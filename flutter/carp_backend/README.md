@@ -7,7 +7,7 @@ This package supports uploading of data from the [CARP Mobile Sensing Framework]
 
 Please file feature requests and bug reports at the [issue tracker][tracker].
 
-[tracker]: https://github.com/cph-cachet/carp.sensing-flutter/issues
+[tracker]: /cph-cachet/carp.sensing/issues
 
 ## License
 
