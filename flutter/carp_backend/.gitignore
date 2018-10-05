@@ -1,15 +1,30 @@
+#Mac
 .DS_Store
-.dart_tool/
 
+# Dart
+.dart_tool/
 .packages
 .pub/
+pubspec.lock
 
+
+# IntelliJ
 .idea/
+out/
 
-# ignore all build files, also auto-generated android and ios files
+# File-based project format
+*.iws
+
+# Build files incl. auto-generated android and ios files
 build/
 android/
 ios/
 ios/.generated/
 ios/Flutter/Generated.xcconfig
 ios/Runner/GeneratedPluginRegistrant.*
+
+# Crashlytics plugin (for Android Studio and IntelliJ)
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
+fabric.properties
