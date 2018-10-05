@@ -1,3 +1,3 @@
-## [0.0.1] - TODO: Add release date.
+## 0.0.1 - Initial version, Oct. 2018.
 
-* TODO: Describe initial release.
+* Initial version of dedicated package bringing together the old implementation.

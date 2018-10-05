@@ -1,8 +1,23 @@
-# carp_backend
+# CARP Data Backend
 
-CARP backend for the carp sensing framework
+This package supports uploading of data from the [CARP Mobile Sensing Framework](https://github.com/cph-cachet/carp.sensing) to the CARP data backend.
 
-## Getting Started
+ 
+## Features and bugs
+
+Please file feature requests and bug reports at the [issue tracker][tracker].
+
+[tracker]: https://github.com/cph-cachet/carp.sensing-flutter/issues
+
+## License
+
+This software is copyright (c) 2018 [Copenhagen Center for Health Technology (CACHET)](http://www.cachet.dk/) at the [Technical University of Denmark (DTU)](http://www.dtu.dk).
+This software is made available 'as-is' in a MIT [license](/LICENSE).
+
+
+
+
+## Getting Started with Flutter
 
 For help getting started with Flutter, view our online [documentation](https://flutter.io/).
 
