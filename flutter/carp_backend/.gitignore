@@ -4,6 +4,7 @@
 .packages
 .pub/
 
+.idea/
 
 # ignore all build files, also auto-generated android and ios files
 build/
