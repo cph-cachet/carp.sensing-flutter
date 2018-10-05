@@ -7,7 +7,6 @@
 
 import 'dart:async';
 import 'package:carp_sensing/carp_sensing.dart';
-import 'package:carp_backend/carp_backend.dart';
 
 /**
  * The [AuthenticationManager] class is responsible for authenticating
