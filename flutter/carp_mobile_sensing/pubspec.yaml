@@ -11,25 +11,27 @@ dependencies:
   flutter:
     sdk: flutter
   #util plugins
-  system_info:
+  system_info: ^0.1.0
   uuid: ^1.0.0
-  device_info:
+  device_info: ^0.2.1
   json_annotation: ^1.0.0
-  path_provider:
+  path_provider: ^0.4.1
   archive: ^2.0.4
 
   # probe-dependent plugins
   sensors: ^0.3.4
-  battery:
-  connectivity:
-  flutter_blue: # <- Gives build errors on android, see issue tracker
-  location:
-  pedometer:
-  light: # Light sensor over platform channel
-  device_apps: # Device installed apps over platform channel
-  sms: # Sms messages over platform channel
-  screen_state:
-  #phone_log:   # phone_log does not support Dart 2.0 >> have raised an issues, but not used until this is fixed.
+  battery: ^0.2.3
+  connectivity: ^0.3.2
+  flutter_blue: ^0.4.1    # <- Gives build errors on android, see issue tracker
+  location: ^1.4.1
+  sms: ^0.2.4             # Sms messages over platform channel
+  #phone_log:             # <- phone_log does not support Dart 2.0 >> have raised an issues, but not used until this is fixed.
+
+  # the CACHET plugins
+  pedometer:              # Get the step count from local OS
+  light:                  # Light sensor over platform channel
+  device_apps:            # Device installed apps over platform channel
+  screen_state:           # Screen LOCK/ON/OFF
 
 
 dev_dependencies:

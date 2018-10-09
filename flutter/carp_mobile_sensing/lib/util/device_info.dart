@@ -7,7 +7,6 @@
 import 'package:device_info/device_info.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
-import 'package:async/async.dart';
 
 class Device {
   // Basic device info about the device from which this datum were collected from.
