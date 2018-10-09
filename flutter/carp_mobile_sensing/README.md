@@ -13,7 +13,7 @@ Note that there are two issues with Android to consider:
 
 ### Documentation
 
-The [wiki]() contains detailed documentation on the CARP Mobile Sensing Framework, including 
+The [wiki](https://github.com/cph-cachet/carp.sensing/wiki) contains detailed documentation on the CARP Mobile Sensing Framework, including 
 the [domain model](https://github.com/cph-cachet/carp.sensing/wiki/Domain-Model), its built-in [probes](https://github.com/cph-cachet/carp.sensing/wiki/Probes), 
 and how to [extend](https://github.com/cph-cachet/carp.sensing/wiki/Extending) it.
 
@@ -26,7 +26,7 @@ Below is a very simple / minimum example.
 // Import package
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
-{
+... {
   // Instantiate a new study
   Study study = new Study("1234", "bardram", name: "Test study #1");
 
