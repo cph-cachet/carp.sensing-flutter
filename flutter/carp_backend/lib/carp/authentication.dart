@@ -70,3 +70,27 @@ class OAuthToken {
       "Refresh Token: $_refreshToken, "
       "Expiry date: $accessTokenExpiryDate";
 }
+
+/**
+ * The [User] class is responsible for storing user data.
+ *
+ */
+class User {
+  final String _username, _password;
+  OAuthToken _oAuthToken;
+
+  User(this._username, this._password, this._oAuthToken);
+
+  String get username => _username;
+
+  String get password => _password;
+
+  OAuthToken get oAuthToken => _oAuthToken;
+
+  OAuthToken set(oAuthToken) => _oAuthToken = oAuthToken;
+
+  String get userInfo {
+    var tokenInfo = oAuthToken.tokenInfo;
+    return "Username: $_username, Password: $_password, OAuth Token: [$tokenInfo]";
+  }
+}
