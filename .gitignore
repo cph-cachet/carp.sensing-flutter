@@ -1,14 +1,33 @@
-# See https://www.dartlang.org/guides/libraries/private-files
+.DS_Store
+.atom/
+.idea/
+.vscode/
 
-# Files and directories created by pub
-.dart_tool/
 .packages
 .pub/
-build/
-# If you're building an application, you may want to check-in your pubspec.lock
+.dart_tool/
 pubspec.lock
 
-# Directory created by dartdoc
-# If you don't generate documentation locally you can remove this line.
-doc/api/
-.DS_Store
+Podfile
+Podfile.lock
+Pods/
+.symlinks/
+**/Flutter/App.framework/
+**/Flutter/Flutter.framework/
+**/Flutter/Generated.xcconfig
+**/Flutter/flutter_assets/
+ServiceDefinitions.json
+xcuserdata/
+
+local.properties
+.gradle/
+gradlew
+gradlew.bat
+gradle-wrapper.jar
+*.iml
+
+GeneratedPluginRegistrant.h
+GeneratedPluginRegistrant.m
+GeneratedPluginRegistrant.java
+build/
+.flutter-plugins
