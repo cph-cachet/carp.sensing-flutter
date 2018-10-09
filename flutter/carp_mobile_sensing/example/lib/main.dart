@@ -15,18 +15,34 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => new _MyAppState();
 }
 
+void example() {
+  // Instantiate a new study
+  Study study = new Study("1234", "bardram", name: "Test study #1");
+
+  // Setting the data endpoint to print to the console
+  study.dataEndPoint = new DataEndPoint(DataEndPointType.PRINT);
+
+  // Create a task to hold measures
+  Task task = new Task("Simple Task");
+
+  // Create a battery and location measures and add them to the task
+  // Both are listening on events from changes from battery and location
+  task.addMeasure(new BatteryMeasure(ProbeRegistry.BATTERY_MEASURE));
+  task.addMeasure(new LocationMeasure(ProbeRegistry.LOCATION_MEASURE));
+
+  // Create an executor that can execute this study, initialize it, and start it.
+  StudyExecutor executor = new StudyExecutor(study);
+  executor.initialize();
+  executor.start();
+}
+
 class _MyAppState extends State<MyApp> implements ProbeListener {
   String _log = "";
   StudyExecutor executor;
 
-//  DataManager manager;
-
   final Map<String, String> _entries = new Map<String, String>();
 
-//  final _biggerFont = const TextStyle(fontSize: 18.0);
-
-  @override
-  Future notify(Datum datum) {
+  void notify(Datum datum) {
     setState(() {
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below
@@ -36,7 +52,7 @@ class _MyAppState extends State<MyApp> implements ProbeListener {
       _log += "\n" + datum.toString();
     });
 
-    return new Future.value("200 OK");
+    //return new Future.value("200 OK");
   }
 
   @override

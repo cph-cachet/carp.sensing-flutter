@@ -18,7 +18,7 @@ enum ProbeType {
 }
 
 abstract class ProbeListener {
-  Future notify(Datum datum);
+  void notify(Datum datum);
 }
 
 /**
