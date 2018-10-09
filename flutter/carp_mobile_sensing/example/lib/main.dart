@@ -16,7 +16,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> implements ProbeListener {
-  String _platformVersion = 'Unknown';
   String _log = "";
   StudyExecutor executor;
 
@@ -86,20 +85,6 @@ class _MyAppState extends State<MyApp> implements ProbeListener {
 //      fileEndPoint.encrypt = false;
 //      _study.dataEndPoint = fileEndPoint;
 
-//      final FirebaseStorageDataEndPoint endpoint = new FirebaseStorageDataEndPoint(DataEndPointType.FIREBASE);
-//      endpoint.name = "Flutter Sensing Sandbox";
-//      endpoint.uri = 'gs://flutter-sensing-sandbox.appspot.com';
-//      endpoint.path = 'sensing/data';
-//      endpoint.projectID = 'flutter-sensing-sandbox';
-//      endpoint.webAPIKey = 'AIzaSyCGy6MeHkiv5XkBtMcMbtgGYOpf6ntNVE4';
-//      endpoint.gcmSenderID = '201621881872';
-//      endpoint.androidGoogleAppID = '1:201621881872:android:8e84e7ccfc85e121';
-//      endpoint.iOSGoogleAppID = '1:159623150305:ios:4a213ef3dbd8997b';
-//      endpoint.firebaseAuthenticationMethod = FireBaseAuthenticationMethods.PASSWORD;
-//      endpoint.email = "jakob@bardram.net";
-//      endpoint.password = "dumt_password";
-//
-//      _study.dataEndPoint = endpoint;
     }
     return _study;
   }

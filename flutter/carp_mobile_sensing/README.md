@@ -3,9 +3,46 @@
 This library contains the software architecture for the CARP sensing framework implemented in Flutter/Dart.
 Supporting cross-platform (iOS and Android) sensing.
 
+## Usage
+To use this plugin, add `carp_mobile_sensing` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/).
+
+Note that there are two issues with Android to consider:
+
+* [Issue #1](https://github.com/cph-cachet/carp.sensing/issues/2) - update your app's android `build.graddle` so that `minSdkVersion 19` (instead of `16` ).
+* [Issue #2](https://github.com/cph-cachet/carp.sensing/issues/1) - update the he file `build.graddle` in `flutter_blue` and change the JDK parameters JDK `26` (instead of `27`).
+
+### Documentation
+
+The [wiki]() contains documentation on CARP Mobile Sensing Framework, including 
+the [domain model](), its built-in [probes](), and how to [extend](wiki/Extending) it.
+
+Below is a very simple / minimum example.
+
+### Example
+
+
+``` dart
+// Import package
+import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+
+// Instantiate it
+var battery = new Battery();
+
+// Access current battery level
+print(battery.batteryLevel);
+
+// Be informed when the state (full, charging, discharging) changes
+_battery.onBatteryStateChanged.listen((BatteryState state) {
+  // Do something with new state
+});
+```
+
+
+
+
 ## Ontology
 
-The library makes use of a set of core concepts (i.e., classes).
+The library makes use of a set of core concepts.
 
 Data collection is configures as a `Study`. A `Study` holds a set of `Task`s which again hold a set of `Measure`s.
 
