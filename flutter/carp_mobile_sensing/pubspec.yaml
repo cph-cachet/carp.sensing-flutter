@@ -31,12 +31,6 @@ dependencies:
   screen_state:
   #phone_log:   # phone_log does not support Dart 2.0 >> have raised an issues, but not used until this is fixed.
 
-  # TODO: I think the following can be removed
-  http:
-  oauth2:
-  google_sign_in: ^3.0.5
-  firebase_storage: ^1.0.2
-  firebase_auth: ^0.5.20
 
 dev_dependencies:
   flutter_test:
