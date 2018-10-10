@@ -6,6 +6,14 @@ Supports cross-platform (iOS and Android) sensing.
 ## Usage
 To use this plugin, add `carp_mobile_sensing` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/).
 
+This plugin relies on `json_serialization: ^1.0.0` which again rely on Dart 2.1. 
+This mean that (at the time of writing) you should use the `dev` channel in Flutter. 
+This can be set using the following Flutter command:
+
+```
+flutter channel dev
+```
+
 Note that there are two issues with Android to consider:
 
 * [Issue #1](https://github.com/cph-cachet/carp.sensing/issues/2) - make sure your app's android `build.graddle` has a `minSdkVersion 19` (instead of `16` ).
