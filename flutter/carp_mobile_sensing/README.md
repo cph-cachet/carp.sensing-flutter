@@ -56,7 +56,7 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 }
 ```
 
-There is a very simple [example](/example) app which shows how a study can be created with different taks and measures.
+There is a very simple [example](example) app which shows how a study can be created with different taks and measures.
 This app just prints the sensing data to a simple console screen.
  
 ## Features and bugs
