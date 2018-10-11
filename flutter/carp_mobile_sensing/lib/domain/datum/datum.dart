@@ -132,8 +132,5 @@ class MultiDatum extends CARPDatum {
   @override
   CARPDataFormat getCARPDataFormat() => (datums.length == 0) ? CARPDataFormat.unknown() : datums[0].getCARPDataFormat();
 
-  @override
-  String toString() {
-    return "MultiDatum: {format: ${getCARPDataFormat().toString()}, size: ${datums.length}}";
-  }
+  String toString() => "MultiDatum: {format: ${getCARPDataFormat().toString()}, size: ${datums.length}}";
 }

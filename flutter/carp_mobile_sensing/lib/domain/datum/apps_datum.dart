@@ -27,7 +27,7 @@ class AppsDatum extends CARPDatum {
 
   @override
   String toString() {
-    String s = 'apps {';
+    String s = 'apps: {';
     installedApps.forEach((appName) {
       s += '$appName,';
     });

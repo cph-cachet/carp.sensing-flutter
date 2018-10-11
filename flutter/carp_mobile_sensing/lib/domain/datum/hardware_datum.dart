@@ -25,10 +25,8 @@ class BatteryDatum extends CARPDatum {
   factory BatteryDatum.fromJson(Map<String, dynamic> json) => _$BatteryDatumFromJson(json);
   Map<String, dynamic> toJson() => _$BatteryDatumToJson(this);
 
-  @override
   CARPDataFormat getCARPDataFormat() => CARP_DATA_FORMAT;
 
-  @override
   String toString() => 'battery: {level: $batteryLevel%, status: $batteryStatus}';
 }
 
@@ -48,10 +46,8 @@ class FreeMemoryDatum extends CARPDatum {
   factory FreeMemoryDatum.fromJson(Map<String, dynamic> json) => _$FreeMemoryDatumFromJson(json);
   Map<String, dynamic> toJson() => _$FreeMemoryDatumToJson(this);
 
-  @override
   CARPDataFormat getCARPDataFormat() => CARP_DATA_FORMAT;
 
-  @override
   String toString() => 'free memory: {physical: $freePhysicalMemory%, virtual: $freeVirtualMemory}';
 }
 
@@ -71,11 +67,9 @@ class UserDatum extends CARPDatum {
   factory UserDatum.fromJson(Map<String, dynamic> json) => _$UserDatumFromJson(json);
   Map<String, dynamic> toJson() => _$UserDatumToJson(this);
 
-  @override
   CARPDataFormat getCARPDataFormat() => CARP_DATA_FORMAT;
 
-  @override
-  String toString() => 'OS user: {id: $userId%, name: $userName}';
+  String toString() => 'os_user: {id: $userId, name: $userName}';
 }
 
 /// A [Datum] that holds a screen event collected from the phone.
@@ -91,9 +85,7 @@ class ScreenDatum extends CARPDatum {
   factory ScreenDatum.fromJson(Map<String, dynamic> json) => _$ScreenDatumFromJson(json);
   Map<String, dynamic> toJson() => _$ScreenDatumToJson(this);
 
-  @override
   CARPDataFormat getCARPDataFormat() => CARP_DATA_FORMAT;
 
-  @override
-  String toString() => 'Screen Event: {$screenEvent}';
+  String toString() => 'screen_Event: {$screenEvent}';
 }

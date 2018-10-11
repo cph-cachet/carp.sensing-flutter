@@ -26,10 +26,8 @@ class ConnectivityDatum extends CARPDatum {
   factory ConnectivityDatum.fromJson(Map<String, dynamic> json) => _$ConnectivityDatumFromJson(json);
   Map<String, dynamic> toJson() => _$ConnectivityDatumToJson(this);
 
-  @override
   CARPDataFormat getCARPDataFormat() => CARP_DATA_FORMAT;
 
-  @override
   String toString() => 'connectivity_status: $connectivityStatus';
 }
 
@@ -51,10 +49,8 @@ class BluetoothDatum extends CARPDatum {
   factory BluetoothDatum.fromJson(Map<String, dynamic> json) => _$BluetoothDatumFromJson(json);
   Map<String, dynamic> toJson() => _$BluetoothDatumToJson(this);
 
-  @override
   CARPDataFormat getCARPDataFormat() => CARP_DATA_FORMAT;
 
-  @override
   String toString() =>
-      'bluetooth device: {id: $bluetoothDeviceId, name: $bluetoothDeviceName, type: $bluetoothDeviceType, connectable: $connectable, rssi: $rssi}';
+      'bluetooth_device: {id: $bluetoothDeviceId, name: $bluetoothDeviceName, type: $bluetoothDeviceType, connectable: $connectable, rssi: $rssi}';
 }

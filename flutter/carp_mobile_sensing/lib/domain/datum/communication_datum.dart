@@ -24,13 +24,9 @@ class TextMessageLogDatum extends Datum {
   factory TextMessageLogDatum.fromJson(Map<String, dynamic> json) => _$TextMessageLogDatumFromJson(json);
   Map<String, dynamic> toJson() => _$TextMessageLogDatumToJson(this);
 
-  @override
   CARPDataFormat getCARPDataFormat() => CARP_DATA_FORMAT;
 
-  @override
-  String toString() {
-    return toJson().toString();
-  }
+  String toString() => "message_log: {size: ${textMessageLog.length}}";
 }
 
 /// Holds a Text Messages.
@@ -90,10 +86,8 @@ class TextMessage extends Serializable {
   factory TextMessage.fromJson(Map<String, dynamic> json) => _$TextMessageFromJson(json);
   Map<String, dynamic> toJson() => _$TextMessageToJson(this);
 
-  @override
-  String toString() {
-    return toJson().toString();
-  }
+  String toString() =>
+      "text_message: {id: $id, address: $address, is_read: $isRead, date: $date, date_send: $dateSent, kind: $kind, state: $state}\n$body";
 }
 
 /// Holds a phone log, i.e. a list of phone calls made on the device.
@@ -108,8 +102,9 @@ class PhoneLogDatum extends Datum {
   factory PhoneLogDatum.fromJson(Map<String, dynamic> json) => _$PhoneLogDatumFromJson(json);
   Map<String, dynamic> toJson() => _$PhoneLogDatumToJson(this);
 
-  @override
   CARPDataFormat getCARPDataFormat() => CARP_DATA_FORMAT;
+
+  String toString() => "phone_log: {size: ${phoneLog.length}}";
 }
 
 /// Holds data regarding a phone call.
@@ -131,4 +126,7 @@ class PhoneCall extends Serializable {
 
   factory PhoneCall.fromJson(Map<String, dynamic> json) => _$PhoneCallFromJson(json);
   Map<String, dynamic> toJson() => _$PhoneCallToJson(this);
+
+  String toString() =>
+      "phone_call: {timestamp: $timestamp, call_type: $callType, duration: $duration, number: $number, formatted_number: $formattedNumber}";
 }

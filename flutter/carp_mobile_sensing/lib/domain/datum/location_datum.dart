@@ -28,10 +28,8 @@ class LocationDatum extends CARPDatum {
   factory LocationDatum.fromJson(Map<String, dynamic> json) => _$LocationDatumFromJson(json);
   Map<String, dynamic> toJson() => _$LocationDatumToJson(this);
 
-  @override
   CARPDataFormat getCARPDataFormat() => CARP_DATA_FORMAT;
 
-  @override
   String toString() =>
-      "${getCARPDataFormat().toString()} : {latitude: $latitude, longitude: $longitude, accuracy; $accuracy, altitude: $altitude, speed: $speed, speed_accuracy: $speedAccuracy}";
+      "location : {latitude: $latitude, longitude: $longitude, accuracy; $accuracy, altitude: $altitude, speed: $speed, speed_accuracy: $speedAccuracy}";
 }

@@ -29,10 +29,8 @@ class AccelerometerDatum extends CARPDatum {
   factory AccelerometerDatum.fromJson(Map<String, dynamic> json) => _$AccelerometerDatumFromJson(json);
   Map<String, dynamic> toJson() => _$AccelerometerDatumToJson(this);
 
-  @override
   CARPDataFormat getCARPDataFormat() => CARP_DATA_FORMAT;
 
-  @override
   String toString() => 'accelerometer: {x: $x, y: $y, x: $z}';
 }
 
@@ -56,10 +54,8 @@ class GyroscopeDatum extends CARPDatum {
   factory GyroscopeDatum.fromJson(Map<String, dynamic> json) => _$GyroscopeDatumFromJson(json);
   Map<String, dynamic> toJson() => _$GyroscopeDatumToJson(this);
 
-  @override
   CARPDataFormat getCARPDataFormat() => CARP_DATA_FORMAT;
 
-  @override
   String toString() => 'gyroscope: {x: $x, y: $y, x: $z}';
 }
 
@@ -76,9 +72,7 @@ class LightDatum extends CARPDatum {
   factory LightDatum.fromJson(Map<String, dynamic> json) => _$LightDatumFromJson(json);
   Map<String, dynamic> toJson() => _$LightDatumToJson(this);
 
-  @override
   CARPDataFormat getCARPDataFormat() => CARP_DATA_FORMAT;
 
-  @override
-  String toString() => 'Light Sensor: {lux: $lux}';
+  String toString() => 'light: {lux: $lux}';
 }

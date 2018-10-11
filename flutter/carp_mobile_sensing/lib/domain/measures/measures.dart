@@ -39,7 +39,7 @@ class Measure extends Serializable {
   }
 
   String toString() {
-    return "\t\tMeasure type: " + measureType;
+    return measureType;
   }
 }
 

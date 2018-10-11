@@ -29,9 +29,7 @@ class PedometerDatum extends CARPDatum {
   factory PedometerDatum.fromJson(Map<String, dynamic> json) => _$PedometerDatumFromJson(json);
   Map<String, dynamic> toJson() => _$PedometerDatumToJson(this);
 
-  @override
   CARPDataFormat getCARPDataFormat() => CARP_DATA_FORMAT;
 
-  @override
   String toString() => 'step_count: {start: $startTime, end: $endTime, steps: $stepCount}';
 }

@@ -5,108 +5,177 @@
  * found in the LICENSE file.
  */
 import 'package:flutter/material.dart';
-import 'dart:async';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
-void main() => runApp(new MyApp());
+void main() => runApp(new CARPMobileSensingApp());
 
-class MyApp extends StatefulWidget {
+class CARPMobileSensingApp extends StatelessWidget {
+  // This widget is the root of your application.
   @override
-  _MyAppState createState() => new _MyAppState();
+  Widget build(BuildContext context) {
+    return new MaterialApp(
+      title: 'CARP Mobile Sensing Demo',
+      theme: new ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: new ConsolePage(title: 'CARP Mobile Sensing Demo'),
+    );
+  }
 }
 
-void example() {
-  // Instantiate a new study
-  Study study = new Study("1234", "bardram", name: "Test study #1");
+class ConsolePage extends StatefulWidget {
+  ConsolePage({Key key, this.title}) : super(key: key);
 
-  // Setting the data endpoint to print to the console
-  study.dataEndPoint = new DataEndPoint(DataEndPointType.PRINT);
+  // This widget is the home page of your application. It is stateful, meaning
+  // that it has a State object (defined below) that contains fields that affect
+  // how it looks.
 
-  // Create a task to hold measures
-  Task task = new Task("Simple Task");
+  // This class is the configuration for the state. It holds the values (in this
+  // case the title) provided by the parent (in this case the App widget) and
+  // used by the build method of the State. Fields in a Widget subclass are
+  // always marked "final".
 
-  // Create a battery and location measures and add them to the task
-  // Both are listening on events from changes from battery and location
-  task.addMeasure(new BatteryMeasure(ProbeRegistry.BATTERY_MEASURE));
-  task.addMeasure(new LocationMeasure(ProbeRegistry.LOCATION_MEASURE));
+  final String title;
 
-  // Create an executor that can execute this study, initialize it, and start it.
-  StudyExecutor executor = new StudyExecutor(study);
-  executor.initialize();
-  executor.start();
+  @override
+  Console createState() => new Console();
 }
 
-class _MyAppState extends State<MyApp> implements ProbeListener {
+class Console extends State<ConsolePage> {
   String _log = "";
-  StudyExecutor executor;
+  Sensing sensing;
 
-  final Map<String, String> _entries = new Map<String, String>();
-
-  void notify(Datum datum) {
+  void log(String msg) {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _log without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _log += "\n" + datum.toString();
+      _log += "$msg\n";
     });
+  }
 
-    //return new Future.value("200 OK");
+  void clearLog() {
+    setState(() {
+      _log += "";
+    });
+  }
+
+  void restart() {
+    log("-------------------------------------\nSensing restarted...");
+    sensing.start();
   }
 
   @override
   void initState() {
     super.initState();
-    startProbes();
+    sensing = new Sensing(this);
+    sensing.start();
   }
 
   @override
   void dispose() {
-    executor.stop();
+    sensing.stop();
     super.dispose();
   }
 
-  void startProbes() {
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      appBar: new AppBar(
+        title: new Text(widget.title),
+      ),
+      body: new SingleChildScrollView(
+        child: new Text(
+          _log,
+          style: TextStyle(fontFamily: 'RobotoMono'),
+        ),
+      ),
+      floatingActionButton: new FloatingActionButton(
+        onPressed: restart,
+        tooltip: 'Restart study & probes',
+        child: new Icon(Icons.cached),
+      ),
+    );
+  }
+}
+
+/// This class implements the sensing incl. setting up a [Study] with [Task]s and [Measure]s.
+/// Note that it implements a [ProbeListener] and hence listen on any data created by the probes.
+/// This is used to write to a log, which is displayed in a simple scrollable text view.
+class Sensing implements ProbeListener {
+  Console console;
+  StudyExecutor executor;
+
+  Sensing(this.console);
+
+  // method called by [ProbeListener]s
+  void notify(Datum datum) {
+    console.log(datum.toString());
+  }
+
+  void start() async {
+    // if an executor is already running, kill the old one before creating a new study
     if (executor != null) {
+      console.log("Stopping '${study.name}'...");
       executor.stop();
     }
     _study = null;
 
-    print("Study: " + study.name);
+    console.log("Setting up '${study.name}'...");
+    study.dataEndPoint = getDataEndpoint(DataEndPointType.PRINT);
+
+    study.tasks.add(testTask);
 //    study.tasks.add(sensorTask);
 //    study.tasks.add(pedometerTask);
     study.tasks.add(hardwareTask);
     study.tasks.add(appTask);
     study.tasks.add(commTask);
-//    study.tasks.add(testTask);
-//    study.tasks.add(locationTask);
+    study.tasks.add(locationTask);
 
+    console.log(study.toString());
+
+    // create a new executor
     executor = new StudyExecutor(study);
+    // add myself as a [ProbeListener] so we can update the log.
+    // see the [notify()] method
     executor.addProbeListener(this);
     executor.initialize();
     executor.start();
+    console.log("sensing started ...");
+  }
+
+  void stop() async {
+    executor.stop();
+    console.log("sensing stopped ...");
   }
 
   Study _study;
-
   Study get study {
     if (_study == null) {
-      _study = new Study("1234", "bardram", name: "Test study #1");
-      _study.dataEndPoint = new DataEndPoint(DataEndPointType.PRINT);
-
-//      final FileDataEndPoint fileEndPoint = new FileDataEndPoint(DataEndPointType.FILE);
-//      fileEndPoint.bufferSize = 500 * 1000;
-//      fileEndPoint.zip = true;
-//      fileEndPoint.encrypt = false;
-//      _study.dataEndPoint = fileEndPoint;
-
+      _study = new Study("1234", "user@dtu.dk", name: "Test study #1");
     }
     return _study;
   }
 
+  /// Return a [DataEndPoint] of the specified type.
+  DataEndPoint getDataEndpoint(String type) {
+    assert(type != null);
+    switch (type) {
+      case DataEndPointType.PRINT:
+        return new DataEndPoint(DataEndPointType.PRINT);
+      case DataEndPointType.FILE:
+        final FileDataEndPoint fileEndPoint = new FileDataEndPoint(DataEndPointType.FILE);
+        fileEndPoint.bufferSize = 500 * 1000;
+        fileEndPoint.zip = true;
+        fileEndPoint.encrypt = false;
+        return fileEndPoint;
+      default:
+        return new DataEndPoint(DataEndPointType.PRINT);
+    }
+  }
+
   Task _testTask;
 
+  /// Return a simple test task that have two measures:
+  /// * a [ProbeMeasure] collection the user info from the OS once
+  /// * a [PollingProbeMeasure] that collects free memory every 2nd second
   Task get testTask {
     if (_testTask == null) {
       _testTask = new Task("Test task");
@@ -126,6 +195,12 @@ class _MyAppState extends State<MyApp> implements ProbeListener {
 
   Task _sensorTask;
 
+  /// A task collecting sensor data from three sensors:
+  /// * the accelerometer
+  /// * the gyroscope
+  /// * light
+  ///
+  /// Note that these sensors collects *a lot of data* and should be used *very* carefully.
   Task get sensorTask {
     if (_sensorTask == null) {
       _sensorTask = new Task("Sensor task");
@@ -153,13 +228,14 @@ class _MyAppState extends State<MyApp> implements ProbeListener {
 
   Task _pedometerTask;
 
+  /// A task collecting pedometer (step count) data on a regular basis.
   Task get pedometerTask {
     if (_pedometerTask == null) {
       _pedometerTask = new Task("Pedometer task");
 
       PedometerMeasure pm = new PedometerMeasure(ProbeRegistry.PEDOMETER_MEASURE);
       pm.name = 'Pedometer';
-      pm.frequency = 8 * 1000; // once every 8 second
+      pm.frequency = 60 * 1000; // once every minute
       _pedometerTask.addMeasure(pm);
     }
     return _pedometerTask;
@@ -167,6 +243,11 @@ class _MyAppState extends State<MyApp> implements ProbeListener {
 
   Task _hardwareTask;
 
+  /// A task with three types of hardware measures:
+  /// * battery
+  /// * connectivity (wifi, ...)
+  /// * screen activity (lock, on, off)
+  /// * nearby bluetooth devices
   Task get hardwareTask {
     if (_hardwareTask == null) {
       _hardwareTask = new Task("Hardware Task");
@@ -183,15 +264,16 @@ class _MyAppState extends State<MyApp> implements ProbeListener {
       sm.name = 'Screen Lock/Unlock';
       _hardwareTask.addMeasure(sm);
 
-//      BluetoothMeasure blue_m = new BluetoothMeasure(ProbeRegistry.BLUETOOTH_MEASURE);
-//      blue_m.name = 'Nearby Bluetooth Devices';
-//      _hardwareTask.addMeasure(blue_m);
+      BluetoothMeasure blue_m = new BluetoothMeasure(ProbeRegistry.BLUETOOTH_MEASURE);
+      blue_m.name = 'Nearby Bluetooth Devices';
+      _hardwareTask.addMeasure(blue_m);
     }
     return _hardwareTask;
   }
 
   Task _appTask;
 
+  /// A task collecting app information about installed apps on the device
   Task get appTask {
     if (_appTask == null) {
       _appTask = new Task("Application Task");
@@ -205,6 +287,10 @@ class _MyAppState extends State<MyApp> implements ProbeListener {
 
   Task _commTask;
 
+  /// A task collecting information about communication. So far only collecting:
+  /// * messages (sms) done on this device
+  ///
+  /// Works only on Android.
   Task get commTask {
     if (_commTask == null) {
       _commTask = new Task("Communication Task");
@@ -217,6 +303,7 @@ class _MyAppState extends State<MyApp> implements ProbeListener {
 
   Task _locationTask;
 
+  /// A task collecting location information.
   Task get locationTask {
     if (_locationTask == null) {
       _locationTask = new Task("Location Task");
@@ -225,27 +312,5 @@ class _MyAppState extends State<MyApp> implements ProbeListener {
       _locationTask.addMeasure(lm);
     }
     return _locationTask;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return new MaterialApp(
-      home: new Scaffold(
-          appBar: new AppBar(
-            title: const Text('CARP Sensing Console'),
-          ),
-          body: new ListView(children: [
-            new RaisedButton(
-              child: const Text('Restart probes'),
-              color: Theme.of(context).accentColor,
-              elevation: 4.0,
-              splashColor: Colors.greenAccent,
-              onPressed: startProbes,
-            ),
-            new SingleChildScrollView(
-              child: new Text(_log),
-            ),
-          ])),
-    );
   }
 }

@@ -10,7 +10,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'tasks.g.dart';
 
-/// The [Task] holds information about each task to be executed as part of this [Study].
+/// A [Task] holds information about each task to be executed as part of a [Study].
 /// Each [Task] has a set of [Measure]s to be done as part of this task.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class Task extends Serializable {
@@ -31,10 +31,11 @@ class Task extends Serializable {
   @override
   String toString() {
     String s = "";
-    s += "\tTask name: " + name + "\n";
+    s += "Task: $name [";
     measures.forEach((m) {
-      s += m.toString() + "\n";
+      s += m.toString() + " | ";
     });
+    s += "]\n";
     return s;
   }
 
