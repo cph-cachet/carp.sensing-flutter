@@ -19,7 +19,7 @@ Note that there are two issues with Android to consider:
 * [Issue #1](https://github.com/cph-cachet/carp.sensing/issues/2) - make sure your app's android `build.graddle` has a `minSdkVersion 19` (instead of `16` ).
 * [Issue #2](https://github.com/cph-cachet/carp.sensing/issues/1) - update the he file `build.graddle` in `flutter_blue` and change the JDK parameters to `26` (instead of `27`).
 
-### Documentation
+## Documentation
 
 The [wiki](https://github.com/cph-cachet/carp.sensing/wiki) contains detailed documentation on the CARP Mobile Sensing Framework, including 
 the [domain model](https://github.com/cph-cachet/carp.sensing/wiki/Domain-Model), its built-in [probes](https://github.com/cph-cachet/carp.sensing/wiki/Probes), 
@@ -27,7 +27,7 @@ and how to [extend](https://github.com/cph-cachet/carp.sensing/wiki/Extending) i
 
 Below is a very simple / minimum example.
 
-### Example
+## Example
 
 
 ``` dart
@@ -56,10 +56,8 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 }
 ```
 
-
-
-
-
+There is a very simple [example](/example) app which shows how a study can be created with different taks and measures.
+This app just prints the sensing data to a simple console screen.
  
 ## Features and bugs
 
