@@ -24,7 +24,7 @@ abstract class DataManager {
 abstract class AbstractDataManager implements DataManager {
   Study study;
 
-  Future initialize(Study study) {
+  Future initialize(Study study) async {
     assert(study != null);
     this.study = study;
   }

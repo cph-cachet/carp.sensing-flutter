@@ -14,7 +14,7 @@ class ConsoleDataManager extends AbstractDataManager {
   Study study;
 
   @override
-  Future initialize(Study study) {
+  Future initialize(Study study) async {
     super.initialize(study);
   }
 

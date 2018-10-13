@@ -1,3 +1,5 @@
+/// This library contains the software architecture for the CARP sensing framework implemented in Flutter.
+/// Supports cross-platform (iOS and Android) sensing.
 library carp_mobile_sensing;
 
 // Services
@@ -37,7 +39,6 @@ export 'package:carp_mobile_sensing/domain/measures/hardware_measures.dart';
 export 'package:carp_mobile_sensing/domain/datum/hardware_datum.dart';
 
 export 'package:carp_mobile_sensing/runtime/probes/connectivity/bluetooth_probe.dart';
-
 export 'package:carp_mobile_sensing/domain/measures/location_measure.dart';
 
 export 'package:carp_mobile_sensing/runtime/probes/connectivity/connectivity_probe.dart';

@@ -1,6 +1,6 @@
 name: carp_mobile_sensing
 description: CARP Mobile Sensing Framework
-version: 0.1.0
+version: 0.1.1
 author:  CACHET Team <cph.cachet@gmail.com>
 homepage: https://github.com/cph-cachet/carp.sensing/tree/master/flutter/carp_mobile_sensing
 
@@ -28,10 +28,10 @@ dependencies:
   #phone_log:             # <- phone_log does not support Dart 2.0 >> have raised an issues, but not used until this is fixed.
 
   # the CACHET plugins
-  pedometer:              # Get the step count from local OS
-  light:                  # Light sensor over platform channel
-  device_apps:            # Device installed apps over platform channel
-  screen_state:           # Screen LOCK/ON/OFF
+  pedometer: ^0.0.3       # Get the step count from local OS
+  light: ^0.0.3           # Light sensor over platform channel
+  device_apps: ^1.0.0     # Device installed apps over platform channel
+  screen_state: ^0.0.1    # Screen LOCK/ON/OFF
 
 
 dev_dependencies:

@@ -16,17 +16,15 @@ abstract class Serializable {
     FromJsonFactory.init();
   }
 
-  static Function get fromJsonFunction {}
+  //static Function get fromJsonFunction {}
 
   registerFromJson(Function fromJson) {
-    print("registring() : " + fromJson.toString());
     FromJsonFactory.registerFromJsonFunction(this.runtimeType.toString(), fromJson);
   }
 }
 
 class FromJsonFactory {
   static final bool isInitialized = false;
-
   static final Map<String, Function> _registry = new Map<String, Function>();
 
   static registerFromJsonFunction(String type, Function f) => _registry[type] = f;
