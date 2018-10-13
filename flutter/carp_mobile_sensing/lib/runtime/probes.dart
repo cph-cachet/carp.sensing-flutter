@@ -108,7 +108,7 @@ abstract class AbstractProbe implements Probe {
 
   Future notifyAllListeners(Datum datum) async {
     for (ProbeListener l in _listener) {
-      await l.notify(datum);
+      l.notify(datum);
     }
   }
 

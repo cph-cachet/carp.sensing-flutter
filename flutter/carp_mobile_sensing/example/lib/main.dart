@@ -123,7 +123,7 @@ class Sensing implements ProbeListener {
 
     study.tasks.add(testTask);
 //    study.tasks.add(sensorTask);
-//    study.tasks.add(pedometerTask);
+    study.tasks.add(pedometerTask);
     study.tasks.add(hardwareTask);
     study.tasks.add(appTask);
     study.tasks.add(commTask);
@@ -235,7 +235,7 @@ class Sensing implements ProbeListener {
 
       PedometerMeasure pm = new PedometerMeasure(ProbeRegistry.PEDOMETER_MEASURE);
       pm.name = 'Pedometer';
-      pm.frequency = 60 * 1000; // once every minute
+      pm.frequency = 5 * 1000; // Sample once every 5 seconds
       _pedometerTask.addMeasure(pm);
     }
     return _pedometerTask;
