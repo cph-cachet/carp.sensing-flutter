@@ -4,12 +4,8 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-import 'dart:async';
-import 'dart:io';
-import 'dart:convert';
-import 'package:path_provider/path_provider.dart';
-import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
-import 'package:archive/archive_io.dart';
+
+part of datastore;
 
 /// Stores [Datum] json objects as plain-text in a zip-compressed file on the device's local
 /// storage media. Also supports encryption.
@@ -55,7 +51,7 @@ class FileDataManager extends AbstractDataManager {
     await sink;
 
     print('Initializig FileDataManager...');
-    print(' study file path : ${_studyPath}');
+    print(' study file path : $_studyPath');
     print(' buffer size     : ${_fileDataEndPoint.bufferSize.toString()} bytes');
   }
 
@@ -63,10 +59,10 @@ class FileDataManager extends AbstractDataManager {
   Future<String> get studyPath async {
     if (_path == null) {
       // get local working directory
-      final _local_application_dir = await getApplicationDocumentsDirectory();
+      final localApplicationDir = await getApplicationDocumentsDirectory();
       // create a sub-directory for this study named as the study ID
       final directory =
-          await new Directory('${_local_application_dir.path}/carp/data/${study.id}').create(recursive: true);
+          await new Directory('${localApplicationDir.path}/carp/data/${study.id}').create(recursive: true);
       _path = directory.path;
     }
     return _path;
@@ -75,14 +71,13 @@ class FileDataManager extends AbstractDataManager {
   Future<String> get filename async {
     if (_filename == null) {
       final path = await studyPath;
-      final created = new DateTime.now();
-      final s_created = created
+      final created = DateTime.now()
           .toString()
           .replaceAll(new RegExp(r":"), "-")
           .replaceAll(new RegExp(r" "), "-")
           .replaceAll(new RegExp(r"\."), "-");
 
-      _filename = '$path/carp-data-${s_created}.json';
+      _filename = '$path/carp-data-$created.json';
     }
 
     return _filename;

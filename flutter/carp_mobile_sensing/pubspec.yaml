@@ -1,6 +1,6 @@
 name: carp_mobile_sensing
 description: CARP Mobile Sensing Framework
-version: 0.1.1
+version: 0.2.0
 author:  CACHET Team <cph.cachet@gmail.com>
 homepage: https://github.com/cph-cachet/carp.sensing/tree/master/flutter/carp_mobile_sensing
 
@@ -10,6 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
   #util plugins
   system_info: ^0.1.0
   uuid: ^1.0.0
@@ -24,7 +25,7 @@ dependencies:
   connectivity: ^0.3.2
   flutter_blue: ^0.4.1    # <- Gives build errors on android, see issue tracker
   location: ^1.4.1
-  sms: ^0.2.4             # Sms messages over platform channel
+  sms: ^0.2.4
   #phone_log:             # <- phone_log does not support Dart 2.0 >> have raised an issues, but not used until this is fixed.
 
   # the CACHET plugins

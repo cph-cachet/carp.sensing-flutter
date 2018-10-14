@@ -4,16 +4,14 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-import "dart:async";
-import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
-/**
- * The [StudyExecutor] is responsible for executing the [Study].
- * For each task it starts a [TaskExecutor].
- *
- * Note that the [StudyExecutor] in itself is a [Probe] and hence work as a 'super probe'.
- * This - amongst other things - imply that you can add [ProbeListener]s to a study manager.
- */
+part of runtime;
+
+/// The [StudyExecutor] is responsible for executing the [Study].
+/// For each task it starts a [TaskExecutor].
+///
+/// Note that the [StudyExecutor] in itself is a [Probe] and hence work as a 'super probe'.
+/// This - amongst other things - imply that you can add [ProbeListener]s to a study manager.
 class StudyExecutor extends AbstractProbe implements ProbeListener {
   static final Device deviceInfo = new Device();
 
@@ -80,13 +78,11 @@ class StudyExecutor extends AbstractProbe implements ProbeListener {
   }
 }
 
-/**
- * The [TaskExecutor] is responsible for executing [Task]s in the [Study].
- * For each task it looks up appropriate probes to collect data.
- *
- * Note that the [TaskExecutor] in itself is a [Probe] and hence work as a 'super probe'.
- * This - amongst other things - imply that you can add [ProbeListener]s to a task executor.
- */
+/// The [TaskExecutor] is responsible for executing [Task]s in the [Study].
+/// For each task it looks up appropriate probes to collect data.
+///
+///Note that the [TaskExecutor] in itself is a [Probe] and hence work as a 'super probe'.
+///This - amongst other things - imply that you can add [ProbeListener]s to a task executor.
 class TaskExecutor extends AbstractProbe implements ProbeListener {
   static final Device deviceInfo = new Device();
 

@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+part of domain;
 
 /// This is the base class for all JSON serializable objects.
 abstract class Serializable {
@@ -18,13 +18,17 @@ abstract class Serializable {
 
   //static Function get fromJsonFunction {}
 
-  registerFromJson(Function fromJson) {
-    FromJsonFactory.registerFromJsonFunction(this.runtimeType.toString(), fromJson);
-  }
+  /// Use this method to register a custom fromJson function for this class
+  /// in the [FromJsonFactory].
+  _registerFromJson(Function fromJsonFunction) =>
+      FromJsonFactory.registerFromJsonFunction(this.runtimeType.toString(), fromJsonFunction);
+
+  /// Return a JSON encoding of this object.
+  Map<String, dynamic> toJson();
 }
 
 class FromJsonFactory {
-  static final bool isInitialized = false;
+  static final bool _isInitialized = false;
   static final Map<String, Function> _registry = new Map<String, Function>();
 
   static registerFromJsonFunction(String type, Function f) => _registry[type] = f;
@@ -32,7 +36,7 @@ class FromJsonFactory {
   static Serializable fromJson(String type, Map<String, dynamic> json) => Function.apply(_registry[type], [json]);
 
   static void init() {
-    if (isInitialized) return;
+    if (_isInitialized) return;
 
     //TODO : This should be done using reflection or a build_runner script that can auto-generate this.
     registerFromJsonFunction("Study", Study.fromJsonFunction);
@@ -43,7 +47,6 @@ class FromJsonFactory {
     registerFromJsonFunction("Measure", Measure.fromJsonFunction);
     registerFromJsonFunction("ProbeMeasure", ProbeMeasure.fromJsonFunction);
     registerFromJsonFunction("PollingProbeMeasure", PollingProbeMeasure.fromJsonFunction);
-    registerFromJsonFunction("PedometerMeasure", PedometerMeasure.fromJsonFunction);
     registerFromJsonFunction("SensorMeasure", SensorMeasure.fromJsonFunction);
     registerFromJsonFunction("ConnectivityMeasure", ConnectivityMeasure.fromJsonFunction);
     registerFromJsonFunction("BluetoothMeasure", BluetoothMeasure.fromJsonFunction);

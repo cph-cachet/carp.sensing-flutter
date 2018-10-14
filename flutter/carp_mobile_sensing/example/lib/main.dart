@@ -105,45 +105,50 @@ class Sensing implements ProbeListener {
 
   Sensing(this.console);
 
-  // method called by [ProbeListener]s
+  /// Callback method called by [ProbeListener]s
   void notify(Datum datum) {
     console.log(datum.toString());
   }
 
+  /// (Re)start sensing.
   void start() async {
-    // if an executor is already running, kill the old one before creating a new study
+    // if an executor/study is already running, stop the old one before creating a new study
     if (executor != null) {
-      console.log("Stopping '${study.name}'...");
-      executor.stop();
+      stop();
     }
-    _study = null;
 
     console.log("Setting up '${study.name}'...");
+
+    // specify the [DataEndPoint] for this study.
     study.dataEndPoint = getDataEndpoint(DataEndPointType.PRINT);
 
-    study.tasks.add(testTask);
-//    study.tasks.add(sensorTask);
+    // add tasks to the study
+    // note that in this version, don't start the sensors (accelerometer, etc. - they simpley generate too much data....
+    //study.tasks.add(sensorTask);
     study.tasks.add(pedometerTask);
     study.tasks.add(hardwareTask);
     study.tasks.add(appTask);
     study.tasks.add(commTask);
     study.tasks.add(locationTask);
 
+    // print the study to the console
     console.log(study.toString());
 
     // create a new executor
     executor = new StudyExecutor(study);
-    // add myself as a [ProbeListener] so we can update the log.
+    // add `this` as a [ProbeListener] so we can update the log.
     // see the [notify()] method
     executor.addProbeListener(this);
     executor.initialize();
     executor.start();
-    console.log("sensing started ...");
+    console.log("Sensing started ...");
   }
 
+  /// Stop sensing.
   void stop() async {
     executor.stop();
-    console.log("sensing stopped ...");
+    _study = null;
+    console.log("Sensing stopped ...");
   }
 
   Study _study;
@@ -171,34 +176,12 @@ class Sensing implements ProbeListener {
     }
   }
 
-  Task _testTask;
-
-  /// Return a simple test task that have two measures:
-  /// * a [ProbeMeasure] collection the user info from the OS once
-  /// * a [PollingProbeMeasure] that collects free memory every 2nd second
-  Task get testTask {
-    if (_testTask == null) {
-      _testTask = new Task("Test task");
-      Measure _measure;
-
-      _measure = new ProbeMeasure(ProbeRegistry.USER_MEASURE);
-      _measure.name = 'One-time collection of OS user information';
-      _testTask.addMeasure(_measure);
-
-      _measure = new PollingProbeMeasure(ProbeRegistry.MEMORY_MEASURE);
-      _measure.name = 'Polling of availabel memory';
-      (_measure as PollingProbeMeasure).frequency = 2 * 1000; // 2 secs.
-      _testTask.addMeasure(_measure);
-    }
-    return _testTask;
-  }
-
   Task _sensorTask;
 
-  /// A task collecting sensor data from three sensors:
-  /// * the accelerometer
-  /// * the gyroscope
-  /// * light
+  /// A task collecting sensor data from four sensors:
+  /// - the accelerometer
+  /// - the gyroscope
+  /// - the light sensor
   ///
   /// Note that these sensors collects *a lot of data* and should be used *very* carefully.
   Task get sensorTask {
@@ -233,7 +216,7 @@ class Sensing implements ProbeListener {
     if (_pedometerTask == null) {
       _pedometerTask = new Task("Pedometer task");
 
-      PedometerMeasure pm = new PedometerMeasure(ProbeRegistry.PEDOMETER_MEASURE);
+      SensorMeasure pm = new SensorMeasure(ProbeRegistry.PEDOMETER_MEASURE);
       pm.name = 'Pedometer';
       pm.frequency = 5 * 1000; // Sample once every 5 seconds
       _pedometerTask.addMeasure(pm);
@@ -244,31 +227,34 @@ class Sensing implements ProbeListener {
   Task _hardwareTask;
 
   /// A task with three types of hardware measures:
-  /// * battery
-  /// * connectivity (wifi, ...)
-  /// * screen activity (lock, on, off)
-  /// * nearby bluetooth devices
+  /// - free memory
+  /// - battery
+  /// - screen activity (lock, on, off)
   Task get hardwareTask {
     if (_hardwareTask == null) {
       _hardwareTask = new Task("Hardware Task");
 
-      BatteryMeasure bm = new BatteryMeasure(ProbeRegistry.BATTERY_MEASURE);
-      bm.name = 'Battery';
-      _hardwareTask.addMeasure(bm);
-
-      ConnectivityMeasure cm = new ConnectivityMeasure(ProbeRegistry.CONNECTIVITY_MEASURE);
-      cm.name = 'Connectivity';
-      _hardwareTask.addMeasure(cm);
-
-      ScreenMeasure sm = new ScreenMeasure(ProbeRegistry.SCREEN_MEASURE);
-      sm.name = 'Screen Lock/Unlock';
-      _hardwareTask.addMeasure(sm);
-
-      BluetoothMeasure blue_m = new BluetoothMeasure(ProbeRegistry.BLUETOOTH_MEASURE);
-      blue_m.name = 'Nearby Bluetooth Devices';
-      _hardwareTask.addMeasure(blue_m);
+      _hardwareTask.addMeasure(
+          PollingProbeMeasure(ProbeRegistry.MEMORY_MEASURE, name: 'Polling of availabel memory', frequency: 2 * 1000));
+      _hardwareTask.addMeasure(BatteryMeasure(ProbeRegistry.BATTERY_MEASURE, name: 'Battery'));
+      _hardwareTask.addMeasure(ScreenMeasure(ProbeRegistry.SCREEN_MEASURE, name: 'Screen Lock/Unlock'));
     }
     return _hardwareTask;
+  }
+
+  Task _connectivityTask;
+
+  /// A task with three types of connectivity measures:
+  /// - connectivity (wifi, ...)
+  /// - nearby bluetooth devices
+  Task get connectivityTask {
+    if (_connectivityTask == null) {
+      _connectivityTask = new Task("Connectivity Task");
+
+      _connectivityTask.addMeasure(ConnectivityMeasure(ProbeRegistry.CONNECTIVITY_MEASURE, name: 'Connectivity'));
+      _connectivityTask.addMeasure(BluetoothMeasure(ProbeRegistry.BLUETOOTH_MEASURE, name: 'Nearby Bluetooth Devices'));
+    }
+    return _connectivityTask;
   }
 
   Task _appTask;
@@ -279,7 +265,7 @@ class Sensing implements ProbeListener {
       _appTask = new Task("Application Task");
       PollingProbeMeasure am = new PollingProbeMeasure(ProbeRegistry.APPS_MEASURE);
       am.name = "Apps";
-      am.frequency = 5 * 1000; // 8 secs.
+      am.frequency = 5 * 1000;
       _appTask.addMeasure(am);
     }
     return _appTask;
@@ -288,7 +274,7 @@ class Sensing implements ProbeListener {
   Task _commTask;
 
   /// A task collecting information about communication. So far only collecting:
-  /// * messages (sms) done on this device
+  /// - messages (sms) done on this device
   ///
   /// Works only on Android.
   Task get commTask {
@@ -307,9 +293,7 @@ class Sensing implements ProbeListener {
   Task get locationTask {
     if (_locationTask == null) {
       _locationTask = new Task("Location Task");
-      LocationMeasure lm = new LocationMeasure(ProbeRegistry.LOCATION_MEASURE);
-      lm.name = 'Location';
-      _locationTask.addMeasure(lm);
+      _locationTask.addMeasure(LocationMeasure(ProbeRegistry.LOCATION_MEASURE, name: 'Location'));
     }
     return _locationTask;
   }

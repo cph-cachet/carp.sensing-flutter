@@ -30,7 +30,7 @@ Below is a very simple / minimum example.
 ## Example
 
 
-``` dart
+```dart
 // Import package
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
@@ -57,7 +57,7 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 ```
 
 There is a very simple [example](example) app which shows how a study can be created with different taks and measures.
-This app just prints the sensing data to a simple console screen.
+This app just prints the sensing data to a console screen on the phone.
  
 ## Features and bugs
 

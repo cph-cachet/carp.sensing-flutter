@@ -1,3 +1,7 @@
+## 0.2.0 October 2018
+* refactor of organization of classes into libraries 
+* complete API documentation
+
 ## 0.1.1 October 2018
 * small improvements incl. documentation
 
@@ -5,8 +9,7 @@
 * removal of all remote backend code to separate packages
 
 ## 0.0.1 September 2018
-
 * Initial version by Jakob E. Bardram 
-* Transfering the carp.sensing-flutter framework 
+* Transferring the carp.sensing-flutter framework 
 * General refactor and clean-up
 

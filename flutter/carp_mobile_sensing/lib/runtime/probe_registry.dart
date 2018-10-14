@@ -4,25 +4,18 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
-import 'package:carp_mobile_sensing/runtime/probes/environment/light_probe.dart';
-import 'package:carp_mobile_sensing/runtime/probes/hardware/screen_probe.dart';
-import 'package:carp_mobile_sensing/runtime/probes/location/location_probe.dart';
-import 'package:carp_mobile_sensing/runtime/probes/apps/apps_probe.dart';
-import 'package:carp_mobile_sensing/runtime/probes/communication/text_messages_probe.dart';
+
+part of runtime;
 
 //TODO : change probes to use Dart Isolates in order to support dynamic class loading (and isolation).
-/**
- * The [ProbeRegistry] can create an instance of a relevant probe based on the measure type.
- * Right now registration of probes has to be done manually (i.e., by editing this classe).
- *
- * Later this will be implemented using Dart Isolates.
- */
+/// The [ProbeRegistry] can create an instance of a relevant probe based on the measure type.
+///
+/// Right now registration of probes has to be done manually.
+///Later this will be implemented using Dart Isolates.
 class ProbeRegistry {
   static const String MEASURE = "measure";
   static const String STRING_MEASURE = "string";
   static const String ERROR_MEASURE = "error";
-  static const String USER_MEASURE = "user";
   static const String MEMORY_MEASURE = "memory";
   static const String PEDOMETER_MEASURE = "stepcount";
   static const String ACCELEROMETER_MEASURE = "accelerometer";
@@ -33,7 +26,8 @@ class ProbeRegistry {
   static const String CONNECTIVITY_MEASURE = "connectivity";
   static const String LIGHT_MEASURE = "light";
   static const String APPS_MEASURE = "apps";
-  static const String TEXT_MESSAGE_MEASURE = "sms";
+  static const String TEXT_MESSAGE_LOG_MEASURE = "text_message_log";
+  static const String TEXT_MESSAGE_MEASURE = "text_message";
   static const String SCREEN_MEASURE = "screen";
   static const String PHONELOG_MEASURE = "phone_log";
 
@@ -53,9 +47,6 @@ class ProbeRegistry {
     Probe _probe;
 
     switch (type) {
-      case USER_MEASURE:
-        _probe = new UserProbe(measure);
-        break;
       case MEMORY_MEASURE:
         _probe = new MemoryPollingProbe(measure);
         break;
@@ -85,6 +76,9 @@ class ProbeRegistry {
         break;
       case APPS_MEASURE:
         _probe = new AppsProbe(measure);
+        break;
+      case TEXT_MESSAGE_LOG_MEASURE:
+        _probe = new TextMessageLogProbe(measure);
         break;
       case TEXT_MESSAGE_MEASURE:
         _probe = new TextMessageProbe(measure);

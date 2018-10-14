@@ -4,18 +4,13 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
-import 'package:carp_mobile_sensing/domain/serialization.dart';
-import 'package:json_annotation/json_annotation.dart';
 
-part 'study.g.dart';
+part of domain;
 
-/**
- * The [Study] holds information about the study to be performed on this device.
- * The study may be fetched in a [StudyManager] who knows how to fetch a study protocol for this device.
- *
- * A [Study] mainly consists of a list of [Task]s.
- */
+/// The [Study] holds information about the study to be performed on this device.
+/// The study may be fetched in a [StudyManager] who knows how to fetch a study protocol for this device.
+///
+/// A [Study] mainly consists of a list of [Task]s.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class Study extends Serializable {
   String id;

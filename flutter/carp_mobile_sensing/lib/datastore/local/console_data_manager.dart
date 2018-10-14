@@ -4,9 +4,8 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-import 'dart:async';
-import 'dart:convert';
-import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+
+part of datastore;
 
 /// A very simple data manager that just "uploads" the data to the console (i.e., prints it).
 /// Used mainly for testing and debugging purposes.

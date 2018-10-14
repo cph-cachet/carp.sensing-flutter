@@ -6,6 +6,7 @@
 .packages
 .pub/
 pubspec.lock
+doc/
 
 
 # IntelliJ

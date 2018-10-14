@@ -4,11 +4,8 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
-import 'package:carp_mobile_sensing/domain/serialization.dart';
-import 'package:json_annotation/json_annotation.dart';
 
-part 'tasks.g.dart';
+part of domain;
 
 /// A [Task] holds information about each task to be executed as part of a [Study].
 /// Each [Task] has a set of [Measure]s to be done as part of this task.

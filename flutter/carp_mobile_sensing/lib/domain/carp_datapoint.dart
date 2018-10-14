@@ -5,10 +5,7 @@
  * found in the LICENSE file.
  */
 
-import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
-import 'package:json_annotation/json_annotation.dart';
-
-part 'carp_datapoint.g.dart';
+part of domain;
 
 /// A CARP Data Point which can be uploaded to a CARP data endpoint.
 ///
