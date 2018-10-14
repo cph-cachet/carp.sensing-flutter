@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'firebase_data_endpoint.dart';
+part of carp_firebase_backend;
 
 // **************************************************************************
 // JsonSerializableGenerator

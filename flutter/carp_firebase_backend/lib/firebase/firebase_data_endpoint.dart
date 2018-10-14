@@ -4,10 +4,8 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-import 'package:carp_sensing/carp_sensing.dart';
-import 'package:json_annotation/json_annotation.dart';
 
-part 'firebase_data_endpoint.g.dart';
+part of carp_firebase_backend;
 
 /// Specify a data endpoint for the Google Firebase Storage for storing files.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
