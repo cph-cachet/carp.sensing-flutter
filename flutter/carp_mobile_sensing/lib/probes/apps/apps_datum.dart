@@ -10,14 +10,16 @@ part of apps;
 /// Holds a list of names of apps installed on the device.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class AppsDatum extends CARPDatum {
-  static CARPDataFormat CARP_DATA_FORMAT = new CARPDataFormat(NameSpace.CARP_NAMESPACE, ProbeRegistry.APPS_MEASURE);
+  static CARPDataFormat CARP_DATA_FORMAT =
+      new CARPDataFormat(NameSpace.CARP_NAMESPACE, ProbeRegistry.APPS_MEASURE);
 
   /// List of names on installed apps.
   List<String> installedApps;
 
   AppsDatum() : super();
 
-  factory AppsDatum.fromJson(Map<String, dynamic> json) => _$AppsDatumFromJson(json);
+  factory AppsDatum.fromJson(Map<String, dynamic> json) =>
+      _$AppsDatumFromJson(json);
   Map<String, dynamic> toJson() => _$AppsDatumToJson(this);
 
   @override

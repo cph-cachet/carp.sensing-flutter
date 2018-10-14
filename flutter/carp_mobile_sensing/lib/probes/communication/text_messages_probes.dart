@@ -25,7 +25,8 @@ class TextMessageLogProbe extends DatumProbe {
     return tmld;
   }
 
-  TextMessage smsToTextMessage(SmsMessage sms) => TextMessage.fromSmsMessage(sms);
+  TextMessage smsToTextMessage(SmsMessage sms) =>
+      TextMessage.fromSmsMessage(sms);
 }
 
 /// The [TextMessageProbe] listens to SMS messages and collects a
@@ -46,7 +47,8 @@ class TextMessageProbe extends StreamSubscriptionListeningProbe {
     super.start();
 
     // starting the subscription to the battery - triggered every time the charging level changes.
-    subscription = _receiver.onSmsReceived.listen(onData, onError: onError, onDone: onDone, cancelOnError: true);
+    subscription = _receiver.onSmsReceived
+        .listen(onData, onError: onError, onDone: onDone, cancelOnError: true);
   }
 
   void onData(dynamic event) async {

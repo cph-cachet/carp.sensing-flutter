@@ -20,6 +20,7 @@ class SensorMeasure extends PollingProbeMeasure {
   SensorMeasure(measureType) : super(measureType);
 
   static Function get fromJsonFunction => _$SensorMeasureFromJson;
-  factory SensorMeasure.fromJson(Map<String, dynamic> json) => _$SensorMeasureFromJson(json);
+  factory SensorMeasure.fromJson(Map<String, dynamic> json) =>
+      _$SensorMeasureFromJson(json);
   Map<String, dynamic> toJson() => _$SensorMeasureToJson(this);
 }

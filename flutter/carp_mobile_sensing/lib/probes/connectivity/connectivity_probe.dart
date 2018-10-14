@@ -25,8 +25,8 @@ class ConnectivityProbe extends StreamSubscriptionListeningProbe {
     super.start();
 
     // starting the subscription to the network.
-    subscription =
-        _connectivity.onConnectivityChanged.listen(onData, onError: onError, onDone: onDone, cancelOnError: true);
+    subscription = _connectivity.onConnectivityChanged
+        .listen(onData, onError: onError, onDone: onDone, cancelOnError: true);
   }
 
   void onData(dynamic event) async {

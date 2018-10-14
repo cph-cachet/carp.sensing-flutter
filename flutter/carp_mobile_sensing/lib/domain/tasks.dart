@@ -19,7 +19,8 @@ class Task extends Serializable {
   }
 
   static Function get fromJsonFunction => _$TaskFromJson;
-  factory Task.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(json['\$'].toString(), json);
+  factory Task.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory.fromJson(json['\$'].toString(), json);
   Map<String, dynamic> toJson() => _$TaskToJson(this);
 
   /// A list of [Measure]s to be done as part of this task.
@@ -53,7 +54,8 @@ class ParallelTask extends Task {
   }
 
   static Function get fromJsonFunction => _$ParallelTaskFromJson;
-  factory ParallelTask.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(json['\$'].toString(), json);
+  factory ParallelTask.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory.fromJson(json['\$'].toString(), json);
   Map<String, dynamic> toJson() => _$ParallelTaskToJson(this);
 }
 
@@ -65,7 +67,8 @@ class SequentialTask extends Task {
   }
 
   static Function get fromJsonFunction => _$SequentialTaskFromJson;
-  factory SequentialTask.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(json['\$'].toString(), json);
+  factory SequentialTask.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory.fromJson(json['\$'].toString(), json);
   //factory SequentialTask.fromJson(Map<String, dynamic> json) => _$SequentialTaskFromJson(json);
   Map<String, dynamic> toJson() => _$SequentialTaskToJson(this);
 }

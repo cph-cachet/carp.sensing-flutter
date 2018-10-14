@@ -30,7 +30,8 @@ class AccelerometerProbe extends ListeningProbe {
     super.start();
 
     // starting the subscription to the accelerometer events
-    _subscription = accelerometerEvents.listen(_onData, onError: _onError, onDone: _onDone, cancelOnError: true);
+    _subscription = accelerometerEvents.listen(_onData,
+        onError: _onError, onDone: _onDone, cancelOnError: true);
 
     // pause it for now.
     _subscription.pause();
@@ -74,7 +75,8 @@ class AccelerometerProbe extends ListeningProbe {
 
   void _onData(AccelerometerEvent event) async {
     if (_data != null) {
-      AccelerometerDatum _ad = new AccelerometerDatum(x: event.x, y: event.y, z: event.z);
+      AccelerometerDatum _ad =
+          new AccelerometerDatum(x: event.x, y: event.y, z: event.z);
       _data.addDatum(_ad);
     }
   }
@@ -112,7 +114,8 @@ class GyroscopeProbe extends ListeningProbe {
     super.start();
 
     // starting the subscription to the accelerometer events
-    _subscription = gyroscopeEvents.listen(_onData, onError: _onError, onDone: _onDone, cancelOnError: true);
+    _subscription = gyroscopeEvents.listen(_onData,
+        onError: _onError, onDone: _onDone, cancelOnError: true);
 
     // pause it for now.
     _subscription.pause();
@@ -156,7 +159,8 @@ class GyroscopeProbe extends ListeningProbe {
 
   void _onData(GyroscopeEvent event) async {
     if (data != null) {
-      GyroscopeDatum _gd = new GyroscopeDatum(x: event.x, y: event.y, z: event.z);
+      GyroscopeDatum _gd =
+          new GyroscopeDatum(x: event.x, y: event.y, z: event.z);
       data.addDatum(_gd);
     }
   }

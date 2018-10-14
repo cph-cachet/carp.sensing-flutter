@@ -28,7 +28,8 @@ class PedometerProbe extends ListeningProbe {
     _pedometer = new Pedometer();
 
     // start listening to the pedometer, but pause until the probe is started
-    _subscription = _pedometer.stepCountStream.listen(_onData, onError: _onError, onDone: _onDone, cancelOnError: true);
+    _subscription = _pedometer.stepCountStream.listen(_onData,
+        onError: _onError, onDone: _onDone, cancelOnError: true);
     _startTime = DateTime.now();
     _subscription.pause();
   }

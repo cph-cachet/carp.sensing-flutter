@@ -26,7 +26,8 @@ class CARPDataPoint {
     this.carpBody = datum;
   }
 
-  factory CARPDataPoint.fromJson(Map<String, dynamic> json) => _$CARPDataPointFromJson(json);
+  factory CARPDataPoint.fromJson(Map<String, dynamic> json) =>
+      _$CARPDataPointFromJson(json);
   Map<String, dynamic> toJson() => _$CARPDataPointToJson(this);
 }
 
@@ -42,9 +43,11 @@ class CARPDataPointHeader {
   DateTime endTime;
 
   // Create a new [CARPDataPointHeader]. [studyId] and [userId] are required.
-  CARPDataPointHeader(this.studyId, this.userId, {this.deviceRoleName, this.triggerId, this.startTime, this.endTime});
+  CARPDataPointHeader(this.studyId, this.userId,
+      {this.deviceRoleName, this.triggerId, this.startTime, this.endTime});
 
-  factory CARPDataPointHeader.fromJson(Map<String, dynamic> json) => _$CARPDataPointHeaderFromJson(json);
+  factory CARPDataPointHeader.fromJson(Map<String, dynamic> json) =>
+      _$CARPDataPointHeaderFromJson(json);
   Map<String, dynamic> toJson() => _$CARPDataPointHeaderToJson(this);
 }
 
@@ -54,9 +57,11 @@ class CARPDataFormat {
   String name;
 
   CARPDataFormat(this.namepace, this.name);
-  factory CARPDataFormat.unknown() => new CARPDataFormat(NameSpace.UNKNOWN_NAMESPACE, "unknown");
+  factory CARPDataFormat.unknown() =>
+      new CARPDataFormat(NameSpace.UNKNOWN_NAMESPACE, "unknown");
 
-  factory CARPDataFormat.fromJson(Map<String, dynamic> json) => _$CARPDataFormatFromJson(json);
+  factory CARPDataFormat.fromJson(Map<String, dynamic> json) =>
+      _$CARPDataFormatFromJson(json);
   Map<String, dynamic> toJson() => _$CARPDataFormatToJson(this);
 
   @override

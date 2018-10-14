@@ -13,7 +13,8 @@ class BatteryMeasure extends ProbeMeasure {
   BatteryMeasure(String measureType, {name}) : super(measureType, name: name);
 
   static Function get fromJsonFunction => _$BatteryMeasureFromJson;
-  factory BatteryMeasure.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(json['\$'].toString(), json);
+  factory BatteryMeasure.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory.fromJson(json['\$'].toString(), json);
   Map<String, dynamic> toJson() => _$BatteryMeasureToJson(this);
 }
 
@@ -22,6 +23,7 @@ class ScreenMeasure extends ProbeMeasure {
   ScreenMeasure(String measureType, {name}) : super(measureType, name: name);
 
   static Function get fromJsonFunction => _$ScreenMeasureFromJson;
-  factory ScreenMeasure.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(json['\$'].toString(), json);
+  factory ScreenMeasure.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory.fromJson(json['\$'].toString(), json);
   Map<String, dynamic> toJson() => _$ScreenMeasureToJson(this);
 }

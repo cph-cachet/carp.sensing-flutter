@@ -25,7 +25,8 @@ class BatteryProbe extends StreamSubscriptionListeningProbe {
     super.start();
 
     // starting the subscription to the battery - triggered every time the charging level changes.
-    subscription = _battery.onBatteryStateChanged.listen(onData, onError: onError, onDone: onDone, cancelOnError: true);
+    subscription = _battery.onBatteryStateChanged
+        .listen(onData, onError: onError, onDone: onDone, cancelOnError: true);
   }
 
   void onData(dynamic event) async {

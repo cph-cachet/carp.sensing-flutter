@@ -10,8 +10,8 @@ part of connectivity;
 /// A [Datum] that holds connectivity status of the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ConnectivityDatum extends CARPDatum {
-  static CARPDataFormat CARP_DATA_FORMAT =
-      new CARPDataFormat(NameSpace.CARP_NAMESPACE, ProbeRegistry.CONNECTIVITY_MEASURE);
+  static CARPDataFormat CARP_DATA_FORMAT = new CARPDataFormat(
+      NameSpace.CARP_NAMESPACE, ProbeRegistry.CONNECTIVITY_MEASURE);
 
   /// The status of the connectivity.
   /// - WiFi: Device connected via Wi-Fi
@@ -21,7 +21,8 @@ class ConnectivityDatum extends CARPDatum {
 
   ConnectivityDatum() : super();
 
-  factory ConnectivityDatum.fromJson(Map<String, dynamic> json) => _$ConnectivityDatumFromJson(json);
+  factory ConnectivityDatum.fromJson(Map<String, dynamic> json) =>
+      _$ConnectivityDatumFromJson(json);
   Map<String, dynamic> toJson() => _$ConnectivityDatumToJson(this);
 
   CARPDataFormat getCARPDataFormat() => CARP_DATA_FORMAT;
@@ -32,8 +33,8 @@ class ConnectivityDatum extends CARPDatum {
 /// A [Datum] that holds information on nearby Bluetoth devices.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class BluetoothDatum extends CARPDatum {
-  static CARPDataFormat CARP_DATA_FORMAT =
-      new CARPDataFormat(NameSpace.CARP_NAMESPACE, ProbeRegistry.BLUETOOTH_MEASURE);
+  static CARPDataFormat CARP_DATA_FORMAT = new CARPDataFormat(
+      NameSpace.CARP_NAMESPACE, ProbeRegistry.BLUETOOTH_MEASURE);
 
   /// The bluetooth id of the nearby device.
   String bluetoothDeviceId;
@@ -59,7 +60,8 @@ class BluetoothDatum extends CARPDatum {
 
   BluetoothDatum() : super();
 
-  factory BluetoothDatum.fromJson(Map<String, dynamic> json) => _$BluetoothDatumFromJson(json);
+  factory BluetoothDatum.fromJson(Map<String, dynamic> json) =>
+      _$BluetoothDatumFromJson(json);
   Map<String, dynamic> toJson() => _$BluetoothDatumToJson(this);
 
   CARPDataFormat getCARPDataFormat() => CARP_DATA_FORMAT;

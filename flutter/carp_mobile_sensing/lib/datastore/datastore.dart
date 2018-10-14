@@ -42,7 +42,8 @@ abstract class AbstractDataManager implements DataManager {
   }
 
   /// JSON encode an object.
-  String jsonEncode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
+  String jsonEncode(Object object) =>
+      const JsonEncoder.withIndent(' ').convert(object);
 }
 
 /// A registry of [DataManager]s.

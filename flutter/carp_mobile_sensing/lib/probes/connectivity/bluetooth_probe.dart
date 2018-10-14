@@ -27,7 +27,8 @@ class BluetoothProbe extends ListeningProbe {
   Future start() async {
     super.start();
 
-    timeout = new Duration(milliseconds: (measure as BluetoothMeasure).duration);
+    timeout =
+        new Duration(milliseconds: (measure as BluetoothMeasure).duration);
 
     int _frequency = (measure as BluetoothMeasure).frequency;
     frequency = new Duration(milliseconds: _frequency);
@@ -56,7 +57,8 @@ class BluetoothProbe extends ListeningProbe {
       // starting the scanning event loop, will run the [timeout] duration
       _subscription = _flutterBlue
           .scan(scanMode: ScanMode.lowLatency, timeout: timeout)
-          .listen(_onData, onError: _onError, onDone: _onDone, cancelOnError: true);
+          .listen(_onData,
+              onError: _onError, onDone: _onDone, cancelOnError: true);
     });
   }
 
