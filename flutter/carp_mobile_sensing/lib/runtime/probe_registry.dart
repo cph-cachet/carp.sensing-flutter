@@ -17,7 +17,7 @@ class ProbeRegistry {
   static const String STRING_MEASURE = "string";
   static const String ERROR_MEASURE = "error";
   static const String MEMORY_MEASURE = "memory";
-  static const String PEDOMETER_MEASURE = "stepcount";
+  static const String PEDOMETER_MEASURE = "pedometer";
   static const String ACCELEROMETER_MEASURE = "accelerometer";
   static const String GYROSCOPE_MEASURE = "gyroscope";
   static const String BATTERY_MEASURE = "battery";
@@ -30,6 +30,10 @@ class ProbeRegistry {
   static const String TEXT_MESSAGE_MEASURE = "text_message";
   static const String SCREEN_MEASURE = "screen";
   static const String PHONELOG_MEASURE = "phone_log";
+  static const String SOUND_MEASURE = "sound";
+  static const String ACTIVITY_MEASURE = "activity";
+  static const String APPLE_HEALTHKIT_MEASURE = "apple_healthkit";
+  static const String GOOGLE_FIT_MEASURE = "google_fit";
 
   static List<Probe> _probes = new List();
 
