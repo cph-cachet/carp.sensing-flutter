@@ -8,7 +8,7 @@
 part of sensors;
 
 /// The [PedometerProbe] listens to the hardware step counts.
-/// It samples step counts periodically, as specified by [frequency] in [PedometerMeasure] and
+/// It samples step counts periodically, as specified by [frequency] in [SensorMeasure] and
 /// reports the step count in a [PedometerDatum] for the duration of the period.
 class PedometerProbe extends ListeningProbe {
   Pedometer _pedometer;
@@ -28,8 +28,7 @@ class PedometerProbe extends ListeningProbe {
     _pedometer = new Pedometer();
 
     // start listening to the pedometer, but pause until the probe is started
-    _subscription = _pedometer.stepCountStream.listen(_onData,
-        onError: _onError, onDone: _onDone, cancelOnError: true);
+    _subscription = _pedometer.stepCountStream.listen(_onData, onError: _onError, onDone: _onDone, cancelOnError: true);
     _startTime = DateTime.now();
     _subscription.pause();
   }

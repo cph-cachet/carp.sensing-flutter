@@ -13,7 +13,7 @@ part of communication;
 /// If you want to listen to text messages being received,
 /// use a [TextMessageProbe] instead.
 class TextMessageLogProbe extends DatumProbe {
-  TextMessageLogProbe(ProbeMeasure _measure) : super(_measure);
+  TextMessageLogProbe(TextMessageMeasure _measure) : super(_measure);
 
   @override
   Future<Datum> getDatum() async {
@@ -21,16 +21,19 @@ class TextMessageLogProbe extends DatumProbe {
     List<SmsMessage> _messages = await query.getAllSms;
 
     TextMessageLogDatum tmld = new TextMessageLogDatum();
-    tmld.textMessageLog = _messages.map(smsToTextMessage).toList();
+    tmld.textMessageLog = _messages.map(_smsToTextMessage).toList();
     return tmld;
   }
 
-  TextMessage smsToTextMessage(SmsMessage sms) =>
-      TextMessage.fromSmsMessage(sms);
+  TextMessage _smsToTextMessage(SmsMessage sms) {
+    TextMessage msg = TextMessage.fromSmsMessage(sms);
+    if (!(measure as TextMessageMeasure).collectBodyOfMessage) msg.body = "";
+    return msg;
+  }
 }
 
 /// The [TextMessageProbe] listens to SMS messages and collects a
-/// [TextMessageDatum] everytime a new SMS message is received.
+/// [TextMessageDatum] every time a new SMS message is received.
 class TextMessageProbe extends StreamSubscriptionListeningProbe {
   SmsReceiver _receiver;
 
@@ -46,9 +49,7 @@ class TextMessageProbe extends StreamSubscriptionListeningProbe {
   Future start() async {
     super.start();
 
-    // starting the subscription to the battery - triggered every time the charging level changes.
-    subscription = _receiver.onSmsReceived
-        .listen(onData, onError: onError, onDone: onDone, cancelOnError: true);
+    subscription = _receiver.onSmsReceived.listen(onData, onError: onError, onDone: onDone, cancelOnError: true);
   }
 
   void onData(dynamic event) async {
@@ -56,6 +57,7 @@ class TextMessageProbe extends StreamSubscriptionListeningProbe {
     SmsMessage sms = event;
 
     TextMessageDatum _tmd = TextMessageDatum(TextMessage.fromSmsMessage(sms));
+    if (!(measure as TextMessageMeasure).collectBodyOfMessage) _tmd.textMessage.body = "";
 
     this.notifyAllListeners(_tmd);
   }

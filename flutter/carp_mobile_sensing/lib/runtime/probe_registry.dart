@@ -11,7 +11,7 @@ part of runtime;
 /// The [ProbeRegistry] can create an instance of a relevant probe based on the measure type.
 ///
 /// Right now registration of probes has to be done manually.
-///Later this will be implemented using Dart Isolates.
+/// Later this will be implemented using Dart Isolates.
 class ProbeRegistry {
   static const String MEASURE = "measure";
   static const String STRING_MEASURE = "string";

@@ -21,6 +21,8 @@ Note that there are two issues with Android to consider:
 
 ## Documentation
 
+The [Dart API doc](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/) describes the different libraries and classes.
+
 The [wiki](https://github.com/cph-cachet/carp.sensing/wiki) contains detailed documentation on the CARP Mobile Sensing Framework, including 
 the [domain model](https://github.com/cph-cachet/carp.sensing/wiki/Domain-Model), its built-in [probes](https://github.com/cph-cachet/carp.sensing/wiki/Probes), 
 and how to [extend](https://github.com/cph-cachet/carp.sensing/wiki/Extending) it.

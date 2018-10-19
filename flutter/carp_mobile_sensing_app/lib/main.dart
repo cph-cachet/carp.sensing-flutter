@@ -6,6 +6,7 @@
  */
 import 'package:flutter/material.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+//import 'package:carp_firebase_backend/carp_firebase_backend.dart';
 
 void main() => runApp(new CARPMobileSensingApp());
 
@@ -120,14 +121,15 @@ class Sensing implements ProbeListener {
     console.log("Setting up '${study.name}'...");
 
     // specify the [DataEndPoint] for this study.
-    study.dataEndPoint = getDataEndpoint(DataEndPointType.PRINT);
+    study.dataEndPoint = getDataEndpoint(DataEndPointType.FILE);
 
     // add tasks to the study
-    // note that in this version, don't start the sensors (accelerometer, etc. - they simpley generate too much data....
+    // note that in this version, don't start the sensors (accelerometer, etc. - they simply generate too much data....
     //study.tasks.add(sensorTask);
     study.tasks.add(pedometerTask);
     study.tasks.add(hardwareTask);
     study.tasks.add(appTask);
+    study.tasks.add(connectivityTask);
     study.tasks.add(commTask);
     study.tasks.add(locationTask);
 
@@ -171,6 +173,20 @@ class Sensing implements ProbeListener {
         fileEndPoint.zip = true;
         fileEndPoint.encrypt = false;
         return fileEndPoint;
+      case DataEndPointType.FIREBASE:
+//        final FirebaseStorageDataEndPoint firebaseEndPoint = new FirebaseStorageDataEndPoint(DataEndPointType.FIREBASE);
+//        firebaseEndPoint.name = "Flutter Sensing Sandbox";
+//        firebaseEndPoint.uri = 'gs://flutter-sensing-sandbox.appspot.com';
+//        firebaseEndPoint.path = 'sensing/data';
+//        firebaseEndPoint.projectID = 'flutter-sensing-sandbox';
+//        firebaseEndPoint.webAPIKey = 'AIzaSyCGy6MeHkiv5XkBtMcMbtgGYOpf6ntNVE4';
+//        firebaseEndPoint.gcmSenderID = '201621881872';
+//        firebaseEndPoint.androidGoogleAppID = '1:201621881872:android:8e84e7ccfc85e121';
+//        firebaseEndPoint.iOSGoogleAppID = '1:159623150305:ios:4a213ef3dbd8997b';
+//        firebaseEndPoint.firebaseAuthenticationMethod = FireBaseAuthenticationMethods.PASSWORD;
+//        firebaseEndPoint.email = "jakob@bardram.net";
+//        firebaseEndPoint.password = "dumt_password";
+//        return firebaseEndPoint;
       default:
         return new DataEndPoint(DataEndPointType.PRINT);
     }
@@ -264,7 +280,7 @@ class Sensing implements ProbeListener {
     if (_appTask == null) {
       _appTask = new Task("Application Task");
       PollingProbeMeasure am = new PollingProbeMeasure(ProbeRegistry.APPS_MEASURE);
-      am.name = "Apps";
+      am.name = "Installed apps";
       am.frequency = 5 * 1000;
       _appTask.addMeasure(am);
     }
@@ -288,7 +304,6 @@ class Sensing implements ProbeListener {
       _commTask.addMeasure(tm_1);
 
       TextMessageMeasure tm_2 = new TextMessageMeasure(ProbeRegistry.TEXT_MESSAGE_MEASURE, name: "Text Messages");
-      tm_2.collectBodyOfMessage = true;
       _commTask.addMeasure(tm_2);
     }
     return _commTask;

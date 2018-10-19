@@ -9,8 +9,12 @@ part of communication;
 
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class TextMessageMeasure extends ProbeMeasure {
-  TextMessageMeasure(String measureType, {name})
-      : super(measureType, name: name);
+  TextMessageMeasure(String measureType, {name}) : super(measureType, name: name);
+
+  /// Specify if the body (i.e, the full text) should be collected.
+  ///
+  /// For privacy reasons, this should be set to false. True as default.
+  bool collectBodyOfMessage = true;
 
   static Function get fromJsonFunction => _$TextMessageMeasureFromJson;
   factory TextMessageMeasure.fromJson(Map<String, dynamic> json) =>
