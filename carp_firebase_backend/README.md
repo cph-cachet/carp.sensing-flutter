@@ -90,14 +90,14 @@ see [Using Packages](https://flutter.io/using-packages/).
 
 ## Using `carp_firebase_backend`
 
-First you should register the register a `FirebaseStorageDataManager` in the `DataManagerRegistry`.
+First you should register a `FirebaseStorageDataManager` in the `DataManagerRegistry`.
 
 ````dart
 DataManagerRegistry.register(DataEndPointType.FIREBASE, new FirebaseStorageDataManager());
 ````
 
 Then, you create a new `FirebaseStorageDataEndPoint` and add it as your `Study` data endpoint.
-`FirebaseStorageDataEndPoint` contians all the configuration needed to contract you GFS endpoint,
+`FirebaseStorageDataEndPoint` contains all the configuration needed to contact you GFS endpoint,
  as illustrated below. All of these configuration keys can be found in the _Projects Settings_ in the Firebase Console.
  Remember to register your app in Firebase, as described above.
  
@@ -128,7 +128,7 @@ _Google Sign-In_ is implemented (even though `FireBaseAuthenticationMethods` lis
 
 ````
 
-Note that a `FirebaseStorageDataEndPoint` extends the `FileDataEndPoint` class and paremeters related to 
+Note that a `FirebaseStorageDataEndPoint` extends the `FileDataEndPoint` class and parameters related to 
 how to create the files can be specified, including `bufferSize`, `zip`, and `encrypt`.
 In the example above, the file buffer size is set to 1 MB, which is zipped before upload.
 
