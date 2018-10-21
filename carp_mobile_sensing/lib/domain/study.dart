@@ -55,7 +55,8 @@ class DataEndPoint extends Serializable {
   DataEndPoint(this.type) : super();
 
   static Function get fromJsonFunction => _$DataEndPointFromJson;
-  factory DataEndPoint.fromJson(Map<String, dynamic> json) => _$DataEndPointFromJson(json);
+  factory DataEndPoint.fromJson(Map<String, dynamic> json) =>
+      _$DataEndPointFromJson(json);
   Map<String, dynamic> toJson() => _$DataEndPointToJson(this);
 }
 
@@ -90,7 +91,8 @@ class FileDataEndPoint extends DataEndPoint {
   FileDataEndPoint(String type) : super(type);
 
   static Function get fromJsonFunction => _$FileDataEndPointFromJson;
-  factory FileDataEndPoint.fromJson(Map<String, dynamic> json) => _$FileDataEndPointFromJson(json);
+  factory FileDataEndPoint.fromJson(Map<String, dynamic> json) =>
+      _$FileDataEndPointFromJson(json);
   Map<String, dynamic> toJson() => _$FileDataEndPointToJson(this);
 }
 
@@ -106,9 +108,11 @@ class RESTDataEndPoint extends DataEndPoint {
   UploadStrategy uploadStrategy = UploadStrategy.CONTINUOUSLY;
 
   /// Creates a [DataEndPoint]. [type] is defined in [DataEndPointType].
-  RESTDataEndPoint(String type, {this.uri, this.method, this.uploadStrategy}) : super(type);
+  RESTDataEndPoint(String type, {this.uri, this.method, this.uploadStrategy})
+      : super(type);
 
-  factory RESTDataEndPoint.fromJson(Map<String, dynamic> json) => _$RESTDataEndPointFromJson(json);
+  factory RESTDataEndPoint.fromJson(Map<String, dynamic> json) =>
+      _$RESTDataEndPointFromJson(json);
   Map<String, dynamic> toJson() => _$RESTDataEndPointToJson(this);
 }
 

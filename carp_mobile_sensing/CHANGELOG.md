@@ -1,6 +1,7 @@
 ## 0.2.1 October 2018
 * re-organization of github location and outline
-* improvements to `FileDataManager`
+* improvements to `FileDataManager` to avoid race conditions
+* improved API documentation
 
 
 ## 0.2.0 October 2018

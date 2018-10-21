@@ -49,7 +49,8 @@ class TextMessageProbe extends StreamSubscriptionListeningProbe {
   Future start() async {
     super.start();
 
-    subscription = _receiver.onSmsReceived.listen(onData, onError: onError, onDone: onDone, cancelOnError: true);
+    subscription = _receiver.onSmsReceived
+        .listen(onData, onError: onError, onDone: onDone, cancelOnError: true);
   }
 
   void onData(dynamic event) async {
@@ -57,7 +58,8 @@ class TextMessageProbe extends StreamSubscriptionListeningProbe {
     SmsMessage sms = event;
 
     TextMessageDatum _tmd = TextMessageDatum(TextMessage.fromSmsMessage(sms));
-    if (!(measure as TextMessageMeasure).collectBodyOfMessage) _tmd.textMessage.body = "";
+    if (!(measure as TextMessageMeasure).collectBodyOfMessage)
+      _tmd.textMessage.body = "";
 
     this.notifyAllListeners(_tmd);
   }

@@ -12,6 +12,3 @@ import 'package:json_annotation/json_annotation.dart';
 part 'firebase/firebase_data_endpoint.dart';
 part 'firebase/firebase_data_manager.dart';
 part 'carp_firebase_backend.g.dart';
-
-//export 'package:carp_firebase_backend/firebase/firebase_data_endpoint.dart';
-//export 'package:carp_firebase_backend/firebase/firebase_data_manager.dart';
