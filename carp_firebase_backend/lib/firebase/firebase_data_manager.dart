@@ -15,7 +15,7 @@ final FirebaseAuth _auth = FirebaseAuth.instance;
 /// files to the local device.
 ///
 /// Files are transferred when the device is online and buffered when offline.
-/// Once the file has been transfered, it is deleted on the local device.
+/// Once the file has been transferred to Firebase, it is deleted on the local device.
 class FirebaseStorageDataManager extends AbstractDataManager implements FileDataManagerListener {
   FileDataManager _fileDataManager;
   FirebaseStorageDataEndPoint _firebaseStorageDataEndPoint;
@@ -123,8 +123,7 @@ class FirebaseStorageDataManager extends AbstractDataManager implements FileData
   Future<Uri> _uploadFileToFirestore(String localFilePath) async {
     final String filename = localFilePath.substring(localFilePath.lastIndexOf('/') + 1);
 
-    print('>>_uploadFileToFirestore - filename     : $filename');
-    print('                         - firebasePath : $firebasePath');
+    print("Upload to Firestore started - path : '$firebasePath', filename : '$filename'");
 
     final StorageReference ref = FirebaseStorage.instance.ref().child(firebasePath).child(filename);
     final File file = new File(localFilePath);
@@ -132,7 +131,6 @@ class FirebaseStorageDataManager extends AbstractDataManager implements FileData
     final String studyID = study.id;
     final String userID = (await user).email;
 
-    print("ref = ${ref.getBucket()}");
     final StorageUploadTask uploadTask = ref.putFile(
       file,
       new StorageMetadata(
@@ -145,10 +143,10 @@ class FirebaseStorageDataManager extends AbstractDataManager implements FileData
 
     // await the upload is successful
     final Uri downloadUrl = (await uploadTask.onComplete).uploadSessionUri;
-    print('>>_uploadFileToFirestore - file uploaded, uri  : ${downloadUrl.path}');
+    print("Upload to Firestore finished - remote file uri  : ${downloadUrl.path}'");
     // then delete the local file.
     file.delete();
-    print('                         - file deleted : ${file.path}');
+    print("File deleted : ${file.path}");
 
     return downloadUrl;
 

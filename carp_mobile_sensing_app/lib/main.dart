@@ -6,7 +6,7 @@
  */
 import 'package:flutter/material.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
-//import 'package:carp_firebase_backend/carp_firebase_backend.dart';
+import 'package:carp_firebase_backend/carp_firebase_backend.dart';
 
 void main() => runApp(new CARPMobileSensingApp());
 
@@ -98,13 +98,19 @@ class Console extends State<ConsolePage> {
 }
 
 /// This class implements the sensing incl. setting up a [Study] with [Task]s and [Measure]s.
+///
+///
 /// Note that it implements a [ProbeListener] and hence listen on any data created by the probes.
 /// This is used to write to a log, which is displayed in a simple scrollable text view.
+/// This example uses a [FirebaseStorageDataManager] and code for registry and creation is also included.
 class Sensing implements ProbeListener {
   Console console;
   StudyExecutor executor;
 
-  Sensing(this.console);
+  Sensing(this.console) {
+    // Register a [FirebaseStorageDataManager] in the [DataManagerRegistry].
+    DataManagerRegistry.register(DataEndPointType.FIREBASE, new FirebaseStorageDataManager());
+  }
 
   /// Callback method called by [ProbeListener]s
   void notify(Datum datum) {
@@ -121,11 +127,13 @@ class Sensing implements ProbeListener {
     console.log("Setting up '${study.name}'...");
 
     // specify the [DataEndPoint] for this study.
-    study.dataEndPoint = getDataEndpoint(DataEndPointType.FILE);
+    study.dataEndPoint = getDataEndpoint(DataEndPointType.FIREBASE);
 
     // add tasks to the study
-    // note that in this version, don't start the sensors (accelerometer, etc. - they simply generate too much data....
-    //study.tasks.add(sensorTask);
+
+    // note that in this version, we start the sensors (accelerometer, etc.)
+    // in order to generate a lot of data quickly for testsing pusposes
+    study.tasks.add(sensorTask);
     study.tasks.add(pedometerTask);
     study.tasks.add(hardwareTask);
     study.tasks.add(appTask);
@@ -156,7 +164,7 @@ class Sensing implements ProbeListener {
   Study _study;
   Study get study {
     if (_study == null) {
-      _study = new Study("1234", "user@dtu.dk", name: "Test study #1");
+      _study = new Study("983475-17", "user@dtu.dk", name: "Test study #1");
     }
     return _study;
   }
@@ -174,19 +182,22 @@ class Sensing implements ProbeListener {
         fileEndPoint.encrypt = false;
         return fileEndPoint;
       case DataEndPointType.FIREBASE:
-//        final FirebaseStorageDataEndPoint firebaseEndPoint = new FirebaseStorageDataEndPoint(DataEndPointType.FIREBASE);
-//        firebaseEndPoint.name = "Flutter Sensing Sandbox";
-//        firebaseEndPoint.uri = 'gs://flutter-sensing-sandbox.appspot.com';
-//        firebaseEndPoint.path = 'sensing/data';
-//        firebaseEndPoint.projectID = 'flutter-sensing-sandbox';
-//        firebaseEndPoint.webAPIKey = 'AIzaSyCGy6MeHkiv5XkBtMcMbtgGYOpf6ntNVE4';
-//        firebaseEndPoint.gcmSenderID = '201621881872';
-//        firebaseEndPoint.androidGoogleAppID = '1:201621881872:android:8e84e7ccfc85e121';
-//        firebaseEndPoint.iOSGoogleAppID = '1:159623150305:ios:4a213ef3dbd8997b';
-//        firebaseEndPoint.firebaseAuthenticationMethod = FireBaseAuthenticationMethods.PASSWORD;
-//        firebaseEndPoint.email = "jakob@bardram.net";
-//        firebaseEndPoint.password = "dumt_password";
-//        return firebaseEndPoint;
+        final FirebaseStorageDataEndPoint firebaseEndPoint = new FirebaseStorageDataEndPoint(DataEndPointType.FIREBASE,
+            name: "Flutter Sensing Sandbox",
+            uri: 'gs://flutter-sensing-sandbox.appspot.com',
+            path: 'sensing/data',
+            projectID: 'flutter-sensing-sandbox',
+            webAPIKey: 'AIzaSyCGy6MeHkiv5XkBtMcMbtgGYOpf6ntNVE4',
+            gcmSenderID: '201621881872',
+            androidGoogleAppID: '1:201621881872:android:8e84e7ccfc85e121',
+            iOSGoogleAppID: '1:159623150305:ios:4a213ef3dbd8997b',
+            firebaseAuthenticationMethod: FireBaseAuthenticationMethods.PASSWORD,
+            email: "jakob@bardram.net",
+            password: "dumt_password");
+
+        firebaseEndPoint.bufferSize = 100 * 1000;
+        firebaseEndPoint.zip = true;
+        return firebaseEndPoint;
       default:
         return new DataEndPoint(DataEndPointType.PRINT);
     }

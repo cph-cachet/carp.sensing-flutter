@@ -59,3 +59,10 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
+
+// Firebase suppoort, using firebase_auth plugin
+// see https://pub.dartlang.org/packages/firebase_auth
+apply plugin: 'com.google.gms.google-services'
+// SDK 15 vs. 16 conflict resolution
+// See https://github.com/evollu/react-native-fcm/issues/1026
+com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true

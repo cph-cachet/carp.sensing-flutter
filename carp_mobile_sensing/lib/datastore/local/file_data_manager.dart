@@ -18,6 +18,8 @@ class FileDataManager extends AbstractDataManager {
   File _file;
   IOSink _sink;
   bool _initialized = false;
+  //bool _flushing = false;
+  int _flushingSink = 0;
 
   List<FileDataManagerListener> _listener = new List<FileDataManagerListener>();
   void addFileDataManagerListener(FileDataManagerListener listener) {
@@ -52,8 +54,7 @@ class FileDataManager extends AbstractDataManager {
 
     print('Initializig FileDataManager...');
     print(' study file path : $_studyPath');
-    print(
-        ' buffer size     : ${_fileDataEndPoint.bufferSize.toString()} bytes');
+    print(' buffer size     : ${_fileDataEndPoint.bufferSize.toString()} bytes');
   }
 
   ///Returns the local study path on the device where files can be written.
@@ -62,9 +63,8 @@ class FileDataManager extends AbstractDataManager {
       // get local working directory
       final localApplicationDir = await getApplicationDocumentsDirectory();
       // create a sub-directory for this study named as the study ID
-      final directory = await new Directory(
-              '${localApplicationDir.path}/carp/data/${study.id}')
-          .create(recursive: true);
+      final directory =
+          await new Directory('${localApplicationDir.path}/carp/data/${study.id}').create(recursive: true);
       _path = directory.path;
     }
     return _path;
@@ -109,17 +109,15 @@ class FileDataManager extends AbstractDataManager {
     return _sink;
   }
 
-  @override
+  /// Writes a JSON encoded [Datum] to the file
   Future<String> uploadData(Datum data) async {
+    // Check if the sink is ready for writing...
     if (!_initialized) {
-      // This is really a hack! After having spend a whole day trying to figure out how to do a
-      // mutex in Dart, I gave up... /jb
       print("File not ready -- delaying for 1 sec...");
       return Future.delayed(const Duration(seconds: 1), () => uploadData(data));
     }
 
-    CARPDataPoint _header =
-        new CARPDataPoint.fromDatum(study.id, study.userId, data);
+    CARPDataPoint _header = new CARPDataPoint.fromDatum(study.id, study.userId, data);
     final json_string = jsonEncode(_header);
 
     sink.then((_s) {
@@ -131,7 +129,7 @@ class FileDataManager extends AbstractDataManager {
       file.then((_f) {
         _f.length().then((len) {
           if (len > _fileDataEndPoint.bufferSize) {
-            flush();
+            flush(_f, _s);
           }
         });
       });
@@ -141,28 +139,37 @@ class FileDataManager extends AbstractDataManager {
   }
 
   /// Flushes data to the file, compress, encrypt, and close it.
-  void flush() {
-    final IOSink _s = _sink;
-    final String _jsonFilePath = _file.path;
+  void flush(File flush_file, IOSink flush_sink) {
+    // if we're already flushing this file/sink, then do nothing.
+    if (flush_sink.hashCode == _flushingSink) return;
+
+    _flushingSink = flush_sink.hashCode;
+
+    // Reset the file (setting it and its name and sink to null), so a new file (and sink) can be created.
+    _filename = null;
+    _file = null;
+    _sink = null;
+
+    final String _jsonFilePath = flush_file.path;
     String _finalFilePath = _jsonFilePath;
 
-    print("Written JSON bytes to file. Closing and zipping it.");
+    print("Written JSON  to file '$_jsonFilePath'. Closing and zipping it.");
     // write the closing json ']'
-    _s.write(']\n');
+    flush_sink.write(']\n');
 
     // once finished closing the file, then zip and encrypt it
-    _s.close().then((value) {
+    flush_sink.close().then((value) {
       if (_fileDataEndPoint.zip) {
         // create a new zip file and add the JSON file to this zip file
         final encoder = new ZipFileEncoder();
-        final file = new File(_jsonFilePath);
+        final json_file = new File(_jsonFilePath);
         _finalFilePath = '$_jsonFilePath.zip';
         encoder.create(_finalFilePath);
-        encoder.addFile(file);
+        encoder.addFile(json_file);
         encoder.close();
 
         // once the file is zipped to a new zip file, delete the old JSON file
-        file.delete();
+        json_file.delete();
       }
 
       // encrypt the zip file
@@ -171,17 +178,18 @@ class FileDataManager extends AbstractDataManager {
         // if the encrypted file gets another name, remember to update _jsonFilePath
       }
 
-      notifyAllListeners(
-          new FileDataManagerEvent(FileEvent.closed, _finalFilePath));
+      notifyAllListeners(new FileDataManagerEvent(FileEvent.closed, _finalFilePath));
     });
-
-    _filename = null;
-    _file = null;
-    _sink = null;
   }
 
   Future close() async {
-    flush();
+    //old_flush();
+
+    file.then((_f) {
+      sink.then((_s) {
+        flush(_f, _s);
+      });
+    });
   }
 
   @override

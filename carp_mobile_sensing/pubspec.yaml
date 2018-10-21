@@ -1,8 +1,9 @@
 name: carp_mobile_sensing
 description: CARP Mobile Sensing Framework
-version: 0.2.0
+version: 0.2.1
 author:  CACHET Team <cph.cachet@gmail.com>
-homepage: https://github.com/cph-cachet/carp.sensing/tree/master/flutter/carp_mobile_sensing
+homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_mobile_sensing
+
 
 environment:
   sdk: ">=2.0.0-dev <3.0.0"

@@ -56,7 +56,20 @@ class FirebaseStorageDataEndPoint extends FileDataEndPoint {
   String gcmSenderID;
 
   /// Creates a [DataEndPoint]. [type] is defined in [DataEndPointType].
-  FirebaseStorageDataEndPoint(String type, {this.uri, this.firebaseAuthenticationMethod}) : super(type);
+  FirebaseStorageDataEndPoint(String type,
+      {this.name,
+      this.uri,
+      this.path,
+      this.firebaseAuthenticationMethod,
+      this.email,
+      this.password,
+      this.token,
+      this.projectID,
+      this.webAPIKey,
+      this.androidGoogleAppID,
+      this.iOSGoogleAppID,
+      this.gcmSenderID})
+      : super(type);
 
   static Function get fromJsonFunction => _$FirebaseStorageDataEndPointFromJson;
   factory FirebaseStorageDataEndPoint.fromJson(Map<String, dynamic> json) =>

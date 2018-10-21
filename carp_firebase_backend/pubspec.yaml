@@ -2,7 +2,7 @@ name: carp_firebase_backend
 description: Firebase data backend for CARP mobile sensing in Flutter
 version: 0.0.1
 author:  CACHET Team <cph.cachet@gmail.com>
-homepage: https://github.com/cph-cachet/carp.sensing/tree/master/flutter/carp_firebase_backend
+homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_firebase_backend
 
 environment:
   sdk: ">=2.0.0-dev.68.0 <3.0.0"

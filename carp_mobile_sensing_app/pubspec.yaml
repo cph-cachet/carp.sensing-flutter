@@ -19,8 +19,8 @@ dependencies:
 dependency_overrides:
   carp_mobile_sensing:
     path: ../carp_mobile_sensing/
-  #carp_firebase_backend:
-  #  path: ../carp_firebase_backend/
+  carp_firebase_backend:
+    path: ../carp_firebase_backend/
 
 dev_dependencies:
   flutter_test:
