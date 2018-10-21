@@ -164,7 +164,7 @@ class Sensing implements ProbeListener {
   Study _study;
   Study get study {
     if (_study == null) {
-      _study = new Study("983475-17", "user@dtu.dk", name: "Test study #1");
+      _study = new Study("983475-20", "user@dtu.dk", name: "Test study #1");
     }
     return _study;
   }

@@ -113,7 +113,7 @@ class FileDataManager extends AbstractDataManager {
   Future<String> uploadData(Datum data) async {
     // Check if the sink is ready for writing...
     if (!_initialized) {
-      print("File not ready -- delaying for 1 sec...");
+      print("File sink not ready -- delaying for 1 sec...");
       return Future.delayed(const Duration(seconds: 1), () => uploadData(data));
     }
 
@@ -146,9 +146,12 @@ class FileDataManager extends AbstractDataManager {
     _flushingSink = flush_sink.hashCode;
 
     // Reset the file (setting it and its name and sink to null), so a new file (and sink) can be created.
+    _initialized = false;
     _filename = null;
     _file = null;
     _sink = null;
+    // Start creating a new sink (and file) to be used in parallel to flushing this file.
+    sink.then((value) {});
 
     final String _jsonFilePath = flush_file.path;
     String _finalFilePath = _jsonFilePath;
