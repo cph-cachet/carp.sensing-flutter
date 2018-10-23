@@ -27,6 +27,7 @@ dependencies:
   flutter_blue: ^0.4.1    # <- Gives build errors on android, see issue tracker
   location: ^1.4.1
   sms: ^0.2.4
+  call_log: ^1.0.2
   #phone_log:             # <- phone_log does not support Dart 2.0 >> have raised an issues, but not used until this is fixed.
 
   # the CACHET plugins

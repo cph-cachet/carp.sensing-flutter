@@ -133,7 +133,7 @@ class Sensing implements ProbeListener {
 
     // note that in this version, we start the sensors (accelerometer, etc.)
     // in order to generate a lot of data quickly for testsing pusposes
-    study.tasks.add(sensorTask);
+    //study.tasks.add(sensorTask);
     study.tasks.add(pedometerTask);
     study.tasks.add(hardwareTask);
     study.tasks.add(appTask);
@@ -164,7 +164,7 @@ class Sensing implements ProbeListener {
   Study _study;
   Study get study {
     if (_study == null) {
-      _study = new Study("983475-20", "user@dtu.dk", name: "Test study #1");
+      _study = new Study("983476-1", "user@dtu.dk", name: "Test study #1");
     }
     return _study;
   }
@@ -300,14 +300,17 @@ class Sensing implements ProbeListener {
 
   Task _commTask;
 
-  /// A task collecting information about communication. So far only collecting sms info:
-  /// - messages (sms) log from this device
+  /// A task collecting information about communication:
+  /// - phone log
+  /// - messages (sms) log
   /// - an event every time a sms is recieved
   ///
   /// Works only on Android.
   Task get commTask {
     if (_commTask == null) {
       _commTask = new Task("Communication Task");
+
+      _commTask.addMeasure(PhoneLogMeasure(ProbeRegistry.PHONELOG_MEASURE, name: "Entire phone log", days: -1));
 
       TextMessageMeasure tm_1 =
           new TextMessageMeasure(ProbeRegistry.TEXT_MESSAGE_LOG_MEASURE, name: "Text Message Log");

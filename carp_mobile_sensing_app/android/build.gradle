@@ -5,7 +5,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.2'
+        classpath 'com.android.tools.build:gradle:3.1.4'
         //classpath 'com.google.gms:google-services:3.2.1'   // Firebase support
         classpath 'com.google.gms:google-services:4.1.0'   // Firebase support
         //classpath 'com.google.gms:google-services:3.3.0'   // Firebase support

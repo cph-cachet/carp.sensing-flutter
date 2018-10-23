@@ -10,15 +10,14 @@ part of communication;
 /// Holds a list of text (SMS) messages from the device.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class TextMessageLogDatum extends Datum {
-  static CARPDataFormat CARP_DATA_FORMAT = new CARPDataFormat(
-      NameSpace.CARP_NAMESPACE, ProbeRegistry.TEXT_MESSAGE_LOG_MEASURE);
+  static CARPDataFormat CARP_DATA_FORMAT =
+      new CARPDataFormat(NameSpace.CARP_NAMESPACE, ProbeRegistry.TEXT_MESSAGE_LOG_MEASURE);
 
   List<TextMessage> textMessageLog;
 
   TextMessageLogDatum() : super();
 
-  factory TextMessageLogDatum.fromJson(Map<String, dynamic> json) =>
-      _$TextMessageLogDatumFromJson(json);
+  factory TextMessageLogDatum.fromJson(Map<String, dynamic> json) => _$TextMessageLogDatumFromJson(json);
   Map<String, dynamic> toJson() => _$TextMessageLogDatumToJson(this);
 
   CARPDataFormat getCARPDataFormat() => CARP_DATA_FORMAT;
@@ -31,15 +30,14 @@ class TextMessageLogDatum extends Datum {
 /// Wraps a [TextMessage].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class TextMessageDatum extends Datum {
-  static CARPDataFormat CARP_DATA_FORMAT = new CARPDataFormat(
-      NameSpace.CARP_NAMESPACE, ProbeRegistry.TEXT_MESSAGE_MEASURE);
+  static CARPDataFormat CARP_DATA_FORMAT =
+      new CARPDataFormat(NameSpace.CARP_NAMESPACE, ProbeRegistry.TEXT_MESSAGE_MEASURE);
 
   TextMessage textMessage;
 
   TextMessageDatum(this.textMessage) : super();
 
-  factory TextMessageDatum.fromJson(Map<String, dynamic> json) =>
-      _$TextMessageDatumFromJson(json);
+  factory TextMessageDatum.fromJson(Map<String, dynamic> json) => _$TextMessageDatumFromJson(json);
   Map<String, dynamic> toJson() => _$TextMessageDatumToJson(this);
 
   CARPDataFormat getCARPDataFormat() => CARP_DATA_FORMAT;
@@ -53,33 +51,28 @@ class TextMessage extends Serializable {
   int id;
   String address;
   String body;
+
+  /// The size in bytes of the body of the message.
+  int size;
   bool isRead;
   DateTime date;
   DateTime dateSent;
 
-  /// The kind of message - Draft, Received, Sent
+  /// The kind of message:
+  /// - Draft
+  /// - Received
+  /// - Sent
   String kind;
   String state;
 
-  TextMessage(
-      {this.id,
-      this.address,
-      this.body,
-      this.isRead,
-      this.date,
-      this.dateSent,
-      this.kind,
-      this.state})
+  TextMessage({this.id, this.address, this.body, this.isRead, this.date, this.dateSent, this.kind, this.state})
       : super();
 
   factory TextMessage.fromSmsMessage(SmsMessage sms) {
     TextMessage msg = new TextMessage(
-        id: sms.id,
-        address: sms.address,
-        body: sms.body,
-        isRead: sms.isRead,
-        date: sms.date,
-        dateSent: sms.dateSent);
+        id: sms.id, address: sms.address, body: sms.body, isRead: sms.isRead, date: sms.date, dateSent: sms.dateSent);
+
+    if (sms.body != null) msg.size = sms.body.length;
 
     switch (sms.kind) {
       case SmsMessageKind.Sent:
@@ -114,8 +107,7 @@ class TextMessage extends Serializable {
     return msg;
   }
 
-  factory TextMessage.fromJson(Map<String, dynamic> json) =>
-      _$TextMessageFromJson(json);
+  factory TextMessage.fromJson(Map<String, dynamic> json) => _$TextMessageFromJson(json);
   Map<String, dynamic> toJson() => _$TextMessageToJson(this);
 
   String toString() =>
@@ -125,15 +117,13 @@ class TextMessage extends Serializable {
 /// Holds a phone log, i.e. a list of phone calls made on the device.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class PhoneLogDatum extends Datum {
-  static CARPDataFormat CARP_DATA_FORMAT = new CARPDataFormat(
-      NameSpace.CARP_NAMESPACE, ProbeRegistry.PHONELOG_MEASURE);
+  static CARPDataFormat CARP_DATA_FORMAT = new CARPDataFormat(NameSpace.CARP_NAMESPACE, ProbeRegistry.PHONELOG_MEASURE);
 
-  List<PhoneCall> phoneLog;
+  List<PhoneCall> phoneLog = new List<PhoneCall>();
 
   PhoneLogDatum() : super();
 
-  factory PhoneLogDatum.fromJson(Map<String, dynamic> json) =>
-      _$PhoneLogDatumFromJson(json);
+  factory PhoneLogDatum.fromJson(Map<String, dynamic> json) => _$PhoneLogDatumFromJson(json);
   Map<String, dynamic> toJson() => _$PhoneLogDatumToJson(this);
 
   CARPDataFormat getCARPDataFormat() => CARP_DATA_FORMAT;
@@ -144,10 +134,17 @@ class PhoneLogDatum extends Datum {
 /// Holds data regarding a phone call.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class PhoneCall extends Serializable {
-  /// Data & Time of the call.
+  /// Date & Time of the call.
   DateTime timestamp;
 
-  /// Type of call. 1=incoming, 2=connected, 3=dialing, 4=disconnected
+  /// Type of call:
+  /// * answered
+  /// * incoming
+  /// * blocked
+  /// * missed
+  /// * outgoing
+  /// * rejected
+  /// * voice_mail
   String callType;
 
   /// duration of call in ms.
@@ -155,18 +152,49 @@ class PhoneCall extends Serializable {
 
   String formattedNumber;
   String number;
+  String name;
 
-  PhoneCall(
-      [this.timestamp,
-      this.callType,
-      this.duration,
-      this.formattedNumber,
-      this.number]);
+  PhoneCall([this.timestamp, this.callType, this.duration, this.formattedNumber, this.number, this.name]);
 
-  factory PhoneCall.fromJson(Map<String, dynamic> json) =>
-      _$PhoneCallFromJson(json);
+  factory PhoneCall.fromCallLogEntry(CallLogEntry call) {
+    DateTime _timestamp = DateTime.fromMicrosecondsSinceEpoch(call.timestamp);
+    String _type = "unknown";
+
+    switch (call.callType) {
+      case CallType.answeredExternally:
+        _type = 'answered_externally';
+        break;
+      case CallType.blocked:
+        _type = 'blocked';
+        break;
+      case CallType.incoming:
+        _type = 'incoming';
+        break;
+      case CallType.missed:
+        _type = 'missed';
+        break;
+      case CallType.outgoing:
+        _type = 'outgoing';
+        break;
+      case CallType.rejected:
+        _type = 'rejected';
+        break;
+      case CallType.voiceMail:
+        _type = 'voice_mail';
+        break;
+      default:
+        _type = "unknown";
+        break;
+    }
+
+    PhoneCall pc = new PhoneCall(_timestamp, _type, call.duration, call.formattedNumber, call.number, call.name);
+
+    return pc;
+  }
+
+  factory PhoneCall.fromJson(Map<String, dynamic> json) => _$PhoneCallFromJson(json);
   Map<String, dynamic> toJson() => _$PhoneCallToJson(this);
 
   String toString() =>
-      "phone_call: {timestamp: $timestamp, call_type: $callType, duration: $duration, number: $number, formatted_number: $formattedNumber}";
+      "phone_call: {timestamp: $timestamp, call_type: $callType, duration: $duration, number: $number, formatted_number: $formattedNumber, name: $name}";
 }

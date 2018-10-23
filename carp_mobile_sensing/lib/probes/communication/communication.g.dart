@@ -63,7 +63,8 @@ TextMessage _$TextMessageFromJson(Map<String, dynamic> json) {
           : DateTime.parse(json['date_sent'] as String),
       kind: json['kind'] as String,
       state: json['state'] as String)
-    ..$ = json[r'$'] as String;
+    ..$ = json[r'$'] as String
+    ..size = json['size'] as int;
 }
 
 Map<String, dynamic> _$TextMessageToJson(TextMessage instance) {
@@ -79,6 +80,7 @@ Map<String, dynamic> _$TextMessageToJson(TextMessage instance) {
   writeNotNull('id', instance.id);
   writeNotNull('address', instance.address);
   writeNotNull('body', instance.body);
+  writeNotNull('size', instance.size);
   writeNotNull('is_read', instance.isRead);
   writeNotNull('date', instance.date?.toIso8601String());
   writeNotNull('date_sent', instance.dateSent?.toIso8601String());
@@ -118,7 +120,8 @@ PhoneCall _$PhoneCallFromJson(Map<String, dynamic> json) {
       json['call_type'] as String,
       json['duration'] as int,
       json['formatted_number'] as String,
-      json['number'] as String)
+      json['number'] as String,
+      json['name'] as String)
     ..$ = json[r'$'] as String;
 }
 
@@ -137,6 +140,7 @@ Map<String, dynamic> _$PhoneCallToJson(PhoneCall instance) {
   writeNotNull('duration', instance.duration);
   writeNotNull('formatted_number', instance.formattedNumber);
   writeNotNull('number', instance.number);
+  writeNotNull('name', instance.name);
   return val;
 }
 
@@ -145,7 +149,8 @@ TextMessageMeasure _$TextMessageMeasureFromJson(Map<String, dynamic> json) {
     ..$ = json[r'$'] as String
     ..enabled = json['enabled'] as bool
     ..configuration = (json['configuration'] as Map<String, dynamic>)
-        ?.map((k, e) => MapEntry(k, e as String));
+        ?.map((k, e) => MapEntry(k, e as String))
+    ..collectBodyOfMessage = json['collect_body_of_message'] as bool;
 }
 
 Map<String, dynamic> _$TextMessageMeasureToJson(TextMessageMeasure instance) {
@@ -162,5 +167,33 @@ Map<String, dynamic> _$TextMessageMeasureToJson(TextMessageMeasure instance) {
   writeNotNull('name', instance.name);
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
+  writeNotNull('collect_body_of_message', instance.collectBodyOfMessage);
+  return val;
+}
+
+PhoneLogMeasure _$PhoneLogMeasureFromJson(Map<String, dynamic> json) {
+  return PhoneLogMeasure(json['measure_type'] as String, name: json['name'])
+    ..$ = json[r'$'] as String
+    ..enabled = json['enabled'] as bool
+    ..configuration = (json['configuration'] as Map<String, dynamic>)
+        ?.map((k, e) => MapEntry(k, e as String))
+    ..days = json['days'] as int;
+}
+
+Map<String, dynamic> _$PhoneLogMeasureToJson(PhoneLogMeasure instance) {
+  var val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(r'$', instance.$);
+  writeNotNull('measure_type', instance.measureType);
+  writeNotNull('name', instance.name);
+  writeNotNull('enabled', instance.enabled);
+  writeNotNull('configuration', instance.configuration);
+  writeNotNull('days', instance.days);
   return val;
 }
