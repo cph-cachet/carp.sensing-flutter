@@ -1,8 +1,8 @@
-name: carp_core
-description: Flutter API for accessing CARP
+name: carp_webservices
+description: Flutter API for accessing CARP web services
 version: 0.0.1
-author:
-homepage:
+author:  CACHET Team <cph.cachet@gmail.com>
+homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_webservices
 
 environment:
   sdk: ">=2.0.0-dev <3.0.0"

@@ -9,7 +9,7 @@
 library carp_auth;
 
 import 'dart:async';
-import 'package:carp_core/carp_service/carp_service.dart';
+import 'package:carp_webservices/carp_service/carp_service.dart';
 
 part 'oauth.dart';
 part 'carp_user.dart';

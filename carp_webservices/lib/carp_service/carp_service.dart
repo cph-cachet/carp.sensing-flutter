@@ -8,7 +8,7 @@
 library carp_service;
 
 import 'package:meta/meta.dart';
-import 'package:carp_core/carp_auth/carp_auth.dart';
+import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'dart:async';
 import 'package:carp_mobile_sensing/domain/domain.dart';
 import 'package:http/http.dart' as http;
