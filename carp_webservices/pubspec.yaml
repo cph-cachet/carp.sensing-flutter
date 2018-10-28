@@ -1,0 +1,29 @@
+name: carp_core
+description: Flutter API for accessing CARP
+version: 0.0.1
+author:
+homepage:
+
+environment:
+  sdk: ">=2.0.0-dev <3.0.0"
+
+
+dependencies:
+  flutter:
+    sdk: flutter
+  carp_mobile_sensing: ^0.2.0     # using carp_mobile_sensing to get to the carp flutter domain classes.
+                                  # TODO - should probably be moved to a separate carp_core_flutter library
+
+# Overriding carp_mobile_sensing to use the local copy
+# Remove this when done development
+dependency_overrides:
+  carp_mobile_sensing:
+    path: ../carp_mobile_sensing/
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+# The following section is specific to Flutter.
+flutter:

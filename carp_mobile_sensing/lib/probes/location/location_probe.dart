@@ -26,8 +26,8 @@ class LocationProbe extends StreamSubscriptionListeningProbe {
 
     // starting the subscription to the location service - triggered every time the location changes.
     try {
-      subscription = _location.onLocationChanged().listen(onData,
-          onError: onError, onDone: onDone, cancelOnError: true);
+      subscription =
+          _location.onLocationChanged().listen(onData, onError: onError, onDone: onDone, cancelOnError: true);
     } catch (error) {
       onError(error);
     }
@@ -35,16 +35,6 @@ class LocationProbe extends StreamSubscriptionListeningProbe {
 
   void onData(dynamic event) async {
     assert(event is Map<String, double>);
-    Map<String, double> location = event;
-
-    LocationDatum ld = new LocationDatum();
-    ld.latitude = location["latitude"];
-    ld.longitude = location["longitude"];
-    ld.accuracy = location["accuracy"];
-    ld.altitude = location["altitude"];
-    ld.speed = location["speed"];
-    ld.speedAccuracy = location["speed_accuracy"];
-
-    this.notifyAllListeners(ld);
+    this.notifyAllListeners(LocationDatum.fromMap(event));
   }
 }

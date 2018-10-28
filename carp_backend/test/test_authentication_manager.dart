@@ -1,9 +1,9 @@
-import 'package:carp_sensing/carp_sensing.dart';
 import 'package:test/test.dart';
+import 'package:carp_backend/carp_backend.dart';
 
 void main() {
   group('AuthenticationManager Tests', () {
-    AuthenticationManager authManager;
+    CARPBackend carp;
     String oAuthResponse;
     OAuthToken oAuthToken;
     Map<String, String> oAuthResponseJson;
@@ -14,10 +14,10 @@ void main() {
       testUser = new User("thomas", "pass", null);
 
       /// Instantiate an AuthenticationManager
-      //authManager = new CARPBackend();
+      carp = new CARPBackend();
 
       /// Send oAuth token request to the CARP oAuth endpoint and receive a token in return
-      oAuthToken = await authManager.authenticate(testUser.username, testUser.password);
+      oAuthToken = await carp.authenticate(testUser.username, testUser.password);
 
       /// Assign fetched token to user
       testUser.set(oAuthToken);

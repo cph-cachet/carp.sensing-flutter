@@ -5,8 +5,9 @@
  * found in the LICENSE file.
  */
 
+/// Flutter classes to handle authentication to the CACHET Research Platform (CARP).
+
 import 'dart:async';
-import 'package:carp_sensing/carp_sensing.dart';
 
 /**
  * The [AuthenticationManager] class is responsible for authenticating

@@ -1,4 +1,4 @@
 library carp_backend;
 
-export 'package:carp_backend/carp/carp_backend.dart';
-export 'package:carp_backend/carp/authentication.dart';
+export 'package:carp_backend/database/carp_backend.dart';
+export 'package:carp_backend/database/authentication.dart';
