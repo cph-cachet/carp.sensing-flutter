@@ -6,85 +6,14 @@
  */
 part of carp_service;
 
-abstract class CarpReference {
-  CarpService service;
-
-  CarpReference._(this.service);
-}
-
-class DataPointReference extends CarpReference {
-  DataPointReference._(service) : super._(service);
-
-  /// Returns the URL for the data end point for this [DataPointReference].
-  String getDataPointUri() {
-    return "${service.app.uri.toString()}/api/studies/${service.app.study.id}/data-points";
-  }
-
-  /// Upload a [CARPDataPoint] to the CARP backend using HTTP POST
-  Future<http.Response> postDataPoint(CARPDataPoint data) async {
-    assert(service != null);
-    CarpUser user = await service.currentUser;
-    assert(user != null);
-    assert(user.isAuthenticated);
-    final OAuthToken accessToken = await user.getOAuthToken();
-    String url = "${getDataPointUri()}?access_token=$accessToken";
-
-    http.Response response =
-        await http.post(Uri.encodeFull(url), headers: {"Content-Type": "application/json"}, body: json.encode(data));
-
-    return response;
-  }
-
-  /// Downloading a [CARPDataPoint] from the CARP backend using HTTP GET
-  Future<CARPDataPoint> getDataPoint(String id) async {
-    assert(service != null);
-    CarpUser user = await service.currentUser;
-    assert(user != null);
-    assert(user.isAuthenticated);
-    final OAuthToken accessToken = await user.getOAuthToken();
-    String url = "${getDataPointUri()}/$id?access_token=$accessToken";
-
-    // GET the data point from the CARP web service
-    http.Response response = await http.get(Uri.encodeFull(url));
-
-    int httpStatusCode = response.statusCode;
-    Map<String, String> responseJSON = json.decode(response.body);
-
-    switch (httpStatusCode) {
-      case 200:
-        {
-          return CARPDataPoint.fromJson(responseJSON);
-        }
-      default:
-        // All other cases are treated as an error.
-        // TODO - later we can handle more HTTP status codes here.
-        {
-          final String error = responseJSON["error"];
-          final String description = responseJSON["error_description"];
-          throw CarpServiceException(error, code: httpStatusCode.toString(), description: description);
-        }
-    }
-  }
-
-  /// Deleting a [CARPDataPoint] from the CARP backend using HTTP DELETE
-  Future<http.Response> deleteDataPoint(String id) async {
-    assert(service != null);
-    CarpUser user = await service.currentUser;
-    assert(user != null);
-    assert(user.isAuthenticated);
-    final OAuthToken accessToken = await user.getOAuthToken();
-    String url = "${getDataPointUri()}/$id?access_token=$accessToken";
-
-    http.Response response = await http.delete(Uri.encodeFull(url));
-
-    return response;
-  }
-}
-
+/// Provide a file endpoint reference to a CARP web service. Used to:
+/// - upload a local [File] to CARP
+/// - download a CARP file to a local [File]
+/// - delete a file at CARP
 class FileStorageReference extends CarpReference {
   String _path;
 
-  FileStorageReference._(service, this._path) : super._(service);
+  FileStorageReference._(CarpService service, this._path) : super._(service);
 
   /// Returns the full path to this object, not including the CARP Web Service URI
   Future<String> getPath() async {
@@ -115,12 +44,6 @@ class FileStorageReference extends CarpReference {
     task._start();
     return task;
   }
-}
-
-class CollectionReference extends CarpReference {
-  String _path;
-
-  CollectionReference._(service, this._path) : super._(service);
 }
 
 /// Metadata for a [FileStorageReference]. Metadata stores default attributes such as

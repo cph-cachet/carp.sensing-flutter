@@ -65,7 +65,11 @@ class FileUploadTask extends CarpServiceTask {
 
   FileUploadTask._(FileStorageReference reference, this.file, [this.metadata]) : super._(reference);
 
-  /// Start the the upload/download/delete task.
+  /// Returns a last snapshot when completed
+  Completer<http.Response> _completer = Completer<http.Response>();
+  Future<http.Response> get onComplete => _completer.future;
+
+  /// Start the the upload task.
   Future<http.Response> _start() {
     super._start();
     //TODO - implement this...
@@ -97,7 +101,11 @@ class FileDownloadTask extends CarpServiceTask {
 
   FileDownloadTask._(FileStorageReference reference, this.file) : super._(reference);
 
-  /// Start the the upload/download/delete task.
+  /// Returns a last snapshot when completed
+  Completer<http.Response> _completer = Completer<http.Response>();
+  Future<http.Response> get onComplete => _completer.future;
+
+  /// Start the the download task.
   Future<http.Response> _start() {
     super._start();
     //TODO - implement this...
@@ -126,6 +134,10 @@ class FileDeleteTask extends CarpServiceTask {
   String path;
 
   FileDeleteTask._(FileStorageReference reference) : super._(reference);
+
+  /// Returns a last snapshot when completed
+  Completer<http.Response> _completer = Completer<http.Response>();
+  Future<http.Response> get onComplete => _completer.future;
 
   /// Start the the delete task.
   Future<http.Response> _start() {

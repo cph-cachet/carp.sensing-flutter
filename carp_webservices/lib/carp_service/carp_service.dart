@@ -16,7 +16,9 @@ import 'dart:convert';
 import 'dart:io';
 
 part 'carp_app.dart';
-part 'carp_reference.dart';
+part 'datapoint_reference.dart';
+part 'file_reference.dart';
+part 'collection_reference.dart';
 part 'carp_tasks.dart';
 
 /// Provide access to the CARP web service endpoint.
@@ -50,7 +52,10 @@ class CarpService {
     return _instance;
   }
 
-  // Sign in to CARP using email and password.
+  /// Sign in to this CARP web service using email and password.
+  ///
+  /// Return the signed in user (with an access token) if successful.
+  /// Throws a [CarpServiceException] if not successful.
   Future<CarpUser> signInWithEmailAndPassword({
     @required String email,
     @required String password,
@@ -91,7 +96,7 @@ class CarpService {
     _currentUser = new CarpUser(email, password: password);
 
     int httpStatusCode = response.statusCode;
-    Map<String, String> responseJSON = json.decode(response.body);
+    Map<String, dynamic> responseJSON = json.decode(response.body);
 
     switch (httpStatusCode) {
       case 200:
@@ -151,10 +156,23 @@ class CarpService {
   }
 }
 
+/// Abstract for CARP web service references.
+abstract class CarpReference {
+  CarpService service;
+
+  CarpReference._(this.service);
+}
+
+/// Exception for CARP web service communication.
 class CarpServiceException implements Exception {
   String code;
   String message;
   String description;
 
   CarpServiceException(this.message, {this.code, this.description});
+
+  @override
+  String toString() {
+    return "CarpServiceException: {code: $code, message: $message, description: $description}";
+  }
 }

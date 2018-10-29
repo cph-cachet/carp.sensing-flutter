@@ -11,7 +11,8 @@ void main() {
 
     setUp(() async {
       /// Instantiate test user with no oAuthToken initially.
-      testUser = new User("thomas", "pass", null);
+      //testUser = new User("thomas", "pass", null);
+      testUser = new User("admin", "password", null);
 
       /// Instantiate an AuthenticationManager
       carp = new CARPBackend();

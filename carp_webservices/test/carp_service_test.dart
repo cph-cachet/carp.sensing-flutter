@@ -13,49 +13,97 @@ void main() {
   CarpApp app;
   Study study;
 
-  // Runs before all tests.
-  setUpAll(() {
-    study = new Study("983476-1", "user@dtu.dk", name: "Test study #1");
-    app = new CarpApp(
-        study: study,
-        name: "any_name_is_fine_for_now",
-        uri: Uri.parse(uri),
-        oauth: OAuthEndPoint(clientID: clientID, clientSecret: clientSecret, path: "/oauth/token"));
+  group("CARP Base Services", () {
+    // Runs before all tests.
+    setUpAll(() {
+      study = new Study("983476-1", "user@dtu.dk", name: "Test study #1");
+      app = new CarpApp(
+          study: study,
+          name: "any_name_is_fine_for_now",
+          uri: Uri.parse(uri),
+          oauth: OAuthEndPoint(clientID: clientID, clientSecret: clientSecret, path: "/oauth/token"));
 
-    CarpService.configure(app);
-  });
-
-  test('Authentication', () async {
-    CarpUser user = await CarpService.instance.signInWithEmailAndPassword(email: email, password: pw);
-
-    print("signed in " + user.email + " : " + user.uid);
-  });
-
-  test('File upload', () async {
-    final File myFile = new File("abc.txt");
-
-    final FileUploadTask uploadTask = CarpService.instance.getFileStorageReference("abc.txt").putFile(
-          myFile,
-          new FileMetadata(
-            contentLanguage: 'en',
-            customMetadata: <String, String>{'activity': 'test'},
-          ),
-        );
-  });
-
-  test('Data point upload', () async {
-    // Create a dummy location datum
-    LocationDatum ld = LocationDatum.fromMap(<String, dynamic>{
-      "latitude": 23454.345,
-      "longitude": 23.4,
-      "altitude": 43.3,
-      "accuracy": 12.4,
-      "speed": 2.3,
-      "speedAccuracy": 12.3
+      CarpService.configure(app);
+      print(app.name);
     });
 
-    final CARPDataPoint data = CARPDataPoint.fromDatum(study.id, study.userId, ld);
+    // Runs before each test.
+    setUp(() {});
 
-    CarpService.instance.getDataPointReference().postDataPoint(data);
+    test('Authentication', () async {
+      CarpUser user;
+      try {
+        user = await CarpService.instance.signInWithEmailAndPassword(email: email, password: pw);
+      } catch (excp) {
+        print(excp.toString());
+      }
+      assert(user != null);
+      assert(user.isAuthenticated);
+
+      print("signed in " + user.email + " : " + user.uid);
+    });
+
+    test('File upload', () async {
+      final File myFile = new File("abc.txt");
+
+      final FileUploadTask uploadTask = CarpService.instance.getFileStorageReference("abc.txt").putFile(
+            myFile,
+            new FileMetadata(
+              contentLanguage: 'en',
+              customMetadata: <String, String>{'activity': 'test'},
+            ),
+          );
+
+      assert(uploadTask != null);
+
+      await uploadTask.onComplete;
+    });
+
+    test('Data point upload', () async {
+      // Create a dummy location datum
+      LocationDatum datum = LocationDatum.fromMap(<String, dynamic>{
+        "latitude": 23454.345,
+        "longitude": 23.4,
+        "altitude": 43.3,
+        "accuracy": 12.4,
+        "speed": 2.3,
+        "speedAccuracy": 12.3
+      });
+
+      final CARPDataPoint data = CARPDataPoint.fromDatum(study.id, study.userId, datum);
+
+      CarpService.instance.getDataPointReference().postDataPoint(data);
+    });
+
+    test('Collections', () async {
+      // List all collections in the root
+      List<CollectionReference> root = await CarpService.instance.collection("").collections;
+      for (CollectionReference ref in root) {
+        print(ref.path);
+        // List all object in each collection
+        List<ObjectSnapshot> objects = await CarpService.instance.collection(ref.path).objects;
+        for (ObjectSnapshot object in objects) {
+          print(object);
+        }
+      }
+
+      List<ObjectSnapshot> objects = await CarpService.instance.collection("users").objects;
+      for (ObjectSnapshot object in objects) {
+        print(object);
+      }
+
+      // is not providing an object id, so this should create a new object
+      String object_id =
+          await CarpService.instance.collection('users').object().setData({'email': email, 'name': 'Administrator'});
+
+      // updating the name
+      await CarpService.instance
+          .collection('users')
+          .object(object_id)
+          .updateData({'email': email, 'name': 'Super User'});
+
+      // deleting the object
+      await CarpService.instance.collection('users').object(object_id).delete();
+    });
   });
 }

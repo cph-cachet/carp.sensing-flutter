@@ -45,12 +45,12 @@ class CarpUser {
 
   /// Sign out the current user.
   Future<void> signOut() async {
-    //TODO - implement sign out on the CARP Service
+    //TODO - implement sign out on the CARP Web Service
     _token = null;
   }
 
-  /// Manually refreshes the data of the current user (for example, attached
-  /// providers, display name, and so on) from the CARP web service.
+  /// Manually refreshes the data of the current user (for example, phoneNumber,
+  /// display name, and so on) from the CARP web service.
   ///
   /// TODO - not implemented, since there is currently no CARP endpoint for users.
   Future<void> reload() async {}

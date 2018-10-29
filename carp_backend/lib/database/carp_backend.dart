@@ -12,9 +12,15 @@ import 'package:carp_backend/carp_backend.dart';
 
 class CARPBackend implements AuthenticationManager {
   // TODO: These static URIs are not pretty -- needs to be configured somehow...
-  static const String clientID = "webui";
-  static const String clientSecret = "webuisecret";
-  static const String CARP_auth_uri = "https://sandbox.carp.cachet.dk/auth-service/auth/oauth/token";
+//  static const String clientID = "webui";
+//  static const String clientSecret = "webuisecret";
+//  static const String CARP_auth_uri = "https://sandbox.carp.cachet.dk/auth-service/auth/oauth/token";
+//  static const String CARP_datapoint_uri = "https://sandbox.carp.cachet.dk/data-service/api/dataPoint";
+//  static const String CARP_deployment_uri = "https://sandbox.carp.cachet.dk/data-service/api/dataPoint";
+
+  static const String clientID = "carp";
+  static const String clientSecret = "carp";
+  static const String CARP_auth_uri = "http://staging.carp.cachet.dk:8080/oauth/token";
   static const String CARP_datapoint_uri = "https://sandbox.carp.cachet.dk/data-service/api/dataPoint";
   static const String CARP_deployment_uri = "https://sandbox.carp.cachet.dk/data-service/api/dataPoint";
 
@@ -60,6 +66,8 @@ class CARPBackend implements AuthenticationManager {
       body: loginBody,
     );
 
+    print("request : ${response.request.toString()}");
+
     print("status code : ${response.statusCode}");
 
     Map<String, String> headers = response.headers;
@@ -69,6 +77,7 @@ class CARPBackend implements AuthenticationManager {
     print("reponse : $responseFromServer");
 
     Map<String, String> responseJSON = json.decode(responseFromServer);
+
     _token = new OAuthToken.fromJson(responseJSON);
 
     return _token;
