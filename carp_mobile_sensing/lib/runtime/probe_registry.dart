@@ -22,6 +22,7 @@ class ProbeRegistry {
   static const String GYROSCOPE_MEASURE = "gyroscope";
   static const String BATTERY_MEASURE = "battery";
   static const String BLUETOOTH_MEASURE = "bluetooth";
+  static const String AUDIO_MEASURE = "audio";
   static const String LOCATION_MEASURE = "location";
   static const String CONNECTIVITY_MEASURE = "connectivity";
   static const String LIGHT_MEASURE = "light";
@@ -92,6 +93,9 @@ class ProbeRegistry {
         break;
       case PHONELOG_MEASURE:
         _probe = new PhoneLogProbe(measure);
+        break;
+      case AUDIO_MEASURE:
+        _probe = new AudioProbe(measure);
         break;
       default:
         //_probe = new UserProbe(measure);

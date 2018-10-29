@@ -6,11 +6,9 @@
  */
 
 
-import 'package:carp_mobile_sensing/domain/domain.dart';
-import 'package:carp_mobile_sensing/runtime/runtime.dart';
-import 'package:json_annotation/json_annotation.dart';
 
-part 'audio_datum.g.dart';
+
+part of audio;
 
 /// An [AudioDatum] that holds bytes of an audio file.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)

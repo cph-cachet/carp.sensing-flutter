@@ -11,7 +11,7 @@ part of audio;
 /// Note that this probe generates a lot of data and should be used with caution.
 /// See [SensorMeasure] on how to configure this probe, including setting the
 /// frequency and duration of the sampling rate.
-class AccelerometerProbe extends ListeningProbe {
+class AudioProbe extends ListeningProbe {
   FlutterSound flutterSound;
   StreamSubscription _recorderSubscription;
   Timer _startTimer;
@@ -20,7 +20,7 @@ class AccelerometerProbe extends ListeningProbe {
   String lastPath;
   AudioDatum _datum;
 
-  AccelerometerProbe(SensorMeasure _measure) : super(_measure);
+  AudioProbe(SensorMeasure _measure) : super(_measure);
 
   @override
   void initialize() {
@@ -32,6 +32,8 @@ class AccelerometerProbe extends ListeningProbe {
   @override
   Future start() async {
     super.start();
+
+    print("Audio Probe: start() called");
 
     // Define the probe sampling frequency
     // (not related to audio file sampling rate)
