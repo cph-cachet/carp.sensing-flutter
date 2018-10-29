@@ -31,3 +31,10 @@ GeneratedPluginRegistrant.m
 GeneratedPluginRegistrant.java
 build/
 .flutter-plugins
+*.xcconfig
+*.xcconfig
+*.xcconfig
+carp_mobile_sensing/example/ios/Flutter/Release.xcconfig
+carp_mobile_sensing_app/ios/Flutter/Debug.xcconfig
+*.xcconfig
+carp_mobile_sensing_app/ios/Flutter/Release.xcconfig

@@ -172,12 +172,12 @@ Map<String, dynamic> _$TextMessageMeasureToJson(TextMessageMeasure instance) {
 }
 
 PhoneLogMeasure _$PhoneLogMeasureFromJson(Map<String, dynamic> json) {
-  return PhoneLogMeasure(json['measure_type'] as String, name: json['name'])
+  return PhoneLogMeasure(json['measure_type'] as String,
+      name: json['name'], days: json['days'] as int)
     ..$ = json[r'$'] as String
     ..enabled = json['enabled'] as bool
     ..configuration = (json['configuration'] as Map<String, dynamic>)
-        ?.map((k, e) => MapEntry(k, e as String))
-    ..days = json['days'] as int;
+        ?.map((k, e) => MapEntry(k, e as String));
 }
 
 Map<String, dynamic> _$PhoneLogMeasureToJson(PhoneLogMeasure instance) {

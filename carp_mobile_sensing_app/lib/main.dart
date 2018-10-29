@@ -7,6 +7,7 @@
 import 'package:flutter/material.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_firebase_backend/carp_firebase_backend.dart';
+import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 void main() => runApp(new CARPMobileSensingApp());
 
@@ -134,12 +135,13 @@ class Sensing implements ProbeListener {
     // note that in this version, we start the sensors (accelerometer, etc.)
     // in order to generate a lot of data quickly for testsing pusposes
     //study.tasks.add(sensorTask);
-    study.tasks.add(pedometerTask);
-    study.tasks.add(hardwareTask);
-    study.tasks.add(appTask);
-    study.tasks.add(connectivityTask);
-    study.tasks.add(commTask);
-    study.tasks.add(locationTask);
+//    study.tasks.add(pedometerTask);
+//    study.tasks.add(hardwareTask);
+//    study.tasks.add(appTask);
+//    study.tasks.add(connectivityTask);
+//    study.tasks.add(commTask);
+//    study.tasks.add(locationTask);
+    study.tasks.add(audioTask);
 
     // print the study to the console
     console.log(study.toString());
@@ -234,6 +236,22 @@ class Sensing implements ProbeListener {
       _sensorTask.addMeasure(lm);
     }
     return _sensorTask;
+  }
+
+  /// A task collecting audio data with a certain interval
+  Task _audioTask;
+
+  Task get audioTask {
+    if (_audioTask == null) {
+      _audioTask = new Task("Audio task");
+
+      SensorMeasure aum = new SensorMeasure(ProbeRegistry.AUDIO_MEASURE);
+      aum.name = 'Audio';
+      aum.frequency = 10 * 1000; // once every 30 seconds
+      aum.duration = 3 * 1000; // 10 seconds
+      _audioTask.addMeasure(aum);
+    }
+    return _audioTask;
   }
 
   Task _pedometerTask;

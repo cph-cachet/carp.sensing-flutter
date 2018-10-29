@@ -60,6 +60,13 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 There is a very simple [example](example) app which shows how a study can be created with different taks and measures.
 This app just prints the sensing data to a console screen on the phone.
+
+##Auto generation of files 
+
+Files depending on JSON serialization can be generated using `build_runner`, by running the following command in the root of your Flutter project:
+```
+flutter packages pub run build_runner build --delete-conflicting-outputs
+```
  
 ## Features and bugs
 
