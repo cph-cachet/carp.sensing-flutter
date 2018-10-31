@@ -77,11 +77,11 @@ void main() {
 
     test('Collections', () async {
       // List all collections in the root
-      List<CollectionReference> root = await CarpService.instance.collection("").collections;
-      for (CollectionReference ref in root) {
-        print(ref.path);
+      List<String> root = await CarpService.instance.collection("").collections;
+      for (String ref in root) {
+        print(ref);
         // List all object in each collection
-        List<ObjectSnapshot> objects = await CarpService.instance.collection(ref.path).objects;
+        List<ObjectSnapshot> objects = await CarpService.instance.collection("/$ref").objects;
         for (ObjectSnapshot object in objects) {
           print(object);
         }
@@ -93,17 +93,17 @@ void main() {
       }
 
       // is not providing an object id, so this should create a new object
-      String object_id =
+      ObjectSnapshot object =
           await CarpService.instance.collection('users').object().setData({'email': email, 'name': 'Administrator'});
 
       // updating the name
       await CarpService.instance
           .collection('users')
-          .object(object_id)
+          .object(object.id)
           .updateData({'email': email, 'name': 'Super User'});
 
       // deleting the object
-      await CarpService.instance.collection('users').object(object_id).delete();
+      await CarpService.instance.collection('users').object(object.id).delete();
     });
   });
 }

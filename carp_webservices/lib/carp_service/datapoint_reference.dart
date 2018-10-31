@@ -13,37 +13,26 @@ part of carp_service;
 class DataPointReference extends CarpReference {
   DataPointReference._(CarpService service) : super._(service);
 
-  /// Returns the URL for the data end point for this [DataPointReference].
-  String getDataPointUri() {
-    return "${service.app.uri.toString()}/api/studies/${service.app.study.id}/data-points";
-  }
+  /// The URL for the data end point for this [DataPointReference].
+  String get dataPointUri => "${service.app.uri.toString()}/api/studies/${service.app.study.id}/data-points";
 
   /// Upload a [CARPDataPoint] to the CARP backend using HTTP POST
   Future<http.Response> postDataPoint(CARPDataPoint data) async {
-    assert(service != null);
-    CarpUser user = await service.currentUser;
-    assert(user != null);
-    assert(user.isAuthenticated);
-    final OAuthToken accessToken = await user.getOAuthToken();
-    String url = "${getDataPointUri()}?access_token=$accessToken";
+    final String url = "${dataPointUri}";
+    final rest_headers = await headers;
 
-    http.Response response =
-        await http.post(Uri.encodeFull(url), headers: {"Content-Type": "application/json"}, body: json.encode(data));
+    http.Response response = await http.post(Uri.encodeFull(url), headers: rest_headers, body: json.encode(data));
 
     return response;
   }
 
   /// Get a [CARPDataPoint] from the CARP backend using HTTP GET
   Future<CARPDataPoint> getDataPoint(String id) async {
-    assert(service != null);
-    CarpUser user = await service.currentUser;
-    assert(user != null);
-    assert(user.isAuthenticated);
-    final OAuthToken accessToken = await user.getOAuthToken();
-    String url = "${getDataPointUri()}/$id?access_token=$accessToken";
+    String url = "${dataPointUri}/$id";
+    final rest_headers = await headers;
 
     // GET the data point from the CARP web service
-    http.Response response = await http.get(Uri.encodeFull(url));
+    http.Response response = await http.get(Uri.encodeFull(url), headers: rest_headers);
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJSON = json.decode(response.body);
@@ -66,14 +55,11 @@ class DataPointReference extends CarpReference {
 
   /// Delete a [CARPDataPoint] from the CARP backend using HTTP DELETE
   Future<http.Response> deleteDataPoint(String id) async {
-    assert(service != null);
-    CarpUser user = await service.currentUser;
-    assert(user != null);
-    assert(user.isAuthenticated);
-    final OAuthToken accessToken = await user.getOAuthToken();
-    String url = "${getDataPointUri()}/$id?access_token=$accessToken";
+    String url = "${dataPointUri}/$id";
+    final rest_headers = await headers;
 
-    http.Response response = await http.delete(Uri.encodeFull(url));
+    // DELETE the data point
+    http.Response response = await http.delete(Uri.encodeFull(url), headers: rest_headers);
 
     return response;
   }

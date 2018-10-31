@@ -160,7 +160,23 @@ class CarpService {
 abstract class CarpReference {
   CarpService service;
 
-  CarpReference._(this.service);
+  CarpReference._(this.service) : assert(service != null);
+
+  Future<Map<String, String>> get headers async {
+    assert(service != null);
+    CarpUser user = await service.currentUser;
+    assert(user != null);
+    assert(user.isAuthenticated);
+    final OAuthToken token = await user.getOAuthToken();
+
+    final Map<String, String> _header = {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "Authorization": "bearer ${token.accessToken}",
+      "cache-control": "no-cache"
+    };
+
+    return _header;
+  }
 }
 
 /// Exception for CARP web service communication.
