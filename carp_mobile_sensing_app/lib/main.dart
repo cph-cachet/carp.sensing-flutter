@@ -7,7 +7,6 @@
 import 'package:flutter/material.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_firebase_backend/carp_firebase_backend.dart';
-import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 void main() => runApp(new CARPMobileSensingApp());
 

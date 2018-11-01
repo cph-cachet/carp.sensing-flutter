@@ -1,4 +1,4 @@
-# carp_core
+# CARP Web Service API
 
 Flutter API for accessing CARP
 
