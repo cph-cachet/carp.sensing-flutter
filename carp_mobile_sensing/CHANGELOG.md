@@ -1,5 +1,7 @@
 ## 0.2.2 
 * `phone_log` probe added
+* `audio` probe added
+
 
 
 ## 0.2.1 

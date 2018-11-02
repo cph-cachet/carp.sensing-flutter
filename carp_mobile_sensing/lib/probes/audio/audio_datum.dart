@@ -7,20 +7,24 @@
 
 part of audio;
 
-/// An [AudioDatum] that holds bytes of an audio file.
+/// An [AudioDatum] that holds the path to audio file on the local device
+/// as well as the bytes of the audio file.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class AudioDatum extends CARPDatum {
   static CARPDataFormat CARP_DATA_FORMAT = new CARPDataFormat(NameSpace.CARP_NAMESPACE, ProbeRegistry.AUDIO_MEASURE);
 
+  /// The file path to the audio file store on this device.
+  String filePath;
+
   /// Audio bytes recorded with the microphone.
   List<int> audioBytes;
 
-  AudioDatum({this.audioBytes}) : super(includeDeviceInfo: false);
+  AudioDatum({this.filePath}) : super();
 
   factory AudioDatum.fromJson(Map<String, dynamic> json) => _$AudioDatumFromJson(json);
   Map<String, dynamic> toJson() => _$AudioDatumToJson(this);
 
   CARPDataFormat getCARPDataFormat() => CARP_DATA_FORMAT;
 
-  String toString() => 'Audio bytes length: ${audioBytes.length}';
+  String toString() => 'Audio: {path: $filePath, length: ${audioBytes.length}}';
 }

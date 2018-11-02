@@ -20,6 +20,7 @@ class AudioProbe extends ListeningProbe {
   String lastPath;
   AudioDatum _datum;
 
+  // Initialize an audio probe taking a [SensorMeasure] as configuration.
   AudioProbe(SensorMeasure _measure) : super(_measure);
 
   @override
@@ -83,8 +84,7 @@ class AudioProbe extends ListeningProbe {
       print('startRecorder: $path');
 
       _recorderSubscription = flutterSound.onRecorderStateChanged.listen((e) {
-        DateTime date =
-            new DateTime.fromMillisecondsSinceEpoch(e.currentPosition.toInt());
+        DateTime date = new DateTime.fromMillisecondsSinceEpoch(e.currentPosition.toInt());
         print(date);
       });
 
@@ -92,23 +92,6 @@ class AudioProbe extends ListeningProbe {
     } catch (err) {
       print('startRecorder error: $err');
     }
-  }
-
-  Future<AudioDatum> get datum async {
-    String result = await stopAudioRecording();
-    if (result != null) {
-      List<int> bytes = File(lastPath).readAsBytesSync();
-      AudioDatum datum = new AudioDatum();
-      datum.audioBytes = bytes;
-      return datum;
-    }
-    print("audio_probe: datum() => No audio data");
-  }
-
-  Future<String> generateLocalPath() async {
-    Directory appDocDir = await getApplicationDocumentsDirectory();
-    String timeStamp = DateTime.now().toString().replaceAll(" ", "_");
-    return appDocDir.path + "/$timeStamp.m4a";
   }
 
   Future<String> stopAudioRecording() async {
@@ -127,5 +110,21 @@ class AudioProbe extends ListeningProbe {
     }
     return result;
   }
-//
+
+  Future<AudioDatum> get datum async {
+    String result = await stopAudioRecording();
+    if (result != null) {
+      List<int> bytes = File(lastPath).readAsBytesSync();
+      AudioDatum datum = new AudioDatum(filePath: lastPath);
+      datum.audioBytes = bytes;
+      return datum;
+    }
+    print("audio_probe: datum() => No audio data");
+  }
+
+  Future<String> generateLocalPath() async {
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    String timeStamp = DateTime.now().toString().replaceAll(" ", "_");
+    return appDocDir.path + "/$timeStamp.m4a";
+  }
 }
