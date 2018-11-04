@@ -127,12 +127,12 @@ class Sensing implements ProbeListener {
     console.log("Setting up '${study.name}'...");
 
     // specify the [DataEndPoint] for this study.
-    study.dataEndPoint = getDataEndpoint(DataEndPointType.FIREBASE);
+    study.dataEndPoint = getDataEndpoint(DataEndPointType.FILE);
 
     // add tasks to the study
 
     // note that in this version, we start the sensors (accelerometer, etc.)
-    // in order to generate a lot of data quickly for testsing pusposes
+    // in order to generate a lot of data quickly for testing pusposes
     //study.tasks.add(sensorTask);
 //    study.tasks.add(pedometerTask);
 //    study.tasks.add(hardwareTask);
@@ -237,17 +237,19 @@ class Sensing implements ProbeListener {
     return _sensorTask;
   }
 
-  /// A task collecting audio data with a certain interval
+  /// A task collecting audio data as files.
   Task _audioTask;
 
   Task get audioTask {
     if (_audioTask == null) {
       _audioTask = new Task("Audio task");
 
-      SensorMeasure aum = new SensorMeasure(ProbeRegistry.AUDIO_MEASURE);
-      aum.name = 'Audio';
-      aum.frequency = 10 * 1000; // once every 30 seconds
-      aum.duration = 3 * 1000; // 10 seconds
+      AudioMeasure aum = new AudioMeasure(ProbeRegistry.AUDIO_MEASURE,
+          name: 'Audio',
+          frequency: 10 * 1000, // once every 10 seconds
+          duration: 2 * 1000, // 2 seconds
+          soundFileDirPath: "${FileDataManager.CARP_FILE_PATH}/${study.id}/sound");
+
       _audioTask.addMeasure(aum);
     }
     return _audioTask;

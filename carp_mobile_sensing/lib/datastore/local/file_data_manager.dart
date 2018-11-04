@@ -12,6 +12,9 @@ part of datastore;
 ///
 /// The filename format is "carp/data/<study_id>/carp-data-yyyy-mm-dd-hh-mm-ss-ms.json.zip"
 class FileDataManager extends AbstractDataManager {
+  /// The path to use on this device for CARP data.
+  static final String CARP_FILE_PATH = 'carp/data';
+
   FileDataEndPoint _fileDataEndPoint;
   String _filename;
   String _path;
@@ -54,8 +57,7 @@ class FileDataManager extends AbstractDataManager {
 
     print('Initializig FileDataManager...');
     print(' study file path : $_studyPath');
-    print(
-        ' buffer size     : ${_fileDataEndPoint.bufferSize.toString()} bytes');
+    print(' buffer size     : ${_fileDataEndPoint.bufferSize.toString()} bytes');
   }
 
   ///Returns the local study path on the device where files can be written.
@@ -64,9 +66,8 @@ class FileDataManager extends AbstractDataManager {
       // get local working directory
       final localApplicationDir = await getApplicationDocumentsDirectory();
       // create a sub-directory for this study named as the study ID
-      final directory = await new Directory(
-              '${localApplicationDir.path}/carp/data/${study.id}')
-          .create(recursive: true);
+      final directory =
+          await new Directory('${localApplicationDir.path}/$CARP_FILE_PATH/${study.id}').create(recursive: true);
       _path = directory.path;
     }
     return _path;
@@ -83,7 +84,6 @@ class FileDataManager extends AbstractDataManager {
 
       _filename = '$path/carp-data-$created.json';
     }
-
     return _filename;
   }
 
@@ -119,8 +119,7 @@ class FileDataManager extends AbstractDataManager {
       return Future.delayed(const Duration(seconds: 1), () => uploadData(data));
     }
 
-    CARPDataPoint _header =
-        new CARPDataPoint.fromDatum(study.id, study.userId, data);
+    CARPDataPoint _header = new CARPDataPoint.fromDatum(study.id, study.userId, data);
     final json_string = jsonEncode(_header);
 
     sink.then((_s) {
@@ -184,8 +183,7 @@ class FileDataManager extends AbstractDataManager {
         // if the encrypted file gets another name, remember to update _jsonFilePath
       }
 
-      notifyAllListeners(
-          new FileDataManagerEvent(FileEvent.closed, _finalFilePath));
+      notifyAllListeners(new FileDataManagerEvent(FileEvent.closed, _finalFilePath));
     });
   }
 

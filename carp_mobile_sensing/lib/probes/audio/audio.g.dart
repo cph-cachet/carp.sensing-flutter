@@ -10,14 +10,9 @@ AudioDatum _$AudioDatumFromJson(Map<String, dynamic> json) {
   return AudioDatum(filePath: json['file_path'] as String)
     ..$ = json[r'$'] as String
     ..id = json['id'] as String
-    ..timestamp = json['timestamp'] == null
-        ? null
-        : DateTime.parse(json['timestamp'] as String)
-    ..deviceInfo = json['device_info'] == null
-        ? null
-        : DeviceInfo.fromJson(json['device_info'] as Map<String, dynamic>)
-    ..audioBytes =
-        (json['audio_bytes'] as List)?.map((e) => e as int)?.toList();
+    ..timestamp = json['timestamp'] == null ? null : DateTime.parse(json['timestamp'] as String)
+    ..deviceInfo = json['device_info'] == null ? null : DeviceInfo.fromJson(json['device_info'] as Map<String, dynamic>)
+    ..audioBytes = (json['audio_bytes'] as List)?.map((e) => e as int)?.toList();
 }
 
 Map<String, dynamic> _$AudioDatumToJson(AudioDatum instance) {
@@ -35,5 +30,36 @@ Map<String, dynamic> _$AudioDatumToJson(AudioDatum instance) {
   writeNotNull('device_info', instance.deviceInfo);
   writeNotNull('file_path', instance.filePath);
   writeNotNull('audio_bytes', instance.audioBytes);
+  return val;
+}
+
+AudioMeasure _$AudioMeasureFromJson(Map<String, dynamic> json) {
+  return AudioMeasure(json['measure_type'],
+      name: json['name'],
+      frequency: json['frequency'],
+      duration: json['duration'],
+      soundFileDirPath: json['file_path'] as String)
+    ..$ = json[r'$'] as String
+    ..enabled = json['enabled'] as bool
+    ..configuration = (json['configuration'] as Map<String, dynamic>)?.map((k, e) => MapEntry(k, e as String));
+}
+
+Map<String, dynamic> _$AudioMeasureToJson(AudioMeasure instance) {
+  var val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(r'$', instance.$);
+  writeNotNull('measure_type', instance.measureType);
+  writeNotNull('name', instance.name);
+  writeNotNull('enabled', instance.enabled);
+  writeNotNull('configuration', instance.configuration);
+  writeNotNull('frequency', instance.frequency);
+  writeNotNull('duration', instance.duration);
+  writeNotNull('file_path', instance.soundFileDirPath);
   return val;
 }

@@ -6,41 +6,47 @@
  */
 part of audio;
 
-/// A listening probe collecting data from the accelerometer.
+/// A listening probe collecting data from the microphone.
 ///
 /// Note that this probe generates a lot of data and should be used with caution.
-/// See [SensorMeasure] on how to configure this probe, including setting the
+/// See [AudioMeasure] on how to configure this probe, including setting the
 /// frequency and duration of the sampling rate.
+///
+/// Also note that this probe records raw sound directly from the microphone and hence
+/// records everything - including human speech - in its vicinity.
 class AudioProbe extends ListeningProbe {
   FlutterSound flutterSound;
   StreamSubscription _recorderSubscription;
   Timer _startTimer;
   Timer _stopTimer;
+  String _path;
+  String soundFileName;
   bool _isRecording = false;
-  String lastPath;
   AudioDatum _datum;
 
   // Initialize an audio probe taking a [SensorMeasure] as configuration.
-  AudioProbe(SensorMeasure _measure) : super(_measure);
+  AudioProbe(AudioMeasure _measure)
+      : assert(_measure != null),
+        super(_measure);
 
   @override
   void initialize() {
     flutterSound = new FlutterSound();
     super.initialize();
-    flutterSound.setSubscriptionDuration(0.01);
   }
 
   @override
   Future start() async {
     super.start();
 
-    print("Audio Probe: start() called");
+    // create sound dir and initialize
+    await path;
 
     // Define the probe sampling frequency
     // (not related to audio file sampling rate)
-    int _frequency = (measure as SensorMeasure).frequency;
+    int _frequency = (measure as AudioMeasure).frequency;
     Duration _pause = new Duration(milliseconds: _frequency);
-    int _duration = (measure as SensorMeasure).duration;
+    int _duration = (measure as AudioMeasure).duration;
     Duration _samplingDuration = new Duration(milliseconds: _duration);
 
     // create a recurrent timer that wait (pause) and then resume the sampling.
@@ -76,18 +82,8 @@ class AudioProbe extends ListeningProbe {
   void startAudioRecording() async {
     if (_isRecording) return;
     try {
-      String appDocPath = await generateLocalPath();
-      lastPath = appDocPath;
-      print("App Doc Path: $appDocPath");
-
-      String path = await flutterSound.startRecorder(appDocPath);
-      print('startRecorder: $path');
-
-      _recorderSubscription = flutterSound.onRecorderStateChanged.listen((e) {
-        DateTime date = new DateTime.fromMillisecondsSinceEpoch(e.currentPosition.toInt());
-        print(date);
-      });
-
+      soundFileName = await filePath;
+      String result = await flutterSound.startRecorder(soundFileName);
       _isRecording = true;
     } catch (err) {
       print('startRecorder error: $err');
@@ -95,36 +91,47 @@ class AudioProbe extends ListeningProbe {
   }
 
   Future<String> stopAudioRecording() async {
-    String result;
-    try {
-      result = await flutterSound.stopRecorder();
-      print('stopRecorder: $result');
-
-      if (_recorderSubscription != null) {
-        _recorderSubscription.cancel();
-        _recorderSubscription = null;
-      }
-      _isRecording = false;
-    } catch (err) {
-      print('stopRecorder error: $err');
-    }
+    String result = await flutterSound.stopRecorder();
+    _isRecording = false;
     return result;
   }
 
-  Future<AudioDatum> get datum async {
-    String result = await stopAudioRecording();
-    if (result != null) {
-      List<int> bytes = File(lastPath).readAsBytesSync();
-      AudioDatum datum = new AudioDatum(filePath: lastPath);
-      datum.audioBytes = bytes;
-      return datum;
+  Future<Datum> get datum async {
+    try {
+      String result = await stopAudioRecording();
+      if (result != null) {
+        AudioDatum datum = new AudioDatum(filePath: soundFileName);
+        List<int> bytes = File(soundFileName).readAsBytesSync();
+        datum.audioBytes = bytes;
+        return datum;
+      } else {
+        return ErrorDatum("No sound recording");
+      }
+    } catch (err) {
+      return ErrorDatum("SoundProbe error - $err");
     }
-    print("audio_probe: datum() => No audio data");
   }
 
-  Future<String> generateLocalPath() async {
-    Directory appDocDir = await getApplicationDocumentsDirectory();
-    String timeStamp = DateTime.now().toString().replaceAll(" ", "_");
-    return appDocDir.path + "/$timeStamp.m4a";
+  ///Returns the local path on the device where sound files can be written.
+  ///Creates the directory, if not existing.
+  Future<String> get path async {
+    if (_path == null) {
+      String sound_path = (measure as AudioMeasure).soundFileDirPath;
+      // get local working directory
+      final localApplicationDir = await getApplicationDocumentsDirectory();
+      // create a sub-directory for sound files
+      final directory = await new Directory('${localApplicationDir.path}/$sound_path').create(recursive: true);
+      _path = directory.path;
+    }
+    return _path;
+  }
+
+  /// Returns the full file path to the sound file.
+  /// The filename format is "audio-yyyy-mm-dd-hh-mm-ss-ms.m4a".
+  Future<String> get filePath async {
+    String dir = await path;
+    String created =
+        DateTime.now().toString().replaceAll(" ", "-").replaceAll(":", "-").replaceAll("_", "-").replaceAll(".", "-");
+    return "$dir/audio-$created.m4a";
   }
 }

@@ -17,10 +17,10 @@ part of sensors;
 ///sample.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class SensorMeasure extends PollingProbeMeasure {
-  SensorMeasure(measureType) : super(measureType);
+  SensorMeasure(measureType, {name, frequency, duration})
+      : super(measureType, name: name, frequency: frequency, duration: duration);
 
   static Function get fromJsonFunction => _$SensorMeasureFromJson;
-  factory SensorMeasure.fromJson(Map<String, dynamic> json) =>
-      _$SensorMeasureFromJson(json);
+  factory SensorMeasure.fromJson(Map<String, dynamic> json) => _$SensorMeasureFromJson(json);
   Map<String, dynamic> toJson() => _$SensorMeasureToJson(this);
 }

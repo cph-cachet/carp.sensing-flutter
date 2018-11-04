@@ -13,3 +13,4 @@ import 'package:json_annotation/json_annotation.dart';
 part 'audio_probe.dart';
 part 'audio_datum.dart';
 part 'audio.g.dart';
+part 'audio_measure.dart';

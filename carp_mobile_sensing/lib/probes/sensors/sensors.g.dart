@@ -142,14 +142,14 @@ Map<String, dynamic> _$LightDatumToJson(LightDatum instance) {
 }
 
 SensorMeasure _$SensorMeasureFromJson(Map<String, dynamic> json) {
-  return SensorMeasure(json['measure_type'])
+  return SensorMeasure(json['measure_type'],
+      name: json['name'],
+      frequency: json['frequency'],
+      duration: json['duration'])
     ..$ = json[r'$'] as String
-    ..name = json['name'] as String
     ..enabled = json['enabled'] as bool
     ..configuration = (json['configuration'] as Map<String, dynamic>)
-        ?.map((k, e) => MapEntry(k, e as String))
-    ..frequency = json['frequency'] as int
-    ..duration = json['duration'] as int;
+        ?.map((k, e) => MapEntry(k, e as String));
 }
 
 Map<String, dynamic> _$SensorMeasureToJson(SensorMeasure instance) {
