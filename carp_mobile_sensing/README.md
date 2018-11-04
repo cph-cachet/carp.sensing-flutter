@@ -19,6 +19,28 @@ Note that there are two issues with Android to consider:
 * [Issue #1](https://github.com/cph-cachet/carp.sensing/issues/2) - make sure your app's android `build.graddle` has a `minSdkVersion 19` (instead of `16` ).
 * [Issue #2](https://github.com/cph-cachet/carp.sensing/issues/1) - update the he file `build.graddle` in `flutter_blue` and change the JDK parameters to `26` (instead of `27`).
 
+### Android Integration
+
+Add the following to your apps `manifest.xml` file located in `android/app/src/main`:
+
+````xml
+<manifest
+   ...
+   <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+   <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
+
+   <application
+      ...
+      <!-- service for using the Android activity recognition API -->
+      <service android:name="at.resiverbindet.activityrecognition.activity.ActivityRecognizedService" />
+    </application>
+</manifest>
+````
+
+### iOS Integration
+
+
 ## Documentation
 
 The [Dart API doc](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/) describes the different libraries and classes.
@@ -58,7 +80,7 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 }
 ```
 
-There is a very simple [example](example) app which shows how a study can be created with different taks and measures.
+There is a very simple [example](example) app which shows how a study can be created with different tasks and measures.
 This app just prints the sensing data to a console screen on the phone.
 
 ##Auto generation of files 

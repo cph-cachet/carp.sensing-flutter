@@ -31,6 +31,7 @@ dependencies:
   flutter_sound: # audio probe, recording audio
   #path_provider: # audio probe, file system access
   #phone_log:             # <- phone_log does not support Dart 2.0 >> have raised an issues, but not used until this is fixed.
+  activity_recognition: ^0.1.3
 
   # the CACHET plugins
   pedometer: ^0.0.3       # Get the step count from local OS

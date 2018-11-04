@@ -132,15 +132,17 @@ class Sensing implements ProbeListener {
     // add tasks to the study
 
     // note that in this version, we start the sensors (accelerometer, etc.)
-    // in order to generate a lot of data quickly for testing pusposes
+    // in order to generate a lot of data quickly for testing purposes
     //study.tasks.add(sensorTask);
-//    study.tasks.add(pedometerTask);
+
+    study.tasks.add(pedometerTask);
 //    study.tasks.add(hardwareTask);
 //    study.tasks.add(appTask);
 //    study.tasks.add(connectivityTask);
 //    study.tasks.add(commTask);
 //    study.tasks.add(locationTask);
-    study.tasks.add(audioTask);
+//    study.tasks.add(audioTask);
+    study.tasks.add(contextTask);
 
     // print the study to the console
     console.log(study.toString());
@@ -255,6 +257,18 @@ class Sensing implements ProbeListener {
     return _audioTask;
   }
 
+  /// A task collecting context information, such as activity.
+  Task _contextTask;
+
+  Task get contextTask {
+    if (_contextTask == null) {
+      _contextTask = new Task("Context task");
+
+      _contextTask.addMeasure(ProbeMeasure(ProbeRegistry.ACTIVITY_MEASURE, name: "Activity Recognition Probe"));
+    }
+    return _contextTask;
+  }
+
   Task _pedometerTask;
 
   /// A task collecting pedometer (step count) data on a regular basis.
@@ -262,9 +276,10 @@ class Sensing implements ProbeListener {
     if (_pedometerTask == null) {
       _pedometerTask = new Task("Pedometer task");
 
-      SensorMeasure pm = new SensorMeasure(ProbeRegistry.PEDOMETER_MEASURE);
-      pm.name = 'Pedometer';
-      pm.frequency = 5 * 1000; // Sample once every 5 seconds
+      SensorMeasure pm = new SensorMeasure(ProbeRegistry.PEDOMETER_MEASURE,
+          name: 'Pedometer', //
+          frequency: 30 * 1000 // Sample once every 30 seconds
+          );
       _pedometerTask.addMeasure(pm);
     }
     return _pedometerTask;

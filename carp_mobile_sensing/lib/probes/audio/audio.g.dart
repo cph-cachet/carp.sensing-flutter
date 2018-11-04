@@ -10,9 +10,14 @@ AudioDatum _$AudioDatumFromJson(Map<String, dynamic> json) {
   return AudioDatum(filePath: json['file_path'] as String)
     ..$ = json[r'$'] as String
     ..id = json['id'] as String
-    ..timestamp = json['timestamp'] == null ? null : DateTime.parse(json['timestamp'] as String)
-    ..deviceInfo = json['device_info'] == null ? null : DeviceInfo.fromJson(json['device_info'] as Map<String, dynamic>)
-    ..audioBytes = (json['audio_bytes'] as List)?.map((e) => e as int)?.toList();
+    ..timestamp = json['timestamp'] == null
+        ? null
+        : DateTime.parse(json['timestamp'] as String)
+    ..deviceInfo = json['device_info'] == null
+        ? null
+        : DeviceInfo.fromJson(json['device_info'] as Map<String, dynamic>)
+    ..audioBytes =
+        (json['audio_bytes'] as List)?.map((e) => e as int)?.toList();
 }
 
 Map<String, dynamic> _$AudioDatumToJson(AudioDatum instance) {
@@ -38,10 +43,11 @@ AudioMeasure _$AudioMeasureFromJson(Map<String, dynamic> json) {
       name: json['name'],
       frequency: json['frequency'],
       duration: json['duration'],
-      soundFileDirPath: json['file_path'] as String)
+      soundFileDirPath: json['sound_file_dir_path'] as String)
     ..$ = json[r'$'] as String
     ..enabled = json['enabled'] as bool
-    ..configuration = (json['configuration'] as Map<String, dynamic>)?.map((k, e) => MapEntry(k, e as String));
+    ..configuration = (json['configuration'] as Map<String, dynamic>)
+        ?.map((k, e) => MapEntry(k, e as String));
 }
 
 Map<String, dynamic> _$AudioMeasureToJson(AudioMeasure instance) {
@@ -60,6 +66,6 @@ Map<String, dynamic> _$AudioMeasureToJson(AudioMeasure instance) {
   writeNotNull('configuration', instance.configuration);
   writeNotNull('frequency', instance.frequency);
   writeNotNull('duration', instance.duration);
-  writeNotNull('file_path', instance.soundFileDirPath);
+  writeNotNull('sound_file_dir_path', instance.soundFileDirPath);
   return val;
 }
