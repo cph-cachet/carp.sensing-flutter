@@ -113,7 +113,11 @@ Map<String, dynamic> _$GyroscopeDatumToJson(GyroscopeDatum instance) {
 }
 
 LightDatum _$LightDatumFromJson(Map<String, dynamic> json) {
-  return LightDatum(lux: json['lux'] as int)
+  return LightDatum(
+      avgLux: (json['avg_lux'] as num)?.toDouble(),
+      stdLux: (json['std_lux'] as num)?.toDouble(),
+      minLux: (json['min_lux'] as num)?.toDouble(),
+      maxLux: (json['max_lux'] as num)?.toDouble())
     ..$ = json[r'$'] as String
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
@@ -137,7 +141,10 @@ Map<String, dynamic> _$LightDatumToJson(LightDatum instance) {
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
   writeNotNull('device_info', instance.deviceInfo);
-  writeNotNull('lux', instance.lux);
+  writeNotNull('avg_lux', instance.avgLux);
+  writeNotNull('std_lux', instance.stdLux);
+  writeNotNull('min_lux', instance.minLux);
+  writeNotNull('max_lux', instance.maxLux);
   return val;
 }
 

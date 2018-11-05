@@ -66,9 +66,12 @@ class LightDatum extends CARPDatum {
       new CARPDataFormat(NameSpace.CARP_NAMESPACE, ProbeRegistry.LIGHT_MEASURE);
 
   /// Intensity in Lux
-  int lux;
+  double avgLux;
+  double stdLux;
+  double minLux;
+  double maxLux;
 
-  LightDatum({this.lux}) : super(includeDeviceInfo: false);
+  LightDatum({this.avgLux, this.stdLux, this.minLux, this.maxLux}) : super(includeDeviceInfo: false);
 
   factory LightDatum.fromJson(Map<String, dynamic> json) =>
       _$LightDatumFromJson(json);
@@ -76,5 +79,5 @@ class LightDatum extends CARPDatum {
 
   CARPDataFormat getCARPDataFormat() => CARP_DATA_FORMAT;
 
-  String toString() => 'light: {lux: $lux}';
+  String toString() => 'light: {avgLux: $avgLux, stdLux: $stdLux, minLux: $minLux, avgLux: $maxLux}';
 }
