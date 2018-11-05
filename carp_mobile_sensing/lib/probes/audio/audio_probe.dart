@@ -105,7 +105,6 @@ class AudioProbe extends ListeningProbe {
       String result = await stopAudioRecording();
       if (result != null) {
         String filename = soundFileName.split("/").last;
-        print("filename = $filename");
         AudioDatum datum = new AudioDatum(
             filename: filename, startRecordingTime: _startRecordingTime, endRecordingTime: _endRecordingTime);
         return datum;
