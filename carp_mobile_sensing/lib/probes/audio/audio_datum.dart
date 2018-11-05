@@ -16,10 +16,10 @@ class AudioDatum extends CARPDatum {
   /// The filename of the audio file store on this device.
   String filename;
 
-  /// The timestampe for start of recording
+  /// The timestamp for start of recording.
   DateTime startRecordingTime;
 
-  /// The timestampe for end of recording
+  /// The timestamp for end of recording.
   DateTime endRecordingTime;
 
   AudioDatum({this.filename, this.startRecordingTime, this.endRecordingTime}) : super();
