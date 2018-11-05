@@ -71,7 +71,8 @@ class LightDatum extends CARPDatum {
   num minLux;
   num maxLux;
 
-  LightDatum({this.avgLux, this.stdLux, this.minLux, this.maxLux}) : super(includeDeviceInfo: false);
+  LightDatum({this.avgLux, this.stdLux, this.minLux, this.maxLux})
+      : super(includeDeviceInfo: false);
 
   factory LightDatum.fromJson(Map<String, dynamic> json) =>
       _$LightDatumFromJson(json);
@@ -79,5 +80,6 @@ class LightDatum extends CARPDatum {
 
   CARPDataFormat getCARPDataFormat() => CARP_DATA_FORMAT;
 
-  String toString() => 'light: {avgLux: $avgLux, stdLux: $stdLux, minLux: $minLux, avgLux: $maxLux}';
+  String toString() =>
+      'light: {avgLux: $avgLux, stdLux: $stdLux, minLux: $minLux, avgLux: $maxLux}';
 }

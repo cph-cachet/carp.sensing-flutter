@@ -88,7 +88,7 @@ class LightProbe extends ListeningProbe {
   }
 
   num mean(List<num> data) {
-    return data.reduce((a,b) => a+b) / data.length;
+    return data.reduce((a, b) => a + b) / data.length;
   }
 
   LightDatum get datum {

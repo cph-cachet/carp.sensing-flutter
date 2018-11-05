@@ -2,6 +2,7 @@
 * `phone_log` probe added
 * `audio` probe added
 * `activity` probe added
+* improvement to `readme` file on `manifest.xml` and `Info.plist`.
 
 
 ## 0.2.1 

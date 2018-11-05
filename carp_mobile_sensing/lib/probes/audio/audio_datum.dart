@@ -11,7 +11,8 @@ part of audio;
 /// as well as the bytes of the audio file.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class AudioDatum extends CARPDatum {
-  static CARPDataFormat CARP_DATA_FORMAT = new CARPDataFormat(NameSpace.CARP_NAMESPACE, ProbeRegistry.AUDIO_MEASURE);
+  static CARPDataFormat CARP_DATA_FORMAT =
+      new CARPDataFormat(NameSpace.CARP_NAMESPACE, ProbeRegistry.AUDIO_MEASURE);
 
   /// The filename of the audio file store on this device.
   String filename;
@@ -22,12 +23,15 @@ class AudioDatum extends CARPDatum {
   /// The timestamp for end of recording.
   DateTime endRecordingTime;
 
-  AudioDatum({this.filename, this.startRecordingTime, this.endRecordingTime}) : super();
+  AudioDatum({this.filename, this.startRecordingTime, this.endRecordingTime})
+      : super();
 
-  factory AudioDatum.fromJson(Map<String, dynamic> json) => _$AudioDatumFromJson(json);
+  factory AudioDatum.fromJson(Map<String, dynamic> json) =>
+      _$AudioDatumFromJson(json);
   Map<String, dynamic> toJson() => _$AudioDatumToJson(this);
 
   CARPDataFormat getCARPDataFormat() => CARP_DATA_FORMAT;
 
-  String toString() => 'Audio File: {filename: $filename, start: $startRecordingTime, end: $endRecordingTime}';
+  String toString() =>
+      'Audio File: {filename: $filename, start: $startRecordingTime, end: $endRecordingTime}';
 }

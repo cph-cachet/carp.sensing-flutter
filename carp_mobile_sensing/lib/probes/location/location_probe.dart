@@ -26,8 +26,8 @@ class LocationProbe extends StreamSubscriptionListeningProbe {
 
     // starting the subscription to the location service - triggered every time the location changes.
     try {
-      subscription =
-          _location.onLocationChanged().listen(onData, onError: onError, onDone: onDone, cancelOnError: true);
+      subscription = _location.onLocationChanged().listen(onData,
+          onError: onError, onDone: onDone, cancelOnError: true);
     } catch (error) {
       onError(error);
     }

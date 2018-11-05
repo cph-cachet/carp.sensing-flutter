@@ -1,5 +1,7 @@
 # CARP Mobile Sensing Framework in Flutter
 
+[![pub package](https://img.shields.io/pub/v/carp_mobile_sensing.svg)](https://pub.dartlang.org/packages/carp_mobile_sensing)
+
 This library contains the software architecture for the CARP sensing framework implemented in Flutter.
 Supports cross-platform (iOS and Android) sensing.
 

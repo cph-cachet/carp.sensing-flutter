@@ -19,9 +19,11 @@ class AudioMeasure extends SensorMeasure {
   String soundFileDirPath;
 
   AudioMeasure(measureType, {name, frequency, duration, this.soundFileDirPath})
-      : super(measureType, name: name, frequency: frequency, duration: duration);
+      : super(measureType,
+            name: name, frequency: frequency, duration: duration);
 
   static Function get fromJsonFunction => _$AudioMeasureFromJson;
-  factory AudioMeasure.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(json['\$'].toString(), json);
+  factory AudioMeasure.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory.fromJson(json['\$'].toString(), json);
   Map<String, dynamic> toJson() => _$AudioMeasureToJson(this);
 }

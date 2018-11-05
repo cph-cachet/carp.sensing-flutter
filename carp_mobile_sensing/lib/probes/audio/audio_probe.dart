@@ -102,7 +102,9 @@ class AudioProbe extends ListeningProbe {
       if (result != null) {
         String filename = soundFileName.split("/").last;
         AudioDatum datum = new AudioDatum(
-            filename: filename, startRecordingTime: _startRecordingTime, endRecordingTime: _endRecordingTime);
+            filename: filename,
+            startRecordingTime: _startRecordingTime,
+            endRecordingTime: _endRecordingTime);
         return datum;
       } else {
         return ErrorDatum("No sound recording");
@@ -120,7 +122,9 @@ class AudioProbe extends ListeningProbe {
       // get local working directory
       final localApplicationDir = await getApplicationDocumentsDirectory();
       // create a sub-directory for sound files
-      final directory = await new Directory('${localApplicationDir.path}/$sound_path').create(recursive: true);
+      final directory =
+          await new Directory('${localApplicationDir.path}/$sound_path')
+              .create(recursive: true);
       _path = directory.path;
     }
     return _path;
@@ -130,8 +134,12 @@ class AudioProbe extends ListeningProbe {
   /// The filename format is "audio-yyyy-mm-dd-hh-mm-ss-ms.m4a".
   Future<String> get filePath async {
     String dir = await path;
-    String created =
-        DateTime.now().toString().replaceAll(" ", "-").replaceAll(":", "-").replaceAll("_", "-").replaceAll(".", "-");
+    String created = DateTime.now()
+        .toString()
+        .replaceAll(" ", "-")
+        .replaceAll(":", "-")
+        .replaceAll("_", "-")
+        .replaceAll(".", "-");
     return "$dir/audio-$created.m4a";
   }
 }

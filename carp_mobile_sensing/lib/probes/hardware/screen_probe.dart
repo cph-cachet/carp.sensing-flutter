@@ -23,7 +23,8 @@ class ScreenProbe extends StreamSubscriptionListeningProbe {
   @override
   Future start() async {
     super.start();
-    subscription = _screen.screenStateEvents.listen(onData, onError: onError, onDone: onDone, cancelOnError: true);
+    subscription = _screen.screenStateEvents
+        .listen(onData, onError: onError, onDone: onDone, cancelOnError: true);
   }
 
   void onData(dynamic event) async {

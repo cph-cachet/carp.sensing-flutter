@@ -24,8 +24,8 @@ class ActivityProbe extends StreamSubscriptionListeningProbe {
 
     // starting the subscription to the activity recognition service
     try {
-      subscription =
-          ActivityRecognition.activityUpdates().listen(onData, onError: onError, onDone: onDone, cancelOnError: true);
+      subscription = ActivityRecognition.activityUpdates().listen(onData,
+          onError: onError, onDone: onDone, cancelOnError: true);
     } catch (error) {
       onError(error);
     }
