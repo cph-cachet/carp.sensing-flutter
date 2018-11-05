@@ -7,14 +7,16 @@
 
 part of sensors;
 
+
 /// The [LightProbe] listens to the phone's light sensor typically located near the front camera.
 /// Every value is in the SI unit Lux and will be stored in a [LightDatum] object.
 class LightProbe extends ListeningProbe {
   StreamSubscription<int> _subscription;
   Timer _startTimer;
   Timer _stopTimer;
-  LightDatum _data;
+  LightDatum _datum;
   Light _light;
+  List<int> _luxValues = new List();
 
   LightProbe(SensorMeasure _measure) : super(_measure);
 
@@ -52,34 +54,39 @@ class LightProbe extends ListeningProbe {
 
   @override
   void stop() {
-    if (_data != null) this.notifyAllListeners(_data);
+    if (_datum != null) this.notifyAllListeners(_datum);
     _subscription.cancel();
     _subscription = null;
-    _data = null;
+    _datum = null;
   }
 
   @override
   void resume() {
-    _data = new LightDatum();
     _subscription.resume();
   }
 
   @override
   void pause() {
-    if (_data != null) this.notifyAllListeners(_data);
-    _data = null;
+//    double avgLux = Stats.fromData(_luxValues).mean;
+//    double stdLux = Stats.fromData(_luxValues).standardDeviation;
+//    double minLux = Stats.fromData(_luxValues).min;
+//    double maxLux = Stats.fromData(_luxValues).max;
+//    _datum = new LightDatum(
+//        avgLux: avgLux, stdLux: stdLux, minLux: minLux, maxLux: maxLux);
+
+    if (_datum != null) this.notifyAllListeners(_datum);
+    _datum = null;
     _subscription.pause();
   }
 
   void _onData(int luxValue) async {
-    if (_data != null) {
-      _data.lux = luxValue;
-      this.notifyAllListeners(_data);
+    if (_datum != null) {
+      _luxValues.add(luxValue);
     }
   }
 
   void _onDone() {
-    if (_data != null) this.notifyAllListeners(_data);
+    if (_datum != null) this.notifyAllListeners(_datum);
   }
 
   void _onError(error) {

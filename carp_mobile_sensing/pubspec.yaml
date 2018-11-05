@@ -29,9 +29,10 @@ dependencies:
   sms: ^0.2.4
   call_log: ^1.0.2
   flutter_sound: # audio probe, recording audio
-  #path_provider: # audio probe, file system access
   #phone_log:             # <- phone_log does not support Dart 2.0 >> have raised an issues, but not used until this is fixed.
   activity_recognition: ^0.1.3
+  stats: ^0.2.0+2 # For calculating statistics, ex LightProbe
+
 
   # the CACHET plugins
   pedometer: ^0.0.3       # Get the step count from local OS
@@ -45,6 +46,7 @@ dev_dependencies:
     sdk: flutter
   build_runner:
   json_serializable: ^1.0.0
+
 
 
 # The following section is specific to Flutter.
