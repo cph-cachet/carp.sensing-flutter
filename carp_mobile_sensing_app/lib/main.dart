@@ -133,7 +133,7 @@ class Sensing implements ProbeListener {
 
     // note that in this version, we start the sensors (accelerometer, etc.)
     // in order to generate a lot of data quickly for testing purposes
-    //study.tasks.add(sensorTask);
+    study.tasks.add(sensorTask);
 
 //    study.tasks.add(pedometerTask);
 //    study.tasks.add(hardwareTask);
@@ -142,12 +142,7 @@ class Sensing implements ProbeListener {
 //    study.tasks.add(commTask);
 //    study.tasks.add(locationTask);
 //    study.tasks.add(audioTask);
-<<<<<<< HEAD
     study.tasks.add(contextTask);
-=======
-//    study.tasks.add(contextTask);
-    study.tasks.add(sensorTask);
->>>>>>> 8860591dcf4a1d617827e87bf22c3ff302719891
 
     // print the study to the console
     console.log(study.toString());
