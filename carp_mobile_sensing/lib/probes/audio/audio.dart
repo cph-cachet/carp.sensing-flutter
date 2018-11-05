@@ -1,4 +1,4 @@
-/// A library for collecting ambient sound from the phones microphone.
+/// A library for collecting an audio recording from the phone's microphone.
 library audio;
 
 import 'dart:async';

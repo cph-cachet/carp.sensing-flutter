@@ -23,6 +23,8 @@ class AudioProbe extends ListeningProbe {
   String soundFileName;
   bool _isRecording = false;
   AudioDatum _datum;
+  DateTime _startRecordingTime;
+  DateTime _endRecordingTime;
 
   // Initialize an audio probe taking a [SensorMeasure] as configuration.
   AudioProbe(AudioMeasure _measure)
@@ -83,6 +85,7 @@ class AudioProbe extends ListeningProbe {
     if (_isRecording) return;
     try {
       soundFileName = await filePath;
+      _startRecordingTime = DateTime.now();
       String result = await flutterSound.startRecorder(soundFileName);
       _isRecording = true;
     } catch (err) {
@@ -92,6 +95,7 @@ class AudioProbe extends ListeningProbe {
 
   Future<String> stopAudioRecording() async {
     String result = await flutterSound.stopRecorder();
+    _endRecordingTime = DateTime.now();
     _isRecording = false;
     return result;
   }
@@ -100,9 +104,10 @@ class AudioProbe extends ListeningProbe {
     try {
       String result = await stopAudioRecording();
       if (result != null) {
-        AudioDatum datum = new AudioDatum(filePath: soundFileName);
-        List<int> bytes = File(soundFileName).readAsBytesSync();
-        datum.audioBytes = bytes;
+        String filename = soundFileName.split("/").last;
+        print("filename = $filename");
+        AudioDatum datum = new AudioDatum(
+            filename: filename, startRecordingTime: _startRecordingTime, endRecordingTime: _endRecordingTime);
         return datum;
       } else {
         return ErrorDatum("No sound recording");
@@ -125,6 +130,14 @@ class AudioProbe extends ListeningProbe {
     }
     return _path;
   }
+
+  /// Returns the filename of the sound file.
+  /// The filename format is "audio-yyyy-mm-dd-hh-mm-ss-ms.m4a".
+//  String get filename {
+//    String created =
+//        DateTime.now().toString().replaceAll(" ", "-").replaceAll(":", "-").replaceAll("_", "-").replaceAll(".", "-");
+//    return "audio-$created.m4a";
+//  }
 
   /// Returns the full file path to the sound file.
   /// The filename format is "audio-yyyy-mm-dd-hh-mm-ss-ms.m4a".

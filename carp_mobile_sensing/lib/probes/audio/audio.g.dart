@@ -7,7 +7,14 @@ part of audio;
 // **************************************************************************
 
 AudioDatum _$AudioDatumFromJson(Map<String, dynamic> json) {
-  return AudioDatum(filePath: json['file_path'] as String)
+  return AudioDatum(
+      filename: json['filename'] as String,
+      startRecordingTime: json['start_recording_time'] == null
+          ? null
+          : DateTime.parse(json['start_recording_time'] as String),
+      endRecordingTime: json['end_recording_time'] == null
+          ? null
+          : DateTime.parse(json['end_recording_time'] as String))
     ..$ = json[r'$'] as String
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
@@ -15,9 +22,7 @@ AudioDatum _$AudioDatumFromJson(Map<String, dynamic> json) {
         : DateTime.parse(json['timestamp'] as String)
     ..deviceInfo = json['device_info'] == null
         ? null
-        : DeviceInfo.fromJson(json['device_info'] as Map<String, dynamic>)
-    ..audioBytes =
-        (json['audio_bytes'] as List)?.map((e) => e as int)?.toList();
+        : DeviceInfo.fromJson(json['device_info'] as Map<String, dynamic>);
 }
 
 Map<String, dynamic> _$AudioDatumToJson(AudioDatum instance) {
@@ -33,8 +38,11 @@ Map<String, dynamic> _$AudioDatumToJson(AudioDatum instance) {
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
   writeNotNull('device_info', instance.deviceInfo);
-  writeNotNull('file_path', instance.filePath);
-  writeNotNull('audio_bytes', instance.audioBytes);
+  writeNotNull('filename', instance.filename);
+  writeNotNull(
+      'start_recording_time', instance.startRecordingTime?.toIso8601String());
+  writeNotNull(
+      'end_recording_time', instance.endRecordingTime?.toIso8601String());
   return val;
 }
 

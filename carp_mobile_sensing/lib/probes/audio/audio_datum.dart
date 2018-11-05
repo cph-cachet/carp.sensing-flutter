@@ -13,18 +13,21 @@ part of audio;
 class AudioDatum extends CARPDatum {
   static CARPDataFormat CARP_DATA_FORMAT = new CARPDataFormat(NameSpace.CARP_NAMESPACE, ProbeRegistry.AUDIO_MEASURE);
 
-  /// The file path to the audio file store on this device.
-  String filePath;
+  /// The filename of the audio file store on this device.
+  String filename;
 
-  /// Audio bytes recorded with the microphone.
-  List<int> audioBytes;
+  /// The timestampe for start of recording
+  DateTime startRecordingTime;
 
-  AudioDatum({this.filePath}) : super();
+  /// The timestampe for end of recording
+  DateTime endRecordingTime;
+
+  AudioDatum({this.filename, this.startRecordingTime, this.endRecordingTime}) : super();
 
   factory AudioDatum.fromJson(Map<String, dynamic> json) => _$AudioDatumFromJson(json);
   Map<String, dynamic> toJson() => _$AudioDatumToJson(this);
 
   CARPDataFormat getCARPDataFormat() => CARP_DATA_FORMAT;
 
-  String toString() => 'Audio: {path: $filePath, length: ${audioBytes.length}}';
+  String toString() => 'Audio File: {filename: $filename, start: $startRecordingTime, end: $endRecordingTime}';
 }

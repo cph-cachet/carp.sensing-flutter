@@ -26,6 +26,7 @@ Add the following to your apps `manifest.xml` file located in `android/app/src/m
 ````xml
 <manifest
    ...
+   <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
@@ -39,6 +40,27 @@ Add the following to your apps `manifest.xml` file located in `android/app/src/m
 ````
 
 ### iOS Integration
+
+Add this permission in `Info.plist`:
+
+```xml
+<key>NSLocationWhenInUseUsageDescription</key>
+<string>This sample uses the location API to record location.</string>
+<key>NSLocationAlwaysUsageDescription</key>
+<string>This sample uses the location API to record location.</string>
+<key>NSMicrophoneUsageDescription</key>
+<string>This sample uses the microphone to record ambient noice in the phone's environment.</string>
+<key>UIBackgroundModes</key>
+  <array>
+  <string>audio</string>
+  <string>bluetooth-central</string>
+  <string>bluetooth-peripheral</string>
+  <string>external-accessory</string>
+  <string>fetch</string>
+  <string>location</string>
+</array>
+
+```
 
 
 ## Documentation

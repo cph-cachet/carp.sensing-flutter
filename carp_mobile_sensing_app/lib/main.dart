@@ -135,13 +135,13 @@ class Sensing implements ProbeListener {
     // in order to generate a lot of data quickly for testing purposes
     //study.tasks.add(sensorTask);
 
-    study.tasks.add(pedometerTask);
+//    study.tasks.add(pedometerTask);
 //    study.tasks.add(hardwareTask);
 //    study.tasks.add(appTask);
 //    study.tasks.add(connectivityTask);
 //    study.tasks.add(commTask);
 //    study.tasks.add(locationTask);
-//    study.tasks.add(audioTask);
+    study.tasks.add(audioTask);
     study.tasks.add(contextTask);
 
     // print the study to the console

@@ -23,6 +23,7 @@ class ProbeRegistry {
   static const String BATTERY_MEASURE = "battery";
   static const String BLUETOOTH_MEASURE = "bluetooth";
   static const String AUDIO_MEASURE = "audio";
+  static const String NOICE_MEASURE = "noice";
   static const String LOCATION_MEASURE = "location";
   static const String CONNECTIVITY_MEASURE = "connectivity";
   static const String LIGHT_MEASURE = "light";
