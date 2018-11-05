@@ -114,10 +114,10 @@ Map<String, dynamic> _$GyroscopeDatumToJson(GyroscopeDatum instance) {
 
 LightDatum _$LightDatumFromJson(Map<String, dynamic> json) {
   return LightDatum(
-      avgLux: (json['avg_lux'] as num)?.toDouble(),
-      stdLux: (json['std_lux'] as num)?.toDouble(),
-      minLux: (json['min_lux'] as num)?.toDouble(),
-      maxLux: (json['max_lux'] as num)?.toDouble())
+      avgLux: json['avg_lux'] as num,
+      stdLux: json['std_lux'] as num,
+      minLux: json['min_lux'] as num,
+      maxLux: json['max_lux'] as num)
     ..$ = json[r'$'] as String
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null

@@ -66,10 +66,10 @@ class LightDatum extends CARPDatum {
       new CARPDataFormat(NameSpace.CARP_NAMESPACE, ProbeRegistry.LIGHT_MEASURE);
 
   /// Intensity in Lux
-  double avgLux;
-  double stdLux;
-  double minLux;
-  double maxLux;
+  num avgLux;
+  num stdLux;
+  num minLux;
+  num maxLux;
 
   LightDatum({this.avgLux, this.stdLux, this.minLux, this.maxLux}) : super(includeDeviceInfo: false);
 

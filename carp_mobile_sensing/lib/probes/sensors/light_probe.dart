@@ -7,7 +7,6 @@
 
 part of sensors;
 
-
 /// The [LightProbe] listens to the phone's light sensor typically located near the front camera.
 /// Every value is in the SI unit Lux and will be stored in a [LightDatum] object.
 class LightProbe extends ListeningProbe {
@@ -16,7 +15,7 @@ class LightProbe extends ListeningProbe {
   Timer _stopTimer;
   LightDatum _datum;
   Light _light;
-  List<int> _luxValues = new List();
+  List<num> _luxValues = new List();
 
   LightProbe(SensorMeasure _measure) : super(_measure);
 
@@ -67,30 +66,41 @@ class LightProbe extends ListeningProbe {
 
   @override
   void pause() {
-//    double avgLux = Stats.fromData(_luxValues).mean;
-//    double stdLux = Stats.fromData(_luxValues).standardDeviation;
-//    double minLux = Stats.fromData(_luxValues).min;
-//    double maxLux = Stats.fromData(_luxValues).max;
-//    _datum = new LightDatum(
-//        avgLux: avgLux, stdLux: stdLux, minLux: minLux, maxLux: maxLux);
+    _datum = datum;
 
-    if (_datum != null) this.notifyAllListeners(_datum);
+    if (datum != null) this.notifyAllListeners(_datum);
     _datum = null;
     _subscription.pause();
   }
 
-  void _onData(int luxValue) async {
-    if (_datum != null) {
-      _luxValues.add(luxValue);
-    }
+  void _onData(num luxValue) async {
+    _luxValues.add(luxValue);
   }
 
   void _onDone() {
+    _datum = datum;
     if (_datum != null) this.notifyAllListeners(_datum);
   }
 
   void _onError(error) {
     ErrorDatum _ed = new ErrorDatum(error.toString());
     this.notifyAllListeners(_ed);
+  }
+
+  num mean(List<num> data) {
+    return data.reduce((a,b) => a+b) / data.length;
+  }
+
+  LightDatum get datum {
+    Stats stats = Stats.fromData(_luxValues);
+    num avgLux = stats.mean;
+    num stdLux = stats.standardDeviation;
+    num minLux = stats.min;
+    num maxLux = stats.max;
+
+    print("$avgLux, $stdLux, $minLux, $maxLux");
+
+    return new LightDatum(
+        avgLux: avgLux, stdLux: stdLux, minLux: minLux, maxLux: maxLux);
   }
 }
