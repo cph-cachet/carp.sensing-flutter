@@ -16,9 +16,6 @@ part of audio;
 /// records everything - including human speech - in its vicinity.
 class AudioProbe extends ListeningProbe {
   FlutterSound flutterSound;
-  StreamSubscription _recorderSubscription;
-  Timer _startTimer;
-  Timer _stopTimer;
   String _path;
   String soundFileName;
   bool _isRecording = false;
@@ -51,11 +48,11 @@ class AudioProbe extends ListeningProbe {
     Duration _samplingDuration = new Duration(milliseconds: _duration);
 
     // create a recurrent timer that wait (pause) and then resume the sampling.
-    _startTimer = new Timer.periodic(_pause, (Timer timer) {
+    Timer.periodic(_pause, (Timer timer) {
       this.resume();
 
       // create a timer that stops the sampling after the specified duration.
-      _stopTimer = new Timer(_samplingDuration, () {
+      new Timer(_samplingDuration, () {
         this.pause();
       });
     });
@@ -82,7 +79,7 @@ class AudioProbe extends ListeningProbe {
     try {
       soundFileName = await filePath;
       _startRecordingTime = DateTime.now();
-      String result = await flutterSound.startRecorder(soundFileName);
+      await flutterSound.startRecorder(soundFileName);
       _isRecording = true;
     } catch (err) {
       print('startRecorder error: $err');
@@ -102,9 +99,7 @@ class AudioProbe extends ListeningProbe {
       if (result != null) {
         String filename = soundFileName.split("/").last;
         AudioDatum datum = new AudioDatum(
-            filename: filename,
-            startRecordingTime: _startRecordingTime,
-            endRecordingTime: _endRecordingTime);
+            filename: filename, startRecordingTime: _startRecordingTime, endRecordingTime: _endRecordingTime);
         return datum;
       } else {
         return ErrorDatum("No sound recording");
@@ -122,9 +117,7 @@ class AudioProbe extends ListeningProbe {
       // get local working directory
       final localApplicationDir = await getApplicationDocumentsDirectory();
       // create a sub-directory for sound files
-      final directory =
-          await new Directory('${localApplicationDir.path}/$sound_path')
-              .create(recursive: true);
+      final directory = await new Directory('${localApplicationDir.path}/$sound_path').create(recursive: true);
       _path = directory.path;
     }
     return _path;
@@ -134,12 +127,8 @@ class AudioProbe extends ListeningProbe {
   /// The filename format is "audio-yyyy-mm-dd-hh-mm-ss-ms.m4a".
   Future<String> get filePath async {
     String dir = await path;
-    String created = DateTime.now()
-        .toString()
-        .replaceAll(" ", "-")
-        .replaceAll(":", "-")
-        .replaceAll("_", "-")
-        .replaceAll(".", "-");
+    String created =
+        DateTime.now().toString().replaceAll(" ", "-").replaceAll(":", "-").replaceAll("_", "-").replaceAll(".", "-");
     return "$dir/audio-$created.m4a";
   }
 }

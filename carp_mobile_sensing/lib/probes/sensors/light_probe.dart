@@ -11,8 +11,6 @@ part of sensors;
 /// Every value is in the SI unit Lux and will be stored in a [LightDatum] object.
 class LightProbe extends ListeningProbe {
   StreamSubscription<int> _subscription;
-  Timer _startTimer;
-  Timer _stopTimer;
   LightDatum _datum;
   Light _light;
   List<num> _luxValues = new List();
@@ -29,8 +27,7 @@ class LightProbe extends ListeningProbe {
   Future start() async {
     super.start();
     // starting the subscription to the accelerometer events
-    _subscription = _light.lightSensorStream.listen(_onData,
-        onError: _onError, onDone: _onDone, cancelOnError: true);
+    _subscription = _light.lightSensorStream.listen(_onData, onError: _onError, onDone: _onDone, cancelOnError: true);
 
     // pause it for now.
     _subscription.pause();
@@ -41,11 +38,11 @@ class LightProbe extends ListeningProbe {
     Duration _samplingDuration = new Duration(milliseconds: _duration);
 
     // create a recurrent timer that wait (pause) and then resume the sampling.
-    _startTimer = new Timer.periodic(_pause, (Timer timer) {
+    Timer.periodic(_pause, (Timer timer) {
       this.resume();
 
       // create a timer that stops the sampling after the specified duration.
-      _stopTimer = new Timer(_samplingDuration, () {
+      Timer(_samplingDuration, () {
         this.pause();
       });
     });
@@ -100,7 +97,6 @@ class LightProbe extends ListeningProbe {
 
     print("$avgLux, $stdLux, $minLux, $maxLux");
 
-    return new LightDatum(
-        avgLux: avgLux, stdLux: stdLux, minLux: minLux, maxLux: maxLux);
+    return new LightDatum(avgLux: avgLux, stdLux: stdLux, minLux: minLux, maxLux: maxLux);
   }
 }

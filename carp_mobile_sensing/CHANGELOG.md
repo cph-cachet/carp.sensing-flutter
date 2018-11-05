@@ -1,3 +1,9 @@
+## 0.2.4 
+* error in `light` probe fixed.
+
+## 0.2.3
+* fixed error in `readme` file.
+
 ## 0.2.2 
 * `phone_log` probe added
 * `audio` probe added

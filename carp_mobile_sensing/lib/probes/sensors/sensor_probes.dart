@@ -14,8 +14,6 @@ part of sensors;
 /// frequency and duration of the sampling rate.
 class AccelerometerProbe extends ListeningProbe {
   StreamSubscription<AccelerometerEvent> _subscription;
-  Timer _startTimer;
-  Timer _stopTimer;
   MultiDatum _data;
 
   AccelerometerProbe(SensorMeasure _measure) : super(_measure);
@@ -30,8 +28,7 @@ class AccelerometerProbe extends ListeningProbe {
     super.start();
 
     // starting the subscription to the accelerometer events
-    _subscription = accelerometerEvents.listen(_onData,
-        onError: _onError, onDone: _onDone, cancelOnError: true);
+    _subscription = accelerometerEvents.listen(_onData, onError: _onError, onDone: _onDone, cancelOnError: true);
 
     // pause it for now.
     _subscription.pause();
@@ -42,11 +39,11 @@ class AccelerometerProbe extends ListeningProbe {
     Duration _samplingDuration = new Duration(milliseconds: _duration);
 
     // create a recurrent timer that wait (pause) and then resume the sampling.
-    _startTimer = new Timer.periodic(_pause, (Timer timer) {
+    Timer.periodic(_pause, (Timer timer) {
       this.resume();
 
       // create a timer that stops the sampling after the specified duration.
-      _stopTimer = new Timer(_samplingDuration, () {
+      Timer(_samplingDuration, () {
         this.pause();
       });
     });
@@ -75,8 +72,7 @@ class AccelerometerProbe extends ListeningProbe {
 
   void _onData(AccelerometerEvent event) async {
     if (_data != null) {
-      AccelerometerDatum _ad =
-          new AccelerometerDatum(x: event.x, y: event.y, z: event.z);
+      AccelerometerDatum _ad = new AccelerometerDatum(x: event.x, y: event.y, z: event.z);
       _data.addDatum(_ad);
     }
   }
@@ -98,8 +94,6 @@ class AccelerometerProbe extends ListeningProbe {
 /// frequency and duration of the sampling rate.
 class GyroscopeProbe extends ListeningProbe {
   StreamSubscription<GyroscopeEvent> _subscription;
-  Timer _startTimer;
-  Timer _stopTimer;
   MultiDatum data;
 
   GyroscopeProbe(SensorMeasure _measure) : super(_measure);
@@ -114,8 +108,7 @@ class GyroscopeProbe extends ListeningProbe {
     super.start();
 
     // starting the subscription to the accelerometer events
-    _subscription = gyroscopeEvents.listen(_onData,
-        onError: _onError, onDone: _onDone, cancelOnError: true);
+    _subscription = gyroscopeEvents.listen(_onData, onError: _onError, onDone: _onDone, cancelOnError: true);
 
     // pause it for now.
     _subscription.pause();
@@ -126,11 +119,11 @@ class GyroscopeProbe extends ListeningProbe {
     Duration _samplingDuration = new Duration(milliseconds: _duration);
 
     // create a recurrent timer that wait (pause) and then resume the sampling.
-    _startTimer = new Timer.periodic(_pause, (Timer timer) {
+    Timer.periodic(_pause, (Timer timer) {
       this.resume();
 
       // create a timer that stops the sampling after the specified duration.
-      _stopTimer = new Timer(_samplingDuration, () {
+      Timer(_samplingDuration, () {
         this.pause();
       });
     });
@@ -159,8 +152,7 @@ class GyroscopeProbe extends ListeningProbe {
 
   void _onData(GyroscopeEvent event) async {
     if (data != null) {
-      GyroscopeDatum _gd =
-          new GyroscopeDatum(x: event.x, y: event.y, z: event.z);
+      GyroscopeDatum _gd = new GyroscopeDatum(x: event.x, y: event.y, z: event.z);
       data.addDatum(_gd);
     }
   }

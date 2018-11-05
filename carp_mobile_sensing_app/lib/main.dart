@@ -222,7 +222,7 @@ class Sensing implements ProbeListener {
       am.name = 'Accelerometer';
       am.frequency = 8 * 1000; // once every 8 second
       am.duration = 500; // 500 ms
-//      _sensorTask.addMeasure(am);
+      _sensorTask.addMeasure(am);
 
       SensorMeasure gm = new SensorMeasure(ProbeRegistry.GYROSCOPE_MEASURE);
       gm.name = 'Gyroscope';
