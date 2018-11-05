@@ -22,7 +22,6 @@ class AudioProbe extends ListeningProbe {
   String _path;
   String soundFileName;
   bool _isRecording = false;
-  AudioDatum _datum;
   DateTime _startRecordingTime;
   DateTime _endRecordingTime;
 
@@ -64,9 +63,7 @@ class AudioProbe extends ListeningProbe {
 
   @override
   void stop() {
-    if (_datum != null) this.notifyAllListeners(_datum);
     flutterSound = null;
-    _datum = null;
   }
 
   @override
@@ -76,9 +73,8 @@ class AudioProbe extends ListeningProbe {
 
   @override
   void pause() async {
-    _datum = await datum;
+    Datum _datum = await datum;
     if (_datum != null) this.notifyAllListeners(_datum);
-    _datum = null;
   }
 
   void startAudioRecording() async {
@@ -129,14 +125,6 @@ class AudioProbe extends ListeningProbe {
     }
     return _path;
   }
-
-  /// Returns the filename of the sound file.
-  /// The filename format is "audio-yyyy-mm-dd-hh-mm-ss-ms.m4a".
-//  String get filename {
-//    String created =
-//        DateTime.now().toString().replaceAll(" ", "-").replaceAll(":", "-").replaceAll("_", "-").replaceAll(".", "-");
-//    return "audio-$created.m4a";
-//  }
 
   /// Returns the full file path to the sound file.
   /// The filename format is "audio-yyyy-mm-dd-hh-mm-ss-ms.m4a".
