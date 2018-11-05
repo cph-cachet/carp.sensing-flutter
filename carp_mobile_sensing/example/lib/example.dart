@@ -13,7 +13,7 @@ void example() {
 
   // Create a battery and location measures and add them to the task
   // Both are listening on events from changes from battery and location
-  task.addMeasure(new BatteryMeasure(ProbeRegistry.BATTERY_MEASURE));
+  task.addMeasure(new ListeningProbeMeasure(ProbeRegistry.BATTERY_MEASURE));
   task.addMeasure(new LocationMeasure(ProbeRegistry.LOCATION_MEASURE));
 
   // Create a Measure for collecting text messages

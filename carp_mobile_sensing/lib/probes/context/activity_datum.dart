@@ -40,6 +40,14 @@ class ActivityDatum extends CARPDatum {
   /// * TILTING - The device angle relative to gravity changed significantly.
   /// * UNKNOWN - Unable to detect the current activity.
   /// * WALKING - The device is on a user who is walking.
+  ///
+  /// On iOS:
+  /// * stationary
+  /// * walking
+  /// * running
+  /// * automotive
+  /// * cycling
+  /// * unknown
   String type;
 
   CARPDataFormat getCARPDataFormat() => CARP_DATA_FORMAT;

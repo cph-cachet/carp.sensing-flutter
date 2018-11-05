@@ -13,7 +13,6 @@ import 'package:system_info/system_info.dart';
 
 part 'battery_probe.dart';
 part 'hardware_datum.dart';
-part 'hardware_measures.dart';
 part 'screen_probe.dart';
 part 'sysinfo_probe.dart';
 part 'hardware.g.dart';

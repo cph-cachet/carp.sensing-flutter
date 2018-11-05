@@ -43,5 +43,6 @@
 
         <!-- service for using the Android activity recognition API -->
         <service android:name="at.resiverbindet.activityrecognition.activity.ActivityRecognizedService" />
+
     </application>
 </manifest>

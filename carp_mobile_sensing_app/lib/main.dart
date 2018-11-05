@@ -141,7 +141,7 @@ class Sensing implements ProbeListener {
 //    study.tasks.add(connectivityTask);
 //    study.tasks.add(commTask);
 //    study.tasks.add(locationTask);
-    study.tasks.add(audioTask);
+//    study.tasks.add(audioTask);
     study.tasks.add(contextTask);
 
     // print the study to the console
@@ -257,14 +257,15 @@ class Sensing implements ProbeListener {
     return _audioTask;
   }
 
-  /// A task collecting context information, such as activity.
   Task _contextTask;
 
+  /// A task collecting context information, such as activity.
   Task get contextTask {
     if (_contextTask == null) {
       _contextTask = new Task("Context task");
 
-      _contextTask.addMeasure(ProbeMeasure(ProbeRegistry.ACTIVITY_MEASURE, name: "Activity Recognition Probe"));
+      _contextTask
+          .addMeasure(ListeningProbeMeasure(ProbeRegistry.ACTIVITY_MEASURE, name: "Activity Recognition Probe"));
     }
     return _contextTask;
   }
@@ -297,8 +298,8 @@ class Sensing implements ProbeListener {
 
       _hardwareTask.addMeasure(
           PollingProbeMeasure(ProbeRegistry.MEMORY_MEASURE, name: 'Polling of availabel memory', frequency: 2 * 1000));
-      _hardwareTask.addMeasure(BatteryMeasure(ProbeRegistry.BATTERY_MEASURE, name: 'Battery'));
-      _hardwareTask.addMeasure(ScreenMeasure(ProbeRegistry.SCREEN_MEASURE, name: 'Screen Lock/Unlock'));
+      _hardwareTask.addMeasure(ListeningProbeMeasure(ProbeRegistry.BATTERY_MEASURE, name: 'Battery'));
+      _hardwareTask.addMeasure(ListeningProbeMeasure(ProbeRegistry.SCREEN_MEASURE, name: 'Screen Lock/Unlock'));
     }
     return _hardwareTask;
   }

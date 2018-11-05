@@ -11,7 +11,8 @@ part of hardware;
 class ScreenProbe extends StreamSubscriptionListeningProbe {
   Screen _screen;
 
-  ScreenProbe(ScreenMeasure measure) : super(measure);
+  /// A [ScreenProbe] is a listening probe and takes a [ListeningProbeMeasure] as configuration.
+  ScreenProbe(ListeningProbeMeasure measure) : super(measure);
 
   @override
   void initialize() {
@@ -22,8 +23,7 @@ class ScreenProbe extends StreamSubscriptionListeningProbe {
   @override
   Future start() async {
     super.start();
-    subscription = _screen.screenStateEvents
-        .listen(onData, onError: onError, onDone: onDone, cancelOnError: true);
+    subscription = _screen.screenStateEvents.listen(onData, onError: onError, onDone: onDone, cancelOnError: true);
   }
 
   void onData(dynamic event) async {

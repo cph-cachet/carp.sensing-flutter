@@ -98,6 +98,15 @@ class ProbeRegistry {
       case AUDIO_MEASURE:
         _probe = new AudioProbe(measure);
         break;
+      case ACTIVITY_MEASURE:
+        _probe = new ActivityProbe(measure);
+        break;
+      case APPLE_HEALTHKIT_MEASURE:
+        throw "Not Implemented Yet";
+        break;
+      case GOOGLE_FIT_MEASURE:
+        throw "Not Implemented Yet";
+        break;
       default:
         //_probe = new UserProbe(measure);
         break;

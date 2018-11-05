@@ -156,7 +156,9 @@ abstract class DatumProbe extends AbstractProbe {
 /// [ProbeListener]s are notified via the [this.notifyAllListeners(datum)] method whenever a
 /// new [Datum] is available.
 abstract class ListeningProbe extends AbstractProbe {
-  ListeningProbe(Measure measure) : super.init(measure);
+  ListeningProbe(Measure measure)
+      : assert(measure != null),
+        super.init(measure);
 
   @override
   ProbeType get probeType => ProbeType.listening;

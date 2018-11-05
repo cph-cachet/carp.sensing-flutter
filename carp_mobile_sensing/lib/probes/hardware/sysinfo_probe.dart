@@ -9,6 +9,7 @@ part of hardware;
 
 /// A polling probe that collects free virtual memory on a regular basis as specified in [PollingProbeMeasure.frequency].
 class MemoryPollingProbe extends PollingProbe {
+  /// A [MemoryPollingProbe] is a polling probe and takes a [PollingProbeMeasure] as configuration.
   MemoryPollingProbe(PollingProbeMeasure _measure) : super(_measure);
 
   @override

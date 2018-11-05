@@ -166,8 +166,7 @@ class Sensing implements ProbeListener {
       case DataEndPointType.PRINT:
         return new DataEndPoint(DataEndPointType.PRINT);
       case DataEndPointType.FILE:
-        final FileDataEndPoint fileEndPoint =
-            new FileDataEndPoint(DataEndPointType.FILE);
+        final FileDataEndPoint fileEndPoint = new FileDataEndPoint(DataEndPointType.FILE);
         fileEndPoint.bufferSize = 500 * 1000;
         fileEndPoint.zip = true;
         fileEndPoint.encrypt = false;
@@ -235,12 +234,10 @@ class Sensing implements ProbeListener {
     if (_hardwareTask == null) {
       _hardwareTask = new Task("Hardware Task");
 
-      _hardwareTask.addMeasure(PollingProbeMeasure(ProbeRegistry.MEMORY_MEASURE,
-          name: 'Polling of availabel memory', frequency: 2 * 1000));
       _hardwareTask.addMeasure(
-          BatteryMeasure(ProbeRegistry.BATTERY_MEASURE, name: 'Battery'));
-      _hardwareTask.addMeasure(ScreenMeasure(ProbeRegistry.SCREEN_MEASURE,
-          name: 'Screen Lock/Unlock'));
+          PollingProbeMeasure(ProbeRegistry.MEMORY_MEASURE, name: 'Polling of availabel memory', frequency: 2 * 1000));
+      _hardwareTask.addMeasure(ListeningProbeMeasure(ProbeRegistry.BATTERY_MEASURE, name: 'Battery'));
+      _hardwareTask.addMeasure(ListeningProbeMeasure(ProbeRegistry.SCREEN_MEASURE, name: 'Screen Lock/Unlock'));
     }
     return _hardwareTask;
   }
@@ -254,12 +251,8 @@ class Sensing implements ProbeListener {
     if (_connectivityTask == null) {
       _connectivityTask = new Task("Connectivity Task");
 
-      _connectivityTask.addMeasure(ConnectivityMeasure(
-          ProbeRegistry.CONNECTIVITY_MEASURE,
-          name: 'Connectivity'));
-      _connectivityTask.addMeasure(BluetoothMeasure(
-          ProbeRegistry.BLUETOOTH_MEASURE,
-          name: 'Nearby Bluetooth Devices'));
+      _connectivityTask.addMeasure(ConnectivityMeasure(ProbeRegistry.CONNECTIVITY_MEASURE, name: 'Connectivity'));
+      _connectivityTask.addMeasure(BluetoothMeasure(ProbeRegistry.BLUETOOTH_MEASURE, name: 'Nearby Bluetooth Devices'));
     }
     return _connectivityTask;
   }
@@ -270,8 +263,7 @@ class Sensing implements ProbeListener {
   Task get appTask {
     if (_appTask == null) {
       _appTask = new Task("Application Task");
-      PollingProbeMeasure am =
-          new PollingProbeMeasure(ProbeRegistry.APPS_MEASURE);
+      PollingProbeMeasure am = new PollingProbeMeasure(ProbeRegistry.APPS_MEASURE);
       am.name = "Apps";
       am.frequency = 5 * 1000;
       _appTask.addMeasure(am);
@@ -290,15 +282,12 @@ class Sensing implements ProbeListener {
     if (_commTask == null) {
       _commTask = new Task("Communication Task");
 
-      TextMessageMeasure tm_1 = new TextMessageMeasure(
-          ProbeRegistry.TEXT_MESSAGE_LOG_MEASURE,
-          name: "Text Message Log");
+      TextMessageMeasure tm_1 =
+          new TextMessageMeasure(ProbeRegistry.TEXT_MESSAGE_LOG_MEASURE, name: "Text Message Log");
       tm_1.collectBodyOfMessage = false;
       _commTask.addMeasure(tm_1);
 
-      TextMessageMeasure tm_2 = new TextMessageMeasure(
-          ProbeRegistry.TEXT_MESSAGE_MEASURE,
-          name: "Text Messages");
+      TextMessageMeasure tm_2 = new TextMessageMeasure(ProbeRegistry.TEXT_MESSAGE_MEASURE, name: "Text Messages");
       tm_2.collectBodyOfMessage = true;
       _commTask.addMeasure(tm_2);
     }
@@ -311,8 +300,7 @@ class Sensing implements ProbeListener {
   Task get locationTask {
     if (_locationTask == null) {
       _locationTask = new Task("Location Task");
-      _locationTask.addMeasure(
-          LocationMeasure(ProbeRegistry.LOCATION_MEASURE, name: 'Location'));
+      _locationTask.addMeasure(LocationMeasure(ProbeRegistry.LOCATION_MEASURE, name: 'Location'));
     }
     return _locationTask;
   }

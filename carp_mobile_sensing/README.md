@@ -45,11 +45,13 @@ Add this permission in `Info.plist`:
 
 ```xml
 <key>NSLocationWhenInUseUsageDescription</key>
-<string>This sample uses the location API to record location.</string>
+<string>Uses the location API to record location.</string>
 <key>NSLocationAlwaysUsageDescription</key>
-<string>This sample uses the location API to record location.</string>
+<string>Uses the location API to record location.</string>
 <key>NSMicrophoneUsageDescription</key>
-<string>This sample uses the microphone to record ambient noice in the phone's environment.</string>
+<string>Uses the microphone to record ambient noise in the phone's environment.</string>
+<key>NSMotionUsageDescription</key>
+<string>Detects activity.</string>
 <key>UIBackgroundModes</key>
   <array>
   <string>audio</string>

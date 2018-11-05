@@ -10,14 +10,12 @@ part of activity;
 /// Collects location information from the underlying OS's location API.
 /// Is a [ListeningProbe] that generates a [ActivityDatum] every time location is changed.
 class ActivityProbe extends StreamSubscriptionListeningProbe {
-  Location _location;
-
-  ActivityProbe(ProbeMeasure measure) : super(measure);
+  /// A [ActivityProbe] is a listening probe and takes a [ListeningProbeMeasure] as configuration.
+  ActivityProbe(ListeningProbeMeasure measure) : super(measure);
 
   @override
   void initialize() {
     super.initialize();
-    _location = new Location();
   }
 
   @override

@@ -8,11 +8,12 @@
 part of hardware;
 
 /// The [BatteryProbe] listens to the hardware battery and collect a [BatteryDatum]
-/// everytime the battery state changes. For example, battery level or charging mode.
+/// every time the battery state changes. For example, battery level or charging mode.
 class BatteryProbe extends StreamSubscriptionListeningProbe {
   Battery _battery;
 
-  BatteryProbe(BatteryMeasure measure) : super(measure);
+  /// A [BatteryProbe] is a listening probe and takes a [ListeningProbeMeasure] as configuration.
+  BatteryProbe(ListeningProbeMeasure measure) : super(measure);
 
   @override
   void initialize() {
@@ -25,8 +26,7 @@ class BatteryProbe extends StreamSubscriptionListeningProbe {
     super.start();
 
     // starting the subscription to the battery - triggered every time the charging level changes.
-    subscription = _battery.onBatteryStateChanged
-        .listen(onData, onError: onError, onDone: onDone, cancelOnError: true);
+    subscription = _battery.onBatteryStateChanged.listen(onData, onError: onError, onDone: onDone, cancelOnError: true);
   }
 
   void onData(dynamic event) async {

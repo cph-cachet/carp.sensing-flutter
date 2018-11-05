@@ -26,8 +26,7 @@ class Measure extends Serializable {
   Measure(this.measureType, {this.name});
 
   static Function get fromJsonFunction => _$MeasureFromJson;
-  factory Measure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(json['\$'].toString(), json);
+  factory Measure.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(json['\$'].toString(), json);
   Map<String, dynamic> toJson() => _$MeasureToJson(this);
 
   /// Add a key-value pair as configuration for this measure.
@@ -46,12 +45,22 @@ class ProbeMeasure extends Measure {
   ProbeMeasure(measureType, {name}) : super(measureType, name: name);
 
   static Function get fromJsonFunction => _$ProbeMeasureFromJson;
-  factory ProbeMeasure.fromJson(Map<String, dynamic> json) =>
-      _$ProbeMeasureFromJson(json);
+  factory ProbeMeasure.fromJson(Map<String, dynamic> json) => _$ProbeMeasureFromJson(json);
   Map<String, dynamic> toJson() => _$ProbeMeasureToJson(this);
 }
 
-/// A [PollingProbeMeasure] specify how to collect data by polling a [Probe] on a regular basis.
+/// A [ListeningProbeMeasure] specify how a [ListeningProbe] should collect data by listening to events.
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+class ListeningProbeMeasure extends Measure {
+  ListeningProbeMeasure(measureType, {name}) : super(measureType, name: name);
+
+  static Function get fromJsonFunction => _$ListeningProbeMeasureFromJson;
+  factory ListeningProbeMeasure.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory.fromJson(json['\$'].toString(), json);
+  Map<String, dynamic> toJson() => _$ListeningProbeMeasureToJson(this);
+}
+
+/// A [PollingProbeMeasure] specify how to collect data by polling a [PollingProbe] on a regular basis.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class PollingProbeMeasure extends ProbeMeasure {
   /// Sampling frequency in milliseconds (i.e., delay between sampling).
@@ -60,11 +69,10 @@ class PollingProbeMeasure extends ProbeMeasure {
   /// The sampling duration in milliseconds.
   int duration;
 
-  PollingProbeMeasure(measureType, {name, this.frequency, this.duration})
-      : super(measureType, name: name);
+  PollingProbeMeasure(measureType, {name, this.frequency, this.duration}) : super(measureType, name: name);
 
   static Function get fromJsonFunction => _$PollingProbeMeasureFromJson;
   factory PollingProbeMeasure.fromJson(Map<String, dynamic> json) =>
-      _$PollingProbeMeasureFromJson(json);
+      FromJsonFactory.fromJson(json['\$'].toString(), json);
   Map<String, dynamic> toJson() => _$PollingProbeMeasureToJson(this);
 }
