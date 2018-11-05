@@ -142,7 +142,12 @@ class Sensing implements ProbeListener {
 //    study.tasks.add(commTask);
 //    study.tasks.add(locationTask);
 //    study.tasks.add(audioTask);
+<<<<<<< HEAD
     study.tasks.add(contextTask);
+=======
+//    study.tasks.add(contextTask);
+    study.tasks.add(sensorTask);
+>>>>>>> 8860591dcf4a1d617827e87bf22c3ff302719891
 
     // print the study to the console
     console.log(study.toString());
@@ -222,18 +227,18 @@ class Sensing implements ProbeListener {
       am.name = 'Accelerometer';
       am.frequency = 8 * 1000; // once every 8 second
       am.duration = 500; // 500 ms
-      _sensorTask.addMeasure(am);
+//      _sensorTask.addMeasure(am);
 
       SensorMeasure gm = new SensorMeasure(ProbeRegistry.GYROSCOPE_MEASURE);
       gm.name = 'Gyroscope';
       gm.frequency = 8 * 1000; // once every 8 second
       gm.duration = 100; // 100 ms
-      _sensorTask.addMeasure(gm);
+//      _sensorTask.addMeasure(gm);
 
       SensorMeasure lm = new SensorMeasure(ProbeRegistry.LIGHT_MEASURE);
       lm.name = 'Light';
       lm.frequency = 8 * 1000; // once every 8 second
-      lm.duration = 100; // 500 ms
+      lm.duration = 1000; // 1 second
       _sensorTask.addMeasure(lm);
     }
     return _sensorTask;
