@@ -9,24 +9,24 @@ part of carp_firebase_backend;
 FirebaseStorageDataEndPoint _$FirebaseStorageDataEndPointFromJson(
     Map<String, dynamic> json) {
   return FirebaseStorageDataEndPoint(json['type'] as String,
+      name: json['name'] as String,
       uri: json['uri'] as String,
+      path: json['path'] as String,
       firebaseAuthenticationMethod:
-          json['firebase_authentication_method'] as String)
-    ..$ = json[r'$'] as String
+          json['firebase_authentication_method'] as String,
+      email: json['email'] as String,
+      password: json['password'] as String,
+      token: json['token'] as String,
+      projectID: json['project_i_d'] as String,
+      webAPIKey: json['web_a_p_i_key'] as String,
+      androidGoogleAppID: json['android_google_app_i_d'] as String,
+      iOSGoogleAppID: json['i_o_s_google_app_i_d'] as String,
+      gcmSenderID: json['gcm_sender_i_d'] as String)
+    ..classname = json['classname'] as String
     ..bufferSize = json['buffer_size'] as int
     ..zip = json['zip'] as bool
     ..encrypt = json['encrypt'] as bool
-    ..publicKey = json['public_key'] as String
-    ..name = json['name'] as String
-    ..path = json['path'] as String
-    ..email = json['email'] as String
-    ..password = json['password'] as String
-    ..token = json['token'] as String
-    ..projectID = json['project_i_d'] as String
-    ..webAPIKey = json['web_a_p_i_key'] as String
-    ..androidGoogleAppID = json['android_google_app_i_d'] as String
-    ..iOSGoogleAppID = json['i_o_s_google_app_i_d'] as String
-    ..gcmSenderID = json['gcm_sender_i_d'] as String;
+    ..publicKey = json['public_key'] as String;
 }
 
 Map<String, dynamic> _$FirebaseStorageDataEndPointToJson(
@@ -39,7 +39,7 @@ Map<String, dynamic> _$FirebaseStorageDataEndPointToJson(
     }
   }
 
-  writeNotNull(r'$', instance.$);
+  writeNotNull('classname', instance.classname);
   writeNotNull('type', instance.type);
   writeNotNull('buffer_size', instance.bufferSize);
   writeNotNull('zip', instance.zip);

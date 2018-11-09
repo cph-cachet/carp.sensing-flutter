@@ -43,26 +43,24 @@ class CollectionReference extends CarpReference {
     http.Response response = await http.get(Uri.encodeFull(collectionUri), headers: rest_headers);
 
     int httpStatusCode = response.statusCode;
-    Map<String, dynamic> responseJson = json.decode(response.body);
 
     switch (httpStatusCode) {
       case 200:
         {
-//          List<String> collections = new List<String>();
-//          for (String key in responseJson.keys) {
-//            collections.add(key);
-//          }
-//          return collections;
-
-          return responseJson.keys;
+          List<dynamic> server_list = json.decode(response.body);
+          List<String> collections = new List<String>();
+          server_list.forEach((c) => collections.add(c.toString()));
+          return collections;
         }
       default:
         // All other cases are treated as an error.
         // TODO - later we can handle more HTTP status codes here.
         {
+          Map<String, dynamic> responseJson = json.decode(response.body);
           final String error = responseJson["error"];
           final String description = responseJson["error_description"];
-          throw CarpServiceException(error, code: httpStatusCode.toString(), description: description);
+          throw CarpServiceException(error,
+              description: description, httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
         }
     }
   }
@@ -73,16 +71,18 @@ class CollectionReference extends CarpReference {
 
     // GET the list of objects in this collection from the CARP web service
     http.Response response = await http.get(Uri.encodeFull(collectionUri), headers: rest_headers);
-
     int httpStatusCode = response.statusCode;
-    Map<String, dynamic> responseJson = json.decode(response.body);
 
     switch (httpStatusCode) {
       case 200:
         {
+          List<dynamic> server_list = json.decode(response.body);
           List<ObjectSnapshot> objects = new List<ObjectSnapshot>();
-          for (String key in responseJson.keys) {
-            Map<String, dynamic> objectJson = json.decode(responseJson[key]);
+          for (var item in server_list) {
+            //print(json.encode(item));
+            //Map<String, dynamic> objectJson = json.decode(item);
+            Map<String, dynamic> objectJson = item;
+            String key = objectJson["id"];
             objects.add(ObjectSnapshot._("$path/$key", objectJson));
           }
           return objects;
@@ -91,9 +91,11 @@ class CollectionReference extends CarpReference {
         // All other cases are treated as an error.
         // TODO - later we can handle more HTTP status codes here.
         {
+          Map<String, dynamic> responseJson = json.decode(response.body);
           final String error = responseJson["error"];
           final String description = responseJson["error_description"];
-          throw CarpServiceException(error, code: httpStatusCode.toString(), description: description);
+          throw CarpServiceException(error,
+              description: description, httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
         }
     }
   }
@@ -120,6 +122,8 @@ class CollectionReference extends CarpReference {
 /// and can be used to write, read, or delete this object.
 ///
 /// The object with the referenced id may or may not exist.
+/// If the object does not yet exist, it will be created.
+/// If the collection does not yet exist, it will be created.
 ///
 /// TODO:
 /// A [ObjectReference] can also be used to create a [CollectionReference]
@@ -136,50 +140,51 @@ class ObjectReference extends CarpReference {
   String get id => _id;
 
   /// The full URI path to this object.
-  String get objectUri => "_collection.collectionUri/$id";
+  String get objectUri => "${_collection.collectionUri}/$id";
 
   /// The CARP path to this object.
-  String get carpPath => "_collection.carpPath/$id";
+  String get carpPath => "${_collection.carpPath}/$id";
 
   /// Writes to the object referred to by this [ObjectReference].
   ///
   /// If the object does not yet exist, it will be created.
+  /// If the collection does not yet exist, it will be created.
   /// Returns a [ObjectSnapshot] with the ID generated at the server side.
   Future<ObjectSnapshot> setData(Map<String, dynamic> data) async {
     // Remember that the CARP collection service generated the ID and returns it in a POST.
 
-    final rest_headers = await headers;
-    http.Response response;
-
+    // If this object does not already exist on the server (i.e., have an ID), then create it
     if ((id == null) || (id.length == 0)) {
-      // Use POST to create a new object
-      response = await http.post(Uri.encodeFull(_collection.collectionUri), headers: rest_headers, body: data);
+      final rest_headers = await headers;
+      http.Response response =
+          await http.post(Uri.encodeFull(_collection.collectionUri), headers: rest_headers, body: json.encode(data));
+      int httpStatusCode = response.statusCode;
+      Map<String, dynamic> responseJson = json.decode(response.body);
+
+      // get the id generated from the server
+      _id = responseJson["id"];
+
+      switch (httpStatusCode) {
+        // CARP web service returns "201 Created" when created.
+        case 200:
+        case 201:
+          {
+            return ObjectSnapshot._(carpPath, responseJson);
+          }
+        default:
+          // All other cases are treated as an error.
+          {
+            final String error = responseJson["error"];
+            final String description = responseJson["error_description"];
+            throw CarpServiceException(error,
+                description: description, httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+          }
+      }
     } else {
-      // Use PUT to update the existing object
-      response = await http.put(Uri.encodeFull(objectUri), headers: rest_headers, body: data);
+      return updateData(data);
     }
 
-    int httpStatusCode = response.statusCode;
-    Map<String, dynamic> responseJson = json.decode(response.body);
-
-    // get the id generated from the server
-    _id = responseJson["id"];
-
-    switch (httpStatusCode) {
-      case 200:
-        {
-          ObjectSnapshot object = ObjectSnapshot._(carpPath, responseJson);
-          return object;
-        }
-      default:
-        // All other cases are treated as an error.
-        // TODO - later we can handle more HTTP status codes here.
-        {
-          final String error = responseJson["error"];
-          final String description = responseJson["error_description"];
-          throw CarpServiceException(error, code: httpStatusCode.toString(), description: description);
-        }
-    }
+    //response.reasonPhrase;
   }
 
   /// Updates fields in the object referred to by this [ObjectReference].
@@ -188,10 +193,11 @@ class ObjectReference extends CarpReference {
   Future<ObjectSnapshot> updateData(Map<String, dynamic> data) async {
     final rest_headers = await headers;
 
-    http.Response response = await http.put(Uri.encodeFull(objectUri), headers: rest_headers, body: data);
+    http.Response response = await http.put(Uri.encodeFull(objectUri), headers: rest_headers, body: json.encode(data));
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
+
     switch (httpStatusCode) {
       case 200:
         {
@@ -203,7 +209,8 @@ class ObjectReference extends CarpReference {
         {
           final String error = responseJson["error"];
           final String description = responseJson["error_description"];
-          throw CarpServiceException(error, code: httpStatusCode.toString(), description: description);
+          throw CarpServiceException(error,
+              description: description, httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
         }
     }
   }
@@ -230,9 +237,27 @@ class ObjectReference extends CarpReference {
   }
 
   /// Deletes the object referred to by this [ObjectReference].
-  Future<http.Response> delete() async {
+  Future<void> delete() async {
     final rest_headers = await headers;
-    return await http.delete(Uri.encodeFull(objectUri), headers: rest_headers);
+
+    http.Response response = await http.delete(Uri.encodeFull(objectUri), headers: rest_headers);
+
+    int httpStatusCode = response.statusCode;
+    switch (httpStatusCode) {
+      case 200:
+        {
+          return;
+        }
+      default:
+        // All other cases are treated as an error.
+        {
+          final Map<String, dynamic> responseJson = json.decode(response.body);
+          final String error = responseJson["error"];
+          final String description = responseJson["error_description"];
+          throw CarpServiceException(error,
+              description: description, httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+        }
+    }
   }
 
   /// Returns the reference of a collection contained inside of this
@@ -268,4 +293,6 @@ class ObjectSnapshot {
 
   /// Returns `true` if the object exists.
   bool get exists => data != null;
+
+  String toString() => "ObjectSnapshot - id: $id, data size: ${data.length}";
 }

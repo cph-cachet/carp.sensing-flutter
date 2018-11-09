@@ -9,8 +9,7 @@ part of domain;
 /// A base (abstract) class for a single unit of sensed information returned by a [Probe].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class Datum extends Serializable {
-  static CARPDataFormat CARP_DATA_FORMAT =
-      new CARPDataFormat(NameSpace.UNKNOWN_NAMESPACE, "unknown");
+  static CARPDataFormat CARP_DATA_FORMAT = new CARPDataFormat(NameSpace.UNKNOWN_NAMESPACE, "unknown");
 
   Datum() : super();
 
@@ -23,13 +22,12 @@ class Datum extends Serializable {
 /// A [Datum] which conforms to the CARP [CARPDataFormat].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class CARPDatum extends Datum {
-  static CARPDataFormat CARP_DATA_FORMAT =
-      new CARPDataFormat(NameSpace.CARP_NAMESPACE, ProbeRegistry.MEASURE);
+  static CARPDataFormat CARP_DATA_FORMAT = new CARPDataFormat(NameSpace.CARP_NAMESPACE, ProbeRegistry.MEASURE);
 
   /// Unique identifier for the current Datum, unique across all data generated.
   String id;
 
-  /// Date and time at which a data element from the [Probe] was read.
+  /// The UTC timestamp for generating this data on the device.
   DateTime timestamp;
 
   // Basic information about the device from which this [Datum] was collected.
@@ -38,12 +36,11 @@ class CARPDatum extends Datum {
   /// The type of [Measure] that were the originator for this datum.
   //String measureType;
 
-  CARPDatum({bool includeDeviceInfo}) {
-    timestamp = new DateTime.now();
-    id = new Uuid().v1(); // Generates a time-based version 1 UUID.
-    if (includeDeviceInfo == null) includeDeviceInfo = true;
+  CARPDatum({bool multiDatum = false}) {
+    timestamp = new DateTime.now().toUtc();
 
-    if (includeDeviceInfo) {
+    if (!multiDatum) {
+      id = new Uuid().v1(); // Generates a time-based version 1 UUID.
       deviceInfo = new DeviceInfo(Device.platform, Device.deviceID,
           deviceName: Device.deviceName,
           deviceModel: Device.deviceModel,
@@ -74,14 +71,9 @@ class DeviceInfo {
   String operatingSystem;
 
   DeviceInfo(this.platform, this.deviceId,
-      {this.deviceName,
-      this.deviceModel,
-      this.deviceManufacturer,
-      this.operatingSystem,
-      this.hardware});
+      {this.deviceName, this.deviceModel, this.deviceManufacturer, this.operatingSystem, this.hardware});
 
-  factory DeviceInfo.fromJson(Map<String, dynamic> json) =>
-      _$DeviceInfoFromJson(json);
+  factory DeviceInfo.fromJson(Map<String, dynamic> json) => _$DeviceInfoFromJson(json);
 
   Map<String, dynamic> toJson() => _$DeviceInfoToJson(this);
 }
@@ -89,15 +81,13 @@ class DeviceInfo {
 /// A very simple [Datum] that only holds a string datum object.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class StringDatum extends CARPDatum {
-  static CARPDataFormat CARP_DATA_FORMAT = new CARPDataFormat(
-      NameSpace.CARP_NAMESPACE, ProbeRegistry.STRING_MEASURE);
+  static CARPDataFormat CARP_DATA_FORMAT = new CARPDataFormat(NameSpace.CARP_NAMESPACE, ProbeRegistry.STRING_MEASURE);
 
   String data;
 
   StringDatum({this.data}) : super();
 
-  factory StringDatum.fromJson(Map<String, dynamic> json) =>
-      _$StringDatumFromJson(json);
+  factory StringDatum.fromJson(Map<String, dynamic> json) => _$StringDatumFromJson(json);
 
   Map<String, dynamic> toJson() => _$StringDatumToJson(this);
 }
@@ -106,21 +96,19 @@ class StringDatum extends CARPDatum {
 /// sort of error, which is reported back.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ErrorDatum extends CARPDatum {
-  static CARPDataFormat CARP_DATA_FORMAT =
-      new CARPDataFormat(NameSpace.CARP_NAMESPACE, ProbeRegistry.ERROR_MEASURE);
+  static CARPDataFormat CARP_DATA_FORMAT = new CARPDataFormat(NameSpace.CARP_NAMESPACE, ProbeRegistry.ERROR_MEASURE);
 
   /// The original error message returned from the probe, if available.
   String errorMessage;
 
   ErrorDatum(this.errorMessage) : super();
 
-  factory ErrorDatum.fromJson(Map<String, dynamic> json) =>
-      _$ErrorDatumFromJson(json);
+  factory ErrorDatum.fromJson(Map<String, dynamic> json) => _$ErrorDatumFromJson(json);
 
   Map<String, dynamic> toJson() => _$ErrorDatumToJson(this);
 }
 
-/// A [Datum] object holding a multiple [Datum]s.
+/// A [Datum] object holding multiple [Datum]s of the same type.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MultiDatum extends CARPDatum {
   List<Datum> datums = new List<Datum>();
@@ -131,16 +119,11 @@ class MultiDatum extends CARPDatum {
 
   MultiDatum() : super();
 
-  factory MultiDatum.fromJson(Map<String, dynamic> json) =>
-      _$MultiDatumFromJson(json);
-
+  factory MultiDatum.fromJson(Map<String, dynamic> json) => _$MultiDatumFromJson(json);
   Map<String, dynamic> toJson() => _$MultiDatumToJson(this);
 
   @override
-  CARPDataFormat getCARPDataFormat() => (datums.length == 0)
-      ? CARPDataFormat.unknown()
-      : datums[0].getCARPDataFormat();
+  CARPDataFormat getCARPDataFormat() => (datums.length == 0) ? CARPDataFormat.unknown() : datums[0].getCARPDataFormat();
 
-  String toString() =>
-      "MultiDatum: {format: ${getCARPDataFormat().toString()}, size: ${datums.length}}";
+  String toString() => "MultiDatum: {format: ${getCARPDataFormat().toString()}, size: ${datums.length}}";
 }

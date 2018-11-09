@@ -21,7 +21,7 @@ class AccelerometerDatum extends CARPDatum {
   /// Acceleration force along the z axis (including gravity) measured in m/s^2.
   double z;
 
-  AccelerometerDatum({this.x, this.y, this.z}) : super(includeDeviceInfo: false);
+  AccelerometerDatum({this.x, this.y, this.z}) : super(multiDatum: true);
 
   factory AccelerometerDatum.fromJson(Map<String, dynamic> json) => _$AccelerometerDatumFromJson(json);
   Map<String, dynamic> toJson() => _$AccelerometerDatumToJson(this);
@@ -32,7 +32,7 @@ class AccelerometerDatum extends CARPDatum {
 }
 
 /// A [Datum] that holds rotation data collected from the native gyroscope on the phone.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: true)
 class GyroscopeDatum extends CARPDatum {
   static CARPDataFormat CARP_DATA_FORMAT =
       new CARPDataFormat(NameSpace.CARP_NAMESPACE, ProbeRegistry.GYROSCOPE_MEASURE);
@@ -46,7 +46,7 @@ class GyroscopeDatum extends CARPDatum {
   /// Rate of rotation around the z axis measured in rad/s.
   double z;
 
-  GyroscopeDatum({this.x, this.y, this.z}) : super(includeDeviceInfo: false);
+  GyroscopeDatum({this.x, this.y, this.z}) : super(multiDatum: true);
 
   factory GyroscopeDatum.fromJson(Map<String, dynamic> json) => _$GyroscopeDatumFromJson(json);
   Map<String, dynamic> toJson() => _$GyroscopeDatumToJson(this);
@@ -67,7 +67,7 @@ class LightDatum extends CARPDatum {
   num minLux;
   num maxLux;
 
-  LightDatum({this.avgLux, this.stdLux, this.minLux, this.maxLux}) : super(includeDeviceInfo: false);
+  LightDatum({this.avgLux, this.stdLux, this.minLux, this.maxLux}) : super(multiDatum: false);
 
   factory LightDatum.fromJson(Map<String, dynamic> json) => _$LightDatumFromJson(json);
   Map<String, dynamic> toJson() => _$LightDatumToJson(this);

@@ -16,6 +16,11 @@ dependencies:
   firebase_auth: ^0.5.20
   carp_mobile_sensing: ^0.2.1
 
+# Overriding carp_mobile_sensing to use the local copy
+# Remove this when done development
+dependency_overrides:
+  carp_mobile_sensing:
+    path: ../carp_mobile_sensing/
 
 
 dev_dependencies:

@@ -8,7 +8,7 @@ part of hardware;
 
 BatteryDatum _$BatteryDatumFromJson(Map<String, dynamic> json) {
   return BatteryDatum()
-    ..$ = json[r'$'] as String
+    ..classname = json['classname'] as String
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
         ? null
@@ -29,7 +29,7 @@ Map<String, dynamic> _$BatteryDatumToJson(BatteryDatum instance) {
     }
   }
 
-  writeNotNull(r'$', instance.$);
+  writeNotNull('classname', instance.classname);
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
   writeNotNull('device_info', instance.deviceInfo);
@@ -40,7 +40,7 @@ Map<String, dynamic> _$BatteryDatumToJson(BatteryDatum instance) {
 
 FreeMemoryDatum _$FreeMemoryDatumFromJson(Map<String, dynamic> json) {
   return FreeMemoryDatum()
-    ..$ = json[r'$'] as String
+    ..classname = json['classname'] as String
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
         ? null
@@ -61,7 +61,7 @@ Map<String, dynamic> _$FreeMemoryDatumToJson(FreeMemoryDatum instance) {
     }
   }
 
-  writeNotNull(r'$', instance.$);
+  writeNotNull('classname', instance.classname);
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
   writeNotNull('device_info', instance.deviceInfo);
@@ -72,7 +72,7 @@ Map<String, dynamic> _$FreeMemoryDatumToJson(FreeMemoryDatum instance) {
 
 ScreenDatum _$ScreenDatumFromJson(Map<String, dynamic> json) {
   return ScreenDatum()
-    ..$ = json[r'$'] as String
+    ..classname = json['classname'] as String
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
         ? null
@@ -92,7 +92,7 @@ Map<String, dynamic> _$ScreenDatumToJson(ScreenDatum instance) {
     }
   }
 
-  writeNotNull(r'$', instance.$);
+  writeNotNull('classname', instance.classname);
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
   writeNotNull('device_info', instance.deviceInfo);

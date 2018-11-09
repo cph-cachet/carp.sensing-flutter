@@ -86,6 +86,9 @@ class CarpService {
       "password": "$password"
     };
 
+    print(loginHeader);
+    print(loginBody);
+
     final String url = "${_app.uri.toString()}${_app.oauth.path.toString()}";
     http.Response response = await http.post(
       Uri.encodeFull(url),
@@ -110,7 +113,8 @@ class CarpService {
         {
           final String error = responseJSON["error"];
           final String description = responseJSON["error_description"];
-          throw CarpServiceException(error, code: httpStatusCode.toString(), description: description);
+          throw CarpServiceException(error,
+              description: description, httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
         }
     }
   }
@@ -150,6 +154,7 @@ class CarpService {
   }
 
   /// Gets a [CollectionReference] for the current CARP Service path.
+  /// Note that [path] should be absolute and either be empty `""` or start with `/`.
   CollectionReference collection(String path) {
     assert(path != null);
     return CollectionReference._(this, path);
@@ -170,7 +175,7 @@ abstract class CarpReference {
     final OAuthToken token = await user.getOAuthToken();
 
     final Map<String, String> _header = {
-      "Content-Type": "application/x-www-form-urlencoded",
+      "Content-Type": "application/json",
       "Authorization": "bearer ${token.accessToken}",
       "cache-control": "no-cache"
     };
@@ -181,14 +186,23 @@ abstract class CarpReference {
 
 /// Exception for CARP web service communication.
 class CarpServiceException implements Exception {
-  String code;
   String message;
   String description;
+  HTTPStatus httpStatus;
 
-  CarpServiceException(this.message, {this.code, this.description});
+  CarpServiceException(this.message, {this.description, this.httpStatus});
 
   @override
   String toString() {
-    return "CarpServiceException: {code: $code, message: $message, description: $description}";
+    return "CarpServiceException: {message: $message, description: $description} [${httpStatus.toString()}]";
   }
+}
+
+class HTTPStatus {
+  int httpResponseCode;
+  String httpReasonPhrase;
+
+  HTTPStatus(this.httpResponseCode, this.httpReasonPhrase);
+
+  String toString() => "$httpResponseCode $httpReasonPhrase";
 }

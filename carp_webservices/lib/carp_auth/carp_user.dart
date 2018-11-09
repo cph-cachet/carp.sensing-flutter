@@ -9,25 +9,39 @@ part of carp_auth;
 
 /// Represents a CARP user.
 class CarpUser {
-  String email;
+  /// Unique CARP username
+  String username;
+
+  /// Unique CARP ID
   String uid;
+
+  /// CARP password
   String password;
+
+  /// The user's email
+  String email;
+
+  /// Printer-friendly full user name
   String displayName;
+
+  /// Mobile phone number
   String phoneNumber;
+
+  /// The OAuth 2.0 [OAuthToken] for this user, once authenticated to CARP
   OAuthToken _token;
 
-  CarpUser(this.email, {this.uid, this.password, this.displayName, this.phoneNumber});
+  CarpUser(this.username, {this.uid, this.password, this.displayName, this.phoneNumber});
 
   /// Set or update the authenticated OAuth token for this user.
   void authenticated(OAuthToken token) {
     _token = token;
   }
 
-  // Returns true if the user is logged in; that is, has a valid token.
+  /// Returns true if the user is logged in; that is, has a valid token.
   bool get isAuthenticated => (_token != null);
 
   /// Returns true if the user's email is verified.
-  bool get isEmailVerified => ((email != null) && (_token != null));
+  bool get isEmailVerified => ((username != null) && (_token != null));
 
   /// Obtains the OAuth token for the current user, forcing a [refresh] if desired.
   Future<OAuthToken> getOAuthToken({bool refresh = false}) async {
@@ -49,8 +63,8 @@ class CarpUser {
     _token = null;
   }
 
-  /// Manually refreshes the data of the current user (for example, phoneNumber,
-  /// display name, and so on) from the CARP web service.
+  /// Manually refreshes the data of the current user (e.g., [displayName], [phoneNumber], etc.)
+  /// from the CARP web service.
   ///
   /// TODO - not implemented, since there is currently no CARP endpoint for users.
   Future<void> reload() async {}
@@ -62,6 +76,6 @@ class CarpUser {
 
   @override
   String toString() {
-    return 'CarpUser: $displayName<$email>[$uid]';
+    return 'CARP User: $username - $displayName<$email>[$uid]';
   }
 }

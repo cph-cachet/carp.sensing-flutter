@@ -16,14 +16,34 @@ class DataPointReference extends CarpReference {
   /// The URL for the data end point for this [DataPointReference].
   String get dataPointUri => "${service.app.uri.toString()}/api/studies/${service.app.study.id}/data-points";
 
-  /// Upload a [CARPDataPoint] to the CARP backend using HTTP POST
-  Future<http.Response> postDataPoint(CARPDataPoint data) async {
+  /// Upload a [CARPDataPoint] to the CARP backend using HTTP POST.
+  ///
+  /// Returns the server-generated ID for this data point.
+  Future<String> postDataPoint(CARPDataPoint data) async {
     final String url = "${dataPointUri}";
     final rest_headers = await headers;
 
     http.Response response = await http.post(Uri.encodeFull(url), headers: rest_headers, body: json.encode(data));
 
-    return response;
+    int httpStatusCode = response.statusCode;
+    Map<String, dynamic> responseJSON = json.decode(response.body);
+
+    switch (httpStatusCode) {
+      case 200:
+      case 201:
+        {
+          return responseJSON["id"];
+        }
+      default:
+        // All other cases are treated as an error.
+        // TODO - later we can handle more HTTP status codes here.
+        {
+          final String error = responseJSON["error"];
+          final String description = responseJSON["error_description"];
+          throw CarpServiceException(error,
+              description: description, httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+        }
+    }
   }
 
   /// Get a [CARPDataPoint] from the CARP backend using HTTP GET
@@ -48,19 +68,36 @@ class DataPointReference extends CarpReference {
         {
           final String error = responseJSON["error"];
           final String description = responseJSON["error_description"];
-          throw CarpServiceException(error, code: httpStatusCode.toString(), description: description);
+          throw CarpServiceException(error,
+              description: description, httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
         }
     }
   }
 
   /// Delete a [CARPDataPoint] from the CARP backend using HTTP DELETE
-  Future<http.Response> deleteDataPoint(String id) async {
+  Future<void> deleteDataPoint(String id) async {
     String url = "${dataPointUri}/$id";
     final rest_headers = await headers;
 
     // DELETE the data point
     http.Response response = await http.delete(Uri.encodeFull(url), headers: rest_headers);
 
-    return response;
+    int httpStatusCode = response.statusCode;
+    switch (httpStatusCode) {
+      case 200:
+        {
+          return;
+        }
+      default:
+        // All other cases are treated as an error.
+        // TODO - later we can handle more HTTP status codes here.
+        {
+          final Map<String, dynamic> responseJSON = json.decode(response.body);
+          final String error = responseJSON["error"];
+          final String description = responseJSON["error_description"];
+          throw CarpServiceException(error,
+              description: description, httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+        }
+    }
   }
 }
