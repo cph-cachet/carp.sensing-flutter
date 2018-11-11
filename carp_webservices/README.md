@@ -88,9 +88,15 @@ await uploadTask.onComplete;
 **Collections and Objects**
  
 
+ 
+## Features and bugs
 
-## Getting Started
+Please file feature requests and bug reports at the [issue tracker][tracker].
 
-For help getting started with Flutter, view our online [documentation](https://flutter.io/).
+[tracker]: https://github.com/cph-cachet/carp.sensing/issues
 
-For help on editing package code, view the [documentation](https://flutter.io/developing-packages/).
+## License
+
+This software is copyright (c) 2018 [Copenhagen Center for Health Technology (CACHET)](http://www.cachet.dk/) at the [Technical University of Denmark (DTU)](http://www.dtu.dk).
+This software is made available 'as-is' in a MIT [license](/LICENSE).
+
