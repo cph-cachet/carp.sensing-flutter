@@ -40,7 +40,7 @@ app = new CarpApp(
       study: study,
       name: "any_display_friendly_name_is_fine",
       uri: Uri.parse(uri),
-      oauth: OAuthEndPoint(clientID: clientID, clientSecret: clientSecret, path: "/oauth/token"));
+      oauth: OAuthEndPoint(clientID: "the_client_id", clientSecret: "the_client_secret"));
 
 CarpService.configure(app);
 

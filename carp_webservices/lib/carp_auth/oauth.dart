@@ -59,10 +59,6 @@ class OAuthToken {
 
 /// A [OAuthEndPoint] specify an OAuth 2.0 endpoint.
 class OAuthEndPoint {
-  //static const String clientSecret = "webuisecret";
-  //static const String clientID = "webui";
-  //static const String CARP_auth_uri = "https://sandbox.carp.cachet.dk/auth-service/auth/oauth/token";
-
   /// The OAuth 2.0 client id.
   String clientID;
 
@@ -74,5 +70,5 @@ class OAuthEndPoint {
   /// Default is `/oauth/token`
   String path = "/oauth/token";
 
-  OAuthEndPoint({this.clientID, this.clientSecret, this.path});
+  OAuthEndPoint({this.clientID, this.clientSecret, this.path = "/oauth/token"});
 }
