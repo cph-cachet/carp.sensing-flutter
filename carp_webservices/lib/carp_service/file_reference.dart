@@ -4,7 +4,7 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of carp_service;
+part of carp_services;
 
 /// Provide a file endpoint reference to a CARP web service. Used to:
 /// - upload a local [File] to CARP

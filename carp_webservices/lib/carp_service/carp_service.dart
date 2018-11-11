@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-library carp_service;
+library carp_services;
 
 import 'package:meta/meta.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
@@ -21,7 +21,7 @@ part 'file_reference.dart';
 part 'collection_reference.dart';
 part 'carp_tasks.dart';
 
-/// Provide access to the CARP web service endpoint.
+/// Provide access to the CARP web services endpoint.
 ///
 /// The (current) assumption is that each Flutter app (using this library) will only connect
 /// to one CARP web service backend. Therefore this is a singleton and should be used like:
@@ -52,15 +52,15 @@ class CarpService {
     return _instance;
   }
 
-  /// Sign in to this CARP web service using email and password.
+  /// Sign in to this CARP web service using username and password.
   ///
   /// Return the signed in user (with an access token) if successful.
   /// Throws a [CarpServiceException] if not successful.
-  Future<CarpUser> signInWithEmailAndPassword({
-    @required String email,
+  Future<CarpUser> authenticate({
+    @required String username,
     @required String password,
   }) async {
-    assert(email != null);
+    assert(username != null);
     assert(password != null);
 
     if (_app == null)
@@ -82,7 +82,7 @@ class CarpService {
       "client_secret": "$clientSecret",
       "grant_type": "password",
       "scope": "read",
-      "username": "$email",
+      "username": "$username",
       "password": "$password"
     };
 
@@ -96,7 +96,7 @@ class CarpService {
       body: loginBody,
     );
 
-    _currentUser = new CarpUser(email, password: password);
+    _currentUser = new CarpUser(username, password: password);
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJSON = json.decode(response.body);

@@ -8,8 +8,8 @@ import 'dart:io';
 String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
 
 void main() {
-  final String email = "researcher";
-  final String pw = "password";
+  final String username = "researcher";
+  final String password = "password";
   final String uri = "http://staging.carp.cachet.dk:8080";
   final String clientID = "carp";
   final String clientSecret = "carp";
@@ -39,7 +39,7 @@ void main() {
     test('Authentication', () async {
       CarpUser user;
       try {
-        user = await CarpService.instance.signInWithEmailAndPassword(email: email, password: pw);
+        user = await CarpService.instance.authenticate(username: username, password: password);
       } catch (excp) {
         print(excp.toString());
       }
@@ -68,7 +68,7 @@ void main() {
 
   group("Data point", () {
     test('- upload', () async {
-      // Create a dummy location datum
+      // Create a test location datum
       LocationDatum datum = LocationDatum.fromMap(<String, dynamic>{
         "latitude": 23454.345,
         "longitude": 23.4,
@@ -88,7 +88,7 @@ void main() {
       print("data_point_id : $data_point_id");
     });
 
-    test('- download', () async {
+    test('- get', () async {
       CARPDataPoint data = await CarpService.instance.getDataPointReference().getDataPoint(data_point_id);
 
       print(_encode(data.toJson()));
@@ -104,8 +104,10 @@ void main() {
     test(' - add object', () async {
       // is not providing an object id, so this should create a new object
       // if the collections (users) don't exist, it is created (according to David).
-      object =
-          await CarpService.instance.collection('/users').object().setData({'email': email, 'name': 'Administrator'});
+      object = await CarpService.instance
+          .collection('/users')
+          .object()
+          .setData({'email': username, 'name': 'Administrator'});
 
       print(object);
       assert(object.id.length > 0);
@@ -117,7 +119,7 @@ void main() {
       ObjectSnapshot updated_object = await CarpService.instance
           .collection('/users')
           .object(object.id)
-          .updateData({'email': email, 'name': 'Super User'});
+          .updateData({'email': username, 'name': 'Super User'});
 
       print(updated_object.toString());
       print(updated_object.data["name"]);
