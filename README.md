@@ -11,13 +11,13 @@ These plugins are also available on [pub](https://pub.dartlang.org/flutter/plugi
 
 ## Issues
 
-Please check existing issues and file any new issues, bugs, or feature requests in the [carp.sensing repo](https://github.com/cph-cachet/carp.sensing/issues).
+Please check existing issues and file any new issues, bugs, or feature requests in the [carp.sensing-flutter repo](https://github.com/cph-cachet/carp.sensing-flutter/issues).
 
 ## Contributing
 
 Contributing is not entirely in place yet. However, if you wish to contribute a change to any of the existing components in this repo,
 please review our [contribution guide](https://github.com/cph-cachet/carp.sensing/CONTRIBUTING.md),
-and send a [pull request](https://github.com/cph-cachet/carp.sensing/pulls).
+and send a [pull request](https://github.com/cph-cachet/carp.sensing-flutter/pulls).
 
 ## Software Components
 These are the available CARP Mobile Sensing Flutter components in this repository.
