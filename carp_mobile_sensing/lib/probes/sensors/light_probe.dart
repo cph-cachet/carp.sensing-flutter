@@ -90,13 +90,10 @@ class LightProbe extends ListeningProbe {
 
   LightDatum get datum {
     Stats stats = Stats.fromData(_luxValues);
-    num avgLux = stats.mean;
-    num stdLux = stats.standardDeviation;
-    num minLux = stats.min;
-    num maxLux = stats.max;
-
-    print("$avgLux, $stdLux, $minLux, $maxLux");
-
-    return new LightDatum(avgLux: avgLux, stdLux: stdLux, minLux: minLux, maxLux: maxLux);
+    num mean = stats.mean;
+    num std = stats.standardDeviation;
+    num min = stats.min;
+    num max = stats.max;
+    return new LightDatum(meanLux: mean, stdLux: std, minLux: min, maxLux: max);
   }
 }
