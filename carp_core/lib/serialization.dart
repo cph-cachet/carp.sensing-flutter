@@ -5,18 +5,20 @@
  * found in the LICENSE file.
  */
 
-part of domain;
+part of carp_core;
 
 /// This is the base class for all JSON serializable objects.
 abstract class Serializable {
-  String classname;
+  static const String CLASS_IDENTIFIER = "c__";
+
+  /// The runtime class name (type) of this object.
+  /// Used for deserialization from JSON objects.
+  String c__;
 
   Serializable() {
-    classname = this.runtimeType.toString();
-    FromJsonFactory.init();
+    c__ = this.runtimeType.toString();
+    FromJsonFactory._();
   }
-
-  //static Function get fromJsonFunction {}
 
   /// Use this method to register a custom fromJson function for this class
   /// in the [FromJsonFactory].
@@ -27,30 +29,32 @@ abstract class Serializable {
   Map<String, dynamic> toJson();
 }
 
+/// A factory class that holds [fromJson] functions to be used in JSON deserialization.
 class FromJsonFactory {
-  static bool _initialized = false;
+  static final bool _isInitialized = false;
   static final Map<String, Function> _registry = new Map<String, Function>();
 
+  /// To be used for registering [fromJsonFunction] functions to this Factory.
+  /// Should be done for each [type] of class that needs to be deserialized from JSON
+  /// to a CARP Flutter class.
   static registerFromJsonFunction(String type, Function f) => _registry[type] = f;
 
+  /// Deserialize [json] of the specified class [type].
   static Serializable fromJson(String type, Map<String, dynamic> json) => Function.apply(_registry[type], [json]);
 
-  static void init() {
-    if (_initialized) return;
+  static void _() {
+    if (_isInitialized) return;
 
     //TODO : This should be done using reflection or a build_runner script that can auto-generate this.
     registerFromJsonFunction("Study", Study.fromJsonFunction);
     registerFromJsonFunction("DataEndPoint", DataEndPoint.fromJsonFunction);
+    registerFromJsonFunction("FileDataEndPoint", FileDataEndPoint.fromJsonFunction);
     registerFromJsonFunction("Task", Task.fromJsonFunction);
     registerFromJsonFunction("ParallelTask", ParallelTask.fromJsonFunction);
     registerFromJsonFunction("SequentialTask", SequentialTask.fromJsonFunction);
     registerFromJsonFunction("Measure", Measure.fromJsonFunction);
     registerFromJsonFunction("ProbeMeasure", ProbeMeasure.fromJsonFunction);
     registerFromJsonFunction("PollingProbeMeasure", PollingProbeMeasure.fromJsonFunction);
-    registerFromJsonFunction("SensorMeasure", SensorMeasure.fromJsonFunction);
-    registerFromJsonFunction("ConnectivityMeasure", ConnectivityMeasure.fromJsonFunction);
-    registerFromJsonFunction("BluetoothMeasure", BluetoothMeasure.fromJsonFunction);
-
-    _initialized = true;
+    registerFromJsonFunction("ListeningProbeMeasure", ListeningProbeMeasure.fromJsonFunction);
   }
 }

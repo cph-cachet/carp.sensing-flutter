@@ -1,0 +1,75 @@
+{
+ "c__": "Study",
+ "id": "1234",
+ "user_id": "bardram",
+ "name": "bardram study",
+ "data_end_point": {
+  "c__": "FileDataEndPoint",
+  "type": "file",
+  "buffer_size": 500000,
+  "zip": true,
+  "encrypt": false
+ },
+ "tasks": [
+  {
+   "c__": "Task",
+   "name": "Generic task",
+   "measures": [
+    {
+     "c__": "Measure",
+     "measure_type": "measure",
+     "name": "Generic measure",
+     "enabled": true,
+     "configuration": {
+      "generic_1": "8000",
+      "generic_2": "abc"
+     }
+    }
+   ]
+  },
+  {
+   "c__": "ParallelTask",
+   "name": "Sensor task",
+   "measures": [
+    {
+     "c__": "ProbeMeasure",
+     "measure_type": "probe",
+     "name": "Accelerometer",
+     "enabled": true,
+     "configuration": {
+      "frequency": "8000",
+      "duration": "500"
+     }
+    },
+    {
+     "c__": "ListeningProbeMeasure",
+     "measure_type": "listening",
+     "name": "Gyroscope",
+     "enabled": true,
+     "configuration": {
+      "frequency": "8000"
+     }
+    }
+   ]
+  },
+  {
+   "c__": "SequentialTask",
+   "name": "Pedometer task",
+   "measures": [
+    {
+     "c__": "PollingProbeMeasure",
+     "measure_type": "polling",
+     "name": "Pedometer",
+     "enabled": true,
+     "configuration": {},
+     "frequency": 8000
+    }
+   ]
+  },
+  {
+   "c__": "ParallelTask",
+   "name": "Connectivity task",
+   "measures": []
+  }
+ ]
+}

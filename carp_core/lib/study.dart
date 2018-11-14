@@ -5,32 +5,39 @@
  * found in the LICENSE file.
  */
 
-part of domain;
+part of carp_core;
 
 /// The [Study] holds information about the study to be performed on this device.
 /// The study may be fetched in a [StudyManager] who knows how to fetch a study protocol for this device.
 ///
-/// A [Study] mainly consists of a list of [Task]s.
+/// A [Study] mainly consists of a list of [Task]s, which again consists of a list of [Measure]s.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class Study extends Serializable {
+  /// The ID of this [Study].
   String id;
+
+  /// The ID of the user executing this study. May be [null] if no user is known.
   String userId;
+
+  /// A printer-friendly name for this study.
   String name;
+
+  /// A longer description of this study. To be used to inform the user about this study and its purpose.
   String description;
 
   /// Specify where and how to upload this study data.
   DataEndPoint dataEndPoint;
 
+  /// The list of [Task]s in this [Study].
   List<Task> tasks = new List<Task>();
 
-  Study(this.id, this.userId, {this.name, this.description}) : super() {
-    _registerFromJson(fromJsonFunction);
-  }
+  Study(this.id, this.userId, {this.name, this.description}) : super();
 
   static Function get fromJsonFunction => _$StudyFromJson;
   factory Study.fromJson(Map<String, dynamic> json) => _$StudyFromJson(json);
   Map<String, dynamic> toJson() => _$StudyToJson(this);
 
+  /// Add a [Task] to this [Study]
   void addTask(Task task) => tasks.add(task);
 
   @override
@@ -57,11 +64,12 @@ class DataEndPoint extends Serializable {
   DataEndPoint(this.type) : super();
 
   static Function get fromJsonFunction => _$DataEndPointFromJson;
-  factory DataEndPoint.fromJson(Map<String, dynamic> json) => _$DataEndPointFromJson(json);
+  factory DataEndPoint.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$DataEndPointToJson(this);
 }
 
-/// Specify an endpoint where a [FileDataManager] can store JSON data as files on the local device.
+/// Specify an endpoint where a file-based [DataManager] can store JSON data as files on the local device.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class FileDataEndPoint extends DataEndPoint {
   /// The buffer size of the raw JSON file in bytes.
@@ -92,42 +100,16 @@ class FileDataEndPoint extends DataEndPoint {
   FileDataEndPoint(String type) : super(type);
 
   static Function get fromJsonFunction => _$FileDataEndPointFromJson;
-  factory FileDataEndPoint.fromJson(Map<String, dynamic> json) => _$FileDataEndPointFromJson(json);
+  factory FileDataEndPoint.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$FileDataEndPointToJson(this);
 }
 
-/// Specify a RESTful data endpoint where a [DataManager] can upload data.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class RESTDataEndPoint extends DataEndPoint {
-  /// The HTTP method to use in a REST call to upload data. See [HTTPMethod]. Typically POST.
-  HTTPMethod method;
-
-  /// The URI of the REST end point.
-  Uri uri;
-
-  UploadStrategy uploadStrategy = UploadStrategy.CONTINUOUSLY;
-
-  /// Creates a [DataEndPoint]. [type] is defined in [DataEndPointType].
-  RESTDataEndPoint(String type, {this.uri, this.method, this.uploadStrategy}) : super(type);
-
-  factory RESTDataEndPoint.fromJson(Map<String, dynamic> json) => _$RESTDataEndPointFromJson(json);
-  Map<String, dynamic> toJson() => _$RESTDataEndPointToJson(this);
-}
-
-/// A enumeration of possible endpoint API types.
+/// A enumeration of known endpoint API types.
 class DataEndPointType {
-  // TODO : we need to establish the mapping of these -- are these the right names for the data endpoint types?
   static const String PRINT = "print";
   static const String FILE = "file";
   static const String FIREBASE = "firebase";
   static const String CARP = "carp";
   static const String OMH = "omh";
 }
-
-/// HTTP Methods
-enum HTTPMethod { GET, POST, HEAD, PUT, DELETE }
-
-/// A enumeration of possible upload strategies for this end point.
-///
-// TODO : Currently not implemented.
-enum UploadStrategy { CONTINUOUSLY, PERIODIC }
