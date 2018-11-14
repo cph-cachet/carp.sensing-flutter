@@ -254,12 +254,12 @@ CARPDataPointHeader _$CARPDataPointHeaderFromJson(Map<String, dynamic> json) {
       endTime: json['end_time'] == null
           ? null
           : DateTime.parse(json['end_time'] as String))
-    ..dataFormat = json['data_format'] == null
-        ? null
-        : CARPDataFormat.fromJson(json['data_format'] as Map<String, dynamic>)
     ..uploadTime = json['upload_time'] == null
         ? null
-        : DateTime.parse(json['upload_time'] as String);
+        : DateTime.parse(json['upload_time'] as String)
+    ..dataFormat = json['data_format'] == null
+        ? null
+        : CARPDataFormat.fromJson(json['data_format'] as Map<String, dynamic>);
 }
 
 Map<String, dynamic> _$CARPDataPointHeaderToJson(CARPDataPointHeader instance) {
@@ -275,10 +275,10 @@ Map<String, dynamic> _$CARPDataPointHeaderToJson(CARPDataPointHeader instance) {
   writeNotNull('device_role_name', instance.deviceRoleName);
   writeNotNull('trigger_id', instance.triggerId);
   writeNotNull('user_id', instance.userId);
-  writeNotNull('data_format', instance.dataFormat);
   writeNotNull('upload_time', instance.uploadTime?.toIso8601String());
   writeNotNull('start_time', instance.startTime?.toIso8601String());
   writeNotNull('end_time', instance.endTime?.toIso8601String());
+  writeNotNull('data_format', instance.dataFormat);
   return val;
 }
 

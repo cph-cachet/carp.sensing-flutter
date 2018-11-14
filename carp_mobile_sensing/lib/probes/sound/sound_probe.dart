@@ -113,11 +113,11 @@ class AudioProbe extends ListeningProbe {
   ///Creates the directory, if not existing.
   Future<String> get path async {
     if (_path == null) {
-      String sound_path = (measure as AudioMeasure).soundFileDirPath;
+      String audioPath = (measure as AudioMeasure).soundFileDirPath;
       // get local working directory
       final localApplicationDir = await getApplicationDocumentsDirectory();
       // create a sub-directory for sound files
-      final directory = await new Directory('${localApplicationDir.path}/$sound_path').create(recursive: true);
+      final directory = await new Directory('${localApplicationDir.path}/$audioPath').create(recursive: true);
       _path = directory.path;
     }
     return _path;
@@ -132,3 +132,4 @@ class AudioProbe extends ListeningProbe {
     return "$dir/audio-$created.m4a";
   }
 }
+
