@@ -109,7 +109,8 @@ class Sensing implements ProbeListener {
 
   Sensing(this.console) {
     // Register a [FirebaseStorageDataManager] in the [DataManagerRegistry].
-    DataManagerRegistry.register(DataEndPointType.FIREBASE, new FirebaseStorageDataManager());
+    DataManagerRegistry.register(
+        DataEndPointType.FIREBASE, new FirebaseStorageDataManager());
   }
 
   /// Callback method called by [ProbeListener]s
@@ -133,8 +134,8 @@ class Sensing implements ProbeListener {
 
     // note that in this version, we start the sensors (accelerometer, etc.)
     // in order to generate a lot of data quickly for testing purposes
-    study.tasks.add(sensorTask);
 
+//    study.tasks.add(sensorTask);
 //    study.tasks.add(pedometerTask);
 //    study.tasks.add(hardwareTask);
 //    study.tasks.add(appTask);
@@ -142,7 +143,8 @@ class Sensing implements ProbeListener {
 //    study.tasks.add(commTask);
 //    study.tasks.add(locationTask);
 //    study.tasks.add(audioTask);
-    study.tasks.add(contextTask);
+//    study.tasks.add(contextTask);
+    study.tasks.add(noiseTask);
 
     // print the study to the console
     console.log(study.toString());
@@ -165,6 +167,7 @@ class Sensing implements ProbeListener {
   }
 
   Study _study;
+
   Study get study {
     if (_study == null) {
       _study = new Study("983476-1", "user@dtu.dk", name: "Test study #1");
@@ -179,24 +182,27 @@ class Sensing implements ProbeListener {
       case DataEndPointType.PRINT:
         return new DataEndPoint(DataEndPointType.PRINT);
       case DataEndPointType.FILE:
-        final FileDataEndPoint fileEndPoint = new FileDataEndPoint(DataEndPointType.FILE);
+        final FileDataEndPoint fileEndPoint =
+            new FileDataEndPoint(DataEndPointType.FILE);
         fileEndPoint.bufferSize = 500 * 1000;
         fileEndPoint.zip = true;
         fileEndPoint.encrypt = false;
         return fileEndPoint;
       case DataEndPointType.FIREBASE:
-        final FirebaseStorageDataEndPoint firebaseEndPoint = new FirebaseStorageDataEndPoint(DataEndPointType.FIREBASE,
-            name: "Flutter Sensing Sandbox",
-            uri: 'gs://flutter-sensing-sandbox.appspot.com',
-            path: 'sensing/data',
-            projectID: 'flutter-sensing-sandbox',
-            webAPIKey: 'AIzaSyCGy6MeHkiv5XkBtMcMbtgGYOpf6ntNVE4',
-            gcmSenderID: '201621881872',
-            androidGoogleAppID: '1:201621881872:android:8e84e7ccfc85e121',
-            iOSGoogleAppID: '1:159623150305:ios:4a213ef3dbd8997b',
-            firebaseAuthenticationMethod: FireBaseAuthenticationMethods.PASSWORD,
-            email: "jakob@bardram.net",
-            password: "dumt_password");
+        final FirebaseStorageDataEndPoint firebaseEndPoint =
+            new FirebaseStorageDataEndPoint(DataEndPointType.FIREBASE,
+                name: "Flutter Sensing Sandbox",
+                uri: 'gs://flutter-sensing-sandbox.appspot.com',
+                path: 'sensing/data',
+                projectID: 'flutter-sensing-sandbox',
+                webAPIKey: 'AIzaSyCGy6MeHkiv5XkBtMcMbtgGYOpf6ntNVE4',
+                gcmSenderID: '201621881872',
+                androidGoogleAppID: '1:201621881872:android:8e84e7ccfc85e121',
+                iOSGoogleAppID: '1:159623150305:ios:4a213ef3dbd8997b',
+                firebaseAuthenticationMethod:
+                    FireBaseAuthenticationMethods.PASSWORD,
+                email: "jakob@bardram.net",
+                password: "dumt_password");
 
         firebaseEndPoint.bufferSize = 100 * 1000;
         firebaseEndPoint.zip = true;
@@ -250,11 +256,31 @@ class Sensing implements ProbeListener {
           name: 'Audio',
           frequency: 10 * 1000, // once every 10 seconds
           duration: 2 * 1000, // 2 seconds
-          soundFileDirPath: "${FileDataManager.CARP_FILE_PATH}/${study.id}/sound");
+          soundFileDirPath:
+              "${FileDataManager.CARP_FILE_PATH}/${study.id}/sound");
 
       _audioTask.addMeasure(aum);
     }
     return _audioTask;
+  }
+
+  /// A task collecting audio data as files.
+  Task _noiseTask;
+
+  Task get noiseTask {
+    if (_audioTask == null) {
+      _noiseTask = new Task("Noise task");
+
+      NoiseMeasure nm = new NoiseMeasure(
+        ProbeRegistry.AUDIO_MEASURE,
+        name: 'Noise',
+        frequency: 10 * 1000, // once every 10 seconds
+        duration: 2 * 1000, // 2 seconds
+      );
+
+      _noiseTask.addMeasure(nm);
+    }
+    return _noiseTask;
   }
 
   Task _contextTask;
@@ -264,8 +290,9 @@ class Sensing implements ProbeListener {
     if (_contextTask == null) {
       _contextTask = new Task("Context task");
 
-      _contextTask
-          .addMeasure(ListeningProbeMeasure(ProbeRegistry.ACTIVITY_MEASURE, name: "Activity Recognition Probe"));
+      _contextTask.addMeasure(ListeningProbeMeasure(
+          ProbeRegistry.ACTIVITY_MEASURE,
+          name: "Activity Recognition Probe"));
     }
     return _contextTask;
   }
@@ -296,10 +323,14 @@ class Sensing implements ProbeListener {
     if (_hardwareTask == null) {
       _hardwareTask = new Task("Hardware Task");
 
-      _hardwareTask.addMeasure(
-          PollingProbeMeasure(ProbeRegistry.MEMORY_MEASURE, name: 'Polling of availabel memory', frequency: 2 * 1000));
-      _hardwareTask.addMeasure(ListeningProbeMeasure(ProbeRegistry.BATTERY_MEASURE, name: 'Battery'));
-      _hardwareTask.addMeasure(ListeningProbeMeasure(ProbeRegistry.SCREEN_MEASURE, name: 'Screen Lock/Unlock'));
+      _hardwareTask.addMeasure(PollingProbeMeasure(ProbeRegistry.MEMORY_MEASURE,
+          name: 'Polling of availabel memory', frequency: 2 * 1000));
+      _hardwareTask.addMeasure(ListeningProbeMeasure(
+          ProbeRegistry.BATTERY_MEASURE,
+          name: 'Battery'));
+      _hardwareTask.addMeasure(ListeningProbeMeasure(
+          ProbeRegistry.SCREEN_MEASURE,
+          name: 'Screen Lock/Unlock'));
     }
     return _hardwareTask;
   }
@@ -313,8 +344,12 @@ class Sensing implements ProbeListener {
     if (_connectivityTask == null) {
       _connectivityTask = new Task("Connectivity Task");
 
-      _connectivityTask.addMeasure(ConnectivityMeasure(ProbeRegistry.CONNECTIVITY_MEASURE, name: 'Connectivity'));
-      _connectivityTask.addMeasure(BluetoothMeasure(ProbeRegistry.BLUETOOTH_MEASURE, name: 'Nearby Bluetooth Devices'));
+      _connectivityTask.addMeasure(ConnectivityMeasure(
+          ProbeRegistry.CONNECTIVITY_MEASURE,
+          name: 'Connectivity'));
+      _connectivityTask.addMeasure(BluetoothMeasure(
+          ProbeRegistry.BLUETOOTH_MEASURE,
+          name: 'Nearby Bluetooth Devices'));
     }
     return _connectivityTask;
   }
@@ -325,7 +360,8 @@ class Sensing implements ProbeListener {
   Task get appTask {
     if (_appTask == null) {
       _appTask = new Task("Application Task");
-      PollingProbeMeasure am = new PollingProbeMeasure(ProbeRegistry.APPS_MEASURE);
+      PollingProbeMeasure am =
+          new PollingProbeMeasure(ProbeRegistry.APPS_MEASURE);
       am.name = "Installed apps";
       am.frequency = 5 * 1000;
       _appTask.addMeasure(am);
@@ -345,14 +381,18 @@ class Sensing implements ProbeListener {
     if (_commTask == null) {
       _commTask = new Task("Communication Task");
 
-      _commTask.addMeasure(PhoneLogMeasure(ProbeRegistry.PHONELOG_MEASURE, name: "Entire phone log", days: -1));
+      _commTask.addMeasure(PhoneLogMeasure(ProbeRegistry.PHONELOG_MEASURE,
+          name: "Entire phone log", days: -1));
 
-      TextMessageMeasure tm_1 =
-          new TextMessageMeasure(ProbeRegistry.TEXT_MESSAGE_LOG_MEASURE, name: "Text Message Log");
+      TextMessageMeasure tm_1 = new TextMessageMeasure(
+          ProbeRegistry.TEXT_MESSAGE_LOG_MEASURE,
+          name: "Text Message Log");
       tm_1.collectBodyOfMessage = false;
       _commTask.addMeasure(tm_1);
 
-      TextMessageMeasure tm_2 = new TextMessageMeasure(ProbeRegistry.TEXT_MESSAGE_MEASURE, name: "Text Messages");
+      TextMessageMeasure tm_2 = new TextMessageMeasure(
+          ProbeRegistry.TEXT_MESSAGE_MEASURE,
+          name: "Text Messages");
       _commTask.addMeasure(tm_2);
     }
     return _commTask;
@@ -364,7 +404,8 @@ class Sensing implements ProbeListener {
   Task get locationTask {
     if (_locationTask == null) {
       _locationTask = new Task("Location Task");
-      _locationTask.addMeasure(LocationMeasure(ProbeRegistry.LOCATION_MEASURE, name: 'Location'));
+      _locationTask.addMeasure(
+          LocationMeasure(ProbeRegistry.LOCATION_MEASURE, name: 'Location'));
     }
     return _locationTask;
   }
