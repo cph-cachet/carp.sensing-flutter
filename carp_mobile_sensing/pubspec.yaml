@@ -32,7 +32,7 @@ dependencies:
   #phone_log:             # <- phone_log does not support Dart 2.0 >> have raised an issues, but not used until this is fixed.
   activity_recognition: ^0.1.3
   stats: # For calculating statistics, ex LightProbe
-#  noise_level:
+  noise_level:
 
 
 
