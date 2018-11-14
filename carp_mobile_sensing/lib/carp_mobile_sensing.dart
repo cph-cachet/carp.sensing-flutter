@@ -9,7 +9,7 @@ export 'package:carp_mobile_sensing/domain/domain.dart';
 
 // The list of built-in sensors
 export 'package:carp_mobile_sensing/probes/location/location.dart';
-export 'package:carp_mobile_sensing/probes/audio/audio.dart';
+export 'package:carp_mobile_sensing/probes/sound/sound.dart';
 export 'package:carp_mobile_sensing/probes/sensors/sensors.dart';
 export 'package:carp_mobile_sensing/probes/hardware/hardware.dart';
 export 'package:carp_mobile_sensing/probes/apps/apps.dart';

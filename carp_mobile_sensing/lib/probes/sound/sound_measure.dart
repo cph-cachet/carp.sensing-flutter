@@ -23,7 +23,24 @@ class AudioMeasure extends SensorMeasure {
             name: name, frequency: frequency, duration: duration);
 
   static Function get fromJsonFunction => _$AudioMeasureFromJson;
+
   factory AudioMeasure.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory.fromJson(json['\$'].toString(), json);
+
   Map<String, dynamic> toJson() => _$AudioMeasureToJson(this);
+}
+
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+class NoiseMeasure extends SensorMeasure {
+
+  NoiseMeasure(measureType, {name, frequency, duration})
+      : super(measureType,
+            name: name, frequency: frequency, duration: duration);
+
+  static Function get fromJsonFunction => _$NoiseMeasureFromJson;
+
+  factory NoiseMeasure.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory.fromJson(json['\$'].toString(), json);
+
+  Map<String, dynamic> toJson() => _$NoiseMeasureToJson(this);
 }

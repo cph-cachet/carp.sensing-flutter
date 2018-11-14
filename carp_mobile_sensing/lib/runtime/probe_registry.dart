@@ -23,6 +23,7 @@ class ProbeRegistry {
   static const String BATTERY_MEASURE = "battery";
   static const String BLUETOOTH_MEASURE = "bluetooth";
   static const String AUDIO_MEASURE = "audio";
+  static const String NOISE_MEASURE = "noise";
   static const String NOICE_MEASURE = "noice";
   static const String LOCATION_MEASURE = "location";
   static const String CONNECTIVITY_MEASURE = "connectivity";
@@ -97,6 +98,9 @@ class ProbeRegistry {
         break;
       case AUDIO_MEASURE:
         _probe = new AudioProbe(measure);
+        break;
+      case NOISE_MEASURE:
+        _probe = new NoiseProbe(measure);
         break;
       case ACTIVITY_MEASURE:
         _probe = new ActivityProbe(measure);
