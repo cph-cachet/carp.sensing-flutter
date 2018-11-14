@@ -1,5 +1,6 @@
 ## 0.2.4 
 * error in `light` probe fixed.
+* `noise` probe added.
 
 ## 0.2.3
 * fixed error in `readme` file.
