@@ -10,12 +10,11 @@ part of connectivity;
 /// Configuration of the connectivity sampling.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ConnectivityMeasure extends ProbeMeasure {
-  ConnectivityMeasure(String measureType, {name})
-      : super(measureType, name: name);
+  ConnectivityMeasure(String measureType, {name}) : super(measureType, name: name);
 
   static Function get fromJsonFunction => _$ConnectivityMeasureFromJson;
   factory ConnectivityMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(json['\$'].toString(), json);
+      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$ConnectivityMeasureToJson(this);
 }
 
@@ -33,14 +32,13 @@ class BluetoothMeasure extends PollingProbeMeasure {
   static const int DEFAULT_DURATION = 3 * 1000;
 
   BluetoothMeasure(String measureType, {name, frequency, duration})
-      : super(measureType,
-            name: name, frequency: frequency, duration: duration) {
+      : super(measureType, name: name, frequency: frequency, duration: duration) {
     if (frequency == null) this.frequency = DEFAULT_FREQUENCY;
     if (duration == null) this.duration = DEFAULT_DURATION;
   }
 
   static Function get fromJsonFunction => _$BluetoothMeasureFromJson;
   factory BluetoothMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(json['\$'].toString(), json);
+      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$BluetoothMeasureToJson(this);
 }

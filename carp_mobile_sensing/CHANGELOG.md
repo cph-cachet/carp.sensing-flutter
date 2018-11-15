@@ -1,3 +1,6 @@
+## 0.2.5 
+*
+
 ## 0.2.4 
 * error in `light` probe fixed.
 * `noise` probe added.

@@ -81,7 +81,7 @@ class FirebaseStorageDataManager extends AbstractDataManager implements FileData
           {
             GoogleSignInAccount googleUser = await _googleSignIn.signIn();
             GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-            FirebaseUser _user = await _auth.signInWithGoogle(
+            await _auth.signInWithGoogle(
               accessToken: googleAuth.accessToken,
               idToken: googleAuth.idToken,
             );
@@ -107,12 +107,10 @@ class FirebaseStorageDataManager extends AbstractDataManager implements FileData
     return _user;
   }
 
-  @override
-  Future close() {
-    // TODO: implement close
+  Future close() async {
+    return;
   }
 
-  @override
   Future<bool> uploadData(Datum data) {
     // Forward to [FileDataManager]
     return _fileDataManager.uploadData(data);
@@ -149,12 +147,9 @@ class FirebaseStorageDataManager extends AbstractDataManager implements FileData
     print("File deleted : ${file.path}");
 
     return downloadUrl;
-
-    //return new Uri();
   }
 
-  @override
-  Future notify(FileDataManagerEvent event) {
+  Future notify(FileDataManagerEvent event) async {
     print("FirebaseStorageDataManager : {event: ${event.event}, path : ${event.path}");
     switch (event.event) {
       case FileEvent.created:

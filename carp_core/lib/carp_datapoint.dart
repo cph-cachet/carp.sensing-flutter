@@ -26,7 +26,7 @@ class CARPDataPoint {
 
   CARPDataPoint.fromDatum(String studyId, String userId, Datum datum) {
     CARPDataPointHeader header = new CARPDataPointHeader(studyId, userId);
-    header.startTime = (datum is CARPDatum) ? (datum as CARPDatum).timestamp.toUtc() : new DateTime.now().toUtc();
+    header.startTime = (datum is CARPDatum) ? datum.timestamp.toUtc() : new DateTime.now().toUtc();
     header.dataFormat = datum.getCARPDataFormat();
 
     this.carpHeader = header;

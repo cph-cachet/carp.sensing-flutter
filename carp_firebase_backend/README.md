@@ -93,7 +93,7 @@ Run `flutter packages get`. For more information on managing packages and plugin
 see [Using Packages](https://flutter.io/using-packages/).
 
 
-## Using `carp_firebase_backend`
+## Using the Plugin
 
 First you should register a `FirebaseStorageDataManager` in the `DataManagerRegistry`.
 

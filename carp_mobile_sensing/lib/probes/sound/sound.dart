@@ -13,7 +13,7 @@ import 'package:noise_meter/noise_meter.dart';
 import 'package:stats/stats.dart';
 import 'package:carp_core/carp_core.dart';
 
-part 'sound_probe.dart';
+part 'audio_probe.dart';
 part 'noise_probe.dart';
 part 'sound_datum.dart';
 part 'sound.g.dart';

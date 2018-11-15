@@ -1,6 +1,6 @@
 name: carp_mobile_sensing
 description: Mobile Sensing Framework for Flutter. A software framework for collecting sensor data from the phone and attached wearable devices via probes. Can be extended.
-version: 0.2.4
+version: 0.2.5
 author:  CACHET Team <cph.cachet@gmail.com>
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_mobile_sensing
 
@@ -31,16 +31,15 @@ dependencies:
   sms: ^0.2.4
   call_log: ^1.0.2
   flutter_sound: ^1.1.5   # audio probe, recording audio
-  #phone_log:             # <- phone_log does not support Dart 2.0 >> have raised an issues, but not used until this is fixed.
   activity_recognition: ^0.1.3
-  stats: # For calculating statistics, ex LightProbe
+  stats: ^0.2.0           # For calculating statistics, ex LightProbe
 
   # the CACHET plugins
   pedometer: ^0.0.3       # Get the step count from local OS
   light: ^0.0.3           # Light sensor over platform channel
   device_apps: ^1.0.0     # Device installed apps over platform channel
   screen_state: ^0.0.1    # Screen LOCK/ON/OFF
-  noise_meter:            # Measuring noise level
+  noise_meter: ^0.0.3     # Measuring noise level
 
 
 dev_dependencies:

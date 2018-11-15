@@ -9,8 +9,7 @@ part of communication;
 
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class TextMessageMeasure extends ProbeMeasure {
-  TextMessageMeasure(String measureType, {name})
-      : super(measureType, name: name);
+  TextMessageMeasure(String measureType, {name}) : super(measureType, name: name);
 
   /// Specify if the body (i.e, the full text) should be collected.
   ///
@@ -19,14 +18,13 @@ class TextMessageMeasure extends ProbeMeasure {
 
   static Function get fromJsonFunction => _$TextMessageMeasureFromJson;
   factory TextMessageMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(json['\$'].toString(), json);
+      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$TextMessageMeasureToJson(this);
 }
 
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class PhoneLogMeasure extends ProbeMeasure {
-  PhoneLogMeasure(String measureType, {name, this.days})
-      : super(measureType, name: name);
+  PhoneLogMeasure(String measureType, {name, this.days}) : super(measureType, name: name);
 
   /// The number of days back in time to collect the phone log from.
   ///
@@ -35,6 +33,6 @@ class PhoneLogMeasure extends ProbeMeasure {
 
   static Function get fromJsonFunction => _$PhoneLogMeasureFromJson;
   factory PhoneLogMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(json['\$'].toString(), json);
+      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$PhoneLogMeasureToJson(this);
 }
