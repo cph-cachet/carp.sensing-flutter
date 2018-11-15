@@ -18,9 +18,9 @@ class ConsoleDataManager extends AbstractDataManager {
   }
 
   @override
-  Future<String> uploadData(Datum data) {
+  Future<bool> uploadData(Datum data) async {
     print("^^^^^^^^^^^^^^^\n" + jsonEncode(data));
-    return new Future.value("200 OK");
+    return true;
   }
 
   @override

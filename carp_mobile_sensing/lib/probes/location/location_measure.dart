@@ -14,6 +14,6 @@ class LocationMeasure extends ProbeMeasure {
 
   static Function get fromJsonFunction => _$LocationMeasureFromJson;
   factory LocationMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(json['\$'].toString(), json);
+      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$LocationMeasureToJson(this);
 }

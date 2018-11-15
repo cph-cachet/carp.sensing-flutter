@@ -8,7 +8,7 @@ part of connectivity;
 
 ConnectivityDatum _$ConnectivityDatumFromJson(Map<String, dynamic> json) {
   return ConnectivityDatum()
-    ..classname = json['classname'] as String
+    ..c__ = json['c__'] as String
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
         ? null
@@ -28,7 +28,7 @@ Map<String, dynamic> _$ConnectivityDatumToJson(ConnectivityDatum instance) {
     }
   }
 
-  writeNotNull('classname', instance.classname);
+  writeNotNull('c__', instance.c__);
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
   writeNotNull('device_info', instance.deviceInfo);
@@ -38,7 +38,7 @@ Map<String, dynamic> _$ConnectivityDatumToJson(ConnectivityDatum instance) {
 
 BluetoothDatum _$BluetoothDatumFromJson(Map<String, dynamic> json) {
   return BluetoothDatum()
-    ..classname = json['classname'] as String
+    ..c__ = json['c__'] as String
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
         ? null
@@ -63,7 +63,7 @@ Map<String, dynamic> _$BluetoothDatumToJson(BluetoothDatum instance) {
     }
   }
 
-  writeNotNull('classname', instance.classname);
+  writeNotNull('c__', instance.c__);
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
   writeNotNull('device_info', instance.deviceInfo);
@@ -78,7 +78,7 @@ Map<String, dynamic> _$BluetoothDatumToJson(BluetoothDatum instance) {
 
 ConnectivityMeasure _$ConnectivityMeasureFromJson(Map<String, dynamic> json) {
   return ConnectivityMeasure(json['measure_type'] as String, name: json['name'])
-    ..classname = json['classname'] as String
+    ..c__ = json['c__'] as String
     ..enabled = json['enabled'] as bool
     ..configuration = (json['configuration'] as Map<String, dynamic>)
         ?.map((k, e) => MapEntry(k, e as String));
@@ -93,7 +93,7 @@ Map<String, dynamic> _$ConnectivityMeasureToJson(ConnectivityMeasure instance) {
     }
   }
 
-  writeNotNull('classname', instance.classname);
+  writeNotNull('c__', instance.c__);
   writeNotNull('measure_type', instance.measureType);
   writeNotNull('name', instance.name);
   writeNotNull('enabled', instance.enabled);
@@ -106,7 +106,7 @@ BluetoothMeasure _$BluetoothMeasureFromJson(Map<String, dynamic> json) {
       name: json['name'],
       frequency: json['frequency'],
       duration: json['duration'])
-    ..classname = json['classname'] as String
+    ..c__ = json['c__'] as String
     ..enabled = json['enabled'] as bool
     ..configuration = (json['configuration'] as Map<String, dynamic>)
         ?.map((k, e) => MapEntry(k, e as String));
@@ -121,7 +121,7 @@ Map<String, dynamic> _$BluetoothMeasureToJson(BluetoothMeasure instance) {
     }
   }
 
-  writeNotNull('classname', instance.classname);
+  writeNotNull('c__', instance.c__);
   writeNotNull('measure_type', instance.measureType);
   writeNotNull('name', instance.name);
   writeNotNull('enabled', instance.enabled);

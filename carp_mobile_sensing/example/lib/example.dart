@@ -1,4 +1,5 @@
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+import 'package:carp_core/carp_core.dart';
 
 /// This is the code for the very minimal example used in the README.md file.
 void example() {

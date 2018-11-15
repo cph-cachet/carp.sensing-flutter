@@ -22,7 +22,7 @@ FirebaseStorageDataEndPoint _$FirebaseStorageDataEndPointFromJson(
       androidGoogleAppID: json['android_google_app_i_d'] as String,
       iOSGoogleAppID: json['i_o_s_google_app_i_d'] as String,
       gcmSenderID: json['gcm_sender_i_d'] as String)
-    ..classname = json['classname'] as String
+    ..c__ = json['c__'] as String
     ..bufferSize = json['buffer_size'] as int
     ..zip = json['zip'] as bool
     ..encrypt = json['encrypt'] as bool
@@ -39,7 +39,7 @@ Map<String, dynamic> _$FirebaseStorageDataEndPointToJson(
     }
   }
 
-  writeNotNull('classname', instance.classname);
+  writeNotNull('c__', instance.c__);
   writeNotNull('type', instance.type);
   writeNotNull('buffer_size', instance.bufferSize);
   writeNotNull('zip', instance.zip);

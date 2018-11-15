@@ -10,6 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  carp_core: ^0.1.0                   # The core CARP domain model
   carp_mobile_sensing: ^0.2.0
   #carp_firebase_backend: ^0.0.1
   #cupertino_icons: ^0.1.2

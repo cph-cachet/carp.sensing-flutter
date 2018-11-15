@@ -16,8 +16,7 @@ final FirebaseAuth _auth = FirebaseAuth.instance;
 ///
 /// Files are transferred when the device is online and buffered when offline.
 /// Once the file has been transferred to Firebase, it is deleted on the local device.
-class FirebaseStorageDataManager extends AbstractDataManager
-    implements FileDataManagerListener {
+class FirebaseStorageDataManager extends AbstractDataManager implements FileDataManagerListener {
   FileDataManager _fileDataManager;
   FirebaseStorageDataEndPoint _firebaseStorageDataEndPoint;
 
@@ -36,8 +35,7 @@ class FirebaseStorageDataManager extends AbstractDataManager
   Future initialize(Study study) async {
     super.initialize(study);
     assert(study.dataEndPoint is FirebaseStorageDataEndPoint);
-    _firebaseStorageDataEndPoint =
-        study.dataEndPoint as FirebaseStorageDataEndPoint;
+    _firebaseStorageDataEndPoint = study.dataEndPoint as FirebaseStorageDataEndPoint;
 
     _fileDataManager.initialize(study);
 
@@ -48,8 +46,7 @@ class FirebaseStorageDataManager extends AbstractDataManager
     print(' Firebase URI  : ${_firebaseStorageDataEndPoint.uri}');
     print(' Folder path   : ${_firebaseStorageDataEndPoint.path}');
     print(' Storage       : ${storage.app.name}');
-    print(
-        ' Auth. user    : ${authenticatedUser.displayName} <${authenticatedUser.email}>');
+    print(' Auth. user    : ${authenticatedUser.displayName} <${authenticatedUser.email}>');
   }
 
   Future<FirebaseApp> get firebaseApp async {
@@ -72,8 +69,7 @@ class FirebaseStorageDataManager extends AbstractDataManager
   Future<FirebaseStorage> get firebaseStorage async {
     if (_firebaseStorage == null) {
       final FirebaseApp app = await firebaseApp;
-      _firebaseStorage = new FirebaseStorage(
-          app: app, storageBucket: _firebaseStorageDataEndPoint.uri);
+      _firebaseStorage = new FirebaseStorage(app: app, storageBucket: _firebaseStorageDataEndPoint.uri);
     }
     return _firebaseStorage;
   }
@@ -84,8 +80,7 @@ class FirebaseStorageDataManager extends AbstractDataManager
         case FireBaseAuthenticationMethods.GOOGLE:
           {
             GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-            GoogleSignInAuthentication googleAuth =
-                await googleUser.authentication;
+            GoogleSignInAuthentication googleAuth = await googleUser.authentication;
             FirebaseUser _user = await _auth.signInWithGoogle(
               accessToken: googleAuth.accessToken,
               idToken: googleAuth.idToken,
@@ -98,8 +93,7 @@ class FirebaseStorageDataManager extends AbstractDataManager
             assert(_firebaseStorageDataEndPoint.email != null);
             assert(_firebaseStorageDataEndPoint.password != null);
             _user = await _auth.signInWithEmailAndPassword(
-                email: _firebaseStorageDataEndPoint.email,
-                password: _firebaseStorageDataEndPoint.password);
+                email: _firebaseStorageDataEndPoint.email, password: _firebaseStorageDataEndPoint.password);
             break;
           }
         default:
@@ -119,23 +113,19 @@ class FirebaseStorageDataManager extends AbstractDataManager
   }
 
   @override
-  Future<String> uploadData(Datum data) {
+  Future<bool> uploadData(Datum data) {
     // Forward to [FileDataManager]
     return _fileDataManager.uploadData(data);
   }
 
-  String get firebasePath =>
-      "${_firebaseStorageDataEndPoint.path}/${study.id}/${Device.deviceID.toString()}";
+  String get firebasePath => "${_firebaseStorageDataEndPoint.path}/${study.id}/${Device.deviceID.toString()}";
 
   Future<Uri> _uploadFileToFirestore(String localFilePath) async {
-    final String filename =
-        localFilePath.substring(localFilePath.lastIndexOf('/') + 1);
+    final String filename = localFilePath.substring(localFilePath.lastIndexOf('/') + 1);
 
-    print(
-        "Upload to Firestore started - path : '$firebasePath', filename : '$filename'");
+    print("Upload to Firestore started - path : '$firebasePath', filename : '$filename'");
 
-    final StorageReference ref =
-        FirebaseStorage.instance.ref().child(firebasePath).child(filename);
+    final StorageReference ref = FirebaseStorage.instance.ref().child(firebasePath).child(filename);
     final File file = new File(localFilePath);
     final String deviceID = Device.deviceID.toString();
     final String studyID = study.id;
@@ -144,21 +134,16 @@ class FirebaseStorageDataManager extends AbstractDataManager
     final StorageUploadTask uploadTask = ref.putFile(
       file,
       new StorageMetadata(
-        contentEncoding: 'application/zip',
-        contentType: 'application/json',
-        customMetadata: <String, String>{
-          'device_id': '$deviceID',
-          'study_id': '$studyID',
-          'user_id': '$userID'
-        },
+        contentEncoding: 'application/json',
+        contentType: 'application/zip',
+        customMetadata: <String, String>{'device_id': '$deviceID', 'study_id': '$studyID', 'user_id': '$userID'},
         // TODO add location as metadata
       ),
     );
 
     // await the upload is successful
     final Uri downloadUrl = (await uploadTask.onComplete).uploadSessionUri;
-    print(
-        "Upload to Firestore finished - remote file uri  : ${downloadUrl.path}'");
+    print("Upload to Firestore finished - remote file uri  : ${downloadUrl.path}'");
     // then delete the local file.
     file.delete();
     print("File deleted : ${file.path}");
@@ -170,8 +155,7 @@ class FirebaseStorageDataManager extends AbstractDataManager
 
   @override
   Future notify(FileDataManagerEvent event) {
-    print(
-        "FirebaseStorageDataManager : {event: ${event.event}, path : ${event.path}");
+    print("FirebaseStorageDataManager : {event: ${event.event}, path : ${event.path}");
     switch (event.event) {
       case FileEvent.created:
         {

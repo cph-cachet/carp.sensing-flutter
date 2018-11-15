@@ -1,6 +1,7 @@
 ## 0.2.4 
 * error in `light` probe fixed.
 * `noise` probe added.
+* using the `carp_core` domain model
 
 ## 0.2.3
 * fixed error in `readme` file.

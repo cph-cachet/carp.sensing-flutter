@@ -8,7 +8,7 @@ part of apps;
 
 AppsDatum _$AppsDatumFromJson(Map<String, dynamic> json) {
   return AppsDatum()
-    ..classname = json['classname'] as String
+    ..c__ = json['c__'] as String
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
         ? null
@@ -29,7 +29,7 @@ Map<String, dynamic> _$AppsDatumToJson(AppsDatum instance) {
     }
   }
 
-  writeNotNull('classname', instance.classname);
+  writeNotNull('c__', instance.c__);
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
   writeNotNull('device_info', instance.deviceInfo);

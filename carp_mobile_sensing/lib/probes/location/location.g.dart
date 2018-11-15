@@ -8,7 +8,7 @@ part of location;
 
 LocationDatum _$LocationDatumFromJson(Map<String, dynamic> json) {
   return LocationDatum()
-    ..classname = json['classname'] as String
+    ..c__ = json['c__'] as String
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
         ? null
@@ -33,7 +33,7 @@ Map<String, dynamic> _$LocationDatumToJson(LocationDatum instance) {
     }
   }
 
-  writeNotNull('classname', instance.classname);
+  writeNotNull('c__', instance.c__);
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
   writeNotNull('device_info', instance.deviceInfo);
@@ -48,7 +48,7 @@ Map<String, dynamic> _$LocationDatumToJson(LocationDatum instance) {
 
 LocationMeasure _$LocationMeasureFromJson(Map<String, dynamic> json) {
   return LocationMeasure(json['measure_type'] as String, name: json['name'])
-    ..classname = json['classname'] as String
+    ..c__ = json['c__'] as String
     ..enabled = json['enabled'] as bool
     ..configuration = (json['configuration'] as Map<String, dynamic>)
         ?.map((k, e) => MapEntry(k, e as String));
@@ -63,7 +63,7 @@ Map<String, dynamic> _$LocationMeasureToJson(LocationMeasure instance) {
     }
   }
 
-  writeNotNull('classname', instance.classname);
+  writeNotNull('c__', instance.c__);
   writeNotNull('measure_type', instance.measureType);
   writeNotNull('name', instance.name);
   writeNotNull('enabled', instance.enabled);

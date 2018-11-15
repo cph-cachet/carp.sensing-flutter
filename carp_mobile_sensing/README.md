@@ -20,8 +20,8 @@ flutter channel dev
 
 Note that there are two issues with Android to consider:
 
-* [Issue #1](https://github.com/cph-cachet/carp.sensing/issues/2) - make sure your app's android `build.graddle` has a `minSdkVersion 19` (instead of `16` ).
-* [Issue #2](https://github.com/cph-cachet/carp.sensing/issues/1) - update the he file `build.graddle` in `flutter_blue` and change the JDK parameters to `26` (instead of `27`).
+* [Issue #1](https://github.com/cph-cachet/carp.sensing/issues/2) - make sure your app's android `build.gradle` has a `minSdkVersion 19` (instead of `16` ).
+* [Issue #2](https://github.com/cph-cachet/carp.sensing/issues/1) - update the he file `build.gradle` in `flutter_blue` and change the JDK parameters to `26` (instead of `27`).
 
 ### Android Integration
 
