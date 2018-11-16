@@ -111,6 +111,7 @@ class Sensing implements ProbeListener {
   Sensing(this.console) {
     // Register a [FirebaseStorageDataManager] in the [DataManagerRegistry].
     DataManagerRegistry.register(DataEndPointType.FIREBASE, new FirebaseStorageDataManager());
+    DataManagerRegistry.register(DataEndPointType.FILE, new FileDataManager());
   }
 
   /// Callback method called by [ProbeListener]s
@@ -130,21 +131,18 @@ class Sensing implements ProbeListener {
     // specify the [DataEndPoint] for this study.
     study.dataEndPoint = getDataEndpoint(DataEndPointType.FILE);
 
-    // add tasks to the study
-
     // note that in this version, we start the sensors (accelerometer, etc.)
     // in order to generate a lot of data quickly for testing purposes
-
 //    study.tasks.add(sensorTask);
 //    study.tasks.add(pedometerTask);
 //    study.tasks.add(hardwareTask);
 //    study.tasks.add(appTask);
 //    study.tasks.add(connectivityTask);
 //    study.tasks.add(commTask);
-//    study.tasks.add(locationTask);
+    study.tasks.add(locationTask);
 //    study.tasks.add(audioTask);
 //    study.tasks.add(contextTask);
-    study.tasks.add(noiseTask);
+//    study.tasks.add(noiseTask);
 
     // print the study to the console
     console.log(study.toString());
@@ -264,14 +262,15 @@ class Sensing implements ProbeListener {
   Task _noiseTask;
 
   Task get noiseTask {
-    if (_audioTask == null) {
+    if (_noiseTask == null) {
       _noiseTask = new Task("Noise task");
 
       NoiseMeasure nm = new NoiseMeasure(
-        ProbeRegistry.AUDIO_MEASURE,
+        ProbeRegistry.NOISE_MEASURE,
         name: 'Noise',
-        frequency: 10 * 1000, // once every 10 seconds
-        duration: 2 * 1000, // 2 seconds
+        frequency:  30 * 1000, // How often to start a measure
+        duration: 10 * 1000, // Window size: 10 seconds,
+        samplingRate: 500 // Sample a data point every 500 ms
       );
 
       _noiseTask.addMeasure(nm);
@@ -386,8 +385,7 @@ class Sensing implements ProbeListener {
   Task get locationTask {
     if (_locationTask == null) {
       _locationTask = new Task("Location Task");
-      _locationTask.addMeasure(NoiseMeasure("w"));
-      LocationMeasure(ProbeRegistry.LOCATION_MEASURE, name: 'Location');
+      _locationTask.addMeasure(LocationMeasure(ProbeRegistry.LOCATION_MEASURE, name: 'Location'));
     }
     return _locationTask;
   }
