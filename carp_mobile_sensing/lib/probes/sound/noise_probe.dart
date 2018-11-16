@@ -3,36 +3,37 @@ part of audio;
 /// A listening probe collecting noise data from the microphone.
 ///
 /// See [NoiseMeasure] on how to configure this probe, including setting the
-/// frequency and duration of the sampling rate.
+/// frequency, duration and sampling rate of the sampling rate.
 ///
 /// Does not record sound, and instead reports the audio level with a specified frequency, in a given sampling window.
 class NoiseProbe extends ListeningProbe {
-  Noise noise;
+  Noise _noise;
   bool _isListening = false;
   DateTime _startRecordingTime;
   DateTime _endRecordingTime;
-  int _frequency;
+  int _samplingRate;
   StreamSubscription<NoiseEvent> _noiseSubscription;
-  List<num> _noiseValues = new List();
+  List<num> _noiseReadings = new List();
 
-  // Initialize an audio probe taking a [SensorMeasure] as configuration.
-  NoiseProbe(AudioMeasure _measure)
+  /// Initialize an [NoiseProbe] taking a [SensorMeasure] as configuration.
+  NoiseProbe(NoiseMeasure _measure)
       : assert(_measure != null),
         super(_measure);
 
   @override
   void initialize() {
-    // Define the probe sampling frequency
-    _frequency = (measure as AudioMeasure).frequency;
-    noise = new Noise(_frequency);
+    // Define the probe sampling sampling rate
+    _samplingRate = (measure as NoiseMeasure).samplingRate;
+    _noise = new Noise(_samplingRate);
     super.initialize();
   }
 
   @override
   Future start() async {
     super.start();
+    int _frequency = (measure as NoiseMeasure).frequency;
+    int _duration = (measure as NoiseMeasure).duration;
     Duration _pause = new Duration(milliseconds: _frequency);
-    int _duration = (measure as AudioMeasure).duration;
     Duration _samplingDuration = new Duration(milliseconds: _duration);
     // Create a recurrent timer that wait (pause) and then resume the sampling.
     Timer.periodic(_pause, (Timer timer) {
@@ -46,7 +47,7 @@ class NoiseProbe extends ListeningProbe {
 
   @override
   void stop() {
-    noise = null;
+    _noise = null;
   }
 
   @override
@@ -62,13 +63,14 @@ class NoiseProbe extends ListeningProbe {
   }
 
   void onData(NoiseEvent event) {
-    _noiseValues.add(event.decibel);
+    print('onData(): $event');
+    _noiseReadings.add(event.decibel);
   }
 
   void startListening() async {
     if (_isListening) return;
     try {
-      _noiseSubscription = noise.noiseStream.listen(onData);
+      _noiseSubscription = _noise.noiseStream.listen(onData);
     } catch (err) {
       print('startListening() error: $err');
     }
@@ -81,7 +83,7 @@ class NoiseProbe extends ListeningProbe {
   }
 
   Future<Datum> get datum async {
-    Stats stats = Stats.fromData(_noiseValues);
+    Stats stats = Stats.fromData(_noiseReadings);
     num mean = stats.mean;
     num std = stats.standardDeviation;
     num min = stats.min;

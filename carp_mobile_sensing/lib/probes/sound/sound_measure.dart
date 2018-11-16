@@ -31,7 +31,9 @@ class AudioMeasure extends SensorMeasure {
 
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class NoiseMeasure extends SensorMeasure {
-  NoiseMeasure(measureType, {name, frequency, duration})
+
+  int samplingRate;
+  NoiseMeasure(measureType, {name, frequency, duration, this.samplingRate})
       : super(measureType, name: name, frequency: frequency, duration: duration);
 
   static Function get fromJsonFunction => _$NoiseMeasureFromJson;
