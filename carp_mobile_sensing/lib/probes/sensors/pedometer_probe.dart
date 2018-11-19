@@ -15,7 +15,6 @@ class PedometerProbe extends ListeningProbe {
   StreamSubscription<int> _subscription;
   int _latestStepCount = 0;
   DateTime _startTime;
-  Timer _periodicTimer;
 
   /// Returns the latest known step count.
   int get latestStepCount => _latestStepCount;
@@ -28,8 +27,7 @@ class PedometerProbe extends ListeningProbe {
     _pedometer = new Pedometer();
 
     // start listening to the pedometer, but pause until the probe is started
-    _subscription = _pedometer.stepCountStream.listen(_onData,
-        onError: _onError, onDone: _onDone, cancelOnError: true);
+    _subscription = _pedometer.stepCountStream.listen(_onData, onError: _onError, onDone: _onDone, cancelOnError: true);
     _startTime = DateTime.now();
     _subscription.pause();
   }
@@ -42,7 +40,7 @@ class PedometerProbe extends ListeningProbe {
     final Duration _pause = new Duration(milliseconds: _frequency);
 
     // create a recurrent timer that wait (pause) and then resumes the sampling.
-    _periodicTimer = new Timer.periodic(_pause, (Timer timer) {
+    Timer.periodic(_pause, (Timer timer) {
       _subscription.resume();
     });
   }
