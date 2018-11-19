@@ -40,6 +40,7 @@ dependencies:
   device_apps: ^1.0.0     # Device installed apps over platform channel
   screen_state: ^0.0.1    # Screen LOCK/ON/OFF
   noise_meter: ^0.0.3     # Measuring noise level
+  app_usage: ^0.0.2       # App-usage statistics
 
 
 dev_dependencies:

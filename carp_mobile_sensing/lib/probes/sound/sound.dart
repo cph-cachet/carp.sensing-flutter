@@ -8,7 +8,6 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:carp_mobile_sensing/runtime/runtime.dart';
 import 'package:json_annotation/json_annotation.dart';
-//import 'package:noise_level/noise_level.dart';
 import 'package:noise_meter/noise_meter.dart';
 import 'package:stats/stats.dart';
 import 'package:carp_core/carp_core.dart';

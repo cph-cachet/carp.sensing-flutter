@@ -118,7 +118,8 @@ NoiseMeasure _$NoiseMeasureFromJson(Map<String, dynamic> json) {
   return NoiseMeasure(json['measure_type'],
       name: json['name'],
       frequency: json['frequency'],
-      duration: json['duration'])
+      duration: json['duration'],
+      samplingRate: json['sampling_rate'] as int)
     ..c__ = json['c__'] as String
     ..enabled = json['enabled'] as bool
     ..configuration = (json['configuration'] as Map<String, dynamic>)
@@ -141,5 +142,6 @@ Map<String, dynamic> _$NoiseMeasureToJson(NoiseMeasure instance) {
   writeNotNull('configuration', instance.configuration);
   writeNotNull('frequency', instance.frequency);
   writeNotNull('duration', instance.duration);
+  writeNotNull('sampling_rate', instance.samplingRate);
   return val;
 }

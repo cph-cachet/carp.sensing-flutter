@@ -29,6 +29,7 @@ class ProbeRegistry {
   static const String CONNECTIVITY_MEASURE = "connectivity";
   static const String LIGHT_MEASURE = "light";
   static const String APPS_MEASURE = "apps";
+  static const String APP_USAGE_MEASURE = "app_usage";
   static const String TEXT_MESSAGE_LOG_MEASURE = "text_message_log";
   static const String TEXT_MESSAGE_MEASURE = "text_message";
   static const String SCREEN_MEASURE = "screen";
@@ -83,6 +84,9 @@ class ProbeRegistry {
         break;
       case APPS_MEASURE:
         _probe = new AppsProbe(measure);
+        break;
+      case APP_USAGE_MEASURE:
+        _probe = new AppUsageProbe(measure);
         break;
       case TEXT_MESSAGE_LOG_MEASURE:
         _probe = new TextMessageLogProbe(measure);

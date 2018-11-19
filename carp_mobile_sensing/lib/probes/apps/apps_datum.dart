@@ -11,7 +11,7 @@ part of apps;
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class AppsDatum extends CARPDatum {
   static CARPDataFormat CARP_DATA_FORMAT =
-      new CARPDataFormat(NameSpace.CARP_NAMESPACE, ProbeRegistry.APPS_MEASURE);
+  new CARPDataFormat(NameSpace.CARP_NAMESPACE, ProbeRegistry.APPS_MEASURE);
 
   /// List of names on installed apps.
   List<String> installedApps;
@@ -34,4 +34,28 @@ class AppsDatum extends CARPDatum {
     s += '}';
     return s;
   }
+}
+
+
+/// Holds a Map of names of apps and their corresponding usage in seconds.
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+class AppUsageDatum extends CARPDatum {
+  static CARPDataFormat CARP_DATA_FORMAT =
+  new CARPDataFormat(NameSpace.CARP_NAMESPACE, ProbeRegistry.APP_USAGE_MEASURE);
+
+  /// List of names on installed apps and the time spent in foreground for that app.
+  Map<String, double> usage;
+
+  AppUsageDatum() : super();
+
+  factory AppUsageDatum.fromJson(Map<String, dynamic> json) =>
+      _$AppUsageDatumFromJson(json);
+  Map<String, dynamic> toJson() => _$AppUsageDatumToJson(this);
+
+  @override
+  CARPDataFormat getCARPDataFormat() => CARP_DATA_FORMAT;
+
+  @override
+  String toString() => usage.toString();
+
 }
