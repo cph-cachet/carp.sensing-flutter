@@ -7,5 +7,6 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:carp_core/carp_core.dart';
 
 part 'environment_datum.dart';
+part 'environment_measure.dart';
 part 'weather_probe.dart';
 part 'environment.g.dart';

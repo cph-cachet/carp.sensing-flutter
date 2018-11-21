@@ -2,17 +2,18 @@ part of environment;
 
 class WeatherProbe extends PollingProbe {
   Weather _weather;
-  int _frequency;
   String _apiKey;
+  int _frequency;
 
   /// Initialize an [WeatherProbe] taking a [ProbeMeasure] as configuration.
-  WeatherProbe(PollingProbeMeasure _measure, String _apiKey)
+  WeatherProbe(PollingProbeMeasure _measure)
       : assert(_measure != null),
         super(_measure);
 
   @override
   void initialize() {
-    _frequency = (measure as PollingProbeMeasure).frequency;
+    _apiKey = (measure as WeatherMeasure).apiKey;
+    _frequency = (measure as WeatherMeasure).frequency;
     super.initialize();
   }
 

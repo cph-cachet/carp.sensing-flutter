@@ -144,7 +144,8 @@ class Sensing implements ProbeListener {
 //    study.tasks.add(audioTask);
 //    study.tasks.add(contextTask);
 //    study.tasks.add(noiseTask);
-    study.tasks.add(appUsageTask);
+//    study.tasks.add(appUsageTask);
+    study.tasks.add(environmentTask);
 
     // print the study to the console
     console.log(study.toString());
@@ -218,6 +219,7 @@ class Sensing implements ProbeListener {
   Task _commTask;
   Task _connectivityTask;
   Task _contextTask;
+  Task _environmentTask;
   Task _hardwareTask;
   Task _locationTask;
   Task _noiseTask;
@@ -324,6 +326,21 @@ class Sensing implements ProbeListener {
           name: "Activity Recognition Probe"));
     }
     return _contextTask;
+  }
+
+  /// A task collecting environment information, such as the weather.
+  Task get environmentTask {
+    if (_environmentTask == null) {
+      _environmentTask = new Task("Environment task");
+
+      _environmentTask.addMeasure(WeatherMeasure(
+          ProbeRegistry.WEATHER_MEASURE,
+          apiKey: '12b6e28582eb9298577c734a31ba9f4f',
+          name: "Weather Probe",
+          frequency: 15 * 1000
+      ));
+    }
+    return _environmentTask;
   }
 
   /// A task with three types of hardware measures:

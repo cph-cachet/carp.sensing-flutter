@@ -15,3 +15,4 @@ export 'package:carp_mobile_sensing/probes/apps/apps.dart';
 export 'package:carp_mobile_sensing/probes/communication/communication.dart';
 export 'package:carp_mobile_sensing/probes/connectivity/connectivity.dart';
 export 'package:carp_mobile_sensing/probes/context/activity.dart';
+export 'package:carp_mobile_sensing/probes/environment/environment.dart';

@@ -110,14 +110,14 @@ class ProbeRegistry {
       case ACTIVITY_MEASURE:
         _probe = new ActivityProbe(measure);
         break;
+      case WEATHER_MEASURE:
+        _probe = new WeatherProbe(measure);
+        break;
       case APPLE_HEALTHKIT_MEASURE:
         throw "Not Implemented Yet";
         break;
       case GOOGLE_FIT_MEASURE:
         throw "Not Implemented Yet";
-        break;
-      case WEATHER_MEASURE:
-        throw "weather";
         break;
       default:
         //_probe = new UserProbe(measure);

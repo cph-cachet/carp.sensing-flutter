@@ -35,3 +35,35 @@ Map<String, dynamic> _$WeatherDatumToJson(WeatherDatum instance) {
   writeNotNull('weather', instance.weather);
   return val;
 }
+
+WeatherMeasure _$WeatherMeasureFromJson(Map<String, dynamic> json) {
+  return WeatherMeasure(json['measure_type'],
+      apiKey: json['api_key'] as String,
+      name: json['name'],
+      frequency: json['frequency'],
+      duration: json['duration'])
+    ..c__ = json['c__'] as String
+    ..enabled = json['enabled'] as bool
+    ..configuration = (json['configuration'] as Map<String, dynamic>)
+        ?.map((k, e) => MapEntry(k, e as String));
+}
+
+Map<String, dynamic> _$WeatherMeasureToJson(WeatherMeasure instance) {
+  var val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('c__', instance.c__);
+  writeNotNull('measure_type', instance.measureType);
+  writeNotNull('name', instance.name);
+  writeNotNull('enabled', instance.enabled);
+  writeNotNull('configuration', instance.configuration);
+  writeNotNull('frequency', instance.frequency);
+  writeNotNull('duration', instance.duration);
+  writeNotNull('api_key', instance.apiKey);
+  return val;
+}
