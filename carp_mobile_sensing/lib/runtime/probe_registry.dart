@@ -38,6 +38,7 @@ class ProbeRegistry {
   static const String ACTIVITY_MEASURE = "activity";
   static const String APPLE_HEALTHKIT_MEASURE = "apple_healthkit";
   static const String GOOGLE_FIT_MEASURE = "google_fit";
+  static const String WEATHER_MEASURE = "weather";
 
   static List<Probe> _probes = new List();
 
@@ -114,6 +115,9 @@ class ProbeRegistry {
         break;
       case GOOGLE_FIT_MEASURE:
         throw "Not Implemented Yet";
+        break;
+      case WEATHER_MEASURE:
+        throw "weather";
         break;
       default:
         //_probe = new UserProbe(measure);
