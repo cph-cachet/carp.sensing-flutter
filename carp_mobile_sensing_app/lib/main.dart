@@ -212,7 +212,180 @@ class Sensing implements ProbeListener {
     }
   }
 
+  Task _appTask;
+  Task _appUsageTask;
+  Task _audioTask;
+  Task _commTask;
+  Task _connectivityTask;
+  Task _contextTask;
+  Task _hardwareTask;
+  Task _locationTask;
+  Task _noiseTask;
+  Task _pedometerTask;
   Task _sensorTask;
+
+  /// A task collecting app information about installed apps on the device
+  Task get appTask {
+    if (_appTask == null) {
+      _appTask = new Task("Application Task");
+      PollingProbeMeasure am =
+      new PollingProbeMeasure(ProbeRegistry.APPS_MEASURE);
+      am.name = "Installed apps";
+      am.frequency = 5 * 1000;
+      _appTask.addMeasure(am);
+    }
+    return _appTask;
+  }
+
+  /// A task collecting app information about installed apps on the device
+  Task get appUsageTask {
+    if (_appUsageTask == null) {
+      _appUsageTask = new Task("AppUsage Task");
+      AppUsageMeasure aum =
+      new AppUsageMeasure(ProbeRegistry.APP_USAGE_MEASURE);
+      aum.name = "App foreground usage time";
+      int hourly = 60 * 60 * 1000;
+      aum.frequency = 10 * 1000;
+      aum.duration = hourly; // Go back one hour
+      _appUsageTask.addMeasure(aum);
+    }
+    return _appUsageTask;
+  }
+
+
+  /// A task collecting audio data as files.
+  Task get audioTask {
+    if (_audioTask == null) {
+      _audioTask = new Task("Audio task");
+
+      AudioMeasure aum = new AudioMeasure(ProbeRegistry.AUDIO_MEASURE,
+          name: 'Audio',
+          frequency: 10 * 1000, // once every 10 seconds
+          duration: 2 * 1000, // 2 seconds
+          soundFileDirPath:
+          "${FileDataManager.CARP_FILE_PATH}/${study.id}/sound");
+
+      _audioTask.addMeasure(aum);
+    }
+    return _audioTask;
+  }
+
+  /// A task collecting information about communication:
+  /// - phone log
+  /// - messages (sms) log
+  /// - an event every time a sms is recieved
+  ///
+  /// Works only on Android.
+  Task get commTask {
+    if (_commTask == null) {
+      _commTask = new Task("Communication Task");
+
+      _commTask.addMeasure(PhoneLogMeasure(ProbeRegistry.PHONELOG_MEASURE,
+          name: "Entire phone log", days: -1));
+
+      TextMessageMeasure tm_1 = new TextMessageMeasure(
+          ProbeRegistry.TEXT_MESSAGE_LOG_MEASURE,
+          name: "Text Message Log");
+      tm_1.collectBodyOfMessage = false;
+      _commTask.addMeasure(tm_1);
+
+      TextMessageMeasure tm_2 = new TextMessageMeasure(
+          ProbeRegistry.TEXT_MESSAGE_MEASURE,
+          name: "Text Messages");
+      _commTask.addMeasure(tm_2);
+    }
+    return _commTask;
+  }
+
+  /// A task with three types of connectivity measures:
+  /// - connectivity (wifi, ...)
+  /// - nearby bluetooth devices
+  Task get connectivityTask {
+    if (_connectivityTask == null) {
+      _connectivityTask = new Task("Connectivity Task");
+
+      _connectivityTask.addMeasure(ConnectivityMeasure(
+          ProbeRegistry.CONNECTIVITY_MEASURE,
+          name: 'Connectivity'));
+      _connectivityTask.addMeasure(BluetoothMeasure(
+          ProbeRegistry.BLUETOOTH_MEASURE,
+          name: 'Nearby Bluetooth Devices'));
+    }
+    return _connectivityTask;
+  }
+
+  /// A task collecting context information, such as activity.
+  Task get contextTask {
+    if (_contextTask == null) {
+      _contextTask = new Task("Context task");
+
+      _contextTask.addMeasure(ListeningProbeMeasure(
+          ProbeRegistry.ACTIVITY_MEASURE,
+          name: "Activity Recognition Probe"));
+    }
+    return _contextTask;
+  }
+
+  /// A task with three types of hardware measures:
+  /// - free memory
+  /// - battery
+  /// - screen activity (lock, on, off)
+  Task get hardwareTask {
+    if (_hardwareTask == null) {
+      _hardwareTask = new Task("Hardware Task");
+
+      _hardwareTask.addMeasure(PollingProbeMeasure(ProbeRegistry.MEMORY_MEASURE,
+          name: 'Polling of availabel memory', frequency: 2 * 1000));
+      _hardwareTask.addMeasure(ListeningProbeMeasure(
+          ProbeRegistry.BATTERY_MEASURE,
+          name: 'Battery'));
+      _hardwareTask.addMeasure(ListeningProbeMeasure(
+          ProbeRegistry.SCREEN_MEASURE,
+          name: 'Screen Lock/Unlock'));
+    }
+    return _hardwareTask;
+  }
+
+  /// A task collecting location information.
+  Task get locationTask {
+    if (_locationTask == null) {
+      _locationTask = new Task("Location Task");
+      _locationTask.addMeasure(
+          LocationMeasure(ProbeRegistry.LOCATION_MEASURE, name: 'Location'));
+    }
+    return _locationTask;
+  }
+
+  /// A task collecting audio data as files.
+  Task get noiseTask {
+    if (_noiseTask == null) {
+      _noiseTask = new Task("Noise task");
+
+      NoiseMeasure nm = new NoiseMeasure(ProbeRegistry.NOISE_MEASURE,
+          name: 'Noise',
+          frequency: 30 * 1000, // How often to start a measure
+          duration: 10 * 1000, // Window size: 10 seconds,
+          samplingRate: 500 // Sample a data point every 500 ms
+      );
+
+      _noiseTask.addMeasure(nm);
+    }
+    return _noiseTask;
+  }
+
+  /// A task collecting pedometer (step count) data on a regular basis.
+  Task get pedometerTask {
+    if (_pedometerTask == null) {
+      _pedometerTask = new Task("Pedometer task");
+
+      SensorMeasure pm = new SensorMeasure(ProbeRegistry.PEDOMETER_MEASURE,
+          name: 'Pedometer', //
+          frequency: 30 * 1000 // Sample once every 30 seconds
+      );
+      _pedometerTask.addMeasure(pm);
+    }
+    return _pedometerTask;
+  }
 
   /// A task collecting sensor data from four sensors:
   /// - the accelerometer
@@ -245,185 +418,4 @@ class Sensing implements ProbeListener {
     return _sensorTask;
   }
 
-  /// A task collecting audio data as files.
-  Task _audioTask;
-
-  Task get audioTask {
-    if (_audioTask == null) {
-      _audioTask = new Task("Audio task");
-
-      AudioMeasure aum = new AudioMeasure(ProbeRegistry.AUDIO_MEASURE,
-          name: 'Audio',
-          frequency: 10 * 1000, // once every 10 seconds
-          duration: 2 * 1000, // 2 seconds
-          soundFileDirPath:
-              "${FileDataManager.CARP_FILE_PATH}/${study.id}/sound");
-
-      _audioTask.addMeasure(aum);
-    }
-    return _audioTask;
-  }
-
-  /// A task collecting audio data as files.
-  Task _noiseTask;
-
-  Task get noiseTask {
-    if (_noiseTask == null) {
-      _noiseTask = new Task("Noise task");
-
-      NoiseMeasure nm = new NoiseMeasure(ProbeRegistry.NOISE_MEASURE,
-          name: 'Noise',
-          frequency: 30 * 1000, // How often to start a measure
-          duration: 10 * 1000, // Window size: 10 seconds,
-          samplingRate: 500 // Sample a data point every 500 ms
-          );
-
-      _noiseTask.addMeasure(nm);
-    }
-    return _noiseTask;
-  }
-
-  Task _contextTask;
-
-  /// A task collecting context information, such as activity.
-  Task get contextTask {
-    if (_contextTask == null) {
-      _contextTask = new Task("Context task");
-
-      _contextTask.addMeasure(ListeningProbeMeasure(
-          ProbeRegistry.ACTIVITY_MEASURE,
-          name: "Activity Recognition Probe"));
-    }
-    return _contextTask;
-  }
-
-  Task _pedometerTask;
-
-  /// A task collecting pedometer (step count) data on a regular basis.
-  Task get pedometerTask {
-    if (_pedometerTask == null) {
-      _pedometerTask = new Task("Pedometer task");
-
-      SensorMeasure pm = new SensorMeasure(ProbeRegistry.PEDOMETER_MEASURE,
-          name: 'Pedometer', //
-          frequency: 30 * 1000 // Sample once every 30 seconds
-          );
-      _pedometerTask.addMeasure(pm);
-    }
-    return _pedometerTask;
-  }
-
-  Task _hardwareTask;
-
-  /// A task with three types of hardware measures:
-  /// - free memory
-  /// - battery
-  /// - screen activity (lock, on, off)
-  Task get hardwareTask {
-    if (_hardwareTask == null) {
-      _hardwareTask = new Task("Hardware Task");
-
-      _hardwareTask.addMeasure(PollingProbeMeasure(ProbeRegistry.MEMORY_MEASURE,
-          name: 'Polling of availabel memory', frequency: 2 * 1000));
-      _hardwareTask.addMeasure(ListeningProbeMeasure(
-          ProbeRegistry.BATTERY_MEASURE,
-          name: 'Battery'));
-      _hardwareTask.addMeasure(ListeningProbeMeasure(
-          ProbeRegistry.SCREEN_MEASURE,
-          name: 'Screen Lock/Unlock'));
-    }
-    return _hardwareTask;
-  }
-
-  Task _connectivityTask;
-
-  /// A task with three types of connectivity measures:
-  /// - connectivity (wifi, ...)
-  /// - nearby bluetooth devices
-  Task get connectivityTask {
-    if (_connectivityTask == null) {
-      _connectivityTask = new Task("Connectivity Task");
-
-      _connectivityTask.addMeasure(ConnectivityMeasure(
-          ProbeRegistry.CONNECTIVITY_MEASURE,
-          name: 'Connectivity'));
-      _connectivityTask.addMeasure(BluetoothMeasure(
-          ProbeRegistry.BLUETOOTH_MEASURE,
-          name: 'Nearby Bluetooth Devices'));
-    }
-    return _connectivityTask;
-  }
-
-  Task _appTask;
-
-  /// A task collecting app information about installed apps on the device
-  Task get appTask {
-    if (_appTask == null) {
-      _appTask = new Task("Application Task");
-      PollingProbeMeasure am =
-          new PollingProbeMeasure(ProbeRegistry.APPS_MEASURE);
-      am.name = "Installed apps";
-      am.frequency = 5 * 1000;
-      _appTask.addMeasure(am);
-    }
-    return _appTask;
-  }
-
-  Task _appUsageTask;
-
-  /// A task collecting app information about installed apps on the device
-  Task get appUsageTask {
-    if (_appUsageTask == null) {
-      _appUsageTask = new Task("AppUsage Task");
-      AppUsageMeasure aum =
-          new AppUsageMeasure(ProbeRegistry.APP_USAGE_MEASURE);
-      aum.name = "App foreground usage time";
-      int hourly = 60 * 60 * 1000;
-      aum.frequency = 10 * 1000;
-      aum.duration = hourly; // Go back one hour
-      _appUsageTask.addMeasure(aum);
-    }
-    return _appUsageTask;
-  }
-
-  Task _commTask;
-
-  /// A task collecting information about communication:
-  /// - phone log
-  /// - messages (sms) log
-  /// - an event every time a sms is recieved
-  ///
-  /// Works only on Android.
-  Task get commTask {
-    if (_commTask == null) {
-      _commTask = new Task("Communication Task");
-
-      _commTask.addMeasure(PhoneLogMeasure(ProbeRegistry.PHONELOG_MEASURE,
-          name: "Entire phone log", days: -1));
-
-      TextMessageMeasure tm_1 = new TextMessageMeasure(
-          ProbeRegistry.TEXT_MESSAGE_LOG_MEASURE,
-          name: "Text Message Log");
-      tm_1.collectBodyOfMessage = false;
-      _commTask.addMeasure(tm_1);
-
-      TextMessageMeasure tm_2 = new TextMessageMeasure(
-          ProbeRegistry.TEXT_MESSAGE_MEASURE,
-          name: "Text Messages");
-      _commTask.addMeasure(tm_2);
-    }
-    return _commTask;
-  }
-
-  Task _locationTask;
-
-  /// A task collecting location information.
-  Task get locationTask {
-    if (_locationTask == null) {
-      _locationTask = new Task("Location Task");
-      _locationTask.addMeasure(
-          LocationMeasure(ProbeRegistry.LOCATION_MEASURE, name: 'Location'));
-    }
-    return _locationTask;
-  }
 }
