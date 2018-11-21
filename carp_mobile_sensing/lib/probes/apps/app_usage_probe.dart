@@ -11,7 +11,6 @@ class AppUsageProbe extends PollingProbe {
 
   @override
   void initialize() {
-    _appUsage = new AppUsage();
     _frequency = (measure as AppUsageMeasure).frequency;
     _duration = (measure as AppUsageMeasure).duration;
     super.initialize();
@@ -48,13 +47,19 @@ class AppUsageProbe extends PollingProbe {
 
   @override
   Future<Datum> getDatum() async {
-    DateTime start = DateTime.now();
-    DateTime end = DateTime.fromMillisecondsSinceEpoch(
-        start.millisecondsSinceEpoch - _duration);
+    _appUsage = new AppUsage();
+    DateTime end = DateTime.now();
+    DateTime start = DateTime.fromMillisecondsSinceEpoch(
+        end.millisecondsSinceEpoch - _duration);
+
+    print('Start date: $start');
+    print('End date: $end');
     Map<dynamic, dynamic> usage = await _appUsage.getUsage(start, end);
 
     AppUsageDatum datum = new AppUsageDatum();
     datum.usage = Map<String, double>.from(usage);
+
+    print(usage);
     return datum;
   }
 }

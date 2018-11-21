@@ -146,7 +146,6 @@ class Sensing implements ProbeListener {
 //    study.tasks.add(noiseTask);
     study.tasks.add(appUsageTask);
 
-
     // print the study to the console
     console.log(study.toString());
 
@@ -376,8 +375,8 @@ class Sensing implements ProbeListener {
   Task get appUsageTask {
     if (_appUsageTask == null) {
       _appUsageTask = new Task("AppUsage Task");
-      PollingProbeMeasure aum =
-          new PollingProbeMeasure(ProbeRegistry.APP_USAGE_MEASURE);
+      AppUsageMeasure aum =
+          new AppUsageMeasure(ProbeRegistry.APP_USAGE_MEASURE);
       aum.name = "App foreground usage time";
       int hourly = 60 * 60 * 1000;
       aum.frequency = 10 * 1000;
