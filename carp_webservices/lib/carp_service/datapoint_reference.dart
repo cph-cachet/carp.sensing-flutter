@@ -23,6 +23,9 @@ class DataPointReference extends CarpReference {
     final String url = "${dataPointUri}";
     final rest_headers = await headers;
 
+    print("url : $url");
+    print("headers : $headers");
+
     http.Response response = await http.post(Uri.encodeFull(url), headers: rest_headers, body: json.encode(data));
 
     int httpStatusCode = response.statusCode;

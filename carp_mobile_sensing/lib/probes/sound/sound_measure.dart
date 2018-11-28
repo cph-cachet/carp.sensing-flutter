@@ -31,8 +31,8 @@ class AudioMeasure extends SensorMeasure {
 
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class NoiseMeasure extends SensorMeasure {
-
   int samplingRate;
+
   NoiseMeasure(measureType, {name, frequency, duration, this.samplingRate})
       : super(measureType, name: name, frequency: frequency, duration: duration);
 

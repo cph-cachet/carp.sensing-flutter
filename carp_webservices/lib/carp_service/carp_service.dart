@@ -8,12 +8,12 @@
 library carp_services;
 
 import 'package:meta/meta.dart';
-import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'dart:async';
-import 'package:carp_mobile_sensing/domain/domain.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
+import 'package:carp_webservices/carp_auth/carp_auth.dart';
+import 'package:carp_core/carp_core.dart';
 
 part 'carp_app.dart';
 part 'datapoint_reference.dart';
