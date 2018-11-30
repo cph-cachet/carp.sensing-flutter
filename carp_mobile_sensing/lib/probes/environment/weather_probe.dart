@@ -1,7 +1,7 @@
 part of environment;
 
 class WeatherProbe extends PollingProbe {
-  Weather _weather;
+  WeatherStation _ws;
   String _apiKey;
   int _frequency;
 
@@ -14,6 +14,7 @@ class WeatherProbe extends PollingProbe {
   void initialize() {
     _apiKey = (measure as WeatherMeasure).apiKey;
     _frequency = (measure as WeatherMeasure).frequency;
+    _ws = new WeatherStation(_apiKey);
     super.initialize();
   }
 
@@ -32,13 +33,11 @@ class WeatherProbe extends PollingProbe {
 
   @override
   void stop() {
-    _weather = null;
+    _ws = null;
   }
 
   @override
-  void resume() {
-
-  }
+  void resume() {}
 
   @override
   void pause() async {
@@ -48,9 +47,29 @@ class WeatherProbe extends PollingProbe {
 
   @override
   Future<Datum> getDatum() async {
+    Weather w = await _ws.currentWeather();
     WeatherDatum datum = new WeatherDatum();
-    _weather = new Weather(_apiKey);
-    datum.weather = await _weather.getCurrentWeather();
+    datum.country = w.country;
+    datum.areaName = w.areaName;
+    datum.weatherMain = w.weatherMain;
+    datum.weatherDescription = w.weatherDescription;
+    datum.date = w.date;
+    datum.sunrise = w.sunrise;
+    datum.sunset = w.sunset;
+    datum.latitude = w.latitude;
+    datum.longitude = w.longitude;
+    datum.pressure = w.pressure;
+    datum.windSpeed = w.windSpeed;
+    datum.windDegree = w.windDegree;
+    datum.humidity = w.humidity;
+    datum.cloudiness = w.cloudiness;
+    datum.rainLastHour = w.rainLastHour;
+    datum.rainLast3Hours = w.rainLast3Hours;
+    datum.snowLastHour = w.snowLastHour;
+    datum.snowLast3Hours = w.snowLast3Hours;
+    datum.temperature = w.temperature.celsius;
+    datum.tempMin = w.tempMin.celsius;
+    datum.tempMax = w.tempMax.celsius;
     return datum;
   }
 }
