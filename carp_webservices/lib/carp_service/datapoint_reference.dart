@@ -14,13 +14,13 @@ class DataPointReference extends CarpReference {
   DataPointReference._(CarpService service) : super._(service);
 
   /// The URL for the data end point for this [DataPointReference].
-  String get dataPointUri => "${service.app.uri.toString()}/api/studies/${service.app.study.id}/data-points";
+  String get dataEndpointUri => "${service.app.uri.toString()}/api/studies/${service.app.study.id}/data-points";
 
   /// Upload a [CARPDataPoint] to the CARP backend using HTTP POST.
   ///
   /// Returns the server-generated ID for this data point.
   Future<String> postDataPoint(CARPDataPoint data) async {
-    final String url = "${dataPointUri}";
+    final String url = "${dataEndpointUri}";
     final rest_headers = await headers;
 
     print("url : $url");
@@ -51,7 +51,7 @@ class DataPointReference extends CarpReference {
 
   /// Get a [CARPDataPoint] from the CARP backend using HTTP GET
   Future<CARPDataPoint> getDataPoint(String id) async {
-    String url = "${dataPointUri}/$id";
+    String url = "${dataEndpointUri}/$id";
     final rest_headers = await headers;
 
     // GET the data point from the CARP web service
@@ -79,7 +79,7 @@ class DataPointReference extends CarpReference {
 
   /// Delete a [CARPDataPoint] from the CARP backend using HTTP DELETE
   Future<void> deleteDataPoint(String id) async {
-    String url = "${dataPointUri}/$id";
+    String url = "${dataEndpointUri}/$id";
     final rest_headers = await headers;
 
     // DELETE the data point

@@ -15,7 +15,10 @@ class FileStorageReference extends CarpReference {
 
   FileStorageReference._(CarpService service, this._path) : super._(service);
 
-  /// Returns the full path to this object, not including the CARP Web Service URI
+  /// The URL for the file end point for this [FileStorageReference].
+  String get fileEndpointUri => "${service.app.uri.toString()}/api/studies/${service.app.study.id}/files";
+
+  /// Returns the full path to this file object, not including the CARP Web Service URI
   Future<String> getPath() async {
     return _path;
   }
