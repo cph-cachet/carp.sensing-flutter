@@ -109,7 +109,8 @@ class FileDataEndPoint extends DataEndPoint {
 class DataEndPointType {
   static const String PRINT = "print";
   static const String FILE = "file";
-  static const String FIREBASE = "firebase";
+  static const String FIREBASE_STORAGE = "firebase-storage";
+  static const String FIREBASE_DATABASE = "firebase-database";
   static const String CARP = "carp";
   static const String OMH = "omh";
 }

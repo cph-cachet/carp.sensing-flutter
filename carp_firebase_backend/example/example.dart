@@ -3,7 +3,7 @@ import 'package:carp_firebase_backend/carp_firebase_backend.dart';
 
 void main() {
   // Using email/password as authentication
-  final FirebaseStorageDataEndPoint firebaseEndPoint_1 = new FirebaseStorageDataEndPoint(DataEndPointType.FIREBASE,
+  final FirebaseDataEndPoint firebaseEndPoint_1 = new FirebaseDataEndPoint(DataEndPointType.FIREBASE,
       name: "Flutter Sensing Sandbox",
       uri: 'gs://flutter-sensing-sandbox.appspot.com',
       path: 'sensing/data',
@@ -23,7 +23,7 @@ void main() {
   study_1.dataEndPoint = firebaseEndPoint_1;
 
   // Using Google Sign-In as authentication
-  final FirebaseStorageDataEndPoint firebaseEndPoint_2 = new FirebaseStorageDataEndPoint(DataEndPointType.FIREBASE,
+  final FirebaseDataEndPoint firebaseEndPoint_2 = new FirebaseDataEndPoint(DataEndPointType.FIREBASE,
       name: "Flutter Sensing Sandbox",
       uri: 'gs://flutter-sensing-sandbox.appspot.com',
       path: 'sensing/data',

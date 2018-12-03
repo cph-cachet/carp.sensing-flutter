@@ -1,3 +1,6 @@
+## 0.2.0
+* Support for uploading to the Google Firebase Database also.
+
 ## 0.1.1 
 * Bug fixes
 * Uploading zip files (instead of json)

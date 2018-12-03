@@ -7,9 +7,6 @@
 
 part of carp_firebase_backend;
 
-final GoogleSignIn _googleSignIn = GoogleSignIn();
-final FirebaseAuth _auth = FirebaseAuth.instance;
-
 /// Stores files with [Datum] json objects in the Firebase Storage file store.
 /// Works closely with the [FileDataManager] which is responsible for writing and zipping
 /// files to the local device.
@@ -18,7 +15,7 @@ final FirebaseAuth _auth = FirebaseAuth.instance;
 /// Once the file has been transferred to Firebase, it is deleted on the local device.
 class FirebaseStorageDataManager extends AbstractDataManager implements FileDataManagerListener {
   FileDataManager _fileDataManager;
-  FirebaseStorageDataEndPoint _firebaseStorageDataEndPoint;
+  FirebaseStorageDataEndPoint dataEndPoint;
 
   FirebaseApp _firebaseApp;
   FirebaseStorage _firebaseStorage;
@@ -35,7 +32,7 @@ class FirebaseStorageDataManager extends AbstractDataManager implements FileData
   Future initialize(Study study) async {
     super.initialize(study);
     assert(study.dataEndPoint is FirebaseStorageDataEndPoint);
-    _firebaseStorageDataEndPoint = study.dataEndPoint as FirebaseStorageDataEndPoint;
+    dataEndPoint = study.dataEndPoint as FirebaseStorageDataEndPoint;
 
     _fileDataManager.initialize(study);
 
@@ -43,8 +40,8 @@ class FirebaseStorageDataManager extends AbstractDataManager implements FileData
     final FirebaseUser authenticatedUser = await user;
 
     print('Initializig FirebaseStorageDataManager...');
-    print(' Firebase URI  : ${_firebaseStorageDataEndPoint.uri}');
-    print(' Folder path   : ${_firebaseStorageDataEndPoint.path}');
+    print(' Firebase URI  : ${dataEndPoint.uri}');
+    print(' Folder path   : ${dataEndPoint.path}');
     print(' Storage       : ${storage.app.name}');
     print(' Auth. user    : ${authenticatedUser.displayName} <${authenticatedUser.email}>');
   }
@@ -52,14 +49,12 @@ class FirebaseStorageDataManager extends AbstractDataManager implements FileData
   Future<FirebaseApp> get firebaseApp async {
     if (_firebaseApp == null) {
       _firebaseApp = await FirebaseApp.configure(
-        name: _firebaseStorageDataEndPoint.name,
+        name: dataEndPoint.name,
         options: new FirebaseOptions(
-          googleAppID: Platform.isIOS
-              ? _firebaseStorageDataEndPoint.iOSGoogleAppID
-              : _firebaseStorageDataEndPoint.androidGoogleAppID,
-          gcmSenderID: _firebaseStorageDataEndPoint.gcmSenderID,
-          apiKey: _firebaseStorageDataEndPoint.webAPIKey,
-          projectID: _firebaseStorageDataEndPoint.projectID,
+          googleAppID: Platform.isIOS ? dataEndPoint.iOSGoogleAppID : dataEndPoint.androidGoogleAppID,
+          gcmSenderID: dataEndPoint.gcmSenderID,
+          apiKey: dataEndPoint.webAPIKey,
+          projectID: dataEndPoint.projectID,
         ),
       );
     }
@@ -69,14 +64,14 @@ class FirebaseStorageDataManager extends AbstractDataManager implements FileData
   Future<FirebaseStorage> get firebaseStorage async {
     if (_firebaseStorage == null) {
       final FirebaseApp app = await firebaseApp;
-      _firebaseStorage = new FirebaseStorage(app: app, storageBucket: _firebaseStorageDataEndPoint.uri);
+      _firebaseStorage = new FirebaseStorage(app: app, storageBucket: dataEndPoint.uri);
     }
     return _firebaseStorage;
   }
 
   Future<FirebaseUser> get user async {
     if (_user == null) {
-      switch (_firebaseStorageDataEndPoint.firebaseAuthenticationMethod) {
+      switch (dataEndPoint.firebaseAuthenticationMethod) {
         case FireBaseAuthenticationMethods.GOOGLE:
           {
             GoogleSignInAccount googleUser = await _googleSignIn.signIn();
@@ -90,10 +85,9 @@ class FirebaseStorageDataManager extends AbstractDataManager implements FileData
           }
         case FireBaseAuthenticationMethods.PASSWORD:
           {
-            assert(_firebaseStorageDataEndPoint.email != null);
-            assert(_firebaseStorageDataEndPoint.password != null);
-            _user = await _auth.signInWithEmailAndPassword(
-                email: _firebaseStorageDataEndPoint.email, password: _firebaseStorageDataEndPoint.password);
+            assert(dataEndPoint.email != null);
+            assert(dataEndPoint.password != null);
+            _user = await _auth.signInWithEmailAndPassword(email: dataEndPoint.email, password: dataEndPoint.password);
             break;
           }
         default:
@@ -116,7 +110,7 @@ class FirebaseStorageDataManager extends AbstractDataManager implements FileData
     return _fileDataManager.uploadData(data);
   }
 
-  String get firebasePath => "${_firebaseStorageDataEndPoint.path}/${study.id}/${Device.deviceID.toString()}";
+  String get firebasePath => "${dataEndPoint.path}/${study.id}/${Device.deviceID.toString()}";
 
   Future<Uri> _uploadFileToFirestore(String localFilePath) async {
     final String filename = localFilePath.substring(localFilePath.lastIndexOf('/') + 1);
