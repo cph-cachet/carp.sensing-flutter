@@ -8,7 +8,8 @@
 part of carp_firebase_backend;
 
 /// Specify a Google Firebase endpoint.
-abstract class FirebaseDataEndPoint {
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+class FirebaseEndPoint {
   /// The name of the Firebase endpoint.
   /// Can be anything, but its recommended to name it according to the Firebase bucket.
   String name;
@@ -46,6 +47,30 @@ abstract class FirebaseDataEndPoint {
 
   // The Firebase GCM (Google Cloud Messaging) Sender ID. See project setting under the 'Cloud Messaging' tab.
   String gcmSenderID;
+
+  /// Creates a [FirebaseEndPoint].
+  FirebaseEndPoint(
+      {this.name,
+      this.uri,
+      this.firebaseAuthenticationMethod,
+      this.email,
+      this.password,
+      this.token,
+      this.projectID,
+      this.webAPIKey,
+      this.androidGoogleAppID,
+      this.iOSGoogleAppID,
+      this.gcmSenderID})
+      : super();
+
+  static Function get fromJsonFunction => _$FirebaseEndPointFromJson;
+  factory FirebaseEndPoint.fromJson(Map<String, dynamic> json) => _$FirebaseEndPointFromJson(json);
+  Map<String, dynamic> toJson() => _$FirebaseEndPointToJson(this);
+}
+
+abstract class FirebaseDataEndPoint {
+  /// The Firebase endpoint.
+  FirebaseEndPoint firebaseEndPoint;
 }
 
 /// Specify a Google Firebase Database document endpoint.
@@ -60,31 +85,8 @@ class FirebaseDatabaseDataEndPoint extends DataEndPoint with FirebaseDataEndPoin
   String collection;
 
   /// Creates a [FirebaseDatabaseDataEndPoint]. [type] is defined in [DataEndPointType].
-  FirebaseDatabaseDataEndPoint(String type,
-      {this.collection,
-      name,
-      uri,
-      firebaseAuthenticationMethod,
-      email,
-      password,
-      token,
-      projectID,
-      webAPIKey,
-      androidGoogleAppID,
-      iOSGoogleAppID,
-      gcmSenderID})
-      : super(type) {
-    this.name = name;
-    this.uri = uri;
-    this.firebaseAuthenticationMethod = firebaseAuthenticationMethod;
-    this.email = email;
-    this.password = password;
-    this.token = token;
-    this.projectID = projectID;
-    this.webAPIKey = webAPIKey;
-    this.androidGoogleAppID = androidGoogleAppID;
-    this.iOSGoogleAppID = iOSGoogleAppID;
-    this.gcmSenderID = gcmSenderID;
+  FirebaseDatabaseDataEndPoint(String type, FirebaseEndPoint firebaseEndPoint, this.collection) : super(type) {
+    this.firebaseEndPoint = firebaseEndPoint;
   }
 
   static Function get fromJsonFunction => _$FirebaseDatabaseDataEndPointFromJson;
@@ -105,31 +107,8 @@ class FirebaseStorageDataEndPoint extends FileDataEndPoint with FirebaseDataEndP
   String path;
 
   /// Creates a [FirebaseStorageDataEndPoint]. [type] is defined in [DataEndPointType].
-  FirebaseStorageDataEndPoint(String type,
-      {this.path,
-      name,
-      uri,
-      firebaseAuthenticationMethod,
-      email,
-      password,
-      token,
-      projectID,
-      webAPIKey,
-      androidGoogleAppID,
-      iOSGoogleAppID,
-      gcmSenderID})
-      : super(type) {
-    this.name = name;
-    this.uri = uri;
-    this.firebaseAuthenticationMethod = firebaseAuthenticationMethod;
-    this.email = email;
-    this.password = password;
-    this.token = token;
-    this.projectID = projectID;
-    this.webAPIKey = webAPIKey;
-    this.androidGoogleAppID = androidGoogleAppID;
-    this.iOSGoogleAppID = iOSGoogleAppID;
-    this.gcmSenderID = gcmSenderID;
+  FirebaseStorageDataEndPoint(String type, FirebaseEndPoint firebaseEndPoint, this.path) : super(type) {
+    this.firebaseEndPoint = firebaseEndPoint;
   }
 
   static Function get fromJsonFunction => _$FirebaseStorageDataEndPointFromJson;

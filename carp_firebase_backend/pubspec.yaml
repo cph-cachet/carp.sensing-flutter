@@ -19,12 +19,13 @@ dependencies:
   carp_mobile_sensing: ^0.2.4
 
 
-# Overriding carp_mobile_sensing to use the local copy
+# Overriding carp_mobile_sensing and carp_core to use the local copy
 # Remove this when done development
-#dependency_overrides:
-#  carp_mobile_sensing:
-#    path: ../carp_mobile_sensing/
-
+dependency_overrides:
+  carp_core:
+    path: ../carp_core/
+  carp_mobile_sensing:
+    path: ../carp_mobile_sensing/
 
 dev_dependencies:
   flutter_test:

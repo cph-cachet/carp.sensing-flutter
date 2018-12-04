@@ -6,21 +6,55 @@ part of carp_firebase_backend;
 // JsonSerializableGenerator
 // **************************************************************************
 
+FirebaseEndPoint _$FirebaseEndPointFromJson(Map<String, dynamic> json) {
+  return FirebaseEndPoint(
+      name: json['name'] as String,
+      uri: json['uri'] as String,
+      firebaseAuthenticationMethod:
+          json['firebase_authentication_method'] as String,
+      email: json['email'] as String,
+      password: json['password'] as String,
+      token: json['token'] as String,
+      projectID: json['project_i_d'] as String,
+      webAPIKey: json['web_a_p_i_key'] as String,
+      androidGoogleAppID: json['android_google_app_i_d'] as String,
+      iOSGoogleAppID: json['i_o_s_google_app_i_d'] as String,
+      gcmSenderID: json['gcm_sender_i_d'] as String);
+}
+
+Map<String, dynamic> _$FirebaseEndPointToJson(FirebaseEndPoint instance) {
+  var val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('name', instance.name);
+  writeNotNull('uri', instance.uri);
+  writeNotNull(
+      'firebase_authentication_method', instance.firebaseAuthenticationMethod);
+  writeNotNull('email', instance.email);
+  writeNotNull('password', instance.password);
+  writeNotNull('token', instance.token);
+  writeNotNull('project_i_d', instance.projectID);
+  writeNotNull('web_a_p_i_key', instance.webAPIKey);
+  writeNotNull('android_google_app_i_d', instance.androidGoogleAppID);
+  writeNotNull('i_o_s_google_app_i_d', instance.iOSGoogleAppID);
+  writeNotNull('gcm_sender_i_d', instance.gcmSenderID);
+  return val;
+}
+
 FirebaseDatabaseDataEndPoint _$FirebaseDatabaseDataEndPointFromJson(
     Map<String, dynamic> json) {
-  return FirebaseDatabaseDataEndPoint(json['type'] as String,
-      collection: json['collection'] as String,
-      name: json['name'],
-      uri: json['uri'],
-      firebaseAuthenticationMethod: json['firebase_authentication_method'],
-      email: json['email'],
-      password: json['password'],
-      token: json['token'],
-      projectID: json['project_i_d'],
-      webAPIKey: json['web_a_p_i_key'],
-      androidGoogleAppID: json['android_google_app_i_d'],
-      iOSGoogleAppID: json['i_o_s_google_app_i_d'],
-      gcmSenderID: json['gcm_sender_i_d'])
+  return FirebaseDatabaseDataEndPoint(
+      json['type'] as String,
+      json['firebase_end_point'] == null
+          ? null
+          : FirebaseEndPoint.fromJson(
+              json['firebase_end_point'] as Map<String, dynamic>),
+      json['collection'] as String)
     ..c__ = json['c__'] as String;
 }
 
@@ -34,39 +68,22 @@ Map<String, dynamic> _$FirebaseDatabaseDataEndPointToJson(
     }
   }
 
-  writeNotNull('name', instance.name);
   writeNotNull('c__', instance.c__);
-  writeNotNull('uri', instance.uri);
-  writeNotNull(
-      'firebase_authentication_method', instance.firebaseAuthenticationMethod);
-  writeNotNull('email', instance.email);
-  writeNotNull('password', instance.password);
-  writeNotNull('token', instance.token);
-  writeNotNull('project_i_d', instance.projectID);
-  writeNotNull('web_a_p_i_key', instance.webAPIKey);
-  writeNotNull('android_google_app_i_d', instance.androidGoogleAppID);
-  writeNotNull('i_o_s_google_app_i_d', instance.iOSGoogleAppID);
-  writeNotNull('gcm_sender_i_d', instance.gcmSenderID);
   writeNotNull('type', instance.type);
+  writeNotNull('firebase_end_point', instance.firebaseEndPoint);
   writeNotNull('collection', instance.collection);
   return val;
 }
 
 FirebaseStorageDataEndPoint _$FirebaseStorageDataEndPointFromJson(
     Map<String, dynamic> json) {
-  return FirebaseStorageDataEndPoint(json['type'] as String,
-      path: json['path'] as String,
-      name: json['name'],
-      uri: json['uri'],
-      firebaseAuthenticationMethod: json['firebase_authentication_method'],
-      email: json['email'],
-      password: json['password'],
-      token: json['token'],
-      projectID: json['project_i_d'],
-      webAPIKey: json['web_a_p_i_key'],
-      androidGoogleAppID: json['android_google_app_i_d'],
-      iOSGoogleAppID: json['i_o_s_google_app_i_d'],
-      gcmSenderID: json['gcm_sender_i_d'])
+  return FirebaseStorageDataEndPoint(
+      json['type'] as String,
+      json['firebase_end_point'] == null
+          ? null
+          : FirebaseEndPoint.fromJson(
+              json['firebase_end_point'] as Map<String, dynamic>),
+      json['path'] as String)
     ..c__ = json['c__'] as String
     ..bufferSize = json['buffer_size'] as int
     ..zip = json['zip'] as bool
@@ -84,24 +101,13 @@ Map<String, dynamic> _$FirebaseStorageDataEndPointToJson(
     }
   }
 
-  writeNotNull('name', instance.name);
   writeNotNull('c__', instance.c__);
-  writeNotNull('uri', instance.uri);
-  writeNotNull(
-      'firebase_authentication_method', instance.firebaseAuthenticationMethod);
-  writeNotNull('email', instance.email);
-  writeNotNull('password', instance.password);
-  writeNotNull('token', instance.token);
-  writeNotNull('project_i_d', instance.projectID);
-  writeNotNull('web_a_p_i_key', instance.webAPIKey);
-  writeNotNull('android_google_app_i_d', instance.androidGoogleAppID);
-  writeNotNull('i_o_s_google_app_i_d', instance.iOSGoogleAppID);
-  writeNotNull('gcm_sender_i_d', instance.gcmSenderID);
   writeNotNull('type', instance.type);
   writeNotNull('buffer_size', instance.bufferSize);
   writeNotNull('zip', instance.zip);
   writeNotNull('encrypt', instance.encrypt);
   writeNotNull('public_key', instance.publicKey);
+  writeNotNull('firebase_end_point', instance.firebaseEndPoint);
   writeNotNull('path', instance.path);
   return val;
 }

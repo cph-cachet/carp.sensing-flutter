@@ -15,9 +15,11 @@ dependencies:
   #carp_firebase_backend: ^0.0.1
   #cupertino_icons: ^0.1.2
 
-# Overriding carp_mobile_sensing to use the local copy
+# Overriding carp libraries to use the local copy
 # Remove this when done development
 dependency_overrides:
+  carp_core:
+    path: ../carp_core/
   carp_mobile_sensing:
     path: ../carp_mobile_sensing/
   carp_firebase_backend:

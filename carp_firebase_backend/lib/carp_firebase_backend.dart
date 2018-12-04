@@ -14,6 +14,5 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 part 'firebase/firebase_common.dart';
 part 'firebase/firebase_data_endpoint.dart';
-part 'firebase/firebase_storage_data_manager.dart';
-part 'firebase/firebase_database_data_manager.dart';
+part 'firebase/firebase_data_managers.dart';
 part 'carp_firebase_backend.g.dart';
