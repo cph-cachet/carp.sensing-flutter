@@ -12,17 +12,38 @@ part of environment;
 class WeatherDatum extends CARPDatum {
   static CARPDataFormat CARP_DATA_FORMAT = new CARPDataFormat(
       NameSpace.CARP_NAMESPACE, ProbeRegistry.WEATHER_MEASURE);
-  
-  Map<String, dynamic> weather;
+
+  String country, areaName, weatherMain, weatherDescription;
+  DateTime date, sunrise, sunset;
+  double latitude,
+      longitude,
+      pressure,
+      windSpeed,
+      windDegree,
+      humidity,
+      cloudiness,
+      rainLastHour,
+      rainLast3Hours,
+      snowLastHour,
+      snowLast3Hours,
+      temperature, tempMin, tempMax;
 
   WeatherDatum() : super();
 
   factory WeatherDatum.fromJson(Map<String, dynamic> json) =>
       _$WeatherDatumFromJson(json);
+
   Map<String, dynamic> toJson() => _$WeatherDatumToJson(this);
 
   CARPDataFormat getCARPDataFormat() => CARP_DATA_FORMAT;
 
-  String toString() =>
-      'Weather Map: $weather';
+  String toString() {
+    return '''
+    Place Name: $areaName ($country)
+    Date: $date
+    Weather: $weatherMain, $weatherDescription
+    Temp: $temperature, Temp (min): $tempMin, Temp (max): $tempMax
+    Sunrise: $sunrise, Sunset: $sunset
+    ''';
+  }
 }
