@@ -16,14 +16,12 @@ dependencies:
   firebase_auth: ^0.5.20
   carp_core: ^0.1.0                   # The core CARP domain model
   carp_mobile_sensing: ^0.2.4
-  carp_firebase_backend:
-
 
 # Overriding carp_firebase_backend to use the local copy
 # Remove this when done development
-#dependency_overrides:
-#  carp_firebase_backend:
-#    path: ../carp_firebase_backend/
+dependency_overrides:
+  carp_firebase_backend:
+    path: ../
 
 
 dev_dependencies:
