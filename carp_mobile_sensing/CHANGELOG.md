@@ -1,5 +1,5 @@
 ## 0.2.5 
-*
+* small bug fixes in connectivity datum model
 
 ## 0.2.4 
 * error in `light` probe fixed.

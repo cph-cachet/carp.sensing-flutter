@@ -66,7 +66,7 @@ abstract class FirebaseDataManager extends AbstractDataManager {
           }
       }
 
-      print("signed in " + _user.email + " : " + _user.uid);
+      print("signed in as " + _user.email + " - uid: " + _user.uid);
     }
     return _user;
   }
@@ -109,7 +109,7 @@ class FirebaseStorageDataManager extends FirebaseDataManager implements FileData
     print(' Firebase URI  : ${firebaseEndPoint.uri}');
     print(' Folder path   : ${dataEndPoint.path}');
     print(' Storage       : ${storage.app.name}');
-    print(' Auth. user    : ${authenticatedUser.displayName} <${authenticatedUser.email}>');
+    print(' Auth. user    : ${authenticatedUser.displayName} <${authenticatedUser.email}>\n');
   }
 
   Future<FirebaseStorage> get firebaseStorage async {
@@ -201,7 +201,7 @@ class FirebaseDatabaseDataManager extends FirebaseDataManager {
     print(' Firebase URI    : ${firebaseEndPoint.uri}');
     print(' Collection path : ${dataEndPoint.collection}');
     print(' Database        : ${database.app.name}');
-    print(' Auth. user      : ${authenticatedUser.displayName} <${authenticatedUser.email}>');
+    print(' Auth. user      : ${authenticatedUser.displayName} <${authenticatedUser.email}>\n');
   }
 
   Future<Firestore> get firebaseDatabase async {
@@ -220,14 +220,20 @@ class FirebaseDatabaseDataManager extends FirebaseDataManager {
 
     if (user != null) {
       final String device_id = Device.deviceID.toString();
+      final String data_type = data.getCARPDataFormat().name;
+
+      final json_data_string = json.encode(data);
+      Map<String, dynamic> json_data = json.decode(json_data_string) as Map<String, dynamic>;
 
       // add json data
       Firestore.instance
           .collection(dataEndPoint.collection)
           .document(study.id) // study id
           .collection(device_id) // device id
+          .document('upload') // the default upload document is called 'upload'
+          .collection(data_type) // data/measure type
           .document(carp_data.id) // data id
-          .setData(carp_data.toJson());
+          .setData(json_data);
 
       return true;
     }

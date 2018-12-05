@@ -130,7 +130,7 @@ class Sensing implements ProbeListener {
     console.log("Setting up '${study.name}'...");
 
     // specify the [DataEndPoint] for this study.
-    study.dataEndPoint = getDataEndpoint(DataEndPointType.FIREBASE_STORAGE);
+    study.dataEndPoint = getDataEndpoint(DataEndPointType.FIREBASE_DATABASE);
 
     // note that in this version, we start the sensors (accelerometer, etc.)
     // in order to generate a lot of data quickly for testing purposes
@@ -145,7 +145,7 @@ class Sensing implements ProbeListener {
 //    study.tasks.add(contextTask);
 //    study.tasks.add(noiseTask);
 //    study.tasks.add(appUsageTask);
-    study.tasks.add(environmentTask);
+//    study.tasks.add(environmentTask);
 
     // print the study to the console
     console.log(study.toString());
@@ -171,7 +171,7 @@ class Sensing implements ProbeListener {
 
   Study get study {
     if (_study == null) {
-      _study = new Study("983476-1", "user@dtu.dk", name: "Test study #1");
+      _study = new Study("983476-2", "user@dtu.dk", name: "Test study #1");
     }
     return _study;
   }
@@ -192,7 +192,7 @@ class Sensing implements ProbeListener {
         final FirebaseStorageDataEndPoint storageEndPoint =
             new FirebaseStorageDataEndPoint(DataEndPointType.FIREBASE_STORAGE, firebaseEndPoint, 'sensing/data');
 
-        storageEndPoint.bufferSize = 1000 * 1000;
+        storageEndPoint.bufferSize = 50 * 1000;
         storageEndPoint.zip = true;
 
         return storageEndPoint;

@@ -26,10 +26,12 @@ By using the Google Firebase **Database** endpoint, CARP sensing data are upload
 In Firebase, data json objects are stores in the `collection` specified in the `FirebaseDatabaseDataManager`
 JSON objects will be stored in collections named 
 
-`<study_id>/<device_id>`
+`/<collection>/<study_id>/<device_id>/upload/<data_type>`
  
-relative to this path. For example, if `collection` is `carp_data`, `study_id` is `1234` and `device_id`is `987234`, the data will
- be stored as documents in `carp_data/1234/987234/`.
+relative to this path. For example, if `collection` is `carp_data`, `study_id` is `1234` and `device_id`is `R16NW`, 
+location data will be stored as documents in this collection:
+
+`carp_data/1234/R16NW/upload/location`.
 
 
 
