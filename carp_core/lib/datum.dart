@@ -85,7 +85,6 @@ class DeviceInfo {
       {this.deviceName, this.deviceModel, this.deviceManufacturer, this.operatingSystem, this.hardware});
 
   factory DeviceInfo.fromJson(Map<String, dynamic> json) => _$DeviceInfoFromJson(json);
-
   Map<String, dynamic> toJson() => _$DeviceInfoToJson(this);
 }
 
@@ -99,7 +98,6 @@ class StringDatum extends CARPDatum {
   StringDatum({this.data}) : super();
 
   factory StringDatum.fromJson(Map<String, dynamic> json) => _$StringDatumFromJson(json);
-
   Map<String, dynamic> toJson() => _$StringDatumToJson(this);
 }
 
@@ -115,7 +113,6 @@ class ErrorDatum extends CARPDatum {
   ErrorDatum(this.errorMessage) : super();
 
   factory ErrorDatum.fromJson(Map<String, dynamic> json) => _$ErrorDatumFromJson(json);
-
   Map<String, dynamic> toJson() => _$ErrorDatumToJson(this);
 }
 

@@ -7,22 +7,42 @@ to a Google Firebase data backend.
 
 For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/README.md).
 
-This package can upload files to a Goggle Firebase **Storage** (GFS) endpoint as raw or zipped JSON file, generated using the 
+This package can upload sending data to Goggle Firebase in two ways.
+
+### Google Firebase Storage
+
+By using the Google Firebase **Storage** endpoint, CARP sensing data are uploaded as raw or zipped JSON file, generated using the 
 [`FileDataManager`](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/datastore/FileDataManager-class.html) 
 in `carp_mobile_sensing`.
-In GFS, sensing data is stored in the `path` specified in the `FirebaseStorageDataEndPoint` plus subfolders for each study and device. 
-The path on GFS hence follow this pattern:
+In Firebase, files with sensed data is stored in the `path` specified in the `FirebaseStorageDataEndPoint` plus subfolders for each study and device. 
+The path on Firebase hence follow this pattern:
 
 `/<path>/<study_id>/<device_id>/`
 
-## Setting up support for GFS
+### Google Firebase Database
 
-For Firebase to work with your Flutter app, configuration of both GFS and the Flutter app has to be done. 
+By using the Google Firebase **Database** endpoint, CARP sensing data are uploaded as raw JSON data points, using Firebase as a  
+[`DataManager`](https://pub.dartlang.org/documentation/carp_core/latest/carp_core/DataManager-class.html) in `carp_mobile_sensing`.
+In Firebase, data json objects are stores in the `collection` specified in the `FirebaseDatabaseDataManager`
+JSON objects will be stored in collections named 
+
+`/<collection>/<study_id>/<device_id>/upload/<data_type>`
+ 
+relative to this path. For example, if `collection` is `carp_data`, `study_id` is `1234` and `device_id`is `R16NW`, 
+location data will be stored as documents in this collection:
+
+`carp_data/1234/R16NW/upload/location`.
+
+
+
+## Setting up support for Google Firebase (GF)
+
+For Firebase to work with your Flutter app, configuration of both GF and the Flutter app has to be done. 
 Please follow the step below in details, since the level of debugging/error messages are quite limited 
 when setting this up. If you are new to Firebase, then please start by reading the extensive 
 [Firebase documentation](https://firebase.google.com/docs/) first.
 
-### In GFS
+### In Google Firebase
 1. Create a Firebase project with a [cloud storage](https://firebase.google.com/docs/storage/)
 1. Add Firebase to your  [Flutter](https://firebase.google.com/docs/flutter/setup) project by following the description. 
 Note that you need to add support for both the Android and iOS version of the Flutter app.
@@ -78,7 +98,7 @@ Your Flutter app should now be connected to Firebase.
 
 ### In your Flutter App
 
-In Flutter, the `carp_firebase_backend` plugin is used to upload data from `carp_mobile_sensing` to a Firebase Storage endpoint.
+In Flutter, the `carp_firebase_backend` plugin is used to upload data from `carp_mobile_sensing` to a Firebase endpoint.
 
 Add the `carp_firebase_backend` plugin to the `pubspec.yaml` file.
 
@@ -86,7 +106,7 @@ Add the `carp_firebase_backend` plugin to the `pubspec.yaml` file.
 dependencies:
   flutter:
     sdk: flutter
-  carp_firebase_backend: ^0.0.1     # support for uploading CARP data to Firebase
+  carp_firebase_backend: ^0.2.0     # support for uploading CARP data to Firebase
 ```
 
 Run `flutter packages get`. For more information on managing packages and plugins, 
@@ -95,65 +115,91 @@ see [Using Packages](https://flutter.io/using-packages/).
 
 ## Using the Plugin
 
-First you should register a `FirebaseStorageDataManager` in the `DataManagerRegistry`.
+Upload of files to Firebase Storage uses the `FirebaseStorageDataManager` and
+upload of json objects to Firebase Database uses `FirebaseDatabaseDataManager`.
+Using the library takes three steps.
+
+### 1. Register the Data Managers
+
+First you should register the data manager you want to use (or both) in the `DataManagerRegistry`.
 
 ````dart
-DataManagerRegistry.register(DataEndPointType.FIREBASE, new FirebaseStorageDataManager());
+    DataManagerRegistry.register(DataEndPointType.FIREBASE_STORAGE, new FirebaseStorageDataManager());
+    DataManagerRegistry.register(DataEndPointType.FIREBASE_DATABASE, new FirebaseDatabaseDataManager());
 ````
 
-Then, you create a new `FirebaseStorageDataEndPoint` and add it as your `Study` data endpoint.
-`FirebaseStorageDataEndPoint` contains all the configuration needed to contact you GFS endpoint,
- as illustrated below. All of these configuration keys can be found in the _Projects Settings_ in the Firebase Console.
- Remember to register your app in Firebase, as described above.
+### 2. Specify Access Details to the Firebase App
  
+Both data managers uses a `FirebaseEndPoint` object to handle access to Firebase. 
+In this object, Firebase endpoint configuration keys are stored as well as authentication details. 
+All of the Firebase configuration keys can be found in the _Projects Settings_ in the Firebase Console.
+Remember to register your app in Firebase, as described above.
 The `firebaseAuthenticationMethod` key specify the authentication method. Currently, only _email/password_ and 
 _Google Sign-In_ is implemented (even though `FireBaseAuthenticationMethods` lists them all (for future use)).
+ 
 
-### Using email/password as authentication
+**Using email/password as authentication**
 
 ````dart
- final FirebaseStorageDataEndPoint firebaseEndPoint = new FirebaseStorageDataEndPoint(DataEndPointType.FIREBASE,
-     name: "Flutter Sensing Sandbox",
-     uri: 'gs://flutter-sensing-sandbox.appspot.com',
-     path: 'sensing/data',
-     projectID: 'flutter-sensing-sandbox',
-     webAPIKey: 'AIzaSyCGy6MeHkiv5XkBtMcMbtgGYOpf6ntNVE4',
-     gcmSenderID: '201621881872',
-     androidGoogleAppID: '1:201621881872:android:8e84e7ccfc85e121',
-     iOSGoogleAppID: '1:159623150305:ios:4a213ef3dbd8997b',
-     firebaseAuthenticationMethod: FireBaseAuthenticationMethods.PASSWORD,
-     email: "some_email@dtu.dk",
-     password: "some_password");
+  final FirebaseEndPoint firebaseEndPoint = new FirebaseEndPoint(
+      name: "Flutter Sensing Sandbox",
+      uri: 'gs://flutter-sensing-sandbox.appspot.com',
+      projectID: 'flutter-sensing-sandbox',
+      webAPIKey: 'AIzaSyCGy6MeHkiv5XkBtMcMbtgGYOpf6ntNVE4',
+      gcmSenderID: '201621881872',
+      androidGoogleAppID: '1:201621881872:android:8e84e7ccfc85e121',
+      iOSGoogleAppID: '1:159623150305:ios:4a213ef3dbd8997b',
+      firebaseAuthenticationMethod: FireBaseAuthenticationMethods.PASSWORD,
+      email: "some_email@dtu.dk",
+      password: "some_password");
+````
 
- firebaseEndPoint.bufferSize = 1000 * 1000;
- firebaseEndPoint.zip = true;
+**Using Google Sign-In as authentication**
 
- Study study = new Study("1234", "user@dtu.dk", name: "Test study #1");
- study.dataEndPoint = firebaseEndPoint;
 
+````dart
+  final FirebaseEndPoint firebaseEndPoint = new FirebaseEndPoint(
+      name: "Flutter Sensing Sandbox",
+      uri: 'gs://flutter-sensing-sandbox.appspot.com',
+      projectID: 'flutter-sensing-sandbox',
+      webAPIKey: 'AIzaSyCGy6MeHkiv5XkBtMcMbtgGYOpf6ntNVE4',
+      gcmSenderID: '201621881872',
+      androidGoogleAppID: '1:201621881872:android:8e84e7ccfc85e121',
+      iOSGoogleAppID: '1:159623150305:ios:4a213ef3dbd8997b',
+      firebaseAuthenticationMethod: FireBaseAuthenticationMethods.GOOGLE);
+````
+
+### 3. Create the Data Endpoint 
+
+Finally, you create the data endpoint (`FirebaseStorageDataEndPoint` or `FirebaseDatabaseDataEndPoint`) providing it
+with a `FirebaseEndPoint` and add it as your `Study` data endpoint.
+
+**Firebase Storage Endpoint**
+
+````dart
+  final FirebaseStorageDataEndPoint storageEndPoint =
+      new FirebaseStorageDataEndPoint(DataEndPointType.FIREBASE_STORAGE, firebaseEndPoint, 'sensing/data');
+
+  storageEndPoint.bufferSize = 1000 * 1000;
+  storageEndPoint.zip = true;
+
+  Study study_1 = new Study("1234", "user_1@dtu.dk", name: "Test study #1");
+  study_1.dataEndPoint = storageEndPoint;
 ````
 
 Note that a `FirebaseStorageDataEndPoint` extends the `FileDataEndPoint` class and parameters related to 
 how to create the files can be specified, including `bufferSize`, `zip`, and `encrypt`.
 In the example above, the file buffer size is set to 1 MB, which is zipped before upload.
 
-### Using Google Sign-In as authentication
+
+**Firebase Database Endpoint**
 
 ````dart
- final FirebaseStorageDataEndPoint firebaseEndPoint = new FirebaseStorageDataEndPoint(DataEndPointType.FIREBASE,
-     name: "Flutter Sensing Sandbox",
-     uri: 'gs://flutter-sensing-sandbox.appspot.com',
-     path: 'sensing/data',
-     projectID: 'flutter-sensing-sandbox',
-     webAPIKey: 'AIzaSyCGy6MeHkiv5XkBtMcMbtgGYOpf6ntNVE4',
-     gcmSenderID: '201621881872',
-     androidGoogleAppID: '1:201621881872:android:8e84e7ccfc85e121',
-     iOSGoogleAppID: '1:159623150305:ios:4a213ef3dbd8997b',
-     firebaseAuthenticationMethod: FireBaseAuthenticationMethods.GOOGLE);
+  final FirebaseDatabaseDataEndPoint databaseEndPoint =
+      new FirebaseDatabaseDataEndPoint(DataEndPointType.FIREBASE_DATABASE, firebaseEndPoint_2, 'carp_data');
 
- Study study = new Study("1234", "user@dtu.dk", name: "Test study #1");
- study.dataEndPoint = firebaseEndPoint;
-
+  Study study_2 = new Study("5678", "user_2@dtu.dk", name: "Test study #2");
+  study_2.dataEndPoint = databaseEndPoint;
 ````
 
  

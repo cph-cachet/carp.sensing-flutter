@@ -7,22 +7,15 @@
 
 part of carp_firebase_backend;
 
-/// Specify a data endpoint for the Google Firebase Storage for storing files.
+/// Specify a Google Firebase endpoint.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class FirebaseStorageDataEndPoint extends FileDataEndPoint {
-  /// The name of the Firebase Storage endpoint to upload files to.
+class FirebaseEndPoint {
+  /// The name of the Firebase endpoint.
   /// Can be anything, but its recommended to name it according to the Firebase bucket.
   String name;
 
-  /// The URI of the Firebase Storage endpoint to upload files to.
+  /// The URI of the Firebase endpoint.
   String uri;
-
-  /// The folder path where to store files. May contain subfolders separated with `/`.
-  ///
-  /// Data (zip files) will be stored in folders named <study_id>/<device_id> relative to this path.
-  /// For example, if path = "sensing/data", study_id = "1234" and device_id = "987234", the data will
-  /// be stored in "sensing/data/1234/987234/".
-  String path;
 
   /// The authentization method used for Firebase. See [FireBaseAuthenticationMethods] for options.
   ///
@@ -55,11 +48,10 @@ class FirebaseStorageDataEndPoint extends FileDataEndPoint {
   // The Firebase GCM (Google Cloud Messaging) Sender ID. See project setting under the 'Cloud Messaging' tab.
   String gcmSenderID;
 
-  /// Creates a [DataEndPoint]. [type] is defined in [DataEndPointType].
-  FirebaseStorageDataEndPoint(String type,
+  /// Creates a [FirebaseEndPoint].
+  FirebaseEndPoint(
       {this.name,
       this.uri,
-      this.path,
       this.firebaseAuthenticationMethod,
       this.email,
       this.password,
@@ -69,7 +61,55 @@ class FirebaseStorageDataEndPoint extends FileDataEndPoint {
       this.androidGoogleAppID,
       this.iOSGoogleAppID,
       this.gcmSenderID})
-      : super(type);
+      : super();
+
+  static Function get fromJsonFunction => _$FirebaseEndPointFromJson;
+  factory FirebaseEndPoint.fromJson(Map<String, dynamic> json) => _$FirebaseEndPointFromJson(json);
+  Map<String, dynamic> toJson() => _$FirebaseEndPointToJson(this);
+}
+
+abstract class FirebaseDataEndPoint {
+  /// The Firebase endpoint.
+  FirebaseEndPoint firebaseEndPoint;
+}
+
+/// Specify a Google Firebase Database document endpoint.
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+class FirebaseDatabaseDataEndPoint extends DataEndPoint with FirebaseDataEndPoint {
+  /// When uploading to the Firebase Database using the [FirebaseDatabaseDataManager],
+  /// [collection] hold the name of the collection to store json objects. May contain sub-collections separated with `/`.
+  ///
+  /// JSON objects will be stored in collections named <study_id>/<device_id> relative to this path.
+  /// For example, if collection = "carp_data", study_id = "1234" and device_id = "987234", the data will
+  /// be stored as documents in "carp_data/1234/987234/".
+  String collection;
+
+  /// Creates a [FirebaseDatabaseDataEndPoint]. [type] is defined in [DataEndPointType].
+  FirebaseDatabaseDataEndPoint(String type, FirebaseEndPoint firebaseEndPoint, this.collection) : super(type) {
+    this.firebaseEndPoint = firebaseEndPoint;
+  }
+
+  static Function get fromJsonFunction => _$FirebaseDatabaseDataEndPointFromJson;
+  factory FirebaseDatabaseDataEndPoint.fromJson(Map<String, dynamic> json) =>
+      _$FirebaseDatabaseDataEndPointFromJson(json);
+  Map<String, dynamic> toJson() => _$FirebaseDatabaseDataEndPointToJson(this);
+}
+
+/// Specify a Google Firebase Storage file endpoint.
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+class FirebaseStorageDataEndPoint extends FileDataEndPoint with FirebaseDataEndPoint {
+  /// When uploading to the Firebase Storage using the [FirebaseStorageDataManager],
+  /// [path] hold the folder path where to store files. May contain sub-folders separated with `/`.
+  ///
+  /// Data (zip files) will be stored in folders named <study_id>/<device_id> relative to this path.
+  /// For example, if path = "sensing/data", study_id = "1234" and device_id = "987234", the data will
+  /// be stored in "sensing/data/1234/987234/".
+  String path;
+
+  /// Creates a [FirebaseStorageDataEndPoint]. [type] is defined in [DataEndPointType].
+  FirebaseStorageDataEndPoint(String type, FirebaseEndPoint firebaseEndPoint, this.path) : super(type) {
+    this.firebaseEndPoint = firebaseEndPoint;
+  }
 
   static Function get fromJsonFunction => _$FirebaseStorageDataEndPointFromJson;
   factory FirebaseStorageDataEndPoint.fromJson(Map<String, dynamic> json) =>
