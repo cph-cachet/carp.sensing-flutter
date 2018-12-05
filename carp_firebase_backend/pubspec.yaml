@@ -14,18 +14,18 @@ dependencies:
   google_sign_in: ^3.0.5
   firebase_storage: ^1.0.2
   firebase_auth: ^0.5.20
-  cloud_firestore:
+  cloud_firestore: ^0.8.2+3
   carp_core: ^0.1.0                   # The core CARP domain model
   carp_mobile_sensing: ^0.2.4
 
 
 # Overriding carp_mobile_sensing and carp_core to use the local copy
 # Remove this when done development
-dependency_overrides:
-  carp_core:
-    path: ../carp_core/
-  carp_mobile_sensing:
-    path: ../carp_mobile_sensing/
+#dependency_overrides:
+#  carp_core:
+#    path: ../carp_core/
+#  carp_mobile_sensing:
+#    path: ../carp_mobile_sensing/
 
 dev_dependencies:
   flutter_test:
