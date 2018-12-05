@@ -1,6 +1,9 @@
+## 0.2.6
+* fixed small bug in `weater` probe.
+
 ## 0.2.5 
-* small bug fixes in connectivity datum model (to work w. `carp_firebase_backend)
-* `weather` probe added 
+* small bug fixes in connectivity datum model (to work w. `carp_firebase_backend).
+* `weather` probe added. 
 
 ## 0.2.4 
 * error in `light` probe fixed.

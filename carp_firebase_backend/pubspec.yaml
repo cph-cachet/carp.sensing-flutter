@@ -1,5 +1,5 @@
 name: carp_firebase_backend
-description: Firebase data backend for CARP mobile sensing in Flutter. Supports uploading json files to Google Firebase as either (i) zipped filed to Firebase Storage or as (ii) plain json to Firebase Database.
+description: Google Firebase data backend for CARP mobile sensing. Supports uploading json to Firebase as either zipped filed to Firebase Storage or as plain json to Firebase Database.
 version: 0.2.0
 author:  CACHET Team <cph.cachet@gmail.com>
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_firebase_backend
