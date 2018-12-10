@@ -9,8 +9,7 @@ part of carp_services;
 enum TaskStateType {
   idle,
   working,
-  paused,
-  cancled,
+  canceled,
   success,
   failure,
 }
@@ -22,18 +21,16 @@ abstract class CarpServiceTask {
   bool isCanceled = false;
   bool isComplete = false;
   bool isInProgress = true;
-  bool isPaused = false;
   bool isSuccessful = false;
 
   CarpServiceTask._(this.reference);
 
-  TaskStateType getState() => _state;
+  TaskStateType get state => _state;
 
   void _resetState() {
     isCanceled = false;
     isComplete = false;
     isInProgress = false;
-    isPaused = false;
     isSuccessful = false;
     _state = TaskStateType.idle;
   }
@@ -43,19 +40,9 @@ abstract class CarpServiceTask {
     _state = TaskStateType.working;
   }
 
-  /// Pause this task
-  void pause() {
-    _state = TaskStateType.paused;
-  }
-
-  /// Resume this task
-  void resume() {
-    _state = TaskStateType.working;
-  }
-
   /// Cancel this task
   void cancel() {
-    _state = TaskStateType.cancled;
+    _state = TaskStateType.canceled;
   }
 }
 
@@ -65,10 +52,6 @@ class FileUploadTask extends CarpServiceTask {
 
   /// Metadata for the file.
   Map<String, String> metadata;
-
-  /// The server-side ID of this file.
-  int get id => _id;
-  int _id = -1;
 
   FileUploadTask._(FileStorageReference reference, this.file, [metadata]) : super._(reference) {
     this.metadata = metadata == null ? new Map<String, String>() : metadata;
@@ -94,37 +77,32 @@ class FileUploadTask extends CarpServiceTask {
     metadata['size'] = (await file.length()).toString();
     // TODO -- there is an error if we submit metadata to the CARP server. Responds with "415 - Unsupported Media Type"
     //request.fields['metadata'] = json.encode(metadata);
-    print('metadate : ' + json.encode(metadata));
+    print('metadata : ' + json.encode(metadata));
 
     request.files.add(new http.MultipartFile.fromBytes('file', file != null ? file.readAsBytesSync() : new List<int>(),
         filename: file != null ? file.path : '', contentType: MediaType('image', 'jpg')));
 
-    print("url : $url");
-    print('request.headers : ${request.headers}');
-
     request.send().then((response) {
-      print('file upload status : ${response.statusCode}');
-
       response.stream.toStringStream().first.then((body) {
-        print('response data : $body');
         final int httpStatusCode = response.statusCode;
         final Map<String, dynamic> map = json.decode(body);
 
-        // get the id generated from the server
-        _id = map["id"];
-        reference.id = _id;
+        // save the id generated from the server
+        reference.id = map["id"];
 
         switch (httpStatusCode) {
           // CARP web service returns "201 Created" when a file is uploaded / created on the server.
           case 200:
           case 201:
             {
+              _state = TaskStateType.success;
               _completer.complete(CarpFileResponse._(reference, map));
               break;
             }
           default:
             // All other cases are treated as an error.
             {
+              _state = TaskStateType.failure;
               final String error = map["error"];
               final String description = map["error_description"];
               final HTTPStatus status = HTTPStatus(httpStatusCode, response.reasonPhrase);
@@ -136,18 +114,6 @@ class FileUploadTask extends CarpServiceTask {
     });
 
     return _completer.future;
-  }
-
-  /// Pause the upload task
-  void pause() {
-    super.pause();
-    //TODO - implement this...
-  }
-
-  /// Resume the upload task
-  void resume() {
-    super.resume();
-    //TODO - implement this...
   }
 
   /// Cancel the upload task
@@ -164,32 +130,49 @@ class FileDownloadTask extends CarpServiceTask {
 
   FileDownloadTask._(FileStorageReference reference, this.file) : super._(reference);
 
-  /// Returns a last snapshot when completed
-  Completer<CarpFileResponse> _completer = Completer<CarpFileResponse>();
-  Future<CarpFileResponse> get onComplete => _completer.future;
+  /// Returns the HTTP status code when completed
+  Completer<int> _completer = Completer<int>();
+  Future<int> get onComplete => _completer.future;
 
-  /// Start the the download task.
-  Future<CarpFileResponse> _start() {
+  /// Start the the download task. Returns the HTTP status code (200 for successful download).
+  Future<int> _start() async {
     super._start();
-    //TODO - implement this...
-  }
+    final String url = '${reference.fileEndpointUri}/${reference.id}/download';
+    Map<String, String> rest_headers = await reference.headers;
+    rest_headers['Content-Type'] = 'application/x-www-form-urlencoded';
 
-  /// Pause the download task
-  void pause() {
-    super.pause();
-    //TODO - implement this...
-  }
+    http.get(Uri.encodeFull(url), headers: rest_headers).then((response) {
+      final int httpStatusCode = response.statusCode;
 
-  /// Resume the download task
-  void resume() {
-    super.resume();
-    //TODO - implement this...
+      switch (httpStatusCode) {
+        case 200:
+          {
+            _state = TaskStateType.success;
+            file.writeAsBytes(response.bodyBytes);
+            _completer.complete(httpStatusCode);
+            break;
+          }
+        default:
+          // All other cases are treated as an error.
+          {
+            _state = TaskStateType.failure;
+            final Map<String, dynamic> map = json.decode(response.body);
+            final String error = map["error"];
+            final String description = map["error_description"];
+            final HTTPStatus status = HTTPStatus(httpStatusCode, response.reasonPhrase);
+            _completer.completeError(httpStatusCode);
+            throw CarpServiceException(error, description: description, httpStatus: status);
+          }
+      }
+    });
+
+    return _completer.future;
   }
 
   /// Cancel the download task
   void cancel() {
     super.cancel();
-    //TODO - implement this...
+    _completer.completeError(408); // 408 Request Timeout
   }
 }
 

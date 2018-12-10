@@ -30,8 +30,7 @@ class FileStorageReference extends CarpReference {
     return task;
   }
 
-  /// Asynchronously downloads the object at this [FileStorageReference] to a
-  /// specified system file.
+  /// Asynchronously downloads the object at this [FileStorageReference] to a specified local file.
   FileDownloadTask download(File file) {
     assert(file != null);
     assert(id > 0);
@@ -46,23 +45,17 @@ class FileStorageReference extends CarpReference {
     final String url = "${fileEndpointUri}/$id";
     final rest_headers = await headers;
 
-    print("url : $url");
-    print("headers : $rest_headers");
-
     http.Response response = await http.get(Uri.encodeFull(url), headers: rest_headers);
-
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> map = json.decode(response.body);
 
     switch (httpStatusCode) {
       case 200:
-      case 204:
         {
           return CarpFileResponse._(this, map);
         }
       default:
         // All other cases are treated as an error.
-        // TODO - later we can handle more HTTP status codes here.
         {
           final String error = map["error"];
           final String description = map["error_description"];
@@ -77,11 +70,7 @@ class FileStorageReference extends CarpReference {
     final String url = "${fileEndpointUri}";
     final rest_headers = await headers;
 
-    print("url : $url");
-    print("headers : $rest_headers");
-
     http.Response response = await http.get(Uri.encodeFull(url), headers: rest_headers);
-
     int httpStatusCode = response.statusCode;
     List<dynamic> list = json.decode(response.body);
 
@@ -97,7 +86,6 @@ class FileStorageReference extends CarpReference {
         }
       default:
         // All other cases are treated as an error.
-        // TODO - later we can handle more HTTP status codes here.
         {
           Map<String, dynamic> map = json.decode(response.body);
           final String error = map["error"];
@@ -114,11 +102,7 @@ class FileStorageReference extends CarpReference {
     final String url = "${fileEndpointUri}/$id";
     final rest_headers = await headers;
 
-    print("url : $url");
-    print("headers : $rest_headers");
-
     http.Response response = await http.delete(Uri.encodeFull(url), headers: rest_headers);
-
     int httpStatusCode = response.statusCode;
 
     switch (httpStatusCode) {

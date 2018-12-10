@@ -51,8 +51,8 @@ void main() {
     });
   });
 
-  group("Data points", () {
-    test('- upload', () async {
+  group("Datapoints", () {
+    test('- post', () async {
       // Create a test location datum
       LocationDatum datum = LocationDatum.fromMap(<String, dynamic>{
         "latitude": 23454.345,
@@ -114,17 +114,10 @@ void main() {
 
     test(' - get object', () async {
       assert(object != null);
-      // get the object
       ObjectSnapshot new_object = await CarpService.instance.collection('/users').object(object.id).get();
 
       print((new_object));
       assert(new_object.id == object.id);
-    });
-
-    test(' - delete object', () async {
-      assert(object != null);
-      // deleting the object
-      await CarpService.instance.collection('/users').object(object.id).delete();
     });
 
     test(' - list collections', () async {
@@ -154,6 +147,11 @@ void main() {
       for (ObjectSnapshot object in objects) {
         print(object);
       }
+    });
+
+    test(' - delete object', () async {
+      assert(object != null);
+      await CarpService.instance.collection('/users').object(object.id).delete();
     });
   });
 
@@ -192,12 +190,9 @@ void main() {
 
       assert(downloadTask != null);
 
-      CarpFileResponse response = await downloadTask.onComplete;
-      assert(response.id == id);
-
-      print('response.storageName : ${response.storageName}');
-      print('response.studyId : ${response.studyId}');
-      print('response.createdAt : ${response.createdAt}');
+      int response = await downloadTask.onComplete;
+      assert(response == 200);
+      print('status code : $response');
     });
 
     test('- get all', () async {
