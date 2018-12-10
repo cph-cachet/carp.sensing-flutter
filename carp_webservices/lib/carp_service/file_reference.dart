@@ -11,21 +11,19 @@ part of carp_services;
 /// - download a CARP file to a local [File]
 /// - delete a file at CARP
 class FileStorageReference extends CarpReference {
-  String _path;
+  /// The CARP server-side ID of this file.
+  ///
+  /// -1 if unknown or referencing a file not uploaded yet.
+  int id = -1;
 
-  FileStorageReference._(CarpService service, this._path) : super._(service);
+  FileStorageReference._(CarpService service, [this.id]) : super._(service);
 
   /// The URL for the file end point for this [FileStorageReference].
   String get fileEndpointUri => "${service.app.uri.toString()}/api/studies/${service.app.study.id}/files";
 
-  /// Returns the full path to this file object, not including the CARP Web Service URI
-  Future<String> getPath() async {
-    return _path;
-  }
-
   /// Asynchronously uploads a file to the currently specified
   /// [FileStorageReference], with optional [metadata].
-  FileUploadTask putFile(File file, [FileMetadata metadata]) {
+  FileUploadTask upload(File file, [Map<String, String> metadata]) {
     assert(file != null);
     final FileUploadTask task = FileUploadTask._(this, file, metadata);
     task._start();
@@ -34,21 +32,116 @@ class FileStorageReference extends CarpReference {
 
   /// Asynchronously downloads the object at this [FileStorageReference] to a
   /// specified system file.
-  FileDownloadTask writeToFile(File file) {
+  FileDownloadTask download(File file) {
     assert(file != null);
+    assert(id > 0);
     final FileDownloadTask task = FileDownloadTask._(this, file);
     task._start();
     return task;
   }
 
+  /// Get the metadata for this file reference.
+  Future<CarpFileResponse> get() async {
+    assert(id > 0);
+    final String url = "${fileEndpointUri}/$id";
+    final rest_headers = await headers;
+
+    print("url : $url");
+    print("headers : $rest_headers");
+
+    http.Response response = await http.get(Uri.encodeFull(url), headers: rest_headers);
+
+    int httpStatusCode = response.statusCode;
+    Map<String, dynamic> map = json.decode(response.body);
+
+    switch (httpStatusCode) {
+      case 200:
+      case 204:
+        {
+          return CarpFileResponse._(this, map);
+        }
+      default:
+        // All other cases are treated as an error.
+        // TODO - later we can handle more HTTP status codes here.
+        {
+          final String error = map["error"];
+          final String description = map["error_description"];
+          throw CarpServiceException(error,
+              description: description, httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+        }
+    }
+  }
+
+  /// Get metadata for all files for this [Study].
+  Future<List<CarpFileResponse>> getAll() async {
+    final String url = "${fileEndpointUri}";
+    final rest_headers = await headers;
+
+    print("url : $url");
+    print("headers : $rest_headers");
+
+    http.Response response = await http.get(Uri.encodeFull(url), headers: rest_headers);
+
+    int httpStatusCode = response.statusCode;
+    List<dynamic> list = json.decode(response.body);
+
+    switch (httpStatusCode) {
+      case 200:
+        {
+          List<CarpFileResponse> file_list = new List<CarpFileResponse>();
+          list.forEach((element) {
+            file_list.add(CarpFileResponse._(this, element));
+          });
+
+          return file_list;
+        }
+      default:
+        // All other cases are treated as an error.
+        // TODO - later we can handle more HTTP status codes here.
+        {
+          Map<String, dynamic> map = json.decode(response.body);
+          final String error = map["error"];
+          final String description = map["error_description"];
+          throw CarpServiceException(error,
+              description: description, httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+        }
+    }
+  }
+
   /// Asynchronously deletes the file at this [FileStorageReference].
-  FileDeleteTask delete() {
-    final FileDeleteTask task = FileDeleteTask._(this);
-    task._start();
-    return task;
+  Future<int> delete() async {
+    assert(id > 0);
+    final String url = "${fileEndpointUri}/$id";
+    final rest_headers = await headers;
+
+    print("url : $url");
+    print("headers : $rest_headers");
+
+    http.Response response = await http.delete(Uri.encodeFull(url), headers: rest_headers);
+
+    int httpStatusCode = response.statusCode;
+
+    switch (httpStatusCode) {
+      case 200:
+      case 204:
+        {
+          return httpStatusCode;
+        }
+      default:
+        // All other cases are treated as an error.
+        // TODO - later we can handle more HTTP status codes here.
+        {
+          Map<String, dynamic> map = json.decode(response.body);
+          final String error = map["error"];
+          final String description = map["error_description"];
+          throw CarpServiceException(error,
+              description: description, httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+        }
+    }
   }
 }
 
+// TODO - This [FileMetadata] class is not used currently -- only a 'flat' Map is used.
 /// Metadata for a [FileStorageReference]. Metadata stores default attributes such as
 /// size and content type. Also allow for storing custom metadata.
 class FileMetadata {

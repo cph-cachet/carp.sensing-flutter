@@ -156,6 +156,7 @@ class ObjectReference extends CarpReference {
     // If this object does not already exist on the server (i.e., have an ID), then create it
     if ((id == null) || (id.length == 0)) {
       final rest_headers = await headers;
+
       http.Response response =
           await http.post(Uri.encodeFull(_collection.collectionUri), headers: rest_headers, body: json.encode(data));
       int httpStatusCode = response.statusCode;

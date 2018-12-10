@@ -10,10 +10,13 @@ library carp_services;
 import 'package:meta/meta.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_core/carp_core.dart';
+import 'dart:collection';
+//import 'package:dio/dio.dart';
 
 part 'carp_app.dart';
 part 'datapoint_reference.dart';
@@ -104,7 +107,7 @@ class CarpService {
     switch (httpStatusCode) {
       case 200:
         {
-          _currentUser.authenticated(new OAuthToken.fromJson(responseJSON));
+          _currentUser.authenticated(new OAuthToken.fromMap(responseJSON));
           return _currentUser;
         }
       default:
@@ -146,12 +149,9 @@ class CarpService {
   /// CarpService storage location.
   DataPointReference getDataPointReference() => DataPointReference._(this);
 
-  /// Creates a new [FileStorageReference] initialized at the current
-  /// CarpService storage location.
-  FileStorageReference getFileStorageReference(String path) {
-    assert(path != null);
-    return FileStorageReference._(this, path);
-  }
+  /// Creates a new [FileStorageReference] initialized at the current CarpService storage location.
+  /// [id] can be omitted if a local file is not uploaded yet.
+  FileStorageReference getFileStorageReference([int id]) => FileStorageReference._(this, id);
 
   /// Gets a [CollectionReference] for the current CARP Service path.
   /// Note that [path] should be absolute and either be empty `""` or start with `/`.

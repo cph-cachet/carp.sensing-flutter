@@ -13,6 +13,7 @@ dependencies:
     sdk: flutter
   carp_core: ^0.1.0
   carp_mobile_sensing: ^0.2.0
+  # dio: ^1.0.9
 
 # Overriding carp_mobile_sensing to use the local copy
 # Remove this when done development

@@ -21,13 +21,13 @@ class OAuthToken {
   /// Constructor
   OAuthToken(this._accessToken, this._refreshToken, this._tokenType, this._expiresIn, this._scope);
 
-  /// JSON Constructor
-  OAuthToken.fromJson(Map<String, dynamic> json)
-      : _accessToken = json['access_token'],
-        _refreshToken = json['refresh_token'],
-        _tokenType = json['token_type'],
-        _expiresIn = json['expires_in'],
-        _scope = json['scope'];
+  /// Factory taking a Map.
+  OAuthToken.fromMap(Map<String, dynamic> map)
+      : _accessToken = map['access_token'],
+        _refreshToken = map['refresh_token'],
+        _tokenType = map['token_type'],
+        _expiresIn = map['expires_in'],
+        _scope = map['scope'];
 
   /// Calculate the date of expiration for the access token.
   /// If access token has expired, the refresh token should be used
