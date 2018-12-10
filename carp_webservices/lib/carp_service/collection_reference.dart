@@ -29,7 +29,7 @@ class CollectionReference extends CarpReference {
     return "/api/studies/${service.app.study.id}/collections$path";
   }
 
-  /// The URL for the collection end point for this [CollectionReference].
+  /// The URL for the collection endpoint for this [CollectionReference].
   String get collectionUri => "${service.app.uri.toString()}$carpPath";
 
   /// Fetch the list of collections (names) in this collection.
@@ -54,7 +54,6 @@ class CollectionReference extends CarpReference {
         }
       default:
         // All other cases are treated as an error.
-        // TODO - later we can handle more HTTP status codes here.
         {
           Map<String, dynamic> responseJson = json.decode(response.body);
           final String error = responseJson["error"];
@@ -65,7 +64,7 @@ class CollectionReference extends CarpReference {
     }
   }
 
-  /// Fetch the objects in this collection.
+  /// Get the objects in this collection.
   Future<List<ObjectSnapshot>> get objects async {
     final rest_headers = await headers;
 
@@ -89,7 +88,6 @@ class CollectionReference extends CarpReference {
         }
       default:
         // All other cases are treated as an error.
-        // TODO - later we can handle more HTTP status codes here.
         {
           Map<String, dynamic> responseJson = json.decode(response.body);
           final String error = responseJson["error"];
@@ -156,6 +154,7 @@ class ObjectReference extends CarpReference {
     // If this object does not already exist on the server (i.e., have an ID), then create it
     if ((id == null) || (id.length == 0)) {
       final rest_headers = await headers;
+
       http.Response response =
           await http.post(Uri.encodeFull(_collection.collectionUri), headers: rest_headers, body: json.encode(data));
       int httpStatusCode = response.statusCode;
@@ -183,8 +182,6 @@ class ObjectReference extends CarpReference {
     } else {
       return updateData(data);
     }
-
-    //response.reasonPhrase;
   }
 
   /// Updates fields in the object referred to by this [ObjectReference].
@@ -204,8 +201,6 @@ class ObjectReference extends CarpReference {
           return ObjectSnapshot._(carpPath, responseJson);
         }
       default:
-        // All other cases are treated as an error.
-        // TODO - later we can handle more HTTP status codes here.
         {
           final String error = responseJson["error"];
           final String description = responseJson["error_description"];
@@ -231,7 +226,6 @@ class ObjectReference extends CarpReference {
           return ObjectSnapshot._(carpPath, responseJson);
         }
       default:
-        // All other cases are treated as a null response.
         return null;
     }
   }
@@ -249,7 +243,6 @@ class ObjectReference extends CarpReference {
           return;
         }
       default:
-        // All other cases are treated as an error.
         {
           final Map<String, dynamic> responseJson = json.decode(response.body);
           final String error = responseJson["error"];
@@ -270,9 +263,9 @@ class ObjectReference extends CarpReference {
   }
 }
 
-/// A ObjectSnapshot contains data read from a collection in CARP web service
+/// A ObjectSnapshot contains data read from a collection in the CARP web service
 ///
-/// The data can be extracted with the data property or by using subscript
+/// The data can be extracted with the [data] property or by using subscript
 /// syntax to access a specific field.
 class ObjectSnapshot {
   ObjectSnapshot._(this._path, this.data);

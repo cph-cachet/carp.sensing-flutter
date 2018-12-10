@@ -14,7 +14,7 @@ void main() {
   final String uri = "http://staging.carp.cachet.dk:8080";
   final String clientID = "carp";
   final String clientSecret = "carp";
-  final String testStudyId = "1";
+  final String testStudyId = "8";
   CarpApp app;
   Study study;
   String data_point_id;
@@ -49,26 +49,10 @@ void main() {
 
       print("signed in : $user");
     });
-
-    test('File upload', () async {
-      final File myFile = new File("abc.txt");
-
-      final FileUploadTask uploadTask = CarpService.instance.getFileStorageReference("abc.txt").putFile(
-            myFile,
-            new FileMetadata(
-              contentLanguage: 'en',
-              customMetadata: <String, String>{'activity': 'test'},
-            ),
-          );
-
-      assert(uploadTask != null);
-
-      //await uploadTask.onComplete;
-    });
   });
 
-  group("Data point", () {
-    test('- upload', () async {
+  group("Datapoints", () {
+    test('- post', () async {
       // Create a test location datum
       LocationDatum datum = LocationDatum.fromMap(<String, dynamic>{
         "latitude": 23454.345,
@@ -130,17 +114,10 @@ void main() {
 
     test(' - get object', () async {
       assert(object != null);
-      // get the object
       ObjectSnapshot new_object = await CarpService.instance.collection('/users').object(object.id).get();
 
       print((new_object));
       assert(new_object.id == object.id);
-    });
-
-    test(' - delete object', () async {
-      assert(object != null);
-      // deleting the object
-      await CarpService.instance.collection('/users').object(object.id).delete();
     });
 
     test(' - list collections', () async {
@@ -170,6 +147,66 @@ void main() {
       for (ObjectSnapshot object in objects) {
         print(object);
       }
+    });
+
+    test(' - delete object', () async {
+      assert(object != null);
+      await CarpService.instance.collection('/users').object(object.id).delete();
+    });
+  });
+
+  group("Files", () {
+    int id = -1;
+
+    test('- upload', () async {
+      final File myFile = File("test/img.jpg");
+
+      final FileUploadTask uploadTask = CarpService.instance
+          .getFileStorageReference()
+          .upload(myFile, {'content-type': 'image/jpg', 'content-language': 'en', 'activity': 'test'});
+
+      assert(uploadTask != null);
+
+      CarpFileResponse response = await uploadTask.onComplete;
+      assert(response.id > 0);
+      id = response.id;
+
+      print('response.storageName : ${response.storageName}');
+      print('response.studyId : ${response.studyId}');
+      print('response.createdAt : ${response.createdAt}');
+    });
+
+    test('- get', () async {
+      final CarpFileResponse result = await CarpService.instance.getFileStorageReference(id).get();
+
+      assert(result.id == id);
+      print('result : ${result}');
+    });
+
+    test('- download', () async {
+      final File myFile = File("test/img-$id.jpg");
+
+      final FileDownloadTask downloadTask = CarpService.instance.getFileStorageReference(id).download(myFile);
+
+      assert(downloadTask != null);
+
+      int response = await downloadTask.onComplete;
+      assert(response == 200);
+      print('status code : $response');
+    });
+
+    test('- get all', () async {
+      final List<CarpFileResponse> results = await CarpService.instance.getFileStorageReference(id).getAll();
+
+      //assert(result.id == id);
+      print('result : ${results}');
+    });
+
+    test('- delete', () async {
+      final int result = await CarpService.instance.getFileStorageReference(id).delete();
+
+      assert(result > 0);
+      print('result : $result');
     });
   });
 }
