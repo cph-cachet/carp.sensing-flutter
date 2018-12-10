@@ -46,6 +46,7 @@ abstract class CarpServiceTask {
   }
 }
 
+/// A task supporting asynchronous upload of a file.
 class FileUploadTask extends CarpServiceTask {
   /// The file to upload.
   File file;
@@ -123,6 +124,7 @@ class FileUploadTask extends CarpServiceTask {
   }
 }
 
+/// A task supporting asynchronous download of a file.
 class FileDownloadTask extends CarpServiceTask {
   /// The file on the local device which this task is downloading to.
   /// The file has to be created before starting the download.
@@ -176,6 +178,7 @@ class FileDownloadTask extends CarpServiceTask {
   }
 }
 
+/// Represents the response from the CARP server when getting file objects.
 class CarpFileResponse {
   CarpFileResponse._(this.ref, this.map)
       : id = map['id'],

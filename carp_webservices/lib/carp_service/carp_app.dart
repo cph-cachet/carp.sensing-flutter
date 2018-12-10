@@ -6,7 +6,7 @@
  */
 part of carp_services;
 
-/// Represents a CARP web app endpoint.
+/// Represents a CARP web service app endpoint.
 class CarpApp {
   /// The CARP study for this app.
   Study study;

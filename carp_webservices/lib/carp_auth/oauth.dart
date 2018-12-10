@@ -49,7 +49,7 @@ class OAuthToken {
   /// Scope of this token:
   /// - read
   /// - read write
-  /// - TODO : anything else?
+  // TODO : anything else?
   String get scope => _scope;
 
   String get tokenInfo => "Access Token: $_accessToken, "
@@ -57,7 +57,7 @@ class OAuthToken {
       "Expiry date: $accessTokenExpiryDate";
 }
 
-/// A [OAuthEndPoint] specify an OAuth 2.0 endpoint.
+/// Specifies an OAuth 2.0 REST endpoint.
 class OAuthEndPoint {
   /// The OAuth 2.0 client id.
   String clientID;

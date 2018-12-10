@@ -15,8 +15,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_core/carp_core.dart';
-import 'dart:collection';
-//import 'package:dio/dio.dart';
 
 part 'carp_app.dart';
 part 'datapoint_reference.dart';
@@ -28,9 +26,10 @@ part 'carp_tasks.dart';
 ///
 /// The (current) assumption is that each Flutter app (using this library) will only connect
 /// to one CARP web service backend. Therefore this is a singleton and should be used like:
+///
 /// ```
 /// await CarpService.configure(myApp);
-/// CarpUser user = await CarpService.instance.signInWithEmailAndPassword("user@dtu.dk","password");
+/// CarpUseruser = await CarpService.instance.authenticate(username: "user@dtu.dk", password: "password");
 /// ```
 class CarpService {
   static CarpService _instance;
@@ -46,7 +45,7 @@ class CarpService {
   CarpService._(this._app) : assert(_app != null);
 
   /// Returns the singleton default instance of the [CarpService].
-  /// Before this instance can be used, it must be configured using the [configure()] method.
+  /// Before this instance can be used, it must be configured using the [configure] method.
   static CarpService get instance => _instance;
 
   /// Configure the default instance of the [CarpService].
@@ -55,9 +54,9 @@ class CarpService {
     return _instance;
   }
 
-  /// Sign in to this CARP web service using username and password.
+  /// Authenticate to this CARP web service using username and password.
   ///
-  /// Return the signed in user (with an access token) if successful.
+  /// Return the signed in user (with an [OAuthToken] access token), if successful.
   /// Throws a [CarpServiceException] if not successful.
   Future<CarpUser> authenticate({
     @required String username,
@@ -122,7 +121,7 @@ class CarpService {
     }
   }
 
-  /// Asynchronously gets current user, or `null` if there is none.
+  /// Asynchronously gets the current user, or `null` if there is none.
   Future<CarpUser> get currentUser async {
     return _currentUser;
   }
@@ -132,7 +131,7 @@ class CarpService {
     _currentUser.signOut();
   }
 
-  // Create a new CARP user with using email and password.
+  // Create a new CARP user using email and password.
   Future<CarpUser> createUserWithEmailAndPassword({
     @required String email,
     @required String password,
@@ -161,7 +160,7 @@ class CarpService {
   }
 }
 
-/// Abstract for CARP web service references.
+/// Abstract CARP web service references.
 abstract class CarpReference {
   CarpService service;
 
@@ -198,6 +197,8 @@ class CarpServiceException implements Exception {
   }
 }
 
+/// Implements HTTP Response Code and associated Reason Phrase.
+/// See https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
 class HTTPStatus {
   int httpResponseCode;
   String httpReasonPhrase;

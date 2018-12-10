@@ -7,8 +7,10 @@
 part of carp_services;
 
 /// Provide a file endpoint reference to a CARP web service. Used to:
-/// - upload a local [File] to CARP
+/// - upload a local [File] to the CARP server
 /// - download a CARP file to a local [File]
+/// - get a [CarpFileResponse] file object from the CARP sever
+/// - get all file object as a list of [CarpFileResponse]s from the CARP sever
 /// - delete a file at CARP
 class FileStorageReference extends CarpReference {
   /// The CARP server-side ID of this file.
@@ -39,7 +41,7 @@ class FileStorageReference extends CarpReference {
     return task;
   }
 
-  /// Get the metadata for this file reference.
+  /// Get the file object at the server for this [FileStorageReference].
   Future<CarpFileResponse> get() async {
     assert(id > 0);
     final String url = "${fileEndpointUri}/$id";
@@ -65,7 +67,7 @@ class FileStorageReference extends CarpReference {
     }
   }
 
-  /// Get metadata for all files for this [Study].
+  /// Get all file objects for the [Study] in this [FileStorageReference].
   Future<List<CarpFileResponse>> getAll() async {
     final String url = "${fileEndpointUri}";
     final rest_headers = await headers;
@@ -81,7 +83,6 @@ class FileStorageReference extends CarpReference {
           list.forEach((element) {
             file_list.add(CarpFileResponse._(this, element));
           });
-
           return file_list;
         }
       default:
@@ -96,7 +97,7 @@ class FileStorageReference extends CarpReference {
     }
   }
 
-  /// Asynchronously deletes the file at this [FileStorageReference].
+  /// Deletes the file at this [FileStorageReference].
   Future<int> delete() async {
     assert(id > 0);
     final String url = "${fileEndpointUri}/$id";
@@ -113,7 +114,6 @@ class FileStorageReference extends CarpReference {
         }
       default:
         // All other cases are treated as an error.
-        // TODO - later we can handle more HTTP status codes here.
         {
           Map<String, dynamic> map = json.decode(response.body);
           final String error = map["error"];
