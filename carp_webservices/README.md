@@ -62,34 +62,118 @@ try {
 ```
 
 
-**File Upload**
+**File Management**
 
-A `FileStorageReference` is used to upload files to CARP. 
-You can add metadata to a file using the `FileMetadata` class.
+A [`FileStorageReference`](https://pub.dartlang.org/documentation/carp_webservices/latest/carp_services/FileStorageReference-class.html)
+ is used to manage [files](http://staging.carp.cachet.dk:8080/swagger-ui.html#/file-controller) on a CARP web service and have methods for:
+
+* uploading a file
+* downloading a file
+* getting a file object
+* getting all file objects
+* deleting a file
+
+When uploading a file, you can add metadata as a `Map<String, String>`.
 
 ````dart
-final File myFile = new File("abc.txt");
+// first upload a file
+final File myFile = File("test/img.jpg");
+final FileUploadTask uploadTask = CarpService.instance
+   .getFileStorageReference()
+   .upload(myFile, {'content-type': 'image/jpg', 'content-language': 'en', 'activity': 'test'});
+CarpFileResponse response = await uploadTask.onComplete;
+int id = response.id;
 
-final FileUploadTask uploadTask = CarpService.instance.getFileStorageReference("abc.txt").putFile(
-      myFile,
-      new FileMetadata(
-        contentLanguage: 'en',
-        customMetadata: <String, String>{'activity': 'test'},
-      ),
-    );
+// then get its description back from the server
+final CarpFileResponse result = await CarpService.instance.getFileStorageReference(id).get();
 
-await uploadTask.onComplete;
+// then download the file again
+// note that a local file to download is needed
+final File myFile = File("test/img-$id.jpg");
+final FileDownloadTask downloadTask = CarpService.instance.getFileStorageReference(id).download(myFile);
+int response = await downloadTask.onComplete;
+
+// now get references to ALL files in this study
+final List<CarpFileResponse> results = await CarpService.instance.getFileStorageReference(id).getAll();
+
+// finally, delete the file
+final int result = await CarpService.instance.getFileStorageReference(id).delete();
+
 ````
+
 
 **Data Points**
 
+A [`DataPointReference`](https://pub.dartlang.org/documentation/carp_webservices/latest/carp_services/DataPointReference-class.html)
+is used to manage [data points](http://staging.carp.cachet.dk:8080/swagger-ui.html#/data-point-controller) 
+on a CARP web service and have CRUD methods for:
 
+* post a data point
+* get a data point
+* delete data points
+
+````dart
+// Create a test location datum
+LocationDatum datum = LocationDatum.fromMap(<String, dynamic>{
+  "latitude": 23454.345,
+  "longitude": 23.4,
+  "altitude": 43.3,
+  "accuracy": 12.4,
+  "speed": 2.3,
+  "speedAccuracy": 12.3
+});
+
+// create a CARP data point
+final CARPDataPoint data = CARPDataPoint.fromDatum(study.id, study.userId, datum);
+// post it to the CARP server, which returns the ID of the data point
+data_point_id = await CarpService.instance.getDataPointReference().postDataPoint(data);
+
+// get the data point back from the server
+CARPDataPoint data = await CarpService.instance.getDataPointReference().getDataPoint(data_point_id);
+
+// delete the data point
+await CarpService.instance.getDataPointReference().deleteDataPoint(data_point_id);
+````
 
 **Collections and Objects**
- 
 
- 
-## Features and bugs
+A [`CollectionReference`](https://pub.dartlang.org/documentation/carp_webservices/latest/carp_services/CollectionReference-class.html)
+is used to manage [collections](http://staging.carp.cachet.dk:8080/swagger-ui.html#/collection-controller) 
+on a CARP web service and have methods for:
+
+* creating, updating, and deleting objects
+* accessing objects in collections
+
+`````dart
+// access an object 
+//  - if the object id is not specified, a new object (with a new id) is created
+//  - if the collection (users) don't exist, it is created
+ObjectSnapshot object = await CarpService.instance
+    .collection('/users')
+    .object()
+    .setData({'email': username, 'name': 'Administrator'});
+
+// update the object
+ObjectSnapshot updated_object = await CarpService.instance
+    .collection('/users')
+    .object(object.id)
+    .updateData({'email': username, 'name': 'Super User'});
+
+// get the object
+ObjectSnapshot new_object = await CarpService.instance.collection('/users').object(object.id).get();
+
+// delete the object
+await CarpService.instance.collection('/users').object(object.id).delete();
+
+// get all collections in the root
+List<String> root = await CarpService.instance.collection("").collections;
+
+// get all objects in a collection.
+List<ObjectSnapshot> objects = await CarpService.instance.collection("/users").objects;
+`````
+
+
+ ## Features and bugs
 
 Please file feature requests and bug reports at the [issue tracker][tracker].
 
