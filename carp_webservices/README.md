@@ -26,8 +26,9 @@ import 'package:carp_webservices/carp_service/carp_service.dart';
 
 **Configuration of `CarpService`**
 
-The `CarpService` is a singleton and needs to be configured once.
-Note that a valid `Study` with a valid study ID is needed.
+The [`CarpService`](https://pub.dartlang.org/documentation/carp_webservices/latest/carp_services/CarpService-class.html)
+is a singleton and needs to be configured once.
+Note that a valid [`Study`](https://pub.dartlang.org/documentation/carp_core/latest/carp_core/Study-class.html) with a valid study ID is needed.
 
 ````dart
 final String uri = "http://staging.carp.cachet.dk:8080";
