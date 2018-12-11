@@ -24,7 +24,7 @@ development, staging, and production servers.
 import 'package:carp_webservices/carp_service/carp_service.dart';
 ```
 
-**Configuration of `CarpService`**
+### Configuration
 
 The [`CarpService`](https://pub.dartlang.org/documentation/carp_webservices/latest/carp_services/CarpService-class.html)
 is a singleton and needs to be configured once.
@@ -49,7 +49,7 @@ CarpService.configure(app);
 
 The singleton can then be accessed via `CarpService.instance`.
 
-**Authentication**
+### Authentication
 
 Authentication is currently only supported using username and password.
 
@@ -63,7 +63,7 @@ try {
 ```
 
 
-**File Management**
+### File Management
 
 A [`FileStorageReference`](https://pub.dartlang.org/documentation/carp_webservices/latest/carp_services/FileStorageReference-class.html)
  is used to manage [files](http://staging.carp.cachet.dk:8080/swagger-ui.html#/file-controller) on a CARP web service and have methods for:
@@ -103,7 +103,7 @@ final int result = await CarpService.instance.getFileStorageReference(id).delete
 ````
 
 
-**Data Points**
+### Data Points
 
 A [`DataPointReference`](https://pub.dartlang.org/documentation/carp_webservices/latest/carp_services/DataPointReference-class.html)
 is used to manage [data points](http://staging.carp.cachet.dk:8080/swagger-ui.html#/data-point-controller) 
@@ -136,7 +136,7 @@ CARPDataPoint data = await CarpService.instance.getDataPointReference().getDataP
 await CarpService.instance.getDataPointReference().deleteDataPoint(data_point_id);
 ````
 
-**Collections and Objects**
+### Collections and Objects
 
 A [`CollectionReference`](https://pub.dartlang.org/documentation/carp_webservices/latest/carp_services/CollectionReference-class.html)
 is used to manage [collections](http://staging.carp.cachet.dk:8080/swagger-ui.html#/collection-controller) 
@@ -174,7 +174,7 @@ List<ObjectSnapshot> objects = await CarpService.instance.collection("/users").o
 `````
 
 
- ## Features and bugs
+## Features and bugs
 
 Please file feature requests and bug reports at the [issue tracker][tracker].
 
