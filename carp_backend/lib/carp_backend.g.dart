@@ -6,8 +6,8 @@ part of carp_backend;
 // JsonSerializableGenerator
 // **************************************************************************
 
-CarpEndPoint _$CarpEndPointFromJson(Map<String, dynamic> json) {
-  return CarpEndPoint(json['upload_method'] as String,
+CarpDataEndPoint _$CarpDataEndPointFromJson(Map<String, dynamic> json) {
+  return CarpDataEndPoint(json['upload_method'] as String,
       name: json['name'] as String,
       uri: json['uri'] as String,
       clientId: json['client_id'] as String,
@@ -23,7 +23,7 @@ CarpEndPoint _$CarpEndPointFromJson(Map<String, dynamic> json) {
     ..publicKey = json['public_key'] as String;
 }
 
-Map<String, dynamic> _$CarpEndPointToJson(CarpEndPoint instance) {
+Map<String, dynamic> _$CarpDataEndPointToJson(CarpDataEndPoint instance) {
   var val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {

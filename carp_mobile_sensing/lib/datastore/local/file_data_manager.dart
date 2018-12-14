@@ -21,7 +21,6 @@ class FileDataManager extends AbstractDataManager {
   File _file;
   IOSink _sink;
   bool _initialized = false;
-  //bool _flushing = false;
   int _flushingSink = 0;
 
   List<FileDataManagerListener> _listener = new List<FileDataManagerListener>();

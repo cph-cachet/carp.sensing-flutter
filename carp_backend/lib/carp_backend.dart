@@ -21,7 +21,7 @@ part 'carp_backend.g.dart';
 
 /// Specify a CARP Web Service endpoint.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class CarpEndPoint extends FileDataEndPoint {
+class CarpDataEndPoint extends FileDataEndPoint {
   /// The default collection name.
   static const String DEFAULT_COLLECTION = "carp_sensing";
 
@@ -53,17 +53,27 @@ class CarpEndPoint extends FileDataEndPoint {
   /// [collection] hold the name of the collection to store json objects.
   String collection = DEFAULT_COLLECTION;
 
-  /// Creates a [CarpEndPoint].
+  /// Creates a [CarpDataEndPoint].
   ///
   /// [uploadMethod] specified the upload method as enumerated in [CarpUploadMethod].
-  CarpEndPoint(this.uploadMethod,
-      {this.name, this.uri, this.clientId, this.clientSecret, this.email, this.password, this.collection})
+  CarpDataEndPoint(this.uploadMethod,
+      {this.name,
+      this.uri,
+      this.clientId,
+      this.clientSecret,
+      this.email,
+      this.password,
+      this.collection,
+      bufferSize,
+      zip,
+      encrypt,
+      publicKey})
       : assert(uploadMethod != null),
-        super(DataEndPointType.CARP);
+        super(type: DataEndPointType.CARP, bufferSize: bufferSize, zip: zip, encrypt: encrypt);
 
-  static Function get fromJsonFunction => _$CarpEndPointFromJson;
-  factory CarpEndPoint.fromJson(Map<String, dynamic> json) => _$CarpEndPointFromJson(json);
-  Map<String, dynamic> toJson() => _$CarpEndPointToJson(this);
+  static Function get fromJsonFunction => _$CarpDataEndPointFromJson;
+  factory CarpDataEndPoint.fromJson(Map<String, dynamic> json) => _$CarpDataEndPointFromJson(json);
+  Map<String, dynamic> toJson() => _$CarpDataEndPointToJson(this);
 }
 
 /// A enumeration of upload methods to CARP

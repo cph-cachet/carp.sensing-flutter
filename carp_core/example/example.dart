@@ -15,7 +15,7 @@ Study _study;
 Study get study {
   if (_study == null) {
     _study = new Study("1234", "bardram", name: "bardram study");
-    _study.dataEndPoint = new FileDataEndPoint(DataEndPointType.FILE);
+    _study.dataEndPoint = new FileDataEndPoint();
 
     Task task = new Task("Generic task");
     final Measure m = new Measure(Measure.GENERIC_MEASURE, name: 'Generic measure');

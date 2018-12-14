@@ -49,13 +49,13 @@ Map<String, dynamic> _$FirebaseEndPointToJson(FirebaseEndPoint instance) {
 FirebaseDatabaseDataEndPoint _$FirebaseDatabaseDataEndPointFromJson(
     Map<String, dynamic> json) {
   return FirebaseDatabaseDataEndPoint(
-      json['type'] as String,
       json['firebase_end_point'] == null
           ? null
           : FirebaseEndPoint.fromJson(
               json['firebase_end_point'] as Map<String, dynamic>),
-      json['collection'] as String)
-    ..c__ = json['c__'] as String;
+      collection: json['collection'] as String)
+    ..c__ = json['c__'] as String
+    ..type = json['type'] as String;
 }
 
 Map<String, dynamic> _$FirebaseDatabaseDataEndPointToJson(
@@ -78,13 +78,13 @@ Map<String, dynamic> _$FirebaseDatabaseDataEndPointToJson(
 FirebaseStorageDataEndPoint _$FirebaseStorageDataEndPointFromJson(
     Map<String, dynamic> json) {
   return FirebaseStorageDataEndPoint(
-      json['type'] as String,
       json['firebase_end_point'] == null
           ? null
           : FirebaseEndPoint.fromJson(
               json['firebase_end_point'] as Map<String, dynamic>),
-      json['path'] as String)
+      path: json['path'] as String)
     ..c__ = json['c__'] as String
+    ..type = json['type'] as String
     ..bufferSize = json['buffer_size'] as int
     ..zip = json['zip'] as bool
     ..encrypt = json['encrypt'] as bool
@@ -103,11 +103,11 @@ Map<String, dynamic> _$FirebaseStorageDataEndPointToJson(
 
   writeNotNull('c__', instance.c__);
   writeNotNull('type', instance.type);
+  writeNotNull('firebase_end_point', instance.firebaseEndPoint);
   writeNotNull('buffer_size', instance.bufferSize);
   writeNotNull('zip', instance.zip);
   writeNotNull('encrypt', instance.encrypt);
   writeNotNull('public_key', instance.publicKey);
-  writeNotNull('firebase_end_point', instance.firebaseEndPoint);
   writeNotNull('path', instance.path);
   return val;
 }

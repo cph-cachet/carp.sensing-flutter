@@ -177,11 +177,12 @@ with a `FirebaseEndPoint` and add it as your `Study` data endpoint.
 **Firebase Storage Endpoint**
 
 ````dart
-final FirebaseStorageDataEndPoint storageEndPoint =
-    new FirebaseStorageDataEndPoint(DataEndPointType.FIREBASE_STORAGE, firebaseEndPoint, 'sensing/data');
-
-storageEndPoint.bufferSize = 1000 * 1000;
-storageEndPoint.zip = true;
+final FirebaseStorageDataEndPoint storageEndPoint = new FirebaseStorageDataEndPoint(
+   firebaseEndPoint,
+   path: 'sensing/data', 
+   bufferSize: 500 * 1000, 
+   zip: true, 
+   encrypt: false);
 
 Study study_1 = new Study("1234", "user_1@dtu.dk", name: "Test study #1");
 study_1.dataEndPoint = storageEndPoint;
@@ -196,7 +197,7 @@ In the example above, the file buffer size is set to 1 MB, which is zipped befor
 
 ````dart
 final FirebaseDatabaseDataEndPoint databaseEndPoint =
-    new FirebaseDatabaseDataEndPoint(DataEndPointType.FIREBASE_DATABASE, firebaseEndPoint_2, 'carp_data');
+    new FirebaseDatabaseDataEndPoint(firebaseEndPoint, collection: 'carp_data');
 
 Study study_2 = new Study("5678", "user_2@dtu.dk", name: "Test study #2");
 study_2.dataEndPoint = databaseEndPoint;

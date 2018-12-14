@@ -97,7 +97,8 @@ class FileDataEndPoint extends DataEndPoint {
   String publicKey;
 
   /// Creates a [FileDataEndPoint]. [type] is defined in [DataEndPointType].
-  FileDataEndPoint(String type) : super(type);
+  FileDataEndPoint({String type, this.bufferSize, this.zip, this.encrypt, this.publicKey})
+      : super(type == null ? DataEndPointType.FILE : type);
 
   static Function get fromJsonFunction => _$FileDataEndPointFromJson;
   factory FileDataEndPoint.fromJson(Map<String, dynamic> json) =>

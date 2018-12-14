@@ -57,12 +57,13 @@ Map<String, dynamic> _$DataEndPointToJson(DataEndPoint instance) {
 }
 
 FileDataEndPoint _$FileDataEndPointFromJson(Map<String, dynamic> json) {
-  return FileDataEndPoint(json['type'] as String)
+  return FileDataEndPoint(
+      bufferSize: json['buffer_size'] as int,
+      zip: json['zip'] as bool,
+      encrypt: json['encrypt'] as bool,
+      publicKey: json['public_key'] as String)
     ..c__ = json['c__'] as String
-    ..bufferSize = json['buffer_size'] as int
-    ..zip = json['zip'] as bool
-    ..encrypt = json['encrypt'] as bool
-    ..publicKey = json['public_key'] as String;
+    ..type = json['type'] as String;
 }
 
 Map<String, dynamic> _$FileDataEndPointToJson(FileDataEndPoint instance) {

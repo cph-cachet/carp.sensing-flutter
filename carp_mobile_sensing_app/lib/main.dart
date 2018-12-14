@@ -5,9 +5,10 @@
  * found in the LICENSE file.
  */
 import 'package:flutter/material.dart';
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_firebase_backend/carp_firebase_backend.dart';
-import 'package:carp_core/carp_core.dart';
+import 'package:carp_backend/carp_backend.dart';
 
 void main() => runApp(new CARPMobileSensingApp());
 
@@ -105,6 +106,9 @@ class Console extends State<ConsolePage> {
 /// This is used to write to a log, which is displayed in a simple scrollable text view.
 /// This example uses a [FirebaseStorageDataManager] and code for registry and creation is also included.
 class Sensing implements ProbeListener {
+  final String username = "researcher";
+  final String password = "password";
+
   Console console;
   StudyExecutor executor;
 
@@ -113,6 +117,7 @@ class Sensing implements ProbeListener {
     DataManagerRegistry.register(DataEndPointType.FIREBASE_STORAGE, new FirebaseStorageDataManager());
     DataManagerRegistry.register(DataEndPointType.FIREBASE_DATABASE, new FirebaseDatabaseDataManager());
     DataManagerRegistry.register(DataEndPointType.FILE, new FileDataManager());
+    DataManagerRegistry.register(DataEndPointType.CARP, new CarpDataManager());
   }
 
   /// Callback method called by [ProbeListener]s
@@ -130,11 +135,11 @@ class Sensing implements ProbeListener {
     console.log("Setting up '${study.name}'...");
 
     // specify the [DataEndPoint] for this study.
-    study.dataEndPoint = getDataEndpoint(DataEndPointType.FIREBASE_DATABASE);
+    study.dataEndPoint = getDataEndpoint(DataEndPointType.CARP);
 
     // note that in this version, we start the sensors (accelerometer, etc.)
     // in order to generate a lot of data quickly for testing purposes
-    study.tasks.add(sensorTask);
+    //study.tasks.add(sensorTask);
     study.tasks.add(pedometerTask);
     study.tasks.add(hardwareTask);
     study.tasks.add(appTask);
@@ -171,7 +176,7 @@ class Sensing implements ProbeListener {
 
   Study get study {
     if (_study == null) {
-      _study = new Study("983476-2", "user@dtu.dk", name: "Test study #1");
+      _study = new Study("983476-2", username, name: "Test study #1");
     }
     return _study;
   }
@@ -183,24 +188,19 @@ class Sensing implements ProbeListener {
       case DataEndPointType.PRINT:
         return new DataEndPoint(DataEndPointType.PRINT);
       case DataEndPointType.FILE:
-        final FileDataEndPoint fileEndPoint = new FileDataEndPoint(DataEndPointType.FILE);
-        fileEndPoint.bufferSize = 500 * 1000;
-        fileEndPoint.zip = true;
-        fileEndPoint.encrypt = false;
-        return fileEndPoint;
+        return FileDataEndPoint(bufferSize: 500 * 1000, zip: true, encrypt: false);
+      case DataEndPointType.CARP:
+        return CarpDataEndPoint(CarpUploadMethod.DATA_POINT,
+            name: 'CARP Staging Server',
+            uri: 'http://staging.carp.cachet.dk:8080',
+            clientId: 'carp',
+            clientSecret: 'carp',
+            email: study.userId,
+            password: password);
       case DataEndPointType.FIREBASE_STORAGE:
-        final FirebaseStorageDataEndPoint storageEndPoint =
-            new FirebaseStorageDataEndPoint(DataEndPointType.FIREBASE_STORAGE, firebaseEndPoint, 'sensing/data');
-
-        storageEndPoint.bufferSize = 50 * 1000;
-        storageEndPoint.zip = true;
-
-        return storageEndPoint;
+        return FirebaseStorageDataEndPoint(firebaseEndPoint, path: 'sensing/data', bufferSize: 50 * 1000, zip: true);
       case DataEndPointType.FIREBASE_DATABASE:
-        final FirebaseDatabaseDataEndPoint databaseEndPoint =
-            new FirebaseDatabaseDataEndPoint(DataEndPointType.FIREBASE_DATABASE, firebaseEndPoint, 'carp_data');
-
-        return databaseEndPoint;
+        return FirebaseDatabaseDataEndPoint(firebaseEndPoint, collection: 'carp_data');
       default:
         return new DataEndPoint(DataEndPointType.PRINT);
     }
