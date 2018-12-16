@@ -108,6 +108,10 @@ class Console extends State<ConsolePage> {
 class Sensing implements ProbeListener {
   final String username = "researcher";
   final String password = "password";
+  final String uri = "http://staging.carp.cachet.dk:8080";
+  final String clientID = "carp";
+  final String clientSecret = "carp";
+  final String testStudyId = "8";
 
   Console console;
   StudyExecutor executor;
@@ -139,7 +143,7 @@ class Sensing implements ProbeListener {
 
     // note that in this version, we start the sensors (accelerometer, etc.)
     // in order to generate a lot of data quickly for testing purposes
-    //study.tasks.add(sensorTask);
+    study.tasks.add(sensorTask);
     study.tasks.add(pedometerTask);
     study.tasks.add(hardwareTask);
     study.tasks.add(appTask);
@@ -176,7 +180,7 @@ class Sensing implements ProbeListener {
 
   Study get study {
     if (_study == null) {
-      _study = new Study("983476-2", username, name: "Test study #1");
+      _study = new Study(testStudyId, username, name: "Test study #1");
     }
     return _study;
   }
@@ -190,13 +194,22 @@ class Sensing implements ProbeListener {
       case DataEndPointType.FILE:
         return FileDataEndPoint(bufferSize: 500 * 1000, zip: true, encrypt: false);
       case DataEndPointType.CARP:
-        return CarpDataEndPoint(CarpUploadMethod.DATA_POINT,
+//        return CarpDataEndPoint(CarpUploadMethod.DATA_POINT,
+//            name: 'CARP Staging Server',
+//            uri: uri,
+//            clientId: clientID,
+//            clientSecret: clientSecret,
+//            email: study.userId,
+//            password: password);
+        return CarpDataEndPoint(CarpUploadMethod.FILE,
             name: 'CARP Staging Server',
-            uri: 'http://staging.carp.cachet.dk:8080',
-            clientId: 'carp',
-            clientSecret: 'carp',
+            uri: uri,
+            clientId: clientID,
+            clientSecret: clientSecret,
             email: study.userId,
-            password: password);
+            password: password,
+            bufferSize: 500 * 1000,
+            zip: true);
       case DataEndPointType.FIREBASE_STORAGE:
         return FirebaseStorageDataEndPoint(firebaseEndPoint, path: 'sensing/data', bufferSize: 50 * 1000, zip: true);
       case DataEndPointType.FIREBASE_DATABASE:

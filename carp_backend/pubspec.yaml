@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   json_annotation: ^1.0.0
-  carp_core: ^0.1.0                   # The core CARP domain model
+  carp_core: ^0.1.2                   # The core CARP domain model
   carp_mobile_sensing: ^0.2.4
   carp_webservices: 0.1.1
 

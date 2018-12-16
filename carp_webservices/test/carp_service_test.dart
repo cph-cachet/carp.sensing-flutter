@@ -65,7 +65,7 @@ void main() {
 
       final CARPDataPoint data = CARPDataPoint.fromDatum(study.id, study.userId, datum);
 
-      //print(_encode(data.toJson()));
+      print(_encode(data.toJson()));
 
       data_point_id = await CarpService.instance.getDataPointReference().postDataPoint(data);
 

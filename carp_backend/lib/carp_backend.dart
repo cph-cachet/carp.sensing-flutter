@@ -64,12 +64,12 @@ class CarpDataEndPoint extends FileDataEndPoint {
       this.email,
       this.password,
       this.collection,
-      bufferSize,
-      zip,
-      encrypt,
+      bufferSize = 500 * 1000, // default buffer size = 500 MB
+      zip = true, // zip file pr. default
+      encrypt = false, // don't encrypt pr. default
       publicKey})
       : assert(uploadMethod != null),
-        super(type: DataEndPointType.CARP, bufferSize: bufferSize, zip: zip, encrypt: encrypt);
+        super(type: DataEndPointType.CARP, bufferSize: bufferSize, zip: zip, encrypt: encrypt, publicKey: publicKey);
 
   static Function get fromJsonFunction => _$CarpDataEndPointFromJson;
   factory CarpDataEndPoint.fromJson(Map<String, dynamic> json) => _$CarpDataEndPointFromJson(json);

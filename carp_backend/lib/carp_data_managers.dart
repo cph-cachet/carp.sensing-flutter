@@ -7,6 +7,8 @@
 
 part of carp_backend;
 
+String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
+
 /// Stores CARP json objects in the CARP backend.
 ///
 ///
@@ -33,6 +35,7 @@ class CarpDataManager extends AbstractDataManager implements FileDataManagerList
       // Create a [FileDataManager] and wrap it.
       fileDataManager = new FileDataManager();
       fileDataManager.addFileDataManagerListener(this);
+      fileDataManager.initialize(study);
     }
     await user; // This will trigger authentication to the CARP server
   }
@@ -60,13 +63,13 @@ class CarpDataManager extends AbstractDataManager implements FileDataManagerList
 
   /// Handle upload of data depending on the specified [CarpUploadMethod].
   Future<bool> uploadData(Datum data) async {
-    print(">> upload() - data : $data");
+    print(">> $data");
     assert(data is CARPDatum);
 
     // Check if CARP authentication is ready before writing...
     if (!_initialized) {
-      print("waiting for CARP authentication -- delaying for 1 sec...");
-      return Future.delayed(const Duration(seconds: 1), () => uploadData(data));
+      print("waiting for CARP authentication -- delaying for 10 sec...");
+      return Future.delayed(const Duration(seconds: 10), () => uploadData(data));
     }
 
     await user;
@@ -83,7 +86,10 @@ class CarpDataManager extends AbstractDataManager implements FileDataManagerList
           // Forward to [FileDataManager]
           return fileDataManager.uploadData(data);
         case CarpUploadMethod.OBJECT:
-          return (await CarpService.instance.collection('/users').object().setData(json.decode(json.encode(data))) !=
+          return (await CarpService.instance
+                  .collection('/${carpEndPoint.collection}')
+                  .object()
+                  .setData(json.decode(json.encode(data))) !=
               null);
       }
     }
@@ -106,7 +112,7 @@ class CarpDataManager extends AbstractDataManager implements FileDataManagerList
   Future<int> _uploadFileToCarp(String path) async {
     //final String filename = localFilePath.substring(localFilePath.lastIndexOf('/') + 1);
 
-    print("Upload to Firestore started - path : '$path'");
+    print("Upload to CARP started - path : '$path'");
 
     final File file = File(path);
     final String deviceID = Device.deviceID.toString();
@@ -121,10 +127,10 @@ class CarpDataManager extends AbstractDataManager implements FileDataManagerList
     CarpFileResponse response = await uploadTask.onComplete;
     int id = response.id;
 
-    print("Upload to Firestore finished - remote id : $id ");
+    print("Upload to CARP finished - remote id : $id ");
     // then delete the local file.
     file.delete();
-    print("File deleted : ${file.path}");
+    print("Local file deleted : ${file.path}");
 
     return id;
   }
