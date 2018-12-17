@@ -69,6 +69,7 @@ is used to manage [data points](http://staging.carp.cachet.dk:8080/swagger-ui.ht
 on a CARP web service and have CRUD methods for:
 
 * post a data point
+* batch upload multiple data points
 * get a data point
 * delete data points
 

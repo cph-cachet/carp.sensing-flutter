@@ -3,16 +3,21 @@
 This package supports uploading of data from the [CARP Mobile Sensing Framework](https://github.com/cph-cachet/carp.sensing) 
 to the [CARP web service backend](https://github.com/cph-cachet/carp.webservices).
 
-## Using the Plugin
-
-Upload of sensing data to the CARP server uses the `CarpDataManager` and support four different ways to upload data:
+Upload of sensing data to the CARP web service can be done in four different ways:
 
 * as [CARP data points](http://staging.carp.cachet.dk:8080/swagger-ui.html#/data-point-controller)
 * as a CARP object in a [collection](http://staging.carp.cachet.dk:8080/swagger-ui.html#/collection-controller)
 * as a file to the CARP [file store](http://staging.carp.cachet.dk:8080/swagger-ui.html#/file-controller)
 * [bulk upload](http://staging.carp.cachet.dk:8080/swagger-ui.html#/data-point-controller/createManyUsingPOST) of data point via a file
 
+## Using the Plugin
 
+Add `carp_services` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/) 
+and import the library.
+
+```dart
+import 'package:carp_webservices/carp_service/carp_service.dart';
+```
 
 Using the library takes three steps.
 
