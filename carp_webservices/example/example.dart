@@ -81,6 +81,10 @@ void main() async {
   // get the data point back from the server
   CARPDataPoint data_point = await CarpService.instance.getDataPointReference().getDataPoint(data_point_id);
 
+  // batch upload a list of raw json data points in a file
+  final File file = File("test/batch.json");
+  await CarpService.instance.getDataPointReference().batchPostDataPoint(file);
+
   // delete the data point
   await CarpService.instance.getDataPointReference().deleteDataPoint(data_point_id);
 

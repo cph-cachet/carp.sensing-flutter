@@ -1,6 +1,7 @@
 # CARP Data Backend
 
-This package supports uploading of data from the [CARP Mobile Sensing Framework](https://github.com/cph-cachet/carp.sensing) to the CARP data backend.
+This package supports uploading of data from the [CARP Mobile Sensing Framework](https://github.com/cph-cachet/carp.sensing) 
+to the [CARP web service backend](https://github.com/cph-cachet/carp.webservices).
 
 ## Using the Plugin
 
@@ -52,6 +53,21 @@ A `CarpDataEndPoint` that uploads data as zipped files looks like this:
       password: password,
       bufferSize: 500 * 1000,
       zip: true);
+`````
+
+And a `CarpDataEndPoint` that bulk uploads data points in a json files looks like this:
+
+
+`````dart
+  CarpDataEndPoint cdep_3 = CarpDataEndPoint(CarpUploadMethod.BATCH_DATA_POINT,
+      name: 'CARP Staging Server',
+      uri: uri,
+      clientId: clientID,
+      clientSecret: clientSecret,
+      email: username,
+      password: password,
+      bufferSize: 500 * 1000);
+
 `````
 
 ### 3. Assign the CARP Data Endpoint to your Study
