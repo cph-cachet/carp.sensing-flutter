@@ -32,6 +32,16 @@ void main() {
       bufferSize: 500 * 1000,
       zip: true);
 
+  // using the batch upload method could also take information on file size, but the file must NOT be zipped
+  CarpDataEndPoint cdep_3 = CarpDataEndPoint(CarpUploadMethod.BATCH_DATA_POINT,
+      name: 'CARP Staging Server',
+      uri: uri,
+      clientId: clientID,
+      clientSecret: clientSecret,
+      email: username,
+      password: password,
+      bufferSize: 500 * 1000);
+
   // create a study and allocate this data point to it.
   Study study = new Study(testStudyId, username, name: "Test study #$testStudyId");
   study.dataEndPoint = cdep;

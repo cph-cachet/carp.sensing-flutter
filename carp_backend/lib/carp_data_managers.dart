@@ -31,7 +31,11 @@ class CarpDataManager extends AbstractDataManager implements FileDataManagerList
     assert(study.dataEndPoint is CarpDataEndPoint);
     carpEndPoint = study.dataEndPoint as CarpDataEndPoint;
 
-    if (carpEndPoint.uploadMethod == CarpUploadMethod.FILE) {
+    if ((carpEndPoint.uploadMethod == CarpUploadMethod.FILE) ||
+        (carpEndPoint.uploadMethod == CarpUploadMethod.BATCH_DATA_POINT)) {
+      // make sure that files are not zipped if using batch upload
+      assert(carpEndPoint.uploadMethod == CarpUploadMethod.BATCH_DATA_POINT ? carpEndPoint.zip == false : true);
+
       // Create a [FileDataManager] and wrap it.
       fileDataManager = new FileDataManager();
       fileDataManager.addFileDataManagerListener(this);
@@ -81,7 +85,6 @@ class CarpDataManager extends AbstractDataManager implements FileDataManagerList
                   .postDataPoint(CARPDataPoint.fromDatum(study.id, study.userId, data)) !=
               null);
         case CarpUploadMethod.BATCH_DATA_POINT:
-          throw UnimplementedError;
         case CarpUploadMethod.FILE:
           // Forward to [FileDataManager]
           return fileDataManager.uploadData(data);
@@ -99,7 +102,6 @@ class CarpDataManager extends AbstractDataManager implements FileDataManagerList
 
   /// Called by the [FileDataManager]
   Future notify(FileDataManagerEvent event) async {
-    print("CarpDataManager : {event: ${event.event}, path : ${event.path}");
     switch (event.event) {
       case FileEvent.created:
         break;
@@ -109,30 +111,35 @@ class CarpDataManager extends AbstractDataManager implements FileDataManagerList
     }
   }
 
-  Future<int> _uploadFileToCarp(String path) async {
-    //final String filename = localFilePath.substring(localFilePath.lastIndexOf('/') + 1);
-
-    print("Upload to CARP started - path : '$path'");
-
+  Future<void> _uploadFileToCarp(String path) async {
+    print("File upload to CARP started - path : '$path'");
     final File file = File(path);
+
     final String deviceID = Device.deviceID.toString();
     final String studyID = study.id;
     final String userID = (await user).email;
 
-    final FileUploadTask uploadTask = CarpService.instance
-        .getFileStorageReference()
-        .upload(file, {'device_id': '$deviceID', 'study_id': '$studyID', 'user_id': '$userID'});
+    switch (carpEndPoint.uploadMethod) {
+      case CarpUploadMethod.BATCH_DATA_POINT:
+        await CarpService.instance.getDataPointReference().batchPostDataPoint(file);
+        print("Batch upload to CARP finished");
+        break;
+      case CarpUploadMethod.FILE:
+        final FileUploadTask uploadTask = CarpService.instance
+            .getFileStorageReference()
+            .upload(file, {'device_id': '$deviceID', 'study_id': '$studyID', 'user_id': '$userID'});
 
-    // await the upload is successful
-    CarpFileResponse response = await uploadTask.onComplete;
-    int id = response.id;
+        // await the upload is successful
+        CarpFileResponse response = await uploadTask.onComplete;
+        int id = response.id;
 
-    print("Upload to CARP finished - remote id : $id ");
+        print("File upload to CARP finished - remote id : $id ");
+        break;
+    }
+
     // then delete the local file.
     file.delete();
     print("Local file deleted : ${file.path}");
-
-    return id;
   }
 
   Future close() async {

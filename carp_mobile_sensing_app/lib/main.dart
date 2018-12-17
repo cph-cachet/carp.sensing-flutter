@@ -201,14 +201,14 @@ class Sensing implements ProbeListener {
 //            clientSecret: clientSecret,
 //            email: study.userId,
 //            password: password);
-        return CarpDataEndPoint(CarpUploadMethod.FILE,
+        return CarpDataEndPoint(CarpUploadMethod.BATCH_DATA_POINT,
             name: 'CARP Staging Server',
             uri: uri,
             clientId: clientID,
             clientSecret: clientSecret,
             email: study.userId,
             password: password,
-            bufferSize: 500 * 1000,
+            bufferSize: 50 * 1000,
             zip: true);
       case DataEndPointType.FIREBASE_STORAGE:
         return FirebaseStorageDataEndPoint(firebaseEndPoint, path: 'sensing/data', bufferSize: 50 * 1000, zip: true);

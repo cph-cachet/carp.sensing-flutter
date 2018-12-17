@@ -73,6 +73,11 @@ void main() {
       print("data_point_id : $data_point_id");
     });
 
+    test('- batch', () async {
+      final File file = File("test/batch.json");
+      await CarpService.instance.getDataPointReference().batchPostDataPoint(file);
+    });
+
     test('- get', () async {
       CARPDataPoint data = await CarpService.instance.getDataPointReference().getDataPoint(data_point_id);
 
