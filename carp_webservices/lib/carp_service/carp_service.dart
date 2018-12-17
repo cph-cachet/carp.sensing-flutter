@@ -88,9 +88,6 @@ class CarpService {
       "password": "$password"
     };
 
-    print(loginHeader);
-    print(loginBody);
-
     final String url = "${_app.uri.toString()}${_app.oauth.path.toString()}";
     http.Response response = await http.post(
       Uri.encodeFull(url),

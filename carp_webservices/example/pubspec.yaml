@@ -1,6 +1,6 @@
-name: carp_core
-description: The CARP Flutter domain model. The core domain model used across all CARP Flutter plugins.
-version: 0.1.2
+name: carp_webservices_example
+description: An small example of how to usee the CARP web service package.
+version: 0.0.1
 author:  CACHET Team <cph.cachet@gmail.com>
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_core
 
@@ -10,15 +10,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  uuid: ^1.0.0
-  device_info: ^0.2.1
-  json_annotation: ^1.0.0
+
+  carp_webservices:
+    path: ../
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  build_runner:
-  json_serializable: ^1.0.0
 
 
 # The following section is specific to Flutter.

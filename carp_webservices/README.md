@@ -62,6 +62,82 @@ try {
 }
 ```
 
+### Data Points
+
+A [`DataPointReference`](https://pub.dartlang.org/documentation/carp_webservices/latest/carp_services/DataPointReference-class.html)
+is used to manage [data points](http://staging.carp.cachet.dk:8080/swagger-ui.html#/data-point-controller) 
+on a CARP web service and have CRUD methods for:
+
+* post a data point
+* batch upload multiple data points
+* get a data point
+* delete data points
+
+````dart
+// Create a test location datum
+LocationDatum datum = LocationDatum.fromMap(<String, dynamic>{
+  "latitude": 23454.345,
+  "longitude": 23.4,
+  "altitude": 43.3,
+  "accuracy": 12.4,
+  "speed": 2.3,
+  "speedAccuracy": 12.3
+});
+
+// create a CARP data point
+final CARPDataPoint data = CARPDataPoint.fromDatum(study.id, study.userId, datum);
+// post it to the CARP server, which returns the ID of the data point
+data_point_id = await CarpService.instance.getDataPointReference().postDataPoint(data);
+
+// get the data point back from the server
+CARPDataPoint data = await CarpService.instance.getDataPointReference().getDataPoint(data_point_id);
+
+// batch upload a list of raw json data points in a file
+final File file = File("test/batch.json");
+await CarpService.instance.getDataPointReference().batchPostDataPoint(file);
+
+// delete the data point
+await CarpService.instance.getDataPointReference().deleteDataPoint(data_point_id);
+````
+
+
+### Application-specific Collections and Objects
+
+A [`CollectionReference`](https://pub.dartlang.org/documentation/carp_webservices/latest/carp_services/CollectionReference-class.html)
+is used to manage [collections](http://staging.carp.cachet.dk:8080/swagger-ui.html#/collection-controller) 
+on a CARP web service and have methods for:
+
+* creating, updating, and deleting objects
+* accessing objects in collections
+
+`````dart
+// access an object 
+//  - if the object id is not specified, a new object (with a new id) is created
+//  - if the collection (users) don't exist, it is created
+ObjectSnapshot object = await CarpService.instance
+    .collection('/users')
+    .object()
+    .setData({'email': username, 'name': 'Administrator'});
+
+// update the object
+ObjectSnapshot updated_object = await CarpService.instance
+    .collection('/users')
+    .object(object.id)
+    .updateData({'email': username, 'name': 'Super User'});
+
+// get the object
+ObjectSnapshot new_object = await CarpService.instance.collection('/users').object(object.id).get();
+
+// delete the object
+await CarpService.instance.collection('/users').object(object.id).delete();
+
+// get all collections in the root
+List<String> root = await CarpService.instance.collection("").collections;
+
+// get all objects in a collection.
+List<ObjectSnapshot> objects = await CarpService.instance.collection("/users").objects;
+`````
+
 
 ### File Management
 
@@ -101,77 +177,6 @@ final List<CarpFileResponse> results = await CarpService.instance.getFileStorage
 final int result = await CarpService.instance.getFileStorageReference(id).delete();
 
 ````
-
-
-### Data Points
-
-A [`DataPointReference`](https://pub.dartlang.org/documentation/carp_webservices/latest/carp_services/DataPointReference-class.html)
-is used to manage [data points](http://staging.carp.cachet.dk:8080/swagger-ui.html#/data-point-controller) 
-on a CARP web service and have CRUD methods for:
-
-* post a data point
-* get a data point
-* delete data points
-
-````dart
-// Create a test location datum
-LocationDatum datum = LocationDatum.fromMap(<String, dynamic>{
-  "latitude": 23454.345,
-  "longitude": 23.4,
-  "altitude": 43.3,
-  "accuracy": 12.4,
-  "speed": 2.3,
-  "speedAccuracy": 12.3
-});
-
-// create a CARP data point
-final CARPDataPoint data = CARPDataPoint.fromDatum(study.id, study.userId, datum);
-// post it to the CARP server, which returns the ID of the data point
-data_point_id = await CarpService.instance.getDataPointReference().postDataPoint(data);
-
-// get the data point back from the server
-CARPDataPoint data = await CarpService.instance.getDataPointReference().getDataPoint(data_point_id);
-
-// delete the data point
-await CarpService.instance.getDataPointReference().deleteDataPoint(data_point_id);
-````
-
-### Collections and Objects
-
-A [`CollectionReference`](https://pub.dartlang.org/documentation/carp_webservices/latest/carp_services/CollectionReference-class.html)
-is used to manage [collections](http://staging.carp.cachet.dk:8080/swagger-ui.html#/collection-controller) 
-on a CARP web service and have methods for:
-
-* creating, updating, and deleting objects
-* accessing objects in collections
-
-`````dart
-// access an object 
-//  - if the object id is not specified, a new object (with a new id) is created
-//  - if the collection (users) don't exist, it is created
-ObjectSnapshot object = await CarpService.instance
-    .collection('/users')
-    .object()
-    .setData({'email': username, 'name': 'Administrator'});
-
-// update the object
-ObjectSnapshot updated_object = await CarpService.instance
-    .collection('/users')
-    .object(object.id)
-    .updateData({'email': username, 'name': 'Super User'});
-
-// get the object
-ObjectSnapshot new_object = await CarpService.instance.collection('/users').object(object.id).get();
-
-// delete the object
-await CarpService.instance.collection('/users').object(object.id).delete();
-
-// get all collections in the root
-List<String> root = await CarpService.instance.collection("").collections;
-
-// get all objects in a collection.
-List<ObjectSnapshot> objects = await CarpService.instance.collection("/users").objects;
-`````
 
 
 ## Features and bugs

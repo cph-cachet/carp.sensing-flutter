@@ -15,28 +15,14 @@ enum TaskStateType {
 }
 
 abstract class CarpServiceTask {
-  FileStorageReference reference;
-  TaskStateType _state = TaskStateType.idle;
-
-  bool isCanceled = false;
-  bool isComplete = false;
-  bool isInProgress = true;
-  bool isSuccessful = false;
-
   CarpServiceTask._(this.reference);
 
+  FileStorageReference reference;
+  TaskStateType _state = TaskStateType.idle;
   TaskStateType get state => _state;
 
-  void _resetState() {
-    isCanceled = false;
-    isComplete = false;
-    isInProgress = false;
-    isSuccessful = false;
-    _state = TaskStateType.idle;
-  }
-
   /// Start this task.
-  Future<void> _start() {
+  Future _start() {
     _state = TaskStateType.working;
   }
 

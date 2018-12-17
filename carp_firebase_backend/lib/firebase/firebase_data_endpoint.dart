@@ -84,8 +84,9 @@ class FirebaseDatabaseDataEndPoint extends DataEndPoint with FirebaseDataEndPoin
   /// be stored as documents in "carp_data/1234/987234/".
   String collection;
 
-  /// Creates a [FirebaseDatabaseDataEndPoint]. [type] is defined in [DataEndPointType].
-  FirebaseDatabaseDataEndPoint(String type, FirebaseEndPoint firebaseEndPoint, this.collection) : super(type) {
+  /// Creates a [FirebaseDatabaseDataEndPoint].
+  FirebaseDatabaseDataEndPoint(FirebaseEndPoint firebaseEndPoint, {this.collection})
+      : super(DataEndPointType.FIREBASE_DATABASE) {
     this.firebaseEndPoint = firebaseEndPoint;
   }
 
@@ -106,8 +107,9 @@ class FirebaseStorageDataEndPoint extends FileDataEndPoint with FirebaseDataEndP
   /// be stored in "sensing/data/1234/987234/".
   String path;
 
-  /// Creates a [FirebaseStorageDataEndPoint]. [type] is defined in [DataEndPointType].
-  FirebaseStorageDataEndPoint(String type, FirebaseEndPoint firebaseEndPoint, this.path) : super(type) {
+  /// Creates a [FirebaseStorageDataEndPoint].
+  FirebaseStorageDataEndPoint(FirebaseEndPoint firebaseEndPoint, {this.path, bufferSize, zip, encrypt, publicKey})
+      : super(type: DataEndPointType.FIREBASE_STORAGE, bufferSize: bufferSize, zip: zip, encrypt: encrypt) {
     this.firebaseEndPoint = firebaseEndPoint;
   }
 

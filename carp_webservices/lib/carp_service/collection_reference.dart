@@ -78,8 +78,6 @@ class CollectionReference extends CarpReference {
           List<dynamic> server_list = json.decode(response.body);
           List<ObjectSnapshot> objects = new List<ObjectSnapshot>();
           for (var item in server_list) {
-            //print(json.encode(item));
-            //Map<String, dynamic> objectJson = json.decode(item);
             Map<String, dynamic> objectJson = item;
             String key = objectJson["id"];
             objects.add(ObjectSnapshot._("$path/$key", objectJson));

@@ -1,3 +1,6 @@
+## 0.1.2
+* misc. refactor to support upload to CARP web service backend in `carp_backend` library.
+
 ## 0.1.1
 * added `pubspec.yaml` to example.dart
 

@@ -23,9 +23,6 @@ class DataPointReference extends CarpReference {
     final String url = "${dataEndpointUri}";
     final rest_headers = await headers;
 
-    print("url : $url");
-    print("headers : $headers");
-
     http.Response response = await http.post(Uri.encodeFull(url), headers: rest_headers, body: json.encode(data));
 
     int httpStatusCode = response.statusCode;
@@ -47,6 +44,49 @@ class DataPointReference extends CarpReference {
               description: description, httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
         }
     }
+  }
+
+  /// Batch upload a file with [CARPDataPoint]s to the CARP backend using HTTP POST.
+  ///
+  /// A file can be created using a [FileDataManager] in `carp_mobile_sensing`.
+  /// Note that the file should be raw JSON, and hence not zipped.
+  ///
+  /// Returns if successful. Throws an [CarpServiceException] if not.
+  Future<void> batchPostDataPoint(File file) async {
+    assert(file != null);
+    final String url = "${dataEndpointUri}/batch";
+    final rest_headers = await headers;
+
+    var request = new http.MultipartRequest("POST", Uri.parse(url));
+    request.headers['Authorization'] = rest_headers['Authorization'];
+    request.headers['Content-Type'] = 'multipart/form-data';
+    request.headers['cache-control'] = 'no-cache';
+
+    request.files.add(new http.MultipartFile.fromBytes('file', file != null ? file.readAsBytesSync() : new List<int>(),
+        filename: file != null ? file.path : '', contentType: MediaType('application', 'json')));
+
+    request.send().then((response) {
+      final int httpStatusCode = response.statusCode;
+
+      switch (httpStatusCode) {
+        // CARP web service returns "200 OK" or "201 Created" when a file is uploaded to the server.
+        case 200:
+        case 201:
+          {
+            return;
+          }
+        default:
+          {
+            response.stream.toStringStream().first.then((body) {
+              final Map<String, dynamic> map = json.decode(body);
+              final String error = map["error"];
+              final String description = map["error_description"];
+              final HTTPStatus status = HTTPStatus(httpStatusCode, response.reasonPhrase);
+              throw CarpServiceException(error, description: description, httpStatus: status);
+            });
+          }
+      }
+    });
   }
 
   /// Get a [CARPDataPoint] from the CARP backend using HTTP GET
