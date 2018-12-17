@@ -8,22 +8,22 @@ Upload of sensing data to the CARP web service can be done in four different way
 * as [CARP data points](http://staging.carp.cachet.dk:8080/swagger-ui.html#/data-point-controller)
 * as a CARP object in a [collection](http://staging.carp.cachet.dk:8080/swagger-ui.html#/collection-controller)
 * as a file to the CARP [file store](http://staging.carp.cachet.dk:8080/swagger-ui.html#/file-controller)
-* [bulk upload](http://staging.carp.cachet.dk:8080/swagger-ui.html#/data-point-controller/createManyUsingPOST) of data point via a file
-
+* [batch upload](http://staging.carp.cachet.dk:8080/swagger-ui.html#/data-point-controller)
 ## Using the Plugin
 
-Add `carp_services` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/) 
-and import the library.
+Add `carp_backend` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/) 
+and import the library along with the [`carp_core`](https://pub.dartlang.org/packages/carp_core) library.
 
 ```dart
-import 'package:carp_webservices/carp_service/carp_service.dart';
+import 'package:carp_core/carp_core.dart';
+import 'package:carp_backend/carp_backend.dart';
 ```
 
 Using the library takes three steps.
 
 ### 1. Register the Data Manager
 
-First you should register the data manager you want to use (or both) in the `DataManagerRegistry`.
+First you should register the data manager in the [`DataManagerRegistry`](https://pub.dartlang.org/documentation/carp_core/latest/carp_core/DataManagerRegistry-class.html).
 
 ````dart
 DataManagerRegistry.register(DataEndPointType.CARP, new CarpDataManager());
@@ -60,7 +60,7 @@ A `CarpDataEndPoint` that uploads data as zipped files looks like this:
       zip: true);
 `````
 
-And a `CarpDataEndPoint` that bulk uploads data points in a json files looks like this:
+And a `CarpDataEndPoint` that batch uploads data points in a json files looks like this:
 
 
 `````dart
@@ -100,11 +100,3 @@ Please file feature requests and bug reports at the [issue tracker][tracker].
 This software is copyright (c) 2018 [Copenhagen Center for Health Technology (CACHET)](http://www.cachet.dk/) at the [Technical University of Denmark (DTU)](http://www.dtu.dk).
 This software is made available 'as-is' in a MIT [license](/LICENSE).
 
-
-
-
-## Getting Started with Flutter
-
-For help getting started with Flutter, view our online [documentation](https://flutter.io/).
-
-For help on editing package code, view the [documentation](https://flutter.io/developing-packages/).
