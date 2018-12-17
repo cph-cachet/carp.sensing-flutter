@@ -3,6 +3,11 @@
 This package supports uploading of data from the [CARP Mobile Sensing Framework](https://github.com/cph-cachet/carp.sensing) 
 to the [CARP web service backend](https://github.com/cph-cachet/carp.webservices).
 
+[![pub package](https://img.shields.io/pub/v/carp_backend.svg)](https://pub.dartlang.org/packages/carp_backend)
+
+For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/README.md).
+
+
 Upload of sensing data to the CARP web service can be done in four different ways:
 
 * as [CARP data points](http://staging.carp.cachet.dk:8080/swagger-ui.html#/data-point-controller)

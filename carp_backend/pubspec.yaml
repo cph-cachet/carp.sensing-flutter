@@ -1,9 +1,8 @@
 name: carp_backend
 description: CARP data backend for CARP mobile sensing. Supports uploading json to CARP as either zipped filed or as plain json in collections.
-version: 0.1.0
+version: 0.1.1
 author: CACHET Team <cph.cachet@gmail.com>
-homepage: https://github.com/cph-cachet/carp.sensing/tree/master/flutter/carp_backend
-
+homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_backend
 environment:
   sdk: ">=2.0.0-dev <3.0.0"
 
