@@ -24,20 +24,19 @@ class ProbeRegistry {
   static const String BLUETOOTH_MEASURE = "bluetooth";
   static const String AUDIO_MEASURE = "audio";
   static const String NOISE_MEASURE = "noise";
-  static const String NOICE_MEASURE = "noice";
   static const String LOCATION_MEASURE = "location";
   static const String CONNECTIVITY_MEASURE = "connectivity";
   static const String LIGHT_MEASURE = "light";
   static const String APPS_MEASURE = "apps";
   static const String APP_USAGE_MEASURE = "app_usage";
-  static const String TEXT_MESSAGE_LOG_MEASURE = "text_message_log";
-  static const String TEXT_MESSAGE_MEASURE = "text_message";
+  static const String TEXT_MESSAGE_LOG_MEASURE = "text-message-log";
+  static const String TEXT_MESSAGE_MEASURE = "text-message";
   static const String SCREEN_MEASURE = "screen";
   static const String PHONELOG_MEASURE = "phone_log";
   static const String SOUND_MEASURE = "sound";
   static const String ACTIVITY_MEASURE = "activity";
-  static const String APPLE_HEALTHKIT_MEASURE = "apple_healthkit";
-  static const String GOOGLE_FIT_MEASURE = "google_fit";
+  static const String APPLE_HEALTHKIT_MEASURE = "apple-healthkit";
+  static const String GOOGLE_FIT_MEASURE = "google-fit";
   static const String WEATHER_MEASURE = "weather";
 
   static List<Probe> _probes = new List();

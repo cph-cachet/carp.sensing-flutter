@@ -1,10 +1,11 @@
 part of apps;
 
+/// A probe collecting app information about installed apps on the device
 class AppUsageProbe extends PollingProbe {
   AppUsage _appUsage;
   int _frequency, _duration;
 
-  /// Initialize an [AppUsageProbe] taking a [SensorMeasure] as configuration.
+  /// Initialize an [AppUsageProbe] taking a [AppUsageMeasure] as configuration.
   AppUsageProbe(AppUsageMeasure _measure)
       : assert(_measure != null),
         super(_measure);
@@ -35,9 +36,7 @@ class AppUsageProbe extends PollingProbe {
   }
 
   @override
-  void resume() {
-
-  }
+  void resume() {}
 
   @override
   void pause() async {
@@ -49,8 +48,7 @@ class AppUsageProbe extends PollingProbe {
   Future<Datum> getDatum() async {
     _appUsage = new AppUsage();
     DateTime end = DateTime.now();
-    DateTime start = DateTime.fromMillisecondsSinceEpoch(
-        end.millisecondsSinceEpoch - _duration);
+    DateTime start = DateTime.fromMillisecondsSinceEpoch(end.millisecondsSinceEpoch - _duration);
 
     print('Start date: $start');
     print('End date: $end');

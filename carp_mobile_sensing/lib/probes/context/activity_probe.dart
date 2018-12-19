@@ -7,8 +7,8 @@
 
 part of activity;
 
-/// Collects location information from the underlying OS's location API.
-/// Is a [ListeningProbe] that generates a [ActivityDatum] every time location is changed.
+/// Collects activity information from the underlying OS's activity recognition API.
+/// Is a [ListeningProbe] that generates a [ActivityDatum] every time an activity is detected.
 class ActivityProbe extends StreamSubscriptionListeningProbe {
   /// A [ActivityProbe] is a listening probe and takes a [ListeningProbeMeasure] as configuration.
   ActivityProbe(ListeningProbeMeasure measure) : super(measure);
@@ -24,8 +24,8 @@ class ActivityProbe extends StreamSubscriptionListeningProbe {
 
     // starting the subscription to the activity recognition service
     try {
-      subscription = ActivityRecognition.activityUpdates().listen(onData,
-          onError: onError, onDone: onDone, cancelOnError: true);
+      subscription =
+          ActivityRecognition.activityUpdates().listen(onData, onError: onError, onDone: onDone, cancelOnError: true);
     } catch (error) {
       onError(error);
     }

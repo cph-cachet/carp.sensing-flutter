@@ -26,7 +26,7 @@ class LightProbe extends ListeningProbe {
   @override
   Future start() async {
     super.start();
-    // starting the subscription to the accelerometer events
+    // starting the subscription to the light events
     _subscription = _light.lightSensorStream.listen(_onData, onError: _onError, onDone: _onDone, cancelOnError: true);
 
     // pause it for now.
