@@ -8,10 +8,11 @@
 part of runtime;
 
 //TODO : change probes to use Dart Isolates in order to support dynamic class loading (and isolation).
-/// The [ProbeRegistry] can create an instance of a relevant probe based on the measure type.
-///
-/// Right now registration of probes has to be done manually.
-/// Later this will be implemented using Dart Isolates.
+// Right now registration of probes has to be done manually.
+// Later this will be implemented using Dart Isolates.
+
+/// The [ProbeRegistry] can create and register an instance of a relevant probe
+/// based on the measure type.
 class ProbeRegistry {
   static const String MEASURE = "measure";
   static const String STRING_MEASURE = "string";

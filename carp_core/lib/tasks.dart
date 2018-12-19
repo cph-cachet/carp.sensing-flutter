@@ -7,33 +7,22 @@
 
 part of carp_core;
 
-/// A [Task] holds information about each task to be executed as part of a [Study].
-/// Each [Task] holds a list of [Measure]s to be done as part of this task.
+/// A [TaskDescriptor] holds information about each task to be executed as part of a [Study].
+/// Each [TaskDescriptor] holds a list of [Measure]s to be done as part of this task.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class Task extends Serializable {
+class TaskDescriptor extends Serializable {
   /// The name of this task. Unique for this [Study].
   String name;
-
-  Task(this.name) : super();
-
-  static Function get fromJsonFunction => _$TaskFromJson;
-  factory Task.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
-  Map<String, dynamic> toJson() => _$TaskToJson(this);
 
   /// A list of [Measure]s to be done as part of this task.
   List<Measure> measures = new List<Measure>();
 
-  @override
-  String toString() {
-    String s = "";
-    s += "Task: $name [";
-    measures.forEach((m) {
-      s += m.toString() + " | ";
-    });
-    s += "]\n";
-    return s;
-  }
+  TaskDescriptor(this.name) : super();
+
+  static Function get fromJsonFunction => _$TaskDescriptorFromJson;
+  factory TaskDescriptor.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$TaskDescriptorToJson(this);
 
   /// Add a [Measure] to this task.
   void addMeasure(Measure measure) {
@@ -44,11 +33,13 @@ class Task extends Serializable {
   void removeMeasure(Measure measure) {
     this.measures.remove(measure);
   }
+
+  String toString() => name;
 }
 
-/// A [Task] which runs all [Measure]s in parallel.
+/// A [TaskDescriptor] which runs all [Measure]s in parallel.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class ParallelTask extends Task {
+class ParallelTask extends TaskDescriptor {
   ParallelTask(String name) : super(name);
 
   static Function get fromJsonFunction => _$ParallelTaskFromJson;
@@ -57,13 +48,13 @@ class ParallelTask extends Task {
   Map<String, dynamic> toJson() => _$ParallelTaskToJson(this);
 }
 
-/// A [Task] which takes all its [Measure]s in sequence.
+/// A [TaskDescriptor] which takes all its [Measure]s in sequence.
 ///
 /// Note, however, that not all measures necessarily ends. A [ListeningProbeMeasure] will listens
 /// for events until stopped manually. In a [SequentialTask], a measure is only started when the
 /// previous measure has ended.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class SequentialTask extends Task {
+class SequentialTask extends TaskDescriptor {
   SequentialTask(String name) : super(name);
 
   static Function get fromJsonFunction => _$SequentialTaskFromJson;

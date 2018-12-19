@@ -6,70 +6,70 @@
  "data_end_point": {
   "c__": "FileDataEndPoint",
   "type": "file",
-  "buffer_size": 500000,
+  "buffer_size": 50000,
   "zip": true,
   "encrypt": false
  },
  "tasks": [
   {
-   "c__": "Task",
-   "name": "Generic task",
+   "c__": "TaskDescriptor",
+   "name": "1st Taks",
    "measures": [
     {
      "c__": "Measure",
-     "measure_type": "measure",
-     "name": "Generic measure",
-     "enabled": true,
-     "configuration": {
-      "generic_1": "8000",
-      "generic_2": "abc"
+     "type": {
+      "namepace": "carp",
+      "name": "location"
+     }
+    },
+    {
+     "c__": "Measure",
+     "type": {
+      "namepace": "carp",
+      "name": "noise"
      }
     }
    ]
   },
   {
    "c__": "ParallelTask",
-   "name": "Sensor task",
+   "name": "2nd Taks",
    "measures": [
     {
-     "c__": "ProbeMeasure",
-     "measure_type": "probe",
-     "name": "Accelerometer",
-     "enabled": true,
-     "configuration": {
-      "frequency": "8000",
-      "duration": "500"
+     "c__": "Measure",
+     "type": {
+      "namepace": "carp",
+      "name": "accelerometer"
      }
     },
     {
-     "c__": "ListeningProbeMeasure",
-     "measure_type": "listening",
-     "name": "Gyroscope",
-     "enabled": true,
-     "configuration": {
-      "frequency": "8000"
+     "c__": "Measure",
+     "type": {
+      "namepace": "carp",
+      "name": "light"
      }
     }
    ]
   },
   {
    "c__": "SequentialTask",
-   "name": "Pedometer task",
+   "name": "3rd Taks",
    "measures": [
     {
-     "c__": "PollingProbeMeasure",
-     "measure_type": "polling",
-     "name": "Pedometer",
-     "enabled": true,
-     "configuration": {},
-     "frequency": 8000
+     "c__": "Measure",
+     "type": {
+      "namepace": "carp",
+      "name": "sound"
+     }
+    },
+    {
+     "c__": "Measure",
+     "type": {
+      "namepace": "carp",
+      "name": "weather"
+     }
     }
    ]
-  },
-  {
-   "c__": "ParallelTask",
-   "name": "Connectivity task",
-   "measures": []
   }
  ]
 }

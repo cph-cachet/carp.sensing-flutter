@@ -14,40 +14,23 @@ String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(objec
 Study _study;
 Study get study {
   if (_study == null) {
-    _study = new Study("1234", "bardram", name: "bardram study");
-    _study.dataEndPoint = new FileDataEndPoint();
+    _study = Study("1234", "bardram", name: "bardram study");
+    _study.dataEndPoint = FileDataEndPoint()
+      ..bufferSize = 50 * 1000
+      ..zip = true
+      ..encrypt = false;
 
-    Task task = new Task("Generic task");
-    final Measure m = new Measure(Measure.GENERIC_MEASURE, name: 'Generic measure');
-    m.setConfiguration("generic_1", "8000");
-    m.setConfiguration("generic_2", "abc");
-    task.addMeasure(m);
-    _study.addTask(task);
+    _study.addTask(TaskDescriptor('1st Taks')
+      ..addMeasure(Measure(DataFormat('carp', 'location')))
+      ..addMeasure(Measure(DataFormat('carp', 'noise'))));
 
-    Task _sensorTask = new ParallelTask("Sensor task");
-    final ProbeMeasure am = new ProbeMeasure(Measure.PROBE_MEASURE);
-    am.name = 'Accelerometer';
-    am.setConfiguration("frequency", "8000");
-    am.setConfiguration("duration", "500");
-    _sensorTask.addMeasure(am);
+    _study.addTask(ParallelTask('2nd Taks')
+      ..addMeasure(Measure(DataFormat('carp', 'accelerometer')))
+      ..addMeasure(Measure(DataFormat('carp', 'light'))));
 
-    ListeningProbeMeasure gm = new ListeningProbeMeasure(Measure.LISTENING_MEASURE);
-    gm.name = 'Gyroscope';
-    gm.setConfiguration("frequency", "8000");
-    _sensorTask.addMeasure(gm);
-
-    _study.addTask(_sensorTask);
-
-    Task _pedometerTask = new SequentialTask("Pedometer task");
-
-    PollingProbeMeasure pm = new PollingProbeMeasure(Measure.POLLING_MEASURE);
-    pm.name = 'Pedometer';
-    pm.frequency = 8 * 1000; // once every 8 second
-    _pedometerTask.addMeasure(pm);
-
-    _study.addTask(_pedometerTask);
-
-    _study.addTask(ParallelTask("Connectivity task"));
+    _study.addTask(SequentialTask('3rd Taks')
+      ..addMeasure(Measure(DataFormat('carp', 'sound')))
+      ..addMeasure(Measure(DataFormat('carp', 'weather'))));
   }
 
   return _study;

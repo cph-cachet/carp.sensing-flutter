@@ -9,44 +9,26 @@ void main() {
   Study study;
 
   setUp(() {
-    study = new Study("1234", "bardram", name: "bardram study");
-    study.dataEndPoint = new FileDataEndPoint();
+    study = Study("1234", "bardram", name: "bardram study");
+    study.dataEndPoint = FileDataEndPoint()
+      ..bufferSize = 50 * 1000
+      ..zip = true
+      ..encrypt = false;
 
-    Task task = new Task("Generic task");
-    final Measure m = new Measure(Measure.GENERIC_MEASURE, name: 'Generic measure');
-    m.setConfiguration("generic_1", "8000");
-    m.setConfiguration("generic_2", "abc");
-    task.addMeasure(m);
-    study.addTask(task);
+    study.addTask(TaskDescriptor('1st Taks')
+      ..addMeasure(Measure(DataFormat('carp', 'location')))
+      ..addMeasure(Measure(DataFormat('carp', 'noise'))));
 
-    Task _sensorTask = new ParallelTask("Sensor task");
-    final ProbeMeasure am = new ProbeMeasure(Measure.PROBE_MEASURE);
-    am.name = 'Accelerometer';
-    am.setConfiguration("frequency", "8000");
-    am.setConfiguration("duration", "500");
-    _sensorTask.addMeasure(am);
+    study.addTask(ParallelTask('2nd Taks')
+      ..addMeasure(Measure(DataFormat('carp', 'accelerometer')))
+      ..addMeasure(Measure(DataFormat('carp', 'light'))));
 
-    ListeningProbeMeasure gm = new ListeningProbeMeasure(Measure.LISTENING_MEASURE);
-    gm.name = 'Gyroscope';
-    gm.setConfiguration("frequency", "8000");
-    _sensorTask.addMeasure(gm);
-
-    study.addTask(_sensorTask);
-
-    Task _pedometerTask = new SequentialTask("Pedometer task");
-
-    PollingProbeMeasure pm = new PollingProbeMeasure(Measure.POLLING_MEASURE);
-    pm.name = 'Pedometer';
-    pm.frequency = 8 * 1000; // once every 8 second
-    _pedometerTask.addMeasure(pm);
-
-    study.addTask(_pedometerTask);
-
-    study.addTask(ParallelTask("Connectivity task"));
+    study.addTask(SequentialTask('3rd Taks')
+      ..addMeasure(Measure(DataFormat('carp', 'sound')))
+      ..addMeasure(Measure(DataFormat('carp', 'weather'))));
   });
 
   test('Study -> JSON', () async {
-    print("Study : " + study.name);
     print(_encode(study));
 
     expect(study.id, "1234");
@@ -58,7 +40,7 @@ void main() {
     Study study_2 = Study.fromJson(json.decode(study_json) as Map<String, dynamic>);
     expect(study_2.id, study.id);
 
-    print("\nSTUDY_2\n" + _encode(study_2));
+    print(_encode(study_2));
   });
 
   test('JSON -> Study, deep assert', () async {
@@ -87,5 +69,14 @@ void main() {
 
     Study study_2 = Study.fromJson(json.decode(plain_study_json) as Map<String, dynamic>);
     expect(_encode(study_2), equals(study_json));
+  });
+
+  test('Data point -> JSON', () async {
+    var dp = CARPDataPoint.fromDatum(
+        study.id,
+        study.userId,
+        MapDatum(Measure(DataFormat('carp', 'location')),
+            map: {'latitude': '12.23423452345', 'longitude': '3.82375823475'}));
+    print(_encode(dp));
   });
 }

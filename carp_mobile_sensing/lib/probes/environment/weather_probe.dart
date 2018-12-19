@@ -5,7 +5,7 @@ class WeatherProbe extends PollingProbe {
   String _apiKey;
   int _frequency;
 
-  /// Initialize an [WeatherProbe] taking a [ProbeMeasure] as configuration.
+  /// Initialize an [WeatherProbe] taking a [PollingProbeMeasure] as configuration.
   WeatherProbe(PollingProbeMeasure _measure)
       : assert(_measure != null),
         super(_measure);
