@@ -10,13 +10,13 @@ part of sensors;
 /// A listening probe collecting data from the accelerometer.
 ///
 /// Note that this probe generates a lot of data and should be used with caution.
-/// See [SensorMeasure] on how to configure this probe, including setting the
+/// See [PeriodicMeasure] on how to configure this probe, including setting the
 /// frequency and duration of the sampling rate.
 class AccelerometerProbe extends ListeningProbe {
   StreamSubscription<AccelerometerEvent> _subscription;
-  MultiDatum _data;
+  MultiDatum data;
 
-  AccelerometerProbe(SensorMeasure _measure) : super(_measure);
+  AccelerometerProbe(PeriodicMeasure measure) : super(measure);
 
   @override
   void initialize() {
@@ -33,9 +33,9 @@ class AccelerometerProbe extends ListeningProbe {
     // pause it for now.
     _subscription.pause();
 
-    int _frequency = (measure as SensorMeasure).frequency;
+    int _frequency = (measure as PeriodicMeasure).frequency;
     Duration _pause = new Duration(milliseconds: _frequency);
-    int _duration = (measure as SensorMeasure).duration;
+    int _duration = (measure as PeriodicMeasure).duration;
     Duration _samplingDuration = new Duration(milliseconds: _duration);
 
     // create a recurrent timer that wait (pause) and then resume the sampling.
@@ -51,40 +51,62 @@ class AccelerometerProbe extends ListeningProbe {
 
   @override
   void stop() {
-    if (_data != null) this.notifyAllListeners(_data);
+    if (data != null) this.notifyAllListeners(data);
     _subscription.cancel();
     _subscription = null;
-    _data = null;
+    data = null;
   }
 
   @override
   void resume() {
-    _data = new MultiDatum();
+    data = new MultiDatum(measure: measure);
     _subscription.resume();
   }
 
   @override
   void pause() {
-    if (_data != null) this.notifyAllListeners(_data);
-    _data = null;
+    if (data != null) this.notifyAllListeners(data);
+    data = null;
     _subscription.pause();
   }
 
   void _onData(AccelerometerEvent event) async {
-    if (_data != null) {
-      AccelerometerDatum _ad = new AccelerometerDatum(x: event.x, y: event.y, z: event.z);
-      _data.addDatum(_ad);
+    if (data != null) {
+      data.addDatum(AccelerometerDatum.fromAccelerometerEvent(measure, event));
     }
   }
 
   void _onDone() {
-    if (_data != null) this.notifyAllListeners(_data);
+    if (data != null) this.notifyAllListeners(data);
   }
 
   void _onError(error) {
-    ErrorDatum _ed = new ErrorDatum(error.toString());
+    ErrorDatum _ed = new ErrorDatum(measure: measure, message: error.toString());
     this.notifyAllListeners(_ed);
   }
+
+  //Stream<AccelerometerDatum> _myStream;
+
+  Stream<MultiDatum> myStream(Stream<AccelerometerDatum> source) async* {
+    // Stores any partial line from the previous chunk.
+    var partial = '';
+    // Wait until a new chunk is available, then process it.
+    await for (var event in source) {
+//      var lines = chunk.split('\n');
+//      lines[0] = partial + lines[0]; // Prepend partial line.
+//      partial = lines.removeLast(); // Remove new partial line.
+//      for (var line in lines) {
+//        yield line; // Add lines to output stream.
+//      }
+    }
+    // Add final partial line to output stream, if any.
+    ///    if (partial.isNotEmpty) yield partial;
+  }
+
+  Stream<MultiDatum> get stream => myStream(datum);
+
+  Stream<AccelerometerDatum> get datum =>
+      accelerometerEvents.map((event) => AccelerometerDatum.fromAccelerometerEvent(measure, event));
 }
 
 /// A listening probe collecting data from the gyroscope.
@@ -96,7 +118,9 @@ class GyroscopeProbe extends ListeningProbe {
   StreamSubscription<GyroscopeEvent> _subscription;
   MultiDatum data;
 
-  GyroscopeProbe(SensorMeasure _measure) : super(_measure);
+  GyroscopeProbe(PeriodicMeasure _measure) : super(_measure);
+
+  Stream<Datum> get stream => null;
 
   @override
   void initialize() {
@@ -113,9 +137,9 @@ class GyroscopeProbe extends ListeningProbe {
     // pause it for now.
     _subscription.pause();
 
-    int _frequency = (measure as SensorMeasure).frequency;
+    int _frequency = (measure as PeriodicMeasure).frequency;
     Duration _pause = new Duration(milliseconds: _frequency);
-    int _duration = (measure as SensorMeasure).duration;
+    int _duration = (measure as PeriodicMeasure).duration;
     Duration _samplingDuration = new Duration(milliseconds: _duration);
 
     // create a recurrent timer that wait (pause) and then resume the sampling.
@@ -146,14 +170,13 @@ class GyroscopeProbe extends ListeningProbe {
 
   @override
   void resume() {
-    data = new MultiDatum();
+    data = new MultiDatum(measure: measure);
     _subscription.resume();
   }
 
   void _onData(GyroscopeEvent event) async {
     if (data != null) {
-      GyroscopeDatum _gd = new GyroscopeDatum(x: event.x, y: event.y, z: event.z);
-      data.addDatum(_gd);
+      data.addDatum(GyroscopeDatum.fromGyroscopeEvent(measure, event));
     }
   }
 
@@ -162,7 +185,6 @@ class GyroscopeProbe extends ListeningProbe {
   }
 
   void _onError(error) {
-    ErrorDatum _ed = new ErrorDatum(error.toString());
-    this.notifyAllListeners(_ed);
+    this.notifyAllListeners(ErrorDatum(measure: measure, message: error.toString()));
   }
 }

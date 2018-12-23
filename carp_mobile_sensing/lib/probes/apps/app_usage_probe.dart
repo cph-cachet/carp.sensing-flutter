@@ -1,26 +1,25 @@
 part of apps;
 
-/// A probe collecting app information about installed apps on the device
+/// A probe collecting app usage information about installed apps on the device
 class AppUsageProbe extends PollingProbe {
-  AppUsage _appUsage;
-  int _frequency, _duration;
+  AppUsage appUsage;
+  int frequency, duration;
 
-  /// Initialize an [AppUsageProbe] taking a [AppUsageMeasure] as configuration.
-  AppUsageProbe(AppUsageMeasure _measure)
-      : assert(_measure != null),
-        super(_measure);
+  Stream<Datum> get stream => null;
+
+  AppUsageProbe(PeriodicMeasure measure) : super(measure);
 
   @override
   void initialize() {
-    _frequency = (measure as AppUsageMeasure).frequency;
-    _duration = (measure as AppUsageMeasure).duration;
+    frequency = (measure as PeriodicMeasure).frequency;
+    duration = (measure as PeriodicMeasure).duration;
     super.initialize();
   }
 
   @override
   Future start() async {
     super.start();
-    Duration _pause = new Duration(milliseconds: _frequency);
+    Duration _pause = new Duration(milliseconds: frequency);
     Timer.periodic(_pause, (Timer timer) {
       // Create a recurrent timer that wait (pause) and then resume the sampling.
       Timer.periodic(_pause, (Timer timer) {
@@ -32,7 +31,7 @@ class AppUsageProbe extends PollingProbe {
 
   @override
   void stop() {
-    _appUsage = null;
+    appUsage = null;
   }
 
   @override
@@ -46,18 +45,12 @@ class AppUsageProbe extends PollingProbe {
 
   @override
   Future<Datum> getDatum() async {
-    _appUsage = new AppUsage();
+    appUsage = new AppUsage();
     DateTime end = DateTime.now();
-    DateTime start = DateTime.fromMillisecondsSinceEpoch(end.millisecondsSinceEpoch - _duration);
+    DateTime start = DateTime.fromMillisecondsSinceEpoch(end.millisecondsSinceEpoch - duration);
 
-    print('Start date: $start');
-    print('End date: $end');
-    Map<dynamic, dynamic> usage = await _appUsage.getUsage(start, end);
+    Map<dynamic, dynamic> usage = await appUsage.getUsage(start, end);
 
-    AppUsageDatum datum = new AppUsageDatum();
-    datum.usage = Map<String, double>.from(usage);
-
-    print(usage);
-    return datum;
+    return AppUsageDatum(measure: measure)..usage = Map<String, double>.from(usage);
   }
 }

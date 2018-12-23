@@ -53,6 +53,5 @@ class FromJsonFactory {
     registerFromJsonFunction("ParallelTask", ParallelTask.fromJsonFunction);
     registerFromJsonFunction("SequentialTask", SequentialTask.fromJsonFunction);
     registerFromJsonFunction("Measure", Measure.fromJsonFunction);
-    registerFromJsonFunction("PhoneSensorMeasure", PhoneSensorMeasure.fromJsonFunction);
   }
 }

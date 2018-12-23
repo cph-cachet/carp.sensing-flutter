@@ -10,9 +10,6 @@ part of sensors;
 /// Holds the step count for a specific time period.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class PedometerDatum extends CARPDatum {
-  static CARPDataFormat CARP_DATA_FORMAT = new CARPDataFormat(
-      NameSpace.CARP_NAMESPACE, ProbeRegistry.PEDOMETER_MEASURE);
-
   /// The start time of the collection period.
   DateTime startTime;
 
@@ -22,14 +19,10 @@ class PedometerDatum extends CARPDatum {
   /// The total amount of steps.
   int stepCount;
 
-  PedometerDatum() : super();
+  PedometerDatum({Measure measure}) : super(measure: measure);
 
-  factory PedometerDatum.fromJson(Map<String, dynamic> json) =>
-      _$PedometerDatumFromJson(json);
+  factory PedometerDatum.fromJson(Map<String, dynamic> json) => _$PedometerDatumFromJson(json);
   Map<String, dynamic> toJson() => _$PedometerDatumToJson(this);
 
-  CARPDataFormat getCARPDataFormat() => CARP_DATA_FORMAT;
-
-  String toString() =>
-      'step_count: {start: $startTime, end: $endTime, steps: $stepCount}';
+  String toString() => 'step_count: {start: $startTime, end: $endTime, steps: $stepCount}';
 }

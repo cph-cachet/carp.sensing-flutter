@@ -12,115 +12,91 @@ part of runtime;
 // Later this will be implemented using Dart Isolates.
 
 /// The [ProbeRegistry] can create and register an instance of a relevant probe
-/// based on the measure type.
+/// based on the [MeasureType].
 class ProbeRegistry {
-  static const String MEASURE = "measure";
-  static const String STRING_MEASURE = "string";
-  static const String ERROR_MEASURE = "error";
-  static const String MEMORY_MEASURE = "memory";
-  static const String PEDOMETER_MEASURE = "pedometer";
-  static const String ACCELEROMETER_MEASURE = "accelerometer";
-  static const String GYROSCOPE_MEASURE = "gyroscope";
-  static const String BATTERY_MEASURE = "battery";
-  static const String BLUETOOTH_MEASURE = "bluetooth";
-  static const String AUDIO_MEASURE = "audio";
-  static const String NOISE_MEASURE = "noise";
-  static const String LOCATION_MEASURE = "location";
-  static const String CONNECTIVITY_MEASURE = "connectivity";
-  static const String LIGHT_MEASURE = "light";
-  static const String APPS_MEASURE = "apps";
-  static const String APP_USAGE_MEASURE = "app_usage";
-  static const String TEXT_MESSAGE_LOG_MEASURE = "text-message-log";
-  static const String TEXT_MESSAGE_MEASURE = "text-message";
-  static const String SCREEN_MEASURE = "screen";
-  static const String PHONELOG_MEASURE = "phone_log";
-  static const String SOUND_MEASURE = "sound";
-  static const String ACTIVITY_MEASURE = "activity";
-  static const String APPLE_HEALTHKIT_MEASURE = "apple-healthkit";
-  static const String GOOGLE_FIT_MEASURE = "google-fit";
-  static const String WEATHER_MEASURE = "weather";
-
-  static List<Probe> _probes = new List();
+  static Map<String, Probe> _probes = new Map<String, Probe>();
 
   /// Returns a list of running probes.
-  static List<Probe> get probes => _probes;
+  static Map<String, Probe> get probes => _probes;
 
   /// If you create a probe manually, i.e. outside of the [ProbeRegistry] you can register it here.
   static void register(Probe probe) {
-    _probes.add(probe);
+    print('adding probe - ${probe.measure.type.name}');
+    _probes[probe.measure.type.name] = probe;
+
+    ProbeRegistry.probes.forEach((key, probe) => print('probe fuck! - $key - $probe'));
   }
 
   /// Create an instance of a probe based on the measure type.
   static Probe create(Measure measure) {
-    String type = measure.measureType;
+    String type = measure.type.name;
     Probe _probe;
 
     switch (type) {
-      case MEMORY_MEASURE:
+      case MeasureType.MEMORY:
         _probe = new MemoryPollingProbe(measure);
         break;
-      case PEDOMETER_MEASURE:
+      case MeasureType.PEDOMETER:
         _probe = new PedometerProbe(measure);
         break;
-      case ACCELEROMETER_MEASURE:
+      case MeasureType.ACCELEROMETER:
         _probe = new AccelerometerProbe(measure);
         break;
-      case GYROSCOPE_MEASURE:
+      case MeasureType.GYROSCOPE:
         _probe = new GyroscopeProbe(measure);
         break;
-      case BATTERY_MEASURE:
+      case MeasureType.BATTERY:
         _probe = new BatteryProbe(measure);
         break;
-      case BLUETOOTH_MEASURE:
+      case MeasureType.BLUETOOTH:
         _probe = new BluetoothProbe(measure);
         break;
-      case LOCATION_MEASURE:
+      case MeasureType.LOCATION:
         _probe = new LocationProbe(measure);
         break;
-      case CONNECTIVITY_MEASURE:
+      case MeasureType.CONNECTIVITY:
         _probe = new ConnectivityProbe(measure);
         break;
-      case LIGHT_MEASURE:
+      case MeasureType.LIGHT:
         _probe = new LightProbe(measure);
         break;
-      case APPS_MEASURE:
+      case MeasureType.APPS:
         _probe = new AppsProbe(measure);
         break;
-      case APP_USAGE_MEASURE:
+      case MeasureType.APP_USAGE:
         _probe = new AppUsageProbe(measure);
         break;
-      case TEXT_MESSAGE_LOG_MEASURE:
+      case MeasureType.TEXT_MESSAGE_LOG:
         _probe = new TextMessageLogProbe(measure);
         break;
-      case TEXT_MESSAGE_MEASURE:
+      case MeasureType.TEXT_MESSAGE:
         _probe = new TextMessageProbe(measure);
         break;
-      case SCREEN_MEASURE:
+      case MeasureType.SCREEN:
         _probe = new ScreenProbe(measure);
         break;
-      case PHONELOG_MEASURE:
+      case MeasureType.PHONE_LOG:
         _probe = new PhoneLogProbe(measure);
         break;
-      case AUDIO_MEASURE:
+      case MeasureType.AUDIO:
         _probe = new AudioProbe(measure);
         break;
-      case NOISE_MEASURE:
+      case MeasureType.NOISE:
         _probe = new NoiseProbe(measure);
         break;
-      case ACTIVITY_MEASURE:
+      case MeasureType.ACTIVITY:
         _probe = new ActivityProbe(measure);
         break;
-      case WEATHER_MEASURE:
+      case MeasureType.WEATHER:
         _probe = new WeatherProbe(measure);
         break;
-      case APPLE_HEALTHKIT_MEASURE:
+      case MeasureType.APPLE_HEALTHKIT:
         throw "Not Implemented Yet";
         break;
-      case GOOGLE_FIT_MEASURE:
+      case MeasureType.GOOGLE_FIT:
         throw "Not Implemented Yet";
         break;
       default:
-        //_probe = new UserProbe(measure);
         break;
     }
 

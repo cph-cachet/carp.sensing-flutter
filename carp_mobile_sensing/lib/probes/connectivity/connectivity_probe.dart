@@ -7,12 +7,14 @@
 
 part of connectivity;
 
-/// The [ConnectivityProbe] listens to the connectivity status of the phone and collect a [ConnectivityDatum]
-/// everytime the connectivity state changes.
+/// The [ConnectivityProbe] listens to the connectivity status of the phone and
+/// collect a [ConnectivityDatum] everytime the connectivity state changes.
 class ConnectivityProbe extends StreamSubscriptionListeningProbe {
   Connectivity _connectivity;
 
-  ConnectivityProbe(ConnectivityMeasure measure) : super(measure);
+  ConnectivityProbe(Measure measure) : super(measure);
+
+  Stream<Datum> get stream => null;
 
   @override
   void initialize() {
@@ -25,15 +27,15 @@ class ConnectivityProbe extends StreamSubscriptionListeningProbe {
     super.start();
 
     // starting the subscription to the network.
-    subscription = _connectivity.onConnectivityChanged
-        .listen(onData, onError: onError, onDone: onDone, cancelOnError: true);
+    subscription =
+        _connectivity.onConnectivityChanged.listen(onData, onError: onError, onDone: onDone, cancelOnError: true);
   }
 
   void onData(dynamic event) async {
     assert(event is ConnectivityResult);
     ConnectivityResult result = event;
 
-    ConnectivityDatum _cd = new ConnectivityDatum();
+    ConnectivityDatum _cd = new ConnectivityDatum(measure: measure);
     switch (result) {
       case ConnectivityResult.wifi:
         _cd.connectivityStatus = "wifi";

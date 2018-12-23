@@ -28,14 +28,3 @@ class Measure extends Serializable {
 
   String toString() => type.toString();
 }
-
-/// A [PhoneSensorMeasure] specify how a smartphone should collect data.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class PhoneSensorMeasure extends Measure {
-  PhoneSensorMeasure(type, {name}) : super(type, name: name);
-
-  static Function get fromJsonFunction => _$PhoneSensorMeasureFromJson;
-  factory PhoneSensorMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
-  Map<String, dynamic> toJson() => _$PhoneSensorMeasureToJson(this);
-}

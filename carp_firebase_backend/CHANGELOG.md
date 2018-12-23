@@ -1,3 +1,6 @@
+## 0.2.1
+* Adjustment to refactoring of carp_mobile_sensing library to version 0.3.0
+
 ## 0.2.0
 * Support for uploading to the Google Firebase Database also.
 

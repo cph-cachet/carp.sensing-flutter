@@ -10,14 +10,13 @@ part of location;
 /// Collects location information from the underlying OS's location API.
 /// Is a [ListeningProbe] that generates a [LocationDatum] every time location is changed.
 class LocationProbe extends StreamSubscriptionListeningProbe {
-  Location _location;
+  Location _location = new Location();
 
-  LocationProbe(LocationMeasure measure) : super(measure);
+  LocationProbe(Measure measure) : super(measure);
 
   @override
   void initialize() {
     super.initialize();
-    _location = new Location();
   }
 
   @override
@@ -26,8 +25,8 @@ class LocationProbe extends StreamSubscriptionListeningProbe {
 
     // starting the subscription to the location service - triggered every time the location changes.
     try {
-      subscription = _location.onLocationChanged().listen(onData,
-          onError: onError, onDone: onDone, cancelOnError: true);
+      subscription =
+          _location.onLocationChanged().listen(onData, onError: onError, onDone: onDone, cancelOnError: true);
     } catch (error) {
       onError(error);
     }
@@ -35,6 +34,10 @@ class LocationProbe extends StreamSubscriptionListeningProbe {
 
   void onData(dynamic event) async {
     assert(event is Map<String, double>);
-    this.notifyAllListeners(LocationDatum.fromMap(event));
+
+    this.notifyAllListeners(LocationDatum.fromMap(measure, event));
   }
+
+  Stream<LocationDatum> get stream =>
+      _location.onLocationChanged().map((event) => LocationDatum.fromMap(measure, event));
 }

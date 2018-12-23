@@ -485,25 +485,3 @@ Map<String, dynamic> _$MeasureToJson(Measure instance) {
   writeNotNull('enabled', instance.enabled);
   return val;
 }
-
-PhoneSensorMeasure _$PhoneSensorMeasureFromJson(Map<String, dynamic> json) {
-  return PhoneSensorMeasure(json['type'], name: json['name'])
-    ..c__ = json['c__'] as String
-    ..enabled = json['enabled'] as bool;
-}
-
-Map<String, dynamic> _$PhoneSensorMeasureToJson(PhoneSensorMeasure instance) {
-  var val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('c__', instance.c__);
-  writeNotNull('type', instance.type);
-  writeNotNull('name', instance.name);
-  writeNotNull('enabled', instance.enabled);
-  return val;
-}

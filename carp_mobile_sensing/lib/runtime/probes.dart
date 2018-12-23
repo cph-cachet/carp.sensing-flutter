@@ -26,7 +26,17 @@ abstract class ProbeListener {
 /// A [Probe] is responsible for collecting data.
 /// This class is an interface class used for implementing specific
 /// probes as sub-classes.
+///
+/// Probes return sensed data in a [Stream] as [events]. This is the main
+/// usage of a probe. For example, to listens to events and print them;
+///
+/// `````dart
+///  probe.events.forEach(print);
+/// ````
 abstract class Probe {
+  /// A [Stream] generating sensor data events from this probe.
+  Stream<Datum> get events;
+
   Measure get measure;
   ProbeType get probeType;
   bool get isRunning;
@@ -62,6 +72,7 @@ abstract class Probe {
 abstract class AbstractProbe implements Probe {
   Measure _measure;
   Measure get measure => _measure;
+  Stream<Datum> _events;
 
   ProbeType get probeType => ProbeType.unknown;
 
@@ -122,6 +133,17 @@ abstract class AbstractProbe implements Probe {
   void stop() async {
     _isRunning = false;
   }
+
+  Stream<Datum> get events {
+    if (_events == null) {
+      _events = stream;
+    }
+    return _events;
+  }
+
+  /// The a [Stream] of data items from this probe. Should be implemented by
+  /// the specific probes implementing this [AbstractProbe] class.
+  Stream<Datum> get stream;
 }
 
 /// A [DatumProbe] can collect one piece of data and then returns.
@@ -147,10 +169,10 @@ abstract class DatumProbe extends AbstractProbe {
 }
 
 /// Listening Probes are triggered by a change in state within the underlying device or sensor.
-/// For example, the [AccelerometerProbe] register itself as a listener on the accelerometer
-/// and collects movement data via a callback method.
+/// For example, the [LocationProbe] register itself as a listener on the location API
+/// and collects location data via a callback method.
 ///
-/// Llistening Probes should (at least) implement / override the initialize() and start()
+/// Listening probes should (at least) implement / override the initialize() and start()
 /// methods. In the initialize() method, listening to sensors are set up and listening is
 /// started in the start() method. When the probe receives callbacks from the sensor,
 /// [ProbeListener]s are notified via the [this.notifyAllListeners(datum)] method whenever a
@@ -204,13 +226,13 @@ abstract class StreamSubscriptionListeningProbe extends ListeningProbe {
   void onDone() {}
 
   void onError(error) {
-    ErrorDatum _ed = new ErrorDatum(error.toString());
+    ErrorDatum _ed = new ErrorDatum(measure: measure, message: error.toString());
     this.notifyAllListeners(_ed);
   }
 }
 
 /// Polling Probes are triggered at regular intervals, specified by its [frequency] property
-/// in the [Measure].
+/// in a [PeriodicMeasure].
 ///
 ///When triggered, Polling Probes ask the device (and perhaps the user)
 ///for some type of information and then notifies its [ProbeListener]s
@@ -218,15 +240,15 @@ abstract class PollingProbe extends AbstractProbe {
   Duration _pollingFrequency;
   Timer _timer;
 
-  PollingProbe(PollingProbeMeasure _measure) : super.init(_measure);
+  PollingProbe(PeriodicMeasure measure) : super.init(measure);
 
   @override
   ProbeType get probeType => ProbeType.polling;
 
   Future start() async {
     // need to make sure we have a [PollingProbeMeasure] measure, containing a frequency configuration.
-    assert(measure is PollingProbeMeasure);
-    int _frequency = (measure as PollingProbeMeasure).frequency;
+    assert(measure is PeriodicMeasure);
+    int _frequency = (measure as PeriodicMeasure).frequency;
     _pollingFrequency = new Duration(milliseconds: _frequency);
 
     super.start();
@@ -247,4 +269,73 @@ abstract class PollingProbe extends AbstractProbe {
   /// This method will be called every time the polling is scheduled as specified
   /// in the [Measure] interval.
   Future<Datum> getDatum();
+}
+
+/// An abstract super class implementation useful for implementing probes that
+/// use a [PeriodicMeasure].
+///
+/// See [AccelerometerProbe] for an example of how to use this class.
+abstract class PeriodicMeasureProbe extends StreamSubscriptionListeningProbe {
+  MultiDatum data;
+
+  PeriodicMeasureProbe(PeriodicMeasure measure) : super(measure);
+
+  /// This has to be overwritten in the sub-class to return the [Stream] producing the events.
+  Stream getStream();
+
+  @override
+  Future start() async {
+    super.start();
+
+    // starting the subscription to the accelerometer events
+    subscription = getStream().listen(onData, onError: onError, onDone: onDone, cancelOnError: true);
+
+    // pause it for now.
+    subscription.pause();
+
+    int _frequency = (measure as PeriodicMeasure).frequency;
+    Duration _pause = new Duration(milliseconds: _frequency);
+    int _duration = (measure as PeriodicMeasure).duration;
+    Duration _samplingDuration = new Duration(milliseconds: _duration);
+
+    // create a recurrent timer that wait (pause) and then resume the sampling.
+    Timer.periodic(_pause, (Timer timer) {
+      this.resume();
+
+      // create a timer that stops the sampling after the specified duration.
+      Timer(_samplingDuration, () {
+        this.pause();
+      });
+    });
+  }
+
+  @override
+  void stop() {
+    if (data != null) this.notifyAllListeners(data);
+    subscription.cancel();
+    subscription = null;
+    data = null;
+  }
+
+  @override
+  void resume() {
+    data = new MultiDatum(measure: measure);
+    subscription.resume();
+  }
+
+  @override
+  void pause() {
+    if (data != null) this.notifyAllListeners(data);
+    data = null;
+    subscription.pause();
+  }
+
+  void onDone() {
+    if (data != null) this.notifyAllListeners(data);
+  }
+
+  void onError(error) {
+    ErrorDatum ed = new ErrorDatum(measure: measure, message: error.toString());
+    this.notifyAllListeners(ed);
+  }
 }

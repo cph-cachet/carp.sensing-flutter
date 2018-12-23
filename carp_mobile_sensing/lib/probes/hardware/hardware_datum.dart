@@ -10,9 +10,6 @@ part of hardware;
 /// A [Datum] that holds battery level collected from the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class BatteryDatum extends CARPDatum {
-  static CARPDataFormat CARP_DATA_FORMAT = new CARPDataFormat(
-      NameSpace.CARP_NAMESPACE, ProbeRegistry.BATTERY_MEASURE);
-
   /// The battery level in percent.
   int batteryLevel;
 
@@ -23,61 +20,62 @@ class BatteryDatum extends CARPDatum {
   /// - unknown
   String batteryStatus;
 
-  BatteryDatum() : super();
+  BatteryDatum({Measure measure}) : super(measure: measure);
 
-  factory BatteryDatum.fromJson(Map<String, dynamic> json) =>
-      _$BatteryDatumFromJson(json);
+  BatteryDatum.fromBatteryState(Measure measure, int level, BatteryState state)
+      : batteryLevel = level,
+        batteryStatus = _parseBatteryState(state),
+        super(measure: measure);
+
+  static String _parseBatteryState(BatteryState state) {
+    switch (state) {
+      case BatteryState.full:
+        return "full";
+      case BatteryState.charging:
+        return "charging";
+      case BatteryState.discharging:
+        return "discharging";
+      default:
+        return "unknown";
+    }
+  }
+
+  factory BatteryDatum.fromJson(Map<String, dynamic> json) => _$BatteryDatumFromJson(json);
   Map<String, dynamic> toJson() => _$BatteryDatumToJson(this);
 
-  CARPDataFormat getCARPDataFormat() => CARP_DATA_FORMAT;
-
-  String toString() =>
-      'battery: {level: $batteryLevel%, status: $batteryStatus}';
+  String toString() => 'battery: {level: $batteryLevel%, status: $batteryStatus}';
 }
 
 /// Holds information about free memory on the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class FreeMemoryDatum extends CARPDatum {
-  static CARPDataFormat CARP_DATA_FORMAT = new CARPDataFormat(
-      NameSpace.CARP_NAMESPACE, ProbeRegistry.MEMORY_MEASURE);
-
   /// Amount of free physical memory in bytes.
   int freePhysicalMemory;
 
   /// Amount of free virtual memory in bytes.
   int freeVirtualMemory;
 
-  FreeMemoryDatum() : super();
+  FreeMemoryDatum({Measure measure}) : super(measure: measure);
 
-  factory FreeMemoryDatum.fromJson(Map<String, dynamic> json) =>
-      _$FreeMemoryDatumFromJson(json);
+  factory FreeMemoryDatum.fromJson(Map<String, dynamic> json) => _$FreeMemoryDatumFromJson(json);
   Map<String, dynamic> toJson() => _$FreeMemoryDatumToJson(this);
 
-  CARPDataFormat getCARPDataFormat() => CARP_DATA_FORMAT;
-
-  String toString() =>
-      'free memory: {physical: $freePhysicalMemory%, virtual: $freeVirtualMemory}';
+  String toString() => 'free memory: {physical: $freePhysicalMemory%, virtual: $freeVirtualMemory}';
 }
 
 /// Holds a screen event collected from the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ScreenDatum extends CARPDatum {
-  static CARPDataFormat CARP_DATA_FORMAT = new CARPDataFormat(
-      NameSpace.CARP_NAMESPACE, ProbeRegistry.SCREEN_MEASURE);
-
   /// A screen event:
   /// - SCREEN_OFF
   /// - SCREEN_ON
   /// - SCREEN_UNLOCKED
   String screenEvent;
 
-  ScreenDatum() : super();
+  ScreenDatum({Measure measure}) : super(measure: measure);
 
-  factory ScreenDatum.fromJson(Map<String, dynamic> json) =>
-      _$ScreenDatumFromJson(json);
+  factory ScreenDatum.fromJson(Map<String, dynamic> json) => _$ScreenDatumFromJson(json);
   Map<String, dynamic> toJson() => _$ScreenDatumToJson(this);
-
-  CARPDataFormat getCARPDataFormat() => CARP_DATA_FORMAT;
 
   String toString() => 'screen_Event: {$screenEvent}';
 }

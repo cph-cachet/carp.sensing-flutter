@@ -10,8 +10,9 @@ part of activity;
 /// Collects activity information from the underlying OS's activity recognition API.
 /// Is a [ListeningProbe] that generates a [ActivityDatum] every time an activity is detected.
 class ActivityProbe extends StreamSubscriptionListeningProbe {
-  /// A [ActivityProbe] is a listening probe and takes a [ListeningProbeMeasure] as configuration.
-  ActivityProbe(ListeningProbeMeasure measure) : super(measure);
+  ActivityProbe(Measure measure) : super(measure);
+
+  Stream<Datum> get stream => null;
 
   @override
   void initialize() {
@@ -22,7 +23,6 @@ class ActivityProbe extends StreamSubscriptionListeningProbe {
   Future start() async {
     super.start();
 
-    // starting the subscription to the activity recognition service
     try {
       subscription =
           ActivityRecognition.activityUpdates().listen(onData, onError: onError, onDone: onDone, cancelOnError: true);
@@ -33,6 +33,6 @@ class ActivityProbe extends StreamSubscriptionListeningProbe {
 
   void onData(dynamic event) async {
     assert(event is Activity);
-    this.notifyAllListeners(ActivityDatum.fromActivity(event as Activity));
+    this.notifyAllListeners(ActivityDatum.fromActivity(measure: measure, activity: event as Activity));
   }
 }

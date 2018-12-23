@@ -7,7 +7,9 @@
 
 part of connectivity;
 
-/// The [BluetoothProbe] scans for nearby and visible Bluetooth devices and collect a [BluetoothDatum] for each.
+/// The [BluetoothProbe] scans for nearby and visible Bluetooth devices and collect
+/// a [BluetoothDatum] for each. Uses a [PeriodicMeasure] for configuration stating
+/// [frequency] and [duration] of the scan.
 class BluetoothProbe extends ListeningProbe {
   FlutterBlue _flutterBlue;
   StreamSubscription<ScanResult> _subscription;
@@ -15,7 +17,9 @@ class BluetoothProbe extends ListeningProbe {
   Duration timeout;
   Duration frequency;
 
-  BluetoothProbe(BluetoothMeasure _measure) : super(_measure);
+  Stream<Datum> get stream => null;
+
+  BluetoothProbe(PeriodicMeasure measure) : super(measure);
 
   @override
   void initialize() {
@@ -27,10 +31,8 @@ class BluetoothProbe extends ListeningProbe {
   Future start() async {
     super.start();
 
-    timeout =
-        new Duration(milliseconds: (measure as BluetoothMeasure).duration);
-
-    int _frequency = (measure as BluetoothMeasure).frequency;
+    timeout = new Duration(milliseconds: (measure as PeriodicMeasure).duration);
+    int _frequency = (measure as PeriodicMeasure).frequency;
     frequency = new Duration(milliseconds: _frequency);
 
     this.resume();
@@ -57,19 +59,17 @@ class BluetoothProbe extends ListeningProbe {
       // starting the scanning event loop, will run the [timeout] duration
       _subscription = _flutterBlue
           .scan(scanMode: ScanMode.lowLatency, timeout: timeout)
-          .listen(_onData,
-              onError: _onError, onDone: _onDone, cancelOnError: true);
+          .listen(_onData, onError: _onError, onDone: _onDone, cancelOnError: true);
     });
   }
 
   void _onData(ScanResult result) async {
-    BluetoothDatum _bd = new BluetoothDatum();
-
-    _bd.bluetoothDeviceId = result.device.id.id;
-    _bd.bluetoothDeviceName = result.device.name;
-    _bd.connectable = result.advertisementData.connectable;
-    _bd.txPowerLevel = result.advertisementData.txPowerLevel;
-    _bd.rssi = result.rssi;
+    BluetoothDatum _bd = new BluetoothDatum(measure: measure)
+      ..bluetoothDeviceId = result.device.id.id
+      ..bluetoothDeviceName = result.device.name
+      ..connectable = result.advertisementData.connectable
+      ..txPowerLevel = result.advertisementData.txPowerLevel
+      ..rssi = result.rssi;
 
     switch (result.device.type) {
       case BluetoothDeviceType.classic:
@@ -91,7 +91,7 @@ class BluetoothProbe extends ListeningProbe {
   void _onDone() {}
 
   void _onError(error) {
-    ErrorDatum _ed = new ErrorDatum(error.toString());
+    ErrorDatum _ed = new ErrorDatum(measure: measure, message: error.toString());
 
     this.notifyAllListeners(_ed);
   }

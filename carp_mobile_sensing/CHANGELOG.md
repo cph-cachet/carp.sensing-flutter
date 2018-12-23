@@ -1,3 +1,10 @@
+## 0.3.0 - no backward compatibility
+* major updates to the domain model as a `core` library
+    * `Measure` now have a `configuration`
+* simplification to probe implementations
+
+
+
 ## 0.2.6
 * fixed small bug in `weater` probe.
 

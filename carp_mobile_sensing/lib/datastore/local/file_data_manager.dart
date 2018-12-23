@@ -7,17 +7,20 @@
 
 part of datastore;
 
-/// Stores [Datum] json objects as plain-text in a zip-compressed file on the device's local
-/// storage media. Also supports encryption.
+/// Stores [Datum] json objects as plain-text on the device's local storage media.
+/// Supports compression (zip) and encryption.
 ///
-/// The filename format is "carp/data/<study_id>/carp-data-yyyy-mm-dd-hh-mm-ss-ms.json.zip"
+/// The path and filename format is
+///
+///   `carp/data/<study_id>/carp-data-yyyy-mm-dd-hh-mm-ss-ms.json.zip`
+///
 class FileDataManager extends AbstractDataManager {
-  /// The path to use on this device for CARP data.
+  /// The path to use on the device for storing CARP files.
   static final String CARP_FILE_PATH = 'carp/data';
 
   FileDataEndPoint _fileDataEndPoint;
-  String _filename;
   String _path;
+  String _filename;
   File _file;
   IOSink _sink;
   bool _initialized = false;
@@ -66,7 +69,7 @@ class FileDataManager extends AbstractDataManager {
       final localApplicationDir = await getApplicationDocumentsDirectory();
       // create a sub-directory for this study named as the study ID
       final directory =
-          await new Directory('${localApplicationDir.path}/$CARP_FILE_PATH/${study.id}').create(recursive: true);
+          await Directory('${localApplicationDir.path}/$CARP_FILE_PATH/${study.id}').create(recursive: true);
       _path = directory.path;
     }
     return _path;

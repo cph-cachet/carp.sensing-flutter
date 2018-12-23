@@ -6,21 +6,30 @@
  */
 part of audio;
 
-/// A listening probe collecting data from the microphone.
+/// A probe recording audio from the microphone.
 ///
 /// Note that this probe generates a lot of data and should be used with caution.
-/// See [AudioMeasure] on how to configure this probe, including setting the
-/// frequency and duration of the sampling rate.
+/// Use a [AudioMeasure] to configure this probe, including setting the
+/// [frequency] and [duration] of the sampling rate.
 ///
 /// Also note that this probe records raw sound directly from the microphone and hence
 /// records everything - including human speech - in its vicinity.
+///
+/// The Audio probe generates an [AudioDatum] that holds the meta-data for each recording
+/// along with the actual recording in an audio file. How to upload this data to a  data backend
+/// if up to the implementation of a [DataManager] to decide.
 class AudioProbe extends ListeningProbe {
-  FlutterSound flutterSound;
+  static final String AUDIO_FILE_PATH = 'audio';
+
+  String studyId;
   String _path;
+  FlutterSound flutterSound;
   String soundFileName;
   bool _isRecording = false;
   DateTime _startRecordingTime;
   DateTime _endRecordingTime;
+
+  Stream<Datum> get stream => null;
 
   // Initialize an audio probe taking a [SensorMeasure] as configuration.
   AudioProbe(AudioMeasure _measure)
@@ -45,6 +54,8 @@ class AudioProbe extends ListeningProbe {
     int _frequency = (measure as AudioMeasure).frequency;
     Duration _pause = new Duration(milliseconds: _frequency);
     int _duration = (measure as AudioMeasure).duration;
+    studyId = (measure as AudioMeasure).studyId;
+
     Duration _samplingDuration = new Duration(milliseconds: _duration);
 
     // create a recurrent timer that wait (pause) and then resume the sampling.
@@ -99,25 +110,30 @@ class AudioProbe extends ListeningProbe {
       if (result != null) {
         String filename = soundFileName.split("/").last;
         AudioDatum datum = new AudioDatum(
-            filename: filename, startRecordingTime: _startRecordingTime, endRecordingTime: _endRecordingTime);
+            measure: measure,
+            filename: filename,
+            startRecordingTime: _startRecordingTime,
+            endRecordingTime: _endRecordingTime);
         return datum;
       } else {
-        return ErrorDatum("No sound recording");
+        return ErrorDatum(measure: measure, message: "No sound recording");
       }
     } catch (err) {
-      return ErrorDatum("SoundProbe error - $err");
+      return ErrorDatum(measure: measure, message: "SoundProbe error - $err");
     }
   }
 
-  ///Returns the local path on the device where sound files can be written.
+  ///Returns the local path on the device where sound files can be stored.
   ///Creates the directory, if not existing.
   Future<String> get path async {
     if (_path == null) {
-      String audioPath = (measure as AudioMeasure).soundFileDirPath;
       // get local working directory
       final localApplicationDir = await getApplicationDocumentsDirectory();
       // create a sub-directory for sound files
-      final directory = await new Directory('${localApplicationDir.path}/$audioPath').create(recursive: true);
+      final directory =
+          await Directory('${localApplicationDir.path}/${FileDataManager.CARP_FILE_PATH}/${studyId}/$AUDIO_FILE_PATH')
+              .create(recursive: true);
+
       _path = directory.path;
     }
     return _path;
@@ -132,4 +148,3 @@ class AudioProbe extends ListeningProbe {
     return "$dir/audio-$created.m4a";
   }
 }
-

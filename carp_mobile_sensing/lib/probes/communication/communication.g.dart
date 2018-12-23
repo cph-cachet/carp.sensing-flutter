@@ -8,7 +8,13 @@ part of communication;
 
 TextMessageLogDatum _$TextMessageLogDatumFromJson(Map<String, dynamic> json) {
   return TextMessageLogDatum()
-    ..c__ = json['c__'] as String
+    ..id = json['id'] as String
+    ..timestamp = json['timestamp'] == null
+        ? null
+        : DateTime.parse(json['timestamp'] as String)
+    ..deviceInfo = json['device_info'] == null
+        ? null
+        : DeviceInfo.fromJson(json['device_info'] as Map<String, dynamic>)
     ..textMessageLog = (json['text_message_log'] as List)
         ?.map((e) =>
             e == null ? null : TextMessage.fromJson(e as Map<String, dynamic>))
@@ -24,16 +30,25 @@ Map<String, dynamic> _$TextMessageLogDatumToJson(TextMessageLogDatum instance) {
     }
   }
 
-  writeNotNull('c__', instance.c__);
+  writeNotNull('id', instance.id);
+  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  writeNotNull('device_info', instance.deviceInfo);
   writeNotNull('text_message_log', instance.textMessageLog);
   return val;
 }
 
 TextMessageDatum _$TextMessageDatumFromJson(Map<String, dynamic> json) {
-  return TextMessageDatum(json['text_message'] == null
-      ? null
-      : TextMessage.fromJson(json['text_message'] as Map<String, dynamic>))
-    ..c__ = json['c__'] as String;
+  return TextMessageDatum(
+      textMessage: json['text_message'] == null
+          ? null
+          : TextMessage.fromJson(json['text_message'] as Map<String, dynamic>))
+    ..id = json['id'] as String
+    ..timestamp = json['timestamp'] == null
+        ? null
+        : DateTime.parse(json['timestamp'] as String)
+    ..deviceInfo = json['device_info'] == null
+        ? null
+        : DeviceInfo.fromJson(json['device_info'] as Map<String, dynamic>);
 }
 
 Map<String, dynamic> _$TextMessageDatumToJson(TextMessageDatum instance) {
@@ -45,7 +60,9 @@ Map<String, dynamic> _$TextMessageDatumToJson(TextMessageDatum instance) {
     }
   }
 
-  writeNotNull('c__', instance.c__);
+  writeNotNull('id', instance.id);
+  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  writeNotNull('device_info', instance.deviceInfo);
   writeNotNull('text_message', instance.textMessage);
   return val;
 }
@@ -91,7 +108,13 @@ Map<String, dynamic> _$TextMessageToJson(TextMessage instance) {
 
 PhoneLogDatum _$PhoneLogDatumFromJson(Map<String, dynamic> json) {
   return PhoneLogDatum()
-    ..c__ = json['c__'] as String
+    ..id = json['id'] as String
+    ..timestamp = json['timestamp'] == null
+        ? null
+        : DateTime.parse(json['timestamp'] as String)
+    ..deviceInfo = json['device_info'] == null
+        ? null
+        : DeviceInfo.fromJson(json['device_info'] as Map<String, dynamic>)
     ..phoneLog = (json['phone_log'] as List)
         ?.map((e) =>
             e == null ? null : PhoneCall.fromJson(e as Map<String, dynamic>))
@@ -107,7 +130,9 @@ Map<String, dynamic> _$PhoneLogDatumToJson(PhoneLogDatum instance) {
     }
   }
 
-  writeNotNull('c__', instance.c__);
+  writeNotNull('id', instance.id);
+  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  writeNotNull('device_info', instance.deviceInfo);
   writeNotNull('phone_log', instance.phoneLog);
   return val;
 }
@@ -144,36 +169,13 @@ Map<String, dynamic> _$PhoneCallToJson(PhoneCall instance) {
   return val;
 }
 
-TextMessageMeasure _$TextMessageMeasureFromJson(Map<String, dynamic> json) {
-  return TextMessageMeasure(json['measure_type'] as String, name: json['name'])
-    ..c__ = json['c__'] as String
-    ..enabled = json['enabled'] as bool
-    ..configuration = (json['configuration'] as Map<String, dynamic>)
-        ?.map((k, e) => MapEntry(k, e as String))
-    ..collectBodyOfMessage = json['collect_body_of_message'] as bool;
-}
-
-Map<String, dynamic> _$TextMessageMeasureToJson(TextMessageMeasure instance) {
-  var val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('c__', instance.c__);
-  writeNotNull('measure_type', instance.measureType);
-  writeNotNull('name', instance.name);
-  writeNotNull('enabled', instance.enabled);
-  writeNotNull('configuration', instance.configuration);
-  writeNotNull('collect_body_of_message', instance.collectBodyOfMessage);
-  return val;
-}
-
 PhoneLogMeasure _$PhoneLogMeasureFromJson(Map<String, dynamic> json) {
-  return PhoneLogMeasure(json['measure_type'] as String,
-      name: json['name'], days: json['days'] as int)
+  return PhoneLogMeasure(
+      json['type'] == null
+          ? null
+          : DataType.fromJson(json['type'] as Map<String, dynamic>),
+      name: json['name'],
+      days: json['days'] as int)
     ..c__ = json['c__'] as String
     ..enabled = json['enabled'] as bool
     ..configuration = (json['configuration'] as Map<String, dynamic>)
@@ -190,7 +192,7 @@ Map<String, dynamic> _$PhoneLogMeasureToJson(PhoneLogMeasure instance) {
   }
 
   writeNotNull('c__', instance.c__);
-  writeNotNull('measure_type', instance.measureType);
+  writeNotNull('type', instance.type);
   writeNotNull('name', instance.name);
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);

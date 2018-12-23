@@ -1,6 +1,6 @@
 name: carp_mobile_sensing_app
 description: The CARP Mobile Sensing App
-version: 0.0.1
+version: 0.0.2
 author:  CACHET Team <cph.cachet@gmail.com>
 homepage: https://github.com/cph-cachet/carp.sensing/tree/master/flutter/carp_firebase_backend
 
@@ -10,7 +10,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  carp_core: ^0.1.0                   # The core CARP domain model
   carp_mobile_sensing: ^0.2.0
   #carp_firebase_backend: ^0.0.1
   #cupertino_icons: ^0.1.2
@@ -18,8 +17,6 @@ dependencies:
 # Overriding carp libraries to use the local copy
 # Remove this when done development
 dependency_overrides:
-  carp_core:
-    path: ../carp_core/
   carp_mobile_sensing:
     path: ../carp_mobile_sensing/
   carp_firebase_backend:

@@ -10,9 +10,6 @@ part of environment;
 /// A [Datum] that holds weather information collected through OpenWeatherMap.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class WeatherDatum extends CARPDatum {
-  static CARPDataFormat CARP_DATA_FORMAT = new CARPDataFormat(
-      NameSpace.CARP_NAMESPACE, ProbeRegistry.WEATHER_MEASURE);
-
   String country, areaName, weatherMain, weatherDescription;
   DateTime date, sunrise, sunset;
   double latitude,
@@ -26,16 +23,14 @@ class WeatherDatum extends CARPDatum {
       rainLast3Hours,
       snowLastHour,
       snowLast3Hours,
-      temperature, tempMin, tempMax;
+      temperature,
+      tempMin,
+      tempMax;
 
-  WeatherDatum() : super();
+  WeatherDatum({Measure measure}) : super(measure: measure);
 
-  factory WeatherDatum.fromJson(Map<String, dynamic> json) =>
-      _$WeatherDatumFromJson(json);
-
+  factory WeatherDatum.fromJson(Map<String, dynamic> json) => _$WeatherDatumFromJson(json);
   Map<String, dynamic> toJson() => _$WeatherDatumToJson(this);
-
-  CARPDataFormat getCARPDataFormat() => CARP_DATA_FORMAT;
 
   String toString() {
     return '''

@@ -220,7 +220,7 @@ class FirebaseDatabaseDataManager extends FirebaseDataManager {
 
     if (user != null) {
       final String device_id = Device.deviceID.toString();
-      final String data_type = data.getCARPDataFormat().name;
+      final String data_type = data.measure.type.name;
 
       final json_data_string = json.encode(data);
       Map<String, dynamic> json_data = json.decode(json_data_string) as Map<String, dynamic>;

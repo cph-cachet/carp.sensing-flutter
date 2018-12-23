@@ -5,7 +5,6 @@
  * found in the LICENSE file.
  */
 import 'package:flutter/material.dart';
-import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_firebase_backend/carp_firebase_backend.dart';
 import 'package:carp_backend/carp_backend.dart';
@@ -117,6 +116,7 @@ class Sensing implements ProbeListener {
   StudyExecutor executor;
 
   Sensing(this.console) {
+    DataManagerRegistry.register(DataEndPointType.PRINT, new ConsoleDataManager());
     // Register a [FirebaseStorageDataManager] in the [DataManagerRegistry].
     DataManagerRegistry.register(DataEndPointType.FIREBASE_STORAGE, new FirebaseStorageDataManager());
     DataManagerRegistry.register(DataEndPointType.FIREBASE_DATABASE, new FirebaseDatabaseDataManager());
@@ -139,16 +139,16 @@ class Sensing implements ProbeListener {
     console.log("Setting up '${study.name}'...");
 
     // specify the [DataEndPoint] for this study.
-    study.dataEndPoint = getDataEndpoint(DataEndPointType.CARP);
+    study.dataEndPoint = getDataEndpoint(DataEndPointType.PRINT);
 
     // note that in this version, we start the sensors (accelerometer, etc.)
     // in order to generate a lot of data quickly for testing purposes
-    study.tasks.add(sensorTask);
-    study.tasks.add(pedometerTask);
+//    study.tasks.add(sensorTask);
+//    study.tasks.add(pedometerTask);
     study.tasks.add(hardwareTask);
-    study.tasks.add(appTask);
-    study.tasks.add(connectivityTask);
-    study.tasks.add(commTask);
+//    study.tasks.add(appTask);
+//    study.tasks.add(connectivityTask);
+//    study.tasks.add(commTask);
     study.tasks.add(locationTask);
 //    study.tasks.add(audioTask);
 //    study.tasks.add(contextTask);
@@ -165,8 +165,18 @@ class Sensing implements ProbeListener {
     // see the [notify()] method
     executor.addProbeListener(this);
     executor.initialize();
-    executor.start();
+    await executor.start();
     console.log("Sensing started ...");
+
+    print('listening on streams...');
+
+    // listening on all events from the study
+    executor.events.forEach(print);
+
+    // listening on a specific probe
+    ProbeRegistry.probes[MeasureType.LOCATION].events.forEach(print);
+
+    ProbeRegistry.probes.forEach((key, probe) => print('probe - $key - $probe'));
   }
 
   /// Stop sensing.
@@ -192,7 +202,7 @@ class Sensing implements ProbeListener {
       case DataEndPointType.PRINT:
         return new DataEndPoint(DataEndPointType.PRINT);
       case DataEndPointType.FILE:
-        return FileDataEndPoint(bufferSize: 500 * 1000, zip: true, encrypt: false);
+        return FileDataEndPoint(bufferSize: 50 * 1000, zip: true, encrypt: false);
       case DataEndPointType.CARP:
 //        return CarpDataEndPoint(CarpUploadMethod.DATA_POINT,
 //            name: 'CARP Staging Server',
@@ -252,26 +262,24 @@ class Sensing implements ProbeListener {
 
   /// A task collecting app information about installed apps on the device
   Task get appTask {
-    if (_appTask == null) {
-      _appTask = new Task("Application Task");
-      PollingProbeMeasure am = new PollingProbeMeasure(ProbeRegistry.APPS_MEASURE);
-      am.name = "Installed apps";
-      am.frequency = 5 * 1000;
-      _appTask.addMeasure(am);
-    }
+    if (_appTask == null)
+      _appTask = Task("Application Task")
+        ..addMeasure(PeriodicMeasure(DataType(NameSpace.CARP_NAMESPACE, MeasureType.APPS))
+          ..name = "Installed apps"
+          ..frequency = 5 * 1000);
+
     return _appTask;
   }
 
   /// A task collecting app information about installed apps on the device
   Task get appUsageTask {
     if (_appUsageTask == null) {
-      _appUsageTask = new Task("AppUsage Task");
-      AppUsageMeasure aum = new AppUsageMeasure(ProbeRegistry.APP_USAGE_MEASURE);
-      aum.name = "App foreground usage time";
-      int hourly = 60 * 60 * 1000;
-      aum.frequency = 10 * 1000;
-      aum.duration = hourly; // Go back one hour
-      _appUsageTask.addMeasure(aum);
+      _appUsageTask = Task("AppUsage Task")
+        ..addMeasure(PeriodicMeasure(DataType(NameSpace.CARP_NAMESPACE, MeasureType.APP_USAGE))
+              ..name = "App foreground usage time"
+              ..frequency = 10 * 1000
+              ..duration = 60 * 60 * 1000 // go back one hour
+            );
     }
     return _appUsageTask;
   }
@@ -279,15 +287,12 @@ class Sensing implements ProbeListener {
   /// A task collecting audio data as files.
   Task get audioTask {
     if (_audioTask == null) {
-      _audioTask = new Task("Audio task");
-
-      AudioMeasure aum = new AudioMeasure(ProbeRegistry.AUDIO_MEASURE,
-          name: 'Audio',
-          frequency: 10 * 1000, // once every 10 seconds
-          duration: 2 * 1000, // 2 seconds
-          soundFileDirPath: "${FileDataManager.CARP_FILE_PATH}/${study.id}/sound");
-
-      _audioTask.addMeasure(aum);
+      _audioTask = Task("Audio Task")
+        ..addMeasure(AudioMeasure(DataType(NameSpace.CARP_NAMESPACE, MeasureType.APP_USAGE))
+          ..name = "App foreground usage time"
+          ..frequency = 10 * 1000 // once every 10 sec
+          ..duration = 2 * 1000 // record 2 sec
+          ..studyId = study.id);
     }
     return _audioTask;
   }
@@ -300,30 +305,28 @@ class Sensing implements ProbeListener {
   /// Works only on Android.
   Task get commTask {
     if (_commTask == null) {
-      _commTask = new Task("Communication Task");
-
-      _commTask.addMeasure(PhoneLogMeasure(ProbeRegistry.PHONELOG_MEASURE, name: "Entire phone log", days: -1));
-
-      TextMessageMeasure tm_1 =
-          new TextMessageMeasure(ProbeRegistry.TEXT_MESSAGE_LOG_MEASURE, name: "Text Message Log");
-      tm_1.collectBodyOfMessage = false;
-      _commTask.addMeasure(tm_1);
-
-      TextMessageMeasure tm_2 = new TextMessageMeasure(ProbeRegistry.TEXT_MESSAGE_MEASURE, name: "Text Messages");
-      _commTask.addMeasure(tm_2);
+      _commTask = Task("Communication Task")
+        ..addMeasure(PhoneLogMeasure(DataType(NameSpace.CARP_NAMESPACE, MeasureType.PHONE_LOG))
+          ..name = "Entire phone log"
+          ..days = 10) // 10 days of log
+        ..addMeasure(Measure(DataType(NameSpace.CARP_NAMESPACE, MeasureType.TEXT_MESSAGE_LOG))..name = "Entire SMS log")
+        ..addMeasure(Measure(DataType(NameSpace.CARP_NAMESPACE, MeasureType.TEXT_MESSAGE))..name = "Listen on SMS's");
     }
     return _commTask;
   }
 
-  /// A task with three types of connectivity measures:
+  /// A task with two types of connectivity measures:
   /// - connectivity (wifi, ...)
   /// - nearby bluetooth devices
   Task get connectivityTask {
     if (_connectivityTask == null) {
-      _connectivityTask = new Task("Connectivity Task");
-
-      _connectivityTask.addMeasure(ConnectivityMeasure(ProbeRegistry.CONNECTIVITY_MEASURE, name: 'Connectivity'));
-      _connectivityTask.addMeasure(BluetoothMeasure(ProbeRegistry.BLUETOOTH_MEASURE, name: 'Nearby Bluetooth Devices'));
+      _connectivityTask = Task("Connectivity Task")
+        ..addMeasure(Measure(DataType(NameSpace.CARP_NAMESPACE, MeasureType.CONNECTIVITY))..name = "Connectivity")
+        ..addMeasure(PeriodicMeasure(DataType(NameSpace.CARP_NAMESPACE, MeasureType.BLUETOOTH))
+              ..name = "Nearby Bluetooth Devices"
+              ..frequency = 1 * 60 * 1000 // every minute
+              ..duration = 5 * 1000 // scan for 5 secs.
+            );
     }
     return _connectivityTask;
   }
@@ -331,10 +334,9 @@ class Sensing implements ProbeListener {
   /// A task collecting context information, such as activity.
   Task get contextTask {
     if (_contextTask == null) {
-      _contextTask = new Task("Context task");
-
-      _contextTask
-          .addMeasure(ListeningProbeMeasure(ProbeRegistry.ACTIVITY_MEASURE, name: "Activity Recognition Probe"));
+      _contextTask = Task("Context Task")
+        ..addMeasure(PeriodicMeasure(DataType(NameSpace.CARP_NAMESPACE, MeasureType.ACTIVITY))
+          ..name = "Activity Recognition Probe");
     }
     return _contextTask;
   }
@@ -342,10 +344,12 @@ class Sensing implements ProbeListener {
   /// A task collecting environment information, such as the weather.
   Task get environmentTask {
     if (_environmentTask == null) {
-      _environmentTask = new Task("Environment task");
-
-      _environmentTask.addMeasure(WeatherMeasure(ProbeRegistry.WEATHER_MEASURE,
-          apiKey: '12b6e28582eb9298577c734a31ba9f4f', name: "Weather Probe", frequency: 15 * 1000));
+      _environmentTask = Task("Environment Task")
+        ..addMeasure(WeatherMeasure(DataType(NameSpace.CARP_NAMESPACE, MeasureType.WEATHER))
+          ..name = "Weather Probe"
+          ..frequency = 1 * 60 * 1000 // once every minute
+          ..duration = 2 * 1000 // record 2 sec
+          ..apiKey = '12b6e28582eb9298577c734a31ba9f4f');
     }
     return _environmentTask;
   }
@@ -356,12 +360,13 @@ class Sensing implements ProbeListener {
   /// - screen activity (lock, on, off)
   Task get hardwareTask {
     if (_hardwareTask == null) {
-      _hardwareTask = new Task("Hardware Task");
-
-      _hardwareTask.addMeasure(
-          PollingProbeMeasure(ProbeRegistry.MEMORY_MEASURE, name: 'Polling of availabel memory', frequency: 2 * 1000));
-      _hardwareTask.addMeasure(ListeningProbeMeasure(ProbeRegistry.BATTERY_MEASURE, name: 'Battery'));
-      _hardwareTask.addMeasure(ListeningProbeMeasure(ProbeRegistry.SCREEN_MEASURE, name: 'Screen Lock/Unlock'));
+      _hardwareTask = Task("Hardware Task")
+//        ..addMeasure(PeriodicMeasure(DataType(NameSpace.CARP_NAMESPACE, MeasureType.MEMORY))
+//          ..name = "Polling of availabel memory"
+//          ..frequency = 10 * 1000) // 10 days of log
+            ..addMeasure(Measure(DataType(NameSpace.CARP_NAMESPACE, MeasureType.BATTERY))..name = "Battery")
+//        ..addMeasure(Measure(DataType(NameSpace.CARP_NAMESPACE, MeasureType.SCREEN))..name = "Screen Lock/Unlock")
+          ;
     }
     return _hardwareTask;
   }
@@ -369,25 +374,22 @@ class Sensing implements ProbeListener {
   /// A task collecting location information.
   Task get locationTask {
     if (_locationTask == null) {
-      _locationTask = new Task("Location Task");
-      _locationTask.addMeasure(LocationMeasure(ProbeRegistry.LOCATION_MEASURE, name: 'Location'));
+      _locationTask = Task("Location Task")
+        ..addMeasure(Measure(DataType(NameSpace.CARP_NAMESPACE, MeasureType.LOCATION))..name = "Location");
     }
     return _locationTask;
   }
 
-  /// A task collecting audio data as files.
+  /// A task sensing noise.
   Task get noiseTask {
     if (_noiseTask == null) {
-      _noiseTask = new Task("Noise task");
-
-      NoiseMeasure nm = new NoiseMeasure(ProbeRegistry.NOISE_MEASURE,
-          name: 'Noise',
-          frequency: 30 * 1000, // How often to start a measure
-          duration: 10 * 1000, // Window size: 10 seconds,
-          samplingRate: 500 // Sample a data point every 500 ms
-          );
-
-      _noiseTask.addMeasure(nm);
+      _noiseTask = Task("Audio Task")
+        ..addMeasure(NoiseMeasure(DataType(NameSpace.CARP_NAMESPACE, MeasureType.NOISE))
+              ..name = "Noise"
+              ..frequency = 30 * 1000 // How often to start a measure
+              ..duration = 2 * 1000 // Window size
+              ..samplingRate = 400 // Sample a data point every 400 ms
+            );
     }
     return _noiseTask;
   }
@@ -395,13 +397,11 @@ class Sensing implements ProbeListener {
   /// A task collecting pedometer (step count) data on a regular basis.
   Task get pedometerTask {
     if (_pedometerTask == null) {
-      _pedometerTask = new Task("Pedometer task");
-
-      SensorMeasure pm = new SensorMeasure(ProbeRegistry.PEDOMETER_MEASURE,
-          name: 'Pedometer', //
-          frequency: 30 * 1000 // Sample once every 30 seconds
-          );
-      _pedometerTask.addMeasure(pm);
+      _pedometerTask = Task("Pedometer Task")
+        ..addMeasure(PeriodicMeasure(DataType(NameSpace.CARP_NAMESPACE, MeasureType.MEMORY))
+              ..name = "Pedometer"
+              ..frequency = 1 * 60 * 1000 // how often to collect step count
+            );
     }
     return _pedometerTask;
   }
@@ -414,25 +414,22 @@ class Sensing implements ProbeListener {
   /// Note that these sensors collects *a lot of data* and should be used *very* carefully.
   Task get sensorTask {
     if (_sensorTask == null) {
-      _sensorTask = new Task("Sensor task");
-
-      SensorMeasure am = new SensorMeasure(ProbeRegistry.ACCELEROMETER_MEASURE);
-      am.name = 'Accelerometer';
-      am.frequency = 8 * 1000; // once every 8 second
-      am.duration = 500; // 500 ms
-      _sensorTask.addMeasure(am);
-
-      SensorMeasure gm = new SensorMeasure(ProbeRegistry.GYROSCOPE_MEASURE);
-      gm.name = 'Gyroscope';
-      gm.frequency = 8 * 1000; // once every 8 second
-      gm.duration = 100; // 100 ms
-//      _sensorTask.addMeasure(gm);
-
-      SensorMeasure lm = new SensorMeasure(ProbeRegistry.LIGHT_MEASURE);
-      lm.name = 'Light';
-      lm.frequency = 8 * 1000; // once every 8 second
-      lm.duration = 1000; // 1 second
-      _sensorTask.addMeasure(lm);
+      _sensorTask = Task("Sensor Task")
+        ..addMeasure(PeriodicMeasure(DataType(NameSpace.CARP_NAMESPACE, MeasureType.ACCELEROMETER))
+              ..name = "Accelerometer"
+              ..frequency = 8 * 1000 // How often to start a measure
+              ..duration = 20 // Window size
+            )
+        ..addMeasure(PeriodicMeasure(DataType(NameSpace.CARP_NAMESPACE, MeasureType.GYROSCOPE))
+              ..name = "Gyroscope"
+              ..frequency = 9 * 1000 // How often to start a measure
+              ..duration = 100 // Window size
+            )
+        ..addMeasure(PeriodicMeasure(DataType(NameSpace.CARP_NAMESPACE, MeasureType.LIGHT))
+              ..name = "Light"
+              ..frequency = 11 * 1000 // How often to start a measure
+              ..duration = 700 // Window size
+            );
     }
     return _sensorTask;
   }

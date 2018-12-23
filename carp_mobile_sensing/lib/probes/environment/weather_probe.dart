@@ -5,10 +5,10 @@ class WeatherProbe extends PollingProbe {
   String _apiKey;
   int _frequency;
 
-  /// Initialize an [WeatherProbe] taking a [PollingProbeMeasure] as configuration.
-  WeatherProbe(PollingProbeMeasure _measure)
-      : assert(_measure != null),
-        super(_measure);
+  Stream<Datum> get stream => null;
+
+  /// Initialize an [WeatherProbe] taking a [PeriodicMeasure] as configuration.
+  WeatherProbe(WeatherMeasure measure) : super(measure);
 
   @override
   void initialize() {
@@ -48,28 +48,29 @@ class WeatherProbe extends PollingProbe {
   @override
   Future<Datum> getDatum() async {
     Weather w = await _ws.currentWeather();
-    WeatherDatum datum = new WeatherDatum();
-    datum.country = w.country;
-    datum.areaName = w.areaName;
-    datum.weatherMain = w.weatherMain;
-    datum.weatherDescription = w.weatherDescription;
-    datum.date = w.date;
-    datum.sunrise = w.sunrise;
-    datum.sunset = w.sunset;
-    datum.latitude = w.latitude;
-    datum.longitude = w.longitude;
-    datum.pressure = w.pressure;
-    datum.windSpeed = w.windSpeed;
-    datum.windDegree = w.windDegree;
-    datum.humidity = w.humidity;
-    datum.cloudiness = w.cloudiness;
-    datum.rainLastHour = w.rainLastHour;
-    datum.rainLast3Hours = w.rainLast3Hours;
-    datum.snowLastHour = w.snowLastHour;
-    datum.snowLast3Hours = w.snowLast3Hours;
-    datum.temperature = w.temperature.celsius;
-    datum.tempMin = w.tempMin.celsius;
-    datum.tempMax = w.tempMax.celsius;
+    WeatherDatum datum = new WeatherDatum(measure: measure)
+      ..country = w.country
+      ..areaName = w.areaName
+      ..weatherMain = w.weatherMain
+      ..weatherDescription = w.weatherDescription
+      ..date = w.date
+      ..sunrise = w.sunrise
+      ..sunset = w.sunset
+      ..latitude = w.latitude
+      ..longitude = w.longitude
+      ..pressure = w.pressure
+      ..windSpeed = w.windSpeed
+      ..windDegree = w.windDegree
+      ..humidity = w.humidity
+      ..cloudiness = w.cloudiness
+      ..rainLastHour = w.rainLastHour
+      ..rainLast3Hours = w.rainLast3Hours
+      ..snowLastHour = w.snowLastHour
+      ..snowLast3Hours = w.snowLast3Hours
+      ..temperature = w.temperature.celsius
+      ..tempMin = w.tempMin.celsius
+      ..tempMax = w.tempMax.celsius;
+
     return datum;
   }
 }

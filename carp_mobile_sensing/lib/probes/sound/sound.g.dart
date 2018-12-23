@@ -15,7 +15,6 @@ AudioDatum _$AudioDatumFromJson(Map<String, dynamic> json) {
       endRecordingTime: json['end_recording_time'] == null
           ? null
           : DateTime.parse(json['end_recording_time'] as String))
-    ..c__ = json['c__'] as String
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
         ? null
@@ -34,7 +33,6 @@ Map<String, dynamic> _$AudioDatumToJson(AudioDatum instance) {
     }
   }
 
-  writeNotNull('c__', instance.c__);
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
   writeNotNull('device_info', instance.deviceInfo);
@@ -52,7 +50,6 @@ NoiseDatum _$NoiseDatumFromJson(Map<String, dynamic> json) {
       stdDecibel: json['std_decibel'] as num,
       minDecibel: json['min_decibel'] as num,
       maxDecibel: json['max_decibel'] as num)
-    ..c__ = json['c__'] as String
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
         ? null
@@ -71,7 +68,6 @@ Map<String, dynamic> _$NoiseDatumToJson(NoiseDatum instance) {
     }
   }
 
-  writeNotNull('c__', instance.c__);
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
   writeNotNull('device_info', instance.deviceInfo);
@@ -83,13 +79,16 @@ Map<String, dynamic> _$NoiseDatumToJson(NoiseDatum instance) {
 }
 
 AudioMeasure _$AudioMeasureFromJson(Map<String, dynamic> json) {
-  return AudioMeasure(json['measure_type'],
+  return AudioMeasure(
+      json['type'] == null
+          ? null
+          : DataType.fromJson(json['type'] as Map<String, dynamic>),
       name: json['name'],
+      enabled: json['enabled'],
       frequency: json['frequency'],
       duration: json['duration'],
-      soundFileDirPath: json['sound_file_dir_path'] as String)
+      studyId: json['study_id'] as String)
     ..c__ = json['c__'] as String
-    ..enabled = json['enabled'] as bool
     ..configuration = (json['configuration'] as Map<String, dynamic>)
         ?.map((k, e) => MapEntry(k, e as String));
 }
@@ -104,24 +103,27 @@ Map<String, dynamic> _$AudioMeasureToJson(AudioMeasure instance) {
   }
 
   writeNotNull('c__', instance.c__);
-  writeNotNull('measure_type', instance.measureType);
+  writeNotNull('type', instance.type);
   writeNotNull('name', instance.name);
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
   writeNotNull('frequency', instance.frequency);
   writeNotNull('duration', instance.duration);
-  writeNotNull('sound_file_dir_path', instance.soundFileDirPath);
+  writeNotNull('study_id', instance.studyId);
   return val;
 }
 
 NoiseMeasure _$NoiseMeasureFromJson(Map<String, dynamic> json) {
-  return NoiseMeasure(json['measure_type'],
+  return NoiseMeasure(
+      json['type'] == null
+          ? null
+          : DataType.fromJson(json['type'] as Map<String, dynamic>),
       name: json['name'],
+      enabled: json['enabled'],
       frequency: json['frequency'],
       duration: json['duration'],
       samplingRate: json['sampling_rate'] as int)
     ..c__ = json['c__'] as String
-    ..enabled = json['enabled'] as bool
     ..configuration = (json['configuration'] as Map<String, dynamic>)
         ?.map((k, e) => MapEntry(k, e as String));
 }
@@ -136,7 +138,7 @@ Map<String, dynamic> _$NoiseMeasureToJson(NoiseMeasure instance) {
   }
 
   writeNotNull('c__', instance.c__);
-  writeNotNull('measure_type', instance.measureType);
+  writeNotNull('type', instance.type);
   writeNotNull('name', instance.name);
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);

@@ -1,5 +1,5 @@
 import 'package:carp_backend/carp_backend.dart';
-import 'package:carp_core/carp_core.dart';
+import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 void main() {
   final String username = "researcher";

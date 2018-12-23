@@ -9,14 +9,14 @@ part of apps;
 
 /// A polling probe collecting a list of installed applications on this device.
 class AppsProbe extends PollingProbe {
-  AppsProbe(PollingProbeMeasure _measure) : super(_measure);
+  AppsProbe(PeriodicMeasure measure) : super(measure);
+
+  Stream<Datum> get stream => null;
 
   @override
   Future<Datum> getDatum() async {
     List<Application> apps = await DeviceApps.getInstalledApplications();
-    AppsDatum _ad = new AppsDatum();
-    _ad.installedApps = _getAppNames(apps);
-    return _ad;
+    return AppsDatum(measure: measure)..installedApps = _getAppNames(apps);
   }
 
   List<String> _getAppNames(List<Application> apps) {

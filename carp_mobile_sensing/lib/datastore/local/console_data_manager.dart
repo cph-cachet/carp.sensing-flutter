@@ -24,6 +24,11 @@ class ConsoleDataManager extends AbstractDataManager {
   }
 
   @override
+  void onData(Datum datum) {
+    uploadData(datum);
+  }
+
+  @override
   Future close() async {}
 
   @override

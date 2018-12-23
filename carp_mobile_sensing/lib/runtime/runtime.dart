@@ -11,9 +11,10 @@
 library runtime;
 
 import 'dart:async';
+import 'package:async/async.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_mobile_sensing/probes/sensors/sensors.dart';
-import 'package:carp_core/carp_core.dart';
+import 'package:carp_mobile_sensing/core/core.dart';
 
 part 'probes.dart';
 part 'probe_registry.dart';

@@ -7,16 +7,18 @@
 
 part of hardware;
 
-/// A polling probe that collects free virtual memory on a regular basis as specified in [PollingProbeMeasure.frequency].
+/// A polling probe that collects free virtual memory on a regular basis
+/// as specified in [PeriodicMeasure.frequency].
 class MemoryPollingProbe extends PollingProbe {
-  /// A [MemoryPollingProbe] is a polling probe and takes a [PollingProbeMeasure] as configuration.
-  MemoryPollingProbe(PollingProbeMeasure _measure) : super(_measure);
+  /// A [MemoryPollingProbe] is a polling probe and takes a [PeriodicMeasure] as configuration.
+  MemoryPollingProbe(PeriodicMeasure measure) : super(measure);
+
+  Stream<Datum> get stream => null;
 
   @override
   Future<Datum> getDatum() async {
-    FreeMemoryDatum _fmd = new FreeMemoryDatum();
-    _fmd.freePhysicalMemory = SysInfo.getFreePhysicalMemory();
-    _fmd.freeVirtualMemory = SysInfo.getFreeVirtualMemory();
-    return _fmd;
+    return FreeMemoryDatum(measure: measure)
+      ..freePhysicalMemory = SysInfo.getFreePhysicalMemory()
+      ..freeVirtualMemory = SysInfo.getFreeVirtualMemory();
   }
 }

@@ -15,7 +15,9 @@ class LightProbe extends ListeningProbe {
   Light _light;
   List<num> _luxValues = new List();
 
-  LightProbe(SensorMeasure _measure) : super(_measure);
+  Stream<Datum> get stream => null;
+
+  LightProbe(PeriodicMeasure _measure) : super(_measure);
 
   @override
   void initialize() {
@@ -32,9 +34,9 @@ class LightProbe extends ListeningProbe {
     // pause it for now.
     _subscription.pause();
 
-    int _frequency = (measure as SensorMeasure).frequency;
+    int _frequency = (measure as PeriodicMeasure).frequency;
     Duration _pause = new Duration(milliseconds: _frequency);
-    int _duration = (measure as SensorMeasure).duration;
+    int _duration = (measure as PeriodicMeasure).duration;
     Duration _samplingDuration = new Duration(milliseconds: _duration);
 
     // create a recurrent timer that wait (pause) and then resume the sampling.
@@ -80,7 +82,7 @@ class LightProbe extends ListeningProbe {
   }
 
   void _onError(error) {
-    ErrorDatum _ed = new ErrorDatum(error.toString());
+    ErrorDatum _ed = new ErrorDatum(measure: measure, message: error.toString());
     this.notifyAllListeners(_ed);
   }
 
@@ -94,6 +96,6 @@ class LightProbe extends ListeningProbe {
     num std = stats.standardDeviation;
     num min = stats.min;
     num max = stats.max;
-    return new LightDatum(meanLux: mean, stdLux: std, minLux: min, maxLux: max);
+    return new LightDatum(measure: measure, meanLux: mean, stdLux: std, minLux: min, maxLux: max);
   }
 }

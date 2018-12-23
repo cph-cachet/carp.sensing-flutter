@@ -5,7 +5,8 @@ part of audio;
 /// See [NoiseMeasure] on how to configure this probe, including setting the
 /// frequency, duration and sampling rate of the sampling rate.
 ///
-/// Does not record sound, and instead reports the audio level with a specified frequency, in a given sampling window.
+/// Does not record sound, and instead reports the audio level with a specified frequency,
+/// in a given sampling window.
 class NoiseProbe extends ListeningProbe {
   Noise _noise;
   bool _isListening = false;
@@ -15,14 +16,13 @@ class NoiseProbe extends ListeningProbe {
   StreamSubscription<NoiseEvent> _noiseSubscription;
   List<num> _noiseReadings = new List();
 
-  /// Initialize an [NoiseProbe] taking a [SensorMeasure] as configuration.
-  NoiseProbe(NoiseMeasure _measure)
-      : assert(_measure != null),
-        super(_measure);
+  Stream<Datum> get stream => null;
+
+  /// Initialize an [NoiseProbe] taking a [NoiseMeasure] as configuration.
+  NoiseProbe(NoiseMeasure measure) : super(measure);
 
   @override
   void initialize() {
-    // Define the probe sampling sampling rate
     _samplingRate = (measure as NoiseMeasure).samplingRate;
     _noise = new Noise(_samplingRate);
     super.initialize();
@@ -89,7 +89,6 @@ class NoiseProbe extends ListeningProbe {
     num min = stats.min;
     num max = stats.max;
     print("NoiseProbe: $mean, $std, $min, $max");
-    return new NoiseDatum(
-        meanDecibel: mean, stdDecibel: std, minDecibel: min, maxDecibel: max);
+    return new NoiseDatum(measure: measure, meanDecibel: mean, stdDecibel: std, minDecibel: min, maxDecibel: max);
   }
 }

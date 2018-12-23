@@ -8,7 +8,6 @@ part of environment;
 
 WeatherDatum _$WeatherDatumFromJson(Map<String, dynamic> json) {
   return WeatherDatum()
-    ..c__ = json['c__'] as String
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
         ? null
@@ -52,7 +51,6 @@ Map<String, dynamic> _$WeatherDatumToJson(WeatherDatum instance) {
     }
   }
 
-  writeNotNull('c__', instance.c__);
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
   writeNotNull('device_info', instance.deviceInfo);
@@ -81,11 +79,14 @@ Map<String, dynamic> _$WeatherDatumToJson(WeatherDatum instance) {
 }
 
 WeatherMeasure _$WeatherMeasureFromJson(Map<String, dynamic> json) {
-  return WeatherMeasure(json['measure_type'],
-      apiKey: json['api_key'] as String,
+  return WeatherMeasure(
+      json['type'] == null
+          ? null
+          : DataType.fromJson(json['type'] as Map<String, dynamic>),
       name: json['name'],
       frequency: json['frequency'],
-      duration: json['duration'])
+      duration: json['duration'],
+      apiKey: json['api_key'] as String)
     ..c__ = json['c__'] as String
     ..enabled = json['enabled'] as bool
     ..configuration = (json['configuration'] as Map<String, dynamic>)
@@ -102,7 +103,7 @@ Map<String, dynamic> _$WeatherMeasureToJson(WeatherMeasure instance) {
   }
 
   writeNotNull('c__', instance.c__);
-  writeNotNull('measure_type', instance.measureType);
+  writeNotNull('type', instance.type);
   writeNotNull('name', instance.name);
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);

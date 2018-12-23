@@ -13,7 +13,7 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:path_provider/path_provider.dart';
 import 'package:archive/archive_io.dart';
-import 'package:carp_core/carp_core.dart';
+import 'package:carp_mobile_sensing/core/core.dart';
 
 part 'local/console_data_manager.dart';
 part 'local/file_data_manager.dart';
