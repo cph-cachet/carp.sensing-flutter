@@ -10,7 +10,7 @@ part of core;
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class Measure extends Serializable {
   /// The type of measure to do.
-  DataType type;
+  MeasureType type;
 
   /// A printer-friendly name for this measure.
   String name;
@@ -52,7 +52,7 @@ class PeriodicMeasure extends Measure {
   /// The sampling duration in milliseconds.
   int duration;
 
-  PeriodicMeasure(DataType type, {name, enabled = true, this.frequency, this.duration})
+  PeriodicMeasure(MeasureType type, {name, enabled = true, this.frequency, this.duration})
       : super(type, name: name, enabled: enabled);
 
   static Function get fromJsonFunction => _$PeriodicMeasureFromJson;
@@ -61,58 +61,21 @@ class PeriodicMeasure extends Measure {
   Map<String, dynamic> toJson() => _$PeriodicMeasureToJson(this);
 }
 
-/// Specifies the data type of a [Measure].
+/// Specifies the type of a [Measure].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class DataType extends Serializable {
+class MeasureType extends Serializable {
   /// The data format namespace. See [NameSpace].
   String namepace;
 
   /// The name of this data format.
   String name;
 
-  DataType(this.namepace, this.name) : super();
+  MeasureType(this.namepace, this.name) : super();
 
-  static Function get fromJsonFunction => _$DataTypeFromJson;
-  factory DataType.fromJson(Map<String, dynamic> json) =>
+  static Function get fromJsonFunction => _$MeasureTypeFromJson;
+  factory MeasureType.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
-  Map<String, dynamic> toJson() => _$DataTypeToJson(this);
+  Map<String, dynamic> toJson() => _$MeasureTypeToJson(this);
 
   String toString() => "$namepace.$name";
-}
-
-/// An abstract class represent any namespace schema.
-/// Currently supporting:
-/// * `omh`  : Open mHealth data format
-/// * `carp` : CARP data format
-abstract class NameSpace {
-  static const String UNKNOWN_NAMESPACE = "unknown";
-  static const String OMH_NAMESPACE = "omh";
-  static const String CARP_NAMESPACE = "carp";
-}
-
-class MeasureType {
-  static const String MEASURE = "measure";
-  static const String STRING = "string";
-  static const String ERROR = "error";
-  static const String MEMORY = "memory";
-  static const String PEDOMETER = "pedometer";
-  static const String ACCELEROMETER = "accelerometer";
-  static const String GYROSCOPE = "gyroscope";
-  static const String BATTERY = "battery";
-  static const String BLUETOOTH = "bluetooth";
-  static const String AUDIO = "audio";
-  static const String NOISE = "noise";
-  static const String LOCATION = "location";
-  static const String CONNECTIVITY = "connectivity";
-  static const String LIGHT = "light";
-  static const String APPS = "apps";
-  static const String APP_USAGE = "app_usage";
-  static const String TEXT_MESSAGE_LOG = "text-message-log";
-  static const String TEXT_MESSAGE = "text-message";
-  static const String SCREEN = "screen";
-  static const String PHONE_LOG = "phone_log";
-  static const String ACTIVITY = "activity";
-  static const String APPLE_HEALTHKIT = "apple-healthkit";
-  static const String GOOGLE_FIT = "google-fit";
-  static const String WEATHER = "weather";
 }

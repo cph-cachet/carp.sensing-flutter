@@ -7,21 +7,21 @@ part of sensors;
 // **************************************************************************
 
 PedometerDatum _$PedometerDatumFromJson(Map<String, dynamic> json) {
-  return PedometerDatum()
+  return PedometerDatum(
+      stepCount: json['step_count'] as int,
+      startTime: json['start_time'] == null
+          ? null
+          : DateTime.parse(json['start_time'] as String),
+      endTime: json['end_time'] == null
+          ? null
+          : DateTime.parse(json['end_time'] as String))
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
         ? null
         : DateTime.parse(json['timestamp'] as String)
     ..deviceInfo = json['device_info'] == null
         ? null
-        : DeviceInfo.fromJson(json['device_info'] as Map<String, dynamic>)
-    ..startTime = json['start_time'] == null
-        ? null
-        : DateTime.parse(json['start_time'] as String)
-    ..endTime = json['end_time'] == null
-        ? null
-        : DateTime.parse(json['end_time'] as String)
-    ..stepCount = json['step_count'] as int;
+        : DeviceInfo.fromJson(json['device_info'] as Map<String, dynamic>);
 }
 
 Map<String, dynamic> _$PedometerDatumToJson(PedometerDatum instance) {

@@ -10,6 +10,9 @@ part of hardware;
 /// A [Datum] that holds battery level collected from the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class BatteryDatum extends CARPDatum {
+  static DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.BATTERY);
+  DataFormat get format => CARP_DATA_FORMAT;
+
   /// The battery level in percent.
   int batteryLevel;
 
@@ -20,12 +23,12 @@ class BatteryDatum extends CARPDatum {
   /// - unknown
   String batteryStatus;
 
-  BatteryDatum({Measure measure}) : super(measure: measure);
+  BatteryDatum() : super();
 
   BatteryDatum.fromBatteryState(Measure measure, int level, BatteryState state)
       : batteryLevel = level,
         batteryStatus = _parseBatteryState(state),
-        super(measure: measure);
+        super();
 
   static String _parseBatteryState(BatteryState state) {
     switch (state) {
@@ -49,13 +52,16 @@ class BatteryDatum extends CARPDatum {
 /// Holds information about free memory on the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class FreeMemoryDatum extends CARPDatum {
+  static DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.MEMORY);
+  DataFormat get format => CARP_DATA_FORMAT;
+
   /// Amount of free physical memory in bytes.
   int freePhysicalMemory;
 
   /// Amount of free virtual memory in bytes.
   int freeVirtualMemory;
 
-  FreeMemoryDatum({Measure measure}) : super(measure: measure);
+  FreeMemoryDatum() : super();
 
   factory FreeMemoryDatum.fromJson(Map<String, dynamic> json) => _$FreeMemoryDatumFromJson(json);
   Map<String, dynamic> toJson() => _$FreeMemoryDatumToJson(this);
@@ -66,13 +72,33 @@ class FreeMemoryDatum extends CARPDatum {
 /// Holds a screen event collected from the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ScreenDatum extends CARPDatum {
+  static DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.SCREEN);
+  DataFormat get format => CARP_DATA_FORMAT;
+
   /// A screen event:
   /// - SCREEN_OFF
   /// - SCREEN_ON
   /// - SCREEN_UNLOCKED
   String screenEvent;
 
-  ScreenDatum({Measure measure}) : super(measure: measure);
+  ScreenDatum({Measure measure}) : super();
+
+  factory ScreenDatum.fromScreenStateEvent(Measure measure, ScreenStateEvent event) {
+    ScreenDatum sd = new ScreenDatum(measure: measure);
+
+    switch (event) {
+      case ScreenStateEvent.SCREEN_ON:
+        sd.screenEvent = "SCREEN_ON";
+        break;
+      case ScreenStateEvent.SCREEN_OFF:
+        sd.screenEvent = "SCREEN_OFF";
+        break;
+      case ScreenStateEvent.SCREEN_UNLOCKED:
+        sd.screenEvent = "SCREEN_UNLOCKED";
+        break;
+    }
+    return sd;
+  }
 
   factory ScreenDatum.fromJson(Map<String, dynamic> json) => _$ScreenDatumFromJson(json);
   Map<String, dynamic> toJson() => _$ScreenDatumToJson(this);

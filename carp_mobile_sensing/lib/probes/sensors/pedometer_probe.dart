@@ -7,10 +7,65 @@
 
 part of sensors;
 
-/// The [PedometerProbe] listens to the hardware step counts.
+/// The pedometer probe listens to the hardware step counts.
 /// It samples step counts periodically, as specified by [frequency] in [PeriodicMeasure] and
 /// reports the step count in a [PedometerDatum] for the duration of the period.
-class PedometerProbe extends ListeningProbe {
+class PedometerProbe extends StreamProbe {
+  Duration frequency;
+  Pedometer pedometer = new Pedometer();
+  int _latestStepCount = 0;
+  DateTime _startTime;
+
+  /// Returns the latest known step count.
+  int get latestStepCount => _latestStepCount;
+
+  PedometerProbe(PeriodicMeasure measure)
+      : assert(measure != null),
+        assert(measure.frequency != null, 'Measure frequency cannot be null for a PedometerProbe.'),
+        frequency = Duration(milliseconds: measure.frequency),
+        super(measure);
+
+  @override
+  void initialize() {
+    super.initialize();
+
+    // start listening to the pedometer, but pause until the probe is started
+    subscription = pedometer.stepCountStream.listen(_onStep, onError: onError);
+    _startTime = DateTime.now();
+    subscription.pause();
+  }
+
+  Stream<Datum> get stream => null; // we're not using this stream - creating our own above.
+
+  @override
+  Future start() async {
+    super.start();
+
+    // create a recurrent timer that wait (pause) and then resumes the sampling.
+    Timer.periodic(frequency, (Timer timer) {
+      subscription.resume();
+    });
+  }
+
+  // FlutterPedometer callback
+  void _onStep(int count) async {
+    PedometerDatum _scd =
+        new PedometerDatum(stepCount: count - _latestStepCount, startTime: _startTime, endTime: DateTime.now());
+
+    // pause the listening until the periodic timer above resumes it
+    subscription.pause();
+    // save this timestamp and the step count as the start for the next period
+    _startTime = DateTime.now();
+    _latestStepCount = count;
+    // propagate the event up to the super controller.
+    onData(_scd);
+  }
+}
+
+/// The [OldPedometerProbe] listens to the hardware step counts.
+/// It samples step counts periodically, as specified by [frequency] in [PeriodicMeasure] and
+/// reports the step count in a [PedometerDatum] for the duration of the period.
+class OldPedometerProbe extends AbstractProbe {
   Pedometer _pedometer;
   StreamSubscription<int> _subscription;
   int _latestStepCount = 0;
@@ -19,9 +74,9 @@ class PedometerProbe extends ListeningProbe {
   /// Returns the latest known step count.
   int get latestStepCount => _latestStepCount;
 
-  Stream<Datum> get stream => null;
+  Stream<Datum> get events => null;
 
-  PedometerProbe(PeriodicMeasure measure) : super(measure);
+  OldPedometerProbe(PeriodicMeasure measure) : super.init(measure);
 
   @override
   void initialize() {
@@ -65,7 +120,7 @@ class PedometerProbe extends ListeningProbe {
 
   // FlutterPedometer callback
   void _onData(int count) async {
-    PedometerDatum _scd = new PedometerDatum(measure: measure);
+    PedometerDatum _scd = new PedometerDatum();
     // calculate step count for this period
     _scd.stepCount = count - _latestStepCount;
     _scd.startTime = _startTime;
@@ -83,7 +138,7 @@ class PedometerProbe extends ListeningProbe {
   void _onDone() {}
 
   void _onError(error) {
-    ErrorDatum _ed = new ErrorDatum(measure: measure, message: error.toString());
+    ErrorDatum _ed = new ErrorDatum(message: error.toString());
     this.notifyAllListeners(_ed);
   }
 }

@@ -82,7 +82,7 @@ AudioMeasure _$AudioMeasureFromJson(Map<String, dynamic> json) {
   return AudioMeasure(
       json['type'] == null
           ? null
-          : DataType.fromJson(json['type'] as Map<String, dynamic>),
+          : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
       name: json['name'],
       enabled: json['enabled'],
       frequency: json['frequency'],
@@ -117,7 +117,7 @@ NoiseMeasure _$NoiseMeasureFromJson(Map<String, dynamic> json) {
   return NoiseMeasure(
       json['type'] == null
           ? null
-          : DataType.fromJson(json['type'] as Map<String, dynamic>),
+          : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
       name: json['name'],
       enabled: json['enabled'],
       frequency: json['frequency'],

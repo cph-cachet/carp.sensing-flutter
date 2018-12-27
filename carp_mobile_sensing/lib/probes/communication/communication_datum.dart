@@ -10,9 +10,12 @@ part of communication;
 /// Holds a list of text (SMS) messages from the device.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class TextMessageLogDatum extends CARPDatum {
+  static DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.TEXT_MESSAGE_LOG);
+  DataFormat get format => CARP_DATA_FORMAT;
+
   List<TextMessage> textMessageLog;
 
-  TextMessageLogDatum({Measure measure}) : super(measure: measure);
+  TextMessageLogDatum() : super();
 
   factory TextMessageLogDatum.fromJson(Map<String, dynamic> json) => _$TextMessageLogDatumFromJson(json);
   Map<String, dynamic> toJson() => _$TextMessageLogDatumToJson(this);
@@ -25,9 +28,13 @@ class TextMessageLogDatum extends CARPDatum {
 /// Wraps a [TextMessage].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class TextMessageDatum extends CARPDatum {
+  static DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.TEXT_MESSAGE);
+  DataFormat get format => CARP_DATA_FORMAT;
+
   TextMessage textMessage;
 
-  TextMessageDatum({Measure measure, this.textMessage}) : super(measure: measure);
+  TextMessageDatum() : super();
+  factory TextMessageDatum.fromTextMessage(Measure measure, TextMessage msg) => TextMessageDatum()..textMessage = msg;
 
   factory TextMessageDatum.fromJson(Map<String, dynamic> json) => _$TextMessageDatumFromJson(json);
   Map<String, dynamic> toJson() => _$TextMessageDatumToJson(this);
@@ -107,9 +114,12 @@ class TextMessage extends Serializable {
 /// Holds a phone log, i.e. a list of phone calls made on the device.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class PhoneLogDatum extends CARPDatum {
+  static DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.PHONE_LOG);
+  DataFormat get format => CARP_DATA_FORMAT;
+
   List<PhoneCall> phoneLog = new List<PhoneCall>();
 
-  PhoneLogDatum({Measure measure}) : super(measure: measure);
+  PhoneLogDatum() : super();
 
   factory PhoneLogDatum.fromJson(Map<String, dynamic> json) => _$PhoneLogDatumFromJson(json);
   Map<String, dynamic> toJson() => _$PhoneLogDatumToJson(this);

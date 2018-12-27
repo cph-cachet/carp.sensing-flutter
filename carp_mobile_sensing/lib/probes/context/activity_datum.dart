@@ -10,17 +10,20 @@ part of activity;
 /// Holds activity information.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ActivityDatum extends CARPDatum {
-  ActivityDatum({Measure measure}) : super(measure: measure);
+  static DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.ACTIVITY);
+  DataFormat get format => CARP_DATA_FORMAT;
 
-  ActivityDatum.fromMap({Measure measure, Map<dynamic, dynamic> map})
+  ActivityDatum() : super();
+
+  ActivityDatum.fromMap(Map<dynamic, dynamic> map)
       : confidence = map['confidence'],
         type = map['type'],
-        super(measure: measure);
+        super();
 
-  ActivityDatum.fromActivity({Measure measure, Activity activity}) : super(measure: measure) {
-    this.confidence = activity.confidence;
-    this.type = activity.type;
-  }
+  ActivityDatum.fromActivity(Activity activity)
+      : confidence = activity.confidence,
+        type = activity.type,
+        super();
 
   factory ActivityDatum.fromJson(Map<String, dynamic> json) => _$ActivityDatumFromJson(json);
   Map<String, dynamic> toJson() => _$ActivityDatumToJson(this);

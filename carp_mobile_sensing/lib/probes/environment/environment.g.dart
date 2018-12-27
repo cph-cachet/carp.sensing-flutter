@@ -82,7 +82,7 @@ WeatherMeasure _$WeatherMeasureFromJson(Map<String, dynamic> json) {
   return WeatherMeasure(
       json['type'] == null
           ? null
-          : DataType.fromJson(json['type'] as Map<String, dynamic>),
+          : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
       name: json['name'],
       frequency: json['frequency'],
       duration: json['duration'],

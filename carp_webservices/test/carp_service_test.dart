@@ -53,7 +53,7 @@ void main() {
   group("Datapoints", () {
     test('- post', () async {
       // Create a test location datum
-      LocationDatum datum = LocationDatum.fromMap(Measure(DataFormat(NameSpace.CARP_NAMESPACE, MeasureType.LOCATION)), {
+      LocationDatum datum = LocationDatum.fromMap(Measure(MeasureType(NameSpace.CARP, DataType.LOCATION)), {
         "latitude": 23454.345,
         "longitude": 23.4,
         "altitude": 43.3,

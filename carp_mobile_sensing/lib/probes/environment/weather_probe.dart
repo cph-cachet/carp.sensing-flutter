@@ -1,54 +1,24 @@
 part of environment;
 
-class WeatherProbe extends PollingProbe {
-  WeatherStation _ws;
-  String _apiKey;
-  int _frequency;
+/// Collects the weather on a regular basis using the [WeatherStation] API.
+class WeatherProbe extends PeriodicDatumProbe {
+  WeatherStation weather;
+  String apiKey;
 
-  Stream<Datum> get stream => null;
-
-  /// Initialize an [WeatherProbe] taking a [PeriodicMeasure] as configuration.
-  WeatherProbe(WeatherMeasure measure) : super(measure);
+  WeatherProbe(WeatherMeasure measure)
+      : apiKey = measure.apiKey,
+        super(measure);
 
   @override
   void initialize() {
-    _apiKey = (measure as WeatherMeasure).apiKey;
-    _frequency = (measure as WeatherMeasure).frequency;
-    _ws = new WeatherStation(_apiKey);
+    weather = new WeatherStation(apiKey);
     super.initialize();
   }
 
   @override
-  Future start() async {
-    super.start();
-    Duration _pause = new Duration(milliseconds: _frequency);
-    Timer.periodic(_pause, (Timer timer) {
-      // Create a recurrent timer that wait (pause) and then resume the sampling.
-      Timer.periodic(_pause, (Timer timer) {
-        this.resume();
-        // Create a timer that stops the sampling after the specified duration.
-      });
-    });
-  }
-
-  @override
-  void stop() {
-    _ws = null;
-  }
-
-  @override
-  void resume() {}
-
-  @override
-  void pause() async {
-    Datum _datum = await getDatum();
-    if (_datum != null) this.notifyAllListeners(_datum);
-  }
-
-  @override
   Future<Datum> getDatum() async {
-    Weather w = await _ws.currentWeather();
-    WeatherDatum datum = new WeatherDatum(measure: measure)
+    Weather w = await weather.currentWeather();
+    return WeatherDatum()
       ..country = w.country
       ..areaName = w.areaName
       ..weatherMain = w.weatherMain
@@ -70,7 +40,5 @@ class WeatherProbe extends PollingProbe {
       ..temperature = w.temperature.celsius
       ..tempMin = w.tempMin.celsius
       ..tempMax = w.tempMax.celsius;
-
-    return datum;
   }
 }

@@ -8,7 +8,7 @@
 part of communication;
 
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class PhoneLogMeasure extends Measure {
+class PhoneLogMeasure extends PeriodicMeasure {
   static const int DEFAULT_NUMBER_OF_DAYS = 30;
 
   /// The number of days back in time to collect the phone log from.
@@ -16,7 +16,7 @@ class PhoneLogMeasure extends Measure {
   /// Default is -1, which is the entire log.
   int days = DEFAULT_NUMBER_OF_DAYS;
 
-  PhoneLogMeasure(DataType type, {name, this.days}) : super(type, name: name);
+  PhoneLogMeasure(MeasureType type, {name, this.days}) : super(type, name: name);
 
   static Function get fromJsonFunction => _$PhoneLogMeasureFromJson;
   factory PhoneLogMeasure.fromJson(Map<String, dynamic> json) =>

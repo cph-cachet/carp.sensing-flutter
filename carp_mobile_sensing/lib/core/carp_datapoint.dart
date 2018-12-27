@@ -27,7 +27,7 @@ class CARPDataPoint {
   CARPDataPoint.fromDatum(String studyId, String userId, CARPDatum datum) {
     CARPDataPointHeader header = new CARPDataPointHeader(studyId, userId);
     header.startTime = (datum is CARPDatum) ? datum.timestamp.toUtc() : new DateTime.now().toUtc();
-    header.dataFormat = datum.getDataFormat();
+    header.dataFormat = datum.format;
 
     // setting the measure to null in order to avoid serialization of it
     //datum.measure = null;
@@ -66,8 +66,8 @@ class CARPDataPointHeader {
   /// If this data point does not cover a period, [endTime] will be null.
   DateTime endTime;
 
-  /// The CARP data format. See [CARPDataFormat] and [NameSpace].
-  CARPDataFormat dataFormat;
+  /// The CARP data format. See [DataFormat] and [NameSpace].
+  DataFormat dataFormat;
 
   // Create a new [CARPDataPointHeader]. [studyId] and [userId] are required.
   CARPDataPointHeader(this.studyId, this.userId, {this.deviceRoleName, this.triggerId, this.startTime, this.endTime}) {
@@ -81,24 +81,4 @@ class CARPDataPointHeader {
 
   factory CARPDataPointHeader.fromJson(Map<String, dynamic> json) => _$CARPDataPointHeaderFromJson(json);
   Map<String, dynamic> toJson() => _$CARPDataPointHeaderToJson(this);
-}
-
-/// Specifies the data format of a [CARPDataPoint].
-/// Is also used as the [type] in a [Measure].
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class CARPDataFormat {
-  /// The data format namespace. See [NameSpace].
-  String namepace;
-
-  /// The name of this data format.
-  String name;
-
-  CARPDataFormat(this.namepace, this.name) : super();
-  factory CARPDataFormat.unknown() => new CARPDataFormat(NameSpace.UNKNOWN_NAMESPACE, "unknown");
-  factory CARPDataFormat.fromDataType(DataType type) => CARPDataFormat(type.namepace, type.name);
-
-  factory CARPDataFormat.fromJson(Map<String, dynamic> json) => _$CARPDataFormatFromJson(json);
-  Map<String, dynamic> toJson() => _$CARPDataFormatToJson(this);
-
-  String toString() => "$namepace.$name";
 }

@@ -10,9 +10,7 @@ part of communication;
 /// A probe that collects the phone log from this device.
 /// Only collects this information once when the [getDatum] method is called.
 class PhoneLogProbe extends DatumProbe {
-  PhoneLogProbe(PhoneLogMeasure _measure) : super(_measure);
-
-  Stream<Datum> get stream => null;
+  PhoneLogProbe(PhoneLogMeasure measure) : super(measure);
 
   @override
   Future<Datum> getDatum() async {
@@ -27,7 +25,7 @@ class PhoneLogProbe extends DatumProbe {
       entries = await CallLog.query(dateFrom: from, dateTo: to);
     }
 
-    PhoneLogDatum pld = new PhoneLogDatum(measure: measure);
+    PhoneLogDatum pld = new PhoneLogDatum();
     for (CallLogEntry call in entries ?? []) {
       pld.phoneLog.add(PhoneCall.fromCallLogEntry(call));
     }

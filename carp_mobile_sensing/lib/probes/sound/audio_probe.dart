@@ -10,7 +10,7 @@ part of audio;
 ///
 /// Note that this probe generates a lot of data and should be used with caution.
 /// Use a [AudioMeasure] to configure this probe, including setting the
-/// [frequency] and [duration] of the sampling rate.
+/// [_frequency] and [_duration] of the sampling rate.
 ///
 /// Also note that this probe records raw sound directly from the microphone and hence
 /// records everything - including human speech - in its vicinity.
@@ -18,9 +18,10 @@ part of audio;
 /// The Audio probe generates an [AudioDatum] that holds the meta-data for each recording
 /// along with the actual recording in an audio file. How to upload this data to a  data backend
 /// if up to the implementation of a [DataManager] to decide.
-class AudioProbe extends ListeningProbe {
+class AudioProbe extends AbstractProbe {
   static final String AUDIO_FILE_PATH = 'audio';
 
+  StreamController<Datum> controller = StreamController<Datum>();
   String studyId;
   String _path;
   FlutterSound flutterSound;
@@ -29,12 +30,12 @@ class AudioProbe extends ListeningProbe {
   DateTime _startRecordingTime;
   DateTime _endRecordingTime;
 
-  Stream<Datum> get stream => null;
+  Stream<Datum> get events => controller.stream;
 
   // Initialize an audio probe taking a [SensorMeasure] as configuration.
-  AudioProbe(AudioMeasure _measure)
-      : assert(_measure != null),
-        super(_measure);
+  AudioProbe(AudioMeasure measure)
+      : assert(measure != null),
+        super.init(measure);
 
   @override
   void initialize() {
@@ -82,7 +83,7 @@ class AudioProbe extends ListeningProbe {
   @override
   void pause() async {
     Datum _datum = await datum;
-    if (_datum != null) this.notifyAllListeners(_datum);
+    if (_datum != null) controller.add(_datum);
   }
 
   void startAudioRecording() async {
@@ -93,7 +94,7 @@ class AudioProbe extends ListeningProbe {
       await flutterSound.startRecorder(soundFileName);
       _isRecording = true;
     } catch (err) {
-      print('startRecorder error: $err');
+      controller.addError(err);
     }
   }
 
@@ -110,16 +111,13 @@ class AudioProbe extends ListeningProbe {
       if (result != null) {
         String filename = soundFileName.split("/").last;
         AudioDatum datum = new AudioDatum(
-            measure: measure,
-            filename: filename,
-            startRecordingTime: _startRecordingTime,
-            endRecordingTime: _endRecordingTime);
+            filename: filename, startRecordingTime: _startRecordingTime, endRecordingTime: _endRecordingTime);
         return datum;
       } else {
-        return ErrorDatum(measure: measure, message: "No sound recording");
+        return ErrorDatum(message: "No sound recording");
       }
     } catch (err) {
-      return ErrorDatum(measure: measure, message: "SoundProbe error - $err");
+      return ErrorDatum(message: "SoundProbe error - $err");
     }
   }
 

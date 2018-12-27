@@ -18,7 +18,7 @@
         {
           "c__": "Measure",
           "type": {
-            "c__": "DataType",
+            "c__": "MeasureType",
             "namepace": "carp",
             "name": "location"
           },
@@ -34,7 +34,7 @@
         {
           "c__": "PeriodicMeasure",
           "type": {
-            "c__": "DataType",
+            "c__": "MeasureType",
             "namepace": "carp",
             "name": "accelerometer"
           },
@@ -46,7 +46,7 @@
         {
           "c__": "PeriodicMeasure",
           "type": {
-            "c__": "DataType",
+            "c__": "MeasureType",
             "namepace": "carp",
             "name": "gyroscope"
           },
@@ -64,7 +64,7 @@
         {
           "c__": "AudioMeasure",
           "type": {
-            "c__": "DataType",
+            "c__": "MeasureType",
             "namepace": "carp",
             "name": "audio"
           },
@@ -77,7 +77,7 @@
         {
           "c__": "NoiseMeasure",
           "type": {
-            "c__": "DataType",
+            "c__": "MeasureType",
             "namepace": "carp",
             "name": "noise"
           },
@@ -96,7 +96,7 @@
         {
           "c__": "Measure",
           "type": {
-            "c__": "DataType",
+            "c__": "MeasureType",
             "namepace": "carp",
             "name": "activity"
           },
@@ -108,7 +108,7 @@
         {
           "c__": "PeriodicMeasure",
           "type": {
-            "c__": "DataType",
+            "c__": "MeasureType",
             "namepace": "carp",
             "name": "weather"
           },
@@ -124,7 +124,7 @@
         {
           "c__": "Measure",
           "type": {
-            "c__": "DataType",
+            "c__": "MeasureType",
             "namepace": "carp",
             "name": "apps"
           },

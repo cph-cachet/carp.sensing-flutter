@@ -7,19 +7,20 @@ part of audio;
 ///
 /// Does not record sound, and instead reports the audio level with a specified frequency,
 /// in a given sampling window.
-class NoiseProbe extends ListeningProbe {
+class NoiseProbe extends AbstractProbe {
+  StreamController<Datum> controller = StreamController<Datum>();
   Noise _noise;
   bool _isListening = false;
   DateTime _startRecordingTime;
   DateTime _endRecordingTime;
   int _samplingRate;
-  StreamSubscription<NoiseEvent> _noiseSubscription;
+  StreamSubscription<NoiseEvent> noiseSubscription;
   List<num> _noiseReadings = new List();
 
-  Stream<Datum> get stream => null;
+  Stream<Datum> get events => controller.stream;
 
   /// Initialize an [NoiseProbe] taking a [NoiseMeasure] as configuration.
-  NoiseProbe(NoiseMeasure measure) : super(measure);
+  NoiseProbe(NoiseMeasure measure) : super.init(measure);
 
   @override
   void initialize() {
@@ -59,25 +60,24 @@ class NoiseProbe extends ListeningProbe {
   void pause() async {
     stopListening();
     Datum _datum = await datum;
-    if (_datum != null) this.notifyAllListeners(_datum);
+    if (_datum != null) controller.add(_datum);
   }
 
   void onData(NoiseEvent event) {
-    print('onData(): $event');
     _noiseReadings.add(event.decibel);
   }
 
   void startListening() async {
     if (_isListening) return;
     try {
-      _noiseSubscription = _noise.noiseStream.listen(onData);
+      noiseSubscription = _noise.noiseStream.listen(onData);
     } catch (err) {
-      print('startListening() error: $err');
+      controller.addError(err);
     }
   }
 
   void stopListening() {
-    _noiseSubscription.cancel();
+    noiseSubscription.cancel();
     _endRecordingTime = DateTime.now();
     _isListening = false;
   }
@@ -88,7 +88,6 @@ class NoiseProbe extends ListeningProbe {
     num std = stats.standardDeviation;
     num min = stats.min;
     num max = stats.max;
-    print("NoiseProbe: $mean, $std, $min, $max");
-    return new NoiseDatum(measure: measure, meanDecibel: mean, stdDecibel: std, minDecibel: min, maxDecibel: max);
+    return new NoiseDatum(meanDecibel: mean, stdDecibel: std, minDecibel: min, maxDecibel: max);
   }
 }

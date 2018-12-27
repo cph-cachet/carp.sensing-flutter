@@ -11,6 +11,9 @@ part of audio;
 /// as well as the timestamps of when the recording was started and stopped
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class AudioDatum extends CARPDatum {
+  static DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.AUDIO);
+  DataFormat get format => CARP_DATA_FORMAT;
+
   /// The filename of the audio file store on this device.
   String filename;
 
@@ -20,8 +23,7 @@ class AudioDatum extends CARPDatum {
   /// The timestamp for end of recording.
   DateTime endRecordingTime;
 
-  AudioDatum({Measure measure, this.filename, this.startRecordingTime, this.endRecordingTime})
-      : super(measure: measure);
+  AudioDatum({this.filename, this.startRecordingTime, this.endRecordingTime}) : super();
 
   factory AudioDatum.fromJson(Map<String, dynamic> json) => _$AudioDatumFromJson(json);
 
@@ -33,14 +35,16 @@ class AudioDatum extends CARPDatum {
 /// A [NoiseDatum] that holds the noise level in decibel of a noise reading.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class NoiseDatum extends CARPDatum {
+  static DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.NOISE);
+  DataFormat get format => CARP_DATA_FORMAT;
+
   /// The sound intensity [dB] measurement statistics for a given sampling window.
   num meanDecibel;
   num stdDecibel;
   num minDecibel;
   num maxDecibel;
 
-  NoiseDatum({Measure measure, this.meanDecibel, this.stdDecibel, this.minDecibel, this.maxDecibel})
-      : super(measure: measure);
+  NoiseDatum({this.meanDecibel, this.stdDecibel, this.minDecibel, this.maxDecibel}) : super();
 
   factory NoiseDatum.fromJson(Map<String, dynamic> json) => _$NoiseDatumFromJson(json);
 

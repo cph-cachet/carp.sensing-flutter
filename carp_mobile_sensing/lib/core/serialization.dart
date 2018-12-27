@@ -53,7 +53,7 @@ class FromJsonFactory {
     registerFromJsonFunction("ParallelTask", ParallelTask.fromJsonFunction);
     registerFromJsonFunction("SequentialTask", SequentialTask.fromJsonFunction);
     registerFromJsonFunction("Measure", Measure.fromJsonFunction);
-    registerFromJsonFunction("DataType", DataType.fromJsonFunction);
+    registerFromJsonFunction("MeasureType", MeasureType.fromJsonFunction);
 
     registerFromJsonFunction("PeriodicMeasure", PeriodicMeasure.fromJsonFunction);
     registerFromJsonFunction("AudioMeasure", AudioMeasure.fromJsonFunction);

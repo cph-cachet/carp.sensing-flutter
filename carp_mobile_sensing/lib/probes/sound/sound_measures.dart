@@ -16,7 +16,7 @@ class AudioMeasure extends PeriodicMeasure {
   /// storing the audio file correctly in the device's file system.
   String studyId;
 
-  AudioMeasure(DataType type, {name, enabled = true, frequency, duration, this.studyId})
+  AudioMeasure(MeasureType type, {name, enabled = true, frequency, duration, this.studyId})
       : super(type, name: name, enabled: enabled, frequency: frequency, duration: duration);
 
   static Function get fromJsonFunction => _$AudioMeasureFromJson;
@@ -33,7 +33,7 @@ class NoiseMeasure extends PeriodicMeasure {
 
   int samplingRate = DEFAULT_SAMPLING_RATE;
 
-  NoiseMeasure(DataType type, {name, enabled = true, frequency, duration, this.samplingRate})
+  NoiseMeasure(MeasureType type, {name, enabled = true, frequency, duration, this.samplingRate})
       : super(type, name: name, enabled: enabled, frequency: frequency, duration: duration);
 
   static Function get fromJsonFunction => _$NoiseMeasureFromJson;

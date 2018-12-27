@@ -20,10 +20,7 @@ class StudyExecutor extends AbstractProbe implements ProbeListener {
   DataManager _dataUploadManager;
   List<TaskExecutor> executors = new List();
 
-  Stream<Datum> get stream => _group.stream;
-
-  @override
-  ProbeType get probeType => ProbeType.manager;
+  Stream<Datum> get events => _group.stream;
 
   StudyExecutor(this.study) {
     this.name = study.name;
@@ -97,9 +94,6 @@ class TaskExecutor extends AbstractProbe implements ProbeListener {
   Study study;
   Task task;
 
-  @override
-  ProbeType get probeType => ProbeType.executor;
-
   TaskExecutor(this.study, this.task)
       : assert(study != null),
         assert(task != null) {
@@ -128,6 +122,7 @@ class TaskExecutor extends AbstractProbe implements ProbeListener {
       if ((probe != null) && (measure.enabled)) {
         _probes.add(probe);
         //probe.addProbeListener(this);
+        print('>>> adding probe stream : ${probe.events}');
         _group.add(probe.events);
         probe.initialize();
 
@@ -137,7 +132,7 @@ class TaskExecutor extends AbstractProbe implements ProbeListener {
     }
   }
 
-  Stream<Datum> get stream => _group.stream;
+  Stream<Datum> get events => _group.stream;
 
   void onData(Datum datum) {}
   @override

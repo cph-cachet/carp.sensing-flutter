@@ -22,6 +22,6 @@ part 'tasks.dart';
 part 'carp_datapoint.dart';
 part 'datum.dart';
 part 'measures.dart';
-part 'core.g.dart';
 part 'device_info.dart';
 part 'managers.dart';
+part 'core.g.dart';

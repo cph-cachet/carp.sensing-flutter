@@ -7,16 +7,6 @@
 
 part of runtime;
 
-/// An enumeration of different probe types.
-enum ProbeType {
-  unknown,
-  manager, // a [StudyManager] working as a probe
-  executor, // the [TaskExecutor] which is also a probe
-  datum, // a probe of type [DatumProbe]
-  listening, // probe of type [ListeningProbe]
-  polling, // probe of type [PollingProbe]
-}
-
 /// An interface for classes that can listen on [Probe]s.
 abstract class ProbeListener {
   /// Is called when a [Probe] has collected a piece of [Datum].
@@ -37,8 +27,8 @@ abstract class Probe {
   /// A [Stream] generating sensor data events from this probe.
   Stream<Datum> get events;
 
+  /// The [Measure] that configures this probe.
   Measure get measure;
-  ProbeType get probeType;
   bool get isRunning;
 
   ///A printer-friendly name for this probe. Takes its name from [Measure.name] as default.
@@ -72,9 +62,6 @@ abstract class Probe {
 abstract class AbstractProbe implements Probe {
   Measure _measure;
   Measure get measure => _measure;
-  Stream<Datum> _events;
-
-  ProbeType get probeType => ProbeType.unknown;
 
   bool _isRunning = false;
   bool get isRunning => _isRunning;
@@ -92,7 +79,9 @@ abstract class AbstractProbe implements Probe {
   }
 
   AbstractProbe();
-  AbstractProbe.init(this._measure);
+  AbstractProbe.init(Measure measure)
+      : assert(measure != null, 'A Probe cannot be initialized with a null Measure.'),
+        this._measure = measure;
 
   List<ProbeListener> _listener = new List<ProbeListener>();
   void addProbeListener(ProbeListener listener) {
@@ -134,208 +123,202 @@ abstract class AbstractProbe implements Probe {
     _isRunning = false;
   }
 
-  Stream<Datum> get events {
-    if (_events == null) {
-      _events = stream;
-    }
-    return _events;
-  }
-
-  /// The a [Stream] of data items from this probe. Should be implemented by
-  /// the specific probes implementing this [AbstractProbe] class.
-  Stream<Datum> get stream;
+  Stream<Datum> get events;
 }
 
-/// A [DatumProbe] can collect one piece of data and then returns.
-/// Used to collect a single piece of information, which may take a while to collect.
-/// For example, network dependent sensors.
-abstract class DatumProbe extends AbstractProbe {
-  DatumProbe(_measure) : super.init(_measure);
+/// An abstract class used to create a probe that listen to events from a [Stream].
+///
+/// Subclasses should implement the [get stream] method.
+/// See [LocationProbe] for an example.
+///
+///
+///
+abstract class StreamProbe extends AbstractProbe {
+  StreamSubscription<dynamic> subscription;
+  StreamController<Datum> controller = StreamController<Datum>();
 
-  @override
-  ProbeType get probeType => ProbeType.datum;
+  StreamProbe(Measure measure)
+      : assert(measure != null),
+        super.init(measure);
 
-  @override
+  Stream<Datum> get events => controller.stream;
+
+  /// The a [Stream] of data items from this probe. Should be implemented by
+  /// the specific probes implementing this [StreamProbe] class.
+  Stream<Datum> get stream;
+
   Future start() async {
     super.start();
-    Datum datum = await this.getDatum();
+    print('>> in ${this.runtimeType}, subscribing to $stream');
+    if (stream != null) subscription = stream.listen(onData, onError: onError, onDone: onDone);
+  }
 
-    this.notifyAllListeners(datum);
+  void pause() {
+    super.pause();
+    subscription.pause();
+  }
+
+  void resume() {
+    super.resume();
+    subscription.resume();
+  }
+
+  void stop() async {
+    subscription.cancel();
+    controller.close();
     super.stop();
   }
+
+  void onData(Datum event) async {
+    if (_isRunning) controller.add(event);
+  }
+
+  void onError(error) => controller.addError(error);
+
+  void onDone() => controller.close();
+}
+
+/// A [DatumProbe] can collect one piece of [Datum], send its to its stream, and then stops.
+///
+/// The [Datum] to be collected is implemented in the [getDatum] method.
+abstract class DatumProbe extends AbstractProbe {
+  DatumProbe(Measure measure) : super.init(measure);
+
+  Stream<Datum> get events => Stream.fromFuture(getDatum());
 
   /// Subclasses should implement this method to collect a [Datum].
   Future<Datum> getDatum();
 }
 
-/// Listening Probes are triggered by a change in state within the underlying device or sensor.
-/// For example, the [LocationProbe] register itself as a listener on the location API
-/// and collects location data via a callback method.
-///
-/// Listening probes should (at least) implement / override the initialize() and start()
-/// methods. In the initialize() method, listening to sensors are set up and listening is
-/// started in the start() method. When the probe receives callbacks from the sensor,
-/// [ProbeListener]s are notified via the [this.notifyAllListeners(datum)] method whenever a
-/// new [Datum] is available.
-abstract class ListeningProbe extends AbstractProbe {
-  ListeningProbe(Measure measure)
-      : assert(measure != null),
-        super.init(measure);
-
-  @override
-  ProbeType get probeType => ProbeType.listening;
-}
-
-/// An abstract super class implementation useful for listening on
-/// Flutter platform StreamSubscription events.
-///
-/// See [BatteryProbe] for an example of how to extend this class.
-abstract class StreamSubscriptionListeningProbe extends ListeningProbe {
-  StreamSubscription<dynamic> subscription;
-
-  StreamSubscriptionListeningProbe(Measure measure) : super(measure);
-
-  @override
-  void initialize() {
-    super.initialize();
-  }
-
-  @override
-  Future start() async {
-    super.start();
-  }
-
-  @override
-  void stop() {
-    subscription.cancel();
-    subscription = null;
-  }
-
-  @override
-  void pause() {
-    subscription.pause();
-  }
-
-  @override
-  void resume() {
-    subscription.resume();
-  }
-
-  void onData(dynamic event);
-
-  void onDone() {}
-
-  void onError(error) {
-    ErrorDatum _ed = new ErrorDatum(measure: measure, message: error.toString());
-    this.notifyAllListeners(_ed);
-  }
-}
-
-/// Polling Probes are triggered at regular intervals, specified by its [frequency] property
+/// A periodic probe is triggered at regular intervals, specified by its [frequency] property
 /// in a [PeriodicMeasure].
 ///
-///When triggered, Polling Probes ask the device (and perhaps the user)
-///for some type of information and then notifies its [ProbeListener]s
-abstract class PollingProbe extends AbstractProbe {
-  Duration _pollingFrequency;
-  Timer _timer;
+/// When triggered, a periodic probe collect a piece of data ([Datum]) using the [getDatum] method.
+abstract class PeriodicDatumProbe extends DatumProbe {
+  Timer timer;
+  StreamController<Datum> controller = StreamController<Datum>();
+  Duration frequency, duration;
 
-  PollingProbe(PeriodicMeasure measure) : super.init(measure);
+  PeriodicDatumProbe(PeriodicMeasure measure)
+      : assert(measure != null),
+        assert(measure.frequency != null, 'Measure frequency cannot be null for a PeriodicProbe.'),
+        frequency = Duration(milliseconds: measure.frequency),
+        duration = (measure.duration != null) ? Duration(milliseconds: measure.duration) : null,
+        super(measure);
 
-  @override
-  ProbeType get probeType => ProbeType.polling;
+  Stream<Datum> get events => controller.stream;
 
   Future start() async {
-    // need to make sure we have a [PollingProbeMeasure] measure, containing a frequency configuration.
-    assert(measure is PeriodicMeasure);
-    int _frequency = (measure as PeriodicMeasure).frequency;
-    _pollingFrequency = new Duration(milliseconds: _frequency);
-
     super.start();
+    this.resume();
+  }
 
-    _timer = new Timer.periodic(_pollingFrequency, (Timer timer) async {
-      Datum datum = await this.getDatum();
-      this.notifyAllListeners(datum);
+  void resume() {
+    super.resume();
+    // create a recurrent timer that resumes sampling every [frequency].
+    timer = Timer.periodic(frequency, (Timer t) async {
+      try {
+        getDatum().then((Datum data) {
+          controller.add(data);
+        });
+      } catch (e, s) {
+        controller.addError(e, s);
+        return;
+      }
     });
   }
 
-  @override
-  void stop() async {
-    if (_timer != null) _timer.cancel();
-    super.stop();
+  void pause() {
+    timer.cancel();
+    super.pause();
   }
 
-  /// Subclasses should implement / override this method to collect the [Datum].
-  /// This method will be called every time the polling is scheduled as specified
-  /// in the [Measure] interval.
-  Future<Datum> getDatum();
+  void stop() async {
+    if (timer != null) timer.cancel();
+    controller.close();
+    super.stop();
+  }
 }
 
-/// An abstract super class implementation useful for implementing probes that
-/// use a [PeriodicMeasure].
-///
-/// See [AccelerometerProbe] for an example of how to use this class.
-abstract class PeriodicMeasureProbe extends StreamSubscriptionListeningProbe {
-  MultiDatum data;
+/// A periodic probe listening on a stream. Listening is done periodically as specified in a
+/// [PeriodicMeasure] listening on intervals every [frequency] for a period of [duration]. During this
+/// period, all events are forwarded to this probes [events] stream.
+abstract class PeriodicStreamProbe extends StreamProbe {
+  Timer timer;
+  Duration frequency, duration;
 
-  PeriodicMeasureProbe(PeriodicMeasure measure) : super(measure);
+  PeriodicStreamProbe(PeriodicMeasure measure)
+      : assert(measure != null),
+        assert(measure.frequency != null, 'Measure frequency cannot be null for a PeriodicProbe.'),
+        frequency = Duration(milliseconds: measure.frequency),
+        duration = (measure.duration != null) ? Duration(milliseconds: measure.duration) : null,
+        super(measure);
 
-  /// This has to be overwritten in the sub-class to return the [Stream] producing the events.
-  Stream getStream();
-
-  @override
   Future start() async {
     super.start();
+    if (subscription != null) {
+      // pause events for now.
+      subscription.pause();
+      // create a recurrent timer that wait (pause) and then resume the sampling.
+      timer = Timer.periodic(frequency, (Timer t) {
+        this.resume();
 
-    // starting the subscription to the accelerometer events
-    subscription = getStream().listen(onData, onError: onError, onDone: onDone, cancelOnError: true);
+        // create a timer that stops the sampling after the specified duration.
+        Timer(duration, () {
+          this.pause();
+        });
+      });
+    }
+  }
 
-    // pause it for now.
+  void stop() async {
+    if (timer != null) timer.cancel();
+    controller.close();
+    super.stop();
+  }
+}
+
+/// An abstract probe which can be used to collect data from a [bufferEvents] stream,
+/// every [frequency] for a period of [duration]. These events are buffered, and
+/// once collected for the [duration], are collected from the [getDatum] method and
+/// send to the main [events] stream.
+///
+/// See [LightProbe] for an example.
+///
+abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
+  /// The stream of events to be buffered.
+  Stream<dynamic> get bufferEvents;
+  Stream<Datum> get stream => null; // is not used for this probe.
+
+  BufferingPeriodicStreamProbe(PeriodicMeasure measure) : super(measure);
+
+  Future start() async {
+    _isRunning = true;
+
+    // starting the subscription to the buffered events
+    subscription = bufferEvents.listen(onData, onError: onError, onDone: onDone, cancelOnError: true);
     subscription.pause();
-
-    int _frequency = (measure as PeriodicMeasure).frequency;
-    Duration _pause = new Duration(milliseconds: _frequency);
-    int _duration = (measure as PeriodicMeasure).duration;
-    Duration _samplingDuration = new Duration(milliseconds: _duration);
-
-    // create a recurrent timer that wait (pause) and then resume the sampling.
-    Timer.periodic(_pause, (Timer timer) {
+    // create a recurrent timer that wait (pause) and then resume the buffering.
+    timer = Timer.periodic(frequency, (Timer t) {
       this.resume();
-
-      // create a timer that stops the sampling after the specified duration.
-      Timer(_samplingDuration, () {
+      // create a timer that stops the buffering after the specified duration.
+      Timer(duration, () {
         this.pause();
       });
     });
   }
 
   @override
-  void stop() {
-    if (data != null) this.notifyAllListeners(data);
-    subscription.cancel();
-    subscription = null;
-    data = null;
-  }
-
-  @override
-  void resume() {
-    data = new MultiDatum(measure: measure);
-    subscription.resume();
-  }
-
-  @override
   void pause() {
-    if (data != null) this.notifyAllListeners(data);
-    data = null;
-    subscription.pause();
+    super.pause();
+    getDatum().then((datum) => controller.add(datum));
   }
 
-  void onDone() {
-    if (data != null) this.notifyAllListeners(data);
-  }
+  /// Handler for handling onData events.
+  void onData(dynamic event);
 
-  void onError(error) {
-    ErrorDatum ed = new ErrorDatum(measure: measure, message: error.toString());
-    this.notifyAllListeners(ed);
-  }
+  /// Subclasses should implement / override this method to collect the [Datum].
+  /// This method will be called every time data has been buffered for a [duration]
+  /// and should return the final [Datum] for the buffered data.
+  Future<Datum> getDatum();
 }

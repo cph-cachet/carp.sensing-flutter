@@ -38,17 +38,17 @@ Map<String, dynamic> _$TextMessageLogDatumToJson(TextMessageLogDatum instance) {
 }
 
 TextMessageDatum _$TextMessageDatumFromJson(Map<String, dynamic> json) {
-  return TextMessageDatum(
-      textMessage: json['text_message'] == null
-          ? null
-          : TextMessage.fromJson(json['text_message'] as Map<String, dynamic>))
+  return TextMessageDatum()
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
         ? null
         : DateTime.parse(json['timestamp'] as String)
     ..deviceInfo = json['device_info'] == null
         ? null
-        : DeviceInfo.fromJson(json['device_info'] as Map<String, dynamic>);
+        : DeviceInfo.fromJson(json['device_info'] as Map<String, dynamic>)
+    ..textMessage = json['text_message'] == null
+        ? null
+        : TextMessage.fromJson(json['text_message'] as Map<String, dynamic>);
 }
 
 Map<String, dynamic> _$TextMessageDatumToJson(TextMessageDatum instance) {
@@ -173,13 +173,15 @@ PhoneLogMeasure _$PhoneLogMeasureFromJson(Map<String, dynamic> json) {
   return PhoneLogMeasure(
       json['type'] == null
           ? null
-          : DataType.fromJson(json['type'] as Map<String, dynamic>),
+          : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
       name: json['name'],
       days: json['days'] as int)
     ..c__ = json['c__'] as String
     ..enabled = json['enabled'] as bool
     ..configuration = (json['configuration'] as Map<String, dynamic>)
-        ?.map((k, e) => MapEntry(k, e as String));
+        ?.map((k, e) => MapEntry(k, e as String))
+    ..frequency = json['frequency'] as int
+    ..duration = json['duration'] as int;
 }
 
 Map<String, dynamic> _$PhoneLogMeasureToJson(PhoneLogMeasure instance) {
@@ -196,6 +198,8 @@ Map<String, dynamic> _$PhoneLogMeasureToJson(PhoneLogMeasure instance) {
   writeNotNull('name', instance.name);
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
+  writeNotNull('frequency', instance.frequency);
+  writeNotNull('duration', instance.duration);
   writeNotNull('days', instance.days);
   return val;
 }

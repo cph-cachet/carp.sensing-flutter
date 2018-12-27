@@ -12,7 +12,7 @@ part of runtime;
 // Later this will be implemented using Dart Isolates.
 
 /// The [ProbeRegistry] can create and register an instance of a relevant probe
-/// based on the [MeasureType].
+/// based on the [DataType].
 class ProbeRegistry {
   static Map<String, Probe> _probes = new Map<String, Probe>();
 
@@ -21,10 +21,7 @@ class ProbeRegistry {
 
   /// If you create a probe manually, i.e. outside of the [ProbeRegistry] you can register it here.
   static void register(Probe probe) {
-    print('adding probe - ${probe.measure.type.name}');
     _probes[probe.measure.type.name] = probe;
-
-    ProbeRegistry.probes.forEach((key, probe) => print('probe fuck! - $key - $probe'));
   }
 
   /// Create an instance of a probe based on the measure type.
@@ -33,67 +30,67 @@ class ProbeRegistry {
     Probe _probe;
 
     switch (type) {
-      case MeasureType.MEMORY:
+      case DataType.MEMORY:
         _probe = new MemoryPollingProbe(measure);
         break;
-      case MeasureType.PEDOMETER:
+      case DataType.PEDOMETER:
         _probe = new PedometerProbe(measure);
         break;
-      case MeasureType.ACCELEROMETER:
-        _probe = new AccelerometerProbe(measure);
+      case DataType.ACCELEROMETER:
+        _probe = new BufferingAccelerometerProbe(measure);
         break;
-      case MeasureType.GYROSCOPE:
-        _probe = new GyroscopeProbe(measure);
+      case DataType.GYROSCOPE:
+        _probe = new BufferingGyroscopeProbe(measure);
         break;
-      case MeasureType.BATTERY:
+      case DataType.BATTERY:
         _probe = new BatteryProbe(measure);
         break;
-      case MeasureType.BLUETOOTH:
+      case DataType.BLUETOOTH:
         _probe = new BluetoothProbe(measure);
         break;
-      case MeasureType.LOCATION:
+      case DataType.LOCATION:
         _probe = new LocationProbe(measure);
         break;
-      case MeasureType.CONNECTIVITY:
+      case DataType.CONNECTIVITY:
         _probe = new ConnectivityProbe(measure);
         break;
-      case MeasureType.LIGHT:
+      case DataType.LIGHT:
         _probe = new LightProbe(measure);
         break;
-      case MeasureType.APPS:
+      case DataType.APPS:
         _probe = new AppsProbe(measure);
         break;
-      case MeasureType.APP_USAGE:
+      case DataType.APP_USAGE:
         _probe = new AppUsageProbe(measure);
         break;
-      case MeasureType.TEXT_MESSAGE_LOG:
+      case DataType.TEXT_MESSAGE_LOG:
         _probe = new TextMessageLogProbe(measure);
         break;
-      case MeasureType.TEXT_MESSAGE:
+      case DataType.TEXT_MESSAGE:
         _probe = new TextMessageProbe(measure);
         break;
-      case MeasureType.SCREEN:
+      case DataType.SCREEN:
         _probe = new ScreenProbe(measure);
         break;
-      case MeasureType.PHONE_LOG:
+      case DataType.PHONE_LOG:
         _probe = new PhoneLogProbe(measure);
         break;
-      case MeasureType.AUDIO:
+      case DataType.AUDIO:
         _probe = new AudioProbe(measure);
         break;
-      case MeasureType.NOISE:
+      case DataType.NOISE:
         _probe = new NoiseProbe(measure);
         break;
-      case MeasureType.ACTIVITY:
+      case DataType.ACTIVITY:
         _probe = new ActivityProbe(measure);
         break;
-      case MeasureType.WEATHER:
+      case DataType.WEATHER:
         _probe = new WeatherProbe(measure);
         break;
-      case MeasureType.APPLE_HEALTHKIT:
+      case DataType.APPLE_HEALTHKIT:
         throw "Not Implemented Yet";
         break;
-      case MeasureType.GOOGLE_FIT:
+      case DataType.GOOGLE_FIT:
         throw "Not Implemented Yet";
         break;
       default:
