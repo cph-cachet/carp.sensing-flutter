@@ -38,14 +38,12 @@ class PedometerProbe extends StreamProbe {
 
     // create a recurrent timer that wait (pause) and then resumes the sampling.
     Timer.periodic(frequency, (Timer timer) {
-      print('....resuming step listening');
       subscription.resume();
     });
   }
 
   // FlutterPedometer callback
   void _onStep(int count) async {
-    print('onStep : $count');
     PedometerDatum _scd =
         new PedometerDatum(stepCount: count - _latestStepCount, startTime: _startTime, endTime: DateTime.now());
 

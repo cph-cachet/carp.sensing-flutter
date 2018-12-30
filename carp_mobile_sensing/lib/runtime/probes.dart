@@ -98,6 +98,7 @@ abstract class AbstractProbe implements Probe {
     _isRunning = false;
   }
 
+  /// The stream of data events from this probe.
   Stream<Datum> get events;
 }
 
@@ -110,7 +111,7 @@ abstract class AbstractProbe implements Probe {
 ///
 abstract class StreamProbe extends AbstractProbe {
   StreamSubscription<dynamic> subscription;
-  StreamController<Datum> controller = StreamController<Datum>();
+  StreamController<Datum> controller = StreamController<Datum>.broadcast();
 
   StreamProbe(Measure measure)
       : assert(measure != null),
@@ -172,7 +173,7 @@ abstract class DatumProbe extends AbstractProbe {
 /// When triggered, a periodic probe collect a piece of data ([Datum]) using the [getDatum] method.
 abstract class PeriodicDatumProbe extends DatumProbe {
   Timer timer;
-  StreamController<Datum> controller = StreamController<Datum>();
+  StreamController<Datum> controller = StreamController<Datum>.broadcast();
   Duration frequency, duration;
 
   PeriodicDatumProbe(PeriodicMeasure measure)
@@ -264,7 +265,7 @@ abstract class PeriodicStreamProbe extends StreamProbe {
 abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
   /// The stream of events to be buffered.
   Stream<dynamic> get bufferEvents;
-  Stream<Datum> get stream => Stream.empty(); // Not used
+  Stream<Datum> get stream => null; // Not used
 
   BufferingPeriodicStreamProbe(PeriodicMeasure measure) : super(measure);
 
