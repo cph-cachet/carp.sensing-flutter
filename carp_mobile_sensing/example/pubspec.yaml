@@ -1,5 +1,5 @@
-name: carp_mobile_sensing_app
-description: Demonstrates how to use the carp_mobile_sensing plugin.
+name: carp_mobile_sensing_example
+description: Examples of how to use the carp_mobile_sensing plugin.
 version: 0.0.1
 author:  CACHET Team <cph.cachet@gmail.com>
 
@@ -9,24 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^0.1.2
-  carp_mobile_sensing: ^0.2.0
-  carp_firebase_backend: ^0.0.1
- # carp_webservices:
-  carp_backend:
-
-
-# Overriding carp libraries to use the local copy
-# Remove this when done development
-dependency_overrides:
   carp_mobile_sensing:
     path: ../
-#  carp_firebase_backend:
-#    path: ../../carp_firebase_backend/
-#  carp_webservices:
-#    path: ../../carp_webservices/
-#  carp_backend:
-#    path: ../../carp_backend/
 
 dev_dependencies:
   flutter_test:

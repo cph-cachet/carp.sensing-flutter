@@ -15,7 +15,6 @@ environment:
   carp_mobile_sensing: ^0.2.0
 #  carp_firebase_backend: ^0.0.1
   carp_backend:
-  carp_webservices:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -28,8 +27,6 @@ dependency_overrides:
     path: ../carp_mobile_sensing/
 #  carp_firebase_backend:
 #    path: ../carp_firebase_backend/
-  carp_webservices:
-    path: ../carp_webservices/
   carp_backend:
     path: ../carp_backend/
 
@@ -79,3 +76,9 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.io/custom-fonts/#from-packages
+  fonts:
+    - family: RobotoMono
+      fonts:
+        - asset: fonts/RobotoMono-Regular.ttf
+        - asset: fonts/RobotoMono-Bold.ttf
+          weight: 400

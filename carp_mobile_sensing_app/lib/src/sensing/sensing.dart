@@ -17,8 +17,8 @@ class Sensing {
   Sensing() : super() {
     DataManagerRegistry.register(DataEndPointType.PRINT, new ConsoleDataManager());
     // Register a [FirebaseStorageDataManager] in the [DataManagerRegistry].
-    DataManagerRegistry.register(DataEndPointType.FIREBASE_STORAGE, new FirebaseStorageDataManager());
-    DataManagerRegistry.register(DataEndPointType.FIREBASE_DATABASE, new FirebaseDatabaseDataManager());
+    //DataManagerRegistry.register(DataEndPointType.FIREBASE_STORAGE, new FirebaseStorageDataManager());
+    //DataManagerRegistry.register(DataEndPointType.FIREBASE_DATABASE, new FirebaseDatabaseDataManager());
     DataManagerRegistry.register(DataEndPointType.FILE, new FileDataManager());
     DataManagerRegistry.register(DataEndPointType.CARP, new CarpDataManager());
   }
@@ -37,17 +37,17 @@ class Sensing {
 
     // note that in this version, we start the sensors (accelerometer, etc.)
     // in order to generate a lot of data quickly for testing purposes
-    study.tasks.add(sensorTask);
-    study.tasks.add(pedometerTask);
+    //study.tasks.add(sensorTask);
+    //study.tasks.add(pedometerTask);
     study.tasks.add(hardwareTask);
     study.tasks.add(appTask);
-    study.tasks.add(connectivityTask);
-    study.tasks.add(commTask);
+    //study.tasks.add(connectivityTask);
+    //study.tasks.add(commTask);
     study.tasks.add(locationTask);
-    study.tasks.add(audioTask);
+    //study.tasks.add(audioTask);
     study.tasks.add(contextTask);
-    study.tasks.add(noiseTask);
-    study.tasks.add(appUsageTask);
+    //study.tasks.add(noiseTask);
+    //study.tasks.add(appUsageTask);
     study.tasks.add(environmentTask);
 
     // print the study to the console
@@ -112,32 +112,32 @@ class Sensing {
             password: password,
             bufferSize: 50 * 1000,
             zip: true);
-      case DataEndPointType.FIREBASE_STORAGE:
-        return FirebaseStorageDataEndPoint(firebaseEndPoint, path: 'sensing/data', bufferSize: 50 * 1000, zip: true);
-      case DataEndPointType.FIREBASE_DATABASE:
-        return FirebaseDatabaseDataEndPoint(firebaseEndPoint, collection: 'carp_data');
+//      case DataEndPointType.FIREBASE_STORAGE:
+//        return FirebaseStorageDataEndPoint(firebaseEndPoint, path: 'sensing/data', bufferSize: 50 * 1000, zip: true);
+//      case DataEndPointType.FIREBASE_DATABASE:
+//        return FirebaseDatabaseDataEndPoint(firebaseEndPoint, collection: 'carp_data');
       default:
         return new DataEndPoint(DataEndPointType.PRINT);
     }
   }
 
-  FirebaseEndPoint _firebaseEndPoint;
-  FirebaseEndPoint get firebaseEndPoint {
-    if (_firebaseEndPoint == null) {
-      _firebaseEndPoint = new FirebaseEndPoint(
-          name: "Flutter Sensing Sandbox",
-          uri: 'gs://flutter-sensing-sandbox.appspot.com',
-          projectID: 'flutter-sensing-sandbox',
-          webAPIKey: 'AIzaSyCGy6MeHkiv5XkBtMcMbtgGYOpf6ntNVE4',
-          gcmSenderID: '201621881872',
-          androidGoogleAppID: '1:201621881872:android:8e84e7ccfc85e121',
-          iOSGoogleAppID: '1:159623150305:ios:4a213ef3dbd8997b',
-          firebaseAuthenticationMethod: FireBaseAuthenticationMethods.PASSWORD,
-          email: "jakob@bardram.net",
-          password: "dumt_password");
-    }
-    return _firebaseEndPoint;
-  }
+//  FirebaseEndPoint _firebaseEndPoint;
+//  FirebaseEndPoint get firebaseEndPoint {
+//    if (_firebaseEndPoint == null) {
+//      _firebaseEndPoint = new FirebaseEndPoint(
+//          name: "Flutter Sensing Sandbox",
+//          uri: 'gs://flutter-sensing-sandbox.appspot.com',
+//          projectID: 'flutter-sensing-sandbox',
+//          webAPIKey: 'AIzaSyCGy6MeHkiv5XkBtMcMbtgGYOpf6ntNVE4',
+//          gcmSenderID: '201621881872',
+//          androidGoogleAppID: '1:201621881872:android:8e84e7ccfc85e121',
+//          iOSGoogleAppID: '1:159623150305:ios:4a213ef3dbd8997b',
+//          firebaseAuthenticationMethod: FireBaseAuthenticationMethods.PASSWORD,
+//          email: "jakob@bardram.net",
+//          password: "dumt_password");
+//    }
+//    return _firebaseEndPoint;
+//  }
 
   Task _appTask;
   Task _appUsageTask;

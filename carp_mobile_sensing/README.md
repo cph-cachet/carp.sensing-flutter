@@ -45,7 +45,7 @@ Add the following to your apps `manifest.xml` file located in `android/app/src/m
 
 ### iOS Integration
 
-Add this permission in `Info.plist`:
+Add this permission in the `Info.plist` file located in `ios/Runner`:
 
 ```xml
 <key>NSLocationWhenInUseUsageDescription</key>

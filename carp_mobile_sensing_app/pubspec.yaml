@@ -12,8 +12,7 @@ dependencies:
     sdk: flutter
   rxdart: ^0.18.0
   carp_mobile_sensing: ^0.2.0
-  carp_firebase_backend: ^0.0.1
-  carp_webservices:
+#  carp_firebase_backend: ^0.0.1
   carp_backend:
 
   # The following adds the Cupertino Icons font to your application.
@@ -25,8 +24,8 @@ dependencies:
 dependency_overrides:
   carp_mobile_sensing:
     path: ../carp_mobile_sensing/
-  carp_firebase_backend:
-    path: ../carp_firebase_backend/
+#  carp_firebase_backend:
+#    path: ../carp_firebase_backend/
   carp_webservices:
     path: ../carp_webservices/
   carp_backend:
