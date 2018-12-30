@@ -156,16 +156,16 @@ class Sensing {
     // in order to generate a lot of data quickly for testing purposes
     //study.tasks.add(sensorTask);
     study.tasks.add(pedometerTask);
-    study.tasks.add(hardwareTask);
-    study.tasks.add(appTask);
+    //study.tasks.add(hardwareTask);
+    //study.tasks.add(appTask);
     //study.tasks.add(connectivityTask);
-    study.tasks.add(commTask);
+    //study.tasks.add(commTask);
     study.tasks.add(locationTask);
     //study.tasks.add(audioTask);
     study.tasks.add(contextTask);
-    study.tasks.add(noiseTask);
-    study.tasks.add(appUsageTask);
-    study.tasks.add(environmentTask);
+    //study.tasks.add(noiseTask);
+    //study.tasks.add(appUsageTask);
+    //study.tasks.add(environmentTask);
 
     // print the study to the console
     console.log(study.toString());
@@ -412,7 +412,7 @@ class Sensing {
       _pedometerTask = Task("Pedometer Task")
         ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.PEDOMETER))
               ..name = "Pedometer"
-              ..frequency = 1 * 20 * 1000 // how often to collect step count
+              ..frequency = 1 * 30 * 1000 // how often to collect step count
             );
     }
     return _pedometerTask;

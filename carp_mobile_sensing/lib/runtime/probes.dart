@@ -123,8 +123,8 @@ abstract class StreamProbe extends AbstractProbe {
   Stream<Datum> get stream;
 
   Future start() async {
+    super.start();
     if (stream != null) {
-      super.start();
       subscription = stream.listen(onData, onError: onError, onDone: onDone);
     }
   }
