@@ -1,4 +1,4 @@
-package com.example.carpmobilesensingapp;
+package dk.cachet.consoleapp;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

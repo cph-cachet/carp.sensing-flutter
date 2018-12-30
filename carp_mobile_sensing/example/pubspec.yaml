@@ -1,31 +1,36 @@
-name: carp_mobile_sensing_example
+name: carp_mobile_sensing_app
 description: Demonstrates how to use the carp_mobile_sensing plugin.
-
-# The following defines the version and build number for your application.
-# A version number is three numbers separated by dots, like 1.2.43
-# followed by an optional build number separated by a +.
-# Both the version and the builder number may be overridden in flutter
-# build by specifying --build-name and --build-number, respectively.
-# Read more about versioning at semver.org.
-version: 1.0.0+1
+version: 0.0.1
+author:  CACHET Team <cph.cachet@gmail.com>
 
 environment:
-  sdk: ">=2.0.0-dev.68.0 <3.0.0"
+  sdk: ">=2.0.0-dev <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
+  carp_mobile_sensing: ^0.2.0
+  carp_firebase_backend: ^0.0.1
+ # carp_webservices:
+  carp_backend:
+
+
+# Overriding carp libraries to use the local copy
+# Remove this when done development
+dependency_overrides:
+  carp_mobile_sensing:
+    path: ../
+#  carp_firebase_backend:
+#    path: ../../carp_firebase_backend/
+#  carp_webservices:
+#    path: ../../carp_webservices/
+#  carp_backend:
+#    path: ../../carp_backend/
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
-  carp_mobile_sensing:
-    path: ../
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec

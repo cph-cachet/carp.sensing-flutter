@@ -1,8 +1,8 @@
 name: carp_mobile_sensing_app
 description: The CARP Mobile Sensing App
-version: 0.0.2
+version: 0.2.0
 author:  CACHET Team <cph.cachet@gmail.com>
-homepage: https://github.com/cph-cachet/carp.sensing/tree/master/flutter/carp_firebase_backend
+homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_mobile_sensing_app
 
 environment:
   sdk: ">=2.0.0-dev <3.0.0"
@@ -10,9 +10,15 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  rxdart: ^0.18.0
   carp_mobile_sensing: ^0.2.0
-  #carp_firebase_backend: ^0.0.1
-  #cupertino_icons: ^0.1.2
+  carp_firebase_backend: ^0.0.1
+  carp_webservices:
+  carp_backend:
+
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^0.1.2
 
 # Overriding carp libraries to use the local copy
 # Remove this when done development
@@ -25,6 +31,7 @@ dependency_overrides:
     path: ../carp_webservices/
   carp_backend:
     path: ../carp_backend/
+
 
 dev_dependencies:
   flutter_test:

@@ -28,5 +28,6 @@ class LightProbe extends BufferingPeriodicStreamProbe {
     super.resume();
   }
 
+  @override
   void onData(luxValue) => luxValues.add(luxValue);
 }

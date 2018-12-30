@@ -24,6 +24,54 @@ class ProbeRegistry {
     _probes[probe.measure.type.name] = probe;
   }
 
+  static List<String> get availableProbeTypes => [
+        DataType.MEMORY,
+        DataType.PEDOMETER,
+        DataType.ACCELEROMETER,
+        DataType.GYROSCOPE,
+        DataType.BATTERY,
+        DataType.BLUETOOTH,
+        DataType.AUDIO,
+        DataType.NOISE,
+        DataType.LOCATION,
+        DataType.CONNECTIVITY,
+        DataType.LIGHT,
+        DataType.APPS,
+        DataType.APP_USAGE,
+        DataType.TEXT_MESSAGE_LOG,
+        DataType.TEXT_MESSAGE,
+        DataType.SCREEN,
+        DataType.PHONE_LOG,
+        DataType.ACTIVITY,
+        DataType.APPLE_HEALTHKIT,
+        DataType.GOOGLE_FIT,
+        DataType.WEATHER
+      ];
+
+  static Map<String, String> get probeTypeDescription => {
+        DataType.MEMORY: 'a',
+        DataType.PEDOMETER: 'a',
+        DataType.ACCELEROMETER: 'a',
+        DataType.GYROSCOPE: 'a',
+        DataType.BATTERY: 'a',
+        DataType.BLUETOOTH: 'a',
+        DataType.AUDIO: 'a',
+        DataType.NOISE: 'a',
+        DataType.LOCATION: 'a',
+        DataType.CONNECTIVITY: 'a',
+        DataType.LIGHT: 'a',
+        DataType.APPS: 'a',
+        DataType.APP_USAGE: 'a',
+        DataType.TEXT_MESSAGE_LOG: 'a',
+        DataType.TEXT_MESSAGE: 'a',
+        DataType.SCREEN: 'a',
+        DataType.PHONE_LOG: 'a',
+        DataType.ACTIVITY: 'a',
+        DataType.APPLE_HEALTHKIT: 'a',
+        DataType.GOOGLE_FIT: 'a',
+        DataType.WEATHER: 'a'
+      };
+
   /// Create an instance of a probe based on the measure type.
   static Probe create(Measure measure) {
     String type = measure.type.name;

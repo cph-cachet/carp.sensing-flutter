@@ -148,9 +148,10 @@ abstract class StreamProbe extends AbstractProbe {
   Stream<Datum> get stream;
 
   Future start() async {
-    super.start();
-    print('>> in ${this.runtimeType}, subscribing to $stream');
-    if (stream != null) subscription = stream.listen(onData, onError: onError, onDone: onDone);
+    if (stream != null) {
+      super.start();
+      subscription = stream.listen(onData, onError: onError, onDone: onDone);
+    }
   }
 
   void pause() {
@@ -288,24 +289,26 @@ abstract class PeriodicStreamProbe extends StreamProbe {
 abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
   /// The stream of events to be buffered.
   Stream<dynamic> get bufferEvents;
-  Stream<Datum> get stream => null; // is not used for this probe.
+  Stream<Datum> get stream => Stream.empty(); // Not used
 
   BufferingPeriodicStreamProbe(PeriodicMeasure measure) : super(measure);
 
   Future start() async {
-    _isRunning = true;
+    if (bufferEvents != null) {
+      super.start();
 
-    // starting the subscription to the buffered events
-    subscription = bufferEvents.listen(onData, onError: onError, onDone: onDone, cancelOnError: true);
-    subscription.pause();
-    // create a recurrent timer that wait (pause) and then resume the buffering.
-    timer = Timer.periodic(frequency, (Timer t) {
-      this.resume();
-      // create a timer that stops the buffering after the specified duration.
-      Timer(duration, () {
-        this.pause();
+      // starting the subscription to the buffered events
+      subscription = bufferEvents.listen(onData, onError: onError, onDone: onDone);
+      subscription.pause();
+      // create a recurrent timer that wait (pause) and then resume the buffering.
+      timer = Timer.periodic(frequency, (Timer t) {
+        this.resume();
+        // create a timer that stops the buffering after the specified duration.
+        Timer(duration, () {
+          this.pause();
+        });
       });
-    });
+    }
   }
 
   @override
