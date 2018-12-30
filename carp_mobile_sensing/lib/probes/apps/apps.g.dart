@@ -44,6 +44,9 @@ AppUsageDatum _$AppUsageDatumFromJson(Map<String, dynamic> json) {
     ..deviceInfo = json['device_info'] == null
         ? null
         : DeviceInfo.fromJson(json['device_info'] as Map<String, dynamic>)
+    ..start =
+        json['start'] == null ? null : DateTime.parse(json['start'] as String)
+    ..end = json['end'] == null ? null : DateTime.parse(json['end'] as String)
     ..usage = (json['usage'] as Map<String, dynamic>)
         ?.map((k, e) => MapEntry(k, (e as num)?.toDouble()));
 }
@@ -60,6 +63,8 @@ Map<String, dynamic> _$AppUsageDatumToJson(AppUsageDatum instance) {
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
   writeNotNull('device_info', instance.deviceInfo);
+  writeNotNull('start', instance.start?.toIso8601String());
+  writeNotNull('end', instance.end?.toIso8601String());
   writeNotNull('usage', instance.usage);
   return val;
 }

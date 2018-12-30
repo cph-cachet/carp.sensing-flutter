@@ -11,13 +11,13 @@ part of runtime;
 /// For each task it starts a [TaskExecutor].
 ///
 /// Note that the [StudyExecutor] in itself is a [Probe] and hence work as a 'super probe'.
-/// This - amongst other things - imply that you can add [ProbeListener]s to a study manager.
-class StudyExecutor extends AbstractProbe implements ProbeListener {
+///This - amongst other things - imply that you can listen to datum [events] from a study executor.
+class StudyExecutor extends AbstractProbe {
   static final Device deviceInfo = new Device();
   StreamGroup<Datum> _group = StreamGroup<Datum>.broadcast();
 
   Study study;
-  DataManager _dataUploadManager;
+  DataManager _dataManager;
   List<TaskExecutor> executors = new List();
 
   Stream<Datum> get events => _group.stream;
@@ -31,18 +31,18 @@ class StudyExecutor extends AbstractProbe implements ProbeListener {
     print('Initializing Study Executor for study: ' + study.name);
     print(' platform     : ' + Device.platform.toString());
     print(' device ID    : ' + Device.deviceID.toString());
-    print(' data manager : ' + dataUploadManager.toString());
+    print(' data manager : ' + dataManager.toString());
 
-    await dataUploadManager.initialize(study);
-    events.listen(dataUploadManager.onData, onError: dataUploadManager.onError, onDone: dataUploadManager.onDone);
+    await dataManager.initialize(study);
+    events.listen(dataManager.onData, onError: dataManager.onError, onDone: dataManager.onDone);
   }
 
-  DataManager get dataUploadManager {
-    if (_dataUploadManager == null) {
+  DataManager get dataManager {
+    if (_dataManager == null) {
       // if the data manager hasn't been set, then try to look it up in the [DataManagerRegistry].
-      _dataUploadManager = DataManagerRegistry.lookup(study.dataEndPoint.type);
+      _dataManager = DataManagerRegistry.lookup(study.dataEndPoint.type);
     }
-    return _dataUploadManager;
+    return _dataManager;
   }
 
   Future start() async {
@@ -54,39 +54,27 @@ class StudyExecutor extends AbstractProbe implements ProbeListener {
     for (TaskExecutor executor in executors) {
       executor.stop();
     }
-    if (dataUploadManager != null) dataUploadManager.close();
+    if (dataManager != null) dataManager.close();
     super.stop();
   }
 
   Future _start() async {
     for (Task task in study.tasks) {
       TaskExecutor executor = new TaskExecutor(study, task);
-      //executor.addProbeListener(this);
       _group.add(executor.events);
 
       executors.add(executor);
-
-      // start the executor
       await executor.start();
     }
-  }
-
-  @override
-  Future notify(Datum datum) async {
-    // notify the data manager
-    if (dataUploadManager != null) dataUploadManager.uploadData(datum);
-
-    // notify all my listeners -- if any
-    notifyAllListeners(datum);
   }
 }
 
 /// The [TaskExecutor] is responsible for executing [Task]s in the [Study].
-/// For each task it looks up appropriate probes to collect data.
+/// For each task it looks up appropriate [Probe]s to collect data.
 ///
 ///Note that the [TaskExecutor] in itself is a [Probe] and hence work as a 'super probe'.
-///This - amongst other things - imply that you can add [ProbeListener]s to a task executor.
-class TaskExecutor extends AbstractProbe implements ProbeListener {
+///This - amongst other things - imply that you can listen to datum [events] from a task executor.
+class TaskExecutor extends AbstractProbe {
   static final Device deviceInfo = new Device();
   StreamGroup<Datum> _group = StreamGroup<Datum>.broadcast();
   List<Probe> _probes = new List<Probe>();
@@ -133,11 +121,4 @@ class TaskExecutor extends AbstractProbe implements ProbeListener {
   }
 
   Stream<Datum> get events => _group.stream;
-
-  void onData(Datum datum) {}
-  @override
-  Future notify(Datum datum) async {
-    // notify all my listeners -- if any
-    notifyAllListeners(datum);
-  }
 }

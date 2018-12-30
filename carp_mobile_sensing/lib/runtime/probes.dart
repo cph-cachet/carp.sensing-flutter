@@ -7,12 +7,6 @@
 
 part of runtime;
 
-/// An interface for classes that can listen on [Probe]s.
-abstract class ProbeListener {
-  /// Is called when a [Probe] has collected a piece of [Datum].
-  void notify(Datum datum);
-}
-
 /// A [Probe] is responsible for collecting data.
 /// This class is an interface class used for implementing specific
 /// probes as sub-classes.
@@ -33,10 +27,6 @@ abstract class Probe {
 
   ///A printer-friendly name for this probe. Takes its name from [Measure.name] as default.
   String name;
-
-  void addProbeListener(ProbeListener listener);
-  void removeProbeListener(ProbeListener listener);
-  Future notifyAllListeners(Datum datum);
 
   /// Initialize the probe.
   void initialize();
@@ -82,21 +72,6 @@ abstract class AbstractProbe implements Probe {
   AbstractProbe.init(Measure measure)
       : assert(measure != null, 'A Probe cannot be initialized with a null Measure.'),
         this._measure = measure;
-
-  List<ProbeListener> _listener = new List<ProbeListener>();
-  void addProbeListener(ProbeListener listener) {
-    _listener.add(listener);
-  }
-
-  void removeProbeListener(ProbeListener listener) {
-    _listener.remove(listener);
-  }
-
-  Future notifyAllListeners(Datum datum) async {
-    for (ProbeListener l in _listener) {
-      l.notify(datum);
-    }
-  }
 
   void initialize() {
     _isRunning = false;

@@ -24,9 +24,7 @@ class AppsDatum extends CARPDatum {
   @override
   String toString() {
     String s = 'apps: {';
-    installedApps.forEach((appName) {
-      s += '$appName,';
-    });
+    installedApps.forEach((appName) => s += '$appName,');
     s += '}';
     return s;
   }
@@ -38,6 +36,8 @@ class AppUsageDatum extends CARPDatum {
   static DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.APP_USAGE);
   DataFormat get format => CARP_DATA_FORMAT;
 
+  DateTime start, end;
+
   /// List of names on installed apps and the time spent in foreground for that app.
   Map<String, double> usage;
 
@@ -46,6 +46,5 @@ class AppUsageDatum extends CARPDatum {
   factory AppUsageDatum.fromJson(Map<String, dynamic> json) => _$AppUsageDatumFromJson(json);
   Map<String, dynamic> toJson() => _$AppUsageDatumToJson(this);
 
-  @override
-  String toString() => usage.toString();
+  String toString() => 'App usage: {start: $start, end: $end, usage: $usage}';
 }

@@ -35,7 +35,7 @@ class PedometerProbe extends StreamProbe {
     subscription.pause();
   }
 
-  Stream<Datum> get stream => null; // we're not using this stream - creating our own above.
+  Stream<Datum> get stream => null; // we're not using this stream - creating our own.
 
   @override
   Future start() async {
@@ -132,13 +132,13 @@ class OldPedometerProbe extends AbstractProbe {
     _startTime = DateTime.now();
     _latestStepCount = count;
 
-    this.notifyAllListeners(_scd);
+    //this.notifyAllListeners(_scd);
   }
 
   void _onDone() {}
 
   void _onError(error) {
     ErrorDatum _ed = new ErrorDatum(message: error.toString());
-    this.notifyAllListeners(_ed);
+    //this.notifyAllListeners(_ed);
   }
 }

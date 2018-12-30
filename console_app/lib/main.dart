@@ -92,11 +92,8 @@ class Console extends State<ConsolePage> {
 
 /// This class implements the sensing incl. setting up a [Study] with [Task]s and [Measure]s.
 ///
-///
-/// Note that it implements a [ProbeListener] and hence listen on any data created by the probes.
-/// This is used to write to a log, which is displayed in a simple scrollable text view.
-/// This example uses a [FirebaseStorageDataManager] and code for registry and creation is also included.
-class Sensing implements ProbeListener {
+/// It listens to all datum [events] from the [StudyExecutor], which is displayed in a simple scrollable text view.
+class Sensing {
   final String username = "researcher";
   final String password = "password";
   final String uri = "http://staging.carp.cachet.dk:8080";
@@ -115,11 +112,6 @@ class Sensing implements ProbeListener {
     DataManagerRegistry.register(DataEndPointType.CARP, new CarpDataManager());
   }
 
-  /// Callback method called by [ProbeListener]s
-  void notify(Datum datum) {
-    console.log(datum.toString());
-  }
-
   /// (Re)start sensing.
   void start() async {
     // if an executor/study is already running, stop the old one before creating a new study
@@ -134,11 +126,11 @@ class Sensing implements ProbeListener {
 
     // note that in this version, we start the sensors (accelerometer, etc.)
     // in order to generate a lot of data quickly for testing purposes
-    study.tasks.add(sensorTask);
+    //study.tasks.add(sensorTask);
     study.tasks.add(pedometerTask);
     study.tasks.add(hardwareTask);
     study.tasks.add(appTask);
-    study.tasks.add(connectivityTask);
+    //study.tasks.add(connectivityTask);
     study.tasks.add(commTask);
     study.tasks.add(locationTask);
     //study.tasks.add(audioTask);
@@ -152,9 +144,6 @@ class Sensing implements ProbeListener {
 
     // create a new executor
     executor = new StudyExecutor(study);
-    // add `this` as a [ProbeListener] so we can update the log.
-    // see the [notify()] method
-    executor.addProbeListener(this);
     executor.initialize();
     executor.start();
     console.log("Sensing started ...");
@@ -162,7 +151,8 @@ class Sensing implements ProbeListener {
     print('listening on streams...');
 
     // listening on all probe events from the study
-    executor.events.forEach(print);
+    //executor.events.forEach(print);
+    executor.events.forEach((datum) => console.log(datum.toString()));
 
     // listening on a specific probe
     //ProbeRegistry.probes[DataType.LOCATION].events.forEach(print);
@@ -258,7 +248,7 @@ class Sensing implements ProbeListener {
       _appTask = Task("Application Task")
         ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.APPS))
           ..name = "Installed apps"
-          ..frequency = 5 * 1000);
+          ..frequency = 30 * 1000);
 
     return _appTask;
   }
