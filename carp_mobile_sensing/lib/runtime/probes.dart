@@ -140,7 +140,7 @@ abstract class StreamProbe extends AbstractProbe {
   }
 
   void stop() async {
-    subscription.cancel();
+    if (subscription != null) subscription.cancel();
     controller.close();
     super.stop();
   }

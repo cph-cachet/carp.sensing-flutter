@@ -76,6 +76,34 @@ class Console extends State<ConsolePage> {
         title: new Text(widget.title),
       ),
       body: new SingleChildScrollView(
+        child: StreamBuilder(
+          stream: sensing.executor.events,
+          builder: (context, AsyncSnapshot<Datum> snapshot) {
+            if (snapshot.hasData) {
+              _log += "${snapshot.data.toString()}\n";
+              return Text(_log);
+            } else if (snapshot.hasError) {
+              return Text(snapshot.error.toString());
+            }
+            return Center(child: CircularProgressIndicator());
+          },
+        ),
+      ),
+      floatingActionButton: new FloatingActionButton(
+        onPressed: restart,
+        tooltip: 'Restart study & probes',
+        child: new Icon(Icons.cached),
+      ),
+    );
+  }
+
+  @override
+  Widget old_build(BuildContext context) {
+    return new Scaffold(
+      appBar: new AppBar(
+        title: new Text(widget.title),
+      ),
+      body: new SingleChildScrollView(
         child: new Text(
           _log,
           style: TextStyle(fontFamily: 'RobotoMono'),
@@ -151,8 +179,8 @@ class Sensing {
     print('listening on streams...');
 
     // listening on all probe events from the study
-    //executor.events.forEach(print);
-    executor.events.forEach((datum) => console.log(datum.toString()));
+    executor.events.forEach(print);
+    //executor.events.forEach((datum) => console.log(datum.toString()));
 
     // listening on a specific probe
     //ProbeRegistry.probes[DataType.LOCATION].events.forEach(print);
