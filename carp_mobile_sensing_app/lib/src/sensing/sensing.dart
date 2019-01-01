@@ -38,16 +38,16 @@ class Sensing {
     // note that in this version, we start the sensors (accelerometer, etc.)
     // in order to generate a lot of data quickly for testing purposes
     //study.tasks.add(sensorTask);
-    //study.tasks.add(pedometerTask);
+    study.tasks.add(pedometerTask);
     study.tasks.add(hardwareTask);
     study.tasks.add(appTask);
-    //study.tasks.add(connectivityTask);
-    //study.tasks.add(commTask);
+    study.tasks.add(connectivityTask);
+    study.tasks.add(commTask);
     study.tasks.add(locationTask);
-    //study.tasks.add(audioTask);
+    study.tasks.add(audioTask);
     study.tasks.add(contextTask);
-    //study.tasks.add(noiseTask);
-    //study.tasks.add(appUsageTask);
+    study.tasks.add(noiseTask);
+    study.tasks.add(appUsageTask);
     study.tasks.add(environmentTask);
 
     // print the study to the console
@@ -157,7 +157,7 @@ class Sensing {
     if (_appTask == null)
       _appTask = Task("Application Task")
         ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.APPS))
-          ..name = "Installed apps"
+          ..name = "Installed Apps"
           ..frequency = 5 * 1000);
 
     return _appTask;
@@ -168,7 +168,7 @@ class Sensing {
     if (_appUsageTask == null) {
       _appUsageTask = Task("AppUsage Task")
         ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.APP_USAGE))
-              ..name = "App foreground usage time"
+              ..name = "App Foreground Usage Time"
               ..frequency = 10 * 1000
               ..duration = 60 * 60 * 1000 // go back one hour
             );
@@ -180,8 +180,8 @@ class Sensing {
   Task get audioTask {
     if (_audioTask == null) {
       _audioTask = Task("Audio Task")
-        ..addMeasure(AudioMeasure(MeasureType(NameSpace.CARP, DataType.APP_USAGE))
-          ..name = "App foreground usage time"
+        ..addMeasure(AudioMeasure(MeasureType(NameSpace.CARP, DataType.AUDIO))
+          ..name = "Ambient Audio"
           ..frequency = 10 * 1000 // once every 10 sec
           ..duration = 2 * 1000 // record 2 sec
           ..studyId = study.id);
@@ -199,14 +199,14 @@ class Sensing {
     if (_commTask == null) {
       _commTask = Task("Communication Task")
         ..addMeasure(PhoneLogMeasure(MeasureType(NameSpace.CARP, DataType.PHONE_LOG))
-          ..name = "Entire phone log"
+          ..name = "Phone Log"
           ..frequency = 10 * 1000 // once every 10 sec
           ..days = 10) // 10 days of log
         ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.TEXT_MESSAGE_LOG))
-              ..name = "Entire SMS log"
+              ..name = "SMS Message Log"
               ..frequency = 6 * 1000 // once every 10 sec
             )
-        ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.TEXT_MESSAGE))..name = "Listen on SMS's");
+        ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.TEXT_MESSAGE))..name = "SMS Text Messaging");
     }
     return _commTask;
   }
@@ -231,8 +231,7 @@ class Sensing {
   Task get contextTask {
     if (_contextTask == null) {
       _contextTask = Task("Context Task")
-        ..addMeasure(
-            PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.ACTIVITY))..name = "Activity Recognition Probe");
+        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.ACTIVITY))..name = "Activity Recognition");
     }
     return _contextTask;
   }
@@ -242,7 +241,7 @@ class Sensing {
     if (_environmentTask == null) {
       _environmentTask = Task("Environment Task")
         ..addMeasure(WeatherMeasure(MeasureType(NameSpace.CARP, DataType.WEATHER))
-          ..name = "Weather Probe"
+          ..name = "Local Weather"
           ..frequency = 1 * 30 * 1000 // once every minute
           ..apiKey = '12b6e28582eb9298577c734a31ba9f4f');
     }
@@ -257,7 +256,7 @@ class Sensing {
     if (_hardwareTask == null) {
       _hardwareTask = Task("Hardware Task")
         ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.MEMORY))
-          ..name = "Polling of availabel memory"
+          ..name = "Availabel Memory"
           ..frequency = 10 * 1000) // 10 days of log
         ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.BATTERY))..name = "Battery")
         ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.SCREEN))..name = "Screen Lock/Unlock");
@@ -279,7 +278,7 @@ class Sensing {
     if (_noiseTask == null) {
       _noiseTask = Task("Audio Task")
         ..addMeasure(NoiseMeasure(MeasureType(NameSpace.CARP, DataType.NOISE))
-              ..name = "Noise"
+              ..name = "Ambient Noise"
               ..frequency = 30 * 1000 // How often to start a measure
               ..duration = 2 * 1000 // Window size
               ..samplingRate = 400 // Sample a data point every 400 ms
@@ -293,7 +292,7 @@ class Sensing {
     if (_pedometerTask == null) {
       _pedometerTask = Task("Pedometer Task")
         ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.PEDOMETER))
-              ..name = "Pedometer"
+              ..name = "Pedometer (Step Count)"
               ..frequency = 1 * 20 * 1000 // how often to collect step count
             );
     }
@@ -320,7 +319,7 @@ class Sensing {
               ..duration = 100 // Window size
             )
         ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.LIGHT))
-              ..name = "Light"
+              ..name = "Ambient Light"
               ..frequency = 11 * 1000 // How often to start a measure
               ..duration = 700 // Window size
             );

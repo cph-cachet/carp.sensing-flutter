@@ -27,6 +27,19 @@ class CarpMobileSensingAppState extends State<CarpMobileSensingApp> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    bloc.init();
+    bloc.start();
+  }
+
+  @override
+  void dispose() {
+    bloc.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _pages[_selectedIndex],
@@ -42,7 +55,7 @@ class CarpMobileSensingAppState extends State<CarpMobileSensingApp> {
       floatingActionButton: new FloatingActionButton(
         onPressed: _restart,
         tooltip: 'Restart study & probes',
-        child: new Icon(Icons.cached),
+        child: bloc.isRunning ? Icon(Icons.pause) : Icon(Icons.play_arrow),
       ),
     );
   }
@@ -53,5 +66,12 @@ class CarpMobileSensingAppState extends State<CarpMobileSensingApp> {
     });
   }
 
-  void _restart() {}
+  void _restart() {
+    this.setState(() {
+      if (bloc.isRunning)
+        bloc.pause();
+      else
+        bloc.resume();
+    });
+  }
 }

@@ -15,7 +15,10 @@ class ProbeModel {
   String get name => probe.name;
 
   ///A printer-friendly description of this probe.
-  String get description => ProbeRegistry.probeTypeDescription[type];
+  String get description => ProbeDescription.probeTypeDescription[type];
+
+  ///A printer-friendly description of this probe.
+  Icon get icon => ProbeDescription.probeTypeIcon[type];
 
   ProbeModel(this.probe)
       : assert(probe != null, 'A ProbeModel must be initialized with a real Probe.'),
