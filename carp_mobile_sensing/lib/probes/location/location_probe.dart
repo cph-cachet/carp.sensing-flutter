@@ -14,6 +14,11 @@ class LocationProbe extends StreamProbe {
 
   LocationProbe(Measure measure) : super(measure);
 
+  @override
+  void initialize() async {
+    //await SimplePermissions.requestPermission(Permission.AccessFineLocation);
+  }
+
   Stream<LocationDatum> get stream =>
       _location.onLocationChanged().map((event) => LocationDatum.fromMap(measure, event));
 }

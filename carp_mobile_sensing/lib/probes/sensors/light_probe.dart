@@ -17,17 +17,21 @@ class LightProbe extends BufferingPeriodicStreamProbe {
 
   @override
   Future<Datum> getDatum() async {
-    Stats stats = Stats.fromData(luxValues);
-    return LightDatum(meanLux: stats.mean, stdLux: stats.standardDeviation, minLux: stats.min, maxLux: stats.max);
+    if (luxValues.length > 0) {
+      Stats stats = Stats.fromData(luxValues);
+      return LightDatum(meanLux: stats.mean, stdLux: stats.standardDeviation, minLux: stats.min, maxLux: stats.max);
+    } else {
+      return null;
+    }
   }
 
-  Stream get bufferEvents => light.lightSensorStream;
+  Stream get bufferingEvents => light.lightSensorStream;
 
-  void resume() {
+  void onPeriodStart() {
     luxValues.clear();
-    super.resume();
   }
 
-  @override
+  void onPeriodEnd() {}
+
   void onData(luxValue) => luxValues.add(luxValue);
 }

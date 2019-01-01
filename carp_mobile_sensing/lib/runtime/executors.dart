@@ -7,24 +7,53 @@
 
 part of runtime;
 
-/// The [StudyExecutor] is responsible for executing the [Study].
-/// For each task it starts a [TaskExecutor].
-///
-/// Note that the [StudyExecutor] in itself is a [Probe] and hence work as a 'super probe'.
-///This - amongst other things - imply that you can listen to datum [events] from a study executor.
-class StudyExecutor extends AbstractProbe {
+abstract class Executor extends AbstractProbe {
   static final Device deviceInfo = new Device();
   StreamGroup<Datum> _group = StreamGroup<Datum>.broadcast();
 
   Study study;
   DataManager _dataManager;
-  List<TaskExecutor> executors = new List();
+  List<Probe> executors = new List<Probe>();
 
   Stream<Datum> get events => _group.stream;
 
-  StudyExecutor(this.study) {
+  Executor(this.study) : assert(study != null, "Cannot initiate an Executor without a Study.") {
     this.name = study.name;
   }
+
+  Future start() async {
+    super.start();
+    this._start();
+  }
+
+  Future _start();
+
+  void pause() async {
+    executors.forEach((executor) => executor.pause());
+    super.pause();
+  }
+
+  void resume() async {
+    executors.forEach((executor) => executor.resume());
+    super.resume();
+  }
+
+  void stop() async {
+    executors.forEach((executor) => executor.stop());
+    super.stop();
+  }
+}
+
+/// The [StudyExecutor] is responsible for executing the [Study].
+/// For each task it starts a [TaskExecutor].
+///
+/// Note that the [StudyExecutor] in itself is a [Probe] and hence work as a 'super probe'.
+///This - amongst other things - imply that you can listen to datum [events] from a study executor.
+class StudyExecutor extends Executor {
+  Study study;
+  DataManager _dataManager;
+
+  StudyExecutor(this.study) : super(study);
 
   void initialize() async {
     await Device.getDeviceInfo();
@@ -45,19 +74,6 @@ class StudyExecutor extends AbstractProbe {
     return _dataManager;
   }
 
-  Future start() async {
-    super.start();
-    this._start();
-  }
-
-  void stop() async {
-    for (TaskExecutor executor in executors) {
-      executor.stop();
-    }
-    if (dataManager != null) dataManager.close();
-    super.stop();
-  }
-
   Future _start() async {
     for (Task task in study.tasks) {
       TaskExecutor executor = new TaskExecutor(study, task);
@@ -67,6 +83,11 @@ class StudyExecutor extends AbstractProbe {
       await executor.start();
     }
   }
+
+  void stop() async {
+    super.stop();
+    if (dataManager != null) dataManager.close();
+  }
 }
 
 /// The [TaskExecutor] is responsible for executing [Task]s in the [Study].
@@ -74,17 +95,13 @@ class StudyExecutor extends AbstractProbe {
 ///
 ///Note that the [TaskExecutor] in itself is a [Probe] and hence work as a 'super probe'.
 ///This - amongst other things - imply that you can listen to datum [events] from a task executor.
-class TaskExecutor extends AbstractProbe {
-  static final Device deviceInfo = new Device();
-  StreamGroup<Datum> _group = StreamGroup<Datum>.broadcast();
-  List<Probe> _probes = new List<Probe>();
-
-  Study study;
+class TaskExecutor extends Executor {
+  //List<Probe> _probes = new List<Probe>();
   Task task;
 
-  TaskExecutor(this.study, this.task)
-      : assert(study != null),
-        assert(task != null) {
+  TaskExecutor(Study study, this.task)
+      : assert(task != null),
+        super(study) {
     name = task.name;
   }
 
@@ -92,25 +109,11 @@ class TaskExecutor extends AbstractProbe {
     print('Initializing Task Executor for task: $name ...');
   }
 
-  Future start() async {
-    super.start();
-    this._run();
-  }
-
-  void stop() async {
-    for (Probe probe in _probes) {
-      probe.stop();
-    }
-    super.stop();
-  }
-
-  Future _run() async {
+  Future _start() async {
     for (Measure measure in task.measures) {
       Probe probe = ProbeRegistry.create(measure);
       if ((probe != null) && (measure.enabled)) {
-        _probes.add(probe);
-        //probe.addProbeListener(this);
-        print('>>> adding probe stream : ${probe.events}');
+        executors.add(probe);
         _group.add(probe.events);
         probe.initialize();
 

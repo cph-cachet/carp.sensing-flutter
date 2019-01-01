@@ -9,16 +9,17 @@ part of sensors;
 
 /// A simple abstract probe to be used to implement specific buffered sensor probes.
 abstract class BufferingSensorProbe extends BufferingPeriodicStreamProbe {
-  MultiDatum datum;
+  MultiDatum datum = MultiDatum();
 
   BufferingSensorProbe(PeriodicMeasure measure) : super(measure);
 
   Future<Datum> getDatum() async => datum;
 
-  void resume() {
+  void onPeriodStart() {
     datum = MultiDatum();
-    super.resume();
   }
+
+  void onPeriodEnd() {}
 }
 
 /// A probe that collects accelerometer events and buffers them and return a [MultiDatum] with
@@ -26,7 +27,7 @@ abstract class BufferingSensorProbe extends BufferingPeriodicStreamProbe {
 class BufferingAccelerometerProbe extends BufferingSensorProbe {
   BufferingAccelerometerProbe(PeriodicMeasure measure) : super(measure);
 
-  Stream get bufferEvents => accelerometerEvents;
+  Stream get bufferingEvents => accelerometerEvents;
 
   void onData(event) => datum.addDatum(AccelerometerDatum.fromAccelerometerEvent(event));
 }
@@ -47,7 +48,7 @@ class AccelerometerProbe extends PeriodicStreamProbe {
 class BufferingGyroscopeProbe extends BufferingSensorProbe {
   BufferingGyroscopeProbe(PeriodicMeasure measure) : super(measure);
 
-  Stream get bufferEvents => gyroscopeEvents;
+  Stream get bufferingEvents => gyroscopeEvents;
 
   void onData(event) => datum.addDatum(GyroscopeDatum.fromGyroscopeEvent(event));
 }

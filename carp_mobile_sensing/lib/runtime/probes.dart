@@ -84,10 +84,12 @@ abstract class AbstractProbe implements Probe {
 
   void pause() async {
     _isRunning = false;
+    print(name.toString() + ' probe paused');
   }
 
   void resume() async {
     _isRunning = true;
+    print(name.toString() + ' probe resumed');
   }
 
   void reset() async {
@@ -96,6 +98,7 @@ abstract class AbstractProbe implements Probe {
 
   void stop() async {
     _isRunning = false;
+    print(name.toString() + ' probe stopped');
   }
 
   /// The stream of data events from this probe.
@@ -255,7 +258,7 @@ abstract class PeriodicStreamProbe extends StreamProbe {
   }
 }
 
-/// An abstract probe which can be used to collect data from a [bufferEvents] stream,
+/// An abstract probe which can be used to collect data from a [bufferingEvents] stream,
 /// every [frequency] for a period of [duration]. These events are buffered, and
 /// once collected for the [duration], are collected from the [getDatum] method and
 /// send to the main [events] stream.
@@ -264,34 +267,56 @@ abstract class PeriodicStreamProbe extends StreamProbe {
 ///
 abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
   /// The stream of events to be buffered.
-  Stream<dynamic> get bufferEvents;
+  Stream<dynamic> get bufferingEvents;
   Stream<Datum> get stream => null; // Not used
 
   BufferingPeriodicStreamProbe(PeriodicMeasure measure) : super(measure);
 
   Future start() async {
-    if (bufferEvents != null) {
+    if (bufferingEvents != null) {
       super.start();
 
-      // starting the subscription to the buffered events
-      subscription = bufferEvents.listen(onData, onError: onError, onDone: onDone);
+      // subscribing to the buffering events
+      subscription = bufferingEvents.listen(onData, onError: onError, onDone: onDone);
       subscription.pause();
-      // create a recurrent timer that wait (pause) and then resume the buffering.
-      timer = Timer.periodic(frequency, (Timer t) {
-        this.resume();
-        // create a timer that stops the buffering after the specified duration.
-        Timer(duration, () {
-          this.pause();
+      resume();
+    }
+  }
+
+  @override
+  void resume() {
+    super.resume();
+    // create a recurrent timer that every [frequency] resumes the buffering.
+    timer = Timer.periodic(frequency, (Timer t) {
+      onPeriodStart();
+      subscription.resume();
+      // create a timer that stops the buffering after the specified [duration].
+      Timer(duration, () {
+        subscription.pause();
+        onPeriodEnd();
+        // collect the datum
+        getDatum().then((datum) {
+          if (datum != null) controller.add(datum);
         });
       });
-    }
+    });
   }
 
   @override
   void pause() {
     super.pause();
-    getDatum().then((datum) => controller.add(datum));
+    timer.cancel();
+    // check if there are some buffered data that needs to be collected before pausing
+    getDatum().then((datum) {
+      if (datum != null) controller.add(datum);
+    });
   }
+
+  /// Handler called when sampling period starts.
+  void onPeriodStart();
+
+  /// Handler called when sampling period ends.
+  void onPeriodEnd();
 
   /// Handler for handling onData events.
   void onData(dynamic event);
