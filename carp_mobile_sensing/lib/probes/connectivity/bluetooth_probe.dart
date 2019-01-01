@@ -7,6 +7,9 @@
 
 part of connectivity;
 
+// This probe requests access to location PERMISSIONS (on Android).
+// TODO - implement request for getting permission.
+
 /// The [BluetoothProbe] scans for nearby and visible Bluetooth devices and collect
 /// a [BluetoothDatum] for each. Uses a [PeriodicMeasure] for configuration the
 /// [frequency] and [duration] of the scan.

@@ -115,7 +115,7 @@ class TaskExecutor extends Executor {
       if ((probe != null) && (measure.enabled)) {
         executors.add(probe);
         _group.add(probe.events);
-        probe.initialize();
+        await probe.initialize();
 
         // start the probe
         await probe.start();

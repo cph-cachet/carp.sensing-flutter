@@ -15,8 +15,8 @@ class Sensing {
   StudyExecutor executor;
 
   Sensing() : super() {
+    // Register a [StorageDataManager]s in the [DataManagerRegistry].
     DataManagerRegistry.register(DataEndPointType.PRINT, new ConsoleDataManager());
-    // Register a [FirebaseStorageDataManager] in the [DataManagerRegistry].
     //DataManagerRegistry.register(DataEndPointType.FIREBASE_STORAGE, new FirebaseStorageDataManager());
     //DataManagerRegistry.register(DataEndPointType.FIREBASE_DATABASE, new FirebaseDatabaseDataManager());
     DataManagerRegistry.register(DataEndPointType.FILE, new FileDataManager());
@@ -37,13 +37,13 @@ class Sensing {
 
     // note that in this version, we start the sensors (accelerometer, etc.)
     // in order to generate a lot of data quickly for testing purposes
-    study.tasks.add(sensorTask);
+    //study.tasks.add(sensorTask);
     study.tasks.add(pedometerTask);
     study.tasks.add(hardwareTask);
     study.tasks.add(appTask);
-//    study.tasks.add(connectivityTask);
-//    study.tasks.add(commTask);
-//    study.tasks.add(locationTask);
+    //study.tasks.add(connectivityTask);
+    //study.tasks.add(commTask);
+    study.tasks.add(locationTask);
 //    study.tasks.add(audioTask);
 //    study.tasks.add(contextTask);
 //    study.tasks.add(noiseTask);
@@ -192,7 +192,7 @@ class Sensing {
   /// A task collecting information about communication:
   /// - phone log
   /// - messages (sms) log
-  /// - an event every time a sms is recieved
+  /// - an event every time a sms is received
   ///
   /// Works only on Android.
   Task get commTask {
@@ -214,6 +214,9 @@ class Sensing {
   /// A task with two types of connectivity measures:
   /// - connectivity (wifi, ...)
   /// - nearby bluetooth devices
+  ///
+  /// PERMISSIONS
+  /// - location related to Bluetooth
   Task get connectivityTask {
     if (_connectivityTask == null) {
       _connectivityTask = Task("Connectivity Task")

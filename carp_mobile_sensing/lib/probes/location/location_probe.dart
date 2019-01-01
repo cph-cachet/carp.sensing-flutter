@@ -16,7 +16,11 @@ class LocationProbe extends StreamProbe {
 
   @override
   void initialize() async {
-    //await SimplePermissions.requestPermission(Permission.AccessFineLocation);
+    super.initialize();
+//    PermissionStatus status = await SimplePermissions.requestPermission(Permission.AccessFineLocation);
+//    bool granted = await SimplePermissions.checkPermission(Permission.AccessFineLocation);
+//    print('>>> Permission, location : $granted');
+    _location = new Location();
   }
 
   Stream<LocationDatum> get stream =>
