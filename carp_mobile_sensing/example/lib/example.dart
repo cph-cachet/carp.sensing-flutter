@@ -42,4 +42,12 @@ void example() {
   StudyExecutor executor = new StudyExecutor(study);
   executor.initialize();
   executor.start();
+
+  // listening on all data events from the study
+  executor.events.forEach(print);
+
+  // listening on a specific probe
+  ProbeRegistry.probes[DataType.LOCATION].events.forEach(print);
+
+  //executor.events.transform(streamTransformer).map(convert).where(test).skipWhile(test);
 }

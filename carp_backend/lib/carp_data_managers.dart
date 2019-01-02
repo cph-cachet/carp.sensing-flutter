@@ -26,8 +26,8 @@ class CarpDataManager extends AbstractDataManager implements FileDataManagerList
   CarpDataManager() {}
 
   @override
-  Future initialize(Study study) async {
-    super.initialize(study);
+  Future initialize(Study study, Stream<Datum> events) async {
+    super.initialize(study, events);
     assert(study.dataEndPoint is CarpDataEndPoint);
     carpEndPoint = study.dataEndPoint as CarpDataEndPoint;
 
@@ -39,7 +39,7 @@ class CarpDataManager extends AbstractDataManager implements FileDataManagerList
       // Create a [FileDataManager] and wrap it.
       fileDataManager = new FileDataManager();
       fileDataManager.addFileDataManagerListener(this);
-      fileDataManager.initialize(study);
+      fileDataManager.initialize(study, events);
     }
     await user; // This will trigger authentication to the CARP server
   }
@@ -145,4 +145,12 @@ class CarpDataManager extends AbstractDataManager implements FileDataManagerList
   Future close() async {
     return;
   }
+
+  void onData(Datum datum) => uploadData(datum);
+
+  void onDone() {
+    close();
+  }
+
+  void onError(error) {}
 }

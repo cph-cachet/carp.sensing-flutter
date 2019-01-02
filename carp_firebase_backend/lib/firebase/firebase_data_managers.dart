@@ -17,8 +17,8 @@ abstract class FirebaseDataManager extends AbstractDataManager {
   FirebaseDataManager() {}
 
   @override
-  Future initialize(Study study) async {
-    super.initialize(study);
+  Future initialize(Study study, Stream<Datum> events) async {
+    super.initialize(study, events);
     assert(study.dataEndPoint is FirebaseDataEndPoint);
     firebaseEndPoint = (study.dataEndPoint as FirebaseDataEndPoint).firebaseEndPoint;
   }
@@ -74,6 +74,12 @@ abstract class FirebaseDataManager extends AbstractDataManager {
   Future close() async {
     return;
   }
+
+  void onDone() {
+    close();
+  }
+
+  void onError(error) {}
 }
 
 /// Stores files with [Datum] json objects in the Firebase Storage file store.
@@ -95,12 +101,12 @@ class FirebaseStorageDataManager extends FirebaseDataManager implements FileData
   }
 
   @override
-  Future initialize(Study study) async {
-    super.initialize(study);
+  Future initialize(Study study, Stream<Datum> events) async {
+    super.initialize(study, events);
     assert(study.dataEndPoint is FirebaseStorageDataEndPoint);
     dataEndPoint = study.dataEndPoint as FirebaseStorageDataEndPoint;
 
-    fileDataManager.initialize(study);
+    fileDataManager.initialize(study, events);
 
     final FirebaseStorage storage = await firebaseStorage;
     final FirebaseUser authenticatedUser = await user;
@@ -174,6 +180,8 @@ class FirebaseStorageDataManager extends FirebaseDataManager implements FileData
         }
     }
   }
+
+  void onData(Datum datum) => uploadData(datum);
 }
 
 /// Stores CARP json objects in the Firebase Database.
@@ -189,8 +197,8 @@ class FirebaseDatabaseDataManager extends FirebaseDataManager {
   FirebaseDatabaseDataManager() {}
 
   @override
-  Future initialize(Study study) async {
-    super.initialize(study);
+  Future initialize(Study study, Stream<Datum> events) async {
+    super.initialize(study, events);
     assert(study.dataEndPoint is FirebaseDatabaseDataEndPoint);
     dataEndPoint = study.dataEndPoint as FirebaseDatabaseDataEndPoint;
 
@@ -240,4 +248,6 @@ class FirebaseDatabaseDataManager extends FirebaseDataManager {
 
     return false;
   }
+
+  void onData(Datum datum) => uploadData(datum);
 }

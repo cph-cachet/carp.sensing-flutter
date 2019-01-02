@@ -13,25 +13,18 @@ class ConsoleDataManager extends AbstractDataManager {
   Study study;
 
   @override
-  Future initialize(Study study) async {
-    super.initialize(study);
+  Future initialize(Study study, Stream<Datum> events) async {
+    super.initialize(study, events);
   }
 
-  @override
-  Future<bool> uploadData(Datum data) async {
-    print("^^^^^^^^^^^^^^^\n" + jsonEncode(data));
-    return true;
-  }
+  void onData(Datum datum) => print(">> ${jsonEncode(datum)}");
 
-  @override
-  void onData(Datum datum) {
-    uploadData(datum);
-  }
-
-  @override
   Future close() async {}
 
-  @override
+  void onDone() {}
+
+  void onError(error) {}
+
   String toString() {
     return "JSON Print Data Manager";
   }

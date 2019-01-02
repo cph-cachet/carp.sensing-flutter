@@ -14,10 +14,33 @@ class BatteryProbe extends StreamProbe {
 
   BatteryProbe(Measure measure) : super(measure);
 
-  Stream<Datum> get stream async* {
-    await for (var state in battery.onBatteryStateChanged) {
+  Stream<Datum> get stream {
+    StreamController<Datum> controller;
+    StreamSubscription<BatteryState> subscription;
+
+    void onData(state) async {
       int level = await battery.batteryLevel;
-      yield BatteryDatum.fromBatteryState(measure, level, state);
+      Datum datum = BatteryDatum.fromBatteryState(measure, level, state);
+      controller.add(datum);
     }
+
+    controller = StreamController<Datum>(
+        onListen: () => subscription.resume(),
+        onPause: () => subscription.pause(),
+        onResume: () => subscription.resume(),
+        onCancel: () => subscription.cancel());
+
+    subscription = battery.onBatteryStateChanged
+        .listen(onData, onError: (error) => controller.addError(error), onDone: () => controller.close());
+
+    return controller.stream;
   }
+
+//  Stream<Datum> get stream async* {
+//    await for (var state in battery.onBatteryStateChanged) {
+//      int level = await battery.batteryLevel;
+//      yield BatteryDatum.fromBatteryState(measure, level, state);
+//    }
+//  }
+
 }

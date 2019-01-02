@@ -53,7 +53,9 @@ class StudyExecutor extends Executor {
   Study study;
   DataManager _dataManager;
 
-  StudyExecutor(this.study) : super(study);
+  StudyExecutor(this.study)
+      : assert(study != null),
+        super(study);
 
   void initialize() async {
     await Device.getDeviceInfo();
@@ -62,8 +64,7 @@ class StudyExecutor extends Executor {
     print(' device ID    : ' + Device.deviceID.toString());
     print(' data manager : ' + dataManager.toString());
 
-    await dataManager.initialize(study);
-    events.listen(dataManager.onData, onError: dataManager.onError, onDone: dataManager.onDone);
+    await dataManager.initialize(study, events);
   }
 
   DataManager get dataManager {

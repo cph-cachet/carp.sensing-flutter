@@ -9,20 +9,22 @@ part of core;
 /// The [DataManager] interface is used to upload [Datum] objects to any
 /// data manager that implements this interface.
 abstract class DataManager {
-  /// Initialize the data manager by specifying the running [Study].
-  Future<void> initialize(Study study);
-
-  /// Upload data to the data store.
-  /// Returns [true] if data was successfully uploaded; [false] otherwise.
-  Future<bool> uploadData(Datum data);
+  /// Initialize the data manager by specifying the running [Study]
+  /// and the stream of [Datum] events to handle.
+  Future<void> initialize(Study study, Stream<Datum> events);
 
   /// Close the data manager (e.g. closing connections).
   Future<void> close();
 
   // Stream handlers below
 
+  /// On each data event from the data stream, the [onData] handler is called.
   void onData(Datum datum);
+
+  /// When the data stream closes, the [onDone] handler is called.
   void onDone();
+
+  /// When an error event is send on the stream, the [onError] handler is called.
   void onError(error);
 }
 
@@ -31,14 +33,14 @@ abstract class DataManager {
 abstract class AbstractDataManager implements DataManager {
   Study study;
 
-  Future<void> initialize(Study study) async {
-    assert(study != null);
+  Future<void> initialize(Study study, Stream<Datum> events) async {
     this.study = study;
+    events.listen(onData, onError: onError, onDone: onDone);
   }
 
-  void onData(Datum datum) {}
-  void onDone() {}
-  void onError(error) {}
+  void onData(Datum datum);
+  void onDone();
+  void onError(error);
 
   /// JSON encode an object.
   String jsonEncode(Object object) => const JsonEncoder.withIndent(' ').convert(object);

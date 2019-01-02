@@ -42,8 +42,8 @@ class FileDataManager extends AbstractDataManager {
   }
 
   @override
-  Future initialize(Study study) async {
-    super.initialize(study);
+  Future initialize(Study study, Stream<Datum> events) async {
+    super.initialize(study, events);
     assert(study.dataEndPoint is FileDataEndPoint);
     _fileDataEndPoint = study.dataEndPoint as FileDataEndPoint;
 
@@ -199,10 +199,15 @@ class FileDataManager extends AbstractDataManager {
     });
   }
 
-  @override
   String toString() {
     return "FileDataManager";
   }
+
+  void onData(Datum datum) => uploadData(datum);
+
+  void onDone() {}
+
+  void onError(error) {}
 }
 
 /// A Listener that can listen on [FileDataManagerEvent]s from a [FileDataManager].
