@@ -1,17 +1,22 @@
 part of runtime;
 
+/// Signature of a data transformer.
+typedef DatumTransformer = Datum Function(Datum);
+
 /// Signature of a data stream transformer.
 typedef DatumStreamTransformer = Stream<Datum> Function(Stream<Datum>);
 
 class StudyManager {
   Study study;
   StudyExecutor executor;
-  Stream<Datum> events;
   DataManager manager;
   DatumStreamTransformer transformer;
+  SamplingSchema samplingSchema;
+
+  Stream<Datum> events;
   bool get isRunning => executor.isRunning;
 
-  StudyManager(this.study, {this.executor, this.manager, this.transformer})
+  StudyManager(this.study, {this.executor, this.samplingSchema, this.manager, this.transformer})
       : assert(study != null),
         super() {
     // if no executor is specified, use the default one
@@ -52,13 +57,42 @@ class StudyManager {
 }
 
 class PrivacySchema {
-  PrivacySchema();
+  Map<String, DatumTransformer> transformers = Map();
+
+  PrivacySchema() : super();
 
   factory PrivacySchema.none() => PrivacySchema();
-  factory PrivacySchema.none() => PrivacySchema();
-  factory PrivacySchema.none() => PrivacySchema();
+  factory PrivacySchema.full() => PrivacySchema();
+
+  addProtector(String type, DatumTransformer protector) => transformers[type] = protector;
+
+  /// Returns a privacy protected version of [data].
+  ///
+  /// If a transformer for this data type exists, the data is transformed.
+  /// Otherwise, the same data is returned unchanged.
+  Datum protect(Datum data) {
+    Function transformer = transformers[data.format.name];
+    return (transformer != null) ? transformer(data) : data;
+  }
 }
 
-class SamplingSchema {}
+class SamplingSchema {
+  /// Is this sampling schema power-aware, i.e. adapting its sampling strategy to
+  /// the battery power status.
+  bool powerAware = false;
 
-class DatumTransformer {}
+  SamplingSchema() : super();
+
+  /// A default light sampling schema.
+  ///
+  /// This theme is intended for sampling on a daily basis with recharging
+  /// at least once pr. day. This scheme is not power-aware.
+  ///
+  /// Settings:
+  /// -
+  factory SamplingSchema.light() => SamplingSchema();
+
+  factory SamplingSchema.maximum() => SamplingSchema();
+
+  factory SamplingSchema.powerFriendly() => SamplingSchema();
+}
