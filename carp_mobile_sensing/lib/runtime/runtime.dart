@@ -19,3 +19,4 @@ import 'package:carp_mobile_sensing/core/core.dart';
 part 'probes.dart';
 part 'probe_registry.dart';
 part 'executors.dart';
+part 'study_manager.dart';

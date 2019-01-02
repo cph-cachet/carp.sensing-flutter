@@ -7,12 +7,13 @@
 
 part of runtime;
 
+/// An abstract class used to implement executors.
+/// See [StudyExecutor] and [TaskExecutor] for examples.
 abstract class Executor extends AbstractProbe {
   static final Device deviceInfo = new Device();
   StreamGroup<Datum> _group = StreamGroup<Datum>.broadcast();
 
   Study study;
-  DataManager _dataManager;
   List<Probe> executors = new List<Probe>();
 
   Stream<Datum> get events => _group.stream;
@@ -48,32 +49,9 @@ abstract class Executor extends AbstractProbe {
 /// For each task it starts a [TaskExecutor].
 ///
 /// Note that the [StudyExecutor] in itself is a [Probe] and hence work as a 'super probe'.
-///This - amongst other things - imply that you can listen to datum [events] from a study executor.
+/// This - amongst other things - imply that you can listen to datum [events] from a study executor.
 class StudyExecutor extends Executor {
-  Study study;
-  DataManager _dataManager;
-
-  StudyExecutor(this.study)
-      : assert(study != null),
-        super(study);
-
-  void initialize() async {
-    await Device.getDeviceInfo();
-    print('Initializing Study Executor for study: ' + study.name);
-    print(' platform     : ' + Device.platform.toString());
-    print(' device ID    : ' + Device.deviceID.toString());
-    print(' data manager : ' + dataManager.toString());
-
-    await dataManager.initialize(study, events);
-  }
-
-  DataManager get dataManager {
-    if (_dataManager == null) {
-      // if the data manager hasn't been set, then try to look it up in the [DataManagerRegistry].
-      _dataManager = DataManagerRegistry.lookup(study.dataEndPoint.type);
-    }
-    return _dataManager;
-  }
+  StudyExecutor(Study study) : super(study);
 
   Future _start() async {
     for (Task task in study.tasks) {
@@ -84,11 +62,6 @@ class StudyExecutor extends Executor {
       await executor.start();
     }
   }
-
-  void stop() async {
-    super.stop();
-    if (dataManager != null) dataManager.close();
-  }
 }
 
 /// The [TaskExecutor] is responsible for executing [Task]s in the [Study].
@@ -97,7 +70,6 @@ class StudyExecutor extends Executor {
 ///Note that the [TaskExecutor] in itself is a [Probe] and hence work as a 'super probe'.
 ///This - amongst other things - imply that you can listen to datum [events] from a task executor.
 class TaskExecutor extends Executor {
-  //List<Probe> _probes = new List<Probe>();
   Task task;
 
   TaskExecutor(Study study, this.task)
@@ -106,23 +78,17 @@ class TaskExecutor extends Executor {
     name = task.name;
   }
 
-  Future initialize() async {
-    print('Initializing Task Executor for task: $name ...');
-  }
-
   Future _start() async {
     for (Measure measure in task.measures) {
       Probe probe = ProbeRegistry.create(measure);
       if ((probe != null) && (measure.enabled)) {
         executors.add(probe);
         _group.add(probe.events);
-        await probe.initialize();
+        probe.initialize();
 
         // start the probe
         await probe.start();
       }
     }
   }
-
-  Stream<Datum> get events => _group.stream;
 }

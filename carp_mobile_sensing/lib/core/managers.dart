@@ -65,8 +65,8 @@ class DataManagerRegistry {
   }
 }
 
-/// An interface for defining a way to get a [Study].
-abstract class StudyManager {
+/// An interface defining a way to get a [Study].
+abstract class StudyReceiver {
   /// Initialize the study manager.
   Future<void> initialize();
 

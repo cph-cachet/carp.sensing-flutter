@@ -41,7 +41,6 @@ class FileDataManager extends AbstractDataManager {
     }
   }
 
-  @override
   Future initialize(Study study, Stream<Datum> events) async {
     super.initialize(study, events);
     assert(study.dataEndPoint is FileDataEndPoint);

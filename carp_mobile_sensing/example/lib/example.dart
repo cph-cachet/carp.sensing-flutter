@@ -38,16 +38,25 @@ void example() {
   study.addTask(SequentialTask('Task collecting a list of all installed apps')
     ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.APPS))));
 
-  // Create an executor that can execute this study, initialize it, and start it.
-  StudyExecutor executor = new StudyExecutor(study);
-  executor.initialize();
-  executor.start();
+  // Create a Study Manager that can manage this study, initialize it, and start it.
+  StudyManager manager =
+      StudyManager(study, transformer: ((events) => events.where((event) => (event is BatteryDatum))));
+  manager.initialize();
+  manager.start();
+
+//  StudyExecutor executor = new StudyExecutor(study);
+//  executor.initialize();
+//  executor.start();
 
   // listening on all data events from the study
-  executor.events.forEach(print);
+  manager.events.forEach(print);
 
   // listening on a specific probe
-  ProbeRegistry.probes[DataType.LOCATION].events.forEach(print);
+  //ProbeRegistry.probes[DataType.LOCATION].events.forEach(print);
 
-  //executor.events.transform(streamTransformer).map(convert).where(test).skipWhile(test);
+  //get transformedStream => executor.events.transform(streamTransformer).map(convert).where(test).skipWhile(test);
+
+//  Stream<Datum> transform<Datum>(Stream<Datum> stream) {
+//    return stream.transform(streamTransformer);
+//  }
 }

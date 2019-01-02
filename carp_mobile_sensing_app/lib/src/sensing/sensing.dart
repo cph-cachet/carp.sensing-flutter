@@ -12,7 +12,7 @@ class Sensing {
   List<String> get availableProbes => ProbeRegistry.availableProbeTypes;
   Map<String, Probe> get runningProbes => ProbeRegistry.probes;
   //List<Probe> get runningProbes => ProbeRegistry.probes.;
-  StudyExecutor executor;
+  StudyManager manager;
 
   Sensing() : super() {
     // Register a [StorageDataManager]s in the [DataManagerRegistry].
@@ -26,7 +26,7 @@ class Sensing {
   /// (Re)start sensing.
   void start() async {
     // if an executor/study is already running, stop the old one before creating a new study
-    if (executor != null) {
+    if (manager != null) {
       stop();
     }
 
@@ -53,16 +53,16 @@ class Sensing {
     // print the study to the console
     print(study.toString());
 
-    // create a new executor
-    executor = new StudyExecutor(study);
-    executor.initialize();
-    executor.start();
+    // Create a Study Manager that can manage this study, initialize it, and start it.
+    manager = StudyManager(study, transformer: ((events) => events.where((event) => (event is BatteryDatum))));
+
+    //manager = StudyManager(study);
+    manager.initialize();
+    manager.start();
     print("Sensing started ...");
 
-    print('listening on streams...');
-
-    // listening on all probe events from the study
-    executor.events.forEach(print);
+    // listening on all data events from the study
+    manager.events.forEach(print);
 
     // listening on a specific probe
     //ProbeRegistry.probes[DataType.LOCATION].events.forEach(print);
@@ -73,7 +73,7 @@ class Sensing {
 
   /// Stop sensing.
   void stop() async {
-    executor.stop();
+    manager.stop();
     _study = null;
     print("Sensing stopped ...");
   }
