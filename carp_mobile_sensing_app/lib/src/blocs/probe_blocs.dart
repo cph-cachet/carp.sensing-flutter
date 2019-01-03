@@ -7,7 +7,8 @@ class ProbesBloc {
   bool get isRunning => _sensing.manager.isRunning;
 
   //Observable<ProbeModel> get runningProbes => _probesFetcher.stream;
-  Iterable<ProbeModel> get runningProbes => _sensing.runningProbes.values.map((probe) => ProbeModel(probe));
+  Iterable<ProbeModel> get runningProbes => _sensing.runningProbes.map((probe) => ProbeModel(probe));
+  //Observable<Iterable<ProbeModel>> get runningProbes => _sensing.runningProbes.values.map((probe) => ProbeModel(probe));
 
   void init() async {
 //    await _sensing.start();

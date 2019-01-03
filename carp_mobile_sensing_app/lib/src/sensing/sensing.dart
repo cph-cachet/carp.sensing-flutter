@@ -10,9 +10,9 @@ class Sensing {
   final String testStudyId = "8";
 
   List<String> get availableProbes => ProbeRegistry.availableProbeTypes;
-  Map<String, Probe> get runningProbes => ProbeRegistry.probes;
   //List<Probe> get runningProbes => ProbeRegistry.probes.;
   StudyManager manager;
+  List<Probe> get runningProbes => manager.executor.probes;
 
   Sensing() : super() {
     // Register a [StorageDataManager]s in the [DataManagerRegistry].
@@ -54,7 +54,11 @@ class Sensing {
     print(study.toString());
 
     // Create a Study Manager that can manage this study, initialize it, and start it.
-    manager = StudyManager(study, transformer: ((events) => events.where((event) => (event is BatteryDatum))));
+    manager = StudyManager(
+      study,
+      samplingSchema: SamplingSchema.light(),
+      //    transformer: ((events) => events.where((event) => (event is BatteryDatum)))
+    );
 
     //manager = StudyManager(study);
     manager.initialize();

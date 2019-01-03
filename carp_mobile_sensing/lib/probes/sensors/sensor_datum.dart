@@ -9,7 +9,7 @@ part of sensors;
 /// A [Datum] that holds acceleration data collected from the native accelerometer on the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class AccelerometerDatum extends CARPDatum {
-  static DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.ACCELEROMETER);
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.ACCELEROMETER);
   DataFormat get format => CARP_DATA_FORMAT;
 
   /// Acceleration force along the x axis (including gravity) measured in m/s^2.
@@ -36,7 +36,7 @@ class AccelerometerDatum extends CARPDatum {
 /// A [Datum] that holds rotation data collected from the native gyroscope on the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: true)
 class GyroscopeDatum extends CARPDatum {
-  static DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.GYROSCOPE);
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.GYROSCOPE);
   DataFormat get format => CARP_DATA_FORMAT;
 
   /// Rate of rotation around the x axis measured in rad/s.
@@ -63,7 +63,7 @@ class GyroscopeDatum extends CARPDatum {
 /// A [Datum] that holds light intensity in Lux from the light sensor on the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class LightDatum extends CARPDatum {
-  static DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.LIGHT);
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.LIGHT);
   DataFormat get format => CARP_DATA_FORMAT;
 
   /// Intensity in Lux

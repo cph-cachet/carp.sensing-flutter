@@ -10,17 +10,22 @@ part of hardware;
 /// A [Datum] that holds battery level collected from the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class BatteryDatum extends CARPDatum {
-  static DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.BATTERY);
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.BATTERY);
   DataFormat get format => CARP_DATA_FORMAT;
+
+  static const String STATE_FULL = 'full';
+  static const String STATE_CHARGING = 'charging';
+  static const String STATE_DISCHARGING = 'discharging';
+  static const String STATE_UNKNOWN = 'unknown';
 
   /// The battery level in percent.
   int batteryLevel;
 
   /// The charging status of the battery:
-  /// - charging
-  /// - full
-  /// - discharging
-  /// - unknown
+  ///  - charging
+  ///  - full
+  ///  - discharging
+  ///  - unknown
   String batteryStatus;
 
   BatteryDatum() : super();
@@ -33,13 +38,13 @@ class BatteryDatum extends CARPDatum {
   static String _parseBatteryState(BatteryState state) {
     switch (state) {
       case BatteryState.full:
-        return "full";
+        return STATE_FULL;
       case BatteryState.charging:
-        return "charging";
+        return STATE_CHARGING;
       case BatteryState.discharging:
-        return "discharging";
+        return STATE_DISCHARGING;
       default:
-        return "unknown";
+        return STATE_UNKNOWN;
     }
   }
 
@@ -52,7 +57,7 @@ class BatteryDatum extends CARPDatum {
 /// Holds information about free memory on the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class FreeMemoryDatum extends CARPDatum {
-  static DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.MEMORY);
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.MEMORY);
   DataFormat get format => CARP_DATA_FORMAT;
 
   /// Amount of free physical memory in bytes.
@@ -72,7 +77,7 @@ class FreeMemoryDatum extends CARPDatum {
 /// Holds a screen event collected from the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ScreenDatum extends CARPDatum {
-  static DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.SCREEN);
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.SCREEN);
   DataFormat get format => CARP_DATA_FORMAT;
 
   /// A screen event:

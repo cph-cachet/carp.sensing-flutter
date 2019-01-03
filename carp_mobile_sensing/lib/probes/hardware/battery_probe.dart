@@ -19,9 +19,13 @@ class BatteryProbe extends StreamProbe {
     StreamSubscription<BatteryState> subscription;
 
     void onData(state) async {
-      int level = await battery.batteryLevel;
-      Datum datum = BatteryDatum.fromBatteryState(measure, level, state);
-      controller.add(datum);
+      try {
+        int level = await battery.batteryLevel;
+        Datum datum = BatteryDatum.fromBatteryState(measure, level, state);
+        controller.add(datum);
+      } catch (error) {
+        controller.addError(error);
+      }
     }
 
     controller = StreamController<Datum>(

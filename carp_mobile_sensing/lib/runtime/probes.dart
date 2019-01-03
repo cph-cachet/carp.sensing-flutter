@@ -69,9 +69,10 @@ abstract class AbstractProbe implements Probe {
   }
 
   AbstractProbe();
-  AbstractProbe.init(Measure measure)
-      : assert(measure != null, 'A Probe cannot be initialized with a null Measure.'),
-        this._measure = measure;
+  AbstractProbe.init(Measure measure) : assert(measure != null, 'A Probe cannot be initialized with a null Measure.') {
+    this._measure = measure;
+    this.name = measure.name;
+  }
 
   void initialize() {
     _isRunning = false;
@@ -79,17 +80,17 @@ abstract class AbstractProbe implements Probe {
 
   Future start() async {
     _isRunning = true;
-    print(name.toString() + ' probe started');
+    print('$name probe started');
   }
 
   void pause() async {
     _isRunning = false;
-    print(name.toString() + ' probe paused');
+    print('$name probe paused');
   }
 
   void resume() async {
     _isRunning = true;
-    print(name.toString() + ' probe resumed');
+    print('$name probe resumed');
   }
 
   void reset() async {
@@ -98,7 +99,7 @@ abstract class AbstractProbe implements Probe {
 
   void stop() async {
     _isRunning = false;
-    print(name.toString() + ' probe stopped');
+    print('$name probe stopped');
   }
 
   /// The stream of data events from this probe.
@@ -182,14 +183,15 @@ abstract class PeriodicDatumProbe extends DatumProbe {
   PeriodicDatumProbe(PeriodicMeasure measure)
       : assert(measure != null),
         assert(measure.frequency != null, 'Measure frequency cannot be null for a PeriodicProbe.'),
-        frequency = Duration(milliseconds: measure.frequency),
-        duration = (measure.duration != null) ? Duration(milliseconds: measure.duration) : null,
         super(measure);
 
   Stream<Datum> get events => controller.stream;
 
   Future start() async {
     super.start();
+    PeriodicMeasure _measure = measure as PeriodicMeasure;
+    frequency = Duration(milliseconds: _measure.frequency);
+    duration = (_measure.duration != null) ? Duration(milliseconds: _measure.duration) : null;
     this.resume();
   }
 
@@ -236,6 +238,9 @@ abstract class PeriodicStreamProbe extends StreamProbe {
 
   Future start() async {
     super.start();
+    PeriodicMeasure _measure = measure as PeriodicMeasure;
+    frequency = Duration(milliseconds: _measure.frequency);
+    duration = (_measure.duration != null) ? Duration(milliseconds: _measure.duration) : null;
     if (subscription != null) {
       // pause events for now.
       subscription.pause();

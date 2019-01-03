@@ -21,7 +21,7 @@ class Datum {
 /// A [Datum] which conforms to the [DataFormat].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class CARPDatum extends Datum {
-  static DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.CARP);
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.CARP);
   DataFormat get format => CARP_DATA_FORMAT;
 
   /// Unique identifier for the current Datum, unique across all data generated.
@@ -88,7 +88,7 @@ class DeviceInfo {
 /// A very simple [Datum] that only holds a string datum object.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class StringDatum extends CARPDatum {
-  static DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.STRING);
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.STRING);
   DataFormat get format => CARP_DATA_FORMAT;
 
   String str;
@@ -102,7 +102,7 @@ class StringDatum extends CARPDatum {
 /// A generic [Datum] that holds a map of key, value string objects.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MapDatum extends CARPDatum {
-  static DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.MAP);
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.MAP);
   DataFormat get format => CARP_DATA_FORMAT;
 
   Map<String, String> map;
@@ -117,7 +117,7 @@ class MapDatum extends CARPDatum {
 /// sort of error, which is reported back.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ErrorDatum extends CARPDatum {
-  static DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.ERROR);
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.ERROR);
   DataFormat get format => CARP_DATA_FORMAT;
 
   /// The original error message returned from the probe, if available.
@@ -153,15 +153,15 @@ class MultiDatum extends CARPDatum {
 /// Specifies the data format of a [Datum].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class DataFormat {
-  static DataFormat UNKNOWN = DataFormat(NameSpace.UNKNOWN, "unknown");
+  static const DataFormat UNKNOWN = DataFormat(NameSpace.UNKNOWN, "unknown");
 
   /// The data format namespace. See [NameSpace].
-  String namepace;
+  final String namepace;
 
   /// The name of this data format.
-  String name;
+  final String name;
 
-  DataFormat(this.namepace, this.name) : super();
+  const DataFormat(this.namepace, this.name) : super();
   factory DataFormat.fromDataType(MeasureType type) => DataFormat(type.namepace, type.name);
 
   factory DataFormat.fromJson(Map<String, dynamic> json) => _$DataFormatFromJson(json);

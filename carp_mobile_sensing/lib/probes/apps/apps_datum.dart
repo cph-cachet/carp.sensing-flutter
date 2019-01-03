@@ -10,7 +10,7 @@ part of apps;
 /// Holds a list of names of apps installed on the device.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class AppsDatum extends CARPDatum {
-  static DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.APPS);
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.APPS);
   DataFormat get format => CARP_DATA_FORMAT;
 
   /// List of names on installed apps.
@@ -33,7 +33,7 @@ class AppsDatum extends CARPDatum {
 /// Holds a Map of names of apps and their corresponding usage in seconds.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class AppUsageDatum extends CARPDatum {
-  static DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.APP_USAGE);
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.APP_USAGE);
   DataFormat get format => CARP_DATA_FORMAT;
 
   DateTime start, end;

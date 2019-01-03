@@ -10,7 +10,7 @@ part of environment;
 /// A [Datum] that holds weather information collected through OpenWeatherMap.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class WeatherDatum extends CARPDatum {
-  static DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.WEATHER);
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.WEATHER);
   DataFormat get format => CARP_DATA_FORMAT;
 
   String country, areaName, weatherMain, weatherDescription;

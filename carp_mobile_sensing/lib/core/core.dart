@@ -24,4 +24,5 @@ part 'datum.dart';
 part 'measures.dart';
 part 'device_info.dart';
 part 'managers.dart';
+part 'schemas.dart';
 part 'core.g.dart';

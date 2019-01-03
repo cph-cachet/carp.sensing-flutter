@@ -10,7 +10,7 @@ part of communication;
 /// Holds a list of text (SMS) messages from the device.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class TextMessageLogDatum extends CARPDatum {
-  static DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.TEXT_MESSAGE_LOG);
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.TEXT_MESSAGE_LOG);
   DataFormat get format => CARP_DATA_FORMAT;
 
   List<TextMessage> textMessageLog;
@@ -28,7 +28,7 @@ class TextMessageLogDatum extends CARPDatum {
 /// Wraps a [TextMessage].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class TextMessageDatum extends CARPDatum {
-  static DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.TEXT_MESSAGE);
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.TEXT_MESSAGE);
   DataFormat get format => CARP_DATA_FORMAT;
 
   TextMessage textMessage;
@@ -114,7 +114,7 @@ class TextMessage extends Serializable {
 /// Holds a phone log, i.e. a list of phone calls made on the device.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class PhoneLogDatum extends CARPDatum {
-  static DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.PHONE_LOG);
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.PHONE_LOG);
   DataFormat get format => CARP_DATA_FORMAT;
 
   List<PhoneCall> phoneLog = new List<PhoneCall>();

@@ -43,6 +43,12 @@ class Study extends Serializable {
   /// Add a [Task] to this [Study]
   void addTask(Task task) => tasks.add(task);
 
+  /// Adapt the sampling [Measure]s of this [Study] to the specified [SamplingSchema].
+  void adapt(SamplingSchema schema) {
+    assert(schema != null);
+    schema.adapt(this);
+  }
+
   @override
   String toString() {
     String s = "";

@@ -10,7 +10,7 @@ part of activity;
 /// Holds activity information.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ActivityDatum extends CARPDatum {
-  static DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.ACTIVITY);
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.ACTIVITY);
   DataFormat get format => CARP_DATA_FORMAT;
 
   ActivityDatum() : super();

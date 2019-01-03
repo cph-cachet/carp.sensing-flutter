@@ -53,6 +53,17 @@ abstract class Executor extends AbstractProbe {
 class StudyExecutor extends Executor {
   StudyExecutor(Study study) : super(study);
 
+  /// Returns a list of the running probes in this task executor.
+  ///
+  /// This is a combination of the running probes in all tasks.
+  List<Probe> get probes {
+    List<Probe> _probes = List<Probe>();
+    executors.forEach((probe) {
+      _probes.add(probe);
+    });
+    return _probes;
+  }
+
   Future _start() async {
     for (Task task in study.tasks) {
       TaskExecutor executor = new TaskExecutor(study, task);
@@ -61,6 +72,11 @@ class StudyExecutor extends Executor {
       executors.add(executor);
       await executor.start();
     }
+  }
+
+  void reset() async {
+    await this.stop();
+    await this.start();
   }
 }
 
@@ -71,6 +87,9 @@ class StudyExecutor extends Executor {
 ///This - amongst other things - imply that you can listen to datum [events] from a task executor.
 class TaskExecutor extends Executor {
   Task task;
+
+  /// Returns a list of the running probes in this task executor.
+  List<Probe> get probes => executors;
 
   TaskExecutor(Study study, this.task)
       : assert(task != null),
