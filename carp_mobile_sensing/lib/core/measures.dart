@@ -15,7 +15,7 @@ class Measure extends Serializable {
   /// A printer-friendly name for this measure.
   String name;
 
-  /// Whether the measure is enabled when the study is started.
+  /// Whether the measure is enabled - i.e. collecting data - when the study is running.
   /// A measure is enabled as default.
   bool enabled = true;
 

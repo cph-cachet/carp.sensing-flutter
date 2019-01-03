@@ -284,7 +284,7 @@ class Sensing {
               ..name = "Ambient Noise"
               ..frequency = 30 * 1000 // How often to start a measure
               ..duration = 2 * 1000 // Window size
-              ..samplingRate = 400 // Sample a data point every 400 ms
+              ..samplingRate = 400 // Sampling rate at 400 ms
             );
     }
     return _noiseTask;

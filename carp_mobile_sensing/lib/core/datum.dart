@@ -206,4 +206,28 @@ class DataType {
   static const String APPLE_HEALTHKIT = "apple-healthkit";
   static const String GOOGLE_FIT = "google-fit";
   static const String WEATHER = "weather";
+
+  static List<String> get all => [
+        DataType.MEMORY,
+        DataType.PEDOMETER,
+        DataType.ACCELEROMETER,
+        DataType.GYROSCOPE,
+        DataType.BATTERY,
+        DataType.BLUETOOTH,
+        DataType.AUDIO,
+        DataType.NOISE,
+        DataType.LOCATION,
+        DataType.CONNECTIVITY,
+        DataType.LIGHT,
+        DataType.APPS,
+        DataType.APP_USAGE,
+        DataType.TEXT_MESSAGE_LOG,
+        DataType.TEXT_MESSAGE,
+        DataType.SCREEN,
+        DataType.PHONE_LOG,
+        DataType.ACTIVITY,
+        DataType.APPLE_HEALTHKIT,
+        DataType.GOOGLE_FIT,
+        DataType.WEATHER
+      ];
 }
