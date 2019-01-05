@@ -4,11 +4,8 @@
   "user_id": "bardram",
   "name": "bardram study",
   "data_end_point": {
-    "c__": "FileDataEndPoint",
-    "type": "file",
-    "buffer_size": 50000,
-    "zip": true,
-    "encrypt": false
+    "c__": "DataEndPoint",
+    "type": "print"
   },
   "tasks": [
     {

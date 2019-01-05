@@ -35,8 +35,6 @@ class Sensing {
     // specify the [DataEndPoint] for this study.
     study.dataEndPoint = getDataEndpoint(DataEndPointType.PRINT);
 
-    // note that in this version, we start the sensors (accelerometer, etc.)
-    // in order to generate a lot of data quickly for testing purposes
     //study.tasks.add(sensorTask);
     study.tasks.add(pedometerTask);
     study.tasks.add(hardwareTask);

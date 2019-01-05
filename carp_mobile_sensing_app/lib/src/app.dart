@@ -67,7 +67,7 @@ class CarpMobileSensingAppState extends State<CarpMobileSensingApp> {
   }
 
   void _restart() {
-    this.setState(() {
+    setState(() {
       if (bloc.isRunning)
         bloc.pause();
       else

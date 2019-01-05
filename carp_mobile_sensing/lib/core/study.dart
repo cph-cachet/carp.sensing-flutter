@@ -73,6 +73,7 @@ class DataEndPoint extends Serializable {
   DataEndPoint(this.type) : super();
 
   static Function get fromJsonFunction => _$DataEndPointFromJson;
+  //factory DataEndPoint.fromJson(Map<String, dynamic> json) => _$DataEndPointFromJson(json);
   factory DataEndPoint.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$DataEndPointToJson(this);

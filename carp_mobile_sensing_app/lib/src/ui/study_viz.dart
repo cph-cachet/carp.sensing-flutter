@@ -8,7 +8,11 @@ class StudyVisualization extends StatelessWidget {
         title: Text('Study'),
       ),
       body: Center(
-        child: CircularProgressIndicator(),
+        child: Icon(
+          Icons.school,
+          size: 100,
+          color: CACHET.ORANGE,
+        ),
       ),
     );
   }

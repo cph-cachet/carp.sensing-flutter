@@ -33,17 +33,10 @@ class PrivacySchema {
   }
 }
 
+/// Specify how sampling should be done. Used to make default configuration of [Measure]s.
 class SamplingSchema {
-  /// The default [NameSpace] for sampling schemas.
-  //static const String DEFAULT_NAMESPACE = NameSpace.CARP;
-
-  //Study study;
-
   /// A printer-friendly name of this [SamplingSchema].
   String name;
-
-  /// The [NameSpace] to be used for this [SamplingSchema].
-  //String namespace;
 
   /// A map of default [Measure] for this sampling schema.
   ///
@@ -77,12 +70,12 @@ class SamplingSchema {
   ///  - activity recognition
   ///  - environment (weather)
   factory SamplingSchema.light() {
-    //namespace ??= DEFAULT_NAMESPACE;
     return SamplingSchema(name: 'Light sampling', powerAware: true)
-      ..measures.addEntries([MapEntry('a', Measure(MeasureType(NameSpace.UNKNOWN, 'a')))]);
+      ..measures.addEntries([
+        MapEntry(DataType.LOCATION,
+            Measure(MeasureType(NameSpace.UNKNOWN, DataType.LOCATION), enabled: false)) // disable location sensing
+      ]);
   }
-
-  factory SamplingSchema.maximum() => SamplingSchema();
 
   factory SamplingSchema.minimum() => SamplingSchema();
 
@@ -101,6 +94,12 @@ class SamplingSchema {
     return schema;
   }
 
+  /// A sampling schema that does not adapt any [Measure]s.
+  ///
+  /// This schema is an empty schema and therefore don't change anything in when
+  /// used to adapt a [Study] and its [Measure]s in the [adapt] method.
+  factory SamplingSchema.normal() => SamplingSchema(powerAware: true);
+
   /// Adapts the [Measure]s in a [Study] to this [SamplingSchema].
   ///
   /// The following parameters are adapted
@@ -108,7 +107,6 @@ class SamplingSchema {
   ///   * [frequency] - the sampling frequency can be adjusted based on this schema
   ///   * [duration] - the sampling duration can be adjusted based on this schema
   void adapt(Study study) {
-    //this.study = study;
     study.tasks.forEach((task) {
       task.measures.forEach((measure) {
         if (measures.containsKey(measure.type.name)) {

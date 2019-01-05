@@ -8,7 +8,12 @@ class DataVisualization extends StatelessWidget {
         title: Text('Data Visualization'),
       ),
       body: Center(
-        child: CircularProgressIndicator(),
+        child: Icon(
+          Icons.show_chart,
+          size: 100,
+          color: CACHET.DARK_BLUE,
+        ),
+        //child: CircularProgressIndicator(),
       ),
     );
   }

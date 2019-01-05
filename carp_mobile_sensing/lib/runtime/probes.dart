@@ -14,22 +14,26 @@ part of runtime;
 /// Probes return sensed data in a [Stream] as [events]. This is the main
 /// usage of a probe. For example, to listens to events and print them;
 ///
-/// `````dart
-///  probe.events.forEach(print);
-/// ````
+///     probe.events.forEach(print);
+///
 abstract class Probe {
   /// A [Stream] generating sensor data events from this probe.
   Stream<Datum> get events;
 
   /// The [Measure] that configures this probe.
   Measure get measure;
+
+  /// Is this probe running.
   bool get isRunning;
+
+  /// Has this probe been stopped? If so, it cannot be started, restarted, or resumed.
+  bool get isStopped;
 
   ///A printer-friendly name for this probe. Takes its name from [Measure.name] as default.
   String name;
 
-  /// Initialize the probe.
-  void initialize();
+  /// Initialize the probe with the specified [Measure].
+  void initialize(Measure measure);
 
   ///Start the probe();
   Future start();
@@ -40,11 +44,17 @@ abstract class Probe {
   /// Resume the probe.
   void resume();
 
-  /// Reset the probe.
-  void reset();
+  /// Restart the probe. This forces the probe to reload its configuration from
+  /// the its [Measure] and restart sampling accordingly. If a new [measure] is
+  /// specified, this new measure is used. Otherwise, the measure specified in the
+  /// [initialize] method is used.
+  ///
+  /// This methods is used when sampling configuration is adapted, e.g. as
+  /// part of the [PowerAwarenessState].
+  void restart({Measure measure});
 
   /// Stop the probe. Once a probe is stopped, it cannot be started again.
-  ///If you need to stop/restart a probe, use the [pause()] and [resume()] methods.
+  /// If you need to restart a probe, use the [restart] or [pause] and [resume] methods.
   void stop();
 }
 
@@ -56,29 +66,29 @@ abstract class AbstractProbe implements Probe {
   bool _isRunning = false;
   bool get isRunning => _isRunning;
 
+  bool _isStopped = false;
+  bool get isStopped => _isStopped;
+
   String name;
 
-  bool _isEnabled = false;
-  bool get isEnabled => _isEnabled;
-  void enable() {
-    _isEnabled = true;
-  }
+  bool get enabled => (measure != null) ? measure.enabled : true;
 
-  void disable() {
-    _isEnabled = true;
-  }
+  AbstractProbe({this.name});
 
-  AbstractProbe();
-  AbstractProbe.init(Measure measure) : assert(measure != null, 'A Probe cannot be initialized with a null Measure.') {
-    this._measure = measure;
-    this.name = measure.name;
-  }
-
-  void initialize() {
+  void initialize(Measure measure) {
+    assert(measure != null, 'A Probe cannot be initialized with a null Measure.');
     _isRunning = false;
+    _measure = measure;
+    name ??= measure.name;
   }
 
   Future start() async {
+    if (isStopped) throw SensingException('Probe has been stopped and cannot be (re)started.');
+    if (!enabled) {
+      print('$name probe not enabled - not starting');
+      return;
+    }
+
     _isRunning = true;
     print('$name probe started');
   }
@@ -89,16 +99,22 @@ abstract class AbstractProbe implements Probe {
   }
 
   void resume() async {
+    if (isStopped) throw SensingException('Probe has been stopped and cannot be resumed.');
     _isRunning = true;
     print('$name probe resumed');
   }
 
-  void reset() async {
-    _isRunning = false;
+  void restart({Measure measure}) {
+    if (isStopped) throw SensingException('Probe has been stopped and cannot be restarted.');
+    if (enabled)
+      resume();
+    else
+      pause();
   }
 
   void stop() async {
     _isRunning = false;
+    _isStopped = true;
     print('$name probe stopped');
   }
 
@@ -131,6 +147,8 @@ abstract class StreamProbe extends AbstractProbe {
     super.start();
     if (stream != null) {
       subscription = stream.listen(onData, onError: onError, onDone: onDone);
+      subscription.pause();
+      restart();
     }
   }
 
@@ -150,9 +168,7 @@ abstract class StreamProbe extends AbstractProbe {
     super.stop();
   }
 
-  void onData(Datum event) async {
-    if (_isRunning) controller.add(event);
-  }
+  void onData(Datum event) => controller.add(event);
 
   void onError(error) => controller.addError(error);
 
@@ -189,10 +205,7 @@ abstract class PeriodicDatumProbe extends DatumProbe {
 
   Future start() async {
     super.start();
-    PeriodicMeasure _measure = measure as PeriodicMeasure;
-    frequency = Duration(milliseconds: _measure.frequency);
-    duration = (_measure.duration != null) ? Duration(milliseconds: _measure.duration) : null;
-    this.resume();
+    this.restart();
   }
 
   void resume() {
@@ -215,6 +228,13 @@ abstract class PeriodicDatumProbe extends DatumProbe {
     super.pause();
   }
 
+  void restart() {
+    PeriodicMeasure _measure = measure as PeriodicMeasure;
+    frequency = Duration(milliseconds: _measure.frequency);
+    duration = (_measure.duration != null) ? Duration(milliseconds: _measure.duration) : null;
+    super.restart();
+  }
+
   void stop() async {
     if (timer != null) timer.cancel();
     controller.close();
@@ -232,8 +252,8 @@ abstract class PeriodicStreamProbe extends StreamProbe {
   PeriodicStreamProbe(PeriodicMeasure measure)
       : assert(measure != null),
         assert(measure.frequency != null, 'Measure frequency cannot be null for a PeriodicProbe.'),
-        frequency = Duration(milliseconds: measure.frequency),
-        duration = (measure.duration != null) ? Duration(milliseconds: measure.duration) : null,
+//        frequency = Duration(milliseconds: measure.frequency),
+//        duration = (measure.duration != null) ? Duration(milliseconds: measure.duration) : null,
         super(measure);
 
   Future start() async {
@@ -254,6 +274,13 @@ abstract class PeriodicStreamProbe extends StreamProbe {
         });
       });
     }
+  }
+
+  void restart() {
+    PeriodicMeasure _measure = measure as PeriodicMeasure;
+    frequency = Duration(milliseconds: _measure.frequency);
+    duration = (_measure.duration != null) ? Duration(milliseconds: _measure.duration) : null;
+    super.restart();
   }
 
   void stop() async {
@@ -284,7 +311,7 @@ abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
       // subscribing to the buffering events
       subscription = bufferingEvents.listen(onData, onError: onError, onDone: onDone);
       subscription.pause();
-      resume();
+      restart();
     }
   }
 

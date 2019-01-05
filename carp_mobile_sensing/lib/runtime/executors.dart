@@ -39,8 +39,15 @@ abstract class Executor extends AbstractProbe {
     super.resume();
   }
 
+  void restart() async {
+    executors.forEach((executor) => executor.restart());
+  }
+
   void stop() async {
-    executors.forEach((executor) => executor.stop());
+    executors.forEach((executor) {
+      executor.stop();
+      executors.remove(executor);
+    });
     super.stop();
   }
 }
@@ -53,13 +60,17 @@ abstract class Executor extends AbstractProbe {
 class StudyExecutor extends Executor {
   StudyExecutor(Study study) : super(study);
 
-  /// Returns a list of the running probes in this task executor.
+  /// Returns a list of the running probes in this study executor.
   ///
-  /// This is a combination of the running probes in all tasks.
+  /// This is a combination of the running probes in all task executors.
   List<Probe> get probes {
     List<Probe> _probes = List<Probe>();
-    executors.forEach((probe) {
-      _probes.add(probe);
+    executors.forEach((executor) {
+      if (executor is TaskExecutor) {
+        executor.probes.forEach((probe) {
+          _probes.add(probe);
+        });
+      }
     });
     return _probes;
   }
@@ -72,11 +83,6 @@ class StudyExecutor extends Executor {
       executors.add(executor);
       await executor.start();
     }
-  }
-
-  void reset() async {
-    await this.stop();
-    await this.start();
   }
 }
 

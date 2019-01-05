@@ -19,7 +19,11 @@ class _ProbeListState extends State<ProbesList> {
         //dense: _dense,
         //leading:  ExcludeSemantics(child: CircleAvatar(child: Text(snapshot.data.name.substring(0,2).toUpperCase()))),
         //leading: ExcludeSemantics(child: probe.icon),
-        leading: Icon(probe.icon.icon, size: 50),
+        leading: Icon(
+          probe.icon.icon,
+          size: 50,
+          color: probe.icon.color,
+        ),
         title: Text(probe.name),
         subtitle: Text(probe.description),
         trailing: probe.isRunning ? Icon(Icons.pause) : Icon(Icons.play_arrow),
