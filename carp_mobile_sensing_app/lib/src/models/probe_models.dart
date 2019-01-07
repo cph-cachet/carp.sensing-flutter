@@ -9,7 +9,7 @@ class ProbeModel {
   Probe probe;
   String get type => probe.measure.type.name;
   Measure get measure => probe.measure;
-  bool get isRunning => probe.isRunning;
+  ProbeStateType get state => probe.state.type;
 
   ///A printer-friendly name for this probe.
   String get name => probe.name;
@@ -17,8 +17,11 @@ class ProbeModel {
   ///A printer-friendly description of this probe.
   String get description => ProbeDescription.probeTypeDescription[type];
 
-  ///A printer-friendly description of this probe.
+  /// The icon for this type of probe.
   Icon get icon => ProbeDescription.probeTypeIcon[type];
+
+  /// The icon for the runtime state of this probe.
+  Icon get stateIcon => ProbeDescription.probeStateIcon[state];
 
   ProbeModel(this.probe)
       : assert(probe != null, 'A ProbeModel must be initialized with a real Probe.'),

@@ -10,7 +10,7 @@ part of audio;
 ///
 /// Note that this probe generates a lot of data and should be used with caution.
 /// Use a [AudioMeasure] to configure this probe, including setting the
-/// [_frequency] and [_duration] of the sampling rate.
+/// [frequency] and [duration] of the sampling rate.
 ///
 /// Also note that this probe records raw sound directly from the microphone and hence
 /// records everything - including human speech - in its vicinity.
@@ -19,12 +19,12 @@ part of audio;
 /// along with the actual recording in an audio file. How to upload this data to a  data backend
 /// if up to the implementation of a [DataManager] to decide.
 class AudioProbe extends AbstractProbe {
-  static final String AUDIO_FILE_PATH = 'audio';
+  static const String AUDIO_FILE_PATH = 'audio';
 
   StreamController<Datum> controller = StreamController<Datum>();
   String studyId;
   String _path;
-  FlutterSound flutterSound;
+  FlutterSound flutterSound = new FlutterSound();
   String soundFileName;
   bool _isRecording = false;
   DateTime _startRecordingTime;
@@ -32,20 +32,10 @@ class AudioProbe extends AbstractProbe {
 
   Stream<Datum> get events => controller.stream;
 
-  // Initialize an audio probe taking a [SensorMeasure] as configuration.
-  AudioProbe(AudioMeasure measure)
-      : assert(measure != null),
-        super.init(measure);
+  AudioProbe({String name}) : super(name: name);
 
-  @override
-  void initialize() {
-    flutterSound = new FlutterSound();
-    super.initialize();
-  }
-
-  @override
-  Future start() async {
-    super.start();
+  Future onStart() async {
+    //super.start();
 
     // create sound dir and initialize
     await path;
@@ -70,18 +60,15 @@ class AudioProbe extends AbstractProbe {
     });
   }
 
-  @override
-  void stop() {
+  void onStop() {
     flutterSound = null;
   }
 
-  @override
-  void resume() {
+  void onResume() {
     startAudioRecording();
   }
 
-  @override
-  void pause() async {
+  void onPause() async {
     Datum _datum = await datum;
     if (_datum != null) controller.add(_datum);
   }

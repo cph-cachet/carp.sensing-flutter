@@ -11,21 +11,21 @@ part of sensors;
 abstract class BufferingSensorProbe extends BufferingPeriodicStreamProbe {
   MultiDatum datum = MultiDatum();
 
-  BufferingSensorProbe(PeriodicMeasure measure) : super(measure);
+  BufferingSensorProbe({String name}) : super(name: name);
 
   Future<Datum> getDatum() async => datum;
 
-  void onPeriodStart() {
+  void onSamplingStart() {
     datum = MultiDatum();
   }
 
-  void onPeriodEnd() {}
+  void onSamplingEnd() {}
 }
 
 /// A probe that collects accelerometer events and buffers them and return a [MultiDatum] with
 /// all the buffered [AccelerometerDatum]s.
 class BufferingAccelerometerProbe extends BufferingSensorProbe {
-  BufferingAccelerometerProbe(PeriodicMeasure measure) : super(measure);
+  BufferingAccelerometerProbe({String name}) : super(name: name);
 
   Stream get bufferingEvents => accelerometerEvents;
 
@@ -38,7 +38,7 @@ class BufferingAccelerometerProbe extends BufferingSensorProbe {
 /// See [PeriodicMeasure] on how to configure this probe, including setting the
 /// [frequency] and [duration] of the sampling rate.
 class AccelerometerProbe extends PeriodicStreamProbe {
-  AccelerometerProbe(PeriodicMeasure measure) : super(measure);
+  AccelerometerProbe({String name}) : super(name: name);
 
   Stream<Datum> get stream => accelerometerEvents.map((event) => AccelerometerDatum.fromAccelerometerEvent(event));
 }
@@ -46,7 +46,7 @@ class AccelerometerProbe extends PeriodicStreamProbe {
 /// A probe that collects gyroscope events and buffers them and return a [MultiDatum] with
 /// all the buffered [GyroscopeDatum]s.
 class BufferingGyroscopeProbe extends BufferingSensorProbe {
-  BufferingGyroscopeProbe(PeriodicMeasure measure) : super(measure);
+  BufferingGyroscopeProbe({String name}) : super(name: name);
 
   Stream get bufferingEvents => gyroscopeEvents;
 
@@ -59,7 +59,7 @@ class BufferingGyroscopeProbe extends BufferingSensorProbe {
 /// See [PeriodicMeasure] on how to configure this probe, including setting the
 /// [frequency] and [duration] of the sampling rate.
 class GyroscopeProbe extends PeriodicStreamProbe {
-  GyroscopeProbe(PeriodicMeasure measure) : super(measure);
+  GyroscopeProbe({String name}) : super(name: name);
 
   Stream<Datum> get stream => gyroscopeEvents.map((event) => GyroscopeDatum.fromGyroscopeEvent(event));
 }

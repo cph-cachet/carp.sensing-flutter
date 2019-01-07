@@ -67,7 +67,7 @@ class DataManagerRegistry {
 
 /// An interface defining a way to get a [Study].
 abstract class StudyReceiver {
-  /// Initialize the study manager.
+  /// Initialize the study receiver.
   Future<void> initialize();
 
   /// Get a [Study] based on its ID.

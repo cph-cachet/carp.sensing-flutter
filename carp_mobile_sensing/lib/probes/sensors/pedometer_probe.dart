@@ -19,13 +19,14 @@ class PedometerProbe extends StreamProbe {
   /// Returns the latest known step count.
   int get latestStepCount => _latestStepCount;
 
-  PedometerProbe(PeriodicMeasure measure)
-      : assert(measure != null),
-        assert(measure.frequency != null, 'Measure frequency cannot be null for a PedometerProbe.'),
-        frequency = Duration(milliseconds: measure.frequency),
-        super(measure);
+  PedometerProbe({String name}) : super(name: name);
 
-  Stream<Datum> get stream => null; // we're not using this stream - creating our own StreamSubscription.
+  @override
+  void initialize(Measure measure) {
+    assert(measure is PeriodicMeasure, 'A PedometerProbe must be intialized with a PeriodicMeasure');
+    super.initialize(measure);
+    frequency = Duration(milliseconds: (measure as PeriodicMeasure).frequency);
+  }
 
   @override
   Future start() async {
@@ -41,6 +42,8 @@ class PedometerProbe extends StreamProbe {
       subscription.resume();
     });
   }
+
+  Stream<Datum> get stream => null; // we're not using this stream - creating our own StreamSubscription.
 
   // FlutterPedometer callback
   void _onStep(int count) async {

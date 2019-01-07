@@ -37,9 +37,7 @@ class NoiseMeasure extends PeriodicMeasure {
       : super(type, name: name, enabled: enabled, frequency: frequency, duration: duration);
 
   static Function get fromJsonFunction => _$NoiseMeasureFromJson;
-
   factory NoiseMeasure.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
-
   Map<String, dynamic> toJson() => _$NoiseMeasureToJson(this);
 }

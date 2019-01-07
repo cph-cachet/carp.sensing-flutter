@@ -48,4 +48,12 @@ class ProbeDescription {
         DataType.GOOGLE_FIT: Icon(Icons.directions_run, color: CACHET.GREEN),
         DataType.WEATHER: Icon(Icons.cloud, color: CACHET.LIGHT_BLUE_2)
       };
+
+  static Map<ProbeStateType, Icon> get probeStateIcon => {
+        ProbeStateType.created: Icon(Icons.child_care, color: CACHET.GREY_4),
+        ProbeStateType.initialized: Icon(Icons.check, color: CACHET.LIGHT_PURPLE),
+        ProbeStateType.resumed: Icon(Icons.play_arrow, color: CACHET.GREEN),
+        ProbeStateType.paused: Icon(Icons.pause, color: CACHET.RED),
+        ProbeStateType.stopped: Icon(Icons.close, color: CACHET.GREY_2)
+      };
 }

@@ -14,9 +14,8 @@ class StudyManager {
   SamplingSchema samplingSchema;
 
   Stream<Datum> events;
-  bool get isRunning => executor.isRunning;
-  BatteryProbe battery =
-      BatteryProbe(Measure(MeasureType(NameSpace.CARP, DataType.BATTERY))..name = "PowerAwarenessProbe");
+  Measure batteryMeasure = Measure(MeasureType(NameSpace.CARP, DataType.BATTERY))..name = 'PowerAwarenessProbe';
+  BatteryProbe battery = BatteryProbe();
   PowerAwarenessState powerAwarenessState = NormalSamplingState.instance;
 
   StudyManager(this.study, {this.executor, this.samplingSchema, this.manager, this.transformer})
@@ -24,6 +23,8 @@ class StudyManager {
         super() {
     // if no executor is specified, use the default one
     executor ??= StudyExecutor(study);
+    // if no sampling schema is specified, use the normal one with no power-awareness
+    samplingSchema ??= SamplingSchema.normal(powerAware: false);
     // if the data manager hasn't been set, then try to look it up in the [DataManagerRegistry]
     manager ??= DataManagerRegistry.lookup(study.dataEndPoint.type);
     // if no transform function is specified, create a 1:1 mapping
@@ -31,16 +32,7 @@ class StudyManager {
     events = transformer(executor.events);
   }
 
-  String _string_snapshot;
-  void _snapshot() {
-    _string_snapshot = json.encode(study);
-  }
-
-  void _restore() {
-    study = Study.fromJson(json.decode(_string_snapshot));
-  }
-
-  void initialize() async {
+  Future initialize() async {
     await Device.getDeviceInfo();
     print('Initializing Study Manager for study: ' + study.name);
     print(' platform     : ' + Device.platform.toString());
@@ -51,13 +43,14 @@ class StudyManager {
       study.adapt(samplingSchema);
     }
 
+    executor.initialize(Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR), name: "Study Executor: ${study.name}"));
     manager.initialize(study, events);
   }
 
   Future enablePowerAwareness() async {
     if (samplingSchema.powerAware) {
       //take a snapshot of the study before adapting it
-      _snapshot();
+      //_snapshot();
       battery.events.listen((datum) {
         BatteryDatum battery_state = (datum as BatteryDatum);
         print('PowerAware - ${battery_state}');
@@ -68,13 +61,13 @@ class StudyManager {
             powerAwarenessState = new_state;
             print('PowerAware: Going to $powerAwarenessState, level ${battery_state.batteryLevel}%');
             // restore to original before adapting
-            _restore();
+            //_restore();
             study.adapt(powerAwarenessState.schema);
-            executor.restart();
+            //executor.restart(_adapted_measures);
           }
         }
       });
-      battery.initialize();
+      battery.initialize(batteryMeasure);
       await battery.start();
     }
   }
@@ -83,9 +76,9 @@ class StudyManager {
     battery.stop();
   }
 
-  void start() async {
+  Future start() async {
     await enablePowerAwareness();
-    executor.start();
+    await executor.start();
   }
 
   void stop() {
@@ -103,7 +96,7 @@ class StudyManager {
   }
 }
 
-/// This default power-awarenes schema opereterates with four power states:
+/// This default power-awarenes schema operates with four power states:
 ///
 ///   * Normal [100% - 50%]
 ///   * Light  [49%-30%]

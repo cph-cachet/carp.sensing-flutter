@@ -12,15 +12,14 @@ part of location;
 class LocationProbe extends StreamProbe {
   Location _location = new Location();
 
-  LocationProbe(Measure measure) : super(measure);
+  LocationProbe({String name}) : super(name: name);
 
   @override
-  void initialize() async {
-    super.initialize();
+  void initialize(Measure measure) {
+    super.initialize(measure);
 //    PermissionStatus status = await SimplePermissions.requestPermission(Permission.AccessFineLocation);
 //    bool granted = await SimplePermissions.checkPermission(Permission.AccessFineLocation);
 //    print('>>> Permission, location : $granted');
-    _location = new Location();
   }
 
   Stream<LocationDatum> get stream =>

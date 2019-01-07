@@ -12,43 +12,28 @@ part of runtime;
 abstract class Executor extends AbstractProbe {
   static final Device deviceInfo = new Device();
   StreamGroup<Datum> _group = StreamGroup<Datum>.broadcast();
-
-  Study study;
   List<Probe> executors = new List<Probe>();
-
   Stream<Datum> get events => _group.stream;
 
-  Executor(this.study) : assert(study != null, "Cannot initiate an Executor without a Study.") {
-    this.name = study.name;
-  }
+  Executor({String name}) : super(name: name);
 
-  Future start() async {
-    super.start();
-    this._start();
-  }
-
-  Future _start();
-
-  void pause() async {
+  void onPause() async {
     executors.forEach((executor) => executor.pause());
-    super.pause();
   }
 
-  void resume() async {
+  void onResume() async {
     executors.forEach((executor) => executor.resume());
-    super.resume();
   }
 
-  void restart() async {
+  void onRestart({Measure measure}) async {
     executors.forEach((executor) => executor.restart());
   }
 
-  void stop() async {
+  void onStop() async {
     executors.forEach((executor) {
       executor.stop();
       executors.remove(executor);
     });
-    super.stop();
   }
 }
 
@@ -58,7 +43,11 @@ abstract class Executor extends AbstractProbe {
 /// Note that the [StudyExecutor] in itself is a [Probe] and hence work as a 'super probe'.
 /// This - amongst other things - imply that you can listen to datum [events] from a study executor.
 class StudyExecutor extends Executor {
-  StudyExecutor(Study study) : super(study);
+  Study study;
+
+  StudyExecutor(this.study)
+      : assert(study != null, "Cannot initiate a StudyExecutor without a Study."),
+        super(name: study.name);
 
   /// Returns a list of the running probes in this study executor.
   ///
@@ -75,12 +64,14 @@ class StudyExecutor extends Executor {
     return _probes;
   }
 
-  Future _start() async {
+  Future onStart() async {
     for (Task task in study.tasks) {
-      TaskExecutor executor = new TaskExecutor(study, task);
+      TaskExecutor executor = new TaskExecutor(task);
       _group.add(executor.events);
 
       executors.add(executor);
+      executor
+          .initialize(Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR), name: "Task Executor : ${task.name}"));
       await executor.start();
     }
   }
@@ -97,19 +88,17 @@ class TaskExecutor extends Executor {
   /// Returns a list of the running probes in this task executor.
   List<Probe> get probes => executors;
 
-  TaskExecutor(Study study, this.task)
-      : assert(task != null),
-        super(study) {
-    name = task.name;
-  }
+  TaskExecutor(this.task)
+      : assert(task != null, "Cannot initiate a TaskExecutor without a Task."),
+        super(name: task.name);
 
-  Future _start() async {
+  Future onStart() async {
     for (Measure measure in task.measures) {
-      Probe probe = ProbeRegistry.create(measure);
+      Probe probe = ProbeRegistry.create(measure.type);
       if ((probe != null) && (measure.enabled)) {
         executors.add(probe);
         _group.add(probe.events);
-        probe.initialize();
+        probe.initialize(measure);
 
         // start the probe
         await probe.start();

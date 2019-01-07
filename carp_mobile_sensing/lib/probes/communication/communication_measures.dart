@@ -8,12 +8,10 @@
 part of communication;
 
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class PhoneLogMeasure extends PeriodicMeasure {
+class PhoneLogMeasure extends Measure {
   static const int DEFAULT_NUMBER_OF_DAYS = 30;
 
   /// The number of days back in time to collect the phone log from.
-  ///
-  /// Default is -1, which is the entire log.
   int days = DEFAULT_NUMBER_OF_DAYS;
 
   PhoneLogMeasure(MeasureType type, {name, this.days}) : super(type, name: name);

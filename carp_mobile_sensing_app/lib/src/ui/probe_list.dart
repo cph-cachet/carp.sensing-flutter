@@ -26,7 +26,7 @@ class _ProbeListState extends State<ProbesList> {
         ),
         title: Text(probe.name),
         subtitle: Text(probe.description),
-        trailing: probe.isRunning ? Icon(Icons.pause) : Icon(Icons.play_arrow),
+        trailing: probe.stateIcon,
       ),
     );
   }

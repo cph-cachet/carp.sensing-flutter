@@ -7,7 +7,7 @@
 
 part of connectivity;
 
-// This probe requests access to location PERMISSIONS (on Android).
+// This probe requests access to location PERMISSIONS (on Android). Don't ask why.....
 // TODO - implement request for getting permission.
 
 /// The [BluetoothProbe] scans for nearby and visible Bluetooth devices and collect
@@ -21,14 +21,17 @@ class BluetoothProbe extends StreamProbe {
   Duration frequency, duration;
   Timer timer;
 
-  BluetoothProbe(PeriodicMeasure measure)
-      : assert(measure != null),
-        assert(measure.frequency != null, 'Measure frequency cannot be null for a BluetoothProbe.'),
-        frequency = Duration(milliseconds: measure.frequency),
-        duration = (measure.duration != null)
-            ? Duration(milliseconds: measure.duration)
-            : Duration(milliseconds: DEFAULT_TIMEOUT),
-        super(measure);
+  BluetoothProbe({String name}) : super(name: name);
+
+  @override
+  void initialize(Measure measure) {
+    assert(measure is PeriodicMeasure, 'A BluetoothProbe must be intialized with a PeriodicMeasure');
+    super.initialize(measure);
+    frequency = Duration(milliseconds: (measure as PeriodicMeasure).frequency);
+    duration = ((measure as PeriodicMeasure).duration != null)
+        ? Duration(milliseconds: (measure as PeriodicMeasure).duration)
+        : Duration(milliseconds: DEFAULT_TIMEOUT);
+  }
 
   Stream<Datum> get stream => flutterBlue
       .scan(scanMode: ScanMode.lowLatency, timeout: duration)

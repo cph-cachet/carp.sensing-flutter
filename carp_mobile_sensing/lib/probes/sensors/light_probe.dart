@@ -13,7 +13,7 @@ class LightProbe extends BufferingPeriodicStreamProbe {
   Light light = new Light();
   List<num> luxValues = new List();
 
-  LightProbe(PeriodicMeasure measure) : super(measure);
+  LightProbe({String name}) : super(name: name);
 
   @override
   Future<Datum> getDatum() async {
@@ -27,11 +27,11 @@ class LightProbe extends BufferingPeriodicStreamProbe {
 
   Stream get bufferingEvents => light.lightSensorStream;
 
-  void onPeriodStart() {
+  void onSamplingStart() {
     luxValues.clear();
   }
 
-  void onPeriodEnd() {}
+  void onSamplingEnd() {}
 
   void onData(luxValue) => luxValues.add(luxValue);
 }

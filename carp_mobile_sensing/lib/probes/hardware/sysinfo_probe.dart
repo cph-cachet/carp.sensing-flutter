@@ -11,7 +11,7 @@ part of hardware;
 /// as specified in [PeriodicMeasure.frequency].
 class MemoryPollingProbe extends PeriodicDatumProbe {
   /// A [MemoryPollingProbe] is a polling probe and takes a [PeriodicMeasure] as configuration.
-  MemoryPollingProbe(PeriodicMeasure measure) : super(measure);
+  MemoryPollingProbe({String name}) : super(name: name);
 
   @override
   Future<Datum> getDatum() async {

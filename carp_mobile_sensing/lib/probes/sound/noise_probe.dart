@@ -13,52 +13,56 @@ class NoiseProbe extends AbstractProbe {
   bool _isListening = false;
   DateTime _startRecordingTime;
   DateTime _endRecordingTime;
-  int _samplingRate;
+  Duration frequency, duration;
+  int samplingRate;
   StreamSubscription<NoiseEvent> noiseSubscription;
   List<num> _noiseReadings = new List();
 
   Stream<Datum> get events => controller.stream;
 
-  /// Initialize an [NoiseProbe] taking a [NoiseMeasure] as configuration.
-  NoiseProbe(NoiseMeasure measure) : super.init(measure);
+  NoiseProbe({String name}) : super(name: name);
 
-  @override
-  void initialize() {
-    _samplingRate = (measure as NoiseMeasure).samplingRate;
-    _noise = new Noise(_samplingRate);
-    super.initialize();
+  /// Initialize this [NoiseProbe] taking a [NoiseMeasure] as configuration.
+  void onInitialize(Measure measure) {
+    assert(measure is NoiseMeasure, 'A NoiseProbe must be intialized with a NoiseMeasure');
+    frequency = Duration(milliseconds: (measure as NoiseMeasure).frequency);
+    duration = ((measure as NoiseMeasure).duration != null)
+        ? Duration(milliseconds: (measure as NoiseMeasure).duration)
+        : null;
+    samplingRate = (measure as NoiseMeasure).samplingRate;
+    _noise = new Noise(samplingRate);
   }
 
-  @override
-  Future start() async {
-    super.start();
-    int _frequency = (measure as NoiseMeasure).frequency;
-    int _duration = (measure as NoiseMeasure).duration;
-    Duration _pause = new Duration(milliseconds: _frequency);
-    Duration _samplingDuration = new Duration(milliseconds: _duration);
+  Future onStart() async {
     // Create a recurrent timer that wait (pause) and then resume the sampling.
-    Timer.periodic(_pause, (Timer timer) {
+    Timer.periodic(frequency, (Timer timer) {
       this.resume();
       // Create a timer that stops the sampling after the specified duration.
-      new Timer(_samplingDuration, () {
+      new Timer(duration, () {
         this.pause();
       });
     });
   }
 
-  @override
-  void stop() {
+  void onRestart() {
+    frequency = Duration(milliseconds: (measure as NoiseMeasure).frequency);
+    duration = ((measure as NoiseMeasure).duration != null)
+        ? Duration(milliseconds: (measure as NoiseMeasure).duration)
+        : null;
+    samplingRate = (measure as NoiseMeasure).samplingRate;
+    _noise = new Noise(samplingRate);
+  }
+
+  void onStop() {
     _noise = null;
   }
 
-  @override
-  void resume() {
-    startListening();
+  void onResume() {
+    _startListening();
   }
 
-  @override
-  void pause() async {
-    stopListening();
+  void onPause() async {
+    _stopListening();
     Datum _datum = await datum;
     if (_datum != null) controller.add(_datum);
   }
@@ -67,7 +71,7 @@ class NoiseProbe extends AbstractProbe {
     _noiseReadings.add(event.decibel);
   }
 
-  void startListening() async {
+  void _startListening() async {
     if (_isListening) return;
     try {
       noiseSubscription = _noise.noiseStream.listen(onData);
@@ -76,7 +80,7 @@ class NoiseProbe extends AbstractProbe {
     }
   }
 
-  void stopListening() {
+  void _stopListening() {
     noiseSubscription.cancel();
     _endRecordingTime = DateTime.now();
     _isListening = false;

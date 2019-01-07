@@ -21,7 +21,7 @@ class Datum {
 /// A [Datum] which conforms to the [DataFormat].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class CARPDatum extends Datum {
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.CARP);
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.NONE);
   DataFormat get format => CARP_DATA_FORMAT;
 
   /// Unique identifier for the current Datum, unique across all data generated.
@@ -181,7 +181,8 @@ abstract class NameSpace {
 }
 
 class DataType {
-  static const String CARP = "carp";
+  static const String NONE = "none";
+  static const String EXECUTOR = "executor";
   static const String STRING = "string";
   static const String MAP = "map";
   static const String ERROR = "error";

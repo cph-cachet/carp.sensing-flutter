@@ -20,8 +20,8 @@ class ProbeRegistry {
   static Map<String, Probe> get probes => _probes;
 
   /// If you create a probe manually, i.e. outside of the [ProbeRegistry] you can register it here.
-  static void register(Probe probe) {
-    _probes[probe.measure.type.name] = probe;
+  static void register(String type, Probe probe) {
+    _probes[type] = probe;
   }
 
   static List<String> get availableProbeTypes => [
@@ -49,67 +49,66 @@ class ProbeRegistry {
       ];
 
   /// Create an instance of a probe based on the measure type.
-  static Probe create(Measure measure) {
-    String type = measure.type.name;
+  static Probe create(MeasureType type) {
     Probe _probe;
 
-    switch (type) {
+    switch (type.name) {
       case DataType.MEMORY:
-        _probe = new MemoryPollingProbe(measure);
+        _probe = new MemoryPollingProbe();
         break;
       case DataType.PEDOMETER:
-        _probe = new PedometerProbe(measure);
+        _probe = new PedometerProbe();
         break;
       case DataType.ACCELEROMETER:
-        _probe = new BufferingAccelerometerProbe(measure);
+        _probe = new BufferingAccelerometerProbe();
         break;
       case DataType.GYROSCOPE:
-        _probe = new BufferingGyroscopeProbe(measure);
+        _probe = new BufferingGyroscopeProbe();
         break;
       case DataType.BATTERY:
-        _probe = new BatteryProbe(measure);
+        _probe = new BatteryProbe();
         break;
       case DataType.BLUETOOTH:
-        _probe = new BluetoothProbe(measure);
+        _probe = new BluetoothProbe();
         break;
       case DataType.LOCATION:
-        _probe = new LocationProbe(measure);
+        _probe = new LocationProbe();
         break;
       case DataType.CONNECTIVITY:
-        _probe = new ConnectivityProbe(measure);
+        _probe = new ConnectivityProbe();
         break;
       case DataType.LIGHT:
-        _probe = new LightProbe(measure);
+        _probe = new LightProbe();
         break;
       case DataType.APPS:
-        _probe = new AppsProbe(measure);
+        _probe = new AppsProbe();
         break;
       case DataType.APP_USAGE:
-        _probe = new AppUsageProbe(measure);
+        _probe = new AppUsageProbe();
         break;
       case DataType.TEXT_MESSAGE_LOG:
-        _probe = new TextMessageLogProbe(measure);
+        _probe = new TextMessageLogProbe();
         break;
       case DataType.TEXT_MESSAGE:
-        _probe = new TextMessageProbe(measure);
+        _probe = new TextMessageProbe();
         break;
       case DataType.SCREEN:
-        _probe = new ScreenProbe(measure);
+        _probe = new ScreenProbe();
         break;
       case DataType.PHONE_LOG:
-        _probe = new PhoneLogProbe(measure);
+        _probe = new PhoneLogProbe();
         break;
       case DataType.AUDIO:
-        _probe = new AudioProbe(measure);
+        _probe = new AudioProbe();
         break;
       case DataType.NOISE:
-        _probe = new NoiseProbe(measure);
+        _probe = new NoiseProbe();
         break;
       case DataType.ACTIVITY:
-        _probe = new ActivityProbe(measure);
+        _probe = new ActivityProbe();
         break;
       case DataType.WEATHER:
-        _probe = new WeatherProbe(measure);
+        _probe = new WeatherProbe();
         break;
       case DataType.APPLE_HEALTHKIT:
         throw "Not Implemented Yet";
@@ -122,8 +121,7 @@ class ProbeRegistry {
     }
 
     if (_probe != null) {
-      _probe.name = measure.name;
-      register(_probe);
+      register(type.name, _probe);
     }
 
     return _probe;

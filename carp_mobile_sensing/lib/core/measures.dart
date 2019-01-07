@@ -17,14 +17,19 @@ class Measure extends Serializable {
 
   /// Whether the measure is enabled - i.e. collecting data - when the study is running.
   /// A measure is enabled as default.
-  bool enabled = true;
+  bool get enabled => _enabled;
+  bool _enabled = true;
+  bool _storedEnabled;
 
   /// A key-value map holding any application-specific configuration.
   Map<String, String> configuration = new Map<String, String>();
 
-  Measure(this.type, {this.name, this.enabled = true})
+  Measure(this.type, {this.name, bool enabled = true})
       : assert(type != null),
-        super();
+        super() {
+    _enabled = enabled;
+    _storedEnabled = enabled;
+  }
 
   static Function get fromJsonFunction => _$MeasureFromJson;
   factory Measure.fromJson(Map<String, dynamic> json) =>
@@ -37,7 +42,40 @@ class Measure extends Serializable {
   /// Get value from the configuration for this measure.
   String getConfiguration(String key) => this.configuration[key];
 
-  String toString() => type.toString();
+  List<MeasureListener> _listeners = new List<MeasureListener>();
+  void addMeasureListener(MeasureListener listener) {
+    print('...addMeasureListener(), listener: $listener');
+    _listeners.add(listener);
+  }
+
+  void removeMeasureListener(MeasureListener listener) {
+    _listeners.remove(listener);
+  }
+
+  void adapt(Measure measure) {
+    assert(measure != null,
+        "Don't adapt a measure to a null measure. If you want to disable a measure, set the enabled property to false.");
+    //_storedEnabled = this.enabled;
+    this._enabled = measure.enabled ?? this.enabled;
+    print('.. setting enabled for $measure to ${measure.enabled}');
+    //this.hasChanged();
+  }
+
+  void restore() {
+    _enabled = _storedEnabled;
+    print('...restoring $this');
+    //this.hasChanged();
+  }
+
+  Future hasChanged() async {
+    print('...hasChanged(), measure: $this');
+    for (MeasureListener listener in _listeners) {
+      print('...hasChanged(), listener: $listener');
+      listener.hasChanged(this);
+    }
+  }
+
+  String toString() => '${this.runtimeType}: type: $type, enabled: $enabled';
 }
 
 /// A [PeriodicMeasure] specify how to collect data on a regular basis.
@@ -47,18 +85,49 @@ class Measure extends Serializable {
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class PeriodicMeasure extends Measure {
   /// Sampling frequency in milliseconds (i.e., delay between sampling).
-  int frequency;
+  int get frequency => _frequency;
+  int _frequency;
+  int _storedFrequency;
 
   /// The sampling duration in milliseconds.
-  int duration;
+  int get duration => _duration;
+  int _duration;
+  int _storedDuration;
 
-  PeriodicMeasure(MeasureType type, {name, enabled = true, this.frequency, this.duration})
-      : super(type, name: name, enabled: enabled);
+  PeriodicMeasure(MeasureType type, {name, enabled = true, int frequency, int duration})
+      : super(type, name: name, enabled: enabled) {
+    _frequency = frequency;
+    _storedFrequency = frequency;
+    _duration = duration;
+    _storedDuration = duration;
+  }
 
   static Function get fromJsonFunction => _$PeriodicMeasureFromJson;
   factory PeriodicMeasure.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$PeriodicMeasureToJson(this);
+
+  void adapt(Measure measure) {
+    super.adapt(measure);
+    if (measure is PeriodicMeasure) {
+      _storedFrequency = this.frequency;
+      print('.. setting frequency for $measure to ${measure.frequency}');
+      this._frequency = measure.frequency ?? this.frequency;
+      _storedDuration = this.duration;
+      print('.. setting duration for $measure to ${measure.duration}');
+      this._duration = measure.duration ?? this.duration;
+    }
+    //this.hasChanged();
+  }
+
+  void restore() {
+    super.restore();
+    this._frequency = _storedFrequency;
+    this._duration = _storedDuration;
+    //this.hasChanged();
+  }
+
+  String toString() => super.toString() + ', frequency: $frequency, duration: $duration';
 }
 
 /// Specifies the type of a [Measure].
@@ -78,4 +147,9 @@ class MeasureType extends Serializable {
   Map<String, dynamic> toJson() => _$MeasureTypeToJson(this);
 
   String toString() => "$namepace.$name";
+}
+
+/// A Listener that can listen on changes to a [Measure].
+abstract class MeasureListener {
+  void hasChanged(Measure measure);
 }

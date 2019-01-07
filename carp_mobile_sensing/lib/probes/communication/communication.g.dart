@@ -177,11 +177,8 @@ PhoneLogMeasure _$PhoneLogMeasureFromJson(Map<String, dynamic> json) {
       name: json['name'],
       days: json['days'] as int)
     ..c__ = json['c__'] as String
-    ..enabled = json['enabled'] as bool
     ..configuration = (json['configuration'] as Map<String, dynamic>)
-        ?.map((k, e) => MapEntry(k, e as String))
-    ..frequency = json['frequency'] as int
-    ..duration = json['duration'] as int;
+        ?.map((k, e) => MapEntry(k, e as String));
 }
 
 Map<String, dynamic> _$PhoneLogMeasureToJson(PhoneLogMeasure instance) {
@@ -196,10 +193,7 @@ Map<String, dynamic> _$PhoneLogMeasureToJson(PhoneLogMeasure instance) {
   writeNotNull('c__', instance.c__);
   writeNotNull('type', instance.type);
   writeNotNull('name', instance.name);
-  writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
-  writeNotNull('frequency', instance.frequency);
-  writeNotNull('duration', instance.duration);
   writeNotNull('days', instance.days);
   return val;
 }

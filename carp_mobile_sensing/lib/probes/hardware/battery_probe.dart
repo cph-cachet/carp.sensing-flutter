@@ -12,7 +12,7 @@ part of hardware;
 class BatteryProbe extends StreamProbe {
   Battery battery = new Battery();
 
-  BatteryProbe(Measure measure) : super(measure);
+  BatteryProbe({String name}) : super(name: name);
 
   Stream<Datum> get stream {
     StreamController<Datum> controller;

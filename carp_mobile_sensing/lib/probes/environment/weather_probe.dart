@@ -5,14 +5,13 @@ class WeatherProbe extends PeriodicDatumProbe {
   WeatherStation weather;
   String apiKey;
 
-  WeatherProbe(WeatherMeasure measure)
-      : apiKey = measure.apiKey,
-        super(measure);
+  WeatherProbe({String name}) : super(name: name);
 
   @override
-  void initialize() {
-    weather = new WeatherStation(apiKey);
-    super.initialize();
+  void initialize(Measure measure) {
+    assert(measure is WeatherMeasure, 'A WeatherProbe must be intialized with a WeatherMeasure');
+    super.initialize(measure);
+    apiKey = (measure as WeatherMeasure).apiKey;
   }
 
   @override

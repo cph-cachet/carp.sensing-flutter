@@ -70,14 +70,20 @@ class SamplingSchema {
   ///  - activity recognition
   ///  - environment (weather)
   factory SamplingSchema.light() {
-    return SamplingSchema(name: 'Light sampling', powerAware: true)
+    return SamplingSchema(name: 'Default Light sampling', powerAware: true)
       ..measures.addEntries([
         MapEntry(DataType.LOCATION,
             Measure(MeasureType(NameSpace.UNKNOWN, DataType.LOCATION), enabled: false)) // disable location sensing
       ]);
   }
 
-  factory SamplingSchema.minimum() => SamplingSchema();
+  factory SamplingSchema.minimum() => SamplingSchema(name: 'Default Minimum sampling', powerAware: true)
+    ..measures.addEntries([
+      MapEntry(DataType.LOCATION,
+          Measure(MeasureType(NameSpace.UNKNOWN, DataType.LOCATION), enabled: false)), // disable location sensing
+      MapEntry(
+          DataType.APPS, Measure(MeasureType(NameSpace.UNKNOWN, DataType.APPS), enabled: false)) // disable app sensing
+    ]);
 
   /// A non-sampling sampling schema.
   ///
@@ -86,7 +92,7 @@ class SamplingSchema {
   /// level, once the device is recharged above the [SamplingSchema.LIGHT_SAMPLING_LEVEL]
   /// level.
   factory SamplingSchema.none() {
-    SamplingSchema schema = SamplingSchema(powerAware: true);
+    SamplingSchema schema = SamplingSchema(name: 'Default No sampling', powerAware: true);
     DataType.all.forEach((key) {
       schema.measures[key] = Measure(MeasureType(NameSpace.UNKNOWN, key), enabled: false);
     });
@@ -98,9 +104,11 @@ class SamplingSchema {
   ///
   /// This schema is an empty schema and therefore don't change anything in when
   /// used to adapt a [Study] and its [Measure]s in the [adapt] method.
-  factory SamplingSchema.normal() => SamplingSchema(powerAware: true);
+  factory SamplingSchema.normal({bool powerAware}) =>
+      SamplingSchema(name: 'Default Normal sampling', powerAware: powerAware);
 
   /// Adapts the [Measure]s in a [Study] to this [SamplingSchema].
+  /// Returns a list of measures that has been adapted.
   ///
   /// The following parameters are adapted
   ///   * [enabled] - a measure can be enabled / disabled based on this schema
@@ -109,15 +117,14 @@ class SamplingSchema {
   void adapt(Study study) {
     study.tasks.forEach((task) {
       task.measures.forEach((measure) {
+        // first restore each measure in the study+tasks to its previous value
+        measure.restore();
         if (measures.containsKey(measure.type.name)) {
-          Measure default_measure = measures[measure.type.name];
-          // adapting to the default measure settings
-          measure.enabled = default_measure.enabled;
-          if ((measure is PeriodicMeasure) && (default_measure is PeriodicMeasure)) {
-            measure.frequency = default_measure.frequency;
-            measure.duration = default_measure.duration;
-          }
+          // if an adapted measure exists in this schema, adapt to this
+          measure.adapt(measures[measure.type.name]);
         }
+        // notify listeners that the measure has changed due to restoration and/or adaptation
+        measure.hasChanged();
       });
     });
   }
