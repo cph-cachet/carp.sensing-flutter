@@ -15,7 +15,7 @@ abstract class Executor extends AbstractProbe {
   List<Probe> executors = new List<Probe>();
   Stream<Datum> get events => _group.stream;
 
-  Executor({String name}) : super(name: name);
+  Executor() : super();
 
   void onPause() async {
     executors.forEach((executor) => executor.pause());
@@ -47,7 +47,7 @@ class StudyExecutor extends Executor {
 
   StudyExecutor(this.study)
       : assert(study != null, "Cannot initiate a StudyExecutor without a Study."),
-        super(name: study.name);
+        super();
 
   /// Returns a list of the running probes in this study executor.
   ///
@@ -72,7 +72,7 @@ class StudyExecutor extends Executor {
       executors.add(executor);
       executor
           .initialize(Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR), name: "Task Executor : ${task.name}"));
-      await executor.start();
+      executor.start();
     }
   }
 }
@@ -90,7 +90,7 @@ class TaskExecutor extends Executor {
 
   TaskExecutor(this.task)
       : assert(task != null, "Cannot initiate a TaskExecutor without a Task."),
-        super(name: task.name);
+        super();
 
   Future onStart() async {
     for (Measure measure in task.measures) {
@@ -101,7 +101,7 @@ class TaskExecutor extends Executor {
         probe.initialize(measure);
 
         // start the probe
-        await probe.start();
+        probe.start();
       }
     }
   }

@@ -2,6 +2,7 @@ part of mobile_sensing_app;
 
 class ProbeDescription {
   static Map<String, String> get probeTypeDescription => {
+        DataType.NONE: 'Non-configured Probe',
         DataType.MEMORY: 'Collecting free physical and virtual memory.',
         DataType.PEDOMETER: 'Collecting step counts on a regular basis.',
         DataType.ACCELEROMETER: "Collecting sensor data from the phone's onboard accelerometer.",
@@ -26,6 +27,7 @@ class ProbeDescription {
       };
 
   static Map<String, Icon> get probeTypeIcon => {
+        DataType.NONE: Icon(Icons.report_problem, color: CACHET.GREY_4),
         DataType.MEMORY: Icon(Icons.memory, color: CACHET.GREY_4),
         DataType.PEDOMETER: Icon(Icons.directions_walk, color: CACHET.LIGHT_PURPLE),
         DataType.ACCELEROMETER: Icon(Icons.adb, color: CACHET.GREY_4),
@@ -52,8 +54,8 @@ class ProbeDescription {
   static Map<ProbeStateType, Icon> get probeStateIcon => {
         ProbeStateType.created: Icon(Icons.child_care, color: CACHET.GREY_4),
         ProbeStateType.initialized: Icon(Icons.check, color: CACHET.LIGHT_PURPLE),
-        ProbeStateType.resumed: Icon(Icons.play_arrow, color: CACHET.GREEN),
-        ProbeStateType.paused: Icon(Icons.pause, color: CACHET.RED),
+        ProbeStateType.resumed: Icon(Icons.radio_button_checked, color: CACHET.GREEN),
+        ProbeStateType.paused: Icon(Icons.radio_button_unchecked, color: CACHET.RED),
         ProbeStateType.stopped: Icon(Icons.close, color: CACHET.GREY_2)
       };
 }

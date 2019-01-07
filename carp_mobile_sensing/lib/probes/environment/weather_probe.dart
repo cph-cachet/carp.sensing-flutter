@@ -5,17 +5,17 @@ class WeatherProbe extends PeriodicDatumProbe {
   WeatherStation weather;
   String apiKey;
 
-  WeatherProbe({String name}) : super(name: name);
+  WeatherProbe() : super();
 
-  @override
-  void initialize(Measure measure) {
+  void onInitialize(Measure measure) {
     assert(measure is WeatherMeasure, 'A WeatherProbe must be intialized with a WeatherMeasure');
-    super.initialize(measure);
+    super.onInitialize(measure);
     apiKey = (measure as WeatherMeasure).apiKey;
+    weather = WeatherStation(apiKey);
   }
 
-  @override
   Future<Datum> getDatum() async {
+    print('getting weather using $weather');
     Weather w = await weather.currentWeather();
     return WeatherDatum()
       ..country = w.country

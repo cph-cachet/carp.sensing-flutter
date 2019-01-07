@@ -40,7 +40,7 @@ class StudyManager {
     print(' data manager : ' + manager.toString());
 
     if (samplingSchema != null) {
-      study.adapt(samplingSchema);
+      //study.adapt(samplingSchema);
     }
 
     executor.initialize(Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR), name: "Study Executor: ${study.name}"));
@@ -68,7 +68,7 @@ class StudyManager {
         }
       });
       battery.initialize(batteryMeasure);
-      await battery.start();
+      battery.start();
     }
   }
 
@@ -77,8 +77,8 @@ class StudyManager {
   }
 
   Future start() async {
-    await enablePowerAwareness();
-    await executor.start();
+    //enablePowerAwareness();
+    executor.start();
   }
 
   void stop() {

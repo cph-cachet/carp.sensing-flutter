@@ -12,7 +12,7 @@ part of connectivity;
 class ConnectivityProbe extends StreamProbe {
   Connectivity connectivity = new Connectivity();
 
-  ConnectivityProbe({String name}) : super(name: name);
+  ConnectivityProbe() : super();
 
   Stream<Datum> get stream => connectivity.onConnectivityChanged
       .map((ConnectivityResult event) => ConnectivityDatum.fromConnectivityResult(event));

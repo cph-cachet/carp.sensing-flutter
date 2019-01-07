@@ -32,7 +32,7 @@ class AudioProbe extends AbstractProbe {
 
   Stream<Datum> get events => controller.stream;
 
-  AudioProbe({String name}) : super(name: name);
+  AudioProbe() : super();
 
   Future onStart() async {
     //super.start();
@@ -59,6 +59,8 @@ class AudioProbe extends AbstractProbe {
       });
     });
   }
+
+  void onRestart() {}
 
   void onStop() {
     flutterSound = null;

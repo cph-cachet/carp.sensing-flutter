@@ -19,7 +19,7 @@ class PedometerProbe extends StreamProbe {
   /// Returns the latest known step count.
   int get latestStepCount => _latestStepCount;
 
-  PedometerProbe({String name}) : super(name: name);
+  PedometerProbe() : super();
 
   @override
   void initialize(Measure measure) {

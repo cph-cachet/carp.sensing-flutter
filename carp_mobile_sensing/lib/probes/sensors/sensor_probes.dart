@@ -11,7 +11,7 @@ part of sensors;
 abstract class BufferingSensorProbe extends BufferingPeriodicStreamProbe {
   MultiDatum datum = MultiDatum();
 
-  BufferingSensorProbe({String name}) : super(name: name);
+  BufferingSensorProbe() : super();
 
   Future<Datum> getDatum() async => datum;
 
@@ -25,7 +25,7 @@ abstract class BufferingSensorProbe extends BufferingPeriodicStreamProbe {
 /// A probe that collects accelerometer events and buffers them and return a [MultiDatum] with
 /// all the buffered [AccelerometerDatum]s.
 class BufferingAccelerometerProbe extends BufferingSensorProbe {
-  BufferingAccelerometerProbe({String name}) : super(name: name);
+  BufferingAccelerometerProbe() : super();
 
   Stream get bufferingEvents => accelerometerEvents;
 
@@ -38,7 +38,7 @@ class BufferingAccelerometerProbe extends BufferingSensorProbe {
 /// See [PeriodicMeasure] on how to configure this probe, including setting the
 /// [frequency] and [duration] of the sampling rate.
 class AccelerometerProbe extends PeriodicStreamProbe {
-  AccelerometerProbe({String name}) : super(name: name);
+  AccelerometerProbe() : super();
 
   Stream<Datum> get stream => accelerometerEvents.map((event) => AccelerometerDatum.fromAccelerometerEvent(event));
 }
@@ -46,7 +46,7 @@ class AccelerometerProbe extends PeriodicStreamProbe {
 /// A probe that collects gyroscope events and buffers them and return a [MultiDatum] with
 /// all the buffered [GyroscopeDatum]s.
 class BufferingGyroscopeProbe extends BufferingSensorProbe {
-  BufferingGyroscopeProbe({String name}) : super(name: name);
+  BufferingGyroscopeProbe() : super();
 
   Stream get bufferingEvents => gyroscopeEvents;
 
@@ -59,7 +59,7 @@ class BufferingGyroscopeProbe extends BufferingSensorProbe {
 /// See [PeriodicMeasure] on how to configure this probe, including setting the
 /// [frequency] and [duration] of the sampling rate.
 class GyroscopeProbe extends PeriodicStreamProbe {
-  GyroscopeProbe({String name}) : super(name: name);
+  GyroscopeProbe() : super();
 
   Stream<Datum> get stream => gyroscopeEvents.map((event) => GyroscopeDatum.fromGyroscopeEvent(event));
 }

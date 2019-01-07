@@ -12,11 +12,10 @@ part of location;
 class LocationProbe extends StreamProbe {
   Location _location = new Location();
 
-  LocationProbe({String name}) : super(name: name);
+  LocationProbe() : super();
 
-  @override
-  void initialize(Measure measure) {
-    super.initialize(measure);
+  void onInitialize(Measure measure) {
+    super.onInitialize(measure);
 //    PermissionStatus status = await SimplePermissions.requestPermission(Permission.AccessFineLocation);
 //    bool granted = await SimplePermissions.checkPermission(Permission.AccessFineLocation);
 //    print('>>> Permission, location : $granted');

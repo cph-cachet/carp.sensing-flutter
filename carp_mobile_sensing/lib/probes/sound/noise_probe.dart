@@ -20,7 +20,7 @@ class NoiseProbe extends AbstractProbe {
 
   Stream<Datum> get events => controller.stream;
 
-  NoiseProbe({String name}) : super(name: name);
+  NoiseProbe() : super();
 
   /// Initialize this [NoiseProbe] taking a [NoiseMeasure] as configuration.
   void onInitialize(Measure measure) {

@@ -10,10 +10,8 @@ part of hardware;
 /// A polling probe that collects free virtual memory on a regular basis
 /// as specified in [PeriodicMeasure.frequency].
 class MemoryPollingProbe extends PeriodicDatumProbe {
-  /// A [MemoryPollingProbe] is a polling probe and takes a [PeriodicMeasure] as configuration.
-  MemoryPollingProbe({String name}) : super(name: name);
+  MemoryPollingProbe() : super();
 
-  @override
   Future<Datum> getDatum() async {
     return FreeMemoryDatum()
       ..freePhysicalMemory = SysInfo.getFreePhysicalMemory()

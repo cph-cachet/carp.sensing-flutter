@@ -13,7 +13,7 @@ class LightProbe extends BufferingPeriodicStreamProbe {
   Light light = new Light();
   List<num> luxValues = new List();
 
-  LightProbe({String name}) : super(name: name);
+  LightProbe() : super();
 
   @override
   Future<Datum> getDatum() async {

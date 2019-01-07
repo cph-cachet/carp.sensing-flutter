@@ -313,22 +313,23 @@ class StudyMock implements StudyReceiver {
   Task get sensorTask {
     if (_sensorTask == null) {
       _sensorTask = Task("Sensor Task")
-        ..addMeasure(PeriodicMeasure(
-          MeasureType(NameSpace.CARP, DataType.ACCELEROMETER),
-          name: "Accelerometer",
-          frequency: 8 * 1000, // How often to start a measure
-          duration: 20, // Window size
-        ))
-        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.GYROSCOPE),
-            name: "Gyroscope",
-            frequency: 9 * 1000, // How often to start a measure
-            duration: 100 // Window size
+            ..addMeasure(PeriodicMeasure(
+              MeasureType(NameSpace.CARP, DataType.ACCELEROMETER),
+              name: "Accelerometer",
+              frequency: 8 * 1000, // How often to start a measure
+              duration: 20, // Window size
             ))
-        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.LIGHT),
-                name: "Ambient Light",
-                frequency: 11 * 1000, // How often to start a measure
-                duration: 700) // Window size
-            );
+            ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.GYROSCOPE),
+                name: "Gyroscope",
+                frequency: 9 * 1000, // How often to start a measure
+                duration: 100 // Window size
+                ))
+//        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.LIGHT),
+//                name: "Ambient Light",
+//                frequency: 11 * 1000, // How often to start a measure
+//                duration: 700) // Window size
+//            )
+          ;
     }
     return _sensorTask;
   }

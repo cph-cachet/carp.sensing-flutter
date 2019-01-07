@@ -21,7 +21,7 @@ class BluetoothProbe extends StreamProbe {
   Duration frequency, duration;
   Timer timer;
 
-  BluetoothProbe({String name}) : super(name: name);
+  BluetoothProbe() : super();
 
   @override
   void initialize(Measure measure) {

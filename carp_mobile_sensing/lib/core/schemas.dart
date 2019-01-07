@@ -81,8 +81,8 @@ class SamplingSchema {
     ..measures.addEntries([
       MapEntry(DataType.LOCATION,
           Measure(MeasureType(NameSpace.UNKNOWN, DataType.LOCATION), enabled: false)), // disable location sensing
-      MapEntry(
-          DataType.APPS, Measure(MeasureType(NameSpace.UNKNOWN, DataType.APPS), enabled: false)) // disable app sensing
+      MapEntry(DataType.MEMORY,
+          Measure(MeasureType(NameSpace.UNKNOWN, DataType.MEMORY), enabled: false)) // disable memory sensing
     ]);
 
   /// A non-sampling sampling schema.

@@ -11,7 +11,7 @@ part of hardware;
 class ScreenProbe extends StreamProbe {
   Screen screen = new Screen();
 
-  ScreenProbe({String name}) : super(name: name);
+  ScreenProbe() : super();
 
   Stream<Datum> get stream => screen.screenStateEvents.map((event) => ScreenDatum.fromScreenStateEvent(measure, event));
 }

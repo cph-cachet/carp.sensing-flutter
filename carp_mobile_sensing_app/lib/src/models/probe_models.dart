@@ -7,7 +7,7 @@ class ProbesModel {
 
 class ProbeModel {
   Probe probe;
-  String get type => probe.measure.type.name;
+  String get type => probe.type;
   Measure get measure => probe.measure;
   ProbeStateType get state => probe.state.type;
 
