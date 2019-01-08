@@ -10,35 +10,35 @@ part of hardware;
 /// The [BatteryProbe] listens to the hardware battery and collect a [BatteryDatum]
 /// every time the battery state changes. For example, battery level or charging mode.
 class BatteryProbe extends StreamProbe {
+  BatteryProbe(Measure measure) : super(measure, batteryStream);
+}
+
+Stream<Datum> get batteryStream {
   Battery battery = new Battery();
+  StreamController<Datum> controller;
+  StreamSubscription<BatteryState> subscription;
 
-  BatteryProbe() : super();
-
-  Stream<Datum> get stream {
-    StreamController<Datum> controller;
-    StreamSubscription<BatteryState> subscription;
-
-    void onData(state) async {
-      try {
-        int level = await battery.batteryLevel;
-        Datum datum = BatteryDatum.fromBatteryState(measure, level, state);
-        controller.add(datum);
-      } catch (error) {
-        controller.addError(error);
-      }
+  void onData(state) async {
+    try {
+      int level = await battery.batteryLevel;
+      Datum datum = BatteryDatum.fromBatteryState(level, state);
+      controller.add(datum);
+    } catch (error) {
+      controller.addError(error);
     }
-
-    controller = StreamController<Datum>(
-        onListen: () => subscription.resume(),
-        onPause: () => subscription.pause(),
-        onResume: () => subscription.resume(),
-        onCancel: () => subscription.cancel());
-
-    subscription = battery.onBatteryStateChanged
-        .listen(onData, onError: (error) => controller.addError(error), onDone: () => controller.close());
-
-    return controller.stream;
   }
+
+  controller = StreamController<Datum>(
+      onListen: () => subscription.resume(),
+      onPause: () => subscription.pause(),
+      onResume: () => subscription.resume(),
+      onCancel: () => subscription.cancel());
+
+  subscription = battery.onBatteryStateChanged
+      .listen(onData, onError: (error) => controller.addError(error), onDone: () => controller.close());
+
+  return controller.stream;
+}
 
 // Old stream implementation below. Did NOT comply to pause/resume/cancels events.
 // Hence reimplemented using a StreamController as done above.
@@ -50,5 +50,3 @@ class BatteryProbe extends StreamProbe {
 //      yield BatteryDatum.fromBatteryState(measure, level, state);
 //    }
 //  }
-
-}

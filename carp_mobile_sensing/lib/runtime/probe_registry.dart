@@ -48,67 +48,68 @@ class ProbeRegistry {
         DataType.WEATHER
       ];
 
-  /// Create an instance of a probe based on the measure type.
-  static Probe create(MeasureType type) {
+  /// Create an instance of a probe based on the measure.
+  static Probe create(Measure measure) {
     Probe _probe;
 
-    switch (type.name) {
+    switch (measure.type.name) {
       case DataType.MEMORY:
-        _probe = new MemoryPollingProbe();
+        _probe = new MemoryPollingProbe(measure);
         break;
       case DataType.PEDOMETER:
-        _probe = new PedometerProbe();
+        _probe = new PedometerProbe(measure);
         break;
       case DataType.ACCELEROMETER:
-        _probe = new BufferingAccelerometerProbe();
+        _probe = new BufferingAccelerometerProbe(measure);
         break;
       case DataType.GYROSCOPE:
-        _probe = new BufferingGyroscopeProbe();
+        _probe = new BufferingGyroscopeProbe(measure);
         break;
       case DataType.BATTERY:
-        _probe = new BatteryProbe();
+        _probe = new BatteryProbe(measure);
         break;
       case DataType.BLUETOOTH:
-        _probe = new BluetoothProbe();
+        //TODO - fix this -- should probes be created or initialized w. the Measure??????
+        _probe = new BluetoothProbe(measure);
         break;
       case DataType.LOCATION:
-        _probe = new LocationProbe();
+        _probe = new LocationProbe(measure);
         break;
       case DataType.CONNECTIVITY:
-        _probe = new ConnectivityProbe();
+        _probe = new ConnectivityProbe(measure);
         break;
       case DataType.LIGHT:
-        _probe = new LightProbe();
+        _probe = new LightProbe(measure);
         break;
       case DataType.APPS:
-        _probe = new AppsProbe();
+        _probe = new AppsProbe(measure);
         break;
       case DataType.APP_USAGE:
-        _probe = new AppUsageProbe();
+        _probe = new AppUsageProbe(measure);
         break;
       case DataType.TEXT_MESSAGE_LOG:
-        _probe = new TextMessageLogProbe();
+        _probe = new TextMessageLogProbe(measure);
         break;
       case DataType.TEXT_MESSAGE:
-        _probe = new TextMessageProbe();
+        _probe = new TextMessageProbe(measure);
         break;
       case DataType.SCREEN:
-        _probe = new ScreenProbe();
+        _probe = new ScreenProbe(measure);
         break;
       case DataType.PHONE_LOG:
-        _probe = new PhoneLogProbe();
+        _probe = new PhoneLogProbe(measure);
         break;
       case DataType.AUDIO:
-        _probe = new AudioProbe();
+        _probe = new AudioProbe(measure);
         break;
       case DataType.NOISE:
-        _probe = new NoiseProbe();
+        _probe = new NoiseProbe(measure);
         break;
       case DataType.ACTIVITY:
-        _probe = new ActivityProbe();
+        _probe = new ActivityProbe(measure);
         break;
       case DataType.WEATHER:
-        _probe = new WeatherProbe();
+        _probe = new WeatherProbe(measure);
         break;
       case DataType.APPLE_HEALTHKIT:
         throw "Not Implemented Yet";
@@ -121,7 +122,7 @@ class ProbeRegistry {
     }
 
     if (_probe != null) {
-      register(type.name, _probe);
+      register(measure.type.name, _probe);
     }
 
     return _probe;

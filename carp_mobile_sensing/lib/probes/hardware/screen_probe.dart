@@ -9,9 +9,7 @@ part of hardware;
 
 /// Listens to screen actions which are: SCREEN ON/OFF/UNLOCK which are stored as a [ScreenDatum].
 class ScreenProbe extends StreamProbe {
-  Screen screen = new Screen();
-
-  ScreenProbe() : super();
-
-  Stream<Datum> get stream => screen.screenStateEvents.map((event) => ScreenDatum.fromScreenStateEvent(measure, event));
+  ScreenProbe(Measure measure) : super(measure, screenStream);
 }
+
+Stream<Datum> get screenStream => Screen().screenStateEvents.map((event) => ScreenDatum.fromScreenStateEvent(event));

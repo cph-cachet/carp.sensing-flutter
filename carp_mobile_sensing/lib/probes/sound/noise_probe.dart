@@ -1,5 +1,7 @@
 part of audio;
 
+// TODO - this probe really needs a rewrite according to the new architecture....
+
 /// A listening probe collecting noise data from the microphone.
 ///
 /// See [NoiseMeasure] on how to configure this probe, including setting the
@@ -20,15 +22,9 @@ class NoiseProbe extends AbstractProbe {
 
   Stream<Datum> get events => controller.stream;
 
-  NoiseProbe() : super();
-
-  /// Initialize this [NoiseProbe] taking a [NoiseMeasure] as configuration.
-  void onInitialize(Measure measure) {
-    assert(measure is NoiseMeasure, 'A NoiseProbe must be intialized with a NoiseMeasure');
-    frequency = Duration(milliseconds: (measure as NoiseMeasure).frequency);
-    duration = ((measure as NoiseMeasure).duration != null)
-        ? Duration(milliseconds: (measure as NoiseMeasure).duration)
-        : null;
+  NoiseProbe(NoiseMeasure measure) : super(measure) {
+    frequency = Duration(milliseconds: measure.frequency);
+    duration = (measure.duration != null) ? Duration(milliseconds: measure.duration) : null;
     samplingRate = (measure as NoiseMeasure).samplingRate;
     _noise = new Noise(samplingRate);
   }

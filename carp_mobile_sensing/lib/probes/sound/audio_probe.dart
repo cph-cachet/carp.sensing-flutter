@@ -6,6 +6,8 @@
  */
 part of audio;
 
+// TODO - this probe really needs a rewrite according to the new architecture....
+
 /// A probe recording audio from the microphone.
 ///
 /// Note that this probe generates a lot of data and should be used with caution.
@@ -32,7 +34,7 @@ class AudioProbe extends AbstractProbe {
 
   Stream<Datum> get events => controller.stream;
 
-  AudioProbe() : super();
+  AudioProbe(AudioMeasure measure) : super(measure);
 
   Future onStart() async {
     //super.start();

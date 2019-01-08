@@ -30,7 +30,7 @@ class BatteryDatum extends CARPDatum {
 
   BatteryDatum() : super();
 
-  BatteryDatum.fromBatteryState(Measure measure, int level, BatteryState state)
+  BatteryDatum.fromBatteryState(int level, BatteryState state)
       : batteryLevel = level,
         batteryStatus = _parseBatteryState(state),
         super();
@@ -86,10 +86,10 @@ class ScreenDatum extends CARPDatum {
   /// - SCREEN_UNLOCKED
   String screenEvent;
 
-  ScreenDatum({Measure measure}) : super();
+  ScreenDatum() : super();
 
-  factory ScreenDatum.fromScreenStateEvent(Measure measure, ScreenStateEvent event) {
-    ScreenDatum sd = new ScreenDatum(measure: measure);
+  factory ScreenDatum.fromScreenStateEvent(ScreenStateEvent event) {
+    ScreenDatum sd = new ScreenDatum();
 
     switch (event) {
       case ScreenStateEvent.SCREEN_ON:

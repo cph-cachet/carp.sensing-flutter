@@ -3,15 +3,9 @@ part of environment;
 /// Collects the weather on a regular basis using the [WeatherStation] API.
 class WeatherProbe extends PeriodicDatumProbe {
   WeatherStation weather;
-  String apiKey;
 
-  WeatherProbe() : super();
-
-  void onInitialize(Measure measure) {
-    assert(measure is WeatherMeasure, 'A WeatherProbe must be intialized with a WeatherMeasure');
-    super.onInitialize(measure);
-    apiKey = (measure as WeatherMeasure).apiKey;
-    weather = WeatherStation(apiKey);
+  WeatherProbe(WeatherMeasure measure) : super(measure) {
+    weather = WeatherStation(measure.apiKey);
   }
 
   Future<Datum> getDatum() async {

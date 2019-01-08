@@ -18,7 +18,7 @@ enum ProbeStateType { created, initialized, resumed, paused, stopped }
 
 abstract class ProbeState {
   ProbeStateType get type;
-  void initialize(Measure measure);
+  void initialize();
   void start();
   void pause();
   void resume();
@@ -32,7 +32,7 @@ abstract class AbstractProbeState implements ProbeState {
   AbstractProbeState(this.probe, this.type) : assert(probe != null);
 
   // pr. default, a probe cannot be initialized while running -- only when created
-  void initialize(Measure measure) {}
+  void initialize() {}
 
   // Default stop behavior. A probe can be stopped in all states.
   void stop() {
@@ -45,10 +45,9 @@ abstract class AbstractProbeState implements ProbeState {
 class CreatedState extends AbstractProbeState implements ProbeState {
   CreatedState(Probe probe) : super(probe, ProbeStateType.created);
 
-  void initialize(Measure measure) {
-    assert(measure != null, 'A Probe cannot be initialized with a null Measure.');
+  void initialize() {
     print('Initializing $probe');
-    probe.onInitialize(measure);
+    probe.onInitialize();
     probe._state = InitializedState(probe);
   }
 
@@ -163,8 +162,8 @@ abstract class Probe {
   /// A [Stream] generating sensor data events from this probe.
   Stream<Datum> get events;
 
-  /// Initialize the probe with the specified [Measure].
-  void initialize(Measure measure);
+  /// Initialize the probe before starting it.
+  void initialize();
 
   /// Start the probe();
   void start();
@@ -191,9 +190,9 @@ abstract class Probe {
 
 /// An abstract implementation of a [Probe] to extend from.
 abstract class AbstractProbe with MeasureListener implements Probe {
-  bool get enabled => (measure != null) ? measure.enabled : true;
-  String get type => (measure != null) ? measure.type.name : DataType.NONE;
-  String get name => (measure != null) ? measure.name : 'Unknown';
+  bool get enabled => measure.enabled;
+  String get type => measure.type.name;
+  String get name => measure.name;
 
   ProbeState _state;
   ProbeState get state => _state;
@@ -201,12 +200,14 @@ abstract class AbstractProbe with MeasureListener implements Probe {
   Measure _measure;
   Measure get measure => _measure;
 
-  AbstractProbe() {
+  AbstractProbe(Measure measure) : assert(measure != null, 'Probe cannot be created with a null measure.') {
+    _measure = measure;
+    measure.addMeasureListener(this);
     _state = CreatedState(this);
   }
 
   // ProbeState handlers
-  void initialize(Measure measure) => state.initialize(measure);
+  void initialize() => state.initialize();
   void start() => state.start();
   void restart() => state.restart();
   void pause() => state.pause();
@@ -214,10 +215,7 @@ abstract class AbstractProbe with MeasureListener implements Probe {
   void stop() => state.stop();
 
   /// Callback for initialization of probe
-  void onInitialize(Measure measure) {
-    _measure = measure;
-    measure.addMeasureListener(this);
-  }
+  void onInitialize() {}
 
   /// Callback for starting probe
   void onStart();
@@ -244,7 +242,7 @@ abstract class AbstractProbe with MeasureListener implements Probe {
 ///
 /// The [Datum] to be collected is implemented in the [getDatum] method.
 abstract class DatumProbe extends AbstractProbe {
-  DatumProbe() : super();
+  DatumProbe(Measure measure) : super(measure);
 
   Stream<Datum> get events => Stream.fromFuture(getDatum());
 
@@ -266,18 +264,14 @@ abstract class PeriodicDatumProbe extends DatumProbe {
   StreamController<Datum> controller = StreamController<Datum>.broadcast();
   Duration frequency, duration;
 
-  PeriodicDatumProbe() : super();
-
-  Stream<Datum> get events => controller.stream;
-
-  void onInitialize(Measure measure) {
-    assert(measure is PeriodicMeasure, 'A PeriodicDatumProbe must be intialized with a PeriodicMeasure');
-    super.onInitialize(measure);
+  PeriodicDatumProbe(PeriodicMeasure measure) : super(measure) {
     frequency = Duration(milliseconds: (measure as PeriodicMeasure).frequency);
     duration = ((measure as PeriodicMeasure).duration != null)
         ? Duration(milliseconds: (measure as PeriodicMeasure).duration)
         : null;
   }
+
+  Stream<Datum> get events => controller.stream;
 
   void onRestart() {
     print('...restart() in $this, measure: $measure');
@@ -321,21 +315,20 @@ abstract class PeriodicDatumProbe extends DatumProbe {
 /// Subclasses should implement the [get stream] method.
 /// See [LocationProbe] for an example.
 abstract class StreamProbe extends AbstractProbe {
+  Stream<Datum> _stream;
   StreamSubscription<dynamic> subscription;
   StreamController<Datum> controller = StreamController<Datum>.broadcast();
-
-  StreamProbe() : super();
-
   Stream<Datum> get events => controller.stream;
 
-  /// The a [Stream] of data items from this probe. Should be implemented by
-  /// the specific probes implementing this [StreamProbe] class.
-  Stream<Datum> get stream;
+  /// Creates a [StreamProbe] handling the [stream].
+  StreamProbe(Measure measure, Stream<Datum> stream)
+      : assert(stream != null, 'Stream cannot be null in a StreamProbe'),
+        super(measure) {
+    this._stream = stream;
+  }
 
   void onStart() {
-    if (stream != null) {
-      subscription = stream.listen(onData, onError: onError, onDone: onDone);
-    }
+    subscription = _stream.listen(onData, onError: onError, onDone: onDone);
   }
 
   void onRestart() {}
@@ -367,11 +360,18 @@ abstract class PeriodicStreamProbe extends StreamProbe {
   Timer timer;
   Duration frequency, duration;
 
-  PeriodicStreamProbe() : super();
+  /// Creates a [PeriodicStreamProbe] handling the [stream] in a periodic manner.
+  PeriodicStreamProbe(PeriodicMeasure measure, Stream<Datum> stream) : super(measure, stream) {
+    frequency = Duration(milliseconds: measure.frequency);
+    duration = (measure.duration != null) ? Duration(milliseconds: measure.duration) : null;
+  }
 
-  void onInitialize(Measure measure) {
-    assert(measure is PeriodicMeasure, 'A PeriodicStreamProbe must be intialized with a PeriodicMeasure');
-    super.onInitialize(measure);
+  void onInitialize() {
+    super.onInitialize();
+  }
+
+  void onRestart() {
+    print('...restart() in $this, measure: $measure');
     frequency = Duration(milliseconds: (measure as PeriodicMeasure).frequency);
     duration = ((measure as PeriodicMeasure).duration != null)
         ? Duration(milliseconds: (measure as PeriodicMeasure).duration)
@@ -396,13 +396,6 @@ abstract class PeriodicStreamProbe extends StreamProbe {
     super.onPause();
   }
 
-  void onRestart() {
-    frequency = Duration(milliseconds: (measure as PeriodicMeasure).frequency);
-    duration = ((measure as PeriodicMeasure).duration != null)
-        ? Duration(milliseconds: (measure as PeriodicMeasure).duration)
-        : null;
-  }
-
   void onStop() async {
     if (timer != null) timer.cancel();
     controller.close();
@@ -410,7 +403,7 @@ abstract class PeriodicStreamProbe extends StreamProbe {
   }
 }
 
-/// An abstract probe which can be used to sample data from a [bufferingEvents] stream,
+/// An abstract probe which can be used to sample data from a [_bufferingStream] stream,
 /// every [frequency] for a period of [duration]. These events are buffered, and
 /// once collected for the [duration], are collected from the [getDatum] method and
 /// send to the main [events] stream.
@@ -422,15 +415,19 @@ abstract class PeriodicStreamProbe extends StreamProbe {
 ///
 abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
   /// The stream of events to be buffered.
-  Stream<dynamic> get bufferingEvents;
-  Stream<Datum> get stream => null; // Not used
+  Stream<dynamic> _bufferingStream;
 
-  BufferingPeriodicStreamProbe() : super();
+  BufferingPeriodicStreamProbe(PeriodicMeasure measure, Stream<dynamic> bufferingStream)
+      : assert(bufferingStream != null, 'Buffering event stream must not be null'),
+        super(measure,
+            Stream<Datum>.empty()) // we don't use the stream in the super class so we give it an empty non-null stream
+  {
+    _bufferingStream = bufferingStream;
+  }
 
   void onStart() async {
-    assert(bufferingEvents != null, 'Buffering event stream must not be null');
-    // subscribing to the buffering events
-    subscription = bufferingEvents.listen(onData, onError: onError, onDone: onDone);
+    // subscribing to the buffering stream events
+    subscription = _bufferingStream.listen(onData, onError: onError, onDone: onDone);
   }
 
   void onResume() {

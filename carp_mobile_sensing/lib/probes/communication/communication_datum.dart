@@ -34,7 +34,7 @@ class TextMessageDatum extends CARPDatum {
   TextMessage textMessage;
 
   TextMessageDatum() : super();
-  factory TextMessageDatum.fromTextMessage(Measure measure, TextMessage msg) => TextMessageDatum()..textMessage = msg;
+  factory TextMessageDatum.fromTextMessage(TextMessage msg) => TextMessageDatum()..textMessage = msg;
 
   factory TextMessageDatum.fromJson(Map<String, dynamic> json) => _$TextMessageDatumFromJson(json);
   Map<String, dynamic> toJson() => _$TextMessageDatumToJson(this);

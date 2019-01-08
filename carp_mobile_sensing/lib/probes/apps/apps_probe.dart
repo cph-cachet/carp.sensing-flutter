@@ -8,7 +8,7 @@ part of apps;
 
 /// A polling probe collecting a list of installed applications on this device.
 class AppsProbe extends PeriodicDatumProbe {
-  AppsProbe() : super();
+  AppsProbe(PeriodicMeasure measure) : super(measure);
 
   Stream<Datum> get stream => null;
 

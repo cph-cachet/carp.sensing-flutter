@@ -21,6 +21,7 @@ part 'probes.dart';
 part 'probe_registry.dart';
 part 'executors.dart';
 part 'study_manager.dart';
+part 'probe_controller.dart';
 
 class SensingException implements Exception {
   dynamic message;

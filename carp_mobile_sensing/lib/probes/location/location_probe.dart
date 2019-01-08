@@ -7,20 +7,15 @@
 
 part of location;
 
-/// Collects location information from the underlying OS's location API.
-/// Is a [ListeningProbe] that generates a [LocationDatum] every time location is changed.
-class LocationProbe extends StreamProbe {
-  Location _location = new Location();
-
-  LocationProbe() : super();
-
-  void onInitialize(Measure measure) {
-    super.onInitialize(measure);
+// TODO - check for permissions...
 //    PermissionStatus status = await SimplePermissions.requestPermission(Permission.AccessFineLocation);
 //    bool granted = await SimplePermissions.checkPermission(Permission.AccessFineLocation);
 //    print('>>> Permission, location : $granted');
-  }
 
-  Stream<LocationDatum> get stream =>
-      _location.onLocationChanged().map((event) => LocationDatum.fromMap(measure, event));
+/// Collects location information from the underlying OS's location API.
+/// Is a [ListeningProbe] that generates a [LocationDatum] every time location is changed.
+class LocationProbe extends StreamProbe {
+  LocationProbe(Measure measure) : super(measure, locationStream);
 }
+
+Stream<LocationDatum> get locationStream => Location().onLocationChanged().map((event) => LocationDatum.fromMap(event));

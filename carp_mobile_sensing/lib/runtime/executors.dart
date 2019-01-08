@@ -15,7 +15,7 @@ abstract class Executor extends AbstractProbe {
   List<Probe> executors = new List<Probe>();
   Stream<Datum> get events => _group.stream;
 
-  Executor() : super();
+  Executor() : super(Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR)));
 
   void onPause() async {
     executors.forEach((executor) => executor.pause());
@@ -43,11 +43,14 @@ abstract class Executor extends AbstractProbe {
 /// Note that the [StudyExecutor] in itself is a [Probe] and hence work as a 'super probe'.
 /// This - amongst other things - imply that you can listen to datum [events] from a study executor.
 class StudyExecutor extends Executor {
-  Study study;
+  Study get study => _study;
+  Study _study;
 
-  StudyExecutor(this.study)
+  StudyExecutor(Study study)
       : assert(study != null, "Cannot initiate a StudyExecutor without a Study."),
-        super();
+        super() {
+    _study = study;
+  }
 
   /// Returns a list of the running probes in this study executor.
   ///
@@ -70,8 +73,7 @@ class StudyExecutor extends Executor {
       _group.add(executor.events);
 
       executors.add(executor);
-      executor
-          .initialize(Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR), name: "Task Executor : ${task.name}"));
+      executor.initialize();
       executor.start();
     }
   }
@@ -83,22 +85,25 @@ class StudyExecutor extends Executor {
 ///Note that the [TaskExecutor] in itself is a [Probe] and hence work as a 'super probe'.
 ///This - amongst other things - imply that you can listen to datum [events] from a task executor.
 class TaskExecutor extends Executor {
-  Task task;
+  Task get task => _task;
+  Task _task;
 
   /// Returns a list of the running probes in this task executor.
   List<Probe> get probes => executors;
 
-  TaskExecutor(this.task)
+  TaskExecutor(Task task)
       : assert(task != null, "Cannot initiate a TaskExecutor without a Task."),
-        super();
+        super() {
+    _task = task;
+  }
 
   Future onStart() async {
     for (Measure measure in task.measures) {
-      Probe probe = ProbeRegistry.create(measure.type);
+      Probe probe = ProbeRegistry.create(measure);
       if ((probe != null) && (measure.enabled)) {
         executors.add(probe);
         _group.add(probe.events);
-        probe.initialize(measure);
+        probe.initialize();
 
         // start the probe
         probe.start();

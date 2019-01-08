@@ -14,8 +14,8 @@ class StudyManager {
   SamplingSchema samplingSchema;
 
   Stream<Datum> events;
-  Measure batteryMeasure = Measure(MeasureType(NameSpace.CARP, DataType.BATTERY))..name = 'PowerAwarenessProbe';
-  BatteryProbe battery = BatteryProbe();
+  BatteryProbe battery =
+      BatteryProbe(Measure(MeasureType(NameSpace.CARP, DataType.BATTERY), name: 'PowerAwarenessProbe'));
   PowerAwarenessState powerAwarenessState = NormalSamplingState.instance;
 
   StudyManager(this.study, {this.executor, this.samplingSchema, this.manager, this.transformer})
@@ -43,7 +43,7 @@ class StudyManager {
       //study.adapt(samplingSchema);
     }
 
-    executor.initialize(Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR), name: "Study Executor: ${study.name}"));
+    executor.initialize();
     manager.initialize(study, events);
   }
 
@@ -67,7 +67,7 @@ class StudyManager {
           }
         }
       });
-      battery.initialize(batteryMeasure);
+      battery.initialize();
       battery.start();
     }
   }

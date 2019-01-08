@@ -4,7 +4,7 @@ part of apps;
 class AppUsageProbe extends PeriodicDatumProbe {
   AppUsage appUsage = new AppUsage();
 
-  AppUsageProbe() : super();
+  AppUsageProbe(PeriodicMeasure measure) : super(measure);
 
   Future<Datum> getDatum() async {
     DateTime end = DateTime.now();

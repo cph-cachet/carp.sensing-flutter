@@ -10,10 +10,9 @@ part of connectivity;
 /// The [ConnectivityProbe] listens to the connectivity status of the phone and
 /// collect a [ConnectivityDatum] everytime the connectivity state changes.
 class ConnectivityProbe extends StreamProbe {
-  Connectivity connectivity = new Connectivity();
-
-  ConnectivityProbe() : super();
-
-  Stream<Datum> get stream => connectivity.onConnectivityChanged
-      .map((ConnectivityResult event) => ConnectivityDatum.fromConnectivityResult(event));
+  ConnectivityProbe(Measure measure) : super(measure, connectivityStream);
 }
+
+Stream<Datum> get connectivityStream => Connectivity()
+    .onConnectivityChanged
+    .map((ConnectivityResult event) => ConnectivityDatum.fromConnectivityResult(event));

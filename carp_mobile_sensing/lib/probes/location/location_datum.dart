@@ -15,7 +15,7 @@ class LocationDatum extends CARPDatum {
 
   LocationDatum() : super();
 
-  LocationDatum.fromMap(Measure measure, Map<dynamic, dynamic> map)
+  LocationDatum.fromMap(Map<dynamic, dynamic> map)
       : latitude = map['latitude'],
         longitude = map['longitude'],
         altitude = map['altitude'],
