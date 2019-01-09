@@ -4,6 +4,8 @@ class ProbesBloc {
   final Sensing _sensing = Sensing();
   final _probesFetcher = PublishSubject<ProbeModel>();
 
+  Stream<ProbeStateType> get stateChanges => _sensing.manager.executor.stateEvents;
+
   bool get isRunning =>
       (_sensing.manager != null) ? _sensing.manager.executor.state.type == ProbeStateType.resumed : false;
 

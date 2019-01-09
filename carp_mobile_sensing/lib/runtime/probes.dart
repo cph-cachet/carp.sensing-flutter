@@ -8,130 +8,7 @@
 part of runtime;
 
 //---------------------------------------------------------------------------------------
-//                                 PROBE STATE MACHINE
-//
-//         created -> initialized -> resumed <-> paused *-> stopped
-//
-//---------------------------------------------------------------------------------------
-
-enum ProbeStateType { created, initialized, resumed, paused, stopped }
-
-abstract class ProbeState {
-  ProbeStateType get type;
-  void initialize();
-  void start();
-  void pause();
-  void resume();
-  void restart();
-  void stop();
-}
-
-abstract class AbstractProbeState implements ProbeState {
-  ProbeStateType type;
-  AbstractProbe probe;
-  AbstractProbeState(this.probe, this.type) : assert(probe != null);
-
-  // pr. default, a probe cannot be initialized while running -- only when created
-  void initialize() {}
-
-  // Default stop behavior. A probe can be stopped in all states.
-  void stop() {
-    print('Stopping $probe');
-    probe.onStop();
-    probe._state = StoppedState(probe);
-  }
-}
-
-class CreatedState extends AbstractProbeState implements ProbeState {
-  CreatedState(Probe probe) : super(probe, ProbeStateType.created);
-
-  void initialize() {
-    print('Initializing $probe');
-    probe.onInitialize();
-    probe._state = InitializedState(probe);
-  }
-
-  void start() {} // cannot be started
-  void restart() {} // cannot be restarted
-  void pause() {} // cannot be paused
-  void resume() {} // cannot be resumed
-}
-
-class InitializedState extends AbstractProbeState implements ProbeState {
-  InitializedState(Probe probe) : super(probe, ProbeStateType.initialized);
-
-  void start() {
-    print('Starting $probe');
-    probe.onStart();
-    if (probe.enabled) {
-      probe.onResume();
-      probe._state = ResumedState(probe);
-    } else {
-      probe.onPause();
-      probe._state = PausedState(probe);
-    }
-  }
-
-  void restart() {} // cannot be restarted before started
-  void pause() {} // cannot be paused before started
-  void resume() {} // cannot be resumed before started
-}
-
-class ResumedState extends AbstractProbeState implements ProbeState {
-  ResumedState(Probe probe) : super(probe, ProbeStateType.resumed);
-
-  void start() {} // cannot be started (again)
-
-  void restart() {
-    print('Restarting $probe');
-    probe.pause(); // first pause probe, setting it in a paused state
-    probe.onRestart();
-    if (probe.enabled) // check if it has been enabled
-      probe.resume();
-  }
-
-  void pause() {
-    print('Pausing $probe');
-    probe.onPause();
-    probe._state = PausedState(probe);
-  }
-
-  void resume() {} // resuming a resumed probe does nothing
-}
-
-class PausedState extends AbstractProbeState implements ProbeState {
-  PausedState(Probe probe) : super(probe, ProbeStateType.paused);
-
-  void start() {} // cannot be started (again)
-
-  void restart() {
-    print('Restarting $probe');
-    probe.onRestart();
-    if (probe.enabled) // check if it has been enabled
-      probe.resume();
-  }
-
-  void pause() {} // pausing a paused probe does nothing
-
-  void resume() {
-    print('Resuming $probe');
-    probe.onResume();
-    probe._state = ResumedState(probe);
-  }
-}
-
-class StoppedState extends AbstractProbeState implements ProbeState {
-  StoppedState(Probe probe) : super(probe, ProbeStateType.stopped);
-
-  // in a stopped state, a probe does not respond to any state changes.
-  void start() {}
-  void restart() {}
-  void pause() {}
-  void resume() {}
-}
-
-//---------------------------------------------------------------------------------------
-//                                        PROBES
+//                                        PROBE
 //---------------------------------------------------------------------------------------
 
 /// A [Probe] is responsible for collecting data.
@@ -144,7 +21,7 @@ class StoppedState extends AbstractProbeState implements ProbeState {
 ///     probe.events.forEach(print);
 ///
 abstract class Probe {
-  /// Is this probe enables, i.e. should it be resumed or paused.
+  /// Is this probe enabled, i.e. should run.
   bool get enabled;
 
   /// The type of this probe according to [DataType].
@@ -152,6 +29,9 @@ abstract class Probe {
 
   /// The runtime state of this probe.
   ProbeState get state;
+
+  /// The runtime state changes of this probe.
+  Stream<ProbeStateType> get stateEvents;
 
   /// The [Measure] that configures this probe.
   Measure get measure;
@@ -190,12 +70,19 @@ abstract class Probe {
 
 /// An abstract implementation of a [Probe] to extend from.
 abstract class AbstractProbe with MeasureListener implements Probe {
+  StreamController<ProbeStateType> _stateEventController = StreamController.broadcast();
+  Stream<ProbeStateType> get stateEvents => _stateEventController.stream;
+
   bool get enabled => measure.enabled;
   String get type => measure.type.name;
   String get name => measure.name;
 
   ProbeState _state;
   ProbeState get state => _state;
+  void _setState(ProbeState state) {
+    _state = state;
+    _stateEventController.add(state.type);
+  }
 
   Measure _measure;
   Measure get measure => _measure;
@@ -230,13 +117,142 @@ abstract class AbstractProbe with MeasureListener implements Probe {
   void onRestart();
 
   /// Callback for stopping probe
-  void onStop() {}
+  void onStop() {
+    _stateEventController.close();
+  }
 
   void hasChanged(Measure measure) {
     print('...measure $measure changed for $name probe.');
     restart();
   }
 }
+
+//---------------------------------------------------------------------------------------
+//                                 PROBE STATE MACHINE
+//
+//         created -> initialized -> resumed <-> paused *-> stopped
+//
+//---------------------------------------------------------------------------------------
+
+enum ProbeStateType { created, initialized, resumed, paused, stopped }
+
+abstract class ProbeState {
+  ProbeStateType get type;
+  void initialize();
+  void start();
+  void pause();
+  void resume();
+  void restart();
+  void stop();
+}
+
+abstract class AbstractProbeState implements ProbeState {
+  ProbeStateType type;
+  AbstractProbe probe;
+  AbstractProbeState(this.probe, this.type) : assert(probe != null);
+
+  // pr. default, a probe cannot be initialized while running -- only when created
+  void initialize() {}
+
+  // Default stop behavior. A probe can be stopped in all states.
+  void stop() {
+    print('Stopping $probe');
+    probe.onStop();
+    probe._setState(StoppedState(probe));
+  }
+}
+
+class CreatedState extends AbstractProbeState implements ProbeState {
+  CreatedState(Probe probe) : super(probe, ProbeStateType.created);
+
+  void initialize() {
+    print('Initializing $probe');
+    probe.onInitialize();
+    probe._setState(InitializedState(probe));
+  }
+
+  void start() {} // cannot be started
+  void restart() {} // cannot be restarted
+  void pause() {} // cannot be paused
+  void resume() {} // cannot be resumed
+}
+
+class InitializedState extends AbstractProbeState implements ProbeState {
+  InitializedState(Probe probe) : super(probe, ProbeStateType.initialized);
+
+  void start() {
+    print('Starting $probe');
+    probe.onStart();
+    if (probe.enabled) {
+      probe.onResume();
+      probe._setState(ResumedState(probe));
+    } else {
+      probe.onPause();
+      probe._setState(PausedState(probe));
+    }
+  }
+
+  void restart() {} // cannot be restarted before started
+  void pause() {} // cannot be paused before started
+  void resume() {} // cannot be resumed before started
+}
+
+class ResumedState extends AbstractProbeState implements ProbeState {
+  ResumedState(Probe probe) : super(probe, ProbeStateType.resumed);
+
+  void start() {} // cannot be started (again)
+
+  void restart() {
+    print('Restarting $probe');
+    probe.pause(); // first pause probe, setting it in a paused state
+    probe.onRestart();
+    if (probe.enabled) // check if it has been enabled
+      probe.resume();
+  }
+
+  void pause() {
+    print('Pausing $probe');
+    probe.onPause();
+    probe._setState(PausedState(probe));
+  }
+
+  void resume() {} // resuming a resumed probe does nothing
+}
+
+class PausedState extends AbstractProbeState implements ProbeState {
+  PausedState(Probe probe) : super(probe, ProbeStateType.paused);
+
+  void start() {} // cannot be started (again)
+
+  void restart() {
+    print('Restarting $probe');
+    probe.onRestart();
+    if (probe.enabled) // check if it has been enabled
+      probe.resume();
+  }
+
+  void pause() {} // pausing a paused probe does nothing
+
+  void resume() {
+    print('Resuming $probe');
+    probe.onResume();
+    probe._setState(ResumedState(probe));
+  }
+}
+
+class StoppedState extends AbstractProbeState implements ProbeState {
+  StoppedState(Probe probe) : super(probe, ProbeStateType.stopped);
+
+  // in a stopped state, a probe does not respond to any state changes.
+  void start() {}
+  void restart() {}
+  void pause() {}
+  void resume() {}
+}
+
+//---------------------------------------------------------------------------------------
+//                                SPECIALIZED PROBES
+//---------------------------------------------------------------------------------------
 
 /// A [DatumProbe] can collect one piece of [Datum], send its to its stream, and then stops.
 ///

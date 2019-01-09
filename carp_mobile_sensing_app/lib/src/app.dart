@@ -18,7 +18,7 @@ class CarpMobileSensingApp extends StatefulWidget {
 }
 
 class CarpMobileSensingAppState extends State<CarpMobileSensingApp> {
-  int _selectedIndex = 1;
+  int _selectedIndex = 0;
 
   final _pages = [
     StudyVisualization(),

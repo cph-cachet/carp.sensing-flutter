@@ -96,12 +96,13 @@ class StudyManager {
   }
 }
 
-/// This default power-awarenes schema operates with four power states:
+/// This default power-awareness schema operates with four power states:
 ///
-///   * Normal [100% - 50%]
-///   * Light  [49%-30%]
-///   * Minimum [29%-10%]
-///   * None [9%-0%]
+///
+///       0%     10%            30%           50%                          1000%
+///       +-------+--------------+-------------+------------------------------+
+///         none      minimum         light                normal
+///
 abstract class PowerAwarenessState {
   static const int LIGHT_SAMPLING_LEVEL = 50;
   static const int MINIMUM_SAMPLING_LEVEL = 30;
