@@ -8,6 +8,17 @@ void example() {
     ..zip = true
     ..encrypt = false;
 
+  // Create a task that take a a battery and location measures.
+  // Both are listening on events from changes from battery and location
+  study.addTask(Task('Location and Battery Task')
+    ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.BATTERY)))
+    ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.LOCATION))));
+
+  // Create another task to collect activity and weather information
+  study.addTask(SequentialTask('Sample Activity with Weather Task')
+    ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.ACTIVITY))..configuration['jakob'] = 'was here')
+    ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.WEATHER))));
+
   study.addTask(Task('Location Task')..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.LOCATION))));
 
   study.addTask(ParallelTask('Sensor Task')
@@ -31,21 +42,19 @@ void example() {
         samplingRate: 500 // configure sampling rate to 500 ms
         )));
 
-  study.addTask(SequentialTask('Sample Activity with Weather Task')
-    ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.ACTIVITY))..configuration['jakob'] = 'was here')
-    ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.WEATHER))));
-
   study.addTask(SequentialTask('Task collecting a list of all installed apps')
     ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.APPS))));
 
   // Create a Study Manager that can manage this study, initialize it, and start it.
-  StudyManager manager =
-      StudyManager(study, transformer: ((events) => events.where((event) => (event is BatteryDatum))));
+  StudyManager manager = StudyManager(study);
 
-  manager = StudyManager(study,
-      transformer: ((events) => events.map((datum) {
-            PrivacySchema.full().protect(datum);
-          })));
+//  StudyManager manager =
+//  StudyManager(study, transformer: ((events) => events.where((event) => (event is BatteryDatum))));
+//
+//  manager = StudyManager(study,
+//      transformer: ((events) => events.map((datum) {
+//            PrivacySchema.full().protect(datum);
+//          })));
 
   //manager = StudyManager(study, transformer: ((events) => events.transform(streamTransformer)));
   manager.initialize();

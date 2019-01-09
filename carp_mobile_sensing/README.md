@@ -88,23 +88,35 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 ... {
   // Instantiate a new study
-  Study study = new Study("1234", "bardram", name: "Test study #1");
+  Study study = Study("1234", "bardram", name: "Test study#1");
 
-  // Setting the data endpoint to print to the console
-  study.dataEndPoint = new DataEndPoint(DataEndPointType.PRINT);
+  // Set the data endpoint to be a non-encrypted zipped file with a 500 KB buffer
+    study.dataEndPoint = FileDataEndPoint()
+      ..bufferSize = 500 * 1000
+      ..zip = true
+      ..encrypt = false;
 
-  // Create a task to hold measures
-  Task task = new Task("Simple Task");
-
-  // Create a battery and location measures and add them to the task
+  // Create a task that take a a battery and location measures.
   // Both are listening on events from changes from battery and location
-  task.addMeasure(new BatteryMeasure(ProbeRegistry.BATTERY_MEASURE));
-  task.addMeasure(new LocationMeasure(ProbeRegistry.LOCATION_MEASURE));
+  study.addTask(Task('Location and Battery Task')
+  ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.BATTERY)))
+  ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.LOCATION)));
 
-  // Create an executor that can execute this study, initialize it, and start it.
-  StudyExecutor executor = new StudyExecutor(study);
-  executor.initialize();
-  executor.start();
+  // Create another task to collect activity and weather information
+  study.addTask(SequentialTask('Sample Activity with Weather Task')
+    ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.ACTIVITY))..configuration['jakob'] = 'was here')
+    ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.WEATHER))));
+
+  // Create a Study Manager that can manage this study, initialize it, and start it.
+  StudyManager manager = StudyManager(study);
+  manager.initialize();
+  manager.start();
+  
+  // listening on all data events from the study
+  manager.events.forEach(print);
+  
+  // listening on a specific probe
+  ProbeRegistry.probes[DataType.LOCATION].events.forEach(print);
 }
 ```
 

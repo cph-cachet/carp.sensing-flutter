@@ -274,9 +274,9 @@ class Sensing {
   Task get appTask {
     if (_appTask == null)
       _appTask = Task("Application Task")
-        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.APPS))
-          ..name = "Installed apps"
-          ..frequency = 30 * 1000);
+        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.APPS),
+          name : "Installed apps",
+          frequency : 30 * 1000);
 
     return _appTask;
   }
@@ -285,11 +285,11 @@ class Sensing {
   Task get appUsageTask {
     if (_appUsageTask == null) {
       _appUsageTask = Task("AppUsage Task")
-        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.APP_USAGE))
-              ..name = "App foreground usage time"
-              ..frequency = 10 * 1000
-              ..duration = 60 * 60 * 1000 // go back one hour
-            );
+        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.APP_USAGE),
+              name : "App foreground usage time",
+              frequency : 10 * 1000,
+              duration : 60 * 60 * 1000 // go back one hour
+            ));
     }
     return _appUsageTask;
   }
@@ -298,11 +298,11 @@ class Sensing {
   Task get audioTask {
     if (_audioTask == null) {
       _audioTask = Task("Audio Task")
-        ..addMeasure(AudioMeasure(MeasureType(NameSpace.CARP, DataType.APP_USAGE))
-          ..name = "App foreground usage time"
-          ..frequency = 10 * 1000 // once every 10 sec
-          ..duration = 2 * 1000 // record 2 sec
-          ..studyId = study.id);
+        ..addMeasure(AudioMeasure(MeasureType(NameSpace.CARP, DataType.APP_USAGE),
+          name = "App foreground usage time",
+          frequency : 10 * 1000, // once every 10 sec
+          duration : 2 * 1000, // record 2 sec
+          studyId : study.id));
     }
     return _audioTask;
   }

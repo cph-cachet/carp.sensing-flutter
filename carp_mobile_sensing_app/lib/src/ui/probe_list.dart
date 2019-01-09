@@ -40,10 +40,10 @@ class _ProbeListState extends State<ProbesList> {
   }
 
   Widget buildProbeListTile(BuildContext context, ProbeModel probe) {
-    return StreamBuilder<ProbeStateType>(
-      stream: bloc.stateChanges,
-      initialData: ProbeStateType.created,
-      builder: (context, AsyncSnapshot<ProbeStateType> snapshot) {
+    return StreamBuilder<ProbeState>(
+      stream: probe.stateEvents,
+      initialData: ProbeState.created,
+      builder: (context, AsyncSnapshot<ProbeState> snapshot) {
         if (snapshot.hasData) {
           return ListTile(
             isThreeLine: true,
@@ -57,7 +57,7 @@ class _ProbeListState extends State<ProbesList> {
             trailing: probe.stateIcon,
           );
         } else if (snapshot.hasError) {
-          return Text(snapshot.error.toString());
+          return Text('Error in probe state - ${snapshot.error}');
         }
         return Text('Unknown');
       },

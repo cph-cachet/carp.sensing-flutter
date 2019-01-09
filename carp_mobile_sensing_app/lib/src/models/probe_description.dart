@@ -51,11 +51,11 @@ class ProbeDescription {
         DataType.WEATHER: Icon(Icons.cloud, color: CACHET.LIGHT_BLUE_2)
       };
 
-  static Map<ProbeStateType, Icon> get probeStateIcon => {
-        ProbeStateType.created: Icon(Icons.child_care, color: CACHET.GREY_4),
-        ProbeStateType.initialized: Icon(Icons.check, color: CACHET.LIGHT_PURPLE),
-        ProbeStateType.resumed: Icon(Icons.radio_button_checked, color: CACHET.GREEN),
-        ProbeStateType.paused: Icon(Icons.radio_button_unchecked, color: CACHET.RED),
-        ProbeStateType.stopped: Icon(Icons.close, color: CACHET.GREY_2)
+  static Map<ProbeState, Icon> get probeStateIcon => {
+        ProbeState.created: Icon(Icons.child_care, color: CACHET.GREY_4),
+        ProbeState.initialized: Icon(Icons.check, color: CACHET.LIGHT_PURPLE),
+        ProbeState.resumed: Icon(Icons.radio_button_checked, color: CACHET.GREEN),
+        ProbeState.paused: Icon(Icons.radio_button_unchecked, color: CACHET.RED),
+        ProbeState.stopped: Icon(Icons.close, color: CACHET.GREY_2)
       };
 }

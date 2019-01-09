@@ -9,9 +9,9 @@ class ProbeModel {
   Probe probe;
   String get type => probe.type;
   Measure get measure => probe.measure;
-  ProbeStateType get state => probe.state.type;
+  ProbeState get state => probe.state;
   //int get length async => await probe.events.length;
-  Stream<ProbeStateType> get stateEvents => probe.stateEvents;
+  Stream<ProbeState> get stateEvents => probe.stateEvents;
 
   ///A printer-friendly name for this probe.
   String get name => probe.name;

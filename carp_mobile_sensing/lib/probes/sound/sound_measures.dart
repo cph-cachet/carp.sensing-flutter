@@ -14,7 +14,7 @@ part of audio;
 class AudioMeasure extends PeriodicMeasure {
   /// The study id for the study recording this audio. Needed for
   /// storing the audio file correctly in the device's file system.
-  String studyId;
+  String studyId = '0';
 
   AudioMeasure(MeasureType type, {name, enabled = true, frequency, duration, this.studyId})
       : super(type, name: name, enabled: enabled, frequency: frequency, duration: duration);
@@ -29,7 +29,7 @@ class AudioMeasure extends PeriodicMeasure {
 /// [frequency], [duration], and [samplingRate] for collecting audio.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class NoiseMeasure extends PeriodicMeasure {
-  static final int DEFAULT_SAMPLING_RATE = 500;
+  static const int DEFAULT_SAMPLING_RATE = 500;
 
   int samplingRate = DEFAULT_SAMPLING_RATE;
 

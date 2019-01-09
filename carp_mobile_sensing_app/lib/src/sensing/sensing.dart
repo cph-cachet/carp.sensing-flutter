@@ -81,16 +81,16 @@ class StudyMock implements StudyReceiver {
       // specify the [DataEndPoint] for this study.
       _study.dataEndPoint = getDataEndpoint(DataEndPointType.PRINT);
 
-      _study.tasks.add(sensorTask);
-      //_study.tasks.add(pedometerTask);
+      //_study.tasks.add(sensorTask);
+      _study.tasks.add(pedometerTask);
       _study.tasks.add(hardwareTask);
       _study.tasks.add(appTask);
       //_study.tasks.add(connectivityTask);
       //study.tasks.add(commTask);
       _study.tasks.add(locationTask);
-//    study.tasks.add(audioTask);
+      //_study.tasks.add(audioTask);
 //    study.tasks.add(contextTask);
-//    study.tasks.add(noiseTask);
+      _study.tasks.add(noiseTask);
 //    study.tasks.add(appUsageTask);
       _study.tasks.add(environmentTask);
     }

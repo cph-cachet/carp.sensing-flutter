@@ -1,6 +1,12 @@
 part of audio;
 
-// TODO - this probe really needs a rewrite according to the new architecture....
+// TODO - PERMISSIONS
+// This probe needs PERMISSIONS to use
+//    - audio recording / microphone
+//    - file access / storage
+//
+// If these permissions are not set, the app crashes....
+// See issue on github.
 
 /// A listening probe collecting noise data from the microphone.
 ///
@@ -9,7 +15,50 @@ part of audio;
 ///
 /// Does not record sound, and instead reports the audio level with a specified frequency,
 /// in a given sampling window.
-class NoiseProbe extends AbstractProbe {
+class NoiseProbe extends BufferingPeriodicStreamProbe {
+  static Noise _noise = Noise(400);
+  DateTime _startRecordingTime;
+  DateTime _endRecordingTime;
+  int samplingRate;
+  List<num> _noiseReadings = new List();
+
+  Stream<Datum> get events => controller.stream;
+
+  NoiseProbe(NoiseMeasure measure) : super(measure, _noise.noiseStream);
+
+  void onRestart() {
+    samplingRate = (measure as NoiseMeasure).samplingRate;
+    _noise = Noise(samplingRate);
+  }
+
+  void onStop() {
+    super.onStop();
+    _noise = null;
+  }
+
+  void onSamplingEnd() {
+    _endRecordingTime = DateTime.now();
+  }
+
+  void onSamplingStart() {
+    // Do nothing
+  }
+
+  void onData(dynamic event) {
+    _noiseReadings.add(event.decibel);
+  }
+
+  Future<Datum> getDatum() async {
+    Stats stats = Stats.fromData(_noiseReadings);
+    num mean = stats.mean;
+    num std = stats.standardDeviation;
+    num min = stats.min;
+    num max = stats.max;
+    return NoiseDatum(meanDecibel: mean, stdDecibel: std, minDecibel: min, maxDecibel: max);
+  }
+}
+
+class OldNoiseProbe extends AbstractProbe {
   StreamController<Datum> controller = StreamController<Datum>();
   Noise _noise;
   bool _isListening = false;
@@ -22,7 +71,7 @@ class NoiseProbe extends AbstractProbe {
 
   Stream<Datum> get events => controller.stream;
 
-  NoiseProbe(NoiseMeasure measure) : super(measure) {
+  OldNoiseProbe(NoiseMeasure measure) : super(measure) {
     frequency = Duration(milliseconds: measure.frequency);
     duration = (measure.duration != null) ? Duration(milliseconds: measure.duration) : null;
     samplingRate = (measure as NoiseMeasure).samplingRate;
