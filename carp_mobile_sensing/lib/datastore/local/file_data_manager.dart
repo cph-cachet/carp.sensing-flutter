@@ -16,7 +16,7 @@ part of datastore;
 ///
 class FileDataManager extends AbstractDataManager {
   /// The path to use on the device for storing CARP files.
-  static final String CARP_FILE_PATH = 'carp/data';
+  static const String CARP_FILE_PATH = 'carp/data';
 
   FileDataEndPoint _fileDataEndPoint;
   String _path;

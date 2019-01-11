@@ -2,7 +2,7 @@ part of mobile_sensing_app;
 
 class ProbesBloc {
   final Sensing _sensing = Sensing();
-  final _probesFetcher = PublishSubject<ProbeModel>();
+  //final _probesFetcher = PublishSubject<ProbeModel>();
 
   Stream<ProbeState> get stateEvents => _sensing.manager.executor.stateEvents;
 
@@ -36,7 +36,7 @@ class ProbesBloc {
 
   void dispose() async {
     _sensing.stop();
-    _probesFetcher.close();
+    //_probesFetcher.close();
   }
 }
 
