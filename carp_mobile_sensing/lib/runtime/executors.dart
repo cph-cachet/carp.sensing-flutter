@@ -100,7 +100,7 @@ class TaskExecutor extends Executor {
   Future onStart() async {
     for (Measure measure in task.measures) {
       Probe probe = ProbeRegistry.create(measure);
-      if ((probe != null) && (measure.enabled)) {
+      if (probe != null) {
         executors.add(probe);
         _group.add(probe.events);
         probe.initialize();

@@ -53,7 +53,8 @@ class _ProbeListState extends State<ProbesList> {
               color: probe.icon.color,
             ),
             title: Text(probe.name),
-            subtitle: Text(probe.description),
+//            subtitle: Text(probe.description),
+            subtitle: Text(probe.measure.toString()),
             trailing: probe.stateIcon,
           );
         } else if (snapshot.hasError) {

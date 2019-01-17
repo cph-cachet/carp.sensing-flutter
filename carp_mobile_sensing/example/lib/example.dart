@@ -46,15 +46,19 @@ void example() {
     ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.APPS))));
 
   // Create a Study Manager that can manage this study, initialize it, and start it.
-  StudyManager manager = StudyManager(study);
+  //StudyManager manager = StudyManager(study);
 
 //  StudyManager manager =
 //  StudyManager(study, transformer: ((events) => events.where((event) => (event is BatteryDatum))));
 //
-//  manager = StudyManager(study,
-//      transformer: ((events) => events.map((datum) {
-//            PrivacySchema.full().protect(datum);
-//          })));
+
+  StudyManager manager = StudyManager(
+    study,
+    transformer: ((events) => events.map((datum) {
+          PrivacySchema.full().protect(datum);
+        })),
+    samplingSchema: SamplingSchema.common(),
+  );
 
   //manager = StudyManager(study, transformer: ((events) => events.transform(streamTransformer)));
   manager.initialize();
@@ -65,4 +69,8 @@ void example() {
 
   // listening on a specific probe
   ProbeRegistry.probes[DataType.LOCATION].events.forEach(print);
+}
+
+void stuff() {
+  SamplingSchema.common().getMeasureList([DataType.LOCATION, DataType.WEATHER, DataType.ACTIVITY]);
 }

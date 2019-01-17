@@ -29,13 +29,21 @@ class Sensing {
     print(study.toString());
 
     // Create a Study Manager that can manage this study, initialize it, and start it.
+    //manager = StudyManager(study);
+//    manager = StudyManager(
+//      study,
+//      samplingSchema: SamplingSchema.normal(powerAware: true),
+//      //    transformer: ((events) => events.where((event) => (event is BatteryDatum)))
+//    );
+
     manager = StudyManager(
       study,
-      samplingSchema: SamplingSchema.normal(powerAware: true),
-      //    transformer: ((events) => events.where((event) => (event is BatteryDatum)))
+      samplingSchema: SamplingSchema.common(),
     );
 
-    //manager = StudyManager(study);
+    SamplingSchema.common()
+        .getMeasureList([DataType.LOCATION, DataType.WEATHER, DataType.ACTIVITY], namepace: NameSpace.CARP);
+
     await manager.initialize();
     await manager.start();
     print("Sensing started ...");
@@ -81,17 +89,25 @@ class StudyMock implements StudyReceiver {
       // specify the [DataEndPoint] for this study.
       _study.dataEndPoint = getDataEndpoint(DataEndPointType.PRINT);
 
-      //_study.tasks.add(sensorTask);
+//      Task task = Task('Task #1');
+//
+//      DataType.all.forEach((type) {
+//        task.addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, type)));
+//      });
+//
+//      _study.addTask(task);
+
+      _study.tasks.add(sensorTask);
       _study.tasks.add(pedometerTask);
       _study.tasks.add(hardwareTask);
       _study.tasks.add(appTask);
-      //_study.tasks.add(connectivityTask);
-      //study.tasks.add(commTask);
+      _study.tasks.add(connectivityTask);
+      _study.tasks.add(commTask);
       _study.tasks.add(locationTask);
       //_study.tasks.add(audioTask);
-//    study.tasks.add(contextTask);
+      _study.tasks.add(contextTask);
       _study.tasks.add(noiseTask);
-//    study.tasks.add(appUsageTask);
+      _study.tasks.add(appUsageTask);
       _study.tasks.add(environmentTask);
     }
     return _study;
@@ -224,12 +240,13 @@ class StudyMock implements StudyReceiver {
   Task get connectivityTask {
     if (_connectivityTask == null) {
       _connectivityTask = Task("Connectivity Task")
-        ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.CONNECTIVITY), name: "Connectivity"))
-        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.BLUETOOTH),
-            name: "Nearby Bluetooth Devices",
-            frequency: 1 * 10 * 1000, // every minute
-            duration: 2 * 1000 // scan for 2 secs.
-            ));
+            ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.CONNECTIVITY), name: "Connectivity"))
+//        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.BLUETOOTH),
+//            name: "Nearby Bluetooth Devices",
+//            frequency: 1 * 10 * 1000, // every minute
+//            duration: 2 * 1000 // scan for 2 secs.
+//            ))
+          ;
     }
     return _connectivityTask;
   }
@@ -282,7 +299,7 @@ class StudyMock implements StudyReceiver {
   /// A task sensing noise.
   Task get noiseTask {
     if (_noiseTask == null) {
-      _noiseTask = Task("Audio Task")
+      _noiseTask = Task("Noise Task")
         ..addMeasure(NoiseMeasure(MeasureType(NameSpace.CARP, DataType.NOISE),
             name: "Ambient Noise",
             frequency: 30 * 1000, // How often to start a measure

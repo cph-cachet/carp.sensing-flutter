@@ -16,8 +16,8 @@ class WeatherMeasure extends PeriodicMeasure {
   /// API key for the OpenWeatherMap API.
   String apiKey = DEFAULT_WEATHER_API_KEY;
 
-  WeatherMeasure(MeasureType type, {name, frequency, duration, this.apiKey})
-      : super(type, name: name, frequency: frequency, duration: duration);
+  WeatherMeasure(MeasureType type, {name, enabled, frequency, duration, this.apiKey})
+      : super(type, name: name, enabled: enabled, frequency: frequency, duration: duration);
 
   static Function get fromJsonFunction => _$WeatherMeasureFromJson;
   factory WeatherMeasure.fromJson(Map<String, dynamic> json) =>

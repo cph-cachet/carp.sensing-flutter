@@ -19,16 +19,16 @@ class Measure extends Serializable {
   /// A measure is enabled as default.
   bool get enabled => _enabled;
   bool _enabled = true;
-  bool _storedEnabled;
+  bool _storedEnabled = true;
 
   /// A key-value map holding any application-specific configuration.
   Map<String, String> configuration = new Map<String, String>();
 
-  Measure(this.type, {this.name, bool enabled = true})
+  Measure(this.type, {this.name, bool enabled})
       : assert(type != null),
         super() {
-    _enabled = enabled;
-    _storedEnabled = enabled;
+    _enabled = enabled ?? true;
+    _storedEnabled = _enabled;
   }
 
   static Function get fromJsonFunction => _$MeasureFromJson;
@@ -42,38 +42,31 @@ class Measure extends Serializable {
   /// Get value from the configuration for this measure.
   String getConfiguration(String key) => this.configuration[key];
 
+  /// Add a [MeasureListener] to this [Measure].
+  void addMeasureListener(MeasureListener listener) => _listeners.add(listener);
+
+  /// Remove a [MeasureListener] to this [Measure].
+  void removeMeasureListener(MeasureListener listener) => _listeners.remove(listener);
   List<MeasureListener> _listeners = new List<MeasureListener>();
-  void addMeasureListener(MeasureListener listener) {
-    print('...addMeasureListener(), listener: $listener');
-    _listeners.add(listener);
-  }
 
-  void removeMeasureListener(MeasureListener listener) {
-    _listeners.remove(listener);
-  }
-
+  /// Adapt this [Measure] to a new value specified in [measure].
   void adapt(Measure measure) {
     assert(measure != null,
         "Don't adapt a measure to a null measure. If you want to disable a measure, set the enabled property to false.");
-    //_storedEnabled = this.enabled;
-    this._enabled = measure.enabled ?? this.enabled;
-    print('.. setting enabled for $measure to ${measure.enabled}');
-    //this.hasChanged();
+    _storedEnabled = this._enabled;
+    this._enabled = measure.enabled ?? true;
   }
 
+  // TODO - support a stack-based approach to adapt/restore.
+  /// Restore this [Measure] to its original value before [adapt] was called.
+  ///
+  /// Note that the adapt/restore mechanism only supports **one** cycle, i.e
+  /// multiple adaptation followed by multiple restoration is not supported.
   void restore() {
-    _enabled = _storedEnabled;
-    print('...restoring $this');
-    //this.hasChanged();
+    this._enabled = _storedEnabled;
   }
 
-  Future hasChanged() async {
-    print('...hasChanged(), measure: $this');
-    for (MeasureListener listener in _listeners) {
-      print('...hasChanged(), listener: $listener');
-      listener.hasChanged(this);
-    }
-  }
+  Future<void> hasChanged() async => _listeners.forEach((listener) => listener.hasChanged(this));
 
   String toString() => '${this.runtimeType}: type: $type, enabled: $enabled';
 }
@@ -81,7 +74,7 @@ class Measure extends Serializable {
 /// A [PeriodicMeasure] specify how to collect data on a regular basis.
 ///
 /// Data collection will be started as specified by the [frequency] for a time interval specified as the [duration].
-/// Usefull for listening in on a sensor (e.g. the accelerometer) on a regular, but limited basis.
+/// Useful for listening in on a sensor (e.g. the accelerometer) on a regular, but limited time window.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class PeriodicMeasure extends Measure {
   /// Sampling frequency in milliseconds (i.e., delay between sampling).
@@ -94,7 +87,7 @@ class PeriodicMeasure extends Measure {
   int _duration;
   int _storedDuration;
 
-  PeriodicMeasure(MeasureType type, {name, enabled = true, int frequency, int duration})
+  PeriodicMeasure(MeasureType type, {String name, bool enabled, int frequency, int duration})
       : super(type, name: name, enabled: enabled) {
     _frequency = frequency;
     _storedFrequency = frequency;
@@ -111,20 +104,16 @@ class PeriodicMeasure extends Measure {
     super.adapt(measure);
     if (measure is PeriodicMeasure) {
       _storedFrequency = this.frequency;
-      print('.. setting frequency for $measure to ${measure.frequency}');
-      this._frequency = measure.frequency ?? this.frequency;
+      this._frequency = measure.frequency;
       _storedDuration = this.duration;
-      print('.. setting duration for $measure to ${measure.duration}');
-      this._duration = measure.duration ?? this.duration;
+      this._duration = measure.duration;
     }
-    //this.hasChanged();
   }
 
   void restore() {
     super.restore();
     this._frequency = _storedFrequency;
     this._duration = _storedDuration;
-    //this.hasChanged();
   }
 
   String toString() => super.toString() + ', frequency: $frequency, duration: $duration';
@@ -133,10 +122,10 @@ class PeriodicMeasure extends Measure {
 /// Specifies the type of a [Measure].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MeasureType extends Serializable {
-  /// The data format namespace. See [NameSpace].
+  /// The data type namespace. See [NameSpace].
   String namepace;
 
-  /// The name of this data format.
+  /// The name of this data format. See [DataType].
   String name;
 
   MeasureType(this.namepace, this.name) : super();

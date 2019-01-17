@@ -14,7 +14,7 @@ class PhoneLogMeasure extends Measure {
   /// The number of days back in time to collect the phone log from.
   int days = DEFAULT_NUMBER_OF_DAYS;
 
-  PhoneLogMeasure(MeasureType type, {name, this.days}) : super(type, name: name);
+  PhoneLogMeasure(MeasureType type, {name, enabled, this.days}) : super(type, enabled: enabled, name: name);
 
   static Function get fromJsonFunction => _$PhoneLogMeasureFromJson;
   factory PhoneLogMeasure.fromJson(Map<String, dynamic> json) =>

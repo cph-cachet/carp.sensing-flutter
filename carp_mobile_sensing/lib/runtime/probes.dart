@@ -123,12 +123,12 @@ abstract class AbstractProbe with MeasureListener implements Probe {
   String get type => measure.type.name;
   String get name => measure.name;
 
-  ProbeState get state => _state.type;
+  ProbeState get state => _stateMachine.state;
 
-  _ProbeStateMachine _state;
+  _ProbeStateMachine _stateMachine;
   void _setState(_ProbeStateMachine state) {
-    _state = state;
-    _stateEventController.add(state.type);
+    _stateMachine = state;
+    _stateEventController.add(state.state);
   }
 
   Measure _measure;
@@ -137,16 +137,16 @@ abstract class AbstractProbe with MeasureListener implements Probe {
   AbstractProbe(Measure measure) : assert(measure != null, 'Probe cannot be created with a null measure.') {
     _measure = measure;
     measure.addMeasureListener(this);
-    _state = _CreatedState(this);
+    _stateMachine = _CreatedState(this);
   }
 
   // ProbeState handlers
-  void initialize() => _state.initialize();
-  void start() => _state.start();
-  void restart() => _state.restart();
-  void pause() => _state.pause();
-  void resume() => _state.resume();
-  void stop() => _state.stop();
+  void initialize() => _stateMachine.initialize();
+  void start() => _stateMachine.start();
+  void restart() => _stateMachine.restart();
+  void pause() => _stateMachine.pause();
+  void resume() => _stateMachine.resume();
+  void stop() => _stateMachine.stop();
 
   /// Callback for initialization of probe
   void onInitialize() {}
@@ -169,7 +169,6 @@ abstract class AbstractProbe with MeasureListener implements Probe {
   }
 
   void hasChanged(Measure measure) {
-    print('...measure $measure changed for $name probe.');
     restart();
   }
 }
@@ -182,7 +181,7 @@ abstract class AbstractProbe with MeasureListener implements Probe {
 //---------------------------------------------------------------------------------------
 
 abstract class _ProbeStateMachine {
-  ProbeState get type;
+  ProbeState get state;
   void initialize();
   void start();
   void pause();
@@ -192,9 +191,9 @@ abstract class _ProbeStateMachine {
 }
 
 abstract class _AbstractProbeState implements _ProbeStateMachine {
-  ProbeState type;
+  ProbeState state;
   AbstractProbe probe;
-  _AbstractProbeState(this.probe, this.type) : assert(probe != null);
+  _AbstractProbeState(this.probe, this.state) : assert(probe != null);
 
   // pr. default, a probe cannot be initialized while running -- only when created
   void initialize() {}
@@ -272,16 +271,18 @@ class _PausedState extends _AbstractProbeState implements _ProbeStateMachine {
   void restart() {
     print('Restarting $probe');
     probe.onRestart();
-    if (probe.enabled) // check if it has been enabled
+    if (probe.enabled) // check if probe is enabled
       probe.resume();
   }
 
   void pause() {} // pausing a paused probe does nothing
 
   void resume() {
-    print('Resuming $probe');
-    probe.onResume();
-    probe._setState(_ResumedState(probe));
+    if (probe.enabled) {
+      print('Resuming $probe');
+      probe.onResume();
+      probe._setState(_ResumedState(probe));
+    }
   }
 }
 
@@ -335,7 +336,6 @@ abstract class PeriodicDatumProbe extends DatumProbe {
   Stream<Datum> get events => controller.stream;
 
   void onRestart() {
-    print('...restart() in $this, measure: $measure');
     frequency = Duration(milliseconds: (measure as PeriodicMeasure).frequency);
     duration = ((measure as PeriodicMeasure).duration != null)
         ? Duration(milliseconds: (measure as PeriodicMeasure).duration)
@@ -344,7 +344,6 @@ abstract class PeriodicDatumProbe extends DatumProbe {
 
   void onResume() {
     super.onResume();
-    print('...resume() in $this, measure: $measure');
     // create a recurrent timer that resumes sampling every [frequency].
     timer = Timer.periodic(frequency, (Timer t) async {
       try {
@@ -359,9 +358,7 @@ abstract class PeriodicDatumProbe extends DatumProbe {
 
   void onPause() {
     super.onPause();
-    print('...pause() in $this, measure: $measure');
-    timer.cancel();
-    print('... timer: ${timer.isActive}');
+    if (timer != null) timer.cancel();
   }
 
   void onStop() {
@@ -432,7 +429,6 @@ abstract class PeriodicStreamProbe extends StreamProbe {
   }
 
   void onRestart() {
-    print('...restart() in $this, measure: $measure');
     frequency = Duration(milliseconds: (measure as PeriodicMeasure).frequency);
     duration = ((measure as PeriodicMeasure).duration != null)
         ? Duration(milliseconds: (measure as PeriodicMeasure).duration)
@@ -453,7 +449,7 @@ abstract class PeriodicStreamProbe extends StreamProbe {
   }
 
   void onPause() {
-    timer.cancel();
+    if (timer != null) timer.cancel();
     super.onPause();
   }
 
@@ -507,7 +503,7 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
   }
 
   void onPause() {
-    timer.cancel();
+    if (timer != null) timer.cancel();
     // check if there are some buffered data that needs to be collected before pausing
     getDatum().then((datum) {
       if (datum != null) controller.add(datum);
@@ -515,7 +511,7 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
   }
 
   void onStop() {
-    timer.cancel();
+    if (timer != null) timer.cancel();
     controller.close();
   }
 
@@ -531,7 +527,7 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
   Future<Datum> getDatum();
 }
 
-/// An abstract probe which can be used to sample data from a [_bufferingStream] stream,
+/// An abstract probe which can be used to sample data from a buffering stream,
 /// every [frequency] for a period of [duration]. These events are buffered, and
 /// once collected for the [duration], are collected from the [getDatum] method and
 /// send to the main [events] stream.
@@ -577,7 +573,7 @@ abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
   }
 
   void onPause() {
-    timer.cancel();
+    if (timer != null) timer.cancel();
     subscription.pause();
     // check if there are some buffered data that needs to be collected before pausing
     getDatum().then((datum) {

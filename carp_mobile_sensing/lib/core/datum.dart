@@ -170,16 +170,32 @@ class DataFormat {
   String toString() => "$namepace.$name";
 }
 
-/// An abstract class represent any namespace schema.
-/// Currently supporting:
-/// * `omh`  : Open mHealth data format
-/// * `carp` : CARP data format
-abstract class NameSpace {
+/// Enumeration of data format types.
+///
+/// Currently know data format types include:
+/// * `csv`  : Comma-separated values
+/// * `json` : JSON
+/// * `omh`  : Open mHealth
+class DataFormatType {
+  static const String CSV = "csv";
+  static const String JSON = "json";
+  static const String OMH = "omh";
+}
+
+/// Enumeration of namespaces.
+///
+/// Namespaces are used both in specification of [MeasureType] and in [DataFormat].
+///
+/// Currently know namespaces include:
+/// * `omh`  : Open mHealth
+/// * `carp` : CACHET Research Platform (CARP)
+class NameSpace {
   static const String UNKNOWN = "unknown";
   static const String OMH = "omh";
   static const String CARP = "carp";
 }
 
+/// Enumeration of data types used in [MeasureType].
 class DataType {
   static const String NONE = "none";
   static const String EXECUTOR = "executor";

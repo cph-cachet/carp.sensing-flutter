@@ -8,9 +8,12 @@
 part of core;
 
 /// The [Study] holds information about the study to be performed on this device.
-/// The study may be fetched in a [StudyManager] who knows how to fetch a study protocol for this device.
 ///
-/// A [Study] mainly consists of a list of [Task]s, which again consists of a list of [Measure]s.
+/// A [Study] specify a list of [Task]s, which again consists of a list of [Measure]s.
+///
+/// A study may be fetched in a [StudyReceiver] who knows how to fetch a study protocol for this device.
+/// A study is executes by a [StudyManager]. Data from the study is uploaded to the specified [DataEndPoint]
+/// in the specified [dataFormat].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class Study extends Serializable {
   /// The ID of this [Study].
@@ -25,16 +28,25 @@ class Study extends Serializable {
   /// A longer description of this study. To be used to inform the user about this study and its purpose.
   String description;
 
+  /// The sampling strategy according to [SamplingSchemaType].
+  String samplingStrategy = SamplingSchemaType.NORMAL;
+
   /// Specify where and how to upload this study data.
   DataEndPoint dataEndPoint;
 
-  /// The sampling strategy according to [SamplingStrategy]
-  String samplingStrategy;
+  /// The format of the data to be uploaded according to [DataFormatType].
+  String dataFormat;
 
   /// The list of [Task]s in this [Study].
   List<Task> tasks = new List<Task>();
 
-  Study(this.id, this.userId, {this.name, this.description}) : super();
+  /// Create a new [Study] object with a set of configurations.
+  ///
+  /// The [id] and [userId] are required for a new study.
+  Study(this.id, this.userId, {this.name, this.description, this.samplingStrategy, this.dataEndPoint, this.dataFormat})
+      : assert(id != null, 'Cannot create a Study without an id: id=null'),
+        assert(userId != null, 'Cannot create a Study without an user id: userId=null'),
+        super();
 
   static Function get fromJsonFunction => _$StudyFromJson;
   factory Study.fromJson(Map<String, dynamic> json) => _$StudyFromJson(json);
@@ -44,9 +56,9 @@ class Study extends Serializable {
   void addTask(Task task) => tasks.add(task);
 
   /// Adapt the sampling [Measure]s of this [Study] to the specified [SamplingSchema].
-  void adapt(SamplingSchema schema) {
+  void adapt(SamplingSchema schema, {bool restore = true}) {
     assert(schema != null);
-    schema.adapt(this);
+    schema.adapt(this, restore: restore);
   }
 
   @override
@@ -69,8 +81,10 @@ class DataEndPoint extends Serializable {
   /// The type of endpoint as enumerated in [DataEndPointType].
   String type;
 
-  /// Creates a simple [DataEndPoint]. [type] is defined in [DataEndPointType].
-  DataEndPoint(this.type) : super();
+  /// Creates a [DataEndPoint]. [type] is defined in [DataEndPointType].
+  DataEndPoint(this.type)
+      : assert(type != null),
+        super();
 
   static Function get fromJsonFunction => _$DataEndPointFromJson;
   //factory DataEndPoint.fromJson(Map<String, dynamic> json) => _$DataEndPointFromJson(json);
@@ -106,9 +120,12 @@ class FileDataEndPoint extends DataEndPoint {
   /// If [encrypt] is true, this should hold the public key in a RSA KPI encryption of data.
   String publicKey;
 
-  /// Creates a [FileDataEndPoint]. [type] is defined in [DataEndPointType].
+  /// Creates a [FileDataEndPoint].
+  ///
+  /// [type] is defined in [DataEndPointType]. Is typically of type [DataEndPointType.FILE]
+  /// but specialized file types can be specified.
   FileDataEndPoint({String type, this.bufferSize, this.zip, this.encrypt, this.publicKey})
-      : super(type == null ? DataEndPointType.FILE : type);
+      : super(type ?? DataEndPointType.FILE);
 
   static Function get fromJsonFunction => _$FileDataEndPointFromJson;
   factory FileDataEndPoint.fromJson(Map<String, dynamic> json) =>
@@ -124,11 +141,4 @@ class DataEndPointType {
   static const String FIREBASE_DATABASE = "firebase-database";
   static const String CARP = "carp";
   static const String OMH = "omh";
-}
-
-/// A enumeration of known sampling strategies.
-class SamplingStrategy {
-  static const String DEFALT = "DEFAULT";
-  static const String HIGH_FREQUENCY = "HIGH_FREQUENCY";
-  static const String LOW_FREQUENCY = "LOW_FREQUENCY";
 }

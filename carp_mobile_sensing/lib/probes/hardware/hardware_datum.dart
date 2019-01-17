@@ -22,8 +22,8 @@ class BatteryDatum extends CARPDatum {
   int batteryLevel;
 
   /// The charging status of the battery:
-  ///  - charging
   ///  - full
+  ///  - charging
   ///  - discharging
   ///  - unknown
   String batteryStatus;

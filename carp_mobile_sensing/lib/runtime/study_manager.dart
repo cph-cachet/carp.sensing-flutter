@@ -9,7 +9,7 @@ part of runtime;
 class StudyManager {
   Study study;
   StudyExecutor executor;
-  DataManager manager;
+  DataManager dataManager;
   DatumStreamTransformer transformer;
   SamplingSchema samplingSchema;
 
@@ -18,52 +18,49 @@ class StudyManager {
       BatteryProbe(Measure(MeasureType(NameSpace.CARP, DataType.BATTERY), name: 'PowerAwarenessProbe'));
   PowerAwarenessState powerAwarenessState = NormalSamplingState.instance;
 
-  StudyManager(this.study, {this.executor, this.samplingSchema, this.manager, this.transformer})
+  StudyManager(this.study, {this.executor, this.samplingSchema, this.dataManager, this.transformer})
       : assert(study != null),
         super() {
     // if no executor is specified, use the default one
     executor ??= StudyExecutor(study);
-    // if no sampling schema is specified, use the normal one with no power-awareness
-    samplingSchema ??= SamplingSchema.normal(powerAware: false);
+    // if no sampling schema is specified, use the normal one with power-awareness
+    samplingSchema ??= SamplingSchema.normal(powerAware: true);
     // if the data manager hasn't been set, then try to look it up in the [DataManagerRegistry]
-    manager ??= DataManagerRegistry.lookup(study.dataEndPoint.type);
+    dataManager ??= DataManagerRegistry.lookup(study.dataEndPoint.type);
     // if no transform function is specified, create a 1:1 mapping
     transformer ??= ((events) => events);
     events = transformer(executor.events);
   }
 
-  Future initialize() async {
+  Future<void> initialize() async {
     await Device.getDeviceInfo();
     print('Initializing Study Manager for study: ' + study.name);
     print(' platform     : ' + Device.platform.toString());
     print(' device ID    : ' + Device.deviceID.toString());
-    print(' data manager : ' + manager.toString());
+    print(' data manager : ' + dataManager.toString());
 
     if (samplingSchema != null) {
-      //study.adapt(samplingSchema);
+      // doing two adaptation is a bit of a hack; used to ensure that
+      // restoration values are set to the specified sampling schema
+      study.adapt(samplingSchema, restore: false);
+      study.adapt(samplingSchema, restore: false);
     }
 
     executor.initialize();
-    manager.initialize(study, events);
+    dataManager.initialize(study, events);
   }
 
-  Future enablePowerAwareness() async {
+  Future<void> enablePowerAwareness() async {
     if (samplingSchema.powerAware) {
-      //take a snapshot of the study before adapting it
-      //_snapshot();
       battery.events.listen((datum) {
         BatteryDatum battery_state = (datum as BatteryDatum);
-        print('PowerAware - ${battery_state}');
         if (battery_state.batteryStatus == BatteryDatum.STATE_DISCHARGING) {
           // only apply power-awareness if not charging.
           PowerAwarenessState new_state = powerAwarenessState.adapt(battery_state.batteryLevel);
           if (new_state != powerAwarenessState) {
             powerAwarenessState = new_state;
             print('PowerAware: Going to $powerAwarenessState, level ${battery_state.batteryLevel}%');
-            // restore to original before adapting
-            //_restore();
             study.adapt(powerAwarenessState.schema);
-            //executor.restart(_adapted_measures);
           }
         }
       });
@@ -76,14 +73,14 @@ class StudyManager {
     battery.stop();
   }
 
-  Future start() async {
-    //enablePowerAwareness();
+  Future<void> start() async {
+    enablePowerAwareness();
     executor.start();
   }
 
   void stop() {
     disablePowerAwareness();
-    manager.close();
+    dataManager.close();
     executor.stop();
   }
 
@@ -99,7 +96,7 @@ class StudyManager {
 /// This default power-awareness schema operates with four power states:
 ///
 ///
-///       0%     10%            30%           50%                          1000%
+///       0%     10%            30%           50%                           1000%
 ///       +-------+--------------+-------------+------------------------------+
 ///         none      minimum         light                normal
 ///

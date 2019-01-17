@@ -189,8 +189,6 @@ class FileDataManager extends AbstractDataManager {
   }
 
   Future close() async {
-    //old_flush();
-
     file.then((_f) {
       sink.then((_s) {
         flush(_f, _s);

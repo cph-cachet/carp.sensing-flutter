@@ -9,7 +9,6 @@ class WeatherProbe extends PeriodicDatumProbe {
   }
 
   Future<Datum> getDatum() async {
-    print('getting weather using $weather');
     Weather w = await weather.currentWeather();
     return WeatherDatum()
       ..country = w.country
