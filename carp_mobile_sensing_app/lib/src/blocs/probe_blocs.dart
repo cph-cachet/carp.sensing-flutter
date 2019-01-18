@@ -4,9 +4,10 @@ class ProbesBloc {
   final Sensing _sensing = Sensing();
   //final _probesFetcher = PublishSubject<ProbeModel>();
 
-  Stream<ProbeState> get stateEvents => _sensing.manager.executor.stateEvents;
+  Stream<ProbeState> get stateEvents => _sensing.controller.executor.stateEvents;
 
-  bool get isRunning => (_sensing.manager != null) ? _sensing.manager.executor.state == ProbeState.resumed : false;
+  bool get isRunning =>
+      (_sensing.controller != null) ? _sensing.controller.executor.state == ProbeState.resumed : false;
 
   //Observable<ProbeModel> get runningProbes => _probesFetcher.stream;
   Iterable<ProbeModel> get runningProbes => _sensing.runningProbes.map((probe) => ProbeModel(probe));
@@ -23,11 +24,11 @@ class ProbesBloc {
   }
 
   void pause() {
-    _sensing.manager.pause();
+    _sensing.controller.pause();
   }
 
   void resume() async {
-    _sensing.manager.resume();
+    _sensing.controller.resume();
   }
 
   void stop() async {

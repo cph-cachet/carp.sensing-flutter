@@ -36,6 +36,34 @@ class PrivacySchema {
 }
 
 /// Specify how sampling should be done. Used to make default configuration of [Measure]s.
+///
+/// A new [SamplingSchema] can be created for specific purposes. For example, the following schema is
+/// made for outdoor activity tracking.
+///
+///     SamplingSchema activitySchema = SamplingSchema(name: 'Connectivity Sampling Schema', powerAware: true)
+///       ..measures.addEntries([
+///         MapEntry(DataType.PEDOMETER,
+///           PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.PEDOMETER), enabled: true, frequency: 60 * 60 * 1000)),
+///         MapEntry(DataType.SCREEN, Measure(MeasureType(NameSpace.CARP, DataType.SCREEN), enabled: true)),
+///         MapEntry(DataType.LOCATION, Measure(MeasureType(NameSpace.CARP, DataType.LOCATION), enabled: true)),
+///         MapEntry(DataType.NOISE,
+///           PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.NOISE),
+///             enabled: true, frequency: 60 * 1000, duration: 2 * 1000)),
+///         MapEntry(DataType.ACTIVITY, Measure(MeasureType(NameSpace.CARP, DataType.ACTIVITY), enabled: true)),
+///         MapEntry(DataType.WEATHER,
+///           WeatherMeasure(MeasureType(NameSpace.CARP, DataType.WEATHER), enabled: true, frequency: 2 * 60 * 60 * 1000))
+///       ]);
+///
+/// There is also a set of factory methods than provide different default sampling schemas, including:
+///
+/// * [`common`]() - a default, most common configuration of all known measures
+/// * [`maximum`]() - using the `common` default configuration of all probes, but enabling all measures
+/// * [`light`]() - a light configuration, enabling low-frequent sampling but with good coverage
+/// * [`minimum`]() - a minimum set of measures, with a minimum sampling rate
+/// * [`none`]() - no sampling at all (used to stop sampling)
+///
+/// See the [documentation](https://github.com/cph-cachet/carp.sensing-flutter/wiki/Schemas) for further details.
+///
 class SamplingSchema {
   /// The sampling schema type according to [SamplingSchemaType].
   String type;
@@ -80,10 +108,21 @@ class SamplingSchema {
   }
 
   /// Is this sampling schema power-aware, i.e. adapting its sampling strategy to
-  /// the battery power status.
+  /// the battery power status. See [PowerAwarenessState].
   bool powerAware = false;
 
   SamplingSchema({this.type, this.name, this.powerAware}) : super();
+
+  /// A schema that does maximum sampling.
+  ///
+  /// Takes its settings from the [SamplingSchema.common()] schema, but enables all measures.
+  factory SamplingSchema.maximum() {
+    return SamplingSchema.common()
+      ..type = SamplingSchemaType.MAXIMUM
+      ..name = 'Default ALL sampling'
+      ..powerAware = true
+      ..measures.values.forEach((measure) => measure.enabled = true);
+  }
 
   /// A default `common` sampling schema.
   ///
@@ -93,7 +132,7 @@ class SamplingSchema {
   ///
   /// These default settings are described in this [table](https://github.com/cph-cachet/carp.sensing-flutter/wiki/Schemas#samplingschemacommon).
   factory SamplingSchema.common() {
-    return SamplingSchema(type: SamplingSchemaType.LIGHT, name: 'Common (default) sampling', powerAware: true)
+    return SamplingSchema(type: SamplingSchemaType.COMMON, name: 'Common (default) sampling', powerAware: true)
       ..measures.addEntries([
         MapEntry(
             DataType.ACCELEROMETER,
@@ -110,7 +149,7 @@ class SamplingSchema {
         MapEntry(
             DataType.LIGHT,
             PeriodicMeasure(MeasureType(NameSpace.UNKNOWN, DataType.LIGHT),
-                enabled: false, frequency: 60 * 1000, duration: 1000)),
+                enabled: true, frequency: 60 * 1000, duration: 1000)),
         MapEntry(DataType.BATTERY, Measure(MeasureType(NameSpace.UNKNOWN, DataType.BATTERY), enabled: true)),
         MapEntry(DataType.SCREEN, Measure(MeasureType(NameSpace.UNKNOWN, DataType.SCREEN), enabled: true)),
         MapEntry(DataType.MEMORY,
@@ -120,7 +159,7 @@ class SamplingSchema {
         MapEntry(
             DataType.BLUETOOTH,
             PeriodicMeasure(MeasureType(NameSpace.UNKNOWN, DataType.BLUETOOTH),
-                enabled: false, frequency: 60 * 60 * 1000, duration: 2 * 1000)),
+                enabled: true, frequency: 60 * 60 * 1000, duration: 2 * 1000)),
         MapEntry(
             DataType.APPS,
             PeriodicMeasure(MeasureType(NameSpace.UNKNOWN, DataType.APPS),
@@ -146,47 +185,150 @@ class SamplingSchema {
         MapEntry(
             DataType.WEATHER,
             WeatherMeasure(MeasureType(NameSpace.UNKNOWN, DataType.WEATHER),
-                enabled: false, frequency: 2 * 60 * 60 * 1000))
+                enabled: true, frequency: 2 * 60 * 60 * 1000))
       ]);
   }
 
   /// A sampling schema that does not adapt any [Measure]s.
   ///
-  /// This schema is an empty schema and therefore don't change anything when
+  /// This schema is used in the power-aware adaptation of sampling. See [PowerAwarenessState].
+  /// [SamplingSchema.normal] is an empty schema and therefore don't change anything when
   /// used to adapt a [Study] and its [Measure]s in the [adapt] method.
   factory SamplingSchema.normal({bool powerAware}) =>
       SamplingSchema(type: SamplingSchemaType.NORMAL, name: 'Default sampling', powerAware: powerAware);
 
   /// A default light sampling schema.
   ///
+  /// This schema is used in the power-aware adaptation of sampling. See [PowerAwarenessState].
   /// This schema is intended for sampling on a daily basis with recharging
   /// at least once pr. day. This scheme is not power-aware.
-  factory SamplingSchema.light() {
-    return SamplingSchema(type: SamplingSchemaType.LIGHT, name: 'Default Light sampling', powerAware: true)
-      ..measures.addEntries([
-        MapEntry(DataType.LOCATION,
-            Measure(MeasureType(NameSpace.UNKNOWN, DataType.LOCATION), enabled: false)) // disable location sensing
-      ]);
-  }
+  factory SamplingSchema.light() => SamplingSchema(
+      type: SamplingSchemaType.LIGHT, name: 'Default Light sampling', powerAware: true)
+    ..measures.addEntries([
+      MapEntry(
+          DataType.ACCELEROMETER,
+          PeriodicMeasure(MeasureType(NameSpace.UNKNOWN, DataType.ACCELEROMETER),
+              enabled: false, frequency: 1000, duration: 10)),
+      MapEntry(
+          DataType.GYROSCOPE,
+          PeriodicMeasure(MeasureType(NameSpace.UNKNOWN, DataType.GYROSCOPE),
+              enabled: false, frequency: 1000, duration: 10)),
+      MapEntry(
+          DataType.PEDOMETER,
+          PeriodicMeasure(MeasureType(NameSpace.UNKNOWN, DataType.PEDOMETER),
+              enabled: true, frequency: 60 * 60 * 1000)),
+      MapEntry(
+          DataType.LIGHT,
+          PeriodicMeasure(MeasureType(NameSpace.UNKNOWN, DataType.LIGHT),
+              enabled: false, frequency: 60 * 1000, duration: 1000)),
+      MapEntry(DataType.BATTERY, Measure(MeasureType(NameSpace.UNKNOWN, DataType.BATTERY), enabled: true)),
+      MapEntry(DataType.SCREEN, Measure(MeasureType(NameSpace.UNKNOWN, DataType.SCREEN), enabled: true)),
+      MapEntry(DataType.MEMORY,
+          PeriodicMeasure(MeasureType(NameSpace.UNKNOWN, DataType.MEMORY), enabled: false, frequency: 10 * 1000)),
+      MapEntry(DataType.LOCATION, Measure(MeasureType(NameSpace.UNKNOWN, DataType.LOCATION), enabled: true)),
+      MapEntry(DataType.CONNECTIVITY, Measure(MeasureType(NameSpace.UNKNOWN, DataType.CONNECTIVITY), enabled: false)),
+      MapEntry(
+          DataType.BLUETOOTH,
+          PeriodicMeasure(MeasureType(NameSpace.UNKNOWN, DataType.BLUETOOTH),
+              enabled: false, frequency: 60 * 60 * 1000, duration: 2 * 1000)),
+      MapEntry(
+          DataType.APPS,
+          PeriodicMeasure(MeasureType(NameSpace.UNKNOWN, DataType.APPS),
+              enabled: true, frequency: 24 * 60 * 60 * 1000)),
+      MapEntry(
+          DataType.APP_USAGE,
+          PeriodicMeasure(MeasureType(NameSpace.UNKNOWN, DataType.APP_USAGE),
+              enabled: true, frequency: 60 * 60 * 1000, duration: 60 * 60 * 1000)),
+      MapEntry(
+          DataType.AUDIO,
+          PeriodicMeasure(MeasureType(NameSpace.UNKNOWN, DataType.AUDIO),
+              enabled: false, frequency: 60 * 1000, duration: 2 * 1000)),
+      MapEntry(
+          DataType.NOISE,
+          PeriodicMeasure(MeasureType(NameSpace.UNKNOWN, DataType.NOISE),
+              enabled: true, frequency: 10 * 60 * 1000, duration: 2 * 1000)),
+      MapEntry(DataType.ACTIVITY, Measure(MeasureType(NameSpace.UNKNOWN, DataType.ACTIVITY), enabled: true)),
+      MapEntry(DataType.PHONE_LOG,
+          PhoneLogMeasure(MeasureType(NameSpace.UNKNOWN, DataType.PHONE_LOG), enabled: false, days: 30)),
+      MapEntry(DataType.TEXT_MESSAGE_LOG,
+          Measure(MeasureType(NameSpace.UNKNOWN, DataType.TEXT_MESSAGE_LOG), enabled: false)),
+      MapEntry(DataType.TEXT_MESSAGE, Measure(MeasureType(NameSpace.UNKNOWN, DataType.TEXT_MESSAGE), enabled: false)),
+      MapEntry(
+          DataType.WEATHER,
+          WeatherMeasure(MeasureType(NameSpace.UNKNOWN, DataType.WEATHER),
+              enabled: false, frequency: 2 * 60 * 60 * 1000))
+    ]);
 
-  factory SamplingSchema.minimum() =>
-      SamplingSchema(type: SamplingSchemaType.MINIMUM, name: 'Default Minimum sampling', powerAware: true)
-        ..measures.addEntries([
-          MapEntry(DataType.LOCATION,
-              Measure(MeasureType(NameSpace.UNKNOWN, DataType.LOCATION), enabled: false)), // disable location sensing
-          MapEntry(DataType.MEMORY,
-              Measure(MeasureType(NameSpace.UNKNOWN, DataType.MEMORY), enabled: false)) // disable memory sensing
-        ]);
+  /// A default minimum sampling schema.
+  ///
+  /// This schema is used in the power-aware adaptation of sampling. See [PowerAwarenessState].
+  factory SamplingSchema.minimum() => SamplingSchema(
+      type: SamplingSchemaType.MINIMUM, name: 'Default Minimum sampling', powerAware: true)
+    ..measures.addEntries([
+      MapEntry(
+          DataType.ACCELEROMETER,
+          PeriodicMeasure(MeasureType(NameSpace.UNKNOWN, DataType.ACCELEROMETER),
+              enabled: false, frequency: 1000, duration: 10)),
+      MapEntry(
+          DataType.GYROSCOPE,
+          PeriodicMeasure(MeasureType(NameSpace.UNKNOWN, DataType.GYROSCOPE),
+              enabled: false, frequency: 1000, duration: 10)),
+      MapEntry(
+          DataType.PEDOMETER,
+          PeriodicMeasure(MeasureType(NameSpace.UNKNOWN, DataType.PEDOMETER),
+              enabled: false, frequency: 60 * 60 * 1000)),
+      MapEntry(
+          DataType.LIGHT,
+          PeriodicMeasure(MeasureType(NameSpace.UNKNOWN, DataType.LIGHT),
+              enabled: false, frequency: 60 * 1000, duration: 1000)),
+      MapEntry(DataType.BATTERY, Measure(MeasureType(NameSpace.UNKNOWN, DataType.BATTERY), enabled: true)),
+      MapEntry(DataType.SCREEN, Measure(MeasureType(NameSpace.UNKNOWN, DataType.SCREEN), enabled: true)),
+      MapEntry(DataType.MEMORY,
+          PeriodicMeasure(MeasureType(NameSpace.UNKNOWN, DataType.MEMORY), enabled: false, frequency: 10 * 1000)),
+      MapEntry(DataType.LOCATION, Measure(MeasureType(NameSpace.UNKNOWN, DataType.LOCATION), enabled: false)),
+      MapEntry(DataType.CONNECTIVITY, Measure(MeasureType(NameSpace.UNKNOWN, DataType.CONNECTIVITY), enabled: false)),
+      MapEntry(
+          DataType.BLUETOOTH,
+          PeriodicMeasure(MeasureType(NameSpace.UNKNOWN, DataType.BLUETOOTH),
+              enabled: false, frequency: 60 * 60 * 1000, duration: 2 * 1000)),
+      MapEntry(
+          DataType.APPS,
+          PeriodicMeasure(MeasureType(NameSpace.UNKNOWN, DataType.APPS),
+              enabled: true, frequency: 24 * 60 * 60 * 1000)),
+      MapEntry(
+          DataType.APP_USAGE,
+          PeriodicMeasure(MeasureType(NameSpace.UNKNOWN, DataType.APP_USAGE),
+              enabled: true, frequency: 60 * 60 * 1000, duration: 60 * 60 * 1000)),
+      MapEntry(
+          DataType.AUDIO,
+          PeriodicMeasure(MeasureType(NameSpace.UNKNOWN, DataType.AUDIO),
+              enabled: false, frequency: 60 * 1000, duration: 2 * 1000)),
+      MapEntry(
+          DataType.NOISE,
+          PeriodicMeasure(MeasureType(NameSpace.UNKNOWN, DataType.NOISE),
+              enabled: false, frequency: 10 * 60 * 1000, duration: 2 * 1000)),
+      MapEntry(DataType.ACTIVITY, Measure(MeasureType(NameSpace.UNKNOWN, DataType.ACTIVITY), enabled: false)),
+      MapEntry(DataType.PHONE_LOG,
+          PhoneLogMeasure(MeasureType(NameSpace.UNKNOWN, DataType.PHONE_LOG), enabled: false, days: 30)),
+      MapEntry(DataType.TEXT_MESSAGE_LOG,
+          Measure(MeasureType(NameSpace.UNKNOWN, DataType.TEXT_MESSAGE_LOG), enabled: false)),
+      MapEntry(DataType.TEXT_MESSAGE, Measure(MeasureType(NameSpace.UNKNOWN, DataType.TEXT_MESSAGE), enabled: false)),
+      MapEntry(
+          DataType.WEATHER,
+          WeatherMeasure(MeasureType(NameSpace.UNKNOWN, DataType.WEATHER),
+              enabled: false, frequency: 2 * 60 * 60 * 1000))
+    ]);
 
   /// A non-sampling sampling schema.
   ///
-  /// This schema disables all sampling by disabling all probes.
-  /// This schema is power-aware and sampling will be restored to the original
-  /// level, once the device is recharged above the [SamplingSchema.LIGHT_SAMPLING_LEVEL]
-  /// level.
+  /// This schema is used in the power-aware adaptation of sampling. See [PowerAwarenessState].
+  /// This schema stops all sampling by disabling all probes.
+  /// Sampling will be restored to the original level, once the device is
+  /// recharged above the [PowerAwarenessState.LIGHT_SAMPLING_LEVEL] level.
   factory SamplingSchema.none() {
     SamplingSchema schema =
         SamplingSchema(type: SamplingSchemaType.NONE, name: 'Default No sampling', powerAware: true);
+
     DataType.all.forEach((key) {
       schema.measures[key] = Measure(MeasureType(NameSpace.UNKNOWN, key), enabled: false);
     });
@@ -218,6 +360,8 @@ class SamplingSchema {
 
 /// A enumeration of known sampling schemas types.
 class SamplingSchemaType {
+  static const String MAXIMUM = "MAXIMUM";
+  static const String COMMON = "COMMON";
   static const String NORMAL = "NORMAL";
   static const String LIGHT = "LIGHT";
   static const String MINIMUM = "MINIMUM";

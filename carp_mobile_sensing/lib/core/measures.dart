@@ -17,18 +17,17 @@ class Measure extends Serializable {
 
   /// Whether the measure is enabled - i.e. collecting data - when the study is running.
   /// A measure is enabled as default.
-  bool get enabled => _enabled;
-  bool _enabled = true;
+  bool enabled = true;
   bool _storedEnabled = true;
 
   /// A key-value map holding any application-specific configuration.
   Map<String, String> configuration = new Map<String, String>();
 
-  Measure(this.type, {this.name, bool enabled})
+  Measure(this.type, {this.name, this.enabled})
       : assert(type != null),
         super() {
-    _enabled = enabled ?? true;
-    _storedEnabled = _enabled;
+    enabled = enabled ?? true;
+    _storedEnabled = enabled;
   }
 
   static Function get fromJsonFunction => _$MeasureFromJson;
@@ -53,8 +52,8 @@ class Measure extends Serializable {
   void adapt(Measure measure) {
     assert(measure != null,
         "Don't adapt a measure to a null measure. If you want to disable a measure, set the enabled property to false.");
-    _storedEnabled = this._enabled;
-    this._enabled = measure.enabled ?? true;
+    _storedEnabled = this.enabled;
+    this.enabled = measure.enabled ?? true;
   }
 
   // TODO - support a stack-based approach to adapt/restore.
@@ -63,7 +62,7 @@ class Measure extends Serializable {
   /// Note that the adapt/restore mechanism only supports **one** cycle, i.e
   /// multiple adaptation followed by multiple restoration is not supported.
   void restore() {
-    this._enabled = _storedEnabled;
+    this.enabled = _storedEnabled;
   }
 
   Future<void> hasChanged() async => _listeners.forEach((listener) => listener.hasChanged(this));

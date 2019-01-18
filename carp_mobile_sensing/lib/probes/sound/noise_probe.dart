@@ -49,11 +49,15 @@ class NoiseProbe extends BufferingPeriodicStreamProbe {
   }
 
   Future<Datum> getDatum() async {
-    Stats stats = Stats.fromData(_noiseReadings);
-    num mean = stats.mean;
-    num std = stats.standardDeviation;
-    num min = stats.min;
-    num max = stats.max;
-    return NoiseDatum(meanDecibel: mean, stdDecibel: std, minDecibel: min, maxDecibel: max);
+    if (_noiseReadings.length > 0) {
+      Stats stats = Stats.fromData(_noiseReadings);
+      num mean = stats.mean;
+      num std = stats.standardDeviation;
+      num min = stats.min;
+      num max = stats.max;
+      return NoiseDatum(meanDecibel: mean, stdDecibel: std, minDecibel: min, maxDecibel: max);
+    } else {
+      return null;
+    }
   }
 }

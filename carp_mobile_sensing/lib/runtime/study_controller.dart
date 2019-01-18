@@ -6,7 +6,8 @@
  */
 part of runtime;
 
-class StudyManager {
+/// A [StudyController] controls the execution of a [Study].
+class StudyController {
   Study study;
   StudyExecutor executor;
   DataManager dataManager;
@@ -18,7 +19,7 @@ class StudyManager {
       BatteryProbe(Measure(MeasureType(NameSpace.CARP, DataType.BATTERY), name: 'PowerAwarenessProbe'));
   PowerAwarenessState powerAwarenessState = NormalSamplingState.instance;
 
-  StudyManager(this.study, {this.executor, this.samplingSchema, this.dataManager, this.transformer})
+  StudyController(this.study, {this.executor, this.samplingSchema, this.dataManager, this.transformer})
       : assert(study != null),
         super() {
     // if no executor is specified, use the default one

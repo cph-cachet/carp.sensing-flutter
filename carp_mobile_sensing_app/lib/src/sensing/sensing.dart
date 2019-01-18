@@ -8,10 +8,10 @@ class Sensing {
   List<String> get availableProbes => ProbeRegistry.availableProbeTypes;
 
   //List<Probe> get runningProbes => ProbeRegistry.probes.;
-  StudyManager manager;
+  StudyController controller;
   StudyReceiver mock = new StudyMock();
 
-  List<Probe> get runningProbes => (manager != null) ? manager.executor.probes : List();
+  List<Probe> get runningProbes => (controller != null) ? controller.executor.probes : List();
 
   Sensing() : super() {
     // Register a [StorageDataManager]s in the [DataManagerRegistry].
@@ -36,7 +36,7 @@ class Sensing {
 //      //    transformer: ((events) => events.where((event) => (event is BatteryDatum)))
 //    );
 
-    manager = StudyManager(
+    controller = StudyController(
       study,
       samplingSchema: SamplingSchema.common(),
     );
@@ -44,12 +44,12 @@ class Sensing {
     SamplingSchema.common()
         .getMeasureList([DataType.LOCATION, DataType.WEATHER, DataType.ACTIVITY], namepace: NameSpace.CARP);
 
-    await manager.initialize();
-    await manager.start();
+    await controller.initialize();
+    await controller.start();
     print("Sensing started ...");
 
     // listening on all data events from the study
-    manager.events.forEach(print);
+    controller.events.forEach(print);
 
     // listening on a specific probe
     //ProbeRegistry.probes[DataType.LOCATION].events.forEach(print);
@@ -60,7 +60,7 @@ class Sensing {
 
   /// Stop sensing.
   void stop() async {
-    manager.stop();
+    controller.stop();
     study = null;
     print("Sensing stopped ...");
   }
@@ -330,23 +330,22 @@ class StudyMock implements StudyReceiver {
   Task get sensorTask {
     if (_sensorTask == null) {
       _sensorTask = Task("Sensor Task")
-            ..addMeasure(PeriodicMeasure(
-              MeasureType(NameSpace.CARP, DataType.ACCELEROMETER),
-              name: "Accelerometer",
-              frequency: 8 * 1000, // How often to start a measure
-              duration: 20, // Window size
+        ..addMeasure(PeriodicMeasure(
+          MeasureType(NameSpace.CARP, DataType.ACCELEROMETER),
+          name: "Accelerometer",
+          frequency: 8 * 1000, // How often to start a measure
+          duration: 20, // Window size
+        ))
+        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.GYROSCOPE),
+            name: "Gyroscope",
+            frequency: 9 * 1000, // How often to start a measure
+            duration: 100 // Window size
             ))
-            ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.GYROSCOPE),
-                name: "Gyroscope",
-                frequency: 9 * 1000, // How often to start a measure
-                duration: 100 // Window size
-                ))
-//        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.LIGHT),
-//                name: "Ambient Light",
-//                frequency: 11 * 1000, // How often to start a measure
-//                duration: 700) // Window size
-//            )
-          ;
+        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.LIGHT),
+                name: "Ambient Light",
+                frequency: 11 * 1000, // How often to start a measure
+                duration: 700) // Window size
+            );
     }
     return _sensorTask;
   }
