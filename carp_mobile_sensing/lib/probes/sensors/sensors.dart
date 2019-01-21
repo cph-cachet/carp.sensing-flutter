@@ -12,12 +12,11 @@ import 'package:light/light.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:pedometer/pedometer.dart';
 import 'package:stats/stats.dart';
-import 'package:carp_core/carp_core.dart';
+import 'package:carp_mobile_sensing/core/core.dart';
 
 part 'sensor_probes.dart';
 part 'light_probe.dart';
 part 'pedometer_datum.dart';
 part 'pedometer_probe.dart';
 part 'sensor_datum.dart';
-part 'sensor_measure.dart';
 part 'sensors.g.dart';

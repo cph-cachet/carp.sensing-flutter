@@ -7,17 +7,20 @@
 
 part of datastore;
 
-/// Stores [Datum] json objects as plain-text in a zip-compressed file on the device's local
-/// storage media. Also supports encryption.
+/// Stores [Datum] json objects as plain-text on the device's local storage media.
+/// Supports compression (zip) and encryption.
 ///
-/// The filename format is "carp/data/<study_id>/carp-data-yyyy-mm-dd-hh-mm-ss-ms.json.zip"
+/// The path and filename format is
+///
+///   `carp/data/<study_id>/carp-data-yyyy-mm-dd-hh-mm-ss-ms.json.zip`
+///
 class FileDataManager extends AbstractDataManager {
-  /// The path to use on this device for CARP data.
-  static final String CARP_FILE_PATH = 'carp/data';
+  /// The path to use on the device for storing CARP files.
+  static const String CARP_FILE_PATH = 'carp/data';
 
   FileDataEndPoint _fileDataEndPoint;
-  String _filename;
   String _path;
+  String _filename;
   File _file;
   IOSink _sink;
   bool _initialized = false;
@@ -38,9 +41,8 @@ class FileDataManager extends AbstractDataManager {
     }
   }
 
-  @override
-  Future initialize(Study study) async {
-    super.initialize(study);
+  Future initialize(Study study, Stream<Datum> events) async {
+    super.initialize(study, events);
     assert(study.dataEndPoint is FileDataEndPoint);
     _fileDataEndPoint = study.dataEndPoint as FileDataEndPoint;
 
@@ -66,7 +68,7 @@ class FileDataManager extends AbstractDataManager {
       final localApplicationDir = await getApplicationDocumentsDirectory();
       // create a sub-directory for this study named as the study ID
       final directory =
-          await new Directory('${localApplicationDir.path}/$CARP_FILE_PATH/${study.id}').create(recursive: true);
+          await Directory('${localApplicationDir.path}/$CARP_FILE_PATH/${study.id}').create(recursive: true);
       _path = directory.path;
     }
     return _path;
@@ -187,8 +189,6 @@ class FileDataManager extends AbstractDataManager {
   }
 
   Future close() async {
-    //old_flush();
-
     file.then((_f) {
       sink.then((_s) {
         flush(_f, _s);
@@ -196,10 +196,15 @@ class FileDataManager extends AbstractDataManager {
     });
   }
 
-  @override
   String toString() {
     return "FileDataManager";
   }
+
+  void onData(Datum datum) => uploadData(datum);
+
+  void onDone() {}
+
+  void onError(error) {}
 }
 
 /// A Listener that can listen on [FileDataManagerEvent]s from a [FileDataManager].

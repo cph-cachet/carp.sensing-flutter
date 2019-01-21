@@ -14,7 +14,7 @@ import 'package:http_parser/http_parser.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
-import 'package:carp_core/carp_core.dart';
+import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 part 'carp_app.dart';
 part 'datapoint_reference.dart';

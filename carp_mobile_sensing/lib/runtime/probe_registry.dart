@@ -8,124 +8,121 @@
 part of runtime;
 
 //TODO : change probes to use Dart Isolates in order to support dynamic class loading (and isolation).
-/// The [ProbeRegistry] can create an instance of a relevant probe based on the measure type.
-///
-/// Right now registration of probes has to be done manually.
-/// Later this will be implemented using Dart Isolates.
-class ProbeRegistry {
-  static const String MEASURE = "measure";
-  static const String STRING_MEASURE = "string";
-  static const String ERROR_MEASURE = "error";
-  static const String MEMORY_MEASURE = "memory";
-  static const String PEDOMETER_MEASURE = "pedometer";
-  static const String ACCELEROMETER_MEASURE = "accelerometer";
-  static const String GYROSCOPE_MEASURE = "gyroscope";
-  static const String BATTERY_MEASURE = "battery";
-  static const String BLUETOOTH_MEASURE = "bluetooth";
-  static const String AUDIO_MEASURE = "audio";
-  static const String NOISE_MEASURE = "noise";
-  static const String LOCATION_MEASURE = "location";
-  static const String CONNECTIVITY_MEASURE = "connectivity";
-  static const String LIGHT_MEASURE = "light";
-  static const String APPS_MEASURE = "apps";
-  static const String APP_USAGE_MEASURE = "app_usage";
-  static const String TEXT_MESSAGE_LOG_MEASURE = "text-message-log";
-  static const String TEXT_MESSAGE_MEASURE = "text-message";
-  static const String SCREEN_MEASURE = "screen";
-  static const String PHONELOG_MEASURE = "phone_log";
-  static const String SOUND_MEASURE = "sound";
-  static const String ACTIVITY_MEASURE = "activity";
-  static const String APPLE_HEALTHKIT_MEASURE = "apple-healthkit";
-  static const String GOOGLE_FIT_MEASURE = "google-fit";
-  static const String WEATHER_MEASURE = "weather";
+// Right now registration of probes has to be done manually.
+// Later this will be implemented using Dart Isolates.
 
-  static List<Probe> _probes = new List();
+/// The [ProbeRegistry] can create and register an instance of a relevant probe
+/// based on the [DataType].
+class ProbeRegistry {
+  static Map<String, Probe> _probes = new Map<String, Probe>();
 
   /// Returns a list of running probes.
-  static List<Probe> get probes => _probes;
+  static Map<String, Probe> get probes => _probes;
 
   /// If you create a probe manually, i.e. outside of the [ProbeRegistry] you can register it here.
-  static void register(Probe probe) {
-    _probes.add(probe);
+  static void register(String type, Probe probe) {
+    _probes[type] = probe;
   }
 
-  /// Create an instance of a probe based on the measure type.
+  static List<String> get availableProbeTypes => [
+        DataType.MEMORY,
+        DataType.PEDOMETER,
+        DataType.ACCELEROMETER,
+        DataType.GYROSCOPE,
+        DataType.BATTERY,
+        DataType.BLUETOOTH,
+        DataType.AUDIO,
+        DataType.NOISE,
+        DataType.LOCATION,
+        DataType.CONNECTIVITY,
+        DataType.LIGHT,
+        DataType.APPS,
+        DataType.APP_USAGE,
+        DataType.TEXT_MESSAGE_LOG,
+        DataType.TEXT_MESSAGE,
+        DataType.SCREEN,
+        DataType.PHONE_LOG,
+        DataType.ACTIVITY,
+        DataType.APPLE_HEALTHKIT,
+        DataType.GOOGLE_FIT,
+        DataType.WEATHER
+      ];
+
+  /// Create an instance of a probe based on the measure.
   static Probe create(Measure measure) {
-    String type = measure.measureType;
     Probe _probe;
 
-    switch (type) {
-      case MEMORY_MEASURE:
+    switch (measure.type.name) {
+      case DataType.MEMORY:
         _probe = new MemoryPollingProbe(measure);
         break;
-      case PEDOMETER_MEASURE:
+      case DataType.PEDOMETER:
         _probe = new PedometerProbe(measure);
         break;
-      case ACCELEROMETER_MEASURE:
-        _probe = new AccelerometerProbe(measure);
+      case DataType.ACCELEROMETER:
+        _probe = new BufferingAccelerometerProbe(measure);
         break;
-      case GYROSCOPE_MEASURE:
-        _probe = new GyroscopeProbe(measure);
+      case DataType.GYROSCOPE:
+        _probe = new BufferingGyroscopeProbe(measure);
         break;
-      case BATTERY_MEASURE:
+      case DataType.BATTERY:
         _probe = new BatteryProbe(measure);
         break;
-      case BLUETOOTH_MEASURE:
+      case DataType.BLUETOOTH:
+        //TODO - fix this -- should probes be created or initialized w. the Measure??????
         _probe = new BluetoothProbe(measure);
         break;
-      case LOCATION_MEASURE:
+      case DataType.LOCATION:
         _probe = new LocationProbe(measure);
         break;
-      case CONNECTIVITY_MEASURE:
+      case DataType.CONNECTIVITY:
         _probe = new ConnectivityProbe(measure);
         break;
-      case LIGHT_MEASURE:
+      case DataType.LIGHT:
         _probe = new LightProbe(measure);
         break;
-      case APPS_MEASURE:
+      case DataType.APPS:
         _probe = new AppsProbe(measure);
         break;
-      case APP_USAGE_MEASURE:
+      case DataType.APP_USAGE:
         _probe = new AppUsageProbe(measure);
         break;
-      case TEXT_MESSAGE_LOG_MEASURE:
+      case DataType.TEXT_MESSAGE_LOG:
         _probe = new TextMessageLogProbe(measure);
         break;
-      case TEXT_MESSAGE_MEASURE:
+      case DataType.TEXT_MESSAGE:
         _probe = new TextMessageProbe(measure);
         break;
-      case SCREEN_MEASURE:
+      case DataType.SCREEN:
         _probe = new ScreenProbe(measure);
         break;
-      case PHONELOG_MEASURE:
+      case DataType.PHONE_LOG:
         _probe = new PhoneLogProbe(measure);
         break;
-      case AUDIO_MEASURE:
+      case DataType.AUDIO:
         _probe = new AudioProbe(measure);
         break;
-      case NOISE_MEASURE:
+      case DataType.NOISE:
         _probe = new NoiseProbe(measure);
         break;
-      case ACTIVITY_MEASURE:
+      case DataType.ACTIVITY:
         _probe = new ActivityProbe(measure);
         break;
-      case WEATHER_MEASURE:
+      case DataType.WEATHER:
         _probe = new WeatherProbe(measure);
         break;
-      case APPLE_HEALTHKIT_MEASURE:
+      case DataType.APPLE_HEALTHKIT:
         throw "Not Implemented Yet";
         break;
-      case GOOGLE_FIT_MEASURE:
+      case DataType.GOOGLE_FIT:
         throw "Not Implemented Yet";
         break;
       default:
-        //_probe = new UserProbe(measure);
         break;
     }
 
     if (_probe != null) {
-      _probe.name = measure.name;
-      register(_probe);
+      register(measure.type.name, _probe);
     }
 
     return _probe;

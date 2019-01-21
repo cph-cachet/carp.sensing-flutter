@@ -10,8 +10,10 @@ part of location;
 /// Holds location information using the GPS format.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class LocationDatum extends CARPDatum {
-  static CARPDataFormat CARP_DATA_FORMAT = new CARPDataFormat(
-      NameSpace.CARP_NAMESPACE, ProbeRegistry.LOCATION_MEASURE);
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.LOCATION);
+  DataFormat get format => CARP_DATA_FORMAT;
+
+  LocationDatum() : super();
 
   LocationDatum.fromMap(Map<dynamic, dynamic> map)
       : latitude = map['latitude'],
@@ -19,10 +21,10 @@ class LocationDatum extends CARPDatum {
         altitude = map['altitude'],
         accuracy = map['accuracy'],
         speed = map['speed'],
-        speedAccuracy = map['speedAccuracy'];
+        speedAccuracy = map['speedAccuracy'],
+        super();
 
-  factory LocationDatum.fromJson(Map<String, dynamic> json) =>
-      _$LocationDatumFromJson(json);
+  factory LocationDatum.fromJson(Map<String, dynamic> json) => _$LocationDatumFromJson(json);
   Map<String, dynamic> toJson() => _$LocationDatumToJson(this);
 
   /// Latitude in GPS coordinates.
@@ -48,12 +50,8 @@ class LocationDatum extends CARPDatum {
   /// Will always be 0 on iOS
   double speedAccuracy;
 
-  LocationDatum() : super();
-
   /// The 2D GPS coordinates [latitude, longitude].
   get gpsCoordinates => [latitude, longitude];
-
-  CARPDataFormat getCARPDataFormat() => CARP_DATA_FORMAT;
 
   String toString() =>
       "location : {latitude: $latitude, longitude: $longitude, accuracy; $accuracy, altitude: $altitude, speed: $speed, speed_accuracy: $speedAccuracy}";

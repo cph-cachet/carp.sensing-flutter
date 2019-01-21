@@ -10,22 +10,22 @@ part of activity;
 /// Holds activity information.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ActivityDatum extends CARPDatum {
-  static CARPDataFormat CARP_DATA_FORMAT = new CARPDataFormat(
-      NameSpace.CARP_NAMESPACE, ProbeRegistry.ACTIVITY_MEASURE);
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.ACTIVITY);
+  DataFormat get format => CARP_DATA_FORMAT;
 
   ActivityDatum() : super();
 
   ActivityDatum.fromMap(Map<dynamic, dynamic> map)
       : confidence = map['confidence'],
-        type = map['type'];
+        type = map['type'],
+        super();
 
-  ActivityDatum.fromActivity(Activity act) {
-    this.confidence = act.confidence;
-    this.type = act.type;
-  }
+  ActivityDatum.fromActivity(Activity activity)
+      : confidence = activity.confidence,
+        type = activity.type,
+        super();
 
-  factory ActivityDatum.fromJson(Map<String, dynamic> json) =>
-      _$ActivityDatumFromJson(json);
+  factory ActivityDatum.fromJson(Map<String, dynamic> json) => _$ActivityDatumFromJson(json);
   Map<String, dynamic> toJson() => _$ActivityDatumToJson(this);
 
   /// Confidence in activity recognition.
@@ -51,8 +51,6 @@ class ActivityDatum extends CARPDatum {
   /// * cycling
   /// * unknown
   String type;
-
-  CARPDataFormat getCARPDataFormat() => CARP_DATA_FORMAT;
 
   String toString() => "activity : {type: $type, confidence: $confidence}";
 }

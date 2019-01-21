@@ -10,8 +10,8 @@ part of environment;
 /// A [Datum] that holds weather information collected through OpenWeatherMap.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class WeatherDatum extends CARPDatum {
-  static CARPDataFormat CARP_DATA_FORMAT = new CARPDataFormat(
-      NameSpace.CARP_NAMESPACE, ProbeRegistry.WEATHER_MEASURE);
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.WEATHER);
+  DataFormat get format => CARP_DATA_FORMAT;
 
   String country, areaName, weatherMain, weatherDescription;
   DateTime date, sunrise, sunset;
@@ -26,24 +26,15 @@ class WeatherDatum extends CARPDatum {
       rainLast3Hours,
       snowLastHour,
       snowLast3Hours,
-      temperature, tempMin, tempMax;
+      temperature,
+      tempMin,
+      tempMax;
 
   WeatherDatum() : super();
 
-  factory WeatherDatum.fromJson(Map<String, dynamic> json) =>
-      _$WeatherDatumFromJson(json);
-
+  factory WeatherDatum.fromJson(Map<String, dynamic> json) => _$WeatherDatumFromJson(json);
   Map<String, dynamic> toJson() => _$WeatherDatumToJson(this);
 
-  CARPDataFormat getCARPDataFormat() => CARP_DATA_FORMAT;
-
-  String toString() {
-    return '''
-    Place Name: $areaName ($country)
-    Date: $date
-    Weather: $weatherMain, $weatherDescription
-    Temp: $temperature, Temp (min): $tempMin, Temp (max): $tempMax
-    Sunrise: $sunrise, Sunset: $sunset
-    ''';
-  }
+  String toString() =>
+      'Weather: {place: $areaName ($country), date: $date, weather: $weatherMain, $weatherDescription, temp: $temperature, temp (min): $tempMin, temp (max): $tempMax, sunrise: $sunrise, sunset: $sunset';
 }

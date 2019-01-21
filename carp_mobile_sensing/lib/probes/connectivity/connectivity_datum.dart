@@ -10,8 +10,8 @@ part of connectivity;
 /// A [Datum] that holds connectivity status of the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ConnectivityDatum extends CARPDatum {
-  static CARPDataFormat CARP_DATA_FORMAT = new CARPDataFormat(
-      NameSpace.CARP_NAMESPACE, ProbeRegistry.CONNECTIVITY_MEASURE);
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.CONNECTIVITY);
+  DataFormat get format => CARP_DATA_FORMAT;
 
   /// The status of the connectivity.
   /// - WiFi: Device connected via Wi-Fi
@@ -21,11 +21,25 @@ class ConnectivityDatum extends CARPDatum {
 
   ConnectivityDatum() : super();
 
-  factory ConnectivityDatum.fromJson(Map<String, dynamic> json) =>
-      _$ConnectivityDatumFromJson(json);
+  ConnectivityDatum.fromConnectivityResult(ConnectivityResult result)
+      : connectivityStatus = _parseConnectivityStatus(result),
+        super();
+
+  factory ConnectivityDatum.fromJson(Map<String, dynamic> json) => _$ConnectivityDatumFromJson(json);
   Map<String, dynamic> toJson() => _$ConnectivityDatumToJson(this);
 
-  CARPDataFormat getCARPDataFormat() => CARP_DATA_FORMAT;
+  static String _parseConnectivityStatus(ConnectivityResult result) {
+    switch (result) {
+      case ConnectivityResult.wifi:
+        return "wifi";
+      case ConnectivityResult.mobile:
+        return "mobile";
+      case ConnectivityResult.none:
+        return "none";
+      default:
+        return "unknown";
+    }
+  }
 
   String toString() => 'connectivity_status: $connectivityStatus';
 }
@@ -33,8 +47,8 @@ class ConnectivityDatum extends CARPDatum {
 /// A [Datum] that holds information on nearby Bluetoth devices.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class BluetoothDatum extends CARPDatum {
-  static CARPDataFormat CARP_DATA_FORMAT = new CARPDataFormat(
-      NameSpace.CARP_NAMESPACE, ProbeRegistry.BLUETOOTH_MEASURE);
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.BLUETOOTH);
+  DataFormat get format => CARP_DATA_FORMAT;
 
   /// The bluetooth id of the nearby device.
   String bluetoothDeviceId;
@@ -60,11 +74,29 @@ class BluetoothDatum extends CARPDatum {
 
   BluetoothDatum() : super();
 
-  factory BluetoothDatum.fromJson(Map<String, dynamic> json) =>
-      _$BluetoothDatumFromJson(json);
-  Map<String, dynamic> toJson() => _$BluetoothDatumToJson(this);
+  factory BluetoothDatum.fromScanResult(ScanResult result) => BluetoothDatum()
+    ..bluetoothDeviceId = result.device.id.id
+    ..bluetoothDeviceName = result.device.name
+    ..connectable = result.advertisementData.connectable
+    ..txPowerLevel = result.advertisementData.txPowerLevel
+    ..rssi = result.rssi
+    ..bluetoothDeviceType = getBluetoothDeviceType(result.device.type);
 
-  CARPDataFormat getCARPDataFormat() => CARP_DATA_FORMAT;
+  static String getBluetoothDeviceType(BluetoothDeviceType type) {
+    switch (type) {
+      case BluetoothDeviceType.classic:
+        return "classic";
+      case BluetoothDeviceType.dual:
+        return "dual";
+      case BluetoothDeviceType.le:
+        return "le";
+      default:
+        return "unknown";
+    }
+  }
+
+  factory BluetoothDatum.fromJson(Map<String, dynamic> json) => _$BluetoothDatumFromJson(json);
+  Map<String, dynamic> toJson() => _$BluetoothDatumToJson(this);
 
   String toString() =>
       'bluetooth_device: {id: $bluetoothDeviceId, name: $bluetoothDeviceName, type: $bluetoothDeviceType, connectable: $connectable, rssi: $rssi}';

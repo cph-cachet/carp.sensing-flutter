@@ -7,162 +7,56 @@
 
 part of sensors;
 
-/// A listening probe collecting data from the accelerometer.
-///
-/// Note that this probe generates a lot of data and should be used with caution.
-/// See [SensorMeasure] on how to configure this probe, including setting the
-/// frequency and duration of the sampling rate.
-class AccelerometerProbe extends ListeningProbe {
-  StreamSubscription<AccelerometerEvent> _subscription;
-  MultiDatum _data;
+/// A simple abstract probe to be used to implement specific buffered sensor probes.
+abstract class BufferingSensorProbe extends BufferingPeriodicStreamProbe {
+  MultiDatum datum = MultiDatum();
 
-  AccelerometerProbe(SensorMeasure _measure) : super(_measure);
+  BufferingSensorProbe(PeriodicMeasure measure, Stream<dynamic> bufferingStream) : super(measure, bufferingStream);
 
-  @override
-  void initialize() {
-    super.initialize();
+  Future<Datum> getDatum() async => datum;
+
+  void onSamplingStart() {
+    datum = MultiDatum();
   }
 
-  @override
-  Future start() async {
-    super.start();
-
-    // starting the subscription to the accelerometer events
-    _subscription = accelerometerEvents.listen(_onData, onError: _onError, onDone: _onDone, cancelOnError: true);
-
-    // pause it for now.
-    _subscription.pause();
-
-    int _frequency = (measure as SensorMeasure).frequency;
-    Duration _pause = new Duration(milliseconds: _frequency);
-    int _duration = (measure as SensorMeasure).duration;
-    Duration _samplingDuration = new Duration(milliseconds: _duration);
-
-    // create a recurrent timer that wait (pause) and then resume the sampling.
-    Timer.periodic(_pause, (Timer timer) {
-      this.resume();
-
-      // create a timer that stops the sampling after the specified duration.
-      Timer(_samplingDuration, () {
-        this.pause();
-      });
-    });
-  }
-
-  @override
-  void stop() {
-    if (_data != null) this.notifyAllListeners(_data);
-    _subscription.cancel();
-    _subscription = null;
-    _data = null;
-  }
-
-  @override
-  void resume() {
-    _data = new MultiDatum();
-    _subscription.resume();
-  }
-
-  @override
-  void pause() {
-    if (_data != null) this.notifyAllListeners(_data);
-    _data = null;
-    _subscription.pause();
-  }
-
-  void _onData(AccelerometerEvent event) async {
-    if (_data != null) {
-      AccelerometerDatum _ad = new AccelerometerDatum(x: event.x, y: event.y, z: event.z);
-      _data.addDatum(_ad);
-    }
-  }
-
-  void _onDone() {
-    if (_data != null) this.notifyAllListeners(_data);
-  }
-
-  void _onError(error) {
-    ErrorDatum _ed = new ErrorDatum(error.toString());
-    this.notifyAllListeners(_ed);
-  }
+  void onSamplingEnd() {}
 }
 
-/// A listening probe collecting data from the gyroscope.
+Stream<Datum> get _accelerometerStream =>
+    accelerometerEvents.map((event) => AccelerometerDatum.fromAccelerometerEvent(event));
+
+/// A probe that collects accelerometer events and buffers them and return a [MultiDatum] with
+/// all the buffered [AccelerometerDatum]s.
+class BufferingAccelerometerProbe extends BufferingSensorProbe {
+  BufferingAccelerometerProbe(PeriodicMeasure measure) : super(measure, accelerometerEvents);
+
+  void onSamplingData(event) => datum.addDatum(AccelerometerDatum.fromAccelerometerEvent(event));
+}
+
+/// A  probe collecting raw data from the accelerometer.
 ///
 /// Note that this probe generates a lot of data and should be used with caution.
-/// See [SensorMeasure] on how to configure this probe, including setting the
-/// frequency and duration of the sampling rate.
-class GyroscopeProbe extends ListeningProbe {
-  StreamSubscription<GyroscopeEvent> _subscription;
-  MultiDatum data;
+/// See [PeriodicMeasure] on how to configure this probe, including setting the
+/// [frequency] and [duration] of the sampling rate.
+class AccelerometerProbe extends PeriodicStreamProbe {
+  AccelerometerProbe(PeriodicMeasure measure) : super(measure, _accelerometerStream);
+}
 
-  GyroscopeProbe(SensorMeasure _measure) : super(_measure);
+Stream<Datum> get _gyroscopeStream => gyroscopeEvents.map((event) => GyroscopeDatum.fromGyroscopeEvent(event));
 
-  @override
-  void initialize() {
-    super.initialize();
-  }
+/// A probe that collects gyroscope events and buffers them and return a [MultiDatum] with
+/// all the buffered [GyroscopeDatum]s.
+class BufferingGyroscopeProbe extends BufferingSensorProbe {
+  BufferingGyroscopeProbe(PeriodicMeasure measure) : super(measure, gyroscopeEvents);
 
-  @override
-  Future start() async {
-    super.start();
+  void onSamplingData(event) => datum.addDatum(GyroscopeDatum.fromGyroscopeEvent(event));
+}
 
-    // starting the subscription to the accelerometer events
-    _subscription = gyroscopeEvents.listen(_onData, onError: _onError, onDone: _onDone, cancelOnError: true);
-
-    // pause it for now.
-    _subscription.pause();
-
-    int _frequency = (measure as SensorMeasure).frequency;
-    Duration _pause = new Duration(milliseconds: _frequency);
-    int _duration = (measure as SensorMeasure).duration;
-    Duration _samplingDuration = new Duration(milliseconds: _duration);
-
-    // create a recurrent timer that wait (pause) and then resume the sampling.
-    Timer.periodic(_pause, (Timer timer) {
-      this.resume();
-
-      // create a timer that stops the sampling after the specified duration.
-      Timer(_samplingDuration, () {
-        this.pause();
-      });
-    });
-  }
-
-  @override
-  void stop() {
-    if (data != null) this.notifyAllListeners(data);
-    _subscription.cancel();
-    _subscription = null;
-    data = null;
-  }
-
-  @override
-  void pause() {
-    if (data != null) this.notifyAllListeners(data);
-    data = null;
-    _subscription.pause();
-  }
-
-  @override
-  void resume() {
-    data = new MultiDatum();
-    _subscription.resume();
-  }
-
-  void _onData(GyroscopeEvent event) async {
-    if (data != null) {
-      GyroscopeDatum _gd = new GyroscopeDatum(x: event.x, y: event.y, z: event.z);
-      data.addDatum(_gd);
-    }
-  }
-
-  void _onDone() {
-    if (data != null) this.notifyAllListeners(data);
-  }
-
-  void _onError(error) {
-    ErrorDatum _ed = new ErrorDatum(error.toString());
-    this.notifyAllListeners(_ed);
-  }
+/// A  probe collecting raw data from the gyroscope.
+///
+/// Note that this probe generates a lot of data and should be used with caution.
+/// See [PeriodicMeasure] on how to configure this probe, including setting the
+/// [frequency] and [duration] of the sampling rate.
+class GyroscopeProbe extends PeriodicStreamProbe {
+  GyroscopeProbe(PeriodicMeasure measure) : super(measure, _gyroscopeStream);
 }

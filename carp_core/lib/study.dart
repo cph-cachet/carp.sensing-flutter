@@ -10,7 +10,7 @@ part of carp_core;
 /// The [Study] holds information about the study to be performed on this device.
 /// The study may be fetched in a [StudyManager] who knows how to fetch a study protocol for this device.
 ///
-/// A [Study] mainly consists of a list of [Task]s, which again consists of a list of [Measure]s.
+/// A [Study] mainly consists of a list of [TaskDescriptor]s, which again consists of a list of [Measure]s.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class Study extends Serializable {
   /// The ID of this [Study].
@@ -28,8 +28,8 @@ class Study extends Serializable {
   /// Specify where and how to upload this study data.
   DataEndPoint dataEndPoint;
 
-  /// The list of [Task]s in this [Study].
-  List<Task> tasks = new List<Task>();
+  /// The list of [TaskDescriptor]s in this [Study].
+  List<TaskDescriptor> tasks = new List<TaskDescriptor>();
 
   Study(this.id, this.userId, {this.name, this.description}) : super();
 
@@ -37,8 +37,8 @@ class Study extends Serializable {
   factory Study.fromJson(Map<String, dynamic> json) => _$StudyFromJson(json);
   Map<String, dynamic> toJson() => _$StudyToJson(this);
 
-  /// Add a [Task] to this [Study]
-  void addTask(Task task) => tasks.add(task);
+  /// Add a [TaskDescriptor] to this [Study]
+  void addTask(TaskDescriptor task) => tasks.add(task);
 
   @override
   String toString() {

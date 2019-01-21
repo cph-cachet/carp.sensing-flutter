@@ -1,4 +1,4 @@
-/// The core CARP domain classes like [Study], [Task], and [Measure].
+/// The core CARP domain classes like [Study], [TaskDescriptor], and [Measure].
 /// Also hold JSON serialization logic to serialize [Datum] objects
 /// into a [CARPDataPoint] as well as deseralization of [Study] objects
 /// obtained from a [StudyManager].

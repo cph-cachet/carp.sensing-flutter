@@ -14,8 +14,9 @@ Study _$StudyFromJson(Map<String, dynamic> json) {
         ? null
         : DataEndPoint.fromJson(json['data_end_point'] as Map<String, dynamic>)
     ..tasks = (json['tasks'] as List)
-        ?.map(
-            (e) => e == null ? null : Task.fromJson(e as Map<String, dynamic>))
+        ?.map((e) => e == null
+            ? null
+            : TaskDescriptor.fromJson(e as Map<String, dynamic>))
         ?.toList();
 }
 
@@ -84,8 +85,8 @@ Map<String, dynamic> _$FileDataEndPointToJson(FileDataEndPoint instance) {
   return val;
 }
 
-Task _$TaskFromJson(Map<String, dynamic> json) {
-  return Task(json['name'] as String)
+TaskDescriptor _$TaskDescriptorFromJson(Map<String, dynamic> json) {
+  return TaskDescriptor(json['name'] as String)
     ..c__ = json['c__'] as String
     ..measures = (json['measures'] as List)
         ?.map((e) =>
@@ -93,7 +94,7 @@ Task _$TaskFromJson(Map<String, dynamic> json) {
         ?.toList();
 }
 
-Map<String, dynamic> _$TaskToJson(Task instance) {
+Map<String, dynamic> _$TaskDescriptorToJson(TaskDescriptor instance) {
   var val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -199,7 +200,7 @@ CARPDataPointHeader _$CARPDataPointHeaderFromJson(Map<String, dynamic> json) {
         : DateTime.parse(json['upload_time'] as String)
     ..dataFormat = json['data_format'] == null
         ? null
-        : CARPDataFormat.fromJson(json['data_format'] as Map<String, dynamic>);
+        : DataFormat.fromJson(json['data_format'] as Map<String, dynamic>);
 }
 
 Map<String, dynamic> _$CARPDataPointHeaderToJson(CARPDataPointHeader instance) {
@@ -222,11 +223,11 @@ Map<String, dynamic> _$CARPDataPointHeaderToJson(CARPDataPointHeader instance) {
   return val;
 }
 
-CARPDataFormat _$CARPDataFormatFromJson(Map<String, dynamic> json) {
-  return CARPDataFormat(json['namepace'] as String, json['name'] as String);
+DataFormat _$DataFormatFromJson(Map<String, dynamic> json) {
+  return DataFormat(json['namepace'] as String, json['name'] as String);
 }
 
-Map<String, dynamic> _$CARPDataFormatToJson(CARPDataFormat instance) {
+Map<String, dynamic> _$DataFormatToJson(DataFormat instance) {
   var val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -241,7 +242,10 @@ Map<String, dynamic> _$CARPDataFormatToJson(CARPDataFormat instance) {
 }
 
 Datum _$DatumFromJson(Map<String, dynamic> json) {
-  return Datum()..c__ = json['c__'] as String;
+  return Datum(json['measure'] == null
+      ? null
+      : Measure.fromJson(json['measure'] as Map<String, dynamic>))
+    ..c__ = json['c__'] as String;
 }
 
 Map<String, dynamic> _$DatumToJson(Datum instance) {
@@ -254,11 +258,14 @@ Map<String, dynamic> _$DatumToJson(Datum instance) {
   }
 
   writeNotNull('c__', instance.c__);
+  writeNotNull('measure', instance.measure);
   return val;
 }
 
 CARPDatum _$CARPDatumFromJson(Map<String, dynamic> json) {
-  return CARPDatum()
+  return CARPDatum(json['measure'] == null
+      ? null
+      : Measure.fromJson(json['measure'] as Map<String, dynamic>))
     ..c__ = json['c__'] as String
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
@@ -279,6 +286,7 @@ Map<String, dynamic> _$CARPDatumToJson(CARPDatum instance) {
   }
 
   writeNotNull('c__', instance.c__);
+  writeNotNull('measure', instance.measure);
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
   writeNotNull('device_info', instance.deviceInfo);
@@ -314,7 +322,11 @@ Map<String, dynamic> _$DeviceInfoToJson(DeviceInfo instance) {
 }
 
 StringDatum _$StringDatumFromJson(Map<String, dynamic> json) {
-  return StringDatum(data: json['data'] as String)
+  return StringDatum(
+      json['measure'] == null
+          ? null
+          : Measure.fromJson(json['measure'] as Map<String, dynamic>),
+      str: json['str'] as String)
     ..c__ = json['c__'] as String
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
@@ -335,15 +347,55 @@ Map<String, dynamic> _$StringDatumToJson(StringDatum instance) {
   }
 
   writeNotNull('c__', instance.c__);
+  writeNotNull('measure', instance.measure);
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
   writeNotNull('device_info', instance.deviceInfo);
-  writeNotNull('data', instance.data);
+  writeNotNull('str', instance.str);
+  return val;
+}
+
+MapDatum _$MapDatumFromJson(Map<String, dynamic> json) {
+  return MapDatum(
+      json['measure'] == null
+          ? null
+          : Measure.fromJson(json['measure'] as Map<String, dynamic>),
+      map: (json['map'] as Map<String, dynamic>)
+          ?.map((k, e) => MapEntry(k, e as String)))
+    ..c__ = json['c__'] as String
+    ..id = json['id'] as String
+    ..timestamp = json['timestamp'] == null
+        ? null
+        : DateTime.parse(json['timestamp'] as String)
+    ..deviceInfo = json['device_info'] == null
+        ? null
+        : DeviceInfo.fromJson(json['device_info'] as Map<String, dynamic>);
+}
+
+Map<String, dynamic> _$MapDatumToJson(MapDatum instance) {
+  var val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('c__', instance.c__);
+  writeNotNull('measure', instance.measure);
+  writeNotNull('id', instance.id);
+  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  writeNotNull('device_info', instance.deviceInfo);
+  writeNotNull('map', instance.map);
   return val;
 }
 
 ErrorDatum _$ErrorDatumFromJson(Map<String, dynamic> json) {
-  return ErrorDatum(json['error_message'] as String)
+  return ErrorDatum(
+      json['measure'] == null
+          ? null
+          : Measure.fromJson(json['measure'] as Map<String, dynamic>),
+      json['error_message'] as String)
     ..c__ = json['c__'] as String
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
@@ -364,6 +416,7 @@ Map<String, dynamic> _$ErrorDatumToJson(ErrorDatum instance) {
   }
 
   writeNotNull('c__', instance.c__);
+  writeNotNull('measure', instance.measure);
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
   writeNotNull('device_info', instance.deviceInfo);
@@ -372,7 +425,9 @@ Map<String, dynamic> _$ErrorDatumToJson(ErrorDatum instance) {
 }
 
 MultiDatum _$MultiDatumFromJson(Map<String, dynamic> json) {
-  return MultiDatum()
+  return MultiDatum(json['measure'] == null
+      ? null
+      : Measure.fromJson(json['measure'] as Map<String, dynamic>))
     ..c__ = json['c__'] as String
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
@@ -381,7 +436,7 @@ MultiDatum _$MultiDatumFromJson(Map<String, dynamic> json) {
     ..deviceInfo = json['device_info'] == null
         ? null
         : DeviceInfo.fromJson(json['device_info'] as Map<String, dynamic>)
-    ..datums = (json['datums'] as List)
+    ..data = (json['data'] as List)
         ?.map(
             (e) => e == null ? null : Datum.fromJson(e as Map<String, dynamic>))
         ?.toList();
@@ -397,19 +452,22 @@ Map<String, dynamic> _$MultiDatumToJson(MultiDatum instance) {
   }
 
   writeNotNull('c__', instance.c__);
+  writeNotNull('measure', instance.measure);
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
   writeNotNull('device_info', instance.deviceInfo);
-  writeNotNull('datums', instance.datums);
+  writeNotNull('data', instance.data);
   return val;
 }
 
 Measure _$MeasureFromJson(Map<String, dynamic> json) {
-  return Measure(json['measure_type'] as String, name: json['name'] as String)
-    ..c__ = json['c__'] as String
-    ..enabled = json['enabled'] as bool
-    ..configuration = (json['configuration'] as Map<String, dynamic>)
-        ?.map((k, e) => MapEntry(k, e as String));
+  return Measure(
+      json['type'] == null
+          ? null
+          : DataFormat.fromJson(json['type'] as Map<String, dynamic>),
+      name: json['name'] as String,
+      enabled: json['enabled'] as bool)
+    ..c__ = json['c__'] as String;
 }
 
 Map<String, dynamic> _$MeasureToJson(Measure instance) {
@@ -422,91 +480,8 @@ Map<String, dynamic> _$MeasureToJson(Measure instance) {
   }
 
   writeNotNull('c__', instance.c__);
-  writeNotNull('measure_type', instance.measureType);
+  writeNotNull('type', instance.type);
   writeNotNull('name', instance.name);
   writeNotNull('enabled', instance.enabled);
-  writeNotNull('configuration', instance.configuration);
-  return val;
-}
-
-ProbeMeasure _$ProbeMeasureFromJson(Map<String, dynamic> json) {
-  return ProbeMeasure(json['measure_type'], name: json['name'])
-    ..c__ = json['c__'] as String
-    ..enabled = json['enabled'] as bool
-    ..configuration = (json['configuration'] as Map<String, dynamic>)
-        ?.map((k, e) => MapEntry(k, e as String));
-}
-
-Map<String, dynamic> _$ProbeMeasureToJson(ProbeMeasure instance) {
-  var val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('c__', instance.c__);
-  writeNotNull('measure_type', instance.measureType);
-  writeNotNull('name', instance.name);
-  writeNotNull('enabled', instance.enabled);
-  writeNotNull('configuration', instance.configuration);
-  return val;
-}
-
-ListeningProbeMeasure _$ListeningProbeMeasureFromJson(
-    Map<String, dynamic> json) {
-  return ListeningProbeMeasure(json['measure_type'], name: json['name'])
-    ..c__ = json['c__'] as String
-    ..enabled = json['enabled'] as bool
-    ..configuration = (json['configuration'] as Map<String, dynamic>)
-        ?.map((k, e) => MapEntry(k, e as String));
-}
-
-Map<String, dynamic> _$ListeningProbeMeasureToJson(
-    ListeningProbeMeasure instance) {
-  var val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('c__', instance.c__);
-  writeNotNull('measure_type', instance.measureType);
-  writeNotNull('name', instance.name);
-  writeNotNull('enabled', instance.enabled);
-  writeNotNull('configuration', instance.configuration);
-  return val;
-}
-
-PollingProbeMeasure _$PollingProbeMeasureFromJson(Map<String, dynamic> json) {
-  return PollingProbeMeasure(json['measure_type'],
-      name: json['name'],
-      frequency: json['frequency'] as int,
-      duration: json['duration'] as int)
-    ..c__ = json['c__'] as String
-    ..enabled = json['enabled'] as bool
-    ..configuration = (json['configuration'] as Map<String, dynamic>)
-        ?.map((k, e) => MapEntry(k, e as String));
-}
-
-Map<String, dynamic> _$PollingProbeMeasureToJson(PollingProbeMeasure instance) {
-  var val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('c__', instance.c__);
-  writeNotNull('measure_type', instance.measureType);
-  writeNotNull('name', instance.name);
-  writeNotNull('enabled', instance.enabled);
-  writeNotNull('configuration', instance.configuration);
-  writeNotNull('frequency', instance.frequency);
-  writeNotNull('duration', instance.duration);
   return val;
 }

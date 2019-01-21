@@ -8,7 +8,6 @@ part of activity;
 
 ActivityDatum _$ActivityDatumFromJson(Map<String, dynamic> json) {
   return ActivityDatum()
-    ..c__ = json['c__'] as String
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
         ? null
@@ -29,7 +28,6 @@ Map<String, dynamic> _$ActivityDatumToJson(ActivityDatum instance) {
     }
   }
 
-  writeNotNull('c__', instance.c__);
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
   writeNotNull('device_info', instance.deviceInfo);

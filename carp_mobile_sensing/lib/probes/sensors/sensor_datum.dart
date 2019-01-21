@@ -9,8 +9,8 @@ part of sensors;
 /// A [Datum] that holds acceleration data collected from the native accelerometer on the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class AccelerometerDatum extends CARPDatum {
-  static CARPDataFormat CARP_DATA_FORMAT =
-      new CARPDataFormat(NameSpace.CARP_NAMESPACE, ProbeRegistry.ACCELEROMETER_MEASURE);
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.ACCELEROMETER);
+  DataFormat get format => CARP_DATA_FORMAT;
 
   /// Acceleration force along the x axis (including gravity) measured in m/s^2.
   double x;
@@ -22,11 +22,13 @@ class AccelerometerDatum extends CARPDatum {
   double z;
 
   AccelerometerDatum({this.x, this.y, this.z}) : super(multiDatum: true);
+  factory AccelerometerDatum.fromAccelerometerEvent(AccelerometerEvent event) => AccelerometerDatum()
+    ..x = event.x
+    ..y = event.y
+    ..z = event.z;
 
   factory AccelerometerDatum.fromJson(Map<String, dynamic> json) => _$AccelerometerDatumFromJson(json);
   Map<String, dynamic> toJson() => _$AccelerometerDatumToJson(this);
-
-  CARPDataFormat getCARPDataFormat() => CARP_DATA_FORMAT;
 
   String toString() => 'accelerometer: {x: $x, y: $y, x: $z}';
 }
@@ -34,8 +36,8 @@ class AccelerometerDatum extends CARPDatum {
 /// A [Datum] that holds rotation data collected from the native gyroscope on the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: true)
 class GyroscopeDatum extends CARPDatum {
-  static CARPDataFormat CARP_DATA_FORMAT =
-      new CARPDataFormat(NameSpace.CARP_NAMESPACE, ProbeRegistry.GYROSCOPE_MEASURE);
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.GYROSCOPE);
+  DataFormat get format => CARP_DATA_FORMAT;
 
   /// Rate of rotation around the x axis measured in rad/s.
   double x;
@@ -47,11 +49,13 @@ class GyroscopeDatum extends CARPDatum {
   double z;
 
   GyroscopeDatum({this.x, this.y, this.z}) : super(multiDatum: true);
+  factory GyroscopeDatum.fromGyroscopeEvent(GyroscopeEvent event) => GyroscopeDatum()
+    ..x = event.x
+    ..y = event.y
+    ..z = event.z;
 
   factory GyroscopeDatum.fromJson(Map<String, dynamic> json) => _$GyroscopeDatumFromJson(json);
   Map<String, dynamic> toJson() => _$GyroscopeDatumToJson(this);
-
-  CARPDataFormat getCARPDataFormat() => CARP_DATA_FORMAT;
 
   String toString() => 'gyroscope: {x: $x, y: $y, x: $z}';
 }
@@ -59,7 +63,8 @@ class GyroscopeDatum extends CARPDatum {
 /// A [Datum] that holds light intensity in Lux from the light sensor on the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class LightDatum extends CARPDatum {
-  static CARPDataFormat CARP_DATA_FORMAT = new CARPDataFormat(NameSpace.CARP_NAMESPACE, ProbeRegistry.LIGHT_MEASURE);
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.LIGHT);
+  DataFormat get format => CARP_DATA_FORMAT;
 
   /// Intensity in Lux
   num meanLux;
@@ -71,8 +76,6 @@ class LightDatum extends CARPDatum {
 
   factory LightDatum.fromJson(Map<String, dynamic> json) => _$LightDatumFromJson(json);
   Map<String, dynamic> toJson() => _$LightDatumToJson(this);
-
-  CARPDataFormat getCARPDataFormat() => CARP_DATA_FORMAT;
 
   String toString() => 'light: {avgLux: $meanLux, stdLux: $stdLux, minLux: $minLux, maxLux: $maxLux}';
 }

@@ -1,3 +1,6 @@
+## 0.1.3
+* Adjustment to refactoring of carp_mobile_sensing library to version 0.3.0
+
 ## 0.1.2
 * Small refactor and removal of debug print.
 * Adding an example

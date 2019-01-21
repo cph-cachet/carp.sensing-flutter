@@ -27,7 +27,7 @@ class CARPDataPoint {
   CARPDataPoint.fromDatum(String studyId, String userId, Datum datum) {
     CARPDataPointHeader header = new CARPDataPointHeader(studyId, userId);
     header.startTime = (datum is CARPDatum) ? datum.timestamp.toUtc() : new DateTime.now().toUtc();
-    header.dataFormat = datum.getCARPDataFormat();
+    header.dataFormat = datum.measure.type;
 
     this.carpHeader = header;
     this.carpBody = datum;
@@ -63,8 +63,8 @@ class CARPDataPointHeader {
   /// If this data point does not cover a period, [endTime] will be null.
   DateTime endTime;
 
-  /// The CARP data format. See [CARPDataFormat] and [NameSpace].
-  CARPDataFormat dataFormat;
+  /// The CARP data format. See [DataFormat] and [NameSpace].
+  DataFormat dataFormat;
 
   // Create a new [CARPDataPointHeader]. [studyId] and [userId] are required.
   CARPDataPointHeader(this.studyId, this.userId, {this.deviceRoleName, this.triggerId, this.startTime, this.endTime}) {
@@ -81,24 +81,22 @@ class CARPDataPointHeader {
 }
 
 /// Specifies the data format of a [CARPDataPoint].
+/// Is also used as the [type] in a [Measure].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class CARPDataFormat {
+class DataFormat {
   /// The data format namespace. See [NameSpace].
   String namepace;
 
   /// The name of this data format.
-  /// Typically the same as the [Measure] type.
   String name;
 
-  CARPDataFormat(this.namepace, this.name);
-  factory CARPDataFormat.unknown() => new CARPDataFormat(NameSpace.UNKNOWN_NAMESPACE, "unknown");
+  DataFormat(this.namepace, this.name);
+  factory DataFormat.unknown() => new DataFormat(NameSpace.UNKNOWN_NAMESPACE, "unknown");
 
-  factory CARPDataFormat.fromJson(Map<String, dynamic> json) => _$CARPDataFormatFromJson(json);
-  Map<String, dynamic> toJson() => _$CARPDataFormatToJson(this);
+  factory DataFormat.fromJson(Map<String, dynamic> json) => _$DataFormatFromJson(json);
+  Map<String, dynamic> toJson() => _$DataFormatToJson(this);
 
-  String toString() {
-    return "$namepace.$name";
-  }
+  String toString() => "$namepace.$name";
 }
 
 /// An abstract class represent any OMH schema.

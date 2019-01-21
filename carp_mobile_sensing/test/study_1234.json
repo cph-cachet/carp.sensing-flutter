@@ -1,0 +1,134 @@
+{
+  "c__": "Study",
+  "id": "1234",
+  "user_id": "bardram",
+  "name": "bardram study",
+  "data_end_point": {
+    "c__": "DataEndPoint",
+    "type": "print"
+  },
+  "tasks": [
+    {
+      "c__": "Task",
+      "name": "Location Task",
+      "measures": [
+        {
+          "c__": "Measure",
+          "type": {
+            "c__": "MeasureType",
+            "namepace": "carp",
+            "name": "location"
+          },
+          "enabled": true,
+          "configuration": {}
+        }
+      ]
+    },
+    {
+      "c__": "ParallelTask",
+      "name": "Sensor Task",
+      "measures": [
+        {
+          "c__": "PeriodicMeasure",
+          "type": {
+            "c__": "MeasureType",
+            "namepace": "carp",
+            "name": "accelerometer"
+          },
+          "enabled": true,
+          "configuration": {},
+          "frequency": 10000,
+          "duration": 100
+        },
+        {
+          "c__": "PeriodicMeasure",
+          "type": {
+            "c__": "MeasureType",
+            "namepace": "carp",
+            "name": "gyroscope"
+          },
+          "enabled": true,
+          "configuration": {},
+          "frequency": 20000,
+          "duration": 100
+        }
+      ]
+    },
+    {
+      "c__": "Task",
+      "name": "Audio Recording Task",
+      "measures": [
+        {
+          "c__": "AudioMeasure",
+          "type": {
+            "c__": "MeasureType",
+            "namepace": "carp",
+            "name": "audio"
+          },
+          "enabled": true,
+          "configuration": {},
+          "frequency": 600000,
+          "duration": 10000,
+          "study_id": "1234"
+        },
+        {
+          "c__": "NoiseMeasure",
+          "type": {
+            "c__": "MeasureType",
+            "namepace": "carp",
+            "name": "noise"
+          },
+          "enabled": true,
+          "configuration": {},
+          "frequency": 600000,
+          "duration": 10000,
+          "sampling_rate": 500
+        }
+      ]
+    },
+    {
+      "c__": "SequentialTask",
+      "name": "Sample Activity with Weather Task",
+      "measures": [
+        {
+          "c__": "Measure",
+          "type": {
+            "c__": "MeasureType",
+            "namepace": "carp",
+            "name": "activity"
+          },
+          "enabled": true,
+          "configuration": {
+            "jakob": "was here"
+          }
+        },
+        {
+          "c__": "PeriodicMeasure",
+          "type": {
+            "c__": "MeasureType",
+            "namepace": "carp",
+            "name": "weather"
+          },
+          "enabled": true,
+          "configuration": {}
+        }
+      ]
+    },
+    {
+      "c__": "SequentialTask",
+      "name": "Task collecting a list of all installed apps",
+      "measures": [
+        {
+          "c__": "Measure",
+          "type": {
+            "c__": "MeasureType",
+            "namepace": "carp",
+            "name": "apps"
+          },
+          "enabled": true,
+          "configuration": {}
+        }
+      ]
+    }
+  ]
+}

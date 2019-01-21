@@ -45,7 +45,7 @@ Add the following to your apps `manifest.xml` file located in `android/app/src/m
 
 ### iOS Integration
 
-Add this permission in `Info.plist`:
+Add this permission in the `Info.plist` file located in `ios/Runner`:
 
 ```xml
 <key>NSLocationWhenInUseUsageDescription</key>
@@ -77,7 +77,7 @@ The [wiki](https://github.com/cph-cachet/carp.sensing/wiki) contains detailed do
 the [domain model](https://github.com/cph-cachet/carp.sensing/wiki/Domain-Model), its built-in [probes](https://github.com/cph-cachet/carp.sensing/wiki/Probes), 
 and how to [extend](https://github.com/cph-cachet/carp.sensing/wiki/Extending) it.
 
-Below is a very simple / minimum example.
+Below is a very simple / minimum example (a better description is available on the [wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki/Domain-Model)).
 
 ## Example
 
@@ -86,38 +86,64 @@ Below is a very simple / minimum example.
 // Import package
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
-... {
-  // Instantiate a new study
-  Study study = new Study("1234", "bardram", name: "Test study #1");
+method() {
+  // Create a study using a File backend
+  Study study = Study("1234", "bardram", name: "bardram study");
+  study.dataEndPoint = FileDataEndPoint()
+    ..bufferSize = 500 * 1000
+    ..zip = true
+    ..encrypt = false;
 
-  // Setting the data endpoint to print to the console
-  study.dataEndPoint = new DataEndPoint(DataEndPointType.PRINT);
+  // add a task to collect location, activity, and weather information
+  study.addTask(SequentialTask('Location, Activity, and Weather Task')
+    ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.LOCATION)))
+    ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.ACTIVITY)))
+    ..addMeasure(WeatherMeasure(MeasureType(NameSpace.CARP, DataType.WEATHER))
+      ..enabled = true
+      ..frequency = 2 * 60 * 60 * 1000));
 
-  // Create a task to hold measures
-  Task task = new Task("Simple Task");
+  // add sensor collection from accelerometer and gyroscope
+  // careful - these sensors generate a lot of data!
+  study.addTask(ParallelTask('Sensor Task')
+    ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.ACCELEROMETER),
+        frequency: 10 * 1000, // sample every 10 secs)
+        duration: 100 // for 100 ms
+        ))
+    ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.GYROSCOPE),
+        frequency: 20 * 1000, // sample every 20 secs
+        duration: 100 // for 100 ms
+        )));
 
-  // Create a battery and location measures and add them to the task
-  // Both are listening on events from changes from battery and location
-  task.addMeasure(new BatteryMeasure(ProbeRegistry.BATTERY_MEASURE));
-  task.addMeasure(new LocationMeasure(ProbeRegistry.LOCATION_MEASURE));
+  study.addTask(Task('Noise Sampling Task')
+    ..addMeasure(NoiseMeasure(MeasureType(NameSpace.CARP, DataType.NOISE),
+        frequency: 10 * 60 * 1000, // sample sound every 10 min
+        duration: 10 * 1000, // for 10 secs
+        samplingRate: 500 // configure sampling rate to 500 ms
+        )));
 
-  // Create an executor that can execute this study, initialize it, and start it.
-  StudyExecutor executor = new StudyExecutor(study);
-  executor.initialize();
-  executor.start();
+  study.addTask(SequentialTask('Task collecting a list of all installed apps')
+    ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.APPS))));
+
+  // Create a Study Controller that can manage this study, initialize it, and start it.
+  StudyController controller = StudyController(study);
+  controller.initialize();
+  controller.start();
+
+  // listening on all data events from the study
+  controller.events.forEach(print);
+  controller.events.where((datum) => datum.format.namepace == NameSpace.CARP);
+
+  // listening on a specific probe
+  ProbeRegistry.probes[DataType.LOCATION].events.forEach(print);
 }
 ```
 
-There is a very simple [example](example) app which shows how a study can be created with different tasks and measures.
+There is a very simple [example app](example) app which shows how a study can be created with different tasks and measures.
 This app just prints the sensing data to a console screen on the phone.
 
-## Auto generation of files 
+The CARP Mobile Sensing App is available from [Github](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_mobile_sensing_app).
 
-Files depending on JSON serialization can be generated using `build_runner`, by running the following command in the root of your Flutter project:
-```
-flutter packages pub run build_runner build --delete-conflicting-outputs
-```
- 
+
 ## Features and bugs
 
 Please read about existing issues and file new feature requests and bug reports at the [issue tracker][tracker].

@@ -1,6 +1,6 @@
 name: carp_core
 description: The CARP Flutter domain model. The core domain model used across all CARP Flutter plugins.
-version: 0.1.2
+version: 0.1.3
 author:  CACHET Team <cph.cachet@gmail.com>
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_core
 

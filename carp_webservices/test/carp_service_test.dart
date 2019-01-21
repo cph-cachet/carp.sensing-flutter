@@ -1,7 +1,6 @@
 import 'package:test/test.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_service/carp_service.dart';
-import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'dart:convert';
 import 'dart:io';
@@ -54,7 +53,7 @@ void main() {
   group("Datapoints", () {
     test('- post', () async {
       // Create a test location datum
-      LocationDatum datum = LocationDatum.fromMap(<String, dynamic>{
+      LocationDatum datum = LocationDatum.fromMap(Measure(MeasureType(NameSpace.CARP, DataType.LOCATION)), {
         "latitude": 23454.345,
         "longitude": 23.4,
         "altitude": 43.3,

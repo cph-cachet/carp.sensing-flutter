@@ -49,12 +49,9 @@ class FromJsonFactory {
     registerFromJsonFunction("Study", Study.fromJsonFunction);
     registerFromJsonFunction("DataEndPoint", DataEndPoint.fromJsonFunction);
     registerFromJsonFunction("FileDataEndPoint", FileDataEndPoint.fromJsonFunction);
-    registerFromJsonFunction("Task", Task.fromJsonFunction);
+    registerFromJsonFunction("TaskDescriptor", TaskDescriptor.fromJsonFunction);
     registerFromJsonFunction("ParallelTask", ParallelTask.fromJsonFunction);
     registerFromJsonFunction("SequentialTask", SequentialTask.fromJsonFunction);
     registerFromJsonFunction("Measure", Measure.fromJsonFunction);
-    registerFromJsonFunction("ProbeMeasure", ProbeMeasure.fromJsonFunction);
-    registerFromJsonFunction("PollingProbeMeasure", PollingProbeMeasure.fromJsonFunction);
-    registerFromJsonFunction("ListeningProbeMeasure", ListeningProbeMeasure.fromJsonFunction);
   }
 }
