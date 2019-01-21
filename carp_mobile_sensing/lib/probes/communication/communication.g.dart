@@ -12,9 +12,6 @@ TextMessageLogDatum _$TextMessageLogDatumFromJson(Map<String, dynamic> json) {
     ..timestamp = json['timestamp'] == null
         ? null
         : DateTime.parse(json['timestamp'] as String)
-    ..deviceInfo = json['device_info'] == null
-        ? null
-        : DeviceInfo.fromJson(json['device_info'] as Map<String, dynamic>)
     ..textMessageLog = (json['text_message_log'] as List)
         ?.map((e) =>
             e == null ? null : TextMessage.fromJson(e as Map<String, dynamic>))
@@ -32,7 +29,6 @@ Map<String, dynamic> _$TextMessageLogDatumToJson(TextMessageLogDatum instance) {
 
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
-  writeNotNull('device_info', instance.deviceInfo);
   writeNotNull('text_message_log', instance.textMessageLog);
   return val;
 }
@@ -43,9 +39,6 @@ TextMessageDatum _$TextMessageDatumFromJson(Map<String, dynamic> json) {
     ..timestamp = json['timestamp'] == null
         ? null
         : DateTime.parse(json['timestamp'] as String)
-    ..deviceInfo = json['device_info'] == null
-        ? null
-        : DeviceInfo.fromJson(json['device_info'] as Map<String, dynamic>)
     ..textMessage = json['text_message'] == null
         ? null
         : TextMessage.fromJson(json['text_message'] as Map<String, dynamic>);
@@ -62,7 +55,6 @@ Map<String, dynamic> _$TextMessageDatumToJson(TextMessageDatum instance) {
 
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
-  writeNotNull('device_info', instance.deviceInfo);
   writeNotNull('text_message', instance.textMessage);
   return val;
 }
@@ -112,9 +104,6 @@ PhoneLogDatum _$PhoneLogDatumFromJson(Map<String, dynamic> json) {
     ..timestamp = json['timestamp'] == null
         ? null
         : DateTime.parse(json['timestamp'] as String)
-    ..deviceInfo = json['device_info'] == null
-        ? null
-        : DeviceInfo.fromJson(json['device_info'] as Map<String, dynamic>)
     ..phoneLog = (json['phone_log'] as List)
         ?.map((e) =>
             e == null ? null : PhoneCall.fromJson(e as Map<String, dynamic>))
@@ -132,7 +121,6 @@ Map<String, dynamic> _$PhoneLogDatumToJson(PhoneLogDatum instance) {
 
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
-  writeNotNull('device_info', instance.deviceInfo);
   writeNotNull('phone_log', instance.phoneLog);
   return val;
 }

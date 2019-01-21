@@ -14,6 +14,5 @@ import 'package:carp_mobile_sensing/core/core.dart';
 
 part 'battery_probe.dart';
 part 'hardware_datum.dart';
-part 'screen_probe.dart';
-part 'sysinfo_probe.dart';
+part 'hardware_probes.dart';
 part 'hardware.g.dart';

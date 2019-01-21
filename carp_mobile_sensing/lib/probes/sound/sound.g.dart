@@ -18,10 +18,7 @@ AudioDatum _$AudioDatumFromJson(Map<String, dynamic> json) {
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
         ? null
-        : DateTime.parse(json['timestamp'] as String)
-    ..deviceInfo = json['device_info'] == null
-        ? null
-        : DeviceInfo.fromJson(json['device_info'] as Map<String, dynamic>);
+        : DateTime.parse(json['timestamp'] as String);
 }
 
 Map<String, dynamic> _$AudioDatumToJson(AudioDatum instance) {
@@ -35,7 +32,6 @@ Map<String, dynamic> _$AudioDatumToJson(AudioDatum instance) {
 
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
-  writeNotNull('device_info', instance.deviceInfo);
   writeNotNull('filename', instance.filename);
   writeNotNull(
       'start_recording_time', instance.startRecordingTime?.toIso8601String());
@@ -53,10 +49,7 @@ NoiseDatum _$NoiseDatumFromJson(Map<String, dynamic> json) {
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
         ? null
-        : DateTime.parse(json['timestamp'] as String)
-    ..deviceInfo = json['device_info'] == null
-        ? null
-        : DeviceInfo.fromJson(json['device_info'] as Map<String, dynamic>);
+        : DateTime.parse(json['timestamp'] as String);
 }
 
 Map<String, dynamic> _$NoiseDatumToJson(NoiseDatum instance) {
@@ -70,7 +63,6 @@ Map<String, dynamic> _$NoiseDatumToJson(NoiseDatum instance) {
 
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
-  writeNotNull('device_info', instance.deviceInfo);
   writeNotNull('mean_decibel', instance.meanDecibel);
   writeNotNull('std_decibel', instance.stdDecibel);
   writeNotNull('min_decibel', instance.minDecibel);

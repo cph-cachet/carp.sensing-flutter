@@ -7,6 +7,44 @@
 
 part of hardware;
 
+/// Holds basic information about the mobile device from where the data is collected.
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+class DeviceDatum extends CARPDatum {
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.DEVICE);
+  DataFormat get format => CARP_DATA_FORMAT;
+
+  ///The platform type from which this Datum was collected.
+  /// * `Android`
+  /// * `IOS`
+  String platform;
+
+  /// An identifier that is unique to the particular device which this [Datum] was collected.
+  /// Note that this ID will change if the user performs a factory reset on their device.
+  String deviceId;
+
+  /// The hardware type from which this [Datum] was collected (e.g. 'iPhone7,1' for iPhone 6 Plus).
+  String hardware;
+
+  /// Device name as specified by the OS.
+  String deviceName;
+
+  /// Device manufacturer as specified by the OS.
+  String deviceManufacturer;
+
+  /// Device model as specified by the OS.
+  String deviceModel;
+
+  /// Device OS as specified by the OS.
+  String operatingSystem;
+
+  DeviceDatum(this.platform, this.deviceId,
+      {this.deviceName, this.deviceModel, this.deviceManufacturer, this.operatingSystem, this.hardware})
+      : super();
+
+  factory DeviceDatum.fromJson(Map<String, dynamic> json) => _$DeviceDatumFromJson(json);
+  Map<String, dynamic> toJson() => _$DeviceDatumToJson(this);
+}
+
 /// A [Datum] that holds battery level collected from the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class BatteryDatum extends CARPDatum {

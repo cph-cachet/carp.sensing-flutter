@@ -12,9 +12,6 @@ WeatherDatum _$WeatherDatumFromJson(Map<String, dynamic> json) {
     ..timestamp = json['timestamp'] == null
         ? null
         : DateTime.parse(json['timestamp'] as String)
-    ..deviceInfo = json['device_info'] == null
-        ? null
-        : DeviceInfo.fromJson(json['device_info'] as Map<String, dynamic>)
     ..country = json['country'] as String
     ..areaName = json['area_name'] as String
     ..weatherMain = json['weather_main'] as String
@@ -53,7 +50,6 @@ Map<String, dynamic> _$WeatherDatumToJson(WeatherDatum instance) {
 
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
-  writeNotNull('device_info', instance.deviceInfo);
   writeNotNull('country', instance.country);
   writeNotNull('area_name', instance.areaName);
   writeNotNull('weather_main', instance.weatherMain);
