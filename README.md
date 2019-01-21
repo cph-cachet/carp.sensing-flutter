@@ -4,8 +4,8 @@ This repo hold the source code for the [CACHET](http://www.cachet.dk/) Research 
 It contains the source code for CACHET first-party (i.e., developed by the core CACHET team) frameworks, packages, and apps.
 
 In addition, the CARP team maintain a set of [Flutter plugins](https://github.com/cph-cachet/flutter-plugins) (mainly) for sensing purposes. Flutter plugins enable access to platform-specific APIs. For more information
-about plugins, and how to use them, see
-[https://flutter.io/platform-plugins/](https://flutter.io/platform-plugins/).
+about plugins, and how to use them, see the
+[Flutter Packages](https://flutter.io/platform-plugins/) description.
 
 These plugins are also available on [pub](https://pub.dartlang.org/flutter/plugins).
 
