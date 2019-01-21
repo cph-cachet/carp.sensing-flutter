@@ -1,11 +1,11 @@
 name: carp_firebase_backend
 description: Google Firebase data backend for CARP mobile sensing. Supports uploading json to Firebase as either zipped filed to Firebase Storage or as plain json to Firebase Database.
-version: 0.2.1
+version: 0.3.0
 author:  CACHET Team <cph.cachet@gmail.com>
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_firebase_backend
 
 environment:
-  sdk: ">=2.0.0-dev.68.0 <3.0.0"
+  sdk: ">=2.0.0-dev <3.0.0"
 
 dependencies:
   flutter:
@@ -15,14 +15,14 @@ dependencies:
   firebase_storage: ^1.0.2
   firebase_auth: ^0.5.20
   cloud_firestore: ^0.8.2+3
-  carp_mobile_sensing: ^0.2.4
+  carp_mobile_sensing: ^0.3.0
 
 
 # Overriding carp_mobile_sensing and carp_core to use the local copy
 # Remove this when done development
-dependency_overrides:
-  carp_mobile_sensing:
-    path: ../carp_mobile_sensing/
+#dependency_overrides:
+#  carp_mobile_sensing:
+#    path: ../carp_mobile_sensing/
 
 dev_dependencies:
   flutter_test:

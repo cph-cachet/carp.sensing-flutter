@@ -11,13 +11,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  carp_mobile_sensing: ^0.2.0
+  carp_mobile_sensing: ^0.3.0
 
 # Overriding carp_mobile_sensing to use the local copy
 # Remove this when done development
-dependency_overrides:
-  carp_mobile_sensing:
-    path: ../carp_mobile_sensing/
+#dependency_overrides:
+#  carp_mobile_sensing:
+#    path: ../carp_mobile_sensing/
 
 
 dev_dependencies:

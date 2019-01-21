@@ -1,8 +1,7 @@
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_service/carp_service.dart';
-import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
-import 'dart:convert';
+import 'package:carp_mobile_sensing/core/core.dart';
 import 'dart:io';
 
 void main() async {
