@@ -7,55 +7,36 @@ class Sensing {
 
   List<String> get availableProbes => ProbeRegistry.availableProbeTypes;
 
-  //List<Probe> get runningProbes => ProbeRegistry.probes.;
   StudyController controller;
   StudyManager mock = new StudyMock();
 
   List<Probe> get runningProbes => (controller != null) ? controller.executor.probes : List();
 
   Sensing() : super() {
-    // Register a [StorageDataManager]s in the [DataManagerRegistry].
     DataManagerRegistry.register(DataEndPointType.PRINT, new ConsoleDataManager());
-    //DataManagerRegistry.register(DataEndPointType.FIREBASE_STORAGE, new FirebaseStorageDataManager());
-    //DataManagerRegistry.register(DataEndPointType.FIREBASE_DATABASE, new FirebaseDatabaseDataManager());
     DataManagerRegistry.register(DataEndPointType.FILE, new FileDataManager());
     DataManagerRegistry.register(DataEndPointType.CARP, new CarpDataManager());
+    //DataManagerRegistry.register(DataEndPointType.FIREBASE_STORAGE, new FirebaseStorageDataManager());
+    //DataManagerRegistry.register(DataEndPointType.FIREBASE_DATABASE, new FirebaseDatabaseDataManager());
   }
 
-  /// (Re)start sensing.
+  /// Start sensing.
   void start() async {
     // Get the study.
     study = await mock.getStudy(testStudyId);
     print(study.toString());
 
-    // Create a Study Manager that can manage this study, initialize it, and start it.
-    //manager = StudyManager(study);
-//    manager = StudyManager(
-//      study,
-//      samplingSchema: SamplingSchema.normal(powerAware: true),
-//      //    transformer: ((events) => events.where((event) => (event is BatteryDatum)))
-//    );
-
-    controller = StudyController(
-      study,
-//      samplingSchema: SamplingSchema.common(),
-    );
-
-//    SamplingSchema.common()
-//        .getMeasureList([DataType.LOCATION, DataType.WEATHER, DataType.ACTIVITY], namepace: NameSpace.CARP);
-
+    // Create a Study Controller that can manage this study, initialize it, and start it.
+    controller = StudyController(study);
     await controller.initialize();
-    await controller.start();
+    controller.start();
     print("Sensing started ...");
 
-    // listening on all data events from the study
+    // listening on all data events from the study and print it (for debugging purpose).
     controller.events.forEach(print);
 
     // listening on a specific probe
-    ProbeRegistry.probes[DataType.LOCATION].events.forEach(print);
-
-    print('PROBE REGISTRY:');
-    ProbeRegistry.probes.forEach((key, probe) => print('  [$key] : ${probe.runtimeType}'));
+    //ProbeRegistry.probes[DataType.LOCATION].events.forEach(print);
   }
 
   /// Stop sensing.
@@ -66,6 +47,7 @@ class Sensing {
   }
 }
 
+/// Used as a mock [StudyManager] to generate a local study.
 class StudyMock implements StudyManager {
   final String username = "researcher";
   final String password = "password";

@@ -47,14 +47,10 @@ class _ProbeListState extends State<ProbesList> {
         if (snapshot.hasData) {
           return ListTile(
             isThreeLine: true,
-            leading: Icon(
-              probe.icon.icon,
-              size: 50,
-              color: probe.icon.color,
-            ),
+            leading: probe.icon,
             title: Text(probe.name),
-//            subtitle: Text(probe.description),
-            subtitle: Text(probe.measure.toString()),
+            subtitle: Text(probe.description),
+//            subtitle: Text(probe.measure.toString()),
             trailing: probe.stateIcon,
           );
         } else if (snapshot.hasError) {

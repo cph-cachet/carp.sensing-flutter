@@ -14,7 +14,7 @@ part 'src/ui/probe_list.dart';
 part 'src/ui/data_viz.dart';
 part 'src/ui/study_viz.dart';
 part 'src/ui/cachet.dart';
-part 'src/models/probe_description.dart';
+part 'package:carp_mobile_sensing_app/src/models/probe_description.dart';
 
 void main() {
   runApp(App());
