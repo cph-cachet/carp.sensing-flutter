@@ -175,6 +175,7 @@ PhoneLogMeasure _$PhoneLogMeasureFromJson(Map<String, dynamic> json) {
           ? null
           : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
       name: json['name'],
+      enabled: json['enabled'],
       days: json['days'] as int)
     ..c__ = json['c__'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)
@@ -193,6 +194,7 @@ Map<String, dynamic> _$PhoneLogMeasureToJson(PhoneLogMeasure instance) {
   writeNotNull('c__', instance.c__);
   writeNotNull('type', instance.type);
   writeNotNull('name', instance.name);
+  writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
   writeNotNull('days', instance.days);
   return val;

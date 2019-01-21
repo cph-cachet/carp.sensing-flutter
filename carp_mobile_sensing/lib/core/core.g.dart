@@ -8,12 +8,15 @@ part of core;
 
 Study _$StudyFromJson(Map<String, dynamic> json) {
   return Study(json['id'] as String, json['user_id'] as String,
-      name: json['name'] as String, description: json['description'] as String)
+      name: json['name'] as String,
+      description: json['description'] as String,
+      samplingStrategy: json['sampling_strategy'] as String,
+      dataEndPoint: json['data_end_point'] == null
+          ? null
+          : DataEndPoint.fromJson(
+              json['data_end_point'] as Map<String, dynamic>),
+      dataFormat: json['data_format'] as String)
     ..c__ = json['c__'] as String
-    ..dataEndPoint = json['data_end_point'] == null
-        ? null
-        : DataEndPoint.fromJson(json['data_end_point'] as Map<String, dynamic>)
-    ..samplingStrategy = json['sampling_strategy'] as String
     ..tasks = (json['tasks'] as List)
         ?.map(
             (e) => e == null ? null : Task.fromJson(e as Map<String, dynamic>))
@@ -34,8 +37,9 @@ Map<String, dynamic> _$StudyToJson(Study instance) {
   writeNotNull('user_id', instance.userId);
   writeNotNull('name', instance.name);
   writeNotNull('description', instance.description);
-  writeNotNull('data_end_point', instance.dataEndPoint);
   writeNotNull('sampling_strategy', instance.samplingStrategy);
+  writeNotNull('data_end_point', instance.dataEndPoint);
+  writeNotNull('data_format', instance.dataFormat);
   writeNotNull('tasks', instance.tasks);
   return val;
 }
@@ -450,8 +454,8 @@ PeriodicMeasure _$PeriodicMeasureFromJson(Map<String, dynamic> json) {
       json['type'] == null
           ? null
           : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
-      name: json['name'],
-      enabled: json['enabled'],
+      name: json['name'] as String,
+      enabled: json['enabled'] as bool,
       frequency: json['frequency'] as int,
       duration: json['duration'] as int)
     ..c__ = json['c__'] as String
@@ -479,7 +483,7 @@ Map<String, dynamic> _$PeriodicMeasureToJson(PeriodicMeasure instance) {
 }
 
 MeasureType _$MeasureTypeFromJson(Map<String, dynamic> json) {
-  return MeasureType(json['namepace'] as String, json['name'] as String)
+  return MeasureType(json['namespace'] as String, json['name'] as String)
     ..c__ = json['c__'] as String;
 }
 
@@ -493,7 +497,7 @@ Map<String, dynamic> _$MeasureTypeToJson(MeasureType instance) {
   }
 
   writeNotNull('c__', instance.c__);
-  writeNotNull('namepace', instance.namepace);
+  writeNotNull('namespace', instance.namespace);
   writeNotNull('name', instance.name);
   return val;
 }

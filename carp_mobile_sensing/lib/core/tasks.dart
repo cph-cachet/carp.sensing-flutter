@@ -17,7 +17,7 @@ class Task extends Serializable {
   /// A list of [Measure]s to be done as part of this task.
   List<Measure> measures = new List<Measure>();
 
-  Task(this.name) : super();
+  Task([this.name = '']) : super();
 
   static Function get fromJsonFunction => _$TaskFromJson;
   factory Task.fromJson(Map<String, dynamic> json) =>
@@ -40,7 +40,7 @@ class Task extends Serializable {
 /// A [Task] which runs all [Measure]s in parallel.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ParallelTask extends Task {
-  ParallelTask(String name) : super(name);
+  ParallelTask([String name]) : super(name);
 
   static Function get fromJsonFunction => _$ParallelTaskFromJson;
   factory ParallelTask.fromJson(Map<String, dynamic> json) =>
@@ -55,7 +55,7 @@ class ParallelTask extends Task {
 /// previous measure has ended.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class SequentialTask extends Task {
-  SequentialTask(String name) : super(name);
+  SequentialTask([String name]) : super(name);
 
   static Function get fromJsonFunction => _$SequentialTaskFromJson;
   factory SequentialTask.fromJson(Map<String, dynamic> json) =>

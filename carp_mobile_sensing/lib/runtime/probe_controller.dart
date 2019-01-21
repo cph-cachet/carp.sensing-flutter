@@ -4,41 +4,41 @@ part of runtime;
 // Controller for creating and adding events to a stream.
 // -------------------------------------------------------------------
 
-/// Type of a probe controller's `onStart`, `onRestart`, `onResume`, `onPause` and `onStop` callbacks.
-typedef void ControllerCallback();
-
-/// Type of stream controller `onInitialize` callbacks.
-typedef void ControllerInitializeCallback(Measure measure);
-
-abstract class ProbeController<T> {
-  /// The probe that this controller is controlling.
-  //Probe<T> get probe;
-
-  /// The stream of data from the probe this controller is controlling.
-  Stream<T> get stream;
-
-  factory ProbeController(
-      {void onInitialize(Measure measure),
-      void onStart(),
-      void onRestart(),
-      void onPause(),
-      void onResume(),
-      onStop()}) {
-    return null;
-  }
-}
-
-abstract class StreamProbeController<T> {
-  factory StreamProbeController(Stream<T> stream,
-      {void onInitialize(Measure measure),
-      void onStart(),
-      void onRestart(),
-      void onPause(),
-      void onResume(),
-      onStop()}) {
-    return null;
-  }
-}
+///// Type of a probe controller's `onStart`, `onRestart`, `onResume`, `onPause` and `onStop` callbacks.
+//typedef void ControllerCallback();
+//
+///// Type of stream controller `onInitialize` callbacks.
+//typedef void ControllerInitializeCallback(Measure measure);
+//
+//abstract class ProbeController<T> {
+//  /// The probe that this controller is controlling.
+//  //Probe<T> get probe;
+//
+//  /// The stream of data from the probe this controller is controlling.
+//  Stream<T> get stream;
+//
+//  factory ProbeController(
+//      {void onInitialize(Measure measure),
+//      void onStart(),
+//      void onRestart(),
+//      void onPause(),
+//      void onResume(),
+//      onStop()}) {
+//    return null;
+//  }
+//}
+//
+//abstract class StreamProbeController<T> {
+//  factory StreamProbeController(Stream<T> stream,
+//      {void onInitialize(Measure measure),
+//      void onStart(),
+//      void onRestart(),
+//      void onPause(),
+//      void onResume(),
+//      onStop()}) {
+//    return null;
+//  }
+//}
 
 /// The [BatteryProbe] listens to the hardware battery and collect a [BatteryDatum]
 /// every time the battery state changes. For example, battery level or charging mode.

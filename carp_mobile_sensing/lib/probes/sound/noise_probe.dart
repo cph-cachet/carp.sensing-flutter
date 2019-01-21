@@ -22,8 +22,6 @@ class NoiseProbe extends BufferingPeriodicStreamProbe {
   int samplingRate;
   List<num> _noiseReadings = new List();
 
-  Stream<Datum> get events => controller.stream;
-
   NoiseProbe(NoiseMeasure measure) : super(measure, _noise.noiseStream);
 
   void onRestart() {
@@ -44,7 +42,7 @@ class NoiseProbe extends BufferingPeriodicStreamProbe {
     // Do nothing
   }
 
-  void onData(dynamic event) {
+  void onSamplingData(dynamic event) {
     _noiseReadings.add(event.decibel);
   }
 

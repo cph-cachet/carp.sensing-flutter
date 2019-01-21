@@ -61,43 +61,41 @@ class AudioProbe extends BufferingPeriodicProbe {
   }
 
   void _startAudioRecording() async {
-    print('>>> startRecording, isRecording; $_isRecording');
     if (_isRecording) return;
-//    try {
-    soundFileName = await filePath;
-    _startRecordingTime = DateTime.now();
-    String s = await _flutterSound.startRecorder(soundFileName);
-    print('>>> s: $s');
-    _isRecording = true;
-//    } catch (err) {
-//      controller.addError(err);
-//    }
+    try {
+      soundFileName = await filePath;
+      _startRecordingTime = DateTime.now();
+      await _flutterSound.startRecorder(soundFileName);
+      _isRecording = true;
+    } catch (err) {
+      controller.addError(err);
+    }
   }
 
   Future<String> _stopAudioRecording() async {
-//    try {
-    String result = await _flutterSound.stopRecorder();
-    _endRecordingTime = DateTime.now();
-    _isRecording = false;
-    return result;
-//    } catch (err) {
-//      controller.addError(err);
-//    }
+    try {
+      String result = await _flutterSound.stopRecorder();
+      _endRecordingTime = DateTime.now();
+      _isRecording = false;
+      return result;
+    } catch (err) {
+      controller.addError(err);
+    }
   }
 
   Future<Datum> getDatum() async {
-//    try {
-    String result = await _stopAudioRecording();
-    if (result != null) {
-      String filename = soundFileName.split("/").last;
-      return AudioDatum(
-          filename: filename, startRecordingTime: _startRecordingTime, endRecordingTime: _endRecordingTime);
-    } else {
-      return ErrorDatum(message: "No sound recording available");
+    try {
+      String result = await _stopAudioRecording();
+      if (result != null) {
+        String filename = soundFileName.split("/").last;
+        return AudioDatum(
+            filename: filename, startRecordingTime: _startRecordingTime, endRecordingTime: _endRecordingTime);
+      } else {
+        return ErrorDatum(message: "No sound recording available");
+      }
+    } catch (err) {
+      return ErrorDatum(message: "AudioProbe Error: $err");
     }
-//    } catch (err) {
-//      return ErrorDatum(message: "AudioProbe error - $err");
-// }
   }
 
   ///Returns the local path on the device where sound files can be stored.

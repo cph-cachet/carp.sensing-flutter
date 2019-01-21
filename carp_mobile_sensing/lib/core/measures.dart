@@ -18,12 +18,14 @@ class Measure extends Serializable {
   /// Whether the measure is enabled - i.e. collecting data - when the study is running.
   /// A measure is enabled as default.
   bool enabled = true;
-  bool _storedEnabled = true;
 
   /// A key-value map holding any application-specific configuration.
   Map<String, String> configuration = new Map<String, String>();
 
-  Measure(this.type, {this.name, this.enabled})
+  bool _storedEnabled = true;
+  List<MeasureListener> _listeners = new List<MeasureListener>();
+
+  Measure(this.type, {this.name, this.enabled = true})
       : assert(type != null),
         super() {
     enabled = enabled ?? true;
@@ -46,7 +48,6 @@ class Measure extends Serializable {
 
   /// Remove a [MeasureListener] to this [Measure].
   void removeMeasureListener(MeasureListener listener) => _listeners.remove(listener);
-  List<MeasureListener> _listeners = new List<MeasureListener>();
 
   /// Adapt this [Measure] to a new value specified in [measure].
   void adapt(Measure measure) {
@@ -77,20 +78,16 @@ class Measure extends Serializable {
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class PeriodicMeasure extends Measure {
   /// Sampling frequency in milliseconds (i.e., delay between sampling).
-  int get frequency => _frequency;
-  int _frequency;
+  int frequency;
   int _storedFrequency;
 
   /// The sampling duration in milliseconds.
-  int get duration => _duration;
-  int _duration;
+  int duration;
   int _storedDuration;
 
-  PeriodicMeasure(MeasureType type, {String name, bool enabled, int frequency, int duration})
+  PeriodicMeasure(MeasureType type, {String name, bool enabled, this.frequency, this.duration})
       : super(type, name: name, enabled: enabled) {
-    _frequency = frequency;
     _storedFrequency = frequency;
-    _duration = duration;
     _storedDuration = duration;
   }
 
@@ -103,16 +100,16 @@ class PeriodicMeasure extends Measure {
     super.adapt(measure);
     if (measure is PeriodicMeasure) {
       _storedFrequency = this.frequency;
-      this._frequency = measure.frequency;
+      this.frequency = measure.frequency;
       _storedDuration = this.duration;
-      this._duration = measure.duration;
+      this.duration = measure.duration;
     }
   }
 
   void restore() {
     super.restore();
-    this._frequency = _storedFrequency;
-    this._duration = _storedDuration;
+    this.frequency = _storedFrequency;
+    this.duration = _storedDuration;
   }
 
   String toString() => super.toString() + ', frequency: $frequency, duration: $duration';
@@ -122,19 +119,19 @@ class PeriodicMeasure extends Measure {
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MeasureType extends Serializable {
   /// The data type namespace. See [NameSpace].
-  String namepace;
+  String namespace;
 
   /// The name of this data format. See [DataType].
   String name;
 
-  MeasureType(this.namepace, this.name) : super();
+  MeasureType(this.namespace, this.name) : super();
 
   static Function get fromJsonFunction => _$MeasureTypeFromJson;
   factory MeasureType.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$MeasureTypeToJson(this);
 
-  String toString() => "$namepace.$name";
+  String toString() => "$namespace.$name";
 }
 
 /// A Listener that can listen on changes to a [Measure].

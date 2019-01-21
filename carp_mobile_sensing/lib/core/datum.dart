@@ -162,7 +162,7 @@ class DataFormat {
   final String name;
 
   const DataFormat(this.namepace, this.name) : super();
-  factory DataFormat.fromDataType(MeasureType type) => DataFormat(type.namepace, type.name);
+  factory DataFormat.fromDataType(MeasureType type) => DataFormat(type.namespace, type.name);
 
   factory DataFormat.fromJson(Map<String, dynamic> json) => _$DataFormatFromJson(json);
   Map<String, dynamic> toJson() => _$DataFormatToJson(this);

@@ -30,7 +30,7 @@ class LightProbe extends BufferingPeriodicStreamProbe {
 
   void onSamplingEnd() {}
 
-  void onData(luxValue) => luxValues.add(luxValue);
+  void onSamplingData(luxValue) => luxValues.add(luxValue);
 }
 
 Stream get lightSensorStream => Light().lightSensorStream;

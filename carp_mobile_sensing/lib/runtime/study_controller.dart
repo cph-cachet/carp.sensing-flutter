@@ -13,26 +13,27 @@ class StudyController {
   DataManager dataManager;
   DatumStreamTransformer transformer;
   SamplingSchema samplingSchema;
-
   Stream<Datum> events;
-  BatteryProbe battery =
-      BatteryProbe(Measure(MeasureType(NameSpace.CARP, DataType.BATTERY), name: 'PowerAwarenessProbe'));
   PowerAwarenessState powerAwarenessState = NormalSamplingState.instance;
 
+  /// Create a new [StudyController] to control the [study].
+  ///
+  /// A custom study executor can be specified in [executor]. If null, the default [StudyExecutor] is used.
+  /// If [samplingSchema] is null, [SamplingSchema.normal()] with power-awareness is used.
+  /// If [dataManager] is null, a [DataManager] will be looked up in the [DataManagerRegistry] based on
+  /// the type of the study's [DataEndPoint].
+  /// If [transformer] is null, a 1:1 mapping is done, i.e. no transformation.
   StudyController(this.study, {this.executor, this.samplingSchema, this.dataManager, this.transformer})
       : assert(study != null),
         super() {
-    // if no executor is specified, use the default one
     executor ??= StudyExecutor(study);
-    // if no sampling schema is specified, use the normal one with power-awareness
     samplingSchema ??= SamplingSchema.normal(powerAware: true);
-    // if the data manager hasn't been set, then try to look it up in the [DataManagerRegistry]
     dataManager ??= DataManagerRegistry.lookup(study.dataEndPoint.type);
-    // if no transform function is specified, create a 1:1 mapping
     transformer ??= ((events) => events);
     events = transformer(executor.events);
   }
 
+  /// Initialize this controller. Must be called only once, and before [start] is called.
   Future<void> initialize() async {
     await Device.getDeviceInfo();
     print('Initializing Study Manager for study: ' + study.name);
@@ -51,9 +52,13 @@ class StudyController {
     dataManager.initialize(study, events);
   }
 
+  BatteryProbe _battery =
+      BatteryProbe(Measure(MeasureType(NameSpace.CARP, DataType.BATTERY), name: 'PowerAwarenessProbe'));
+
+  /// Enable power-aware sensing in this study. See [PowerAwarenessState].
   Future<void> enablePowerAwareness() async {
     if (samplingSchema.powerAware) {
-      battery.events.listen((datum) {
+      _battery.events.listen((datum) {
         BatteryDatum battery_state = (datum as BatteryDatum);
         if (battery_state.batteryStatus == BatteryDatum.STATE_DISCHARGING) {
           // only apply power-awareness if not charging.
@@ -65,30 +70,38 @@ class StudyController {
           }
         }
       });
-      battery.initialize();
-      battery.start();
+      _battery.initialize();
+      _battery.start();
     }
   }
 
+  /// Disable power-aware sensing.
   void disablePowerAwareness() {
-    battery.stop();
+    _battery.stop();
   }
 
+  /// Start this controller, i.e. start collecting data according to the specified [study] and [samplingSchema].
   Future<void> start() async {
     enablePowerAwareness();
     executor.start();
   }
 
+  /// Stop the sampling.
+  ///
+  /// Once a controller is stopped it **cannot** be (re)started.
+  /// If a controller should be restarted, use the [pause] and [resume] methods.
   void stop() {
     disablePowerAwareness();
     dataManager.close();
     executor.stop();
   }
 
+  /// Pause the controller, which will pause data collection.
   void pause() {
     executor.pause();
   }
 
+  /// Resume the controller, i.e. resume data collection.
   void resume() {
     executor.resume();
   }
@@ -97,9 +110,9 @@ class StudyController {
 /// This default power-awareness schema operates with four power states:
 ///
 ///
-///       0%     10%            30%           50%                           1000%
-///       +-------+--------------+-------------+------------------------------+
-///         none      minimum         light                normal
+///       0%   10%        30%        50%                         100%
+///       +-----+----------+----------+----------------------------+
+///        none   minimum     light              normal
 ///
 abstract class PowerAwarenessState {
   static const int LIGHT_SAMPLING_LEVEL = 50;

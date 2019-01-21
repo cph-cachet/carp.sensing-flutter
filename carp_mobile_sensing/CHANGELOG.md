@@ -2,8 +2,10 @@
 * major updates to the domain model as a `core` library
     * `Measure` now have a `configuration`
 * simplification to probe implementations
-* all probes now uses Streams and supports a reactive programming model
-
+* all probes now uses the Dart `Stream` API and supports a reactive programming model
+* all probes adjusted to a stream model
+* implementation of `SamplingSchema` architecture
+* support for power-aware sampling using different sampling schemas
 
 
 ## 0.2.6

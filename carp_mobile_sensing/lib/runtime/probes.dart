@@ -119,9 +119,9 @@ abstract class AbstractProbe with MeasureListener implements Probe {
   StreamController<ProbeState> _stateEventController = StreamController.broadcast();
   Stream<ProbeState> get stateEvents => _stateEventController.stream;
 
-  bool get enabled => measure.enabled;
+  bool get enabled => measure.enabled ?? true;
   String get type => measure.type.name;
-  String get name => measure.name;
+  String get name => measure.name ?? 'NO_NAME';
 
   ProbeState get state => _stateMachine.state;
 
@@ -327,10 +327,8 @@ abstract class PeriodicDatumProbe extends DatumProbe {
   Duration frequency, duration;
 
   PeriodicDatumProbe(PeriodicMeasure measure) : super(measure) {
-    frequency = Duration(milliseconds: (measure as PeriodicMeasure).frequency);
-    duration = ((measure as PeriodicMeasure).duration != null)
-        ? Duration(milliseconds: (measure as PeriodicMeasure).duration)
-        : null;
+    frequency = Duration(milliseconds: measure.frequency);
+    duration = (measure.duration != null) ? Duration(milliseconds: measure.duration) : null;
   }
 
   Stream<Datum> get events => controller.stream;
@@ -348,7 +346,7 @@ abstract class PeriodicDatumProbe extends DatumProbe {
     timer = Timer.periodic(frequency, (Timer t) async {
       try {
         getDatum().then((Datum data) {
-          controller.add(data);
+          if (data != null) controller.add(data);
         });
       } catch (e, s) {
         controller.addError(e, s);
@@ -527,6 +525,9 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
   Future<Datum> getDatum();
 }
 
+//typedef OnSamplingDataCallback = void Function(dynamic event);
+//typedef OnSamplingCallback = void Function();
+
 /// An abstract probe which can be used to sample data from a buffering stream,
 /// every [frequency] for a period of [duration]. These events are buffered, and
 /// once collected for the [duration], are collected from the [getDatum] method and
@@ -550,21 +551,17 @@ abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
   }
 
   void onStart() async {
-    // subscribing to the buffering stream events
-    subscription = _bufferingStream.listen(onData, onError: onError, onDone: onDone);
+    subscription = _bufferingStream.listen(onSamplingData, onError: onError, onDone: onDone);
   }
 
   void onResume() {
     subscription.resume();
-    // create a recurrent timer that every [frequency] resumes the buffering.
     timer = Timer.periodic(frequency, (Timer t) {
       onSamplingStart();
       subscription.resume();
-      // create a timer that stops the buffering after the specified [duration].
       Timer(duration, () {
         subscription.pause();
         onSamplingEnd();
-        // collect the datum
         getDatum().then((datum) {
           if (datum != null) controller.add(datum);
         });
@@ -581,14 +578,16 @@ abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
     });
   }
 
+  // Sub-classes should implement the following handler methods.
+
   /// Handler called when sampling period starts.
   void onSamplingStart();
 
   /// Handler called when sampling period ends.
   void onSamplingEnd();
 
-  /// Handler for handling onData events.
-  void onData(dynamic event);
+  /// Handler for handling onData events from the buffering stream.
+  void onSamplingData(dynamic event);
 
   /// Subclasses should implement / override this method to collect the [Datum].
   /// This method will be called every time data has been buffered for a [duration]

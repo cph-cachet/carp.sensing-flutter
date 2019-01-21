@@ -14,7 +14,8 @@ part of audio;
 class AudioMeasure extends PeriodicMeasure {
   /// The study id for the study recording this audio. Needed for
   /// storing the audio file correctly in the device's file system.
-  String studyId = '0';
+  /// If no [studyId] is provide, `default_study` will be used as the default id.
+  String studyId = 'default_study';
 
   AudioMeasure(MeasureType type, {name, enabled = true, frequency, duration, this.studyId})
       : super(type, name: name, enabled: enabled, frequency: frequency, duration: duration);

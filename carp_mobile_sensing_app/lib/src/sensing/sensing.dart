@@ -9,7 +9,7 @@ class Sensing {
 
   //List<Probe> get runningProbes => ProbeRegistry.probes.;
   StudyController controller;
-  StudyReceiver mock = new StudyMock();
+  StudyManager mock = new StudyMock();
 
   List<Probe> get runningProbes => (controller != null) ? controller.executor.probes : List();
 
@@ -38,11 +38,11 @@ class Sensing {
 
     controller = StudyController(
       study,
-      samplingSchema: SamplingSchema.common(),
+//      samplingSchema: SamplingSchema.common(),
     );
 
-    SamplingSchema.common()
-        .getMeasureList([DataType.LOCATION, DataType.WEATHER, DataType.ACTIVITY], namepace: NameSpace.CARP);
+//    SamplingSchema.common()
+//        .getMeasureList([DataType.LOCATION, DataType.WEATHER, DataType.ACTIVITY], namepace: NameSpace.CARP);
 
     await controller.initialize();
     await controller.start();
@@ -52,7 +52,7 @@ class Sensing {
     controller.events.forEach(print);
 
     // listening on a specific probe
-    //ProbeRegistry.probes[DataType.LOCATION].events.forEach(print);
+    ProbeRegistry.probes[DataType.LOCATION].events.forEach(print);
 
     print('PROBE REGISTRY:');
     ProbeRegistry.probes.forEach((key, probe) => print('  [$key] : ${probe.runtimeType}'));
@@ -66,7 +66,7 @@ class Sensing {
   }
 }
 
-class StudyMock implements StudyReceiver {
+class StudyMock implements StudyManager {
   final String username = "researcher";
   final String password = "password";
   final String uri = "http://staging.carp.cachet.dk:8080";
@@ -82,12 +82,23 @@ class StudyMock implements StudyReceiver {
   Study _study;
   Future<Study> getStudy(String studyId) async {
     if (_study == null) {
-      _study = new Study(studyId, username, name: "Test study #1");
+      _study = Study('DF#4dD', 'user@cachet.dk')
+        ..name = 'CARP Mobile Sensing - default configuration'
+        ..dataEndPoint = getDataEndpoint(DataEndPointType.FILE)
+        ..addTask(Task()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
 
-      print("Setting up '${_study.name}'...");
+      // adding a set of specific measures from the `common` sampling schema to one no-name task
+//      _study.addTask(Task()
+//        ..measures = SamplingSchema.common().getMeasureList(
+//            [DataType.PEDOMETER, DataType.LOCATION, DataType.ACTIVITY, DataType.WEATHER],
+//            namespace: NameSpace.CARP));
+
+      // OLD stuff below
+
+//      _study = new Study(studyId, username, name: "Test study #1");
 
       // specify the [DataEndPoint] for this study.
-      _study.dataEndPoint = getDataEndpoint(DataEndPointType.PRINT);
+      //    _study.dataEndPoint = getDataEndpoint(DataEndPointType.PRINT);
 
 //      Task task = Task('Task #1');
 //
@@ -97,18 +108,18 @@ class StudyMock implements StudyReceiver {
 //
 //      _study.addTask(task);
 
-      _study.tasks.add(sensorTask);
-      _study.tasks.add(pedometerTask);
-      _study.tasks.add(hardwareTask);
-      _study.tasks.add(appTask);
-      _study.tasks.add(connectivityTask);
-      _study.tasks.add(commTask);
-      _study.tasks.add(locationTask);
-      //_study.tasks.add(audioTask);
-      _study.tasks.add(contextTask);
-      _study.tasks.add(noiseTask);
-      _study.tasks.add(appUsageTask);
-      _study.tasks.add(environmentTask);
+//      //_study.tasks.add(sensorTask);
+//      _study.tasks.add(pedometerTask);
+//      _study.tasks.add(hardwareTask);
+//      _study.tasks.add(appTask);
+//      _study.tasks.add(connectivityTask);
+//      _study.tasks.add(commTask);
+//      _study.tasks.add(locationTask);
+//      //_study.tasks.add(audioTask);
+//      _study.tasks.add(contextTask);
+//      _study.tasks.add(noiseTask);
+//      _study.tasks.add(appUsageTask);
+//      _study.tasks.add(environmentTask);
     }
     return _study;
   }
@@ -120,7 +131,7 @@ class StudyMock implements StudyReceiver {
       case DataEndPointType.PRINT:
         return new DataEndPoint(DataEndPointType.PRINT);
       case DataEndPointType.FILE:
-        return FileDataEndPoint(bufferSize: 50 * 1000, zip: true, encrypt: false);
+        return FileDataEndPoint(bufferSize: 500 * 1000, zip: true, encrypt: false);
       case DataEndPointType.CARP:
 //        return CarpDataEndPoint(CarpUploadMethod.DATA_POINT,
 //            name: 'CARP Staging Server',

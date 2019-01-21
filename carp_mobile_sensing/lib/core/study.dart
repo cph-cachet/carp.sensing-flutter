@@ -11,7 +11,7 @@ part of core;
 ///
 /// A [Study] specify a list of [Task]s, which again consists of a list of [Measure]s.
 ///
-/// A study may be fetched in a [StudyReceiver] who knows how to fetch a study protocol for this device.
+/// A study may be fetched in a [StudyManager] who knows how to fetch a study protocol for this device.
 /// A study is executes by a [StudyManager]. Data from the study is uploaded to the specified [DataEndPoint]
 /// in the specified [dataFormat].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)

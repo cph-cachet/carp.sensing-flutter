@@ -9,6 +9,5 @@ import 'package:app_usage/app_usage.dart';
 import 'package:carp_mobile_sensing/core/core.dart';
 
 part 'apps_datum.dart';
-part 'apps_probe.dart';
-part 'app_usage_probe.dart';
+part 'app_probes.dart';
 part 'apps.g.dart';

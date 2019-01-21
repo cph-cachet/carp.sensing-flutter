@@ -2,28 +2,26 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 /// This is the code for the very minimal example used in the README.md file.
 void example() {
+  // Create a study using a File Backend
   Study study = Study("1234", "bardram", name: "bardram study");
   study.dataEndPoint = FileDataEndPoint()
     ..bufferSize = 500 * 1000
     ..zip = true
     ..encrypt = false;
 
-  // Create a task that take a a battery and location measures.
-  // Both are listening on events from changes from battery and location
-  study.addTask(Task('Location and Battery Task')
-    ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.BATTERY)))
-    ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.LOCATION))));
+  // add a task to collect location, activity, and weather information
+  study.addTask(SequentialTask('Location, Activity, and Weather Task')
+    ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.LOCATION)))
+    ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.ACTIVITY)))
+    ..addMeasure(WeatherMeasure(MeasureType(NameSpace.CARP, DataType.WEATHER))
+      ..enabled = true
+      ..frequency = 2 * 60 * 60 * 1000));
 
-  // Create another task to collect activity and weather information
-  study.addTask(SequentialTask('Sample Activity with Weather Task')
-    ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.ACTIVITY))..configuration['jakob'] = 'was here')
-    ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.WEATHER))));
-
-  study.addTask(Task('Location Task')..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.LOCATION))));
-
+  // add sensor collection from accelerometer and gyroscope
+  // careful - these sensors generate a lot of data!
   study.addTask(ParallelTask('Sensor Task')
     ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.ACCELEROMETER),
-        frequency: 10 * 1000, // sample every 10 secs
+        frequency: 10 * 1000, // sample every 10 secs)
         duration: 100 // for 100 ms
         ))
     ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.GYROSCOPE),
@@ -45,20 +43,20 @@ void example() {
   study.addTask(SequentialTask('Task collecting a list of all installed apps')
     ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.APPS))));
 
-  // Create a Study Manager that can manage this study, initialize it, and start it.
-  //StudyManager manager = StudyManager(study);
+  // Create a Study Controller that can manage this study, initialize it, and start it.
+  StudyController controller = StudyController(study);
 
 //  StudyManager manager =
 //  StudyManager(study, transformer: ((events) => events.where((event) => (event is BatteryDatum))));
 //
 
-  StudyController controller = StudyController(
-    study,
-    transformer: ((events) => events.map((datum) {
-          PrivacySchema.full().protect(datum);
-        })),
-    samplingSchema: SamplingSchema.common(),
-  );
+//  StudyController controller = StudyController(
+//    study,
+//    transformer: ((events) => events.map((datum) {
+//          PrivacySchema.full().protect(datum);
+//        })),
+//    samplingSchema: SamplingSchema.common(),
+//  );
 
   //manager = StudyManager(study, transformer: ((events) => events.transform(streamTransformer)));
   controller.initialize();
@@ -67,11 +65,14 @@ void example() {
   // listening on all data events from the study
   controller.events.forEach(print);
 
+  controller.events.where((datum) => datum.format.namepace == NameSpace.CARP);
+
   // listening on a specific probe
   ProbeRegistry.probes[DataType.LOCATION].events.forEach(print);
 }
 
-void sampling_schema_stuff() {
+/// An example of how to use the [SamplingSchema] model.
+void sampling_schema_stuff() async {
   SamplingSchema.common().getMeasureList([DataType.LOCATION, DataType.WEATHER, DataType.ACTIVITY]);
 
   // creating a sampling schema focused on connectivity
@@ -118,6 +119,16 @@ void sampling_schema_stuff() {
     ..measures = SamplingSchema.common()
         .getMeasureList([DataType.PEDOMETER, DataType.LOCATION, DataType.ACTIVITY, DataType.WEATHER]));
 
+  study.addTask(Task('One Common Sensing Task')
+    ..measures = SamplingSchema.common().getMeasureList([
+      DataType.LOCATION,
+      DataType.ACTIVITY,
+      DataType.WEATHER,
+      DataType.ACCELEROMETER,
+      DataType.GYROSCOPE,
+      DataType.APPS
+    ]));
+
   // adding all measure from the activity schema to one overall 'sensing' task
   study.addTask(Task('Sensing Task')..measures = activitySchema.measures.values);
 
@@ -130,5 +141,45 @@ void sampling_schema_stuff() {
     ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.LIGHT),
         name: "Ambient Light", frequency: 11 * 1000, duration: 700)));
 
-  StudyController manager = StudyController(study, samplingSchema: activitySchema);
+  StudyController controller = StudyController(study, samplingSchema: activitySchema);
+
+//    SamplingSchema.common()
+//        .getMeasureList([DataType.LOCATION, DataType.WEATHER, DataType.ACTIVITY], namepace: NameSpace.CARP);
+
+  controller = StudyController(study);
+  await controller.initialize();
+  await controller.start();
+  print("Sensing started ...");
+
+  // listening on all data events from the study
+  controller.events.forEach(print);
+
+  // listening on a specific probe
+  ProbeRegistry.probes[DataType.LOCATION].events.forEach(print);
+}
+
+/// This is an example of how to set up a study in a very simple way using [SamplingSchema.common()].
+void example_2() {
+  Study study = Study('DF#4dD', 'user@cachet.dk',
+      name: 'A outdoor activity study',
+      dataEndPoint: FileDataEndPoint()
+        ..bufferSize = 500 * 1000
+        ..zip = true
+        ..encrypt = false)
+    ..addTask(Task()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
+
+  // adding a set of specific measures from the `common` sampling schema to one no-name task
+  study.addTask(Task()
+    ..measures = SamplingSchema.common().getMeasureList(
+        [DataType.PEDOMETER, DataType.LOCATION, DataType.ACTIVITY, DataType.WEATHER],
+        namespace: NameSpace.CARP));
+}
+
+void scratch_pad() {
+  Measure mLoc = Measure(MeasureType(NameSpace.CARP, DataType.LOCATION));
+
+  Measure mBT = PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.BLUETOOTH))
+    ..enabled = true
+    ..frequency = 60 * 60 * 1000
+    ..duration = 2 * 1000;
 }
