@@ -1,11 +1,11 @@
 part of mobile_sensing_app;
 
+final Sensing sensing = Sensing();
+
 /// This class implements the sensing incl. setting up a [Study] with [Task]s and [Measure]s.
 class Sensing {
   Study study;
   final String testStudyId = "8";
-
-  List<String> get availableProbes => ProbeRegistry.availableProbeTypes;
 
   StudyController controller;
   StudyManager mock = new StudyMock();
@@ -24,6 +24,7 @@ class Sensing {
   void start() async {
     // Get the study.
     study = await mock.getStudy(testStudyId);
+
     print(study.toString());
 
     // Create a Study Controller that can manage this study, initialize it, and start it.
@@ -64,10 +65,14 @@ class StudyMock implements StudyManager {
   Study _study;
   Future<Study> getStudy(String studyId) async {
     if (_study == null) {
-      _study = Study('DF#4dD', 'user@cachet.dk')
+      _study = Study('DF#4dD-2', 'user@cachet.dk')
         ..name = 'CARP Mobile Sensing - default configuration'
+        ..description =
+            'This is a long description of a Study which can run forever and take up a lot of space and drain you battery and you have to agree to an informed consent which - by all standards - do not comply to any legal framework....'
         ..dataEndPoint = getDataEndpoint(DataEndPointType.FILE)
         ..addTask(Task()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
+
+      //_study.tasks.forEach((task) => task.measures.forEach((measure) => measure.enabled = true));
 
       // adding a set of specific measures from the `common` sampling schema to one no-name task
 //      _study.addTask(Task()

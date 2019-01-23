@@ -24,35 +24,14 @@ class ProbeRegistry {
     _probes[type] = probe;
   }
 
-  static List<String> get availableProbeTypes => [
-        DataType.MEMORY,
-        DataType.PEDOMETER,
-        DataType.ACCELEROMETER,
-        DataType.GYROSCOPE,
-        DataType.BATTERY,
-        DataType.BLUETOOTH,
-        DataType.AUDIO,
-        DataType.NOISE,
-        DataType.LOCATION,
-        DataType.CONNECTIVITY,
-        DataType.LIGHT,
-        DataType.APPS,
-        DataType.APP_USAGE,
-        DataType.TEXT_MESSAGE_LOG,
-        DataType.TEXT_MESSAGE,
-        DataType.SCREEN,
-        DataType.PHONE_LOG,
-        DataType.ACTIVITY,
-        DataType.APPLE_HEALTHKIT,
-        DataType.GOOGLE_FIT,
-        DataType.WEATHER
-      ];
-
   /// Create an instance of a probe based on the measure.
   static Probe create(Measure measure) {
     Probe _probe;
 
     switch (measure.type.name) {
+      case DataType.DEVICE:
+        _probe = new DeviceProbe(measure);
+        break;
       case DataType.MEMORY:
         _probe = new MemoryPollingProbe(measure);
         break;
@@ -69,7 +48,6 @@ class ProbeRegistry {
         _probe = new BatteryProbe(measure);
         break;
       case DataType.BLUETOOTH:
-        //TODO - fix this -- should probes be created or initialized w. the Measure??????
         _probe = new BluetoothProbe(measure);
         break;
       case DataType.LOCATION:

@@ -3,7 +3,7 @@ part of mobile_sensing_app;
 class ProbesList extends StatefulWidget {
   const ProbesList({Key key}) : super(key: key);
 
-  //static const String routeName = '/material/list';
+  static const String routeName = '/probelist';
 
   _ProbeListState createState() => _ProbeListState();
 }
@@ -13,7 +13,7 @@ class _ProbeListState extends State<ProbesList> {
 
   Widget build(BuildContext context) {
     Iterable<Widget> probes = ListTile.divideTiles(
-        context: context, tiles: bloc.runningProbes.map<Widget>((probe) => buildProbeListTile(context, probe)));
+        context: context, tiles: bloc.runningProbes.map<Widget>((probe) => _buildProbeListTile(context, probe)));
 
     return Scaffold(
       key: scaffoldKey,
@@ -39,7 +39,7 @@ class _ProbeListState extends State<ProbesList> {
     );
   }
 
-  Widget buildProbeListTile(BuildContext context, ProbeModel probe) {
+  Widget _buildProbeListTile(BuildContext context, ProbeModel probe) {
     return StreamBuilder<ProbeState>(
       stream: probe.stateEvents,
       initialData: ProbeState.created,

@@ -91,6 +91,8 @@ class DataEndPoint extends Serializable {
   factory DataEndPoint.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$DataEndPointToJson(this);
+
+  String toString() => type;
 }
 
 /// Specify an endpoint where a file-based [DataManager] can store JSON data as files on the local device.
@@ -131,6 +133,8 @@ class FileDataEndPoint extends DataEndPoint {
   factory FileDataEndPoint.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$FileDataEndPointToJson(this);
+
+  String toString() => 'File [buffer ${bufferSize / 1000} KB, zip: $zip, encrypt: $encrypt]';
 }
 
 /// A enumeration of known endpoint API types.

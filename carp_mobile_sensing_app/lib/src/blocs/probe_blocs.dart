@@ -1,43 +1,35 @@
 part of mobile_sensing_app;
 
 class ProbesBloc {
-  final Sensing _sensing = Sensing();
-  //final _probesFetcher = PublishSubject<ProbeModel>();
+  bool get isRunning => (sensing.controller != null) ? sensing.controller.executor.state == ProbeState.resumed : false;
+  Iterable<ProbeModel> get runningProbes => sensing.runningProbes.map((probe) => ProbeModel(probe));
 
-  Stream<ProbeState> get stateEvents => _sensing.controller.executor.stateEvents;
+  Stream<ProbeState> get studyExecutorStateEvents => sensing.controller.executor.stateEvents;
+  ProbeState get studyState => sensing.controller.executor.state;
+  StudyModel get study => sensing.study != null ? StudyModel(sensing.study) : null;
+  Stream<Datum> get samplingEvents => sensing.controller.events;
+  int get samplingSize => sensing.controller.samplingSize;
 
-  bool get isRunning =>
-      (_sensing.controller != null) ? _sensing.controller.executor.state == ProbeState.resumed : false;
-
-  //Observable<ProbeModel> get runningProbes => _probesFetcher.stream;
-  Iterable<ProbeModel> get runningProbes => _sensing.runningProbes.map((probe) => ProbeModel(probe));
-  //Observable<Iterable<ProbeModel>> get runningProbes => _sensing.runningProbes.values.map((probe) => ProbeModel(probe));
-
-  void init() async {
-//    await _sensing.start();
-//    _sensing.runningProbes.forEach((key, probe) => _probesFetcher.sink.add(ProbeModel(probe)));
-  }
+  void init() async {}
 
   void start() async {
-    await _sensing.start();
-    //_sensing.runningProbes.forEach((key, probe) => _probesFetcher.sink.add(ProbeModel(probe)));
+    sensing.start();
   }
 
   void pause() {
-    _sensing.controller.pause();
+    sensing.controller.pause();
   }
 
   void resume() async {
-    _sensing.controller.resume();
+    sensing.controller.resume();
   }
 
   void stop() async {
-    _sensing.stop();
+    sensing.stop();
   }
 
   void dispose() async {
-    _sensing.stop();
-    //_probesFetcher.close();
+    sensing.stop();
   }
 }
 
