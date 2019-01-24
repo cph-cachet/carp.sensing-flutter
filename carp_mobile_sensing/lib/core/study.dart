@@ -43,7 +43,12 @@ class Study extends Serializable {
   /// Create a new [Study] object with a set of configurations.
   ///
   /// The [id] and [userId] are required for a new study.
-  Study(this.id, this.userId, {this.name, this.description, this.samplingStrategy, this.dataEndPoint, this.dataFormat})
+  Study(this.id, this.userId,
+      {this.name,
+      this.description,
+      this.samplingStrategy = SamplingSchemaType.NORMAL,
+      this.dataEndPoint,
+      this.dataFormat})
       : assert(id != null, 'Cannot create a Study without an id: id=null'),
         assert(userId != null, 'Cannot create a Study without an user id: userId=null'),
         super();
@@ -134,7 +139,7 @@ class FileDataEndPoint extends DataEndPoint {
       FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$FileDataEndPointToJson(this);
 
-  String toString() => 'File [buffer ${bufferSize / 1000} KB, zip: $zip, encrypt: $encrypt]';
+  String toString() => 'FILE [buffer ${bufferSize / 1000} KB, zip: $zip, encrypt: $encrypt]';
 }
 
 /// A enumeration of known endpoint API types.

@@ -69,8 +69,17 @@ class StudyMock implements StudyManager {
         ..name = 'CARP Mobile Sensing - default configuration'
         ..description =
             'This is a long description of a Study which can run forever and take up a lot of space and drain you battery and you have to agree to an informed consent which - by all standards - do not comply to any legal framework....'
-        ..dataEndPoint = getDataEndpoint(DataEndPointType.FILE)
-        ..addTask(Task()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
+        ..dataEndPoint = getDataEndpoint(DataEndPointType.FILE);
+      // ..addTask(Task()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
+
+      // adding the measures to two separate tasks, while also adding a new light measure to the 2nd task
+      _study.addTask(Task('Activity Sensing Task #1')
+        ..measures = SamplingSchema.common()
+            .getMeasureList([DataType.PEDOMETER, DataType.LOCATION, DataType.ACTIVITY, DataType.WEATHER]));
+      _study.addTask(Task('Phone Sensing Task #2')
+        ..measures = SamplingSchema.common().getMeasureList([DataType.SCREEN, DataType.NOISE])
+        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.LIGHT),
+            name: "Ambient Light", frequency: 11 * 1000, duration: 700)));
 
       //_study.tasks.forEach((task) => task.measures.forEach((measure) => measure.enabled = true));
 

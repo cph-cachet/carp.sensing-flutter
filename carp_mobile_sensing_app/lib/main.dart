@@ -12,7 +12,7 @@ part 'src/sensing/sensing.dart';
 part 'src/models/probe_models.dart';
 part 'src/models/probe_description.dart';
 part 'src/models/study_model.dart';
-part 'src/blocs/probe_blocs.dart';
+part 'src/blocs/sensing_bloc.dart';
 part 'src/ui/probe_list.dart';
 part 'src/ui/data_viz.dart';
 part 'src/ui/study_viz.dart';

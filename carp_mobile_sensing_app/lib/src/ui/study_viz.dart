@@ -2,7 +2,6 @@ part of mobile_sensing_app;
 
 class StudyVisualization extends StatefulWidget {
   const StudyVisualization({Key key}) : super(key: key);
-
   static const String routeName = '/study';
 
   _StudyVizState createState() => _StudyVizState();
@@ -15,7 +14,7 @@ class _StudyVizState extends State<StudyVisualization> {
   @override
   Widget build(BuildContext context) {
     if (bloc.study != null) {
-      return _buildStudyVizualization(context, bloc.study);
+      return _buildStudyVisualization(context, bloc.study);
     } else {
       return _buildEmptyStudyPanel(context);
     }
@@ -36,7 +35,7 @@ class _StudyVizState extends State<StudyVisualization> {
     );
   }
 
-  Widget _buildStudyVizualization(BuildContext context, StudyModel study) {
+  Widget _buildStudyVisualization(BuildContext context, StudyModel study) {
     return Scaffold(
       key: _scaffoldKey,
       body: CustomScrollView(
@@ -66,134 +65,29 @@ class _StudyVizState extends State<StudyVisualization> {
 //                    fit: BoxFit.cover,
 //                    height: _appBarHeight,
 //                  ),
-                  // This gradient ensures that the toolbar icons are distinct
-                  // against the background image.
-                  const DecoratedBox(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment(0.0, -1.0),
-                        end: Alignment(0.0, -0.4),
-                        colors: <Color>[Color(0x60000000), Color(0x00000000)],
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
           ),
           SliverList(
-            delegate: SliverChildListDelegate(<Widget>[
-              AnnotatedRegion<SystemUiOverlayStyle>(
-                value: SystemUiOverlayStyle.dark,
-                child: _buildStudyControllerPanel(context, study),
-              ),
-              _TaskPanel(
-                icon: Icons.contact_mail,
-                children: <Widget>[
-                  _ContactItem(
-                    icon: Icons.email,
-                    tooltip: 'Send personal e-mail',
-                    onPressed: () {
-                      _scaffoldKey.currentState
-                          .showSnackBar(const SnackBar(content: Text('Here, your e-mail application would open.')));
-                    },
-                    lines: const <String>[
-                      'ali_connors@example.com',
-                      'Personal',
-                    ],
-                  ),
-                  _ContactItem(
-                    icon: Icons.email,
-                    tooltip: 'Send work e-mail',
-                    onPressed: () {
-                      _scaffoldKey.currentState
-                          .showSnackBar(const SnackBar(content: Text('Summon your favorite e-mail application here.')));
-                    },
-                    lines: const <String>[
-                      'aliconnors@example.com',
-                      'Work',
-                    ],
-                  ),
-                ],
-              ),
-              _TaskPanel(
-                icon: Icons.location_on,
-                children: <Widget>[
-                  _ContactItem(
-                    icon: Icons.map,
-                    tooltip: 'Open map',
-                    onPressed: () {
-                      _scaffoldKey.currentState
-                          .showSnackBar(const SnackBar(content: Text('This would show a map of San Francisco.')));
-                    },
-                    lines: const <String>[
-                      '2000 Main Street',
-                      'San Francisco, CA',
-                      'Home',
-                    ],
-                  ),
-                  _ContactItem(
-                    icon: Icons.map,
-                    tooltip: 'Open map',
-                    onPressed: () {
-                      _scaffoldKey.currentState
-                          .showSnackBar(const SnackBar(content: Text('This would show a map of Mountain View.')));
-                    },
-                    lines: const <String>[
-                      '1600 Amphitheater Parkway',
-                      'Mountain View, CA',
-                      'Work',
-                    ],
-                  ),
-                  _ContactItem(
-                    icon: Icons.map,
-                    tooltip: 'Open map',
-                    onPressed: () {
-                      _scaffoldKey.currentState.showSnackBar(
-                          const SnackBar(content: Text('This would also show a map, if this was not a demo.')));
-                    },
-                    lines: const <String>[
-                      '126 Severyns Ave',
-                      'Mountain View, CA',
-                      'Jet Travel',
-                    ],
-                  ),
-                ],
-              ),
-              _TaskPanel(
-                icon: Icons.today,
-                children: <Widget>[
-                  _ContactItem(
-                    lines: const <String>[
-                      'Birthday',
-                      'January 9th, 1989',
-                    ],
-                  ),
-                  _ContactItem(
-                    lines: const <String>[
-                      'Wedding anniversary',
-                      'June 21st, 2014',
-                    ],
-                  ),
-                  _ContactItem(
-                    lines: const <String>[
-                      'First day in office',
-                      'January 20th, 2015',
-                    ],
-                  ),
-                  _ContactItem(
-                    lines: const <String>[
-                      'Last day in office',
-                      'August 9th, 2018',
-                    ],
-                  ),
-                ],
-              ),
-            ]),
+            delegate: SliverChildListDelegate(_buildStudyPanel(context, study)),
           ),
         ],
       ),
     );
+  }
+
+  List<Widget> _buildStudyPanel(BuildContext context, StudyModel study) {
+    List<Widget> children = List<Widget>();
+
+    children.add(AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.dark,
+      child: _buildStudyControllerPanel(context, study),
+    ));
+
+    study.study.tasks.forEach((task) => children.add(_TaskPanel(task: task)));
+
+    return children;
   }
 
   Widget _buildStudyControllerPanel(BuildContext context, StudyModel study) {
@@ -212,32 +106,27 @@ class _StudyVizState extends State<StudyVisualization> {
               Container(
                   padding: const EdgeInsets.symmetric(vertical: 24.0),
                   width: 72.0,
-                  child: Icon(Icons.settings, size: 50, color: CACHET.PRIMARY_BLUE)),
+                  child: Icon(Icons.settings, size: 50, color: CACHET.CACHET_BLUE)),
               Expanded(
-                  child: Column(children: [
-                _buildStudyControllerLine(study.description),
-                _buildStudyControllerLine(study.userID, heading: 'User'),
-                _buildStudyControllerLine(study.samplingStrategy, heading: 'Sampling'),
-                _buildStudyControllerLine(study.dataEndpoint, heading: 'Data Endpoint'),
-
+                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                _StudyControllerLine(study.description),
+                _StudyControllerLine(study.userID, heading: 'User'),
+                _StudyControllerLine(study.samplingStrategy, heading: 'Sampling Strategy'),
+                _StudyControllerLine(study.dataEndpoint, heading: 'Data Endpoint'),
                 StreamBuilder<ProbeState>(
                     stream: bloc.studyExecutorStateEvents,
-//                    initialData: ProbeState.created,
+                    initialData: ProbeState.created,
                     builder: (context, AsyncSnapshot<ProbeState> snapshot) {
                       if (snapshot.hasData)
-                        return _buildStudyControllerLine(snapshot.data.toString(), heading: 'State');
+                        return _StudyControllerLine(probeStateLabel(snapshot.data), heading: 'State');
                       else
-                        return _buildStudyControllerLine(ProbeState.created.toString(), heading: 'State');
+                        return _StudyControllerLine(probeStateLabel(ProbeState.initialized), heading: 'State');
                     }),
-
                 StreamBuilder<Datum>(
                     stream: bloc.samplingEvents,
                     builder: (context, AsyncSnapshot<Datum> snapshot) {
-                      //if (snapshot.hasData) bloc.samplingSize++;
-                      return _buildStudyControllerLine('${bloc.samplingSize}', heading: 'Sample Size');
+                      return _StudyControllerLine('${bloc.samplingSize}', heading: 'Sample Size');
                     }),
-
-//                _buildStudyControllerLine(),
               ]))
             ],
           ),
@@ -246,10 +135,21 @@ class _StudyVizState extends State<StudyVisualization> {
     );
   }
 
-  Widget _buildStudyControllerLine(String line, {String heading}) {
+  void _showSettings() {
+    Scaffold.of(context).showSnackBar(const SnackBar(content: Text('Settings not implemented yet...', softWrap: true)));
+  }
+}
+
+class _StudyControllerLine extends StatelessWidget {
+  final String line, heading;
+
+  _StudyControllerLine(this.line, {this.heading}) {}
+
+  @override
+  Widget build(BuildContext context) {
     return MergeSemantics(
         child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            padding: const EdgeInsets.symmetric(vertical: 4.0),
             child: (heading == null)
                 ? Text(line, textAlign: TextAlign.left, softWrap: true)
                 : Text.rich(
@@ -261,72 +161,68 @@ class _StudyVizState extends State<StudyVisualization> {
                     ),
                   )));
   }
-
-  void _showSettings() {
-    Scaffold.of(context).showSnackBar(const SnackBar(content: Text('Settings not implemented yet...', softWrap: true)));
-  }
 }
 
 class _TaskPanel extends StatelessWidget {
-  const _TaskPanel({Key key, this.icon, this.children}) : super(key: key);
+  _TaskPanel({Key key, this.task}) : super(key: key);
 
-  final IconData icon;
-  final List<Widget> children;
+  final Task task;
 
   @override
   Widget build(BuildContext context) {
     final ThemeData themeData = Theme.of(context);
+    final List<Widget> children = task.measures.map((measure) => _MeasureLine(measure: measure)).toList();
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16.0),
       decoration: BoxDecoration(border: Border(bottom: BorderSide(color: themeData.dividerColor))),
       child: DefaultTextStyle(
-        style: Theme.of(context).textTheme.subhead,
-        child: SafeArea(
-          top: false,
-          bottom: false,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                  padding: const EdgeInsets.symmetric(vertical: 24.0),
-                  width: 72.0,
-                  child: Icon(icon, color: themeData.primaryColor)),
-              Expanded(child: Column(children: children))
-            ],
-          ),
-        ),
-      ),
+          style: Theme.of(context).textTheme.subhead,
+          child: SafeArea(
+              top: false,
+              bottom: false,
+              child: Column(children: <Widget>[
+                Row(children: <Widget>[
+                  Icon(Icons.description, size: 40, color: CACHET.ORANGE),
+                  Text('  ${task.name}', style: themeData.textTheme.title),
+                ]),
+                Column(children: children)
+                //Expanded(child: Column(children: children))
+              ]))),
     );
   }
 }
 
-class _ContactItem extends StatelessWidget {
-  _ContactItem({Key key, this.icon, this.lines, this.tooltip, this.onPressed})
-      : assert(lines.length > 1),
+class _MeasureLine extends StatelessWidget {
+  _MeasureLine({Key key, this.measure})
+      : assert(measure != null),
         super(key: key);
 
-  final IconData icon;
-  final List<String> lines;
-  final String tooltip;
-  final VoidCallback onPressed;
+  final Measure measure;
 
   @override
   Widget build(BuildContext context) {
     final ThemeData themeData = Theme.of(context);
-    final List<Widget> columnChildren =
-        lines.sublist(0, lines.length - 1).map<Widget>((String line) => Text(line)).toList();
-    columnChildren.add(Text(lines.last, style: themeData.textTheme.caption));
+    final Icon icon = Icon(ProbeDescription.probeTypeIcon[measure.type.name].icon, size: 25);
 
-    final List<Widget> rowChildren = <Widget>[
-      Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: columnChildren))
-    ];
+    final List<Widget> columnChildren = List<Widget>();
+    columnChildren.add(Text(measure.name));
+    columnChildren.add(Text(measure.toString(), style: themeData.textTheme.caption));
+
+    final List<Widget> rowChildren = List<Widget>();
     if (icon != null) {
       rowChildren.add(SizedBox(
-          width: 72.0, child: IconButton(icon: Icon(icon), color: themeData.primaryColor, onPressed: onPressed)));
+          width: 72.0,
+          child: IconButton(
+            icon: icon,
+            onPressed: null,
+          )));
     }
+    rowChildren
+        .addAll([Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: columnChildren))]);
     return MergeSemantics(
       child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16.0),
+          padding: const EdgeInsets.symmetric(vertical: 2.0),
           child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: rowChildren)),
     );
   }

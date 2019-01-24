@@ -11,13 +11,17 @@ part of core;
 /// Each [Task] holds a list of [Measure]s to be done as part of this task.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class Task extends Serializable {
+  static int _counter = 0;
+
   /// The name of this task. Unique for this [Study].
   String name;
 
   /// A list of [Measure]s to be done as part of this task.
   List<Measure> measures = new List<Measure>();
 
-  Task([this.name = '']) : super();
+  Task([this.name]) : super() {
+    name ??= 'Task #${_counter++}';
+  }
 
   static Function get fromJsonFunction => _$TaskFromJson;
   factory Task.fromJson(Map<String, dynamic> json) =>
