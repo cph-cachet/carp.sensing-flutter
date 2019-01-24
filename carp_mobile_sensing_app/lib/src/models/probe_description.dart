@@ -4,6 +4,7 @@ class ProbeDescription {
   static Map<String, String> get probeTypeDescription => {
         DataType.NONE: 'Non-configured Probe',
         DataType.MEMORY: 'Collecting free physical and virtual memory.',
+        DataType.DEVICE: 'Basic Device (Phone) Information.',
         DataType.PEDOMETER: 'Collecting step counts on a regular basis.',
         DataType.ACCELEROMETER: "Collecting sensor data from the phone's onboard accelerometer.",
         DataType.GYROSCOPE: "Collecting sensor data from the phone's onboard gyroscope.",
@@ -29,6 +30,7 @@ class ProbeDescription {
   static Map<String, Icon> get probeTypeIcon => {
         DataType.NONE: Icon(Icons.report_problem, size: 50, color: CACHET.GREY_4),
         DataType.MEMORY: Icon(Icons.memory, size: 50, color: CACHET.GREY_4),
+        DataType.DEVICE: Icon(Icons.phone_android, size: 50, color: CACHET.GREY_4),
         DataType.PEDOMETER: Icon(Icons.directions_walk, size: 50, color: CACHET.LIGHT_PURPLE),
         DataType.ACCELEROMETER: Icon(Icons.adb, size: 50, color: CACHET.GREY_4),
         DataType.GYROSCOPE: Icon(Icons.adb, size: 50, color: CACHET.GREY_4),
@@ -44,7 +46,7 @@ class ProbeDescription {
         DataType.TEXT_MESSAGE_LOG: Icon(Icons.textsms, size: 50, color: CACHET.LIGHT_PURPLE),
         DataType.TEXT_MESSAGE: Icon(Icons.text_fields, size: 50, color: CACHET.LIGHT_PURPLE),
         DataType.SCREEN: Icon(Icons.screen_lock_portrait, size: 50, color: CACHET.LIGHT_PURPLE),
-        DataType.PHONE_LOG: Icon(Icons.phone_android, size: 50, color: CACHET.ORANGE),
+        DataType.PHONE_LOG: Icon(Icons.phone_in_talk, size: 50, color: CACHET.ORANGE),
         DataType.ACTIVITY: Icon(Icons.directions_bike, size: 50, color: CACHET.ORANGE),
         DataType.APPLE_HEALTHKIT: Icon(Icons.healing, size: 50, color: CACHET.RED),
         DataType.GOOGLE_FIT: Icon(Icons.directions_run, size: 50, color: CACHET.GREEN),

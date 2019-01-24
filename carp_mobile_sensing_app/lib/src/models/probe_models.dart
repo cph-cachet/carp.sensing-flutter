@@ -28,3 +28,18 @@ class ProbeModel {
       : assert(probe != null, 'A ProbeModel must be initialized with a real Probe.'),
         super();
 }
+
+probeStateLabel(ProbeState state) {
+  switch (state) {
+    case ProbeState.initialized:
+      return "Initialized";
+    case ProbeState.created:
+      return "Created";
+    case ProbeState.resumed:
+      return "Resumed";
+    case ProbeState.paused:
+      return "Paused";
+    case ProbeState.stopped:
+      return "Stopped";
+  }
+}

@@ -12,9 +12,6 @@ AppsDatum _$AppsDatumFromJson(Map<String, dynamic> json) {
     ..timestamp = json['timestamp'] == null
         ? null
         : DateTime.parse(json['timestamp'] as String)
-    ..deviceInfo = json['device_info'] == null
-        ? null
-        : DeviceInfo.fromJson(json['device_info'] as Map<String, dynamic>)
     ..installedApps =
         (json['installed_apps'] as List)?.map((e) => e as String)?.toList();
 }
@@ -30,7 +27,6 @@ Map<String, dynamic> _$AppsDatumToJson(AppsDatum instance) {
 
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
-  writeNotNull('device_info', instance.deviceInfo);
   writeNotNull('installed_apps', instance.installedApps);
   return val;
 }
@@ -41,9 +37,6 @@ AppUsageDatum _$AppUsageDatumFromJson(Map<String, dynamic> json) {
     ..timestamp = json['timestamp'] == null
         ? null
         : DateTime.parse(json['timestamp'] as String)
-    ..deviceInfo = json['device_info'] == null
-        ? null
-        : DeviceInfo.fromJson(json['device_info'] as Map<String, dynamic>)
     ..start =
         json['start'] == null ? null : DateTime.parse(json['start'] as String)
     ..end = json['end'] == null ? null : DateTime.parse(json['end'] as String)
@@ -62,7 +55,6 @@ Map<String, dynamic> _$AppUsageDatumToJson(AppUsageDatum instance) {
 
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
-  writeNotNull('device_info', instance.deviceInfo);
   writeNotNull('start', instance.start?.toIso8601String());
   writeNotNull('end', instance.end?.toIso8601String());
   writeNotNull('usage', instance.usage);

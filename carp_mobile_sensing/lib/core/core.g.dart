@@ -239,10 +239,7 @@ CARPDatum _$CARPDatumFromJson(Map<String, dynamic> json) {
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
         ? null
-        : DateTime.parse(json['timestamp'] as String)
-    ..deviceInfo = json['device_info'] == null
-        ? null
-        : DeviceInfo.fromJson(json['device_info'] as Map<String, dynamic>);
+        : DateTime.parse(json['timestamp'] as String);
 }
 
 Map<String, dynamic> _$CARPDatumToJson(CARPDatum instance) {
@@ -256,35 +253,6 @@ Map<String, dynamic> _$CARPDatumToJson(CARPDatum instance) {
 
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
-  writeNotNull('device_info', instance.deviceInfo);
-  return val;
-}
-
-DeviceInfo _$DeviceInfoFromJson(Map<String, dynamic> json) {
-  return DeviceInfo(json['platform'] as String, json['device_id'] as String,
-      deviceName: json['device_name'] as String,
-      deviceModel: json['device_model'] as String,
-      deviceManufacturer: json['device_manufacturer'] as String,
-      operatingSystem: json['operating_system'] as String,
-      hardware: json['hardware'] as String);
-}
-
-Map<String, dynamic> _$DeviceInfoToJson(DeviceInfo instance) {
-  var val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('platform', instance.platform);
-  writeNotNull('device_id', instance.deviceId);
-  writeNotNull('hardware', instance.hardware);
-  writeNotNull('device_name', instance.deviceName);
-  writeNotNull('device_manufacturer', instance.deviceManufacturer);
-  writeNotNull('device_model', instance.deviceModel);
-  writeNotNull('operating_system', instance.operatingSystem);
   return val;
 }
 
@@ -293,10 +261,7 @@ StringDatum _$StringDatumFromJson(Map<String, dynamic> json) {
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
         ? null
-        : DateTime.parse(json['timestamp'] as String)
-    ..deviceInfo = json['device_info'] == null
-        ? null
-        : DeviceInfo.fromJson(json['device_info'] as Map<String, dynamic>);
+        : DateTime.parse(json['timestamp'] as String);
 }
 
 Map<String, dynamic> _$StringDatumToJson(StringDatum instance) {
@@ -310,7 +275,6 @@ Map<String, dynamic> _$StringDatumToJson(StringDatum instance) {
 
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
-  writeNotNull('device_info', instance.deviceInfo);
   writeNotNull('str', instance.str);
   return val;
 }
@@ -322,10 +286,7 @@ MapDatum _$MapDatumFromJson(Map<String, dynamic> json) {
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
         ? null
-        : DateTime.parse(json['timestamp'] as String)
-    ..deviceInfo = json['device_info'] == null
-        ? null
-        : DeviceInfo.fromJson(json['device_info'] as Map<String, dynamic>);
+        : DateTime.parse(json['timestamp'] as String);
 }
 
 Map<String, dynamic> _$MapDatumToJson(MapDatum instance) {
@@ -339,7 +300,6 @@ Map<String, dynamic> _$MapDatumToJson(MapDatum instance) {
 
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
-  writeNotNull('device_info', instance.deviceInfo);
   writeNotNull('map', instance.map);
   return val;
 }
@@ -349,10 +309,7 @@ ErrorDatum _$ErrorDatumFromJson(Map<String, dynamic> json) {
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
         ? null
-        : DateTime.parse(json['timestamp'] as String)
-    ..deviceInfo = json['device_info'] == null
-        ? null
-        : DeviceInfo.fromJson(json['device_info'] as Map<String, dynamic>);
+        : DateTime.parse(json['timestamp'] as String);
 }
 
 Map<String, dynamic> _$ErrorDatumToJson(ErrorDatum instance) {
@@ -366,7 +323,6 @@ Map<String, dynamic> _$ErrorDatumToJson(ErrorDatum instance) {
 
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
-  writeNotNull('device_info', instance.deviceInfo);
   writeNotNull('message', instance.message);
   return val;
 }
@@ -377,9 +333,6 @@ MultiDatum _$MultiDatumFromJson(Map<String, dynamic> json) {
     ..timestamp = json['timestamp'] == null
         ? null
         : DateTime.parse(json['timestamp'] as String)
-    ..deviceInfo = json['device_info'] == null
-        ? null
-        : DeviceInfo.fromJson(json['device_info'] as Map<String, dynamic>)
     ..data = (json['data'] as List)
         ?.map(
             (e) => e == null ? null : Datum.fromJson(e as Map<String, dynamic>))
@@ -397,7 +350,6 @@ Map<String, dynamic> _$MultiDatumToJson(MultiDatum instance) {
 
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
-  writeNotNull('device_info', instance.deviceInfo);
   writeNotNull('data', instance.data);
   return val;
 }

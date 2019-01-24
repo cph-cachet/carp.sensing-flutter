@@ -139,6 +139,8 @@ class SamplingSchema {
       ..name = 'Common (default) sampling'
       ..powerAware = true
       ..measures.addEntries([
+        MapEntry(DataType.DEVICE,
+            Measure(MeasureType(namespace, DataType.DEVICE), name: 'Basic Device Info', enabled: true)),
         MapEntry(
             DataType.ACCELEROMETER,
             PeriodicMeasure(MeasureType(namespace, DataType.ACCELEROMETER),
@@ -181,7 +183,7 @@ class SamplingSchema {
         MapEntry(
             DataType.AUDIO,
             AudioMeasure(MeasureType(namespace, DataType.AUDIO),
-                name: 'Audio Recording', enabled: false, frequency: 60 * 1000, duration: 2 * 1000)),
+                name: 'Audio Recording', enabled: true, frequency: 60 * 1000, duration: 2 * 1000)),
         MapEntry(
             DataType.NOISE,
             NoiseMeasure(MeasureType(namespace, DataType.NOISE),
@@ -189,9 +191,9 @@ class SamplingSchema {
         MapEntry(DataType.ACTIVITY,
             Measure(MeasureType(namespace, DataType.ACTIVITY), name: 'Activity Recognition', enabled: true)),
         MapEntry(DataType.PHONE_LOG,
-            PhoneLogMeasure(MeasureType(namespace, DataType.PHONE_LOG), name: 'Phone Log', enabled: false, days: 30)),
+            PhoneLogMeasure(MeasureType(namespace, DataType.PHONE_LOG), name: 'Phone Log', enabled: true, days: 30)),
         MapEntry(DataType.TEXT_MESSAGE_LOG,
-            Measure(MeasureType(namespace, DataType.TEXT_MESSAGE_LOG), name: 'Text Message (SMS) Log', enabled: false)),
+            Measure(MeasureType(namespace, DataType.TEXT_MESSAGE_LOG), name: 'Text Message (SMS) Log', enabled: true)),
         MapEntry(DataType.TEXT_MESSAGE,
             Measure(MeasureType(namespace, DataType.TEXT_MESSAGE), name: 'Text Message (SMS)', enabled: true)),
         MapEntry(

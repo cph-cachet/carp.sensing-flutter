@@ -16,6 +16,9 @@ class StudyController {
   Stream<Datum> events;
   PowerAwarenessState powerAwarenessState = NormalSamplingState.instance;
 
+  /// The size of this current study in terms of number of [Datum] object that has been collected.
+  int samplingSize = 0;
+
   /// Create a new [StudyController] to control the [study].
   ///
   /// A custom study executor can be specified in [executor]. If null, the default [StudyExecutor] is used.
@@ -50,6 +53,8 @@ class StudyController {
 
     executor.initialize();
     dataManager.initialize(study, events);
+
+    events.listen((data) => samplingSize++);
   }
 
   BatteryProbe _battery =

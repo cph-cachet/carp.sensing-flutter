@@ -30,59 +30,16 @@ class CARPDatum extends Datum {
   /// The UTC timestamp for generating this data on the device.
   DateTime timestamp;
 
-  /// Basic information about the device from which this [Datum] was collected.
-  DeviceInfo deviceInfo;
-
   CARPDatum({bool multiDatum = false}) : super() {
     timestamp = new DateTime.now().toUtc();
 
     if (!multiDatum) {
       id = new Uuid().v1(); // Generates a time-based version 1 UUID.
-      deviceInfo = new DeviceInfo(Device.platform, Device.deviceID,
-          deviceName: Device.deviceName,
-          deviceModel: Device.deviceModel,
-          deviceManufacturer: Device.deviceManufacturer,
-          operatingSystem: Device.operatingSystem,
-          hardware: Device.hardware);
     }
   }
 
   factory CARPDatum.fromJson(Map<String, dynamic> json) => _$CARPDatumFromJson(json);
   Map<String, dynamic> toJson() => _$CARPDatumToJson(this);
-}
-
-/// Holds basic information about the mobile device from where the data is collected.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class DeviceInfo {
-  ///The platform type from which this Datum was collected.
-  /// * `Android`
-  /// * `IOS`
-  String platform;
-
-  /// An identifier that is unique to the particular device which this [Datum] was collected.
-  /// Note that this ID will change if the user performs a factory reset on their device.
-  String deviceId;
-
-  /// The hardware type from which this [Datum] was collected (e.g. 'iPhone7,1' for iPhone 6 Plus).
-  String hardware;
-
-  /// Device name as specified by the OS.
-  String deviceName;
-
-  /// Device manufacturer as specified by the OS.
-  String deviceManufacturer;
-
-  /// Device model as specified by the OS.
-  String deviceModel;
-
-  /// Device OS as specified by the OS.
-  String operatingSystem;
-
-  DeviceInfo(this.platform, this.deviceId,
-      {this.deviceName, this.deviceModel, this.deviceManufacturer, this.operatingSystem, this.hardware});
-
-  factory DeviceInfo.fromJson(Map<String, dynamic> json) => _$DeviceInfoFromJson(json);
-  Map<String, dynamic> toJson() => _$DeviceInfoToJson(this);
 }
 
 /// A very simple [Datum] that only holds a string datum object.
@@ -203,6 +160,7 @@ class DataType {
   static const String MAP = "map";
   static const String ERROR = "error";
   static const String MEMORY = "memory";
+  static const String DEVICE = "device";
   static const String PEDOMETER = "pedometer";
   static const String ACCELEROMETER = "accelerometer";
   static const String GYROSCOPE = "gyroscope";
@@ -226,6 +184,7 @@ class DataType {
 
   static List<String> get all => [
         DataType.MEMORY,
+        DataType.DEVICE,
         DataType.PEDOMETER,
         DataType.ACCELEROMETER,
         DataType.GYROSCOPE,
