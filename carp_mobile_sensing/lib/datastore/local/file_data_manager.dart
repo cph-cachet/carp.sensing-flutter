@@ -121,10 +121,10 @@ class FileDataManager extends AbstractDataManager {
     }
 
     CARPDataPoint _header = new CARPDataPoint.fromDatum(study.id, study.userId, data);
-    final json_string = jsonEncode(_header);
+    final json = jsonEncode(_header);
 
     sink.then((_s) {
-      _s.write(json_string);
+      _s.write(json);
       // write a ',' to separate json objects in the list
       _s.write('\n,\n');
       print("Writing to file : ${data.toString()}");
@@ -142,11 +142,11 @@ class FileDataManager extends AbstractDataManager {
   }
 
   /// Flushes data to the file, compress, encrypt, and close it.
-  void flush(File flush_file, IOSink flush_sink) {
+  void flush(File flushFile, IOSink flushSink) {
     // if we're already flushing this file/sink, then do nothing.
-    if (flush_sink.hashCode == _flushingSink) return;
+    if (flushSink.hashCode == _flushingSink) return;
 
-    _flushingSink = flush_sink.hashCode;
+    _flushingSink = flushSink.hashCode;
 
     // Reset the file (setting it and its name and sink to null), so a new file (and sink) can be created.
     _initialized = false;
@@ -156,26 +156,26 @@ class FileDataManager extends AbstractDataManager {
     // Start creating a new sink (and file) to be used in parallel to flushing this file.
     sink.then((value) {});
 
-    final String _jsonFilePath = flush_file.path;
+    final String _jsonFilePath = flushFile.path;
     String _finalFilePath = _jsonFilePath;
 
     print("Written JSON  to file '$_jsonFilePath'. Closing and zipping it.");
     // write the closing json ']'
-    flush_sink.write(']\n');
+    flushSink.write(']\n');
 
     // once finished closing the file, then zip and encrypt it
-    flush_sink.close().then((value) {
+    flushSink.close().then((value) {
       if (_fileDataEndPoint.zip) {
         // create a new zip file and add the JSON file to this zip file
         final encoder = new ZipFileEncoder();
-        final json_file = new File(_jsonFilePath);
+        final jsonFile = new File(_jsonFilePath);
         _finalFilePath = '$_jsonFilePath.zip';
         encoder.create(_finalFilePath);
-        encoder.addFile(json_file);
+        encoder.addFile(jsonFile);
         encoder.close();
 
         // once the file is zipped to a new zip file, delete the old JSON file
-        json_file.delete();
+        jsonFile.delete();
       }
 
       // encrypt the zip file

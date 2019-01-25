@@ -80,6 +80,7 @@ class AudioProbe extends BufferingPeriodicProbe {
       return result;
     } catch (err) {
       controller.addError(err);
+      return err;
     }
   }
 
@@ -106,7 +107,7 @@ class AudioProbe extends BufferingPeriodicProbe {
       final localApplicationDir = await getApplicationDocumentsDirectory();
       // create a sub-directory for sound files
       final directory =
-          await Directory('${localApplicationDir.path}/${FileDataManager.CARP_FILE_PATH}/${studyId}/$AUDIO_FILE_PATH')
+          await Directory('${localApplicationDir.path}/${FileDataManager.CARP_FILE_PATH}/$studyId/$AUDIO_FILE_PATH')
               .create(recursive: true);
 
       _path = directory.path;
@@ -224,7 +225,7 @@ class OldAudioProbe extends AbstractProbe {
       final localApplicationDir = await getApplicationDocumentsDirectory();
       // create a sub-directory for sound files
       final directory =
-          await Directory('${localApplicationDir.path}/${FileDataManager.CARP_FILE_PATH}/${studyId}/$AUDIO_FILE_PATH')
+          await Directory('${localApplicationDir.path}/${FileDataManager.CARP_FILE_PATH}/$studyId/$AUDIO_FILE_PATH')
               .create(recursive: true);
 
       _path = directory.path;
