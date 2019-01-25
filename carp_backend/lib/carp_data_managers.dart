@@ -7,8 +7,6 @@
 
 part of carp_backend;
 
-String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
-
 /// Stores CARP json objects in the CARP backend.
 ///
 ///
@@ -23,7 +21,7 @@ class CarpDataManager extends AbstractDataManager implements FileDataManagerList
 
   FileDataManager fileDataManager;
 
-  CarpDataManager() {}
+  CarpDataManager() : super();
 
   @override
   Future initialize(Study study, Stream<Datum> events) async {

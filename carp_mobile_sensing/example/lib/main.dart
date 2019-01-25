@@ -94,26 +94,6 @@ class Console extends State<ConsolePage> {
       ),
     );
   }
-
-  @override
-  Widget old_build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text(widget.title),
-      ),
-      body: new SingleChildScrollView(
-        child: new Text(
-          _log,
-          style: TextStyle(fontFamily: 'RobotoMono'),
-        ),
-      ),
-      floatingActionButton: new FloatingActionButton(
-        onPressed: restart,
-        tooltip: 'Restart study & probes',
-        child: new Icon(Icons.cached),
-      ),
-    );
-  }
 }
 
 /// This class implements the sensing incl. setting up a [Study] with [Task]s and [Measure]s.

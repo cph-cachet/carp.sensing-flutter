@@ -59,7 +59,7 @@ class StudyMock implements StudyManager {
 
   @override
   Future<void> initialize() {
-    // TODO: implement initialize
+    // TODO: implement
   }
 
   Study _study;

@@ -2,7 +2,6 @@ import 'package:test/test.dart';
 import 'package:carp_mobile_sensing/core/core.dart';
 import 'package:carp_mobile_sensing/probes/sound/sound.dart';
 import 'dart:convert';
-import 'dart:io';
 
 String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
 
@@ -66,13 +65,13 @@ void main() {
       ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.APPS))));
   });
 
-  String _string_snapshot;
+  String _stringSnapshot;
   void _snapshot() {
-    _string_snapshot = json.encode(study);
+    _stringSnapshot = json.encode(study);
   }
 
   void _restore() {
-    study = Study.fromJson(json.decode(_string_snapshot));
+    study = Study.fromJson(json.decode(_stringSnapshot));
   }
 
   test('json.encode II', () {

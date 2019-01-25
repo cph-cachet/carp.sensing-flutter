@@ -104,7 +104,7 @@ class MultiDatum extends CARPDatum {
   factory MultiDatum.fromJson(Map<String, dynamic> json) => _$MultiDatumFromJson(json);
   Map<String, dynamic> toJson() => _$MultiDatumToJson(this);
 
-  String toString() => "${this.runtimeType}: {format: ${format}, size: ${data.length}}";
+  String toString() => "${this.runtimeType}: {format: $format, size: ${data.length}}";
 }
 
 /// Specifies the data format of a [Datum].

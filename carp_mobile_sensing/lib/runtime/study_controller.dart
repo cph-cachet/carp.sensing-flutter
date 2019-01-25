@@ -64,13 +64,13 @@ class StudyController {
   Future<void> enablePowerAwareness() async {
     if (samplingSchema.powerAware) {
       _battery.events.listen((datum) {
-        BatteryDatum battery_state = (datum as BatteryDatum);
-        if (battery_state.batteryStatus == BatteryDatum.STATE_DISCHARGING) {
+        BatteryDatum batteryState = (datum as BatteryDatum);
+        if (batteryState.batteryStatus == BatteryDatum.STATE_DISCHARGING) {
           // only apply power-awareness if not charging.
-          PowerAwarenessState new_state = powerAwarenessState.adapt(battery_state.batteryLevel);
-          if (new_state != powerAwarenessState) {
-            powerAwarenessState = new_state;
-            print('PowerAware: Going to $powerAwarenessState, level ${battery_state.batteryLevel}%');
+          PowerAwarenessState newState = powerAwarenessState.adapt(batteryState.batteryLevel);
+          if (newState != powerAwarenessState) {
+            powerAwarenessState = newState;
+            print('PowerAware: Going to $powerAwarenessState, level ${batteryState.batteryLevel}%');
             study.adapt(powerAwarenessState.schema);
           }
         }

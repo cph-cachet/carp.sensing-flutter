@@ -74,40 +74,40 @@ void main() {
   });
 
   test('JSON -> Study, assert study id', () async {
-    final study_json = _encode(study);
+    final studyJson = _encode(study);
 
-    Study study_2 = Study.fromJson(json.decode(study_json) as Map<String, dynamic>);
+    Study study_2 = Study.fromJson(json.decode(studyJson) as Map<String, dynamic>);
     expect(study_2.id, study.id);
 
     print(_encode(study_2));
   });
 
   test('JSON -> Study, deep assert', () async {
-    final study_json = _encode(study);
+    final studyJson = _encode(study);
 
-    Study study_2 = Study.fromJson(json.decode(study_json) as Map<String, dynamic>);
-    expect(_encode(study_2), equals(study_json));
+    Study study_2 = Study.fromJson(json.decode(studyJson) as Map<String, dynamic>);
+    expect(_encode(study_2), equals(studyJson));
   });
 
   test('Configuration -> JSON', () async {
-    final study_json = _encode(study);
+    final studyJson = _encode(study);
 
-    Study study_2 = Study.fromJson(json.decode(study_json) as Map<String, dynamic>);
-    //expect(study_2.tasks);
+    Study study_2 = Study.fromJson(json.decode(studyJson) as Map<String, dynamic>);
+    expect(study_2.name, study.name);
   });
 
   test('Plain JSON string -> Study object', () async {
     print(Directory.current.toString());
-    String plain_study_json = File("test/study_1234.json").readAsStringSync();
-    print(plain_study_json);
+    String plainStudyJson = File("test/study_1234.json").readAsStringSync();
+    print(plainStudyJson);
 
-    Study plain_study = Study.fromJson(json.decode(plain_study_json) as Map<String, dynamic>);
-    expect(plain_study.id, study.id);
+    Study plainStudy = Study.fromJson(json.decode(plainStudyJson) as Map<String, dynamic>);
+    expect(plainStudy.id, study.id);
 
-    final study_json = _encode(study);
+    final studyJson = _encode(study);
 
-    Study study_2 = Study.fromJson(json.decode(plain_study_json) as Map<String, dynamic>);
-    expect(_encode(study_2), equals(study_json));
+    Study study_2 = Study.fromJson(json.decode(plainStudyJson) as Map<String, dynamic>);
+    expect(_encode(study_2), equals(studyJson));
   });
 
   test('Data point -> JSON', () async {

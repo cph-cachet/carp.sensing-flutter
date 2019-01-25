@@ -143,7 +143,7 @@ class _StudyVizState extends State<StudyVisualization> {
 class _StudyControllerLine extends StatelessWidget {
   final String line, heading;
 
-  _StudyControllerLine(this.line, {this.heading}) {}
+  _StudyControllerLine(this.line, {this.heading}) : super();
 
   @override
   Widget build(BuildContext context) {

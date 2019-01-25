@@ -72,7 +72,7 @@ void example() {
 }
 
 /// An example of how to use the [SamplingSchema] model.
-void sampling_schema_stuff() async {
+void samplingSchemaExample() async {
   SamplingSchema.common().getMeasureList([DataType.LOCATION, DataType.WEATHER, DataType.ACTIVITY]);
 
   // creating a sampling schema focused on connectivity
@@ -175,7 +175,7 @@ void example_2() {
         namespace: NameSpace.CARP));
 }
 
-void scratch_pad() {
+void scratchPad() {
   Measure mLoc = Measure(MeasureType(NameSpace.CARP, DataType.LOCATION));
 
   Measure mBT = PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.BLUETOOTH))
