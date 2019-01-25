@@ -30,10 +30,8 @@ abstract class Executor extends AbstractProbe {
   }
 
   void onStop() async {
-    executors.forEach((executor) {
-      executor.stop();
-      executors.remove(executor);
-    });
+    executors.forEach((executor) => executor.stop());
+    executors = new List<Probe>();
   }
 }
 
@@ -69,7 +67,7 @@ class StudyExecutor extends Executor {
 
   Future onStart() async {
     for (Task task in study.tasks) {
-      TaskExecutor executor = new TaskExecutor(task);
+      TaskExecutor executor = TaskExecutor(task);
       _group.add(executor.events);
 
       executors.add(executor);

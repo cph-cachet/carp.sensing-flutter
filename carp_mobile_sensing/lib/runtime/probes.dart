@@ -201,8 +201,8 @@ abstract class _AbstractProbeState implements _ProbeStateMachine {
   // Default stop behavior. A probe can be stopped in all states.
   void stop() {
     print('Stopping $probe');
-    probe.onStop();
     probe._setState(_StoppedState(probe));
+    probe.onStop();
   }
 }
 

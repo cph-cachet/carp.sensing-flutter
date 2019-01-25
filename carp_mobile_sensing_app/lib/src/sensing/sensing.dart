@@ -21,7 +21,7 @@ class Sensing {
   }
 
   /// Start sensing.
-  void start() async {
+  Future<void> start() async {
     // Get the study.
     study = await mock.getStudy(testStudyId);
 

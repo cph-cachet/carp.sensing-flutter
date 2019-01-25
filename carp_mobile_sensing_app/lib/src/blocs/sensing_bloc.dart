@@ -13,7 +13,7 @@ class SensingBloc {
   void init() async {}
 
   void start() async {
-    sensing.start();
+    await sensing.start();
   }
 
   void pause() {

@@ -1,6 +1,6 @@
 ## 0.3.1
 * small updates to the data format incl. documentation on the [wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki/Sampling-Data-Formats).
-
+* fixed error in the `stop` method.
 
 ## 0.3.0 - no backward compatibility
 * major updates to the domain model as a `core` library
