@@ -1,18 +1,14 @@
 part of mobile_sensing_app;
 
 class SensingBloc {
-  /// Is sensing running, i.e. is the study executor started?
+  /// Is sensing running, i.e. has the study executor been resumed?
   bool get isRunning => (sensing.controller != null) ? sensing.controller.executor.state == ProbeState.resumed : false;
 
-  Stream<ProbeState> get studyExecutorStateEvents => sensing.controller.executor.stateEvents;
-  ProbeState get studyState => sensing.controller.executor.state;
-
+  /// Get the study for this app.
   StudyModel get study => sensing.study != null ? StudyModel(sensing.study) : null;
 
-  /// Get a list of running probes to be shown in the
+  /// Get a list of running probes
   Iterable<ProbeModel> get runningProbes => sensing.runningProbes.map((probe) => ProbeModel(probe));
-  Stream<Datum> get samplingEvents => sensing.controller.events;
-  int get samplingSize => sensing.controller.samplingSize;
 
   void init() async {}
 

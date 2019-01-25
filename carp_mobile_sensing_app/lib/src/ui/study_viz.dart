@@ -114,7 +114,7 @@ class _StudyVizState extends State<StudyVisualization> {
                 _StudyControllerLine(study.samplingStrategy, heading: 'Sampling Strategy'),
                 _StudyControllerLine(study.dataEndpoint, heading: 'Data Endpoint'),
                 StreamBuilder<ProbeState>(
-                    stream: bloc.studyExecutorStateEvents,
+                    stream: study.studyExecutorStateEvents,
                     initialData: ProbeState.created,
                     builder: (context, AsyncSnapshot<ProbeState> snapshot) {
                       if (snapshot.hasData)
@@ -123,9 +123,9 @@ class _StudyVizState extends State<StudyVisualization> {
                         return _StudyControllerLine(probeStateLabel(ProbeState.initialized), heading: 'State');
                     }),
                 StreamBuilder<Datum>(
-                    stream: bloc.samplingEvents,
+                    stream: study.samplingEvents,
                     builder: (context, AsyncSnapshot<Datum> snapshot) {
-                      return _StudyControllerLine('${bloc.samplingSize}', heading: 'Sample Size');
+                      return _StudyControllerLine('${study.samplingSize}', heading: 'Sample Size');
                     }),
               ]))
             ],

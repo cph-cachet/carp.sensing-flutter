@@ -139,7 +139,8 @@ class FileDataEndPoint extends DataEndPoint {
       FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$FileDataEndPointToJson(this);
 
-  String toString() => 'FILE [buffer ${bufferSize / 1000} KB, zip: $zip, encrypt: $encrypt]';
+  String toString() =>
+      'FILE - buffer ${(bufferSize / 1000).round()} KB${zip ? ', zipped' : ''}, ${encrypt ? ', encrypted' : ''}';
 }
 
 /// A enumeration of known endpoint API types.
