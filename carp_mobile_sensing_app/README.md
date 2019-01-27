@@ -5,8 +5,8 @@ The app sets up a `Study` that starts a set of `Probe`s and visualize the data. 
 (from left to right) the Study Visualization page, the Probe List page, and the Data Visualization page.
 
 
-![Study Visualization page]() 
-![Probe List page]() 
+![Study Visualization page](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/carp_mobile_sensing_app/documentation/study_screen.jpeg) 
+![Probe List page](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/carp_mobile_sensing_app/documentation/probe_list.jpeg) 
 ![Data Visualization page]() 
  
  
