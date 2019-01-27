@@ -1,26 +1,26 @@
 # CARP Mobile Sensing App
 
-The CARP Mobile Sensing App provides an example on how to use the [`carp_mobile_sensing` package](https://pub.dartlang.org/packages/carp_mobile_sensing).
+The CARP Mobile Sensing App provides an example on how to use the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package.
 The app sets up a `Study` that starts a set of `Probe`s and visualize the data. The UI of the app is shown below, showing
-(from left to right) the Study Visualization page, the Probe List page, and the Data Visualization page.
+(from left to right) the Study Visualization page, the Probe List page, and the Data Visualization page (the latter is not implemented yet).
 
-![Study Visualization page](documentation/study_screen.jpeg) 
+![Study Visualization page](documentation/study_viz.jpeg) 
 ![Probe List page](documentation/probe_list.jpeg) 
-![Data Visualization page]() 
+![Data Visualization page](documentation/data_viz.jpeg) 
 
-  
+
 The architecture of the app is illustrated below. It follows the [BLoC architecture](https://medium.com/flutterpub/architecting-your-flutter-project-bd04e144a8f1),
 which is recommended by the [Flutter Team](https://www.youtube.com/watch?v=PLHln7wHgPE).
 
 
 ![Data Visualization page](documentation/architecture.png)
 
-The basic architecture hold a singleton `Sensing` class responsible for handling sensing via the `carp_mobile_sensing` packages. 
+The basic architecture holds a singleton `Sensing` class responsible for handling sensing via the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package. 
 All data is handled by a singleton `BloC` which is the only way, the UI models can access and modify 
 data, or initiate life cycle events (like pausing and resuming sensing). 
 All data to be shown in the UI are handled by (UI) models, and finally each screen (`Widget`)
 is implemented as a `StatefulWidget` in Flutter. Each UI widget only known its corresponding model
-and the model knows the BloC. **No** data or control flows between the UI and the Bloc or Sensing layer.
+and the model knows the BloC. **NO** data or control flows between the UI and the Bloc or Sensing layer.
 
 ## Sensing BLoC
 
@@ -54,10 +54,14 @@ class SensingBLoC {
 
   void dispose() async => sensing.stop();
 }
+
+
+final bloc = SensingBLoC();
 ````
 
 The BLoC basically plays two roles; it access data by returning model objects (such as `StudyModel`) 
 and it expose business logic like the sensing life cycle events (`start`, `stop`, etc.).
+Note that the singleton `bloc` variable is created, which makes the BLoC accessible in the entire app.
 
  ## UI Models
  
@@ -100,13 +104,19 @@ class StudyModel {
 In this model, there are only data **getters**, since in the current version of the app, you 
 cannot change a study once it is running. However, if modification of a study was to be 
 supported, then **setter** methods would be implmented in the model as well. 
-For example, a `void set name(String name)` method to modify the study name.
+For example, the following method would enable modification of the study name.
+
+````dart
+void set name(String name) {
+  ...
+}
+````
 
 ## UI Widgets
 
-The final layer is the UI Widgets. 
-Each UI Widget takes in its constructor its corresponding UI Model. 
-For example, in the `StudyVisualization` widget, is implemented like this:
+The final layer is the UI widgets. 
+Each UI widget takes in its constructor its corresponding UI model. 
+For example, the `StudyVisualization` widget's `State` takes a `StudyModel` in its constructor:
 
 `````dart
 class StudyVisualization extends StatefulWidget {
