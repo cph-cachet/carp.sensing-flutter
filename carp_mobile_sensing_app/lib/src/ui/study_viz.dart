@@ -4,17 +4,21 @@ class StudyVisualization extends StatefulWidget {
   const StudyVisualization({Key key}) : super(key: key);
   static const String routeName = '/study';
 
-  _StudyVizState createState() => _StudyVizState();
+  _StudyVizState createState() => _StudyVizState(bloc.study);
 }
 
 class _StudyVizState extends State<StudyVisualization> {
   static final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final double _appBarHeight = 256.0;
 
+  final StudyModel study;
+
+  _StudyVizState(this.study) : super();
+
   @override
   Widget build(BuildContext context) {
     if (bloc.study != null) {
-      return _buildStudyVisualization(context, bloc.study);
+      return _buildStudyVisualization(context, study);
     } else {
       return _buildEmptyStudyPanel(context);
     }

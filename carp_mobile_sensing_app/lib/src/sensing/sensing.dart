@@ -1,7 +1,5 @@
 part of mobile_sensing_app;
 
-final Sensing sensing = Sensing();
-
 /// This class implements the sensing incl. setting up a [Study] with [Task]s and [Measure]s.
 class Sensing {
   Study study;

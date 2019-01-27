@@ -11,16 +11,16 @@ class StudyModel {
   String get dataEndpoint => study.dataEndPoint.toString();
 
   /// Events on the state of the study executor
-  Stream<ProbeState> get studyExecutorStateEvents => sensing.controller.executor.stateEvents;
+  Stream<ProbeState> get studyExecutorStateEvents => bloc.sensing.controller.executor.stateEvents;
 
   /// Current state of the study executor (e.g., resumed, paused, ...)
-  ProbeState get studyState => sensing.controller.executor.state;
+  ProbeState get studyState => bloc.sensing.controller.executor.state;
 
   /// Get all sesing events (i.e. all [Datum] objects being collected).
-  Stream<Datum> get samplingEvents => sensing.controller.events;
+  Stream<Datum> get samplingEvents => bloc.sensing.controller.events;
 
   /// The total sampling size so far since this study was started.
-  int get samplingSize => sensing.controller.samplingSize;
+  int get samplingSize => bloc.sensing.controller.samplingSize;
 
   StudyModel(this.study)
       : assert(study != null, 'A StudyModel must be initialized with a real Study.'),
