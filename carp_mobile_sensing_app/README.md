@@ -4,9 +4,8 @@ The CARP Mobile Sensing App provides an example on how to use the [`carp_mobile_
 The app sets up a `Study` that starts a set of `Probe`s and visualize the data. The UI of the app is shown below, showing
 (from left to right) the Study Visualization page, the Probe List page, and the Data Visualization page.
 
-
-![Study Visualization page](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/carp_mobile_sensing_app/documentation/study_screen.jpeg) 
-![Probe List page](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/carp_mobile_sensing_app/documentation/probe_list.jpeg) 
+![Study Visualization page](documentation/study_screen.jpeg) 
+![Probe List page](documentation/probe_list.jpeg) 
 ![Data Visualization page]() 
  
  
