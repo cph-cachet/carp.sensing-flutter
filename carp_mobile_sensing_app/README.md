@@ -64,6 +64,10 @@ The BLoC basically plays two roles; it access data by returning model objects (s
 and it expose business logic like the sensing life cycle events (`start`, `stop`, etc.).
 Note that the singleton `bloc` variable is created, which makes the BLoC accessible in the entire app.
 
+We will not discuss the [`Sensing`](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/carp_mobile_sensing_app/lib/src/sensing/sensing.dart) 
+class here. I basically implements a [`Study`](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/core/Study-class.html) and sets up the sensing according to the
+[documentation](https://github.com/cph-cachet/carp.sensing-flutter/wiki) of the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package.
+
  ## UI Models
  
  In this CAPR Mobile Sensing App, we use one UI Model for each UI Widget. 
