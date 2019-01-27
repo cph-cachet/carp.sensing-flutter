@@ -56,7 +56,6 @@ class SensingBLoC {
   void dispose() async => sensing.stop();
 }
 
-
 final bloc = SensingBLoC();
 ````
 
@@ -166,7 +165,7 @@ counter showing sampling size, the following `StreamBuilder` is used.
  StreamBuilder<Datum>(
     stream: study.samplingEvents,
     builder: (context, AsyncSnapshot<Datum> snapshot) {
-      return _StudyControllerLine('${study.samplingSize}', heading: 'Sample Size');
+      return Text('Sample Size: ${study.samplingSize}');
     })
 `````
 
