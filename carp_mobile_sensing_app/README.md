@@ -19,7 +19,8 @@ The basic architecture holds a singleton `Sensing` class responsible for handlin
 All data is handled by a singleton `BloC` which is the only way, the UI models can access and modify 
 data, or initiate life cycle events (like pausing and resuming sensing). 
 All data to be shown in the UI are handled by (UI) models, and finally each screen (`Widget`)
-is implemented as a `StatefulWidget` in Flutter. Each UI widget only known its corresponding model
+is implemented as a [`StatefulWidget`](https://docs.flutter.io/flutter/widgets/StatefulWidget-class.html)
+in Flutter. Each UI widget only known its corresponding model
 and the model knows the BloC. **NO** data or control flows between the UI and the Bloc or Sensing layer.
 
 ## Sensing BLoC
