@@ -29,7 +29,7 @@ Add the following to your apps `manifest.xml` file located in `android/app/src/m
 
 ````xml
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="<<your_package_name"
+    package="<your_package_name>"
     xmlns:tools="http://schemas.android.com/tools">
 
    ...
