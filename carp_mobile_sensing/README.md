@@ -28,12 +28,22 @@ Note that there are two issues with Android to consider:
 Add the following to your apps `manifest.xml` file located in `android/app/src/main`:
 
 ````xml
-<manifest
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="<<your_package_name"
+    xmlns:tools="http://schemas.android.com/tools">
+
    ...
+   
+   <!-- The following permissions are used for CARP Mobile Sensing -->
    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
+   <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" tools:ignore="ProtectedPermissions"/>
+   <uses-permission android:name="android.permission.CALL_PHONE"/>
+   <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+   <uses-permission android:name="android.permission.READ_PHONE_NUMBERS"/>
+   <uses-permission android:name="android.permission.READ_SMS"/>
 
    <application
       ...
@@ -141,7 +151,7 @@ method() {
 There is a very simple [example app](example) app which shows how a study can be created with different tasks and measures.
 This app just prints the sensing data to a console screen on the phone.
 
-The CARP Mobile Sensing App is available from [Github](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_mobile_sensing_app).
+However, the [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_mobile_sensing_app) provides a **much** better example of how to use the package in a Flutter BLoC architecture, including good documentation of how to do this.
 
 
 ## Features and bugs
