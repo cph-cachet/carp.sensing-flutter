@@ -390,6 +390,9 @@ abstract class StreamProbe extends AbstractProbe {
   void onRestart() {}
 
   void onPause() {
+    // Not all underlying streams seems to comply to the pause event.
+    // For example, the location and activity probe
+    // TODO - implement support for pause/resume in the StreamProbe
     if (subscription != null) subscription.pause();
   }
 

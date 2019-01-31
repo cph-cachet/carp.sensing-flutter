@@ -63,7 +63,7 @@ class StudyMock implements StudyManager {
   Study _study;
   Future<Study> getStudy(String studyId) async {
     if (_study == null) {
-      _study = Study('DF#4dD-2', 'user@cachet.dk')
+      _study = Study('DF#4dD-3', 'user@cachet.dk')
         ..name = 'CARP Mobile Sensing - default configuration'
         ..description =
             'This is a long description of a Study which can run forever and take up a lot of space and drain you battery and you have to agree to an informed consent which - by all standards - do not comply to any legal framework....'

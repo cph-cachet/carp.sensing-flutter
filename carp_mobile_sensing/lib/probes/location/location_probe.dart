@@ -13,7 +13,7 @@ part of location;
 //    print('>>> Permission, location : $granted');
 
 /// Collects location information from the underlying OS's location API.
-/// Is a [ListeningProbe] that generates a [LocationDatum] every time location is changed.
+/// Is a [StreamProbe] that generates a [LocationDatum] every time location is changed.
 class LocationProbe extends StreamProbe {
   LocationProbe(Measure measure) : super(measure, locationStream);
 }
