@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of environment;
+part of context;
 
 /// Specify the configuration on how to collect weather data.
 /// Needs an [apiKey] for the OpenWeatherMap API.

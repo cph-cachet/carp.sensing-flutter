@@ -5,12 +5,11 @@
  * found in the LICENSE file.
  */
 
-part of hardware;
+part of device;
 
 /// The [BatteryProbe] listens to the hardware battery and collect a [BatteryDatum]
 /// every time the battery state changes. For example, battery level or charging mode.
 class BatteryProbe extends StreamProbe {
-  //BatteryProbe(Measure measure) : super(measure, batteryStream);
   BatteryProbe() : super(batteryStream);
 }
 
@@ -51,3 +50,37 @@ Stream<Datum> get batteryStream {
 //      yield BatteryDatum.fromBatteryState(measure, level, state);
 //    }
 //  }
+
+/// Listens to screen actions which are: SCREEN ON/OFF/UNLOCK which are stored as a [ScreenDatum].
+class ScreenProbe extends StreamProbe {
+  ScreenProbe() : super(screenStream);
+}
+
+Stream<Datum> get screenStream => Screen().screenStateEvents.map((event) => ScreenDatum.fromScreenStateEvent(event));
+
+/// A polling probe that collects free virtual memory on a regular basis
+/// as specified in [PeriodicMeasure.frequency].
+class MemoryPollingProbe extends PeriodicDatumProbe {
+  MemoryPollingProbe() : super();
+
+  Future<Datum> getDatum() async {
+    return FreeMemoryDatum()
+      ..freePhysicalMemory = SysInfo.getFreePhysicalMemory()
+      ..freeVirtualMemory = SysInfo.getFreeVirtualMemory();
+  }
+}
+
+/// A probe that collects the device info about this device.
+/// Only collects this information once when the [getDatum] method is called.
+class DeviceProbe extends DatumProbe {
+  DeviceProbe() : super();
+
+  Future<Datum> getDatum() async {
+    return DeviceDatum(Device.platform, Device.deviceID,
+        deviceName: Device.deviceName,
+        deviceModel: Device.deviceModel,
+        deviceManufacturer: Device.deviceManufacturer,
+        operatingSystem: Device.operatingSystem,
+        hardware: Device.hardware);
+  }
+}

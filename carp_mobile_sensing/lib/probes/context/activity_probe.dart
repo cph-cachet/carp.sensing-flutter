@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of activity;
+part of context;
 
 /// Collects activity information from the underlying OS's activity recognition API.
 /// Is a [ListeningProbe] that generates a [ActivityDatum] every time an activity is detected.

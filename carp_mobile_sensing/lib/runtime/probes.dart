@@ -168,6 +168,8 @@ abstract class Probe {
   Stream<Datum> get events;
 
   /// Initialize the probe before starting it.
+  ///
+  /// The configuration of the probe is specified in the [measure].
   void initialize(Measure measure);
 
   /// Start the probe();
@@ -252,6 +254,7 @@ abstract class Probe {
 //  }
 //}
 
+///// An abstract implementation of a [Probe] to extend from.
 abstract class AbstractProbe with MeasureListener implements Probe {
   StreamController<ProbeState> _stateEventController = StreamController.broadcast();
   Stream<ProbeState> get stateEvents => _stateEventController.stream;
@@ -275,7 +278,7 @@ abstract class AbstractProbe with MeasureListener implements Probe {
     _stateMachine = _CreatedState(this);
   }
 
-// ProbeState handlers
+  // ProbeState handlers
   void initialize(Measure measure) async {
     assert(measure != null, 'Probe cannot be initialized with a null measure.');
     _measure = measure;
@@ -309,6 +312,7 @@ abstract class AbstractProbe with MeasureListener implements Probe {
     _stateEventController.close();
   }
 
+  /// Callback when this probe's [measure] has changed.
   void hasChanged(Measure measure) {
     restart();
   }
@@ -539,65 +543,6 @@ abstract class PeriodicDatumProbe extends DatumProbe {
   }
 }
 
-/// A periodic probe is triggered at regular intervals, specified by its [frequency] property
-/// in a [PeriodicMeasure].
-///
-/// When triggered, a periodic probe collect a piece of data ([Datum]) using the [getDatum] method.
-abstract class PeriodicDatumProbe2 extends DatumProbe {
-  Timer timer;
-  StreamController<Datum> controller = StreamController<Datum>.broadcast();
-  Duration frequency, duration;
-
-//  PeriodicDatumProbe2(PeriodicMeasure measure) : super(measure) {
-//    frequency = Duration(milliseconds: measure.frequency);
-//    duration = (measure.duration != null) ? Duration(milliseconds: measure.duration) : null;
-//  }
-
-  PeriodicDatumProbe2() : super();
-
-  Stream<Datum> get events => controller.stream;
-
-  void onInitialize(Measure measure) {
-    assert(measure is PeriodicMeasure);
-    frequency = Duration(milliseconds: (measure as PeriodicMeasure).frequency);
-    duration = ((measure as PeriodicMeasure).duration != null)
-        ? Duration(milliseconds: (measure as PeriodicMeasure).duration)
-        : null;
-  }
-
-  void onRestart() {
-    frequency = Duration(milliseconds: (measure as PeriodicMeasure).frequency);
-    duration = ((measure as PeriodicMeasure).duration != null)
-        ? Duration(milliseconds: (measure as PeriodicMeasure).duration)
-        : null;
-  }
-
-  void onResume() {
-    super.onResume();
-    // create a recurrent timer that resumes sampling every [frequency].
-    timer = Timer.periodic(frequency, (Timer t) async {
-      try {
-        getDatum().then((Datum data) {
-          if (data != null) controller.add(data);
-        });
-      } catch (e, s) {
-        controller.addError(e, s);
-      }
-    });
-  }
-
-  void onPause() {
-    super.onPause();
-    if (timer != null) timer.cancel();
-  }
-
-  void onStop() {
-    if (timer != null) timer.cancel();
-    controller.close();
-    super.onStop();
-  }
-}
-
 /// An abstract class used to create a probe that listen to events from a [Stream].
 ///
 /// Subclasses should implement the [get stream] method.
@@ -657,11 +602,7 @@ abstract class PeriodicStreamProbe extends StreamProbe {
   Duration frequency, duration;
 
   /// Creates a [PeriodicStreamProbe] handling the [stream] in a periodic manner.
-//  PeriodicStreamProbe(PeriodicMeasure measure, Stream<Datum> stream) : super(measure, stream) {
-//    frequency = Duration(milliseconds: measure.frequency);
-//    duration = (measure.duration != null) ? Duration(milliseconds: measure.duration) : null;
-//  }
-  PeriodicStreamProbe(Stream<Datum> stream) : super(stream) {}
+  PeriodicStreamProbe(Stream<Datum> stream) : super(stream);
 
   void onInitialize(Measure measure) {
     assert(measure is PeriodicMeasure);
@@ -680,7 +621,7 @@ abstract class PeriodicStreamProbe extends StreamProbe {
 
   void onResume() {
     if (subscription != null) {
-      // create a recurrent timer that wait (pause) and then resume the sampling.
+      // create a recurrent timer that resume sampling.
       timer = Timer.periodic(frequency, (Timer t) {
         subscription.resume();
         // create a timer that pause the sampling after the specified duration.
@@ -698,7 +639,6 @@ abstract class PeriodicStreamProbe extends StreamProbe {
 
   void onStop() async {
     if (timer != null) timer.cancel();
-    controller.close();
     super.onStop();
   }
 }

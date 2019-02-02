@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of location;
+part of context;
 
 /// Holds location information using the GPS format.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)

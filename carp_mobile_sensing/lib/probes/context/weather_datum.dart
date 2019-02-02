@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of environment;
+part of context;
 
 /// A [Datum] that holds weather information collected through OpenWeatherMap.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)

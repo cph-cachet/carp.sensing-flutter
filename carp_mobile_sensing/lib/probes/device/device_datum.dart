@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of hardware;
+part of device;
 
 /// Holds basic information about the mobile device from where the data is collected.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)

@@ -1,10 +1,70 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of environment;
+part of context;
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
+
+ActivityDatum _$ActivityDatumFromJson(Map<String, dynamic> json) {
+  return ActivityDatum()
+    ..id = json['id'] as String
+    ..timestamp = json['timestamp'] == null
+        ? null
+        : DateTime.parse(json['timestamp'] as String)
+    ..confidence = json['confidence'] as int
+    ..type = json['type'] as String;
+}
+
+Map<String, dynamic> _$ActivityDatumToJson(ActivityDatum instance) {
+  var val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', instance.id);
+  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  writeNotNull('confidence', instance.confidence);
+  writeNotNull('type', instance.type);
+  return val;
+}
+
+LocationDatum _$LocationDatumFromJson(Map<String, dynamic> json) {
+  return LocationDatum()
+    ..id = json['id'] as String
+    ..timestamp = json['timestamp'] == null
+        ? null
+        : DateTime.parse(json['timestamp'] as String)
+    ..latitude = (json['latitude'] as num)?.toDouble()
+    ..longitude = (json['longitude'] as num)?.toDouble()
+    ..altitude = (json['altitude'] as num)?.toDouble()
+    ..accuracy = (json['accuracy'] as num)?.toDouble()
+    ..speed = (json['speed'] as num)?.toDouble()
+    ..speedAccuracy = (json['speed_accuracy'] as num)?.toDouble();
+}
+
+Map<String, dynamic> _$LocationDatumToJson(LocationDatum instance) {
+  var val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', instance.id);
+  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  writeNotNull('latitude', instance.latitude);
+  writeNotNull('longitude', instance.longitude);
+  writeNotNull('altitude', instance.altitude);
+  writeNotNull('accuracy', instance.accuracy);
+  writeNotNull('speed', instance.speed);
+  writeNotNull('speed_accuracy', instance.speedAccuracy);
+  return val;
+}
 
 WeatherDatum _$WeatherDatumFromJson(Map<String, dynamic> json) {
   return WeatherDatum()

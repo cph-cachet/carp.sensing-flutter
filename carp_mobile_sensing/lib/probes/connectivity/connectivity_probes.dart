@@ -7,6 +7,17 @@
 
 part of connectivity;
 
+/// The [ConnectivityProbe] listens to the connectivity status of the phone and
+/// collect a [ConnectivityDatum] every time the connectivity state changes.
+class ConnectivityProbe extends StreamProbe {
+  //ConnectivityProbe(Measure measure) : super(measure, connectivityStream);
+  ConnectivityProbe() : super(connectivityStream);
+}
+
+Stream<Datum> get connectivityStream => Connectivity()
+    .onConnectivityChanged
+    .map((ConnectivityResult event) => ConnectivityDatum.fromConnectivityResult(event));
+
 // This probe requests access to location PERMISSIONS (on Android). Don't ask why.....
 // TODO - implement request for getting permission.
 

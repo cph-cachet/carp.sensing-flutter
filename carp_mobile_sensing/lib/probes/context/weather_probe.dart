@@ -1,4 +1,4 @@
-part of environment;
+part of context;
 
 /// Collects the weather on a regular basis using the [WeatherStation] API.
 class WeatherProbe extends PeriodicDatumProbe {

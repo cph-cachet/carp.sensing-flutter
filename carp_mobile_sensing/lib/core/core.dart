@@ -12,7 +12,7 @@ import 'package:device_info/device_info.dart';
 import 'package:flutter/services.dart';
 
 // import Measures defined in the probes libraries.
-import 'package:carp_mobile_sensing/probes/environment/environment.dart';
+import 'package:carp_mobile_sensing/probes/context/context.dart';
 import 'package:carp_mobile_sensing/probes/sound/sound.dart';
 import 'package:carp_mobile_sensing/probes/communication/communication.dart';
 

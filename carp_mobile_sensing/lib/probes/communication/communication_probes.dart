@@ -7,13 +7,38 @@
 
 part of communication;
 
+/// A probe that collects the phone log from this device.
+/// Only collects this information once when the [getDatum] method is called.
+class PhoneLogProbe extends DatumProbe {
+  PhoneLogProbe() : super();
+
+  Future<Datum> getDatum() async {
+    int days = (measure as PhoneLogMeasure).days;
+    Iterable<CallLogEntry> entries;
+    if ((days == null) || (days == -1)) {
+      entries = await CallLog.get();
+    } else {
+      var now = DateTime.now();
+      int from = now.subtract(Duration(days: days)).millisecondsSinceEpoch;
+      int to = now.millisecondsSinceEpoch;
+      entries = await CallLog.query(dateFrom: from, dateTo: to);
+    }
+
+    PhoneLogDatum pld = new PhoneLogDatum();
+    for (CallLogEntry call in entries ?? []) {
+      pld.phoneLog.add(PhoneCall.fromCallLogEntry(call));
+    }
+
+    return pld;
+  }
+}
+
 /// A probe that collects a complete list of all text (SMS) messages from this device.
 ///
 /// This probe only collects the list of SMS messages once.
 /// If you want to listen to text messages being received,
 /// use a [TextMessageProbe] instead.
 class TextMessageLogProbe extends DatumProbe {
-  //TextMessageLogProbe(Measure measure) : super(measure);
   TextMessageLogProbe() : super();
 
   Future<Datum> getDatum() async {
@@ -30,7 +55,6 @@ class TextMessageLogProbe extends DatumProbe {
 class TextMessageProbe extends StreamProbe {
   SmsReceiver receiver = SmsReceiver();
 
-  //TextMessageProbe(Measure measure) : super(measure, textMessageStream);
   TextMessageProbe() : super(textMessageStream);
 }
 

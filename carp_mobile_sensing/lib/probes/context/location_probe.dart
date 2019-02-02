@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of location;
+part of context;
 
 // TODO - check for permissions...
 //    PermissionStatus status = await SimplePermissions.requestPermission(Permission.AccessFineLocation);

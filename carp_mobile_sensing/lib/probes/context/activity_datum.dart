@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of activity;
+part of context;
 
 /// Holds activity information.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)

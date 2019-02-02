@@ -11,7 +11,6 @@ import 'package:call_log/call_log.dart';
 import 'package:carp_mobile_sensing/core/core.dart';
 
 part 'communication_datum.dart';
-part 'phone_log_probe.dart';
-part 'text_messages_probes.dart';
+part 'communication_probes.dart';
 part 'communication_measures.dart';
 part 'communication.g.dart';
