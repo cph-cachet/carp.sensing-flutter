@@ -8,7 +8,8 @@ part of apps;
 
 /// A polling probe collecting a list of installed applications on this device.
 class AppsProbe extends PeriodicDatumProbe {
-  AppsProbe(PeriodicMeasure measure) : super(measure);
+  //AppsProbe(PeriodicMeasure measure) : super(measure);
+  AppsProbe() : super();
 
   Stream<Datum> get stream => null;
 
@@ -30,7 +31,8 @@ class AppsProbe extends PeriodicDatumProbe {
 class AppUsageProbe extends PeriodicDatumProbe {
   AppUsage appUsage = new AppUsage();
 
-  AppUsageProbe(PeriodicMeasure measure) : super(measure);
+  //AppUsageProbe(PeriodicMeasure measure) : super(measure);
+  AppUsageProbe() : super();
 
   Future<Datum> getDatum() async {
     DateTime end = DateTime.now();

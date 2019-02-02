@@ -10,7 +10,8 @@ part of connectivity;
 /// The [ConnectivityProbe] listens to the connectivity status of the phone and
 /// collect a [ConnectivityDatum] everytime the connectivity state changes.
 class ConnectivityProbe extends StreamProbe {
-  ConnectivityProbe(Measure measure) : super(measure, connectivityStream);
+  //ConnectivityProbe(Measure measure) : super(measure, connectivityStream);
+  ConnectivityProbe() : super(connectivityStream);
 }
 
 Stream<Datum> get connectivityStream => Connectivity()

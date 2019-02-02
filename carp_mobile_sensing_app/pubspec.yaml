@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   rxdart: ^0.18.0
-  carp_mobile_sensing: ^0.2.0
+  carp_mobile_sensing: ^0.3.0
 #  carp_firebase_backend: ^0.0.1
   carp_backend:
 

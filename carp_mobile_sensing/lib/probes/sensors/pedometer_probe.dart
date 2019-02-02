@@ -27,10 +27,17 @@ class PedometerProbe extends StreamProbe {
   /// Returns the latest known step count.
   int get latestStepCount => _latestStepCount;
 
-  PedometerProbe(PeriodicMeasure measure)
-      : super(measure, Stream<Datum>.empty()) // we're not using this stream - creating our own StreamSubscription.
-  {
-    frequency = Duration(milliseconds: measure.frequency);
+//  PedometerProbe(PeriodicMeasure measure)
+//      : super(measure, Stream<Datum>.empty()) // we're not using this stream - creating our own StreamSubscription.
+//  {
+//    frequency = Duration(milliseconds: measure.frequency);
+//  }
+
+  PedometerProbe() : super(Stream<Datum>.empty()); // we're not using this stream - creating our own StreamSubscription.
+
+  void onInitialize(Measure measure) {
+    super.onInitialize(measure);
+    frequency = Duration(milliseconds: (measure as PeriodicMeasure).frequency);
   }
 
   void onStart() {

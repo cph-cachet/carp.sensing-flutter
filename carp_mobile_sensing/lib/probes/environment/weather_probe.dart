@@ -4,8 +4,14 @@ part of environment;
 class WeatherProbe extends PeriodicDatumProbe {
   WeatherStation weather;
 
-  WeatherProbe(WeatherMeasure measure) : super(measure) {
-    weather = WeatherStation(measure.apiKey);
+//  WeatherProbe(WeatherMeasure measure) : super(measure) {
+//    weather = WeatherStation(measure.apiKey);
+//  }
+  WeatherProbe() : super();
+
+  void onInitialize(Measure measure) {
+    super.onInitialize(measure);
+    weather = WeatherStation((measure as WeatherMeasure).apiKey);
   }
 
   Future<Datum> getDatum() async {

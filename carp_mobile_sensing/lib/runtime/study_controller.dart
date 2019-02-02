@@ -51,14 +51,13 @@ class StudyController {
       study.adapt(samplingSchema, restore: false);
     }
 
-    executor.initialize();
+    executor.initialize(Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR)));
     dataManager.initialize(study, events);
 
     events.listen((data) => samplingSize++);
   }
 
-  BatteryProbe _battery =
-      BatteryProbe(Measure(MeasureType(NameSpace.CARP, DataType.BATTERY), name: 'PowerAwarenessProbe'));
+  BatteryProbe _battery = BatteryProbe();
 
   /// Enable power-aware sensing in this study. See [PowerAwarenessState].
   Future<void> enablePowerAwareness() async {
@@ -75,7 +74,7 @@ class StudyController {
           }
         }
       });
-      _battery.initialize();
+      _battery.initialize(Measure(MeasureType(NameSpace.CARP, DataType.BATTERY), name: 'PowerAwarenessProbe'));
       _battery.start();
     }
   }

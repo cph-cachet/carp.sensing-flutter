@@ -13,7 +13,8 @@ part of communication;
 /// If you want to listen to text messages being received,
 /// use a [TextMessageProbe] instead.
 class TextMessageLogProbe extends DatumProbe {
-  TextMessageLogProbe(Measure measure) : super(measure);
+  //TextMessageLogProbe(Measure measure) : super(measure);
+  TextMessageLogProbe() : super();
 
   Future<Datum> getDatum() async {
     SmsQuery query = new SmsQuery();
@@ -29,7 +30,8 @@ class TextMessageLogProbe extends DatumProbe {
 class TextMessageProbe extends StreamProbe {
   SmsReceiver receiver = SmsReceiver();
 
-  TextMessageProbe(Measure measure) : super(measure, textMessageStream);
+  //TextMessageProbe(Measure measure) : super(measure, textMessageStream);
+  TextMessageProbe() : super(textMessageStream);
 }
 
 Stream<Datum> get textMessageStream =>

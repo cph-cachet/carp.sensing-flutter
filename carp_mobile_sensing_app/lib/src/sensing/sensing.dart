@@ -71,13 +71,13 @@ class StudyMock implements StudyManager {
       // ..addTask(Task()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
 
       // adding the measures to two separate tasks, while also adding a new light measure to the 2nd task
-      _study.addTask(Task('Activity Sensing Task #1')
-        ..measures = SamplingSchema.common()
-            .getMeasureList([DataType.PEDOMETER, DataType.LOCATION, DataType.ACTIVITY, DataType.WEATHER]));
-      _study.addTask(Task('Phone Sensing Task #2')
-        ..measures = SamplingSchema.common().getMeasureList([DataType.SCREEN, DataType.NOISE])
-        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.LIGHT),
-            name: "Ambient Light", frequency: 11 * 1000, duration: 700)));
+//      _study.addTask(Task('Activity Sensing Task #1')
+//        ..measures = SamplingSchema.common()
+//            .getMeasureList([DataType.PEDOMETER, DataType.LOCATION, DataType.ACTIVITY, DataType.WEATHER]));
+//      _study.addTask(Task('Phone Sensing Task #2')
+//        ..measures = SamplingSchema.common().getMeasureList([DataType.SCREEN, DataType.NOISE])
+//        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.LIGHT),
+//            name: "Ambient Light", frequency: 11 * 1000, duration: 700)));
 
       //_study.tasks.forEach((task) => task.measures.forEach((measure) => measure.enabled = true));
 
@@ -102,18 +102,18 @@ class StudyMock implements StudyManager {
 //
 //      _study.addTask(task);
 
-//      //_study.tasks.add(sensorTask);
-//      _study.tasks.add(pedometerTask);
-//      _study.tasks.add(hardwareTask);
-//      _study.tasks.add(appTask);
-//      _study.tasks.add(connectivityTask);
-//      _study.tasks.add(commTask);
-//      _study.tasks.add(locationTask);
-//      //_study.tasks.add(audioTask);
-//      _study.tasks.add(contextTask);
-//      _study.tasks.add(noiseTask);
-//      _study.tasks.add(appUsageTask);
-//      _study.tasks.add(environmentTask);
+      _study.tasks.add(sensorTask);
+      _study.tasks.add(pedometerTask);
+      _study.tasks.add(hardwareTask);
+      _study.tasks.add(appTask);
+      _study.tasks.add(connectivityTask);
+      _study.tasks.add(commTask);
+      _study.tasks.add(locationTask);
+      // _study.tasks.add(audioTask);
+      _study.tasks.add(contextTask);
+      _study.tasks.add(noiseTask);
+      _study.tasks.add(appUsageTask);
+      _study.tasks.add(environmentTask);
     }
     return _study;
   }

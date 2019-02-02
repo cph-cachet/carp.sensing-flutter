@@ -10,7 +10,8 @@ part of activity;
 /// Collects activity information from the underlying OS's activity recognition API.
 /// Is a [ListeningProbe] that generates a [ActivityDatum] every time an activity is detected.
 class ActivityProbe extends StreamProbe {
-  ActivityProbe(Measure measure) : super(measure, activityStream);
+  //ActivityProbe(Measure measure) : super(measure, activityStream);
+  ActivityProbe() : super(activityStream);
 }
 
 Stream<Datum> get activityStream =>

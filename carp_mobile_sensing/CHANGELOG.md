@@ -1,3 +1,15 @@
+## 0.3.2
+* support for dividing probes into separate probe packages
+* included in `carp_mobile_sensing` are
+     * `sensors` (sensors, light, pedometer)
+     * `hardware` (device, screen, memory, battery)
+     * `connectivity` (connectivity, bluetooth)
+* implementation of the following external probe packages:
+     * `phone` (sms & call log)
+     * `context` (location, activity, weather)
+     * `sound` (noise, recording)
+     * `movisens` (Movisens Move/ECG devices)
+
 ## 0.3.1
 * small updates to the data format incl. documentation on the [wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki/Sampling-Data-Formats).
 * fixed error in the `stop` method.

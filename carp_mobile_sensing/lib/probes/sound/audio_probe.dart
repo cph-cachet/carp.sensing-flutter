@@ -38,8 +38,15 @@ class AudioProbe extends BufferingPeriodicProbe {
   DateTime _startRecordingTime, _endRecordingTime;
   FlutterSound _flutterSound = new FlutterSound();
 
-  AudioProbe(AudioMeasure measure) : super(measure) {
-    this.studyId = measure.studyId;
+//  AudioProbe(AudioMeasure measure) : super(measure) {
+//    this.studyId = measure.studyId;
+//  }
+
+  AudioProbe() : super();
+
+  void onInitialize(Measure measure) {
+    super.onInitialize(measure);
+    this.studyId = (measure as AudioMeasure).studyId;
   }
 
   void onRestart() {
@@ -139,7 +146,7 @@ class OldAudioProbe extends AbstractProbe {
 
   Stream<Datum> get events => controller.stream;
 
-  OldAudioProbe(AudioMeasure measure) : super(measure);
+  //OldAudioProbe(AudioMeasure measure) : super(measure);
 
   Future onStart() async {
     //super.start();

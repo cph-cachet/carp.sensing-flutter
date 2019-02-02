@@ -10,7 +10,8 @@ part of hardware;
 /// The [BatteryProbe] listens to the hardware battery and collect a [BatteryDatum]
 /// every time the battery state changes. For example, battery level or charging mode.
 class BatteryProbe extends StreamProbe {
-  BatteryProbe(Measure measure) : super(measure, batteryStream);
+  //BatteryProbe(Measure measure) : super(measure, batteryStream);
+  BatteryProbe() : super(batteryStream);
 }
 
 Stream<Datum> get batteryStream {

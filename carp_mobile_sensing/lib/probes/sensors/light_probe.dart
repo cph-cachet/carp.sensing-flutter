@@ -12,7 +12,8 @@ part of sensors;
 class LightProbe extends BufferingPeriodicStreamProbe {
   List<num> luxValues = new List();
 
-  LightProbe(PeriodicMeasure measure) : super(measure, lightSensorStream);
+  //LightProbe(PeriodicMeasure measure) : super(measure, lightSensorStream);
+  LightProbe() : super(lightSensorStream);
 
   @override
   Future<Datum> getDatum() async {

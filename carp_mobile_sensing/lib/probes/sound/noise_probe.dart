@@ -22,7 +22,8 @@ class NoiseProbe extends BufferingPeriodicStreamProbe {
   int samplingRate;
   List<num> _noiseReadings = new List();
 
-  NoiseProbe(NoiseMeasure measure) : super(measure, _noise.noiseStream);
+  //NoiseProbe(NoiseMeasure measure) : super(measure, _noise.noiseStream);
+  NoiseProbe() : super(_noise.noiseStream);
 
   void onRestart() {
     samplingRate = (measure as NoiseMeasure).samplingRate;

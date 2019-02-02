@@ -10,7 +10,8 @@ part of communication;
 /// A probe that collects the phone log from this device.
 /// Only collects this information once when the [getDatum] method is called.
 class PhoneLogProbe extends DatumProbe {
-  PhoneLogProbe(PhoneLogMeasure measure) : super(measure);
+  //PhoneLogProbe(PhoneLogMeasure measure) : super(measure);
+  PhoneLogProbe() : super();
 
   Future<Datum> getDatum() async {
     int days = (measure as PhoneLogMeasure).days;
