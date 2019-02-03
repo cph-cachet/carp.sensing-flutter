@@ -8,6 +8,9 @@ class _SamplingPackageRegistry {
   List<SamplingPackage> get packages => _packages;
 
   _SamplingPackageRegistry() : super() {
+    // HACK - creating a serializable object (such as a [Study]) ensures that
+    // JSON deserialization in [Serializable] is initialized
+    Study("1234", "unknown");
     // register the known, built-in packages
     register(DeviceSamplingPackage());
     register(SensorSamplingPackage());
@@ -15,6 +18,7 @@ class _SamplingPackageRegistry {
     register(AppsSamplingPackage());
   }
 
+  /// Register a sampling package.
   void register(SamplingPackage package) {
     _packages.add(package);
     DataType.add(package.dataTypes);

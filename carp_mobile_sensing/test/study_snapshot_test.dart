@@ -8,6 +8,10 @@ void main() {
   Study study;
 
   setUp(() {
+    SamplingPackageRegistry.register(AudioSamplingPackage());
+    SamplingPackageRegistry.register(CommunicationSamplingPackage());
+    SamplingPackageRegistry.register(ContextSamplingPackage());
+
     study = Study("1234", "bardram", name: "bardram study");
     study.dataEndPoint = DataEndPoint(DataEndPointType.PRINT);
 //    study.dataEndPoint = FileDataEndPoint()

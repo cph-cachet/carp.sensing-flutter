@@ -4,37 +4,7 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-
 part of core;
-
-/// Signature of a data transformer.
-typedef DatumTransformer = Datum Function(Datum);
-
-/// Signature of a data stream transformer.
-typedef DatumStreamTransformer = Stream<Datum> Function(Stream<Datum>);
-
-String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
-
-/// Specify a schema for transforming data according to a set of privacy rules.
-class PrivacySchema {
-  Map<String, DatumTransformer> transformers = Map();
-
-  PrivacySchema() : super();
-
-  factory PrivacySchema.none() => PrivacySchema();
-  factory PrivacySchema.full() => PrivacySchema();
-
-  addProtector(String type, DatumTransformer protector) => transformers[type] = protector;
-
-  /// Returns a privacy protected version of [data].
-  ///
-  /// If a transformer for this data type exists, the data is transformed.
-  /// Otherwise, the same data is returned unchanged.
-  Datum protect(Datum data) {
-    Function transformer = transformers[data.format.name];
-    return (transformer != null) ? transformer(data) : data;
-  }
-}
 
 /// Specify how sampling should be done. Used to make default configuration of [Measure]s.
 ///
@@ -151,73 +121,6 @@ class SamplingSchema {
 
     return schema;
   }
-
-//  factory SamplingSchema.commonOld({String namespace = NameSpace.CARP}) => SamplingSchema()
-//    ..type = SamplingSchemaType.COMMON
-//    ..name = 'Common (default) sampling'
-//    ..powerAware = true
-//    ..measures.addEntries([
-//      MapEntry(
-//          DataType.DEVICE, Measure(MeasureType(namespace, DataType.DEVICE), name: 'Basic Device Info', enabled: true)),
-//      MapEntry(
-//          DataType.ACCELEROMETER,
-//          PeriodicMeasure(MeasureType(namespace, DataType.ACCELEROMETER),
-//              name: 'Accelerometer', enabled: false, frequency: 1000, duration: 10)),
-//      MapEntry(
-//          DataType.GYROSCOPE,
-//          PeriodicMeasure(MeasureType(namespace, DataType.GYROSCOPE),
-//              name: 'Gyroscope', enabled: false, frequency: 1000, duration: 10)),
-//      MapEntry(
-//          DataType.PEDOMETER,
-//          PeriodicMeasure(MeasureType(namespace, DataType.PEDOMETER),
-//              name: 'Pedometer (Step Count)', enabled: true, frequency: 60 * 60 * 1000)),
-//      MapEntry(
-//          DataType.LIGHT,
-//          PeriodicMeasure(MeasureType(namespace, DataType.LIGHT),
-//              name: 'Ambient Light', enabled: true, frequency: 60 * 1000, duration: 1000)),
-//      MapEntry(DataType.BATTERY, Measure(MeasureType(namespace, DataType.BATTERY), name: 'Battery', enabled: true)),
-//      MapEntry(DataType.SCREEN,
-//          Measure(MeasureType(namespace, DataType.SCREEN), name: 'Screen Activity (lock/on/off)', enabled: true)),
-//      MapEntry(
-//          DataType.MEMORY,
-//          PeriodicMeasure(MeasureType(namespace, DataType.MEMORY),
-//              name: 'Memory Usage', enabled: true, frequency: 60 * 1000)),
-//      MapEntry(DataType.LOCATION, Measure(MeasureType(namespace, DataType.LOCATION), name: 'Location', enabled: true)),
-//      MapEntry(DataType.CONNECTIVITY,
-//          Measure(MeasureType(namespace, DataType.CONNECTIVITY), name: 'Connectivity (wifi/3G/...)', enabled: true)),
-//      MapEntry(
-//          DataType.BLUETOOTH,
-//          PeriodicMeasure(MeasureType(namespace, DataType.BLUETOOTH),
-//              name: 'Nearby Devices (Bluetooth Scan)', enabled: true, frequency: 60 * 60 * 1000, duration: 2 * 1000)),
-//      MapEntry(
-//          DataType.APPS,
-//          PeriodicMeasure(MeasureType(namespace, DataType.APPS),
-//              name: 'Installed Apps', enabled: true, frequency: 24 * 60 * 60 * 1000)),
-//      MapEntry(
-//          DataType.APP_USAGE,
-//          PeriodicMeasure(MeasureType(namespace, DataType.APP_USAGE),
-//              name: 'Apps Usage', enabled: true, frequency: 60 * 60 * 1000, duration: 60 * 60 * 1000)),
-//      MapEntry(
-//          DataType.AUDIO,
-//          AudioMeasure(MeasureType(namespace, DataType.AUDIO),
-//              name: 'Audio Recording', enabled: true, frequency: 60 * 1000, duration: 2 * 1000)),
-//      MapEntry(
-//          DataType.NOISE,
-//          NoiseMeasure(MeasureType(namespace, DataType.NOISE),
-//              name: 'Ambient Noise', enabled: true, frequency: 60 * 1000, duration: 2 * 1000)),
-//      MapEntry(DataType.ACTIVITY,
-//          Measure(MeasureType(namespace, DataType.ACTIVITY), name: 'Activity Recognition', enabled: true)),
-//      MapEntry(DataType.PHONE_LOG,
-//          PhoneLogMeasure(MeasureType(namespace, DataType.PHONE_LOG), name: 'Phone Log', enabled: true, days: 30)),
-//      MapEntry(DataType.TEXT_MESSAGE_LOG,
-//          Measure(MeasureType(namespace, DataType.TEXT_MESSAGE_LOG), name: 'Text Message (SMS) Log', enabled: true)),
-//      MapEntry(DataType.TEXT_MESSAGE,
-//          Measure(MeasureType(namespace, DataType.TEXT_MESSAGE), name: 'Text Message (SMS)', enabled: true)),
-//      MapEntry(
-//          DataType.WEATHER,
-//          WeatherMeasure(MeasureType(namespace, DataType.WEATHER),
-//              name: 'Local Weather', enabled: true, frequency: 60 * 60 * 1000))
-//    ]);
 
   /// A sampling schema that does not adapt any [Measure]s.
   ///

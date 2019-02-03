@@ -13,11 +13,6 @@ import 'package:flutter/services.dart';
 
 import 'package:carp_mobile_sensing/runtime/runtime.dart';
 
-// import Measures defined in the probes libraries.
-//import 'package:carp_mobile_sensing/probes/context/context.dart';
-//import 'package:carp_mobile_sensing/probes/sound/audio.dart';
-//import 'package:carp_mobile_sensing/probes/communication/communication.dart';
-
 part 'serialization.dart';
 part 'study.dart';
 part 'tasks.dart';
@@ -26,5 +21,6 @@ part 'datum.dart';
 part 'measures.dart';
 part 'device_info.dart';
 part 'managers.dart';
-part 'schemas.dart';
+part 'sampling_schema.dart';
+part 'privacy_schema.dart';
 part 'core.g.dart';
