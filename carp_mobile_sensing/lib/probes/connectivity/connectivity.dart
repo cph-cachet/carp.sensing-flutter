@@ -13,3 +13,4 @@ import 'package:carp_mobile_sensing/core/core.dart';
 part 'connectivity_probes.dart';
 part 'connectivity_datum.dart';
 part 'connectivity.g.dart';
+part 'connectivity_package.dart';

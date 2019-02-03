@@ -13,4 +13,5 @@ import 'package:carp_mobile_sensing/core/core.dart';
 part 'communication_datum.dart';
 part 'communication_probes.dart';
 part 'communication_measures.dart';
+part 'communication_package.dart';
 part 'communication.g.dart';

@@ -182,7 +182,12 @@ class DataType {
   static const String GOOGLE_FIT = "google-fit";
   static const String WEATHER = "weather";
 
-  static List<String> get all => [
+  static List<String> _allTypes = List<String>();
+
+  static void add(List<String> types) => _allTypes.addAll(types);
+  static List<String> get all => _allTypes;
+
+  static List<String> get allOld => [
         DataType.MEMORY,
         DataType.DEVICE,
         DataType.PEDOMETER,

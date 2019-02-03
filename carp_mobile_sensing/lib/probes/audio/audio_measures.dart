@@ -34,7 +34,7 @@ class NoiseMeasure extends PeriodicMeasure {
 
   int samplingRate = DEFAULT_SAMPLING_RATE;
 
-  NoiseMeasure(MeasureType type, {name, enabled = true, frequency, duration, this.samplingRate})
+  NoiseMeasure(MeasureType type, {name, enabled = true, frequency, duration, this.samplingRate = DEFAULT_SAMPLING_RATE})
       : super(type, name: name, enabled: enabled, frequency: frequency, duration: duration);
 
   static Function get fromJsonFunction => _$NoiseMeasureFromJson;

@@ -10,4 +10,5 @@ import 'package:carp_mobile_sensing/core/core.dart';
 
 part 'apps_datum.dart';
 part 'app_probes.dart';
+part 'apps_package.dart';
 part 'apps.g.dart';

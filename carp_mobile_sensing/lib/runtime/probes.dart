@@ -498,7 +498,7 @@ abstract class PeriodicDatumProbe extends DatumProbe {
 //    duration = (measure.duration != null) ? Duration(milliseconds: measure.duration) : null;
 //  }
 
-  PeriodicDatumProbe() : super() {}
+  PeriodicDatumProbe() : super();
 
   Stream<Datum> get events => controller.stream;
 

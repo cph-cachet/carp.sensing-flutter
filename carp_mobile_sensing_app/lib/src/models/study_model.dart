@@ -7,7 +7,7 @@ class StudyModel {
   String get description => study.description ?? 'No description available.';
   Image get image => Image.asset('images/study.png');
   String get userID => study.userId;
-  String get samplingStrategy => study.samplingStrategy.toString();
+  String get samplingStrategy => study.samplingStrategy;
   String get dataEndpoint => study.dataEndPoint.toString();
 
   /// Events on the state of the study executor

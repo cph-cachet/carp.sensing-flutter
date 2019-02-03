@@ -52,14 +52,14 @@ class FromJsonFactory {
     registerFromJsonFunction("Task", Task.fromJsonFunction);
     registerFromJsonFunction("ParallelTask", ParallelTask.fromJsonFunction);
     registerFromJsonFunction("SequentialTask", SequentialTask.fromJsonFunction);
-    registerFromJsonFunction("Measure", Measure.fromJsonFunction);
-    registerFromJsonFunction("MeasureType", MeasureType.fromJsonFunction);
 
+    registerFromJsonFunction("MeasureType", MeasureType.fromJsonFunction);
+    registerFromJsonFunction("Measure", Measure.fromJsonFunction);
     registerFromJsonFunction("PeriodicMeasure", PeriodicMeasure.fromJsonFunction);
-    registerFromJsonFunction("AudioMeasure", AudioMeasure.fromJsonFunction);
-    registerFromJsonFunction("NoiseMeasure", NoiseMeasure.fromJsonFunction);
-    registerFromJsonFunction("WeatherMeasure", WeatherMeasure.fromJsonFunction);
-    registerFromJsonFunction("PhoneLogMeasure", PhoneLogMeasure.fromJsonFunction);
+//    registerFromJsonFunction("AudioMeasure", AudioMeasure.fromJsonFunction);
+//    registerFromJsonFunction("NoiseMeasure", NoiseMeasure.fromJsonFunction);
+//    registerFromJsonFunction("WeatherMeasure", WeatherMeasure.fromJsonFunction);
+//    registerFromJsonFunction("PhoneLogMeasure", PhoneLogMeasure.fromJsonFunction);
 
     _isInitialized = true;
   }

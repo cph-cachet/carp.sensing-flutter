@@ -67,8 +67,8 @@ class StudyMock implements StudyManager {
         ..name = 'CARP Mobile Sensing - default configuration'
         ..description =
             'This is a long description of a Study which can run forever and take up a lot of space and drain you battery and you have to agree to an informed consent which - by all standards - do not comply to any legal framework....'
-        ..dataEndPoint = getDataEndpoint(DataEndPointType.FILE);
-      // ..addTask(Task()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
+        ..dataEndPoint = getDataEndpoint(DataEndPointType.FILE)
+        ..addTask(Task()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
 
       // adding the measures to two separate tasks, while also adding a new light measure to the 2nd task
 //      _study.addTask(Task('Activity Sensing Task #1')
@@ -102,18 +102,18 @@ class StudyMock implements StudyManager {
 //
 //      _study.addTask(task);
 
-      _study.tasks.add(sensorTask);
-      _study.tasks.add(pedometerTask);
-      _study.tasks.add(hardwareTask);
-      _study.tasks.add(appTask);
-      _study.tasks.add(connectivityTask);
-      _study.tasks.add(commTask);
-      _study.tasks.add(locationTask);
-      // _study.tasks.add(audioTask);
-      _study.tasks.add(contextTask);
-      _study.tasks.add(noiseTask);
-      _study.tasks.add(appUsageTask);
-      _study.tasks.add(environmentTask);
+//      _study.tasks.add(sensorTask);
+//      _study.tasks.add(pedometerTask);
+//      _study.tasks.add(hardwareTask);
+//      _study.tasks.add(appTask);
+//      _study.tasks.add(connectivityTask);
+//      _study.tasks.add(commTask);
+//      _study.tasks.add(locationTask);
+//      // _study.tasks.add(audioTask);
+//      _study.tasks.add(contextTask);
+//      _study.tasks.add(noiseTask);
+//      _study.tasks.add(appUsageTask);
+//      _study.tasks.add(environmentTask);
     }
     return _study;
   }

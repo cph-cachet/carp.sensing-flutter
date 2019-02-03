@@ -1,7 +1,6 @@
 import 'package:test/test.dart';
-import 'package:carp_mobile_sensing/core/core.dart';
-import 'package:carp_mobile_sensing/probes/sound/sound.dart';
 import 'dart:convert';
+import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
 

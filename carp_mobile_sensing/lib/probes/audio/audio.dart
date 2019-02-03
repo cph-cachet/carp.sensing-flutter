@@ -14,6 +14,7 @@ import 'package:carp_mobile_sensing/core/core.dart';
 
 part 'audio_probe.dart';
 part 'noise_probe.dart';
-part 'sound_datum.dart';
-part 'sound.g.dart';
-part 'sound_measures.dart';
+part 'audio_datum.dart';
+part 'audio_measures.dart';
+part 'audio_package.dart';
+part 'audio.g.dart';

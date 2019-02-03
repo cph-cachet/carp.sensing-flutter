@@ -1,9 +1,7 @@
 import 'package:test/test.dart';
 import 'dart:convert';
 import 'dart:io';
-
-import 'package:carp_mobile_sensing/core/core.dart';
-import 'package:carp_mobile_sensing/probes/sound/sound.dart';
+import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
 
@@ -11,6 +9,10 @@ void main() {
   Study study;
 
   setUp(() {
+    SamplingPackageRegistry.register(AudioSamplingPackage());
+    SamplingPackageRegistry.register(CommunicationSamplingPackage());
+    SamplingPackageRegistry.register(ContextSamplingPackage());
+
     study = Study("1234", "bardram", name: "bardram study");
     study.dataEndPoint = DataEndPoint(DataEndPointType.PRINT);
 //    study.dataEndPoint = FileDataEndPoint()

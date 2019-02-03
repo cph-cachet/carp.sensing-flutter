@@ -173,6 +173,11 @@ void example_2() {
     ..measures = SamplingSchema.common().getMeasureList(
         [DataType.PEDOMETER, DataType.LOCATION, DataType.ACTIVITY, DataType.WEATHER],
         namespace: NameSpace.CARP));
+
+  StudyController controller = StudyController(study,
+      samplingSchema: SamplingSchema.common()
+        ..addSamplingSchema(PhoneSamplingSchema.phone())
+        ..addSamplingSchema(PhoneSamplingSchema.phone()));
 }
 
 void scratchPad() {
@@ -182,4 +187,12 @@ void scratchPad() {
     ..enabled = true
     ..frequency = 60 * 60 * 1000
     ..duration = 2 * 1000;
+}
+
+class PhoneSamplingSchema extends SamplingSchema {
+  factory PhoneSamplingSchema.phone({String namespace}) => SamplingSchema.common(namespace: namespace);
+}
+
+void samplingPackageExample() {
+  SamplingPackageRegistry.register(SensorSamplingPackage());
 }

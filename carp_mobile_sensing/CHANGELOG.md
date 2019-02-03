@@ -1,14 +1,14 @@
 ## 0.3.2
-* support for dividing probes into separate probe packages
+* support for dividing probes into separate sampling packages
 * included in `carp_mobile_sensing` are
-     * `sensors` (sensors, light, pedometer)
      * `device` (device, screen, memory, battery)
+     * `sensors` (sensors, light, pedometer)
      * `connectivity` (connectivity, bluetooth)
      * `apps` (installed apps, app usage)
 * implementation of the following external probe packages:
      * `communication` (sms & call log)
      * `context` (location, activity, weather)
-     * `sound` (noise, recording)
+     * `audio` (noise, audio recording)
      * `movisens` (Movisens Move/ECG devices)
 
 ## 0.3.1

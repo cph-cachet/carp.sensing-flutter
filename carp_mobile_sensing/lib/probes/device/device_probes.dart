@@ -51,17 +51,21 @@ Stream<Datum> get batteryStream {
 //    }
 //  }
 
-/// Listens to screen actions which are: SCREEN ON/OFF/UNLOCK which are stored as a [ScreenDatum].
+/// A probe collecting screen events:
+///  - SCREEN ON
+///  - SCREEN OFF
+///  - SCREEN UNLOCK
+/// which are stored as a [ScreenDatum].
 class ScreenProbe extends StreamProbe {
   ScreenProbe() : super(screenStream);
 }
 
 Stream<Datum> get screenStream => Screen().screenStateEvents.map((event) => ScreenDatum.fromScreenStateEvent(event));
 
-/// A polling probe that collects free virtual memory on a regular basis
+/// A probe that collects free virtual memory on a regular basis
 /// as specified in [PeriodicMeasure.frequency].
-class MemoryPollingProbe extends PeriodicDatumProbe {
-  MemoryPollingProbe() : super();
+class MemoryProbe extends PeriodicDatumProbe {
+  MemoryProbe() : super();
 
   Future<Datum> getDatum() async {
     return FreeMemoryDatum()

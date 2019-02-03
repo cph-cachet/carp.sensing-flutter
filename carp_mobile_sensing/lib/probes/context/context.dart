@@ -16,4 +16,5 @@ part 'location_probe.dart';
 part 'weather_datum.dart';
 part 'weather_measures.dart';
 part 'weather_probe.dart';
+part 'context_package.dart';
 part 'context.g.dart';
