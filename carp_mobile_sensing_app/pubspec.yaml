@@ -12,6 +12,7 @@ dependencies:
     sdk: flutter
   rxdart: ^0.18.0
   carp_mobile_sensing: ^0.3.0
+  carp_communication_package: ^0.3.0
 #  carp_firebase_backend: ^0.0.1
   carp_backend:
 
@@ -24,6 +25,8 @@ dependencies:
 dependency_overrides:
   carp_mobile_sensing:
     path: ../carp_mobile_sensing/
+  carp_communication_package:
+    path: ../carp_communication_package/
 #  carp_firebase_backend:
 #    path: ../carp_firebase_backend/
   carp_webservices:
