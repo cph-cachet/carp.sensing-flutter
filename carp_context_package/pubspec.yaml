@@ -1,5 +1,5 @@
 name: carp_context_package
-description: CARP context sampling package
+description: CARP context sampling package. Samples location, activity, and weather.
 version: 0.3.0
 author:  CACHET Team <cph.cachet@gmail.com>
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_context_package
