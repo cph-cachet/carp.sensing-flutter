@@ -12,9 +12,9 @@ class AudioSamplingPackage implements SamplingPackage {
   Probe create(String type) {
     switch (type) {
       case AUDIO:
-        return LocationProbe();
+        return AudioProbe();
       case NOISE:
-        return ActivityProbe();
+        return NoiseProbe();
       default:
         return null;
     }

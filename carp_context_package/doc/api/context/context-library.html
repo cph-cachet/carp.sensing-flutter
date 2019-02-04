@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="context library API docs, for the Dart programming language.">
+  <title>context library - Dart API</title>
+  <!-- required because all the links are pseudo-absolute -->
+  <base href="..">
+
+  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500,400i,400,300|Source+Sans+Pro:400,300,700" rel="stylesheet">
+  <link rel="stylesheet" href="static-assets/github.css">
+  <link rel="stylesheet" href="static-assets/styles.css">
+  <link rel="icon" href="static-assets/favicon.png">
+
+</head>
+
+<body>
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="index.html">carp_context_package</a></li>
+    <li class="self-crumb">context library</li>
+  </ol>
+  <div class="self-name">context</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<main>
+
+  <div class="col-xs-6 col-sm-3 col-md-2 sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+      <form class="search-sidebar" role="search">
+        <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+      </form>
+    </header>
+    
+    <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+      <li><a href="index.html">carp_context_package</a></li>
+      <li class="self-crumb">context library</li>
+    </ol>
+    
+    <h5><span class="package-name">carp_context_package</span> <span class="package-kind">package</span></h5>
+    <ol>
+          <li class="section-title">Libraries</li>
+          <li><a href="context/context-library.html">context</a></li>
+          <li class="section-title">Dart</li>
+          <li><a href="dart-ui/dart-ui-library.html">dart:ui</a></li>
+          <li class="section-subtitle">Core</li>
+            <li class="section-subitem"><a href="dart-async/dart-async-library.html">dart:async</a></li>
+            <li class="section-subitem"><a href="dart-collection/dart-collection-library.html">dart:collection</a></li>
+            <li class="section-subitem"><a href="dart-convert/dart-convert-library.html">dart:convert</a></li>
+            <li class="section-subitem"><a href="dart-core/dart-core-library.html">dart:core</a></li>
+            <li class="section-subitem"><a href="dart-developer/dart-developer-library.html">dart:developer</a></li>
+            <li class="section-subitem"><a href="dart-math/dart-math-library.html">dart:math</a></li>
+            <li class="section-subitem"><a href="dart-typed_data/dart-typed_data-library.html">dart:typed_data</a></li>
+          <li class="section-subtitle">VM</li>
+            <li class="section-subitem"><a href="dart-io/dart-io-library.html">dart:io</a></li>
+            <li class="section-subitem"><a href="dart-isolate/dart-isolate-library.html">dart:isolate</a></li>
+    </ol>
+  </div>
+
+  <div class="col-xs-12 col-sm-9 col-md-8 main-content">
+    <h1>context library </h1>
+
+    <section class="desc markdown">
+      <p>A library for collecting context information on:</p><ul><li>location</li><li>activity</li><li>weather</li></ul>
+    </section>
+    
+    <section class="summary offset-anchor" id="classes">
+      <h2>Classes</h2>
+
+      <dl>
+        <dt id="ActivityDatum">
+          <span class="name "><a href="context/ActivityDatum-class.html">ActivityDatum</a></span> 
+        </dt>
+        <dd>
+          Holds activity information.
+        </dd>
+        <dt id="ActivityProbe">
+          <span class="name "><a href="context/ActivityProbe-class.html">ActivityProbe</a></span> 
+        </dt>
+        <dd>
+          Collects activity information from the underlying OS's activity recognition API.
+Is a <code>ListeningProbe</code> that generates a <a href="context/ActivityDatum-class.html">ActivityDatum</a> every time an activity is detected.
+        </dd>
+        <dt id="ContextSamplingPackage">
+          <span class="name "><a href="context/ContextSamplingPackage-class.html">ContextSamplingPackage</a></span> 
+        </dt>
+        <dd>
+          
+        </dd>
+        <dt id="LocationDatum">
+          <span class="name "><a href="context/LocationDatum-class.html">LocationDatum</a></span> 
+        </dt>
+        <dd>
+          Holds location information using the GPS format.
+        </dd>
+        <dt id="LocationProbe">
+          <span class="name "><a href="context/LocationProbe-class.html">LocationProbe</a></span> 
+        </dt>
+        <dd>
+          Collects location information from the underlying OS's location API.
+Is a <code>StreamProbe</code> that generates a <a href="context/LocationDatum-class.html">LocationDatum</a> every time location is changed.
+        </dd>
+        <dt id="WeatherDatum">
+          <span class="name "><a href="context/WeatherDatum-class.html">WeatherDatum</a></span> 
+        </dt>
+        <dd>
+          A <code>Datum</code> that holds weather information collected through OpenWeatherMap.
+        </dd>
+        <dt id="WeatherMeasure">
+          <span class="name "><a href="context/WeatherMeasure-class.html">WeatherMeasure</a></span> 
+        </dt>
+        <dd>
+          Specify the configuration on how to collect weather data.
+Needs an <a href="context/WeatherMeasure/apiKey.html">apiKey</a> for the OpenWeatherMap API.
+        </dd>
+        <dt id="WeatherProbe">
+          <span class="name "><a href="context/WeatherProbe-class.html">WeatherProbe</a></span> 
+        </dt>
+        <dd>
+          Collects the weather on a regular basis using the <code>WeatherStation</code> API.
+        </dd>
+      </dl>
+    </section>
+
+
+
+    <section class="summary offset-anchor" id="properties">
+      <h2>Properties</h2>
+
+      <dl class="properties">
+        <dt id="activityStream" class="property">
+          <span class="name"><a href="context/activityStream.html">activityStream</a></span>
+          <span class="signature">&#8594; <a href="dart-async/Stream-class.html">Stream</a><span class="signature">&lt;<wbr><span class="type-parameter">Datum</span>&gt;</span></span> 
+        </dt>
+        <dd>
+          
+          <div class="features">read-only</div>
+</dd>
+        <dt id="locationStream" class="property">
+          <span class="name"><a href="context/locationStream.html">locationStream</a></span>
+          <span class="signature">&#8594; <a href="dart-async/Stream-class.html">Stream</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="context/LocationDatum-class.html">LocationDatum</a></span>&gt;</span></span> 
+        </dt>
+        <dd>
+          
+          <div class="features">read-only</div>
+</dd>
+      </dl>
+    </section>
+
+
+
+
+
+  </div> <!-- /.main-content -->
+
+  <div class="col-xs-6 col-sm-6 col-md-2 sidebar sidebar-offcanvas-right">
+    <h5>context library</h5>
+    <ol>
+      <li class="section-title"><a href="context/context-library.html#classes">Classes</a></li>
+      <li><a href="context/ActivityDatum-class.html">ActivityDatum</a></li>
+      <li><a href="context/ActivityProbe-class.html">ActivityProbe</a></li>
+      <li><a href="context/ContextSamplingPackage-class.html">ContextSamplingPackage</a></li>
+      <li><a href="context/LocationDatum-class.html">LocationDatum</a></li>
+      <li><a href="context/LocationProbe-class.html">LocationProbe</a></li>
+      <li><a href="context/WeatherDatum-class.html">WeatherDatum</a></li>
+      <li><a href="context/WeatherMeasure-class.html">WeatherMeasure</a></li>
+      <li><a href="context/WeatherProbe-class.html">WeatherProbe</a></li>
+    
+    
+    
+      <li class="section-title"><a href="context/context-library.html#properties">Properties</a></li>
+      <li><a href="context/activityStream.html">activityStream</a></li>
+      <li><a href="context/locationStream.html">locationStream</a></li>
+    
+    
+    
+    
+    </ol>
+  </div><!--/sidebar-offcanvas-right-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    carp_context_package 0.3.0
+  </span>
+
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="static-assets/typeahead.bundle.min.js"></script>
+<script src="static-assets/highlight.pack.js"></script>
+<script src="static-assets/URI.js"></script>
+<script src="static-assets/script.js"></script>
+
+
+</body>
+
+</html>

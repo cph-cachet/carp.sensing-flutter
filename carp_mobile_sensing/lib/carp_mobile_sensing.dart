@@ -15,5 +15,5 @@ export 'package:carp_mobile_sensing/probes/apps/apps.dart';
 
 // External sampling packages (TODO - move to external Dart Packages)
 //export 'package:carp_mobile_sensing/probes/communication/communication.dart';
-export 'package:carp_mobile_sensing/probes/context/context.dart';
+//export 'package:carp_mobile_sensing/probes/context/context.dart';
 export 'package:carp_mobile_sensing/probes/audio/audio.dart';

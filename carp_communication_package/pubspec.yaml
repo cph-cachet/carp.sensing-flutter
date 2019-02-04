@@ -5,12 +5,11 @@ author:  CACHET Team <cph.cachet@gmail.com>
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_communication_package
 
 environment:
-  sdk: ">=2.0.0-dev.68.0 <3.0.0"
+  sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-#  archive: ^2.0.4
   json_annotation: ^1.0.0
   sms: ^0.2.4
   call_log: ^1.0.2

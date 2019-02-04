@@ -132,7 +132,7 @@ class Sensing {
     //study.tasks.add(commTask);
     study.tasks.add(locationTask);
     //study.tasks.add(audioTask);
-    study.tasks.add(contextTask);
+    //study.tasks.add(contextTask);
     //study.tasks.add(noiseTask);
     //study.tasks.add(appUsageTask);
     //study.tasks.add(environmentTask);
@@ -191,7 +191,7 @@ class Sensing {
   Task _audioTask;
   //Task _commTask;
   Task _connectivityTask;
-  Task _contextTask;
+  //Task _contextTask;
   Task _environmentTask;
   Task _hardwareTask;
   Task _locationTask;
@@ -269,26 +269,26 @@ class Sensing {
   }
 
   /// A task collecting context information, such as activity.
-  Task get contextTask {
-    if (_contextTask == null) {
-      _contextTask = Task("Context Task")
-        ..addMeasure(
-            PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.ACTIVITY))..name = "Activity Recognition Probe");
-    }
-    return _contextTask;
-  }
+//  Task get contextTask {
+//    if (_contextTask == null) {
+//      _contextTask = Task("Context Task")
+//        ..addMeasure(
+//            PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.ACTIVITY))..name = "Activity Recognition Probe");
+//    }
+//    return _contextTask;
+//  }
 
   /// A task collecting environment information, such as the weather.
-  Task get environmentTask {
-    if (_environmentTask == null) {
-      _environmentTask = Task("Environment Task")
-        ..addMeasure(WeatherMeasure(MeasureType(NameSpace.CARP, DataType.WEATHER),
-            name: "Weather Probe",
-            frequency: 1 * 30 * 1000, // once every minute
-            apiKey: '12b6e28582eb9298577c734a31ba9f4f'));
-    }
-    return _environmentTask;
-  }
+//  Task get environmentTask {
+//    if (_environmentTask == null) {
+//      _environmentTask = Task("Environment Task")
+//        ..addMeasure(WeatherMeasure(MeasureType(NameSpace.CARP, DataType.WEATHER),
+//            name: "Weather Probe",
+//            frequency: 1 * 30 * 1000, // once every minute
+//            apiKey: '12b6e28582eb9298577c734a31ba9f4f'));
+//    }
+//    return _environmentTask;
+//  }
 
   /// A task with three types of hardware measures:
   /// - free memory

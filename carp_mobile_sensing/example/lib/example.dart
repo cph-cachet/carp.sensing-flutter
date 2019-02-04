@@ -12,10 +12,10 @@ void example() {
   // add a task to collect location, activity, and weather information
   study.addTask(SequentialTask('Location, Activity, and Weather Task')
     ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.LOCATION)))
-    ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.ACTIVITY)))
-    ..addMeasure(WeatherMeasure(MeasureType(NameSpace.CARP, DataType.WEATHER))
-      ..enabled = true
-      ..frequency = 2 * 60 * 60 * 1000));
+    ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.ACTIVITY))));
+//    ..addMeasure(WeatherMeasure(MeasureType(NameSpace.CARP, DataType.WEATHER))
+//      ..enabled = true
+//      ..frequency = 2 * 60 * 60 * 1000));
 
   // add sensor collection from accelerometer and gyroscope
   // careful - these sensors generate a lot of data!
@@ -102,8 +102,8 @@ void samplingSchemaExample() async {
           PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.NOISE),
               enabled: true, frequency: 60 * 1000, duration: 2 * 1000)),
       MapEntry(DataType.ACTIVITY, Measure(MeasureType(NameSpace.CARP, DataType.ACTIVITY), enabled: true)),
-      MapEntry(DataType.WEATHER,
-          WeatherMeasure(MeasureType(NameSpace.CARP, DataType.WEATHER), enabled: true, frequency: 2 * 60 * 60 * 1000))
+//      MapEntry(DataType.WEATHER,
+//          WeatherMeasure(MeasureType(NameSpace.CARP, DataType.WEATHER), enabled: true, frequency: 2 * 60 * 60 * 1000))
     ]);
 
   //creating a study

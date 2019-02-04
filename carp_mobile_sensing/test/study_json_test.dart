@@ -9,7 +9,7 @@ void main() {
   setUp(() {
     SamplingPackageRegistry.register(AudioSamplingPackage());
     //SamplingPackageRegistry.register(CommunicationSamplingPackage());
-    SamplingPackageRegistry.register(ContextSamplingPackage());
+    //SamplingPackageRegistry.register(ContextSamplingPackage());
   });
 
   /// Test if we can load a raw JSON from a file and convert it into a [Study] object with all its [Task]s and [Measure]s.

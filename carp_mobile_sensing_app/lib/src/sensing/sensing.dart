@@ -14,6 +14,7 @@ class Sensing {
   Sensing() : super() {
     // register the sampling packages
     SamplingPackageRegistry.register(CommunicationSamplingPackage());
+    SamplingPackageRegistry.register(ContextSamplingPackage());
 
     // register data endpoints
     DataManagerRegistry.register(DataEndPointType.PRINT, new ConsoleDataManager());
