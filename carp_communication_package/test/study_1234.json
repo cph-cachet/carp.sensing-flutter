@@ -1,0 +1,53 @@
+{
+  "c__": "Study",
+  "id": "1234",
+  "user_id": "bardram",
+  "name": "bardram study",
+  "sampling_strategy": "NORMAL",
+  "data_end_point": {
+    "c__": "DataEndPoint",
+    "type": "print"
+  },
+  "tasks": [
+    {
+      "c__": "Task",
+      "name": "Communication Task",
+      "measures": [
+        {
+          "c__": "PhoneLogMeasure",
+          "type": {
+            "c__": "MeasureType",
+            "namespace": "carp",
+            "name": "phone_log"
+          },
+          "name": "Phone Log",
+          "enabled": true,
+          "configuration": {},
+          "days": 30
+        },
+        {
+          "c__": "Measure",
+          "type": {
+            "c__": "MeasureType",
+            "namespace": "carp",
+            "name": "text-message-log"
+          },
+          "name": "Text Message (SMS) Log",
+          "enabled": true,
+          "configuration": {}
+        },
+        {
+          "c__": "Measure",
+          "type": {
+            "c__": "MeasureType",
+            "namespace": "carp",
+            "name": "text-message"
+          },
+          "name": "Text Message (SMS)",
+          "enabled": true,
+          "configuration": {}
+        }
+      ]
+    }
+  ]
+}

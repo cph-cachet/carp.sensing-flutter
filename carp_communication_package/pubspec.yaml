@@ -28,6 +28,7 @@ dev_dependencies:
     sdk: flutter
   build_runner:
   json_serializable: ^1.0.0
+  test:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec

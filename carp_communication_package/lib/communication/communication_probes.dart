@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of communication;
+part of communication_package;
 
 /// A probe that collects the phone log from this device.
 /// Only collects this information once when the [getDatum] method is called.

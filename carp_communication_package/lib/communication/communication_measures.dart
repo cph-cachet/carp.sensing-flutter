@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of communication;
+part of communication_package;
 
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class PhoneLogMeasure extends Measure {

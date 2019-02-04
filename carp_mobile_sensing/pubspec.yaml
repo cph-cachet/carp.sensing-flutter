@@ -49,7 +49,7 @@ dev_dependencies:
     sdk: flutter
   build_runner:
   json_serializable: ^1.0.0
-
+  test:
 
 
 # The following section is specific to Flutter.

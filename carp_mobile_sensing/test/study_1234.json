@@ -5,30 +5,62 @@
   "name": "bardram study",
   "sampling_strategy": "NORMAL",
   "data_end_point": {
-    "c__": "DataEndPoint",
-    "type": "print"
+    "c__": "FileDataEndPoint",
+    "type": "file",
+    "buffer_size": 50000,
+    "zip": true,
+    "encrypt": false
   },
   "tasks": [
     {
       "c__": "Task",
-      "name": "Location Task",
+      "name": "Sampling Task",
       "measures": [
         {
           "c__": "Measure",
           "type": {
             "c__": "MeasureType",
             "namespace": "carp",
-            "name": "location"
+            "name": "device"
           },
+          "name": "Basic Device Info",
           "enabled": true,
           "configuration": {}
-        }
-      ]
-    },
-    {
-      "c__": "ParallelTask",
-      "name": "Sensor Task",
-      "measures": [
+        },
+        {
+          "c__": "PeriodicMeasure",
+          "type": {
+            "c__": "MeasureType",
+            "namespace": "carp",
+            "name": "memory"
+          },
+          "name": "Memory Usage",
+          "enabled": true,
+          "configuration": {},
+          "frequency": 60000
+        },
+        {
+          "c__": "Measure",
+          "type": {
+            "c__": "MeasureType",
+            "namespace": "carp",
+            "name": "battery"
+          },
+          "name": "Battery",
+          "enabled": true,
+          "configuration": {}
+        },
+        {
+          "c__": "Measure",
+          "type": {
+            "c__": "MeasureType",
+            "namespace": "carp",
+            "name": "screen"
+          },
+          "name": "Screen Activity (lock/on/off)",
+          "enabled": true,
+          "configuration": {}
+        },
         {
           "c__": "PeriodicMeasure",
           "type": {
@@ -36,10 +68,11 @@
             "namespace": "carp",
             "name": "accelerometer"
           },
-          "enabled": true,
+          "name": "Accelerometer",
+          "enabled": false,
           "configuration": {},
           "frequency": 10000,
-          "duration": 100
+          "duration": 10
         },
         {
           "c__": "PeriodicMeasure",
@@ -48,17 +81,86 @@
             "namespace": "carp",
             "name": "gyroscope"
           },
+          "name": "Gyroscope",
+          "enabled": false,
+          "configuration": {},
+          "frequency": 10000,
+          "duration": 10
+        },
+        {
+          "c__": "PeriodicMeasure",
+          "type": {
+            "c__": "MeasureType",
+            "namespace": "carp",
+            "name": "pedometer"
+          },
+          "name": "Pedometer (Step Count)",
           "enabled": true,
           "configuration": {},
-          "frequency": 20000,
-          "duration": 100
-        }
-      ]
-    },
-    {
-      "c__": "Task",
-      "name": "Audio Recording Task",
-      "measures": [
+          "frequency": 3600000
+        },
+        {
+          "c__": "PeriodicMeasure",
+          "type": {
+            "c__": "MeasureType",
+            "namespace": "carp",
+            "name": "light"
+          },
+          "name": "Ambient Light",
+          "enabled": true,
+          "configuration": {},
+          "frequency": 60000,
+          "duration": 1000
+        },
+        {
+          "c__": "Measure",
+          "type": {
+            "c__": "MeasureType",
+            "namespace": "carp",
+            "name": "connectivity"
+          },
+          "name": "Connectivity (wifi/3G/...)",
+          "enabled": true,
+          "configuration": {}
+        },
+        {
+          "c__": "PeriodicMeasure",
+          "type": {
+            "c__": "MeasureType",
+            "namespace": "carp",
+            "name": "bluetooth"
+          },
+          "name": "Nearby Devices (Bluetooth Scan)",
+          "enabled": true,
+          "configuration": {},
+          "frequency": 3600000,
+          "duration": 2000
+        },
+        {
+          "c__": "PeriodicMeasure",
+          "type": {
+            "c__": "MeasureType",
+            "namespace": "carp",
+            "name": "apps"
+          },
+          "name": "Installed Apps",
+          "enabled": true,
+          "configuration": {},
+          "frequency": 86400000
+        },
+        {
+          "c__": "PeriodicMeasure",
+          "type": {
+            "c__": "MeasureType",
+            "namespace": "carp",
+            "name": "app_usage"
+          },
+          "name": "Apps Usage",
+          "enabled": true,
+          "configuration": {},
+          "frequency": 3600000,
+          "duration": 3600000
+        },
         {
           "c__": "AudioMeasure",
           "type": {
@@ -66,11 +168,11 @@
             "namespace": "carp",
             "name": "audio"
           },
+          "name": "Audio Recording",
           "enabled": true,
           "configuration": {},
-          "frequency": 600000,
-          "duration": 10000,
-          "study_id": "1234"
+          "frequency": 60000,
+          "duration": 2000
         },
         {
           "c__": "NoiseMeasure",
@@ -79,18 +181,58 @@
             "namespace": "carp",
             "name": "noise"
           },
+          "name": "Ambient Noise",
           "enabled": true,
           "configuration": {},
-          "frequency": 600000,
-          "duration": 10000,
+          "frequency": 60000,
+          "duration": 2000,
           "sampling_rate": 500
-        }
-      ]
-    },
-    {
-      "c__": "SequentialTask",
-      "name": "Sample Activity with Weather Task",
-      "measures": [
+        },
+        {
+          "c__": "PhoneLogMeasure",
+          "type": {
+            "c__": "MeasureType",
+            "namespace": "carp",
+            "name": "phone_log"
+          },
+          "name": "Phone Log",
+          "enabled": true,
+          "configuration": {},
+          "days": 30
+        },
+        {
+          "c__": "Measure",
+          "type": {
+            "c__": "MeasureType",
+            "namespace": "carp",
+            "name": "text-message-log"
+          },
+          "name": "Text Message (SMS) Log",
+          "enabled": true,
+          "configuration": {}
+        },
+        {
+          "c__": "Measure",
+          "type": {
+            "c__": "MeasureType",
+            "namespace": "carp",
+            "name": "text-message"
+          },
+          "name": "Text Message (SMS)",
+          "enabled": true,
+          "configuration": {}
+        },
+        {
+          "c__": "Measure",
+          "type": {
+            "c__": "MeasureType",
+            "namespace": "carp",
+            "name": "location"
+          },
+          "name": "Location",
+          "enabled": true,
+          "configuration": {}
+        },
         {
           "c__": "Measure",
           "type": {
@@ -98,36 +240,21 @@
             "namespace": "carp",
             "name": "activity"
           },
+          "name": "Activity Recognition",
           "enabled": true,
-          "configuration": {
-            "jakob": "was here"
-          }
+          "configuration": {}
         },
         {
-          "c__": "PeriodicMeasure",
+          "c__": "WeatherMeasure",
           "type": {
             "c__": "MeasureType",
             "namespace": "carp",
             "name": "weather"
           },
+          "name": "Local Weather",
           "enabled": true,
-          "configuration": {}
-        }
-      ]
-    },
-    {
-      "c__": "SequentialTask",
-      "name": "Task collecting a list of all installed apps",
-      "measures": [
-        {
-          "c__": "Measure",
-          "type": {
-            "c__": "MeasureType",
-            "namespace": "carp",
-            "name": "apps"
-          },
-          "enabled": true,
-          "configuration": {}
+          "configuration": {},
+          "frequency": 3600000
         }
       ]
     }

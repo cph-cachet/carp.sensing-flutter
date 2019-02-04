@@ -8,7 +8,6 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:sms/sms.dart';
 import 'dart:async';
 import 'package:call_log/call_log.dart';
-import 'package:carp_mobile_sensing/core/core.dart';
 
 part 'communication_datum.dart';
 part 'communication_probes.dart';
