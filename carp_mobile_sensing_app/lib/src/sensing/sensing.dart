@@ -1,6 +1,6 @@
 part of mobile_sensing_app;
 
-/// This class implements the sensing incl. setting up a [Study] with [Task]s and [Measure]s.
+/// This class implements the sensing layer incl. setting up a [Study] with [Task]s and [Measure]s.
 class Sensing {
   Study study;
   final String testStudyId = "8";
@@ -8,9 +8,14 @@ class Sensing {
   StudyController controller;
   StudyManager mock = new StudyMock();
 
+  /// the list of running - i.e. used - probes in this study.
   List<Probe> get runningProbes => (controller != null) ? controller.executor.probes : List();
 
   Sensing() : super() {
+    // register the sampling packages
+    SamplingPackageRegistry.register(CommunicationSamplingPackage());
+
+    // register data endpoints
     DataManagerRegistry.register(DataEndPointType.PRINT, new ConsoleDataManager());
     DataManagerRegistry.register(DataEndPointType.FILE, new FileDataManager());
     DataManagerRegistry.register(DataEndPointType.CARP, new CarpDataManager());
@@ -46,7 +51,7 @@ class Sensing {
   }
 }
 
-/// Used as a mock [StudyManager] to generate a local study.
+/// Used as a mock [StudyManager] to generate a local [Study].
 class StudyMock implements StudyManager {
   final String username = "researcher";
   final String password = "password";

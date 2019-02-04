@@ -189,7 +189,7 @@ class Sensing {
   Task _appTask;
   Task _appUsageTask;
   Task _audioTask;
-  Task _commTask;
+  //Task _commTask;
   Task _connectivityTask;
   Task _contextTask;
   Task _environmentTask;
@@ -239,18 +239,18 @@ class Sensing {
   /// - an event every time a sms is recieved
   ///
   /// Works only on Android.
-  Task get commTask {
-    if (_commTask == null) {
-      _commTask = Task("Communication Task")
-        ..addMeasure(PhoneLogMeasure(MeasureType(NameSpace.CARP, DataType.PHONE_LOG),
-            name: "Entire phone log", days: 10)) // 10 days of log
-        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.TEXT_MESSAGE_LOG),
-            name: "Entire SMS log", frequency: 6 * 1000 // once every 10 sec
-            ))
-        ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.TEXT_MESSAGE), name: "Listen on SMS's"));
-    }
-    return _commTask;
-  }
+//  Task get commTask {
+//    if (_commTask == null) {
+//      _commTask = Task("Communication Task")
+//        ..addMeasure(PhoneLogMeasure(MeasureType(NameSpace.CARP, DataType.PHONE_LOG),
+//            name: "Entire phone log", days: 10)) // 10 days of log
+//        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.TEXT_MESSAGE_LOG),
+//            name: "Entire SMS log", frequency: 6 * 1000 // once every 10 sec
+//            ))
+//        ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.TEXT_MESSAGE), name: "Listen on SMS's"));
+//    }
+//    return _commTask;
+//  }
 
   /// A task with two types of connectivity measures:
   /// - connectivity (wifi, ...)

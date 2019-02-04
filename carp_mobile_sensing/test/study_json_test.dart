@@ -8,7 +8,7 @@ String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(objec
 void main() {
   setUp(() {
     SamplingPackageRegistry.register(AudioSamplingPackage());
-    SamplingPackageRegistry.register(CommunicationSamplingPackage());
+    //SamplingPackageRegistry.register(CommunicationSamplingPackage());
     SamplingPackageRegistry.register(ContextSamplingPackage());
   });
 

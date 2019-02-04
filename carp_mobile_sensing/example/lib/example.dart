@@ -83,8 +83,8 @@ void samplingSchemaExample() async {
           DataType.BLUETOOTH,
           PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.BLUETOOTH),
               enabled: true, frequency: 60 * 60 * 1000, duration: 2 * 1000)),
-      MapEntry(DataType.PHONE_LOG,
-          PhoneLogMeasure(MeasureType(NameSpace.CARP, DataType.PHONE_LOG), enabled: true, days: 30)),
+//      MapEntry(DataType.PHONE_LOG,
+//          PhoneLogMeasure(MeasureType(NameSpace.CARP, DataType.PHONE_LOG), enabled: true, days: 30)),
       MapEntry(
           DataType.TEXT_MESSAGE_LOG, Measure(MeasureType(NameSpace.CARP, DataType.TEXT_MESSAGE_LOG), enabled: true)),
       MapEntry(DataType.TEXT_MESSAGE, Measure(MeasureType(NameSpace.CARP, DataType.TEXT_MESSAGE), enabled: true)),

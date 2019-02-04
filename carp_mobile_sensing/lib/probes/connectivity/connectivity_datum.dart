@@ -41,7 +41,7 @@ class ConnectivityDatum extends CARPDatum {
     }
   }
 
-  String toString() => 'connectivity_status: $connectivityStatus';
+  String toString() => 'Connectivity Status - $connectivityStatus';
 }
 
 /// A [Datum] that holds information on nearby Bluetoth devices.
@@ -99,5 +99,5 @@ class BluetoothDatum extends CARPDatum {
   Map<String, dynamic> toJson() => _$BluetoothDatumToJson(this);
 
   String toString() =>
-      'bluetooth_device: {id: $bluetoothDeviceId, name: $bluetoothDeviceName, type: $bluetoothDeviceType, connectable: $connectable, rssi: $rssi}';
+      'Bluetooth Device - id: $bluetoothDeviceId, name: $bluetoothDeviceName, type: $bluetoothDeviceType, connectable: $connectable, rssi: $rssi';
 }

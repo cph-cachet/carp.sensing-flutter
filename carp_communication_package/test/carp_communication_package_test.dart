@@ -1,23 +1,22 @@
 import 'package:test/test.dart';
 import 'dart:convert';
 import 'dart:io';
-import 'package:carp_communication_package/communication.dart' as communication;
+import 'package:carp_communication_package/communication.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
-communication.CommunicationSamplingPackage CommunicationSamplingPackage = communication.CommunicationSamplingPackage();
 
 void main() {
   Study study;
 
   setUp(() {
-    SamplingPackageRegistry.register(CommunicationSamplingPackage);
+    SamplingPackageRegistry.register(CommunicationSamplingPackage());
 
-    study = Study("1234", "bardram", name: "bardram study");
-    study.dataEndPoint = DataEndPoint(DataEndPointType.PRINT);
+    study = Study("1234", "bardram", name: "bardram study")
+      ..dataEndPoint = DataEndPoint(DataEndPointType.PRINT)
+      ..addTask(Task('Task #1')..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
 
-    // adding all measure from the communication package common schema to one overall 'communication' task
-    study.addTask(Task('Communication Task')..measures = CommunicationSamplingPackage.common.measures.values.toList());
+    //..addTask(Task('Communication Task')..measures = CommunicationSamplingPackage.common.measures.values.toList())
   });
 
   test('Study -> JSON', () async {

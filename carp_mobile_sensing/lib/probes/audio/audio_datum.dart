@@ -29,7 +29,7 @@ class AudioDatum extends CARPDatum {
 
   Map<String, dynamic> toJson() => _$AudioDatumToJson(this);
 
-  String toString() => 'Audio Recording: {filename: $filename, start: $startRecordingTime, end: $endRecordingTime}';
+  String toString() => 'Audio Recording - filename: $filename, start: $startRecordingTime, end: $endRecordingTime';
 }
 
 /// A [NoiseDatum] that holds the noise level in decibel of a noise reading.
@@ -50,5 +50,5 @@ class NoiseDatum extends CARPDatum {
 
   Map<String, dynamic> toJson() => _$NoiseDatumToJson(this);
 
-  String toString() => 'Noise: {mean: $meanDecibel, std: $stdDecibel, min: $minDecibel, max: $maxDecibel}';
+  String toString() => 'Noise - mean: $meanDecibel, std: $stdDecibel, min: $minDecibel, max: $maxDecibel';
 }

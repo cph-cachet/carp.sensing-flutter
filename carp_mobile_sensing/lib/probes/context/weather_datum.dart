@@ -36,5 +36,5 @@ class WeatherDatum extends CARPDatum {
   Map<String, dynamic> toJson() => _$WeatherDatumToJson(this);
 
   String toString() =>
-      'Weather: {place: $areaName ($country), date: $date, weather: $weatherMain, $weatherDescription, temp: $temperature, temp (min): $tempMin, temp (max): $tempMax, sunrise: $sunrise, sunset: $sunset';
+      'Weather - place: $areaName ($country), date: $date, weather: $weatherMain, $weatherDescription, temp: $temperature, temp (min): $tempMin, temp (max): $tempMax, sunrise: $sunrise, sunset: $sunset';
 }

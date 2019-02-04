@@ -10,7 +10,7 @@ void main() {
 
   setUp(() {
     SamplingPackageRegistry.register(AudioSamplingPackage());
-    SamplingPackageRegistry.register(CommunicationSamplingPackage());
+    //SamplingPackageRegistry.register(CommunicationSamplingPackage());
     SamplingPackageRegistry.register(ContextSamplingPackage());
 
     study = Study("1234", "bardram", name: "bardram study");
