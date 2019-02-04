@@ -2,6 +2,7 @@ import 'package:test/test.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+import 'package:carp_audio_package/audio.dart';
 
 String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
 
@@ -9,19 +10,11 @@ void main() {
   Study study;
 
   setUp(() {
-    //SamplingPackageRegistry.register(AudioSamplingPackage());
-    //SamplingPackageRegistry.register(CommunicationSamplingPackage());
-    //SamplingPackageRegistry.register(ContextSamplingPackage());
+    SamplingPackageRegistry.register(AudioSamplingPackage());
 
-    study = Study("1234", "bardram", name: "bardram study");
-    //study.dataEndPoint = DataEndPoint(DataEndPointType.PRINT);
-    study.dataEndPoint = FileDataEndPoint()
-      ..bufferSize = 50 * 1000
-      ..zip = true
-      ..encrypt = false;
-
-    // adding all measure from the common schema to one overall 'Sampling' task
-    study.addTask(Task('Sampling Task')..measures = SamplingSchema.common().measures.values.toList());
+    study = Study("1234", "bardram", name: "bardram study")
+      ..dataEndPoint = DataEndPoint(DataEndPointType.PRINT)
+      ..addTask(Task('Task #1')..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
   });
 
   test('Study -> JSON', () async {
@@ -46,13 +39,6 @@ void main() {
     expect(_encode(study_2), equals(studyJson));
   });
 
-  test('Configuration -> JSON', () async {
-    final studyJson = _encode(study);
-
-    Study study_2 = Study.fromJson(json.decode(studyJson) as Map<String, dynamic>);
-    expect(study_2.name, study.name);
-  });
-
   test('Plain JSON string -> Study object', () async {
     print(Directory.current.toString());
     String plainStudyJson = File("test/study_1234.json").readAsStringSync();
@@ -67,9 +53,5 @@ void main() {
     expect(_encode(study_2), equals(studyJson));
   });
 
-  test('Data point -> JSON', () async {
-    var dp = CARPDataPoint.fromDatum(
-        study.id, study.userId, MapDatum(map: {'latitude': '12.23423452345', 'longitude': '3.82375823475'}));
-    print(_encode(dp));
-  });
+  test('', () {});
 }

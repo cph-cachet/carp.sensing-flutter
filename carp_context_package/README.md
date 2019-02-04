@@ -33,3 +33,46 @@ dependencies:
   ...
 `````
 
+### Android Integration
+
+Add the following to your app's `manifest.xml` file located in `android/app/src/main`:
+
+````xml
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="<your_package_name>"
+    xmlns:tools="http://schemas.android.com/tools">
+
+   ...
+   
+   <!-- The following permissions are used for CARP Mobile Sensing -->
+   <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+   <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
+   <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" tools:ignore="ProtectedPermissions"/>
+
+   <application
+      ...
+      <!-- service for using the Android activity recognition API -->
+      <service android:name="at.resiverbindet.activityrecognition.activity.ActivityRecognizedService" />
+    </application>
+</manifest>
+````
+
+### iOS Integration
+
+Add this permission in the `Info.plist` file located in `ios/Runner`:
+
+```xml
+<key>NSLocationWhenInUseUsageDescription</key>
+<string>Uses the location API to record location.</string>
+<key>NSLocationAlwaysUsageDescription</key>
+<string>Uses the location API to record location.</string>
+<key>NSMotionUsageDescription</key>
+<string>Detects activity.</string>
+<key>UIBackgroundModes</key>
+  <array>
+  <string>fetch</string>
+  <string>location</string>
+</array>
+
+```
+

@@ -26,29 +26,33 @@ class AudioDatum extends CARPDatum {
   AudioDatum({this.filename, this.startRecordingTime, this.endRecordingTime}) : super();
 
   factory AudioDatum.fromJson(Map<String, dynamic> json) => _$AudioDatumFromJson(json);
-
   Map<String, dynamic> toJson() => _$AudioDatumToJson(this);
-
   String toString() => 'Audio Recording - filename: $filename, start: $startRecordingTime, end: $endRecordingTime';
 }
 
-/// A [NoiseDatum] that holds the noise level in decibel of a noise reading.
+/// A [NoiseDatum] that holds the noise level in decibel of a noise sampling.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class NoiseDatum extends CARPDatum {
   static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.NOISE);
   DataFormat get format => CARP_DATA_FORMAT;
 
-  /// The sound intensity [dB] measurement statistics for a given sampling window.
+  // The sound intensity [dB] measurement statistics for a given sampling window.
+
+  /// Mean decibel of sampling window.
   num meanDecibel;
+
+  /// Standard deviation (in decibel) of sampling window.
   num stdDecibel;
+
+  /// Minimum decibel of sampling window.
   num minDecibel;
+
+  /// Maximum decibel of sampling window.
   num maxDecibel;
 
   NoiseDatum({this.meanDecibel, this.stdDecibel, this.minDecibel, this.maxDecibel}) : super();
 
   factory NoiseDatum.fromJson(Map<String, dynamic> json) => _$NoiseDatumFromJson(json);
-
   Map<String, dynamic> toJson() => _$NoiseDatumToJson(this);
-
   String toString() => 'Noise - mean: $meanDecibel, std: $stdDecibel, min: $minDecibel, max: $maxDecibel';
 }

@@ -1,5 +1,19 @@
+/*
+ * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
+ * Technical University of Denmark (DTU).
+ * Use of this source code is governed by a MIT-style license that can be
+ * found in the LICENSE file.
+ */
+
 part of audio;
 
+/// This is the base class for this audio sampling package.
+///
+/// To use this package, register it in the [carp_mobile_sensing] package using
+///
+/// ```
+///   SamplingPackageRegistry.register(AudioSamplingPackage());
+/// ```
 class AudioSamplingPackage implements SamplingPackage {
   static const String AUDIO = "audio";
   static const String NOISE = "noise";

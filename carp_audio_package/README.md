@@ -1,15 +1,13 @@
-# CARP Communication Sampling Package
+# CARP Audio Sampling Package
 
-[![pub package](https://img.shields.io/pub/v/carp_communication_package.svg)](https://pub.dartlang.org/packages/carp_communication_package)
+[![pub package](https://img.shields.io/pub/v/carp_audio_package.svg)](https://pub.dartlang.org/packages/carp_audio_package)
 
-This library contains a sampling package for communication to work with 
+This library contains a sampling package for audio to work with 
 the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package.
 This packages supports sampling of the following [`Measure`](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/core/Measure-class.html) types:
 
-* `phone_log`
-* `telephony`
-* `text-message-log`
-* `text-message`
+* `audio`
+* `noise`
 
 See the [wiki]() for further documentation, particularly on available [probes](https://github.com/cph-cachet/carp.sensing-flutter/wiki/Probes)
 and [sampling schemas](https://github.com/cph-cachet/carp.sensing-flutter/wiki/Schemas#sampling-schema).
@@ -30,7 +28,7 @@ dependencies:
   flutter:
     sdk: flutter
   carp_mobile_sensing: ^0.3.0
-  carp_communication_package: ^0.3.0
+  carp_audio_package: ^0.3.0
   ...
 `````
 
@@ -46,14 +44,26 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
    ...
    
    <!-- The following permissions are used for CARP Mobile Sensing -->
-   <uses-permission android:name="android.permission.CALL_PHONE"/>
-   <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-   <uses-permission android:name="android.permission.READ_PHONE_NUMBERS"/>
-   <uses-permission android:name="android.permission.READ_SMS"/>
+   <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+   <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" tools:ignore="ProtectedPermissions"/>
 
 </manifest>
 ````
 
 ### iOS Integration
 
-No changes should be needed regarding permission in the `Info.plist` for this package.
+Add this permission in the `Info.plist` file located in `ios/Runner`:
+
+```xml
+<key>NSMicrophoneUsageDescription</key>
+<string>Uses the microphone to record ambient noise in the phone's environment.</string>
+<key>UIBackgroundModes</key>
+  <array>
+  <string>audio</string>
+  <string>external-accessory</string>
+  <string>fetch</string>
+</array>
+
+```
+

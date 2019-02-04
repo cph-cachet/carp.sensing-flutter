@@ -15,6 +15,7 @@ class Sensing {
     // register the sampling packages
     SamplingPackageRegistry.register(CommunicationSamplingPackage());
     SamplingPackageRegistry.register(ContextSamplingPackage());
+    SamplingPackageRegistry.register(AudioSamplingPackage());
 
     // register data endpoints
     DataManagerRegistry.register(DataEndPointType.PRINT, new ConsoleDataManager());

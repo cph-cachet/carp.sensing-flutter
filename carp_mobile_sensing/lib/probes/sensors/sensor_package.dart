@@ -16,9 +16,9 @@ class SensorSamplingPackage implements SamplingPackage {
   Probe create(String type) {
     switch (type) {
       case ACCELEROMETER:
-        return AccelerometerProbe();
+        return BufferingAccelerometerProbe();
       case GYROSCOPE:
-        return GyroscopeProbe();
+        return BufferingGyroscopeProbe();
       case PEDOMETER:
         return PedometerProbe();
       case LIGHT:

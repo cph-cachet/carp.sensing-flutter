@@ -1,8 +1,8 @@
-name: carp_communication_package
-description: CARP communication sampling package
+name: carp_audio_package
+description: CARP Audio Sampling Package
 version: 0.3.0
 author:  CACHET Team <cph.cachet@gmail.com>
-homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_communication_package
+homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_audio_package
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -11,9 +11,10 @@ dependencies:
   flutter:
     sdk: flutter
   json_annotation: ^1.0.0
-  sms: ^0.2.4
-  call_log: ^1.0.2
   carp_mobile_sensing: ^0.3.0
+  flutter_sound: ^1.1.5   # audio probe, recording audio
+  noise_meter: ^0.0.3     # Measuring noise level
+  path_provider: ^0.4.1
 
 dev_dependencies:
   flutter_test:

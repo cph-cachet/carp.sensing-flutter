@@ -130,7 +130,7 @@
           "name": "Nearby Devices (Bluetooth Scan)",
           "enabled": true,
           "configuration": {},
-          "frequency": 3600000,
+          "frequency": 600000,
           "duration": 2000
         },
         {

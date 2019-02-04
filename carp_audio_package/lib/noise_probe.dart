@@ -1,3 +1,10 @@
+/*
+ * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
+ * Technical University of Denmark (DTU).
+ * Use of this source code is governed by a MIT-style license that can be
+ * found in the LICENSE file.
+ */
+
 part of audio;
 
 // TODO - PERMISSIONS
@@ -8,13 +15,13 @@ part of audio;
 // If these permissions are not set, the app crashes....
 // See issue on github.
 
-/// A listening probe collecting noise data from the microphone.
+/// A listening probe collecting noise sampling from the microphone.
 ///
 /// See [NoiseMeasure] on how to configure this probe, including setting the
 /// frequency, duration and sampling rate of the sampling rate.
 ///
-/// Does not record sound, and instead reports the audio level with a specified frequency,
-/// in a given sampling window.
+/// Does not record sound. Instead reports the audio level with a specified frequency,
+/// in a given sampling window as a [NoiseDatum].
 class NoiseProbe extends BufferingPeriodicStreamProbe {
   static Noise _noise = Noise(400);
   DateTime _startRecordingTime;
@@ -22,7 +29,6 @@ class NoiseProbe extends BufferingPeriodicStreamProbe {
   int samplingRate;
   List<num> _noiseReadings = new List();
 
-  //NoiseProbe(NoiseMeasure measure) : super(measure, _noise.noiseStream);
   NoiseProbe() : super(_noise.noiseStream);
 
   void onRestart() {

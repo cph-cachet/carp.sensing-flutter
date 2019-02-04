@@ -5,7 +5,7 @@
      * `sensors` (sensors, light, pedometer)
      * `connectivity` (connectivity, bluetooth)
      * `apps` (installed apps, app usage)
-* implementation of the following external probe packages:
+* implementation of the following **external** probe packages:
      * `communication` (sms & call log)
      * `context` (location, activity, weather)
      * `audio` (noise, audio recording)

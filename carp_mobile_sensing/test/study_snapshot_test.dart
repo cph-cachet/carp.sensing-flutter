@@ -8,7 +8,7 @@ void main() {
   Study study;
 
   setUp(() {
-    SamplingPackageRegistry.register(AudioSamplingPackage());
+    //SamplingPackageRegistry.register(AudioSamplingPackage());
     //SamplingPackageRegistry.register(CommunicationSamplingPackage());
     //SamplingPackageRegistry.register(ContextSamplingPackage());
 
@@ -49,16 +49,16 @@ void main() {
           duration: 100 // for 100 ms
           )));
 
-    study.addTask(Task('Audio Recording Task')
-      ..addMeasure(AudioMeasure(MeasureType(NameSpace.CARP, DataType.AUDIO),
-          frequency: 10 * 60 * 1000, // sample sound every 10 min
-          duration: 10 * 1000, // for 10 secs
-          studyId: study.id))
-      ..addMeasure(NoiseMeasure(MeasureType(NameSpace.CARP, DataType.NOISE),
-          frequency: 10 * 60 * 1000, // sample sound every 10 min
-          duration: 10 * 1000, // for 10 secs
-          samplingRate: 500 // configure sampling rate to 500 ms
-          )));
+//    study.addTask(Task('Audio Recording Task')
+//      ..addMeasure(AudioMeasure(MeasureType(NameSpace.CARP, DataType.AUDIO),
+//          frequency: 10 * 60 * 1000, // sample sound every 10 min
+//          duration: 10 * 1000, // for 10 secs
+//          studyId: study.id))
+//      ..addMeasure(NoiseMeasure(MeasureType(NameSpace.CARP, DataType.NOISE),
+//          frequency: 10 * 60 * 1000, // sample sound every 10 min
+//          duration: 10 * 1000, // for 10 secs
+//          samplingRate: 500 // configure sampling rate to 500 ms
+//          )));
 
     study.addTask(SequentialTask('Sample Activity with Weather Task')
       ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.ACTIVITY))..configuration['jakob'] = 'was here')
