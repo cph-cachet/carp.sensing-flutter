@@ -20,89 +20,25 @@ class ProbeRegistry {
   static Map<String, Probe> get probes => _probes;
 
   /// If you create a probe manually, i.e. outside of the [ProbeRegistry] you can register it here.
-  static void register(String type, Probe probe) {
-    _probes[type] = probe;
-  }
+  static void register(String type, Probe probe) => _probes[type] = probe;
+
+  /// Lookup a [Probe] based on its [DataType].
+  static Probe lookup(String type) => _probes[type] ?? create(type);
 
   /// Create an instance of a probe based on the measure.
-  static Probe create(Measure measure) {
+  ///
+  /// This methods search the [SamplingPackageRegistry] for a [SamplingPackage] which
+  /// has a probe of the specified [type].
+  static Probe create(String type) {
     Probe _probe;
 
-    switch (measure.type.name) {
-      case DataType.DEVICE:
-        _probe = new DeviceProbe(measure);
-        break;
-      case DataType.MEMORY:
-        _probe = new MemoryPollingProbe(measure);
-        break;
-      case DataType.PEDOMETER:
-        _probe = new PedometerProbe(measure);
-        break;
-      case DataType.ACCELEROMETER:
-        _probe = new BufferingAccelerometerProbe(measure);
-        break;
-      case DataType.GYROSCOPE:
-        _probe = new BufferingGyroscopeProbe(measure);
-        break;
-      case DataType.BATTERY:
-        _probe = new BatteryProbe(measure);
-        break;
-      case DataType.BLUETOOTH:
-        _probe = new BluetoothProbe(measure);
-        break;
-      case DataType.LOCATION:
-        _probe = new LocationProbe(measure);
-        break;
-      case DataType.CONNECTIVITY:
-        _probe = new ConnectivityProbe(measure);
-        break;
-      case DataType.LIGHT:
-        _probe = new LightProbe(measure);
-        break;
-      case DataType.APPS:
-        _probe = new AppsProbe(measure);
-        break;
-      case DataType.APP_USAGE:
-        _probe = new AppUsageProbe(measure);
-        break;
-      case DataType.TEXT_MESSAGE_LOG:
-        _probe = new TextMessageLogProbe(measure);
-        break;
-      case DataType.TEXT_MESSAGE:
-        _probe = new TextMessageProbe(measure);
-        break;
-      case DataType.SCREEN:
-        _probe = new ScreenProbe(measure);
-        break;
-      case DataType.PHONE_LOG:
-        _probe = new PhoneLogProbe(measure);
-        break;
-      case DataType.AUDIO:
-        _probe = new AudioProbe(measure);
-        break;
-      case DataType.NOISE:
-        _probe = new NoiseProbe(measure);
-        break;
-      case DataType.ACTIVITY:
-        _probe = new ActivityProbe(measure);
-        break;
-      case DataType.WEATHER:
-        _probe = new WeatherProbe(measure);
-        break;
-      case DataType.APPLE_HEALTHKIT:
-        throw "Not Implemented Yet";
-        break;
-      case DataType.GOOGLE_FIT:
-        throw "Not Implemented Yet";
-        break;
-      default:
-        break;
-    }
+    SamplingPackageRegistry.packages.forEach((package) {
+      if (package.dataTypes.contains(type)) {
+        _probe = package.create(type);
+      }
+    });
 
-    if (_probe != null) {
-      register(measure.type.name, _probe);
-    }
-
+    if (_probe != null) register(type, _probe);
     return _probe;
   }
 }

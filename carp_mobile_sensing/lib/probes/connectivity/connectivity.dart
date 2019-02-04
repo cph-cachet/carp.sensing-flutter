@@ -10,7 +10,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:carp_mobile_sensing/core/core.dart';
 
-part 'connectivity_probe.dart';
-part 'bluetooth_probe.dart';
+part 'connectivity_probes.dart';
 part 'connectivity_datum.dart';
 part 'connectivity.g.dart';
+part 'connectivity_package.dart';

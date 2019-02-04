@@ -3,7 +3,9 @@ library mobile_sensing_app;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
-import 'package:carp_mobile_sensing/core/core.dart';
+import 'package:carp_communication_package/communication.dart';
+import 'package:carp_context_package/context.dart';
+import 'package:carp_audio_package/audio.dart';
 import 'package:carp_backend/carp_backend.dart';
 import 'dart:async';
 

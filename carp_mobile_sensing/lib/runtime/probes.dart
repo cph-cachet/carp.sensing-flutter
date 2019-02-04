@@ -35,6 +35,85 @@ enum ProbeState { created, initialized, resumed, paused, stopped }
 ///
 ///     probe.events.forEach(print);
 ///
+//abstract class Probe {
+//  /// Is this probe enabled, i.e. should run.
+//  bool get enabled;
+//
+//  /// The type of this probe according to [DataType].
+//  String get type;
+//
+//  /// The runtime state of this probe.
+//  ProbeState get state;
+//
+//  /// The runtime state changes of this probe.
+//  ///
+//  /// This is useful for listening on state changes as specified in [ProbeState].
+//  /// Can e.g. be used in a [StreamBuilder] when showing the UI of a probe.
+//  /// The following example is taken from the CARP Mobile Sensing App
+//  ///
+//  ///       Widget buildProbeListTile(BuildContext context, ProbeModel probe) {
+//  ///           return StreamBuilder<ProbeStateType>(
+//  ///             stream: probe.stateEvents,
+//  ///             initialData: ProbeState.created,
+//  ///             builder: (context, AsyncSnapshot<ProbeState> snapshot) {
+//  ///               if (snapshot.hasData) {
+//  ///                 return ListTile(
+//  ///                   isThreeLine: true,
+//  ///                   leading: Icon(
+//  ///                     probe.icon.icon,
+//  ///                     size: 50,
+//  ///                     color: probe.icon.color,
+//  ///                   ),
+//  ///                   title: Text(probe.name),
+//  ///                   subtitle: Text(probe.description),
+//  ///                   trailing: probe.stateIcon,
+//  ///                 );
+//  ///               } else if (snapshot.hasError) {
+//  ///                 return Text('Error in probe state - ${snapshot.error}');
+//  ///              }
+//  ///              return Text('Unknown');
+//  ///           },
+//  ///         );
+//  ///       }
+//  /// This will update the trailing icon of the probe every time the probe change
+//  /// state (e.g. from `resumed` to `paused`).
+//  Stream<ProbeState> get stateEvents;
+//
+//  /// The [Measure] that configures this probe.
+//  Measure get measure;
+//
+//  /// A printer-friendly name for this probe. Takes its name from [Measure.name] as default.
+//  String get name;
+//
+//  /// A [Stream] generating sensor data events from this probe.
+//  Stream<Datum> get events;
+//
+//  /// Initialize the probe before starting it.
+//  void initialize();
+//
+//  /// Start the probe();
+//  void start();
+//
+//  /// Pause the probe. The probe is paused until [resume] or [restart] is called.
+//  void pause();
+//
+//  /// Resume the probe.
+//  void resume();
+//
+//  /// Restart the probe. This forces the probe to reload its configuration from
+//  /// its [Measure] and restart sampling accordingly. If a new [measure] is
+//  /// to be used, this new measure must be specified in the
+//  /// [initialize] method before calling restart.
+//  ///
+//  /// This methods is used when sampling configuration is adapted, e.g. as
+//  /// part of the power-awareness.
+//  void restart();
+//
+//  /// Stop the probe. Once a probe is stopped, it cannot be started again.
+//  /// If you need to restart a probe, use the [restart] or [pause] and [resume] methods.
+//  void stop();
+//}
+
 abstract class Probe {
   /// Is this probe enabled, i.e. should run.
   bool get enabled;
@@ -89,7 +168,9 @@ abstract class Probe {
   Stream<Datum> get events;
 
   /// Initialize the probe before starting it.
-  void initialize();
+  ///
+  /// The configuration of the probe is specified in the [measure].
+  void initialize(Measure measure);
 
   /// Start the probe();
   void start();
@@ -114,7 +195,66 @@ abstract class Probe {
   void stop();
 }
 
-/// An abstract implementation of a [Probe] to extend from.
+///// An abstract implementation of a [Probe] to extend from.
+//abstract class AbstractProbe with MeasureListener implements Probe {
+//  StreamController<ProbeState> _stateEventController = StreamController.broadcast();
+//  Stream<ProbeState> get stateEvents => _stateEventController.stream;
+//
+//  bool get enabled => measure.enabled ?? true;
+//  String get type => measure.type.name;
+//  String get name => measure.name ?? 'NO_NAME';
+//
+//  ProbeState get state => _stateMachine.state;
+//
+//  _ProbeStateMachine _stateMachine;
+//  void _setState(_ProbeStateMachine state) {
+//    _stateMachine = state;
+//    _stateEventController.add(state.state);
+//  }
+//
+//  Measure _measure;
+//  Measure get measure => _measure;
+//
+//  AbstractProbe(Measure measure) : assert(measure != null, 'Probe cannot be created with a null measure.') {
+//    _measure = measure;
+//    measure.addMeasureListener(this);
+//    _stateMachine = _CreatedState(this);
+//  }
+//
+//  // ProbeState handlers
+//  void initialize() => _stateMachine.initialize();
+//  void start() => _stateMachine.start();
+//  void restart() => _stateMachine.restart();
+//  void pause() => _stateMachine.pause();
+//  void resume() => _stateMachine.resume();
+//  void stop() => _stateMachine.stop();
+//
+//  /// Callback for initialization of probe
+//  void onInitialize() {}
+//
+//  /// Callback for starting probe
+//  void onStart();
+//
+//  /// Callback for resuming probe
+//  void onResume();
+//
+//  /// Callback for pausing probe
+//  void onPause();
+//
+//  /// Callback for restarting probe
+//  void onRestart();
+//
+//  /// Callback for stopping probe
+//  void onStop() {
+//    _stateEventController.close();
+//  }
+//
+//  void hasChanged(Measure measure) {
+//    restart();
+//  }
+//}
+
+///// An abstract implementation of a [Probe] to extend from.
 abstract class AbstractProbe with MeasureListener implements Probe {
   StreamController<ProbeState> _stateEventController = StreamController.broadcast();
   Stream<ProbeState> get stateEvents => _stateEventController.stream;
@@ -134,14 +274,18 @@ abstract class AbstractProbe with MeasureListener implements Probe {
   Measure _measure;
   Measure get measure => _measure;
 
-  AbstractProbe(Measure measure) : assert(measure != null, 'Probe cannot be created with a null measure.') {
-    _measure = measure;
-    measure.addMeasureListener(this);
+  AbstractProbe() : super() {
     _stateMachine = _CreatedState(this);
   }
 
   // ProbeState handlers
-  void initialize() => _stateMachine.initialize();
+  void initialize(Measure measure) async {
+    assert(measure != null, 'Probe cannot be initialized with a null measure.');
+    _measure = measure;
+    measure.addMeasureListener(this);
+    _stateMachine.initialize(measure);
+  }
+
   void start() => _stateMachine.start();
   void restart() => _stateMachine.restart();
   void pause() => _stateMachine.pause();
@@ -149,7 +293,7 @@ abstract class AbstractProbe with MeasureListener implements Probe {
   void stop() => _stateMachine.stop();
 
   /// Callback for initialization of probe
-  void onInitialize() {}
+  void onInitialize(Measure measure) {}
 
   /// Callback for starting probe
   void onStart();
@@ -168,6 +312,7 @@ abstract class AbstractProbe with MeasureListener implements Probe {
     _stateEventController.close();
   }
 
+  /// Callback when this probe's [measure] has changed.
   void hasChanged(Measure measure) {
     restart();
   }
@@ -182,7 +327,7 @@ abstract class AbstractProbe with MeasureListener implements Probe {
 
 abstract class _ProbeStateMachine {
   ProbeState get state;
-  void initialize();
+  void initialize(Measure measure);
   void start();
   void pause();
   void resume();
@@ -196,7 +341,7 @@ abstract class _AbstractProbeState implements _ProbeStateMachine {
   _AbstractProbeState(this.probe, this.state) : assert(probe != null);
 
   // pr. default, a probe cannot be initialized while running -- only when created
-  void initialize() {}
+  void initialize(Measure measure) {}
 
   // Default stop behavior. A probe can be stopped in all states.
   void stop() {
@@ -209,9 +354,9 @@ abstract class _AbstractProbeState implements _ProbeStateMachine {
 class _CreatedState extends _AbstractProbeState implements _ProbeStateMachine {
   _CreatedState(Probe probe) : super(probe, ProbeState.created);
 
-  void initialize() {
-    print('Initializing $probe');
-    probe.onInitialize();
+  void initialize(Measure measure) {
+    print('Initializing $probe, measure: $measure');
+    probe.onInitialize(measure);
     probe._setState(_InitializedState(probe));
   }
 
@@ -303,12 +448,34 @@ class _StoppedState extends _AbstractProbeState implements _ProbeStateMachine {
 /// A [DatumProbe] can collect one piece of [Datum], send its to its stream, and then stops.
 ///
 /// The [Datum] to be collected is implemented in the [getDatum] method.
+//abstract class DatumProbe extends AbstractProbe {
+//  DatumProbe(Measure measure) : super(measure);
+//
+//  Stream<Datum> get events => Stream.fromFuture(getDatum());
+//
+//  void onStart() {}
+//  void onRestart() {}
+//  void onResume() {}
+//  void onPause() {}
+//
+//  /// Subclasses should implement this method to collect a [Datum].
+//  Future<Datum> getDatum();
+//}
+
+/// A [DatumProbe] can collect one piece of [Datum], send its to its stream, and then stops.
+///
+/// The [Datum] to be collected is implemented in the [getDatum] method.
 abstract class DatumProbe extends AbstractProbe {
-  DatumProbe(Measure measure) : super(measure);
+  DatumProbe() : super();
 
-  Stream<Datum> get events => Stream.fromFuture(getDatum());
+  //Stream<Datum> get events => Stream.fromFuture(getDatum());
+  StreamController<Datum> _events = StreamController<Datum>();
+  Stream<Datum> get events => _events.stream;
 
-  void onStart() {}
+  void onStart() {
+    _events.addStream(Stream.fromFuture(getDatum()));
+  }
+
   void onRestart() {}
   void onResume() {}
   void onPause() {}
@@ -326,12 +493,22 @@ abstract class PeriodicDatumProbe extends DatumProbe {
   StreamController<Datum> controller = StreamController<Datum>.broadcast();
   Duration frequency, duration;
 
-  PeriodicDatumProbe(PeriodicMeasure measure) : super(measure) {
-    frequency = Duration(milliseconds: measure.frequency);
-    duration = (measure.duration != null) ? Duration(milliseconds: measure.duration) : null;
-  }
+//  PeriodicDatumProbe(PeriodicMeasure measure) : super(measure) {
+//    frequency = Duration(milliseconds: measure.frequency);
+//    duration = (measure.duration != null) ? Duration(milliseconds: measure.duration) : null;
+//  }
+
+  PeriodicDatumProbe() : super();
 
   Stream<Datum> get events => controller.stream;
+
+  void onInitialize(Measure measure) {
+    assert(measure is PeriodicMeasure);
+    frequency = Duration(milliseconds: (measure as PeriodicMeasure).frequency);
+    duration = ((measure as PeriodicMeasure).duration != null)
+        ? Duration(milliseconds: (measure as PeriodicMeasure).duration)
+        : null;
+  }
 
   void onRestart() {
     frequency = Duration(milliseconds: (measure as PeriodicMeasure).frequency);
@@ -377,9 +554,14 @@ abstract class StreamProbe extends AbstractProbe {
   Stream<Datum> get events => controller.stream;
 
   /// Creates a [StreamProbe] handling the [stream].
-  StreamProbe(Measure measure, Stream<Datum> stream)
+//  StreamProbe(Measure measure, Stream<Datum> stream)
+//      : assert(stream != null, 'Stream cannot be null in a StreamProbe'),
+//        super(measure) {
+//    this._stream = stream;
+//  }
+  StreamProbe(Stream<Datum> stream)
       : assert(stream != null, 'Stream cannot be null in a StreamProbe'),
-        super(measure) {
+        super() {
     this._stream = stream;
   }
 
@@ -420,13 +602,14 @@ abstract class PeriodicStreamProbe extends StreamProbe {
   Duration frequency, duration;
 
   /// Creates a [PeriodicStreamProbe] handling the [stream] in a periodic manner.
-  PeriodicStreamProbe(PeriodicMeasure measure, Stream<Datum> stream) : super(measure, stream) {
-    frequency = Duration(milliseconds: measure.frequency);
-    duration = (measure.duration != null) ? Duration(milliseconds: measure.duration) : null;
-  }
+  PeriodicStreamProbe(Stream<Datum> stream) : super(stream);
 
-  void onInitialize() {
-    super.onInitialize();
+  void onInitialize(Measure measure) {
+    assert(measure is PeriodicMeasure);
+    frequency = Duration(milliseconds: (measure as PeriodicMeasure).frequency);
+    duration = ((measure as PeriodicMeasure).duration != null)
+        ? Duration(milliseconds: (measure as PeriodicMeasure).duration)
+        : null;
   }
 
   void onRestart() {
@@ -438,7 +621,7 @@ abstract class PeriodicStreamProbe extends StreamProbe {
 
   void onResume() {
     if (subscription != null) {
-      // create a recurrent timer that wait (pause) and then resume the sampling.
+      // create a recurrent timer that resume sampling.
       timer = Timer.periodic(frequency, (Timer t) {
         subscription.resume();
         // create a timer that pause the sampling after the specified duration.
@@ -456,7 +639,6 @@ abstract class PeriodicStreamProbe extends StreamProbe {
 
   void onStop() async {
     if (timer != null) timer.cancel();
-    controller.close();
     super.onStop();
   }
 }
@@ -476,9 +658,18 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
   Timer timer;
   Duration frequency, duration;
 
-  BufferingPeriodicProbe(PeriodicMeasure measure) : super(measure) {
-    frequency = Duration(milliseconds: measure.frequency);
-    duration = (measure.duration != null) ? Duration(milliseconds: measure.duration) : null;
+//  BufferingPeriodicProbe(PeriodicMeasure measure) : super(measure) {
+//    frequency = Duration(milliseconds: measure.frequency);
+//    duration = (measure.duration != null) ? Duration(milliseconds: measure.duration) : null;
+//  }
+  BufferingPeriodicProbe() : super();
+
+  void onInitialize(Measure measure) {
+    assert(measure is PeriodicMeasure);
+    frequency = Duration(milliseconds: (measure as PeriodicMeasure).frequency);
+    duration = ((measure as PeriodicMeasure).duration != null)
+        ? Duration(milliseconds: (measure as PeriodicMeasure).duration)
+        : null;
   }
 
   void onRestart() {
@@ -545,9 +736,17 @@ abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
   /// The stream of events to be buffered.
   Stream<dynamic> _bufferingStream;
 
-  BufferingPeriodicStreamProbe(PeriodicMeasure measure, Stream<dynamic> bufferingStream)
+//  BufferingPeriodicStreamProbe(PeriodicMeasure measure, Stream<dynamic> bufferingStream)
+//      : assert(bufferingStream != null, 'Buffering event stream must not be null'),
+//        super(measure,
+//            Stream<Datum>.empty()) // we don't use the stream in the super class so we give it an empty non-null stream
+//  {
+//    _bufferingStream = bufferingStream;
+//  }
+
+  BufferingPeriodicStreamProbe(Stream<dynamic> bufferingStream)
       : assert(bufferingStream != null, 'Buffering event stream must not be null'),
-        super(measure,
+        super(
             Stream<Datum>.empty()) // we don't use the stream in the super class so we give it an empty non-null stream
   {
     _bufferingStream = bufferingStream;

@@ -58,4 +58,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    // added the following line due to this ERROR:
+    //    >> Android dependency 'com.android.support:support-compat' has different version for the compile (26.1.0) and runtime (27.1.1) classpath.
+    implementation "com.android.support:support-v4:27.1.1"
 }

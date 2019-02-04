@@ -21,11 +21,10 @@ class AppsDatum extends CARPDatum {
   factory AppsDatum.fromJson(Map<String, dynamic> json) => _$AppsDatumFromJson(json);
   Map<String, dynamic> toJson() => _$AppsDatumToJson(this);
 
-  @override
   String toString() {
-    String s = 'apps: {';
+    String s = 'Installed Apps - [';
     installedApps.forEach((appName) => s += '$appName,');
-    s += '}';
+    s += ']';
     return s;
   }
 }
@@ -46,5 +45,5 @@ class AppUsageDatum extends CARPDatum {
   factory AppUsageDatum.fromJson(Map<String, dynamic> json) => _$AppUsageDatumFromJson(json);
   Map<String, dynamic> toJson() => _$AppUsageDatumToJson(this);
 
-  String toString() => 'App usage: {start: $start, end: $end, usage: $usage}';
+  String toString() => 'App Usage - start: $start, end: $end, usage: $usage';
 }

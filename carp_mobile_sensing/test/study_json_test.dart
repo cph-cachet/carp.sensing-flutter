@@ -1,11 +1,17 @@
 import 'package:test/test.dart';
-import 'package:carp_mobile_sensing/core/core.dart';
 import 'dart:convert';
 import 'dart:io';
+import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
 
 void main() {
+  setUp(() {
+    //SamplingPackageRegistry.register(AudioSamplingPackage());
+    //SamplingPackageRegistry.register(CommunicationSamplingPackage());
+    //SamplingPackageRegistry.register(ContextSamplingPackage());
+  });
+
   /// Test if we can load a raw JSON from a file and convert it into a [Study] object with all its [Task]s and [Measure]s.
   /// Note that this test, tests if a [Study] object can be create 'from scratch', i.e. without having been created before.
   test('Raw JSON string -> Study object', () async {

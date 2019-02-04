@@ -63,6 +63,7 @@ class Study extends Serializable {
   /// Adapt the sampling [Measure]s of this [Study] to the specified [SamplingSchema].
   void adapt(SamplingSchema schema, {bool restore = true}) {
     assert(schema != null);
+    samplingStrategy = schema.type;
     schema.adapt(this, restore: restore);
   }
 

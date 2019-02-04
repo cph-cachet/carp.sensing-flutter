@@ -11,10 +11,7 @@ import 'package:uuid/uuid.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/services.dart';
 
-// import Measures defined in the probes libraries.
-import 'package:carp_mobile_sensing/probes/environment/environment.dart';
-import 'package:carp_mobile_sensing/probes/sound/sound.dart';
-import 'package:carp_mobile_sensing/probes/communication/communication.dart';
+import 'package:carp_mobile_sensing/runtime/runtime.dart';
 
 part 'serialization.dart';
 part 'study.dart';
@@ -24,5 +21,6 @@ part 'datum.dart';
 part 'measures.dart';
 part 'device_info.dart';
 part 'managers.dart';
-part 'schemas.dart';
+part 'sampling_schema.dart';
+part 'privacy_schema.dart';
 part 'core.g.dart';
