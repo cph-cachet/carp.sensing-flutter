@@ -17,6 +17,8 @@ These are the available CARP Mobile Sensing Flutter components in this repositor
 | **Core** | Basic components |  | 
 | [carp_core](./carp_core) | The core CARP domain model | [![pub package](https://img.shields.io/pub/v/carp_core.svg)](https://pub.dartlang.org/packages/carp_core) |
 | [carp_mobile_sensing](./carp_mobile_sensing) | The main CARP Mobile Sensing Framework | [![pub package](https://img.shields.io/pub/v/carp_mobile_sensing.svg)](https://pub.dartlang.org/packages/carp_mobile_sensing) |
+| **Packages** | Data sampling packages |  | 
+| [carp_communication_package](./carp_communication_package) | Communication sampling package (phone, sms) | [![pub package](https://img.shields.io/pub/v/carp_communication_package.svg)](https://pub.dartlang.org/packages/carp_communication_package) |
 | **Backends** | Backend data upload components |  | 
 | [carp_webservices](./carp_webservices) | Flutter API for CARP web services | [![pub package](https://img.shields.io/pub/v/carp_webservices.svg)](https://pub.dartlang.org/packages/carp_webservices) |
 | [carp_backend](./carp_backend) | Support for uploading data to a CARP data backend as JSON. | [![pub package](https://img.shields.io/pub/v/carp_backend.svg)](https://pub.dartlang.org/packages/carp_backend) |
