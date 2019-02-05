@@ -10,7 +10,8 @@ part of context;
 /// Holds location information using the GPS format.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class LocationDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.LOCATION);
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, DataType.LOCATION);
   DataFormat get format => CARP_DATA_FORMAT;
 
   LocationDatum() : super();
@@ -24,7 +25,8 @@ class LocationDatum extends CARPDatum {
         speedAccuracy = map['speedAccuracy'],
         super();
 
-  factory LocationDatum.fromJson(Map<String, dynamic> json) => _$LocationDatumFromJson(json);
+  factory LocationDatum.fromJson(Map<String, dynamic> json) =>
+      _$LocationDatumFromJson(json);
   Map<String, dynamic> toJson() => _$LocationDatumToJson(this);
 
   /// Latitude in GPS coordinates.

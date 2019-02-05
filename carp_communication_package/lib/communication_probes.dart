@@ -44,10 +44,12 @@ class TextMessageLogProbe extends DatumProbe {
   Future<Datum> getDatum() async {
     SmsQuery query = new SmsQuery();
     List<SmsMessage> _messages = await query.getAllSms;
-    return TextMessageLogDatum()..textMessageLog = _messages.map(_smsToTextMessage).toList();
+    return TextMessageLogDatum()
+      ..textMessageLog = _messages.map(_smsToTextMessage).toList();
   }
 
-  TextMessage _smsToTextMessage(SmsMessage sms) => TextMessage.fromSmsMessage(sms);
+  TextMessage _smsToTextMessage(SmsMessage sms) =>
+      TextMessage.fromSmsMessage(sms);
 }
 
 /// The [TextMessageProbe] listens to SMS messages and collects a
@@ -59,4 +61,5 @@ class TextMessageProbe extends StreamProbe {
 }
 
 Stream<Datum> get textMessageStream =>
-    SmsReceiver().onSmsReceived.map((event) => TextMessageDatum.fromTextMessage(TextMessage.fromSmsMessage(event)));
+    SmsReceiver().onSmsReceived.map((event) =>
+        TextMessageDatum.fromTextMessage(TextMessage.fromSmsMessage(event)));

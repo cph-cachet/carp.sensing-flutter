@@ -14,5 +14,5 @@ class ActivityProbe extends StreamProbe {
   ActivityProbe() : super(_activityStream);
 }
 
-Stream<Datum> get _activityStream =>
-    ActivityRecognition.activityUpdates().map((activity) => ActivityDatum.fromActivity(activity));
+Stream<Datum> get _activityStream => ActivityRecognition.activityUpdates()
+    .map((activity) => ActivityDatum.fromActivity(activity));

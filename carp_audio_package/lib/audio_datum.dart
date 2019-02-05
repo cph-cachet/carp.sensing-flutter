@@ -11,7 +11,8 @@ part of audio;
 /// as well as the timestamps of when the recording was started and stopped
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class AudioDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.AUDIO);
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, DataType.AUDIO);
   DataFormat get format => CARP_DATA_FORMAT;
 
   /// The filename of the audio file store on this device.
@@ -23,17 +24,21 @@ class AudioDatum extends CARPDatum {
   /// The timestamp for end of recording.
   DateTime endRecordingTime;
 
-  AudioDatum({this.filename, this.startRecordingTime, this.endRecordingTime}) : super();
+  AudioDatum({this.filename, this.startRecordingTime, this.endRecordingTime})
+      : super();
 
-  factory AudioDatum.fromJson(Map<String, dynamic> json) => _$AudioDatumFromJson(json);
+  factory AudioDatum.fromJson(Map<String, dynamic> json) =>
+      _$AudioDatumFromJson(json);
   Map<String, dynamic> toJson() => _$AudioDatumToJson(this);
-  String toString() => 'Audio Recording - filename: $filename, start: $startRecordingTime, end: $endRecordingTime';
+  String toString() =>
+      'Audio Recording - filename: $filename, start: $startRecordingTime, end: $endRecordingTime';
 }
 
 /// A [NoiseDatum] that holds the noise level in decibel of a noise sampling.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class NoiseDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.NOISE);
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, DataType.NOISE);
   DataFormat get format => CARP_DATA_FORMAT;
 
   // The sound intensity [dB] measurement statistics for a given sampling window.
@@ -50,9 +55,13 @@ class NoiseDatum extends CARPDatum {
   /// Maximum decibel of sampling window.
   num maxDecibel;
 
-  NoiseDatum({this.meanDecibel, this.stdDecibel, this.minDecibel, this.maxDecibel}) : super();
+  NoiseDatum(
+      {this.meanDecibel, this.stdDecibel, this.minDecibel, this.maxDecibel})
+      : super();
 
-  factory NoiseDatum.fromJson(Map<String, dynamic> json) => _$NoiseDatumFromJson(json);
+  factory NoiseDatum.fromJson(Map<String, dynamic> json) =>
+      _$NoiseDatumFromJson(json);
   Map<String, dynamic> toJson() => _$NoiseDatumToJson(this);
-  String toString() => 'Noise - mean: $meanDecibel, std: $stdDecibel, min: $minDecibel, max: $maxDecibel';
+  String toString() =>
+      'Noise - mean: $meanDecibel, std: $stdDecibel, min: $minDecibel, max: $maxDecibel';
 }

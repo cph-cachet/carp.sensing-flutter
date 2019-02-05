@@ -17,12 +17,18 @@ class AudioMeasure extends PeriodicMeasure {
   /// If no [studyId] is provide, `default_study` will be used as the default id.
   String studyId = 'default_study';
 
-  AudioMeasure(MeasureType type, {name, enabled = true, frequency, duration, this.studyId})
-      : super(type, name: name, enabled: enabled, frequency: frequency, duration: duration);
+  AudioMeasure(MeasureType type,
+      {name, enabled = true, frequency, duration, this.studyId})
+      : super(type,
+            name: name,
+            enabled: enabled,
+            frequency: frequency,
+            duration: duration);
 
   static Function get fromJsonFunction => _$AudioMeasureFromJson;
   factory AudioMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory.fromJson(
+          json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$AudioMeasureToJson(this);
 }
 
@@ -34,11 +40,21 @@ class NoiseMeasure extends PeriodicMeasure {
 
   int samplingRate = DEFAULT_SAMPLING_RATE;
 
-  NoiseMeasure(MeasureType type, {name, enabled = true, frequency, duration, this.samplingRate = DEFAULT_SAMPLING_RATE})
-      : super(type, name: name, enabled: enabled, frequency: frequency, duration: duration);
+  NoiseMeasure(MeasureType type,
+      {name,
+      enabled = true,
+      frequency,
+      duration,
+      this.samplingRate = DEFAULT_SAMPLING_RATE})
+      : super(type,
+            name: name,
+            enabled: enabled,
+            frequency: frequency,
+            duration: duration);
 
   static Function get fromJsonFunction => _$NoiseMeasureFromJson;
   factory NoiseMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory.fromJson(
+          json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$NoiseMeasureToJson(this);
 }
