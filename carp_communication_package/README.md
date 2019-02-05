@@ -57,3 +57,20 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
 ### iOS Integration
 
 No changes should be needed regarding permission in the `Info.plist` for this package.
+
+## Using it
+
+To use this package, import it into your app together with the
+[`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package:
+
+`````dart
+import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+import 'package:carp_comunication_package/context.dart';
+`````
+
+Before creating a study and running it, register this package in the 
+[SamplingPackageRegistry](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/runtime/SamplingPackageRegistry.html).
+
+`````dart
+  SamplingPackageRegistry.register(CommunicationSamplingPackage());
+`````

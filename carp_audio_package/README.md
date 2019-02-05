@@ -67,3 +67,19 @@ Add this permission in the `Info.plist` file located in `ios/Runner`:
 
 ```
 
+## Using it
+
+To use this package, import it into your app together with the
+[`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package:
+
+`````dart
+import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+import 'package:carp_audio_package/context.dart';
+`````
+
+Before creating a study and running it, register this package in the 
+[SamplingPackageRegistry](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/runtime/SamplingPackageRegistry.html).
+
+`````dart
+  SamplingPackageRegistry.register(AudioSamplingPackage());
+`````
