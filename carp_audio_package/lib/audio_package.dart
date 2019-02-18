@@ -35,10 +35,8 @@ class AudioSamplingPackage implements SamplingPackage {
   }
 
   void onRegister() {
-    FromJsonFactory.registerFromJsonFunction(
-        "AudioMeasure", AudioMeasure.fromJsonFunction);
-    FromJsonFactory.registerFromJsonFunction(
-        "NoiseMeasure", NoiseMeasure.fromJsonFunction);
+    FromJsonFactory.registerFromJsonFunction("AudioMeasure", AudioMeasure.fromJsonFunction);
+    FromJsonFactory.registerFromJsonFunction("NoiseMeasure", NoiseMeasure.fromJsonFunction);
   }
 
   SamplingSchema get common => SamplingSchema()
@@ -49,17 +47,11 @@ class AudioSamplingPackage implements SamplingPackage {
       MapEntry(
           DataType.AUDIO,
           AudioMeasure(MeasureType(NameSpace.CARP, DataType.AUDIO),
-              name: 'Audio Recording',
-              enabled: true,
-              frequency: 60 * 1000,
-              duration: 2 * 1000)),
+              name: 'Audio Recording', enabled: true, frequency: 60 * 1000, duration: 2 * 1000)),
       MapEntry(
           DataType.NOISE,
           NoiseMeasure(MeasureType(NameSpace.CARP, DataType.NOISE),
-              name: 'Ambient Noise',
-              enabled: true,
-              frequency: 60 * 1000,
-              duration: 2 * 1000)),
+              name: 'Ambient Noise', enabled: true, frequency: 60 * 1000, duration: 2 * 1000)),
     ]);
 
   SamplingSchema get light => common
@@ -68,7 +60,7 @@ class AudioSamplingPackage implements SamplingPackage {
     ..measures[AUDIO].enabled = false;
 
   SamplingSchema get minimum => light
-    ..type = SamplingSchemaType.LIGHT
+    ..type = SamplingSchemaType.MINIMUM
     ..name = 'Minimum audio sampling'
     ..measures[NOISE].enabled = false;
 

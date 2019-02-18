@@ -39,8 +39,7 @@ class ContextSamplingPackage implements SamplingPackage {
   }
 
   void onRegister() {
-    FromJsonFactory.registerFromJsonFunction(
-        "WeatherMeasure", WeatherMeasure.fromJsonFunction);
+    FromJsonFactory.registerFromJsonFunction("WeatherMeasure", WeatherMeasure.fromJsonFunction);
   }
 
   SamplingSchema get common => SamplingSchema()
@@ -49,13 +48,9 @@ class ContextSamplingPackage implements SamplingPackage {
     ..powerAware = true
     ..measures.addEntries([
       MapEntry(
-          DataType.LOCATION,
-          Measure(MeasureType(NameSpace.CARP, DataType.LOCATION),
-              name: 'Location', enabled: true)),
-      MapEntry(
-          DataType.ACTIVITY,
-          Measure(MeasureType(NameSpace.CARP, DataType.ACTIVITY),
-              name: 'Activity Recognition', enabled: true)),
+          DataType.LOCATION, Measure(MeasureType(NameSpace.CARP, DataType.LOCATION), name: 'Location', enabled: true)),
+      MapEntry(DataType.ACTIVITY,
+          Measure(MeasureType(NameSpace.CARP, DataType.ACTIVITY), name: 'Activity Recognition', enabled: true)),
       MapEntry(
           DataType.WEATHER,
           WeatherMeasure(MeasureType(NameSpace.CARP, DataType.WEATHER),
@@ -68,7 +63,7 @@ class ContextSamplingPackage implements SamplingPackage {
     ..measures[WEATHER].enabled = false;
 
   SamplingSchema get minimum => light
-    ..type = SamplingSchemaType.LIGHT
+    ..type = SamplingSchemaType.MINIMUM
     ..name = 'Minimum context sampling'
     ..measures[ACTIVITY].enabled = false;
 

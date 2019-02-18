@@ -8,7 +8,7 @@
 part of runtime;
 
 //---------------------------------------------------------------------------------------
-//                                        PROBE
+//                                        PROBES
 //---------------------------------------------------------------------------------------
 
 /// Enumerates the different states of a probe.
@@ -35,85 +35,6 @@ enum ProbeState { created, initialized, resumed, paused, stopped }
 ///
 ///     probe.events.forEach(print);
 ///
-//abstract class Probe {
-//  /// Is this probe enabled, i.e. should run.
-//  bool get enabled;
-//
-//  /// The type of this probe according to [DataType].
-//  String get type;
-//
-//  /// The runtime state of this probe.
-//  ProbeState get state;
-//
-//  /// The runtime state changes of this probe.
-//  ///
-//  /// This is useful for listening on state changes as specified in [ProbeState].
-//  /// Can e.g. be used in a [StreamBuilder] when showing the UI of a probe.
-//  /// The following example is taken from the CARP Mobile Sensing App
-//  ///
-//  ///       Widget buildProbeListTile(BuildContext context, ProbeModel probe) {
-//  ///           return StreamBuilder<ProbeStateType>(
-//  ///             stream: probe.stateEvents,
-//  ///             initialData: ProbeState.created,
-//  ///             builder: (context, AsyncSnapshot<ProbeState> snapshot) {
-//  ///               if (snapshot.hasData) {
-//  ///                 return ListTile(
-//  ///                   isThreeLine: true,
-//  ///                   leading: Icon(
-//  ///                     probe.icon.icon,
-//  ///                     size: 50,
-//  ///                     color: probe.icon.color,
-//  ///                   ),
-//  ///                   title: Text(probe.name),
-//  ///                   subtitle: Text(probe.description),
-//  ///                   trailing: probe.stateIcon,
-//  ///                 );
-//  ///               } else if (snapshot.hasError) {
-//  ///                 return Text('Error in probe state - ${snapshot.error}');
-//  ///              }
-//  ///              return Text('Unknown');
-//  ///           },
-//  ///         );
-//  ///       }
-//  /// This will update the trailing icon of the probe every time the probe change
-//  /// state (e.g. from `resumed` to `paused`).
-//  Stream<ProbeState> get stateEvents;
-//
-//  /// The [Measure] that configures this probe.
-//  Measure get measure;
-//
-//  /// A printer-friendly name for this probe. Takes its name from [Measure.name] as default.
-//  String get name;
-//
-//  /// A [Stream] generating sensor data events from this probe.
-//  Stream<Datum> get events;
-//
-//  /// Initialize the probe before starting it.
-//  void initialize();
-//
-//  /// Start the probe();
-//  void start();
-//
-//  /// Pause the probe. The probe is paused until [resume] or [restart] is called.
-//  void pause();
-//
-//  /// Resume the probe.
-//  void resume();
-//
-//  /// Restart the probe. This forces the probe to reload its configuration from
-//  /// its [Measure] and restart sampling accordingly. If a new [measure] is
-//  /// to be used, this new measure must be specified in the
-//  /// [initialize] method before calling restart.
-//  ///
-//  /// This methods is used when sampling configuration is adapted, e.g. as
-//  /// part of the power-awareness.
-//  void restart();
-//
-//  /// Stop the probe. Once a probe is stopped, it cannot be started again.
-//  /// If you need to restart a probe, use the [restart] or [pause] and [resume] methods.
-//  void stop();
-//}
-
 abstract class Probe {
   /// Is this probe enabled, i.e. should run.
   bool get enabled;
@@ -195,66 +116,7 @@ abstract class Probe {
   void stop();
 }
 
-///// An abstract implementation of a [Probe] to extend from.
-//abstract class AbstractProbe with MeasureListener implements Probe {
-//  StreamController<ProbeState> _stateEventController = StreamController.broadcast();
-//  Stream<ProbeState> get stateEvents => _stateEventController.stream;
-//
-//  bool get enabled => measure.enabled ?? true;
-//  String get type => measure.type.name;
-//  String get name => measure.name ?? 'NO_NAME';
-//
-//  ProbeState get state => _stateMachine.state;
-//
-//  _ProbeStateMachine _stateMachine;
-//  void _setState(_ProbeStateMachine state) {
-//    _stateMachine = state;
-//    _stateEventController.add(state.state);
-//  }
-//
-//  Measure _measure;
-//  Measure get measure => _measure;
-//
-//  AbstractProbe(Measure measure) : assert(measure != null, 'Probe cannot be created with a null measure.') {
-//    _measure = measure;
-//    measure.addMeasureListener(this);
-//    _stateMachine = _CreatedState(this);
-//  }
-//
-//  // ProbeState handlers
-//  void initialize() => _stateMachine.initialize();
-//  void start() => _stateMachine.start();
-//  void restart() => _stateMachine.restart();
-//  void pause() => _stateMachine.pause();
-//  void resume() => _stateMachine.resume();
-//  void stop() => _stateMachine.stop();
-//
-//  /// Callback for initialization of probe
-//  void onInitialize() {}
-//
-//  /// Callback for starting probe
-//  void onStart();
-//
-//  /// Callback for resuming probe
-//  void onResume();
-//
-//  /// Callback for pausing probe
-//  void onPause();
-//
-//  /// Callback for restarting probe
-//  void onRestart();
-//
-//  /// Callback for stopping probe
-//  void onStop() {
-//    _stateEventController.close();
-//  }
-//
-//  void hasChanged(Measure measure) {
-//    restart();
-//  }
-//}
-
-///// An abstract implementation of a [Probe] to extend from.
+/// An abstract implementation of a [Probe] to extend from.
 abstract class AbstractProbe with MeasureListener implements Probe {
   StreamController<ProbeState> _stateEventController = StreamController.broadcast();
   Stream<ProbeState> get stateEvents => _stateEventController.stream;
