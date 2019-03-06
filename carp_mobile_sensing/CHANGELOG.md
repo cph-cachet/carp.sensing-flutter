@@ -1,4 +1,4 @@
-## 0.3.2
+## 0.3.3
 * update to new versions of [CACHET Flutter Plugins](https://github.com/cph-cachet/flutter-plugins)
 * rename of `probes` folder to `packages`
 * upgrade and test on Flutter v. 1.3.4 Dart v. 2.2.1 
