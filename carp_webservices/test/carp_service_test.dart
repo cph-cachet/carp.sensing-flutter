@@ -52,15 +52,15 @@ void main() {
 
   group("Datapoints", () {
     test('- post', () async {
-      // Create a test location datum
-      LocationDatum datum = LocationDatum.fromMap({
-        "latitude": 23454.345,
-        "longitude": 23.4,
-        "altitude": 43.3,
-        "accuracy": 12.4,
-        "speed": 2.3,
-        "speedAccuracy": 12.3
-      });
+      ScreenDatum screenDatum;
+      // Create a test bluetooth datum
+      BluetoothDatum datum = BluetoothDatum()
+        ..bluetoothDeviceId = "weg"
+        ..bluetoothDeviceName = "ksjbdf"
+        ..connectable = true
+        ..txPowerLevel = 314
+        ..rssi = 567
+        ..bluetoothDeviceType = "classic";
 
       final CARPDataPoint data = CARPDataPoint.fromDatum(study.id, study.userId, datum);
 

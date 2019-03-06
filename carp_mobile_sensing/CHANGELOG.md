@@ -1,3 +1,6 @@
+## 0.3.5
+* rename of `core` folder to `domain`
+
 ## 0.3.3
 * update to new versions of [CACHET Flutter Plugins](https://github.com/cph-cachet/flutter-plugins)
 * rename of `probes` folder to `packages`

@@ -1,7 +1,6 @@
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_service/carp_service.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
-import 'package:carp_mobile_sensing/core/core.dart';
 import 'dart:io';
 
 void main() async {
@@ -62,15 +61,14 @@ void main() async {
 
   // ------------------- DATA POINTS --------------------------------
 
-  // Create a test location datum
-  LocationDatum datum = LocationDatum.fromMap(<String, dynamic>{
-    "latitude": 23454.345,
-    "longitude": 23.4,
-    "altitude": 43.3,
-    "accuracy": 12.4,
-    "speed": 2.3,
-    "speedAccuracy": 12.3
-  });
+  // Create a test bluetooth datum
+  BluetoothDatum datum = BluetoothDatum()
+    ..bluetoothDeviceId = "weg"
+    ..bluetoothDeviceName = "ksjbdf"
+    ..connectable = true
+    ..txPowerLevel = 314
+    ..rssi = 567
+    ..bluetoothDeviceType = "classic";
 
   // create a CARP data point
   final CARPDataPoint data = CARPDataPoint.fromDatum(study.id, study.userId, datum);

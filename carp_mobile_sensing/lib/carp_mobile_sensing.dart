@@ -5,9 +5,9 @@ library carp_mobile_sensing;
 // The core packages
 export 'package:carp_mobile_sensing/datastore/datastore.dart';
 export 'package:carp_mobile_sensing/runtime/runtime.dart';
-export 'package:carp_mobile_sensing/core/core.dart';
+export 'package:carp_mobile_sensing/domain/domain.dart';
 
-// The built-in sensors
+// The built-in sampling packages
 export 'package:carp_mobile_sensing/packages/device/device.dart';
 export 'package:carp_mobile_sensing/packages/sensors/sensors.dart';
 export 'package:carp_mobile_sensing/packages/connectivity/connectivity.dart';

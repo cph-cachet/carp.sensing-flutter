@@ -29,7 +29,8 @@ abstract class DataManager {
 }
 
 /// An abstract [DataManager] implementation useful for extension.
-/// Also supports JSON encoding.
+///
+/// Takes data from a [Stream] and uploads these. Also supports JSON encoding.
 abstract class AbstractDataManager implements DataManager {
   Study study;
 

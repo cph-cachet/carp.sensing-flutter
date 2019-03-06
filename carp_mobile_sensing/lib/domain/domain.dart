@@ -11,7 +11,7 @@ import 'package:uuid/uuid.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/services.dart';
 
-import 'package:carp_mobile_sensing/runtime/runtime.dart';
+import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 part 'serialization.dart';
 part 'study.dart';
@@ -23,4 +23,4 @@ part 'device_info.dart';
 part 'managers.dart';
 part 'sampling_schema.dart';
 part 'privacy_schema.dart';
-part 'core.g.dart';
+part 'domain.g.dart';
