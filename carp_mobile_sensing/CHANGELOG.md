@@ -1,3 +1,6 @@
+## 0.3.6
+* rename of `packages` folder to `sampling_packages` (seems like Dart Pub don't like folders called `packages`)
+
 ## 0.3.5
 * rename of `core` folder to `domain`
 

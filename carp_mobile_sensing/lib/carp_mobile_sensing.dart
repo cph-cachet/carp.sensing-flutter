@@ -8,7 +8,7 @@ export 'package:carp_mobile_sensing/runtime/runtime.dart';
 export 'package:carp_mobile_sensing/domain/domain.dart';
 
 // The built-in sampling packages
-export 'package:carp_mobile_sensing/packages/device/device.dart';
-export 'package:carp_mobile_sensing/packages/sensors/sensors.dart';
-export 'package:carp_mobile_sensing/packages/connectivity/connectivity.dart';
-export 'package:carp_mobile_sensing/packages/apps/apps.dart';
+export 'package:carp_mobile_sensing/sampling_packages/device/device.dart';
+export 'package:carp_mobile_sensing/sampling_packages/sensors/sensors.dart';
+export 'package:carp_mobile_sensing/sampling_packages/connectivity/connectivity.dart';
+export 'package:carp_mobile_sensing/sampling_packages/apps/apps.dart';
