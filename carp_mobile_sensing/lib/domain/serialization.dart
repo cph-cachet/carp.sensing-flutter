@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of core;
+part of domain;
 
 /// This is the base class for all JSON serializable objects.
 abstract class Serializable {

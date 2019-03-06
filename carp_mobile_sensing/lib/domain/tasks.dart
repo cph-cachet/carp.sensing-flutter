@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of core;
+part of domain;
 
 /// A [Task] holds information about each task to be executed as part of a [Study].
 /// Each [Task] holds a list of [Measure]s to be done as part of this task.

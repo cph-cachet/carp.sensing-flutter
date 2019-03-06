@@ -4,7 +4,7 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of core;
+part of domain;
 
 /// A [Measure] holds information about what measure to do/collect for a [Task] in a [Study].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)

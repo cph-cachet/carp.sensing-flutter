@@ -4,7 +4,7 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of core;
+part of domain;
 
 /// The [DataManager] interface is used to upload [Datum] objects to any
 /// data manager that implements this interface.

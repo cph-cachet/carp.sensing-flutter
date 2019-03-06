@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of core;
+part of domain;
 
 /// A CARP Data Point which can be uploaded to a CARP data endpoint.
 ///

@@ -2,7 +2,7 @@
 /// Also hold JSON serialization logic to serialize [Datum] objects
 /// into a [CARPDataPoint] as well as deseralization of [Study] objects
 /// obtained from a [StudyManager].
-library core;
+library domain;
 
 import 'dart:io';
 import 'dart:convert';

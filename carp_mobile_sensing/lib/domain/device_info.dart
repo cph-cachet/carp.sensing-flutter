@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of core;
+part of domain;
 
 /// Provides (static) information about the local device.
 ///

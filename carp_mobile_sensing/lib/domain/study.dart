@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of core;
+part of domain;
 
 /// The [Study] holds information about the study to be performed on this device.
 ///
