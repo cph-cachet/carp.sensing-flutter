@@ -1,6 +1,6 @@
 name: carp_mobile_sensing
 description: Mobile Sensing Framework for Flutter. A software framework for collecting sensor data from the phone and attached wearable devices via probes. Can be extended.
-version: 0.3.2
+version: 0.3.3
 author:  CACHET Team <cph.cachet@gmail.com>
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_mobile_sensing
 
@@ -30,11 +30,11 @@ dependencies:
   stats: ^0.2.0           # For calculating statistics, ex LightProbe
 
   # the CACHET plugins
-  pedometer: ^0.0.3       # Get the step count from local OS
-  light: ^0.0.3           # Light sensor over platform channel
+  pedometer: ^0.0.5       # Get the step count from local OS
+  light: ^0.1.0           # Light sensor over platform channel
   device_apps: ^1.0.0     # Device installed apps over platform channel
-  screen_state: ^0.0.1    # Screen LOCK/ON/OFF
-  app_usage: ^0.0.2       # App-usage statistics
+  screen_state: ^0.1.0    # Screen LOCK/ON/OFF
+  app_usage: ^0.1.0       # App-usage statistics
 
 dev_dependencies:
   flutter_test:

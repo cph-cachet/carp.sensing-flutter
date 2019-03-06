@@ -14,7 +14,7 @@ abstract class FirebaseDataManager extends AbstractDataManager {
   FirebaseApp _firebaseApp;
   FirebaseUser _user;
 
-  FirebaseDataManager() {}
+  FirebaseDataManager();
 
   @override
   Future initialize(Study study, Stream<Datum> events) async {
@@ -194,7 +194,7 @@ class FirebaseDatabaseDataManager extends FirebaseDataManager {
 
   Firestore _firebaseDatabase;
 
-  FirebaseDatabaseDataManager() {}
+  FirebaseDatabaseDataManager();
 
   @override
   Future initialize(Study study, Stream<Datum> events) async {

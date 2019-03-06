@@ -36,7 +36,7 @@ class AppUsageProbe extends PeriodicDatumProbe {
     DateTime end = DateTime.now();
     DateTime start = DateTime.fromMillisecondsSinceEpoch(end.millisecondsSinceEpoch - duration.inMilliseconds);
 
-    Map<dynamic, dynamic> usage = await appUsage.getUsage(start, end);
+    Map<dynamic, dynamic> usage = await appUsage.fetchUsage(start, end);
     return AppUsageDatum()
       ..start = start.toUtc()
       ..end = end.toUtc()

@@ -1,4 +1,9 @@
 ## 0.3.2
+* update to new versions of [CACHET Flutter Plugins](https://github.com/cph-cachet/flutter-plugins)
+* rename of `probes` folder to `packages`
+* upgrade and test on Flutter v. 1.3.4 Dart v. 2.2.1 
+
+## 0.3.2
 * support for dividing probes into separate sampling packages
 * included in `carp_mobile_sensing` are
      * `device` (device, screen, memory, battery)

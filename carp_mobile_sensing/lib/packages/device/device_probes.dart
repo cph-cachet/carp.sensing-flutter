@@ -60,7 +60,7 @@ class ScreenProbe extends StreamProbe {
   ScreenProbe() : super(screenStream);
 }
 
-Stream<Datum> get screenStream => Screen().screenStateEvents.map((event) => ScreenDatum.fromScreenStateEvent(event));
+Stream<Datum> get screenStream => Screen().screenStateStream.map((event) => ScreenDatum.fromScreenStateEvent(event));
 
 /// A probe that collects free virtual memory on a regular basis
 /// as specified in [PeriodicMeasure.frequency].

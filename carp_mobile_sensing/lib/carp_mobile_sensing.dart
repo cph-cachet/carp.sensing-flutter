@@ -8,12 +8,7 @@ export 'package:carp_mobile_sensing/runtime/runtime.dart';
 export 'package:carp_mobile_sensing/core/core.dart';
 
 // The built-in sensors
-export 'package:carp_mobile_sensing/probes/device/device.dart';
-export 'package:carp_mobile_sensing/probes/sensors/sensors.dart';
-export 'package:carp_mobile_sensing/probes/connectivity/connectivity.dart';
-export 'package:carp_mobile_sensing/probes/apps/apps.dart';
-
-// External sampling packages (TODO - move to external Dart Packages)
-//export 'package:carp_mobile_sensing/probes/communication/communication.dart';
-//export 'package:carp_mobile_sensing/probes/context/context.dart';
-//export 'package:carp_mobile_sensing/probes/audio/audio.dart';
+export 'package:carp_mobile_sensing/packages/device/device.dart';
+export 'package:carp_mobile_sensing/packages/sensors/sensors.dart';
+export 'package:carp_mobile_sensing/packages/connectivity/connectivity.dart';
+export 'package:carp_mobile_sensing/packages/apps/apps.dart';

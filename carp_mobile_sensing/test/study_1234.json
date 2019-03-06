@@ -133,7 +133,7 @@
           "name": "Nearby Devices (Bluetooth Scan)",
           "enabled": true,
           "configuration": {},
-          "frequency": 3600000,
+          "frequency": 600000,
           "duration": 2000
         },
         {
@@ -160,101 +160,6 @@
           "configuration": {},
           "frequency": 3600000,
           "duration": 3600000
-        },
-        {
-          "c__": "AudioMeasure",
-          "type": {
-            "c__": "MeasureType",
-            "namespace": "carp",
-            "name": "audio"
-          },
-          "name": "Audio Recording",
-          "enabled": true,
-          "configuration": {},
-          "frequency": 60000,
-          "duration": 2000
-        },
-        {
-          "c__": "NoiseMeasure",
-          "type": {
-            "c__": "MeasureType",
-            "namespace": "carp",
-            "name": "noise"
-          },
-          "name": "Ambient Noise",
-          "enabled": true,
-          "configuration": {},
-          "frequency": 60000,
-          "duration": 2000,
-          "sampling_rate": 500
-        },
-        {
-          "c__": "PhoneLogMeasure",
-          "type": {
-            "c__": "MeasureType",
-            "namespace": "carp",
-            "name": "phone_log"
-          },
-          "name": "Phone Log",
-          "enabled": true,
-          "configuration": {},
-          "days": 30
-        },
-        {
-          "c__": "Measure",
-          "type": {
-            "c__": "MeasureType",
-            "namespace": "carp",
-            "name": "text-message-log"
-          },
-          "name": "Text Message (SMS) Log",
-          "enabled": true,
-          "configuration": {}
-        },
-        {
-          "c__": "Measure",
-          "type": {
-            "c__": "MeasureType",
-            "namespace": "carp",
-            "name": "text-message"
-          },
-          "name": "Text Message (SMS)",
-          "enabled": true,
-          "configuration": {}
-        },
-        {
-          "c__": "Measure",
-          "type": {
-            "c__": "MeasureType",
-            "namespace": "carp",
-            "name": "location"
-          },
-          "name": "Location",
-          "enabled": true,
-          "configuration": {}
-        },
-        {
-          "c__": "Measure",
-          "type": {
-            "c__": "MeasureType",
-            "namespace": "carp",
-            "name": "activity"
-          },
-          "name": "Activity Recognition",
-          "enabled": true,
-          "configuration": {}
-        },
-        {
-          "c__": "WeatherMeasure",
-          "type": {
-            "c__": "MeasureType",
-            "namespace": "carp",
-            "name": "weather"
-          },
-          "name": "Local Weather",
-          "enabled": true,
-          "configuration": {},
-          "frequency": 3600000
         }
       ]
     }

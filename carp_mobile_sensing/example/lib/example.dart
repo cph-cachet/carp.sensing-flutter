@@ -1,13 +1,16 @@
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+import 'dart:async';
+import 'dart:convert';
 
 /// This is the code for the very minimal example used in the README.md file.
 void example() async {
   // Create a study using a File Backend
-  Study study = Study("1234", "bardram", name: "bardram study");
-  study.dataEndPoint = FileDataEndPoint()
-    ..bufferSize = 500 * 1000
-    ..zip = true
-    ..encrypt = false;
+  Study study = Study("1234", "bardram",
+      name: "bardram study",
+      dataEndPoint: FileDataEndPoint()
+        ..bufferSize = 500 * 1000
+        ..zip = true
+        ..encrypt = false);
 
   // add sensor collection from accelerometer and gyroscope
   // careful - these sensors generate a lot of data!
@@ -26,6 +29,7 @@ void example() async {
 
   // Create a Study Controller that can manage this study, initialize it, and start it.
   StudyController controller = StudyController(study);
+  // await initialization before starting
   await controller.initialize();
   controller.start();
 
@@ -35,8 +39,19 @@ void example() async {
   // listen on only CARP events
   controller.events.where((datum) => datum.format.namepace == NameSpace.CARP).forEach(print);
 
+  // listen on BLUETOOTH events
+  controller.events.where((datum) => datum.format.name == ConnectivitySamplingPackage.BLUETOOTH).forEach(print);
+
+  // map events
+  controller.events.map((datum) => datum.format.name == ConnectivitySamplingPackage.BLUETOOTH).forEach(print);
+
   // listening on a specific probe
   ProbeRegistry.probes[DataType.LOCATION].events.forEach(print);
+
+  StreamSubscription<Datum> subscription = controller.events.listen((Datum datum) {
+    // do something w. the datum, e.g. print the json
+    print(JsonEncoder.withIndent(' ').convert(datum));
+  });
 }
 
 /// An example of how to use the [SamplingSchema] model.
