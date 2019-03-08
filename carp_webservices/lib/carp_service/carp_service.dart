@@ -19,7 +19,7 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 part 'carp_app.dart';
 part 'datapoint_reference.dart';
 part 'file_reference.dart';
-part 'collection_reference.dart';
+part 'document_reference.dart';
 part 'carp_tasks.dart';
 
 /// Provide access to the CARP web services endpoint.

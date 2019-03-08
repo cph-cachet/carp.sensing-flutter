@@ -14,7 +14,7 @@ part of domain;
 class CARPDataPoint {
   /// A unique, server-side generated ID for this data point.
   /// [null] if this data point is not yet stored in the CARP server.
-  String id;
+  int id;
 
   /// The CARP data point header.
   CARPDataPointHeader carpHeader;
@@ -28,9 +28,6 @@ class CARPDataPoint {
     CARPDataPointHeader header = new CARPDataPointHeader(studyId, userId);
     header.startTime = (datum is CARPDatum) ? datum.timestamp.toUtc() : new DateTime.now().toUtc();
     header.dataFormat = datum.format;
-
-    // setting the measure to null in order to avoid serialization of it
-    //datum.measure = null;
 
     this.carpHeader = header;
     this.carpBody = datum;

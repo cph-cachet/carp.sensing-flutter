@@ -8,15 +8,15 @@ import 'dart:io';
 String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
 
 void main() {
-  final String username = "researcher";
+  final String username = "researcher@example.com";
   final String password = "password";
   final String uri = "http://staging.carp.cachet.dk:8080";
   final String clientID = "carp";
   final String clientSecret = "carp";
-  final String testStudyId = "8";
+  final String testStudyId = "2";
   CarpApp app;
   Study study;
-  String data_point_id;
+  int data_point_id;
   ObjectSnapshot object;
 
   group("CARP Base Services", () {
@@ -67,9 +67,11 @@ void main() {
       print(_encode(data.toJson()));
 
       data_point_id = await CarpService.instance.getDataPointReference().postDataPoint(data);
+      //var id = await CarpService.instance.getDataPointReference().postDataPoint(data);
 
-      assert(data_point_id.length > 0);
+      assert(data_point_id > 0);
       print("data_point_id : $data_point_id");
+      //print("id : $id");
     });
 
     test('- batch', () async {

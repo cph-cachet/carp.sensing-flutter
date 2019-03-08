@@ -171,7 +171,7 @@ CARPDataPoint _$CARPDataPointFromJson(Map<String, dynamic> json) {
       json['carp_body'] == null
           ? null
           : Datum.fromJson(json['carp_body'] as Map<String, dynamic>))
-    ..id = json['id'] as String;
+    ..id = json['id'] as int;
 }
 
 Map<String, dynamic> _$CARPDataPointToJson(CARPDataPoint instance) {

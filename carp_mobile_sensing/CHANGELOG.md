@@ -1,3 +1,6 @@
+## 0.3.8
+* update of `CARPDataPoint`
+
 ## 0.3.5+6+7
 * rename of `packages` folder to `sampling_packages` (seems like Dart Pub don't like folders called `packages`)
 * rename of `core` folder to `domain`

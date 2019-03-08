@@ -19,7 +19,7 @@ class DataPointReference extends CarpReference {
   /// Upload a [CARPDataPoint] to the CARP backend using HTTP POST.
   ///
   /// Returns the server-generated ID for this data point.
-  Future<String> postDataPoint(CARPDataPoint data) async {
+  Future<int> postDataPoint(CARPDataPoint data) async {
     final String url = "${dataEndpointUri}";
     final rest_headers = await headers;
 
@@ -27,6 +27,8 @@ class DataPointReference extends CarpReference {
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJSON = json.decode(response.body);
+
+    //print(" body : ${response.body}");
 
     switch (httpStatusCode) {
       case 200:
@@ -90,7 +92,7 @@ class DataPointReference extends CarpReference {
   }
 
   /// Get a [CARPDataPoint] from the CARP backend using HTTP GET
-  Future<CARPDataPoint> getDataPoint(String id) async {
+  Future<CARPDataPoint> getDataPoint(int id) async {
     String url = "${dataEndpointUri}/$id";
     final rest_headers = await headers;
 
@@ -118,7 +120,7 @@ class DataPointReference extends CarpReference {
   }
 
   /// Delete a [CARPDataPoint] from the CARP backend using HTTP DELETE
-  Future<void> deleteDataPoint(String id) async {
+  Future<void> deleteDataPoint(int id) async {
     String url = "${dataEndpointUri}/$id";
     final rest_headers = await headers;
 

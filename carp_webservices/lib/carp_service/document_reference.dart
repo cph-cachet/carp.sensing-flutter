@@ -8,7 +8,7 @@ part of carp_services;
 
 /// Provide a collection reference to a CARP web service.
 ///
-/// The Collections endpoint allows you to store and query custom objects to
+/// The Collections endpoint allows you to store and query custom documents to
 /// suit your specific application's needs.
 class CollectionReference extends CarpReference {
   String _path;
@@ -99,22 +99,22 @@ class CollectionReference extends CarpReference {
   /// Returns a `ObjectReference` with the provided id in this collection.
   ///
   /// If no [id] is provided, an auto-generated ID is used.
-  ObjectReference object([String id]) {
-    return ObjectReference._(service, this, id);
+  DocumentReference object([String id]) {
+    return DocumentReference._(service, this, id);
   }
 
   /// Add a data object to this collection.
   ///
   /// Returns a `ObjectReference` with an auto-generated ID, after
   /// populating it with provided [data].
-  Future<ObjectReference> add(Map<String, dynamic> data) async {
-    final ObjectReference newObject = object();
+  Future<DocumentReference> add(Map<String, dynamic> data) async {
+    final DocumentReference newObject = object();
     await newObject.setData(data);
     return newObject;
   }
 }
 
-/// A [ObjectReference] refers to an object in a CARP collection
+/// A [DocumentReference] refers to a document in a CARP collection
 /// and can be used to write, read, or delete this object.
 ///
 /// The object with the referenced id may or may not exist.
@@ -122,13 +122,13 @@ class CollectionReference extends CarpReference {
 /// If the collection does not yet exist, it will be created.
 ///
 /// TODO:
-/// A [ObjectReference] can also be used to create a [CollectionReference]
+/// A [DocumentReference] can also be used to create a [CollectionReference]
 /// to a sub-collection.
-class ObjectReference extends CarpReference {
+class DocumentReference extends CarpReference {
   String _id;
   CollectionReference _collection;
 
-  ObjectReference._(CarpService service, this._collection, this._id)
+  DocumentReference._(CarpService service, this._collection, this._id)
       : assert(_collection != null),
         super._(service);
 
@@ -141,7 +141,7 @@ class ObjectReference extends CarpReference {
   /// The CARP path to this object.
   String get carpPath => "${_collection.carpPath}/$id";
 
-  /// Writes to the object referred to by this [ObjectReference].
+  /// Writes to the object referred to by this [DocumentReference].
   ///
   /// If the object does not yet exist, it will be created.
   /// If the collection does not yet exist, it will be created.
@@ -182,7 +182,7 @@ class ObjectReference extends CarpReference {
     }
   }
 
-  /// Updates fields in the object referred to by this [ObjectReference].
+  /// Updates fields in the object referred to by this [DocumentReference].
   ///
   /// If no object exists yet, the update will fail.
   Future<ObjectSnapshot> updateData(Map<String, dynamic> data) async {
@@ -208,7 +208,7 @@ class ObjectReference extends CarpReference {
     }
   }
 
-  /// Reads the object referenced by this [ObjectReference].
+  /// Reads the object referenced by this [DocumentReference].
   ///
   /// If no object exists, the read will return null.
   Future<ObjectSnapshot> get() async {
@@ -228,7 +228,7 @@ class ObjectReference extends CarpReference {
     }
   }
 
-  /// Deletes the object referred to by this [ObjectReference].
+  /// Deletes the object referred to by this [DocumentReference].
   Future<void> delete() async {
     final rest_headers = await headers;
 
