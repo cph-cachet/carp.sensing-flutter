@@ -10,8 +10,7 @@ part of context;
 /// Holds activity information.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ActivityDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, DataType.ACTIVITY);
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, ContextSamplingPackage.ACTIVITY);
   DataFormat get format => CARP_DATA_FORMAT;
 
   ActivityDatum() : super();
@@ -26,8 +25,7 @@ class ActivityDatum extends CARPDatum {
         type = activity.type,
         super();
 
-  factory ActivityDatum.fromJson(Map<String, dynamic> json) =>
-      _$ActivityDatumFromJson(json);
+  factory ActivityDatum.fromJson(Map<String, dynamic> json) => _$ActivityDatumFromJson(json);
   Map<String, dynamic> toJson() => _$ActivityDatumToJson(this);
 
   /// Confidence in activity recognition.

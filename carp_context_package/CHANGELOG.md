@@ -1,3 +1,10 @@
+## 0.3.3
+* Documentation
+
+## 0.3.2
+* Update to `carp_mobile_sensing` v. 0.3.7
+* Using the data types in the package (`activity`, `weather`, `location`)
+
 ## 0.3.1
 * Documentation
 

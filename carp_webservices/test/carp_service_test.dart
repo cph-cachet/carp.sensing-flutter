@@ -17,7 +17,7 @@ void main() {
   CarpApp app;
   Study study;
   int data_point_id;
-  ObjectSnapshot object;
+  DocumentSnapshot document;
 
   group("CARP Base Services", () {
     // Runs before all tests.
@@ -91,39 +91,39 @@ void main() {
     });
   });
 
-  group("Collections", () {
-    test(' - add object', () async {
-      // is not providing an object id, so this should create a new object
+  group("Documents & Collections", () {
+    test(' - add document', () async {
+      // is not providing an document id, so this should create a new document
       // if the collections (users) don't exist, it is created (according to David).
-      object = await CarpService.instance
+      document = await CarpService.instance
           .collection('/users')
-          .object()
+          .document()
           .setData({'email': username, 'name': 'Administrator'});
 
-      print(object);
-      assert(object.id.length > 0);
+      print(document);
+      assert(document.id.length > 0);
     });
 
-    test(' - update object', () async {
-      assert(object != null);
+    test(' - update document', () async {
+      assert(document != null);
       // updating the name
-      ObjectSnapshot updated_object = await CarpService.instance
+      DocumentSnapshot updated_document = await CarpService.instance
           .collection('/users')
-          .object(object.id)
+          .document(document.id)
           .updateData({'email': username, 'name': 'Super User'});
 
-      print(updated_object.toString());
-      print(updated_object.data["name"]);
-      assert(updated_object.id.length > 0);
-      assert(updated_object.data["name"] == 'Super User');
+      print(updated_document.toString());
+      print(updated_document.data["name"]);
+      assert(updated_document.id.length > 0);
+      assert(updated_document.data["name"] == 'Super User');
     });
 
-    test(' - get object', () async {
-      assert(object != null);
-      ObjectSnapshot new_object = await CarpService.instance.collection('/users').object(object.id).get();
+    test(' - get document', () async {
+      assert(document != null);
+      DocumentSnapshot new_document = await CarpService.instance.collection('/users').document(document.id).get();
 
-      print((new_object));
-      assert(new_object.id == object.id);
+      print((new_document));
+      assert(new_document.id == document.id);
     });
 
     test(' - list collections', () async {
@@ -132,32 +132,34 @@ void main() {
       root.forEach((ref) => print(ref));
     });
 
-    test(" - list objects in '/users' collection", () async {
-      List<ObjectSnapshot> objects = await CarpService.instance.collection("/users").objects;
-      objects.forEach((object) => print(object));
+    test(" - list documents in '/users' collection", () async {
+      List<DocumentSnapshot> documents = await CarpService.instance.collection("/users").documents;
+      documents.forEach((doc) => print(doc));
     });
 
-    test(' - list all objects', () async {
+    test(' - list all documents', () async {
+      List<DocumentSnapshot> documents;
+
       // List all collections in the root
       List<String> root = await CarpService.instance.collection("").collections;
       for (String ref in root) {
         print(ref);
-        // List all object in each collection
-        List<ObjectSnapshot> objects = await CarpService.instance.collection("/$ref").objects;
-        for (ObjectSnapshot object in objects) {
-          print(object);
+        // List all documents in each collection
+        documents = await CarpService.instance.collection("/$ref").documents;
+        for (DocumentSnapshot doc in documents) {
+          print(doc);
         }
       }
 
-      List<ObjectSnapshot> objects = await CarpService.instance.collection("/users").objects;
-      for (ObjectSnapshot object in objects) {
-        print(object);
+      documents = await CarpService.instance.collection("/users").documents;
+      for (DocumentSnapshot doc in documents) {
+        print(doc);
       }
     });
 
-    test(' - delete object', () async {
-      assert(object != null);
-      await CarpService.instance.collection('/users').object(object.id).delete();
+    test(' - delete document', () async {
+      assert(document != null);
+      await CarpService.instance.collection('/users').document(document.id).delete();
     });
   });
 

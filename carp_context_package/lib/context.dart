@@ -8,7 +8,6 @@ import 'dart:async';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:activity_recognition/activity_recognition.dart';
-import 'package:carp_mobile_sensing/core/core.dart';
 import 'package:location/location.dart';
 import 'package:weather/weather.dart';
 

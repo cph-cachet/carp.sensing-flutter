@@ -90,24 +90,24 @@ void main() async {
   // access an object
   //  - if the object id is not specified, a new object (with a new id) is created
   //  - if the collection (users) don't exist, it is created
-  ObjectSnapshot object =
-      await CarpService.instance.collection('/users').object().setData({'email': username, 'name': 'Administrator'});
+  DocumentSnapshot object =
+      await CarpService.instance.collection('/users').document().setData({'email': username, 'name': 'Administrator'});
 
   // update the object
-  ObjectSnapshot updated_object = await CarpService.instance
+  DocumentSnapshot updated_object = await CarpService.instance
       .collection('/users')
-      .object(object.id)
+      .document(object.id)
       .updateData({'email': username, 'name': 'Super User'});
 
   // get the object
-  ObjectSnapshot new_object = await CarpService.instance.collection('/users').object(object.id).get();
+  DocumentSnapshot new_object = await CarpService.instance.collection('/users').document(object.id).get();
 
   // delete the object
-  await CarpService.instance.collection('/users').object(object.id).delete();
+  await CarpService.instance.collection('/users').document(object.id).delete();
 
   // get all collections in the root
   List<String> root = await CarpService.instance.collection("").collections;
 
   // get all objects in a collection.
-  List<ObjectSnapshot> objects = await CarpService.instance.collection("/users").objects;
+  List<DocumentSnapshot> objects = await CarpService.instance.collection("/users").documents;
 }

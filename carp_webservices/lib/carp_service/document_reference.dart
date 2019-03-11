@@ -10,27 +10,49 @@ part of carp_services;
 ///
 /// The Collections endpoint allows you to store and query custom documents to
 /// suit your specific application's needs.
+///
+/// Note that the collection / document structure is like this:
+///
+/// `collection/document/collection/document/...`
+///
+/// I.e., that a collection holds a list of documents, which each can hold a list of collections, etc.
+/// For example, the following
+///
+/// `/collections/activities/running/geopositions/pos_1`
+///
+/// is a reference to the geoposition document `pos_1` in the collection `geopositions` in the document `running`
+/// in the collection `activities`.
 class CollectionReference extends CarpReference {
   String _path;
 
+  /// Creates a [CollectionReference] based on the path to the
+  /// collection, relative to the root of the web service.
+  ///
+  /// Note that [path] should be absolute and start with `/`.
+  /// For example; `/activities/running/geopositions`
   CollectionReference._(CarpService service, this._path)
       : assert(_path != null),
         assert(_path.startsWith('/') || _path.length == 0),
         super._(service);
 
-  /// Returns the path of this collection (relative to the root of the database).
-  /// Note that [path] should be absolute and start with `/`.
+  /// ID of the referenced collection.
+  int get id => ??;
+
+  /// Returns the path of this collection (relative to the root of the web service).
   String get path {
     return _path;
   }
 
-  /// The full CARP path to this collection.
+  /// The full CARP web service path to this collection.
   String get carpPath {
     return "/api/studies/${service.app.study.id}/collections$path";
   }
 
   /// The URL for the collection endpoint for this [CollectionReference].
   String get collectionUri => "${service.app.uri.toString()}$carpPath";
+
+
+  //TODO -- this has to be removed
 
   /// Fetch the list of collections (names) in this collection.
   ///
@@ -64,11 +86,14 @@ class CollectionReference extends CarpReference {
     }
   }
 
-  /// Get the objects in this collection.
-  Future<List<ObjectSnapshot>> get objects async {
+
+
+
+  /// Get the documents in this collection.
+  Future<List<DocumentSnapshot>> get documents async {
     final rest_headers = await headers;
 
-    // GET the list of objects in this collection from the CARP web service
+    // GET the list of documents in this collection from the CARP web service
     http.Response response = await http.get(Uri.encodeFull(collectionUri), headers: rest_headers);
     int httpStatusCode = response.statusCode;
 
@@ -76,13 +101,13 @@ class CollectionReference extends CarpReference {
       case 200:
         {
           List<dynamic> server_list = json.decode(response.body);
-          List<ObjectSnapshot> objects = new List<ObjectSnapshot>();
+          List<DocumentSnapshot> documents = new List<DocumentSnapshot>();
           for (var item in server_list) {
-            Map<String, dynamic> objectJson = item;
-            String key = objectJson["id"];
-            objects.add(ObjectSnapshot._("$path/$key", objectJson));
+            Map<String, dynamic> documentJson = item;
+            String key = documentJson["id"];
+            documents.add(DocumentSnapshot._("$path/$key", documentJson));
           }
-          return objects;
+          return documents;
         }
       default:
         // All other cases are treated as an error.
@@ -96,21 +121,21 @@ class CollectionReference extends CarpReference {
     }
   }
 
-  /// Returns a `ObjectReference` with the provided id in this collection.
+  /// Returns a [DocumentReference] with the provided id in this collection.
   ///
   /// If no [id] is provided, an auto-generated ID is used.
-  DocumentReference object([String id]) {
+  DocumentReference document([String id]) {
     return DocumentReference._(service, this, id);
   }
 
-  /// Add a data object to this collection.
+  /// Add a data document to this collection.
   ///
-  /// Returns a `ObjectReference` with an auto-generated ID, after
+  /// Returns a [DocumentReference] with an auto-generated ID, after
   /// populating it with provided [data].
   Future<DocumentReference> add(Map<String, dynamic> data) async {
-    final DocumentReference newObject = object();
-    await newObject.setData(data);
-    return newObject;
+    final DocumentReference newDocument = document();
+    await newDocument.setData(data);
+    return newDocument;
   }
 }
 
@@ -145,8 +170,8 @@ class DocumentReference extends CarpReference {
   ///
   /// If the object does not yet exist, it will be created.
   /// If the collection does not yet exist, it will be created.
-  /// Returns a [ObjectSnapshot] with the ID generated at the server side.
-  Future<ObjectSnapshot> setData(Map<String, dynamic> data) async {
+  /// Returns a [DocumentSnapshot] with the ID generated at the server side.
+  Future<DocumentSnapshot> setData(Map<String, dynamic> data) async {
     // Remember that the CARP collection service generated the ID and returns it in a POST.
 
     // If this object does not already exist on the server (i.e., have an ID), then create it
@@ -166,7 +191,7 @@ class DocumentReference extends CarpReference {
         case 200:
         case 201:
           {
-            return ObjectSnapshot._(carpPath, responseJson);
+            return DocumentSnapshot._(carpPath, responseJson);
           }
         default:
           // All other cases are treated as an error.
@@ -185,7 +210,7 @@ class DocumentReference extends CarpReference {
   /// Updates fields in the object referred to by this [DocumentReference].
   ///
   /// If no object exists yet, the update will fail.
-  Future<ObjectSnapshot> updateData(Map<String, dynamic> data) async {
+  Future<DocumentSnapshot> updateData(Map<String, dynamic> data) async {
     final rest_headers = await headers;
 
     http.Response response = await http.put(Uri.encodeFull(objectUri), headers: rest_headers, body: json.encode(data));
@@ -196,7 +221,7 @@ class DocumentReference extends CarpReference {
     switch (httpStatusCode) {
       case 200:
         {
-          return ObjectSnapshot._(carpPath, responseJson);
+          return DocumentSnapshot._(carpPath, responseJson);
         }
       default:
         {
@@ -208,10 +233,10 @@ class DocumentReference extends CarpReference {
     }
   }
 
-  /// Reads the object referenced by this [DocumentReference].
+  /// Reads the document referenced by this [DocumentReference].
   ///
   /// If no object exists, the read will return null.
-  Future<ObjectSnapshot> get() async {
+  Future<DocumentSnapshot> get() async {
     final rest_headers = await headers;
 
     http.Response response = await http.get(Uri.encodeFull(objectUri), headers: rest_headers);
@@ -221,7 +246,7 @@ class DocumentReference extends CarpReference {
       case 200:
         {
           Map<String, dynamic> responseJson = json.decode(response.body);
-          return ObjectSnapshot._(carpPath, responseJson);
+          return DocumentSnapshot._(carpPath, responseJson);
         }
       default:
         return null;
@@ -261,12 +286,12 @@ class DocumentReference extends CarpReference {
   }
 }
 
-/// A ObjectSnapshot contains data read from a collection in the CARP web service
+/// A [DocumentSnapshot] contains data read from a collection in the CARP web service
 ///
 /// The data can be extracted with the [data] property or by using subscript
 /// syntax to access a specific field.
-class ObjectSnapshot {
-  ObjectSnapshot._(this._path, this.data);
+class DocumentSnapshot {
+  DocumentSnapshot._(this._path, this.data);
 
   final String _path;
 

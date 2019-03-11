@@ -159,38 +159,31 @@
           "duration": 3600000
         },
         {
-          "c__": "Measure",
+          "c__": "AudioMeasure",
           "type": {
             "c__": "MeasureType",
             "namespace": "carp",
-            "name": "location"
+            "name": "audio"
           },
-          "name": "Location",
-          "enabled": true,
-          "configuration": {}
-        },
-        {
-          "c__": "Measure",
-          "type": {
-            "c__": "MeasureType",
-            "namespace": "carp",
-            "name": "activity"
-          },
-          "name": "Activity Recognition",
-          "enabled": true,
-          "configuration": {}
-        },
-        {
-          "c__": "WeatherMeasure",
-          "type": {
-            "c__": "MeasureType",
-            "namespace": "carp",
-            "name": "weather"
-          },
-          "name": "Local Weather",
+          "name": "Audio Recording",
           "enabled": true,
           "configuration": {},
-          "frequency": 3600000
+          "frequency": 60000,
+          "duration": 2000
+        },
+        {
+          "c__": "NoiseMeasure",
+          "type": {
+            "c__": "MeasureType",
+            "namespace": "carp",
+            "name": "noise"
+          },
+          "name": "Ambient Noise",
+          "enabled": true,
+          "configuration": {},
+          "frequency": 60000,
+          "duration": 2000,
+          "sampling_rate": 500
         }
       ]
     }
