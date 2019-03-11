@@ -101,41 +101,39 @@ await CarpService.instance.getDataPointReference().deleteDataPoint(data_point_id
 ````
 
 
-### Application-specific Collections and Objects
+### Application-specific Collections and Documents
 
 A [`CollectionReference`](https://pub.dartlang.org/documentation/carp_webservices/latest/carp_services/CollectionReference-class.html)
 is used to manage [collections](http://staging.carp.cachet.dk:8080/swagger-ui.html#/collection-controller) 
 on a CARP web service and have methods for:
 
-* creating, updating, and deleting objects
-* accessing objects in collections
+* creating, updating, and deleting documents
+* accessing documents in collections
 
 `````dart
-// access an object 
-//  - if the object id is not specified, a new object (with a new id) is created
-//  - if the collection (users) don't exist, it is created
-ObjectSnapshot object = await CarpService.instance
-    .collection('/users')
-    .object()
-    .setData({'email': username, 'name': 'Administrator'});
+  // access an document
+  //  - if the document id is not specified, a new document (with a new id) is created
+  //  - if the collection (users) don't exist, it is created
+  DocumentSnapshot document =
+      await CarpService.instance.collection('users').document().setData({'email': username, 'name': 'Administrator'});
 
-// update the object
-ObjectSnapshot updated_object = await CarpService.instance
-    .collection('/users')
-    .object(object.id)
-    .updateData({'email': username, 'name': 'Super User'});
+  // update the document
+  DocumentSnapshot updated_document = await CarpService.instance
+      .collection('/users')
+      .document(document.name)
+      .updateData({'email': username, 'name': 'Super User'});
 
-// get the object
-ObjectSnapshot new_object = await CarpService.instance.collection('/users').object(object.id).get();
+  // get the document
+  DocumentSnapshot new_document = await CarpService.instance.collection('users').document(document.name).get();
 
-// delete the object
-await CarpService.instance.collection('/users').object(object.id).delete();
+  // delete the document
+  await CarpService.instance.collection('users').document(document.name).delete();
 
-// get all collections in the root
-List<String> root = await CarpService.instance.collection("").collections;
+  // get all collections from a document
+  List<String> collections = new_document.collections;
 
-// get all objects in a collection.
-List<ObjectSnapshot> objects = await CarpService.instance.collection("/users").objects;
+  // get all documents in a collection.
+  List<DocumentSnapshot> documents = await CarpService.instance.collection("users").documents;
 `````
 
 

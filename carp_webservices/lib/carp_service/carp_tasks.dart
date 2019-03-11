@@ -22,7 +22,7 @@ abstract class CarpServiceTask {
   TaskStateType get state => _state;
 
   /// Start this task.
-  Future _start() {
+  void _start() {
     _state = TaskStateType.working;
   }
 
@@ -52,10 +52,10 @@ class FileUploadTask extends CarpServiceTask {
   Future<CarpFileResponse> _start() async {
     super._start();
     final String url = "${reference.fileEndpointUri}";
-    Map<String, String> rest_headers = await reference.headers;
+    Map<String, String> headers = await reference.headers;
 
     var request = new http.MultipartRequest("POST", Uri.parse(url));
-    request.headers['Authorization'] = rest_headers['Authorization'];
+    request.headers['Authorization'] = headers['Authorization'];
     request.headers['Content-Type'] = 'multipart/form-data';
     request.headers['cache-control'] = 'no-cache';
 
@@ -126,10 +126,10 @@ class FileDownloadTask extends CarpServiceTask {
   Future<int> _start() async {
     super._start();
     final String url = '${reference.fileEndpointUri}/${reference.id}/download';
-    Map<String, String> rest_headers = await reference.headers;
-    rest_headers['Content-Type'] = 'application/x-www-form-urlencoded';
+    Map<String, String> headers = await reference.headers;
+    headers['Content-Type'] = 'application/x-www-form-urlencoded';
 
-    http.get(Uri.encodeFull(url), headers: rest_headers).then((response) {
+    http.get(Uri.encodeFull(url), headers: headers).then((response) {
       final int httpStatusCode = response.statusCode;
 
       switch (httpStatusCode) {

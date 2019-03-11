@@ -1,4 +1,4 @@
-## 0.1.4
+## 0.2.0
 * upgrade and test on Flutter v. 1.3.4 Dart v. 2.2.1 
 * upgrading to the new CARP Web Service API for documents (instead of objects) and collections
 

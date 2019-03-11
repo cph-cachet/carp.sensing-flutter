@@ -73,7 +73,7 @@ void main() async {
   // create a CARP data point
   final CARPDataPoint data = CARPDataPoint.fromDatum(study.id, study.userId, datum);
   // post it to the CARP server, which returns the ID of the data point
-  String data_point_id = await CarpService.instance.getDataPointReference().postDataPoint(data);
+  int data_point_id = await CarpService.instance.getDataPointReference().postDataPoint(data);
 
   // get the data point back from the server
   CARPDataPoint data_point = await CarpService.instance.getDataPointReference().getDataPoint(data_point_id);
@@ -85,29 +85,29 @@ void main() async {
   // delete the data point
   await CarpService.instance.getDataPointReference().deleteDataPoint(data_point_id);
 
-  // ------------------- COLLECTIONS AND OBJECTS --------------------------------
+  // ------------------- COLLECTIONS AND DOCUMENTS --------------------------------
 
-  // access an object
-  //  - if the object id is not specified, a new object (with a new id) is created
+  // access an document
+  //  - if the document id is not specified, a new document (with a new id) is created
   //  - if the collection (users) don't exist, it is created
-  DocumentSnapshot object =
-      await CarpService.instance.collection('/users').document().setData({'email': username, 'name': 'Administrator'});
+  DocumentSnapshot document =
+      await CarpService.instance.collection('users').document().setData({'email': username, 'name': 'Administrator'});
 
-  // update the object
-  DocumentSnapshot updated_object = await CarpService.instance
+  // update the document
+  DocumentSnapshot updated_document = await CarpService.instance
       .collection('/users')
-      .document(object.id)
+      .document(document.name)
       .updateData({'email': username, 'name': 'Super User'});
 
-  // get the object
-  DocumentSnapshot new_object = await CarpService.instance.collection('/users').document(object.id).get();
+  // get the document
+  DocumentSnapshot new_document = await CarpService.instance.collection('users').document(document.name).get();
 
-  // delete the object
-  await CarpService.instance.collection('/users').document(object.id).delete();
+  // delete the document
+  await CarpService.instance.collection('users').document(document.name).delete();
 
-  // get all collections in the root
-  List<String> root = await CarpService.instance.collection("").collections;
+  // get all collections from a document
+  List<String> collections = new_document.collections;
 
-  // get all objects in a collection.
-  List<DocumentSnapshot> objects = await CarpService.instance.collection("/users").documents;
+  // get all documents in a collection.
+  List<DocumentSnapshot> documents = await CarpService.instance.collection("users").documents;
 }

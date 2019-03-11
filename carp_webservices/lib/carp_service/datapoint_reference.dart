@@ -20,10 +20,10 @@ class DataPointReference extends CarpReference {
   ///
   /// Returns the server-generated ID for this data point.
   Future<int> postDataPoint(CARPDataPoint data) async {
-    final String url = "${dataEndpointUri}";
-    final rest_headers = await headers;
+    final String url = "$dataEndpointUri";
+    final restHeaders = await headers;
 
-    http.Response response = await http.post(Uri.encodeFull(url), headers: rest_headers, body: json.encode(data));
+    http.Response response = await http.post(Uri.encodeFull(url), headers: restHeaders, body: json.encode(data));
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJSON = json.decode(response.body);
@@ -56,11 +56,11 @@ class DataPointReference extends CarpReference {
   /// Returns if successful. Throws an [CarpServiceException] if not.
   Future<void> batchPostDataPoint(File file) async {
     assert(file != null);
-    final String url = "${dataEndpointUri}/batch";
-    final rest_headers = await headers;
+    final String url = "$dataEndpointUri/batch";
+    final restHeaders = await headers;
 
     var request = new http.MultipartRequest("POST", Uri.parse(url));
-    request.headers['Authorization'] = rest_headers['Authorization'];
+    request.headers['Authorization'] = restHeaders['Authorization'];
     request.headers['Content-Type'] = 'multipart/form-data';
     request.headers['cache-control'] = 'no-cache';
 
@@ -93,11 +93,11 @@ class DataPointReference extends CarpReference {
 
   /// Get a [CARPDataPoint] from the CARP backend using HTTP GET
   Future<CARPDataPoint> getDataPoint(int id) async {
-    String url = "${dataEndpointUri}/$id";
-    final rest_headers = await headers;
+    String url = "$dataEndpointUri/$id";
+    final restHeaders = await headers;
 
     // GET the data point from the CARP web service
-    http.Response response = await http.get(Uri.encodeFull(url), headers: rest_headers);
+    http.Response response = await http.get(Uri.encodeFull(url), headers: restHeaders);
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJSON = json.decode(response.body);
@@ -121,11 +121,11 @@ class DataPointReference extends CarpReference {
 
   /// Delete a [CARPDataPoint] from the CARP backend using HTTP DELETE
   Future<void> deleteDataPoint(int id) async {
-    String url = "${dataEndpointUri}/$id";
-    final rest_headers = await headers;
+    String url = "$dataEndpointUri/$id";
+    final restHeaders = await headers;
 
     // DELETE the data point
-    http.Response response = await http.delete(Uri.encodeFull(url), headers: rest_headers);
+    http.Response response = await http.delete(Uri.encodeFull(url), headers: restHeaders);
 
     int httpStatusCode = response.statusCode;
     switch (httpStatusCode) {

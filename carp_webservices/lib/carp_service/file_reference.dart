@@ -44,10 +44,10 @@ class FileStorageReference extends CarpReference {
   /// Get the file object at the server for this [FileStorageReference].
   Future<CarpFileResponse> get() async {
     assert(id > 0);
-    final String url = "${fileEndpointUri}/$id";
-    final rest_headers = await headers;
+    final String url = "$fileEndpointUri/$id";
+    final restHeaders = await headers;
 
-    http.Response response = await http.get(Uri.encodeFull(url), headers: rest_headers);
+    http.Response response = await http.get(Uri.encodeFull(url), headers: restHeaders);
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> map = json.decode(response.body);
 
@@ -69,21 +69,21 @@ class FileStorageReference extends CarpReference {
 
   /// Get all file objects for the [Study] in this [FileStorageReference].
   Future<List<CarpFileResponse>> getAll() async {
-    final String url = "${fileEndpointUri}";
-    final rest_headers = await headers;
+    final String url = "$fileEndpointUri";
+    final restHeaders = await headers;
 
-    http.Response response = await http.get(Uri.encodeFull(url), headers: rest_headers);
+    http.Response response = await http.get(Uri.encodeFull(url), headers: restHeaders);
     int httpStatusCode = response.statusCode;
     List<dynamic> list = json.decode(response.body);
 
     switch (httpStatusCode) {
       case 200:
         {
-          List<CarpFileResponse> file_list = new List<CarpFileResponse>();
+          List<CarpFileResponse> fileList = new List<CarpFileResponse>();
           list.forEach((element) {
-            file_list.add(CarpFileResponse._(this, element));
+            fileList.add(CarpFileResponse._(this, element));
           });
-          return file_list;
+          return fileList;
         }
       default:
         // All other cases are treated as an error.
@@ -100,10 +100,10 @@ class FileStorageReference extends CarpReference {
   /// Deletes the file at this [FileStorageReference].
   Future<int> delete() async {
     assert(id > 0);
-    final String url = "${fileEndpointUri}/$id";
-    final rest_headers = await headers;
+    final String url = "$fileEndpointUri/$id";
+    final restHeaders = await headers;
 
-    http.Response response = await http.delete(Uri.encodeFull(url), headers: rest_headers);
+    http.Response response = await http.delete(Uri.encodeFull(url), headers: restHeaders);
     int httpStatusCode = response.statusCode;
 
     switch (httpStatusCode) {
