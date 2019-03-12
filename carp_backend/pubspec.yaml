@@ -26,6 +26,7 @@ dev_dependencies:
     sdk: flutter
   build_runner:       # used to build JSON serialization .g files
   json_serializable: ^1.0.0
+  test:
 
 # The following section is specific to Flutter.
 flutter:
