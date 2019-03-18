@@ -141,7 +141,12 @@ class DocumentReference extends CarpReference {
   String get path => _path;
 
   /// The full CARP web service path to this document.
-  String get carpPath => "/api/studies/${service.app.study.id}/collections/$path";
+  ///
+  /// If the id of this document is known, use the `documents` CARP endpoint,
+  /// otherwise use the `collections` endpoint.
+  String get carpPath => (_id != null)
+      ? "/api/studies/${service.app.study.id}/documents/$id"
+      : "/api/studies/${service.app.study.id}/collections/$path";
 
   /// The full URI for the document endpoint for this document.
   String get documentUri => "${service.app.uri.toString()}$carpPath";
@@ -323,9 +328,6 @@ class DocumentSnapshot {
 
   /// The timestamp of latest update of this document
   String get updatedAt => _snapshot['updatedAt'];
-
-  /// The reference that produced this document
-  //DocumentReference get reference => _firestore.document(_path);
 
   List<String> get collections {
     List<String> collections = new List<String>();

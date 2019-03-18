@@ -146,3 +146,5 @@ class DataPointReference extends CarpReference {
     }
   }
 }
+
+String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);

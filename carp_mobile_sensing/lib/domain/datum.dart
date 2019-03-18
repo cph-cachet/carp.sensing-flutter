@@ -48,6 +48,7 @@ class StringDatum extends CARPDatum {
   static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.STRING);
   DataFormat get format => CARP_DATA_FORMAT;
 
+  /// The string data for this Datum.
   String str;
 
   StringDatum({this.str}) : super();

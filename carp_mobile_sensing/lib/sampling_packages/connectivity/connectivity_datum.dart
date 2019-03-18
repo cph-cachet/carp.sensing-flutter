@@ -44,7 +44,7 @@ class ConnectivityDatum extends CARPDatum {
   String toString() => 'Connectivity Status - $connectivityStatus';
 }
 
-/// A [Datum] that holds information on nearby Bluetoth devices.
+/// A [Datum] that holds information on nearby Bluetooth devices.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class BluetoothDatum extends CARPDatum {
   static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.BLUETOOTH);

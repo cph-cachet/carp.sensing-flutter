@@ -162,19 +162,17 @@ Map<String, dynamic> _$SequentialTaskToJson(SequentialTask instance) {
   return val;
 }
 
-CARPDataPoint _$CARPDataPointFromJson(Map<String, dynamic> json) {
-  return CARPDataPoint(
-      json['carp_header'] == null
+DataPoint _$DataPointFromJson(Map<String, dynamic> json) {
+  return DataPoint(
+      json['header'] == null
           ? null
-          : CARPDataPointHeader.fromJson(
-              json['carp_header'] as Map<String, dynamic>),
-      json['carp_body'] == null
+          : DataPointHeader.fromJson(json['header'] as Map<String, dynamic>),
+      json['body'] == null
           ? null
-          : Datum.fromJson(json['carp_body'] as Map<String, dynamic>))
-    ..id = json['id'] as int;
+          : Datum.fromJson(json['body'] as Map<String, dynamic>));
 }
 
-Map<String, dynamic> _$CARPDataPointToJson(CARPDataPoint instance) {
+Map<String, dynamic> _$DataPointToJson(DataPoint instance) {
   var val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -183,17 +181,13 @@ Map<String, dynamic> _$CARPDataPointToJson(CARPDataPoint instance) {
     }
   }
 
-  writeNotNull('id', instance.id);
-  writeNotNull('carp_header', instance.carpHeader);
-  writeNotNull('carp_body', instance.carpBody);
+  writeNotNull('header', instance.header);
+  writeNotNull('body', instance.body);
   return val;
 }
 
-CARPDataPointHeader _$CARPDataPointHeaderFromJson(Map<String, dynamic> json) {
-  return CARPDataPointHeader(
-      json['study_id'] as String, json['user_id'] as String,
-      deviceRoleName: json['device_role_name'] as String,
-      triggerId: json['trigger_id'] as String,
+DataPointHeader _$DataPointHeaderFromJson(Map<String, dynamic> json) {
+  return DataPointHeader(json['study_id'] as String, json['user_id'] as String,
       startTime: json['start_time'] == null
           ? null
           : DateTime.parse(json['start_time'] as String),
@@ -208,7 +202,7 @@ CARPDataPointHeader _$CARPDataPointHeaderFromJson(Map<String, dynamic> json) {
         : DataFormat.fromJson(json['data_format'] as Map<String, dynamic>);
 }
 
-Map<String, dynamic> _$CARPDataPointHeaderToJson(CARPDataPointHeader instance) {
+Map<String, dynamic> _$DataPointHeaderToJson(DataPointHeader instance) {
   var val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -218,8 +212,6 @@ Map<String, dynamic> _$CARPDataPointHeaderToJson(CARPDataPointHeader instance) {
   }
 
   writeNotNull('study_id', instance.studyId);
-  writeNotNull('device_role_name', instance.deviceRoleName);
-  writeNotNull('trigger_id', instance.triggerId);
   writeNotNull('user_id', instance.userId);
   writeNotNull('upload_time', instance.uploadTime?.toIso8601String());
   writeNotNull('start_time', instance.startTime?.toIso8601String());

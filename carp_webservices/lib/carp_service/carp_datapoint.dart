@@ -5,9 +5,9 @@
  * found in the LICENSE file.
  */
 
-part of domain;
+part of carp_services;
 
-/// A CARP Data Point which can be uploaded to a CARP data endpoint.
+/// A CARP Data Point which can be up/downloaded to/from the CARP Web Services API.
 ///
 /// See https://github.com/cph-cachet/carp.webservices
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
@@ -16,21 +16,44 @@ class CARPDataPoint {
   /// [null] if this data point is not yet stored in the CARP server.
   int id;
 
+  /// The unique study id that this data point belongs to.
+  int studyId;
+
+  /// The unique id of the user who created / uploaded this data point.
+  ///
+  /// This user id is the server-side generated user id (an integer), and *not*
+  /// the user login-id (a string, typically the email).
+  /// This user id may, or may not, be identical to the id of the user who this data point belongs to,
+  /// as specified in the [CARPDataPointHeader].
+  int createdByUserId;
+
   /// The CARP data point header.
   CARPDataPointHeader carpHeader;
 
-  /// The CARP data point body. Can be any payload modelled as a [Datum].
-  Datum carpBody;
+  /// The CARP data point body. Can be any JSON payload.
+  Map<String, dynamic> carpBody;
 
   CARPDataPoint(this.carpHeader, this.carpBody);
 
+  /// Create a [CARPDataPoint] based on a [DataPoint] generated in the CARP Mobile Sensing Framework.
+  CARPDataPoint.fromDataPoint(DataPoint dataPoint) {
+    CARPDataPointHeader header = new CARPDataPointHeader(dataPoint.header.studyId, dataPoint.header.userId);
+    header.startTime =
+        (dataPoint.body is CARPDatum) ? (dataPoint.body as CARPDatum).timestamp.toUtc() : new DateTime.now().toUtc();
+    header.dataFormat = dataPoint.header.dataFormat;
+
+    this.carpHeader = header;
+    this.carpBody = dataPoint.body.toJson();
+  }
+
+  /// Create a [CARPDataPoint] based on a [CARPDatum] generated in the CARP Mobile Sensing Framework.
   CARPDataPoint.fromDatum(String studyId, String userId, CARPDatum datum) {
     CARPDataPointHeader header = new CARPDataPointHeader(studyId, userId);
     header.startTime = (datum is CARPDatum) ? datum.timestamp.toUtc() : new DateTime.now().toUtc();
     header.dataFormat = datum.format;
 
     this.carpHeader = header;
-    this.carpBody = datum;
+    this.carpBody = datum.toJson();
   }
 
   factory CARPDataPoint.fromJson(Map<String, dynamic> json) => _$CARPDataPointFromJson(json);

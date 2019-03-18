@@ -102,6 +102,9 @@ void main() async {
   // get the document
   DocumentSnapshot new_document = await CarpService.instance.collection('users').document(document.name).get();
 
+  // get the document by its unique ID
+  new_document = await CarpService.instance.documentById(document.id).get();
+
   // delete the document
   await CarpService.instance.collection('users').document(document.name).delete();
 

@@ -15,7 +15,6 @@ part of context;
 /// Collects location information from the underlying OS's location API.
 /// Is a [StreamProbe] that generates a [LocationDatum] every time location is changed.
 class LocationProbe extends StreamProbe {
-  //LocationProbe(Measure measure) : super(measure, locationStream);
   LocationProbe() : super(_locationStream);
 }
 

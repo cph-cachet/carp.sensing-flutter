@@ -1,5 +1,7 @@
-## 0.3.8
-* update of `CARPDataPoint`
+## 0.3.8+9
+* update and rename of `CARPDataPoint` to `DataPoint` to reflect new CARP API.
+* moved CARP web service specific data model to `CARPDataPoint` to the `carp_webservices` package.
+
 
 ## 0.3.5+6+7
 * rename of `packages` folder to `sampling_packages` (seems like Dart Pub don't like folders called `packages`)

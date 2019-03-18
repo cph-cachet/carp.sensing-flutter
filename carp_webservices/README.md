@@ -123,8 +123,11 @@ on a CARP web service and have methods for:
       .document(document.name)
       .updateData({'email': username, 'name': 'Super User'});
 
-  // get the document
+  // get the document by its path in collection(s).
   DocumentSnapshot new_document = await CarpService.instance.collection('users').document(document.name).get();
+
+  // get the document by its unique ID
+  new_document = await CarpService.instance.documentById(document.id).get();
 
   // delete the document
   await CarpService.instance.collection('users').document(document.name).delete();

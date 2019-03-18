@@ -48,7 +48,7 @@ class CarpDataEndPoint extends FileDataEndPoint {
   /// TODO : right now in clear text -- not so good.
   String password;
 
-  /// When uploading to the CARP using the [CarpUploadMethod.OBJECT] method,
+  /// When uploading to the CARP using the [CarpUploadMethod.DOCUMENT] method,
   /// [collection] hold the name of the collection to store json objects.
   String collection = DEFAULT_COLLECTION;
 
@@ -85,5 +85,5 @@ class CarpUploadMethod {
   static const String DATA_POINT = "data-point";
   static const String BATCH_DATA_POINT = "batch-data-point";
   static const String FILE = "file";
-  static const String OBJECT = "object";
+  static const String DOCUMENT = "document";
 }

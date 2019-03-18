@@ -120,7 +120,7 @@ class FileDataManager extends AbstractDataManager {
       return Future.delayed(const Duration(seconds: 1), () => uploadData(data));
     }
 
-    CARPDataPoint _header = new CARPDataPoint.fromDatum(study.id, study.userId, data);
+    DataPoint _header = new DataPoint.fromDatum(study.id, study.userId, data);
     final json = jsonEncode(_header);
 
     sink.then((_s) {

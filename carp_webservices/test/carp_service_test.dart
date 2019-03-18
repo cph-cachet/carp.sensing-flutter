@@ -17,7 +17,9 @@ void main() {
   CarpApp app;
   Study study;
   int dataPointId;
+  BluetoothDatum datum;
   DocumentSnapshot document;
+  int documentId;
 
   group("CARP Base Services", () {
     // Runs before all tests.
@@ -53,7 +55,7 @@ void main() {
   group("Datapoints", () {
     test('- post', () async {
       // Create a test bluetooth datum
-      BluetoothDatum datum = BluetoothDatum()
+      datum = BluetoothDatum()
         ..bluetoothDeviceId = "weg"
         ..bluetoothDeviceName = "ksjbdf"
         ..connectable = true
@@ -79,10 +81,12 @@ void main() {
     });
 
     test('- get', () async {
+      print("GET data_point_id : $dataPointId");
       CARPDataPoint data = await CarpService.instance.getDataPointReference().getDataPoint(dataPointId);
 
       print(_encode(data.toJson()));
       assert(data.id == dataPointId);
+      assert(data.carpBody['rssi'] == datum.rssi);
     });
 
     test('- delete', () async {
@@ -101,6 +105,7 @@ void main() {
 
       print(document);
       assert(document.id > 0);
+      documentId = document.id;
     });
 
     test(' - update document', () async {
@@ -117,12 +122,21 @@ void main() {
       assert(updatedDocument.data["name"] == 'Super User');
     });
 
-    test(' - get document', () async {
+    test(' - get document by path', () async {
       assert(document != null);
       DocumentSnapshot newDocument = await CarpService.instance.collection('users').document(document.name).get();
 
       print((newDocument));
       assert(newDocument.id == document.id);
+    });
+
+    test(' - get document by id', () async {
+      assert(document != null);
+      DocumentSnapshot newDocument = await CarpService.instance.documentById(documentId).get();
+
+      print((newDocument));
+      assert(newDocument.id == document.id);
+      assert(newDocument.id == documentId);
     });
 
     test(' - get nested document', () async {

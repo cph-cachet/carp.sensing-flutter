@@ -7,12 +7,12 @@
 
 part of carp_backend;
 
-/// Stores CARP json objects in the CARP backend.
+/// Stores CARP json data points in the CARP backend.
 ///
-///
-/// Every time a CARP json data object is created, it is uploaded to Firebase.
+/// Every time a CARP json data object is created, it is uploaded to CARP.
 /// Hence, this interface only works when the device is online.
-/// If offline data storage and forward is needed, use the [FirebaseStorageDataManager] instead.
+/// If offline data storage and forward is needed, use the [CarpUploadMethod.FILE]
+/// or [CarpUploadMethod.BATCH_DATA_POINT] instead. These methods will buffer files for upload, if offline.
 class CarpDataManager extends AbstractDataManager implements FileDataManagerListener {
   bool _initialized = false;
   CarpDataEndPoint carpEndPoint;
@@ -84,12 +84,12 @@ class CarpDataManager extends AbstractDataManager implements FileDataManagerList
               null);
         case CarpUploadMethod.BATCH_DATA_POINT:
         case CarpUploadMethod.FILE:
-          // Forward to [FileDataManager]
+          // In both cases, forward to [FileDataManager], which collects data in a file before upload.
           return fileDataManager.uploadData(data);
-        case CarpUploadMethod.OBJECT:
+        case CarpUploadMethod.DOCUMENT:
           return (await CarpService.instance
                   .collection('/${carpEndPoint.collection}')
-                  .object()
+                  .document()
                   .setData(json.decode(json.encode(data))) !=
               null);
       }
@@ -98,7 +98,7 @@ class CarpDataManager extends AbstractDataManager implements FileDataManagerList
     return false;
   }
 
-  /// Called by the [FileDataManager]
+  /// Callback from the [FileDataManager]
   Future notify(FileDataManagerEvent event) async {
     switch (event.event) {
       case FileEvent.created:
@@ -109,6 +109,7 @@ class CarpDataManager extends AbstractDataManager implements FileDataManagerList
     }
   }
 
+  //TODO - implement support for offline store-and-wait for later upload when online.
   Future<void> _uploadFileToCarp(String path) async {
     print("File upload to CARP started - path : '$path'");
     final File file = File(path);

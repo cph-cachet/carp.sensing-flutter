@@ -68,8 +68,20 @@ void main() {
   });
 
   test('Data point -> JSON', () async {
-    var dp = CARPDataPoint.fromDatum(
+    var dp = DataPoint.fromDatum(
         study.id, study.userId, MapDatum(map: {'latitude': '12.23423452345', 'longitude': '3.82375823475'}));
     print(_encode(dp));
+
+    BluetoothDatum datum = BluetoothDatum()
+      ..bluetoothDeviceId = "weg"
+      ..bluetoothDeviceName = "ksjbdf"
+      ..connectable = true
+      ..txPowerLevel = 314
+      ..rssi = 567
+      ..bluetoothDeviceType = "classic";
+
+    final DataPoint data = DataPoint.fromDatum(study.id, study.userId, datum);
+
+    print(_encode(data.toJson()));
   });
 }
