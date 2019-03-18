@@ -56,36 +56,44 @@ class AudioProbe extends BufferingPeriodicProbe {
   }
 
   void onSamplingStart() {
-    _startAudioRecording();
+    try {
+      _startAudioRecording();
+    } catch (err) {
+      controller.addError(err);
+    }
   }
 
   void onSamplingEnd() {
-    _stopAudioRecording();
+    _stopAudioRecording().catchError((err) => controller.addError(err));
   }
 
   void _startAudioRecording() async {
     if (_isRecording) return;
-    try {
-      soundFileName = await filePath;
-      _startRecordingTime = DateTime.now();
-      await _flutterSound.startRecorder(soundFileName);
-      _isRecording = true;
-    } catch (err) {
-      controller.addError(err);
-    }
+    soundFileName = await filePath;
+    _startRecordingTime = DateTime.now();
+    await _flutterSound.startRecorder(soundFileName);
+    _isRecording = true;
   }
 
-  Future<String> _stopAudioRecording() async {
-    try {
-      String result = await _flutterSound.stopRecorder();
+  Future<String> _stopAudioRecording() {
+    return Future.sync(() {
       _endRecordingTime = DateTime.now();
       _isRecording = false;
-      return result;
-    } catch (err) {
-      controller.addError(err);
-      return err;
-    }
+      return _flutterSound.stopRecorder();
+    });
   }
+
+//  Future<String> _stopAudioRecording() async {
+//    try {
+//      String result = await _flutterSound.stopRecorder();
+//      _endRecordingTime = DateTime.now();
+//      _isRecording = false;
+//      return result;
+//    } catch (err) {
+//      controller.addError(err);
+//      return err;
+//    }
+//  }
 
   Future<Datum> getDatum() async {
     try {
@@ -93,9 +101,7 @@ class AudioProbe extends BufferingPeriodicProbe {
       if (result != null) {
         String filename = soundFileName.split("/").last;
         return AudioDatum(
-            filename: filename,
-            startRecordingTime: _startRecordingTime,
-            endRecordingTime: _endRecordingTime);
+            filename: filename, startRecordingTime: _startRecordingTime, endRecordingTime: _endRecordingTime);
       } else {
         return ErrorDatum(message: "No sound recording available");
       }
@@ -111,9 +117,9 @@ class AudioProbe extends BufferingPeriodicProbe {
       // get local working directory
       final localApplicationDir = await getApplicationDocumentsDirectory();
       // create a sub-directory for sound files
-      final directory = await Directory(
-              '${localApplicationDir.path}/${FileDataManager.CARP_FILE_PATH}/$studyId/$AUDIO_FILE_PATH')
-          .create(recursive: true);
+      final directory =
+          await Directory('${localApplicationDir.path}/${FileDataManager.CARP_FILE_PATH}/$studyId/$AUDIO_FILE_PATH')
+              .create(recursive: true);
 
       _path = directory.path;
     }
@@ -124,12 +130,8 @@ class AudioProbe extends BufferingPeriodicProbe {
   /// The filename format is "audio-yyyy-mm-dd-hh-mm-ss-ms.m4a".
   Future<String> get filePath async {
     String dir = await path;
-    String created = DateTime.now()
-        .toString()
-        .replaceAll(" ", "-")
-        .replaceAll(":", "-")
-        .replaceAll("_", "-")
-        .replaceAll(".", "-");
+    String created =
+        DateTime.now().toString().replaceAll(" ", "-").replaceAll(":", "-").replaceAll("_", "-").replaceAll(".", "-");
     return "$dir/audio-$created.m4a";
   }
 }
