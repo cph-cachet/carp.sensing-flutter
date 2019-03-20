@@ -4,8 +4,6 @@ part of context;
 class WeatherProbe extends PeriodicDatumProbe {
   WeatherStation _weather;
 
-  WeatherProbe() : super();
-
   void onInitialize(Measure measure) {
     super.onInitialize(measure);
     _weather = WeatherStation((measure as WeatherMeasure).apiKey);

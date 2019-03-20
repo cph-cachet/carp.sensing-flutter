@@ -1,3 +1,7 @@
+## 0.3.10
+* minor change to the `StreamProbe` API - now non-static streams can be used by implementing the `get stream` method.
+* update of the relevant sampling packages using `StreamProbe`
+
 ## 0.3.8+9
 * update and rename of `CARPDataPoint` to `DataPoint` to reflect new CARP API.
 * moved CARP web service specific data model to `CARPDataPoint` to the `carp_webservices` package.

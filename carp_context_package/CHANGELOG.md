@@ -1,3 +1,6 @@
+## 0.3.4
+* update to `carp_mobile_sensing` version 0.3.10
+
 ## 0.3.3
 * Documentation
 

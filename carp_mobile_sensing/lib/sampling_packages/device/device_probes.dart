@@ -10,34 +10,32 @@ part of device;
 /// The [BatteryProbe] listens to the hardware battery and collect a [BatteryDatum]
 /// every time the battery state changes. For example, battery level or charging mode.
 class BatteryProbe extends StreamProbe {
-  BatteryProbe() : super(batteryStream);
-}
+  Stream<Datum> get stream {
+    Battery battery = new Battery();
+    StreamController<Datum> controller;
+    StreamSubscription<BatteryState> subscription;
 
-Stream<Datum> get batteryStream {
-  Battery battery = new Battery();
-  StreamController<Datum> controller;
-  StreamSubscription<BatteryState> subscription;
-
-  void onData(state) async {
-    try {
-      int level = await battery.batteryLevel;
-      Datum datum = BatteryDatum.fromBatteryState(level, state);
-      controller.add(datum);
-    } catch (error) {
-      controller.addError(error);
+    void onData(state) async {
+      try {
+        int level = await battery.batteryLevel;
+        Datum datum = BatteryDatum.fromBatteryState(level, state);
+        controller.add(datum);
+      } catch (error) {
+        controller.addError(error);
+      }
     }
+
+    controller = StreamController<Datum>(
+        onListen: () => subscription.resume(),
+        onPause: () => subscription.pause(),
+        onResume: () => subscription.resume(),
+        onCancel: () => subscription.cancel());
+
+    subscription = battery.onBatteryStateChanged
+        .listen(onData, onError: (error) => controller.addError(error), onDone: () => controller.close());
+
+    return controller.stream;
   }
-
-  controller = StreamController<Datum>(
-      onListen: () => subscription.resume(),
-      onPause: () => subscription.pause(),
-      onResume: () => subscription.resume(),
-      onCancel: () => subscription.cancel());
-
-  subscription = battery.onBatteryStateChanged
-      .listen(onData, onError: (error) => controller.addError(error), onDone: () => controller.close());
-
-  return controller.stream;
 }
 
 // Old stream implementation below. Did NOT comply to pause/resume/cancels events.
@@ -57,16 +55,14 @@ Stream<Datum> get batteryStream {
 ///  - SCREEN UNLOCK
 /// which are stored as a [ScreenDatum].
 class ScreenProbe extends StreamProbe {
-  ScreenProbe() : super(screenStream);
-}
+  ScreenProbe() : super();
 
-Stream<Datum> get screenStream => Screen().screenStateStream.map((event) => ScreenDatum.fromScreenStateEvent(event));
+  Stream<Datum> get stream => Screen().screenStateStream.map((event) => ScreenDatum.fromScreenStateEvent(event));
+}
 
 /// A probe that collects free virtual memory on a regular basis
 /// as specified in [PeriodicMeasure.frequency].
 class MemoryProbe extends PeriodicDatumProbe {
-  MemoryProbe() : super();
-
   Future<Datum> getDatum() async {
     return FreeMemoryDatum()
       ..freePhysicalMemory = SysInfo.getFreePhysicalMemory()
@@ -77,8 +73,6 @@ class MemoryProbe extends PeriodicDatumProbe {
 /// A probe that collects the device info about this device.
 /// Only collects this information once when the [getDatum] method is called.
 class DeviceProbe extends DatumProbe {
-  DeviceProbe() : super();
-
   Future<Datum> getDatum() async {
     return DeviceDatum(Device.platform, Device.deviceID,
         deviceName: Device.deviceName,

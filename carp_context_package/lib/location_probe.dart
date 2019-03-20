@@ -15,8 +15,5 @@ part of context;
 /// Collects location information from the underlying OS's location API.
 /// Is a [StreamProbe] that generates a [LocationDatum] every time location is changed.
 class LocationProbe extends StreamProbe {
-  LocationProbe() : super(_locationStream);
+  Stream<LocationDatum> get stream => Location().onLocationChanged().map((event) => LocationDatum.fromMap(event));
 }
-
-Stream<LocationDatum> get _locationStream =>
-    Location().onLocationChanged().map((event) => LocationDatum.fromMap(event));

@@ -18,6 +18,9 @@ abstract class Executor extends AbstractProbe {
   //Executor() : super(Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR)));
   Executor() : super();
 
+  // Do nothing
+  void onInitialize(Measure measure) {}
+
   void onPause() async {
     executors.forEach((executor) => executor.pause());
   }

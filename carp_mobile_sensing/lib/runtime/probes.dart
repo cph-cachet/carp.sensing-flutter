@@ -152,10 +152,13 @@ abstract class AbstractProbe with MeasureListener implements Probe {
   void restart() => _stateMachine.restart();
   void pause() => _stateMachine.pause();
   void resume() => _stateMachine.resume();
-  void stop() => _stateMachine.stop();
+  void stop() {
+    _stateMachine.stop();
+    _stateEventController.close();
+  }
 
   /// Callback for initialization of probe
-  void onInitialize(Measure measure) {}
+  void onInitialize(Measure measure);
 
   /// Callback for starting probe
   void onStart();
@@ -170,9 +173,7 @@ abstract class AbstractProbe with MeasureListener implements Probe {
   void onRestart();
 
   /// Callback for stopping probe
-  void onStop() {
-    _stateEventController.close();
-  }
+  void onStop();
 
   /// Callback when this probe's [measure] has changed.
   void hasChanged(Measure measure) {
@@ -328,11 +329,11 @@ class _StoppedState extends _AbstractProbeState implements _ProbeStateMachine {
 ///
 /// The [Datum] to be collected is implemented in the [getDatum] method.
 abstract class DatumProbe extends AbstractProbe {
-  DatumProbe() : super();
-
   //Stream<Datum> get events => Stream.fromFuture(getDatum());
   StreamController<Datum> _events = StreamController<Datum>();
   Stream<Datum> get events => _events.stream;
+
+  void onInitialize(Measure measure) {}
 
   void onStart() {
     _events.addStream(Stream.fromFuture(getDatum()));
@@ -341,6 +342,7 @@ abstract class DatumProbe extends AbstractProbe {
   void onRestart() {}
   void onResume() {}
   void onPause() {}
+  void onStop() {}
 
   /// Subclasses should implement this method to collect a [Datum].
   Future<Datum> getDatum();
@@ -354,13 +356,6 @@ abstract class PeriodicDatumProbe extends DatumProbe {
   Timer timer;
   StreamController<Datum> controller = StreamController<Datum>.broadcast();
   Duration frequency, duration;
-
-//  PeriodicDatumProbe(PeriodicMeasure measure) : super(measure) {
-//    frequency = Duration(milliseconds: measure.frequency);
-//    duration = (measure.duration != null) ? Duration(milliseconds: measure.duration) : null;
-//  }
-
-  PeriodicDatumProbe() : super();
 
   Stream<Datum> get events => controller.stream;
 
@@ -401,34 +396,32 @@ abstract class PeriodicDatumProbe extends DatumProbe {
   void onStop() {
     if (timer != null) timer.cancel();
     controller.close();
-    super.onStop();
   }
 }
 
 /// An abstract class used to create a probe that listen to events from a [Stream].
 ///
-/// Subclasses should implement the [get stream] method.
-/// See [LocationProbe] for an example.
+/// Sub-classes must implement the
+///
+///     Stream<Datum> get stream => ...
+///
+/// method in order to provide the stream to collect data from.
+/// See [BluetoothProbe] for an (simple) example or [BatteryProbe] for a more
+/// sophisticated example.
 abstract class StreamProbe extends AbstractProbe {
-  Stream<Datum> _stream;
   StreamSubscription<dynamic> subscription;
   StreamController<Datum> controller = StreamController<Datum>.broadcast();
   Stream<Datum> get events => controller.stream;
 
-  /// Creates a [StreamProbe] handling the [stream].
-//  StreamProbe(Measure measure, Stream<Datum> stream)
-//      : assert(stream != null, 'Stream cannot be null in a StreamProbe'),
-//        super(measure) {
-//    this._stream = stream;
-//  }
-  StreamProbe(Stream<Datum> stream)
-      : assert(stream != null, 'Stream cannot be null in a StreamProbe'),
-        super() {
-    this._stream = stream;
-  }
+  /// The stream for this [StreamProbe]. Must be implemented by sub-classes.
+  Stream<Datum> get stream;
+
+  // Do nothing here. Can be overwritten in subclasses.
+  void onInitialize(Measure measure) {}
 
   void onStart() {
-    subscription = _stream.listen(onData, onError: onError, onDone: onDone);
+    assert(stream != null, 'Stream cannot be null in a StreamProbe');
+    subscription = stream.listen(onData, onError: onError, onDone: onDone);
   }
 
   void onRestart() {}
@@ -459,12 +452,15 @@ abstract class StreamProbe extends AbstractProbe {
 /// A periodic probe listening on a stream. Listening is done periodically as specified in a
 /// [PeriodicMeasure] listening on intervals every [frequency] for a period of [duration]. During this
 /// period, all events are forwarded to this probes [events] stream.
+///
+/// Just like in [StreamProbe], sub-classes must implement the
+///
+///     Stream<Datum> get stream => ...
+///
+/// method in order to provide the stream to collect data from.
 abstract class PeriodicStreamProbe extends StreamProbe {
   Timer timer;
   Duration frequency, duration;
-
-  /// Creates a [PeriodicStreamProbe] handling the [stream] in a periodic manner.
-  PeriodicStreamProbe(Stream<Datum> stream) : super(stream);
 
   void onInitialize(Measure measure) {
     assert(measure is PeriodicMeasure);
@@ -519,12 +515,6 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
   Stream<Datum> get events => controller.stream;
   Timer timer;
   Duration frequency, duration;
-
-//  BufferingPeriodicProbe(PeriodicMeasure measure) : super(measure) {
-//    frequency = Duration(milliseconds: measure.frequency);
-//    duration = (measure.duration != null) ? Duration(milliseconds: measure.duration) : null;
-//  }
-  BufferingPeriodicProbe() : super();
 
   void onInitialize(Measure measure) {
     assert(measure is PeriodicMeasure);
@@ -589,33 +579,23 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
 /// once collected for the [duration], are collected from the [getDatum] method and
 /// send to the main [events] stream.
 ///
+/// Sub-classes must implement the
+///
+///     Stream<dynamic> get bufferingStream => ...
+///
+/// method in order to provide the stream to be buffered.
+///
 /// When sampling starts, the [onSamplingStart] handle is called.
 /// When the sampling window ends, the [onSamplingEnd] handle is called.
 ///
 /// See [LightProbe] for an example.
-///
 abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
-  /// The stream of events to be buffered.
-  Stream<dynamic> _bufferingStream;
-
-//  BufferingPeriodicStreamProbe(PeriodicMeasure measure, Stream<dynamic> bufferingStream)
-//      : assert(bufferingStream != null, 'Buffering event stream must not be null'),
-//        super(measure,
-//            Stream<Datum>.empty()) // we don't use the stream in the super class so we give it an empty non-null stream
-//  {
-//    _bufferingStream = bufferingStream;
-//  }
-
-  BufferingPeriodicStreamProbe(Stream<dynamic> bufferingStream)
-      : assert(bufferingStream != null, 'Buffering event stream must not be null'),
-        super(
-            Stream<Datum>.empty()) // we don't use the stream in the super class so we give it an empty non-null stream
-  {
-    _bufferingStream = bufferingStream;
-  }
+  // we don't use the stream in the super class so we give it an empty non-null stream
+  Stream<Datum> get stream => Stream<Datum>.empty();
 
   void onStart() async {
-    subscription = _bufferingStream.listen(onSamplingData, onError: onError, onDone: onDone);
+    assert(bufferingStream != null, 'Buffering event stream must not be null');
+    subscription = bufferingStream.listen(onSamplingData, onError: onError, onDone: onDone);
   }
 
   void onResume() {
@@ -643,6 +623,9 @@ abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
   }
 
   // Sub-classes should implement the following handler methods.
+
+  /// The stream of events to be buffered. Must be specified by sub-classes.
+  Stream<dynamic> get bufferingStream;
 
   /// Handler called when sampling period starts.
   void onSamplingStart();
