@@ -55,7 +55,7 @@ class Sensing {
 
 /// Used as a mock [StudyManager] to generate a local [Study].
 class StudyMock implements StudyManager {
-  final String username = "researcher";
+  final String username = "researcher@example.com";
   final String password = "password";
   final String uri = "http://staging.carp.cachet.dk:8080";
   final String clientID = "carp";
@@ -70,7 +70,7 @@ class StudyMock implements StudyManager {
   Study _study;
   Future<Study> getStudy(String studyId) async {
     if (_study == null) {
-      _study = Study('DF#4dD-3', 'user@cachet.dk')
+      _study = Study('DF#4dD-3', username)
         ..name = 'CARP Mobile Sensing - default configuration'
         ..description =
             'This is a long description of a Study which can run forever and take up a lot of space and drain you battery and you have to agree to an informed consent which - by all standards - do not comply to any legal framework....'
@@ -134,22 +134,22 @@ class StudyMock implements StudyManager {
       case DataEndPointType.FILE:
         return FileDataEndPoint(bufferSize: 500 * 1000, zip: true, encrypt: false);
       case DataEndPointType.CARP:
-//        return CarpDataEndPoint(CarpUploadMethod.DATA_POINT,
-//            name: 'CARP Staging Server',
-//            uri: uri,
-//            clientId: clientID,
-//            clientSecret: clientSecret,
-//            email: study.userId,
-//            password: password);
-        return CarpDataEndPoint(CarpUploadMethod.BATCH_DATA_POINT,
+        return CarpDataEndPoint(CarpUploadMethod.DATA_POINT,
             name: 'CARP Staging Server',
             uri: uri,
             clientId: clientID,
             clientSecret: clientSecret,
-            email: _study.userId,
-            password: password,
-            bufferSize: 50 * 1000,
-            zip: true);
+            email: username,
+            password: password);
+//        return CarpDataEndPoint(CarpUploadMethod.BATCH_DATA_POINT,
+//            name: 'CARP Staging Server',
+//            uri: uri,
+//            clientId: clientID,
+//            clientSecret: clientSecret,
+//            email: _study.userId,
+//            password: password,
+//            bufferSize: 50 * 1000,
+//            zip: true);
 //      case DataEndPointType.FIREBASE_STORAGE:
 //        return FirebaseStorageDataEndPoint(firebaseEndPoint, path: 'sensing/data', bufferSize: 50 * 1000, zip: true);
 //      case DataEndPointType.FIREBASE_DATABASE:
