@@ -28,6 +28,10 @@ These are the available CARP Mobile Sensing Flutter components in this repositor
 | **Apps** | Misc. mobile sensing apps |  | 
 | [carp_mobile_sensing_app](./carp_mobile_sensing_app) | The CARP Mobile Sensing app | N/A |
 
+## Documentation
+
+The overall documentation on the software architecture of CARP Mobile Sensing, and how to use and extend it is available on this github [wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki). Each of the specific packages also contain more specific documentation on how each package is used in the framework (e.g. how the [Firebase data backend package](https://pub.dartlang.org/packages/carp_firebase_backend) is to be used).
+
 ## Issues
 
 Please check existing issues and file any new issues, bugs, or feature requests in the [carp.sensing-flutter repo](https://github.com/cph-cachet/carp.sensing-flutter/issues).
