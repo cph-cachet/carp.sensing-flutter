@@ -31,7 +31,7 @@ class DataPoint {
   Map<String, dynamic> toJson() => _$DataPointToJson(this);
 }
 
-/// The header (mata-data) attached to all [DataPoint]s.
+/// The header (meta-data) attached to all [DataPoint]s.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class DataPointHeader {
   /// The ID of the [Study] from which this data point was generated.

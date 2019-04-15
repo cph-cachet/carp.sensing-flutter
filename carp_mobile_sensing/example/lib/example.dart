@@ -27,6 +27,11 @@ void example() async {
   study.addTask(Task('Task collecting a list of all installed apps')
     ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.APPS))));
 
+  // creating measure variable to be used later
+  PeriodicMeasure lightMeasure = PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.LIGHT),
+      name: "Ambient Light", frequency: 11 * 1000, duration: 700);
+  study.addTask(Task('Light')..addMeasure(lightMeasure));
+
   // Create a Study Controller that can manage this study, initialize it, and start it.
   StudyController controller = StudyController(study);
   // await initialization before starting
@@ -52,6 +57,29 @@ void example() async {
     // do something w. the datum, e.g. print the json
     print(JsonEncoder.withIndent(' ').convert(datum));
   });
+
+  // sampling can be paused and resumed
+  controller.pause();
+  controller.resume();
+
+  // pause / resume specific probe(s)
+  ProbeRegistry.lookup(DataType.ACCELEROMETER).pause();
+  ProbeRegistry.lookup(DataType.ACCELEROMETER).resume();
+
+  // adapt measures on the go - calling hasChanged() force a restart of the probe, which will load the new measure
+  lightMeasure
+    ..frequency = 12 * 1000
+    ..duration = 500
+    ..hasChanged();
+
+  // disabling a measure will pause the probe
+  lightMeasure
+    ..enabled = false
+    ..hasChanged();
+
+  // once the sampling has to stop, e.g. in a Flutter dispose() methods, call stop.
+  // note that once a sampling has stopped, it cannot be restarted.
+  controller.stop();
 }
 
 /// An example of how to use the [SamplingSchema] model.
@@ -149,6 +177,9 @@ void example_2() {
         ..addSamplingSchema(PhoneSamplingSchema.phone())
         ..addSamplingSchema(PhoneSamplingSchema.phone()));
 }
+
+/// An example of how to restart probes or an entire sampling study.
+void restart_example() {}
 
 void scratchPad() {
   Measure mLoc = Measure(MeasureType(NameSpace.CARP, DataType.LOCATION));

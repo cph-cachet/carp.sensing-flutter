@@ -11,7 +11,7 @@ part of runtime;
 // Right now registration of probes has to be done manually.
 // Later this will be implemented using Dart Isolates.
 
-/// The [ProbeRegistry] can create and register an instance of a relevant probe
+/// The [ProbeRegistry] can create, register, and lookup an instance of a relevant probe
 /// based on the [DataType].
 class ProbeRegistry {
   static Map<String, Probe> _probes = new Map<String, Probe>();

@@ -15,7 +15,6 @@ abstract class Executor extends AbstractProbe {
   List<Probe> executors = new List<Probe>();
   Stream<Datum> get events => _group.stream;
 
-  //Executor() : super(Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR)));
   Executor() : super();
 
   // Do nothing
@@ -98,20 +97,6 @@ class TaskExecutor extends Executor {
         super() {
     _task = task;
   }
-
-//  Future onStart() async {
-//    for (Measure measure in task.measures) {
-//      Probe probe = ProbeRegistry.create(measure);
-//      if (probe != null) {
-//        executors.add(probe);
-//        _group.add(probe.events);
-//        probe.initialize();
-//
-//        // start the probe
-//        probe.start();
-//      }
-//    }
-//  }
 
   Future onStart() async {
     for (Measure measure in task.measures) {
