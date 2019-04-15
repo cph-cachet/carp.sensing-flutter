@@ -36,15 +36,12 @@ class LocationDatum extends CARPDatum {
   /// Altitude in GPS coordinates.
   double altitude;
 
-  // TODO : check if this is true.
   /// Accuracy in absolute measures.
   double accuracy;
 
-  // TODO : check if this is true.
   /// Estimated movement speed.
   double speed;
 
-  // TODO : check if this is true.
   /// Accuracy in speed estimation.
   ///
   /// Will always be 0 on iOS

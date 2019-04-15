@@ -1,3 +1,6 @@
+## 0.3.11
+* support for data transformers
+
 ## 0.3.10
 * minor change to the `StreamProbe` API - now non-static streams can be used by implementing the `get stream` method.
 * update of the relevant sampling packages using `StreamProbe`

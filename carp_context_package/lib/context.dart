@@ -10,6 +10,7 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:activity_recognition/activity_recognition.dart';
 import 'package:location/location.dart';
 import 'package:weather/weather.dart';
+import 'package:openmhealth_schemas/openmhealth_schemas.dart' as omh;
 
 part 'activity_datum.dart';
 part 'activity_probe.dart';
@@ -18,5 +19,6 @@ part 'location_probe.dart';
 part 'weather_datum.dart';
 part 'weather_measures.dart';
 part 'weather_probe.dart';
+part 'context_transformers.dart';
 part 'context_package.dart';
 part 'context.g.dart';

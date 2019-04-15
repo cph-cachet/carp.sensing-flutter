@@ -22,5 +22,5 @@ part 'measures.dart';
 part 'device_info.dart';
 part 'managers.dart';
 part 'sampling_schema.dart';
-part 'privacy_schema.dart';
+part 'transformers.dart';
 part 'domain.g.dart';

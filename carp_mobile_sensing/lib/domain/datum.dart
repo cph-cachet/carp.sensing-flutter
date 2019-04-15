@@ -140,7 +140,7 @@ class DataFormatType {
   static const String OMH = "omh";
 }
 
-/// Enumeration of namespaces.
+/// Enumeration of data type namespaces.
 ///
 /// Namespaces are used both in specification of [MeasureType] and in [DataFormat].
 ///
@@ -185,31 +185,9 @@ class DataType {
 
   static List<String> _allTypes = List<String>();
 
+  /// Add a list of data types (as String) to the list of available data types.
   static void add(List<String> types) => _allTypes.addAll(types);
-  static List<String> get all => _allTypes;
 
-  static List<String> get allOld => [
-        DataType.MEMORY,
-        DataType.DEVICE,
-        DataType.PEDOMETER,
-        DataType.ACCELEROMETER,
-        DataType.GYROSCOPE,
-        DataType.BATTERY,
-        DataType.BLUETOOTH,
-        DataType.AUDIO,
-        DataType.NOISE,
-        DataType.LOCATION,
-        DataType.CONNECTIVITY,
-        DataType.LIGHT,
-        DataType.APPS,
-        DataType.APP_USAGE,
-        DataType.TEXT_MESSAGE_LOG,
-        DataType.TEXT_MESSAGE,
-        DataType.SCREEN,
-        DataType.PHONE_LOG,
-        DataType.ACTIVITY,
-        DataType.APPLE_HEALTHKIT,
-        DataType.GOOGLE_FIT,
-        DataType.WEATHER
-      ];
+  /// Get a list of all available data types.
+  static List<String> get all => _allTypes;
 }
