@@ -32,13 +32,13 @@ class _TransformerSchemaRegistry {
     register(PrivacySchema());
   }
 
-  /// Register a transformer package.
+  /// Register a transformer schema.
   void register(TransformerSchema schema) {
     _schemas[schema.namespace] = schema;
     schema.onRegister();
   }
 
-  /// Lookup a transformer package based on its namespace.
+  /// Lookup a transformer schema based on its namespace.
   TransformerSchema lookup(String namespace) => _schemas[namespace];
 }
 

@@ -74,7 +74,8 @@ class StudyMock implements StudyManager {
         ..name = 'CARP Mobile Sensing - default configuration'
         ..description =
             'This is a long description of a Study which can run forever and take up a lot of space and drain you battery and you have to agree to an informed consent which - by all standards - do not comply to any legal framework....'
-        ..dataEndPoint = getDataEndpoint(DataEndPointType.FILE)
+        ..dataEndPoint = getDataEndpoint(DataEndPointType.PRINT)
+        ..dataFormat = NameSpace.OMH
         ..addTask(Task()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
 
       // adding the measures to two separate tasks, while also adding a new light measure to the 2nd task

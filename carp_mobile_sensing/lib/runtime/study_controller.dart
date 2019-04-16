@@ -40,9 +40,11 @@ class StudyController {
     privacySchemaName ??= PrivacySchema.DEFAULT;
     transformer ??= ((events) => events);
 
+    print('study.dataFormat = ${study.dataFormat}');
+
     // set up transformation in the following order:
     // 1. privacy schema
-    // 2. preferred dataformat as specified in the study protocol
+    // 2. preferred data format as specified in the study protocol
     // 3. any custom transformer
     events = transformer(executor.events
         .map((datum) => TransformerSchemaRegistry.lookup(privacySchemaName).transform(datum))
