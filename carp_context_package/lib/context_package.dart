@@ -40,7 +40,7 @@ class ContextSamplingPackage implements SamplingPackage {
 
   void onRegister() {
     FromJsonFactory.registerFromJsonFunction("WeatherMeasure", WeatherMeasure.fromJsonFunction);
-    TransformerPackageRegistry.lookup(NameSpace.OMH).add(LOCATION, Location2GeopositionTransfomer);
+    TransformerSchemaRegistry.lookup(NameSpace.OMH).add(LOCATION, OMHGeopositionDatum.transformer);
   }
 
   SamplingSchema get common => SamplingSchema()

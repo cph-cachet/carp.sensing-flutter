@@ -3,9 +3,8 @@ library omh;
 
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
-class OMHTransformerPackage extends TransformerPackage {
+/// A default [TransformerSchema] for Open mHealth (OMH) transformers
+class OMHTransformerSchema extends TransformerSchema {
   String get namespace => NameSpace.OMH;
   void onRegister() {}
 }
-
-//class CARPLocation2OMHGeoposition extends CARPDatum {}
