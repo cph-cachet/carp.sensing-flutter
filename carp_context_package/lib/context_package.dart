@@ -40,6 +40,8 @@ class ContextSamplingPackage implements SamplingPackage {
 
   void onRegister() {
     FromJsonFactory.registerFromJsonFunction("WeatherMeasure", WeatherMeasure.fromJsonFunction);
+
+    // registering the transformers from CARP to OMH for geolocation and physical activity.
     TransformerSchemaRegistry.lookup(NameSpace.OMH).add(LOCATION, OMHGeopositionDatum.transformer);
     TransformerSchemaRegistry.lookup(NameSpace.OMH).add(ACTIVITY, OMHPhysicalActivityDatum.transformer);
   }

@@ -16,7 +16,7 @@ part of domain;
 /// in the specified [dataFormat].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class Study extends Serializable {
-  /// The ID of this [Study].
+  /// The id of this [Study].
   String id;
 
   /// The ID of the user executing this study. May be [null] if no user is known.
@@ -34,7 +34,7 @@ class Study extends Serializable {
   /// Specify where and how to upload this study data.
   DataEndPoint dataEndPoint;
 
-  /// The format of the data to be uploaded according to [DataFormatType].
+  /// The preferred format of the data to be uploaded according to [DataFormatType].
   /// Default using the [NameSpace.CARP].
   String dataFormat = NameSpace.CARP;
 
