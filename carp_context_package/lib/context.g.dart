@@ -17,7 +17,7 @@ ActivityDatum _$ActivityDatumFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$ActivityDatumToJson(ActivityDatum instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -47,7 +47,7 @@ LocationDatum _$LocationDatumFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$LocationDatumToJson(LocationDatum instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -100,7 +100,7 @@ WeatherDatum _$WeatherDatumFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$WeatherDatumToJson(WeatherDatum instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -145,12 +145,13 @@ WeatherMeasure _$WeatherMeasureFromJson(Map<String, dynamic> json) {
       duration: json['duration'],
       apiKey: json['api_key'] as String)
     ..c__ = json['c__'] as String
-    ..configuration = (json['configuration'] as Map<String, dynamic>)
-        ?.map((k, e) => MapEntry(k, e as String));
+    ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(k, e as String),
+    );
 }
 
 Map<String, dynamic> _$WeatherMeasureToJson(WeatherMeasure instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {

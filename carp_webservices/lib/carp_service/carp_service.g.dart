@@ -19,7 +19,7 @@ CARPDataPoint _$CARPDataPointFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$CARPDataPointToJson(CARPDataPoint instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -55,7 +55,7 @@ CARPDataPointHeader _$CARPDataPointHeaderFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$CARPDataPointHeaderToJson(CARPDataPointHeader instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {

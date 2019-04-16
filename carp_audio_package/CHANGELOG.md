@@ -1,3 +1,6 @@
+## 0.3.5
+* upgrade to json_serializable v.2
+
 ## 0.3.4
 * update to `carp_mobile_sensing` version 0.3.10
 

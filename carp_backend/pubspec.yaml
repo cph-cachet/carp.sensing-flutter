@@ -1,6 +1,6 @@
 name: carp_backend
 description: CARP data backend for CARP mobile sensing. Supports uploading json to CARP as either zipped filed or as plain json in collections.
-version: 0.3.1
+version: 0.3.2
 author: CACHET Team <cph.cachet@gmail.com>
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_backend
 environment:
@@ -9,23 +9,23 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  json_annotation: ^1.0.0
-  carp_mobile_sensing: ^0.3.0
-  carp_webservices: ^0.2.1
+  json_annotation: ^2.0.0
+#  carp_mobile_sensing: ^0.3.0
+#  carp_webservices: ^0.2.1
 
 # Overriding carp libraries to use the local copy
 # Remove this when done development
-#dependency_overrides:
-#  carp_mobile_sensing:
-#    path: ../carp_mobile_sensing/
-#  carp_webservices:
-#    path: ../carp_webservices/
+dependency_overrides:
+  carp_mobile_sensing:
+    path: ../carp_mobile_sensing/
+  carp_webservices:
+    path: ../carp_webservices/
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   build_runner:       # used to build JSON serialization .g files
-  json_serializable: ^1.0.0
+  json_serializable: ^2.0.0
   test:
 
 # The following section is specific to Flutter.
