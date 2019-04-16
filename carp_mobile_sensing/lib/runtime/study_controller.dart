@@ -11,8 +11,10 @@ class StudyController {
   Study study;
   StudyExecutor executor;
   DataManager dataManager;
-  DatumStreamTransformer transformer;
   SamplingSchema samplingSchema;
+  String privacySchemaName;
+  DatumStreamTransformer transformer;
+
   Stream<Datum> events;
   PowerAwarenessState powerAwarenessState = NormalSamplingState.instance;
 
@@ -21,19 +23,33 @@ class StudyController {
 
   /// Create a new [StudyController] to control the [study].
   ///
-  /// A custom study executor can be specified in [executor]. If null, the default [StudyExecutor] is used.
-  /// If [samplingSchema] is null, [SamplingSchema.normal()] with power-awareness is used.
-  /// If [dataManager] is null, a [DataManager] will be looked up in the [DataManagerRegistry] based on
+  /// A number of optional parameters can be specified:
+  ///    * A custom study [executor] can be specified. If null, the default [StudyExecutor] is used.
+  ///    * A specific [samplingSchema] can be used. If null, [SamplingSchema.normal] with power-awareness is used.
+  ///    * A specific [dataManager] can be provided. If null, a [DataManager] will be looked up in the [DataManagerRegistry] based on
   /// the type of the study's [DataEndPoint].
-  /// If [transformer] is null, a 1:1 mapping is done, i.e. no transformation.
-  StudyController(this.study, {this.executor, this.samplingSchema, this.dataManager, this.transformer})
+  ///     * The name of a [PrivacySchema] can be provided in [privacySchemaName]. Use [PrivacySchema.DEFAULT] for the default, built-in schema.
+  ///     * A generic [transformer] can be provided which transform each collected data. If null, a 1:1 mapping is done, i.e. no transformation.
+  StudyController(this.study,
+      {this.executor, this.samplingSchema, this.dataManager, this.privacySchemaName, this.transformer})
       : assert(study != null),
         super() {
     executor ??= StudyExecutor(study);
     samplingSchema ??= SamplingSchema.normal(powerAware: true);
     dataManager ??= DataManagerRegistry.lookup(study.dataEndPoint.type);
+    privacySchemaName ??= PrivacySchema.DEFAULT;
     transformer ??= ((events) => events);
-    events = transformer(executor.events);
+
+    // set up transformation in the following order:
+    // 1. privacy schema
+    // 2. preferred dataformat as specified in the study protocol
+    // 3. any custom transformer
+    events = transformer(executor.events
+        .map((datum) => TransformerSchemaRegistry.lookup(privacySchemaName).transform(datum))
+        .map((datum) => TransformerSchemaRegistry.lookup(study.dataFormat).transform(datum)));
+
+    // old, simple version below
+    // events = transformer(executor.events);
   }
 
   /// Initialize this controller. Must be called only once, and before [start] is called.

@@ -35,7 +35,8 @@ class Study extends Serializable {
   DataEndPoint dataEndPoint;
 
   /// The format of the data to be uploaded according to [DataFormatType].
-  String dataFormat;
+  /// Default using the [NameSpace.CARP].
+  String dataFormat = NameSpace.CARP;
 
   /// The list of [Task]s in this [Study].
   List<Task> tasks = new List<Task>();

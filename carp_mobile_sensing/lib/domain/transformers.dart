@@ -23,6 +23,10 @@ class _TransformerSchemaRegistry {
   Map<String, TransformerSchema> get schemas => _schemas;
 
   _TransformerSchemaRegistry() {
+    // register 3 default transformer schemas:
+    // 1. a no-operation CARP schema
+    // 2. a default OMH schema
+    // 3. a default privacy transformation schemas
     register(CARPTransformerSchema());
     register(OMHTransformerSchema());
     register(PrivacySchema());
