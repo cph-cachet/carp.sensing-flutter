@@ -1,3 +1,6 @@
+## 0.2.2
+* upgrade to json_serializable v.2
+
 ## 0.2.1
 * support for get document by id
 

@@ -1,5 +1,9 @@
 ## 0.3.11
 * support for data transformers
+   * OMH Geolocation
+   * OMH PhysicalActivity
+* support for privacy schema
+* upgrade to json_serializable v.2
 
 ## 0.3.10
 * minor change to the `StreamProbe` API - now non-static streams can be used by implementing the `get stream` method.

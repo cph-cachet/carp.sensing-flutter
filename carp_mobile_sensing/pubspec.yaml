@@ -36,9 +36,6 @@ dependencies:
   screen_state: ^0.1.0    # Screen LOCK/ON/OFF
   app_usage: ^0.1.0       # App-usage statistics
 
-  # different data formats
-  openmhealth_schemas:
-    path: ../../openmhealth_schemas
 
 dev_dependencies:
   flutter_test:
