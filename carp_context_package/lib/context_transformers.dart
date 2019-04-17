@@ -5,8 +5,6 @@ class OMHGeopositionDatum extends CARPDatum implements TransformedDatum {
   static const DataFormat DATA_FORMAT = DataFormat(omh.SchemaSupport.OMH_NAMESPACE, omh.SchemaSupport.GEOPOSITION);
   DataFormat get format => DATA_FORMAT;
 
-  static DatumTransformer get transformer => ((datum) => OMHGeopositionDatum.fromLocationDatum(datum));
-
   omh.Geoposition geoposition;
 
   OMHGeopositionDatum(this.geoposition);
@@ -18,15 +16,16 @@ class OMHGeopositionDatum extends CARPDatum implements TransformedDatum {
 
   factory OMHGeopositionDatum.fromJson(Map<String, dynamic> json) =>
       OMHGeopositionDatum(omh.Geoposition.fromJson(json));
+
   Map<String, dynamic> toJson() => geoposition.toJson();
+
+  static DatumTransformer get transformer => ((datum) => OMHGeopositionDatum.fromLocationDatum(datum));
 }
 
 /// A [TransformedDatum] that holds an OMH [PhysicalActivity](https://pub.dartlang.org/documentation/openmhealth_schemas/latest/domain_omh_activity/PhysicalActivity-class.html)
 class OMHPhysicalActivityDatum extends CARPDatum implements TransformedDatum {
   static const DataFormat DATA_FORMAT = DataFormat(omh.SchemaSupport.OMH_NAMESPACE, omh.SchemaSupport.GEOPOSITION);
   DataFormat get format => DATA_FORMAT;
-
-  static DatumTransformer get transformer => ((datum) => OMHPhysicalActivityDatum.fromActivityDatum(datum));
 
   omh.PhysicalActivity activity;
 
@@ -37,5 +36,8 @@ class OMHPhysicalActivityDatum extends CARPDatum implements TransformedDatum {
 
   factory OMHPhysicalActivityDatum.fromJson(Map<String, dynamic> json) =>
       OMHPhysicalActivityDatum(omh.PhysicalActivity.fromJson(json));
+
   Map<String, dynamic> toJson() => activity.toJson();
+
+  static DatumTransformer get transformer => ((datum) => OMHPhysicalActivityDatum.fromActivityDatum(datum));
 }
