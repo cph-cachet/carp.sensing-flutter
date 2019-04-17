@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2019 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -42,6 +42,7 @@ class _TransformerSchemaRegistry {
   TransformerSchema lookup(String namespace) => _schemas[namespace];
 }
 
+/// An interface for Datum that is created from a transformer.
 abstract class TransformedDatum {
   static DatumTransformer get transformer => null;
 }
