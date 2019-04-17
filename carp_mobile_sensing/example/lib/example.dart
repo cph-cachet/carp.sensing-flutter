@@ -188,6 +188,12 @@ void example_2() {
 /// An example of how to restart probes or an entire sampling study.
 void restart_example() {}
 
+/// An example of how to configure a [StudyController]
+void study_controller_example() {
+  Study study = Study('DF#4dD', 'user@cachet.dk');
+  StudyController controller = StudyController(study, privacySchemaName: PrivacySchema.DEFAULT);
+}
+
 void scratchPad() {
   Measure mLoc = Measure(MeasureType(NameSpace.CARP, DataType.LOCATION));
 
