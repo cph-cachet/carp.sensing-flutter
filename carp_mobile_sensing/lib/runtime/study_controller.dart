@@ -26,9 +26,10 @@ class StudyController {
   /// A number of optional parameters can be specified:
   ///    * A custom study [executor] can be specified. If null, the default [StudyExecutor] is used.
   ///    * A specific [samplingSchema] can be used. If null, [SamplingSchema.normal] with power-awareness is used.
-  ///    * A specific [dataManager] can be provided. If null, a [DataManager] will be looked up in the [DataManagerRegistry] based on
-  /// the type of the study's [DataEndPoint].
-  ///     * The name of a [PrivacySchema] can be provided in [privacySchemaName]. Use [PrivacySchema.DEFAULT] for the default, built-in schema.
+  ///    * A specific [dataManager] can be provided. If null, a [DataManager] will be looked up in the
+  ///    [DataManagerRegistry] based on the type of the study's [DataEndPoint].
+  ///     * The name of a [PrivacySchema] can be provided in [privacySchemaName].
+  ///     Use [PrivacySchema.DEFAULT] for the default, built-in schema. If null, no privacy schema is used.
   ///     * A generic [transformer] can be provided which transform each collected data. If null, a 1:1 mapping is done, i.e. no transformation.
   StudyController(this.study,
       {this.executor, this.samplingSchema, this.dataManager, this.privacySchemaName, this.transformer})
@@ -37,7 +38,7 @@ class StudyController {
     executor ??= StudyExecutor(study);
     samplingSchema ??= SamplingSchema.normal(powerAware: true);
     dataManager ??= DataManagerRegistry.lookup(study.dataEndPoint.type);
-    privacySchemaName ??= PrivacySchema.DEFAULT_PRIVACY_SCHEMA;
+    privacySchemaName ??= PrivacySchema.NONE;
     transformer ??= ((events) => events);
 
     print('study.dataFormat = ${study.dataFormat}');

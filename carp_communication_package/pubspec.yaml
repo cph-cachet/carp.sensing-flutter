@@ -13,6 +13,7 @@ dependencies:
   json_annotation: ^2.0.0
   sms: ^0.2.4
   call_log: ^1.0.2
+  crypto: ^2.0.0
   carp_mobile_sensing: ^0.3.11
 
 # Overriding carp libraries to use the local copy

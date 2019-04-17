@@ -12,8 +12,9 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 /// A default [TransformerSchema] for privacy transformers
 class PrivacySchema extends TransformerSchema {
-  static const String DEFAULT_PRIVACY_SCHEMA = "default-privacy-schema";
+  static const String NONE = "no-privacy-schema";
+  static const String DEFAULT = "default-privacy-schema";
 
-  String get namespace => DEFAULT_PRIVACY_SCHEMA;
+  String get namespace => DEFAULT;
   void onRegister() {}
 }
