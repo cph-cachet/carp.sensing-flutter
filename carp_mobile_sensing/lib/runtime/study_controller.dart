@@ -38,7 +38,7 @@ class StudyController {
     executor ??= StudyExecutor(study);
     samplingSchema ??= SamplingSchema.normal(powerAware: true);
     dataManager ??= DataManagerRegistry.lookup(study.dataEndPoint.type);
-    privacySchemaName ??= PrivacySchema.NONE;
+    privacySchemaName ??= NameSpace.CARP;
     transformer ??= ((events) => events);
 
     print('study.dataFormat = ${study.dataFormat}');
