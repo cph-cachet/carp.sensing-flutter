@@ -8,6 +8,7 @@
     "c__": "DataEndPoint",
     "type": "print"
   },
+  "data_format": "carp",
   "tasks": [
     {
       "c__": "Task",
@@ -191,6 +192,23 @@
           "enabled": true,
           "configuration": {},
           "frequency": 3600000
+        },
+        {
+          "c__": "GeofenceMeasure",
+          "type": {
+            "c__": "MeasureType",
+            "namespace": "carp",
+            "name": "geofence"
+          },
+          "enabled": true,
+          "configuration": {},
+          "center": {
+            "c__": "Location",
+            "latitude": 55.786025,
+            "longitude": 12.524159
+          },
+          "radius": 500.0,
+          "name": "DTU"
         }
       ]
     }

@@ -155,6 +155,7 @@ class NameSpace {
 
 /// Enumeration of data types used in [MeasureType].
 class DataType {
+  static const String UNKNOWN = "unknown";
   static const String NONE = "none";
   static const String EXECUTOR = "executor";
   static const String STRING = "string";
@@ -182,6 +183,7 @@ class DataType {
   static const String APPLE_HEALTHKIT = "apple-healthkit";
   static const String GOOGLE_FIT = "google-fit";
   static const String WEATHER = "weather";
+  static const String GEOFENCE = "geofence";
 
   static List<String> _allTypes = List<String>();
 

@@ -81,5 +81,35 @@ void main() {
     print(_encode(dp_2));
   });
 
+  test('Geofence', () {
+    GeofenceDatum d;
+    Location home = Location(55.7946, 12.4472); // Parsbergsvej
+    Location dtu = Location(55.786025, 12.524159); // DTU
+    Location compute = Location(55.783499, 12.518914); // DTU Compute
+    Location lyngby = Location(55.7704, 12.5038); // Kgs. Lyngby
+
+    GeofenceMeasure m = ContextSamplingPackage().common.measures[ContextSamplingPackage.GEOFENCE];
+    Geofence f = Geofence.fromMeasure(m)..dwell = 2 * 1000; // dwell timeout 2 secs.
+    print(f);
+    d = f.moved(home);
+    expect(d, null);
+    print('starting from home - $d');
+    d = f.moved(dtu);
+    expect(d.type, 'ENTER');
+    print('moving to DTU - $d');
+    d = f.moved(lyngby);
+    expect(d.type, 'EXIT');
+    print('moving to Lyngby - $d');
+    d = f.moved(compute);
+    expect(d.type, 'ENTER');
+    print('moving to DTU Compute - $d');
+    sleep(const Duration(seconds: 3));
+    d = f.moved(dtu);
+    expect(d.type, 'DWELL');
+    print('moving to DTU - $d');
+    d = f.moved(home);
+    expect(d.type, 'EXIT');
+    print('going home - $d');
+  });
   test('', () {});
 }

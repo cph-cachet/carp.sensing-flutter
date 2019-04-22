@@ -28,5 +28,5 @@ class GeofenceDatum extends CARPDatum {
   ///  - DWELL
   String type;
 
-  String toString() => "Geofence - name:$name, type: $type";
+  String toString() => "Geofence - name: $name, type: $type";
 }

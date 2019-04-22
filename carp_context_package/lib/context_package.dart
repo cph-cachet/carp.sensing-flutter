@@ -30,6 +30,8 @@ class ContextSamplingPackage implements SamplingPackage {
         return ActivityProbe();
       case WEATHER:
         return WeatherProbe();
+      case GEOFENCE:
+        return GeofenceProbe();
       default:
         return null;
     }
@@ -37,6 +39,8 @@ class ContextSamplingPackage implements SamplingPackage {
 
   void onRegister() {
     FromJsonFactory.registerFromJsonFunction("WeatherMeasure", WeatherMeasure.fromJsonFunction);
+    FromJsonFactory.registerFromJsonFunction("GeofenceMeasure", GeofenceMeasure.fromJsonFunction);
+    FromJsonFactory.registerFromJsonFunction("Location", Location.fromJsonFunction);
 
     // registering the transformers from CARP to OMH for geolocation and physical activity.
     // we assume that there is an OMH schema registered already...
@@ -56,7 +60,11 @@ class ContextSamplingPackage implements SamplingPackage {
       MapEntry(
           DataType.WEATHER,
           WeatherMeasure(MeasureType(NameSpace.CARP, DataType.WEATHER),
-              name: 'Local Weather', enabled: true, frequency: 60 * 60 * 1000))
+              name: 'Local Weather', enabled: true, frequency: 60 * 60 * 1000)),
+      MapEntry(
+          DataType.GEOFENCE,
+          GeofenceMeasure(MeasureType(NameSpace.CARP, DataType.GEOFENCE),
+              enabled: true, center: Location(55.786025, 12.524159), radius: 500, name: 'DTU')),
     ]);
 
   SamplingSchema get light => common
@@ -67,7 +75,8 @@ class ContextSamplingPackage implements SamplingPackage {
   SamplingSchema get minimum => light
     ..type = SamplingSchemaType.MINIMUM
     ..name = 'Minimum context sampling'
-    ..measures[ACTIVITY].enabled = false;
+    ..measures[ACTIVITY].enabled = false
+    ..measures[GEOFENCE].enabled = false;
 
   SamplingSchema get normal => common;
 }

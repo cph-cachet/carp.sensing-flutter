@@ -207,7 +207,9 @@ class _MeasureLine extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData themeData = Theme.of(context);
-    final Icon icon = Icon(ProbeDescription.probeTypeIcon[measure.type.name].icon, size: 25);
+    final Icon icon = (ProbeDescription.probeTypeIcon[measure.type.name] != null)
+        ? Icon(ProbeDescription.probeTypeIcon[measure.type.name].icon, size: 25)
+        : Icon(ProbeDescription.probeTypeIcon[DataType.NONE].icon, size: 25);
 
     final List<Widget> columnChildren = List<Widget>();
     columnChildren.add(Text(measure.name));

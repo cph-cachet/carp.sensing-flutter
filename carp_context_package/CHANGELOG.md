@@ -1,5 +1,6 @@
 ## 0.3.5
 * update to json_serialization v.2
+* added support for geofence measures
 
 ## 0.3.4
 * update to `carp_mobile_sensing` version 0.3.10

@@ -205,7 +205,8 @@ GeofenceMeasure _$GeofenceMeasureFromJson(Map<String, dynamic> json) {
     ..c__ = json['c__'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
-    );
+    )
+    ..dwell = json['dwell'] as int;
 }
 
 Map<String, dynamic> _$GeofenceMeasureToJson(GeofenceMeasure instance) {
@@ -223,6 +224,7 @@ Map<String, dynamic> _$GeofenceMeasureToJson(GeofenceMeasure instance) {
   writeNotNull('configuration', instance.configuration);
   writeNotNull('center', instance.center);
   writeNotNull('radius', instance.radius);
+  writeNotNull('dwell', instance.dwell);
   writeNotNull('name', instance.name);
   return val;
 }

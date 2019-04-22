@@ -7,6 +7,9 @@
 
 part of context;
 
+/// The general location provider service.
+location.Location locationService = location.Location();
+
 // TODO - check for permissions...
 //    PermissionStatus status = await SimplePermissions.requestPermission(Permission.AccessFineLocation);
 //    bool granted = await SimplePermissions.checkPermission(Permission.AccessFineLocation);
@@ -18,5 +21,5 @@ part of context;
 /// Is a [StreamProbe] that generates a [LocationDatum] every time location is changed.
 class LocationProbe extends StreamProbe {
   Stream<LocationDatum> get stream =>
-      location.Location().onLocationChanged().map((event) => LocationDatum.fromMap(event));
+      locationService.onLocationChanged().asBroadcastStream().map((event) => LocationDatum.fromMap(event));
 }
