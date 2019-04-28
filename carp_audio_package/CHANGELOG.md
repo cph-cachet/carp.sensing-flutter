@@ -1,5 +1,6 @@
 ## 0.3.5
 * upgrade to json_serializable v.2
+* fixed bug in audio recording probe (issue [#23](https://github.com/cph-cachet/carp.sensing-flutter/issues/23))
 
 ## 0.3.4
 * update to `carp_mobile_sensing` version 0.3.10

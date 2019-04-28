@@ -36,16 +36,19 @@ class AudioProbe extends BufferingPeriodicProbe {
   String _path;
   bool _isRecording = false;
   DateTime _startRecordingTime, _endRecordingTime;
+  String _recording;
   FlutterSound _flutterSound = new FlutterSound();
 
   void onInitialize(Measure measure) {
     super.onInitialize(measure);
     this.studyId = (measure as AudioMeasure).studyId;
+    print('onInitialize() : $measure');
   }
 
   void onRestart() {
     super.onRestart();
     this.studyId = (measure as AudioMeasure).studyId;
+    print('onRestart() : $measure');
   }
 
   void onStop() {
@@ -54,6 +57,7 @@ class AudioProbe extends BufferingPeriodicProbe {
   }
 
   void onSamplingStart() {
+    print('onSamplingStart()');
     try {
       _startAudioRecording();
     } catch (err) {
@@ -62,22 +66,36 @@ class AudioProbe extends BufferingPeriodicProbe {
   }
 
   void onSamplingEnd() {
+    print('onSamplingEnd()');
     _stopAudioRecording().catchError((err) => controller.addError(err));
   }
 
   void _startAudioRecording() async {
+    print('_startAudioRecording(), recording = $_isRecording');
     if (_isRecording) return;
     soundFileName = await filePath;
+    print('_startAudioRecording(), soundFileName = $soundFileName');
+
     _startRecordingTime = DateTime.now();
-    await _flutterSound.startRecorder(soundFileName);
+    _recording = null;
+    //await _flutterSound.startRecorder(soundFileName);
+
+    String path = await _flutterSound.startRecorder(null);
+    print('startRecorder: $path');
+
     _isRecording = true;
   }
 
   Future<String> _stopAudioRecording() {
-    return Future.sync(() {
+    print('_stopAudioRecording(), recording = $_isRecording');
+    return Future.sync(() async {
       _endRecordingTime = DateTime.now();
       _isRecording = false;
-      return _flutterSound.stopRecorder();
+      _recording = await _flutterSound.stopRecorder();
+      print('stopRecorder: $_recording');
+      return _recording;
+
+      //return _flutterSound.stopRecorder();
     });
   }
 
@@ -95,8 +113,8 @@ class AudioProbe extends BufferingPeriodicProbe {
 
   Future<Datum> getDatum() async {
     try {
-      String result = await _stopAudioRecording();
-      if (result != null) {
+      //String result = await _stopAudioRecording();
+      if (_recording != null) {
         String filename = soundFileName.split("/").last;
         return AudioDatum(
             filename: filename, startRecordingTime: _startRecordingTime, endRecordingTime: _endRecordingTime);

@@ -33,7 +33,7 @@ class Sensing {
     print(study.toString());
 
     // Create a Study Controller that can manage this study, initialize it, and start it.
-    controller = StudyController(study);
+    controller = StudyController(study, privacySchemaName: PrivacySchema.DEFAULT);
     await controller.initialize();
     controller.start();
     print("Sensing started ...");
