@@ -16,6 +16,7 @@ location.Location locationService = location.Location();
 //    print('>>> Permission, location : $granted');
 
 // TODO - upgrade to newest version of location Flutter plugin.
+// But - there are conflict w. the Weather plugin -- check w. Thomas...
 
 /// Collects location information from the underlying OS's location API.
 /// Is a [StreamProbe] that generates a [LocationDatum] every time location is changed.

@@ -3,6 +3,7 @@
    * OMH Geolocation
    * OMH PhysicalActivity
 * support for privacy schema
+   * added support for hashing bluetooth names in the bluetooth package
 * upgrade to json_serializable v.2
 
 ## 0.3.10

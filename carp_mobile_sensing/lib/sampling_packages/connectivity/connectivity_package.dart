@@ -20,7 +20,9 @@ class ConnectivitySamplingPackage implements SamplingPackage {
     }
   }
 
-  void onRegister() {} // does nothing for this device sampling package
+  void onRegister() {
+    TransformerSchemaRegistry.lookup(PrivacySchema.DEFAULT).add(BLUETOOTH, blueetoth_name_anoymizer);
+  }
 
   SamplingSchema get common => SamplingSchema()
     ..type = SamplingSchemaType.COMMON

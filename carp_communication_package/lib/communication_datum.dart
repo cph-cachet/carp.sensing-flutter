@@ -58,7 +58,11 @@ class TextMessage extends Serializable {
   /// The size in bytes of the body of the message.
   int size;
   bool isRead;
+
+  /// The date this message was created.
   DateTime date;
+
+  /// The date this message was sent.
   DateTime dateSent;
 
   /// The kind of message:
