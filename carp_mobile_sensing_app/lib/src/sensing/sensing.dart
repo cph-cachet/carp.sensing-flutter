@@ -76,7 +76,11 @@ class StudyMock implements StudyManager {
             'This is a long description of a Study which can run forever and take up a lot of space and drain you battery and you have to agree to an informed consent which - by all standards - do not comply to any legal framework....'
         ..dataEndPoint = getDataEndpoint(DataEndPointType.PRINT)
         ..dataFormat = NameSpace.OMH
-        ..addTask(Task()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
+        ..addTask(Task()
+          ..measures =
+              SamplingSchema.common(namespace: NameSpace.CARP).getMeasureList([DataType.AUDIO, DataType.NOISE]));
+
+//    ..addTask(Task()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
 
       // adding the measures to two separate tasks, while also adding a new light measure to the 2nd task
 //      _study.addTask(Task('Activity Sensing Task #1')
