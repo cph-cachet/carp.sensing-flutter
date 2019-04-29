@@ -352,6 +352,7 @@ abstract class DatumProbe extends AbstractProbe {
 /// in a [PeriodicMeasure].
 ///
 /// When triggered, a periodic probe collect a piece of data ([Datum]) using the [getDatum] method.
+/// Note that the [duration] parameter in a [PeriodicMeasure] is **not** used.
 abstract class PeriodicDatumProbe extends DatumProbe {
   Timer timer;
   StreamController<Datum> controller = StreamController<Datum>.broadcast();

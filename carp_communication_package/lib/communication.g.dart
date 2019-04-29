@@ -158,6 +158,70 @@ Map<String, dynamic> _$PhoneCallToJson(PhoneCall instance) {
   return val;
 }
 
+CalendarDatum _$CalendarDatumFromJson(Map<String, dynamic> json) {
+  return CalendarDatum()
+    ..id = json['id'] as String
+    ..timestamp = json['timestamp'] == null
+        ? null
+        : DateTime.parse(json['timestamp'] as String)
+    ..calendarEvents = (json['calendar_events'] as List)
+        ?.map((e) => e == null
+            ? null
+            : CalendarEvent.fromJson(e as Map<String, dynamic>))
+        ?.toList();
+}
+
+Map<String, dynamic> _$CalendarDatumToJson(CalendarDatum instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', instance.id);
+  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  writeNotNull('calendar_events', instance.calendarEvents);
+  return val;
+}
+
+CalendarEvent _$CalendarEventFromJson(Map<String, dynamic> json) {
+  return CalendarEvent(
+      json['event_id'] as String,
+      json['calendar_id'] as String,
+      json['title'] as String,
+      json['description'] as String,
+      json['start'] == null ? null : DateTime.parse(json['start'] as String),
+      json['end'] == null ? null : DateTime.parse(json['end'] as String),
+      json['all_day'] as bool,
+      json['location'] as String,
+      (json['attendees'] as List)?.map((e) => e as String)?.toList())
+    ..c__ = json['c__'] as String;
+}
+
+Map<String, dynamic> _$CalendarEventToJson(CalendarEvent instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('c__', instance.c__);
+  writeNotNull('event_id', instance.eventId);
+  writeNotNull('calendar_id', instance.calendarId);
+  writeNotNull('title', instance.title);
+  writeNotNull('description', instance.description);
+  writeNotNull('start', instance.start?.toIso8601String());
+  writeNotNull('end', instance.end?.toIso8601String());
+  writeNotNull('all_day', instance.allDay);
+  writeNotNull('location', instance.location);
+  writeNotNull('attendees', instance.attendees);
+  return val;
+}
+
 PhoneLogMeasure _$PhoneLogMeasureFromJson(Map<String, dynamic> json) {
   return PhoneLogMeasure(
       json['type'] == null
@@ -187,5 +251,39 @@ Map<String, dynamic> _$PhoneLogMeasureToJson(PhoneLogMeasure instance) {
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
   writeNotNull('days', instance.days);
+  return val;
+}
+
+CalendarMeasure _$CalendarMeasureFromJson(Map<String, dynamic> json) {
+  return CalendarMeasure(
+      json['type'] == null
+          ? null
+          : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
+      name: json['name'],
+      enabled: json['enabled'],
+      daysBack: json['days_back'] as int,
+      daysFuture: json['days_future'] as int)
+    ..c__ = json['c__'] as String
+    ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(k, e as String),
+    );
+}
+
+Map<String, dynamic> _$CalendarMeasureToJson(CalendarMeasure instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('c__', instance.c__);
+  writeNotNull('type', instance.type);
+  writeNotNull('name', instance.name);
+  writeNotNull('enabled', instance.enabled);
+  writeNotNull('configuration', instance.configuration);
+  writeNotNull('days_back', instance.daysBack);
+  writeNotNull('days_future', instance.daysFuture);
   return val;
 }

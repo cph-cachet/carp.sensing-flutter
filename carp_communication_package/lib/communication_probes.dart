@@ -52,3 +52,12 @@ class TextMessageProbe extends StreamProbe {
   Stream<Datum> get stream =>
       SmsReceiver().onSmsReceived.map((event) => TextMessageDatum.fromTextMessage(TextMessage.fromSmsMessage(event)));
 }
+
+/// A probe collecting calendar entries from the calendar on the phone.
+///
+/// See [CalendarMeasure] for how to configure this probe's measure.
+class CalendarProbe extends PeriodicDatumProbe {
+  DeviceCalendarPlugin _deviceCalendar = DeviceCalendarPlugin();
+
+  Future<Datum> getDatum() async {}
+}

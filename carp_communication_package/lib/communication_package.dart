@@ -19,12 +19,14 @@ class CommunicationSamplingPackage implements SamplingPackage {
   static const String TELEPHONY = "telephony";
   static const String TEXT_MESSAGE_LOG = "text-message-log";
   static const String TEXT_MESSAGE = "text-message";
+  static const String CALENDAR = "text-message";
 
   List<String> get dataTypes => [
         PHONE_LOG,
         //TELEPHONY,
         TEXT_MESSAGE_LOG,
         TEXT_MESSAGE,
+        CALENDAR,
       ];
 
   Probe create(String type) {
@@ -37,6 +39,8 @@ class CommunicationSamplingPackage implements SamplingPackage {
         return TextMessageProbe();
       case TELEPHONY:
         throw "Not implemented yet";
+      case CALENDAR:
+        return CalendarProbe();
       default:
         return null;
     }
@@ -55,14 +59,16 @@ class CommunicationSamplingPackage implements SamplingPackage {
     ..name = 'Common (default) communication sampling schema'
     ..powerAware = true
     ..measures.addEntries([
-      MapEntry(DataType.PHONE_LOG,
-          PhoneLogMeasure(MeasureType(NameSpace.CARP, DataType.PHONE_LOG), name: 'Phone Log', enabled: true, days: 30)),
+      MapEntry(PHONE_LOG,
+          PhoneLogMeasure(MeasureType(NameSpace.CARP, PHONE_LOG), name: 'Phone Log', enabled: true, days: 30)),
+      MapEntry(TEXT_MESSAGE_LOG,
+          Measure(MeasureType(NameSpace.CARP, TEXT_MESSAGE_LOG), name: 'Text Message (SMS) Log', enabled: true)),
       MapEntry(
-          DataType.TEXT_MESSAGE_LOG,
-          Measure(MeasureType(NameSpace.CARP, DataType.TEXT_MESSAGE_LOG),
-              name: 'Text Message (SMS) Log', enabled: true)),
-      MapEntry(DataType.TEXT_MESSAGE,
-          Measure(MeasureType(NameSpace.CARP, DataType.TEXT_MESSAGE), name: 'Text Message (SMS)', enabled: true)),
+          TEXT_MESSAGE, Measure(MeasureType(NameSpace.CARP, TEXT_MESSAGE), name: 'Text Message (SMS)', enabled: true)),
+      MapEntry(
+          CALENDAR,
+          CalendarMeasure(MeasureType(NameSpace.CARP, CALENDAR),
+              name: 'Calendar Events', enabled: true, frequency: 1 * 24 * 60 * 60 * 1000, daysBack: 1, daysFuture: 1)),
     ]);
 
   SamplingSchema get light => common
@@ -70,7 +76,8 @@ class CommunicationSamplingPackage implements SamplingPackage {
     ..name = 'Light communication sampling'
     ..measures[PHONE_LOG].enabled = false
     ..measures[TEXT_MESSAGE_LOG].enabled = false
-    ..measures[TEXT_MESSAGE].enabled = false;
+    ..measures[TEXT_MESSAGE].enabled = false
+    ..measures[CALENDAR].enabled = false;
 
   SamplingSchema get minimum => light..type = SamplingSchemaType.MINIMUM;
 
