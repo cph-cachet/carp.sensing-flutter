@@ -97,6 +97,8 @@ void main() {
     d = f.moved(dtu);
     expect(d.type, 'ENTER');
     print('moving to DTU - $d');
+    print(_encode(d));
+
     d = f.moved(lyngby);
     expect(d.type, 'EXIT');
     print('moving to Lyngby - $d');

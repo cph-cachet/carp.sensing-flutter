@@ -7,15 +7,16 @@ part of communication;
 // **************************************************************************
 
 TextMessageLogDatum _$TextMessageLogDatumFromJson(Map<String, dynamic> json) {
-  return TextMessageLogDatum()
+  return TextMessageLogDatum(
+      textMessageLog: (json['text_message_log'] as List)
+          ?.map((e) => e == null
+              ? null
+              : TextMessage.fromJson(e as Map<String, dynamic>))
+          ?.toList())
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
         ? null
-        : DateTime.parse(json['timestamp'] as String)
-    ..textMessageLog = (json['text_message_log'] as List)
-        ?.map((e) =>
-            e == null ? null : TextMessage.fromJson(e as Map<String, dynamic>))
-        ?.toList();
+        : DateTime.parse(json['timestamp'] as String);
 }
 
 Map<String, dynamic> _$TextMessageLogDatumToJson(TextMessageLogDatum instance) {

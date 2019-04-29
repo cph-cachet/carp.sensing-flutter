@@ -1,4 +1,4 @@
-## 0.3.11
+## 0.4.0
 * support for data transformers
    * OMH Geolocation
    * OMH PhysicalActivity

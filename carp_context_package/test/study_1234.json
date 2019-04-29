@@ -132,7 +132,7 @@
           "enabled": true,
           "configuration": {},
           "frequency": 600000,
-          "duration": 2000
+          "duration": 10000
         },
         {
           "c__": "PeriodicMeasure",
