@@ -14,13 +14,13 @@ dependencies:
   sms: ^0.2.4
   call_log: ^1.0.2
   crypto: ^2.0.0
-  carp_mobile_sensing: ^0.3.11
+  carp_mobile_sensing: ^0.4.0
 
 # Overriding carp libraries to use the local copy
 # Remove this when done development
-dependency_overrides:
-  carp_mobile_sensing:
-    path: ../carp_mobile_sensing/
+#dependency_overrides:
+#  carp_mobile_sensing:
+#    path: ../carp_mobile_sensing/
 
 dev_dependencies:
   flutter_test:
