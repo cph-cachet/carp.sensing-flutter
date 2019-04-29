@@ -53,59 +53,31 @@ class AudioProbe extends BufferingPeriodicProbe {
     super.onStop();
   }
 
-  void onSamplingStart() {
-    try {
-      _startAudioRecording();
-    } catch (err) {
-      controller.addError(err);
-    }
-  }
+  void onSamplingStart() => _startAudioRecording().catchError((err) => controller.addError(err));
 
-  void onSamplingEnd() {
-    _stopAudioRecording().catchError((err) => controller.addError(err));
-  }
+  void onSamplingEnd() => _stopAudioRecording().catchError((err) => controller.addError(err));
 
-  void _startAudioRecording() async {
-    if (_isRecording) return;
+  Future<String> _startAudioRecording() async {
+    if (_isRecording) throw new Exception('AudioProbe is already running');
     soundFileName = await filePath;
     _startRecordingTime = DateTime.now();
-    await _flutterSound.startRecorder(soundFileName);
     _isRecording = true;
+
+    return await _flutterSound.startRecorder(soundFileName);
   }
 
   Future<String> _stopAudioRecording() {
     return Future.sync(() {
       _endRecordingTime = DateTime.now();
       _isRecording = false;
+
       return _flutterSound.stopRecorder();
     });
   }
 
-//  Future<String> _stopAudioRecording() async {
-//    try {
-//      String result = await _flutterSound.stopRecorder();
-//      _endRecordingTime = DateTime.now();
-//      _isRecording = false;
-//      return result;
-//    } catch (err) {
-//      controller.addError(err);
-//      return err;
-//    }
-//  }
-
   Future<Datum> getDatum() async {
-    try {
-      String result = await _stopAudioRecording();
-      if (result != null) {
-        String filename = soundFileName.split("/").last;
-        return AudioDatum(
-            filename: filename, startRecordingTime: _startRecordingTime, endRecordingTime: _endRecordingTime);
-      } else {
-        return ErrorDatum(message: "No sound recording available");
-      }
-    } catch (err) {
-      return ErrorDatum(message: "AudioProbe Error: $err");
-    }
+    String filename = soundFileName.split("/").last;
+    return AudioDatum(filename: filename, startRecordingTime: _startRecordingTime, endRecordingTime: _endRecordingTime);
   }
 
   /// Returns the local path on the device where sound files can be stored.

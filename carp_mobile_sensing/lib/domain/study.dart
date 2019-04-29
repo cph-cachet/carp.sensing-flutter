@@ -16,7 +16,7 @@ part of domain;
 /// in the specified [dataFormat].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class Study extends Serializable {
-  /// The ID of this [Study].
+  /// The id of this [Study].
   String id;
 
   /// The ID of the user executing this study. May be [null] if no user is known.
@@ -34,7 +34,8 @@ class Study extends Serializable {
   /// Specify where and how to upload this study data.
   DataEndPoint dataEndPoint;
 
-  /// The format of the data to be uploaded according to [DataFormatType].
+  /// The preferred format of the data to be uploaded according to [DataFormatType].
+  /// Default using the [NameSpace.CARP].
   String dataFormat;
 
   /// The list of [Task]s in this [Study].
@@ -43,15 +44,13 @@ class Study extends Serializable {
   /// Create a new [Study] object with a set of configurations.
   ///
   /// The [id] and [userId] are required for a new study.
-  Study(this.id, this.userId,
-      {this.name,
-      this.description,
-      this.samplingStrategy = SamplingSchemaType.NORMAL,
-      this.dataEndPoint,
-      this.dataFormat})
+  Study(this.id, this.userId, {this.name, this.description, this.samplingStrategy, this.dataEndPoint, this.dataFormat})
       : assert(id != null, 'Cannot create a Study without an id: id=null'),
         assert(userId != null, 'Cannot create a Study without an user id: userId=null'),
-        super();
+        super() {
+    samplingStrategy ??= SamplingSchemaType.NORMAL;
+    dataFormat ??= NameSpace.CARP;
+  }
 
   static Function get fromJsonFunction => _$StudyFromJson;
   factory Study.fromJson(Map<String, dynamic> json) => _$StudyFromJson(json);
@@ -70,10 +69,11 @@ class Study extends Serializable {
   @override
   String toString() {
     String s = "";
-    s += "Study  id : " + id + "\n";
-    s += "     name : " + name + "\n";
-    s += "     user : " + userId + "\n";
-    s += " endpoint : " + dataEndPoint.type + "\n";
+    s += "Study     id : " + id + "\n";
+    s += "        name : " + name + "\n";
+    s += "        user : " + userId + "\n";
+    s += "    endpoint : " + dataEndPoint.type + "\n";
+    s += " data format : " + dataFormat + "\n";
     tasks.forEach((t) {
       s += t.toString();
     });

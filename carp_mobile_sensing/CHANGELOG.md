@@ -1,3 +1,11 @@
+## 0.4.0
+* support for data transformers
+   * OMH Geolocation
+   * OMH PhysicalActivity
+* support for privacy schema
+   * added support for hashing bluetooth names in the bluetooth package
+* upgrade to json_serializable v.2
+
 ## 0.3.10
 * minor change to the `StreamProbe` API - now non-static streams can be used by implementing the `get stream` method.
 * update of the relevant sampling packages using `StreamProbe`

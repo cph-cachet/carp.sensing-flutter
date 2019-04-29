@@ -6,6 +6,8 @@
  */
 part of domain;
 
+String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
+
 /// Specify how sampling should be done. Used to make default configuration of [Measure]s.
 ///
 /// A new [SamplingSchema] can be created for specific purposes. For example, the following schema is

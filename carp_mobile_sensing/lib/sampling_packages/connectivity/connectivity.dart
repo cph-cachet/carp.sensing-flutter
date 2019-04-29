@@ -9,8 +9,11 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:connectivity/connectivity.dart';
 
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+import 'package:crypto/crypto.dart';
+import 'dart:convert';
 
 part 'connectivity_probes.dart';
 part 'connectivity_datum.dart';
 part 'connectivity.g.dart';
 part 'connectivity_package.dart';
+part 'connectivity_privacy.dart';

@@ -2,6 +2,7 @@ part of mobile_sensing_app;
 
 class ProbeDescription {
   static Map<String, String> get probeTypeDescription => {
+        DataType.UNKNOWN: 'Unknown Probe',
         DataType.NONE: 'Non-configured Probe',
         DataType.MEMORY: 'Collecting free physical and virtual memory.',
         DataType.DEVICE: 'Basic Device (Phone) Information.',
@@ -24,10 +25,12 @@ class ProbeDescription {
         DataType.ACTIVITY: 'Recognize physical activity, e.g. sitting, walking, biking, etc.',
         DataType.APPLE_HEALTHKIT: 'Collects health data from Apple Health Kit.',
         DataType.GOOGLE_FIT: 'Collects health data from Google Fit.',
-        DataType.WEATHER: 'Collects local weather on a regular basis.'
+        DataType.WEATHER: 'Collects local weather on a regular basis.',
+        DataType.GEOFENCE: 'Track movement in/our of this geofence.'
       };
 
   static Map<String, Icon> get probeTypeIcon => {
+        DataType.UNKNOWN: Icon(Icons.error, size: 50, color: CACHET.GREY_4),
         DataType.NONE: Icon(Icons.report_problem, size: 50, color: CACHET.GREY_4),
         DataType.MEMORY: Icon(Icons.memory, size: 50, color: CACHET.GREY_4),
         DataType.DEVICE: Icon(Icons.phone_android, size: 50, color: CACHET.GREY_4),
@@ -50,7 +53,8 @@ class ProbeDescription {
         DataType.ACTIVITY: Icon(Icons.directions_bike, size: 50, color: CACHET.ORANGE),
         DataType.APPLE_HEALTHKIT: Icon(Icons.healing, size: 50, color: CACHET.RED),
         DataType.GOOGLE_FIT: Icon(Icons.directions_run, size: 50, color: CACHET.GREEN),
-        DataType.WEATHER: Icon(Icons.cloud, size: 50, color: CACHET.LIGHT_BLUE_2)
+        DataType.WEATHER: Icon(Icons.cloud, size: 50, color: CACHET.LIGHT_BLUE_2),
+        DataType.GEOFENCE: Icon(Icons.location_on, size: 50, color: CACHET.CYAN)
       };
 
   static Map<ProbeState, Icon> get probeStateIcon => {

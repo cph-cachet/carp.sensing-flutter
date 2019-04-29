@@ -7,19 +7,20 @@ part of communication;
 // **************************************************************************
 
 TextMessageLogDatum _$TextMessageLogDatumFromJson(Map<String, dynamic> json) {
-  return TextMessageLogDatum()
+  return TextMessageLogDatum(
+      textMessageLog: (json['text_message_log'] as List)
+          ?.map((e) => e == null
+              ? null
+              : TextMessage.fromJson(e as Map<String, dynamic>))
+          ?.toList())
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
         ? null
-        : DateTime.parse(json['timestamp'] as String)
-    ..textMessageLog = (json['text_message_log'] as List)
-        ?.map((e) =>
-            e == null ? null : TextMessage.fromJson(e as Map<String, dynamic>))
-        ?.toList();
+        : DateTime.parse(json['timestamp'] as String);
 }
 
 Map<String, dynamic> _$TextMessageLogDatumToJson(TextMessageLogDatum instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -45,7 +46,7 @@ TextMessageDatum _$TextMessageDatumFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$TextMessageDatumToJson(TextMessageDatum instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -77,7 +78,7 @@ TextMessage _$TextMessageFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$TextMessageToJson(TextMessage instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -111,7 +112,7 @@ PhoneLogDatum _$PhoneLogDatumFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$PhoneLogDatumToJson(PhoneLogDatum instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -139,7 +140,7 @@ PhoneCall _$PhoneCallFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$PhoneCallToJson(PhoneCall instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -166,12 +167,13 @@ PhoneLogMeasure _$PhoneLogMeasureFromJson(Map<String, dynamic> json) {
       enabled: json['enabled'],
       days: json['days'] as int)
     ..c__ = json['c__'] as String
-    ..configuration = (json['configuration'] as Map<String, dynamic>)
-        ?.map((k, e) => MapEntry(k, e as String));
+    ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(k, e as String),
+    );
 }
 
 Map<String, dynamic> _$PhoneLogMeasureToJson(PhoneLogMeasure instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {

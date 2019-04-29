@@ -1,3 +1,6 @@
+## 0.3.2
+* upgrade to json_serializable v.2
+
 ## 0.3.1
 * adjustment to new CARP web service API as implemented in `carp_webservices` package.
 * small update to pubspec

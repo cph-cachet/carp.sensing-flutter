@@ -6,6 +6,8 @@ library carp_mobile_sensing;
 export 'package:carp_mobile_sensing/datastore/datastore.dart';
 export 'package:carp_mobile_sensing/runtime/runtime.dart';
 export 'package:carp_mobile_sensing/domain/domain.dart';
+export 'package:carp_mobile_sensing/transformer_schemas/omh/omh_schemas.dart';
+export 'package:carp_mobile_sensing/transformer_schemas/privacy/privacy_schemas.dart';
 
 // The built-in sampling packages
 export 'package:carp_mobile_sensing/sampling_packages/device/device.dart';

@@ -22,7 +22,7 @@ PedometerDatum _$PedometerDatumFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$PedometerDatumToJson(PedometerDatum instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -50,7 +50,7 @@ AccelerometerDatum _$AccelerometerDatumFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$AccelerometerDatumToJson(AccelerometerDatum instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -78,7 +78,7 @@ GyroscopeDatum _$GyroscopeDatumFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$GyroscopeDatumToJson(GyroscopeDatum instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -107,7 +107,7 @@ LightDatum _$LightDatumFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$LightDatumToJson(LightDatum instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {

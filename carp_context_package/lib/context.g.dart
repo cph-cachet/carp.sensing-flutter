@@ -17,7 +17,7 @@ ActivityDatum _$ActivityDatumFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$ActivityDatumToJson(ActivityDatum instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -47,7 +47,7 @@ LocationDatum _$LocationDatumFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$LocationDatumToJson(LocationDatum instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -100,7 +100,7 @@ WeatherDatum _$WeatherDatumFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$WeatherDatumToJson(WeatherDatum instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -145,12 +145,13 @@ WeatherMeasure _$WeatherMeasureFromJson(Map<String, dynamic> json) {
       duration: json['duration'],
       apiKey: json['api_key'] as String)
     ..c__ = json['c__'] as String
-    ..configuration = (json['configuration'] as Map<String, dynamic>)
-        ?.map((k, e) => MapEntry(k, e as String));
+    ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(k, e as String),
+    );
 }
 
 Map<String, dynamic> _$WeatherMeasureToJson(WeatherMeasure instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -166,5 +167,89 @@ Map<String, dynamic> _$WeatherMeasureToJson(WeatherMeasure instance) {
   writeNotNull('frequency', instance.frequency);
   writeNotNull('duration', instance.duration);
   writeNotNull('api_key', instance.apiKey);
+  return val;
+}
+
+Location _$LocationFromJson(Map<String, dynamic> json) {
+  return Location((json['latitude'] as num)?.toDouble(),
+      (json['longitude'] as num)?.toDouble())
+    ..c__ = json['c__'] as String;
+}
+
+Map<String, dynamic> _$LocationToJson(Location instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('c__', instance.c__);
+  writeNotNull('latitude', instance.latitude);
+  writeNotNull('longitude', instance.longitude);
+  return val;
+}
+
+GeofenceMeasure _$GeofenceMeasureFromJson(Map<String, dynamic> json) {
+  return GeofenceMeasure(
+      json['type'] == null
+          ? null
+          : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
+      enabled: json['enabled'],
+      center: json['center'] == null
+          ? null
+          : Location.fromJson(json['center'] as Map<String, dynamic>),
+      radius: (json['radius'] as num)?.toDouble(),
+      name: json['name'] as String)
+    ..c__ = json['c__'] as String
+    ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(k, e as String),
+    )
+    ..dwell = json['dwell'] as int;
+}
+
+Map<String, dynamic> _$GeofenceMeasureToJson(GeofenceMeasure instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('c__', instance.c__);
+  writeNotNull('type', instance.type);
+  writeNotNull('enabled', instance.enabled);
+  writeNotNull('configuration', instance.configuration);
+  writeNotNull('center', instance.center);
+  writeNotNull('radius', instance.radius);
+  writeNotNull('dwell', instance.dwell);
+  writeNotNull('name', instance.name);
+  return val;
+}
+
+GeofenceDatum _$GeofenceDatumFromJson(Map<String, dynamic> json) {
+  return GeofenceDatum(
+      type: json['type'] as String, name: json['name'] as String)
+    ..id = json['id'] as String
+    ..timestamp = json['timestamp'] == null
+        ? null
+        : DateTime.parse(json['timestamp'] as String);
+}
+
+Map<String, dynamic> _$GeofenceDatumToJson(GeofenceDatum instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', instance.id);
+  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  writeNotNull('name', instance.name);
+  writeNotNull('type', instance.type);
   return val;
 }

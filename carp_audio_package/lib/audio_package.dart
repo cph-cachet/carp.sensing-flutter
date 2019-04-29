@@ -47,11 +47,11 @@ class AudioSamplingPackage implements SamplingPackage {
       MapEntry(
           DataType.AUDIO,
           AudioMeasure(MeasureType(NameSpace.CARP, DataType.AUDIO),
-              name: 'Audio Recording', enabled: true, frequency: 60 * 1000, duration: 2 * 1000)),
+              name: 'Audio Recording', enabled: true, frequency: 60 * 1000, duration: 10 * 1000)),
       MapEntry(
           DataType.NOISE,
           NoiseMeasure(MeasureType(NameSpace.CARP, DataType.NOISE),
-              name: 'Ambient Noise', enabled: true, frequency: 60 * 1000, duration: 2 * 1000)),
+              name: 'Ambient Noise', enabled: true, frequency: 37 * 1000, duration: 2 * 1000)),
     ]);
 
   SamplingSchema get light => common

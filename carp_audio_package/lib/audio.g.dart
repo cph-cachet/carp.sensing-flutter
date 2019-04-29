@@ -22,7 +22,7 @@ AudioDatum _$AudioDatumFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$AudioDatumToJson(AudioDatum instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -53,7 +53,7 @@ NoiseDatum _$NoiseDatumFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$NoiseDatumToJson(NoiseDatum instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -81,12 +81,13 @@ AudioMeasure _$AudioMeasureFromJson(Map<String, dynamic> json) {
       duration: json['duration'],
       studyId: json['study_id'] as String)
     ..c__ = json['c__'] as String
-    ..configuration = (json['configuration'] as Map<String, dynamic>)
-        ?.map((k, e) => MapEntry(k, e as String));
+    ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(k, e as String),
+    );
 }
 
 Map<String, dynamic> _$AudioMeasureToJson(AudioMeasure instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -116,12 +117,13 @@ NoiseMeasure _$NoiseMeasureFromJson(Map<String, dynamic> json) {
       duration: json['duration'],
       samplingRate: json['sampling_rate'] as int)
     ..c__ = json['c__'] as String
-    ..configuration = (json['configuration'] as Map<String, dynamic>)
-        ?.map((k, e) => MapEntry(k, e as String));
+    ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(k, e as String),
+    );
 }
 
 Map<String, dynamic> _$NoiseMeasureToJson(NoiseMeasure instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {

@@ -18,7 +18,7 @@ class DataPoint {
 
   DataPoint(this.header, this.body);
 
-  DataPoint.fromDatum(String studyId, String userId, CARPDatum datum) {
+  DataPoint.fromDatum(String studyId, String userId, Datum datum) {
     DataPointHeader header = new DataPointHeader(studyId, userId);
     header.startTime = (datum is CARPDatum) ? datum.timestamp.toUtc() : new DateTime.now().toUtc();
     header.dataFormat = datum.format;

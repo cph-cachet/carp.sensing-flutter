@@ -14,17 +14,17 @@ CarpDataEndPoint _$CarpDataEndPointFromJson(Map<String, dynamic> json) {
       clientSecret: json['client_secret'] as String,
       email: json['email'] as String,
       password: json['password'] as String,
-      collection: json['collection'] as String)
+      collection: json['collection'] as String,
+      bufferSize: json['buffer_size'],
+      zip: json['zip'],
+      encrypt: json['encrypt'],
+      publicKey: json['public_key'])
     ..c__ = json['c__'] as String
-    ..type = json['type'] as String
-    ..bufferSize = json['buffer_size'] as int
-    ..zip = json['zip'] as bool
-    ..encrypt = json['encrypt'] as bool
-    ..publicKey = json['public_key'] as String;
+    ..type = json['type'] as String;
 }
 
 Map<String, dynamic> _$CarpDataEndPointToJson(CarpDataEndPoint instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {

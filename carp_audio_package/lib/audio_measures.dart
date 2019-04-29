@@ -12,23 +12,19 @@ part of audio;
 /// length of the recording.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class AudioMeasure extends PeriodicMeasure {
+  static const String DEFAULT_STUDY_ID = 'default_study';
+
   /// The study id for the study recording this audio. Needed for
   /// storing the audio file correctly in the device's file system.
   /// If no [studyId] is provide, `default_study` will be used as the default id.
-  String studyId = 'default_study';
+  String studyId = DEFAULT_STUDY_ID;
 
-  AudioMeasure(MeasureType type,
-      {name, enabled = true, frequency, duration, this.studyId})
-      : super(type,
-            name: name,
-            enabled: enabled,
-            frequency: frequency,
-            duration: duration);
+  AudioMeasure(MeasureType type, {name, enabled = true, frequency, duration, this.studyId = DEFAULT_STUDY_ID})
+      : super(type, name: name, enabled: enabled, frequency: frequency, duration: duration);
 
   static Function get fromJsonFunction => _$AudioMeasureFromJson;
   factory AudioMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(
-          json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$AudioMeasureToJson(this);
 }
 
@@ -40,21 +36,11 @@ class NoiseMeasure extends PeriodicMeasure {
 
   int samplingRate = DEFAULT_SAMPLING_RATE;
 
-  NoiseMeasure(MeasureType type,
-      {name,
-      enabled = true,
-      frequency,
-      duration,
-      this.samplingRate = DEFAULT_SAMPLING_RATE})
-      : super(type,
-            name: name,
-            enabled: enabled,
-            frequency: frequency,
-            duration: duration);
+  NoiseMeasure(MeasureType type, {name, enabled = true, frequency, duration, this.samplingRate = DEFAULT_SAMPLING_RATE})
+      : super(type, name: name, enabled: enabled, frequency: frequency, duration: duration);
 
   static Function get fromJsonFunction => _$NoiseMeasureFromJson;
   factory NoiseMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(
-          json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$NoiseMeasureToJson(this);
 }

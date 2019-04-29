@@ -83,8 +83,8 @@ class StudyExecutor extends Executor {
 /// The [TaskExecutor] is responsible for executing [Task]s in the [Study].
 /// For each task it looks up appropriate [Probe]s to collect data.
 ///
-///Note that the [TaskExecutor] in itself is a [Probe] and hence work as a 'super probe'.
-///This - amongst other things - imply that you can listen to datum [events] from a task executor.
+/// Note that a [TaskExecutor] in itself is a [Probe] and hence work as a 'super probe'.
+/// This - amongst other things - imply that you can listen to datum [events] from a task executor.
 class TaskExecutor extends Executor {
   Task get task => _task;
   Task _task;
@@ -100,7 +100,11 @@ class TaskExecutor extends Executor {
 
   Future onStart() async {
     for (Measure measure in task.measures) {
-      Probe probe = ProbeRegistry.lookup(measure.type.name);
+      //Probe probe = ProbeRegistry.lookup(measure.type.name);
+      // create a new probe for each measure - this ensures that we can have
+      // multiple measures of the same type, each using its own probe instance
+      Probe probe = ProbeRegistry.create(measure.type.name);
+      assert(probe != null, 'A probe for measure type ${measure.type.name} could not be created.');
       if (probe != null) {
         executors.add(probe);
         _group.add(probe.events);

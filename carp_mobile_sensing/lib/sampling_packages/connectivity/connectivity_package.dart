@@ -20,7 +20,9 @@ class ConnectivitySamplingPackage implements SamplingPackage {
     }
   }
 
-  void onRegister() {} // does nothing for this device sampling package
+  void onRegister() {
+    TransformerSchemaRegistry.lookup(PrivacySchema.DEFAULT).add(BLUETOOTH, blueetoth_name_anoymizer);
+  }
 
   SamplingSchema get common => SamplingSchema()
     ..type = SamplingSchemaType.COMMON
@@ -34,7 +36,7 @@ class ConnectivitySamplingPackage implements SamplingPackage {
       MapEntry(
           DataType.BLUETOOTH,
           PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.BLUETOOTH),
-              name: 'Nearby Devices (Bluetooth Scan)', enabled: true, frequency: 10 * 60 * 1000, duration: 2 * 1000)),
+              name: 'Nearby Devices (Bluetooth Scan)', enabled: true, frequency: 10 * 60 * 1000, duration: 10 * 1000)),
     ]);
 
   SamplingSchema get light => common

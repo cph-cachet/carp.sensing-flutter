@@ -1,3 +1,10 @@
+/*
+ * Copyright 2019 Copenhagen Center for Health Technology (CACHET) at the
+ * Technical University of Denmark (DTU).
+ * Use of this source code is governed by a MIT-style license that can be
+ * found in the LICENSE file.
+ */
+
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -180,6 +187,12 @@ void example_2() {
 
 /// An example of how to restart probes or an entire sampling study.
 void restart_example() {}
+
+/// An example of how to configure a [StudyController]
+void study_controller_example() {
+  Study study = Study('DF#4dD', 'user@cachet.dk');
+  StudyController controller = StudyController(study, privacySchemaName: PrivacySchema.DEFAULT);
+}
 
 void scratchPad() {
   Measure mLoc = Measure(MeasureType(NameSpace.CARP, DataType.LOCATION));

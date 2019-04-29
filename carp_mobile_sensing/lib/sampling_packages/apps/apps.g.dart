@@ -17,7 +17,7 @@ AppsDatum _$AppsDatumFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$AppsDatumToJson(AppsDatum instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -40,12 +40,13 @@ AppUsageDatum _$AppUsageDatumFromJson(Map<String, dynamic> json) {
     ..start =
         json['start'] == null ? null : DateTime.parse(json['start'] as String)
     ..end = json['end'] == null ? null : DateTime.parse(json['end'] as String)
-    ..usage = (json['usage'] as Map<String, dynamic>)
-        ?.map((k, e) => MapEntry(k, (e as num)?.toDouble()));
+    ..usage = (json['usage'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(k, (e as num)?.toDouble()),
+    );
 }
 
 Map<String, dynamic> _$AppUsageDatumToJson(AppUsageDatum instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
