@@ -83,3 +83,5 @@ Before creating a study and running it, register this package in the
 `````dart
   SamplingPackageRegistry.register(AudioSamplingPackage());
 `````
+
+**Note:** The audio and noise probe / measure *cannot* run at the same time, since they both make exclusive use of the microphone.

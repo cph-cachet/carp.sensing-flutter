@@ -24,7 +24,7 @@ Study _$StudyFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$StudyToJson(Study instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -49,7 +49,7 @@ DataEndPoint _$DataEndPointFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$DataEndPointToJson(DataEndPoint instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -73,7 +73,7 @@ FileDataEndPoint _$FileDataEndPointFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$FileDataEndPointToJson(FileDataEndPoint instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -100,7 +100,7 @@ Task _$TaskFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$TaskToJson(Task instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -124,7 +124,7 @@ ParallelTask _$ParallelTaskFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$ParallelTaskToJson(ParallelTask instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -148,7 +148,7 @@ SequentialTask _$SequentialTaskFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$SequentialTaskToJson(SequentialTask instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -173,7 +173,7 @@ DataPoint _$DataPointFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$DataPointToJson(DataPoint instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -203,7 +203,7 @@ DataPointHeader _$DataPointHeaderFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$DataPointHeaderToJson(DataPointHeader instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -235,7 +235,7 @@ CARPDatum _$CARPDatumFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$CARPDatumToJson(CARPDatum instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -257,7 +257,7 @@ StringDatum _$StringDatumFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$StringDatumToJson(StringDatum instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -273,8 +273,9 @@ Map<String, dynamic> _$StringDatumToJson(StringDatum instance) {
 
 MapDatum _$MapDatumFromJson(Map<String, dynamic> json) {
   return MapDatum(
-      map: (json['map'] as Map<String, dynamic>)
-          ?.map((k, e) => MapEntry(k, e as String)))
+      map: (json['map'] as Map<String, dynamic>)?.map(
+    (k, e) => MapEntry(k, e as String),
+  ))
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
         ? null
@@ -282,7 +283,7 @@ MapDatum _$MapDatumFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$MapDatumToJson(MapDatum instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -305,7 +306,7 @@ ErrorDatum _$ErrorDatumFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$ErrorDatumToJson(ErrorDatum instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -332,7 +333,7 @@ MultiDatum _$MultiDatumFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$MultiDatumToJson(MultiDatum instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -351,7 +352,7 @@ DataFormat _$DataFormatFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$DataFormatToJson(DataFormat instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -372,12 +373,13 @@ Measure _$MeasureFromJson(Map<String, dynamic> json) {
       name: json['name'] as String,
       enabled: json['enabled'] as bool)
     ..c__ = json['c__'] as String
-    ..configuration = (json['configuration'] as Map<String, dynamic>)
-        ?.map((k, e) => MapEntry(k, e as String));
+    ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(k, e as String),
+    );
 }
 
 Map<String, dynamic> _$MeasureToJson(Measure instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -403,12 +405,13 @@ PeriodicMeasure _$PeriodicMeasureFromJson(Map<String, dynamic> json) {
       frequency: json['frequency'] as int,
       duration: json['duration'] as int)
     ..c__ = json['c__'] as String
-    ..configuration = (json['configuration'] as Map<String, dynamic>)
-        ?.map((k, e) => MapEntry(k, e as String));
+    ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(k, e as String),
+    );
 }
 
 Map<String, dynamic> _$PeriodicMeasureToJson(PeriodicMeasure instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -432,7 +435,7 @@ MeasureType _$MeasureTypeFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$MeasureTypeToJson(MeasureType instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {

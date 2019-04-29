@@ -20,7 +20,7 @@ DeviceDatum _$DeviceDatumFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$DeviceDatumToJson(DeviceDatum instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -51,7 +51,7 @@ BatteryDatum _$BatteryDatumFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$BatteryDatumToJson(BatteryDatum instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -77,7 +77,7 @@ FreeMemoryDatum _$FreeMemoryDatumFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$FreeMemoryDatumToJson(FreeMemoryDatum instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -102,7 +102,7 @@ ScreenDatum _$ScreenDatumFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$ScreenDatumToJson(ScreenDatum instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {

@@ -33,7 +33,8 @@ class Sensing {
     print(study.toString());
 
     // Create a Study Controller that can manage this study, initialize it, and start it.
-    controller = StudyController(study, privacySchemaName: PrivacySchema.DEFAULT);
+    controller = StudyController(study);
+    //controller = StudyController(study, privacySchemaName: PrivacySchema.DEFAULT); // a controller w. privacy
     await controller.initialize();
     controller.start();
     print("Sensing started ...");
@@ -78,7 +79,7 @@ class StudyMock implements StudyManager {
         ..dataFormat = NameSpace.OMH
         ..addTask(Task()
           ..measures =
-              SamplingSchema.common(namespace: NameSpace.CARP).getMeasureList([DataType.AUDIO, DataType.NOISE]));
+              SamplingSchema.common(namespace: NameSpace.CARP).getMeasureList([DataType.AUDIO, DataType.BLUETOOTH]));
 
 //    ..addTask(Task()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
 

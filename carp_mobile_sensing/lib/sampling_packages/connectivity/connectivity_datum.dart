@@ -44,11 +44,14 @@ class ConnectivityDatum extends CARPDatum {
   String toString() => 'Connectivity Status - $connectivityStatus';
 }
 
-/// A [Datum] that holds information on nearby Bluetooth devices.
+/// A [Datum] that holds information of a nearby Bluetooth device.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class BluetoothDatum extends CARPDatum {
   static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.BLUETOOTH);
   DataFormat get format => CARP_DATA_FORMAT;
+
+  /// The bluetooth advertising name of the device.
+  String advertisementName;
 
   /// The bluetooth id of the nearby device.
   String bluetoothDeviceId;
@@ -79,6 +82,7 @@ class BluetoothDatum extends CARPDatum {
     ..bluetoothDeviceName = result.device.name
     ..connectable = result.advertisementData.connectable
     ..txPowerLevel = result.advertisementData.txPowerLevel
+    ..advertisementName = result.advertisementData.localName
     ..rssi = result.rssi
     ..bluetoothDeviceType = getBluetoothDeviceType(result.device.type);
 
@@ -99,5 +103,5 @@ class BluetoothDatum extends CARPDatum {
   Map<String, dynamic> toJson() => _$BluetoothDatumToJson(this);
 
   String toString() =>
-      'Bluetooth Device - id: $bluetoothDeviceId, name: $bluetoothDeviceName, type: $bluetoothDeviceType, connectable: $connectable, rssi: $rssi';
+      'Bluetooth Device - advertisementName: $advertisementName, id: $bluetoothDeviceId, name: $bluetoothDeviceName, type: $bluetoothDeviceType, connectable: $connectable, rssi: $rssi';
 }
