@@ -19,7 +19,7 @@ class CommunicationSamplingPackage implements SamplingPackage {
   static const String TELEPHONY = "telephony";
   static const String TEXT_MESSAGE_LOG = "text-message-log";
   static const String TEXT_MESSAGE = "text-message";
-  static const String CALENDAR = "text-message";
+  static const String CALENDAR = "calendar";
 
   List<String> get dataTypes => [
         PHONE_LOG,

@@ -15,7 +15,7 @@ dependencies:
   call_log: ^1.0.2
   device_calendar: ^0.1.1
   crypto: ^2.0.0
-  #carp_mobile_sensing: ^0.4.0
+  #carp_mobile_sensing: ^0.5.0
 
 # Overriding carp libraries to use the local copy
 # Remove this when done development

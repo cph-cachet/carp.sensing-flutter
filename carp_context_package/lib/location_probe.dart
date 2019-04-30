@@ -21,6 +21,8 @@ location.Location locationService = location.Location();
 /// Collects location information from the underlying OS's location API.
 /// Is a [StreamProbe] that generates a [LocationDatum] every time location is changed.
 class LocationProbe extends StreamProbe {
-  Stream<LocationDatum> get stream =>
-      locationService.onLocationChanged().asBroadcastStream().map((event) => LocationDatum.fromMap(event));
+  Stream<LocationDatum> get stream => locationService
+      .onLocationChanged()
+      .asBroadcastStream()
+      .map((location) => LocationDatum.fromLocationData(location));
 }

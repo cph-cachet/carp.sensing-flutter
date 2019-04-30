@@ -29,9 +29,9 @@ class Location extends Serializable {
       : assert(latitude != null),
         assert(longitude != null);
 
-  Location.fromMap(Map<dynamic, dynamic> map)
-      : latitude = map['latitude'],
-        longitude = map['longitude'],
+  Location.fromLocationData(location.LocationData location)
+      : latitude = location.latitude,
+        longitude = location.longitude,
         super();
 
   /// Returns the approximate distance in meters between this location and the given location.

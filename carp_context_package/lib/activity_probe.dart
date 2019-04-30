@@ -11,5 +11,5 @@ part of context;
 /// It generates an [ActivityDatum] every time an activity is detected.
 class ActivityProbe extends StreamProbe {
   Stream<Datum> get stream =>
-      ActivityRecognition.activityUpdates().map((activity) => ActivityDatum.fromActivity(activity));
+      ActivityRecognitionAlt.activityUpdates().map((activity) => ActivityDatum.fromActivity(activity));
 }

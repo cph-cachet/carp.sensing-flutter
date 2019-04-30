@@ -12,7 +12,11 @@ class GeofenceProbe extends StreamProbe {
     super.onInitialize(measure);
     fence = Geofence.fromMeasure(measure);
     // listen in on the location service
-    locationService.onLocationChanged().asBroadcastStream().map((event) => Location.fromMap(event)).listen((location) {
+    locationService
+        .onLocationChanged()
+        .asBroadcastStream()
+        .map((location) => Location.fromLocationData(location))
+        .listen((location) {
       // when a location event is fired, check if the new location creates a new [GeofenceDatum] event.
       // if so -- add it to the main stream.
       GeofenceDatum datum = fence.moved(location);
