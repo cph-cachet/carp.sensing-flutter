@@ -59,8 +59,10 @@ class CommunicationSamplingPackage implements SamplingPackage {
     ..name = 'Common (default) communication sampling schema'
     ..powerAware = true
     ..measures.addEntries([
-      MapEntry(PHONE_LOG,
-          PhoneLogMeasure(MeasureType(NameSpace.CARP, PHONE_LOG), name: 'Phone Log', enabled: true, days: 30)),
+      MapEntry(
+          PHONE_LOG,
+          PhoneLogMeasure(MeasureType(NameSpace.CARP, PHONE_LOG),
+              name: 'Phone Log', enabled: true, frequency: 1 * 24 * 60 * 60 * 1000, days: 2)),
       MapEntry(TEXT_MESSAGE_LOG,
           Measure(MeasureType(NameSpace.CARP, TEXT_MESSAGE_LOG), name: 'Text Message (SMS) Log', enabled: true)),
       MapEntry(

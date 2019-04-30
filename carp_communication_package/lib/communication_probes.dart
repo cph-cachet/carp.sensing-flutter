@@ -7,9 +7,8 @@
 
 part of communication;
 
-/// A probe that collects the phone log from this device.
-/// Only collects this information once when the [getDatum] method is called.
-class PhoneLogProbe extends DatumProbe {
+/// A probe that collects the phone log from this device on a regular basis (e.g. once pr. day).
+class PhoneLogProbe extends PeriodicDatumProbe {
   Future<Datum> getDatum() async {
     int days = (measure as PhoneLogMeasure).days;
     Iterable<CallLogEntry> entries;
@@ -40,10 +39,8 @@ class TextMessageLogProbe extends DatumProbe {
   Future<Datum> getDatum() async {
     SmsQuery query = new SmsQuery();
     List<SmsMessage> _messages = await query.getAllSms;
-    return TextMessageLogDatum()..textMessageLog = _messages.map(_smsToTextMessage).toList();
+    return TextMessageLogDatum()..textMessageLog = _messages.map((sms) => TextMessage.fromSmsMessage(sms)).toList();
   }
-
-  TextMessage _smsToTextMessage(SmsMessage sms) => TextMessage.fromSmsMessage(sms);
 }
 
 /// The [TextMessageProbe] listens to SMS messages and collects a
@@ -58,6 +55,48 @@ class TextMessageProbe extends StreamProbe {
 /// See [CalendarMeasure] for how to configure this probe's measure.
 class CalendarProbe extends PeriodicDatumProbe {
   DeviceCalendarPlugin _deviceCalendar = DeviceCalendarPlugin();
+  List<Calendar> _calendars;
 
-  Future<Datum> getDatum() async {}
+  void onInitialize(Measure measure) {
+    assert(measure is CalendarMeasure);
+    super.onInitialize(measure);
+    _retrieveCalendars();
+  }
+
+  void _retrieveCalendars() async {
+    // try to get permission to access calendar
+    try {
+      var permissionsGranted = await _deviceCalendar.hasPermissions();
+      if (permissionsGranted.isSuccess && !permissionsGranted.data) {
+        permissionsGranted = await _deviceCalendar.requestPermissions();
+        if (!permissionsGranted.isSuccess || !permissionsGranted.data) {
+          return;
+        }
+      }
+
+      final calendarsResult = await _deviceCalendar.retrieveCalendars();
+      _calendars = calendarsResult?.data;
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<Datum> getDatum() async {
+    if (_calendars == null) await _retrieveCalendars();
+
+    final startDate = new DateTime.now().subtract(new Duration(days: (measure as CalendarMeasure).daysBack));
+    final endDate = new DateTime.now().add(new Duration(days: (measure as CalendarMeasure).daysFuture));
+
+    if (_calendars != null) {
+      _calendars.forEach((calendar) async {
+        var calendarEventsResult = await _deviceCalendar.retrieveEvents(
+            calendar.id, RetrieveEventsParams(startDate: startDate, endDate: endDate));
+        List<Event> _calendarEvents = calendarEventsResult?.data;
+        if (_calendarEvents != null) {
+          return CalendarDatum()
+            ..calendarEvents = _calendarEvents.map((event) => CalendarEvent.fromEvent(event)).toList();
+        }
+      });
+    }
+  }
 }

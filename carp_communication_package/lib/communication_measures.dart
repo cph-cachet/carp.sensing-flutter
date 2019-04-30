@@ -9,14 +9,14 @@ part of communication;
 
 /// Specifies the configuration of how to sample a phone log from this device.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class PhoneLogMeasure extends Measure {
-  static const int DEFAULT_NUMBER_OF_DAYS = 30;
+class PhoneLogMeasure extends PeriodicMeasure {
+  static const int DEFAULT_NUMBER_OF_DAYS = 2;
 
   /// The number of days back in time to collect the phone log from.
   int days = DEFAULT_NUMBER_OF_DAYS;
 
-  PhoneLogMeasure(MeasureType type, {name, enabled, this.days = DEFAULT_NUMBER_OF_DAYS})
-      : super(type, enabled: enabled, name: name);
+  PhoneLogMeasure(MeasureType type, {name, enabled, frequency, duration, this.days = DEFAULT_NUMBER_OF_DAYS})
+      : super(type, enabled: enabled, name: name, frequency: frequency, duration: duration);
 
   static Function get fromJsonFunction => _$PhoneLogMeasureFromJson;
   factory PhoneLogMeasure.fromJson(Map<String, dynamic> json) =>
