@@ -48,10 +48,12 @@ class CommunicationSamplingPackage implements SamplingPackage {
 
   void onRegister() {
     FromJsonFactory.registerFromJsonFunction("PhoneLogMeasure", PhoneLogMeasure.fromJsonFunction);
+    FromJsonFactory.registerFromJsonFunction("CalendarMeasure", CalendarMeasure.fromJsonFunction);
 
     TransformerSchemaRegistry.lookup(PrivacySchema.DEFAULT).add(TEXT_MESSAGE, text_message_datum_anoymizer);
     TransformerSchemaRegistry.lookup(PrivacySchema.DEFAULT).add(TEXT_MESSAGE_LOG, text_message_log_anoymizer);
     TransformerSchemaRegistry.lookup(PrivacySchema.DEFAULT).add(PHONE_LOG, phone_log_anoymizer);
+    TransformerSchemaRegistry.lookup(PrivacySchema.DEFAULT).add(CALENDAR, calendar_anoymizer);
   }
 
   SamplingSchema get common => SamplingSchema()

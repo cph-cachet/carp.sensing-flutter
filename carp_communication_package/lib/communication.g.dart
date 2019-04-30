@@ -229,6 +229,8 @@ PhoneLogMeasure _$PhoneLogMeasureFromJson(Map<String, dynamic> json) {
           : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
       name: json['name'],
       enabled: json['enabled'],
+      frequency: json['frequency'],
+      duration: json['duration'],
       days: json['days'] as int)
     ..c__ = json['c__'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
@@ -250,6 +252,8 @@ Map<String, dynamic> _$PhoneLogMeasureToJson(PhoneLogMeasure instance) {
   writeNotNull('name', instance.name);
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
+  writeNotNull('frequency', instance.frequency);
+  writeNotNull('duration', instance.duration);
   writeNotNull('days', instance.days);
   return val;
 }
@@ -261,6 +265,8 @@ CalendarMeasure _$CalendarMeasureFromJson(Map<String, dynamic> json) {
           : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
       name: json['name'],
       enabled: json['enabled'],
+      frequency: json['frequency'],
+      duration: json['duration'],
       daysBack: json['days_back'] as int,
       daysFuture: json['days_future'] as int)
     ..c__ = json['c__'] as String
@@ -283,6 +289,8 @@ Map<String, dynamic> _$CalendarMeasureToJson(CalendarMeasure instance) {
   writeNotNull('name', instance.name);
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
+  writeNotNull('frequency', instance.frequency);
+  writeNotNull('duration', instance.duration);
   writeNotNull('days_back', instance.daysBack);
   writeNotNull('days_future', instance.daysFuture);
   return val;

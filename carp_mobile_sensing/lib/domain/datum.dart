@@ -51,7 +51,7 @@ class StringDatum extends CARPDatum {
   /// The string data for this Datum.
   String str;
 
-  StringDatum({this.str}) : super();
+  StringDatum([this.str]) : super();
 
   factory StringDatum.fromJson(Map<String, dynamic> json) => _$StringDatumFromJson(json);
   Map<String, dynamic> toJson() => _$StringDatumToJson(this);
@@ -65,7 +65,7 @@ class MapDatum extends CARPDatum {
 
   Map<String, String> map;
 
-  MapDatum({this.map}) : super();
+  MapDatum([this.map]) : super();
 
   factory MapDatum.fromJson(Map<String, dynamic> json) => _$MapDatumFromJson(json);
   Map<String, dynamic> toJson() => _$MapDatumToJson(this);
@@ -81,7 +81,7 @@ class ErrorDatum extends CARPDatum {
   /// The original error message returned from the probe, if available.
   String message;
 
-  ErrorDatum({this.message}) : super();
+  ErrorDatum([this.message]) : super();
 
   factory ErrorDatum.fromJson(Map<String, dynamic> json) => _$ErrorDatumFromJson(json);
   Map<String, dynamic> toJson() => _$ErrorDatumToJson(this);

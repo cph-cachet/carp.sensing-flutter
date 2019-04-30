@@ -1,6 +1,6 @@
 name: carp_context_package
 description: CARP context sampling package. Samples location, activity, and weather.
-version: 0.3.5
+version: 0.3.6
 author:  CACHET Team <cph.cachet@gmail.com>
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_context_package
 
@@ -19,11 +19,11 @@ dependencies:
 
 # Overriding carp libraries to use the local copy
 # Remove this when done development
-#dependency_overrides:
-#  carp_mobile_sensing:
-#    path: ../carp_mobile_sensing/
-#  openmhealth_schemas:
-#    path: ../../openmhealth_schemas/
+dependency_overrides:
+  carp_mobile_sensing:
+    path: ../carp_mobile_sensing/
+  openmhealth_schemas:
+    path: ../../openmhealth_schemas/
 
 dev_dependencies:
   flutter_test:

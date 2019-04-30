@@ -36,7 +36,7 @@ class WeatherProbe extends PeriodicDatumProbe {
         ..tempMin = w.tempMin.celsius
         ..tempMax = w.tempMax.celsius;
     } catch (err) {
-      return ErrorDatum(message: 'WeatherProbe Exception: $err');
+      return ErrorDatum('WeatherProbe Exception: $err');
     }
   }
 }

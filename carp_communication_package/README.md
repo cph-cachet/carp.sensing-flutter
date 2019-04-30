@@ -29,7 +29,7 @@ this package only works together with `carp_mobile_sensing`.
 dependencies:
   flutter:
     sdk: flutter
-  carp_mobile_sensing: ^0.3.0
+  carp_mobile_sensing: ^0.4.0
   carp_communication_package: ^0.3.0
   ...
 `````
@@ -50,13 +50,19 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
    <uses-permission android:name="android.permission.READ_PHONE_NUMBERS"/>
    <uses-permission android:name="android.permission.READ_SMS"/>
+   <uses-permission android:name="android.permission.READ_CALENDAR"/>
 
 </manifest>
 ````
 
 ### iOS Integration
 
-No changes should be needed regarding permission in the `Info.plist` for this package.
+Add this permission in the `Info.plist` file located in `ios/Runner`:
+
+````xml
+<key>NSCalendarsUsageDescription</key>
+<string>INSERT_REASON_HERE</string>
+````
 
 ## Using it
 

@@ -8,6 +8,7 @@
     "c__": "DataEndPoint",
     "type": "print"
   },
+  "data_format": "carp",
   "tasks": [
     {
       "c__": "Task",
@@ -131,7 +132,7 @@
           "enabled": true,
           "configuration": {},
           "frequency": 600000,
-          "duration": 2000
+          "duration": 10000
         },
         {
           "c__": "PeriodicMeasure",
@@ -168,7 +169,8 @@
           "name": "Phone Log",
           "enabled": true,
           "configuration": {},
-          "days": 30
+          "frequency": 86400000,
+          "days": 2
         },
         {
           "c__": "Measure",
@@ -182,15 +184,18 @@
           "configuration": {}
         },
         {
-          "c__": "Measure",
+          "c__": "CalendarMeasure",
           "type": {
             "c__": "MeasureType",
             "namespace": "carp",
             "name": "text-message"
           },
-          "name": "Text Message (SMS)",
+          "name": "Calendar Events",
           "enabled": true,
-          "configuration": {}
+          "configuration": {},
+          "frequency": 86400000,
+          "days_back": 1,
+          "days_future": 1
         }
       ]
     }

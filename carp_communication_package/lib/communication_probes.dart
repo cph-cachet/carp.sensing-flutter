@@ -21,12 +21,14 @@ class PhoneLogProbe extends PeriodicDatumProbe {
       entries = await CallLog.query(dateFrom: from, dateTo: to);
     }
 
-    PhoneLogDatum pld = new PhoneLogDatum();
-    for (CallLogEntry call in entries ?? []) {
-      pld.phoneLog.add(PhoneCall.fromCallLogEntry(call));
-    }
+    return PhoneLogDatum()..phoneLog = entries.map((call) => PhoneCall.fromCallLogEntry(call)).toList();
 
-    return pld;
+//    PhoneLogDatum pld = new PhoneLogDatum();
+//    for (CallLogEntry call in entries ?? []) {
+//      pld.phoneLog.add(PhoneCall.fromCallLogEntry(call));
+//    }
+//
+//    return pld;
   }
 }
 
@@ -63,7 +65,7 @@ class CalendarProbe extends PeriodicDatumProbe {
     _retrieveCalendars();
   }
 
-  void _retrieveCalendars() async {
+  Future<void> _retrieveCalendars() async {
     // try to get permission to access calendar
     try {
       var permissionsGranted = await _deviceCalendar.hasPermissions();
@@ -84,10 +86,10 @@ class CalendarProbe extends PeriodicDatumProbe {
   Future<Datum> getDatum() async {
     if (_calendars == null) await _retrieveCalendars();
 
-    final startDate = new DateTime.now().subtract(new Duration(days: (measure as CalendarMeasure).daysBack));
-    final endDate = new DateTime.now().add(new Duration(days: (measure as CalendarMeasure).daysFuture));
-
     if (_calendars != null) {
+      final startDate = new DateTime.now().subtract(new Duration(days: (measure as CalendarMeasure).daysBack));
+      final endDate = new DateTime.now().add(new Duration(days: (measure as CalendarMeasure).daysFuture));
+
       _calendars.forEach((calendar) async {
         var calendarEventsResult = await _deviceCalendar.retrieveEvents(
             calendar.id, RetrieveEventsParams(startDate: startDate, endDate: endDate));
@@ -98,5 +100,6 @@ class CalendarProbe extends PeriodicDatumProbe {
         }
       });
     }
+    return ErrorDatum('Could not retrieve calendar entries');
   }
 }

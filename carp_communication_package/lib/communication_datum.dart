@@ -281,5 +281,5 @@ class CalendarEvent extends Serializable {
   Map<String, dynamic> toJson() => _$CalendarEventToJson(this);
 
   String toString() =>
-      "Calendar Event - eventId: $eventId, calendarId: $calendarId, title: $title, description: $description, start: $start, end: $end, all day: $allDay, location: $location";
+      "Calendar Event - eventId: $eventId, calendarId: $calendarId, title: $title, description: $description, start: $start, end: $end, all day: $allDay, location: $location, no. attendees: ${attendees.length}";
 }

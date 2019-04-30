@@ -34,6 +34,15 @@ Datum text_message_log_anoymizer(Datum datum) {
   return log;
 }
 
+/// A [PhoneLogDatum] anonymizer function. Anonymizes each [PhoneCall]
+/// entry in the log using the [phone_call_anoymizer] function.
+Datum phone_log_anoymizer(Datum datum) {
+  assert(datum is PhoneLogDatum);
+  PhoneLogDatum log = datum as PhoneLogDatum;
+  log.phoneLog.forEach((call) => phone_call_anoymizer(call));
+  return log;
+}
+
 /// A [PhoneCall] anonymizer function. Anonymizes:
 ///  - formattedNumber
 ///  - number
@@ -46,11 +55,23 @@ PhoneCall phone_call_anoymizer(PhoneCall call) {
   return call;
 }
 
-/// A [PhoneLogDatum] anonymizer function. Anonymizes each [PhoneCall]
-/// entry in the log using the [phone_call_anoymizer] function.
-Datum phone_log_anoymizer(Datum datum) {
-  assert(datum is PhoneLogDatum);
-  PhoneLogDatum log = datum as PhoneLogDatum;
-  log.phoneLog.forEach((call) => phone_call_anoymizer(call));
-  return log;
+/// A [CalendarDatum] anonymizer function. Anonymizes each [CalendarEvent]
+/// entry in the calendar using the [calendar_event_anoymizer] function.
+Datum calendar_anoymizer(Datum datum) {
+  assert(datum is CalendarDatum);
+  CalendarDatum calendar = datum as CalendarDatum;
+  calendar.calendarEvents.forEach((event) => calendar_event_anoymizer(event));
+  return calendar;
+}
+
+/// A [CalendarEvent] anonymizer function. Anonymizes:
+///  - title
+///  - description
+///  - names of all attendees
+CalendarEvent calendar_event_anoymizer(CalendarEvent event) {
+  event.title = sha1.convert(utf8.encode(event.title)).toString();
+  event.description = sha1.convert(utf8.encode(event.description)).toString();
+  event.attendees = event.attendees.map((name) => sha1.convert(utf8.encode(name)).toString()).toList();
+
+  return event;
 }

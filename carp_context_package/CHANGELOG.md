@@ -1,3 +1,6 @@
+## 0.3.6
+* small update to domain model
+
 ## 0.3.5
 * update to json_serialization v.2
 * added support for geofence measure

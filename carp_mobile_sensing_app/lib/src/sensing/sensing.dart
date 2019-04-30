@@ -78,8 +78,8 @@ class StudyMock implements StudyManager {
         ..dataEndPoint = getDataEndpoint(DataEndPointType.PRINT)
         ..dataFormat = NameSpace.OMH
         ..addTask(Task()
-          ..measures =
-              SamplingSchema.common(namespace: NameSpace.CARP).getMeasureList([DataType.AUDIO, DataType.BLUETOOTH]));
+          ..measures = SamplingSchema.common(namespace: NameSpace.CARP)
+              .getMeasureList([CommunicationSamplingPackage.TEXT_MESSAGE_LOG, CommunicationSamplingPackage.PHONE_LOG]));
 
 //    ..addTask(Task()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
 

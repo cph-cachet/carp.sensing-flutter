@@ -26,7 +26,8 @@ class ProbeDescription {
         DataType.APPLE_HEALTHKIT: 'Collects health data from Apple Health Kit.',
         DataType.GOOGLE_FIT: 'Collects health data from Google Fit.',
         DataType.WEATHER: 'Collects local weather on a regular basis.',
-        DataType.GEOFENCE: 'Track movement in/our of this geofence.'
+        DataType.GEOFENCE: 'Track movement in/our of this geofence.',
+        CommunicationSamplingPackage.CALENDAR: 'Collects entries from phone calendars'
       };
 
   static Map<String, Icon> get probeTypeIcon => {
@@ -54,7 +55,8 @@ class ProbeDescription {
         DataType.APPLE_HEALTHKIT: Icon(Icons.healing, size: 50, color: CACHET.RED),
         DataType.GOOGLE_FIT: Icon(Icons.directions_run, size: 50, color: CACHET.GREEN),
         DataType.WEATHER: Icon(Icons.cloud, size: 50, color: CACHET.LIGHT_BLUE_2),
-        DataType.GEOFENCE: Icon(Icons.location_on, size: 50, color: CACHET.CYAN)
+        DataType.GEOFENCE: Icon(Icons.location_on, size: 50, color: CACHET.CYAN),
+        CommunicationSamplingPackage.CALENDAR: Icon(Icons.event, size: 50, color: CACHET.CYAN)
       };
 
   static Map<ProbeState, Icon> get probeStateIcon => {

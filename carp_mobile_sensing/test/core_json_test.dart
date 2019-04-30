@@ -68,8 +68,8 @@ void main() {
   });
 
   test('Data point -> JSON', () async {
-    var dp = DataPoint.fromDatum(
-        study.id, study.userId, MapDatum(map: {'item_1': '12.23423452345', 'item_2': '3.82375823475'}));
+    var dp =
+        DataPoint.fromDatum(study.id, study.userId, MapDatum({'item_1': '12.23423452345', 'item_2': '3.82375823475'}));
     print(_encode(dp));
 
     BluetoothDatum datum = BluetoothDatum()
