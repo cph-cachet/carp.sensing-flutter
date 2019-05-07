@@ -27,8 +27,8 @@ this package only works together with `carp_mobile_sensing`.
 dependencies:
   flutter:
     sdk: flutter
-  carp_mobile_sensing: ^0.3.0
-  carp_audio_package: ^0.3.0
+  carp_mobile_sensing: ^0.5.0
+  carp_audio_package: ^0.5.0
   ...
 `````
 
@@ -50,6 +50,12 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
 
 </manifest>
 ````
+
+Note that version 0.5.0 is migrated to AndroidX. This shouldn't result in any functional changes, but it requires any Android apps using this plugin to also 
+[migrate](https://developer.android.com/jetpack/androidx/migrate) if they're using the original support library. 
+See Flutter [AndroidX compatibility](https://flutter.dev/docs/development/packages-and-plugins/androidx-compatibility)
+
+
 
 ### iOS Integration
 

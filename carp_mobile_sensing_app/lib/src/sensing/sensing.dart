@@ -81,7 +81,7 @@ class StudyMock implements StudyManager {
           ..measures = SamplingSchema.common(namespace: NameSpace.CARP)
               .getMeasureList([DataType.TEXT_MESSAGE_LOG, DataType.LOCATION])
           ..addMeasure(CalendarMeasure(MeasureType(NameSpace.CARP, CommunicationSamplingPackage.CALENDAR),
-              name: "Calendar", frequency: 11 * 1000, daysBack: 1, daysFuture: 1)));
+              name: "Calendar", frequency: 11 * 1000, daysBack: 10, daysFuture: 10)));
 
 //    ..addTask(Task()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
 

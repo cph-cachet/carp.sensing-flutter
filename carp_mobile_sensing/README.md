@@ -10,7 +10,7 @@ For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter
 ## Usage
 To use this plugin, add `carp_mobile_sensing` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/).
 
-This plugin relies on `json_serialization: ^1.0.0` which again rely on Dart 2.1. 
+This plugin relies on Dart 2.1. 
 
 Note that there are two issues with Android to consider:
 
@@ -33,6 +33,11 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
 
 </manifest>
 ````
+Note that version 0.5.0 is migrated to AndroidX. This shouldn't result in any functional changes, but it requires any Android apps using this plugin to also 
+[migrate](https://developer.android.com/jetpack/androidx/migrate) if they're using the original support library. 
+See Flutter [AndroidX compatibility](https://flutter.dev/docs/development/packages-and-plugins/androidx-compatibility)
+
+
 
 ### iOS Integration
 
