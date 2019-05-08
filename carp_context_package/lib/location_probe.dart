@@ -10,17 +10,29 @@ part of context;
 /// The general location provider service.
 location.Location locationService = location.Location();
 
-// TODO - check for permissions...
-//    PermissionStatus status = await SimplePermissions.requestPermission(Permission.AccessFineLocation);
-//    bool granted = await SimplePermissions.checkPermission(Permission.AccessFineLocation);
-//    print('>>> Permission, location : $granted');
-
-// TODO - upgrade to newest version of location Flutter plugin.
-// But - there are conflict w. the Weather plugin -- check w. Thomas...
-
 /// Collects location information from the underlying OS's location API.
 /// Is a [StreamProbe] that generates a [LocationDatum] every time location is changed.
+///
+/// Note that in order for location tracking to work with this probe, the
+/// phone must be online on the internet, since Google APIs are used.
 class LocationProbe extends StreamProbe {
+  bool permission = false;
+
+  void onInitialize(Measure measure) async {
+    super.onInitialize(measure);
+
+    try {
+      bool enabled = await locationService.serviceEnabled();
+      print("Location service available: $enabled");
+      if (enabled) {
+        permission = await locationService.requestPermission();
+        print("Location permission: $permission");
+      }
+    } on PlatformException catch (e) {
+      print(e);
+    }
+  }
+
   Stream<LocationDatum> get stream => locationService
       .onLocationChanged()
       .asBroadcastStream()

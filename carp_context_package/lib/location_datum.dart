@@ -23,10 +23,14 @@ class LocationDatum extends CARPDatum {
         speed = location.speed,
         speedAccuracy = location.speedAccuracy,
         heading = location.heading,
+        time = location.time,
         super();
 
   factory LocationDatum.fromJson(Map<String, dynamic> json) => _$LocationDatumFromJson(json);
   Map<String, dynamic> toJson() => _$LocationDatumToJson(this);
+
+  /// The time in milliseconds
+  double time;
 
   /// Latitude in GPS coordinates.
   double latitude;
@@ -55,5 +59,5 @@ class LocationDatum extends CARPDatum {
   get gpsCoordinates => [latitude, longitude];
 
   String toString() =>
-      "Location - latitude: $latitude, longitude: $longitude, accuracy; $accuracy, altitude: $altitude, speed: $speed, speed_accuracy: $speedAccuracy, heading: $heading";
+      "Location - latitude: $latitude, longitude: $longitude, accuracy; $accuracy, altitude: $altitude, speed: $speed, speed_accuracy: $speedAccuracy, heading: $heading, time: $time";
 }

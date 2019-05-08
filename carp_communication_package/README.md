@@ -10,6 +10,7 @@ This packages supports sampling of the following [`Measure`](https://pub.dartlan
 * `telephony`
 * `text-message-log`
 * `text-message`
+* `calendar`
 
 See the [wiki]() for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types)
 and [sampling schemas](https://github.com/cph-cachet/carp.sensing-flutter/wiki/D.-Sampling-Schemas).
@@ -51,6 +52,7 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
    <uses-permission android:name="android.permission.READ_PHONE_NUMBERS"/>
    <uses-permission android:name="android.permission.READ_SMS"/>
    <uses-permission android:name="android.permission.READ_CALENDAR"/>
+   <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
 
 </manifest>
 ````

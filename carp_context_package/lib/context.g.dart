@@ -38,12 +38,14 @@ LocationDatum _$LocationDatumFromJson(Map<String, dynamic> json) {
     ..timestamp = json['timestamp'] == null
         ? null
         : DateTime.parse(json['timestamp'] as String)
+    ..time = (json['time'] as num)?.toDouble()
     ..latitude = (json['latitude'] as num)?.toDouble()
     ..longitude = (json['longitude'] as num)?.toDouble()
     ..altitude = (json['altitude'] as num)?.toDouble()
     ..accuracy = (json['accuracy'] as num)?.toDouble()
     ..speed = (json['speed'] as num)?.toDouble()
-    ..speedAccuracy = (json['speed_accuracy'] as num)?.toDouble();
+    ..speedAccuracy = (json['speed_accuracy'] as num)?.toDouble()
+    ..heading = (json['heading'] as num)?.toDouble();
 }
 
 Map<String, dynamic> _$LocationDatumToJson(LocationDatum instance) {
@@ -57,12 +59,14 @@ Map<String, dynamic> _$LocationDatumToJson(LocationDatum instance) {
 
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  writeNotNull('time', instance.time);
   writeNotNull('latitude', instance.latitude);
   writeNotNull('longitude', instance.longitude);
   writeNotNull('altitude', instance.altitude);
   writeNotNull('accuracy', instance.accuracy);
   writeNotNull('speed', instance.speed);
   writeNotNull('speed_accuracy', instance.speedAccuracy);
+  writeNotNull('heading', instance.heading);
   return val;
 }
 

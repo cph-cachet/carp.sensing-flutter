@@ -10,8 +10,9 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:activity_recognition_alt/activity_recognition_alt.dart';
 import 'package:location/location.dart' as location;
-//import 'package:weather/weather.dart';
+import 'package:weather/weather.dart';
 import 'package:openmhealth_schemas/openmhealth_schemas.dart' as omh;
+import 'package:flutter/services.dart';
 
 part 'activity_datum.dart';
 part 'activity_probe.dart';

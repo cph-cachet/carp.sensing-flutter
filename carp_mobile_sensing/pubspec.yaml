@@ -25,7 +25,7 @@ dependencies:
   sensors: ^0.4.0
   battery: ^0.3.0
   connectivity: ^0.4.0
-  #flutter_blue: ^0.5.0    # For bluetooth scan
+  flutter_blue: ^0.5.0    # For bluetooth scan
   stats: ^0.2.0           # For calculating statistics, ex LightProbe
 
   # the CACHET plugins

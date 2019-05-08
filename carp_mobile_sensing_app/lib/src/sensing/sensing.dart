@@ -76,12 +76,16 @@ class StudyMock implements StudyManager {
         ..description =
             'This is a long description of a Study which can run forever and take up a lot of space and drain you battery and you have to agree to an informed consent which - by all standards - do not comply to any legal framework....'
         ..dataEndPoint = getDataEndpoint(DataEndPointType.PRINT)
-        ..dataFormat = NameSpace.OMH
-        ..addTask(Task()
-          ..measures = SamplingSchema.common(namespace: NameSpace.CARP)
-              .getMeasureList([DataType.TEXT_MESSAGE_LOG, DataType.LOCATION])
-          ..addMeasure(CalendarMeasure(MeasureType(NameSpace.CARP, CommunicationSamplingPackage.CALENDAR),
-              name: "Calendar", frequency: 11 * 1000, daysBack: 10, daysFuture: 10)));
+        //..dataFormat = NameSpace.OMH
+        ..addTask(Task()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
+
+      //        ..addTask(Task()
+//          ..measures = SamplingSchema.common().getMeasureList(
+//              [DataType.TEXT_MESSAGE_LOG, DataType.LOCATION, DataType.ACTIVITY], namespace: NameSpace.CARP)
+//          ..addMeasure(CalendarMeasure(MeasureType(NameSpace.CARP, CommunicationSamplingPackage.CALENDAR),
+//              name: "Calendar", frequency: 11 * 1000, daysBack: 10, daysFuture: 10))
+//          ..addMeasure(
+//              WeatherMeasure(MeasureType(NameSpace.CARP, DataType.WEATHER), name: "Weather", frequency: 11 * 1000)));
 
 //    ..addTask(Task()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
 

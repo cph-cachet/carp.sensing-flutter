@@ -111,7 +111,7 @@ class SamplingSchema {
   /// at least once pr. day. This scheme is power-aware.
   ///
   /// These default settings are described in this [table](https://github.com/cph-cachet/carp.sensing-flutter/wiki/Schemas#samplingschemacommon).
-  factory SamplingSchema.common({String namespace = NameSpace.CARP}) {
+  factory SamplingSchema.common({String namespace = NameSpace.UNKNOWN}) {
     SamplingSchema schema = SamplingSchema()
       ..type = SamplingSchemaType.COMMON
       ..name = 'Common (default) sampling'

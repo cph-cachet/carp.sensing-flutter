@@ -77,27 +77,27 @@ class BluetoothDatum extends CARPDatum {
 
   BluetoothDatum() : super();
 
-//  factory BluetoothDatum.fromScanResult(ScanResult result) => BluetoothDatum()
-//    ..bluetoothDeviceId = result.device.id.id
-//    ..bluetoothDeviceName = result.device.name
-//    ..connectable = result.advertisementData.connectable
-//    ..txPowerLevel = result.advertisementData.txPowerLevel
-//    ..advertisementName = result.advertisementData.localName
-//    ..rssi = result.rssi
-//    ..bluetoothDeviceType = getBluetoothDeviceType(result.device.type);
-//
-//  static String getBluetoothDeviceType(BluetoothDeviceType type) {
-//    switch (type) {
-//      case BluetoothDeviceType.classic:
-//        return "classic";
-//      case BluetoothDeviceType.dual:
-//        return "dual";
-//      case BluetoothDeviceType.le:
-//        return "le";
-//      default:
-//        return "unknown";
-//    }
-//  }
+  factory BluetoothDatum.fromScanResult(ScanResult result) => BluetoothDatum()
+    ..bluetoothDeviceId = result.device.id.id
+    ..bluetoothDeviceName = result.device.name
+    ..connectable = result.advertisementData.connectable
+    ..txPowerLevel = result.advertisementData.txPowerLevel
+    ..advertisementName = result.advertisementData.localName
+    ..rssi = result.rssi
+    ..bluetoothDeviceType = getBluetoothDeviceType(result.device.type);
+
+  static String getBluetoothDeviceType(BluetoothDeviceType type) {
+    switch (type) {
+      case BluetoothDeviceType.classic:
+        return "classic";
+      case BluetoothDeviceType.dual:
+        return "dual";
+      case BluetoothDeviceType.le:
+        return "le";
+      default:
+        return "unknown";
+    }
+  }
 
   factory BluetoothDatum.fromJson(Map<String, dynamic> json) => _$BluetoothDatumFromJson(json);
   Map<String, dynamic> toJson() => _$BluetoothDatumToJson(this);
