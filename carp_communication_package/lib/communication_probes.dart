@@ -58,6 +58,8 @@ class TextMessageProbe extends StreamProbe {
 class CalendarProbe extends PeriodicDatumProbe {
   DeviceCalendarPlugin _deviceCalendar = DeviceCalendarPlugin();
   List<Calendar> _calendars;
+  Iterator<Calendar> _calendarIterator;
+  List<CalendarEvent> _events = [];
 
   void onInitialize(Measure measure) {
     assert(measure is CalendarMeasure);
@@ -66,61 +68,48 @@ class CalendarProbe extends PeriodicDatumProbe {
   }
 
   Future<void> _retrieveCalendars() async {
-    print('_retrieveCalendars() #0');
     // try to get permission to access calendar
     try {
       var permissionsGranted = await _deviceCalendar.hasPermissions();
-      print('_retrieveCalendars() #0.1 - ${permissionsGranted.data}');
       if (permissionsGranted.isSuccess && !permissionsGranted.data) {
         permissionsGranted = await _deviceCalendar.requestPermissions();
-        print('_retrieveCalendars() #0.2 - ${permissionsGranted.data}');
         if (!permissionsGranted.isSuccess || !permissionsGranted.data) {
-          print('_retrieveCalendars() #0.3 - ${permissionsGranted.data}');
           return;
         }
       }
 
-      print('_retrieveCalendars() #1');
       final calendarsResult = await _deviceCalendar.retrieveCalendars();
       _calendars = calendarsResult?.data;
-      print('_retrieveCalendars() - $_calendars');
     } catch (e) {
       print(e);
     }
   }
 
+  /// Collects events from the [calendar].
+  Future<void> _retrieveEvents(Calendar calendar) async {
+    final startDate = new DateTime.now().subtract(new Duration(days: (measure as CalendarMeasure).daysBack));
+    final endDate = new DateTime.now().add(new Duration(days: (measure as CalendarMeasure).daysFuture));
+
+    var _calendarEventsResult =
+        await _deviceCalendar.retrieveEvents(calendar.id, RetrieveEventsParams(startDate: startDate, endDate: endDate));
+    List<Event> _calendarEvents = _calendarEventsResult?.data;
+    if (_calendarEvents != null) _calendarEvents.forEach((event) => _events.add(CalendarEvent.fromEvent(event)));
+
+    // recursively collect events from the next calendar in the iterator
+    if (_calendarIterator.moveNext()) await _retrieveEvents(_calendarIterator.current);
+  }
+
+  /// Get the [CalendarDatum].
   Future<Datum> getDatum() async {
-    print('getDatum() - $_calendars');
-    //if (_calendars == null) await _retrieveCalendars();
-    //print('getDatum() - $_calendars');
-
     if (_calendars != null) {
-      print('getDatum() #2 - $_calendars');
-      final startDate = new DateTime.now().subtract(new Duration(days: (measure as CalendarMeasure).daysBack));
-      final endDate = new DateTime.now().add(new Duration(days: (measure as CalendarMeasure).daysFuture));
+      _events = [];
+      _calendarIterator = _calendars.iterator;
 
-      _calendars.forEach((calendar) async {
-        print('cal - ${calendar.name}');
-        var calendarEventsResult = await _deviceCalendar.retrieveEvents(
-            calendar.id, RetrieveEventsParams(startDate: startDate, endDate: endDate));
-        print('event #1 - ${calendarEventsResult}');
-        List<Event> _calendarEvents = calendarEventsResult?.data;
-        print('event #2 - ${_calendarEvents}');
-        if (_calendarEvents != null) {
-          print('event #3 - ${_calendarEvents.length}');
+      if (_calendarIterator.moveNext()) await _retrieveEvents(_calendarIterator.current);
 
-          List<CalendarEvent> _events = new List<CalendarEvent>();
-          _calendarEvents.forEach((event) => _events.add(CalendarEvent.fromEvent(event)));
-
-          print('_events : $_events');
-          CalendarDatum cd = CalendarDatum();
-          cd..calendarEvents = _events;
-          print('cd - $cd');
-          return cd;
-        }
-      });
+      return CalendarDatum()..calendarEvents = _events;
     } else {
-      return ErrorDatum('Could not retrieve calendar entries');
+      return ErrorDatum('Permission to collect calendar entries not granted.');
     }
   }
 }
