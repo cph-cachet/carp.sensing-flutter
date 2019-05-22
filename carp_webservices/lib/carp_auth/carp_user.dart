@@ -27,15 +27,15 @@ class CarpUser {
   /// Mobile phone number
   String phoneNumber;
 
-  /// The OAuth 2.0 [OAuthToken] for this user, once authenticated to CARP
   OAuthToken _token;
+
+  /// The OAuth 2.0 [OAuthToken] for this user, once authenticated to CARP
+  OAuthToken get token => _token;
 
   CarpUser(this.username, {this.uid, this.password, this.displayName, this.phoneNumber});
 
   /// Set or update the authenticated OAuth token for this user.
-  void authenticated(OAuthToken token) {
-    _token = token;
-  }
+  void authenticated(OAuthToken token) => _token = token;
 
   /// Returns true if the user is logged in; that is, has a valid token.
   bool get isAuthenticated => (_token != null);
@@ -49,9 +49,8 @@ class CarpUser {
       throw new CarpServiceException("CARP Service not initialized. Call 'CarpService.configure()' first.");
 
     // check if we need to refresh the token.
-    // TODO - should look at the expire as well.
-    if ((refresh) || (_token == null)) {
-      //TODO - refresh the token.
+    if ((_token == null) || _token.hasExpired || refresh) {
+      _token = await CarpService.instance.refresh();
     }
 
     return _token;

@@ -1,3 +1,6 @@
+## 0.2.3
+* auto-refresh auth token
+
 ## 0.2.2
 * upgrade to json_serializable v.2
 

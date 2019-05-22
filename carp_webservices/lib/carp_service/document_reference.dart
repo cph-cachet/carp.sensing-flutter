@@ -62,26 +62,18 @@ class CollectionReference extends CarpReference {
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
 
-    switch (httpStatusCode) {
-      case 200:
-        {
-          List<DocumentSnapshot> documents = new List<DocumentSnapshot>();
-          for (var item in responseJson['documents']) {
-            Map<String, dynamic> documentJson = item;
-            String key = documentJson["name"];
-            documents.add(DocumentSnapshot._("$path/$key", documentJson));
-          }
-          return documents;
-        }
-      default:
-        // All other cases are treated as an error.
-        {
-          final String error = responseJson["error"];
-          final String description = responseJson["error_description"];
-          throw CarpServiceException(error,
-              description: description, httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
-        }
+    if (httpStatusCode == 200) {
+      List<DocumentSnapshot> documents = new List<DocumentSnapshot>();
+      for (var item in responseJson['documents']) {
+        Map<String, dynamic> documentJson = item;
+        String key = documentJson["name"];
+        documents.add(DocumentSnapshot._("$path/$key", documentJson));
+      }
+      return documents;
     }
+    // All other cases are treated as an error.
+    throw CarpServiceException(responseJson["error"],
+        description: responseJson["error_description"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
   }
 
   /// Returns a [DocumentReference] with the provided name in this collection.
@@ -168,22 +160,12 @@ class DocumentReference extends CarpReference {
       int httpStatusCode = response.statusCode;
       Map<String, dynamic> responseJson = json.decode(response.body);
 
-      switch (httpStatusCode) {
-        // CARP web service returns "200 OK" or "201 Created" when POST is successful
-        case 200:
-        case 201:
-          {
-            return DocumentSnapshot._(path, responseJson);
-          }
-        default:
-          // All other cases are treated as an error.
-          {
-            final String error = responseJson["error"];
-            final String description = responseJson["error_description"];
-            throw CarpServiceException(error,
-                description: description, httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
-          }
-      }
+      if ((httpStatusCode == 200) || (httpStatusCode == 201)) return DocumentSnapshot._(path, responseJson);
+
+      // All other cases are treated as an error.
+      throw CarpServiceException(responseJson["error"],
+          description: responseJson["error_description"],
+          httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
     } else {
       return updateData(data);
     }
@@ -201,19 +183,10 @@ class DocumentReference extends CarpReference {
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
 
-    switch (httpStatusCode) {
-      case 200:
-        {
-          return DocumentSnapshot._(path, responseJson);
-        }
-      default:
-        {
-          final String error = responseJson["error"];
-          final String description = responseJson["error_description"];
-          throw CarpServiceException(error,
-              description: description, httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
-        }
-    }
+    if (httpStatusCode == 200) return DocumentSnapshot._(path, responseJson);
+
+    throw CarpServiceException(responseJson["error"],
+        description: responseJson["error_description"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
   }
 
   /// Reads the document referenced by this [DocumentReference].
@@ -225,15 +198,10 @@ class DocumentReference extends CarpReference {
     http.Response response = await http.get(Uri.encodeFull(documentUri), headers: restHeaders);
 
     int httpStatusCode = response.statusCode;
-    switch (httpStatusCode) {
-      case 200:
-        {
-          Map<String, dynamic> responseJson = json.decode(response.body);
-          return DocumentSnapshot._(path, responseJson);
-        }
-      default:
-        return null;
-    }
+    if (httpStatusCode == 200)
+      return DocumentSnapshot._(path, json.decode(response.body));
+    else
+      return null;
   }
 
   /// Deletes the document referred to by this [DocumentReference].
@@ -244,19 +212,13 @@ class DocumentReference extends CarpReference {
     http.Response response = await http.delete(Uri.encodeFull(documentUri), headers: restHeaders);
 
     int httpStatusCode = response.statusCode;
-    switch (httpStatusCode) {
-      case 200:
-        {
-          return;
-        }
-      default:
-        {
-          final Map<String, dynamic> responseJson = json.decode(response.body);
-          final String error = responseJson["error"];
-          final String description = responseJson["error_description"];
-          throw CarpServiceException(error,
-              description: description, httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
-        }
+    if (httpStatusCode == 200)
+      return;
+    else {
+      final Map<String, dynamic> responseJson = json.decode(response.body);
+      throw CarpServiceException(responseJson["error"],
+          description: responseJson["error_description"],
+          httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
     }
   }
 
