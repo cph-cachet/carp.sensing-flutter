@@ -1,5 +1,5 @@
 ## 0.2.3
-* auto-refresh auth token
+* refresh of auth token when expired
 
 ## 0.2.2
 * upgrade to json_serializable v.2
