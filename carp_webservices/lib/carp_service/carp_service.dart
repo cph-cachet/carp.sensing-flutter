@@ -27,6 +27,8 @@ part 'carp_tasks.dart';
 part 'push_id_generator.dart';
 part 'carp_service.g.dart';
 
+String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
+
 /// Provide access to the CARP web services endpoint.
 ///
 /// The (current) assumption is that each Flutter app (using this library) will only connect
@@ -39,15 +41,18 @@ part 'carp_service.g.dart';
 class CarpService {
   static CarpService _instance;
 
+  CarpService._(this._app) : assert(_app != null);
+
   CarpApp _app;
+  CarpUser _currentUser;
 
   /// The CARP app associated with the CARP Web Service.
   CarpApp get app => _app;
 
-  /// Get the current user.
-  CarpUser _currentUser;
-
-  CarpService._(this._app) : assert(_app != null);
+  /// Gets the current user.
+  CarpUser get currentUser {
+    return _currentUser;
+  }
 
   /// Returns the singleton default instance of the [CarpService].
   /// Before this instance can be used, it must be configured using the [configure] method.
@@ -70,8 +75,17 @@ class CarpService {
     assert(username != null);
     assert(password != null);
 
+    _currentUser = new CarpUser(username, password: password);
+    OAuthToken _token = await refresh();
+    return _currentUser..authenticated(_token);
+  }
+
+  /// Get a new (refreshed) access token for the current user.
+  Future<OAuthToken> refresh() async {
     if (_app == null)
       throw new CarpServiceException("CARP Service not initialized. Call 'CarpService.configure()' first.");
+
+    print('refreshing token...');
 
     final clientID = _app.oauth.clientID;
     final clientSecret = _app.oauth.clientSecret;
@@ -89,8 +103,8 @@ class CarpService {
       "client_secret": "$clientSecret",
       "grant_type": "password",
       "scope": "read",
-      "username": "$username",
-      "password": "$password"
+      "username": "${_currentUser.username}",
+      "password": "${_currentUser.password}"
     };
 
     final String url = "${_app.uri.toString()}${_app.oauth.path.toString()}";
@@ -100,16 +114,13 @@ class CarpService {
       body: loginBody,
     );
 
-    _currentUser = new CarpUser(username, password: password);
-
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJSON = json.decode(response.body);
 
     switch (httpStatusCode) {
       case 200:
         {
-          _currentUser.authenticated(new OAuthToken.fromMap(responseJSON));
-          return _currentUser;
+          return new OAuthToken.fromMap(responseJSON);
         }
       default:
         // All other cases are treated as an error.
@@ -123,8 +134,9 @@ class CarpService {
     }
   }
 
-  /// Asynchronously gets the current user, or `null` if there is none.
-  Future<CarpUser> get currentUser async {
+  /// Asynchronously gets the CARP profile of the current user.
+  Future<CarpUser> getCurrentUserProfile() async {
+    // TODO - implement fetching user profile from CARP server.
     return _currentUser;
   }
 
@@ -181,9 +193,8 @@ abstract class CarpReference {
 
   Future<Map<String, String>> get headers async {
     assert(service != null);
-    CarpUser user = await service.currentUser;
+    CarpUser user = service.currentUser;
     assert(user != null);
-    assert(user.isAuthenticated);
     final OAuthToken token = await user.getOAuthToken();
 
     final Map<String, String> _header = {
@@ -196,7 +207,7 @@ abstract class CarpReference {
   }
 }
 
-/// Exception for CARP web service communication.
+/// Exception for CARP REST/HTTP service communication.
 class CarpServiceException implements Exception {
   String message;
   String description;

@@ -25,6 +25,16 @@ void main() {
     // Runs before all tests.
     setUpAll(() {
       study = new Study(testStudyId, "user@dtu.dk", name: "Test study #$testStudyId");
+
+      // Create a test bluetooth datum
+      datum = BluetoothDatum()
+        ..bluetoothDeviceId = "weg"
+        ..bluetoothDeviceName = "ksjbdf"
+        ..connectable = true
+        ..txPowerLevel = 314
+        ..rssi = 567
+        ..bluetoothDeviceType = "classic";
+
       app = new CarpApp(
           study: study,
           name: "any_display_friendly_name_is_fine",
@@ -54,25 +64,14 @@ void main() {
 
   group("Datapoints", () {
     test('- post', () async {
-      // Create a test bluetooth datum
-      datum = BluetoothDatum()
-        ..bluetoothDeviceId = "weg"
-        ..bluetoothDeviceName = "ksjbdf"
-        ..connectable = true
-        ..txPowerLevel = 314
-        ..rssi = 567
-        ..bluetoothDeviceType = "classic";
-
       final CARPDataPoint data = CARPDataPoint.fromDatum(study.id, study.userId, datum);
 
       print(_encode(data.toJson()));
 
       dataPointId = await CarpService.instance.getDataPointReference().postDataPoint(data);
-      //var id = await CarpService.instance.getDataPointReference().postDataPoint(data);
 
       assert(dataPointId > 0);
       print("data_point_id : $dataPointId");
-      //print("id : $id");
     });
 
     test('- batch', () async {
@@ -89,7 +88,19 @@ void main() {
       assert(data.carpBody['rssi'] == datum.rssi);
     });
 
+    test('- refresh token', () async {
+      final CARPDataPoint data = CARPDataPoint.fromDatum(study.id, study.userId, datum);
+
+      print('expiring token...');
+      CarpService.instance.currentUser.token.expire();
+      dataPointId = await CarpService.instance.getDataPointReference().postDataPoint(data);
+
+      assert(dataPointId > 0);
+      print("data_point_id : $dataPointId");
+    });
+
     test('- delete', () async {
+      print("DELETE data_point_id : $dataPointId");
       await CarpService.instance.getDataPointReference().deleteDataPoint(dataPointId);
     });
   });

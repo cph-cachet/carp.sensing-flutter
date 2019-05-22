@@ -12,8 +12,8 @@ class OAuthToken {
   final String _accessToken;
   final String _refreshToken;
   final String _tokenType;
-  final int _expiresIn;
   final String _scope;
+  int _expiresIn;
 
   /// The date the access token was issued.
   final DateTime issuedDate = new DateTime.now();
@@ -30,6 +30,7 @@ class OAuthToken {
         _scope = map['scope'];
 
   /// Calculate the date of expiration for the access token.
+  ///
   /// If access token has expired, the refresh token should be used
   /// in order to acquire a new access token.
   DateTime get accessTokenExpiryDate {
@@ -37,6 +38,12 @@ class OAuthToken {
     DateTime expiryDate = issuedDate.add(durationLeft);
     return expiryDate;
   }
+
+  /// Expire the authenticated OAuth token for this user.
+  void expire() => _expiresIn = 0;
+
+  /// Has the access token expired?
+  bool get hasExpired => DateTime.now().isAfter(accessTokenExpiryDate);
 
   /// The OAuth access token
   String get accessToken => _accessToken;
