@@ -11,6 +11,7 @@
     "zip": true,
     "encrypt": false
   },
+  "data_format": "carp",
   "tasks": [
     {
       "c__": "Task",
@@ -20,7 +21,7 @@
           "c__": "Measure",
           "type": {
             "c__": "MeasureType",
-            "namespace": "carp",
+            "namespace": "unknown",
             "name": "device"
           },
           "name": "Basic Device Info",
@@ -31,7 +32,7 @@
           "c__": "PeriodicMeasure",
           "type": {
             "c__": "MeasureType",
-            "namespace": "carp",
+            "namespace": "unknown",
             "name": "memory"
           },
           "name": "Memory Usage",
@@ -43,7 +44,7 @@
           "c__": "Measure",
           "type": {
             "c__": "MeasureType",
-            "namespace": "carp",
+            "namespace": "unknown",
             "name": "battery"
           },
           "name": "Battery",
@@ -54,7 +55,7 @@
           "c__": "Measure",
           "type": {
             "c__": "MeasureType",
-            "namespace": "carp",
+            "namespace": "unknown",
             "name": "screen"
           },
           "name": "Screen Activity (lock/on/off)",
@@ -65,11 +66,11 @@
           "c__": "PeriodicMeasure",
           "type": {
             "c__": "MeasureType",
-            "namespace": "carp",
+            "namespace": "unknown",
             "name": "accelerometer"
           },
           "name": "Accelerometer",
-          "enabled": false,
+          "enabled": true,
           "configuration": {},
           "frequency": 10000,
           "duration": 10
@@ -78,11 +79,11 @@
           "c__": "PeriodicMeasure",
           "type": {
             "c__": "MeasureType",
-            "namespace": "carp",
+            "namespace": "unknown",
             "name": "gyroscope"
           },
           "name": "Gyroscope",
-          "enabled": false,
+          "enabled": true,
           "configuration": {},
           "frequency": 10000,
           "duration": 10
@@ -91,19 +92,19 @@
           "c__": "PeriodicMeasure",
           "type": {
             "c__": "MeasureType",
-            "namespace": "carp",
+            "namespace": "unknown",
             "name": "pedometer"
           },
           "name": "Pedometer (Step Count)",
           "enabled": true,
           "configuration": {},
-          "frequency": 3600000
+          "frequency": 60000
         },
         {
           "c__": "PeriodicMeasure",
           "type": {
             "c__": "MeasureType",
-            "namespace": "carp",
+            "namespace": "unknown",
             "name": "light"
           },
           "name": "Ambient Light",
@@ -111,55 +112,6 @@
           "configuration": {},
           "frequency": 60000,
           "duration": 1000
-        },
-        {
-          "c__": "Measure",
-          "type": {
-            "c__": "MeasureType",
-            "namespace": "carp",
-            "name": "connectivity"
-          },
-          "name": "Connectivity (wifi/3G/...)",
-          "enabled": true,
-          "configuration": {}
-        },
-        {
-          "c__": "PeriodicMeasure",
-          "type": {
-            "c__": "MeasureType",
-            "namespace": "carp",
-            "name": "bluetooth"
-          },
-          "name": "Nearby Devices (Bluetooth Scan)",
-          "enabled": true,
-          "configuration": {},
-          "frequency": 600000,
-          "duration": 2000
-        },
-        {
-          "c__": "PeriodicMeasure",
-          "type": {
-            "c__": "MeasureType",
-            "namespace": "carp",
-            "name": "apps"
-          },
-          "name": "Installed Apps",
-          "enabled": true,
-          "configuration": {},
-          "frequency": 86400000
-        },
-        {
-          "c__": "PeriodicMeasure",
-          "type": {
-            "c__": "MeasureType",
-            "namespace": "carp",
-            "name": "app_usage"
-          },
-          "name": "Apps Usage",
-          "enabled": true,
-          "configuration": {},
-          "frequency": 3600000,
-          "duration": 3600000
         }
       ]
     }

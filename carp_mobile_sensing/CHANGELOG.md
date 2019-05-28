@@ -2,8 +2,8 @@
 * **Breaking change.** This version has been migrated from the deprecated Android Support Library to *AndroidX*. 
 This should not result in any functional changes, but it requires any Android app using this plugin to also 
 [migrate](https://developer.android.com/jetpack/androidx/migrate) if they're using the original support library. 
-* See Flutter [AndroidX compatibility](https://flutter.dev/docs/development/packages-and-plugins/androidx-compatibility)
-
+   * See Flutter [AndroidX compatibility](https://flutter.dev/docs/development/packages-and-plugins/androidx-compatibility)
+* Fixed error in `PedometerProbe`
 ## 0.4.0
 * support for data transformers
    * OMH Geolocation

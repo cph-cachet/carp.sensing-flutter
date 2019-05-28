@@ -46,7 +46,7 @@ class SensorSamplingPackage implements SamplingPackage {
       MapEntry(
           PEDOMETER,
           PeriodicMeasure(MeasureType(NameSpace.CARP, PEDOMETER),
-              name: 'Pedometer (Step Count)', enabled: true, frequency: 60 * 1000, duration: 10)),
+              name: 'Pedometer (Step Count)', enabled: true, frequency: 60 * 1000)),
       MapEntry(
           LIGHT,
           PeriodicMeasure(MeasureType(NameSpace.CARP, LIGHT),

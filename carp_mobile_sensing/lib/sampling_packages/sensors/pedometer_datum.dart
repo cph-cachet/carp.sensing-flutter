@@ -22,7 +22,7 @@ class PedometerDatum extends CARPDatum {
   /// The total amount of steps.
   int stepCount;
 
-  PedometerDatum({this.stepCount, this.startTime, this.endTime}) : super();
+  PedometerDatum([this.stepCount, this.startTime, this.endTime]) : super();
 
   factory PedometerDatum.fromJson(Map<String, dynamic> json) => _$PedometerDatumFromJson(json);
   Map<String, dynamic> toJson() => _$PedometerDatumToJson(this);

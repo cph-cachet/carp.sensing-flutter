@@ -8,11 +8,11 @@ part of sensors;
 
 PedometerDatum _$PedometerDatumFromJson(Map<String, dynamic> json) {
   return PedometerDatum(
-      stepCount: json['step_count'] as int,
-      startTime: json['start_time'] == null
+      json['step_count'] as int,
+      json['start_time'] == null
           ? null
           : DateTime.parse(json['start_time'] as String),
-      endTime: json['end_time'] == null
+      json['end_time'] == null
           ? null
           : DateTime.parse(json['end_time'] as String))
     ..id = json['id'] as String

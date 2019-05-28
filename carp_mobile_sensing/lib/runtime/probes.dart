@@ -642,3 +642,32 @@ abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
   /// and should return the final [Datum] for the buffered data.
   Future<Datum> getDatum();
 }
+
+/// An abstract probe which can be used to buffer data from a stream and collect data
+/// every [frequency]. All events from the [bufferingStream] are buffered, and
+/// collected from the [getDatum] method every [frequency] and send to the
+/// main [events] stream.
+///
+/// Sub-classes must implement the
+///
+///     Stream<dynamic> get bufferingStream => ...
+///
+/// method in order to provide the stream to be buffered.
+///
+/// When the sampling window ends, the [getDatum] method is called.
+///
+/// See [PedometerProbe] for an example.
+abstract class BufferingStreamProbe extends BufferingPeriodicStreamProbe {
+  void onResume() {
+    subscription.resume();
+    timer = Timer.periodic(frequency, (Timer t) {
+      onSamplingStart();
+      getDatum().then((datum) {
+        if (datum != null) controller.add(datum);
+      });
+    });
+  }
+
+  void onSamplingEnd() {}
+  void onSamplingStart() {}
+}
