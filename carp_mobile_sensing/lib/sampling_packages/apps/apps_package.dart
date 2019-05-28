@@ -12,6 +12,11 @@ class AppsSamplingPackage implements SamplingPackage {
   Probe create(String type) {
     switch (type) {
       case APPS:
+        // there is an error in the device_apps plugin
+        // see https://github.com/g123k/flutter_plugin_device_apps/issues/12
+        // therefore the APPS probe is disabled right now.
+        // TODO - add the AppsProbe once the plugin is fixed.
+        return null;
         return AppsProbe();
       case APP_USAGE:
         return AppUsageProbe();
@@ -34,7 +39,11 @@ class AppsSamplingPackage implements SamplingPackage {
       MapEntry(
           DataType.APP_USAGE,
           PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.APP_USAGE),
-              name: 'Apps Usage', enabled: true, frequency: 60 * 60 * 1000, duration: 60 * 60 * 1000)),
+              // collect app usage every 10 min for the 10 min
+              name: 'Apps Usage',
+              enabled: true,
+              frequency: 10 * 60 * 1000,
+              duration: 10 * 60 * 1000)),
     ]);
 
   SamplingSchema get light => common;

@@ -104,7 +104,6 @@ class TaskExecutor extends Executor {
       // create a new probe for each measure - this ensures that we can have
       // multiple measures of the same type, each using its own probe instance
       Probe probe = ProbeRegistry.create(measure.type.name);
-      assert(probe != null, 'A probe for measure type ${measure.type.name} could not be created.');
       if (probe != null) {
         executors.add(probe);
         _group.add(probe.events);
@@ -112,6 +111,8 @@ class TaskExecutor extends Executor {
 
         // start the probe
         probe.start();
+      } else {
+        print('A probe for measure type ${measure.type.name} could not be created.');
       }
     }
   }
