@@ -46,12 +46,29 @@ class CollectionReference extends CarpReference {
   String get path => _path;
 
   /// The full CARP web service path to this collection.
-  String get carpPath {
-    return "/api/studies/${service.app.study.id}/collections/$path";
-  }
+  String get carpPath => '/api/studies/${service.app.study.id}/collections/$path';
 
   /// The full URI for the collection endpoint for this [CollectionReference].
   String get collectionUri => "${service.app.uri.toString()}$carpPath";
+
+  /// The full URI for the collection endpoint for this [CollectionReference] by its unique [id].
+  String get _collectionUriByID => '${service.app.uri.toString()}/api/studies/${service.app.study.id}/collections/$id';
+
+  /// Reads the collection referenced by this [CollectionReference] from the server.
+  ///
+  /// If no collection exists on the server (yet), this local CollectionReference is returned.
+  Future<CollectionReference> get() async {
+    final restHeaders = await headers;
+
+    http.Response response = await http.get(Uri.encodeFull(collectionUri), headers: restHeaders);
+    Map<String, dynamic> responseJson = json.decode(response.body);
+
+    int httpStatusCode = response.statusCode;
+    if (httpStatusCode == 200)
+      return this.._id = responseJson['id'];
+    else
+      return this;
+  }
 
   /// Get the documents in this collection.
   Future<List<DocumentSnapshot>> get documents async {
@@ -73,7 +90,7 @@ class CollectionReference extends CarpReference {
     }
     // All other cases are treated as an error.
     throw CarpServiceException(responseJson["error"],
-        description: responseJson["error_description"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+        description: responseJson["message"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
   }
 
   /// Returns a [DocumentReference] with the provided name in this collection.
@@ -100,6 +117,47 @@ class CollectionReference extends CarpReference {
     if (data != null) await newDocument.setData(data);
     return newDocument;
   }
+
+  /// Rename this collection.
+  Future<void> rename(String newName) async {
+    assert(newName != null);
+    final restHeaders = await headers;
+
+    print(_collectionUriByID);
+
+    // PUT the new name of this collection to the CARP web service
+    http.Response response =
+        await http.put(Uri.encodeFull(_collectionUriByID), headers: restHeaders, body: '{"name":"$newName"}');
+    int httpStatusCode = response.statusCode;
+    Map<String, dynamic> responseJson = json.decode(response.body);
+
+    if (httpStatusCode == 200) {
+      _path.replaceAll(name, newName);
+      return;
+    }
+    // All other cases are treated as an error.
+    throw CarpServiceException(responseJson["error"],
+        description: responseJson["message"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+  }
+
+  /// Deletes the collection referred to by this [CollectionReference].
+  Future<void> delete() async {
+    final restHeaders = await headers;
+
+    print(_collectionUriByID);
+    http.Response response = await http.delete(Uri.encodeFull(_collectionUriByID), headers: restHeaders);
+
+    int httpStatusCode = response.statusCode;
+    if (httpStatusCode == 200)
+      return;
+    else {
+      final Map<String, dynamic> responseJson = json.decode(response.body);
+      throw CarpServiceException(responseJson["error"],
+          description: responseJson["message"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+    }
+  }
+
+  String toString() => 'CollectionReference - id: $id, path: $path';
 }
 
 /// A [DocumentReference] refers to a document in a CARP collection
@@ -164,8 +222,7 @@ class DocumentReference extends CarpReference {
 
       // All other cases are treated as an error.
       throw CarpServiceException(responseJson["error"],
-          description: responseJson["error_description"],
-          httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+          description: responseJson["message"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
     } else {
       return updateData(data);
     }
@@ -186,7 +243,7 @@ class DocumentReference extends CarpReference {
     if (httpStatusCode == 200) return DocumentSnapshot._(path, responseJson);
 
     throw CarpServiceException(responseJson["error"],
-        description: responseJson["error_description"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+        description: responseJson["message"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
   }
 
   /// Reads the document referenced by this [DocumentReference].
@@ -217,8 +274,7 @@ class DocumentReference extends CarpReference {
     else {
       final Map<String, dynamic> responseJson = json.decode(response.body);
       throw CarpServiceException(responseJson["error"],
-          description: responseJson["error_description"],
-          httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+          description: responseJson["message"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
     }
   }
 
@@ -249,12 +305,14 @@ class DocumentReference extends CarpReference {
 //        {
 //          Map<String, dynamic> responseJson = json.decode(response.body);
 //          final String error = responseJson["error"];
-//          final String description = responseJson["error_description"];
+//          final String description = responseJson["message"];
 //          throw CarpServiceException(error,
 //              description: description, httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
 //        }
 //    }
 //  }
+
+  String toString() => 'DocumentReference - id: $id, path: $path';
 }
 
 /// A [DocumentSnapshot] contains data read from a collection in the CARP web service

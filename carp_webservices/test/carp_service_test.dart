@@ -199,9 +199,28 @@ void main() {
 //      }
     });
 
+    test(' - get collection from path', () async {
+      assert(document != null);
+      CollectionReference collection = await CarpService.instance.collection('users').get();
+      assert(collection.id > 0);
+      print(collection);
+    });
+
+    test(' - rename collection', () async {
+      CollectionReference collection = await CarpService.instance.collection('users').get();
+      await collection.rename('new_users');
+      expect(collection.name, 'new_users');
+    });
+
     test(' - delete document', () async {
       assert(document != null);
       await CarpService.instance.collection('users').document(document.name).delete();
+    });
+
+    test(' - delete collection', () async {
+      CollectionReference collection = await CarpService.instance.collection('users').get();
+      await collection.delete();
+      expect(collection.name, 'new_users');
     });
   });
 

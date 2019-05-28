@@ -217,7 +217,7 @@ class CarpServiceException implements Exception {
 
   @override
   String toString() {
-    return "CarpServiceException: {message: $message, description: $description} [${httpStatus.toString()}]";
+    return "CarpServiceException: ${httpStatus?.httpResponseCode} - $message; $description";
   }
 }
 
@@ -229,5 +229,5 @@ class HTTPStatus {
 
   HTTPStatus(this.httpResponseCode, this.httpReasonPhrase);
 
-  String toString() => "$httpResponseCode $httpReasonPhrase";
+  String toString() => "$httpResponseCode - $httpReasonPhrase";
 }
