@@ -407,7 +407,7 @@ abstract class PeriodicDatumProbe extends DatumProbe {
 ///     Stream<Datum> get stream => ...
 ///
 /// method in order to provide the stream to collect data from.
-/// See [BluetoothProbe] for an (simple) example or [BatteryProbe] for a more
+/// See [ConnectivityProbe] for a simple example or [BatteryProbe] for a more
 /// sophisticated example.
 abstract class StreamProbe extends AbstractProbe {
   StreamSubscription<dynamic> subscription;

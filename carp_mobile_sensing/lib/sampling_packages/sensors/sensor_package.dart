@@ -38,15 +38,15 @@ class SensorSamplingPackage implements SamplingPackage {
       MapEntry(
           ACCELEROMETER,
           PeriodicMeasure(MeasureType(NameSpace.CARP, ACCELEROMETER),
-              name: 'Accelerometer', enabled: false, frequency: 10 * 1000, duration: 10)),
+              name: 'Accelerometer', enabled: true, frequency: 10 * 1000, duration: 10)),
       MapEntry(
           GYROSCOPE,
           PeriodicMeasure(MeasureType(NameSpace.CARP, GYROSCOPE),
-              name: 'Gyroscope', enabled: false, frequency: 10 * 1000, duration: 10)),
+              name: 'Gyroscope', enabled: true, frequency: 10 * 1000, duration: 10)),
       MapEntry(
           PEDOMETER,
           PeriodicMeasure(MeasureType(NameSpace.CARP, PEDOMETER),
-              name: 'Pedometer (Step Count)', enabled: true, frequency: 60 * 60 * 1000)),
+              name: 'Pedometer (Step Count)', enabled: true, frequency: 60 * 1000, duration: 10)),
       MapEntry(
           LIGHT,
           PeriodicMeasure(MeasureType(NameSpace.CARP, LIGHT),

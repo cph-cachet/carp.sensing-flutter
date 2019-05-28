@@ -13,9 +13,9 @@ class Sensing {
 
   Sensing() : super() {
     // register the sampling packages
-    SamplingPackageRegistry.register(CommunicationSamplingPackage());
-    SamplingPackageRegistry.register(ContextSamplingPackage());
-    SamplingPackageRegistry.register(AudioSamplingPackage());
+    //SamplingPackageRegistry.register(CommunicationSamplingPackage());
+    //SamplingPackageRegistry.register(ContextSamplingPackage());
+    //SamplingPackageRegistry.register(AudioSamplingPackage());
 
     // register data endpoints
     DataManagerRegistry.register(DataEndPointType.PRINT, new ConsoleDataManager());
@@ -79,7 +79,7 @@ class StudyMock implements StudyManager {
         //..dataFormat = NameSpace.OMH
         ..addTask(Task()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
 
-      //        ..addTask(Task()
+//        ..addTask(Task()
 //          ..measures = SamplingSchema.common().getMeasureList(
 //              [DataType.TEXT_MESSAGE_LOG, DataType.LOCATION, DataType.ACTIVITY], namespace: NameSpace.CARP)
 //          ..addMeasure(CalendarMeasure(MeasureType(NameSpace.CARP, CommunicationSamplingPackage.CALENDAR),
