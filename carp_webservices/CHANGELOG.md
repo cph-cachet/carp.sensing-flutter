@@ -1,4 +1,7 @@
 ## 0.2.3
+* support for PUT and DELETE of documents and collections
+
+## 0.2.3
 * refresh of auth token when expired
 
 ## 0.2.2
