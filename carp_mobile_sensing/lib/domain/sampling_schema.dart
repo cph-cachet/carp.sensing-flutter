@@ -181,6 +181,21 @@ class SamplingSchema {
     return schema;
   }
 
+  /// A sampling schema for debugging purposes.
+  /// Collects and combines the [SamplingPackage.debug] [SamplingSchema]s for each package.
+  factory SamplingSchema.debug({String namespace = NameSpace.CARP}) {
+    SamplingSchema schema = SamplingSchema()
+      ..type = SamplingSchemaType.DEBUG
+      ..name = 'Debugging sampling'
+      ..powerAware = false;
+
+    // join sampling schemas from each registered sampling package.
+    SamplingPackageRegistry.packages.forEach((package) => schema.addSamplingSchema(package.debug));
+    schema.measures.values.forEach((measure) => measure.type.namespace = namespace);
+
+    return schema;
+  }
+
   /// Adapts all [Measure]s in a [Study] to this [SamplingSchema].
   ///
   /// The following parameters are adapted
@@ -211,4 +226,5 @@ class SamplingSchemaType {
   static const String LIGHT = "LIGHT";
   static const String MINIMUM = "MINIMUM";
   static const String NONE = "NONE";
+  static const String DEBUG = "DEBUG";
 }

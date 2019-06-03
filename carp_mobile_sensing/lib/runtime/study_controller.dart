@@ -93,7 +93,8 @@ class StudyController {
           }
         }
       });
-      _battery.initialize(Measure(MeasureType(NameSpace.CARP, DataType.BATTERY), name: 'PowerAwarenessProbe'));
+      _battery
+          .initialize(Measure(MeasureType(NameSpace.CARP, DeviceSamplingPackage.BATTERY), name: 'PowerAwarenessProbe'));
       _battery.start();
     }
   }

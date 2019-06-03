@@ -104,4 +104,24 @@ class CommunicationSamplingPackage implements SamplingPackage {
   SamplingSchema get minimum => light..type = SamplingSchemaType.MINIMUM;
 
   SamplingSchema get normal => common;
+
+  SamplingSchema get debug => common
+    ..type = SamplingSchemaType.DEBUG
+    ..name = 'Debugging communication sampling schema'
+    ..powerAware = false
+    ..measures[PHONE_LOG] = PhoneLogMeasure(MeasureType(NameSpace.CARP, PHONE_LOG),
+        // collect calendar events once pr. minute
+        name: 'Phone Log',
+        frequency: 60 * 1000,
+        days: 1)
+    ..measures[TEXT_MESSAGE_LOG] = PeriodicMeasure(MeasureType(NameSpace.CARP, TEXT_MESSAGE_LOG),
+        // collect calendar events once pr. minute
+        name: 'Text Message (SMS) Log',
+        frequency: 60 * 1000)
+    ..measures[CALENDAR] = CalendarMeasure(MeasureType(NameSpace.CARP, CALENDAR),
+        // collect calendar events once pr. minute
+        name: 'Calendar Events',
+        frequency: 60 * 1000,
+        daysBack: 1,
+        daysFuture: 1);
 }

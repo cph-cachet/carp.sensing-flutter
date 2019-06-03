@@ -212,7 +212,7 @@ class _MeasureLine extends StatelessWidget {
         : Icon(ProbeDescription.probeTypeIcon[DataType.NONE].icon, size: 25);
 
     final List<Widget> columnChildren = List<Widget>();
-    columnChildren.add(Text(measure.name));
+    columnChildren.add((measure.name != null) ? Text(measure.name) : Text(measure.runtimeType.toString()));
     columnChildren.add(Text(measure.toString(), style: themeData.textTheme.caption));
 
     final List<Widget> rowChildren = List<Widget>();

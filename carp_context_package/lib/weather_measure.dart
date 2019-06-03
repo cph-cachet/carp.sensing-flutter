@@ -11,23 +11,16 @@ part of context;
 /// Needs an [apiKey] for the OpenWeatherMap API.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class WeatherMeasure extends PeriodicMeasure {
-  static const String DEFAULT_WEATHER_API_KEY =
-      '12b6e28582eb9298577c734a31ba9f4f';
-
   /// API key for the OpenWeatherMap API.
-  String apiKey = DEFAULT_WEATHER_API_KEY;
+  String apiKey;
 
-  WeatherMeasure(MeasureType type,
-      {name, enabled, frequency, duration, this.apiKey})
-      : super(type,
-            name: name,
-            enabled: enabled,
-            frequency: frequency,
-            duration: duration);
+  WeatherMeasure(MeasureType type, {name, enabled, frequency, duration, this.apiKey})
+      : super(type, name: name, enabled: enabled, frequency: frequency, duration: duration);
 
   static Function get fromJsonFunction => _$WeatherMeasureFromJson;
   factory WeatherMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(
-          json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$WeatherMeasureToJson(this);
+
+  String toString() => super.toString() + ', API key: $apiKey';
 }

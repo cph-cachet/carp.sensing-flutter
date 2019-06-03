@@ -10,7 +10,7 @@ part of connectivity;
 /// A [Datum] that holds connectivity status of the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ConnectivityDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.CONNECTIVITY);
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, ConnectivitySamplingPackage.CONNECTIVITY);
   DataFormat get format => CARP_DATA_FORMAT;
 
   /// The status of the connectivity.
@@ -47,7 +47,7 @@ class ConnectivityDatum extends CARPDatum {
 /// A [Datum] that holds information of a nearby Bluetooth device.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class BluetoothDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.BLUETOOTH);
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, ConnectivitySamplingPackage.BLUETOOTH);
   DataFormat get format => CARP_DATA_FORMAT;
 
   /// The bluetooth advertising name of the device.

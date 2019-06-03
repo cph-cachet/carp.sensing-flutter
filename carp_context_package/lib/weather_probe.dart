@@ -6,6 +6,8 @@ class WeatherProbe extends PeriodicDatumProbe {
 
   void onInitialize(Measure measure) {
     super.onInitialize(measure);
+    assert(
+        (measure as WeatherMeasure).apiKey != null, 'In order to use the Weather API, and API key must be provided.');
     _weather = WeatherStation((measure as WeatherMeasure).apiKey);
   }
 

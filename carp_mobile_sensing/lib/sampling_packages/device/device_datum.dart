@@ -10,7 +10,7 @@ part of device;
 /// Holds basic information about the mobile device from where the data is collected.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class DeviceDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.DEVICE);
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DeviceSamplingPackage.DEVICE);
   DataFormat get format => CARP_DATA_FORMAT;
 
   ///The platform type from which this Datum was collected.
@@ -51,7 +51,7 @@ class DeviceDatum extends CARPDatum {
 /// A [Datum] that holds battery level collected from the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class BatteryDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.BATTERY);
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DeviceSamplingPackage.BATTERY);
   DataFormat get format => CARP_DATA_FORMAT;
 
   static const String STATE_FULL = 'full';
@@ -98,7 +98,7 @@ class BatteryDatum extends CARPDatum {
 /// Holds information about free memory on the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class FreeMemoryDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.MEMORY);
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DeviceSamplingPackage.MEMORY);
   DataFormat get format => CARP_DATA_FORMAT;
 
   /// Amount of free physical memory in bytes.
@@ -118,7 +118,7 @@ class FreeMemoryDatum extends CARPDatum {
 /// Holds a screen event collected from the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ScreenDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.SCREEN);
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DeviceSamplingPackage.SCREEN);
   DataFormat get format => CARP_DATA_FORMAT;
 
   /// A screen event:

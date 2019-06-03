@@ -33,22 +33,20 @@ class AppsSamplingPackage implements SamplingPackage {
     ..powerAware = true
     ..measures.addEntries([
       MapEntry(
-          DataType.APPS,
+          APPS,
           PeriodicMeasure(
-            MeasureType(NameSpace.CARP, DataType.APPS),
+            MeasureType(NameSpace.CARP, APPS),
             // collect list of installed apps once pr. day
             name: 'Installed Apps',
             enabled: true,
             frequency: 24 * 60 * 60 * 1000,
-            //frequency: 60 * 1000
           )),
       MapEntry(
-          DataType.APP_USAGE,
-          PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.APP_USAGE),
+          APP_USAGE,
+          PeriodicMeasure(MeasureType(NameSpace.CARP, APP_USAGE),
               // collect app usage every 10 min for the last 10 min
               name: 'Apps Usage',
               enabled: true,
-              //frequency: 60 * 1000,
               frequency: 10 * 60 * 1000,
               duration: 10 * 60 * 1000)),
     ]);
@@ -58,4 +56,26 @@ class AppsSamplingPackage implements SamplingPackage {
   SamplingSchema get minimum => common;
 
   SamplingSchema get normal => common;
+
+  SamplingSchema get debug => SamplingSchema()
+    ..type = SamplingSchemaType.DEBUG
+    ..name = 'Debugging app sampling schema'
+    ..powerAware = true
+    ..measures.addEntries([
+      MapEntry(
+          APPS,
+          PeriodicMeasure(MeasureType(NameSpace.CARP, APPS),
+              // collect list of installed apps once pr. day
+              name: 'Installed Apps',
+              enabled: true,
+              frequency: 60 * 1000)),
+      MapEntry(
+          APP_USAGE,
+          PeriodicMeasure(MeasureType(NameSpace.CARP, APP_USAGE),
+              // collect app usage every 10 min for the last 10 min
+              name: 'Apps Usage',
+              enabled: true,
+              frequency: 60 * 1000,
+              duration: 10 * 60 * 1000)),
+    ]);
 }

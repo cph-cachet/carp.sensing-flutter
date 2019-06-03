@@ -53,22 +53,18 @@ class ContextSamplingPackage implements SamplingPackage {
     ..name = 'Common (default) context sampling schema'
     ..powerAware = true
     ..measures.addEntries([
+      MapEntry(LOCATION, Measure(MeasureType(NameSpace.CARP, LOCATION), name: 'Location', enabled: true)),
+      MapEntry(ACTIVITY, Measure(MeasureType(NameSpace.CARP, ACTIVITY), name: 'Activity Recognition', enabled: true)),
       MapEntry(
-          DataType.LOCATION, Measure(MeasureType(NameSpace.CARP, DataType.LOCATION), name: 'Location', enabled: true)),
-      MapEntry(DataType.ACTIVITY,
-          Measure(MeasureType(NameSpace.CARP, DataType.ACTIVITY), name: 'Activity Recognition', enabled: true)),
-      MapEntry(
-          DataType.WEATHER,
-          WeatherMeasure(MeasureType(NameSpace.CARP, DataType.WEATHER),
+          WEATHER,
+          WeatherMeasure(MeasureType(NameSpace.CARP, WEATHER),
               // collect local weather once pr. hour
               name: 'Local Weather',
               enabled: true,
-              //frequency: 60 * 60 * 1000
-              frequency: 60 * 1000,
-              apiKey: '12b6e28582eb9298577c734a31ba9f4f')),
+              frequency: 60 * 60 * 1000)),
       MapEntry(
-          DataType.GEOFENCE,
-          GeofenceMeasure(MeasureType(NameSpace.CARP, DataType.GEOFENCE),
+          GEOFENCE,
+          GeofenceMeasure(MeasureType(NameSpace.CARP, GEOFENCE),
               enabled: true, center: Location(55.786025, 12.524159), radius: 500, name: 'DTU')),
     ]);
 
@@ -84,4 +80,14 @@ class ContextSamplingPackage implements SamplingPackage {
     ..measures[GEOFENCE].enabled = false;
 
   SamplingSchema get normal => common;
+
+  SamplingSchema get debug => common
+    ..type = SamplingSchemaType.DEBUG
+    ..name = 'Debugging context sampling schema'
+    ..powerAware = false
+    ..measures[WEATHER] = WeatherMeasure(MeasureType(NameSpace.CARP, WEATHER),
+        // collect calendar events once pr. minute
+        name: 'Local Weather',
+        frequency: 60 * 1000,
+        apiKey: '12b6e28582eb9298577c734a31ba9f4f');
 }

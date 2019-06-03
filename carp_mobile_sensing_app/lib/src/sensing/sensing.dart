@@ -77,7 +77,7 @@ class StudyMock implements StudyManager {
             'This is a long description of a Study which can run forever and take up a lot of space and drain you battery and you have to agree to an informed consent which - by all standards - do not comply to any legal framework....'
         ..dataEndPoint = getDataEndpoint(DataEndPointType.PRINT)
         //..dataFormat = NameSpace.OMH
-        ..addTask(Task()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
+        ..addTask(Task()..measures = SamplingSchema.debug(namespace: NameSpace.CARP).measures.values.toList());
 
 //        ..addTask(Task()
 //          ..measures = SamplingSchema.common().getMeasureList(
@@ -206,8 +206,8 @@ class StudyMock implements StudyManager {
   Task get appTask {
     if (_appTask == null)
       _appTask = Task("Application Task")
-        ..addMeasure(
-            PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.APPS), name: "Installed Apps", frequency: 5 * 1000));
+        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, AppsSamplingPackage.APPS),
+            name: "Installed Apps", frequency: 5 * 1000));
 
     return _appTask;
   }
@@ -216,7 +216,7 @@ class StudyMock implements StudyManager {
   Task get appUsageTask {
     if (_appUsageTask == null) {
       _appUsageTask = Task("AppUsage Task")
-        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.APP_USAGE),
+        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, AppsSamplingPackage.APP_USAGE),
                 name: "App Foreground Usage Time", frequency: 10 * 1000, duration: 60 * 60 * 1000) // go back one hour
             );
     }
@@ -227,7 +227,7 @@ class StudyMock implements StudyManager {
   Task get audioTask {
     if (_audioTask == null) {
       _audioTask = Task("Audio Task")
-        ..addMeasure(AudioMeasure(MeasureType(NameSpace.CARP, DataType.AUDIO),
+        ..addMeasure(AudioMeasure(MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO),
             name: "Ambient Audio",
             frequency: 10 * 1000, // once every 10 sec
             duration: 2 * 1000, // record 2 sec
@@ -245,12 +245,13 @@ class StudyMock implements StudyManager {
   Task get commTask {
     if (_commTask == null) {
       _commTask = Task("Communication Task")
-        ..addMeasure(PhoneLogMeasure(MeasureType(NameSpace.CARP, DataType.PHONE_LOG),
+        ..addMeasure(PhoneLogMeasure(MeasureType(NameSpace.CARP, CommunicationSamplingPackage.PHONE_LOG),
             name: "Phone Log", days: 10)) // 10 days of log
-        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.TEXT_MESSAGE_LOG),
+        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, CommunicationSamplingPackage.TEXT_MESSAGE_LOG),
             name: "SMS Message Log", frequency: 6 * 1000 // once every 10 sec
             ))
-        ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.TEXT_MESSAGE), name: "SMS Text Messaging"));
+        ..addMeasure(Measure(MeasureType(NameSpace.CARP, CommunicationSamplingPackage.TEXT_MESSAGE),
+            name: "SMS Text Messaging"));
     }
     return _commTask;
   }
@@ -264,7 +265,8 @@ class StudyMock implements StudyManager {
   Task get connectivityTask {
     if (_connectivityTask == null) {
       _connectivityTask = Task("Connectivity Task")
-            ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.CONNECTIVITY), name: "Connectivity"))
+            ..addMeasure(
+                Measure(MeasureType(NameSpace.CARP, ConnectivitySamplingPackage.CONNECTIVITY), name: "Connectivity"))
 //        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.BLUETOOTH),
 //            name: "Nearby Bluetooth Devices",
 //            frequency: 1 * 10 * 1000, // every minute
@@ -279,7 +281,8 @@ class StudyMock implements StudyManager {
   Task get contextTask {
     if (_contextTask == null) {
       _contextTask = Task("Context Task")
-        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.ACTIVITY), name: "Activity Recognition"));
+        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, ContextSamplingPackage.ACTIVITY),
+            name: "Activity Recognition"));
     }
     return _contextTask;
   }
@@ -288,7 +291,7 @@ class StudyMock implements StudyManager {
   Task get environmentTask {
     if (_environmentTask == null) {
       _environmentTask = Task("Environment Task")
-        ..addMeasure(WeatherMeasure(MeasureType(NameSpace.CARP, DataType.WEATHER),
+        ..addMeasure(WeatherMeasure(MeasureType(NameSpace.CARP, ContextSamplingPackage.WEATHER),
             name: "Local Weather",
             frequency: 1 * 30 * 1000, // once every minute
             apiKey: '12b6e28582eb9298577c734a31ba9f4f'));
@@ -303,10 +306,10 @@ class StudyMock implements StudyManager {
   Task get hardwareTask {
     if (_hardwareTask == null) {
       _hardwareTask = Task("Hardware Task")
-        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.MEMORY),
+        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DeviceSamplingPackage.MEMORY),
             name: "Availabel Memory", frequency: 10 * 1000)) // 10 days of log
-        ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.BATTERY), name: "Battery"))
-        ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.SCREEN), name: "Screen Activity"));
+        ..addMeasure(Measure(MeasureType(NameSpace.CARP, DeviceSamplingPackage.BATTERY), name: "Battery"))
+        ..addMeasure(Measure(MeasureType(NameSpace.CARP, DeviceSamplingPackage.SCREEN), name: "Screen Activity"));
     }
     return _hardwareTask;
   }
@@ -315,7 +318,7 @@ class StudyMock implements StudyManager {
   Task get locationTask {
     if (_locationTask == null) {
       _locationTask = Task("Location Task")
-        ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.LOCATION))..name = "Location");
+        ..addMeasure(Measure(MeasureType(NameSpace.CARP, ContextSamplingPackage.LOCATION))..name = "Location");
     }
     return _locationTask;
   }
@@ -324,7 +327,7 @@ class StudyMock implements StudyManager {
   Task get noiseTask {
     if (_noiseTask == null) {
       _noiseTask = Task("Noise Task")
-        ..addMeasure(NoiseMeasure(MeasureType(NameSpace.CARP, DataType.NOISE),
+        ..addMeasure(NoiseMeasure(MeasureType(NameSpace.CARP, AudioSamplingPackage.NOISE),
             name: "Ambient Noise",
             frequency: 30 * 1000, // How often to start a measure
             duration: 2 * 1000, // Window size
@@ -338,7 +341,7 @@ class StudyMock implements StudyManager {
   Task get pedometerTask {
     if (_pedometerTask == null) {
       _pedometerTask = Task("Pedometer Task")
-        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.PEDOMETER),
+        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.PEDOMETER),
             name: "Pedometer (Step Count)", frequency: 1 * 20 * 1000 // how often to collect step count
             ));
     }
@@ -355,17 +358,17 @@ class StudyMock implements StudyManager {
     if (_sensorTask == null) {
       _sensorTask = Task("Sensor Task")
         ..addMeasure(PeriodicMeasure(
-          MeasureType(NameSpace.CARP, DataType.ACCELEROMETER),
+          MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
           name: "Accelerometer",
           frequency: 8 * 1000, // How often to start a measure
           duration: 20, // Window size
         ))
-        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.GYROSCOPE),
+        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
             name: "Gyroscope",
             frequency: 9 * 1000, // How often to start a measure
             duration: 100 // Window size
             ))
-        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.LIGHT),
+        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
                 name: "Ambient Light",
                 frequency: 11 * 1000, // How often to start a measure
                 duration: 700) // Window size

@@ -29,13 +29,11 @@ class ConnectivitySamplingPackage implements SamplingPackage {
     ..name = 'Common (default) connectivity sampling schema'
     ..powerAware = true
     ..measures.addEntries([
+      MapEntry(CONNECTIVITY,
+          Measure(MeasureType(NameSpace.CARP, CONNECTIVITY), name: 'Connectivity (wifi/3G/...)', enabled: true)),
       MapEntry(
-          DataType.CONNECTIVITY,
-          Measure(MeasureType(NameSpace.CARP, DataType.CONNECTIVITY),
-              name: 'Connectivity (wifi/3G/...)', enabled: true)),
-      MapEntry(
-          DataType.BLUETOOTH,
-          PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.BLUETOOTH),
+          BLUETOOTH,
+          PeriodicMeasure(MeasureType(NameSpace.CARP, BLUETOOTH),
               name: 'Nearby Devices (Bluetooth Scan)', enabled: true, frequency: 10 * 60 * 1000, duration: 5 * 1000)),
     ]);
 
@@ -49,5 +47,9 @@ class ConnectivitySamplingPackage implements SamplingPackage {
     ..name = 'Minimum connectivity sampling'
     ..measures[CONNECTIVITY].enabled = false;
 
-  SamplingSchema get normal => common;
+  SamplingSchema get normal => common..type = SamplingSchemaType.NORMAL;
+
+  SamplingSchema get debug => common
+    ..type = SamplingSchemaType.DEBUG
+    ..name = 'Debug connectivity sampling';
 }
