@@ -1,16 +1,16 @@
 ## 0.5.0 BREAKING
-* **Breaking change.** This version has been migrated from the deprecated Android Support Library to *AndroidX*. 
+* Upgraded to use [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) version 0.5.0 
+   * **Breaking change.** This version has been migrated from the deprecated Android Support Library to *AndroidX*. 
 This should not result in any functional changes, but it requires any Android app using this plugin to also 
-[migrate](https://developer.android.com/jetpack/androidx/migrate) if they're using the original support library. 
-* Use [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) version 0.5.0 
-* See Flutter [AndroidX compatibility](https://flutter.dev/docs/development/packages-and-plugins/androidx-compatibility)
+[migrate](https://developer.android.com/jetpack/androidx/migrate) if using the original support library. 
+   * See Flutter [AndroidX compatibility](https://flutter.dev/docs/development/packages-and-plugins/androidx-compatibility)
 
 ## 0.3.6
 * small update to domain model
 
 ## 0.3.5
 * update to json_serialization v.2
-* added support for geofence measure
+* added support for `geofence` measure
 
 ## 0.3.4
 * update to `carp_mobile_sensing` version 0.3.10

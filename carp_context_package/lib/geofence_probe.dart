@@ -46,7 +46,7 @@ class Geofence {
 
   /// The dwell time of this geofence in miliseconds.
   /// If an object is located inside this geofence for more that [dwell] miliseconds,
-  /// [GeofenceState.DWELL] are fired.
+  /// the [GeofenceState.DWELL] event is fired.
   int dwell;
 
   /// The name of this geofence.

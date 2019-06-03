@@ -17,8 +17,8 @@ part of communication;
 class CommunicationSamplingPackage implements SamplingPackage {
   static const String PHONE_LOG = "phone_log";
   static const String TELEPHONY = "telephony";
-  static const String TEXT_MESSAGE_LOG = "text-message-log";
-  static const String TEXT_MESSAGE = "text-message";
+  static const String TEXT_MESSAGE_LOG = "text_message_log";
+  static const String TEXT_MESSAGE = "text_message";
   static const String CALENDAR = "calendar";
 
   List<String> get dataTypes => [
@@ -64,15 +64,33 @@ class CommunicationSamplingPackage implements SamplingPackage {
       MapEntry(
           PHONE_LOG,
           PhoneLogMeasure(MeasureType(NameSpace.CARP, PHONE_LOG),
-              name: 'Phone Log', enabled: true, frequency: 1 * 24 * 60 * 60 * 1000, days: 2)),
-      MapEntry(TEXT_MESSAGE_LOG,
-          Measure(MeasureType(NameSpace.CARP, TEXT_MESSAGE_LOG), name: 'Text Message (SMS) Log', enabled: true)),
+              // collect phone log once pr. day
+              name: 'Phone Log',
+              enabled: true,
+              //frequency: 60 * 1000,
+              frequency: 1 * 24 * 60 * 60 * 1000,
+              days: 2)),
+      MapEntry(
+          TEXT_MESSAGE_LOG,
+          PeriodicMeasure(
+            MeasureType(NameSpace.CARP, TEXT_MESSAGE_LOG),
+            // collect text messages once pr. day
+            name: 'Text Message (SMS) Log',
+            enabled: true,
+            frequency: 1 * 24 * 60 * 60 * 1000,
+            //frequency: 60 * 1000
+          )),
       MapEntry(
           TEXT_MESSAGE, Measure(MeasureType(NameSpace.CARP, TEXT_MESSAGE), name: 'Text Message (SMS)', enabled: true)),
       MapEntry(
           CALENDAR,
           CalendarMeasure(MeasureType(NameSpace.CARP, CALENDAR),
-              name: 'Calendar Events', enabled: true, frequency: 1 * 24 * 60 * 60 * 1000, daysBack: 1, daysFuture: 1)),
+              // collect calendar events once pr. day
+              name: 'Calendar Events',
+              enabled: true,
+              frequency: 1 * 24 * 60 * 60 * 1000,
+              daysBack: 1,
+              daysFuture: 1)),
     ]);
 
   SamplingSchema get light => common

@@ -36,7 +36,7 @@ class ConnectivitySamplingPackage implements SamplingPackage {
       MapEntry(
           DataType.BLUETOOTH,
           PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.BLUETOOTH),
-              name: 'Nearby Devices (Bluetooth Scan)', enabled: true, frequency: 10 * 60 * 1000, duration: 10 * 1000)),
+              name: 'Nearby Devices (Bluetooth Scan)', enabled: true, frequency: 10 * 60 * 1000, duration: 5 * 1000)),
     ]);
 
   SamplingSchema get light => common

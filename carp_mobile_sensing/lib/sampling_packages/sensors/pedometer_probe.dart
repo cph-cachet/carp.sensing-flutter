@@ -22,6 +22,8 @@ class PedometerProbe extends BufferingStreamProbe {
   Stream<dynamic> get bufferingStream => Pedometer().stepCountStream;
 
   Future<Datum> getDatum() async {
+    // check if we have passed midnight, then _steps has to be reset to zero.
+    if (_count < _steps) _steps = 0;
     PedometerDatum pd = PedometerDatum(_count - _steps, _startTime, DateTime.now());
     _steps = _count;
     _startTime = DateTime.now();
@@ -31,6 +33,5 @@ class PedometerProbe extends BufferingStreamProbe {
   // the pedometer plugin reports absolute number of steps taken since midnight.
   void onSamplingData(count) {
     _count = count;
-    print('step count : $count');
   }
 }

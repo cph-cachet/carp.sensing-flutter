@@ -60,7 +60,12 @@ class ContextSamplingPackage implements SamplingPackage {
       MapEntry(
           DataType.WEATHER,
           WeatherMeasure(MeasureType(NameSpace.CARP, DataType.WEATHER),
-              name: 'Local Weather', enabled: true, frequency: 60 * 60 * 1000)),
+              // collect local weather once pr. hour
+              name: 'Local Weather',
+              enabled: true,
+              //frequency: 60 * 60 * 1000
+              frequency: 60 * 1000,
+              apiKey: '12b6e28582eb9298577c734a31ba9f4f')),
       MapEntry(
           DataType.GEOFENCE,
           GeofenceMeasure(MeasureType(NameSpace.CARP, DataType.GEOFENCE),

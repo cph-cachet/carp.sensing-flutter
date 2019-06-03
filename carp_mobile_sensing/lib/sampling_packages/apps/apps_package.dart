@@ -16,7 +16,7 @@ class AppsSamplingPackage implements SamplingPackage {
         // see https://github.com/g123k/flutter_plugin_device_apps/issues/12
         // therefore the APPS probe is disabled right now.
         // TODO - add the AppsProbe once the plugin is fixed.
-        return null;
+        //return null;
         return AppsProbe();
       case APP_USAGE:
         return AppUsageProbe();
@@ -34,14 +34,21 @@ class AppsSamplingPackage implements SamplingPackage {
     ..measures.addEntries([
       MapEntry(
           DataType.APPS,
-          PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.APPS),
-              name: 'Installed Apps', enabled: true, frequency: 24 * 60 * 60 * 1000)),
+          PeriodicMeasure(
+            MeasureType(NameSpace.CARP, DataType.APPS),
+            // collect list of installed apps once pr. day
+            name: 'Installed Apps',
+            enabled: true,
+            frequency: 24 * 60 * 60 * 1000,
+            //frequency: 60 * 1000
+          )),
       MapEntry(
           DataType.APP_USAGE,
           PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.APP_USAGE),
-              // collect app usage every 10 min for the 10 min
+              // collect app usage every 10 min for the last 10 min
               name: 'Apps Usage',
               enabled: true,
+              //frequency: 60 * 1000,
               frequency: 10 * 60 * 1000,
               duration: 10 * 60 * 1000)),
     ]);

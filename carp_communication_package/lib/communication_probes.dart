@@ -33,17 +33,27 @@ class PhoneLogProbe extends PeriodicDatumProbe {
 }
 
 /// A probe that collects a complete list of all text (SMS) messages from this device.
-///
-/// This probe only collects the list of SMS messages once.
-/// If you want to listen to text messages being received,
-/// use a [TextMessageProbe] instead.
-class TextMessageLogProbe extends DatumProbe {
+/// This is done on a regular basis as specified by the [frequency] in a [PeriodicMeasure].
+class TextMessageLogProbe extends PeriodicDatumProbe {
   Future<Datum> getDatum() async {
     SmsQuery query = new SmsQuery();
     List<SmsMessage> _messages = await query.getAllSms;
     return TextMessageLogDatum()..textMessageLog = _messages.map((sms) => TextMessage.fromSmsMessage(sms)).toList();
   }
 }
+
+///// A probe that collects a complete list of all text (SMS) messages from this device.
+/////
+///// This probe only collects the list of SMS messages once.
+///// If you want to listen to text messages being received,
+///// use a [TextMessageProbe] instead.
+//class TextMessageLogProbe extends DatumProbe {
+//  Future<Datum> getDatum() async {
+//    SmsQuery query = new SmsQuery();
+//    List<SmsMessage> _messages = await query.getAllSms;
+//    return TextMessageLogDatum()..textMessageLog = _messages.map((sms) => TextMessage.fromSmsMessage(sms)).toList();
+//  }
+//}
 
 /// The [TextMessageProbe] listens to SMS messages and collects a
 /// [TextMessageDatum] every time a new SMS message is received.

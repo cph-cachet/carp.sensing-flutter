@@ -12,9 +12,9 @@ class _SamplingPackageRegistry {
     // JSON deserialization in [Serializable] is initialized
     Study("1234", "unknown");
     // register the known, built-in packages
-    //register(DeviceSamplingPackage());
-    //register(SensorSamplingPackage());
-    //register(ConnectivitySamplingPackage());
+    register(DeviceSamplingPackage());
+    register(SensorSamplingPackage());
+    register(ConnectivitySamplingPackage());
     register(AppsSamplingPackage());
   }
 
