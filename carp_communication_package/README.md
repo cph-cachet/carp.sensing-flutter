@@ -10,6 +10,7 @@ This packages supports sampling of the following [`Measure`](https://pub.dartlan
 * `telephony`
 * `text-message-log`
 * `text-message`
+* `calendar`
 
 See the [wiki]() for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types)
 and [sampling schemas](https://github.com/cph-cachet/carp.sensing-flutter/wiki/D.-Sampling-Schemas).
@@ -29,8 +30,8 @@ this package only works together with `carp_mobile_sensing`.
 dependencies:
   flutter:
     sdk: flutter
-  carp_mobile_sensing: ^0.3.0
-  carp_communication_package: ^0.3.0
+  carp_mobile_sensing: ^0.5.0
+  carp_communication_package: ^0.5.0
   ...
 `````
 
@@ -50,13 +51,26 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
    <uses-permission android:name="android.permission.READ_PHONE_NUMBERS"/>
    <uses-permission android:name="android.permission.READ_SMS"/>
+   <uses-permission android:name="android.permission.READ_CALENDAR"/>
+   <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
 
 </manifest>
 ````
 
+Note that version 0.5.0 is migrated to AndroidX. This shouldn't result in any functional changes, but it requires any Android apps using this plugin to also 
+[migrate](https://developer.android.com/jetpack/androidx/migrate) if they're using the original support library. 
+See Flutter [AndroidX compatibility](https://flutter.dev/docs/development/packages-and-plugins/androidx-compatibility)
+
+
+
 ### iOS Integration
 
-No changes should be needed regarding permission in the `Info.plist` for this package.
+Add this permission in the `Info.plist` file located in `ios/Runner`:
+
+````xml
+<key>NSCalendarsUsageDescription</key>
+<string>INSERT_REASON_HERE</string>
+````
 
 ## Using it
 

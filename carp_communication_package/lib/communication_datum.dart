@@ -212,5 +212,74 @@ class PhoneCall extends Serializable {
   Map<String, dynamic> toJson() => _$PhoneCallToJson(this);
 
   String toString() =>
-      "phone_call: {timestamp: $timestamp, call_type: $callType, duration: $duration, number: $number, formatted_number: $formattedNumber, name: $name}";
+      "Phone Call - timestamp: $timestamp, call_type: $callType, duration: $duration, number: $number, formatted_number: $formattedNumber, name: $name";
+}
+
+/// Holds a list of calendar events from the device.
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+class CalendarDatum extends CARPDatum {
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, CommunicationSamplingPackage.CALENDAR);
+  DataFormat get format => CARP_DATA_FORMAT;
+
+  List<CalendarEvent> calendarEvents = new List<CalendarEvent>();
+
+  CalendarDatum() : super();
+
+  factory CalendarDatum.fromJson(Map<String, dynamic> json) => _$CalendarDatumFromJson(json);
+  Map<String, dynamic> toJson() => _$CalendarDatumToJson(this);
+
+  String toString() => "Calendar Events - size: ${calendarEvents.length}";
+}
+
+/// A calendar event.
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+class CalendarEvent extends Serializable {
+  /// The unique identifier for this event
+  String eventId;
+
+  /// The identifier of the calendar that this event is associated with
+  String calendarId;
+
+  /// The title of this event
+  String title;
+
+  /// The description for this event
+  String description;
+
+  /// Indicates when the event starts
+  DateTime start;
+
+  /// Indicates when the event ends
+  DateTime end;
+
+  /// Indicates if this is an all-day event
+  bool allDay;
+
+  /// The location of this event
+  String location;
+
+  /// A list of attendees' name for this event
+  List<String> attendees;
+
+  CalendarEvent(
+      [this.eventId,
+      this.calendarId,
+      this.title,
+      this.description,
+      this.start,
+      this.end,
+      this.allDay,
+      this.location,
+      this.attendees]);
+
+  factory CalendarEvent.fromEvent(Event event) {
+    return CalendarEvent(event.eventId, event.calendarId, event.title, event.description, event.start.toUtc(),
+        event.end.toUtc(), event.allDay, event.location, event.attendees.map((attendees) => attendees.name).toList());
+  }
+
+  factory CalendarEvent.fromJson(Map<String, dynamic> json) => _$CalendarEventFromJson(json);
+  Map<String, dynamic> toJson() => _$CalendarEventToJson(this);
+
+  String toString() =>
+      "Calendar Event - eventId: $eventId, calendarId: $calendarId, title: $title, description: $description, start: $start, end: $end, all day: $allDay, location: $location, no. attendees: ${attendees.length}";
 }

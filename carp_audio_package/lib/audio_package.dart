@@ -28,6 +28,8 @@ class AudioSamplingPackage implements SamplingPackage {
       case AUDIO:
         return AudioProbe();
       case NOISE:
+        // TODO - add link to issue
+        return null;
         return NoiseProbe();
       default:
         return null;
@@ -45,13 +47,13 @@ class AudioSamplingPackage implements SamplingPackage {
     ..powerAware = true
     ..measures.addEntries([
       MapEntry(
-          DataType.AUDIO,
-          AudioMeasure(MeasureType(NameSpace.CARP, DataType.AUDIO),
-              name: 'Audio Recording', enabled: true, frequency: 60 * 1000, duration: 10 * 1000)),
+          AUDIO,
+          AudioMeasure(MeasureType(NameSpace.CARP, AUDIO),
+              name: 'Audio Recording', enabled: false, frequency: 60 * 1000, duration: 2 * 1000)),
       MapEntry(
-          DataType.NOISE,
-          NoiseMeasure(MeasureType(NameSpace.CARP, DataType.NOISE),
-              name: 'Ambient Noise', enabled: true, frequency: 37 * 1000, duration: 2 * 1000)),
+          NOISE,
+          NoiseMeasure(MeasureType(NameSpace.CARP, NOISE),
+              name: 'Ambient Noise', enabled: true, frequency: 60 * 1000, duration: 2 * 1000)),
     ]);
 
   SamplingSchema get light => common
@@ -65,4 +67,13 @@ class AudioSamplingPackage implements SamplingPackage {
     ..measures[NOISE].enabled = false;
 
   SamplingSchema get normal => common;
+
+  SamplingSchema get debug => common
+    ..type = SamplingSchemaType.DEBUG
+    ..name = 'Debugging audio sampling schema'
+    ..powerAware = false
+    ..measures[AUDIO] =
+        AudioMeasure(MeasureType(NameSpace.CARP, AUDIO), enabled: true, frequency: 45 * 1000, duration: 5 * 1000)
+    ..measures[NOISE] =
+        NoiseMeasure(MeasureType(NameSpace.CARP, NOISE), enabled: true, frequency: 35 * 1000, duration: 2 * 1000);
 }

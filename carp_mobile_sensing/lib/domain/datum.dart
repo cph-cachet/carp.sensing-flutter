@@ -51,7 +51,7 @@ class StringDatum extends CARPDatum {
   /// The string data for this Datum.
   String str;
 
-  StringDatum({this.str}) : super();
+  StringDatum([this.str]) : super();
 
   factory StringDatum.fromJson(Map<String, dynamic> json) => _$StringDatumFromJson(json);
   Map<String, dynamic> toJson() => _$StringDatumToJson(this);
@@ -65,7 +65,7 @@ class MapDatum extends CARPDatum {
 
   Map<String, String> map;
 
-  MapDatum({this.map}) : super();
+  MapDatum([this.map]) : super();
 
   factory MapDatum.fromJson(Map<String, dynamic> json) => _$MapDatumFromJson(json);
   Map<String, dynamic> toJson() => _$MapDatumToJson(this);
@@ -81,7 +81,7 @@ class ErrorDatum extends CARPDatum {
   /// The original error message returned from the probe, if available.
   String message;
 
-  ErrorDatum({this.message}) : super();
+  ErrorDatum([this.message]) : super();
 
   factory ErrorDatum.fromJson(Map<String, dynamic> json) => _$ErrorDatumFromJson(json);
   Map<String, dynamic> toJson() => _$ErrorDatumToJson(this);
@@ -161,29 +161,29 @@ class DataType {
   static const String STRING = "string";
   static const String MAP = "map";
   static const String ERROR = "error";
-  static const String MEMORY = "memory";
-  static const String DEVICE = "device";
-  static const String PEDOMETER = "pedometer";
-  static const String ACCELEROMETER = "accelerometer";
-  static const String GYROSCOPE = "gyroscope";
-  static const String BATTERY = "battery";
-  static const String BLUETOOTH = "bluetooth";
-  static const String AUDIO = "audio";
-  static const String NOISE = "noise";
-  static const String LOCATION = "location";
-  static const String CONNECTIVITY = "connectivity";
-  static const String LIGHT = "light";
-  static const String APPS = "apps";
-  static const String APP_USAGE = "app_usage";
-  static const String TEXT_MESSAGE_LOG = "text-message-log";
-  static const String TEXT_MESSAGE = "text-message";
-  static const String SCREEN = "screen";
-  static const String PHONE_LOG = "phone_log";
-  static const String ACTIVITY = "activity";
-  static const String APPLE_HEALTHKIT = "apple-healthkit";
-  static const String GOOGLE_FIT = "google-fit";
-  static const String WEATHER = "weather";
-  static const String GEOFENCE = "geofence";
+//  static const String MEMORY = "memory";
+//  static const String DEVICE = "device";
+//  static const String PEDOMETER = "pedometer";
+//  static const String ACCELEROMETER = "accelerometer";
+//  static const String GYROSCOPE = "gyroscope";
+//  static const String BATTERY = "battery";
+//  static const String BLUETOOTH = "bluetooth";
+//  static const String AUDIO = "audio";
+//  static const String NOISE = "noise";
+//  static const String LOCATION = "location";
+//  static const String CONNECTIVITY = "connectivity";
+//  static const String LIGHT = "light";
+//  static const String APPS = "apps";
+//  static const String APP_USAGE = "app_usage";
+//  static const String TEXT_MESSAGE_LOG = "text-message-log";
+//  static const String TEXT_MESSAGE = "text-message";
+//  static const String SCREEN = "screen";
+//  static const String PHONE_LOG = "phone_log";
+//  static const String ACTIVITY = "activity";
+//  static const String APPLE_HEALTHKIT = "apple-healthkit";
+//  static const String GOOGLE_FIT = "google-fit";
+//  static const String WEATHER = "weather";
+//  static const String GEOFENCE = "geofence";
 
   static List<String> _allTypes = List<String>();
 

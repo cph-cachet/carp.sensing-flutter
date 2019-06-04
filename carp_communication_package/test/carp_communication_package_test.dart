@@ -92,5 +92,7 @@ void main() {
     p_log.phoneLog.forEach(print);
   });
 
+  test('Calendar', () {});
+
   test('', () {});
 }

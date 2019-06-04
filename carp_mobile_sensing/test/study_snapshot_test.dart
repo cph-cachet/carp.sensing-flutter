@@ -37,14 +37,12 @@ void main() {
 //      ..addMeasure(PeriodicMeasure(DataFormat('carp', 'apps'), frequency: 3, duration: 8))
 //      ..addMeasure(Measure(DataFormat('carp', 'weather'))));
 
-    study.addTask(Task('Location Task')..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.LOCATION))));
-
     study.addTask(ParallelTask('Sensor Task')
-      ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.ACCELEROMETER),
+      ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
           frequency: 10 * 1000, // sample every 10 secs
           duration: 100 // for 100 ms
           ))
-      ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.GYROSCOPE),
+      ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
           frequency: 20 * 1000, // sample every 20 secs
           duration: 100 // for 100 ms
           )));
@@ -60,12 +58,12 @@ void main() {
 //          samplingRate: 500 // configure sampling rate to 500 ms
 //          )));
 
-    study.addTask(SequentialTask('Sample Activity with Weather Task')
-      ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.ACTIVITY))..configuration['jakob'] = 'was here')
-      ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.WEATHER))));
+//    study.addTask(SequentialTask('Sample Activity with Weather Task')
+//      ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.ACTIVITY))..configuration['jakob'] = 'was here')
+//      ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.WEATHER))));
 
     study.addTask(SequentialTask('Task collecting a list of all installed apps')
-      ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.APPS))));
+      ..addMeasure(Measure(MeasureType(NameSpace.CARP, AppsSamplingPackage.APPS))));
   });
 
   String _stringSnapshot;

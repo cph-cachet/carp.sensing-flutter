@@ -46,6 +46,10 @@ abstract class SamplingPackage {
   /// See [PowerAwarenessState].
   SamplingSchema get minimum;
 
+  /// A debugging sampling schema for all measures in this package.
+  /// Typically provides very detailed and frequent sampling in order to debug the probes.
+  SamplingSchema get debug;
+
   /// The list of data type this package supports.
   List<String> get dataTypes;
 

@@ -352,6 +352,7 @@ abstract class DatumProbe extends AbstractProbe {
 /// in a [PeriodicMeasure].
 ///
 /// When triggered, a periodic probe collect a piece of data ([Datum]) using the [getDatum] method.
+/// Note that the [duration] parameter in a [PeriodicMeasure] is **not** used.
 abstract class PeriodicDatumProbe extends DatumProbe {
   Timer timer;
   StreamController<Datum> controller = StreamController<Datum>.broadcast();
@@ -406,7 +407,7 @@ abstract class PeriodicDatumProbe extends DatumProbe {
 ///     Stream<Datum> get stream => ...
 ///
 /// method in order to provide the stream to collect data from.
-/// See [BluetoothProbe] for an (simple) example or [BatteryProbe] for a more
+/// See [ConnectivityProbe] for a simple example or [BatteryProbe] for a more
 /// sophisticated example.
 abstract class StreamProbe extends AbstractProbe {
   StreamSubscription<dynamic> subscription;
@@ -640,4 +641,33 @@ abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
   /// This method will be called every time data has been buffered for a [duration]
   /// and should return the final [Datum] for the buffered data.
   Future<Datum> getDatum();
+}
+
+/// An abstract probe which can be used to buffer data from a stream and collect data
+/// every [frequency]. All events from the [bufferingStream] are buffered, and
+/// collected from the [getDatum] method every [frequency] and send to the
+/// main [events] stream.
+///
+/// Sub-classes must implement the
+///
+///     Stream<dynamic> get bufferingStream => ...
+///
+/// method in order to provide the stream to be buffered.
+///
+/// When the sampling window ends, the [getDatum] method is called.
+///
+/// See [PedometerProbe] for an example.
+abstract class BufferingStreamProbe extends BufferingPeriodicStreamProbe {
+  void onResume() {
+    subscription.resume();
+    timer = Timer.periodic(frequency, (Timer t) {
+      onSamplingStart();
+      getDatum().then((datum) {
+        if (datum != null) controller.add(datum);
+      });
+    });
+  }
+
+  void onSamplingEnd() {}
+  void onSamplingStart() {}
 }

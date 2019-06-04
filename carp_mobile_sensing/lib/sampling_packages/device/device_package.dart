@@ -35,16 +35,14 @@ class DeviceSamplingPackage implements SamplingPackage {
     ..name = 'Common (default) device sampling schema'
     ..powerAware = true
     ..measures.addEntries([
-      MapEntry(DataType.DEVICE,
-          Measure(MeasureType(NameSpace.CARP, DataType.DEVICE), name: 'Basic Device Info', enabled: true)),
+      MapEntry(DEVICE, Measure(MeasureType(NameSpace.CARP, DEVICE), name: 'Basic Device Info', enabled: true)),
       MapEntry(
-          DataType.MEMORY,
-          PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.MEMORY),
+          MEMORY,
+          PeriodicMeasure(MeasureType(NameSpace.CARP, MEMORY),
               name: 'Memory Usage', enabled: true, frequency: 60 * 1000)),
+      MapEntry(BATTERY, Measure(MeasureType(NameSpace.CARP, BATTERY), name: 'Battery', enabled: true)),
       MapEntry(
-          DataType.BATTERY, Measure(MeasureType(NameSpace.CARP, DataType.BATTERY), name: 'Battery', enabled: true)),
-      MapEntry(DataType.SCREEN,
-          Measure(MeasureType(NameSpace.CARP, DataType.SCREEN), name: 'Screen Activity (lock/on/off)', enabled: true)),
+          SCREEN, Measure(MeasureType(NameSpace.CARP, SCREEN), name: 'Screen Activity (lock/on/off)', enabled: true)),
     ]);
 
   SamplingSchema get light => common
@@ -55,4 +53,8 @@ class DeviceSamplingPackage implements SamplingPackage {
   SamplingSchema get minimum => light;
 
   SamplingSchema get normal => common;
+
+  SamplingSchema get debug => common
+    ..type = SamplingSchemaType.DEBUG
+    ..name = 'Debug device sampling';
 }

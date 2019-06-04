@@ -15,17 +15,22 @@ class LocationDatum extends CARPDatum {
 
   LocationDatum() : super();
 
-  LocationDatum.fromMap(Map<dynamic, dynamic> map)
-      : latitude = map['latitude'],
-        longitude = map['longitude'],
-        altitude = map['altitude'],
-        accuracy = map['accuracy'],
-        speed = map['speed'],
-        speedAccuracy = map['speedAccuracy'],
+  LocationDatum.fromLocationData(location.LocationData location)
+      : latitude = location.latitude,
+        longitude = location.longitude,
+        altitude = location.altitude,
+        accuracy = location.accuracy,
+        speed = location.speed,
+        speedAccuracy = location.speedAccuracy,
+        heading = location.heading,
+        time = location.time,
         super();
 
   factory LocationDatum.fromJson(Map<String, dynamic> json) => _$LocationDatumFromJson(json);
   Map<String, dynamic> toJson() => _$LocationDatumToJson(this);
+
+  /// The time in milliseconds
+  double time;
 
   /// Latitude in GPS coordinates.
   double latitude;
@@ -47,9 +52,12 @@ class LocationDatum extends CARPDatum {
   /// Will always be 0 on iOS
   double speedAccuracy;
 
+  /// Heading in degrees
+  double heading;
+
   /// The 2D GPS coordinates [latitude, longitude].
   get gpsCoordinates => [latitude, longitude];
 
   String toString() =>
-      "Location - latitude: $latitude, longitude: $longitude, accuracy; $accuracy, altitude: $altitude, speed: $speed, speed_accuracy: $speedAccuracy";
+      "Location - latitude: $latitude, longitude: $longitude, accuracy; $accuracy, altitude: $altitude, speed: $speed, speed_accuracy: $speedAccuracy, heading: $heading, time: $time";
 }

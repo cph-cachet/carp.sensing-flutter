@@ -38,11 +38,11 @@ class SensorSamplingPackage implements SamplingPackage {
       MapEntry(
           ACCELEROMETER,
           PeriodicMeasure(MeasureType(NameSpace.CARP, ACCELEROMETER),
-              name: 'Accelerometer', enabled: false, frequency: 10 * 1000, duration: 10)),
+              name: 'Accelerometer', enabled: false, frequency: 1000, duration: 10)),
       MapEntry(
           GYROSCOPE,
           PeriodicMeasure(MeasureType(NameSpace.CARP, GYROSCOPE),
-              name: 'Gyroscope', enabled: false, frequency: 10 * 1000, duration: 10)),
+              name: 'Gyroscope', enabled: false, frequency: 1000, duration: 10)),
       MapEntry(
           PEDOMETER,
           PeriodicMeasure(MeasureType(NameSpace.CARP, PEDOMETER),
@@ -64,4 +64,27 @@ class SensorSamplingPackage implements SamplingPackage {
     ..measures[PEDOMETER].enabled = false;
 
   SamplingSchema get normal => common;
+
+  SamplingSchema get debug => SamplingSchema()
+    ..type = SamplingSchemaType.COMMON
+    ..name = 'Common (default) sensor sampling schema'
+    ..powerAware = true
+    ..measures.addEntries([
+      MapEntry(
+          ACCELEROMETER,
+          PeriodicMeasure(MeasureType(NameSpace.CARP, ACCELEROMETER),
+              name: 'Accelerometer', enabled: true, frequency: 10 * 1000, duration: 10)),
+      MapEntry(
+          GYROSCOPE,
+          PeriodicMeasure(MeasureType(NameSpace.CARP, GYROSCOPE),
+              name: 'Gyroscope', enabled: true, frequency: 10 * 1000, duration: 10)),
+      MapEntry(
+          PEDOMETER,
+          PeriodicMeasure(MeasureType(NameSpace.CARP, PEDOMETER),
+              name: 'Pedometer (Step Count)', enabled: true, frequency: 60 * 1000)),
+      MapEntry(
+          LIGHT,
+          PeriodicMeasure(MeasureType(NameSpace.CARP, LIGHT),
+              name: 'Ambient Light', enabled: true, frequency: 60 * 1000, duration: 1000)),
+    ]);
 }

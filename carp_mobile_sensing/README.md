@@ -10,13 +10,6 @@ For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter
 ## Usage
 To use this plugin, add `carp_mobile_sensing` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/).
 
-This plugin relies on `json_serialization: ^1.0.0` which again rely on Dart 2.1. 
-
-Note that there are two issues with Android to consider:
-
-* [Issue #1](https://github.com/cph-cachet/carp.sensing/issues/2) - make sure your app's android `build.gradle` has a `minSdkVersion 19` (instead of `16` ).
-* [Issue #2](https://github.com/cph-cachet/carp.sensing/issues/1) - update the he file `build.gradle` in `flutter_blue` and change the JDK parameters to `26` (instead of `27`).
-
 ### Android Integration
 
 Add the following to your app's `manifest.xml` file located in `android/app/src/main`:
@@ -33,6 +26,11 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
 
 </manifest>
 ````
+Note that version 0.5.0 is migrated to AndroidX. This shouldn't result in any functional changes, but it requires any Android apps using this plugin to also 
+[migrate](https://developer.android.com/jetpack/androidx/migrate) if they're using the original support library. 
+See Flutter [AndroidX compatibility](https://flutter.dev/docs/development/packages-and-plugins/androidx-compatibility)
+
+
 
 ### iOS Integration
 
@@ -79,17 +77,17 @@ some_method() async {
   // add sensor collection from accelerometer and gyroscope
   // careful - these sensors generate a lot of data!
   study.addTask(Task('Sensor Task')
-    ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.ACCELEROMETER),
+    ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
         frequency: 10 * 1000, // sample every 10 secs)
         duration: 100 // for 100 ms
         ))
-    ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.GYROSCOPE),
+    ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
         frequency: 20 * 1000, // sample every 20 secs
         duration: 100 // for 100 ms
         )));
 
   study.addTask(Task('Task collecting a list of all installed apps')
-    ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.APPS))));
+    ..addMeasure(Measure(MeasureType(NameSpace.CARP, AppsSamplingPackage.APPS))));
 
   // Create a Study Controller that can manage this study, initialize it, and start it.
   StudyController controller = StudyController(study);

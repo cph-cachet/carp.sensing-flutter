@@ -249,7 +249,7 @@ Map<String, dynamic> _$CARPDatumToJson(CARPDatum instance) {
 }
 
 StringDatum _$StringDatumFromJson(Map<String, dynamic> json) {
-  return StringDatum(str: json['str'] as String)
+  return StringDatum(json['str'] as String)
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
         ? null
@@ -272,8 +272,7 @@ Map<String, dynamic> _$StringDatumToJson(StringDatum instance) {
 }
 
 MapDatum _$MapDatumFromJson(Map<String, dynamic> json) {
-  return MapDatum(
-      map: (json['map'] as Map<String, dynamic>)?.map(
+  return MapDatum((json['map'] as Map<String, dynamic>)?.map(
     (k, e) => MapEntry(k, e as String),
   ))
     ..id = json['id'] as String
@@ -298,7 +297,7 @@ Map<String, dynamic> _$MapDatumToJson(MapDatum instance) {
 }
 
 ErrorDatum _$ErrorDatumFromJson(Map<String, dynamic> json) {
-  return ErrorDatum(message: json['message'] as String)
+  return ErrorDatum(json['message'] as String)
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
         ? null
