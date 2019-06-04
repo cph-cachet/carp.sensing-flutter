@@ -41,8 +41,6 @@ class StudyController {
     privacySchemaName ??= NameSpace.CARP;
     transformer ??= ((events) => events);
 
-    print('study.dataFormat = ${study.dataFormat}');
-
     // set up transformation in the following order:
     // 1. privacy schema
     // 2. preferred data format as specified in the study protocol
@@ -58,10 +56,16 @@ class StudyController {
   /// Initialize this controller. Must be called only once, and before [start] is called.
   Future<void> initialize() async {
     await Device.getDeviceInfo();
-    print('Initializing Study Manager for study: ' + study.name);
-    print(' platform     : ' + Device.platform.toString());
-    print(' device ID    : ' + Device.deviceID.toString());
-    print(' data manager : ' + dataManager.toString());
+
+    print('CARP Mobile sensing - Initializing Study Controller: ');
+    print('     study id : ${study.id}');
+    print('   study name : ${study.name}');
+    print('         user : ${study.userId}');
+    print('     endpoint : ${study.dataEndPoint.type}');
+    print('  data format : ${study.dataFormat}');
+    print('     platform : ${Device.platform.toString()}');
+    print('    device ID : ${Device.deviceID.toString()}');
+    print(' data manager : ${dataManager.toString()}');
 
     if (samplingSchema != null) {
       // doing two adaptation is a bit of a hack; used to ensure that
@@ -106,6 +110,7 @@ class StudyController {
 
   /// Start this controller, i.e. start collecting data according to the specified [study] and [samplingSchema].
   Future<void> start() async {
+    print("Starting data sampling ...");
     enablePowerAwareness();
     executor.start();
   }
@@ -115,6 +120,7 @@ class StudyController {
   /// Once a controller is stopped it **cannot** be (re)started.
   /// If a controller should be restarted, use the [pause] and [resume] methods.
   void stop() {
+    print("Stopping data sampling ...");
     disablePowerAwareness();
     dataManager.close();
     executor.stop();
@@ -122,11 +128,13 @@ class StudyController {
 
   /// Pause the controller, which will pause data collection.
   void pause() {
+    print("Pausing data sampling ...");
     executor.pause();
   }
 
   /// Resume the controller, i.e. resume data collection.
   void resume() {
+    print("Resuming data sampling ...");
     executor.resume();
   }
 }

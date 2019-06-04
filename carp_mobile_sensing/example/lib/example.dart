@@ -161,7 +161,6 @@ void samplingSchemaExample() async {
   controller = StudyController(study);
   await controller.initialize();
   controller.start();
-  print("Sensing started ...");
 
   // listening on all data events from the study
   controller.events.forEach(print);

@@ -12,16 +12,16 @@ dependencies:
     sdk: flutter
   json_annotation: ^2.0.0
   sms: ^0.2.4
-  call_log: ^1.0.2
+  call_log: ^2.0.0
   device_calendar: ^0.1.1
   crypto: ^2.0.0
-  #carp_mobile_sensing: ^0.5.0
+  carp_mobile_sensing: ^0.5.0
 
 # Overriding carp libraries to use the local copy
 # Remove this when done development
-dependency_overrides:
-  carp_mobile_sensing:
-    path: ../carp_mobile_sensing/
+#dependency_overrides:
+#  carp_mobile_sensing:
+#    path: ../carp_mobile_sensing/
 
 dev_dependencies:
   flutter_test:

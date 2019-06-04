@@ -66,19 +66,7 @@ class Study extends Serializable {
     schema.adapt(this, restore: restore);
   }
 
-  @override
-  String toString() {
-    String s = "";
-    s += "Study     id : " + id + "\n";
-    s += "        name : " + name + "\n";
-    s += "        user : " + userId + "\n";
-    s += "    endpoint : " + dataEndPoint.type + "\n";
-    s += " data format : " + dataFormat + "\n";
-    tasks.forEach((t) {
-      s += t.toString();
-    });
-    return s;
-  }
+  String toString() => name;
 }
 
 /// Specify an endpoint where a [DataManager] can upload data.

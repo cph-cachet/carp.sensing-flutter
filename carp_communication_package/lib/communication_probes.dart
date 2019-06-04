@@ -22,13 +22,6 @@ class PhoneLogProbe extends PeriodicDatumProbe {
     }
 
     return PhoneLogDatum()..phoneLog = entries.map((call) => PhoneCall.fromCallLogEntry(call)).toList();
-
-//    PhoneLogDatum pld = new PhoneLogDatum();
-//    for (CallLogEntry call in entries ?? []) {
-//      pld.phoneLog.add(PhoneCall.fromCallLogEntry(call));
-//    }
-//
-//    return pld;
   }
 }
 

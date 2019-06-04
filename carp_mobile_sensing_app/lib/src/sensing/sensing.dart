@@ -15,6 +15,9 @@ class Sensing {
     // register the sampling packages
     SamplingPackageRegistry.register(CommunicationSamplingPackage());
     SamplingPackageRegistry.register(ContextSamplingPackage());
+    // right now the audio plugin throws an exception
+    // see https://github.com/dooboolab/flutter_sound/issues/93
+    // TODO - enable once issue is solved.
     //SamplingPackageRegistry.register(AudioSamplingPackage());
 
     // register data endpoints
@@ -30,14 +33,11 @@ class Sensing {
     // Get the study.
     study = await mock.getStudy(testStudyId);
 
-    print(study.toString());
-
     // Create a Study Controller that can manage this study, initialize it, and start it.
     controller = StudyController(study);
     //controller = StudyController(study, privacySchemaName: PrivacySchema.DEFAULT); // a controller w. privacy
     await controller.initialize();
     controller.start();
-    print("Sensing started ...");
 
     // listening on all data events from the study and print it (for debugging purpose).
     controller.events.forEach(print);
@@ -50,7 +50,6 @@ class Sensing {
   void stop() async {
     controller.stop();
     study = null;
-    print("Sensing stopped ...");
   }
 }
 

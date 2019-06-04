@@ -1,3 +1,6 @@
+## 0.5.1
+* Update of readme file.
+
 ## 0.5.0 BREAKING
 * **Breaking change.** This version has been migrated from the deprecated Android Support Library to *AndroidX*. 
 This should not result in any functional changes, but it requires any Android app using this plugin to also 

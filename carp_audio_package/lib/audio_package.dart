@@ -28,6 +28,8 @@ class AudioSamplingPackage implements SamplingPackage {
       case AUDIO:
         return AudioProbe();
       case NOISE:
+        // TODO - add link to issue
+        return null;
         return NoiseProbe();
       default:
         return null;
