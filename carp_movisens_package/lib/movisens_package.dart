@@ -34,4 +34,8 @@ class MovisensSamplingPackage implements SamplingPackage {
 
     print("inside register MovisnesMeasure");
 }
+
+  @override
+  // TODO: implement debug
+  SamplingSchema get debug => null;
 }
