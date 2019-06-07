@@ -48,6 +48,7 @@ class CarpUser {
     if (CarpService.instance == null)
       throw new CarpServiceException("CARP Service not initialized. Call 'CarpService.configure()' first.");
 
+    print('token : $_token - ${_token.hasExpired}');
     // check if we need to refresh the token.
     if ((_token == null) || _token.hasExpired || refresh) {
       _token = await CarpService.instance.refresh();

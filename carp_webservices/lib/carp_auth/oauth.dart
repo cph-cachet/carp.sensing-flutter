@@ -21,13 +21,16 @@ class OAuthToken {
   /// Constructor
   OAuthToken(this._accessToken, this._refreshToken, this._tokenType, this._expiresIn, this._scope);
 
-  /// Factory taking a Map.
+  /// Constructor taking a Map.
   OAuthToken.fromMap(Map<String, dynamic> map)
       : _accessToken = map['access_token'],
         _refreshToken = map['refresh_token'],
         _tokenType = map['token_type'],
         _expiresIn = map['expires_in'],
         _scope = map['scope'];
+
+  /// Clone this token.
+  OAuthToken clone() => OAuthToken(_accessToken, _refreshToken, _tokenType, _expiresIn, _scope);
 
   /// Calculate the date of expiration for the access token.
   ///
@@ -62,6 +65,9 @@ class OAuthToken {
   String get tokenInfo => "Access Token: $_accessToken, "
       "Refresh Token: $_refreshToken, "
       "Expiry date: $accessTokenExpiryDate";
+
+  String toString() =>
+      'OAuthToken - accessToken: $accessToken, refresh_token: $refreshToken, token_type: $tokenType, expires_in: $_expiresIn, scope: $scope';
 }
 
 /// Specifies an OAuth 2.0 REST endpoint.

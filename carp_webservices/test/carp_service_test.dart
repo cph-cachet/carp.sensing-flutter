@@ -15,6 +15,7 @@ void main() {
   final String clientSecret = "carp";
   final String testStudyId = "2";
   CarpApp app;
+  OAuthToken token;
   Study study;
   int dataPointId;
   BluetoothDatum datum;
@@ -48,10 +49,41 @@ void main() {
     // Runs before each test.
     setUp(() {});
 
-    test('Authentication', () async {
+    test('- authentication', () async {
       CarpUser user;
       try {
         user = await CarpService.instance.authenticate(username: username, password: password);
+        // saving the token for later use
+        token = user.token.clone();
+      } catch (excp) {
+        print(excp.toString());
+      }
+      assert(token != null);
+      assert(user != null);
+      assert(user.isAuthenticated);
+
+      print("signed in : $user");
+      print("   token  : ${user.token}");
+    });
+
+    test('- refresh token', () async {
+      print('expiring token...');
+      CarpService.instance.currentUser.token.expire();
+
+      print('trying to upload a document...');
+      DocumentSnapshot d = await CarpService.instance
+          .collection('users')
+          .document()
+          .setData({'email': username, 'name': 'Administrator'});
+
+      assert(d.id > 0);
+      print(d);
+    });
+
+    test('- authentication with saved token', () async {
+      CarpUser user;
+      try {
+        user = await CarpService.instance.authenticateWithToken(username: username, token: token);
       } catch (excp) {
         print(excp.toString());
       }
@@ -59,6 +91,7 @@ void main() {
       assert(user.isAuthenticated);
 
       print("signed in : $user");
+      print("   token  : ${user.token}");
     });
   });
 
@@ -86,17 +119,6 @@ void main() {
       print(_encode(data.toJson()));
       assert(data.id == dataPointId);
       assert(data.carpBody['rssi'] == datum.rssi);
-    });
-
-    test('- refresh token', () async {
-      final CARPDataPoint data = CARPDataPoint.fromDatum(study.id, study.userId, datum);
-
-      print('expiring token...');
-      CarpService.instance.currentUser.token.expire();
-      dataPointId = await CarpService.instance.getDataPointReference().postDataPoint(data);
-
-      assert(dataPointId > 0);
-      print("data_point_id : $dataPointId");
     });
 
     test('- delete', () async {

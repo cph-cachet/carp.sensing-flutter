@@ -80,6 +80,23 @@ class CarpService {
     return _currentUser..authenticated(_token);
   }
 
+  /// Authenticate to this CARP web service using username and a previously stored [OAuthToken] access token.
+  ///
+  /// This method can be used to re-authenticate  a user if the token (and username) is known locally on the phone.
+  /// Useful for keeping the token locally on the phone between starting/stopping the app.
+  ///
+  /// Return the signed in user.
+  Future<CarpUser> authenticateWithToken({
+    @required String username,
+    @required OAuthToken token,
+  }) async {
+    assert(username != null);
+    assert(token != null);
+
+    _currentUser = new CarpUser(username);
+    return _currentUser..authenticated(token);
+  }
+
   /// Get a new (refreshed) access token for the current user.
   Future<OAuthToken> refresh() async {
     if (_app == null)
@@ -98,6 +115,9 @@ class CarpService {
       "Accept": "application/json"
     };
 
+    // right now we use the stored username and password to get a new token
+    // but - we should use a real 'refresh token" endpoint in the CARP server for this
+    // TODO - reimplement refresh token once CARP endpoint is available.
     final loginBody = {
       "client_id": "$clientID",
       "client_secret": "$clientSecret",

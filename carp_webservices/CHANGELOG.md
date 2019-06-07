@@ -1,5 +1,7 @@
-## 0.2.3
+## 0.2.4
 * support for PUT and DELETE of documents and collections
+* dependent on `carp_mobile_sensing` library to version 0.5.0
+* support for authenticate with (locally saved) token
 
 ## 0.2.3
 * refresh of auth token when expired
