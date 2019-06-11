@@ -10,9 +10,11 @@ part of runtime;
 //TODO : change probes to use Dart Isolates in order to support dynamic class loading (and isolation).
 // Right now registration of probes has to be done manually.
 // Later this will be implemented using Dart Isolates.
+// HOWEVER, Dart isolates do not support calling a platform channel method from a another isolate
+// See issue #13937 >> https://github.com/flutter/flutter/issues/13937
 
 /// The [ProbeRegistry] can create, register, and lookup an instance of a relevant probe
-/// based on the [DataType].
+/// based on its [DataType].
 class ProbeRegistry {
   static Map<String, Probe> _probes = new Map<String, Probe>();
 

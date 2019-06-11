@@ -102,7 +102,9 @@ abstract class Probe {
   /// Resume the probe.
   void resume();
 
-  /// Restart the probe. This forces the probe to reload its configuration from
+  /// Restart the probe.
+  ///
+  /// This forces the probe to reload its configuration from
   /// its [Measure] and restart sampling accordingly. If a new [measure] is
   /// to be used, this new measure must be specified in the
   /// [initialize] method before calling restart.
@@ -187,6 +189,9 @@ abstract class AbstractProbe with MeasureListener implements Probe {
 //         created -> initialized -> resumed <-> paused *-> stopped
 //
 //---------------------------------------------------------------------------------------
+
+// all of the below probe state machine classes are private and only used internally
+// hence, they are not documented
 
 abstract class _ProbeStateMachine {
   ProbeState get state;
@@ -310,26 +315,8 @@ class _StoppedState extends _AbstractProbeState implements _ProbeStateMachine {
 
 /// A [DatumProbe] can collect one piece of [Datum], send its to its stream, and then stops.
 ///
-/// The [Datum] to be collected is implemented in the [getDatum] method.
-//abstract class DatumProbe extends AbstractProbe {
-//  DatumProbe(Measure measure) : super(measure);
-//
-//  Stream<Datum> get events => Stream.fromFuture(getDatum());
-//
-//  void onStart() {}
-//  void onRestart() {}
-//  void onResume() {}
-//  void onPause() {}
-//
-//  /// Subclasses should implement this method to collect a [Datum].
-//  Future<Datum> getDatum();
-//}
-
-/// A [DatumProbe] can collect one piece of [Datum], send its to its stream, and then stops.
-///
-/// The [Datum] to be collected is implemented in the [getDatum] method.
+/// The [Datum] to be collected should be implemented in the [getDatum] method.
 abstract class DatumProbe extends AbstractProbe {
-  //Stream<Datum> get events => Stream.fromFuture(getDatum());
   StreamController<Datum> _events = StreamController<Datum>();
   Stream<Datum> get events => _events.stream;
 
@@ -353,6 +340,8 @@ abstract class DatumProbe extends AbstractProbe {
 ///
 /// When triggered, a periodic probe collect a piece of data ([Datum]) using the [getDatum] method.
 /// Note that the [duration] parameter in a [PeriodicMeasure] is **not** used.
+///
+/// See [MemoryProbe] for an example.
 abstract class PeriodicDatumProbe extends DatumProbe {
   Timer timer;
   StreamController<Datum> controller = StreamController<Datum>.broadcast();

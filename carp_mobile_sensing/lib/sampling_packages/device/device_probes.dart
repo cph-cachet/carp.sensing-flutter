@@ -36,18 +36,19 @@ class BatteryProbe extends StreamProbe {
 
     return controller.stream;
   }
+
+  // Old stream implementation below. Did NOT comply to pause/resume/cancels events.
+  // Hence reimplemented using a StreamController as done above.
+  // Keeping the below as a WARNING for future implementation of probe event streams
+
+  //Stream<Datum> get stream async* {
+  //  await for (var state in battery.onBatteryStateChanged) {
+  //    int level = await battery.batteryLevel;
+  //    yield BatteryDatum.fromBatteryState(measure, level, state);
+  //  }
+  //}
+
 }
-
-// Old stream implementation below. Did NOT comply to pause/resume/cancels events.
-// Hence reimplemented using a StreamController as done above.
-// Keeping the below as a WARNING for future implementation of probe event streams
-
-//  Stream<Datum> get stream async* {
-//    await for (var state in battery.onBatteryStateChanged) {
-//      int level = await battery.batteryLevel;
-//      yield BatteryDatum.fromBatteryState(measure, level, state);
-//    }
-//  }
 
 /// A probe collecting screen events:
 ///  - SCREEN ON
