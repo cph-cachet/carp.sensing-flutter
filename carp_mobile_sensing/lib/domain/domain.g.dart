@@ -564,7 +564,7 @@ RecurrentScheduledTrigger _$RecurrentScheduledTriggerFromJson(
         json['start'] == null ? null : DateTime.parse(json['start'] as String)
     ..end = json['end'] == null ? null : DateTime.parse(json['end'] as String)
     ..separationCount = json['separation_count'] as int
-    ..maxNumberOfOccurrences = json['max_number_of_occurrences'] as int
+    ..maxNumberOfSampling = json['max_number_of_sampling'] as int
     ..dayOfWeek = json['day_of_week'] as int
     ..weekOfMonth = json['week_of_month'] as int
     ..dayOfMonth = json['day_of_month'] as int
@@ -587,7 +587,7 @@ Map<String, dynamic> _$RecurrentScheduledTriggerToJson(
   writeNotNull('start', instance.start?.toIso8601String());
   writeNotNull('end', instance.end?.toIso8601String());
   writeNotNull('separation_count', instance.separationCount);
-  writeNotNull('max_number_of_occurrences', instance.maxNumberOfOccurrences);
+  writeNotNull('max_number_of_sampling', instance.maxNumberOfSampling);
   writeNotNull('day_of_week', instance.dayOfWeek);
   writeNotNull('week_of_month', instance.weekOfMonth);
   writeNotNull('day_of_month', instance.dayOfMonth);

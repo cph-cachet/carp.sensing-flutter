@@ -53,6 +53,7 @@ class FromJsonFactory {
 
     registerFromJsonFunction("Trigger", Trigger.fromJsonFunction);
     registerFromJsonFunction("ImmediateTrigger", ImmediateTrigger.fromJsonFunction);
+    registerFromJsonFunction("DelayedTrigger", DelayedTrigger.fromJsonFunction);
     registerFromJsonFunction("PeriodicTrigger", PeriodicTrigger.fromJsonFunction);
     registerFromJsonFunction("ScheduledTrigger", ScheduledTrigger.fromJsonFunction);
     registerFromJsonFunction("RecurrentScheduledTrigger", RecurrentScheduledTrigger.fromJsonFunction);

@@ -89,4 +89,68 @@ void main() {
 
     print(_encode(data.toJson()));
   });
+
+  test('Triggers -> JSON', () async {
+    Study study_3 = Study("jh-sgadDF#jkdhf", "bardram", name: "Multi Trigger Study");
+    study_3.dataEndPoint = FileDataEndPoint()
+      ..bufferSize = 50 * 1000
+      ..zip = true
+      ..encrypt = false;
+
+    study_3.addTriggerTask(
+        DelayedTrigger(10 * 1000), // delay for 10 secs.
+        Task('Sensing Task #1')
+          ..measures =
+              SamplingSchema.common().getMeasureList([SensorSamplingPackage.PEDOMETER, DeviceSamplingPackage.SCREEN]));
+
+    study_3.addTriggerTask(
+        PeriodicTrigger(60 * 1000), // collect every min.
+        Task('Sensing Task #1')
+          ..measures =
+              SamplingSchema.common().getMeasureList([SensorSamplingPackage.LIGHT, DeviceSamplingPackage.DEVICE]));
+
+    study_3.addTriggerTask(
+        ScheduledTrigger(DateTime(2019, 12, 24)), // collect date on Xmas.
+        Task('Sensing Task #1')
+          ..measures = SamplingSchema.common()
+              .getMeasureList([AppsSamplingPackage.APP_USAGE, ConnectivitySamplingPackage.BLUETOOTH]));
+
+    study_3.addTriggerTask(
+        RecurrentScheduledTrigger(RecurrentType.daily)
+          ..start = DateTime(0, 1, 1, 13, 30), // collect every day at 13:30.
+        Task('Sensing Task #1')..measures = SamplingSchema.common().getMeasureList([DeviceSamplingPackage.MEMORY]));
+
+    study_3.addTriggerTask(
+        RecurrentScheduledTrigger(RecurrentType.daily)
+          ..start = DateTime(0, 1, 1, 13, 30)
+          ..separationCount = 1, // collect every other day at 13:30.
+        Task('Sensing Task #1')
+          ..measures = SamplingSchema.common()
+              .getMeasureList([AppsSamplingPackage.APPS, ConnectivitySamplingPackage.CONNECTIVITY]));
+
+    study_3.addTriggerTask(
+        RecurrentScheduledTrigger(RecurrentType.monthly)
+          ..start = DateTime(0, 1, 1, 13, 30)
+          ..weekOfMonth = 2
+          ..dayOfWeek = DateTime.monday, // collect every monday in the 2nd week of the month at 13:30.
+        Task('Sensing Task #1')
+          ..measures = SamplingSchema.common()
+              .getMeasureList([AppsSamplingPackage.APPS, ConnectivitySamplingPackage.CONNECTIVITY]));
+
+    study_3.addTriggerTask(
+        RecurrentScheduledTrigger(RecurrentType.monthly)
+          ..start = DateTime(0, 1, 1, 15, 00)
+          ..separationCount = 1
+          ..dayOfMonth = 24, // collect every second month at the 24th at 15:00.
+        Task('Sensing Task #1')
+          ..measures = SamplingSchema.common()
+              .getMeasureList([AppsSamplingPackage.APPS, ConnectivitySamplingPackage.CONNECTIVITY]));
+
+    final studyJson = _encode(study_3);
+
+    print(studyJson);
+
+    Study study_4 = Study.fromJson(json.decode(studyJson) as Map<String, dynamic>);
+    expect(study_4.id, study_3.id);
+  });
 }
