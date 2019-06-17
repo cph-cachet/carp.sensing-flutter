@@ -54,13 +54,19 @@ class DelayedTrigger extends Trigger {
   Map<String, dynamic> toJson() => _$DelayedTriggerToJson(this);
 }
 
-/// A trigger that resume/pause sampling every [period] milliseconds.
+/// A trigger that resume/pause sampling every [period] milliseconds for a specific [duration].
+///
+/// It is important to specify **both** the [period] and the [duration] in order to specify
+/// the timing of resuming and pausing sampling.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class PeriodicTrigger extends Trigger {
   /// The period (reciprocal of frequency) of sampling in milliseconds.
-  int period = 0;
+  int period = 60 * 1000; // default is one minute
 
-  PeriodicTrigger([this.period]) : super();
+  /// The duration (until paused) of the the sampling in milliseconds.
+  int duration = 1000; // default is one second
+
+  PeriodicTrigger([this.period, this.duration]) : super();
 
   static Function get fromJsonFunction => _$PeriodicTriggerFromJson;
   factory PeriodicTrigger.fromJson(Map<String, dynamic> json) =>

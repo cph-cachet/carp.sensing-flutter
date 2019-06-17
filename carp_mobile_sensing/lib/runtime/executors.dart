@@ -39,7 +39,7 @@ abstract class Executor extends AbstractProbe {
 }
 
 /// The [StudyExecutor] is responsible for executing the [Study].
-/// For each task it starts a [TaskExecutor].
+/// For each trigger in this study, it starts a [TriggerExecutor].
 ///
 /// Note that the [StudyExecutor] in itself is a [Probe] and hence work as a 'super probe'.
 /// This - amongst other things - imply that you can listen to datum [events] from a study executor.
@@ -68,6 +68,8 @@ class StudyExecutor extends Executor {
     return _probes;
   }
 
+  // default behavior is to start all tasks in a study, with no regards to any triggers
+  // mostly for backward compatibility before v. 0.6.0
   Future onStart() async {
     for (Task task in study.tasks) {
       TaskExecutor executor = TaskExecutor(task);
@@ -80,7 +82,98 @@ class StudyExecutor extends Executor {
   }
 }
 
-/// The [TaskExecutor] is responsible for executing [Task]s in the [Study].
+/// Responsible for handling the timing of a [Trigger] in the [Study].
+///
+/// This is an abstract class. For each specific type of [Trigger],
+/// a corresponding implementation of a [TriggerExecutor] exists.
+abstract class TriggerExecutor extends Executor {
+  Trigger _trigger;
+  Trigger get trigger => _trigger;
+
+  TriggerExecutor(Trigger trigger)
+      : assert(trigger != null, "Cannot initiate a TriggerExecutor without a Trigger."),
+        super() {
+    _trigger = trigger;
+    _createAllTaskExecutors();
+  }
+
+  /// Create [TaskExecutor]s for all tasks associated with this trigger.
+  void _createAllTaskExecutors() {
+    for (Task task in trigger.tasks) {
+      TaskExecutor executor = TaskExecutor(task);
+      _group.add(executor.events);
+
+      executors.add(executor);
+      executor.initialize(Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR)));
+    }
+  }
+
+  /// Start all tasks associated with this trigger.
+  Future _startAllTasks() async => executors.forEach((executor) => executor.start());
+}
+
+class ImmediateTriggerExecutor extends TriggerExecutor {
+  ImmediateTriggerExecutor(ImmediateTrigger trigger) : super(trigger);
+
+  // create and start all tasks associated with this trigger
+  Future onStart() async {
+    _startAllTasks();
+  }
+}
+
+class DelayedTriggerExecutor extends TriggerExecutor {
+  Duration delay;
+  DelayedTriggerExecutor(DelayedTrigger trigger) : super(trigger) {
+    delay = Duration(milliseconds: trigger.delay);
+  }
+
+  Future onStart() async {
+    Timer(delay, () {
+      _startAllTasks();
+    });
+  }
+}
+
+class PeriodicTriggerExecutor extends TriggerExecutor {
+  Duration period, duration;
+
+  PeriodicTriggerExecutor(PeriodicTrigger trigger) : super(trigger) {
+    assert(trigger.period != null, 'The period in a PeriodicTrigger must be specified.');
+    assert(trigger.duration != null, 'The duration in a PeriodicTrigger must be specified.');
+    period = Duration(milliseconds: trigger.period);
+    duration = Duration(milliseconds: trigger.duration);
+  }
+
+  Future onStart() async {
+    await _startAllTasks();
+    this.pause();
+    // create a recurrent timer that resume sampling.
+    Timer.periodic(period, (Timer t) {
+      this.resume();
+      // create a timer that pause the sampling after the specified duration.
+      Timer(duration, () {
+        this.pause();
+      });
+    });
+  }
+}
+
+class ScheduledTriggerExecutor extends TriggerExecutor {
+  ScheduledTriggerExecutor(ScheduledTrigger trigger) : super(trigger);
+  Future onStart() async {}
+}
+
+class RecurrentScheduledTriggerExecutor extends TriggerExecutor {
+  RecurrentScheduledTriggerExecutor(RecurrentScheduledTrigger trigger) : super(trigger);
+  Future onStart() async {}
+}
+
+class SamplingEventTriggerExecutor extends TriggerExecutor {
+  SamplingEventTriggerExecutor(SamplingEventTrigger trigger) : super(trigger);
+  Future onStart() async {}
+}
+
+/// The [TaskExecutor] is responsible for executing a [Task] in the [Study].
 /// For each task it looks up appropriate [Probe]s to collect data.
 ///
 /// Note that a [TaskExecutor] in itself is a [Probe] and hence work as a 'super probe'.

@@ -147,15 +147,5 @@ class FileDataEndPoint extends DataEndPoint {
       'FILE - buffer ${(bufferSize / 1000).round()} KB${zip ? ', zipped' : ''}${encrypt ? ', encrypted' : ''}';
 }
 
-///// A enumeration of known endpoint API types.
-//class DataEndPointType {
-//  static const String PRINT = "print";
-//  static const String FILE = "file";
-//  static const String FIREBASE_STORAGE = "firebase-storage";
-//  static const String FIREBASE_DATABASE = "firebase-database";
-//  static const String CARP = "carp";
-//  static const String OMH = "omh";
-//}
-
 /// A enumeration of known endpoint API types.
 enum DataEndPointType { PRINT, FILE, FIREBASE_STORAGE, FIREBASE_DATABSE, CARP, OMH }
