@@ -38,8 +38,8 @@ class Study extends Serializable {
   /// Default using the [NameSpace.CARP].
   String dataFormat;
 
-  /// The list of [Task]s in this [Study].
-  List<Task> tasks = new List<Task>();
+  /// The set of [Trigger]s which can trigger [Task](s) in this study.
+  List<Trigger> triggers = new List<Trigger>();
 
   /// Create a new [Study] object with a set of configurations.
   ///
@@ -53,11 +53,26 @@ class Study extends Serializable {
   }
 
   static Function get fromJsonFunction => _$StudyFromJson;
+
   factory Study.fromJson(Map<String, dynamic> json) => _$StudyFromJson(json);
+
   Map<String, dynamic> toJson() => _$StudyToJson(this);
 
-  /// Add a [Task] to this [Study]
-  void addTask(Task task) => tasks.add(task);
+  /// Add a [Trigger] to this [Study]
+  void addTrigger(Trigger trigger) => triggers.add(trigger);
+
+  /// Add a [Task] with a [Trigger] to this [Study]
+  void addTriggerTask(Trigger trigger, Task task) {
+    if (!triggers.contains(trigger)) triggers.add(trigger);
+    trigger.addTask(task);
+  }
+
+  /// The list of all [Task]s in this [Study].
+  List<Task> get tasks {
+    List<Task> _tasks = List<Task>();
+    triggers.forEach((trigger) => _tasks.addAll(trigger.tasks));
+    return _tasks;
+  }
 
   /// Adapt the sampling [Measure]s of this [Study] to the specified [SamplingSchema].
   void adapt(SamplingSchema schema, {bool restore = true}) {
@@ -73,7 +88,7 @@ class Study extends Serializable {
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class DataEndPoint extends Serializable {
   /// The type of endpoint as enumerated in [DataEndPointType].
-  String type;
+  DataEndPointType type;
 
   /// Creates a [DataEndPoint]. [type] is defined in [DataEndPointType].
   DataEndPoint(this.type)
@@ -86,7 +101,7 @@ class DataEndPoint extends Serializable {
       FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$DataEndPointToJson(this);
 
-  String toString() => type;
+  String toString() => type.toString();
 }
 
 /// Specify an endpoint where a file-based [DataManager] can store JSON data as files on the local device.
@@ -120,7 +135,7 @@ class FileDataEndPoint extends DataEndPoint {
   ///
   /// [type] is defined in [DataEndPointType]. Is typically of type [DataEndPointType.FILE]
   /// but specialized file types can be specified.
-  FileDataEndPoint({String type, this.bufferSize, this.zip, this.encrypt, this.publicKey})
+  FileDataEndPoint({DataEndPointType type, this.bufferSize, this.zip, this.encrypt, this.publicKey})
       : super(type ?? DataEndPointType.FILE);
 
   static Function get fromJsonFunction => _$FileDataEndPointFromJson;
@@ -132,12 +147,15 @@ class FileDataEndPoint extends DataEndPoint {
       'FILE - buffer ${(bufferSize / 1000).round()} KB${zip ? ', zipped' : ''}${encrypt ? ', encrypted' : ''}';
 }
 
+///// A enumeration of known endpoint API types.
+//class DataEndPointType {
+//  static const String PRINT = "print";
+//  static const String FILE = "file";
+//  static const String FIREBASE_STORAGE = "firebase-storage";
+//  static const String FIREBASE_DATABASE = "firebase-database";
+//  static const String CARP = "carp";
+//  static const String OMH = "omh";
+//}
+
 /// A enumeration of known endpoint API types.
-class DataEndPointType {
-  static const String PRINT = "print";
-  static const String FILE = "file";
-  static const String FIREBASE_STORAGE = "firebase-storage";
-  static const String FIREBASE_DATABASE = "firebase-database";
-  static const String CARP = "carp";
-  static const String OMH = "omh";
-}
+enum DataEndPointType { PRINT, FILE, FIREBASE_STORAGE, FIREBASE_DATABSE, CARP, OMH }

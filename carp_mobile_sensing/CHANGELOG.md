@@ -1,3 +1,12 @@
+## 0.6.0
+* Extension of `Study` domain model to include support for
+   * `Trigger`, i.e. that sampling can be triggered in different ways
+   * `Measure`
+* Adjustment of runtime environment to reflect the new study model
+   * Addition of a `TriggerExecutor`
+   * Update to `Executors`, i.e. `StudyExecutor`, `TaskExecutor` and `Probe`
+    
+   
 ## 0.5.1
 * Update of readme file.
 

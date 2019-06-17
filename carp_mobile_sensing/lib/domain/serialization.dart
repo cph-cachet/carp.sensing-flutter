@@ -50,16 +50,22 @@ class FromJsonFactory {
     registerFromJsonFunction("DataEndPoint", DataEndPoint.fromJsonFunction);
     registerFromJsonFunction("FileDataEndPoint", FileDataEndPoint.fromJsonFunction);
     registerFromJsonFunction("Task", Task.fromJsonFunction);
-    registerFromJsonFunction("ParallelTask", ParallelTask.fromJsonFunction);
-    registerFromJsonFunction("SequentialTask", SequentialTask.fromJsonFunction);
+
+    registerFromJsonFunction("Trigger", Trigger.fromJsonFunction);
+    registerFromJsonFunction("ImmediateTrigger", ImmediateTrigger.fromJsonFunction);
+    registerFromJsonFunction("PeriodicTrigger", PeriodicTrigger.fromJsonFunction);
+    registerFromJsonFunction("ScheduledTrigger", ScheduledTrigger.fromJsonFunction);
+    registerFromJsonFunction("RecurrentScheduledTrigger", RecurrentScheduledTrigger.fromJsonFunction);
+    registerFromJsonFunction("SamplingEventTrigger", SamplingEventTrigger.fromJsonFunction);
 
     registerFromJsonFunction("MeasureType", MeasureType.fromJsonFunction);
     registerFromJsonFunction("Measure", Measure.fromJsonFunction);
     registerFromJsonFunction("PeriodicMeasure", PeriodicMeasure.fromJsonFunction);
-//    registerFromJsonFunction("AudioMeasure", AudioMeasure.fromJsonFunction);
-//    registerFromJsonFunction("NoiseMeasure", NoiseMeasure.fromJsonFunction);
-//    registerFromJsonFunction("WeatherMeasure", WeatherMeasure.fromJsonFunction);
-//    registerFromJsonFunction("PhoneLogMeasure", PhoneLogMeasure.fromJsonFunction);
+
+    //    registerFromJsonFunction("AudioMeasure", AudioMeasure.fromJsonFunction);
+    //    registerFromJsonFunction("NoiseMeasure", NoiseMeasure.fromJsonFunction);
+    //    registerFromJsonFunction("WeatherMeasure", WeatherMeasure.fromJsonFunction);
+    //    registerFromJsonFunction("PhoneLogMeasure", PhoneLogMeasure.fromJsonFunction);
 
     _isInitialized = true;
   }

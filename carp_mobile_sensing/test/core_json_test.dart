@@ -20,8 +20,13 @@ void main() {
       ..zip = true
       ..encrypt = false;
 
-    // adding all measure from the common schema to one overall 'Sampling' task
-    study.addTask(Task('Sampling Task')..measures = SamplingSchema.common().measures.values.toList());
+    // adding all measure from the common schema to one one trigger and one task
+    study.addTriggerTask(
+        ImmediateTrigger(), // a simple trigger that starts immediately
+        Task('Sampling Task')
+          ..measures =
+              SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList() // a task with all measures
+        );
   });
 
   test('Study -> JSON', () async {
