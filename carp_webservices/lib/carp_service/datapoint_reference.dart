@@ -8,7 +8,8 @@ part of carp_services;
 
 /// Provide a data endpoint reference to a CARP web service. Used to:
 /// - post [CARPDataPoint]s
-/// - get [CARPDataPoint]s
+/// - get a [CARPDataPoint]s
+/// - query for [CARPDataPoint]s
 /// - delete [CARPDataPoint]s
 class DataPointReference extends CarpReference {
   DataPointReference._(CarpService service) : super._(service);
@@ -39,7 +40,7 @@ class DataPointReference extends CarpReference {
   /// Batch upload a file with [CARPDataPoint]s to the CARP backend using HTTP POST.
   ///
   /// A file can be created using a [FileDataManager] in `carp_mobile_sensing`.
-  /// Note that the file should be raw JSON, and hence not zipped.
+  /// Note that the file should be raw JSON, and hence _not_ zipped.
   ///
   /// Returns if successful. Throws an [CarpServiceException] if not.
   Future<void> batchPostDataPoint(File file) async {
@@ -92,6 +93,70 @@ class DataPointReference extends CarpReference {
 
     if (httpStatusCode == 200) return CARPDataPoint.fromJson(responseJson);
 
+    // All other cases are treated as an error.
+    throw CarpServiceException(responseJson["error"],
+        description: responseJson["error_description"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+  }
+
+  /// Get all [CARPDataPoint]s for this study.
+  ///
+  /// Be careful using this method - this might potential return an enormous amount of data.
+  Future<List<CARPDataPoint>> getAllDataPoint() async => queryDataPoint('');
+
+  /// Query for [CARPDataPoint]s from the CARP backend using HTTP GET.
+  ///
+  /// The [query] string can be build by querying data point _fields_ using _logical operations_.
+  ///
+  /// Query fields can be any field in a data point JSON, including nested fields. Examples include:
+  ///
+  ///  * Header fields such as `carp_header.start_time`, `carp_header.user_id`, and `carp_header.data_format.name`
+  ///  * Body fields such as `carp_body.latitude` or `carp_body.connectivity_status`
+  ///
+  /// Note that field names are nested using the dot-notation.
+  ///
+  /// The logical operations include:
+  ///
+  ///   * Logical AND : `;`
+  ///   * Logical OR : `,`
+  ///   * Equal to : `==`
+  ///
+  /// Comparison operations include.
+  ///
+  ///   * Not equal to : `!=`
+  ///   * Less than : `<`
+  ///   * Less than or equal to : `<=`
+  ///   * Greater than operator : `>`
+  ///   * Greater than or equal to : `>=`
+  ///   * In : `=in=`
+  ///   * Not in : `=out=`
+  ///
+  /// Examples of query strings include:
+  ///
+  /// Get all data-points between 2018-05-27T13:28:07 and 2019-05-29T08:55:26
+  ///   * `carp_header.created_at>2018-05-27T13:28:07Z;carp_header.created_at<2019-05-29T08:55:26Z`
+  ///
+  /// Get all where the user id is 1 or 2
+  ///   * `carp_header.user_id==1,2`
+  ///
+  Future<List<CARPDataPoint>> queryDataPoint(String query) async {
+    assert(query != null, 'A query string must be specified.');
+    String url = (query.length == 0) ? dataEndpointUri : "$dataEndpointUri?query=$query";
+    final restHeaders = await headers;
+
+    // GET the data points from the CARP web service
+    http.Response response = await http.get(Uri.encodeFull(url), headers: restHeaders);
+
+    int httpStatusCode = response.statusCode;
+    Map<String, dynamic> responseJson = json.decode(response.body);
+
+    if (httpStatusCode == 200) {
+      List<CARPDataPoint> datapoints = new List<CARPDataPoint>();
+      // TODO - what is the key for the datapoints?
+      for (var item in responseJson['the_key']) {
+        datapoints.add(CARPDataPoint.fromJson(item));
+      }
+      return datapoints;
+    }
     // All other cases are treated as an error.
     throw CarpServiceException(responseJson["error"],
         description: responseJson["error_description"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));

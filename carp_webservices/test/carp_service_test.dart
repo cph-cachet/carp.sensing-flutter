@@ -121,6 +121,22 @@ void main() {
       assert(data.carpBody['rssi'] == datum.rssi);
     });
 
+    test('- get all', () async {
+      List<CARPDataPoint> data = await CarpService.instance.getDataPointReference().getAllDataPoint();
+
+      data.forEach((datapoint) => print(_encode((datapoint.toJson()))));
+      assert(data.length > 0);
+    });
+
+    test('- query', () async {
+      String query = 'carp_header.user_id==$username';
+      print("query : $query");
+      List<CARPDataPoint> data = await CarpService.instance.getDataPointReference().queryDataPoint(query);
+
+      data.forEach((datapoint) => print(_encode((datapoint.toJson()))));
+      assert(data.length > 0);
+    });
+
     test('- delete', () async {
       print("DELETE data_point_id : $dataPointId");
       await CarpService.instance.getDataPointReference().deleteDataPoint(dataPointId);
@@ -133,8 +149,8 @@ void main() {
       // if the collections (users) don't exist, it is created (according to David).
       document = await CarpService.instance
           .collection('users')
-          .document()
-          .setData({'email': username, 'name': 'Administrator'});
+          .document(username)
+          .setData({'email': username, 'role': 'Administrator'});
 
       print(document);
       assert(document.id > 0);
@@ -143,16 +159,35 @@ void main() {
 
     test(' - update document', () async {
       assert(document != null);
+
+      DocumentSnapshot original = await CarpService.instance.collection('users').document(document.name).get();
+
+      print(_encode(original.data));
+
       // updating the name
-      DocumentSnapshot updatedDocument = await CarpService.instance
+      DocumentSnapshot updated = await CarpService.instance
           .collection('users')
           .document(document.name)
-          .updateData({'email': username, 'name': 'Super User'});
+          .updateData({'email': username, 'role': 'Super User'});
 
-      print(updatedDocument.toString());
-      print(updatedDocument.data["name"]);
-      assert(updatedDocument.id > 0);
-      assert(updatedDocument.data["name"] == 'Super User');
+      print(_encode(updated.data));
+
+      print(updated.toString());
+      print(updated.data["role"]);
+      assert(updated.id > 0);
+      assert(updated.data["role"] == 'Super User');
+    });
+
+    test(' - rename document', () async {
+      assert(document != null);
+
+      document = await CarpService.instance.collection('users').document(document.name).rename('new name');
+
+      print(_encode(document.data));
+
+      print(document.toString());
+      assert(document.id > 0);
+      assert(document.name == 'new name');
     });
 
     test(' - get document by path', () async {
@@ -228,15 +263,15 @@ void main() {
       print(collection);
     });
 
+    test(' - delete document', () async {
+      assert(document != null);
+      await CarpService.instance.collection('users').document(document.name).delete();
+    });
+
     test(' - rename collection', () async {
       CollectionReference collection = await CarpService.instance.collection('users').get();
       await collection.rename('new_users');
       expect(collection.name, 'new_users');
-    });
-
-    test(' - delete document', () async {
-      assert(document != null);
-      await CarpService.instance.collection('users').document(document.name).delete();
     });
 
     test(' - delete collection', () async {

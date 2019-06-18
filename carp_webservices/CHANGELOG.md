@@ -1,5 +1,8 @@
+## 0.2.5
+* support for rename, update, and delete of documents and collections
+* support for query of DataPoints
+
 ## 0.2.4
-* support for PUT and DELETE of documents and collections
 * dependent on `carp_mobile_sensing` library to version 0.5.0
 * support for authenticate with (locally saved) token
 
