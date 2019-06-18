@@ -10,7 +10,9 @@ part of domain;
 /// certain points in time when the condition applies. The condition can either
 /// be time-bound, based on data streams, initiated by a user of the platform,
 /// or a combination of these.
+///
 /// Sub-classes of [Trigger] implements the specific behavior / timing of a trigger.
+/// Note that you should **not** use/instantiate this [Trigger] base class, but only its subclasses.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class Trigger extends Serializable {
   /// The list of [Task]s in this [Trigger].
@@ -77,7 +79,7 @@ class PeriodicTrigger extends Trigger {
 /// A trigger that starts sampling based on a scheduled date and time.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ScheduledTrigger extends Trigger {
-  /// Delay in milliseconds.
+  /// The scheduled date and time for triggering.
   DateTime schedule;
 
   ScheduledTrigger([this.schedule]) : super();

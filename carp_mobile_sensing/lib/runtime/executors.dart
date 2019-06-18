@@ -17,7 +17,7 @@ abstract class Executor extends AbstractProbe {
 
   Executor() : super();
 
-  // Do nothing
+  // do nothing on init
   void onInitialize(Measure measure) {}
 
   void onPause() async {
@@ -68,9 +68,44 @@ class StudyExecutor extends Executor {
     return _probes;
   }
 
+  Future onStart() async {
+    for (Trigger trigger in study.triggers) {
+      TriggerExecutor executor;
+
+      switch (trigger.runtimeType) {
+        case Trigger:
+          // actually, a study it not supposed to use the base-class [Trigger]
+          // but if so, we treat it as an [ImmediateTrigger]
+          executor = ImmediateTriggerExecutor(trigger);
+          break;
+        case ImmediateTrigger:
+          executor = ImmediateTriggerExecutor(trigger);
+          break;
+        case DelayedTrigger:
+          executor = DelayedTriggerExecutor(trigger);
+          break;
+        case PeriodicTrigger:
+          executor = PeriodicTriggerExecutor(trigger);
+          break;
+        case ScheduledTrigger:
+          executor = ScheduledTriggerExecutor(trigger);
+          break;
+        case RecurrentScheduledTrigger:
+          executor = RecurrentScheduledTriggerExecutor(trigger);
+          break;
+      }
+
+      _group.add(executor.events);
+
+      executors.add(executor);
+      executor.initialize(Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR)));
+      executor.start();
+    }
+  }
+
   // default behavior is to start all tasks in a study, with no regards to any triggers
   // mostly for backward compatibility before v. 0.6.0
-  Future onStart() async {
+  Future _startAllTasks() async {
     for (Task task in study.tasks) {
       TaskExecutor executor = TaskExecutor(task);
       _group.add(executor.events);
@@ -81,6 +116,8 @@ class StudyExecutor extends Executor {
     }
   }
 }
+
+// ---------------------------- TriggerExecutors -------------------------------------------------------------
 
 /// Responsible for handling the timing of a [Trigger] in the [Study].
 ///
@@ -112,8 +149,9 @@ abstract class TriggerExecutor extends Executor {
   Future _startAllTasks() async => executors.forEach((executor) => executor.start());
 }
 
+/// Executes a [ImmediateTrigger], i.e. starts sampling immediately.
 class ImmediateTriggerExecutor extends TriggerExecutor {
-  ImmediateTriggerExecutor(ImmediateTrigger trigger) : super(trigger);
+  ImmediateTriggerExecutor(Trigger trigger) : super(trigger);
 
   // create and start all tasks associated with this trigger
   Future onStart() async {
@@ -121,8 +159,10 @@ class ImmediateTriggerExecutor extends TriggerExecutor {
   }
 }
 
+/// Executes a [DelayedTrigger], i.e. starts sampling after the specified delay.
 class DelayedTriggerExecutor extends TriggerExecutor {
   Duration delay;
+
   DelayedTriggerExecutor(DelayedTrigger trigger) : super(trigger) {
     delay = Duration(milliseconds: trigger.delay);
   }
@@ -134,6 +174,10 @@ class DelayedTriggerExecutor extends TriggerExecutor {
   }
 }
 
+/// Executes a [PeriodicTrigger], i.e. resumes sampling on a regular basis for a given period of time.
+///
+/// It is required that both the [period] and the [duration] of the [PeriodicTrigger] is specified
+/// to make sure that this executor is properly started/paused/resumed.
 class PeriodicTriggerExecutor extends TriggerExecutor {
   Duration period, duration;
 
@@ -145,6 +189,7 @@ class PeriodicTriggerExecutor extends TriggerExecutor {
   }
 
   Future onStart() async {
+    // first start all tasks, but pause them
     await _startAllTasks();
     this.pause();
     // create a recurrent timer that resume sampling.
@@ -158,9 +203,21 @@ class PeriodicTriggerExecutor extends TriggerExecutor {
   }
 }
 
+/// Executes a [ScheduledTrigger] on the specified [schedule].
 class ScheduledTriggerExecutor extends TriggerExecutor {
-  ScheduledTriggerExecutor(ScheduledTrigger trigger) : super(trigger);
-  Future onStart() async {}
+  Duration lapse;
+
+  ScheduledTriggerExecutor(ScheduledTrigger trigger) : super(trigger) {
+    assert(trigger.schedule != null, 'The schedule of a ScheduledTrigger must be specified.');
+    assert(trigger.schedule.isAfter(DateTime.now()), 'The schedule of the ScheduledTrigger cannot be in the past.');
+    lapse = trigger.schedule.difference(DateTime.now());
+  }
+
+  Future onStart() async {
+    Timer(lapse, () {
+      _startAllTasks();
+    });
+  }
 }
 
 class RecurrentScheduledTriggerExecutor extends TriggerExecutor {
@@ -172,6 +229,8 @@ class SamplingEventTriggerExecutor extends TriggerExecutor {
   SamplingEventTriggerExecutor(SamplingEventTrigger trigger) : super(trigger);
   Future onStart() async {}
 }
+
+// ---------------------------- TaskExecutor -------------------------------------------------------------
 
 /// The [TaskExecutor] is responsible for executing a [Task] in the [Study].
 /// For each task it looks up appropriate [Probe]s to collect data.
