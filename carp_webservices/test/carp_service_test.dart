@@ -112,7 +112,7 @@ void main() {
       await CarpService.instance.getDataPointReference().batchPostDataPoint(file);
     });
 
-    test('- get', () async {
+    test('- get by id', () async {
       print("GET data_point_id : $dataPointId");
       CARPDataPoint data = await CarpService.instance.getDataPointReference().getDataPoint(dataPointId);
 

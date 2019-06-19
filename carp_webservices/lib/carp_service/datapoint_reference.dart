@@ -109,6 +109,7 @@ class DataPointReference extends CarpReference {
   ///
   /// Query fields can be any field in a data point JSON, including nested fields. Examples include:
   ///
+  ///  * Data point fields such as `id`, `study_id` and `created_at`.
   ///  * Header fields such as `carp_header.start_time`, `carp_header.user_id`, and `carp_header.data_format.name`
   ///  * Body fields such as `carp_body.latitude` or `carp_body.connectivity_status`
   ///
@@ -138,6 +139,44 @@ class DataPointReference extends CarpReference {
   /// Get all where the user id is 1 or 2
   ///   * `carp_header.user_id==1,2`
   ///
+  ///
+  /// Below is an example of a data point in JSON to see the different fields.
+  ///
+  /// ````
+  /// {
+  ///   "id": 24481799,
+  ///   "study_id": 2,
+  ///   "created_by_user_id": 2,
+  ///   "created_at": "2019-06-19T09:50:44.245Z",
+  ///   "updated_at": "2019-06-19T09:50:44.245Z",
+  ///   "carp_header": {
+  ///     "study_id": "8",
+  ///     "user_id": "user@dtu.dk",
+  ///     "data_format": {
+  ///       "name": "location",
+  ///       "namepace": "carp"
+  ///     },
+  ///     "trigger_id": "task1",
+  ///     "device_role_name": "Patient's phone",
+  ///     "upload_time": "2019-06-19T09:50:43.551Z",
+  ///     "start_time": "2018-11-08T15:30:40.721748Z",
+  ///     "end_time": "2019-06-19T09:50:43.551Z"
+  ///   },
+  ///   "carp_body": {
+  ///     "altitude": 43.3,
+  ///     "device_info": {},
+  ///     "classname": "LocationDatum",
+  ///     "latitude": 23454.345,
+  ///     "accuracy": 12.4,
+  ///     "speed_accuracy": 12.3,
+  ///     "id": "3fdd1760-bd30-11e8-e209-ef7ee8358d2f",
+  ///     "speed": 2.3,
+  ///     "timestamp": "2018-11-08T15:30:40.721748Z",
+  ///     "longitude": 23.4
+  ///   }
+  ///  }
+  /// ````
+  ///
   Future<List<CARPDataPoint>> queryDataPoint(String query) async {
     assert(query != null, 'A query string must be specified.');
     String url = (query.length == 0) ? dataEndpointUri : "$dataEndpointUri?query=$query";
@@ -147,17 +186,17 @@ class DataPointReference extends CarpReference {
     http.Response response = await http.get(Uri.encodeFull(url), headers: restHeaders);
 
     int httpStatusCode = response.statusCode;
-    Map<String, dynamic> responseJson = json.decode(response.body);
 
     if (httpStatusCode == 200) {
+      List<dynamic> list = json.decode(response.body);
       List<CARPDataPoint> datapoints = new List<CARPDataPoint>();
-      // TODO - what is the key for the datapoints?
-      for (var item in responseJson['the_key']) {
+      for (var item in list) {
         datapoints.add(CARPDataPoint.fromJson(item));
       }
       return datapoints;
     }
     // All other cases are treated as an error.
+    Map<String, dynamic> responseJson = json.decode(response.body);
     throw CarpServiceException(responseJson["error"],
         description: responseJson["error_description"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
   }
