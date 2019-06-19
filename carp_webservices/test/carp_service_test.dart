@@ -10,6 +10,7 @@ String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(objec
 void main() {
   final String username = "researcher@example.com";
   final String password = "password";
+  final String userId = "user@dtu.dk";
   final String uri = "http://staging.carp.cachet.dk:8080";
   final String clientID = "carp";
   final String clientSecret = "carp";
@@ -25,7 +26,7 @@ void main() {
   group("CARP Base Services", () {
     // Runs before all tests.
     setUpAll(() {
-      study = new Study(testStudyId, "user@dtu.dk", name: "Test study #$testStudyId");
+      study = new Study(testStudyId, userId, name: "Test study #$testStudyId");
 
       // Create a test bluetooth datum
       datum = BluetoothDatum()
@@ -129,7 +130,7 @@ void main() {
     });
 
     test('- query', () async {
-      String query = 'carp_header.user_id==$username';
+      String query = 'carp_header.user_id==$userId';
       print("query : $query");
       List<CARPDataPoint> data = await CarpService.instance.getDataPointReference().queryDataPoint(query);
 
@@ -149,8 +150,8 @@ void main() {
       // if the collections (users) don't exist, it is created (according to David).
       document = await CarpService.instance
           .collection('users')
-          .document(username)
-          .setData({'email': username, 'role': 'Administrator'});
+          .document(userId)
+          .setData({'email': userId, 'role': 'Administrator'});
 
       print(document);
       assert(document.id > 0);
@@ -168,7 +169,7 @@ void main() {
       DocumentSnapshot updated = await CarpService.instance
           .collection('users')
           .document(document.name)
-          .updateData({'email': username, 'role': 'Super User'});
+          .updateData({'email': userId, 'role': 'Super User'});
 
       print(_encode(updated.data));
 
@@ -207,20 +208,39 @@ void main() {
       assert(newDocument.id == documentId);
     });
 
+    test(' - add document in nested collections', () async {
+      // is not providing an document id, so this should create a new document
+      // if the collections (users) don't exist, it is created (according to David).
+      DocumentSnapshot newDocument = await CarpService.instance
+          .collection('users')
+          .document(userId)
+          .collection('activities')
+          .document('cooking')
+          .setData({'what': 'breakfast', 'time': 'morning'});
+
+      print(newDocument);
+      assert(newDocument.id > 0);
+    });
+
     test(' - get nested document', () async {
       assert(document != null);
-      DocumentSnapshot newDocument = await CarpService.instance.collection('activities').document("test").get();
+      DocumentSnapshot newDocument = await CarpService.instance
+          .collection('users')
+          .document(userId)
+          .collection('activities')
+          .document('cooking')
+          .get();
 
       print(newDocument);
       print(newDocument.createdAt);
       print(newDocument.snapshot);
       print(newDocument.data);
-      print(newDocument['my_field']);
-      assert(newDocument.id == 4);
+      print(newDocument['what']);
+      assert(newDocument.id > 0);
     });
 
     test(' - list collections', () async {
-      DocumentSnapshot newDocument = await CarpService.instance.collection('activities').document("test").get();
+      DocumentSnapshot newDocument = await CarpService.instance.collection('users').document(userId).get();
       newDocument.collections.forEach((ref) => print(ref));
     });
 
@@ -229,12 +249,11 @@ void main() {
       documents.forEach((doc) => print(doc));
     });
 
-    test(" - list all nested documents in 'activities' collection", () async {
-      List<DocumentSnapshot> documents = await CarpService.instance.collection("activities").documents;
+    test(" - list all nested documents in 'users' collection", () async {
+      List<DocumentSnapshot> documents = await CarpService.instance.collection("users").documents;
       documents.forEach((doc) {
         print(doc);
         doc.collections.forEach((col) => print(col));
-        // doc.c
       });
 
       //     List<DocumentSnapshot> documents;
@@ -257,7 +276,6 @@ void main() {
     });
 
     test(' - get collection from path', () async {
-      assert(document != null);
       CollectionReference collection = await CarpService.instance.collection('users').get();
       assert(collection.id > 0);
       print(collection);
@@ -272,12 +290,13 @@ void main() {
       CollectionReference collection = await CarpService.instance.collection('users').get();
       await collection.rename('new_users');
       expect(collection.name, 'new_users');
+      print(collection);
     });
 
     test(' - delete collection', () async {
-      CollectionReference collection = await CarpService.instance.collection('users').get();
+      CollectionReference collection = await CarpService.instance.collection('new_users').get();
       await collection.delete();
-      expect(collection.name, 'new_users');
+      print(collection);
     });
   });
 

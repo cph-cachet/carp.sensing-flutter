@@ -1,5 +1,6 @@
 ## 0.2.5
 * support for rename, update, and delete of documents and collections
+  * _note_ than rename of a collection don't work in this release
 * support for query of DataPoints
 
 ## 0.2.4

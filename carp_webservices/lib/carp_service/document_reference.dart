@@ -62,12 +62,17 @@ class CollectionReference extends CarpReference {
 
     http.Response response = await http.get(Uri.encodeFull(collectionUri), headers: restHeaders);
     Map<String, dynamic> responseJson = json.decode(response.body);
-
     int httpStatusCode = response.statusCode;
-    if (httpStatusCode == 200)
-      return this.._id = responseJson['id'];
-    else
-      return this;
+
+    print('url : $collectionUri');
+    print('response code: $httpStatusCode');
+    print(_encode(responseJson));
+
+    if (httpStatusCode == 200) return this.._id = responseJson['id'];
+
+    // All other cases are treated as an error.
+    throw CarpServiceException(responseJson["error"],
+        description: responseJson["message"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
   }
 
   /// Get the documents in this collection.
@@ -123,21 +128,15 @@ class CollectionReference extends CarpReference {
     assert(newName != null);
     final restHeaders = await headers;
 
-    print('path 1 : $_path');
-
-    print(_collectionUriByID);
-
     // PUT the new name of this collection to the CARP web service
     http.Response response =
         await http.put(Uri.encodeFull(_collectionUriByID), headers: restHeaders, body: '{"name":"$newName"}');
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
 
-    print(_encode(responseJson));
-
     if (httpStatusCode == 200) {
-      print(_path.replaceAll(new RegExp(r'$name'), newName));
-      print('path 2 : $_path');
+      int start = _path.length - _path.split('/').last.length;
+      _path = _path.replaceRange(start, _path.length, newName); // renaming path, i.e. the last part of the path
       return;
     }
     // All other cases are treated as an error.
@@ -395,5 +394,5 @@ class DocumentSnapshot {
   /// Returns `true` if the document exists.
   bool get exists => data != null;
 
-  String toString() => "DocumentSnapshot - id: $id, name; $name, data size: ${data.length}";
+  String toString() => "DocumentSnapshot - id: $id, name; $name, data size: ${data?.length}";
 }
