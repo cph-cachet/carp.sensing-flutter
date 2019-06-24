@@ -53,8 +53,12 @@ class MovisensMETLevelDatum extends MovisensDatum {
     MovisensMETLevelDatum metLevelDatum = MovisensMETLevelDatum();
     Map<dynamic, dynamic> map = jsonDecode(value);
 
+    ///Make movisens timestamp into UTC format
+    String timestamp = map['timestamp'];
+    List splittedTimestamp = timestamp.split(" ");
+    String timeUtc = splittedTimestamp[0] + "T" + splittedTimestamp[1] + ".000Z";
 
-    metLevelDatum.movisensTimestamp = DateTime.parse(map['timestamp']).toUtc().toIso8601String();
+    metLevelDatum.movisensTimestamp = timeUtc;
     metLevelDatum.sedentary = map['sedentary'];
 
     metLevelDatum.light = map['light'];
@@ -93,7 +97,13 @@ class MovisensMovementAccelerationDatum extends MovisensDatum {
     MovisensMovementAccelerationDatum movementAccelerationDatum =
     MovisensMovementAccelerationDatum();
     Map<dynamic, dynamic> map = jsonDecode(value);
-    movementAccelerationDatum.movisensTimestamp = DateTime.parse(map['timestamp']).toUtc().toIso8601String();
+
+    ///Make movisens timestamp into UTC format
+    String timestamp = map['timestamp'];
+    List splittedTimestamp = timestamp.split(" ");
+    String timeUtc = splittedTimestamp[0] + "T" + splittedTimestamp[1] + ".000Z";
+
+    movementAccelerationDatum.movisensTimestamp = timeUtc;
     movementAccelerationDatum.movementAcceleration =
     map['movement_acceleration'];
 
@@ -122,7 +132,13 @@ class MovisensTapMarkerDatum extends MovisensDatum {
   factory MovisensTapMarkerDatum.fromMap(String value) {
     MovisensTapMarkerDatum tapMakerDatum = MovisensTapMarkerDatum();
     Map<dynamic, dynamic> map = jsonDecode(value);
-    tapMakerDatum.movisensTimestamp = DateTime.parse(map['timestamp']).toUtc().toIso8601String();
+
+    ///Make movisens timestamp into UTC format
+    String timestamp = map['timestamp'];
+    List splittedTimestamp = timestamp.split(" ");
+    String timeUtc = splittedTimestamp[0] + "T" + splittedTimestamp[1] + ".000Z";
+
+    tapMakerDatum.movisensTimestamp = timeUtc;
     tapMakerDatum.tapMarker = map['tap_marker'];
 
     return tapMakerDatum;
@@ -139,7 +155,6 @@ class MovisensBatteryLevelDatum extends MovisensDatum {
 
   MovisensBatteryLevelDatum() : super();
 
-
   ///set data format
   static const DataFormat CARP_DATA_FORMAT = DataFormat(
       NameSpace.CARP, '${MovisensSamplingPackage.MOVISENS}.batteryLevel');
@@ -148,7 +163,13 @@ class MovisensBatteryLevelDatum extends MovisensDatum {
   factory MovisensBatteryLevelDatum.fromMap(String value) {
     MovisensBatteryLevelDatum batteryLevelDatum = MovisensBatteryLevelDatum();
     Map<dynamic, dynamic> map = jsonDecode(value);
-    batteryLevelDatum.movisensTimestamp = DateTime.parse(map['timestamp']).toUtc().toIso8601String();
+
+    ///Make movisens timestamp into UTC format
+    String timestamp = map['timestamp'];
+    List splittedTimestamp = timestamp.split(" ");
+    String timeUtc = splittedTimestamp[0] + "T" + splittedTimestamp[1] + ".000Z";
+
+    batteryLevelDatum.movisensTimestamp = timeUtc;
     batteryLevelDatum.batteryLevel = map['battery_level'];
 
     return batteryLevelDatum;
@@ -164,7 +185,6 @@ class MovisensBodyPositionDatum extends MovisensDatum {
 
   MovisensBodyPositionDatum() : super();
 
-
   ///set data format
 
   static const DataFormat CARP_DATA_FORMAT = DataFormat(
@@ -174,7 +194,13 @@ class MovisensBodyPositionDatum extends MovisensDatum {
   factory MovisensBodyPositionDatum.fromMap(String value) {
     MovisensBodyPositionDatum bodyPositionDatum = MovisensBodyPositionDatum();
     Map<dynamic, dynamic> map = jsonDecode(value);
-    bodyPositionDatum.movisensTimestamp = DateTime.parse(map['timestamp']).toUtc().toIso8601String();
+
+    ///Make movisens timestamp into UTC format
+    String timestamp = map['timestamp'];
+    List splittedTimestamp = timestamp.split(" ");
+    String timeUtc = splittedTimestamp[0] + "T" + splittedTimestamp[1] + ".000Z";
+
+    bodyPositionDatum.movisensTimestamp = timeUtc;
     bodyPositionDatum.bodyPosition = map['body_position'];
 
     return bodyPositionDatum;
@@ -199,7 +225,13 @@ class MovisensMETDatum extends MovisensDatum {
   factory MovisensMETDatum.fromMap(String value) {
     MovisensMETDatum metDatum = MovisensMETDatum();
     Map<dynamic, dynamic> map = jsonDecode(value);
-    metDatum.movisensTimestamp = DateTime.parse(map['timestamp']).toUtc().toIso8601String();
+
+    ///Make movisens timestamp into UTC format
+    String timestamp = map['timestamp'];
+    List splittedTimestamp = timestamp.split(" ");
+    String timeUtc = splittedTimestamp[0] + "T" + splittedTimestamp[1] + ".000Z";
+
+    metDatum.movisensTimestamp = timeUtc;
     metDatum.met = map['met'];
 
     return metDatum;
@@ -225,7 +257,13 @@ class MovisensHRDatum extends MovisensDatum {
     MovisensHRDatum hrDatum = MovisensHRDatum();
 
     Map<dynamic, dynamic> map = jsonDecode(value);
-    hrDatum.movisensTimestamp = DateTime.parse(map['timestamp']).toUtc().toIso8601String();
+
+    ///Make movisens timestamp into UTC format
+    String timestamp = map['timestamp'];
+    List splittedTimestamp = timestamp.split(" ");
+    String timeUtc = splittedTimestamp[0] + "T" + splittedTimestamp[1] + ".000Z";
+
+    hrDatum.movisensTimestamp = timeUtc;
     hrDatum.hr = map['hr'];
 
     return hrDatum;
@@ -252,7 +290,13 @@ class MovisensHRVDatum extends MovisensDatum {
     MovisensHRVDatum hrvDatum = MovisensHRVDatum();
 
     Map<dynamic, dynamic> map = jsonDecode(value);
-    hrvDatum.movisensTimestamp = DateTime.parse(map['timestamp']).toUtc().toIso8601String();
+
+    ///Make movisens timestamp into UTC format
+    String timestamp = map['timestamp'];
+    List splittedTimestamp = timestamp.split(" ");
+    String timeUtc = splittedTimestamp[0] + "T" + splittedTimestamp[1] + ".000Z";
+
+    hrvDatum.movisensTimestamp = timeUtc;
     hrvDatum.hrv = map['hrv'];
 
     return hrvDatum;
@@ -277,7 +321,13 @@ class MovisensIsHrvValidDatum extends MovisensDatum {
   factory MovisensIsHrvValidDatum.fromMap(String value) {
     MovisensIsHrvValidDatum isHrvValidDatum = MovisensIsHrvValidDatum();
     Map<dynamic, dynamic> map = jsonDecode(value);
-    isHrvValidDatum.movisensTimestamp = DateTime.parse(map['timestamp']).toUtc().toIso8601String();
+
+    ///Make movisens timestamp into UTC format
+    String timestamp = map['timestamp'];
+    List splittedTimestamp = timestamp.split(" ");
+    String timeUtc = splittedTimestamp[0] + "T" + splittedTimestamp[1] + ".000Z";
+
+    isHrvValidDatum.movisensTimestamp = timeUtc;
     isHrvValidDatum.isHrvValid = map['is_hrv_valid'];
 
     return isHrvValidDatum;
@@ -302,7 +352,13 @@ class MovisensStepCountDatum extends MovisensDatum {
     MovisensStepCountDatum stepCountDatum = MovisensStepCountDatum();
 
     Map<dynamic, dynamic> map = jsonDecode(value);
-    stepCountDatum.movisensTimestamp = DateTime.parse(map['timestamp']).toUtc().toIso8601String();
+
+    ///Make movisens timestamp into UTC format
+    String timestamp = map['timestamp'];
+    List splittedTimestamp = timestamp.split(" ");
+    String timeUtc = splittedTimestamp[0] + "T" + splittedTimestamp[1] + ".000Z";
+
+    stepCountDatum.movisensTimestamp = timeUtc;
     stepCountDatum.stepCount = map['step_count'];
 
     return stepCountDatum;
@@ -318,8 +374,6 @@ class MovisensConnectionStatusDatum extends MovisensDatum {
 
   MovisensConnectionStatusDatum() : super();
 
-
-
   ///set data format
 
   static const DataFormat CARP_DATA_FORMAT = DataFormat(
@@ -331,7 +385,13 @@ class MovisensConnectionStatusDatum extends MovisensDatum {
     MovisensConnectionStatusDatum();
 
     Map<dynamic, dynamic> map = jsonDecode(value);
-    connectionStatusDatum.movisensTimestamp = DateTime.parse(map['timestamp']).toUtc().toIso8601String();
+
+    ///Make movisens timestamp into UTC format
+    String timestamp = map['timestamp'];
+    List splittedTimestamp = timestamp.split(" ");
+    String timeUtc = splittedTimestamp[0] + "T" + splittedTimestamp[1] + ".000Z";
+
+    connectionStatusDatum.movisensTimestamp = timeUtc;
     connectionStatusDatum.connectionStatus = map['connection_status'];
 
     return connectionStatusDatum;
