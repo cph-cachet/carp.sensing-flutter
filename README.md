@@ -21,6 +21,7 @@ These are the available CARP Mobile Sensing Flutter components in this repositor
 | [carp_communication_package](./carp_communication_package) | Communication sampling package (phone, sms) | [![pub package](https://img.shields.io/pub/v/carp_communication_package.svg)](https://pub.dartlang.org/packages/carp_communication_package) |
 | [carp_context_package](./carp_context_package) | Context sampling package (location, activity, weather) | [![pub package](https://img.shields.io/pub/v/carp_context_package.svg)](https://pub.dartlang.org/packages/carp_context_package) |
 | [carp_audio_package](./carp_audio_package) | Audio sampling package (audio, noise) | [![pub package](https://img.shields.io/pub/v/carp_audio_package.svg)](https://pub.dartlang.org/packages/carp_audio_package) |
+| [carp_movisens_package](./carp_movisens_package) | Movisens Move & ECG sampling package (movement, MET-level, ECG) | [![pub package](https://img.shields.io/pub/v/carp_movisens_package.svg)](https://pub.dartlang.org/packages/carp_movisens_package) |
 | **Backends** | **Backend data upload components** |  | 
 | [carp_webservices](./carp_webservices) | Flutter API for CARP web services | [![pub package](https://img.shields.io/pub/v/carp_webservices.svg)](https://pub.dartlang.org/packages/carp_webservices) |
 | [carp_backend](./carp_backend) | Support for uploading data to a CARP data backend as JSON. | [![pub package](https://img.shields.io/pub/v/carp_backend.svg)](https://pub.dartlang.org/packages/carp_backend) |
