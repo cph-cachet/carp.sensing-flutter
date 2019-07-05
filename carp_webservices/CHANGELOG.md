@@ -1,6 +1,13 @@
+## 0.2.6
+* rename of collection is now supported
+* refresh token
+* get user object w. name
+* create user
+
+
 ## 0.2.5
 * support for rename, update, and delete of documents and collections
-  * _note_ than rename of a collection don't work in this release
+  * _note_ than rename of a collection don't happen in the CARP web service at the time of this release
 * support for query of DataPoints
 
 ## 0.2.4

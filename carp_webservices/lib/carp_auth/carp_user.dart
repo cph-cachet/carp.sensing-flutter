@@ -13,7 +13,7 @@ class CarpUser {
   String username;
 
   /// Unique CARP ID
-  String uid;
+  int id;
 
   /// CARP password
   String password;
@@ -22,17 +22,30 @@ class CarpUser {
   String email;
 
   /// Printer-friendly full user name
-  String displayName;
+  String fullName;
 
   /// Mobile phone number
-  String phoneNumber;
+  String telephone;
+
+  /// Department of the the user (e.g. CACHET)
+  String department;
+
+  /// Organization of the the user (e.g. DTU)
+  String organization;
+
+  /// Timestamp for agreeing to the informed consent
+  DateTime termsAgreed;
+
+  /// Timestamp for the creation of this user.
+  DateTime created;
 
   OAuthToken _token;
 
   /// The OAuth 2.0 [OAuthToken] for this user, once authenticated to CARP
   OAuthToken get token => _token;
 
-  CarpUser(this.username, {this.uid, this.password, this.displayName, this.phoneNumber});
+  CarpUser(this.username,
+      {this.id, this.password, this.fullName, this.telephone, this.email, this.department, this.organization});
 
   /// Set or update the authenticated OAuth token for this user.
   void authenticated(OAuthToken token) => _token = token;
@@ -63,7 +76,7 @@ class CarpUser {
     _token = null;
   }
 
-  /// Manually refreshes the data of the current user (e.g., [displayName], [phoneNumber], etc.)
+  /// Manually refreshes the data of the current user (e.g., [fullName], [telephone], etc.)
   /// from the CARP web service.
   ///
   /// TODO - not implemented, since there is currently no CARP endpoint for users.
@@ -76,6 +89,6 @@ class CarpUser {
 
   @override
   String toString() {
-    return 'CARP User: $username - $displayName<$email>[$uid]';
+    return 'CARP User: $username - $fullName [$id]';
   }
 }
