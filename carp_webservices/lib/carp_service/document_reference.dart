@@ -281,6 +281,7 @@ class DocumentReference extends CarpReference {
     http.Response response = await http.get(Uri.encodeFull(documentUri), headers: restHeaders);
 
     int httpStatusCode = response.statusCode;
+
     if (httpStatusCode == 200)
       return DocumentSnapshot._(path, json.decode(response.body));
     else
@@ -365,16 +366,16 @@ class DocumentSnapshot {
   String get name => _snapshot['name'];
 
   /// The id of the collection this document belongs to
-  int get collectionId => _snapshot['collectionId'];
+  int get collectionId => _snapshot['collection_id'];
 
   /// The id of the user who created this document
-  String get createdByUserId => _snapshot['createdByUserId'];
+  String get createdByUserId => _snapshot['created_by_user_id'];
 
   /// The timestamp of creation of this document
-  String get createdAt => _snapshot['createdAt'];
+  DateTime get createdAt => DateTime.parse(_snapshot['created_at']);
 
   /// The timestamp of latest update of this document
-  String get updatedAt => _snapshot['updatedAt'];
+  DateTime get updatedAt => DateTime.parse(_snapshot['updated_at']);
 
   List<String> get collections {
     List<String> collections = new List<String>();

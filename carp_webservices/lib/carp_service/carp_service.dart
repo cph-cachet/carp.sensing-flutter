@@ -26,6 +26,7 @@ part 'document_reference.dart';
 part 'carp_tasks.dart';
 part 'push_id_generator.dart';
 part 'carp_service.g.dart';
+part 'consent_document.dart';
 
 String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
 
@@ -63,6 +64,10 @@ class CarpService {
     _instance = new CarpService._(app);
     return _instance;
   }
+
+  // ---------------------------------------------------------------------------------------------------------
+  // AUTHENTICATION
+  // ---------------------------------------------------------------------------------------------------------
 
   String get _authHeaderBase64 => base64.encode(utf8.encode("${_app.oauth.clientID}:${_app.oauth.clientSecret}"));
 
@@ -163,6 +168,10 @@ class CarpService {
         description: responseJSON["error_description"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
   }
 
+  // ---------------------------------------------------------------------------------------------------------
+  // USERS
+  // ---------------------------------------------------------------------------------------------------------
+
   /// The URL for the user end point for this [CarpService].
   String get userEndpointUri => "${_app.uri.toString()}/api/users";
 
@@ -211,7 +220,7 @@ class CarpService {
     _currentUser.signOut();
   }
 
-  // Create a new CARP user using email and password.
+  /// Create a new CARP user using email and password.
   Future<CarpUser> createUserWithEmailAndPassword(String email, String password, {String fullName}) async {
     assert(email != null);
     assert(password != null);
@@ -238,6 +247,58 @@ class CarpService {
     throw CarpServiceException(responseJson["error"],
         description: responseJson["message"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
   }
+
+  // ---------------------------------------------------------------------------------------------------------
+  // CONSENT DOCUMENT
+  // ---------------------------------------------------------------------------------------------------------
+
+  /// The URL for the consent document end point for this [CarpService].
+  String get consentDocumentEndpointUri => "${_app.uri.toString()}/api/studies/${_app.study.id}/consent-documents";
+
+  /// Create a new consent document.
+  /// Returns the created [ConsentDocument] if the document is uploaded correctly.
+  Future<ConsentDocument> createConsentDocument(Map<String, String> document) async {
+    assert(document != null);
+
+    // POST the document to the CARP web service
+    http.Response response =
+        await http.post(Uri.encodeFull(consentDocumentEndpointUri), headers: headers, body: json.encode(document));
+
+    int httpStatusCode = response.statusCode;
+    Map<String, dynamic> responseJson = json.decode(response.body);
+
+//    print('response code: $httpStatusCode');
+//    print(_encode(responseJson));
+
+    if ((httpStatusCode == 200) || (httpStatusCode == 201)) return ConsentDocument._(responseJson);
+
+    // All other cases are treated as an error.
+    throw CarpServiceException(responseJson["error"],
+        description: responseJson["message"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+  }
+
+  /// Asynchronously gets a [ConsentDocument].
+  Future<ConsentDocument> getConsentDocument(int id) async {
+    String url = "$consentDocumentEndpointUri/$id";
+
+    // GET the consent document from the CARP web service
+    http.Response response = await http.get(Uri.encodeFull(url), headers: headers);
+
+    int httpStatusCode = response.statusCode;
+    Map<String, dynamic> responseJson = json.decode(response.body);
+
+    if (httpStatusCode == 200) return ConsentDocument._(responseJson);
+
+    // All other cases are treated as an error.
+    Map<String, dynamic> errorResponseJson = json.decode(response.body);
+    throw CarpServiceException(errorResponseJson["error"],
+        description: errorResponseJson["error_description"],
+        httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+  }
+
+  // ---------------------------------------------------------------------------------------------------------
+  // DATA POINT & FILES & DOCUMENTS & COLLECTIONS
+  // ---------------------------------------------------------------------------------------------------------
 
   /// Creates a new [DataPointReference] initialized at the current
   /// CarpService storage location.

@@ -3,6 +3,8 @@
 * refresh token
 * get user object w. name
 * create user
+* upload and get of informed consent document
+* [DcoumentSnapshot] now handles date/time timestamps as [DateTine]
 
 
 ## 0.2.5

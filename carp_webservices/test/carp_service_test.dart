@@ -25,6 +25,7 @@ void main() {
   BluetoothDatum datum;
   DocumentSnapshot document;
   int documentId;
+  int consentDocumentId;
   Random random = Random();
 
   group("CARP Base Services", () {
@@ -119,6 +120,27 @@ void main() {
 
       print("signed in : $new_user");
       print("   token  : ${new_user.token}");
+    });
+  });
+
+  group('Informed Consent', () {
+    test('- create', () async {
+      ConsentDocument uploaded = await CarpService.instance
+          .createConsentDocument({"text": "The original terms text.", "signature": "Image Blob"});
+
+      assert(uploaded != null);
+      print(uploaded);
+      print(uploaded.createdAt);
+
+      consentDocumentId = uploaded.id;
+    });
+
+    test('- get', () async {
+      ConsentDocument uploaded = await CarpService.instance.getConsentDocument(consentDocumentId);
+
+      assert(uploaded != null);
+      print(uploaded);
+      print(uploaded.createdAt);
     });
   });
 
