@@ -100,14 +100,11 @@ void main() {
       print('expiring token...');
       CarpService.instance.currentUser.token.expire();
 
-      print('trying to upload a document...');
-      DocumentSnapshot d = await CarpService.instance
-          .collection('patients')
-          .document()
-          .setData({'email': username, 'name': 'Administrator'});
+      await CarpService.instance.currentUser.getOAuthToken(refresh: true);
 
-      assert(d.id > 0);
-      print(d);
+      assert(user.token != null);
+      print("signed in : $user");
+      print("   token  : ${user.token}");
     });
 
     test('- authentication with saved token', () async {
@@ -189,6 +186,7 @@ void main() {
 
     test(' - update document', () async {
       assert(document != null);
+      print(document);
 
       DocumentSnapshot original = await CarpService.instance.collection('patients').document(document.name).get();
 
@@ -266,6 +264,20 @@ void main() {
       print(newDocument.data);
       print(newDocument['what']);
       assert(newDocument.id > 0);
+    });
+
+    test('- expire token and the upload document', () async {
+      print('expiring token...');
+      CarpService.instance.currentUser.token.expire();
+
+      print('trying to upload a document...');
+      DocumentSnapshot d = await CarpService.instance
+          .collection('patients')
+          .document()
+          .setData({'email': username, 'name': 'Administrator'});
+
+      assert(d.id > 0);
+      print(d);
     });
 
     test(' - list collections', () async {
