@@ -1,10 +1,10 @@
 ## 0.2.6
 * rename of collection is now supported
 * refresh token
-* get user object w. name
-* create user
-* upload and get of informed consent document
-* [DcoumentSnapshot] now handles date/time timestamps as [DateTine]
+* get user profile incl. name
+* create user from email and password
+* upload and get of informed consent documents as a `ConsentDocument` 
+* `DocumentSnapshot` now handles timestamps as real `DateTime` 
 
 
 ## 0.2.5
