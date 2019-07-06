@@ -4,12 +4,15 @@ import 'package:carp_webservices/carp_service/carp_service.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
 
 void main() {
   final String username = "researcher@example.com";
   final String password = "password";
+//  final String username = "tester_487@dtu.dk";
+//  final String password = "underbar";
   final String userId = "user@dtu.dk";
   final String uri = "http://staging.carp.cachet.dk:8080";
   final String clientID = "carp";
@@ -17,12 +20,12 @@ void main() {
   final String testStudyId = "2";
   CarpApp app;
   CarpUser user;
-  //OAuthToken token;
   Study study;
   int dataPointId;
   BluetoothDatum datum;
   DocumentSnapshot document;
   int documentId;
+  Random random = Random();
 
   group("CARP Base Services", () {
     // Runs before all tests.
@@ -54,8 +57,6 @@ void main() {
     test('- authentication', () async {
       try {
         user = await CarpService.instance.authenticate(username: username, password: password);
-        // saving the token for later use
-        //token = user.token.clone();
       } catch (excp) {
         print(excp.toString());
       }
@@ -67,7 +68,7 @@ void main() {
       print("   token  : ${user.token}");
     });
 
-    test('- get display name', () async {
+    test('- get user profile', () async {
       CarpUser new_user;
       try {
         new_user = await CarpService.instance.getCurrentUserProfile();
@@ -78,6 +79,21 @@ void main() {
 
       print("signed in : $new_user");
       print("   name   : ${new_user.fullName}");
+    });
+
+    test('- create user', () async {
+      CarpUser new_user;
+      int id = random.nextInt(1000);
+      try {
+        new_user = await CarpService.instance
+            .createUserWithEmailAndPassword('tester_$id@dtu.dk', 'underbar', fullName: 'CACHET Tester #$id');
+      } catch (excp) {
+        print(excp.toString());
+      }
+      assert(new_user != null);
+
+      print("create  : $new_user");
+      print("   name : ${new_user.fullName}");
     });
 
     test('- refresh token', () async {

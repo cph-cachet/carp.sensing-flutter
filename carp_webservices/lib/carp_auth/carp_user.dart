@@ -78,17 +78,17 @@ class CarpUser {
 
   /// Manually refreshes the data of the current user (e.g., [fullName], [telephone], etc.)
   /// from the CARP web service.
-  ///
-  /// TODO - not implemented, since there is currently no CARP endpoint for users.
-  Future<void> reload() async {}
+  Future<void> reload() async {
+    if (CarpService.instance == null)
+      throw new CarpServiceException("CARP Service not initialized. Call 'CarpService.configure()' first.");
+
+    CarpService.instance.getCurrentUserProfile();
+  }
 
   /// Deletes the user record from the CARP web service.
   ///
   /// TODO - not implemented, since there is currently no CARP endpoint for users.
   Future<void> delete() async {}
 
-  @override
-  String toString() {
-    return 'CARP User: $username - $fullName [$id]';
-  }
+  String toString() => 'CARP User: $username - $fullName [$id]';
 }
