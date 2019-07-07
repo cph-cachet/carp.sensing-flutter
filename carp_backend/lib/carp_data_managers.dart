@@ -57,7 +57,7 @@ class CarpDataManager extends AbstractDataManager implements FileDataManagerList
     if (_user == null) {
       CarpService.configure(await app);
       _user = await CarpService.instance.authenticate(username: carpEndPoint.email, password: carpEndPoint.password);
-      print("signed in - username: ${_user.username} uid: ${_user.uid}");
+      print("signed in - username: ${_user.username} uid: ${_user.id}");
       _initialized = true;
     }
     return _user;
