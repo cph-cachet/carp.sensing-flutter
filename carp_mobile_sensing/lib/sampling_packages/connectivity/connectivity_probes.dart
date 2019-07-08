@@ -16,8 +16,21 @@ class ConnectivityProbe extends StreamProbe {
 }
 
 // This probe requests access to location PERMISSIONS (on Android). Don't ask why.....
-// TODO - implement request for getting permission.
+/// The [WifiProbe] get the wifi connectivity status of the phone and
+/// collect a [WifiDatum].
+class WifiProbe extends PeriodicDatumProbe {
+  Future<Datum> getDatum() async {
+    String ssid = await Connectivity().getWifiName();
+    String bssid = await Connectivity().getWifiBSSID();
 
+    return WifiDatum()
+      ..ssid = ssid
+      ..bssid = bssid;
+  }
+}
+
+// This probe requests access to location PERMISSIONS (on Android). Don't ask why.....
+// TODO - implement request for getting permission.
 // TODO - need to reimplement this probe -- taking into consideration if BT is available and only start scans when asked...
 
 /// The [BluetoothProbe] scans for nearby and visible Bluetooth devices and collect

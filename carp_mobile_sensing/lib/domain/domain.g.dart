@@ -502,7 +502,7 @@ Map<String, dynamic> _$DelayedTriggerToJson(DelayedTrigger instance) {
 }
 
 PeriodicTrigger _$PeriodicTriggerFromJson(Map<String, dynamic> json) {
-  return PeriodicTrigger(json['period'] as int)
+  return PeriodicTrigger(json['period'] as int, json['duration'] as int)
     ..c__ = json['c__'] as String
     ..tasks = (json['tasks'] as List)
         ?.map(
@@ -522,6 +522,7 @@ Map<String, dynamic> _$PeriodicTriggerToJson(PeriodicTrigger instance) {
   writeNotNull('c__', instance.c__);
   writeNotNull('tasks', instance.tasks);
   writeNotNull('period', instance.period);
+  writeNotNull('duration', instance.duration);
   return val;
 }
 

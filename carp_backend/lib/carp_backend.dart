@@ -25,7 +25,7 @@ class CarpDataEndPoint extends FileDataEndPoint {
   static const String DEFAULT_COLLECTION = "carp_sensing";
 
   /// The method used to upload to CARP -- see [CarpUploadMethod] for options.
-  String uploadMethod;
+  CarpUploadMethod uploadMethod;
 
   /// The name of the CARP endpoint.
   /// Can be anything, but its recommended to name it according to the CARP service name.
@@ -81,9 +81,4 @@ class CarpDataEndPoint extends FileDataEndPoint {
 }
 
 /// A enumeration of upload methods to CARP
-class CarpUploadMethod {
-  static const String DATA_POINT = "data-point";
-  static const String BATCH_DATA_POINT = "batch-data-point";
-  static const String FILE = "file";
-  static const String DOCUMENT = "document";
-}
+enum CarpUploadMethod { DATA_POINT, BATCH_DATA_POINT, FILE, DOCUMENT }

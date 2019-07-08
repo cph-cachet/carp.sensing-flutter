@@ -105,3 +105,25 @@ class BluetoothDatum extends CARPDatum {
   String toString() =>
       'Bluetooth Device - advertisementName: $advertisementName, id: $bluetoothDeviceId, name: $bluetoothDeviceName, type: $bluetoothDeviceType, connectable: $connectable, rssi: $rssi';
 }
+
+/// A [Datum] that holds wifi connectivity status in terms of connected SSID and BSSID.
+///
+/// Note that it wifi information cannot be collected on emulators.
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+class WifiDatum extends CARPDatum {
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, ConnectivitySamplingPackage.WIFI);
+  DataFormat get format => CARP_DATA_FORMAT;
+
+  /// The wifi service set ID (SSID) of the connected network
+  String ssid;
+
+  /// The basic service set identifier (BSSID) of the connected network
+  String bssid;
+
+  WifiDatum() : super();
+
+  factory WifiDatum.fromJson(Map<String, dynamic> json) => _$WifiDatumFromJson(json);
+  Map<String, dynamic> toJson() => _$WifiDatumToJson(this);
+
+  String toString() => 'Wifi Status - SSID: $ssid, BSSID: $bssid';
+}

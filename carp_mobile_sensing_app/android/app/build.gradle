@@ -56,8 +56,8 @@ flutter {
 
 dependencies {
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     // added the following line due to this ERROR:
     //    >> Android dependency 'com.android.support:support-compat' has different version for the compile (26.1.0) and runtime (27.1.1) classpath.
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'

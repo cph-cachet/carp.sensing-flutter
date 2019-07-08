@@ -57,7 +57,7 @@ class CarpDataManager extends AbstractDataManager implements FileDataManagerList
     if (_user == null) {
       CarpService.configure(await app);
       _user = await CarpService.instance.authenticate(username: carpEndPoint.email, password: carpEndPoint.password);
-      print("signed in - username: ${_user.username} uid: ${_user.uid}");
+      print("signed in - username: ${_user.username} uid: ${_user.id}");
       _initialized = true;
     }
     return _user;
@@ -133,6 +133,12 @@ class CarpDataManager extends AbstractDataManager implements FileDataManagerList
         int id = response.id;
 
         print("File upload to CARP finished - remote id : $id ");
+        break;
+      case CarpUploadMethod.DATA_POINT:
+        // do nothing -- no file to upload since data point has already been uploaded (see uploadData method)
+        break;
+      case CarpUploadMethod.DOCUMENT:
+        // do nothing -- no file to upload since data point has already been uploaded (see uploadData method)
         break;
     }
 

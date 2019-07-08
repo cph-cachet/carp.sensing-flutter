@@ -70,13 +70,14 @@ class StudyMock implements StudyManager {
   Study _study;
   Future<Study> getStudy(String studyId) async {
     if (_study == null) {
-      _study = Study('DF#4dD-3', username)
+      _study = Study('DF#4dD-app', username)
         ..name = 'CARP Mobile Sensing - default configuration'
         ..description =
             'This is a long description of a Study which can run forever and take up a lot of space and drain you battery and you have to agree to an informed consent which - by all standards - do not comply to any legal framework....'
-        ..dataEndPoint = getDataEndpoint(DataEndPointType.PRINT)
+        ..dataEndPoint = getDataEndpoint(DataEndPointType.FILE)
         //..dataFormat = NameSpace.OMH
-        ..addTask(Task()..measures = SamplingSchema.debug(namespace: NameSpace.CARP).measures.values.toList());
+        ..addTriggerTask(ImmediateTrigger(),
+            Task()..measures = SamplingSchema.debug(namespace: NameSpace.CARP).measures.values.toList());
 
 //        ..addTask(Task()
 //          ..measures = SamplingSchema.common().getMeasureList(
@@ -137,7 +138,7 @@ class StudyMock implements StudyManager {
   }
 
   /// Return a [DataEndPoint] of the specified type.
-  DataEndPoint getDataEndpoint(String type) {
+  DataEndPoint getDataEndpoint(DataEndPointType type) {
     assert(type != null);
     switch (type) {
       case DataEndPointType.PRINT:

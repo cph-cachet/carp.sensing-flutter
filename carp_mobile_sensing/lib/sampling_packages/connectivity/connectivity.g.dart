@@ -65,3 +65,29 @@ Map<String, dynamic> _$BluetoothDatumToJson(BluetoothDatum instance) {
   writeNotNull('rssi', instance.rssi);
   return val;
 }
+
+WifiDatum _$WifiDatumFromJson(Map<String, dynamic> json) {
+  return WifiDatum()
+    ..id = json['id'] as String
+    ..timestamp = json['timestamp'] == null
+        ? null
+        : DateTime.parse(json['timestamp'] as String)
+    ..ssid = json['ssid'] as String
+    ..bssid = json['bssid'] as String;
+}
+
+Map<String, dynamic> _$WifiDatumToJson(WifiDatum instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', instance.id);
+  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  writeNotNull('ssid', instance.ssid);
+  writeNotNull('bssid', instance.bssid);
+  return val;
+}
