@@ -1,5 +1,18 @@
+## 0.2.6
+* rename of collection is now supported
+* refresh token
+* get user profile incl. name
+* create user from email and password
+* upload and get of informed consent documents as a `ConsentDocument` 
+* `DocumentSnapshot` now handles timestamps as real `DateTime` 
+
+
+## 0.2.5
+* support for rename, update, and delete of documents and collections
+  * _note_ than rename of a collection don't happen in the CARP web service at the time of this release
+* support for query of DataPoints
+
 ## 0.2.4
-* support for PUT and DELETE of documents and collections
 * dependent on `carp_mobile_sensing` library to version 0.5.0
 * support for authenticate with (locally saved) token
 

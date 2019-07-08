@@ -62,12 +62,17 @@ class CollectionReference extends CarpReference {
 
     http.Response response = await http.get(Uri.encodeFull(collectionUri), headers: restHeaders);
     Map<String, dynamic> responseJson = json.decode(response.body);
-
     int httpStatusCode = response.statusCode;
-    if (httpStatusCode == 200)
-      return this.._id = responseJson['id'];
-    else
-      return this;
+
+    print('url : $collectionUri');
+    print('response code: $httpStatusCode');
+    print(_encode(responseJson));
+
+    if (httpStatusCode == 200) return this.._id = responseJson['id'];
+
+    // All other cases are treated as an error.
+    throw CarpServiceException(responseJson["error"],
+        description: responseJson["message"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
   }
 
   /// Get the documents in this collection.
@@ -123,8 +128,6 @@ class CollectionReference extends CarpReference {
     assert(newName != null);
     final restHeaders = await headers;
 
-    print(_collectionUriByID);
-
     // PUT the new name of this collection to the CARP web service
     http.Response response =
         await http.put(Uri.encodeFull(_collectionUriByID), headers: restHeaders, body: '{"name":"$newName"}');
@@ -132,7 +135,8 @@ class CollectionReference extends CarpReference {
     Map<String, dynamic> responseJson = json.decode(response.body);
 
     if (httpStatusCode == 200) {
-      _path.replaceAll(name, newName);
+      int start = _path.length - _path.split('/').last.length;
+      _path = _path.replaceRange(start, _path.length, newName); // renaming path, i.e. the last part of the path
       return;
     }
     // All other cases are treated as an error.
@@ -231,11 +235,33 @@ class DocumentReference extends CarpReference {
   /// Updates fields in the document referred to by this [DocumentReference].
   ///
   /// If no document exists yet, the update will fail.
-  // TODO - it seems like the PUT (update) CRUD operation isn't support in CARP (yet). Has raised an issue #14.
   Future<DocumentSnapshot> updateData(Map<String, dynamic> data) async {
-    final restHeaders = await headers;
+    // if we don't have the document ID, get it first.
+    if (id == null) _id = (await this.get()).id;
 
-    http.Response response = await http.put(Uri.encodeFull(documentUri), headers: restHeaders, body: json.encode(data));
+    final restHeaders = await headers;
+    Map<String, dynamic> payload = {'data': data};
+    http.Response response =
+        await http.put(Uri.encodeFull(documentUri), headers: restHeaders, body: json.encode(payload));
+
+    int httpStatusCode = response.statusCode;
+    Map<String, dynamic> responseJson = json.decode(response.body);
+
+    if (httpStatusCode == 200) return DocumentSnapshot._(path, responseJson);
+
+    throw CarpServiceException(responseJson["error"],
+        description: responseJson["message"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+  }
+
+  /// Renames the document referred to by this [DocumentReference].
+  Future<DocumentSnapshot> rename(String name) async {
+    // if we don't have the document ID, get it first.
+    if (id == null) _id = (await this.get()).id;
+
+    final restHeaders = await headers;
+    Map<String, dynamic> payload = {'name': name};
+    http.Response response =
+        await http.put(Uri.encodeFull(documentUri), headers: restHeaders, body: json.encode(payload));
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
@@ -255,6 +281,7 @@ class DocumentReference extends CarpReference {
     http.Response response = await http.get(Uri.encodeFull(documentUri), headers: restHeaders);
 
     int httpStatusCode = response.statusCode;
+
     if (httpStatusCode == 200)
       return DocumentSnapshot._(path, json.decode(response.body));
     else
@@ -262,10 +289,11 @@ class DocumentReference extends CarpReference {
   }
 
   /// Deletes the document referred to by this [DocumentReference].
-  // TODO - it seems like the DELETE CRUD operation isn't support in CARP (yet). Has raised an issue #14.
   Future<void> delete() async {
-    final restHeaders = await headers;
+    // if we don't have the document ID, get it first.
+    if (id == null) _id = (await this.get()).id;
 
+    final restHeaders = await headers;
     http.Response response = await http.delete(Uri.encodeFull(documentUri), headers: restHeaders);
 
     int httpStatusCode = response.statusCode;
@@ -338,16 +366,16 @@ class DocumentSnapshot {
   String get name => _snapshot['name'];
 
   /// The id of the collection this document belongs to
-  int get collectionId => _snapshot['collectionId'];
+  int get collectionId => _snapshot['collection_id'];
 
   /// The id of the user who created this document
-  String get createdByUserId => _snapshot['createdByUserId'];
+  String get createdByUserId => _snapshot['created_by_user_id'];
 
   /// The timestamp of creation of this document
-  String get createdAt => _snapshot['createdAt'];
+  DateTime get createdAt => DateTime.parse(_snapshot['created_at']);
 
   /// The timestamp of latest update of this document
-  String get updatedAt => _snapshot['updatedAt'];
+  DateTime get updatedAt => DateTime.parse(_snapshot['updated_at']);
 
   List<String> get collections {
     List<String> collections = new List<String>();
@@ -367,5 +395,5 @@ class DocumentSnapshot {
   /// Returns `true` if the document exists.
   bool get exists => data != null;
 
-  String toString() => "DocumentSnapshot - id: $id, name; $name, data size: ${data.length}";
+  String toString() => "DocumentSnapshot - id: $id, name; $name, data size: ${data?.length}";
 }

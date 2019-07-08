@@ -1,3 +1,8 @@
+## 0.3.1
+* upgrade to `carp_mobile_sensing` v.0.5.0
+* upgrade to `json_serializable` v.2
+
+
 ## 0.3.0
 * Adjustment to refactoring of `carp_mobile_sensing` library to version 0.3.0
 

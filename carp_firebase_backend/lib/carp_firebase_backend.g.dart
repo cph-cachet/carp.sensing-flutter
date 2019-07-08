@@ -23,7 +23,7 @@ FirebaseEndPoint _$FirebaseEndPointFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$FirebaseEndPointToJson(FirebaseEndPoint instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -60,7 +60,7 @@ FirebaseDatabaseDataEndPoint _$FirebaseDatabaseDataEndPointFromJson(
 
 Map<String, dynamic> _$FirebaseDatabaseDataEndPointToJson(
     FirebaseDatabaseDataEndPoint instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -69,8 +69,8 @@ Map<String, dynamic> _$FirebaseDatabaseDataEndPointToJson(
   }
 
   writeNotNull('c__', instance.c__);
-  writeNotNull('type', instance.type);
   writeNotNull('firebase_end_point', instance.firebaseEndPoint);
+  writeNotNull('type', instance.type);
   writeNotNull('collection', instance.collection);
   return val;
 }
@@ -82,18 +82,18 @@ FirebaseStorageDataEndPoint _$FirebaseStorageDataEndPointFromJson(
           ? null
           : FirebaseEndPoint.fromJson(
               json['firebase_end_point'] as Map<String, dynamic>),
-      path: json['path'] as String)
+      path: json['path'] as String,
+      bufferSize: json['buffer_size'],
+      zip: json['zip'],
+      encrypt: json['encrypt'],
+      publicKey: json['public_key'])
     ..c__ = json['c__'] as String
-    ..type = json['type'] as String
-    ..bufferSize = json['buffer_size'] as int
-    ..zip = json['zip'] as bool
-    ..encrypt = json['encrypt'] as bool
-    ..publicKey = json['public_key'] as String;
+    ..type = json['type'] as String;
 }
 
 Map<String, dynamic> _$FirebaseStorageDataEndPointToJson(
     FirebaseStorageDataEndPoint instance) {
-  var val = <String, dynamic>{};
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -102,8 +102,8 @@ Map<String, dynamic> _$FirebaseStorageDataEndPointToJson(
   }
 
   writeNotNull('c__', instance.c__);
-  writeNotNull('type', instance.type);
   writeNotNull('firebase_end_point', instance.firebaseEndPoint);
+  writeNotNull('type', instance.type);
   writeNotNull('buffer_size', instance.bufferSize);
   writeNotNull('zip', instance.zip);
   writeNotNull('encrypt', instance.encrypt);

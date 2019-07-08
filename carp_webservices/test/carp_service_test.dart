@@ -4,28 +4,34 @@ import 'package:carp_webservices/carp_service/carp_service.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
 
 void main() {
   final String username = "researcher@example.com";
   final String password = "password";
+//  final String username = "tester_487@dtu.dk";
+//  final String password = "underbar";
+  final String userId = "user@dtu.dk";
   final String uri = "http://staging.carp.cachet.dk:8080";
   final String clientID = "carp";
   final String clientSecret = "carp";
   final String testStudyId = "2";
   CarpApp app;
-  OAuthToken token;
+  CarpUser user;
   Study study;
   int dataPointId;
   BluetoothDatum datum;
   DocumentSnapshot document;
   int documentId;
+  int consentDocumentId;
+  Random random = Random();
 
   group("CARP Base Services", () {
     // Runs before all tests.
     setUpAll(() {
-      study = new Study(testStudyId, "user@dtu.dk", name: "Test study #$testStudyId");
+      study = new Study(testStudyId, userId, name: "Test study #$testStudyId");
 
       // Create a test bluetooth datum
       datum = BluetoothDatum()
@@ -50,48 +56,91 @@ void main() {
     setUp(() {});
 
     test('- authentication', () async {
-      CarpUser user;
       try {
         user = await CarpService.instance.authenticate(username: username, password: password);
-        // saving the token for later use
-        token = user.token.clone();
       } catch (excp) {
         print(excp.toString());
       }
-      assert(token != null);
       assert(user != null);
+      assert(user.token != null);
       assert(user.isAuthenticated);
 
       print("signed in : $user");
       print("   token  : ${user.token}");
+    });
+
+    test('- get user profile', () async {
+      CarpUser new_user;
+      try {
+        new_user = await CarpService.instance.getCurrentUserProfile();
+      } catch (excp) {
+        print(excp.toString());
+      }
+      assert(new_user != null);
+
+      print("signed in : $new_user");
+      print("   name   : ${new_user.fullName}");
+    });
+
+    test('- create user', () async {
+      CarpUser new_user;
+      int id = random.nextInt(1000);
+      try {
+        new_user = await CarpService.instance
+            .createUserWithEmailAndPassword('tester_$id@dtu.dk', 'underbar', fullName: 'CACHET Tester #$id');
+      } catch (excp) {
+        print(excp.toString());
+      }
+      assert(new_user != null);
+
+      print("create  : $new_user");
+      print("   name : ${new_user.fullName}");
     });
 
     test('- refresh token', () async {
       print('expiring token...');
       CarpService.instance.currentUser.token.expire();
 
-      print('trying to upload a document...');
-      DocumentSnapshot d = await CarpService.instance
-          .collection('users')
-          .document()
-          .setData({'email': username, 'name': 'Administrator'});
+      await CarpService.instance.currentUser.getOAuthToken(refresh: true);
 
-      assert(d.id > 0);
-      print(d);
+      assert(user.token != null);
+      print("signed in : $user");
+      print("   token  : ${user.token}");
     });
 
     test('- authentication with saved token', () async {
-      CarpUser user;
+      CarpUser new_user;
       try {
-        user = await CarpService.instance.authenticateWithToken(username: username, token: token);
+        new_user = await CarpService.instance.authenticateWithToken(username: username, token: user.token);
       } catch (excp) {
         print(excp.toString());
       }
-      assert(user != null);
-      assert(user.isAuthenticated);
+      assert(new_user != null);
+      assert(new_user.isAuthenticated);
 
-      print("signed in : $user");
-      print("   token  : ${user.token}");
+      print("signed in : $new_user");
+      print("   token  : ${new_user.token}");
+    });
+  });
+
+  group('Informed Consent', () {
+    test('- create', () async {
+      ConsentDocument uploaded = await CarpService.instance
+          .createConsentDocument({"text": "The original terms text.", "signature": "Image Blob"});
+
+      assert(uploaded != null);
+      print(uploaded);
+      print(uploaded.createdAt);
+
+      consentDocumentId = uploaded.id;
+    });
+
+    test('- get', () async {
+      ConsentDocument uploaded = await CarpService.instance.getConsentDocument(consentDocumentId);
+
+      assert(uploaded != null);
+      print(uploaded);
+      print(uploaded.createdAt);
     });
   });
 
@@ -112,13 +161,29 @@ void main() {
       await CarpService.instance.getDataPointReference().batchPostDataPoint(file);
     });
 
-    test('- get', () async {
+    test('- get by id', () async {
       print("GET data_point_id : $dataPointId");
       CARPDataPoint data = await CarpService.instance.getDataPointReference().getDataPoint(dataPointId);
 
       print(_encode(data.toJson()));
       assert(data.id == dataPointId);
       assert(data.carpBody['rssi'] == datum.rssi);
+    });
+
+    test('- get all', () async {
+      List<CARPDataPoint> data = await CarpService.instance.getDataPointReference().getAllDataPoint();
+
+      data.forEach((datapoint) => print(_encode((datapoint.toJson()))));
+      assert(data.length > 0);
+    });
+
+    test('- query', () async {
+      String query = 'carp_header.user_id==$userId';
+      print("query : $query");
+      List<CARPDataPoint> data = await CarpService.instance.getDataPointReference().queryDataPoint(query);
+
+      data.forEach((datapoint) => print(_encode((datapoint.toJson()))));
+      assert(data.length > 0);
     });
 
     test('- delete', () async {
@@ -130,11 +195,11 @@ void main() {
   group("Documents & Collections", () {
     test(' - add document', () async {
       // is not providing an document id, so this should create a new document
-      // if the collections (users) don't exist, it is created (according to David).
+      // if the collections (patients) don't exist, it is created (according to David).
       document = await CarpService.instance
-          .collection('users')
-          .document()
-          .setData({'email': username, 'name': 'Administrator'});
+          .collection('patients')
+          .document(userId)
+          .setData({'email': userId, 'role': 'Administrator'});
 
       print(document);
       assert(document.id > 0);
@@ -143,21 +208,41 @@ void main() {
 
     test(' - update document', () async {
       assert(document != null);
-      // updating the name
-      DocumentSnapshot updatedDocument = await CarpService.instance
-          .collection('users')
-          .document(document.name)
-          .updateData({'email': username, 'name': 'Super User'});
+      print(document);
 
-      print(updatedDocument.toString());
-      print(updatedDocument.data["name"]);
-      assert(updatedDocument.id > 0);
-      assert(updatedDocument.data["name"] == 'Super User');
+      DocumentSnapshot original = await CarpService.instance.collection('patients').document(document.name).get();
+
+      print(_encode(original.data));
+
+      // updating the name
+      DocumentSnapshot updated = await CarpService.instance
+          .collection('patients')
+          .document(document.name)
+          .updateData({'email': userId, 'role': 'Super User'});
+
+      print(_encode(updated.data));
+
+      print(updated.toString());
+      print(updated.data["role"]);
+      assert(updated.id > 0);
+      assert(updated.data["role"] == 'Super User');
+    });
+
+    test(' - rename document', () async {
+      assert(document != null);
+
+      document = await CarpService.instance.collection('patients').document(document.name).rename('new name');
+
+      print(_encode(document.data));
+
+      print(document.toString());
+      assert(document.id > 0);
+      assert(document.name == 'new name');
     });
 
     test(' - get document by path', () async {
       assert(document != null);
-      DocumentSnapshot newDocument = await CarpService.instance.collection('users').document(document.name).get();
+      DocumentSnapshot newDocument = await CarpService.instance.collection('patients').document(document.name).get();
 
       print((newDocument));
       assert(newDocument.id == document.id);
@@ -172,34 +257,66 @@ void main() {
       assert(newDocument.id == documentId);
     });
 
+    test(' - add document in nested collections', () async {
+      // is not providing an document id, so this should create a new document
+      // if the collections (patients) don't exist, it is created (according to David).
+      DocumentSnapshot newDocument = await CarpService.instance
+          .collection('patients')
+          .document(userId)
+          .collection('activities')
+          .document('cooking')
+          .setData({'what': 'breakfast', 'time': 'morning'});
+
+      print(newDocument);
+      assert(newDocument.id > 0);
+    });
+
     test(' - get nested document', () async {
       assert(document != null);
-      DocumentSnapshot newDocument = await CarpService.instance.collection('activities').document("test").get();
+      DocumentSnapshot newDocument = await CarpService.instance
+          .collection('patients')
+          .document(userId)
+          .collection('activities')
+          .document('cooking')
+          .get();
 
       print(newDocument);
       print(newDocument.createdAt);
       print(newDocument.snapshot);
       print(newDocument.data);
-      print(newDocument['my_field']);
-      assert(newDocument.id == 4);
+      print(newDocument['what']);
+      assert(newDocument.id > 0);
+    });
+
+    test('- expire token and the upload document', () async {
+      print('expiring token...');
+      CarpService.instance.currentUser.token.expire();
+
+      print('trying to upload a document...');
+      DocumentSnapshot d = await CarpService.instance
+          .collection('patients')
+          .document()
+          .setData({'email': username, 'name': 'Administrator'});
+
+      assert(d.id > 0);
+      print(d);
     });
 
     test(' - list collections', () async {
-      DocumentSnapshot newDocument = await CarpService.instance.collection('activities').document("test").get();
+      DocumentSnapshot newDocument = await CarpService.instance.collection('patients').document(userId).get();
       newDocument.collections.forEach((ref) => print(ref));
     });
 
-    test(" - list documents in 'users' collection", () async {
-      List<DocumentSnapshot> documents = await CarpService.instance.collection("users").documents;
+    test(" - list documents in 'patients' collection", () async {
+      List<DocumentSnapshot> documents = await CarpService.instance.collection("patients").documents;
       documents.forEach((doc) => print(doc));
     });
 
-    test(" - list all nested documents in 'activities' collection", () async {
-      List<DocumentSnapshot> documents = await CarpService.instance.collection("activities").documents;
+    test(" - list all nested documents in 'patients' collection", () async {
+      List<DocumentSnapshot> documents = await CarpService.instance.collection("patients").documents;
       documents.forEach((doc) {
         print(doc);
         doc.collections.forEach((col) => print(col));
-        // doc.c
       });
 
       //     List<DocumentSnapshot> documents;
@@ -215,34 +332,36 @@ void main() {
 //        }
 //      }
 //
-//      documents = await CarpService.instance.collection("users").documents;
+//      documents = await CarpService.instance.collection("patients").documents;
 //      for (DocumentSnapshot doc in documents) {
 //        print(doc);
 //      }
     });
 
     test(' - get collection from path', () async {
-      assert(document != null);
-      CollectionReference collection = await CarpService.instance.collection('users').get();
+      CollectionReference collection = await CarpService.instance.collection('patients').get();
       assert(collection.id > 0);
       print(collection);
     });
 
-    test(' - rename collection', () async {
-      CollectionReference collection = await CarpService.instance.collection('users').get();
-      await collection.rename('new_users');
-      expect(collection.name, 'new_users');
-    });
-
     test(' - delete document', () async {
       assert(document != null);
-      await CarpService.instance.collection('users').document(document.name).delete();
+      await CarpService.instance.collection('patients').document(document.name).delete();
+    });
+
+// RENAME of collection does not work on the CARP server side right now
+// see issue >>
+    test(' - rename collection', () async {
+      CollectionReference collection = await CarpService.instance.collection('patients').get();
+      await collection.rename('new_patients');
+      expect(collection.name, 'new_patients');
+      print(collection);
     });
 
     test(' - delete collection', () async {
-      CollectionReference collection = await CarpService.instance.collection('users').get();
+      CollectionReference collection = await CarpService.instance.collection('new_patients').get();
       await collection.delete();
-      expect(collection.name, 'new_users');
+      print(collection);
     });
   });
 

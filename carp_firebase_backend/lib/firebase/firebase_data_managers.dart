@@ -38,6 +38,14 @@ abstract class FirebaseDataManager extends AbstractDataManager {
     return _firebaseApp;
   }
 
+  /// Returns the current authenticated user.
+  ///
+  /// If the user is not authenticated, authentication to Firebase is done
+  /// according to the specified [FireBaseAuthenticationMethods]:
+  ///
+  ///   * `GOOGLE` -- authenticate using Google credentials
+  ///   * `PASSWORD` - authenticate using username and password
+  ///
   Future<FirebaseUser> get user async {
     if (_user == null) {
       switch (firebaseEndPoint.firebaseAuthenticationMethod) {
@@ -45,11 +53,11 @@ abstract class FirebaseDataManager extends AbstractDataManager {
           {
             GoogleSignInAccount googleUser = await _googleSignIn.signIn();
             GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-            await _auth.signInWithGoogle(
+            final AuthCredential credential = GoogleAuthProvider.getCredential(
               accessToken: googleAuth.accessToken,
               idToken: googleAuth.idToken,
             );
-
+            _user = await _auth.signInWithCredential(credential);
             break;
           }
         case FireBaseAuthenticationMethods.PASSWORD:

@@ -13,7 +13,7 @@ class CarpUser {
   String username;
 
   /// Unique CARP ID
-  String uid;
+  int id;
 
   /// CARP password
   String password;
@@ -22,17 +22,30 @@ class CarpUser {
   String email;
 
   /// Printer-friendly full user name
-  String displayName;
+  String fullName;
 
   /// Mobile phone number
-  String phoneNumber;
+  String telephone;
+
+  /// Department of the the user (e.g. CACHET)
+  String department;
+
+  /// Organization of the the user (e.g. DTU)
+  String organization;
+
+  /// Timestamp for agreeing to the informed consent
+  DateTime termsAgreed;
+
+  /// Timestamp for the creation of this user.
+  DateTime created;
 
   OAuthToken _token;
 
   /// The OAuth 2.0 [OAuthToken] for this user, once authenticated to CARP
   OAuthToken get token => _token;
 
-  CarpUser(this.username, {this.uid, this.password, this.displayName, this.phoneNumber});
+  CarpUser(this.username,
+      {this.id, this.password, this.fullName, this.telephone, this.email, this.department, this.organization});
 
   /// Set or update the authenticated OAuth token for this user.
   void authenticated(OAuthToken token) => _token = token;
@@ -48,7 +61,7 @@ class CarpUser {
     if (CarpService.instance == null)
       throw new CarpServiceException("CARP Service not initialized. Call 'CarpService.configure()' first.");
 
-    print('token : $_token - ${_token.hasExpired}');
+    //print('token : $_token - ${_token.hasExpired}');
     // check if we need to refresh the token.
     if ((_token == null) || _token.hasExpired || refresh) {
       _token = await CarpService.instance.refresh();
@@ -63,19 +76,19 @@ class CarpUser {
     _token = null;
   }
 
-  /// Manually refreshes the data of the current user (e.g., [displayName], [phoneNumber], etc.)
+  /// Manually refreshes the data of the current user (e.g., [fullName], [telephone], etc.)
   /// from the CARP web service.
-  ///
-  /// TODO - not implemented, since there is currently no CARP endpoint for users.
-  Future<void> reload() async {}
+  Future<void> reload() async {
+    if (CarpService.instance == null)
+      throw new CarpServiceException("CARP Service not initialized. Call 'CarpService.configure()' first.");
+
+    CarpService.instance.getCurrentUserProfile();
+  }
 
   /// Deletes the user record from the CARP web service.
   ///
   /// TODO - not implemented, since there is currently no CARP endpoint for users.
   Future<void> delete() async {}
 
-  @override
-  String toString() {
-    return 'CARP User: $username - $displayName<$email>[$uid]';
-  }
+  String toString() => 'CARP User: $username - $fullName [$id]';
 }
