@@ -55,11 +55,11 @@ class StudyExecutor extends Executor {
 
   /// Returns a list of the running probes in this study executor.
   ///
-  /// This is a combination of the running probes in all task executors.
+  /// This is a combination of the running probes in all trigger  executors.
   List<Probe> get probes {
     List<Probe> _probes = List<Probe>();
     executors.forEach((executor) {
-      if (executor is TaskExecutor) {
+      if (executor is TriggerExecutor) {
         executor.probes.forEach((probe) {
           _probes.add(probe);
         });
@@ -147,6 +147,21 @@ abstract class TriggerExecutor extends Executor {
 
   /// Start all tasks associated with this trigger.
   Future _startAllTasks() async => executors.forEach((executor) => executor.start());
+
+  /// Returns a list of the running probes in this trigger executor.
+  ///
+  /// This is a combination of the running probes in all task executors.
+  List<Probe> get probes {
+    List<Probe> _probes = List<Probe>();
+    executors.forEach((executor) {
+      if (executor is TaskExecutor) {
+        executor.probes.forEach((probe) {
+          _probes.add(probe);
+        });
+      }
+    });
+    return _probes;
+  }
 }
 
 /// Executes a [ImmediateTrigger], i.e. starts sampling immediately.

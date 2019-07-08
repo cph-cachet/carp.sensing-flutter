@@ -127,7 +127,7 @@ class FileDataManager extends AbstractDataManager {
       _s.write(json);
       // write a ',' to separate json objects in the list
       _s.write('\n,\n');
-      print("Writing to file : ${data.toString()}");
+      //print("Writing to file : ${data.toString()}");
 
       file.then((_f) {
         _f.length().then((len) {

@@ -42,6 +42,8 @@ class Sensing {
     // listening on all data events from the study and print it (for debugging purpose).
     controller.events.forEach(print);
 
+    //ProbeRegistry.probes.forEach((key, probe) => probe.stateEvents.forEach(print));
+
     // listening on a specific probe
     //ProbeRegistry.probes[DataType.LOCATION].events.forEach(print);
   }

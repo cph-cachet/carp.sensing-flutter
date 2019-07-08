@@ -44,7 +44,7 @@ class ConnectivitySamplingPackage implements SamplingPackage {
       MapEntry(
           WIFI,
           PeriodicMeasure(MeasureType(NameSpace.CARP, WIFI),
-              name: 'Wifi SSID & BSSID', enabled: true, frequency: 60 * 1000, duration: 5 * 1000)),
+              name: 'Wifi network names (SSID / BSSID)', enabled: true, frequency: 60 * 1000, duration: 5 * 1000)),
     ]);
 
   SamplingSchema get light => common

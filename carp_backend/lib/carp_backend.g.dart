@@ -21,7 +21,7 @@ CarpDataEndPoint _$CarpDataEndPointFromJson(Map<String, dynamic> json) {
       encrypt: json['encrypt'],
       publicKey: json['public_key'])
     ..c__ = json['c__'] as String
-    ..type = json['type'] as String;
+    ..type = _$enumDecodeNullable(_$DataEndPointTypeEnumMap, json['type']);
 }
 
 Map<String, dynamic> _$CarpDataEndPointToJson(CarpDataEndPoint instance) {
@@ -34,7 +34,7 @@ Map<String, dynamic> _$CarpDataEndPointToJson(CarpDataEndPoint instance) {
   }
 
   writeNotNull('c__', instance.c__);
-  writeNotNull('type', instance.type);
+  writeNotNull('type', _$DataEndPointTypeEnumMap[instance.type]);
   writeNotNull('buffer_size', instance.bufferSize);
   writeNotNull('zip', instance.zip);
   writeNotNull('encrypt', instance.encrypt);
@@ -76,4 +76,13 @@ const _$CarpUploadMethodEnumMap = <CarpUploadMethod, dynamic>{
   CarpUploadMethod.BATCH_DATA_POINT: 'BATCH_DATA_POINT',
   CarpUploadMethod.FILE: 'FILE',
   CarpUploadMethod.DOCUMENT: 'DOCUMENT'
+};
+
+const _$DataEndPointTypeEnumMap = <DataEndPointType, dynamic>{
+  DataEndPointType.PRINT: 'PRINT',
+  DataEndPointType.FILE: 'FILE',
+  DataEndPointType.FIREBASE_STORAGE: 'FIREBASE_STORAGE',
+  DataEndPointType.FIREBASE_DATABSE: 'FIREBASE_DATABSE',
+  DataEndPointType.CARP: 'CARP',
+  DataEndPointType.OMH: 'OMH'
 };
