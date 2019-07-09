@@ -38,6 +38,10 @@ abstract class Executor extends AbstractProbe {
   }
 }
 
+// ---------------------------------------------------------------------------------------------------------
+// STUDY EXECUTOR
+// ---------------------------------------------------------------------------------------------------------
+
 /// The [StudyExecutor] is responsible for executing the [Study].
 /// For each trigger in this study, it starts a [TriggerExecutor].
 ///
@@ -54,8 +58,7 @@ class StudyExecutor extends Executor {
   }
 
   /// Returns a list of the running probes in this study executor.
-  ///
-  /// This is a combination of the running probes in all trigger  executors.
+  /// This is a combination of the running probes in all trigger executors.
   List<Probe> get probes {
     List<Probe> _probes = List<Probe>();
     executors.forEach((executor) {
@@ -93,11 +96,18 @@ class StudyExecutor extends Executor {
         case RecurrentScheduledTrigger:
           executor = RecurrentScheduledTriggerExecutor(trigger);
           break;
+        case SamplingEventTrigger:
+          executor = SamplingEventTriggerExecutor(trigger);
+          break;
+        case ConditionalSamplingEventTrigger:
+          executor = ConditionalSamplingEventTriggerExecutor(trigger);
+          break;
       }
 
       _group.add(executor.events);
 
       executors.add(executor);
+      executor._studyExecutor = this;
       executor.initialize(Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR)));
       executor.start();
     }
@@ -117,7 +127,9 @@ class StudyExecutor extends Executor {
   }
 }
 
-// ---------------------------- TriggerExecutors -------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------
+// TRIGGER EXECUTORS
+// ---------------------------------------------------------------------------------------------------------
 
 /// Responsible for handling the timing of a [Trigger] in the [Study].
 ///
@@ -126,6 +138,8 @@ class StudyExecutor extends Executor {
 abstract class TriggerExecutor extends Executor {
   Trigger _trigger;
   Trigger get trigger => _trigger;
+
+  StudyExecutor _studyExecutor;
 
   TriggerExecutor(Trigger trigger)
       : assert(trigger != null, "Cannot initiate a TriggerExecutor without a Trigger."),
@@ -149,7 +163,6 @@ abstract class TriggerExecutor extends Executor {
   Future _startAllTasks() async => executors.forEach((executor) => executor.start());
 
   /// Returns a list of the running probes in this trigger executor.
-  ///
   /// This is a combination of the running probes in all task executors.
   List<Probe> get probes {
     List<Probe> _probes = List<Probe>();
@@ -174,6 +187,19 @@ class ImmediateTriggerExecutor extends TriggerExecutor {
   }
 }
 
+/// Executes a [ManualTrigger].
+class ManualTriggerExecutor extends TriggerExecutor {
+  ManualTriggerExecutor(ManualTrigger trigger) : super(trigger) {
+    trigger.executor = this;
+  }
+
+  Future onStart() async {
+    // first start all tasks, but pause them
+    await _startAllTasks();
+    this.pause();
+  }
+}
+
 /// Executes a [DelayedTrigger], i.e. starts sampling after the specified delay.
 class DelayedTriggerExecutor extends TriggerExecutor {
   Duration delay;
@@ -192,7 +218,7 @@ class DelayedTriggerExecutor extends TriggerExecutor {
 /// Executes a [PeriodicTrigger], i.e. resumes sampling on a regular basis for a given period of time.
 ///
 /// It is required that both the [period] and the [duration] of the [PeriodicTrigger] is specified
-/// to make sure that this executor is properly started/paused/resumed.
+/// to make sure that this executor is properly started/resumed and paused again.
 class PeriodicTriggerExecutor extends TriggerExecutor {
   Duration period, duration;
 
@@ -218,7 +244,7 @@ class PeriodicTriggerExecutor extends TriggerExecutor {
   }
 }
 
-/// Executes a [ScheduledTrigger] on the specified [schedule].
+/// Executes a [ScheduledTrigger] on the specified [ScheduledTrigger.schedule].
 class ScheduledTriggerExecutor extends TriggerExecutor {
   Duration lapse;
 
@@ -235,17 +261,57 @@ class ScheduledTriggerExecutor extends TriggerExecutor {
   }
 }
 
+/// Executes a [RecurrentScheduledTrigger].
+///
+/// TODO : implement RecurrentScheduledTriggerExecutor.
 class RecurrentScheduledTriggerExecutor extends TriggerExecutor {
   RecurrentScheduledTriggerExecutor(RecurrentScheduledTrigger trigger) : super(trigger);
   Future onStart() async {}
 }
 
+/// Executes a [SamplingEventTrigger] based on the specified
+/// [SamplingEventTrigger.measureType] and [SamplingEventTrigger.resumeCondition].
 class SamplingEventTriggerExecutor extends TriggerExecutor {
   SamplingEventTriggerExecutor(SamplingEventTrigger trigger) : super(trigger);
-  Future onStart() async {}
+  Future onStart() async {
+    // first start all tasks, but pause them
+    await _startAllTasks();
+    this.pause();
+
+    SamplingEventTrigger eventTrigger = trigger as SamplingEventTrigger;
+    // listen for event of the specified type
+    ProbeRegistry.lookup(eventTrigger.measureType.name).events.listen((datum) {
+      if ((eventTrigger.resumeCondition == null) || (datum == eventTrigger?.resumeCondition)) {
+        this.resume();
+      }
+      if (datum == eventTrigger?.pauseCondition) {
+        this.pause();
+      }
+    });
+  }
 }
 
-// ---------------------------- TaskExecutor -------------------------------------------------------------
+/// Executes a [ConditionalSamplingEventTrigger] based on the specified
+/// [ConditionalSamplingEventTrigger.measureType] and [ConditionalSamplingEventTrigger.condition].
+class ConditionalSamplingEventTriggerExecutor extends TriggerExecutor {
+  ConditionalSamplingEventTriggerExecutor(ConditionalSamplingEventTrigger trigger) : super(trigger);
+  Future onStart() async {
+    // first start all tasks, but pause them
+    await _startAllTasks();
+    this.pause();
+
+    ConditionalSamplingEventTrigger eventTrigger = trigger as ConditionalSamplingEventTrigger;
+    // listen for event of the specified type
+    ProbeRegistry.lookup(eventTrigger.measureType.name).events.listen((datum) {
+      if (eventTrigger.resumeCondition(datum)) this.resume();
+      if (eventTrigger.pauseCondition(datum)) this.pause();
+    });
+  }
+}
+
+// ---------------------------------------------------------------------------------------------------------
+// TASK EXECUTORS
+// ---------------------------------------------------------------------------------------------------------
 
 /// The [TaskExecutor] is responsible for executing a [Task] in the [Study].
 /// For each task it looks up appropriate [Probe]s to collect data.

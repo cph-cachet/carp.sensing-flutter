@@ -132,6 +132,19 @@ class MeasureType extends Serializable {
   Map<String, dynamic> toJson() => _$MeasureTypeToJson(this);
 
   String toString() => "$namespace.$name";
+
+  bool operator ==(other) {
+    if (other is! MeasureType) return false;
+    return (other.namespace == namespace && other.name == name);
+  }
+
+  // taken from https://dart.dev/guides/libraries/library-tour#implementing-map-keys
+  int get hashCode {
+    int result = 17;
+    result = 37 * result + namespace.hashCode;
+    result = 37 * result + name.hashCode;
+    return result;
+  }
 }
 
 /// A Listener that can listen on changes to a [Measure].

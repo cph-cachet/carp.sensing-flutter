@@ -145,6 +145,19 @@
               "type": {
                 "c__": "MeasureType",
                 "namespace": "carp",
+                "name": "wifi"
+              },
+              "name": "Wifi network names (SSID / BSSID)",
+              "enabled": true,
+              "configuration": {},
+              "frequency": 60000,
+              "duration": 5000
+            },
+            {
+              "c__": "PeriodicMeasure",
+              "type": {
+                "c__": "MeasureType",
+                "namespace": "carp",
                 "name": "apps"
               },
               "name": "Installed Apps",

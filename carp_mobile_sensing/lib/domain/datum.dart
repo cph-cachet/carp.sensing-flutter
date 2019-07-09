@@ -40,6 +40,12 @@ class CARPDatum extends Datum {
 
   factory CARPDatum.fromJson(Map<String, dynamic> json) => _$CARPDatumFromJson(json);
   Map<String, dynamic> toJson() => _$CARPDatumToJson(this);
+
+//  bool operator ==(other) {
+//    // TODO: implement ==
+//    return super.==(other);
+//  }
+
 }
 
 /// A very simple [Datum] that only holds a string datum object.

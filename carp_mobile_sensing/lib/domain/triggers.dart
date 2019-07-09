@@ -6,7 +6,7 @@
  */
 part of domain;
 
-/// A [Trigger] is a specification of any condition which starts or stops [Task]s at
+/// A [Trigger] is a specification of any condition which starts and stops [Task]s at
 /// certain points in time when the condition applies. The condition can either
 /// be time-bound, based on data streams, initiated by a user of the platform,
 /// or a combination of these.
@@ -29,7 +29,7 @@ class Trigger extends Serializable {
   Map<String, dynamic> toJson() => _$TriggerToJson(this);
 }
 
-/// A trigger that starts sampling immediately.
+/// A trigger that starts sampling immediately and never stops.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ImmediateTrigger extends Trigger {
   ImmediateTrigger() : super();
@@ -40,7 +40,37 @@ class ImmediateTrigger extends Trigger {
   Map<String, dynamic> toJson() => _$ImmediateTriggerToJson(this);
 }
 
+/// A trigger that can be started manually by calling the [resume] method
+/// and paused by calling the [pause] method.
+///
+/// Note that sampling continues until it is manually paused.
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+class ManualTrigger extends Trigger {
+  ManualTrigger() : super();
+
+  ManualTriggerExecutor executor;
+
+  /// Called when data sampling in this [Trigger] is to be resumed (started).
+  ///
+  /// Starting a trigger implies that all [Task]s in this trigger is started,
+  /// which again implies that all [Measure]s in these tasks are started.
+  /// Therefore, all measures to be started should be 'bundled' into this trigger.
+  void resume() => executor?.resume();
+
+  /// Called when data sampling in this [Trigger] is to pause (stop).
+  ///
+  /// Stopping a trigger implies that all [Task]s in this trigger is paused,
+  /// which again implies that all [Measure]s in these tasks are paused.
+  void pause() => executor?.pause();
+
+  static Function get fromJsonFunction => _$ManualTriggerFromJson;
+  factory ManualTrigger.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$ManualTriggerToJson(this);
+}
+
 /// A trigger that delays sampling for [delay] milliseconds and then starts sampling.
+/// Never stops sampling once started.
 ///
 /// The delay is measured from the start of the overall [Study].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
@@ -93,6 +123,7 @@ class ScheduledTrigger extends Trigger {
 enum RecurrentType { daily, weekly, monthly, yearly }
 
 /// A trigger that resume/pause sampling based on a recurrent scheduled date and time.
+/// Stops / pause after the specified [duration].
 ///
 /// Supports daily, weekly, monthly and yearly recurrences.
 /// TODO - provide examples.
@@ -105,10 +136,10 @@ class RecurrentScheduledTrigger extends Trigger {
   /// The type of recurrence - daily, weekly, monthly, yearly
   RecurrentType type;
 
-  /// Start time and date. If [null], the trigger starts immediately.
+  /// Start time and date. If [null], the trigger starts sampling immediately.
   DateTime start;
 
-  /// End time and date. If [null], this trigger runs forever.
+  /// End time and date. If [null], this trigger keeps resuming sampling forever.
   DateTime end;
 
   /// Separation between recurrences.
@@ -149,7 +180,21 @@ class RecurrentScheduledTrigger extends Trigger {
   /// Follows the [DateTime] standards, i.e. possible values are 1..12 counting from the start of a year.
   int monthOfYear;
 
-  RecurrentScheduledTrigger([this.type]) : super();
+  /// The duration (until paused) of the the sampling in milliseconds.
+  int duration = 1000; // default is one second
+
+  RecurrentScheduledTrigger(
+      {this.type,
+      this.start,
+      this.end,
+      this.separationCount,
+      this.maxNumberOfSampling,
+      this.dayOfWeek,
+      this.weekOfMonth,
+      this.dayOfMonth,
+      this.duration = 1000})
+      : assert(duration != null),
+        super();
 
   static Function get fromJsonFunction => _$RecurrentScheduledTriggerFromJson;
   factory RecurrentScheduledTrigger.fromJson(Map<String, dynamic> json) =>
@@ -157,29 +202,61 @@ class RecurrentScheduledTrigger extends Trigger {
   Map<String, dynamic> toJson() => _$RecurrentScheduledTriggerToJson(this);
 }
 
-/// Takes a [Datum] from a sampling stream and evaluates if an event has occurred.
-/// Returns [true] if the event has occurred, [false] otherwise.
-//@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-typedef EventConditionEvaluator = bool Function(Datum datum);
-
-/// A trigger that resume sampling when some sampling event occurs.
+/// A trigger that resume and pause sampling when some (other) sampling event occurs.
 ///
-/// For example, if [measureType] is `carp.geofence` the [condition] can be `{'DTU','ENTER'}`
+/// For example, if [measureType] is `carp.geofence` the [resumeCondition] can be `{'DTU','ENTER'}`
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class SamplingEventTrigger extends Trigger {
-  SamplingEventTrigger([this.measureType, this.condition]) : super();
+  SamplingEventTrigger({this.measureType, this.resumeCondition, this.pauseCondition}) : super();
 
   /// The [MeasureType] of the event to look for.
+  ///
+  /// If [resumeCondition] is null, sampling will be triggered for all events of this type.
   MeasureType measureType;
 
-  /// The [EventConditionEvaluator] function evaluating if the event condition is meet.
-  //EventConditionEvaluator condition;
+  /// The [Datum] specifying a specific sampling value to compare with for resuming this trigger
+  ///
+  /// When comparing, the `==` operator is used. Hence, the sampled datum and
+  /// this datum must be equal (`==`) in order to start sampling based on an event.
+  /// Note that the `==` operator can be overwritten in application-specific [Datum]s
+  /// to support this.
+  ///
+  /// If [resumeCondition] is null, sampling will be triggered / resumed on every sampling
+  /// event that matches the specified [measureType].
+  Datum resumeCondition;
 
-  /// The [EventConditionEvaluator] function evaluating if the event condition is meet.
-  Datum condition;
+  /// The [Datum] specifying a specific sampling value to compare with for pausing this trigger
+  Datum pauseCondition;
 
   static Function get fromJsonFunction => _$SamplingEventTriggerFromJson;
   factory SamplingEventTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$SamplingEventTriggerToJson(this);
+}
+
+/// Takes a [Datum] from a sampling stream and evaluates if an event has occurred.
+/// Returns [true] if the event has occurred, [false] otherwise.
+typedef EventConditionEvaluator = bool Function(Datum datum);
+
+/// A trigger that resume sampling when some (other) sampling event occurs and
+/// a application-specific [condition] is meet.
+///
+/// In contrast to other [Trigger]s, this trigger cannot be de/serialized from/to JSON.
+/// This implies that if can not be retrieved as part of a [Study] from a [StudyManager]
+/// since it rely on specifying a Dart-specific function as the [EventConditionEvaluator]
+/// method. Hence, this trigger is mostly useful when creating a [Study] directly in the app
+/// using Dart code.
+///
+/// If you need to de/serialize this trigger, use the [SamplingEventTrigger] instead.
+class ConditionalSamplingEventTrigger extends Trigger {
+  ConditionalSamplingEventTrigger({this.measureType, this.resumeCondition, this.pauseCondition}) : super();
+
+  /// The [MeasureType] of the event to look for.
+  MeasureType measureType;
+
+  /// The [EventConditionEvaluator] function evaluating if the event condition is meet for resuming this trigger
+  EventConditionEvaluator resumeCondition;
+
+  /// The [EventConditionEvaluator] function evaluating if the event condition is meet for pausing this trigger
+  EventConditionEvaluator pauseCondition;
 }

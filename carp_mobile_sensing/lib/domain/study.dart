@@ -9,11 +9,14 @@ part of domain;
 
 /// The [Study] holds information about the study to be performed on this device.
 ///
-/// A [Study] specify a list of [Task]s, which again consists of a list of [Measure]s.
+/// A [Study] specify a set of [Trigger]s, each consisting of a set of [Task]s,
+/// which again consists of a list of [Measure]s.
+///
+///   `Study---*Trigger---*Task---*Measure`
 ///
 /// A study may be fetched in a [StudyManager] who knows how to fetch a study protocol for this device.
-/// A study is executes by a [StudyManager]. Data from the study is uploaded to the specified [DataEndPoint]
-/// in the specified [dataFormat].
+/// A study is controlled and executed by a [StudyController].
+/// Data from the study is uploaded to the specified [DataEndPoint] in the specified [dataFormat].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class Study extends Serializable {
   /// The id of this [Study].

@@ -9,6 +9,7 @@ part of domain;
 
 /// A [Task] holds information about each task to be triggered by a [Trigger] as part of a [Study].
 /// Each [Task] holds a list of [Measure]s to be done as part of this task.
+/// A [Task] is hence merely an aggregation of [Measure]s.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class Task extends Serializable {
   static int _counter = 0;

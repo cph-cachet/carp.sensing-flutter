@@ -116,35 +116,53 @@ void main() {
               .getMeasureList([AppsSamplingPackage.APP_USAGE, ConnectivitySamplingPackage.BLUETOOTH]));
 
     study_3.addTriggerTask(
-        RecurrentScheduledTrigger(RecurrentType.daily)
-          ..start = DateTime(0, 1, 1, 13, 30), // collect every day at 13:30.
+        RecurrentScheduledTrigger(
+            type: RecurrentType.daily, start: DateTime(0, 1, 1, 13, 30)), // collect every day at 13:30.
         Task('Sensing Task #1')..measures = SamplingSchema.common().getMeasureList([DeviceSamplingPackage.MEMORY]));
 
     study_3.addTriggerTask(
-        RecurrentScheduledTrigger(RecurrentType.daily)
-          ..start = DateTime(0, 1, 1, 13, 30)
-          ..separationCount = 1, // collect every other day at 13:30.
+        RecurrentScheduledTrigger(
+            type: RecurrentType.daily,
+            start: DateTime(0, 1, 1, 13, 30),
+            separationCount: 1), // collect every other day at 13:30.
         Task('Sensing Task #1')
           ..measures = SamplingSchema.common()
               .getMeasureList([AppsSamplingPackage.APPS, ConnectivitySamplingPackage.CONNECTIVITY]));
 
     study_3.addTriggerTask(
-        RecurrentScheduledTrigger(RecurrentType.monthly)
-          ..start = DateTime(0, 1, 1, 13, 30)
-          ..weekOfMonth = 2
-          ..dayOfWeek = DateTime.monday, // collect every monday in the 2nd week of the month at 13:30.
+        RecurrentScheduledTrigger(
+            type: RecurrentType.monthly,
+            start: DateTime(0, 1, 1, 13, 30),
+            weekOfMonth: 2,
+            dayOfWeek: DateTime.monday), // collect every monday in the 2nd week of the month at 13:30.
         Task('Sensing Task #1')
           ..measures = SamplingSchema.common()
               .getMeasureList([AppsSamplingPackage.APPS, ConnectivitySamplingPackage.CONNECTIVITY]));
 
     study_3.addTriggerTask(
-        RecurrentScheduledTrigger(RecurrentType.monthly)
-          ..start = DateTime(0, 1, 1, 15, 00)
-          ..separationCount = 1
-          ..dayOfMonth = 24, // collect every second month at the 24th at 15:00.
+        RecurrentScheduledTrigger(
+            type: RecurrentType.monthly,
+            start: DateTime(0, 1, 1, 15, 00),
+            separationCount: 1,
+            dayOfMonth: 24), // collect every second month at the 24th at 15:00.
         Task('Sensing Task #1')
           ..measures = SamplingSchema.common()
               .getMeasureList([AppsSamplingPackage.APPS, ConnectivitySamplingPackage.CONNECTIVITY]));
+
+    // when entering the 'wifi.bardram.net' WIFI network, start sampling bluetooth devices
+    study_3.addTriggerTask(
+        SamplingEventTrigger(
+            measureType: MeasureType(NameSpace.CARP, ConnectivitySamplingPackage.WIFI),
+            resumeCondition: WifiDatum()..ssid = 'wifi.bardram.net'),
+        Task('Sensing Task #1')
+          ..measures = SamplingSchema.common().getMeasureList([ConnectivitySamplingPackage.BLUETOOTH]));
+
+    study_3.addTriggerTask(
+        ConditionalSamplingEventTrigger(
+            measureType: MeasureType(NameSpace.CARP, ConnectivitySamplingPackage.WIFI),
+            resumeCondition: (datum) => (datum as WifiDatum).ssid == 'wifi.bardram.net'),
+        Task('Sensing Task #1')
+          ..measures = SamplingSchema.common().getMeasureList([ConnectivitySamplingPackage.BLUETOOTH]));
 
     final studyJson = _encode(study_3);
 
