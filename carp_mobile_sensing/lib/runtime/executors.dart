@@ -107,7 +107,6 @@ class StudyExecutor extends Executor {
       _group.add(executor.events);
 
       executors.add(executor);
-      executor._studyExecutor = this;
       executor.initialize(Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR)));
       executor.start();
     }

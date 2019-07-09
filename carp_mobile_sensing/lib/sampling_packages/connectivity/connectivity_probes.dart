@@ -31,7 +31,6 @@ class WifiProbe extends PeriodicDatumProbe {
 
 // This probe requests access to location PERMISSIONS (on Android). Don't ask why.....
 // TODO - implement request for getting permission.
-// TODO - need to reimplement this probe -- taking into consideration if BT is available and only start scans when asked...
 
 /// The [BluetoothProbe] scans for nearby and visible Bluetooth devices and collect
 /// a [BluetoothDatum] for each. Uses a [PeriodicMeasure] for configuration the
@@ -39,6 +38,21 @@ class WifiProbe extends PeriodicDatumProbe {
 class BluetoothProbe extends PeriodicStreamProbe {
   /// Default timeout for bluetooth scan - 2 secs
   static const DEFAULT_TIMEOUT = 2 * 1000;
+
+  void onStart() {
+    // checking if bluetooth is available and turned on before starting the probe.
+    FlutterBlue.instance.isAvailable.then((available) {
+      if (available)
+        FlutterBlue.instance.isOn.then((on) {
+          if (on)
+            super.onStart();
+          else
+            this.stop();
+        });
+      else
+        this.stop();
+    });
+  }
 
   Stream<Datum> get stream => FlutterBlue.instance
       .scan(scanMode: ScanMode.lowLatency, timeout: duration ?? Duration(milliseconds: DEFAULT_TIMEOUT))

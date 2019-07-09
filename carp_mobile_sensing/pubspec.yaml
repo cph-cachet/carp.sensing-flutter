@@ -25,13 +25,13 @@ dependencies:
   sensors: ^0.4.0
   battery: ^0.3.0
   connectivity: ^0.4.0
-  flutter_blue: ^0.5.0    # For bluetooth scan - v.0.5.0 supports AndroidX
+  flutter_blue: ^0.6.0    # For bluetooth scan - v.0.5.0 supports AndroidX
   stats: ^0.2.0           # For calculating statistics, ex LightProbe
 
   # the CACHET plugins
   pedometer: ^0.0.5       # Get the step count from local OS
   light: ^0.1.0           # Light sensor over platform channel
-  device_apps: ^1.0.0     # Device installed apps over platform channel
+  device_apps: ^1.0.8     # Device installed apps over platform channel
   screen_state: ^0.1.0    # Screen LOCK/ON/OFF
   app_usage: ^0.1.0       # App-usage statistics
 

@@ -12,11 +12,6 @@ class AppsSamplingPackage implements SamplingPackage {
   Probe create(String type) {
     switch (type) {
       case APPS:
-        // there is an error in the device_apps plugin
-        // see https://github.com/g123k/flutter_plugin_device_apps/issues/12
-        // therefore the APPS probe is disabled right now.
-        // TODO - add the AppsProbe once the plugin is fixed.
-        //return null;
         return AppsProbe();
       case APP_USAGE:
         return AppUsageProbe();
