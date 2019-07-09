@@ -139,8 +139,6 @@ abstract class TriggerExecutor extends Executor {
   Trigger _trigger;
   Trigger get trigger => _trigger;
 
-  StudyExecutor _studyExecutor;
-
   TriggerExecutor(Trigger trigger)
       : assert(trigger != null, "Cannot initiate a TriggerExecutor without a Trigger."),
         super() {
@@ -342,7 +340,6 @@ class TaskExecutor extends Executor {
         _group.add(probe.events);
         probe.initialize(measure);
 
-        // start the probe
         probe.start();
       } else {
         print('A probe for measure type ${measure.type.name} could not be created.');

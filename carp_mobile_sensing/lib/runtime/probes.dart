@@ -313,7 +313,7 @@ class _StoppedState extends _AbstractProbeState implements _ProbeStateMachine {
 //                                SPECIALIZED PROBES
 //---------------------------------------------------------------------------------------
 
-/// A [DatumProbe] can collect one piece of [Datum], send its to its stream, and then stops.
+/// A [DatumProbe] can collect one piece of [Datum], send its to its [events] stream, and then stops.
 ///
 /// The [Datum] to be collected should be implemented in the [getDatum] method.
 abstract class DatumProbe extends AbstractProbe {
