@@ -1,3 +1,9 @@
+## 0.2.8
+* query interface for documents
+* add participant to study by invite
+* add researcher to study by invite
+* changed create user to reflect the name of the backend endpoint
+
 ## 0.2.7
 * update of GET user endpoint
 
