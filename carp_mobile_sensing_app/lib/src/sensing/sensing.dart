@@ -34,13 +34,14 @@ class Sensing {
     study = await mock.getStudy(testStudyId);
 
     // Create a Study Controller that can manage this study, initialize it, and start it.
-    controller = StudyController(study);
+    //controller = StudyController(study);
+    controller = StudyController(study, samplingSchema: aware); // a controller using the AWARE test schema
     //controller = StudyController(study, privacySchemaName: PrivacySchema.DEFAULT); // a controller w. privacy
     await controller.initialize();
     controller.start();
 
     // listening on all data events from the study and print it (for debugging purpose).
-    controller.events.forEach(print);
+    //controller.events.forEach(print);
 
     //ProbeRegistry.probes.forEach((key, probe) => probe.stateEvents.forEach(print));
 
@@ -72,69 +73,13 @@ class StudyMock implements StudyManager {
   Study _study;
   Future<Study> getStudy(String studyId) async {
     if (_study == null) {
-      _study = Study('DF#4dD-app', username)
-        ..name = 'CARP Mobile Sensing - default configuration'
+      _study = Study('DF#4dD-aware', username)
+        ..name = 'CARP Mobile Sensing - AWARE configuration'
         ..description =
-            'This is a long description of a Study which can run forever and take up a lot of space and drain you battery and you have to agree to an informed consent which - by all standards - do not comply to any legal framework....'
+            'This Study is a technical evaluation of the CARP Mobile Sensing framework. It simulates the AWARE configuration in order to compare data sampling and battery drain.'
         ..dataEndPoint = getDataEndpoint(DataEndPointType.FILE)
-        //..dataFormat = NameSpace.OMH
-        ..addTriggerTask(ImmediateTrigger(),
-            Task()..measures = SamplingSchema.debug(namespace: NameSpace.CARP).measures.values.toList());
-
-//        ..addTask(Task()
-//          ..measures = SamplingSchema.common().getMeasureList(
-//              [DataType.TEXT_MESSAGE_LOG, DataType.LOCATION, DataType.ACTIVITY], namespace: NameSpace.CARP)
-//          ..addMeasure(CalendarMeasure(MeasureType(NameSpace.CARP, CommunicationSamplingPackage.CALENDAR),
-//              name: "Calendar", frequency: 11 * 1000, daysBack: 10, daysFuture: 10))
-//          ..addMeasure(
-//              WeatherMeasure(MeasureType(NameSpace.CARP, DataType.WEATHER), name: "Weather", frequency: 11 * 1000)));
-
-//    ..addTask(Task()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
-
-      // adding the measures to two separate tasks, while also adding a new light measure to the 2nd task
-//      _study.addTask(Task('Activity Sensing Task #1')
-//        ..measures = SamplingSchema.common()
-//            .getMeasureList([DataType.PEDOMETER, DataType.LOCATION, DataType.ACTIVITY, DataType.WEATHER]));
-//      _study.addTask(Task('Phone Sensing Task #2')
-//        ..measures = SamplingSchema.common().getMeasureList([DataType.SCREEN, DataType.NOISE])
-//        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.LIGHT),
-//            name: "Ambient Light", frequency: 11 * 1000, duration: 700)));
-
-      //_study.tasks.forEach((task) => task.measures.forEach((measure) => measure.enabled = true));
-
-      // adding a set of specific measures from the `common` sampling schema to one no-name task
-//      _study.addTask(Task()
-//        ..measures = SamplingSchema.common().getMeasureList(
-//            [DataType.PEDOMETER, DataType.LOCATION, DataType.ACTIVITY, DataType.WEATHER],
-//            namespace: NameSpace.CARP));
-
-      // OLD stuff below
-
-//      _study = new Study(studyId, username, name: "Test study #1");
-
-      // specify the [DataEndPoint] for this study.
-      //    _study.dataEndPoint = getDataEndpoint(DataEndPointType.PRINT);
-
-//      Task task = Task('Task #1');
-//
-//      DataType.all.forEach((type) {
-//        task.addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, type)));
-//      });
-//
-//      _study.addTask(task);
-
-//      _study.tasks.add(sensorTask);
-//      _study.tasks.add(pedometerTask);
-//      _study.tasks.add(hardwareTask);
-//      _study.tasks.add(appTask);
-//      _study.tasks.add(connectivityTask);
-//      _study.tasks.add(commTask);
-//      _study.tasks.add(locationTask);
-//      // _study.tasks.add(audioTask);
-//      _study.tasks.add(contextTask);
-//      _study.tasks.add(noiseTask);
-//      _study.tasks.add(appUsageTask);
-//      _study.tasks.add(environmentTask);
+        ..addTriggerTask(
+            ImmediateTrigger(), Task()..measures = aware.measures.values.toList()); // add all measures (for now)
     }
     return _study;
   }
@@ -191,191 +136,90 @@ class StudyMock implements StudyManager {
 //    return _firebaseEndPoint;
 //  }
 
-  Task _appTask;
-  Task _appUsageTask;
-  Task _audioTask;
-  Task _commTask;
-  Task _connectivityTask;
-  Task _contextTask;
-  Task _environmentTask;
-  Task _hardwareTask;
-  Task _locationTask;
-  Task _noiseTask;
-  Task _pedometerTask;
-  Task _sensorTask;
+}
 
-  /// A task collecting app information about installed apps on the device
-  Task get appTask {
-    if (_appTask == null)
-      _appTask = Task("Application Task")
-        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, AppsSamplingPackage.APPS),
-            name: "Installed Apps", frequency: 5 * 1000));
-
-    return _appTask;
-  }
-
-  /// A task collecting app information about installed apps on the device
-  Task get appUsageTask {
-    if (_appUsageTask == null) {
-      _appUsageTask = Task("AppUsage Task")
-        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, AppsSamplingPackage.APP_USAGE),
-                name: "App Foreground Usage Time", frequency: 10 * 1000, duration: 60 * 60 * 1000) // go back one hour
-            );
-    }
-    return _appUsageTask;
-  }
-
-  /// A task collecting audio data as files.
-  Task get audioTask {
-    if (_audioTask == null) {
-      _audioTask = Task("Audio Task")
-        ..addMeasure(AudioMeasure(MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO),
-            name: "Ambient Audio",
-            frequency: 10 * 1000, // once every 10 sec
-            duration: 2 * 1000, // record 2 sec
-            studyId: _study.id));
-    }
-    return _audioTask;
-  }
-
-  /// A task collecting information about communication:
-  /// - phone log
-  /// - messages (sms) log
-  /// - an event every time a sms is received
-  ///
-  /// Works only on Android.
-  Task get commTask {
-    if (_commTask == null) {
-      _commTask = Task("Communication Task")
-        ..addMeasure(PhoneLogMeasure(MeasureType(NameSpace.CARP, CommunicationSamplingPackage.PHONE_LOG),
-            name: "Phone Log", days: 10)) // 10 days of log
-        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, CommunicationSamplingPackage.TEXT_MESSAGE_LOG),
-            name: "SMS Message Log", frequency: 6 * 1000 // once every 10 sec
-            ))
-        ..addMeasure(Measure(MeasureType(NameSpace.CARP, CommunicationSamplingPackage.TEXT_MESSAGE),
-            name: "SMS Text Messaging"));
-    }
-    return _commTask;
-  }
-
-  /// A task with two types of connectivity measures:
-  /// - connectivity (wifi, ...)
-  /// - nearby bluetooth devices
-  ///
-  /// PERMISSIONS
-  /// - location related to Bluetooth
-  Task get connectivityTask {
-    if (_connectivityTask == null) {
-      _connectivityTask = Task("Connectivity Task")
-            ..addMeasure(
-                Measure(MeasureType(NameSpace.CARP, ConnectivitySamplingPackage.CONNECTIVITY), name: "Connectivity"))
-//        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.BLUETOOTH),
-//            name: "Nearby Bluetooth Devices",
-//            frequency: 1 * 10 * 1000, // every minute
-//            duration: 2 * 1000 // scan for 2 secs.
-//            ))
-          ;
-    }
-    return _connectivityTask;
-  }
-
-  /// A task collecting context information, such as activity.
-  Task get contextTask {
-    if (_contextTask == null) {
-      _contextTask = Task("Context Task")
-        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, ContextSamplingPackage.ACTIVITY),
-            name: "Activity Recognition"));
-    }
-    return _contextTask;
-  }
-
-  /// A task collecting environment information, such as the weather.
-  Task get environmentTask {
-    if (_environmentTask == null) {
-      _environmentTask = Task("Environment Task")
-        ..addMeasure(WeatherMeasure(MeasureType(NameSpace.CARP, ContextSamplingPackage.WEATHER),
-            name: "Local Weather",
-            frequency: 1 * 30 * 1000, // once every minute
-            apiKey: '12b6e28582eb9298577c734a31ba9f4f'));
-    }
-    return _environmentTask;
-  }
-
-  /// A task with three types of hardware measures:
-  /// - free memory
-  /// - battery
-  /// - screen activity (lock, on, off)
-  Task get hardwareTask {
-    if (_hardwareTask == null) {
-      _hardwareTask = Task("Hardware Task")
-        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DeviceSamplingPackage.MEMORY),
-            name: "Availabel Memory", frequency: 10 * 1000)) // 10 days of log
-        ..addMeasure(Measure(MeasureType(NameSpace.CARP, DeviceSamplingPackage.BATTERY), name: "Battery"))
-        ..addMeasure(Measure(MeasureType(NameSpace.CARP, DeviceSamplingPackage.SCREEN), name: "Screen Activity"));
-    }
-    return _hardwareTask;
-  }
-
-  /// A task collecting location information.
-  Task get locationTask {
-    if (_locationTask == null) {
-      _locationTask = Task("Location Task")
-        ..addMeasure(Measure(MeasureType(NameSpace.CARP, ContextSamplingPackage.LOCATION))..name = "Location");
-    }
-    return _locationTask;
-  }
-
-  /// A task sensing noise.
-  Task get noiseTask {
-    if (_noiseTask == null) {
-      _noiseTask = Task("Noise Task")
-        ..addMeasure(NoiseMeasure(MeasureType(NameSpace.CARP, AudioSamplingPackage.NOISE),
-            name: "Ambient Noise",
-            frequency: 30 * 1000, // How often to start a measure
-            duration: 2 * 1000, // Window size
-            samplingRate: 400 // Sampling rate at 400 ms
-            ));
-    }
-    return _noiseTask;
-  }
-
-  /// A task collecting pedometer (step count) data on a regular basis.
-  Task get pedometerTask {
-    if (_pedometerTask == null) {
-      _pedometerTask = Task("Pedometer Task")
-        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.PEDOMETER),
-            name: "Pedometer (Step Count)", frequency: 1 * 20 * 1000 // how often to collect step count
-            ));
-    }
-    return _pedometerTask;
-  }
-
-  /// A task collecting sensor data from four sensors:
-  /// - the accelerometer
-  /// - the gyroscope
-  /// - the light sensor
-  ///
-  /// Note that these sensors collects *a lot of data* and should be used *very* carefully.
-  Task get sensorTask {
-    if (_sensorTask == null) {
-      _sensorTask = Task("Sensor Task")
-        ..addMeasure(PeriodicMeasure(
+SamplingSchema get aware => SamplingSchema()
+  ..type = SamplingSchemaType.NORMAL
+  ..name = 'AWARE equivalent sampling schema'
+  ..powerAware = false
+  ..measures.addEntries([
+    MapEntry(
+        SensorSamplingPackage.ACCELEROMETER,
+        PeriodicMeasure(
           MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
           name: "Accelerometer",
-          frequency: 8 * 1000, // How often to start a measure
-          duration: 20, // Window size
-        ))
-        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
+          frequency: 200, // How often to start a measure
+          duration: 2, // Window size
+        )),
+    MapEntry(
+        SensorSamplingPackage.GYROSCOPE,
+        PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
             name: "Gyroscope",
-            frequency: 9 * 1000, // How often to start a measure
-            duration: 100 // Window size
-            ))
-        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
-                name: "Ambient Light",
-                frequency: 11 * 1000, // How often to start a measure
-                duration: 700) // Window size
-            );
-    }
-    return _sensorTask;
-  }
-}
+            frequency: 200, // How often to start a measure
+            duration: 2 // Window size
+            )),
+    MapEntry(
+        SensorSamplingPackage.LIGHT,
+        PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
+            name: "Ambient Light",
+            frequency: 200, // How often to start a measure
+            duration: 10 // Window size
+            )),
+    MapEntry(
+        AppsSamplingPackage.APPS,
+        PeriodicMeasure(
+          MeasureType(NameSpace.CARP, AppsSamplingPackage.APPS),
+          // collect list of installed apps once pr. day
+          name: 'Installed Apps',
+          frequency: 24 * 60 * 60 * 1000,
+        )),
+    MapEntry(
+        AppsSamplingPackage.APP_USAGE,
+        PeriodicMeasure(MeasureType(NameSpace.CARP, AppsSamplingPackage.APP_USAGE),
+            // collect app usage every 10 min for the last 10 min
+            name: 'Apps Usage',
+            frequency: 10 * 60 * 1000,
+            duration: 10 * 60 * 1000)),
+    MapEntry(DeviceSamplingPackage.BATTERY,
+        Measure(MeasureType(NameSpace.CARP, DeviceSamplingPackage.BATTERY), name: 'Battery')),
+    MapEntry(DeviceSamplingPackage.SCREEN,
+        Measure(MeasureType(NameSpace.CARP, DeviceSamplingPackage.SCREEN), name: 'Screen Activity (lock/on/off)')),
+    MapEntry(
+        ConnectivitySamplingPackage.BLUETOOTH,
+        PeriodicMeasure(MeasureType(NameSpace.CARP, ConnectivitySamplingPackage.BLUETOOTH),
+            name: 'Nearby Devices (Bluetooth Scan)', frequency: 60 * 1000, duration: 3 * 1000)),
+    MapEntry(
+        ConnectivitySamplingPackage.WIFI,
+        PeriodicMeasure(MeasureType(NameSpace.CARP, ConnectivitySamplingPackage.WIFI),
+            name: 'Wifi network names (SSID / BSSID)', frequency: 60 * 1000, duration: 5 * 1000)),
+    MapEntry(
+        CommunicationSamplingPackage.PHONE_LOG,
+        PhoneLogMeasure(MeasureType(NameSpace.CARP, CommunicationSamplingPackage.PHONE_LOG),
+            // collect phone log once pr. day
+            name: 'Phone Log',
+            //frequency: 60 * 1000,
+            frequency: 1 * 24 * 60 * 60 * 1000,
+            days: 2)),
+    MapEntry(
+        CommunicationSamplingPackage.TEXT_MESSAGE_LOG,
+        PeriodicMeasure(
+          MeasureType(NameSpace.CARP, CommunicationSamplingPackage.TEXT_MESSAGE_LOG),
+          // collect text messages once pr. day
+          name: 'Text Message (SMS) Log',
+          frequency: 1 * 24 * 60 * 60 * 1000,
+          //frequency: 60 * 1000
+        )),
+    MapEntry(CommunicationSamplingPackage.TEXT_MESSAGE,
+        Measure(MeasureType(NameSpace.CARP, CommunicationSamplingPackage.TEXT_MESSAGE), name: 'Text Message (SMS)')),
+    MapEntry(ContextSamplingPackage.LOCATION,
+        Measure(MeasureType(NameSpace.CARP, ContextSamplingPackage.LOCATION), name: 'Location')),
+    MapEntry(ContextSamplingPackage.ACTIVITY,
+        Measure(MeasureType(NameSpace.CARP, ContextSamplingPackage.ACTIVITY), name: 'Activity Recognition')),
+    MapEntry(
+        ContextSamplingPackage.WEATHER,
+        WeatherMeasure(MeasureType(NameSpace.CARP, ContextSamplingPackage.WEATHER),
+            // collect local weather once pr. hour
+            name: 'Local Weather',
+            frequency: 60 * 60 * 1000,
+            apiKey: '12b6e28582eb9298577c734a31ba9f4f')),
+  ]);
