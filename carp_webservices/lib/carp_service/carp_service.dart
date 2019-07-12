@@ -59,6 +59,9 @@ class CarpService {
   /// Before this instance can be used, it must be configured using the [configure] method.
   static CarpService get instance => _instance;
 
+  /// Has this service been configured?
+  static bool get isConfigured => (_instance != null);
+
   /// Configure the default instance of the [CarpService].
   static Future<CarpService> configure(CarpApp app) async {
     _instance = new CarpService._(app);

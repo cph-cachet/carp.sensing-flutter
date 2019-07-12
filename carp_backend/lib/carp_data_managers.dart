@@ -17,7 +17,7 @@ class CarpDataManager extends AbstractDataManager implements FileDataManagerList
   bool _initialized = false;
   CarpDataEndPoint carpEndPoint;
   CarpApp _app;
-  CarpUser _user;
+  //CarpUser _user;
 
   FileDataManager fileDataManager;
 
@@ -54,13 +54,14 @@ class CarpDataManager extends AbstractDataManager implements FileDataManagerList
   }
 
   Future<CarpUser> get user async {
-    if (_user == null) {
-      CarpService.configure(await app);
-      _user = await CarpService.instance.authenticate(username: carpEndPoint.email, password: carpEndPoint.password);
-      print("signed in - username: ${_user.username} uid: ${_user.id}");
-      _initialized = true;
+    // check if the CARP webservice has already been configured and the user is logged in.
+    if (!CarpService.isConfigured) await CarpService.configure(await app);
+    if (CarpService.instance.currentUser == null) {
+      await CarpService.instance.authenticate(username: carpEndPoint.email, password: carpEndPoint.password);
+      print("signed in - current user: ${CarpService.instance.currentUser}");
     }
-    return _user;
+    _initialized = true;
+    return CarpService.instance.currentUser;
   }
 
   /// Handle upload of data depending on the specified [CarpUploadMethod].

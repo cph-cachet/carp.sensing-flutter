@@ -60,8 +60,8 @@ class CarpUser {
   Future<OAuthToken> getOAuthToken({bool refresh = false}) async {
     if (CarpService.instance == null)
       throw new CarpServiceException("CARP Service not initialized. Call 'CarpService.configure()' first.");
+    if (_token == null) throw new CarpServiceException("OAuth token is null. Call 'CarpService.authenticate()' first.");
 
-    //print('token : $_token - ${_token.hasExpired}');
     // check if we need to refresh the token.
     if (_token.hasExpired || refresh) {
       _token = await CarpService.instance.refresh();
