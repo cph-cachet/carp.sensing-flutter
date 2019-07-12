@@ -1,3 +1,6 @@
+## 0.2.7
+* update of GET user endpoint
+
 ## 0.2.6
 * rename of collection is now supported
 * refresh token

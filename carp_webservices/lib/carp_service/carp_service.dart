@@ -172,6 +172,9 @@ class CarpService {
   // USERS
   // ---------------------------------------------------------------------------------------------------------
 
+  /// The URL for the authenticated user end point for this [CarpService].
+  String get authUserEndpointUri => "${_app.uri.toString()}/api/auth/user";
+
   /// The URL for the user end point for this [CarpService].
   String get userEndpointUri => "${_app.uri.toString()}/api/users";
 
@@ -186,33 +189,26 @@ class CarpService {
 
   /// Asynchronously gets the CARP profile of the current user.
   Future<CarpUser> getCurrentUserProfile() async {
-    String url = "$userEndpointUri?query=email==${_currentUser.username}";
-
     // GET the user from the CARP web service
-    http.Response response = await http.get(Uri.encodeFull(url), headers: headers);
-
+    http.Response response = await http.get(Uri.encodeFull(authUserEndpointUri), headers: headers);
     int httpStatusCode = response.statusCode;
+    Map<String, dynamic> responseJson = json.decode(response.body);
 
     if (httpStatusCode == 200) {
-      List<dynamic> responseJson = json.decode(response.body);
-      Map<String, dynamic> userJson =
-          json.decode(_encode(responseJson[0])); // pick only the first result (hopefully only one with this email)
-
       return _currentUser
-        ..id = userJson['id']
-        ..fullName = userJson['full_name']
-        ..telephone = userJson['telephone']
-        ..department = userJson['department']
-        ..organization = userJson['organization']
-        ..termsAgreed = DateTime.parse(userJson['terms_agreed'])
-        ..created = DateTime.parse(userJson['created_at']);
+        ..id = responseJson['id']
+        ..email = responseJson['email']
+        ..fullName = responseJson['full_name']
+        ..telephone = responseJson['telephone']
+        ..department = responseJson['department']
+        ..organization = responseJson['organization']
+        ..termsAgreed = DateTime.parse(responseJson['terms_agreed'])
+        ..created = DateTime.parse(responseJson['created_at']);
     }
 
     // All other cases are treated as an error.
-    Map<String, dynamic> errorResponseJson = json.decode(response.body);
-    throw CarpServiceException(errorResponseJson["error"],
-        description: errorResponseJson["error_description"],
-        httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+    throw CarpServiceException(responseJson["error"],
+        description: responseJson["error_description"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
   }
 
   /// Sign out the current user.
