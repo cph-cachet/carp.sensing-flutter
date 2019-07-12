@@ -63,7 +63,7 @@ class CarpUser {
 
     //print('token : $_token - ${_token.hasExpired}');
     // check if we need to refresh the token.
-    if ((_token == null) || _token.hasExpired || refresh) {
+    if (_token.hasExpired || refresh) {
       _token = await CarpService.instance.refresh();
     }
 

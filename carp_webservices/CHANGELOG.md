@@ -1,3 +1,6 @@
+## 0.2.8+1
+* fixed bug in token refresh.
+
 ## 0.2.8
 * query interface for documents
 * add participant to study by invite

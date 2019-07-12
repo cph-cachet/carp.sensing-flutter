@@ -143,7 +143,7 @@ class CarpService {
     return _currentUser..authenticated(token);
   }
 
-  /// Get a new (refreshed) access token for the current user.
+  /// Get a new (refreshed) access token for the current user based on the previously granted refresh token.
   Future<OAuthToken> refresh() async {
     if (_app == null)
       throw new CarpServiceException("CARP Service not initialized. Call 'CarpService.configure()' first.");
