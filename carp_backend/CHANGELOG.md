@@ -1,5 +1,6 @@
 ## 0.3.4+2
 * bug in authentication fixed
+* delete on uploaded support
 
 ## 0.3.4
 * upgrade to `carp_webservices` v.0.2.6

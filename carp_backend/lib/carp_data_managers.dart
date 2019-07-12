@@ -137,9 +137,11 @@ class CarpDataManager extends AbstractDataManager implements FileDataManagerList
         break;
     }
 
-    // then delete the local file.
-    file.delete();
-    print("Local file deleted : ${file.path}");
+    if (carpEndPoint.deleteWhenUploaded) {
+      // then delete the local file.
+      file.delete();
+      print("Local file deleted : ${file.path}");
+    }
   }
 
   Future close() async {

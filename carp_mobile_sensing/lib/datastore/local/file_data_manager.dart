@@ -159,7 +159,7 @@ class FileDataManager extends AbstractDataManager {
     final String _jsonFilePath = flushFile.path;
     String _finalFilePath = _jsonFilePath;
 
-    print("Written JSON  to file '$_jsonFilePath'. Closing and zipping it.");
+    print("Written JSON to file '$_jsonFilePath'. Closing it.");
     // write the closing json ']'
     flushSink.write(']\n');
 

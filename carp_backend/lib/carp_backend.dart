@@ -52,6 +52,11 @@ class CarpDataEndPoint extends FileDataEndPoint {
   /// [collection] hold the name of the collection to store json objects.
   String collection = DEFAULT_COLLECTION;
 
+  /// When uploading to CARP using file in the [CarpUploadMethod.BATCH_DATA_POINT]
+  /// or [CarpUploadMethod.FILE] methods, specifies if the local file on the phone
+  /// should be deleted once uploaded.
+  bool deleteWhenUploaded = true;
+
   /// Creates a [CarpDataEndPoint].
   ///
   /// [uploadMethod] specified the upload method as enumerated in [CarpUploadMethod].
@@ -63,6 +68,7 @@ class CarpDataEndPoint extends FileDataEndPoint {
       this.email,
       this.password,
       this.collection,
+      this.deleteWhenUploaded = true,
       bufferSize = 500 * 1000, // default buffer size = 500 MB
       zip = true, // zip file pr. default
       encrypt = false, // don't encrypt pr. default
