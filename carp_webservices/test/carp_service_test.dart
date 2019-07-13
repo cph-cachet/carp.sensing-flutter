@@ -56,11 +56,8 @@ void main() {
     setUp(() {});
 
     test('- authentication', () async {
-      try {
-        user = await CarpService.instance.authenticate(username: username, password: password);
-      } catch (excp) {
-        print(excp.toString());
-      }
+      user = await CarpService.instance.authenticate(username: username, password: password);
+
       assert(user != null);
       assert(user.token != null);
       assert(user.isAuthenticated);
@@ -70,12 +67,8 @@ void main() {
     });
 
     test('- get user profile', () async {
-      CarpUser new_user;
-      try {
-        new_user = await CarpService.instance.getCurrentUserProfile();
-      } catch (excp) {
-        print(excp.toString());
-      }
+      CarpUser new_user = await CarpService.instance.getCurrentUserProfile();
+
       assert(new_user != null);
 
       print("signed in : $new_user");
@@ -83,14 +76,33 @@ void main() {
     });
 
     test('- create user', () async {
-      CarpUser new_user;
       int id = random.nextInt(1000);
-      try {
-        new_user = await CarpService.instance
-            .createUserWithEmailAndPassword('tester_$id@dtu.dk', 'underbar', fullName: 'CACHET Tester #$id');
-      } catch (excp) {
-        print(excp.toString());
-      }
+      CarpUser new_user =
+          await CarpService.instance.createUser('user_$id@dtu.dk', 'underbar', fullName: 'CACHET User #$id');
+
+      // we expect this call to fail, since we're not authenticated as admin
+      assert(new_user == null);
+
+      print("create  : $new_user");
+      print("   name : ${new_user.fullName}");
+    });
+
+    test('- create participant by invite', () async {
+      int id = random.nextInt(1000);
+      CarpUser new_user = await CarpService.instance
+          .createParticipantByInvite('participant_$id@dtu.dk', 'underbar', fullName: 'CACHET Participant #$id');
+
+      assert(new_user != null);
+
+      print("create  : $new_user");
+      print("   name : ${new_user.fullName}");
+    });
+
+    test('- create researcher by invite', () async {
+      int id = random.nextInt(1000);
+      CarpUser new_user = await CarpService.instance
+          .createResearcherByInvite('researcher_$id@dtu.dk', 'underbar', fullName: 'CACHET Researcher #$id');
+
       assert(new_user != null);
 
       print("create  : $new_user");
@@ -109,12 +121,8 @@ void main() {
     });
 
     test('- authentication with saved token', () async {
-      CarpUser new_user;
-      try {
-        new_user = await CarpService.instance.authenticateWithToken(username: username, token: user.token);
-      } catch (excp) {
-        print(excp.toString());
-      }
+      CarpUser new_user = await CarpService.instance.authenticateWithToken(username: username, token: user.token);
+
       assert(new_user != null);
       assert(new_user.isAuthenticated);
 
@@ -255,6 +263,16 @@ void main() {
       print((newDocument));
       assert(newDocument.id == document.id);
       assert(newDocument.id == documentId);
+    });
+
+    test(' - get document by query', () async {
+      assert(document != null);
+      String query = 'name==test';
+      List<DocumentSnapshot> documents = await CarpService.instance.documentsByQuery(query);
+
+      documents.forEach((document) => print(document));
+
+      assert(documents.length != 0);
     });
 
     test(' - add document in nested collections', () async {

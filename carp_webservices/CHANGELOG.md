@@ -1,3 +1,15 @@
+## 0.2.8+3
+* fixed bug in token refresh.
+
+## 0.2.8
+* query interface for documents
+* add participant to study by invite
+* add researcher to study by invite
+* changed create user to reflect the name of the backend endpoint
+
+## 0.2.7
+* update of GET user endpoint
+
 ## 0.2.6
 * rename of collection is now supported
 * refresh token
