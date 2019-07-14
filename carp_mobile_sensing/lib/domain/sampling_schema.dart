@@ -44,6 +44,9 @@ class SamplingSchema {
   /// A printer-friendly name of this [SamplingSchema].
   String name;
 
+  /// A description of this [SamplingSchema].
+  String description;
+
   /// A map of default [Measure]s for this sampling schema.
   ///
   /// These default measures can be manually populated by

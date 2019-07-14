@@ -11,9 +11,9 @@ dependencies:
   flutter:
     sdk: flutter
   json_annotation: ^2.0.0
-  carp_mobile_sensing: ^0.5.0
+  carp_mobile_sensing: ^0.6.0
   flutter_sound: ^1.4.0   # audio probe, recording audio
-  noise_meter: ^0.0.3     # Measuring noise level
+  noise_meter: ^0.1.0     # Measuring noise level
   path_provider: ^0.5.0
 
 # Overriding carp libraries to use the local copy

@@ -35,7 +35,8 @@ class Sensing {
 
     // Create a Study Controller that can manage this study, initialize it, and start it.
     //controller = StudyController(study);
-    controller = StudyController(study, samplingSchema: aware); // a controller using the AWARE test schema
+    //controller = StudyController(study, samplingSchema: aware); // a controller using the AWARE test schema
+    controller = StudyController(study, samplingSchema: mCerebrum); // a controller using the AWARE test schema
     //controller = StudyController(study, privacySchemaName: PrivacySchema.DEFAULT); // a controller w. privacy
     await controller.initialize();
     controller.start();
@@ -75,11 +76,10 @@ class StudyMock implements StudyManager {
     if (_study == null) {
       _study = Study('DF#4dD-aware', username)
         ..name = 'CARP Mobile Sensing - AWARE configuration'
-        ..description =
-            'This Study is a technical evaluation of the CARP Mobile Sensing framework. It simulates the AWARE configuration in order to compare data sampling and battery drain.'
+        ..description = mCerebrum.description
         ..dataEndPoint = getDataEndpoint(DataEndPointType.FILE)
         ..addTriggerTask(
-            ImmediateTrigger(), Task()..measures = aware.measures.values.toList()); // add all measures (for now)
+            ImmediateTrigger(), Task()..measures = mCerebrum.measures.values.toList()); // add all measures (for now)
     }
     return _study;
   }
@@ -141,6 +141,8 @@ class StudyMock implements StudyManager {
 SamplingSchema get aware => SamplingSchema()
   ..type = SamplingSchemaType.NORMAL
   ..name = 'AWARE equivalent sampling schema'
+  ..description =
+      'This Study is a technical evaluation of the CARP Mobile Sensing framework. It simulates the AWARE configuration in order to compare data sampling and battery drain.'
   ..powerAware = false
   ..measures.addEntries([
     MapEntry(
@@ -222,4 +224,37 @@ SamplingSchema get aware => SamplingSchema()
             name: 'Local Weather',
             frequency: 60 * 60 * 1000,
             apiKey: '12b6e28582eb9298577c734a31ba9f4f')),
+  ]);
+
+SamplingSchema get mCerebrum => SamplingSchema()
+  ..type = SamplingSchemaType.NORMAL
+  ..name = 'mCerebrum and AWARE equivalent sampling schema - high frequency'
+  ..description =
+      'This Study is a technical evaluation of the CARP Mobile Sensing framework. It simulates the mCerebrum power test in the SenSys 2017 paper with high frequency (50Hz) data sampling.'
+  ..powerAware = false
+  ..measures.addEntries([
+    MapEntry(
+        SensorSamplingPackage.ACCELEROMETER,
+        PeriodicMeasure(
+          MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
+          name: "Accelerometer",
+          frequency: 20, // How often to start a measure
+          duration: 1, // Window size
+        )),
+    MapEntry(
+        SensorSamplingPackage.GYROSCOPE,
+        PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
+            name: "Gyroscope",
+            frequency: 20, // How often to start a measure
+            duration: 1 // Window size
+            )),
+    MapEntry(
+        SensorSamplingPackage.LIGHT,
+        PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
+            name: "Ambient Light",
+            frequency: 20, // How often to start a measure
+            duration: 10 // Window size
+            )),
+    MapEntry(ContextSamplingPackage.LOCATION,
+        Measure(MeasureType(NameSpace.CARP, ContextSamplingPackage.LOCATION), name: 'Location')),
   ]);

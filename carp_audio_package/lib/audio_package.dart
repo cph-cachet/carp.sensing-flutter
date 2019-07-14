@@ -28,8 +28,8 @@ class AudioSamplingPackage implements SamplingPackage {
       case AUDIO:
         return AudioProbe();
       case NOISE:
-        // TODO - add link to issue
-        return null;
+        // TODO - is the noise_meter plugin fixed?
+        //return null;
         return NoiseProbe();
       default:
         return null;
