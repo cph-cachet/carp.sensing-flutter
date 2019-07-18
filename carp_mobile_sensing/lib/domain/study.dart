@@ -107,48 +107,14 @@ class DataEndPoint extends Serializable {
   String toString() => type.toString();
 }
 
-/// Specify an endpoint where a file-based [DataManager] can store JSON data as files on the local device.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class FileDataEndPoint extends DataEndPoint {
-  /// The buffer size of the raw JSON file in bytes.
-  ///
-  /// All Probed data will be written to a JSON file until the buffer is filled, at which time
-  /// the file will be zipped. There is not a single-best [bufferSize] value.
-  /// If data are collected at high rates, a higher value will be best to minimize
-  /// zip operations. If data are collected at low rates, a lower value will be best
-  /// to minimize the likelihood of data loss when the app is killed or crashes.
-  /// Default size is 500 KB.
-  int bufferSize = 500 * 1000;
-
-  ///Is data to be compressed (zipped) before storing in a file. True as default.
-  ///
-  /// If zipped, the JSON file will be reduced to 1/5 of its size.
-  /// For example, the 500 KB buffer typically is reduced to ~100 KB.
-  bool zip = true;
-
-  ///Is data to be encrypted before storing. False as default.
-  ///
-  /// Support only one-way encryption using a public key.
-  bool encrypt = false;
-
-  /// If [encrypt] is true, this should hold the public key in a RSA KPI encryption of data.
-  String publicKey;
-
-  /// Creates a [FileDataEndPoint].
-  ///
-  /// [type] is defined in [DataEndPointType]. Is typically of type [DataEndPointType.FILE]
-  /// but specialized file types can be specified.
-  FileDataEndPoint({DataEndPointType type, this.bufferSize, this.zip, this.encrypt, this.publicKey})
-      : super(type ?? DataEndPointType.FILE);
-
-  static Function get fromJsonFunction => _$FileDataEndPointFromJson;
-  factory FileDataEndPoint.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
-  Map<String, dynamic> toJson() => _$FileDataEndPointToJson(this);
-
-  String toString() =>
-      'FILE - buffer ${(bufferSize / 1000).round()} KB${zip ? ', zipped' : ''}${encrypt ? ', encrypted' : ''}';
+/// A enumeration of known (but not necessarily implemented) endpoint API types.
+enum DataEndPointType {
+  PRINT,
+  FILE,
+  SQLITE,
+  FIREBASE_STORAGE,
+  FIREBASE_DATABSE,
+  CARP,
+  OMH,
+  AWS,
 }
-
-/// A enumeration of known endpoint API types.
-enum DataEndPointType { PRINT, FILE, FIREBASE_STORAGE, FIREBASE_DATABSE, CARP, OMH }

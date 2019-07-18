@@ -76,32 +76,55 @@ some_method() async {
 
   // add sensor collection from accelerometer and gyroscope
   // careful - these sensors generate a lot of data!
-  study.addTask(Task('Sensor Task')
-    ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
-        frequency: 10 * 1000, // sample every 10 secs)
-        duration: 100 // for 100 ms
-        ))
-    ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
-        frequency: 20 * 1000, // sample every 20 secs
-        duration: 100 // for 100 ms
-        )));
+  study.addTriggerTask(
+      DelayedTrigger(1000), // delay sampling for one second
+      Task('Sensor Task')
+        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
+            frequency: 10 * 1000, // sample every 10 secs
+            duration: 100 // for 100 ms
+            ))
+        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
+            frequency: 20 * 1000, // sample every 20 secs
+            duration: 100 // for 100 ms
+            )));
 
-  study.addTask(Task('Task collecting a list of all installed apps')
-    ..addMeasure(Measure(MeasureType(NameSpace.CARP, AppsSamplingPackage.APPS))));
+  study.addTriggerTask(
+      PeriodicTrigger(24 * 60 * 60 * 1000), // trigger sampling once pr. day
+      Task('Task collecting a list of all installed apps')
+        ..addMeasure(Measure(MeasureType(NameSpace.CARP, AppsSamplingPackage.APPS))));
 
   // Create a Study Controller that can manage this study, initialize it, and start it.
   StudyController controller = StudyController(study);
+  // important - await initialization before starting
   await controller.initialize();
   controller.start();
 
   // listening on all data events from the study
   controller.events.forEach(print);
 
-  // listen on only CARP events
-  controller.events.where((datum) => datum.format.namepace == NameSpace.CARP).forEach(print);
+  // listen on BLUETOOTH events
+  controller.events.where((datum) => datum.format.name == ConnectivitySamplingPackage.BLUETOOTH).forEach(print);
 
-  // listening on a specific probe
+  // listening on a specific probe registred in the ProbeRegistry
   ProbeRegistry.probes[DataType.LOCATION].events.forEach(print);
+  
+  // subscribe to events
+  StreamSubscription<Datum> subscription = controller.events.listen((Datum datum) {
+    // do something w. the datum, e.g. print the json
+    print(JsonEncoder.withIndent(' ').convert(datum));
+  });
+
+  // sampling can be paused and resumed
+  controller.pause();
+  controller.resume();
+
+  // pause / resume specific probe(s)
+  ProbeRegistry.lookup(SensorSamplingPackage.ACCELEROMETER).pause();
+  ProbeRegistry.lookup(SensorSamplingPackage.ACCELEROMETER).resume();
+
+  // once the sampling has to stop, e.g. in a Flutter dispose() methods, call stop.
+  // note that once a sampling has stopped, it cannot be restarted.
+  controller.stop();
 }
 ```
 

@@ -25,7 +25,7 @@ void example() async {
       DelayedTrigger(1000), // delay sampling for one second
       Task('Sensor Task')
         ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
-            frequency: 10 * 1000, // sample every 10 secs)
+            frequency: 10 * 1000, // sample every 10 secs
             duration: 100 // for 100 ms
             ))
         ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
@@ -61,9 +61,10 @@ void example() async {
   // map events
   controller.events.map((datum) => datum.format.name == ConnectivitySamplingPackage.BLUETOOTH).forEach(print);
 
-  // listening on a specific probe
+  // listening on a specific probe registred in the ProbeRegistry
   ProbeRegistry.probes[AppsSamplingPackage.APPS].events.forEach(print);
 
+  // subscribe to events
   StreamSubscription<Datum> subscription = controller.events.listen((Datum datum) {
     // do something w. the datum, e.g. print the json
     print(JsonEncoder.withIndent(' ').convert(datum));
@@ -206,6 +207,19 @@ void example_2() {
       samplingSchema: SamplingSchema.common()
         ..addSamplingSchema(PhoneSamplingSchema.phone())
         ..addSamplingSchema(PhoneSamplingSchema.phone()));
+}
+
+/// This is an example of how to set up a study controller.
+void example_3() {
+//  StudyController controller = StudyController(
+//      study,
+//      samplingSchema: ,
+//      privacySchemaName: ,
+//      dataManager: ,
+//      executor: ,
+//      transformer:
+//  );
+//
 }
 
 /// An example of how to restart probes or an entire sampling study.

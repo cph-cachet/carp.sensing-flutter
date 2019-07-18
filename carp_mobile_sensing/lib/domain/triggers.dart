@@ -48,6 +48,7 @@ class ImmediateTrigger extends Trigger {
 class ManualTrigger extends Trigger {
   ManualTrigger() : super();
 
+  @JsonKey(ignore: true)
   ManualTriggerExecutor executor;
 
   /// Called when data sampling in this [Trigger] is to be resumed (started).
