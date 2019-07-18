@@ -55,11 +55,14 @@ class ContextSamplingPackage implements SamplingPackage {
     ..measures.addEntries([
       MapEntry(LOCATION, Measure(MeasureType(NameSpace.CARP, LOCATION), name: 'Location', enabled: true)),
       MapEntry(ACTIVITY, Measure(MeasureType(NameSpace.CARP, ACTIVITY), name: 'Activity Recognition', enabled: true)),
-      MapEntry(WEATHER, WeatherMeasure(MeasureType(NameSpace.CARP, WEATHER), name: 'Local Weather', enabled: true)),
+      MapEntry(
+          WEATHER,
+          WeatherMeasure(MeasureType(NameSpace.CARP, WEATHER),
+              name: 'Local Weather', enabled: true, apiKey: '12b6e28582eb9298577c734a31ba9f4f')),
       MapEntry(
           GEOFENCE,
           GeofenceMeasure(MeasureType(NameSpace.CARP, GEOFENCE),
-              enabled: true, center: Location(55.786025, 12.524159), radius: 500, name: 'DTU')),
+              enabled: true, center: Location(55.786025, 12.524159), radius: 500, name: 'Geofence (DTU)')),
     ]);
 
   SamplingSchema get light => common

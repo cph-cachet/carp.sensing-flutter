@@ -212,7 +212,6 @@ class SamplingSchema {
         if (restore) measure.restore();
         if (measures.containsKey(measure.type.name)) {
           // if an adapted measure exists in this schema, adapt to it
-          print('adapting : $measure');
           measure.adapt(measures[measure.type.name]);
         }
         // notify listeners that the measure has changed due to restoration and/or adaptation

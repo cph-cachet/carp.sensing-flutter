@@ -71,7 +71,20 @@ class StudyMock implements StudyManager {
 
   Future<Study> getStudy(String studyId) async {
     //return _getHighFrequencyStudy(studyId);
-    return _getAllProbesAsAwareStudy(studyId);
+    //return _getAllProbesAsAwareStudy(studyId);
+    return _getAllMeasuresStudy(studyId);
+  }
+
+  Future<Study> _getAllMeasuresStudy(String studyId) async {
+    if (_study == null) {
+      _study = Study('DF#4dD-all', username)
+        ..name = 'CARP Mobile Sensing - all measures available'
+        ..description = 'This is a study of with all possible measures available in CARP Mobile Sensing'
+        ..dataEndPoint = getDataEndpoint(DataEndPointType.FILE)
+        ..addTriggerTask(ImmediateTrigger(),
+            Task()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
+    }
+    return _study;
   }
 
   Future<Study> _getAllProbesAsAwareStudy(String studyId) async {
@@ -84,9 +97,10 @@ class StudyMock implements StudyManager {
             ImmediateTrigger(), Task()..measures = aware.measures.values.toList()) // add all measures (for now)
         ..addTriggerTask(
             PeriodicTrigger(60 * 1000), // add periodic weather measure, once pr. min.
-            Task()..addMeasure(aware.measures[ContextSamplingPackage.WEATHER]));
-
-      //_study.adapt(aware);
+            Task()..addMeasure(aware.measures[ContextSamplingPackage.WEATHER]))
+        ..addTriggerTask(
+            PeriodicTrigger(60 * 1000), // add periodic app log measure, once pr. day
+            Task()..addMeasure(aware.measures[AppsSamplingPackage.APPS]));
     }
     return _study;
   }
@@ -185,16 +199,14 @@ SamplingSchema get aware => SamplingSchema()
         SensorSamplingPackage.LIGHT,
         PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
             name: "Ambient Light",
-            frequency: 200, // How often to start a measure
-            duration: 10 // Window size
+            frequency: 60 * 1000, // How often to start a measure
+            duration: 1000 // Window size
             )),
     MapEntry(
         AppsSamplingPackage.APPS,
-        PeriodicMeasure(
+        Measure(
           MeasureType(NameSpace.CARP, AppsSamplingPackage.APPS),
-          // collect list of installed apps once pr. day
           name: 'Installed Apps',
-          frequency: 24 * 60 * 60 * 1000,
         )),
     MapEntry(
         AppsSamplingPackage.APP_USAGE,
@@ -217,20 +229,11 @@ SamplingSchema get aware => SamplingSchema()
     MapEntry(
         CommunicationSamplingPackage.PHONE_LOG,
         PhoneLogMeasure(MeasureType(NameSpace.CARP, CommunicationSamplingPackage.PHONE_LOG),
-            // collect phone log once pr. day
-            name: 'Phone Log',
-            //frequency: 60 * 1000,
-            frequency: 1 * 24 * 60 * 60 * 1000,
-            days: 2)),
+            name: 'Phone Log', days: 1)),
     MapEntry(
         CommunicationSamplingPackage.TEXT_MESSAGE_LOG,
-        PeriodicMeasure(
-          MeasureType(NameSpace.CARP, CommunicationSamplingPackage.TEXT_MESSAGE_LOG),
-          // collect text messages once pr. day
-          name: 'Text Message (SMS) Log',
-          frequency: 1 * 24 * 60 * 60 * 1000,
-          //frequency: 60 * 1000
-        )),
+        Measure(MeasureType(NameSpace.CARP, CommunicationSamplingPackage.TEXT_MESSAGE_LOG),
+            name: 'Text Message (SMS) Log')),
     MapEntry(CommunicationSamplingPackage.TEXT_MESSAGE,
         Measure(MeasureType(NameSpace.CARP, CommunicationSamplingPackage.TEXT_MESSAGE), name: 'Text Message (SMS)')),
     MapEntry(ContextSamplingPackage.LOCATION,

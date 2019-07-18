@@ -54,8 +54,6 @@ class Measure extends Serializable {
     assert(measure != null,
         "Don't adapt a measure to a null measure. If you want to disable a measure, set the enabled property to false.");
     _storedEnabled = this.enabled;
-    print('adapting to : $measure');
-
     this.enabled = measure.enabled ?? true;
   }
 

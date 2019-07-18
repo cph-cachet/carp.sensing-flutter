@@ -9,14 +9,15 @@ part of communication;
 
 /// Specifies the configuration of how to sample a phone log from this device.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class PhoneLogMeasure extends PeriodicMeasure {
-  static const int DEFAULT_NUMBER_OF_DAYS = 2;
+class PhoneLogMeasure extends Measure {
+  static const int DEFAULT_NUMBER_OF_DAYS = 1;
 
   /// The number of days back in time to collect the phone log from.
+  /// If [days] are -1, the entire call log will be collected.
   int days = DEFAULT_NUMBER_OF_DAYS;
 
-  PhoneLogMeasure(MeasureType type, {name, enabled, frequency, duration, this.days = DEFAULT_NUMBER_OF_DAYS})
-      : super(type, enabled: enabled, name: name, frequency: frequency, duration: duration);
+  PhoneLogMeasure(MeasureType type, {name, enabled, this.days = DEFAULT_NUMBER_OF_DAYS})
+      : super(type, enabled: enabled, name: name);
 
   static Function get fromJsonFunction => _$PhoneLogMeasureFromJson;
   factory PhoneLogMeasure.fromJson(Map<String, dynamic> json) =>
@@ -25,7 +26,7 @@ class PhoneLogMeasure extends PeriodicMeasure {
 }
 
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class CalendarMeasure extends PeriodicMeasure {
+class CalendarMeasure extends Measure {
   static const int DEFAULT_NUMBER_OF_DAYS = 1;
 
   /// The number of days back in time to collect calendar events.
@@ -35,13 +36,8 @@ class CalendarMeasure extends PeriodicMeasure {
   int daysFuture = DEFAULT_NUMBER_OF_DAYS;
 
   CalendarMeasure(MeasureType type,
-      {name,
-      enabled,
-      frequency,
-      duration,
-      this.daysBack = DEFAULT_NUMBER_OF_DAYS,
-      this.daysFuture = DEFAULT_NUMBER_OF_DAYS})
-      : super(type, enabled: enabled, name: name, frequency: frequency, duration: duration);
+      {name, enabled, this.daysBack = DEFAULT_NUMBER_OF_DAYS, this.daysFuture = DEFAULT_NUMBER_OF_DAYS})
+      : super(type, enabled: enabled, name: name);
 
   static Function get fromJsonFunction => _$CalendarMeasureFromJson;
   factory CalendarMeasure.fromJson(Map<String, dynamic> json) =>
