@@ -55,13 +55,7 @@ class ContextSamplingPackage implements SamplingPackage {
     ..measures.addEntries([
       MapEntry(LOCATION, Measure(MeasureType(NameSpace.CARP, LOCATION), name: 'Location', enabled: true)),
       MapEntry(ACTIVITY, Measure(MeasureType(NameSpace.CARP, ACTIVITY), name: 'Activity Recognition', enabled: true)),
-      MapEntry(
-          WEATHER,
-          WeatherMeasure(MeasureType(NameSpace.CARP, WEATHER),
-              // collect local weather once pr. hour
-              name: 'Local Weather',
-              enabled: true,
-              frequency: 60 * 60 * 1000)),
+      MapEntry(WEATHER, WeatherMeasure(MeasureType(NameSpace.CARP, WEATHER), name: 'Local Weather', enabled: true)),
       MapEntry(
           GEOFENCE,
           GeofenceMeasure(MeasureType(NameSpace.CARP, GEOFENCE),
@@ -88,6 +82,5 @@ class ContextSamplingPackage implements SamplingPackage {
     ..measures[WEATHER] = WeatherMeasure(MeasureType(NameSpace.CARP, WEATHER),
         // collect calendar events once pr. minute
         name: 'Local Weather',
-        frequency: 60 * 1000,
         apiKey: '12b6e28582eb9298577c734a31ba9f4f');
 }

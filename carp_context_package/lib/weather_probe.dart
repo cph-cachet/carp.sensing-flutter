@@ -1,7 +1,7 @@
 part of context;
 
-/// Collects the weather on a regular basis using the [WeatherStation] API.
-class WeatherProbe extends PeriodicDatumProbe {
+/// Collects local weather information using the [WeatherStation] API.
+class WeatherProbe extends DatumProbe {
   WeatherStation _weather;
 
   void onInitialize(Measure measure) {

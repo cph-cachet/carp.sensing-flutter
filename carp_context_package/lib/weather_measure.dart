@@ -10,12 +10,11 @@ part of context;
 /// Specify the configuration on how to collect weather data.
 /// Needs an [apiKey] for the OpenWeatherMap API.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class WeatherMeasure extends PeriodicMeasure {
+class WeatherMeasure extends Measure {
   /// API key for the OpenWeatherMap API.
   String apiKey;
 
-  WeatherMeasure(MeasureType type, {name, enabled, frequency, duration, this.apiKey})
-      : super(type, name: name, enabled: enabled, frequency: frequency, duration: duration);
+  WeatherMeasure(MeasureType type, {name, enabled, this.apiKey}) : super(type, name: name, enabled: enabled);
 
   static Function get fromJsonFunction => _$WeatherMeasureFromJson;
   factory WeatherMeasure.fromJson(Map<String, dynamic> json) =>
