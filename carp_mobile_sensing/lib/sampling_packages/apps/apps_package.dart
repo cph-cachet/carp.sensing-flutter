@@ -29,21 +29,18 @@ class AppsSamplingPackage implements SamplingPackage {
     ..measures.addEntries([
       MapEntry(
           APPS,
-          PeriodicMeasure(
+          Measure(
             MeasureType(NameSpace.CARP, APPS),
-            // collect list of installed apps once pr. day
             name: 'Installed Apps',
-            enabled: true,
-            frequency: 24 * 60 * 60 * 1000,
           )),
       MapEntry(
           APP_USAGE,
-          PeriodicMeasure(MeasureType(NameSpace.CARP, APP_USAGE),
-              // collect app usage every 10 min for the last 10 min
-              name: 'Apps Usage',
-              enabled: true,
-              frequency: 10 * 60 * 1000,
-              duration: 10 * 60 * 1000)),
+          AppUsageMeasure(
+            MeasureType(NameSpace.CARP, APP_USAGE),
+            name: 'Apps Usage',
+            enabled: true,
+            duration: 60 * 60 * 1000, // collect app usage once pr. hour
+          )),
     ]);
 
   SamplingSchema get light => common;
@@ -59,18 +56,17 @@ class AppsSamplingPackage implements SamplingPackage {
     ..measures.addEntries([
       MapEntry(
           APPS,
-          PeriodicMeasure(MeasureType(NameSpace.CARP, APPS),
-              // collect list of installed apps once pr. day
-              name: 'Installed Apps',
-              enabled: true,
-              frequency: 60 * 1000)),
+          Measure(
+            MeasureType(NameSpace.CARP, APPS),
+            name: 'Installed Apps',
+          )),
       MapEntry(
           APP_USAGE,
-          PeriodicMeasure(MeasureType(NameSpace.CARP, APP_USAGE),
-              // collect app usage every 10 min for the last 10 min
-              name: 'Apps Usage',
-              enabled: true,
-              frequency: 60 * 1000,
-              duration: 10 * 60 * 1000)),
+          AppUsageMeasure(
+            MeasureType(NameSpace.CARP, APP_USAGE),
+            name: 'Apps Usage',
+            enabled: true,
+            duration: 60 * 1000,
+          )),
     ]);
 }

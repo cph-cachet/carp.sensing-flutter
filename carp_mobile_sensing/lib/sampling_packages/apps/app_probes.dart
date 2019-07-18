@@ -6,8 +6,8 @@
  */
 part of apps;
 
-/// A polling probe collecting a list of installed applications on this device.
-class AppsProbe extends PeriodicDatumProbe {
+/// A probe collecting a list of installed applications on this device.
+class AppsProbe extends DatumProbe {
   AppsProbe() : super();
 
   Stream<Datum> get stream => null;
@@ -27,14 +27,20 @@ class AppsProbe extends PeriodicDatumProbe {
 }
 
 /// A probe collecting app usage information about installed apps on the device
-class AppUsageProbe extends PeriodicDatumProbe {
+class AppUsageProbe extends DatumProbe {
   AppUsage appUsage = new AppUsage();
 
   AppUsageProbe() : super();
 
+  void onInitialize(Measure measure) {
+    super.onInitialize(measure);
+    assert(measure is AppUsageMeasure, 'An AppUsageMeasure must be provided to use the AppUsageProbe.');
+  }
+
   Future<Datum> getDatum() async {
     DateTime end = DateTime.now();
-    DateTime start = DateTime.fromMillisecondsSinceEpoch(end.millisecondsSinceEpoch - duration.inMilliseconds);
+    DateTime start =
+        DateTime.fromMillisecondsSinceEpoch(end.millisecondsSinceEpoch - (measure as AppUsageMeasure).duration);
 
     Map<dynamic, dynamic> usage = await appUsage.fetchUsage(start, end);
     return AppUsageDatum()

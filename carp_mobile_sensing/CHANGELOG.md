@@ -1,11 +1,14 @@
 ## 0.6.0
 * Extension of `Study` domain model to include support for
    * `Trigger`, i.e. that sampling can be triggered in different ways
-   * `Measure`
+   * `Measure` 
 * Adjustment of runtime environment to reflect the new study model
    * Addition of a `TriggerExecutor`
    * Update to `Executors`, i.e. `StudyExecutor`, `TaskExecutor` and `Probe`
-    
+* Minor refactoring
+   * Apps and AppUsage are no longer periodic measure, but one-off measures.
+     Hence, use the new trigger model to sample installed apps and their usage.
+   * `datastore` library have been renamed to `data_managers`.    
    
 ## 0.5.1
 * Update of readme file.

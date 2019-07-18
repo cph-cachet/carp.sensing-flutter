@@ -2,7 +2,8 @@ part of context;
 
 /// Listen on location movements and reports a [GeofenceDatum] to the [stream]
 /// when a geofence event happens. This probe can handle only one [GeofenceMeasure].
-/// If you need multiple geofences, add a [GeofenceMeasure] for each to your [Study].
+/// If you need multiple geofences, add a [GeofenceMeasure] for each to your [Study]
+/// for example using the [Trigger] model.
 class GeofenceProbe extends StreamProbe {
   Geofence fence;
   StreamController<GeofenceDatum> geoFenceStreamController = StreamController<GeofenceDatum>.broadcast();
@@ -27,10 +28,10 @@ class GeofenceProbe extends StreamProbe {
   Stream<GeofenceDatum> get stream => geoFenceStreamController.stream;
 }
 
+/// The possible states of a geofence event.
 enum GeofenceState { ENTER, EXIT, DWELL }
 
 /// A class representing a circular geofence with a center, a radius (in meters) and a name.
-
 class Geofence {
   /// The last known state of this geofence.
   GeofenceState state = GeofenceState.EXIT;

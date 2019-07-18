@@ -79,7 +79,12 @@ class StudyMock implements StudyManager {
         ..description = mCerebrum.description
         ..dataEndPoint = getDataEndpoint(DataEndPointType.FILE)
         ..addTriggerTask(
-            ImmediateTrigger(), Task()..measures = mCerebrum.measures.values.toList()); // add all measures (for now)
+            ImmediateTrigger(), Task()..measures = mCerebrum.measures.values.toList()) // add all measures (for now)
+        ..addTriggerTask(
+            PeriodicTrigger(60 * 60 * 1000),
+            Task()
+              ..addMeasure(
+                  mCerebrum.measures[ContextSamplingPackage.WEATHER])); // add periodic weather measure, once pr. hour
     }
     return _study;
   }
@@ -222,7 +227,6 @@ SamplingSchema get aware => SamplingSchema()
         WeatherMeasure(MeasureType(NameSpace.CARP, ContextSamplingPackage.WEATHER),
             // collect local weather once pr. hour
             name: 'Local Weather',
-            frequency: 60 * 60 * 1000,
             apiKey: '12b6e28582eb9298577c734a31ba9f4f')),
   ]);
 
