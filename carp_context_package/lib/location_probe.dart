@@ -16,21 +16,22 @@ location.Location locationService = location.Location();
 /// Note that in order for location tracking to work with this probe, the
 /// phone must be online on the internet, since Google APIs are used.
 class LocationProbe extends StreamProbe {
-  bool permission = false;
+  Future<bool> getPermission() async {
+    bool permission = false;
+    bool enabled = await locationService.serviceEnabled();
+    print("Location service available: $enabled");
+    if (enabled) {
+      permission = await locationService.hasPermission();
+      if (!permission) permission = await locationService.requestPermission();
+    }
+    print("Location permission: $permission");
+
+    return permission;
+  }
 
   void onInitialize(Measure measure) async {
     super.onInitialize(measure);
-
-    try {
-      bool enabled = await locationService.serviceEnabled();
-      print("Location service available: $enabled");
-      if (enabled) {
-        permission = await locationService.requestPermission();
-        print("Location permission: $permission");
-      }
-    } on PlatformException catch (e) {
-      print(e);
-    }
+    await getPermission();
   }
 
   Stream<LocationDatum> get stream => locationService

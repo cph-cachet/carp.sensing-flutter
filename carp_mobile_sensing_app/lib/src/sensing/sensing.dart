@@ -35,8 +35,7 @@ class Sensing {
 
     // Create a Study Controller that can manage this study, initialize it, and start it.
     //controller = StudyController(study);
-    //controller = StudyController(study, samplingSchema: aware); // a controller using the AWARE test schema
-    controller = StudyController(study, samplingSchema: mCerebrum); // a controller using the AWARE test schema
+    controller = StudyController(study, samplingSchema: aware); // a controller using the AWARE test schema
     //controller = StudyController(study, privacySchemaName: PrivacySchema.DEFAULT); // a controller w. privacy
     await controller.initialize();
     controller.start();
@@ -66,25 +65,40 @@ class StudyMock implements StudyManager {
   final String clientSecret = "carp";
   String studyId;
 
-  @override
-  Future<void> initialize() {
-    // TODO: implement
-  }
+  Future<void> initialize() {}
 
   Study _study;
+
   Future<Study> getStudy(String studyId) async {
+    //return _getHighFrequencyStudy(studyId);
+    return _getAllProbesAsAwareStudy(studyId);
+  }
+
+  Future<Study> _getAllProbesAsAwareStudy(String studyId) async {
     if (_study == null) {
       _study = Study('DF#4dD-aware', username)
-        ..name = 'CARP Mobile Sensing - AWARE configuration'
+        ..name = 'CARP Mobile Sensing - long term sampling study configures like AWARE'
+        ..description = aware.description
+        ..dataEndPoint = getDataEndpoint(DataEndPointType.FILE)
+        ..addTriggerTask(
+            ImmediateTrigger(), Task()..measures = aware.measures.values.toList()) // add all measures (for now)
+        ..addTriggerTask(
+            PeriodicTrigger(60 * 1000), // add periodic weather measure, once pr. min.
+            Task()..addMeasure(aware.measures[ContextSamplingPackage.WEATHER]));
+
+      //_study.adapt(aware);
+    }
+    return _study;
+  }
+
+  Future<Study> _getHighFrequencyStudy(String studyId) async {
+    if (_study == null) {
+      _study = Study('DF#4dD-high-frequency', username)
+        ..name = 'CARP Mobile Sensing - high-frequency sampling study'
         ..description = mCerebrum.description
         ..dataEndPoint = getDataEndpoint(DataEndPointType.FILE)
         ..addTriggerTask(
-            ImmediateTrigger(), Task()..measures = mCerebrum.measures.values.toList()) // add all measures (for now)
-        ..addTriggerTask(
-            PeriodicTrigger(60 * 60 * 1000),
-            Task()
-              ..addMeasure(
-                  mCerebrum.measures[ContextSamplingPackage.WEATHER])); // add periodic weather measure, once pr. hour
+            ImmediateTrigger(), Task()..measures = mCerebrum.measures.values.toList()); // add all measures (for now)
     }
     return _study;
   }
@@ -155,6 +169,7 @@ SamplingSchema get aware => SamplingSchema()
         PeriodicMeasure(
           MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
           name: "Accelerometer",
+          enabled: false,
           frequency: 200, // How often to start a measure
           duration: 2, // Window size
         )),
@@ -162,6 +177,7 @@ SamplingSchema get aware => SamplingSchema()
         SensorSamplingPackage.GYROSCOPE,
         PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
             name: "Gyroscope",
+            enabled: false,
             frequency: 200, // How often to start a measure
             duration: 2 // Window size
             )),
@@ -182,10 +198,9 @@ SamplingSchema get aware => SamplingSchema()
         )),
     MapEntry(
         AppsSamplingPackage.APP_USAGE,
-        PeriodicMeasure(MeasureType(NameSpace.CARP, AppsSamplingPackage.APP_USAGE),
+        AppUsageMeasure(MeasureType(NameSpace.CARP, AppsSamplingPackage.APP_USAGE),
             // collect app usage every 10 min for the last 10 min
             name: 'Apps Usage',
-            frequency: 10 * 60 * 1000,
             duration: 10 * 60 * 1000)),
     MapEntry(DeviceSamplingPackage.BATTERY,
         Measure(MeasureType(NameSpace.CARP, DeviceSamplingPackage.BATTERY), name: 'Battery')),
@@ -225,9 +240,7 @@ SamplingSchema get aware => SamplingSchema()
     MapEntry(
         ContextSamplingPackage.WEATHER,
         WeatherMeasure(MeasureType(NameSpace.CARP, ContextSamplingPackage.WEATHER),
-            // collect local weather once pr. hour
-            name: 'Local Weather',
-            apiKey: '12b6e28582eb9298577c734a31ba9f4f')),
+            name: 'Local Weather', apiKey: '12b6e28582eb9298577c734a31ba9f4f')),
   ]);
 
 SamplingSchema get mCerebrum => SamplingSchema()
@@ -242,22 +255,22 @@ SamplingSchema get mCerebrum => SamplingSchema()
         PeriodicMeasure(
           MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
           name: "Accelerometer",
-          frequency: 20, // How often to start a measure
+          frequency: 200, // How often to start a measure
           duration: 1, // Window size
         )),
     MapEntry(
         SensorSamplingPackage.GYROSCOPE,
         PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
             name: "Gyroscope",
-            frequency: 20, // How often to start a measure
+            frequency: 200, // How often to start a measure
             duration: 1 // Window size
             )),
     MapEntry(
         SensorSamplingPackage.LIGHT,
         PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
             name: "Ambient Light",
-            frequency: 20, // How often to start a measure
-            duration: 10 // Window size
+            frequency: 200, // How often to start a measure
+            duration: 2 // Window size
             )),
     MapEntry(ContextSamplingPackage.LOCATION,
         Measure(MeasureType(NameSpace.CARP, ContextSamplingPackage.LOCATION), name: 'Location')),

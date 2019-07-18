@@ -99,7 +99,7 @@ class PeriodicTrigger extends Trigger {
   /// The duration (until paused) of the the sampling in milliseconds.
   int duration = 1000; // default is one second
 
-  PeriodicTrigger([this.period, this.duration]) : super();
+  PeriodicTrigger([this.period, this.duration = 1000]) : super();
 
   static Function get fromJsonFunction => _$PeriodicTriggerFromJson;
   factory PeriodicTrigger.fromJson(Map<String, dynamic> json) =>

@@ -313,21 +313,31 @@ class _StoppedState extends _AbstractProbeState implements _ProbeStateMachine {
 //                                SPECIALIZED PROBES
 //---------------------------------------------------------------------------------------
 
-/// A [DatumProbe] can collect one piece of [Datum], send its to its [events] stream, and then stops.
+/// When resumed collects one piece of [Datum], send its to its [events] stream, and then pause.
 ///
 /// The [Datum] to be collected should be implemented in the [getDatum] method.
 abstract class DatumProbe extends AbstractProbe {
-  StreamController<Datum> _events = StreamController<Datum>();
-  Stream<Datum> get events => _events.stream;
+  StreamController<Datum> controller = StreamController<Datum>.broadcast();
+  Stream<Datum> get events => controller.stream;
 
   void onInitialize(Measure measure) {}
 
   void onStart() {
-    _events.addStream(Stream.fromFuture(getDatum()));
+    this.resume();
   }
 
   void onRestart() {}
-  void onResume() {}
+  void onResume() {
+    try {
+      getDatum().then((Datum data) {
+        if (data != null) controller.add(data);
+      });
+    } catch (e, s) {
+      controller.addError(e, s);
+    }
+    this.pause();
+  }
+
   void onPause() {}
   void onStop() {}
 

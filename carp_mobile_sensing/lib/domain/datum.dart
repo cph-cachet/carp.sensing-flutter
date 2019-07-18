@@ -91,12 +91,10 @@ class ErrorDatum extends CARPDatum {
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MultiDatum extends CARPDatum {
   /// The list of [Datum]s, i.e. the data.
-  List<Datum> data = new List<Datum>();
+  List<Datum> data = List<Datum>();
 
   /// Add a [Datum] to the list.
-  void addDatum(Datum datum) {
-    data.add(datum);
-  }
+  void addDatum(Datum datum) => data.add(datum);
 
   MultiDatum() : super();
 
