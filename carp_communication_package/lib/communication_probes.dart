@@ -58,20 +58,18 @@ class CalendarProbe extends DatumProbe {
 
   Future<void> _retrieveCalendars() async {
     // try to get permission to access calendar
-    try {
-      var permissionsGranted = await _deviceCalendar.hasPermissions();
-      if (permissionsGranted.isSuccess && !permissionsGranted.data) {
-        permissionsGranted = await _deviceCalendar.requestPermissions();
-        if (!permissionsGranted.isSuccess || !permissionsGranted.data) {
-          return;
-        }
+    var permissionsGranted = await _deviceCalendar.hasPermissions();
+    if (permissionsGranted.isSuccess && !permissionsGranted.data) {
+      permissionsGranted = await _deviceCalendar.requestPermissions();
+      if (!permissionsGranted.isSuccess || !permissionsGranted.data) {
+        return;
       }
-
-      final calendarsResult = await _deviceCalendar.retrieveCalendars();
-      _calendars = calendarsResult?.data;
-    } catch (e) {
-      print(e);
     }
+
+    final calendarsResult = await _deviceCalendar.retrieveCalendars();
+    _calendars = calendarsResult?.data;
+
+    print('_calendar : $_calendars');
   }
 
   /// Collects events from the [calendar].
@@ -90,6 +88,7 @@ class CalendarProbe extends DatumProbe {
 
   /// Get the [CalendarDatum].
   Future<Datum> getDatum() async {
+    if (_calendars == null) await _retrieveCalendars();
     if (_calendars != null) {
       _events = [];
       _calendarIterator = _calendars.iterator;
