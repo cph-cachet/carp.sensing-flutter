@@ -72,8 +72,8 @@
               "name": "Accelerometer",
               "enabled": false,
               "configuration": {},
-              "frequency": 1000,
-              "duration": 10
+              "frequency": 200,
+              "duration": 1
             },
             {
               "c__": "PeriodicMeasure",
@@ -85,8 +85,8 @@
               "name": "Gyroscope",
               "enabled": false,
               "configuration": {},
-              "frequency": 1000,
-              "duration": 10
+              "frequency": 200,
+              "duration": 1
             },
             {
               "c__": "PeriodicMeasure",
@@ -151,7 +151,7 @@
               "duration": 5000
             },
             {
-              "c__": "PeriodicMeasure",
+              "c__": "Measure",
               "type": {
                 "c__": "MeasureType",
                 "namespace": "carp",
@@ -159,11 +159,10 @@
               },
               "name": "Installed Apps",
               "enabled": true,
-              "configuration": {},
-              "frequency": 86400000
+              "configuration": {}
             },
             {
-              "c__": "PeriodicMeasure",
+              "c__": "AppUsageMeasure",
               "type": {
                 "c__": "MeasureType",
                 "namespace": "carp",
@@ -172,8 +171,7 @@
               "name": "Apps Usage",
               "enabled": true,
               "configuration": {},
-              "frequency": 600000,
-              "duration": 600000
+              "duration": 3600000
             },
             {
               "c__": "PhoneLogMeasure",
@@ -185,11 +183,10 @@
               "name": "Phone Log",
               "enabled": true,
               "configuration": {},
-              "frequency": 86400000,
-              "days": 2
+              "days": 1
             },
             {
-              "c__": "PeriodicMeasure",
+              "c__": "Measure",
               "type": {
                 "c__": "MeasureType",
                 "namespace": "carp",
@@ -197,8 +194,7 @@
               },
               "name": "Text Message (SMS) Log",
               "enabled": true,
-              "configuration": {},
-              "frequency": 86400000
+              "configuration": {}
             },
             {
               "c__": "Measure",
@@ -221,7 +217,6 @@
               "name": "Calendar Events",
               "enabled": true,
               "configuration": {},
-              "frequency": 86400000,
               "days_back": 1,
               "days_future": 1
             }

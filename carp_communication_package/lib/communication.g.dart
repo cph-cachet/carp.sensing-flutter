@@ -73,7 +73,6 @@ TextMessage _$TextMessageFromJson(Map<String, dynamic> json) {
           : DateTime.parse(json['date_sent'] as String),
       kind: json['kind'] as String,
       state: json['state'] as String)
-    ..c__ = json['c__'] as String
     ..size = json['size'] as int;
 }
 
@@ -86,7 +85,6 @@ Map<String, dynamic> _$TextMessageToJson(TextMessage instance) {
     }
   }
 
-  writeNotNull('c__', instance.c__);
   writeNotNull('id', instance.id);
   writeNotNull('address', instance.address);
   writeNotNull('body', instance.body);
@@ -135,8 +133,7 @@ PhoneCall _$PhoneCallFromJson(Map<String, dynamic> json) {
       json['duration'] as int,
       json['formatted_number'] as String,
       json['number'] as String,
-      json['name'] as String)
-    ..c__ = json['c__'] as String;
+      json['name'] as String);
 }
 
 Map<String, dynamic> _$PhoneCallToJson(PhoneCall instance) {
@@ -148,7 +145,6 @@ Map<String, dynamic> _$PhoneCallToJson(PhoneCall instance) {
     }
   }
 
-  writeNotNull('c__', instance.c__);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
   writeNotNull('call_type', instance.callType);
   writeNotNull('duration', instance.duration);
@@ -196,8 +192,7 @@ CalendarEvent _$CalendarEventFromJson(Map<String, dynamic> json) {
       json['end'] == null ? null : DateTime.parse(json['end'] as String),
       json['all_day'] as bool,
       json['location'] as String,
-      (json['attendees'] as List)?.map((e) => e as String)?.toList())
-    ..c__ = json['c__'] as String;
+      (json['attendees'] as List)?.map((e) => e as String)?.toList());
 }
 
 Map<String, dynamic> _$CalendarEventToJson(CalendarEvent instance) {
@@ -209,7 +204,6 @@ Map<String, dynamic> _$CalendarEventToJson(CalendarEvent instance) {
     }
   }
 
-  writeNotNull('c__', instance.c__);
   writeNotNull('event_id', instance.eventId);
   writeNotNull('calendar_id', instance.calendarId);
   writeNotNull('title', instance.title);
