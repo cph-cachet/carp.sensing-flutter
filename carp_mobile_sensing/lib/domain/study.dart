@@ -109,6 +109,7 @@ class DataEndPoint extends Serializable {
 
 /// A enumeration of known (but not necessarily implemented) endpoint API types.
 enum DataEndPointType {
+  UNKNOWN,
   PRINT,
   FILE,
   SQLITE,

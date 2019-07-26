@@ -55,6 +55,7 @@ T _$enumDecodeNullable<T>(Map<T, dynamic> enumValues, dynamic source) {
 }
 
 const _$DataEndPointTypeEnumMap = <DataEndPointType, dynamic>{
+  DataEndPointType.UNKNOWN: 'UNKNOWN',
   DataEndPointType.PRINT: 'PRINT',
   DataEndPointType.FILE: 'FILE',
   DataEndPointType.SQLITE: 'SQLITE',

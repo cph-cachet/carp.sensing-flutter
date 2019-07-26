@@ -35,6 +35,14 @@ class StudyController {
       {this.executor, this.samplingSchema, this.dataManager, this.privacySchemaName, this.transformer})
       : assert(study != null),
         super() {
+    // create and register the two built-in data managers
+    DataManagerRegistry.register(ConsoleDataManager());
+    DataManagerRegistry.register(FileDataManager());
+
+    // if a data manager is provided, register this
+    if (dataManager != null) DataManagerRegistry.register(dataManager);
+
+    // now initialize optional parameters
     executor ??= StudyExecutor(study);
     samplingSchema ??= SamplingSchema.normal(powerAware: true);
     dataManager ??= DataManagerRegistry.lookup(study.dataEndPoint.type);

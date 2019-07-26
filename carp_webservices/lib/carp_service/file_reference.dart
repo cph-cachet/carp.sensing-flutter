@@ -27,6 +27,7 @@ class FileStorageReference extends CarpReference {
   /// [FileStorageReference], with optional [metadata].
   FileUploadTask upload(File file, [Map<String, String> metadata]) {
     assert(file != null);
+    assert(file.existsSync());
     final FileUploadTask task = FileUploadTask._(this, file, metadata);
     task._start();
     return task;

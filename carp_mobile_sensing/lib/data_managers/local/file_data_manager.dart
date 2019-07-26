@@ -18,6 +18,8 @@ class FileDataManager extends AbstractDataManager {
   /// The path to use on the device for storing CARP files.
   static const String CARP_FILE_PATH = 'carp/data';
 
+  DataEndPointType get type => DataEndPointType.FILE;
+
   FileDataEndPoint _fileDataEndPoint;
   String _path;
   String _filename;
@@ -26,20 +28,20 @@ class FileDataManager extends AbstractDataManager {
   bool _initialized = false;
   int _flushingSink = 0;
 
-  List<FileDataManagerListener> _listener = new List<FileDataManagerListener>();
-  void addFileDataManagerListener(FileDataManagerListener listener) {
-    _listener.add(listener);
-  }
-
-  void removeFileDataManagerListener(FileDataManagerListener listener) {
-    _listener.remove(listener);
-  }
-
-  Future notifyAllListeners(FileDataManagerEvent event) async {
-    for (FileDataManagerListener l in _listener) {
-      await l.notify(event);
-    }
-  }
+//  List<FileDataManagerListener> _listener = new List<FileDataManagerListener>();
+//  void addFileDataManagerListener(FileDataManagerListener listener) {
+//    _listener.add(listener);
+//  }
+//
+//  void removeFileDataManagerListener(FileDataManagerListener listener) {
+//    _listener.remove(listener);
+//  }
+//
+//  Future notifyAllListeners(FileDataManagerEvent event) async {
+//    for (FileDataManagerListener l in _listener) {
+//      await l.notify(event);
+//    }
+//  }
 
   Future initialize(Study study, Stream<Datum> events) async {
     super.initialize(study, events);
@@ -94,7 +96,7 @@ class FileDataManager extends AbstractDataManager {
       final path = await filename;
       _file = File(path);
       print("Creating file '$path'");
-      notifyAllListeners(new FileDataManagerEvent(FileEvent.created, path));
+      addEvent(FileDataManagerEvent(DataManagerEventType.file_created, path));
     }
     return _file;
   }
@@ -176,15 +178,17 @@ class FileDataManager extends AbstractDataManager {
 
         // once the file is zipped to a new zip file, delete the old JSON file
         jsonFile.delete();
+        addEvent(FileDataManagerEvent(DataManagerEventType.file_deleted, _finalFilePath));
       }
 
       // encrypt the zip file
       if (_fileDataEndPoint.encrypt) {
         //TODO : implement encryption
         // if the encrypted file gets another name, remember to update _jsonFilePath
+        addEvent(FileDataManagerEvent(DataManagerEventType.file_encrypted, _finalFilePath));
       }
 
-      notifyAllListeners(new FileDataManagerEvent(FileEvent.closed, _finalFilePath));
+      addEvent(FileDataManagerEvent(DataManagerEventType.file_closed, _finalFilePath));
     });
   }
 
@@ -194,6 +198,7 @@ class FileDataManager extends AbstractDataManager {
         flush(_f, _s);
       });
     });
+    super.close();
   }
 
   String toString() {
@@ -220,7 +225,7 @@ class FileDataEndPoint extends DataEndPoint {
   /// Default size is 500 KB.
   int bufferSize = 500 * 1000;
 
-  ///Is data to be compressed (zipped) before storing in a file. True as default.
+  /// Is data to be compressed (zipped) before storing in a file. True as default.
   ///
   /// If zipped, the JSON file will be reduced to 1/5 of its size.
   /// For example, the 500 KB buffer typically is reduced to ~100 KB.
@@ -250,19 +255,21 @@ class FileDataEndPoint extends DataEndPoint {
       'FILE - buffer ${(bufferSize / 1000).round()} KB${zip ? ', zipped' : ''}${encrypt ? ', encrypted' : ''}';
 }
 
+// TODO - this should maybe be changed to a [Stream] model in order to comply to the Dart/Flutter programming model?
+//      - see e.g. the Firebase model >> https://github.com/flutter/plugins/blob/master/packages/firebase_storage/lib/src/upload_task.dart
 /// A Listener that can listen on [FileDataManagerEvent]s from a [FileDataManager].
 abstract class FileDataManagerListener {
   Future notify(FileDataManagerEvent event);
 }
 
-class FileDataManagerEvent {
-  /// The event type, see [FileEvent].
-  FileEvent event;
-
+class FileDataManagerEvent extends DataManagerEvent {
   /// The full path and filename for the file.
   String path;
 
-  FileDataManagerEvent(this.event, this.path);
+  FileDataManagerEvent(DataManagerEventType event, this.path) : super(event);
 }
 
-enum FileEvent { created, closed }
+//enum FileEvent {
+//  created,
+//  closed,
+//}

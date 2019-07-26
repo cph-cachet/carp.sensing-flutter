@@ -327,14 +327,12 @@ abstract class DatumProbe extends AbstractProbe {
   }
 
   void onRestart() {}
+
   void onResume() {
-    try {
-      getDatum().then((Datum data) {
-        if (data != null) controller.add(data);
-      });
-    } catch (e, s) {
-      controller.addError(e, s);
-    }
+    getDatum().then((Datum data) {
+      if (data != null) controller.add(data);
+    }).catchError((error, stacktrace) => controller.addError(error, stacktrace));
+
     this.pause();
   }
 
@@ -378,13 +376,9 @@ abstract class PeriodicDatumProbe extends DatumProbe {
     super.onResume();
     // create a recurrent timer that resumes sampling every [frequency].
     timer = Timer.periodic(frequency, (Timer t) async {
-      try {
-        getDatum().then((Datum data) {
-          if (data != null) controller.add(data);
-        });
-      } catch (e, s) {
-        controller.addError(e, s);
-      }
+      getDatum().then((Datum data) {
+        if (data != null) controller.add(data);
+      }).catchError((error, stacktrace) => controller.addError(error, stacktrace));
     });
   }
 
@@ -541,7 +535,7 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
         // collect the datum
         getDatum().then((datum) {
           if (datum != null) controller.add(datum);
-        });
+        }).catchError((error, stacktrace) => controller.addError(error, stacktrace));
       });
     });
   }
@@ -551,7 +545,7 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
     // check if there are some buffered data that needs to be collected before pausing
     getDatum().then((datum) {
       if (datum != null) controller.add(datum);
-    });
+    }).catchError((error, stacktrace) => controller.addError(error, stacktrace));
   }
 
   void onStop() {
@@ -608,7 +602,7 @@ abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
         onSamplingEnd();
         getDatum().then((datum) {
           if (datum != null) controller.add(datum);
-        });
+        }).catchError((error, stacktrace) => controller.addError(error, stacktrace));
       });
     });
   }
@@ -619,7 +613,7 @@ abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
     // check if there are some buffered data that needs to be collected before pausing
     getDatum().then((datum) {
       if (datum != null) controller.add(datum);
-    });
+    }).catchError((error, stacktrace) => controller.addError(error, stacktrace));
   }
 
   // Sub-classes should implement the following handler methods.
@@ -663,7 +657,7 @@ abstract class BufferingStreamProbe extends BufferingPeriodicStreamProbe {
       onSamplingStart();
       getDatum().then((datum) {
         if (datum != null) controller.add(datum);
-      });
+      }).catchError((error, stacktrace) => controller.addError(error, stacktrace));
     });
   }
 

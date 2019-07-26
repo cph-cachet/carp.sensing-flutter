@@ -105,8 +105,8 @@ class Sensing {
   StudyController controller;
 
   Sensing(this.console) {
-    DataManagerRegistry.register(DataEndPointType.PRINT, new ConsoleDataManager());
-    DataManagerRegistry.register(DataEndPointType.FILE, new FileDataManager());
+    //DataManagerRegistry.register(DataEndPointType.PRINT, new ConsoleDataManager());
+    //DataManagerRegistry.register(DataEndPointType.FILE, new FileDataManager());
   }
 
   /// (Re)start sensing.

@@ -181,7 +181,7 @@ void samplingSchemaExample() async {
   controller.events.forEach(print);
 
   // listening on events from a specific probe
-  ProbeRegistry.probes[DeviceSamplingPackage.SCREEN].events.forEach(print);
+  ProbeRegistry.lookup(DeviceSamplingPackage.SCREEN).events.forEach(print);
 }
 
 /// This is an example of how to set up a study in a very simple way using [SamplingSchema.common()].

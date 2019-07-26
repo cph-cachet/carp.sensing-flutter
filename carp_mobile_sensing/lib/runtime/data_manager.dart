@@ -4,11 +4,14 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of domain;
+part of runtime;
 
 /// The [DataManager] interface is used to upload [Datum] objects to any
 /// data manager that implements this interface.
 abstract class DataManager {
+  /// The type of this data manager as enumerated in [DataEndPointType].
+  DataEndPointType get type;
+
   /// Initialize the data manager by specifying the running [Study]
   /// and the stream of [Datum] events to handle.
   Future<void> initialize(Study study, Stream<Datum> events);
@@ -16,7 +19,8 @@ abstract class DataManager {
   /// Close the data manager (e.g. closing connections).
   Future<void> close();
 
-  // Stream handlers below
+  /// Stream of data manager events.
+  Stream<DataManagerEvent> get events;
 
   /// On each data event from the data stream, the [onData] handler is called.
   void onData(Datum datum);
@@ -34,10 +38,18 @@ abstract class DataManager {
 abstract class AbstractDataManager implements DataManager {
   Study study;
 
+  // Event handling below
+  StreamController<DataManagerEvent> _controller = StreamController<DataManagerEvent>.broadcast();
+  Stream<DataManagerEvent> get events => _controller.stream;
+  void addEvent(DataManagerEvent event) => _controller.add(event);
+
   Future<void> initialize(Study study, Stream<Datum> events) async {
     this.study = study;
     events.listen(onData, onError: onError, onDone: onDone);
+    addEvent(DataManagerEvent(DataManagerEventType.initialized));
   }
+
+  Future<void> close() async => addEvent(DataManagerEvent(DataManagerEventType.closed));
 
   void onData(Datum datum);
   void onDone();
@@ -56,8 +68,8 @@ class DataManagerRegistry {
   static Map<DataEndPointType, DataManager> _registry = new Map<DataEndPointType, DataManager>();
 
   /// Register a [DataManager] with a specific type.
-  static register(DataEndPointType type, DataManager manager) {
-    _registry[type] = manager;
+  static register(DataManager manager) {
+    _registry[manager.type] = manager;
   }
 
   /// Lookup an instance of a [DataManager] based on the [DataEndPointType].
@@ -73,4 +85,22 @@ abstract class StudyManager {
 
   /// Get a [Study] based on its ID.
   Future<Study> getStudy(String studyId);
+}
+
+class DataManagerEvent {
+  /// The event type, see [DataManagerEventType].
+  DataManagerEventType event;
+
+  DataManagerEvent(this.event);
+}
+
+enum DataManagerEventType {
+  initialized,
+  closed,
+  file_created,
+  file_closed,
+  file_uploaded,
+  file_deleted,
+  file_zipped,
+  file_encrypted,
 }
