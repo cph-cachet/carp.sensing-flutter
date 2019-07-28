@@ -74,7 +74,8 @@ class CarpDataEndPoint extends FileDataEndPoint {
       encrypt = false, // don't encrypt pr. default
       publicKey})
       : assert(uploadMethod != null),
-        super(type: DataEndPointType.CARP, bufferSize: bufferSize, zip: zip, encrypt: encrypt, publicKey: publicKey) {
+        super(type: DataEndPointTypes.CARP, bufferSize: bufferSize, zip: zip, encrypt: encrypt, publicKey: publicKey) {
+    // the CARP server cannot handle zipped files (yet)
     if (this.uploadMethod == CarpUploadMethod.BATCH_DATA_POINT) {
       this.zip = false;
       this.encrypt = false;

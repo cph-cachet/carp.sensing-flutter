@@ -10,9 +10,9 @@ part of data_managers;
 /// A very simple data manager that just "uploads" the data to the console (i.e., prints it).
 /// Used mainly for testing and debugging purposes.
 class ConsoleDataManager extends AbstractDataManager {
-  DataEndPointType get type => DataEndPointType.PRINT;
+  String get type => DataEndPointTypes.PRINT;
 
-  void onData(Datum datum) => print(">> ${jsonEncode(datum)}");
+  void onDatum(Datum datum) => print(">> ${jsonEncode(datum)}");
 
   void onDone() {}
 

@@ -30,7 +30,8 @@ class StudyController {
   ///      [DataManagerRegistry] based on the type of the study's [DataEndPoint].
   ///    * The name of a [PrivacySchema] can be provided in [privacySchemaName].
   ///      Use [PrivacySchema.DEFAULT] for the default, built-in schema. If null, no privacy schema is used.
-  ///    * A generic [transformer] can be provided which transform each collected data. If null, a 1:1 mapping is done, i.e. no transformation.
+  ///    * A generic [transformer] can be provided which transform each collected data.
+  ///      If null, a 1:1 mapping is done, i.e. no transformation.
   StudyController(this.study,
       {this.executor, this.samplingSchema, this.dataManager, this.privacySchemaName, this.transformer})
       : assert(study != null),
@@ -59,6 +60,8 @@ class StudyController {
 
     // old, simple version below
     // events = transformer(executor.events);
+
+    //dataManager.events.forEach(print);
   }
 
   /// Initialize this controller. Must be called only once, and before [start] is called.
@@ -85,7 +88,7 @@ class StudyController {
     executor.initialize(Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR)));
     dataManager.initialize(study, events);
 
-    events.listen((data) => samplingSize++);
+    events.listen((datum) => samplingSize++);
   }
 
   BatteryProbe _battery = BatteryProbe();

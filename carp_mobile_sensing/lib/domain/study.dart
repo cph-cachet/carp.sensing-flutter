@@ -90,16 +90,15 @@ class Study extends Serializable {
 /// Specify an endpoint where a [DataManager] can upload data.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class DataEndPoint extends Serializable {
-  /// The type of endpoint as enumerated in [DataEndPointType].
-  DataEndPointType type;
+  /// The type of endpoint as enumerated in [DataEndPointTypes].
+  String type;
 
-  /// Creates a [DataEndPoint]. [type] is defined in [DataEndPointType].
+  /// Creates a [DataEndPoint]. [type] is defined in [DataEndPointTypes].
   DataEndPoint(this.type)
       : assert(type != null),
         super();
 
   static Function get fromJsonFunction => _$DataEndPointFromJson;
-  //factory DataEndPoint.fromJson(Map<String, dynamic> json) => _$DataEndPointFromJson(json);
   factory DataEndPoint.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$DataEndPointToJson(this);
@@ -108,14 +107,17 @@ class DataEndPoint extends Serializable {
 }
 
 /// A enumeration of known (but not necessarily implemented) endpoint API types.
-enum DataEndPointType {
-  UNKNOWN,
-  PRINT,
-  FILE,
-  SQLITE,
-  FIREBASE_STORAGE,
-  FIREBASE_DATABSE,
-  CARP,
-  OMH,
-  AWS,
+///
+/// Note that the type is basically a [String], which allow for extension of unknown,
+/// application-specific data endpoints.
+class DataEndPointTypes {
+  static const String UNKNOWN = 'UNKNOWN';
+  static const String PRINT = 'PRINT';
+  static const String FILE = 'FILE';
+  static const String SQLITE = 'SQLITE';
+  static const String FIREBASE_STORAGE = 'FIREBASE_STORAGE';
+  static const String FIREBASE_DATABSE = 'FIREBASE_DATABSE';
+  static const String CARP = 'CARP';
+  static const String OMH = 'OMH';
+  static const String AWS = 'AWS';
 }

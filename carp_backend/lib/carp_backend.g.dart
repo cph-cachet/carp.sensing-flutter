@@ -16,12 +16,13 @@ CarpDataEndPoint _$CarpDataEndPointFromJson(Map<String, dynamic> json) {
       email: json['email'] as String,
       password: json['password'] as String,
       collection: json['collection'] as String,
+      deleteWhenUploaded: json['delete_when_uploaded'] as bool,
       bufferSize: json['buffer_size'],
       zip: json['zip'],
       encrypt: json['encrypt'],
       publicKey: json['public_key'])
     ..c__ = json['c__'] as String
-    ..type = _$enumDecodeNullable(_$DataEndPointTypeEnumMap, json['type']);
+    ..type = json['type'] as String;
 }
 
 Map<String, dynamic> _$CarpDataEndPointToJson(CarpDataEndPoint instance) {
@@ -34,7 +35,7 @@ Map<String, dynamic> _$CarpDataEndPointToJson(CarpDataEndPoint instance) {
   }
 
   writeNotNull('c__', instance.c__);
-  writeNotNull('type', _$DataEndPointTypeEnumMap[instance.type]);
+  writeNotNull('type', instance.type);
   writeNotNull('buffer_size', instance.bufferSize);
   writeNotNull('zip', instance.zip);
   writeNotNull('encrypt', instance.encrypt);
@@ -48,6 +49,7 @@ Map<String, dynamic> _$CarpDataEndPointToJson(CarpDataEndPoint instance) {
   writeNotNull('email', instance.email);
   writeNotNull('password', instance.password);
   writeNotNull('collection', instance.collection);
+  writeNotNull('delete_when_uploaded', instance.deleteWhenUploaded);
   return val;
 }
 
@@ -76,13 +78,4 @@ const _$CarpUploadMethodEnumMap = <CarpUploadMethod, dynamic>{
   CarpUploadMethod.BATCH_DATA_POINT: 'BATCH_DATA_POINT',
   CarpUploadMethod.FILE: 'FILE',
   CarpUploadMethod.DOCUMENT: 'DOCUMENT'
-};
-
-const _$DataEndPointTypeEnumMap = <DataEndPointType, dynamic>{
-  DataEndPointType.PRINT: 'PRINT',
-  DataEndPointType.FILE: 'FILE',
-  DataEndPointType.FIREBASE_STORAGE: 'FIREBASE_STORAGE',
-  DataEndPointType.FIREBASE_DATABSE: 'FIREBASE_DATABSE',
-  DataEndPointType.CARP: 'CARP',
-  DataEndPointType.OMH: 'OMH'
 };

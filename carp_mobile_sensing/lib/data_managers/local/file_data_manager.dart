@@ -18,7 +18,7 @@ class FileDataManager extends AbstractDataManager {
   /// The path to use on the device for storing CARP files.
   static const String CARP_FILE_PATH = 'carp/data';
 
-  DataEndPointType get type => DataEndPointType.FILE;
+  String get type => DataEndPointTypes.FILE;
 
   FileDataEndPoint _fileDataEndPoint;
   String _path;
@@ -28,24 +28,10 @@ class FileDataManager extends AbstractDataManager {
   bool _initialized = false;
   int _flushingSink = 0;
 
-//  List<FileDataManagerListener> _listener = new List<FileDataManagerListener>();
-//  void addFileDataManagerListener(FileDataManagerListener listener) {
-//    _listener.add(listener);
-//  }
-//
-//  void removeFileDataManagerListener(FileDataManagerListener listener) {
-//    _listener.remove(listener);
-//  }
-//
-//  Future notifyAllListeners(FileDataManagerEvent event) async {
-//    for (FileDataManagerListener l in _listener) {
-//      await l.notify(event);
-//    }
-//  }
-
-  Future initialize(Study study, Stream<Datum> events) async {
-    super.initialize(study, events);
+  Future initialize(Study study, Stream<Datum> data) async {
     assert(study.dataEndPoint is FileDataEndPoint);
+    super.initialize(study, data);
+
     _fileDataEndPoint = study.dataEndPoint as FileDataEndPoint;
 
     if (_fileDataEndPoint.encrypt) {
@@ -62,6 +48,12 @@ class FileDataManager extends AbstractDataManager {
     print(' study file path : $_studyPath');
     print(' buffer size     : ${_fileDataEndPoint.bufferSize.toString()} bytes');
   }
+
+  void onDatum(Datum datum) => write(datum);
+
+  void onDone() => close();
+
+  void onError(error) {}
 
   ///Returns the local study path on the device where files can be written.
   Future<String> get studyPath async {
@@ -96,7 +88,7 @@ class FileDataManager extends AbstractDataManager {
       final path = await filename;
       _file = File(path);
       print("Creating file '$path'");
-      addEvent(FileDataManagerEvent(DataManagerEventType.file_created, path));
+      addEvent(FileDataManagerEvent(FileDataManagerEventTypes.file_created, path));
     }
     return _file;
   }
@@ -115,11 +107,11 @@ class FileDataManager extends AbstractDataManager {
   }
 
   /// Writes a JSON encoded [Datum] to the file
-  Future<bool> uploadData(Datum data) async {
+  Future<bool> write(Datum data) async {
     // Check if the sink is ready for writing...
     if (!_initialized) {
-      print("File sink not ready -- delaying for 1 sec...");
-      return Future.delayed(const Duration(seconds: 1), () => uploadData(data));
+      print("File sink not ready -- delaying for 2 sec...");
+      return Future.delayed(const Duration(seconds: 2), () => write(data));
     }
 
     DataPoint _header = new DataPoint.fromDatum(study.id, study.userId, data);
@@ -178,17 +170,16 @@ class FileDataManager extends AbstractDataManager {
 
         // once the file is zipped to a new zip file, delete the old JSON file
         jsonFile.delete();
-        addEvent(FileDataManagerEvent(DataManagerEventType.file_deleted, _finalFilePath));
       }
 
       // encrypt the zip file
       if (_fileDataEndPoint.encrypt) {
         //TODO : implement encryption
         // if the encrypted file gets another name, remember to update _jsonFilePath
-        addEvent(FileDataManagerEvent(DataManagerEventType.file_encrypted, _finalFilePath));
+        addEvent(FileDataManagerEvent(FileDataManagerEventTypes.file_encrypted, _finalFilePath));
       }
 
-      addEvent(FileDataManagerEvent(DataManagerEventType.file_closed, _finalFilePath));
+      addEvent(FileDataManagerEvent(FileDataManagerEventTypes.file_closed, _finalFilePath));
     });
   }
 
@@ -201,15 +192,7 @@ class FileDataManager extends AbstractDataManager {
     super.close();
   }
 
-  String toString() {
-    return "FileDataManager";
-  }
-
-  void onData(Datum datum) => uploadData(datum);
-
-  void onDone() {}
-
-  void onError(error) {}
+  String toString() => "FileDataManager";
 }
 
 /// Specify an endpoint where a file-based [DataManager] can store JSON data as files on the local device.
@@ -241,10 +224,10 @@ class FileDataEndPoint extends DataEndPoint {
 
   /// Creates a [FileDataEndPoint].
   ///
-  /// [type] is defined in [DataEndPointType]. Is typically of type [DataEndPointType.FILE]
+  /// [type] is defined in [DataEndPointTypes]. Is typically of type [DataEndPointType.FILE]
   /// but specialized file types can be specified.
-  FileDataEndPoint({DataEndPointType type, this.bufferSize, this.zip, this.encrypt, this.publicKey})
-      : super(type ?? DataEndPointType.FILE);
+  FileDataEndPoint({String type, this.bufferSize, this.zip, this.encrypt, this.publicKey})
+      : super(type ?? DataEndPointTypes.FILE);
 
   static Function get fromJsonFunction => _$FileDataEndPointFromJson;
   factory FileDataEndPoint.fromJson(Map<String, dynamic> json) =>
@@ -255,21 +238,21 @@ class FileDataEndPoint extends DataEndPoint {
       'FILE - buffer ${(bufferSize / 1000).round()} KB${zip ? ', zipped' : ''}${encrypt ? ', encrypted' : ''}';
 }
 
-// TODO - this should maybe be changed to a [Stream] model in order to comply to the Dart/Flutter programming model?
-//      - see e.g. the Firebase model >> https://github.com/flutter/plugins/blob/master/packages/firebase_storage/lib/src/upload_task.dart
-/// A Listener that can listen on [FileDataManagerEvent]s from a [FileDataManager].
-abstract class FileDataManagerListener {
-  Future notify(FileDataManagerEvent event);
-}
-
+/// A status event for this file data manager.
+/// See [FileDataManagerEventTypes] for a list of possible event types.
 class FileDataManagerEvent extends DataManagerEvent {
   /// The full path and filename for the file.
   String path;
 
-  FileDataManagerEvent(DataManagerEventType event, this.path) : super(event);
+  FileDataManagerEvent(String type, this.path) : super(type);
+
+  String toString() => 'FileDataManagerEvent - type: $type, path: $path';
 }
 
-//enum FileEvent {
-//  created,
-//  closed,
-//}
+/// An enumeration of file data manager event types
+class FileDataManagerEventTypes extends DataManagerEventTypes {
+  static const String file_created = 'file_created';
+  static const String file_closed = 'file_closed';
+  static const String file_deleted = 'file_deleted';
+  static const String file_encrypted = 'file_encrypted';
+}

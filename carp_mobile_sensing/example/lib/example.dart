@@ -12,8 +12,8 @@ import 'dart:convert';
 /// This is the code for the very minimal example used in the README.md file.
 void example() async {
   // Create a study using a File Backend
-  Study study = Study("1234", "bardram",
-      name: "bardram study",
+  Study study = Study("1234", "user@dtu.dk",
+      name: "An example study",
       dataEndPoint: FileDataEndPoint()
         ..bufferSize = 500 * 1000
         ..zip = true
@@ -26,11 +26,11 @@ void example() async {
       Task('Sensor Task')
         ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
             frequency: 10 * 1000, // sample every 10 secs
-            duration: 100 // for 100 ms
+            duration: 2 // for 2 ms
             ))
         ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
             frequency: 20 * 1000, // sample every 20 secs
-            duration: 100 // for 100 ms
+            duration: 2 // for 2 ms
             )));
 
   study.addTriggerTask(
@@ -55,14 +55,15 @@ void example() async {
   // listen on only CARP events
   controller.events.where((datum) => datum.format.namepace == NameSpace.CARP).forEach(print);
 
-  // listen on BLUETOOTH events
-  controller.events.where((datum) => datum.format.name == ConnectivitySamplingPackage.BLUETOOTH).forEach(print);
+  // listen on LIGHT events only
+  controller.events.where((datum) => datum.format.name == SensorSamplingPackage.LIGHT).forEach(print);
 
-  // map events
-  controller.events.map((datum) => datum.format.name == ConnectivitySamplingPackage.BLUETOOTH).forEach(print);
+  // map events to JSON and then print
+  controller.events.map((datum) => datum.toJson()).forEach(print);
 
-  // listening on a specific probe registred in the ProbeRegistry
-  ProbeRegistry.probes[AppsSamplingPackage.APPS].events.forEach(print);
+  // listening on a specific probe registered in the ProbeRegistry
+  // this is equivalent to the statement above
+  ProbeRegistry.probes[SensorSamplingPackage.LIGHT].events.forEach(print);
 
   // subscribe to events
   StreamSubscription<Datum> subscription = controller.events.listen((Datum datum) {
@@ -182,6 +183,9 @@ void samplingSchemaExample() async {
 
   // listening on events from a specific probe
   ProbeRegistry.lookup(DeviceSamplingPackage.SCREEN).events.forEach(print);
+
+  // listening on data manager events
+  controller.dataManager.events.forEach(print);
 }
 
 /// This is an example of how to set up a study in a very simple way using [SamplingSchema.common()].

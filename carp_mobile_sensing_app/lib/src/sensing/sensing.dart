@@ -12,7 +12,7 @@ class Sensing {
   List<Probe> get runningProbes => (controller != null) ? controller.executor.probes : List();
 
   Sensing() : super() {
-    // register the sampling packages
+    // create/load and register external sampling packages
     SamplingPackageRegistry.register(CommunicationSamplingPackage());
     SamplingPackageRegistry.register(ContextSamplingPackage());
     // right now the audio plugin throws an exception
@@ -20,10 +20,8 @@ class Sensing {
     // TODO - enable once issue is solved.
     //SamplingPackageRegistry.register(AudioSamplingPackage());
 
-    // register data endpoints
-    DataManagerRegistry.register(DataEndPointType.PRINT, new ConsoleDataManager());
-    DataManagerRegistry.register(DataEndPointType.FILE, new FileDataManager());
-    DataManagerRegistry.register(DataEndPointType.CARP, new CarpDataManager());
+    // create/load and register external data managers
+    DataManagerRegistry.register(CarpDataManager());
     //DataManagerRegistry.register(DataEndPointType.FIREBASE_STORAGE, new FirebaseStorageDataManager());
     //DataManagerRegistry.register(DataEndPointType.FIREBASE_DATABASE, new FirebaseDatabaseDataManager());
   }
@@ -38,6 +36,7 @@ class Sensing {
     controller = StudyController(study, samplingSchema: aware); // a controller using the AWARE test schema
     //controller = StudyController(study, privacySchemaName: PrivacySchema.DEFAULT); // a controller w. privacy
     await controller.initialize();
+
     controller.start();
 
     // listening on all data events from the study and print it (for debugging purpose).
@@ -47,6 +46,9 @@ class Sensing {
 
     // listening on a specific probe
     //ProbeRegistry.probes[DataType.LOCATION].events.forEach(print);
+
+    // listening on data manager events
+    controller.dataManager.events.forEach(print);
   }
 
   /// Stop sensing.
@@ -63,6 +65,8 @@ class StudyMock implements StudyManager {
   final String uri = "http://staging.carp.cachet.dk:8080";
   final String clientID = "carp";
   final String clientSecret = "carp";
+  final String testStudyId = "2";
+
   String studyId;
 
   Future<void> initialize() {}
@@ -70,29 +74,35 @@ class StudyMock implements StudyManager {
   Study _study;
 
   Future<Study> getStudy(String studyId) async {
-    //return _getHighFrequencyStudy(studyId);
-    //return _getAllProbesAsAwareStudy(studyId);
-    return _getAllMeasuresStudy(studyId);
+    //return _getHighFrequencyStudy('DF#4dD-high-frequency');
+    //return _getAllProbesAsAwareStudy('DF#4dD-aware-carp');
+    //return _getAllMeasuresStudy(studyId);
+    return _getAllProbesAsAwareCarpUploadStudy();
   }
 
   Future<Study> _getAllMeasuresStudy(String studyId) async {
     if (_study == null) {
-      _study = Study('DF#4dD-all', username)
+      _study = Study(studyId, username)
         ..name = 'CARP Mobile Sensing - all measures available'
         ..description = 'This is a study of with all possible measures available in CARP Mobile Sensing'
-        ..dataEndPoint = getDataEndpoint(DataEndPointType.FILE)
+        ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
         ..addTriggerTask(ImmediateTrigger(),
             Task()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
     }
     return _study;
   }
 
+  Future<Study> _getAllProbesAsAwareCarpUploadStudy() async {
+    return await _getAllProbesAsAwareStudy(testStudyId)
+      ..dataEndPoint = getDataEndpoint(DataEndPointTypes.CARP);
+  }
+
   Future<Study> _getAllProbesAsAwareStudy(String studyId) async {
     if (_study == null) {
-      _study = Study('DF#4dD-aware', username)
+      _study = Study(studyId, username)
         ..name = 'CARP Mobile Sensing - long term sampling study configures like AWARE'
         ..description = aware.description
-        ..dataEndPoint = getDataEndpoint(DataEndPointType.FILE)
+        ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
         ..addTriggerTask(
             ImmediateTrigger(), Task()..measures = aware.measures.values.toList()) // add all measures (for now)
         ..addTriggerTask(
@@ -107,10 +117,10 @@ class StudyMock implements StudyManager {
 
   Future<Study> _getHighFrequencyStudy(String studyId) async {
     if (_study == null) {
-      _study = Study('DF#4dD-high-frequency', username)
+      _study = Study(studyId, username)
         ..name = 'CARP Mobile Sensing - high-frequency sampling study'
         ..description = mCerebrum.description
-        ..dataEndPoint = getDataEndpoint(DataEndPointType.FILE)
+        ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
         ..addTriggerTask(
             ImmediateTrigger(), Task()..measures = mCerebrum.measures.values.toList()); // add all measures (for now)
     }
@@ -118,36 +128,51 @@ class StudyMock implements StudyManager {
   }
 
   /// Return a [DataEndPoint] of the specified type.
-  DataEndPoint getDataEndpoint(DataEndPointType type) {
+  DataEndPoint getDataEndpoint(String type) {
     assert(type != null);
     switch (type) {
-      case DataEndPointType.PRINT:
-        return new DataEndPoint(DataEndPointType.PRINT);
-      case DataEndPointType.FILE:
+      case DataEndPointTypes.PRINT:
+        return new DataEndPoint(DataEndPointTypes.PRINT);
+      case DataEndPointTypes.FILE:
         return FileDataEndPoint(bufferSize: 500 * 1000, zip: true, encrypt: false);
-      case DataEndPointType.CARP:
-        return CarpDataEndPoint(CarpUploadMethod.DATA_POINT,
-            name: 'CARP Staging Server',
-            uri: uri,
-            clientId: clientID,
-            clientSecret: clientSecret,
-            email: username,
-            password: password);
-//        return CarpDataEndPoint(CarpUploadMethod.BATCH_DATA_POINT,
+      case DataEndPointTypes.CARP:
+//        return CarpDataEndPoint(CarpUploadMethod.DATA_POINT,
 //            name: 'CARP Staging Server',
 //            uri: uri,
 //            clientId: clientID,
 //            clientSecret: clientSecret,
-//            email: _study.userId,
-//            password: password,
-//            bufferSize: 50 * 1000,
-//            zip: true);
+//            email: username,
+//            password: password);
+//        return CarpDataEndPoint(
+//          CarpUploadMethod.BATCH_DATA_POINT,
+//          name: 'CARP Staging Server',
+//          uri: uri,
+//          clientId: clientID,
+//          clientSecret: clientSecret,
+//          email: _study.userId,
+//          password: password,
+//          bufferSize: 500 * 1000,
+//          zip: false,
+//          deleteWhenUploaded: false,
+//        );
+        return CarpDataEndPoint(
+          CarpUploadMethod.FILE,
+          name: 'CARP Staging Server',
+          uri: uri,
+          clientId: clientID,
+          clientSecret: clientSecret,
+          email: _study.userId,
+          password: password,
+          bufferSize: 500 * 1000,
+          zip: true,
+          deleteWhenUploaded: false,
+        );
 //      case DataEndPointType.FIREBASE_STORAGE:
 //        return FirebaseStorageDataEndPoint(firebaseEndPoint, path: 'sensing/data', bufferSize: 50 * 1000, zip: true);
 //      case DataEndPointType.FIREBASE_DATABASE:
 //        return FirebaseDatabaseDataEndPoint(firebaseEndPoint, collection: 'carp_data');
       default:
-        return new DataEndPoint(DataEndPointType.PRINT);
+        return new DataEndPoint(DataEndPointTypes.PRINT);
     }
   }
 
@@ -183,7 +208,7 @@ SamplingSchema get aware => SamplingSchema()
         PeriodicMeasure(
           MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
           name: "Accelerometer",
-          enabled: false,
+          enabled: true,
           frequency: 200, // How often to start a measure
           duration: 2, // Window size
         )),
@@ -191,7 +216,7 @@ SamplingSchema get aware => SamplingSchema()
         SensorSamplingPackage.GYROSCOPE,
         PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
             name: "Gyroscope",
-            enabled: false,
+            enabled: true,
             frequency: 200, // How often to start a measure
             duration: 2 // Window size
             )),

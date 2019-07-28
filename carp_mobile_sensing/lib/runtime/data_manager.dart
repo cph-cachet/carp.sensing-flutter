@@ -10,11 +10,11 @@ part of runtime;
 /// data manager that implements this interface.
 abstract class DataManager {
   /// The type of this data manager as enumerated in [DataEndPointType].
-  DataEndPointType get type;
+  String get type;
 
   /// Initialize the data manager by specifying the running [Study]
   /// and the stream of [Datum] events to handle.
-  Future<void> initialize(Study study, Stream<Datum> events);
+  Future<void> initialize(Study study, Stream<Datum> data);
 
   /// Close the data manager (e.g. closing connections).
   Future<void> close();
@@ -22,8 +22,8 @@ abstract class DataManager {
   /// Stream of data manager events.
   Stream<DataManagerEvent> get events;
 
-  /// On each data event from the data stream, the [onData] handler is called.
-  void onData(Datum datum);
+  /// On each data event from the data stream, the [onDatum] handler is called.
+  void onDatum(Datum datum);
 
   /// When the data stream closes, the [onDone] handler is called.
   void onDone();
@@ -38,20 +38,19 @@ abstract class DataManager {
 abstract class AbstractDataManager implements DataManager {
   Study study;
 
-  // Event handling below
-  StreamController<DataManagerEvent> _controller = StreamController<DataManagerEvent>.broadcast();
-  Stream<DataManagerEvent> get events => _controller.stream;
-  void addEvent(DataManagerEvent event) => _controller.add(event);
+  StreamController<DataManagerEvent> controller = StreamController<DataManagerEvent>.broadcast();
+  Stream<DataManagerEvent> get events => controller.stream;
+  void addEvent(DataManagerEvent event) => controller.add(event);
 
-  Future<void> initialize(Study study, Stream<Datum> events) async {
+  Future<void> initialize(Study study, Stream<Datum> data) async {
     this.study = study;
-    events.listen(onData, onError: onError, onDone: onDone);
-    addEvent(DataManagerEvent(DataManagerEventType.initialized));
+    data.listen(onDatum, onError: onError, onDone: onDone);
+    addEvent(DataManagerEvent(DataManagerEventTypes.initialized));
   }
 
-  Future<void> close() async => addEvent(DataManagerEvent(DataManagerEventType.closed));
+  Future<void> close() async => addEvent(DataManagerEvent(DataManagerEventTypes.closed));
 
-  void onData(Datum datum);
+  void onDatum(Datum datum);
   void onDone();
   void onError(error);
 
@@ -65,7 +64,7 @@ abstract class AbstractDataManager implements DataManager {
 /// which is later used to call [lookup] when trying to find an appropriate [DataManager] for
 /// a specific [DataEndPointType].
 class DataManagerRegistry {
-  static Map<DataEndPointType, DataManager> _registry = new Map<DataEndPointType, DataManager>();
+  static Map<String, DataManager> _registry = new Map<String, DataManager>();
 
   /// Register a [DataManager] with a specific type.
   static register(DataManager manager) {
@@ -73,7 +72,7 @@ class DataManagerRegistry {
   }
 
   /// Lookup an instance of a [DataManager] based on the [DataEndPointType].
-  static DataManager lookup(DataEndPointType type) {
+  static DataManager lookup(String type) {
     return _registry[type];
   }
 }
@@ -88,19 +87,16 @@ abstract class StudyManager {
 }
 
 class DataManagerEvent {
-  /// The event type, see [DataManagerEventType].
-  DataManagerEventType event;
+  /// The event type, see [DataManagerEventTypes].
+  String type;
 
-  DataManagerEvent(this.event);
+  DataManagerEvent(this.type);
+
+  String toString() => 'DataManagerEvent - type: $type';
 }
 
-enum DataManagerEventType {
-  initialized,
-  closed,
-  file_created,
-  file_closed,
-  file_uploaded,
-  file_deleted,
-  file_zipped,
-  file_encrypted,
+/// An enumeration of data manager event types
+class DataManagerEventTypes {
+  static const String initialized = 'initialized';
+  static const String closed = 'closed';
 }

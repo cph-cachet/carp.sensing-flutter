@@ -68,11 +68,12 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 some_method() async {
   // Create a study using a File Backend
-  Study study = Study("1234", "bardram", name: "bardram study");
-  study.dataEndPoint = FileDataEndPoint()
-    ..bufferSize = 500 * 1000
-    ..zip = true
-    ..encrypt = false;
+  Study study = Study("1234", "user@dtu.dk",
+      name: "An example study",
+      dataEndPoint: FileDataEndPoint()
+        ..bufferSize = 500 * 1000
+        ..zip = true
+        ..encrypt = false);
 
   // add sensor collection from accelerometer and gyroscope
   // careful - these sensors generate a lot of data!
@@ -81,11 +82,11 @@ some_method() async {
       Task('Sensor Task')
         ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
             frequency: 10 * 1000, // sample every 10 secs
-            duration: 100 // for 100 ms
+            duration: 2 // for 2 ms
             ))
         ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
             frequency: 20 * 1000, // sample every 20 secs
-            duration: 100 // for 100 ms
+            duration: 2 // for 2 ms
             )));
 
   study.addTriggerTask(
@@ -93,21 +94,33 @@ some_method() async {
       Task('Task collecting a list of all installed apps')
         ..addMeasure(Measure(MeasureType(NameSpace.CARP, AppsSamplingPackage.APPS))));
 
+  // creating measure variable to be used later
+  PeriodicMeasure lightMeasure = PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
+      name: "Ambient Light", frequency: 11 * 1000, duration: 700);
+  study.addTriggerTask(ImmediateTrigger(), Task('Light')..addMeasure(lightMeasure));
+
   // Create a Study Controller that can manage this study, initialize it, and start it.
   StudyController controller = StudyController(study);
-  // important - await initialization before starting
+  // await initialization before starting
   await controller.initialize();
   controller.start();
 
   // listening on all data events from the study
   controller.events.forEach(print);
 
-  // listen on BLUETOOTH events
-  controller.events.where((datum) => datum.format.name == ConnectivitySamplingPackage.BLUETOOTH).forEach(print);
+  // listen on only CARP events
+  controller.events.where((datum) => datum.format.namepace == NameSpace.CARP).forEach(print);
 
-  // listening on a specific probe registred in the ProbeRegistry
-  ProbeRegistry.probes[DataType.LOCATION].events.forEach(print);
-  
+  // listen on LIGHT events only
+  controller.events.where((datum) => datum.format.name == SensorSamplingPackage.LIGHT).forEach(print);
+
+  // map events to JSON and then print
+  controller.events.map((datum) => datum.toJson()).forEach(print);
+
+  // listening on a specific probe registered in the ProbeRegistry
+  // this is equivalent to the statement above
+  ProbeRegistry.probes[SensorSamplingPackage.LIGHT].events.forEach(print);
+
   // subscribe to events
   StreamSubscription<Datum> subscription = controller.events.listen((Datum datum) {
     // do something w. the datum, e.g. print the json
@@ -121,6 +134,17 @@ some_method() async {
   // pause / resume specific probe(s)
   ProbeRegistry.lookup(SensorSamplingPackage.ACCELEROMETER).pause();
   ProbeRegistry.lookup(SensorSamplingPackage.ACCELEROMETER).resume();
+
+  // adapt measures on the go - calling hasChanged() force a restart of the probe, which will load the new measure
+  lightMeasure
+    ..frequency = 12 * 1000
+    ..duration = 500
+    ..hasChanged();
+
+  // disabling a measure will pause the probe
+  lightMeasure
+    ..enabled = false
+    ..hasChanged();
 
   // once the sampling has to stop, e.g. in a Flutter dispose() methods, call stop.
   // note that once a sampling has stopped, it cannot be restarted.

@@ -1,10 +1,18 @@
-## 0.6.0
+## 0.6.0 - `Trigger` Model & Data Manager events
+
 * Extension of `Study` domain model to include support for
    * `Trigger`, i.e. that sampling can be triggered in different ways
    * `Measure` 
+
 * Adjustment of runtime environment to reflect the new study model
    * Addition of a `TriggerExecutor`
    * Update to `Executors`, i.e. `StudyExecutor`, `TaskExecutor` and `Probe`
+
+* The data manager model has been updated
+   * A `DataManager` now expose a stream of state `events` as defined in `DataManagerEventTypes`
+   * A `DataManager` now has a `type` which is a string as defined in `DataEndPointTypes`
+   * These changes are also implemented for the file and CARP data managers.
+   
 * Minor refactoring
    * Apps and AppUsage are no longer periodic measure, but one-off measures.
      Hence, use the new trigger model to sample installed apps and their usage.
@@ -13,14 +21,14 @@
 ## 0.5.1
 * Update of readme file.
 
-## 0.5.0 BREAKING
+## 0.5.0 - AndroidX Compatibility 
 * **Breaking change.** This version has been migrated from the deprecated Android Support Library to *AndroidX*. 
 This should not result in any functional changes, but it requires any Android app using this plugin to also 
 [migrate](https://developer.android.com/jetpack/androidx/migrate) if they're using the original support library. 
    * See Flutter [AndroidX compatibility](https://flutter.dev/docs/development/packages-and-plugins/androidx-compatibility)
 * Fixed error in `PedometerProbe`
 
-## 0.4.0
+## 0.4.0 - Data Transformers and Privacy Support
 * support for data transformers
    * OMH Geolocation
    * OMH PhysicalActivity
@@ -46,7 +54,7 @@ This should not result in any functional changes, but it requires any Android ap
 * rename of `probes` folder to `packages`
 * upgrade and test on Flutter v. 1.3.4 Dart v. 2.2.1 
 
-## 0.3.2
+## 0.3.2 - Sampling Packages
 * support for dividing probes into separate sampling packages
 * included in `carp_mobile_sensing` are
      * `device` (device, screen, memory, battery)
@@ -63,7 +71,7 @@ This should not result in any functional changes, but it requires any Android ap
 * small updates to the data format incl. documentation on the [wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki/Sampling-Data-Formats).
 * fixed error in the `stop` method.
 
-## 0.3.0 - no backward compatibility
+## 0.3.0 - Domain Model update
 * major updates to the domain model as a `core` library
     * `Measure` now have a `configuration`
 * simplification to probe implementations
