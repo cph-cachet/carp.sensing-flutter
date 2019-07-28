@@ -15,10 +15,7 @@ class Sensing {
     // create/load and register external sampling packages
     SamplingPackageRegistry.register(CommunicationSamplingPackage());
     SamplingPackageRegistry.register(ContextSamplingPackage());
-    // right now the audio plugin throws an exception
-    // see https://github.com/dooboolab/flutter_sound/issues/93
-    // TODO - enable once issue is solved.
-    //SamplingPackageRegistry.register(AudioSamplingPackage());
+    SamplingPackageRegistry.register(AudioSamplingPackage());
 
     // create/load and register external data managers
     DataManagerRegistry.register(CarpDataManager());
@@ -32,8 +29,8 @@ class Sensing {
     study = await mock.getStudy(testStudyId);
 
     // Create a Study Controller that can manage this study, initialize it, and start it.
-    //controller = StudyController(study);
-    controller = StudyController(study, samplingSchema: aware); // a controller using the AWARE test schema
+    controller = StudyController(study);
+    //controller = StudyController(study, samplingSchema: aware); // a controller using the AWARE test schema
     //controller = StudyController(study, privacySchemaName: PrivacySchema.DEFAULT); // a controller w. privacy
     await controller.initialize();
 
@@ -77,7 +74,20 @@ class StudyMock implements StudyManager {
     //return _getHighFrequencyStudy('DF#4dD-high-frequency');
     //return _getAllProbesAsAwareStudy('DF#4dD-aware-carp');
     //return _getAllMeasuresStudy(studyId);
-    return _getAllProbesAsAwareCarpUploadStudy();
+    //return _getAllProbesAsAwareCarpUploadStudy();
+    return _getAudioStudy(studyId);
+  }
+
+  Future<Study> _getAudioStudy(String studyId) async {
+    if (_study == null) {
+      _study = Study(studyId, username)
+        ..name = 'CARP Mobile Sensing - audio measures'
+        ..description = 'This is a study ...'
+        ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
+        ..addTriggerTask(
+            ImmediateTrigger(), Task()..measures = SamplingSchema.debug().getMeasureList([AudioSamplingPackage.NOISE]));
+    }
+    return _study;
   }
 
   Future<Study> _getAllMeasuresStudy(String studyId) async {
