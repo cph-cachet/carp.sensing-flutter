@@ -15,7 +15,7 @@ dependencies:
   firebase_storage: ^3.0.0
   firebase_auth: ^0.11.0
   cloud_firestore: ^0.12.0
-  carp_mobile_sensing: ^0.6.0
+  #carp_mobile_sensing: ^0.6.0
 
 
 # Overriding carp_mobile_sensing and carp_core to use the local copy

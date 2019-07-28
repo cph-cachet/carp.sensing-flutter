@@ -138,10 +138,8 @@ class CarpDataManager extends AbstractDataManager {
         CarpFileResponse response = await uploadTask.onComplete;
         int id = response.id;
 
-        addEvent(
-          CarpDataManagerEvent(
-              CarpDataManagerEventTypes.file_uploaded, file.path, id, uploadTask.reference.fileEndpointUri),
-        );
+        addEvent(CarpDataManagerEvent(
+            CarpDataManagerEventTypes.file_uploaded, file.path, id, uploadTask.reference.fileEndpointUri));
         print("File upload to CARP finished - remote id : $id ");
         break;
       case CarpUploadMethod.DATA_POINT:

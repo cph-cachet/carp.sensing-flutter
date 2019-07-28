@@ -16,7 +16,6 @@ abstract class FirebaseDataManager extends AbstractDataManager {
 
   FirebaseDataManager();
 
-  @override
   Future initialize(Study study, Stream<Datum> events) async {
     super.initialize(study, events);
     assert(study.dataEndPoint is FirebaseDataEndPoint);
@@ -73,7 +72,7 @@ abstract class FirebaseDataManager extends AbstractDataManager {
             //TODO : should probably throw a NotImplementedException
           }
       }
-
+      addEvent(FirebaseDataManagerEvent(FirebaseDataManagerEventTypes.authenticated));
       print("signed in as " + _user.email + " - uid: " + _user.uid);
     }
     return _user;
@@ -96,19 +95,29 @@ abstract class FirebaseDataManager extends AbstractDataManager {
 ///
 /// Files are transferred when the device is online and buffered when offline.
 /// Once the file has been transferred to Firebase, it is deleted on the local device.
-class FirebaseStorageDataManager extends FirebaseDataManager implements FileDataManagerListener {
+class FirebaseStorageDataManager extends FirebaseDataManager {
   FileDataManager fileDataManager;
   FirebaseStorageDataEndPoint dataEndPoint;
 
   FirebaseStorage _firebaseStorage;
 
+  String get type => DataEndPointTypes.FIREBASE_STORAGE;
+
   FirebaseStorageDataManager() : super() {
     // Create a [FileDataManager] and wrap it.
     fileDataManager = new FileDataManager();
-    fileDataManager.addFileDataManagerListener(this);
+
+    // merge the file data manager's events into this CARP data manager's event stream
+    fileDataManager.events.forEach((event) => controller.add(event));
+
+    // listen to data manager events, but only those from the file manager and only closing events
+    // on a close event, upload the file to CARP
+    fileDataManager.events
+        .where((event) => event.runtimeType == FileDataManagerEvent)
+        .where((event) => event.type == FileDataManagerEventTypes.file_closed)
+        .listen((event) => _uploadFileToFirestore((event as FileDataManagerEvent).path));
   }
 
-  @override
   Future initialize(Study study, Stream<Datum> events) async {
     super.initialize(study, events);
     assert(study.dataEndPoint is FirebaseStorageDataEndPoint);
@@ -132,11 +141,6 @@ class FirebaseStorageDataManager extends FirebaseDataManager implements FileData
       _firebaseStorage = new FirebaseStorage(app: app, storageBucket: dataEndPoint.firebaseEndPoint.uri);
     }
     return _firebaseStorage;
-  }
-
-  Future<bool> uploadData(Datum data) {
-    // Forward to [FileDataManager]
-    return fileDataManager.uploadData(data);
   }
 
   String get firebasePath => "${dataEndPoint.path}/${study.id}/${Device.deviceID.toString()}";
@@ -164,32 +168,17 @@ class FirebaseStorageDataManager extends FirebaseDataManager implements FileData
 
     // await the upload is successful
     final Uri downloadUrl = (await uploadTask.onComplete).uploadSessionUri;
+    addEvent(FirebaseDataManagerEvent(FirebaseDataManagerEventTypes.file_uploaded, file.path, downloadUrl.path));
     print("Upload to Firestore finished - remote file uri  : ${downloadUrl.path}'");
     // then delete the local file.
     file.delete();
-    print("File deleted : ${file.path}");
+    addEvent(FileDataManagerEvent(FileDataManagerEventTypes.file_deleted, file.path));
 
     return downloadUrl;
   }
 
-  Future notify(FileDataManagerEvent event) async {
-    print("FirebaseStorageDataManager : {event: ${event.event}, path : ${event.path}");
-    switch (event.event) {
-      case FileEvent.created:
-        {
-          // do nothing
-          break;
-        }
-      case FileEvent.closed:
-        {
-          // Queue file for transfer to Firebase
-          _uploadFileToFirestore(event.path);
-          break;
-        }
-    }
-  }
-
-  void onData(Datum datum) => uploadData(datum);
+  // forward to file data manager
+  void onDatum(Datum datum) => fileDataManager.write(datum);
 }
 
 /// Stores CARP json objects in the Firebase Database.
@@ -204,7 +193,8 @@ class FirebaseDatabaseDataManager extends FirebaseDataManager {
 
   FirebaseDatabaseDataManager();
 
-  @override
+  String get type => DataEndPointTypes.FIREBASE_DATABSE;
+
   Future initialize(Study study, Stream<Datum> events) async {
     super.initialize(study, events);
     assert(study.dataEndPoint is FirebaseDatabaseDataEndPoint);
@@ -257,5 +247,25 @@ class FirebaseDatabaseDataManager extends FirebaseDataManager {
     return false;
   }
 
-  void onData(Datum datum) => uploadData(datum);
+  void onDatum(Datum datum) => uploadData(datum);
+}
+
+/// A status event for this Firebase data manager.
+/// See [FirebaseDataManagerEventTypes] for a list of possible event types.
+class FirebaseDataManagerEvent extends DataManagerEvent {
+  /// The full path and filename for the file on the device.
+  String path;
+
+  /// The URI of the file on the Firebase server.
+  String firebaseUri;
+
+  FirebaseDataManagerEvent(String type, [this.path, this.firebaseUri]) : super(type);
+
+  String toString() => 'FirebaseDataManagerEvent - type: $type, path: $path, firebaseUri: $firebaseUri';
+}
+
+/// An enumeration of file data manager event types
+class FirebaseDataManagerEventTypes extends FileDataManagerEventTypes {
+  static const String authenticated = 'authenticated';
+  static const String file_uploaded = 'file_uploaded';
 }

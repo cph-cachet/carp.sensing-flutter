@@ -88,7 +88,7 @@ class FirebaseDatabaseDataEndPoint extends DataEndPoint with FirebaseDataEndPoin
 
   /// Creates a [FirebaseDatabaseDataEndPoint].
   FirebaseDatabaseDataEndPoint(FirebaseEndPoint firebaseEndPoint, {this.collection})
-      : super(DataEndPointType.FIREBASE_DATABASE) {
+      : super(DataEndPointTypes.FIREBASE_DATABSE) {
     this.firebaseEndPoint = firebaseEndPoint;
   }
 
@@ -113,7 +113,7 @@ class FirebaseStorageDataEndPoint extends FileDataEndPoint with FirebaseDataEndP
 
   /// Creates a [FirebaseStorageDataEndPoint].
   FirebaseStorageDataEndPoint(FirebaseEndPoint firebaseEndPoint, {this.path, bufferSize, zip, encrypt, publicKey})
-      : super(type: DataEndPointType.FIREBASE_STORAGE, bufferSize: bufferSize, zip: zip, encrypt: encrypt) {
+      : super(type: DataEndPointTypes.FIREBASE_STORAGE, bufferSize: bufferSize, zip: zip, encrypt: encrypt) {
     this.firebaseEndPoint = firebaseEndPoint;
   }
 
