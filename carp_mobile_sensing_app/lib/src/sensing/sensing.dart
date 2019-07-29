@@ -85,7 +85,10 @@ class StudyMock implements StudyManager {
         ..description = 'This is a study ...'
         ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
         ..addTriggerTask(
-            ImmediateTrigger(), Task()..measures = SamplingSchema.debug().getMeasureList([AudioSamplingPackage.NOISE]));
+            ImmediateTrigger(),
+            Task()
+              ..measures.add(AudioMeasure(MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO),
+                  name: "Audio", frequency: 1 * 60 * 1000, duration: 4 * 1000, studyId: studyId)));
     }
     return _study;
   }
