@@ -40,6 +40,8 @@ class CARPDatum extends Datum {
 
   factory CARPDatum.fromJson(Map<String, dynamic> json) => _$CARPDatumFromJson(json);
   Map<String, dynamic> toJson() => _$CARPDatumToJson(this);
+
+  String toString() => '${this.runtimeType}: format: $format, id: $id, timestamp: $timestamp';
 }
 
 /// A very simple [Datum] that only holds a string datum object.
@@ -55,6 +57,8 @@ class StringDatum extends CARPDatum {
 
   factory StringDatum.fromJson(Map<String, dynamic> json) => _$StringDatumFromJson(json);
   Map<String, dynamic> toJson() => _$StringDatumToJson(this);
+
+  String toString() => super.toString() + ', str: $str';
 }
 
 /// A generic [Datum] that holds a map of key, value string objects.
@@ -85,6 +89,8 @@ class ErrorDatum extends CARPDatum {
 
   factory ErrorDatum.fromJson(Map<String, dynamic> json) => _$ErrorDatumFromJson(json);
   Map<String, dynamic> toJson() => _$ErrorDatumToJson(this);
+
+  String toString() => super.toString() + ', message: $message';
 }
 
 /// A [Datum] object holding multiple [Datum]s of the same type.

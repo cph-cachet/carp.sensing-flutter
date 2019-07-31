@@ -16,6 +16,7 @@ class Sensing {
     SamplingPackageRegistry.register(CommunicationSamplingPackage());
     SamplingPackageRegistry.register(ContextSamplingPackage());
     SamplingPackageRegistry.register(AudioSamplingPackage());
+    SamplingPackageRegistry.register(ESenseSamplingPackage());
 
     // create/load and register external data managers
     DataManagerRegistry.register(CarpDataManager());
@@ -75,7 +76,23 @@ class StudyMock implements StudyManager {
     //return _getAllProbesAsAwareStudy('DF#4dD-aware-carp');
     //return _getAllMeasuresStudy(studyId);
     //return _getAllProbesAsAwareCarpUploadStudy();
-    return _getAudioStudy(studyId);
+    //return _getAudioStudy(studyId);
+    return _getESenseStudy(studyId);
+  }
+
+  Future<Study> _getESenseStudy(String studyId) async {
+    if (_study == null) {
+      _study = Study(studyId, username)
+        ..name = 'CARP Mobile Sensing - audio measures'
+        ..description = 'This is a study ...'
+        ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
+        ..addTriggerTask(
+            ImmediateTrigger(),
+            Task()
+              ..measures.add(AudioMeasure(MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO),
+                  name: "Audio", frequency: 1 * 60 * 1000, duration: 4 * 1000, studyId: studyId)));
+    }
+    return _study;
   }
 
   Future<Study> _getAudioStudy(String studyId) async {
