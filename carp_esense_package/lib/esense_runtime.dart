@@ -32,7 +32,7 @@ abstract class _ESenseProbe extends StreamProbe {
       }
     });
 
-    //ESenseManager.setSamplingRate(samplingRate);
+    ESenseManager.setSamplingRate(samplingRate);
     ESenseManager.connect(deviceName);
   }
 }

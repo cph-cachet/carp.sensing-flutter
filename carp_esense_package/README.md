@@ -7,7 +7,8 @@ the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensin
 to work with the [eSense](http://www.esense.io) earable computing platform.
 This packages supports sampling of the following [`Measure`](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/domain/Measure-class.html) types(s)
 
-* `esense`
+* `esense_button` : eSense button pressed / released events
+* `esense_sensor` : eSense sensor (accelerometer & gyroscope) events.
 
 See the user documentation on the [eSense device](http://www.esense.io/share/eSense-User-Documentation.pdf) for how to use the device. 
 See the [`esense`](https://pub.dev/packages/esense) Flutter plugin and its [API](https://pub.dev/documentation/esense/latest/) documentation to understand how sensor data is generated and their data formats. 
@@ -30,7 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
   carp_mobile_sensing: ^0.5.0
-  carp_esense_package: ^0.1.0
+  carp_esense_package: ^0.1.3
   ...
 `````
 
@@ -70,5 +71,5 @@ Before creating a study and running it, register this package in the
 [SamplingPackageRegistry](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/runtime/SamplingPackageRegistry.html).
 
 `````dart
-  SamplingPackageRegistry.register(ESenseSamplingPackage());
+SamplingPackageRegistry.register(ESenseSamplingPackage());
 `````
