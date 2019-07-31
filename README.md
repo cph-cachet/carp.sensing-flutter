@@ -12,21 +12,22 @@ These plugins are also available on [pub](https://pub.dartlang.org/flutter/plugi
 ## Software Components
 These are the available CARP Mobile Sensing Flutter components in this repository.
 
-| Component | Description | Pub | 
+| Component | Description | Pub |
 |-----------|-------------|-----|
-| **Core** | **Basic components** |  | 
+| **Core** | **Basic components** |  |
 | [carp_core](./carp_core) | The core CARP domain model | [![pub package](https://img.shields.io/pub/v/carp_core.svg)](https://pub.dartlang.org/packages/carp_core) |
 | [carp_mobile_sensing](./carp_mobile_sensing) | The main CARP Mobile Sensing Framework | [![pub package](https://img.shields.io/pub/v/carp_mobile_sensing.svg)](https://pub.dartlang.org/packages/carp_mobile_sensing) |
-| **Packages** | **Data sampling packages** |  | 
+| **Packages** | **Data sampling packages** |  |
 | [carp_communication_package](./carp_communication_package) | Communication sampling package (phone, sms) | [![pub package](https://img.shields.io/pub/v/carp_communication_package.svg)](https://pub.dartlang.org/packages/carp_communication_package) |
 | [carp_context_package](./carp_context_package) | Context sampling package (location, activity, weather) | [![pub package](https://img.shields.io/pub/v/carp_context_package.svg)](https://pub.dartlang.org/packages/carp_context_package) |
 | [carp_audio_package](./carp_audio_package) | Audio sampling package (audio, noise) | [![pub package](https://img.shields.io/pub/v/carp_audio_package.svg)](https://pub.dartlang.org/packages/carp_audio_package) |
 | [carp_movisens_package](./carp_movisens_package) | Movisens Move & ECG sampling package (movement, MET-level, ECG) | [![pub package](https://img.shields.io/pub/v/carp_movisens_package.svg)](https://pub.dartlang.org/packages/carp_movisens_package) |
-| **Backends** | **Backend data upload components** |  | 
+| [carp_esense_package](./carp_esense_package) | Sampling package for the eSense ear plug device (button pressed & movement) | [![pub package](https://img.shields.io/pub/v/carp_esense_package.svg)](https://pub.dartlang.org/packages/carp_esense_package) |
+| **Backends** | **Backend data upload components** |  |
 | [carp_webservices](./carp_webservices) | Flutter API for CARP web services | [![pub package](https://img.shields.io/pub/v/carp_webservices.svg)](https://pub.dartlang.org/packages/carp_webservices) |
 | [carp_backend](./carp_backend) | Support for uploading data to a CARP data backend as JSON. | [![pub package](https://img.shields.io/pub/v/carp_backend.svg)](https://pub.dartlang.org/packages/carp_backend) |
 | [carp_firebase_backend](./carp_firebase_backend) | Support for uploading data to Firebase as both zipped files and JSON data| [![pub package](https://img.shields.io/pub/v/carp_firebase_backend.svg)](https://pub.dartlang.org/packages/carp_firebase_backend) |
-| **Apps** | **Misc. mobile sensing apps** |  | 
+| **Apps** | **Misc. mobile sensing apps** |  |
 | [carp_mobile_sensing_app](./carp_mobile_sensing_app) | The CARP Mobile Sensing example app | N/A |
 
 ## Documentation
@@ -42,5 +43,3 @@ Please check existing issues and file any new issues, bugs, or feature requests 
 Contributing is not entirely in place yet. However, if you wish to contribute a change to any of the existing components in this repo,
 please review our [contribution guide](https://github.com/cph-cachet/carp.sensing/CONTRIBUTING.md),
 and send a [pull request](https://github.com/cph-cachet/carp.sensing-flutter/pulls).
-
-

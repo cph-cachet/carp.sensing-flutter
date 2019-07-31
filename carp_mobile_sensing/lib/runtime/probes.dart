@@ -414,32 +414,44 @@ abstract class StreamProbe extends AbstractProbe {
   void onInitialize(Measure measure) {}
 
   void onStart() {
-    assert(stream != null, 'Stream cannot be null in a StreamProbe');
-    subscription = stream.listen(onData, onError: onError, onDone: onDone);
+    //assert(stream != null, 'Stream cannot be null in a StreamProbe');
+    if (stream != null) subscription = stream.listen(onData, onError: onError, onDone: onDone);
   }
 
-  void onRestart() {}
+  void onRestart() {
+    // if we don't have a subscription yet, try to get one
+    if (subscription == null && stream != null) subscription = stream.listen(onData, onError: onError, onDone: onDone);
+  }
 
   void onPause() {
-    // Not all underlying streams seems to comply to the pause event.
-    // For example, the location and activity probe
-    // TODO - implement support for pause/resume in the StreamProbe
-    if (subscription != null) subscription.pause();
+    if (subscription != null) {
+      if (stream.isBroadcast) {
+        // If the underlying stream is a broadcast stream, it is better to cancel and later resume the
+        // subscription. See https://api.dart.dev/stable/2.4.0/dart-async/StreamSubscription/pause.html
+        // Most streams from platform channels are broadcast (e.g. activity, location, eSense, ...).
+        subscription.cancel();
+        subscription = null;
+      } else {
+        subscription.pause();
+      }
+    }
   }
 
   void onResume() {
-    if (subscription != null) subscription.resume();
+    // if we don't have a subscription yet, or it has been canceled, try to get one
+    if (subscription == null && stream != null)
+      subscription = stream.listen(onData, onError: onError, onDone: onDone);
+    else if (stream != null && !stream.isBroadcast) subscription.resume();
   }
 
   void onStop() {
     if (subscription != null) subscription.cancel();
     controller.close();
+    subscription = null;
   }
 
   void onData(Datum event) => controller.add(event);
-
   void onError(error) => controller.addError(error);
-
   void onDone() => controller.close();
 }
 

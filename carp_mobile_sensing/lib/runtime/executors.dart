@@ -112,18 +112,18 @@ class StudyExecutor extends Executor {
     }
   }
 
-  // default behavior is to start all tasks in a study, with no regards to any triggers
-  // mostly for backward compatibility before v. 0.6.0
-  Future _startAllTasks() async {
-    for (Task task in study.tasks) {
-      TaskExecutor executor = TaskExecutor(task);
-      _group.add(executor.events);
-
-      executors.add(executor);
-      executor.initialize(Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR)));
-      executor.start();
-    }
-  }
+//  // default behavior is to start all tasks in a study, with no regards to any triggers
+//  // mostly for backward compatibility before v. 0.6.0
+//  Future _startAllTasks() async {
+//    for (Task task in study.tasks) {
+//      TaskExecutor executor = TaskExecutor(task);
+//      _group.add(executor.events);
+//
+//      executors.add(executor);
+//      executor.initialize(Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR)));
+//      executor.start();
+//    }
+//  }
 }
 
 // ---------------------------------------------------------------------------------------------------------

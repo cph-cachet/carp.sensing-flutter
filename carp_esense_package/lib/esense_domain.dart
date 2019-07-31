@@ -65,9 +65,6 @@ class ESenseSensorDatum extends ESenseDatum {
   static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, ESenseSamplingPackage.ESENSE_SENSOR);
   DataFormat get format => CARP_DATA_FORMAT;
 
-  /// Phone timestamp
-  DateTime timestamp;
-
   /// Sequential number of sensor packet
   ///
   /// The eSense device don't have a clock, so this index reflect the order of reading.
@@ -79,7 +76,10 @@ class ESenseSensorDatum extends ESenseDatum {
   /// 3-elements array with X, Y and Z axis for gyroscope
   List<int> gyro;
 
-  ESenseSensorDatum({String deviceName, this.timestamp, this.packetIndex, this.accel, this.gyro}) : super(deviceName);
+  ESenseSensorDatum({String deviceName, DateTime timestamp, this.packetIndex, this.accel, this.gyro})
+      : super(deviceName) {
+    this.timestamp ??= timestamp;
+  }
 
   factory ESenseSensorDatum.fromSensorEvent({String deviceName, SensorEvent event}) => ESenseSensorDatum(
       deviceName: deviceName,
@@ -87,10 +87,11 @@ class ESenseSensorDatum extends ESenseDatum {
       packetIndex: event.packetIndex,
       gyro: event.gyro,
       accel: event.accel);
+
   factory ESenseSensorDatum.fromJson(Map<String, dynamic> json) => _$ESenseSensorDatumFromJson(json);
   Map<String, dynamic> toJson() => _$ESenseSensorDatumToJson(this);
 
   String toString() =>
       super.toString() +
-      ', timestamp: $timestamp, packetIndex: $packetIndex, accl: [${accel[0]},${accel[1]},${accel[2]}], gyro: [${gyro[0]},${gyro[1]},${gyro[2]}]';
+      ', packetIndex: $packetIndex, accl: [${accel[0]},${accel[1]},${accel[2]}], gyro: [${gyro[0]},${gyro[1]},${gyro[2]}]';
 }

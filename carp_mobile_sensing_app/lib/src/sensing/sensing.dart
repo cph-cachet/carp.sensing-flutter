@@ -38,7 +38,7 @@ class Sensing {
     controller.start();
 
     // listening on all data events from the study and print it (for debugging purpose).
-    //controller.events.forEach(print);
+    controller.events.forEach(print);
 
     //ProbeRegistry.probes.forEach((key, probe) => probe.stateEvents.forEach(print));
 
@@ -46,7 +46,7 @@ class Sensing {
     //ProbeRegistry.probes[DataType.LOCATION].events.forEach(print);
 
     // listening on data manager events
-    controller.dataManager.events.forEach(print);
+    // controller.dataManager.events.forEach(print);
   }
 
   /// Stop sensing.
@@ -83,14 +83,19 @@ class StudyMock implements StudyManager {
   Future<Study> _getESenseStudy(String studyId) async {
     if (_study == null) {
       _study = Study(studyId, username)
-        ..name = 'CARP Mobile Sensing - audio measures'
-        ..description = 'This is a study ...'
+        ..name = 'CARP Mobile Sensing - eSense sampling'
+        ..description =
+            'This is a study designed to test the eSense earable computing platform together with CARP Mobile Sensing'
         ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
         ..addTriggerTask(
             ImmediateTrigger(),
             Task()
-              ..measures.add(AudioMeasure(MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO),
-                  name: "Audio", frequency: 1 * 60 * 1000, duration: 4 * 1000, studyId: studyId)));
+              ..measures.add(ESenseMeasure(MeasureType(NameSpace.CARP, ESenseSamplingPackage.ESENSE_BUTTON),
+                  name: 'eSense - Button', enabled: true, deviceName: 'eSense-0332'))
+              ..measures.add(ESenseMeasure(MeasureType(NameSpace.CARP, ESenseSamplingPackage.ESENSE_SENSOR),
+                  name: 'eSense - Sensors', enabled: true, deviceName: 'eSense-0332', samplingRate: 10)));
+
+//    ..measures = ESenseSamplingPackage().debug.measures.values.toList());
     }
     return _study;
   }

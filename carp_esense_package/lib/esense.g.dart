@@ -88,8 +88,8 @@ Map<String, dynamic> _$ESenseSensorDatumToJson(ESenseSensorDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('device_name', instance.deviceName);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  writeNotNull('device_name', instance.deviceName);
   writeNotNull('packet_index', instance.packetIndex);
   writeNotNull('accel', instance.accel);
   writeNotNull('gyro', instance.gyro);

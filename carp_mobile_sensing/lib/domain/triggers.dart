@@ -51,14 +51,14 @@ class ManualTrigger extends Trigger {
   @JsonKey(ignore: true)
   ManualTriggerExecutor executor;
 
-  /// Called when data sampling in this [Trigger] is to be resumed (started).
+  /// Called when data sampling in this [Trigger] is to be resumed.
   ///
   /// Starting a trigger implies that all [Task]s in this trigger is started,
   /// which again implies that all [Measure]s in these tasks are started.
   /// Therefore, all measures to be started should be 'bundled' into this trigger.
   void resume() => executor?.resume();
 
-  /// Called when data sampling in this [Trigger] is to pause (stop).
+  /// Called when data sampling in this [Trigger] is to paused.
   ///
   /// Stopping a trigger implies that all [Task]s in this trigger is paused,
   /// which again implies that all [Measure]s in these tasks are paused.
@@ -255,9 +255,11 @@ class ConditionalSamplingEventTrigger extends Trigger {
   /// The [MeasureType] of the event to look for.
   MeasureType measureType;
 
-  /// The [EventConditionEvaluator] function evaluating if the event condition is meet for resuming this trigger
+  /// The [EventConditionEvaluator] function evaluating if the event condition is meet
+  /// for resuming this trigger
   EventConditionEvaluator resumeCondition;
 
-  /// The [EventConditionEvaluator] function evaluating if the event condition is meet for pausing this trigger
+  /// The [EventConditionEvaluator] function evaluating if the event condition is meet
+  /// for pausing this trigger
   EventConditionEvaluator pauseCondition;
 }
