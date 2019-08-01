@@ -50,6 +50,12 @@ class StudyController {
     privacySchemaName ??= NameSpace.CARP;
     transformer ??= ((events) => events);
 
+    assert(
+        dataManager != null,
+        'Could not find a data manager for type ${study.dataEndPoint.type}. '
+        'An instance of a DataManager can be specified as the dataManager argument when creating this StudyController.'
+        'Or you can registrer it in the DataManagerRegistry.');
+
     // set up transformation in the following order:
     // 1. privacy schema
     // 2. preferred data format as specified in the study protocol

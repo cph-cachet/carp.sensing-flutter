@@ -13,7 +13,7 @@ class GeofenceProbe extends StreamProbe {
     super.onInitialize(measure);
     fence = Geofence.fromMeasure(measure);
     // listen in on the location service
-    locationService
+    _locationService
         .onLocationChanged()
         .asBroadcastStream()
         .map((location) => Location.fromLocationData(location))

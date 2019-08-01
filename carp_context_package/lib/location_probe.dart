@@ -8,7 +8,7 @@
 part of context;
 
 /// The general location provider service.
-location.Location locationService = location.Location();
+location.Location _locationService = location.Location();
 
 /// Collects location information from the underlying OS's location API.
 /// Is a [StreamProbe] that generates a [LocationDatum] every time location is changed.
@@ -16,26 +16,24 @@ location.Location locationService = location.Location();
 /// Note that in order for location tracking to work with this probe, the
 /// phone must be online on the internet, since Google APIs are used.
 class LocationProbe extends StreamProbe {
-  Future<bool> getPermission() async {
-    bool permission = false;
-    bool enabled = await locationService.serviceEnabled();
-    print("Location service available: $enabled");
-    if (enabled) {
-      permission = await locationService.hasPermission();
-      if (!permission) permission = await locationService.requestPermission();
-    }
-    print("Location permission: $permission");
-
-    return permission;
-  }
-
   void onInitialize(Measure measure) async {
     super.onInitialize(measure);
-    await getPermission();
+    await _getPermission();
   }
 
-  Stream<LocationDatum> get stream => locationService
+  Stream<LocationDatum> get stream => _locationService
       .onLocationChanged()
       .asBroadcastStream()
       .map((location) => LocationDatum.fromLocationData(location));
+
+  Future<bool> _getPermission() async {
+    bool permission = false;
+    bool enabled = await _locationService.serviceEnabled();
+    if (enabled) {
+      permission = await _locationService.hasPermission();
+      if (!permission) permission = await _locationService.requestPermission();
+    }
+
+    return permission;
+  }
 }
