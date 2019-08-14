@@ -62,6 +62,17 @@ class ESenseSamplingPackage implements SamplingPackage {
 
   SamplingSchema get normal => common;
 
+  // This is the debug sampling schema used by bardram
+  // His eSense devices are
+  //
+  //            name         id
+  //  right  eSense-0917  00:04:79:00:0F:4D
+  //  left   eSense-0332  00:04:79:00:0D:04
+  //
+  // As recommended;:
+  //   "it would be better to use the right earbud to record only sound samples
+  //    and the left earbud to record only IMU data."
+  // Hence, connect the right earbud (eSense-0917) to the phone.
   SamplingSchema get debug => SamplingSchema()
     ..type = SamplingSchemaType.DEBUG
     ..name = 'Debugging eSense sampling schema'
@@ -74,6 +85,6 @@ class ESenseSamplingPackage implements SamplingPackage {
       MapEntry(
           ESENSE_SENSOR,
           ESenseMeasure(MeasureType(NameSpace.CARP, ESENSE_SENSOR),
-              name: 'eSense - Sensors', enabled: true, deviceName: 'eSense-0332', samplingRate: 10)),
+              name: 'eSense - Sensors', enabled: true, deviceName: 'eSense-0332', samplingRate: 5)),
     ]);
 }

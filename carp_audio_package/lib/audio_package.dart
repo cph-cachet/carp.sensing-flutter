@@ -77,5 +77,5 @@ class AudioSamplingPackage implements SamplingPackage {
     ..measures[AUDIO] = AudioMeasure(MeasureType(NameSpace.CARP, AUDIO),
         name: 'Audio Recording', enabled: true, frequency: 45 * 1000, duration: 5 * 1000)
     ..measures[NOISE] = NoiseMeasure(MeasureType(NameSpace.CARP, NOISE),
-        name: 'Ambient Noise', enabled: true, frequency: 35 * 1000, duration: 2 * 1000);
+        name: 'Ambient Noise', enabled: true, frequency: 45 * 1000, duration: 5 * 1000);
 }

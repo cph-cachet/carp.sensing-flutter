@@ -45,7 +45,14 @@ class DeviceDatum extends CARPDatum {
   Map<String, dynamic> toJson() => _$DeviceDatumToJson(this);
 
   String toString() =>
-      'Device - platform: $platform, deviceId: $deviceId, hardware: $hardware, name: $deviceName, manufacturer: $deviceManufacturer, model: $deviceModel, OS: $operatingSystem';
+      super.toString() +
+      ', platform: $platform'
+          ', deviceId: $deviceId'
+          ', hardware: $hardware'
+          ', name: $deviceName'
+          ', manufacturer: $deviceManufacturer'
+          ', model: $deviceModel'
+          ', OS: $operatingSystem';
 }
 
 /// A [Datum] that holds battery level collected from the phone.
@@ -92,7 +99,7 @@ class BatteryDatum extends CARPDatum {
   factory BatteryDatum.fromJson(Map<String, dynamic> json) => _$BatteryDatumFromJson(json);
   Map<String, dynamic> toJson() => _$BatteryDatumToJson(this);
 
-  String toString() => 'Battery - level: $batteryLevel%, status: $batteryStatus';
+  String toString() => super.toString() + ', level: $batteryLevel%, status: $batteryStatus';
 }
 
 /// Holds information about free memory on the phone.
@@ -112,7 +119,7 @@ class FreeMemoryDatum extends CARPDatum {
   factory FreeMemoryDatum.fromJson(Map<String, dynamic> json) => _$FreeMemoryDatumFromJson(json);
   Map<String, dynamic> toJson() => _$FreeMemoryDatumToJson(this);
 
-  String toString() => 'free memory: {physical: $freePhysicalMemory%, virtual: $freeVirtualMemory}';
+  String toString() => super.toString() + ', physical: $freePhysicalMemory, virtual: $freeVirtualMemory';
 }
 
 /// Holds a screen event collected from the phone.
@@ -149,5 +156,5 @@ class ScreenDatum extends CARPDatum {
   factory ScreenDatum.fromJson(Map<String, dynamic> json) => _$ScreenDatumFromJson(json);
   Map<String, dynamic> toJson() => _$ScreenDatumToJson(this);
 
-  String toString() => 'Screen Event - $screenEvent';
+  String toString() => super.toString() + ', screenEvent: $screenEvent';
 }

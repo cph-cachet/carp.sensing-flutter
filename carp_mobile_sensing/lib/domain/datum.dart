@@ -41,7 +41,7 @@ class CARPDatum extends Datum {
   factory CARPDatum.fromJson(Map<String, dynamic> json) => _$CARPDatumFromJson(json);
   Map<String, dynamic> toJson() => _$CARPDatumToJson(this);
 
-  String toString() => '${this.runtimeType}: format: $format, id: $id, timestamp: $timestamp';
+  String toString() => '${this.runtimeType} - format: $format, id: $id, timestamp: $timestamp';
 }
 
 /// A very simple [Datum] that only holds a string datum object.
@@ -109,7 +109,7 @@ class MultiDatum extends CARPDatum {
   factory MultiDatum.fromJson(Map<String, dynamic> json) => _$MultiDatumFromJson(json);
   Map<String, dynamic> toJson() => _$MultiDatumToJson(this);
 
-  String toString() => "${this.runtimeType}: {format: $format, size: ${data.length}}";
+  String toString() => super.toString() + ', size: ${data.length}';
 }
 
 /// Specifies the data format of a [Datum].

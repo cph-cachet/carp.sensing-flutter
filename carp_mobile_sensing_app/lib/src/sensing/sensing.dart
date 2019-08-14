@@ -83,17 +83,30 @@ class StudyMock implements StudyManager {
   Future<Study> _getESenseStudy(String studyId) async {
     if (_study == null) {
       _study = Study(studyId, username)
-        ..name = 'CARP Mobile Sensing - eSense sampling'
+        ..name = 'CARP Mobile Sensing - eSense sampling demo'
         ..description =
             'This is a study designed to test the eSense earable computing platform together with CARP Mobile Sensing'
         ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
         ..addTriggerTask(
             ImmediateTrigger(),
             Task()
-              ..measures.add(ESenseMeasure(MeasureType(NameSpace.CARP, ESenseSamplingPackage.ESENSE_BUTTON),
-                  name: 'eSense - Button', enabled: true, deviceName: 'eSense-0332'))
-              ..measures.add(ESenseMeasure(MeasureType(NameSpace.CARP, ESenseSamplingPackage.ESENSE_SENSOR),
-                  name: 'eSense - Sensors', enabled: true, deviceName: 'eSense-0332', samplingRate: 10)));
+              ..measures = SamplingSchema.debug().getMeasureList([
+                ESenseSamplingPackage.ESENSE_BUTTON,
+                ESenseSamplingPackage.ESENSE_SENSOR,
+                AudioSamplingPackage.NOISE,
+                ContextSamplingPackage.LOCATION,
+                ContextSamplingPackage.ACTIVITY,
+                ContextSamplingPackage.WEATHER,
+                //ConnectivitySamplingPackage.BLUETOOTH,
+                ConnectivitySamplingPackage.WIFI,
+                AudioSamplingPackage.AUDIO,
+              ]));
+
+//            ..measures.add(ESenseMeasure(MeasureType(NameSpace.CARP, ESenseSamplingPackage.ESENSE_BUTTON),
+//                name: 'eSense - Button', enabled: true, deviceName: 'eSense-0332'))
+//            ..measures.add(ESenseMeasure(MeasureType(NameSpace.CARP, ESenseSamplingPackage.ESENSE_SENSOR),
+//                name: 'eSense - Sensors', enabled: true, deviceName: 'eSense-0332', samplingRate: 10)),
+//        );
 
 //    ..measures = ESenseSamplingPackage().debug.measures.values.toList());
     }

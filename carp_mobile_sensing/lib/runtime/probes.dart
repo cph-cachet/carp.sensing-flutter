@@ -450,6 +450,7 @@ abstract class StreamProbe extends AbstractProbe {
     subscription = null;
   }
 
+  // just forwarding to the controller
   void onData(Datum event) => controller.add(event);
   void onError(error) => controller.addError(error);
   void onDone() => controller.close();

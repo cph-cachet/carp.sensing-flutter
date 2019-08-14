@@ -60,7 +60,20 @@ class ConnectivitySamplingPackage implements SamplingPackage {
 
   SamplingSchema get normal => common..type = SamplingSchemaType.NORMAL;
 
-  SamplingSchema get debug => common
+  SamplingSchema get debug => SamplingSchema()
     ..type = SamplingSchemaType.DEBUG
-    ..name = 'Debug connectivity sampling';
+    ..name = 'Debug connectivity sampling'
+    ..powerAware = true
+    ..measures.addEntries([
+      MapEntry(CONNECTIVITY,
+          Measure(MeasureType(NameSpace.CARP, CONNECTIVITY), name: 'Connectivity (wifi/3G/...)', enabled: true)),
+      MapEntry(
+          BLUETOOTH,
+          PeriodicMeasure(MeasureType(NameSpace.CARP, BLUETOOTH),
+              name: 'Nearby Devices (Bluetooth Scan)', enabled: true, frequency: 1 * 60 * 1000, duration: 5 * 1000)),
+      MapEntry(
+          WIFI,
+          PeriodicMeasure(MeasureType(NameSpace.CARP, WIFI),
+              name: 'Wifi network names (SSID / BSSID)', enabled: true, frequency: 60 * 1000, duration: 5 * 1000)),
+    ]);
 }

@@ -41,7 +41,7 @@ class ConnectivityDatum extends CARPDatum {
     }
   }
 
-  String toString() => 'Connectivity Status - $connectivityStatus';
+  String toString() => super.toString() + ', connectivityStatus: $connectivityStatus';
 }
 
 /// A [Datum] that holds information of a nearby Bluetooth device.
@@ -103,7 +103,13 @@ class BluetoothDatum extends CARPDatum {
   Map<String, dynamic> toJson() => _$BluetoothDatumToJson(this);
 
   String toString() =>
-      'Bluetooth Device - advertisementName: $advertisementName, id: $bluetoothDeviceId, name: $bluetoothDeviceName, type: $bluetoothDeviceType, connectable: $connectable, rssi: $rssi';
+      super.toString() +
+      ', advertisementName: $advertisementName'
+          ', id: $bluetoothDeviceId'
+          ', name: $bluetoothDeviceName'
+          ', type: $bluetoothDeviceType'
+          ', connectable: $connectable'
+          ', rssi: $rssi';
 }
 
 /// A [Datum] that holds wifi connectivity status in terms of connected SSID and BSSID.
@@ -125,5 +131,5 @@ class WifiDatum extends CARPDatum {
   factory WifiDatum.fromJson(Map<String, dynamic> json) => _$WifiDatumFromJson(json);
   Map<String, dynamic> toJson() => _$WifiDatumToJson(this);
 
-  String toString() => 'Wifi Status - SSID: $ssid, BSSID: $bssid';
+  String toString() => super.toString() + ', SSID: $ssid, BSSID: $bssid';
 }
