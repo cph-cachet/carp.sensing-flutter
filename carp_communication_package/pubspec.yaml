@@ -1,19 +1,19 @@
 name: carp_communication_package
 description: CARP communication sampling package. Samples phone, sms, and calendar logs and activity.
-version: 0.5.0
+version: 0.6.0
 author:  CACHET Team <cph.cachet@gmail.com>
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_communication_package
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.3.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  json_annotation: ^2.0.0
+  json_annotation: ^3.0.0
   sms: ^0.2.4
   call_log: ^2.0.0
-  device_calendar: ^0.1.1
+  device_calendar: ^0.2.0
   crypto: ^2.0.0
   carp_mobile_sensing: ^0.6.0
 
@@ -27,7 +27,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   build_runner:
-  json_serializable: ^2.0.0
+  json_serializable: ^3.0.0
   test:
 
 # For information on the generic Dart part of this file, see the

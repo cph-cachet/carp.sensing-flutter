@@ -6,7 +6,7 @@ homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_mo
 
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.3.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -17,7 +17,7 @@ dependencies:
   uuid: ^2.0.0
   async: ^2.0.8
   device_info: ^0.4.0
-  json_annotation: ^2.0.0
+  json_annotation: ^3.0.0
   path_provider: ^1.2.0
   archive: ^2.0.4
 
@@ -40,7 +40,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   build_runner:
-  json_serializable: ^2.0.0
+  json_serializable: ^3.0.0
   test:
 
 

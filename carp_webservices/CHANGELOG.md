@@ -1,4 +1,4 @@
-### 0.2.10
+## 0.3.0
 * update to `carp_mobile_sensing` v.0.6.0
 
 ## 0.2.8+3

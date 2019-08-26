@@ -1,5 +1,6 @@
 ## 0.3.5
 * `CarpUploadMethod` is now an enumeration
+* Support for JSON serialization v. 3.0.0
 
 ## 0.3.4+2
 * bug in authentication fixed
