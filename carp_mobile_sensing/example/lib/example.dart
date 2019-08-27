@@ -22,7 +22,7 @@ void example() async {
   // add sensor collection from accelerometer and gyroscope
   // careful - these sensors generate a lot of data!
   study.addTriggerTask(
-      DelayedTrigger(1000), // delay sampling for one second
+      DelayedTrigger(delay: 1000), // delay sampling for one second
       Task('Sensor Task')
         ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
             frequency: 10 * 1000, // sample every 10 secs
@@ -34,7 +34,7 @@ void example() async {
             )));
 
   study.addTriggerTask(
-      PeriodicTrigger(24 * 60 * 60 * 1000), // trigger sampling once pr. day
+      PeriodicTrigger(period: 24 * 60 * 60 * 1000), // trigger sampling once pr. day
       Task('Task collecting a list of all installed apps')
         ..addMeasure(Measure(MeasureType(NameSpace.CARP, AppsSamplingPackage.APPS))));
 

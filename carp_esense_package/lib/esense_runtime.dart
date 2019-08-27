@@ -29,6 +29,8 @@ abstract class _ESenseProbe extends StreamProbe {
         // this is a hack! - don't know why, but the sensorEvents stream needs a kick in the ass to get started...
         ESenseManager.sensorEvents.listen(null);
         this.restart();
+      } else {
+        connected = false;
       }
     });
 
@@ -40,11 +42,14 @@ abstract class _ESenseProbe extends StreamProbe {
 /// Collects eSense button pressed events.
 /// It generates an [ESenseButtonDatum] every time the button is pressed or released.
 class ESenseButtonProbe extends _ESenseProbe {
-  Stream<Datum> get stream => (ESenseManager.connected)
-      ? ESenseManager.eSenseEvents
-          .where((event) => event.runtimeType == ButtonEventChanged)
-          .map((event) => ESenseButtonDatum(deviceName: deviceName, pressed: (event as ButtonEventChanged).pressed))
-      : null;
+  Stream<Datum> get stream {
+    if (!ESenseManager.connected) ESenseManager.connect(deviceName);
+    return (ESenseManager.connected)
+        ? ESenseManager.eSenseEvents
+            .where((event) => event.runtimeType == ButtonEventChanged)
+            .map((event) => ESenseButtonDatum(deviceName: deviceName, pressed: (event as ButtonEventChanged).pressed))
+        : null;
+  }
 }
 
 /// Collects eSense sensor events.
@@ -58,6 +63,7 @@ class ESenseSensorProbe extends _ESenseProbe {
 //      ESenseManager.sensorEvents.listen((event) => print('eSense sensor event #1 : $event'));
 //    }
 
+    if (!ESenseManager.connected) ESenseManager.connect(deviceName);
     return (ESenseManager.connected)
         ? ESenseManager.sensorEvents
             .map((event) => ESenseSensorDatum.fromSensorEvent(deviceName: deviceName, event: event))

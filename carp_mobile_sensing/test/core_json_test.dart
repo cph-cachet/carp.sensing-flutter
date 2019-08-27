@@ -98,19 +98,19 @@ void main() {
       ..encrypt = false;
 
     study_3.addTriggerTask(
-        DelayedTrigger(10 * 1000), // delay for 10 secs.
+        DelayedTrigger(delay: 10 * 1000), // delay for 10 secs.
         Task('Sensing Task #1')
           ..measures =
               SamplingSchema.common().getMeasureList([SensorSamplingPackage.PEDOMETER, DeviceSamplingPackage.SCREEN]));
 
     study_3.addTriggerTask(
-        PeriodicTrigger(60 * 1000), // collect every min.
+        PeriodicTrigger(period: 60 * 1000), // collect every min.
         Task('Sensing Task #1')
           ..measures =
               SamplingSchema.common().getMeasureList([SensorSamplingPackage.LIGHT, DeviceSamplingPackage.DEVICE]));
 
     study_3.addTriggerTask(
-        ScheduledTrigger(DateTime(2019, 12, 24)), // collect date on Xmas.
+        ScheduledTrigger(schedule: DateTime(2019, 12, 24)), // collect date on Xmas.
         Task('Sensing Task #1')
           ..measures = SamplingSchema.common()
               .getMeasureList([AppsSamplingPackage.APP_USAGE, ConnectivitySamplingPackage.BLUETOOTH]));

@@ -7,12 +7,15 @@ part of device;
 // **************************************************************************
 
 DeviceDatum _$DeviceDatumFromJson(Map<String, dynamic> json) {
-  return DeviceDatum(json['platform'] as String, json['device_id'] as String,
-      deviceName: json['device_name'] as String,
-      deviceModel: json['device_model'] as String,
-      deviceManufacturer: json['device_manufacturer'] as String,
-      operatingSystem: json['operating_system'] as String,
-      hardware: json['hardware'] as String)
+  return DeviceDatum(
+    json['platform'] as String,
+    json['device_id'] as String,
+    deviceName: json['device_name'] as String,
+    deviceModel: json['device_model'] as String,
+    deviceManufacturer: json['device_manufacturer'] as String,
+    operatingSystem: json['operating_system'] as String,
+    hardware: json['hardware'] as String,
+  )
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
         ? null

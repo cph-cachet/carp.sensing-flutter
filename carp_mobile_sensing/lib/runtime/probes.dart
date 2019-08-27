@@ -414,7 +414,6 @@ abstract class StreamProbe extends AbstractProbe {
   void onInitialize(Measure measure) {}
 
   void onStart() {
-    //assert(stream != null, 'Stream cannot be null in a StreamProbe');
     if (stream != null) subscription = stream.listen(onData, onError: onError, onDone: onDone);
   }
 
@@ -424,12 +423,14 @@ abstract class StreamProbe extends AbstractProbe {
   }
 
   void onPause() {
+    // if the stream has disappeared, remove the subscription also
+    if (stream == null) subscription = null;
     if (subscription != null) {
       if (stream.isBroadcast) {
-        // If the underlying stream is a broadcast stream, it is better to cancel and later resume the
+        // If the underlying stream is gone or is a broadcast stream, it is better to cancel and later resume the
         // subscription. See https://api.dart.dev/stable/2.4.0/dart-async/StreamSubscription/pause.html
         // Most streams from platform channels are broadcast (e.g. activity, location, eSense, ...).
-        subscription.cancel();
+        subscription?.cancel();
         subscription = null;
       } else {
         subscription.pause();
@@ -445,8 +446,8 @@ abstract class StreamProbe extends AbstractProbe {
   }
 
   void onStop() {
-    if (subscription != null) subscription.cancel();
-    controller.close();
+    subscription?.cancel();
+    controller?.close();
     subscription = null;
   }
 

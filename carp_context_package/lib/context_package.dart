@@ -83,7 +83,5 @@ class ContextSamplingPackage implements SamplingPackage {
     ..name = 'Debugging context sampling schema'
     ..powerAware = false
     ..measures[WEATHER] = WeatherMeasure(MeasureType(NameSpace.CARP, WEATHER),
-        // collect calendar events once pr. minute
-        name: 'Local Weather',
-        apiKey: '12b6e28582eb9298577c734a31ba9f4f');
+        name: 'Local Weather', apiKey: '12b6e28582eb9298577c734a31ba9f4f');
 }

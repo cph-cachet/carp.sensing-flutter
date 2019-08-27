@@ -7,15 +7,17 @@ part of domain;
 // **************************************************************************
 
 Study _$StudyFromJson(Map<String, dynamic> json) {
-  return Study(json['id'] as String, json['user_id'] as String,
-      name: json['name'] as String,
-      description: json['description'] as String,
-      samplingStrategy: json['sampling_strategy'] as String,
-      dataEndPoint: json['data_end_point'] == null
-          ? null
-          : DataEndPoint.fromJson(
-              json['data_end_point'] as Map<String, dynamic>),
-      dataFormat: json['data_format'] as String)
+  return Study(
+    json['id'] as String,
+    json['user_id'] as String,
+    name: json['name'] as String,
+    description: json['description'] as String,
+    samplingStrategy: json['sampling_strategy'] as String,
+    dataEndPoint: json['data_end_point'] == null
+        ? null
+        : DataEndPoint.fromJson(json['data_end_point'] as Map<String, dynamic>),
+    dataFormat: json['data_format'] as String,
+  )
     ..c__ = json['c__'] as String
     ..triggers = (json['triggers'] as List)
         ?.map((e) =>
@@ -45,7 +47,9 @@ Map<String, dynamic> _$StudyToJson(Study instance) {
 }
 
 DataEndPoint _$DataEndPointFromJson(Map<String, dynamic> json) {
-  return DataEndPoint(json['type'] as String)..c__ = json['c__'] as String;
+  return DataEndPoint(
+    json['type'] as String,
+  )..c__ = json['c__'] as String;
 }
 
 Map<String, dynamic> _$DataEndPointToJson(DataEndPoint instance) {
@@ -63,7 +67,9 @@ Map<String, dynamic> _$DataEndPointToJson(DataEndPoint instance) {
 }
 
 Task _$TaskFromJson(Map<String, dynamic> json) {
-  return Task(json['name'] as String)
+  return Task(
+    json['name'] as String,
+  )
     ..c__ = json['c__'] as String
     ..measures = (json['measures'] as List)
         ?.map((e) =>
@@ -88,12 +94,13 @@ Map<String, dynamic> _$TaskToJson(Task instance) {
 
 DataPoint _$DataPointFromJson(Map<String, dynamic> json) {
   return DataPoint(
-      json['header'] == null
-          ? null
-          : DataPointHeader.fromJson(json['header'] as Map<String, dynamic>),
-      json['body'] == null
-          ? null
-          : Datum.fromJson(json['body'] as Map<String, dynamic>));
+    json['header'] == null
+        ? null
+        : DataPointHeader.fromJson(json['header'] as Map<String, dynamic>),
+    json['body'] == null
+        ? null
+        : Datum.fromJson(json['body'] as Map<String, dynamic>),
+  );
 }
 
 Map<String, dynamic> _$DataPointToJson(DataPoint instance) {
@@ -111,13 +118,16 @@ Map<String, dynamic> _$DataPointToJson(DataPoint instance) {
 }
 
 DataPointHeader _$DataPointHeaderFromJson(Map<String, dynamic> json) {
-  return DataPointHeader(json['study_id'] as String, json['user_id'] as String,
-      startTime: json['start_time'] == null
-          ? null
-          : DateTime.parse(json['start_time'] as String),
-      endTime: json['end_time'] == null
-          ? null
-          : DateTime.parse(json['end_time'] as String))
+  return DataPointHeader(
+    json['study_id'] as String,
+    json['user_id'] as String,
+    startTime: json['start_time'] == null
+        ? null
+        : DateTime.parse(json['start_time'] as String),
+    endTime: json['end_time'] == null
+        ? null
+        : DateTime.parse(json['end_time'] as String),
+  )
     ..uploadTime = json['upload_time'] == null
         ? null
         : DateTime.parse(json['upload_time'] as String)
@@ -173,7 +183,9 @@ Map<String, dynamic> _$CARPDatumToJson(CARPDatum instance) {
 }
 
 StringDatum _$StringDatumFromJson(Map<String, dynamic> json) {
-  return StringDatum(json['str'] as String)
+  return StringDatum(
+    json['str'] as String,
+  )
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
         ? null
@@ -196,9 +208,11 @@ Map<String, dynamic> _$StringDatumToJson(StringDatum instance) {
 }
 
 MapDatum _$MapDatumFromJson(Map<String, dynamic> json) {
-  return MapDatum((json['map'] as Map<String, dynamic>)?.map(
-    (k, e) => MapEntry(k, e as String),
-  ))
+  return MapDatum(
+    (json['map'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(k, e as String),
+    ),
+  )
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
         ? null
@@ -221,7 +235,9 @@ Map<String, dynamic> _$MapDatumToJson(MapDatum instance) {
 }
 
 ErrorDatum _$ErrorDatumFromJson(Map<String, dynamic> json) {
-  return ErrorDatum(json['message'] as String)
+  return ErrorDatum(
+    json['message'] as String,
+  )
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
         ? null
@@ -271,7 +287,10 @@ Map<String, dynamic> _$MultiDatumToJson(MultiDatum instance) {
 }
 
 DataFormat _$DataFormatFromJson(Map<String, dynamic> json) {
-  return DataFormat(json['namepace'] as String, json['name'] as String);
+  return DataFormat(
+    json['namepace'] as String,
+    json['name'] as String,
+  );
 }
 
 Map<String, dynamic> _$DataFormatToJson(DataFormat instance) {
@@ -290,11 +309,12 @@ Map<String, dynamic> _$DataFormatToJson(DataFormat instance) {
 
 Measure _$MeasureFromJson(Map<String, dynamic> json) {
   return Measure(
-      json['type'] == null
-          ? null
-          : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
-      name: json['name'] as String,
-      enabled: json['enabled'] as bool)
+    json['type'] == null
+        ? null
+        : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
+    name: json['name'] as String,
+    enabled: json['enabled'] as bool,
+  )
     ..c__ = json['c__'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
@@ -320,13 +340,14 @@ Map<String, dynamic> _$MeasureToJson(Measure instance) {
 
 PeriodicMeasure _$PeriodicMeasureFromJson(Map<String, dynamic> json) {
   return PeriodicMeasure(
-      json['type'] == null
-          ? null
-          : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
-      name: json['name'] as String,
-      enabled: json['enabled'] as bool,
-      frequency: json['frequency'] as int,
-      duration: json['duration'] as int)
+    json['type'] == null
+        ? null
+        : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
+    name: json['name'] as String,
+    enabled: json['enabled'] as bool,
+    frequency: json['frequency'] as int,
+    duration: json['duration'] as int,
+  )
     ..c__ = json['c__'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
@@ -353,8 +374,10 @@ Map<String, dynamic> _$PeriodicMeasureToJson(PeriodicMeasure instance) {
 }
 
 MeasureType _$MeasureTypeFromJson(Map<String, dynamic> json) {
-  return MeasureType(json['namespace'] as String, json['name'] as String)
-    ..c__ = json['c__'] as String;
+  return MeasureType(
+    json['namespace'] as String,
+    json['name'] as String,
+  )..c__ = json['c__'] as String;
 }
 
 Map<String, dynamic> _$MeasureTypeToJson(MeasureType instance) {
@@ -442,7 +465,9 @@ Map<String, dynamic> _$ManualTriggerToJson(ManualTrigger instance) {
 }
 
 DelayedTrigger _$DelayedTriggerFromJson(Map<String, dynamic> json) {
-  return DelayedTrigger(json['delay'] as int)
+  return DelayedTrigger(
+    delay: json['delay'] as int,
+  )
     ..c__ = json['c__'] as String
     ..tasks = (json['tasks'] as List)
         ?.map(
@@ -466,7 +491,10 @@ Map<String, dynamic> _$DelayedTriggerToJson(DelayedTrigger instance) {
 }
 
 PeriodicTrigger _$PeriodicTriggerFromJson(Map<String, dynamic> json) {
-  return PeriodicTrigger(json['period'] as int, json['duration'] as int)
+  return PeriodicTrigger(
+    period: json['period'] as int,
+    duration: json['duration'] as int,
+  )
     ..c__ = json['c__'] as String
     ..tasks = (json['tasks'] as List)
         ?.map(
@@ -491,9 +519,11 @@ Map<String, dynamic> _$PeriodicTriggerToJson(PeriodicTrigger instance) {
 }
 
 ScheduledTrigger _$ScheduledTriggerFromJson(Map<String, dynamic> json) {
-  return ScheduledTrigger(json['schedule'] == null
-      ? null
-      : DateTime.parse(json['schedule'] as String))
+  return ScheduledTrigger(
+    schedule: json['schedule'] == null
+        ? null
+        : DateTime.parse(json['schedule'] as String),
+  )
     ..c__ = json['c__'] as String
     ..tasks = (json['tasks'] as List)
         ?.map(
@@ -519,17 +549,17 @@ Map<String, dynamic> _$ScheduledTriggerToJson(ScheduledTrigger instance) {
 RecurrentScheduledTrigger _$RecurrentScheduledTriggerFromJson(
     Map<String, dynamic> json) {
   return RecurrentScheduledTrigger(
-      type: _$enumDecodeNullable(_$RecurrentTypeEnumMap, json['type']),
-      start: json['start'] == null
-          ? null
-          : DateTime.parse(json['start'] as String),
-      end: json['end'] == null ? null : DateTime.parse(json['end'] as String),
-      separationCount: json['separation_count'] as int,
-      maxNumberOfSampling: json['max_number_of_sampling'] as int,
-      dayOfWeek: json['day_of_week'] as int,
-      weekOfMonth: json['week_of_month'] as int,
-      dayOfMonth: json['day_of_month'] as int,
-      duration: json['duration'] as int)
+    type: _$enumDecodeNullable(_$RecurrentTypeEnumMap, json['type']),
+    start:
+        json['start'] == null ? null : DateTime.parse(json['start'] as String),
+    end: json['end'] == null ? null : DateTime.parse(json['end'] as String),
+    separationCount: json['separation_count'] as int,
+    maxNumberOfSampling: json['max_number_of_sampling'] as int,
+    dayOfWeek: json['day_of_week'] as int,
+    weekOfMonth: json['week_of_month'] as int,
+    dayOfMonth: json['day_of_month'] as int,
+    duration: json['duration'] as int,
+  )
     ..c__ = json['c__'] as String
     ..tasks = (json['tasks'] as List)
         ?.map(
@@ -563,44 +593,57 @@ Map<String, dynamic> _$RecurrentScheduledTriggerToJson(
   return val;
 }
 
-T _$enumDecode<T>(Map<T, dynamic> enumValues, dynamic source) {
+T _$enumDecode<T>(
+  Map<T, dynamic> enumValues,
+  dynamic source, {
+  T unknownValue,
+}) {
   if (source == null) {
     throw ArgumentError('A value must be provided. Supported values: '
         '${enumValues.values.join(', ')}');
   }
-  return enumValues.entries
-      .singleWhere((e) => e.value == source,
-          orElse: () => throw ArgumentError(
-              '`$source` is not one of the supported values: '
-              '${enumValues.values.join(', ')}'))
-      .key;
+
+  final value = enumValues.entries
+      .singleWhere((e) => e.value == source, orElse: () => null)
+      ?.key;
+
+  if (value == null && unknownValue == null) {
+    throw ArgumentError('`$source` is not one of the supported values: '
+        '${enumValues.values.join(', ')}');
+  }
+  return value ?? unknownValue;
 }
 
-T _$enumDecodeNullable<T>(Map<T, dynamic> enumValues, dynamic source) {
+T _$enumDecodeNullable<T>(
+  Map<T, dynamic> enumValues,
+  dynamic source, {
+  T unknownValue,
+}) {
   if (source == null) {
     return null;
   }
-  return _$enumDecode<T>(enumValues, source);
+  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
 }
 
-const _$RecurrentTypeEnumMap = <RecurrentType, dynamic>{
+const _$RecurrentTypeEnumMap = {
   RecurrentType.daily: 'daily',
   RecurrentType.weekly: 'weekly',
   RecurrentType.monthly: 'monthly',
-  RecurrentType.yearly: 'yearly'
+  RecurrentType.yearly: 'yearly',
 };
 
 SamplingEventTrigger _$SamplingEventTriggerFromJson(Map<String, dynamic> json) {
   return SamplingEventTrigger(
-      measureType: json['measure_type'] == null
-          ? null
-          : MeasureType.fromJson(json['measure_type'] as Map<String, dynamic>),
-      resumeCondition: json['resume_condition'] == null
-          ? null
-          : Datum.fromJson(json['resume_condition'] as Map<String, dynamic>),
-      pauseCondition: json['pause_condition'] == null
-          ? null
-          : Datum.fromJson(json['pause_condition'] as Map<String, dynamic>))
+    measureType: json['measure_type'] == null
+        ? null
+        : MeasureType.fromJson(json['measure_type'] as Map<String, dynamic>),
+    resumeCondition: json['resume_condition'] == null
+        ? null
+        : Datum.fromJson(json['resume_condition'] as Map<String, dynamic>),
+    pauseCondition: json['pause_condition'] == null
+        ? null
+        : Datum.fromJson(json['pause_condition'] as Map<String, dynamic>),
+  )
     ..c__ = json['c__'] as String
     ..tasks = (json['tasks'] as List)
         ?.map(

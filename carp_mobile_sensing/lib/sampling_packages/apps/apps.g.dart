@@ -8,12 +8,13 @@ part of apps;
 
 AppUsageMeasure _$AppUsageMeasureFromJson(Map<String, dynamic> json) {
   return AppUsageMeasure(
-      json['type'] == null
-          ? null
-          : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
-      name: json['name'],
-      enabled: json['enabled'],
-      duration: json['duration'] as int)
+    json['type'] == null
+        ? null
+        : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
+    name: json['name'],
+    enabled: json['enabled'],
+    duration: json['duration'] as int,
+  )
     ..c__ = json['c__'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),

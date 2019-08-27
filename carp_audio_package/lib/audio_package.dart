@@ -7,6 +7,8 @@
 
 part of audio;
 
+// TODO -- audio recording and noise is conflicting... can't run at the same time...
+
 /// This is the base class for this audio sampling package.
 ///
 /// To use this package, register it in the [carp_mobile_sensing] package using
@@ -28,11 +30,7 @@ class AudioSamplingPackage implements SamplingPackage {
       case AUDIO:
         return AudioProbe();
       case NOISE:
-        // right now the noise plugin throws an exception
-        // see https://github.com/cph-cachet/flutter-plugins/issues/22
-        // TODO - enable once issue is solved.
-        // return NoiseProbe();
-        return null;
+        return NoiseProbe();
       default:
         return null;
     }
@@ -75,7 +73,7 @@ class AudioSamplingPackage implements SamplingPackage {
     ..name = 'Debugging audio sampling schema'
     ..powerAware = false
     ..measures[AUDIO] = AudioMeasure(MeasureType(NameSpace.CARP, AUDIO),
-        name: 'Audio Recording', enabled: true, frequency: 45 * 1000, duration: 5 * 1000)
+        name: 'Audio Recording', enabled: true, frequency: 52 * 1000, duration: 5 * 1000)
     ..measures[NOISE] = NoiseMeasure(MeasureType(NameSpace.CARP, NOISE),
-        name: 'Ambient Noise', enabled: true, frequency: 45 * 1000, duration: 5 * 1000);
+        name: 'Ambient Noise', enabled: true, frequency: 21 * 1000, duration: 5 * 1000);
 }

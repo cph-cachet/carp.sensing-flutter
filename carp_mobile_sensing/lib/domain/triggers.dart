@@ -79,7 +79,7 @@ class DelayedTrigger extends Trigger {
   /// Delay in milliseconds.
   int delay = 0;
 
-  DelayedTrigger([this.delay]) : super();
+  DelayedTrigger({this.delay = 0}) : super();
 
   static Function get fromJsonFunction => _$DelayedTriggerFromJson;
   factory DelayedTrigger.fromJson(Map<String, dynamic> json) =>
@@ -99,7 +99,7 @@ class PeriodicTrigger extends Trigger {
   /// The duration (until paused) of the the sampling in milliseconds.
   int duration = 1000; // default is one second
 
-  PeriodicTrigger([this.period, this.duration = 1000]) : super();
+  PeriodicTrigger({this.period, this.duration = 1000}) : super();
 
   static Function get fromJsonFunction => _$PeriodicTriggerFromJson;
   factory PeriodicTrigger.fromJson(Map<String, dynamic> json) =>
@@ -113,7 +113,7 @@ class ScheduledTrigger extends Trigger {
   /// The scheduled date and time for triggering.
   DateTime schedule;
 
-  ScheduledTrigger([this.schedule]) : super();
+  ScheduledTrigger({this.schedule}) : super();
 
   static Function get fromJsonFunction => _$ScheduledTriggerFromJson;
   factory ScheduledTrigger.fromJson(Map<String, dynamic> json) =>
