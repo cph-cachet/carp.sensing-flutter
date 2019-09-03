@@ -58,14 +58,11 @@ class ContextSamplingPackage implements SamplingPackage {
       MapEntry(
           WEATHER,
           WeatherMeasure(MeasureType(NameSpace.CARP, WEATHER),
-              // collect local weather once pr. hour
-              name: 'Local Weather',
-              enabled: true,
-              frequency: 60 * 60 * 1000)),
+              name: 'Local Weather', enabled: true, apiKey: '12b6e28582eb9298577c734a31ba9f4f')),
       MapEntry(
           GEOFENCE,
           GeofenceMeasure(MeasureType(NameSpace.CARP, GEOFENCE),
-              enabled: true, center: Location(55.786025, 12.524159), radius: 500, name: 'DTU')),
+              enabled: true, center: Location(55.786025, 12.524159), radius: 500, name: 'Geofence (DTU)')),
     ]);
 
   SamplingSchema get light => common
@@ -86,8 +83,5 @@ class ContextSamplingPackage implements SamplingPackage {
     ..name = 'Debugging context sampling schema'
     ..powerAware = false
     ..measures[WEATHER] = WeatherMeasure(MeasureType(NameSpace.CARP, WEATHER),
-        // collect calendar events once pr. minute
-        name: 'Local Weather',
-        frequency: 60 * 1000,
-        apiKey: '12b6e28582eb9298577c734a31ba9f4f');
+        name: 'Local Weather', apiKey: '12b6e28582eb9298577c734a31ba9f4f');
 }

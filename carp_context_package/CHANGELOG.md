@@ -1,3 +1,9 @@
+## 0.6.0
+* update to `carp_mobile_sensing` version 0.6.0
+* Weather measure is no longer periodic but 'one-off', i.e. at `DatumProbe`. 
+Use the new `Trigger` model in `carp_mobile_sensing` v.0.6.0 to achieve periodic sampling of weather information.
+
+
 ## 0.5.0 BREAKING
 * Upgraded to use [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) version 0.5.0 
    * **Breaking change.** This version has been migrated from the deprecated Android Support Library to *AndroidX*. 

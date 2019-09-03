@@ -35,12 +35,13 @@ void main() {
 
       // Create a test bluetooth datum
       datum = BluetoothDatum()
-        ..bluetoothDeviceId = "weg"
-        ..bluetoothDeviceName = "ksjbdf"
-        ..connectable = true
-        ..txPowerLevel = 314
-        ..rssi = 567
-        ..bluetoothDeviceType = "classic";
+        ..scanResult.add(BluetoothDevice()
+          ..bluetoothDeviceId = "weg"
+          ..bluetoothDeviceName = "ksjbdf"
+          ..connectable = true
+          ..txPowerLevel = 314
+          ..rssi = 567
+          ..bluetoothDeviceType = "classic");
 
       app = new CarpApp(
           study: study,
@@ -175,7 +176,7 @@ void main() {
 
       print(_encode(data.toJson()));
       assert(data.id == dataPointId);
-      assert(data.carpBody['rssi'] == datum.rssi);
+      assert(data.carpBody['id'] == datum.id);
     });
 
     test('- get all', () async {

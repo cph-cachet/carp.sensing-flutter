@@ -36,13 +36,11 @@ BluetoothDatum _$BluetoothDatumFromJson(Map<String, dynamic> json) {
     ..timestamp = json['timestamp'] == null
         ? null
         : DateTime.parse(json['timestamp'] as String)
-    ..advertisementName = json['advertisement_name'] as String
-    ..bluetoothDeviceId = json['bluetooth_device_id'] as String
-    ..bluetoothDeviceName = json['bluetooth_device_name'] as String
-    ..bluetoothDeviceType = json['bluetooth_device_type'] as String
-    ..connectable = json['connectable'] as bool
-    ..txPowerLevel = json['tx_power_level'] as int
-    ..rssi = json['rssi'] as int;
+    ..scanResult = (json['scan_result'] as List)
+        ?.map((e) => e == null
+            ? null
+            : BluetoothDevice.fromJson(e as Map<String, dynamic>))
+        ?.toList();
 }
 
 Map<String, dynamic> _$BluetoothDatumToJson(BluetoothDatum instance) {
@@ -56,6 +54,30 @@ Map<String, dynamic> _$BluetoothDatumToJson(BluetoothDatum instance) {
 
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  writeNotNull('scan_result', instance.scanResult);
+  return val;
+}
+
+BluetoothDevice _$BluetoothDeviceFromJson(Map<String, dynamic> json) {
+  return BluetoothDevice()
+    ..advertisementName = json['advertisement_name'] as String
+    ..bluetoothDeviceId = json['bluetooth_device_id'] as String
+    ..bluetoothDeviceName = json['bluetooth_device_name'] as String
+    ..bluetoothDeviceType = json['bluetooth_device_type'] as String
+    ..connectable = json['connectable'] as bool
+    ..txPowerLevel = json['tx_power_level'] as int
+    ..rssi = json['rssi'] as int;
+}
+
+Map<String, dynamic> _$BluetoothDeviceToJson(BluetoothDevice instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
   writeNotNull('advertisement_name', instance.advertisementName);
   writeNotNull('bluetooth_device_id', instance.bluetoothDeviceId);
   writeNotNull('bluetooth_device_name', instance.bluetoothDeviceName);
@@ -63,5 +85,31 @@ Map<String, dynamic> _$BluetoothDatumToJson(BluetoothDatum instance) {
   writeNotNull('connectable', instance.connectable);
   writeNotNull('tx_power_level', instance.txPowerLevel);
   writeNotNull('rssi', instance.rssi);
+  return val;
+}
+
+WifiDatum _$WifiDatumFromJson(Map<String, dynamic> json) {
+  return WifiDatum()
+    ..id = json['id'] as String
+    ..timestamp = json['timestamp'] == null
+        ? null
+        : DateTime.parse(json['timestamp'] as String)
+    ..ssid = json['ssid'] as String
+    ..bssid = json['bssid'] as String;
+}
+
+Map<String, dynamic> _$WifiDatumToJson(WifiDatum instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', instance.id);
+  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  writeNotNull('ssid', instance.ssid);
+  writeNotNull('bssid', instance.bssid);
   return val;
 }

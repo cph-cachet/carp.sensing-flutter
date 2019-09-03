@@ -46,7 +46,7 @@ class TextMessageDatum extends CARPDatum {
 
 /// Holds a text messages (SMS).
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class TextMessage extends Serializable {
+class TextMessage {
   int id;
 
   /// The receiver address of this message
@@ -141,12 +141,12 @@ class PhoneLogDatum extends CARPDatum {
   factory PhoneLogDatum.fromJson(Map<String, dynamic> json) => _$PhoneLogDatumFromJson(json);
   Map<String, dynamic> toJson() => _$PhoneLogDatumToJson(this);
 
-  String toString() => "Phone Log - size: ${phoneLog.length}";
+  String toString() => super.toString() + "size: ${phoneLog.length}";
 }
 
 /// Phone call data.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class PhoneCall extends Serializable {
+class PhoneCall {
   /// Date & Time of the call.
   DateTime timestamp;
 
@@ -233,7 +233,7 @@ class CalendarDatum extends CARPDatum {
 
 /// A calendar event.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class CalendarEvent extends Serializable {
+class CalendarEvent {
   /// The unique identifier for this event
   String eventId;
 

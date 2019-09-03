@@ -1,3 +1,8 @@
+## 0.6.0
+* update to `carp_mobile_sensing` version 0.6.0
+* fixed noise probe.
+* note that the noise and audio probe (still) can't run at the same time.
+
 ## 0.5.0 BREAKING
 * **Breaking change.** This version has been migrated from the deprecated Android Support Library to *AndroidX*. 
 This should not result in any functional changes, but it requires any Android app using this plugin to also 

@@ -95,15 +95,18 @@ class Console extends State<ConsolePage> {
   }
 }
 
-/// This class implements the sensing incl. setting up a [Study] with [Task]s and [Measure]s.
+/// This class implements sensing incl. setting up a [Study] with [Task]s and [Measure]s.
+///
+/// This example is useful for creating a Business Logical Object (BLOC) in a Flutter app.
+/// See e.g. the CARP Mobile Sensing App.
 class Sensing {
   Study study;
   Console console;
   StudyController controller;
 
   Sensing(this.console) {
-    DataManagerRegistry.register(DataEndPointType.PRINT, new ConsoleDataManager());
-    DataManagerRegistry.register(DataEndPointType.FILE, new FileDataManager());
+    //DataManagerRegistry.register(DataEndPointType.PRINT, new ConsoleDataManager());
+    //DataManagerRegistry.register(DataEndPointType.FILE, new FileDataManager());
   }
 
   /// (Re)start sensing.
@@ -111,13 +114,14 @@ class Sensing {
     console.log("Setting up study...");
 
     // create the study
-    study = Study('DF#4dD', 'user@cachet.dk',
+    study = Study('DF#4dD-example', 'user@cachet.dk',
         name: 'A default / common study',
         dataEndPoint: FileDataEndPoint()
           ..bufferSize = 500 * 1000
           ..zip = true
           ..encrypt = false)
-      ..addTask(Task()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
+      ..addTriggerTask(ImmediateTrigger(),
+          Task()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
 
     //console.log("Setting up '${study.name}'...");
 

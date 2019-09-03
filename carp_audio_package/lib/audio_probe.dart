@@ -76,8 +76,12 @@ class AudioProbe extends BufferingPeriodicProbe {
   }
 
   Future<Datum> getDatum() async {
-    String filename = soundFileName.split("/").last;
-    return AudioDatum(filename: filename, startRecordingTime: _startRecordingTime, endRecordingTime: _endRecordingTime);
+    return (soundFileName != null)
+        ? AudioDatum(
+            filename: soundFileName.split("/").last,
+            startRecordingTime: _startRecordingTime,
+            endRecordingTime: _endRecordingTime)
+        : null;
   }
 
   /// Returns the local path on the device where sound files can be stored.

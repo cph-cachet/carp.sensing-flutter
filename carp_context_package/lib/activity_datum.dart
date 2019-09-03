@@ -20,10 +20,40 @@ class ActivityDatum extends CARPDatum {
         type = map['type'],
         super();
 
-  ActivityDatum.fromActivity(Activity activity)
-      : confidence = activity.confidence,
-        type = activity.type,
-        super();
+  factory ActivityDatum.fromActivity(Activity activity) {
+    ActivityDatum activityDatum = ActivityDatum();
+    activityDatum.confidence = activity.confidence;
+    if (Platform.isIOS) {
+      // map iOS activity types
+      switch (activity.type) {
+        case 'stationary':
+          activityDatum.type = 'STILL';
+          break;
+        case 'walking':
+          activityDatum.type = 'WALKING';
+          break;
+        case 'running':
+          activityDatum.type = 'RUNNING';
+          break;
+        case 'automotive':
+          activityDatum.type = 'IN_VEHICLE';
+          break;
+        case 'cycling':
+          activityDatum.type = 'ON_BICYCLE';
+          break;
+        case 'unknown':
+          activityDatum.type = 'UNKNOWN';
+          break;
+        default:
+          activityDatum.type = 'UNKNOWN';
+          break;
+      }
+    } else
+      // use the Android types directly
+      activityDatum.type = activity.type;
+
+    return activityDatum;
+  }
 
   factory ActivityDatum.fromJson(Map<String, dynamic> json) => _$ActivityDatumFromJson(json);
   Map<String, dynamic> toJson() => _$ActivityDatumToJson(this);
@@ -33,23 +63,25 @@ class ActivityDatum extends CARPDatum {
 
   /// Type of activity recognized.
   ///
-  /// On Android these are:
+  /// Possible types of activities are:
   /// * IN_VEHICLE - The device is in a vehicle, such as a car.
   /// * ON_BICYCLE - The device is on a bicycle.
   /// * ON_FOOT - The device is on a user who is walking or running.
+  /// * WALKING - The device is on a user who is walking.
   /// * RUNNING - The device is on a user who is running.
   /// * STILL - The device is still (not moving).
   /// * TILTING - The device angle relative to gravity changed significantly.
   /// * UNKNOWN - Unable to detect the current activity.
-  /// * WALKING - The device is on a user who is walking.
   ///
-  /// On iOS:
-  /// * stationary
-  /// * walking
-  /// * running
-  /// * automotive
-  /// * cycling
-  /// * unknown
+  /// The types above are adopted from the Android activity recognition API.
+  /// On iOS the following mapping takes place:
+  ///
+  /// * stationary => STILL
+  /// * walking => WALKING
+  /// * running => RUNNING
+  /// * automotive => IN_VEHICLE
+  /// * cycling => ON_BICYCLE
+  /// * unknown => UNKNOWN
   String type;
 
   String toString() => "Activity - type: $type, confidence: $confidence";

@@ -9,11 +9,14 @@ part of domain;
 
 /// The [Study] holds information about the study to be performed on this device.
 ///
-/// A [Study] specify a list of [Task]s, which again consists of a list of [Measure]s.
+/// A [Study] specify a set of [Trigger]s, each consisting of a set of [Task]s,
+/// which again consists of a list of [Measure]s.
+///
+///   `Study---*Trigger---*Task---*Measure`
 ///
 /// A study may be fetched in a [StudyManager] who knows how to fetch a study protocol for this device.
-/// A study is executes by a [StudyManager]. Data from the study is uploaded to the specified [DataEndPoint]
-/// in the specified [dataFormat].
+/// A study is controlled and executed by a [StudyController].
+/// Data from the study is uploaded to the specified [DataEndPoint] in the specified [dataFormat].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class Study extends Serializable {
   /// The id of this [Study].
@@ -38,8 +41,8 @@ class Study extends Serializable {
   /// Default using the [NameSpace.CARP].
   String dataFormat;
 
-  /// The list of [Task]s in this [Study].
-  List<Task> tasks = new List<Task>();
+  /// The set of [Trigger]s which can trigger [Task](s) in this study.
+  List<Trigger> triggers = new List<Trigger>();
 
   /// Create a new [Study] object with a set of configurations.
   ///
@@ -53,11 +56,26 @@ class Study extends Serializable {
   }
 
   static Function get fromJsonFunction => _$StudyFromJson;
+
   factory Study.fromJson(Map<String, dynamic> json) => _$StudyFromJson(json);
+
   Map<String, dynamic> toJson() => _$StudyToJson(this);
 
-  /// Add a [Task] to this [Study]
-  void addTask(Task task) => tasks.add(task);
+  /// Add a [Trigger] to this [Study]
+  void addTrigger(Trigger trigger) => triggers.add(trigger);
+
+  /// Add a [Task] with a [Trigger] to this [Study]
+  void addTriggerTask(Trigger trigger, Task task) {
+    if (!triggers.contains(trigger)) triggers.add(trigger);
+    trigger.addTask(task);
+  }
+
+  /// The list of all [Task]s in this [Study].
+  List<Task> get tasks {
+    List<Task> _tasks = List<Task>();
+    triggers.forEach((trigger) => _tasks.addAll(trigger.tasks));
+    return _tasks;
+  }
 
   /// Adapt the sampling [Measure]s of this [Study] to the specified [SamplingSchema].
   void adapt(SamplingSchema schema, {bool restore = true}) {
@@ -72,72 +90,34 @@ class Study extends Serializable {
 /// Specify an endpoint where a [DataManager] can upload data.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class DataEndPoint extends Serializable {
-  /// The type of endpoint as enumerated in [DataEndPointType].
+  /// The type of endpoint as enumerated in [DataEndPointTypes].
   String type;
 
-  /// Creates a [DataEndPoint]. [type] is defined in [DataEndPointType].
+  /// Creates a [DataEndPoint]. [type] is defined in [DataEndPointTypes].
   DataEndPoint(this.type)
       : assert(type != null),
         super();
 
   static Function get fromJsonFunction => _$DataEndPointFromJson;
-  //factory DataEndPoint.fromJson(Map<String, dynamic> json) => _$DataEndPointFromJson(json);
   factory DataEndPoint.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$DataEndPointToJson(this);
 
-  String toString() => type;
+  String toString() => type.toString();
 }
 
-/// Specify an endpoint where a file-based [DataManager] can store JSON data as files on the local device.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class FileDataEndPoint extends DataEndPoint {
-  /// The buffer size of the raw JSON file in bytes.
-  ///
-  /// All Probed data will be written to a JSON file until the buffer is filled, at which time
-  /// the file will be zipped. There is not a single-best [bufferSize] value.
-  /// If data are collected at high rates, a higher value will be best to minimize
-  /// zip operations. If data are collected at low rates, a lower value will be best
-  /// to minimize the likelihood of data loss when the app is killed or crashes.
-  /// Default size is 500 KB.
-  int bufferSize = 500 * 1000;
-
-  ///Is data to be compressed (zipped) before storing in a file. True as default.
-  ///
-  /// If zipped, the JSON file will be reduced to 1/5 of its size.
-  /// For example, the 500 KB buffer typically is reduced to ~100 KB.
-  bool zip = true;
-
-  ///Is data to be encrypted before storing. False as default.
-  ///
-  /// Support only one-way encryption using a public key.
-  bool encrypt = false;
-
-  /// If [encrypt] is true, this should hold the public key in a RSA KPI encryption of data.
-  String publicKey;
-
-  /// Creates a [FileDataEndPoint].
-  ///
-  /// [type] is defined in [DataEndPointType]. Is typically of type [DataEndPointType.FILE]
-  /// but specialized file types can be specified.
-  FileDataEndPoint({String type, this.bufferSize, this.zip, this.encrypt, this.publicKey})
-      : super(type ?? DataEndPointType.FILE);
-
-  static Function get fromJsonFunction => _$FileDataEndPointFromJson;
-  factory FileDataEndPoint.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
-  Map<String, dynamic> toJson() => _$FileDataEndPointToJson(this);
-
-  String toString() =>
-      'FILE - buffer ${(bufferSize / 1000).round()} KB${zip ? ', zipped' : ''}${encrypt ? ', encrypted' : ''}';
-}
-
-/// A enumeration of known endpoint API types.
-class DataEndPointType {
-  static const String PRINT = "print";
-  static const String FILE = "file";
-  static const String FIREBASE_STORAGE = "firebase-storage";
-  static const String FIREBASE_DATABASE = "firebase-database";
-  static const String CARP = "carp";
-  static const String OMH = "omh";
+/// A enumeration of known (but not necessarily implemented) endpoint API types.
+///
+/// Note that the type is basically a [String], which allow for extension of unknown,
+/// application-specific data endpoints.
+class DataEndPointTypes {
+  static const String UNKNOWN = 'UNKNOWN';
+  static const String PRINT = 'PRINT';
+  static const String FILE = 'FILE';
+  static const String SQLITE = 'SQLITE';
+  static const String FIREBASE_STORAGE = 'FIREBASE_STORAGE';
+  static const String FIREBASE_DATABSE = 'FIREBASE_DATABSE';
+  static const String CARP = 'CARP';
+  static const String OMH = 'OMH';
+  static const String AWS = 'AWS';
 }

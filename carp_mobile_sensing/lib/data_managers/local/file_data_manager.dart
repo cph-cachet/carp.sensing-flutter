@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of datastore;
+part of data_managers;
 
 /// Stores [Datum] json objects as plain-text on the device's local storage media.
 /// Supports compression (zip) and encryption.
@@ -18,6 +18,8 @@ class FileDataManager extends AbstractDataManager {
   /// The path to use on the device for storing CARP files.
   static const String CARP_FILE_PATH = 'carp/data';
 
+  String get type => DataEndPointTypes.FILE;
+
   FileDataEndPoint _fileDataEndPoint;
   String _path;
   String _filename;
@@ -26,24 +28,10 @@ class FileDataManager extends AbstractDataManager {
   bool _initialized = false;
   int _flushingSink = 0;
 
-  List<FileDataManagerListener> _listener = new List<FileDataManagerListener>();
-  void addFileDataManagerListener(FileDataManagerListener listener) {
-    _listener.add(listener);
-  }
-
-  void removeFileDataManagerListener(FileDataManagerListener listener) {
-    _listener.remove(listener);
-  }
-
-  Future notifyAllListeners(FileDataManagerEvent event) async {
-    for (FileDataManagerListener l in _listener) {
-      await l.notify(event);
-    }
-  }
-
-  Future initialize(Study study, Stream<Datum> events) async {
-    super.initialize(study, events);
+  Future initialize(Study study, Stream<Datum> data) async {
     assert(study.dataEndPoint is FileDataEndPoint);
+    super.initialize(study, data);
+
     _fileDataEndPoint = study.dataEndPoint as FileDataEndPoint;
 
     if (_fileDataEndPoint.encrypt) {
@@ -60,6 +48,12 @@ class FileDataManager extends AbstractDataManager {
     print(' study file path : $_studyPath');
     print(' buffer size     : ${_fileDataEndPoint.bufferSize.toString()} bytes');
   }
+
+  void onDatum(Datum datum) => write(datum);
+
+  void onDone() => close();
+
+  void onError(error) {}
 
   ///Returns the local study path on the device where files can be written.
   Future<String> get studyPath async {
@@ -94,7 +88,7 @@ class FileDataManager extends AbstractDataManager {
       final path = await filename;
       _file = File(path);
       print("Creating file '$path'");
-      notifyAllListeners(new FileDataManagerEvent(FileEvent.created, path));
+      addEvent(FileDataManagerEvent(FileDataManagerEventTypes.file_created, path));
     }
     return _file;
   }
@@ -113,11 +107,11 @@ class FileDataManager extends AbstractDataManager {
   }
 
   /// Writes a JSON encoded [Datum] to the file
-  Future<bool> uploadData(Datum data) async {
+  Future<bool> write(Datum data) async {
     // Check if the sink is ready for writing...
     if (!_initialized) {
-      print("File sink not ready -- delaying for 1 sec...");
-      return Future.delayed(const Duration(seconds: 1), () => uploadData(data));
+      print("File sink not ready -- delaying for 2 sec...");
+      return Future.delayed(const Duration(seconds: 2), () => write(data));
     }
 
     DataPoint _header = new DataPoint.fromDatum(study.id, study.userId, data);
@@ -127,7 +121,7 @@ class FileDataManager extends AbstractDataManager {
       _s.write(json);
       // write a ',' to separate json objects in the list
       _s.write('\n,\n');
-      print("Writing to file : ${data.toString()}");
+      //print("Writing to file : ${data.toString()}");
 
       file.then((_f) {
         _f.length().then((len) {
@@ -182,9 +176,10 @@ class FileDataManager extends AbstractDataManager {
       if (_fileDataEndPoint.encrypt) {
         //TODO : implement encryption
         // if the encrypted file gets another name, remember to update _jsonFilePath
+        addEvent(FileDataManagerEvent(FileDataManagerEventTypes.file_encrypted, _finalFilePath));
       }
 
-      notifyAllListeners(new FileDataManagerEvent(FileEvent.closed, _finalFilePath));
+      addEvent(FileDataManagerEvent(FileDataManagerEventTypes.file_closed, _finalFilePath));
     });
   }
 
@@ -194,32 +189,70 @@ class FileDataManager extends AbstractDataManager {
         flush(_f, _s);
       });
     });
+    super.close();
   }
 
-  String toString() {
-    return "FileDataManager";
-  }
-
-  void onData(Datum datum) => uploadData(datum);
-
-  void onDone() {}
-
-  void onError(error) {}
+  String toString() => "FileDataManager";
 }
 
-/// A Listener that can listen on [FileDataManagerEvent]s from a [FileDataManager].
-abstract class FileDataManagerListener {
-  Future notify(FileDataManagerEvent event);
+/// Specify an endpoint where a file-based [DataManager] can store JSON data as files on the local device.
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+class FileDataEndPoint extends DataEndPoint {
+  /// The buffer size of the raw JSON file in bytes.
+  ///
+  /// All Probed data will be written to a JSON file until the buffer is filled, at which time
+  /// the file will be zipped. There is not a single-best [bufferSize] value.
+  /// If data are collected at high rates, a higher value will be best to minimize
+  /// zip operations. If data are collected at low rates, a lower value will be best
+  /// to minimize the likelihood of data loss when the app is killed or crashes.
+  /// Default size is 500 KB.
+  int bufferSize = 500 * 1000;
+
+  /// Is data to be compressed (zipped) before storing in a file. True as default.
+  ///
+  /// If zipped, the JSON file will be reduced to 1/5 of its size.
+  /// For example, the 500 KB buffer typically is reduced to ~100 KB.
+  bool zip = true;
+
+  ///Is data to be encrypted before storing. False as default.
+  ///
+  /// Support only one-way encryption using a public key.
+  bool encrypt = false;
+
+  /// If [encrypt] is true, this should hold the public key in a RSA KPI encryption of data.
+  String publicKey;
+
+  /// Creates a [FileDataEndPoint].
+  ///
+  /// [type] is defined in [DataEndPointTypes]. Is typically of type [DataEndPointType.FILE]
+  /// but specialized file types can be specified.
+  FileDataEndPoint({String type, this.bufferSize, this.zip, this.encrypt, this.publicKey})
+      : super(type ?? DataEndPointTypes.FILE);
+
+  static Function get fromJsonFunction => _$FileDataEndPointFromJson;
+  factory FileDataEndPoint.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$FileDataEndPointToJson(this);
+
+  String toString() =>
+      'FILE - buffer ${(bufferSize / 1000).round()} KB${zip ? ', zipped' : ''}${encrypt ? ', encrypted' : ''}';
 }
 
-class FileDataManagerEvent {
-  /// The event type, see [FileEvent].
-  FileEvent event;
-
+/// A status event for this file data manager.
+/// See [FileDataManagerEventTypes] for a list of possible event types.
+class FileDataManagerEvent extends DataManagerEvent {
   /// The full path and filename for the file.
   String path;
 
-  FileDataManagerEvent(this.event, this.path);
+  FileDataManagerEvent(String type, this.path) : super(type);
+
+  String toString() => 'FileDataManagerEvent - type: $type, path: $path';
 }
 
-enum FileEvent { created, closed }
+/// An enumeration of file data manager event types
+class FileDataManagerEventTypes extends DataManagerEventTypes {
+  static const String file_created = 'file_created';
+  static const String file_closed = 'file_closed';
+  static const String file_deleted = 'file_deleted';
+  static const String file_encrypted = 'file_encrypted';
+}

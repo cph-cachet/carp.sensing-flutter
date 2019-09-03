@@ -4,7 +4,7 @@ version: 0.0.1
 author:  CACHET Team <cph.cachet@gmail.com>
 
 environment:
-  sdk: ">=2.0.0-dev <3.0.0"
+  sdk: ">=2.1.0-dev <3.0.0"
 
 dependencies:
   flutter:

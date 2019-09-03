@@ -73,7 +73,9 @@ abstract class FirebaseDataEndPoint {
   FirebaseEndPoint firebaseEndPoint;
 }
 
-/// Specify a Google Firebase Database document endpoint.
+/// Specify a Google Firebase Database (Cloud Firestore) document endpoint.
+///
+/// See [Cloud Firestore](https://firebase.google.com/docs/firestore) for description of the Firebase cloud database.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class FirebaseDatabaseDataEndPoint extends DataEndPoint with FirebaseDataEndPoint {
   /// When uploading to the Firebase Database using the [FirebaseDatabaseDataManager],
@@ -86,7 +88,7 @@ class FirebaseDatabaseDataEndPoint extends DataEndPoint with FirebaseDataEndPoin
 
   /// Creates a [FirebaseDatabaseDataEndPoint].
   FirebaseDatabaseDataEndPoint(FirebaseEndPoint firebaseEndPoint, {this.collection})
-      : super(DataEndPointType.FIREBASE_DATABASE) {
+      : super(DataEndPointTypes.FIREBASE_DATABSE) {
     this.firebaseEndPoint = firebaseEndPoint;
   }
 
@@ -97,6 +99,8 @@ class FirebaseDatabaseDataEndPoint extends DataEndPoint with FirebaseDataEndPoin
 }
 
 /// Specify a Google Firebase Storage file endpoint.
+///
+/// See [Firebase Storage](https://firebase.google.com/docs/storage) for description of Firebase file storage.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class FirebaseStorageDataEndPoint extends FileDataEndPoint with FirebaseDataEndPoint {
   /// When uploading to the Firebase Storage using the [FirebaseStorageDataManager],
@@ -109,7 +113,7 @@ class FirebaseStorageDataEndPoint extends FileDataEndPoint with FirebaseDataEndP
 
   /// Creates a [FirebaseStorageDataEndPoint].
   FirebaseStorageDataEndPoint(FirebaseEndPoint firebaseEndPoint, {this.path, bufferSize, zip, encrypt, publicKey})
-      : super(type: DataEndPointType.FIREBASE_STORAGE, bufferSize: bufferSize, zip: zip, encrypt: encrypt) {
+      : super(type: DataEndPointTypes.FIREBASE_STORAGE, bufferSize: bufferSize, zip: zip, encrypt: encrypt) {
     this.firebaseEndPoint = firebaseEndPoint;
   }
 

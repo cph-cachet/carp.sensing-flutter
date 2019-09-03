@@ -3,7 +3,7 @@
 library carp_mobile_sensing;
 
 // The core packages
-export 'package:carp_mobile_sensing/datastore/datastore.dart';
+export 'package:carp_mobile_sensing/data_managers/data_managers.dart';
 export 'package:carp_mobile_sensing/runtime/runtime.dart';
 export 'package:carp_mobile_sensing/domain/domain.dart';
 export 'package:carp_mobile_sensing/transformer_schemas/omh/omh_schemas.dart';

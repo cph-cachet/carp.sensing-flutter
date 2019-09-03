@@ -12,6 +12,7 @@ library runtime;
 
 import 'dart:async';
 import 'package:async/async.dart';
+import 'dart:convert';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 part 'probes.dart';
@@ -20,6 +21,7 @@ part 'executors.dart';
 part 'study_controller.dart';
 part 'probe_controller.dart';
 part 'sampling_package.dart';
+part 'data_manager.dart';
 
 class SensingException implements Exception {
   dynamic message;

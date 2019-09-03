@@ -40,6 +40,8 @@ class CARPDatum extends Datum {
 
   factory CARPDatum.fromJson(Map<String, dynamic> json) => _$CARPDatumFromJson(json);
   Map<String, dynamic> toJson() => _$CARPDatumToJson(this);
+
+  String toString() => '${this.runtimeType} - format: $format, id: $id, timestamp: $timestamp';
 }
 
 /// A very simple [Datum] that only holds a string datum object.
@@ -55,6 +57,8 @@ class StringDatum extends CARPDatum {
 
   factory StringDatum.fromJson(Map<String, dynamic> json) => _$StringDatumFromJson(json);
   Map<String, dynamic> toJson() => _$StringDatumToJson(this);
+
+  String toString() => super.toString() + ', str: $str';
 }
 
 /// A generic [Datum] that holds a map of key, value string objects.
@@ -85,18 +89,18 @@ class ErrorDatum extends CARPDatum {
 
   factory ErrorDatum.fromJson(Map<String, dynamic> json) => _$ErrorDatumFromJson(json);
   Map<String, dynamic> toJson() => _$ErrorDatumToJson(this);
+
+  String toString() => super.toString() + ', message: $message';
 }
 
 /// A [Datum] object holding multiple [Datum]s of the same type.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MultiDatum extends CARPDatum {
   /// The list of [Datum]s, i.e. the data.
-  List<Datum> data = new List<Datum>();
+  List<Datum> data = List<Datum>();
 
   /// Add a [Datum] to the list.
-  void addDatum(Datum datum) {
-    data.add(datum);
-  }
+  void addDatum(Datum datum) => data.add(datum);
 
   MultiDatum() : super();
 
@@ -105,7 +109,7 @@ class MultiDatum extends CARPDatum {
   factory MultiDatum.fromJson(Map<String, dynamic> json) => _$MultiDatumFromJson(json);
   Map<String, dynamic> toJson() => _$MultiDatumToJson(this);
 
-  String toString() => "${this.runtimeType}: {format: $format, size: ${data.length}}";
+  String toString() => super.toString() + ', size: ${data.length}';
 }
 
 /// Specifies the data format of a [Datum].
@@ -161,29 +165,6 @@ class DataType {
   static const String STRING = "string";
   static const String MAP = "map";
   static const String ERROR = "error";
-//  static const String MEMORY = "memory";
-//  static const String DEVICE = "device";
-//  static const String PEDOMETER = "pedometer";
-//  static const String ACCELEROMETER = "accelerometer";
-//  static const String GYROSCOPE = "gyroscope";
-//  static const String BATTERY = "battery";
-//  static const String BLUETOOTH = "bluetooth";
-//  static const String AUDIO = "audio";
-//  static const String NOISE = "noise";
-//  static const String LOCATION = "location";
-//  static const String CONNECTIVITY = "connectivity";
-//  static const String LIGHT = "light";
-//  static const String APPS = "apps";
-//  static const String APP_USAGE = "app_usage";
-//  static const String TEXT_MESSAGE_LOG = "text-message-log";
-//  static const String TEXT_MESSAGE = "text-message";
-//  static const String SCREEN = "screen";
-//  static const String PHONE_LOG = "phone_log";
-//  static const String ACTIVITY = "activity";
-//  static const String APPLE_HEALTHKIT = "apple-healthkit";
-//  static const String GOOGLE_FIT = "google-fit";
-//  static const String WEATHER = "weather";
-//  static const String GEOFENCE = "geofence";
 
   static List<String> _allTypes = List<String>();
 

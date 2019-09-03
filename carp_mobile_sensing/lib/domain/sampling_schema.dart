@@ -44,6 +44,9 @@ class SamplingSchema {
   /// A printer-friendly name of this [SamplingSchema].
   String name;
 
+  /// A description of this [SamplingSchema].
+  String description;
+
   /// A map of default [Measure]s for this sampling schema.
   ///
   /// These default measures can be manually populated by
@@ -208,7 +211,7 @@ class SamplingSchema {
         // first restore each measure in the study+tasks to its previous value
         if (restore) measure.restore();
         if (measures.containsKey(measure.type.name)) {
-          // if an adapted measure exists in this schema, adapt to this
+          // if an adapted measure exists in this schema, adapt to it
           measure.adapt(measures[measure.type.name]);
         }
         // notify listeners that the measure has changed due to restoration and/or adaptation

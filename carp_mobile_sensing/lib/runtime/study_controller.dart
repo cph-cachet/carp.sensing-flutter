@@ -30,16 +30,31 @@ class StudyController {
   ///      [DataManagerRegistry] based on the type of the study's [DataEndPoint].
   ///    * The name of a [PrivacySchema] can be provided in [privacySchemaName].
   ///      Use [PrivacySchema.DEFAULT] for the default, built-in schema. If null, no privacy schema is used.
-  ///    * A generic [transformer] can be provided which transform each collected data. If null, a 1:1 mapping is done, i.e. no transformation.
+  ///    * A generic [transformer] can be provided which transform each collected data.
+  ///      If null, a 1:1 mapping is done, i.e. no transformation.
   StudyController(this.study,
       {this.executor, this.samplingSchema, this.dataManager, this.privacySchemaName, this.transformer})
       : assert(study != null),
         super() {
+    // create and register the two built-in data managers
+    DataManagerRegistry.register(ConsoleDataManager());
+    DataManagerRegistry.register(FileDataManager());
+
+    // if a data manager is provided, register this
+    if (dataManager != null) DataManagerRegistry.register(dataManager);
+
+    // now initialize optional parameters
     executor ??= StudyExecutor(study);
     samplingSchema ??= SamplingSchema.normal(powerAware: true);
     dataManager ??= DataManagerRegistry.lookup(study.dataEndPoint.type);
     privacySchemaName ??= NameSpace.CARP;
     transformer ??= ((events) => events);
+
+    assert(
+        dataManager != null,
+        'Could not find a data manager for type ${study.dataEndPoint.type}. '
+        'An instance of a DataManager can be specified as the dataManager argument when creating this StudyController.'
+        'Or you can registrer it in the DataManagerRegistry.');
 
     // set up transformation in the following order:
     // 1. privacy schema
@@ -51,6 +66,8 @@ class StudyController {
 
     // old, simple version below
     // events = transformer(executor.events);
+
+    //dataManager.events.forEach(print);
   }
 
   /// Initialize this controller. Must be called only once, and before [start] is called.
@@ -77,7 +94,7 @@ class StudyController {
     executor.initialize(Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR)));
     dataManager.initialize(study, events);
 
-    events.listen((data) => samplingSize++);
+    events.listen((datum) => samplingSize++);
   }
 
   BatteryProbe _battery = BatteryProbe();

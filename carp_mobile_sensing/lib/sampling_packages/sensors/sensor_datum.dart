@@ -30,7 +30,7 @@ class AccelerometerDatum extends CARPDatum {
   factory AccelerometerDatum.fromJson(Map<String, dynamic> json) => _$AccelerometerDatumFromJson(json);
   Map<String, dynamic> toJson() => _$AccelerometerDatumToJson(this);
 
-  String toString() => 'Accelerometer - x: $x, y: $y, x: $z';
+  String toString() => super.toString() + ', x: $x, y: $y, x: $z';
 }
 
 /// A [Datum] that holds rotation data collected from the native gyroscope on the phone.
@@ -57,7 +57,7 @@ class GyroscopeDatum extends CARPDatum {
   factory GyroscopeDatum.fromJson(Map<String, dynamic> json) => _$GyroscopeDatumFromJson(json);
   Map<String, dynamic> toJson() => _$GyroscopeDatumToJson(this);
 
-  String toString() => 'Gyroscope - x: $x, y: $y, x: $z';
+  String toString() => super.toString() + ', x: $x, y: $y, x: $z';
 }
 
 /// A [Datum] that holds light intensity in Lux from the light sensor on the phone.
@@ -77,5 +77,22 @@ class LightDatum extends CARPDatum {
   factory LightDatum.fromJson(Map<String, dynamic> json) => _$LightDatumFromJson(json);
   Map<String, dynamic> toJson() => _$LightDatumToJson(this);
 
-  String toString() => 'Light - avgLux: $meanLux, stdLux: $stdLux, minLux: $minLux, maxLux: $maxLux';
+  String toString() => super.toString() + ', avgLux: $meanLux, stdLux: $stdLux, minLux: $minLux, maxLux: $maxLux';
+}
+
+/// Holds the step count.
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+class PedometerDatum extends CARPDatum {
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, SensorSamplingPackage.PEDOMETER);
+  DataFormat get format => CARP_DATA_FORMAT;
+
+  /// The amount of steps.
+  int stepCount;
+
+  PedometerDatum([this.stepCount]) : super();
+
+  factory PedometerDatum.fromJson(Map<String, dynamic> json) => _$PedometerDatumFromJson(json);
+  Map<String, dynamic> toJson() => _$PedometerDatumToJson(this);
+
+  String toString() => super.toString() + ', steps: $stepCount';
 }

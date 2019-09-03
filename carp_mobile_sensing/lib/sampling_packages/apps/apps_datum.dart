@@ -21,7 +21,7 @@ class AppsDatum extends CARPDatum {
   Map<String, dynamic> toJson() => _$AppsDatumToJson(this);
 
   String toString() {
-    String s = 'Installed Apps - [';
+    String s = super.toString() + ' [';
     installedApps.forEach((appName) => s += '$appName,');
     s += ']';
     return s;
@@ -44,5 +44,5 @@ class AppUsageDatum extends CARPDatum {
   factory AppUsageDatum.fromJson(Map<String, dynamic> json) => _$AppUsageDatumFromJson(json);
   Map<String, dynamic> toJson() => _$AppUsageDatumToJson(this);
 
-  String toString() => 'App Usage - start: $start, end: $end, usage: $usage';
+  String toString() => super.toString() + ', start: $start, end: $end, usage: $usage';
 }

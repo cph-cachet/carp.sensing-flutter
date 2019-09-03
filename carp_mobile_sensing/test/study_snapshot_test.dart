@@ -13,7 +13,7 @@ void main() {
     //SamplingPackageRegistry.register(ContextSamplingPackage());
 
     study = Study("1234", "bardram", name: "bardram study");
-    study.dataEndPoint = DataEndPoint(DataEndPointType.PRINT);
+    study.dataEndPoint = DataEndPoint(DataEndPointTypes.PRINT);
 //    study.dataEndPoint = FileDataEndPoint()
 //      ..bufferSize = 50 * 1000
 //      ..zip = true
@@ -37,15 +37,17 @@ void main() {
 //      ..addMeasure(PeriodicMeasure(DataFormat('carp', 'apps'), frequency: 3, duration: 8))
 //      ..addMeasure(Measure(DataFormat('carp', 'weather'))));
 
-    study.addTask(ParallelTask('Sensor Task')
-      ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
-          frequency: 10 * 1000, // sample every 10 secs
-          duration: 100 // for 100 ms
-          ))
-      ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
-          frequency: 20 * 1000, // sample every 20 secs
-          duration: 100 // for 100 ms
-          )));
+    study.addTriggerTask(
+        ImmediateTrigger(),
+        Task('Sensor Task')
+          ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
+              frequency: 10 * 1000, // sample every 10 secs
+              duration: 100 // for 100 ms
+              ))
+          ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
+              frequency: 20 * 1000, // sample every 20 secs
+              duration: 100 // for 100 ms
+              )));
 
 //    study.addTask(Task('Audio Recording Task')
 //      ..addMeasure(AudioMeasure(MeasureType(NameSpace.CARP, DataType.AUDIO),
@@ -62,8 +64,10 @@ void main() {
 //      ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.ACTIVITY))..configuration['jakob'] = 'was here')
 //      ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.WEATHER))));
 
-    study.addTask(SequentialTask('Task collecting a list of all installed apps')
-      ..addMeasure(Measure(MeasureType(NameSpace.CARP, AppsSamplingPackage.APPS))));
+    study.addTriggerTask(
+        ImmediateTrigger(),
+        Task('Task collecting a list of all installed apps')
+          ..addMeasure(Measure(MeasureType(NameSpace.CARP, AppsSamplingPackage.APPS))));
   });
 
   String _stringSnapshot;

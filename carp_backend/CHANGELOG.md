@@ -1,3 +1,11 @@
+## 0.6.0+1
+* auto-generate of json serialization files
+
+## 0.6.0
+* `CarpUploadMethod` is now an enumeration
+* Support for JSON serialization v. 3.0.0
+* update to `carp_mobile_sensing` version 0.6.0
+
 ## 0.3.4+2
 * bug in authentication fixed
 * delete on uploaded support

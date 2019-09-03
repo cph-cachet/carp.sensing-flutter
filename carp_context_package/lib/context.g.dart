@@ -145,8 +145,6 @@ WeatherMeasure _$WeatherMeasureFromJson(Map<String, dynamic> json) {
           : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
       name: json['name'],
       enabled: json['enabled'],
-      frequency: json['frequency'],
-      duration: json['duration'],
       apiKey: json['api_key'] as String)
     ..c__ = json['c__'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
@@ -168,8 +166,6 @@ Map<String, dynamic> _$WeatherMeasureToJson(WeatherMeasure instance) {
   writeNotNull('name', instance.name);
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
-  writeNotNull('frequency', instance.frequency);
-  writeNotNull('duration', instance.duration);
   writeNotNull('api_key', instance.apiKey);
   return val;
 }

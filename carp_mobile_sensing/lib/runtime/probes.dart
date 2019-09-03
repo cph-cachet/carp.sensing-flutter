@@ -313,21 +313,29 @@ class _StoppedState extends _AbstractProbeState implements _ProbeStateMachine {
 //                                SPECIALIZED PROBES
 //---------------------------------------------------------------------------------------
 
-/// A [DatumProbe] can collect one piece of [Datum], send its to its stream, and then stops.
+/// When resumed collects one piece of [Datum], send its to its [events] stream, and then pause.
 ///
 /// The [Datum] to be collected should be implemented in the [getDatum] method.
 abstract class DatumProbe extends AbstractProbe {
-  StreamController<Datum> _events = StreamController<Datum>();
-  Stream<Datum> get events => _events.stream;
+  StreamController<Datum> controller = StreamController<Datum>.broadcast();
+  Stream<Datum> get events => controller.stream;
 
   void onInitialize(Measure measure) {}
 
   void onStart() {
-    _events.addStream(Stream.fromFuture(getDatum()));
+    this.resume();
   }
 
   void onRestart() {}
-  void onResume() {}
+
+  void onResume() {
+    getDatum().then((Datum data) {
+      if (data != null) controller.add(data);
+    }).catchError((error, stacktrace) => controller.addError(error, stacktrace));
+
+    this.pause();
+  }
+
   void onPause() {}
   void onStop() {}
 
@@ -368,23 +376,19 @@ abstract class PeriodicDatumProbe extends DatumProbe {
     super.onResume();
     // create a recurrent timer that resumes sampling every [frequency].
     timer = Timer.periodic(frequency, (Timer t) async {
-      try {
-        getDatum().then((Datum data) {
-          if (data != null) controller.add(data);
-        });
-      } catch (e, s) {
-        controller.addError(e, s);
-      }
+      getDatum().then((Datum data) {
+        if (data != null) controller.add(data);
+      }).catchError((error, stacktrace) => controller.addError(error, stacktrace));
     });
   }
 
   void onPause() {
     super.onPause();
-    if (timer != null) timer.cancel();
+    timer?.cancel();
   }
 
   void onStop() {
-    if (timer != null) timer.cancel();
+    timer?.cancel();
     controller.close();
   }
 }
@@ -410,32 +414,47 @@ abstract class StreamProbe extends AbstractProbe {
   void onInitialize(Measure measure) {}
 
   void onStart() {
-    assert(stream != null, 'Stream cannot be null in a StreamProbe');
-    subscription = stream.listen(onData, onError: onError, onDone: onDone);
+    //subscription = stream?.listen(onData, onError: onError, onDone: onDone);
   }
 
-  void onRestart() {}
+  void onRestart() {
+    // if we don't have a subscription yet, try to get one
+    if (subscription == null && stream != null) subscription = stream.listen(onData, onError: onError, onDone: onDone);
+  }
 
   void onPause() {
-    // Not all underlying streams seems to comply to the pause event.
-    // For example, the location and activity probe
-    // TODO - implement support for pause/resume in the StreamProbe
-    if (subscription != null) subscription.pause();
+    // if the stream has disappeared, remove the subscription also
+    if (stream == null) subscription = null;
+    if (subscription != null) {
+      if (stream.isBroadcast) {
+        // If the underlying stream is gone or is a broadcast stream, it is better to cancel and later resume the
+        // subscription. See https://api.dart.dev/stable/2.4.0/dart-async/StreamSubscription/pause.html
+        // Most streams from platform channels are broadcast (e.g. activity, location, eSense, ...).
+        subscription?.cancel();
+        subscription = null;
+        //print('${this.runtimeType} - onPause() - isBroadcast - subscription = null');
+      } else {
+        subscription?.pause();
+      }
+    }
   }
 
   void onResume() {
-    if (subscription != null) subscription.resume();
+    // if we don't have a subscription yet, or it has been canceled, try to get one
+    if (subscription == null && stream != null)
+      subscription = stream.listen(onData, onError: onError, onDone: onDone);
+    else if (stream != null && !stream.isBroadcast) subscription.resume();
   }
 
   void onStop() {
-    if (subscription != null) subscription.cancel();
-    controller.close();
+    subscription?.cancel();
+    controller?.close();
+    subscription = null;
   }
 
+  // just forwarding to the controller
   void onData(Datum event) => controller.add(event);
-
   void onError(error) => controller.addError(error);
-
   void onDone() => controller.close();
 }
 
@@ -465,15 +484,21 @@ abstract class PeriodicStreamProbe extends StreamProbe {
     duration = ((measure as PeriodicMeasure).duration != null)
         ? Duration(milliseconds: (measure as PeriodicMeasure).duration)
         : null;
+    super.onRestart();
   }
 
   void onResume() {
+    print('${this.runtimeType} - onResume() - subscription: $subscription');
+    // if we don't have a subscription yet, or it has been canceled, try to get one
+    if (subscription == null) subscription = stream?.listen(onData, onError: onError, onDone: onDone);
     if (subscription != null) {
       // create a recurrent timer that resume sampling.
       timer = Timer.periodic(frequency, (Timer t) {
+        print('${this.runtimeType} - onResume() - subscription.resume()');
         subscription.resume();
         // create a timer that pause the sampling after the specified duration.
         Timer(duration, () {
+          print('${this.runtimeType} - onResume() - subscription.pause()');
           subscription.pause();
         });
       });
@@ -481,12 +506,12 @@ abstract class PeriodicStreamProbe extends StreamProbe {
   }
 
   void onPause() {
-    if (timer != null) timer.cancel();
-    super.onPause();
+    timer?.cancel();
+    subscription?.pause();
   }
 
   void onStop() async {
-    if (timer != null) timer.cancel();
+    timer?.cancel();
     super.onStop();
   }
 }
@@ -531,7 +556,7 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
         // collect the datum
         getDatum().then((datum) {
           if (datum != null) controller.add(datum);
-        });
+        }).catchError((error, stacktrace) => controller.addError(error, stacktrace));
       });
     });
   }
@@ -541,7 +566,7 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
     // check if there are some buffered data that needs to be collected before pausing
     getDatum().then((datum) {
       if (datum != null) controller.add(datum);
-    });
+    }).catchError((error, stacktrace) => controller.addError(error, stacktrace));
   }
 
   void onStop() {
@@ -589,27 +614,27 @@ abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
   }
 
   void onResume() {
-    subscription.resume();
+    subscription?.resume();
     timer = Timer.periodic(frequency, (Timer t) {
       onSamplingStart();
-      subscription.resume();
+      subscription?.resume();
       Timer(duration, () {
-        subscription.pause();
+        subscription?.pause();
         onSamplingEnd();
         getDatum().then((datum) {
           if (datum != null) controller.add(datum);
-        });
+        }).catchError((error, stacktrace) => controller.addError(error, stacktrace));
       });
     });
   }
 
   void onPause() {
-    if (timer != null) timer.cancel();
-    subscription.pause();
+    timer?.cancel();
+    subscription?.pause();
     // check if there are some buffered data that needs to be collected before pausing
     getDatum().then((datum) {
       if (datum != null) controller.add(datum);
-    });
+    }).catchError((error, stacktrace) => controller.addError(error, stacktrace));
   }
 
   // Sub-classes should implement the following handler methods.
@@ -653,7 +678,7 @@ abstract class BufferingStreamProbe extends BufferingPeriodicStreamProbe {
       onSamplingStart();
       getDatum().then((datum) {
         if (datum != null) controller.add(datum);
-      });
+      }).catchError((error, stacktrace) => controller.addError(error, stacktrace));
     });
   }
 

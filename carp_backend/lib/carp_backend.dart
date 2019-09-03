@@ -25,7 +25,7 @@ class CarpDataEndPoint extends FileDataEndPoint {
   static const String DEFAULT_COLLECTION = "carp_sensing";
 
   /// The method used to upload to CARP -- see [CarpUploadMethod] for options.
-  String uploadMethod;
+  CarpUploadMethod uploadMethod;
 
   /// The name of the CARP endpoint.
   /// Can be anything, but its recommended to name it according to the CARP service name.
@@ -74,7 +74,8 @@ class CarpDataEndPoint extends FileDataEndPoint {
       encrypt = false, // don't encrypt pr. default
       publicKey})
       : assert(uploadMethod != null),
-        super(type: DataEndPointType.CARP, bufferSize: bufferSize, zip: zip, encrypt: encrypt, publicKey: publicKey) {
+        super(type: DataEndPointTypes.CARP, bufferSize: bufferSize, zip: zip, encrypt: encrypt, publicKey: publicKey) {
+    // the CARP server cannot handle zipped files (yet)
     if (this.uploadMethod == CarpUploadMethod.BATCH_DATA_POINT) {
       this.zip = false;
       this.encrypt = false;
@@ -87,9 +88,4 @@ class CarpDataEndPoint extends FileDataEndPoint {
 }
 
 /// A enumeration of upload methods to CARP
-class CarpUploadMethod {
-  static const String DATA_POINT = "data-point";
-  static const String BATCH_DATA_POINT = "batch-data-point";
-  static const String FILE = "file";
-  static const String DOCUMENT = "document";
-}
+enum CarpUploadMethod { DATA_POINT, BATCH_DATA_POINT, FILE, DOCUMENT }

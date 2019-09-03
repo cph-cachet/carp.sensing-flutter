@@ -17,7 +17,7 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="carp_mobile_sensing_example"
+        android:label="CARP Mobile Sensing Console"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

@@ -13,8 +13,9 @@ void main() {
     SamplingPackageRegistry.register(ContextSamplingPackage());
 
     study = Study("1234", "bardram", name: "bardram study")
-      ..dataEndPoint = DataEndPoint(DataEndPointType.PRINT)
-      ..addTask(Task('Task #1')..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
+      ..dataEndPoint = DataEndPoint(DataEndPointTypes.PRINT)
+      ..addTriggerTask(ImmediateTrigger(),
+          Task('Task #1')..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
   });
 
   test('Study -> JSON', () async {

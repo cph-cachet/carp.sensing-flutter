@@ -61,36 +61,21 @@ class CommunicationSamplingPackage implements SamplingPackage {
     ..name = 'Common (default) communication sampling schema'
     ..powerAware = true
     ..measures.addEntries([
-      MapEntry(
-          PHONE_LOG,
-          PhoneLogMeasure(MeasureType(NameSpace.CARP, PHONE_LOG),
-              // collect phone log once pr. day
-              name: 'Phone Log',
-              enabled: true,
-              //frequency: 60 * 1000,
-              frequency: 1 * 24 * 60 * 60 * 1000,
-              days: 2)),
+      MapEntry(PHONE_LOG,
+          PhoneLogMeasure(MeasureType(NameSpace.CARP, PHONE_LOG), name: 'Phone Log', enabled: true, days: 1)),
       MapEntry(
           TEXT_MESSAGE_LOG,
-          PeriodicMeasure(
+          Measure(
             MeasureType(NameSpace.CARP, TEXT_MESSAGE_LOG),
-            // collect text messages once pr. day
             name: 'Text Message (SMS) Log',
             enabled: true,
-            frequency: 1 * 24 * 60 * 60 * 1000,
-            //frequency: 60 * 1000
           )),
       MapEntry(
           TEXT_MESSAGE, Measure(MeasureType(NameSpace.CARP, TEXT_MESSAGE), name: 'Text Message (SMS)', enabled: true)),
       MapEntry(
           CALENDAR,
           CalendarMeasure(MeasureType(NameSpace.CARP, CALENDAR),
-              // collect calendar events once pr. day
-              name: 'Calendar Events',
-              enabled: true,
-              frequency: 1 * 24 * 60 * 60 * 1000,
-              daysBack: 1,
-              daysFuture: 1)),
+              name: 'Calendar Events', enabled: true, daysBack: 1, daysFuture: 1)),
     ]);
 
   SamplingSchema get light => common
@@ -112,16 +97,13 @@ class CommunicationSamplingPackage implements SamplingPackage {
     ..measures[PHONE_LOG] = PhoneLogMeasure(MeasureType(NameSpace.CARP, PHONE_LOG),
         // collect calendar events once pr. minute
         name: 'Phone Log',
-        frequency: 60 * 1000,
         days: 1)
-    ..measures[TEXT_MESSAGE_LOG] = PeriodicMeasure(MeasureType(NameSpace.CARP, TEXT_MESSAGE_LOG),
+    ..measures[TEXT_MESSAGE_LOG] = Measure(MeasureType(NameSpace.CARP, TEXT_MESSAGE_LOG),
         // collect calendar events once pr. minute
-        name: 'Text Message (SMS) Log',
-        frequency: 60 * 1000)
+        name: 'Text Message (SMS) Log')
     ..measures[CALENDAR] = CalendarMeasure(MeasureType(NameSpace.CARP, CALENDAR),
         // collect calendar events once pr. minute
         name: 'Calendar Events',
-        frequency: 60 * 1000,
         daysBack: 1,
         daysFuture: 1);
 }

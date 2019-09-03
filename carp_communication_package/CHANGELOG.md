@@ -1,3 +1,6 @@
+## 0.6.0
+* update to `carp_mobile_sensing` version 0.6.0
+
 ## 0.5.0
 * `calendar` measure, probe, and datum added incl. default privacy protection 
 * `phone_log` measure redesigned as a periodic measure

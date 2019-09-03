@@ -20,7 +20,7 @@ part 'datapoint.dart';
 part 'datum.dart';
 part 'measures.dart';
 part 'device_info.dart';
-part 'managers.dart';
 part 'sampling_schema.dart';
 part 'transformers.dart';
+part 'triggers.dart';
 part 'domain.g.dart';

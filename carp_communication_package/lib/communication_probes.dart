@@ -7,8 +7,8 @@
 
 part of communication;
 
-/// A probe that collects the phone log from this device on a regular basis (e.g. once pr. day).
-class PhoneLogProbe extends PeriodicDatumProbe {
+/// A probe that collects the phone log from this device on a regular basis (e.g. once pr. hour).
+class PhoneLogProbe extends DatumProbe {
   Future<Datum> getDatum() async {
     int days = (measure as PhoneLogMeasure).days;
     Iterable<CallLogEntry> entries;
@@ -26,27 +26,13 @@ class PhoneLogProbe extends PeriodicDatumProbe {
 }
 
 /// A probe that collects a complete list of all text (SMS) messages from this device.
-/// This is done on a regular basis as specified by the [frequency] in a [PeriodicMeasure].
-class TextMessageLogProbe extends PeriodicDatumProbe {
+class TextMessageLogProbe extends DatumProbe {
   Future<Datum> getDatum() async {
     SmsQuery query = new SmsQuery();
     List<SmsMessage> _messages = await query.getAllSms;
     return TextMessageLogDatum()..textMessageLog = _messages.map((sms) => TextMessage.fromSmsMessage(sms)).toList();
   }
 }
-
-///// A probe that collects a complete list of all text (SMS) messages from this device.
-/////
-///// This probe only collects the list of SMS messages once.
-///// If you want to listen to text messages being received,
-///// use a [TextMessageProbe] instead.
-//class TextMessageLogProbe extends DatumProbe {
-//  Future<Datum> getDatum() async {
-//    SmsQuery query = new SmsQuery();
-//    List<SmsMessage> _messages = await query.getAllSms;
-//    return TextMessageLogDatum()..textMessageLog = _messages.map((sms) => TextMessage.fromSmsMessage(sms)).toList();
-//  }
-//}
 
 /// The [TextMessageProbe] listens to SMS messages and collects a
 /// [TextMessageDatum] every time a new SMS message is received.
@@ -58,7 +44,7 @@ class TextMessageProbe extends StreamProbe {
 /// A probe collecting calendar entries from the calendar on the phone.
 ///
 /// See [CalendarMeasure] for how to configure this probe's measure.
-class CalendarProbe extends PeriodicDatumProbe {
+class CalendarProbe extends DatumProbe {
   DeviceCalendarPlugin _deviceCalendar = DeviceCalendarPlugin();
   List<Calendar> _calendars;
   Iterator<Calendar> _calendarIterator;
@@ -72,20 +58,18 @@ class CalendarProbe extends PeriodicDatumProbe {
 
   Future<void> _retrieveCalendars() async {
     // try to get permission to access calendar
-    try {
-      var permissionsGranted = await _deviceCalendar.hasPermissions();
-      if (permissionsGranted.isSuccess && !permissionsGranted.data) {
-        permissionsGranted = await _deviceCalendar.requestPermissions();
-        if (!permissionsGranted.isSuccess || !permissionsGranted.data) {
-          return;
-        }
+    var permissionsGranted = await _deviceCalendar.hasPermissions();
+    if (permissionsGranted.isSuccess && !permissionsGranted.data) {
+      permissionsGranted = await _deviceCalendar.requestPermissions();
+      if (!permissionsGranted.isSuccess || !permissionsGranted.data) {
+        return;
       }
-
-      final calendarsResult = await _deviceCalendar.retrieveCalendars();
-      _calendars = calendarsResult?.data;
-    } catch (e) {
-      print(e);
     }
+
+    final calendarsResult = await _deviceCalendar.retrieveCalendars();
+    _calendars = calendarsResult?.data;
+
+    print('_calendar : $_calendars');
   }
 
   /// Collects events from the [calendar].
@@ -104,6 +88,7 @@ class CalendarProbe extends PeriodicDatumProbe {
 
   /// Get the [CalendarDatum].
   Future<Datum> getDatum() async {
+    if (_calendars == null) await _retrieveCalendars();
     if (_calendars != null) {
       _events = [];
       _calendarIterator = _calendars.iterator;

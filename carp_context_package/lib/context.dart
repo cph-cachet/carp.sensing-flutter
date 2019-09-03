@@ -6,6 +6,7 @@ library context;
 
 import 'dart:async';
 import 'dart:math' as math;
+import 'dart:io' show Platform;
 import 'package:json_annotation/json_annotation.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:activity_recognition_alt/activity_recognition_alt.dart';

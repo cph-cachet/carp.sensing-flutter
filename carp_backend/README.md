@@ -51,10 +51,10 @@ CarpDataEndPoint cdep = CarpDataEndPoint(CarpUploadMethod.DATA_POINT,
       password: password);
 `````
 
-A `CarpDataEndPoint` that uploads data as zipped files looks like this:
+A `CarpDataEndPoint` that uploads data as zipped files and keeps the file on the phone, looks like this:
 
 `````dart
-  CarpDataEndPoint cdep_2 = CarpDataEndPoint(CarpUploadMethod.FILE,
+  CarpDataEndPoint cdep = CarpDataEndPoint(CarpUploadMethod.FILE,
       name: 'CARP Staging Server',
       uri: uri,
       clientId: clientID,
@@ -62,21 +62,23 @@ A `CarpDataEndPoint` that uploads data as zipped files looks like this:
       email: username,
       password: password,
       bufferSize: 500 * 1000,
-      zip: true);
+      zip: true
+      deleteWhenUploaded: false);
 `````
 
-And a `CarpDataEndPoint` that batch uploads data points in a json files looks like this:
+And a `CarpDataEndPoint` that batch uploads data points in a json file (which is deleted when uploaded) looks like this:
 
 
 `````dart
-  CarpDataEndPoint cdep_3 = CarpDataEndPoint(CarpUploadMethod.BATCH_DATA_POINT,
+  CarpDataEndPoint cdep = CarpDataEndPoint(CarpUploadMethod.BATCH_DATA_POINT,
       name: 'CARP Staging Server',
       uri: uri,
       clientId: clientID,
       clientSecret: clientSecret,
       email: username,
       password: password,
-      bufferSize: 500 * 1000);
+      bufferSize: 500 * 1000
+      deleteWhenUploaded: true);
 
 `````
 
