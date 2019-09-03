@@ -1,14 +1,16 @@
 part of connectivity;
 
-/// A [BluetoothDatum] anonymizer function. Anonymizes the name and discovery name of the bluetooth device.
-/// Bluetooth devices' names may contain participants' real name because people use
-/// their names to name their computers.
+/// A [BluetoothDatum] anonymizer function. Anonymizes the name and discovery name of each
+/// discovered bluetooth device. Bluetooth devices' names may contain participants'
+/// real name because people use their names to name their computers and phones.
 Datum blueetoth_name_anoymizer(Datum datum) {
   assert(datum is BluetoothDatum);
   BluetoothDatum bt = datum as BluetoothDatum;
-  return bt
-    ..bluetoothDeviceName = sha1.convert(utf8.encode(bt.bluetoothDeviceName)).toString()
-    ..advertisementName = sha1.convert(utf8.encode(bt.advertisementName)).toString();
+  bt.scanResult.forEach((result) {
+    result.bluetoothDeviceName = sha1.convert(utf8.encode(result.bluetoothDeviceName)).toString();
+    result.advertisementName = sha1.convert(utf8.encode(result.advertisementName)).toString();
+  });
+  return bt;
 }
 
 /// A [WifiDatum] anonymizer function. Anonymizes the wifi name (SSID) of the wifi network.

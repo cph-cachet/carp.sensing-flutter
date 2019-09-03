@@ -6,39 +6,6 @@ part of sensors;
 // JsonSerializableGenerator
 // **************************************************************************
 
-PedometerDatum _$PedometerDatumFromJson(Map<String, dynamic> json) {
-  return PedometerDatum(
-    json['step_count'] as int,
-    json['start_time'] == null
-        ? null
-        : DateTime.parse(json['start_time'] as String),
-    json['end_time'] == null
-        ? null
-        : DateTime.parse(json['end_time'] as String),
-  )
-    ..id = json['id'] as String
-    ..timestamp = json['timestamp'] == null
-        ? null
-        : DateTime.parse(json['timestamp'] as String);
-}
-
-Map<String, dynamic> _$PedometerDatumToJson(PedometerDatum instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
-  writeNotNull('start_time', instance.startTime?.toIso8601String());
-  writeNotNull('end_time', instance.endTime?.toIso8601String());
-  writeNotNull('step_count', instance.stepCount);
-  return val;
-}
-
 AccelerometerDatum _$AccelerometerDatumFromJson(Map<String, dynamic> json) {
   return AccelerometerDatum(
     x: (json['x'] as num)?.toDouble(),
@@ -125,5 +92,30 @@ Map<String, dynamic> _$LightDatumToJson(LightDatum instance) {
   writeNotNull('std_lux', instance.stdLux);
   writeNotNull('min_lux', instance.minLux);
   writeNotNull('max_lux', instance.maxLux);
+  return val;
+}
+
+PedometerDatum _$PedometerDatumFromJson(Map<String, dynamic> json) {
+  return PedometerDatum(
+    json['step_count'] as int,
+  )
+    ..id = json['id'] as String
+    ..timestamp = json['timestamp'] == null
+        ? null
+        : DateTime.parse(json['timestamp'] as String);
+}
+
+Map<String, dynamic> _$PedometerDatumToJson(PedometerDatum instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', instance.id);
+  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  writeNotNull('step_count', instance.stepCount);
   return val;
 }

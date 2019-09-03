@@ -1,5 +1,6 @@
 ## 0.3.0
 * update to `carp_mobile_sensing` v.0.6.0
+* json serialization 3.0.0
 
 ## 0.2.8+3
 * fixed bug in token refresh.

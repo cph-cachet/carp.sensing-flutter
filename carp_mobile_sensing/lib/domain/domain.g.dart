@@ -523,6 +523,7 @@ ScheduledTrigger _$ScheduledTriggerFromJson(Map<String, dynamic> json) {
     schedule: json['schedule'] == null
         ? null
         : DateTime.parse(json['schedule'] as String),
+    duration: json['duration'] as int,
   )
     ..c__ = json['c__'] as String
     ..tasks = (json['tasks'] as List)
@@ -543,6 +544,31 @@ Map<String, dynamic> _$ScheduledTriggerToJson(ScheduledTrigger instance) {
   writeNotNull('c__', instance.c__);
   writeNotNull('tasks', instance.tasks);
   writeNotNull('schedule', instance.schedule?.toIso8601String());
+  writeNotNull('duration', instance.duration);
+  return val;
+}
+
+Time _$TimeFromJson(Map<String, dynamic> json) {
+  return Time(
+    hour: json['hour'] as int,
+    minute: json['minute'] as int,
+    second: json['second'] as int,
+  )..c__ = json['c__'] as String;
+}
+
+Map<String, dynamic> _$TimeToJson(Time instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('c__', instance.c__);
+  writeNotNull('hour', instance.hour);
+  writeNotNull('minute', instance.minute);
+  writeNotNull('second', instance.second);
   return val;
 }
 
@@ -550,22 +576,20 @@ RecurrentScheduledTrigger _$RecurrentScheduledTriggerFromJson(
     Map<String, dynamic> json) {
   return RecurrentScheduledTrigger(
     type: _$enumDecodeNullable(_$RecurrentTypeEnumMap, json['type']),
-    start:
-        json['start'] == null ? null : DateTime.parse(json['start'] as String),
+    time: json['time'] == null
+        ? null
+        : Time.fromJson(json['time'] as Map<String, dynamic>),
     end: json['end'] == null ? null : DateTime.parse(json['end'] as String),
     separationCount: json['separation_count'] as int,
     maxNumberOfSampling: json['max_number_of_sampling'] as int,
     dayOfWeek: json['day_of_week'] as int,
-    weekOfMonth: json['week_of_month'] as int,
-    dayOfMonth: json['day_of_month'] as int,
     duration: json['duration'] as int,
   )
     ..c__ = json['c__'] as String
     ..tasks = (json['tasks'] as List)
         ?.map(
             (e) => e == null ? null : Task.fromJson(e as Map<String, dynamic>))
-        ?.toList()
-    ..monthOfYear = json['month_of_year'] as int;
+        ?.toList();
 }
 
 Map<String, dynamic> _$RecurrentScheduledTriggerToJson(
@@ -580,16 +604,13 @@ Map<String, dynamic> _$RecurrentScheduledTriggerToJson(
 
   writeNotNull('c__', instance.c__);
   writeNotNull('tasks', instance.tasks);
+  writeNotNull('duration', instance.duration);
   writeNotNull('type', _$RecurrentTypeEnumMap[instance.type]);
-  writeNotNull('start', instance.start?.toIso8601String());
+  writeNotNull('time', instance.time);
   writeNotNull('end', instance.end?.toIso8601String());
   writeNotNull('separation_count', instance.separationCount);
   writeNotNull('max_number_of_sampling', instance.maxNumberOfSampling);
   writeNotNull('day_of_week', instance.dayOfWeek);
-  writeNotNull('week_of_month', instance.weekOfMonth);
-  writeNotNull('day_of_month', instance.dayOfMonth);
-  writeNotNull('month_of_year', instance.monthOfYear);
-  writeNotNull('duration', instance.duration);
   return val;
 }
 
@@ -628,8 +649,6 @@ T _$enumDecodeNullable<T>(
 const _$RecurrentTypeEnumMap = {
   RecurrentType.daily: 'daily',
   RecurrentType.weekly: 'weekly',
-  RecurrentType.monthly: 'monthly',
-  RecurrentType.yearly: 'yearly',
 };
 
 SamplingEventTrigger _$SamplingEventTriggerFromJson(Map<String, dynamic> json) {

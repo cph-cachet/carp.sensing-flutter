@@ -16,9 +16,10 @@ dependencies:
 
 # Overriding carp libraries to use the local copy
 # Remove this when done development
-dependency_overrides:
-  carp_mobile_sensing:
-    path: ../carp_mobile_sensing/
+#dependency_overrides:
+#  carp_mobile_sensing:
+#
+#    path: ../carp_mobile_sensing/
 
 
 dev_dependencies:

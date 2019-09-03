@@ -141,7 +141,7 @@ class PhoneLogDatum extends CARPDatum {
   factory PhoneLogDatum.fromJson(Map<String, dynamic> json) => _$PhoneLogDatumFromJson(json);
   Map<String, dynamic> toJson() => _$PhoneLogDatumToJson(this);
 
-  String toString() => "Phone Log - size: ${phoneLog.length}";
+  String toString() => super.toString() + "size: ${phoneLog.length}";
 }
 
 /// Phone call data.

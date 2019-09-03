@@ -79,3 +79,20 @@ class LightDatum extends CARPDatum {
 
   String toString() => super.toString() + ', avgLux: $meanLux, stdLux: $stdLux, minLux: $minLux, maxLux: $maxLux';
 }
+
+/// Holds the step count.
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+class PedometerDatum extends CARPDatum {
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, SensorSamplingPackage.PEDOMETER);
+  DataFormat get format => CARP_DATA_FORMAT;
+
+  /// The amount of steps.
+  int stepCount;
+
+  PedometerDatum([this.stepCount]) : super();
+
+  factory PedometerDatum.fromJson(Map<String, dynamic> json) => _$PedometerDatumFromJson(json);
+  Map<String, dynamic> toJson() => _$PedometerDatumToJson(this);
+
+  String toString() => super.toString() + ', steps: $stepCount';
+}

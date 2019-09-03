@@ -78,12 +78,13 @@ void main() {
     print(_encode(dp));
 
     BluetoothDatum datum = BluetoothDatum()
-      ..bluetoothDeviceId = "weg"
-      ..bluetoothDeviceName = "ksjbdf"
-      ..connectable = true
-      ..txPowerLevel = 314
-      ..rssi = 567
-      ..bluetoothDeviceType = "classic";
+      ..scanResult.add(BluetoothDevice()
+        ..bluetoothDeviceId = "weg"
+        ..bluetoothDeviceName = "ksjbdf"
+        ..connectable = true
+        ..txPowerLevel = 314
+        ..rssi = 567
+        ..bluetoothDeviceType = "classic");
 
     final DataPoint data = DataPoint.fromDatum(study.id, study.userId, datum);
 
@@ -105,46 +106,49 @@ void main() {
 
     study_3.addTriggerTask(
         PeriodicTrigger(period: 60 * 1000), // collect every min.
-        Task('Sensing Task #1')
+        Task('Sensing Task #2')
           ..measures =
               SamplingSchema.common().getMeasureList([SensorSamplingPackage.LIGHT, DeviceSamplingPackage.DEVICE]));
 
     study_3.addTriggerTask(
         ScheduledTrigger(schedule: DateTime(2019, 12, 24)), // collect date on Xmas.
-        Task('Sensing Task #1')
+        Task('Sensing Task #3')
           ..measures = SamplingSchema.common()
               .getMeasureList([AppsSamplingPackage.APP_USAGE, ConnectivitySamplingPackage.BLUETOOTH]));
 
-    study_3.addTriggerTask(
-        RecurrentScheduledTrigger(
-            type: RecurrentType.daily, start: DateTime(0, 1, 1, 13, 30)), // collect every day at 13:30.
-        Task('Sensing Task #1')..measures = SamplingSchema.common().getMeasureList([DeviceSamplingPackage.MEMORY]));
+    RecurrentScheduledTrigger t1, t2, t3, t4;
 
+    // collect every day at 13:30.
+    t1 = RecurrentScheduledTrigger(type: RecurrentType.daily, time: Time(hour: 21, minute: 30));
+    print('$t1');
     study_3.addTriggerTask(
-        RecurrentScheduledTrigger(
-            type: RecurrentType.daily,
-            start: DateTime(0, 1, 1, 13, 30),
-            separationCount: 1), // collect every other day at 13:30.
+        t1, Task('Sensing Task #1')..measures = SamplingSchema.common().getMeasureList([DeviceSamplingPackage.MEMORY]));
+
+    // collect every other day at 13:30.
+    t2 = RecurrentScheduledTrigger(type: RecurrentType.daily, time: Time(hour: 13, minute: 30), separationCount: 1);
+    print('$t2');
+    study_3.addTriggerTask(
+        t2,
         Task('Sensing Task #1')
           ..measures = SamplingSchema.common()
               .getMeasureList([AppsSamplingPackage.APPS, ConnectivitySamplingPackage.CONNECTIVITY]));
 
+    // collect every wednesday at 12:23.
+    t3 = RecurrentScheduledTrigger(
+        type: RecurrentType.weekly, time: Time(hour: 12, minute: 23), dayOfWeek: DateTime.wednesday);
+    print('$t3');
     study_3.addTriggerTask(
-        RecurrentScheduledTrigger(
-            type: RecurrentType.monthly,
-            start: DateTime(0, 1, 1, 13, 30),
-            weekOfMonth: 2,
-            dayOfWeek: DateTime.monday), // collect every monday in the 2nd week of the month at 13:30.
+        t3,
         Task('Sensing Task #1')
           ..measures = SamplingSchema.common()
               .getMeasureList([AppsSamplingPackage.APPS, ConnectivitySamplingPackage.CONNECTIVITY]));
 
+    // collect every 2nd monday at 12:23.
+    t4 = RecurrentScheduledTrigger(
+        type: RecurrentType.weekly, time: Time(hour: 12, minute: 23), dayOfWeek: DateTime.monday, separationCount: 1);
+    print('$t4');
     study_3.addTriggerTask(
-        RecurrentScheduledTrigger(
-            type: RecurrentType.monthly,
-            start: DateTime(0, 1, 1, 15, 00),
-            separationCount: 1,
-            dayOfMonth: 24), // collect every second month at the 24th at 15:00.
+        t4,
         Task('Sensing Task #1')
           ..measures = SamplingSchema.common()
               .getMeasureList([AppsSamplingPackage.APPS, ConnectivitySamplingPackage.CONNECTIVITY]));

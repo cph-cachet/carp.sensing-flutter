@@ -1,4 +1,5 @@
 ## 0.6.0
+* update to `carp_mobile_sensing` version 0.6.0
 * Weather measure is no longer periodic but 'one-off', i.e. at `DatumProbe`. 
 Use the new `Trigger` model in `carp_mobile_sensing` v.0.6.0 to achieve periodic sampling of weather information.
 

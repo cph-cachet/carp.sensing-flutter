@@ -8,11 +8,11 @@ part of communication;
 
 TextMessageLogDatum _$TextMessageLogDatumFromJson(Map<String, dynamic> json) {
   return TextMessageLogDatum(
-      textMessageLog: (json['text_message_log'] as List)
-          ?.map((e) => e == null
-              ? null
-              : TextMessage.fromJson(e as Map<String, dynamic>))
-          ?.toList())
+    textMessageLog: (json['text_message_log'] as List)
+        ?.map((e) =>
+            e == null ? null : TextMessage.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
+  )
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
         ? null
@@ -62,18 +62,17 @@ Map<String, dynamic> _$TextMessageDatumToJson(TextMessageDatum instance) {
 
 TextMessage _$TextMessageFromJson(Map<String, dynamic> json) {
   return TextMessage(
-      id: json['id'] as int,
-      address: json['address'] as String,
-      body: json['body'] as String,
-      isRead: json['is_read'] as bool,
-      date:
-          json['date'] == null ? null : DateTime.parse(json['date'] as String),
-      dateSent: json['date_sent'] == null
-          ? null
-          : DateTime.parse(json['date_sent'] as String),
-      kind: json['kind'] as String,
-      state: json['state'] as String)
-    ..size = json['size'] as int;
+    id: json['id'] as int,
+    address: json['address'] as String,
+    body: json['body'] as String,
+    isRead: json['is_read'] as bool,
+    date: json['date'] == null ? null : DateTime.parse(json['date'] as String),
+    dateSent: json['date_sent'] == null
+        ? null
+        : DateTime.parse(json['date_sent'] as String),
+    kind: json['kind'] as String,
+    state: json['state'] as String,
+  )..size = json['size'] as int;
 }
 
 Map<String, dynamic> _$TextMessageToJson(TextMessage instance) {
@@ -126,14 +125,15 @@ Map<String, dynamic> _$PhoneLogDatumToJson(PhoneLogDatum instance) {
 
 PhoneCall _$PhoneCallFromJson(Map<String, dynamic> json) {
   return PhoneCall(
-      json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String),
-      json['call_type'] as String,
-      json['duration'] as int,
-      json['formatted_number'] as String,
-      json['number'] as String,
-      json['name'] as String);
+    json['timestamp'] == null
+        ? null
+        : DateTime.parse(json['timestamp'] as String),
+    json['call_type'] as String,
+    json['duration'] as int,
+    json['formatted_number'] as String,
+    json['number'] as String,
+    json['name'] as String,
+  );
 }
 
 Map<String, dynamic> _$PhoneCallToJson(PhoneCall instance) {
@@ -184,15 +184,16 @@ Map<String, dynamic> _$CalendarDatumToJson(CalendarDatum instance) {
 
 CalendarEvent _$CalendarEventFromJson(Map<String, dynamic> json) {
   return CalendarEvent(
-      json['event_id'] as String,
-      json['calendar_id'] as String,
-      json['title'] as String,
-      json['description'] as String,
-      json['start'] == null ? null : DateTime.parse(json['start'] as String),
-      json['end'] == null ? null : DateTime.parse(json['end'] as String),
-      json['all_day'] as bool,
-      json['location'] as String,
-      (json['attendees'] as List)?.map((e) => e as String)?.toList());
+    json['event_id'] as String,
+    json['calendar_id'] as String,
+    json['title'] as String,
+    json['description'] as String,
+    json['start'] == null ? null : DateTime.parse(json['start'] as String),
+    json['end'] == null ? null : DateTime.parse(json['end'] as String),
+    json['all_day'] as bool,
+    json['location'] as String,
+    (json['attendees'] as List)?.map((e) => e as String)?.toList(),
+  );
 }
 
 Map<String, dynamic> _$CalendarEventToJson(CalendarEvent instance) {
@@ -218,12 +219,13 @@ Map<String, dynamic> _$CalendarEventToJson(CalendarEvent instance) {
 
 PhoneLogMeasure _$PhoneLogMeasureFromJson(Map<String, dynamic> json) {
   return PhoneLogMeasure(
-      json['type'] == null
-          ? null
-          : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
-      name: json['name'],
-      enabled: json['enabled'],
-      days: json['days'] as int)
+    json['type'] == null
+        ? null
+        : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
+    name: json['name'],
+    enabled: json['enabled'],
+    days: json['days'] as int,
+  )
     ..c__ = json['c__'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
@@ -250,13 +252,14 @@ Map<String, dynamic> _$PhoneLogMeasureToJson(PhoneLogMeasure instance) {
 
 CalendarMeasure _$CalendarMeasureFromJson(Map<String, dynamic> json) {
   return CalendarMeasure(
-      json['type'] == null
-          ? null
-          : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
-      name: json['name'],
-      enabled: json['enabled'],
-      daysBack: json['days_back'] as int,
-      daysFuture: json['days_future'] as int)
+    json['type'] == null
+        ? null
+        : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
+    name: json['name'],
+    enabled: json['enabled'],
+    daysBack: json['days_back'] as int,
+    daysFuture: json['days_future'] as int,
+  )
     ..c__ = json['c__'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),

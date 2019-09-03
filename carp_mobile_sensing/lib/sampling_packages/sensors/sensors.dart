@@ -16,7 +16,6 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 part 'sensor_probes.dart';
 part 'light_probe.dart';
-part 'pedometer_datum.dart';
 part 'pedometer_probe.dart';
 part 'sensor_datum.dart';
 part 'sensor_package.dart';

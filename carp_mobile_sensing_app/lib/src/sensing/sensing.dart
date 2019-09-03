@@ -97,8 +97,11 @@ class StudyMock implements StudyManager {
         ..addTriggerTask(
             ImmediateTrigger(),
             Task('Context')
-              ..measures = SamplingSchema.common(namespace: NameSpace.CARP)
-                  .getMeasureList([ContextSamplingPackage.LOCATION, ContextSamplingPackage.ACTIVITY]))
+              ..measures = SamplingSchema.common(namespace: NameSpace.CARP).getMeasureList([
+                ContextSamplingPackage.LOCATION,
+                ContextSamplingPackage.ACTIVITY,
+                SensorSamplingPackage.PEDOMETER,
+              ]))
         ..addTriggerTask(
             ImmediateTrigger(),
             Task('Noise')
@@ -113,13 +116,13 @@ class StudyMock implements StudyManager {
               ..measures =
                   SamplingSchema.common(namespace: NameSpace.CARP).getMeasureList([ContextSamplingPackage.WEATHER]))
         ..addTriggerTask(
-            DelayedTrigger(delay: 30 * 1000),
+            DelayedTrigger(delay: 10 * 1000),
             Task('Bluetooth')
               ..measures.add(PeriodicMeasure(MeasureType(NameSpace.CARP, ConnectivitySamplingPackage.BLUETOOTH),
                   name: 'Nearby Devices (Bluetooth Scan)',
                   enabled: true,
-                  frequency: 1 * 60 * 1000,
-                  duration: 5 * 1000)));
+                  frequency: 1 * 30 * 1000,
+                  duration: 2 * 1000)));
 
 //    ..measures = SamplingSchema.debug().getMeasureList([
 //                    ESenseSamplingPackage.ESENSE_BUTTON,

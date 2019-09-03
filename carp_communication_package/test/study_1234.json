@@ -89,7 +89,7 @@
               "duration": 1
             },
             {
-              "c__": "PeriodicMeasure",
+              "c__": "Measure",
               "type": {
                 "c__": "MeasureType",
                 "namespace": "carp",
@@ -97,8 +97,7 @@
               },
               "name": "Pedometer (Step Count)",
               "enabled": true,
-              "configuration": {},
-              "frequency": 3600000
+              "configuration": {}
             },
             {
               "c__": "PeriodicMeasure",

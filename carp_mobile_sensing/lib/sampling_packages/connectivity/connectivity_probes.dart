@@ -32,10 +32,10 @@ class WifiProbe extends PeriodicDatumProbe {
 // This probe requests access to location PERMISSIONS (on Android). Don't ask why.....
 // TODO - implement request for getting permission.
 
-/// The [BluetoothProbe] scans for nearby and visible Bluetooth devices and collect
-/// a [BluetoothDatum] for each. Uses a [PeriodicMeasure] for configuration the
-/// [frequency] and [duration] of the scan.
-class BluetoothProbe extends PeriodicStreamProbe {
+/// The [BluetoothProbe] scans for nearby and visible Bluetooth devices and collects
+/// a [BluetoothDatum] last lists each device found during the scan.
+/// Uses a [PeriodicMeasure] for configuration the [frequency] and [duration] of the scan.
+class BluetoothProbe extends PeriodicDatumProbe {
   /// Default timeout for bluetooth scan - 2 secs
   static const DEFAULT_TIMEOUT = 2 * 1000;
 
@@ -54,11 +54,45 @@ class BluetoothProbe extends PeriodicStreamProbe {
     });
   }
 
-  Stream<Datum> get stream => FlutterBlue.instance
-      .scan(scanMode: ScanMode.lowLatency, timeout: duration ?? Duration(milliseconds: DEFAULT_TIMEOUT))
-      .map((result) => BluetoothDatum.fromScanResult(result));
+  Future<Datum> getDatum() async {
+    List<ScanResult> results = await FlutterBlue.instance
+        .startScan(scanMode: ScanMode.lowLatency, timeout: duration ?? Duration(milliseconds: DEFAULT_TIMEOUT));
+    await FlutterBlue.instance.stopScan();
 
-  // important to overwrite onDone() as a no-op, so that the super class (StreamProbe) don't close the overall stream.
-  @override
-  void onDone() {}
+    return BluetoothDatum.fromScanResult(results);
+  }
 }
+
+//// This probe requests access to location PERMISSIONS (on Android). Don't ask why.....
+//// TODO - implement request for getting permission.
+//
+///// The [BluetoothProbe] scans for nearby and visible Bluetooth devices and collect
+///// a [BluetoothDatum] for each. Uses a [PeriodicMeasure] for configuration the
+///// [frequency] and [duration] of the scan.
+//class BluetoothProbe extends PeriodicStreamProbe {
+//  /// Default timeout for bluetooth scan - 2 secs
+//  static const DEFAULT_TIMEOUT = 2 * 1000;
+//
+//  void onStart() {
+//    // checking if bluetooth is available and turned on before starting the probe.
+//    FlutterBlue.instance.isAvailable.then((available) {
+//      if (available)
+//        FlutterBlue.instance.isOn.then((on) {
+//          if (on)
+//            super.onStart();
+//          else
+//            this.stop();
+//        });
+//      else
+//        this.stop();
+//    });
+//  }
+//
+//  Stream<Datum> get stream => FlutterBlue.instance
+//      .scan(scanMode: ScanMode.lowLatency, timeout: duration ?? Duration(milliseconds: DEFAULT_TIMEOUT))
+//      .map((result) => BluetoothDatum.fromScanResult(result));
+//
+//  // important to overwrite onDone() as a no-op, so that the super class (StreamProbe) don't close the overall stream.
+//  @override
+//  void onDone() {}
+//}

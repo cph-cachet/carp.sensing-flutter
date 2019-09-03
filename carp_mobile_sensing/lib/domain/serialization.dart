@@ -56,6 +56,7 @@ class FromJsonFactory {
     registerFromJsonFunction("DelayedTrigger", DelayedTrigger.fromJsonFunction);
     registerFromJsonFunction("PeriodicTrigger", PeriodicTrigger.fromJsonFunction);
     registerFromJsonFunction("ScheduledTrigger", ScheduledTrigger.fromJsonFunction);
+    registerFromJsonFunction("Time", Time.fromJsonFunction);
     registerFromJsonFunction("RecurrentScheduledTrigger", RecurrentScheduledTrigger.fromJsonFunction);
     registerFromJsonFunction("SamplingEventTrigger", SamplingEventTrigger.fromJsonFunction);
     // note that ConditionalSamplingEventTrigger can't be de/serialized to/from JSON - see documentation of it.

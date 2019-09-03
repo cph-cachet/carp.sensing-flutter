@@ -1,8 +1,9 @@
 ## 0.6.0 - `Trigger` Model & Data Manager events
 
 * Extension of `Study` domain model to include support for
-   * `Trigger`, i.e. that sampling can be triggered in different ways
-   * `Measure` 
+ `Trigger`, which manages the temporal triggering of data sampling.
+ See the [documentation](https://github.com/cph-cachet/carp.sensing-flutter/wiki/2.-Domain-Model) on how to defined a study with triggers.
+ 
 
 * Adjustment of runtime environment to reflect the new study model
    * Addition of a `TriggerExecutor`
@@ -15,7 +16,9 @@
    
 * Minor refactoring
    * Apps and AppUsage are no longer periodic measure, but one-off measures.
-     Hence, use the new trigger model to sample installed apps and their usage.
+     Hence, use the new trigger model to sample installed apps and their usage e.g. on a daily basis.
+   * The `BluetoothDatum` now lists all devices found in a scan.
+   * The pedometer now works as a simple step stream which sense and report each step taken.
    * `datastore` library have been renamed to `data_managers`.    
    
 ## 0.5.1

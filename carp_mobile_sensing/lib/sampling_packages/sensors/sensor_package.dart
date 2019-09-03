@@ -46,9 +46,7 @@ class SensorSamplingPackage implements SamplingPackage {
           PeriodicMeasure(MeasureType(NameSpace.CARP, GYROSCOPE),
               name: 'Gyroscope', enabled: false, frequency: 200, duration: 1)),
       MapEntry(
-          PEDOMETER,
-          PeriodicMeasure(MeasureType(NameSpace.CARP, PEDOMETER),
-              name: 'Pedometer (Step Count)', enabled: true, frequency: 60 * 60 * 1000)),
+          PEDOMETER, Measure(MeasureType(NameSpace.CARP, PEDOMETER), name: 'Pedometer (Step Count)', enabled: true)),
       MapEntry(
           LIGHT,
           PeriodicMeasure(MeasureType(NameSpace.CARP, LIGHT),
@@ -81,9 +79,7 @@ class SensorSamplingPackage implements SamplingPackage {
           PeriodicMeasure(MeasureType(NameSpace.CARP, GYROSCOPE),
               name: 'Gyroscope', enabled: true, frequency: 10 * 1000, duration: 10)),
       MapEntry(
-          PEDOMETER,
-          PeriodicMeasure(MeasureType(NameSpace.CARP, PEDOMETER),
-              name: 'Pedometer (Step Count)', enabled: true, frequency: 60 * 1000)),
+          PEDOMETER, Measure(MeasureType(NameSpace.CARP, PEDOMETER), name: 'Pedometer (Step Count)', enabled: true)),
       MapEntry(
           LIGHT,
           PeriodicMeasure(MeasureType(NameSpace.CARP, LIGHT),

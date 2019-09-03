@@ -198,6 +198,7 @@ class ManualTriggerExecutor extends TriggerExecutor {
 }
 
 /// Executes a [DelayedTrigger], i.e. starts sampling after the specified delay.
+/// Once started, it runs forever.
 class DelayedTriggerExecutor extends TriggerExecutor {
   Duration delay;
 
@@ -215,7 +216,7 @@ class DelayedTriggerExecutor extends TriggerExecutor {
 /// Executes a [PeriodicTrigger], i.e. resumes sampling on a regular basis for a given period of time.
 ///
 /// It is required that both the [period] and the [duration] of the [PeriodicTrigger] is specified
-/// to make sure that this executor is properly started/resumed and paused again.
+/// to make sure that this executor is properly resumed and paused again.
 class PeriodicTriggerExecutor extends TriggerExecutor {
   Duration period, duration;
 
@@ -241,29 +242,42 @@ class PeriodicTriggerExecutor extends TriggerExecutor {
   }
 }
 
-/// Executes a [ScheduledTrigger] on the specified [ScheduledTrigger.schedule].
+/// Executes a [ScheduledTrigger] on the specified [ScheduledTrigger.schedule] date and time.
 class ScheduledTriggerExecutor extends TriggerExecutor {
-  Duration lapse;
+  Duration delay, duration;
 
   ScheduledTriggerExecutor(ScheduledTrigger trigger) : super(trigger) {
     assert(trigger.schedule != null, 'The schedule of a ScheduledTrigger must be specified.');
     assert(trigger.schedule.isAfter(DateTime.now()), 'The schedule of the ScheduledTrigger cannot be in the past.');
-    lapse = trigger.schedule.difference(DateTime.now());
+    delay = trigger.schedule.difference(DateTime.now());
+    duration = (trigger.duration != null) ? Duration(milliseconds: trigger.duration) : null;
   }
 
   Future onStart() async {
-    Timer(lapse, () {
+    Timer(delay, () {
       _startAllTasks();
+      if (duration != null) {
+        // create a timer that stop the sampling after the specified duration.
+        Timer(duration, () {
+          this.stop();
+        });
+      }
     });
   }
 }
 
 /// Executes a [RecurrentScheduledTrigger].
-///
-/// TODO : implement RecurrentScheduledTriggerExecutor.
-class RecurrentScheduledTriggerExecutor extends TriggerExecutor {
-  RecurrentScheduledTriggerExecutor(RecurrentScheduledTrigger trigger) : super(trigger);
-  Future onStart() async {}
+class RecurrentScheduledTriggerExecutor extends PeriodicTriggerExecutor {
+  Duration delay; // the delay before starting the PeriodicTriggerExecutor
+
+  RecurrentScheduledTriggerExecutor(RecurrentScheduledTrigger trigger) : super(trigger) {
+    delay = trigger.firstOccurrence.difference(DateTime.now());
+  }
+
+  Future onStart() async {
+    DateTime _end = (trigger as RecurrentScheduledTrigger).end;
+    if (_end == null || _end.isAfter(DateTime.now())) Timer(delay, () => super.onStart());
+  }
 }
 
 /// Executes a [SamplingEventTrigger] based on the specified
@@ -289,7 +303,8 @@ class SamplingEventTriggerExecutor extends TriggerExecutor {
 }
 
 /// Executes a [ConditionalSamplingEventTrigger] based on the specified
-/// [ConditionalSamplingEventTrigger.measureType] and [ConditionalSamplingEventTrigger.condition].
+/// [ConditionalSamplingEventTrigger.measureType] and their [ConditionalSamplingEventTrigger.resumeCondition]
+/// and [ConditionalSamplingEventTrigger.pauseCondition].
 class ConditionalSamplingEventTriggerExecutor extends TriggerExecutor {
   ConditionalSamplingEventTriggerExecutor(ConditionalSamplingEventTrigger trigger) : super(trigger);
   Future onStart() async {
