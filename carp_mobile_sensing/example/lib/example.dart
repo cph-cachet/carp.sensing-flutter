@@ -123,6 +123,13 @@ void samplingSchemaExample() async {
     ]);
 
   //creating a study
+
+  Study study_1 = Study('DF#4dD', 'user@cachet.dk')
+    ..name = 'CARP Mobile Sensing - default configuration'
+    ..dataEndPoint = DataEndPoint(DataEndPointTypes.PRINT)
+    ..addTriggerTask(ImmediateTrigger(),
+        Task()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
+
   Study study = Study('DF#4dD', 'user@cachet.dk',
       name: 'A outdoor activity study',
       dataEndPoint: FileDataEndPoint()
@@ -134,8 +141,11 @@ void samplingSchemaExample() async {
   study.addTriggerTask(
       ImmediateTrigger(),
       Task('Sensing Task #1')
-        ..measures =
-            SamplingSchema.common().getMeasureList([SensorSamplingPackage.PEDOMETER, DeviceSamplingPackage.SCREEN]));
+        ..measures = SamplingSchema.common().getMeasureList([
+          ConnectivitySamplingPackage.CONNECTIVITY,
+          SensorSamplingPackage.PEDOMETER,
+          DeviceSamplingPackage.SCREEN,
+        ]));
 
   study.addTriggerTask(
       ImmediateTrigger(),
