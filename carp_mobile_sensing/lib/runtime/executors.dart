@@ -352,6 +352,7 @@ class TaskExecutor extends Executor {
       if (probe != null) {
         executors.add(probe);
         _group.add(probe.events);
+        // TODO - init should return true/false and only start a probe if initialized
         probe.initialize(measure);
 
         probe.start();
