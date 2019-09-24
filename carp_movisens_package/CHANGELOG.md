@@ -1,3 +1,7 @@
+## 0.1.5
+* changed movisens_flutter plugin to  ^0.1.5
+
+
 ## 0.1.4
 
 * upgraded carp-mobile-sensing  to 0.6.0  
