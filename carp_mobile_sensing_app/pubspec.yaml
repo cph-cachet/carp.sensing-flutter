@@ -13,6 +13,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_launcher_icons: ^0.7.3
   carp_mobile_sensing: ^0.6.0
   carp_communication_package: ^0.5.0
   carp_context_package: ^0.5.0
@@ -47,6 +48,10 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/cachet_logo.png"
 
 # The following section is specific to Flutter.
 flutter:
@@ -58,7 +63,9 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-   - images/study.png
+   - assets/study.png
+   - assets/cachet_logo.png
+   - assets/logo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.
