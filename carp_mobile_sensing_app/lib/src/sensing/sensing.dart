@@ -91,9 +91,9 @@ class StudyMock implements StudyManager {
             ImmediateTrigger(),
             Task('eSense')
               ..measures.add(ESenseMeasure(MeasureType(NameSpace.CARP, ESenseSamplingPackage.ESENSE_BUTTON),
-                  name: 'eSense - Button', enabled: true, deviceName: 'eSense-0332'))
-              ..measures.add(ESenseMeasure(MeasureType(NameSpace.CARP, ESenseSamplingPackage.ESENSE_SENSOR),
-                  name: 'eSense - Sensors', enabled: true, deviceName: 'eSense-0332', samplingRate: 10)))
+                  name: 'eSense - Button', enabled: true, deviceName: 'eSense-0332')))
+//              ..measures.add(ESenseMeasure(MeasureType(NameSpace.CARP, ESenseSamplingPackage.ESENSE_SENSOR),
+//                  name: 'eSense - Sensors', enabled: true, deviceName: 'eSense-0332', samplingRate: 10)))
         ..addTriggerTask(
             ImmediateTrigger(),
             Task('Context')

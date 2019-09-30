@@ -59,5 +59,14 @@ class LocationDatum extends CARPDatum {
   get gpsCoordinates => [latitude, longitude];
 
   String toString() =>
-      "Location - latitude: $latitude, longitude: $longitude, accuracy; $accuracy, altitude: $altitude, speed: $speed, speed_accuracy: $speedAccuracy, heading: $heading, time: $time";
+      super.toString() +
+      ','
+          ' latitude: $latitude, '
+          'longitude: $longitude, '
+          'accuracy; $accuracy, '
+          'altitude: $altitude, '
+          'speed: $speed, '
+          'speed_accuracy: $speedAccuracy, '
+          'heading: $heading, '
+          'time: $time';
 }

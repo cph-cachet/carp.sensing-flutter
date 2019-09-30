@@ -84,5 +84,5 @@ class ActivityDatum extends CARPDatum {
   /// * unknown => UNKNOWN
   String type;
 
-  String toString() => "Activity - type: $type, confidence: $confidence";
+  String toString() => super.toString() + ', type: $type, confidence: $confidence';
 }
