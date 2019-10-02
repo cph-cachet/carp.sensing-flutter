@@ -87,53 +87,55 @@ class StudyMock implements StudyManager {
         ..description =
             'This is a study designed to test the eSense earable computing platform together with CARP Mobile Sensing'
         ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
-        ..addTriggerTask(
-            ImmediateTrigger(),
-            Task('eSense')
-              ..measures.add(ESenseMeasure(MeasureType(NameSpace.CARP, ESenseSamplingPackage.ESENSE_BUTTON),
-                  name: 'eSense - Button', enabled: true, deviceName: 'eSense-0332')))
+//        ..addTriggerTask(
+//            ImmediateTrigger(),
+//            Task('eSense')
+//              ..measures.add(ESenseMeasure(MeasureType(NameSpace.CARP, ESenseSamplingPackage.ESENSE_BUTTON),
+//                  name: 'eSense - Button', enabled: true, deviceName: 'eSense-0332'))
 //              ..measures.add(ESenseMeasure(MeasureType(NameSpace.CARP, ESenseSamplingPackage.ESENSE_SENSOR),
 //                  name: 'eSense - Sensors', enabled: true, deviceName: 'eSense-0332', samplingRate: 10)))
+//        ..addTriggerTask(
+//            ImmediateTrigger(),
+//            Task('Context')
+//              ..measures = SamplingSchema.common().getMeasureList([
+//                ContextSamplingPackage.LOCATION,
+//                ContextSamplingPackage.ACTIVITY,
+//                SensorSamplingPackage.PEDOMETER,
+//              ], namespace: NameSpace.CARP))
+//        ..addTriggerTask(
+//            ImmediateTrigger(),
+//            Task('Noise')
+//              ..measures.add(NoiseMeasure(MeasureType(NameSpace.CARP, AudioSamplingPackage.NOISE),
+//                  name: 'Ambient Noise', enabled: true, frequency: 37 * 1000, duration: 5 * 1000)))
+//        // audio recording and noise is conflicting... can't run at the same time...
+////            ..measures.add(AudioMeasure(MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO),
+////                name: "Audio", frequency: 1 * 53 * 1000, duration: 4 * 1000, studyId: studyId)))
+//        ..addTriggerTask(
+//            PeriodicTrigger(period: 1 * 60 * 1000, duration: 2000),
+//            Task('Weather')
+//              ..measures =
+//                  SamplingSchema.common(namespace: NameSpace.CARP).getMeasureList([ContextSamplingPackage.WEATHER]))
+//        ..addTriggerTask(
+//            DelayedTrigger(delay: 10 * 1000),
+//            Task('Bluetooth')
+//              ..measures.add(PeriodicMeasure(MeasureType(NameSpace.CARP, ConnectivitySamplingPackage.BLUETOOTH),
+//                  name: 'Nearby Devices (Bluetooth Scan)',
+//                  enabled: true,
+//                  frequency: 1 * 30 * 1000,
+//                  duration: 2 * 1000)));
         ..addTriggerTask(
             ImmediateTrigger(),
-            Task('Context')
-              ..measures = SamplingSchema.common(namespace: NameSpace.CARP).getMeasureList([
+            Task()
+              ..measures = SamplingSchema.debug().getMeasureList([
+                ESenseSamplingPackage.ESENSE_BUTTON,
+                //ESenseSamplingPackage.ESENSE_SENSOR,
+                AudioSamplingPackage.NOISE,
                 ContextSamplingPackage.LOCATION,
                 ContextSamplingPackage.ACTIVITY,
-                SensorSamplingPackage.PEDOMETER,
-              ]))
-        ..addTriggerTask(
-            ImmediateTrigger(),
-            Task('Noise')
-              ..measures.add(NoiseMeasure(MeasureType(NameSpace.CARP, AudioSamplingPackage.NOISE),
-                  name: 'Ambient Noise', enabled: true, frequency: 37 * 1000, duration: 5 * 1000)))
-        // audio recording and noise is conflicting... can't run at the same time...
-//            ..measures.add(AudioMeasure(MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO),
-//                name: "Audio", frequency: 1 * 53 * 1000, duration: 4 * 1000, studyId: studyId)))
-        ..addTriggerTask(
-            PeriodicTrigger(period: 1 * 60 * 1000, duration: 2000),
-            Task('Weather')
-              ..measures =
-                  SamplingSchema.common(namespace: NameSpace.CARP).getMeasureList([ContextSamplingPackage.WEATHER]))
-        ..addTriggerTask(
-            DelayedTrigger(delay: 10 * 1000),
-            Task('Bluetooth')
-              ..measures.add(PeriodicMeasure(MeasureType(NameSpace.CARP, ConnectivitySamplingPackage.BLUETOOTH),
-                  name: 'Nearby Devices (Bluetooth Scan)',
-                  enabled: true,
-                  frequency: 1 * 30 * 1000,
-                  duration: 2 * 1000)));
-
-//    ..measures = SamplingSchema.debug().getMeasureList([
-//                    ESenseSamplingPackage.ESENSE_BUTTON,
-//                    ESenseSamplingPackage.ESENSE_SENSOR,
-//                    AudioSamplingPackage.NOISE,
-//                    ContextSamplingPackage.LOCATION,
-//                    ContextSamplingPackage.ACTIVITY,
-//                    ContextSamplingPackage.WEATHER,
-//                    //ConnectivitySamplingPackage.BLUETOOTH,
-//                    ConnectivitySamplingPackage.WIFI,
-//                  ]))
+                ContextSamplingPackage.WEATHER,
+                //ConnectivitySamplingPackage.BLUETOOTH,
+                ConnectivitySamplingPackage.WIFI,
+              ], namespace: NameSpace.CARP));
 
 //            ..measures.add(ESenseMeasure(MeasureType(NameSpace.CARP, ESenseSamplingPackage.ESENSE_BUTTON),
 //                name: 'eSense - Button', enabled: true, deviceName: 'eSense-0332'))

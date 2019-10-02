@@ -84,10 +84,10 @@ void main() {
 
   test('Geofence', () {
     GeofenceDatum d;
-    Location home = Location(55.7946, 12.4472); // Parsbergsvej
-    Location dtu = Location(55.786025, 12.524159); // DTU
-    Location compute = Location(55.783499, 12.518914); // DTU Compute
-    Location lyngby = Location(55.7704, 12.5038); // Kgs. Lyngby
+    GeoPosition home = GeoPosition(55.7946, 12.4472); // Parsbergsvej
+    GeoPosition dtu = GeoPosition(55.786025, 12.524159); // DTU
+    GeoPosition compute = GeoPosition(55.783499, 12.518914); // DTU Compute
+    GeoPosition lyngby = GeoPosition(55.7704, 12.5038); // Kgs. Lyngby
 
     GeofenceMeasure m = ContextSamplingPackage().common.measures[ContextSamplingPackage.GEOFENCE];
     Geofence f = Geofence.fromMeasure(m)..dwell = 2 * 1000; // dwell timeout 2 secs.

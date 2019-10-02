@@ -15,7 +15,7 @@ class LocationDatum extends CARPDatum {
 
   LocationDatum() : super();
 
-  LocationDatum.fromLocationData(location.LocationData location)
+  LocationDatum.fromLocationData(LocationData location)
       : latitude = location.latitude,
         longitude = location.longitude,
         altitude = location.altitude,

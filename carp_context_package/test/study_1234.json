@@ -72,8 +72,8 @@
               "name": "Accelerometer",
               "enabled": false,
               "configuration": {},
-              "frequency": 1000,
-              "duration": 10
+              "frequency": 200,
+              "duration": 1
             },
             {
               "c__": "PeriodicMeasure",
@@ -85,11 +85,11 @@
               "name": "Gyroscope",
               "enabled": false,
               "configuration": {},
-              "frequency": 1000,
-              "duration": 10
+              "frequency": 200,
+              "duration": 1
             },
             {
-              "c__": "PeriodicMeasure",
+              "c__": "Measure",
               "type": {
                 "c__": "MeasureType",
                 "namespace": "carp",
@@ -97,8 +97,7 @@
               },
               "name": "Pedometer (Step Count)",
               "enabled": true,
-              "configuration": {},
-              "frequency": 3600000
+              "configuration": {}
             },
             {
               "c__": "PeriodicMeasure",
@@ -151,7 +150,7 @@
               "duration": 5000
             },
             {
-              "c__": "PeriodicMeasure",
+              "c__": "Measure",
               "type": {
                 "c__": "MeasureType",
                 "namespace": "carp",
@@ -159,11 +158,10 @@
               },
               "name": "Installed Apps",
               "enabled": true,
-              "configuration": {},
-              "frequency": 86400000
+              "configuration": {}
             },
             {
-              "c__": "PeriodicMeasure",
+              "c__": "AppUsageMeasure",
               "type": {
                 "c__": "MeasureType",
                 "namespace": "carp",
@@ -172,19 +170,20 @@
               "name": "Apps Usage",
               "enabled": true,
               "configuration": {},
-              "frequency": 600000,
-              "duration": 600000
+              "duration": 3600000
             },
             {
-              "c__": "Measure",
+              "c__": "LocationMeasure",
               "type": {
                 "c__": "MeasureType",
                 "namespace": "carp",
                 "name": "location"
               },
-              "name": "Location",
+              "name": "Periodic Location",
               "enabled": true,
-              "configuration": {}
+              "configuration": {},
+              "frequency": 10000,
+              "accuracy": "BALANCED"
             },
             {
               "c__": "Measure",
@@ -207,7 +206,7 @@
               "name": "Local Weather",
               "enabled": true,
               "configuration": {},
-              "frequency": 3600000
+              "api_key": "12b6e28582eb9298577c734a31ba9f4f"
             },
             {
               "c__": "GeofenceMeasure",
@@ -219,12 +218,12 @@
               "enabled": true,
               "configuration": {},
               "center": {
-                "c__": "Location",
+                "c__": "GeoPosition",
                 "latitude": 55.786025,
                 "longitude": 12.524159
               },
               "radius": 500.0,
-              "name": "DTU"
+              "name": "Geofence (DTU)"
             }
           ]
         }

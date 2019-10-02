@@ -15,7 +15,7 @@ class ProbeDescription {
         ConnectivitySamplingPackage.WIFI: 'Collecting names of connected wifi networks (SSID and BSSID)',
         AudioSamplingPackage.AUDIO: 'Records ambient sound on a regular basis.',
         AudioSamplingPackage.NOISE: 'Measures noise level in decibel on a regular basis.',
-        ContextSamplingPackage.LOCATION: 'Collecting location information when moving.',
+        ContextSamplingPackage.LOCATION: 'Collecting location information.',
         ConnectivitySamplingPackage.CONNECTIVITY: 'Collecting information on connectivity status and mode.',
         AppsSamplingPackage.APPS: 'Collecting a list of installed apps.',
         AppsSamplingPackage.APP_USAGE: 'Collects app usage statistics.',

@@ -16,7 +16,7 @@ class GeofenceProbe extends StreamProbe {
     _locationService
         .onLocationChanged()
         .asBroadcastStream()
-        .map((location) => Location.fromLocationData(location))
+        .map((location) => GeoPosition.fromLocationData(location))
         .listen((location) {
       // when a location event is fired, check if the new location creates a new [GeofenceDatum] event.
       // if so -- add it to the main stream.
@@ -40,7 +40,7 @@ class Geofence {
   DateTime lastEvent = DateTime.now();
 
   /// The center of the geofence as a GPS location.
-  Location center;
+  GeoPosition center;
 
   /// The radius of the geofence in meters.
   double radius;
@@ -63,7 +63,7 @@ class Geofence {
     this.name = measure.name;
   }
 
-  GeofenceDatum moved(Location location) {
+  GeofenceDatum moved(GeoPosition location) {
     GeofenceDatum datum;
     if (center.distanceTo(location) < radius) {
       // we're inside the geofence
