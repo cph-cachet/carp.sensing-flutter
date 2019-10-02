@@ -5,7 +5,7 @@ class StudyModel {
 
   String get name => study.name;
   String get description => study.description ?? 'No description available.';
-  Image get image => Image.asset('images/study.png');
+  Image get image => Image.asset('assets/study.png');
   String get userID => study.userId;
   String get samplingStrategy => study.samplingStrategy;
   String get dataEndpoint => study.dataEndPoint.toString();

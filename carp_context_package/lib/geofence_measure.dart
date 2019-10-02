@@ -16,20 +16,20 @@ double degToRad(num deg) => deg * (math.pi / 180.0);
 /// Convert radians to degrees.
 double radToDeg(num rad) => rad * (180.0 / math.pi);
 
-/// Location coordinated in Degrees (i.e. GPS-style).
+/// Position coordinated in Degrees (i.e. GPS-style).
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class Location extends Serializable {
+class GeoPosition extends Serializable {
   /// Latitude in GPS coordinates.
   final double latitude;
 
   /// Longitude in GPS coordinates.
   final double longitude;
 
-  Location(this.latitude, this.longitude)
+  GeoPosition(this.latitude, this.longitude)
       : assert(latitude != null),
         assert(longitude != null);
 
-  Location.fromLocationData(location.LocationData location)
+  GeoPosition.fromLocationData(LocationData location)
       : latitude = location.latitude,
         longitude = location.longitude,
         super();
@@ -39,7 +39,7 @@ class Location extends Serializable {
   /// For distance calculations we use the  'haversine' formula to calculate the great-circle distance between two points.
   /// See http://www.movable-type.co.uk/scripts/latlong.html for details on how to
   /// calculate distance, bearing and more between latitude/longitude points.
-  double distanceTo(Location destination) {
+  double distanceTo(GeoPosition destination) {
     assert(destination != null);
     final sDLat = math.sin((degToRad(destination.latitude) - degToRad(latitude)) / 2);
     final sDLng = math.sin((degToRad(destination.longitude) - degToRad(longitude)) / 2);
@@ -49,14 +49,14 @@ class Location extends Serializable {
     return earthRadius * c;
   }
 
-  static Function get fromJsonFunction => _$LocationFromJson;
-  factory Location.fromJson(Map<String, dynamic> json) =>
+  static Function get fromJsonFunction => _$GeoPositionFromJson;
+  factory GeoPosition.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
-  Map<String, dynamic> toJson() => _$LocationToJson(this);
+  Map<String, dynamic> toJson() => _$GeoPositionToJson(this);
 
-  String toString() => 'Location (latitude:$latitude, longitude:$longitude)';
+  String toString() => 'GeoPosition (latitude:$latitude, longitude:$longitude)';
   int get hashCode => latitude.hashCode + longitude.hashCode;
-  bool operator ==(Object other) => other is Location && latitude == other.latitude && longitude == other.longitude;
+  bool operator ==(Object other) => other is GeoPosition && latitude == other.latitude && longitude == other.longitude;
 }
 
 /// Specify the configuration of a circular geofence measure, specifying the:
@@ -67,7 +67,7 @@ class Location extends Serializable {
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class GeofenceMeasure extends Measure {
   /// The center of the geofence as a GPS location.
-  Location center;
+  GeoPosition center;
 
   /// The radius of the geofence in meters.
   double radius;

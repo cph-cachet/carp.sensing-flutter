@@ -8,17 +8,50 @@
 part of context;
 
 /// The general location provider service.
-location.Location _locationService = location.Location();
+Location _locationService = Location();
+
+/// Collects location information from the underlying OS's location API.
+/// Is a [PeriodicDatumProbe] that collects a [LocationDatum] on a regular basis
+/// as specified in a [LocationMeasure].
+///
+/// Note that in order for location tracking to work with this probe, the
+/// phone must be online on the internet, since Google APIs are used.
+class LocationProbe extends PeriodicDatumProbe {
+  void onInitialize(Measure measure) async {
+    assert(measure is LocationMeasure);
+    super.onInitialize(measure);
+    await _getPermission();
+    await _setSettings();
+  }
+
+  Future<bool> _getPermission() async {
+    bool permission = false;
+    bool enabled = await _locationService.serviceEnabled();
+    if (enabled) {
+      permission = await _locationService.hasPermission();
+      if (!permission) permission = await _locationService.requestPermission();
+    }
+
+    return permission;
+  }
+
+  Future<bool> _setSettings() async => await _locationService.changeSettings(
+      accuracy: (measure as LocationMeasure).accuracy ?? LocationAccuracy.BALANCED);
+
+  Future<Datum> getDatum() =>
+      _locationService.getLocation().then((location) => LocationDatum.fromLocationData(location));
+}
 
 /// Collects location information from the underlying OS's location API.
 /// Is a [StreamProbe] that generates a [LocationDatum] every time location is changed.
 ///
 /// Note that in order for location tracking to work with this probe, the
 /// phone must be online on the internet, since Google APIs are used.
-class LocationProbe extends StreamProbe {
+class DeprecatedLocationProbe extends StreamProbe {
   void onInitialize(Measure measure) async {
     super.onInitialize(measure);
     await _getPermission();
+    await _setSettings();
   }
 
   Stream<LocationDatum> get stream => _locationService
@@ -36,4 +69,7 @@ class LocationProbe extends StreamProbe {
 
     return permission;
   }
+
+  Future<bool> _setSettings() async =>
+      await _locationService.changeSettings(accuracy: LocationAccuracy.BALANCED, interval: 5000);
 }

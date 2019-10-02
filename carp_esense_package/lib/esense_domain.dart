@@ -19,7 +19,7 @@ class ESenseMeasure extends Measure {
   /// Default sampling rate is 10 Hz.
   int samplingRate = 10;
 
-  ESenseMeasure(MeasureType type, {name, enabled, this.deviceName, this.samplingRate})
+  ESenseMeasure(MeasureType type, {name, enabled = true, this.deviceName, this.samplingRate = 10})
       : super(type, name: name, enabled: enabled);
 
   static Function get fromJsonFunction => _$ESenseMeasureFromJson;

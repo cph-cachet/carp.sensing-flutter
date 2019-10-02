@@ -67,16 +67,18 @@ class SamplingSchema {
   /// measures of the correct type with default settings.
   /// For example using
   ///
-  ///       SamplingSchema.common().getMeasureList(
-  ///          [DataType.LOCATION, DataType.ACTIVITY, DataType.WEATHER]
-  ///       );
+  ///       SamplingSchema.common().getMeasureList[
+  ///          ContextSamplingPackage.LOCATION,
+  ///          ContextSamplingPackage.ACTIVITY,
+  ///          ContextSamplingPackage.WEATHER,
+  ///          ]);
   ///
   /// would return a list with a [Measure] for location and activity, a [WeatherMeasure] for weather,
   /// each with default configurations from the [SamplingSchema.common()] schema.
   ///
   /// If [namespace] is specified, then the returned measures' [MeasureType] belong to this namespace.
   /// Otherwise, the [NameSpace.UNKNOWN] is applied.
-  List<Measure> getMeasureList(List<String> types, {String namespace}) {
+  List<Measure> getMeasureList(List<String> types, {String namespace = NameSpace.UNKNOWN}) {
     List<Measure> _list = List<Measure>();
 
     types.forEach((type) {
@@ -122,6 +124,7 @@ class SamplingSchema {
 
     // join sampling schemas from each registered sampling package.
     SamplingPackageRegistry.packages.forEach((package) => schema.addSamplingSchema(package.common));
+    //schema.measures.values.forEach((measure) => print("measure : $measure"));
     schema.measures.values.forEach((measure) => measure.type.namespace = namespace);
 
     return schema;

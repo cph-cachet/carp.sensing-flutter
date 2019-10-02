@@ -70,6 +70,83 @@ Map<String, dynamic> _$LocationDatumToJson(LocationDatum instance) {
   return val;
 }
 
+LocationMeasure _$LocationMeasureFromJson(Map<String, dynamic> json) {
+  return LocationMeasure(
+    json['type'] == null
+        ? null
+        : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
+    name: json['name'],
+    enabled: json['enabled'],
+    frequency: json['frequency'],
+    duration: json['duration'],
+    accuracy: _$enumDecodeNullable(_$LocationAccuracyEnumMap, json['accuracy']),
+  )
+    ..c__ = json['c__'] as String
+    ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(k, e as String),
+    );
+}
+
+Map<String, dynamic> _$LocationMeasureToJson(LocationMeasure instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('c__', instance.c__);
+  writeNotNull('type', instance.type);
+  writeNotNull('name', instance.name);
+  writeNotNull('enabled', instance.enabled);
+  writeNotNull('configuration', instance.configuration);
+  writeNotNull('frequency', instance.frequency);
+  writeNotNull('duration', instance.duration);
+  writeNotNull('accuracy', _$LocationAccuracyEnumMap[instance.accuracy]);
+  return val;
+}
+
+T _$enumDecode<T>(
+  Map<T, dynamic> enumValues,
+  dynamic source, {
+  T unknownValue,
+}) {
+  if (source == null) {
+    throw ArgumentError('A value must be provided. Supported values: '
+        '${enumValues.values.join(', ')}');
+  }
+
+  final value = enumValues.entries
+      .singleWhere((e) => e.value == source, orElse: () => null)
+      ?.key;
+
+  if (value == null && unknownValue == null) {
+    throw ArgumentError('`$source` is not one of the supported values: '
+        '${enumValues.values.join(', ')}');
+  }
+  return value ?? unknownValue;
+}
+
+T _$enumDecodeNullable<T>(
+  Map<T, dynamic> enumValues,
+  dynamic source, {
+  T unknownValue,
+}) {
+  if (source == null) {
+    return null;
+  }
+  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
+}
+
+const _$LocationAccuracyEnumMap = {
+  LocationAccuracy.POWERSAVE: 'POWERSAVE',
+  LocationAccuracy.LOW: 'LOW',
+  LocationAccuracy.BALANCED: 'BALANCED',
+  LocationAccuracy.HIGH: 'HIGH',
+  LocationAccuracy.NAVIGATION: 'NAVIGATION',
+};
+
 WeatherDatum _$WeatherDatumFromJson(Map<String, dynamic> json) {
   return WeatherDatum()
     ..id = json['id'] as String
@@ -140,12 +217,13 @@ Map<String, dynamic> _$WeatherDatumToJson(WeatherDatum instance) {
 
 WeatherMeasure _$WeatherMeasureFromJson(Map<String, dynamic> json) {
   return WeatherMeasure(
-      json['type'] == null
-          ? null
-          : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
-      name: json['name'],
-      enabled: json['enabled'],
-      apiKey: json['api_key'] as String)
+    json['type'] == null
+        ? null
+        : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
+    name: json['name'],
+    enabled: json['enabled'],
+    apiKey: json['api_key'] as String,
+  )
     ..c__ = json['c__'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
@@ -170,13 +248,14 @@ Map<String, dynamic> _$WeatherMeasureToJson(WeatherMeasure instance) {
   return val;
 }
 
-Location _$LocationFromJson(Map<String, dynamic> json) {
-  return Location((json['latitude'] as num)?.toDouble(),
-      (json['longitude'] as num)?.toDouble())
-    ..c__ = json['c__'] as String;
+GeoPosition _$GeoPositionFromJson(Map<String, dynamic> json) {
+  return GeoPosition(
+    (json['latitude'] as num)?.toDouble(),
+    (json['longitude'] as num)?.toDouble(),
+  )..c__ = json['c__'] as String;
 }
 
-Map<String, dynamic> _$LocationToJson(Location instance) {
+Map<String, dynamic> _$GeoPositionToJson(GeoPosition instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -193,15 +272,16 @@ Map<String, dynamic> _$LocationToJson(Location instance) {
 
 GeofenceMeasure _$GeofenceMeasureFromJson(Map<String, dynamic> json) {
   return GeofenceMeasure(
-      json['type'] == null
-          ? null
-          : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
-      enabled: json['enabled'],
-      center: json['center'] == null
-          ? null
-          : Location.fromJson(json['center'] as Map<String, dynamic>),
-      radius: (json['radius'] as num)?.toDouble(),
-      name: json['name'] as String)
+    json['type'] == null
+        ? null
+        : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
+    enabled: json['enabled'],
+    center: json['center'] == null
+        ? null
+        : GeoPosition.fromJson(json['center'] as Map<String, dynamic>),
+    radius: (json['radius'] as num)?.toDouble(),
+    name: json['name'] as String,
+  )
     ..c__ = json['c__'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
@@ -231,7 +311,9 @@ Map<String, dynamic> _$GeofenceMeasureToJson(GeofenceMeasure instance) {
 
 GeofenceDatum _$GeofenceDatumFromJson(Map<String, dynamic> json) {
   return GeofenceDatum(
-      type: json['type'] as String, name: json['name'] as String)
+    type: json['type'] as String,
+    name: json['name'] as String,
+  )
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
         ? null

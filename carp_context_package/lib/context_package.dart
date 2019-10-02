@@ -38,9 +38,10 @@ class ContextSamplingPackage implements SamplingPackage {
   }
 
   void onRegister() {
+    FromJsonFactory.registerFromJsonFunction("LocationMeasure", LocationMeasure.fromJsonFunction);
     FromJsonFactory.registerFromJsonFunction("WeatherMeasure", WeatherMeasure.fromJsonFunction);
     FromJsonFactory.registerFromJsonFunction("GeofenceMeasure", GeofenceMeasure.fromJsonFunction);
-    FromJsonFactory.registerFromJsonFunction("Location", Location.fromJsonFunction);
+    FromJsonFactory.registerFromJsonFunction("GeoPosition", GeoPosition.fromJsonFunction);
 
     // registering the transformers from CARP to OMH for geolocation and physical activity.
     // we assume that there is an OMH schema registered already...
@@ -53,7 +54,10 @@ class ContextSamplingPackage implements SamplingPackage {
     ..name = 'Common (default) context sampling schema'
     ..powerAware = true
     ..measures.addEntries([
-      MapEntry(LOCATION, Measure(MeasureType(NameSpace.CARP, LOCATION), name: 'Location', enabled: true)),
+      MapEntry(
+          LOCATION,
+          LocationMeasure(MeasureType(NameSpace.CARP, LOCATION),
+              name: 'Location', enabled: true, frequency: 10 * 1000, accuracy: LocationAccuracy.BALANCED)),
       MapEntry(ACTIVITY, Measure(MeasureType(NameSpace.CARP, ACTIVITY), name: 'Activity Recognition', enabled: true)),
       MapEntry(
           WEATHER,
@@ -62,7 +66,7 @@ class ContextSamplingPackage implements SamplingPackage {
       MapEntry(
           GEOFENCE,
           GeofenceMeasure(MeasureType(NameSpace.CARP, GEOFENCE),
-              enabled: true, center: Location(55.786025, 12.524159), radius: 500, name: 'Geofence (DTU)')),
+              enabled: true, center: GeoPosition(55.786025, 12.524159), radius: 500, name: 'Geofence (DTU)')),
     ]);
 
   SamplingSchema get light => common
