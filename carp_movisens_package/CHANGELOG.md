@@ -1,6 +1,9 @@
+## 0.1.6
+* support for Open mHealth data formats for `HeartRate` and `StepCount`
+* improvement to documentation
+
 ## 0.1.5
 * changed movisens_flutter plugin to  ^0.1.5
-
 
 ## 0.1.4
 

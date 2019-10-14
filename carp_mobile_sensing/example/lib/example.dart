@@ -132,6 +132,7 @@ void samplingSchemaExample() async {
 
   Study study = Study('DF#4dD', 'user@cachet.dk',
       name: 'A outdoor activity study',
+      dataFormat: NameSpace.OMH,
       dataEndPoint: FileDataEndPoint()
         ..bufferSize = 500 * 1000
         ..zip = true
@@ -155,7 +156,7 @@ void samplingSchemaExample() async {
           ConnectivitySamplingPackage.CONNECTIVITY,
           SensorSamplingPackage.ACCELEROMETER,
           SensorSamplingPackage.GYROSCOPE,
-          AppsSamplingPackage.APPS
+          AppsSamplingPackage.APPS,
         ]));
 
   // adding all measure from the activity schema to one overall 'sensing' task

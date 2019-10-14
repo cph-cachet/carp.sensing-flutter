@@ -8,19 +8,20 @@ part of movisens;
 
 MovisensMeasure _$MovisensMeasureFromJson(Map<String, dynamic> json) {
   return MovisensMeasure(
-      json['type'] == null
-          ? null
-          : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
-      name: json['name'],
-      enabled: json['enabled'],
-      address: json['address'] as String,
-      sensorLocation: _$enumDecodeNullable(
-          _$SensorLocationEnumMap, json['sensor_location']),
-      gender: _$enumDecodeNullable(_$GenderEnumMap, json['gender']),
-      deviceName: json['device_name'] as String,
-      height: json['height'] as int,
-      weight: json['weight'] as int,
-      age: json['age'] as int)
+    json['type'] == null
+        ? null
+        : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
+    name: json['name'],
+    enabled: json['enabled'],
+    address: json['address'] as String,
+    sensorLocation:
+        _$enumDecodeNullable(_$SensorLocationEnumMap, json['sensor_location']),
+    gender: _$enumDecodeNullable(_$GenderEnumMap, json['gender']),
+    deviceName: json['device_name'] as String,
+    height: json['height'] as int,
+    weight: json['weight'] as int,
+    age: json['age'] as int,
+  )
     ..c__ = json['c__'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
@@ -52,27 +53,39 @@ Map<String, dynamic> _$MovisensMeasureToJson(MovisensMeasure instance) {
   return val;
 }
 
-T _$enumDecode<T>(Map<T, dynamic> enumValues, dynamic source) {
+T _$enumDecode<T>(
+  Map<T, dynamic> enumValues,
+  dynamic source, {
+  T unknownValue,
+}) {
   if (source == null) {
     throw ArgumentError('A value must be provided. Supported values: '
         '${enumValues.values.join(', ')}');
   }
-  return enumValues.entries
-      .singleWhere((e) => e.value == source,
-          orElse: () => throw ArgumentError(
-              '`$source` is not one of the supported values: '
-              '${enumValues.values.join(', ')}'))
-      .key;
+
+  final value = enumValues.entries
+      .singleWhere((e) => e.value == source, orElse: () => null)
+      ?.key;
+
+  if (value == null && unknownValue == null) {
+    throw ArgumentError('`$source` is not one of the supported values: '
+        '${enumValues.values.join(', ')}');
+  }
+  return value ?? unknownValue;
 }
 
-T _$enumDecodeNullable<T>(Map<T, dynamic> enumValues, dynamic source) {
+T _$enumDecodeNullable<T>(
+  Map<T, dynamic> enumValues,
+  dynamic source, {
+  T unknownValue,
+}) {
   if (source == null) {
     return null;
   }
-  return _$enumDecode<T>(enumValues, source);
+  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
 }
 
-const _$SensorLocationEnumMap = <SensorLocation, dynamic>{
+const _$SensorLocationEnumMap = {
   SensorLocation.left_ankle: 'left_ankle',
   SensorLocation.left_hip: 'left_hip',
   SensorLocation.left_thigh: 'left_thigh',
@@ -83,12 +96,12 @@ const _$SensorLocationEnumMap = <SensorLocation, dynamic>{
   SensorLocation.right_thigh: 'right_thigh',
   SensorLocation.right_upper_arm: 'right_upper_arm',
   SensorLocation.right_wrist: 'right_wrist',
-  SensorLocation.chest: 'chest'
+  SensorLocation.chest: 'chest',
 };
 
-const _$GenderEnumMap = <Gender, dynamic>{
+const _$GenderEnumMap = {
   Gender.male: 'male',
-  Gender.female: 'female'
+  Gender.female: 'female',
 };
 
 MovisensDatum _$MovisensDatumFromJson(Map<String, dynamic> json) {

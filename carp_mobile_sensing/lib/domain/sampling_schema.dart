@@ -68,12 +68,14 @@ class SamplingSchema {
   /// For example using
   ///
   ///       SamplingSchema.common().getMeasureList[
-  ///          ContextSamplingPackage.LOCATION,
-  ///          ContextSamplingPackage.ACTIVITY,
-  ///          ContextSamplingPackage.WEATHER,
-  ///          ]);
+  ///          ConnectivitySamplingPackage.BLUETOOTH,
+  ///          ConnectivitySamplingPackage.CONNECTIVITY,
+  ///          SensorSamplingPackage.ACCELEROMETER,
+  ///          SensorSamplingPackage.GYROSCOPE,
+  ///          AppsSamplingPackage.APPS,
+  ///        ]);
   ///
-  /// would return a list with a [Measure] for location and activity, a [WeatherMeasure] for weather,
+  /// would return a list with a [Measure] for bluetooth, connectivity, etc.,
   /// each with default configurations from the [SamplingSchema.common()] schema.
   ///
   /// If [namespace] is specified, then the returned measures' [MeasureType] belong to this namespace.

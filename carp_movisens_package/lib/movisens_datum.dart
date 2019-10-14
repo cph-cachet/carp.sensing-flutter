@@ -1,11 +1,9 @@
 part of movisens;
 
-///movisensDatum  which  serializes movisens data into CARPDatum
-
+/// An abstract Datum for all Movisens data points.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MovisensDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT =
-  DataFormat(NameSpace.CARP, MovisensSamplingPackage.MOVISENS);
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, MovisensSamplingPackage.MOVISENS);
   DataFormat get format => CARP_DATA_FORMAT;
 
   String movisensTimestamp;
@@ -13,56 +11,49 @@ class MovisensDatum extends CARPDatum {
   MovisensDatum() : super();
 
   factory MovisensDatum.fromMap(Map<String, dynamic> map) {
-    if (map.containsKey("MetLevel"))
-      return MovisensMETLevelDatum.fromMap(map["MetLevel"]);
+    if (map.containsKey("MetLevel")) return MovisensMETLevelDatum.fromMap(map["MetLevel"]);
     if (map.containsKey("Met")) return MovisensMETDatum.fromMap(map["Met"]);
-
     if (map.containsKey("HR")) return MovisensHRDatum.fromMap(map["HR"]);
     if (map.containsKey("HRV")) return MovisensHRVDatum.fromMap(map["HRV"]);
-    if (map.containsKey("IsHrvValid"))
-      return MovisensIsHrvValidDatum.fromMap(map["IsHrvValid"]);
-    if (map.containsKey("BodyPosition"))
-      return MovisensBodyPositionDatum.fromMap(map["BodyPosition"]);
-    if (map.containsKey("StepCount"))
-      return MovisensStepCountDatum.fromMap(map["StepCount"]);
+    if (map.containsKey("IsHrvValid")) return MovisensIsHrvValidDatum.fromMap(map["IsHrvValid"]);
+    if (map.containsKey("BodyPosition")) return MovisensBodyPositionDatum.fromMap(map["BodyPosition"]);
+    if (map.containsKey("StepCount")) return MovisensStepCountDatum.fromMap(map["StepCount"]);
     if (map.containsKey("MovementAcceleration"))
-      return MovisensMovementAccelerationDatum.fromMap(
-          map["MovementAcceleration"]);
-    if (map.containsKey("TapMarker"))
-      return MovisensTapMarkerDatum.fromMap(map["TapMarker"]);
-    if (map.containsKey("BatteryLevel"))
-      return MovisensBatteryLevelDatum.fromMap(map["BatteryLevel"]);
-    if (map.containsKey("ConnectionStatus"))
-      return MovisensConnectionStatusDatum.fromMap(map["ConnectionStatus"]);
+      return MovisensMovementAccelerationDatum.fromMap(map["MovementAcceleration"]);
+    if (map.containsKey("TapMarker")) return MovisensTapMarkerDatum.fromMap(map["TapMarker"]);
+    if (map.containsKey("BatteryLevel")) return MovisensBatteryLevelDatum.fromMap(map["BatteryLevel"]);
+    if (map.containsKey("ConnectionStatus")) return MovisensConnectionStatusDatum.fromMap(map["ConnectionStatus"]);
 
     return MovisensDatum();
   }
 }
 
-/// MovisensMETLevelDatum
+/// Make a Movisens timestamp into UTC format
+String _MovisensTimestampToUTC(String timestamp) {
+  List splittedTimestamp = timestamp.split(" ");
+  return splittedTimestamp[0] + "T" + splittedTimestamp[1] + ".000Z";
+}
+
+/// Movisens Metabolic (MET) level. MET levels are:
+///   * sedentary
+///   * light
+///   * moderate
+///   * vigorous
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MovisensMETLevelDatum extends MovisensDatum {
   MovisensMETLevelDatum() : super();
 
-  ///set data format
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(
-      NameSpace.CARP, '${MovisensSamplingPackage.MOVISENS}.metLevel');
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, '${MovisensSamplingPackage.MOVISENS}.${MovisensSamplingPackage.MET_LEVEL}');
   DataFormat get format => CARP_DATA_FORMAT;
 
   factory MovisensMETLevelDatum.fromMap(String value) {
     MovisensMETLevelDatum metLevelDatum = MovisensMETLevelDatum();
     Map<dynamic, dynamic> map = jsonDecode(value);
 
-    ///Make movisens timestamp into UTC format
-    String timestamp = map['timestamp'];
-    List splittedTimestamp = timestamp.split(" ");
-    String timeUtc = splittedTimestamp[0] + "T" + splittedTimestamp[1] + ".000Z";
-
-    metLevelDatum.movisensTimestamp = timeUtc;
+    metLevelDatum.movisensTimestamp = _MovisensTimestampToUTC(map['timestamp']);
     metLevelDatum.sedentary = map['sedentary'];
-
     metLevelDatum.light = map['light'];
-
     metLevelDatum.moderate = map['moderate'];
     metLevelDatum.vigorous = map['vigorous'];
 
@@ -70,14 +61,11 @@ class MovisensMETLevelDatum extends MovisensDatum {
   }
 
   String sedentary;
-
   String light;
   String moderate;
-
   String vigorous;
 
-  factory MovisensMETLevelDatum.fromJson(Map<String, dynamic> json) =>
-      _$MovisensMETLevelDatumFromJson(json);
+  factory MovisensMETLevelDatum.fromJson(Map<String, dynamic> json) => _$MovisensMETLevelDatumFromJson(json);
   Map<String, dynamic> toJson() => _$MovisensMETLevelDatumToJson(this);
 }
 
@@ -87,65 +75,45 @@ class MovisensMovementAccelerationDatum extends MovisensDatum {
 
   MovisensMovementAccelerationDatum() : super();
 
-  ///set data format
-
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP,
-      '${MovisensSamplingPackage.MOVISENS}.movementAcceleration');
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(
+      NameSpace.CARP, '${MovisensSamplingPackage.MOVISENS}.${MovisensSamplingPackage.MOVEMENT_ACCELERATION}');
   DataFormat get format => CARP_DATA_FORMAT;
 
   factory MovisensMovementAccelerationDatum.fromMap(String value) {
-    MovisensMovementAccelerationDatum movementAccelerationDatum =
-    MovisensMovementAccelerationDatum();
+    MovisensMovementAccelerationDatum movementAccelerationDatum = MovisensMovementAccelerationDatum();
     Map<dynamic, dynamic> map = jsonDecode(value);
-
-    ///Make movisens timestamp into UTC format
-    String timestamp = map['timestamp'];
-    List splittedTimestamp = timestamp.split(" ");
-    String timeUtc = splittedTimestamp[0] + "T" + splittedTimestamp[1] + ".000Z";
-
-    movementAccelerationDatum.movisensTimestamp = timeUtc;
-    movementAccelerationDatum.movementAcceleration =
-    map['movement_acceleration'];
+    movementAccelerationDatum.movisensTimestamp = _MovisensTimestampToUTC(map['timestamp']);
+    movementAccelerationDatum.movementAcceleration = map['movement_acceleration'];
 
     return movementAccelerationDatum;
   }
 
-  factory MovisensMovementAccelerationDatum.fromJson(
-      Map<String, dynamic> json) =>
+  factory MovisensMovementAccelerationDatum.fromJson(Map<String, dynamic> json) =>
       _$MovisensMovementAccelerationDatumFromJson(json);
-  Map<String, dynamic> toJson() =>
-      _$MovisensMovementAccelerationDatumToJson(this);
+  Map<String, dynamic> toJson() => _$MovisensMovementAccelerationDatumToJson(this);
 }
 
+/// Representing a tap marker event from a user tap on the Movisens device.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MovisensTapMarkerDatum extends MovisensDatum {
   String tapMarker;
 
   MovisensTapMarkerDatum() : super();
 
-  ///set data format
-
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(
-      NameSpace.CARP, '${MovisensSamplingPackage.MOVISENS}.tapMarker');
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, '${MovisensSamplingPackage.MOVISENS}.${MovisensSamplingPackage.TAP_MARKER}');
   DataFormat get format => CARP_DATA_FORMAT;
 
   factory MovisensTapMarkerDatum.fromMap(String value) {
     MovisensTapMarkerDatum tapMakerDatum = MovisensTapMarkerDatum();
     Map<dynamic, dynamic> map = jsonDecode(value);
-
-    ///Make movisens timestamp into UTC format
-    String timestamp = map['timestamp'];
-    List splittedTimestamp = timestamp.split(" ");
-    String timeUtc = splittedTimestamp[0] + "T" + splittedTimestamp[1] + ".000Z";
-
-    tapMakerDatum.movisensTimestamp = timeUtc;
+    tapMakerDatum.movisensTimestamp = _MovisensTimestampToUTC(map['timestamp']);
     tapMakerDatum.tapMarker = map['tap_marker'];
 
     return tapMakerDatum;
   }
 
-  factory MovisensTapMarkerDatum.fromJson(Map<String, dynamic> json) =>
-      _$MovisensTapMarkerDatumFromJson(json);
+  factory MovisensTapMarkerDatum.fromJson(Map<String, dynamic> json) => _$MovisensTapMarkerDatumFromJson(json);
   Map<String, dynamic> toJson() => _$MovisensTapMarkerDatumToJson(this);
 }
 
@@ -155,27 +123,20 @@ class MovisensBatteryLevelDatum extends MovisensDatum {
 
   MovisensBatteryLevelDatum() : super();
 
-  ///set data format
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(
-      NameSpace.CARP, '${MovisensSamplingPackage.MOVISENS}.batteryLevel');
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, '${MovisensSamplingPackage.MOVISENS}.${MovisensSamplingPackage.BATTERY_LEVEL}');
   DataFormat get format => CARP_DATA_FORMAT;
 
   factory MovisensBatteryLevelDatum.fromMap(String value) {
     MovisensBatteryLevelDatum batteryLevelDatum = MovisensBatteryLevelDatum();
     Map<dynamic, dynamic> map = jsonDecode(value);
-
-    ///Make movisens timestamp into UTC format
-    String timestamp = map['timestamp'];
-    List splittedTimestamp = timestamp.split(" ");
-    String timeUtc = splittedTimestamp[0] + "T" + splittedTimestamp[1] + ".000Z";
-
-    batteryLevelDatum.movisensTimestamp = timeUtc;
+    batteryLevelDatum.movisensTimestamp = _MovisensTimestampToUTC(map['timestamp']);
     batteryLevelDatum.batteryLevel = map['battery_level'];
 
     return batteryLevelDatum;
   }
-  factory MovisensBatteryLevelDatum.fromJson(Map<String, dynamic> json) =>
-      _$MovisensBatteryLevelDatumFromJson(json);
+
+  factory MovisensBatteryLevelDatum.fromJson(Map<String, dynamic> json) => _$MovisensBatteryLevelDatumFromJson(json);
   Map<String, dynamic> toJson() => _$MovisensBatteryLevelDatumToJson(this);
 }
 
@@ -185,28 +146,20 @@ class MovisensBodyPositionDatum extends MovisensDatum {
 
   MovisensBodyPositionDatum() : super();
 
-  ///set data format
-
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(
-      NameSpace.CARP, '${MovisensSamplingPackage.MOVISENS}.bodyPosition');
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, '${MovisensSamplingPackage.MOVISENS}.${MovisensSamplingPackage.BODY_POSITION}');
   DataFormat get format => CARP_DATA_FORMAT;
 
   factory MovisensBodyPositionDatum.fromMap(String value) {
     MovisensBodyPositionDatum bodyPositionDatum = MovisensBodyPositionDatum();
     Map<dynamic, dynamic> map = jsonDecode(value);
-
-    ///Make movisens timestamp into UTC format
-    String timestamp = map['timestamp'];
-    List splittedTimestamp = timestamp.split(" ");
-    String timeUtc = splittedTimestamp[0] + "T" + splittedTimestamp[1] + ".000Z";
-
-    bodyPositionDatum.movisensTimestamp = timeUtc;
+    bodyPositionDatum.movisensTimestamp = _MovisensTimestampToUTC(map['timestamp']);
     bodyPositionDatum.bodyPosition = map['body_position'];
 
     return bodyPositionDatum;
   }
-  factory MovisensBodyPositionDatum.fromJson(Map<String, dynamic> json) =>
-      _$MovisensBodyPositionDatumFromJson(json);
+
+  factory MovisensBodyPositionDatum.fromJson(Map<String, dynamic> json) => _$MovisensBodyPositionDatumFromJson(json);
   Map<String, dynamic> toJson() => _$MovisensBodyPositionDatumToJson(this);
 }
 
@@ -216,93 +169,69 @@ class MovisensMETDatum extends MovisensDatum {
 
   MovisensMETDatum() : super();
 
-  ///set data format
-
   static const DataFormat CARP_DATA_FORMAT =
-  DataFormat(NameSpace.CARP, '${MovisensSamplingPackage.MOVISENS}.met');
+      DataFormat(NameSpace.CARP, '${MovisensSamplingPackage.MOVISENS}.${MovisensSamplingPackage.MET}');
   DataFormat get format => CARP_DATA_FORMAT;
 
   factory MovisensMETDatum.fromMap(String value) {
     MovisensMETDatum metDatum = MovisensMETDatum();
     Map<dynamic, dynamic> map = jsonDecode(value);
-
-    ///Make movisens timestamp into UTC format
-    String timestamp = map['timestamp'];
-    List splittedTimestamp = timestamp.split(" ");
-    String timeUtc = splittedTimestamp[0] + "T" + splittedTimestamp[1] + ".000Z";
-
-    metDatum.movisensTimestamp = timeUtc;
+    metDatum.movisensTimestamp = _MovisensTimestampToUTC(map['timestamp']);
     metDatum.met = map['met'];
 
     return metDatum;
   }
-  factory MovisensMETDatum.fromJson(Map<String, dynamic> json) =>
-      _$MovisensMETDatumFromJson(json);
+
+  factory MovisensMETDatum.fromJson(Map<String, dynamic> json) => _$MovisensMETDatumFromJson(json);
   Map<String, dynamic> toJson() => _$MovisensMETDatumToJson(this);
 }
 
+/// Heart Rate (HR) in beats pr. minute (BPM).
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MovisensHRDatum extends MovisensDatum {
+  /// Heart Rate (HR) in beats pr. minute (BPM).
   String hr;
 
   MovisensHRDatum() : super();
 
-  ///set data format
-
   static const DataFormat CARP_DATA_FORMAT =
-  DataFormat(NameSpace.CARP, '${MovisensSamplingPackage.MOVISENS}.hr');
+      DataFormat(NameSpace.CARP, '${MovisensSamplingPackage.MOVISENS}.${MovisensSamplingPackage.HR}');
   DataFormat get format => CARP_DATA_FORMAT;
 
   factory MovisensHRDatum.fromMap(String value) {
     MovisensHRDatum hrDatum = MovisensHRDatum();
-
     Map<dynamic, dynamic> map = jsonDecode(value);
-
-    ///Make movisens timestamp into UTC format
-    String timestamp = map['timestamp'];
-    List splittedTimestamp = timestamp.split(" ");
-    String timeUtc = splittedTimestamp[0] + "T" + splittedTimestamp[1] + ".000Z";
-
-    hrDatum.movisensTimestamp = timeUtc;
+    hrDatum.movisensTimestamp = _MovisensTimestampToUTC(map['timestamp']);
     hrDatum.hr = map['hr'];
 
     return hrDatum;
   }
 
-  factory MovisensHRDatum.fromJson(Map<String, dynamic> json) =>
-      _$MovisensHRDatumFromJson(json);
+  factory MovisensHRDatum.fromJson(Map<String, dynamic> json) => _$MovisensHRDatumFromJson(json);
   Map<String, dynamic> toJson() => _$MovisensHRDatumToJson(this);
 }
 
+/// Heart rate variability (HRV).
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MovisensHRVDatum extends MovisensDatum {
   String hrv;
 
   MovisensHRVDatum() : super();
 
-  ///set data format
-
   static const DataFormat CARP_DATA_FORMAT =
-  DataFormat(NameSpace.CARP, '${MovisensSamplingPackage.MOVISENS}.hrv');
+      DataFormat(NameSpace.CARP, '${MovisensSamplingPackage.MOVISENS}.${MovisensSamplingPackage.HRV}');
   DataFormat get format => CARP_DATA_FORMAT;
 
   factory MovisensHRVDatum.fromMap(String value) {
     MovisensHRVDatum hrvDatum = MovisensHRVDatum();
-
     Map<dynamic, dynamic> map = jsonDecode(value);
-
-    ///Make movisens timestamp into UTC format
-    String timestamp = map['timestamp'];
-    List splittedTimestamp = timestamp.split(" ");
-    String timeUtc = splittedTimestamp[0] + "T" + splittedTimestamp[1] + ".000Z";
-
-    hrvDatum.movisensTimestamp = timeUtc;
+    hrvDatum.movisensTimestamp = _MovisensTimestampToUTC(map['timestamp']);
     hrvDatum.hrv = map['hrv'];
 
     return hrvDatum;
   }
-  factory MovisensHRVDatum.fromJson(Map<String, dynamic> json) =>
-      _$MovisensHRVDatumFromJson(json);
+
+  factory MovisensHRVDatum.fromJson(Map<String, dynamic> json) => _$MovisensHRVDatumFromJson(json);
   Map<String, dynamic> toJson() => _$MovisensHRVDatumToJson(this);
 }
 
@@ -312,28 +241,20 @@ class MovisensIsHrvValidDatum extends MovisensDatum {
 
   MovisensIsHrvValidDatum() : super();
 
-  ///set data format
-
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(
-      NameSpace.CARP, '${MovisensSamplingPackage.MOVISENS}.isHrvValid');
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, '${MovisensSamplingPackage.MOVISENS}.${MovisensSamplingPackage.IS_HRV_VALID}');
   DataFormat get format => CARP_DATA_FORMAT;
 
   factory MovisensIsHrvValidDatum.fromMap(String value) {
     MovisensIsHrvValidDatum isHrvValidDatum = MovisensIsHrvValidDatum();
     Map<dynamic, dynamic> map = jsonDecode(value);
-
-    ///Make movisens timestamp into UTC format
-    String timestamp = map['timestamp'];
-    List splittedTimestamp = timestamp.split(" ");
-    String timeUtc = splittedTimestamp[0] + "T" + splittedTimestamp[1] + ".000Z";
-
-    isHrvValidDatum.movisensTimestamp = timeUtc;
+    isHrvValidDatum.movisensTimestamp = _MovisensTimestampToUTC(map['timestamp']);
     isHrvValidDatum.isHrvValid = map['is_hrv_valid'];
 
     return isHrvValidDatum;
   }
-  factory MovisensIsHrvValidDatum.fromJson(Map<String, dynamic> json) =>
-      _$MovisensIsHrvValidDatumFromJson(json);
+
+  factory MovisensIsHrvValidDatum.fromJson(Map<String, dynamic> json) => _$MovisensIsHrvValidDatumFromJson(json);
   Map<String, dynamic> toJson() => _$MovisensIsHrvValidDatumToJson(this);
 }
 
@@ -343,28 +264,19 @@ class MovisensStepCountDatum extends MovisensDatum {
 
   MovisensStepCountDatum() : super();
 
-  ///set data format
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(
-      NameSpace.CARP, '${MovisensSamplingPackage.MOVISENS}.stepCount');
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, '${MovisensSamplingPackage.MOVISENS}.${MovisensSamplingPackage.STEP_COUNT}');
   DataFormat get format => CARP_DATA_FORMAT;
 
   factory MovisensStepCountDatum.fromMap(String value) {
     MovisensStepCountDatum stepCountDatum = MovisensStepCountDatum();
-
     Map<dynamic, dynamic> map = jsonDecode(value);
-
-    ///Make movisens timestamp into UTC format
-    String timestamp = map['timestamp'];
-    List splittedTimestamp = timestamp.split(" ");
-    String timeUtc = splittedTimestamp[0] + "T" + splittedTimestamp[1] + ".000Z";
-
-    stepCountDatum.movisensTimestamp = timeUtc;
+    stepCountDatum.movisensTimestamp = _MovisensTimestampToUTC(map['timestamp']);
     stepCountDatum.stepCount = map['step_count'];
 
     return stepCountDatum;
   }
-  factory MovisensStepCountDatum.fromJson(Map<String, dynamic> json) =>
-      _$MovisensStepCountDatumFromJson(json);
+  factory MovisensStepCountDatum.fromJson(Map<String, dynamic> json) => _$MovisensStepCountDatumFromJson(json);
   Map<String, dynamic> toJson() => _$MovisensStepCountDatumToJson(this);
 }
 
@@ -374,28 +286,19 @@ class MovisensConnectionStatusDatum extends MovisensDatum {
 
   MovisensConnectionStatusDatum() : super();
 
-  ///set data format
-
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(
-      NameSpace.CARP, '${MovisensSamplingPackage.MOVISENS}.connectionStatus');
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, '${MovisensSamplingPackage.MOVISENS}.${MovisensSamplingPackage.CONNECTION_STATUS}');
   DataFormat get format => CARP_DATA_FORMAT;
 
   factory MovisensConnectionStatusDatum.fromMap(String value) {
-    MovisensConnectionStatusDatum connectionStatusDatum =
-    MovisensConnectionStatusDatum();
-
+    MovisensConnectionStatusDatum connectionStatusDatum = MovisensConnectionStatusDatum();
     Map<dynamic, dynamic> map = jsonDecode(value);
-
-    ///Make movisens timestamp into UTC format
-    String timestamp = map['timestamp'];
-    List splittedTimestamp = timestamp.split(" ");
-    String timeUtc = splittedTimestamp[0] + "T" + splittedTimestamp[1] + ".000Z";
-
-    connectionStatusDatum.movisensTimestamp = timeUtc;
+    connectionStatusDatum.movisensTimestamp = _MovisensTimestampToUTC(map['timestamp']);
     connectionStatusDatum.connectionStatus = map['connection_status'];
 
     return connectionStatusDatum;
   }
+
   factory MovisensConnectionStatusDatum.fromJson(Map<String, dynamic> json) =>
       _$MovisensConnectionStatusDatumFromJson(json);
   Map<String, dynamic> toJson() => _$MovisensConnectionStatusDatumToJson(this);
