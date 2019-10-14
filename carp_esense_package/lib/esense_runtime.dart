@@ -56,13 +56,6 @@ class ESenseButtonProbe extends _ESenseProbe {
 /// It generates an [ESenseSensorDatum] for each sensor event.
 class ESenseSensorProbe extends _ESenseProbe {
   Stream<Datum> get stream {
-//    print('connected : $connected');
-//    print('ESenseManager.connected : ${ESenseManager.connected}');
-//    if (ESenseManager.connected) {
-//      print('ESenseManager.sensorEvents : ${ESenseManager.sensorEvents}');
-//      ESenseManager.sensorEvents.listen((event) => print('eSense sensor event #1 : $event'));
-//    }
-
     if (!ESenseManager.connected) ESenseManager.connect(deviceName);
     return (ESenseManager.connected)
         ? ESenseManager.sensorEvents

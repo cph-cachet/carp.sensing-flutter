@@ -11,7 +11,7 @@ This packages supports sampling of the following [`Measure`](https://pub.dartlan
 * `esense_sensor` : eSense sensor (accelerometer & gyroscope) events.
 
 See the user documentation on the [eSense device](http://www.esense.io/share/eSense-User-Documentation.pdf) for how to use the device. 
-See the [`esense`](https://pub.dev/packages/esense) Flutter plugin and its [API](https://pub.dev/documentation/esense/latest/) documentation to understand how sensor data is generated and their data formats. 
+See the [`esense_flutter`](https://pub.dev/packages/esense_flutter) Flutter plugin and its [API](https://pub.dev/documentation/esense_flutter/latest/) documentation to understand how sensor data is generated and their data formats. 
 
 See the `carp_mobile_sensing` [wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki) for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types)
 and [sampling schemas](https://github.com/cph-cachet/carp.sensing-flutter/wiki/D.-Sampling-Schemas).
@@ -30,8 +30,8 @@ this package only works together with `carp_mobile_sensing`.
 dependencies:
   flutter:
     sdk: flutter
-  carp_mobile_sensing: ^0.5.0
-  carp_esense_package: ^0.1.3
+  carp_mobile_sensing: ^0.6.0
+  carp_esense_package: ^0.1.2
   ...
 `````
 
@@ -48,14 +48,35 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
 ```
 
 
-Note that this package only supports AndroidX. This shouldn't result in any functional changes, but it requires any Android apps using this plugin to also 
+Note that this package only supports AndroidX. This should not result in any functional changes, but it requires any Android apps using this plugin to also 
 [migrate](https://developer.android.com/jetpack/androidx/migrate) if they're using the original support library. 
 See Flutter [AndroidX compatibility](https://flutter.dev/docs/development/packages-and-plugins/androidx-compatibility)
 
 
 ### iOS Integration
 
-The eSense API is not (yet) available on iOS.
+Requires iOS 10 or later. Hence, in your `Podfile` in the `ios` folder of your app, 
+make sure that the platform is set to `10.0`.
+ 
+
+```
+platform :ios, '10.0'
+```
+
+Add this permission in the `Info.plist` file located in `ios/Runner`:
+
+```xml
+<key>NSBluetoothAlwaysUsageDescription</key>
+<string>Uses bluetooth to connect to the eSense device</string>
+<key>UIBackgroundModes</key>
+  <array>
+  <string>audio</string>
+  <string>external-accessory</string>
+  <string>fetch</string>
+</array>
+
+```
+
 
 ## Using it
 
