@@ -170,30 +170,22 @@ class CarpFileResponse {
       : id = map['id'],
         storageName = map['storage_name'],
         originalName = map['original_name'],
-        metadata = map['metadata'] != null ? json.decode(map['metadata']) : null,
+        metadata = map['metadata'] != null ? map['metadata'] : null,
         createdByUserId = map['created_by_user_id'],
-        // TODO - are we sure we want the entire JSON tree for a creator in the response?
-        //creator = map['creator'] != null ? json.decode(map['creator']) : null,
-        creator = null,
         createdAt = DateTime.parse(map['created_at']),
         updatedAt = DateTime.parse(map['updated_at']),
-        studyId = map['study_id'],
-        study = null;
-  // TODO - same problem as above -- the response contains the entire study protocol....
-  //study = map['study'] != null ? json.decode(map['study']) : null;
+        studyId = map['study_id'];
 
   final Map<dynamic, dynamic> map;
   final FileStorageReference ref;
   final int id;
   final String storageName;
   final String originalName;
-  final Map<String, String> metadata;
+  final Map<String, dynamic> metadata;
   final int createdByUserId;
-  final String creator;
   final DateTime createdAt;
   final DateTime updatedAt;
   final int studyId;
-  final Study study;
 
   String toString() => json.encode(map);
 }

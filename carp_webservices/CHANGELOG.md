@@ -1,3 +1,6 @@
+## 0.3.1
+* fixed a bug in the get all files method
+
 ## 0.3.0
 * update to `carp_mobile_sensing` v.0.6.0
 * json serialization 3.0.0

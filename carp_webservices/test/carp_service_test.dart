@@ -11,13 +11,14 @@ String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(objec
 void main() {
   final String username = "researcher@example.com";
   final String password = "password";
-//  final String username = "tester_487@dtu.dk";
-//  final String password = "underbar";
+  //final String username = "tester_487@dtu.dk";
+  //final String password = "underbar";
   final String userId = "user@dtu.dk";
-  final String uri = "http://staging.carp.cachet.dk:8080";
+  //final String uri = "http://staging.carp.cachet.dk:8080";
+  final String uri = "https://test.carp.cachet.dk:443";
   final String clientID = "carp";
   final String clientSecret = "carp";
-  final String testStudyId = "2";
+  final String testStudyId = "1";
   CarpApp app;
   CarpUser user;
   Study study;
