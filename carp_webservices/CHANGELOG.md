@@ -1,3 +1,6 @@
+## 0.3.2
+* support for retry in all RESTfull calls, incl. upload of JSON data files.
+
 ## 0.3.1
 * fixed a bug in the get all files method
 

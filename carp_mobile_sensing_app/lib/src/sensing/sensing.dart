@@ -20,8 +20,8 @@ class Sensing {
 
     // create/load and register external data managers
     DataManagerRegistry.register(CarpDataManager());
-    //DataManagerRegistry.register(DataEndPointType.FIREBASE_STORAGE, new FirebaseStorageDataManager());
-    //DataManagerRegistry.register(DataEndPointType.FIREBASE_DATABASE, new FirebaseDatabaseDataManager());
+    DataManagerRegistry.register(FirebaseStorageDataManager());
+    DataManagerRegistry.register(FirebaseDatabaseDataManager());
   }
 
   /// Start sensing.
@@ -86,7 +86,7 @@ class StudyMock implements StudyManager {
         ..name = 'CARP Mobile Sensing - eSense sampling demo'
         ..description =
             'This is a study designed to test the eSense earable computing platform together with CARP Mobile Sensing'
-        ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
+        ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FIREBASE_DATABSE)
 //        ..addTriggerTask(
 //            ImmediateTrigger(),
 //            Task('eSense')
@@ -133,7 +133,7 @@ class StudyMock implements StudyManager {
                 ContextSamplingPackage.LOCATION,
                 ContextSamplingPackage.ACTIVITY,
                 ContextSamplingPackage.WEATHER,
-                //ConnectivitySamplingPackage.BLUETOOTH,
+                ConnectivitySamplingPackage.BLUETOOTH,
                 ConnectivitySamplingPackage.WIFI,
               ], namespace: NameSpace.CARP));
 
@@ -250,33 +250,32 @@ class StudyMock implements StudyManager {
           zip: true,
           deleteWhenUploaded: false,
         );
-//      case DataEndPointType.FIREBASE_STORAGE:
-//        return FirebaseStorageDataEndPoint(firebaseEndPoint, path: 'sensing/data', bufferSize: 50 * 1000, zip: true);
-//      case DataEndPointType.FIREBASE_DATABASE:
-//        return FirebaseDatabaseDataEndPoint(firebaseEndPoint, collection: 'carp_data');
+      case DataEndPointTypes.FIREBASE_STORAGE:
+        return FirebaseStorageDataEndPoint(firebaseEndPoint, path: 'sensing/data', bufferSize: 50 * 1000, zip: true);
+      case DataEndPointTypes.FIREBASE_DATABSE:
+        return FirebaseDatabaseDataEndPoint(firebaseEndPoint, collection: 'carp_data');
       default:
         return new DataEndPoint(DataEndPointTypes.PRINT);
     }
   }
 
-//  FirebaseEndPoint _firebaseEndPoint;
-//  FirebaseEndPoint get firebaseEndPoint {
-//    if (_firebaseEndPoint == null) {
-//      _firebaseEndPoint = new FirebaseEndPoint(
-//          name: "Flutter Sensing Sandbox",
-//          uri: 'gs://flutter-sensing-sandbox.appspot.com',
-//          projectID: 'flutter-sensing-sandbox',
-//          webAPIKey: 'AIzaSyCGy6MeHkiv5XkBtMcMbtgGYOpf6ntNVE4',
-//          gcmSenderID: '201621881872',
-//          androidGoogleAppID: '1:201621881872:android:8e84e7ccfc85e121',
-//          iOSGoogleAppID: '1:159623150305:ios:4a213ef3dbd8997b',
-//          firebaseAuthenticationMethod: FireBaseAuthenticationMethods.PASSWORD,
-//          email: "jakob@bardram.net",
-//          password: "dumt_password");
-//    }
-//    return _firebaseEndPoint;
-//  }
-
+  FirebaseEndPoint _firebaseEndPoint;
+  FirebaseEndPoint get firebaseEndPoint {
+    if (_firebaseEndPoint == null) {
+      _firebaseEndPoint = new FirebaseEndPoint(
+          name: "Flutter Sensing Sandbox",
+          uri: 'gs://flutter-sensing-sandbox.appspot.com',
+          projectID: 'flutter-sensing-sandbox',
+          webAPIKey: 'AIzaSyCGy6MeHkiv5XkBtMcMbtgGYOpf6ntNVE4',
+          gcmSenderID: '201621881872',
+          androidGoogleAppID: '1:201621881872:android:8e84e7ccfc85e121',
+          iOSGoogleAppID: '1:159623150305:ios:4a213ef3dbd8997b',
+          firebaseAuthenticationMethod: FireBaseAuthenticationMethods.PASSWORD,
+          email: "jakob@bardram.net",
+          password: "dumt_password");
+    }
+    return _firebaseEndPoint;
+  }
 }
 
 SamplingSchema get aware => SamplingSchema()

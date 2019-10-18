@@ -25,7 +25,7 @@ class DataPointReference extends CarpReference {
     final restHeaders = await headers;
 
     // POST the data point to the CARP web service
-    http.Response response = await http.post(Uri.encodeFull(url), headers: restHeaders, body: json.encode(data));
+    http.Response response = await Retry.post(Uri.encodeFull(url), headers: restHeaders, body: json.encode(data));
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
@@ -42,21 +42,32 @@ class DataPointReference extends CarpReference {
   /// A file can be created using a [FileDataManager] in `carp_mobile_sensing`.
   /// Note that the file should be raw JSON, and hence _not_ zipped.
   ///
-  /// Returns if successful. Throws an [CarpServiceException] if not.
+  /// In case of network problems (socket or timeout exceptions), this method will retry to
+  /// upload the file N=10 times, with an increasing delay time as 2^(N+1) * 5 secs (20, 40, , ..., 10,240).
+  /// I.e., maximum retry time is ca. three hours.
+  ///
+  /// Returns when successful. Throws an [CarpServiceException] if not.
   Future<void> batchPostDataPoint(File file) async {
     assert(file != null);
     final String url = "$dataEndpointUri/batch";
     final restHeaders = await headers;
 
-    var request = new http.MultipartRequest("POST", Uri.parse(url));
+    var request = http.MultipartRequest("POST", Uri.parse(url));
     request.headers['Authorization'] = restHeaders['Authorization'];
     request.headers['Content-Type'] = 'multipart/form-data';
     request.headers['cache-control'] = 'no-cache';
 
-    request.files.add(new http.MultipartFile.fromBytes('file', file != null ? file.readAsBytesSync() : new List<int>(),
+    request.files.add(http.MultipartFile.fromBytes('file', file != null ? file.readAsBytesSync() : List<int>(),
         filename: file != null ? file.path : '', contentType: MediaType('application', 'json')));
 
-    request.send().then((response) async {
+    // sending the request using the retry approach
+    retry(
+      () => request.send().timeout(Duration(seconds: 5)),
+      delayFactor: Duration(seconds: 5),
+      maxAttempts: 15,
+      retryIf: (e) => e is SocketException || e is TimeoutException,
+      onRetry: (e) => print('${e.runtimeType} - Retrying to send ${file.path}...'),
+    ).then((response) async {
       final int httpStatusCode = response.statusCode;
 
       switch (httpStatusCode) {
@@ -78,6 +89,29 @@ class DataPointReference extends CarpReference {
           }
       }
     });
+
+//    request.send().then((response) async {
+//      final int httpStatusCode = response.statusCode;
+//
+//      switch (httpStatusCode) {
+//        // CARP web service returns "200 OK" or "201 Created" when a file is uploaded to the server.
+//        case 200:
+//        case 201:
+//          {
+//            return;
+//          }
+//        default:
+//          {
+//            response.stream.toStringStream().first.then((body) {
+//              final Map<String, dynamic> map = json.decode(body);
+//              final String error = map["error"];
+//              final String description = map["error_description"];
+//              final HTTPStatus status = HTTPStatus(httpStatusCode, response.reasonPhrase);
+//              throw CarpServiceException(error, description: description, httpStatus: status);
+//            });
+//          }
+//      }
+//    });
   }
 
   /// Get a [CARPDataPoint] from the CARP backend using HTTP GET
@@ -86,7 +120,7 @@ class DataPointReference extends CarpReference {
     final restHeaders = await headers;
 
     // GET the data point from the CARP web service
-    http.Response response = await http.get(Uri.encodeFull(url), headers: restHeaders);
+    http.Response response = await Retry.get(Uri.encodeFull(url), headers: restHeaders);
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
@@ -183,7 +217,7 @@ class DataPointReference extends CarpReference {
     final restHeaders = await headers;
 
     // GET the data points from the CARP web service
-    http.Response response = await http.get(Uri.encodeFull(url), headers: restHeaders);
+    http.Response response = await Retry.get(Uri.encodeFull(url), headers: restHeaders);
 
     int httpStatusCode = response.statusCode;
 
@@ -207,7 +241,7 @@ class DataPointReference extends CarpReference {
     final restHeaders = await headers;
 
     // DELETE the data point
-    http.Response response = await http.delete(Uri.encodeFull(url), headers: restHeaders);
+    http.Response response = await Retry.delete(Uri.encodeFull(url), headers: restHeaders);
     final int httpStatusCode = response.statusCode;
 
     if (httpStatusCode == 200) return;

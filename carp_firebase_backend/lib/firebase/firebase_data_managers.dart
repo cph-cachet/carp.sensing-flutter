@@ -56,15 +56,17 @@ abstract class FirebaseDataManager extends AbstractDataManager {
               accessToken: googleAuth.accessToken,
               idToken: googleAuth.idToken,
             );
-            _user = await _auth.signInWithCredential(credential);
+            AuthResult result = await _auth.signInWithCredential(credential);
+            _user = result.user;
             break;
           }
         case FireBaseAuthenticationMethods.PASSWORD:
           {
             assert(firebaseEndPoint.email != null);
             assert(firebaseEndPoint.password != null);
-            _user = await _auth.signInWithEmailAndPassword(
+            AuthResult result = await _auth.signInWithEmailAndPassword(
                 email: firebaseEndPoint.email, password: firebaseEndPoint.password);
+            _user = result.user;
             break;
           }
         default:

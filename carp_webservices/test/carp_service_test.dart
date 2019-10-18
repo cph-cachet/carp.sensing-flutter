@@ -77,6 +77,7 @@ void main() {
       print("   name   : ${new_user.fullName}");
     });
 
+    // This test fails -- we do not have access to create users with the authenticated user.
     test('- create user', () async {
       int id = random.nextInt(1000);
       CarpUser new_user =
@@ -224,7 +225,7 @@ void main() {
 
       print(_encode(original.data));
 
-      // updating the name
+      // updating the role to super user
       DocumentSnapshot updated = await CarpService.instance
           .collection('patients')
           .document(document.name)
@@ -241,17 +242,22 @@ void main() {
     test(' - rename document', () async {
       assert(document != null);
 
-      document = await CarpService.instance.collection('patients').document(document.name).rename('new name');
+      // rename the document
+      document = await CarpService.instance.collection('patients').document(document.name).rename('new_name');
+      print('local document : $document');
 
-      print(_encode(document.data));
+      // get the document back from the server
+      DocumentSnapshot server_document =
+          await CarpService.instance.collection('patients').document(document.name).get();
+      print('server document : $server_document');
 
-      print(document.toString());
-      assert(document.id > 0);
-      assert(document.name == 'new name');
+      assert(server_document.id > 0);
+      assert(server_document.name == document.name);
     });
 
     test(' - get document by path', () async {
       assert(document != null);
+      print(document.name);
       DocumentSnapshot newDocument = await CarpService.instance.collection('patients').document(document.name).get();
 
       print((newDocument));
@@ -369,8 +375,6 @@ void main() {
       await CarpService.instance.collection('patients').document(document.name).delete();
     });
 
-// RENAME of collection does not work on the CARP server side right now
-// see issue >>
     test(' - rename collection', () async {
       CollectionReference collection = await CarpService.instance.collection('patients').get();
       await collection.rename('new_patients');

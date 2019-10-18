@@ -61,4 +61,14 @@ dependencies {
     // added the following line due to this ERROR:
     //    >> Android dependency 'com.android.support:support-compat' has different version for the compile (26.1.0) and runtime (27.1.1) classpath.
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'com.google.firebase:firebase-auth:19.1.0'
+    // from firebase_auth plugin
+    implementation 'com.google.firebase:firebase-core:16.0.1'
 }
+
+// from firebase_auth plugin
+// see https://pub.dartlang.org/packages/firebase_auth
+apply plugin: 'com.google.gms.google-services' // Google Play services Gradle plugin
+// SDK 15 vs. 16 conflict resolution
+// See https://github.com/evollu/react-native-fcm/issues/1026
+// com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true

@@ -8,18 +8,19 @@ part of carp_firebase_backend;
 
 FirebaseEndPoint _$FirebaseEndPointFromJson(Map<String, dynamic> json) {
   return FirebaseEndPoint(
-      name: json['name'] as String,
-      uri: json['uri'] as String,
-      firebaseAuthenticationMethod:
-          json['firebase_authentication_method'] as String,
-      email: json['email'] as String,
-      password: json['password'] as String,
-      token: json['token'] as String,
-      projectID: json['project_i_d'] as String,
-      webAPIKey: json['web_a_p_i_key'] as String,
-      androidGoogleAppID: json['android_google_app_i_d'] as String,
-      iOSGoogleAppID: json['i_o_s_google_app_i_d'] as String,
-      gcmSenderID: json['gcm_sender_i_d'] as String);
+    name: json['name'] as String,
+    uri: json['uri'] as String,
+    firebaseAuthenticationMethod:
+        json['firebase_authentication_method'] as String,
+    email: json['email'] as String,
+    password: json['password'] as String,
+    token: json['token'] as String,
+    projectID: json['project_i_d'] as String,
+    webAPIKey: json['web_a_p_i_key'] as String,
+    androidGoogleAppID: json['android_google_app_i_d'] as String,
+    iOSGoogleAppID: json['i_o_s_google_app_i_d'] as String,
+    gcmSenderID: json['gcm_sender_i_d'] as String,
+  );
 }
 
 Map<String, dynamic> _$FirebaseEndPointToJson(FirebaseEndPoint instance) {
@@ -49,11 +50,12 @@ Map<String, dynamic> _$FirebaseEndPointToJson(FirebaseEndPoint instance) {
 FirebaseDatabaseDataEndPoint _$FirebaseDatabaseDataEndPointFromJson(
     Map<String, dynamic> json) {
   return FirebaseDatabaseDataEndPoint(
-      json['firebase_end_point'] == null
-          ? null
-          : FirebaseEndPoint.fromJson(
-              json['firebase_end_point'] as Map<String, dynamic>),
-      collection: json['collection'] as String)
+    json['firebase_end_point'] == null
+        ? null
+        : FirebaseEndPoint.fromJson(
+            json['firebase_end_point'] as Map<String, dynamic>),
+    collection: json['collection'] as String,
+  )
     ..c__ = json['c__'] as String
     ..type = json['type'] as String;
 }
@@ -78,15 +80,16 @@ Map<String, dynamic> _$FirebaseDatabaseDataEndPointToJson(
 FirebaseStorageDataEndPoint _$FirebaseStorageDataEndPointFromJson(
     Map<String, dynamic> json) {
   return FirebaseStorageDataEndPoint(
-      json['firebase_end_point'] == null
-          ? null
-          : FirebaseEndPoint.fromJson(
-              json['firebase_end_point'] as Map<String, dynamic>),
-      path: json['path'] as String,
-      bufferSize: json['buffer_size'],
-      zip: json['zip'],
-      encrypt: json['encrypt'],
-      publicKey: json['public_key'])
+    json['firebase_end_point'] == null
+        ? null
+        : FirebaseEndPoint.fromJson(
+            json['firebase_end_point'] as Map<String, dynamic>),
+    path: json['path'] as String,
+    bufferSize: json['buffer_size'],
+    zip: json['zip'],
+    encrypt: json['encrypt'],
+    publicKey: json['public_key'],
+  )
     ..c__ = json['c__'] as String
     ..type = json['type'] as String;
 }

@@ -41,7 +41,7 @@ class FileUploadTask extends CarpServiceTask {
   Map<String, String> metadata;
 
   FileUploadTask._(FileStorageReference reference, this.file, [metadata]) : super._(reference) {
-    this.metadata = metadata == null ? new Map<String, String>() : metadata;
+    this.metadata = (metadata == null) ? new Map<String, String>() : metadata;
   }
 
   /// Returns the [CarpFileResponse] when completed
@@ -62,12 +62,13 @@ class FileUploadTask extends CarpServiceTask {
     // add file-specific metadata
     metadata['filename'] = file.path;
     metadata['size'] = (await file.length()).toString();
-    // TODO -- there is an error if we submit metadata to the CARP server. Responds with "415 - Unsupported Media Type"
-    //request.fields['metadata'] = json.encode(metadata);
-    print('metadata : ' + json.encode(metadata));
+    request.fields['metadata'] = json.encode(metadata);
 
-    request.files.add(new http.MultipartFile.fromBytes('file', file != null ? file.readAsBytesSync() : new List<int>(),
-        filename: file != null ? file.path : '', contentType: MediaType('image', 'jpg')));
+    request.files.add(new http.MultipartFile.fromBytes(
+      'file',
+      file != null ? file.readAsBytesSync() : new List<int>(),
+      filename: file != null ? file.path : '',
+    ));
 
     request.send().then((response) {
       response.stream.toStringStream().first.then((body) {
@@ -129,7 +130,7 @@ class FileDownloadTask extends CarpServiceTask {
     Map<String, String> headers = await reference.headers;
     headers['Content-Type'] = 'application/x-www-form-urlencoded';
 
-    http.get(Uri.encodeFull(url), headers: headers).then((response) {
+    Retry.get(Uri.encodeFull(url), headers: headers).then((response) {
       final int httpStatusCode = response.statusCode;
 
       switch (httpStatusCode) {

@@ -17,6 +17,7 @@ import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'dart:math';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:retry/retry.dart';
 
 part 'carp_datapoint.dart';
 part 'carp_app.dart';
@@ -29,6 +30,85 @@ part 'carp_service.g.dart';
 part 'consent_document.dart';
 
 String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
+
+/// A class wrapping all HTTP operations (GET, POST, PUT, DELETE) in a retry manner.
+///
+/// Retry happens on SocketException or TimeoutException.
+/// Defaults to 8 attempts, sleeping as following after N = 1, 2, ... 7 attempts
+/// with sleep time as 2^(N+1) * 100 ms (400, 800, ... 25600).
+class Retry {
+  /// Sends an HTTP GET request with the given headers to the given URL, which can
+  /// be a [Uri] or a [String].
+  static Future<http.Response> get(url, {Map<String, String> headers}) async {
+    // calling the http GET method using the retry approach
+    final http.Response response = await retry(
+      () => http
+          .get(
+            Uri.encodeFull(url),
+            headers: headers,
+          )
+          .timeout(Duration(seconds: 5)),
+      // Retry on SocketException or TimeoutException
+      retryIf: (e) => e is SocketException || e is TimeoutException,
+    );
+    return response;
+  }
+
+  /// Sends an HTTP POST request with the given headers and body to the given URL,
+  /// which can be a [Uri] or a [String].
+  static Future<http.Response> post(url, {Map<String, String> headers, body, Encoding encoding}) async {
+    // calling the http POST method using the retry approach
+    final http.Response response = await retry(
+      () => http
+          .post(
+            Uri.encodeFull(url),
+            headers: headers,
+            body: body,
+            encoding: encoding,
+          )
+          .timeout(Duration(seconds: 5)),
+      // Retry on SocketException or TimeoutException
+      retryIf: (e) => e is SocketException || e is TimeoutException,
+    );
+    return response;
+  }
+
+  /// Sends an HTTP PUT request with the given headers and body to the given URL,
+  /// which can be a [Uri] or a [String].
+  static Future<http.Response> put(url, {Map<String, String> headers, body, Encoding encoding}) async {
+    // calling the http POST method using the retry approach
+    final http.Response response = await retry(
+      () => http
+          .put(
+            Uri.encodeFull(url),
+            headers: headers,
+            body: body,
+            encoding: encoding,
+          )
+          .timeout(Duration(seconds: 5)),
+      // Retry on SocketException or TimeoutException
+      retryIf: (e) => e is SocketException || e is TimeoutException,
+    );
+    return response;
+  }
+
+  /// Sends an HTTP DELETE request with the given headers to the given URL, which
+  /// can be a [Uri] or a [String].
+  static Future<http.Response> delete(url, {Map<String, String> headers}) async {
+    // calling the http DELETE method using the retry approach
+    final http.Response response = await retry(
+      () => http
+          .delete(
+            Uri.encodeFull(url),
+            headers: headers,
+          )
+          .timeout(Duration(seconds: 5)),
+      // Retry on SocketException or TimeoutException
+      retryIf: (e) => e is SocketException || e is TimeoutException,
+    );
+    return response;
+  }
+}
 
 /// Provide access to the CARP web services endpoint.
 ///
@@ -107,7 +187,8 @@ class CarpService {
     };
 
     final String url = "${_app.uri.toString()}${_app.oauth.path.toString()}";
-    http.Response response = await http.post(
+
+    final http.Response response = await Retry.post(
       Uri.encodeFull(url),
       headers: authenticationHeader,
       body: loginBody,
@@ -115,9 +196,6 @@ class CarpService {
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJSON = json.decode(response.body);
-
-//    print('response code: $httpStatusCode');
-//    print(_encode(responseJSON));
 
     if (httpStatusCode == 200) {
       _currentUser.authenticated(OAuthToken.fromMap(responseJSON));
@@ -155,7 +233,7 @@ class CarpService {
     final loginBody = {"refresh_token": "${_currentUser.token.refreshToken}", "grant_type": "refresh_token"};
 
     final String url = "${_app.uri.toString()}${_app.oauth.path.toString()}";
-    http.Response response = await http.post(
+    final http.Response response = await Retry.post(
       Uri.encodeFull(url),
       headers: authenticationHeader,
       body: loginBody,
@@ -201,7 +279,7 @@ class CarpService {
   /// Asynchronously gets the CARP profile of the current user.
   Future<CarpUser> getCurrentUserProfile() async {
     // GET the user from the CARP web service
-    http.Response response = await http.get(Uri.encodeFull(authUserEndpointUri), headers: headers);
+    http.Response response = await Retry.get(Uri.encodeFull(authUserEndpointUri), headers: headers);
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
 
@@ -240,7 +318,7 @@ class CarpService {
 
     final CarpUser newUser = new CarpUser(email, password: password, fullName: fullName, email: email);
 
-    http.Response response = await http.post(Uri.encodeFull(userEndpointUri),
+    http.Response response = await Retry.post(Uri.encodeFull(userEndpointUri),
         headers: headers, body: json.encode(getUserBody(email, password, fullName)));
 
     int httpStatusCode = response.statusCode;
@@ -261,7 +339,7 @@ class CarpService {
     assert(password != null);
     final CarpUser newUser = new CarpUser(email, password: password, fullName: fullName, email: email);
 
-    http.Response response = await http.post(Uri.encodeFull('$userEndpointUri/invite-participant'),
+    http.Response response = await Retry.post(Uri.encodeFull('$userEndpointUri/invite-participant'),
         headers: headers, body: json.encode(getUserBody(email, password, fullName)));
 
     int httpStatusCode = response.statusCode;
@@ -282,7 +360,7 @@ class CarpService {
     assert(password != null);
     final CarpUser newUser = new CarpUser(email, password: password, fullName: fullName, email: email);
 
-    http.Response response = await http.post(Uri.encodeFull('$userEndpointUri/invite-researcher'),
+    http.Response response = await Retry.post(Uri.encodeFull('$userEndpointUri/invite-researcher'),
         headers: headers, body: json.encode(getUserBody(email, password, fullName)));
 
     int httpStatusCode = response.statusCode;
@@ -329,7 +407,7 @@ class CarpService {
     String url = "$consentDocumentEndpointUri/$id";
 
     // GET the consent document from the CARP web service
-    http.Response response = await http.get(Uri.encodeFull(url), headers: headers);
+    http.Response response = await Retry.get(Uri.encodeFull(url), headers: headers);
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
@@ -373,7 +451,7 @@ class CarpService {
   /// Get a list documents from a query.
   Future<List<DocumentSnapshot>> documentsByQuery(String query) async {
     // GET the list of documents in this collection from the CARP web service
-    http.Response response = await http.get(Uri.encodeFull('$documentEndpointUri?query=$query'), headers: headers);
+    http.Response response = await Retry.get(Uri.encodeFull('$documentEndpointUri?query=$query'), headers: headers);
     int httpStatusCode = response.statusCode;
 
     if (httpStatusCode == 200) {

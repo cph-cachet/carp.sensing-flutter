@@ -14,7 +14,7 @@ For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter
 
 1. You need a CARP Web Service host running. See the [CARP Web Service API](https://github.com/cph-cachet/carp.webservices) 
 documentation for how to do this. If you're part of the [CACHET](http://www.cachet.dk/) team, you can use the specified 
-development, staging, and production servers.
+test, staging, and production servers.
 
 1. Add `carp_services` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/).
 

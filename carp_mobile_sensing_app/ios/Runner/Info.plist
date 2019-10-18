@@ -28,14 +28,14 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Uses bluetooth to connect to the eSense device</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Uses the location API to record location.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Uses the location API to record location.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Uses the microphone to record ambient noise in the phone's environment.</string>
-	<key>NSBluetoothAlwaysUsageDescription</key>
-    <string>Uses bluetooth to connect to the eSense device</string>
 	<key>NSMotionUsageDescription</key>
 	<string>Detects activity.</string>
 	<key>UIBackgroundModes</key>
@@ -46,8 +46,8 @@
 		<string>external-accessory</string>
 		<string>fetch</string>
 		<string>location</string>
-        <string>audio</string>
-        <string>external-accessory</string>
+		<string>audio</string>
+		<string>external-accessory</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

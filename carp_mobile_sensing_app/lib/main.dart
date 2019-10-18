@@ -7,6 +7,7 @@ import 'package:carp_communication_package/communication.dart';
 import 'package:carp_context_package/context.dart';
 import 'package:carp_audio_package/audio.dart';
 import 'package:carp_backend/carp_backend.dart';
+import 'package:carp_firebase_backend/carp_firebase_backend.dart';
 import 'package:carp_esense_package/esense.dart';
 import 'dart:async';
 

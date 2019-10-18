@@ -34,9 +34,9 @@ class CarpApp {
     assert(oauth.clientSecret != null);
   }
 
-  @override
   int get hashCode => name.hashCode;
 
-  @override
+  bool operator ==(other) => name == other;
+
   String toString() => '$CarpApp($name)';
 }
