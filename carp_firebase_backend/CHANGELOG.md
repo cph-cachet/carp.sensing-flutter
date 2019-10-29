@@ -1,7 +1,8 @@
-## 0.3.2
+## 0.4.0
 * upgrade to `json_serializable` v.3
 * upgrade to `firebase_auth` v. 0.14...
 * upgrade to `carp_mobile_sensing` v.0.6.0
+* support for iOS
 
 ## 0.3.1
 * upgrade to `carp_mobile_sensing` v.0.5.0

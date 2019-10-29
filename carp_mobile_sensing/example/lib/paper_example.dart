@@ -13,7 +13,7 @@ void sensing() async {
     ..addTriggerTask(
         ImmediateTrigger(),
         Task('One Common Sensing Task')
-          ..measures = SamplingSchema.common().getMeasureList([
+          ..measures = SamplingSchema.common().getMeasureList(types: [
             ConnectivitySamplingPackage.BLUETOOTH,
             ConnectivitySamplingPackage.CONNECTIVITY,
             SensorSamplingPackage.ACCELEROMETER,

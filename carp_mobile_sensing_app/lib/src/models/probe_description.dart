@@ -69,7 +69,8 @@ class ProbeDescription {
         ProbeState.created: Icon(Icons.child_care, color: CACHET.GREY_4),
         ProbeState.initialized: Icon(Icons.check, color: CACHET.LIGHT_PURPLE),
         ProbeState.resumed: Icon(Icons.radio_button_checked, color: CACHET.GREEN),
-        ProbeState.paused: Icon(Icons.radio_button_unchecked, color: CACHET.RED),
-        ProbeState.stopped: Icon(Icons.close, color: CACHET.GREY_2)
+        ProbeState.paused: Icon(Icons.radio_button_unchecked, color: CACHET.GREEN),
+        ProbeState.stopped: Icon(Icons.close, color: CACHET.GREY_2),
+        ProbeState.undefined: Icon(Icons.error_outline, color: CACHET.RED),
       };
 }

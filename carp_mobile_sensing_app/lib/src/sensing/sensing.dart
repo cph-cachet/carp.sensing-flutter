@@ -3,7 +3,7 @@ part of mobile_sensing_app;
 /// This class implements the sensing layer incl. setting up a [Study] with [Task]s and [Measure]s.
 class Sensing {
   Study study;
-  final String testStudyId = "eSense-#1";
+  final String testStudyId = "iOS-testing-#2";
 
   StudyController controller;
   StudyManager mock = new StudyMock();
@@ -13,15 +13,15 @@ class Sensing {
 
   Sensing() : super() {
     // create/load and register external sampling packages
-    SamplingPackageRegistry.register(CommunicationSamplingPackage());
     SamplingPackageRegistry.register(ContextSamplingPackage());
+    SamplingPackageRegistry.register(CommunicationSamplingPackage());
     SamplingPackageRegistry.register(AudioSamplingPackage());
     SamplingPackageRegistry.register(ESenseSamplingPackage());
 
     // create/load and register external data managers
     DataManagerRegistry.register(CarpDataManager());
-    DataManagerRegistry.register(FirebaseStorageDataManager());
-    DataManagerRegistry.register(FirebaseDatabaseDataManager());
+    //DataManagerRegistry.register(FirebaseStorageDataManager());
+    //DataManagerRegistry.register(FirebaseDatabaseDataManager());
   }
 
   /// Start sensing.
@@ -77,7 +77,83 @@ class StudyMock implements StudyManager {
     //return _getAllMeasuresStudy(studyId);
     //return _getAllProbesAsAwareCarpUploadStudy();
     //return _getAudioStudy(studyId);
-    return _getESenseStudy(studyId);
+    //return _getESenseStudy(studyId);
+    return _getTestingStudy(studyId);
+  }
+
+  Future<Study> _getTestingStudy(String studyId) async {
+    if (_study == null) {
+      _study = Study(studyId, username)
+        ..name = 'Testing ...'
+        ..description = 'This is a study for testing and debugging -- especially on iOS.'
+        ..dataEndPoint = FileDataEndPoint(bufferSize: 500 * 1000, zip: false, encrypt: false)
+        ..addTriggerTask(
+            ImmediateTrigger(),
+            Task()
+              ..measures = SamplingSchema.debug().getMeasureList(
+                namespace: NameSpace.CARP,
+                types: [
+                  //SensorSamplingPackage.ACCELEROMETER,
+                  //SensorSamplingPackage.GYROSCOPE,
+                  SensorSamplingPackage.LIGHT,
+                  SensorSamplingPackage.PEDOMETER,
+                ],
+              ))
+        ..addTriggerTask(
+            DelayedTrigger(delay: 10 * 1000),
+            Task()
+              ..measures = SamplingSchema.debug().getMeasureList(
+                namespace: NameSpace.CARP,
+                types: [
+                  ConnectivitySamplingPackage.BLUETOOTH,
+                  ConnectivitySamplingPackage.WIFI,
+                  ConnectivitySamplingPackage.CONNECTIVITY,
+                ],
+              ))
+        ..addTriggerTask(
+            ImmediateTrigger(),
+            Task()
+              ..measures = SamplingSchema.debug().getMeasureList(
+                namespace: NameSpace.CARP,
+                types: [
+                  AppsSamplingPackage.APP_USAGE,
+                  AppsSamplingPackage.APPS,
+                ],
+              ))
+        ..addTriggerTask(
+            ImmediateTrigger(),
+            Task()
+              ..measures = SamplingSchema.debug().getMeasureList(
+                namespace: NameSpace.CARP,
+                types: [
+                  DeviceSamplingPackage.MEMORY,
+                  DeviceSamplingPackage.DEVICE,
+                  DeviceSamplingPackage.BATTERY,
+                  DeviceSamplingPackage.SCREEN,
+                ],
+              ))
+        ..addTriggerTask(
+            PeriodicTrigger(period: 2 * 60 * 1000),
+            Task()
+              ..measures = SamplingSchema.debug().getMeasureList(
+                namespace: NameSpace.CARP,
+                types: [
+                  ContextSamplingPackage.WEATHER,
+                ],
+              ))
+        ..addTriggerTask(
+            ImmediateTrigger(),
+            Task()
+              ..measures = SamplingSchema.debug().getMeasureList(
+                namespace: NameSpace.CARP,
+                types: [
+                  ContextSamplingPackage.LOCATION,
+                  ContextSamplingPackage.ACTIVITY,
+                  ContextSamplingPackage.GEOFENCE,
+                ],
+              ));
+    }
+    return _study;
   }
 
   Future<Study> _getESenseStudy(String studyId) async {
@@ -86,7 +162,7 @@ class StudyMock implements StudyManager {
         ..name = 'CARP Mobile Sensing - eSense sampling demo'
         ..description =
             'This is a study designed to test the eSense earable computing platform together with CARP Mobile Sensing'
-        ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FIREBASE_DATABSE)
+        ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
 //        ..addTriggerTask(
 //            ImmediateTrigger(),
 //            Task('eSense')
@@ -126,16 +202,19 @@ class StudyMock implements StudyManager {
         ..addTriggerTask(
             ImmediateTrigger(),
             Task()
-              ..measures = SamplingSchema.debug().getMeasureList([
-                ESenseSamplingPackage.ESENSE_BUTTON,
-                //ESenseSamplingPackage.ESENSE_SENSOR,
-                AudioSamplingPackage.NOISE,
-                ContextSamplingPackage.LOCATION,
-                ContextSamplingPackage.ACTIVITY,
-                ContextSamplingPackage.WEATHER,
-                ConnectivitySamplingPackage.BLUETOOTH,
-                ConnectivitySamplingPackage.WIFI,
-              ], namespace: NameSpace.CARP));
+              ..measures = SamplingSchema.debug().getMeasureList(
+                namespace: NameSpace.CARP,
+                types: [
+                  //ESenseSamplingPackage.ESENSE_BUTTON,
+                  //ESenseSamplingPackage.ESENSE_SENSOR,
+                  AudioSamplingPackage.NOISE,
+                  ContextSamplingPackage.LOCATION,
+                  ContextSamplingPackage.ACTIVITY,
+                  ContextSamplingPackage.WEATHER,
+                  ConnectivitySamplingPackage.BLUETOOTH,
+                  //ConnectivitySamplingPackage.WIFI,
+                ],
+              ));
 
 //            ..measures.add(ESenseMeasure(MeasureType(NameSpace.CARP, ESenseSamplingPackage.ESENSE_BUTTON),
 //                name: 'eSense - Button', enabled: true, deviceName: 'eSense-0332'))
@@ -217,7 +296,7 @@ class StudyMock implements StudyManager {
       case DataEndPointTypes.PRINT:
         return new DataEndPoint(DataEndPointTypes.PRINT);
       case DataEndPointTypes.FILE:
-        return FileDataEndPoint(bufferSize: 1000 * 1000, zip: true, encrypt: false);
+        return FileDataEndPoint(bufferSize: 500 * 1000, zip: true, encrypt: false);
       case DataEndPointTypes.CARP:
 //        return CarpDataEndPoint(CarpUploadMethod.DATA_POINT,
 //            name: 'CARP Staging Server',
@@ -250,32 +329,33 @@ class StudyMock implements StudyManager {
           zip: true,
           deleteWhenUploaded: false,
         );
-      case DataEndPointTypes.FIREBASE_STORAGE:
-        return FirebaseStorageDataEndPoint(firebaseEndPoint, path: 'sensing/data', bufferSize: 50 * 1000, zip: true);
-      case DataEndPointTypes.FIREBASE_DATABSE:
-        return FirebaseDatabaseDataEndPoint(firebaseEndPoint, collection: 'carp_data');
-      default:
+//      case DataEndPointTypes.FIREBASE_STORAGE:
+//        return FirebaseStorageDataEndPoint(firebaseEndPoint, path: 'sensing/data', bufferSize: 50 * 1000, zip: true);
+//      case DataEndPointTypes.FIREBASE_DATABSE:
+//        return FirebaseDatabaseDataEndPoint(firebaseEndPoint, collection: 'carp_data');
+//      default:
         return new DataEndPoint(DataEndPointTypes.PRINT);
     }
   }
 
-  FirebaseEndPoint _firebaseEndPoint;
-  FirebaseEndPoint get firebaseEndPoint {
-    if (_firebaseEndPoint == null) {
-      _firebaseEndPoint = new FirebaseEndPoint(
-          name: "Flutter Sensing Sandbox",
-          uri: 'gs://flutter-sensing-sandbox.appspot.com',
-          projectID: 'flutter-sensing-sandbox',
-          webAPIKey: 'AIzaSyCGy6MeHkiv5XkBtMcMbtgGYOpf6ntNVE4',
-          gcmSenderID: '201621881872',
-          androidGoogleAppID: '1:201621881872:android:8e84e7ccfc85e121',
-          iOSGoogleAppID: '1:159623150305:ios:4a213ef3dbd8997b',
-          firebaseAuthenticationMethod: FireBaseAuthenticationMethods.PASSWORD,
-          email: "jakob@bardram.net",
-          password: "dumt_password");
-    }
-    return _firebaseEndPoint;
-  }
+//  FirebaseEndPoint _firebaseEndPoint;
+//  FirebaseEndPoint get firebaseEndPoint {
+//    if (_firebaseEndPoint == null) {
+//      _firebaseEndPoint = new FirebaseEndPoint(
+//          name: "Flutter Sensing Sandbox",
+//          uri: 'gs://flutter-sensing-sandbox.appspot.com',
+//          projectID: 'flutter-sensing-sandbox',
+//          webAPIKey: 'AIzaSyCGy6MeHkiv5XkBtMcMbtgGYOpf6ntNVE4',
+//          gcmSenderID: '201621881872',
+//          androidGoogleAppID: '1:201621881872:android:8e84e7ccfc85e121',
+//          iOSGoogleAppID: '1:159623150305:ios:4a213ef3dbd8997b',
+//          firebaseAuthenticationMethod: FireBaseAuthenticationMethods.PASSWORD,
+//          email: "jakob@bardram.net",
+//          // remember to change this to the real pw before running, but remove again before committing to git
+//          password: "mit_password");
+//    }
+//    return _firebaseEndPoint;
+//  }
 }
 
 SamplingSchema get aware => SamplingSchema()

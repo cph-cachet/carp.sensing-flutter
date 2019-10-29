@@ -1,9 +1,23 @@
+/*
+ * Copyright 2019 Copenhagen Center for Health Technology (CACHET) at the
+ * Technical University of Denmark (DTU).
+ * Use of this source code is governed by a MIT-style license that can be
+ * found in the LICENSE file.
+ */
+/// A library for collecting cardiovascular data from the Movisens Move4 and EcgMove4 device data on:
+///
+///  * tap marker
+///  * heart rate
+///  * heart rate variability
+///  * metabolic level
+///  * body position
+///  * step count
+///  * movement (accelerometer)
+///  * battery level of device
+///  * connectivity status to device
 library movisens;
 
-/// tThis is the main library  for CARP movisens package
-
 import 'dart:convert';
-
 import 'dart:async';
 import 'package:movisens_flutter/movisens_flutter.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';

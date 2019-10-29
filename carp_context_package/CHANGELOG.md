@@ -1,5 +1,6 @@
 ## 0.6.1
 * Changed the location probe to a periodic probe which can be configured to sample location data on a specific frequency.
+* allignment with `carp_mobile_sensing` v. 0.6.1.
 
 ## 0.6.0
 * update to `carp_mobile_sensing` version 0.6.0

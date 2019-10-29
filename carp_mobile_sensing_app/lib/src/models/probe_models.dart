@@ -41,5 +41,7 @@ probeStateLabel(ProbeState state) {
       return "Paused";
     case ProbeState.stopped:
       return "Stopped";
+    case ProbeState.undefined:
+      return "Undefined";
   }
 }

@@ -6,6 +6,7 @@ library domain;
 
 import 'dart:io';
 import 'dart:convert';
+import 'package:meta/meta.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:uuid/uuid.dart';
 import 'package:device_info/device_info.dart';

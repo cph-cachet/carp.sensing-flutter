@@ -38,17 +38,17 @@ class AudioProbe extends BufferingPeriodicProbe {
   DateTime _startRecordingTime, _endRecordingTime;
   FlutterSound _flutterSound = new FlutterSound();
 
-  void onInitialize(Measure measure) {
+  Future<void> onInitialize(Measure measure) async {
     super.onInitialize(measure);
     this.studyId = (measure as AudioMeasure).studyId;
   }
 
-  void onRestart() {
+  Future<void> onRestart() async {
     super.onRestart();
     this.studyId = (measure as AudioMeasure).studyId;
   }
 
-  void onStop() {
+  Future<void> onStop() async {
     _flutterSound = null;
     super.onStop();
   }

@@ -15,9 +15,15 @@ class ConnectivityProbe extends StreamProbe {
       .map((ConnectivityResult event) => ConnectivityDatum.fromConnectivityResult(event));
 }
 
-// This probe requests access to location PERMISSIONS (on Android). Don't ask why.....
+// This probe requests access to location permissions (both on Android and iOS).
 /// The [WifiProbe] get the wifi connectivity status of the phone and
 /// collect a [WifiDatum].
+///
+/// Note, that in order to make this probe work on iOS (especially after iOS 12 and 13), there
+/// is a set of requirements to meet for the app using this probe. See
+///
+///  * [connectivity](https://pub.dev/packages/connectivity)
+///  * [CNCopyCurrentNetworkInfo](https://developer.apple.com/documentation/systemconfiguration/1614126-cncopycurrentnetworkinfo)
 class WifiProbe extends PeriodicDatumProbe {
   Future<Datum> getDatum() async {
     String ssid = await Connectivity().getWifiName();
@@ -39,60 +45,24 @@ class BluetoothProbe extends PeriodicDatumProbe {
   /// Default timeout for bluetooth scan - 2 secs
   static const DEFAULT_TIMEOUT = 2 * 1000;
 
-  void onStart() {
-    // checking if bluetooth is available and turned on before starting the probe.
-    FlutterBlue.instance.isAvailable.then((available) {
-      if (available)
-        FlutterBlue.instance.isOn.then((on) {
-          if (on)
-            super.onStart();
-          else
-            this.stop();
-        });
-      else
-        this.stop();
-    });
+  // checking if bluetooth is available before starting the probe.
+  Future<void> onInitialize(Measure measure) async {
+    super.onInitialize(measure);
+    if (!await FlutterBlue.instance.isAvailable)
+      throw SensingException("Error initializing BluetoothProbe -- Bluetooth is not available.");
   }
 
   Future<Datum> getDatum() async {
-    List<ScanResult> results = await FlutterBlue.instance
-        .startScan(scanMode: ScanMode.lowLatency, timeout: duration ?? Duration(milliseconds: DEFAULT_TIMEOUT));
-    await FlutterBlue.instance.stopScan();
+    Datum datum;
+    try {
+      List<ScanResult> results = await FlutterBlue.instance
+          .startScan(scanMode: ScanMode.lowLatency, timeout: duration ?? Duration(milliseconds: DEFAULT_TIMEOUT));
+      datum = BluetoothDatum.fromScanResult(results);
+    } catch (error) {
+      await FlutterBlue.instance.stopScan();
+      rethrow;
+    }
 
-    return BluetoothDatum.fromScanResult(results);
+    return datum;
   }
 }
-
-//// This probe requests access to location PERMISSIONS (on Android). Don't ask why.....
-//// TODO - implement request for getting permission.
-//
-///// The [BluetoothProbe] scans for nearby and visible Bluetooth devices and collect
-///// a [BluetoothDatum] for each. Uses a [PeriodicMeasure] for configuration the
-///// [frequency] and [duration] of the scan.
-//class BluetoothProbe extends PeriodicStreamProbe {
-//  /// Default timeout for bluetooth scan - 2 secs
-//  static const DEFAULT_TIMEOUT = 2 * 1000;
-//
-//  void onStart() {
-//    // checking if bluetooth is available and turned on before starting the probe.
-//    FlutterBlue.instance.isAvailable.then((available) {
-//      if (available)
-//        FlutterBlue.instance.isOn.then((on) {
-//          if (on)
-//            super.onStart();
-//          else
-//            this.stop();
-//        });
-//      else
-//        this.stop();
-//    });
-//  }
-//
-//  Stream<Datum> get stream => FlutterBlue.instance
-//      .scan(scanMode: ScanMode.lowLatency, timeout: duration ?? Duration(milliseconds: DEFAULT_TIMEOUT))
-//      .map((result) => BluetoothDatum.fromScanResult(result));
-//
-//  // important to overwrite onDone() as a no-op, so that the super class (StreamProbe) don't close the overall stream.
-//  @override
-//  void onDone() {}
-//}

@@ -1,3 +1,7 @@
+## 0.6.1
+* Thorough testing on iOS.
+* Better handling of probes not available on iOS via the `initialize` method.
+
 ## 0.6.0 - `Trigger` Model & Data Manager events
 
 * Extension of `Study` domain model to include support for

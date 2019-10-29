@@ -34,17 +34,17 @@ class NoiseProbe extends BufferingPeriodicStreamProbe {
     _noiseMeter = NoiseMeter();
   }
 
-  void onInitialize(Measure measure) {
+  Future<void> onInitialize(Measure measure) async {
     super.onInitialize(measure);
     _init();
   }
 
-  void onRestart() {
+  Future<void> onRestart() async {
     super.onRestart();
     _init();
   }
 
-  void onStop() {
+  Future<void> onStop() async {
     super.onStop();
     _noiseMeter = null;
   }
@@ -53,13 +53,9 @@ class NoiseProbe extends BufferingPeriodicStreamProbe {
     _endRecordingTime = DateTime.now();
   }
 
-  void onSamplingStart() {
-    // Do nothing
-  }
+  void onSamplingStart() {} // Do nothing
 
-  void onSamplingData(dynamic noiseReading) {
-    _noiseReadings.add(noiseReading.db);
-  }
+  void onSamplingData(dynamic noiseReading) => _noiseReadings.add(noiseReading.db);
 
   Future<Datum> getDatum() async {
     if (_noiseReadings.length > 0) {

@@ -12,10 +12,14 @@ part of sensors;
 class LightProbe extends BufferingPeriodicStreamProbe {
   List<num> luxValues = new List();
 
-  //LightProbe(PeriodicMeasure measure) : super(measure, lightSensorStream);
-  //LightProbe() : super(lightSensorStream);
+  Stream<dynamic> _bufferingStream;
+  Stream<dynamic> get bufferingStream => _bufferingStream;
 
-  Stream<dynamic> get bufferingStream => Light().lightSensorStream;
+  Future<void> onInitialize(Measure measure) async {
+    super.onInitialize(measure);
+    // check if Light is available (only available on Android)
+    _bufferingStream = Light().lightSensorStream;
+  }
 
   Future<Datum> getDatum() async {
     if (luxValues.length > 0) {

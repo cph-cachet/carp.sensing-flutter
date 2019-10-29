@@ -1,3 +1,9 @@
+/*
+ * Copyright 2019 Copenhagen Center for Health Technology (CACHET) at the
+ * Technical University of Denmark (DTU).
+ * Use of this source code is governed by a MIT-style license that can be
+ * found in the LICENSE file.
+ */
 part of movisens;
 
 /// An abstract Datum for all Movisens data points.
@@ -117,6 +123,7 @@ class MovisensTapMarkerDatum extends MovisensDatum {
   Map<String, dynamic> toJson() => _$MovisensTapMarkerDatumToJson(this);
 }
 
+/// The battery level of the Movisens device.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MovisensBatteryLevelDatum extends MovisensDatum {
   String batteryLevel;
@@ -140,6 +147,7 @@ class MovisensBatteryLevelDatum extends MovisensDatum {
   Map<String, dynamic> toJson() => _$MovisensBatteryLevelDatumToJson(this);
 }
 
+/// The body position of the person wearing the device.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MovisensBodyPositionDatum extends MovisensDatum {
   String bodyPosition;

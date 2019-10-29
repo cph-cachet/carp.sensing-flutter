@@ -15,13 +15,11 @@ Location _locationService = Location();
 /// as specified in a [LocationMeasure].
 ///
 /// Note that in order for location tracking to work with this probe, the
-/// phone must be online on the internet, since Google APIs are used.
+/// phone must be online on the internet, since online Google APIs are used.
 class LocationProbe extends PeriodicDatumProbe {
-  void onInitialize(Measure measure) async {
+  Future<void> onInitialize(Measure measure) async {
     assert(measure is LocationMeasure);
     super.onInitialize(measure);
-    await _getPermission();
-    await _setSettings();
   }
 
   Future<bool> _getPermission() async {
@@ -48,7 +46,7 @@ class LocationProbe extends PeriodicDatumProbe {
 /// Note that in order for location tracking to work with this probe, the
 /// phone must be online on the internet, since Google APIs are used.
 class DeprecatedLocationProbe extends StreamProbe {
-  void onInitialize(Measure measure) async {
+  Future<void> onInitialize(Measure measure) async {
     super.onInitialize(measure);
     await _getPermission();
     await _setSettings();

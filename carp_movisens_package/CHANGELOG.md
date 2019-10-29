@@ -1,3 +1,6 @@
+## 0.1.7
+* allignment with `carp_mobile_sensing` v. 0.6.1.
+
 ## 0.1.6
 * support for Open mHealth data formats for `HeartRate` and `StepCount`
 * improvement to documentation

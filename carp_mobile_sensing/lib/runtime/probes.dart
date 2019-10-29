@@ -12,20 +12,22 @@ part of runtime;
 //---------------------------------------------------------------------------------------
 
 /// Enumerates the different states of a probe.
-enum ProbeState { created, initialized, resumed, paused, stopped }
+enum ProbeState { created, initialized, resumed, paused, stopped, undefined }
 
 /// A [Probe] is responsible for collecting data.
 ///
 /// The runtime state of a [Probe] is defined in [ProbeState] and has the following
 /// state machine:
 ///
-///         +-----------------------------------------------+
-///         | created -> initialized -> resumed <-> paused  | -> stopped
-///         +-----------------------------------------------+
+///         +-----------------------------------------------+ -> stopped
+///         | created -> initialized -> resumed <-> paused  |
+///         +-----------------------------------------------+ -> undefined
 ///
 /// A probe's [state] can be set using the [initialize], [start], [pause], [resume], and [stop] methods.
-/// The [restart] is only used if the probes [measure] has changed (e.g. disabling the probe).
-/// This is rarely needed.
+/// A [restart] can be used to restart a probe when its [measure] has changed (e.g. disabling the probe).
+/// A probe can be [stopped] at any time.
+/// If an error occurs the state of a probe becomes [undefined]. This is, for example, used when an exception
+/// is caught or when a probe is not available (e.g. on iOS).
 ///
 /// The [state] property reveals the probe's current runtime state.
 /// The [stateEvents] is a stream of state changes which can be listen to as a broadcast stream.
@@ -91,7 +93,7 @@ abstract class Probe {
   /// Initialize the probe before starting it.
   ///
   /// The configuration of the probe is specified in the [measure].
-  void initialize(Measure measure);
+  Future<void> initialize(Measure measure);
 
   /// Start the probe();
   void start();
@@ -143,7 +145,7 @@ abstract class AbstractProbe with MeasureListener implements Probe {
   }
 
   // ProbeState handlers
-  void initialize(Measure measure) async {
+  Future<void> initialize(Measure measure) async {
     assert(measure != null, 'Probe cannot be initialized with a null measure.');
     _measure = measure;
     measure.addMeasureListener(this);
@@ -159,28 +161,28 @@ abstract class AbstractProbe with MeasureListener implements Probe {
     _stateEventController.close();
   }
 
-  /// Callback for initialization of probe
-  void onInitialize(Measure measure);
+  void error() => _stateMachine.error();
+
+  /// Callback for initialization of probe.
+  Future<void> onInitialize(Measure measure);
 
   /// Callback for starting probe
-  void onStart();
+  Future<void> onStart();
 
   /// Callback for resuming probe
-  void onResume();
+  Future<void> onResume();
 
   /// Callback for pausing probe
-  void onPause();
+  Future<void> onPause();
 
   /// Callback for restarting probe
-  void onRestart();
+  Future<void> onRestart();
 
   /// Callback for stopping probe
-  void onStop();
+  Future<void> onStop();
 
   /// Callback when this probe's [measure] has changed.
-  void hasChanged(Measure measure) {
-    restart();
-  }
+  void hasChanged(Measure measure) => restart();
 }
 
 //---------------------------------------------------------------------------------------
@@ -201,6 +203,7 @@ abstract class _ProbeStateMachine {
   void resume();
   void restart();
   void stop();
+  void error();
 }
 
 abstract class _AbstractProbeState implements _ProbeStateMachine {
@@ -208,8 +211,12 @@ abstract class _AbstractProbeState implements _ProbeStateMachine {
   AbstractProbe probe;
   _AbstractProbeState(this.probe, this.state) : assert(probe != null);
 
-  // pr. default, a probe cannot be initialized while running -- only when created
-  void initialize(Measure measure) {}
+  // Default behavior is no-op
+  Future<void> initialize(Measure measure) async {}
+  void start() {}
+  void restart() {}
+  void pause() {}
+  void resume() {}
 
   // Default stop behavior. A probe can be stopped in all states.
   void stop() {
@@ -217,21 +224,26 @@ abstract class _AbstractProbeState implements _ProbeStateMachine {
     probe._setState(_StoppedState(probe));
     probe.onStop();
   }
+
+  // Default error behavior. A probe can become undefined in all states.
+  void error() {
+    print('Error in $probe');
+    probe._setState(_UndefinedState(probe));
+  }
 }
 
 class _CreatedState extends _AbstractProbeState implements _ProbeStateMachine {
   _CreatedState(Probe probe) : super(probe, ProbeState.created);
 
-  void initialize(Measure measure) {
+  Future<void> initialize(Measure measure) async {
     print('Initializing $probe, measure: $measure');
-    probe.onInitialize(measure);
-    probe._setState(_InitializedState(probe));
+    try {
+      await probe.onInitialize(measure);
+      probe._setState(_InitializedState(probe));
+    } catch (error) {
+      probe._setState(_UndefinedState(probe));
+    }
   }
-
-  void start() {} // cannot be started
-  void restart() {} // cannot be restarted
-  void pause() {} // cannot be paused
-  void resume() {} // cannot be resumed
 }
 
 class _InitializedState extends _AbstractProbeState implements _ProbeStateMachine {
@@ -248,16 +260,10 @@ class _InitializedState extends _AbstractProbeState implements _ProbeStateMachin
       probe._setState(_PausedState(probe));
     }
   }
-
-  void restart() {} // cannot be restarted before started
-  void pause() {} // cannot be paused before started
-  void resume() {} // cannot be resumed before started
 }
 
 class _ResumedState extends _AbstractProbeState implements _ProbeStateMachine {
   _ResumedState(Probe probe) : super(probe, ProbeState.resumed);
-
-  void start() {} // cannot be started (again)
 
   void restart() {
     print('Restarting $probe');
@@ -272,14 +278,10 @@ class _ResumedState extends _AbstractProbeState implements _ProbeStateMachine {
     probe.onPause();
     probe._setState(_PausedState(probe));
   }
-
-  void resume() {} // resuming a resumed probe does nothing
 }
 
 class _PausedState extends _AbstractProbeState implements _ProbeStateMachine {
   _PausedState(Probe probe) : super(probe, ProbeState.paused);
-
-  void start() {} // cannot be started (again)
 
   void restart() {
     print('Restarting $probe');
@@ -287,8 +289,6 @@ class _PausedState extends _AbstractProbeState implements _ProbeStateMachine {
     if (probe.enabled) // check if probe is enabled
       probe.resume();
   }
-
-  void pause() {} // pausing a paused probe does nothing
 
   void resume() {
     if (probe.enabled) {
@@ -301,12 +301,10 @@ class _PausedState extends _AbstractProbeState implements _ProbeStateMachine {
 
 class _StoppedState extends _AbstractProbeState implements _ProbeStateMachine {
   _StoppedState(Probe probe) : super(probe, ProbeState.stopped);
+}
 
-  // in a stopped state, a probe does not respond to any state changes.
-  void start() {}
-  void restart() {}
-  void pause() {}
-  void resume() {}
+class _UndefinedState extends _AbstractProbeState implements _ProbeStateMachine {
+  _UndefinedState(Probe probe) : super(probe, ProbeState.undefined);
 }
 
 //---------------------------------------------------------------------------------------
@@ -320,15 +318,15 @@ abstract class DatumProbe extends AbstractProbe {
   StreamController<Datum> controller = StreamController<Datum>.broadcast();
   Stream<Datum> get events => controller.stream;
 
-  void onInitialize(Measure measure) {}
+  Future<void> onInitialize(Measure measure) async {}
 
-  void onStart() {
+  Future<void> onStart() async {
     this.resume();
   }
 
-  void onRestart() {}
+  Future<void> onRestart() async {}
 
-  void onResume() {
+  Future<void> onResume() async {
     getDatum().then((Datum data) {
       if (data != null) controller.add(data);
     }).catchError((error, stacktrace) => controller.addError(error, stacktrace));
@@ -336,8 +334,8 @@ abstract class DatumProbe extends AbstractProbe {
     this.pause();
   }
 
-  void onPause() {}
-  void onStop() {}
+  Future<void> onPause() async {}
+  Future<void> onStop() async {}
 
   /// Subclasses should implement this method to collect a [Datum].
   Future<Datum> getDatum();
@@ -357,7 +355,7 @@ abstract class PeriodicDatumProbe extends DatumProbe {
 
   Stream<Datum> get events => controller.stream;
 
-  void onInitialize(Measure measure) {
+  Future<void> onInitialize(Measure measure) async {
     assert(measure is PeriodicMeasure);
     frequency = Duration(milliseconds: (measure as PeriodicMeasure).frequency);
     duration = ((measure as PeriodicMeasure).duration != null)
@@ -365,14 +363,14 @@ abstract class PeriodicDatumProbe extends DatumProbe {
         : null;
   }
 
-  void onRestart() {
+  Future<void> onRestart() async {
     frequency = Duration(milliseconds: (measure as PeriodicMeasure).frequency);
     duration = ((measure as PeriodicMeasure).duration != null)
         ? Duration(milliseconds: (measure as PeriodicMeasure).duration)
         : null;
   }
 
-  void onResume() {
+  Future<void> onResume() async {
     super.onResume();
     // create a recurrent timer that resumes sampling every [frequency].
     timer = Timer.periodic(frequency, (Timer t) async {
@@ -382,12 +380,12 @@ abstract class PeriodicDatumProbe extends DatumProbe {
     });
   }
 
-  void onPause() {
+  Future<void> onPause() async {
     super.onPause();
     timer?.cancel();
   }
 
-  void onStop() {
+  Future<void> onStop() async {
     timer?.cancel();
     controller.close();
   }
@@ -411,18 +409,18 @@ abstract class StreamProbe extends AbstractProbe {
   Stream<Datum> get stream;
 
   // Do nothing here. Can be overwritten in subclasses.
-  void onInitialize(Measure measure) {}
+  Future<void> onInitialize(Measure measure) async {}
 
-  void onStart() {
+  Future<void> onStart() async {
     //subscription = stream?.listen(onData, onError: onError, onDone: onDone);
   }
 
-  void onRestart() {
+  Future<void> onRestart() async {
     // if we don't have a subscription yet, try to get one
     if (subscription == null && stream != null) subscription = stream.listen(onData, onError: onError, onDone: onDone);
   }
 
-  void onPause() {
+  Future<void> onPause() async {
     // if the stream has disappeared, remove the subscription also
     if (stream == null) subscription = null;
     if (subscription != null) {
@@ -439,14 +437,14 @@ abstract class StreamProbe extends AbstractProbe {
     }
   }
 
-  void onResume() {
+  Future<void> onResume() async {
     // if we don't have a subscription yet, or it has been canceled, try to get one
     if (subscription == null && stream != null)
       subscription = stream.listen(onData, onError: onError, onDone: onDone);
     else if (stream != null && !stream.isBroadcast) subscription.resume();
   }
 
-  void onStop() {
+  Future<void> onStop() async {
     subscription?.cancel();
     controller?.close();
     subscription = null;
@@ -471,7 +469,7 @@ abstract class PeriodicStreamProbe extends StreamProbe {
   Timer timer;
   Duration frequency, duration;
 
-  void onInitialize(Measure measure) {
+  Future<void> onInitialize(Measure measure) async {
     assert(measure is PeriodicMeasure);
     frequency = Duration(milliseconds: (measure as PeriodicMeasure).frequency);
     duration = ((measure as PeriodicMeasure).duration != null)
@@ -479,7 +477,7 @@ abstract class PeriodicStreamProbe extends StreamProbe {
         : null;
   }
 
-  void onRestart() {
+  Future<void> onRestart() async {
     frequency = Duration(milliseconds: (measure as PeriodicMeasure).frequency);
     duration = ((measure as PeriodicMeasure).duration != null)
         ? Duration(milliseconds: (measure as PeriodicMeasure).duration)
@@ -487,7 +485,7 @@ abstract class PeriodicStreamProbe extends StreamProbe {
     super.onRestart();
   }
 
-  void onResume() {
+  Future<void> onResume() async {
     print('${this.runtimeType} - onResume() - subscription: $subscription');
     // if we don't have a subscription yet, or it has been canceled, try to get one
     if (subscription == null) subscription = stream?.listen(onData, onError: onError, onDone: onDone);
@@ -505,12 +503,12 @@ abstract class PeriodicStreamProbe extends StreamProbe {
     }
   }
 
-  void onPause() {
+  Future<void> onPause() async {
     timer?.cancel();
     subscription?.pause();
   }
 
-  void onStop() async {
+  Future<void> onStop() async {
     timer?.cancel();
     super.onStop();
   }
@@ -531,7 +529,7 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
   Timer timer;
   Duration frequency, duration;
 
-  void onInitialize(Measure measure) {
+  Future<void> onInitialize(Measure measure) async {
     assert(measure is PeriodicMeasure);
     frequency = Duration(milliseconds: (measure as PeriodicMeasure).frequency);
     duration = ((measure as PeriodicMeasure).duration != null)
@@ -539,14 +537,14 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
         : null;
   }
 
-  void onRestart() {
+  Future<void> onRestart() async {
     frequency = Duration(milliseconds: (measure as PeriodicMeasure).frequency);
     duration = ((measure as PeriodicMeasure).duration != null)
         ? Duration(milliseconds: (measure as PeriodicMeasure).duration)
         : null;
   }
 
-  void onResume() {
+  Future<void> onResume() async {
     // create a recurrent timer that every [frequency] resumes the buffering.
     timer = Timer.periodic(frequency, (Timer t) {
       onSamplingStart();
@@ -561,7 +559,7 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
     });
   }
 
-  void onPause() {
+  Future<void> onPause() async {
     if (timer != null) timer.cancel();
     // check if there are some buffered data that needs to be collected before pausing
     getDatum().then((datum) {
@@ -569,7 +567,7 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
     }).catchError((error, stacktrace) => controller.addError(error, stacktrace));
   }
 
-  void onStop() {
+  Future<void> onStop() {
     if (timer != null) timer.cancel();
     controller.close();
   }
@@ -608,12 +606,12 @@ abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
   // we don't use the stream in the super class so we give it an empty non-null stream
   Stream<Datum> get stream => Stream<Datum>.empty();
 
-  void onStart() async {
+  Future<void> onStart() async {
     assert(bufferingStream != null, 'Buffering event stream must not be null');
     subscription = bufferingStream.listen(onSamplingData, onError: onError, onDone: onDone);
   }
 
-  void onResume() {
+  Future<void> onResume() async {
     subscription?.resume();
     timer = Timer.periodic(frequency, (Timer t) {
       onSamplingStart();
@@ -628,7 +626,7 @@ abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
     });
   }
 
-  void onPause() {
+  Future<void> onPause() async {
     timer?.cancel();
     subscription?.pause();
     // check if there are some buffered data that needs to be collected before pausing
@@ -672,7 +670,7 @@ abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
 ///
 /// See [PedometerProbe] for an example.
 abstract class BufferingStreamProbe extends BufferingPeriodicStreamProbe {
-  void onResume() {
+  Future<void> onResume() async {
     subscription.resume();
     timer = Timer.periodic(frequency, (Timer t) {
       onSamplingStart();

@@ -56,7 +56,11 @@ class BatteryProbe extends StreamProbe {
 ///  - SCREEN UNLOCK
 /// which are stored as a [ScreenDatum].
 class ScreenProbe extends StreamProbe {
-  ScreenProbe() : super();
+  Future<void> onInitialize(Measure measure) async {
+    super.onInitialize(measure);
+    // check if Screen is available (only available on Android)
+    Screen().screenStateStream.first;
+  }
 
   Stream<Datum> get stream => Screen().screenStateStream.map((event) => ScreenDatum.fromScreenStateEvent(event));
 }
@@ -64,6 +68,12 @@ class ScreenProbe extends StreamProbe {
 /// A probe that collects free virtual memory on a regular basis
 /// as specified in [PeriodicMeasure.frequency].
 class MemoryProbe extends PeriodicDatumProbe {
+  Future<void> onInitialize(Measure measure) async {
+    super.onInitialize(measure);
+    // check if SysInfo is available (seems not to be available on iOS)
+    SysInfo.getFreePhysicalMemory();
+  }
+
   Future<Datum> getDatum() async {
     return FreeMemoryDatum()
       ..freePhysicalMemory = SysInfo.getFreePhysicalMemory()

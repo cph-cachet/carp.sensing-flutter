@@ -17,22 +17,27 @@ abstract class Executor extends AbstractProbe {
 
   Executor() : super();
 
-  // do nothing on init
-  void onInitialize(Measure measure) {}
+  Future<void> onInitialize(Measure measure) async {
+    executors.forEach((executor) => executor.initialize(measure));
+  }
 
-  void onPause() async {
+  Future<void> onStart() async {
+    executors.forEach((executor) => executor.start());
+  }
+
+  Future<void> onPause() async {
     executors.forEach((executor) => executor.pause());
   }
 
-  void onResume() async {
+  Future<void> onResume() async {
     executors.forEach((executor) => executor.resume());
   }
 
-  void onRestart({Measure measure}) async {
+  Future<void> onRestart({Measure measure}) async {
     executors.forEach((executor) => executor.restart());
   }
 
-  void onStop() async {
+  Future<void> onStop() async {
     executors.forEach((executor) => executor.stop());
     executors = new List<Probe>();
   }
@@ -71,7 +76,7 @@ class StudyExecutor extends Executor {
     return _probes;
   }
 
-  Future onStart() async {
+  Future<void> onStart() async {
     for (Trigger trigger in study.triggers) {
       TriggerExecutor executor;
 
@@ -107,23 +112,10 @@ class StudyExecutor extends Executor {
       _group.add(executor.events);
 
       executors.add(executor);
-      executor.initialize(Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR)));
+      await executor.initialize(Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR)));
       executor.start();
     }
   }
-
-//  // default behavior is to start all tasks in a study, with no regards to any triggers
-//  // mostly for backward compatibility before v. 0.6.0
-//  Future _startAllTasks() async {
-//    for (Task task in study.tasks) {
-//      TaskExecutor executor = TaskExecutor(task);
-//      _group.add(executor.events);
-//
-//      executors.add(executor);
-//      executor.initialize(Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR)));
-//      executor.start();
-//    }
-//  }
 }
 
 // ---------------------------------------------------------------------------------------------------------
@@ -146,18 +138,17 @@ abstract class TriggerExecutor extends Executor {
   }
 
   /// Create [TaskExecutor]s for all tasks associated with this trigger.
-  void _createAllTaskExecutors() {
+  Future<void> _createAllTaskExecutors() async {
     for (Task task in trigger.tasks) {
       TaskExecutor executor = TaskExecutor(task);
       _group.add(executor.events);
-
       executors.add(executor);
-      executor.initialize(Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR)));
+      //executor.initialize(Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR)));
     }
   }
 
   /// Start all tasks associated with this trigger.
-  Future _startAllTasks() async => executors.forEach((executor) => executor.start());
+  void _startAllTasks() => executors.forEach((executor) => executor.start());
 
   /// Returns a list of the running probes in this trigger executor.
   /// This is a combination of the running probes in all task executors.
@@ -179,9 +170,7 @@ class ImmediateTriggerExecutor extends TriggerExecutor {
   ImmediateTriggerExecutor(Trigger trigger) : super(trigger);
 
   // create and start all tasks associated with this trigger
-  Future onStart() async {
-    _startAllTasks();
-  }
+  Future<void> onStart() async => _startAllTasks();
 }
 
 /// Executes a [ManualTrigger].
@@ -190,9 +179,9 @@ class ManualTriggerExecutor extends TriggerExecutor {
     trigger.executor = this;
   }
 
-  Future onStart() async {
+  Future<void> onStart() async {
     // first start all tasks, but pause them
-    await _startAllTasks();
+    _startAllTasks();
     this.pause();
   }
 }
@@ -206,7 +195,7 @@ class DelayedTriggerExecutor extends TriggerExecutor {
     delay = Duration(milliseconds: trigger.delay);
   }
 
-  Future onStart() async {
+  Future<void> onStart() async {
     Timer(delay, () {
       _startAllTasks();
     });
@@ -227,9 +216,9 @@ class PeriodicTriggerExecutor extends TriggerExecutor {
     duration = Duration(milliseconds: trigger.duration);
   }
 
-  Future onStart() async {
+  Future<void> onStart() async {
     // first start all tasks, but pause them
-    await _startAllTasks();
+    _startAllTasks();
     this.pause();
     // create a recurrent timer that resume sampling.
     Timer.periodic(period, (Timer t) {
@@ -253,7 +242,7 @@ class ScheduledTriggerExecutor extends TriggerExecutor {
     duration = (trigger.duration != null) ? Duration(milliseconds: trigger.duration) : null;
   }
 
-  Future onStart() async {
+  Future<void> onStart() async {
     Timer(delay, () {
       _startAllTasks();
       if (duration != null) {
@@ -274,7 +263,7 @@ class RecurrentScheduledTriggerExecutor extends PeriodicTriggerExecutor {
     delay = trigger.firstOccurrence.difference(DateTime.now());
   }
 
-  Future onStart() async {
+  Future<void> onStart() async {
     DateTime _end = (trigger as RecurrentScheduledTrigger).end;
     if (_end == null || _end.isAfter(DateTime.now())) Timer(delay, () => super.onStart());
   }
@@ -284,9 +273,10 @@ class RecurrentScheduledTriggerExecutor extends PeriodicTriggerExecutor {
 /// [SamplingEventTrigger.measureType] and [SamplingEventTrigger.resumeCondition].
 class SamplingEventTriggerExecutor extends TriggerExecutor {
   SamplingEventTriggerExecutor(SamplingEventTrigger trigger) : super(trigger);
-  Future onStart() async {
+
+  Future<void> onStart() async {
     // first start all tasks, but pause them
-    await _startAllTasks();
+    _startAllTasks();
     this.pause();
 
     SamplingEventTrigger eventTrigger = trigger as SamplingEventTrigger;
@@ -307,9 +297,10 @@ class SamplingEventTriggerExecutor extends TriggerExecutor {
 /// and [ConditionalSamplingEventTrigger.pauseCondition].
 class ConditionalSamplingEventTriggerExecutor extends TriggerExecutor {
   ConditionalSamplingEventTriggerExecutor(ConditionalSamplingEventTrigger trigger) : super(trigger);
-  Future onStart() async {
+
+  Future<void> onStart() async {
     // first start all tasks, but pause them
-    await _startAllTasks();
+    _startAllTasks();
     this.pause();
 
     ConditionalSamplingEventTrigger eventTrigger = trigger as ConditionalSamplingEventTrigger;
@@ -343,22 +334,39 @@ class TaskExecutor extends Executor {
     _task = task;
   }
 
-  Future onStart() async {
+  Future<void> onInitialize(Measure taskMeasure) async {
     for (Measure measure in task.measures) {
-      //Probe probe = ProbeRegistry.lookup(measure.type.name);
+      // Probe probe = ProbeRegistry.lookup(measure.type.name);
       // create a new probe for each measure - this ensures that we can have
       // multiple measures of the same type, each using its own probe instance
       Probe probe = ProbeRegistry.create(measure.type.name);
       if (probe != null) {
         executors.add(probe);
         _group.add(probe.events);
-        // TODO - init should return true/false and only start a probe if initialized
         probe.initialize(measure);
-
-        probe.start();
       } else {
         print('A probe for measure type ${measure.type.name} could not be created.');
       }
     }
   }
+
+//  Future<void> onStart() async {
+//    for (Measure measure in task.measures) {
+//      // Probe probe = ProbeRegistry.lookup(measure.type.name);
+//      // create a new probe for each measure - this ensures that we can have
+//      // multiple measures of the same type, each using its own probe instance
+//      Probe probe = ProbeRegistry.create(measure.type.name);
+//      if (probe != null) {
+//        executors.add(probe);
+//        _group.add(probe.events);
+//        // TODO - init should return true/false and only start a probe if initialized
+//        print('trying to initialize probe - $probe');
+//        await probe.initialize(measure);
+//
+//        probe.start();
+//      } else {
+//        print('A probe for measure type ${measure.type.name} could not be created.');
+//      }
+//    }
+//  }
 }

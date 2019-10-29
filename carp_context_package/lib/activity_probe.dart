@@ -10,6 +10,12 @@ part of context;
 /// Collects activity information from the underlying OS's activity recognition API.
 /// It generates an [ActivityDatum] every time an activity is detected.
 class ActivityProbe extends StreamProbe {
+  Future<void> onInitialize(Measure measure) async {
+    super.onInitialize(measure);
+    // check if activity recognition API is available
+    ActivityRecognitionAlt.activityUpdates();
+  }
+
   Stream<Datum> get stream =>
       ActivityRecognitionAlt.activityUpdates().map((activity) => ActivityDatum.fromActivity(activity));
 }

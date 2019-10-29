@@ -6,6 +6,8 @@
  */
 part of domain;
 
+// TODO - implement duration/time/delays/etc. using the dart [Duration] class. Make a wrapper to support JSON de/serailization.
+
 /// A [Trigger] is a specification of any condition which starts and stops [Task]s at
 /// certain points in time when the condition applies. The condition can either
 /// be time-bound, based on data streams, initiated by a user of the platform,
@@ -119,7 +121,7 @@ class ScheduledTrigger extends Trigger {
   /// If null, the sampling is never stopped (i.e., runs forever).
   int duration;
 
-  ScheduledTrigger({this.schedule, this.duration}) : super();
+  ScheduledTrigger({@required this.schedule, this.duration}) : super();
 
   static Function get fromJsonFunction => _$ScheduledTriggerFromJson;
   factory ScheduledTrigger.fromJson(Map<String, dynamic> json) =>
@@ -253,8 +255,8 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
 //  int monthOfYear;
 
   RecurrentScheduledTrigger(
-      {this.type,
-      this.time,
+      {@required this.type,
+      @required this.time,
       this.end,
       this.separationCount = 0,
       this.maxNumberOfSampling,

@@ -8,6 +8,10 @@
 part of device;
 
 /// Holds basic information about the mobile device from where the data is collected.
+///
+/// More information on the data from Android and iOS are available at:
+///   * [AndroidDeviceInfo](https://pub.dev/documentation/device_info/latest/device_info/AndroidDeviceInfo-class.html)
+///   * [IosDeviceInfo](https://pub.dev/documentation/device_info/latest/device_info/IosDeviceInfo-class.html)
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class DeviceDatum extends CARPDatum {
   static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DeviceSamplingPackage.DEVICE);
@@ -37,6 +41,12 @@ class DeviceDatum extends CARPDatum {
   /// Device OS as specified by the OS.
   String operatingSystem;
 
+  /// The SDK version.
+  String sdk;
+
+  /// The OS release.
+  String release;
+
   DeviceDatum(this.platform, this.deviceId,
       {this.deviceName, this.deviceModel, this.deviceManufacturer, this.operatingSystem, this.hardware})
       : super();
@@ -52,7 +62,9 @@ class DeviceDatum extends CARPDatum {
           ', name: $deviceName'
           ', manufacturer: $deviceManufacturer'
           ', model: $deviceModel'
-          ', OS: $operatingSystem';
+          ', OS: $operatingSystem'
+          ', SDK: $sdk'
+          ', release: $release';
 }
 
 /// A [Datum] that holds battery level collected from the phone.

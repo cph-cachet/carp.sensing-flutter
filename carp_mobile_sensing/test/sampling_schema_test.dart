@@ -16,9 +16,11 @@ void main() {
     study.dataEndPoint = DataEndPoint(DataEndPointTypes.PRINT);
 
     study.addTriggerTask(
-        ImmediateTrigger(),
-        Task()
-          ..measures = SamplingSchema.common().getMeasureList([
+      ImmediateTrigger(),
+      Task()
+        ..measures = SamplingSchema.common().getMeasureList(
+          namespace: NameSpace.CARP,
+          types: [
             AppsSamplingPackage.APPS,
             AppsSamplingPackage.APP_USAGE,
             DeviceSamplingPackage.SCREEN,
@@ -28,7 +30,9 @@ void main() {
             ConnectivitySamplingPackage.BLUETOOTH,
             ConnectivitySamplingPackage.WIFI,
             ConnectivitySamplingPackage.CONNECTIVITY,
-          ], namespace: NameSpace.CARP));
+          ],
+        ),
+    );
 
 //    study.dataEndPoint = FileDataEndPoint()
 //      ..bufferSize = 50 * 1000

@@ -22,6 +22,8 @@ class Device {
   static String deviceManufacturer;
   static String deviceModel;
   static String operatingSystem;
+  static String sdk;
+  static String release;
 
   static Map<String, dynamic> deviceData = <String, dynamic>{};
 
@@ -41,68 +43,72 @@ class Device {
     deviceData = _deviceData;
   }
 
-  static Map<String, dynamic> _readAndroidBuildData(AndroidDeviceInfo build) {
+  static Map<String, dynamic> _readAndroidBuildData(AndroidDeviceInfo info) {
     platform = 'Android';
-    hardware = build.hardware;
-    deviceID = build.id;
-    deviceName = build.device;
-    deviceManufacturer = build.manufacturer;
-    deviceModel = build.model;
-    operatingSystem = build.version.baseOS;
+    hardware = info.hardware;
+    deviceID = info.id;
+    deviceName = info.device;
+    deviceManufacturer = info.manufacturer;
+    deviceModel = info.model;
+    operatingSystem = info.version.codename;
+    sdk = info.version.sdkInt.toString();
+    release = info.version.release;
 
     return <String, dynamic>{
       'platform': 'Android',
-      'version.securityPatch': build.version.securityPatch,
-      'version.sdkInt': build.version.sdkInt,
-      'version.release': build.version.release,
-      'version.previewSdkInt': build.version.previewSdkInt,
-      'version.incremental': build.version.incremental,
-      'version.codename': build.version.codename,
-      'version.baseOS': build.version.baseOS,
-      'board': build.board,
-      'bootloader': build.bootloader,
-      'brand': build.brand,
-      'device': build.device,
-      'display': build.display,
-      'fingerprint': build.fingerprint,
-      'hardware': build.hardware,
-      'host': build.host,
-      'id': build.id,
-      'manufacturer': build.manufacturer,
-      'model': build.model,
-      'product': build.product,
-      'supported32BitAbis': build.supported32BitAbis,
-      'supported64BitAbis': build.supported64BitAbis,
-      'supportedAbis': build.supportedAbis,
-      'tags': build.tags,
-      'type': build.type,
-      'isPhysicalDevice': build.isPhysicalDevice,
+      'version.securityPatch': info.version.securityPatch,
+      'version.sdkInt': info.version.sdkInt,
+      'version.release': info.version.release,
+      'version.previewSdkInt': info.version.previewSdkInt,
+      'version.incremental': info.version.incremental,
+      'version.codename': info.version.codename,
+      'version.baseOS': info.version.baseOS,
+      'board': info.board,
+      'bootloader': info.bootloader,
+      'brand': info.brand,
+      'device': info.device,
+      'display': info.display,
+      'fingerprint': info.fingerprint,
+      'hardware': info.hardware,
+      'host': info.host,
+      'id': info.id,
+      'manufacturer': info.manufacturer,
+      'model': info.model,
+      'product': info.product,
+      'supported32BitAbis': info.supported32BitAbis,
+      'supported64BitAbis': info.supported64BitAbis,
+      'supportedAbis': info.supportedAbis,
+      'tags': info.tags,
+      'type': info.type,
+      'isPhysicalDevice': info.isPhysicalDevice,
     };
   }
 
-  static Map<String, dynamic> _readIosDeviceInfo(IosDeviceInfo data) {
+  static Map<String, dynamic> _readIosDeviceInfo(IosDeviceInfo info) {
     platform = 'IOS';
-    hardware = data.utsname.machine;
-    deviceID = data.identifierForVendor;
-    deviceName = data.name;
+    hardware = info.utsname.machine;
+    deviceID = info.identifierForVendor;
+    deviceName = info.name;
     deviceManufacturer = 'Apple';
-    deviceModel = data.model;
-    operatingSystem = data.systemName;
+    deviceModel = info.model;
+    operatingSystem = info.systemName;
+    sdk = info.utsname.release;
+    release = info.utsname.version;
 
     return <String, dynamic>{
       'platform': 'IOS',
-      'name': data.name,
-      'systemName': data.systemName,
-      'systemVersion': data.systemVersion,
-      'model': data.model,
-      'localizedModel': data.localizedModel,
-      'identifierForVendor': data.identifierForVendor,
-      'isPhysicalDevice': data.isPhysicalDevice,
-      'utsname.sysname:': data.utsname.sysname,
-      'utsname.nodename:': data.utsname.nodename,
-      'utsname.release:': data.utsname.release,
-      'utsname.version:': data.utsname.version,
-      'utsname.machine:': data.utsname.machine,
+      'name': info.name,
+      'systemName': info.systemName,
+      'systemVersion': info.systemVersion,
+      'model': info.model,
+      'localizedModel': info.localizedModel,
+      'identifierForVendor': info.identifierForVendor,
+      'isPhysicalDevice': info.isPhysicalDevice,
+      'utsname.sysname:': info.utsname.sysname,
+      'utsname.nodename:': info.utsname.nodename,
+      'utsname.release:': info.utsname.release,
+      'utsname.version:': info.utsname.version,
+      'utsname.machine:': info.utsname.machine,
     };
   }
 }

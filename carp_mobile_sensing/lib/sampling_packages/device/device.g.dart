@@ -19,7 +19,9 @@ DeviceDatum _$DeviceDatumFromJson(Map<String, dynamic> json) {
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
         ? null
-        : DateTime.parse(json['timestamp'] as String);
+        : DateTime.parse(json['timestamp'] as String)
+    ..sdk = json['sdk'] as String
+    ..release = json['release'] as String;
 }
 
 Map<String, dynamic> _$DeviceDatumToJson(DeviceDatum instance) {
@@ -40,6 +42,8 @@ Map<String, dynamic> _$DeviceDatumToJson(DeviceDatum instance) {
   writeNotNull('device_manufacturer', instance.deviceManufacturer);
   writeNotNull('device_model', instance.deviceModel);
   writeNotNull('operating_system', instance.operatingSystem);
+  writeNotNull('sdk', instance.sdk);
+  writeNotNull('release', instance.release);
   return val;
 }
 

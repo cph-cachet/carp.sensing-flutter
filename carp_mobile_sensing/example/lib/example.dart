@@ -97,8 +97,11 @@ void example() async {
 
 /// An example of how to use the [SamplingSchema] model.
 void samplingSchemaExample() async {
-  SamplingSchema.common()
-      .getMeasureList([AppsSamplingPackage.APPS, DeviceSamplingPackage.DEVICE, DeviceSamplingPackage.SCREEN]);
+  SamplingSchema.common().getMeasureList(types: [
+    AppsSamplingPackage.APPS,
+    DeviceSamplingPackage.DEVICE,
+    DeviceSamplingPackage.SCREEN,
+  ]);
 
   // creating a sampling schema focused on connectivity
   SamplingSchema connectivitySchema = SamplingSchema(name: 'Connectivity Sampling Schema', powerAware: true)
@@ -142,7 +145,7 @@ void samplingSchemaExample() async {
   study.addTriggerTask(
       ImmediateTrigger(),
       Task('Sensing Task #1')
-        ..measures = SamplingSchema.common().getMeasureList([
+        ..measures = SamplingSchema.common().getMeasureList(types: [
           ConnectivitySamplingPackage.CONNECTIVITY,
           SensorSamplingPackage.PEDOMETER,
           DeviceSamplingPackage.SCREEN,
@@ -151,7 +154,7 @@ void samplingSchemaExample() async {
   study.addTriggerTask(
       ImmediateTrigger(),
       Task('One Common Sensing Task')
-        ..measures = SamplingSchema.common().getMeasureList([
+        ..measures = SamplingSchema.common().getMeasureList(types: [
           ConnectivitySamplingPackage.BLUETOOTH,
           ConnectivitySamplingPackage.CONNECTIVITY,
           SensorSamplingPackage.ACCELEROMETER,
@@ -166,7 +169,7 @@ void samplingSchemaExample() async {
   study.addTriggerTask(
       ImmediateTrigger(),
       Task('Activity Sensing Task #1')
-        ..measures = activitySchema.getMeasureList([
+        ..measures = activitySchema.getMeasureList(types: [
           SensorSamplingPackage.PEDOMETER,
           ConnectivitySamplingPackage.CONNECTIVITY,
           SensorSamplingPackage.ACCELEROMETER
@@ -175,8 +178,10 @@ void samplingSchemaExample() async {
   study.addTriggerTask(
       ImmediateTrigger(),
       Task('Phone Sensing Task #2')
-        ..measures =
-            activitySchema.getMeasureList([DeviceSamplingPackage.SCREEN, ConnectivitySamplingPackage.BLUETOOTH])
+        ..measures = activitySchema.getMeasureList(types: [
+          DeviceSamplingPackage.SCREEN,
+          ConnectivitySamplingPackage.BLUETOOTH,
+        ])
         ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
             name: "Ambient Light", frequency: 11 * 1000, duration: 700)));
 
@@ -215,8 +220,9 @@ void example_2() {
       ImmediateTrigger(),
       Task()
         ..measures = SamplingSchema.common().getMeasureList(
-            [SensorSamplingPackage.PEDOMETER, DeviceSamplingPackage.SCREEN],
-            namespace: NameSpace.CARP));
+          types: [SensorSamplingPackage.PEDOMETER, DeviceSamplingPackage.SCREEN],
+          namespace: NameSpace.CARP,
+        ));
 
   StudyController controller = StudyController(study,
       samplingSchema: SamplingSchema.common()

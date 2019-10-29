@@ -12,7 +12,7 @@ abstract class _ESenseProbe extends StreamProbe {
   String deviceName;
   int samplingRate = 10;
 
-  void onInitialize(Measure measure) {
+  Future<void> onInitialize(Measure measure) async {
     assert(measure is ESenseMeasure);
     super.onInitialize(measure);
     deviceName = (measure as ESenseMeasure)?.deviceName;

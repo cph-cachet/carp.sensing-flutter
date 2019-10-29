@@ -20,7 +20,7 @@ dependencies:
   carp_audio_package: ^0.5.0
   carp_esense_package: ^0.1.1
   carp_backend: ^0.3.2
-  carp_firebase_backend: ^0.3.0
+  #carp_firebase_backend: ^0.3.0
 
 
 # Overriding carp libraries to use the local copy
@@ -36,12 +36,12 @@ dependency_overrides:
     path: ../carp_audio_package/
   carp_esense_package:
     path: ../carp_esense_package/
-  carp_firebase_backend:
-    path: ../carp_firebase_backend/
   carp_webservices:
     path: ../carp_webservices/
   carp_backend:
     path: ../carp_backend/
+  #carp_firebase_backend:
+  #  path: ../carp_firebase_backend/
 
 
 dev_dependencies:

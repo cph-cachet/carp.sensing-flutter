@@ -8,7 +8,7 @@ class GeofenceProbe extends StreamProbe {
   Geofence fence;
   StreamController<GeofenceDatum> geoFenceStreamController = StreamController<GeofenceDatum>.broadcast();
 
-  void onInitialize(Measure measure) {
+  Future<void> onInitialize(Measure measure) async {
     assert(measure is GeofenceMeasure);
     super.onInitialize(measure);
     fence = Geofence.fromMeasure(measure);

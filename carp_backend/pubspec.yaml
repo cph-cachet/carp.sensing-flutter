@@ -15,11 +15,11 @@ dependencies:
 
 # Overriding carp libraries to use the local copy
 # Remove this when done development
-#dependency_overrides:
-#  carp_mobile_sensing:
-#    path: ../carp_mobile_sensing/
-#  carp_webservices:
-#    path: ../carp_webservices/
+dependency_overrides:
+  carp_mobile_sensing:
+    path: ../carp_mobile_sensing/
+  carp_webservices:
+    path: ../carp_webservices/
 
 dev_dependencies:
   flutter_test:

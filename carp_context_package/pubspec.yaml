@@ -20,11 +20,11 @@ dependencies:
 
 # Overriding carp libraries to use the local copy
 # Remove this when done development
-#dependency_overrides:
-#  carp_mobile_sensing:
-#    path: ../carp_mobile_sensing/
-#  openmhealth_schemas:
-#    path: ../../openmhealth_schemas/
+dependency_overrides:
+  carp_mobile_sensing:
+    path: ../carp_mobile_sensing/
+  openmhealth_schemas:
+    path: ../../openmhealth_schemas/
 
 dev_dependencies:
   flutter_test:

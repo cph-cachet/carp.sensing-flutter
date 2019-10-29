@@ -15,6 +15,7 @@ class StudyController {
   String privacySchemaName;
   DatumStreamTransformer transformer;
 
+  /// The stream of all sampled data.
   Stream<Datum> events;
   PowerAwarenessState powerAwarenessState = NormalSamplingState.instance;
 
@@ -27,7 +28,9 @@ class StudyController {
   ///    * A custom study [executor] can be specified. If null, the default [StudyExecutor] is used.
   ///    * A specific [samplingSchema] can be used. If null, [SamplingSchema.normal] with power-awareness is used.
   ///    * A specific [dataManager] can be provided. If null, a [DataManager] will be looked up in the
-  ///      [DataManagerRegistry] based on the type of the study's [DataEndPoint].
+  ///      [DataManagerRegistry] based on the type of the study's [DataEndPoint]. If no data manager is found in the
+  ///      registry, then no data management is done, but sensing can still be initiated. This is useful for apps
+  ///      which wants to use the framework for in-app consumption of sensing events without saving the data.
   ///    * The name of a [PrivacySchema] can be provided in [privacySchemaName].
   ///      Use [PrivacySchema.DEFAULT] for the default, built-in schema. If null, no privacy schema is used.
   ///    * A generic [transformer] can be provided which transform each collected data.
@@ -46,15 +49,16 @@ class StudyController {
     // now initialize optional parameters
     executor ??= StudyExecutor(study);
     samplingSchema ??= SamplingSchema.normal(powerAware: true);
-    dataManager ??= DataManagerRegistry.lookup(study.dataEndPoint.type);
+    dataManager ??= (study.dataEndPoint != null) ? DataManagerRegistry.lookup(study.dataEndPoint.type) : null;
     privacySchemaName ??= NameSpace.CARP;
     transformer ??= ((events) => events);
 
-    assert(
-        dataManager != null,
-        'Could not find a data manager for type ${study.dataEndPoint.type}. '
-        'An instance of a DataManager can be specified as the dataManager argument when creating this StudyController.'
-        'Or you can registrer it in the DataManagerRegistry.');
+    // In version 6.1 we allow for a null data manager - this allows for non-persistent sampling.
+    // assert(
+    //    dataManager != null,
+    //    'Could not find a data manager for type ${study.dataEndPoint.type}. '
+    //    'An instance of a DataManager can be specified as the dataManager argument when creating this StudyController.'
+    //    'Or you can registrer it in the DataManagerRegistry.');
 
     // set up transformation in the following order:
     // 1. privacy schema
@@ -66,8 +70,6 @@ class StudyController {
 
     // old, simple version below
     // events = transformer(executor.events);
-
-    //dataManager.events.forEach(print);
   }
 
   /// Initialize this controller. Must be called only once, and before [start] is called.
@@ -82,7 +84,7 @@ class StudyController {
     print('  data format : ${study.dataFormat}');
     print('     platform : ${Device.platform.toString()}');
     print('    device ID : ${Device.deviceID.toString()}');
-    print(' data manager : ${dataManager.toString()}');
+    print(' data manager : ${dataManager?.toString()}');
 
     if (samplingSchema != null) {
       // doing two adaptation is a bit of a hack; used to ensure that
@@ -91,8 +93,8 @@ class StudyController {
       study.adapt(samplingSchema, restore: false);
     }
 
-    executor.initialize(Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR)));
-    dataManager.initialize(study, events);
+    await dataManager?.initialize(study, events);
+    await executor.initialize(Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR)));
 
     events.listen((datum) => samplingSize++);
   }
@@ -139,14 +141,15 @@ class StudyController {
   void stop() {
     print("Stopping data sampling ...");
     disablePowerAwareness();
-    dataManager.close();
+    dataManager?.close();
     executor.stop();
   }
 
-  /// Pause the controller, which will pause data collection.
+  /// Pause the controller, which will pause data collection and close the data manager.
   void pause() {
     print("Pausing data sampling ...");
     executor.pause();
+    dataManager?.close();
   }
 
   /// Resume the controller, i.e. resume data collection.

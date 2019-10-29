@@ -67,20 +67,22 @@ class SamplingSchema {
   /// measures of the correct type with default settings.
   /// For example using
   ///
-  ///       SamplingSchema.common().getMeasureList[
-  ///          ConnectivitySamplingPackage.BLUETOOTH,
-  ///          ConnectivitySamplingPackage.CONNECTIVITY,
-  ///          SensorSamplingPackage.ACCELEROMETER,
-  ///          SensorSamplingPackage.GYROSCOPE,
-  ///          AppsSamplingPackage.APPS,
-  ///        ]);
+  ///       SamplingSchema.common().getMeasureList(
+  ///         namespace: NameSpace.CARP,
+  ///         types: [
+  ///           ConnectivitySamplingPackage.BLUETOOTH,
+  ///           ConnectivitySamplingPackage.CONNECTIVITY,
+  ///           SensorSamplingPackage.ACCELEROMETER,
+  ///           SensorSamplingPackage.GYROSCOPE,
+  ///           AppsSamplingPackage.APPS,
+  ///         ]);
   ///
   /// would return a list with a [Measure] for bluetooth, connectivity, etc.,
   /// each with default configurations from the [SamplingSchema.common()] schema.
   ///
   /// If [namespace] is specified, then the returned measures' [MeasureType] belong to this namespace.
   /// Otherwise, the [NameSpace.UNKNOWN] is applied.
-  List<Measure> getMeasureList(List<String> types, {String namespace = NameSpace.UNKNOWN}) {
+  List<Measure> getMeasureList({String namespace = NameSpace.UNKNOWN, @required List<String> types}) {
     List<Measure> _list = List<Measure>();
 
     types.forEach((type) {

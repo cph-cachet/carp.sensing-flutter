@@ -50,7 +50,7 @@ class CalendarProbe extends DatumProbe {
   Iterator<Calendar> _calendarIterator;
   List<CalendarEvent> _events = [];
 
-  void onInitialize(Measure measure) {
+  Future<void> onInitialize(Measure measure) async {
     assert(measure is CalendarMeasure);
     super.onInitialize(measure);
     _retrieveCalendars();

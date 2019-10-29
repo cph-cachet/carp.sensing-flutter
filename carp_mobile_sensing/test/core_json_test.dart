@@ -101,20 +101,20 @@ void main() {
     study_3.addTriggerTask(
         DelayedTrigger(delay: 10 * 1000), // delay for 10 secs.
         Task('Sensing Task #1')
-          ..measures =
-              SamplingSchema.common().getMeasureList([SensorSamplingPackage.PEDOMETER, DeviceSamplingPackage.SCREEN]));
+          ..measures = SamplingSchema.common()
+              .getMeasureList(types: [SensorSamplingPackage.PEDOMETER, DeviceSamplingPackage.SCREEN]));
 
     study_3.addTriggerTask(
         PeriodicTrigger(period: 60 * 1000), // collect every min.
         Task('Sensing Task #2')
-          ..measures =
-              SamplingSchema.common().getMeasureList([SensorSamplingPackage.LIGHT, DeviceSamplingPackage.DEVICE]));
+          ..measures = SamplingSchema.common()
+              .getMeasureList(types: [SensorSamplingPackage.LIGHT, DeviceSamplingPackage.DEVICE]));
 
     study_3.addTriggerTask(
         ScheduledTrigger(schedule: DateTime(2019, 12, 24)), // collect date on Xmas.
         Task('Sensing Task #3')
           ..measures = SamplingSchema.common()
-              .getMeasureList([AppsSamplingPackage.APP_USAGE, ConnectivitySamplingPackage.BLUETOOTH]));
+              .getMeasureList(types: [AppsSamplingPackage.APP_USAGE, ConnectivitySamplingPackage.BLUETOOTH]));
 
     RecurrentScheduledTrigger t1, t2, t3, t4;
 
@@ -122,7 +122,9 @@ void main() {
     t1 = RecurrentScheduledTrigger(type: RecurrentType.daily, time: Time(hour: 21, minute: 30));
     print('$t1');
     study_3.addTriggerTask(
-        t1, Task('Sensing Task #1')..measures = SamplingSchema.common().getMeasureList([DeviceSamplingPackage.MEMORY]));
+        t1,
+        Task('Sensing Task #1')
+          ..measures = SamplingSchema.common().getMeasureList(types: [DeviceSamplingPackage.MEMORY]));
 
     // collect every other day at 13:30.
     t2 = RecurrentScheduledTrigger(type: RecurrentType.daily, time: Time(hour: 13, minute: 30), separationCount: 1);
@@ -131,7 +133,7 @@ void main() {
         t2,
         Task('Sensing Task #1')
           ..measures = SamplingSchema.common()
-              .getMeasureList([AppsSamplingPackage.APPS, ConnectivitySamplingPackage.CONNECTIVITY]));
+              .getMeasureList(types: [AppsSamplingPackage.APPS, ConnectivitySamplingPackage.CONNECTIVITY]));
 
     // collect every wednesday at 12:23.
     t3 = RecurrentScheduledTrigger(
@@ -141,7 +143,7 @@ void main() {
         t3,
         Task('Sensing Task #1')
           ..measures = SamplingSchema.common()
-              .getMeasureList([AppsSamplingPackage.APPS, ConnectivitySamplingPackage.CONNECTIVITY]));
+              .getMeasureList(types: [AppsSamplingPackage.APPS, ConnectivitySamplingPackage.CONNECTIVITY]));
 
     // collect every 2nd monday at 12:23.
     t4 = RecurrentScheduledTrigger(
@@ -151,7 +153,7 @@ void main() {
         t4,
         Task('Sensing Task #1')
           ..measures = SamplingSchema.common()
-              .getMeasureList([AppsSamplingPackage.APPS, ConnectivitySamplingPackage.CONNECTIVITY]));
+              .getMeasureList(types: [AppsSamplingPackage.APPS, ConnectivitySamplingPackage.CONNECTIVITY]));
 
     // when entering the 'wifi.bardram.net' WIFI network, start sampling bluetooth devices
     study_3.addTriggerTask(
@@ -159,14 +161,14 @@ void main() {
             measureType: MeasureType(NameSpace.CARP, ConnectivitySamplingPackage.WIFI),
             resumeCondition: WifiDatum()..ssid = 'wifi.bardram.net'),
         Task('Sensing Task #1')
-          ..measures = SamplingSchema.common().getMeasureList([ConnectivitySamplingPackage.BLUETOOTH]));
+          ..measures = SamplingSchema.common().getMeasureList(types: [ConnectivitySamplingPackage.BLUETOOTH]));
 
     study_3.addTriggerTask(
         ConditionalSamplingEventTrigger(
             measureType: MeasureType(NameSpace.CARP, ConnectivitySamplingPackage.WIFI),
             resumeCondition: (datum) => (datum as WifiDatum).ssid == 'wifi.bardram.net'),
         Task('Sensing Task #1')
-          ..measures = SamplingSchema.common().getMeasureList([ConnectivitySamplingPackage.BLUETOOTH]));
+          ..measures = SamplingSchema.common().getMeasureList(types: [ConnectivitySamplingPackage.BLUETOOTH]));
 
     final studyJson = _encode(study_3);
 

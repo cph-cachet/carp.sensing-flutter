@@ -66,7 +66,7 @@ class ContextSamplingPackage implements SamplingPackage {
       MapEntry(
           GEOFENCE,
           GeofenceMeasure(MeasureType(NameSpace.CARP, GEOFENCE),
-              enabled: true, center: GeoPosition(55.786025, 12.524159), radius: 500, name: 'Geofence (DTU)')),
+              enabled: true, center: GeoPosition(55.7943601, 12.4461956), radius: 500, name: 'Geofence (Virum)')),
     ]);
 
   SamplingSchema get light => common

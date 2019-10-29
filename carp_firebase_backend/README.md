@@ -20,9 +20,7 @@ using Firebase as a [`DataManager`](https://pub.dartlang.org/documentation/carp_
 In Firebase, data json objects are stores in the `collection` specified in the `FirebaseDatabaseDataManager`.
 JSON objects will be stored in collections named `/<collection>/<study_id>/<device_id>/upload/<data_type>` 
 relative to this path. For example, if `collection` is `carp_data`, `study_id` is `1234` and `device_id` is `R16NW`, 
-location data will be stored as documents in this collection:
-
-`carp_data/1234/R16NW/upload/location`.
+location data will be stored as documents in this collection: `carp_data/1234/R16NW/upload/location`.
 
 
 
@@ -90,14 +88,19 @@ $ pod init
 
 This should install all the necessary pods for Firebase.
 
-**Note** – it seems like Firebase is putting constraints on the naming of the iOS **App Name**. 
-Even though a valid iOS app name can contain `.` (dots) and spaces, Firebase throws the following exception:
+**Note** – it seems like Firebase is putting constraints on the naming of the iOS **Bundle Name**. 
+Even though a valid iOS bundle name can contain `.` (dots) and spaces, Firebase throws the following exception:
 
 ```
 Terminating app due to uncaught exception 'com.firebase.core', reason: 'App name can only contain alphanumeric, hyphen (-), and underscore (_) characters'
 ```
 
-if dots are used. Hence, avoid using dots, but use `-` (hypen) instead.
+if dots are used. Hence, avoid using dots, but use `-` (hypen) instead. This is specified in the `ios/Runner/info.plist' file:
+
+```
+<key>CFBundleName</key>
+<string>your-app-name</string>
+```
 
 **Note** – it seems like adding Firebase support to your iOS app dramatically increases the Xcode build 
 process for the Flutter app. So – have patience...
