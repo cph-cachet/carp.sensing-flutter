@@ -13,7 +13,7 @@ import 'package:activity_recognition_alt/activity_recognition_alt.dart';
 import 'package:location/location.dart';
 import 'package:weather/weather.dart';
 import 'package:openmhealth_schemas/openmhealth_schemas.dart' as omh;
-import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 part 'activity_datum.dart';
 part 'activity_probe.dart';

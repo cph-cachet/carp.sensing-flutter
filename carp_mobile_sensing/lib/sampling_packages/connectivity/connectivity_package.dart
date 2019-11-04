@@ -30,6 +30,8 @@ class ConnectivitySamplingPackage implements SamplingPackage {
     TransformerSchemaRegistry.lookup(PrivacySchema.DEFAULT).add(WIFI, wifi_name_anoymizer);
   }
 
+  List<PermissionGroup> get permissions => [];
+
   SamplingSchema get common => SamplingSchema()
     ..type = SamplingSchemaType.COMMON
     ..name = 'Common (default) connectivity sampling schema'

@@ -93,6 +93,14 @@ class StudyController {
       study.adapt(samplingSchema, restore: false);
     }
 
+    // setting up permissions
+
+    SamplingPackageRegistry.permissions.forEach(print);
+
+    Map<PermissionGroup, PermissionStatus> permissions =
+        await PermissionHandler().requestPermissions(SamplingPackageRegistry.permissions);
+    print('>>>>>>>permissions  : $permissions');
+
     await dataManager?.initialize(study, events);
     await executor.initialize(Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR)));
 

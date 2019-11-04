@@ -11,6 +11,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
+import 'package:permission_handler/permission_handler.dart';
 
 part 'connectivity_probes.dart';
 part 'connectivity_datum.dart';

@@ -20,7 +20,8 @@ dependencies:
   json_annotation: ^3.0.0
   path_provider: ^1.2.0
   archive: ^2.0.4
-#  platform: ^2.2.1
+  permission_handler: ^3.3.0
+  #platform: ^2.2.1
 
   # probe-dependent plugins
   sensors: ^0.4.0

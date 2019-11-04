@@ -68,8 +68,6 @@ class CalendarProbe extends DatumProbe {
 
     final calendarsResult = await _deviceCalendar.retrieveCalendars();
     _calendars = calendarsResult?.data;
-
-    print('_calendar : $_calendars');
   }
 
   /// Collects events from the [calendar].

@@ -8,7 +8,7 @@
 part of context;
 
 /// The general location provider service.
-Location _locationService = Location();
+Location _locationService;
 
 /// Collects location information from the underlying OS's location API.
 /// Is a [PeriodicDatumProbe] that collects a [LocationDatum] on a regular basis
@@ -19,24 +19,14 @@ Location _locationService = Location();
 class LocationProbe extends PeriodicDatumProbe {
   Future<void> onInitialize(Measure measure) async {
     assert(measure is LocationMeasure);
+    _locationService = Location();
     super.onInitialize(measure);
-  }
-
-  Future<bool> _getPermission() async {
-    bool permission = false;
-    bool enabled = await _locationService.serviceEnabled();
-    if (enabled) {
-      permission = await _locationService.hasPermission();
-      if (!permission) permission = await _locationService.requestPermission();
-    }
-
-    return permission;
   }
 
   Future<bool> _setSettings() async => await _locationService.changeSettings(
       accuracy: (measure as LocationMeasure).accuracy ?? LocationAccuracy.BALANCED);
 
-  Future<Datum> getDatum() =>
+  Future<Datum> getDatum() async =>
       _locationService.getLocation().then((location) => LocationDatum.fromLocationData(location));
 }
 

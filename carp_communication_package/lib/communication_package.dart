@@ -56,6 +56,8 @@ class CommunicationSamplingPackage implements SamplingPackage {
     TransformerSchemaRegistry.lookup(PrivacySchema.DEFAULT).add(CALENDAR, calendar_anoymizer);
   }
 
+  List<PermissionGroup> get permissions => [PermissionGroup.phone, PermissionGroup.sms, PermissionGroup.calendar];
+
   SamplingSchema get common => SamplingSchema()
     ..type = SamplingSchemaType.COMMON
     ..name = 'Common (default) communication sampling schema'
@@ -94,16 +96,9 @@ class CommunicationSamplingPackage implements SamplingPackage {
     ..type = SamplingSchemaType.DEBUG
     ..name = 'Debugging communication sampling schema'
     ..powerAware = false
-    ..measures[PHONE_LOG] = PhoneLogMeasure(MeasureType(NameSpace.CARP, PHONE_LOG),
-        // collect calendar events once pr. minute
-        name: 'Phone Log',
-        days: 1)
-    ..measures[TEXT_MESSAGE_LOG] = Measure(MeasureType(NameSpace.CARP, TEXT_MESSAGE_LOG),
-        // collect calendar events once pr. minute
-        name: 'Text Message (SMS) Log')
-    ..measures[CALENDAR] = CalendarMeasure(MeasureType(NameSpace.CARP, CALENDAR),
-        // collect calendar events once pr. minute
-        name: 'Calendar Events',
-        daysBack: 1,
-        daysFuture: 1);
+    ..measures[PHONE_LOG] = PhoneLogMeasure(MeasureType(NameSpace.CARP, PHONE_LOG), name: 'Phone Log', days: 1)
+    ..measures[TEXT_MESSAGE_LOG] =
+        Measure(MeasureType(NameSpace.CARP, TEXT_MESSAGE_LOG), name: 'Text Message (SMS) Log')
+    ..measures[CALENDAR] =
+        CalendarMeasure(MeasureType(NameSpace.CARP, CALENDAR), name: 'Calendar Events', daysBack: 1, daysFuture: 1);
 }

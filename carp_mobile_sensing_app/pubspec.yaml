@@ -18,7 +18,7 @@ dependencies:
   carp_communication_package: ^0.5.0
   carp_context_package: ^0.5.0
   carp_audio_package: ^0.5.0
-  carp_esense_package: ^0.1.1
+  #carp_esense_package: ^0.1.1
   carp_backend: ^0.3.2
   #carp_firebase_backend: ^0.3.0
 
@@ -34,8 +34,8 @@ dependency_overrides:
     path: ../carp_context_package/
   carp_audio_package:
     path: ../carp_audio_package/
-  carp_esense_package:
-    path: ../carp_esense_package/
+  #carp_esense_package:
+  #  path: ../carp_esense_package/
   carp_webservices:
     path: ../carp_webservices/
   carp_backend:

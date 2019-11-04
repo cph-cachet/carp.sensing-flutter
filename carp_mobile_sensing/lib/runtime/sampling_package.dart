@@ -6,11 +6,17 @@ _SamplingPackageRegistry SamplingPackageRegistry = _SamplingPackageRegistry();
 class _SamplingPackageRegistry {
   List<SamplingPackage> _packages = List<SamplingPackage>();
   List<SamplingPackage> get packages => _packages;
+  List<PermissionGroup> _permissions = List<PermissionGroup>();
+  List<PermissionGroup> get permissions => _permissions;
 
   _SamplingPackageRegistry() : super() {
     // HACK - creating a serializable object (such as a [Study]) ensures that
     // JSON deserialization in [Serializable] is initialized
     Study("1234", "unknown");
+
+    // add the basic permissions needed
+    _permissions.add(PermissionGroup.storage);
+
     // register the known, built-in packages
     register(DeviceSamplingPackage());
     register(SensorSamplingPackage());
@@ -21,6 +27,8 @@ class _SamplingPackageRegistry {
   /// Register a sampling package.
   void register(SamplingPackage package) {
     _packages.add(package);
+    package.permissions
+        .forEach((permission) => (_permissions.indexOf(permission) < 0) ? _permissions.add(permission) : null);
     DataType.add(package.dataTypes);
     package.onRegister();
   }
@@ -52,6 +60,12 @@ abstract class SamplingPackage {
 
   /// The list of data type this package supports.
   List<String> get dataTypes;
+
+  /// The list of permissions that this package need.
+  ///
+  /// See [PermissionGroup](https://pub.dev/documentation/permission_handler/latest/permission_handler/PermissionGroup-class.html)
+  /// for a list of possible permissions.
+  List<PermissionGroup> get permissions;
 
   /// Creates a new [Probe] of the specified [type].
   Probe create(String type);

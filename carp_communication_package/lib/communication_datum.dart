@@ -22,7 +22,7 @@ class TextMessageLogDatum extends CARPDatum {
   factory TextMessageLogDatum.fromJson(Map<String, dynamic> json) => _$TextMessageLogDatumFromJson(json);
   Map<String, dynamic> toJson() => _$TextMessageLogDatumToJson(this);
 
-  String toString() => "Text Message Log - size: ${textMessageLog.length}";
+  String toString() => super.toString() + ', size: ${textMessageLog.length}';
 }
 
 /// Holds a single text (SMS) message as a [Datum] object.
@@ -41,7 +41,7 @@ class TextMessageDatum extends CARPDatum {
   factory TextMessageDatum.fromJson(Map<String, dynamic> json) => _$TextMessageDatumFromJson(json);
   Map<String, dynamic> toJson() => _$TextMessageDatumToJson(this);
 
-  String toString() => "Text Message - $textMessage";
+  String toString() => super.toString() + ', textMessage: $textMessage';
 }
 
 /// Holds a text messages (SMS).
@@ -228,7 +228,7 @@ class CalendarDatum extends CARPDatum {
   factory CalendarDatum.fromJson(Map<String, dynamic> json) => _$CalendarDatumFromJson(json);
   Map<String, dynamic> toJson() => _$CalendarDatumToJson(this);
 
-  String toString() => "Calendar Events - size: ${calendarEvents.length}";
+  String toString() => super.toString() + ', size: ${calendarEvents.length}';
 }
 
 /// A calendar event.

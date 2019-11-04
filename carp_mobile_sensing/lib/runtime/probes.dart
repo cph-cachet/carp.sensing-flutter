@@ -371,8 +371,7 @@ abstract class PeriodicDatumProbe extends DatumProbe {
   }
 
   Future<void> onResume() async {
-    super.onResume();
-    // create a recurrent timer that resumes sampling every [frequency].
+    // create a recurrent timer that gets the datum every [frequency].
     timer = Timer.periodic(frequency, (Timer t) async {
       getDatum().then((Datum data) {
         if (data != null) controller.add(data);
@@ -381,7 +380,6 @@ abstract class PeriodicDatumProbe extends DatumProbe {
   }
 
   Future<void> onPause() async {
-    super.onPause();
     timer?.cancel();
   }
 
