@@ -48,10 +48,7 @@ class AudioSamplingPackage implements SamplingPackage {
     ..name = 'Common (default) context sampling schema'
     ..powerAware = true
     ..measures.addEntries([
-      MapEntry(
-          AUDIO,
-          AudioMeasure(MeasureType(NameSpace.CARP, AUDIO),
-              name: 'Audio Recording', enabled: true, frequency: 5 * 60 * 1000, duration: 10 * 1000)),
+      MapEntry(AUDIO, AudioMeasure(MeasureType(NameSpace.CARP, AUDIO), name: 'Audio Recording', enabled: true)),
       MapEntry(
           NOISE,
           NoiseMeasure(MeasureType(NameSpace.CARP, NOISE),
@@ -74,8 +71,7 @@ class AudioSamplingPackage implements SamplingPackage {
     ..type = SamplingSchemaType.DEBUG
     ..name = 'Debugging audio sampling schema'
     ..powerAware = false
-    ..measures[AUDIO] = AudioMeasure(MeasureType(NameSpace.CARP, AUDIO),
-        name: 'Audio Recording', enabled: true, frequency: 52 * 1000, duration: 5 * 1000)
+    ..measures[AUDIO] = AudioMeasure(MeasureType(NameSpace.CARP, AUDIO), name: 'Audio Recording', enabled: true)
     ..measures[NOISE] = NoiseMeasure(MeasureType(NameSpace.CARP, NOISE),
         name: 'Ambient Noise', enabled: true, frequency: 21 * 1000, duration: 5 * 1000);
 }

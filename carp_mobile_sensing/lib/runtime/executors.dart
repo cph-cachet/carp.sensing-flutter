@@ -147,8 +147,8 @@ abstract class TriggerExecutor extends Executor {
     }
   }
 
-  /// Start all tasks associated with this trigger.
-  void _startAllTasks() => executors.forEach((executor) => executor.start());
+  // Start all tasks associated with this trigger.
+  //void _startAllTasks() => executors.forEach((executor) => executor.start());
 
   /// Returns a list of the running probes in this trigger executor.
   /// This is a combination of the running probes in all task executors.
@@ -168,9 +168,6 @@ abstract class TriggerExecutor extends Executor {
 /// Executes a [ImmediateTrigger], i.e. starts sampling immediately.
 class ImmediateTriggerExecutor extends TriggerExecutor {
   ImmediateTriggerExecutor(Trigger trigger) : super(trigger);
-
-  // create and start all tasks associated with this trigger
-  Future<void> onStart() async => _startAllTasks();
 }
 
 /// Executes a [ManualTrigger].
@@ -181,7 +178,7 @@ class ManualTriggerExecutor extends TriggerExecutor {
 
   Future<void> onStart() async {
     // first start all tasks, but pause them
-    _startAllTasks();
+    super.onStart();
     this.pause();
   }
 }
@@ -197,7 +194,7 @@ class DelayedTriggerExecutor extends TriggerExecutor {
 
   Future<void> onStart() async {
     Timer(delay, () {
-      _startAllTasks();
+      super.onStart();
     });
   }
 }
@@ -217,15 +214,17 @@ class PeriodicTriggerExecutor extends TriggerExecutor {
   }
 
   Future<void> onStart() async {
-    // first start all tasks, but pause them
-    _startAllTasks();
-    this.pause();
-    // create a recurrent timer that resume sampling.
-    Timer.periodic(period, (Timer t) {
-      this.resume();
-      // create a timer that pause the sampling after the specified duration.
-      Timer(duration, () {
-        this.pause();
+    // first start all tasks, but pause them after a duration
+    super.onStart();
+    Timer(duration, () {
+      this.pause();
+      // create a recurrent timer that resume sampling.
+      Timer.periodic(period, (Timer t) {
+        this.resume();
+        // create a timer that pause the sampling after the specified duration.
+        Timer(duration, () {
+          this.pause();
+        });
       });
     });
   }
@@ -244,7 +243,7 @@ class ScheduledTriggerExecutor extends TriggerExecutor {
 
   Future<void> onStart() async {
     Timer(delay, () {
-      _startAllTasks();
+      super.onStart();
       if (duration != null) {
         // create a timer that stop the sampling after the specified duration.
         Timer(duration, () {
@@ -276,7 +275,7 @@ class SamplingEventTriggerExecutor extends TriggerExecutor {
 
   Future<void> onStart() async {
     // first start all tasks, but pause them
-    _startAllTasks();
+    super.onStart();
     this.pause();
 
     SamplingEventTrigger eventTrigger = trigger as SamplingEventTrigger;
@@ -300,7 +299,7 @@ class ConditionalSamplingEventTriggerExecutor extends TriggerExecutor {
 
   Future<void> onStart() async {
     // first start all tasks, but pause them
-    _startAllTasks();
+    super.onStart();
     this.pause();
 
     ConditionalSamplingEventTrigger eventTrigger = trigger as ConditionalSamplingEventTrigger;

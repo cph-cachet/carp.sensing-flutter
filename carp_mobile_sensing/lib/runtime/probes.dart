@@ -320,9 +320,7 @@ abstract class DatumProbe extends AbstractProbe {
 
   Future<void> onInitialize(Measure measure) async {}
 
-  Future<void> onStart() async {
-    this.resume();
-  }
+  Future<void> onStart() async {}
 
   Future<void> onRestart() async {}
 

@@ -99,17 +99,17 @@ class StudyMock implements StudyManager {
                       SensorSamplingPackage.PEDOMETER,
                     ],
                   ))
-//        ..addTriggerTask(
-//            DelayedTrigger(delay: 10 * 1000),
-//            Task()
-//              ..measures = SamplingSchema.debug().getMeasureList(
-//                namespace: NameSpace.CARP,
-//                types: [
-//                  ConnectivitySamplingPackage.BLUETOOTH,
-//                  ConnectivitySamplingPackage.WIFI,
-//                  ConnectivitySamplingPackage.CONNECTIVITY,
-//                ],
-//              ))
+            ..addTriggerTask(
+                DelayedTrigger(delay: 10 * 1000),
+                Task()
+                  ..measures = SamplingSchema.debug().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      ConnectivitySamplingPackage.BLUETOOTH,
+                      ConnectivitySamplingPackage.WIFI,
+                      ConnectivitySamplingPackage.CONNECTIVITY,
+                    ],
+                  ))
 //        ..addTriggerTask(
 //            ImmediateTrigger(),
 //            Task()
@@ -152,16 +152,20 @@ class StudyMock implements StudyManager {
                       ContextSamplingPackage.GEOFENCE,
                     ],
                   ))
+//            ..addTriggerTask(
+//                ImmediateTrigger(),
+//                Task()
+//                  ..measures = SamplingSchema.debug().getMeasureList(
+//                    namespace: NameSpace.CARP,
+//                    types: [
+//                      AudioSamplingPackage.NOISE,
+//                    ],
+//                  ))
             ..addTriggerTask(
-                ImmediateTrigger(),
-                Task()
-                  ..measures = SamplingSchema.debug().getMeasureList(
-                    namespace: NameSpace.CARP,
-                    types: [
-                      AudioSamplingPackage.NOISE,
-                      //AudioSamplingPackage.AUDIO,
-                    ],
-                  ))
+                PeriodicTrigger(period: 1 * 53 * 1000, duration: 2 * 1000),
+                Task('Audio')
+                  ..measures.add(AudioMeasure(MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO),
+                      name: "Audio Recording", studyId: studyId)))
             ..addTriggerTask(
                 ImmediateTrigger(),
                 Task()

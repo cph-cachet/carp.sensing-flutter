@@ -11,7 +11,7 @@ part of audio;
 /// [frequency] specify how often to record and [duration] specify the
 /// length of the recording.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class AudioMeasure extends PeriodicMeasure {
+class AudioMeasure extends Measure {
   static const String DEFAULT_STUDY_ID = 'default_study';
 
   /// The study id for the study recording this audio. Needed for
@@ -19,8 +19,8 @@ class AudioMeasure extends PeriodicMeasure {
   /// If no [studyId] is provide, `default_study` will be used as the default id.
   String studyId = DEFAULT_STUDY_ID;
 
-  AudioMeasure(MeasureType type, {name, enabled = true, frequency, duration, this.studyId = DEFAULT_STUDY_ID})
-      : super(type, name: name, enabled: enabled, frequency: frequency, duration: duration);
+  AudioMeasure(MeasureType type, {name, enabled = true, this.studyId = DEFAULT_STUDY_ID})
+      : super(type, name: name, enabled: enabled);
 
   static Function get fromJsonFunction => _$AudioMeasureFromJson;
   factory AudioMeasure.fromJson(Map<String, dynamic> json) =>
