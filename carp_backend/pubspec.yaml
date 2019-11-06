@@ -14,7 +14,7 @@ dependencies:
   carp_webservices: ^0.3.0
 
 # Overriding carp libraries to use the local copy
-# Remove this when done development
+# Remove this before release of package
 dependency_overrides:
   carp_mobile_sensing:
     path: ../carp_mobile_sensing/
