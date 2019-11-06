@@ -51,7 +51,7 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
 </manifest>
 ````
 
-Note that version 0.5.0 is migrated to AndroidX. This shouldn't result in any functional changes, but it requires any Android apps using this plugin to also 
+> **NOTE:** Version 0.5.0 is migrated to AndroidX. This shouldn't result in any functional changes, but it requires any Android apps using this plugin to also 
 [migrate](https://developer.android.com/jetpack/androidx/migrate) if they're using the original support library. 
 See Flutter [AndroidX compatibility](https://flutter.dev/docs/development/packages-and-plugins/androidx-compatibility)
 
@@ -90,4 +90,4 @@ Before creating a study and running it, register this package in the
   SamplingPackageRegistry.register(AudioSamplingPackage());
 `````
 
-**Note:** The audio and noise probe / measure *cannot* run at the same time, since they both make exclusive use of the microphone.
+> **NOTE:** The audio and noise probe / measure *cannot* run at the same time, since they both make exclusive use of the microphone.

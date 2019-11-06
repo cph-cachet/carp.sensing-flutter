@@ -12,6 +12,7 @@ import 'package:crypto/crypto.dart';
 import 'dart:convert';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'dart:io';
 
 part 'communication_datum.dart';
 part 'communication_probes.dart';

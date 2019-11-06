@@ -148,7 +148,7 @@ class StudyMock implements StudyManager {
                     namespace: NameSpace.CARP,
                     types: [
                       ContextSamplingPackage.LOCATION,
-                      //ContextSamplingPackage.ACTIVITY,
+                      ContextSamplingPackage.ACTIVITY,
                       ContextSamplingPackage.GEOFENCE,
                     ],
                   ))

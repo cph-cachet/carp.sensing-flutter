@@ -13,7 +13,7 @@ dependencies:
   json_annotation: ^3.0.0
   sms: ^0.2.4
   call_log: ^2.0.0
-  device_calendar: ^0.2.0
+  device_calendar: ^1.0.0
   crypto: ^2.0.0
   carp_mobile_sensing: ^0.6.1
 

@@ -8,6 +8,8 @@
 part of communication;
 
 /// A probe that collects the phone log from this device on a regular basis (e.g. once pr. hour).
+///
+/// Only works on Android
 class PhoneLogProbe extends DatumProbe {
   Future<Datum> getDatum() async {
     int days = (measure as PhoneLogMeasure).days;
@@ -21,14 +23,26 @@ class PhoneLogProbe extends DatumProbe {
       entries = await CallLog.query(dateFrom: from, dateTo: to);
     }
 
+    // on iOS, CallLog returns null.
+    entries ??= List<CallLogEntry>();
     return PhoneLogDatum()..phoneLog = entries.map((call) => PhoneCall.fromCallLogEntry(call)).toList();
   }
 }
 
 /// A probe that collects a complete list of all text (SMS) messages from this device.
+///
+/// Only works on Android
 class TextMessageLogProbe extends DatumProbe {
+  SmsQuery query;
+
+  Future<void> onInitialize(Measure measure) async {
+    super.onInitialize(measure);
+    // check if SMS is available (only available on Android)
+    query = SmsQuery();
+    await query.querySms(start: 1, count: 2);
+  }
+
   Future<Datum> getDatum() async {
-    SmsQuery query = new SmsQuery();
     List<SmsMessage> _messages = await query.getAllSms;
     return TextMessageLogDatum()..textMessageLog = _messages.map((sms) => TextMessage.fromSmsMessage(sms)).toList();
   }
@@ -36,7 +50,14 @@ class TextMessageLogProbe extends DatumProbe {
 
 /// The [TextMessageProbe] listens to SMS messages and collects a
 /// [TextMessageDatum] every time a new SMS message is received.
+///
+/// Only works on Android
 class TextMessageProbe extends StreamProbe {
+  Future<void> onInitialize(Measure measure) async {
+    super.onInitialize(measure);
+    if (!Platform.isAndroid) throw SensingException('TextMessageProbe only available on Android.');
+  }
+
   Stream<Datum> get stream =>
       SmsReceiver().onSmsReceived.map((event) => TextMessageDatum.fromTextMessage(TextMessage.fromSmsMessage(event)));
 }
@@ -87,6 +108,7 @@ class CalendarProbe extends DatumProbe {
   /// Get the [CalendarDatum].
   Future<Datum> getDatum() async {
     if (_calendars == null) await _retrieveCalendars();
+
     if (_calendars != null) {
       _events = [];
       _calendarIterator = _calendars.iterator;
