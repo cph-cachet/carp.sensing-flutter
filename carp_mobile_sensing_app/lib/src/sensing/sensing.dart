@@ -16,7 +16,7 @@ class Sensing {
     SamplingPackageRegistry.register(ContextSamplingPackage());
     SamplingPackageRegistry.register(CommunicationSamplingPackage());
     SamplingPackageRegistry.register(AudioSamplingPackage());
-    //SamplingPackageRegistry.register(ESenseSamplingPackage());
+    SamplingPackageRegistry.register(ESenseSamplingPackage());
 
     // create/load and register external data managers
     DataManagerRegistry.register(CarpDataManager());
@@ -99,17 +99,17 @@ class StudyMock implements StudyManager {
                       SensorSamplingPackage.PEDOMETER,
                     ],
                   ))
-            ..addTriggerTask(
-                DelayedTrigger(delay: 10 * 1000),
-                Task()
-                  ..measures = SamplingSchema.debug().getMeasureList(
-                    namespace: NameSpace.CARP,
-                    types: [
-                      ConnectivitySamplingPackage.BLUETOOTH,
-                      ConnectivitySamplingPackage.WIFI,
-                      ConnectivitySamplingPackage.CONNECTIVITY,
-                    ],
-                  ))
+//            ..addTriggerTask(
+//                DelayedTrigger(delay: 10 * 1000),
+//                Task()
+//                  ..measures = SamplingSchema.debug().getMeasureList(
+//                    namespace: NameSpace.CARP,
+//                    types: [
+//                      ConnectivitySamplingPackage.BLUETOOTH,
+//                      ConnectivitySamplingPackage.WIFI,
+//                      ConnectivitySamplingPackage.CONNECTIVITY,
+//                    ],
+//                  ))
 //        ..addTriggerTask(
 //            ImmediateTrigger(),
 //            Task()
@@ -164,8 +164,8 @@ class StudyMock implements StudyManager {
             ..addTriggerTask(
                 PeriodicTrigger(period: 1 * 53 * 1000, duration: 2 * 1000),
                 Task('Audio')
-                  ..measures.add(AudioMeasure(MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO),
-                      name: "Audio Recording", studyId: studyId)))
+                  ..measures
+                      .add(Measure(MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO), name: "Audio Recording")))
             ..addTriggerTask(
                 ImmediateTrigger(),
                 Task()
@@ -179,6 +179,13 @@ class StudyMock implements StudyManager {
                       CommunicationSamplingPackage.TELEPHONY,
                     ],
                   ))
+            ..addTriggerTask(
+                DelayedTrigger(delay: 10 * 1000),
+                Task('eSense')
+                  ..measures.add(ESenseMeasure(MeasureType(NameSpace.CARP, ESenseSamplingPackage.ESENSE_BUTTON),
+                      name: 'eSense - Button', enabled: true, deviceName: 'eSense-0332'))
+                  ..measures.add(ESenseMeasure(MeasureType(NameSpace.CARP, ESenseSamplingPackage.ESENSE_SENSOR),
+                      name: 'eSense - Sensors', enabled: true, deviceName: 'eSense-0332', samplingRate: 10)))
           //
           ;
     }

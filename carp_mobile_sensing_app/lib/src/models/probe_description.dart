@@ -27,8 +27,8 @@ class ProbeDescription {
         ContextSamplingPackage.WEATHER: 'Collects local weather.',
         ContextSamplingPackage.GEOFENCE: 'Track movement in/out of this geofence.',
         CommunicationSamplingPackage.CALENDAR: 'Collects entries from phone calendars.',
-//        ESenseSamplingPackage.ESENSE_SENSOR: 'Sensor reading from the eSense device.',
-//        ESenseSamplingPackage.ESENSE_BUTTON: 'Button pressed events from the eSense device.',
+        ESenseSamplingPackage.ESENSE_SENSOR: 'Sensor reading from the eSense device.',
+        ESenseSamplingPackage.ESENSE_BUTTON: 'Button pressed events from the eSense device.',
         //DataType.APPLE_HEALTHKIT: 'Collects health data from Apple Health Kit.',
         //DataType.GOOGLE_FIT: 'Collects health data from Google Fit.',
       };
@@ -59,8 +59,8 @@ class ProbeDescription {
         ContextSamplingPackage.WEATHER: Icon(Icons.cloud, size: 50, color: CACHET.LIGHT_BLUE_2),
         ContextSamplingPackage.GEOFENCE: Icon(Icons.location_on, size: 50, color: CACHET.CYAN),
         CommunicationSamplingPackage.CALENDAR: Icon(Icons.event, size: 50, color: CACHET.CYAN),
-//        ESenseSamplingPackage.ESENSE_SENSOR: Icon(Icons.hearing, size: 50, color: CACHET.DARK_BLUE),
-//        ESenseSamplingPackage.ESENSE_BUTTON: Icon(Icons.radio_button_checked, size: 50, color: CACHET.DARK_BLUE),
+        ESenseSamplingPackage.ESENSE_SENSOR: Icon(Icons.hearing, size: 50, color: CACHET.DARK_BLUE),
+        ESenseSamplingPackage.ESENSE_BUTTON: Icon(Icons.radio_button_checked, size: 50, color: CACHET.DARK_BLUE),
         //DataType.APPLE_HEALTHKIT: Icon(Icons.healing, size: 50, color: CACHET.RED),
         //DataType.GOOGLE_FIT: Icon(Icons.directions_run, size: 50, color: CACHET.GREEN),
       };

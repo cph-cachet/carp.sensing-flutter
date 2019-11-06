@@ -94,9 +94,7 @@ class StudyController {
     }
 
     // setting up permissions
-
     SamplingPackageRegistry.permissions.forEach(print);
-
     Map<PermissionGroup, PermissionStatus> permissions =
         await PermissionHandler().requestPermissions(SamplingPackageRegistry.permissions);
     print('>>>>>>>permissions  : $permissions');

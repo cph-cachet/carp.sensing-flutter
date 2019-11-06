@@ -47,6 +47,8 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
 <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
 ```
 
+Note that the first time the app starts make sure to allow it to access the phone location. 
+This is necessary to use the BLE on Android. 
 
 Note that this package only supports AndroidX. This should not result in any functional changes, but it requires any Android apps using this plugin to also 
 [migrate](https://developer.android.com/jetpack/androidx/migrate) if they're using the original support library. 

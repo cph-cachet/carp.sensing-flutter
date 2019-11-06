@@ -33,7 +33,7 @@ class ESenseSamplingPackage implements SamplingPackage {
 
   void onRegister() => FromJsonFactory.registerFromJsonFunction("ESenseMeasure", ESenseMeasure.fromJsonFunction);
 
-  List<PermissionGroup> get permissions => [PermissionGroup.microphone];
+  List<PermissionGroup> get permissions => [PermissionGroup.location, PermissionGroup.microphone];
 
   SamplingSchema get common => SamplingSchema()
     ..type = SamplingSchemaType.COMMON

@@ -26,25 +26,11 @@ part of audio;
 class AudioProbe extends DatumProbe {
   static const String AUDIO_FILE_PATH = 'audio';
 
-  String studyId;
   String soundFileName;
   String _path;
   bool _isRecording = false;
   DateTime _startRecordingTime, _endRecordingTime;
   FlutterSound _flutterSound = new FlutterSound();
-
-  Future<void> onInitialize(Measure measure) async {
-    assert(measure is AudioMeasure);
-    super.onInitialize(measure);
-    this.studyId = (measure as AudioMeasure).studyId;
-  }
-
-  Future<void> onStart() async {} // do nothing on start -- only record on resume()
-
-  Future<void> onRestart() async {
-    super.onRestart();
-    this.studyId = (measure as AudioMeasure).studyId;
-  }
 
   Future<void> onResume() async {
     soundFileName = await _startAudioRecording().catchError((err) => controller.addError(err));
@@ -86,22 +72,6 @@ class AudioProbe extends DatumProbe {
     await _flutterSound.stopRecorder();
   }
 
-  /// Returns the local path on the device where sound files can be stored.
-  /// Creates the directory, if not existing.
-  Future<String> get path async {
-    if (_path == null) {
-      // get local working directory
-      final localApplicationDir = await getApplicationDocumentsDirectory();
-      // create a sub-directory for sound files
-      final directory =
-          await Directory('${localApplicationDir.path}/${FileDataManager.CARP_FILE_PATH}/$studyId/$AUDIO_FILE_PATH')
-              .create(recursive: true);
-
-      _path = directory.path;
-    }
-    return _path;
-  }
-
   /// Returns the  filename of the sound file.
   /// The filename format is
   ///    * Android : `audio-yyyy-mm-dd-hh-mm-ss-ms.mp4`
@@ -111,12 +81,6 @@ class AudioProbe extends DatumProbe {
         DateTime.now().toString().replaceAll(" ", "-").replaceAll(":", "-").replaceAll("_", "-").replaceAll(".", "-");
     String type = Platform.isIOS ? 'm4a' : 'mp4';
     return 'audio-$created.$type';
-  }
-
-  /// Returns the full file path to the sound file.
-  Future<String> get filePath async {
-    String dir = await path;
-    return "$dir/filename";
   }
 }
 
@@ -206,12 +170,20 @@ class DeprecatedAudioProbe extends BufferingPeriodicProbe {
     return _path;
   }
 
-  /// Returns the full file path to the sound file.
-  /// The filename format is "audio-yyyy-mm-dd-hh-mm-ss-ms.m4a".
-  Future<String> get filePath async {
-    String dir = await path;
+  /// Returns the  filename of the sound file.
+  /// The filename format is
+  ///    * Android : `audio-yyyy-mm-dd-hh-mm-ss-ms.mp4`
+  ///    * iOS : `audio-yyyy-mm-dd-hh-mm-ss-ms.m4a`
+  String get filename {
     String created =
         DateTime.now().toString().replaceAll(" ", "-").replaceAll(":", "-").replaceAll("_", "-").replaceAll(".", "-");
-    return "$dir/audio-$created.m4a";
+    String type = Platform.isIOS ? 'm4a' : 'mp4';
+    return 'audio-$created.$type';
+  }
+
+  /// Returns the full file path to the sound file.
+  Future<String> get filePath async {
+    String dir = await path;
+    return "$dir/filename";
   }
 }
