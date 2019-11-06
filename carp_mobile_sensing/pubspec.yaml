@@ -31,7 +31,7 @@ dependencies:
   stats: ^0.2.0           # For calculating statistics, ex LightProbe
 
   # the CACHET plugins
-  pedometer: ^0.0.5       # Get the step count from local OS
+  pedometer: ^1.0.0       # Get the step count from local OS
   light: ^0.1.0           # Light sensor over platform channel
   device_apps: ^1.0.8     # Device installed apps over platform channel
   screen_state: ^0.1.0    # Screen LOCK/ON/OFF

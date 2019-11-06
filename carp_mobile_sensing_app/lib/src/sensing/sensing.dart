@@ -179,13 +179,13 @@ class StudyMock implements StudyManager {
 //                      CommunicationSamplingPackage.TELEPHONY,
 //                    ],
 //                  ))
-            ..addTriggerTask(
-                DelayedTrigger(delay: 10 * 1000),
-                Task('eSense')
-                  ..measures.add(ESenseMeasure(MeasureType(NameSpace.CARP, ESenseSamplingPackage.ESENSE_BUTTON),
-                      name: 'eSense - Button', enabled: true, deviceName: 'eSense-0332'))
-                  ..measures.add(ESenseMeasure(MeasureType(NameSpace.CARP, ESenseSamplingPackage.ESENSE_SENSOR),
-                      name: 'eSense - Sensors', enabled: true, deviceName: 'eSense-0332', samplingRate: 10)))
+//            ..addTriggerTask(
+//                DelayedTrigger(delay: 10 * 1000),
+//                Task('eSense')
+//                  ..measures.add(ESenseMeasure(MeasureType(NameSpace.CARP, ESenseSamplingPackage.ESENSE_BUTTON),
+//                      name: 'eSense - Button', enabled: true, deviceName: 'eSense-0332'))
+//                  ..measures.add(ESenseMeasure(MeasureType(NameSpace.CARP, ESenseSamplingPackage.ESENSE_SENSOR),
+//                      name: 'eSense - Sensors', enabled: true, deviceName: 'eSense-0332', samplingRate: 10)))
           //
           ;
     }
