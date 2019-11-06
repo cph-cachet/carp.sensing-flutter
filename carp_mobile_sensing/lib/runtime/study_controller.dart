@@ -84,8 +84,7 @@ class StudyController {
     permissions = await PermissionHandler().requestPermissions(SamplingPackageRegistry.permissions);
     SamplingPackageRegistry.permissions.forEach((permission) {
       PermissionStatus status = permissions[permission];
-      if (status != PermissionStatus.granted)
-        print('CAMS Warning - Permissions not granted for $permission, permission is $status');
+      if (status != PermissionStatus.granted) warning('Permissions not granted for $permission, permission is $status');
     });
 
     print('CARP Mobile sensing - Initializing Study Controller: ');

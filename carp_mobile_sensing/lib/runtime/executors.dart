@@ -344,7 +344,8 @@ class TaskExecutor extends Executor {
         _group.add(probe.events);
         probe.initialize(measure);
       } else {
-        print('A probe for measure type ${measure.type.name} could not be created.');
+        warning('A probe for measure type ${measure.type.name} could not be created. '
+            'Check that the sampling package containing this probe been registered in the SamplingPackageRegistry.');
       }
     }
   }

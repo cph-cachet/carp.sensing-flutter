@@ -29,3 +29,6 @@ class SensingException implements Exception {
   dynamic message;
   SensingException([this.message]);
 }
+
+/// A simple method for printing warning messages to the console.
+warning(String message) => print('CAMS WARNING - $message');
