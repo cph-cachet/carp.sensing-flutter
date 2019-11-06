@@ -67,10 +67,13 @@ See Flutter [AndroidX compatibility](https://flutter.dev/docs/development/packag
 
 Add this permission in the `Info.plist` file located in `ios/Runner`:
 
+
 ```xml
 <key>NSLocationWhenInUseUsageDescription</key>
 <string>Uses the location API to record location.</string>
 <key>NSLocationAlwaysUsageDescription</key>
+<string>Uses the location API to record location.</string>
+<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 <string>Uses the location API to record location.</string>
 <key>NSMotionUsageDescription</key>
 <string>Detects activity.</string>

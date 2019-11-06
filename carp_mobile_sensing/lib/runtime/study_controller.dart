@@ -15,6 +15,9 @@ class StudyController {
   String privacySchemaName;
   DatumStreamTransformer transformer;
 
+  /// The permissions granted to this study from the OS.
+  Map<PermissionGroup, PermissionStatus> permissions;
+
   /// The stream of all sampled data.
   Stream<Datum> events;
   PowerAwarenessState powerAwarenessState = NormalSamplingState.instance;
@@ -74,7 +77,16 @@ class StudyController {
 
   /// Initialize this controller. Must be called only once, and before [start] is called.
   Future<void> initialize() async {
+    // start getting basic device info.
     await Device.getDeviceInfo();
+
+    // setting up permissions
+    permissions = await PermissionHandler().requestPermissions(SamplingPackageRegistry.permissions);
+    SamplingPackageRegistry.permissions.forEach((permission) {
+      PermissionStatus status = permissions[permission];
+      if (status != PermissionStatus.granted)
+        print('CAMS Warning - Permissions not granted for $permission, permission is $status');
+    });
 
     print('CARP Mobile sensing - Initializing Study Controller: ');
     print('     study id : ${study.id}');
@@ -85,6 +97,7 @@ class StudyController {
     print('     platform : ${Device.platform.toString()}');
     print('    device ID : ${Device.deviceID.toString()}');
     print(' data manager : ${dataManager?.toString()}');
+    print('  permissions : ${permissions?.toString()}');
 
     if (samplingSchema != null) {
       // doing two adaptation is a bit of a hack; used to ensure that
@@ -92,12 +105,6 @@ class StudyController {
       study.adapt(samplingSchema, restore: false);
       study.adapt(samplingSchema, restore: false);
     }
-
-    // setting up permissions
-    SamplingPackageRegistry.permissions.forEach(print);
-    Map<PermissionGroup, PermissionStatus> permissions =
-        await PermissionHandler().requestPermissions(SamplingPackageRegistry.permissions);
-    print('>>>>>>>permissions  : $permissions');
 
     await dataManager?.initialize(study, events);
     await executor.initialize(Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR)));

@@ -30,14 +30,18 @@
 	<true/>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>Uses bluetooth to connect to the eSense device</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Uses the location API to record location.</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Uses the location API to record location.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Uses the microphone to record ambient noise in the phone's environment.</string>
-	<key>NSMotionUsageDescription</key>
-	<string>Detects activity.</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Uses the location API to record location.</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>Uses the location API to record location.</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>Uses the location API to record location.</string>
+    <key>NSMotionUsageDescription</key>
+    <string>Detects activity.</string>
+    <key>NSCalendarsUsageDescription</key>
+    <string>Collects calendar events.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>

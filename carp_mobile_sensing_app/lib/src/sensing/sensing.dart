@@ -16,7 +16,7 @@ class Sensing {
     SamplingPackageRegistry.register(ContextSamplingPackage());
     SamplingPackageRegistry.register(CommunicationSamplingPackage());
     SamplingPackageRegistry.register(AudioSamplingPackage());
-    SamplingPackageRegistry.register(ESenseSamplingPackage());
+    //SamplingPackageRegistry.register(ESenseSamplingPackage());
 
     // create/load and register external data managers
     DataManagerRegistry.register(CarpDataManager());
@@ -99,17 +99,17 @@ class StudyMock implements StudyManager {
                       SensorSamplingPackage.PEDOMETER,
                     ],
                   ))
-//            ..addTriggerTask(
-//                DelayedTrigger(delay: 10 * 1000),
-//                Task()
-//                  ..measures = SamplingSchema.debug().getMeasureList(
-//                    namespace: NameSpace.CARP,
-//                    types: [
-//                      ConnectivitySamplingPackage.BLUETOOTH,
-//                      ConnectivitySamplingPackage.WIFI,
-//                      ConnectivitySamplingPackage.CONNECTIVITY,
-//                    ],
-//                  ))
+            ..addTriggerTask(
+                DelayedTrigger(delay: 10 * 1000),
+                Task()
+                  ..measures = SamplingSchema.debug().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      ConnectivitySamplingPackage.BLUETOOTH,
+                      ConnectivitySamplingPackage.WIFI,
+                      ConnectivitySamplingPackage.CONNECTIVITY,
+                    ],
+                  ))
 //        ..addTriggerTask(
 //            ImmediateTrigger(),
 //            Task()
@@ -120,27 +120,27 @@ class StudyMock implements StudyManager {
 //                  AppsSamplingPackage.APPS,
 //                ],
 //              ))
-//        ..addTriggerTask(
-//            ImmediateTrigger(),
-//            Task()
-//              ..measures = SamplingSchema.debug().getMeasureList(
-//                namespace: NameSpace.CARP,
-//                types: [
-//                  DeviceSamplingPackage.MEMORY,
-//                  DeviceSamplingPackage.DEVICE,
-//                  DeviceSamplingPackage.BATTERY,
-//                  DeviceSamplingPackage.SCREEN,
-//                ],
-//              ))
-//        ..addTriggerTask(
-//            PeriodicTrigger(period: 2 * 60 * 1000),
-//            Task()
-//              ..measures = SamplingSchema.debug().getMeasureList(
-//                namespace: NameSpace.CARP,
-//                types: [
-//                  ContextSamplingPackage.WEATHER,
-//                ],
-//              ))
+            ..addTriggerTask(
+                ImmediateTrigger(),
+                Task()
+                  ..measures = SamplingSchema.debug().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      DeviceSamplingPackage.MEMORY,
+                      DeviceSamplingPackage.DEVICE,
+                      DeviceSamplingPackage.BATTERY,
+                      DeviceSamplingPackage.SCREEN,
+                    ],
+                  ))
+            ..addTriggerTask(
+                PeriodicTrigger(period: 2 * 60 * 1000),
+                Task()
+                  ..measures = SamplingSchema.debug().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      ContextSamplingPackage.WEATHER,
+                    ],
+                  ))
             ..addTriggerTask(
                 ImmediateTrigger(),
                 Task()
@@ -148,7 +148,7 @@ class StudyMock implements StudyManager {
                     namespace: NameSpace.CARP,
                     types: [
                       ContextSamplingPackage.LOCATION,
-                      ContextSamplingPackage.ACTIVITY,
+                      //ContextSamplingPackage.ACTIVITY,
                       ContextSamplingPackage.GEOFENCE,
                     ],
                   ))
@@ -161,31 +161,31 @@ class StudyMock implements StudyManager {
 //                      AudioSamplingPackage.NOISE,
 //                    ],
 //                  ))
-            ..addTriggerTask(
-                PeriodicTrigger(period: 1 * 53 * 1000, duration: 2 * 1000),
-                Task('Audio')
-                  ..measures
-                      .add(Measure(MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO), name: "Audio Recording")))
-            ..addTriggerTask(
-                ImmediateTrigger(),
-                Task()
-                  ..measures = SamplingSchema.debug().getMeasureList(
-                    namespace: NameSpace.CARP,
-                    types: [
-                      CommunicationSamplingPackage.CALENDAR,
-                      CommunicationSamplingPackage.TEXT_MESSAGE_LOG,
-                      CommunicationSamplingPackage.TEXT_MESSAGE,
-                      CommunicationSamplingPackage.PHONE_LOG,
-                      CommunicationSamplingPackage.TELEPHONY,
-                    ],
-                  ))
-            ..addTriggerTask(
-                DelayedTrigger(delay: 10 * 1000),
-                Task('eSense')
-                  ..measures.add(ESenseMeasure(MeasureType(NameSpace.CARP, ESenseSamplingPackage.ESENSE_BUTTON),
-                      name: 'eSense - Button', enabled: true, deviceName: 'eSense-0332'))
-                  ..measures.add(ESenseMeasure(MeasureType(NameSpace.CARP, ESenseSamplingPackage.ESENSE_SENSOR),
-                      name: 'eSense - Sensors', enabled: true, deviceName: 'eSense-0332', samplingRate: 10)))
+//            ..addTriggerTask(
+//                PeriodicTrigger(period: 1 * 53 * 1000, duration: 2 * 1000),
+//                Task('Audio')
+//                  ..measures
+//                      .add(Measure(MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO), name: "Audio Recording")))
+//            ..addTriggerTask(
+//                ImmediateTrigger(),
+//                Task()
+//                  ..measures = SamplingSchema.debug().getMeasureList(
+//                    namespace: NameSpace.CARP,
+//                    types: [
+//                      CommunicationSamplingPackage.CALENDAR,
+//                      CommunicationSamplingPackage.TEXT_MESSAGE_LOG,
+//                      CommunicationSamplingPackage.TEXT_MESSAGE,
+//                      CommunicationSamplingPackage.PHONE_LOG,
+//                      CommunicationSamplingPackage.TELEPHONY,
+//                    ],
+//                  ))
+//            ..addTriggerTask(
+//                DelayedTrigger(delay: 10 * 1000),
+//                Task('eSense')
+//                  ..measures.add(ESenseMeasure(MeasureType(NameSpace.CARP, ESenseSamplingPackage.ESENSE_BUTTON),
+//                      name: 'eSense - Button', enabled: true, deviceName: 'eSense-0332'))
+//                  ..measures.add(ESenseMeasure(MeasureType(NameSpace.CARP, ESenseSamplingPackage.ESENSE_SENSOR),
+//                      name: 'eSense - Sensors', enabled: true, deviceName: 'eSense-0332', samplingRate: 10)))
           //
           ;
     }
