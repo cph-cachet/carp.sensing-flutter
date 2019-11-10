@@ -1,6 +1,5 @@
 import 'package:test/test.dart';
 import 'dart:convert';
-import 'dart:io';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_movisens_package/movisens.dart';
 
