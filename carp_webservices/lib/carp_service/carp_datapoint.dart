@@ -37,7 +37,7 @@ class CARPDataPoint {
 
   /// Create a [CARPDataPoint] based on a [DataPoint] generated in the CARP Mobile Sensing Framework.
   CARPDataPoint.fromDataPoint(DataPoint dataPoint) {
-    CARPDataPointHeader header = new CARPDataPointHeader(dataPoint.header.studyId, dataPoint.header.userId);
+    CARPDataPointHeader header = new CARPDataPointHeader(dataPoint.header.studyId.toString(), dataPoint.header.userId);
     header.startTime =
         (dataPoint.body is CARPDatum) ? (dataPoint.body as CARPDatum).timestamp.toUtc() : new DateTime.now().toUtc();
     header.dataFormat = dataPoint.header.dataFormat;
@@ -47,8 +47,8 @@ class CARPDataPoint {
   }
 
   /// Create a [CARPDataPoint] based on a [CARPDatum] generated in the CARP Mobile Sensing Framework.
-  CARPDataPoint.fromDatum(String studyId, String userId, CARPDatum datum) {
-    CARPDataPointHeader header = new CARPDataPointHeader(studyId, userId);
+  CARPDataPoint.fromDatum(int studyId, String userId, CARPDatum datum) {
+    CARPDataPointHeader header = new CARPDataPointHeader(studyId.toString(), userId);
     header.startTime = (datum is CARPDatum) ? datum.timestamp.toUtc() : new DateTime.now().toUtc();
     header.dataFormat = datum.format;
 
@@ -64,6 +64,9 @@ class CARPDataPoint {
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class CARPDataPointHeader {
   /// The ID of the [Study] from which this data point was generated.
+  ///
+  /// TODO - as of this time, this id is a string, even though the Study ID is an int
+  /// See issue #16 >> https://github.com/cph-cachet/carp.webservices/issues/16
   String studyId;
 
   /// The role of this device in the [Study].
@@ -89,7 +92,7 @@ class CARPDataPointHeader {
   /// The CARP data format. See [DataFormat] and [NameSpace].
   DataFormat dataFormat;
 
-  // Create a new [CARPDataPointHeader]. [studyId] and [userId] are required.
+  /// Create a new [CARPDataPointHeader]. [studyId] and [userId] are required.
   CARPDataPointHeader(this.studyId, this.userId, {this.deviceRoleName, this.triggerId, this.startTime, this.endTime}) {
     if (startTime != null) startTime.toUtc();
     if (endTime != null) endTime.toUtc();

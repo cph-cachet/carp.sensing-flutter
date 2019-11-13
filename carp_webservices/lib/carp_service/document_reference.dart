@@ -60,7 +60,7 @@ class CollectionReference extends CarpReference {
   Future<CollectionReference> get() async {
     final restHeaders = await headers;
 
-    http.Response response = await Retry.get(Uri.encodeFull(collectionUri), headers: restHeaders);
+    http.Response response = await httpr.get(Uri.encodeFull(collectionUri), headers: restHeaders);
     Map<String, dynamic> responseJson = json.decode(response.body);
     int httpStatusCode = response.statusCode;
 
@@ -80,7 +80,7 @@ class CollectionReference extends CarpReference {
     final restHeaders = await headers;
 
     // GET the list of documents in this collection from the CARP web service
-    http.Response response = await Retry.get(Uri.encodeFull(collectionUri), headers: restHeaders);
+    http.Response response = await httpr.get(Uri.encodeFull(collectionUri), headers: restHeaders);
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
 
@@ -130,7 +130,7 @@ class CollectionReference extends CarpReference {
 
     // PUT the new name of this collection to the CARP web service
     http.Response response =
-        await Retry.put(Uri.encodeFull(_collectionUriByID), headers: restHeaders, body: '{"name":"$newName"}');
+        await httpr.put(Uri.encodeFull(_collectionUriByID), headers: restHeaders, body: '{"name":"$newName"}');
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
 
@@ -149,7 +149,7 @@ class CollectionReference extends CarpReference {
     final restHeaders = await headers;
 
     print(_collectionUriByID);
-    http.Response response = await Retry.delete(Uri.encodeFull(_collectionUriByID), headers: restHeaders);
+    http.Response response = await httpr.delete(Uri.encodeFull(_collectionUriByID), headers: restHeaders);
 
     int httpStatusCode = response.statusCode;
     if (httpStatusCode == 200)
@@ -218,7 +218,7 @@ class DocumentReference extends CarpReference {
       final restHeaders = await headers;
 
       http.Response response =
-          await Retry.post(Uri.encodeFull(documentUri), headers: restHeaders, body: json.encode(data));
+          await httpr.post(Uri.encodeFull(documentUri), headers: restHeaders, body: json.encode(data));
       int httpStatusCode = response.statusCode;
       Map<String, dynamic> responseJson = json.decode(response.body);
 
@@ -242,7 +242,7 @@ class DocumentReference extends CarpReference {
     final restHeaders = await headers;
     Map<String, dynamic> payload = {'data': data};
     http.Response response =
-        await Retry.put(Uri.encodeFull(documentUri), headers: restHeaders, body: json.encode(payload));
+        await httpr.put(Uri.encodeFull(documentUri), headers: restHeaders, body: json.encode(payload));
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
@@ -266,7 +266,7 @@ class DocumentReference extends CarpReference {
     final restHeaders = await headers;
     Map<String, dynamic> payload = {'name': name};
     http.Response response =
-        await Retry.put(Uri.encodeFull(documentUri), headers: restHeaders, body: json.encode(payload));
+        await httpr.put(Uri.encodeFull(documentUri), headers: restHeaders, body: json.encode(payload));
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
@@ -283,7 +283,7 @@ class DocumentReference extends CarpReference {
   Future<DocumentSnapshot> get() async {
     final restHeaders = await headers;
 
-    http.Response response = await Retry.get(Uri.encodeFull(documentUri), headers: restHeaders);
+    http.Response response = await httpr.get(Uri.encodeFull(documentUri), headers: restHeaders);
 
     int httpStatusCode = response.statusCode;
 

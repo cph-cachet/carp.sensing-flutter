@@ -8,7 +8,7 @@ part of domain;
 
 Study _$StudyFromJson(Map<String, dynamic> json) {
   return Study(
-    json['id'] as String,
+    json['id'] as int,
     json['user_id'] as String,
     name: json['name'] as String,
     description: json['description'] as String,
@@ -36,9 +36,9 @@ Map<String, dynamic> _$StudyToJson(Study instance) {
 
   writeNotNull('c__', instance.c__);
   writeNotNull('id', instance.id);
-  writeNotNull('user_id', instance.userId);
   writeNotNull('name', instance.name);
   writeNotNull('description', instance.description);
+  writeNotNull('user_id', instance.userId);
   writeNotNull('sampling_strategy', instance.samplingStrategy);
   writeNotNull('data_end_point', instance.dataEndPoint);
   writeNotNull('data_format', instance.dataFormat);
@@ -119,7 +119,7 @@ Map<String, dynamic> _$DataPointToJson(DataPoint instance) {
 
 DataPointHeader _$DataPointHeaderFromJson(Map<String, dynamic> json) {
   return DataPointHeader(
-    json['study_id'] as String,
+    json['study_id'] as int,
     json['user_id'] as String,
     startTime: json['start_time'] == null
         ? null

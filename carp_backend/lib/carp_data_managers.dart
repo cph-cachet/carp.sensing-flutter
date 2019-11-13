@@ -79,7 +79,6 @@ class CarpDataManager extends AbstractDataManager {
 
   /// Handle upload of data depending on the specified [CarpUploadMethod].
   Future<bool> uploadData(Datum data) async {
-    //print(">> $data");
     assert(data is CARPDatum);
 
     // Check if CARP authentication is ready before writing...
@@ -118,7 +117,7 @@ class CarpDataManager extends AbstractDataManager {
     final File file = File(path);
 
     final String deviceID = Device.deviceID.toString();
-    final String studyID = study.id;
+    final int studyID = study.id;
     final String userID = (await user).email;
 
     switch (carpEndPoint.uploadMethod) {

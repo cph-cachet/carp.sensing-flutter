@@ -4,7 +4,7 @@ import 'dart:convert';
 /// A simple example of how to set up sampling.
 void sensing() async {
   // create the study
-  Study study = Study('DF#4dD-1', 'user@gmail.com',
+  Study study = Study(2, 'user@gmail.com',
       name: 'A simple example study',
       dataEndPoint: FileDataEndPoint()
         ..bufferSize = 500 * 1000

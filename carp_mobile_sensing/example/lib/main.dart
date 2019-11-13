@@ -114,7 +114,7 @@ class Sensing {
     console.log("Setting up study...");
 
     // create the study
-    study = Study('DF#4dD-example', 'user@cachet.dk',
+    study = Study(2, 'user@cachet.dk',
         name: 'A default / common study',
         dataEndPoint: FileDataEndPoint()
           ..bufferSize = 500 * 1000

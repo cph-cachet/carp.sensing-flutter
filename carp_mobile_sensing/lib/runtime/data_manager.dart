@@ -83,7 +83,7 @@ abstract class StudyManager {
   Future<void> initialize();
 
   /// Get a [Study] based on its ID.
-  Future<Study> getStudy(String studyId);
+  Future<Study> getStudy(int studyId);
 }
 
 class DataManagerEvent {
