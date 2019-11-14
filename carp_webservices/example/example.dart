@@ -9,7 +9,7 @@ void main() async {
   final String uri = "http://staging.carp.cachet.dk:8080";
   final String clientID = "carp";
   final String clientSecret = "carp";
-  final int testStudyId = 8;
+  final String testStudyId = "8";
 
   CarpApp app;
   Study study;

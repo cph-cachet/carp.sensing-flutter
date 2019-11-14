@@ -18,7 +18,7 @@ class DataPoint {
 
   DataPoint(this.header, this.body);
 
-  DataPoint.fromDatum(int studyId, String userId, Datum datum) {
+  DataPoint.fromDatum(String studyId, String userId, Datum datum) {
     DataPointHeader header = new DataPointHeader(studyId, userId);
     header.startTime = (datum is CARPDatum) ? datum.timestamp.toUtc() : new DateTime.now().toUtc();
     header.dataFormat = datum.format;
@@ -35,7 +35,7 @@ class DataPoint {
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class DataPointHeader {
   /// The ID of the [Study] from which this data point was generated.
-  int studyId;
+  String studyId;
 
   /// The ID of the user (if known).
   String userId;

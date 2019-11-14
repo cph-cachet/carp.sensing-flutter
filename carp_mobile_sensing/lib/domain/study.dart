@@ -20,7 +20,7 @@ part of domain;
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class Study extends Serializable {
   /// The id of this [Study].
-  int id;
+  String id;
 
   /// A printer-friendly name for this study.
   String name;

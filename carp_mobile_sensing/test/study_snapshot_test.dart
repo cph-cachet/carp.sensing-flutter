@@ -12,7 +12,7 @@ void main() {
     //SamplingPackageRegistry.register(CommunicationSamplingPackage());
     //SamplingPackageRegistry.register(ContextSamplingPackage());
 
-    study = Study(1234, "bardram", name: "bardram study");
+    study = Study("1234", "bardram", name: "bardram study");
     study.dataEndPoint = DataEndPoint(DataEndPointTypes.PRINT);
 //    study.dataEndPoint = FileDataEndPoint()
 //      ..bufferSize = 50 * 1000

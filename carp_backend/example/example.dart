@@ -7,7 +7,7 @@ void main() {
   final String uri = "http://staging.carp.cachet.dk:8080";
   final String clientID = "carp";
   final String clientSecret = "carp";
-  final int testStudyId = 8;
+  final String testStudyId = "8";
 
   // first register the CARP data manager
   DataManagerRegistry.register(CarpDataManager());

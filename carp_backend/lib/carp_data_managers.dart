@@ -117,7 +117,7 @@ class CarpDataManager extends AbstractDataManager {
     final File file = File(path);
 
     final String deviceID = Device.deviceID.toString();
-    final int studyID = study.id;
+    final String studyID = study.id;
     final String userID = (await user).email;
 
     switch (carpEndPoint.uploadMethod) {

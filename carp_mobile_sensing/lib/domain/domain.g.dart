@@ -8,7 +8,7 @@ part of domain;
 
 Study _$StudyFromJson(Map<String, dynamic> json) {
   return Study(
-    json['id'] as int,
+    json['id'] as String,
     json['user_id'] as String,
     name: json['name'] as String,
     description: json['description'] as String,
@@ -119,7 +119,7 @@ Map<String, dynamic> _$DataPointToJson(DataPoint instance) {
 
 DataPointHeader _$DataPointHeaderFromJson(Map<String, dynamic> json) {
   return DataPointHeader(
-    json['study_id'] as int,
+    json['study_id'] as String,
     json['user_id'] as String,
     startTime: json['start_time'] == null
         ? null
