@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "201621881872-hatqr59lrlljsanljl0vdgkv7f9hjcg2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "dk.cachet.carpmobilesensingapp",
+            "certificate_hash": "e96319cc50f8baee3dabf63e8cba1403be01beb1"
+          }
+        },
+        {
           "client_id": "201621881872-cfmoutur5nvplgi955bclc38ufbcok7c.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -30,6 +38,13 @@
             {
               "client_id": "201621881872-cfmoutur5nvplgi955bclc38ufbcok7c.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "201621881872-qe7ttdlnn92agmrr4keu5k897k8jbm82.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "dk.cachet.carp.cams.app"
+              }
             }
           ]
         }
@@ -59,6 +74,13 @@
             {
               "client_id": "201621881872-cfmoutur5nvplgi955bclc38ufbcok7c.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "201621881872-qe7ttdlnn92agmrr4keu5k897k8jbm82.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "dk.cachet.carp.cams.app"
+              }
             }
           ]
         }
@@ -96,6 +118,13 @@
             {
               "client_id": "201621881872-cfmoutur5nvplgi955bclc38ufbcok7c.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "201621881872-qe7ttdlnn92agmrr4keu5k897k8jbm82.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "dk.cachet.carp.cams.app"
+              }
             }
           ]
         }

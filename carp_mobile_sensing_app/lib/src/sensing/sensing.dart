@@ -3,7 +3,7 @@ part of mobile_sensing_app;
 /// This class implements the sensing layer incl. setting up a [Study] with [Task]s and [Measure]s.
 class Sensing {
   Study study;
-  final String testStudyId = "2_and_some_text";
+  final String testStudyId = "2";
 
   StudyController controller;
   StudyManager mock = new StudyMock();
@@ -20,8 +20,8 @@ class Sensing {
 
     // create/load and register external data managers
     DataManagerRegistry.register(CarpDataManager());
-    //DataManagerRegistry.register(FirebaseStorageDataManager());
-    //DataManagerRegistry.register(FirebaseDatabaseDataManager());
+    DataManagerRegistry.register(FirebaseStorageDataManager());
+    DataManagerRegistry.register(FirebaseDatabaseDataManager());
   }
 
   /// Start sensing.
@@ -86,7 +86,7 @@ class StudyMock implements StudyManager {
       _study = Study(studyId, username)
             ..name = testStudyName
             ..description = 'This is a study for testing and debugging -- especially on iOS.'
-            ..dataEndPoint = getDataEndpoint(DataEndPointTypes.CARP)
+            ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FIREBASE_DATABSE)
             ..addTriggerTask(
                 ImmediateTrigger(),
                 Task()
@@ -382,33 +382,34 @@ class StudyMock implements StudyManager {
 //          zip: true,
 //          deleteWhenUploaded: false,
 //        );
-//      case DataEndPointTypes.FIREBASE_STORAGE:
-//        return FirebaseStorageDataEndPoint(firebaseEndPoint, path: 'sensing/data', bufferSize: 50 * 1000, zip: true);
-//      case DataEndPointTypes.FIREBASE_DATABSE:
-//        return FirebaseDatabaseDataEndPoint(firebaseEndPoint, collection: 'carp_data');
+      case DataEndPointTypes.FIREBASE_STORAGE:
+        return FirebaseStorageDataEndPoint(firebaseEndPoint, path: 'sensing/data', bufferSize: 50 * 1000, zip: true);
+      case DataEndPointTypes.FIREBASE_DATABSE:
+        return FirebaseDatabaseDataEndPoint(firebaseEndPoint, collection: 'carp_data');
       default:
         return new DataEndPoint(DataEndPointTypes.PRINT);
     }
   }
 
-//  FirebaseEndPoint _firebaseEndPoint;
-//  FirebaseEndPoint get firebaseEndPoint {
-//    if (_firebaseEndPoint == null) {
-//      _firebaseEndPoint = new FirebaseEndPoint(
-//          name: "Flutter Sensing Sandbox",
-//          uri: 'gs://flutter-sensing-sandbox.appspot.com',
-//          projectID: 'flutter-sensing-sandbox',
-//          webAPIKey: 'AIzaSyCGy6MeHkiv5XkBtMcMbtgGYOpf6ntNVE4',
-//          gcmSenderID: '201621881872',
-//          androidGoogleAppID: '1:201621881872:android:8e84e7ccfc85e121',
-//          iOSGoogleAppID: '1:159623150305:ios:4a213ef3dbd8997b',
-//          firebaseAuthenticationMethod: FireBaseAuthenticationMethods.PASSWORD,
-//          email: "jakob@bardram.net",
-//          // remember to change this to the real pw before running, but remove again before committing to git
-//          password: "mit_password");
-//    }
-//    return _firebaseEndPoint;
-//  }
+  FirebaseEndPoint _firebaseEndPoint;
+  FirebaseEndPoint get firebaseEndPoint {
+    if (_firebaseEndPoint == null) {
+      _firebaseEndPoint = new FirebaseEndPoint(
+        name: "Flutter Sensing Sandbox",
+        uri: 'gs://flutter-sensing-sandbox.appspot.com',
+        projectID: 'flutter-sensing-sandbox',
+        webAPIKey: 'AIzaSyCGy6MeHkiv5XkBtMcMbtgGYOpf6ntNVE4',
+        gcmSenderID: '201621881872',
+        androidGoogleAppID: '1:201621881872:android:8e84e7ccfc85e121',
+        iOSGoogleAppID: '1:159623150305:ios:4a213ef3dbd8997b',
+        firebaseAuthenticationMethod: FireBaseAuthenticationMethods.GOOGLE,
+        //email: "jakob@bardram.net",
+        // remember to change this to the real pw before running, but remove again before committing to git
+        //password: "QAfflkfh23",
+      );
+    }
+    return _firebaseEndPoint;
+  }
 }
 
 SamplingSchema get aware => SamplingSchema()
