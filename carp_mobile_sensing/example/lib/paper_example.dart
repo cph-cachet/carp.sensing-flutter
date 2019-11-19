@@ -1,7 +1,6 @@
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'dart:convert';
 
-/// A simple example of how to set up sampling.
 void sensing() async {
   // create the study
   Study study = Study('DF#4dD-1', 'user@gmail.com',
@@ -10,6 +9,7 @@ void sensing() async {
         ..bufferSize = 500 * 1000
         ..zip = true
         ..encrypt = false)
+    ..dataFormat = NameSpace.OMH
     ..addTriggerTask(
         ImmediateTrigger(),
         Task('One Common Sensing Task')

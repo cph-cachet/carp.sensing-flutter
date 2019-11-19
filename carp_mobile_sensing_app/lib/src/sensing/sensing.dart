@@ -73,12 +73,12 @@ class StudyMock implements StudyManager {
 
   Future<Study> getStudy(String studyId) async {
     //return _getHighFrequencyStudy('DF#4dD-high-frequency');
-    //return _getAllProbesAsAwareStudy('DF#4dD-aware-carp');
+    return _getAllProbesAsAwareStudy('DF#4dD-aware-carp');
     //return _getAllMeasuresStudy(studyId);
     //return _getAllProbesAsAwareCarpUploadStudy();
     //return _getAudioStudy(studyId);
     //return _getESenseStudy(studyId);
-    return _getTestingStudy(studyId);
+    //return _getTestingStudy(studyId);
   }
 
   Future<Study> _getTestingStudy(String studyId) async {
@@ -304,12 +304,9 @@ class StudyMock implements StudyManager {
         ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
         ..addTriggerTask(
             ImmediateTrigger(), Task()..measures = aware.measures.values.toList()) // add all measures (for now)
-//        ..addTriggerTask(
-//            PeriodicTrigger(period: 60 * 1000), // add periodic weather measure, once pr. min.
-//            Task()..addMeasure(aware.measures[ContextSamplingPackage.WEATHER]))
         ..addTriggerTask(
-            PeriodicTrigger(period: 60 * 1000), // add periodic app log measure, once pr. day
-            Task()..addMeasure(aware.measures[AppsSamplingPackage.APPS]));
+            PeriodicTrigger(period: 60 * 1000), // add periodic weather measure, once pr. min.
+            Task()..addMeasure(aware.measures[ContextSamplingPackage.WEATHER]));
     }
     return _study;
   }
@@ -460,10 +457,10 @@ SamplingSchema get aware => SamplingSchema()
             name: 'Text Message (SMS) Log')),
     MapEntry(CommunicationSamplingPackage.TEXT_MESSAGE,
         Measure(MeasureType(NameSpace.CARP, CommunicationSamplingPackage.TEXT_MESSAGE), name: 'Text Message (SMS)')),
-//    MapEntry(ContextSamplingPackage.LOCATION,
-//        Measure(MeasureType(NameSpace.CARP, ContextSamplingPackage.LOCATION), name: 'Location')),
-//    MapEntry(ContextSamplingPackage.ACTIVITY,
-//        Measure(MeasureType(NameSpace.CARP, ContextSamplingPackage.ACTIVITY), name: 'Activity Recognition')),
+    MapEntry(ContextSamplingPackage.LOCATION,
+        Measure(MeasureType(NameSpace.CARP, ContextSamplingPackage.LOCATION), name: 'Location')),
+    MapEntry(ContextSamplingPackage.ACTIVITY,
+        Measure(MeasureType(NameSpace.CARP, ContextSamplingPackage.ACTIVITY), name: 'Activity Recognition')),
 //    MapEntry(
 //        ContextSamplingPackage.WEATHER,
 //        WeatherMeasure(MeasureType(NameSpace.CARP, ContextSamplingPackage.WEATHER),
