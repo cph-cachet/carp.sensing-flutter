@@ -85,6 +85,8 @@ class CarpDataEndPoint extends FileDataEndPoint {
   static Function get fromJsonFunction => _$CarpDataEndPointFromJson;
   factory CarpDataEndPoint.fromJson(Map<String, dynamic> json) => _$CarpDataEndPointFromJson(json);
   Map<String, dynamic> toJson() => _$CarpDataEndPointToJson(this);
+
+  String toString() => 'CARP - $name [$uri]';
 }
 
 /// A enumeration of upload methods to CARP

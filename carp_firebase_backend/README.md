@@ -30,7 +30,9 @@ For Firebase to work with your Flutter app, configuration of both Firebase and y
 Please follow the step below in details, since the level of debugging / error messages are quite limited 
 when setting this up. If you are new to Firebase, then please start by reading the extensive 
 [Firebase documentation](https://firebase.google.com/docs/) first.
-Then read the [Add Firebase to your Flutter app](https://firebase.google.com/docs/flutter/setup#configure_to_use_firebase) tutorial.
+Then read the [Add Firebase to your Flutter app](https://firebase.google.com/docs/flutter/setup) tutorial.
+
+
 
 ### Step 1: Configure Google Firebase
 
@@ -40,7 +42,8 @@ Note that you need to add support for **both** the Android and iOS version of th
 4. Configure [authentication](https://firebase.google.com/docs/auth/)
     * `carp_firebase_backend` supports two types of authentication:
          * [username/password](https://firebase.google.com/docs/auth/android/password-auth) authentication
-         * [Google Sign-In](https://firebase.google.com/docs/auth/android/google-signin) on Android
+         * [Google Sign-In](https://firebase.google.com/docs/auth/android/google-signin) on Android. 
+         **Note:** [SHA-1](https://developers.google.com/android/guides/client-auth) information is required by Google Sign-In
 5. Add users that can upload data e.g. via the console
 6. Set up your [storage security rules](https://firebase.google.com/docs/storage/security/start) as shown below.
 
@@ -88,7 +91,7 @@ $ pod init
 
 This should install all the necessary pods for Firebase.
 
-**Note** – it seems like Firebase is putting constraints on the naming of the iOS **Bundle Name**. 
+> **Note:** It seems like Firebase is putting constraints on the naming of the iOS **Bundle Name**. 
 Even though a valid iOS bundle name can contain `.` (dots) and spaces, Firebase throws the following exception:
 
 ```

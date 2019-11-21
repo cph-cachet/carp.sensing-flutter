@@ -15,10 +15,11 @@ void main() {
   //final String password = "underbar";
   final String userId = "user@dtu.dk";
   //final String uri = "http://staging.carp.cachet.dk:8080";
-  final String uri = "https://test.carp.cachet.dk:443";
+  //final String uri = "https://test.carp.cachet.dk:443";
+  final String uri = "https://cans.cachet.dk:443";
   final String clientID = "carp";
   final String clientSecret = "carp";
-  final String testStudyId = "1";
+  final String testStudyId = "2";
   CarpApp app;
   CarpUser user;
   Study study;

@@ -127,13 +127,13 @@ void samplingSchemaExample() async {
 
   //creating a study
 
-  Study study_1 = Study('DF#4dD', 'user@cachet.dk')
+  Study study_1 = Study("2", 'user@cachet.dk')
     ..name = 'CARP Mobile Sensing - default configuration'
     ..dataEndPoint = DataEndPoint(DataEndPointTypes.PRINT)
     ..addTriggerTask(ImmediateTrigger(),
         Task()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
 
-  Study study = Study('DF#4dD', 'user@cachet.dk',
+  Study study = Study("2", 'user@cachet.dk',
       name: 'A outdoor activity study',
       dataFormat: NameSpace.OMH,
       dataEndPoint: FileDataEndPoint()
@@ -206,7 +206,7 @@ void samplingSchemaExample() async {
 
 /// This is an example of how to set up a study in a very simple way using [SamplingSchema.common()].
 void example_2() {
-  Study study = Study('DF#4dD', 'user@cachet.dk',
+  Study study = Study("2", 'user@cachet.dk',
       name: 'A outdoor activity study',
       dataEndPoint: FileDataEndPoint()
         ..bufferSize = 500 * 1000
@@ -248,7 +248,7 @@ void restart_example() {}
 
 /// An example of how to configure a [StudyController]
 void study_controller_example() {
-  Study study = Study('DF#4dD', 'user@cachet.dk');
+  Study study = Study("2", 'user@cachet.dk');
   StudyController controller = StudyController(study, privacySchemaName: PrivacySchema.DEFAULT);
 }
 

@@ -1,10 +1,14 @@
+## 0.6.2
+* intensive test of data upload to CARP and Firebase on both Android and iOS
+* support for retry in upload of data to CARP
+* handling that a study id can only be an integer in the CARP web services
+
 ## 0.6.1
 * Thorough testing on iOS.
 * Better handling of probes not available on iOS via the `initialize` method.
 * Centralized concept for handling permissions.
 
 ## 0.6.0 - `Trigger` Model & Data Manager events
-
 * Extension of `Study` domain model to include support for
  `Trigger`, which manages the temporal triggering of data sampling.
  See the [documentation](https://github.com/cph-cachet/carp.sensing-flutter/wiki/2.-Domain-Model) on how to defined a study with triggers.

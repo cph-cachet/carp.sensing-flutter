@@ -92,7 +92,7 @@ void main() {
   });
 
   test('Triggers -> JSON', () async {
-    Study study_3 = Study("jh-sgadDF#jkdhf", "bardram", name: "Multi Trigger Study");
+    Study study_3 = Study("3", "bardram", name: "Multi Trigger Study");
     study_3.dataEndPoint = FileDataEndPoint()
       ..bufferSize = 50 * 1000
       ..zip = true

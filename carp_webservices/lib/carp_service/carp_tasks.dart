@@ -70,7 +70,7 @@ class FileUploadTask extends CarpServiceTask {
       filename: file != null ? file.path : '',
     ));
 
-    request.send().then((response) {
+    httpr.send(request).then((response) {
       response.stream.toStringStream().first.then((body) {
         final int httpStatusCode = response.statusCode;
         final Map<String, dynamic> map = json.decode(body);
@@ -130,7 +130,7 @@ class FileDownloadTask extends CarpServiceTask {
     Map<String, String> headers = await reference.headers;
     headers['Content-Type'] = 'application/x-www-form-urlencoded';
 
-    Retry.get(Uri.encodeFull(url), headers: headers).then((response) {
+    httpr.get(Uri.encodeFull(url), headers: headers).then((response) {
       final int httpStatusCode = response.statusCode;
 
       switch (httpStatusCode) {

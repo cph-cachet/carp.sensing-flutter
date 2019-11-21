@@ -1,3 +1,8 @@
+## 0.3.3
+* improvement on retry in offline mode
+* testing w. iOS
+* aligned with `carp_mobile_sensing` version 0.6.2
+
 ## 0.3.2
 * support for retry in all RESTfull calls, incl. upload of JSON data files.
 

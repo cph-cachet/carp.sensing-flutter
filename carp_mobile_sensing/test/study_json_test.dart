@@ -8,7 +8,7 @@ String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(objec
 void main() {
   setUp(() {
     // This is a hack. Need to create some serialization object in order to intialize searialization.
-    Study study = Study("123", "kkk");
+    Study study = Study("1234", "kkk");
   });
 
   /// Test if we can load a raw JSON from a file and convert it into a [Study] object with all its [Task]s and [Measure]s.

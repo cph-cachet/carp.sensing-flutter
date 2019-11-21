@@ -36,9 +36,9 @@ Map<String, dynamic> _$StudyToJson(Study instance) {
 
   writeNotNull('c__', instance.c__);
   writeNotNull('id', instance.id);
-  writeNotNull('user_id', instance.userId);
   writeNotNull('name', instance.name);
   writeNotNull('description', instance.description);
+  writeNotNull('user_id', instance.userId);
   writeNotNull('sampling_strategy', instance.samplingStrategy);
   writeNotNull('data_end_point', instance.dataEndPoint);
   writeNotNull('data_format', instance.dataFormat);

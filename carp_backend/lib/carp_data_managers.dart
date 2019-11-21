@@ -79,7 +79,6 @@ class CarpDataManager extends AbstractDataManager {
 
   /// Handle upload of data depending on the specified [CarpUploadMethod].
   Future<bool> uploadData(Datum data) async {
-    //print(">> $data");
     assert(data is CARPDatum);
 
     // Check if CARP authentication is ready before writing...

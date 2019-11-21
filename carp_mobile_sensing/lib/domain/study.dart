@@ -22,14 +22,14 @@ class Study extends Serializable {
   /// The id of this [Study].
   String id;
 
-  /// The ID of the user executing this study. May be [null] if no user is known.
-  String userId;
-
   /// A printer-friendly name for this study.
   String name;
 
   /// A longer description of this study. To be used to inform the user about this study and its purpose.
   String description;
+
+  /// The ID of the user executing this study. May be [null] if no user is known.
+  String userId;
 
   /// The sampling strategy according to [SamplingSchemaType].
   String samplingStrategy = SamplingSchemaType.NORMAL;
@@ -108,7 +108,7 @@ class DataEndPoint extends Serializable {
 
 /// A enumeration of known (but not necessarily implemented) endpoint API types.
 ///
-/// Note that the type is basically a [String], which allow for extension of unknown,
+/// Note that the type is basically a [String], which allow for extension of new
 /// application-specific data endpoints.
 class DataEndPointTypes {
   static const String UNKNOWN = 'UNKNOWN';
