@@ -305,8 +305,25 @@ class StudyMock implements StudyManager {
         ..addTriggerTask(
             ImmediateTrigger(), Task()..measures = aware.measures.values.toList()) // add all measures (for now)
         ..addTriggerTask(
-            PeriodicTrigger(period: 60 * 1000), // add periodic weather measure, once pr. min.
-            Task()..addMeasure(aware.measures[ContextSamplingPackage.WEATHER]));
+            DelayedTrigger(delay: 10 * 1000),
+            Task()
+              ..measures = SamplingSchema.debug().getMeasureList(
+                namespace: NameSpace.CARP,
+                types: [
+                  ConnectivitySamplingPackage.BLUETOOTH,
+                  //ConnectivitySamplingPackage.WIFI,
+                  //ConnectivitySamplingPackage.CONNECTIVITY,
+                ],
+              ))
+        ..addTriggerTask(
+            PeriodicTrigger(period: 60 * 60 * 1000),
+            Task()
+              ..measures = SamplingSchema.debug().getMeasureList(
+                namespace: NameSpace.CARP,
+                types: [
+                  ContextSamplingPackage.WEATHER,
+                ],
+              ));
     }
     return _study;
   }
@@ -439,10 +456,10 @@ SamplingSchema get aware => SamplingSchema()
         Measure(MeasureType(NameSpace.CARP, DeviceSamplingPackage.BATTERY), name: 'Battery')),
     MapEntry(DeviceSamplingPackage.SCREEN,
         Measure(MeasureType(NameSpace.CARP, DeviceSamplingPackage.SCREEN), name: 'Screen Activity (lock/on/off)')),
-    MapEntry(
-        ConnectivitySamplingPackage.BLUETOOTH,
-        PeriodicMeasure(MeasureType(NameSpace.CARP, ConnectivitySamplingPackage.BLUETOOTH),
-            name: 'Nearby Devices (Bluetooth Scan)', frequency: 60 * 1000, duration: 3 * 1000)),
+//    MapEntry(
+//        ConnectivitySamplingPackage.BLUETOOTH,
+//        PeriodicMeasure(MeasureType(NameSpace.CARP, ConnectivitySamplingPackage.BLUETOOTH),
+//            name: 'Nearby Devices (Bluetooth Scan)', frequency: 60 * 1000, duration: 3 * 1000)),
     MapEntry(
         ConnectivitySamplingPackage.WIFI,
         PeriodicMeasure(MeasureType(NameSpace.CARP, ConnectivitySamplingPackage.WIFI),
@@ -457,8 +474,10 @@ SamplingSchema get aware => SamplingSchema()
             name: 'Text Message (SMS) Log')),
     MapEntry(CommunicationSamplingPackage.TEXT_MESSAGE,
         Measure(MeasureType(NameSpace.CARP, CommunicationSamplingPackage.TEXT_MESSAGE), name: 'Text Message (SMS)')),
-    MapEntry(ContextSamplingPackage.LOCATION,
-        Measure(MeasureType(NameSpace.CARP, ContextSamplingPackage.LOCATION), name: 'Location')),
+    MapEntry(
+        ContextSamplingPackage.LOCATION,
+        LocationMeasure(MeasureType(NameSpace.CARP, ContextSamplingPackage.LOCATION),
+            name: 'Location', enabled: true, frequency: 30 * 1000)),
     MapEntry(ContextSamplingPackage.ACTIVITY,
         Measure(MeasureType(NameSpace.CARP, ContextSamplingPackage.ACTIVITY), name: 'Activity Recognition')),
 //    MapEntry(
