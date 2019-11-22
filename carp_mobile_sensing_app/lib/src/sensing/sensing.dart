@@ -20,8 +20,8 @@ class Sensing {
 
     // create/load and register external data managers
     DataManagerRegistry.register(CarpDataManager());
-    DataManagerRegistry.register(FirebaseStorageDataManager());
-    DataManagerRegistry.register(FirebaseDatabaseDataManager());
+//    DataManagerRegistry.register(FirebaseStorageDataManager());
+//    DataManagerRegistry.register(FirebaseDatabaseDataManager());
   }
 
   /// Start sensing.
@@ -73,7 +73,7 @@ class StudyMock implements StudyManager {
 
   Future<Study> getStudy(String studyId) async {
     //return _getHighFrequencyStudy('DF#4dD-high-frequency');
-    return _getAllProbesAsAwareStudy('DF#4dD-aware-carp');
+    return _getAllProbesAsAwareStudy('#4-aware-carp');
     //return _getAllMeasuresStudy(studyId);
     //return _getAllProbesAsAwareCarpUploadStudy();
     //return _getAudioStudy(studyId);
@@ -396,34 +396,34 @@ class StudyMock implements StudyManager {
 //          zip: true,
 //          deleteWhenUploaded: false,
 //        );
-      case DataEndPointTypes.FIREBASE_STORAGE:
-        return FirebaseStorageDataEndPoint(firebaseEndPoint, path: 'sensing/data', bufferSize: 50 * 1000, zip: true);
-      case DataEndPointTypes.FIREBASE_DATABSE:
-        return FirebaseDatabaseDataEndPoint(firebaseEndPoint, collection: 'carp_data');
+//      case DataEndPointTypes.FIREBASE_STORAGE:
+//        return FirebaseStorageDataEndPoint(firebaseEndPoint, path: 'sensing/data', bufferSize: 50 * 1000, zip: true);
+//      case DataEndPointTypes.FIREBASE_DATABSE:
+//        return FirebaseDatabaseDataEndPoint(firebaseEndPoint, collection: 'carp_data');
       default:
         return new DataEndPoint(DataEndPointTypes.PRINT);
     }
   }
 
-  FirebaseEndPoint _firebaseEndPoint;
-  FirebaseEndPoint get firebaseEndPoint {
-    if (_firebaseEndPoint == null) {
-      _firebaseEndPoint = new FirebaseEndPoint(
-        name: "Flutter Sensing Sandbox",
-        uri: 'gs://flutter-sensing-sandbox.appspot.com',
-        projectID: 'flutter-sensing-sandbox',
-        webAPIKey: 'AIzaSyCGy6MeHkiv5XkBtMcMbtgGYOpf6ntNVE4',
-        gcmSenderID: '201621881872',
-        androidGoogleAppID: '1:201621881872:android:8e84e7ccfc85e121',
-        iOSGoogleAppID: '1:159623150305:ios:4a213ef3dbd8997b',
-        firebaseAuthenticationMethod: FireBaseAuthenticationMethods.GOOGLE,
-        //email: "jakob@bardram.net",
-        // remember to change this to the real pw before running, but remove again before committing to git
-        //password: "QAfflkfh23",
-      );
-    }
-    return _firebaseEndPoint;
-  }
+//  FirebaseEndPoint _firebaseEndPoint;
+//  FirebaseEndPoint get firebaseEndPoint {
+//    if (_firebaseEndPoint == null) {
+//      _firebaseEndPoint = new FirebaseEndPoint(
+//        name: "Flutter Sensing Sandbox",
+//        uri: 'gs://flutter-sensing-sandbox.appspot.com',
+//        projectID: 'flutter-sensing-sandbox',
+//        webAPIKey: 'AIzaSyCGy6MeHkiv5XkBtMcMbtgGYOpf6ntNVE4',
+//        gcmSenderID: '201621881872',
+//        androidGoogleAppID: '1:201621881872:android:8e84e7ccfc85e121',
+//        iOSGoogleAppID: '1:159623150305:ios:4a213ef3dbd8997b',
+//        firebaseAuthenticationMethod: FireBaseAuthenticationMethods.GOOGLE,
+//        //email: "jakob@bardram.net",
+//        // remember to change this to the real pw before running, but remove again before committing to git
+//        //password: "QAfflkfh23",
+//      );
+//    }
+//    return _firebaseEndPoint;
+//  }
 }
 
 SamplingSchema get aware => SamplingSchema()

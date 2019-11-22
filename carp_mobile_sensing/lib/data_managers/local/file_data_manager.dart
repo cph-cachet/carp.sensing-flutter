@@ -114,13 +114,12 @@ class FileDataManager extends AbstractDataManager {
       return Future.delayed(const Duration(seconds: 2), () => write(data));
     }
 
-    DataPoint _header = new DataPoint.fromDatum(study.id, study.userId, data);
-    final json = jsonEncode(_header);
+    final DataPoint _datapoint = DataPoint.fromDatum(study.id, study.userId, data);
+    final json = jsonEncode(_datapoint);
 
     sink.then((_s) {
       _s.write(json);
-      // write a ',' to separate json objects in the list
-      _s.write('\n,\n');
+      _s.write('\n,\n'); // write a ',' to separate json objects in the list
       //print("Writing to file : ${data.toString()}");
 
       file.then((_f) {
@@ -143,10 +142,10 @@ class FileDataManager extends AbstractDataManager {
     _flushingSink = flushSink.hashCode;
 
     // Reset the file (setting it and its name and sink to null), so a new file (and sink) can be created.
+    _sink = null;
     _initialized = false;
     _filename = null;
     _file = null;
-    _sink = null;
     // Start creating a new sink (and file) to be used in parallel to flushing this file.
     sink.then((value) {});
 
