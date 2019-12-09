@@ -174,10 +174,12 @@ class DataPointReference extends CarpReference {
   Future<List<CARPDataPoint>> queryDataPoint(String query) async {
     assert(query != null, 'A query string must be specified.');
     String url = (query.length == 0) ? dataEndpointUri : "$dataEndpointUri?query=$query";
+    print('url : $url');
     final restHeaders = await headers;
 
     // GET the data points from the CARP web service
-    http.Response response = await httpr.get(Uri.encodeFull(url), headers: restHeaders);
+    //http.Response response = await httpr.get(Uri.encodeFull(url), headers: restHeaders);
+    http.Response response = await httpr.get(url, headers: restHeaders);
 
     int httpStatusCode = response.statusCode;
 

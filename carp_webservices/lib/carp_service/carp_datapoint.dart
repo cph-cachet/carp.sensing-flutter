@@ -50,9 +50,8 @@ class CARPDataPoint {
   }
 
   /// Create a [CARPDataPoint] based on a [CARPDatum] generated in the CARP Mobile Sensing Framework.
-  ///
-  /// TODO - once the restriction on only integers as study id on the server side is fixed, remove the assert below.
   CARPDataPoint.fromDatum(String studyId, String userId, CARPDatum datum) {
+    /// TODO - once the restriction on only integers as study id on the server side is fixed, remove the assert below.
     assert(int.tryParse(studyId) != null, 'Study ID ($studyId) for the CARP Web Services can only be an integer.');
     CARPDataPointHeader header = new CARPDataPointHeader(studyId.toString(), userId);
     header.startTime = (datum is CARPDatum) ? datum.timestamp.toUtc() : new DateTime.now().toUtc();

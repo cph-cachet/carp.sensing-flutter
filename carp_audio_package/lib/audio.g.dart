@@ -43,10 +43,10 @@ Map<String, dynamic> _$AudioDatumToJson(AudioDatum instance) {
 
 NoiseDatum _$NoiseDatumFromJson(Map<String, dynamic> json) {
   return NoiseDatum(
-    meanDecibel: json['mean_decibel'] as num,
-    stdDecibel: json['std_decibel'] as num,
-    minDecibel: json['min_decibel'] as num,
-    maxDecibel: json['max_decibel'] as num,
+    meanDecibel: (json['mean_decibel'] as num)?.toDouble(),
+    stdDecibel: (json['std_decibel'] as num)?.toDouble(),
+    minDecibel: (json['min_decibel'] as num)?.toDouble(),
+    maxDecibel: (json['max_decibel'] as num)?.toDouble(),
   )
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null

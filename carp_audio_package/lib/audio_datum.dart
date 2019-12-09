@@ -39,16 +39,16 @@ class NoiseDatum extends CARPDatum {
   // The sound intensity [dB] measurement statistics for a given sampling window.
 
   /// Mean decibel of sampling window.
-  num meanDecibel;
+  double meanDecibel;
 
   /// Standard deviation (in decibel) of sampling window.
-  num stdDecibel;
+  double stdDecibel;
 
   /// Minimum decibel of sampling window.
-  num minDecibel;
+  double minDecibel;
 
   /// Maximum decibel of sampling window.
-  num maxDecibel;
+  double maxDecibel;
 
   NoiseDatum({this.meanDecibel, this.stdDecibel, this.minDecibel, this.maxDecibel}) : super();
 

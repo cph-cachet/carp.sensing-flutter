@@ -64,7 +64,12 @@ class NoiseProbe extends BufferingPeriodicStreamProbe {
       num std = stats.standardDeviation;
       num min = stats.min;
       num max = stats.max;
-      return NoiseDatum(meanDecibel: mean, stdDecibel: std, minDecibel: min, maxDecibel: max);
+
+      return NoiseDatum(
+          meanDecibel: mean.toDouble(),
+          stdDecibel: std.toDouble(),
+          minDecibel: min.toDouble(),
+          maxDecibel: max.toDouble());
     } else {
       return null;
     }

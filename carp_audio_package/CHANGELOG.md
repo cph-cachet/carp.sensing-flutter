@@ -1,3 +1,6 @@
+## 0.6.2
+* NoiseDatum now w. doubles.
+
 ## 0.6.1
 * allignment with `carp_mobile_sensing` v. 0.6.1.
 * improvement to the audio probe based
