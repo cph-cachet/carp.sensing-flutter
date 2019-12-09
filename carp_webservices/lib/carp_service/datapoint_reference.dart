@@ -178,6 +178,7 @@ class DataPointReference extends CarpReference {
     final restHeaders = await headers;
 
     // GET the data points from the CARP web service
+    // TODO - for some reason the CARP web service don't like encoded url's....
     //http.Response response = await httpr.get(Uri.encodeFull(url), headers: restHeaders);
     http.Response response = await httpr.get(url, headers: restHeaders);
 
