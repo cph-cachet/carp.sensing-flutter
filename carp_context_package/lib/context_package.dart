@@ -18,9 +18,16 @@ class ContextSamplingPackage implements SamplingPackage {
   static const String LOCATION = "location";
   static const String ACTIVITY = "activity";
   static const String WEATHER = "weather";
+  static const String AIR_QUALITY = "air_quality";
   static const String GEOFENCE = "geofence";
 
-  List<String> get dataTypes => [LOCATION, ACTIVITY, WEATHER, GEOFENCE];
+  List<String> get dataTypes => [
+        LOCATION,
+        ACTIVITY,
+        WEATHER,
+        AIR_QUALITY,
+        GEOFENCE,
+      ];
 
   Probe create(String type) {
     switch (type) {
@@ -30,6 +37,8 @@ class ContextSamplingPackage implements SamplingPackage {
         return ActivityProbe();
       case WEATHER:
         return WeatherProbe();
+      case AIR_QUALITY:
+        return AirQualityProbe();
       case GEOFENCE:
         return GeofenceProbe();
       default:
