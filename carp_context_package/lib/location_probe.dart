@@ -7,8 +7,13 @@
 
 part of context;
 
-/// The general location provider service.
 Location _locationService;
+
+/// The general location provider service.
+Location get locationService {
+  if (_locationService == null) _locationService = Location();
+  return _locationService;
+}
 
 /// Collects location information from the underlying OS's location API.
 /// Is a [PeriodicDatumProbe] that collects a [LocationDatum] on a regular basis
@@ -19,15 +24,14 @@ Location _locationService;
 class LocationProbe extends PeriodicDatumProbe {
   Future<void> onInitialize(Measure measure) async {
     assert(measure is LocationMeasure);
-    _locationService = Location();
     super.onInitialize(measure);
   }
 
-  Future<bool> _setSettings() async => await _locationService.changeSettings(
+  Future<bool> _setSettings() async => await locationService.changeSettings(
       accuracy: (measure as LocationMeasure).accuracy ?? LocationAccuracy.BALANCED);
 
   Future<Datum> getDatum() async =>
-      _locationService.getLocation().then((location) => LocationDatum.fromLocationData(location));
+      locationService.getLocation().then((location) => LocationDatum.fromLocationData(location));
 }
 
 /// Collects location information from the underlying OS's location API.
@@ -42,22 +46,22 @@ class DeprecatedLocationProbe extends StreamProbe {
     await _setSettings();
   }
 
-  Stream<LocationDatum> get stream => _locationService
+  Stream<LocationDatum> get stream => locationService
       .onLocationChanged()
       .asBroadcastStream()
       .map((location) => LocationDatum.fromLocationData(location));
 
   Future<bool> _getPermission() async {
     bool permission = false;
-    bool enabled = await _locationService.serviceEnabled();
+    bool enabled = await locationService.serviceEnabled();
     if (enabled) {
-      permission = await _locationService.hasPermission();
-      if (!permission) permission = await _locationService.requestPermission();
+      permission = await locationService.hasPermission();
+      if (!permission) permission = await locationService.requestPermission();
     }
 
     return permission;
   }
 
   Future<bool> _setSettings() async =>
-      await _locationService.changeSettings(accuracy: LocationAccuracy.BALANCED, interval: 5000);
+      await locationService.changeSettings(accuracy: LocationAccuracy.BALANCED, interval: 5000);
 }

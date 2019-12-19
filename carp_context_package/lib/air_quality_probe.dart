@@ -1,48 +1,26 @@
 part of context;
 
-/// Collects local weather information using the [WeatherStation] API.
+/// Collects local air quality information using the [AirQuality] API.
 class AirQualityProbe extends DatumProbe {
-  WeatherStation _weather;
+  AirQuality _waqi;
 
   Future<void> onInitialize(Measure measure) async {
     super.onInitialize(measure);
-    assert(
-        (measure as WeatherMeasure).apiKey != null, 'In order to use the Weather API, and API key must be provided.');
-    _weather = WeatherStation((measure as WeatherMeasure).apiKey);
+    assert((measure as AirQualityMeasure).apiKey != null, 'In order to use the WAQI API, an API key must be provided.');
+    _waqi = AirQuality((measure as AirQualityMeasure).apiKey);
   }
 
-  /// Returns the [WeatherDatum] for this location.
+  /// Returns the [AirQualityDatum] for this location based on the IP address of the phone.
   Future<Datum> getDatum() async {
     try {
-      Weather w = await _weather.currentWeather();
+      //LocationData loc = await locationService.getLocation();
+      //AirQualityData data = await _waqi.feedFromGeoLocation(loc.latitude.toString(), loc.longitude.toString());
+      //AirQualityData data = await _waqi.feedFromIP();
+      //return AirQualityDatum.fromAirQualityData(data);
 
-      if (w != null)
-        return WeatherDatum()
-          ..country = w.country
-          ..areaName = w.areaName
-          ..weatherMain = w.weatherMain
-          ..weatherDescription = w.weatherDescription
-          ..date = w.date
-          ..sunrise = w.sunrise
-          ..sunset = w.sunset
-          ..latitude = w.latitude
-          ..longitude = w.longitude
-          ..pressure = w.pressure
-          ..windSpeed = w.windSpeed
-          ..windDegree = w.windDegree
-          ..humidity = w.humidity
-          ..cloudiness = w.cloudiness
-          ..rainLastHour = w.rainLastHour
-          ..rainLast3Hours = w.rainLast3Hours
-          ..snowLastHour = w.snowLastHour
-          ..snowLast3Hours = w.snowLast3Hours
-          ..temperature = w.temperature.celsius
-          ..tempMin = w.tempMin.celsius
-          ..tempMax = w.tempMax.celsius;
-      else
-        return ErrorDatum('WeatherStation plugin retuned null: ${_weather.toString()}');
+      return _waqi.feedFromIP().then((data) => AirQualityDatum.fromAirQualityData(data));
     } catch (err) {
-      return ErrorDatum('WeatherProbe Exception: $err');
+      return ErrorDatum('AirQualityProbe Exception: $err');
     }
   }
 }

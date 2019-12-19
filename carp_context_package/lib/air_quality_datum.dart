@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2019 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -9,37 +9,32 @@ part of context;
 
 /// A [Datum] that holds weather information collected through OpenWeatherMap.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class WeatherDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, ContextSamplingPackage.WEATHER);
+class AirQualityDatum extends CARPDatum {
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, ContextSamplingPackage.AIR_QUALITY);
   DataFormat get format => CARP_DATA_FORMAT;
 
-  String country, areaName, weatherMain, weatherDescription;
-  DateTime date, sunrise, sunset;
-  double latitude,
-      longitude,
-      pressure,
-      windSpeed,
-      windDegree,
-      humidity,
-      cloudiness,
-      rainLastHour,
-      rainLast3Hours,
-      snowLastHour,
-      snowLast3Hours,
-      temperature,
-      tempMin,
-      tempMax;
+  String airQualityIndex, source, place;
+  double latitude, longitude;
+  AirQualityLevel airQualityLevel;
 
-  WeatherDatum() : super();
+  AirQualityDatum() : super();
 
-  factory WeatherDatum.fromJson(Map<String, dynamic> json) => _$WeatherDatumFromJson(json);
-  Map<String, dynamic> toJson() => _$WeatherDatumToJson(this);
+  AirQualityDatum.fromAirQualityData(AirQualityData airQualityData)
+      : latitude = double.tryParse(airQualityData.latitude),
+        longitude = double.tryParse(airQualityData.longitude),
+        airQualityIndex = airQualityData.airQualityIndex,
+        source = airQualityData.source,
+        place = airQualityData.place,
+        airQualityLevel = airQualityData.airQualityLevel,
+        super();
+
+  factory AirQualityDatum.fromJson(Map<String, dynamic> json) => _$AirQualityDatumFromJson(json);
+  Map<String, dynamic> toJson() => _$AirQualityDatumToJson(this);
 
   String toString() =>
       super.toString() +
-      ',place: $areaName ($country), '
-          'date: $date, '
-          'weather: $weatherMain, $weatherDescription, '
-          'temp: $temperature, temp (min): $tempMin, temp (max): $tempMax, '
-          'sunrise: $sunrise, sunset: $sunset';
+      ',place: $place (latitude:$latitude, longitude:$longitude), '
+          'souce: $source, '
+          'airQualityIndex: $airQualityIndex, '
+          'airQualityLevel: $airQualityLevel';
 }
