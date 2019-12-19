@@ -10,6 +10,7 @@ This packages supports sampling of the following [`Measure`](https://pub.dartlan
 * `activity`
 * `weather`
 * `geofence`
+* `air_quality`
 
 See the [wiki]() for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types)
 and [sampling schemas](https://github.com/cph-cachet/carp.sensing-flutter/wiki/D.-Sampling-Schemas).
@@ -28,8 +29,8 @@ this package only works together with `carp_mobile_sensing`.
 dependencies:
   flutter:
     sdk: flutter
-  carp_mobile_sensing: ^0.5.0
-  carp_context_package: ^0.5.0
+  carp_mobile_sensing: ^0.6.0
+  carp_context_package: ^0.6.0
   ...
 `````
 
