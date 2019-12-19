@@ -14,6 +14,7 @@ import 'package:location/location.dart';
 import 'package:weather/weather.dart';
 import 'package:openmhealth_schemas/openmhealth_schemas.dart' as omh;
 import 'package:permission_handler/permission_handler.dart';
+import 'package:air_quality/air_quality.dart';
 
 part 'activity_datum.dart';
 part 'activity_probe.dart';
@@ -28,4 +29,7 @@ part 'context_package.dart';
 part 'geofence_measure.dart';
 part 'geofence_datum.dart';
 part 'geofence_probe.dart';
+part 'air_quality_datum.dart';
+part 'air_quality_measure.dart';
+part 'air_quality_probe.dart';
 part 'context.g.dart';

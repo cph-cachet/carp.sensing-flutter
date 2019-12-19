@@ -72,13 +72,14 @@ class StudyMock implements StudyManager {
   Study _study;
 
   Future<Study> getStudy(String studyId) async {
+    return _getTestingStudy(studyId);
+
     //return _getHighFrequencyStudy('DF#4dD-high-frequency');
-    return _getAllProbesAsAwareStudy('#4-aware-carp');
+    //return _getAllProbesAsAwareStudy('#4-aware-carp');
     //return _getAllMeasuresStudy(studyId);
     //return _getAllProbesAsAwareCarpUploadStudy();
     //return _getAudioStudy(studyId);
     //return _getESenseStudy(studyId);
-    //return _getTestingStudy(studyId);
   }
 
   Future<Study> _getTestingStudy(String studyId) async {
@@ -87,29 +88,29 @@ class StudyMock implements StudyManager {
             ..name = testStudyName
             ..description = 'This is a study for testing and debugging -- especially on iOS.'
             ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FIREBASE_DATABSE)
-            ..addTriggerTask(
-                ImmediateTrigger(),
-                Task()
-                  ..measures = SamplingSchema.debug().getMeasureList(
-                    namespace: NameSpace.CARP,
-                    types: [
-                      //SensorSamplingPackage.ACCELEROMETER,
-                      //SensorSamplingPackage.GYROSCOPE,
-                      SensorSamplingPackage.LIGHT,
-                      SensorSamplingPackage.PEDOMETER,
-                    ],
-                  ))
-            ..addTriggerTask(
-                DelayedTrigger(delay: 10 * 1000),
-                Task()
-                  ..measures = SamplingSchema.debug().getMeasureList(
-                    namespace: NameSpace.CARP,
-                    types: [
-                      ConnectivitySamplingPackage.BLUETOOTH,
-                      ConnectivitySamplingPackage.WIFI,
-                      ConnectivitySamplingPackage.CONNECTIVITY,
-                    ],
-                  ))
+//            ..addTriggerTask(
+//                ImmediateTrigger(),
+//                Task()
+//                  ..measures = SamplingSchema.debug().getMeasureList(
+//                    namespace: NameSpace.CARP,
+//                    types: [
+//                      //SensorSamplingPackage.ACCELEROMETER,
+//                      //SensorSamplingPackage.GYROSCOPE,
+//                      SensorSamplingPackage.LIGHT,
+//                      SensorSamplingPackage.PEDOMETER,
+//                    ],
+//                  ))
+//            ..addTriggerTask(
+//                DelayedTrigger(delay: 10 * 1000),
+//                Task()
+//                  ..measures = SamplingSchema.debug().getMeasureList(
+//                    namespace: NameSpace.CARP,
+//                    types: [
+//                      ConnectivitySamplingPackage.BLUETOOTH,
+//                      ConnectivitySamplingPackage.WIFI,
+//                      ConnectivitySamplingPackage.CONNECTIVITY,
+//                    ],
+//                  ))
 //        ..addTriggerTask(
 //            ImmediateTrigger(),
 //            Task()
@@ -120,38 +121,39 @@ class StudyMock implements StudyManager {
 //                  AppsSamplingPackage.APPS,
 //                ],
 //              ))
+//            ..addTriggerTask(
+//                ImmediateTrigger(),
+//                Task()
+//                  ..measures = SamplingSchema.debug().getMeasureList(
+//                    namespace: NameSpace.CARP,
+//                    types: [
+//                      DeviceSamplingPackage.MEMORY,
+//                      DeviceSamplingPackage.DEVICE,
+//                      DeviceSamplingPackage.BATTERY,
+//                      DeviceSamplingPackage.SCREEN,
+//                    ],
+//                  ))
             ..addTriggerTask(
-                ImmediateTrigger(),
-                Task()
-                  ..measures = SamplingSchema.debug().getMeasureList(
-                    namespace: NameSpace.CARP,
-                    types: [
-                      DeviceSamplingPackage.MEMORY,
-                      DeviceSamplingPackage.DEVICE,
-                      DeviceSamplingPackage.BATTERY,
-                      DeviceSamplingPackage.SCREEN,
-                    ],
-                  ))
-            ..addTriggerTask(
-                PeriodicTrigger(period: 2 * 60 * 1000),
+                PeriodicTrigger(period: 1 * 60 * 1000),
                 Task()
                   ..measures = SamplingSchema.debug().getMeasureList(
                     namespace: NameSpace.CARP,
                     types: [
                       ContextSamplingPackage.WEATHER,
+                      ContextSamplingPackage.AIR_QUALITY,
                     ],
                   ))
-            ..addTriggerTask(
-                ImmediateTrigger(),
-                Task()
-                  ..measures = SamplingSchema.debug().getMeasureList(
-                    namespace: NameSpace.CARP,
-                    types: [
-                      ContextSamplingPackage.LOCATION,
-                      ContextSamplingPackage.ACTIVITY,
-                      ContextSamplingPackage.GEOFENCE,
-                    ],
-                  ))
+//            ..addTriggerTask(
+//                ImmediateTrigger(),
+//                Task()
+//                  ..measures = SamplingSchema.debug().getMeasureList(
+//                    namespace: NameSpace.CARP,
+//                    types: [
+//                      ContextSamplingPackage.LOCATION,
+//                      ContextSamplingPackage.ACTIVITY,
+//                      ContextSamplingPackage.GEOFENCE,
+//                    ],
+//                  ))
 //            ..addTriggerTask(
 //                ImmediateTrigger(),
 //                Task()

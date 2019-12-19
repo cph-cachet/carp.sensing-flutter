@@ -1,3 +1,6 @@
+## 0.6.2
+* support for `air_quality` 
+
 ## 0.6.1
 * Changed the location probe to a periodic probe which can be configured to sample location data on a specific frequency.
 * allignment with `carp_mobile_sensing` v. 0.6.1.

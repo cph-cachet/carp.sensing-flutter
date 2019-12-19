@@ -18,9 +18,16 @@ class ContextSamplingPackage implements SamplingPackage {
   static const String LOCATION = "location";
   static const String ACTIVITY = "activity";
   static const String WEATHER = "weather";
+  static const String AIR_QUALITY = "air_quality";
   static const String GEOFENCE = "geofence";
 
-  List<String> get dataTypes => [LOCATION, ACTIVITY, WEATHER, GEOFENCE];
+  List<String> get dataTypes => [
+        LOCATION,
+        ACTIVITY,
+        WEATHER,
+        AIR_QUALITY,
+        GEOFENCE,
+      ];
 
   Probe create(String type) {
     switch (type) {
@@ -30,6 +37,8 @@ class ContextSamplingPackage implements SamplingPackage {
         return ActivityProbe();
       case WEATHER:
         return WeatherProbe();
+      case AIR_QUALITY:
+        return AirQualityProbe();
       case GEOFENCE:
         return GeofenceProbe();
       default:
@@ -41,6 +50,7 @@ class ContextSamplingPackage implements SamplingPackage {
     FromJsonFactory.registerFromJsonFunction("LocationMeasure", LocationMeasure.fromJsonFunction);
     FromJsonFactory.registerFromJsonFunction("WeatherMeasure", WeatherMeasure.fromJsonFunction);
     FromJsonFactory.registerFromJsonFunction("GeofenceMeasure", GeofenceMeasure.fromJsonFunction);
+    FromJsonFactory.registerFromJsonFunction("AirQualityMeasure", AirQualityMeasure.fromJsonFunction);
     FromJsonFactory.registerFromJsonFunction("GeoPosition", GeoPosition.fromJsonFunction);
 
     // registering the transformers from CARP to OMH for geolocation and physical activity.
@@ -60,11 +70,18 @@ class ContextSamplingPackage implements SamplingPackage {
           LOCATION,
           LocationMeasure(MeasureType(NameSpace.CARP, LOCATION),
               name: 'Location', enabled: true, frequency: 10 * 1000, accuracy: LocationAccuracy.BALANCED)),
-      MapEntry(ACTIVITY, Measure(MeasureType(NameSpace.CARP, ACTIVITY), name: 'Activity Recognition', enabled: true)),
+      MapEntry(
+        ACTIVITY,
+        Measure(MeasureType(NameSpace.CARP, ACTIVITY), name: 'Activity Recognition', enabled: true),
+      ),
       MapEntry(
           WEATHER,
           WeatherMeasure(MeasureType(NameSpace.CARP, WEATHER),
               name: 'Local Weather', enabled: true, apiKey: '12b6e28582eb9298577c734a31ba9f4f')),
+      MapEntry(
+          AIR_QUALITY,
+          AirQualityMeasure(MeasureType(NameSpace.CARP, AIR_QUALITY),
+              name: 'Local Air Quality', enabled: true, apiKey: '9e538456b2b85c92647d8b65090e29f957638c77')),
       MapEntry(
           GEOFENCE,
           GeofenceMeasure(MeasureType(NameSpace.CARP, GEOFENCE),

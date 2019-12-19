@@ -335,3 +335,82 @@ Map<String, dynamic> _$GeofenceDatumToJson(GeofenceDatum instance) {
   writeNotNull('type', instance.type);
   return val;
 }
+
+AirQualityDatum _$AirQualityDatumFromJson(Map<String, dynamic> json) {
+  return AirQualityDatum()
+    ..id = json['id'] as String
+    ..timestamp = json['timestamp'] == null
+        ? null
+        : DateTime.parse(json['timestamp'] as String)
+    ..airQualityIndex = json['air_quality_index'] as String
+    ..source = json['source'] as String
+    ..place = json['place'] as String
+    ..latitude = (json['latitude'] as num)?.toDouble()
+    ..longitude = (json['longitude'] as num)?.toDouble()
+    ..airQualityLevel = _$enumDecodeNullable(
+        _$AirQualityLevelEnumMap, json['air_quality_level']);
+}
+
+Map<String, dynamic> _$AirQualityDatumToJson(AirQualityDatum instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', instance.id);
+  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  writeNotNull('air_quality_index', instance.airQualityIndex);
+  writeNotNull('source', instance.source);
+  writeNotNull('place', instance.place);
+  writeNotNull('latitude', instance.latitude);
+  writeNotNull('longitude', instance.longitude);
+  writeNotNull(
+      'air_quality_level', _$AirQualityLevelEnumMap[instance.airQualityLevel]);
+  return val;
+}
+
+const _$AirQualityLevelEnumMap = {
+  AirQualityLevel.GOOD: 'GOOD',
+  AirQualityLevel.MODERATE: 'MODERATE',
+  AirQualityLevel.UNHEALTHY_FOR_SENSITIVE_GROUPS:
+      'UNHEALTHY_FOR_SENSITIVE_GROUPS',
+  AirQualityLevel.UNHEALTHY: 'UNHEALTHY',
+  AirQualityLevel.VERY_UNHEALTHY: 'VERY_UNHEALTHY',
+  AirQualityLevel.HAZARDOUS: 'HAZARDOUS',
+};
+
+AirQualityMeasure _$AirQualityMeasureFromJson(Map<String, dynamic> json) {
+  return AirQualityMeasure(
+    json['type'] == null
+        ? null
+        : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
+    name: json['name'],
+    enabled: json['enabled'],
+    apiKey: json['api_key'] as String,
+  )
+    ..c__ = json['c__'] as String
+    ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(k, e as String),
+    );
+}
+
+Map<String, dynamic> _$AirQualityMeasureToJson(AirQualityMeasure instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('c__', instance.c__);
+  writeNotNull('type', instance.type);
+  writeNotNull('name', instance.name);
+  writeNotNull('enabled', instance.enabled);
+  writeNotNull('configuration', instance.configuration);
+  writeNotNull('api_key', instance.apiKey);
+  return val;
+}

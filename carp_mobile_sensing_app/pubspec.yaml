@@ -16,7 +16,7 @@ dependencies:
   flutter_launcher_icons: ^0.7.3
   carp_mobile_sensing: ^0.6.1
   carp_communication_package: ^0.6.1
-  carp_context_package: ^0.6.1
+  #carp_context_package: ^0.6.1
   carp_audio_package: ^0.6.1
   carp_esense_package: ^0.1.3
   carp_backend: ^0.3.2
