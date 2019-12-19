@@ -30,7 +30,7 @@ class DeviceSamplingPackage implements SamplingPackage {
 
   void onRegister() {} // does nothing for this device sampling package
 
-  List<PermissionGroup> get permissions => [PermissionGroup.phone];
+  List<PermissionGroup> get permissions => [];
 
   SamplingSchema get common => SamplingSchema()
     ..type = SamplingSchemaType.COMMON
