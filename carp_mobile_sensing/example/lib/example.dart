@@ -79,7 +79,8 @@ void example() async {
   ProbeRegistry.lookup(SensorSamplingPackage.ACCELEROMETER).pause();
   ProbeRegistry.lookup(SensorSamplingPackage.ACCELEROMETER).resume();
 
-  // adapt measures on the go - calling hasChanged() force a restart of the probe, which will load the new measure
+  // adapt measures on the go - calling hasChanged() force a restart of
+  // the probe, which will load the new measure
   lightMeasure
     ..frequency = 12 * 1000
     ..duration = 500

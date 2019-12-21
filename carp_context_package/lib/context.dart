@@ -2,6 +2,7 @@
 ///  * location
 ///  * activity
 ///  * weather
+///  * air quality
 library context;
 
 import 'dart:async';

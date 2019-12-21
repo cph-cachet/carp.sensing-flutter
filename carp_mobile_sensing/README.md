@@ -59,7 +59,7 @@ Below is a few simple / minimum examples (a better description is available on t
 
 ## Examples
 
-In the following example, a study is created "by hand", i.e. you specify each task and measure in the study.
+In the following example, a study is created "by hand", i.e. you specify each trigger, task and measure in the study.
 
 ```dart
 // Import package

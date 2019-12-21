@@ -38,9 +38,14 @@ class StudyController {
   ///      Use [PrivacySchema.DEFAULT] for the default, built-in schema. If null, no privacy schema is used.
   ///    * A generic [transformer] can be provided which transform each collected data.
   ///      If null, a 1:1 mapping is done, i.e. no transformation.
-  StudyController(this.study,
-      {this.executor, this.samplingSchema, this.dataManager, this.privacySchemaName, this.transformer})
-      : assert(study != null),
+  StudyController(
+    this.study, {
+    this.executor,
+    this.samplingSchema,
+    this.dataManager,
+    this.privacySchemaName,
+    this.transformer,
+  })  : assert(study != null),
         super() {
     // create and register the two built-in data managers
     DataManagerRegistry.register(ConsoleDataManager());

@@ -1,6 +1,6 @@
 part of context;
 
-/// Collects local air quality information using the [AirQuality] API.
+/// Collects local air quality information using the [AirQuality] plugin.
 class AirQualityProbe extends DatumProbe {
   AirQuality _waqi;
 
