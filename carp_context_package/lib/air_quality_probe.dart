@@ -10,17 +10,8 @@ class AirQualityProbe extends DatumProbe {
     _waqi = AirQuality((measure as AirQualityMeasure).apiKey);
   }
 
-  /// Returns the [AirQualityDatum] for this location based on the IP address of the phone.
-  Future<Datum> getDatum() async {
-    try {
-      //LocationData loc = await locationService.getLocation();
-      //AirQualityData data = await _waqi.feedFromGeoLocation(loc.latitude.toString(), loc.longitude.toString());
-      //AirQualityData data = await _waqi.feedFromIP();
-      //return AirQualityDatum.fromAirQualityData(data);
-
-      return _waqi.feedFromIP().then((data) => AirQualityDatum.fromAirQualityData(data));
-    } catch (err) {
-      return ErrorDatum('AirQualityProbe Exception: $err');
-    }
-  }
+  /// Returns the [AirQualityDatum] based on the location of the phone.
+  Future<Datum> getDatum() async => geolocator.getCurrentPosition().then((location) => _waqi
+      .feedFromGeoLocation(location.latitude.toString(), location.longitude.toString())
+      .then((data) => AirQualityDatum.fromAirQualityData(data)));
 }

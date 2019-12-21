@@ -7,12 +7,12 @@
 
 part of context;
 
-Location _locationService;
+Geolocator _geolocator;
 
-/// The general location provider service.
-Location get locationService {
-  if (_locationService == null) _locationService = Location();
-  return _locationService;
+/// The general geo-location provider service.
+Geolocator get geolocator {
+  if (_geolocator == null) _geolocator = Geolocator();
+  return _geolocator;
 }
 
 /// Collects location information from the underlying OS's location API.
@@ -27,41 +27,31 @@ class LocationProbe extends PeriodicDatumProbe {
     super.onInitialize(measure);
   }
 
-  Future<bool> _setSettings() async => await locationService.changeSettings(
-      accuracy: (measure as LocationMeasure).accuracy ?? LocationAccuracy.BALANCED);
-
   Future<Datum> getDatum() async =>
-      locationService.getLocation().then((location) => LocationDatum.fromLocationData(location));
+      geolocator.getCurrentPosition().then((position) => LocationDatum.fromPositionData(position));
 }
 
-/// Collects location information from the underlying OS's location API.
+/// Collects geolocation information from the underlying OS's location API.
 /// Is a [StreamProbe] that generates a [LocationDatum] every time location is changed.
 ///
 /// Note that in order for location tracking to work with this probe, the
 /// phone must be online on the internet, since Google APIs are used.
-class DeprecatedLocationProbe extends StreamProbe {
+class GeoLocationProbe extends StreamProbe {
+  LocationOptions locationOptions;
+
   Future<void> onInitialize(Measure measure) async {
+    assert(measure is LocationMeasure);
     super.onInitialize(measure);
-    await _getPermission();
-    await _setSettings();
+
+    locationOptions = LocationOptions(
+      accuracy: (measure as LocationMeasure).locationAccuracy,
+      timeInterval: (measure as LocationMeasure).frequency,
+      distanceFilter: (measure as LocationMeasure).distance,
+    );
   }
 
-  Stream<LocationDatum> get stream => locationService
-      .onLocationChanged()
+  Stream<LocationDatum> get stream => geolocator
+      .getPositionStream(locationOptions)
       .asBroadcastStream()
-      .map((location) => LocationDatum.fromLocationData(location));
-
-  Future<bool> _getPermission() async {
-    bool permission = false;
-    bool enabled = await locationService.serviceEnabled();
-    if (enabled) {
-      permission = await locationService.hasPermission();
-      if (!permission) permission = await locationService.requestPermission();
-    }
-
-    return permission;
-  }
-
-  Future<bool> _setSettings() async =>
-      await locationService.changeSettings(accuracy: LocationAccuracy.BALANCED, interval: 5000);
+      .map((position) => LocationDatum.fromPositionData(position));
 }

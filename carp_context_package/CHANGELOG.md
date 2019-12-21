@@ -1,4 +1,9 @@
-## 0.6.2
+## 0.6.4
+* change of location provider to the [geolocator](https://pub.dev/packages/geolocator) plugin.
+* introduction of a `geolocation` measure type for listening to location events.
+* adjustment of the `LocationMeasure` to hold configuration for specifying various options.
+
+## 0.6.3
 * support for `air_quality` 
 
 ## 0.6.1

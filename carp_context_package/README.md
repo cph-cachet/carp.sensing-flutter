@@ -7,6 +7,7 @@ the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensin
 This packages supports sampling of the following [`Measure`](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/domain/Measure-class.html) types:
 
 * `location`
+* `geolocation`
 * `activity`
 * `weather`
 * `geofence`

@@ -134,7 +134,7 @@ class StudyMock implements StudyManager {
 //                    ],
 //                  ))
             ..addTriggerTask(
-                PeriodicTrigger(period: 1 * 60 * 1000),
+                PeriodicTrigger(period: 1 * 20 * 1000),
                 Task()
                   ..measures = SamplingSchema.debug().getMeasureList(
                     namespace: NameSpace.CARP,
@@ -143,17 +143,18 @@ class StudyMock implements StudyManager {
                       ContextSamplingPackage.AIR_QUALITY,
                     ],
                   ))
-//            ..addTriggerTask(
-//                ImmediateTrigger(),
-//                Task()
-//                  ..measures = SamplingSchema.debug().getMeasureList(
-//                    namespace: NameSpace.CARP,
-//                    types: [
-//                      ContextSamplingPackage.LOCATION,
-//                      ContextSamplingPackage.ACTIVITY,
-//                      ContextSamplingPackage.GEOFENCE,
-//                    ],
-//                  ))
+            ..addTriggerTask(
+                ImmediateTrigger(),
+                Task()
+                  ..measures = SamplingSchema.debug().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      ContextSamplingPackage.LOCATION,
+                      ContextSamplingPackage.GEOLOCATION,
+                      //ContextSamplingPackage.ACTIVITY,
+                      ContextSamplingPackage.GEOFENCE,
+                    ],
+                  ))
 //            ..addTriggerTask(
 //                ImmediateTrigger(),
 //                Task()

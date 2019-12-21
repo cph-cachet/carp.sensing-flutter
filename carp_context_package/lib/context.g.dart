@@ -38,7 +38,8 @@ LocationDatum _$LocationDatumFromJson(Map<String, dynamic> json) {
     ..timestamp = json['timestamp'] == null
         ? null
         : DateTime.parse(json['timestamp'] as String)
-    ..time = (json['time'] as num)?.toDouble()
+    ..time =
+        json['time'] == null ? null : DateTime.parse(json['time'] as String)
     ..latitude = (json['latitude'] as num)?.toDouble()
     ..longitude = (json['longitude'] as num)?.toDouble()
     ..altitude = (json['altitude'] as num)?.toDouble()
@@ -59,7 +60,7 @@ Map<String, dynamic> _$LocationDatumToJson(LocationDatum instance) {
 
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
-  writeNotNull('time', instance.time);
+  writeNotNull('time', instance.time?.toIso8601String());
   writeNotNull('latitude', instance.latitude);
   writeNotNull('longitude', instance.longitude);
   writeNotNull('altitude', instance.altitude);
@@ -79,7 +80,9 @@ LocationMeasure _$LocationMeasureFromJson(Map<String, dynamic> json) {
     enabled: json['enabled'],
     frequency: json['frequency'],
     duration: json['duration'],
-    accuracy: _$enumDecodeNullable(_$LocationAccuracyEnumMap, json['accuracy']),
+    accuracy:
+        _$enumDecodeNullable(_$GeolocationAccuracyEnumMap, json['accuracy']),
+    distance: json['distance'] as int,
   )
     ..c__ = json['c__'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
@@ -103,7 +106,8 @@ Map<String, dynamic> _$LocationMeasureToJson(LocationMeasure instance) {
   writeNotNull('configuration', instance.configuration);
   writeNotNull('frequency', instance.frequency);
   writeNotNull('duration', instance.duration);
-  writeNotNull('accuracy', _$LocationAccuracyEnumMap[instance.accuracy]);
+  writeNotNull('accuracy', _$GeolocationAccuracyEnumMap[instance.accuracy]);
+  writeNotNull('distance', instance.distance);
   return val;
 }
 
@@ -139,12 +143,13 @@ T _$enumDecodeNullable<T>(
   return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
 }
 
-const _$LocationAccuracyEnumMap = {
-  LocationAccuracy.POWERSAVE: 'POWERSAVE',
-  LocationAccuracy.LOW: 'LOW',
-  LocationAccuracy.BALANCED: 'BALANCED',
-  LocationAccuracy.HIGH: 'HIGH',
-  LocationAccuracy.NAVIGATION: 'NAVIGATION',
+const _$GeolocationAccuracyEnumMap = {
+  GeolocationAccuracy.lowest: 'lowest',
+  GeolocationAccuracy.low: 'low',
+  GeolocationAccuracy.medium: 'medium',
+  GeolocationAccuracy.high: 'high',
+  GeolocationAccuracy.best: 'best',
+  GeolocationAccuracy.bestForNavigation: 'bestForNavigation',
 };
 
 WeatherDatum _$WeatherDatumFromJson(Map<String, dynamic> json) {

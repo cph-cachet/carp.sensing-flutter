@@ -29,7 +29,7 @@ class GeoPosition extends Serializable {
       : assert(latitude != null),
         assert(longitude != null);
 
-  GeoPosition.fromLocationData(LocationData location)
+  GeoPosition.fromLocationData(Position location)
       : latitude = location.latitude,
         longitude = location.longitude,
         super();

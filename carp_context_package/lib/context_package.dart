@@ -16,6 +16,7 @@ part of context;
 /// ```
 class ContextSamplingPackage implements SamplingPackage {
   static const String LOCATION = "location";
+  static const String GEOLOCATION = "geolocation";
   static const String ACTIVITY = "activity";
   static const String WEATHER = "weather";
   static const String AIR_QUALITY = "air_quality";
@@ -23,6 +24,7 @@ class ContextSamplingPackage implements SamplingPackage {
 
   List<String> get dataTypes => [
         LOCATION,
+        GEOLOCATION,
         ACTIVITY,
         WEATHER,
         AIR_QUALITY,
@@ -33,6 +35,8 @@ class ContextSamplingPackage implements SamplingPackage {
     switch (type) {
       case LOCATION:
         return LocationProbe();
+      case GEOLOCATION:
+        return GeoLocationProbe();
       case ACTIVITY:
         return ActivityProbe();
       case WEATHER:
@@ -67,9 +71,20 @@ class ContextSamplingPackage implements SamplingPackage {
     ..powerAware = true
     ..measures.addEntries([
       MapEntry(
-          LOCATION,
-          LocationMeasure(MeasureType(NameSpace.CARP, LOCATION),
-              name: 'Location', enabled: true, frequency: 10 * 1000, accuracy: LocationAccuracy.BALANCED)),
+        LOCATION,
+        LocationMeasure(MeasureType(NameSpace.CARP, LOCATION),
+            name: 'Location', enabled: true, frequency: 10 * 1000, accuracy: GeolocationAccuracy.low),
+      ),
+      MapEntry(
+          GEOLOCATION,
+          LocationMeasure(
+            MeasureType(NameSpace.CARP, GEOLOCATION),
+            name: 'Geo-location',
+            enabled: true,
+            frequency: 10 * 1000,
+            accuracy: GeolocationAccuracy.low,
+            distance: 3,
+          )),
       MapEntry(
         ACTIVITY,
         Measure(MeasureType(NameSpace.CARP, ACTIVITY), name: 'Activity Recognition', enabled: true),
