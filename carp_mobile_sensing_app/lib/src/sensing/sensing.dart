@@ -72,8 +72,9 @@ class StudyMock implements StudyManager {
   Study _study;
 
   Future<Study> getStudy(String studyId) async {
-    return _getTestingStudy(studyId);
+    //return _getTestingStudy(studyId);
 
+    return _getCoverageStudy('#5-coverage');
     //return _getHighFrequencyStudy('DF#4dD-high-frequency');
     //return _getAllProbesAsAwareStudy('#4-aware-carp');
     //return _getAllMeasuresStudy(studyId);
@@ -189,6 +190,51 @@ class StudyMock implements StudyManager {
 //                      name: 'eSense - Button', enabled: true, deviceName: 'eSense-0332'))
 //                  ..measures.add(ESenseMeasure(MeasureType(NameSpace.CARP, ESenseSamplingPackage.ESENSE_SENSOR),
 //                      name: 'eSense - Sensors', enabled: true, deviceName: 'eSense-0332', samplingRate: 10)))
+          //
+          ;
+    }
+    return _study;
+  }
+
+  Future<Study> _getCoverageStudy(String studyId) async {
+    if (_study == null) {
+      _study = Study(studyId, username)
+            ..name = studyId
+            ..description = 'This is a study for testing the coverage of sampling.'
+            ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
+            ..addTriggerTask(
+                ImmediateTrigger(),
+                Task()
+                  ..measures = SamplingSchema.debug().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      SensorSamplingPackage.LIGHT, // 60 s
+                      ConnectivitySamplingPackage.BLUETOOTH, // 60 s
+                      ConnectivitySamplingPackage.WIFI, // 60 s
+                      DeviceSamplingPackage.MEMORY, // 60 s
+                      ContextSamplingPackage.LOCATION, // 30 s
+                      AudioSamplingPackage.NOISE, // 60 s
+                    ],
+                  ))
+            ..addTriggerTask(
+                PeriodicTrigger(period: 5 * 60 * 1000), // 5 min
+                Task()
+                  ..measures = SamplingSchema.debug().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      AppsSamplingPackage.APP_USAGE, // 60 s
+                    ],
+                  ))
+            ..addTriggerTask(
+                PeriodicTrigger(period: 10 * 60 * 1000), // 10 min
+                Task()
+                  ..measures = SamplingSchema.debug().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      ContextSamplingPackage.WEATHER,
+                      ContextSamplingPackage.AIR_QUALITY,
+                    ],
+                  ))
           //
           ;
     }
@@ -366,7 +412,7 @@ class StudyMock implements StudyManager {
       case DataEndPointTypes.PRINT:
         return new DataEndPoint(DataEndPointTypes.PRINT);
       case DataEndPointTypes.FILE:
-        return FileDataEndPoint(bufferSize: 500 * 1000, zip: true, encrypt: false);
+        return FileDataEndPoint(bufferSize: 50 * 1000, zip: true, encrypt: false);
       case DataEndPointTypes.CARP:
         return CarpDataEndPoint(CarpUploadMethod.DATA_POINT,
             name: 'CARP Staging Server',

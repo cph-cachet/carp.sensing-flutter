@@ -52,6 +52,7 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
    <uses-permission android:name="android.permission.READ_PHONE_NUMBERS"/>
    <uses-permission android:name="android.permission.READ_SMS"/>
    <uses-permission android:name="android.permission.READ_CALENDAR"/>
+    <!-- Even though we only want to READ the calendar, for some unknown reason we also need to add the WRITE permission. -->
    <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
 
 </manifest>

@@ -154,7 +154,7 @@ class FileDataManager extends AbstractDataManager {
 
     print("Written JSON to file '$_jsonFilePath'. Closing it.");
     // write the closing json ']'
-    flushSink.write(']\n');
+    flushSink.write('{}]\n');
 
     // once finished closing the file, then zip and encrypt it
     flushSink.close().then((value) {

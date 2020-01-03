@@ -24,14 +24,16 @@ void example() async {
   study.addTriggerTask(
       DelayedTrigger(delay: 1000), // delay sampling for one second
       Task('Sensor Task')
-        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
-            frequency: 10 * 1000, // sample every 10 secs
-            duration: 2 // for 2 ms
-            ))
-        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
-            frequency: 20 * 1000, // sample every 20 secs
-            duration: 2 // for 2 ms
-            )));
+        ..addMeasure(PeriodicMeasure(
+          MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
+          frequency: 10 * 1000, // sample every 10 secs
+          duration: 2, // for 2 ms
+        ))
+        ..addMeasure(PeriodicMeasure(
+          MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
+          frequency: 20 * 1000, // sample every 20 secs
+          duration: 2, // for 2 ms
+        )));
 
   study.addTriggerTask(
       PeriodicTrigger(period: 24 * 60 * 60 * 1000), // trigger sampling once pr. day
@@ -39,12 +41,17 @@ void example() async {
         ..addMeasure(Measure(MeasureType(NameSpace.CARP, AppsSamplingPackage.APPS))));
 
   // creating measure variable to be used later
-  PeriodicMeasure lightMeasure = PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
-      name: "Ambient Light", frequency: 11 * 1000, duration: 700);
+  PeriodicMeasure lightMeasure = PeriodicMeasure(
+    MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
+    name: "Ambient Light",
+    frequency: 11 * 1000,
+    duration: 700,
+  );
   study.addTriggerTask(ImmediateTrigger(), Task('Light')..addMeasure(lightMeasure));
 
   // Create a Study Controller that can manage this study, initialize it, and start it.
   StudyController controller = StudyController(study);
+
   // await initialization before starting
   await controller.initialize();
   controller.start();
@@ -94,16 +101,11 @@ void example() async {
   // once the sampling has to stop, e.g. in a Flutter dispose() methods, call stop.
   // note that once a sampling has stopped, it cannot be restarted.
   controller.stop();
+  subscription.cancel();
 }
 
 /// An example of how to use the [SamplingSchema] model.
 void samplingSchemaExample() async {
-  SamplingSchema.common().getMeasureList(types: [
-    AppsSamplingPackage.APPS,
-    DeviceSamplingPackage.DEVICE,
-    DeviceSamplingPackage.SCREEN,
-  ]);
-
   // creating a sampling schema focused on connectivity
   SamplingSchema connectivitySchema = SamplingSchema(name: 'Connectivity Sampling Schema', powerAware: true)
     ..measures.addEntries([
@@ -145,23 +147,43 @@ void samplingSchemaExample() async {
   // adding a set of specific measures from the `common` sampling schema to one overall task
   study.addTriggerTask(
       ImmediateTrigger(),
+      Task()
+        ..measures = SamplingSchema.common().getMeasureList(
+          namespace: NameSpace.CARP,
+          types: [
+            SensorSamplingPackage.LIGHT,
+            ConnectivitySamplingPackage.BLUETOOTH,
+            ConnectivitySamplingPackage.WIFI,
+            DeviceSamplingPackage.MEMORY,
+          ],
+        ));
+
+  // adding a set of specific measures from the `common` sampling schema to one overall task
+  study.addTriggerTask(
+      ImmediateTrigger(),
       Task('Sensing Task #1')
-        ..measures = SamplingSchema.common().getMeasureList(types: [
-          ConnectivitySamplingPackage.CONNECTIVITY,
-          SensorSamplingPackage.PEDOMETER,
-          DeviceSamplingPackage.SCREEN,
-        ]));
+        ..measures = SamplingSchema.common().getMeasureList(
+          namespace: NameSpace.CARP,
+          types: [
+            ConnectivitySamplingPackage.CONNECTIVITY,
+            SensorSamplingPackage.PEDOMETER,
+            DeviceSamplingPackage.SCREEN,
+          ],
+        ));
 
   study.addTriggerTask(
       ImmediateTrigger(),
       Task('One Common Sensing Task')
-        ..measures = SamplingSchema.common().getMeasureList(types: [
-          ConnectivitySamplingPackage.BLUETOOTH,
-          ConnectivitySamplingPackage.CONNECTIVITY,
-          SensorSamplingPackage.ACCELEROMETER,
-          SensorSamplingPackage.GYROSCOPE,
-          AppsSamplingPackage.APPS,
-        ]));
+        ..measures = SamplingSchema.common().getMeasureList(
+          namespace: NameSpace.CARP,
+          types: [
+            ConnectivitySamplingPackage.BLUETOOTH,
+            ConnectivitySamplingPackage.CONNECTIVITY,
+            SensorSamplingPackage.ACCELEROMETER,
+            SensorSamplingPackage.GYROSCOPE,
+            AppsSamplingPackage.APPS,
+          ],
+        ));
 
   // adding all measure from the activity schema to one overall 'sensing' task
   study.addTriggerTask(ImmediateTrigger(), Task('Sensing Task')..measures = activitySchema.measures.values);
@@ -170,21 +192,31 @@ void samplingSchemaExample() async {
   study.addTriggerTask(
       ImmediateTrigger(),
       Task('Activity Sensing Task #1')
-        ..measures = activitySchema.getMeasureList(types: [
-          SensorSamplingPackage.PEDOMETER,
-          ConnectivitySamplingPackage.CONNECTIVITY,
-          SensorSamplingPackage.ACCELEROMETER
-        ]));
+        ..measures = activitySchema.getMeasureList(
+          namespace: NameSpace.CARP,
+          types: [
+            SensorSamplingPackage.PEDOMETER,
+            ConnectivitySamplingPackage.CONNECTIVITY,
+            SensorSamplingPackage.ACCELEROMETER
+          ],
+        ));
 
   study.addTriggerTask(
       ImmediateTrigger(),
       Task('Phone Sensing Task #2')
-        ..measures = activitySchema.getMeasureList(types: [
-          DeviceSamplingPackage.SCREEN,
-          ConnectivitySamplingPackage.BLUETOOTH,
-        ])
-        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
-            name: "Ambient Light", frequency: 11 * 1000, duration: 700)));
+        ..measures = activitySchema.getMeasureList(
+          namespace: NameSpace.CARP,
+          types: [
+            DeviceSamplingPackage.SCREEN,
+            ConnectivitySamplingPackage.BLUETOOTH,
+          ],
+        )
+        ..addMeasure(PeriodicMeasure(
+          MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
+          name: "Ambient Light",
+          frequency: 11 * 1000,
+          duration: 700,
+        )));
 
   StudyController controller = StudyController(study, samplingSchema: activitySchema);
 

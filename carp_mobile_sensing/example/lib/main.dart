@@ -115,26 +115,37 @@ class Sensing {
 
     // create the study
     study = Study("2", 'user@cachet.dk',
-        name: 'A default / common study',
-        dataEndPoint: FileDataEndPoint()
-          ..bufferSize = 500 * 1000
-          ..zip = true
-          ..encrypt = false)
-      ..addTriggerTask(ImmediateTrigger(),
-          Task()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
+            name: 'A default / common study',
+            dataEndPoint: FileDataEndPoint()
+              ..bufferSize = 500 * 1000
+              ..zip = true
+              ..encrypt = false)
+          ..addTriggerTask(
+              ImmediateTrigger(),
+              Task()
+                ..measures = SamplingSchema.debug().getMeasureList(
+                  namespace: NameSpace.CARP,
+                  types: [
+                    SensorSamplingPackage.LIGHT,
+                    ConnectivitySamplingPackage.BLUETOOTH,
+                    ConnectivitySamplingPackage.WIFI,
+                    DeviceSamplingPackage.MEMORY,
+                  ],
+                ))
+//      ..addTriggerTask(ImmediateTrigger(),
+//          Task()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList())
+        ;
 
-    //console.log("Setting up '${study.name}'...");
+    console.log("Setting up '${study.name}'...");
 
     // print the study to the console
     console.log(study.toString());
 
     // Create a Study Controller that can manage this study, initialize it, and start it.
-    controller = StudyController(study, samplingSchema: SamplingSchema.maximum());
+    controller = StudyController(study);
     await controller.initialize();
     controller.start();
     console.log("Sensing started ...");
-
-    print('listening on streams...');
 
     // listening on all probe events from the study
     controller.events.forEach(print);

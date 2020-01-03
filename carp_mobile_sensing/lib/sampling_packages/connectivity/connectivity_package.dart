@@ -30,23 +30,41 @@ class ConnectivitySamplingPackage implements SamplingPackage {
     TransformerSchemaRegistry.lookup(PrivacySchema.DEFAULT).add(WIFI, wifi_name_anoymizer);
   }
 
-  List<PermissionGroup> get permissions => [];
+  //List<PermissionGroup> get permissions => [];
+
+  // Bluetooth scan requires access to location - for some strange reason...
+  List<PermissionGroup> get permissions => [PermissionGroup.location];
 
   SamplingSchema get common => SamplingSchema()
     ..type = SamplingSchemaType.COMMON
     ..name = 'Common (default) connectivity sampling schema'
     ..powerAware = true
     ..measures.addEntries([
-      MapEntry(CONNECTIVITY,
-          Measure(MeasureType(NameSpace.CARP, CONNECTIVITY), name: 'Connectivity (wifi/3G/...)', enabled: true)),
+      MapEntry(
+          CONNECTIVITY,
+          Measure(
+            MeasureType(NameSpace.CARP, CONNECTIVITY),
+            name: 'Connectivity (wifi/3G/...)',
+            enabled: true,
+          )),
       MapEntry(
           BLUETOOTH,
-          PeriodicMeasure(MeasureType(NameSpace.CARP, BLUETOOTH),
-              name: 'Nearby Devices (Bluetooth Scan)', enabled: true, frequency: 10 * 60 * 1000, duration: 5 * 1000)),
+          PeriodicMeasure(
+            MeasureType(NameSpace.CARP, BLUETOOTH),
+            name: 'Nearby Devices (Bluetooth Scan)',
+            enabled: true,
+            frequency: 10 * 60 * 1000,
+            duration: 5 * 1000,
+          )),
       MapEntry(
           WIFI,
-          PeriodicMeasure(MeasureType(NameSpace.CARP, WIFI),
-              name: 'Wifi network names (SSID / BSSID)', enabled: true, frequency: 60 * 1000, duration: 5 * 1000)),
+          PeriodicMeasure(
+            MeasureType(NameSpace.CARP, WIFI),
+            name: 'Wifi network names (SSID / BSSID)',
+            enabled: true,
+            frequency: 60 * 1000,
+            duration: 5 * 1000,
+          )),
     ]);
 
   SamplingSchema get light => common
@@ -67,15 +85,30 @@ class ConnectivitySamplingPackage implements SamplingPackage {
     ..name = 'Debug connectivity sampling'
     ..powerAware = true
     ..measures.addEntries([
-      MapEntry(CONNECTIVITY,
-          Measure(MeasureType(NameSpace.CARP, CONNECTIVITY), name: 'Connectivity (wifi/3G/...)', enabled: true)),
+      MapEntry(
+          CONNECTIVITY,
+          Measure(
+            MeasureType(NameSpace.CARP, CONNECTIVITY),
+            name: 'Connectivity (wifi/3G/...)',
+            enabled: true,
+          )),
       MapEntry(
           BLUETOOTH,
-          PeriodicMeasure(MeasureType(NameSpace.CARP, BLUETOOTH),
-              name: 'Nearby Devices (Bluetooth Scan)', enabled: true, frequency: 1 * 60 * 1000, duration: 5 * 1000)),
+          PeriodicMeasure(
+            MeasureType(NameSpace.CARP, BLUETOOTH),
+            name: 'Nearby Devices (Bluetooth Scan)',
+            enabled: true,
+            frequency: 1 * 60 * 1000,
+            duration: 2 * 1000,
+          )),
       MapEntry(
           WIFI,
-          PeriodicMeasure(MeasureType(NameSpace.CARP, WIFI),
-              name: 'Wifi network names (SSID / BSSID)', enabled: true, frequency: 60 * 1000, duration: 5 * 1000)),
+          PeriodicMeasure(
+            MeasureType(NameSpace.CARP, WIFI),
+            name: 'Wifi network names (SSID / BSSID)',
+            enabled: true,
+            frequency: 1 * 60 * 1000,
+            duration: 5 * 1000,
+          )),
     ]);
 }

@@ -39,18 +39,11 @@ class WifiProbe extends PeriodicDatumProbe {
 // TODO - implement request for getting permission.
 
 /// The [BluetoothProbe] scans for nearby and visible Bluetooth devices and collects
-/// a [BluetoothDatum] last lists each device found during the scan.
+/// a [BluetoothDatum] that lists each device found during the scan.
 /// Uses a [PeriodicMeasure] for configuration the [frequency] and [duration] of the scan.
 class BluetoothProbe extends PeriodicDatumProbe {
   /// Default timeout for bluetooth scan - 2 secs
   static const DEFAULT_TIMEOUT = 2 * 1000;
-
-  // checking if bluetooth is available before starting the probe.
-  Future<void> onInitialize(Measure measure) async {
-    super.onInitialize(measure);
-    if (!await FlutterBlue.instance.isAvailable)
-      throw SensingException("Error initializing BluetoothProbe -- Bluetooth is not available.");
-  }
 
   Future<Datum> getDatum() async {
     Datum datum;
@@ -60,7 +53,7 @@ class BluetoothProbe extends PeriodicDatumProbe {
       datum = BluetoothDatum.fromScanResult(results);
     } catch (error) {
       await FlutterBlue.instance.stopScan();
-      rethrow;
+      datum = ErrorDatum('Error scanning for bluetooth - $error');
     }
 
     return datum;

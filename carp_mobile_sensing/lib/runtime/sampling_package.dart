@@ -65,6 +65,8 @@ abstract class SamplingPackage {
   ///
   /// See [PermissionGroup](https://pub.dev/documentation/permission_handler/latest/permission_handler/PermissionGroup-class.html)
   /// for a list of possible permissions.
+  ///
+  /// For Android permission in the Manifest.xml file, see [Manifest.permission](https://developer.android.com/reference/android/Manifest.permission.html)
   List<PermissionGroup> get permissions;
 
   /// Creates a new [Probe] of the specified [type].

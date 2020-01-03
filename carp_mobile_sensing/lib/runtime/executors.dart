@@ -345,7 +345,7 @@ class TaskExecutor extends Executor {
         probe.initialize(measure);
       } else {
         warning('A probe for measure type ${measure.type.name} could not be created. '
-            'Check that the sampling package containing this probe been registered in the SamplingPackageRegistry.');
+            'Check that the sampling package containing this probe has been registered in the SamplingPackageRegistry.');
       }
     }
   }

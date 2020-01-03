@@ -21,8 +21,10 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
 
    ...
    
-   <!-- The following permissions are used for CARP Mobile Sensing -->
-   <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" tools:ignore="ProtectedPermissions"/>
+    <!-- The following permissions are used for CARP Mobile Sensing -->
+    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" tools:ignore="ProtectedPermissions"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
 </manifest>
 ````
@@ -65,7 +67,7 @@ In the following example, a study is created "by hand", i.e. you specify each tr
 // Import package
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
-some_method() async {
+void example() async {
   // Create a study using a File Backend
   Study study = Study("1234", "user@dtu.dk",
       name: "An example study",
@@ -77,29 +79,36 @@ some_method() async {
   // add sensor collection from accelerometer and gyroscope
   // careful - these sensors generate a lot of data!
   study.addTriggerTask(
-      DelayedTrigger(1000), // delay sampling for one second
+      DelayedTrigger(delay: 1000), // delay sampling for one second
       Task('Sensor Task')
-        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
-            frequency: 10 * 1000, // sample every 10 secs
-            duration: 2 // for 2 ms
-            ))
-        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
-            frequency: 20 * 1000, // sample every 20 secs
-            duration: 2 // for 2 ms
-            )));
+        ..addMeasure(PeriodicMeasure(
+          MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
+          frequency: 10 * 1000, // sample every 10 secs
+          duration: 2, // for 2 ms
+        ))
+        ..addMeasure(PeriodicMeasure(
+          MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
+          frequency: 20 * 1000, // sample every 20 secs
+          duration: 2, // for 2 ms
+        )));
 
   study.addTriggerTask(
-      PeriodicTrigger(24 * 60 * 60 * 1000), // trigger sampling once pr. day
+      PeriodicTrigger(period: 24 * 60 * 60 * 1000), // trigger sampling once pr. day
       Task('Task collecting a list of all installed apps')
         ..addMeasure(Measure(MeasureType(NameSpace.CARP, AppsSamplingPackage.APPS))));
 
   // creating measure variable to be used later
-  PeriodicMeasure lightMeasure = PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
-      name: "Ambient Light", frequency: 11 * 1000, duration: 700);
+  PeriodicMeasure lightMeasure = PeriodicMeasure(
+    MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
+    name: "Ambient Light",
+    frequency: 11 * 1000,
+    duration: 700,
+  );
   study.addTriggerTask(ImmediateTrigger(), Task('Light')..addMeasure(lightMeasure));
 
   // Create a Study Controller that can manage this study, initialize it, and start it.
   StudyController controller = StudyController(study);
+
   // await initialization before starting
   await controller.initialize();
   controller.start();
@@ -134,7 +143,8 @@ some_method() async {
   ProbeRegistry.lookup(SensorSamplingPackage.ACCELEROMETER).pause();
   ProbeRegistry.lookup(SensorSamplingPackage.ACCELEROMETER).resume();
 
-  // adapt measures on the go - calling hasChanged() force a restart of the probe, which will load the new measure
+  // adapt measures on the go - calling hasChanged() force a restart of
+  // the probe, which will load the new measure
   lightMeasure
     ..frequency = 12 * 1000
     ..duration = 500
@@ -148,23 +158,27 @@ some_method() async {
   // once the sampling has to stop, e.g. in a Flutter dispose() methods, call stop.
   // note that once a sampling has stopped, it cannot be restarted.
   controller.stop();
+  subscription.cancel();
 }
 ```
 
 However, you can se up a study quite simple, by using [sampling schemas](https://github.com/cph-cachet/carp.sensing-flutter/wiki/Schemas#sampling-schema).
-Below is an example of this:
+Below is an example of how to add measure to the `study` by using measures from the `common` sampling schema.
 
 `````dart
- StudyController controller = StudyController(
-    study,
-    samplingSchema: SamplingSchema.common(),
-  );
-
-  await controller.initialize();
-  controller.start();
-
-  // listening on all data events from the study
-  controller.events.forEach(print);
+ // adding a set of specific measures from the `common` sampling schema to one overall task
+ study.addTriggerTask(
+     ImmediateTrigger(),
+     Task()
+       ..measures = SamplingSchema.common().getMeasureList(
+         namespace: NameSpace.CARP,
+         types: [
+           SensorSamplingPackage.LIGHT,
+           ConnectivitySamplingPackage.BLUETOOTH,
+           ConnectivitySamplingPackage.WIFI,
+           DeviceSamplingPackage.MEMORY,
+         ],
+       ));
 `````
 
 There is a very **simple** [example app](example/main.dart) app which shows how a study can be created with different tasks and measures.
@@ -182,7 +196,7 @@ Please read about existing issues and file new feature requests and bug reports 
 
 ## License
 
-This software is copyright (c) 2018 [Copenhagen Center for Health Technology (CACHET)](http://www.cachet.dk/) 
+This software is copyright (c) 2020 [Copenhagen Center for Health Technology (CACHET)](http://www.cachet.dk/) 
 at the [Technical University of Denmark (DTU)](http://www.dtu.dk).
 This software is made available 'as-is' in a MIT [license](/LICENSE).
 

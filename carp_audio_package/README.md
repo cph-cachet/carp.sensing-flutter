@@ -37,18 +37,7 @@ dependencies:
 Add the following to your app's `manifest.xml` file located in `android/app/src/main`:
 
 ````xml
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="<your_package_name>"
-    xmlns:tools="http://schemas.android.com/tools">
-
-   ...
-   
-   <!-- The following permissions are used for CARP Mobile Sensing -->
-   <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-   <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" tools:ignore="ProtectedPermissions"/>
-
-</manifest>
+ <uses-permission android:name="android.permission.RECORD_AUDIO"/>
 ````
 
 > **NOTE:** Version 0.5.0 is migrated to AndroidX. This shouldn't result in any functional changes, but it requires any Android apps using this plugin to also 

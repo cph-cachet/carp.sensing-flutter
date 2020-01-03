@@ -3,7 +3,7 @@
 [![pub package](https://img.shields.io/pub/v/carp_context_package.svg)](https://pub.dartlang.org/packages/carp_context_package)
 
 This library contains a sampling package for context sampling to work with 
-the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package.
+the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) framework.
 This packages supports sampling of the following [`Measure`](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/domain/Measure-class.html) types:
 
 * `location`
@@ -103,5 +103,5 @@ Before creating a study and running it, register this package in the
 [SamplingPackageRegistry](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/runtime/SamplingPackageRegistry.html).
 
 `````dart
-  SamplingPackageRegistry.register(ContextSamplingPackage());
+SamplingPackageRegistry.register(ContextSamplingPackage());
 `````

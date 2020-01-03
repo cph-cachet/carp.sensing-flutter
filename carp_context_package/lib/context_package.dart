@@ -73,7 +73,7 @@ class ContextSamplingPackage implements SamplingPackage {
       MapEntry(
         LOCATION,
         LocationMeasure(MeasureType(NameSpace.CARP, LOCATION),
-            name: 'Location', enabled: true, frequency: 10 * 1000, accuracy: GeolocationAccuracy.low),
+            name: 'Location', enabled: true, frequency: 30 * 1000, accuracy: GeolocationAccuracy.low),
       ),
       MapEntry(
           GEOLOCATION,
@@ -81,7 +81,7 @@ class ContextSamplingPackage implements SamplingPackage {
             MeasureType(NameSpace.CARP, GEOLOCATION),
             name: 'Geo-location',
             enabled: true,
-            frequency: 10 * 1000,
+            frequency: 30 * 1000,
             accuracy: GeolocationAccuracy.low,
             distance: 3,
           )),
