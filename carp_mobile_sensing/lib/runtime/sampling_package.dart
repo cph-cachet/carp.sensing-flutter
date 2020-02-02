@@ -20,7 +20,6 @@ class _SamplingPackageRegistry {
     // register the known, built-in packages
     register(DeviceSamplingPackage());
     register(SensorSamplingPackage());
-    register(ConnectivitySamplingPackage());
     register(AppsSamplingPackage());
   }
 

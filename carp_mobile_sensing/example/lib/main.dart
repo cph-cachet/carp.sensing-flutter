@@ -127,8 +127,7 @@ class Sensing {
                   namespace: NameSpace.CARP,
                   types: [
                     SensorSamplingPackage.LIGHT,
-                    ConnectivitySamplingPackage.BLUETOOTH,
-                    ConnectivitySamplingPackage.WIFI,
+                    AppsSamplingPackage.APP_USAGE,
                     DeviceSamplingPackage.MEMORY,
                   ],
                 ))

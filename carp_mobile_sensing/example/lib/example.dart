@@ -106,17 +106,6 @@ void example() async {
 
 /// An example of how to use the [SamplingSchema] model.
 void samplingSchemaExample() async {
-  // creating a sampling schema focused on connectivity
-  SamplingSchema connectivitySchema = SamplingSchema(name: 'Connectivity Sampling Schema', powerAware: true)
-    ..measures.addEntries([
-      MapEntry(ConnectivitySamplingPackage.CONNECTIVITY,
-          Measure(MeasureType(NameSpace.CARP, ConnectivitySamplingPackage.CONNECTIVITY), enabled: true)),
-      MapEntry(
-          ConnectivitySamplingPackage.BLUETOOTH,
-          PeriodicMeasure(MeasureType(NameSpace.CARP, ConnectivitySamplingPackage.BLUETOOTH),
-              enabled: true, frequency: 60 * 60 * 1000, duration: 2 * 1000)),
-    ]);
-
   // creating a sampling schema focused on activity and outdoor context (weather)
   SamplingSchema activitySchema = SamplingSchema(name: 'Connectivity Sampling Schema', powerAware: true)
     ..measures.addEntries([
@@ -152,8 +141,8 @@ void samplingSchemaExample() async {
           namespace: NameSpace.CARP,
           types: [
             SensorSamplingPackage.LIGHT,
-            ConnectivitySamplingPackage.BLUETOOTH,
-            ConnectivitySamplingPackage.WIFI,
+            AppsSamplingPackage.APPS,
+            AppsSamplingPackage.APP_USAGE,
             DeviceSamplingPackage.MEMORY,
           ],
         ));
@@ -165,7 +154,7 @@ void samplingSchemaExample() async {
         ..measures = SamplingSchema.common().getMeasureList(
           namespace: NameSpace.CARP,
           types: [
-            ConnectivitySamplingPackage.CONNECTIVITY,
+            AppsSamplingPackage.APP_USAGE,
             SensorSamplingPackage.PEDOMETER,
             DeviceSamplingPackage.SCREEN,
           ],
@@ -177,8 +166,7 @@ void samplingSchemaExample() async {
         ..measures = SamplingSchema.common().getMeasureList(
           namespace: NameSpace.CARP,
           types: [
-            ConnectivitySamplingPackage.BLUETOOTH,
-            ConnectivitySamplingPackage.CONNECTIVITY,
+            AppsSamplingPackage.APP_USAGE,
             SensorSamplingPackage.ACCELEROMETER,
             SensorSamplingPackage.GYROSCOPE,
             AppsSamplingPackage.APPS,
@@ -196,8 +184,8 @@ void samplingSchemaExample() async {
           namespace: NameSpace.CARP,
           types: [
             SensorSamplingPackage.PEDOMETER,
-            ConnectivitySamplingPackage.CONNECTIVITY,
-            SensorSamplingPackage.ACCELEROMETER
+            AppsSamplingPackage.APP_USAGE,
+            SensorSamplingPackage.ACCELEROMETER,
           ],
         ));
 
@@ -208,7 +196,7 @@ void samplingSchemaExample() async {
           namespace: NameSpace.CARP,
           types: [
             DeviceSamplingPackage.SCREEN,
-            ConnectivitySamplingPackage.BLUETOOTH,
+            AppsSamplingPackage.APP_USAGE,
           ],
         )
         ..addMeasure(PeriodicMeasure(

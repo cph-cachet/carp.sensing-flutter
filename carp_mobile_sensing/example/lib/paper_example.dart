@@ -14,8 +14,7 @@ void sensing() async {
         ImmediateTrigger(),
         Task('One Common Sensing Task')
           ..measures = SamplingSchema.common().getMeasureList(types: [
-            ConnectivitySamplingPackage.BLUETOOTH,
-            ConnectivitySamplingPackage.CONNECTIVITY,
+            AppsSamplingPackage.APP_USAGE,
             SensorSamplingPackage.ACCELEROMETER,
             SensorSamplingPackage.GYROSCOPE
           ]));

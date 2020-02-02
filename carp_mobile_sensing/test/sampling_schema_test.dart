@@ -27,9 +27,6 @@ void main() {
             DeviceSamplingPackage.BATTERY,
             DeviceSamplingPackage.DEVICE,
             DeviceSamplingPackage.MEMORY,
-            ConnectivitySamplingPackage.BLUETOOTH,
-            ConnectivitySamplingPackage.WIFI,
-            ConnectivitySamplingPackage.CONNECTIVITY,
           ],
         ),
     );
