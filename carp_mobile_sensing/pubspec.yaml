@@ -1,6 +1,6 @@
 name: carp_mobile_sensing
 description: Mobile Sensing Framework for Flutter. A software framework for collecting sensor data from the phone and attached wearable devices via probes. Can be extended.
-version: 0.6.2+2
+version: 0.6.3
 author:  CACHET Team <cph.cachet@gmail.com>
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_mobile_sensing
 
@@ -25,10 +25,7 @@ dependencies:
   # probe-dependent plugins
   sensors: ^0.4.0
   battery: ^0.3.0
-  connectivity: ^0.4.0
   stats: ^0.2.0           # For calculating statistics, ex LightProbe
-  flutter_blue: 0.6.2     # For bluetooth scan - v.0.6.2 is the most stable
-                          #  >> see https://stackoverflow.com/questions/58603255/error-package-androidx-core-app-does-not-exist-when-running-flutter-blue-plugin/58615329#58615329
 
   # the CACHET plugins
   pedometer: ^1.0.0       # Get the step count from local OS

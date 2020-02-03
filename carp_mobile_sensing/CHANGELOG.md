@@ -1,4 +1,8 @@
 ## 0.6.2
+* moved the `connectivity` sampling package to an external [`carp_connectivity_package`](https://pub.dev/packages/carp_connectivity_package) 
+  due to [issue#46](https://github.com/cph-cachet/carp.sensing-flutter/issues/46).
+
+## 0.6.2
 * intensive test of data upload to CARP and Firebase on both Android and iOS
 * support for retry in upload of data to CARP
 * handling that a study id can only be an integer in the CARP web services

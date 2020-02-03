@@ -28,25 +28,9 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
 
 </manifest>
 ````
-> **NOTE:** Version 0.5.0 is migrated to AndroidX. This shouldn't result in any functional changes, but it requires any Android apps using this plugin to also 
+> **NOTE:** Version 0.5.0 is migrated to AndroidX. This should not result in any functional changes, but it requires any Android apps using this plugin to also 
 [migrate](https://developer.android.com/jetpack/androidx/migrate) if they're using the original support library. 
 See Flutter [AndroidX compatibility](https://flutter.dev/docs/development/packages-and-plugins/androidx-compatibility)
-
-
-
-### iOS Integration
-
-Add this permission in the `Info.plist` file located in `ios/Runner`:
-
-```xml
-<key>UIBackgroundModes</key>
-  <array>
-  <string>bluetooth-central</string>
-  <string>bluetooth-peripheral</string>
-  <string>external-accessory</string>
-  <string>fetch</string>
-</array>
-``` 
 
 
 ## Documentation
@@ -174,8 +158,7 @@ Below is an example of how to add measure to the `study` by using measures from 
          namespace: NameSpace.CARP,
          types: [
            SensorSamplingPackage.LIGHT,
-           ConnectivitySamplingPackage.BLUETOOTH,
-           ConnectivitySamplingPackage.WIFI,
+           AppsSamplingPackage.APP_USAGE,
            DeviceSamplingPackage.MEMORY,
          ],
        ));

@@ -1,3 +1,4 @@
+import 'package:carp_connectivity_package/connectivity.dart';
 import 'package:test/test.dart';
 import 'dart:convert';
 import 'dart:io';
@@ -77,9 +78,14 @@ void main() {
         DataPoint.fromDatum(study.id, study.userId, MapDatum({'item_1': '12.23423452345', 'item_2': '3.82375823475'}));
     print(_encode(dp));
 
-    BatteryDatum datum = BatteryDatum()
-      ..batteryLevel = 10
-      ..batteryStatus = "charging";
+    BluetoothDatum datum = BluetoothDatum()
+      ..scanResult.add(BluetoothDevice()
+        ..bluetoothDeviceId = "weg"
+        ..bluetoothDeviceName = "ksjbdf"
+        ..connectable = true
+        ..txPowerLevel = 314
+        ..rssi = 567
+        ..bluetoothDeviceType = "classic");
 
     final DataPoint data = DataPoint.fromDatum(study.id, study.userId, datum);
 
@@ -105,6 +111,12 @@ void main() {
           ..measures = SamplingSchema.common()
               .getMeasureList(types: [SensorSamplingPackage.LIGHT, DeviceSamplingPackage.DEVICE]));
 
+    study_3.addTriggerTask(
+        ScheduledTrigger(schedule: DateTime(2019, 12, 24)), // collect date on Xmas.
+        Task('Sensing Task #3')
+          ..measures = SamplingSchema.common()
+              .getMeasureList(types: [AppsSamplingPackage.APP_USAGE, ConnectivitySamplingPackage.BLUETOOTH]));
+
     RecurrentScheduledTrigger t1, t2, t3, t4;
 
     // collect every day at 13:30.
@@ -121,8 +133,8 @@ void main() {
     study_3.addTriggerTask(
         t2,
         Task('Sensing Task #1')
-          ..measures =
-              SamplingSchema.common().getMeasureList(types: [AppsSamplingPackage.APPS, DeviceSamplingPackage.MEMORY]));
+          ..measures = SamplingSchema.common()
+              .getMeasureList(types: [AppsSamplingPackage.APPS, ConnectivitySamplingPackage.CONNECTIVITY]));
 
     // collect every wednesday at 12:23.
     t3 = RecurrentScheduledTrigger(
@@ -131,8 +143,8 @@ void main() {
     study_3.addTriggerTask(
         t3,
         Task('Sensing Task #1')
-          ..measures =
-              SamplingSchema.common().getMeasureList(types: [AppsSamplingPackage.APPS, AppsSamplingPackage.APP_USAGE]));
+          ..measures = SamplingSchema.common()
+              .getMeasureList(types: [AppsSamplingPackage.APPS, ConnectivitySamplingPackage.CONNECTIVITY]));
 
     // collect every 2nd monday at 12:23.
     t4 = RecurrentScheduledTrigger(
@@ -141,23 +153,23 @@ void main() {
     study_3.addTriggerTask(
         t4,
         Task('Sensing Task #1')
-          ..measures =
-              SamplingSchema.common().getMeasureList(types: [AppsSamplingPackage.APPS, DeviceSamplingPackage.MEMORY]));
+          ..measures = SamplingSchema.common()
+              .getMeasureList(types: [AppsSamplingPackage.APPS, ConnectivitySamplingPackage.CONNECTIVITY]));
 
-    // when battery level is 10% then find the list of apps running
+    // when entering the 'wifi.bardram.net' WIFI network, start sampling bluetooth devices
     study_3.addTriggerTask(
         SamplingEventTrigger(
-            measureType: MeasureType(NameSpace.CARP, DeviceSamplingPackage.BATTERY),
-            resumeCondition: BatteryDatum()..batteryLevel = 10),
+            measureType: MeasureType(NameSpace.CARP, ConnectivitySamplingPackage.WIFI),
+            resumeCondition: WifiDatum()..ssid = 'wifi.bardram.net'),
         Task('Sensing Task #1')
-          ..measures = SamplingSchema.common().getMeasureList(types: [AppsSamplingPackage.APP_USAGE]));
+          ..measures = SamplingSchema.common().getMeasureList(types: [ConnectivitySamplingPackage.BLUETOOTH]));
 
     study_3.addTriggerTask(
         ConditionalSamplingEventTrigger(
-            measureType: MeasureType(NameSpace.CARP, DeviceSamplingPackage.BATTERY),
-            resumeCondition: (datum) => (datum as BatteryDatum).batteryLevel == 10),
+            measureType: MeasureType(NameSpace.CARP, ConnectivitySamplingPackage.WIFI),
+            resumeCondition: (datum) => (datum as WifiDatum).ssid == 'wifi.bardram.net'),
         Task('Sensing Task #1')
-          ..measures = SamplingSchema.common().getMeasureList(types: [AppsSamplingPackage.APP_USAGE]));
+          ..measures = SamplingSchema.common().getMeasureList(types: [ConnectivitySamplingPackage.BLUETOOTH]));
 
     final studyJson = _encode(study_3);
 

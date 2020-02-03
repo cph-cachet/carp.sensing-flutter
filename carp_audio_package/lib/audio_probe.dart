@@ -63,7 +63,7 @@ class AudioProbe extends DatumProbe {
     _startRecordingTime = DateTime.now();
     _isRecording = true;
 
-    return _flutterSound.startRecorder(filename);
+    return _flutterSound.startRecorder(uri: filename);
   }
 
   Future<void> _stopAudioRecording() async {
@@ -133,7 +133,7 @@ class DeprecatedAudioProbe extends BufferingPeriodicProbe {
     _startRecordingTime = DateTime.now();
     _isRecording = true;
 
-    return await _flutterSound.startRecorder(soundFileName);
+    return await _flutterSound.startRecorder(uri: soundFileName);
   }
 
   Future<String> _stopAudioRecording() {

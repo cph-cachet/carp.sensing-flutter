@@ -1,6 +1,7 @@
 /// A library for collecting connectivity data on:
 /// * bluetooth info from nearby devices
 /// * connectivity status
+/// * wifi status
 library connectivity;
 
 import 'dart:async';
