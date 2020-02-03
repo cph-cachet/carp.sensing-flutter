@@ -1,4 +1,4 @@
-## 0.6.2
+## 0.6.3
 * moved the `connectivity` sampling package to an external [`carp_connectivity_package`](https://pub.dev/packages/carp_connectivity_package) 
   due to [issue#46](https://github.com/cph-cachet/carp.sensing-flutter/issues/46).
 
