@@ -13,6 +13,7 @@ class Sensing {
 
   Sensing() : super() {
     // create/load and register external sampling packages
+    SamplingPackageRegistry.register(ConnectivitySamplingPackage());
     SamplingPackageRegistry.register(ContextSamplingPackage());
     SamplingPackageRegistry.register(CommunicationSamplingPackage());
     SamplingPackageRegistry.register(AudioSamplingPackage());
