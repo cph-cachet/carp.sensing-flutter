@@ -13,11 +13,12 @@ class Sensing {
 
   Sensing() : super() {
     // create/load and register external sampling packages
-    SamplingPackageRegistry.register(ConnectivitySamplingPackage());
+    //SamplingPackageRegistry.register(ConnectivitySamplingPackage());
     SamplingPackageRegistry.register(ContextSamplingPackage());
     SamplingPackageRegistry.register(CommunicationSamplingPackage());
     SamplingPackageRegistry.register(AudioSamplingPackage());
     SamplingPackageRegistry.register(ESenseSamplingPackage());
+    SamplingPackageRegistry.register(SurveySamplingPackage());
 
     // create/load and register external data managers
     DataManagerRegistry.register(CarpDataManager());
@@ -40,8 +41,6 @@ class Sensing {
 
     // listening on all data events from the study and print it (for debugging purpose).
     controller.events.forEach(print);
-
-    //ProbeRegistry.probes.forEach((key, probe) => probe.stateEvents.forEach(print));
 
     // listening on a specific probe
     //ProbeRegistry.probes[DataType.LOCATION].events.forEach(print);
@@ -74,8 +73,9 @@ class StudyMock implements StudyManager {
 
   Future<Study> getStudy(String studyId) async {
     //return _getTestingStudy(studyId);
+    return _getSurveyStudy(studyId);
 
-    return _getCoverageStudy('#5-coverage');
+    //return _getCoverageStudy('#5-coverage');
     //return _getHighFrequencyStudy('DF#4dD-high-frequency');
     //return _getAllProbesAsAwareStudy('#4-aware-carp');
     //return _getAllMeasuresStudy(studyId);
@@ -157,6 +157,15 @@ class StudyMock implements StudyManager {
                       ContextSamplingPackage.GEOFENCE,
                     ],
                   ))
+            ..addTriggerTask(
+                DelayedTrigger(delay: 30 * 1000),
+                Task('WHO-5 Survey')
+                  ..measures = SamplingSchema.debug().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      SurveySamplingPackage.SURVEY,
+                    ],
+                  ))
 //            ..addTriggerTask(
 //                ImmediateTrigger(),
 //                Task()
@@ -197,6 +206,51 @@ class StudyMock implements StudyManager {
     return _study;
   }
 
+  Future<Study> _getSurveyStudy(String studyId) async {
+    if (_study == null) {
+      _study = Study(studyId, username)
+            ..name = testStudyName
+            ..description = 'This is a study for testing and debugging -- especially on iOS.'
+            ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
+            ..addTriggerTask(
+                PeriodicTrigger(period: 1 * 20 * 1000),
+                Task()
+                  ..measures = SamplingSchema.debug().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      ContextSamplingPackage.WEATHER,
+                      ContextSamplingPackage.AIR_QUALITY,
+                    ],
+                  ))
+            ..addTriggerTask(
+                ImmediateTrigger(),
+                Task()
+                  ..measures = SamplingSchema.debug().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      ContextSamplingPackage.LOCATION,
+                      ContextSamplingPackage.GEOLOCATION,
+                      //ContextSamplingPackage.ACTIVITY,
+                      ContextSamplingPackage.GEOFENCE,
+                    ],
+                  ))
+            ..addTriggerTask(
+                DelayedTrigger(delay: 30 * 1000),
+                Task('WHO-5 Survey')
+                  ..measures.add(RPTaskMeasure(
+                    MeasureType(NameSpace.CARP, SurveySamplingPackage.SURVEY),
+                    name: 'WHO5',
+                    enabled: true,
+                    surveyTask: who5Task,
+                    onSurveyTriggered: bloc.onSurveyTriggered,
+                    onSurveySubmit: bloc.onSurveySubmit,
+                  )))
+          //
+          ;
+    }
+    return _study;
+  }
+
   Future<Study> _getCoverageStudy(String studyId) async {
     if (_study == null) {
       _study = Study(studyId, username)
@@ -210,8 +264,8 @@ class StudyMock implements StudyManager {
                     namespace: NameSpace.CARP,
                     types: [
                       SensorSamplingPackage.LIGHT, // 60 s
-                      ConnectivitySamplingPackage.BLUETOOTH, // 60 s
-                      ConnectivitySamplingPackage.WIFI, // 60 s
+                      //ConnectivitySamplingPackage.BLUETOOTH, // 60 s
+                      //ConnectivitySamplingPackage.WIFI, // 60 s
                       DeviceSamplingPackage.MEMORY, // 60 s
                       ContextSamplingPackage.LOCATION, // 30 s
                       AudioSamplingPackage.NOISE, // 60 s
@@ -312,8 +366,8 @@ class StudyMock implements StudyManager {
                     namespace: NameSpace.CARP,
                     types: [
                       AudioSamplingPackage.NOISE,
-                      ConnectivitySamplingPackage.BLUETOOTH,
-                      ConnectivitySamplingPackage.WIFI,
+                      //ConnectivitySamplingPackage.BLUETOOTH,
+                      //ConnectivitySamplingPackage.WIFI,
                     ],
                   ))
             ..addTriggerTask(
@@ -376,7 +430,7 @@ class StudyMock implements StudyManager {
               ..measures = SamplingSchema.debug().getMeasureList(
                 namespace: NameSpace.CARP,
                 types: [
-                  ConnectivitySamplingPackage.BLUETOOTH,
+                  //ConnectivitySamplingPackage.BLUETOOTH,
                   //ConnectivitySamplingPackage.WIFI,
                   //ConnectivitySamplingPackage.CONNECTIVITY,
                 ],
@@ -527,10 +581,10 @@ SamplingSchema get aware => SamplingSchema()
 //        ConnectivitySamplingPackage.BLUETOOTH,
 //        PeriodicMeasure(MeasureType(NameSpace.CARP, ConnectivitySamplingPackage.BLUETOOTH),
 //            name: 'Nearby Devices (Bluetooth Scan)', frequency: 60 * 1000, duration: 3 * 1000)),
-    MapEntry(
-        ConnectivitySamplingPackage.WIFI,
-        PeriodicMeasure(MeasureType(NameSpace.CARP, ConnectivitySamplingPackage.WIFI),
-            name: 'Wifi network names (SSID / BSSID)', frequency: 60 * 1000, duration: 5 * 1000)),
+//    MapEntry(
+//        ConnectivitySamplingPackage.WIFI,
+//        PeriodicMeasure(MeasureType(NameSpace.CARP, ConnectivitySamplingPackage.WIFI),
+//            name: 'Wifi network names (SSID / BSSID)', frequency: 60 * 1000, duration: 5 * 1000)),
     MapEntry(
         CommunicationSamplingPackage.PHONE_LOG,
         PhoneLogMeasure(MeasureType(NameSpace.CARP, CommunicationSamplingPackage.PHONE_LOG),
