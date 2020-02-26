@@ -22,6 +22,7 @@
 		D60C46552368607D0078EFE4 /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D60C46542368607D0078EFE4 /* ExternalAccessory.framework */; };
 		D617BBB223591D62004F0E5E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D617BBB123591D61004F0E5E /* GoogleService-Info.plist */; };
 		D6A8D59E2322969000A05908 /* bridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A8D59D2322969000A05908 /* bridge.swift */; };
+		D6B361B624068A0A002D140D /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6B361B524068A0A002D140D /* HealthKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -63,6 +64,7 @@
 		D617BBB123591D61004F0E5E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		D6A8D59C2322968F00A05908 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		D6A8D59D2322969000A05908 /* bridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bridge.swift; sourceTree = "<group>"; };
+		D6B361B524068A0A002D140D /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		EF0BE53DBCAEC879C7F22F61 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -75,6 +77,7 @@
 				3B80C3941E831B6300D905FE /* App.framework in Frameworks */,
 				D60C46552368607D0078EFE4 /* ExternalAccessory.framework in Frameworks */,
 				32F0ED7CEE93A95CC016C24C /* Pods_Runner.framework in Frameworks */,
+				D6B361B624068A0A002D140D /* HealthKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -153,6 +156,7 @@
 		C6A700983C993C683EF35DFE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D6B361B524068A0A002D140D /* HealthKit.framework */,
 				D60C46542368607D0078EFE4 /* ExternalAccessory.framework */,
 				D1A319C80EE7E2631EA7B53F /* Pods_Runner.framework */,
 			);

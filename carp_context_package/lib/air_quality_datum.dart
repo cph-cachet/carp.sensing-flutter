@@ -33,7 +33,7 @@ class AirQualityDatum extends CARPDatum {
 
   String toString() =>
       super.toString() +
-      ',place: $place (latitude:$latitude, longitude:$longitude), '
+      ', place: $place (latitude:$latitude, longitude:$longitude), '
           'souce: $source, '
           'airQualityIndex: $airQualityIndex, '
           'airQualityLevel: $airQualityLevel';

@@ -17,8 +17,8 @@ HealthMeasure _$HealthMeasureFromJson(Map<String, dynamic> json) {
     json['duration'] == null
         ? null
         : Duration(microseconds: json['duration'] as int),
-    name: json['name'] as String,
-    enabled: json['enabled'] as bool,
+    name: json['name'],
+    enabled: json['enabled'],
   )
     ..c__ = json['c__'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
@@ -37,6 +37,8 @@ Map<String, dynamic> _$HealthMeasureToJson(HealthMeasure instance) {
 
   writeNotNull('c__', instance.c__);
   writeNotNull('type', instance.type);
+  writeNotNull('name', instance.name);
+  writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
   writeNotNull(
       'health_data_types',
@@ -44,8 +46,6 @@ Map<String, dynamic> _$HealthMeasureToJson(HealthMeasure instance) {
           ?.map((e) => _$HealthDataTypeEnumMap[e])
           ?.toList());
   writeNotNull('duration', instance.duration?.inMicroseconds);
-  writeNotNull('name', instance.name);
-  writeNotNull('enabled', instance.enabled);
   return val;
 }
 
@@ -106,9 +106,12 @@ const _$HealthDataTypeEnumMap = {
 
 HealthDatum _$HealthDatumFromJson(Map<String, dynamic> json) {
   return HealthDatum(
-    (json['health_data'] as List)
-        ?.map((e) => e as Map<String, dynamic>)
-        ?.toList(),
+    json['value'] as num,
+    json['unit'] as String,
+    json['date_from'] as int,
+    json['date_to'] as int,
+    json['data_type'] as String,
+    json['platform'] as String,
   )
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
@@ -127,6 +130,11 @@ Map<String, dynamic> _$HealthDatumToJson(HealthDatum instance) {
 
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
-  writeNotNull('health_data', instance.healthData);
+  writeNotNull('value', instance.value);
+  writeNotNull('unit', instance.unit);
+  writeNotNull('date_from', instance.dateFrom?.toIso8601String());
+  writeNotNull('date_to', instance.dateTo?.toIso8601String());
+  writeNotNull('data_type', instance.dataType);
+  writeNotNull('platform', instance.platform);
   return val;
 }

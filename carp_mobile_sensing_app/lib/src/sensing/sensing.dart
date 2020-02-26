@@ -19,6 +19,7 @@ class Sensing {
     SamplingPackageRegistry.register(AudioSamplingPackage());
     SamplingPackageRegistry.register(ESenseSamplingPackage());
     SamplingPackageRegistry.register(SurveySamplingPackage());
+    SamplingPackageRegistry.register(HealthSamplingPackage());
 
     // create/load and register external data managers
     DataManagerRegistry.register(CarpDataManager());
@@ -73,7 +74,9 @@ class StudyMock implements StudyManager {
 
   Future<Study> getStudy(String studyId) async {
     //return _getTestingStudy(studyId);
-    return _getSurveyStudy(studyId);
+    //return _getSurveyStudy(studyId);
+
+    return _getHealthStudy('#6-health');
 
     //return _getCoverageStudy('#5-coverage');
     //return _getHighFrequencyStudy('DF#4dD-high-frequency');
@@ -245,6 +248,61 @@ class StudyMock implements StudyManager {
                     onSurveyTriggered: bloc.onSurveyTriggered,
                     onSurveySubmit: bloc.onSurveySubmit,
                   )))
+          //
+          ;
+    }
+    return _study;
+  }
+
+  Future<Study> _getHealthStudy(String studyId) async {
+    if (_study == null) {
+      _study = Study(studyId, username)
+            ..name = studyId
+            ..description = 'This is a study for testing the HEALTH Package...'
+            ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
+//            ..addTriggerTask(
+//                ImmediateTrigger(),
+//                Task()
+//                  ..measures = SamplingSchema.debug().getMeasureList(
+//                    namespace: NameSpace.CARP,
+//                    types: [
+//                      SensorSamplingPackage.LIGHT, // 60 s
+//                      //ConnectivitySamplingPackage.BLUETOOTH, // 60 s
+//                      //ConnectivitySamplingPackage.WIFI, // 60 s
+//                      DeviceSamplingPackage.MEMORY, // 60 s
+//                      ContextSamplingPackage.LOCATION, // 30 s
+//                      //AudioSamplingPackage.NOISE, // 60 s
+//                    ],
+//                  ))
+            ..addTriggerTask(
+                PeriodicTrigger(period: 1 * 20 * 1000),
+                Task()
+                  ..measures = SamplingSchema.debug().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      ContextSamplingPackage.WEATHER,
+                      ContextSamplingPackage.AIR_QUALITY,
+                    ],
+                  ))
+            ..addTriggerTask(
+                PeriodicTrigger(period: 5 * 60 * 1000), // 5 min
+                Task()
+                  ..measures = SamplingSchema.debug().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      AppsSamplingPackage.APP_USAGE, // 60 s
+                    ],
+                  ))
+            ..addTriggerTask(
+                //PeriodicTrigger(period: 5 * 1000), // 5 sec
+                DelayedTrigger(delay: 5 * 1000), // 5 sec
+                Task()
+                  ..measures = SamplingSchema.debug().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      HealthSamplingPackage.HEALTH,
+                    ],
+                  ))
           //
           ;
     }

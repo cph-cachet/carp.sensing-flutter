@@ -7,7 +7,7 @@
 
 part of health_lib;
 
-/// This is the base class for this context sampling package.
+/// This is the base class for this health sampling package.
 ///
 /// To use this package, register it in the [carp_mobile_sensing] package using
 ///
@@ -21,21 +21,18 @@ class HealthSamplingPackage implements SamplingPackage {
         HEALTH,
       ];
 
-  Probe create(String type) {
-    return HealthProbe();
-  }
+  Probe create(String type) => type == HEALTH ? HealthProbe() : null;
 
   void onRegister() {
-    FromJsonFactory.registerFromJsonFunction(
-        "HealthMeasure", HealthMeasure.fromJsonFunction);
+    FromJsonFactory.registerFromJsonFunction("HealthMeasure", HealthMeasure.fromJsonFunction);
   }
 
-  List<PermissionGroup> get permissions =>
-      [PermissionGroup.health_data];
+  //List<PermissionGroup> get permissions => [PermissionGroup.health_data];
+  List<PermissionGroup> get permissions => [];
 
   SamplingSchema get common => SamplingSchema()
     ..type = SamplingSchemaType.COMMON
-    ..name = 'Common (default) context sampling schema'
+    ..name = 'Common (default) health sampling schema'
     ..powerAware = true
     ..measures.addEntries([
       MapEntry(
@@ -45,16 +42,14 @@ class HealthSamplingPackage implements SamplingPackage {
               [
                 HealthDataType.STEPS,
                 HealthDataType.WEIGHT,
-                HealthDataType.BODY_MASS_INDEX
+                HealthDataType.BODY_MASS_INDEX,
               ],
-              Duration(hours: 1), name: 'Health Data')),
+              Duration(days: 2),
+              name: 'Health Data')),
     ]);
-
-
 
   SamplingSchema get normal => common;
   SamplingSchema get light => common;
   SamplingSchema get minimum => common;
   SamplingSchema get debug => common;
-
 }

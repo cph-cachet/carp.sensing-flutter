@@ -92,7 +92,7 @@ class StudyController {
       if (status != PermissionStatus.granted) warning('Permissions not granted for $permission, permission is $status');
     });
 
-    print('CARP Mobile sensing - Initializing Study Controller: ');
+    print('CARP Mobile Sensing (CAMS) - Initializing Study Controller: ');
     print('     study id : ${study.id}');
     print('   study name : ${study.name}');
     print('         user : ${study.userId}');

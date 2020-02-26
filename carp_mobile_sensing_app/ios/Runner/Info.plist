@@ -42,6 +42,10 @@
     <string>Detects activity.</string>
     <key>NSCalendarsUsageDescription</key>
     <string>Collects calendar events.</string>
+    <key>NSHealthShareUsageDescription</key>
+    <string>We will sync your data with the Apple Health app to give you better insights</string>
+    <key>NSHealthUpdateUsageDescription</key>
+    <string>We will sync your data with the Apple Health app to give you better insights</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>

@@ -16,6 +16,7 @@ class AppsProbe extends DatumProbe {
 
   // check if the DeviceApps plugin is available (only available on Android)
   Future<void> onInitialize(Measure measure) async {
+    print('onInitialize in $this');
     super.onInitialize(measure);
     if (!Platform.isAndroid) throw SensingException("Error initializing AppsProbe -- only available on Android.");
   }
