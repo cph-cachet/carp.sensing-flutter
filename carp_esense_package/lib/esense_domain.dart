@@ -40,7 +40,7 @@ abstract class ESenseDatum extends CARPDatum {
 /// Holds information about an eSense button pressed event.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ESenseButtonDatum extends ESenseDatum {
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, ESenseSamplingPackage.ESENSE_BUTTON);
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, ESenseSamplingPackage.BUTTON);
   DataFormat get format => CARP_DATA_FORMAT;
 
   ESenseButtonDatum({String deviceName, this.pressed}) : super(deviceName);
@@ -62,7 +62,7 @@ class ESenseButtonDatum extends ESenseDatum {
 /// eSense [SensorEvent](https://pub.dev/documentation/esense/latest/esense/SensorEvent-class.html) event.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ESenseSensorDatum extends ESenseDatum {
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, ESenseSamplingPackage.ESENSE_SENSOR);
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, ESenseSamplingPackage.SENSOR);
   DataFormat get format => CARP_DATA_FORMAT;
 
   /// Sequential number of sensor packet

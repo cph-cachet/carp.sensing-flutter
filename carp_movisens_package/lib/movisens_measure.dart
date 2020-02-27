@@ -8,10 +8,25 @@ part of movisens;
 
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MovisensMeasure extends Measure {
-  String address, deviceName;
+  /// The MAC address of the sensor.
+  String address;
 
-  int weight, height, age;
+  /// The user-friendly name of the sensor.
+  String deviceName;
+
+  /// Weight of the person wearing the Movisens device in kg.
+  int weight;
+
+  /// Height of the person wearing the Movisens device in cm.
+  int height;
+
+  /// Age of the person wearing the Movisens device in years.
+  int age;
+
+  /// Gender of the person wearing the Movisens device, male or female.
   Gender gender;
+
+  /// Sensor placement on body
   SensorLocation sensorLocation;
 
   String get getAddress => address;

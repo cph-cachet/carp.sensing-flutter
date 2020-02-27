@@ -15,16 +15,16 @@ part of esense;
 ///   SamplingPackageRegistry.register(ESenseSamplingPackage());
 /// ```
 class ESenseSamplingPackage implements SamplingPackage {
-  static const String ESENSE_BUTTON = "esense_button";
-  static const String ESENSE_SENSOR = "esense_sensor";
+  static const String BUTTON = "esense.button";
+  static const String SENSOR = "esense.sensor";
 
-  List<String> get dataTypes => [ESENSE_BUTTON, ESENSE_SENSOR];
+  List<String> get dataTypes => [BUTTON, SENSOR];
 
   Probe create(String type) {
     switch (type) {
-      case ESENSE_BUTTON:
+      case BUTTON:
         return ESenseButtonProbe();
-      case ESENSE_SENSOR:
+      case SENSOR:
         return ESenseSensorProbe();
       default:
         return null;
@@ -41,12 +41,12 @@ class ESenseSamplingPackage implements SamplingPackage {
     ..powerAware = true
     ..measures.addEntries([
       MapEntry(
-          ESENSE_BUTTON,
-          ESenseMeasure(MeasureType(NameSpace.CARP, ESENSE_BUTTON),
+          BUTTON,
+          ESenseMeasure(MeasureType(NameSpace.CARP, BUTTON),
               name: 'eSense - Button', enabled: true, deviceName: '', samplingRate: 10)),
       MapEntry(
-          ESENSE_SENSOR,
-          ESenseMeasure(MeasureType(NameSpace.CARP, ESENSE_SENSOR),
+          SENSOR,
+          ESenseMeasure(MeasureType(NameSpace.CARP, SENSOR),
               name: 'eSense - Sensors', enabled: true, deviceName: '', samplingRate: 10)),
     ]);
 
@@ -57,8 +57,8 @@ class ESenseSamplingPackage implements SamplingPackage {
   SamplingSchema get minimum => light
     ..type = SamplingSchemaType.MINIMUM
     ..name = 'Minimum eSense sampling'
-    ..measures[ESENSE_BUTTON].enabled = false
-    ..measures[ESENSE_SENSOR].enabled = false;
+    ..measures[BUTTON].enabled = false
+    ..measures[SENSOR].enabled = false;
 
   SamplingSchema get normal => common;
 
@@ -79,12 +79,12 @@ class ESenseSamplingPackage implements SamplingPackage {
     ..powerAware = false
     ..measures.addEntries([
       MapEntry(
-          ESENSE_BUTTON,
-          ESenseMeasure(MeasureType(NameSpace.CARP, ESENSE_BUTTON),
+          BUTTON,
+          ESenseMeasure(MeasureType(NameSpace.CARP, BUTTON),
               name: 'eSense - Button', enabled: true, deviceName: 'eSense-0332')),
       MapEntry(
-          ESENSE_SENSOR,
-          ESenseMeasure(MeasureType(NameSpace.CARP, ESENSE_SENSOR),
+          SENSOR,
+          ESenseMeasure(MeasureType(NameSpace.CARP, SENSOR),
               name: 'eSense - Sensors', enabled: true, deviceName: 'eSense-0332', samplingRate: 5)),
     ]);
 }

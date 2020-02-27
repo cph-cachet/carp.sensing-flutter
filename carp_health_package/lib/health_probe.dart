@@ -3,11 +3,15 @@ part of health_lib;
 class HealthProbe extends StreamProbe {
   StreamController<HealthDatum> _ctrl = StreamController<HealthDatum>.broadcast();
 
+  String type;
+
   Stream<HealthDatum> get stream => _ctrl.stream;
   List<HealthDataPoint> healthData = List<HealthDataPoint>();
 
   List<HealthDataType> dataTypes;
   Duration duration;
+
+  HealthProbe(this.type);
 
   /// Make Health plugin call and fetch data points
   Future<void> _getHealthData(DateTime start, DateTime end) async {

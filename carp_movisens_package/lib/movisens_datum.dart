@@ -75,6 +75,7 @@ class MovisensMETLevelDatum extends MovisensDatum {
   Map<String, dynamic> toJson() => _$MovisensMETLevelDatumToJson(this);
 }
 
+/// Representing a map of the Movisens device.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MovisensMovementAccelerationDatum extends MovisensDatum {
   String movementAcceleration;

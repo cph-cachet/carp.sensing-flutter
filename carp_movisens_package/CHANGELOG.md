@@ -1,3 +1,7 @@
+## 0.1.8
+* documentation improvements 
+* added example
+
 ## 0.1.7
 * allignment with `carp_mobile_sensing` v. 0.6.1.
 

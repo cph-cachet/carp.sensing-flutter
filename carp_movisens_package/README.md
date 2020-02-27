@@ -4,7 +4,12 @@
 
 This library contains a sampling package for sampling data from the [Movisens Move4 and ECGMove4 devices](https://www.movisens.com/en/products/ecg-sensor/) to work with 
 the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package.
-This packages supports sampling of the following [`Measure`](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/domain/Measure-class.html) types:
+This packages supports sampling a `movisens` [`Measure`](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/domain/Measure-class.html).
+
+See the [wiki]() for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types)
+and [sampling schemas](https://github.com/cph-cachet/carp.sensing-flutter/wiki/D.-Sampling-Schemas).
+
+When running, the `MovisensProbe` of this package return different [`Datum`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/Datum-class.html) formats:
 
 * `movisens.met_level`
 * `movisens.met`
@@ -16,10 +21,7 @@ This packages supports sampling of the following [`Measure`](https://pub.dartlan
 * `movisens.movement_acceleration`
 * `movisens.tap_marker`
 * `movisens.battery_level`
-* `movisens.connection_status`
-
-See the [wiki]() for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types)
-and [sampling schemas](https://github.com/cph-cachet/carp.sensing-flutter/wiki/D.-Sampling-Schemas).
+* `movisens.connection_status` 
 
 For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/README.md).
 
@@ -159,4 +161,21 @@ Before creating a study and running it, register this package in the
  SamplingPackageRegistry.register(MovisensSamplingPackage());
 `````
 
+Once the package is registered, a `MovisensMeasure` can be added to a study like this.
+
+````dart
+  study.addTriggerTask(
+      ImmediateTrigger(), // a simple trigger that starts immediately
+      Task('Movisens Task')
+        ..addMeasure(MovisensMeasure(MeasureType(NameSpace.CARP, MovisensSamplingPackage.MOVISENS),
+            name: "movisens",
+            enabled: true,
+            address: '06-00-00-00-00-00',
+            deviceName: "ECG-223",
+            height: 178,
+            weight: 77,
+            age: 32,
+            gender: Gender.male,
+            sensorLocation: SensorLocation.chest)));
+````
 
