@@ -29,8 +29,8 @@ class ProbeDescription {
         ContextSamplingPackage.AIR_QUALITY: 'Collects local air quality.',
         ContextSamplingPackage.GEOFENCE: 'Track movement in/out of this geofence.',
         CommunicationSamplingPackage.CALENDAR: 'Collects entries from phone calendars.',
-        ESenseSamplingPackage.ESENSE_SENSOR: 'Sensor reading from the eSense device.',
-        ESenseSamplingPackage.ESENSE_BUTTON: 'Button pressed events from the eSense device.',
+//        ESenseSamplingPackage.ESENSE_SENSOR: 'Sensor reading from the eSense device.',
+//        ESenseSamplingPackage.ESENSE_BUTTON: 'Button pressed events from the eSense device.',
         SurveySamplingPackage.SURVEY: 'User survey.',
         HealthSamplingPackage.HEALTH: 'Collects health data from Apple Health / Google Fit.',
       };
@@ -63,8 +63,8 @@ class ProbeDescription {
         ContextSamplingPackage.AIR_QUALITY: Icon(Icons.warning, size: 50, color: CACHET.GREY_3),
         ContextSamplingPackage.GEOFENCE: Icon(Icons.location_on, size: 50, color: CACHET.CYAN),
         CommunicationSamplingPackage.CALENDAR: Icon(Icons.event, size: 50, color: CACHET.CYAN),
-        ESenseSamplingPackage.ESENSE_SENSOR: Icon(Icons.hearing, size: 50, color: CACHET.DARK_BLUE),
-        ESenseSamplingPackage.ESENSE_BUTTON: Icon(Icons.radio_button_checked, size: 50, color: CACHET.DARK_BLUE),
+//        ESenseSamplingPackage.ESENSE_SENSOR: Icon(Icons.hearing, size: 50, color: CACHET.DARK_BLUE),
+//        ESenseSamplingPackage.ESENSE_BUTTON: Icon(Icons.radio_button_checked, size: 50, color: CACHET.DARK_BLUE),
         SurveySamplingPackage.SURVEY: Icon(Icons.note_add, size: 50, color: CACHET.ORANGE),
         HealthSamplingPackage.HEALTH: Icon(Icons.healing, size: 50, color: CACHET.RED),
       };

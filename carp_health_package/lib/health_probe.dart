@@ -8,7 +8,7 @@ class HealthProbe extends StreamProbe {
   Stream<HealthDatum> get stream => _ctrl.stream;
   List<HealthDataPoint> healthData = List<HealthDataPoint>();
 
-  List<HealthDataType> dataTypes;
+  HealthDataType healthDataType;
   Duration duration;
 
   HealthProbe(this.type);
@@ -17,13 +17,11 @@ class HealthProbe extends StreamProbe {
   Future<void> _getHealthData(DateTime start, DateTime end) async {
     List<HealthDataPoint> healthData = List<HealthDataPoint>();
 
-    for (HealthDataType type in dataTypes) {
-      try {
-        List<HealthDataPoint> data = await Health.getHealthDataFromType(start, end, type);
-        healthData.addAll(data);
-      } catch (exception) {
-        _ctrl.addError(exception);
-      }
+    try {
+      List<HealthDataPoint> data = await Health.getHealthDataFromType(start, end, healthDataType);
+      healthData.addAll(data);
+    } catch (exception) {
+      _ctrl.addError(exception);
     }
 
     // convert [HealthDataPoint] to Datums and add them to the stream.
@@ -39,12 +37,10 @@ class HealthProbe extends StreamProbe {
     super.onInitialize(measure);
     assert(measure is HealthMeasure);
     duration = (measure as HealthMeasure).duration;
-    dataTypes = (measure as HealthMeasure).healthDataTypes;
+    healthDataType = (measure as HealthMeasure).healthDataType;
 
     // try to get permissions to accessing health data
     bool permission = await Health.requestAuthorization();
-
-    print(' >>> $this.onInitialize - permission : $permission');
   }
 }
 

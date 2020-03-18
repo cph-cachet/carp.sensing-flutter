@@ -3,13 +3,13 @@ part of health_lib;
 /// Specify the configuration on how to collect health data.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class HealthMeasure extends Measure {
-  /// The list of [HealthDataType]s to collect.
-  List<HealthDataType> healthDataTypes;
+  /// The [HealthDataType] to collect.
+  HealthDataType healthDataType;
 
   /// The duration back in time to collect the data for. E.g. one day.
   Duration duration;
 
-  HealthMeasure(MeasureType type, this.healthDataTypes, this.duration, {name, enabled})
+  HealthMeasure(MeasureType type, this.healthDataType, this.duration, {name, enabled})
       : super(
           type,
           name: name,
@@ -23,15 +23,15 @@ class HealthMeasure extends Measure {
 
   Map<String, dynamic> toJson() => _$HealthMeasureToJson(this);
 
-  String toString() => 'HealthMeasure: $healthDataTypes ($duration)';
+  String toString() => 'HealthMeasure: $healthDataType ($duration)';
 }
 
-/// A [Datum] that holds a [HealthDataPoint] data point information
+/// A [Datum] that holds a [HealthDataPoint](https://pub.dev/documentation/health/latest/health/HealthDataPoint-class.html) data point information.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class HealthDatum extends CARPDatum {
   static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, HealthSamplingPackage.HEALTH);
 
-  DataFormat get format => CARP_DATA_FORMAT;
+  DataFormat get format => DataFormat(NameSpace.CARP, '${HealthSamplingPackage.HEALTH}.${dataType.toLowerCase()}');
 
   /// The value of the health data.
   num value;
@@ -73,35 +73,3 @@ class HealthDatum extends CARPDatum {
           'dateFrom: $dateFrom, '
           'dateTo: $dateTo';
 }
-
-///// A [Datum] that holds a [HealthDataPoint] datapoint information collected through the [World's Air Quality Index (WAQI)](https://waqi.info) API.
-//@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-//class HealthDatum extends CARPDatum {
-//  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, HealthSamplingPackage.HEALTH);
-//  DataFormat get format => CARP_DATA_FORMAT;
-//
-////  num value;
-////  String unit;
-////  int dateFrom;
-////  int dateTo;
-////  String dataType;
-////  String platform;
-//  List<Map<String, dynamic>> healthData;
-//
-//  HealthDatum(this.healthData) : super();
-//
-//  factory HealthDatum.fromHealthDataPointList(List<HealthDataPoint> points) => HealthDatum(points
-//      .map((p) => {
-//            'value': p.value,
-//            'unit': p.unit,
-//            'dateFrom': p.dateFrom,
-//            'dateTo': p.dateTo,
-//            'dataType': p.dataType,
-//            'platform': p.platform
-//          })
-//      .toList());
-//
-//  factory HealthDatum.fromJson(Map<String, dynamic> json) => _$HealthDatumFromJson(json);
-//
-//  Map<String, dynamic> toJson() => _$HealthDatumToJson(this);
-//}

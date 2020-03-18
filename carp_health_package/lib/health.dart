@@ -1,3 +1,8 @@
+/// A library for collecting health information from Apple Health or Google Fit.
+/// Is using the [health](https://pub.dev/packages/health) plugin.
+/// Can be configured to collect the different [HealthDataType](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html).
+///
+/// The measure type is `health`.
 library health_lib;
 
 import 'dart:async';
@@ -12,4 +17,4 @@ import 'package:carp_mobile_sensing/domain/domain.dart';
 part 'health_package.dart';
 part 'health_probe.dart';
 part 'health_domain.dart';
-part 'health_lib.g.dart';
+part 'health.g.dart';

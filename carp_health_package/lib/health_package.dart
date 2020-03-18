@@ -27,7 +27,6 @@ class HealthSamplingPackage implements SamplingPackage {
     FromJsonFactory.registerFromJsonFunction("HealthMeasure", HealthMeasure.fromJsonFunction);
   }
 
-  //List<PermissionGroup> get permissions => [PermissionGroup.health_data];
   List<PermissionGroup> get permissions => [];
 
   SamplingSchema get common => SamplingSchema()
@@ -37,14 +36,7 @@ class HealthSamplingPackage implements SamplingPackage {
     ..measures.addEntries([
       MapEntry(
           HEALTH,
-          HealthMeasure(
-              MeasureType(NameSpace.CARP, HEALTH),
-              [
-                HealthDataType.STEPS,
-                HealthDataType.WEIGHT,
-                HealthDataType.BODY_MASS_INDEX,
-              ],
-              Duration(days: 2),
+          HealthMeasure(MeasureType(NameSpace.CARP, HEALTH), HealthDataType.STEPS, Duration(days: 2),
               name: 'Health Data')),
     ]);
 
