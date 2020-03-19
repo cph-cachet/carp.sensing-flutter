@@ -1,4 +1,4 @@
-part of health_lib;
+part of health_package;
 
 class HealthProbe extends StreamProbe {
   StreamController<HealthDatum> _ctrl = StreamController<HealthDatum>.broadcast();

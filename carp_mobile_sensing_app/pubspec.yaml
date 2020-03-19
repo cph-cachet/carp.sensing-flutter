@@ -22,7 +22,7 @@ dependencies:
   carp_audio_package: ^0.6.1
   carp_esense_package: ^0.1.3
   carp_backend: ^0.3.2
-#  carp_health_package:
+  carp_health_package: ^0.6.1
 #  carp_firebase_backend: ^0.4.0
 
 
@@ -42,8 +42,8 @@ dependency_overrides:
     path: ../carp_audio_package/
   carp_esense_package:
     path: ../carp_esense_package/
-  carp_health_package:
-    path: ../carp_health_package/
+#  carp_health_package:
+#    path: ../carp_health_package/
   carp_webservices:
     path: ../carp_webservices/
   carp_backend:

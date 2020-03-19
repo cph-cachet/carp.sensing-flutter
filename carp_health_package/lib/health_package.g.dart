@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of health_lib;
+part of health_package;
 
 // **************************************************************************
 // JsonSerializableGenerator

@@ -5,7 +5,23 @@
  * found in the LICENSE file.
  */
 
-part of health_lib;
+/// A CAMS sampling package for collecting health information from Apple Health or Google Fit.
+/// Is using the [health](https://pub.dev/packages/health) plugin.
+/// Can be configured to collect the different [HealthDataType](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html).
+///
+/// The measure type is `health`.
+library health_package;
+
+import 'dart:async';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+import 'package:health/health.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:carp_mobile_sensing/domain/domain.dart';
+
+part 'health_probe.dart';
+part 'health_domain.dart';
+part 'health_package.g.dart';
 
 /// This is the base class for this health sampling package.
 ///

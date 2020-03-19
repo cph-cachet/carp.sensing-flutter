@@ -8,7 +8,7 @@ This packages supports sampling of the following [`Measure`](https://pub.dartlan
 
 * `health`
 
-A [`HealthMeasure`]() can be configured to collect a specific [`HealthDataType`](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html).
+A [`HealthMeasure`](https://pub.dev/documentation/carp_health_package/latest/health_lib/HealthMeasure-class.html) can be configured to collect a specific [`HealthDataType`](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html).
 A `HealthDataType` can be:
 
   * BODY_FAT_PERCENTAGE,
