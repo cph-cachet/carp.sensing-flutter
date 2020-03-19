@@ -1,3 +1,6 @@
+## 0.6.2
+* Small update on the documentation and printing.
+
 ## 0.6.1
 * Small updates to documentation and adding an example.
 

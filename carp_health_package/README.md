@@ -59,6 +59,7 @@ android.useAndroidX=true
 
 Google Fit can be tricky to set up and it requires a separate app to be installed. 
 Please follow this [guide to set up Google Fit](https://developers.google.com/fit/android/get-started).
+Also - check out the documentation of the [`health`](https://pub.dev/packages/health) package.
 
 
 

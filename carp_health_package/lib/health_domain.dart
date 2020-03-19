@@ -26,7 +26,7 @@ class HealthMeasure extends Measure {
 
   Map<String, dynamic> toJson() => _$HealthMeasureToJson(this);
 
-  String toString() => 'HealthMeasure: $healthDataType ($duration)';
+  String toString() => super.toString() + ', healthDataType: $healthDataType, duration: $duration';
 }
 
 /// A [Datum] that holds a [HealthDataPoint](https://pub.dev/documentation/health/latest/health/HealthDataPoint-class.html) data point information.
