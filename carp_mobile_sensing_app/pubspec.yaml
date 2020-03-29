@@ -56,6 +56,12 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+# Is used to change the default app launch icons on iOS and Android.
+# To install:
+#  1. import the 'flutter_launcher_icons' package above
+#  2. add the 'flutter_icons:' section below
+#  3. run 'flutter pub get'
+#  3. run 'flutter pub pub run flutter_launcher_icons:main'
 flutter_icons:
   android: true
   ios: true
