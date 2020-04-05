@@ -1,6 +1,6 @@
 name: carp_connectivity_package
 description: CARP connectivity sampling package. Samples connectivity status, bluetooth devices, and wifi access points.
-version: 0.6.0+2
+version: 0.6.1
 author:  CACHET Team <cph.cachet@gmail.com>
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_connectivity_package
 
@@ -13,9 +13,9 @@ dependencies:
   json_annotation: ^3.0.0
   carp_mobile_sensing: ^0.6.2
   connectivity: ^0.4.0
-#  flutter_blue: ^0.6.2     # For bluetooth scan
-  flutter_blue: 0.6.2     # For bluetooth scan - v.0.6.2 is the most stable
-                          #  >> see https://stackoverflow.com/questions/58603255/error-package-androidx-core-app-does-not-exist-when-running-flutter-blue-plugin/58615329#58615329
+  flutter_blue: ^0.7.0     # For bluetooth scan
+#  flutter_blue: 0.6.2     # For bluetooth scan - v.0.6.2 is the most stable
+#                          #  >> see https://stackoverflow.com/questions/58603255/error-package-androidx-core-app-does-not-exist-when-running-flutter-blue-plugin/58615329#58615329
 
 # Overriding carp libraries to use the local copy
 # Remove this before release of package

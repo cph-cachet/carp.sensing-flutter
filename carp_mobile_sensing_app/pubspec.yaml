@@ -30,8 +30,8 @@ dependencies:
 dependency_overrides:
   carp_mobile_sensing:
     path: ../carp_mobile_sensing/
-#  carp_connectivity_package:
-#    path: ../carp_connectivity_package/
+  carp_connectivity_package:
+    path: ../carp_connectivity_package/
   carp_communication_package:
     path: ../carp_communication_package/
   carp_context_package:
