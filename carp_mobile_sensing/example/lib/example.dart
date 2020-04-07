@@ -228,7 +228,7 @@ void samplingSchemaExample() async {
 /// This is an example of how to set up a study in a very simple way using [SamplingSchema.common()].
 void example_2() {
   Study study = Study("2", 'user@cachet.dk',
-      name: 'A outdoor activity study',
+      name: 'An outdoor activity study',
       dataEndPoint: FileDataEndPoint()
         ..bufferSize = 500 * 1000
         ..zip = true
