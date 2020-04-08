@@ -1,3 +1,6 @@
+## 0.6.5
+* upgrade to `carp_mobile_sensing` v. 0.6.5
+
 ## 0.6.4
 * change of location provider to the [geolocator](https://pub.dev/packages/geolocator) plugin.
 * introduction of a `geolocation` measure type for listening to location events.

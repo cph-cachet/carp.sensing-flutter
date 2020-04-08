@@ -1,3 +1,6 @@
+## 0.1.5
+* upgrade to `carp_mobile_sensing` v. 0.6.5
+
 ## 0.1.3
 * alignment with `carp_mobile_sensing` v. 0.6.1.
 

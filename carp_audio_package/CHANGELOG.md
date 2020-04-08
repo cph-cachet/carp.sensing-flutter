@@ -1,3 +1,6 @@
+## 0.6.5
+* upgrade to `carp_mobile_sensing` v. 0.6.5
+
 ## 0.6.3
 * update to `flutter_sound` v. 3.1.x
 * default location of sound files are now with the data collected.

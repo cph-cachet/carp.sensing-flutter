@@ -1,3 +1,6 @@
+## 0.6.5
+* upgrade to `carp_mobile_sensing` v. 0.6.5
+
 ## 0.6.1
 * allignment with `carp_mobile_sensing` v. 0.6.1.
 * extensive testing on iOS 
