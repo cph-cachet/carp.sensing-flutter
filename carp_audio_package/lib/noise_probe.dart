@@ -7,14 +7,6 @@
 
 part of audio;
 
-// TODO - PERMISSIONS
-// This probe needs PERMISSIONS to use
-//    - audio recording / microphone
-//    - file access / storage
-//
-// If these permissions are not set, the app crashes....
-// See issue on github.
-
 /// A listening probe collecting noise sampling from the microphone.
 ///
 /// See [NoiseMeasure] on how to configure this probe, including setting the
@@ -35,6 +27,7 @@ class NoiseProbe extends BufferingPeriodicStreamProbe {
   }
 
   Future<void> onInitialize(Measure measure) async {
+    assert(measure is NoiseMeasure);
     super.onInitialize(measure);
     _init();
   }

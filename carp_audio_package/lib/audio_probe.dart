@@ -35,6 +35,7 @@ class AudioProbe extends DatumProbe {
   FlutterSoundRecorder _recorder = new FlutterSoundRecorder();
 
   Future<void> onInitialize(Measure measure) async {
+    assert(measure is AudioMeasure);
     super.onInitialize(measure);
     this.studyId = (measure as AudioMeasure).studyId;
   }
@@ -113,7 +114,7 @@ class AudioProbe extends DatumProbe {
   /// Returns the full file path to the sound file.
   Future<String> get filePath async {
     String dir = await path;
-    return "$dir/filename";
+    return "$dir/$filename";
   }
 }
 

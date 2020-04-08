@@ -57,7 +57,7 @@ class Sensing {
 class StudyMock implements StudyManager {
   final String username = "researcher@example.com";
 
-  String studyId;
+  //String studyId;
 
   Future<void> initialize() {}
 
@@ -73,7 +73,7 @@ class StudyMock implements StudyManager {
   ///  * creating the study by specifying [Trigger]s, [Task]s, and [Measure]s by hand
   ///
   Future<Study> getStudy(String studyId) async {
-    return _getStudyWithAllMeasuresFromCommonSamplingSchema('#1');
+    return _getStudyWithSelectedMeasuresFromCommonSamplingSchema('#1');
   }
 
   Future<Study> _getStudyWithAllMeasuresFromCommonSamplingSchema(String studyId) async {
@@ -165,16 +165,23 @@ class StudyMock implements StudyManager {
                   ContextSamplingPackage.GEOFENCE,
                 ],
               ))
+        // AUDIO and NOISE cannot be used in the same study since they conflict in using the microphone...
+//        ..addTriggerTask(
+//            PeriodicTrigger(period: 1 * 60 * 1000, duration: 5 * 1000),
+//            Task('Audio')
+//              ..measures.add(AudioMeasure(
+//                MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO),
+//                name: "Audio Recording",
+//                studyId: studyId,
+//              )))
         ..addTriggerTask(
             ImmediateTrigger(),
             Task()
               ..measures = SamplingSchema.debug().getMeasureList(
                 namespace: NameSpace.CARP,
                 types: [
-                  // AUDIO and NOISE cannot be used in the same study since they conflict in using the microphone...
-                  //AudioSamplingPackage.AUDIO,
-                  
-                  // Note that if the eSense devices are used (see below), noise will be collected from them, i.e. around the user's head.
+                  // Note that if the eSense devices are used (see below),
+                  // noise will be collected from them, i.e. around the user's head.
                   AudioSamplingPackage.NOISE,
                 ],
               ))
@@ -206,7 +213,7 @@ class StudyMock implements StudyManager {
         ..addTriggerTask(
             PeriodicTrigger(period: 1 * 20 * 1000),
             Task()
-              ..measures = SamplingSchema.debug().getMeasureList(
+              ..measures = SamplingSchema.common().getMeasureList(
                 namespace: NameSpace.CARP,
                 types: [
                   ContextSamplingPackage.WEATHER,
@@ -216,7 +223,7 @@ class StudyMock implements StudyManager {
         ..addTriggerTask(
             ImmediateTrigger(),
             Task()
-              ..measures = SamplingSchema.debug().getMeasureList(
+              ..measures = SamplingSchema.common().getMeasureList(
                 namespace: NameSpace.CARP,
                 types: [
                   SensorSamplingPackage.LIGHT,
@@ -234,7 +241,7 @@ class StudyMock implements StudyManager {
   Future<Study> _getStudyWithSelectedMeasuresFromCustomSamplingSchema(String studyId) async {
     if (_study == null) {
       _study = Study(studyId, username)
-            ..name = 'CARP Mobile Sensing - long term sampling study configures like AWARE'
+            ..name = 'CAMS Demo Study #4'
             ..description = custom.description
             ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
             ..addTriggerTask(
@@ -280,6 +287,39 @@ class StudyMock implements StudyManager {
                       ContextSamplingPackage.WEATHER,
                     ],
                   ))
+          //
+          ;
+    }
+    return _study;
+  }
+
+  Future<Study> _getStudyWithAudioMeasures(String studyId) async {
+    if (_study == null) {
+      _study = Study(studyId, username)
+            ..name = 'CAMS Demo Study #5'
+            ..description = "Sampling mostly audio"
+            ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
+            ..addTriggerTask(
+                ImmediateTrigger(),
+                Task()
+                  ..measures = SamplingSchema.common().getMeasureList(
+                    types: [
+                      SensorSamplingPackage.LIGHT,
+                      DeviceSamplingPackage.BATTERY,
+                      DeviceSamplingPackage.SCREEN,
+                      ContextSamplingPackage.LOCATION,
+                      ContextSamplingPackage.ACTIVITY,
+                    ],
+                  ))
+            // AUDIO and NOISE cannot be used in the same study since they conflict in using the microphone...
+            ..addTriggerTask(
+                PeriodicTrigger(period: 1 * 60 * 1000, duration: 5 * 1000),
+                Task('Audio')
+                  ..measures.add(AudioMeasure(
+                    MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO),
+                    name: "Audio Recording",
+                    studyId: studyId,
+                  )))
           //
           ;
     }

@@ -26,6 +26,8 @@ class AudioMeasure extends Measure {
   factory AudioMeasure.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$AudioMeasureToJson(this);
+
+  String toString() => super.toString() + ', studyId: $studyId';
 }
 
 /// Specify how to collect noise data, including setting the
@@ -43,4 +45,6 @@ class NoiseMeasure extends PeriodicMeasure {
   factory NoiseMeasure.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$NoiseMeasureToJson(this);
+
+  String toString() => super.toString() + ', samplingRate: $samplingRate';
 }

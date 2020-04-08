@@ -92,7 +92,7 @@ class StudyMock implements StudyManager {
       _study = Study(studyId, username)
             ..name = testStudyName
             ..description = 'This is a study for testing and debugging -- especially on iOS.'
-            ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FIREBASE_DATABSE)
+            ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
 //            ..addTriggerTask(
 //                ImmediateTrigger(),
 //                Task()
@@ -181,8 +181,11 @@ class StudyMock implements StudyManager {
             ..addTriggerTask(
                 PeriodicTrigger(period: 1 * 20 * 1000, duration: 2 * 1000),
                 Task('Audio')
-                  ..measures
-                      .add(Measure(MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO), name: "Audio Recording")))
+                  ..measures.add(AudioMeasure(
+                    MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO),
+                    name: "Audio Recording",
+                    studyId: studyId,
+                  )))
 //            ..addTriggerTask(
 //                ImmediateTrigger(),
 //                Task()
