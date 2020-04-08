@@ -16,6 +16,7 @@ import 'dart:convert';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:permission_handler_platform_interface/permission_handler_platform_interface.dart';
 
 part 'probes.dart';
 part 'probe_registry.dart';

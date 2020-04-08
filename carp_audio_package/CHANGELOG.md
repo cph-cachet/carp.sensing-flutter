@@ -1,3 +1,7 @@
+## 0.6.3
+* update to `flutter_sound` v. 3.1.x
+* default location of sound files are now with the data collected.
+
 ## 0.6.2
 * NoiseDatum now w. doubles.
 

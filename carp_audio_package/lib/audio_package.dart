@@ -41,7 +41,7 @@ class AudioSamplingPackage implements SamplingPackage {
     FromJsonFactory.registerFromJsonFunction("NoiseMeasure", NoiseMeasure.fromJsonFunction);
   }
 
-  List<PermissionGroup> get permissions => [PermissionGroup.microphone];
+  List<Permission> get permissions => [Permission.microphone];
 
   SamplingSchema get common => SamplingSchema()
     ..type = SamplingSchemaType.COMMON

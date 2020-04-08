@@ -1,5 +1,7 @@
-## 0.6.4
+## 0.6.5
+* upgrade to `persmission_handler` v. 5.x
 
+## 0.6.4
 * Support 1.0.0 version of stable dependencies. ([dart_lsc](http://github.com/amirh/dart_lsc))
 
 ## 0.6.3

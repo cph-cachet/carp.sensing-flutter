@@ -33,7 +33,7 @@ class ConnectivitySamplingPackage implements SamplingPackage {
   //List<PermissionGroup> get permissions => [];
 
   // Bluetooth scan requires access to location - for some strange reason...
-  List<PermissionGroup> get permissions => [PermissionGroup.location];
+  List<Permission> get permissions => [Permission.location];
 
   SamplingSchema get common => SamplingSchema()
     ..type = SamplingSchemaType.COMMON

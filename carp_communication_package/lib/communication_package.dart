@@ -56,7 +56,7 @@ class CommunicationSamplingPackage implements SamplingPackage {
     TransformerSchemaRegistry.lookup(PrivacySchema.DEFAULT).add(CALENDAR, calendar_anoymizer);
   }
 
-  List<PermissionGroup> get permissions => [PermissionGroup.phone, PermissionGroup.sms, PermissionGroup.calendar];
+  List<Permission> get permissions => [Permission.phone, Permission.sms, Permission.calendar];
 
   SamplingSchema get common => SamplingSchema()
     ..type = SamplingSchemaType.COMMON

@@ -173,7 +173,7 @@ class StudyMock implements StudyManager {
                 types: [
                   // AUDIO and NOISE cannot be used in the same study since they conflict in using the microphone...
                   //AudioSamplingPackage.AUDIO,
-
+                  
                   // Note that if the eSense devices are used (see below), noise will be collected from them, i.e. around the user's head.
                   AudioSamplingPackage.NOISE,
                 ],

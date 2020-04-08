@@ -20,7 +20,7 @@ class AppsSamplingPackage implements SamplingPackage {
     }
   }
 
-  List<PermissionGroup> get permissions => []; // no permission needed
+  List<Permission> get permissions => []; // no permission needed
 
   void onRegister() {} // does nothing for this device sampling package
 

@@ -15,7 +15,7 @@ class SurveySamplingPackage implements SamplingPackage {
         SURVEY,
       ];
 
-  List<PermissionGroup> get permissions => []; // Research Package don't need any permission on the phone
+  List<Permission> get permissions => []; // Research Package don't need any permission on the phone
 
   Probe create(String type) {
     switch (type) {
