@@ -6,8 +6,8 @@ _SamplingPackageRegistry SamplingPackageRegistry = _SamplingPackageRegistry();
 class _SamplingPackageRegistry {
   List<SamplingPackage> _packages = List<SamplingPackage>();
   List<SamplingPackage> get packages => _packages;
-  List<PermissionGroup> _permissions = List<PermissionGroup>();
-  List<PermissionGroup> get permissions => _permissions;
+  List<Permission> _permissions = List<Permission>();
+  List<Permission> get permissions => _permissions;
 
   _SamplingPackageRegistry() : super() {
     // HACK - creating a serializable object (such as a [Study]) ensures that
@@ -15,7 +15,7 @@ class _SamplingPackageRegistry {
     Study("1234", "unknown");
 
     // add the basic permissions needed
-    _permissions.add(PermissionGroup.storage);
+    _permissions.add(Permission.storage);
 
     // register the known, built-in packages
     register(DeviceSamplingPackage());
@@ -66,7 +66,7 @@ abstract class SamplingPackage {
   /// for a list of possible permissions.
   ///
   /// For Android permission in the Manifest.xml file, see [Manifest.permission](https://developer.android.com/reference/android/Manifest.permission.html)
-  List<PermissionGroup> get permissions;
+  List<Permission> get permissions;
 
   /// Creates a new [Probe] of the specified [type].
   Probe create(String type);

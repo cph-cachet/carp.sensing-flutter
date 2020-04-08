@@ -32,7 +32,7 @@ class SensorSamplingPackage implements SamplingPackage {
 
   void onRegister() {} // does nothing for this sensor package
 
-  List<PermissionGroup> get permissions => [PermissionGroup.sensors];
+  List<Permission> get permissions => [Permission.sensors];
 
   SamplingSchema get common => SamplingSchema()
     ..type = SamplingSchemaType.COMMON

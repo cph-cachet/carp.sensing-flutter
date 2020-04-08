@@ -43,7 +43,7 @@ class HealthSamplingPackage implements SamplingPackage {
     FromJsonFactory.registerFromJsonFunction("HealthMeasure", HealthMeasure.fromJsonFunction);
   }
 
-  List<PermissionGroup> get permissions => [];
+  List<Permission> get permissions => [];
 
   SamplingSchema get common => SamplingSchema()
     ..type = SamplingSchemaType.COMMON

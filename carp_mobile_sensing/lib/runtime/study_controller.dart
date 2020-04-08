@@ -16,7 +16,7 @@ class StudyController {
   DatumStreamTransformer transformer;
 
   /// The permissions granted to this study from the OS.
-  Map<PermissionGroup, PermissionStatus> permissions;
+  Map<Permission, PermissionStatus> permissions;
 
   /// The stream of all sampled data.
   Stream<Datum> events;
@@ -86,7 +86,7 @@ class StudyController {
     await Device.getDeviceInfo();
 
     // setting up permissions
-    permissions = await PermissionHandler().requestPermissions(SamplingPackageRegistry.permissions);
+    permissions = await PermissionHandlerPlatform.instance.requestPermissions(SamplingPackageRegistry.permissions);
     SamplingPackageRegistry.permissions.forEach((permission) {
       PermissionStatus status = permissions[permission];
       if (status != PermissionStatus.granted) warning('Permissions not granted for $permission, permission is $status');

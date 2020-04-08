@@ -23,7 +23,8 @@ part of audio;
 /// The Audio probe generates an [AudioDatum] that holds the meta-data for each recording
 /// along with the actual recording in an audio file. How to upload this data to a data backend
 /// is up to the implementation of the [DataManager], which is used in the [Study].
-class AudioProbe extends DatumProbe {
+@deprecated
+class DeprecatedAudioProbe extends DatumProbe {
   static const String AUDIO_FILE_PATH = 'audio';
 
   String soundFileName;
@@ -98,7 +99,7 @@ class AudioProbe extends DatumProbe {
 /// The Audio probe generates an [AudioDatum] that holds the meta-data for each recording
 /// along with the actual recording in an audio file. How to upload this data to a data backend
 /// is up to the implementation of the [DataManager], which is used in the [Study].
-class DeprecatedAudioProbe extends BufferingPeriodicProbe {
+class AudioProbe extends BufferingPeriodicProbe {
   static const String AUDIO_FILE_PATH = 'audio';
 
   String studyId;
@@ -106,7 +107,7 @@ class DeprecatedAudioProbe extends BufferingPeriodicProbe {
   String _path;
   bool _isRecording = false;
   DateTime _startRecordingTime, _endRecordingTime;
-  FlutterSound _flutterSound = new FlutterSound();
+  FlutterSoundRecorder _recorder = new FlutterSoundRecorder();
 
   Future<void> onInitialize(Measure measure) async {
     super.onInitialize(measure);
@@ -119,7 +120,7 @@ class DeprecatedAudioProbe extends BufferingPeriodicProbe {
   }
 
   Future<void> onStop() async {
-    _flutterSound = null;
+    _recorder = null;
     super.onStop();
   }
 
@@ -133,7 +134,7 @@ class DeprecatedAudioProbe extends BufferingPeriodicProbe {
     _startRecordingTime = DateTime.now();
     _isRecording = true;
 
-    return await _flutterSound.startRecorder(uri: soundFileName);
+    return await _recorder.startRecorder(uri: soundFileName);
   }
 
   Future<String> _stopAudioRecording() {
@@ -141,7 +142,7 @@ class DeprecatedAudioProbe extends BufferingPeriodicProbe {
       _endRecordingTime = DateTime.now();
       _isRecording = false;
 
-      return _flutterSound.stopRecorder();
+      return _recorder.stopRecorder();
     });
   }
 
