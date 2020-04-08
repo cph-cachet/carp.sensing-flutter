@@ -23,15 +23,21 @@ part of audio;
 /// The Audio probe generates an [AudioDatum] that holds the meta-data for each recording
 /// along with the actual recording in an audio file. How to upload this data to a data backend
 /// is up to the implementation of the [DataManager], which is used in the [Study].
-@deprecated
-class DeprecatedAudioProbe extends DatumProbe {
+class AudioProbe extends DatumProbe {
   static const String AUDIO_FILE_PATH = 'audio';
+
+  String studyId;
 
   String soundFileName;
   String _path;
   bool _isRecording = false;
   DateTime _startRecordingTime, _endRecordingTime;
-  FlutterSound _flutterSound = new FlutterSound();
+  FlutterSoundRecorder _recorder = new FlutterSoundRecorder();
+
+  Future<void> onInitialize(Measure measure) async {
+    super.onInitialize(measure);
+    this.studyId = (measure as AudioMeasure).studyId;
+  }
 
   Future<void> onResume() async {
     soundFileName = await _startAudioRecording().catchError((err) => controller.addError(err));
@@ -47,30 +53,50 @@ class DeprecatedAudioProbe extends DatumProbe {
 
   Future<void> onStop() async {
     if (_isRecording) await onPause();
-    _flutterSound.stopRecorder();
-    _flutterSound = null;
+    _recorder.stopRecorder();
+    _recorder = null;
     super.onStop();
-  }
-
-  Future<Datum> getDatum() async {
-    return (soundFileName != null)
-        ? AudioDatum(
-            filename: soundFileName, startRecordingTime: _startRecordingTime, endRecordingTime: _endRecordingTime)
-        : null;
   }
 
   Future<String> _startAudioRecording() async {
     if (_isRecording) throw new Exception('AudioProbe is already running');
+
+    soundFileName = await filePath;
     _startRecordingTime = DateTime.now();
     _isRecording = true;
 
-    return _flutterSound.startRecorder(uri: filename);
+    return _recorder.startRecorder(uri: soundFileName);
   }
 
   Future<void> _stopAudioRecording() async {
     _endRecordingTime = DateTime.now();
     _isRecording = false;
-    await _flutterSound.stopRecorder();
+    await _recorder.stopRecorder();
+  }
+
+  Future<Datum> getDatum() async {
+    return (soundFileName != null)
+        ? AudioDatum(
+            filename: soundFileName.split("/").last,
+            startRecordingTime: _startRecordingTime,
+            endRecordingTime: _endRecordingTime)
+        : null;
+  }
+
+  /// Returns the local path on the device where sound files can be stored.
+  /// Creates the directory, if not existing.
+  Future<String> get path async {
+    if (_path == null) {
+      // get local working directory
+      final localApplicationDir = await getApplicationDocumentsDirectory();
+      // create a sub-directory for sound files
+      final directory =
+          await Directory('${localApplicationDir.path}/${FileDataManager.CARP_FILE_PATH}/$studyId/$AUDIO_FILE_PATH')
+              .create(recursive: true);
+
+      _path = directory.path;
+    }
+    return _path;
   }
 
   /// Returns the  filename of the sound file.
@@ -82,6 +108,12 @@ class DeprecatedAudioProbe extends DatumProbe {
         DateTime.now().toString().replaceAll(" ", "-").replaceAll(":", "-").replaceAll("_", "-").replaceAll(".", "-");
     String type = Platform.isIOS ? 'm4a' : 'mp4';
     return 'audio-$created.$type';
+  }
+
+  /// Returns the full file path to the sound file.
+  Future<String> get filePath async {
+    String dir = await path;
+    return "$dir/filename";
   }
 }
 
@@ -99,7 +131,7 @@ class DeprecatedAudioProbe extends DatumProbe {
 /// The Audio probe generates an [AudioDatum] that holds the meta-data for each recording
 /// along with the actual recording in an audio file. How to upload this data to a data backend
 /// is up to the implementation of the [DataManager], which is used in the [Study].
-class AudioProbe extends BufferingPeriodicProbe {
+class DeprecatedAudioProbe extends BufferingPeriodicProbe {
   static const String AUDIO_FILE_PATH = 'audio';
 
   String studyId;
