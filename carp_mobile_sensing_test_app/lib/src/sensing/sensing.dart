@@ -17,9 +17,9 @@ class Sensing {
     SamplingPackageRegistry.register(ContextSamplingPackage());
     SamplingPackageRegistry.register(CommunicationSamplingPackage());
     SamplingPackageRegistry.register(AudioSamplingPackage());
-    SamplingPackageRegistry.register(ESenseSamplingPackage());
+    //SamplingPackageRegistry.register(ESenseSamplingPackage());
     SamplingPackageRegistry.register(SurveySamplingPackage());
-    SamplingPackageRegistry.register(HealthSamplingPackage());
+    //SamplingPackageRegistry.register(HealthSamplingPackage());
 
     // create/load and register external data managers
     DataManagerRegistry.register(CarpDataManager());
@@ -293,16 +293,16 @@ class StudyMock implements StudyManager {
                       AppsSamplingPackage.APP_USAGE, // 60 s
                     ],
                   ))
-            ..addTriggerTask(
-                //PeriodicTrigger(period: 5 * 1000), // 5 sec
-                DelayedTrigger(delay: 5 * 1000), // 5 sec
-                Task()
-                  ..measures = SamplingSchema.debug().getMeasureList(
-                    namespace: NameSpace.CARP,
-                    types: [
-                      HealthSamplingPackage.HEALTH,
-                    ],
-                  ))
+//            ..addTriggerTask(
+//                //PeriodicTrigger(period: 5 * 1000), // 5 sec
+//                DelayedTrigger(delay: 5 * 1000), // 5 sec
+//                Task()
+//                  ..measures = SamplingSchema.debug().getMeasureList(
+//                    namespace: NameSpace.CARP,
+//                    types: [
+//                      HealthSamplingPackage.HEALTH,
+//                    ],
+//                  ))
           //
           ;
     }
