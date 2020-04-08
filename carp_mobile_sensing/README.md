@@ -164,8 +164,9 @@ Below is an example of how to add measure to the `study` by using measures from 
        ));
 `````
 
-There is a very **simple** [example app](example/main.dart) app which shows how a study can be created with different tasks and measures.
-This app just prints the sensing data to a console screen on the phone.
+There is a very **simple** [example app](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/carp_mobile_sensing/example/lib/main.dart) app which shows how a study can be created with different tasks and measures.
+This app just prints the sensing data to a console screen on the phone. 
+There is also a range of different [examples](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/carp_mobile_sensing/example/lib/example.dart) on how to create a study to take inspiration from.
 
 However, the [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_mobile_sensing_app) 
 provides a **MUCH** better example of how to use the package in a Flutter BLoC architecture, including good documentation of how to do this.

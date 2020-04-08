@@ -6,13 +6,7 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 //import 'package:carp_connectivity_package/connectivity.dart';
 import 'package:carp_communication_package/communication.dart';
 import 'package:carp_context_package/context.dart';
-import 'package:carp_survey_package/survey.dart';
-import 'package:research_package/research_package.dart';
 import 'package:carp_audio_package/audio.dart';
-import 'package:carp_esense_package/esense.dart';
-import 'package:carp_health_package/health_package.dart';
-import 'package:carp_backend/carp_backend.dart';
-//import 'package:carp_firebase_backend/carp_firebase_backend.dart';
 import 'dart:async';
 
 part 'src/app.dart';
@@ -24,7 +18,6 @@ part 'src/models/data_models.dart';
 part 'src/blocs/sensing_bloc.dart';
 part 'src/ui/probe_list.dart';
 part 'src/ui/data_viz.dart';
-part 'src/ui/survey_ui.dart';
 part 'src/ui/study_viz.dart';
 part 'src/ui/cachet.dart';
 

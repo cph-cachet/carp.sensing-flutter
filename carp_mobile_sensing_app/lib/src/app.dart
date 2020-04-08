@@ -22,7 +22,6 @@ class CarpMobileSensingAppState extends State<CarpMobileSensingApp> {
     StudyVisualization(),
     ProbesList(),
     DataVisualization(),
-    SurveyVisualization(),
   ];
 
   void initState() {
@@ -44,7 +43,6 @@ class CarpMobileSensingAppState extends State<CarpMobileSensingApp> {
           BottomNavigationBarItem(icon: Icon(Icons.school), title: Text('Study')),
           BottomNavigationBarItem(icon: Icon(Icons.adb), title: Text('Probes')),
           BottomNavigationBarItem(icon: Icon(Icons.show_chart), title: Text('DataViz')),
-          BottomNavigationBarItem(icon: Icon(Icons.spellcheck), title: Text('Survey')),
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,

@@ -2,7 +2,6 @@ part of mobile_sensing_app;
 
 class SensingBLoC {
   final Sensing sensing = Sensing();
-  SurveyPage surveyPage;
 
   /// Is sensing running, i.e. has the study executor been resumed?
   bool get isRunning => (sensing.controller != null) && sensing.controller.executor.state == ProbeState.resumed;
@@ -27,10 +26,6 @@ class SensingBLoC {
   void stop() async => sensing.stop();
 
   void dispose() async => sensing.stop();
-
-  void onSurveyTriggered(SurveyPage surveyPage) => this.surveyPage = surveyPage;
-
-  void onSurveySubmit(RPTaskResult result) => this.surveyPage = null;
 }
 
 final bloc = SensingBLoC();
