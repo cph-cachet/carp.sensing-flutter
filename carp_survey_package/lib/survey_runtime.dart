@@ -61,11 +61,7 @@ class SurveySamplingPackage implements SamplingPackage {
 class SurveyProbe extends AbstractProbe {
   StreamController<Datum> controller = StreamController<Datum>.broadcast();
   Stream<Datum> get events => controller.stream;
-  bool _engaged = false;
   RPTaskMeasure surveyMeasure;
-
-  /// Has this survey already been issued to the user and not filled in?
-  bool get engaged => _engaged;
 
   /// The survey to be filled in
   RPTask surveyTask;
@@ -81,16 +77,11 @@ class SurveyProbe extends AbstractProbe {
   Future<void> onRestart() async {}
 
   Future<void> onResume() async {
-    // don't start this survey if we're already doing it
-    if (!_engaged) {
-      _engaged = true;
-
-      if (surveyMeasure.notification) {
-        // @TODO send a notification
-      }
-
-      surveyMeasure?.onSurveyTriggered(SurveyPage(surveyTask, onSurveySubmit));
+    if (surveyMeasure.notification) {
+      // @TODO send a notification
     }
+
+    surveyMeasure?.onSurveyTriggered(SurveyPage(surveyTask, onSurveySubmit));
 
     this.pause();
   }
@@ -102,6 +93,5 @@ class SurveyProbe extends AbstractProbe {
     // when we have the survey result, add it to the event stream
     controller?.add(RPTaskResultDatum(result));
     surveyMeasure?.onSurveySubmit(result);
-    _engaged = false;
   }
 }
