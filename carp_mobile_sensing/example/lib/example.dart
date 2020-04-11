@@ -23,7 +23,7 @@ void example() async {
   // careful - these sensors generate a lot of data!
   study.addTriggerTask(
       DelayedTrigger(delay: 1000), // delay sampling for one second
-      Task('Sensor Task')
+      Task(name: 'Sensor Task')
         ..addMeasure(PeriodicMeasure(
           MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
           frequency: 10 * 1000, // sample every 10 secs
@@ -37,7 +37,7 @@ void example() async {
 
   study.addTriggerTask(
       PeriodicTrigger(period: 24 * 60 * 60 * 1000), // trigger sampling once pr. day
-      Task('Task collecting a list of all installed apps')
+      Task(name: 'Task collecting a list of all installed apps')
         ..addMeasure(Measure(MeasureType(NameSpace.CARP, AppsSamplingPackage.APPS))));
 
   // creating measure variable to be used later
@@ -47,7 +47,7 @@ void example() async {
     frequency: 11 * 1000,
     duration: 700,
   );
-  study.addTriggerTask(ImmediateTrigger(), Task('Light')..addMeasure(lightMeasure));
+  study.addTriggerTask(ImmediateTrigger(), Task(name: 'Light')..addMeasure(lightMeasure));
 
   // Create a Study Controller that can manage this study, initialize it, and start it.
   StudyController controller = StudyController(study);
@@ -150,7 +150,7 @@ void samplingSchemaExample() async {
   // adding a set of specific measures from the `common` sampling schema to one overall task
   study.addTriggerTask(
       ImmediateTrigger(),
-      Task('Sensing Task #1')
+      Task(name: 'Sensing Task #1')
         ..measures = SamplingSchema.common().getMeasureList(
           namespace: NameSpace.CARP,
           types: [
@@ -162,7 +162,7 @@ void samplingSchemaExample() async {
 
   study.addTriggerTask(
       ImmediateTrigger(),
-      Task('One Common Sensing Task')
+      Task(name: 'One Common Sensing Task')
         ..measures = SamplingSchema.common().getMeasureList(
           namespace: NameSpace.CARP,
           types: [
@@ -174,12 +174,12 @@ void samplingSchemaExample() async {
         ));
 
   // adding all measure from the activity schema to one overall 'sensing' task
-  study.addTriggerTask(ImmediateTrigger(), Task('Sensing Task')..measures = activitySchema.measures.values);
+  study.addTriggerTask(ImmediateTrigger(), Task(name: 'Sensing Task')..measures = activitySchema.measures.values);
 
   // adding the measures to two separate tasks, while also adding a new light measure to the 2nd task
   study.addTriggerTask(
       ImmediateTrigger(),
-      Task('Activity Sensing Task #1')
+      Task(name: 'Activity Sensing Task #1')
         ..measures = activitySchema.getMeasureList(
           namespace: NameSpace.CARP,
           types: [
@@ -191,7 +191,7 @@ void samplingSchemaExample() async {
 
   study.addTriggerTask(
       ImmediateTrigger(),
-      Task('Phone Sensing Task #2')
+      Task(name: 'Phone Sensing Task #2')
         ..measures = activitySchema.getMeasureList(
           namespace: NameSpace.CARP,
           types: [

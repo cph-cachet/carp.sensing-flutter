@@ -140,15 +140,13 @@ abstract class TriggerExecutor extends Executor {
   /// Create [TaskExecutor]s for all tasks associated with this trigger.
   Future<void> _createAllTaskExecutors() async {
     for (Task task in trigger.tasks) {
-      TaskExecutor executor = TaskExecutor(task);
+      //TaskExecutor executor = TaskExecutor(task);
+      TaskExecutor executor = getTaskExecutor(task);
+
       _group.add(executor.events);
       executors.add(executor);
-      //executor.initialize(Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR)));
     }
   }
-
-  // Start all tasks associated with this trigger.
-  //void _startAllTasks() => executors.forEach((executor) => executor.start());
 
   /// Returns a list of the running probes in this trigger executor.
   /// This is a combination of the running probes in all task executors.
@@ -315,6 +313,20 @@ class ConditionalSamplingEventTriggerExecutor extends TriggerExecutor {
 // TASK EXECUTORS
 // ---------------------------------------------------------------------------------------------------------
 
+/// Returns the relevant [TaskExecutor] based on the type of [task].
+TaskExecutor getTaskExecutor(Task task) {
+  switch (task.runtimeType) {
+    case Task:
+      return TaskExecutor(task);
+    case AutomaticTask:
+      return AutomaticTaskExecutor(task);
+    case AppTask:
+      return AppTaskExecutor(task);
+    default:
+      return TaskExecutor(task);
+  }
+}
+
 /// The [TaskExecutor] is responsible for executing a [Task] in the [Study].
 /// For each task it looks up appropriate [Probe]s to collect data.
 ///
@@ -349,24 +361,48 @@ class TaskExecutor extends Executor {
       }
     }
   }
+}
 
-//  Future<void> onStart() async {
-//    for (Measure measure in task.measures) {
-//      // Probe probe = ProbeRegistry.lookup(measure.type.name);
-//      // create a new probe for each measure - this ensures that we can have
-//      // multiple measures of the same type, each using its own probe instance
-//      Probe probe = ProbeRegistry.create(measure.type.name);
-//      if (probe != null) {
-//        executors.add(probe);
-//        _group.add(probe.events);
-//        // TODO - init should return true/false and only start a probe if initialized
-//        print('trying to initialize probe - $probe');
-//        await probe.initialize(measure);
-//
-//        probe.start();
-//      } else {
-//        print('A probe for measure type ${measure.type.name} could not be created.');
-//      }
-//    }
-//  }
+class AutomaticTaskExecutor extends TaskExecutor {
+  AutomaticTaskExecutor(AutomaticTask task)
+      : assert(task is AutomaticTask, "SensingTaskExecutor should be ininialized with a SensingTask."),
+        super(task);
+}
+
+class AppTaskExecutor extends TaskExecutor {
+  AppTaskExecutor(AppTask task)
+      : assert(task is AppTask, "UserTaskExecutor should be ininialized with a UserTask."),
+        super(task) {
+    _userTask = task as AppTask;
+    _taskExecutor = TaskExecutor(task);
+  }
+
+  AppTask _userTask;
+  TaskExecutor _taskExecutor;
+
+  /// A task executor to execute (start, pause, resume, stop) when asked by the app
+  //TaskExecutor get taskExecutor => _taskExecutor;
+
+  Future<void> onInitialize(Measure measure) async {
+    super.onInitialize(measure);
+    _taskExecutor.initialize(measure);
+    if (_userTask.onInitialize != null) _userTask.onInitialize(_taskExecutor);
+  }
+
+  Future<void> onStart() async {
+    if (_userTask.onStart != null) _userTask.onStart(_taskExecutor);
+  }
+
+  Future<void> onPause() async {
+    if (_userTask.onPause != null) _userTask.onPause(_taskExecutor);
+  }
+
+  Future<void> onResume() async {
+    if (_userTask.onResume != null) _userTask.onResume(_taskExecutor);
+  }
+
+  Future<void> onStop() async {
+    if (_userTask.onInitialize != null) _userTask.onStop(_taskExecutor);
+    super.onStop();
+  }
 }

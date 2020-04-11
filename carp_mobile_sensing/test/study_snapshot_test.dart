@@ -39,7 +39,7 @@ void main() {
 
     study.addTriggerTask(
         ImmediateTrigger(),
-        Task('Sensor Task')
+        Task(name: 'Sensor Task')
           ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
               frequency: 10 * 1000, // sample every 10 secs
               duration: 100 // for 100 ms
@@ -66,7 +66,7 @@ void main() {
 
     study.addTriggerTask(
         ImmediateTrigger(),
-        Task('Task collecting a list of all installed apps')
+        Task(name: 'Task collecting a list of all installed apps')
           ..addMeasure(Measure(MeasureType(NameSpace.CARP, AppsSamplingPackage.APPS))));
   });
 

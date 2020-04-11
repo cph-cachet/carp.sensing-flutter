@@ -1,4 +1,7 @@
 ## 0.6.5
+* Extended Task model -- introduction of a `AutomaticTask` and `AppTask`.
+
+## 0.6.5
 * upgrade to `persmission_handler` v. 5.x
 
 ## 0.6.4
