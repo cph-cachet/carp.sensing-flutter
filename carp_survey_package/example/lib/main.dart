@@ -21,8 +21,8 @@ void main() async {
               name: 'WHO5',
               enabled: true,
               surveyTask: who5Task,
-              onSurveyTriggered: onSurveyTriggered,
-              onSurveySubmit: onSurveySubmit,
+//              onSurveyTriggered: onSurveyTriggered,
+//              onSurveySubmit: onSurveySubmit,
             )))
       //
       ;

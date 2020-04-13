@@ -12,7 +12,7 @@ void main() async {
   // adding all measure from the common schema to one one trigger and one task
   study.addTriggerTask(
       ImmediateTrigger(), // a simple trigger that starts immediately
-      Task('Sampling Task')
+      Task(name: 'Sampling Task')
         ..measures = SamplingSchema.common().getMeasureList(
           namespace: NameSpace.CARP,
           types: [

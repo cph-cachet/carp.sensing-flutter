@@ -59,6 +59,9 @@ class AutomaticTask extends Task {
 class AppTask extends Task {
   AppTask({
     String name,
+    this.description,
+    this.minutesToComplete,
+    this.notification = false,
     this.onInitialize,
     this.onStart,
     this.onResume,
@@ -66,7 +69,17 @@ class AppTask extends Task {
     this.onStop,
   }) : super(name: name);
 
-  /// The callback function providing a [TaskExecutor] object to be used in the app.
+  /// A short description (one line) of this task. Can be used in the app.
+  String description;
+
+  /// How many minutes will it take for the user to peform this task?
+  int minutesToComplete;
+
+  // TODO - implement notification
+  /// Should a notification be send to the user on the phone?
+  bool notification = false;
+
+  /// The callback function providing the [TaskExecutor] object to be used in the app.
   /// This function is called when this task is initialized.
   ///
   /// This callback function needs to be provided by the app on runtime. I.e. this part of the task

@@ -345,7 +345,7 @@ class TaskExecutor extends Executor {
     _task = task;
   }
 
-  Future<void> onInitialize(Measure taskMeasure) async {
+  Future<void> onInitialize(Measure ignored) async {
     for (Measure measure in task.measures) {
       // Probe probe = ProbeRegistry.lookup(measure.type.name);
       // create a new probe for each measure - this ensures that we can have
@@ -373,36 +373,33 @@ class AppTaskExecutor extends TaskExecutor {
   AppTaskExecutor(AppTask task)
       : assert(task is AppTask, "UserTaskExecutor should be ininialized with a UserTask."),
         super(task) {
-    _userTask = task as AppTask;
+    _appTask = task as AppTask;
     _taskExecutor = TaskExecutor(task);
   }
 
-  AppTask _userTask;
+  AppTask _appTask;
   TaskExecutor _taskExecutor;
-
-  /// A task executor to execute (start, pause, resume, stop) when asked by the app
-  //TaskExecutor get taskExecutor => _taskExecutor;
 
   Future<void> onInitialize(Measure measure) async {
     super.onInitialize(measure);
     _taskExecutor.initialize(measure);
-    if (_userTask.onInitialize != null) _userTask.onInitialize(_taskExecutor);
+    if (_appTask.onInitialize != null) _appTask.onInitialize(_taskExecutor);
   }
 
   Future<void> onStart() async {
-    if (_userTask.onStart != null) _userTask.onStart(_taskExecutor);
+    if (_appTask.onStart != null) _appTask.onStart(_taskExecutor);
   }
 
   Future<void> onPause() async {
-    if (_userTask.onPause != null) _userTask.onPause(_taskExecutor);
+    if (_appTask.onPause != null) _appTask.onPause(_taskExecutor);
   }
 
   Future<void> onResume() async {
-    if (_userTask.onResume != null) _userTask.onResume(_taskExecutor);
+    if (_appTask.onResume != null) _appTask.onResume(_taskExecutor);
   }
 
   Future<void> onStop() async {
-    if (_userTask.onInitialize != null) _userTask.onStop(_taskExecutor);
+    if (_appTask.onInitialize != null) _appTask.onStop(_taskExecutor);
     super.onStop();
   }
 }
