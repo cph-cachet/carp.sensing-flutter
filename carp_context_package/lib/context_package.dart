@@ -72,8 +72,7 @@ class ContextSamplingPackage implements SamplingPackage {
     ..measures.addEntries([
       MapEntry(
         LOCATION,
-        LocationMeasure(MeasureType(NameSpace.CARP, LOCATION),
-            name: 'Location', enabled: true, frequency: 30 * 1000, accuracy: GeolocationAccuracy.low),
+        Measure(MeasureType(NameSpace.CARP, LOCATION), name: 'Location', enabled: true),
       ),
       MapEntry(
           GEOLOCATION,
