@@ -53,6 +53,7 @@ abstract class Executor extends AbstractProbe {
 /// Note that the [StudyExecutor] in itself is a [Probe] and hence work as a 'super probe'.
 /// This - amongst other things - imply that you can listen to datum [events] from a study executor.
 class StudyExecutor extends Executor {
+  StreamController<Datum> _manualDatumController = StreamController<Datum>.broadcast();
   Study get study => _study;
   Study _study;
 
@@ -60,7 +61,14 @@ class StudyExecutor extends Executor {
       : assert(study != null, "Cannot initiate a StudyExecutor without a Study."),
         super() {
     _study = study;
+    _group.add(_manualDatumController.stream);
   }
+
+  /// Add a [Datum] object to the stream of events.
+  void addDatum(Datum datum) => _manualDatumController.add(datum);
+
+  /// Add a error to the stream of events.
+  void addError(Object error, [StackTrace stacktrace]) => _manualDatumController.addError(error, stacktrace);
 
   /// Returns a list of the running probes in this study executor.
   /// This is a combination of the running probes in all trigger executors.
@@ -106,6 +114,9 @@ class StudyExecutor extends Executor {
           break;
         case ConditionalSamplingEventTrigger:
           executor = ConditionalSamplingEventTriggerExecutor(trigger);
+          break;
+        case ManualTrigger:
+          executor = ManualTriggerExecutor(trigger);
           break;
       }
 

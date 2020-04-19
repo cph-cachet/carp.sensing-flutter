@@ -261,6 +261,9 @@ class _InitializedState extends _AbstractProbeState implements _ProbeStateMachin
       probe._setState(_PausedState(probe));
     }
   }
+
+  // trying to resume an initialized probe is equivalent to starting it
+  void resume() => start();
 }
 
 class _ResumedState extends _AbstractProbeState implements _ProbeStateMachine {

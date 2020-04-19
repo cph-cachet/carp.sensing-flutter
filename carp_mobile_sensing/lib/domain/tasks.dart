@@ -60,6 +60,7 @@ class AppTask extends Task {
   AppTask({
     String name,
     this.description,
+    this.instructions,
     this.minutesToComplete,
     this.notification = false,
     this.onInitialize,
@@ -72,10 +73,12 @@ class AppTask extends Task {
   /// A short description (one line) of this task. Can be used in the app.
   String description;
 
-  /// How many minutes will it take for the user to peform this task?
+  /// A longer instruction text explaining how a useer should perform this task.
+  String instructions;
+
+  /// How many minutes will it take for the user to perform this task?
   int minutesToComplete;
 
-  // TODO - implement notification
   /// Should a notification be send to the user on the phone?
   bool notification = false;
 

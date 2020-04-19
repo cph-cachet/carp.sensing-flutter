@@ -91,7 +91,7 @@ class ContextSamplingPackage implements SamplingPackage {
       MapEntry(
           WEATHER,
           WeatherMeasure(MeasureType(NameSpace.CARP, WEATHER),
-              name: 'Local Weather', enabled: true, apiKey: '12b6e28582eb9298577c734a31ba9f4f')),
+              name: 'Local Weather', enabled: true, apiKey: '9a61efab8471e191372272a56ffc01c1')),
       MapEntry(
           AIR_QUALITY,
           AirQualityMeasure(MeasureType(NameSpace.CARP, AIR_QUALITY),
