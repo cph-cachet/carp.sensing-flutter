@@ -62,6 +62,12 @@ class StudyExecutor extends Executor {
         super() {
     _study = study;
     _group.add(_manualDatumController.stream);
+    for (Trigger trigger in study.triggers) {
+      TriggerExecutor executor = getTriggerExecutor(trigger);
+      _group.add(executor.events);
+
+      executors.add(executor);
+    }
   }
 
   /// Add a [Datum] object to the stream of events.
@@ -83,55 +89,39 @@ class StudyExecutor extends Executor {
     });
     return _probes;
   }
-
-  Future<void> onStart() async {
-    for (Trigger trigger in study.triggers) {
-      TriggerExecutor executor;
-
-      switch (trigger.runtimeType) {
-        case Trigger:
-          // actually, a study it not supposed to use the base-class [Trigger]
-          // but if so, we treat it as an [ImmediateTrigger]
-          executor = ImmediateTriggerExecutor(trigger);
-          break;
-        case ImmediateTrigger:
-          executor = ImmediateTriggerExecutor(trigger);
-          break;
-        case DelayedTrigger:
-          executor = DelayedTriggerExecutor(trigger);
-          break;
-        case PeriodicTrigger:
-          executor = PeriodicTriggerExecutor(trigger);
-          break;
-        case ScheduledTrigger:
-          executor = ScheduledTriggerExecutor(trigger);
-          break;
-        case RecurrentScheduledTrigger:
-          executor = RecurrentScheduledTriggerExecutor(trigger);
-          break;
-        case SamplingEventTrigger:
-          executor = SamplingEventTriggerExecutor(trigger);
-          break;
-        case ConditionalSamplingEventTrigger:
-          executor = ConditionalSamplingEventTriggerExecutor(trigger);
-          break;
-        case ManualTrigger:
-          executor = ManualTriggerExecutor(trigger);
-          break;
-      }
-
-      _group.add(executor.events);
-
-      executors.add(executor);
-      await executor.initialize(Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR)));
-      executor.start();
-    }
-  }
 }
 
 // ---------------------------------------------------------------------------------------------------------
 // TRIGGER EXECUTORS
 // ---------------------------------------------------------------------------------------------------------
+
+/// Returns the relevant [TriggerExecutor] based on the type of [trigger].
+TriggerExecutor getTriggerExecutor(Trigger trigger) {
+  switch (trigger.runtimeType) {
+    case Trigger:
+      // actually, a study it not supposed to use the base-class [Trigger]
+      // but if so, we treat it as an [ImmediateTrigger]
+      return ImmediateTriggerExecutor(trigger);
+    case ImmediateTrigger:
+      return ImmediateTriggerExecutor(trigger);
+    case DelayedTrigger:
+      return DelayedTriggerExecutor(trigger);
+    case PeriodicTrigger:
+      return PeriodicTriggerExecutor(trigger);
+    case ScheduledTrigger:
+      return ScheduledTriggerExecutor(trigger);
+    case RecurrentScheduledTrigger:
+      return RecurrentScheduledTriggerExecutor(trigger);
+    case SamplingEventTrigger:
+      return SamplingEventTriggerExecutor(trigger);
+    case ConditionalSamplingEventTrigger:
+      return ConditionalSamplingEventTriggerExecutor(trigger);
+    case ManualTrigger:
+      return ManualTriggerExecutor(trigger);
+    default:
+      return ImmediateTriggerExecutor(trigger);
+  }
+}
 
 /// Responsible for handling the timing of a [Trigger] in the [Study].
 ///
@@ -145,13 +135,8 @@ abstract class TriggerExecutor extends Executor {
       : assert(trigger != null, "Cannot initiate a TriggerExecutor without a Trigger."),
         super() {
     _trigger = trigger;
-    _createAllTaskExecutors();
-  }
 
-  /// Create [TaskExecutor]s for all tasks associated with this trigger.
-  Future<void> _createAllTaskExecutors() async {
     for (Task task in trigger.tasks) {
-      //TaskExecutor executor = TaskExecutor(task);
       TaskExecutor executor = getTaskExecutor(task);
 
       _group.add(executor.events);
@@ -177,6 +162,13 @@ abstract class TriggerExecutor extends Executor {
 /// Executes a [ImmediateTrigger], i.e. starts sampling immediately.
 class ImmediateTriggerExecutor extends TriggerExecutor {
   ImmediateTriggerExecutor(Trigger trigger) : super(trigger);
+
+  Future<void> onStart() async {
+    // first start all tasks in this trigger
+    await super.onStart();
+    // then resume sampling immediately
+    this.resume();
+  }
 }
 
 /// Executes a [ManualTrigger].
@@ -184,16 +176,10 @@ class ManualTriggerExecutor extends TriggerExecutor {
   ManualTriggerExecutor(ManualTrigger trigger) : super(trigger) {
     trigger.executor = this;
   }
-
-  Future<void> onStart() async {
-    // first start all tasks, but pause them
-    super.onStart();
-    this.pause();
-  }
 }
 
-/// Executes a [DelayedTrigger], i.e. starts sampling after the specified delay.
-/// Once started, it runs forever.
+/// Executes a [DelayedTrigger], i.e. resumes sampling after the specified delay.
+/// Once started, it can be paused / resumed as any other [Executor].
 class DelayedTriggerExecutor extends TriggerExecutor {
   Duration delay;
 
@@ -202,8 +188,11 @@ class DelayedTriggerExecutor extends TriggerExecutor {
   }
 
   Future<void> onStart() async {
+    // first start all tasks in this trigger
+    await super.onStart();
     Timer(delay, () {
-      super.onStart();
+      // after a delay, resume this trigger and its tasks
+      this.resume();
     });
   }
 }
@@ -223,19 +212,24 @@ class PeriodicTriggerExecutor extends TriggerExecutor {
   }
 
   Future<void> onStart() async {
-    // first start all tasks, but pause them after a duration
-    super.onStart();
-    Timer(duration, () {
-      this.pause();
-      // create a recurrent timer that resume sampling.
-      Timer.periodic(period, (Timer t) {
-        this.resume();
-        // create a timer that pause the sampling after the specified duration.
-        Timer(duration, () {
-          this.pause();
-        });
+    // first start all tasks but pause them
+    await super.onStart();
+    this.pause();
+
+    // create a recurrent timer that resume sampling.
+    Timer.periodic(period, (timer) {
+      this.resume();
+      // create a timer that pause the sampling after the specified duration.
+      Timer(duration, () {
+        this.pause();
       });
     });
+  }
+
+  Future<void> onPause() async {
+    // TODO - what happens if we pause a periodic trigger? Should we kill the Timer above?
+    // right now just calling super....
+    super.onPause();
   }
 }
 
@@ -251,8 +245,12 @@ class ScheduledTriggerExecutor extends TriggerExecutor {
   }
 
   Future<void> onStart() async {
+    await super.onStart();
+    this.pause();
+
     Timer(delay, () {
-      super.onStart();
+      // after the waiting time (delay) is over, resume this trigger
+      this.resume();
       if (duration != null) {
         // create a timer that stop the sampling after the specified duration.
         Timer(duration, () {
@@ -264,6 +262,8 @@ class ScheduledTriggerExecutor extends TriggerExecutor {
 }
 
 /// Executes a [RecurrentScheduledTrigger].
+///
+/// TODO - implement the RecurrentScheduledTriggerExecutor
 class RecurrentScheduledTriggerExecutor extends PeriodicTriggerExecutor {
   Duration delay; // the delay before starting the PeriodicTriggerExecutor
 
@@ -283,8 +283,7 @@ class SamplingEventTriggerExecutor extends TriggerExecutor {
   SamplingEventTriggerExecutor(SamplingEventTrigger trigger) : super(trigger);
 
   Future<void> onStart() async {
-    // first start all tasks, but pause them
-    super.onStart();
+    await super.onStart();
     this.pause();
 
     SamplingEventTrigger eventTrigger = trigger as SamplingEventTrigger;
@@ -307,7 +306,6 @@ class ConditionalSamplingEventTriggerExecutor extends TriggerExecutor {
   ConditionalSamplingEventTriggerExecutor(ConditionalSamplingEventTrigger trigger) : super(trigger);
 
   Future<void> onStart() async {
-    // first start all tasks, but pause them
     super.onStart();
     this.pause();
 

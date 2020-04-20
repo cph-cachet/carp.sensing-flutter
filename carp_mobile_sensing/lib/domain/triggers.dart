@@ -79,7 +79,7 @@ class ManualTrigger extends Trigger {
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class DelayedTrigger extends Trigger {
   /// Delay in milliseconds.
-  int delay = 0;
+  int delay;
 
   DelayedTrigger({this.delay = 0}) : super();
 
@@ -98,10 +98,10 @@ class DelayedTrigger extends Trigger {
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class PeriodicTrigger extends Trigger {
   /// The period (reciprocal of frequency) of sampling in milliseconds.
-  int period = 60 * 1000; // default is one minute
+  int period;
 
   /// The duration (until paused) of the the sampling in milliseconds.
-  int duration = 1000; // default is one second
+  int duration;
 
   PeriodicTrigger({this.period = 60 * 1000, this.duration = 1000}) : super();
 

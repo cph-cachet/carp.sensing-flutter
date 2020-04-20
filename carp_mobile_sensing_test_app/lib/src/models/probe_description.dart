@@ -72,6 +72,7 @@ class ProbeDescription {
   static Map<ProbeState, Icon> get probeStateIcon => {
         ProbeState.created: Icon(Icons.child_care, color: CACHET.GREY_4),
         ProbeState.initialized: Icon(Icons.check, color: CACHET.LIGHT_PURPLE),
+        ProbeState.started: Icon(Icons.radio_button_unchecked, color: CACHET.LIGHT_PURPLE),
         ProbeState.resumed: Icon(Icons.radio_button_checked, color: CACHET.GREEN),
         ProbeState.paused: Icon(Icons.radio_button_unchecked, color: CACHET.GREEN),
         ProbeState.stopped: Icon(Icons.close, color: CACHET.GREY_2),

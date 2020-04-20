@@ -73,7 +73,7 @@ class AppTask extends Task {
   /// A short description (one line) of this task. Can be used in the app.
   String description;
 
-  /// A longer instruction text explaining how a useer should perform this task.
+  /// A longer instruction text explaining how a user should perform this task.
   String instructions;
 
   /// How many minutes will it take for the user to perform this task?

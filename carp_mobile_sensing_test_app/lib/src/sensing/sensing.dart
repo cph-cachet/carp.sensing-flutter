@@ -126,26 +126,27 @@ class StudyMock implements StudyManager {
 //                  AppsSamplingPackage.APPS,
 //                ],
 //              ))
-//            ..addTriggerTask(
-//                ImmediateTrigger(),
-//                Task()
-//                  ..measures = SamplingSchema.debug().getMeasureList(
-//                    namespace: NameSpace.CARP,
-//                    types: [
-//                      DeviceSamplingPackage.MEMORY,
-//                      DeviceSamplingPackage.DEVICE,
-//                      DeviceSamplingPackage.BATTERY,
-//                      DeviceSamplingPackage.SCREEN,
-//                    ],
-//                  ))
+            ..addTriggerTask(
+                ImmediateTrigger(),
+                Task()
+                  ..measures = SamplingSchema.debug().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      DeviceSamplingPackage.MEMORY,
+                      DeviceSamplingPackage.DEVICE,
+                      DeviceSamplingPackage.BATTERY,
+                      DeviceSamplingPackage.SCREEN,
+                    ],
+                  ))
             ..addTriggerTask(
                 PeriodicTrigger(period: 1 * 20 * 1000),
                 Task()
                   ..measures = SamplingSchema.debug().getMeasureList(
                     namespace: NameSpace.CARP,
                     types: [
+                      ContextSamplingPackage.LOCATION,
                       ContextSamplingPackage.WEATHER,
-                      ContextSamplingPackage.AIR_QUALITY,
+                      //ContextSamplingPackage.AIR_QUALITY,
                     ],
                   ))
             ..addTriggerTask(
@@ -180,7 +181,7 @@ class StudyMock implements StudyManager {
 //                  ))
             ..addTriggerTask(
                 PeriodicTrigger(period: 1 * 20 * 1000, duration: 2 * 1000),
-                Task('Audio')
+                Task()
                   ..measures.add(AudioMeasure(
                     MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO),
                     name: "Audio Recording",
@@ -242,14 +243,12 @@ class StudyMock implements StudyManager {
                   ))
             ..addTriggerTask(
                 DelayedTrigger(delay: 30 * 1000),
-                Task('WHO-5 Survey')
+                Task()
                   ..measures.add(RPTaskMeasure(
                     MeasureType(NameSpace.CARP, SurveySamplingPackage.SURVEY),
                     name: 'WHO5',
                     enabled: true,
                     surveyTask: who5Task,
-                    onSurveyTriggered: bloc.onSurveyTriggered,
-                    onSurveySubmit: bloc.onSurveySubmit,
                   )))
           //
           ;
@@ -402,7 +401,7 @@ class StudyMock implements StudyManager {
 //                  duration: 2 * 1000)));
             ..addTriggerTask(
                 PeriodicTrigger(period: 2 * 60 * 1000),
-                Task('Weather')
+                Task()
                   ..measures = SamplingSchema.debug().getMeasureList(
                     namespace: NameSpace.CARP,
                     types: [
@@ -411,7 +410,7 @@ class StudyMock implements StudyManager {
                   ))
             ..addTriggerTask(
                 ImmediateTrigger(),
-                Task('Context')
+                Task()
                   ..measures = SamplingSchema.debug().getMeasureList(
                     namespace: NameSpace.CARP,
                     types: [
@@ -422,7 +421,7 @@ class StudyMock implements StudyManager {
                   ))
             ..addTriggerTask(
                 ImmediateTrigger(),
-                Task('Connectivity')
+                Task()
                   ..measures = SamplingSchema.debug().getMeasureList(
                     namespace: NameSpace.CARP,
                     types: [
