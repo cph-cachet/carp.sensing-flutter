@@ -22,7 +22,7 @@ void sensing() async {
   // setup and start the sampling runtime
   StudyController controller = StudyController(study);
   await controller.initialize();
-  controller.start();
+  controller.resume();
 
   // subscribe to events
   controller.events.listen((Datum datum) {

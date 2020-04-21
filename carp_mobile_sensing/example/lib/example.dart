@@ -54,7 +54,7 @@ void example() async {
 
   // await initialization before starting
   await controller.initialize();
-  controller.start();
+  controller.resume();
 
   // listening on all data events from the study
   controller.events.forEach(print);
@@ -213,7 +213,7 @@ void samplingSchemaExample() async {
 
   controller = StudyController(study);
   await controller.initialize();
-  controller.start();
+  controller.resume();
 
   // listening on all data events from the study
   controller.events.forEach(print);

@@ -143,7 +143,7 @@ class Sensing {
     // Create a Study Controller that can manage this study, initialize it, and start it.
     controller = StudyController(study);
     await controller.initialize();
-    controller.start();
+    controller.resume();
     console.log("Sensing started ...");
 
     // listening on all probe events from the study

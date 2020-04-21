@@ -27,8 +27,8 @@ class Sensing {
 //    DataManagerRegistry.register(FirebaseDatabaseDataManager());
   }
 
-  /// Start sensing.
-  Future<void> start() async {
+  /// Initialize and setup sensing.
+  Future<void> init() async {
     // Get the study.
     study = await mock.getStudy(testStudyId);
 
@@ -37,8 +37,6 @@ class Sensing {
     //controller = StudyController(study, samplingSchema: aware); // a controller using the AWARE test schema
     //controller = StudyController(study, privacySchemaName: PrivacySchema.DEFAULT); // a controller w. privacy
     await controller.initialize();
-
-    controller.start();
 
     // listening on all data events from the study and print it (for debugging purpose).
     controller.events.forEach(print);

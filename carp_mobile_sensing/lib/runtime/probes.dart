@@ -11,21 +11,44 @@ part of runtime;
 //                                        PROBES
 //---------------------------------------------------------------------------------------
 
-/// Enumerates the different states of a probe.
-enum ProbeState { created, initialized, started, resumed, paused, stopped, undefined }
+/// The state of a [Probe].
+///
+/// The runtime state has the following state machine:
+///
+///    +----------------------------------------------------------------+     +-----------+
+///    |   +---------+    +-------------+    +---------+     +--------+ |  -> | undefined |
+///    |   | created | -> | initialized | -> | resumed | <-> | paused | |     +-----------+
+///    |   +---------+    +-------------+    +---------+     +--------+ |  -> | stopped   |
+///    +----------------------------------------------------------------+     +-----------+
+///
+enum ProbeState {
+  /// Created and ready to be initialized.
+  created,
+
+  /// Initialized and ready to be resumed (i.e., started).
+  initialized,
+
+  /// Resumed and active in data collection.
+  resumed,
+
+  /// Paused and not collecting data.
+  paused,
+
+  /// Stopped and can no longer collect data.
+  stopped,
+
+  /// Undefined state.
+  ///
+  /// Typically the probe becomes undefined if it cannot be initialized
+  /// or if this probe is not supported on the specific phone / OS.
+  undefined
+}
 
 /// A [Probe] is responsible for collecting data.
 ///
-/// The runtime state of a [Probe] is defined in [ProbeState] and has the following
-/// state machine:
-///
-///         +----------------------------------------------------------+ -> stopped
-///         | created -> initialized -> started -> resumed <-> paused  |
-///         +----------------------------------------------------------+ -> undefined
-///
-/// A probe's [state] can be set using the [initialize], [start], [resume], [pause], and [stop] methods.
+/// A probe's [state] can be set using the [initialize], [resume], [pause], and [stop] methods.
 /// A [restart] can be used to restart a probe when its [measure] has changed (e.g. disabling the probe).
-/// A probe can be [stopped] at any time.
+/// A probe can be stoped at any time.
 /// If an error occurs the state of a probe becomes [undefined]. This is, for example, used when an exception
 /// is caught or when a probe is not available (e.g. on iOS).
 ///
@@ -95,9 +118,6 @@ abstract class Probe {
   /// The configuration of the probe is specified in the [measure].
   Future<void> initialize(Measure measure);
 
-  /// Start the probe.
-  void start();
-
   /// Resume the probe.
   void resume();
 
@@ -152,7 +172,6 @@ abstract class AbstractProbe with MeasureListener implements Probe {
     _stateMachine.initialize(measure);
   }
 
-  void start() => _stateMachine.start();
   void restart() => _stateMachine.restart();
   void pause() => _stateMachine.pause();
   void resume() => _stateMachine.resume();
@@ -165,9 +184,6 @@ abstract class AbstractProbe with MeasureListener implements Probe {
 
   /// Callback for initialization of probe.
   Future<void> onInitialize(Measure measure);
-
-  /// Callback for starting probe
-  Future<void> onStart();
 
   /// Callback for resuming probe
   Future<void> onResume();
@@ -188,7 +204,7 @@ abstract class AbstractProbe with MeasureListener implements Probe {
 //---------------------------------------------------------------------------------------
 //                                 PROBE STATE MACHINE
 //
-//         created -> initialized -> started -> resumed <-> paused *-> stopped/undefined
+//         created -> initialized -> resumed <-> paused *-> stopped/undefined
 //
 //---------------------------------------------------------------------------------------
 
@@ -198,7 +214,6 @@ abstract class AbstractProbe with MeasureListener implements Probe {
 abstract class _ProbeStateMachine {
   ProbeState get state;
   void initialize(Measure measure);
-  void start();
   void pause();
   void resume();
   void restart();
@@ -213,7 +228,6 @@ abstract class _AbstractProbeState implements _ProbeStateMachine {
 
   // Default behavior is no-op
   Future<void> initialize(Measure measure) async {}
-  void start() {}
   void restart() {}
   void pause() {}
   void resume() {}
@@ -241,7 +255,7 @@ class _CreatedState extends _AbstractProbeState implements _ProbeStateMachine {
       await probe.onInitialize(measure);
       probe._setState(_InitializedState(probe));
     } catch (error) {
-      warning('Error initializing ${probe.runtimeType}. Probe is in undefined state.');
+      warning('Error initializing ${probe.runtimeType}. Probe is now in an undefined state.');
       probe._setState(_UndefinedState(probe));
     }
   }
@@ -250,30 +264,10 @@ class _CreatedState extends _AbstractProbeState implements _ProbeStateMachine {
 class _InitializedState extends _AbstractProbeState implements _ProbeStateMachine {
   _InitializedState(Probe probe) : super(probe, ProbeState.initialized);
 
-  void start() {
-    print('Starting ${probe.runtimeType}');
-    probe.onStart();
-    probe._setState(_StartedState(probe));
-  }
-}
-
-class _StartedState extends _AbstractProbeState implements _ProbeStateMachine {
-  _StartedState(Probe probe) : super(probe, ProbeState.started);
-
   void resume() {
-    print('Resuming ${probe.runtimeType} - enabled : ${probe.enabled}');
-    if (probe.enabled) {
-      probe.onResume();
-      probe._setState(_ResumedState(probe));
-    } else {
-      pause();
-    }
-  }
-
-  void pause() {
-    print('Pausing ${probe.runtimeType}');
-    probe.onPause();
-    probe._setState(_PausedState(probe));
+    print('Resuming ${probe.runtimeType}');
+    probe.onResume();
+    probe._setState(_ResumedState(probe));
   }
 }
 
@@ -335,21 +329,11 @@ abstract class DatumProbe extends AbstractProbe {
 
   Future<void> onInitialize(Measure measure) async {}
 
-  // Default behavior is to just start the probe, i.e. resume it.
-  Future<void> onStart() async => this.resume();
-
   Future<void> onRestart() async {}
 
   Future<void> onResume() async {
     Datum data = await getDatum().catchError((err) => controller.addError(err));
     if (data != null) controller.add(data);
-
-//    getDatum().then((Datum data) {
-//      print('  >> onResume() - data: $data');
-//      if (data != null) controller.add(data);
-//
-//      this.pause();
-//    }).catchError((error, stacktrace) => controller.addError(error, stacktrace));
   }
 
   Future<void> onPause() async {}
@@ -426,9 +410,6 @@ abstract class StreamProbe extends AbstractProbe {
 
   // Do nothing here. Can be overwritten in subclasses.
   Future<void> onInitialize(Measure measure) async {}
-
-  // Default behavior is to just start the probe, i.e. resume it and start listening to the stream.
-  Future<void> onStart() async => this.resume();
 
   Future<void> onRestart() async {
     // if we don't have a subscription yet, try to get one
@@ -551,9 +532,6 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
         ? Duration(milliseconds: (measure as PeriodicMeasure).duration)
         : null;
   }
-
-  // Default behavior is to just start the probe, i.e. resume it.
-  Future<void> onStart() async => this.resume();
 
   Future<void> onRestart() async {
     frequency = Duration(milliseconds: (measure as PeriodicMeasure).frequency);

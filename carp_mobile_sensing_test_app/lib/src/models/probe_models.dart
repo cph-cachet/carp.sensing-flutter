@@ -35,8 +35,6 @@ probeStateLabel(ProbeState state) {
       return "Initialized";
     case ProbeState.created:
       return "Created";
-    case ProbeState.started:
-      return "Started";
     case ProbeState.resumed:
       return "Resumed";
     case ProbeState.paused:

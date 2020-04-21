@@ -64,7 +64,6 @@ class AppTask extends Task {
     this.minutesToComplete,
     this.notification = false,
     this.onInitialize,
-    this.onStart,
     this.onResume,
     this.onPause,
     this.onStop,
@@ -89,14 +88,6 @@ class AppTask extends Task {
   /// cannot be specified in the JSON format of the measure as e.g. downloaded from a study manager.
   @JsonKey(ignore: true)
   void Function(TaskExecutor) onInitialize;
-
-  /// The callback function providing a [TaskExecutor] object to be used in the app.
-  /// This function is called when this task is started.
-  ///
-  /// This callback function needs to be provided by the app on runtime. I.e. this part of the task
-  /// cannot be specified in the JSON format of the measure as e.g. downloaded from a study manager.
-  @JsonKey(ignore: true)
-  void Function(TaskExecutor) onStart;
 
   /// The callback function providing a [TaskExecutor] object to be used in the app.
   /// This function is called when this task is resumed.
