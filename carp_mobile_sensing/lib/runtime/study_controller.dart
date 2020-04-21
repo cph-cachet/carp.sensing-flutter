@@ -135,8 +135,10 @@ class StudyController {
           }
         }
       });
-      _battery
-          .initialize(Measure(MeasureType(NameSpace.CARP, DeviceSamplingPackage.BATTERY), name: 'PowerAwarenessProbe'));
+      await _battery.initialize(Measure(
+        MeasureType(NameSpace.CARP, DeviceSamplingPackage.BATTERY),
+        name: 'PowerAwarenessProbe',
+      ));
       //_battery.start();
       _battery.resume();
     }

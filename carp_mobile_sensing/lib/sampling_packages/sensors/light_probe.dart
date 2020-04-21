@@ -16,9 +16,9 @@ class LightProbe extends BufferingPeriodicStreamProbe {
   Stream<dynamic> get bufferingStream => _bufferingStream;
 
   Future<void> onInitialize(Measure measure) async {
-    super.onInitialize(measure);
     // check if Light is available (only available on Android)
     _bufferingStream = Light().lightSensorStream;
+    super.onInitialize(measure);
   }
 
   Future<Datum> getDatum() async {

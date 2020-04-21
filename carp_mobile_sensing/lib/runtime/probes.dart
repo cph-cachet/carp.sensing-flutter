@@ -226,11 +226,24 @@ abstract class _AbstractProbeState implements _ProbeStateMachine {
   AbstractProbe probe;
   _AbstractProbeState(this.probe, this.state) : assert(probe != null);
 
-  // Default behavior is no-op
-  Future<void> initialize(Measure measure) async {}
-  void restart() {}
-  void pause() {}
-  void resume() {}
+  // Default behavior is to print a warning.
+  // If a state supports this method, this behavior is overwritten in
+  // the state implementation classes below.
+  Future<void> initialize(Measure measure) async {
+    warning("Trying to initialize a probe in a state where this can't be done - state : $state");
+  }
+
+  void restart() {
+    warning("Trying to restart a probe in a state where this can't be done - state : $state");
+  }
+
+  void resume() {
+    warning("Trying to resume a probe in a state where this can't be done - state : $state");
+  }
+
+  void pause() {
+    warning("Trying to pause a probe in a state where this can't be done - state : $state");
+  }
 
   // Default stop behavior. A probe can be stopped in all states.
   void stop() {
@@ -609,7 +622,10 @@ abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
 
   Future<void> onResume() async {
     // if we don't have a subscription yet, or it has been canceled, try to get one
-    if (subscription == null) subscription = bufferingStream?.listen(onData, onError: onError, onDone: onDone);
+    if (subscription == null)
+      subscription = bufferingStream?.listen((data) {
+        // we don't need this data - first collect the Datum in the end
+      });
 
     subscription?.resume();
     timer = Timer.periodic(frequency, (Timer t) {
