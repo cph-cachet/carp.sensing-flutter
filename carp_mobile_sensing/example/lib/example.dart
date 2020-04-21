@@ -49,10 +49,10 @@ void example() async {
   );
   study.addTriggerTask(ImmediateTrigger(), Task(name: 'Light')..addMeasure(lightMeasure));
 
-  // Create a Study Controller that can manage this study, initialize it, and start it.
+  // Create a Study Controller that can manage this study.
   StudyController controller = StudyController(study);
 
-  // await initialization before starting
+  // await initialization before starting/resuming
   await controller.initialize();
   controller.resume();
 

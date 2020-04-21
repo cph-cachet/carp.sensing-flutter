@@ -13,7 +13,7 @@ void main() async {
   // creating a task collecting step counts and blood pressure data for the last two days
   study.addTriggerTask(
     ImmediateTrigger(), // a simple trigger that starts immediately
-    Task('Step and bloodpressure')
+    Task(name: 'Step and bloodpressure')
       ..addMeasure(
         HealthMeasure(
             MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH), HealthDataType.STEPS, Duration(days: 2),
@@ -36,7 +36,7 @@ void main() async {
 
   // await initialization before starting
   await controller.initialize();
-  controller.start();
+  controller.resume();
 
   // listening on all data events from the study
   controller.events.forEach(print);

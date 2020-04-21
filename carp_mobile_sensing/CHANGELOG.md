@@ -1,7 +1,8 @@
 ## 0.6.5
 * Extended Task model -- introduction of a `AutomaticTask` and `AppTask`.
 * Added support for "manually" adding data points (`Datum`) and errors to the data stream (`events`). This is part of the `StudyExecutor` API.
-
+* The `start()` method on all executors (probes, and study, trigger & task executors) has been removed. 
+Now an executor is 'started' by resuming it (calling `resume()`).
 
 ## 0.6.5
 * upgrade to `persmission_handler` v. 5.x

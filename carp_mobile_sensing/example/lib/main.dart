@@ -140,9 +140,11 @@ class Sensing {
     // print the study to the console
     console.log(study.toString());
 
-    // Create a Study Controller that can manage this study, initialize it, and start it.
+    // Create a Study Controller that can manage this study and initialize it.
     controller = StudyController(study);
     await controller.initialize();
+
+    // Resume (i.e. start) data sampling.
     controller.resume();
     console.log("Sensing started ...");
 
