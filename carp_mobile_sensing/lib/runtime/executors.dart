@@ -358,6 +358,7 @@ class AppTaskExecutor extends TaskExecutor {
         super(task) {
     _appTask = task as AppTask;
     _taskExecutor = TaskExecutor(task);
+    _group.add(_taskExecutor.events);
   }
 
   AppTask _appTask;
