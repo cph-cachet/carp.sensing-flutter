@@ -429,6 +429,13 @@ abstract class StreamProbe extends AbstractProbe {
     if (subscription == null && stream != null) subscription = stream.listen(onData, onError: onError, onDone: onDone);
   }
 
+  Future<void> onResume() async {
+    // if we don't have a subscription yet, or it has been canceled, try to get one
+    if (subscription == null && stream != null)
+      subscription = stream.listen(onData, onError: onError, onDone: onDone);
+    else if (stream != null && !stream.isBroadcast) subscription.resume();
+  }
+
   Future<void> onPause() async {
     // if the stream has disappeared, remove the subscription also
     if (stream == null) subscription = null;
@@ -439,18 +446,10 @@ abstract class StreamProbe extends AbstractProbe {
         // Most streams from platform channels are broadcast (e.g. activity, location, eSense, ...).
         subscription?.cancel();
         subscription = null;
-        //print('${this.runtimeType} - onPause() - isBroadcast - subscription = null');
       } else {
         subscription?.pause();
       }
     }
-  }
-
-  Future<void> onResume() async {
-    // if we don't have a subscription yet, or it has been canceled, try to get one
-    if (subscription == null && stream != null)
-      subscription = stream.listen(onData, onError: onError, onDone: onDone);
-    else if (stream != null && !stream.isBroadcast) subscription.resume();
   }
 
   Future<void> onStop() async {
@@ -495,17 +494,14 @@ abstract class PeriodicStreamProbe extends StreamProbe {
   }
 
   Future<void> onResume() async {
-    print('${this.runtimeType} - onResume() - subscription: $subscription');
     // if we don't have a subscription yet, or it has been canceled, try to get one
     if (subscription == null) subscription = stream?.listen(onData, onError: onError, onDone: onDone);
     if (subscription != null) {
       // create a recurrent timer that resume sampling.
-      timer = Timer.periodic(frequency, (Timer t) {
-        print('${this.runtimeType} - onResume() - subscription.resume()');
+      timer = Timer.periodic(frequency, (timer) {
         subscription.resume();
         // create a timer that pause the sampling after the specified duration.
         Timer(duration, () {
-          print('${this.runtimeType} - onResume() - subscription.pause()');
           subscription.pause();
         });
       });
@@ -622,10 +618,7 @@ abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
 
   Future<void> onResume() async {
     // if we don't have a subscription yet, or it has been canceled, try to get one
-    if (subscription == null)
-      subscription = bufferingStream?.listen((data) {
-        // we don't need this data - first collect the Datum in the end
-      });
+    if (subscription == null) subscription = bufferingStream?.listen(onSamplingData, onError: onError, onDone: onDone);
 
     subscription?.resume();
     timer = Timer.periodic(frequency, (Timer t) {
@@ -682,8 +675,6 @@ abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
 /// method in order to provide the stream to be buffered.
 ///
 /// When the sampling window ends, the [getDatum] method is called.
-///
-/// See [PedometerProbe] for an example.
 abstract class BufferingStreamProbe extends BufferingPeriodicStreamProbe {
   Future<void> onResume() async {
     subscription.resume();

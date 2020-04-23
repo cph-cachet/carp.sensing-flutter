@@ -85,6 +85,6 @@ class SensorSamplingPackage implements SamplingPackage {
       MapEntry(
           LIGHT,
           PeriodicMeasure(MeasureType(NameSpace.CARP, LIGHT),
-              name: 'Ambient Light', enabled: true, frequency: 60 * 1000, duration: 1000)),
+              name: 'Ambient Light', enabled: true, frequency: 10 * 1000, duration: 1000)),
     ]);
 }
