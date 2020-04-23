@@ -85,21 +85,11 @@ class SurveyProbe extends AbstractProbe {
     surveyTask = surveyMeasure.surveyTask;
   }
 
-  Future<void> onStart() async {
-    onSurveyTriggered(SurveyPage(surveyTask, _onSurveySubmit));
-    this.pause();
-  }
-
-  Future<void> onRestart() async {
-    onSurveyTriggered(SurveyPage(surveyTask, _onSurveySubmit));
-    this.pause();
-  }
-
   Future<void> onResume() async {
     onSurveyTriggered(SurveyPage(surveyTask, _onSurveySubmit));
-    this.pause();
   }
 
+  Future<void> onRestart() async {}
   Future<void> onPause() async {}
   Future<void> onStop() async {}
 

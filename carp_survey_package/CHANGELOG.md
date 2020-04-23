@@ -1,5 +1,5 @@
-## 0.6.5
-* upgrade to `carp_mobile_sensing` v. 0.6.6
+## 0.7.0
+* upgrade to `carp_mobile_sensing` v. 0.7.0
 * use the `AppTask` model for surveys
 
 ## 0.6.5

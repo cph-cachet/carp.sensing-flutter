@@ -229,21 +229,17 @@ abstract class _AbstractProbeState implements _ProbeStateMachine {
   // Default behavior is to print a warning.
   // If a state supports this method, this behavior is overwritten in
   // the state implementation classes below.
-  Future<void> initialize(Measure measure) async {
-    warning("Trying to initialize a probe in a state where this can't be done - state : $state");
-  }
+  Future<void> initialize(Measure measure) async =>
+      warning("Trying to initialize a ${probe.runtimeType} in a state where this can't be done - state : $state");
 
-  void restart() {
-    warning("Trying to restart a probe in a state where this can't be done - state : $state");
-  }
+  void restart() =>
+      warning("Trying to restart a ${probe.runtimeType} in a state where this can't be done - state : $state");
 
-  void resume() {
-    warning("Trying to resume a probe in a state where this can't be done - state : $state");
-  }
+  void resume() =>
+      warning("Trying to resume a ${probe.runtimeType} in a state where this can't be done - state : $state");
 
-  void pause() {
-    warning("Trying to pause a probe in a state where this can't be done - state : $state");
-  }
+  void pause() =>
+      warning("Trying to pause a ${probe.runtimeType} in a state where this can't be done - state : $state");
 
   // Default stop behavior. A probe can be stopped in all states.
   void stop() {
@@ -254,7 +250,7 @@ abstract class _AbstractProbeState implements _ProbeStateMachine {
 
   // Default error behavior. A probe can become undefined in all states.
   void error() {
-    print('Error in ${probe.runtimeType}');
+    print('Error in ${probe.runtimeType}.');
     probe._setState(_UndefinedState(probe));
   }
 }
@@ -268,7 +264,7 @@ class _CreatedState extends _AbstractProbeState implements _ProbeStateMachine {
       await probe.onInitialize(measure);
       probe._setState(_InitializedState(probe));
     } catch (error) {
-      warning('Error initializing ${probe.runtimeType}. Probe is now in an undefined state.');
+      warning('Error initializing ${probe.runtimeType}: $error Probe is now in an undefined state.');
       probe._setState(_UndefinedState(probe));
     }
   }

@@ -357,7 +357,11 @@ class AppTaskExecutor extends TaskExecutor {
       : assert(task is AppTask, "UserTaskExecutor should be ininialized with a UserTask."),
         super(task) {
     _appTask = task as AppTask;
+
+    // create an embedded executor that later can be used to execute this task
     _taskExecutor = TaskExecutor(task);
+
+    // add the events from the embedded executor to the overall stream of events
     _group.add(_taskExecutor.events);
   }
 
@@ -365,7 +369,6 @@ class AppTaskExecutor extends TaskExecutor {
   TaskExecutor _taskExecutor;
 
   Future<void> onInitialize(Measure measure) async {
-    super.onInitialize(measure);
     _taskExecutor.initialize(measure);
     if (_appTask.onInitialize != null) _appTask.onInitialize(_taskExecutor);
   }
