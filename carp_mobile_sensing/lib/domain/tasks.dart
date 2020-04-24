@@ -10,6 +10,7 @@ part of domain;
 /// A [Task] holds information about each task to be triggered by a [Trigger] as part of a [Study].
 /// Each [Task] holds a list of [Measure]s to be done as part of this task.
 /// A [Task] is hence merely an aggregation of [Measure]s.
+@Deprecated('Use [AutomaticTask] or [AppTask] instead.')
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class Task extends Serializable {
   static int _counter = 0;
@@ -79,6 +80,8 @@ class AppTask extends Task {
   int minutesToComplete;
 
   /// Should a notification be send to the user on the phone?
+  ///
+  /// TODO - implement this ;-)
   bool notification = false;
 
   /// The callback function providing the [TaskExecutor] object to be used in the app.
