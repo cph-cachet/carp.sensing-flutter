@@ -22,10 +22,10 @@ class ConsentDocument {
   int get id => _snapshot['id'];
 
   /// The id of the study of this document
-  int get studyId => _snapshot['study_id'];
+  String get studyId => _snapshot['study_id'];
 
   /// The id of the user who created this document
-  String get createdByUserId => _snapshot['created_by_user_id'];
+  int get createdByUserId => _snapshot['created_by_user_id'];
 
   /// The timestamp of creation of this document
   DateTime get createdAt => DateTime.parse(_snapshot['created_at']);
@@ -42,5 +42,5 @@ class ConsentDocument {
   /// Returns `true` if the document exists.
   bool get exists => document != null;
 
-  String toString() => "ConsentDocument - id: $id, study; $studyId, document size: ${document?.length}";
+  String toString() => "ConsentDocument - id : $id, study: $studyId, document size: ${document?.length}";
 }

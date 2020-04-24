@@ -9,14 +9,14 @@ import 'dart:math';
 String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
 
 void main() {
-  final String username = "researcher@example.com";
-  final String password = "password";
-  //final String username = "tester_487@dtu.dk";
-  //final String password = "underbar";
+  //final String username = "researcher@example.com";
+  //final String password = "password";
+  final String username = "admin@cachet.dk";
+  final String password = "admin";
   final String userId = "user@dtu.dk";
-  final String uri = "http://staging.carp.cachet.dk:8080";
+  //final String uri = "http://staging.carp.cachet.dk:8080";
   //final String uri = "https://test.carp.cachet.dk:443";
-  //final String uri = "https://cans.cachet.dk:443";
+  final String uri = "https://cans.cachet.dk:443";
   final String clientID = "carp";
   final String clientSecret = "carp";
   final String testStudyId = "2";
@@ -24,7 +24,7 @@ void main() {
   CarpUser user;
   Study study;
   int dataPointId;
-  BluetoothDatum datum;
+  LightDatum datum;
   DocumentSnapshot document;
   int documentId;
   int consentDocumentId;
@@ -35,15 +35,13 @@ void main() {
     setUpAll(() {
       study = new Study(testStudyId, userId, name: "Test study #$testStudyId");
 
-      // Create a test bluetooth datum
-      datum = BluetoothDatum()
-        ..scanResult.add(BluetoothDevice()
-          ..bluetoothDeviceId = "weg"
-          ..bluetoothDeviceName = "ksjbdf"
-          ..connectable = true
-          ..txPowerLevel = 314
-          ..rssi = 567
-          ..bluetoothDeviceType = "classic");
+      // Create a test datum
+      datum = LightDatum(
+        maxLux: 12,
+        meanLux: 23,
+        minLux: 0.3,
+        stdLux: 0.4,
+      );
 
       app = new CarpApp(
           study: study,
@@ -75,42 +73,42 @@ void main() {
       assert(new_user != null);
 
       print("signed in : $new_user");
-      print("   name   : ${new_user.fullName}");
+      print("   name   : ${new_user.firstName} ${new_user.lastName}");
     });
 
     // This test fails -- we do not have access to create users with the authenticated user.
     test('- create user', () async {
       int id = random.nextInt(1000);
-      CarpUser new_user =
-          await CarpService.instance.createUser('user_$id@dtu.dk', 'underbar', fullName: 'CACHET User #$id');
+      CarpUser new_user = await CarpService.instance
+          .createUser(username: 'user_$id@dtu.dk', password: 'underbar', firstName: 'CACHET User #$id');
 
       // we expect this call to fail, since we're not authenticated as admin
       assert(new_user == null);
 
       print("create  : $new_user");
-      print("   name : ${new_user.fullName}");
+      print("   name : ${new_user.firstName} ${new_user.lastName}");
     });
 
     test('- create participant by invite', () async {
       int id = random.nextInt(1000);
-      CarpUser new_user = await CarpService.instance
-          .createParticipantByInvite('participant_$id@dtu.dk', 'underbar', fullName: 'CACHET Participant #$id');
+      CarpUser new_user = await CarpService.instance.createParticipantByInvite(
+          username: 'participant_$id@dtu.dk', password: 'underbar', firstName: 'CACHET Participant #$id');
 
       assert(new_user != null);
 
       print("create  : $new_user");
-      print("   name : ${new_user.fullName}");
+      print("   name : ${new_user.firstName} ${new_user.lastName}");
     });
 
     test('- create researcher by invite', () async {
       int id = random.nextInt(1000);
-      CarpUser new_user = await CarpService.instance
-          .createResearcherByInvite('researcher_$id@dtu.dk', 'underbar', fullName: 'CACHET Researcher #$id');
+      CarpUser new_user = await CarpService.instance.createResearcherByInvite(
+          username: 'researcher_$id@dtu.dk', password: 'underbar', firstName: 'CACHET Researcher #$id');
 
       assert(new_user != null);
 
       print("create  : $new_user");
-      print("   name : ${new_user.fullName}");
+      print("   name : ${new_user.firstName} ${new_user.lastName}");
     });
 
     test('- refresh token', () async {

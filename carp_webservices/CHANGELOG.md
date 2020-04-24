@@ -1,3 +1,6 @@
+## 0.4.0
+* **Breaking** Update to the new CANS API and data model.
+
 ## 0.3.3
 * improvement on retry in offline mode
 * testing w. iOS
