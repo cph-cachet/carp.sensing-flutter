@@ -4,6 +4,8 @@
 * The `start()` method on all executors (probes, and study, trigger & task executors) has been removed. 
 Now an executor is 'started' by resuming it (calling `resume()`).
 * Fixed a bug in `BufferingPeriodicStreamProbe`.
+* Added the `FileDatum` data type which can hold a reference to a file. 
+For example, an audio file (see the `carp_audio_package`).
 
 ## 0.6.5
 * upgrade to `persmission_handler` v. 5.x

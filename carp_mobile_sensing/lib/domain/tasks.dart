@@ -49,10 +49,10 @@ class Task extends Serializable {
 class AutomaticTask extends Task {
   AutomaticTask({String name}) : super(name: name);
 
-  static Function get fromJsonFunction => _$SensingTaskFromJson;
+  static Function get fromJsonFunction => _$AutomaticTaskFromJson;
   factory AutomaticTask.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
-  Map<String, dynamic> toJson() => _$SensingTaskToJson(this);
+  Map<String, dynamic> toJson() => _$AutomaticTaskToJson(this);
 }
 
 /// A [Task] that notifies the app when it is triggered.
@@ -116,8 +116,8 @@ class AppTask extends Task {
   @JsonKey(ignore: true)
   void Function(TaskExecutor) onStop;
 
-  static Function get fromJsonFunction => _$UserTaskFromJson;
+  static Function get fromJsonFunction => _$AppTaskFromJson;
   factory AppTask.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
-  Map<String, dynamic> toJson() => _$UserTaskToJson(this);
+  Map<String, dynamic> toJson() => _$AppTaskToJson(this);
 }
