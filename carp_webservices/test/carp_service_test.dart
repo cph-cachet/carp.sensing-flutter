@@ -89,27 +89,27 @@ void main() {
       print("   name : ${new_user.firstName} ${new_user.lastName}");
     });
 
-    test('- create participant by invite', () async {
-      int id = random.nextInt(1000);
-      CarpUser new_user = await CarpService.instance.createParticipantByInvite(
-          username: 'participant_$id@dtu.dk', password: 'underbar', firstName: 'CACHET Participant #$id');
-
-      assert(new_user != null);
-
-      print("create  : $new_user");
-      print("   name : ${new_user.firstName} ${new_user.lastName}");
-    });
-
-    test('- create researcher by invite', () async {
-      int id = random.nextInt(1000);
-      CarpUser new_user = await CarpService.instance.createResearcherByInvite(
-          username: 'researcher_$id@dtu.dk', password: 'underbar', firstName: 'CACHET Researcher #$id');
-
-      assert(new_user != null);
-
-      print("create  : $new_user");
-      print("   name : ${new_user.firstName} ${new_user.lastName}");
-    });
+//    test('- create participant by invite', () async {
+//      int id = random.nextInt(1000);
+//      CarpUser new_user = await CarpService.instance.createParticipantByInvite(
+//          username: 'participant_$id@dtu.dk', password: 'underbar', firstName: 'CACHET Participant #$id');
+//
+//      assert(new_user != null);
+//
+//      print("create  : $new_user");
+//      print("   name : ${new_user.firstName} ${new_user.lastName}");
+//    });
+//
+//    test('- create researcher by invite', () async {
+//      int id = random.nextInt(1000);
+//      CarpUser new_user = await CarpService.instance.createResearcherByInvite(
+//          username: 'researcher_$id@dtu.dk', password: 'underbar', firstName: 'CACHET Researcher #$id');
+//
+//      assert(new_user != null);
+//
+//      print("create  : $new_user");
+//      print("   name : ${new_user.firstName} ${new_user.lastName}");
+//    });
 
     test('- refresh token', () async {
       print('expiring token...');

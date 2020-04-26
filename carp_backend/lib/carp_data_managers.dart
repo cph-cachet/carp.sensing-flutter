@@ -118,7 +118,7 @@ class CarpDataManager extends AbstractDataManager {
     return false;
   }
 
-  // This method upload a file of [Datum] data to CAPP,.
+  // This method upload a file of [Datum] data to CAPP.
   //TODO - implement support for offline store-and-wait for later upload when online.
   Future<void> _uploadDatumFileToCarp(String path) async {
     print("File upload to CARP started - path : '$path'");
