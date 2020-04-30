@@ -20,6 +20,8 @@ void main() {
   final String clientID = "carp";
   final String clientSecret = "carp";
   final String testStudyId = "2";
+
+  Map<String, dynamic> tokenAsJson;
   CarpApp app;
   CarpUser user;
   Study study;
@@ -119,11 +121,26 @@ void main() {
 
       assert(user.token != null);
       print("signed in : $user");
-      print("   token  : ${user.token}");
+      print("   token  : ${user.token}\n");
+
+      //saving token as json for later
+      tokenAsJson = user.token.toJson();
+      print(_encode(tokenAsJson));
     });
 
     test('- authentication with saved token', () async {
       CarpUser new_user = await CarpService.instance.authenticateWithToken(username: username, token: user.token);
+
+      assert(new_user != null);
+      assert(new_user.isAuthenticated);
+
+      print("signed in : $new_user");
+      print("   token  : ${new_user.token}");
+    });
+
+    test('- authentication with saved JSON token', () async {
+      CarpUser new_user =
+          await CarpService.instance.authenticateWithToken(username: username, token: OAuthToken.fromJson(tokenAsJson));
 
       assert(new_user != null);
       assert(new_user.isAuthenticated);

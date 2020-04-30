@@ -192,7 +192,7 @@ class CarpFileResponse {
   final int createdByUserId;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final int studyId;
+  final String studyId;
 
   String toString() => json.encode(map);
 }
