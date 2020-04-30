@@ -150,6 +150,12 @@ class StudyController {
   }
 
   /// Resume this controller, i.e. resume data collection according to the specified [study] and [samplingSchema].
+  @Deprecated("Use the resume() method instead")
+  void start() {
+    this.resume();
+  }
+
+  /// Resume this controller, i.e. resume data collection according to the specified [study] and [samplingSchema].
   void resume() {
     print("Resuming data sampling ...");
     executor.resume();
