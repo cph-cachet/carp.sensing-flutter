@@ -176,7 +176,7 @@ class StudyMock implements StudyManager {
 //              )))
         ..addTriggerTask(
             ImmediateTrigger(),
-            Task()
+            AutomaticTask()
               ..measures = SamplingSchema.debug().getMeasureList(
                 namespace: NameSpace.CARP,
                 types: [
@@ -187,7 +187,7 @@ class StudyMock implements StudyManager {
               ))
         ..addTriggerTask(
             ImmediateTrigger(),
-            Task()
+            AutomaticTask()
               ..measures = SamplingSchema.debug().getMeasureList(
                 namespace: NameSpace.CARP,
                 types: [
@@ -212,18 +212,19 @@ class StudyMock implements StudyManager {
         ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
         ..addTriggerTask(
             PeriodicTrigger(period: 1 * 20 * 1000),
-            Task()
+            AutomaticTask()
               ..measures = SamplingSchema.common().getMeasureList(
                 namespace: NameSpace.CARP,
                 types: [
                   ContextSamplingPackage.WEATHER,
-                  ContextSamplingPackage.AIR_QUALITY,
+                  //ContextSamplingPackage.AIR_QUALITY,
+                  ContextSamplingPackage.LOCATION,
                 ],
               ))
         ..addTriggerTask(
             ImmediateTrigger(),
-            Task()
-              ..measures = SamplingSchema.common().getMeasureList(
+            AutomaticTask()
+              ..measures = SamplingSchema.debug().getMeasureList(
                 namespace: NameSpace.CARP,
                 types: [
                   SensorSamplingPackage.LIGHT,
@@ -246,7 +247,7 @@ class StudyMock implements StudyManager {
             ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
             ..addTriggerTask(
                 ImmediateTrigger(),
-                Task()
+                AutomaticTask()
                   ..measures = custom.getMeasureList(
                     types: [
                       SensorSamplingPackage.LIGHT,
@@ -261,7 +262,7 @@ class StudyMock implements StudyManager {
                   ))
 //            ..addTriggerTask(
 //                DelayedTrigger(delay: 10 * 1000),
-//                Task()
+//                AutomaticTask()
 //                  ..measures = custom.getMeasureList(
 //                    namespace: NameSpace.CARP,
 //                    types: [
@@ -271,7 +272,7 @@ class StudyMock implements StudyManager {
 //                  ))
             ..addTriggerTask(
                 PeriodicTrigger(period: 10 * 60 * 1000),
-                Task()
+                AutomaticTask()
                   ..measures = custom.getMeasureList(
                     namespace: NameSpace.CARP,
                     types: [
@@ -280,7 +281,7 @@ class StudyMock implements StudyManager {
                   ))
             ..addTriggerTask(
                 PeriodicTrigger(period: 60 * 60 * 1000),
-                Task()
+                AutomaticTask()
                   ..measures = custom.getMeasureList(
                     namespace: NameSpace.CARP,
                     types: [

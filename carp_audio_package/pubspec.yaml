@@ -3,7 +3,7 @@
 
 name: carp_audio_package
 description: CARP Audio Sampling Package. Samples audio recording and noise.
-version: 0.7.0+1
+version: 0.7.0+3
 author:  CACHET Team <cph.cachet@gmail.com>
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_audio_package
 
