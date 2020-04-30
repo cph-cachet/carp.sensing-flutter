@@ -122,7 +122,7 @@ class Sensing {
               ..encrypt = false)
           ..addTriggerTask(
               ImmediateTrigger(),
-              Task()
+              AutomaticTask()
                 ..measures = SamplingSchema.debug().getMeasureList(
                   namespace: NameSpace.CARP,
                   types: [
@@ -132,7 +132,7 @@ class Sensing {
                   ],
                 ))
 //      ..addTriggerTask(ImmediateTrigger(),
-//          Task()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList())
+//          AutomaticTask()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList())
         ;
 
     console.log("Setting up '${study.name}'...");

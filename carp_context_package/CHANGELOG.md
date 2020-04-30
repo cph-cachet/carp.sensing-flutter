@@ -1,3 +1,6 @@
+## 0.7.0
+* upgrade to `carp_mobile_sensing` v. 0.7.0
+
 ## 0.6.6
 * the ``location`` measure is now a ``DatumProbe`` and only collects location on request. 
 If continuous (stream-based) location is needed, use the `geolocation` measure.

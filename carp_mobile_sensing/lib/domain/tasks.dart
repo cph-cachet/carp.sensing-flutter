@@ -10,9 +10,10 @@ part of domain;
 /// A [Task] holds information about each task to be triggered by a [Trigger] as part of a [Study].
 /// Each [Task] holds a list of [Measure]s to be done as part of this task.
 /// A [Task] is hence merely an aggregation of [Measure]s.
-@Deprecated('Use [AutomaticTask] or [AppTask] instead.')
+///
+/// The [Task] class is abstract. Use either [AutomaticTask] or [AppTask] for specific tasks.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class Task extends Serializable {
+abstract class Task extends Serializable {
   static int _counter = 0;
 
   /// The name of this task. Unique for this [Study].

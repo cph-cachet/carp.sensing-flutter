@@ -12,7 +12,7 @@ void sensing() async {
     ..dataFormat = NameSpace.OMH
     ..addTriggerTask(
         ImmediateTrigger(),
-        Task(name: 'One Common Sensing Task')
+        AutomaticTask(name: 'One Common Sensing Task')
           ..measures = SamplingSchema.common().getMeasureList(types: [
             AppsSamplingPackage.APP_USAGE,
             SensorSamplingPackage.ACCELEROMETER,

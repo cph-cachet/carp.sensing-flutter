@@ -94,10 +94,6 @@ class StudyExecutor extends Executor {
 /// Returns the relevant [TriggerExecutor] based on the type of [trigger].
 TriggerExecutor getTriggerExecutor(Trigger trigger) {
   switch (trigger.runtimeType) {
-    case Trigger:
-      // actually, a study it not supposed to use the base-class [Trigger]
-      // but if so, we treat it as an [ImmediateTrigger]
-      return ImmediateTriggerExecutor(trigger);
     case ImmediateTrigger:
       return ImmediateTriggerExecutor(trigger);
     case DelayedTrigger:
@@ -219,6 +215,7 @@ class PeriodicTriggerExecutor extends TriggerExecutor {
 /// Executes a [ScheduledTrigger] on the specified [ScheduledTrigger.schedule] date and time.
 class ScheduledTriggerExecutor extends TriggerExecutor {
   Duration delay, duration;
+  Timer timer;
 
   ScheduledTriggerExecutor(ScheduledTrigger trigger) : super(trigger) {
     assert(trigger.schedule != null, 'The schedule of a ScheduledTrigger must be specified.');
@@ -228,7 +225,7 @@ class ScheduledTriggerExecutor extends TriggerExecutor {
   }
 
   Future<void> onResume() async {
-    Timer(delay, () {
+    timer = Timer(delay, () {
       // after the waiting time (delay) is over, resume this trigger
       super.onResume();
       if (duration != null) {
@@ -238,6 +235,11 @@ class ScheduledTriggerExecutor extends TriggerExecutor {
         });
       }
     });
+  }
+
+  Future<void> onPause() async {
+    timer.cancel();
+    super.onPause();
   }
 }
 
@@ -262,17 +264,21 @@ class RecurrentScheduledTriggerExecutor extends PeriodicTriggerExecutor {
 class SamplingEventTriggerExecutor extends TriggerExecutor {
   SamplingEventTriggerExecutor(SamplingEventTrigger trigger) : super(trigger);
 
+  StreamSubscription<Datum> _subscription;
+
   Future<void> onResume() async {
     SamplingEventTrigger eventTrigger = trigger as SamplingEventTrigger;
-    // listen for event of the specified type
-    ProbeRegistry.lookup(eventTrigger?.measureType?.name).events.listen((datum) {
-      if ((eventTrigger?.resumeCondition == null) || (datum == eventTrigger?.resumeCondition)) {
-        super.onResume();
-      }
-      if (datum == eventTrigger?.pauseCondition) {
-        super.onPause();
-      }
+    // start listen for events of the specified type
+    _subscription = ProbeRegistry.lookup(eventTrigger?.measureType?.name).events.listen((datum) {
+      if ((eventTrigger?.resumeCondition == null) || (datum == eventTrigger?.resumeCondition)) super.onResume();
+      if (datum == eventTrigger?.pauseCondition) super.onPause();
     });
+  }
+
+  Future<void> onPause() async {
+    // stop the listening
+    _subscription.cancel();
+    super.onPause();
   }
 }
 
@@ -282,13 +288,20 @@ class SamplingEventTriggerExecutor extends TriggerExecutor {
 class ConditionalSamplingEventTriggerExecutor extends TriggerExecutor {
   ConditionalSamplingEventTriggerExecutor(ConditionalSamplingEventTrigger trigger) : super(trigger);
 
+  StreamSubscription<Datum> _subscription;
+
   Future<void> onResume() async {
     ConditionalSamplingEventTrigger eventTrigger = trigger as ConditionalSamplingEventTrigger;
     // listen for event of the specified type
-    ProbeRegistry.lookup(eventTrigger.measureType.name).events.listen((datum) {
+    _subscription = ProbeRegistry.lookup(eventTrigger.measureType.name).events.listen((datum) {
       if (eventTrigger.resumeCondition(datum)) super.onResume();
       if (eventTrigger.pauseCondition(datum)) super.onPause();
     });
+  }
+
+  Future<void> onPause() async {
+    _subscription.cancel();
+    super.onPause();
   }
 }
 

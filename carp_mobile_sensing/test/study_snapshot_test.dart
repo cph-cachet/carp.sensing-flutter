@@ -39,7 +39,7 @@ void main() {
 
     study.addTriggerTask(
         ImmediateTrigger(),
-        Task(name: 'Sensor Task')
+        AutomaticTask(name: 'Sensor Task')
           ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
               frequency: 10 * 1000, // sample every 10 secs
               duration: 100 // for 100 ms
@@ -49,7 +49,7 @@ void main() {
               duration: 100 // for 100 ms
               )));
 
-//    study.addTask(Task('Audio Recording Task')
+//    study.addTask(AutomaticTask('Audio Recording Task')
 //      ..addMeasure(AudioMeasure(MeasureType(NameSpace.CARP, DataType.AUDIO),
 //          frequency: 10 * 60 * 1000, // sample sound every 10 min
 //          duration: 10 * 1000, // for 10 secs
@@ -66,7 +66,7 @@ void main() {
 
     study.addTriggerTask(
         ImmediateTrigger(),
-        Task(name: 'Task collecting a list of all installed apps')
+        AutomaticTask(name: 'Task collecting a list of all installed apps')
           ..addMeasure(Measure(MeasureType(NameSpace.CARP, AppsSamplingPackage.APPS))));
   });
 

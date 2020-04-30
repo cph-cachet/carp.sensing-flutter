@@ -126,7 +126,7 @@ class StudyMock implements StudyManager {
 //              ))
             ..addTriggerTask(
                 ImmediateTrigger(),
-                Task()
+                AutomaticTask()
                   ..measures = SamplingSchema.debug().getMeasureList(
                     namespace: NameSpace.CARP,
                     types: [
@@ -138,7 +138,7 @@ class StudyMock implements StudyManager {
                   ))
             ..addTriggerTask(
                 PeriodicTrigger(period: 1 * 20 * 1000),
-                Task()
+                AutomaticTask()
                   ..measures = SamplingSchema.debug().getMeasureList(
                     namespace: NameSpace.CARP,
                     types: [
@@ -149,7 +149,7 @@ class StudyMock implements StudyManager {
                   ))
             ..addTriggerTask(
                 ImmediateTrigger(),
-                Task()
+                AutomaticTask()
                   ..measures = SamplingSchema.debug().getMeasureList(
                     namespace: NameSpace.CARP,
                     types: [
@@ -170,7 +170,7 @@ class StudyMock implements StudyManager {
 //                  ))
 //            ..addTriggerTask(
 //                ImmediateTrigger(),
-//                Task()
+//                AutomaticTask()
 //                  ..measures = SamplingSchema.debug().getMeasureList(
 //                    namespace: NameSpace.CARP,
 //                    types: [
@@ -179,7 +179,7 @@ class StudyMock implements StudyManager {
 //                  ))
             ..addTriggerTask(
                 PeriodicTrigger(period: 1 * 20 * 1000, duration: 2 * 1000),
-                Task()
+                AutomaticTask()
                   ..measures.add(AudioMeasure(
                     MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO),
                     name: "Audio Recording",
@@ -187,7 +187,7 @@ class StudyMock implements StudyManager {
                   )))
 //            ..addTriggerTask(
 //                ImmediateTrigger(),
-//                Task()
+//                AutomaticTask()
 //                  ..measures = SamplingSchema.debug().getMeasureList(
 //                    namespace: NameSpace.CARP,
 //                    types: [
@@ -219,7 +219,7 @@ class StudyMock implements StudyManager {
             ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
             ..addTriggerTask(
                 PeriodicTrigger(period: 1 * 20 * 1000),
-                Task()
+                AutomaticTask()
                   ..measures = SamplingSchema.debug().getMeasureList(
                     namespace: NameSpace.CARP,
                     types: [
@@ -229,7 +229,7 @@ class StudyMock implements StudyManager {
                   ))
             ..addTriggerTask(
                 ImmediateTrigger(),
-                Task()
+                AutomaticTask()
                   ..measures = SamplingSchema.debug().getMeasureList(
                     namespace: NameSpace.CARP,
                     types: [
@@ -241,7 +241,7 @@ class StudyMock implements StudyManager {
                   ))
             ..addTriggerTask(
                 DelayedTrigger(delay: 30 * 1000),
-                Task()
+                AutomaticTask()
                   ..measures.add(RPTaskMeasure(
                     MeasureType(NameSpace.CARP, SurveySamplingPackage.SURVEY),
                     name: 'WHO5',
@@ -262,7 +262,7 @@ class StudyMock implements StudyManager {
             ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
 //            ..addTriggerTask(
 //                ImmediateTrigger(),
-//                Task()
+//                AutomaticTask()
 //                  ..measures = SamplingSchema.debug().getMeasureList(
 //                    namespace: NameSpace.CARP,
 //                    types: [
@@ -276,7 +276,7 @@ class StudyMock implements StudyManager {
 //                  ))
             ..addTriggerTask(
                 PeriodicTrigger(period: 1 * 20 * 1000),
-                Task()
+                AutomaticTask()
                   ..measures = SamplingSchema.debug().getMeasureList(
                     namespace: NameSpace.CARP,
                     types: [
@@ -286,7 +286,7 @@ class StudyMock implements StudyManager {
                   ))
             ..addTriggerTask(
                 PeriodicTrigger(period: 5 * 60 * 1000), // 5 min
-                Task()
+                AutomaticTask()
                   ..measures = SamplingSchema.debug().getMeasureList(
                     namespace: NameSpace.CARP,
                     types: [
@@ -296,7 +296,7 @@ class StudyMock implements StudyManager {
 //            ..addTriggerTask(
 //                //PeriodicTrigger(period: 5 * 1000), // 5 sec
 //                DelayedTrigger(delay: 5 * 1000), // 5 sec
-//                Task()
+//                AutomaticTask()
 //                  ..measures = SamplingSchema.debug().getMeasureList(
 //                    namespace: NameSpace.CARP,
 //                    types: [
@@ -317,7 +317,7 @@ class StudyMock implements StudyManager {
             ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
             ..addTriggerTask(
                 ImmediateTrigger(),
-                Task()
+                AutomaticTask()
                   ..measures = SamplingSchema.debug().getMeasureList(
                     namespace: NameSpace.CARP,
                     types: [
@@ -331,7 +331,7 @@ class StudyMock implements StudyManager {
                   ))
             ..addTriggerTask(
                 PeriodicTrigger(period: 5 * 60 * 1000), // 5 min
-                Task()
+                AutomaticTask()
                   ..measures = SamplingSchema.debug().getMeasureList(
                     namespace: NameSpace.CARP,
                     types: [
@@ -340,7 +340,7 @@ class StudyMock implements StudyManager {
                   ))
             ..addTriggerTask(
                 PeriodicTrigger(period: 10 * 60 * 1000), // 10 min
-                Task()
+                AutomaticTask()
                   ..measures = SamplingSchema.debug().getMeasureList(
                     namespace: NameSpace.CARP,
                     types: [
@@ -386,12 +386,12 @@ class StudyMock implements StudyManager {
 ////                name: "Audio", frequency: 1 * 53 * 1000, duration: 4 * 1000, studyId: studyId)))
 //        ..addTriggerTask(
 //            PeriodicTrigger(period: 1 * 60 * 1000, duration: 2000),
-//            Task('Weather')
+//            AutomaticTask'Weather')
 //              ..measures =
 //                  SamplingSchema.common(namespace: NameSpace.CARP).getMeasureList([ContextSamplingPackage.WEATHER]))
 //        ..addTriggerTask(
 //            DelayedTrigger(delay: 10 * 1000),
-//            Task('Bluetooth')
+//            AutomaticTask'Bluetooth')
 //              ..measures.add(PeriodicMeasure(MeasureType(NameSpace.CARP, ConnectivitySamplingPackage.BLUETOOTH),
 //                  name: 'Nearby Devices (Bluetooth Scan)',
 //                  enabled: true,
@@ -399,7 +399,7 @@ class StudyMock implements StudyManager {
 //                  duration: 2 * 1000)));
             ..addTriggerTask(
                 PeriodicTrigger(period: 2 * 60 * 1000),
-                Task()
+                AutomaticTask()
                   ..measures = SamplingSchema.debug().getMeasureList(
                     namespace: NameSpace.CARP,
                     types: [
@@ -408,7 +408,7 @@ class StudyMock implements StudyManager {
                   ))
             ..addTriggerTask(
                 ImmediateTrigger(),
-                Task()
+                AutomaticTask()
                   ..measures = SamplingSchema.debug().getMeasureList(
                     namespace: NameSpace.CARP,
                     types: [
@@ -419,7 +419,7 @@ class StudyMock implements StudyManager {
                   ))
             ..addTriggerTask(
                 ImmediateTrigger(),
-                Task()
+                AutomaticTask()
                   ..measures = SamplingSchema.debug().getMeasureList(
                     namespace: NameSpace.CARP,
                     types: [
@@ -430,7 +430,7 @@ class StudyMock implements StudyManager {
                   ))
 //            ..addTriggerTask(
 //                DelayedTrigger(delay: 10 * 1000),
-//                Task('eSense')
+//                AutomaticTask'eSense')
 //                  ..measures.add(ESenseMeasure(MeasureType(NameSpace.CARP, ESenseSamplingPackage.ESENSE_BUTTON),
 //                      name: 'eSense - Button', enabled: true, deviceName: 'eSense-0332'))
 //                  ..measures.add(ESenseMeasure(MeasureType(NameSpace.CARP, ESenseSamplingPackage.ESENSE_SENSOR),
@@ -449,7 +449,7 @@ class StudyMock implements StudyManager {
             ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
 //        ..addTriggerTask(
 //            ImmediateTrigger(),
-//            Task()
+//            AutomaticTask)
 //              ..measures.add(AudioMeasure(MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO),
 //                  name: "Audio", frequency: 1 * 60 * 1000, duration: 4 * 1000, studyId: studyId)))
           ;
@@ -464,7 +464,7 @@ class StudyMock implements StudyManager {
         ..description = 'This is a study of with all possible measures available in CARP Mobile Sensing'
         ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
         ..addTriggerTask(ImmediateTrigger(),
-            Task()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
+            AutomaticTask()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
     }
     return _study;
   }
@@ -480,11 +480,11 @@ class StudyMock implements StudyManager {
         ..name = 'CARP Mobile Sensing - long term sampling study configures like AWARE'
         ..description = aware.description
         ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
-        ..addTriggerTask(
-            ImmediateTrigger(), Task()..measures = aware.measures.values.toList()) // add all measures (for now)
+        ..addTriggerTask(ImmediateTrigger(),
+            AutomaticTask()..measures = aware.measures.values.toList()) // add all measures (for now)
         ..addTriggerTask(
             DelayedTrigger(delay: 10 * 1000),
-            Task()
+            AutomaticTask()
               ..measures = SamplingSchema.debug().getMeasureList(
                 namespace: NameSpace.CARP,
                 types: [
@@ -495,7 +495,7 @@ class StudyMock implements StudyManager {
               ))
         ..addTriggerTask(
             PeriodicTrigger(period: 60 * 60 * 1000),
-            Task()
+            AutomaticTask()
               ..measures = SamplingSchema.debug().getMeasureList(
                 namespace: NameSpace.CARP,
                 types: [
@@ -512,8 +512,8 @@ class StudyMock implements StudyManager {
         ..name = 'CARP Mobile Sensing - high-frequency sampling study'
         ..description = mCerebrum.description
         ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
-        ..addTriggerTask(
-            ImmediateTrigger(), Task()..measures = mCerebrum.measures.values.toList()); // add all measures (for now)
+        ..addTriggerTask(ImmediateTrigger(),
+            AutomaticTask()..measures = mCerebrum.measures.values.toList()); // add all measures (for now)
     }
     return _study;
   }
