@@ -346,12 +346,13 @@ AirQualityDatum _$AirQualityDatumFromJson(Map<String, dynamic> json) {
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
         ? null
-        : DateTime.parse(json['timestamp'] as String)
-    ..airQualityIndex = json['air_quality_index'] as String
+        : DateTime.tryParse(json['timestamp'] as String) ??
+            DateTime.fromMillisecondsSinceEpoch(0)
+    ..airQualityIndex = int.tryParse(json['air_quality_index']) ?? -1
     ..source = json['source'] as String
     ..place = json['place'] as String
-    ..latitude = (json['latitude'] as num)?.toDouble()
-    ..longitude = (json['longitude'] as num)?.toDouble()
+    ..latitude = double.tryParse(json['latitude']) ?? -1.0
+    ..longitude = double.tryParse(json['longitude']) ?? -1.0
     ..airQualityLevel = _$enumDecodeNullable(
         _$AirQualityLevelEnumMap, json['air_quality_level']);
 }
