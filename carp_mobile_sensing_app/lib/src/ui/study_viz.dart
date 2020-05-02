@@ -18,7 +18,7 @@ class _StudyVizState extends State<StudyVisualization> {
   @override
   Widget build(BuildContext context) {
     if (bloc.study != null) {
-      return _buildStudyVisualization(context, study);
+      return _buildStudyVisualization(context, bloc.study);
     } else {
       return _buildEmptyStudyPanel(context);
     }
