@@ -16,7 +16,7 @@ part of domain;
 /// The [Trigger] class is abstract. Use sub-classes of [Trigger] implements
 /// the specific behavior / timing of a trigger.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-abstract class Trigger extends Serializable {
+class Trigger extends Serializable {
   /// A unique id of this trigger.
   /// Is used when storing data to know what triggered the data collection.
   String triggerId;

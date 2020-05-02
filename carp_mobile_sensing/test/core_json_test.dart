@@ -152,12 +152,13 @@ void main() {
         AutomaticTask(name: 'Sensing Task #1')
           ..measures = SamplingSchema.common().getMeasureList(types: [AppsSamplingPackage.APP_USAGE]));
 
-    study_3.addTriggerTask(
-        ConditionalSamplingEventTrigger(
-            measureType: MeasureType(NameSpace.CARP, DeviceSamplingPackage.BATTERY),
-            resumeCondition: (datum) => (datum as BatteryDatum).batteryLevel == 10),
-        AutomaticTask(name: 'Sensing Task #1')
-          ..measures = SamplingSchema.common().getMeasureList(types: [AppsSamplingPackage.APP_USAGE]));
+// don't add ConditionalSamplingEventTrigger since it cannot be serialized to JSON
+//    study_3.addTriggerTask(
+//        ConditionalSamplingEventTrigger(
+//            measureType: MeasureType(NameSpace.CARP, DeviceSamplingPackage.BATTERY),
+//            resumeCondition: (datum) => (datum as BatteryDatum).batteryLevel == 10),
+//        AutomaticTask(name: 'Sensing Task #1')
+//          ..measures = SamplingSchema.common().getMeasureList(types: [AppsSamplingPackage.APP_USAGE]));
 
     final studyJson = _encode(study_3);
 

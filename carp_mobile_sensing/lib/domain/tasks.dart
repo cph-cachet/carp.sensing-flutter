@@ -13,7 +13,7 @@ part of domain;
 ///
 /// The [Task] class is abstract. Use either [AutomaticTask] or [AppTask] for specific tasks.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-abstract class Task extends Serializable {
+class Task extends Serializable {
   static int _counter = 0;
 
   /// The name of this task. Unique for this [Study].

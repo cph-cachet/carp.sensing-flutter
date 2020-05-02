@@ -94,6 +94,9 @@ class StudyExecutor extends Executor {
 /// Returns the relevant [TriggerExecutor] based on the type of [trigger].
 TriggerExecutor getTriggerExecutor(Trigger trigger) {
   switch (trigger.runtimeType) {
+    // actually, the base Trigger class is not supposed to be used
+    // but if it is, treat it as an ImmediateTrigger
+    case Trigger:
     case ImmediateTrigger:
       return ImmediateTriggerExecutor(trigger);
     case DelayedTrigger:

@@ -1,8 +1,8 @@
 {
   "c__": "Study",
   "id": "1234",
-  "user_id": "bardram",
   "name": "bardram study",
+  "user_id": "bardram",
   "sampling_strategy": "NORMAL",
   "data_end_point": {
     "c__": "FileDataEndPoint",
@@ -17,7 +17,7 @@
       "c__": "ImmediateTrigger",
       "tasks": [
         {
-          "c__": "Task",
+          "c__": "AutomaticTask",
           "name": "Sampling Task",
           "measures": [
             {
@@ -114,43 +114,6 @@
               "configuration": {},
               "frequency": 60000,
               "duration": 1000
-            },
-            {
-              "c__": "Measure",
-              "type": {
-                "c__": "MeasureType",
-                "namespace": "carp",
-                "name": "connectivity"
-              },
-              "name": "Connectivity (wifi/3G/...)",
-              "enabled": true,
-              "configuration": {}
-            },
-            {
-              "c__": "PeriodicMeasure",
-              "type": {
-                "c__": "MeasureType",
-                "namespace": "carp",
-                "name": "bluetooth"
-              },
-              "name": "Nearby Devices (Bluetooth Scan)",
-              "enabled": true,
-              "configuration": {},
-              "frequency": 600000,
-              "duration": 5000
-            },
-            {
-              "c__": "PeriodicMeasure",
-              "type": {
-                "c__": "MeasureType",
-                "namespace": "carp",
-                "name": "wifi"
-              },
-              "name": "Wifi network names (SSID / BSSID)",
-              "enabled": true,
-              "configuration": {},
-              "frequency": 60000,
-              "duration": 5000
             },
             {
               "c__": "Measure",
