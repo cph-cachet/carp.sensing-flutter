@@ -94,27 +94,31 @@ void main() {
     GeofenceMeasure m = ContextSamplingPackage().common.measures[ContextSamplingPackage.GEOFENCE];
     Geofence f = Geofence.fromMeasure(m)..dwell = 2 * 1000; // dwell timeout 2 secs.
     print(f);
+
     d = f.moved(home);
-    expect(d, null);
     print('starting from home - $d');
-    d = f.moved(dtu);
     expect(d.type, 'ENTER');
-    print('moving to DTU - $d');
+
+    d = f.moved(dtu);
+    print('moved to DTU - $d');
+    expect(d.type, 'ENTER');
     print(_encode(d));
 
     d = f.moved(lyngby);
+    print('moved to Lyngby - $d');
     expect(d.type, 'EXIT');
-    print('moving to Lyngby - $d');
+
     d = f.moved(compute);
+    print('moved to DTU Compute - $d');
     expect(d.type, 'ENTER');
-    print('moving to DTU Compute - $d');
+
     sleep(const Duration(seconds: 3));
     d = f.moved(dtu);
     expect(d.type, 'DWELL');
-    print('moving to DTU - $d');
+    print('moved to DTU - $d');
     d = f.moved(home);
     expect(d.type, 'EXIT');
-    print('going home - $d');
+    print('went home - $d');
   });
   test('', () {});
 }

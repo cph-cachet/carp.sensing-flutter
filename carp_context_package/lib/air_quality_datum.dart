@@ -13,19 +13,20 @@ class AirQualityDatum extends CARPDatum {
   static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, ContextSamplingPackage.AIR_QUALITY);
   DataFormat get format => CARP_DATA_FORMAT;
 
-  String airQualityIndex, source, place;
+  int airQualityIndex;
+  String source, place;
   double latitude, longitude;
   AirQualityLevel airQualityLevel;
 
   AirQualityDatum() : super();
 
   AirQualityDatum.fromAirQualityData(AirQualityData airQualityData)
-      : latitude = double.tryParse(airQualityData.latitude),
-        longitude = double.tryParse(airQualityData.longitude),
-        airQualityIndex = airQualityData.airQualityIndex,
-        source = airQualityData.source,
-        place = airQualityData.place,
-        airQualityLevel = airQualityData.airQualityLevel,
+      : latitude = airQualityData?.latitude,
+        longitude = airQualityData?.longitude,
+        airQualityIndex = airQualityData?.airQualityIndex,
+        source = airQualityData?.source,
+        place = airQualityData?.place,
+        airQualityLevel = airQualityData?.airQualityLevel,
         super();
 
   factory AirQualityDatum.fromJson(Map<String, dynamic> json) => _$AirQualityDatumFromJson(json);

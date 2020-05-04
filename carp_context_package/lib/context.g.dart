@@ -347,7 +347,7 @@ AirQualityDatum _$AirQualityDatumFromJson(Map<String, dynamic> json) {
     ..timestamp = json['timestamp'] == null
         ? null
         : DateTime.parse(json['timestamp'] as String)
-    ..airQualityIndex = json['air_quality_index'] as String
+    ..airQualityIndex = json['air_quality_index'] as int
     ..source = json['source'] as String
     ..place = json['place'] as String
     ..latitude = (json['latitude'] as num)?.toDouble()
@@ -378,6 +378,7 @@ Map<String, dynamic> _$AirQualityDatumToJson(AirQualityDatum instance) {
 }
 
 const _$AirQualityLevelEnumMap = {
+  AirQualityLevel.UNKNOWN: 'UNKNOWN',
   AirQualityLevel.GOOD: 'GOOD',
   AirQualityLevel.MODERATE: 'MODERATE',
   AirQualityLevel.UNHEALTHY_FOR_SENSITIVE_GROUPS:
