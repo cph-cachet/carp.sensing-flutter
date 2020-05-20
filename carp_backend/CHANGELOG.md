@@ -1,3 +1,8 @@
+## 0.7.0
+* update to `carp_mobile_sensing` version 0.7.0
+* update to `carp_webservices` version 0.4.0
+* support for upload of files that are referenced in a `FileDatum`.
+
 ## 0.6.0+1
 * auto-generate of json serialization files
 

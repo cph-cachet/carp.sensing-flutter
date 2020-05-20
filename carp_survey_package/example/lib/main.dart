@@ -15,14 +15,14 @@ void main() async {
   // adding all measure from the common schema to one one trigger and one task
   study.addTriggerTask(
           DelayedTrigger(delay: 30 * 1000),
-          Task('WHO-5 Survey')
+          Task(name: 'WHO-5 Survey')
             ..measures.add(RPTaskMeasure(
               MeasureType(NameSpace.CARP, SurveySamplingPackage.SURVEY),
               name: 'WHO5',
               enabled: true,
               surveyTask: who5Task,
-              onSurveyTriggered: onSurveyTriggered,
-              onSurveySubmit: onSurveySubmit,
+//              onSurveyTriggered: onSurveyTriggered,
+//              onSurveySubmit: onSurveySubmit,
             )))
       //
       ;
@@ -31,7 +31,7 @@ void main() async {
 
   // await initialization before starting
   await controller.initialize();
-  controller.start();
+  controller.resume();
 
   // listening on all data events from the study
   controller.events.forEach(print);

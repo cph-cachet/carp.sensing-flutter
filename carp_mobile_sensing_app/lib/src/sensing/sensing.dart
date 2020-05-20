@@ -73,7 +73,8 @@ class StudyMock implements StudyManager {
   ///  * creating the study by specifying [Trigger]s, [Task]s, and [Measure]s by hand
   ///
   Future<Study> getStudy(String studyId) async {
-    return _getStudyWithSelectedMeasuresFromCommonSamplingSchema('#1');
+    //return _getStudyWithSelectedMeasuresFromCommonSamplingSchema('#1');
+    return _getConditionalSamplingStudy('#1');
   }
 
   Future<Study> _getStudyWithAllMeasuresFromCommonSamplingSchema(String studyId) async {
@@ -176,7 +177,7 @@ class StudyMock implements StudyManager {
 //              )))
         ..addTriggerTask(
             ImmediateTrigger(),
-            Task()
+            AutomaticTask()
               ..measures = SamplingSchema.debug().getMeasureList(
                 namespace: NameSpace.CARP,
                 types: [
@@ -187,7 +188,7 @@ class StudyMock implements StudyManager {
               ))
         ..addTriggerTask(
             ImmediateTrigger(),
-            Task()
+            AutomaticTask()
               ..measures = SamplingSchema.debug().getMeasureList(
                 namespace: NameSpace.CARP,
                 types: [
@@ -212,18 +213,19 @@ class StudyMock implements StudyManager {
         ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
         ..addTriggerTask(
             PeriodicTrigger(period: 1 * 20 * 1000),
-            Task()
+            AutomaticTask()
               ..measures = SamplingSchema.common().getMeasureList(
                 namespace: NameSpace.CARP,
                 types: [
                   ContextSamplingPackage.WEATHER,
-                  ContextSamplingPackage.AIR_QUALITY,
+                  //ContextSamplingPackage.AIR_QUALITY,
+                  ContextSamplingPackage.LOCATION,
                 ],
               ))
         ..addTriggerTask(
             ImmediateTrigger(),
-            Task()
-              ..measures = SamplingSchema.common().getMeasureList(
+            AutomaticTask()
+              ..measures = SamplingSchema.debug().getMeasureList(
                 namespace: NameSpace.CARP,
                 types: [
                   SensorSamplingPackage.LIGHT,
@@ -246,7 +248,7 @@ class StudyMock implements StudyManager {
             ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
             ..addTriggerTask(
                 ImmediateTrigger(),
-                Task()
+                AutomaticTask()
                   ..measures = custom.getMeasureList(
                     types: [
                       SensorSamplingPackage.LIGHT,
@@ -261,7 +263,7 @@ class StudyMock implements StudyManager {
                   ))
 //            ..addTriggerTask(
 //                DelayedTrigger(delay: 10 * 1000),
-//                Task()
+//                AutomaticTask()
 //                  ..measures = custom.getMeasureList(
 //                    namespace: NameSpace.CARP,
 //                    types: [
@@ -271,7 +273,7 @@ class StudyMock implements StudyManager {
 //                  ))
             ..addTriggerTask(
                 PeriodicTrigger(period: 10 * 60 * 1000),
-                Task()
+                AutomaticTask()
                   ..measures = custom.getMeasureList(
                     namespace: NameSpace.CARP,
                     types: [
@@ -280,7 +282,7 @@ class StudyMock implements StudyManager {
                   ))
             ..addTriggerTask(
                 PeriodicTrigger(period: 60 * 60 * 1000),
-                Task()
+                AutomaticTask()
                   ..measures = custom.getMeasureList(
                     namespace: NameSpace.CARP,
                     types: [
@@ -314,12 +316,52 @@ class StudyMock implements StudyManager {
             // AUDIO and NOISE cannot be used in the same study since they conflict in using the microphone...
             ..addTriggerTask(
                 PeriodicTrigger(period: 1 * 60 * 1000, duration: 5 * 1000),
-                Task('Audio')
+                AutomaticTask(name: 'Audio')
                   ..measures.add(AudioMeasure(
                     MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO),
                     name: "Audio Recording",
                     studyId: studyId,
                   )))
+          //
+          ;
+    }
+    return _study;
+  }
+
+  Future<Study> _getConditionalSamplingStudy(String studyId) async {
+    if (_study == null) {
+      _study = Study(studyId, username)
+            ..name = 'Conditional Sampling Study'
+            ..description = 'This is a study for testing and debugging Conditional Sampling'
+            ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
+            ..addTriggerTask(
+                ConditionalSamplingEventTrigger(
+                    measureType: MeasureType(NameSpace.CARP, ContextSamplingPackage.LOCATION),
+                    resumeCondition: (datum) {
+                      return true;
+                    },
+                    pauseCondition: (datum) {
+                      return true;
+                    }),
+                AutomaticTask()
+                  ..measures = SamplingSchema.debug().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      ContextSamplingPackage.WEATHER,
+                      //ContextSamplingPackage.AIR_QUALITY,
+                    ],
+                  ))
+            ..addTriggerTask(
+                PeriodicTrigger(period: 1 * 20 * 1000, duration: 2 * 1000),
+                //ImmediateTrigger(),
+                AutomaticTask()
+                  ..measures = SamplingSchema.debug().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      ContextSamplingPackage.LOCATION,
+                      //ContextSamplingPackage.GEOLOCATION,
+                    ],
+                  ))
           //
           ;
     }

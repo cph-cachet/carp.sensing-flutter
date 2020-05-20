@@ -11,7 +11,6 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:uuid/uuid.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/services.dart';
-
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 part 'serialization.dart';

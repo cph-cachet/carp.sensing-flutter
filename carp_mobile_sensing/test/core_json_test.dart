@@ -23,7 +23,7 @@ void main() {
     // adding all measure from the common schema to one one trigger and one task
     study.addTriggerTask(
         ImmediateTrigger(), // a simple trigger that starts immediately
-        Task('Sampling Task')
+        AutomaticTask(name: 'Sampling Task')
           ..measures =
               SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList() // a task with all measures
         );
@@ -95,13 +95,13 @@ void main() {
 
     study_3.addTriggerTask(
         DelayedTrigger(delay: 10 * 1000), // delay for 10 secs.
-        Task('Sensing Task #1')
+        AutomaticTask(name: 'Sensing Task #1')
           ..measures = SamplingSchema.common()
               .getMeasureList(types: [SensorSamplingPackage.PEDOMETER, DeviceSamplingPackage.SCREEN]));
 
     study_3.addTriggerTask(
         PeriodicTrigger(period: 60 * 1000), // collect every min.
-        Task('Sensing Task #2')
+        AutomaticTask(name: 'Sensing Task #2')
           ..measures = SamplingSchema.common()
               .getMeasureList(types: [SensorSamplingPackage.LIGHT, DeviceSamplingPackage.DEVICE]));
 
@@ -112,7 +112,7 @@ void main() {
     print('$t1');
     study_3.addTriggerTask(
         t1,
-        Task('Sensing Task #1')
+        AutomaticTask(name: 'Sensing Task #1')
           ..measures = SamplingSchema.common().getMeasureList(types: [DeviceSamplingPackage.MEMORY]));
 
     // collect every other day at 13:30.
@@ -120,7 +120,7 @@ void main() {
     print('$t2');
     study_3.addTriggerTask(
         t2,
-        Task('Sensing Task #1')
+        AutomaticTask(name: 'Sensing Task #1')
           ..measures =
               SamplingSchema.common().getMeasureList(types: [AppsSamplingPackage.APPS, DeviceSamplingPackage.MEMORY]));
 
@@ -130,7 +130,7 @@ void main() {
     print('$t3');
     study_3.addTriggerTask(
         t3,
-        Task('Sensing Task #1')
+        AutomaticTask(name: 'Sensing Task #1')
           ..measures =
               SamplingSchema.common().getMeasureList(types: [AppsSamplingPackage.APPS, AppsSamplingPackage.APP_USAGE]));
 
@@ -140,7 +140,7 @@ void main() {
     print('$t4');
     study_3.addTriggerTask(
         t4,
-        Task('Sensing Task #1')
+        AutomaticTask(name: 'Sensing Task #1')
           ..measures =
               SamplingSchema.common().getMeasureList(types: [AppsSamplingPackage.APPS, DeviceSamplingPackage.MEMORY]));
 
@@ -149,15 +149,16 @@ void main() {
         SamplingEventTrigger(
             measureType: MeasureType(NameSpace.CARP, DeviceSamplingPackage.BATTERY),
             resumeCondition: BatteryDatum()..batteryLevel = 10),
-        Task('Sensing Task #1')
+        AutomaticTask(name: 'Sensing Task #1')
           ..measures = SamplingSchema.common().getMeasureList(types: [AppsSamplingPackage.APP_USAGE]));
 
-    study_3.addTriggerTask(
-        ConditionalSamplingEventTrigger(
-            measureType: MeasureType(NameSpace.CARP, DeviceSamplingPackage.BATTERY),
-            resumeCondition: (datum) => (datum as BatteryDatum).batteryLevel == 10),
-        Task('Sensing Task #1')
-          ..measures = SamplingSchema.common().getMeasureList(types: [AppsSamplingPackage.APP_USAGE]));
+// don't add ConditionalSamplingEventTrigger since it cannot be serialized to JSON
+//    study_3.addTriggerTask(
+//        ConditionalSamplingEventTrigger(
+//            measureType: MeasureType(NameSpace.CARP, DeviceSamplingPackage.BATTERY),
+//            resumeCondition: (datum) => (datum as BatteryDatum).batteryLevel == 10),
+//        AutomaticTask(name: 'Sensing Task #1')
+//          ..measures = SamplingSchema.common().getMeasureList(types: [AppsSamplingPackage.APP_USAGE]));
 
     final studyJson = _encode(study_3);
 

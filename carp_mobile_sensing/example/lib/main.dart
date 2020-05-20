@@ -122,7 +122,7 @@ class Sensing {
               ..encrypt = false)
           ..addTriggerTask(
               ImmediateTrigger(),
-              Task()
+              AutomaticTask()
                 ..measures = SamplingSchema.debug().getMeasureList(
                   namespace: NameSpace.CARP,
                   types: [
@@ -132,7 +132,7 @@ class Sensing {
                   ],
                 ))
 //      ..addTriggerTask(ImmediateTrigger(),
-//          Task()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList())
+//          AutomaticTask()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList())
         ;
 
     console.log("Setting up '${study.name}'...");
@@ -140,10 +140,12 @@ class Sensing {
     // print the study to the console
     console.log(study.toString());
 
-    // Create a Study Controller that can manage this study, initialize it, and start it.
+    // Create a Study Controller that can manage this study and initialize it.
     controller = StudyController(study);
     await controller.initialize();
-    controller.start();
+
+    // Resume (i.e. start) data sampling.
+    controller.resume();
     console.log("Sensing started ...");
 
     // listening on all probe events from the study

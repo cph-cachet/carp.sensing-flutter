@@ -16,7 +16,7 @@ class ConsoleDataManager extends AbstractDataManager {
 
   void onDone() {}
 
-  void onError(error) {}
+  void onError(error) => print(">> ${jsonEncode(ErrorDatum(error))}");
 
   String toString() => "JSON Print Data Manager";
 }

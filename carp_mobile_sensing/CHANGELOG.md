@@ -1,3 +1,18 @@
+## 0.7.1
+* Added `trigger_id` to the `Trigger` class.
+* Made `Task` abstract rather than deprecated.
+* Fixed issue [#61](https://github.com/cph-cachet/carp.sensing-flutter/issues/61).
+
+## 0.7.0
+* **BREAKING** - this release break some parts of the previous API.
+* Extended Task model -- introduction of a `AutomaticTask` and `AppTask`.
+* Added support for "manually" adding data points (`Datum`) and errors to the data stream (`events`). This is part of the `StudyExecutor` API.
+* The `start()` method on all executors (probes, and study, trigger & task executors) has been removed. 
+Now an executor is 'started' by resuming it (calling `resume()`).
+* Fixed a bug in `BufferingPeriodicStreamProbe`.
+* Added the `FileDatum` data type which can hold a reference to a file. 
+For example, an audio file (see the `carp_audio_package`).
+
 ## 0.6.5
 * upgrade to `persmission_handler` v. 5.x
 
