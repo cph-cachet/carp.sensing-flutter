@@ -4,9 +4,8 @@ version: 0.7.1
 author:  CACHET Team <cph.cachet@gmail.com>
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_mobile_sensing
 
-
 environment:
-  sdk: ">=2.3.0 <3.0.0"
+  sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -25,7 +24,7 @@ dependencies:
   # probe-dependent plugins
   sensors: ^0.4.0
   battery: '>=0.3.0 <2.0.0'
-  stats: ^0.2.0           # For calculating statistics, ex LightProbe
+  stats: ^1.0.0           # For calculating statistics, ex LightProbe
 
   # the CACHET plugins
   pedometer: ^1.0.0       # Get the step count from local OS
@@ -45,3 +44,10 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
+  plugin:
+    platforms:
+      android:
+        package: dk.cachet.carp.carpmobilesensing
+        pluginClass: CarpMobileSensingPlugin
+      ios:
+        pluginClass: CarpMobileSensingPlugin

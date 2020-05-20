@@ -71,7 +71,10 @@ class StudyMock implements StudyManager {
   Study _study;
 
   Future<Study> getStudy(String studyId) async {
-    return _getTestingStudy(studyId);
+    //return _getTestingStudy(studyId);
+
+    return _getConditionalSamplingStudy(studyId);
+
     //return _getSurveyStudy(studyId);
 
     //return _getHealthStudy('#6-health');
@@ -205,6 +208,46 @@ class StudyMock implements StudyManager {
 //                      name: 'eSense - Button', enabled: true, deviceName: 'eSense-0332'))
 //                  ..measures.add(ESenseMeasure(MeasureType(NameSpace.CARP, ESenseSamplingPackage.ESENSE_SENSOR),
 //                      name: 'eSense - Sensors', enabled: true, deviceName: 'eSense-0332', samplingRate: 10)))
+          //
+          ;
+    }
+    return _study;
+  }
+
+  Future<Study> _getConditionalSamplingStudy(String studyId) async {
+    if (_study == null) {
+      _study = Study(studyId, username)
+            ..name = 'Conditional Sampling Study'
+            ..description = 'This is a study for testing and debugging Conditional Sampling'
+            ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
+            ..addTriggerTask(
+                ConditionalSamplingEventTrigger(
+                    measureType: MeasureType(NameSpace.CARP, ContextSamplingPackage.LOCATION),
+                    resumeCondition: (datum) {
+                      return true;
+                    },
+                    pauseCondition: (datum) {
+                      return true;
+                    }),
+                AutomaticTask()
+                  ..measures = SamplingSchema.debug().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      ContextSamplingPackage.WEATHER,
+                      //ContextSamplingPackage.AIR_QUALITY,
+                    ],
+                  ))
+            ..addTriggerTask(
+                PeriodicTrigger(period: 1 * 20 * 1000, duration: 2 * 1000),
+                //ImmediateTrigger(),
+                AutomaticTask()
+                  ..measures = SamplingSchema.debug().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      ContextSamplingPackage.LOCATION,
+                      //ContextSamplingPackage.GEOLOCATION,
+                    ],
+                  ))
           //
           ;
     }

@@ -1,6 +1,7 @@
 ## 0.7.1
 * Added `trigger_id` to the `Trigger` class.
 * Made `Task` abstract rather than deprecated.
+* Fixed issue [#61](https://github.com/cph-cachet/carp.sensing-flutter/issues/61).
 
 ## 0.7.0
 * **BREAKING** - this release break some parts of the previous API.

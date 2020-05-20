@@ -274,7 +274,7 @@ class SamplingEventTriggerExecutor extends TriggerExecutor {
     // start listen for events of the specified type
     _subscription = ProbeRegistry.lookup(eventTrigger?.measureType?.name).events.listen((datum) {
       if ((eventTrigger?.resumeCondition == null) || (datum == eventTrigger?.resumeCondition)) super.onResume();
-      if (datum == eventTrigger?.pauseCondition) super.onPause();
+      if (eventTrigger?.pauseCondition != null && datum == eventTrigger?.pauseCondition) super.onPause();
     });
   }
 
@@ -295,10 +295,11 @@ class ConditionalSamplingEventTriggerExecutor extends TriggerExecutor {
 
   Future<void> onResume() async {
     ConditionalSamplingEventTrigger eventTrigger = trigger as ConditionalSamplingEventTrigger;
+
     // listen for event of the specified type
     _subscription = ProbeRegistry.lookup(eventTrigger.measureType.name).events.listen((datum) {
-      if (eventTrigger.resumeCondition(datum)) super.onResume();
-      if (eventTrigger.pauseCondition(datum)) super.onPause();
+      if (eventTrigger?.resumeCondition != null && eventTrigger?.resumeCondition(datum)) super.onResume();
+      if (eventTrigger?.pauseCondition != null && eventTrigger?.pauseCondition(datum)) super.onPause();
     });
   }
 
@@ -362,12 +363,14 @@ class TaskExecutor extends Executor {
   }
 }
 
+/// Executes an [AutomaticTask].
 class AutomaticTaskExecutor extends TaskExecutor {
   AutomaticTaskExecutor(AutomaticTask task)
       : assert(task is AutomaticTask, "SensingTaskExecutor should be ininialized with a SensingTask."),
         super(task);
 }
 
+/// Executes an [AppTask].
 class AppTaskExecutor extends TaskExecutor {
   AppTaskExecutor(AppTask task)
       : assert(task is AppTask, "UserTaskExecutor should be ininialized with a UserTask."),
