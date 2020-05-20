@@ -21,12 +21,12 @@ class AirQualityDatum extends CARPDatum {
   AirQualityDatum() : super();
 
   AirQualityDatum.fromAirQualityData(AirQualityData airQualityData)
-      : latitude = airQualityData?.latitude,
-        longitude = airQualityData?.longitude,
-        airQualityIndex = airQualityData?.airQualityIndex,
-        source = airQualityData?.source,
-        place = airQualityData?.place,
-        airQualityLevel = airQualityData?.airQualityLevel,
+      : latitude = airQualityData.latitude,
+        longitude = airQualityData.longitude,
+        airQualityIndex = airQualityData.airQualityIndex,
+        source = airQualityData.source,
+        place = airQualityData.place,
+        airQualityLevel = airQualityData.airQualityLevel,
         super();
 
   factory AirQualityDatum.fromJson(Map<String, dynamic> json) => _$AirQualityDatumFromJson(json);

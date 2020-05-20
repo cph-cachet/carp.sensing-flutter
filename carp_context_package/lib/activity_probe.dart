@@ -12,7 +12,7 @@ part of context;
 class ActivityProbe extends StreamProbe {
   Future<void> onInitialize(Measure measure) async {
     super.onInitialize(measure);
-    if (!Platform.isAndroid) throw SensingException('TextMessageProbe only available on Android.');
+//    if (!Platform.isAndroid) throw SensingException('TextMessageProbe only available on Android.');
   }
 
   Stream<Datum> get stream =>
