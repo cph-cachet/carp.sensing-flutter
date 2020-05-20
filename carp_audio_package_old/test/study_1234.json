@@ -1,0 +1,208 @@
+{
+  "c__": "Study",
+  "id": "1234",
+  "user_id": "bardram",
+  "name": "bardram study",
+  "sampling_strategy": "NORMAL",
+  "data_end_point": {
+    "c__": "DataEndPoint",
+    "type": "PRINT"
+  },
+  "data_format": "carp",
+  "triggers": [
+    {
+      "c__": "ImmediateTrigger",
+      "tasks": [
+        {
+          "c__": "Task",
+          "name": "Task #1",
+          "measures": [
+            {
+              "c__": "Measure",
+              "type": {
+                "c__": "MeasureType",
+                "namespace": "carp",
+                "name": "device"
+              },
+              "name": "Basic Device Info",
+              "enabled": true,
+              "configuration": {}
+            },
+            {
+              "c__": "PeriodicMeasure",
+              "type": {
+                "c__": "MeasureType",
+                "namespace": "carp",
+                "name": "memory"
+              },
+              "name": "Memory Usage",
+              "enabled": true,
+              "configuration": {},
+              "frequency": 60000
+            },
+            {
+              "c__": "Measure",
+              "type": {
+                "c__": "MeasureType",
+                "namespace": "carp",
+                "name": "battery"
+              },
+              "name": "Battery",
+              "enabled": true,
+              "configuration": {}
+            },
+            {
+              "c__": "Measure",
+              "type": {
+                "c__": "MeasureType",
+                "namespace": "carp",
+                "name": "screen"
+              },
+              "name": "Screen Activity (lock/on/off)",
+              "enabled": true,
+              "configuration": {}
+            },
+            {
+              "c__": "PeriodicMeasure",
+              "type": {
+                "c__": "MeasureType",
+                "namespace": "carp",
+                "name": "accelerometer"
+              },
+              "name": "Accelerometer",
+              "enabled": false,
+              "configuration": {},
+              "frequency": 200,
+              "duration": 1
+            },
+            {
+              "c__": "PeriodicMeasure",
+              "type": {
+                "c__": "MeasureType",
+                "namespace": "carp",
+                "name": "gyroscope"
+              },
+              "name": "Gyroscope",
+              "enabled": false,
+              "configuration": {},
+              "frequency": 200,
+              "duration": 1
+            },
+            {
+              "c__": "Measure",
+              "type": {
+                "c__": "MeasureType",
+                "namespace": "carp",
+                "name": "pedometer"
+              },
+              "name": "Pedometer (Step Count)",
+              "enabled": true,
+              "configuration": {}
+            },
+            {
+              "c__": "PeriodicMeasure",
+              "type": {
+                "c__": "MeasureType",
+                "namespace": "carp",
+                "name": "light"
+              },
+              "name": "Ambient Light",
+              "enabled": true,
+              "configuration": {},
+              "frequency": 60000,
+              "duration": 1000
+            },
+            {
+              "c__": "Measure",
+              "type": {
+                "c__": "MeasureType",
+                "namespace": "carp",
+                "name": "connectivity"
+              },
+              "name": "Connectivity (wifi/3G/...)",
+              "enabled": true,
+              "configuration": {}
+            },
+            {
+              "c__": "PeriodicMeasure",
+              "type": {
+                "c__": "MeasureType",
+                "namespace": "carp",
+                "name": "bluetooth"
+              },
+              "name": "Nearby Devices (Bluetooth Scan)",
+              "enabled": true,
+              "configuration": {},
+              "frequency": 600000,
+              "duration": 5000
+            },
+            {
+              "c__": "PeriodicMeasure",
+              "type": {
+                "c__": "MeasureType",
+                "namespace": "carp",
+                "name": "wifi"
+              },
+              "name": "Wifi network names (SSID / BSSID)",
+              "enabled": true,
+              "configuration": {},
+              "frequency": 60000,
+              "duration": 5000
+            },
+            {
+              "c__": "Measure",
+              "type": {
+                "c__": "MeasureType",
+                "namespace": "carp",
+                "name": "apps"
+              },
+              "name": "Installed Apps",
+              "enabled": true,
+              "configuration": {}
+            },
+            {
+              "c__": "AppUsageMeasure",
+              "type": {
+                "c__": "MeasureType",
+                "namespace": "carp",
+                "name": "app_usage"
+              },
+              "name": "Apps Usage",
+              "enabled": true,
+              "configuration": {},
+              "duration": 3600000
+            },
+            {
+              "c__": "AudioMeasure",
+              "type": {
+                "c__": "MeasureType",
+                "namespace": "carp",
+                "name": "audio"
+              },
+              "name": "Audio Recording",
+              "enabled": true,
+              "configuration": {},
+              "frequency": 300000,
+              "duration": 10000,
+              "study_id": "default_study"
+            },
+            {
+              "c__": "NoiseMeasure",
+              "type": {
+                "c__": "MeasureType",
+                "namespace": "carp",
+                "name": "noise"
+              },
+              "name": "Ambient Noise",
+              "enabled": false,
+              "configuration": {},
+              "frequency": 300000,
+              "duration": 10000,
+              "sampling_rate": 500
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

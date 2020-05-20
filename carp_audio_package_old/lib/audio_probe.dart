@@ -68,9 +68,7 @@ class AudioProbe extends DatumProbe {
     _startRecordingTime = DateTime.now();
     _isRecording = true;
 
-    await _recorder.startRecorder(toFile: soundFileName);
-
-    return soundFileName;
+    return _recorder.startRecorder(uri: soundFileName);
   }
 
   Future<void> _stopAudioRecording() async {
@@ -171,11 +169,10 @@ class DeprecatedAudioProbe extends BufferingPeriodicProbe {
     _startRecordingTime = DateTime.now();
     _isRecording = true;
 
-    await _recorder.startRecorder(toFile: soundFileName);
-    return soundFileName;
+    return await _recorder.startRecorder(uri: soundFileName);
   }
 
-  Future<void> _stopAudioRecording() {
+  Future<String> _stopAudioRecording() {
     return Future.sync(() {
       _endRecordingTime = DateTime.now();
       _isRecording = false;

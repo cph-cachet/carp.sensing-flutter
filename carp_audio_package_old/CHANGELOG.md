@@ -1,4 +1,4 @@
-## 0.7.1
+## 0.7.0
 * upgrade of packages (`flutter_sound` and `noise_meter`).
 
 ## 0.7.0
