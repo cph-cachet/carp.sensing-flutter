@@ -17,7 +17,7 @@ dependencies:
   carp_mobile_sensing: ^0.7.1
   carp_communication_package: ^0.7.0
   #carp_connectivity_package: ^0.6.0
-  carp_context_package: ^0.7.0
+  carp_context_package: ^0.7.1
   carp_audio_package: ^0.7.1
 
 dev_dependencies:

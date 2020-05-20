@@ -11,7 +11,7 @@ import 'dart:io' show Platform;
 import 'package:json_annotation/json_annotation.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:activity_recognition_flutter/activity_recognition_flutter.dart';
-import 'package:weather/weather.dart';
+import 'package:weather/weather_library.dart';
 import 'package:openmhealth_schemas/openmhealth_schemas.dart' as omh;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:air_quality/air_quality.dart';

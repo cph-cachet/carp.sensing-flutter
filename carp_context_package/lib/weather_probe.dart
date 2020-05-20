@@ -14,7 +14,9 @@ class WeatherProbe extends DatumProbe {
   /// Returns the [WeatherDatum] for this location.
   Future<Datum> getDatum() async {
     try {
-      Weather w = await _weather.currentWeather();
+      Position here = await geolocator.getCurrentPosition();
+
+      Weather w = await _weather.currentWeather(here.latitude, here.longitude);
 
       if (w != null)
         return WeatherDatum()
