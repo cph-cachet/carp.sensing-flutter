@@ -50,6 +50,8 @@ class FromJsonFactory {
     registerFromJsonFunction("DataEndPoint", DataEndPoint.fromJsonFunction);
     registerFromJsonFunction("FileDataEndPoint", FileDataEndPoint.fromJsonFunction);
     registerFromJsonFunction("Task", Task.fromJsonFunction);
+    registerFromJsonFunction("AutomaticTask", AutomaticTask.fromJsonFunction);
+    registerFromJsonFunction("AppTask", AppTask.fromJsonFunction);
 
     registerFromJsonFunction("Trigger", Trigger.fromJsonFunction);
     registerFromJsonFunction("ImmediateTrigger", ImmediateTrigger.fromJsonFunction);
@@ -60,7 +62,7 @@ class FromJsonFactory {
     registerFromJsonFunction("RecurrentScheduledTrigger", RecurrentScheduledTrigger.fromJsonFunction);
     registerFromJsonFunction("SamplingEventTrigger", SamplingEventTrigger.fromJsonFunction);
     // note that ConditionalSamplingEventTrigger can't be de/serialized to/from JSON - see documentation of it.
-    registerFromJsonFunction("ConditionalSamplingEventTrigger", SamplingEventTrigger.fromJsonFunction);
+    // registerFromJsonFunction("ConditionalSamplingEventTrigger", ConditionalSamplingEventTrigger.fromJsonFunction);
 
     registerFromJsonFunction("MeasureType", MeasureType.fromJsonFunction);
     registerFromJsonFunction("Measure", Measure.fromJsonFunction);

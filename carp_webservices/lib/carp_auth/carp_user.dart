@@ -15,17 +15,26 @@ class CarpUser {
   /// Unique CARP ID
   int id;
 
+  /// The CARP account id.
+  String accountId;
+
+  /// Is this user activated in any studies?
+  bool isActivated;
+
   /// CARP password
   String password;
 
   /// The user's email
   String email;
 
-  /// Printer-friendly full user name
-  String fullName;
+  /// User's first name
+  String firstName;
+
+  /// User's last name
+  String lastName;
 
   /// Mobile phone number
-  String telephone;
+  String phone;
 
   /// Department of the the user (e.g. CACHET)
   String department;
@@ -39,13 +48,28 @@ class CarpUser {
   /// Timestamp for the creation of this user.
   DateTime created;
 
+  /// The list of roles that this user has in CARP.
+  List<String> role = List<String>();
+
   OAuthToken _token;
 
   /// The OAuth 2.0 [OAuthToken] for this user, once authenticated to CARP
   OAuthToken get token => _token;
 
-  CarpUser(this.username,
-      {this.id, this.password, this.fullName, this.telephone, this.email, this.department, this.organization});
+  CarpUser({
+    @required this.username,
+    this.id,
+    this.accountId,
+    this.password,
+    this.firstName,
+    this.lastName,
+    this.phone,
+    this.email,
+    this.department,
+    this.organization,
+  }) {
+    accountId ??= Uuid().v4();
+  }
 
   /// Set or update the authenticated OAuth token for this user.
   void authenticated(OAuthToken token) => _token = token;
@@ -90,5 +114,5 @@ class CarpUser {
   /// TODO - not implemented, since there is currently no CARP endpoint for users.
   Future<void> delete() async {}
 
-  String toString() => 'CARP User: $username - $fullName [$id]';
+  String toString() => 'CARP User: $username - $firstName $lastName [$id]';
 }

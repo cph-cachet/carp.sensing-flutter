@@ -16,13 +16,11 @@ class SensingBLoC {
   /// Get the data model for this study.
   DataModel get data => null;
 
-  void init() async {}
-
-  void start() async => await sensing.start();
-
-  void pause() => sensing.controller.pause();
+  void init() async => await sensing.init();
 
   void resume() async => sensing.controller.resume();
+
+  void pause() => sensing.controller.pause();
 
   void stop() async => sensing.stop();
 

@@ -46,10 +46,12 @@ class AudioProbe extends DatumProbe {
 
   Future<void> onPause() async {
     // when pausing the audio sampling, stop recording and collect the datum
-    await _stopAudioRecording().catchError((err) => controller.addError(err));
-    getDatum().then((Datum data) {
-      if (data != null) controller.add(data);
-    }).catchError((error, stacktrace) => controller.addError(error, stacktrace));
+    if (_isRecording) {
+      await _stopAudioRecording().catchError((err) => controller.addError(err));
+      getDatum().then((Datum data) {
+        if (data != null) controller.add(data);
+      }).catchError((error, stacktrace) => controller.addError(error, stacktrace));
+    }
   }
 
   Future<void> onStop() async {

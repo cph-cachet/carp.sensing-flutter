@@ -1,6 +1,6 @@
 name: carp_connectivity_package_example
 description: Examples of how to use the carp_movisens_package.
-version: 0.0.1
+version: 0.0.2
 author:  CACHET Team <cph.cachet@gmail.com>
 
 environment:
@@ -11,6 +11,8 @@ dependencies:
     sdk: flutter
   carp_movisens_package:
     path: ../
+  carp_mobile_sensing:
+    path: ../../carp_mobile_sensing/
 
 dev_dependencies:
   flutter_test:

@@ -52,6 +52,7 @@ class FileUploadTask extends CarpServiceTask {
   Future<CarpFileResponse> _start() async {
     super._start();
     final String url = "${reference.fileEndpointUri}";
+
     Map<String, String> headers = await reference.headers;
 
     var request = new http.MultipartRequest("POST", Uri.parse(url));
@@ -62,7 +63,12 @@ class FileUploadTask extends CarpServiceTask {
     // add file-specific metadata
     metadata['filename'] = file.path;
     metadata['size'] = (await file.length()).toString();
+
+    // in the old CARP file endpoint, metadata was a form field
     request.fields['metadata'] = json.encode(metadata);
+    // but in CANS it seems to be part of the URL
+    // url += 'metadata = ${json.encode(metadata)}';
+    // but - this doesn't work...
 
     request.files.add(new http.MultipartFile.fromBytes(
       'file',
@@ -186,7 +192,7 @@ class CarpFileResponse {
   final int createdByUserId;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final int studyId;
+  final String studyId;
 
   String toString() => json.encode(map);
 }

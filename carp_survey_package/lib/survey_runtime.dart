@@ -61,37 +61,41 @@ class SurveySamplingPackage implements SamplingPackage {
 class SurveyProbe extends AbstractProbe {
   StreamController<Datum> controller = StreamController<Datum>.broadcast();
   Stream<Datum> get events => controller.stream;
-  RPTaskMeasure surveyMeasure;
+  RPTaskMeasure get surveyMeasure => (measure as RPTaskMeasure);
 
   /// The survey to be filled in
   RPTask surveyTask;
 
+  /// The callback function providing a [SurveyPage] object to be displayed in the app.
+  /// This function is called when the survey is triggered, i.e. in the [SurveyProbe.resume] method.
+  ///
+  /// This callback function needs to be provided by the app on runtime. I.e. this part of the measure
+  /// cannot be specified in the JSON format of the measure as e.g. downloaded from a study manager.
+  void Function(SurveyPage) onSurveyTriggered;
+
+  /// The callback function to be called when the survey is submitted by the user (hits done).
+  /// Carries the [RPTaskResult] result of the survey.
+  void Function(RPTaskResult) onSurveySubmit;
+
+  SurveyProbe({this.onSurveyTriggered, this.onSurveySubmit}) : super();
+
   Future<void> onInitialize(Measure measure) async {
     assert(measure is RPTaskMeasure);
-    surveyMeasure = (measure as RPTaskMeasure);
+    //surveyMeasure = (measure as RPTaskMeasure);
     surveyTask = surveyMeasure.surveyTask;
   }
 
-  Future<void> onStart() async {}
-
-  Future<void> onRestart() async {}
-
   Future<void> onResume() async {
-    if (surveyMeasure.notification) {
-      // @TODO send a notification
-    }
-
-    surveyMeasure?.onSurveyTriggered(SurveyPage(surveyTask, onSurveySubmit));
-
-    this.pause();
+    onSurveyTriggered(SurveyPage(surveyTask, _onSurveySubmit));
   }
 
+  Future<void> onRestart() async {}
   Future<void> onPause() async {}
   Future<void> onStop() async {}
 
-  void onSurveySubmit(RPTaskResult result) {
+  void _onSurveySubmit(RPTaskResult result) {
     // when we have the survey result, add it to the event stream
     controller?.add(RPTaskResultDatum(result));
-    surveyMeasure?.onSurveySubmit(result);
+    onSurveySubmit(result);
   }
 }

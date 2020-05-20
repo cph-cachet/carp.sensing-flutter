@@ -51,9 +51,9 @@ class FileDataManager extends AbstractDataManager {
 
   void onDatum(Datum datum) => write(datum);
 
-  void onDone() => close();
+  void onError(error) => write(ErrorDatum(error.toString()));
 
-  void onError(error) {}
+  void onDone() => close();
 
   ///Returns the local study path on the device where files can be written.
   Future<String> get studyPath async {

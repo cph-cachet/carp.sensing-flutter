@@ -5,9 +5,9 @@ class SurveyPage extends StatelessWidget {
   final RPTask task;
 
   /// The callback function which has to return an [RPTaskResult] object.
-  void Function(RPTaskResult) resultCallback;
+  final void Function(RPTaskResult) resultCallback;
 
-  SurveyPage(this.task, this.resultCallback) : super() {}
+  SurveyPage(this.task, this.resultCallback) : super();
 
   Widget build(BuildContext context) {
     return RPUITask(

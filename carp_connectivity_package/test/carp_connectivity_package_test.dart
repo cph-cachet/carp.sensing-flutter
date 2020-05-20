@@ -24,7 +24,7 @@ void main() {
     // adding all measure from the common schema to one one trigger and one task
     study.addTriggerTask(
         ImmediateTrigger(), // a simple trigger that starts immediately
-        Task('Sampling Task')
+        Task(name: 'Sampling Task')
           ..measures =
               SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList() // a task with all measures
         );
@@ -101,19 +101,19 @@ void main() {
 
     study_3.addTriggerTask(
         DelayedTrigger(delay: 10 * 1000), // delay for 10 secs.
-        Task('Sensing Task #1')
+        Task(name: 'Sensing Task #1')
           ..measures = SamplingSchema.common()
               .getMeasureList(types: [SensorSamplingPackage.PEDOMETER, DeviceSamplingPackage.SCREEN]));
 
     study_3.addTriggerTask(
         PeriodicTrigger(period: 60 * 1000), // collect every min.
-        Task('Sensing Task #2')
+        Task(name: 'Sensing Task #2')
           ..measures = SamplingSchema.common()
               .getMeasureList(types: [SensorSamplingPackage.LIGHT, DeviceSamplingPackage.DEVICE]));
 
     study_3.addTriggerTask(
         ScheduledTrigger(schedule: DateTime(2019, 12, 24)), // collect date on Xmas.
-        Task('Sensing Task #3')
+        Task(name: 'Sensing Task #3')
           ..measures = SamplingSchema.common()
               .getMeasureList(types: [AppsSamplingPackage.APP_USAGE, ConnectivitySamplingPackage.BLUETOOTH]));
 
@@ -124,7 +124,7 @@ void main() {
     print('$t1');
     study_3.addTriggerTask(
         t1,
-        Task('Sensing Task #1')
+        Task(name: 'Sensing Task #1')
           ..measures = SamplingSchema.common().getMeasureList(types: [DeviceSamplingPackage.MEMORY]));
 
     // collect every other day at 13:30.
@@ -132,7 +132,7 @@ void main() {
     print('$t2');
     study_3.addTriggerTask(
         t2,
-        Task('Sensing Task #1')
+        Task(name: 'Sensing Task #1')
           ..measures = SamplingSchema.common()
               .getMeasureList(types: [AppsSamplingPackage.APPS, ConnectivitySamplingPackage.CONNECTIVITY]));
 
@@ -142,7 +142,7 @@ void main() {
     print('$t3');
     study_3.addTriggerTask(
         t3,
-        Task('Sensing Task #1')
+        Task(name: 'Sensing Task #1')
           ..measures = SamplingSchema.common()
               .getMeasureList(types: [AppsSamplingPackage.APPS, ConnectivitySamplingPackage.CONNECTIVITY]));
 
@@ -152,7 +152,7 @@ void main() {
     print('$t4');
     study_3.addTriggerTask(
         t4,
-        Task('Sensing Task #1')
+        Task(name: 'Sensing Task #1')
           ..measures = SamplingSchema.common()
               .getMeasureList(types: [AppsSamplingPackage.APPS, ConnectivitySamplingPackage.CONNECTIVITY]));
 
@@ -161,14 +161,14 @@ void main() {
         SamplingEventTrigger(
             measureType: MeasureType(NameSpace.CARP, ConnectivitySamplingPackage.WIFI),
             resumeCondition: WifiDatum()..ssid = 'wifi.bardram.net'),
-        Task('Sensing Task #1')
+        Task(name: 'Sensing Task #1')
           ..measures = SamplingSchema.common().getMeasureList(types: [ConnectivitySamplingPackage.BLUETOOTH]));
 
     study_3.addTriggerTask(
         ConditionalSamplingEventTrigger(
             measureType: MeasureType(NameSpace.CARP, ConnectivitySamplingPackage.WIFI),
             resumeCondition: (datum) => (datum as WifiDatum).ssid == 'wifi.bardram.net'),
-        Task('Sensing Task #1')
+        Task(name: 'Sensing Task #1')
           ..measures = SamplingSchema.common().getMeasureList(types: [ConnectivitySamplingPackage.BLUETOOTH]));
 
     final studyJson = _encode(study_3);

@@ -9,6 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+#  carp_mobile_sensing:
+#    path: ../../carp_mobile_sensing
   carp_survey_package:
     path: ../
 
