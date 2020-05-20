@@ -73,7 +73,8 @@ class StudyMock implements StudyManager {
   ///  * creating the study by specifying [Trigger]s, [Task]s, and [Measure]s by hand
   ///
   Future<Study> getStudy(String studyId) async {
-    return _getStudyWithSelectedMeasuresFromCommonSamplingSchema('#1');
+    //return _getStudyWithSelectedMeasuresFromCommonSamplingSchema('#1');
+    return _getConditionalSamplingStudy('#1');
   }
 
   Future<Study> _getStudyWithAllMeasuresFromCommonSamplingSchema(String studyId) async {
@@ -321,6 +322,46 @@ class StudyMock implements StudyManager {
                     name: "Audio Recording",
                     studyId: studyId,
                   )))
+          //
+          ;
+    }
+    return _study;
+  }
+
+  Future<Study> _getConditionalSamplingStudy(String studyId) async {
+    if (_study == null) {
+      _study = Study(studyId, username)
+            ..name = 'Conditional Sampling Study'
+            ..description = 'This is a study for testing and debugging Conditional Sampling'
+            ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
+            ..addTriggerTask(
+                ConditionalSamplingEventTrigger(
+                    measureType: MeasureType(NameSpace.CARP, ContextSamplingPackage.LOCATION),
+                    resumeCondition: (datum) {
+                      return true;
+                    },
+                    pauseCondition: (datum) {
+                      return true;
+                    }),
+                AutomaticTask()
+                  ..measures = SamplingSchema.debug().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      ContextSamplingPackage.WEATHER,
+                      //ContextSamplingPackage.AIR_QUALITY,
+                    ],
+                  ))
+            ..addTriggerTask(
+                PeriodicTrigger(period: 1 * 20 * 1000, duration: 2 * 1000),
+                //ImmediateTrigger(),
+                AutomaticTask()
+                  ..measures = SamplingSchema.debug().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      ContextSamplingPackage.LOCATION,
+                      //ContextSamplingPackage.GEOLOCATION,
+                    ],
+                  ))
           //
           ;
     }
