@@ -27,10 +27,31 @@ part 'sampling_package.dart';
 part 'data_manager.dart';
 part 'permission_handler.dart';
 
+/// Generic sensing exception.
 class SensingException implements Exception {
   dynamic message;
   SensingException([this.message]);
 }
 
+class DebugLevel {
+  static const int NONE = 0;
+  static const int INFO = 1;
+  static const int WARNING = 2;
+  static const int DEBUG = 3;
+}
+
+/// The global debug level setting.
+///
+/// Typically set when instantiating a [StudyController].
+/// See [DebugLevel] for valid debug level settings.
+/// Can be changed on runtime.
+int globalDebugLevel = DebugLevel.WARNING;
+
 /// A simple method for printing warning messages to the console.
-warning(String message) => print('CAMS WARNING - $message');
+info(String message) => (globalDebugLevel >= DebugLevel.INFO) ? print('CAMS INFO - $message') : 0;
+
+/// A simple method for printing warning messages to the console.
+warning(String message) => (globalDebugLevel >= DebugLevel.WARNING) ? print('CAMS WARNING - $message') : 0;
+
+/// A simple method for printing debug messages to the console.
+debug(String message) => (globalDebugLevel >= DebugLevel.DEBUG) ? print('CAMS DEBUG - $message') : 0;

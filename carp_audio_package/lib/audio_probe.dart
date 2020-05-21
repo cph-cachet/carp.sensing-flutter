@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2020 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -27,7 +27,6 @@ class AudioProbe extends DatumProbe {
   static const String AUDIO_FILE_PATH = 'audio';
 
   String studyId;
-
   String soundFileName;
   String _path;
   bool _isRecording = false;
@@ -38,16 +37,19 @@ class AudioProbe extends DatumProbe {
     assert(measure is AudioMeasure);
     super.onInitialize(measure);
     this.studyId = (measure as AudioMeasure).studyId;
+    _recorder.openAudioSession();
   }
 
   Future<void> onResume() async {
-    soundFileName = await _startAudioRecording().catchError((err) => controller.addError(err));
+    //soundFileName = await _startAudioRecording().catchError((err) => controller.addError(err));
+    soundFileName = await _startAudioRecording();
+    debug('Audio recording resumed - soundfile : $soundFileName');
   }
 
   Future<void> onPause() async {
     // when pausing the audio sampling, stop recording and collect the datum
     if (_isRecording) {
-      await _stopAudioRecording().catchError((err) => controller.addError(err));
+      await _stopAudioRecording();
       getDatum().then((Datum data) {
         if (data != null) controller.add(data);
       }).catchError((error, stacktrace) => controller.addError(error, stacktrace));
@@ -56,20 +58,23 @@ class AudioProbe extends DatumProbe {
 
   Future<void> onStop() async {
     if (_isRecording) await onPause();
-    _recorder.stopRecorder();
+    await _recorder.closeAudioSession();
     _recorder = null;
     super.onStop();
   }
 
   Future<String> _startAudioRecording() async {
-    if (_isRecording) throw new Exception('AudioProbe is already running');
+    //if (_isRecording) throw new Exception('AudioProbe is already running');
+    if (_isRecording) {
+      warning('Trying to strart audio recording, but recording is already running. '
+          'Make sure to pause this audio probe before resuming it.');
+    } else {
+      soundFileName = await filePath;
+      _startRecordingTime = DateTime.now();
+      _isRecording = true;
 
-    soundFileName = await filePath;
-    _startRecordingTime = DateTime.now();
-    _isRecording = true;
-
-    await _recorder.startRecorder(toFile: soundFileName);
-
+      await _recorder.startRecorder(toFile: soundFileName);
+    }
     return soundFileName;
   }
 

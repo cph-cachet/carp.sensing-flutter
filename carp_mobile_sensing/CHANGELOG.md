@@ -1,3 +1,6 @@
+## 0.7.2
+* added support for better logging using the `DebugLevel` settings
+
 ## 0.7.1
 * Added `trigger_id` to the `Trigger` class.
 * Made `Task` abstract rather than deprecated.

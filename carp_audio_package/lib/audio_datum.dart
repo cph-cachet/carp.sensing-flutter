@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2020 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -24,7 +24,7 @@ class AudioDatum extends FileDatum {
 
   factory AudioDatum.fromJson(Map<String, dynamic> json) => _$AudioDatumFromJson(json);
   Map<String, dynamic> toJson() => _$AudioDatumToJson(this);
-  String toString() => super.toString() + ', filename: $filename, start: $startRecordingTime, end: $endRecordingTime';
+  String toString() => super.toString() + ', start: $startRecordingTime, end: $endRecordingTime';
 }
 
 /// A [NoiseDatum] that holds the noise level in decibel of a noise sampling.

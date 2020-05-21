@@ -8,6 +8,7 @@ part of runtime;
 
 /// A [StudyController] controls the execution of a [Study].
 class StudyController {
+  int debugLevel = DebugLevel.WARNING;
   Study study;
   StudyExecutor executor;
   DataManager dataManager;
@@ -45,8 +46,12 @@ class StudyController {
     this.dataManager,
     this.privacySchemaName,
     this.transformer,
+    this.debugLevel = DebugLevel.WARNING,
   })  : assert(study != null),
         super() {
+    // set global debug level
+    globalDebugLevel = debugLevel;
+
     // create and register the two built-in data managers
     DataManagerRegistry.register(ConsoleDataManager());
     DataManagerRegistry.register(FileDataManager());

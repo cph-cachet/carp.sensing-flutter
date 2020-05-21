@@ -1,3 +1,7 @@
+## 0.7.2
+* upgrade to `carp_mobile_sensing` v. 0.7.2
+* alignment to the new `flutter_sound` [v 5.x.x API](https://github.com/dooboolab/flutter_sound/blob/master/doc/migration_5.x.x.md#migration-form-4xx-to-5xx). 
+
 ## 0.7.1
 * upgrade of packages (`flutter_sound` and `noise_meter`).
 
@@ -15,7 +19,7 @@
 * NoiseDatum now w. doubles.
 
 ## 0.6.1
-* allignment with `carp_mobile_sensing` v. 0.6.1.
+* alignment with `carp_mobile_sensing` v. 0.6.1.
 * improvement to the audio probe based
 
 ## 0.6.0
