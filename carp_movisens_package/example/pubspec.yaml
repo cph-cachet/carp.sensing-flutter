@@ -11,10 +11,6 @@ dependencies:
     sdk: flutter
   carp_movisens_package:
     path: ../
-  carp_mobile_sensing: ^0.7.0
-
-#  carp_mobile_sensing:
-#    path: ../../carp_mobile_sensing/
 
 dev_dependencies:
   flutter_test:

@@ -1,3 +1,6 @@
+## 0.5.0
+* upgrade to `carp_mobile_sensing` v. 0.7.x
+
 ## 0.4.0
 * upgrade to `json_serializable` v.3
 * upgrade to `firebase_auth` v. 0.14...
