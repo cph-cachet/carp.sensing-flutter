@@ -25,7 +25,7 @@ class HealthProbe extends StreamProbe {
     }
 
     // convert [HealthDataPoint] to Datums and add them to the stream.
-    for (HealthDataPoint h in healthData) _ctrl.add(HealthDatum.fromHealthDataPoint(h));
+    healthData.forEach((data) => _ctrl.add(HealthDatum.fromHealthDataPoint(data)));
   }
 
   Future<void> onResume() async {
@@ -40,7 +40,7 @@ class HealthProbe extends StreamProbe {
     healthDataType = (measure as HealthMeasure).healthDataType;
 
     // try to get permissions to accessing health data
-    bool permission = await Health.requestAuthorization();
+    await Health.requestAuthorization();
   }
 }
 
