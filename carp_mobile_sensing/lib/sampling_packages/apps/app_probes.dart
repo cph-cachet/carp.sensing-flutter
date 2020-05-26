@@ -45,16 +45,14 @@ class AppUsageProbe extends DatumProbe {
 
   Future<void> onInitialize(Measure measure) async {
     super.onInitialize(measure);
-    assert(measure is AppUsageMeasure, 'An AppUsageMeasure must be provided to use the AppUsageProbe.');
+    assert(measure is MarkedMeasure, 'An MarkedMeasure must be provided to use the AppUsageProbe.');
     // check if AppUsage is available (only available on Android)
     if (!Platform.isAndroid) throw SensingException("Error initializing AppUsageProbe -- only avaiulable on Android.");
-    //await appUsage.fetchUsage(DateTime.now().subtract(Duration(days: 1)), DateTime.now());
   }
 
   Future<Datum> getDatum() async {
+    DateTime start = (measure as MarkedMeasure).mark;
     DateTime end = DateTime.now();
-    DateTime start =
-        DateTime.fromMillisecondsSinceEpoch(end.millisecondsSinceEpoch - (measure as AppUsageMeasure).duration);
 
     Map<dynamic, dynamic> usage = await appUsage.fetchUsage(start, end);
     return AppUsageDatum()

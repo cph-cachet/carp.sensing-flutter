@@ -24,19 +24,13 @@ void example() async {
   study.addTriggerTask(
       DelayedTrigger(delay: 1000), // delay sampling for one second
       AutomaticTask(name: 'Sensor Task')
-        ..addMeasure(PeriodicMeasure(
-          MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
-          frequency: 10 * 1000, // sample every 10 secs
-          duration: 2, // for 2 ms
-        ))
-        ..addMeasure(PeriodicMeasure(
-          MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
-          frequency: 20 * 1000, // sample every 20 secs
-          duration: 2, // for 2 ms
-        )));
+        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
+            frequency: const Duration(seconds: 10), duration: const Duration(milliseconds: 100)))
+        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
+            frequency: const Duration(seconds: 20), duration: const Duration(milliseconds: 100))));
 
   study.addTriggerTask(
-      PeriodicTrigger(period: 24 * 60 * 60 * 1000), // trigger sampling once pr. day
+      PeriodicTrigger(period: const Duration(days: 1)), // trigger sampling once pr. day
       AutomaticTask(name: 'Task collecting a list of all installed apps')
         ..addMeasure(Measure(MeasureType(NameSpace.CARP, AppsSamplingPackage.APPS))));
 
@@ -44,8 +38,8 @@ void example() async {
   PeriodicMeasure lightMeasure = PeriodicMeasure(
     MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
     name: "Ambient Light",
-    frequency: 11 * 1000,
-    duration: 700,
+    frequency: const Duration(seconds: 11),
+    duration: const Duration(milliseconds: 100),
   );
   study.addTriggerTask(ImmediateTrigger(), AutomaticTask(name: 'Light')..addMeasure(lightMeasure));
 
@@ -89,8 +83,8 @@ void example() async {
   // adapt measures on the go - calling hasChanged() force a restart of
   // the probe, which will load the new measure
   lightMeasure
-    ..frequency = 12 * 1000
-    ..duration = 500
+    ..frequency = const Duration(seconds: 12)
+    ..duration = const Duration(milliseconds: 500)
     ..hasChanged();
 
   // disabling a measure will pause the probe
@@ -112,7 +106,7 @@ void samplingSchemaExample() async {
       MapEntry(
           SensorSamplingPackage.PEDOMETER,
           PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.PEDOMETER),
-              enabled: true, frequency: 60 * 60 * 1000)),
+              enabled: true, frequency: const Duration(minutes: 1))),
       MapEntry(DeviceSamplingPackage.SCREEN,
           Measure(MeasureType(NameSpace.CARP, DeviceSamplingPackage.SCREEN), enabled: true)),
     ]);
@@ -203,8 +197,8 @@ void samplingSchemaExample() async {
         ..addMeasure(PeriodicMeasure(
           MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
           name: "Ambient Light",
-          frequency: 11 * 1000,
-          duration: 700,
+          frequency: const Duration(seconds: 11),
+          duration: const Duration(milliseconds: 100),
         )));
 
   StudyController controller = StudyController(study, samplingSchema: activitySchema);

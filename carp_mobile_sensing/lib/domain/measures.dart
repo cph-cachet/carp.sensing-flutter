@@ -77,13 +77,13 @@ class Measure extends Serializable {
 /// Useful for listening in on a sensor (e.g. the accelerometer) on a regular, but limited time window.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class PeriodicMeasure extends Measure {
-  /// Sampling frequency in milliseconds (i.e., delay between sampling).
-  int frequency;
-  int _storedFrequency;
+  /// Sampling frequency (i.e., delay between sampling).
+  Duration frequency;
+  Duration _storedFrequency;
 
-  /// The sampling duration in milliseconds.
-  int duration;
-  int _storedDuration;
+  /// The sampling duration.
+  Duration duration;
+  Duration _storedDuration;
 
   PeriodicMeasure(MeasureType type, {String name, bool enabled, this.frequency, this.duration})
       : super(type, name: name, enabled: enabled) {
@@ -113,6 +113,41 @@ class PeriodicMeasure extends Measure {
   }
 
   String toString() => super.toString() + ', frequency: $frequency, duration: $duration';
+}
+
+/// A [MarkedMeasure] specify how to collect data historically back to a persistent mark.
+///
+/// This measure persistently marks the last time this data measure was done and provide this
+/// in the [mark] variable.
+/// This is useful for measures that wants to collect all measures since last time.
+/// For example the [AppUsageMeasure] that want to collect app usage since last time.
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+class MarkedMeasure extends Measure {
+  /// The date and time of the last time this measure was collected.
+  DateTime mark;
+  DateTime _storedMark;
+
+  MarkedMeasure(MeasureType type, {String name, bool enabled}) : super(type, name: name, enabled: enabled);
+
+  static Function get fromJsonFunction => _$MarkedMeasureFromJson;
+  factory MarkedMeasure.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$MarkedMeasureToJson(this);
+
+  void adapt(Measure measure) {
+    super.adapt(measure);
+    if (measure is MarkedMeasure) {
+      _storedMark = this.mark;
+      this.mark = measure.mark;
+    }
+  }
+
+  void restore() {
+    super.restore();
+    this.mark = _storedMark;
+  }
+
+  String toString() => super.toString() + ', mark: $mark';
 }
 
 /// Specifies the type of a [Measure].

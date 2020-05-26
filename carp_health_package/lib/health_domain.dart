@@ -1,5 +1,40 @@
 part of health_package;
 
+/// Diet, Alcohol, Smoking, Exercise, Sleep (DASES) data types.
+enum DasesHealthDataType {
+  /// Number of calories consumed.
+  CALORIES_INTAKE,
+
+  /// Units of alcohol.
+  ALCOHOL,
+
+  /// Blood alcohol content in percentage.
+  BLOOD_ALCOHOL_CONTENT,
+
+  /// Number of smoked cigarettes.
+  SMOKED_CIGARETTES,
+
+  /// Number of smoked other thing (pipe, cigar, ...).
+  SMOKED_OTHER,
+
+  /// Duration of exercise.
+  EXERCISE,
+
+  /// Duration of sleep.
+  SLEEP,
+}
+
+/// Map a [DasesHealthDataType] to a [HealthDataUnit].
+const Map<DasesHealthDataType, HealthDataUnit> dasesDataTypeToUnit = {
+  DasesHealthDataType.CALORIES_INTAKE: HealthDataUnit.CALORIES,
+  DasesHealthDataType.ALCOHOL: HealthDataUnit.COUNT,
+  DasesHealthDataType.BLOOD_ALCOHOL_CONTENT: HealthDataUnit.PERCENTAGE,
+  DasesHealthDataType.SMOKED_CIGARETTES: HealthDataUnit.COUNT,
+  DasesHealthDataType.SMOKED_OTHER: HealthDataUnit.COUNT,
+  DasesHealthDataType.EXERCISE: HealthDataUnit.NO_UNIT,
+  DasesHealthDataType.SLEEP: HealthDataUnit.NO_UNIT,
+};
+
 /// Specify the configuration on how to collect health data.
 ///
 /// The [healthDataType] specify which [HealthDataType](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html)
@@ -57,7 +92,7 @@ class HealthDatum extends CARPDatum {
   /// Note that the uppercase version is used, e.g. `STEPS`.
   String dataType;
 
-  /// The platform from which this health data point came from (Android, IOS).
+  /// The platform from which this health data point came from (ANDROID, IOS).
   String platform;
 
   HealthDatum(this.value, this.unit, int dateFrom, int dateTo, this.dataType, this.platform) : super() {

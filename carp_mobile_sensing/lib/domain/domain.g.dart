@@ -436,8 +436,12 @@ PeriodicMeasure _$PeriodicMeasureFromJson(Map<String, dynamic> json) {
         : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
     name: json['name'] as String,
     enabled: json['enabled'] as bool,
-    frequency: json['frequency'] as int,
-    duration: json['duration'] as int,
+    frequency: json['frequency'] == null
+        ? null
+        : Duration(microseconds: json['frequency'] as int),
+    duration: json['duration'] == null
+        ? null
+        : Duration(microseconds: json['duration'] as int),
   )
     ..c__ = json['c__'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
@@ -459,8 +463,42 @@ Map<String, dynamic> _$PeriodicMeasureToJson(PeriodicMeasure instance) {
   writeNotNull('name', instance.name);
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
-  writeNotNull('frequency', instance.frequency);
-  writeNotNull('duration', instance.duration);
+  writeNotNull('frequency', instance.frequency?.inMicroseconds);
+  writeNotNull('duration', instance.duration?.inMicroseconds);
+  return val;
+}
+
+MarkedMeasure _$MarkedMeasureFromJson(Map<String, dynamic> json) {
+  return MarkedMeasure(
+    json['type'] == null
+        ? null
+        : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
+    name: json['name'] as String,
+    enabled: json['enabled'] as bool,
+  )
+    ..c__ = json['c__'] as String
+    ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(k, e as String),
+    )
+    ..mark =
+        json['mark'] == null ? null : DateTime.parse(json['mark'] as String);
+}
+
+Map<String, dynamic> _$MarkedMeasureToJson(MarkedMeasure instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('c__', instance.c__);
+  writeNotNull('type', instance.type);
+  writeNotNull('name', instance.name);
+  writeNotNull('enabled', instance.enabled);
+  writeNotNull('configuration', instance.configuration);
+  writeNotNull('mark', instance.mark?.toIso8601String());
   return val;
 }
 
@@ -595,8 +633,12 @@ Map<String, dynamic> _$DelayedTriggerToJson(DelayedTrigger instance) {
 PeriodicTrigger _$PeriodicTriggerFromJson(Map<String, dynamic> json) {
   return PeriodicTrigger(
     triggerId: json['trigger_id'] as String,
-    period: json['period'] as int,
-    duration: json['duration'] as int,
+    period: json['period'] == null
+        ? null
+        : Duration(microseconds: json['period'] as int),
+    duration: json['duration'] == null
+        ? null
+        : Duration(microseconds: json['duration'] as int),
   )
     ..c__ = json['c__'] as String
     ..tasks = (json['tasks'] as List)
@@ -617,8 +659,8 @@ Map<String, dynamic> _$PeriodicTriggerToJson(PeriodicTrigger instance) {
   writeNotNull('c__', instance.c__);
   writeNotNull('trigger_id', instance.triggerId);
   writeNotNull('tasks', instance.tasks);
-  writeNotNull('period', instance.period);
-  writeNotNull('duration', instance.duration);
+  writeNotNull('period', instance.period?.inMicroseconds);
+  writeNotNull('duration', instance.duration?.inMicroseconds);
   return val;
 }
 
@@ -628,7 +670,9 @@ ScheduledTrigger _$ScheduledTriggerFromJson(Map<String, dynamic> json) {
     schedule: json['schedule'] == null
         ? null
         : DateTime.parse(json['schedule'] as String),
-    duration: json['duration'] as int,
+    duration: json['duration'] == null
+        ? null
+        : Duration(microseconds: json['duration'] as int),
   )
     ..c__ = json['c__'] as String
     ..tasks = (json['tasks'] as List)
@@ -650,7 +694,7 @@ Map<String, dynamic> _$ScheduledTriggerToJson(ScheduledTrigger instance) {
   writeNotNull('trigger_id', instance.triggerId);
   writeNotNull('tasks', instance.tasks);
   writeNotNull('schedule', instance.schedule?.toIso8601String());
-  writeNotNull('duration', instance.duration);
+  writeNotNull('duration', instance.duration?.inMicroseconds);
   return val;
 }
 
@@ -690,7 +734,9 @@ RecurrentScheduledTrigger _$RecurrentScheduledTriggerFromJson(
     separationCount: json['separation_count'] as int,
     maxNumberOfSampling: json['max_number_of_sampling'] as int,
     dayOfWeek: json['day_of_week'] as int,
-    duration: json['duration'] as int,
+    duration: json['duration'] == null
+        ? null
+        : Duration(microseconds: json['duration'] as int),
   )
     ..c__ = json['c__'] as String
     ..tasks = (json['tasks'] as List)
@@ -712,7 +758,7 @@ Map<String, dynamic> _$RecurrentScheduledTriggerToJson(
   writeNotNull('c__', instance.c__);
   writeNotNull('trigger_id', instance.triggerId);
   writeNotNull('tasks', instance.tasks);
-  writeNotNull('duration', instance.duration);
+  writeNotNull('duration', instance.duration?.inMicroseconds);
   writeNotNull('type', _$RecurrentTypeEnumMap[instance.type]);
   writeNotNull('time', instance.time);
   writeNotNull('end', instance.end?.toIso8601String());

@@ -194,8 +194,8 @@ class PeriodicTriggerExecutor extends TriggerExecutor {
   PeriodicTriggerExecutor(PeriodicTrigger trigger) : super(trigger) {
     assert(trigger.period != null, 'The period in a PeriodicTrigger must be specified.');
     assert(trigger.duration != null, 'The duration in a PeriodicTrigger must be specified.');
-    period = Duration(milliseconds: trigger.period);
-    duration = Duration(milliseconds: trigger.duration);
+    period = trigger.period;
+    duration = trigger.duration;
   }
 
   Future<void> onResume() async {
@@ -224,7 +224,7 @@ class ScheduledTriggerExecutor extends TriggerExecutor {
     assert(trigger.schedule != null, 'The schedule of a ScheduledTrigger must be specified.');
     assert(trigger.schedule.isAfter(DateTime.now()), 'The schedule of the ScheduledTrigger cannot be in the past.');
     delay = trigger.schedule.difference(DateTime.now());
-    duration = (trigger.duration != null) ? Duration(milliseconds: trigger.duration) : null;
+    duration = trigger.duration;
   }
 
   Future<void> onResume() async {
@@ -347,7 +347,12 @@ class TaskExecutor extends Executor {
 
   Future<void> onInitialize(Measure ignored) async {
     for (Measure measure in task.measures) {
-      // Probe probe = ProbeRegistry.lookup(measure.type.name);
+      if (measure is MarkedMeasure) {
+        // if this is a MarkedMeasure, find the last mark - if not found, go back one day
+        String mark = (await settings.preferences).get(measure.type.toString());
+        measure.mark = (mark != null) ? DateTime.tryParse(mark) : DateTime.now().subtract(Duration(days: 1));
+      }
+
       // create a new probe for each measure - this ensures that we can have
       // multiple measures of the same type, each using its own probe instance
       Probe probe = ProbeRegistry.create(measure.type.name);

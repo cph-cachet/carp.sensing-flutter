@@ -52,6 +52,9 @@ class StudyController {
     // set global debug level
     globalDebugLevel = debugLevel;
 
+    // initialize settings
+    settings.init();
+
     // create and register the two built-in data managers
     DataManagerRegistry.register(ConsoleDataManager());
     DataManagerRegistry.register(FileDataManager());

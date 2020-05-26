@@ -41,7 +41,7 @@
               "name": "Memory Usage",
               "enabled": true,
               "configuration": {},
-              "frequency": 60000
+              "frequency": 60000000
             },
             {
               "c__": "Measure",
@@ -75,8 +75,8 @@
               "name": "Accelerometer",
               "enabled": false,
               "configuration": {},
-              "frequency": 200,
-              "duration": 1
+              "frequency": 100000,
+              "duration": 1000
             },
             {
               "c__": "PeriodicMeasure",
@@ -88,8 +88,8 @@
               "name": "Gyroscope",
               "enabled": false,
               "configuration": {},
-              "frequency": 200,
-              "duration": 1
+              "frequency": 100000,
+              "duration": 1000
             },
             {
               "c__": "Measure",
@@ -112,8 +112,8 @@
               "name": "Ambient Light",
               "enabled": true,
               "configuration": {},
-              "frequency": 60000,
-              "duration": 1000
+              "frequency": 60000000,
+              "duration": 1000000
             },
             {
               "c__": "Measure",
@@ -127,7 +127,7 @@
               "configuration": {}
             },
             {
-              "c__": "AppUsageMeasure",
+              "c__": "MarkedMeasure",
               "type": {
                 "c__": "MeasureType",
                 "namespace": "carp",
@@ -135,8 +135,7 @@
               },
               "name": "Apps Usage",
               "enabled": true,
-              "configuration": {},
-              "duration": 3600000
+              "configuration": {}
             }
           ]
         }

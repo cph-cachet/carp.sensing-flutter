@@ -6,8 +6,6 @@
  */
 part of domain;
 
-// TODO - implement duration/time/delays/etc. using the dart [Duration] class. Make a wrapper to support JSON de/serailization.
-
 /// A [Trigger] is a specification of any condition which starts and stops [Task]s at
 /// certain points in time when the condition applies. The condition can either
 /// be time-bound, based on data streams, initiated by a user of the platform,
@@ -93,7 +91,7 @@ class DelayedTrigger extends Trigger {
   Map<String, dynamic> toJson() => _$DelayedTriggerToJson(this);
 }
 
-/// A trigger that resume/pause sampling every [period] milliseconds for a specific [duration].
+/// A trigger that resume/pause sampling every [period] for a specific [duration].
 ///
 /// It is important to specify **both** the [period] and the [duration] in order to specify
 /// the timing of resuming and pausing sampling.
@@ -101,13 +99,15 @@ class DelayedTrigger extends Trigger {
 /// Weekly and montly recurrent triggers can be specified using the [RecurrentScheduledTrigger].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class PeriodicTrigger extends Trigger {
-  /// The period (reciprocal of frequency) of sampling in milliseconds.
-  int period;
+  /// The period (reciprocal of frequency) of sampling.
+  Duration period;
 
-  /// The duration (until paused) of the the sampling in milliseconds.
-  int duration;
+  /// The duration (until paused) of the the sampling.
+  Duration duration;
 
-  PeriodicTrigger({String triggerId, this.period = 60 * 1000, this.duration = 1000}) : super(triggerId: triggerId);
+  PeriodicTrigger(
+      {String triggerId, this.period = const Duration(seconds: 60), this.duration = const Duration(seconds: 1)})
+      : super(triggerId: triggerId);
 
   static Function get fromJsonFunction => _$PeriodicTriggerFromJson;
   factory PeriodicTrigger.fromJson(Map<String, dynamic> json) =>
@@ -121,9 +121,9 @@ class ScheduledTrigger extends Trigger {
   /// The scheduled date and time for resuming sampling.
   DateTime schedule;
 
-  /// The duration (until stopped) of the the sampling in milliseconds.
+  /// The duration (until stopped) of the the sampling.
   /// If null, the sampling is never stopped (i.e., runs forever).
-  int duration;
+  Duration duration;
 
   ScheduledTrigger({String triggerId, @required this.schedule, this.duration}) : super(triggerId: triggerId);
 
@@ -268,7 +268,7 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
       this.dayOfWeek,
       //this.weekOfMonth,
       //this.dayOfMonth,
-      int duration = 1000})
+      Duration duration = const Duration(seconds: 1)})
       : assert(duration != null),
         super(triggerId: triggerId, duration: duration);
 
@@ -294,14 +294,14 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
   }
 
   /// The period between the recurring samplings.
-  int get period {
+  Duration get period {
     switch (type) {
       case RecurrentType.daily:
-        return (separationCount + 1) * Duration.millisecondsPerDay;
+        return Duration(days: separationCount + 1);
       case RecurrentType.weekly:
-        return (separationCount + 1) * daysPerWeek * Duration.millisecondsPerDay;
+        return Duration(days: (separationCount + 1) * daysPerWeek);
       default:
-        return -1;
+        return null;
     }
   }
 

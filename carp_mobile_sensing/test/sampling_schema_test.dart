@@ -58,13 +58,9 @@ void main() {
         ImmediateTrigger(),
         AutomaticTask(name: 'Sensor Task')
           ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
-              frequency: 10 * 1000, // sample every 10 secs
-              duration: 100 // for 100 ms
-              ))
+              frequency: const Duration(seconds: 10), duration: const Duration(milliseconds: 100)))
           ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
-              frequency: 20 * 1000, // sample every 20 secs
-              duration: 100 // for 100 ms
-              )));
+              frequency: const Duration(seconds: 20), duration: const Duration(milliseconds: 100))));
 
 //    study.addTask(AutomaticTask('Audio Recording Task')
 //      ..addMeasure(AudioMeasure(MeasureType(NameSpace.CARP, DataType.AUDIO),

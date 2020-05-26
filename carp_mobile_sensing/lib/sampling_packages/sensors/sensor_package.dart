@@ -42,17 +42,26 @@ class SensorSamplingPackage implements SamplingPackage {
       MapEntry(
           ACCELEROMETER,
           PeriodicMeasure(MeasureType(NameSpace.CARP, ACCELEROMETER),
-              name: 'Accelerometer', enabled: false, frequency: 200, duration: 1)),
+              name: 'Accelerometer',
+              enabled: false,
+              frequency: const Duration(milliseconds: 100),
+              duration: const Duration(milliseconds: 1))),
       MapEntry(
           GYROSCOPE,
           PeriodicMeasure(MeasureType(NameSpace.CARP, GYROSCOPE),
-              name: 'Gyroscope', enabled: false, frequency: 200, duration: 1)),
+              name: 'Gyroscope',
+              enabled: false,
+              frequency: const Duration(milliseconds: 100),
+              duration: const Duration(milliseconds: 1))),
       MapEntry(
           PEDOMETER, Measure(MeasureType(NameSpace.CARP, PEDOMETER), name: 'Pedometer (Step Count)', enabled: true)),
       MapEntry(
           LIGHT,
           PeriodicMeasure(MeasureType(NameSpace.CARP, LIGHT),
-              name: 'Ambient Light', enabled: true, frequency: 60 * 1000, duration: 1000)),
+              name: 'Ambient Light',
+              enabled: true,
+              frequency: const Duration(minutes: 1),
+              duration: const Duration(seconds: 1))),
     ]);
 
   SamplingSchema get light => common
@@ -75,16 +84,25 @@ class SensorSamplingPackage implements SamplingPackage {
       MapEntry(
           ACCELEROMETER,
           PeriodicMeasure(MeasureType(NameSpace.CARP, ACCELEROMETER),
-              name: 'Accelerometer', enabled: true, frequency: 10 * 1000, duration: 10)),
+              name: 'Accelerometer',
+              enabled: true,
+              frequency: const Duration(milliseconds: 1000),
+              duration: const Duration(milliseconds: 10))),
       MapEntry(
           GYROSCOPE,
           PeriodicMeasure(MeasureType(NameSpace.CARP, GYROSCOPE),
-              name: 'Gyroscope', enabled: true, frequency: 10 * 1000, duration: 10)),
+              name: 'Gyroscope',
+              enabled: true,
+              frequency: const Duration(milliseconds: 1000),
+              duration: const Duration(milliseconds: 10))),
       MapEntry(
           PEDOMETER, Measure(MeasureType(NameSpace.CARP, PEDOMETER), name: 'Pedometer (Step Count)', enabled: true)),
       MapEntry(
           LIGHT,
           PeriodicMeasure(MeasureType(NameSpace.CARP, LIGHT),
-              name: 'Ambient Light', enabled: true, frequency: 10 * 1000, duration: 1000)),
+              name: 'Ambient Light',
+              enabled: true,
+              frequency: const Duration(seconds: 10),
+              duration: const Duration(seconds: 2))),
     ]);
 }

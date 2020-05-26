@@ -343,6 +343,10 @@ abstract class DatumProbe extends AbstractProbe {
   Future<void> onResume() async {
     Datum data = await getDatum().catchError((err) => controller.addError(err));
     if (data != null) controller.add(data);
+
+    // mark this sampling
+    if (measure is MarkedMeasure)
+      (await settings.preferences).setString(measure.type.toString(), DateTime.now().toUtc().toString());
   }
 
   Future<void> onPause() async {}
@@ -368,20 +372,20 @@ abstract class PeriodicDatumProbe extends DatumProbe {
 
   Future<void> onInitialize(Measure measure) async {
     assert(measure is PeriodicMeasure);
-    frequency = Duration(milliseconds: (measure as PeriodicMeasure).frequency);
-    duration = ((measure as PeriodicMeasure).duration != null)
-        ? Duration(milliseconds: (measure as PeriodicMeasure).duration)
-        : null;
+    frequency = (measure as PeriodicMeasure).frequency;
+    duration = (measure as PeriodicMeasure).duration;
   }
 
   Future<void> onRestart() async {
-    frequency = Duration(milliseconds: (measure as PeriodicMeasure).frequency);
-    duration = ((measure as PeriodicMeasure).duration != null)
-        ? Duration(milliseconds: (measure as PeriodicMeasure).duration)
-        : null;
+    frequency = (measure as PeriodicMeasure).frequency;
+    duration = (measure as PeriodicMeasure).duration;
   }
 
   Future<void> onResume() async {
+    // mark this sampling
+    if (measure is MarkedMeasure)
+      (await settings.preferences).setString(measure.type.toString(), DateTime.now().toUtc().toString());
+
     // create a recurrent timer that gets the datum every [frequency].
     timer = Timer.periodic(frequency, (Timer t) async {
       getDatum().then((Datum data) {
@@ -430,6 +434,10 @@ abstract class StreamProbe extends AbstractProbe {
     if (subscription == null && stream != null)
       subscription = stream.listen(onData, onError: onError, onDone: onDone);
     else if (stream != null && !stream.isBroadcast) subscription.resume();
+
+    // mark this sampling
+    if (measure is MarkedMeasure)
+      (await settings.preferences).setString(measure.type.toString(), DateTime.now().toUtc().toString());
   }
 
   Future<void> onPause() async {
@@ -475,21 +483,21 @@ abstract class PeriodicStreamProbe extends StreamProbe {
 
   Future<void> onInitialize(Measure measure) async {
     assert(measure is PeriodicMeasure);
-    frequency = Duration(milliseconds: (measure as PeriodicMeasure).frequency);
-    duration = ((measure as PeriodicMeasure).duration != null)
-        ? Duration(milliseconds: (measure as PeriodicMeasure).duration)
-        : null;
+    frequency = (measure as PeriodicMeasure).frequency;
+    duration = (measure as PeriodicMeasure).duration;
   }
 
   Future<void> onRestart() async {
-    frequency = Duration(milliseconds: (measure as PeriodicMeasure).frequency);
-    duration = ((measure as PeriodicMeasure).duration != null)
-        ? Duration(milliseconds: (measure as PeriodicMeasure).duration)
-        : null;
+    frequency = (measure as PeriodicMeasure).frequency;
+    duration = (measure as PeriodicMeasure).duration;
     super.onRestart();
   }
 
   Future<void> onResume() async {
+    // mark this sampling
+    if (measure is MarkedMeasure)
+      (await settings.preferences).setString(measure.type.toString(), DateTime.now().toUtc().toString());
+
     // if we don't have a subscription yet, or it has been canceled, try to get one
     if (subscription == null) subscription = stream?.listen(onData, onError: onError, onDone: onDone);
     if (subscription != null) {
@@ -532,17 +540,13 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
 
   Future<void> onInitialize(Measure measure) async {
     assert(measure is PeriodicMeasure);
-    frequency = Duration(milliseconds: (measure as PeriodicMeasure).frequency);
-    duration = ((measure as PeriodicMeasure).duration != null)
-        ? Duration(milliseconds: (measure as PeriodicMeasure).duration)
-        : null;
+    frequency = (measure as PeriodicMeasure).frequency;
+    duration = (measure as PeriodicMeasure).duration;
   }
 
   Future<void> onRestart() async {
-    frequency = Duration(milliseconds: (measure as PeriodicMeasure).frequency);
-    duration = ((measure as PeriodicMeasure).duration != null)
-        ? Duration(milliseconds: (measure as PeriodicMeasure).duration)
-        : null;
+    frequency = (measure as PeriodicMeasure).frequency;
+    duration = (measure as PeriodicMeasure).duration;
   }
 
   Future<void> onResume() async {

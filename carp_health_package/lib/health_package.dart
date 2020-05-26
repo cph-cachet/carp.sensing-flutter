@@ -50,10 +50,7 @@ class HealthSamplingPackage implements SamplingPackage {
     ..name = 'Common (default) health sampling schema'
     ..powerAware = true
     ..measures.addEntries([
-      MapEntry(
-          HEALTH,
-          HealthMeasure(MeasureType(NameSpace.CARP, HEALTH), HealthDataType.STEPS, Duration(days: 2),
-              name: 'Health Data')),
+      MapEntry(HEALTH, HealthMeasure(MeasureType(NameSpace.CARP, HEALTH), HealthDataType.STEPS, Duration(days: 2))),
     ]);
 
   SamplingSchema get normal => common;

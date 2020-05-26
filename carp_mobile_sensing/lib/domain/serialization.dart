@@ -67,7 +67,8 @@ class FromJsonFactory {
     registerFromJsonFunction("MeasureType", MeasureType.fromJsonFunction);
     registerFromJsonFunction("Measure", Measure.fromJsonFunction);
     registerFromJsonFunction("PeriodicMeasure", PeriodicMeasure.fromJsonFunction);
-    registerFromJsonFunction("AppUsageMeasure", AppUsageMeasure.fromJsonFunction);
+    registerFromJsonFunction("MarkedMeasure", MarkedMeasure.fromJsonFunction);
+    // registerFromJsonFunction("AppUsageMeasure", AppUsageMeasure.fromJsonFunction);
 
     //    registerFromJsonFunction("AudioMeasure", AudioMeasure.fromJsonFunction);
     //    registerFromJsonFunction("NoiseMeasure", NoiseMeasure.fromJsonFunction);
