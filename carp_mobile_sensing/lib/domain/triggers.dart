@@ -105,9 +105,11 @@ class PeriodicTrigger extends Trigger {
   /// The duration (until paused) of the the sampling.
   Duration duration;
 
-  PeriodicTrigger(
-      {String triggerId, this.period = const Duration(seconds: 60), this.duration = const Duration(seconds: 1)})
-      : super(triggerId: triggerId);
+  PeriodicTrigger({
+    String triggerId,
+    @required this.period,
+    this.duration = const Duration(seconds: 10),
+  }) : super(triggerId: triggerId);
 
   static Function get fromJsonFunction => _$PeriodicTriggerFromJson;
   factory PeriodicTrigger.fromJson(Map<String, dynamic> json) =>
@@ -125,7 +127,11 @@ class ScheduledTrigger extends Trigger {
   /// If null, the sampling is never stopped (i.e., runs forever).
   Duration duration;
 
-  ScheduledTrigger({String triggerId, @required this.schedule, this.duration}) : super(triggerId: triggerId);
+  ScheduledTrigger({
+    String triggerId,
+    @required this.schedule,
+    this.duration,
+  }) : super(triggerId: triggerId);
 
   static Function get fromJsonFunction => _$ScheduledTriggerFromJson;
   factory ScheduledTrigger.fromJson(Map<String, dynamic> json) =>
@@ -270,7 +276,7 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
       //this.dayOfMonth,
       Duration duration = const Duration(seconds: 1)})
       : assert(duration != null),
-        super(triggerId: triggerId, duration: duration);
+        super(triggerId: triggerId, period: const Duration(seconds: 1), duration: duration);
 
   DateTime get firstOccurrence {
     DateTime _firstOccurrence;

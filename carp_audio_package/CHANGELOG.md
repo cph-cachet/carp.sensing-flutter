@@ -1,3 +1,6 @@
+## 0.8.0
+* upgrade to `carp_mobile_sensing` v. 0.8.x
+
 ## 0.7.2
 * upgrade to `carp_mobile_sensing` v. 0.7.2
 * alignment to the new `flutter_sound` [v 5.x.x API](https://github.com/dooboolab/flutter_sound/blob/master/doc/migration_5.x.x.md#migration-form-4xx-to-5xx). 

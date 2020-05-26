@@ -106,7 +106,7 @@ void main() {
               .getMeasureList(types: [SensorSamplingPackage.PEDOMETER, DeviceSamplingPackage.SCREEN]));
 
     study_3.addTriggerTask(
-        PeriodicTrigger(period: 60 * 1000), // collect every min.
+        PeriodicTrigger(period: Duration(minutes: 1)), // collect every min.
         Task(name: 'Sensing Task #2')
           ..measures = SamplingSchema.common()
               .getMeasureList(types: [SensorSamplingPackage.LIGHT, DeviceSamplingPackage.DEVICE]));

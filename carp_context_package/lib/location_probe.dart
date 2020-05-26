@@ -40,7 +40,7 @@ class GeoLocationProbe extends StreamProbe {
 
     locationOptions = LocationOptions(
       accuracy: (measure as LocationMeasure).locationAccuracy,
-      timeInterval: (measure as LocationMeasure).frequency,
+      timeInterval: (measure as LocationMeasure).frequency.inMilliseconds,
       distanceFilter: (measure as LocationMeasure).distance,
     );
   }

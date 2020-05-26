@@ -16,16 +16,16 @@ dependencies:
   system_info: ^0.1.0
   uuid: ^2.0.0
   async: ^2.0.8
-  device_info: ^0.4.0
+  device_info: '>=0.4.2 <2.0.0'
   json_annotation: ^3.0.0
   path_provider: ^1.2.0
   archive: ^2.0.4
   permission_handler: ^5.0.0
-  shared_preferences: ^0.5.6
-
+  shared_preferences: '>=0.5.7 <2.0.0'
+  package_info: '>=0.4.0 <2.0.0'
 
   # probe-dependent plugins
-  sensors: ^0.4.0
+  sensors: '>=0.4.2 <2.0.0'
   battery: '>=0.3.0 <2.0.0'
   stats: ^1.0.0           # For calculating statistics, ex LightProbe
 

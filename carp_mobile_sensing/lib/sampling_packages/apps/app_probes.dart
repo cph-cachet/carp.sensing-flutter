@@ -16,7 +16,6 @@ class AppsProbe extends DatumProbe {
 
   // check if the DeviceApps plugin is available (only available on Android)
   Future<void> onInitialize(Measure measure) async {
-    print('onInitialize in $this');
     super.onInitialize(measure);
     if (!Platform.isAndroid) throw SensingException("Error initializing AppsProbe -- only available on Android.");
   }
@@ -35,7 +34,7 @@ class AppsProbe extends DatumProbe {
   }
 }
 
-/// A probe collecting app usage information about installed apps on the device
+/// A probe collecting app usage information on apps that are installed on the device
 ///
 /// Note that this probe only works on Android. On iOS, an exception is thrown and the probe is stopped.
 class AppUsageProbe extends DatumProbe {
@@ -51,9 +50,11 @@ class AppUsageProbe extends DatumProbe {
   }
 
   Future<Datum> getDatum() async {
-    DateTime start = (measure as MarkedMeasure).mark;
+    // get the last mark - if null, go back one day
+    DateTime start = (measure as MarkedMeasure).mark ?? DateTime.now().subtract(Duration(days: 1));
     DateTime end = DateTime.now();
 
+    debug('Collecting app usage - start: ${start.toUtc()}, end: ${end.toUtc()}');
     Map<dynamic, dynamic> usage = await appUsage.fetchUsage(start, end);
     return AppUsageDatum()
       ..start = start.toUtc()

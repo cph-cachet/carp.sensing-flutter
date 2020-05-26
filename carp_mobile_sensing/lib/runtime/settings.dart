@@ -1,32 +1,43 @@
 part of runtime;
 
 class SettingsBLoC {
-  static const String USER_ID_KEY = "user_id";
-  static const String INSTALL_DATE_KEY = "install_date";
-  static const String COMPLETED_TASKS_KEY = "completed_tasks";
+  static const String USER_ID_KEY = "user.id";
 
   SharedPreferences _preferences;
+  PackageInfo _packageInfo;
+  String appName, packageName, version, buildNumber;
 
   Future<void> init() async {
     _preferences = await SharedPreferences.getInstance();
+    _packageInfo = await PackageInfo.fromPlatform();
+
+    appName = _packageInfo.appName;
+    packageName = _packageInfo.packageName;
+    version = _packageInfo.version;
+    buildNumber = _packageInfo.buildNumber;
+
+    debug('Shared Preferences');
+    _preferences.getKeys().forEach((key) => debug('[$key] = ${_preferences.get(key)}'));
   }
 
-  Future<SharedPreferences> get preferences async {
-    if (_preferences == null) _preferences = await SharedPreferences.getInstance();
-    return _preferences;
-  }
+  SharedPreferences get preferences => _preferences;
+
+  PackageInfo get packageInfo => _packageInfo;
+
+  String get _userIdKey => '$appName.$USER_ID_KEY'.toLowerCase();
 
   String _userId;
 
-  /// A unique anonymous user id.
+  /// Get a unique anonymous user id.
   ///
-  /// This id is stored on the phone in-between session and should therefore be the same for the same phone.
+  /// This id is generated the first time this method is called and then stored on the phone
+  /// in-between sessions, and will therefore be the same for the same app on the same phone.
   Future<String> get userId async {
     if (_userId == null) {
-      _userId = (await preferences).get(USER_ID_KEY);
+      _userId = preferences.get(_userIdKey);
       if (_userId == null) {
         _userId = Uuid().v4();
-        (await preferences).setString(USER_ID_KEY, _userId);
+        preferences.setString(_userIdKey, _userId);
       }
     }
     return _userId;

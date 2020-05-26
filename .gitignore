@@ -41,3 +41,12 @@ carp_mobile_sensing_app/ios/Flutter/Release.xcconfig
 *.xcconfig
 carp_health_package/example/.flutter-plugins-dependencies
 carp_mobile_sensing/example/.flutter-plugins-dependencies
+carp_communication_package/example/.flutter-plugins-dependencies
+carp_mobile_sensing/example/.flutter-plugins-dependencies
+carp_audio_package/.flutter-plugins-dependencies
+carp_backend/example/.flutter-plugins-dependencies
+carp_communication_package/example/.flutter-plugins-dependencies
+carp_context_package/.flutter-plugins-dependencies
+carp_mobile_sensing/example/.flutter-plugins-dependencies
+carp_survey_package/example/.flutter-plugins-dependencies
+carp_webservices/example/.flutter-plugins-dependencies

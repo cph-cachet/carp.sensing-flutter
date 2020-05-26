@@ -120,10 +120,14 @@ class PeriodicMeasure extends Measure {
 /// This measure persistently marks the last time this data measure was done and provide this
 /// in the [mark] variable.
 /// This is useful for measures that wants to collect all measures since last time.
-/// For example the [AppUsageMeasure] that want to collect app usage since last time.
+/// For example the [AppUsageMeasure] that collects app usage since last time.
+///
+/// A [MarkedMeasure] can only be used with [DatumProbe], [StreamProbe] and [PeriodicStreamProbe] probes.
+/// The mark is read when the probe is resumed and saved when the probe is paused.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MarkedMeasure extends Measure {
   /// The date and time of the last time this measure was collected.
+  /// Returns `null` if there is no previous mark.
   DateTime mark;
   DateTime _storedMark;
 

@@ -53,8 +53,8 @@ class ConnectivitySamplingPackage implements SamplingPackage {
             MeasureType(NameSpace.CARP, BLUETOOTH),
             name: 'Nearby Devices (Bluetooth Scan)',
             enabled: true,
-            frequency: 10 * 60 * 1000,
-            duration: 5 * 1000,
+            frequency: Duration(minutes: 10),
+            duration: Duration(seconds: 5),
           )),
       MapEntry(
           WIFI,
@@ -62,8 +62,8 @@ class ConnectivitySamplingPackage implements SamplingPackage {
             MeasureType(NameSpace.CARP, WIFI),
             name: 'Wifi network names (SSID / BSSID)',
             enabled: true,
-            frequency: 60 * 1000,
-            duration: 5 * 1000,
+            frequency: Duration(minutes: 10),
+            duration: Duration(seconds: 5),
           )),
     ]);
 
@@ -98,8 +98,8 @@ class ConnectivitySamplingPackage implements SamplingPackage {
             MeasureType(NameSpace.CARP, BLUETOOTH),
             name: 'Nearby Devices (Bluetooth Scan)',
             enabled: true,
-            frequency: 1 * 60 * 1000,
-            duration: 2 * 1000,
+            frequency: Duration(minutes: 1),
+            duration: Duration(seconds: 2),
           )),
       MapEntry(
           WIFI,
@@ -107,8 +107,8 @@ class ConnectivitySamplingPackage implements SamplingPackage {
             MeasureType(NameSpace.CARP, WIFI),
             name: 'Wifi network names (SSID / BSSID)',
             enabled: true,
-            frequency: 1 * 60 * 1000,
-            duration: 5 * 1000,
+            frequency: Duration(minutes: 1),
+            duration: Duration(seconds: 5),
           )),
     ]);
 }

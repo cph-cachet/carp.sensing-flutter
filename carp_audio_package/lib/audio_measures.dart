@@ -19,8 +19,12 @@ class AudioMeasure extends Measure {
   /// If no [studyId] is provide, `default_study` will be used as the default id.
   String studyId = DEFAULT_STUDY_ID;
 
-  AudioMeasure(MeasureType type, {name, enabled = true, this.studyId = DEFAULT_STUDY_ID})
-      : super(type, name: name, enabled: enabled);
+  AudioMeasure(
+    MeasureType type, {
+    String name,
+    bool enabled = true,
+    this.studyId = DEFAULT_STUDY_ID,
+  }) : super(type, name: name, enabled: enabled);
 
   static Function get fromJsonFunction => _$AudioMeasureFromJson;
   factory AudioMeasure.fromJson(Map<String, dynamic> json) =>
@@ -38,8 +42,14 @@ class NoiseMeasure extends PeriodicMeasure {
 
   int samplingRate = DEFAULT_SAMPLING_RATE;
 
-  NoiseMeasure(MeasureType type, {name, enabled = true, frequency, duration, this.samplingRate = DEFAULT_SAMPLING_RATE})
-      : super(type, name: name, enabled: enabled, frequency: frequency, duration: duration);
+  NoiseMeasure(
+    MeasureType type, {
+    String name,
+    bool enabled = true,
+    Duration frequency,
+    Duration duration,
+    this.samplingRate = DEFAULT_SAMPLING_RATE,
+  }) : super(type, name: name, enabled: enabled, frequency: frequency, duration: duration);
 
   static Function get fromJsonFunction => _$NoiseMeasureFromJson;
   factory NoiseMeasure.fromJson(Map<String, dynamic> json) =>

@@ -13,7 +13,21 @@ class HealthProbe extends StreamProbe {
 
   HealthProbe(this.type);
 
-  /// Make Health plugin call and fetch data points
+  Future<void> onInitialize(Measure measure) async {
+    super.onInitialize(measure);
+    assert(measure is HealthMeasure);
+    duration = (measure as HealthMeasure).duration;
+    healthDataType = (measure as HealthMeasure).healthDataType;
+
+    // try to get permissions to accessing health data
+    await Health.requestAuthorization();
+  }
+
+  Future<void> onResume() async {
+    super.onResume();
+    _getHealthData(DateTime.now().subtract(duration), DateTime.now());
+  }
+
   Future<void> _getHealthData(DateTime start, DateTime end) async {
     List<HealthDataPoint> healthData = List<HealthDataPoint>();
 
@@ -26,21 +40,6 @@ class HealthProbe extends StreamProbe {
 
     // convert [HealthDataPoint] to Datums and add them to the stream.
     healthData.forEach((data) => _ctrl.add(HealthDatum.fromHealthDataPoint(data)));
-  }
-
-  Future<void> onResume() async {
-    super.onResume();
-    _getHealthData(DateTime.now().subtract(duration), DateTime.now());
-  }
-
-  Future<void> onInitialize(Measure measure) async {
-    super.onInitialize(measure);
-    assert(measure is HealthMeasure);
-    duration = (measure as HealthMeasure).duration;
-    healthDataType = (measure as HealthMeasure).healthDataType;
-
-    // try to get permissions to accessing health data
-    await Health.requestAuthorization();
   }
 }
 

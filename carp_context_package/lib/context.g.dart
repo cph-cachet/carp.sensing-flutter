@@ -76,10 +76,14 @@ LocationMeasure _$LocationMeasureFromJson(Map<String, dynamic> json) {
     json['type'] == null
         ? null
         : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
-    name: json['name'],
-    enabled: json['enabled'],
-    frequency: json['frequency'],
-    duration: json['duration'],
+    name: json['name'] as String,
+    enabled: json['enabled'] as bool,
+    frequency: json['frequency'] == null
+        ? null
+        : Duration(microseconds: json['frequency'] as int),
+    duration: json['duration'] == null
+        ? null
+        : Duration(microseconds: json['duration'] as int),
     accuracy:
         _$enumDecodeNullable(_$GeolocationAccuracyEnumMap, json['accuracy']),
     distance: json['distance'] as int,
@@ -104,8 +108,8 @@ Map<String, dynamic> _$LocationMeasureToJson(LocationMeasure instance) {
   writeNotNull('name', instance.name);
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
-  writeNotNull('frequency', instance.frequency);
-  writeNotNull('duration', instance.duration);
+  writeNotNull('frequency', instance.frequency?.inMicroseconds);
+  writeNotNull('duration', instance.duration?.inMicroseconds);
   writeNotNull('accuracy', _$GeolocationAccuracyEnumMap[instance.accuracy]);
   writeNotNull('distance', instance.distance);
   return val;

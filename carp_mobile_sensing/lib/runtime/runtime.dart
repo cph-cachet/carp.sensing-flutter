@@ -19,6 +19,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:permission_handler_platform_interface/permission_handler_platform_interface.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
+import 'package:package_info/package_info.dart';
 
 part 'probes.dart';
 part 'probe_registry.dart';

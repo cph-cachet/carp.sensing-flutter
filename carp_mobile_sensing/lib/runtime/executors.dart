@@ -347,12 +347,6 @@ class TaskExecutor extends Executor {
 
   Future<void> onInitialize(Measure ignored) async {
     for (Measure measure in task.measures) {
-      if (measure is MarkedMeasure) {
-        // if this is a MarkedMeasure, find the last mark - if not found, go back one day
-        String mark = (await settings.preferences).get(measure.type.toString());
-        measure.mark = (mark != null) ? DateTime.tryParse(mark) : DateTime.now().subtract(Duration(days: 1));
-      }
-
       // create a new probe for each measure - this ensures that we can have
       // multiple measures of the same type, each using its own probe instance
       Probe probe = ProbeRegistry.create(measure.type.name);

@@ -164,7 +164,7 @@ abstract class AbstractProbe with MeasureListener implements Probe {
     _stateMachine = _CreatedState(this);
   }
 
-  // ProbeState handlers
+// ProbeState handlers
   Future<void> initialize(Measure measure) async {
     assert(measure != null, 'Probe cannot be initialized with a null measure.');
     _measure = measure;
@@ -199,6 +199,21 @@ abstract class AbstractProbe with MeasureListener implements Probe {
 
   /// Callback when this probe's [measure] has changed.
   void hasChanged(Measure measure) => restart();
+
+  /// Mark the latest sampling
+  void mark() {
+    if (measure is MarkedMeasure)
+      settings.preferences.setString(measure.type.toString(), DateTime.now().toUtc().toString());
+  }
+
+  /// Get the latest mark
+  void marking() {
+    if (measure is MarkedMeasure) {
+      String mark = settings.preferences.get(measure.type.toString());
+      debug('mark : $mark');
+      (measure as MarkedMeasure).mark = (mark != null) ? DateTime.tryParse(mark) : null;
+    }
+  }
 }
 
 //---------------------------------------------------------------------------------------
@@ -341,12 +356,10 @@ abstract class DatumProbe extends AbstractProbe {
   Future<void> onRestart() async {}
 
   Future<void> onResume() async {
+    marking();
     Datum data = await getDatum().catchError((err) => controller.addError(err));
     if (data != null) controller.add(data);
-
-    // mark this sampling
-    if (measure is MarkedMeasure)
-      (await settings.preferences).setString(measure.type.toString(), DateTime.now().toUtc().toString());
+    mark();
   }
 
   Future<void> onPause() async {}
@@ -382,9 +395,7 @@ abstract class PeriodicDatumProbe extends DatumProbe {
   }
 
   Future<void> onResume() async {
-    // mark this sampling
-    if (measure is MarkedMeasure)
-      (await settings.preferences).setString(measure.type.toString(), DateTime.now().toUtc().toString());
+    marking();
 
     // create a recurrent timer that gets the datum every [frequency].
     timer = Timer.periodic(frequency, (Timer t) async {
@@ -396,6 +407,7 @@ abstract class PeriodicDatumProbe extends DatumProbe {
 
   Future<void> onPause() async {
     timer?.cancel();
+    mark();
   }
 
   Future<void> onStop() async {
@@ -430,14 +442,12 @@ abstract class StreamProbe extends AbstractProbe {
   }
 
   Future<void> onResume() async {
+    marking();
+
     // if we don't have a subscription yet, or it has been canceled, try to get one
     if (subscription == null && stream != null)
       subscription = stream.listen(onData, onError: onError, onDone: onDone);
     else if (stream != null && !stream.isBroadcast) subscription.resume();
-
-    // mark this sampling
-    if (measure is MarkedMeasure)
-      (await settings.preferences).setString(measure.type.toString(), DateTime.now().toUtc().toString());
   }
 
   Future<void> onPause() async {
@@ -454,6 +464,8 @@ abstract class StreamProbe extends AbstractProbe {
         subscription?.pause();
       }
     }
+
+    mark();
   }
 
   Future<void> onStop() async {
@@ -494,9 +506,7 @@ abstract class PeriodicStreamProbe extends StreamProbe {
   }
 
   Future<void> onResume() async {
-    // mark this sampling
-    if (measure is MarkedMeasure)
-      (await settings.preferences).setString(measure.type.toString(), DateTime.now().toUtc().toString());
+    marking();
 
     // if we don't have a subscription yet, or it has been canceled, try to get one
     if (subscription == null) subscription = stream?.listen(onData, onError: onError, onDone: onDone);
@@ -515,6 +525,7 @@ abstract class PeriodicStreamProbe extends StreamProbe {
   Future<void> onPause() async {
     timer?.cancel();
     subscription?.pause();
+    mark();
   }
 
   Future<void> onStop() async {

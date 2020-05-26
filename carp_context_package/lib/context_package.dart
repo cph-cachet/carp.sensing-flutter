@@ -80,7 +80,7 @@ class ContextSamplingPackage implements SamplingPackage {
             MeasureType(NameSpace.CARP, GEOLOCATION),
             name: 'Geo-location',
             enabled: true,
-            frequency: 30 * 1000,
+            frequency: Duration(seconds: 30),
             accuracy: GeolocationAccuracy.low,
             distance: 3,
           )),
