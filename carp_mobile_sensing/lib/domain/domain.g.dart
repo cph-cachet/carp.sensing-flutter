@@ -475,6 +475,9 @@ MarkedMeasure _$MarkedMeasureFromJson(Map<String, dynamic> json) {
         : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
     name: json['name'] as String,
     enabled: json['enabled'] as bool,
+    history: json['history'] == null
+        ? null
+        : Duration(microseconds: json['history'] as int),
   )
     ..c__ = json['c__'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
@@ -499,6 +502,7 @@ Map<String, dynamic> _$MarkedMeasureToJson(MarkedMeasure instance) {
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
   writeNotNull('mark', instance.mark?.toIso8601String());
+  writeNotNull('history', instance.history?.inMicroseconds);
   return val;
 }
 

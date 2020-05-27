@@ -188,19 +188,19 @@ class StudyMock implements StudyManager {
 //                    name: "Audio Recording",
 //                    studyId: studyId,
 //                  )))
-//            ..addTriggerTask(
-//                ImmediateTrigger(),
-//                AutomaticTask()
-//                  ..measures = SamplingSchema.debug().getMeasureList(
-//                    namespace: NameSpace.CARP,
-//                    types: [
-//                      CommunicationSamplingPackage.CALENDAR,
-//                      CommunicationSamplingPackage.TEXT_MESSAGE_LOG,
-//                      CommunicationSamplingPackage.TEXT_MESSAGE,
-//                      CommunicationSamplingPackage.PHONE_LOG,
-//                      CommunicationSamplingPackage.TELEPHONY,
-//                    ],
-//                  ))
+            ..addTriggerTask(
+                ImmediateTrigger(),
+                AutomaticTask()
+                  ..measures = SamplingSchema.debug().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      CommunicationSamplingPackage.CALENDAR,
+                      CommunicationSamplingPackage.TEXT_MESSAGE_LOG,
+                      CommunicationSamplingPackage.TEXT_MESSAGE,
+                      CommunicationSamplingPackage.PHONE_LOG,
+                      CommunicationSamplingPackage.TELEPHONY,
+                    ],
+                  ))
 //            ..addTriggerTask(
 //                DelayedTrigger(delay: 10 * 1000),
 //                Task('eSense')
@@ -684,10 +684,8 @@ SamplingSchema get aware => SamplingSchema()
 //        ConnectivitySamplingPackage.WIFI,
 //        PeriodicMeasure(MeasureType(NameSpace.CARP, ConnectivitySamplingPackage.WIFI),
 //            name: 'Wifi network names (SSID / BSSID)', frequency: 60 * 1000, duration: 5 * 1000)),
-    MapEntry(
-        CommunicationSamplingPackage.PHONE_LOG,
-        PhoneLogMeasure(MeasureType(NameSpace.CARP, CommunicationSamplingPackage.PHONE_LOG),
-            name: 'Phone Log', days: 1)),
+    MapEntry(CommunicationSamplingPackage.PHONE_LOG,
+        MarkedMeasure(MeasureType(NameSpace.CARP, CommunicationSamplingPackage.PHONE_LOG), name: 'Phone Log')),
     MapEntry(
         CommunicationSamplingPackage.TEXT_MESSAGE_LOG,
         Measure(MeasureType(NameSpace.CARP, CommunicationSamplingPackage.TEXT_MESSAGE_LOG),

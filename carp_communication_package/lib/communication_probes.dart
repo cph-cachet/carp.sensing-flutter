@@ -7,24 +7,14 @@
 
 part of communication;
 
-/// A probe that collects the phone log from this device on a regular basis (e.g. once pr. hour).
+/// A probe that collects the phone log from this device.
 ///
 /// Only works on Android
 class PhoneLogProbe extends DatumProbe {
   Future<Datum> getDatum() async {
-    int days = (measure as PhoneLogMeasure).days;
-    Iterable<CallLogEntry> entries;
-    if ((days == null) || (days == -1)) {
-      entries = await CallLog.get();
-    } else {
-      var now = DateTime.now();
-      int from = now.subtract(Duration(days: days)).millisecondsSinceEpoch;
-      int to = now.millisecondsSinceEpoch;
-      entries = await CallLog.query(dateFrom: from, dateTo: to);
-    }
-
-    // on iOS, CallLog returns null.
-    entries ??= List<CallLogEntry>();
+    int from = (measure as MarkedMeasure).mark.millisecondsSinceEpoch;
+    int now = DateTime.now().millisecondsSinceEpoch;
+    Iterable<CallLogEntry> entries = await CallLog.query(dateFrom: from, dateTo: now) ?? List<CallLogEntry>();
     return PhoneLogDatum()..phoneLog = entries.map((call) => PhoneCall.fromCallLogEntry(call)).toList();
   }
 }
@@ -91,10 +81,10 @@ class CalendarProbe extends DatumProbe {
     _calendars = calendarsResult?.data;
   }
 
-  /// Collects events from the [calendar].
+  // Collects events from the [calendar].
   Future<void> _retrieveEvents(Calendar calendar) async {
-    final startDate = new DateTime.now().subtract(new Duration(days: (measure as CalendarMeasure).daysBack));
-    final endDate = new DateTime.now().add(new Duration(days: (measure as CalendarMeasure).daysFuture));
+    final startDate = new DateTime.now().subtract((measure as CalendarMeasure).past);
+    final endDate = new DateTime.now().add((measure as CalendarMeasure).future);
 
     var _calendarEventsResult =
         await _deviceCalendar.retrieveEvents(calendar.id, RetrieveEventsParams(startDate: startDate, endDate: endDate));

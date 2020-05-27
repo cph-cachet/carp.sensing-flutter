@@ -1,3 +1,10 @@
+## 0.8.0
+* upgrade to `carp_mobile_sensing` v. 0.8.x
+* upgrading the `PhoneLogProbe`
+  * removed the `PhoneLogMeasure` measure
+  * using the new `MarkedMeasure` for the
+* using `Duration` to specify the `CalendarMeasure`
+
 ## 0.7.0
 * upgrade to `carp_mobile_sensing` v. 0.7.0
 

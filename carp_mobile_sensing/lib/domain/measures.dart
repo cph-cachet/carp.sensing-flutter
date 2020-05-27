@@ -119,7 +119,7 @@ class PeriodicMeasure extends Measure {
 ///
 /// This measure persistently marks the last time this data measure was done and provide this
 /// in the [mark] variable.
-/// This is useful for measures that wants to collect all measures since last time.
+/// This is useful for measures that want to collect data since last time it was collected.
 /// For example the [AppUsageMeasure] that collects app usage since last time.
 ///
 /// A [MarkedMeasure] can only be used with [DatumProbe], [StreamProbe] and [PeriodicStreamProbe] probes.
@@ -127,11 +127,21 @@ class PeriodicMeasure extends Measure {
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MarkedMeasure extends Measure {
   /// The date and time of the last time this measure was collected.
-  /// Returns `null` if there is no previous mark.
-  DateTime mark;
+  /// Returns  `now`-[history] if there is no previous mark.
+  DateTime get mark => _mark ?? DateTime.now().subtract(history);
+  set mark(DateTime m) => _mark = m;
+  DateTime _mark;
   DateTime _storedMark;
 
-  MarkedMeasure(MeasureType type, {String name, bool enabled}) : super(type, name: name, enabled: enabled);
+  /// If there is no persistent mark, how long time back in history should this measure be collected?
+  Duration history;
+
+  MarkedMeasure(
+    MeasureType type, {
+    String name,
+    bool enabled,
+    this.history = const Duration(days: 1),
+  }) : super(type, name: name, enabled: enabled);
 
   static Function get fromJsonFunction => _$MarkedMeasureFromJson;
   factory MarkedMeasure.fromJson(Map<String, dynamic> json) =>
