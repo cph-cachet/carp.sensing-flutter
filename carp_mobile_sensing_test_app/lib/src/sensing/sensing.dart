@@ -19,7 +19,7 @@ class Sensing {
     SamplingPackageRegistry.register(AudioSamplingPackage());
     //SamplingPackageRegistry.register(ESenseSamplingPackage());
     SamplingPackageRegistry.register(SurveySamplingPackage());
-    //SamplingPackageRegistry.register(HealthSamplingPackage());
+    SamplingPackageRegistry.register(HealthSamplingPackage());
 
     // create/load and register external data managers
     DataManagerRegistry.register(CarpDataManager());
@@ -71,13 +71,13 @@ class StudyMock implements StudyManager {
   Study _study;
 
   Future<Study> getStudy(String studyId) async {
-    return _getTestingStudy(studyId);
+    //return _getTestingStudy(studyId);
 
     //return _getConditionalSamplingStudy(studyId);
 
     //return _getSurveyStudy(studyId);
 
-    //return _getHealthStudy('#6-health');
+    return _getHealthStudy('#6-health');
 
     //return _getCoverageStudy('#5-coverage');
     //return _getHighFrequencyStudy('DF#4dD-high-frequency');
@@ -188,19 +188,19 @@ class StudyMock implements StudyManager {
 //                    name: "Audio Recording",
 //                    studyId: studyId,
 //                  )))
-            ..addTriggerTask(
-                ImmediateTrigger(),
-                AutomaticTask()
-                  ..measures = SamplingSchema.debug().getMeasureList(
-                    namespace: NameSpace.CARP,
-                    types: [
-                      CommunicationSamplingPackage.CALENDAR,
-                      CommunicationSamplingPackage.TEXT_MESSAGE_LOG,
-                      CommunicationSamplingPackage.TEXT_MESSAGE,
-                      CommunicationSamplingPackage.PHONE_LOG,
-                      CommunicationSamplingPackage.TELEPHONY,
-                    ],
-                  ))
+//            ..addTriggerTask(
+//                ImmediateTrigger(),
+//                AutomaticTask()
+//                  ..measures = SamplingSchema.debug().getMeasureList(
+//                    namespace: NameSpace.CARP,
+//                    types: [
+//                      CommunicationSamplingPackage.CALENDAR,
+//                      CommunicationSamplingPackage.TEXT_MESSAGE_LOG,
+//                      CommunicationSamplingPackage.TEXT_MESSAGE,
+//                      CommunicationSamplingPackage.PHONE_LOG,
+//                      CommunicationSamplingPackage.TELEPHONY,
+//                    ],
+//                  ))
 //            ..addTriggerTask(
 //                DelayedTrigger(delay: 10 * 1000),
 //                Task('eSense')
@@ -283,7 +283,7 @@ class StudyMock implements StudyManager {
                     ],
                   ))
             ..addTriggerTask(
-                DelayedTrigger(delay: 30 * 1000),
+                DelayedTrigger(delay: Duration(seconds: 30)),
                 AutomaticTask()
                   ..measures.add(RPTaskMeasure(
                     MeasureType(NameSpace.CARP, SurveySamplingPackage.SURVEY),
@@ -336,16 +336,16 @@ class StudyMock implements StudyManager {
                       AppsSamplingPackage.APP_USAGE, // 60 s
                     ],
                   ))
-//            ..addTriggerTask(
-//                //PeriodicTrigger(period: 5 * 1000), // 5 sec
-//                DelayedTrigger(delay: 5 * 1000), // 5 sec
-//                AutomaticTask()
-//                  ..measures = SamplingSchema.debug().getMeasureList(
-//                    namespace: NameSpace.CARP,
-//                    types: [
-//                      HealthSamplingPackage.HEALTH,
-//                    ],
-//                  ))
+            ..addTriggerTask(
+                //PeriodicTrigger(period: Duration(seconds: 5)),
+                DelayedTrigger(delay: Duration(seconds: 5)),
+                AutomaticTask()
+                  ..measures = SamplingSchema.debug().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      HealthSamplingPackage.HEALTH,
+                    ],
+                  ))
           //
           ;
     }
@@ -526,7 +526,7 @@ class StudyMock implements StudyManager {
         ..addTriggerTask(ImmediateTrigger(),
             AutomaticTask()..measures = aware.measures.values.toList()) // add all measures (for now)
         ..addTriggerTask(
-            DelayedTrigger(delay: 10 * 1000),
+            DelayedTrigger(delay: Duration(seconds: 10)),
             AutomaticTask()
               ..measures = SamplingSchema.debug().getMeasureList(
                 namespace: NameSpace.CARP,

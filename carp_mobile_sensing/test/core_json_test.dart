@@ -1,7 +1,8 @@
-import 'package:test/test.dart';
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+import 'package:test/test.dart';
 
 String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
 
@@ -94,7 +95,7 @@ void main() {
       ..encrypt = false;
 
     study_3.addTriggerTask(
-        DelayedTrigger(delay: 10 * 1000), // delay for 10 secs.
+        DelayedTrigger(delay: Duration(seconds: 10)),
         AutomaticTask(name: 'Sensing Task #1')
           ..measures = SamplingSchema.common()
               .getMeasureList(types: [SensorSamplingPackage.PEDOMETER, DeviceSamplingPackage.SCREEN]));

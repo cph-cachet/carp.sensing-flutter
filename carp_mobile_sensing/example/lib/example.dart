@@ -5,9 +5,10 @@
  * found in the LICENSE file.
  */
 
-import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'dart:async';
 import 'dart:convert';
+
+import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 /// This is the code for the very minimal example used in the README.md file.
 void example() async {
@@ -22,7 +23,7 @@ void example() async {
   // add sensor collection from accelerometer and gyroscope
   // careful - these sensors generate a lot of data!
   study.addTriggerTask(
-      DelayedTrigger(delay: 1000), // delay sampling for one second
+      DelayedTrigger(delay: Duration(seconds: 1)),
       AutomaticTask(name: 'Sensor Task')
         ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
             frequency: const Duration(seconds: 10), duration: const Duration(milliseconds: 100)))

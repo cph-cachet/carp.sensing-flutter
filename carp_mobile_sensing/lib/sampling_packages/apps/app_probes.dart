@@ -55,7 +55,7 @@ class AppUsageProbe extends DatumProbe {
 
   Future<Datum> getDatum() async {
     // get the last mark - if null, go back one day
-    DateTime start = markedMeasure.mark ?? DateTime.now().subtract(markedMeasure.history);
+    DateTime start = markedMeasure.lastTime ?? DateTime.now().subtract(markedMeasure.history);
     DateTime end = DateTime.now();
 
     debug('Collecting app usage - start: ${start.toUtc()}, end: ${end.toUtc()}');

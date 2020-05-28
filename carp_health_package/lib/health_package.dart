@@ -56,7 +56,7 @@ class HealthSamplingPackage implements SamplingPackage {
           HEALTH,
           HealthMeasure(
             MeasureType(NameSpace.CARP, HEALTH),
-            //healthDataType: "STEPS",
+            name: "Steps",
             healthDataType: HealthDataType.STEPS,
           )),
     ]);

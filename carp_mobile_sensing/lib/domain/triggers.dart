@@ -80,10 +80,10 @@ class ManualTrigger extends Trigger {
 /// The delay is measured from the start of the overall [Study].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class DelayedTrigger extends Trigger {
-  /// Delay in milliseconds.
-  int delay;
+  /// Delay before this trigger is executed.
+  Duration delay;
 
-  DelayedTrigger({String triggerId, this.delay = 0}) : super(triggerId: triggerId);
+  DelayedTrigger({String triggerId, this.delay = const Duration(seconds: 1)}) : super(triggerId: triggerId);
 
   static Function get fromJsonFunction => _$DelayedTriggerFromJson;
   factory DelayedTrigger.fromJson(Map<String, dynamic> json) =>

@@ -169,14 +169,10 @@ class ManualTriggerExecutor extends TriggerExecutor {
 /// Executes a [DelayedTrigger], i.e. resumes sampling after the specified delay.
 /// Once started, it can be paused / resumed as any other [Executor].
 class DelayedTriggerExecutor extends TriggerExecutor {
-  Duration delay;
-
-  DelayedTriggerExecutor(DelayedTrigger trigger) : super(trigger) {
-    delay = Duration(milliseconds: trigger.delay);
-  }
+  DelayedTriggerExecutor(DelayedTrigger trigger) : super(trigger);
 
   Future<void> onResume() async {
-    Timer(delay, () {
+    Timer((trigger as DelayedTrigger).delay, () {
       // after a delay, resume this trigger and its tasks
       super.onResume();
     });

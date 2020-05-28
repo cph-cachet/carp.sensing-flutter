@@ -154,8 +154,11 @@ void main() {
                 MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
                 healthDataType: HealthDataType.HEART_RATE,
               ))
-              ..measures.add(HealthMeasure(MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
-                  healthDataType: HealthDataType.STEPS))
+              ..measures.add(HealthMeasure(
+                MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
+                name: 'Steps',
+                healthDataType: HealthDataType.STEPS,
+              ))
             //
             )
         ..addTriggerTask(

@@ -606,7 +606,9 @@ Map<String, dynamic> _$ManualTriggerToJson(ManualTrigger instance) {
 DelayedTrigger _$DelayedTriggerFromJson(Map<String, dynamic> json) {
   return DelayedTrigger(
     triggerId: json['trigger_id'] as String,
-    delay: json['delay'] as int,
+    delay: json['delay'] == null
+        ? null
+        : Duration(microseconds: json['delay'] as int),
   )
     ..c__ = json['c__'] as String
     ..tasks = (json['tasks'] as List)
@@ -627,7 +629,7 @@ Map<String, dynamic> _$DelayedTriggerToJson(DelayedTrigger instance) {
   writeNotNull('c__', instance.c__);
   writeNotNull('trigger_id', instance.triggerId);
   writeNotNull('tasks', instance.tasks);
-  writeNotNull('delay', instance.delay);
+  writeNotNull('delay', instance.delay?.inMicroseconds);
   return val;
 }
 

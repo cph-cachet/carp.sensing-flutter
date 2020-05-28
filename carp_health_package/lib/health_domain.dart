@@ -48,7 +48,7 @@ class HealthMeasure extends MarkedMeasure {
     MeasureType type, {
     String name,
     bool enabled,
-    Duration history,
+    Duration history = const Duration(days: 1),
     @required this.healthDataType,
   }) : super(
           type,
@@ -61,6 +61,8 @@ class HealthMeasure extends MarkedMeasure {
   factory HealthMeasure.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$HealthMeasureToJson(this);
+
+  String tag() => '$type.$healthDataType';
 
   String toString() => super.toString() + ', healthDataType: $healthDataType';
 }

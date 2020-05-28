@@ -12,24 +12,25 @@ void main() async {
   // creating a task collecting step counts and blood pressure data for the last two days
   study.addTriggerTask(
     ImmediateTrigger(), // a simple trigger that starts immediately
-    Task(name: 'Step and bloodpressure')
+    Task(name: 'Step and blood pressure')
       ..addMeasure(
         HealthMeasure(
           MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
-          //healthDataType: HealthDataType.STEPS, name: 'Health Data'
+          healthDataType: HealthDataType.STEPS,
+          name: 'Steps',
         ),
       )
       ..addMeasure(
         HealthMeasure(MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
-            //healthDataType: HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
+            healthDataType: HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
             history: Duration(days: 2),
-            name: 'Health Data'),
+            name: 'Blood Pressure Diastolic'),
       )
       ..addMeasure(
         HealthMeasure(MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
-            //healthDataType: HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
+            healthDataType: HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
             history: Duration(days: 2),
-            name: 'Health Data'),
+            name: 'Blood Pressure Systolic'),
       ),
   );
 

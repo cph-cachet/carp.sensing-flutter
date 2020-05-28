@@ -19,7 +19,9 @@ class HealthProbe extends StreamProbe {
   Future<void> onResume() async {
     super.onResume();
 
-    DateTime start = healthMeasure.mark ?? DateTime.now().subtract(healthMeasure.history);
+    debug('healthMeasure : $healthMeasure');
+
+    DateTime start = healthMeasure.lastTime ?? DateTime.now().subtract(healthMeasure.history);
     DateTime end = DateTime.now();
     HealthDataType healthDataType = healthMeasure.healthDataType;
     List<HealthDataPoint> data = List<HealthDataPoint>();

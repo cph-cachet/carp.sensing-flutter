@@ -59,11 +59,11 @@ class _StudyVizState extends State<StudyVisualization> {
               ),
             ],
             flexibleSpace: FlexibleSpaceBar(
-              title: Text(study.name),
+              title: Text(study?.name),
               background: Stack(
                 fit: StackFit.expand,
                 children: <Widget>[
-                  study.image,
+                  study?.image,
 //                  Image.asset(
 //                    bloc.study.image,
 //                    fit: BoxFit.cover,

@@ -118,18 +118,21 @@ class PeriodicMeasure extends Measure {
 /// A [MarkedMeasure] specify how to collect data historically back to a persistent mark.
 ///
 /// This measure persistently marks the last time this data measure was done and provide this
-/// in the [mark] variable.
+/// in the [lastTime] variable.
 /// This is useful for measures that want to collect data since last time it was collected.
-/// For example the [AppUsageMeasure] that collects app usage since last time.
+/// For example the [AppUsageMeasure].
 ///
 /// A [MarkedMeasure] can only be used with [DatumProbe], [StreamProbe] and [PeriodicStreamProbe] probes.
 /// The mark is read when the probe is resumed and saved when the probe is paused.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MarkedMeasure extends Measure {
   /// The date and time of the last time this measure was collected.
-  /// Returns  `now`-[history] if there is no previous mark.
   @JsonKey(ignore: true)
-  DateTime mark;
+  DateTime lastTime;
+
+  /// The tag to be used to uniquely identify this measure.
+  /// Default is the [type] but can be overwritten in sub-classes.
+  String tag() => this.type.toString();
 
   /// If there is no persistent mark, how long time back in history should
   /// this measure be collected?
@@ -147,7 +150,7 @@ class MarkedMeasure extends Measure {
       FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$MarkedMeasureToJson(this);
 
-  String toString() => super.toString() + ', mark: $mark';
+  String toString() => super.toString() + ', mark: $lastTime, history: $history';
 }
 
 /// Specifies the type of a [Measure].

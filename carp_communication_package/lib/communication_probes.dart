@@ -12,7 +12,7 @@ part of communication;
 /// Only works on Android
 class PhoneLogProbe extends DatumProbe {
   Future<Datum> getDatum() async {
-    int from = (measure as MarkedMeasure).mark.millisecondsSinceEpoch;
+    int from = (measure as MarkedMeasure).lastTime.millisecondsSinceEpoch;
     int now = DateTime.now().millisecondsSinceEpoch;
     Iterable<CallLogEntry> entries = await CallLog.query(dateFrom: from, dateTo: now) ?? List<CallLogEntry>();
     return PhoneLogDatum()..phoneLog = entries.map((call) => PhoneCall.fromCallLogEntry(call)).toList();
