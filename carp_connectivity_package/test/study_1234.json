@@ -17,7 +17,7 @@
       "c__": "ImmediateTrigger",
       "tasks": [
         {
-          "c__": "AutomaticTask",
+          "c__": "Task",
           "name": "Sampling Task",
           "measures": [
             {
@@ -136,7 +136,7 @@
               "name": "Apps Usage",
               "enabled": true,
               "configuration": {},
-              "mark": "2020-05-27T00:22:32.089831",
+              "mark": "2020-05-27T00:00:24.716257",
               "history": 86400000000
             }
           ]

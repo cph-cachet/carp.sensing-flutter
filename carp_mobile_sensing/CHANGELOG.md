@@ -1,9 +1,11 @@
 ## 0.8.0
 * using the Dart `Duration` class in many places where duration previously was specified using miliseconds.
 * added the `MarkedMeasure` class for creating measures that collect all measures since last time data was collected.
-Very useful for collecting things like calendar entries, log entries, and health data.
-* added the `settings` global variable providing access to `SharedPreferences` and `PackageInfo`, and 
-a method for getting a unique, persistent user id. 
+Useful for collecting things like log entries and health data.
+* added the `settings` global variable providing access to:
+   * [`SharedPreferences`](https://pub.dev/documentation/shared_preferences/latest/shared_preferences/SharedPreferences-class.html) 
+   * [`PackageInfo`](https://pub.dev/documentation/package_info/latest/package_info/PackageInfo-class.html), and 
+   * a method for getting a unique, persistent user id 
 
 ## 0.7.2
 * added support for better logging using the `DebugLevel` settings

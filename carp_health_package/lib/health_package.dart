@@ -13,15 +13,17 @@
 library health_package;
 
 import 'dart:async';
-import 'package:json_annotation/json_annotation.dart';
-import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
-import 'package:health/health.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:carp_mobile_sensing/domain/domain.dart';
 
-part 'health_probe.dart';
+import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+import 'package:carp_mobile_sensing/domain/domain.dart';
+import 'package:health/health.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:meta/meta.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 part 'health_domain.dart';
 part 'health_package.g.dart';
+part 'health_probe.dart';
 
 /// This is the base class for this health sampling package.
 ///
@@ -37,7 +39,7 @@ class HealthSamplingPackage implements SamplingPackage {
         HEALTH,
       ];
 
-  Probe create(String type) => type == HEALTH ? HealthProbe(type) : null;
+  Probe create(String type) => type == HEALTH ? HealthProbe() : null;
 
   void onRegister() {
     FromJsonFactory.registerFromJsonFunction("HealthMeasure", HealthMeasure.fromJsonFunction);
@@ -50,7 +52,13 @@ class HealthSamplingPackage implements SamplingPackage {
     ..name = 'Common (default) health sampling schema'
     ..powerAware = true
     ..measures.addEntries([
-      MapEntry(HEALTH, HealthMeasure(MeasureType(NameSpace.CARP, HEALTH), HealthDataType.STEPS, Duration(days: 2))),
+      MapEntry(
+          HEALTH,
+          HealthMeasure(
+            MeasureType(NameSpace.CARP, HEALTH),
+            //healthDataType: "STEPS",
+            healthDataType: HealthDataType.STEPS,
+          )),
     ]);
 
   SamplingSchema get normal => common;

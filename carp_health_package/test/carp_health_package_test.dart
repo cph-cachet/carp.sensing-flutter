@@ -1,9 +1,10 @@
-import 'package:test/test.dart';
 import 'dart:convert';
 import 'dart:io';
-import 'package:health/health.dart';
-import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+
 import 'package:carp_health_package/health_package.dart';
+import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+import 'package:health/health.dart';
+import 'package:test/test.dart';
 
 String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
 
@@ -15,16 +16,30 @@ void main() {
 
     study = Study("1234", "bardram", name: "bardram study")
       ..dataEndPoint = DataEndPoint(DataEndPointTypes.PRINT)
+//      ..addTriggerTask(
+//          ImmediateTrigger(), // a simple trigger that starts immediately
+//          Task(name: 'Sampling Task')
+//            ..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
       ..addTriggerTask(
           ImmediateTrigger(),
           AutomaticTask(name: 'Task #1')
             //..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
             ..measures = SamplingSchema.common().getMeasureList(namespace: NameSpace.CARP, types: [
+              DeviceSamplingPackage.BATTERY,
               HealthSamplingPackage.HEALTH,
             ]));
   });
 
   group("Health Study", () {
+    test(' - measure -> json', () async {
+      HealthMeasure mh = HealthMeasure(
+        MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
+        healthDataType: HealthDataType.STEPS,
+      );
+      print(mh.toJson());
+      print(_encode(mh));
+    });
+
     test(' - study -> json', () async {
       print(_encode(study));
       expect(study.id, "1234");
@@ -115,30 +130,43 @@ void main() {
                       SensorSamplingPackage.PEDOMETER,
                       //ContextSamplingPackage.GEOLOCATION,
                       //ContextSamplingPackage.ACTIVITY,
+                      //ContextSamplingPackage.WEATHER,
                     ],
                   ))
             ..addTriggerTask(
                 // collect every hour
-                PeriodicTrigger(period: 60 * 60 * 1000),
+                PeriodicTrigger(period: Duration(minutes: 60)),
                 AutomaticTask()
-                  ..measures.add(HealthMeasure(MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
-                      HealthDataType.BLOOD_GLUCOSE, Duration(hours: 1)))
-                  ..measures.add(HealthMeasure(MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
-                      HealthDataType.BLOOD_PRESSURE_DIASTOLIC, Duration(hours: 1)))
-                  ..measures.add(HealthMeasure(MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
-                      HealthDataType.BLOOD_PRESSURE_SYSTOLIC, Duration(hours: 1)))
-                  ..measures.add(HealthMeasure(MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
-                      HealthDataType.HEART_RATE, Duration(hours: 1)))
-                  ..measures.add(HealthMeasure(MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
-                      HealthDataType.STEPS, Duration(hours: 1)))
+                  ..measures.add(HealthMeasure(
+                    MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
+                    //healthDataType: HealthDataType.BLOOD_GLUCOSE,
+                  ))
+                  ..measures.add(HealthMeasure(
+                    MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
+                    //healthDataType: HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
+                  ))
+                  ..measures.add(HealthMeasure(
+                    MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
+                    //healthDataType: HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
+                  ))
+                  ..measures.add(HealthMeasure(
+                    MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
+                    //healthDataType: HealthDataType.HEART_RATE,
+                  ))
+                  ..measures.add(HealthMeasure(
+                    MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
+                    //healthDataType: HealthDataType.STEPS
+                  ))
                 //
                 )
             ..addTriggerTask(
                 // collect every day at 23:00
                 RecurrentScheduledTrigger(type: RecurrentType.daily, time: Time(hour: 23, minute: 00)),
                 AutomaticTask()
-                  ..measures.add(HealthMeasure(MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
-                      HealthDataType.WEIGHT, Duration(days: 1)))
+                  ..measures.add(HealthMeasure(
+                    MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
+                    //healthDataType: HealthDataType.WEIGHT,
+                  ))
                 //
                 )
           //

@@ -39,29 +39,30 @@ const Map<DasesHealthDataType, HealthDataUnit> dasesDataTypeToUnit = {
 ///
 /// The [healthDataType] specify which [HealthDataType](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html)
 /// to collect.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class HealthMeasure extends Measure {
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false, explicitToJson: true)
+class HealthMeasure extends MarkedMeasure {
   /// The [HealthDataType](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html) to collect.
   HealthDataType healthDataType;
 
-  /// The duration back in time to collect the data for. E.g. one day.
-  Duration duration;
-
-  HealthMeasure(MeasureType type, this.healthDataType, this.duration, {name, enabled})
-      : super(
+  HealthMeasure(
+    MeasureType type, {
+    String name,
+    bool enabled,
+    Duration history,
+    @required this.healthDataType,
+  }) : super(
           type,
           name: name,
           enabled: enabled,
+          history: history,
         );
 
   static Function get fromJsonFunction => _$HealthMeasureFromJson;
-
   factory HealthMeasure.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
-
   Map<String, dynamic> toJson() => _$HealthMeasureToJson(this);
 
-  String toString() => super.toString() + ', healthDataType: $healthDataType, duration: $duration';
+  String toString() => super.toString() + ', healthDataType: $healthDataType';
 }
 
 /// A [Datum] that holds a [HealthDataPoint](https://pub.dev/documentation/health/latest/health/HealthDataPoint-class.html) data point information.

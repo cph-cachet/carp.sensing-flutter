@@ -11,6 +11,8 @@ dependencies:
     sdk: flutter
   carp_health_package:
     path: ../
+  carp_mobile_sensing:
+    path: ../../carp_mobile_sensing
 
 dev_dependencies:
   flutter_test:

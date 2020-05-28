@@ -1,6 +1,5 @@
-import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_health_package/health_package.dart';
-import 'package:health/health.dart';
+import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 /// This is a very simple example of how this sampling package is used with CARP Mobile Sensing (CAMS).
 /// NOTE, however, that the code below will not run.
@@ -16,17 +15,20 @@ void main() async {
     Task(name: 'Step and bloodpressure')
       ..addMeasure(
         HealthMeasure(
-            MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH), HealthDataType.STEPS, Duration(days: 2),
+          MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
+          //healthDataType: HealthDataType.STEPS, name: 'Health Data'
+        ),
+      )
+      ..addMeasure(
+        HealthMeasure(MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
+            //healthDataType: HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
+            history: Duration(days: 2),
             name: 'Health Data'),
       )
       ..addMeasure(
         HealthMeasure(MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
-            HealthDataType.BLOOD_PRESSURE_DIASTOLIC, Duration(days: 2),
-            name: 'Health Data'),
-      )
-      ..addMeasure(
-        HealthMeasure(MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH), HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
-            Duration(days: 2),
+            //healthDataType: HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
+            history: Duration(days: 2),
             name: 'Health Data'),
       ),
   );

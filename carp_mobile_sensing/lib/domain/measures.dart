@@ -128,12 +128,11 @@ class PeriodicMeasure extends Measure {
 class MarkedMeasure extends Measure {
   /// The date and time of the last time this measure was collected.
   /// Returns  `now`-[history] if there is no previous mark.
-  DateTime get mark => _mark ?? DateTime.now().subtract(history);
-  set mark(DateTime m) => _mark = m;
-  DateTime _mark;
-  DateTime _storedMark;
+  @JsonKey(ignore: true)
+  DateTime mark;
 
-  /// If there is no persistent mark, how long time back in history should this measure be collected?
+  /// If there is no persistent mark, how long time back in history should
+  /// this measure be collected?
   Duration history;
 
   MarkedMeasure(
@@ -147,19 +146,6 @@ class MarkedMeasure extends Measure {
   factory MarkedMeasure.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$MarkedMeasureToJson(this);
-
-  void adapt(Measure measure) {
-    super.adapt(measure);
-    if (measure is MarkedMeasure) {
-      _storedMark = this.mark;
-      this.mark = measure.mark;
-    }
-  }
-
-  void restore() {
-    super.restore();
-    this.mark = _storedMark;
-  }
 
   String toString() => super.toString() + ', mark: $mark';
 }

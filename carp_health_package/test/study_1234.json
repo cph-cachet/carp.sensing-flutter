@@ -18,17 +18,26 @@
           "name": "Task #1",
           "measures": [
             {
+              "c__": "Measure",
+              "type": {
+                "c__": "MeasureType",
+                "namespace": "carp",
+                "name": "battery"
+              },
+              "name": "Battery",
+              "enabled": true,
+              "configuration": {}
+            },
+            {
               "c__": "HealthMeasure",
               "type": {
                 "c__": "MeasureType",
                 "namespace": "carp",
                 "name": "health"
               },
-              "name": "Health Data",
               "enabled": true,
               "configuration": {},
-              "health_data_type": "STEPS",
-              "duration": 172800000000
+              "health_data_type": "STEPS"
             }
           ]
         }

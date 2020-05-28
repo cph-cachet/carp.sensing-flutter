@@ -68,12 +68,6 @@ class FromJsonFactory {
     registerFromJsonFunction("Measure", Measure.fromJsonFunction);
     registerFromJsonFunction("PeriodicMeasure", PeriodicMeasure.fromJsonFunction);
     registerFromJsonFunction("MarkedMeasure", MarkedMeasure.fromJsonFunction);
-    // registerFromJsonFunction("AppUsageMeasure", AppUsageMeasure.fromJsonFunction);
-
-    //    registerFromJsonFunction("AudioMeasure", AudioMeasure.fromJsonFunction);
-    //    registerFromJsonFunction("NoiseMeasure", NoiseMeasure.fromJsonFunction);
-    //    registerFromJsonFunction("WeatherMeasure", WeatherMeasure.fromJsonFunction);
-    //    registerFromJsonFunction("PhoneLogMeasure", PhoneLogMeasure.fromJsonFunction);
 
     _isInitialized = true;
   }
