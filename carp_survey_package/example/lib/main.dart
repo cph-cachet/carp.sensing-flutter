@@ -14,7 +14,7 @@ void main() async {
 
   // adding all measure from the common schema to one one trigger and one task
   study.addTriggerTask(
-          DelayedTrigger(delay: 30 * 1000),
+          DelayedTrigger(delay: Duration(seconds: 30)),
           Task(name: 'WHO-5 Survey')
             ..measures.add(RPTaskMeasure(
               MeasureType(NameSpace.CARP, SurveySamplingPackage.SURVEY),
