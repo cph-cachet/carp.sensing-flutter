@@ -18,7 +18,7 @@ dependencies:
   carp_communication_package: ^0.8.0
   #carp_connectivity_package: ^0.8.0
   carp_context_package: ^0.8.0
-  carp_audio_package: ^0.8.0
+  carp_audio_package: ^0.8.1
 
 dev_dependencies:
   flutter_test:

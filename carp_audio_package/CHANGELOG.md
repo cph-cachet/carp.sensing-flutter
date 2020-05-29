@@ -1,3 +1,6 @@
+## 0.8.1
+* fixed bug in noise probe
+
 ## 0.8.0
 * upgrade to `carp_mobile_sensing` v. 0.8.x
 
