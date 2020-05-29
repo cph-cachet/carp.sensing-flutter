@@ -73,8 +73,8 @@ class StudyMock implements StudyManager {
   ///  * creating the study by specifying [Trigger]s, [Task]s, and [Measure]s by hand
   ///
   Future<Study> getStudy(String studyId) async {
-    //return _getStudyWithSelectedMeasuresFromCommonSamplingSchema('#1');
-    return _getConditionalSamplingStudy('#1');
+    return _getStudyWithSelectedMeasuresFromCommonSamplingSchema('#1');
+    //return _getConditionalSamplingStudy('#1');
   }
 
   Future<Study> _getStudyWithAllMeasuresFromCommonSamplingSchema(String studyId) async {
@@ -145,7 +145,7 @@ class StudyMock implements StudyManager {
                 ],
               ))
         ..addTriggerTask(
-            PeriodicTrigger(period: 1 * 20 * 1000),
+            PeriodicTrigger(period: Duration(seconds: 20)),
             Task()
               ..measures = SamplingSchema.debug().getMeasureList(
                 namespace: NameSpace.CARP,
@@ -212,7 +212,7 @@ class StudyMock implements StudyManager {
             'It specify a simple context sampling of things like location, activity, etc.'
         ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
         ..addTriggerTask(
-            PeriodicTrigger(period: 1 * 20 * 1000),
+            PeriodicTrigger(period: Duration(seconds: 20)),
             AutomaticTask()
               ..measures = SamplingSchema.common().getMeasureList(
                 namespace: NameSpace.CARP,
@@ -272,7 +272,7 @@ class StudyMock implements StudyManager {
 //                    ],
 //                  ))
             ..addTriggerTask(
-                PeriodicTrigger(period: 10 * 60 * 1000),
+                PeriodicTrigger(period: Duration(minutes: 20)),
                 AutomaticTask()
                   ..measures = custom.getMeasureList(
                     namespace: NameSpace.CARP,
@@ -281,7 +281,7 @@ class StudyMock implements StudyManager {
                     ],
                   ))
             ..addTriggerTask(
-                PeriodicTrigger(period: 60 * 60 * 1000),
+                PeriodicTrigger(period: Duration(minutes: 30)),
                 AutomaticTask()
                   ..measures = custom.getMeasureList(
                     namespace: NameSpace.CARP,
@@ -315,7 +315,7 @@ class StudyMock implements StudyManager {
                   ))
             // AUDIO and NOISE cannot be used in the same study since they conflict in using the microphone...
             ..addTriggerTask(
-                PeriodicTrigger(period: 1 * 60 * 1000, duration: 5 * 1000),
+                PeriodicTrigger(period: Duration(minutes: 1), duration: Duration(seconds: 5)),
                 AutomaticTask(name: 'Audio')
                   ..measures.add(AudioMeasure(
                     MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO),
@@ -352,7 +352,7 @@ class StudyMock implements StudyManager {
                     ],
                   ))
             ..addTriggerTask(
-                PeriodicTrigger(period: 1 * 20 * 1000, duration: 2 * 1000),
+                PeriodicTrigger(period: Duration(seconds: 20), duration: Duration(seconds: 2)),
                 //ImmediateTrigger(),
                 AutomaticTask()
                   ..measures = SamplingSchema.debug().getMeasureList(
@@ -394,8 +394,8 @@ SamplingSchema get custom => SamplingSchema()
         SensorSamplingPackage.LIGHT,
         PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
             name: "Ambient Light",
-            frequency: 60 * 1000, // How often to start a measure
-            duration: 1000 // Window size
+            frequency: Duration(seconds: 60), // How often to start a measure
+            duration: Duration(seconds: 1) // Window size
             )),
     MapEntry(
         AppsSamplingPackage.APPS,
@@ -405,10 +405,8 @@ SamplingSchema get custom => SamplingSchema()
         )),
     MapEntry(
         AppsSamplingPackage.APP_USAGE,
-        AppUsageMeasure(MeasureType(NameSpace.CARP, AppsSamplingPackage.APP_USAGE),
-            // collect app usage every 10 min for the last 10 min
-            name: 'Apps Usage',
-            duration: 10 * 60 * 1000)),
+        MarkedMeasure(MeasureType(NameSpace.CARP, AppsSamplingPackage.APP_USAGE),
+            name: 'Apps Usage', history: Duration(days: 1))),
     MapEntry(DeviceSamplingPackage.BATTERY,
         Measure(MeasureType(NameSpace.CARP, DeviceSamplingPackage.BATTERY), name: 'Battery')),
     MapEntry(DeviceSamplingPackage.SCREEN,
@@ -423,18 +421,16 @@ SamplingSchema get custom => SamplingSchema()
 //            name: 'Wifi network names (SSID / BSSID)', frequency: 60 * 1000, duration: 5 * 1000)),
     MapEntry(
         CommunicationSamplingPackage.PHONE_LOG,
-        PhoneLogMeasure(MeasureType(NameSpace.CARP, CommunicationSamplingPackage.PHONE_LOG),
-            name: 'Phone Log', days: 1)),
+        MarkedMeasure(MeasureType(NameSpace.CARP, CommunicationSamplingPackage.PHONE_LOG),
+            name: 'Phone Log', history: Duration(days: 1))),
     MapEntry(
         CommunicationSamplingPackage.TEXT_MESSAGE_LOG,
         Measure(MeasureType(NameSpace.CARP, CommunicationSamplingPackage.TEXT_MESSAGE_LOG),
             name: 'Text Message (SMS) Log')),
     MapEntry(CommunicationSamplingPackage.TEXT_MESSAGE,
         Measure(MeasureType(NameSpace.CARP, CommunicationSamplingPackage.TEXT_MESSAGE), name: 'Text Message (SMS)')),
-    MapEntry(
-        ContextSamplingPackage.LOCATION,
-        LocationMeasure(MeasureType(NameSpace.CARP, ContextSamplingPackage.LOCATION),
-            name: 'Location', enabled: true, frequency: 30 * 1000)),
+    MapEntry(ContextSamplingPackage.LOCATION,
+        LocationMeasure(MeasureType(NameSpace.CARP, ContextSamplingPackage.LOCATION), name: 'Location', enabled: true)),
     MapEntry(ContextSamplingPackage.ACTIVITY,
         Measure(MeasureType(NameSpace.CARP, ContextSamplingPackage.ACTIVITY), name: 'Activity Recognition')),
     MapEntry(

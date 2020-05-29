@@ -14,11 +14,11 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_launcher_icons: ^0.7.3
-  carp_mobile_sensing: ^0.7.1
-  carp_communication_package: ^0.7.0
-  #carp_connectivity_package: ^0.6.0
-  carp_context_package: ^0.7.1
-  carp_audio_package: ^0.7.1
+  carp_mobile_sensing: ^0.8.0
+  carp_communication_package: ^0.8.0
+  #carp_connectivity_package: ^0.8.0
+  carp_context_package: ^0.8.0
+  carp_audio_package: ^0.8.0
 
 dev_dependencies:
   flutter_test:
