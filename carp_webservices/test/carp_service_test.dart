@@ -1,10 +1,11 @@
-import 'package:test/test.dart';
-import 'package:carp_webservices/carp_auth/carp_auth.dart';
-import 'package:carp_webservices/carp_service/carp_service.dart';
-import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+
+import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+import 'package:carp_webservices/carp_auth/carp_auth.dart';
+import 'package:carp_webservices/carp_service/carp_service.dart';
+import 'package:test/test.dart';
 
 String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
 
@@ -32,7 +33,7 @@ void main() {
   int consentDocumentId;
   Random random = Random();
 
-  group("CARP Base Services", () {
+  group("Setup Carp Service", () {
     // Runs before all tests.
     setUpAll(() {
       study = new Study(testStudyId, userId, name: "Test study #$testStudyId");
@@ -47,14 +48,19 @@ void main() {
 
       app = new CarpApp(
           study: study,
-          name: "any_display_friendly_name_is_fine",
+          name: "Test",
           uri: Uri.parse(uri),
           oauth: OAuthEndPoint(clientID: clientID, clientSecret: clientSecret));
 
       CarpService.configure(app);
-      print(app.name);
     });
 
+    test('- service', () async {
+      print('CarpService : ${CarpService.instance.app}');
+    });
+  });
+
+  group("CARP Base Services", () {
     // Runs before each test.
     setUp(() {});
 

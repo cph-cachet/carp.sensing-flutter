@@ -1,5 +1,6 @@
 import 'package:carp_health_package/health_package.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+import 'package:health/health.dart';
 
 /// This is a very simple example of how this sampling package is used with CARP Mobile Sensing (CAMS).
 /// NOTE, however, that the code below will not run.

@@ -4,7 +4,7 @@ class StudyVisualization extends StatefulWidget {
   const StudyVisualization({Key key}) : super(key: key);
   static const String routeName = '/study';
 
-  _StudyVizState createState() => _StudyVizState(bloc.study);
+  _StudyVizState createState() => _StudyVizState(bloc.studyModel);
 }
 
 class _StudyVizState extends State<StudyVisualization> {

@@ -55,6 +55,7 @@ class CarpDataManager extends AbstractDataManager {
     await user; // This will trigger authentication to the CARP server
   }
 
+  /// The current [CarpApp] as configured in a [CarpDataEndPoint].
   Future<CarpApp> get app async {
     if (_app == null) {
       _app = new CarpApp(
@@ -66,12 +67,14 @@ class CarpDataManager extends AbstractDataManager {
     return _app;
   }
 
+  /// The current signed in user. If the user is not already signed in,
+  /// this method will authenticate the user and sign him/her in.
   Future<CarpUser> get user async {
     // check if the CARP webservice has already been configured and the user is logged in.
     if (!CarpService.isConfigured) await CarpService.configure(await app);
     if (CarpService.instance.currentUser == null) {
       await CarpService.instance.authenticate(username: carpEndPoint.email, password: carpEndPoint.password);
-      print("signed in - current user: ${CarpService.instance.currentUser}");
+      print("CarpDataManager - signed in user: ${CarpService.instance.currentUser}");
     }
     _initialized = true;
     return CarpService.instance.currentUser;

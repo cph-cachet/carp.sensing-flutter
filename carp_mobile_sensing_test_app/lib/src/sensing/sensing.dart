@@ -2,11 +2,7 @@ part of mobile_sensing_app;
 
 /// This class implements the sensing layer incl. setting up a [Study] with [Task]s and [Measure]s.
 class Sensing {
-  Study study;
-  final String testStudyId = "2";
-
   StudyController controller;
-  StudyManager mock = new StudyMock();
 
   /// the list of running - i.e. used - probes in this study.
   List<Probe> get runningProbes => (controller != null) ? controller.executor.probes : List();
@@ -29,11 +25,8 @@ class Sensing {
 
   /// Initialize and setup sensing.
   Future<void> init() async {
-    // Get the study.
-    study = await mock.getStudy(testStudyId);
-
     // Create a Study Controller that can manage this study, initialize it, and start it.
-    controller = StudyController(study, debugLevel: DebugLevel.DEBUG);
+    controller = StudyController(bloc.study, debugLevel: DebugLevel.DEBUG);
     //controller = StudyController(study, samplingSchema: aware); // a controller using the AWARE test schema
     //controller = StudyController(study, privacySchemaName: PrivacySchema.DEFAULT); // a controller w. privacy
     await controller.initialize();
@@ -51,34 +44,21 @@ class Sensing {
   /// Stop sensing.
   void stop() async {
     controller.stop();
-    study = null;
   }
 }
 
-/// Used as a mock [StudyManager] to generate a local [Study].
-class StudyMock implements StudyManager {
-  final String username = "researcher@example.com";
-  final String password = "password";
-  final String uri = "http://staging.carp.cachet.dk:8080";
-  final String clientID = "carp";
-  final String clientSecret = "carp";
-  final String testStudyName = "iOS-testing-#2";
-
-  String studyId;
-
+/// A [StudyManager] that can create [Study] locally on this phone.
+class LocalStudyManager implements StudyManager {
   Future<void> initialize() {}
 
   Study _study;
 
   Future<Study> getStudy(String studyId) async {
-    //return _getTestingStudy(studyId);
+    return _getTestingStudy(studyId);
 
     //return _getConditionalSamplingStudy(studyId);
-
     //return _getSurveyStudy(studyId);
-
-    return _getHealthStudy('#6-health');
-
+    //return _getHealthStudy('#6-health');
     //return _getCoverageStudy('#5-coverage');
     //return _getHighFrequencyStudy('DF#4dD-high-frequency');
     //return _getAllProbesAsAwareStudy('#4-aware-carp');
@@ -90,10 +70,10 @@ class StudyMock implements StudyManager {
 
   Future<Study> _getTestingStudy(String studyId) async {
     if (_study == null) {
-      _study = Study(studyId, username)
-            ..name = testStudyName
+      _study = Study(studyId, bloc.username)
+            ..name = bloc.testStudyName
             ..description = 'This is a study for testing and debugging -- especially on iOS.'
-            ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
+            ..dataEndPoint = getDataEndpoint(DataEndPointTypes.CARP)
 //            ..addTriggerTask(
 //                ImmediateTrigger(),
 //                Task()
@@ -216,7 +196,7 @@ class StudyMock implements StudyManager {
 
   Future<Study> _getConditionalSamplingStudy(String studyId) async {
     if (_study == null) {
-      _study = Study(studyId, username)
+      _study = Study(studyId, bloc.username)
             ..name = 'Conditional Sampling Study'
             ..description = 'This is a study for testing and debugging Conditional Sampling'
             ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
@@ -256,8 +236,8 @@ class StudyMock implements StudyManager {
 
   Future<Study> _getSurveyStudy(String studyId) async {
     if (_study == null) {
-      _study = Study(studyId, username)
-            ..name = testStudyName
+      _study = Study(studyId, bloc.username)
+            ..name = bloc.testStudyName
             ..description = 'This is a study for testing and debugging -- especially on iOS.'
             ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
             ..addTriggerTask(
@@ -299,7 +279,7 @@ class StudyMock implements StudyManager {
 
   Future<Study> _getHealthStudy(String studyId) async {
     if (_study == null) {
-      _study = Study(studyId, username)
+      _study = Study(studyId, bloc.username)
             ..name = studyId
             ..description = 'This is a study for testing the HEALTH Package...'
             ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
@@ -354,7 +334,7 @@ class StudyMock implements StudyManager {
 
   Future<Study> _getCoverageStudy(String studyId) async {
     if (_study == null) {
-      _study = Study(studyId, username)
+      _study = Study(studyId, bloc.username)
             ..name = studyId
             ..description = 'This is a study for testing the coverage of sampling.'
             ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
@@ -399,7 +379,7 @@ class StudyMock implements StudyManager {
 
   Future<Study> _getESenseStudy(String studyId) async {
     if (_study == null) {
-      _study = Study(studyId, username)
+      _study = Study(studyId, bloc.username)
             ..name = 'CARP Mobile Sensing - eSense sampling demo'
             ..description =
                 'This is a study designed to test the eSense earable computing platform together with CARP Mobile Sensing'
@@ -486,7 +466,7 @@ class StudyMock implements StudyManager {
 
   Future<Study> _getAudioStudy(String studyId) async {
     if (_study == null) {
-      _study = Study(studyId, username)
+      _study = Study(studyId, bloc.username)
             ..name = 'CARP Mobile Sensing - audio measures'
             ..description = 'This is a study ...'
             ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
@@ -502,7 +482,7 @@ class StudyMock implements StudyManager {
 
   Future<Study> _getAllMeasuresStudy(String studyId) async {
     if (_study == null) {
-      _study = Study(studyId, username)
+      _study = Study(studyId, bloc.username)
         ..name = 'CARP Mobile Sensing - all measures available'
         ..description = 'This is a study of with all possible measures available in CARP Mobile Sensing'
         ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
@@ -519,7 +499,7 @@ class StudyMock implements StudyManager {
 
   Future<Study> _getAllProbesAsAwareStudy(String studyId) async {
     if (_study == null) {
-      _study = Study(studyId, username)
+      _study = Study(studyId, bloc.username)
         ..name = 'CARP Mobile Sensing - long term sampling study configures like AWARE'
         ..description = aware.description
         ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
@@ -551,7 +531,7 @@ class StudyMock implements StudyManager {
 
   Future<Study> _getHighFrequencyStudy(String studyId) async {
     if (_study == null) {
-      _study = Study(studyId, username)
+      _study = Study(studyId, bloc.username)
         ..name = 'CARP Mobile Sensing - high-frequency sampling study'
         ..description = mCerebrum.description
         ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
@@ -570,13 +550,15 @@ class StudyMock implements StudyManager {
       case DataEndPointTypes.FILE:
         return FileDataEndPoint(bufferSize: 50 * 1000, zip: true, encrypt: false);
       case DataEndPointTypes.CARP:
-        return CarpDataEndPoint(CarpUploadMethod.DATA_POINT,
-            name: 'CARP Staging Server',
-            uri: uri,
-            clientId: clientID,
-            clientSecret: clientSecret,
-            email: username,
-            password: password);
+        return CarpDataEndPoint(
+          CarpUploadMethod.DATA_POINT,
+          name: 'CANS Testing Server',
+          //uri: bloc.uri,
+          //clientId: bloc.clientID,
+          //clientSecret: bloc.clientSecret,
+          //email: bloc.username,
+          //password: bloc.password
+        );
 //        return CarpDataEndPoint(
 //          CarpUploadMethod.BATCH_DATA_POINT,
 //          name: 'CARP Staging Server',

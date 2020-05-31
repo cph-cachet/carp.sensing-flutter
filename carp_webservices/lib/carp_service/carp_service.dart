@@ -7,27 +7,28 @@
 
 library carp_services;
 
-import 'package:meta/meta.dart';
 import 'dart:async';
-import 'package:http/http.dart' as http;
-import 'package:http_parser/http_parser.dart';
 import 'dart:convert';
 import 'dart:io';
-import 'package:carp_webservices/carp_auth/carp_auth.dart';
-import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'dart:math';
+
+import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+import 'package:carp_webservices/carp_auth/carp_auth.dart';
+import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:meta/meta.dart';
 import 'package:retry/retry.dart';
 
-part 'carp_datapoint.dart';
 part 'carp_app.dart';
-part 'datapoint_reference.dart';
-part 'file_reference.dart';
-part 'document_reference.dart';
-part 'carp_tasks.dart';
-part 'push_id_generator.dart';
+part 'carp_datapoint.dart';
 part 'carp_service.g.dart';
+part 'carp_tasks.dart';
 part 'consent_document.dart';
+part 'datapoint_reference.dart';
+part 'document_reference.dart';
+part 'file_reference.dart';
+part 'push_id_generator.dart';
 
 String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
 
@@ -569,10 +570,7 @@ class CarpServiceException implements Exception {
 
   CarpServiceException(this.message, {this.description, this.httpStatus});
 
-  @override
-  String toString() {
-    return "CarpServiceException: ${httpStatus?.httpResponseCode} - $message; $description";
-  }
+  String toString() => "CarpServiceException: ${httpStatus?.httpResponseCode} - $message; $description";
 }
 
 /// Implements HTTP Response Code and associated Reason Phrase.

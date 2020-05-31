@@ -104,7 +104,7 @@ class StudyController {
     print('     study id : ${study.id}');
     print('   study name : ${study.name}');
     print('         user : ${study.userId}');
-    print('     endpoint : ${study.dataEndPoint.type}');
+    print('     endpoint : ${study.dataEndPoint}');
     print('  data format : ${study.dataFormat}');
     print('     platform : ${Device.platform.toString()}');
     print('    device ID : ${Device.deviceID.toString()}');

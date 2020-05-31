@@ -1,3 +1,6 @@
+## 0.4.2
+* updated to carp_mobile_sensing v. 0.8.x
+
 ## 0.4.1
 * Upload of files to CANS implemented.
 * Support for serializing the OAuth token to JSON.

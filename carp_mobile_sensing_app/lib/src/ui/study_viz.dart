@@ -4,7 +4,7 @@ class StudyVisualization extends StatefulWidget {
   const StudyVisualization({Key key}) : super(key: key);
   static const String routeName = '/study';
 
-  _StudyVizState createState() => _StudyVizState(bloc.study);
+  _StudyVizState createState() => _StudyVizState(bloc.studyModel);
 }
 
 class _StudyVizState extends State<StudyVisualization> {
@@ -17,8 +17,8 @@ class _StudyVizState extends State<StudyVisualization> {
 
   @override
   Widget build(BuildContext context) {
-    if (bloc.study != null) {
-      return _buildStudyVisualization(context, bloc.study);
+    if (bloc.studyModel != null) {
+      return _buildStudyVisualization(context, bloc.studyModel);
     } else {
       return _buildEmptyStudyPanel(context);
     }

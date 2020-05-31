@@ -38,5 +38,5 @@ class CarpApp {
 
   bool operator ==(other) => name == other;
 
-  String toString() => '$CarpApp($name)';
+  String toString() => 'CarpApp - name: $name, uri: $uri, study: ${study.name}';
 }
