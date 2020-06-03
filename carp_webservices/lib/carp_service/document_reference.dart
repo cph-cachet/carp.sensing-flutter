@@ -61,8 +61,8 @@ class CollectionReference extends CarpReference {
     final restHeaders = await headers;
 
     http.Response response = await httpr.get(Uri.encodeFull(collectionUri), headers: restHeaders);
-    Map<String, dynamic> responseJson = json.decode(response.body);
     int httpStatusCode = response.statusCode;
+    Map<String, dynamic> responseJson = json.decode(response.body);
 
     print('url : $collectionUri');
     print('response code: $httpStatusCode');
@@ -80,11 +80,16 @@ class CollectionReference extends CarpReference {
     final restHeaders = await headers;
 
     // GET the list of documents in this collection from the CARP web service
+
+    print(' >> collectionUri : $collectionUri');
+
     http.Response response = await httpr.get(Uri.encodeFull(collectionUri), headers: restHeaders);
     int httpStatusCode = response.statusCode;
-    Map<String, dynamic> responseJson = json.decode(response.body);
+    print(' >> httpStatusCode : $httpStatusCode');
+    print(' >> response.body : ${response.body}');
 
     if (httpStatusCode == 200) {
+      Map<String, dynamic> responseJson = json.decode(response.body);
       List<DocumentSnapshot> documents = new List<DocumentSnapshot>();
       for (var item in responseJson['documents']) {
         Map<String, dynamic> documentJson = item;
@@ -94,8 +99,7 @@ class CollectionReference extends CarpReference {
       return documents;
     }
     // All other cases are treated as an error.
-    throw CarpServiceException(responseJson["error"],
-        description: responseJson["message"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+    throw CarpServiceException(response.body, httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
   }
 
   /// Returns a [DocumentReference] with the provided name in this collection.
@@ -254,6 +258,7 @@ class DocumentReference extends CarpReference {
   }
 
   /// Renames the document referred to by this [DocumentReference].
+  @Deprecated('Documents cannot be renamed in CANS.')
   Future<DocumentSnapshot> rename(String name) async {
     assert(name != null, 'Document path names cannot be null.');
     assert(name.length > 0, 'Document path names cannot be empty.');
@@ -400,5 +405,5 @@ class DocumentSnapshot {
   /// Returns `true` if the document exists.
   bool get exists => data != null;
 
-  String toString() => "${this.runtimeType} - id: $id, name: $name, data size: ${data?.length}";
+  String toString() => "${this.runtimeType} - id: $id, name: $name, path: $path, size: ${data?.length}";
 }

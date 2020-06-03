@@ -20,7 +20,7 @@ class CARPDataPoint {
   int id;
 
   /// The unique study id that this data point belongs to.
-  int studyId;
+  String studyId;
 
   /// The unique id of the user who created / uploaded this data point.
   ///
@@ -40,9 +40,11 @@ class CARPDataPoint {
 
   /// Create a [CARPDataPoint] based on a [DataPoint] generated in the CARP Mobile Sensing Framework.
   CARPDataPoint.fromDataPoint(DataPoint dataPoint) {
-    CARPDataPointHeader header = new CARPDataPointHeader(dataPoint.header.studyId.toString(), dataPoint.header.userId);
-    header.startTime =
-        (dataPoint.body is CARPDatum) ? (dataPoint.body as CARPDatum).timestamp.toUtc() : new DateTime.now().toUtc();
+    CARPDataPointHeader header = new CARPDataPointHeader(
+        dataPoint.header.studyId.toString(), dataPoint.header.userId);
+    header.startTime = (dataPoint.body is CARPDatum)
+        ? (dataPoint.body as CARPDatum).timestamp.toUtc()
+        : new DateTime.now().toUtc();
     header.dataFormat = dataPoint.header.dataFormat;
 
     this.carpHeader = header;
@@ -52,16 +54,21 @@ class CARPDataPoint {
   /// Create a [CARPDataPoint] based on a [CARPDatum] generated in the CARP Mobile Sensing Framework.
   CARPDataPoint.fromDatum(String studyId, String userId, CARPDatum datum) {
     /// TODO - once the restriction on only integers as study id on the server side is fixed, remove the assert below.
-    assert(int.tryParse(studyId) != null, 'Study ID ($studyId) for the CARP Web Services can only be an integer.');
-    CARPDataPointHeader header = new CARPDataPointHeader(studyId.toString(), userId);
-    header.startTime = (datum is CARPDatum) ? datum.timestamp.toUtc() : new DateTime.now().toUtc();
+    assert(int.tryParse(studyId) != null,
+        'Study ID ($studyId) for the CARP Web Services can only be an integer.');
+    CARPDataPointHeader header =
+        new CARPDataPointHeader(studyId.toString(), userId);
+    header.startTime = (datum is CARPDatum)
+        ? datum.timestamp.toUtc()
+        : new DateTime.now().toUtc();
     header.dataFormat = datum.format;
 
     this.carpHeader = header;
     this.carpBody = datum.toJson();
   }
 
-  factory CARPDataPoint.fromJson(Map<String, dynamic> json) => _$CARPDataPointFromJson(json);
+  factory CARPDataPoint.fromJson(Map<String, dynamic> json) =>
+      _$CARPDataPointFromJson(json);
   Map<String, dynamic> toJson() => _$CARPDataPointToJson(this);
 }
 
@@ -95,7 +102,8 @@ class CARPDataPointHeader {
   DataFormat dataFormat;
 
   /// Create a new [CARPDataPointHeader]. [studyId] and [userId] are required.
-  CARPDataPointHeader(this.studyId, this.userId, {this.deviceRoleName, this.triggerId, this.startTime, this.endTime}) {
+  CARPDataPointHeader(this.studyId, this.userId,
+      {this.deviceRoleName, this.triggerId, this.startTime, this.endTime}) {
     if (startTime != null) startTime.toUtc();
     if (endTime != null) endTime.toUtc();
     // [deviceRoleName] and [triggerId] has to be specified when sending this data point to the CARP web service.
@@ -104,6 +112,7 @@ class CARPDataPointHeader {
     if (triggerId == null) triggerId = "unknown";
   }
 
-  factory CARPDataPointHeader.fromJson(Map<String, dynamic> json) => _$CARPDataPointHeaderFromJson(json);
+  factory CARPDataPointHeader.fromJson(Map<String, dynamic> json) =>
+      _$CARPDataPointHeaderFromJson(json);
   Map<String, dynamic> toJson() => _$CARPDataPointHeaderToJson(this);
 }

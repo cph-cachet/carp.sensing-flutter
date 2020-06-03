@@ -1,3 +1,7 @@
+## 0.4.3
+* `study_id` is now a String (not an int anymore).
+
+
 ## 0.4.2
 * updated to carp_mobile_sensing v. 0.8.x
 

@@ -15,7 +15,7 @@ CARPDataPoint _$CARPDataPointFromJson(Map<String, dynamic> json) {
     json['carp_body'] as Map<String, dynamic>,
   )
     ..id = json['id'] as int
-    ..studyId = json['study_id'] as int
+    ..studyId = json['study_id'] as String
     ..createdByUserId = json['created_by_user_id'] as int;
 }
 
