@@ -1,6 +1,6 @@
 ## 0.4.3
 * `study_id` is now a String (not an int anymore).
-
+* fixed issue [#66](https://github.com/cph-cachet/carp.sensing-flutter/issues/66).
 
 ## 0.4.2
 * updated to carp_mobile_sensing v. 0.8.x

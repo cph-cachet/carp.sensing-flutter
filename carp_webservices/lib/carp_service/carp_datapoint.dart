@@ -14,9 +14,6 @@ part of carp_services;
 class CARPDataPoint {
   /// A unique, server-side generated ID for this data point.
   /// [null] if this data point is not yet stored in the CARP server.
-  ///
-  /// TODO - note that on the CARP web service implementation this is an int -- but should be a string.
-  /// See issue #16 >> https://github.com/cph-cachet/carp.webservices/issues/16
   int id;
 
   /// The unique study id that this data point belongs to.
@@ -53,9 +50,6 @@ class CARPDataPoint {
 
   /// Create a [CARPDataPoint] based on a [CARPDatum] generated in the CARP Mobile Sensing Framework.
   CARPDataPoint.fromDatum(String studyId, String userId, CARPDatum datum) {
-    /// TODO - once the restriction on only integers as study id on the server side is fixed, remove the assert below.
-    assert(int.tryParse(studyId) != null,
-        'Study ID ($studyId) for the CARP Web Services can only be an integer.');
     CARPDataPointHeader header =
         new CARPDataPointHeader(studyId.toString(), userId);
     header.startTime = (datum is CARPDatum)
