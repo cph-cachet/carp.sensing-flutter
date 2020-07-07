@@ -440,7 +440,7 @@ class CarpService {
   // ---------------------------------------------------------------------------------------------------------
 
   /// The URL for the consent document end point for this [CarpService].
-  String get consentDocumentEndpointUri => "${_app.uri.toString()}/api/studies/${_app.study.id}/consent-documents";
+  String get consentDocumentEndpointUri => "${_app.uri.toString()}/api/deployments/${_app.study.id}/consent-documents";
 
   /// Create a new consent document.
   /// Returns the created [ConsentDocument] if the document is uploaded correctly.

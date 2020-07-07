@@ -46,15 +46,16 @@ class CollectionReference extends CarpReference {
   String get path => _path;
 
   /// The full CARP web service path to this collection.
-  String get carpPath =>
-      '/api/studies/${service.app.study.id}/collections/$path';
+  String get carpPath => '/api/studies/${service.app.study.id}/collections?query=name==$path';
+
+  /// The old method, which is much better -- see issue #2 : https://github.com/cph-cachet/carp.webservices-docker/issues/2
+  String get oldCarpPath => '/api/studies/${service.app.study.id}/collections/$path';
 
   /// The full URI for the collection endpoint for this [CollectionReference].
   String get collectionUri => "${service.app.uri.toString()}$carpPath";
 
   /// The full URI for the collection endpoint for this [CollectionReference] by its unique [id].
-  String get _collectionUriByID =>
-      '${service.app.uri.toString()}/api/studies/${service.app.study.id}/collections/$id';
+  String get _collectionUriByID => '${service.app.uri.toString()}/api/studies/${service.app.study.id}/collections/$id';
 
   /// Reads the collection referenced by this [CollectionReference] from the server.
   ///
@@ -62,50 +63,90 @@ class CollectionReference extends CarpReference {
   Future<CollectionReference> get() async {
     final restHeaders = await headers;
 
-    http.Response response =
-        await httpr.get(Uri.encodeFull(collectionUri), headers: restHeaders);
+    http.Response response = await httpr.get(Uri.encodeFull(collectionUri), headers: restHeaders);
     int httpStatusCode = response.statusCode;
-    Map<String, dynamic> responseJson = json.decode(response.body);
 
-    print('url : $collectionUri');
-    print('response code: $httpStatusCode');
-    print(_encode(responseJson));
+//    print('url : $collectionUri');
+//    print('response code: $httpStatusCode');
 
-    if (httpStatusCode == 200) return this.._id = responseJson['id'];
+    // - old version - should go back to this.
+//    Map<String, dynamic> responseJson = json.decode(response.body);
+//    if (httpStatusCode == 200) return this.._id = collectionJson['id'];
+//
+//    // All other cases are treated as an error.
+//    throw CarpServiceException(responseJson["error"],
+//        description: responseJson["message"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
 
-    // All other cases are treated as an error.
-    throw CarpServiceException(responseJson["error"],
-        description: responseJson["message"],
-        httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+    // new approach
+    if (httpStatusCode == 200) {
+      List<dynamic> responseJson = json.decode(response.body);
+      Map<String, dynamic> collectionJson = responseJson[0]; // only the first entry contains the collection
+
+      return this
+        .._id = collectionJson["id"]
+        .._path = collectionJson["name"];
+    } else {
+      // All other cases are treated as an error.
+      Map<String, dynamic> responseJson = json.decode(response.body);
+      throw CarpServiceException(responseJson["error"],
+          description: responseJson["message"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+    }
   }
 
   /// Get the documents in this collection.
   Future<List<DocumentSnapshot>> get documents async {
     final restHeaders = await headers;
 
+    http.Response response = await httpr.get(Uri.encodeFull(collectionUri), headers: restHeaders);
+    int httpStatusCode = response.statusCode;
+
+    if (httpStatusCode == 200) {
+      List<dynamic> responseJson = json.decode(response.body);
+      Map<String, dynamic> collectionJson = responseJson[0]; // only the first entry contains the collection
+
+      List<dynamic> documentsJson = collectionJson['documents'];
+      List<DocumentSnapshot> documents = new List<DocumentSnapshot>();
+      for (var documentJson in documentsJson) {
+        String key = documentJson["name"];
+        documents.add(DocumentSnapshot._("$path/$key", documentJson));
+      }
+
+      return documents;
+    } else {
+      // All other cases are treated as an error.
+      Map<String, dynamic> responseJson = json.decode(response.body);
+      throw CarpServiceException(responseJson["error"],
+          description: responseJson["message"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+    }
+  }
+
+  /// Get the documents in this collection.
+  @Deprecated('Issue #2')
+  Future<List<DocumentSnapshot>> get deprecatedDocuments async {
+    final restHeaders = await headers;
+
     // GET the list of documents in this collection from the CARP web service
 
     print(' >> collectionUri : $collectionUri');
 
-    http.Response response =
-        await httpr.get(Uri.encodeFull(collectionUri), headers: restHeaders);
+    http.Response response = await httpr.get(Uri.encodeFull(collectionUri), headers: restHeaders);
     int httpStatusCode = response.statusCode;
     print(' >> httpStatusCode : $httpStatusCode');
     print(' >> response.body : ${response.body}');
 
     if (httpStatusCode == 200) {
-      Map<String, dynamic> responseJson = json.decode(response.body);
+      //Map<String, dynamic> responseJson = json.decode(response.body); // old version
+      List<dynamic> responseJson = json.decode(response.body);
       List<DocumentSnapshot> documents = new List<DocumentSnapshot>();
-      for (var item in responseJson['documents']) {
-        Map<String, dynamic> documentJson = item;
-        String key = documentJson["name"];
+      for (var document in responseJson) {
+        Map<String, dynamic> documentJson = document;
+        String key = document["name"];
         documents.add(DocumentSnapshot._("$path/$key", documentJson));
       }
       return documents;
     }
     // All other cases are treated as an error.
-    throw CarpServiceException(response.body,
-        httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+    throw CarpServiceException(response.body, httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
   }
 
   /// Returns a [DocumentReference] with the provided name in this collection.
@@ -127,8 +168,7 @@ class CollectionReference extends CarpReference {
   ///
   /// If no [name] is provided, an auto-generated name is used.
   /// If no (data] is provided now, this can be set later using the [DocumentReference.setData()] method.
-  Future<DocumentReference> add(
-      [String name, Map<String, dynamic> data]) async {
+  Future<DocumentReference> add([String name, Map<String, dynamic> data]) async {
     final DocumentReference newDocument = document(name);
     if (data != null) await newDocument.setData(data);
     return newDocument;
@@ -140,30 +180,27 @@ class CollectionReference extends CarpReference {
     final restHeaders = await headers;
 
     // PUT the new name of this collection to the CARP web service
-    http.Response response = await httpr.put(Uri.encodeFull(_collectionUriByID),
-        headers: restHeaders, body: '{"name":"$newName"}');
+    http.Response response =
+        await httpr.put(Uri.encodeFull(_collectionUriByID), headers: restHeaders, body: '{"name":"$newName"}');
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
 
     if (httpStatusCode == 200) {
       int start = _path.length - _path.split('/').last.length;
-      _path = _path.replaceRange(start, _path.length,
-          newName); // renaming path, i.e. the last part of the path
+      _path = _path.replaceRange(start, _path.length, newName); // renaming path, i.e. the last part of the path
       return;
     }
     // All other cases are treated as an error.
     throw CarpServiceException(responseJson["error"],
-        description: responseJson["message"],
-        httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+        description: responseJson["message"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
   }
 
   /// Deletes the collection referred to by this [CollectionReference].
   Future<void> delete() async {
     final restHeaders = await headers;
 
-    print(_collectionUriByID);
-    http.Response response = await httpr
-        .delete(Uri.encodeFull(_collectionUriByID), headers: restHeaders);
+    //print(_collectionUriByID);
+    http.Response response = await httpr.delete(Uri.encodeFull(_collectionUriByID), headers: restHeaders);
 
     int httpStatusCode = response.statusCode;
     if (httpStatusCode == 200)
@@ -171,8 +208,7 @@ class CollectionReference extends CarpReference {
     else {
       final Map<String, dynamic> responseJson = json.decode(response.body);
       throw CarpServiceException(responseJson["error"],
-          description: responseJson["message"],
-          httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+          description: responseJson["message"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
     }
   }
 
@@ -232,18 +268,16 @@ class DocumentReference extends CarpReference {
     if (id == null) {
       final restHeaders = await headers;
 
-      http.Response response = await httpr.post(Uri.encodeFull(documentUri),
-          headers: restHeaders, body: json.encode(data));
+      http.Response response =
+          await httpr.post(Uri.encodeFull(documentUri), headers: restHeaders, body: json.encode(data));
       int httpStatusCode = response.statusCode;
       Map<String, dynamic> responseJson = json.decode(response.body);
 
-      if ((httpStatusCode == 200) || (httpStatusCode == 201))
-        return DocumentSnapshot._(path, responseJson);
+      if ((httpStatusCode == 200) || (httpStatusCode == 201)) return DocumentSnapshot._(path, responseJson);
 
       // All other cases are treated as an error.
       throw CarpServiceException(responseJson["error"],
-          description: responseJson["message"],
-          httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+          description: responseJson["message"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
     } else {
       return updateData(data);
     }
@@ -258,8 +292,8 @@ class DocumentReference extends CarpReference {
 
     final restHeaders = await headers;
     Map<String, dynamic> payload = {'data': data};
-    http.Response response = await httpr.put(Uri.encodeFull(documentUri),
-        headers: restHeaders, body: json.encode(payload));
+    http.Response response =
+        await httpr.put(Uri.encodeFull(documentUri), headers: restHeaders, body: json.encode(payload));
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
@@ -267,8 +301,7 @@ class DocumentReference extends CarpReference {
     if (httpStatusCode == 200) return DocumentSnapshot._(path, responseJson);
 
     throw CarpServiceException(responseJson["error"],
-        description: responseJson["message"],
-        httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+        description: responseJson["message"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
   }
 
   /// Renames the document referred to by this [DocumentReference].
@@ -284,8 +317,8 @@ class DocumentReference extends CarpReference {
 
     final restHeaders = await headers;
     Map<String, dynamic> payload = {'name': name};
-    http.Response response = await httpr.put(Uri.encodeFull(documentUri),
-        headers: restHeaders, body: json.encode(payload));
+    http.Response response =
+        await httpr.put(Uri.encodeFull(documentUri), headers: restHeaders, body: json.encode(payload));
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
@@ -293,8 +326,7 @@ class DocumentReference extends CarpReference {
     if (httpStatusCode == 200) return DocumentSnapshot._(path, responseJson);
 
     throw CarpServiceException(responseJson["error"],
-        description: responseJson["message"],
-        httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+        description: responseJson["message"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
   }
 
   /// Reads the document referenced by this [DocumentReference].
@@ -303,8 +335,7 @@ class DocumentReference extends CarpReference {
   Future<DocumentSnapshot> get() async {
     final restHeaders = await headers;
 
-    http.Response response =
-        await httpr.get(Uri.encodeFull(documentUri), headers: restHeaders);
+    http.Response response = await httpr.get(Uri.encodeFull(documentUri), headers: restHeaders);
 
     int httpStatusCode = response.statusCode;
 
@@ -320,8 +351,7 @@ class DocumentReference extends CarpReference {
     if (id == null) _id = (await this.get()).id;
 
     final restHeaders = await headers;
-    http.Response response =
-        await http.delete(Uri.encodeFull(documentUri), headers: restHeaders);
+    http.Response response = await http.delete(Uri.encodeFull(documentUri), headers: restHeaders);
 
     int httpStatusCode = response.statusCode;
     if (httpStatusCode == 200)
@@ -329,14 +359,12 @@ class DocumentReference extends CarpReference {
     else {
       final Map<String, dynamic> responseJson = json.decode(response.body);
       throw CarpServiceException(responseJson["error"],
-          description: responseJson["message"],
-          httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+          description: responseJson["message"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
     }
   }
 
   /// Returns the reference of a collection contained inside of this document.
-  CollectionReference collection(String name) =>
-      service.collection("$path/$name");
+  CollectionReference collection(String name) => service.collection("$path/$name");
 
   // TODO - this is deprecated and not working for now.
 //  /// Fetch the list of collections (names) in this collection.
@@ -424,6 +452,5 @@ class DocumentSnapshot {
   /// Returns `true` if the document exists.
   bool get exists => data != null;
 
-  String toString() =>
-      "${this.runtimeType} - id: $id, name: $name, path: $path, size: ${data?.length}";
+  String toString() => "${this.runtimeType} - id: $id, name: $name, path: $path, size: ${data?.length}";
 }
