@@ -232,6 +232,7 @@ class StudyMock implements StudyManager {
                   ContextSamplingPackage.ACTIVITY,
                   ContextSamplingPackage.GEOFENCE,
                   AudioSamplingPackage.NOISE,
+                  ContextSamplingPackage.MOBILITY,
                 ],
               ));
     }
