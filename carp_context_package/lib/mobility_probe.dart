@@ -7,11 +7,14 @@ class MobilityProbe extends DatumProbe {
   Future<void> onInitialize(Measure measure) async {
     super.onInitialize(measure);
     MobilityMeasure mm = measure as MobilityMeasure;
+
+    assert(mm.locationStream != null, 'Locatiton stream from MobilityMeasure must not be null.');
     _mobilityFactory = MobilityFactory.instance;
     _mobilityFactory.stopRadius = (mm.stopRadius ?? 25);
     _mobilityFactory.placeRadius = (mm.placeRadius ?? 50);
     _mobilityFactory.stopDuration = (mm.stopDuration ?? Duration(minutes: 3));
     _mobilityFactory.usePriorContexts = (mm.usePriorContexts ?? true);
+    _mobilityFactory.startListening(mm.locationStream);
   }
 
   /// Returns the [WeatherDatum] for this location.
