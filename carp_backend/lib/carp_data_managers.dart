@@ -46,7 +46,7 @@ class CarpDataManager extends AbstractDataManager {
       fileDataManager.events
           .where((event) => event.runtimeType == FileDataManagerEvent)
           .where((event) => event.type == FileDataManagerEventTypes.file_closed)
-          .listen((event) => _uploadFileToCarp((event as FileDataManagerEvent).path));
+          .listen((event) => _uploadDatumFileToCarp((event as FileDataManagerEvent).path));
 
       // initialize the file data manager
       fileDataManager.initialize(study, events);
@@ -55,6 +55,7 @@ class CarpDataManager extends AbstractDataManager {
     await user; // This will trigger authentication to the CARP server
   }
 
+  /// The current [CarpApp] as configured in a [CarpDataEndPoint].
   Future<CarpApp> get app async {
     if (_app == null) {
       _app = new CarpApp(
@@ -66,12 +67,14 @@ class CarpDataManager extends AbstractDataManager {
     return _app;
   }
 
+  /// The current signed in user. If the user is not already signed in,
+  /// this method will authenticate the user and sign him/her in.
   Future<CarpUser> get user async {
     // check if the CARP webservice has already been configured and the user is logged in.
     if (!CarpService.isConfigured) await CarpService.configure(await app);
     if (CarpService.instance.currentUser == null) {
       await CarpService.instance.authenticate(username: carpEndPoint.email, password: carpEndPoint.password);
-      print("signed in - current user: ${CarpService.instance.currentUser}");
+      print("CarpDataManager - signed in user: ${CarpService.instance.currentUser}");
     }
     _initialized = true;
     return CarpService.instance.currentUser;
@@ -89,6 +92,13 @@ class CarpDataManager extends AbstractDataManager {
 
     await user;
     if (user != null) {
+      // first check if this is a [FileDatum] that has a separate file to be uploaded
+      if (data is FileDatum) {
+        FileDatum fileDatum = data;
+        if (fileDatum.upload) _uploadFileToCarp(fileDatum);
+      }
+
+      // then upload the datum as specified in the upload method.
       switch (carpEndPoint.uploadMethod) {
         case CarpUploadMethod.DATA_POINT:
           return (await CarpService.instance
@@ -111,8 +121,9 @@ class CarpDataManager extends AbstractDataManager {
     return false;
   }
 
+  // This method upload a file of [Datum] data to CAPP.
   //TODO - implement support for offline store-and-wait for later upload when online.
-  Future<void> _uploadFileToCarp(String path) async {
+  Future<void> _uploadDatumFileToCarp(String path) async {
     print("File upload to CARP started - path : '$path'");
     final File file = File(path);
 
@@ -149,6 +160,37 @@ class CarpDataManager extends AbstractDataManager {
 
     if (carpEndPoint.deleteWhenUploaded) {
       // delete the local file once uploaded
+      file.delete();
+      addEvent(FileDataManagerEvent(FileDataManagerEventTypes.file_deleted, file.path));
+    }
+  }
+
+  // This method upload a file attachment to CARP, i.e. one that is referenced in a [FileDatum].
+  Future<void> _uploadFileToCarp(FileDatum datum) async {
+    print("File attachment upload to CARP started - path : '${datum.filename}'");
+    final File file = File(datum.filename);
+
+    final String deviceID = Device.deviceID.toString();
+    final String studyID = study.id;
+    final String userID = (await user).email;
+
+    datum.metadata['device_id'] = deviceID;
+    datum.metadata['study_id'] = studyID;
+    datum.metadata['user_id'] = userID;
+
+    // start upload
+    final FileUploadTask uploadTask = CarpService.instance.getFileStorageReference().upload(file, datum.metadata);
+
+    // await the upload is successful
+    CarpFileResponse response = await uploadTask.onComplete;
+    int id = response.id;
+
+    addEvent(CarpDataManagerEvent(
+        CarpDataManagerEventTypes.file_uploaded, file.path, id, uploadTask.reference.fileEndpointUri));
+    print("File upload to CARP finished - remote id : $id ");
+
+    // delete the local file once uploaded?
+    if (carpEndPoint.deleteWhenUploaded) {
       file.delete();
       addEvent(FileDataManagerEvent(FileDataManagerEventTypes.file_deleted, file.path));
     }

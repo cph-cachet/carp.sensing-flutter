@@ -7,27 +7,28 @@
 
 library carp_services;
 
-import 'package:meta/meta.dart';
 import 'dart:async';
-import 'package:http/http.dart' as http;
-import 'package:http_parser/http_parser.dart';
 import 'dart:convert';
 import 'dart:io';
-import 'package:carp_webservices/carp_auth/carp_auth.dart';
-import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'dart:math';
+
+import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+import 'package:carp_webservices/carp_auth/carp_auth.dart';
+import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:meta/meta.dart';
 import 'package:retry/retry.dart';
 
-part 'carp_datapoint.dart';
 part 'carp_app.dart';
-part 'datapoint_reference.dart';
-part 'file_reference.dart';
-part 'document_reference.dart';
-part 'carp_tasks.dart';
-part 'push_id_generator.dart';
+part 'carp_datapoint.dart';
 part 'carp_service.g.dart';
+part 'carp_tasks.dart';
 part 'consent_document.dart';
+part 'datapoint_reference.dart';
+part 'document_reference.dart';
+part 'file_reference.dart';
+part 'push_id_generator.dart';
 
 String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
 
@@ -192,7 +193,7 @@ class CarpService {
     if (_app == null)
       throw new CarpServiceException("CARP Service not initialized. Call 'CarpService.configure()' first.");
 
-    _currentUser = new CarpUser(username);
+    _currentUser = new CarpUser(username: username);
 
     final loginBody = {
       "client_id": "${_app.oauth.clientID}",
@@ -212,16 +213,17 @@ class CarpService {
     );
 
     int httpStatusCode = response.statusCode;
-    Map<String, dynamic> responseJSON = json.decode(response.body);
+    Map<String, dynamic> responseJson = json.decode(response.body);
 
     if (httpStatusCode == 200) {
-      _currentUser.authenticated(OAuthToken.fromMap(responseJSON));
+      _currentUser.authenticated(OAuthToken.fromMap(responseJson));
+      //return _currentUser;
       return await getCurrentUserProfile();
     }
 
     // All other cases are treated as an error.
-    throw CarpServiceException(responseJSON["error"],
-        description: responseJSON["error_description"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+    throw CarpServiceException(responseJson["error"],
+        description: responseJson["error_description"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
   }
 
   /// Authenticate to this CARP web service using username and a previously stored [OAuthToken] access token.
@@ -237,7 +239,7 @@ class CarpService {
     assert(username != null);
     assert(token != null);
 
-    _currentUser = new CarpUser(username);
+    _currentUser = new CarpUser(username: username);
     return _currentUser..authenticated(token);
   }
 
@@ -273,6 +275,9 @@ class CarpService {
   /// The URL for the authenticated user end point for this [CarpService].
   String get authUserEndpointUri => "${_app.uri.toString()}/api/auth/user";
 
+  /// The URL for the current user end point for this [CarpService].
+  String get currentUserEndpointUri => "${_app.uri.toString()}/api/users/current";
+
   /// The URL for the user end point for this [CarpService].
   String get userEndpointUri => "${_app.uri.toString()}/api/users";
 
@@ -285,31 +290,30 @@ class CarpService {
     };
   }
 
-  Map<String, String> getUserBody(String email, String password, String fullName) => {
-        "email": email,
+  Map<String, String> getUserBody(String accountId, String password, String firstName, String lastName) => {
+        "accountId": accountId,
         "password": password,
-        "password_confirm": password,
-        "full_name": fullName ?? "",
-        "study_id": _app.study.id.toString(),
+        "firstName": firstName ?? "",
+        "lastName": lastName ?? "",
       };
 
   /// Asynchronously gets the CARP profile of the current user.
   Future<CarpUser> getCurrentUserProfile() async {
     // GET the user from the CARP web service
-    http.Response response = await httpr.get(Uri.encodeFull(authUserEndpointUri), headers: headers);
+    http.Response response = await httpr.get(Uri.encodeFull('$userEndpointUri/current'), headers: headers);
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
+
+//    print('response code: $httpStatusCode');
+//    print(_encode(responseJson));
 
     if (httpStatusCode == 200) {
       return _currentUser
         ..id = responseJson['id']
-        ..email = responseJson['email']
-        ..fullName = responseJson['full_name']
-        ..telephone = responseJson['telephone']
-        ..department = responseJson['department']
-        ..organization = responseJson['organization']
-        ..termsAgreed = DateTime.parse(responseJson['terms_agreed'])
-        ..created = DateTime.parse(responseJson['created_at']);
+        ..accountId = responseJson['accountId']
+        ..isActivated = responseJson['isActivated'] as bool
+        ..firstName = responseJson['firstName']
+        ..lastName = responseJson['lastName'];
     }
 
     // All other cases are treated as an error.
@@ -322,21 +326,34 @@ class CarpService {
     _currentUser.signOut();
   }
 
-  /// Create a new CARP user.
+  /// Create and register a new CARP user.
   ///
   /// This can only be done by an administrator and you need to be authenticated as
   /// such to use this endpoint.
-  ///
-  /// If you want add a participant to this study, use the [createParticipantByInvite].
-  /// If you want add a researcher to this study, use the [createResearcherByInvite].
-  Future<CarpUser> createUser(String email, String password, {String fullName}) async {
-    assert(email != null);
+  Future<CarpUser> createUser({
+    @required String username,
+    @required String password,
+    String firstName,
+    String lastName,
+  }) async {
+    assert(username != null);
     assert(password != null);
 
-    final CarpUser newUser = new CarpUser(email, password: password, fullName: fullName, email: email);
+    final CarpUser newUser = new CarpUser(
+      username: username,
+      password: password,
+      firstName: firstName,
+      lastName: lastName,
+    );
 
-    http.Response response = await httpr.post(Uri.encodeFull(userEndpointUri),
-        headers: headers, body: json.encode(getUserBody(email, password, fullName)));
+    http.Response response = await httpr.post(Uri.encodeFull('$userEndpointUri/register'),
+        headers: headers,
+        body: json.encode(getUserBody(
+          newUser.accountId,
+          newUser.password,
+          newUser.firstName,
+          newUser.lastName,
+        )));
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
@@ -351,13 +368,27 @@ class CarpService {
   /// Create and invite a new participant to this study.
   ///
   /// Users of this method must be authenticated (logged in) as a researcher to this study.
-  Future<CarpUser> createParticipantByInvite(String email, String password, {String fullName}) async {
-    assert(email != null);
+  @Deprecated(
+      'Creating participants is no longer supported. Participants needs to be invited to a study from the CARP side.')
+  Future<CarpUser> createParticipantByInvite({
+    @required String username,
+    @required String password,
+    String firstName,
+    String lastName,
+  }) async {
+    assert(username != null);
     assert(password != null);
-    final CarpUser newUser = new CarpUser(email, password: password, fullName: fullName, email: email);
+
+    final CarpUser newUser = new CarpUser(
+      username: username,
+      password: password,
+      firstName: firstName,
+      lastName: lastName,
+    );
 
     http.Response response = await httpr.post(Uri.encodeFull('$userEndpointUri/invite-participant'),
-        headers: headers, body: json.encode(getUserBody(email, password, fullName)));
+        headers: headers,
+        body: json.encode(getUserBody(newUser.accountId, newUser.password, newUser.firstName, newUser.lastName)));
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
@@ -372,13 +403,27 @@ class CarpService {
   /// Create and invite a fellow researcher to this study.
   ///
   /// Users of this method must be authenticated (logged in) as a researcher to this study.
-  Future<CarpUser> createResearcherByInvite(String email, String password, {String fullName}) async {
-    assert(email != null);
+  @Deprecated(
+      'Creating researchers is no longer supported. Researchers needs to be invited to a study from the CARP side.')
+  Future<CarpUser> createResearcherByInvite({
+    @required String username,
+    @required String password,
+    String firstName,
+    String lastName,
+  }) async {
+    assert(username != null);
     assert(password != null);
-    final CarpUser newUser = new CarpUser(email, password: password, fullName: fullName, email: email);
+
+    final CarpUser newUser = new CarpUser(
+      username: username,
+      password: password,
+      firstName: firstName,
+      lastName: lastName,
+    );
 
     http.Response response = await httpr.post(Uri.encodeFull('$userEndpointUri/invite-researcher'),
-        headers: headers, body: json.encode(getUserBody(email, password, fullName)));
+        headers: headers,
+        body: json.encode(getUserBody(newUser.accountId, newUser.password, newUser.firstName, newUser.lastName)));
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
@@ -395,7 +440,7 @@ class CarpService {
   // ---------------------------------------------------------------------------------------------------------
 
   /// The URL for the consent document end point for this [CarpService].
-  String get consentDocumentEndpointUri => "${_app.uri.toString()}/api/studies/${_app.study.id}/consent-documents";
+  String get consentDocumentEndpointUri => "${_app.uri.toString()}/api/deployments/${_app.study.id}/consent-documents";
 
   /// Create a new consent document.
   /// Returns the created [ConsentDocument] if the document is uploaded correctly.
@@ -525,10 +570,7 @@ class CarpServiceException implements Exception {
 
   CarpServiceException(this.message, {this.description, this.httpStatus});
 
-  @override
-  String toString() {
-    return "CarpServiceException: ${httpStatus?.httpResponseCode} - $message; $description";
-  }
+  String toString() => "CarpServiceException: ${httpStatus?.httpResponseCode} - $message; $description";
 }
 
 /// Implements HTTP Response Code and associated Reason Phrase.

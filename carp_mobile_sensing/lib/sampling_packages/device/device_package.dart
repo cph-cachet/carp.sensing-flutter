@@ -41,7 +41,7 @@ class DeviceSamplingPackage implements SamplingPackage {
       MapEntry(
           MEMORY,
           PeriodicMeasure(MeasureType(NameSpace.CARP, MEMORY),
-              name: 'Memory Usage', enabled: true, frequency: 60 * 1000)),
+              name: 'Memory Usage', enabled: true, frequency: const Duration(minutes: 1))),
       MapEntry(BATTERY, Measure(MeasureType(NameSpace.CARP, BATTERY), name: 'Battery', enabled: true)),
       MapEntry(
           SCREEN, Measure(MeasureType(NameSpace.CARP, SCREEN), name: 'Screen Activity (lock/on/off)', enabled: true)),

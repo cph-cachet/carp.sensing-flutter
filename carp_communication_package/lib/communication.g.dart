@@ -217,39 +217,6 @@ Map<String, dynamic> _$CalendarEventToJson(CalendarEvent instance) {
   return val;
 }
 
-PhoneLogMeasure _$PhoneLogMeasureFromJson(Map<String, dynamic> json) {
-  return PhoneLogMeasure(
-    json['type'] == null
-        ? null
-        : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
-    name: json['name'],
-    enabled: json['enabled'],
-    days: json['days'] as int,
-  )
-    ..c__ = json['c__'] as String
-    ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
-      (k, e) => MapEntry(k, e as String),
-    );
-}
-
-Map<String, dynamic> _$PhoneLogMeasureToJson(PhoneLogMeasure instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('c__', instance.c__);
-  writeNotNull('type', instance.type);
-  writeNotNull('name', instance.name);
-  writeNotNull('enabled', instance.enabled);
-  writeNotNull('configuration', instance.configuration);
-  writeNotNull('days', instance.days);
-  return val;
-}
-
 CalendarMeasure _$CalendarMeasureFromJson(Map<String, dynamic> json) {
   return CalendarMeasure(
     json['type'] == null
@@ -257,8 +224,12 @@ CalendarMeasure _$CalendarMeasureFromJson(Map<String, dynamic> json) {
         : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
     name: json['name'],
     enabled: json['enabled'],
-    daysBack: json['days_back'] as int,
-    daysFuture: json['days_future'] as int,
+    past: json['past'] == null
+        ? null
+        : Duration(microseconds: json['past'] as int),
+    future: json['future'] == null
+        ? null
+        : Duration(microseconds: json['future'] as int),
   )
     ..c__ = json['c__'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
@@ -280,7 +251,7 @@ Map<String, dynamic> _$CalendarMeasureToJson(CalendarMeasure instance) {
   writeNotNull('name', instance.name);
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
-  writeNotNull('days_back', instance.daysBack);
-  writeNotNull('days_future', instance.daysFuture);
+  writeNotNull('past', instance.past?.inMicroseconds);
+  writeNotNull('future', instance.future?.inMicroseconds);
   return val;
 }

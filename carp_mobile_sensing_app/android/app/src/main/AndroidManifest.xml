@@ -50,6 +50,8 @@
             <meta-data
                 android:name="io.flutter.app.android.SplashScreenUntilFirstFrame"
                 android:value="true" />
+            <!-- Specify that the launch screen should continue being displayed -->
+            <!-- until Flutter renders its first frame. -->
             <meta-data
                     android:name="flutterEmbedding"
                     android:value="2" />

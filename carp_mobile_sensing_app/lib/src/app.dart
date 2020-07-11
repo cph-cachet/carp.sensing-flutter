@@ -27,7 +27,6 @@ class CarpMobileSensingAppState extends State<CarpMobileSensingApp> {
   void initState() {
     super.initState();
     bloc.init();
-    bloc.start();
   }
 
   void dispose() {

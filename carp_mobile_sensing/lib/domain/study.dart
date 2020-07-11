@@ -103,7 +103,7 @@ class DataEndPoint extends Serializable {
       FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$DataEndPointToJson(this);
 
-  String toString() => type.toString();
+  String toString() => type;
 }
 
 /// A enumeration of known (but not necessarily implemented) endpoint API types.

@@ -31,10 +31,10 @@ class LocationMeasure extends PeriodicMeasure {
 
   LocationMeasure(
     MeasureType type, {
-    name,
-    enabled,
-    frequency,
-    duration,
+    String name,
+    bool enabled,
+    Duration frequency,
+    Duration duration,
     this.accuracy = GeolocationAccuracy.best,
     this.distance = 0,
   }) : super(type, name: name, enabled: enabled, frequency: frequency, duration: duration);

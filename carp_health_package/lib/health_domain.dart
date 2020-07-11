@@ -1,32 +1,70 @@
 part of health_package;
 
+/// Diet, Alcohol, Smoking, Exercise, Sleep (DASES) data types.
+enum DasesHealthDataType {
+  /// Number of calories consumed.
+  CALORIES_INTAKE,
+
+  /// Units of alcohol.
+  ALCOHOL,
+
+  /// Blood alcohol content in percentage.
+  BLOOD_ALCOHOL_CONTENT,
+
+  /// Number of smoked cigarettes.
+  SMOKED_CIGARETTES,
+
+  /// Number of smoked other thing (pipe, cigar, ...).
+  SMOKED_OTHER,
+
+  /// Duration of exercise.
+  EXERCISE,
+
+  /// Duration of sleep.
+  SLEEP,
+}
+
+/// Map a [DasesHealthDataType] to a [HealthDataUnit].
+const Map<DasesHealthDataType, HealthDataUnit> dasesDataTypeToUnit = {
+  DasesHealthDataType.CALORIES_INTAKE: HealthDataUnit.CALORIES,
+  DasesHealthDataType.ALCOHOL: HealthDataUnit.COUNT,
+  DasesHealthDataType.BLOOD_ALCOHOL_CONTENT: HealthDataUnit.PERCENTAGE,
+  DasesHealthDataType.SMOKED_CIGARETTES: HealthDataUnit.COUNT,
+  DasesHealthDataType.SMOKED_OTHER: HealthDataUnit.COUNT,
+  DasesHealthDataType.EXERCISE: HealthDataUnit.NO_UNIT,
+  DasesHealthDataType.SLEEP: HealthDataUnit.NO_UNIT,
+};
+
 /// Specify the configuration on how to collect health data.
 ///
 /// The [healthDataType] specify which [HealthDataType](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html)
 /// to collect.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class HealthMeasure extends Measure {
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false, explicitToJson: true)
+class HealthMeasure extends MarkedMeasure {
   /// The [HealthDataType](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html) to collect.
   HealthDataType healthDataType;
 
-  /// The duration back in time to collect the data for. E.g. one day.
-  Duration duration;
-
-  HealthMeasure(MeasureType type, this.healthDataType, this.duration, {name, enabled})
-      : super(
+  HealthMeasure(
+    MeasureType type, {
+    String name,
+    bool enabled,
+    Duration history = const Duration(days: 1),
+    @required this.healthDataType,
+  }) : super(
           type,
           name: name,
           enabled: enabled,
+          history: history,
         );
 
   static Function get fromJsonFunction => _$HealthMeasureFromJson;
-
   factory HealthMeasure.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
-
   Map<String, dynamic> toJson() => _$HealthMeasureToJson(this);
 
-  String toString() => super.toString() + ', healthDataType: $healthDataType, duration: $duration';
+  String tag() => '$type.$healthDataType';
+
+  String toString() => super.toString() + ', healthDataType: $healthDataType';
 }
 
 /// A [Datum] that holds a [HealthDataPoint](https://pub.dev/documentation/health/latest/health/HealthDataPoint-class.html) data point information.
@@ -57,7 +95,7 @@ class HealthDatum extends CARPDatum {
   /// Note that the uppercase version is used, e.g. `STEPS`.
   String dataType;
 
-  /// The platform from which this health data point came from (Android, IOS).
+  /// The platform from which this health data point came from (ANDROID, IOS).
   String platform;
 
   HealthDatum(this.value, this.unit, int dateFrom, int dateTo, this.dataType, this.platform) : super() {

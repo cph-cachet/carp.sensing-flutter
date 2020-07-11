@@ -51,8 +51,13 @@ class AudioSamplingPackage implements SamplingPackage {
       MapEntry(AUDIO, AudioMeasure(MeasureType(NameSpace.CARP, AUDIO), name: 'Audio Recording', enabled: true)),
       MapEntry(
           NOISE,
-          NoiseMeasure(MeasureType(NameSpace.CARP, NOISE),
-              name: 'Ambient Noise', enabled: false, frequency: 5 * 60 * 1000, duration: 10 * 1000)),
+          NoiseMeasure(
+            MeasureType(NameSpace.CARP, NOISE),
+            name: 'Ambient Noise',
+            enabled: false,
+            frequency: Duration(minutes: 5),
+            duration: Duration(seconds: 10),
+          )),
     ]);
 
   SamplingSchema get light => common
@@ -72,6 +77,11 @@ class AudioSamplingPackage implements SamplingPackage {
     ..name = 'Debugging audio sampling schema'
     ..powerAware = false
     ..measures[AUDIO] = AudioMeasure(MeasureType(NameSpace.CARP, AUDIO), name: 'Audio Recording', enabled: true)
-    ..measures[NOISE] = NoiseMeasure(MeasureType(NameSpace.CARP, NOISE),
-        name: 'Ambient Noise', enabled: true, frequency: 60 * 1000, duration: 5 * 1000);
+    ..measures[NOISE] = NoiseMeasure(
+      MeasureType(NameSpace.CARP, NOISE),
+      name: 'Ambient Noise',
+      enabled: true,
+      frequency: Duration(minutes: 1),
+      duration: Duration(seconds: 5),
+    );
 }

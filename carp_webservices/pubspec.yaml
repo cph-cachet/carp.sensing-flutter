@@ -1,6 +1,6 @@
 name: carp_webservices
 description: Flutter API for accessing the CARP web services - authentication, file management, data points, and app-specific collections of documents.
-version: 0.3.3+1
+version: 0.4.4
 author:  CACHET Team <cph.cachet@gmail.com>
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_webservices
 
@@ -12,8 +12,9 @@ dependencies:
   flutter:
     sdk: flutter
 
-  carp_mobile_sensing: ^0.6.2
+  carp_mobile_sensing: ^0.8.0
   http: ^0.12.0
+  uuid: ^2.0.0
   json_annotation: ^3.0.0
   retry: ^3.0.0
 

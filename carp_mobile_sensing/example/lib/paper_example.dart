@@ -12,7 +12,7 @@ void sensing() async {
     ..dataFormat = NameSpace.OMH
     ..addTriggerTask(
         ImmediateTrigger(),
-        Task('One Common Sensing Task')
+        AutomaticTask(name: 'One Common Sensing Task')
           ..measures = SamplingSchema.common().getMeasureList(types: [
             AppsSamplingPackage.APP_USAGE,
             SensorSamplingPackage.ACCELEROMETER,
@@ -22,7 +22,7 @@ void sensing() async {
   // setup and start the sampling runtime
   StudyController controller = StudyController(study);
   await controller.initialize();
-  controller.start();
+  controller.resume();
 
   // subscribe to events
   controller.events.listen((Datum datum) {

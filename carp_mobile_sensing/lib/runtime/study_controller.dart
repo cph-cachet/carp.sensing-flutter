@@ -8,6 +8,7 @@ part of runtime;
 
 /// A [StudyController] controls the execution of a [Study].
 class StudyController {
+  int debugLevel = DebugLevel.WARNING;
   Study study;
   StudyExecutor executor;
   DataManager dataManager;
@@ -45,8 +46,15 @@ class StudyController {
     this.dataManager,
     this.privacySchemaName,
     this.transformer,
+    this.debugLevel = DebugLevel.WARNING,
   })  : assert(study != null),
         super() {
+    // set global debug level
+    globalDebugLevel = debugLevel;
+
+    // initialize settings
+    settings.init();
+
     // create and register the two built-in data managers
     DataManagerRegistry.register(ConsoleDataManager());
     DataManagerRegistry.register(FileDataManager());
@@ -96,7 +104,7 @@ class StudyController {
     print('     study id : ${study.id}');
     print('   study name : ${study.name}');
     print('         user : ${study.userId}');
-    print('     endpoint : ${study.dataEndPoint.type}');
+    print('     endpoint : ${study.dataEndPoint}');
     print('  data format : ${study.dataFormat}');
     print('     platform : ${Device.platform.toString()}');
     print('    device ID : ${Device.deviceID.toString()}');
@@ -112,6 +120,8 @@ class StudyController {
 
     await dataManager?.initialize(study, events);
     await executor.initialize(Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR)));
+
+    enablePowerAwareness();
 
     events.listen((datum) => samplingSize++);
   }
@@ -133,9 +143,12 @@ class StudyController {
           }
         }
       });
-      _battery
-          .initialize(Measure(MeasureType(NameSpace.CARP, DeviceSamplingPackage.BATTERY), name: 'PowerAwarenessProbe'));
-      _battery.start();
+      await _battery.initialize(Measure(
+        MeasureType(NameSpace.CARP, DeviceSamplingPackage.BATTERY),
+        name: 'PowerAwarenessProbe',
+      ));
+      //_battery.start();
+      _battery.resume();
     }
   }
 
@@ -144,11 +157,23 @@ class StudyController {
     _battery.stop();
   }
 
-  /// Start this controller, i.e. start collecting data according to the specified [study] and [samplingSchema].
-  Future<void> start() async {
-    print("Starting data sampling ...");
-    enablePowerAwareness();
-    executor.start();
+  /// Resume this controller, i.e. resume data collection according to the specified [study] and [samplingSchema].
+  @Deprecated("Use the resume() method instead")
+  void start() {
+    this.resume();
+  }
+
+  /// Resume this controller, i.e. resume data collection according to the specified [study] and [samplingSchema].
+  void resume() {
+    print("Resuming data sampling ...");
+    executor.resume();
+  }
+
+  /// Pause this controller, which will pause data collection and close the data manager.
+  void pause() {
+    print("Pausing data sampling ...");
+    executor.pause();
+    dataManager?.close();
   }
 
   /// Stop the sampling.
@@ -160,19 +185,6 @@ class StudyController {
     disablePowerAwareness();
     dataManager?.close();
     executor.stop();
-  }
-
-  /// Pause the controller, which will pause data collection and close the data manager.
-  void pause() {
-    print("Pausing data sampling ...");
-    executor.pause();
-    dataManager?.close();
-  }
-
-  /// Resume the controller, i.e. resume data collection.
-  void resume() {
-    print("Resuming data sampling ...");
-    executor.resume();
   }
 }
 

@@ -32,7 +32,7 @@ class MovisensSamplingPackage implements SamplingPackage {
         '${MovisensSamplingPackage.MOVISENS}.${MovisensSamplingPackage.STEP_COUNT}', OMHStepCountDatum.transformer);
   }
 
-  List<PermissionGroup> get permissions => []; // no special permissions needed
+  List<Permission> get permissions => []; // no special permissions needed
 
   Probe create(String type) => (type == MOVISENS) ? MovisensProbe() : null;
 

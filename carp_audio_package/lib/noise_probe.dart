@@ -15,26 +15,19 @@ part of audio;
 /// Does not record sound. Instead reports the audio level with a specified frequency,
 /// in a given sampling window as a [NoiseDatum].
 class NoiseProbe extends BufferingPeriodicStreamProbe {
-  NoiseMeter _noiseMeter;
-  DateTime _startRecordingTime;
-  DateTime _endRecordingTime;
-  List<num> _noiseReadings = new List();
+  NoiseMeter _noiseMeter = NoiseMeter();
+  List<NoiseReading> _noiseReadings = new List<NoiseReading>();
 
   Stream get bufferingStream => _noiseMeter.noiseStream;
-
-  void _init() {
-    _noiseMeter = NoiseMeter();
-  }
 
   Future<void> onInitialize(Measure measure) async {
     assert(measure is NoiseMeasure);
     super.onInitialize(measure);
-    _init();
   }
 
   Future<void> onRestart() async {
     super.onRestart();
-    _init();
+    _noiseMeter = NoiseMeter();
   }
 
   Future<void> onStop() async {
@@ -42,21 +35,30 @@ class NoiseProbe extends BufferingPeriodicStreamProbe {
     _noiseMeter = null;
   }
 
-  void onSamplingEnd() {
-    _endRecordingTime = DateTime.now();
-  }
+  void onSamplingEnd() {}
 
   void onSamplingStart() {} // Do nothing
 
-  void onSamplingData(dynamic noiseReading) => _noiseReadings.add(noiseReading.db);
+  void onSamplingData(dynamic noiseReading) => _noiseReadings.add(noiseReading);
 
   Future<Datum> getDatum() async {
     if (_noiseReadings.length > 0) {
-      Stats stats = Stats.fromData(_noiseReadings);
-      num mean = stats.mean;
-      num std = stats.standardDeviation;
-      num min = stats.min;
-      num max = stats.max;
+      List<num> _meanList = List();
+      List<num> _maxList = List();
+
+      _noiseReadings.forEach((reading) {
+        _meanList.add(reading.meanDecibel);
+        _maxList.add(reading.maxDecibel);
+      });
+
+      Stats meanStats = Stats.fromData(_meanList);
+      Stats maxStats = Stats.fromData(_maxList);
+      // get statistics from the list of mean db's
+      num mean = meanStats.average;
+      num std = meanStats.standardDeviation;
+      num min = meanStats.min;
+      // get the max db from the list of max db's
+      num max = maxStats.max;
 
       if (mean.isFinite && std.isFinite && min.isFinite && max.isFinite)
         return NoiseDatum(

@@ -1,0 +1,47 @@
+{
+  "c__": "Study",
+  "id": "1234",
+  "name": "bardram study",
+  "user_id": "bardram",
+  "sampling_strategy": "NORMAL",
+  "data_end_point": {
+    "c__": "DataEndPoint",
+    "type": "PRINT"
+  },
+  "data_format": "carp",
+  "triggers": [
+    {
+      "c__": "ImmediateTrigger",
+      "tasks": [
+        {
+          "c__": "AutomaticTask",
+          "name": "Task #1",
+          "measures": [
+            {
+              "c__": "Measure",
+              "type": {
+                "c__": "MeasureType",
+                "namespace": "carp",
+                "name": "battery"
+              },
+              "name": "Battery",
+              "enabled": true,
+              "configuration": {}
+            },
+            {
+              "c__": "HealthMeasure",
+              "type": {
+                "c__": "MeasureType",
+                "namespace": "carp",
+                "name": "health"
+              },
+              "enabled": true,
+              "configuration": {},
+              "health_data_type": "STEPS"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

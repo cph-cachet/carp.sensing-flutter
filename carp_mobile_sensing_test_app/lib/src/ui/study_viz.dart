@@ -4,7 +4,7 @@ class StudyVisualization extends StatefulWidget {
   const StudyVisualization({Key key}) : super(key: key);
   static const String routeName = '/study';
 
-  _StudyVizState createState() => _StudyVizState(bloc.study);
+  _StudyVizState createState() => _StudyVizState(bloc.studyModel);
 }
 
 class _StudyVizState extends State<StudyVisualization> {
@@ -59,11 +59,11 @@ class _StudyVizState extends State<StudyVisualization> {
               ),
             ],
             flexibleSpace: FlexibleSpaceBar(
-              title: Text(study.name),
+              title: Text(study?.name),
               background: Stack(
                 fit: StackFit.expand,
                 children: <Widget>[
-                  study.image,
+                  study?.image,
 //                  Image.asset(
 //                    bloc.study.image,
 //                    fit: BoxFit.cover,

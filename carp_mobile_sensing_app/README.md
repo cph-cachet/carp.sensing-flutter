@@ -29,13 +29,23 @@ Since the BLoC is the controller of the entire app, let's start with this class.
 
 ````dart
 class SensingBLoC {
+  final String username = "user";
+  final String password = "...";
+  final String userId = "user@cachet.dk";
+  final String uri = "https://cans.cachet.dk:443";
+  final String testStudyId = "2";
+
   final Sensing sensing = Sensing();
+  final StudyManager manager = LocalStudyManager();
+
+  Study _study;
+  Study get study => _study;
 
   /// Is sensing running, i.e. has the study executor been resumed?
   bool get isRunning => (sensing.controller != null) && sensing.controller.executor.state == ProbeState.resumed;
 
   /// Get the study for this app.
-  StudyModel get study => sensing.study != null ? StudyModel(sensing.study) : null;
+  StudyModel get studyModel => study != null ? StudyModel(study) : null;
 
   /// Get a list of running probes
   Iterable<ProbeModel> get runningProbes => sensing.runningProbes.map((probe) => ProbeModel(probe));
@@ -43,16 +53,14 @@ class SensingBLoC {
   /// Get the data model for this study.
   DataModel get data => null;
 
-  void init() async {}
-
-  void start() async => await sensing.start();
-
-  void pause() => sensing.controller.pause();
+  void init() async {
+    _study ??= await manager.getStudy(testStudyId);
+    await sensing.init();
+  }
 
   void resume() async => sensing.controller.resume();
-
+  void pause() => sensing.controller.pause();
   void stop() async => sensing.stop();
-
   void dispose() async => sensing.stop();
 }
 
@@ -60,8 +68,8 @@ final bloc = SensingBLoC();
 ````
 
 The BLoC basically plays two roles; it accesses data by returning model objects (such as `StudyModel`)
-and it exposes business logic like the sensing life cycle events (`start`, `stop`, etc.).
-Note that the singleton `bloc` variable is created, which makes the BLoC accessible in the entire app.
+and it exposes business logic like the sensing life cycle events (`init`, `start`, `stop`, etc.).
+Note that the singleton `bloc` variable is instantiated, which makes the BLoC accessible in the entire app.
 
 We will not discuss the [`Sensing`](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/carp_mobile_sensing_app/lib/src/sensing/sensing.dart) 
 class here. It basically implements a [`Study`](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/core/Study-class.html) and sets up the sensing according to the

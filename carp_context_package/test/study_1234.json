@@ -1,8 +1,8 @@
 {
   "c__": "Study",
   "id": "1234",
-  "user_id": "bardram",
   "name": "bardram study",
+  "user_id": "bardram",
   "sampling_strategy": "NORMAL",
   "data_end_point": {
     "c__": "DataEndPoint",
@@ -14,7 +14,7 @@
       "c__": "ImmediateTrigger",
       "tasks": [
         {
-          "c__": "Task",
+          "c__": "AutomaticTask",
           "name": "Task #1",
           "measures": [
             {
@@ -38,7 +38,7 @@
               "name": "Memory Usage",
               "enabled": true,
               "configuration": {},
-              "frequency": 60000
+              "frequency": 60000000
             },
             {
               "c__": "Measure",
@@ -72,8 +72,8 @@
               "name": "Accelerometer",
               "enabled": false,
               "configuration": {},
-              "frequency": 200,
-              "duration": 1
+              "frequency": 100000,
+              "duration": 1000
             },
             {
               "c__": "PeriodicMeasure",
@@ -85,8 +85,8 @@
               "name": "Gyroscope",
               "enabled": false,
               "configuration": {},
-              "frequency": 200,
-              "duration": 1
+              "frequency": 100000,
+              "duration": 1000
             },
             {
               "c__": "Measure",
@@ -109,45 +109,8 @@
               "name": "Ambient Light",
               "enabled": true,
               "configuration": {},
-              "frequency": 60000,
-              "duration": 1000
-            },
-            {
-              "c__": "Measure",
-              "type": {
-                "c__": "MeasureType",
-                "namespace": "carp",
-                "name": "connectivity"
-              },
-              "name": "Connectivity (wifi/3G/...)",
-              "enabled": true,
-              "configuration": {}
-            },
-            {
-              "c__": "PeriodicMeasure",
-              "type": {
-                "c__": "MeasureType",
-                "namespace": "carp",
-                "name": "bluetooth"
-              },
-              "name": "Nearby Devices (Bluetooth Scan)",
-              "enabled": true,
-              "configuration": {},
-              "frequency": 600000,
-              "duration": 5000
-            },
-            {
-              "c__": "PeriodicMeasure",
-              "type": {
-                "c__": "MeasureType",
-                "namespace": "carp",
-                "name": "wifi"
-              },
-              "name": "Wifi network names (SSID / BSSID)",
-              "enabled": true,
-              "configuration": {},
-              "frequency": 60000,
-              "duration": 5000
+              "frequency": 60000000,
+              "duration": 1000000
             },
             {
               "c__": "Measure",
@@ -161,7 +124,7 @@
               "configuration": {}
             },
             {
-              "c__": "AppUsageMeasure",
+              "c__": "MarkedMeasure",
               "type": {
                 "c__": "MeasureType",
                 "namespace": "carp",
@@ -170,20 +133,33 @@
               "name": "Apps Usage",
               "enabled": true,
               "configuration": {},
-              "duration": 3600000
+              "mark": "2020-05-26T23:52:37.214250",
+              "history": 86400000000
+            },
+            {
+              "c__": "Measure",
+              "type": {
+                "c__": "MeasureType",
+                "namespace": "carp",
+                "name": "location"
+              },
+              "name": "Location",
+              "enabled": true,
+              "configuration": {}
             },
             {
               "c__": "LocationMeasure",
               "type": {
                 "c__": "MeasureType",
                 "namespace": "carp",
-                "name": "location"
+                "name": "geolocation"
               },
-              "name": "Periodic Location",
+              "name": "Geo-location",
               "enabled": true,
               "configuration": {},
-              "frequency": 10000,
-              "accuracy": "BALANCED"
+              "frequency": 30000000,
+              "accuracy": "low",
+              "distance": 3
             },
             {
               "c__": "Measure",
@@ -206,7 +182,19 @@
               "name": "Local Weather",
               "enabled": true,
               "configuration": {},
-              "api_key": "12b6e28582eb9298577c734a31ba9f4f"
+              "api_key": "9a61efab8471e191372272a56ffc01c1"
+            },
+            {
+              "c__": "AirQualityMeasure",
+              "type": {
+                "c__": "MeasureType",
+                "namespace": "carp",
+                "name": "air_quality"
+              },
+              "name": "Local Air Quality",
+              "enabled": true,
+              "configuration": {},
+              "api_key": "9e538456b2b85c92647d8b65090e29f957638c77"
             },
             {
               "c__": "GeofenceMeasure",
@@ -219,11 +207,11 @@
               "configuration": {},
               "center": {
                 "c__": "GeoPosition",
-                "latitude": 55.786025,
-                "longitude": 12.524159
+                "latitude": 55.7943601,
+                "longitude": 12.4461956
               },
               "radius": 500.0,
-              "name": "Geofence (DTU)"
+              "name": "Geofence (Virum)"
             }
           ]
         }

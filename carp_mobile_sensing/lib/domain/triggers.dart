@@ -6,24 +6,26 @@
  */
 part of domain;
 
-// TODO - implement duration/time/delays/etc. using the dart [Duration] class. Make a wrapper to support JSON de/serailization.
-
 /// A [Trigger] is a specification of any condition which starts and stops [Task]s at
 /// certain points in time when the condition applies. The condition can either
 /// be time-bound, based on data streams, initiated by a user of the platform,
 /// or a combination of these.
 ///
-/// Sub-classes of [Trigger] implements the specific behavior / timing of a trigger.
-/// Note that you should **not** use/instantiate this [Trigger] base class, but only its subclasses.
+/// The [Trigger] class is abstract. Use sub-classes of [Trigger] implements
+/// the specific behavior / timing of a trigger.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class Trigger extends Serializable {
+  /// A unique id of this trigger.
+  /// Is used when storing data to know what triggered the data collection.
+  String triggerId;
+
   /// The list of [Task]s in this [Trigger].
   List<Task> tasks = new List<Task>();
 
   /// Add a [Task] to this [Trigger]
   void addTask(Task task) => tasks.add(task);
 
-  Trigger() : super();
+  Trigger({this.triggerId}) : super();
 
   static Function get fromJsonFunction => _$TriggerFromJson;
   factory Trigger.fromJson(Map<String, dynamic> json) =>
@@ -34,7 +36,7 @@ class Trigger extends Serializable {
 /// A trigger that starts sampling immediately and never stops.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ImmediateTrigger extends Trigger {
-  ImmediateTrigger() : super();
+  ImmediateTrigger([String triggerId]) : super(triggerId: triggerId);
 
   static Function get fromJsonFunction => _$ImmediateTriggerFromJson;
   factory ImmediateTrigger.fromJson(Map<String, dynamic> json) =>
@@ -48,7 +50,7 @@ class ImmediateTrigger extends Trigger {
 /// Note that sampling continues until it is manually paused.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ManualTrigger extends Trigger {
-  ManualTrigger() : super();
+  ManualTrigger({String triggerId}) : super(triggerId: triggerId);
 
   @JsonKey(ignore: true)
   ManualTriggerExecutor executor;
@@ -78,10 +80,10 @@ class ManualTrigger extends Trigger {
 /// The delay is measured from the start of the overall [Study].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class DelayedTrigger extends Trigger {
-  /// Delay in milliseconds.
-  int delay = 0;
+  /// Delay before this trigger is executed.
+  Duration delay;
 
-  DelayedTrigger({this.delay = 0}) : super();
+  DelayedTrigger({String triggerId, this.delay = const Duration(seconds: 1)}) : super(triggerId: triggerId);
 
   static Function get fromJsonFunction => _$DelayedTriggerFromJson;
   factory DelayedTrigger.fromJson(Map<String, dynamic> json) =>
@@ -89,7 +91,7 @@ class DelayedTrigger extends Trigger {
   Map<String, dynamic> toJson() => _$DelayedTriggerToJson(this);
 }
 
-/// A trigger that resume/pause sampling every [period] milliseconds for a specific [duration].
+/// A trigger that resume/pause sampling every [period] for a specific [duration].
 ///
 /// It is important to specify **both** the [period] and the [duration] in order to specify
 /// the timing of resuming and pausing sampling.
@@ -97,13 +99,17 @@ class DelayedTrigger extends Trigger {
 /// Weekly and montly recurrent triggers can be specified using the [RecurrentScheduledTrigger].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class PeriodicTrigger extends Trigger {
-  /// The period (reciprocal of frequency) of sampling in milliseconds.
-  int period = 60 * 1000; // default is one minute
+  /// The period (reciprocal of frequency) of sampling.
+  Duration period;
 
-  /// The duration (until paused) of the the sampling in milliseconds.
-  int duration = 1000; // default is one second
+  /// The duration (until paused) of the the sampling.
+  Duration duration;
 
-  PeriodicTrigger({this.period = 60 * 1000, this.duration = 1000}) : super();
+  PeriodicTrigger({
+    String triggerId,
+    @required this.period,
+    this.duration = const Duration(seconds: 10),
+  }) : super(triggerId: triggerId);
 
   static Function get fromJsonFunction => _$PeriodicTriggerFromJson;
   factory PeriodicTrigger.fromJson(Map<String, dynamic> json) =>
@@ -117,11 +123,15 @@ class ScheduledTrigger extends Trigger {
   /// The scheduled date and time for resuming sampling.
   DateTime schedule;
 
-  /// The duration (until stopped) of the the sampling in milliseconds.
+  /// The duration (until stopped) of the the sampling.
   /// If null, the sampling is never stopped (i.e., runs forever).
-  int duration;
+  Duration duration;
 
-  ScheduledTrigger({@required this.schedule, this.duration}) : super();
+  ScheduledTrigger({
+    String triggerId,
+    @required this.schedule,
+    this.duration,
+  }) : super(triggerId: triggerId);
 
   static Function get fromJsonFunction => _$ScheduledTriggerFromJson;
   factory ScheduledTrigger.fromJson(Map<String, dynamic> json) =>
@@ -255,7 +265,8 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
 //  int monthOfYear;
 
   RecurrentScheduledTrigger(
-      {@required this.type,
+      {String triggerId,
+      @required this.type,
       @required this.time,
       this.end,
       this.separationCount = 0,
@@ -263,9 +274,9 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
       this.dayOfWeek,
       //this.weekOfMonth,
       //this.dayOfMonth,
-      int duration = 1000})
+      Duration duration = const Duration(seconds: 1)})
       : assert(duration != null),
-        super(duration: duration);
+        super(triggerId: triggerId, period: const Duration(seconds: 1), duration: duration);
 
   DateTime get firstOccurrence {
     DateTime _firstOccurrence;
@@ -289,14 +300,14 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
   }
 
   /// The period between the recurring samplings.
-  int get period {
+  Duration get period {
     switch (type) {
       case RecurrentType.daily:
-        return (separationCount + 1) * Duration.millisecondsPerDay;
+        return Duration(days: separationCount + 1);
       case RecurrentType.weekly:
-        return (separationCount + 1) * daysPerWeek * Duration.millisecondsPerDay;
+        return Duration(days: (separationCount + 1) * daysPerWeek);
       default:
-        return -1;
+        return null;
     }
   }
 
@@ -314,7 +325,12 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
 /// For example, if [measureType] is `carp.geofence` the [resumeCondition] can be `{'DTU','ENTER'}`
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class SamplingEventTrigger extends Trigger {
-  SamplingEventTrigger({this.measureType, this.resumeCondition, this.pauseCondition}) : super();
+  SamplingEventTrigger({
+    String triggerId,
+    this.measureType,
+    this.resumeCondition,
+    this.pauseCondition,
+  }) : super(triggerId: triggerId);
 
   /// The [MeasureType] of the event to look for.
   ///
@@ -349,14 +365,19 @@ typedef EventConditionEvaluator = bool Function(Datum datum);
 /// a application-specific [condition] is meet.
 ///
 /// In contrast to other [Trigger]s, this trigger cannot be de/serialized from/to JSON.
-/// This implies that if can not be retrieved as part of a [Study] from a [StudyManager]
+/// This implies that it can not be retrieved as part of a [Study] from a [StudyManager]
 /// since it relies on specifying a Dart-specific function as the [EventConditionEvaluator]
 /// method. Hence, this trigger is mostly useful when creating a [Study] directly in the app
 /// using Dart code.
 ///
 /// If you need to de/serialize an event trigger, use the [SamplingEventTrigger] instead.
 class ConditionalSamplingEventTrigger extends Trigger {
-  ConditionalSamplingEventTrigger({this.measureType, this.resumeCondition, this.pauseCondition}) : super();
+  ConditionalSamplingEventTrigger({
+    String triggerId,
+    this.measureType,
+    this.resumeCondition,
+    this.pauseCondition,
+  }) : super(triggerId: triggerId);
 
   /// The [MeasureType] of the event to look for.
   MeasureType measureType;

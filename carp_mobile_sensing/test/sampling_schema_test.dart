@@ -17,7 +17,7 @@ void main() {
 
     study.addTriggerTask(
       ImmediateTrigger(),
-      Task()
+      AutomaticTask()
         ..measures = SamplingSchema.common().getMeasureList(
           namespace: NameSpace.CARP,
           types: [
@@ -36,7 +36,7 @@ void main() {
 //      ..zip = true
 //      ..encrypt = false;
 
-//    study.addTask(Task('1st Taks')
+//    study.addTask(AutomaticTask('1st Taks')
 //      ..addMeasure(Measure(DataFormat('carp', 'location')))
 //      ..addMeasure(Measure(DataFormat('carp', 'noise'))));
 //
@@ -56,17 +56,13 @@ void main() {
 
     study.addTriggerTask(
         ImmediateTrigger(),
-        Task('Sensor Task')
+        AutomaticTask(name: 'Sensor Task')
           ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
-              frequency: 10 * 1000, // sample every 10 secs
-              duration: 100 // for 100 ms
-              ))
+              frequency: const Duration(seconds: 10), duration: const Duration(milliseconds: 100)))
           ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
-              frequency: 20 * 1000, // sample every 20 secs
-              duration: 100 // for 100 ms
-              )));
+              frequency: const Duration(seconds: 20), duration: const Duration(milliseconds: 100))));
 
-//    study.addTask(Task('Audio Recording Task')
+//    study.addTask(AutomaticTask('Audio Recording Task')
 //      ..addMeasure(AudioMeasure(MeasureType(NameSpace.CARP, DataType.AUDIO),
 //          frequency: 10 * 60 * 1000, // sample sound every 10 min
 //          duration: 10 * 1000, // for 10 secs
@@ -83,7 +79,7 @@ void main() {
 
     study.addTriggerTask(
         ImmediateTrigger(),
-        Task('Task collecting a list of all installed apps')
+        AutomaticTask(name: 'Task collecting a list of all installed apps')
           ..addMeasure(Measure(MeasureType(NameSpace.CARP, AppsSamplingPackage.APPS))));
   });
 

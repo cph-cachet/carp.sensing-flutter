@@ -1,0 +1,147 @@
+{
+  "c__": "Study",
+  "id": "1234",
+  "name": "bardram study",
+  "user_id": "bardram",
+  "sampling_strategy": "NORMAL",
+  "data_end_point": {
+    "c__": "FileDataEndPoint",
+    "type": "FILE",
+    "buffer_size": 50000,
+    "zip": true,
+    "encrypt": false
+  },
+  "data_format": "carp",
+  "triggers": [
+    {
+      "c__": "ImmediateTrigger",
+      "tasks": [
+        {
+          "c__": "Task",
+          "name": "Sampling Task",
+          "measures": [
+            {
+              "c__": "Measure",
+              "type": {
+                "c__": "MeasureType",
+                "namespace": "carp",
+                "name": "device"
+              },
+              "name": "Basic Device Info",
+              "enabled": true,
+              "configuration": {}
+            },
+            {
+              "c__": "PeriodicMeasure",
+              "type": {
+                "c__": "MeasureType",
+                "namespace": "carp",
+                "name": "memory"
+              },
+              "name": "Memory Usage",
+              "enabled": true,
+              "configuration": {},
+              "frequency": 60000000
+            },
+            {
+              "c__": "Measure",
+              "type": {
+                "c__": "MeasureType",
+                "namespace": "carp",
+                "name": "battery"
+              },
+              "name": "Battery",
+              "enabled": true,
+              "configuration": {}
+            },
+            {
+              "c__": "Measure",
+              "type": {
+                "c__": "MeasureType",
+                "namespace": "carp",
+                "name": "screen"
+              },
+              "name": "Screen Activity (lock/on/off)",
+              "enabled": true,
+              "configuration": {}
+            },
+            {
+              "c__": "PeriodicMeasure",
+              "type": {
+                "c__": "MeasureType",
+                "namespace": "carp",
+                "name": "accelerometer"
+              },
+              "name": "Accelerometer",
+              "enabled": false,
+              "configuration": {},
+              "frequency": 100000,
+              "duration": 1000
+            },
+            {
+              "c__": "PeriodicMeasure",
+              "type": {
+                "c__": "MeasureType",
+                "namespace": "carp",
+                "name": "gyroscope"
+              },
+              "name": "Gyroscope",
+              "enabled": false,
+              "configuration": {},
+              "frequency": 100000,
+              "duration": 1000
+            },
+            {
+              "c__": "Measure",
+              "type": {
+                "c__": "MeasureType",
+                "namespace": "carp",
+                "name": "pedometer"
+              },
+              "name": "Pedometer (Step Count)",
+              "enabled": true,
+              "configuration": {}
+            },
+            {
+              "c__": "PeriodicMeasure",
+              "type": {
+                "c__": "MeasureType",
+                "namespace": "carp",
+                "name": "light"
+              },
+              "name": "Ambient Light",
+              "enabled": true,
+              "configuration": {},
+              "frequency": 60000000,
+              "duration": 1000000
+            },
+            {
+              "c__": "Measure",
+              "type": {
+                "c__": "MeasureType",
+                "namespace": "carp",
+                "name": "apps"
+              },
+              "name": "Installed Apps",
+              "enabled": true,
+              "configuration": {}
+            },
+            {
+              "c__": "MarkedMeasure",
+              "type": {
+                "c__": "MeasureType",
+                "namespace": "carp",
+                "name": "app_usage"
+              },
+              "name": "Apps Usage",
+              "enabled": true,
+              "configuration": {},
+              "mark": "2020-05-27T00:00:24.716257",
+              "history": 86400000000
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

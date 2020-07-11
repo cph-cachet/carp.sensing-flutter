@@ -7,37 +7,23 @@
 
 part of communication;
 
-/// Specifies the configuration of how to sample a phone log from this device.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class PhoneLogMeasure extends Measure {
-  static const int DEFAULT_NUMBER_OF_DAYS = 1;
-
-  /// The number of days back in time to collect the phone log from.
-  /// If [days] are -1, the entire call log will be collected.
-  int days = DEFAULT_NUMBER_OF_DAYS;
-
-  PhoneLogMeasure(MeasureType type, {name, enabled, this.days = DEFAULT_NUMBER_OF_DAYS})
-      : super(type, enabled: enabled, name: name);
-
-  static Function get fromJsonFunction => _$PhoneLogMeasureFromJson;
-  factory PhoneLogMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
-  Map<String, dynamic> toJson() => _$PhoneLogMeasureToJson(this);
-}
-
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class CalendarMeasure extends Measure {
   static const int DEFAULT_NUMBER_OF_DAYS = 1;
 
-  /// The number of days back in time to collect calendar events.
-  int daysBack = DEFAULT_NUMBER_OF_DAYS;
+  /// The time duration back in time to collect calendar events.
+  Duration past;
 
-  /// The number of days ahead in time to collect calendar events.
-  int daysFuture = DEFAULT_NUMBER_OF_DAYS;
+  /// The time duration ahead in time to collect calendar events.
+  Duration future;
 
-  CalendarMeasure(MeasureType type,
-      {name, enabled, this.daysBack = DEFAULT_NUMBER_OF_DAYS, this.daysFuture = DEFAULT_NUMBER_OF_DAYS})
-      : super(type, enabled: enabled, name: name);
+  CalendarMeasure(
+    MeasureType type, {
+    name,
+    enabled,
+    this.past = const Duration(days: DEFAULT_NUMBER_OF_DAYS),
+    this.future = const Duration(days: DEFAULT_NUMBER_OF_DAYS),
+  }) : super(type, enabled: enabled, name: name);
 
   static Function get fromJsonFunction => _$CalendarMeasureFromJson;
   factory CalendarMeasure.fromJson(Map<String, dynamic> json) =>

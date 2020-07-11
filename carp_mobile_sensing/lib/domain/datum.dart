@@ -93,6 +93,29 @@ class ErrorDatum extends CARPDatum {
   String toString() => super.toString() + ', message: $message';
 }
 
+/// A [Datum] object holding a link to a file.
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+class FileDatum extends CARPDatum {
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.FILE);
+  DataFormat get format => CARP_DATA_FORMAT;
+
+  /// The path to the attached file.
+  String filename;
+
+  /// Should this file be uploaded together with the [Datum] description. Default is [true].
+  bool upload = true;
+
+  /// Metadata for this file as a map of string key-value pairs.
+  Map<String, String> metadata = Map<String, String>();
+
+  FileDatum([this.filename, this.upload = true]) : super();
+
+  factory FileDatum.fromJson(Map<String, dynamic> json) => _$FileDatumFromJson(json);
+  Map<String, dynamic> toJson() => _$FileDatumToJson(this);
+
+  String toString() => super.toString() + ', filename: $filename, upload: $upload';
+}
+
 /// A [Datum] object holding multiple [Datum]s of the same type.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MultiDatum extends CARPDatum {
@@ -165,6 +188,7 @@ class DataType {
   static const String STRING = "string";
   static const String MAP = "map";
   static const String ERROR = "error";
+  static const String FILE = "file";
 
   static List<String> _allTypes = List<String>();
 

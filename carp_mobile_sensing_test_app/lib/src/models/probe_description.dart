@@ -32,7 +32,7 @@ class ProbeDescription {
 //        ESenseSamplingPackage.ESENSE_SENSOR: 'Sensor reading from the eSense device.',
 //        ESenseSamplingPackage.ESENSE_BUTTON: 'Button pressed events from the eSense device.',
         SurveySamplingPackage.SURVEY: 'User survey.',
-//        HealthSamplingPackage.HEALTH: 'Collects health data from Apple Health / Google Fit.',
+        HealthSamplingPackage.HEALTH: 'Collects health data from Apple Health / Google Fit.',
       };
 
   static Map<String, Icon> get probeTypeIcon => {
@@ -66,12 +66,12 @@ class ProbeDescription {
 //        ESenseSamplingPackage.ESENSE_SENSOR: Icon(Icons.hearing, size: 50, color: CACHET.DARK_BLUE),
 //        ESenseSamplingPackage.ESENSE_BUTTON: Icon(Icons.radio_button_checked, size: 50, color: CACHET.DARK_BLUE),
         SurveySamplingPackage.SURVEY: Icon(Icons.note_add, size: 50, color: CACHET.ORANGE),
-//        HealthSamplingPackage.HEALTH: Icon(Icons.healing, size: 50, color: CACHET.RED),
+        HealthSamplingPackage.HEALTH: Icon(Icons.healing, size: 50, color: CACHET.RED),
       };
 
   static Map<ProbeState, Icon> get probeStateIcon => {
-        ProbeState.created: Icon(Icons.child_care, color: CACHET.GREY_4),
-        ProbeState.initialized: Icon(Icons.check, color: CACHET.LIGHT_PURPLE),
+        ProbeState.created: Icon(Icons.child_care, color: CACHET.GREY_3),
+        ProbeState.initialized: Icon(Icons.check, color: CACHET.GREEN),
         ProbeState.resumed: Icon(Icons.radio_button_checked, color: CACHET.GREEN),
         ProbeState.paused: Icon(Icons.radio_button_unchecked, color: CACHET.GREEN),
         ProbeState.stopped: Icon(Icons.close, color: CACHET.GREY_2),

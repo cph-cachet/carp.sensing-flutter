@@ -1,3 +1,21 @@
+## 0.4.4
+* DataPoint and Informed Consent endpoint changed to use `deployments` in URL.
+* Aligned the collection/documents to the new CANS endpoints
+
+## 0.4.3
+* `study_id` is now a String (not an int anymore).
+* fixed issue [#66](https://github.com/cph-cachet/carp.sensing-flutter/issues/66).
+
+## 0.4.2
+* updated to carp_mobile_sensing v. 0.8.x
+
+## 0.4.1
+* Upload of files to CANS implemented.
+* Support for serializing the OAuth token to JSON.
+
+## 0.4.0
+* **Breaking** Update to the new CANS API and data model.
+
 ## 0.3.3
 * improvement on retry in offline mode
 * testing w. iOS

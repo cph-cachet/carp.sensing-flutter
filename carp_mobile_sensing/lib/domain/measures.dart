@@ -77,13 +77,13 @@ class Measure extends Serializable {
 /// Useful for listening in on a sensor (e.g. the accelerometer) on a regular, but limited time window.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class PeriodicMeasure extends Measure {
-  /// Sampling frequency in milliseconds (i.e., delay between sampling).
-  int frequency;
-  int _storedFrequency;
+  /// Sampling frequency (i.e., delay between sampling).
+  Duration frequency;
+  Duration _storedFrequency;
 
-  /// The sampling duration in milliseconds.
-  int duration;
-  int _storedDuration;
+  /// The sampling duration.
+  Duration duration;
+  Duration _storedDuration;
 
   PeriodicMeasure(MeasureType type, {String name, bool enabled, this.frequency, this.duration})
       : super(type, name: name, enabled: enabled) {
@@ -113,6 +113,44 @@ class PeriodicMeasure extends Measure {
   }
 
   String toString() => super.toString() + ', frequency: $frequency, duration: $duration';
+}
+
+/// A [MarkedMeasure] specify how to collect data historically back to a persistent mark.
+///
+/// This measure persistently marks the last time this data measure was done and provide this
+/// in the [lastTime] variable.
+/// This is useful for measures that want to collect data since last time it was collected.
+/// For example the [AppUsageMeasure].
+///
+/// A [MarkedMeasure] can only be used with [DatumProbe], [StreamProbe] and [PeriodicStreamProbe] probes.
+/// The mark is read when the probe is resumed and saved when the probe is paused.
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+class MarkedMeasure extends Measure {
+  /// The date and time of the last time this measure was collected.
+  @JsonKey(ignore: true)
+  DateTime lastTime;
+
+  /// The tag to be used to uniquely identify this measure.
+  /// Default is the [type] but can be overwritten in sub-classes.
+  String tag() => this.type.toString();
+
+  /// If there is no persistent mark, how long time back in history should
+  /// this measure be collected?
+  Duration history;
+
+  MarkedMeasure(
+    MeasureType type, {
+    String name,
+    bool enabled,
+    this.history = const Duration(days: 1),
+  }) : super(type, name: name, enabled: enabled);
+
+  static Function get fromJsonFunction => _$MarkedMeasureFromJson;
+  factory MarkedMeasure.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$MarkedMeasureToJson(this);
+
+  String toString() => super.toString() + ', mark: $lastTime, history: $history';
 }
 
 /// Specifies the type of a [Measure].

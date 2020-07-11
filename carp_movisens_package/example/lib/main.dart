@@ -13,7 +13,7 @@ void main() async {
   // adding a movisens measure
   study.addTriggerTask(
       ImmediateTrigger(), // a simple trigger that starts immediately
-      Task('Movisens Task')
+      Task(name: 'Movisens Task')
         ..addMeasure(MovisensMeasure(MeasureType(NameSpace.CARP, MovisensSamplingPackage.MOVISENS),
             name: "movisens",
             enabled: true,
@@ -30,7 +30,7 @@ void main() async {
 
   // await initialization before starting
   await controller.initialize();
-  controller.start();
+  controller.resume();
 
   // listening on all data events from the study
   controller.events.forEach(print);

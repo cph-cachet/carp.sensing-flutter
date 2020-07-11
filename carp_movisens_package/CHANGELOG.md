@@ -1,3 +1,6 @@
+## 0.1.9
+* upgrade to `carp_mobile_sensing` v. 0.7.x
+
 ## 0.1.8
 * documentation improvements 
 * added example

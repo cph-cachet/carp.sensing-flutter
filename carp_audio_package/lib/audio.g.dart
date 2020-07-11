@@ -19,7 +19,11 @@ AudioDatum _$AudioDatumFromJson(Map<String, dynamic> json) {
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
         ? null
-        : DateTime.parse(json['timestamp'] as String);
+        : DateTime.parse(json['timestamp'] as String)
+    ..upload = json['upload'] as bool
+    ..metadata = (json['metadata'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(k, e as String),
+    );
 }
 
 Map<String, dynamic> _$AudioDatumToJson(AudioDatum instance) {
@@ -34,6 +38,8 @@ Map<String, dynamic> _$AudioDatumToJson(AudioDatum instance) {
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
   writeNotNull('filename', instance.filename);
+  writeNotNull('upload', instance.upload);
+  writeNotNull('metadata', instance.metadata);
   writeNotNull(
       'start_recording_time', instance.startRecordingTime?.toIso8601String());
   writeNotNull(
@@ -77,8 +83,8 @@ AudioMeasure _$AudioMeasureFromJson(Map<String, dynamic> json) {
     json['type'] == null
         ? null
         : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
-    name: json['name'],
-    enabled: json['enabled'],
+    name: json['name'] as String,
+    enabled: json['enabled'] as bool,
     studyId: json['study_id'] as String,
   )
     ..c__ = json['c__'] as String
@@ -110,10 +116,14 @@ NoiseMeasure _$NoiseMeasureFromJson(Map<String, dynamic> json) {
     json['type'] == null
         ? null
         : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
-    name: json['name'],
-    enabled: json['enabled'],
-    frequency: json['frequency'],
-    duration: json['duration'],
+    name: json['name'] as String,
+    enabled: json['enabled'] as bool,
+    frequency: json['frequency'] == null
+        ? null
+        : Duration(microseconds: json['frequency'] as int),
+    duration: json['duration'] == null
+        ? null
+        : Duration(microseconds: json['duration'] as int),
     samplingRate: json['sampling_rate'] as int,
   )
     ..c__ = json['c__'] as String
@@ -136,8 +146,8 @@ Map<String, dynamic> _$NoiseMeasureToJson(NoiseMeasure instance) {
   writeNotNull('name', instance.name);
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
-  writeNotNull('frequency', instance.frequency);
-  writeNotNull('duration', instance.duration);
+  writeNotNull('frequency', instance.frequency?.inMicroseconds);
+  writeNotNull('duration', instance.duration?.inMicroseconds);
   writeNotNull('sampling_rate', instance.samplingRate);
   return val;
 }

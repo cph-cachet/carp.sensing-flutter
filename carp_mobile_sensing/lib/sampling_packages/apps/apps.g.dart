@@ -6,39 +6,6 @@ part of apps;
 // JsonSerializableGenerator
 // **************************************************************************
 
-AppUsageMeasure _$AppUsageMeasureFromJson(Map<String, dynamic> json) {
-  return AppUsageMeasure(
-    json['type'] == null
-        ? null
-        : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
-    name: json['name'],
-    enabled: json['enabled'],
-    duration: json['duration'] as int,
-  )
-    ..c__ = json['c__'] as String
-    ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
-      (k, e) => MapEntry(k, e as String),
-    );
-}
-
-Map<String, dynamic> _$AppUsageMeasureToJson(AppUsageMeasure instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('c__', instance.c__);
-  writeNotNull('type', instance.type);
-  writeNotNull('name', instance.name);
-  writeNotNull('enabled', instance.enabled);
-  writeNotNull('configuration', instance.configuration);
-  writeNotNull('duration', instance.duration);
-  return val;
-}
-
 AppsDatum _$AppsDatumFromJson(Map<String, dynamic> json) {
   return AppsDatum()
     ..id = json['id'] as String

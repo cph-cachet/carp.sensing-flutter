@@ -5,9 +5,10 @@
  * found in the LICENSE file.
  */
 
-import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'dart:async';
 import 'dart:convert';
+
+import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 /// This is the code for the very minimal example used in the README.md file.
 void example() async {
@@ -22,39 +23,33 @@ void example() async {
   // add sensor collection from accelerometer and gyroscope
   // careful - these sensors generate a lot of data!
   study.addTriggerTask(
-      DelayedTrigger(delay: 1000), // delay sampling for one second
-      Task('Sensor Task')
-        ..addMeasure(PeriodicMeasure(
-          MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
-          frequency: 10 * 1000, // sample every 10 secs
-          duration: 2, // for 2 ms
-        ))
-        ..addMeasure(PeriodicMeasure(
-          MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
-          frequency: 20 * 1000, // sample every 20 secs
-          duration: 2, // for 2 ms
-        )));
+      DelayedTrigger(delay: Duration(seconds: 1)),
+      AutomaticTask(name: 'Sensor Task')
+        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
+            frequency: const Duration(seconds: 10), duration: const Duration(milliseconds: 100)))
+        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
+            frequency: const Duration(seconds: 20), duration: const Duration(milliseconds: 100))));
 
   study.addTriggerTask(
-      PeriodicTrigger(period: 24 * 60 * 60 * 1000), // trigger sampling once pr. day
-      Task('Task collecting a list of all installed apps')
+      PeriodicTrigger(period: const Duration(days: 1)), // trigger sampling once pr. day
+      AutomaticTask(name: 'Task collecting a list of all installed apps')
         ..addMeasure(Measure(MeasureType(NameSpace.CARP, AppsSamplingPackage.APPS))));
 
   // creating measure variable to be used later
   PeriodicMeasure lightMeasure = PeriodicMeasure(
     MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
     name: "Ambient Light",
-    frequency: 11 * 1000,
-    duration: 700,
+    frequency: const Duration(seconds: 11),
+    duration: const Duration(milliseconds: 100),
   );
-  study.addTriggerTask(ImmediateTrigger(), Task('Light')..addMeasure(lightMeasure));
+  study.addTriggerTask(ImmediateTrigger(), AutomaticTask(name: 'Light')..addMeasure(lightMeasure));
 
-  // Create a Study Controller that can manage this study, initialize it, and start it.
+  // Create a Study Controller that can manage this study.
   StudyController controller = StudyController(study);
 
-  // await initialization before starting
+  // await initialization before starting/resuming
   await controller.initialize();
-  controller.start();
+  controller.resume();
 
   // listening on all data events from the study
   controller.events.forEach(print);
@@ -89,8 +84,8 @@ void example() async {
   // adapt measures on the go - calling hasChanged() force a restart of
   // the probe, which will load the new measure
   lightMeasure
-    ..frequency = 12 * 1000
-    ..duration = 500
+    ..frequency = const Duration(seconds: 12)
+    ..duration = const Duration(milliseconds: 500)
     ..hasChanged();
 
   // disabling a measure will pause the probe
@@ -112,7 +107,7 @@ void samplingSchemaExample() async {
       MapEntry(
           SensorSamplingPackage.PEDOMETER,
           PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.PEDOMETER),
-              enabled: true, frequency: 60 * 60 * 1000)),
+              enabled: true, frequency: const Duration(minutes: 1))),
       MapEntry(DeviceSamplingPackage.SCREEN,
           Measure(MeasureType(NameSpace.CARP, DeviceSamplingPackage.SCREEN), enabled: true)),
     ]);
@@ -123,7 +118,7 @@ void samplingSchemaExample() async {
     ..name = 'CARP Mobile Sensing - default configuration'
     ..dataEndPoint = DataEndPoint(DataEndPointTypes.PRINT)
     ..addTriggerTask(ImmediateTrigger(),
-        Task()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
+        AutomaticTask()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
 
   Study study = Study("2", 'user@cachet.dk',
       name: 'A outdoor activity study',
@@ -136,7 +131,7 @@ void samplingSchemaExample() async {
   // adding a set of specific measures from the `common` sampling schema to one overall task
   study.addTriggerTask(
       ImmediateTrigger(),
-      Task()
+      AutomaticTask()
         ..measures = SamplingSchema.common().getMeasureList(
           namespace: NameSpace.CARP,
           types: [
@@ -150,7 +145,7 @@ void samplingSchemaExample() async {
   // adding a set of specific measures from the `common` sampling schema to one overall task
   study.addTriggerTask(
       ImmediateTrigger(),
-      Task('Sensing Task #1')
+      AutomaticTask(name: 'Sensing Task #1')
         ..measures = SamplingSchema.common().getMeasureList(
           namespace: NameSpace.CARP,
           types: [
@@ -162,7 +157,7 @@ void samplingSchemaExample() async {
 
   study.addTriggerTask(
       ImmediateTrigger(),
-      Task('One Common Sensing Task')
+      AutomaticTask(name: 'One Common Sensing Task')
         ..measures = SamplingSchema.common().getMeasureList(
           namespace: NameSpace.CARP,
           types: [
@@ -174,12 +169,13 @@ void samplingSchemaExample() async {
         ));
 
   // adding all measure from the activity schema to one overall 'sensing' task
-  study.addTriggerTask(ImmediateTrigger(), Task('Sensing Task')..measures = activitySchema.measures.values);
+  study.addTriggerTask(
+      ImmediateTrigger(), AutomaticTask(name: 'Sensing Task')..measures = activitySchema.measures.values);
 
   // adding the measures to two separate tasks, while also adding a new light measure to the 2nd task
   study.addTriggerTask(
       ImmediateTrigger(),
-      Task('Activity Sensing Task #1')
+      AutomaticTask(name: 'Activity Sensing Task #1')
         ..measures = activitySchema.getMeasureList(
           namespace: NameSpace.CARP,
           types: [
@@ -191,7 +187,7 @@ void samplingSchemaExample() async {
 
   study.addTriggerTask(
       ImmediateTrigger(),
-      Task('Phone Sensing Task #2')
+      AutomaticTask(name: 'Phone Sensing Task #2')
         ..measures = activitySchema.getMeasureList(
           namespace: NameSpace.CARP,
           types: [
@@ -202,8 +198,8 @@ void samplingSchemaExample() async {
         ..addMeasure(PeriodicMeasure(
           MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
           name: "Ambient Light",
-          frequency: 11 * 1000,
-          duration: 700,
+          frequency: const Duration(seconds: 11),
+          duration: const Duration(milliseconds: 100),
         )));
 
   StudyController controller = StudyController(study, samplingSchema: activitySchema);
@@ -213,7 +209,7 @@ void samplingSchemaExample() async {
 
   controller = StudyController(study);
   await controller.initialize();
-  controller.start();
+  controller.resume();
 
   // listening on all data events from the study
   controller.events.forEach(print);
@@ -234,12 +230,12 @@ void example_2() {
         ..zip = true
         ..encrypt = false)
     ..addTriggerTask(ImmediateTrigger(),
-        Task()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
+        AutomaticTask()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
 
   // adding a set of specific measures from the `common` sampling schema to one no-name task
   study.addTriggerTask(
       ImmediateTrigger(),
-      Task()
+      AutomaticTask()
         ..measures = SamplingSchema.common().getMeasureList(
           types: [SensorSamplingPackage.PEDOMETER, DeviceSamplingPackage.SCREEN],
           namespace: NameSpace.CARP,

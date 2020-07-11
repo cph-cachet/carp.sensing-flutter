@@ -37,11 +37,10 @@ class AppsSamplingPackage implements SamplingPackage {
           )),
       MapEntry(
           APP_USAGE,
-          AppUsageMeasure(
+          MarkedMeasure(
             MeasureType(NameSpace.CARP, APP_USAGE),
             name: 'Apps Usage',
             enabled: true,
-            duration: 60 * 60 * 1000, // collect app usage for the last hour
           )),
     ]);
 
@@ -64,11 +63,10 @@ class AppsSamplingPackage implements SamplingPackage {
           )),
       MapEntry(
           APP_USAGE,
-          AppUsageMeasure(
+          MarkedMeasure(
             MeasureType(NameSpace.CARP, APP_USAGE),
             name: 'Apps Usage',
             enabled: true,
-            duration: 5 * 60 * 1000, // app usage for the last 5 min
           )),
     ]);
 }

@@ -61,16 +61,13 @@ void main() async {
 
   // ------------------- DATA POINTS --------------------------------
 
-  // Create a test bluetooth datum
-
-  BluetoothDatum datum = BluetoothDatum()
-    ..scanResult.add(BluetoothDevice()
-      ..bluetoothDeviceId = "weg"
-      ..bluetoothDeviceName = "ksjbdf"
-      ..connectable = true
-      ..txPowerLevel = 314
-      ..rssi = 567
-      ..bluetoothDeviceType = "classic");
+  // Create a test datum
+  LightDatum datum = LightDatum(
+    maxLux: 12,
+    meanLux: 23,
+    minLux: 0.3,
+    stdLux: 0.4,
+  );
 
   // create a CARP data point
   final CARPDataPoint data = CARPDataPoint.fromDatum(study.id, study.userId, datum);

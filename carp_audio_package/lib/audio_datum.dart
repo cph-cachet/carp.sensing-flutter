@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2020 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -10,12 +10,9 @@ part of audio;
 /// An [AudioDatum] that holds the path to audio file on the local device,
 /// as well as the timestamps of when the recording was started and stopped
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class AudioDatum extends CARPDatum {
+class AudioDatum extends FileDatum {
   static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, AudioSamplingPackage.AUDIO);
   DataFormat get format => CARP_DATA_FORMAT;
-
-  /// The filename of the audio file store on this device.
-  String filename;
 
   /// The timestamp for start of recording.
   DateTime startRecordingTime;
@@ -23,11 +20,11 @@ class AudioDatum extends CARPDatum {
   /// The timestamp for end of recording.
   DateTime endRecordingTime;
 
-  AudioDatum({this.filename, this.startRecordingTime, this.endRecordingTime}) : super();
+  AudioDatum({String filename, this.startRecordingTime, this.endRecordingTime}) : super(filename);
 
   factory AudioDatum.fromJson(Map<String, dynamic> json) => _$AudioDatumFromJson(json);
   Map<String, dynamic> toJson() => _$AudioDatumToJson(this);
-  String toString() => super.toString() + ', filename: $filename, start: $startRecordingTime, end: $endRecordingTime';
+  String toString() => super.toString() + ', start: $startRecordingTime, end: $endRecordingTime';
 }
 
 /// A [NoiseDatum] that holds the noise level in decibel of a noise sampling.

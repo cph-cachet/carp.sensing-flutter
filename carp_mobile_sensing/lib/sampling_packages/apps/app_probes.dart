@@ -14,10 +14,10 @@ class AppsProbe extends DatumProbe {
 
   Stream<Datum> get stream => null;
 
-  // check if the DeviceApps plugin is available (only available on Android)
   Future<void> onInitialize(Measure measure) async {
-    print('onInitialize in $this');
     super.onInitialize(measure);
+
+    // check if the DeviceApps plugin is available (only available on Android)
     if (!Platform.isAndroid) throw SensingException("Error initializing AppsProbe -- only available on Android.");
   }
 
@@ -35,27 +35,30 @@ class AppsProbe extends DatumProbe {
   }
 }
 
-/// A probe collecting app usage information about installed apps on the device
+/// A probe collecting app usage information on apps that are installed on the device
 ///
 /// Note that this probe only works on Android. On iOS, an exception is thrown and the probe is stopped.
 class AppUsageProbe extends DatumProbe {
   AppUsage appUsage = new AppUsage();
+  MarkedMeasure markedMeasure;
 
   AppUsageProbe() : super();
 
   Future<void> onInitialize(Measure measure) async {
     super.onInitialize(measure);
-    assert(measure is AppUsageMeasure, 'An AppUsageMeasure must be provided to use the AppUsageProbe.');
+    assert(measure is MarkedMeasure, 'An MarkedMeasure must be provided to use the AppUsageProbe.');
+    markedMeasure = (measure as MarkedMeasure);
+
     // check if AppUsage is available (only available on Android)
     if (!Platform.isAndroid) throw SensingException("Error initializing AppUsageProbe -- only avaiulable on Android.");
-    //await appUsage.fetchUsage(DateTime.now().subtract(Duration(days: 1)), DateTime.now());
   }
 
   Future<Datum> getDatum() async {
+    // get the last mark - if null, go back one day
+    DateTime start = markedMeasure.lastTime ?? DateTime.now().subtract(markedMeasure.history);
     DateTime end = DateTime.now();
-    DateTime start =
-        DateTime.fromMillisecondsSinceEpoch(end.millisecondsSinceEpoch - (measure as AppUsageMeasure).duration);
 
+    debug('Collecting app usage - start: ${start.toUtc()}, end: ${end.toUtc()}');
     Map<dynamic, dynamic> usage = await appUsage.fetchUsage(start, end);
     return AppUsageDatum()
       ..start = start.toUtc()
