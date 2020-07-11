@@ -7,7 +7,6 @@ class MobilityMeasure extends Measure {
   bool usePriorContexts;
   double stopRadius, placeRadius;
   Duration stopDuration;
-  Stream<LocationSample> locationStream;
 
   MobilityMeasure(MeasureType type,
       {name,
@@ -15,8 +14,7 @@ class MobilityMeasure extends Measure {
       this.usePriorContexts,
       this.stopRadius,
       this.placeRadius,
-      this.stopDuration,
-      this.locationStream})
+      this.stopDuration})
       : super(type, name: name, enabled: enabled);
 
   static Function get fromJsonFunction => _$MobilityMeasureFromJson;
@@ -32,6 +30,5 @@ class MobilityMeasure extends Measure {
       ',usePriorContext: $usePriorContexts,'
           'stopRadius: $stopRadius,'
           'placeRadius: $placeRadius,'
-          'stopDuration: $stopDuration'
-          'locationStream: $locationStream';
+          'stopDuration: $stopDuration';
 }

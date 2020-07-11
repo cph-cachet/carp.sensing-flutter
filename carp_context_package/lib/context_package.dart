@@ -133,8 +133,7 @@ class ContextSamplingPackage implements SamplingPackage {
               placeRadius: 50,
               stopRadius: 25,
               usePriorContexts: true,
-              stopDuration: Duration(minutes: 3),
-              locationStream: Stream<LocationSample>.fromIterable([]))),
+              stopDuration: Duration(minutes: 3))),
     ]);
 
   SamplingSchema get light => common
