@@ -21,6 +21,7 @@ class ContextSamplingPackage implements SamplingPackage {
   static const String WEATHER = "weather";
   static const String AIR_QUALITY = "air_quality";
   static const String GEOFENCE = "geofence";
+  static const String MOBILITY = "mobility";
 
   List<String> get dataTypes => [
         LOCATION,
@@ -29,6 +30,7 @@ class ContextSamplingPackage implements SamplingPackage {
         WEATHER,
         AIR_QUALITY,
         GEOFENCE,
+        MOBILITY,
       ];
 
   Probe create(String type) {
