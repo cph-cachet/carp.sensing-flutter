@@ -232,6 +232,8 @@ WeatherMeasure _$WeatherMeasureFromJson(Map<String, dynamic> json) {
     name: json['name'],
     enabled: json['enabled'],
     apiKey: json['api_key'] as String,
+    latitude: (json['latitude'] as num)?.toDouble(),
+    longitude: (json['longitude'] as num)?.toDouble(),
   )
     ..c__ = json['c__'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
@@ -254,6 +256,8 @@ Map<String, dynamic> _$WeatherMeasureToJson(WeatherMeasure instance) {
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
   writeNotNull('api_key', instance.apiKey);
+  writeNotNull('latitude', instance.latitude);
+  writeNotNull('longitude', instance.longitude);
   return val;
 }
 
@@ -422,5 +426,85 @@ Map<String, dynamic> _$AirQualityMeasureToJson(AirQualityMeasure instance) {
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
   writeNotNull('api_key', instance.apiKey);
+  return val;
+}
+
+MobilityDatum _$MobilityDatumFromJson(Map<String, dynamic> json) {
+  return MobilityDatum()
+    ..id = json['id'] as String
+    ..date =
+        json['date'] == null ? null : DateTime.parse(json['date'] as String)
+    ..timestamp = json['timestamp'] == null
+        ? null
+        : DateTime.parse(json['timestamp'] as String)
+    ..numberOfPlaces = json['number_of_places'] as int
+    ..locationVariance = (json['location_variance'] as num)?.toDouble()
+    ..entropy = (json['entropy'] as num)?.toDouble()
+    ..normalizedEntropy = (json['normalized_entropy'] as num)?.toDouble()
+    ..homeStay = (json['home_stay'] as num)?.toDouble()
+    ..distanceTravelled = (json['distance_travelled'] as num)?.toDouble()
+    ..routineIndex = (json['routine_index'] as num)?.toDouble();
+}
+
+Map<String, dynamic> _$MobilityDatumToJson(MobilityDatum instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', instance.id);
+  writeNotNull('date', instance.date?.toIso8601String());
+  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  writeNotNull('number_of_places', instance.numberOfPlaces);
+  writeNotNull('location_variance', instance.locationVariance);
+  writeNotNull('entropy', instance.entropy);
+  writeNotNull('normalized_entropy', instance.normalizedEntropy);
+  writeNotNull('home_stay', instance.homeStay);
+  writeNotNull('distance_travelled', instance.distanceTravelled);
+  writeNotNull('routine_index', instance.routineIndex);
+  return val;
+}
+
+MobilityMeasure _$MobilityMeasureFromJson(Map<String, dynamic> json) {
+  return MobilityMeasure(
+    json['type'] == null
+        ? null
+        : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
+    name: json['name'],
+    enabled: json['enabled'],
+    usePriorContexts: json['use_prior_contexts'] as bool,
+    stopRadius: (json['stop_radius'] as num)?.toDouble(),
+    placeRadius: (json['place_radius'] as num)?.toDouble(),
+    stopDuration: json['stop_duration'] == null
+        ? null
+        : Duration(microseconds: json['stop_duration'] as int),
+  )
+    ..c__ = json['c__'] as String
+    ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(k, e as String),
+    );
+}
+
+Map<String, dynamic> _$MobilityMeasureToJson(MobilityMeasure instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('c__', instance.c__);
+  writeNotNull('type', instance.type);
+  writeNotNull('name', instance.name);
+  writeNotNull('enabled', instance.enabled);
+  writeNotNull('configuration', instance.configuration);
+  writeNotNull('use_prior_contexts', instance.usePriorContexts);
+  writeNotNull('stop_radius', instance.stopRadius);
+  writeNotNull('place_radius', instance.placeRadius);
+  writeNotNull('stop_duration', instance.stopDuration?.inMicroseconds);
   return val;
 }

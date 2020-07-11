@@ -29,6 +29,7 @@ class ProbeDescription {
         ContextSamplingPackage.AIR_QUALITY: 'Collects local air quality.',
         ContextSamplingPackage.GEOFENCE: 'Track movement in/out of this geofence.',
         CommunicationSamplingPackage.CALENDAR: 'Collects entries from phone calendars.',
+        ContextSamplingPackage.MOBILITY: 'Mobility features calculated from location data.',
       };
 
   static Map<String, Icon> get probeTypeIcon => {
@@ -58,6 +59,7 @@ class ProbeDescription {
         ContextSamplingPackage.WEATHER: Icon(Icons.cloud, size: 50, color: CACHET.LIGHT_BLUE_2),
         ContextSamplingPackage.AIR_QUALITY: Icon(Icons.warning, size: 50, color: CACHET.GREY_3),
         ContextSamplingPackage.GEOFENCE: Icon(Icons.location_on, size: 50, color: CACHET.CYAN),
+        ContextSamplingPackage.MOBILITY: Icon(Icons.location_on, size: 50, color: CACHET.ORANGE),
         CommunicationSamplingPackage.CALENDAR: Icon(Icons.event, size: 50, color: CACHET.CYAN),
       };
 

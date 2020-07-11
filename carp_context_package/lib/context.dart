@@ -16,6 +16,7 @@ import 'package:openmhealth_schemas/openmhealth_schemas.dart' as omh;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:air_quality/air_quality.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:mobility_features/mobility_features.dart';
 
 part 'activity_datum.dart';
 part 'activity_probe.dart';
@@ -33,4 +34,10 @@ part 'geofence_probe.dart';
 part 'air_quality_datum.dart';
 part 'air_quality_measure.dart';
 part 'air_quality_probe.dart';
+part 'package:carp_context_package/mobility_datum.dart';
+part 'package:carp_context_package/mobility_probe.dart';
+part 'package:carp_context_package/mobility_measure.dart';
 part 'context.g.dart';
+
+/// auto generate code with:
+/// flutter pub run build_runner build --delete-conflicting-outputs
