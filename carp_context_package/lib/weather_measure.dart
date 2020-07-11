@@ -13,13 +13,21 @@ part of context;
 class WeatherMeasure extends Measure {
   /// API key for the OpenWeatherMap API.
   String apiKey;
+  double latitude, longitude;
 
-  WeatherMeasure(MeasureType type, {name, enabled, this.apiKey}) : super(type, name: name, enabled: enabled);
+  WeatherMeasure(MeasureType type,
+      {name, enabled, this.apiKey, this.latitude, this.longitude})
+      : super(type, name: name, enabled: enabled);
 
   static Function get fromJsonFunction => _$WeatherMeasureFromJson;
+
   factory WeatherMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory.fromJson(
+          json[Serializable.CLASS_IDENTIFIER].toString(), json);
+
   Map<String, dynamic> toJson() => _$WeatherMeasureToJson(this);
 
-  String toString() => super.toString() + ', API key: $apiKey';
+  String toString() =>
+      super.toString() +
+      ', API key: $apiKey, Location: ($latitude, $longitude)';
 }

@@ -228,6 +228,8 @@ WeatherMeasure _$WeatherMeasureFromJson(Map<String, dynamic> json) {
     name: json['name'],
     enabled: json['enabled'],
     apiKey: json['api_key'] as String,
+    latitude: (json['latitude'] as num)?.toDouble(),
+    longitude: (json['longitude'] as num)?.toDouble(),
   )
     ..c__ = json['c__'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
@@ -250,6 +252,8 @@ Map<String, dynamic> _$WeatherMeasureToJson(WeatherMeasure instance) {
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
   writeNotNull('api_key', instance.apiKey);
+  writeNotNull('latitude', instance.latitude);
+  writeNotNull('longitude', instance.longitude);
   return val;
 }
 
@@ -346,13 +350,12 @@ AirQualityDatum _$AirQualityDatumFromJson(Map<String, dynamic> json) {
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
         ? null
-        : DateTime.tryParse(json['timestamp'] as String) ??
-            DateTime.fromMillisecondsSinceEpoch(0)
-    ..airQualityIndex = int.tryParse(json['air_quality_index']) ?? -1
+        : DateTime.parse(json['timestamp'] as String)
+    ..airQualityIndex = json['air_quality_index'] as int
     ..source = json['source'] as String
     ..place = json['place'] as String
-    ..latitude = double.tryParse(json['latitude']) ?? -1.0
-    ..longitude = double.tryParse(json['longitude']) ?? -1.0
+    ..latitude = (json['latitude'] as num)?.toDouble()
+    ..longitude = (json['longitude'] as num)?.toDouble()
     ..airQualityLevel = _$enumDecodeNullable(
         _$AirQualityLevelEnumMap, json['air_quality_level']);
 }
@@ -379,6 +382,7 @@ Map<String, dynamic> _$AirQualityDatumToJson(AirQualityDatum instance) {
 }
 
 const _$AirQualityLevelEnumMap = {
+  AirQualityLevel.UNKNOWN: 'UNKNOWN',
   AirQualityLevel.GOOD: 'GOOD',
   AirQualityLevel.MODERATE: 'MODERATE',
   AirQualityLevel.UNHEALTHY_FOR_SENSITIVE_GROUPS:

@@ -11,7 +11,7 @@ import 'dart:io' show Platform;
 import 'package:json_annotation/json_annotation.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:activity_recognition_flutter/activity_recognition_flutter.dart';
-import 'package:weather/weather.dart';
+import 'package:weather/weather_library.dart';
 import 'package:openmhealth_schemas/openmhealth_schemas.dart' as omh;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:air_quality/air_quality.dart';
@@ -33,4 +33,10 @@ part 'geofence_probe.dart';
 part 'air_quality_datum.dart';
 part 'air_quality_measure.dart';
 part 'air_quality_probe.dart';
+part 'package:carp_context_package/mobility_datum.dart';
+part 'package:carp_context_package/mobility_probe.dart';
+part 'package:carp_context_package/mobility_measure.dart';
 part 'context.g.dart';
+
+/// auto generate code with:
+/// flutter pub run build_runner build --delete-conflicting-outputs

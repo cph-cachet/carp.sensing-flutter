@@ -3,18 +3,25 @@ part of context;
 /// Collects local weather information using the [WeatherStation] API.
 class WeatherProbe extends DatumProbe {
   WeatherStation _weather;
+  double _latitude, _longitude;
 
   Future<void> onInitialize(Measure measure) async {
     super.onInitialize(measure);
+    WeatherMeasure wm = measure as WeatherMeasure;
     assert(
-        (measure as WeatherMeasure).apiKey != null, 'In order to use the Weather API, and API key must be provided.');
-    _weather = WeatherStation((measure as WeatherMeasure).apiKey);
+    wm.apiKey != null, 'In order to use the Weather API, and API key must be provided.');
+    assert(
+    wm.latitude != null && wm.longitude != null, 'In order to use the Weather API, a Latitude and longitude must be provided.');
+
+    _weather = WeatherStation(wm.apiKey);
+    _latitude = wm.latitude;
+    _longitude = wm.longitude;
   }
 
   /// Returns the [WeatherDatum] for this location.
   Future<Datum> getDatum() async {
     try {
-      Weather w = await _weather.currentWeather();
+      Weather w = await _weather.currentWeather(_latitude, _longitude);
 
       if (w != null)
         return WeatherDatum()
