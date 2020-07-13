@@ -1,3 +1,6 @@
+## 0.8.5
+* Added mobility sampling via the [mobility_features](https://pub.dev/packages/mobility_features)  package
+
 ## 0.8.0
 * upgrade to `carp_mobile_sensing` v. 0.8.x
 

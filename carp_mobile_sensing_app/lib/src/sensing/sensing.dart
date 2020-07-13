@@ -204,6 +204,7 @@ class LocalStudyManager implements StudyManager {
                   ContextSamplingPackage.WEATHER,
                   //ContextSamplingPackage.AIR_QUALITY,
                   ContextSamplingPackage.LOCATION,
+                  ContextSamplingPackage.MOBILITY,
                 ],
               ))
         ..addTriggerTask(
