@@ -1,3 +1,6 @@
+## 0.8.6
+* Removed the latitude and longitude fields from `WeatherMeasure` since they were not used.
+
 ## 0.8.5
 * Added mobility sampling via the [mobility_features](https://pub.dev/packages/mobility_features)  package
 
