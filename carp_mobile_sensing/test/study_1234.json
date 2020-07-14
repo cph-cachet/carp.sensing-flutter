@@ -1,6 +1,7 @@
 {
   "c__": "Study",
   "id": "1234",
+  "deployment_id": "#1",
   "name": "bardram study",
   "user_id": "bardram",
   "sampling_strategy": "NORMAL",
@@ -136,7 +137,6 @@
               "name": "Apps Usage",
               "enabled": true,
               "configuration": {},
-              "mark": "2020-05-27T00:22:32.089831",
               "history": 86400000000
             }
           ]
