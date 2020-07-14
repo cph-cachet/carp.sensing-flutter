@@ -1,7 +1,9 @@
 # CARP Firebase Data Backend
 
 A Flutter plugin for uploading data from the [CARP Mobile Sensing Framework](https://pub.dartlang.org/packages/carp_mobile_sensing) 
-to a Google Firebase data backend.
+to a Google Firebase data backend. 
+
+Supports uploading json to Firebase as either (zipped) files to Firebase Storage or as plain json to a Firebase Database.
 
 [![pub package](https://img.shields.io/pub/v/carp_firebase_backend.svg)](https://pub.dartlang.org/packages/carp_firebase_backend)
 
