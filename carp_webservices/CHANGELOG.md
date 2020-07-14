@@ -1,3 +1,6 @@
+## 0.4.5
+* separation of Study ID and Deployment ID
+
 ## 0.4.4
 * DataPoint and Informed Consent endpoint changed to use `deployments` in URL.
 * Aligned the collection/documents to the new CANS endpoints

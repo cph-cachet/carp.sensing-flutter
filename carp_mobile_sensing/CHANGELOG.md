@@ -1,3 +1,8 @@
+## 0.8.1
+* Support for Deployment ID in `Study`.
+* Upgrade to `screen_state` v. 1.x
+* Upgrade to [Android Embedding v2](https://github.com/flutter/flutter/wiki/Upgrading-pre-1.12-Android-projects).
+
 ## 0.8.0
 * using the Dart `Duration` class in many places where duration previously was specified using miliseconds.
 * added the `MarkedMeasure` class for creating measures that collect all measures since last time data was collected.

@@ -22,6 +22,12 @@ class Study extends Serializable {
   /// The id of this [Study].
   String id;
 
+  /// The deployment id of this [Study].
+  ///
+  /// A study can be deployed multiple times.
+  /// Use this id to keep track of different deployments of the same study.
+  String deploymentId;
+
   /// A printer-friendly name for this study.
   String name;
 
@@ -47,9 +53,16 @@ class Study extends Serializable {
   /// Create a new [Study] object with a set of configurations.
   ///
   /// The [id] and [userId] are required for a new study.
-  Study(this.id, this.userId, {this.name, this.description, this.samplingStrategy, this.dataEndPoint, this.dataFormat})
+  Study(this.id, this.userId,
+      {this.deploymentId,
+      this.name,
+      this.description,
+      this.samplingStrategy,
+      this.dataEndPoint,
+      this.dataFormat})
       : assert(id != null, 'Cannot create a Study without an id: id=null'),
-        assert(userId != null, 'Cannot create a Study without an user id: userId=null'),
+        assert(userId != null,
+            'Cannot create a Study without an user id: userId=null'),
         super() {
     samplingStrategy ??= SamplingSchemaType.NORMAL;
     dataFormat ??= NameSpace.CARP;
@@ -100,7 +113,8 @@ class DataEndPoint extends Serializable {
 
   static Function get fromJsonFunction => _$DataEndPointFromJson;
   factory DataEndPoint.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory.fromJson(
+          json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$DataEndPointToJson(this);
 
   String toString() => type;
