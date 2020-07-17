@@ -13,10 +13,10 @@ part of context;
 class WeatherMeasure extends Measure {
   /// API key for the OpenWeatherMap API.
   String apiKey;
-  double latitude, longitude;
+//  double latitude, longitude;
 
   WeatherMeasure(MeasureType type,
-      {name, enabled, this.apiKey, this.latitude, this.longitude})
+      {name, enabled, this.apiKey})
       : super(type, name: name, enabled: enabled);
 
   static Function get fromJsonFunction => _$WeatherMeasureFromJson;
@@ -29,5 +29,5 @@ class WeatherMeasure extends Measure {
 
   String toString() =>
       super.toString() +
-      ', API key: $apiKey, Location: ($latitude, $longitude)';
+      ', API key: $apiKey';
 }

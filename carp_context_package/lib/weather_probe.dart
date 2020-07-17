@@ -2,27 +2,21 @@ part of context;
 
 /// Collects local weather information using the [WeatherStation] API.
 class WeatherProbe extends DatumProbe {
-  WeatherStation _weather;
-  double _latitude, _longitude;
+  WeatherFactory _wf;
 
   Future<void> onInitialize(Measure measure) async {
     super.onInitialize(measure);
     WeatherMeasure wm = measure as WeatherMeasure;
     assert(
     wm.apiKey != null, 'In order to use the Weather API, and API key must be provided.');
-    assert(
-    wm.latitude != null && wm.longitude != null, 'In order to use the Weather API, a Latitude and longitude must be provided.');
-
-    _weather = WeatherStation(wm.apiKey);
-    _latitude = wm.latitude;
-    _longitude = wm.longitude;
+    _wf = WeatherFactory(wm.apiKey);
   }
 
   /// Returns the [WeatherDatum] for this location.
   Future<Datum> getDatum() async {
     try {
       Position here = await geolocator.getCurrentPosition();
-      Weather w = await _weather.currentWeather(here.latitude, here.longitude);
+      Weather w = await _wf.currentWeatherByLocation(here.latitude, here.longitude);
 
       if (w != null)
         return WeatherDatum()
@@ -48,7 +42,7 @@ class WeatherProbe extends DatumProbe {
           ..tempMin = w.tempMin.celsius
           ..tempMax = w.tempMax.celsius;
       else
-        return ErrorDatum('WeatherStation plugin retuned null: ${_weather.toString()}');
+        return ErrorDatum('WeatherStation plugin retuned null: ${_wf.toString()}');
     } catch (err) {
       return ErrorDatum('WeatherProbe Exception: $err');
     }
