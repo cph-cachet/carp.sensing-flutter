@@ -21,7 +21,15 @@ void main() {
   final String clientID = "carp";
   final String clientSecret = "carp";
   //final String testStudyId = "2";
-  final String testStudyId = "ea7d63f7-3c42-43e8-ba4f-2c02ae63a272";
+  //final String testStudyId = "ea7d63f7-3c42-43e8-ba4f-2c02ae63a272";
+
+  // from Barnabas / iPDM-GO test 2020-07-14
+  //final String testDeploymentId = "d1f01720-1714-46ee-a16d-da2a566b979e";
+  //final String testStudyId = "bc1d3178-c541-46f3-8af2-f313cc9d72fb";
+
+  // from Richard / iPDM-GO test 2020-07-16
+  final String testDeploymentId = "d246170c-515e-40c3-8424-ec1f054f6ba4";
+  final String testStudyId = "64c1784d-52d1-4c3d-99de-24c97fe06939";
 
   Map<String, dynamic> tokenAsJson;
   CarpApp app;
@@ -37,7 +45,7 @@ void main() {
   group("Setup Carp Service", () {
     // Runs before all tests.
     setUpAll(() {
-      study = new Study(testStudyId, userId, name: "Test study #$testStudyId");
+      study = new Study(testStudyId, userId, deploymentId: testDeploymentId, name: "Test study");
 
       // Create a test datum
       datum = LightDatum(
@@ -172,11 +180,12 @@ void main() {
       });
 
       test('- get', () async {
-        ConsentDocument uploaded = await CarpService.instance.getConsentDocument(consentDocumentId);
+        ConsentDocument downloaded = await CarpService.instance.getConsentDocument(consentDocumentId);
 
-        assert(uploaded != null);
-        print(uploaded);
-        print(uploaded.createdAt);
+        assert(downloaded != null);
+        assert(downloaded.id == consentDocumentId);
+        print(downloaded);
+        print(downloaded.createdAt);
       });
     },
     skip: false,
@@ -471,6 +480,16 @@ void main() {
 
         assert(result.id == id);
         print('result : $result');
+      });
+
+      test('- get non-existing', () async {
+        try {
+          final CarpFileResponse result = await CarpService.instance.getFileStorageReference(876872).get();
+        } catch (error) {
+          print(error);
+          assert(error is CarpServiceException);
+          assert((error as CarpServiceException).httpStatus.httpResponseCode == HttpStatus.notFound);
+        }
       });
 
       test('- download', () async {

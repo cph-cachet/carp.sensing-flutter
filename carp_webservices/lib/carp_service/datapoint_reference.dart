@@ -16,7 +16,7 @@ class DataPointReference extends CarpReference {
 
   /// The URL for the data end point for this [DataPointReference].
   String get dataEndpointUri =>
-      "${service.app.uri.toString()}/api/deployments/${service.app.study.id}/data-points";
+      "${service.app.uri.toString()}/api/deployments/${service.app.study.deploymentId}/data-points";
 
   /// Upload a [CARPDataPoint] to the CARP backend using HTTP POST.
   ///
@@ -26,19 +26,18 @@ class DataPointReference extends CarpReference {
     final restHeaders = await headers;
 
     // POST the data point to the CARP web service
-    http.Response response = await httpr.post(Uri.encodeFull(url),
-        headers: restHeaders, body: json.encode(data));
+    http.Response response = await httpr.post(Uri.encodeFull(url), headers: restHeaders, body: json.encode(data));
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
 
-    if ((httpStatusCode == 200) || (httpStatusCode == 201))
-      return responseJson["id"];
+    if ((httpStatusCode == HttpStatus.ok) || (httpStatusCode == HttpStatus.created)) return responseJson["id"];
 
     // All other cases are treated as an error.
-    throw CarpServiceException(responseJson["error"],
-        description: responseJson["error_description"],
-        httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+    throw CarpServiceException(
+      httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
+      message: responseJson["message"],
+    );
   }
 
   /// Batch upload a file with [CARPDataPoint]s to the CARP backend using HTTP POST.
@@ -57,27 +56,23 @@ class DataPointReference extends CarpReference {
     request.headers['Content-Type'] = 'multipart/form-data';
     request.headers['cache-control'] = 'no-cache';
 
-    request.files.add(http.MultipartFile.fromBytes(
-        'file', file != null ? file.readAsBytesSync() : List<int>(),
-        filename: file != null ? file.path : '',
-        contentType: MediaType('application', 'json')));
+    request.files.add(http.MultipartFile.fromBytes('file', file != null ? file.readAsBytesSync() : List<int>(),
+        filename: file != null ? file.path : '', contentType: MediaType('application', 'json')));
 
     // sending the request using the retry approach
     httpr.send(request).then((response) async {
       final int httpStatusCode = response.statusCode;
 
-      if ((httpStatusCode == 200) || (httpStatusCode == 201))
+      if ((httpStatusCode == HttpStatus.ok) || (httpStatusCode == HttpStatus.created))
         return; // CARP web service returns "200 OK" or "201 Created" when a file is uploaded to the server.
 
       // everything else is an exception
       response.stream.toStringStream().first.then((body) {
-        final Map<String, dynamic> map = json.decode(body);
-        final String error = map["error"];
-        final String description = map["error_description"];
-        final HTTPStatus status =
-            HTTPStatus(httpStatusCode, response.reasonPhrase);
-        throw CarpServiceException(error,
-            description: description, httpStatus: status);
+        final Map<String, dynamic> responseJson = json.decode(body);
+        throw CarpServiceException(
+          httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
+          message: responseJson["message"],
+        );
       });
     });
   }
@@ -88,18 +83,18 @@ class DataPointReference extends CarpReference {
     final restHeaders = await headers;
 
     // GET the data point from the CARP web service
-    http.Response response =
-        await httpr.get(Uri.encodeFull(url), headers: restHeaders);
+    http.Response response = await httpr.get(Uri.encodeFull(url), headers: restHeaders);
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
 
-    if (httpStatusCode == 200) return CARPDataPoint.fromJson(responseJson);
+    if (httpStatusCode == HttpStatus.ok) return CARPDataPoint.fromJson(responseJson);
 
     // All other cases are treated as an error.
-    throw CarpServiceException(responseJson["error"],
-        description: responseJson["error_description"],
-        httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+    throw CarpServiceException(
+      httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
+      message: responseJson["message"],
+    );
   }
 
   /// Get all [CARPDataPoint]s for this study.
@@ -183,8 +178,7 @@ class DataPointReference extends CarpReference {
   ///
   Future<List<CARPDataPoint>> queryDataPoint(String query) async {
     assert(query != null, 'A query string must be specified.');
-    String url =
-        (query.length == 0) ? dataEndpointUri : "$dataEndpointUri?query=$query";
+    String url = (query.length == 0) ? dataEndpointUri : "$dataEndpointUri?query=$query";
     print('url : $url');
     final restHeaders = await headers;
 
@@ -195,7 +189,7 @@ class DataPointReference extends CarpReference {
 
     int httpStatusCode = response.statusCode;
 
-    if (httpStatusCode == 200) {
+    if (httpStatusCode == HttpStatus.ok) {
       List<dynamic> list = json.decode(response.body);
       List<CARPDataPoint> datapoints = new List<CARPDataPoint>();
       for (var item in list) {
@@ -205,9 +199,10 @@ class DataPointReference extends CarpReference {
     }
     // All other cases are treated as an error.
     Map<String, dynamic> responseJson = json.decode(response.body);
-    throw CarpServiceException(responseJson["error"],
-        description: responseJson["error_description"],
-        httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+    throw CarpServiceException(
+      httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
+      message: responseJson["message"],
+    );
   }
 
   /// Delete a [CARPDataPoint] from the CARP backend using HTTP DELETE
@@ -216,16 +211,16 @@ class DataPointReference extends CarpReference {
     final restHeaders = await headers;
 
     // DELETE the data point
-    http.Response response =
-        await httpr.delete(Uri.encodeFull(url), headers: restHeaders);
+    http.Response response = await httpr.delete(Uri.encodeFull(url), headers: restHeaders);
     final int httpStatusCode = response.statusCode;
 
-    if (httpStatusCode == 200) return;
+    if (httpStatusCode == HttpStatus.ok) return;
 
     // All other cases are treated as an error.
     final Map<String, dynamic> responseJson = json.decode(response.body);
-    throw CarpServiceException(responseJson["error"],
-        description: responseJson["error_description"],
-        httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+    throw CarpServiceException(
+      httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
+      message: responseJson["message"],
+    );
   }
 }

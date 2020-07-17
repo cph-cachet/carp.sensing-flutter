@@ -1,9 +1,11 @@
 ## 0.4.5
-* separation of Study ID and Deployment ID
+* separation of Study ID and Deployment ID when calling CARP endpoints
+* better error handling and messages
+* unit test for uploading file fails, but seems to be a server-side issue
 
 ## 0.4.4
 * DataPoint and Informed Consent endpoint changed to use `deployments` in URL.
-* Aligned the collection/documents to the new CANS endpoints
+* aligned the collection/documents to the new CANS endpoints
 
 ## 0.4.3
 * `study_id` is now a String (not an int anymore).

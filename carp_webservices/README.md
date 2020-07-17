@@ -1,6 +1,6 @@
 # CARP Web Service Plugin for Flutter
 
-A Flutter plugin to access the [CARP Web Service API](https://github.com/cph-cachet/carp.webservices).
+A Flutter plugin to access the [CARP Web Service API](https://cachet.postman.co/collections/7723888-f1dede9d-13db-4561-b0c3-b329c18c408a?version=latest&workspace=fea39375-3597-4b22-851d-6c4a670f7fc3).
 
 [![pub package](https://img.shields.io/pub/v/carp_webservices.svg)](https://pub.dartlang.org/packages/carp_webservices)
 
@@ -12,7 +12,7 @@ For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter
 
 ## Setup
 
-1. You need a CARP Web Service host running. See the [CARP Web Service API](https://github.com/cph-cachet/carp.webservices) 
+1. You need a CARP Web Service host running. See the [CARP Web Service API](https://github.com/cph-cachet/carp.webservices-docker) 
 documentation for how to do this. If you're part of the [CACHET](http://www.cachet.dk/) team, you can use the specified 
 test, staging, and production servers.
 
@@ -28,15 +28,18 @@ import 'package:carp_webservices/carp_service/carp_service.dart';
 
 The [`CarpService`](https://pub.dartlang.org/documentation/carp_webservices/latest/carp_services/CarpService-class.html)
 is a singleton and needs to be configured once.
-Note that a valid [`Study`](https://pub.dartlang.org/documentation/carp_core/latest/carp_core/Study-class.html) with a valid study ID is needed.
+Note that a valid [`Study`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/Study-class.html) 
+with a valid **Study ID** and **Deployment ID** is needed.
 
 ````dart
 final String uri = "http://staging.carp.cachet.dk:8080";
+final String testDeploymentId = "d246170c-515e";
+final String testStudyId = "64c1784d-52d1-4c3d";
 
 CarpApp app;
 Study study;
 
-study = new Study(testStudyId, "user@dtu.dk", name: "Test study #$testStudyId");
+study = new Study(testStudyId, "user@dtu.dk", deploymentId: testDeploymentId, name: "Test study");
 app = new CarpApp(
       study: study,
       name: "any_display_friendly_name_is_fine",
@@ -62,10 +65,25 @@ try {
 }
 ```
 
+### Informed Consent Document
+
+A [ConsentDocument](https://pub.dev/documentation/carp_webservices/latest/carp_services/ConsentDocument-class.html)
+can be uploaded and downloaded from CARP.
+
+```dart
+try {
+  ConsentDocument uploaded = await CarpService.instance.createConsentDocument({"text": "The original terms text.", "signature": "Image Blob"});
+  ...
+  ConsentDocument downloaded = await CarpService.instance.getConsentDocument(uploaded.id);
+} catch (excp) {
+   ...;
+}
+```
+
 ### Data Points
 
 A [`DataPointReference`](https://pub.dartlang.org/documentation/carp_webservices/latest/carp_services/DataPointReference-class.html)
-is used to manage [data points](http://staging.carp.cachet.dk:8080/swagger-ui.html#/data-point-controller) 
+is used to manage [data points](https://cachet.postman.co/collections/7723888-f1dede9d-13db-4561-b0c3-b329c18c408a?version=latest&workspace=fea39375-3597-4b22-851d-6c4a670f7fc3#d1e199eb-1e17-43a4-9d5e-6f1f465464b4) 
 on a CARP web service and have CRUD methods for:
 
 * post a data point
@@ -104,7 +122,8 @@ await CarpService.instance.getDataPointReference().deleteDataPoint(data_point_id
 ### Application-specific Collections and Documents
 
 A [`CollectionReference`](https://pub.dartlang.org/documentation/carp_webservices/latest/carp_services/CollectionReference-class.html)
-is used to manage [collections](http://staging.carp.cachet.dk:8080/swagger-ui.html#/collection-controller) 
+is used to manage [collections](https://cachet.postman.co/collections/7723888-f1dede9d-13db-4561-b0c3-b329c18c408a?version=latest&workspace=fea39375-3597-4b22-851d-6c4a670f7fc3#9e896f66-953b-4c11-93fd-4f5e2097a7f2)
+and [documents](https://cachet.postman.co/collections/7723888-f1dede9d-13db-4561-b0c3-b329c18c408a?version=latest&workspace=fea39375-3597-4b22-851d-6c4a670f7fc3#aacfb3a6-55ea-454a-9d12-7886ee6c247b) 
 on a CARP web service and have methods for:
 
 * creating, updating, and deleting documents

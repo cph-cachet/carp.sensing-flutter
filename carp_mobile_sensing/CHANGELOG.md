@@ -20,7 +20,7 @@ Useful for collecting things like log entries and health data.
 * Made `Task` abstract rather than deprecated.
 * Fixed issue [#61](https://github.com/cph-cachet/carp.sensing-flutter/issues/61).
 
-## 0.7.0
+## 0.7.0 - Extended Task Model
 * **BREAKING** - this release break some parts of the previous API.
 * Extended Task model -- introduction of a `AutomaticTask` and `AppTask`.
 * Added support for "manually" adding data points (`Datum`) and errors to the data stream (`events`). This is part of the `StudyExecutor` API.

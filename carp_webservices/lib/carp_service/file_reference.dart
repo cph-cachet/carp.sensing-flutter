@@ -60,10 +60,10 @@ class FileStorageReference extends CarpReference {
       default:
         // All other cases are treated as an error.
         {
-          final String error = map["error"];
-          final String description = map["error_description"];
-          throw CarpServiceException(error,
-              description: description, httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+          throw CarpServiceException(
+            httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
+            message: map["message"],
+          );
         }
     }
   }
@@ -89,11 +89,11 @@ class FileStorageReference extends CarpReference {
       default:
         // All other cases are treated as an error.
         {
-          Map<String, dynamic> map = json.decode(response.body);
-          final String error = map["error"];
-          final String description = map["error_description"];
-          throw CarpServiceException(error,
-              description: description, httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+          Map<String, dynamic> responseJson = json.decode(response.body);
+          throw CarpServiceException(
+            httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
+            message: responseJson["message"],
+          );
         }
     }
   }
@@ -116,11 +116,11 @@ class FileStorageReference extends CarpReference {
       default:
         // All other cases are treated as an error.
         {
-          Map<String, dynamic> map = json.decode(response.body);
-          final String error = map["error"];
-          final String description = map["error_description"];
-          throw CarpServiceException(error,
-              description: description, httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+          Map<String, dynamic> responseJson = json.decode(response.body);
+          throw CarpServiceException(
+            httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
+            message: responseJson["message"],
+          );
         }
     }
   }

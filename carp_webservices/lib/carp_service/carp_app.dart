@@ -17,7 +17,7 @@ class CarpApp {
   /// URI of the CARP web service
   Uri uri;
 
-  // The OAuth 2.0 endpoint.
+  /// The OAuth 2.0 endpoint.
   OAuthEndPoint oauth;
 
   CarpApp({

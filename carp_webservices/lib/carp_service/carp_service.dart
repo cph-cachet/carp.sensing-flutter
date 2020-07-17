@@ -28,105 +28,10 @@ part 'consent_document.dart';
 part 'datapoint_reference.dart';
 part 'document_reference.dart';
 part 'file_reference.dart';
+part 'http_retry.dart';
 part 'push_id_generator.dart';
 
 String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
-
-/// The HTTP Retry method.
-final HTTPRetry httpr = HTTPRetry();
-
-/// A class wrapping all HTTP operations (GET, POST, PUT, DELETE) in a retry manner.
-///
-/// In case of network problems ([SocketException] or [TimeoutException]), this method will retry
-/// the HTTP operation N=15 times, with an increasing delay time as 2^(N+1) * 5 secs (20, 40, , ..., 10,240).
-/// I.e., maximum retry time is ca. three hours.
-class HTTPRetry {
-  /// Sends an generic HTTP [MultipartRequest]the given headers to the given URL, which can
-  /// be a [Uri] or a [String].
-  Future<http.StreamedResponse> send(http.MultipartRequest request) async => await retry(
-        () => request.send().timeout(Duration(seconds: 5)),
-        delayFactor: Duration(seconds: 5),
-        maxAttempts: 15,
-        retryIf: (e) => e is SocketException || e is TimeoutException,
-        onRetry: (e) => print('${e.runtimeType} - Retrying to SEND ${request.url}'),
-      );
-
-  /// Sends an HTTP GET request with the given headers to the given URL, which can
-  /// be a [Uri] or a [String].
-  Future<http.Response> get(url, {Map<String, String> headers}) async => await retry(
-        () => http
-            .get(
-              Uri.encodeFull(url),
-              headers: headers,
-            )
-            .timeout(Duration(seconds: 5)),
-        delayFactor: Duration(seconds: 5),
-        maxAttempts: 15,
-        retryIf: (e) => e is SocketException || e is TimeoutException,
-        onRetry: (e) => print('${e.runtimeType} - Retrying to GET $url'),
-      );
-
-  /// Sends an HTTP POST request with the given headers and body to the given URL,
-  /// which can be a [Uri] or a [String].
-  Future<http.Response> post(url, {Map<String, String> headers, body, Encoding encoding}) async {
-    // calling the http POST method using the retry approach
-    final http.Response response = await retry(
-      () => http
-          .post(
-            Uri.encodeFull(url),
-            headers: headers,
-            body: body,
-            encoding: encoding,
-          )
-          .timeout(Duration(seconds: 5)),
-      delayFactor: Duration(seconds: 5),
-      maxAttempts: 15,
-      retryIf: (e) => e is SocketException || e is TimeoutException,
-      onRetry: (e) => print('${e.runtimeType} - Retrying to POST $url'),
-    );
-    return response;
-  }
-
-  /// Sends an HTTP PUT request with the given headers and body to the given URL,
-  /// which can be a [Uri] or a [String].
-  Future<http.Response> put(url, {Map<String, String> headers, body, Encoding encoding}) async {
-    // calling the http PUT method using the retry approach
-    final http.Response response = await retry(
-      () => http
-          .put(
-            Uri.encodeFull(url),
-            headers: headers,
-            body: body,
-            encoding: encoding,
-          )
-          .timeout(Duration(seconds: 5)),
-      delayFactor: Duration(seconds: 5),
-      maxAttempts: 15,
-      retryIf: (e) => e is SocketException || e is TimeoutException,
-      onRetry: (e) => print('${e.runtimeType} - Retrying to PUT $url'),
-    );
-    return response;
-  }
-
-  /// Sends an HTTP DELETE request with the given headers to the given URL, which
-  /// can be a [Uri] or a [String].
-  Future<http.Response> delete(url, {Map<String, String> headers}) async {
-    // calling the http DELETE method using the retry approach
-    final http.Response response = await retry(
-      () => http
-          .delete(
-            Uri.encodeFull(url),
-            headers: headers,
-          )
-          .timeout(Duration(seconds: 5)),
-      delayFactor: Duration(seconds: 5),
-      maxAttempts: 15,
-      retryIf: (e) => e is SocketException || e is TimeoutException,
-      onRetry: (e) => print('${e.runtimeType} - Retrying to DELETE $url'),
-    );
-    return response;
-  }
-}
 
 /// Provide access to the CARP web services endpoint.
 ///
@@ -172,6 +77,9 @@ class CarpService {
 
   String get _authHeaderBase64 => base64.encode(utf8.encode("${_app.oauth.clientID}:${_app.oauth.clientSecret}"));
 
+  /// The URI for the authenticated endpoint for this [CarpService].
+  String get authEndpointUri => "${_app.uri.toString()}${_app.oauth.path.toString()}";
+
   /// The HTTP header for the authentication requests.
   Map<String, String> get authenticationHeader => {
         "Authorization": "Basic $_authHeaderBase64",
@@ -191,7 +99,7 @@ class CarpService {
     assert(password != null);
 
     if (_app == null)
-      throw new CarpServiceException("CARP Service not initialized. Call 'CarpService.configure()' first.");
+      throw new CarpServiceException(message: "CARP Service not initialized. Call 'CarpService.configure()' first.");
 
     _currentUser = new CarpUser(username: username);
 
@@ -204,10 +112,8 @@ class CarpService {
       "password": "$password"
     };
 
-    final String url = "${_app.uri.toString()}${_app.oauth.path.toString()}";
-
     final http.Response response = await httpr.post(
-      Uri.encodeFull(url),
+      Uri.encodeFull(authEndpointUri),
       headers: authenticationHeader,
       body: loginBody,
     );
@@ -215,15 +121,16 @@ class CarpService {
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
 
-    if (httpStatusCode == 200) {
+    if (httpStatusCode == HttpStatus.ok) {
       _currentUser.authenticated(OAuthToken.fromMap(responseJson));
-      //return _currentUser;
       return await getCurrentUserProfile();
     }
 
     // All other cases are treated as an error.
-    throw CarpServiceException(responseJson["error"],
-        description: responseJson["error_description"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+    throw CarpServiceException(
+      httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
+      message: responseJson["error_description"],
+    );
   }
 
   /// Authenticate to this CARP web service using username and a previously stored [OAuthToken] access token.
@@ -246,34 +153,32 @@ class CarpService {
   /// Get a new (refreshed) access token for the current user based on the previously granted refresh token.
   Future<OAuthToken> refresh() async {
     if (_app == null)
-      throw new CarpServiceException("CARP Service not initialized. Call 'CarpService.configure()' first.");
+      throw new CarpServiceException(message: "CARP Service not initialized. Call 'CarpService.configure()' first.");
 
     // --data "refresh_token=my-refresh-token&grant_type=refresh_token"
     final loginBody = {"refresh_token": "${_currentUser.token.refreshToken}", "grant_type": "refresh_token"};
 
-    final String url = "${_app.uri.toString()}${_app.oauth.path.toString()}";
     final http.Response response = await httpr.post(
-      Uri.encodeFull(url),
+      Uri.encodeFull(authEndpointUri),
       headers: authenticationHeader,
       body: loginBody,
     );
 
     int httpStatusCode = response.statusCode;
-    Map<String, dynamic> responseJSON = json.decode(response.body);
+    Map<String, dynamic> responseJson = json.decode(response.body);
 
-    if (httpStatusCode == 200) return new OAuthToken.fromMap(responseJSON);
+    if (httpStatusCode == HttpStatus.ok) return new OAuthToken.fromMap(responseJson);
 
     // All other cases are treated as an error.
-    throw CarpServiceException(responseJSON["error"],
-        description: responseJSON["error_description"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+    throw CarpServiceException(
+      httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
+      message: responseJson["error_description"],
+    );
   }
 
   // ---------------------------------------------------------------------------------------------------------
   // USERS
   // ---------------------------------------------------------------------------------------------------------
-
-  /// The URL for the authenticated user end point for this [CarpService].
-  String get authUserEndpointUri => "${_app.uri.toString()}/api/auth/user";
 
   /// The URL for the current user end point for this [CarpService].
   String get currentUserEndpointUri => "${_app.uri.toString()}/api/users/current";
@@ -283,6 +188,9 @@ class CarpService {
 
   /// The headers for any authenticated HTTP REST call to this [CarpService].
   Map<String, String> get headers {
+    if (_currentUser.token == null)
+      throw new CarpServiceException(message: "OAuth token is null. Call 'CarpService.authenticate()' first.");
+
     return {
       "Content-Type": "application/json",
       "Authorization": "bearer ${_currentUser.token.accessToken}",
@@ -307,7 +215,7 @@ class CarpService {
 //    print('response code: $httpStatusCode');
 //    print(_encode(responseJson));
 
-    if (httpStatusCode == 200) {
+    if (httpStatusCode == HttpStatus.ok) {
       return _currentUser
         ..id = responseJson['id']
         ..accountId = responseJson['accountId']
@@ -317,8 +225,10 @@ class CarpService {
     }
 
     // All other cases are treated as an error.
-    throw CarpServiceException(responseJson["error"],
-        description: responseJson["error_description"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+    throw CarpServiceException(
+      httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
+      message: responseJson["error_description"],
+    );
   }
 
   /// Sign out the current user.
@@ -358,11 +268,13 @@ class CarpService {
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
 
-    if ((httpStatusCode == 200) || (httpStatusCode == 201)) return newUser..reload();
+    if ((httpStatusCode == HttpStatus.ok) || (httpStatusCode == HttpStatus.created)) return newUser..reload();
 
     // All other cases are treated as an error.
-    throw CarpServiceException(responseJson["error"],
-        description: responseJson["message"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+    throw CarpServiceException(
+      httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
+      message: responseJson["message"],
+    );
   }
 
   /// Create and invite a new participant to this study.
@@ -393,11 +305,13 @@ class CarpService {
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
 
-    if ((httpStatusCode == 200) || (httpStatusCode == 201)) return newUser..reload();
+    if ((httpStatusCode == HttpStatus.ok) || (httpStatusCode == HttpStatus.created)) return newUser..reload();
 
     // All other cases are treated as an error.
-    throw CarpServiceException(responseJson["error"],
-        description: responseJson["message"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+    throw CarpServiceException(
+      httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
+      message: responseJson["message"],
+    );
   }
 
   /// Create and invite a fellow researcher to this study.
@@ -428,11 +342,13 @@ class CarpService {
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
 
-    if ((httpStatusCode == 200) || (httpStatusCode == 201)) return newUser..reload();
+    if ((httpStatusCode == HttpStatus.ok) || (httpStatusCode == HttpStatus.created)) return newUser..reload();
 
     // All other cases are treated as an error.
-    throw CarpServiceException(responseJson["error"],
-        description: responseJson["message"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+    throw CarpServiceException(
+      httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
+      message: responseJson["message"],
+    );
   }
 
   // ---------------------------------------------------------------------------------------------------------
@@ -440,7 +356,8 @@ class CarpService {
   // ---------------------------------------------------------------------------------------------------------
 
   /// The URL for the consent document end point for this [CarpService].
-  String get consentDocumentEndpointUri => "${_app.uri.toString()}/api/deployments/${_app.study.id}/consent-documents";
+  String get consentDocumentEndpointUri =>
+      "${_app.uri.toString()}/api/deployments/${_app.study.deploymentId}/consent-documents";
 
   /// Create a new consent document.
   /// Returns the created [ConsentDocument] if the document is uploaded correctly.
@@ -457,11 +374,14 @@ class CarpService {
 //    print('response code: $httpStatusCode');
 //    print(_encode(responseJson));
 
-    if ((httpStatusCode == 200) || (httpStatusCode == 201)) return ConsentDocument._(responseJson);
+    if ((httpStatusCode == HttpStatus.ok) || (httpStatusCode == HttpStatus.created))
+      return ConsentDocument._(responseJson);
 
     // All other cases are treated as an error.
-    throw CarpServiceException(responseJson["error"],
-        description: responseJson["message"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+    throw CarpServiceException(
+      httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
+      message: responseJson["message"],
+    );
   }
 
   /// Asynchronously gets a [ConsentDocument].
@@ -474,13 +394,14 @@ class CarpService {
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
 
-    if (httpStatusCode == 200) return ConsentDocument._(responseJson);
+    if (httpStatusCode == HttpStatus.ok) return ConsentDocument._(responseJson);
 
     // All other cases are treated as an error.
     Map<String, dynamic> errorResponseJson = json.decode(response.body);
-    throw CarpServiceException(errorResponseJson["error"],
-        description: errorResponseJson["error_description"],
-        httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+    throw CarpServiceException(
+      httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
+      message: errorResponseJson["message"],
+    );
   }
 
   // ---------------------------------------------------------------------------------------------------------
@@ -516,7 +437,7 @@ class CarpService {
     http.Response response = await httpr.get(Uri.encodeFull('$documentEndpointUri?query=$query'), headers: headers);
     int httpStatusCode = response.statusCode;
 
-    if (httpStatusCode == 200) {
+    if (httpStatusCode == HttpStatus.ok) {
       List<dynamic> documentsJson = json.decode(response.body);
       List<DocumentSnapshot> documents = new List<DocumentSnapshot>();
       for (var item in documentsJson) {
@@ -529,8 +450,10 @@ class CarpService {
 
     // All other cases are treated as an error.
     Map<String, dynamic> responseJson = json.decode(response.body);
-    throw CarpServiceException(responseJson["error"],
-        description: responseJson["message"], httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase));
+    throw CarpServiceException(
+      httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
+      message: responseJson["message"],
+    );
   }
 
   /// Gets a [CollectionReference] for the current CARP Service path.
@@ -564,22 +487,53 @@ abstract class CarpReference {
 
 /// Exception for CARP REST/HTTP service communication.
 class CarpServiceException implements Exception {
-  String message;
-  String description;
   HTTPStatus httpStatus;
+  String message;
+  //String description;
 
-  CarpServiceException(this.message, {this.description, this.httpStatus});
+  //CarpServiceException(this.message, {this.description, this.httpStatus});
+  CarpServiceException({this.httpStatus, this.message});
 
-  String toString() => "CarpServiceException: ${httpStatus?.httpResponseCode} - $message; $description";
+  //String toString() => "CarpServiceException: ${httpStatus?.httpResponseCode} - $message; $description";
+  String toString() => "CarpServiceException: " + ((httpStatus != null) ? "$httpStatus - " : "") + message;
 }
 
 /// Implements HTTP Response Code and associated Reason Phrase.
 /// See https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
 class HTTPStatus {
+  /// Mapping of the most common HTTP status code to text.
+  /// See https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
+  static const Map<String, String> httpStatusPhrases = {
+    "100": "Continue",
+    "200": "OK",
+    "201": "Created",
+    "202": "Accepted",
+    "300": "Multiple Choices",
+    "301": "Moved Permanently",
+    "400": "Bad Request",
+    "401": "Unauthorized",
+    "402": "Payment Required",
+    "403": "Forbidden",
+    "404": "Not Found",
+    "405": "Method Not Allowed",
+    "408": "Request Timeout",
+    "409": "Conflict",
+    "410": "Gone",
+    "500": "Internal Server Error",
+    "501": "Not Implemented",
+    "502": "Bad Gateway",
+    "503": "Service Unavailable",
+    "504": "Gateway Timeout",
+    "505": "HTTP Version Not Supported",
+  };
+
   int httpResponseCode;
   String httpReasonPhrase;
 
-  HTTPStatus(this.httpResponseCode, this.httpReasonPhrase);
+  HTTPStatus(this.httpResponseCode, [String httpPhrase]) {
+    if ((httpPhrase == null) || (httpPhrase.length == 0))
+      this.httpReasonPhrase = httpStatusPhrases[httpResponseCode.toString()];
+  }
 
-  String toString() => "$httpResponseCode - $httpReasonPhrase";
+  String toString() => "$httpResponseCode $httpReasonPhrase";
 }

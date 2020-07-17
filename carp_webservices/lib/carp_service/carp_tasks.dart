@@ -37,6 +37,9 @@ class FileUploadTask extends CarpServiceTask {
   /// The file to upload.
   File file;
 
+  /// The file name
+  String get name => file.path.split('/').last;
+
   /// Metadata for the file.
   Map<String, String> metadata;
 
@@ -50,8 +53,12 @@ class FileUploadTask extends CarpServiceTask {
 
   /// Start the the upload task.
   Future<CarpFileResponse> _start() async {
+    assert(file != null);
     super._start();
     final String url = "${reference.fileEndpointUri}";
+
+    print("url: $url");
+    print("name: $name");
 
     Map<String, String> headers = await reference.headers;
 
@@ -61,23 +68,20 @@ class FileUploadTask extends CarpServiceTask {
     request.headers['cache-control'] = 'no-cache';
 
     // add file-specific metadata
-    metadata['filename'] = file.path;
+    metadata['filename'] = name;
     metadata['size'] = (await file.length()).toString();
-
-    // in the old CARP file endpoint, metadata was a form field
     request.fields['metadata'] = json.encode(metadata);
-    // but in CANS it seems to be part of the URL
-    // url += 'metadata = ${json.encode(metadata)}';
-    // but - this doesn't work...
 
     request.files.add(new http.MultipartFile.fromBytes(
       'file',
-      file != null ? file.readAsBytesSync() : new List<int>(),
-      filename: file != null ? file.path : '',
+      file.readAsBytesSync(),
+      filename: name,
     ));
 
-    httpr.send(request).then((response) {
+    httpr.send(request).then((http.StreamedResponse response) {
       response.stream.toStringStream().first.then((body) {
+        print("response:\n$response");
+        print("body:\n$body");
         final int httpStatusCode = response.statusCode;
         final Map<String, dynamic> map = json.decode(body);
 
@@ -97,11 +101,9 @@ class FileUploadTask extends CarpServiceTask {
             // All other cases are treated as an error.
             {
               _state = TaskStateType.failure;
-              final String error = map["error"];
-              final String description = map["error_description"];
               final HTTPStatus status = HTTPStatus(httpStatusCode, response.reasonPhrase);
               _completer.completeError(status);
-              throw CarpServiceException(error, description: description, httpStatus: status);
+              throw CarpServiceException(httpStatus: status, message: map["message"]);
             }
         }
       });
@@ -152,11 +154,9 @@ class FileDownloadTask extends CarpServiceTask {
           {
             _state = TaskStateType.failure;
             final Map<String, dynamic> map = json.decode(response.body);
-            final String error = map["error"];
-            final String description = map["error_description"];
             final HTTPStatus status = HTTPStatus(httpStatusCode, response.reasonPhrase);
             _completer.completeError(httpStatusCode);
-            throw CarpServiceException(error, description: description, httpStatus: status);
+            throw CarpServiceException(httpStatus: status, message: map["message"]);
           }
       }
     });
