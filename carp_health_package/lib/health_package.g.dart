@@ -78,36 +78,45 @@ T _$enumDecodeNullable<T>(
 }
 
 const _$HealthDataTypeEnumMap = {
-  HealthDataType.BODY_FAT_PERCENTAGE: 'BODY_FAT_PERCENTAGE',
-  HealthDataType.HEIGHT: 'HEIGHT',
-  HealthDataType.WEIGHT: 'WEIGHT',
-  HealthDataType.BODY_MASS_INDEX: 'BODY_MASS_INDEX',
-  HealthDataType.WAIST_CIRCUMFERENCE: 'WAIST_CIRCUMFERENCE',
-  HealthDataType.STEPS: 'STEPS',
-  HealthDataType.BASAL_ENERGY_BURNED: 'BASAL_ENERGY_BURNED',
   HealthDataType.ACTIVE_ENERGY_BURNED: 'ACTIVE_ENERGY_BURNED',
-  HealthDataType.HEART_RATE: 'HEART_RATE',
-  HealthDataType.BODY_TEMPERATURE: 'BODY_TEMPERATURE',
-  HealthDataType.BLOOD_PRESSURE_SYSTOLIC: 'BLOOD_PRESSURE_SYSTOLIC',
-  HealthDataType.BLOOD_PRESSURE_DIASTOLIC: 'BLOOD_PRESSURE_DIASTOLIC',
-  HealthDataType.RESTING_HEART_RATE: 'RESTING_HEART_RATE',
-  HealthDataType.WALKING_HEART_RATE: 'WALKING_HEART_RATE',
-  HealthDataType.BLOOD_OXYGEN: 'BLOOD_OXYGEN',
+  HealthDataType.BASAL_ENERGY_BURNED: 'BASAL_ENERGY_BURNED',
   HealthDataType.BLOOD_GLUCOSE: 'BLOOD_GLUCOSE',
-  HealthDataType.ELECTRODERMAL_ACTIVITY: 'ELECTRODERMAL_ACTIVITY',
+  HealthDataType.BLOOD_OXYGEN: 'BLOOD_OXYGEN',
+  HealthDataType.BLOOD_PRESSURE_DIASTOLIC: 'BLOOD_PRESSURE_DIASTOLIC',
+  HealthDataType.BLOOD_PRESSURE_SYSTOLIC: 'BLOOD_PRESSURE_SYSTOLIC',
+  HealthDataType.BODY_FAT_PERCENTAGE: 'BODY_FAT_PERCENTAGE',
+  HealthDataType.BODY_MASS_INDEX: 'BODY_MASS_INDEX',
+  HealthDataType.BODY_TEMPERATURE: 'BODY_TEMPERATURE',
+  HealthDataType.HEART_RATE: 'HEART_RATE',
+  HealthDataType.HEART_RATE_VARIABILITY_SDNN: 'HEART_RATE_VARIABILITY_SDNN',
+  HealthDataType.HEIGHT: 'HEIGHT',
+  HealthDataType.RESTING_HEART_RATE: 'RESTING_HEART_RATE',
+  HealthDataType.STEPS: 'STEPS',
+  HealthDataType.WAIST_CIRCUMFERENCE: 'WAIST_CIRCUMFERENCE',
+  HealthDataType.WALKING_HEART_RATE: 'WALKING_HEART_RATE',
+  HealthDataType.WEIGHT: 'WEIGHT',
+  HealthDataType.DISTANCE_WALKING_RUNNING: 'DISTANCE_WALKING_RUNNING',
+  HealthDataType.FLIGHTS_CLIMBED: 'FLIGHTS_CLIMBED',
+  HealthDataType.MOVE_MINUTES: 'MOVE_MINUTES',
+  HealthDataType.DISTANCE_DELTA: 'DISTANCE_DELTA',
   HealthDataType.HIGH_HEART_RATE_EVENT: 'HIGH_HEART_RATE_EVENT',
   HealthDataType.LOW_HEART_RATE_EVENT: 'LOW_HEART_RATE_EVENT',
   HealthDataType.IRREGULAR_HEART_RATE_EVENT: 'IRREGULAR_HEART_RATE_EVENT',
+  HealthDataType.ELECTRODERMAL_ACTIVITY: 'ELECTRODERMAL_ACTIVITY',
 };
 
 HealthDatum _$HealthDatumFromJson(Map<String, dynamic> json) {
   return HealthDatum(
     json['value'] as num,
     json['unit'] as String,
-    json['date_from'] as int,
-    json['date_to'] as int,
     json['data_type'] as String,
+    json['date_from'] == null
+        ? null
+        : DateTime.parse(json['date_from'] as String),
+    json['date_to'] == null ? null : DateTime.parse(json['date_to'] as String),
     json['platform'] as String,
+    json['device_id'] as String,
+    json['uuid'] as String,
   )
     ..id = json['id'] as String
     ..timestamp = json['timestamp'] == null
@@ -132,5 +141,7 @@ Map<String, dynamic> _$HealthDatumToJson(HealthDatum instance) {
   writeNotNull('date_to', instance.dateTo?.toIso8601String());
   writeNotNull('data_type', instance.dataType);
   writeNotNull('platform', instance.platform);
+  writeNotNull('device_id', instance.deviceId);
+  writeNotNull('uuid', instance.uuid);
   return val;
 }

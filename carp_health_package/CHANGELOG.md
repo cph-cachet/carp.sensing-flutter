@@ -1,3 +1,6 @@
+## 1.0.0
+* upgrade to Health 2.0.x API
+
 ## 0.7.0
 * upgrade to `carp_mobile_sensing` v. 0.7.x
 

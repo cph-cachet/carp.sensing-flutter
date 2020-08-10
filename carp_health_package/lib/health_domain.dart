@@ -1,5 +1,7 @@
 part of health_package;
 
+String enumToString(e) => e.toString().split('.').last;
+
 /// Diet, Alcohol, Smoking, Exercise, Sleep (DASES) data types.
 enum DasesHealthDataType {
   /// Number of calories consumed.
@@ -39,7 +41,8 @@ const Map<DasesHealthDataType, HealthDataUnit> dasesDataTypeToUnit = {
 ///
 /// The [healthDataType] specify which [HealthDataType](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html)
 /// to collect.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false, explicitToJson: true)
+@JsonSerializable(
+    fieldRename: FieldRename.snake, includeIfNull: false, explicitToJson: true)
 class HealthMeasure extends MarkedMeasure {
   /// The [HealthDataType](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html) to collect.
   HealthDataType healthDataType;
@@ -58,8 +61,11 @@ class HealthMeasure extends MarkedMeasure {
         );
 
   static Function get fromJsonFunction => _$HealthMeasureFromJson;
+
   factory HealthMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory.fromJson(
+          json[Serializable.CLASS_IDENTIFIER].toString(), json);
+
   Map<String, dynamic> toJson() => _$HealthMeasureToJson(this);
 
   String tag() => '$type.$healthDataType';
@@ -70,11 +76,13 @@ class HealthMeasure extends MarkedMeasure {
 /// A [Datum] that holds a [HealthDataPoint](https://pub.dev/documentation/health/latest/health/HealthDataPoint-class.html) data point information.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class HealthDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, HealthSamplingPackage.HEALTH);
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, HealthSamplingPackage.HEALTH);
 
   /// The format of this health datum is `carp.health.<healthdatatype>`,
   /// where `<healthdatatype>` is the lowercase of the [HealthDataType](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html) collected.
-  DataFormat get format => DataFormat(NameSpace.CARP, '${HealthSamplingPackage.HEALTH}.${dataType.toLowerCase()}');
+  DataFormat get format => DataFormat(NameSpace.CARP,
+      '${HealthSamplingPackage.HEALTH}.${dataType.toLowerCase()}');
 
   /// The value of the health data.
   num value;
@@ -98,20 +106,25 @@ class HealthDatum extends CARPDatum {
   /// The platform from which this health data point came from (ANDROID, IOS).
   String platform;
 
-  HealthDatum(this.value, this.unit, int dateFrom, int dateTo, this.dataType, this.platform) : super() {
-    this.dateFrom = DateTime.fromMillisecondsSinceEpoch(dateFrom);
-    this.dateTo = DateTime.fromMillisecondsSinceEpoch(dateTo);
+  /// The device id of the phone
+  String deviceId;
+
+  /// The UUID of the data point s.t. points can be unique
+  String uuid;
+
+  HealthDatum(this.value, this.unit, this.dataType, this.dateFrom, this.dateTo,
+      this.platform, this.deviceId, this.uuid)
+      : super();
+
+  factory HealthDatum.fromHealthDataPoint(HealthDataPoint h) {
+    String _uuid = Uuid().v5(Uuid.NAMESPACE_URL, h.toJson().toString());
+    return HealthDatum(h.value, h.unitString, h.typeString, h.dateFrom, h.dateTo,
+        enumToString(h.platform), h.deviceId, _uuid);
   }
 
-  factory HealthDatum.fromHealthDataPoint(HealthDataPoint healthDataPoint) => HealthDatum(
-      healthDataPoint.value,
-      healthDataPoint.unit,
-      healthDataPoint.dateFrom,
-      healthDataPoint.dateTo,
-      healthDataPoint.dataType,
-      healthDataPoint.platform);
+  factory HealthDatum.fromJson(Map<String, dynamic> json) =>
+      _$HealthDatumFromJson(json);
 
-  factory HealthDatum.fromJson(Map<String, dynamic> json) => _$HealthDatumFromJson(json);
   Map<String, dynamic> toJson() => _$HealthDatumToJson(this);
 
   String toString() =>
