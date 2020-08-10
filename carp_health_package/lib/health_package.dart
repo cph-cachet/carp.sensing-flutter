@@ -20,6 +20,7 @@ import 'package:health/health.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:uuid/uuid.dart';
 
 part 'health_domain.dart';
 part 'health_package.g.dart';
