@@ -31,6 +31,8 @@ void main() {
   final String testDeploymentId = "d246170c-515e-40c3-8424-ec1f054f6ba4";
   final String testStudyId = "64c1784d-52d1-4c3d-99de-24c97fe06939";
 
+  final String collectionName = 'test_patients';
+
   Map<String, dynamic> tokenAsJson;
   CarpApp app;
   CarpUser user;
@@ -247,9 +249,9 @@ void main() {
   group("Documents & Collections", () {
     test(' - add document', () async {
       // is providing userId as the document name
-      // if the collections (patients) don't exist, it is created (according to David).
+      // if the collection don't exist, it is created (according to David).
       document = await CarpService.instance
-          .collection('patients')
+          .collection(collectionName)
           .document(userId)
           .setData({'email': userId, 'role': 'Administrator'});
 
@@ -261,7 +263,7 @@ void main() {
 
       // create another document
       await CarpService.instance
-          .collection('patients')
+          .collection(collectionName)
           .document(username)
           .setData({'email': username, 'role': 'Participant'});
     });
@@ -270,12 +272,12 @@ void main() {
       assert(document != null);
       print(document);
 
-      DocumentSnapshot original = await CarpService.instance.collection('patients').document(document.name).get();
+      DocumentSnapshot original = await CarpService.instance.collection(collectionName).document(document.name).get();
       print(_encode(original.data));
 
       // updating the role to super user
       DocumentSnapshot updated = await CarpService.instance
-          .collection('patients')
+          .collection(collectionName)
           .document(document.name)
           .updateData({'email': userId, 'role': 'Super User'});
 
@@ -297,7 +299,8 @@ void main() {
     });
 
     test(' - get document by path', () async {
-      DocumentSnapshot newDocument = await CarpService.instance.collection('patients').document(document.name).get();
+      DocumentSnapshot newDocument =
+          await CarpService.instance.collection(collectionName).document(document.name).get();
       print((newDocument));
       assert(newDocument.id == document.id);
     });
@@ -311,13 +314,13 @@ void main() {
 
       print('----------- renamed document -------------');
       DocumentSnapshot renamed_document =
-          await CarpService.instance.collection('patients').document(document.name).rename('new_name');
+          await CarpService.instance.collection(collectionName).document(document.name).rename('new_name');
       print(renamed_document);
       print(_encode(renamed_document.data));
 
       // get the document back from the server
 //      DocumentSnapshot server_document =
-//          await CarpService.instance.collection('patients').document(renamed_document.name).get();
+//          await CarpService.instance.collection(collectionName).document(renamed_document.name).get();
 
       print('----------- server document by ID -------------');
       DocumentSnapshot server_document = await CarpService.instance.documentById(documentId).get();
@@ -325,7 +328,7 @@ void main() {
       print(_encode(server_document.data));
 
       print('----------- server document by NAME -------------');
-      server_document = await CarpService.instance.collection('patients').document(renamed_document.name).get();
+      server_document = await CarpService.instance.collection(collectionName).document(renamed_document.name).get();
       print(server_document);
       print(_encode(server_document.data));
 
@@ -347,9 +350,9 @@ void main() {
 
     test(' - add document in nested collections', () async {
       // is not providing an document id, so this should create a new document
-      // if the collections (patients) don't exist, it is created (according to David).
+      // if the collection don't exist, it is created (according to David).
       DocumentSnapshot newDocument = await CarpService.instance
-          .collection('patients')
+          .collection(collectionName)
           .document(userId)
           .collection('activities')
           .document('cooking')
@@ -357,13 +360,13 @@ void main() {
 
       print(newDocument);
       assert(newDocument.id > 0);
-      assert(newDocument.path == 'patients/$userId/activities/cooking');
+      assert(newDocument.path == '$collectionName/$userId/activities/cooking');
     });
 
     test(' - get nested document', () async {
       assert(document != null);
       DocumentSnapshot newDocument = await CarpService.instance
-          .collection('patients')
+          .collection(collectionName)
           .document(userId)
           .collection('activities')
           .document('cooking')
@@ -383,7 +386,7 @@ void main() {
 
       print('trying to upload a document w/o a name...');
       DocumentSnapshot d = await CarpService.instance
-          .collection('patients')
+          .collection(collectionName)
           .document()
           .setData({'email': username, 'name': 'Administrator'});
 
@@ -391,18 +394,23 @@ void main() {
       print(d);
     });
 
-    test(" - list documents in 'patients' collection", () async {
-      List<DocumentSnapshot> documents = await CarpService.instance.collection("patients").documents;
+    test(" - get the '$collectionName' collection", () async {
+      CollectionReference collection = await CarpService.instance.collection(collectionName).get();
+      print(collection);
+    });
+
+    test(" - list documents in '$collectionName' collection", () async {
+      List<DocumentSnapshot> documents = await CarpService.instance.collection(collectionName).documents;
       documents.forEach((doc) => print(doc));
     });
 
     test(" - list collections in the 'user@dtu.dk' document", () async {
-      DocumentSnapshot newDocument = await CarpService.instance.collection('patients').document(userId).get();
+      DocumentSnapshot newDocument = await CarpService.instance.collection(collectionName).document(userId).get();
       newDocument.collections.forEach((ref) => print(ref));
     });
 
-    test(" - list all nested documents in 'patients' collection", () async {
-      List<DocumentSnapshot> documents = await CarpService.instance.collection("patients").documents;
+    test(" - list all nested documents in '$collectionName' collection", () async {
+      List<DocumentSnapshot> documents = await CarpService.instance.collection(collectionName).documents;
       documents.forEach((doc) {
         print(doc);
         doc.collections.forEach((col) => print(col));
@@ -421,34 +429,59 @@ void main() {
 //        }
 //      }
 //
-//      documents = await CarpService.instance.collection("patients").documents;
+//      documents = await CarpService.instance.collection(collectionName).documents;
 //      for (DocumentSnapshot doc in documents) {
 //        print(doc);
 //      }
 //    });
 
     test(' - get collection from path', () async {
-      CollectionReference collection = await CarpService.instance.collection('patients').get();
+      CollectionReference collection = await CarpService.instance.collection(collectionName).get();
       assert(collection.id > 0);
       print(collection);
     });
 
     test(' - delete document', () async {
       assert(document != null);
-      await CarpService.instance.collection('patients').document(document.name).delete();
+      await CarpService.instance.collection(collectionName).document(document.name).delete();
     });
 
     test(' - rename collection', () async {
-      CollectionReference collection = await CarpService.instance.collection('patients').get();
+      CollectionReference collection = await CarpService.instance.collection(collectionName).get();
       await collection.rename('new_patients');
       expect(collection.name, 'new_patients');
       print(collection);
     });
 
     test(' - delete collection', () async {
-      CollectionReference collection = await CarpService.instance.collection('new_patients').get();
+      //CollectionReference collection = await CarpService.instance.collection('new_patients').get();
+      CollectionReference collection = await CarpService.instance.collection(collectionName).get();
       await collection.delete();
       print(collection);
+    });
+  });
+
+  group("iPDM-GO", () {
+    test(" - get 'patients' collection from path", () async {
+      CollectionReference collection = await CarpService.instance.collection('patients').get();
+      assert(collection.id > 0);
+      print(collection);
+    });
+
+    test(" - list all nested documents in 'patients' collection", () async {
+      List<DocumentSnapshot> documents = await CarpService.instance.collection('patients').documents;
+      documents.forEach((doc) {
+        print(doc);
+        doc.collections.forEach((col) => print(col));
+      });
+    });
+    test(" - list all nested documents in 'patients/s174238@student.dtu.dk/chapters' collection", () async {
+      List<DocumentSnapshot> documents =
+          await CarpService.instance.collection('patients/s174238@student.dtu.dk/chapters').documents;
+      documents.forEach((doc) {
+        print(doc);
+        doc.collections.forEach((col) => print(col));
+      });
     });
   });
 
