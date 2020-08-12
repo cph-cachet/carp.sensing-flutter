@@ -21,17 +21,27 @@ import 'package:meta/meta.dart';
 import 'package:retry/retry.dart';
 
 part 'carp_app.dart';
+
 part 'carp_datapoint.dart';
+
 part 'carp_service.g.dart';
+
 part 'carp_tasks.dart';
+
 part 'consent_document.dart';
+
 part 'datapoint_reference.dart';
+
 part 'document_reference.dart';
+
 part 'file_reference.dart';
+
 part 'http_retry.dart';
+
 part 'push_id_generator.dart';
 
-String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
+String _encode(Object object) =>
+    const JsonEncoder.withIndent(' ').convert(object);
 
 /// Provide access to the CARP web services endpoint.
 ///
@@ -75,10 +85,12 @@ class CarpService {
   // AUTHENTICATION
   // ---------------------------------------------------------------------------------------------------------
 
-  String get _authHeaderBase64 => base64.encode(utf8.encode("${_app.oauth.clientID}:${_app.oauth.clientSecret}"));
+  String get _authHeaderBase64 => base64
+      .encode(utf8.encode("${_app.oauth.clientID}:${_app.oauth.clientSecret}"));
 
   /// The URI for the authenticated endpoint for this [CarpService].
-  String get authEndpointUri => "${_app.uri.toString()}${_app.oauth.path.toString()}";
+  String get authEndpointUri =>
+      "${_app.uri.toString()}${_app.oauth.path.toString()}";
 
   /// The HTTP header for the authentication requests.
   Map<String, String> get authenticationHeader => {
@@ -99,7 +111,9 @@ class CarpService {
     assert(password != null);
 
     if (_app == null)
-      throw new CarpServiceException(message: "CARP Service not initialized. Call 'CarpService.configure()' first.");
+      throw new CarpServiceException(
+          message:
+              "CARP Service not initialized. Call 'CarpService.configure()' first.");
 
     _currentUser = new CarpUser(username: username);
 
@@ -153,10 +167,15 @@ class CarpService {
   /// Get a new (refreshed) access token for the current user based on the previously granted refresh token.
   Future<OAuthToken> refresh() async {
     if (_app == null)
-      throw new CarpServiceException(message: "CARP Service not initialized. Call 'CarpService.configure()' first.");
+      throw new CarpServiceException(
+          message:
+              "CARP Service not initialized. Call 'CarpService.configure()' first.");
 
     // --data "refresh_token=my-refresh-token&grant_type=refresh_token"
-    final loginBody = {"refresh_token": "${_currentUser.token.refreshToken}", "grant_type": "refresh_token"};
+    final loginBody = {
+      "refresh_token": "${_currentUser.token.refreshToken}",
+      "grant_type": "refresh_token"
+    };
 
     final http.Response response = await httpr.post(
       Uri.encodeFull(authEndpointUri),
@@ -167,7 +186,8 @@ class CarpService {
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
 
-    if (httpStatusCode == HttpStatus.ok) return new OAuthToken.fromMap(responseJson);
+    if (httpStatusCode == HttpStatus.ok)
+      return new OAuthToken.fromMap(responseJson);
 
     // All other cases are treated as an error.
     throw CarpServiceException(
@@ -181,7 +201,8 @@ class CarpService {
   // ---------------------------------------------------------------------------------------------------------
 
   /// The URL for the current user end point for this [CarpService].
-  String get currentUserEndpointUri => "${_app.uri.toString()}/api/users/current";
+  String get currentUserEndpointUri =>
+      "${_app.uri.toString()}/api/users/current";
 
   /// The URL for the user end point for this [CarpService].
   String get userEndpointUri => "${_app.uri.toString()}/api/users";
@@ -189,7 +210,9 @@ class CarpService {
   /// The headers for any authenticated HTTP REST call to this [CarpService].
   Map<String, String> get headers {
     if (_currentUser.token == null)
-      throw new CarpServiceException(message: "OAuth token is null. Call 'CarpService.authenticate()' first.");
+      throw new CarpServiceException(
+          message:
+              "OAuth token is null. Call 'CarpService.authenticate()' first.");
 
     return {
       "Content-Type": "application/json",
@@ -198,7 +221,9 @@ class CarpService {
     };
   }
 
-  Map<String, String> getUserBody(String accountId, String password, String firstName, String lastName) => {
+  Map<String, String> getUserBody(String accountId, String password,
+          String firstName, String lastName) =>
+      {
         "accountId": accountId,
         "password": password,
         "firstName": firstName ?? "",
@@ -208,7 +233,8 @@ class CarpService {
   /// Asynchronously gets the CARP profile of the current user.
   Future<CarpUser> getCurrentUserProfile() async {
     // GET the user from the CARP web service
-    http.Response response = await httpr.get(Uri.encodeFull('$userEndpointUri/current'), headers: headers);
+    http.Response response = await httpr
+        .get(Uri.encodeFull('$userEndpointUri/current'), headers: headers);
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
 
@@ -256,19 +282,21 @@ class CarpService {
       lastName: lastName,
     );
 
-    http.Response response = await httpr.post(Uri.encodeFull('$userEndpointUri/register'),
-        headers: headers,
-        body: json.encode(getUserBody(
-          newUser.accountId,
-          newUser.password,
-          newUser.firstName,
-          newUser.lastName,
-        )));
+    http.Response response =
+        await httpr.post(Uri.encodeFull('$userEndpointUri/register'),
+            headers: headers,
+            body: json.encode(getUserBody(
+              newUser.accountId,
+              newUser.password,
+              newUser.firstName,
+              newUser.lastName,
+            )));
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
 
-    if ((httpStatusCode == HttpStatus.ok) || (httpStatusCode == HttpStatus.created)) return newUser..reload();
+    if ((httpStatusCode == HttpStatus.ok) ||
+        (httpStatusCode == HttpStatus.created)) return newUser..reload();
 
     // All other cases are treated as an error.
     throw CarpServiceException(
@@ -298,14 +326,17 @@ class CarpService {
       lastName: lastName,
     );
 
-    http.Response response = await httpr.post(Uri.encodeFull('$userEndpointUri/invite-participant'),
+    http.Response response = await httpr.post(
+        Uri.encodeFull('$userEndpointUri/invite-participant'),
         headers: headers,
-        body: json.encode(getUserBody(newUser.accountId, newUser.password, newUser.firstName, newUser.lastName)));
+        body: json.encode(getUserBody(newUser.accountId, newUser.password,
+            newUser.firstName, newUser.lastName)));
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
 
-    if ((httpStatusCode == HttpStatus.ok) || (httpStatusCode == HttpStatus.created)) return newUser..reload();
+    if ((httpStatusCode == HttpStatus.ok) ||
+        (httpStatusCode == HttpStatus.created)) return newUser..reload();
 
     // All other cases are treated as an error.
     throw CarpServiceException(
@@ -335,14 +366,17 @@ class CarpService {
       lastName: lastName,
     );
 
-    http.Response response = await httpr.post(Uri.encodeFull('$userEndpointUri/invite-researcher'),
+    http.Response response = await httpr.post(
+        Uri.encodeFull('$userEndpointUri/invite-researcher'),
         headers: headers,
-        body: json.encode(getUserBody(newUser.accountId, newUser.password, newUser.firstName, newUser.lastName)));
+        body: json.encode(getUserBody(newUser.accountId, newUser.password,
+            newUser.firstName, newUser.lastName)));
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
 
-    if ((httpStatusCode == HttpStatus.ok) || (httpStatusCode == HttpStatus.created)) return newUser..reload();
+    if ((httpStatusCode == HttpStatus.ok) ||
+        (httpStatusCode == HttpStatus.created)) return newUser..reload();
 
     // All other cases are treated as an error.
     throw CarpServiceException(
@@ -361,12 +395,15 @@ class CarpService {
 
   /// Create a new consent document.
   /// Returns the created [ConsentDocument] if the document is uploaded correctly.
-  Future<ConsentDocument> createConsentDocument(Map<String, dynamic> document) async {
+  Future<ConsentDocument> createConsentDocument(
+      Map<String, dynamic> document) async {
     assert(document != null);
 
     // POST the document to the CARP web service
-    http.Response response =
-        await http.post(Uri.encodeFull(consentDocumentEndpointUri), headers: headers, body: json.encode(document));
+    http.Response response = await http.post(
+        Uri.encodeFull(consentDocumentEndpointUri),
+        headers: headers,
+        body: json.encode(document));
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
@@ -374,7 +411,8 @@ class CarpService {
 //    print('response code: $httpStatusCode');
 //    print(_encode(responseJson));
 
-    if ((httpStatusCode == HttpStatus.ok) || (httpStatusCode == HttpStatus.created))
+    if ((httpStatusCode == HttpStatus.ok) ||
+        (httpStatusCode == HttpStatus.created))
       return ConsentDocument._(responseJson);
 
     // All other cases are treated as an error.
@@ -389,7 +427,8 @@ class CarpService {
     String url = "$consentDocumentEndpointUri/$id";
 
     // GET the consent document from the CARP web service
-    http.Response response = await httpr.get(Uri.encodeFull(url), headers: headers);
+    http.Response response =
+        await httpr.get(Uri.encodeFull(url), headers: headers);
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
@@ -414,7 +453,8 @@ class CarpService {
 
   /// Creates a new [FileStorageReference] initialized at the current CarpService storage location.
   /// [id] can be omitted if a local file is not uploaded yet.
-  FileStorageReference getFileStorageReference([int id]) => FileStorageReference._(this, id);
+  FileStorageReference getFileStorageReference([int id]) =>
+      FileStorageReference._(this, id);
 
   /// Gets a [DocumentReference] for the specified unique id.
   DocumentReference documentById(int id) {
@@ -429,12 +469,15 @@ class CarpService {
   }
 
   /// The URL for the document end point for this [CarpService].
-  String get documentEndpointUri => "${_app.uri.toString()}/api/studies/${_app.study.id}/documents";
+  String get documentEndpointUri =>
+      "${_app.uri.toString()}/api/studies/${_app.study.id}/documents";
 
   /// Get a list documents from a query.
   Future<List<DocumentSnapshot>> documentsByQuery(String query) async {
     // GET the list of documents in this collection from the CARP web service
-    http.Response response = await httpr.get(Uri.encodeFull('$documentEndpointUri?query=$query'), headers: headers);
+    http.Response response = await httpr.get(
+        Uri.encodeFull('$documentEndpointUri?query=$query'),
+        headers: headers);
     int httpStatusCode = response.statusCode;
 
     if (httpStatusCode == HttpStatus.ok) {
@@ -489,13 +532,17 @@ abstract class CarpReference {
 class CarpServiceException implements Exception {
   HTTPStatus httpStatus;
   String message;
+
   //String description;
 
   //CarpServiceException(this.message, {this.description, this.httpStatus});
   CarpServiceException({this.httpStatus, this.message});
 
   //String toString() => "CarpServiceException: ${httpStatus?.httpResponseCode} - $message; $description";
-  String toString() => "CarpServiceException: " + ((httpStatus != null) ? "$httpStatus - " : "") + message;
+  String toString() =>
+      "CarpServiceException: " +
+      ((httpStatus != null) ? "$httpStatus - " : "") +
+      (message ?? "(No Message)");
 }
 
 /// Implements HTTP Response Code and associated Reason Phrase.

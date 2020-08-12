@@ -31,8 +31,8 @@ class HealthProbe extends StreamProbe {
     debug(
         'Collecting health data - type: $healthDataType, start: ${start.toUtc()}, end: ${end.toUtc()}');
     try {
-      data = await _healthFactory.getHealthDataFromType(
-          start, end, healthDataType);
+      data = await _healthFactory.getHealthDataFromTypes(
+          start, end, [healthDataType]);
       debug(
           'Retrieved ${data.length} health data points of type. $healthDataType');
 
