@@ -1,3 +1,6 @@
+## 1.0.1
+* upgrade to Health 2.0.2 API
+
 ## 1.0.0
 * upgrade to Health 2.0.x API
 
