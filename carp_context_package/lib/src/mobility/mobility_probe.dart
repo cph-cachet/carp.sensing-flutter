@@ -13,11 +13,10 @@ class MobilityProbe extends DatumProbe {
     _mobilityFactory.stopDuration = (mm.stopDuration ?? Duration(minutes: 3));
     _mobilityFactory.usePriorContexts = (mm.usePriorContexts ?? true);
 
-    Stream<Position> stream =
-        geolocator.getPositionStream().asBroadcastStream();
-    Stream<LocationSample> locationStream = stream.map((e) =>
-        LocationSample(GeoLocation(e.latitude, e.longitude), e.timestamp));
-    _mobilityFactory.startListening(locationStream);
+    Stream<LocationSample> stream =
+        locationManager.dtoStream.map((e) =>
+        LocationSample(GeoLocation(e.latitude, e.longitude), DateTime.now()));
+    _mobilityFactory.startListening(stream);
   }
 
   /// Returns the [WeatherDatum] for this location.

@@ -86,7 +86,7 @@ LocationMeasure _$LocationMeasureFromJson(Map<String, dynamic> json) {
         : Duration(microseconds: json['duration'] as int),
     accuracy:
         _$enumDecodeNullable(_$GeolocationAccuracyEnumMap, json['accuracy']),
-    distance: json['distance'] as int,
+    distance: (json['distance'] as num)?.toDouble(),
   )
     ..c__ = json['c__'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
