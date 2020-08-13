@@ -10,23 +10,27 @@ part of context;
 /// Holds location information using the GPS format.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class LocationDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, ContextSamplingPackage.LOCATION);
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, ContextSamplingPackage.LOCATION);
+
   DataFormat get format => CARP_DATA_FORMAT;
 
   LocationDatum() : super();
 
-  LocationDatum.fromPositionData(Position position)
-      : latitude = position.latitude,
-        longitude = position.longitude,
-        altitude = position.altitude,
-        accuracy = position.accuracy,
-        speed = position.speed,
-        speedAccuracy = position.speedAccuracy,
-        heading = position.heading,
-        time = position.timestamp,
+  LocationDatum.fromLocationDto(LocationDto dto)
+      : latitude = dto.latitude,
+        longitude = dto.longitude,
+        altitude = dto.altitude,
+        accuracy = dto.accuracy,
+        speed = dto.speed,
+        speedAccuracy = dto.speedAccuracy,
+        heading = dto.heading,
+        time = DateTime.fromMillisecondsSinceEpoch(dto.time.toInt()),
         super();
 
-  factory LocationDatum.fromJson(Map<String, dynamic> json) => _$LocationDatumFromJson(json);
+  factory LocationDatum.fromJson(Map<String, dynamic> json) =>
+      _$LocationDatumFromJson(json);
+
   Map<String, dynamic> toJson() => _$LocationDatumToJson(this);
 
   /// The time when this location was collected.
