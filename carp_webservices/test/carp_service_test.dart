@@ -17,16 +17,16 @@ void main() {
   //final String password = "password";
 
   // CANS Development server URI + credentials
-  final String uri = "https://cans.cachet.dk:443";
-  final String username = "admin@cachet.dk";
-  final String password = "admin";
+//  final String uri = "https://cans.cachet.dk:443";
+//  final String username = "admin@cachet.dk";
+//  final String password = "admin";
   final String clientID = "carp";
   final String clientSecret = "carp";
 
   // CANS Production server URI + credentials
-  //final String uri = "http://cans.cachet.dk:8089/";
-  //final String username = "admin@cachet.dk";
-  //final String password = "admin";
+  final String uri = "http://cans.cachet.dk:8089";
+  final String username = "researcher@cachet.dk";
+  final String password = "researcher";
 
   //final String testStudyId = "2";
   //final String testStudyId = "ea7d63f7-3c42-43e8-ba4f-2c02ae63a272";
@@ -36,12 +36,16 @@ void main() {
   //final String testStudyId = "bc1d3178-c541-46f3-8af2-f313cc9d72fb";
 
   // from Richard / iPDM-GO test 2020-07-16
-  final String testDeploymentId = "d246170c-515e-40c3-8424-ec1f054f6ba4";
-  final String testStudyId = "64c1784d-52d1-4c3d-99de-24c97fe06939";
+  //final String testDeploymentId = "d246170c-515e-40c3-8424-ec1f054f6ba4";
+  //final String testStudyId = "64c1784d-52d1-4c3d-99de-24c97fe06939";
+
+  // from Alban - production testing 2020-08-13
+  final String testDeploymentId = "ab00aeda-9cd0-44d8-902c-9736fec24ab5";
+  final String testStudyId = "c695ab41-e635-42d7-9b89-57530d0ae3da";
 
   final String userId = "user@dtu.dk";
   final String collectionName = 'test_patients';
-  final String newcollectionName = 'new_patients_3';
+  final String newCollectionName = 'new_patients_3';
 
   Map<String, dynamic> tokenAsJson;
   CarpApp app;
@@ -171,83 +175,75 @@ void main() {
     });
   });
 
-  group(
-    'Informed Consent',
-    () {
-      test('- create', () async {
-        ConsentDocument uploaded = await CarpService.instance.createConsentDocument({"text": "The original terms text.", "signature": "Image Blob"});
+  group('Informed Consent', () {
+    test('- create', () async {
+      ConsentDocument uploaded = await CarpService.instance.createConsentDocument({"text": "The original terms text.", "signature": "Image Blob"});
 
-        assert(uploaded != null);
-        print(uploaded);
-        print(uploaded.createdAt);
+      assert(uploaded != null);
+      print(uploaded);
+      print(uploaded.createdAt);
 
-        consentDocumentId = uploaded.id;
-      });
+      consentDocumentId = uploaded.id;
+    });
 
-      test('- get', () async {
-        ConsentDocument downloaded = await CarpService.instance.getConsentDocument(consentDocumentId);
+    test('- get', () async {
+      ConsentDocument downloaded = await CarpService.instance.getConsentDocument(consentDocumentId);
 
-        assert(downloaded != null);
-        assert(downloaded.id == consentDocumentId);
-        print(downloaded);
-        print(downloaded.createdAt);
-      });
-    },
-    skip: false,
-  );
+      assert(downloaded != null);
+      assert(downloaded.id == consentDocumentId);
+      print(downloaded);
+      print(downloaded.createdAt);
+    });
+  }, skip: false);
 
-  group(
-    "Data points",
-    () {
-      test('- post', () async {
-        final CARPDataPoint data = CARPDataPoint.fromDatum(study.id, study.userId, datum);
+  group("Data points", () {
+    test('- post', () async {
+      final CARPDataPoint data = CARPDataPoint.fromDatum(study.id, study.userId, datum);
 
-        print(_encode(data.toJson()));
+      print(_encode(data.toJson()));
 
-        dataPointId = await CarpService.instance.getDataPointReference().postDataPoint(data);
+      dataPointId = await CarpService.instance.getDataPointReference().postDataPoint(data);
 
-        assert(dataPointId > 0);
-        print("data_point_id : $dataPointId");
-      });
+      assert(dataPointId > 0);
+      print("data_point_id : $dataPointId");
+    });
 
-      test('- batch', () async {
-        final File file = File("test/batch.json");
-        await CarpService.instance.getDataPointReference().batchPostDataPoint(file);
-      });
+    test('- batch', () async {
+      final File file = File("test/batch.json");
+      await CarpService.instance.getDataPointReference().batchPostDataPoint(file);
+    });
 
-      test('- get by id', () async {
-        print("GET data_point_id : $dataPointId");
-        CARPDataPoint data = await CarpService.instance.getDataPointReference().getDataPoint(dataPointId);
+    test('- get by id', () async {
+      print("GET data_point_id : $dataPointId");
+      CARPDataPoint data = await CarpService.instance.getDataPointReference().getDataPoint(dataPointId);
 
-        print(_encode(data.toJson()));
-        assert(data.id == dataPointId);
-        assert(data.carpBody['id'] == datum.id);
-      });
+      print(_encode(data.toJson()));
+      assert(data.id == dataPointId);
+      assert(data.carpBody['id'] == datum.id);
+    });
 
-      test('- get all', () async {
-        List<CARPDataPoint> data = await CarpService.instance.getDataPointReference().getAllDataPoint();
+    test('- get all', () async {
+      List<CARPDataPoint> data = await CarpService.instance.getDataPointReference().getAllDataPoint();
 
-        data.forEach((datapoint) => print(_encode((datapoint.toJson()))));
-        assert(data.length > 0);
-      });
+      data.forEach((datapoint) => print(_encode((datapoint.toJson()))));
+      assert(data.length > 0);
+    });
 
-      test('- query', () async {
-        String query = 'carp_header.user_id==$userId;carp_body.timestamp>2019-11-02T12:53:40.219598Z';
-        //String query = 'carp_header.user_id==$userId';
-        print("query : $query");
-        List<CARPDataPoint> data = await CarpService.instance.getDataPointReference().queryDataPoint(query);
+    test('- query', () async {
+      String query = 'carp_header.user_id==$userId;carp_body.timestamp>2019-11-02T12:53:40.219598Z';
+      //String query = 'carp_header.user_id==$userId';
+      print("query : $query");
+      List<CARPDataPoint> data = await CarpService.instance.getDataPointReference().queryDataPoint(query);
 
-        data.forEach((datapoint) => print(_encode((datapoint.toJson()))));
-        assert(data.length > 0);
-      });
+      data.forEach((datapoint) => print(_encode((datapoint.toJson()))));
+      assert(data.length > 0);
+    });
 
-      test('- delete', () async {
-        print("DELETE data_point_id : $dataPointId");
-        await CarpService.instance.getDataPointReference().deleteDataPoint(dataPointId);
-      });
-    },
-    skip: false,
-  );
+    test('- delete', () async {
+      print("DELETE data_point_id : $dataPointId");
+      await CarpService.instance.getDataPointReference().deleteDataPoint(dataPointId);
+    });
+  }, skip: false);
 
   group("Documents & Collections", () {
     test(' - add document', () async {
@@ -434,27 +430,27 @@ void main() {
     test(' - rename collection', () async {
       CollectionReference collection = await CarpService.instance.collection(collectionName).get();
       print('Collection before rename: $collection');
-      await collection.rename(newcollectionName);
-      expect(collection.name, newcollectionName);
+      await collection.rename(newCollectionName);
+      expect(collection.name, newCollectionName);
       print('Collection after rename: $collection');
-      collection = await CarpService.instance.collection(newcollectionName).get();
-      expect(collection.name, newcollectionName);
+      collection = await CarpService.instance.collection(newCollectionName).get();
+      expect(collection.name, newCollectionName);
       print('Collection after get: $collection');
     });
 
     test(' - delete collection', () async {
-      CollectionReference collection = await CarpService.instance.collection(newcollectionName).get();
+      CollectionReference collection = await CarpService.instance.collection(newCollectionName).get();
       await collection.delete();
       expect(collection.id, -1);
       print(collection);
       try {
-        collection = await CarpService.instance.collection(newcollectionName).get();
+        collection = await CarpService.instance.collection(newCollectionName).get();
       } catch (error) {
         print(error);
-        expect((error as CarpServiceException).httpStatus.httpResponseCode, 404);
+        expect((error as CarpServiceException).httpStatus.httpResponseCode, HttpStatus.notFound);
       }
     });
-  });
+  }, skip: true);
 
   group("iPDM-GO", () {
     test(" - get 'patients' collection from path", () async {
@@ -477,7 +473,7 @@ void main() {
         doc.collections.forEach((col) => print(col));
       });
     });
-  });
+  }, skip: false);
 
   group("Files", () {
     int id = -1;
@@ -512,7 +508,7 @@ void main() {
       } catch (error) {
         print(error);
         assert(error is CarpServiceException);
-        assert((error as CarpServiceException).httpStatus.httpResponseCode == HttpStatus.notFound);
+        expect((error as CarpServiceException).httpStatus.httpResponseCode, HttpStatus.notFound);
       }
     });
 
@@ -540,6 +536,33 @@ void main() {
 
       assert(result > 0);
       print('result : $result');
+    });
+  }, skip: false);
+
+  group("Deployment", () {
+    test('- get master device deployment', () async {
+      StudyDeploymentSnapshot deployment = await CarpService.instance.deployment().get();
+      expect(deployment.id, study.deploymentId);
+    });
+
+    test('- deployment success', () async {
+      bool success = await CarpService.instance.deployment().success();
+      expect(success, true);
+    });
+
+    test('- get deployment status', () async {
+      StudyDeploymentStatus status = await CarpService.instance.deployment().status();
+      expect(status.id, study.deploymentId);
+    });
+
+    test('- register device', () async {
+      bool success = await CarpService.instance.deployment().registerDevice();
+      expect(success, true);
+    });
+
+    test('- unregister device', () async {
+      bool success = await CarpService.instance.deployment().unRegisterDevice();
+      expect(success, true);
     });
   }, skip: false);
 }
