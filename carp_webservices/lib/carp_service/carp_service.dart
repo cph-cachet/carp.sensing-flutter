@@ -479,13 +479,9 @@ class CarpServiceException implements Exception {
   HTTPStatus httpStatus;
   String message;
 
-  //String description;
-
-  //CarpServiceException(this.message, {this.description, this.httpStatus});
   CarpServiceException({this.httpStatus, this.message});
 
-  //String toString() => "CarpServiceException: ${httpStatus?.httpResponseCode} - $message; $description";
-  String toString() => "CarpServiceException: " + ((httpStatus != null) ? "$httpStatus - " : "") + (message ?? "(No Message)");
+  String toString() => "CarpServiceException: ${(httpStatus != null) ? httpStatus.toString() + " - " : ""} ${message ?? ""}";
 }
 
 /// Implements HTTP Response Code and associated Reason Phrase.

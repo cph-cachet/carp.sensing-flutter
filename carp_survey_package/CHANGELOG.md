@@ -1,3 +1,6 @@
+## 0.8.2
+* support for canceling a survery ([Issue #77](https://github.com/cph-cachet/carp.sensing-flutter/issues/77))
+
 ## 0.8.1
 * upgrade to `research_package` v. 0.3.x
 

@@ -15,7 +15,8 @@ class SurveySamplingPackage implements SamplingPackage {
         SURVEY,
       ];
 
-  List<Permission> get permissions => []; // Research Package don't need any permission on the phone
+  List<Permission> get permissions =>
+      []; // Research Package don't need any permission on the phone
 
   Probe create(String type) {
     switch (type) {
@@ -27,7 +28,8 @@ class SurveySamplingPackage implements SamplingPackage {
   }
 
   void onRegister() {
-    FromJsonFactory.registerFromJsonFunction("RPTaskMeasure", RPTaskMeasure.fromJsonFunction);
+    FromJsonFactory.registerFromJsonFunction(
+        "RPTaskMeasure", RPTaskMeasure.fromJsonFunction);
   }
 
   /// Adding WHO5 as the default survey.
@@ -77,7 +79,13 @@ class SurveyProbe extends AbstractProbe {
   /// Carries the [RPTaskResult] result of the survey.
   void Function(RPTaskResult) onSurveySubmit;
 
-  SurveyProbe({this.onSurveyTriggered, this.onSurveySubmit}) : super();
+  /// The callback function to be called when the survey is canceled by the user.
+  /// The optional [RPTaskResult] is provided at it's current state. Can be null.
+  void Function([RPTaskResult]) onSurveyCancel;
+
+  SurveyProbe(
+      {this.onSurveyTriggered, this.onSurveySubmit, this.onSurveyCancel})
+      : super();
 
   Future<void> onInitialize(Measure measure) async {
     assert(measure is RPTaskMeasure);
@@ -86,7 +94,11 @@ class SurveyProbe extends AbstractProbe {
   }
 
   Future<void> onResume() async {
-    onSurveyTriggered(SurveyPage(surveyTask, _onSurveySubmit));
+    onSurveyTriggered(SurveyPage(
+      surveyTask,
+      _onSurveySubmit,
+      onSurveyCancel: onSurveyCancel,
+    ));
   }
 
   Future<void> onRestart() async {}

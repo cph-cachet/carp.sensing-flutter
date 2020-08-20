@@ -7,7 +7,10 @@ class SurveyPage extends StatelessWidget {
   /// The callback function which has to return an [RPTaskResult] object.
   final void Function(RPTaskResult) resultCallback;
 
-  SurveyPage(this.task, this.resultCallback) : super();
+  /// The [RPTaskResult] is optional and can be null if no results were created.
+  final void Function([RPTaskResult]) onSurveyCancel;
+
+  SurveyPage(this.task, this.resultCallback, {this.onSurveyCancel}) : super();
 
   Widget build(BuildContext context) {
     return RPUITask(
@@ -15,6 +18,7 @@ class SurveyPage extends StatelessWidget {
       onSubmit: (result) {
         resultCallback(result);
       },
+      onCancel: onSurveyCancel,
     );
   }
 }

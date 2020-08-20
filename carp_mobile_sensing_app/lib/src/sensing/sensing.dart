@@ -302,7 +302,7 @@ class LocalStudyManager implements StudyManager {
             // AUDIO and NOISE cannot be used in the same study since they conflict in using the microphone...
             ..addTriggerTask(
                 PeriodicTrigger(period: Duration(minutes: 1), duration: Duration(seconds: 5)),
-                AutomaticTask(name: 'Audio')
+                AutomaticTask(name: 'Audio')            
                   ..measures.add(AudioMeasure(
                     MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO),
                     name: "Audio Recording",
