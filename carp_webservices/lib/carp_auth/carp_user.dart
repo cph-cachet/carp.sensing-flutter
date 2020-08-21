@@ -8,6 +8,7 @@
 part of carp_auth;
 
 /// Represents a CARP user.
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class CarpUser {
   /// Unique CARP username
   String username;
@@ -82,10 +83,8 @@ class CarpUser {
 
   /// Obtains the OAuth token for the current user, forcing a [refresh] if desired.
   Future<OAuthToken> getOAuthToken({bool refresh = false}) async {
-    if (CarpService.instance == null)
-      throw new CarpServiceException(message: "CARP Service not initialized. Call 'CarpService.configure()' first.");
-    if (_token == null)
-      throw new CarpServiceException(message: "OAuth token is null. Call 'CarpService.authenticate()' first.");
+    if (CarpService.instance == null) throw new CarpServiceException(message: "CARP Service not initialized. Call 'CarpService.configure()' first.");
+    if (_token == null) throw new CarpServiceException(message: "OAuth token is null. Call 'CarpService.authenticate()' first.");
 
     // check if we need to refresh the token.
     if (_token.hasExpired || refresh) {
@@ -104,8 +103,7 @@ class CarpUser {
   /// Manually refreshes the data of the current user (e.g., [fullName], [telephone], etc.)
   /// from the CARP web service.
   Future<void> reload() async {
-    if (CarpService.instance == null)
-      throw new CarpServiceException(message: "CARP Service not initialized. Call 'CarpService.configure()' first.");
+    if (CarpService.instance == null) throw new CarpServiceException(message: "CARP Service not initialized. Call 'CarpService.configure()' first.");
 
     CarpService.instance.getCurrentUserProfile();
   }
@@ -114,6 +112,9 @@ class CarpUser {
   ///
   /// TODO - not implemented, since there is currently no CARP endpoint for users.
   Future<void> delete() async {}
+
+  factory CarpUser.fromJson(Map<String, dynamic> json) => _$CarpUserFromJson(json);
+  Map<String, dynamic> toJson() => _$CarpUserToJson(this);
 
   String toString() => 'CARP User: $username - $firstName $lastName [$id]';
 }

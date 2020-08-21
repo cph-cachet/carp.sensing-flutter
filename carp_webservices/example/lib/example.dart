@@ -1,7 +1,8 @@
+import 'dart:io';
+
+import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_service/carp_service.dart';
-import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
-import 'dart:io';
 
 void main() async {
   final String username = "researcher";
@@ -38,9 +39,8 @@ void main() async {
 
   // first upload a file
   final File uploadFile = File("test/img.jpg");
-  final FileUploadTask uploadTask = CarpService.instance
-      .getFileStorageReference()
-      .upload(uploadFile, {'content-type': 'image/jpg', 'content-language': 'en', 'activity': 'test'});
+  final FileUploadTask uploadTask =
+      CarpService.instance.getFileStorageReference().upload(uploadFile, {'content-type': 'image/jpg', 'content-language': 'en', 'activity': 'test'});
   CarpFileResponse response = await uploadTask.onComplete;
   int id = response.id;
 
@@ -89,14 +89,11 @@ void main() async {
   // access an document
   //  - if the document id is not specified, a new document (with a new id) is created
   //  - if the collection (users) don't exist, it is created
-  DocumentSnapshot document =
-      await CarpService.instance.collection('users').document().setData({'email': username, 'name': 'Administrator'});
+  DocumentSnapshot document = await CarpService.instance.collection('users').document().setData({'email': username, 'name': 'Administrator'});
 
   // update the document
-  DocumentSnapshot updated_document = await CarpService.instance
-      .collection('/users')
-      .document(document.name)
-      .updateData({'email': username, 'name': 'Super User'});
+  DocumentSnapshot updated_document =
+      await CarpService.instance.collection('/users').document(document.name).updateData({'email': username, 'name': 'Super User'});
 
   // get the document
   DocumentSnapshot new_document = await CarpService.instance.collection('users').document(document.name).get();

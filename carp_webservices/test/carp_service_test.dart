@@ -7,29 +7,17 @@ import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_service/carp_service.dart';
 import 'package:test/test.dart';
 
+import 'credentials.dart';
+
 String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
 
 void main() {
-  // Old CARP (David version)
-  //final String uri = "http://staging.carp.cachet.dk:8080";
-  //final String uri = "https://test.carp.cachet.dk:443";
-  //final String username = "researcher@example.com";
-  //final String password = "password";
+  // CANS DEV
+  // final String uri = "https://cans.cachet.dk:443";
 
-  // CANS Development server URI + credentials
-//  final String uri = "https://cans.cachet.dk:443";
-//  final String username = "admin@cachet.dk";
-//  final String password = "admin";
-  final String clientID = "carp";
-  final String clientSecret = "carp";
-
-  // CANS Production server URI + credentials
-  final String uri = "http://cans.cachet.dk:8089";
-  final String username = "researcher@cachet.dk";
-  final String password = "researcher";
-
-  //final String testStudyId = "2";
-  //final String testStudyId = "ea7d63f7-3c42-43e8-ba4f-2c02ae63a272";
+  // CANS PROD server URI
+  // final String uri = "http://cans.cachet.dk:8089";
+  final String uri = "https://cans.cachet.dk:443";
 
   // from Barnabas / iPDM-GO test 2020-07-14
   //final String testDeploymentId = "d1f01720-1714-46ee-a16d-da2a566b979e";
@@ -40,8 +28,12 @@ void main() {
   //final String testStudyId = "64c1784d-52d1-4c3d-99de-24c97fe06939";
 
   // from Alban - production testing 2020-08-13
-  final String testDeploymentId = "ab00aeda-9cd0-44d8-902c-9736fec24ab5";
-  final String testStudyId = "c695ab41-e635-42d7-9b89-57530d0ae3da";
+  //  final String testDeploymentId = "ab00aeda-9cd0-44d8-902c-9736fec24ab5";
+  //  final String testStudyId = "c695ab41-e635-42d7-9b89-57530d0ae3da";
+
+  // from Lori - production testing 2020-08-21
+  final String testDeploymentId = "bb9c2550-f6b7-4948-967f-2e62bdddd840";
+  final String testStudyId = "42ca52da-c768-44f3-9dc5-7f094c192892";
 
   final String userId = "user@dtu.dk";
   final String collectionName = 'test_patients';
@@ -85,8 +77,11 @@ void main() {
     // Runs before each test.
     setUp(() {});
 
-    test('- authentication', () async {
-      user = await CarpService.instance.authenticate(username: username, password: password);
+    test('- authentication w. username and password', () async {
+      user = await CarpService.instance.authenticate(
+        username: username,
+        password: password,
+      );
 
       assert(user != null);
       assert(user.token != null);
@@ -94,6 +89,7 @@ void main() {
 
       print("signed in : $user");
       print("   token  : ${user.token}");
+      print(_encode(user.toJson()));
     });
 
     test('- get user profile', () async {
@@ -450,7 +446,7 @@ void main() {
         expect((error as CarpServiceException).httpStatus.httpResponseCode, HttpStatus.notFound);
       }
     });
-  }, skip: true);
+  }, skip: false);
 
   group("iPDM-GO", () {
     test(" - get 'patients' collection from path", () async {
@@ -473,7 +469,7 @@ void main() {
         doc.collections.forEach((col) => print(col));
       });
     });
-  }, skip: false);
+  }, skip: true);
 
   group("Files", () {
     int id = -1;

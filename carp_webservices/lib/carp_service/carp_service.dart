@@ -85,7 +85,7 @@ class CarpService {
   Map<String, String> get authenticationHeader =>
       {"Authorization": "Basic $_authHeaderBase64", "Content-Type": "application/x-www-form-urlencoded", "Accept": "application/json"};
 
-  /// Authenticate to this CARP web service using username and password.
+  /// Authenticate to this CARP service using a [username] and [password].
   ///
   /// Return the signed in user (with an [OAuthToken] access token), if successful.
   /// Throws a [CarpServiceException] if not successful.
@@ -96,7 +96,7 @@ class CarpService {
     assert(username != null);
     assert(password != null);
 
-    if (_app == null) throw new CarpServiceException(message: "CARP Service not initialized. Call 'CarpService.configure()' first.");
+    if (_app == null) throw CarpServiceException(message: "CARP Service not initialized. Call 'CarpService.configure()' first.");
 
     _currentUser = new CarpUser(username: username);
 
@@ -143,8 +143,11 @@ class CarpService {
     assert(username != null);
     assert(token != null);
 
-    _currentUser = new CarpUser(username: username);
-    return _currentUser..authenticated(token);
+    _currentUser = CarpUser(username: username)..authenticated(token);
+
+    // Refresh the token - it might have expired since it was saved.
+    OAuthToken refreshedToken = await refresh();
+    return _currentUser..authenticated(refreshedToken);
   }
 
   /// Get a new (refreshed) access token for the current user based on the previously granted refresh token.

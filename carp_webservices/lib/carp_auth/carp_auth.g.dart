@@ -32,3 +32,52 @@ Map<String, dynamic> _$OAuthTokenToJson(OAuthToken instance) {
   writeNotNull('expires_in', instance.expiresIn);
   return val;
 }
+
+CarpUser _$CarpUserFromJson(Map<String, dynamic> json) {
+  return CarpUser(
+    username: json['username'] as String,
+    id: json['id'] as int,
+    accountId: json['account_id'] as String,
+    password: json['password'] as String,
+    firstName: json['first_name'] as String,
+    lastName: json['last_name'] as String,
+    phone: json['phone'] as String,
+    email: json['email'] as String,
+    department: json['department'] as String,
+    organization: json['organization'] as String,
+  )
+    ..isActivated = json['is_activated'] as bool
+    ..termsAgreed = json['terms_agreed'] == null
+        ? null
+        : DateTime.parse(json['terms_agreed'] as String)
+    ..created = json['created'] == null
+        ? null
+        : DateTime.parse(json['created'] as String)
+    ..role = (json['role'] as List)?.map((e) => e as String)?.toList();
+}
+
+Map<String, dynamic> _$CarpUserToJson(CarpUser instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('username', instance.username);
+  writeNotNull('id', instance.id);
+  writeNotNull('account_id', instance.accountId);
+  writeNotNull('is_activated', instance.isActivated);
+  writeNotNull('password', instance.password);
+  writeNotNull('email', instance.email);
+  writeNotNull('first_name', instance.firstName);
+  writeNotNull('last_name', instance.lastName);
+  writeNotNull('phone', instance.phone);
+  writeNotNull('department', instance.department);
+  writeNotNull('organization', instance.organization);
+  writeNotNull('terms_agreed', instance.termsAgreed?.toIso8601String());
+  writeNotNull('created', instance.created?.toIso8601String());
+  writeNotNull('role', instance.role);
+  return val;
+}

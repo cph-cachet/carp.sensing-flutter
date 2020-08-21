@@ -1,3 +1,7 @@
+## 0.4.6
+* better support for authentication with stored tokens (Issue [#79](https://github.com/cph-cachet/carp.sensing-flutter/issues/79)).
+* `CarpUser` can be serialized to JSON.
+
 ## 0.4.5
 * separation of Study ID and Deployment ID when calling CARP endpoints
 * better error handling and messages

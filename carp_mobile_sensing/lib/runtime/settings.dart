@@ -28,7 +28,10 @@ class SettingsBLoC {
 
   String _userId;
 
-  /// Get a unique anonymous user id.
+  /// Get a user id that is;
+  ///  * unique
+  ///  * anonymous
+  ///  * persistent
   ///
   /// This id is generated the first time this method is called and then stored on the phone
   /// in-between sessions, and will therefore be the same for the same app on the same phone.
@@ -44,4 +47,5 @@ class SettingsBLoC {
   }
 }
 
+/// Misc. settings for CAMS.
 final settings = SettingsBLoC();
