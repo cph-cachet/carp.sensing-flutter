@@ -21,8 +21,8 @@ void main() {
         ..measures = SamplingSchema.common().getMeasureList(
           namespace: NameSpace.CARP,
           types: [
-            AppsSamplingPackage.APPS,
-            AppsSamplingPackage.APP_USAGE,
+//            AppsSamplingPackage.APPS,
+//            AppsSamplingPackage.APP_USAGE,
             DeviceSamplingPackage.SCREEN,
             DeviceSamplingPackage.BATTERY,
             DeviceSamplingPackage.DEVICE,
@@ -77,10 +77,10 @@ void main() {
 //      ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.ACTIVITY))..configuration['jakob'] = 'was here')
 //      ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.WEATHER))));
 
-    study.addTriggerTask(
-        ImmediateTrigger(),
-        AutomaticTask(name: 'Task collecting a list of all installed apps')
-          ..addMeasure(Measure(MeasureType(NameSpace.CARP, AppsSamplingPackage.APPS))));
+//    study.addTriggerTask(
+//        ImmediateTrigger(),
+//        AutomaticTask(name: 'Task collecting a list of all installed apps')
+//          ..addMeasure(Measure(MeasureType(NameSpace.CARP, AppsSamplingPackage.APPS))));
   });
 
   String _stringSnapshot;

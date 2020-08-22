@@ -1,3 +1,9 @@
+## 0.8.3+1
+* Added back the README which was deleted by accident
+
+## 0.8.3
+* Removed the Apps package and moved this to an external package
+
 ## 0.8.2
 * Converted from a plugin to a package by overhauling the project.
 

@@ -6,6 +6,7 @@
  */
 import 'package:flutter/material.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+//import 'package:carp_apps_package/apps.dart';
 
 void main() => runApp(new CARPMobileSensingApp());
 
@@ -127,13 +128,13 @@ class Sensing {
               namespace: NameSpace.CARP,
               types: [
                 SensorSamplingPackage.LIGHT,
-                AppsSamplingPackage.APP_USAGE,
+//                AppsSamplingPackage.APP_USAGE,
                 DeviceSamplingPackage.MEMORY,
               ],
             ))
-//      ..addTriggerTask(ImmediateTrigger(),
-//          AutomaticTask()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList())
         ;
+
+//    SamplingPackageRegistry.register(AppsSamplingPackage());
 
     console.log("Setting up '${study.name}'...");
 
