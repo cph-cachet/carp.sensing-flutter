@@ -60,10 +60,10 @@ void main() {
 //      ..addMeasure(Measure(MeasureType(NameSpace.CARP, DataType.ACTIVITY))..configuration['jakob'] = 'was here')
 //      ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.WEATHER))));
 
-    study.addTriggerTask(
-        ImmediateTrigger(),
-        AutomaticTask(name: 'Task collecting a list of all installed apps')
-          ..addMeasure(Measure(MeasureType(NameSpace.CARP, AppsSamplingPackage.APPS))));
+//    study.addTriggerTask(
+//        ImmediateTrigger(),
+//        AutomaticTask(name: 'Task collecting a list of all installed apps')
+//          ..addMeasure(Measure(MeasureType(NameSpace.CARP, AppsSamplingPackage.APPS))));
   });
 
   String _stringSnapshot;

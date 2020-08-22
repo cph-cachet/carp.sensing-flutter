@@ -12,4 +12,4 @@ export 'package:carp_mobile_sensing/transformer_schemas/privacy/privacy_schemas.
 // The built-in sampling packages
 export 'package:carp_mobile_sensing/sampling_packages/device/device.dart';
 export 'package:carp_mobile_sensing/sampling_packages/sensors/sensors.dart';
-export 'package:carp_mobile_sensing/sampling_packages/apps/apps.dart';
+//export 'package:carp_mobile_sensing/sampling_packages/apps/apps.dart';

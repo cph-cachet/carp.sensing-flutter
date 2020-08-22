@@ -1,5 +1,6 @@
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'dart:convert';
+//import 'package:carp_apps_package/apps.dart';
 
 void sensing() async {
   // create the study
@@ -14,10 +15,11 @@ void sensing() async {
         ImmediateTrigger(),
         AutomaticTask(name: 'One Common Sensing Task')
           ..measures = SamplingSchema.common().getMeasureList(types: [
-            AppsSamplingPackage.APP_USAGE,
+//            AppsSamplingPackage.APP_USAGE,
             SensorSamplingPackage.ACCELEROMETER,
             SensorSamplingPackage.GYROSCOPE
-          ]));
+          ]))
+  ;
 
   // setup and start the sampling runtime
   StudyController controller = StudyController(study);
