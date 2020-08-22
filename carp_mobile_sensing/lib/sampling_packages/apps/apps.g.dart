@@ -40,9 +40,7 @@ AppUsageDatum _$AppUsageDatumFromJson(Map<String, dynamic> json) {
     ..start =
         json['start'] == null ? null : DateTime.parse(json['start'] as String)
     ..end = json['end'] == null ? null : DateTime.parse(json['end'] as String)
-    ..usage = (json['usage'] as Map<String, dynamic>)?.map(
-      (k, e) => MapEntry(k, (e as num)?.toDouble()),
-    );
+    ..usage = json['usage'] as Map<String, dynamic>;
 }
 
 Map<String, dynamic> _$AppUsageDatumToJson(AppUsageDatum instance) {

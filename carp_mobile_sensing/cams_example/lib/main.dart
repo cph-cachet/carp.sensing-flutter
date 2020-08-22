@@ -115,22 +115,22 @@ class Sensing {
 
     // create the study
     study = Study("2", 'user@cachet.dk',
-        name: 'A default / common study',
-        dataEndPoint: FileDataEndPoint()
-          ..bufferSize = 500 * 1000
-          ..zip = true
-          ..encrypt = false)
-      ..addTriggerTask(
-          ImmediateTrigger(),
-          AutomaticTask()
-            ..measures = SamplingSchema.debug().getMeasureList(
-              namespace: NameSpace.CARP,
-              types: [
-                SensorSamplingPackage.LIGHT,
-                AppsSamplingPackage.APP_USAGE,
-                DeviceSamplingPackage.MEMORY,
-              ],
-            ))
+            name: 'A default / common study',
+            dataEndPoint: FileDataEndPoint()
+              ..bufferSize = 500 * 1000
+              ..zip = true
+              ..encrypt = false)
+          ..addTriggerTask(
+              ImmediateTrigger(),
+              AutomaticTask()
+                ..measures = SamplingSchema.debug().getMeasureList(
+                  namespace: NameSpace.CARP,
+                  types: [
+                    SensorSamplingPackage.LIGHT,
+                    AppsSamplingPackage.APP_USAGE,
+                    DeviceSamplingPackage.MEMORY,
+                  ],
+                ))
 //      ..addTriggerTask(ImmediateTrigger(),
 //          AutomaticTask()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList())
         ;
