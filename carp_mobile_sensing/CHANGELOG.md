@@ -1,3 +1,6 @@
+## 0.8.2
+* Converted from a plugin to a package by overhauling the project.
+
 ## 0.8.1
 * Support for Deployment ID in `Study`.
 * Upgrade to `screen_state` v. 1.x
