@@ -17,7 +17,7 @@ These are the available CARP Mobile Sensing Flutter components in this repositor
 | **Core** | **Basic components** |  |
 | [carp_mobile_sensing](./carp_mobile_sensing) | The main CARP Mobile Sensing Framework | [![pub package](https://img.shields.io/pub/v/carp_mobile_sensing.svg)](https://pub.dartlang.org/packages/carp_mobile_sensing) |
 | **Packages** | **Data sampling packages** |  |
-| [carp_apps_package](./carp_apps_package) | Connectivity sampling package (bluetooth, wifi, connectivity) | [![pub package]
+| [carp_apps_package](./carp_apps_package) | Connectivity sampling package (bluetooth, wifi, connectivity) | [![pub package](https://img.shields.io/pub/v/carp_apps_package.svg)](https://pub.dartlang.org/packages/carp_apps_package) |
 | [carp_connectivity_package](./carp_connectivity_package) | Connectivity sampling package (bluetooth, wifi, connectivity) | [![pub package](https://img.shields.io/pub/v/carp_connectivity_package.svg)](https://pub.dartlang.org/packages/carp_connectivity_package) |
 | [carp_communication_package](./carp_communication_package) | Communication sampling package (phone, sms) | [![pub package](https://img.shields.io/pub/v/carp_communication_package.svg)](https://pub.dartlang.org/packages/carp_communication_package) |
 | [carp_context_package](./carp_context_package) | Context sampling package (location, activity, weather) | [![pub package](https://img.shields.io/pub/v/carp_context_package.svg)](https://pub.dartlang.org/packages/carp_context_package) |
