@@ -51,7 +51,5 @@ class AppUsageDatum extends CARPDatum {
 
   Map<String, double> toJson() => _$AppUsageDatumToJson(this);
 
-  String toString() =>
-      super.toString() +
-      ', $start, end: $end, usage: $usage';
+  String toString() => super.toString() + ', $start, end: $end, usage: $usage';
 }

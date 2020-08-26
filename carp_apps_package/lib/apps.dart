@@ -10,6 +10,9 @@ import 'dart:io';
 import 'package:permission_handler/permission_handler.dart';
 
 part 'apps_datum.dart';
+
 part 'app_probes.dart';
+
 part 'apps_package.dart';
+
 part 'apps.g.dart';
