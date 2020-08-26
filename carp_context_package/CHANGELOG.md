@@ -1,3 +1,7 @@
+## 0.9.0+1
+* Corrected static analysis error caused by the new Activity Recognition API
+* Added example
+
 ## 0.8.6
 * Removed the latitude and longitude fields from `WeatherMeasure` since they were not used.
 

@@ -10,7 +10,9 @@ part of context;
 /// Holds activity information.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ActivityDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, ContextSamplingPackage.ACTIVITY);
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, ContextSamplingPackage.ACTIVITY);
+
   DataFormat get format => CARP_DATA_FORMAT;
 
   ActivityDatum() : super();
@@ -23,39 +25,13 @@ class ActivityDatum extends CARPDatum {
   factory ActivityDatum.fromActivity(Activity activity) {
     ActivityDatum activityDatum = ActivityDatum();
     activityDatum.confidence = activity.confidence;
-    if (Platform.isIOS) {
-      // map iOS activity types
-      switch (activity.type) {
-        case 'stationary':
-          activityDatum.type = 'STILL';
-          break;
-        case 'walking':
-          activityDatum.type = 'WALKING';
-          break;
-        case 'running':
-          activityDatum.type = 'RUNNING';
-          break;
-        case 'automotive':
-          activityDatum.type = 'IN_VEHICLE';
-          break;
-        case 'cycling':
-          activityDatum.type = 'ON_BICYCLE';
-          break;
-        case 'unknown':
-          activityDatum.type = 'UNKNOWN';
-          break;
-        default:
-          activityDatum.type = 'UNKNOWN';
-          break;
-      }
-    } else
-      // use the Android types directly
-      activityDatum.type = activity.type;
-
+    activityDatum.type = activity.type.toString().split(".").last;
     return activityDatum;
   }
 
-  factory ActivityDatum.fromJson(Map<String, dynamic> json) => _$ActivityDatumFromJson(json);
+  factory ActivityDatum.fromJson(Map<String, dynamic> json) =>
+      _$ActivityDatumFromJson(json);
+
   Map<String, dynamic> toJson() => _$ActivityDatumToJson(this);
 
   /// Confidence in activity recognition.
@@ -84,5 +60,6 @@ class ActivityDatum extends CARPDatum {
   /// * unknown => UNKNOWN
   String type;
 
-  String toString() => super.toString() + ', type: $type, confidence: $confidence';
+  String toString() =>
+      super.toString() + ', type: $type, confidence: $confidence';
 }

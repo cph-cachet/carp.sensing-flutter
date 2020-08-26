@@ -20,13 +20,13 @@ void main() {
             ..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
   });
   
-  test('Weather', () {
-    double lat = 55.0111;
-    double lon = 15.0569;
-    String key = '856822fd8e22db5e1ba48c0e7d69844a';
-    WeatherMeasure wm = ContextSamplingPackage().common.measures[ContextSamplingPackage.WEATHER];
-
-  });
+//  test('Weather', () {
+//    double lat = 55.0111;
+//    double lon = 15.0569;
+//    String key = '856822fd8e22db5e1ba48c0e7d69844a';
+//    WeatherMeasure wm = ContextSamplingPackage().common.measures[ContextSamplingPackage.WEATHER];
+//
+//  });
 
   test('Study -> JSON', () async {
     print(_encode(study));

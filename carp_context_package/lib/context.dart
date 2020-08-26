@@ -7,7 +7,6 @@ library context;
 
 import 'dart:async';
 import 'dart:math' as math;
-import 'dart:io' show Platform;
 import 'package:carp_background_location/carp_background_location.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
@@ -17,7 +16,6 @@ import 'package:openmhealth_schemas/openmhealth_schemas.dart' as omh;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:air_quality/air_quality.dart';
 import 'package:mobility_features/mobility_features.dart';
-import 'package:carp_background_location/carp_background_location.dart';
 
 part 'src/activity/activity_datum.dart';
 part 'src/activity/activity_probe.dart';
