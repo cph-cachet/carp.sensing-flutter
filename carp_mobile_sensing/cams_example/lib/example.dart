@@ -9,6 +9,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+//import 'package:carp_apps_package/apps.dart';
 
 /// This is the code for the very minimal example used in the README.md file.
 void example() async {
@@ -30,10 +31,10 @@ void example() async {
         ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
             frequency: const Duration(seconds: 20), duration: const Duration(milliseconds: 100))));
 
-  study.addTriggerTask(
-      PeriodicTrigger(period: const Duration(days: 1)), // trigger sampling once pr. day
-      AutomaticTask(name: 'Task collecting a list of all installed apps')
-        ..addMeasure(Measure(MeasureType(NameSpace.CARP, AppsSamplingPackage.APPS))));
+//  study.addTriggerTask(
+//      PeriodicTrigger(period: const Duration(days: 1)), // trigger sampling once pr. day
+//      AutomaticTask(name: 'Task collecting a list of all installed apps')
+//        ..addMeasure(Measure(MeasureType(NameSpace.CARP, AppsSamplingPackage.APPS))));
 
   // creating measure variable to be used later
   PeriodicMeasure lightMeasure = PeriodicMeasure(
@@ -129,18 +130,18 @@ void samplingSchemaExample() async {
         ..encrypt = false);
 
   // adding a set of specific measures from the `common` sampling schema to one overall task
-  study.addTriggerTask(
-      ImmediateTrigger(),
-      AutomaticTask()
-        ..measures = SamplingSchema.common().getMeasureList(
-          namespace: NameSpace.CARP,
-          types: [
-            SensorSamplingPackage.LIGHT,
-            AppsSamplingPackage.APPS,
-            AppsSamplingPackage.APP_USAGE,
-            DeviceSamplingPackage.MEMORY,
-          ],
-        ));
+//  study.addTriggerTask(
+//      ImmediateTrigger(),
+//      AutomaticTask()
+//        ..measures = SamplingSchema.common().getMeasureList(
+//          namespace: NameSpace.CARP,
+//          types: [
+//            SensorSamplingPackage.LIGHT,
+//            AppsSamplingPackage.APPS,
+//            AppsSamplingPackage.APP_USAGE,
+//            DeviceSamplingPackage.MEMORY,
+//          ],
+//        ));
 
   // adding a set of specific measures from the `common` sampling schema to one overall task
   study.addTriggerTask(
@@ -149,7 +150,7 @@ void samplingSchemaExample() async {
         ..measures = SamplingSchema.common().getMeasureList(
           namespace: NameSpace.CARP,
           types: [
-            AppsSamplingPackage.APP_USAGE,
+//            AppsSamplingPackage.APP_USAGE,
             SensorSamplingPackage.PEDOMETER,
             DeviceSamplingPackage.SCREEN,
           ],
@@ -161,10 +162,10 @@ void samplingSchemaExample() async {
         ..measures = SamplingSchema.common().getMeasureList(
           namespace: NameSpace.CARP,
           types: [
-            AppsSamplingPackage.APP_USAGE,
+//            AppsSamplingPackage.APP_USAGE,
             SensorSamplingPackage.ACCELEROMETER,
             SensorSamplingPackage.GYROSCOPE,
-            AppsSamplingPackage.APPS,
+//            AppsSamplingPackage.APPS,
           ],
         ));
 
@@ -180,7 +181,7 @@ void samplingSchemaExample() async {
           namespace: NameSpace.CARP,
           types: [
             SensorSamplingPackage.PEDOMETER,
-            AppsSamplingPackage.APP_USAGE,
+//            AppsSamplingPackage.APP_USAGE,
             SensorSamplingPackage.ACCELEROMETER,
           ],
         ));
@@ -192,7 +193,7 @@ void samplingSchemaExample() async {
           namespace: NameSpace.CARP,
           types: [
             DeviceSamplingPackage.SCREEN,
-            AppsSamplingPackage.APP_USAGE,
+//            AppsSamplingPackage.APP_USAGE,
           ],
         )
         ..addMeasure(PeriodicMeasure(

@@ -1,3 +1,6 @@
+## 0.8.5
+* Removed Apps properly this time. The folder still persisted until now.
+
 ## 0.8.3+1
 * Added back the README which was deleted by accident
 

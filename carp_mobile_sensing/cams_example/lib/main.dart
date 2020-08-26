@@ -6,6 +6,7 @@
  */
 import 'package:flutter/material.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+//import 'package:carp_apps_package/apps.dart';
 
 void main() => runApp(new CARPMobileSensingApp());
 
@@ -115,25 +116,25 @@ class Sensing {
 
     // create the study
     study = Study("2", 'user@cachet.dk',
-            name: 'A default / common study',
-            dataEndPoint: FileDataEndPoint()
-              ..bufferSize = 500 * 1000
-              ..zip = true
-              ..encrypt = false)
-          ..addTriggerTask(
-              ImmediateTrigger(),
-              AutomaticTask()
-                ..measures = SamplingSchema.debug().getMeasureList(
-                  namespace: NameSpace.CARP,
-                  types: [
-                    SensorSamplingPackage.LIGHT,
-                    AppsSamplingPackage.APP_USAGE,
-                    DeviceSamplingPackage.MEMORY,
-                  ],
-                ))
-//      ..addTriggerTask(ImmediateTrigger(),
-//          AutomaticTask()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList())
-        ;
+        name: 'A default / common study',
+        dataEndPoint: FileDataEndPoint()
+          ..bufferSize = 500 * 1000
+          ..zip = true
+          ..encrypt = false)
+      ..addTriggerTask(
+          ImmediateTrigger(),
+          AutomaticTask()
+            ..measures = SamplingSchema.debug().getMeasureList(
+              namespace: NameSpace.CARP,
+              types: [
+                SensorSamplingPackage.LIGHT,
+//                AppsSamplingPackage.APP_USAGE,
+                DeviceSamplingPackage.MEMORY,
+              ],
+            ))
+    ;
+
+//    SamplingPackageRegistry.register(AppsSamplingPackage());
 
     console.log("Setting up '${study.name}'...");
 
