@@ -1,3 +1,6 @@
+## 0.8.6
+* Updated to the new pedometer API
+
 ## 0.8.5
 * Removed Apps properly this time. The folder still persisted until now.
 

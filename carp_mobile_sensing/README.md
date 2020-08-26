@@ -180,7 +180,7 @@ Please read about existing issues and file new feature requests and bug reports 
 
 ## License
 
-This software is copyright (c) 2020 [Copenhagen Center for Health Technology (CACHET)](http://www.cachet.dk/) 
-at the [Technical University of Denmark (DTU)](http://www.dtu.dk).
+This software is copyright (c) 2020 [Copenhagen Center for Health Technology (CACHET)](https://www.cachet.dk/) 
+at the [Technical University of Denmark (DTU)](https://www.dtu.dk).
 This software is made available 'as-is' in a MIT [license](/LICENSE).
 
