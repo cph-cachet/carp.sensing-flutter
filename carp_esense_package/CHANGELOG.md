@@ -1,3 +1,7 @@
+## 0.1.7+2
+* Formatting
+* Added an example
+
 ## 0.1.7
 * upgrade to `carp_mobile_sensing` v. 0.7.x
 

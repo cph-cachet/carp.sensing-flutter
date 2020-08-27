@@ -19,12 +19,16 @@ class ESenseMeasure extends Measure {
   /// Default sampling rate is 10 Hz.
   int samplingRate = 10;
 
-  ESenseMeasure(MeasureType type, {name, enabled = true, this.deviceName, this.samplingRate = 10})
+  ESenseMeasure(MeasureType type,
+      {name, enabled = true, this.deviceName, this.samplingRate = 10})
       : super(type, name: name, enabled: enabled);
 
   static Function get fromJsonFunction => _$ESenseMeasureFromJson;
+
   factory ESenseMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory.fromJson(
+          json[Serializable.CLASS_IDENTIFIER].toString(), json);
+
   Map<String, dynamic> toJson() => _$ESenseMeasureToJson(this);
 
   String toString() => super.toString() + ', deviceName: $deviceName';
@@ -34,20 +38,26 @@ class ESenseMeasure extends Measure {
 abstract class ESenseDatum extends CARPDatum {
   /// The name of eSense device.
   String deviceName;
+
   ESenseDatum([this.deviceName]) : super();
 }
 
 /// Holds information about an eSense button pressed event.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ESenseButtonDatum extends ESenseDatum {
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, ESenseSamplingPackage.BUTTON);
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, ESenseSamplingPackage.BUTTON);
+
   DataFormat get format => CARP_DATA_FORMAT;
 
   ESenseButtonDatum({String deviceName, this.pressed}) : super(deviceName);
 
   factory ESenseButtonDatum.fromButtonEventChanged(ButtonEventChanged event) =>
       ESenseButtonDatum(deviceName: '', pressed: event.pressed);
-  factory ESenseButtonDatum.fromJson(Map<String, dynamic> json) => _$ESenseButtonDatumFromJson(json);
+
+  factory ESenseButtonDatum.fromJson(Map<String, dynamic> json) =>
+      _$ESenseButtonDatumFromJson(json);
+
   Map<String, dynamic> toJson() => _$ESenseButtonDatumToJson(this);
 
   /// true if the button is pressed, false if it is released
@@ -62,7 +72,9 @@ class ESenseButtonDatum extends ESenseDatum {
 /// eSense [SensorEvent](https://pub.dev/documentation/esense/latest/esense/SensorEvent-class.html) event.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ESenseSensorDatum extends ESenseDatum {
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, ESenseSamplingPackage.SENSOR);
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, ESenseSamplingPackage.SENSOR);
+
   DataFormat get format => CARP_DATA_FORMAT;
 
   /// Sequential number of sensor packet
@@ -76,19 +88,28 @@ class ESenseSensorDatum extends ESenseDatum {
   /// 3-elements array with X, Y and Z axis for gyroscope
   List<int> gyro;
 
-  ESenseSensorDatum({String deviceName, DateTime timestamp, this.packetIndex, this.accel, this.gyro})
+  ESenseSensorDatum(
+      {String deviceName,
+      DateTime timestamp,
+      this.packetIndex,
+      this.accel,
+      this.gyro})
       : super(deviceName) {
     this.timestamp ??= timestamp;
   }
 
-  factory ESenseSensorDatum.fromSensorEvent({String deviceName, SensorEvent event}) => ESenseSensorDatum(
-      deviceName: deviceName,
-      timestamp: event.timestamp,
-      packetIndex: event.packetIndex,
-      gyro: event.gyro,
-      accel: event.accel);
+  factory ESenseSensorDatum.fromSensorEvent(
+          {String deviceName, SensorEvent event}) =>
+      ESenseSensorDatum(
+          deviceName: deviceName,
+          timestamp: event.timestamp,
+          packetIndex: event.packetIndex,
+          gyro: event.gyro,
+          accel: event.accel);
 
-  factory ESenseSensorDatum.fromJson(Map<String, dynamic> json) => _$ESenseSensorDatumFromJson(json);
+  factory ESenseSensorDatum.fromJson(Map<String, dynamic> json) =>
+      _$ESenseSensorDatumFromJson(json);
+
   Map<String, dynamic> toJson() => _$ESenseSensorDatumToJson(this);
 
   String toString() =>

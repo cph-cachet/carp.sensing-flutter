@@ -14,11 +14,15 @@ class AirQualityMeasure extends Measure {
   /// API key for the OpenWeatherMap API.
   String apiKey;
 
-  AirQualityMeasure(MeasureType type, {name, enabled, this.apiKey}) : super(type, name: name, enabled: enabled);
+  AirQualityMeasure(MeasureType type, {name, enabled, this.apiKey})
+      : super(type, name: name, enabled: enabled);
 
   static Function get fromJsonFunction => _$AirQualityMeasureFromJson;
+
   factory AirQualityMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory.fromJson(
+          json[Serializable.CLASS_IDENTIFIER].toString(), json);
+
   Map<String, dynamic> toJson() => _$AirQualityMeasureToJson(this);
 
   String toString() => super.toString() + ', API key: $apiKey';

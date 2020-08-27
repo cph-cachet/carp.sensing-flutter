@@ -1,3 +1,15 @@
+## 0.9.0+3
+* Formatting
+
+## 0.9.0+2
+* Corrected static analysis errors caused by an old location plugin
+* Upgraded dependecies to their newest versions
+* In particular, MobilityFeatures was upgraded to the 2.x.x API
+
+## 0.9.0+1
+* Corrected static analysis error caused by the new Activity Recognition API
+* Added example
+
 ## 0.8.6
 * Removed the latitude and longitude fields from `WeatherMeasure` since they were not used.
 

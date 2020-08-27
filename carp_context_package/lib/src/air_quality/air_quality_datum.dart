@@ -10,7 +10,9 @@ part of context;
 /// A [Datum] that holds air quality information collected through the [World's Air Quality Index (WAQI)](https://waqi.info) API.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class AirQualityDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, ContextSamplingPackage.AIR_QUALITY);
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, ContextSamplingPackage.AIR_QUALITY);
+
   DataFormat get format => CARP_DATA_FORMAT;
 
   int airQualityIndex;
@@ -29,7 +31,9 @@ class AirQualityDatum extends CARPDatum {
         airQualityLevel = airQualityData.airQualityLevel,
         super();
 
-  factory AirQualityDatum.fromJson(Map<String, dynamic> json) => _$AirQualityDatumFromJson(json);
+  factory AirQualityDatum.fromJson(Map<String, dynamic> json) =>
+      _$AirQualityDatumFromJson(json);
+
   Map<String, dynamic> toJson() => _$AirQualityDatumToJson(this);
 
   String toString() =>

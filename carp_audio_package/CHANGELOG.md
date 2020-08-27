@@ -1,3 +1,7 @@
+## 0.8.1+2
+* Formatting was fixed
+* Example was added
+
 ## 0.8.1
 * fixed bug in noise probe
 

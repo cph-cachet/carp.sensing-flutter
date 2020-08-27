@@ -31,9 +31,11 @@ class ESenseSamplingPackage implements SamplingPackage {
     }
   }
 
-  void onRegister() => FromJsonFactory.registerFromJsonFunction("ESenseMeasure", ESenseMeasure.fromJsonFunction);
+  void onRegister() => FromJsonFactory.registerFromJsonFunction(
+      "ESenseMeasure", ESenseMeasure.fromJsonFunction);
 
-  List<Permission> get permissions => [Permission.location, Permission.microphone];
+  List<Permission> get permissions =>
+      [Permission.location, Permission.microphone];
 
   SamplingSchema get common => SamplingSchema()
     ..type = SamplingSchemaType.COMMON
@@ -43,11 +45,17 @@ class ESenseSamplingPackage implements SamplingPackage {
       MapEntry(
           BUTTON,
           ESenseMeasure(MeasureType(NameSpace.CARP, BUTTON),
-              name: 'eSense - Button', enabled: true, deviceName: '', samplingRate: 10)),
+              name: 'eSense - Button',
+              enabled: true,
+              deviceName: '',
+              samplingRate: 10)),
       MapEntry(
           SENSOR,
           ESenseMeasure(MeasureType(NameSpace.CARP, SENSOR),
-              name: 'eSense - Sensors', enabled: true, deviceName: '', samplingRate: 10)),
+              name: 'eSense - Sensors',
+              enabled: true,
+              deviceName: '',
+              samplingRate: 10)),
     ]);
 
   SamplingSchema get light => common
@@ -81,10 +89,15 @@ class ESenseSamplingPackage implements SamplingPackage {
       MapEntry(
           BUTTON,
           ESenseMeasure(MeasureType(NameSpace.CARP, BUTTON),
-              name: 'eSense - Button', enabled: true, deviceName: 'eSense-0332')),
+              name: 'eSense - Button',
+              enabled: true,
+              deviceName: 'eSense-0332')),
       MapEntry(
           SENSOR,
           ESenseMeasure(MeasureType(NameSpace.CARP, SENSOR),
-              name: 'eSense - Sensors', enabled: true, deviceName: 'eSense-0332', samplingRate: 5)),
+              name: 'eSense - Sensors',
+              enabled: true,
+              deviceName: 'eSense-0332',
+              samplingRate: 5)),
     ]);
 }

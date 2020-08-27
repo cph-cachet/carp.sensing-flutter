@@ -37,8 +37,10 @@ class AudioSamplingPackage implements SamplingPackage {
   }
 
   void onRegister() {
-    FromJsonFactory.registerFromJsonFunction("AudioMeasure", AudioMeasure.fromJsonFunction);
-    FromJsonFactory.registerFromJsonFunction("NoiseMeasure", NoiseMeasure.fromJsonFunction);
+    FromJsonFactory.registerFromJsonFunction(
+        "AudioMeasure", AudioMeasure.fromJsonFunction);
+    FromJsonFactory.registerFromJsonFunction(
+        "NoiseMeasure", NoiseMeasure.fromJsonFunction);
   }
 
   List<Permission> get permissions => [Permission.microphone];
@@ -48,7 +50,10 @@ class AudioSamplingPackage implements SamplingPackage {
     ..name = 'Common (default) context sampling schema'
     ..powerAware = true
     ..measures.addEntries([
-      MapEntry(AUDIO, AudioMeasure(MeasureType(NameSpace.CARP, AUDIO), name: 'Audio Recording', enabled: true)),
+      MapEntry(
+          AUDIO,
+          AudioMeasure(MeasureType(NameSpace.CARP, AUDIO),
+              name: 'Audio Recording', enabled: true)),
       MapEntry(
           NOISE,
           NoiseMeasure(
@@ -76,7 +81,8 @@ class AudioSamplingPackage implements SamplingPackage {
     ..type = SamplingSchemaType.DEBUG
     ..name = 'Debugging audio sampling schema'
     ..powerAware = false
-    ..measures[AUDIO] = AudioMeasure(MeasureType(NameSpace.CARP, AUDIO), name: 'Audio Recording', enabled: true)
+    ..measures[AUDIO] = AudioMeasure(MeasureType(NameSpace.CARP, AUDIO),
+        name: 'Audio Recording', enabled: true)
     ..measures[NOISE] = NoiseMeasure(
       MeasureType(NameSpace.CARP, NOISE),
       name: 'Ambient Noise',

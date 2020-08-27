@@ -6,7 +6,8 @@ part of context;
 /// for example using the [Trigger] model.
 class GeofenceProbe extends StreamProbe {
   Geofence fence;
-  StreamController<GeofenceDatum> geoFenceStreamController = StreamController<GeofenceDatum>.broadcast();
+  StreamController<GeofenceDatum> geoFenceStreamController =
+      StreamController<GeofenceDatum>.broadcast();
 
   Future<void> onInitialize(Measure measure) async {
     assert(measure is GeofenceMeasure);
@@ -79,7 +80,8 @@ class Geofence {
         case GeofenceState.ENTER:
         case GeofenceState.DWELL:
           // if we were already inside, check if dwelling takes place
-          if (dwell != null && DateTime.now().difference(lastEvent).inMilliseconds > dwell) {
+          if (dwell != null &&
+              DateTime.now().difference(lastEvent).inMilliseconds > dwell) {
             // we have been dwelling in this geofence
             state = GeofenceState.DWELL;
             lastEvent = DateTime.now();
@@ -100,5 +102,6 @@ class Geofence {
     return datum;
   }
 
-  String toString() => 'Geofence - center: $center, radius: $radius, dwell: $dwell, name: $name, state: $state';
+  String toString() =>
+      'Geofence - center: $center, radius: $radius, dwell: $dwell, name: $name, state: $state';
 }

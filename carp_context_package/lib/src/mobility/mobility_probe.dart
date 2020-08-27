@@ -1,43 +1,39 @@
 part of context;
 
 /// Collects local weather information using the [WeatherStation] API.
-class MobilityProbe extends DatumProbe {
-  MobilityFactory _mobilityFactory;
+class MobilityProbe extends StreamProbe {
+  /// Init the [MobilityFactory] singleton
+  MobilityFactory _mobilityFactory = MobilityFactory.instance;
 
   Future<void> onInitialize(Measure measure) async {
     super.onInitialize(measure);
-    MobilityMeasure mm = measure as MobilityMeasure;
-    _mobilityFactory = MobilityFactory.instance;
-    _mobilityFactory.stopRadius = (mm.stopRadius ?? 25);
-    _mobilityFactory.placeRadius = (mm.placeRadius ?? 50);
-    _mobilityFactory.stopDuration = (mm.stopDuration ?? Duration(minutes: 3));
-    _mobilityFactory.usePriorContexts = (mm.usePriorContexts ?? true);
+    MobilityMeasure m = measure as MobilityMeasure;
 
-    Stream<LocationSample> stream =
-        locationManager.dtoStream.map((e) =>
+    /// Extract parameters from the [MobilityMeasure]
+    _mobilityFactory.stopRadius = (m.stopRadius ?? 25);
+    _mobilityFactory.placeRadius = (m.placeRadius ?? 50);
+    _mobilityFactory.stopDuration = (m.stopDuration ?? Duration(minutes: 3));
+
+    /// Start the Location Data stream from the LocationManager
+    Stream<LocationSample> stream = locationManager.dtoStream.map((e) =>
         LocationSample(GeoLocation(e.latitude, e.longitude), DateTime.now()));
+
+    /// Feed the Location Data Stream to the [MobilityFactory] singleton
+    /// The [MobilityFactory] will in turn produce [MobilityContext]s
     _mobilityFactory.startListening(stream);
   }
 
-  /// Returns the [WeatherDatum] for this location.
-  Future<Datum> getDatum() async {
-    try {
-      MobilityContext context =
-          await _mobilityFactory.computeFeatures(date: DateTime.now());
+  /// Get the [MobilityContext] stream from the [MobilityFactory] singleton
+  @override
+  Stream<Datum> get stream =>
+      _mobilityFactory.contextStream.map(_convertToDatum);
 
-      if (context != null)
-        return MobilityDatum()
-          ..numberOfPlaces = context.numberOfPlaces
-          ..homeStay = context.homeStay
-          ..distanceTravelled = context.distanceTravelled
-          ..entropy = context.entropy
-          ..normalizedEntropy = context.normalizedEntropy
-          ..locationVariance = context.locationVariance
-          ..routineIndex = context.routineIndex;
-      else
-        return ErrorDatum('Mobility Feaures retuned null');
-    } catch (err) {
-      return ErrorDatum('MobilityProbe Exception: $err');
-    }
-  }
+  /// Converts a [MobilityContext] to a [MobilityDatum]
+  MobilityDatum _convertToDatum(MobilityContext context) => MobilityDatum()
+    ..numberOfPlaces = context.numberOfSignificantPlaces
+    ..homeStay = context.homeStay
+    ..distanceTravelled = context.distanceTravelled
+    ..entropy = context.entropy
+    ..normalizedEntropy = context.normalizedEntropy
+    ..locationVariance = context.locationVariance;
 }
