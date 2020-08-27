@@ -7,8 +7,8 @@ class WeatherProbe extends DatumProbe {
   Future<void> onInitialize(Measure measure) async {
     super.onInitialize(measure);
     WeatherMeasure wm = measure as WeatherMeasure;
-    assert(
-    wm.apiKey != null, 'In order to use the Weather API, and API key must be provided.');
+    assert(wm.apiKey != null,
+        'In order to use the Weather API, and API key must be provided.');
     _wf = WeatherFactory(wm.apiKey);
   }
 
@@ -16,7 +16,8 @@ class WeatherProbe extends DatumProbe {
   Future<Datum> getDatum() async {
     try {
       LocationDto location = await locationManager.getCurrentLocation();
-      Weather w = await _wf.currentWeatherByLocation(location.latitude, location.longitude);
+      Weather w = await _wf.currentWeatherByLocation(
+          location.latitude, location.longitude);
 
       if (w != null)
         return WeatherDatum()
@@ -42,7 +43,8 @@ class WeatherProbe extends DatumProbe {
           ..tempMin = w.tempMin.celsius
           ..tempMax = w.tempMax.celsius;
       else
-        return ErrorDatum('WeatherStation plugin retuned null: ${_wf.toString()}');
+        return ErrorDatum(
+            'WeatherStation plugin retuned null: ${_wf.toString()}');
     } catch (err) {
       return ErrorDatum('WeatherProbe Exception: $err');
     }

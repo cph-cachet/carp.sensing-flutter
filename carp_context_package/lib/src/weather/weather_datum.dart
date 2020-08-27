@@ -10,7 +10,9 @@ part of context;
 /// A [Datum] that holds weather information collected through OpenWeatherMap.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class WeatherDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, ContextSamplingPackage.WEATHER);
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, ContextSamplingPackage.WEATHER);
+
   DataFormat get format => CARP_DATA_FORMAT;
 
   String country, areaName, weatherMain, weatherDescription;
@@ -32,7 +34,9 @@ class WeatherDatum extends CARPDatum {
 
   WeatherDatum() : super();
 
-  factory WeatherDatum.fromJson(Map<String, dynamic> json) => _$WeatherDatumFromJson(json);
+  factory WeatherDatum.fromJson(Map<String, dynamic> json) =>
+      _$WeatherDatumFromJson(json);
+
   Map<String, dynamic> toJson() => _$WeatherDatumToJson(this);
 
   String toString() =>

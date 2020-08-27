@@ -30,7 +30,7 @@ void main() async {
             ContextSamplingPackage.ACTIVITY,
             ContextSamplingPackage.GEOFENCE,
           ],
-        ))
+        )
   );
 
   // Create a Study Controller that can manage this study, initialize it, and start it.

@@ -27,15 +27,12 @@ class LocationProbe extends DatumProbe {
 /// Note that in order for location tracking to work with this probe, the
 /// phone must be online on the internet, since Google APIs are used.
 class GeoLocationProbe extends StreamProbe {
-  LocationSettings locationSettings;
-
   Future<void> onInitialize(Measure measure) async {
     assert(measure is LocationMeasure);
     super.onInitialize(measure);
 
     locationManager.distanceFilter = (measure as LocationMeasure).distance;
-    locationManager.interval =
-        (measure as LocationMeasure).frequency.inSeconds;
+    locationManager.interval = (measure as LocationMeasure).frequency.inSeconds;
     locationManager.notificationTitle = 'CARP Location Probe';
     locationManager.notificationMsg = 'CARP is tracking your location';
 

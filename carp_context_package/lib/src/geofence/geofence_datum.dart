@@ -10,12 +10,16 @@ part of context;
 /// Holds information about a geofence event of entering, exiting, or dweling.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class GeofenceDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, ContextSamplingPackage.GEOFENCE);
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, ContextSamplingPackage.GEOFENCE);
+
   DataFormat get format => CARP_DATA_FORMAT;
 
   GeofenceDatum({this.type, this.name}) : super();
 
-  factory GeofenceDatum.fromJson(Map<String, dynamic> json) => _$GeofenceDatumFromJson(json);
+  factory GeofenceDatum.fromJson(Map<String, dynamic> json) =>
+      _$GeofenceDatumFromJson(json);
+
   Map<String, dynamic> toJson() => _$GeofenceDatumToJson(this);
 
   /// The name of this geofence.

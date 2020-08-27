@@ -41,22 +41,36 @@ class GeoPosition extends Serializable {
   /// calculate distance, bearing and more between latitude/longitude points.
   double distanceTo(GeoPosition destination) {
     assert(destination != null);
-    final sDLat = math.sin((degToRad(destination.latitude) - degToRad(latitude)) / 2);
-    final sDLng = math.sin((degToRad(destination.longitude) - degToRad(longitude)) / 2);
-    final a = sDLat * sDLat + sDLng * sDLng * math.cos(degToRad(latitude)) * math.cos(degToRad(destination.latitude));
+    final sDLat =
+        math.sin((degToRad(destination.latitude) - degToRad(latitude)) / 2);
+    final sDLng =
+        math.sin((degToRad(destination.longitude) - degToRad(longitude)) / 2);
+    final a = sDLat * sDLat +
+        sDLng *
+            sDLng *
+            math.cos(degToRad(latitude)) *
+            math.cos(degToRad(destination.latitude));
     final c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a));
 
     return earthRadius * c;
   }
 
   static Function get fromJsonFunction => _$GeoPositionFromJson;
+
   factory GeoPosition.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory.fromJson(
+          json[Serializable.CLASS_IDENTIFIER].toString(), json);
+
   Map<String, dynamic> toJson() => _$GeoPositionToJson(this);
 
   String toString() => 'GeoPosition (latitude:$latitude, longitude:$longitude)';
+
   int get hashCode => latitude.hashCode + longitude.hashCode;
-  bool operator ==(Object other) => other is GeoPosition && latitude == other.latitude && longitude == other.longitude;
+
+  bool operator ==(Object other) =>
+      other is GeoPosition &&
+      latitude == other.latitude &&
+      longitude == other.longitude;
 }
 
 /// Specify the configuration of a circular geofence measure, specifying the:
@@ -81,10 +95,15 @@ class GeofenceMeasure extends Measure {
   String name;
 
   /// Specify a geofence measure
-  GeofenceMeasure(MeasureType type, {enabled, this.center, this.radius, this.name}) : super(type, enabled: enabled);
+  GeofenceMeasure(MeasureType type,
+      {enabled, this.center, this.radius, this.name})
+      : super(type, enabled: enabled);
 
   static Function get fromJsonFunction => _$GeofenceMeasureFromJson;
+
   factory GeofenceMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory.fromJson(
+          json[Serializable.CLASS_IDENTIFIER].toString(), json);
+
   Map<String, dynamic> toJson() => _$GeofenceMeasureToJson(this);
 }
