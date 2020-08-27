@@ -27,8 +27,11 @@ class AudioMeasure extends Measure {
   }) : super(type, name: name, enabled: enabled);
 
   static Function get fromJsonFunction => _$AudioMeasureFromJson;
+
   factory AudioMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory.fromJson(
+          json[Serializable.CLASS_IDENTIFIER].toString(), json);
+
   Map<String, dynamic> toJson() => _$AudioMeasureToJson(this);
 
   String toString() => super.toString() + ', studyId: $studyId';
@@ -49,11 +52,18 @@ class NoiseMeasure extends PeriodicMeasure {
     Duration frequency,
     Duration duration,
     this.samplingRate = DEFAULT_SAMPLING_RATE,
-  }) : super(type, name: name, enabled: enabled, frequency: frequency, duration: duration);
+  }) : super(type,
+            name: name,
+            enabled: enabled,
+            frequency: frequency,
+            duration: duration);
 
   static Function get fromJsonFunction => _$NoiseMeasureFromJson;
+
   factory NoiseMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory.fromJson(
+          json[Serializable.CLASS_IDENTIFIER].toString(), json);
+
   Map<String, dynamic> toJson() => _$NoiseMeasureToJson(this);
 
   String toString() => super.toString() + ', samplingRate: $samplingRate';
