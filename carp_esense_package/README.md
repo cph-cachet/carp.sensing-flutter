@@ -4,13 +4,13 @@
 
 This library contains a sampling package for
 the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) framework
-to work with the [eSense](http://www.esense.io) earable computing platform.
+to work with the [eSense](https://www.esense.io) earable computing platform.
 This packages supports sampling of the following [`Measure`](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/domain/Measure-class.html) types(s)
 
 * `esense.button` : eSense button pressed / released events
 * `esense.sensor` : eSense sensor (accelerometer & gyroscope) events.
 
-See the user documentation on the [eSense device](http://www.esense.io/share/eSense-User-Documentation.pdf) for how to use the device. 
+See the user documentation on the [eSense device](https://www.esense.io/share/eSense-User-Documentation.pdf) for how to use the device. 
 See the [`esense_flutter`](https://pub.dev/packages/esense_flutter) Flutter plugin and its [API](https://pub.dev/documentation/esense_flutter/latest/) documentation to understand how sensor data is generated and their data formats. 
 
 See the `carp_mobile_sensing` [wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki) for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types)
