@@ -1,16 +1,15 @@
+## 0.8.8
+* Support for saving ("remembering") `RecurrentScheduledTrigger` across app shutdown.
+See [Issue #80](https://github.com/cph-cachet/carp.sensing-flutter/issues/80).
+
 ## 0.8.7
-* Support for monthly recurrences in `RecurrentScheduledTrigger`.
+* Support for monthly recurrences in `RecurrentScheduledTrigger`. 
+See [Issue #78](https://github.com/cph-cachet/carp.sensing-flutter/issues/78).
 
 ## 0.8.6
 * Updated to the new pedometer API
 
 ## 0.8.5
-* Removed Apps properly this time. The folder still persisted until now.
-
-## 0.8.3+1
-* Added back the README which was deleted by accident
-
-## 0.8.3
 * Removed the Apps package and moved this to an external package
 
 ## 0.8.2
