@@ -1,3 +1,6 @@
+## 0.8.7
+* Support for monthly recurrences in `RecurrentScheduledTrigger`.
+
 ## 0.8.6
 * Updated to the new pedometer API
 
