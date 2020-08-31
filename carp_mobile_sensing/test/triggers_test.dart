@@ -61,6 +61,18 @@ void main() {
       print('${t.firstOccurrence} - ${t.period}');
       expect(t.firstOccurrence.weekday, DateTime.tuesday);
       expect(t.period.inDays, 30);
+
+      // collect quarterly as above, but remember this trigger across app shutdown
+      t = RecurrentScheduledTrigger(
+        triggerId: '1234wef',
+        type: RecurrentType.monthly,
+        dayOfMonth: 11,
+        separationCount: 2,
+        time: Time(hour: 21, minute: 30),
+        remember: true,
+      );
+      print('${t.firstOccurrence} - ${t.period}');
+      expect(t.period.inDays, 3 * 30);
     });
 
     test(' - RecurrentScheduledTrigger - assert failures', () {

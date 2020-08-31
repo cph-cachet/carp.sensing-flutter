@@ -190,6 +190,24 @@ class Time extends Serializable {
 ///  RecurrentScheduledTrigger(type: RecurrentType.monthly, dayOfMonth: 11, separationCount: 2, time: Time(hour: 21, minute: 30));
 /// ```
 ///
+/// Recurrent scheduled triggers can be saved across app shutdown by setting [remember] to true.
+/// For example;
+///
+/// ```
+///       RecurrentScheduledTrigger(
+///         triggerId: '1234wef',
+///         type: RecurrentType.monthly,
+///         dayOfMonth: 11,
+///         separationCount: 2,
+///         time: Time(hour: 21, minute: 30),
+///         remember: true,
+///       );
+/// ```
+///
+/// would create the quarterly schedule above. But if the app shuts down before this schedule, and
+/// restarted after, the trigger would still trigger (immediately).
+/// Note that the [triggerId] must be specified when remembering triggers (it is used as the key).
+///
 /// Thanks to Shantanu Kher for inspiration in his blog post on
 /// [Again and Again! Managing Recurring Events In a Data Model](https://www.vertabelo.com/blog/technical-articles/again-and-again-managing-recurring-events-in-a-data-model).
 /// We are, however, not using yearly recurrence.
@@ -249,6 +267,18 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
 //  /// Follows the [DateTime] standards, i.e. possible values are 1..12 counting from the start of a year.
 //  int monthOfYear;
 
+  /// Should this recurrent scheduled trigger be remembered across app restart?
+  ///
+  /// This is useful for long schedules (e.g. daily, weekly, or monthly).
+  /// If, for example, a monthly trigger is specified, the app can be closed
+  /// at the time of the triggering. If not remembered, then the next trigger
+  /// would not happen until next month.
+  ///
+  /// It is important to specify a unique [triggerId] since this is used as key.
+  ///
+  /// See [Issue #80](https://github.com/cph-cachet/carp.sensing-flutter/issues/80).
+  bool remember = false;
+
   /// Creates a [RecurrentScheduledTrigger].
   RecurrentScheduledTrigger(
       {String triggerId,
@@ -261,10 +291,11 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
       this.weekOfMonth,
       this.dayOfMonth,
       //this.monthOfYear,
+      this.remember = false,
       Duration duration = const Duration(seconds: 1)})
       : assert(duration != null, 'duration must be specified.'),
         assert(time != null, 'time must be specified.'),
-        assert(separationCount >= 0, 'Separation count myst be zero or positive.'),
+        assert(separationCount >= 0, 'Separation count must be zero or positive.'),
         super(triggerId: triggerId, period: const Duration(seconds: 1), duration: duration) {
     if (type == RecurrentType.weekly) {
       assert(dayOfWeek != null, 'dayOfWeek must be specified in a weekly recurrence.');
@@ -272,6 +303,9 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
       assert(weekOfMonth != null || dayOfMonth != null, 'Specify monthly recurrence using either dayOfMonth or weekOfMonth');
       assert(dayOfMonth == null || (dayOfMonth >= 1 && dayOfMonth <= 31), 'dayOfMonth must be in the range [1-31]');
       assert(weekOfMonth == null || (weekOfMonth >= 1 && weekOfMonth <= 4), 'weekOfMonth must be in the range [1-4]');
+    }
+    if (remember) {
+      assert(triggerId != null, 'A unique trigger ID should be specified when remembering scheduled triggers.');
     }
   }
 

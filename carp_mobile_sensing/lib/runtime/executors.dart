@@ -245,12 +245,45 @@ class ScheduledTriggerExecutor extends TriggerExecutor {
 
 /// Executes a [RecurrentScheduledTrigger].
 class RecurrentScheduledTriggerExecutor extends PeriodicTriggerExecutor {
-  RecurrentScheduledTriggerExecutor(RecurrentScheduledTrigger trigger) : super(trigger);
+  RecurrentScheduledTrigger _myTrigger;
+
+  RecurrentScheduledTriggerExecutor(RecurrentScheduledTrigger trigger) : super(trigger) {
+    _myTrigger = trigger;
+  }
 
   Future<void> onResume() async {
-    Duration _delay = (trigger as RecurrentScheduledTrigger).firstOccurrence.difference(DateTime.now());
-    DateTime _end = (trigger as RecurrentScheduledTrigger).end;
-    if (_end == null || _end.isAfter(DateTime.now())) Timer(_delay, () => super.onResume());
+    // check if there is a remembered trigger date
+    if (_myTrigger.remember) {
+      String _savedFirstOccurrence = settings.preferences.get(_myTrigger.triggerId);
+      debug('savedFirstOccurrence : $_savedFirstOccurrence');
+
+      if (_savedFirstOccurrence != null) {
+        DateTime savedDate = DateTime.tryParse(_savedFirstOccurrence);
+        if (savedDate.isBefore(DateTime.now())) {
+          // if there is a saved timestamp in the past, then resume this trigger once.
+          executors.forEach((executor) => executor.resume());
+          // create a timer that pause the sampling after the specified duration.
+          Timer(duration, () {
+            executors.forEach((executor) => executor.pause());
+          });
+        }
+      }
+
+      // save the day of the first occurrence for later use
+      settings.preferences.setString(_myTrigger.triggerId, _myTrigger.firstOccurrence.toUtc().toString());
+    }
+
+    // below is "normal" (i.e., non-remember) behavior
+    Duration _delay = _myTrigger.firstOccurrence.difference(DateTime.now());
+    if (_myTrigger.end == null || _myTrigger.end.isAfter(DateTime.now()))
+      Timer(_delay, () {
+        if (_myTrigger.remember) {
+          // replace the entry of the first occurrence to the next occurrence date
+          DateTime nextOccurrence = DateTime.now().add(period);
+          settings.preferences.setString(_myTrigger.triggerId, nextOccurrence.toUtc().toString());
+        }
+        super.onResume();
+      });
   }
 }
 
