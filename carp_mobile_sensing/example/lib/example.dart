@@ -105,12 +105,9 @@ void samplingSchemaExample() async {
   // creating a sampling schema focused on activity and outdoor context (weather)
   SamplingSchema activitySchema = SamplingSchema(name: 'Connectivity Sampling Schema', powerAware: true)
     ..measures.addEntries([
-      MapEntry(
-          SensorSamplingPackage.PEDOMETER,
-          PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.PEDOMETER),
-              enabled: true, frequency: const Duration(minutes: 1))),
-      MapEntry(DeviceSamplingPackage.SCREEN,
-          Measure(MeasureType(NameSpace.CARP, DeviceSamplingPackage.SCREEN), enabled: true)),
+      MapEntry(SensorSamplingPackage.PEDOMETER,
+          PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.PEDOMETER), enabled: true, frequency: const Duration(minutes: 1))),
+      MapEntry(DeviceSamplingPackage.SCREEN, Measure(MeasureType(NameSpace.CARP, DeviceSamplingPackage.SCREEN), enabled: true)),
     ]);
 
   //creating a study
@@ -118,8 +115,7 @@ void samplingSchemaExample() async {
   Study study_1 = Study("2", 'user@cachet.dk')
     ..name = 'CARP Mobile Sensing - default configuration'
     ..dataEndPoint = DataEndPoint(DataEndPointTypes.PRINT)
-    ..addTriggerTask(ImmediateTrigger(),
-        AutomaticTask()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
+    ..addTriggerTask(ImmediateTrigger(), AutomaticTask()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
 
   Study study = Study("2", 'user@cachet.dk',
       name: 'A outdoor activity study',
@@ -170,8 +166,7 @@ void samplingSchemaExample() async {
         ));
 
   // adding all measure from the activity schema to one overall 'sensing' task
-  study.addTriggerTask(
-      ImmediateTrigger(), AutomaticTask(name: 'Sensing Task')..measures = activitySchema.measures.values);
+  study.addTriggerTask(ImmediateTrigger(), AutomaticTask(name: 'Sensing Task')..measures = activitySchema.measures.values);
 
   // adding the measures to two separate tasks, while also adding a new light measure to the 2nd task
   study.addTriggerTask(
@@ -230,8 +225,7 @@ void example_2() {
         ..bufferSize = 500 * 1000
         ..zip = true
         ..encrypt = false)
-    ..addTriggerTask(ImmediateTrigger(),
-        AutomaticTask()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
+    ..addTriggerTask(ImmediateTrigger(), AutomaticTask()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
 
   // adding a set of specific measures from the `common` sampling schema to one no-name task
   study.addTriggerTask(
@@ -243,9 +237,7 @@ void example_2() {
         ));
 
   StudyController controller = StudyController(study,
-      samplingSchema: SamplingSchema.common()
-        ..addSamplingSchema(PhoneSamplingSchema.phone())
-        ..addSamplingSchema(PhoneSamplingSchema.phone()));
+      samplingSchema: SamplingSchema.common()..addSamplingSchema(PhoneSamplingSchema.phone())..addSamplingSchema(PhoneSamplingSchema.phone()));
 }
 
 /// This is an example of how to set up a study controller.
@@ -259,6 +251,26 @@ void example_3() {
 //      transformer:
 //  );
 //
+}
+
+void recurrentScheduledTriggerExample() {
+  // collect every day at 13:30
+  RecurrentScheduledTrigger(type: RecurrentType.daily, time: Time(hour: 13, minute: 30));
+
+  // collect every other day at 13:30
+  RecurrentScheduledTrigger(type: RecurrentType.daily, separationCount: 1, time: Time(hour: 13, minute: 30));
+
+  // collect every wednesday at 12:23
+  RecurrentScheduledTrigger(type: RecurrentType.weekly, dayOfWeek: DateTime.wednesday, time: Time(hour: 12, minute: 23));
+
+  // collect every 2nd monday at 12:23
+  RecurrentScheduledTrigger(type: RecurrentType.weekly, dayOfWeek: DateTime.monday, separationCount: 1, time: Time(hour: 12, minute: 23));
+
+  // collect monthly in the second week on a monday at 14:30
+  RecurrentScheduledTrigger(type: RecurrentType.monthly, weekOfMonth: 2, dayOfWeek: DateTime.monday, time: Time(hour: 14, minute: 30));
+
+  // collect quarterly on the 11th day of the first month in each quarter at 21:30
+  RecurrentScheduledTrigger(type: RecurrentType.monthly, dayOfMonth: 11, separationCount: 2, time: Time(hour: 21, minute: 30));
 }
 
 /// An example of how to restart probes or an entire sampling study.

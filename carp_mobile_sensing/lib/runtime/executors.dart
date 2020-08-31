@@ -229,6 +229,7 @@ class ScheduledTriggerExecutor extends TriggerExecutor {
       super.onResume();
       if (duration != null) {
         // create a timer that stop the sampling after the specified duration.
+        // if the duration is null, the sampling never stops, i.e. runs forever.
         Timer(duration, () {
           this.stop();
         });
@@ -243,18 +244,13 @@ class ScheduledTriggerExecutor extends TriggerExecutor {
 }
 
 /// Executes a [RecurrentScheduledTrigger].
-///
-/// TODO - implement the RecurrentScheduledTriggerExecutor
 class RecurrentScheduledTriggerExecutor extends PeriodicTriggerExecutor {
-  Duration delay; // the delay before starting the PeriodicTriggerExecutor
-
-  RecurrentScheduledTriggerExecutor(RecurrentScheduledTrigger trigger) : super(trigger) {
-    delay = trigger.firstOccurrence.difference(DateTime.now());
-  }
+  RecurrentScheduledTriggerExecutor(RecurrentScheduledTrigger trigger) : super(trigger);
 
   Future<void> onResume() async {
+    Duration _delay = (trigger as RecurrentScheduledTrigger).firstOccurrence.difference(DateTime.now());
     DateTime _end = (trigger as RecurrentScheduledTrigger).end;
-    if (_end == null || _end.isAfter(DateTime.now())) Timer(delay, () => super.onResume());
+    if (_end == null || _end.isAfter(DateTime.now())) Timer(_delay, () => super.onResume());
   }
 }
 

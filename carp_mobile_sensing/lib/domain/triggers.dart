@@ -28,8 +28,7 @@ class Trigger extends Serializable {
   Trigger({this.triggerId}) : super();
 
   static Function get fromJsonFunction => _$TriggerFromJson;
-  factory Trigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory Trigger.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$TriggerToJson(this);
 }
 
@@ -39,8 +38,7 @@ class ImmediateTrigger extends Trigger {
   ImmediateTrigger([String triggerId]) : super(triggerId: triggerId);
 
   static Function get fromJsonFunction => _$ImmediateTriggerFromJson;
-  factory ImmediateTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory ImmediateTrigger.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$ImmediateTriggerToJson(this);
 }
 
@@ -69,8 +67,7 @@ class ManualTrigger extends Trigger {
   void pause() => executor?.pause();
 
   static Function get fromJsonFunction => _$ManualTriggerFromJson;
-  factory ManualTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory ManualTrigger.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$ManualTriggerToJson(this);
 }
 
@@ -86,8 +83,7 @@ class DelayedTrigger extends Trigger {
   DelayedTrigger({String triggerId, this.delay = const Duration(seconds: 1)}) : super(triggerId: triggerId);
 
   static Function get fromJsonFunction => _$DelayedTriggerFromJson;
-  factory DelayedTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory DelayedTrigger.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$DelayedTriggerToJson(this);
 }
 
@@ -112,8 +108,7 @@ class PeriodicTrigger extends Trigger {
   }) : super(triggerId: triggerId);
 
   static Function get fromJsonFunction => _$PeriodicTriggerFromJson;
-  factory PeriodicTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory PeriodicTrigger.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$PeriodicTriggerToJson(this);
 }
 
@@ -134,8 +129,7 @@ class ScheduledTrigger extends Trigger {
   }) : super(triggerId: triggerId);
 
   static Function get fromJsonFunction => _$ScheduledTriggerFromJson;
-  factory ScheduledTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory ScheduledTrigger.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$ScheduledTriggerToJson(this);
 }
 
@@ -143,14 +137,9 @@ class ScheduledTrigger extends Trigger {
 enum RecurrentType {
   daily,
   weekly,
+  monthly,
+  //yearly,
 }
-
-//enum RecurrentType {
-//  daily,
-//  weekly,
-//  monthly,
-//  yearly,
-//}
 
 /// A time on a day. Used in a [RecurrentScheduledTrigger].
 ///
@@ -165,8 +154,7 @@ class Time extends Serializable {
   Time({this.hour = 0, this.minute = 0, this.second = 0});
 
   static Function get fromJsonFunction => _$TimeFromJson;
-  factory Time.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory Time.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$TimeToJson(this);
 
   static String _twoDigits(int n) => (n >= 10) ? '$n' : '0$n';
@@ -176,59 +164,54 @@ class Time extends Serializable {
 /// A trigger that resume/pause sampling based on a recurrent scheduled date and time.
 /// Stops / pause after the specified [duration].
 ///
-/// Supports daily and weekly recurrences. Monthly and yearly recurrence is not supported, since
+/// Supports daily, weekly and monthly recurrences.
+/// Yearly recurrence is not supported, since
 /// data sampling is not intended to run on such long time scales.
 ///
 /// Here are a couple of examples:
 ///
 /// ```
-/// // collect every day at 13:30
-/// RecurrentScheduledTrigger(type: RecurrentType.daily, time: Time(hour: 13, minute: 30));
+///  // collect every day at 13:30
+///  RecurrentScheduledTrigger(type: RecurrentType.daily, time: Time(hour: 13, minute: 30));
 ///
-/// // collect every other day at 13:30
-/// RecurrentScheduledTrigger(type: RecurrentType.daily, time: Time(hour: 13, minute: 30), separationCount: 1);
+///  // collect every other day at 13:30
+///  RecurrentScheduledTrigger(type: RecurrentType.daily, separationCount: 1, time: Time(hour: 13, minute: 30));
 ///
-/// // collect every wednesday at 12:23
-/// RecurrentScheduledTrigger(type: RecurrentType.weekly, time: Time(hour: 12, minute: 23), dayOfWeek: DateTime.wednesday);
+///  // collect every wednesday at 12:23
+///  RecurrentScheduledTrigger(type: RecurrentType.weekly, dayOfWeek: DateTime.wednesday, time: Time(hour: 12, minute: 23));
 ///
-/// // collect every 2nd monday at 12:23
-///  RecurrentScheduledTrigger(type: RecurrentType.weekly, time: Time(hour: 12, minute: 23), dayOfWeek: DateTime.monday, separationCount: 1);
+///  // collect every 2nd monday at 12:23
+///  RecurrentScheduledTrigger(type: RecurrentType.weekly, dayOfWeek: DateTime.monday, separationCount: 1, time: Time(hour: 12, minute: 23));
+///
+///  // collect monthly in the second week on a monday at 14:30
+///  RecurrentScheduledTrigger(type: RecurrentType.monthly, weekOfMonth: 2, dayOfWeek: DateTime.monday, time: Time(hour: 14, minute: 30));
+///
+///  // collect quarterly on the 11th day of the first month in each quarter at 21:30
+///  RecurrentScheduledTrigger(type: RecurrentType.monthly, dayOfMonth: 11, separationCount: 2, time: Time(hour: 21, minute: 30));
 /// ```
 ///
 /// Thanks to Shantanu Kher for inspiration in his blog post on
 /// [Again and Again! Managing Recurring Events In a Data Model](https://www.vertabelo.com/blog/technical-articles/again-and-again-managing-recurring-events-in-a-data-model).
-/// We are, however, only using daily and weekly recurrence.
+/// We are, however, not using yearly recurrence.
+/// Moreover, monthly recurrences make little sense in mobile sensing, even though it is supported.
 ///
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class RecurrentScheduledTrigger extends PeriodicTrigger {
   static const int daysPerWeek = 7;
+  static const int daysPerMonth = 30;
 
-  /// The type of recurrence - daily or weekly.
+  /// The type of recurrence - daily, weekly or monthly.
   RecurrentType type;
 
   /// The time of day of this trigger.
   Time time;
 
-//  /// Start time and date.
-//  ///
-//  /// This date-time object specifies two thing;
-//  ///
-//  ///    * the date of when to start the first instance of the recurrent sampling
-//  ///    * the time of the day for each sampling
-//  ///
-//  /// Hence, if [start] is `2019-08-28T06:12:12.815581Z` then the first sampling in e.g. a daily
-//  /// trigger will be on the day of 2019-08-28 and then data will be sampled at 06:12:12 o'clock
-//  /// every day.
-//  ///
-//  /// [duration] specify the duration of the sampling window.
-//  DateTime start;
-
-  /// End time and date. If [null], this trigger keeps resuming sampling forever.
+  /// End time and date. If [null], this trigger keeps sampling forever.
   DateTime end;
 
   /// Separation between recurrences.
   ///
-  /// This value signifies the interval (in days, weeks) before the next
+  /// This value signifies the interval (in days, weeks or months) before the next
   /// event instance is allowed. For example, if an event needs to be configured
   /// for every other week, then [separationCount] is `1`.
   /// The default value is `0`.
@@ -246,24 +229,27 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
   /// i.e. having Monday as the first day of the week and Sunday as the last.
   int dayOfWeek;
 
-//  /// If monthly recurrence, specify the week in the month.
-//  ///
-//  /// [weekOfMonth] is used for samplings that are scheduled for a certain week of the month – i.e.
-//  /// the first, second, etc. Possible values are 1,2,3,4, counting from the beginning of the month.
-//  int weekOfMonth;
-//
-//  /// If monthly recurrence, specify the day of the month.
-//  ///
-//  /// Used in cases when an event is scheduled on a particular day of the month, say the 25th.
-//  /// Possible numbers are 1..31 counting from the start of a month.
-//  int dayOfMonth;
-//
+  /// If monthly recurrence, specify the week in the month.
+  ///
+  /// [weekOfMonth] is used for samplings that are scheduled for a certain week of the month – i.e.
+  /// the first, second, etc.
+  /// Possible values are 1,2,3,4. The first week is the week of the first Monday of a month.
+  /// For example, the first week of September 2020 is the week starting on Monday 2020-09-07.
+  int weekOfMonth;
+
+  /// If monthly recurrence, specify the day of the month.
+  ///
+  /// Used in cases when an event is scheduled on a particular day of the month, say the 25th.
+  /// Possible numbers are 1..31 counting from the start of a month.
+  int dayOfMonth;
+
 //  /// If yearly recurrence, specify the month of the year.
 //  ///
 //  /// In combination with [dayOfWeek] and [weekOfMonth],  this value specify the month of year.
 //  /// Follows the [DateTime] standards, i.e. possible values are 1..12 counting from the start of a year.
 //  int monthOfYear;
 
+  /// Creates a [RecurrentScheduledTrigger].
   RecurrentScheduledTrigger(
       {String triggerId,
       @required this.type,
@@ -272,31 +258,64 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
       this.separationCount = 0,
       this.maxNumberOfSampling,
       this.dayOfWeek,
-      //this.weekOfMonth,
-      //this.dayOfMonth,
+      this.weekOfMonth,
+      this.dayOfMonth,
+      //this.monthOfYear,
       Duration duration = const Duration(seconds: 1)})
-      : assert(duration != null),
-        super(triggerId: triggerId, period: const Duration(seconds: 1), duration: duration);
+      : assert(duration != null, 'duration must be specified.'),
+        assert(time != null, 'time must be specified.'),
+        assert(separationCount >= 0, 'Separation count myst be zero or positive.'),
+        super(triggerId: triggerId, period: const Duration(seconds: 1), duration: duration) {
+    if (type == RecurrentType.weekly) {
+      assert(dayOfWeek != null, 'dayOfWeek must be specified in a weekly recurrence.');
+    } else if (type == RecurrentType.monthly) {
+      assert(weekOfMonth != null || dayOfMonth != null, 'Specify monthly recurrence using either dayOfMonth or weekOfMonth');
+      assert(dayOfMonth == null || (dayOfMonth >= 1 && dayOfMonth <= 31), 'dayOfMonth must be in the range [1-31]');
+      assert(weekOfMonth == null || (weekOfMonth >= 1 && weekOfMonth <= 4), 'weekOfMonth must be in the range [1-4]');
+    }
+  }
 
+  /// The next day in a monthly occurrence from the given [fromDate].
+  DateTime nextMonthlyDay(DateTime fromDate) => fromDate.subtract(Duration(days: fromDate.weekday - 1)).add(Duration(days: 7 * weekOfMonth + dayOfWeek - 1));
+
+  /// The date and time of the first occurrence of this trigger.
   DateTime get firstOccurrence {
-    DateTime _firstOccurrence;
-    DateTime _firstDay;
+    DateTime firstDay;
     DateTime now = DateTime.now();
     DateTime start = DateTime(now.year, now.month, now.day, time.hour, time.minute, time.second);
 
     switch (type) {
       case RecurrentType.daily:
-        _firstDay = (start.isAfter(now)) ? now : DateTime.now().add(Duration(hours: 24));
+        firstDay = (start.isAfter(now)) ? now : DateTime.now().add(Duration(hours: 24));
         break;
       case RecurrentType.weekly:
         int days = dayOfWeek - now.weekday;
-        days = (days < 0) ? days + daysPerWeek : days;
-        _firstDay = DateTime.now().add(Duration(days: days));
+        days = (days < 0) ? days + now.month : days;
+        firstDay = DateTime.now().add(Duration(days: days));
+        break;
+      case RecurrentType.monthly:
+        if (dayOfMonth != null) {
+          // we a trigger on the following type: collect quarterly on the 11th day of the first month in each quarter at 21:30
+          //   RecurrentScheduledTrigger(type: RecurrentType.monthly, dayOfMonth: 11, separationCount: 2, time: Time(hour: 21, minute: 30));
+          int days = dayOfMonth - now.day;
+          int month = (days > 0) ? now.month + separationCount : now.month + separationCount - 1;
+          int year = now.year;
+          if (month > 12) {
+            year = now.year + 1;
+            month = month - DateTime.monthsPerYear;
+          }
+          firstDay = DateTime(year, month, dayOfMonth);
+        } else {
+          // we have a trigger of the following type: collect monthly in the second week on a monday at 14:30
+          //   RecurrentScheduledTrigger(type: RecurrentType.monthly, weekOfMonth: 2, dayOfWeek: DateTime.monday, time: Time(hour: 14, minute: 30));
+          firstDay = nextMonthlyDay(DateTime(now.year, now.month, 1));
+          // check if this day is in the past - if so, move one month forward
+          if (firstDay.isBefore(now)) firstDay = nextMonthlyDay(DateTime(now.year, now.month + 1, 1));
+        }
         break;
     }
 
-    _firstOccurrence = DateTime(_firstDay.year, _firstDay.month, _firstDay.day, time.hour, time.minute, time.second);
-    return _firstOccurrence;
+    return DateTime(firstDay.year, firstDay.month, firstDay.day, time.hour, time.minute, time.second);
   }
 
   /// The period between the recurring samplings.
@@ -306,14 +325,18 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
         return Duration(days: separationCount + 1);
       case RecurrentType.weekly:
         return Duration(days: (separationCount + 1) * daysPerWeek);
+      case RecurrentType.monthly:
+        // @TODO - this is not a correct model...
+        // the period in monthly recurring triggers is not fixed, but depends on the specific month(s)
+        // but the current implementation of the [RecurrentScheduledTriggerExecutor] expects a fixed period
+        return Duration(days: (separationCount + 1) * daysPerMonth);
       default:
         return null;
     }
   }
 
   static Function get fromJsonFunction => _$RecurrentScheduledTriggerFromJson;
-  factory RecurrentScheduledTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory RecurrentScheduledTrigger.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$RecurrentScheduledTriggerToJson(this);
 
   String toString() =>
@@ -352,8 +375,7 @@ class SamplingEventTrigger extends Trigger {
   Datum pauseCondition;
 
   static Function get fromJsonFunction => _$SamplingEventTriggerFromJson;
-  factory SamplingEventTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory SamplingEventTrigger.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$SamplingEventTriggerToJson(this);
 }
 

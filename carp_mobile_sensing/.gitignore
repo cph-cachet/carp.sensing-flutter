@@ -1,17 +1,30 @@
 #Mac
 .DS_Store
 
-# Dart
+# Flutter/Dart/Pub related
+**/doc/api/
 .dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
 .packages
+.pub-cache/
 .pub/
+build/
 pubspec.lock
-doc/
+example/.flutter-plugins
+example/.flutter-plugins-dependencies
+example/.packages
+example/.pub-cache/
+example/.pub/
+example/build/
+example/pubspec.lock
 
 
-# IntelliJ
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
 .idea/
-out/
 
 # File-based project format
 *.iws
