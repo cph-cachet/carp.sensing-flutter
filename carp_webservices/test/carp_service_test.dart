@@ -111,7 +111,7 @@ void main() {
 
       print("create  : $new_user");
       print("   name : ${new_user.firstName} ${new_user.lastName}");
-    });
+    }, skip: true);
 
 //    test('- create participant by invite', () async {
 //      int id = random.nextInt(1000);
@@ -536,6 +536,17 @@ void main() {
   }, skip: false);
 
   group("Deployment", () {
+    test('- get deployment status', () async {
+      StudyDeploymentStatus status = await CarpService.instance.deployment().status();
+      print(status);
+      expect(status.id, study.deploymentId);
+    });
+
+    test('- register device', () async {
+      bool success = await CarpService.instance.deployment().registerDevice('phone', '1');
+      expect(success, true);
+    });
+
     test('- get master device deployment', () async {
       StudyDeploymentSnapshot deployment = await CarpService.instance.deployment().get();
       expect(deployment.id, study.deploymentId);
@@ -543,16 +554,6 @@ void main() {
 
     test('- deployment success', () async {
       bool success = await CarpService.instance.deployment().success();
-      expect(success, true);
-    });
-
-    test('- get deployment status', () async {
-      StudyDeploymentStatus status = await CarpService.instance.deployment().status();
-      expect(status.id, study.deploymentId);
-    });
-
-    test('- register device', () async {
-      bool success = await CarpService.instance.deployment().registerDevice();
       expect(success, true);
     });
 

@@ -1,6 +1,8 @@
-import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'dart:convert';
-//import 'package:carp_apps_package/apps.dart';
+
+import 'package:carp_connectivity_package/connectivity.dart';
+import 'package:carp_context_package/context.dart';
+import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 void sensing() async {
   // create the study
@@ -13,13 +15,14 @@ void sensing() async {
     ..dataFormat = NameSpace.OMH
     ..addTriggerTask(
         ImmediateTrigger(),
-        AutomaticTask(name: 'One Common Sensing Task')
+        Task(name: 'One Common Sensing Task')
           ..measures = SamplingSchema.common().getMeasureList(types: [
-//            AppsSamplingPackage.APP_USAGE,
             SensorSamplingPackage.ACCELEROMETER,
-            SensorSamplingPackage.GYROSCOPE
-          ]))
-  ;
+            SensorSamplingPackage.GYROSCOPE,
+            ContextSamplingPackage.LOCATION,
+            ContextSamplingPackage.ACTIVITY,
+            ConnectivitySamplingPackage.BLUETOOTH,
+          ]));
 
   // setup and start the sampling runtime
   StudyController controller = StudyController(study);
