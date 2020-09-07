@@ -262,7 +262,6 @@ class DeviceRegistring {
       '  ]'
       '}]';
 
-  //factory StudyDeploymentStatus.fromJson(List<dynamic> json) => StudyDeploymentStatus(json[1]['studyDeploymentId'].toString());
   List<dynamic> toJson() => json.decode(registerDeviceJson);
 
   String toString() => "${this.runtimeType} - deploymentId: $id, deviceRoleName: $deviceRoleName, deviceId: $deviceId";

@@ -9,7 +9,7 @@ part of domain;
 
 /// This is the base class for all JSON serializable objects.
 abstract class Serializable {
-  //static const String CLASS_IDENTIFIER = "c__";
+  /// The identifier of the class type in JSON serialization.
   static const String CLASS_IDENTIFIER = "\$type";
 
   /// The runtime class name (type) of this object.
