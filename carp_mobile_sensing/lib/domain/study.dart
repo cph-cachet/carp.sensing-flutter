@@ -62,7 +62,7 @@ class Study extends Serializable {
   }
 
   static Function get fromJsonFunction => _$StudyFromJson;
-  factory Study.fromJson(Map<String, dynamic> json) => _$StudyFromJson(json);
+  factory Study.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$StudyToJson(this);
 
   /// Add a [Trigger] to this [Study]

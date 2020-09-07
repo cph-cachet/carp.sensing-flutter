@@ -9,21 +9,21 @@ part of domain;
 
 /// This is the base class for all JSON serializable objects.
 abstract class Serializable {
-  static const String CLASS_IDENTIFIER = "c__";
+  //static const String CLASS_IDENTIFIER = "c__";
+  static const String CLASS_IDENTIFIER = "\$type";
 
   /// The runtime class name (type) of this object.
   /// Used for deserialization from JSON objects.
-  String c__;
+  String $type;
 
   Serializable() {
-    c__ = this.runtimeType.toString();
+    $type = this.runtimeType.toString();
     FromJsonFactory._();
   }
 
   /// Use this method to register a custom fromJson function for this class
   /// in the [FromJsonFactory].
-  registerFromJson(Function fromJsonFunction) =>
-      FromJsonFactory.registerFromJsonFunction(this.runtimeType.toString(), fromJsonFunction);
+  registerFromJson(Function fromJsonFunction) => FromJsonFactory.registerFromJsonFunction(this.runtimeType.toString(), fromJsonFunction);
 
   /// Return a JSON encoding of this object.
   Map<String, dynamic> toJson();
