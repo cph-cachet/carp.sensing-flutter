@@ -5,7 +5,8 @@ class Sensing {
   StudyController controller;
 
   /// the list of running - i.e. used - probes in this study.
-  List<Probe> get runningProbes => (controller != null) ? controller.executor.probes : List();
+  List<Probe> get runningProbes =>
+      (controller != null) ? controller.executor.probes : List();
 
   Sensing() : super() {
     // create/load and register external sampling packages
@@ -72,7 +73,8 @@ class LocalStudyManager implements StudyManager {
     if (_study == null) {
       _study = Study(studyId, bloc.username)
             ..name = bloc.testStudyName
-            ..description = 'This is a study for testing and debugging -- especially on iOS.'
+            ..description =
+                'This is a study for testing and debugging -- especially on iOS.'
             ..dataEndPoint = getDataEndpoint(DataEndPointTypes.CARP)
 //            ..addTriggerTask(
 //                ImmediateTrigger(),
@@ -194,15 +196,61 @@ class LocalStudyManager implements StudyManager {
     return _study;
   }
 
+  Future<Study> _getDiaFocusStudy(String studyId) async {
+    if (_study == null) {
+      _study = Study(studyId, bloc.username)
+        ..name = bloc.testStudyName
+        ..description =
+            'This is a example study for the DiaFocus app (iPDM-GO).'
+        ..dataEndPoint = getDataEndpoint(DataEndPointTypes.CARP)
+        ..addTriggerTask(
+            ImmediateTrigger(),
+            AutomaticTask()
+              ..measures = SamplingSchema.common().getMeasureList(
+                namespace: NameSpace.CARP,
+                types: [
+                  DeviceSamplingPackage.MEMORY,
+                  DeviceSamplingPackage.DEVICE,
+                  DeviceSamplingPackage.BATTERY,
+                  DeviceSamplingPackage.SCREEN,
+                  AudioSamplingPackage.NOISE,
+                ],
+              ))
+        ..addTriggerTask(
+            PeriodicTrigger(period: Duration(hours: 1)),
+            AutomaticTask()
+              ..measures = SamplingSchema.common().getMeasureList(
+                namespace: NameSpace.CARP,
+                types: [
+                  ContextSamplingPackage.LOCATION,
+                  ContextSamplingPackage.WEATHER,
+                ],
+              ))
+        ..addTriggerTask(
+            ImmediateTrigger(),
+            AutomaticTask()
+              ..measures = SamplingSchema.common().getMeasureList(
+                namespace: NameSpace.CARP,
+                types: [
+                  ContextSamplingPackage.GEOLOCATION,
+                  ContextSamplingPackage.ACTIVITY,
+                ],
+              ));
+    }
+    return _study;
+  }
+
   Future<Study> _getConditionalSamplingStudy(String studyId) async {
     if (_study == null) {
       _study = Study(studyId, bloc.username)
             ..name = 'Conditional Sampling Study'
-            ..description = 'This is a study for testing and debugging Conditional Sampling'
+            ..description =
+                'This is a study for testing and debugging Conditional Sampling'
             ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
             ..addTriggerTask(
                 ConditionalSamplingEventTrigger(
-                    measureType: MeasureType(NameSpace.CARP, ContextSamplingPackage.LOCATION),
+                    measureType: MeasureType(
+                        NameSpace.CARP, ContextSamplingPackage.LOCATION),
                     resumeCondition: (datum) {
                       return true;
                     },
@@ -218,7 +266,9 @@ class LocalStudyManager implements StudyManager {
                     ],
                   ))
             ..addTriggerTask(
-                PeriodicTrigger(period: Duration(seconds: 20), duration: Duration(seconds: 2)),
+                PeriodicTrigger(
+                    period: Duration(seconds: 20),
+                    duration: Duration(seconds: 2)),
                 //ImmediateTrigger(),
                 AutomaticTask()
                   ..measures = SamplingSchema.debug().getMeasureList(
@@ -238,7 +288,8 @@ class LocalStudyManager implements StudyManager {
     if (_study == null) {
       _study = Study(studyId, bloc.username)
             ..name = bloc.testStudyName
-            ..description = 'This is a study for testing and debugging -- especially on iOS.'
+            ..description =
+                'This is a study for testing and debugging -- especially on iOS.'
             ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
             ..addTriggerTask(
                 PeriodicTrigger(period: Duration(seconds: 20)),
@@ -336,7 +387,8 @@ class LocalStudyManager implements StudyManager {
     if (_study == null) {
       _study = Study(studyId, bloc.username)
             ..name = studyId
-            ..description = 'This is a study for testing the coverage of sampling.'
+            ..description =
+                'This is a study for testing the coverage of sampling.'
             ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
             ..addTriggerTask(
                 ImmediateTrigger(),
@@ -484,10 +536,16 @@ class LocalStudyManager implements StudyManager {
     if (_study == null) {
       _study = Study(studyId, bloc.username)
         ..name = 'CARP Mobile Sensing - all measures available'
-        ..description = 'This is a study of with all possible measures available in CARP Mobile Sensing'
+        ..description =
+            'This is a study of with all possible measures available in CARP Mobile Sensing'
         ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
-        ..addTriggerTask(ImmediateTrigger(),
-            AutomaticTask()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
+        ..addTriggerTask(
+            ImmediateTrigger(),
+            AutomaticTask()
+              ..measures = SamplingSchema.common(namespace: NameSpace.CARP)
+                  .measures
+                  .values
+                  .toList());
     }
     return _study;
   }
@@ -500,11 +558,15 @@ class LocalStudyManager implements StudyManager {
   Future<Study> _getAllProbesAsAwareStudy(String studyId) async {
     if (_study == null) {
       _study = Study(studyId, bloc.username)
-        ..name = 'CARP Mobile Sensing - long term sampling study configures like AWARE'
+        ..name =
+            'CARP Mobile Sensing - long term sampling study configures like AWARE'
         ..description = aware.description
         ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
-        ..addTriggerTask(ImmediateTrigger(),
-            AutomaticTask()..measures = aware.measures.values.toList()) // add all measures (for now)
+        ..addTriggerTask(
+            ImmediateTrigger(),
+            AutomaticTask()
+              ..measures =
+                  aware.measures.values.toList()) // add all measures (for now)
         ..addTriggerTask(
             DelayedTrigger(delay: Duration(seconds: 10)),
             AutomaticTask()
@@ -535,8 +597,11 @@ class LocalStudyManager implements StudyManager {
         ..name = 'CARP Mobile Sensing - high-frequency sampling study'
         ..description = mCerebrum.description
         ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
-        ..addTriggerTask(ImmediateTrigger(),
-            AutomaticTask()..measures = mCerebrum.measures.values.toList()); // add all measures (for now)
+        ..addTriggerTask(
+            ImmediateTrigger(),
+            AutomaticTask()
+              ..measures = mCerebrum.measures.values
+                  .toList()); // add all measures (for now)
     }
     return _study;
   }
@@ -548,7 +613,8 @@ class LocalStudyManager implements StudyManager {
       case DataEndPointTypes.PRINT:
         return new DataEndPoint(DataEndPointTypes.PRINT);
       case DataEndPointTypes.FILE:
-        return FileDataEndPoint(bufferSize: 50 * 1000, zip: true, encrypt: false);
+        return FileDataEndPoint(
+            bufferSize: 50 * 1000, zip: true, encrypt: false);
       case DataEndPointTypes.CARP:
         return CarpDataEndPoint(
           CarpUploadMethod.DATA_POINT,
@@ -626,7 +692,8 @@ SamplingSchema get aware => SamplingSchema()
           MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
           name: "Accelerometer",
           enabled: true,
-          frequency: Duration(milliseconds: 200), // How often to start a measure
+          frequency:
+              Duration(milliseconds: 200), // How often to start a measure
           duration: Duration(milliseconds: 2), // Window size
         )),
     MapEntry(
@@ -635,7 +702,8 @@ SamplingSchema get aware => SamplingSchema()
           MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
           name: "Gyroscope",
           enabled: true,
-          frequency: Duration(milliseconds: 200), // How often to start a measure
+          frequency:
+              Duration(milliseconds: 200), // How often to start a measure
           duration: Duration(milliseconds: 2), // Window size
         )),
     MapEntry(
@@ -652,12 +720,19 @@ SamplingSchema get aware => SamplingSchema()
           MeasureType(NameSpace.CARP, AppsSamplingPackage.APPS),
           name: 'Installed Apps',
         )),
-    MapEntry(AppsSamplingPackage.APP_USAGE,
-        MarkedMeasure(MeasureType(NameSpace.CARP, AppsSamplingPackage.APP_USAGE), name: 'App Usage')),
-    MapEntry(DeviceSamplingPackage.BATTERY,
-        Measure(MeasureType(NameSpace.CARP, DeviceSamplingPackage.BATTERY), name: 'Battery')),
-    MapEntry(DeviceSamplingPackage.SCREEN,
-        Measure(MeasureType(NameSpace.CARP, DeviceSamplingPackage.SCREEN), name: 'Screen Activity (lock/on/off)')),
+    MapEntry(
+        AppsSamplingPackage.APP_USAGE,
+        MarkedMeasure(
+            MeasureType(NameSpace.CARP, AppsSamplingPackage.APP_USAGE),
+            name: 'App Usage')),
+    MapEntry(
+        DeviceSamplingPackage.BATTERY,
+        Measure(MeasureType(NameSpace.CARP, DeviceSamplingPackage.BATTERY),
+            name: 'Battery')),
+    MapEntry(
+        DeviceSamplingPackage.SCREEN,
+        Measure(MeasureType(NameSpace.CARP, DeviceSamplingPackage.SCREEN),
+            name: 'Screen Activity (lock/on/off)')),
 //    MapEntry(
 //        ConnectivitySamplingPackage.BLUETOOTH,
 //        PeriodicMeasure(MeasureType(NameSpace.CARP, ConnectivitySamplingPackage.BLUETOOTH),
@@ -666,20 +741,34 @@ SamplingSchema get aware => SamplingSchema()
 //        ConnectivitySamplingPackage.WIFI,
 //        PeriodicMeasure(MeasureType(NameSpace.CARP, ConnectivitySamplingPackage.WIFI),
 //            name: 'Wifi network names (SSID / BSSID)', frequency: 60 * 1000, duration: 5 * 1000)),
-    MapEntry(CommunicationSamplingPackage.PHONE_LOG,
-        MarkedMeasure(MeasureType(NameSpace.CARP, CommunicationSamplingPackage.PHONE_LOG), name: 'Phone Log')),
+    MapEntry(
+        CommunicationSamplingPackage.PHONE_LOG,
+        MarkedMeasure(
+            MeasureType(NameSpace.CARP, CommunicationSamplingPackage.PHONE_LOG),
+            name: 'Phone Log')),
     MapEntry(
         CommunicationSamplingPackage.TEXT_MESSAGE_LOG,
-        Measure(MeasureType(NameSpace.CARP, CommunicationSamplingPackage.TEXT_MESSAGE_LOG),
+        Measure(
+            MeasureType(
+                NameSpace.CARP, CommunicationSamplingPackage.TEXT_MESSAGE_LOG),
             name: 'Text Message (SMS) Log')),
-    MapEntry(CommunicationSamplingPackage.TEXT_MESSAGE,
-        Measure(MeasureType(NameSpace.CARP, CommunicationSamplingPackage.TEXT_MESSAGE), name: 'Text Message (SMS)')),
+    MapEntry(
+        CommunicationSamplingPackage.TEXT_MESSAGE,
+        Measure(
+            MeasureType(
+                NameSpace.CARP, CommunicationSamplingPackage.TEXT_MESSAGE),
+            name: 'Text Message (SMS)')),
     MapEntry(
         ContextSamplingPackage.LOCATION,
-        LocationMeasure(MeasureType(NameSpace.CARP, ContextSamplingPackage.LOCATION),
-            name: 'Location', enabled: true, frequency: Duration(seconds: 30))),
-    MapEntry(ContextSamplingPackage.ACTIVITY,
-        Measure(MeasureType(NameSpace.CARP, ContextSamplingPackage.ACTIVITY), name: 'Activity Recognition')),
+        LocationMeasure(
+            MeasureType(NameSpace.CARP, ContextSamplingPackage.LOCATION),
+            name: 'Location',
+            enabled: true,
+            frequency: Duration(seconds: 30))),
+    MapEntry(
+        ContextSamplingPackage.ACTIVITY,
+        Measure(MeasureType(NameSpace.CARP, ContextSamplingPackage.ACTIVITY),
+            name: 'Activity Recognition')),
 //    MapEntry(
 //        ContextSamplingPackage.WEATHER,
 //        WeatherMeasure(MeasureType(NameSpace.CARP, ContextSamplingPackage.WEATHER),
@@ -698,7 +787,8 @@ SamplingSchema get mCerebrum => SamplingSchema()
         PeriodicMeasure(
           MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
           name: "Accelerometer",
-          frequency: Duration(milliseconds: 200), // How often to start a measure
+          frequency:
+              Duration(milliseconds: 200), // How often to start a measure
           duration: Duration(milliseconds: 2), // Window size
         )),
     MapEntry(
@@ -706,7 +796,8 @@ SamplingSchema get mCerebrum => SamplingSchema()
         PeriodicMeasure(
           MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
           name: "Gyroscope",
-          frequency: Duration(milliseconds: 200), // How often to start a measure
+          frequency:
+              Duration(milliseconds: 200), // How often to start a measure
           duration: Duration(milliseconds: 2), // Window size
         )),
     MapEntry(
@@ -714,7 +805,8 @@ SamplingSchema get mCerebrum => SamplingSchema()
         PeriodicMeasure(
           MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
           name: "Ambient Light",
-          frequency: Duration(milliseconds: 200), // How often to start a measure
+          frequency:
+              Duration(milliseconds: 200), // How often to start a measure
           duration: Duration(milliseconds: 2), // Window size
         )),
 //    MapEntry(ContextSamplingPackage.LOCATION,

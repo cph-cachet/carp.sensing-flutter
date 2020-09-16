@@ -1,8 +1,9 @@
-import 'package:test/test.dart';
 import 'dart:convert';
 import 'dart:io';
-import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+
 import 'package:carp_audio_package/audio.dart';
+import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+import 'package:test/test.dart';
 
 String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
 
@@ -15,9 +16,7 @@ void main() {
     study = Study("1234", "bardram", name: "bardram study")
       ..dataEndPoint = DataEndPoint(DataEndPointTypes.PRINT)
       ..addTriggerTask(
-          ImmediateTrigger(),
-          AutomaticTask(name: 'Task #1')
-            ..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
+          ImmediateTrigger(), AutomaticTask(name: 'Task #1')..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
   });
 
   test('Study -> JSON', () async {

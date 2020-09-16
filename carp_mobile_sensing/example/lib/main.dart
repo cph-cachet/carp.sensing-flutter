@@ -4,9 +4,8 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-import 'package:flutter/material.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
-//import 'package:carp_apps_package/apps.dart';
+import 'package:flutter/material.dart';
 
 void main() => runApp(new CARPMobileSensingApp());
 
@@ -49,25 +48,17 @@ class Console extends State<ConsolePage> {
     });
   }
 
-  void restart() {
-    log("-------------------------------------\nSensing restarted...");
-    sensing.start();
-  }
-
-  @override
   void initState() {
     super.initState();
     sensing = new Sensing(this);
     sensing.start();
   }
 
-  @override
   void dispose() {
     sensing.stop();
     super.dispose();
   }
 
-  @override
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
@@ -88,11 +79,20 @@ class Console extends State<ConsolePage> {
         ),
       ),
       floatingActionButton: new FloatingActionButton(
-        onPressed: restart,
+        onPressed: _restart,
         tooltip: 'Restart study & probes',
-        child: new Icon(Icons.cached),
+        child: sensing.isRunning ? Icon(Icons.pause) : Icon(Icons.play_arrow),
       ),
     );
+  }
+
+  void _restart() {
+    setState(() {
+      if (sensing.isRunning)
+        sensing.pause();
+      else
+        sensing.resume();
+    });
   }
 }
 
@@ -105,12 +105,9 @@ class Sensing {
   Console console;
   StudyController controller;
 
-  Sensing(this.console) {
-    //DataManagerRegistry.register(DataEndPointType.PRINT, new ConsoleDataManager());
-    //DataManagerRegistry.register(DataEndPointType.FILE, new FileDataManager());
-  }
+  Sensing(this.console);
 
-  /// (Re)start sensing.
+  /// Start sensing.
   void start() async {
     console.log("Setting up study...");
 
@@ -128,13 +125,13 @@ class Sensing {
               namespace: NameSpace.CARP,
               types: [
                 SensorSamplingPackage.LIGHT,
-//                AppsSamplingPackage.APP_USAGE,
+                SensorSamplingPackage.PEDOMETER,
                 DeviceSamplingPackage.MEMORY,
+                DeviceSamplingPackage.DEVICE,
+                DeviceSamplingPackage.BATTERY,
+                DeviceSamplingPackage.SCREEN,
               ],
-            ))
-        ;
-
-//    SamplingPackageRegistry.register(AppsSamplingPackage());
+            ));
 
     console.log("Setting up '${study.name}'...");
 
@@ -151,9 +148,21 @@ class Sensing {
 
     // listening on all probe events from the study
     controller.events.forEach(print);
+  }
 
-    // listening on a specific probe
-    //ProbeRegistry.probes[DataType.LOCATION].events.forEach(print);
+  /// Is sensing running, i.e. has the study executor been resumed?
+  bool get isRunning => (controller != null) && controller.executor.state == ProbeState.resumed;
+
+  /// Resume sensing
+  void resume() async {
+    console.log("\nSensing resumed ...\n");
+    controller.resume();
+  }
+
+  /// Pause sensing
+  void pause() async {
+    console.log("\nSensing paused ...\n");
+    controller.pause();
   }
 
   /// Stop sensing.

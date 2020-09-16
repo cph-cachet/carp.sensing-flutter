@@ -1,26 +1,26 @@
 {
-  "c__": "Study",
+  "$type": "Study",
   "id": "1234",
   "name": "bardram study",
   "user_id": "bardram",
   "sampling_strategy": "NORMAL",
   "data_end_point": {
-    "c__": "DataEndPoint",
+    "$type": "DataEndPoint",
     "type": "PRINT"
   },
   "data_format": "carp",
   "triggers": [
     {
-      "c__": "ImmediateTrigger",
+      "$type": "ImmediateTrigger",
       "tasks": [
         {
-          "c__": "AutomaticTask",
+          "$type": "AutomaticTask",
           "name": "Task #1",
           "measures": [
             {
-              "c__": "Measure",
+              "$type": "Measure",
               "type": {
-                "c__": "MeasureType",
+                "$type": "MeasureType",
                 "namespace": "carp",
                 "name": "device"
               },
@@ -29,9 +29,9 @@
               "configuration": {}
             },
             {
-              "c__": "PeriodicMeasure",
+              "$type": "PeriodicMeasure",
               "type": {
-                "c__": "MeasureType",
+                "$type": "MeasureType",
                 "namespace": "carp",
                 "name": "memory"
               },
@@ -41,9 +41,9 @@
               "frequency": 60000000
             },
             {
-              "c__": "Measure",
+              "$type": "Measure",
               "type": {
-                "c__": "MeasureType",
+                "$type": "MeasureType",
                 "namespace": "carp",
                 "name": "battery"
               },
@@ -52,9 +52,9 @@
               "configuration": {}
             },
             {
-              "c__": "Measure",
+              "$type": "Measure",
               "type": {
-                "c__": "MeasureType",
+                "$type": "MeasureType",
                 "namespace": "carp",
                 "name": "screen"
               },
@@ -63,9 +63,9 @@
               "configuration": {}
             },
             {
-              "c__": "PeriodicMeasure",
+              "$type": "PeriodicMeasure",
               "type": {
-                "c__": "MeasureType",
+                "$type": "MeasureType",
                 "namespace": "carp",
                 "name": "accelerometer"
               },
@@ -76,9 +76,9 @@
               "duration": 1000
             },
             {
-              "c__": "PeriodicMeasure",
+              "$type": "PeriodicMeasure",
               "type": {
-                "c__": "MeasureType",
+                "$type": "MeasureType",
                 "namespace": "carp",
                 "name": "gyroscope"
               },
@@ -89,9 +89,9 @@
               "duration": 1000
             },
             {
-              "c__": "Measure",
+              "$type": "Measure",
               "type": {
-                "c__": "MeasureType",
+                "$type": "MeasureType",
                 "namespace": "carp",
                 "name": "pedometer"
               },
@@ -100,9 +100,9 @@
               "configuration": {}
             },
             {
-              "c__": "PeriodicMeasure",
+              "$type": "PeriodicMeasure",
               "type": {
-                "c__": "MeasureType",
+                "$type": "MeasureType",
                 "namespace": "carp",
                 "name": "light"
               },
@@ -113,33 +113,9 @@
               "duration": 1000000
             },
             {
-              "c__": "Measure",
+              "$type": "Measure",
               "type": {
-                "c__": "MeasureType",
-                "namespace": "carp",
-                "name": "apps"
-              },
-              "name": "Installed Apps",
-              "enabled": true,
-              "configuration": {}
-            },
-            {
-              "c__": "MarkedMeasure",
-              "type": {
-                "c__": "MeasureType",
-                "namespace": "carp",
-                "name": "app_usage"
-              },
-              "name": "Apps Usage",
-              "enabled": true,
-              "configuration": {},
-              "mark": "2020-05-26T23:52:37.214250",
-              "history": 86400000000
-            },
-            {
-              "c__": "Measure",
-              "type": {
-                "c__": "MeasureType",
+                "$type": "MeasureType",
                 "namespace": "carp",
                 "name": "location"
               },
@@ -148,9 +124,9 @@
               "configuration": {}
             },
             {
-              "c__": "LocationMeasure",
+              "$type": "LocationMeasure",
               "type": {
-                "c__": "MeasureType",
+                "$type": "MeasureType",
                 "namespace": "carp",
                 "name": "geolocation"
               },
@@ -159,12 +135,12 @@
               "configuration": {},
               "frequency": 30000000,
               "accuracy": "low",
-              "distance": 3
+              "distance": 3.0
             },
             {
-              "c__": "Measure",
+              "$type": "Measure",
               "type": {
-                "c__": "MeasureType",
+                "$type": "MeasureType",
                 "namespace": "carp",
                 "name": "activity"
               },
@@ -173,21 +149,21 @@
               "configuration": {}
             },
             {
-              "c__": "WeatherMeasure",
+              "$type": "WeatherMeasure",
               "type": {
-                "c__": "MeasureType",
+                "$type": "MeasureType",
                 "namespace": "carp",
                 "name": "weather"
               },
               "name": "Local Weather",
               "enabled": true,
               "configuration": {},
-              "api_key": "9a61efab8471e191372272a56ffc01c1"
+              "api_key": "12b6e28582eb9298577c734a31ba9f4f"
             },
             {
-              "c__": "AirQualityMeasure",
+              "$type": "AirQualityMeasure",
               "type": {
-                "c__": "MeasureType",
+                "$type": "MeasureType",
                 "namespace": "carp",
                 "name": "air_quality"
               },
@@ -197,21 +173,36 @@
               "api_key": "9e538456b2b85c92647d8b65090e29f957638c77"
             },
             {
-              "c__": "GeofenceMeasure",
+              "$type": "GeofenceMeasure",
               "type": {
-                "c__": "MeasureType",
+                "$type": "MeasureType",
                 "namespace": "carp",
                 "name": "geofence"
               },
               "enabled": true,
               "configuration": {},
               "center": {
-                "c__": "GeoPosition",
+                "$type": "GeoPosition",
                 "latitude": 55.7943601,
                 "longitude": 12.4461956
               },
               "radius": 500.0,
               "name": "Geofence (Virum)"
+            },
+            {
+              "$type": "MobilityMeasure",
+              "type": {
+                "$type": "MeasureType",
+                "namespace": "carp",
+                "name": "mobility"
+              },
+              "name": "Mobility Features",
+              "enabled": true,
+              "configuration": {},
+              "use_prior_contexts": true,
+              "stop_radius": 25.0,
+              "place_radius": 50.0,
+              "stop_duration": 180000000
             }
           ]
         }

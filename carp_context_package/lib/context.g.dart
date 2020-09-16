@@ -88,7 +88,7 @@ LocationMeasure _$LocationMeasureFromJson(Map<String, dynamic> json) {
         _$enumDecodeNullable(_$GeolocationAccuracyEnumMap, json['accuracy']),
     distance: (json['distance'] as num)?.toDouble(),
   )
-    ..c__ = json['c__'] as String
+    ..$type = json[r'$type'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
     );
@@ -103,7 +103,7 @@ Map<String, dynamic> _$LocationMeasureToJson(LocationMeasure instance) {
     }
   }
 
-  writeNotNull('c__', instance.c__);
+  writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
   writeNotNull('name', instance.name);
   writeNotNull('enabled', instance.enabled);
@@ -233,7 +233,7 @@ WeatherMeasure _$WeatherMeasureFromJson(Map<String, dynamic> json) {
     enabled: json['enabled'],
     apiKey: json['api_key'] as String,
   )
-    ..c__ = json['c__'] as String
+    ..$type = json[r'$type'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
     );
@@ -248,7 +248,7 @@ Map<String, dynamic> _$WeatherMeasureToJson(WeatherMeasure instance) {
     }
   }
 
-  writeNotNull('c__', instance.c__);
+  writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
   writeNotNull('name', instance.name);
   writeNotNull('enabled', instance.enabled);
@@ -261,7 +261,7 @@ GeoPosition _$GeoPositionFromJson(Map<String, dynamic> json) {
   return GeoPosition(
     (json['latitude'] as num)?.toDouble(),
     (json['longitude'] as num)?.toDouble(),
-  )..c__ = json['c__'] as String;
+  )..$type = json[r'$type'] as String;
 }
 
 Map<String, dynamic> _$GeoPositionToJson(GeoPosition instance) {
@@ -273,7 +273,7 @@ Map<String, dynamic> _$GeoPositionToJson(GeoPosition instance) {
     }
   }
 
-  writeNotNull('c__', instance.c__);
+  writeNotNull(r'$type', instance.$type);
   writeNotNull('latitude', instance.latitude);
   writeNotNull('longitude', instance.longitude);
   return val;
@@ -291,7 +291,7 @@ GeofenceMeasure _$GeofenceMeasureFromJson(Map<String, dynamic> json) {
     radius: (json['radius'] as num)?.toDouble(),
     name: json['name'] as String,
   )
-    ..c__ = json['c__'] as String
+    ..$type = json[r'$type'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
     )
@@ -307,7 +307,7 @@ Map<String, dynamic> _$GeofenceMeasureToJson(GeofenceMeasure instance) {
     }
   }
 
-  writeNotNull('c__', instance.c__);
+  writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
@@ -401,7 +401,7 @@ AirQualityMeasure _$AirQualityMeasureFromJson(Map<String, dynamic> json) {
     enabled: json['enabled'],
     apiKey: json['api_key'] as String,
   )
-    ..c__ = json['c__'] as String
+    ..$type = json[r'$type'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
     );
@@ -416,7 +416,7 @@ Map<String, dynamic> _$AirQualityMeasureToJson(AirQualityMeasure instance) {
     }
   }
 
-  writeNotNull('c__', instance.c__);
+  writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
   writeNotNull('name', instance.name);
   writeNotNull('enabled', instance.enabled);
@@ -478,7 +478,7 @@ MobilityMeasure _$MobilityMeasureFromJson(Map<String, dynamic> json) {
         ? null
         : Duration(microseconds: json['stop_duration'] as int),
   )
-    ..c__ = json['c__'] as String
+    ..$type = json[r'$type'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
     );
@@ -493,7 +493,7 @@ Map<String, dynamic> _$MobilityMeasureToJson(MobilityMeasure instance) {
     }
   }
 
-  writeNotNull('c__', instance.c__);
+  writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
   writeNotNull('name', instance.name);
   writeNotNull('enabled', instance.enabled);

@@ -1,3 +1,6 @@
+## 0.9.1
+* upgrade to `carp_mobile_sensing` v. 0.9.x
+
 ## 0.9.0+3
 * Formatting
 

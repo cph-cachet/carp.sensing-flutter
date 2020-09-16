@@ -1,3 +1,8 @@
+## 0.9.0
+* New polymorphic JSON serialization using `$type` for class type identifier.
+* Update of documentation and examples. See [Issue #92](https://github.com/cph-cachet/carp.sensing-flutter/issues/92).
+* 
+
 ## 0.8.8
 * Support for saving ("remembering") `RecurrentScheduledTrigger` across app shutdown.
 See [Issue #80](https://github.com/cph-cachet/carp.sensing-flutter/issues/80).

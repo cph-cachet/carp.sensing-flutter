@@ -1,12 +1,14 @@
 # CARP Mobile Sensing Framework in Flutter
 
-This library contains the software architecture for the CARP sensing framework implemented in Flutter.
-Supports cross-platform (iOS and Android) sensing.
-
 [![pub package](https://img.shields.io/pub/v/carp_mobile_sensing.svg)](https://pub.dartlang.org/packages/carp_mobile_sensing)
+[![github stars](https://img.shields.io/github/stars/cph-cachet/carp.sensing-flutter.svg?style=flat&logo=github&colorB=deeppink&label=stars)](https://github.com/cph-cachet/carp.sensing-flutter)
+[![MIT License](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
 
-For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/README.md).
+This library contains the core Flutter package for the CARP Mobile Sensing (CAMS) framework.
+Supports cross-platform (iOS and Android) mobile sensing.
 
+For an overview of all CAMS packages, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/README.md).
+For documentation on how to use CAMS, see the [CAMS wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki).
 ## Usage
 To use this plugin, add `carp_mobile_sensing` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/).
 
@@ -28,7 +30,10 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
 
 </manifest>
 ````
-> **NOTE:** Version 0.5.0 is migrated to AndroidX. This should not result in any functional changes, but it requires any Android apps using this plugin to also 
+> **NOTE:** Other CAMS sampling packages require additional permissions in the `manifest.xml` file. 
+>See the documentation for each package. 
+
+> **NOTE:** Version 0.5.0 is migrated to AndroidX. It requires any Android apps using this plugin to also 
 [migrate](https://developer.android.com/jetpack/androidx/migrate) if they're using the original support library. 
 See Flutter [AndroidX compatibility](https://flutter.dev/docs/development/packages-and-plugins/androidx-compatibility)
 
@@ -38,21 +43,84 @@ See Flutter [AndroidX compatibility](https://flutter.dev/docs/development/packag
 The [Dart API doc](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/) describes the different libraries and classes.
 
 The [wiki](https://github.com/cph-cachet/carp.sensing/wiki) contains detailed documentation on the CARP Mobile Sensing Framework, including 
-the [domain model](https://github.com/cph-cachet/carp.sensing/wiki/Domain-Model), its built-in [probes](https://github.com/cph-cachet/carp.sensing/wiki/Probes), 
-and how to [extend](https://github.com/cph-cachet/carp.sensing/wiki/Extending) it.
+the [domain model](https://github.com/cph-cachet/carp.sensing-flutter/wiki/2.-Domain-Model), its built-in [probes](https://github.com/cph-cachet/carp.sensing/wiki/Probes), 
+and how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.-Extending-CARP-Mobile-Sensing) it.
 
-Below is a few simple / minimum examples (a better description is available on the [wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki/Domain-Model)).
+Below is a few simple examples (a better description is available on the [wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki/Domain-Model)).
+
+A more scientific documentation of CAMS is available at *[arxiv.org](https://arxiv.org/abs/2006.11904)*:
+
+ *  Bardram, Jakob E. "The CARP Mobile Sensing Framework--A Cross-platform, Reactive, Programming Framework and Runtime Environment for Digital Phenotyping." arXiv preprint arXiv:2006.11904 (2020). [[pdf](https://arxiv.org/pdf/2006.11904.pdf)]
+
+```latex
+@article{bardram2020carp,
+  title={The CARP Mobile Sensing Framework--A Cross-platform, Reactive, Programming Framework and Runtime Environment for Digital Phenotyping},
+  author={Bardram, Jakob E},
+  journal={arXiv preprint arXiv:2006.11904},
+  year={2020}
+}
+```
+
+Please use this as a reference in any scientific papers using CAMS.
 
 ## Examples
 
-In the following example, a study is created "by hand", i.e. you specify each trigger, task and measure in the study.
+In CAMS, sensing is configured in a [`Study`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/Study-class.html) object 
+and sensing is controlled by a [`StudyController`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/StudyController-class.html).
+
+Below is the most simple example of how to set up a study that sense step counts (`pedometer`), ambient light (`light`), 
+screen activity (`screen`), and power consumption (`battery`).
 
 ```dart
 // Import package
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 void example() async {
-  // Create a study using a File Backend
+  // Create a study using a local file to store data
+  Study study = Study("2", 'user@cachet.dk',
+      name: 'A study collecting ..',
+      dataEndPoint: FileDataEndPoint()
+        ..bufferSize = 500 * 1000
+        ..zip = true
+        ..encrypt = false);
+
+  // Add an automatic task that immediately starts collecting
+  // step counts, ambient light, screen activity, and battery level
+  study.addTriggerTask(
+      ImmediateTrigger(),
+      AutomaticTask()
+        ..measures = SamplingSchema.common().getMeasureList(
+          namespace: NameSpace.CARP,
+          types: [
+            SensorSamplingPackage.PEDOMETER,
+            SensorSamplingPackage.LIGHT,
+            DeviceSamplingPackage.SCREEN,
+            DeviceSamplingPackage.BATTERY,
+          ],
+        ));
+
+  // Create a Study Controller that can manage this study.
+  StudyController controller = StudyController(study);
+
+  // await initialization before starting/resuming
+  await controller.initialize();
+  controller.resume();
+
+  // listening and print all data events from the study
+  controller.events.forEach(print);
+}
+```
+
+The above example make use of the pre-defined [`SamplingSchema`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/SamplingSchema-class.html) 
+named `common`. This sampling schema contains a set of default settings for how to sample the different measures. 
+
+Sampling can be configured in a very sophisticated ways, by specifying different types of triggers, tasks, and measures -
+see the  CAMS [domain model](https://github.com/cph-cachet/carp.sensing-flutter/wiki/2.-Domain-Model) for an overview.
+In the following example, a study is created "by hand", i.e. you specify each trigger, task and measure in the study.
+
+```dart
+void example() async {
+  // Create a study using a local file to store data
   Study study = Study("1234", "user@dtu.dk",
       name: "An example study",
       dataEndPoint: FileDataEndPoint()
@@ -60,42 +128,32 @@ void example() async {
         ..zip = true
         ..encrypt = false);
 
-  // add sensor collection from accelerometer and gyroscope
-  // careful - these sensors generate a lot of data!
+  // automatically collect accelerometer and gyroscope data
+  // but delay the sampling by 10 seconds
   study.addTriggerTask(
-      DelayedTrigger(delay: 1000), // delay sampling for one second
-      Task('Sensor Task')
-        ..addMeasure(PeriodicMeasure(
-          MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
-          frequency: 10 * 1000, // sample every 10 secs
-          duration: 2, // for 2 ms
-        ))
-        ..addMeasure(PeriodicMeasure(
-          MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
-          frequency: 20 * 1000, // sample every 20 secs
-          duration: 2, // for 2 ms
-        )));
+      DelayedTrigger(delay: Duration(seconds: 10)),
+      AutomaticTask(name: 'Sensor Task')
+        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
+            frequency: const Duration(seconds: 10), duration: const Duration(milliseconds: 100)))
+        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
+            frequency: const Duration(seconds: 20), duration: const Duration(milliseconds: 100))));
 
-  study.addTriggerTask(
-      PeriodicTrigger(period: 24 * 60 * 60 * 1000), // trigger sampling once pr. day
-      Task('Task collecting a list of all installed apps')
-        ..addMeasure(Measure(MeasureType(NameSpace.CARP, AppsSamplingPackage.APPS))));
-
-  // creating measure variable to be used later
+  // create a light measure variable to be used later
   PeriodicMeasure lightMeasure = PeriodicMeasure(
     MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
     name: "Ambient Light",
-    frequency: 11 * 1000,
-    duration: 700,
+    frequency: const Duration(seconds: 11),
+    duration: const Duration(milliseconds: 100),
   );
-  study.addTriggerTask(ImmediateTrigger(), Task('Light')..addMeasure(lightMeasure));
+  // add it to the study to start immediately
+  study.addTriggerTask(ImmediateTrigger(), AutomaticTask(name: 'Light')..addMeasure(lightMeasure));
 
-  // Create a Study Controller that can manage this study, initialize it, and start it.
+  // Create a Study Controller that can manage this study.
   StudyController controller = StudyController(study);
 
-  // await initialization before starting
+  // await initialization before starting/resuming
   await controller.initialize();
-  controller.start();
+  controller.resume();
 
   // listening on all data events from the study
   controller.events.forEach(print);
@@ -130,8 +188,8 @@ void example() async {
   // adapt measures on the go - calling hasChanged() force a restart of
   // the probe, which will load the new measure
   lightMeasure
-    ..frequency = 12 * 1000
-    ..duration = 500
+    ..frequency = const Duration(seconds: 12)
+    ..duration = const Duration(milliseconds: 500)
     ..hasChanged();
 
   // disabling a measure will pause the probe
@@ -145,24 +203,6 @@ void example() async {
   subscription.cancel();
 }
 ```
-
-However, you can se up a study quite simple, by using [sampling schemas](https://github.com/cph-cachet/carp.sensing-flutter/wiki/Schemas#sampling-schema).
-Below is an example of how to add measure to the `study` by using measures from the `common` sampling schema.
-
-`````dart
- // adding a set of specific measures from the `common` sampling schema to one overall task
- study.addTriggerTask(
-     ImmediateTrigger(),
-     Task()
-       ..measures = SamplingSchema.common().getMeasureList(
-         namespace: NameSpace.CARP,
-         types: [
-           SensorSamplingPackage.LIGHT,
-           AppsSamplingPackage.APP_USAGE,
-           DeviceSamplingPackage.MEMORY,
-         ],
-       ));
-`````
 
 There is a very **simple** [example app](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/carp_mobile_sensing/example/lib/main.dart) app which shows how a study can be created with different tasks and measures.
 This app just prints the sensing data to a console screen on the phone. 

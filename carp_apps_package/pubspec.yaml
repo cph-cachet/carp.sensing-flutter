@@ -1,7 +1,8 @@
 name: carp_apps_package
 description: Apps package for the CARP Mobile Sensing framework (Android only).
-version: 0.1.5+1
+version: 0.9.0
 homepage: https://github.com/cph-cachet/carp.sensing-flutter
+author:  CACHET Team <cph.cachet@gmail.com>
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -9,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  carp_mobile_sensing: ^0.8.3
+  carp_mobile_sensing: ^0.9.0
   app_usage: ^1.0.1
   device_apps: ^1.2.0
   json_annotation: ^3.0.1
@@ -18,6 +19,9 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  build_runner: ^1.10.0
+  json_serializable: ^3.0.0
+  test:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

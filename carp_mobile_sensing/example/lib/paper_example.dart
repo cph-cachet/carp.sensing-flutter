@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'package:carp_connectivity_package/connectivity.dart';
-import 'package:carp_context_package/context.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 void sensing() async {
@@ -19,9 +17,10 @@ void sensing() async {
           ..measures = SamplingSchema.common().getMeasureList(types: [
             SensorSamplingPackage.ACCELEROMETER,
             SensorSamplingPackage.GYROSCOPE,
-            ContextSamplingPackage.LOCATION,
-            ContextSamplingPackage.ACTIVITY,
-            ConnectivitySamplingPackage.BLUETOOTH,
+            DeviceSamplingPackage.SCREEN,
+            // ContextSamplingPackage.LOCATION,
+            // ContextSamplingPackage.ACTIVITY,
+            // ConnectivitySamplingPackage.BLUETOOTH,
           ]));
 
   // setup and start the sampling runtime

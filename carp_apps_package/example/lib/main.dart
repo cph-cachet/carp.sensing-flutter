@@ -7,23 +7,24 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 void main() async {
   SamplingPackageRegistry.register(AppsSamplingPackage());
 
-  Study study = Study("1234", "bardram", name: "bardram study");
+  Study study = Study("1234", "xyz", name: "apps study");
 
-  // creating a task collecting step counts and blood pressure data for the last two days
+  // creating a task collecting a list of installed apps and app usage
   study.addTriggerTask(
-    ImmediateTrigger(), // a simple trigger that starts immediately
-    Task(name: 'Step and blood pressure')
-      ..addMeasure(
-        Measure(
-          MeasureType(NameSpace.CARP, AppsSamplingPackage.APP_USAGE),
-          name: 'App usage',
-        ),
-      )
-      ..addMeasure(
-          Measure( MeasureType(NameSpace.CARP, AppsSamplingPackage.APPS),
-            name: 'Blood Pressure Diastolic'),
-      )
-  );
+      ImmediateTrigger(), // a simple trigger that starts immediately
+      Task(name: 'Step and blood pressure')
+        ..addMeasure(
+          Measure(
+            MeasureType(NameSpace.CARP, AppsSamplingPackage.APP_USAGE),
+            name: 'App usage',
+          ),
+        )
+        ..addMeasure(
+          Measure(
+            MeasureType(NameSpace.CARP, AppsSamplingPackage.APPS),
+            name: 'Installed apps',
+          ),
+        ));
 
   // Create a Study Controller that can manage this study, initialize it, and start it.
   StudyController controller = StudyController(study);

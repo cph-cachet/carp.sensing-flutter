@@ -23,14 +23,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  # CAMS
-  carp_mobile_sensing: ^0.8.0
-    #path: ../
-  # CAMS Packages
-  carp_apps_package:
-  carp_context_package:
-  carp_connectivity_package:
-    #path: ../../carp_apps_package
+  carp_mobile_sensing:
+    path: ../
 
 dev_dependencies:
   flutter_test:

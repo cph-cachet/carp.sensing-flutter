@@ -87,7 +87,7 @@ AudioMeasure _$AudioMeasureFromJson(Map<String, dynamic> json) {
     enabled: json['enabled'] as bool,
     studyId: json['study_id'] as String,
   )
-    ..c__ = json['c__'] as String
+    ..$type = json[r'$type'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
     );
@@ -102,7 +102,7 @@ Map<String, dynamic> _$AudioMeasureToJson(AudioMeasure instance) {
     }
   }
 
-  writeNotNull('c__', instance.c__);
+  writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
   writeNotNull('name', instance.name);
   writeNotNull('enabled', instance.enabled);
@@ -126,7 +126,7 @@ NoiseMeasure _$NoiseMeasureFromJson(Map<String, dynamic> json) {
         : Duration(microseconds: json['duration'] as int),
     samplingRate: json['sampling_rate'] as int,
   )
-    ..c__ = json['c__'] as String
+    ..$type = json[r'$type'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
     );
@@ -141,7 +141,7 @@ Map<String, dynamic> _$NoiseMeasureToJson(NoiseMeasure instance) {
     }
   }
 
-  writeNotNull('c__', instance.c__);
+  writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
   writeNotNull('name', instance.name);
   writeNotNull('enabled', instance.enabled);
