@@ -19,7 +19,7 @@ HealthMeasure _$HealthMeasureFromJson(Map<String, dynamic> json) {
     healthDataType:
         _$enumDecodeNullable(_$HealthDataTypeEnumMap, json['health_data_type']),
   )
-    ..c__ = json['c__'] as String
+    ..$type = json[r'$type'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
     );
@@ -34,7 +34,7 @@ Map<String, dynamic> _$HealthMeasureToJson(HealthMeasure instance) {
     }
   }
 
-  writeNotNull('c__', instance.c__);
+  writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type?.toJson());
   writeNotNull('name', instance.name);
   writeNotNull('enabled', instance.enabled);
@@ -99,6 +99,11 @@ const _$HealthDataTypeEnumMap = {
   HealthDataType.FLIGHTS_CLIMBED: 'FLIGHTS_CLIMBED',
   HealthDataType.MOVE_MINUTES: 'MOVE_MINUTES',
   HealthDataType.DISTANCE_DELTA: 'DISTANCE_DELTA',
+  HealthDataType.MINDFULNESS: 'MINDFULNESS',
+  HealthDataType.WATER: 'WATER',
+  HealthDataType.SLEEP_IN_BED: 'SLEEP_IN_BED',
+  HealthDataType.SLEEP_ASLEEP: 'SLEEP_ASLEEP',
+  HealthDataType.SLEEP_AWAKE: 'SLEEP_AWAKE',
   HealthDataType.HIGH_HEART_RATE_EVENT: 'HIGH_HEART_RATE_EVENT',
   HealthDataType.LOW_HEART_RATE_EVENT: 'LOW_HEART_RATE_EVENT',
   HealthDataType.IRREGULAR_HEART_RATE_EVENT: 'IRREGULAR_HEART_RATE_EVENT',

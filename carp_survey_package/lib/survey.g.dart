@@ -14,7 +14,7 @@ RPTaskMeasure _$RPTaskMeasureFromJson(Map<String, dynamic> json) {
     name: json['name'] as String,
     enabled: json['enabled'] as bool,
   )
-    ..c__ = json['c__'] as String
+    ..$type = json[r'$type'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
     );
@@ -29,7 +29,7 @@ Map<String, dynamic> _$RPTaskMeasureToJson(RPTaskMeasure instance) {
     }
   }
 
-  writeNotNull('c__', instance.c__);
+  writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
   writeNotNull('name', instance.name);
   writeNotNull('enabled', instance.enabled);

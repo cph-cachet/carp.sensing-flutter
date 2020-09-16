@@ -1,26 +1,26 @@
 {
-  "c__": "Study",
+  "$type": "Study",
   "id": "1234",
   "name": "bardram study",
   "user_id": "bardram",
   "sampling_strategy": "NORMAL",
   "data_end_point": {
-    "c__": "DataEndPoint",
+    "$type": "DataEndPoint",
     "type": "PRINT"
   },
   "data_format": "carp",
   "triggers": [
     {
-      "c__": "ImmediateTrigger",
+      "$type": "ImmediateTrigger",
       "tasks": [
         {
-          "c__": "AutomaticTask",
+          "$type": "AutomaticTask",
           "name": "Task #1",
           "measures": [
             {
-              "c__": "Measure",
+              "$type": "Measure",
               "type": {
-                "c__": "MeasureType",
+                "$type": "MeasureType",
                 "namespace": "carp",
                 "name": "battery"
               },
@@ -29,14 +29,16 @@
               "configuration": {}
             },
             {
-              "c__": "HealthMeasure",
+              "$type": "HealthMeasure",
               "type": {
-                "c__": "MeasureType",
+                "$type": "MeasureType",
                 "namespace": "carp",
                 "name": "health"
               },
+              "name": "Steps",
               "enabled": true,
               "configuration": {},
+              "history": 86400000000,
               "health_data_type": "STEPS"
             }
           ]

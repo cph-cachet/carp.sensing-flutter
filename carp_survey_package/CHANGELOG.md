@@ -1,3 +1,6 @@
+## 0.9.0
+* upgrade to `carp_mobile_sensing` v. 0.9.x
+
 ## 0.8.2
 * support for canceling a survery ([Issue #77](https://github.com/cph-cachet/carp.sensing-flutter/issues/77))
 

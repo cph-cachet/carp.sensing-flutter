@@ -1,11 +1,11 @@
 {
-  "c__": "Study",
+  "$type": "Study",
   "id": "1234",
   "name": "bardram study",
   "user_id": "bardram",
   "sampling_strategy": "NORMAL",
   "data_end_point": {
-    "c__": "FileDataEndPoint",
+    "$type": "FileDataEndPoint",
     "type": "FILE",
     "buffer_size": 50000,
     "zip": true,
@@ -14,16 +14,16 @@
   "data_format": "carp",
   "triggers": [
     {
-      "c__": "ImmediateTrigger",
+      "$type": "ImmediateTrigger",
       "tasks": [
         {
-          "c__": "Task",
+          "$type": "Task",
           "name": "Sampling Task",
           "measures": [
             {
-              "c__": "Measure",
+              "$type": "Measure",
               "type": {
-                "c__": "MeasureType",
+                "$type": "MeasureType",
                 "namespace": "carp",
                 "name": "device"
               },
@@ -32,9 +32,9 @@
               "configuration": {}
             },
             {
-              "c__": "PeriodicMeasure",
+              "$type": "PeriodicMeasure",
               "type": {
-                "c__": "MeasureType",
+                "$type": "MeasureType",
                 "namespace": "carp",
                 "name": "memory"
               },
@@ -44,9 +44,9 @@
               "frequency": 60000000
             },
             {
-              "c__": "Measure",
+              "$type": "Measure",
               "type": {
-                "c__": "MeasureType",
+                "$type": "MeasureType",
                 "namespace": "carp",
                 "name": "battery"
               },
@@ -55,9 +55,9 @@
               "configuration": {}
             },
             {
-              "c__": "Measure",
+              "$type": "Measure",
               "type": {
-                "c__": "MeasureType",
+                "$type": "MeasureType",
                 "namespace": "carp",
                 "name": "screen"
               },
@@ -66,9 +66,9 @@
               "configuration": {}
             },
             {
-              "c__": "PeriodicMeasure",
+              "$type": "PeriodicMeasure",
               "type": {
-                "c__": "MeasureType",
+                "$type": "MeasureType",
                 "namespace": "carp",
                 "name": "accelerometer"
               },
@@ -79,9 +79,9 @@
               "duration": 1000
             },
             {
-              "c__": "PeriodicMeasure",
+              "$type": "PeriodicMeasure",
               "type": {
-                "c__": "MeasureType",
+                "$type": "MeasureType",
                 "namespace": "carp",
                 "name": "gyroscope"
               },
@@ -92,9 +92,9 @@
               "duration": 1000
             },
             {
-              "c__": "Measure",
+              "$type": "Measure",
               "type": {
-                "c__": "MeasureType",
+                "$type": "MeasureType",
                 "namespace": "carp",
                 "name": "pedometer"
               },
@@ -103,9 +103,9 @@
               "configuration": {}
             },
             {
-              "c__": "PeriodicMeasure",
+              "$type": "PeriodicMeasure",
               "type": {
-                "c__": "MeasureType",
+                "$type": "MeasureType",
                 "namespace": "carp",
                 "name": "light"
               },
@@ -114,30 +114,6 @@
               "configuration": {},
               "frequency": 60000000,
               "duration": 1000000
-            },
-            {
-              "c__": "Measure",
-              "type": {
-                "c__": "MeasureType",
-                "namespace": "carp",
-                "name": "apps"
-              },
-              "name": "Installed Apps",
-              "enabled": true,
-              "configuration": {}
-            },
-            {
-              "c__": "MarkedMeasure",
-              "type": {
-                "c__": "MeasureType",
-                "namespace": "carp",
-                "name": "app_usage"
-              },
-              "name": "Apps Usage",
-              "enabled": true,
-              "configuration": {},
-              "mark": "2020-05-27T00:00:24.716257",
-              "history": 86400000000
             }
           ]
         }

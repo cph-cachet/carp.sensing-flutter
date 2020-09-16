@@ -1,3 +1,6 @@
+## 1.1.0
+* upgrade to `carp_mobile_sensing` v. 0.9.x
+
 ## 1.0.1
 * Synced with Health version 2.0.2
 

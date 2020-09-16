@@ -231,7 +231,7 @@ CalendarMeasure _$CalendarMeasureFromJson(Map<String, dynamic> json) {
         ? null
         : Duration(microseconds: json['future'] as int),
   )
-    ..c__ = json['c__'] as String
+    ..$type = json[r'$type'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
     );
@@ -246,7 +246,7 @@ Map<String, dynamic> _$CalendarMeasureToJson(CalendarMeasure instance) {
     }
   }
 
-  writeNotNull('c__', instance.c__);
+  writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
   writeNotNull('name', instance.name);
   writeNotNull('enabled', instance.enabled);
