@@ -8,7 +8,7 @@ String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(objec
 void main() {
   setUp(() {
     // This is a hack. Need to create some serialization object in order to intialize searialization.
-    Study study = Study("1234", "kkk");
+    Study("1234", "kkk");
   });
 
 //  /// Test if we can load a raw JSON from a file and convert it into a [Study] object with all its [Task]s and [Measure]s.
@@ -51,7 +51,8 @@ void main() {
       print('${t.firstOccurrence} - ${t.period}');
       expect(t.period.inDays, 2 * 7);
 
-      // collect quarterly on the 11th day of the first month in each quarter at 21:30
+      // collect quarterly on the 11th day of the first month
+      // in each quarter at 21:30
       t = RecurrentScheduledTrigger(type: RecurrentType.monthly, dayOfMonth: 11, separationCount: 2, time: Time(hour: 21, minute: 30));
       print('${t.firstOccurrence} - ${t.period}');
       expect(t.period.inDays, 3 * 30);
@@ -62,7 +63,8 @@ void main() {
       expect(t.firstOccurrence.weekday, DateTime.tuesday);
       expect(t.period.inDays, 30);
 
-      // collect quarterly as above, but remember this trigger across app shutdown
+      // collect quarterly as above,
+      // but remember this trigger across app shutdown
       t = RecurrentScheduledTrigger(
         triggerId: '1234wef',
         type: RecurrentType.monthly,
@@ -78,7 +80,11 @@ void main() {
     test(' - RecurrentScheduledTrigger - assert failures', () {
       // all of the following should fail due to assert
       RecurrentScheduledTrigger(type: RecurrentType.daily);
-      RecurrentScheduledTrigger(type: RecurrentType.daily, separationCount: -1, time: Time(hour: 13, minute: 30));
+      RecurrentScheduledTrigger(
+        type: RecurrentType.daily,
+        separationCount: -1,
+        time: Time(hour: 13, minute: 30),
+      );
 
       RecurrentScheduledTrigger(type: RecurrentType.weekly, time: Time(hour: 12, minute: 23));
 

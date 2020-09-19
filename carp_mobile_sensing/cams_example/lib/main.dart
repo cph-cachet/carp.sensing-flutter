@@ -4,22 +4,22 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-import 'package:flutter/material.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+import 'package:flutter/material.dart';
 //import 'package:carp_apps_package/apps.dart';
 
-void main() => runApp(new CARPMobileSensingApp());
+void main() => runApp(CARPMobileSensingApp());
 
 class CARPMobileSensingApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
+    return MaterialApp(
       title: 'CARP Mobile Sensing Demo',
-      theme: new ThemeData(
+      theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: new ConsolePage(title: 'CARP Mobile Sensing Demo'),
+      home: ConsolePage(title: 'CARP Mobile Sensing Demo'),
     );
   }
 }
@@ -30,7 +30,7 @@ class ConsolePage extends StatefulWidget {
   final String title;
 
   @override
-  Console createState() => new Console();
+  Console createState() => Console();
 }
 
 class Console extends State<ConsolePage> {
@@ -57,7 +57,7 @@ class Console extends State<ConsolePage> {
   @override
   void initState() {
     super.initState();
-    sensing = new Sensing(this);
+    sensing = Sensing(this);
     sensing.start();
   }
 
@@ -69,14 +69,14 @@ class Console extends State<ConsolePage> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text(widget.title),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
       ),
-      body: new SingleChildScrollView(
+      body: SingleChildScrollView(
         child: StreamBuilder(
           stream: sensing.controller.events,
-          builder: (context, AsyncSnapshot<Datum> snapshot) {
+          builder: (context, snapshot) {
             if (snapshot.hasData) {
               _log += "${snapshot.data.toString()}\n";
               return Text(_log);
@@ -87,28 +87,26 @@ class Console extends State<ConsolePage> {
           },
         ),
       ),
-      floatingActionButton: new FloatingActionButton(
+      floatingActionButton: FloatingActionButton(
         onPressed: restart,
         tooltip: 'Restart study & probes',
-        child: new Icon(Icons.cached),
+        child: Icon(Icons.cached),
       ),
     );
   }
 }
 
-/// This class implements sensing incl. setting up a [Study] with [Task]s and [Measure]s.
+/// This class implements sensing incl. setting up a [Study] with [Task]s
+/// and [Measure]s.
 ///
-/// This example is useful for creating a Business Logical Object (BLOC) in a Flutter app.
-/// See e.g. the CARP Mobile Sensing App.
+/// This example is useful for creating a Business Logical Object (BLOC)
+/// in a Flutter app. See e.g. the CARP Mobile Sensing App.
 class Sensing {
   Study study;
   Console console;
   StudyController controller;
 
-  Sensing(this.console) {
-    //DataManagerRegistry.register(DataEndPointType.PRINT, new ConsoleDataManager());
-    //DataManagerRegistry.register(DataEndPointType.FILE, new FileDataManager());
-  }
+  Sensing(this.console);
 
   /// (Re)start sensing.
   void start() async {
@@ -131,8 +129,7 @@ class Sensing {
 //                AppsSamplingPackage.APP_USAGE,
                 DeviceSamplingPackage.MEMORY,
               ],
-            ))
-    ;
+            ));
 
 //    SamplingPackageRegistry.register(AppsSamplingPackage());
 

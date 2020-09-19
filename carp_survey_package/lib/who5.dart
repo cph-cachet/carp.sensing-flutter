@@ -9,7 +9,8 @@ List<RPChoice> choices = [
   RPChoice.withParams("At no time", 0),
 ];
 
-RPChoiceAnswerFormat choiceAnswerFormat = RPChoiceAnswerFormat.withParams(ChoiceAnswerStyle.SingleChoice, choices);
+RPChoiceAnswerFormat choiceAnswerFormat =
+    RPChoiceAnswerFormat.withParams(ChoiceAnswerStyle.SingleChoice, choices);
 
 RPQuestionStep who5Question1 = RPQuestionStep.withAnswerFormat(
   "who5_question1",

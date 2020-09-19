@@ -11,7 +11,7 @@ part of runtime;
 /// See [StudyExecutor] and [TaskExecutor] for examples.
 abstract class Executor extends AbstractProbe {
   static final Device deviceInfo = new Device();
-  StreamGroup<Datum> _group = StreamGroup<Datum>.broadcast();
+  final StreamGroup<Datum> _group = StreamGroup<Datum>.broadcast();
   List<Probe> executors = new List<Probe>();
   Stream<Datum> get events => _group.stream;
 
@@ -61,7 +61,6 @@ class StudyExecutor extends Executor {
     for (Trigger trigger in study.triggers) {
       TriggerExecutor executor = getTriggerExecutor(trigger);
       _group.add(executor.events);
-
       executors.add(executor);
     }
   }
@@ -399,7 +398,7 @@ class AppTaskExecutor extends TaskExecutor {
   AppTaskExecutor(AppTask task)
       : assert(task is AppTask, "UserTaskExecutor should be ininialized with a UserTask."),
         super(task) {
-    _appTask = task as AppTask;
+    _appTask = task;
 
     // create an embedded executor that later can be used to execute this task
     _taskExecutor = TaskExecutor(task);

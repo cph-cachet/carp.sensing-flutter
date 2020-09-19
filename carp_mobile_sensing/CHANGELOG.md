@@ -1,29 +1,26 @@
 ## 0.9.0
-* New polymorphic JSON serialization using `$type` for class type identifier.
-* Update of documentation and examples. See [Issue #92](https://github.com/cph-cachet/carp.sensing-flutter/issues/92).
-* 
+* refactor: new polymorphic JSON serialization using `$type` for class type identifier.
+* docs: update of documentation and examples ([#92](https://github.com/cph-cachet/carp.sensing-flutter/issues/92))
 
 ## 0.8.8
-* Support for saving ("remembering") `RecurrentScheduledTrigger` across app shutdown.
-See [Issue #80](https://github.com/cph-cachet/carp.sensing-flutter/issues/80).
+* feature: support for saving ("remembering") `RecurrentScheduledTrigger` across app shutdown ([#80](https://github.com/cph-cachet/carp.sensing-flutter/issues/80))
 
 ## 0.8.7
-* Support for monthly recurrences in `RecurrentScheduledTrigger`. 
-See [Issue #78](https://github.com/cph-cachet/carp.sensing-flutter/issues/78).
+* feature: support for monthly recurrences in `RecurrentScheduledTrigger` ([#78](https://github.com/cph-cachet/carp.sensing-flutter/issues/78))
 
 ## 0.8.6
-* Updated to the new pedometer API
+* update: updated to the new pedometer API
 
 ## 0.8.5
-* Removed the Apps package and moved this to an external package
+* refactor: removed the Apps package and moved this to an external package
 
 ## 0.8.2
-* Converted from a plugin to a package by overhauling the project.
+* refactor: converted from a plugin to a package by overhauling the project
 
 ## 0.8.1
-* Support for Deployment ID in `Study`.
-* Upgrade to `screen_state` v. 1.x
-* Upgrade to [Android Embedding v2](https://github.com/flutter/flutter/wiki/Upgrading-pre-1.12-Android-projects).
+* feature: support for Deployment ID in `Study`.
+* update: upgrade to `screen_state` v. 1.x
+* update: upgrade to [Android Embedding v2](https://github.com/flutter/flutter/wiki/Upgrading-pre-1.12-Android-projects).
 
 ## 0.8.0
 * using the Dart `Duration` class in many places where duration previously was specified using miliseconds.
@@ -43,7 +40,7 @@ Useful for collecting things like log entries and health data.
 * Fixed issue [#61](https://github.com/cph-cachet/carp.sensing-flutter/issues/61).
 
 ## 0.7.0 - Extended Task Model
-* **BREAKING** - this release break some parts of the previous API.
+* **BREAKING**: this release break some parts of the previous API.
 * Extended Task model -- introduction of a `AutomaticTask` and `AppTask`.
 * Added support for "manually" adding data points (`Datum`) and errors to the data stream (`events`). This is part of the `StudyExecutor` API.
 * The `start()` method on all executors (probes, and study, trigger & task executors) has been removed. 
@@ -56,7 +53,7 @@ For example, an audio file (see the `carp_audio_package`).
 * upgrade to `persmission_handler` v. 5.x
 
 ## 0.6.4
-* Support 1.0.0 version of stable dependencies. ([dart_lsc](http://github.com/amirh/dart_lsc))
+* Support 1.0.0 version of stable dependencies. ([dart_lsc](https://github.com/amirh/dart_lsc))
 
 ## 0.6.3
 * moved the `connectivity` sampling package to an external [`carp_connectivity_package`](https://pub.dev/packages/carp_connectivity_package) 

@@ -1,0 +1,18 @@
+include: package:effective_dart/analysis_options.yaml
+
+linter:
+  rules:
+    avoid_shadowing_type_parameters: false
+    await_only_futures: true
+    camel_case_types: false
+    omit_local_variable_types: false
+    constant_identifier_names: false
+    avoid_classes_with_only_static_members: false
+
+
+analyzer:
+  exclude:
+    - lib/client.dart
+    - lib/server/*.g.dart
+    - test/**
+    - example/**

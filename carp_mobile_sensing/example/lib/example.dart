@@ -88,7 +88,7 @@ void example_2() async {
   controller.events.forEach(print);
 
   // listen on only CARP events
-  controller.events.where((datum) => datum.format.namepace == NameSpace.CARP).forEach(print);
+  controller.events.where((datum) => datum.format.namespace == NameSpace.CARP).forEach(print);
 
   // listen on LIGHT events only
   controller.events.where((datum) => datum.format.name == SensorSamplingPackage.LIGHT).forEach(print);

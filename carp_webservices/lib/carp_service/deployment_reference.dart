@@ -20,8 +20,17 @@ class DeploymentReference extends CarpReference {
   /// Default name is `phone`.
   String masterDeviceRoleName = 'phone';
 
+  /// The role name of this device as registered at CARP.
+  String deviceRoleName;
+
   DeploymentReference._(CarpService service, [this.masterDeviceRoleName = 'phone']) : super._(service) {
     this.masterDeviceRoleName ??= 'phone';
+
+    // register all the fromJson function for the deployment domain classes.
+    FromJsonFactory.registerFromJsonFunction("dk.cachet.carp.deployment.domain.StudyDeploymentStatus.Invited", StudyDeploymentStatus.fromJsonFunction);
+    FromJsonFactory.registerFromJsonFunction("dk.cachet.carp.deployment.domain.StudyDeploymentStatus.DeployingDevices", StudyDeploymentStatus.fromJsonFunction);
+    FromJsonFactory.registerFromJsonFunction("dk.cachet.carp.deployment.domain.StudyDeploymentStatus.DeploymentReady", StudyDeploymentStatus.fromJsonFunction);
+    FromJsonFactory.registerFromJsonFunction("dk.cachet.carp.deployment.domain.StudyDeploymentStatus.Stopped", StudyDeploymentStatus.fromJsonFunction);
   }
 
   /// The URL for the deployment endpoint for this [DeploymentReference].
@@ -49,18 +58,16 @@ class DeploymentReference extends CarpReference {
     int httpStatusCode = response.statusCode;
 
     print(httpStatusCode);
+    Map<String, dynamic> responseJson = json.decode(response.body);
+    print(responseJson.toString());
 
     if (httpStatusCode == HttpStatus.ok) {
-      List<dynamic> responseJson = json.decode(response.body);
       print(responseJson.toString());
+      //return StudyDeploymentStatus(id);
       return StudyDeploymentStatus.fromJson(responseJson);
     }
 
     // All other cases are treated as an error.
-
-    Map<String, dynamic> responseJson = json.decode(response.body);
-    print(responseJson.toString());
-
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
       message: responseJson["message"],
@@ -68,11 +75,16 @@ class DeploymentReference extends CarpReference {
   }
 
   /// Register this device for this deployment at the CARP server.
+  ///  * [deviceRoleName] - the role name of this device, e.g. `phone`.
+  ///  * [deviceId] - a unique ID for this device.
   ///
-  /// Returns true if the registration is successful; throws a [CarpServiceException] if not.
-  Future<bool> registerDevice(String deviceRoleName, String deviceId) async {
+  /// Returns the updated study deployment status if the registration is successful.
+  /// Throws a [CarpServiceException] if not.
+  Future<StudyDeploymentStatus> registerDevice(deviceRoleName, String deviceId) async {
     assert(deviceRoleName != null);
     assert(deviceId != null);
+
+    this.deviceRoleName = deviceRoleName;
 
     final restHeaders = await headers;
     String body = _encode(DeviceRegistring(id, deviceRoleName, deviceId).toJson());
@@ -84,17 +96,12 @@ class DeploymentReference extends CarpReference {
     int httpStatusCode = response.statusCode;
     print(httpStatusCode);
 
-    if (httpStatusCode == HttpStatus.ok) {
-      List<dynamic> responseJson = json.decode(response.body);
-      print(responseJson.toString());
-      return true;
-    }
-
-    // All other cases are treated as an error.
-
     Map<String, dynamic> responseJson = json.decode(response.body);
     print(responseJson.toString());
 
+    if (httpStatusCode == HttpStatus.ok) return StudyDeploymentStatus.fromJson(responseJson);
+
+    // All other cases are treated as an error.
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
       message: responseJson["message"],
@@ -104,20 +111,22 @@ class DeploymentReference extends CarpReference {
   /// Unregister this device for this deployment at the CARP server.
   ///
   /// Returns true if the unregister is successful; throws a [CarpServiceException] if not.
-  Future<bool> unRegisterDevice() async {
+  Future<StudyDeploymentStatus> unRegisterDevice() async {
     final restHeaders = await headers;
     final String uri = "deploymentEndpointUri/$id/devices";
+    String body = _encode(DeviceUnregistring(id, deviceRoleName).toJson());
 
     print(uri);
+    print(body);
 
-    http.Response response = await httpr.post(Uri.encodeFull(deploymentEndpointUri), headers: restHeaders, body: '');
+    http.Response response = await httpr.post(Uri.encodeFull(deploymentEndpointUri), headers: restHeaders, body: body);
     int httpStatusCode = response.statusCode;
+    Map<String, dynamic> responseJson = json.decode(response.body);
     print(httpStatusCode);
 
-    if (httpStatusCode == HttpStatus.ok) return true;
+    if (httpStatusCode == HttpStatus.ok) return StudyDeploymentStatus.fromJson(responseJson);
 
     // All other cases are treated as an error.
-    Map<String, dynamic> responseJson = json.decode(response.body);
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
       message: responseJson["message"],
@@ -126,7 +135,7 @@ class DeploymentReference extends CarpReference {
 
   /// Get the deployment object at the server for this [DeploymentReference]
   /// for the specified [deviceRoleName]. Default to `phone` is not specified.
-  Future<StudyDeploymentSnapshot> get([String deviceRoleName]) async {
+  Future<StudyDeployment> get([String deviceRoleName]) async {
     final restHeaders = await headers;
 
     this.masterDeviceRoleName = deviceRoleName ?? 'phone';
@@ -141,7 +150,7 @@ class DeploymentReference extends CarpReference {
     print(httpStatusCode);
     print(responseJson.toString());
 
-    if (httpStatusCode == HttpStatus.ok) return StudyDeploymentSnapshot._(id, masterDeviceRoleName, null);
+    if (httpStatusCode == HttpStatus.ok) return StudyDeployment._(id, masterDeviceRoleName, null);
 
     // All other cases are treated as an error.
     throw CarpServiceException(
@@ -151,20 +160,22 @@ class DeploymentReference extends CarpReference {
   }
 
   /// Mark this deployment as a success on the CARP server.
-  Future<bool> success() async {
+  Future<StudyDeploymentStatus> success() async {
     final restHeaders = await headers;
     final String uri = "deploymentEndpointUri/$id/success";
+    final String body = _encode(DeploymentServiceRequest(id, masterDeviceRoleName).toJson());
 
     print(uri);
+    print(body);
 
-    http.Response response = await httpr.post(Uri.encodeFull(deploymentEndpointUri), headers: restHeaders, body: '');
+    http.Response response = await httpr.post(Uri.encodeFull(deploymentEndpointUri), headers: restHeaders, body: body);
     int httpStatusCode = response.statusCode;
     print(httpStatusCode);
+    Map<String, dynamic> responseJson = json.decode(response.body);
 
-    if (httpStatusCode == HttpStatus.ok) return true;
+    if (httpStatusCode == HttpStatus.ok) return StudyDeploymentStatus.fromJson(responseJson);
 
     // All other cases are treated as an error.
-    Map<String, dynamic> responseJson = json.decode(response.body);
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
       message: responseJson["message"],
@@ -172,12 +183,16 @@ class DeploymentReference extends CarpReference {
   }
 }
 
-/// A [StudyDeploymentSnapshot] contains data read from a deployment in the CARP web service
+// -----------------------------------------------------
+// Deployment Domain Classes
+// -----------------------------------------------------
+
+/// A [StudyDeployment] contains data read from a deployment in the CARP web service
 ///
 /// The data can be extracted with the [data] property or by using subscript
 /// syntax to access a specific field.
-class StudyDeploymentSnapshot {
-  StudyDeploymentSnapshot._(this._id, this._masterDeviceRoleName, this._snapshot);
+class StudyDeployment {
+  StudyDeployment._(this._id, this._masterDeviceRoleName, this._snapshot);
 
   String _id;
   String _masterDeviceRoleName;
@@ -219,29 +234,85 @@ class StudyDeploymentSnapshot {
   /// Returns `true` if the document exists.
   bool get exists => data != null;
 
-  String toString() => "${this.runtimeType} - deploymentId: $id, masterDeviceRoleName: $masterDeviceRoleName,  size: ${data?.length}";
+  String toString() => "$runtimeType - deploymentId: $id, masterDeviceRoleName: $masterDeviceRoleName,  size: ${data?.length}";
 }
 
-/// A [StudyDeploymentStatus] contains data read from a deployment in the CARP web service
-class StudyDeploymentStatus {
-  StudyDeploymentStatus(this.id);
+/// A [StudyDeploymentStatus] represents the status of a deployment as returned from the CARP web service.
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+class StudyDeploymentStatus extends Serializable {
+  StudyDeploymentStatus(this.studyDeploymentId);
 
-  /// The CARP deployment ID.
-  String id;
+  /// The CARP study deployment ID.
+  String studyDeploymentId;
+  List<DeviceDeploymentStatus> devicesStatus;
+  DateTime startTime;
 
-  factory StudyDeploymentStatus.fromJson(List<dynamic> json) => StudyDeploymentStatus(json[1]['studyDeploymentId'].toString());
+  /// Get the status of this device deployment:
+  /// * Invited
+  /// * DeployingDevices
+  /// * DeploymentReady
+  /// * Stopped
+  String get status => $type.split('.').last;
 
-  String toString() => "${this.runtimeType} - deploymentId: $id";
+  //factory StudyDeploymentStatus.fromJson(Map<String, dynamic> json) => StudyDeploymentStatus(json[1]['studyDeploymentId'].toString());
+
+  static Function get fromJsonFunction => _$StudyDeploymentStatusFromJson;
+  factory StudyDeploymentStatus.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$StudyDeploymentStatusToJson(this);
+
+  String toString() => "$runtimeType - deploymentId: $studyDeploymentId, status: $status";
 }
 
-/// A [DeviceRegistring] contains the data for registering this device for this deployment
-/// in the CARP web service
-///
+/// A [DeviceDeploymentStatus] represents the status of a device in a deployment.
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+class DeviceDeploymentStatus extends Serializable {
+  DeviceDeploymentStatus();
+
+  DeviceDescriptor device;
+  bool requiresDeployment;
+  List<String> remainingDevicesToRegisterToObtainDeployment;
+  List<String> remainingDevicesToRegisterBeforeDeployment;
+
+  /// Get the status of this device deployment:
+  /// * Unregistered
+  /// * Registered
+  /// * Deployed
+  /// * NeedsRedeployment
+  String get status => $type.split('.').last;
+
+  static Function get fromJsonFunction => _$DeviceDeploymentStatusFromJson;
+  factory DeviceDeploymentStatus.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$DeviceDeploymentStatusToJson(this);
+
+  String toString() => "$runtimeType - status: $status";
+}
+
+/// A [DeviceDescriptor] represents the status of a deployment as returned from the CARP web service.
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+class DeviceDescriptor extends Serializable {
+  DeviceDescriptor();
+
+  bool isMasterDevice;
+  String roleName;
+  Map<String, dynamic> samplingConfiguration;
+
+  /// Get the type of this device, like `Smartphone`.
+  String get deviceType => $type.split('.').last;
+
+  static Function get fromJsonFunction => _$DeviceDescriptorFromJson;
+  factory DeviceDescriptor.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$DeviceDescriptorToJson(this);
+
+  String toString() => "$runtimeType - isMasterDevice: $isMasterDevice, : $roleName, deviceType: $deviceType";
+}
+
+/// A [DeviceRegistring] contains the data for registering this device for
+/// this deployment in the CARP web service
 class DeviceRegistring {
-  DeviceRegistring(this.id, this.deviceRoleName, this.deviceId);
+  DeviceRegistring(this.studyDeploymentId, this.deviceRoleName, this.deviceId);
 
-  /// The CARP deployment ID.
-  String id;
+  /// The CARP study deployment ID.
+  String studyDeploymentId;
 
   /// The role name of this device.
   String deviceRoleName;
@@ -249,20 +320,62 @@ class DeviceRegistring {
   /// The ID of this device.
   String deviceId;
 
-  String get registerDeviceJson => '['
-      '"dk.cachet.carp.deployment.infrastructure.DeploymentServiceRequest.RegisterDevice",'
-      '{'
-      '  "studyDeploymentId":"$id",'
-      '  "deviceRoleName":"$deviceRoleName",'
-      '  "registration":['
-      '    "dk.cachet.carp.protocols.domain.devices.DefaultDeviceRegistration",'
-      '    {'
-      '      "deviceId":"$deviceId"'
-      '    }'
-      '  ]'
-      '}]';
+  String get registerDeviceJson => '{  '
+      '"\$type": "dk.cachet.carp.deployment.infrastructure.DeploymentServiceRequest.RegisterDevice",  '
+      '"studyDeploymentId": "$studyDeploymentId",  '
+      '"deviceRoleName": "$deviceRoleName",  '
+      '"registration": {  '
+      '"\$type": "dk.cachet.carp.protocols.domain.devices.DefaultDeviceRegistration",  '
+      '"registrationCreationDate": ${DateTime.now().millisecondsSinceEpoch},  '
+      '"deviceId": "$deviceId"  '
+      '}}';
 
-  List<dynamic> toJson() => json.decode(registerDeviceJson);
+  Map<String, dynamic> toJson() => json.decode(registerDeviceJson);
 
-  String toString() => "${this.runtimeType} - deploymentId: $id, deviceRoleName: $deviceRoleName, deviceId: $deviceId";
+  String toString() => "$runtimeType - studyDeploymentId: $studyDeploymentId, deviceRoleName: $deviceRoleName, deviceId: $deviceId";
+}
+
+/// A [DeviceUnregistring] contains the data for unregistering this device for
+/// this deployment in the CARP web service
+class DeviceUnregistring {
+  DeviceUnregistring(this.studyDeploymentId, this.deviceRoleName);
+
+  /// The CARP study deployment ID.
+  String studyDeploymentId;
+
+  /// The role name of this device.
+  String deviceRoleName;
+
+  String get unregisterDeviceJson => '{  '
+      '"\$type": "dk.cachet.carp.deployment.infrastructure.DeploymentServiceRequest.UnregisterDevice",  '
+      '"studyDeploymentId": "$studyDeploymentId",  '
+      '"deviceRoleName": "$deviceRoleName"'
+      '}';
+
+  Map<String, dynamic> toJson() => json.decode(unregisterDeviceJson);
+
+  String toString() => "$runtimeType - studyDeploymentId: $studyDeploymentId, deviceRoleName: $deviceRoleName";
+}
+
+/// A [DeploymentServiceRequest] contains the data for registering a successful
+/// registration of a deployment in the CARP web service
+class DeploymentServiceRequest {
+  DeploymentServiceRequest(this.studyDeploymentId, this.masterDeviceRoleName);
+
+  /// The CARP study deployment ID.
+  String studyDeploymentId;
+
+  /// The role name of this device.
+  String masterDeviceRoleName;
+
+  String get registerDeviceJson => ''
+      '{"\$type": "dk.cachet.carp.deployment.infrastructure.DeploymentServiceRequest.DeploymentSuccessful",   '
+      '"studyDeploymentId": "$studyDeploymentId",  '
+      '"masterDeviceRoleName": "$masterDeviceRoleName",  '
+      '"deviceDeploymentLastUpdateDate": ${DateTime.now().millisecondsSinceEpoch}'
+      '}';
+
+  Map<String, dynamic> toJson() => json.decode(registerDeviceJson);
+
+  String toString() => "$runtimeType - studyDeploymentId: $studyDeploymentId, masterDeviceRoleName: $masterDeviceRoleName";
 }

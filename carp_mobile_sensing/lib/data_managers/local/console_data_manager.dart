@@ -7,8 +7,8 @@
 
 part of data_managers;
 
-/// A very simple data manager that just "uploads" the data to the console (i.e., prints it).
-/// Used mainly for testing and debugging purposes.
+/// A very simple data manager that just "uploads" the data to the c
+/// onsole (i.e., prints it). Used mainly for testing and debugging purposes.
 class ConsoleDataManager extends AbstractDataManager {
   String get type => DataEndPointTypes.PRINT;
 
@@ -16,7 +16,7 @@ class ConsoleDataManager extends AbstractDataManager {
 
   void onDone() {}
 
-  void onError(error) => print(">> ${jsonEncode(ErrorDatum(error))}");
+  void onError(Object error) => print(">> ${jsonEncode(ErrorDatum(error))}");
 
   String toString() => "JSON Print Data Manager";
 }

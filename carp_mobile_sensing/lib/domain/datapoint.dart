@@ -16,18 +16,23 @@ class DataPoint {
   /// The CARP data point body. Can be any payload modelled as a [Datum].
   Datum body;
 
+  /// Create a new [DataPoint].
   DataPoint(this.header, this.body);
 
-  DataPoint.fromDatum(String studyId, String userId, Datum datum) {
-    DataPointHeader header = new DataPointHeader(studyId, userId);
-    header.startTime = (datum is CARPDatum) ? datum.timestamp.toUtc() : new DateTime.now().toUtc();
-    header.dataFormat = datum.format;
-
-    this.header = header;
-    this.body = datum;
+  /// Create a new [DataPoint] bases on a [studyId], a [userId] and a [Datum].
+  DataPoint.fromDatum(String studyId, String userId, this.body) {
+    header = DataPointHeader(studyId, userId);
+    header.startTime = (body is CARPDatum)
+        ? (body as CARPDatum).timestamp.toUtc()
+        : DateTime.now().toUtc();
+    header.dataFormat = body.format;
   }
 
-  factory DataPoint.fromJson(Map<String, dynamic> json) => _$DataPointFromJson(json);
+  /// Create a [DataPoint] from a JSON map.
+  factory DataPoint.fromJson(Map<String, dynamic> json) =>
+      _$DataPointFromJson(json);
+
+  /// Serialize this [DataPoint] as a JSON map.
   Map<String, dynamic> toJson() => _$DataPointToJson(this);
 }
 
@@ -54,12 +59,21 @@ class DataPointHeader {
   /// The data format. See [DataFormat] and [NameSpace].
   DataFormat dataFormat;
 
-  // Create a new [DataPointHeader]. [studyId] and [userId] are required.
-  DataPointHeader(this.studyId, this.userId, {this.startTime, this.endTime}) {
+  /// Create a new [DataPointHeader]. [studyId] and [userId] are required.
+  DataPointHeader(
+    this.studyId,
+    this.userId, {
+    this.startTime,
+    this.endTime,
+  }) {
     if (startTime != null) startTime.toUtc();
     if (endTime != null) endTime.toUtc();
   }
 
-  factory DataPointHeader.fromJson(Map<String, dynamic> json) => _$DataPointHeaderFromJson(json);
+  /// Create a [DataPointHeader] from a JSON map.
+  factory DataPointHeader.fromJson(Map<String, dynamic> json) =>
+      _$DataPointHeaderFromJson(json);
+
+  /// Return a JSON encoding of this object.
   Map<String, dynamic> toJson() => _$DataPointHeaderToJson(this);
 }

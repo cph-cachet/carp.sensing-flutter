@@ -1,6 +1,6 @@
-import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'dart:convert';
-//import 'package:carp_apps_package/apps.dart';
+
+import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 void sensing() async {
   // create the study
@@ -18,8 +18,7 @@ void sensing() async {
 //            AppsSamplingPackage.APP_USAGE,
             SensorSamplingPackage.ACCELEROMETER,
             SensorSamplingPackage.GYROSCOPE
-          ]))
-  ;
+          ]));
 
   // setup and start the sampling runtime
   StudyController controller = StudyController(study);
@@ -27,7 +26,7 @@ void sensing() async {
   controller.resume();
 
   // subscribe to events
-  controller.events.listen((Datum datum) {
+  controller.events.listen((datum) {
     // do something w. the datum, e.g. print the json
     print(JsonEncoder.withIndent(' ').convert(datum));
   });

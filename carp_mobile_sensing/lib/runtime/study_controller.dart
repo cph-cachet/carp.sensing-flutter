@@ -65,7 +65,9 @@ class StudyController {
     // now initialize optional parameters
     executor ??= StudyExecutor(study);
     samplingSchema ??= SamplingSchema.normal(powerAware: true);
-    dataManager ??= (study.dataEndPoint != null) ? DataManagerRegistry.lookup(study.dataEndPoint.type) : null;
+    dataManager ??= (study.dataEndPoint != null)
+        ? DataManagerRegistry.lookup(study.dataEndPoint.type)
+        : null;
     privacySchemaName ??= NameSpace.CARP;
     transformer ??= ((events) => events);
 
@@ -81,23 +83,29 @@ class StudyController {
     // 2. preferred data format as specified in the study protocol
     // 3. any custom transformer
     events = transformer(executor.events
-        .map((datum) => TransformerSchemaRegistry.lookup(privacySchemaName).transform(datum))
-        .map((datum) => TransformerSchemaRegistry.lookup(study.dataFormat).transform(datum)));
+        .map((datum) => TransformerSchemaRegistry.lookup(privacySchemaName)
+            .transform(datum))
+        .map((datum) => TransformerSchemaRegistry.lookup(study.dataFormat)
+            .transform(datum)));
 
     // old, simple version below
     // events = transformer(executor.events);
   }
 
-  /// Initialize this controller. Must be called only once, and before [start] is called.
+  /// Initialize this controller. Must be called only once,
+  /// and before [resume] is called.
   Future<void> initialize() async {
     // start getting basic device info.
-    await Device.getDeviceInfo();
+    Device.getDeviceInfo();
 
     // setting up permissions
-    permissions = await PermissionHandlerPlatform.instance.requestPermissions(SamplingPackageRegistry.permissions);
+    permissions = await PermissionHandlerPlatform.instance
+        .requestPermissions(SamplingPackageRegistry.permissions);
     SamplingPackageRegistry.permissions.forEach((permission) {
       PermissionStatus status = permissions[permission];
-      if (status != PermissionStatus.granted) warning('Permissions not granted for $permission, permission is $status');
+      if (status != PermissionStatus.granted)
+        warning(
+            'Permissions not granted for $permission, permission is $status');
     });
 
     print('CARP Mobile Sensing (CAMS) - Initializing Study Controller: ');
@@ -119,7 +127,8 @@ class StudyController {
     }
 
     await dataManager?.initialize(study, events);
-    await executor.initialize(Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR)));
+    await executor
+        .initialize(Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR)));
 
     enablePowerAwareness();
 
@@ -135,10 +144,12 @@ class StudyController {
         BatteryDatum batteryState = (datum as BatteryDatum);
         if (batteryState.batteryStatus == BatteryDatum.STATE_DISCHARGING) {
           // only apply power-awareness if not charging.
-          PowerAwarenessState newState = powerAwarenessState.adapt(batteryState.batteryLevel);
+          PowerAwarenessState newState =
+              powerAwarenessState.adapt(batteryState.batteryLevel);
           if (newState != powerAwarenessState) {
             powerAwarenessState = newState;
-            print('PowerAware: Going to $powerAwarenessState, level ${batteryState.batteryLevel}%');
+            print(
+                'PowerAware: Going to $powerAwarenessState, level ${batteryState.batteryLevel}%');
             study.adapt(powerAwarenessState.schema);
           }
         }

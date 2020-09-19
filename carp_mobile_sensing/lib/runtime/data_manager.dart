@@ -38,7 +38,8 @@ abstract class DataManager {
 abstract class AbstractDataManager implements DataManager {
   Study study;
 
-  StreamController<DataManagerEvent> controller = StreamController<DataManagerEvent>.broadcast();
+  StreamController<DataManagerEvent> controller =
+      StreamController<DataManagerEvent>.broadcast();
   Stream<DataManagerEvent> get events => controller.stream;
   void addEvent(DataManagerEvent event) => controller.add(event);
 
@@ -48,21 +49,23 @@ abstract class AbstractDataManager implements DataManager {
     addEvent(DataManagerEvent(DataManagerEventTypes.initialized));
   }
 
-  Future<void> close() async => addEvent(DataManagerEvent(DataManagerEventTypes.closed));
+  Future<void> close() async =>
+      addEvent(DataManagerEvent(DataManagerEventTypes.closed));
 
   void onDatum(Datum datum);
   void onDone();
   void onError(error);
 
   /// JSON encode an object.
-  String jsonEncode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
+  String jsonEncode(Object object) =>
+      const JsonEncoder.withIndent(' ').convert(object);
 }
 
 /// A registry of [DataManager]s.
 ///
-/// When creating a new [DataManager] you can register it here using the [register] method
-/// which is later used to call [lookup] when trying to find an appropriate [DataManager] for
-/// a specific [DataEndPointType].
+/// When creating a new [DataManager] you can register it here using the
+/// [register] method which is later used to call [lookup] when trying to find
+/// an appropriate [DataManager] for a specific [DataEndPointType].
 class DataManagerRegistry {
   static Map<String, DataManager> _registry = new Map<String, DataManager>();
 
@@ -86,10 +89,12 @@ abstract class StudyManager {
   Future<Study> getStudy(String studyId);
 }
 
+/// An event for a data manager.
 class DataManagerEvent {
   /// The event type, see [DataManagerEventTypes].
   String type;
 
+  /// Create a [DataManagerEvent].
   DataManagerEvent(this.type);
 
   String toString() => 'DataManagerEvent - type: $type';
@@ -97,6 +102,9 @@ class DataManagerEvent {
 
 /// An enumeration of data manager event types
 class DataManagerEventTypes {
+  /// DATA MANAGER INITIALIZED event
   static const String initialized = 'initialized';
+
+  /// DATA MANAGER CLOSED event
   static const String closed = 'closed';
 }

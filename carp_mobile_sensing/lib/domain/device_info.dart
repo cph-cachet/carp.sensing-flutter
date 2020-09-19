@@ -9,11 +9,11 @@ part of domain;
 
 /// Provides (static) information about the local device.
 ///
-/// This class is a singleton that one time access the information from the local device
-/// to be used in the sensing framework.
+/// This class is a singleton that one time access the information from the
+/// local device to be used in the sensing framework.
 class Device {
-  // Basic device info about the device from which this datum were collected from.
-  static final DeviceInfoPlugin deviceInfoPlugin = new DeviceInfoPlugin();
+  /// Device info about the device from which this datum were collected from.
+  static final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
 
   static String platform;
   static String hardware;
@@ -25,9 +25,11 @@ class Device {
   static String sdk;
   static String release;
 
+  /// The device info for this device.
   static Map<String, dynamic> deviceData = <String, dynamic>{};
 
-  static getDeviceInfo() async {
+  /// Get the device info using the [DeviceInfoPlugin].
+  static void getDeviceInfo() async {
     Map<String, dynamic> _deviceData;
 
     try {
@@ -37,9 +39,10 @@ class Device {
         deviceData = _readIosDeviceInfo(await deviceInfoPlugin.iosInfo);
       }
     } on PlatformException {
-      deviceData = <String, dynamic>{'Error:': 'Failed to get platform version.'};
+      deviceData = <String, dynamic>{
+        'Error:': 'Failed to get platform version.'
+      };
     }
-
     deviceData = _deviceData;
   }
 

@@ -4,23 +4,25 @@
 /// obtained from a [StudyManager].
 library domain;
 
-import 'dart:io';
 import 'dart:convert';
-import 'package:meta/meta.dart';
-import 'package:json_annotation/json_annotation.dart';
-import 'package:uuid/uuid.dart';
+import 'dart:io';
+
 import 'package:device_info/device_info.dart';
 import 'package:flutter/services.dart';
-import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:meta/meta.dart';
+import 'package:uuid/uuid.dart';
 
+import '../carp_mobile_sensing.dart';
+
+part 'datapoint.dart';
+part 'datum.dart';
+part 'device_info.dart';
+part 'domain.g.dart';
+part 'measures.dart';
+part 'sampling_schema.dart';
 part 'serialization.dart';
 part 'study.dart';
 part 'tasks.dart';
-part 'datapoint.dart';
-part 'datum.dart';
-part 'measures.dart';
-part 'device_info.dart';
-part 'sampling_schema.dart';
 part 'transformers.dart';
 part 'triggers.dart';
-part 'domain.g.dart';

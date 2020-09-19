@@ -1,18 +1,22 @@
-import 'package:test/test.dart';
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+import 'package:test/test.dart';
 
 String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
 
 void main() {
   setUp(() {
-    // This is a hack. Need to create some serialization object in order to intialize searialization.
-    Study study = Study("1234", "kkk");
+    // This is a hack. Need to create a serialization object in order to
+    // initialize serialization.
+    Study("1234", "kkk");
   });
 
-  /// Test if we can load a raw JSON from a file and convert it into a [Study] object with all its [Task]s and [Measure]s.
-  /// Note that this test, tests if a [Study] object can be create 'from scratch', i.e. without having been created before.
+  /// Test if we can load a raw JSON from a file and convert it into a [Study]
+  /// object with all its [Task]s and [Measure]s.
+  /// Note that this test, tests if a [Study] object can be create
+  /// 'from scratch', i.e. without having been created before.
   test('Raw JSON string -> Study object', () async {
     String plainStudyJson = File("test/study_1234.json").readAsStringSync();
 

@@ -26,15 +26,14 @@ void example() async {
   study.addTriggerTask(
       DelayedTrigger(delay: Duration(seconds: 1)),
       AutomaticTask(name: 'Sensor Task')
-        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
-            frequency: const Duration(seconds: 10), duration: const Duration(milliseconds: 100)))
-        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
-            frequency: const Duration(seconds: 20), duration: const Duration(milliseconds: 100))));
-
-//  study.addTriggerTask(
-//      PeriodicTrigger(period: const Duration(days: 1)), // trigger sampling once pr. day
-//      AutomaticTask(name: 'Task collecting a list of all installed apps')
-//        ..addMeasure(Measure(MeasureType(NameSpace.CARP, AppsSamplingPackage.APPS))));
+        ..addMeasure(PeriodicMeasure(
+            MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
+            frequency: const Duration(seconds: 10),
+            duration: const Duration(milliseconds: 100)))
+        ..addMeasure(PeriodicMeasure(
+            MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
+            frequency: const Duration(seconds: 20),
+            duration: const Duration(milliseconds: 100))));
 
   // creating measure variable to be used later
   PeriodicMeasure lightMeasure = PeriodicMeasure(
@@ -43,7 +42,8 @@ void example() async {
     frequency: const Duration(seconds: 11),
     duration: const Duration(milliseconds: 100),
   );
-  study.addTriggerTask(ImmediateTrigger(), AutomaticTask(name: 'Light')..addMeasure(lightMeasure));
+  study.addTriggerTask(ImmediateTrigger(),
+      AutomaticTask(name: 'Light')..addMeasure(lightMeasure));
 
   // Create a Study Controller that can manage this study.
   StudyController controller = StudyController(study);
@@ -56,10 +56,14 @@ void example() async {
   controller.events.forEach(print);
 
   // listen on only CARP events
-  controller.events.where((datum) => datum.format.namepace == NameSpace.CARP).forEach(print);
+  controller.events
+      .where((datum) => datum.format.namespace == NameSpace.CARP)
+      .forEach(print);
 
   // listen on LIGHT events only
-  controller.events.where((datum) => datum.format.name == SensorSamplingPackage.LIGHT).forEach(print);
+  controller.events
+      .where((datum) => datum.format.name == SensorSamplingPackage.LIGHT)
+      .forEach(print);
 
   // map events to JSON and then print
   controller.events.map((datum) => datum.toJson()).forEach(print);
@@ -69,7 +73,7 @@ void example() async {
   ProbeRegistry.probes[SensorSamplingPackage.LIGHT].events.forEach(print);
 
   // subscribe to events
-  StreamSubscription<Datum> subscription = controller.events.listen((Datum datum) {
+  StreamSubscription<Datum> subscription = controller.events.listen((datum) {
     // do something w. the datum, e.g. print the json
     print(JsonEncoder.withIndent(' ').convert(datum));
   });
@@ -94,7 +98,7 @@ void example() async {
     ..enabled = false
     ..hasChanged();
 
-  // once the sampling has to stop, e.g. in a Flutter dispose() methods, call stop.
+  // once the sampling has to stop, e.g. in a dispose() method, call stop.
   // note that once a sampling has stopped, it cannot be restarted.
   controller.stop();
   subscription.cancel();
@@ -102,24 +106,20 @@ void example() async {
 
 /// An example of how to use the [SamplingSchema] model.
 void samplingSchemaExample() async {
-  // creating a sampling schema focused on activity and outdoor context (weather)
-  SamplingSchema activitySchema = SamplingSchema(name: 'Connectivity Sampling Schema', powerAware: true)
-    ..measures.addEntries([
-      MapEntry(
-          SensorSamplingPackage.PEDOMETER,
-          PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.PEDOMETER),
-              enabled: true, frequency: const Duration(minutes: 1))),
-      MapEntry(DeviceSamplingPackage.SCREEN,
-          Measure(MeasureType(NameSpace.CARP, DeviceSamplingPackage.SCREEN), enabled: true)),
-    ]);
-
-  //creating a study
-
-  Study study_1 = Study("2", 'user@cachet.dk')
-    ..name = 'CARP Mobile Sensing - default configuration'
-    ..dataEndPoint = DataEndPoint(DataEndPointTypes.PRINT)
-    ..addTriggerTask(ImmediateTrigger(),
-        AutomaticTask()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
+  SamplingSchema activitySchema =
+      SamplingSchema(name: 'Connectivity Sampling Schema', powerAware: true)
+        ..measures.addEntries([
+          MapEntry(
+              SensorSamplingPackage.PEDOMETER,
+              PeriodicMeasure(
+                  MeasureType(NameSpace.CARP, SensorSamplingPackage.PEDOMETER),
+                  enabled: true,
+                  frequency: const Duration(minutes: 1))),
+          MapEntry(
+              DeviceSamplingPackage.SCREEN,
+              Measure(MeasureType(NameSpace.CARP, DeviceSamplingPackage.SCREEN),
+                  enabled: true)),
+        ]);
 
   Study study = Study("2", 'user@cachet.dk',
       name: 'A outdoor activity study',
@@ -129,28 +129,14 @@ void samplingSchemaExample() async {
         ..zip = true
         ..encrypt = false);
 
-  // adding a set of specific measures from the `common` sampling schema to one overall task
-//  study.addTriggerTask(
-//      ImmediateTrigger(),
-//      AutomaticTask()
-//        ..measures = SamplingSchema.common().getMeasureList(
-//          namespace: NameSpace.CARP,
-//          types: [
-//            SensorSamplingPackage.LIGHT,
-//            AppsSamplingPackage.APPS,
-//            AppsSamplingPackage.APP_USAGE,
-//            DeviceSamplingPackage.MEMORY,
-//          ],
-//        ));
-
-  // adding a set of specific measures from the `common` sampling schema to one overall task
+  // adding a set of specific measures from the `common` sampling schema
+  // to one overall task
   study.addTriggerTask(
       ImmediateTrigger(),
       AutomaticTask(name: 'Sensing Task #1')
         ..measures = SamplingSchema.common().getMeasureList(
           namespace: NameSpace.CARP,
           types: [
-//            AppsSamplingPackage.APP_USAGE,
             SensorSamplingPackage.PEDOMETER,
             DeviceSamplingPackage.SCREEN,
           ],
@@ -162,18 +148,19 @@ void samplingSchemaExample() async {
         ..measures = SamplingSchema.common().getMeasureList(
           namespace: NameSpace.CARP,
           types: [
-//            AppsSamplingPackage.APP_USAGE,
             SensorSamplingPackage.ACCELEROMETER,
             SensorSamplingPackage.GYROSCOPE,
-//            AppsSamplingPackage.APPS,
           ],
         ));
 
   // adding all measure from the activity schema to one overall 'sensing' task
   study.addTriggerTask(
-      ImmediateTrigger(), AutomaticTask(name: 'Sensing Task')..measures = activitySchema.measures.values);
+      ImmediateTrigger(),
+      AutomaticTask(name: 'Sensing Task')
+        ..measures = activitySchema.measures.values);
 
-  // adding the measures to two separate tasks, while also adding a new light measure to the 2nd task
+  // adding the measures to two separate tasks, while also adding a
+  // new light measure to the 2nd task
   study.addTriggerTask(
       ImmediateTrigger(),
       AutomaticTask(name: 'Activity Sensing Task #1')
@@ -203,10 +190,8 @@ void samplingSchemaExample() async {
           duration: const Duration(milliseconds: 100),
         )));
 
-  StudyController controller = StudyController(study, samplingSchema: activitySchema);
-
-//    SamplingSchema.common()
-//        .getMeasureList([DataType.LOCATION, DataType.WEATHER, DataType.ACTIVITY], namepace: NameSpace.CARP);
+  StudyController controller =
+      StudyController(study, samplingSchema: activitySchema);
 
   controller = StudyController(study);
   await controller.initialize();
@@ -222,23 +207,33 @@ void samplingSchemaExample() async {
   controller.dataManager.events.forEach(print);
 }
 
-/// This is an example of how to set up a study in a very simple way using [SamplingSchema.common()].
-void example_2() {
+/// This is an example of how to set up a study in a very simple way
+/// using [SamplingSchema.common()].
+void example_2() async {
   Study study = Study("2", 'user@cachet.dk',
       name: 'An outdoor activity study',
       dataEndPoint: FileDataEndPoint()
         ..bufferSize = 500 * 1000
         ..zip = true
         ..encrypt = false)
-    ..addTriggerTask(ImmediateTrigger(),
-        AutomaticTask()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
+    ..addTriggerTask(
+        ImmediateTrigger(),
+        AutomaticTask()
+          ..measures = SamplingSchema.common(namespace: NameSpace.CARP)
+              .measures
+              .values
+              .toList());
 
-  // adding a set of specific measures from the `common` sampling schema to one no-name task
+  // adding a set of specific measures from the `common` sampling schema
+  // to one no-name task
   study.addTriggerTask(
       ImmediateTrigger(),
       AutomaticTask()
         ..measures = SamplingSchema.common().getMeasureList(
-          types: [SensorSamplingPackage.PEDOMETER, DeviceSamplingPackage.SCREEN],
+          types: [
+            SensorSamplingPackage.PEDOMETER,
+            DeviceSamplingPackage.SCREEN
+          ],
           namespace: NameSpace.CARP,
         ));
 
@@ -246,6 +241,9 @@ void example_2() {
       samplingSchema: SamplingSchema.common()
         ..addSamplingSchema(PhoneSamplingSchema.phone())
         ..addSamplingSchema(PhoneSamplingSchema.phone()));
+
+  await controller.initialize();
+  controller.resume();
 }
 
 /// This is an example of how to set up a study controller.
@@ -261,17 +259,9 @@ void example_3() {
 //
 }
 
-/// An example of how to restart probes or an entire sampling study.
-void restart_example() {}
-
-/// An example of how to configure a [StudyController]
-void study_controller_example() {
-  Study study = Study("2", 'user@cachet.dk');
-  StudyController controller = StudyController(study, privacySchemaName: PrivacySchema.DEFAULT);
-}
-
 class PhoneSamplingSchema extends SamplingSchema {
-  factory PhoneSamplingSchema.phone({String namespace}) => SamplingSchema.common(namespace: namespace);
+  factory PhoneSamplingSchema.phone({String namespace}) =>
+      SamplingSchema.common(namespace: namespace);
 }
 
 void samplingPackageExample() {

@@ -139,11 +139,13 @@ void main() {
         time: Time(hour: 13, minute: 30),
         separationCount: 1);
     print('$t2');
-//    study_3.addTriggerTask(
-//        t2,
-//        AutomaticTask(name: 'Sensing Task #1')
-//          ..measures = SamplingSchema.common().getMeasureList(
-//              types: [AppsSamplingPackage.APPS, DeviceSamplingPackage.MEMORY]));
+    study_3.addTriggerTask(
+        t2,
+        AutomaticTask(name: 'Sensing Task #1')
+          ..measures = SamplingSchema.common().getMeasureList(types: [
+            SensorSamplingPackage.LIGHT,
+            DeviceSamplingPackage.MEMORY
+          ]));
 
     // collect every wednesday at 12:23.
     t3 = RecurrentScheduledTrigger(
@@ -151,13 +153,13 @@ void main() {
         time: Time(hour: 12, minute: 23),
         dayOfWeek: DateTime.wednesday);
     print('$t3');
-//    study_3.addTriggerTask(
-//        t3,
-//        AutomaticTask(name: 'Sensing Task #1')
-//          ..measures = SamplingSchema.common().getMeasureList(types: [
-//            AppsSamplingPackage.APPS,
-//            AppsSamplingPackage.APP_USAGE
-//          ]));
+    study_3.addTriggerTask(
+        t3,
+        AutomaticTask(name: 'Sensing Task #1')
+          ..measures = SamplingSchema.common().getMeasureList(types: [
+            SensorSamplingPackage.LIGHT,
+            DeviceSamplingPackage.BATTERY
+          ]));
 
     // collect every 2nd monday at 12:23.
     t4 = RecurrentScheduledTrigger(
@@ -166,29 +168,33 @@ void main() {
         dayOfWeek: DateTime.monday,
         separationCount: 1);
     print('$t4');
-//    study_3.addTriggerTask(
-//        t4,
-//        AutomaticTask(name: 'Sensing Task #1')
-//          ..measures = SamplingSchema.common().getMeasureList(
-//              types: [AppsSamplingPackage.APPS, DeviceSamplingPackage.MEMORY]));
+    study_3.addTriggerTask(
+        t4,
+        AutomaticTask(name: 'Sensing Task #1')
+          ..measures = SamplingSchema.common().getMeasureList(types: [
+            DeviceSamplingPackage.SCREEN,
+            DeviceSamplingPackage.MEMORY
+          ]));
 
-    // when battery level is 10% then find the list of apps running
-//    study_3.addTriggerTask(
-//        SamplingEventTrigger(
-//            measureType:
-//                MeasureType(NameSpace.CARP, DeviceSamplingPackage.BATTERY),
-//            resumeCondition: BatteryDatum()..batteryLevel = 10),
-//        AutomaticTask(name: 'Sensing Task #1')
-//          ..measures = SamplingSchema.common()
-//              .getMeasureList(types: [AppsSamplingPackage.APP_USAGE]));
+    // when battery level is 10% then sample light
+    study_3.addTriggerTask(
+        SamplingEventTrigger(
+            measureType:
+                MeasureType(NameSpace.CARP, DeviceSamplingPackage.BATTERY),
+            resumeCondition: BatteryDatum()..batteryLevel = 10),
+        AutomaticTask(name: 'Sensing Task #1')
+          ..measures = SamplingSchema.common()
+              .getMeasureList(types: [SensorSamplingPackage.LIGHT]));
 
-// don't add ConditionalSamplingEventTrigger since it cannot be serialized to JSON
-//    study_3.addTriggerTask(
-//        ConditionalSamplingEventTrigger(
-//            measureType: MeasureType(NameSpace.CARP, DeviceSamplingPackage.BATTERY),
-//            resumeCondition: (datum) => (datum as BatteryDatum).batteryLevel == 10),
-//        AutomaticTask(name: 'Sensing Task #1')
-//          ..measures = SamplingSchema.common().getMeasureList(types: [AppsSamplingPackage.APP_USAGE]));
+    study_3.addTriggerTask(
+        ConditionalSamplingEventTrigger(
+            measureType:
+                MeasureType(NameSpace.CARP, DeviceSamplingPackage.BATTERY),
+            resumeCondition: (datum) =>
+                (datum as BatteryDatum).batteryLevel == 10),
+        AutomaticTask(name: 'Sensing Task #1')
+          ..measures = SamplingSchema.common()
+              .getMeasureList(types: [SensorSamplingPackage.LIGHT]));
 
     final studyJson = _encode(study_3);
 

@@ -13,11 +13,10 @@ String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(objec
 
 void main() {
   // CANS DEV
-  // final String uri = "https://cans.cachet.dk:443";
+  final String uri = "http://cans.cachet.dk:8087";
 
-  // CANS PROD server URI
-  // final String uri = "http://cans.cachet.dk:8089";
-  final String uri = "https://cans.cachet.dk:443";
+  // CANS PROD
+  //final String uri = "https://cans.cachet.dk:443";
 
   // from Barnabas / iPDM-GO test 2020-07-14
   //final String testDeploymentId = "d1f01720-1714-46ee-a16d-da2a566b979e";
@@ -32,8 +31,12 @@ void main() {
   //  final String testStudyId = "c695ab41-e635-42d7-9b89-57530d0ae3da";
 
   // from Lori - production testing 2020-08-21
-  final String testDeploymentId = "bb9c2550-f6b7-4948-967f-2e62bdddd840";
-  final String testStudyId = "42ca52da-c768-44f3-9dc5-7f094c192892";
+  //final String testDeploymentId = "bb9c2550-f6b7-4948-967f-2e62bdddd840";
+  //final String testStudyId = "42ca52da-c768-44f3-9dc5-7f094c192892";
+
+  // from Richard - new JSON model at DEV 2020-09-18
+  final String testStudyId = ' 682e11d1-ffb8-41fc-81c5-78d2e82fbe94';
+  final String testDeploymentId = 'e286e04b-31c5-4fb2-b4b0-db37c4510ae0';
 
   final String userId = "user@dtu.dk";
   final String collectionName = 'test_patients';
@@ -446,7 +449,7 @@ void main() {
         expect((error as CarpServiceException).httpStatus.httpResponseCode, HttpStatus.notFound);
       }
     });
-  }, skip: false);
+  }, skip: true);
 
   group("iPDM-GO", () {
     test(" - get 'patients' collection from path", () async {
@@ -533,33 +536,36 @@ void main() {
       assert(result > 0);
       print('result : $result');
     });
-  }, skip: false);
+  }, skip: true);
 
   group("Deployment", () {
     test('- get deployment status', () async {
       StudyDeploymentStatus status = await CarpService.instance.deployment().status();
       print(status);
-      expect(status.id, study.deploymentId);
+      expect(status.studyDeploymentId, study.deploymentId);
     });
 
     test('- register device', () async {
-      bool success = await CarpService.instance.deployment().registerDevice('phone', '1');
-      expect(success, true);
+      StudyDeploymentStatus status = await CarpService.instance.deployment().registerDevice('phone', '1');
+      print(status);
+      expect(status.studyDeploymentId, study.deploymentId);
     });
 
     test('- get master device deployment', () async {
-      StudyDeploymentSnapshot deployment = await CarpService.instance.deployment().get();
+      StudyDeployment deployment = await CarpService.instance.deployment().get();
       expect(deployment.id, study.deploymentId);
     });
 
     test('- deployment success', () async {
-      bool success = await CarpService.instance.deployment().success();
-      expect(success, true);
+      StudyDeploymentStatus status = await CarpService.instance.deployment().success();
+      print(status);
+      expect(status.studyDeploymentId, study.deploymentId);
     });
 
     test('- unregister device', () async {
-      bool success = await CarpService.instance.deployment().unRegisterDevice();
-      expect(success, true);
+      StudyDeploymentStatus status = await CarpService.instance.deployment().unRegisterDevice();
+      print(status);
+      expect(status.studyDeploymentId, study.deploymentId);
     });
   }, skip: false);
 }

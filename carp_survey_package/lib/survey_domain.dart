@@ -42,24 +42,27 @@ class RPTaskMeasure extends Measure {
     this.surveyTask,
 //    this.onSurveyTriggered,
 //    this.onSurveySubmit,
-  }) : super(type, name: name, enabled: enabled);
+  })
+      : super(type, name: name, enabled: enabled);
 
   static Function get fromJsonFunction => _$RPTaskMeasureFromJson;
-  factory RPTaskMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory RPTaskMeasure.fromJson(Map<String, dynamic> json) => FromJsonFactory
+      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$RPTaskMeasureToJson(this);
 }
 
 /// Holds information about the result of a survey.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class RPTaskResultDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, SurveySamplingPackage.SURVEY);
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, SurveySamplingPackage.SURVEY);
   DataFormat get format => CARP_DATA_FORMAT;
 
   RPTaskResult surveyResult;
 
   RPTaskResultDatum([this.surveyResult]);
 
-  factory RPTaskResultDatum.fromJson(Map<String, dynamic> json) => _$RPTaskResultDatumFromJson(json);
+  factory RPTaskResultDatum.fromJson(Map<String, dynamic> json) =>
+      _$RPTaskResultDatumFromJson(json);
   Map<String, dynamic> toJson() => _$RPTaskResultDatumToJson(this);
 }

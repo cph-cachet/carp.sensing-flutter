@@ -16,28 +16,30 @@ abstract class Serializable {
   /// Used for deserialization from JSON objects.
   String $type;
 
+  /// Create a object that can be serialized to JSON.
   Serializable() {
-    $type = this.runtimeType.toString();
+    $type = runtimeType.toString();
     FromJsonFactory._();
   }
 
   /// Use this method to register a custom fromJson function for this class
   /// in the [FromJsonFactory].
-  registerFromJson(Function fromJsonFunction) => FromJsonFactory.registerFromJsonFunction(this.runtimeType.toString(), fromJsonFunction);
+  void registerFromJson(Function fromJsonFunction) => FromJsonFactory.registerFromJsonFunction(runtimeType.toString(), fromJsonFunction);
 
   /// Return a JSON encoding of this object.
   Map<String, dynamic> toJson();
 }
 
-/// A factory class that holds [fromJson] functions to be used in JSON deserialization.
+/// A factory class that holds [fromJson] functions to be used in JSON
+/// deserialization.
 class FromJsonFactory {
   static bool _isInitialized = false;
-  static final Map<String, Function> _registry = new Map<String, Function>();
+  static final Map<String, Function> _registry = {};
 
   /// To be used for registering [fromJsonFunction] functions to this Factory.
-  /// Should be done for each [type] of class that needs to be deserialized from JSON
-  /// to a CARP Flutter class.
-  static registerFromJsonFunction(String type, Function f) => _registry[type] = f;
+  /// Should be done for each [type] of class that needs to be deserialized
+  /// from JSON to a CARP Flutter class.
+  static void registerFromJsonFunction(String type, Function f) => _registry[type] = f;
 
   /// Deserialize [json] of the specified class [type].
   static Serializable fromJson(String type, Map<String, dynamic> json) => Function.apply(_registry[type], [json]);
@@ -45,7 +47,8 @@ class FromJsonFactory {
   static void _() {
     if (_isInitialized) return;
 
-    //TODO : This should be done using reflection or a build_runner script that can auto-generate this.
+    //TODO : This should be done using reflection or a build_runner script
+    // that can auto-generate this.
     registerFromJsonFunction("Study", Study.fromJsonFunction);
     registerFromJsonFunction("DataEndPoint", DataEndPoint.fromJsonFunction);
     registerFromJsonFunction("FileDataEndPoint", FileDataEndPoint.fromJsonFunction);
@@ -61,8 +64,9 @@ class FromJsonFactory {
     registerFromJsonFunction("Time", Time.fromJsonFunction);
     registerFromJsonFunction("RecurrentScheduledTrigger", RecurrentScheduledTrigger.fromJsonFunction);
     registerFromJsonFunction("SamplingEventTrigger", SamplingEventTrigger.fromJsonFunction);
-    // note that ConditionalSamplingEventTrigger can't be de/serialized to/from JSON - see documentation of it.
-    // registerFromJsonFunction("ConditionalSamplingEventTrigger", ConditionalSamplingEventTrigger.fromJsonFunction);
+    // note that the resume and pause condition function in a
+    // ConditionalSamplingEventTrigger can't be de/serialized to/from JSON
+    registerFromJsonFunction("ConditionalSamplingEventTrigger", ConditionalSamplingEventTrigger.fromJsonFunction);
 
     registerFromJsonFunction("MeasureType", MeasureType.fromJsonFunction);
     registerFromJsonFunction("Measure", Measure.fromJsonFunction);

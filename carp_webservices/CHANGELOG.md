@@ -1,26 +1,30 @@
+## 0.5.0
+* **BREAKING**: Updated to CAMS v. 0.9.0 with new `$type` json serialization
+* feature: support for deployment endpoints
+
 ## 0.4.6
-* better support for authentication with stored tokens (Issue [#79](https://github.com/cph-cachet/carp.sensing-flutter/issues/79)).
-* `CarpUser` can be serialized to JSON.
+* feature: better support for authentication with stored tokens (Issue [#79](https://github.com/cph-cachet/carp.sensing-flutter/issues/79)).
+* feature: `CarpUser` can be serialized to JSON.
 
 ## 0.4.5
-* separation of Study ID and Deployment ID when calling CARP endpoints
-* better error handling and messages
-* unit test for uploading file fails, but seems to be a server-side issue
+* refactor: separation of Study ID and Deployment ID when calling CARP endpoints
+* refactor: better error handling and messages
+* test: unit test for uploading file fails, but seems to be a server-side issue
 
 ## 0.4.4
-* DataPoint and Informed Consent endpoint changed to use `deployments` in URL.
-* aligned the collection/documents to the new CANS endpoints
+* feature: data point and informed consent endpoint changed to use `deployments` in URL.
+* refactor: aligned the collection/documents to the new CANS endpoints
 
 ## 0.4.3
-* `study_id` is now a String (not an int anymore).
-* fixed issue [#66](https://github.com/cph-cachet/carp.sensing-flutter/issues/66).
+* refactor: `study_id` is now a String (not an int anymore).
+* fix: fixed issue [#66](https://github.com/cph-cachet/carp.sensing-flutter/issues/66).
 
 ## 0.4.2
-* updated to carp_mobile_sensing v. 0.8.x
+* update: updated to carp_mobile_sensing v. 0.8.x
 
 ## 0.4.1
-* Upload of files to CANS implemented.
-* Support for serializing the OAuth token to JSON.
+* feature: upload of files to CANS implemented.
+* feature: support for serializing the OAuth token to JSON.
 
 ## 0.4.0
 * **Breaking** Update to the new CANS API and data model.
