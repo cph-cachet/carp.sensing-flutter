@@ -33,6 +33,7 @@ void main() {
 
       // collect every day at 13:30
       t = RecurrentScheduledTrigger(type: RecurrentType.daily, time: Time(hour: 09, minute: 30));
+      print(_encode(t));
       print('${t.firstOccurrence} - ${t.period}');
       expect(t.period.inHours, 24);
 

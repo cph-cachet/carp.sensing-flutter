@@ -582,9 +582,9 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
     }).catchError((error, stacktrace) => controller.addError(error, stacktrace));
   }
 
-  Future<void> onStop() {
+  Future<void> onStop() async {
     if (timer != null) timer.cancel();
-    controller.close();
+    await controller.close();
   }
 
   /// Handler called when sampling period starts.

@@ -14,8 +14,9 @@ linter:
 
 analyzer:
   exclude:
-    - lib/client.dart
-    - lib/server/*.g.dart
-    - test/**
-    - example/**
+    - lib/data_managers/*.g.dart
+    - lib/domain/*.g.dart
+    - lib/ampling_packages/device/*.g.dart
+    - lib/ampling_packages/sensors/*.g.dart
+    - test/*.dart
 
