@@ -11,25 +11,26 @@
 library runtime;
 
 import 'dart:async';
-import 'package:async/async.dart';
 import 'dart:convert';
+
+import 'package:async/async.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:flutter/material.dart';
+import 'package:package_info/package_info.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:permission_handler_platform_interface/permission_handler_platform_interface.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
-import 'package:package_info/package_info.dart';
 
-part 'probes.dart';
-part 'probe_registry.dart';
-part 'executors.dart';
-part 'study_controller.dart';
-part 'probe_controller.dart';
-part 'sampling_package.dart';
 part 'data_manager.dart';
+part 'executors.dart';
 part 'permission_handler.dart';
+part 'probe_controller.dart';
+part 'probe_registry.dart';
+part 'probes.dart';
+part 'sampling_package.dart';
 part 'settings.dart';
+part 'study_controller.dart';
 
 /// Generic sensing exception.
 class SensingException implements Exception {
@@ -52,10 +53,10 @@ class DebugLevel {
 int globalDebugLevel = DebugLevel.WARNING;
 
 /// A simple method for printing warning messages to the console.
-info(String message) => (globalDebugLevel >= DebugLevel.INFO) ? print('CAMS INFO - $message') : 0;
+void info(String message) => (globalDebugLevel >= DebugLevel.INFO) ? print('CAMS INFO - $message') : 0;
 
 /// A simple method for printing warning messages to the console.
-warning(String message) => (globalDebugLevel >= DebugLevel.WARNING) ? print('CAMS WARNING - $message') : 0;
+void warning(String message) => (globalDebugLevel >= DebugLevel.WARNING) ? print('CAMS WARNING - $message') : 0;
 
 /// A simple method for printing debug messages to the console.
-debug(String message) => (globalDebugLevel >= DebugLevel.DEBUG) ? print('CAMS DEBUG - $message') : 0;
+void debug(String message) => (globalDebugLevel >= DebugLevel.DEBUG) ? print('CAMS DEBUG - $message') : 0;

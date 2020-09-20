@@ -1,10 +1,10 @@
 part of device;
 
 class DeviceSamplingPackage implements SamplingPackage {
-  static const String DEVICE = "device";
-  static const String MEMORY = "memory";
-  static const String BATTERY = "battery";
-  static const String SCREEN = "screen";
+  static const String DEVICE = 'device';
+  static const String MEMORY = 'memory';
+  static const String BATTERY = 'battery';
+  static const String SCREEN = 'screen';
 
   List<String> get dataTypes => [
         DEVICE,
@@ -38,13 +38,9 @@ class DeviceSamplingPackage implements SamplingPackage {
     ..powerAware = true
     ..measures.addEntries([
       MapEntry(DEVICE, Measure(MeasureType(NameSpace.CARP, DEVICE), name: 'Basic Device Info', enabled: true)),
-      MapEntry(
-          MEMORY,
-          PeriodicMeasure(MeasureType(NameSpace.CARP, MEMORY),
-              name: 'Memory Usage', enabled: true, frequency: const Duration(minutes: 1))),
+      MapEntry(MEMORY, PeriodicMeasure(MeasureType(NameSpace.CARP, MEMORY), name: 'Memory Usage', enabled: true, frequency: const Duration(minutes: 1))),
       MapEntry(BATTERY, Measure(MeasureType(NameSpace.CARP, BATTERY), name: 'Battery', enabled: true)),
-      MapEntry(
-          SCREEN, Measure(MeasureType(NameSpace.CARP, SCREEN), name: 'Screen Activity (lock/on/off)', enabled: true)),
+      MapEntry(SCREEN, Measure(MeasureType(NameSpace.CARP, SCREEN), name: 'Screen Activity (lock/on/off)', enabled: true)),
     ]);
 
   SamplingSchema get light => common

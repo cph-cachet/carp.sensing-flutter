@@ -3,8 +3,7 @@ import 'dart:convert';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:test/test.dart';
 
-String _encode(Object object) =>
-    const JsonEncoder.withIndent(' ').convert(object);
+String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
 
 void main() {
   Study study;
@@ -14,7 +13,7 @@ void main() {
     //SamplingPackageRegistry.register(CommunicationSamplingPackage());
     //SamplingPackageRegistry.register(ContextSamplingPackage());
 
-    study = Study("1234", "bardram", name: "bardram study");
+    study = Study('1234', 'bardram', name: 'bardram study');
     study.dataEndPoint = DataEndPoint(DataEndPointTypes.PRINT);
 //    study.dataEndPoint = FileDataEndPoint()
 //      ..bufferSize = 50 * 1000
@@ -42,14 +41,10 @@ void main() {
     study.addTriggerTask(
         ImmediateTrigger(),
         AutomaticTask(name: 'Sensor Task')
-          ..addMeasure(PeriodicMeasure(
-              MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
-              frequency: const Duration(seconds: 10),
-              duration: const Duration(milliseconds: 100)))
-          ..addMeasure(PeriodicMeasure(
-              MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
-              frequency: const Duration(seconds: 20),
-              duration: const Duration(milliseconds: 100))));
+          ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
+              frequency: const Duration(seconds: 10), duration: const Duration(milliseconds: 100)))
+          ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
+              frequency: const Duration(seconds: 20), duration: const Duration(milliseconds: 100))));
 
 //    study.addTask(AutomaticTask('Audio Recording Task')
 //      ..addMeasure(AudioMeasure(MeasureType(NameSpace.CARP, DataType.AUDIO),
@@ -93,7 +88,7 @@ void main() {
     _restore();
     print(_encode(study));
 
-    expect(study.id, "1234");
+    expect(study.id, '1234');
   });
 
   /// Test template.

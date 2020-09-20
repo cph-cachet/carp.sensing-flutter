@@ -4,15 +4,15 @@ part of runtime;
 _SamplingPackageRegistry SamplingPackageRegistry = _SamplingPackageRegistry();
 
 class _SamplingPackageRegistry {
-  List<SamplingPackage> _packages = List<SamplingPackage>();
+  final List<SamplingPackage> _packages = [];
   List<SamplingPackage> get packages => _packages;
-  List<Permission> _permissions = List<Permission>();
+  final List<Permission> _permissions = [];
   List<Permission> get permissions => _permissions;
 
   _SamplingPackageRegistry() : super() {
     // HACK - creating a serializable object (such as a [Study]) ensures that
     // JSON deserialization in [Serializable] is initialized
-    Study("1234", "unknown");
+    Study('1234', 'unknown');
 
     // add the basic permissions needed
     _permissions.add(Permission.storage);
@@ -26,8 +26,7 @@ class _SamplingPackageRegistry {
   /// Register a sampling package.
   void register(SamplingPackage package) {
     _packages.add(package);
-    package.permissions
-        .forEach((permission) => (_permissions.indexOf(permission) < 0) ? _permissions.add(permission) : null);
+    package.permissions.forEach((permission) => (!_permissions.contains(permission)) ? _permissions.add(permission) : null);
     DataType.add(package.dataTypes);
     package.onRegister();
   }

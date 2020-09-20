@@ -11,7 +11,7 @@ part of device;
 /// every time the battery state changes. For example, battery level or charging mode.
 class BatteryProbe extends StreamProbe {
   Stream<Datum> get stream {
-    Battery battery = new Battery();
+    Battery battery = Battery();
     StreamController<Datum> controller;
     StreamSubscription<BatteryState> subscription;
 
@@ -31,8 +31,7 @@ class BatteryProbe extends StreamProbe {
         onResume: () => subscription.resume(),
         onCancel: () => subscription.cancel());
 
-    subscription = battery.onBatteryStateChanged
-        .listen(onData, onError: (error) => controller.addError(error), onDone: () => controller.close());
+    subscription = battery.onBatteryStateChanged.listen(onData, onError: (error) => controller.addError(error), onDone: () => controller.close());
 
     return controller.stream;
   }
@@ -57,9 +56,9 @@ class BatteryProbe extends StreamProbe {
 /// which are stored as a [ScreenDatum].
 class ScreenProbe extends StreamProbe {
   Future<void> onInitialize(Measure measure) async {
-    super.onInitialize(measure);
+    await super.onInitialize(measure);
     // check if Screen is available (only available on Android)
-    Screen().screenStateStream.first;
+    await Screen().screenStateStream.first;
   }
 
   Stream<Datum> get stream => Screen().screenStateStream.map((event) => ScreenDatum.fromScreenStateEvent(event));
@@ -69,7 +68,7 @@ class ScreenProbe extends StreamProbe {
 /// as specified in [PeriodicMeasure.frequency].
 class MemoryProbe extends PeriodicDatumProbe {
   Future<void> onInitialize(Measure measure) async {
-    super.onInitialize(measure);
+    await super.onInitialize(measure);
     // check if SysInfo is available (seems not to be available on iOS)
     SysInfo.getFreePhysicalMemory();
   }

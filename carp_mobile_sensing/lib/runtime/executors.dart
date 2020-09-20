@@ -10,9 +10,9 @@ part of runtime;
 /// An abstract class used to implement executors.
 /// See [StudyExecutor] and [TaskExecutor] for examples.
 abstract class Executor extends AbstractProbe {
-  static final Device deviceInfo = new Device();
+  static final Device deviceInfo = Device();
   final StreamGroup<Datum> _group = StreamGroup<Datum>.broadcast();
-  List<Probe> executors = new List<Probe>();
+  List<Probe> executors = [];
   Stream<Datum> get events => _group.stream;
 
   Executor() : super();
@@ -35,7 +35,7 @@ abstract class Executor extends AbstractProbe {
 
   Future<void> onStop() async {
     executors.forEach((executor) => executor.stop());
-    executors = new List<Probe>();
+    executors = [];
   }
 }
 
@@ -49,12 +49,12 @@ abstract class Executor extends AbstractProbe {
 /// Note that the [StudyExecutor] in itself is a [Probe] and hence work as a 'super probe'.
 /// This - amongst other things - imply that you can listen to datum [events] from a study executor.
 class StudyExecutor extends Executor {
-  StreamController<Datum> _manualDatumController = StreamController<Datum>.broadcast();
+  final StreamController<Datum> _manualDatumController = StreamController<Datum>.broadcast();
   Study get study => _study;
   Study _study;
 
   StudyExecutor(Study study)
-      : assert(study != null, "Cannot initiate a StudyExecutor without a Study."),
+      : assert(study != null, 'Cannot initiate a StudyExecutor without a Study.'),
         super() {
     _study = study;
     _group.add(_manualDatumController.stream);
@@ -74,7 +74,7 @@ class StudyExecutor extends Executor {
   /// Returns a list of the running probes in this study executor.
   /// This is a combination of the running probes in all trigger executors.
   List<Probe> get probes {
-    List<Probe> _probes = List<Probe>();
+    List<Probe> _probes = [];
     executors.forEach((executor) {
       if (executor is TriggerExecutor) {
         executor.probes.forEach((probe) {
@@ -126,7 +126,7 @@ abstract class TriggerExecutor extends Executor {
   Trigger get trigger => _trigger;
 
   TriggerExecutor(Trigger trigger)
-      : assert(trigger != null, "Cannot initiate a TriggerExecutor without a Trigger."),
+      : assert(trigger != null, 'Cannot initiate a TriggerExecutor without a Trigger.'),
         super() {
     _trigger = trigger;
 
@@ -141,7 +141,7 @@ abstract class TriggerExecutor extends Executor {
   /// Returns a list of the running probes in this trigger executor.
   /// This is a combination of the running probes in all task executors.
   List<Probe> get probes {
-    List<Probe> _probes = List<Probe>();
+    List<Probe> _probes = [];
     executors.forEach((executor) {
       if (executor is TaskExecutor) {
         executor.probes.forEach((probe) {
@@ -206,7 +206,7 @@ class PeriodicTriggerExecutor extends TriggerExecutor {
 
   Future<void> onPause() async {
     timer.cancel();
-    super.onPause();
+    await super.onPause();
   }
 }
 
@@ -230,7 +230,7 @@ class ScheduledTriggerExecutor extends TriggerExecutor {
         // create a timer that stop the sampling after the specified duration.
         // if the duration is null, the sampling never stops, i.e. runs forever.
         Timer(duration, () {
-          this.stop();
+          stop();
         });
       }
     });
@@ -238,7 +238,7 @@ class ScheduledTriggerExecutor extends TriggerExecutor {
 
   Future<void> onPause() async {
     timer.cancel();
-    super.onPause();
+    await super.onPause();
   }
 }
 
@@ -269,12 +269,12 @@ class RecurrentScheduledTriggerExecutor extends PeriodicTriggerExecutor {
       }
 
       // save the day of the first occurrence for later use
-      settings.preferences.setString(_myTrigger.triggerId, _myTrigger.firstOccurrence.toUtc().toString());
+      await settings.preferences.setString(_myTrigger.triggerId, _myTrigger.firstOccurrence.toUtc().toString());
     }
 
-    // below is "normal" (i.e., non-remember) behavior
+    // below is 'normal' (i.e., non-remember) behavior
     Duration _delay = _myTrigger.firstOccurrence.difference(DateTime.now());
-    if (_myTrigger.end == null || _myTrigger.end.isAfter(DateTime.now()))
+    if (_myTrigger.end == null || _myTrigger.end.isAfter(DateTime.now())) {
       Timer(_delay, () {
         if (_myTrigger.remember) {
           // replace the entry of the first occurrence to the next occurrence date
@@ -283,6 +283,7 @@ class RecurrentScheduledTriggerExecutor extends PeriodicTriggerExecutor {
         }
         super.onResume();
       });
+    }
   }
 }
 
@@ -304,8 +305,8 @@ class SamplingEventTriggerExecutor extends TriggerExecutor {
 
   Future<void> onPause() async {
     // stop the listening
-    _subscription.cancel();
-    super.onPause();
+    await _subscription.cancel();
+    await super.onPause();
   }
 }
 
@@ -328,8 +329,8 @@ class ConditionalSamplingEventTriggerExecutor extends TriggerExecutor {
   }
 
   Future<void> onPause() async {
-    _subscription.cancel();
-    super.onPause();
+    await _subscription.cancel();
+    await super.onPause();
   }
 }
 
@@ -364,7 +365,7 @@ class TaskExecutor extends Executor {
   List<Probe> get probes => executors;
 
   TaskExecutor(Task task)
-      : assert(task != null, "Cannot initiate a TaskExecutor without a Task."),
+      : assert(task != null, 'Cannot initiate a TaskExecutor without a Task.'),
         super() {
     _task = task;
   }
@@ -376,8 +377,8 @@ class TaskExecutor extends Executor {
       Probe probe = ProbeRegistry.create(measure.type.name);
       if (probe != null) {
         executors.add(probe);
-        _group.add(probe.events);
-        probe.initialize(measure);
+        await _group.add(probe.events);
+        await probe.initialize(measure);
       } else {
         warning('A probe for measure type ${measure.type.name} could not be created. '
             'Check that the sampling package containing this probe has been registered in the SamplingPackageRegistry.');
@@ -389,14 +390,14 @@ class TaskExecutor extends Executor {
 /// Executes an [AutomaticTask].
 class AutomaticTaskExecutor extends TaskExecutor {
   AutomaticTaskExecutor(AutomaticTask task)
-      : assert(task is AutomaticTask, "SensingTaskExecutor should be ininialized with a SensingTask."),
+      : assert(task is AutomaticTask, 'SensingTaskExecutor should be ininialized with a SensingTask.'),
         super(task);
 }
 
 /// Executes an [AppTask].
 class AppTaskExecutor extends TaskExecutor {
   AppTaskExecutor(AppTask task)
-      : assert(task is AppTask, "UserTaskExecutor should be ininialized with a UserTask."),
+      : assert(task is AppTask, 'UserTaskExecutor should be ininialized with a UserTask.'),
         super(task) {
     _appTask = task;
 
@@ -411,7 +412,7 @@ class AppTaskExecutor extends TaskExecutor {
   TaskExecutor _taskExecutor;
 
   Future<void> onInitialize(Measure measure) async {
-    _taskExecutor.initialize(measure);
+    await _taskExecutor.initialize(measure);
     if (_appTask.onInitialize != null) _appTask.onInitialize(_taskExecutor);
   }
 
@@ -425,6 +426,6 @@ class AppTaskExecutor extends TaskExecutor {
 
   Future<void> onStop() async {
     if (_appTask.onInitialize != null) _appTask.onStop(_taskExecutor);
-    super.onStop();
+    await super.onStop();
   }
 }

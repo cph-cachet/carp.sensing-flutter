@@ -19,7 +19,7 @@ Datum noop(Datum data) => data;
 _TransformerSchemaRegistry TransformerSchemaRegistry = _TransformerSchemaRegistry();
 
 class _TransformerSchemaRegistry {
-  final Map<String, TransformerSchema> _schemas = Map<String, TransformerSchema>();
+  final Map<String, TransformerSchema> _schemas = {};
   Map<String, TransformerSchema> get schemas => _schemas;
 
   _TransformerSchemaRegistry() {
@@ -55,7 +55,7 @@ abstract class TransformerSchema {
   /// pre-defined namespaces).
   String get namespace;
 
-  Map<String, DatumTransformer> _transformers = Map();
+  final Map<String, DatumTransformer> _transformers = {};
 
   /// A map of transformers in this schema, indexed by the data type they can transform.
   Map<String, DatumTransformer> get transformers => _transformers;

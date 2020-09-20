@@ -38,8 +38,7 @@ abstract class DataManager {
 abstract class AbstractDataManager implements DataManager {
   Study study;
 
-  StreamController<DataManagerEvent> controller =
-      StreamController<DataManagerEvent>.broadcast();
+  StreamController<DataManagerEvent> controller = StreamController<DataManagerEvent>.broadcast();
   Stream<DataManagerEvent> get events => controller.stream;
   void addEvent(DataManagerEvent event) => controller.add(event);
 
@@ -49,16 +48,14 @@ abstract class AbstractDataManager implements DataManager {
     addEvent(DataManagerEvent(DataManagerEventTypes.initialized));
   }
 
-  Future<void> close() async =>
-      addEvent(DataManagerEvent(DataManagerEventTypes.closed));
+  Future<void> close() async => addEvent(DataManagerEvent(DataManagerEventTypes.closed));
 
   void onDatum(Datum datum);
   void onDone();
   void onError(error);
 
   /// JSON encode an object.
-  String jsonEncode(Object object) =>
-      const JsonEncoder.withIndent(' ').convert(object);
+  String jsonEncode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
 }
 
 /// A registry of [DataManager]s.
@@ -67,10 +64,10 @@ abstract class AbstractDataManager implements DataManager {
 /// [register] method which is later used to call [lookup] when trying to find
 /// an appropriate [DataManager] for a specific [DataEndPointType].
 class DataManagerRegistry {
-  static Map<String, DataManager> _registry = new Map<String, DataManager>();
+  static final Map<String, DataManager> _registry = {};
 
   /// Register a [DataManager] with a specific type.
-  static register(DataManager manager) {
+  static void register(DataManager manager) {
     _registry[manager.type] = manager;
   }
 

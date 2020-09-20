@@ -10,7 +10,7 @@ part of domain;
 /// This is the base class for all JSON serializable objects.
 abstract class Serializable {
   /// The identifier of the class type in JSON serialization.
-  static const String CLASS_IDENTIFIER = "\$type";
+  static const String CLASS_IDENTIFIER = '\$type';
 
   /// The runtime class name (type) of this object.
   /// Used for deserialization from JSON objects.
@@ -49,29 +49,29 @@ class FromJsonFactory {
 
     //TODO : This should be done using reflection or a build_runner script
     // that can auto-generate this.
-    registerFromJsonFunction("Study", Study.fromJsonFunction);
-    registerFromJsonFunction("DataEndPoint", DataEndPoint.fromJsonFunction);
-    registerFromJsonFunction("FileDataEndPoint", FileDataEndPoint.fromJsonFunction);
-    registerFromJsonFunction("Task", Task.fromJsonFunction);
-    registerFromJsonFunction("AutomaticTask", AutomaticTask.fromJsonFunction);
-    registerFromJsonFunction("AppTask", AppTask.fromJsonFunction);
+    registerFromJsonFunction('Study', Study.fromJsonFunction);
+    registerFromJsonFunction('DataEndPoint', DataEndPoint.fromJsonFunction);
+    registerFromJsonFunction('FileDataEndPoint', FileDataEndPoint.fromJsonFunction);
+    registerFromJsonFunction('Task', Task.fromJsonFunction);
+    registerFromJsonFunction('AutomaticTask', AutomaticTask.fromJsonFunction);
+    registerFromJsonFunction('AppTask', AppTask.fromJsonFunction);
 
-    registerFromJsonFunction("Trigger", Trigger.fromJsonFunction);
-    registerFromJsonFunction("ImmediateTrigger", ImmediateTrigger.fromJsonFunction);
-    registerFromJsonFunction("DelayedTrigger", DelayedTrigger.fromJsonFunction);
-    registerFromJsonFunction("PeriodicTrigger", PeriodicTrigger.fromJsonFunction);
-    registerFromJsonFunction("ScheduledTrigger", ScheduledTrigger.fromJsonFunction);
-    registerFromJsonFunction("Time", Time.fromJsonFunction);
-    registerFromJsonFunction("RecurrentScheduledTrigger", RecurrentScheduledTrigger.fromJsonFunction);
-    registerFromJsonFunction("SamplingEventTrigger", SamplingEventTrigger.fromJsonFunction);
+    registerFromJsonFunction('Trigger', Trigger.fromJsonFunction);
+    registerFromJsonFunction('ImmediateTrigger', ImmediateTrigger.fromJsonFunction);
+    registerFromJsonFunction('DelayedTrigger', DelayedTrigger.fromJsonFunction);
+    registerFromJsonFunction('PeriodicTrigger', PeriodicTrigger.fromJsonFunction);
+    registerFromJsonFunction('ScheduledTrigger', ScheduledTrigger.fromJsonFunction);
+    registerFromJsonFunction('Time', Time.fromJsonFunction);
+    registerFromJsonFunction('RecurrentScheduledTrigger', RecurrentScheduledTrigger.fromJsonFunction);
+    registerFromJsonFunction('SamplingEventTrigger', SamplingEventTrigger.fromJsonFunction);
     // note that the resume and pause condition function in a
     // ConditionalSamplingEventTrigger can't be de/serialized to/from JSON
-    registerFromJsonFunction("ConditionalSamplingEventTrigger", ConditionalSamplingEventTrigger.fromJsonFunction);
+    registerFromJsonFunction('ConditionalSamplingEventTrigger', ConditionalSamplingEventTrigger.fromJsonFunction);
 
-    registerFromJsonFunction("MeasureType", MeasureType.fromJsonFunction);
-    registerFromJsonFunction("Measure", Measure.fromJsonFunction);
-    registerFromJsonFunction("PeriodicMeasure", PeriodicMeasure.fromJsonFunction);
-    registerFromJsonFunction("MarkedMeasure", MarkedMeasure.fromJsonFunction);
+    registerFromJsonFunction('MeasureType', MeasureType.fromJsonFunction);
+    registerFromJsonFunction('Measure', Measure.fromJsonFunction);
+    registerFromJsonFunction('PeriodicMeasure', PeriodicMeasure.fromJsonFunction);
+    registerFromJsonFunction('MarkedMeasure', MarkedMeasure.fromJsonFunction);
 
     _isInitialized = true;
   }

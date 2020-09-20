@@ -48,7 +48,7 @@ class Study extends Serializable {
   String dataFormat;
 
   /// The set of [Trigger]s which can trigger [Task](s) in this study.
-  List<Trigger> triggers = new List<Trigger>();
+  List<Trigger> triggers = [];
 
   /// Create a new [Study] object with a set of configurations.
   ///
@@ -76,7 +76,7 @@ class Study extends Serializable {
 
   /// The list of all [Task]s in this [Study].
   List<Task> get tasks {
-    List<Task> _tasks = List<Task>();
+    List<Task> _tasks = [];
     triggers.forEach((trigger) => _tasks.addAll(trigger.tasks));
     return _tasks;
   }

@@ -1,3 +1,6 @@
+## 0.9.1
+* refactor: using [pedantic](https://pub.dev/packages/pedantic#using-the-lints)
+
 ## 0.9.0
 * refactor: new polymorphic JSON serialization using `$type` for class type identifier.
 * docs: update of documentation and examples ([#92](https://github.com/cph-cachet/carp.sensing-flutter/issues/92))

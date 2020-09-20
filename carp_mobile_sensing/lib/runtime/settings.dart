@@ -1,7 +1,7 @@
 part of runtime;
 
 class SettingsBLoC {
-  static const String USER_ID_KEY = "user.id";
+  static const String USER_ID_KEY = 'user.id';
 
   SharedPreferences _preferences;
   PackageInfo _packageInfo;
@@ -40,7 +40,7 @@ class SettingsBLoC {
       _userId = preferences.get(_userIdKey);
       if (_userId == null) {
         _userId = Uuid().v4();
-        preferences.setString(_userIdKey, _userId);
+        await preferences.setString(_userIdKey, _userId);
       }
     }
     return _userId;

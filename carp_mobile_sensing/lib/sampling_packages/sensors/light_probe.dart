@@ -10,7 +10,7 @@ part of sensors;
 /// The [LightProbe] listens to the phone's light sensor typically located near the front camera.
 /// Every value is in the SI unit Lux and will be stored in a [LightDatum] object.
 class LightProbe extends BufferingPeriodicStreamProbe {
-  List<num> luxValues = new List();
+  List<num> luxValues = [];
 
   Stream<dynamic> _bufferingStream;
   Stream<dynamic> get bufferingStream => _bufferingStream;
@@ -18,11 +18,11 @@ class LightProbe extends BufferingPeriodicStreamProbe {
   Future<void> onInitialize(Measure measure) async {
     // check if Light is available (only available on Android)
     _bufferingStream = Light().lightSensorStream;
-    super.onInitialize(measure);
+    await super.onInitialize(measure);
   }
 
   Future<Datum> getDatum() async {
-    if (luxValues.length > 0) {
+    if (luxValues.isNotEmpty) {
       Stats stats = Stats.fromData(luxValues);
       return LightDatum(meanLux: stats.average, stdLux: stats.standardDeviation, minLux: stats.min, maxLux: stats.max);
     } else {

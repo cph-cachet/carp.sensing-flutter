@@ -47,9 +47,7 @@ class DeviceDatum extends CARPDatum {
   /// The OS release.
   String release;
 
-  DeviceDatum(this.platform, this.deviceId,
-      {this.deviceName, this.deviceModel, this.deviceManufacturer, this.operatingSystem, this.hardware})
-      : super();
+  DeviceDatum(this.platform, this.deviceId, {this.deviceName, this.deviceModel, this.deviceManufacturer, this.operatingSystem, this.hardware}) : super();
 
   factory DeviceDatum.fromJson(Map<String, dynamic> json) => _$DeviceDatumFromJson(json);
   Map<String, dynamic> toJson() => _$DeviceDatumToJson(this);
@@ -149,17 +147,17 @@ class ScreenDatum extends CARPDatum {
   ScreenDatum() : super();
 
   factory ScreenDatum.fromScreenStateEvent(ScreenStateEvent event) {
-    ScreenDatum sd = new ScreenDatum();
+    ScreenDatum sd = ScreenDatum();
 
     switch (event) {
       case ScreenStateEvent.SCREEN_ON:
-        sd.screenEvent = "SCREEN_ON";
+        sd.screenEvent = 'SCREEN_ON';
         break;
       case ScreenStateEvent.SCREEN_OFF:
-        sd.screenEvent = "SCREEN_OFF";
+        sd.screenEvent = 'SCREEN_OFF';
         break;
       case ScreenStateEvent.SCREEN_UNLOCKED:
-        sd.screenEvent = "SCREEN_UNLOCKED";
+        sd.screenEvent = 'SCREEN_UNLOCKED';
         break;
     }
     return sd;

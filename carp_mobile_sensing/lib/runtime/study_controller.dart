@@ -65,9 +65,7 @@ class StudyController {
     // now initialize optional parameters
     executor ??= StudyExecutor(study);
     samplingSchema ??= SamplingSchema.normal(powerAware: true);
-    dataManager ??= (study.dataEndPoint != null)
-        ? DataManagerRegistry.lookup(study.dataEndPoint.type)
-        : null;
+    dataManager ??= (study.dataEndPoint != null) ? DataManagerRegistry.lookup(study.dataEndPoint.type) : null;
     privacySchemaName ??= NameSpace.CARP;
     transformer ??= ((events) => events);
 
@@ -83,10 +81,8 @@ class StudyController {
     // 2. preferred data format as specified in the study protocol
     // 3. any custom transformer
     events = transformer(executor.events
-        .map((datum) => TransformerSchemaRegistry.lookup(privacySchemaName)
-            .transform(datum))
-        .map((datum) => TransformerSchemaRegistry.lookup(study.dataFormat)
-            .transform(datum)));
+        .map((datum) => TransformerSchemaRegistry.lookup(privacySchemaName).transform(datum))
+        .map((datum) => TransformerSchemaRegistry.lookup(study.dataFormat).transform(datum)));
 
     // old, simple version below
     // events = transformer(executor.events);
@@ -99,25 +95,24 @@ class StudyController {
     Device.getDeviceInfo();
 
     // setting up permissions
-    permissions = await PermissionHandlerPlatform.instance
-        .requestPermissions(SamplingPackageRegistry.permissions);
+    permissions = await PermissionHandlerPlatform.instance.requestPermissions(SamplingPackageRegistry.permissions);
     SamplingPackageRegistry.permissions.forEach((permission) {
       PermissionStatus status = permissions[permission];
-      if (status != PermissionStatus.granted)
-        warning(
-            'Permissions not granted for $permission, permission is $status');
+      if (status != PermissionStatus.granted) {
+        warning('Permissions not granted for $permission, permission is $status');
+      }
     });
 
-    print('CARP Mobile Sensing (CAMS) - Initializing Study Controller: ');
-    print('     study id : ${study.id}');
-    print('   study name : ${study.name}');
-    print('         user : ${study.userId}');
-    print('     endpoint : ${study.dataEndPoint}');
-    print('  data format : ${study.dataFormat}');
-    print('     platform : ${Device.platform.toString()}');
-    print('    device ID : ${Device.deviceID.toString()}');
-    print(' data manager : ${dataManager?.toString()}');
-    print('  permissions : ${permissions?.toString()}');
+    info('CARP Mobile Sensing (CAMS) - Initializing Study Controller: ');
+    info('     study id : ${study.id}');
+    info('   study name : ${study.name}');
+    info('         user : ${study.userId}');
+    info('     endpoint : ${study.dataEndPoint}');
+    info('  data format : ${study.dataFormat}');
+    info('     platform : ${Device.platform.toString()}');
+    info('    device ID : ${Device.deviceID.toString()}');
+    info(' data manager : ${dataManager?.toString()}');
+    info('  permissions : ${permissions?.toString()}');
 
     if (samplingSchema != null) {
       // doing two adaptation is a bit of a hack; used to ensure that
@@ -127,15 +122,14 @@ class StudyController {
     }
 
     await dataManager?.initialize(study, events);
-    await executor
-        .initialize(Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR)));
+    await executor.initialize(Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR)));
 
-    enablePowerAwareness();
+    await enablePowerAwareness();
 
     events.listen((datum) => samplingSize++);
   }
 
-  BatteryProbe _battery = BatteryProbe();
+  final BatteryProbe _battery = BatteryProbe();
 
   /// Enable power-aware sensing in this study. See [PowerAwarenessState].
   Future<void> enablePowerAwareness() async {
@@ -144,12 +138,10 @@ class StudyController {
         BatteryDatum batteryState = (datum as BatteryDatum);
         if (batteryState.batteryStatus == BatteryDatum.STATE_DISCHARGING) {
           // only apply power-awareness if not charging.
-          PowerAwarenessState newState =
-              powerAwarenessState.adapt(batteryState.batteryLevel);
+          PowerAwarenessState newState = powerAwarenessState.adapt(batteryState.batteryLevel);
           if (newState != powerAwarenessState) {
             powerAwarenessState = newState;
-            print(
-                'PowerAware: Going to $powerAwarenessState, level ${batteryState.batteryLevel}%');
+            info('PowerAware: Going to $powerAwarenessState, level ${batteryState.batteryLevel}%');
             study.adapt(powerAwarenessState.schema);
           }
         }
@@ -169,20 +161,20 @@ class StudyController {
   }
 
   /// Resume this controller, i.e. resume data collection according to the specified [study] and [samplingSchema].
-  @Deprecated("Use the resume() method instead")
+  @Deprecated('Use the resume() method instead')
   void start() {
-    this.resume();
+    resume();
   }
 
   /// Resume this controller, i.e. resume data collection according to the specified [study] and [samplingSchema].
   void resume() {
-    print("Resuming data sampling ...");
+    info('Resuming data sampling ...');
     executor.resume();
   }
 
   /// Pause this controller, which will pause data collection and close the data manager.
   void pause() {
-    print("Pausing data sampling ...");
+    info('Pausing data sampling ...');
     executor.pause();
     dataManager?.close();
   }
@@ -192,7 +184,7 @@ class StudyController {
   /// Once a controller is stopped it **cannot** be (re)started.
   /// If a controller should be restarted, use the [pause] and [resume] methods.
   void stop() {
-    print("Stopping data sampling ...");
+    info('Stopping data sampling ...');
     disablePowerAwareness();
     dataManager?.close();
     executor.stop();
@@ -221,62 +213,66 @@ class NoSamplingState implements PowerAwarenessState {
   static NoSamplingState instance = NoSamplingState();
 
   PowerAwarenessState adapt(int level) {
-    if (level > PowerAwarenessState.NO_SAMPLING_LEVEL)
+    if (level > PowerAwarenessState.NO_SAMPLING_LEVEL) {
       return MinimumSamplingState.instance;
-    else
+    } else {
       return NoSamplingState.instance;
+    }
   }
 
   SamplingSchema get schema => SamplingSchema.none();
 
-  String toString() => "Disabled Sampling Mode";
+  String toString() => 'Disabled Sampling Mode';
 }
 
 class MinimumSamplingState implements PowerAwarenessState {
   static MinimumSamplingState instance = MinimumSamplingState();
 
   PowerAwarenessState adapt(int level) {
-    if (level < PowerAwarenessState.NO_SAMPLING_LEVEL)
+    if (level < PowerAwarenessState.NO_SAMPLING_LEVEL) {
       return NoSamplingState.instance;
-    else if (level > PowerAwarenessState.MINIMUM_SAMPLING_LEVEL)
+    } else if (level > PowerAwarenessState.MINIMUM_SAMPLING_LEVEL) {
       return LightSamplingState.instance;
-    else
+    } else {
       return MinimumSamplingState.instance;
+    }
   }
 
   SamplingSchema get schema => SamplingSchema.minimum();
 
-  String toString() => "Minimun Sampling Mode";
+  String toString() => 'Minimun Sampling Mode';
 }
 
 class LightSamplingState implements PowerAwarenessState {
   static LightSamplingState instance = LightSamplingState();
 
   PowerAwarenessState adapt(int level) {
-    if (level < PowerAwarenessState.MINIMUM_SAMPLING_LEVEL)
+    if (level < PowerAwarenessState.MINIMUM_SAMPLING_LEVEL) {
       return MinimumSamplingState.instance;
-    else if (level > PowerAwarenessState.LIGHT_SAMPLING_LEVEL)
+    } else if (level > PowerAwarenessState.LIGHT_SAMPLING_LEVEL) {
       return NormalSamplingState.instance;
-    else
+    } else {
       return LightSamplingState.instance;
+    }
   }
 
   SamplingSchema get schema => SamplingSchema.light();
 
-  String toString() => "Light Sampling Mode";
+  String toString() => 'Light Sampling Mode';
 }
 
 class NormalSamplingState implements PowerAwarenessState {
   static NormalSamplingState instance = NormalSamplingState();
 
   PowerAwarenessState adapt(int level) {
-    if (level < PowerAwarenessState.LIGHT_SAMPLING_LEVEL)
+    if (level < PowerAwarenessState.LIGHT_SAMPLING_LEVEL) {
       return LightSamplingState.instance;
-    else
+    } else {
       return NormalSamplingState.instance;
+    }
   }
 
   SamplingSchema get schema => SamplingSchema.normal();
 
-  String toString() => "Normal Sampling Mode";
+  String toString() => 'Normal Sampling Mode';
 }

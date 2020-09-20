@@ -11,7 +11,7 @@ import 'dart:convert';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 /// This is an example of how to set up a study by using the `common`
-/// sampling schema.
+/// sampling schema. Used in the README file.
 void example_1() async {
   // Create a study using a local file to store data
   Study study = Study("2", 'user@cachet.dk',
@@ -147,6 +147,7 @@ void samplingSchemaExample() async {
     ..name = 'CARP Mobile Sensing - default configuration'
     ..dataEndPoint = DataEndPoint(DataEndPointTypes.PRINT)
     ..addTriggerTask(ImmediateTrigger(), AutomaticTask()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
+  print(study_1);
 
   Study study = Study("2", 'user@cachet.dk',
       name: 'A outdoor activity study',
@@ -247,7 +248,9 @@ void recurrentScheduledTriggerExample() {
 }
 
 /// An example of how to configure a [StudyController] with the default privacy schema.
-void study_controller_example() {
+void study_controller_example() async {
   Study study = Study("2", 'user@cachet.dk');
   StudyController controller = StudyController(study, privacySchemaName: PrivacySchema.DEFAULT);
+  await controller.initialize();
+  controller.resume();
 }

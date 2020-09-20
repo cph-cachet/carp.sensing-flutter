@@ -20,7 +20,7 @@ class Task extends Serializable {
   String name;
 
   /// A list of [Measure]s to be done as part of this task.
-  List<Measure> measures = new List<Measure>();
+  List<Measure> measures = [];
 
   Task({this.name}) : super() {
     name ??= 'Task #${_counter++}';
@@ -32,15 +32,15 @@ class Task extends Serializable {
 
   /// Add a [Measure] to this task.
   void addMeasure(Measure measure) {
-    this.measures.add(measure);
+    measures.add(measure);
   }
 
   /// Remove a [Measure] from this task.
   void removeMeasure(Measure measure) {
-    this.measures.remove(measure);
+    measures.remove(measure);
   }
 
-  String toString() => '${this.runtimeType}: name: $name';
+  String toString() => '$runtimeType: name: $name';
 }
 
 /// A [Task] that automatically collects data from the specified measures.

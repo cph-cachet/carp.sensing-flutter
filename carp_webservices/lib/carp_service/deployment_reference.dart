@@ -58,8 +58,9 @@ class DeploymentReference extends CarpReference {
     int httpStatusCode = response.statusCode;
 
     print(httpStatusCode);
+    print(response.body);
     Map<String, dynamic> responseJson = json.decode(response.body);
-    print(responseJson.toString());
+    //print(responseJson.toString());
 
     if (httpStatusCode == HttpStatus.ok) {
       print(responseJson.toString());
@@ -162,7 +163,7 @@ class DeploymentReference extends CarpReference {
   /// Mark this deployment as a success on the CARP server.
   Future<StudyDeploymentStatus> success() async {
     final restHeaders = await headers;
-    final String uri = "deploymentEndpointUri/$id/success";
+    final String uri = "$deploymentEndpointUri/$id/success";
     final String body = _encode(DeploymentServiceRequest(id, masterDeviceRoleName).toJson());
 
     print(uri);

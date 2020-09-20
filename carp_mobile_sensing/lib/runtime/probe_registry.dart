@@ -16,7 +16,7 @@ part of runtime;
 /// The [ProbeRegistry] can create, register, and lookup an instance of a relevant probe
 /// based on its [DataType].
 class ProbeRegistry {
-  static Map<String, Probe> _probes = new Map<String, Probe>();
+  static final Map<String, Probe> _probes = {};
 
   /// Returns a list of running probes.
   static Map<String, Probe> get probes => _probes;
