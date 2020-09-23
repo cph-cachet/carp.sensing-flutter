@@ -7,18 +7,18 @@
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(new CARPMobileSensingApp());
+void main() => runApp(CARPMobileSensingApp());
 
 class CARPMobileSensingApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
+    return MaterialApp(
       title: 'CARP Mobile Sensing Demo',
-      theme: new ThemeData(
+      theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: new ConsolePage(title: 'CARP Mobile Sensing Demo'),
+      home: ConsolePage(title: 'CARP Mobile Sensing Demo'),
     );
   }
 }
@@ -29,28 +29,28 @@ class ConsolePage extends StatefulWidget {
   final String title;
 
   @override
-  Console createState() => new Console();
+  Console createState() => Console();
 }
 
 class Console extends State<ConsolePage> {
-  String _log = "";
+  String _log = '';
   Sensing sensing;
 
   void log(String msg) {
     setState(() {
-      _log += "$msg\n";
+      _log += '$msg\n';
     });
   }
 
   void clearLog() {
     setState(() {
-      _log += "";
+      _log += '';
     });
   }
 
   void initState() {
     super.initState();
-    sensing = new Sensing(this);
+    sensing = Sensing(this);
     sensing.start();
   }
 
@@ -60,16 +60,16 @@ class Console extends State<ConsolePage> {
   }
 
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text(widget.title),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
       ),
-      body: new SingleChildScrollView(
+      body: SingleChildScrollView(
         child: StreamBuilder(
           stream: sensing.controller.events,
           builder: (context, AsyncSnapshot<Datum> snapshot) {
             if (snapshot.hasData) {
-              _log += "${snapshot.data.toString()}\n";
+              _log += '${snapshot.data.toString()}\n';
               return Text(_log);
             } else if (snapshot.hasError) {
               return Text(snapshot.error.toString());
@@ -78,7 +78,7 @@ class Console extends State<ConsolePage> {
           },
         ),
       ),
-      floatingActionButton: new FloatingActionButton(
+      floatingActionButton: FloatingActionButton(
         onPressed: _restart,
         tooltip: 'Restart study & probes',
         child: sensing.isRunning ? Icon(Icons.pause) : Icon(Icons.play_arrow),
@@ -88,10 +88,11 @@ class Console extends State<ConsolePage> {
 
   void _restart() {
     setState(() {
-      if (sensing.isRunning)
+      if (sensing.isRunning) {
         sensing.pause();
-      else
+      } else {
         sensing.resume();
+      }
     });
   }
 }
@@ -109,10 +110,10 @@ class Sensing {
 
   /// Start sensing.
   void start() async {
-    console.log("Setting up study...");
+    console.log('Setting up study...');
 
     // create the study
-    study = Study("2", 'user@cachet.dk',
+    study = Study('2', 'user@cachet.dk',
         name: 'A default / common study',
         dataEndPoint: FileDataEndPoint()
           ..bufferSize = 500 * 1000
@@ -139,12 +140,15 @@ class Sensing {
     console.log(study.toString());
 
     // Create a Study Controller that can manage this study and initialize it.
-    controller = StudyController(study);
+    controller = StudyController(
+      study,
+      debugLevel: DebugLevel.DEBUG,
+    );
     await controller.initialize();
 
     // Resume (i.e. start) data sampling.
     controller.resume();
-    console.log("Sensing started ...");
+    console.log('Sensing started ...');
 
     // listening on all probe events from the study
     controller.events.forEach(print);
@@ -155,13 +159,13 @@ class Sensing {
 
   /// Resume sensing
   void resume() async {
-    console.log("\nSensing resumed ...\n");
+    console.log('\nSensing resumed ...\n');
     controller.resume();
   }
 
   /// Pause sensing
   void pause() async {
-    console.log("\nSensing paused ...\n");
+    console.log('\nSensing paused ...\n');
     controller.pause();
   }
 
@@ -169,6 +173,6 @@ class Sensing {
   void stop() async {
     controller.stop();
     study = null;
-    console.log("Sensing stopped ...");
+    console.log('Sensing stopped ...');
   }
 }

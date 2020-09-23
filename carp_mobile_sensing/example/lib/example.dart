@@ -14,7 +14,7 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 /// sampling schema. Used in the README file.
 void example_1() async {
   // Create a study using a local file to store data
-  Study study = Study("2", 'user@cachet.dk',
+  Study study = Study('2', 'user@cachet.dk',
       name: 'A study collecting ..',
       dataEndPoint: FileDataEndPoint()
         ..bufferSize = 500 * 1000
@@ -50,8 +50,8 @@ void example_1() async {
 /// This is a more elaborate example used in the README.md file.
 void example_2() async {
   // Create a study using a local file to store data
-  Study study = Study("1234", "user@dtu.dk",
-      name: "An example study",
+  Study study = Study('1234', 'user@dtu.dk',
+      name: 'An example study',
       dataEndPoint: FileDataEndPoint()
         ..bufferSize = 500 * 1000
         ..zip = true
@@ -70,7 +70,7 @@ void example_2() async {
   // create a light measure variable to be used later
   PeriodicMeasure lightMeasure = PeriodicMeasure(
     MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
-    name: "Ambient Light",
+    name: 'Ambient Light',
     frequency: const Duration(seconds: 11),
     duration: const Duration(milliseconds: 100),
   );
@@ -143,13 +143,13 @@ void samplingSchemaExample() async {
     ]);
 
   //creating a study
-  Study study_1 = Study("2", 'user@cachet.dk')
+  Study study_1 = Study('2', 'user@cachet.dk')
     ..name = 'CARP Mobile Sensing - default configuration'
     ..dataEndPoint = DataEndPoint(DataEndPointTypes.PRINT)
     ..addTriggerTask(ImmediateTrigger(), AutomaticTask()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
   print(study_1);
 
-  Study study = Study("2", 'user@cachet.dk',
+  Study study = Study('2', 'user@cachet.dk',
       name: 'A outdoor activity study',
       dataFormat: NameSpace.OMH,
       dataEndPoint: FileDataEndPoint()
@@ -206,7 +206,7 @@ void samplingSchemaExample() async {
         )
         ..addMeasure(PeriodicMeasure(
           MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
-          name: "Ambient Light",
+          name: 'Ambient Light',
           frequency: const Duration(seconds: 11),
           duration: const Duration(milliseconds: 100),
         )));
@@ -249,7 +249,7 @@ void recurrentScheduledTriggerExample() {
 
 /// An example of how to configure a [StudyController] with the default privacy schema.
 void study_controller_example() async {
-  Study study = Study("2", 'user@cachet.dk');
+  Study study = Study('2', 'user@cachet.dk');
   StudyController controller = StudyController(study, privacySchemaName: PrivacySchema.DEFAULT);
   await controller.initialize();
   controller.resume();

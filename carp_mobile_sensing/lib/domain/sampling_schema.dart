@@ -130,7 +130,7 @@ class SamplingSchema {
       ..powerAware = true;
 
     // join sampling schemas from each registered sampling package.
-    SamplingPackageRegistry.packages.forEach((package) => schema.addSamplingSchema(package.common));
+    SamplingPackageRegistry.instance.packages.forEach((package) => schema.addSamplingSchema(package.common));
     //schema.measures.values.forEach((measure) => print('measure : $measure'));
     schema.measures.values.forEach((measure) => measure.type.namespace = namespace);
 
@@ -159,7 +159,7 @@ class SamplingSchema {
       ..powerAware = true;
 
     // join sampling schemas from each registered sampling package.
-    SamplingPackageRegistry.packages.forEach((package) => schema.addSamplingSchema(package.light));
+    SamplingPackageRegistry.instance.packages.forEach((package) => schema.addSamplingSchema(package.light));
     schema.measures.values.forEach((measure) => measure.type.namespace = namespace);
 
     return schema;
@@ -175,7 +175,7 @@ class SamplingSchema {
       ..powerAware = true;
 
     // join sampling schemas from each registered sampling package.
-    SamplingPackageRegistry.packages.forEach((package) => schema.addSamplingSchema(package.minimum));
+    SamplingPackageRegistry.instance.packages.forEach((package) => schema.addSamplingSchema(package.minimum));
     schema.measures.values.forEach((measure) => measure.type.namespace = namespace);
 
     return schema;
@@ -203,7 +203,7 @@ class SamplingSchema {
       ..powerAware = false;
 
     // join sampling schemas from each registered sampling package.
-    SamplingPackageRegistry.packages.forEach((package) => schema.addSamplingSchema(package.debug));
+    SamplingPackageRegistry.instance.packages.forEach((package) => schema.addSamplingSchema(package.debug));
     schema.measures.values.forEach((measure) => measure.type.namespace = namespace);
 
     return schema;

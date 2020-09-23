@@ -1,15 +1,19 @@
 part of runtime;
 
-/// A registry for sampling packages. Global singleton.
-_SamplingPackageRegistry SamplingPackageRegistry = _SamplingPackageRegistry();
-
-class _SamplingPackageRegistry {
+class SamplingPackageRegistry {
+  static SamplingPackageRegistry _instance;
   final List<SamplingPackage> _packages = [];
   List<SamplingPackage> get packages => _packages;
   final List<Permission> _permissions = [];
   List<Permission> get permissions => _permissions;
 
-  _SamplingPackageRegistry() : super() {
+  /// A registry for sampling packages. Global singleton.
+  static SamplingPackageRegistry get instance {
+    _instance ??= SamplingPackageRegistry._();
+    return _instance;
+  }
+
+  SamplingPackageRegistry._() {
     // HACK - creating a serializable object (such as a [Study]) ensures that
     // JSON deserialization in [Serializable] is initialized
     Study('1234', 'unknown');

@@ -57,8 +57,7 @@ class BatteryProbe extends StreamProbe {
 class ScreenProbe extends StreamProbe {
   Future<void> onInitialize(Measure measure) async {
     await super.onInitialize(measure);
-    // check if Screen is available (only available on Android)
-    await Screen().screenStateStream.first;
+    if (!Platform.isAndroid) throw SensingException('ScreenProbe only available on Android.');
   }
 
   Stream<Datum> get stream => Screen().screenStateStream.map((event) => ScreenDatum.fromScreenStateEvent(event));

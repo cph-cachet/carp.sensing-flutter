@@ -18,7 +18,10 @@ abstract class Executor extends AbstractProbe {
   Executor() : super();
 
   Future<void> onInitialize(Measure measure) async {
-    executors.forEach((executor) => executor.initialize(measure));
+    //executors.forEach((executor) => await executor.initialize(measure));
+    for (Probe probe in executors) {
+      await probe.initialize(measure);
+    }
   }
 
   Future<void> onPause() async {

@@ -34,7 +34,7 @@ class ProbeRegistry {
   static Probe create(String type) {
     Probe _probe;
 
-    SamplingPackageRegistry.packages.forEach((package) {
+    SamplingPackageRegistry.instance.packages.forEach((package) {
       if (package.dataTypes.contains(type)) {
         _probe = package.create(type);
       }

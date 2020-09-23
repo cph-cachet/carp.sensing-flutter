@@ -45,10 +45,10 @@ abstract class AbstractDataManager implements DataManager {
   Future<void> initialize(Study study, Stream<Datum> data) async {
     this.study = study;
     data.listen(onDatum, onError: onError, onDone: onDone);
-    addEvent(DataManagerEvent(DataManagerEventTypes.initialized));
+    addEvent(DataManagerEvent(DataManagerEventTypes.INITIALIZED));
   }
 
-  Future<void> close() async => addEvent(DataManagerEvent(DataManagerEventTypes.closed));
+  Future<void> close() async => addEvent(DataManagerEvent(DataManagerEventTypes.CLOSED));
 
   void onDatum(Datum datum);
   void onDone();
@@ -100,8 +100,8 @@ class DataManagerEvent {
 /// An enumeration of data manager event types
 class DataManagerEventTypes {
   /// DATA MANAGER INITIALIZED event
-  static const String initialized = 'initialized';
+  static const String INITIALIZED = 'initialized';
 
   /// DATA MANAGER CLOSED event
-  static const String closed = 'closed';
+  static const String CLOSED = 'closed';
 }

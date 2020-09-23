@@ -1,3 +1,8 @@
+## 0.9.2
+* fix: error in screen probe
+* refactor: small pedantic formatting issues
+* refactor: `TransformerSchemaRegistry` and `SamplingPackageRegistry` are now accessed using an instance singleton
+
 ## 0.9.1
 * refactor: using [pedantic](https://pub.dev/packages/pedantic#using-the-lints)
 

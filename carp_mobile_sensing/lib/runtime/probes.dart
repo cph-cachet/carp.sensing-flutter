@@ -155,6 +155,7 @@ abstract class AbstractProbe with MeasureListener implements Probe {
   void _setState(_ProbeStateMachine state) {
     _stateMachine = state;
     _stateEventController.add(state.state);
+    debug('$runtimeType state is set to $state');
   }
 
   Measure _measure;
@@ -169,7 +170,7 @@ abstract class AbstractProbe with MeasureListener implements Probe {
     assert(measure != null, 'Probe cannot be initialized with a null measure.');
     _measure = measure;
     measure.addMeasureListener(this);
-    _stateMachine.initialize(measure);
+    await _stateMachine.initialize(measure);
   }
 
   void restart() => _stateMachine.restart();
@@ -227,7 +228,7 @@ abstract class AbstractProbe with MeasureListener implements Probe {
 
 abstract class _ProbeStateMachine {
   ProbeState get state;
-  void initialize(Measure measure);
+  Future<void> initialize(Measure measure);
   void pause();
   void resume();
   void restart();
@@ -253,14 +254,14 @@ abstract class _AbstractProbeState implements _ProbeStateMachine {
 
   // Default stop behavior. A probe can be stopped in all states.
   void stop() {
-    print('Stopping ${probe.runtimeType}');
+    info('Stopping ${probe.runtimeType}');
     probe._setState(_StoppedState(probe));
     probe.onStop();
   }
 
   // Default error behavior. A probe can become undefined in all states.
   void error() {
-    print('Error in ${probe.runtimeType}.');
+    warning('Error in ${probe.runtimeType}.');
     probe._setState(_UndefinedState(probe));
   }
 }
@@ -269,7 +270,7 @@ class _CreatedState extends _AbstractProbeState implements _ProbeStateMachine {
   _CreatedState(Probe probe) : super(probe, ProbeState.created);
 
   Future<void> initialize(Measure measure) async {
-    print('Initializing ${probe.runtimeType} - $measure');
+    info('Initializing ${probe.runtimeType} - $measure');
     try {
       await probe.onInitialize(measure);
       probe._setState(_InitializedState(probe));
@@ -278,23 +279,27 @@ class _CreatedState extends _AbstractProbeState implements _ProbeStateMachine {
       probe._setState(_UndefinedState(probe));
     }
   }
+
+  String toString() => 'created';
 }
 
 class _InitializedState extends _AbstractProbeState implements _ProbeStateMachine {
   _InitializedState(Probe probe) : super(probe, ProbeState.initialized);
 
   void resume() {
-    print('Resuming ${probe.runtimeType}');
+    info('Resuming ${probe.runtimeType}');
     probe.onResume();
     probe._setState(_ResumedState(probe));
   }
+
+  String toString() => 'initialized';
 }
 
 class _ResumedState extends _AbstractProbeState implements _ProbeStateMachine {
   _ResumedState(Probe probe) : super(probe, ProbeState.resumed);
 
   void restart() {
-    print('Restarting ${probe.runtimeType}');
+    info('Restarting ${probe.runtimeType}');
     probe.pause(); // first pause probe, setting it in a paused state
     probe.onRestart();
     if (probe.enabled) {
@@ -304,17 +309,19 @@ class _ResumedState extends _AbstractProbeState implements _ProbeStateMachine {
   }
 
   void pause() {
-    print('Pausing ${probe.runtimeType}');
+    info('Pausing ${probe.runtimeType}');
     probe.onPause();
     probe._setState(_PausedState(probe));
   }
+
+  String toString() => 'resumed';
 }
 
 class _PausedState extends _AbstractProbeState implements _ProbeStateMachine {
   _PausedState(Probe probe) : super(probe, ProbeState.paused);
 
   void restart() {
-    print('Restarting ${probe.runtimeType}');
+    info('Restarting ${probe.runtimeType}');
     probe.onRestart();
     if (probe.enabled) {
       // check if probe is enabled
@@ -324,19 +331,23 @@ class _PausedState extends _AbstractProbeState implements _ProbeStateMachine {
 
   void resume() {
     if (probe.enabled) {
-      print('Resuming ${probe.runtimeType}');
+      info('Resuming ${probe.runtimeType}');
       probe.onResume();
       probe._setState(_ResumedState(probe));
     }
   }
+
+  String toString() => 'paused';
 }
 
 class _StoppedState extends _AbstractProbeState implements _ProbeStateMachine {
   _StoppedState(Probe probe) : super(probe, ProbeState.stopped);
+  String toString() => 'stopped';
 }
 
 class _UndefinedState extends _AbstractProbeState implements _ProbeStateMachine {
   _UndefinedState(Probe probe) : super(probe, ProbeState.undefined);
+  String toString() => 'undefined';
 }
 
 //---------------------------------------------------------------------------------------

@@ -87,7 +87,7 @@ class FileDataManager extends AbstractDataManager {
       final path = await filename;
       _file = File(path);
       info("Creating file '$path'");
-      addEvent(FileDataManagerEvent(FileDataManagerEventTypes.file_created, path));
+      addEvent(FileDataManagerEvent(FileDataManagerEventTypes.FILE_CREATED, path));
     }
     return _file;
   }
@@ -112,7 +112,7 @@ class FileDataManager extends AbstractDataManager {
       return Future.delayed(const Duration(seconds: 2), () => write(data));
     }
 
-    final DataPoint _datapoint = DataPoint.fromDatum(study.id, study.userId, data);
+    final _datapoint = DataPoint.fromDatum(study.id, study.userId, data);
     final json = jsonEncode(_datapoint);
 
     await sink.then((_s) {
@@ -149,7 +149,7 @@ class FileDataManager extends AbstractDataManager {
     // to flushing this file.
     sink.then((value) {});
 
-    final String _jsonFilePath = flushFile.path;
+    final _jsonFilePath = flushFile.path;
     String _finalFilePath = _jsonFilePath;
 
     info("Written JSON to file '$_jsonFilePath'. Closing it.");
@@ -176,10 +176,10 @@ class FileDataManager extends AbstractDataManager {
         //TODO : implement encryption
         // if the encrypted file gets another name, remember to
         // update _jsonFilePath
-        addEvent(FileDataManagerEvent(FileDataManagerEventTypes.file_encrypted, _finalFilePath));
+        addEvent(FileDataManagerEvent(FileDataManagerEventTypes.FILE_ENCRYPTED, _finalFilePath));
       }
 
-      addEvent(FileDataManagerEvent(FileDataManagerEventTypes.file_closed, _finalFilePath));
+      addEvent(FileDataManagerEvent(FileDataManagerEventTypes.FILE_CLOSED, _finalFilePath));
     });
   }
 
@@ -262,14 +262,14 @@ class FileDataManagerEvent extends DataManagerEvent {
 /// An enumeration of file data manager event types
 class FileDataManagerEventTypes extends DataManagerEventTypes {
   /// FILE CREATED event
-  static const String file_created = 'file_created';
+  static const String FILE_CREATED = 'file_created';
 
   /// FILE CLOSED event
-  static const String file_closed = 'file_closed';
+  static const String FILE_CLOSED = 'file_closed';
 
   /// FILE DELETE event
-  static const String file_deleted = 'file_deleted';
+  static const String FILE_DELETED = 'file_deleted';
 
   /// FILE ENCRYPTED event
-  static const String file_encrypted = 'file_encrypted';
+  static const String FILE_ENCRYPTED = 'file_encrypted';
 }

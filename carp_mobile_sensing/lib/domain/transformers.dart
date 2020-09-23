@@ -15,14 +15,18 @@ typedef DatumStreamTransformer = Stream<Datum> Function(Stream<Datum>);
 /// A no-operation transformer.
 Datum noop(Datum data) => data;
 
-/// A registry for transformer schemas. Global singleton.
-_TransformerSchemaRegistry TransformerSchemaRegistry = _TransformerSchemaRegistry();
-
-class _TransformerSchemaRegistry {
+class TransformerSchemaRegistry {
   final Map<String, TransformerSchema> _schemas = {};
   Map<String, TransformerSchema> get schemas => _schemas;
+  static TransformerSchemaRegistry _instance;
 
-  _TransformerSchemaRegistry() {
+  /// Returns the singleton instance of the [TransformerSchemaRegistry].
+  static TransformerSchemaRegistry get instance {
+    _instance ??= TransformerSchemaRegistry._();
+    return _instance;
+  }
+
+  TransformerSchemaRegistry._() {
     // register 3 default transformer schemas:
     // 1. a no-operation CARP schema
     // 2. a default OMH schema
