@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2018-2020 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -12,7 +12,7 @@ abstract class FirebaseDataManager extends AbstractDataManager {
   FirebaseEndPoint firebaseEndPoint;
 
   FirebaseApp _firebaseApp;
-  FirebaseUser _user;
+  User _user;
 
   FirebaseDataManager();
 
@@ -24,13 +24,13 @@ abstract class FirebaseDataManager extends AbstractDataManager {
 
   Future<FirebaseApp> get firebaseApp async {
     if (_firebaseApp == null) {
-      _firebaseApp = await FirebaseApp.configure(
+      _firebaseApp = await Firebase.initializeApp(
         name: firebaseEndPoint.name,
         options: new FirebaseOptions(
-          googleAppID: Platform.isIOS ? firebaseEndPoint.iOSGoogleAppID : firebaseEndPoint.androidGoogleAppID,
-          gcmSenderID: firebaseEndPoint.gcmSenderID,
+          appId: Platform.isIOS ? firebaseEndPoint.iOSGoogleAppID : firebaseEndPoint.androidGoogleAppID,
+          messagingSenderId: firebaseEndPoint.gcmSenderID,
           apiKey: firebaseEndPoint.webAPIKey,
-          projectID: firebaseEndPoint.projectID,
+          projectId: firebaseEndPoint.projectID,
         ),
       );
     }
@@ -45,18 +45,18 @@ abstract class FirebaseDataManager extends AbstractDataManager {
   ///   * `GOOGLE` -- authenticate using Google credentials
   ///   * `PASSWORD` - authenticate using username and password
   ///
-  Future<FirebaseUser> get user async {
+  Future<User> get user async {
     if (_user == null) {
       switch (firebaseEndPoint.firebaseAuthenticationMethod) {
         case FireBaseAuthenticationMethods.GOOGLE:
           {
             GoogleSignInAccount googleUser = await _googleSignIn.signIn();
             GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-            final AuthCredential credential = GoogleAuthProvider.getCredential(
+            final AuthCredential credential = GoogleAuthProvider.credential(
               accessToken: googleAuth.accessToken,
               idToken: googleAuth.idToken,
             );
-            AuthResult result = await _auth.signInWithCredential(credential);
+            UserCredential result = await _auth.signInWithCredential(credential);
             _user = result.user;
             break;
           }
@@ -64,8 +64,7 @@ abstract class FirebaseDataManager extends AbstractDataManager {
           {
             assert(firebaseEndPoint.email != null);
             assert(firebaseEndPoint.password != null);
-            AuthResult result = await _auth.signInWithEmailAndPassword(
-                email: firebaseEndPoint.email, password: firebaseEndPoint.password);
+            UserCredential result = await _auth.signInWithEmailAndPassword(email: firebaseEndPoint.email, password: firebaseEndPoint.password);
             _user = result.user;
             break;
           }
@@ -128,7 +127,7 @@ class FirebaseStorageDataManager extends FirebaseDataManager {
     fileDataManager.initialize(study, events);
 
     final FirebaseStorage storage = await firebaseStorage;
-    final FirebaseUser authenticatedUser = await user;
+    final User authenticatedUser = await user;
 
     print('Initializig FirebaseStorageDataManager...');
     print(' Firebase URI  : ${firebaseEndPoint.uri}');
@@ -191,7 +190,7 @@ class FirebaseStorageDataManager extends FirebaseDataManager {
 class FirebaseDatabaseDataManager extends FirebaseDataManager {
   FirebaseDatabaseDataEndPoint dataEndPoint;
 
-  Firestore _firebaseDatabase;
+  FirebaseFirestore _firebaseDatabase;
 
   FirebaseDatabaseDataManager();
 
@@ -202,8 +201,8 @@ class FirebaseDatabaseDataManager extends FirebaseDataManager {
     assert(study.dataEndPoint is FirebaseDatabaseDataEndPoint);
     dataEndPoint = study.dataEndPoint as FirebaseDatabaseDataEndPoint;
 
-    final Firestore database = await firebaseDatabase;
-    final FirebaseUser authenticatedUser = await user;
+    final FirebaseFirestore database = await firebaseDatabase;
+    final User authenticatedUser = await user;
 
     print('Initializig FirebaseStorageDataManager...');
     print(' Firebase URI    : ${firebaseEndPoint.uri}');
@@ -212,10 +211,10 @@ class FirebaseDatabaseDataManager extends FirebaseDataManager {
     print(' Auth. user      : ${authenticatedUser.displayName} <${authenticatedUser.email}>\n');
   }
 
-  Future<Firestore> get firebaseDatabase async {
+  Future<FirebaseFirestore> get firebaseDatabase async {
     if (_firebaseDatabase == null) {
       final FirebaseApp app = await firebaseApp;
-      _firebaseDatabase = new Firestore(app: app);
+      _firebaseDatabase = FirebaseFirestore.instanceFor(app: app);
     }
     return _firebaseDatabase;
   }
@@ -223,25 +222,25 @@ class FirebaseDatabaseDataManager extends FirebaseDataManager {
   /// Called every time a JSON CARP [data] object is to be uploaded.
   Future<bool> uploadData(Datum data) async {
     assert(data is CARPDatum);
-    final carp_data = data as CARPDatum;
+    final carpData = data as CARPDatum;
     await user;
 
     if (user != null) {
-      final String device_id = Device.deviceID.toString();
-      final String data_type = data.format.name;
+      final String deviceId = Device.deviceID.toString();
+      final String dataType = data.format.name;
 
-      final json_data_string = json.encode(data);
-      Map<String, dynamic> json_data = json.decode(json_data_string) as Map<String, dynamic>;
+      final jsonDataString = json.encode(data);
+      Map<String, dynamic> jsonData = json.decode(jsonDataString) as Map<String, dynamic>;
 
       // add json data
-      Firestore.instance
+      FirebaseFirestore.instance
           .collection(dataEndPoint.collection)
-          .document(study.id) // study id
-          .collection(device_id) // device id
-          .document('upload') // the default upload document is called 'upload'
-          .collection(data_type) // data/measure type
-          .document(carp_data.id) // data id
-          .setData(json_data);
+          .doc(study.id) // study id
+          .collection(deviceId) // device id
+          .doc('upload') // the default upload document is called 'upload'
+          .collection(dataType) // data/measure type
+          .doc(carpData.id) // data id
+          .set(jsonData);
 
       return true;
     }

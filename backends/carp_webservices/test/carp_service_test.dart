@@ -546,7 +546,7 @@ void main() {
     }, skip: false);
 
     test('- register device', () async {
-      StudyDeploymentStatus status = await CarpService.instance.deployment().registerDevice('phone_2_dfgdfgfdgdfgfd', '2235435345435');
+      StudyDeploymentStatus status = await CarpService.instance.deployment().registerDevice('phone', '1');
       print(status);
       expect(status.studyDeploymentId, study.deploymentId);
     });

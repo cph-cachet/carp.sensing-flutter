@@ -56,7 +56,7 @@ FirebaseDatabaseDataEndPoint _$FirebaseDatabaseDataEndPointFromJson(
             json['firebase_end_point'] as Map<String, dynamic>),
     collection: json['collection'] as String,
   )
-    ..c__ = json['c__'] as String
+    ..$type = json[r'$type'] as String
     ..type = json['type'] as String;
 }
 
@@ -70,7 +70,7 @@ Map<String, dynamic> _$FirebaseDatabaseDataEndPointToJson(
     }
   }
 
-  writeNotNull('c__', instance.c__);
+  writeNotNull(r'$type', instance.$type);
   writeNotNull('firebase_end_point', instance.firebaseEndPoint);
   writeNotNull('type', instance.type);
   writeNotNull('collection', instance.collection);
@@ -90,7 +90,7 @@ FirebaseStorageDataEndPoint _$FirebaseStorageDataEndPointFromJson(
     encrypt: json['encrypt'],
     publicKey: json['public_key'],
   )
-    ..c__ = json['c__'] as String
+    ..$type = json[r'$type'] as String
     ..type = json['type'] as String;
 }
 
@@ -104,7 +104,7 @@ Map<String, dynamic> _$FirebaseStorageDataEndPointToJson(
     }
   }
 
-  writeNotNull('c__', instance.c__);
+  writeNotNull(r'$type', instance.$type);
   writeNotNull('firebase_end_point', instance.firebaseEndPoint);
   writeNotNull('type', instance.type);
   writeNotNull('buffer_size', instance.bufferSize);
