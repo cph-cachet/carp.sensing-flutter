@@ -1,8 +1,9 @@
-import 'package:test/test.dart';
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:carp_communication_package/communication.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+import 'package:test/test.dart';
 
 String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
 
@@ -10,12 +11,11 @@ void main() {
   Study study;
 
   setUp(() {
-    SamplingPackageRegistry.register(CommunicationSamplingPackage());
+    SamplingPackageRegistry.instance.register(CommunicationSamplingPackage());
 
     study = Study("1234", "bardram", name: "bardram study")
       ..dataEndPoint = DataEndPoint(DataEndPointTypes.PRINT)
-      ..addTriggerTask(ImmediateTrigger(),
-          Task(name: 'Task #1')..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
+      ..addTriggerTask(ImmediateTrigger(), Task(name: 'Task #1')..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
 
     //..addTask(Task('Communication Task')..measures = CommunicationSamplingPackage.common.measures.values.toList())
   });
@@ -57,13 +57,12 @@ void main() {
   });
 
   test('Privacy - TextMessageDatum', () {
-    TextMessageDatum msg =
-        TextMessageDatum.fromTextMessage(TextMessage(id: 123, address: '25550446', body: 'Hej Jakob'));
+    TextMessageDatum msg = TextMessageDatum.fromTextMessage(TextMessage(id: 123, address: '25550446', body: 'Hej Jakob'));
     print(msg);
 
     print(_encode(msg));
 
-    TextMessageDatum p_msg = TransformerSchemaRegistry.lookup(PrivacySchema.DEFAULT).transform(msg);
+    TextMessageDatum p_msg = TransformerSchemaRegistry.instance.lookup(PrivacySchema.DEFAULT).transform(msg);
     expect(p_msg.textMessage.address, isNot('25550446'));
     expect(p_msg.textMessage.body, isNot('Hej Jakob'));
     print(p_msg);
@@ -78,7 +77,7 @@ void main() {
 
     log.textMessageLog.forEach(print);
 
-    TextMessageLogDatum p_log = TransformerSchemaRegistry.lookup(PrivacySchema.DEFAULT).transform(log);
+    TextMessageLogDatum p_log = TransformerSchemaRegistry.instance.lookup(PrivacySchema.DEFAULT).transform(log);
     //expect(p_msg.textMessage.address, isNot('25550446'));
     //expect(p_msg.textMessage.body, isNot('Hej Jakob'));
     p_log.textMessageLog.forEach(print);
@@ -93,20 +92,18 @@ void main() {
 
     log.phoneLog.forEach(print);
 
-    PhoneLogDatum p_log = TransformerSchemaRegistry.lookup(PrivacySchema.DEFAULT).transform(log);
+    PhoneLogDatum p_log = TransformerSchemaRegistry.instance.lookup(PrivacySchema.DEFAULT).transform(log);
     //expect(p_msg.textMessage.address, isNot('25550446'));
     //expect(p_msg.textMessage.body, isNot('Hej Jakob'));
     p_log.phoneLog.forEach(print);
   });
 
   test('Calendar', () {
-    CalendarDatum cal = CalendarDatum()
-      ..calendarEvents.add(CalendarEvent('122', 'wer', 'møde #1'))
-      ..calendarEvents.add(CalendarEvent('122', 'wer', 'møde #1'));
+    CalendarDatum cal = CalendarDatum()..calendarEvents.add(CalendarEvent('122', 'wer', 'møde #1'))..calendarEvents.add(CalendarEvent('122', 'wer', 'møde #1'));
 
     print(_encode(cal));
 
-    CalendarDatum p_cal = TransformerSchemaRegistry.lookup(PrivacySchema.DEFAULT).transform(cal);
+    CalendarDatum p_cal = TransformerSchemaRegistry.instance.lookup(PrivacySchema.DEFAULT).transform(cal);
     print(_encode(p_cal));
   });
 

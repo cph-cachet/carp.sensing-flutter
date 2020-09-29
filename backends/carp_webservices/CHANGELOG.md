@@ -1,9 +1,10 @@
 ## 0.5.0
 * **BREAKING**: Updated to CAMS v. 0.9.0 with new `$type` json serialization
 * feature: support for deployment endpoints
+* fix: OAuth token in `CarpUser` is now serialized ([#96](https://github.com/cph-cachet/carp.sensing-flutter/issues/96))
 
 ## 0.4.6
-* feature: better support for authentication with stored tokens (Issue [#79](https://github.com/cph-cachet/carp.sensing-flutter/issues/79)).
+* feature: better support for authentication with stored tokens ([#79](https://github.com/cph-cachet/carp.sensing-flutter/issues/79)).
 * feature: `CarpUser` can be serialized to JSON.
 
 ## 0.4.5
@@ -17,7 +18,7 @@
 
 ## 0.4.3
 * refactor: `study_id` is now a String (not an int anymore).
-* fix: fixed issue [#66](https://github.com/cph-cachet/carp.sensing-flutter/issues/66).
+* fix: fixed [#66](https://github.com/cph-cachet/carp.sensing-flutter/issues/66).
 
 ## 0.4.2
 * update: updated to carp_mobile_sensing v. 0.8.x

@@ -1,11 +1,11 @@
-import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_communication_package/communication.dart';
+import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 /// This is a very simple example of how this sampling package is used with CARP Mobile Sensing (CAMS).
 /// NOTE, however, that the code below will not run.
 /// See the documentation on how to use CAMS: https://github.com/cph-cachet/carp.sensing-flutter/wiki
 void main() async {
-  SamplingPackageRegistry.register(CommunicationSamplingPackage());
+  SamplingPackageRegistry.instance.register(CommunicationSamplingPackage());
 
   Study study = Study("1234", "bardram", name: "bardram study");
 

@@ -6,7 +6,7 @@ import 'package:movisens_flutter/movisens_flutter.dart';
 /// NOTE, however, that the code below will not run.
 /// See the documentation on how to use CAMS: https://github.com/cph-cachet/carp.sensing-flutter/wiki
 void main() async {
-  SamplingPackageRegistry.register(MovisensSamplingPackage());
+  SamplingPackageRegistry.instance.register(MovisensSamplingPackage());
 
   Study study = Study("1234", "bardram", name: "bardram study");
 

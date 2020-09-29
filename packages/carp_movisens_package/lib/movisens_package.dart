@@ -26,9 +26,9 @@ class MovisensSamplingPackage implements SamplingPackage {
 
     // registering the transformers from CARP to OMH for heart rate and step count.
     // we assume that there is an OMH schema registered already...
-    TransformerSchemaRegistry.lookup(NameSpace.OMH)
+    TransformerSchemaRegistry.instance.lookup(NameSpace.OMH)
         .add('${MovisensSamplingPackage.MOVISENS}.${MovisensSamplingPackage.HR}', OMHHeartRateDatum.transformer);
-    TransformerSchemaRegistry.lookup(NameSpace.OMH).add(
+    TransformerSchemaRegistry.instance.lookup(NameSpace.OMH).add(
         '${MovisensSamplingPackage.MOVISENS}.${MovisensSamplingPackage.STEP_COUNT}', OMHStepCountDatum.transformer);
   }
 

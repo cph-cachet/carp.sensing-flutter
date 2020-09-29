@@ -53,7 +53,10 @@ CarpUser _$CarpUserFromJson(Map<String, dynamic> json) {
     ..created = json['created'] == null
         ? null
         : DateTime.parse(json['created'] as String)
-    ..role = (json['role'] as List)?.map((e) => e as String)?.toList();
+    ..role = (json['role'] as List)?.map((e) => e as String)?.toList()
+    ..token = json['token'] == null
+        ? null
+        : OAuthToken.fromJson(json['token'] as Map<String, dynamic>);
 }
 
 Map<String, dynamic> _$CarpUserToJson(CarpUser instance) {
@@ -79,5 +82,6 @@ Map<String, dynamic> _$CarpUserToJson(CarpUser instance) {
   writeNotNull('terms_agreed', instance.termsAgreed?.toIso8601String());
   writeNotNull('created', instance.created?.toIso8601String());
   writeNotNull('role', instance.role);
+  writeNotNull('token', instance.token);
   return val;
 }

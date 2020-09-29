@@ -5,33 +5,34 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 /// NOTE, however, that the code below will not run.
 /// See the documentation on how to use CAMS: https://github.com/cph-cachet/carp.sensing-flutter/wiki
 void main() async {
-  SamplingPackageRegistry.register(ContextSamplingPackage());
+  SamplingPackageRegistry.instance.register(ContextSamplingPackage());
 
   Study study = Study("1234", "bardram", name: "bardram study");
 
   // creating a task collecting step counts and blood pressure data for the last two days
-  study..addTriggerTask(
-      PeriodicTrigger(period: Duration(seconds: 20)),
-      Task()
-        ..measures = SamplingSchema.debug().getMeasureList(
-          namespace: NameSpace.CARP,
-          types: [
-            ContextSamplingPackage.WEATHER,
-            ContextSamplingPackage.AIR_QUALITY,
-          ],
-        ))..addTriggerTask(
-      ImmediateTrigger(),
-      Task()
-        ..measures = SamplingSchema.debug().getMeasureList(
-          namespace: NameSpace.CARP,
-          types: [
-            ContextSamplingPackage.LOCATION,
-            ContextSamplingPackage.GEOLOCATION,
-            ContextSamplingPackage.ACTIVITY,
-            ContextSamplingPackage.GEOFENCE,
-          ],
-        )
-  );
+  study
+    ..addTriggerTask(
+        PeriodicTrigger(period: Duration(seconds: 20)),
+        Task()
+          ..measures = SamplingSchema.debug().getMeasureList(
+            namespace: NameSpace.CARP,
+            types: [
+              ContextSamplingPackage.WEATHER,
+              ContextSamplingPackage.AIR_QUALITY,
+            ],
+          ))
+    ..addTriggerTask(
+        ImmediateTrigger(),
+        Task()
+          ..measures = SamplingSchema.debug().getMeasureList(
+            namespace: NameSpace.CARP,
+            types: [
+              ContextSamplingPackage.LOCATION,
+              ContextSamplingPackage.GEOLOCATION,
+              ContextSamplingPackage.ACTIVITY,
+              ContextSamplingPackage.GEOFENCE,
+            ],
+          ));
 
   // Create a Study Controller that can manage this study, initialize it, and start it.
   StudyController controller = StudyController(study);

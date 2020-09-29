@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2018-2020 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -19,6 +19,8 @@ import 'package:http_parser/http_parser.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 import 'package:retry/retry.dart';
+
+import '../carp_domain/carp_domain.dart';
 
 part 'carp_app.dart';
 part 'carp_datapoint.dart';
@@ -46,7 +48,9 @@ String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(objec
 class CarpService {
   static CarpService _instance;
 
-  CarpService._(this._app) : assert(_app != null);
+  CarpService._(this._app) : assert(_app != null) {
+    registerFromJsonFunctions();
+  }
 
   CarpApp _app;
   CarpUser _currentUser;
@@ -454,9 +458,7 @@ class CarpService {
   // ---------------------------------------------------------------------------------------------------------
 
   /// Gets a [DeploymentReference] for the current CARP Service path.
-  DeploymentReference deployment({String masterDeviceRoleName}) {
-    return DeploymentReference._(this, masterDeviceRoleName);
-  }
+  DeploymentReference deployment({String masterDeviceRoleName}) => DeploymentReference._(this, masterDeviceRoleName);
 }
 
 /// Abstract CARP web service references.

@@ -18,9 +18,7 @@ class AppsProbe extends DatumProbe {
     super.onInitialize(measure);
 
     // check if the DeviceApps plugin is available (only available on Android)
-    if (!Platform.isAndroid)
-      throw SensingException(
-          "Error initializing AppsProbe -- only available on Android.");
+    if (!Platform.isAndroid) throw SensingException("Error initializing AppsProbe -- only available on Android.");
   }
 
   Future<Datum> getDatum() async {
@@ -47,24 +45,19 @@ class AppUsageProbe extends DatumProbe {
 
   Future<void> onInitialize(Measure measure) async {
     super.onInitialize(measure);
-    assert(measure is MarkedMeasure,
-        'An MarkedMeasure must be provided to use the AppUsageProbe.');
+    assert(measure is MarkedMeasure, 'An MarkedMeasure must be provided to use the AppUsageProbe.');
     markedMeasure = (measure as MarkedMeasure);
 
     // check if AppUsage is available (only available on Android)
-    if (!Platform.isAndroid)
-      throw SensingException(
-          "Error initializing AppUsageProbe -- only available on Android.");
+    if (!Platform.isAndroid) throw SensingException("Error initializing AppUsageProbe -- only available on Android.");
   }
 
   Future<Datum> getDatum() async {
     // get the last mark - if null, go back one day
-    DateTime start = markedMeasure.lastTime ??
-        DateTime.now().subtract(markedMeasure.history);
+    DateTime start = markedMeasure.lastTime ?? DateTime.now().subtract(markedMeasure.history);
     DateTime end = DateTime.now();
 
-    debug(
-        'Collecting app usage - start: ${start.toUtc()}, end: ${end.toUtc()}');
+    debug('Collecting app usage - start: ${start.toUtc()}, end: ${end.toUtc()}');
     List<AppUsageInfo> infos = await AppUsage.getAppUsage(start, end);
 
     Map<String, double> usage = {};

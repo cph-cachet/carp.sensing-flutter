@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
+import 'package:carp_webservices/carp_domain/carp_domain.dart';
 import 'package:carp_webservices/carp_service/carp_service.dart';
 import 'package:test/test.dart';
 
@@ -35,8 +36,12 @@ void main() {
   //final String testStudyId = "42ca52da-c768-44f3-9dc5-7f094c192892";
 
   // from Richard - new JSON model at DEV 2020-09-18
-  final String testStudyId = ' 682e11d1-ffb8-41fc-81c5-78d2e82fbe94';
-  final String testDeploymentId = 'e286e04b-31c5-4fb2-b4b0-db37c4510ae0';
+  //final String testStudyId = '682e11d1-ffb8-41fc-81c5-78d2e82fbe94';
+  //final String testDeploymentId = 'e286e04b-31c5-4fb2-b4b0-db37c4510ae0';
+
+  // from Richard - new study/deployment at DEV 2020-09-25
+  final String testStudyId = '19d79948-c4f3-4d0b-91c5-7f55a390e338';
+  final String testDeploymentId = '5b4a3a4d-87df-4c09-adf1-fd47e6a78cc7';
 
   final String userId = "user@dtu.dk";
   final String collectionName = 'test_patients';
@@ -193,7 +198,7 @@ void main() {
       print(downloaded);
       print(downloaded.createdAt);
     });
-  }, skip: false);
+  }, skip: true);
 
   group("Data points", () {
     test('- post', () async {
@@ -539,31 +544,37 @@ void main() {
   }, skip: true);
 
   group("Deployment", () {
+    DeploymentReference deploymentReference;
+    setUpAll(() async {
+      deploymentReference = CarpService.instance.deployment();
+    });
+
     test('- get deployment status', () async {
-      StudyDeploymentStatus status = await CarpService.instance.deployment().status();
+      StudyDeploymentStatus status = await deploymentReference.status();
+      print(_encode(status.toJson()));
       print(status);
       expect(status.studyDeploymentId, study.deploymentId);
     }, skip: false);
 
     test('- register device', () async {
-      StudyDeploymentStatus status = await CarpService.instance.deployment().registerDevice('phone', '1');
+      StudyDeploymentStatus status = await deploymentReference.registerDevice('phone', '1');
       print(status);
       expect(status.studyDeploymentId, study.deploymentId);
-    });
+    }, skip: false);
 
     test('- get master device deployment', () async {
-      StudyDeployment deployment = await CarpService.instance.deployment().get();
-      expect(deployment.id, study.deploymentId);
-    });
+      MasterDeviceDeployment deployment = await deploymentReference.get();
+      //expect(deployment.studyDeploymentId, study.deploymentId);
+    }, skip: false);
 
     test('- deployment success', () async {
-      StudyDeploymentStatus status = await CarpService.instance.deployment().success();
+      StudyDeploymentStatus status = await deploymentReference.success();
       print(status);
       expect(status.studyDeploymentId, study.deploymentId);
-    });
+    }, skip: false);
 
     test('- unregister device', () async {
-      StudyDeploymentStatus status = await CarpService.instance.deployment().unRegisterDevice();
+      StudyDeploymentStatus status = await deploymentReference.unRegisterDevice();
       print(status);
       expect(status.studyDeploymentId, study.deploymentId);
     });

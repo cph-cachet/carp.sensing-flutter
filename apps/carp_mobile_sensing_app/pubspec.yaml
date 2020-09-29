@@ -13,8 +13,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_launcher_icons: ^0.7.3
-  carp_mobile_sensing: ^0.9.0
+  flutter_launcher_icons: ^0.8.0
+  carp_mobile_sensing: ^0.9.2
   carp_communication_package: ^0.9.0
   #carp_connectivity_package: ^0.9.0
   carp_context_package: ^0.9.0

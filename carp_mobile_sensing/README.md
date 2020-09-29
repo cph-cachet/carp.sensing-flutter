@@ -40,6 +40,17 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
 See Flutter [AndroidX compatibility](https://flutter.dev/docs/development/packages-and-plugins/androidx-compatibility)
 
 
+### iOS Integration
+
+The pedometer (step count) probe uses `NSMotion` on iOS and the `NSMotionUsageDescription` needs to be specified 
+in the app's `Info.plist` file located in `ios/Runner`:
+
+```xml
+  <key>NSMotionUsageDescription</key>
+  <string>Collecting step count.</string>
+```
+
+
 ## Documentation
 
 The [Dart API doc](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/) describes the different libraries and classes.
