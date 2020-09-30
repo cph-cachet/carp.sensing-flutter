@@ -16,7 +16,7 @@ part of carp_domain;
 ///
 /// All deployment requests to the CARP Service is defined in
 /// [carp.core-kotlin](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/carp.deployment.core/src/commonMain/kotlin/dk/cachet/carp/deployment/infrastructure/DeploymentServiceRequest.kt)
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class DeploymentServiceRequest extends Serializable {
   DeploymentServiceRequest(this.studyDeploymentId) : super() {
     $type = 'dk.cachet.carp.deployment.infrastructure.DeploymentServiceRequest';
@@ -32,8 +32,29 @@ class DeploymentServiceRequest extends Serializable {
   String toString() => "$runtimeType - studyDeploymentId: $studyDeploymentId";
 }
 
+/// A request for getting the deployment invitations for an account id.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+class GetActiveParticipationInvitations extends DeploymentServiceRequest {
+  GetActiveParticipationInvitations(this.accountId) : super('') {
+    $type = 'dk.cachet.carp.deployment.infrastructure.DeploymentServiceRequest.GetActiveParticipationInvitations';
+  }
+
+  @JsonKey(ignore: true)
+  String studyDeploymentId;
+
+  /// The CARP account (user) ID.
+  String accountId;
+
+  static Function get fromJsonFunction => _$GetActiveParticipationInvitationsFromJson;
+  factory GetActiveParticipationInvitations.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$GetActiveParticipationInvitationsToJson(this);
+
+  String toString() => "$runtimeType - accountId: $accountId";
+}
+
 /// A request for getting the status of a study deployment.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class GetStudyDeploymentStatus extends DeploymentServiceRequest {
   GetStudyDeploymentStatus(String studyDeploymentId) : super(studyDeploymentId) {
     $type = 'dk.cachet.carp.deployment.infrastructure.DeploymentServiceRequest.GetStudyDeploymentStatus';
@@ -47,7 +68,7 @@ class GetStudyDeploymentStatus extends DeploymentServiceRequest {
 }
 
 /// A request for registering this device.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class RegisterDevice extends DeploymentServiceRequest {
   RegisterDevice(String studyDeploymentId, this.deviceRoleName, this.registration) : super(studyDeploymentId) {
     $type = 'dk.cachet.carp.deployment.infrastructure.DeploymentServiceRequest.RegisterDevice';
@@ -84,9 +105,12 @@ class UnregisterDevice extends DeploymentServiceRequest {
 }
 
 /// A device registration description used in a [RegisterDevice] request.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class DeviceRegistration extends Serializable {
-  DeviceRegistration({this.registrationCreationDate, this.deviceId}) : super() {
+  /// Create a new [DeviceRegistration]
+  ///  * [deviceId] - a unique id for this device.
+  ///  * [registrationCreationDate] - the timestamp in milliseconds when this registration was created. If not specified, the time of creation will be used.
+  DeviceRegistration([this.deviceId, this.registrationCreationDate]) : super() {
     $type = 'dk.cachet.carp.protocols.domain.devices.DefaultDeviceRegistration';
     registrationCreationDate ??= DateTime.now().millisecondsSinceEpoch;
   }
@@ -94,7 +118,7 @@ class DeviceRegistration extends Serializable {
   /// The registration time in milliseconds since epoch.
   int registrationCreationDate;
 
-  /// A unique device id for this deployment.
+  /// A unique id for this device.
   String deviceId;
 
   static Function get fromJsonFunction => _$DeviceRegistrationFromJson;
@@ -124,9 +148,9 @@ class GetDeviceDeploymentFor extends DeploymentServiceRequest {
 /// A request for reporting this deployment as successful.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class DeploymentSuccessful extends GetDeviceDeploymentFor {
-  DeploymentSuccessful(String studyDeploymentId, String masterDeviceRoleName) : super(studyDeploymentId, masterDeviceRoleName) {
+  DeploymentSuccessful(String studyDeploymentId, String masterDeviceRoleName, this.deviceDeploymentLastUpdateDate)
+      : super(studyDeploymentId, masterDeviceRoleName) {
     $type = 'dk.cachet.carp.deployment.infrastructure.DeploymentServiceRequest.DeploymentSuccessful';
-    deviceDeploymentLastUpdateDate = DateTime.now().millisecondsSinceEpoch;
   }
 
   /// Timestamp when this was last updated.
@@ -148,9 +172,87 @@ abstract class DeploymentDomainObject extends Serializable {
   /// The CARP study deployment ID.
   String studyDeploymentId;
   DeploymentDomainObject({this.studyDeploymentId});
+  String toString() => "$runtimeType - studyDeploymentId: $studyDeploymentId";
+}
+
+/// An [invitation] to participate in an active study deployment using the specified master [devices].
+/// Some of the devices which the participant is invited to might already be registered.
+/// If the participant wants to use a different device, they will need to unregister the existing device first.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class ActiveParticipationInvitation extends Serializable {
+  ActiveParticipationInvitation() : super();
+
+  Participation participation;
+  StudyInvitation invitation;
+  List<DeviceInvitation> devices;
+
+  static Function get fromJsonFunction => _$ActiveParticipationInvitationFromJson;
+  factory ActiveParticipationInvitation.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$ActiveParticipationInvitationToJson(this);
+
+  String toString() => "$runtimeType - participation: $participation, invitation: $invitation, devices size: ${devices.length}";
+}
+
+/// Uniquely identifies the participation of an account in a study deployment.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class Participation extends DeploymentDomainObject {
+  Participation() : super();
+
+  String id;
+
+  /// True when the device is already registered in the study deployment; false otherwise.
+  /// In case a device is registered, it needs to be unregistered first before a new device can be registered.
+  bool isRegistered;
+
+  static Function get fromJsonFunction => _$ParticipationFromJson;
+  factory Participation.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$ParticipationToJson(this);
+
+  String toString() => "${super.toString()}, id: $id, isRegistered: $isRegistered";
+}
+
+/// A description of a study, shared with participants once they are invited to a study.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class StudyInvitation extends Serializable {
+  StudyInvitation() : super();
+
+  /// A descriptive name for the study to be shown to participants.
+  String name;
+
+  /// A description of the study clarifying to participants what it is about.
+  String description;
+
+  /// Application-specific data to be shared with clients when they are invited to a study.
+  String applicationData;
+
+  static Function get fromJsonFunction => _$StudyInvitationFromJson;
+  factory StudyInvitation.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$StudyInvitationToJson(this);
+
+  String toString() => "$runtimeType - name: $name, description: $description";
+}
+
+/// Holds device invitation details.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class DeviceInvitation extends Serializable {
+  DeviceInvitation() : super();
+
+  String deviceRoleName;
+
+  /// True when the device is already registered in the study deployment; false otherwise.
+  /// In case a device is registered, it needs to be unregistered first before a new device can be registered.
+  bool isRegistered;
+
+  static Function get fromJsonFunction => _$DeviceInvitationFromJson;
+  factory DeviceInvitation.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$DeviceInvitationToJson(this);
+
+  String toString() => "$runtimeType - deviceRoleName: $deviceRoleName";
 }
 
 /// The deployment data for a master device as read from the CARP web service
+///
+/// See [MasterDeviceDeployment.kt](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/carp.deployment.core/src/commonMain/kotlin/dk/cachet/carp/deployment/domain/MasterDeviceDeployment.kt)
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class MasterDeviceDeployment extends Serializable {
   MasterDeviceDeployment() : super();
@@ -202,6 +304,23 @@ class TaskDescriptor extends Serializable {
   Map<String, dynamic> toJson() => _$TaskDescriptorToJson(this);
 
   String toString() => "$runtimeType - name: $name, measures size: ${measures.length}";
+}
+
+/// A [TaskDescriptor] which contains a definition on how to run tasks, measures, and triggers which differs from the CARP domain model.
+///
+/// See [CustomProtocolTask.kt](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/carp.protocols.core/src/commonMain/kotlin/dk/cachet/carp/protocols/domain/tasks/CustomProtocolTask.kt).
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class CustomProtocolTask extends TaskDescriptor {
+  CustomProtocolTask() : super();
+
+  ///A definition on how to run a study on a master device, serialized as a string.
+  String studyProtocol;
+
+  static Function get fromJsonFunction => _$CustomProtocolTaskFromJson;
+  factory CustomProtocolTask.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$CustomProtocolTaskToJson(this);
+
+  String toString() => "${super.toString()}, studyProtocol: $studyProtocol";
 }
 
 /// Any condition on a device ([DeviceDescriptor]) which starts or stops tasks at certain points in time when the condition applies.

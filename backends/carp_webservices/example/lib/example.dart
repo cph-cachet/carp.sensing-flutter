@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
+import 'package:carp_webservices/carp_domain/carp_domain.dart';
 import 'package:carp_webservices/carp_service/carp_service.dart';
 
 void main() async {
@@ -109,4 +110,24 @@ void main() async {
 
   // get all documents in a collection.
   List<DocumentSnapshot> documents = await CarpService.instance.collection("users").documents;
+
+  // ------------------- DEPLOYMENTS --------------------------------
+
+  // get invitations for this account (user)
+  List<ActiveParticipationInvitation> invitations = await CarpService.instance.invitations();
+
+  // get a deployment reference for this master device
+  DeploymentReference deploymentReference = CarpService.instance.deployment(masterDeviceRoleName: 'Master');
+
+  // get the status of this deployment
+  StudyDeploymentStatus status = await deploymentReference.status();
+
+  // register a device
+  status = await deploymentReference.registerDevice(deviceRoleName: 'phone');
+
+  // get the master device deployment
+  MasterDeviceDeployment deployment = await deploymentReference.get();
+
+  // mark the deployment as a success
+  status = await deploymentReference.success();
 }

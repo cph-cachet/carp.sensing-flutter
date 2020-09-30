@@ -159,7 +159,7 @@ void main() {
     });
 
     test('- authentication with saved token', () async {
-      CarpUser new_user = await CarpService.instance.authenticateWithToken(username: username, token: user.token);
+      CarpUser new_user = await CarpService.instance.authenticateWithToken(username: user.username, token: user.token);
 
       assert(new_user != null);
       assert(new_user.isAuthenticated);
@@ -545,9 +545,16 @@ void main() {
 
   group("Deployment", () {
     DeploymentReference deploymentReference;
+
     setUpAll(() async {
       deploymentReference = CarpService.instance.deployment();
     });
+
+    test('- get invitations for this account (user)', () async {
+      List<ActiveParticipationInvitation> invitations = await CarpService.instance.invitations();
+      invitations.forEach((invitation) => print(invitation));
+      //assert(invitations.length > 0);
+    }, skip: false);
 
     test('- get deployment status', () async {
       StudyDeploymentStatus status = await deploymentReference.status();
@@ -557,7 +564,7 @@ void main() {
     }, skip: false);
 
     test('- register device', () async {
-      StudyDeploymentStatus status = await deploymentReference.registerDevice('phone', '1');
+      StudyDeploymentStatus status = await deploymentReference.registerDevice(deviceRoleName: 'phone');
       print(status);
       expect(status.studyDeploymentId, study.deploymentId);
     }, skip: false);
@@ -565,18 +572,18 @@ void main() {
     test('- get master device deployment', () async {
       MasterDeviceDeployment deployment = await deploymentReference.get();
       //expect(deployment.studyDeploymentId, study.deploymentId);
-    }, skip: false);
+    }, skip: true);
 
     test('- deployment success', () async {
       StudyDeploymentStatus status = await deploymentReference.success();
       print(status);
       expect(status.studyDeploymentId, study.deploymentId);
-    }, skip: false);
+    }, skip: true);
 
     test('- unregister device', () async {
-      StudyDeploymentStatus status = await deploymentReference.unRegisterDevice();
+      StudyDeploymentStatus status = await deploymentReference.unRegisterDevice('phone');
       print(status);
       expect(status.studyDeploymentId, study.deploymentId);
-    });
+    }, skip: true);
   }, skip: false);
 }

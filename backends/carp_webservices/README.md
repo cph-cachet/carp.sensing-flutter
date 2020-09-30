@@ -54,7 +54,7 @@ The singleton can then be accessed via `CarpService.instance`.
 
 ### Authentication
 
-Authentication is currently only supported using username and password.
+Basic authentication is using username and password.
 
 ```dart
 CarpUser user;
@@ -64,6 +64,20 @@ try {
    ...;
 }
 ```
+
+Since the [CarpUser](https://pub.dev/documentation/carp_webservices/latest/carp_auth/CarpUser-class.html)
+can be serialized to JSON, the OAuth token can be stored on the phone. 
+This can then later be used for authentication:
+
+```dart
+try {
+   user = await CarpService.instance.authenticateWithToken(username: user.username, token: user.token);
+} catch (excp) {
+   ...;
+}
+```
+
+
 
 ### Informed Consent Document
 
@@ -198,6 +212,35 @@ final int result = await CarpService.instance.getFileStorageReference(id).delete
 
 ````
 
+### Deployments
+
+A core notion of CARP is the [Deployment subsystem](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-deployment.md).
+This subsystem is used for accessing `deployment` configurations, i.e. configurations that describe how 
+data sampling in a study should take place. 
+The CARP web service have methods for:
+
+ * getting a list of invitation for a specific `accountId`, i.e. a user - default is the user who is authenticated to the CARP Service.
+ * getting a deployment reference, which then can be used to query status, register devices, and get the deployment specification.
+
+````dart
+  // get invitations for this account (user)
+  List<ActiveParticipationInvitation> invitations = await CarpService.instance.invitations();
+
+  // get a deployment reference for this master device
+  DeploymentReference deploymentReference = CarpService.instance.deployment(masterDeviceRoleName: 'Master');
+
+  // get the status of this deployment
+  StudyDeploymentStatus status = await deploymentReference.status();
+
+  // register a device
+  status = await deploymentReference.registerDevice(deviceRoleName: 'phone');
+
+  // get the master device deployment
+  MasterDeviceDeployment deployment = await deploymentReference.get();
+
+  // mark the deployment as a success
+  status = await deploymentReference.success();
+````
 
 ## Features and bugs
 

@@ -19,6 +19,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 import 'package:retry/retry.dart';
+import 'package:uuid/uuid.dart';
 
 import '../carp_domain/carp_domain.dart';
 
@@ -59,9 +60,7 @@ class CarpService {
   CarpApp get app => _app;
 
   /// Gets the current user.
-  CarpUser get currentUser {
-    return _currentUser;
-  }
+  CarpUser get currentUser => _currentUser;
 
   /// Returns the singleton default instance of the [CarpService].
   /// Before this instance can be used, it must be configured using the [configure] method.
@@ -73,6 +72,7 @@ class CarpService {
   /// Configure the default instance of the [CarpService].
   static Future<CarpService> configure(CarpApp app) async {
     _instance = new CarpService._(app);
+    await Device.getDeviceInfo();
     return _instance;
   }
 
@@ -151,7 +151,9 @@ class CarpService {
 
     // Refresh the token - it might have expired since it was saved.
     OAuthToken refreshedToken = await refresh();
-    return _currentUser..authenticated(refreshedToken);
+    _currentUser.authenticated(refreshedToken);
+
+    return await getCurrentUserProfile();
   }
 
   /// Get a new (refreshed) access token for the current user based on the previously granted refresh token.
@@ -205,7 +207,6 @@ class CarpService {
 
   /// Asynchronously gets the CARP profile of the current user.
   Future<CarpUser> getCurrentUserProfile() async {
-    // GET the user from the CARP web service
     http.Response response = await httpr.get(Uri.encodeFull('$userEndpointUri/current'), headers: headers);
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
@@ -457,8 +458,40 @@ class CarpService {
   // DEPLOYMENTS
   // ---------------------------------------------------------------------------------------------------------
 
-  /// Gets a [DeploymentReference] for the current CARP Service path.
+  /// The URL for the deployment RPC endpoint.
+  ///
+  /// {{PROTOCOL}}://{{SERVER_HOST}}:{{SERVER_PORT}}/api/deployments/all
+  String get deploymentRPCEndpointUri => "${app.uri.toString()}/api/deployments/all";
+
+  /// Gets a [DeploymentReference] for this master device.
   DeploymentReference deployment({String masterDeviceRoleName}) => DeploymentReference._(this, masterDeviceRoleName);
+
+  /// Get the list of active participation invitations for an [accountId].
+  /// This will return all deployments that this account (user) is invited to.
+  /// If [accountId] is not specified, then the account id of the currently authenticated [CarpUser] is used.
+  Future<List<ActiveParticipationInvitation>> invitations([String accountId]) async {
+    accountId ??= currentUser.accountId;
+    final String body = _encode(GetActiveParticipationInvitations(accountId).toJson());
+
+    print('REQUEST: $deploymentRPCEndpointUri\n$body');
+    http.Response response = await httpr.post(Uri.encodeFull(deploymentRPCEndpointUri), headers: headers, body: body);
+    print('RESPONSE: ${response.statusCode}\n${response.body}');
+
+    if (response.statusCode == HttpStatus.ok) {
+      List<dynamic> items = json.decode(response.body);
+      List<ActiveParticipationInvitation> invitations = [];
+      items.forEach((item) => invitations.add(ActiveParticipationInvitation.fromJson(item)));
+
+      return invitations;
+    }
+
+    // All other cases are treated as an error.
+    Map<String, dynamic> responseJson = json.decode(response.body);
+    throw CarpServiceException(
+      httpStatus: HTTPStatus(response.statusCode, response.reasonPhrase),
+      message: responseJson["message"],
+    );
+  }
 }
 
 /// Abstract CARP web service references.
@@ -472,10 +505,7 @@ abstract class CarpReference {
     CarpUser user = service.currentUser;
     assert(user != null);
     final OAuthToken token = await user.getOAuthToken();
-
-    final Map<String, String> _header = {"Content-Type": "application/json", "Authorization": "bearer ${token.accessToken}", "cache-control": "no-cache"};
-
-    return _header;
+    return {"Content-Type": "application/json", "Authorization": "bearer ${token.accessToken}", "cache-control": "no-cache"};
   }
 }
 

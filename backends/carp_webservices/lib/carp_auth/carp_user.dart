@@ -114,5 +114,5 @@ class CarpUser {
   factory CarpUser.fromJson(Map<String, dynamic> json) => _$CarpUserFromJson(json);
   Map<String, dynamic> toJson() => _$CarpUserToJson(this);
 
-  String toString() => 'CARP User: $username - $firstName $lastName [$id]';
+  String toString() => 'CARP User: $username [$id] - $firstName $lastName [account id: $accountId]';
 }
