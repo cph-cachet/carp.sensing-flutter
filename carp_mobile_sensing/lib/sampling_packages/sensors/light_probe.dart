@@ -15,7 +15,7 @@ class LightProbe extends BufferingPeriodicStreamProbe {
   Stream<dynamic> _bufferingStream;
   Stream<dynamic> get bufferingStream => _bufferingStream;
 
-  Future<void> onInitialize(Measure measure) async {
+  Future onInitialize(Measure measure) async {
     // check if Light is available (only available on Android)
     _bufferingStream = Light().lightSensorStream;
     await super.onInitialize(measure);
@@ -24,7 +24,11 @@ class LightProbe extends BufferingPeriodicStreamProbe {
   Future<Datum> getDatum() async {
     if (luxValues.isNotEmpty) {
       Stats stats = Stats.fromData(luxValues);
-      return LightDatum(meanLux: stats.average, stdLux: stats.standardDeviation, minLux: stats.min, maxLux: stats.max);
+      return LightDatum(
+          meanLux: stats.average,
+          stdLux: stats.standardDeviation,
+          minLux: stats.min,
+          maxLux: stats.max);
     } else {
       return null;
     }

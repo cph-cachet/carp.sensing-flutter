@@ -14,7 +14,8 @@ part of device;
 ///   * [IosDeviceInfo](https://pub.dev/documentation/device_info/latest/device_info/IosDeviceInfo-class.html)
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class DeviceDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DeviceSamplingPackage.DEVICE);
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, DeviceSamplingPackage.DEVICE);
   DataFormat get format => CARP_DATA_FORMAT;
 
   ///The platform type from which this Datum was collected.
@@ -47,28 +48,36 @@ class DeviceDatum extends CARPDatum {
   /// The OS release.
   String release;
 
-  DeviceDatum(this.platform, this.deviceId, {this.deviceName, this.deviceModel, this.deviceManufacturer, this.operatingSystem, this.hardware}) : super();
+  DeviceDatum(this.platform, this.deviceId,
+      {this.deviceName,
+      this.deviceModel,
+      this.deviceManufacturer,
+      this.operatingSystem,
+      this.hardware})
+      : super();
 
-  factory DeviceDatum.fromJson(Map<String, dynamic> json) => _$DeviceDatumFromJson(json);
+  factory DeviceDatum.fromJson(Map<String, dynamic> json) =>
+      _$DeviceDatumFromJson(json);
   Map<String, dynamic> toJson() => _$DeviceDatumToJson(this);
 
   String toString() =>
       super.toString() +
       ', platform: $platform'
-          ', deviceId: $deviceId'
-          ', hardware: $hardware'
-          ', name: $deviceName'
-          ', manufacturer: $deviceManufacturer'
-          ', model: $deviceModel'
-          ', OS: $operatingSystem'
-          ', SDK: $sdk'
-          ', release: $release';
+      ', deviceId: $deviceId'
+      ', hardware: $hardware'
+      ', name: $deviceName'
+      ', manufacturer: $deviceManufacturer'
+      ', model: $deviceModel'
+      ', OS: $operatingSystem'
+      ', SDK: $sdk'
+      ', release: $release';
 }
 
 /// A [Datum] that holds battery level collected from the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class BatteryDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DeviceSamplingPackage.BATTERY);
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, DeviceSamplingPackage.BATTERY);
   DataFormat get format => CARP_DATA_FORMAT;
 
   static const String STATE_FULL = 'full';
@@ -106,16 +115,19 @@ class BatteryDatum extends CARPDatum {
     }
   }
 
-  factory BatteryDatum.fromJson(Map<String, dynamic> json) => _$BatteryDatumFromJson(json);
+  factory BatteryDatum.fromJson(Map<String, dynamic> json) =>
+      _$BatteryDatumFromJson(json);
   Map<String, dynamic> toJson() => _$BatteryDatumToJson(this);
 
-  String toString() => super.toString() + ', level: $batteryLevel%, status: $batteryStatus';
+  String toString() =>
+      super.toString() + ', level: $batteryLevel%, status: $batteryStatus';
 }
 
 /// Holds information about free memory on the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class FreeMemoryDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DeviceSamplingPackage.MEMORY);
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, DeviceSamplingPackage.MEMORY);
   DataFormat get format => CARP_DATA_FORMAT;
 
   /// Amount of free physical memory in bytes.
@@ -126,16 +138,20 @@ class FreeMemoryDatum extends CARPDatum {
 
   FreeMemoryDatum() : super();
 
-  factory FreeMemoryDatum.fromJson(Map<String, dynamic> json) => _$FreeMemoryDatumFromJson(json);
+  factory FreeMemoryDatum.fromJson(Map<String, dynamic> json) =>
+      _$FreeMemoryDatumFromJson(json);
   Map<String, dynamic> toJson() => _$FreeMemoryDatumToJson(this);
 
-  String toString() => super.toString() + ', physical: $freePhysicalMemory, virtual: $freeVirtualMemory';
+  String toString() =>
+      super.toString() +
+      ', physical: $freePhysicalMemory, virtual: $freeVirtualMemory';
 }
 
 /// Holds a screen event collected from the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ScreenDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DeviceSamplingPackage.SCREEN);
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, DeviceSamplingPackage.SCREEN);
   DataFormat get format => CARP_DATA_FORMAT;
 
   /// A screen event:
@@ -163,7 +179,8 @@ class ScreenDatum extends CARPDatum {
     return sd;
   }
 
-  factory ScreenDatum.fromJson(Map<String, dynamic> json) => _$ScreenDatumFromJson(json);
+  factory ScreenDatum.fromJson(Map<String, dynamic> json) =>
+      _$ScreenDatumFromJson(json);
   Map<String, dynamic> toJson() => _$ScreenDatumToJson(this);
 
   String toString() => super.toString() + ', screenEvent: $screenEvent';

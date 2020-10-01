@@ -10,9 +10,9 @@ part of connectivity;
 /// The [ConnectivityProbe] listens to the connectivity status of the phone and
 /// collect a [ConnectivityDatum] every time the connectivity state changes.
 class ConnectivityProbe extends StreamProbe {
-  Stream<Datum> get stream => Connectivity()
-      .onConnectivityChanged
-      .map((ConnectivityResult event) => ConnectivityDatum.fromConnectivityResult(event));
+  Stream<Datum> get stream =>
+      Connectivity().onConnectivityChanged.map((ConnectivityResult event) =>
+          ConnectivityDatum.fromConnectivityResult(event));
 }
 
 // This probe requests access to location permissions (both on Android and iOS).
@@ -48,8 +48,9 @@ class BluetoothProbe extends PeriodicDatumProbe {
   Future<Datum> getDatum() async {
     Datum datum;
     try {
-      List<ScanResult> results = await FlutterBlue.instance
-          .startScan(scanMode: ScanMode.lowLatency, timeout: duration ?? Duration(milliseconds: DEFAULT_TIMEOUT));
+      List<ScanResult> results = await FlutterBlue.instance.startScan(
+          scanMode: ScanMode.lowLatency,
+          timeout: duration ?? Duration(milliseconds: DEFAULT_TIMEOUT));
       datum = BluetoothDatum.fromScanResult(results);
     } catch (error) {
       await FlutterBlue.instance.stopScan();

@@ -10,7 +10,8 @@ part of connectivity;
 /// A [Datum] that holds connectivity status of the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ConnectivityDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, ConnectivitySamplingPackage.CONNECTIVITY);
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, ConnectivitySamplingPackage.CONNECTIVITY);
   DataFormat get format => CARP_DATA_FORMAT;
 
   /// The status of the connectivity.
@@ -25,7 +26,8 @@ class ConnectivityDatum extends CARPDatum {
       : connectivityStatus = _parseConnectivityStatus(result),
         super();
 
-  factory ConnectivityDatum.fromJson(Map<String, dynamic> json) => _$ConnectivityDatumFromJson(json);
+  factory ConnectivityDatum.fromJson(Map<String, dynamic> json) =>
+      _$ConnectivityDatumFromJson(json);
   Map<String, dynamic> toJson() => _$ConnectivityDatumToJson(this);
 
   static String _parseConnectivityStatus(ConnectivityResult result) {
@@ -41,22 +43,28 @@ class ConnectivityDatum extends CARPDatum {
     }
   }
 
-  String toString() => super.toString() + ', connectivityStatus: $connectivityStatus';
+  String toString() =>
+      super.toString() + ', connectivityStatus: $connectivityStatus';
 }
 
 /// A [Datum] that holds information of nearby Bluetooth devices.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class BluetoothDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, ConnectivitySamplingPackage.BLUETOOTH);
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, ConnectivitySamplingPackage.BLUETOOTH);
   DataFormat get format => CARP_DATA_FORMAT;
 
   List<BluetoothDevice> scanResult = new List<BluetoothDevice>();
 
   BluetoothDatum() : super();
-  factory BluetoothDatum.fromScanResult(List<ScanResult> result) =>
-      BluetoothDatum()..scanResult = result.map((r) => BluetoothDevice.fromScanResult(r)).toList();
+  factory BluetoothDatum.fromScanResult(
+          List<ScanResult> result) =>
+      BluetoothDatum()
+        ..scanResult =
+            result.map((r) => BluetoothDevice.fromScanResult(r)).toList();
 
-  factory BluetoothDatum.fromJson(Map<String, dynamic> json) => _$BluetoothDatumFromJson(json);
+  factory BluetoothDatum.fromJson(Map<String, dynamic> json) =>
+      _$BluetoothDatumFromJson(json);
   Map<String, dynamic> toJson() => _$BluetoothDatumToJson(this);
 
   String toString() {
@@ -119,17 +127,18 @@ class BluetoothDevice {
     }
   }
 
-  factory BluetoothDevice.fromJson(Map<String, dynamic> json) => _$BluetoothDeviceFromJson(json);
+  factory BluetoothDevice.fromJson(Map<String, dynamic> json) =>
+      _$BluetoothDeviceFromJson(json);
   Map<String, dynamic> toJson() => _$BluetoothDeviceToJson(this);
 
   String toString() =>
       '${this.runtimeType} - ' +
       ', advertisementName: $advertisementName'
-          ', id: $bluetoothDeviceId'
-          ', name: $bluetoothDeviceName'
-          ', type: $bluetoothDeviceType'
-          ', connectable: $connectable'
-          ', rssi: $rssi';
+      ', id: $bluetoothDeviceId'
+      ', name: $bluetoothDeviceName'
+      ', type: $bluetoothDeviceType'
+      ', connectable: $connectable'
+      ', rssi: $rssi';
 }
 
 /// A [Datum] that holds wifi connectivity status in terms of connected SSID and BSSID.
@@ -137,7 +146,8 @@ class BluetoothDevice {
 /// Note that it wifi information cannot be collected on emulators.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class WifiDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, ConnectivitySamplingPackage.WIFI);
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, ConnectivitySamplingPackage.WIFI);
   DataFormat get format => CARP_DATA_FORMAT;
 
   /// The wifi service set ID (SSID) of the connected network
@@ -148,7 +158,8 @@ class WifiDatum extends CARPDatum {
 
   WifiDatum() : super();
 
-  factory WifiDatum.fromJson(Map<String, dynamic> json) => _$WifiDatumFromJson(json);
+  factory WifiDatum.fromJson(Map<String, dynamic> json) =>
+      _$WifiDatumFromJson(json);
   Map<String, dynamic> toJson() => _$WifiDatumToJson(this);
 
   String toString() => super.toString() + ', SSID: $ssid, BSSID: $bssid';

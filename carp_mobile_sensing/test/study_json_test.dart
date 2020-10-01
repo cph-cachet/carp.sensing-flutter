@@ -4,7 +4,8 @@ import 'dart:io';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:test/test.dart';
 
-String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
+String _encode(Object object) =>
+    const JsonEncoder.withIndent(' ').convert(object);
 
 void main() {
   setUp(() {
@@ -20,7 +21,8 @@ void main() {
   test('Raw JSON string -> Study object', () async {
     String plainStudyJson = File('test/study_1234.json').readAsStringSync();
 
-    Study plainStudy = Study.fromJson(json.decode(plainStudyJson) as Map<String, dynamic>);
+    Study plainStudy =
+        Study.fromJson(json.decode(plainStudyJson) as Map<String, dynamic>);
     expect(plainStudy.id, '1234');
 
     print(_encode(plainStudy));

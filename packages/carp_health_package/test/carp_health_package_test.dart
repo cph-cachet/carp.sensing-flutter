@@ -21,7 +21,8 @@ void main() {
           ImmediateTrigger(),
           AutomaticTask(name: 'Task #1')
             //..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
-            ..measures = SamplingSchema.common()
+            ..measures = SamplingSchema
+                .common()
                 .getMeasureList(namespace: NameSpace.CARP, types: [
               DeviceSamplingPackage.BATTERY,
               HealthSamplingPackage.HEALTH,
@@ -50,7 +51,8 @@ void main() {
       expect(study_2.id, study.id);
       print(_encode(study_2));
     });
-/// @jakba Why is this study being tested here?
+
+    /// @jakba Why is this study being tested here?
 //    test(' - json file -> study', () async {
 //      String plainStudyJson = File("test/study_1234.json").readAsStringSync();
 //      print(plainStudyJson);

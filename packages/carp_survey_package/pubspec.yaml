@@ -1,9 +1,9 @@
 # For information on the generic Dart part of this file, see https://dart.dev/tools/pub/pubspec
 name: carp_survey_package
 description: CARP survey sampling package. Samples survey data from the Flutter Research Package.
-version: 0.9.2
+version: 0.9.2+1
 author:  CACHET Team <cph.cachet@gmail.com>
-homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_survey_package
+homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/packages/carp_survey_package
 
 environment:
   sdk: ">=2.3.0 <3.0.0"

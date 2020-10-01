@@ -29,25 +29,25 @@ dependencies:
 # Overriding carp libraries to use the local copy
 dependency_overrides:
   carp_mobile_sensing:
-    path: ../carp_mobile_sensing/
+    path: ../../carp_mobile_sensing/
 #  carp_connectivity_package:
 #    path: ../carp_connectivity_package/
   carp_communication_package:
-    path: ../carp_communication_package/
+    path: ../../packages/carp_communication_package/
   carp_context_package:
-    path: ../carp_context_package/
+    path: ../../packages/carp_context_package/
   carp_survey_package:
-    path: ../carp_survey_package/
+    path: ../../packages/carp_survey_package/
   carp_audio_package:
-    path: ../carp_audio_package/
+    path: ../../packages/carp_audio_package/
 #  carp_esense_package:
-#    path: ../carp_esense_package/
+#    path: ../../packages/carp_esense_package/
   carp_health_package:
-    path: ../carp_health_package/
-  carp_webservices:
-    path: ../carp_webservices/
-  carp_backend:
-    path: ../carp_backend/
+    path: ../../packages/carp_health_package/
+#  carp_webservices:
+#    path: ../../backends/carp_webservices/
+#  carp_backend:
+#    path: ../../backends/carp_backend/
 #  carp_firebase_backend:
 #    path: ../carp_firebase_backend/
 

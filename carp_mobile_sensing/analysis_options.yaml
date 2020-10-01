@@ -6,8 +6,8 @@ linter:
     await_only_futures: true
     camel_case_types: true
     omit_local_variable_types: false
-    constant_identifier_names: false
-    avoid_classes_with_only_static_members: false
+    #constant_identifier_names: false
+    #avoid_classes_with_only_static_members: false
     annotate_overrides: false
 
 analyzer:

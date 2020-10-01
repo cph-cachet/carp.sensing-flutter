@@ -393,14 +393,14 @@ class TaskExecutor extends Executor {
 /// Executes an [AutomaticTask].
 class AutomaticTaskExecutor extends TaskExecutor {
   AutomaticTaskExecutor(AutomaticTask task)
-      : assert(task is AutomaticTask, 'SensingTaskExecutor should be ininialized with a SensingTask.'),
+      : assert(task is AutomaticTask, 'SensingTaskExecutor should be initialized with a SensingTask.'),
         super(task);
 }
 
 /// Executes an [AppTask].
 class AppTaskExecutor extends TaskExecutor {
   AppTaskExecutor(AppTask task)
-      : assert(task is AppTask, 'UserTaskExecutor should be ininialized with a UserTask.'),
+      : assert(task is AppTask, 'AppTaskExecutor should be initialized with an AppTask.'),
         super(task) {
     _appTask = task;
 

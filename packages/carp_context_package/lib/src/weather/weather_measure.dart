@@ -21,9 +21,8 @@ class WeatherMeasure extends Measure {
 
   static Function get fromJsonFunction => _$WeatherMeasureFromJson;
 
-  factory WeatherMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(
-          json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory WeatherMeasure.fromJson(Map<String, dynamic> json) => FromJsonFactory
+      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
 
   Map<String, dynamic> toJson() => _$WeatherMeasureToJson(this);
 

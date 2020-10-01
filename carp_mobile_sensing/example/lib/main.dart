@@ -155,7 +155,8 @@ class Sensing {
   }
 
   /// Is sensing running, i.e. has the study executor been resumed?
-  bool get isRunning => (controller != null) && controller.executor.state == ProbeState.resumed;
+  bool get isRunning =>
+      (controller != null) && controller.executor.state == ProbeState.resumed;
 
   /// Resume sensing
   void resume() async {

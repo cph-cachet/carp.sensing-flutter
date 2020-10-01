@@ -24,7 +24,8 @@ abstract class Serializable {
 
   /// Use this method to register a custom fromJson function for this class
   /// in the [FromJsonFactory].
-  void registerFromJson(Function fromJsonFunction) => FromJsonFactory.registerFromJsonFunction(runtimeType.toString(), fromJsonFunction);
+  void registerFromJson(Function fromJsonFunction) => FromJsonFactory
+      .registerFromJsonFunction(runtimeType.toString(), fromJsonFunction);
 
   /// Return a JSON encoding of this object.
   Map<String, dynamic> toJson();
@@ -39,10 +40,12 @@ class FromJsonFactory {
   /// To be used for registering [fromJsonFunction] functions to this Factory.
   /// Should be done for each [type] of class that needs to be deserialized
   /// from JSON to a CARP Flutter class.
-  static void registerFromJsonFunction(String type, Function f) => _registry[type] = f;
+  static void registerFromJsonFunction(String type, Function f) =>
+      _registry[type] = f;
 
   /// Deserialize [json] of the specified class [type].
-  static Serializable fromJson(String type, Map<String, dynamic> json) => Function.apply(_registry[type], [json]);
+  static Serializable fromJson(String type, Map<String, dynamic> json) =>
+      Function.apply(_registry[type], [json]);
 
   static void _() {
     if (_isInitialized) return;
@@ -51,26 +54,34 @@ class FromJsonFactory {
     // that can auto-generate this.
     registerFromJsonFunction('Study', Study.fromJsonFunction);
     registerFromJsonFunction('DataEndPoint', DataEndPoint.fromJsonFunction);
-    registerFromJsonFunction('FileDataEndPoint', FileDataEndPoint.fromJsonFunction);
+    registerFromJsonFunction(
+        'FileDataEndPoint', FileDataEndPoint.fromJsonFunction);
     registerFromJsonFunction('Task', Task.fromJsonFunction);
     registerFromJsonFunction('AutomaticTask', AutomaticTask.fromJsonFunction);
     registerFromJsonFunction('AppTask', AppTask.fromJsonFunction);
 
     registerFromJsonFunction('Trigger', Trigger.fromJsonFunction);
-    registerFromJsonFunction('ImmediateTrigger', ImmediateTrigger.fromJsonFunction);
+    registerFromJsonFunction(
+        'ImmediateTrigger', ImmediateTrigger.fromJsonFunction);
     registerFromJsonFunction('DelayedTrigger', DelayedTrigger.fromJsonFunction);
-    registerFromJsonFunction('PeriodicTrigger', PeriodicTrigger.fromJsonFunction);
-    registerFromJsonFunction('ScheduledTrigger', ScheduledTrigger.fromJsonFunction);
+    registerFromJsonFunction(
+        'PeriodicTrigger', PeriodicTrigger.fromJsonFunction);
+    registerFromJsonFunction(
+        'ScheduledTrigger', ScheduledTrigger.fromJsonFunction);
     registerFromJsonFunction('Time', Time.fromJsonFunction);
-    registerFromJsonFunction('RecurrentScheduledTrigger', RecurrentScheduledTrigger.fromJsonFunction);
-    registerFromJsonFunction('SamplingEventTrigger', SamplingEventTrigger.fromJsonFunction);
+    registerFromJsonFunction('RecurrentScheduledTrigger',
+        RecurrentScheduledTrigger.fromJsonFunction);
+    registerFromJsonFunction(
+        'SamplingEventTrigger', SamplingEventTrigger.fromJsonFunction);
     // note that the resume and pause condition function in a
     // ConditionalSamplingEventTrigger can't be de/serialized to/from JSON
-    registerFromJsonFunction('ConditionalSamplingEventTrigger', ConditionalSamplingEventTrigger.fromJsonFunction);
+    registerFromJsonFunction('ConditionalSamplingEventTrigger',
+        ConditionalSamplingEventTrigger.fromJsonFunction);
 
     registerFromJsonFunction('MeasureType', MeasureType.fromJsonFunction);
     registerFromJsonFunction('Measure', Measure.fromJsonFunction);
-    registerFromJsonFunction('PeriodicMeasure', PeriodicMeasure.fromJsonFunction);
+    registerFromJsonFunction(
+        'PeriodicMeasure', PeriodicMeasure.fromJsonFunction);
     registerFromJsonFunction('MarkedMeasure', MarkedMeasure.fromJsonFunction);
 
     _isInitialized = true;

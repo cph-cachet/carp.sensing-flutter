@@ -43,7 +43,8 @@ class HealthSamplingPackage implements SamplingPackage {
   Probe create(String type) => type == HEALTH ? HealthProbe() : null;
 
   void onRegister() {
-    FromJsonFactory.registerFromJsonFunction("HealthMeasure", HealthMeasure.fromJsonFunction);
+    FromJsonFactory.registerFromJsonFunction(
+        "HealthMeasure", HealthMeasure.fromJsonFunction);
   }
 
   List<Permission> get permissions => [];

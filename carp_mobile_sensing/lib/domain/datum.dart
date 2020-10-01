@@ -26,7 +26,8 @@ class Datum {
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class CARPDatum extends Datum {
   /// The [DataFormat] of this type of [CARPDatum].
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.NONE);
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, DataType.NONE);
 
   DataFormat get format => CARP_DATA_FORMAT;
 
@@ -48,19 +49,22 @@ class CARPDatum extends Datum {
   }
 
   /// Create a [CARPDatum] from a JSON map.
-  factory CARPDatum.fromJson(Map<String, dynamic> json) => _$CARPDatumFromJson(json);
+  factory CARPDatum.fromJson(Map<String, dynamic> json) =>
+      _$CARPDatumFromJson(json);
 
   /// Return a JSON encoding of this datum.
   Map<String, dynamic> toJson() => _$CARPDatumToJson(this);
 
-  String toString() => '$runtimeType - format: $format, id: $id, timestamp: $timestamp';
+  String toString() =>
+      '$runtimeType - format: $format, id: $id, timestamp: $timestamp';
 }
 
 /// A very simple [Datum] that only holds a string datum object.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class StringDatum extends CARPDatum {
   /// The [DataFormat] of this type of [CARPDatum].
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.STRING);
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, DataType.STRING);
   DataFormat get format => CARP_DATA_FORMAT;
 
   /// The string data for this Datum.
@@ -70,7 +74,8 @@ class StringDatum extends CARPDatum {
   StringDatum([this.str]) : super();
 
   /// Create a [StringDatum] from a JSON map.
-  factory StringDatum.fromJson(Map<String, dynamic> json) => _$StringDatumFromJson(json);
+  factory StringDatum.fromJson(Map<String, dynamic> json) =>
+      _$StringDatumFromJson(json);
   Map<String, dynamic> toJson() => _$StringDatumToJson(this);
 
   String toString() => '${super.toString()}, str: $str';
@@ -80,7 +85,8 @@ class StringDatum extends CARPDatum {
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MapDatum extends CARPDatum {
   /// The [DataFormat] of this type of [CARPDatum].
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.MAP);
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, DataType.MAP);
   DataFormat get format => CARP_DATA_FORMAT;
 
   /// The data map.
@@ -90,7 +96,8 @@ class MapDatum extends CARPDatum {
   MapDatum([this.map]) : super();
 
   /// Create a [MapDatum] from a JSON map.
-  factory MapDatum.fromJson(Map<String, dynamic> json) => _$MapDatumFromJson(json);
+  factory MapDatum.fromJson(Map<String, dynamic> json) =>
+      _$MapDatumFromJson(json);
   Map<String, dynamic> toJson() => _$MapDatumToJson(this);
 }
 
@@ -99,7 +106,8 @@ class MapDatum extends CARPDatum {
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ErrorDatum extends CARPDatum {
   /// The [DataFormat] of this type of [CARPDatum].
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.ERROR);
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, DataType.ERROR);
   DataFormat get format => CARP_DATA_FORMAT;
 
   /// The original error message returned from the probe, if available.
@@ -109,7 +117,8 @@ class ErrorDatum extends CARPDatum {
   ErrorDatum([this.message]) : super();
 
   /// Create a [ErrorDatum] from a JSON map.
-  factory ErrorDatum.fromJson(Map<String, dynamic> json) => _$ErrorDatumFromJson(json);
+  factory ErrorDatum.fromJson(Map<String, dynamic> json) =>
+      _$ErrorDatumFromJson(json);
   Map<String, dynamic> toJson() => _$ErrorDatumToJson(this);
 
   String toString() => '${super.toString()}, message: $message';
@@ -119,7 +128,8 @@ class ErrorDatum extends CARPDatum {
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class FileDatum extends CARPDatum {
   /// The [DataFormat] of this type of [CARPDatum].
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, DataType.FILE);
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, DataType.FILE);
   DataFormat get format => CARP_DATA_FORMAT;
 
   /// The path to the attached file.
@@ -137,10 +147,12 @@ class FileDatum extends CARPDatum {
   FileDatum({this.filename, this.upload = true}) : super();
 
   /// Create a [FileDatum] from a JSON map.
-  factory FileDatum.fromJson(Map<String, dynamic> json) => _$FileDatumFromJson(json);
+  factory FileDatum.fromJson(Map<String, dynamic> json) =>
+      _$FileDatumFromJson(json);
   Map<String, dynamic> toJson() => _$FileDatumToJson(this);
 
-  String toString() => '${super.toString()}, filename: $filename, upload: $upload';
+  String toString() =>
+      '${super.toString()}, filename: $filename, upload: $upload';
 }
 
 /// A [Datum] object holding multiple [Datum]s of the same type.
@@ -155,10 +167,12 @@ class MultiDatum extends CARPDatum {
   /// Create an empty [MultiDatum].
   MultiDatum() : super();
 
-  DataFormat get format => (data.isNotEmpty) ? data.first.format : DataFormat.UNKNOWN;
+  DataFormat get format =>
+      (data.isNotEmpty) ? data.first.format : DataFormat.UNKNOWN;
 
   /// Create a [MultiDatum] from a JSON map.
-  factory MultiDatum.fromJson(Map<String, dynamic> json) => _$MultiDatumFromJson(json);
+  factory MultiDatum.fromJson(Map<String, dynamic> json) =>
+      _$MultiDatumFromJson(json);
 
   /// Serialize this object to JSON.
   Map<String, dynamic> toJson() => _$MultiDatumToJson(this);
@@ -182,10 +196,12 @@ class DataFormat {
   const DataFormat(this.namespace, this.name) : super();
 
   /// Create a [DataFormat] based on a [MeasureType].
-  factory DataFormat.fromDataType(MeasureType type) => DataFormat(type.namespace, type.name);
+  factory DataFormat.fromDataType(MeasureType type) =>
+      DataFormat(type.namespace, type.name);
 
   /// Create a [DataFormat] from a JSON map.
-  factory DataFormat.fromJson(Map<String, dynamic> json) => _$DataFormatFromJson(json);
+  factory DataFormat.fromJson(Map<String, dynamic> json) =>
+      _$DataFormatFromJson(json);
 
   /// Serialize this object to JSON.
   Map<String, dynamic> toJson() => _$DataFormatToJson(this);

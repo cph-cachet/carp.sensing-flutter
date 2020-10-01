@@ -19,16 +19,15 @@ class MobilityMeasure extends Measure {
 
   static Function get fromJsonFunction => _$MobilityMeasureFromJson;
 
-  factory MobilityMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(
-          json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory MobilityMeasure.fromJson(Map<String, dynamic> json) => FromJsonFactory
+      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
 
   Map<String, dynamic> toJson() => _$MobilityMeasureToJson(this);
 
   String toString() =>
       super.toString() +
       ',usePriorContext: $usePriorContexts,'
-          'stopRadius: $stopRadius,'
-          'placeRadius: $placeRadius,'
-          'stopDuration: $stopDuration';
+      'stopRadius: $stopRadius,'
+      'placeRadius: $placeRadius,'
+      'stopDuration: $stopDuration';
 }

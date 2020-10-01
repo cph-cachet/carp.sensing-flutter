@@ -41,17 +41,17 @@ class SensingBLoC {
     debug('Study : $study');
 
     // creating a CarpApp, configuring the CarpService, and authenticate the user
-    CarpApp app = new CarpApp(
-        study: study,
-        name: "Test",
-        uri: Uri.parse(uri),
-        oauth: OAuthEndPoint(clientID: clientID, clientSecret: clientSecret));
-
-    debug('CarpApp : $app');
-
-    CarpService.configure(app);
-    CarpUser user = await CarpService.instance.authenticate(username: username, password: password);
-    debug('Signed in user - $user');
+    // CarpApp app = new CarpApp(
+    //     study: study,
+    //     name: "Test",
+    //     uri: Uri.parse(uri),
+    //     oauth: OAuthEndPoint(clientID: clientID, clientSecret: clientSecret));
+    //
+    // debug('CarpApp : $app');
+    //
+    // CarpService.configure(app);
+    // CarpUser user = await CarpService.instance.authenticate(username: username, password: password);
+    // debug('Signed in user - $user');
 
     await sensing.init();
   }

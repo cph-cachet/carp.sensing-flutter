@@ -61,7 +61,9 @@ class FileDataManager extends AbstractDataManager {
       // get local working directory
       final localApplicationDir = await getApplicationDocumentsDirectory();
       // create a sub-directory for this study named as the study ID
-      final directory = await Directory('${localApplicationDir.path}/$CARP_FILE_PATH/${study.id}').create(recursive: true);
+      final directory = await Directory(
+              '${localApplicationDir.path}/$CARP_FILE_PATH/${study.id}')
+          .create(recursive: true);
       _path = directory.path;
     }
     return _path;
@@ -74,7 +76,12 @@ class FileDataManager extends AbstractDataManager {
   Future<String> get filename async {
     if (_filename == null) {
       final path = await studyPath;
-      final created = DateTime.now().toString().replaceAll(RegExp(r':'), '-').replaceAll(RegExp(r' '), '-').replaceAll(RegExp(r'\.'), '-');
+      final created = DateTime
+          .now()
+          .toString()
+          .replaceAll(RegExp(r':'), '-')
+          .replaceAll(RegExp(r' '), '-')
+          .replaceAll(RegExp(r'\.'), '-');
 
       _filename = '$path/carp-data-$created.json';
     }
@@ -87,7 +94,8 @@ class FileDataManager extends AbstractDataManager {
       final path = await filename;
       _file = File(path);
       info("Creating file '$path'");
-      addEvent(FileDataManagerEvent(FileDataManagerEventTypes.FILE_CREATED, path));
+      addEvent(
+          FileDataManagerEvent(FileDataManagerEventTypes.FILE_CREATED, path));
     }
     return _file;
   }
@@ -150,7 +158,7 @@ class FileDataManager extends AbstractDataManager {
     sink.then((value) {});
 
     final _jsonFilePath = flushFile.path;
-    String _finalFilePath = _jsonFilePath;
+    var _finalFilePath = _jsonFilePath;
 
     info("Written JSON to file '$_jsonFilePath'. Closing it.");
     // write the closing json ']'
@@ -176,10 +184,12 @@ class FileDataManager extends AbstractDataManager {
         //TODO : implement encryption
         // if the encrypted file gets another name, remember to
         // update _jsonFilePath
-        addEvent(FileDataManagerEvent(FileDataManagerEventTypes.FILE_ENCRYPTED, _finalFilePath));
+        addEvent(FileDataManagerEvent(
+            FileDataManagerEventTypes.FILE_ENCRYPTED, _finalFilePath));
       }
 
-      addEvent(FileDataManagerEvent(FileDataManagerEventTypes.FILE_CLOSED, _finalFilePath));
+      addEvent(FileDataManagerEvent(
+          FileDataManagerEventTypes.FILE_CLOSED, _finalFilePath));
     });
   }
 
@@ -230,7 +240,9 @@ class FileDataEndPoint extends DataEndPoint {
   ///
   /// [type] is defined in [DataEndPointTypes]. Is typically of type
   /// [DataEndPointType.FILE] but specialized file types can be specified.
-  FileDataEndPoint({String type, this.bufferSize, this.zip, this.encrypt, this.publicKey}) : super(type ?? DataEndPointTypes.FILE);
+  FileDataEndPoint(
+      {String type, this.bufferSize, this.zip, this.encrypt, this.publicKey})
+      : super(type ?? DataEndPointTypes.FILE);
 
   /// The function which can transform this [FileDataEndPoint] into JSON.
   ///
@@ -238,7 +250,9 @@ class FileDataEndPoint extends DataEndPoint {
   static Function get fromJsonFunction => _$FileDataEndPointFromJson;
 
   /// Create a [FileDataEndPoint] from a JSON map.
-  factory FileDataEndPoint.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory FileDataEndPoint.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory.fromJson(
+          json[Serializable.CLASS_IDENTIFIER].toString(), json);
 
   /// Serialize this [FileDataEndPoint] as a JSON map.
   Map<String, dynamic> toJson() => _$FileDataEndPointToJson(this);

@@ -11,8 +11,10 @@ part of communication;
 ///  - address
 ///  - body
 TextMessage text_message_anoymizer(TextMessage msg) {
-  if (msg.address != null) msg.address = sha1.convert(utf8.encode(msg.address)).toString();
-  if (msg.body != null) msg.body = sha1.convert(utf8.encode(msg.body)).toString();
+  if (msg.address != null)
+    msg.address = sha1.convert(utf8.encode(msg.address)).toString();
+  if (msg.body != null)
+    msg.body = sha1.convert(utf8.encode(msg.body)).toString();
 
   return msg;
 }
@@ -48,9 +50,13 @@ Datum phone_log_anoymizer(Datum datum) {
 ///  - number
 ///  - name
 PhoneCall phone_call_anoymizer(PhoneCall call) {
-  if (call.formattedNumber != null) call.formattedNumber = sha1.convert(utf8.encode(call.formattedNumber)).toString();
-  if (call.number != null) call.number = sha1.convert(utf8.encode(call.number)).toString();
-  if (call.name != null) call.name = sha1.convert(utf8.encode(call.name)).toString();
+  if (call.formattedNumber != null)
+    call.formattedNumber =
+        sha1.convert(utf8.encode(call.formattedNumber)).toString();
+  if (call.number != null)
+    call.number = sha1.convert(utf8.encode(call.number)).toString();
+  if (call.name != null)
+    call.name = sha1.convert(utf8.encode(call.name)).toString();
 
   return call;
 }
@@ -69,10 +75,14 @@ Datum calendar_anoymizer(Datum datum) {
 ///  - description
 ///  - names of all attendees
 CalendarEvent calendar_event_anoymizer(CalendarEvent event) {
-  if (event.title != null) event.title = sha1.convert(utf8.encode(event.title)).toString();
-  if (event.description != null) event.description = sha1.convert(utf8.encode(event.description)).toString();
+  if (event.title != null)
+    event.title = sha1.convert(utf8.encode(event.title)).toString();
+  if (event.description != null)
+    event.description = sha1.convert(utf8.encode(event.description)).toString();
   if (event.attendees != null)
-    event.attendees = event.attendees.map((name) => sha1.convert(utf8.encode(name)).toString()).toList();
+    event.attendees = event.attendees
+        .map((name) => sha1.convert(utf8.encode(name)).toString())
+        .toList();
 
   return event;
 }

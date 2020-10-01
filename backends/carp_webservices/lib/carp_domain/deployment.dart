@@ -186,6 +186,9 @@ class ActiveParticipationInvitation extends Serializable {
   StudyInvitation invitation;
   List<DeviceInvitation> devices;
 
+  /// The CARP study deployment ID.
+  String get studyDeploymentId => participation?.studyDeploymentId;
+
   static Function get fromJsonFunction => _$ActiveParticipationInvitationFromJson;
   factory ActiveParticipationInvitation.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$ActiveParticipationInvitationToJson(this);
@@ -237,6 +240,7 @@ class StudyInvitation extends Serializable {
 class DeviceInvitation extends Serializable {
   DeviceInvitation() : super();
 
+  /// The role name of the device in this invitation.
   String deviceRoleName;
 
   /// True when the device is already registered in the study deployment; false otherwise.

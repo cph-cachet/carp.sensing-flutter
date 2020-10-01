@@ -12,5 +12,6 @@ part of sensors;
 /// It samples step counts directly from the native OS and reports step counts as they are sensed,
 /// typically for each step taken.
 class PedometerProbe extends StreamProbe {
-  Stream<Datum> get stream => Pedometer.stepCountStream.map((StepCount x) => PedometerDatum(x.steps));
+  Stream<Datum> get stream =>
+      Pedometer.stepCountStream.map((StepCount x) => PedometerDatum(x.steps));
 }

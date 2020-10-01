@@ -25,9 +25,8 @@ class ESenseMeasure extends Measure {
 
   static Function get fromJsonFunction => _$ESenseMeasureFromJson;
 
-  factory ESenseMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(
-          json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory ESenseMeasure.fromJson(Map<String, dynamic> json) => FromJsonFactory
+      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
 
   Map<String, dynamic> toJson() => _$ESenseMeasureToJson(this);
 

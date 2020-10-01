@@ -27,7 +27,8 @@ class Task extends Serializable {
   }
 
   static Function get fromJsonFunction => _$TaskFromJson;
-  factory Task.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory Task.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(
+      json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$TaskToJson(this);
 
   /// Add a [Measure] to this task.
@@ -50,7 +51,8 @@ class AutomaticTask extends Task {
   AutomaticTask({String name}) : super(name: name);
 
   static Function get fromJsonFunction => _$AutomaticTaskFromJson;
-  factory AutomaticTask.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory AutomaticTask.fromJson(Map<String, dynamic> json) => FromJsonFactory
+      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$AutomaticTaskToJson(this);
 }
 
@@ -67,7 +69,8 @@ class AppTask extends Task {
     this.onResume,
     this.onPause,
     this.onStop,
-  }) : super(name: name);
+  })
+      : super(name: name);
 
   /// A short description (one line) of this task. Can be used in the app.
   String description;
@@ -116,6 +119,7 @@ class AppTask extends Task {
   void Function(TaskExecutor) onStop;
 
   static Function get fromJsonFunction => _$AppTaskFromJson;
-  factory AppTask.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory AppTask.fromJson(Map<String, dynamic> json) => FromJsonFactory
+      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$AppTaskToJson(this);
 }

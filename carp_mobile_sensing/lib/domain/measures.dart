@@ -182,7 +182,7 @@ class MeasureType extends Serializable {
 
   // taken from https://dart.dev/guides/libraries/library-tour#implementing-map-keys
   int get hashCode {
-    int result = 17;
+    var result = 17;
     result = 37 * result + namespace.hashCode;
     result = 37 * result + name.hashCode;
     return result;

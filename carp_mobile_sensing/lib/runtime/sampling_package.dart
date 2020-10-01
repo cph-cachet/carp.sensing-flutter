@@ -30,7 +30,10 @@ class SamplingPackageRegistry {
   /// Register a sampling package.
   void register(SamplingPackage package) {
     _packages.add(package);
-    package.permissions.forEach((permission) => (!_permissions.contains(permission)) ? _permissions.add(permission) : null);
+    package.permissions.forEach((permission) =>
+        (!_permissions.contains(permission))
+            ? _permissions.add(permission)
+            : null);
     DataType.add(package.dataTypes);
     package.onRegister();
   }

@@ -53,7 +53,8 @@ class HealthMeasure extends MarkedMeasure {
     bool enabled,
     Duration history = const Duration(days: 1),
     @required this.healthDataType,
-  }) : super(
+  })
+      : super(
           type,
           name: name,
           enabled: enabled,
@@ -62,9 +63,8 @@ class HealthMeasure extends MarkedMeasure {
 
   static Function get fromJsonFunction => _$HealthMeasureFromJson;
 
-  factory HealthMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(
-          json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory HealthMeasure.fromJson(Map<String, dynamic> json) => FromJsonFactory
+      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
 
   Map<String, dynamic> toJson() => _$HealthMeasureToJson(this);
 
@@ -118,8 +118,8 @@ class HealthDatum extends CARPDatum {
 
   factory HealthDatum.fromHealthDataPoint(HealthDataPoint h) {
     String _uuid = Uuid().v5(Uuid.NAMESPACE_URL, h.toJson().toString());
-    return HealthDatum(h.value, h.unitString, h.typeString, h.dateFrom, h.dateTo,
-        enumToString(h.platform), h.deviceId, _uuid);
+    return HealthDatum(h.value, h.unitString, h.typeString, h.dateFrom,
+        h.dateTo, enumToString(h.platform), h.deviceId, _uuid);
   }
 
   factory HealthDatum.fromJson(Map<String, dynamic> json) =>
@@ -130,9 +130,9 @@ class HealthDatum extends CARPDatum {
   String toString() =>
       super.toString() +
       ', dataType: $dataType, '
-          'platform: $platform, '
-          'value: $value, '
-          'unit: $unit, '
-          'dateFrom: $dateFrom, '
-          'dateTo: $dateTo';
+      'platform: $platform, '
+      'value: $value, '
+      'unit: $unit, '
+      'dateFrom: $dateFrom, '
+      'dateTo: $dateTo';
 }

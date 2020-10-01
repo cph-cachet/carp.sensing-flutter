@@ -47,15 +47,25 @@ class CommunicationSamplingPackage implements SamplingPackage {
   }
 
   void onRegister() {
-    FromJsonFactory.registerFromJsonFunction("CalendarMeasure", CalendarMeasure.fromJsonFunction);
+    FromJsonFactory.registerFromJsonFunction(
+        "CalendarMeasure", CalendarMeasure.fromJsonFunction);
 
-    TransformerSchemaRegistry.instance.lookup(PrivacySchema.DEFAULT).add(TEXT_MESSAGE, text_message_datum_anoymizer);
-    TransformerSchemaRegistry.instance.lookup(PrivacySchema.DEFAULT).add(TEXT_MESSAGE_LOG, text_message_log_anoymizer);
-    TransformerSchemaRegistry.instance.lookup(PrivacySchema.DEFAULT).add(PHONE_LOG, phone_log_anoymizer);
-    TransformerSchemaRegistry.instance.lookup(PrivacySchema.DEFAULT).add(CALENDAR, calendar_anoymizer);
+    TransformerSchemaRegistry.instance
+        .lookup(PrivacySchema.DEFAULT)
+        .add(TEXT_MESSAGE, text_message_datum_anoymizer);
+    TransformerSchemaRegistry.instance
+        .lookup(PrivacySchema.DEFAULT)
+        .add(TEXT_MESSAGE_LOG, text_message_log_anoymizer);
+    TransformerSchemaRegistry.instance
+        .lookup(PrivacySchema.DEFAULT)
+        .add(PHONE_LOG, phone_log_anoymizer);
+    TransformerSchemaRegistry.instance
+        .lookup(PrivacySchema.DEFAULT)
+        .add(CALENDAR, calendar_anoymizer);
   }
 
-  List<Permission> get permissions => [Permission.phone, Permission.sms, Permission.calendar];
+  List<Permission> get permissions =>
+      [Permission.phone, Permission.sms, Permission.calendar];
 
   SamplingSchema get common => SamplingSchema()
     ..type = SamplingSchemaType.COMMON
@@ -107,8 +117,13 @@ class CommunicationSamplingPackage implements SamplingPackage {
     ..type = SamplingSchemaType.DEBUG
     ..name = 'Debugging communication sampling schema'
     ..powerAware = false
-    ..measures[PHONE_LOG] = MarkedMeasure(MeasureType(NameSpace.CARP, PHONE_LOG), name: 'Phone Log', history: Duration(days: 1))
-    ..measures[TEXT_MESSAGE_LOG] = Measure(MeasureType(NameSpace.CARP, TEXT_MESSAGE_LOG), name: 'Text Message (SMS) Log')
+    ..measures[PHONE_LOG] = MarkedMeasure(
+        MeasureType(NameSpace.CARP, PHONE_LOG),
+        name: 'Phone Log',
+        history: Duration(days: 1))
+    ..measures[TEXT_MESSAGE_LOG] = Measure(
+        MeasureType(NameSpace.CARP, TEXT_MESSAGE_LOG),
+        name: 'Text Message (SMS) Log')
     ..measures[CALENDAR] = CalendarMeasure(
       MeasureType(NameSpace.CARP, CALENDAR),
       name: 'Calendar Events',

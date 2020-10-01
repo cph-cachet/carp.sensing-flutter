@@ -3,7 +3,8 @@ import 'dart:convert';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:test/test.dart';
 
-String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
+String _encode(Object object) =>
+    const JsonEncoder.withIndent(' ').convert(object);
 
 void main() {
   Study study;
@@ -35,10 +36,14 @@ void main() {
     study.addTriggerTask(
         ImmediateTrigger(),
         AutomaticTask(name: 'Sensor Task')
-          ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
-              frequency: const Duration(seconds: 10), duration: const Duration(milliseconds: 100)))
-          ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
-              frequency: const Duration(seconds: 20), duration: const Duration(milliseconds: 100))));
+          ..addMeasure(PeriodicMeasure(
+              MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
+              frequency: const Duration(seconds: 10),
+              duration: const Duration(milliseconds: 100)))
+          ..addMeasure(PeriodicMeasure(
+              MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
+              frequency: const Duration(seconds: 20),
+              duration: const Duration(milliseconds: 100))));
   });
 
   String _stringSnapshot;
