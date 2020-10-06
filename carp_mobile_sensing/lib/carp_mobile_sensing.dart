@@ -1,6 +1,5 @@
-/// This library contains the software architecture for the CARP sensing
-/// framework implemented in Flutter.
-/// Supports cross-platform (iOS and Android) sensing.
+/// This library contains the software architecture for the CARP Mobile Sensing (CAMS)
+/// framework implemented in Flutter. Supports cross-platform (iOS and Android) sensing.
 library carp_mobile_sensing;
 
 // The core packages

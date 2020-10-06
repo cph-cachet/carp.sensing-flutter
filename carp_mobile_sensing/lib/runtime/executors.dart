@@ -300,7 +300,7 @@ class SamplingEventTriggerExecutor extends TriggerExecutor {
   Future<void> onResume() async {
     SamplingEventTrigger eventTrigger = trigger as SamplingEventTrigger;
     // start listen for events of the specified type
-    _subscription = ProbeRegistry.lookup(eventTrigger?.measureType?.name).events.listen((datum) {
+    _subscription = ProbeRegistry().lookup(eventTrigger?.measureType?.name).events.listen((datum) {
       if ((eventTrigger?.resumeCondition == null) || (datum == eventTrigger?.resumeCondition)) super.onResume();
       if (eventTrigger?.pauseCondition != null && datum == eventTrigger?.pauseCondition) super.onPause();
     });
@@ -325,7 +325,7 @@ class ConditionalSamplingEventTriggerExecutor extends TriggerExecutor {
     ConditionalSamplingEventTrigger eventTrigger = trigger as ConditionalSamplingEventTrigger;
 
     // listen for event of the specified type
-    _subscription = ProbeRegistry.lookup(eventTrigger.measureType.name).events.listen((datum) {
+    _subscription = ProbeRegistry().lookup(eventTrigger.measureType.name).events.listen((datum) {
       if (eventTrigger?.resumeCondition != null && eventTrigger?.resumeCondition(datum)) super.onResume();
       if (eventTrigger?.pauseCondition != null && eventTrigger?.pauseCondition(datum)) super.onPause();
     });
@@ -377,7 +377,7 @@ class TaskExecutor extends Executor {
     for (Measure measure in task.measures) {
       // create a new probe for each measure - this ensures that we can have
       // multiple measures of the same type, each using its own probe instance
-      Probe probe = ProbeRegistry.create(measure.type.name);
+      Probe probe = ProbeRegistry().create(measure.type.name);
       if (probe != null) {
         executors.add(probe);
         await _group.add(probe.events);

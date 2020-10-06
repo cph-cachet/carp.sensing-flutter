@@ -1,3 +1,11 @@
+## 0.9.3
+* refactor: all singleton adhering to the [Dart Singleton Pattern](https://scottt2.github.io/design-patterns-in-dart/singleton/).
+  * `SamplingPackageRegistry`
+  * `ProbeRegistry`
+  * `TransformerSchemaRegistry`
+  * `DataManagerRegistry`
+
+
 ## 0.9.2
 * fix: error in screen probe
 * refactor: small pedantic formatting issues

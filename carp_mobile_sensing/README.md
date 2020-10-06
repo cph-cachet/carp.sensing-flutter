@@ -184,7 +184,7 @@ void example() async {
 
   // listening on a specific probe registered in the ProbeRegistry
   // this is equivalent to the statement above
-  ProbeRegistry.probes[SensorSamplingPackage.LIGHT].events.forEach(print);
+  ProbeRegistry().probes[SensorSamplingPackage.LIGHT].events.forEach(print);
 
   // subscribe to events
   StreamSubscription<Datum> subscription = controller.events.listen((Datum datum) {
@@ -197,8 +197,8 @@ void example() async {
   controller.resume();
 
   // pause / resume specific probe(s)
-  ProbeRegistry.lookup(SensorSamplingPackage.ACCELEROMETER).pause();
-  ProbeRegistry.lookup(SensorSamplingPackage.ACCELEROMETER).resume();
+  ProbeRegistry().lookup(SensorSamplingPackage.ACCELEROMETER).pause();
+  ProbeRegistry().lookup(SensorSamplingPackage.ACCELEROMETER).resume();
 
   // adapt measures on the go - calling hasChanged() force a restart of
   // the probe, which will load the new measure

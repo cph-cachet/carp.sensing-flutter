@@ -64,15 +64,22 @@ abstract class AbstractDataManager implements DataManager {
 /// [register] method which is later used to call [lookup] when trying to find
 /// an appropriate [DataManager] for a specific [DataEndPointType].
 class DataManagerRegistry {
-  static final Map<String, DataManager> _registry = {};
+  static final DataManagerRegistry _instance = DataManagerRegistry._();
+
+  DataManagerRegistry._();
+
+  /// Get the singleton [DataManagerRegistry].
+  factory DataManagerRegistry() => _instance;
+
+  final Map<String, DataManager> _registry = {};
 
   /// Register a [DataManager] with a specific type.
-  static void register(DataManager manager) {
+  void register(DataManager manager) {
     _registry[manager.type] = manager;
   }
 
   /// Lookup an instance of a [DataManager] based on the [DataEndPointType].
-  static DataManager lookup(String type) {
+  DataManager lookup(String type) {
     return _registry[type];
   }
 }
