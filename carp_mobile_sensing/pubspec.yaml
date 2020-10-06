@@ -28,6 +28,7 @@ dependencies:
   package_info: '>=0.4.0 <2.0.0'
   meta: ^1.1.8
   permission_handler_platform_interface: ^2.0.1
+  cron: ^0.2.3            # For scheduling / triggering cron jobs
 
   # probe-dependent plugins
   sensors: '>=0.4.2 <2.0.0'

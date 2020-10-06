@@ -158,7 +158,7 @@ Before creating a study and running it, register this package in the
 [SamplingPackageRegistry](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/runtime/SamplingPackageRegistry.html).
 
 `````dart
- SamplingPackageRegistry.register(MovisensSamplingPackage());
+ SamplingPackageRegistry().register(MovisensSamplingPackage());
 `````
 
 Once the package is registered, a `MovisensMeasure` can be added to a study like this.

@@ -12,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 import 'package:uuid/uuid.dart';
+import 'package:cron/cron.dart' as cron;
 
 import '../carp_mobile_sensing.dart';
 

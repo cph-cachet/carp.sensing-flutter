@@ -10,12 +10,12 @@ class Sensing {
   Sensing() : super() {
     // create/load and register external sampling packages
     //SamplingPackageRegistry.register(ConnectivitySamplingPackage());
-    SamplingPackageRegistry.instance.register(ContextSamplingPackage());
-    SamplingPackageRegistry.instance.register(CommunicationSamplingPackage());
-    SamplingPackageRegistry.instance.register(AudioSamplingPackage());
+    SamplingPackageRegistry().register(ContextSamplingPackage());
+    SamplingPackageRegistry().register(CommunicationSamplingPackage());
+    SamplingPackageRegistry().register(AudioSamplingPackage());
     //SamplingPackageRegistry.instance.register(ESenseSamplingPackage());
-    SamplingPackageRegistry.instance.register(SurveySamplingPackage());
-    SamplingPackageRegistry.instance.register(HealthSamplingPackage());
+    SamplingPackageRegistry().register(SurveySamplingPackage());
+    SamplingPackageRegistry().register(HealthSamplingPackage());
 
     // create/load and register external data managers
     //DataManagerRegistry.register(CarpDataManager());
@@ -31,8 +31,9 @@ class Sensing {
     //controller = StudyController(study, privacySchemaName: PrivacySchema.DEFAULT); // a controller w. privacy
     await controller.initialize();
 
+    print('listen...');
     // listening on all data events from the study and print it (for debugging purpose).
-    controller.events.forEach(print);
+    controller.events.listen((datum) => print(datum));
 
     // listening on a specific probe
     //ProbeRegistry.probes[DataType.LOCATION].events.forEach(print);
@@ -54,8 +55,9 @@ class LocalStudyManager implements StudyManager {
   Study _study;
 
   Future<Study> getStudy(String studyId) async {
-    return _getTestingStudy(studyId);
+    return _getRecurrentScheduledTriggerStudy(studyId);
 
+    //return _getTestingStudy(studyId);
     //return _getConditionalSamplingStudy(studyId);
     //return _getSurveyStudy(studyId);
     //return _getHealthStudy('#6-health');
@@ -142,15 +144,15 @@ class LocalStudyManager implements StudyManager {
 //                      //ContextSamplingPackage.GEOFENCE,
 //                    ],
 //                  ))
-//            ..addTriggerTask(
-//                DelayedTrigger(delay: 30 * 1000),
-//                Task('WHO-5 Survey')
-//                  ..measures = SamplingSchema.debug().getMeasureList(
-//                    namespace: NameSpace.CARP,
-//                    types: [
-//                      SurveySamplingPackage.SURVEY,
-//                    ],
-//                  ))
+//             ..addTriggerTask(
+//                 DelayedTrigger(delay: Duration(seconds: 10)),
+//                 Task(name: 'WHO-5 Survey')
+//                   ..measures = SamplingSchema.debug().getMeasureList(
+//                     namespace: NameSpace.CARP,
+//                     types: [
+//                       SurveySamplingPackage.SURVEY,
+//                     ],
+//                   ))
 //            ..addTriggerTask(
 //                ImmediateTrigger(),
 //                AutomaticTask()
@@ -190,6 +192,47 @@ class LocalStudyManager implements StudyManager {
 //                      name: 'eSense - Sensors', enabled: true, deviceName: 'eSense-0332', samplingRate: 10)))
           //
           ;
+    }
+    return _study;
+  }
+
+  Future<Study> _getRecurrentScheduledTriggerStudy(String studyId) async {
+    if (_study == null) {
+      _study = Study(studyId, bloc.username)
+        ..name = bloc.testStudyName
+        ..description = 'This is a example study for testing RecurrentScheduledTrigger.'
+        ..dataEndPoint = getDataEndpoint(DataEndPointTypes.PRINT)
+        // ..addTriggerTask(
+        //     ImmediateTrigger(),
+        //     AutomaticTask()
+        //       ..measures = SamplingSchema.common().getMeasureList(
+        //         namespace: NameSpace.CARP,
+        //         types: [
+        //           DeviceSamplingPackage.MEMORY,
+        //           DeviceSamplingPackage.DEVICE,
+        //           DeviceSamplingPackage.BATTERY,
+        //           DeviceSamplingPackage.SCREEN,
+        //           AudioSamplingPackage.NOISE,
+        //         ],
+        //       ))
+        ..addTriggerTask(
+            RecurrentScheduledTrigger(
+              triggerId: 'Well-being trigger',
+              type: RecurrentType.weekly,
+              dayOfWeek: DateTime.tuesday,
+              // separationCount: 1,
+              time: Time(hour: 12, minute: 49),
+              remember: true,
+            ),
+            AutomaticTask()
+              ..measures = SamplingSchema.common().getMeasureList(
+                namespace: NameSpace.CARP,
+                types: [
+                  ContextSamplingPackage.LOCATION,
+                  ContextSamplingPackage.WEATHER,
+                  DeviceSamplingPackage.MEMORY,
+                ],
+              ));
     }
     return _study;
   }

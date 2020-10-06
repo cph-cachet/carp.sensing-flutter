@@ -22,17 +22,14 @@ class MovisensSamplingPackage implements SamplingPackage {
   static const String CONNECTION_STATUS = "connection_status";
 
   void onRegister() {
-    FromJsonFactory.registerFromJsonFunction(
-        "MovisensMeasure", MovisensMeasure.fromJsonFunction);
+    FromJsonFactory.registerFromJsonFunction("MovisensMeasure", MovisensMeasure.fromJsonFunction);
 
     // registering the transformers from CARP to OMH for heart rate and step count.
     // we assume that there is an OMH schema registered already...
-    TransformerSchemaRegistry.instance.lookup(NameSpace.OMH).add(
-        '${MovisensSamplingPackage.MOVISENS}.${MovisensSamplingPackage.HR}',
-        OMHHeartRateDatum.transformer);
-    TransformerSchemaRegistry.instance.lookup(NameSpace.OMH).add(
-        '${MovisensSamplingPackage.MOVISENS}.${MovisensSamplingPackage.STEP_COUNT}',
-        OMHStepCountDatum.transformer);
+    TransformerSchemaRegistry().lookup(NameSpace.OMH).add('${MovisensSamplingPackage.MOVISENS}.${MovisensSamplingPackage.HR}', OMHHeartRateDatum.transformer);
+    TransformerSchemaRegistry()
+        .lookup(NameSpace.OMH)
+        .add('${MovisensSamplingPackage.MOVISENS}.${MovisensSamplingPackage.STEP_COUNT}', OMHStepCountDatum.transformer);
   }
 
   List<Permission> get permissions => []; // no special permissions needed

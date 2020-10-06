@@ -381,6 +381,45 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
 ///
 /// For example, if [measureType] is `carp.geofence` the [resumeCondition] can be `{'DTU','ENTER'}`
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+class CronScheduledTrigger extends Trigger {
+  /// Create a trigger based on a cron expression.
+  ///   * [minutes] - The minutes a Task should be started. Can be one of `int`, `List<int>` or `String` or `null` (= match all).
+  ///   * [hours] - The hours a Task should be started. Can be one of `int`, `List<int>` or `String` or `null` (= match all).
+  ///   * [days] - The days a Task should be started. Can be one of `int`, `List<int>` or `String` or `null` (= match all).
+  ///   * [months] - The months a Task should be started. Can be one of `int`, `List<int>` or `String` or `null` (= match all).
+  ///   * [weekdays] - The weekdays a Task should be started. Can be one of `int`, `List<int>` or `String` or `null` (= match all).
+  CronScheduledTrigger({
+    String triggerId,
+    dynamic minutes,
+    dynamic hours,
+    dynamic days,
+    dynamic months,
+    dynamic weekdays,
+  }) : super(triggerId: triggerId) {
+    schedule = cron.Schedule(minutes: minutes, hours: hours, days: days, months: months, weekdays: weekdays);
+  }
+
+  /// Create a trigger based on a cron-formatted string expression.
+  ///
+  /// See [crontab guru](https://crontab.guru/) for help in formatting cron jobs.
+  CronScheduledTrigger.parse(String cronFormat) {
+    schedule = cron.Schedule.parse(cronFormat);
+  }
+
+  cron.Schedule schedule;
+
+  static Function get fromJsonFunction => _$CronScheduledTriggerFromJson;
+  factory CronScheduledTrigger.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$CronScheduledTriggerToJson(this);
+
+  String toString() =>
+      'RecurrentScheduledTrigger - type: $type, time: $time, separationCount: $separationCount, dayOfWeek: $dayOfWeek, firstOccurrence: $firstOccurrence, period; $period';
+}
+
+/// A trigger that resume and pause sampling when some (other) sampling event occurs.
+///
+/// For example, if [measureType] is `carp.geofence` the [resumeCondition] can be `{'DTU','ENTER'}`
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class SamplingEventTrigger extends Trigger {
   SamplingEventTrigger({
     String triggerId,

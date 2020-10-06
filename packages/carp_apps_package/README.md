@@ -52,7 +52,7 @@ Not supported.
 See the example.
 
 `````dart
-  SamplingPackageRegistry.register(AppsSamplingPackage());
+  SamplingPackageRegistry().register(AppsSamplingPackage());
 
   Study study = Study("1234", "bardram", name: "bardram study");
 

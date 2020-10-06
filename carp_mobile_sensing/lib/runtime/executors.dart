@@ -197,7 +197,13 @@ class PeriodicTriggerExecutor extends TriggerExecutor {
   }
 
   Future<void> onResume() async {
-    // create a recurrent timer that resume sampling.
+    // resume first time, and pause after the specified duration.
+    await super.onResume();
+    Timer(duration, () {
+      super.onPause();
+    });
+
+    // then create a recurrent timer that resume periodically.
     timer = Timer.periodic(period, (t) {
       super.onResume();
       // create a timer that pause the sampling after the specified duration.
@@ -273,16 +279,20 @@ class RecurrentScheduledTriggerExecutor extends PeriodicTriggerExecutor {
 
       // save the day of the first occurrence for later use
       await settings.preferences.setString(_myTrigger.triggerId, _myTrigger.firstOccurrence.toUtc().toString());
+      debug('saving firstOccurrence : ${_myTrigger.firstOccurrence.toUtc().toString()}');
     }
 
     // below is 'normal' (i.e., non-remember) behavior
     Duration _delay = _myTrigger.firstOccurrence.difference(DateTime.now());
+    debug('delay: $_delay');
     if (_myTrigger.end == null || _myTrigger.end.isAfter(DateTime.now())) {
       Timer(_delay, () {
+        debug('delay finished, now resuming...');
         if (_myTrigger.remember) {
           // replace the entry of the first occurrence to the next occurrence date
           DateTime nextOccurrence = DateTime.now().add(period);
           settings.preferences.setString(_myTrigger.triggerId, nextOccurrence.toUtc().toString());
+          debug('saving nextOccurrence: $nextOccurrence');
         }
         super.onResume();
       });
