@@ -46,8 +46,7 @@ class GetActiveParticipationInvitations extends DeploymentServiceRequest {
   String accountId;
 
   static Function get fromJsonFunction => _$GetActiveParticipationInvitationsFromJson;
-  factory GetActiveParticipationInvitations.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory GetActiveParticipationInvitations.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$GetActiveParticipationInvitationsToJson(this);
 
   String toString() => "$runtimeType - accountId: $accountId";
@@ -148,8 +147,7 @@ class GetDeviceDeploymentFor extends DeploymentServiceRequest {
 /// A request for reporting this deployment as successful.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class DeploymentSuccessful extends GetDeviceDeploymentFor {
-  DeploymentSuccessful(String studyDeploymentId, String masterDeviceRoleName, this.deviceDeploymentLastUpdateDate)
-      : super(studyDeploymentId, masterDeviceRoleName) {
+  DeploymentSuccessful(String studyDeploymentId, String masterDeviceRoleName, this.deviceDeploymentLastUpdateDate) : super(studyDeploymentId, masterDeviceRoleName) {
     $type = 'dk.cachet.carp.deployment.infrastructure.DeploymentServiceRequest.DeploymentSuccessful';
   }
 
@@ -450,4 +448,32 @@ class DeviceDescriptor extends DeploymentDomainObject {
   Map<String, dynamic> toJson() => _$DeviceDescriptorToJson(this);
 
   String toString() => "$runtimeType - isMasterDevice: $isMasterDevice, : $roleName, deviceType: $deviceType";
+}
+
+/// Register all the fromJson functions for the deployment domain classes.
+void registerFromJsonFunctions() {
+  print('Register all the fromJson function for the deployment domain classes.');
+  FromJsonFactory.registerFromJsonFunction("dk.cachet.carp.deployment.infrastructure.DeploymentServiceRequest.GetStudyDeploymentStatus", GetStudyDeploymentStatus.fromJsonFunction);
+
+  FromJsonFactory.registerFromJsonFunction("dk.cachet.carp.deployment.domain.StudyDeploymentStatus.Invited", StudyDeploymentStatus.fromJsonFunction);
+  FromJsonFactory.registerFromJsonFunction("dk.cachet.carp.deployment.domain.StudyDeploymentStatus.DeployingDevices", StudyDeploymentStatus.fromJsonFunction);
+  FromJsonFactory.registerFromJsonFunction("dk.cachet.carp.deployment.domain.StudyDeploymentStatus.DeploymentReady", StudyDeploymentStatus.fromJsonFunction);
+  FromJsonFactory.registerFromJsonFunction("dk.cachet.carp.deployment.domain.StudyDeploymentStatus.Stopped", StudyDeploymentStatus.fromJsonFunction);
+
+  FromJsonFactory.registerFromJsonFunction("dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.Unregistered", DeviceDeploymentStatus.fromJsonFunction);
+  FromJsonFactory.registerFromJsonFunction("dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.Registered", DeviceDeploymentStatus.fromJsonFunction);
+  FromJsonFactory.registerFromJsonFunction("dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.Deployed", DeviceDeploymentStatus.fromJsonFunction);
+  FromJsonFactory.registerFromJsonFunction("dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.NeedsRedeployment", DeviceDeploymentStatus.fromJsonFunction);
+  FromJsonFactory.registerFromJsonFunction("dk.cachet.carp.protocols.domain.devices.Smartphone", DeviceDescriptor.fromJsonFunction);
+
+  FromJsonFactory.registerFromJsonFunction("dk.cachet.carp.protocols.domain.MasterDeviceDeployment", MasterDeviceDeployment.fromJsonFunction);
+  FromJsonFactory.registerFromJsonFunction("dk.cachet.carp.protocols.domain.devices.DeviceRegistration", DeviceRegistration.fromJsonFunction);
+  FromJsonFactory.registerFromJsonFunction("dk.cachet.carp.protocols.domain.tasks.TaskDescriptor", TaskDescriptor.fromJsonFunction);
+  FromJsonFactory.registerFromJsonFunction("dk.cachet.carp.protocols.domain.triggers.TriggerDescriptor", TriggerDescriptor.fromJsonFunction);
+  FromJsonFactory.registerFromJsonFunction("dk.cachet.carp.protocols.domain.triggers.TriggeredTask", TriggeredTask.fromJsonFunction);
+
+  FromJsonFactory.registerFromJsonFunction("dk.cachet.carp.deployment.domain.users.ActiveParticipationInvitation", ActiveParticipationInvitation.fromJsonFunction);
+  FromJsonFactory.registerFromJsonFunction("dk.cachet.carp.deployment.domain.users.ActiveParticipationInvitation.DeviceInvitation", DeviceInvitation.fromJsonFunction);
+  FromJsonFactory.registerFromJsonFunction("ddk.cachet.carp.deployment.domain.users.Participation", Participation.fromJsonFunction);
+  FromJsonFactory.registerFromJsonFunction("dk.cachet.carp.deployment.domain.users.StudyInvitation", StudyInvitation.fromJsonFunction);
 }

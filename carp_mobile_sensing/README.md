@@ -56,10 +56,10 @@ in the app's `Info.plist` file located in `ios/Runner`:
 The [Dart API doc](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/) describes the different libraries and classes.
 
 The [wiki](https://github.com/cph-cachet/carp.sensing/wiki) contains detailed documentation on the CARP Mobile Sensing Framework, including 
-the [domain model](https://github.com/cph-cachet/carp.sensing-flutter/wiki/2.-Domain-Model), its built-in [probes](https://github.com/cph-cachet/carp.sensing/wiki/Probes), 
-and how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.-Extending-CARP-Mobile-Sensing) it.
-
-Below is a few simple examples (a better description is available on the [wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki/Domain-Model)).
+the [domain model](https://github.com/cph-cachet/carp.sensing-flutter/wiki/2.-Domain-Model), 
+how to use it by create a [`Study` configuration](https://github.com/cph-cachet/carp.sensing-flutter/wiki/3.-Using-CARP-Mobile-Sensing), 
+how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.-Extending-CARP-Mobile-Sensing) it, and
+an overview of the different [`Measure` types available](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types).
 
 A more scientific documentation of CAMS is available at *[arxiv.org](https://arxiv.org/abs/2006.11904)*:
 
@@ -81,8 +81,10 @@ Please use this as a reference in any scientific papers using CAMS.
 In CAMS, sensing is configured in a [`Study`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/Study-class.html) object 
 and sensing is controlled by a [`StudyController`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/StudyController-class.html).
 
-Below is the most simple example of how to set up a study that sense step counts (`pedometer`), ambient light (`light`), 
-screen activity (`screen`), and power consumption (`battery`).
+Below is a simple example of how to set up a study that sense step counts (`pedometer`), ambient light (`light`), 
+screen activity (`screen`), and power consumption (`battery`). This data is stores as 
+[json](https://github.com/cph-cachet/carp.sensing-flutter/wiki/B.-Sampling-Data-Formats) 
+to a [local file](https://github.com/cph-cachet/carp.sensing-flutter/wiki/C.-Data-Backends) on the phone.
 
 ```dart
 // Import package
@@ -221,7 +223,7 @@ There is a very **simple** [example app](https://github.com/cph-cachet/carp.sens
 This app just prints the sensing data to a console screen on the phone. 
 There is also a range of different [examples](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/carp_mobile_sensing/example/lib/example.dart) on how to create a study to take inspiration from.
 
-However, the [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_mobile_sensing_app) 
+However, the [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app) 
 provides a **MUCH** better example of how to use the package in a Flutter BLoC architecture, including good documentation of how to do this.
 
 
@@ -233,7 +235,7 @@ Please read about existing issues and file new feature requests and bug reports 
 
 ## License
 
-This software is copyright (c) 2020 [Copenhagen Center for Health Technology (CACHET)](https://www.cachet.dk/) 
+This software is copyright (c) [Copenhagen Center for Health Technology (CACHET)](https://www.cachet.dk/) 
 at the [Technical University of Denmark (DTU)](https://www.dtu.dk).
-This software is made available 'as-is' in a MIT [license](/LICENSE).
+This software is available 'as-is' under a [MIT license](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/LICENSE).
 

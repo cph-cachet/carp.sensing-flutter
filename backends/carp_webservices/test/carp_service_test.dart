@@ -40,8 +40,12 @@ void main() {
   //final String testDeploymentId = 'e286e04b-31c5-4fb2-b4b0-db37c4510ae0';
 
   // from Richard - new study/deployment at DEV 2020-09-25
-  final String testStudyId = '19d79948-c4f3-4d0b-91c5-7f55a390e338';
-  final String testDeploymentId = '5b4a3a4d-87df-4c09-adf1-fd47e6a78cc7';
+  // final String testStudyId = '19d79948-c4f3-4d0b-91c5-7f55a390e338';
+  // final String testDeploymentId = '5b4a3a4d-87df-4c09-adf1-fd47e6a78cc7';
+
+  // from Richard - new study/deployment at DEV 2020-10-01
+  final String testStudyId = '624482c4-d8a7-4385-8473-6548b1e283d7';
+  final String testDeploymentId = 'f38bab7a-66f7-4089-88ef-bafacaa7cab1';
 
   final String userId = "user@dtu.dk";
   final String collectionName = 'test_patients';
@@ -60,7 +64,9 @@ void main() {
 
   group("Setup Carp Service", () {
     // Runs before all tests.
-    setUpAll(() {
+    setUpAll(() {});
+
+    test('- study', () async {
       study = new Study(testStudyId, userId, deploymentId: testDeploymentId, name: "Test study");
 
       // Create a test datum
@@ -70,13 +76,13 @@ void main() {
         minLux: 0.3,
         stdLux: 0.4,
       );
-
-      app = new CarpApp(study: study, name: "Test", uri: Uri.parse(uri), oauth: OAuthEndPoint(clientID: clientID, clientSecret: clientSecret));
-
-      CarpService.configure(app);
+      print('Study: $study');
     });
 
     test('- service', () async {
+      app = new CarpApp(study: study, name: "Test", uri: Uri.parse(uri), oauth: OAuthEndPoint(clientID: clientID, clientSecret: clientSecret));
+      CarpService.configure(app);
+
       print('CarpService : ${CarpService.instance.app}');
     });
   });
@@ -247,7 +253,7 @@ void main() {
       print("DELETE data_point_id : $dataPointId");
       await CarpService.instance.getDataPointReference().deleteDataPoint(dataPointId);
     });
-  }, skip: false);
+  }, skip: true);
 
   group("Documents & Collections", () {
     test(' - add document', () async {
@@ -273,8 +279,7 @@ void main() {
       print(_encode(original.data));
 
       // updating the role to super user
-      DocumentSnapshot updated =
-          await CarpService.instance.collection(collectionName).document(document.name).updateData({'email': userId, 'role': 'Super User'});
+      DocumentSnapshot updated = await CarpService.instance.collection(collectionName).document(document.name).updateData({'email': userId, 'role': 'Super User'});
 
       print('----------- updated -------------');
       print(updated);
@@ -344,12 +349,8 @@ void main() {
     test(' - add document in nested collections', () async {
       // is not providing an document id, so this should create a new document
       // if the collection don't exist, it is created (according to David).
-      DocumentSnapshot newDocument = await CarpService.instance
-          .collection(collectionName)
-          .document(userId)
-          .collection('activities')
-          .document('cooking')
-          .setData({'what': 'breakfast', 'time': 'morning'});
+      DocumentSnapshot newDocument =
+          await CarpService.instance.collection(collectionName).document(userId).collection('activities').document('cooking').setData({'what': 'breakfast', 'time': 'morning'});
 
       print(newDocument);
       assert(newDocument.id > 0);
@@ -485,8 +486,7 @@ void main() {
     test('- upload', () async {
       final File myFile = File("test/img.jpg");
 
-      final FileUploadTask uploadTask =
-          CarpService.instance.getFileStorageReference().upload(myFile, {'content-type': 'image/jpg', 'content-language': 'en', 'activity': 'test'});
+      final FileUploadTask uploadTask = CarpService.instance.getFileStorageReference().upload(myFile, {'content-type': 'image/jpg', 'content-language': 'en', 'activity': 'test'});
 
       assert(uploadTask != null);
 
@@ -567,7 +567,7 @@ void main() {
       StudyDeploymentStatus status = await deploymentReference.registerDevice(deviceRoleName: 'phone');
       print(status);
       expect(status.studyDeploymentId, study.deploymentId);
-    }, skip: false);
+    }, skip: true);
 
     test('- get master device deployment', () async {
       MasterDeviceDeployment deployment = await deploymentReference.get();

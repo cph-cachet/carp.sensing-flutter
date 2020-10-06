@@ -6,37 +6,6 @@
  */
 part of carp_services;
 
-void registerFromJsonFunctions() {
-  // register all the fromJson function for the deployment domain classes.
-  FromJsonFactory.registerFromJsonFunction(
-    "dk.cachet.carp.deployment.infrastructure.DeploymentServiceRequest.GetStudyDeploymentStatus",
-    GetStudyDeploymentStatus.fromJsonFunction,
-  );
-
-  FromJsonFactory.registerFromJsonFunction("dk.cachet.carp.deployment.domain.StudyDeploymentStatus.Invited", StudyDeploymentStatus.fromJsonFunction);
-  FromJsonFactory.registerFromJsonFunction("dk.cachet.carp.deployment.domain.StudyDeploymentStatus.DeployingDevices", StudyDeploymentStatus.fromJsonFunction);
-  FromJsonFactory.registerFromJsonFunction("dk.cachet.carp.deployment.domain.StudyDeploymentStatus.DeploymentReady", StudyDeploymentStatus.fromJsonFunction);
-  FromJsonFactory.registerFromJsonFunction("dk.cachet.carp.deployment.domain.StudyDeploymentStatus.Stopped", StudyDeploymentStatus.fromJsonFunction);
-
-  FromJsonFactory.registerFromJsonFunction("dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.Unregistered", DeviceDeploymentStatus.fromJsonFunction);
-  FromJsonFactory.registerFromJsonFunction("dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.Registered", DeviceDeploymentStatus.fromJsonFunction);
-  FromJsonFactory.registerFromJsonFunction(
-    "dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.Deployed",
-    DeviceDeploymentStatus.fromJsonFunction,
-  );
-  FromJsonFactory.registerFromJsonFunction(
-    "dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.NeedsRedeployment",
-    DeviceDeploymentStatus.fromJsonFunction,
-  );
-  FromJsonFactory.registerFromJsonFunction("dk.cachet.carp.protocols.domain.devices.Smartphone", DeviceDescriptor.fromJsonFunction);
-
-  FromJsonFactory.registerFromJsonFunction("dk.cachet.carp.protocols.domain.MasterDeviceDeployment", MasterDeviceDeployment.fromJsonFunction);
-  FromJsonFactory.registerFromJsonFunction("dk.cachet.carp.protocols.domain.devices.DeviceRegistration", DeviceRegistration.fromJsonFunction);
-  FromJsonFactory.registerFromJsonFunction("dk.cachet.carp.protocols.domain.tasks.TaskDescriptor", TaskDescriptor.fromJsonFunction);
-  FromJsonFactory.registerFromJsonFunction("dk.cachet.carp.protocols.domain.triggers.TriggerDescriptor", TriggerDescriptor.fromJsonFunction);
-  FromJsonFactory.registerFromJsonFunction("dk.cachet.carp.protocols.domain.triggers.TriggeredTask", TriggeredTask.fromJsonFunction);
-}
-
 /// Provide a deployment endpoint reference to a CARP web service.
 ///
 /// According to CARP core, the protocol for using the
@@ -137,6 +106,5 @@ class DeploymentReference extends CarpReference {
   }
 
   /// Mark this deployment as a success on the server.
-  Future<StudyDeploymentStatus> success() async =>
-      StudyDeploymentStatus.fromJson(await _rpc(DeploymentSuccessful(studyDeploymentId, masterDeviceRoleName, deployment.lastUpdateDate)));
+  Future<StudyDeploymentStatus> success() async => StudyDeploymentStatus.fromJson(await _rpc(DeploymentSuccessful(studyDeploymentId, masterDeviceRoleName, deployment.lastUpdateDate)));
 }
