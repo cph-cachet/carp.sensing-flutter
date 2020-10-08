@@ -12,7 +12,8 @@ part of communication;
 /// Only works on Android
 class PhoneLogProbe extends DatumProbe {
   Future<Datum> getDatum() async {
-    int from = (measure as MarkedMeasure).lastTime.millisecondsSinceEpoch;
+    MarkedMeasure m = (measure as MarkedMeasure);
+    int from = (m.lastTime != null) ? m.lastTime.millisecondsSinceEpoch : DateTime.now().subtract(m.history).millisecondsSinceEpoch;
     int now = DateTime.now().millisecondsSinceEpoch;
     Iterable<CallLogEntry> entries = await CallLog.query(dateFrom: from, dateTo: now) ?? List<CallLogEntry>();
     return PhoneLogDatum()..phoneLog = entries.map((call) => PhoneCall.fromCallLogEntry(call)).toList();
@@ -48,8 +49,7 @@ class TextMessageProbe extends StreamProbe {
     if (!Platform.isAndroid) throw SensingException('TextMessageProbe only available on Android.');
   }
 
-  Stream<Datum> get stream =>
-      SmsReceiver().onSmsReceived.map((event) => TextMessageDatum.fromTextMessage(TextMessage.fromSmsMessage(event)));
+  Stream<Datum> get stream => SmsReceiver().onSmsReceived.map((event) => TextMessageDatum.fromTextMessage(TextMessage.fromSmsMessage(event)));
 }
 
 /// A probe collecting calendar entries from the calendar on the phone.
@@ -86,8 +86,7 @@ class CalendarProbe extends DatumProbe {
     final startDate = new DateTime.now().subtract((measure as CalendarMeasure).past);
     final endDate = new DateTime.now().add((measure as CalendarMeasure).future);
 
-    var _calendarEventsResult =
-        await _deviceCalendar.retrieveEvents(calendar.id, RetrieveEventsParams(startDate: startDate, endDate: endDate));
+    var _calendarEventsResult = await _deviceCalendar.retrieveEvents(calendar.id, RetrieveEventsParams(startDate: startDate, endDate: endDate));
     List<Event> _calendarEvents = _calendarEventsResult?.data;
     if (_calendarEvents != null) _calendarEvents.forEach((event) => _events.add(CalendarEvent.fromEvent(event)));
 

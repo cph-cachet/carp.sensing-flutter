@@ -45,7 +45,7 @@ class CarpDataManager extends AbstractDataManager {
       // on a close event, upload the file to CARP
       fileDataManager.events
           .where((event) => event.runtimeType == FileDataManagerEvent)
-          .where((event) => event.type == FileDataManagerEventTypes.file_closed)
+          .where((event) => event.type == FileDataManagerEventTypes.FILE_CLOSED)
           .listen((event) => _uploadDatumFileToCarp((event as FileDataManagerEvent).path));
 
       // initialize the file data manager
@@ -161,7 +161,7 @@ class CarpDataManager extends AbstractDataManager {
     if (carpEndPoint.deleteWhenUploaded) {
       // delete the local file once uploaded
       file.delete();
-      addEvent(FileDataManagerEvent(FileDataManagerEventTypes.file_deleted, file.path));
+      addEvent(FileDataManagerEvent(FileDataManagerEventTypes.FILE_DELETED, file.path));
     }
   }
 
@@ -192,7 +192,7 @@ class CarpDataManager extends AbstractDataManager {
     // delete the local file once uploaded?
     if (carpEndPoint.deleteWhenUploaded) {
       file.delete();
-      addEvent(FileDataManagerEvent(FileDataManagerEventTypes.file_deleted, file.path));
+      addEvent(FileDataManagerEvent(FileDataManagerEventTypes.FILE_DELETED, file.path));
     }
   }
 

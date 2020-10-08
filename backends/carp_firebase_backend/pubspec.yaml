@@ -2,7 +2,7 @@
 # following page: https://www.dartlang.org/tools/pub/pubspec
 name: carp_firebase_backend
 description: Google Firebase data backend for CARP mobile sensing.
-version: 0.5.2
+version: 0.5.3
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/backends/carp_firebase_backend
 author:  CACHET Team <cph.cachet@gmail.com>
 

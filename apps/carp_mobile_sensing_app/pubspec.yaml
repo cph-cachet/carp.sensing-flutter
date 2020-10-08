@@ -1,6 +1,6 @@
 name: carp_mobile_sensing_app
 description: The CARP Mobile Sensing App
-version: 0.9.0
+version: 0.9.3
 author:  CACHET Team <cph.cachet@gmail.com>
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app
 
@@ -14,17 +14,17 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_launcher_icons: ^0.8.0
-  carp_mobile_sensing: ^0.9.2
-  carp_communication_package: ^0.9.0
-  #carp_connectivity_package: ^0.9.0
-  carp_context_package: ^0.9.0
-  carp_audio_package: ^0.9.0
-  carp_apps_package: ^0.9.0
-  #carp_survey_package: ^0.9.0
-  #carp_esense_package: ^0.9.0
+  carp_mobile_sensing: ^0.9.3
+  carp_communication_package: ^0.9.3
+  #carp_connectivity_package: ^0.9.3
+  carp_context_package: ^0.9.3
+  carp_audio_package: ^0.9.3
+  carp_apps_package: ^0.9.3
+  #carp_survey_package: ^0.9.3
+  #carp_esense_package: ^0.9.3
   #carp_backend: ^0.3.2
-  #carp_health_package: ^1.1.0
-  #carp_firebase_backend: ^0.4.0
+  #carp_health_package: ^1.1.1
+  #carp_firebase_backend: ^0.5.0
 
 dev_dependencies:
   flutter_test:

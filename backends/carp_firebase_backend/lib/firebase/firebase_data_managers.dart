@@ -64,7 +64,8 @@ abstract class FirebaseDataManager extends AbstractDataManager {
           {
             assert(firebaseEndPoint.email != null);
             assert(firebaseEndPoint.password != null);
-            UserCredential result = await _auth.signInWithEmailAndPassword(email: firebaseEndPoint.email, password: firebaseEndPoint.password);
+            UserCredential result = await _auth.signInWithEmailAndPassword(
+                email: firebaseEndPoint.email, password: firebaseEndPoint.password);
             _user = result.user;
             break;
           }
@@ -115,7 +116,7 @@ class FirebaseStorageDataManager extends FirebaseDataManager {
     // on a close event, upload the file to CARP
     fileDataManager.events
         .where((event) => event.runtimeType == FileDataManagerEvent)
-        .where((event) => event.type == FileDataManagerEventTypes.file_closed)
+        .where((event) => event.type == FileDataManagerEventTypes.FILE_CLOSED)
         .listen((event) => _uploadFileToFirestore((event as FileDataManagerEvent).path));
   }
 
@@ -173,7 +174,7 @@ class FirebaseStorageDataManager extends FirebaseDataManager {
     print("Upload to Firestore finished - remote file uri  : ${downloadUrl.path}'");
     // then delete the local file.
     file.delete();
-    addEvent(FileDataManagerEvent(FileDataManagerEventTypes.file_deleted, file.path));
+    addEvent(FileDataManagerEvent(FileDataManagerEventTypes.FILE_DELETED, file.path));
 
     return downloadUrl;
   }

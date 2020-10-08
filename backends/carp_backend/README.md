@@ -31,7 +31,7 @@ Using the library takes three steps.
 First you should register the data manager in the [`DataManagerRegistry`](https://pub.dartlang.org/documentation/carp_core/latest/carp_core/DataManagerRegistry-class.html).
 
 ````dart
-DataManagerRegistry.register(DataEndPointType.CARP, new CarpDataManager());
+DataManagerRegistry().register(DataEndPointType.CARP, new CarpDataManager());
 ````
 
 ### 2. Create a CARP Data Endpoint 
