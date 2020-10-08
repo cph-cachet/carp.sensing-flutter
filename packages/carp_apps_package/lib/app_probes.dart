@@ -60,9 +60,9 @@ class AppUsageProbe extends DatumProbe {
     debug('Collecting app usage - start: ${start.toUtc()}, end: ${end.toUtc()}');
     List<AppUsageInfo> infos = await AppUsage.getAppUsage(start, end);
 
-    Map<String, double> usage = {};
+    Map<String, int> usage = {};
     infos.forEach((e) {
-      usage[e.appName] = e.usage.inSeconds.toDouble();
+      usage[e.appName] = e.usage.inSeconds;
     });
     return AppUsageDatum()
       ..start = start.toUtc()

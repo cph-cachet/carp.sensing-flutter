@@ -1,45 +1,45 @@
 ## 0.9.3
-* upgrade to `carp_mobile_sensing` v. 0.9.3
+* upgrade: to `carp_mobile_sensing` v. 0.9.3
 
 ## 0.9.2
-* upgrade to `carp_mobile_sensing` v. 0.9.2
+* upgrade: to `carp_mobile_sensing` v. 0.9.2
 
 ## 0.9.0
-* upgrade to `carp_mobile_sensing` v. 0.9.x
+* upgrade: to `carp_mobile_sensing` v. 0.9.x
 
 ## 0.8.1+2
-* Formatting was fixed
-* Example was added
+* refactor: formatting 
+* docs: example added
 
 ## 0.8.1
-* fixed bug in noise probe
+* fix: bug in noise probe
 
 ## 0.8.0
-* upgrade to `carp_mobile_sensing` v. 0.8.x
+* upgrade: to `carp_mobile_sensing` v. 0.8.x
 
 ## 0.7.2
-* upgrade to `carp_mobile_sensing` v. 0.7.2
-* alignment to the new `flutter_sound` [v 5.x.x API](https://github.com/dooboolab/flutter_sound/blob/master/doc/migration_5.x.x.md#migration-form-4xx-to-5xx). 
+* upgrade: to `carp_mobile_sensing` v. 0.7.2
+* upgrade: alignment to the new `flutter_sound` [v 5.x.x API](https://github.com/dooboolab/flutter_sound/blob/master/doc/migration_5.x.x.md#migration-form-4xx-to-5xx). 
 
 ## 0.7.1
-* upgrade of packages (`flutter_sound` and `noise_meter`).
+* upgrade: of packages (`flutter_sound` and `noise_meter`).
 
 ## 0.7.0
-* upgrade to `carp_mobile_sensing` v. 0.7.0
+* upgrade: to `carp_mobile_sensing` v. 0.7.0
 
 ## 0.6.5
-* upgrade to `carp_mobile_sensing` v. 0.6.5
+* upgrade: to `carp_mobile_sensing` v. 0.6.5
 
 ## 0.6.3
-* update to `flutter_sound` v. 3.1.x
-* default location of sound files are now with the data collected.
+* update: to `flutter_sound` v. 3.1.x
+* refactor: default location of sound files are now with the data collected.
 
 ## 0.6.2
 * NoiseDatum now w. doubles.
 
 ## 0.6.1
-* alignment with `carp_mobile_sensing` v. 0.6.1.
-* improvement to the audio probe based
+* upgrade: alignment with `carp_mobile_sensing` v. 0.6.1.
+* refactor: improvement to the audio probe based
 
 ## 0.6.0
 * update to `carp_mobile_sensing` version 0.6.0

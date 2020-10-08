@@ -104,7 +104,7 @@ class PeriodicTrigger extends Trigger {
   PeriodicTrigger({
     String triggerId,
     @required this.period,
-    this.duration = const Duration(seconds: 10),
+    this.duration = const Duration(seconds: 1),
   }) : super(triggerId: triggerId);
 
   static Function get fromJsonFunction => _$PeriodicTriggerFromJson;
@@ -292,7 +292,7 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
       this.dayOfMonth,
       //this.monthOfYear,
       this.remember = false,
-      Duration duration = const Duration(seconds: 1)})
+      Duration duration = const Duration(seconds: 10)})
       : assert(duration != null, 'duration must be specified.'),
         assert(time != null, 'time must be specified.'),
         assert(separationCount >= 0, 'Separation count must be zero or positive.'),
@@ -320,16 +320,18 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
 
     switch (type) {
       case RecurrentType.daily:
-        firstDay = (start.isAfter(now)) ? now : DateTime.now().add(Duration(hours: 24));
+        firstDay = (start.isAfter(now)) ? start : start.add(Duration(hours: 24));
         break;
       case RecurrentType.weekly:
         int days = dayOfWeek - now.weekday;
-        days = (days < 0) ? days + now.month : days;
-        firstDay = DateTime.now().add(Duration(days: days));
+        days = (days < 0) ? days + daysPerWeek : days;
+        firstDay = start.add(Duration(days: days));
+        // check if this is the same day, but a time slot earlier this day
+        firstDay = (firstDay.isBefore(now)) ? firstDay.add(Duration(days: daysPerWeek)) : firstDay;
         break;
       case RecurrentType.monthly:
         if (dayOfMonth != null) {
-          // we a trigger on the following type: collect quarterly on the 11th day of the first month in each quarter at 21:30
+          // we have a trigger of the following type: collect quarterly on the 11th day of the first month in each quarter at 21:30
           //   RecurrentScheduledTrigger(type: RecurrentType.monthly, dayOfMonth: 11, separationCount: 2, time: Time(hour: 21, minute: 30));
           int days = dayOfMonth - now.day;
           int month = (days > 0) ? now.month + separationCount : now.month + separationCount - 1;
@@ -377,43 +379,79 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
       'RecurrentScheduledTrigger - type: $type, time: $time, separationCount: $separationCount, dayOfWeek: $dayOfWeek, firstOccurrence: $firstOccurrence, period; $period';
 }
 
-/// A trigger that resume and pause sampling when some (other) sampling event occurs.
+/// A trigger that resume and pause sampling based on a cron job specification.
 ///
-/// For example, if [measureType] is `carp.geofence` the [resumeCondition] can be `{'DTU','ENTER'}`
+/// Bases on the [`cron`](https://pub.dev/packages/cron) package.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class CronScheduledTrigger extends Trigger {
-  /// Create a trigger based on a cron expression.
-  ///   * [minutes] - The minutes a Task should be started. Can be one of `int`, `List<int>` or `String` or `null` (= match all).
-  ///   * [hours] - The hours a Task should be started. Can be one of `int`, `List<int>` or `String` or `null` (= match all).
-  ///   * [days] - The days a Task should be started. Can be one of `int`, `List<int>` or `String` or `null` (= match all).
-  ///   * [months] - The months a Task should be started. Can be one of `int`, `List<int>` or `String` or `null` (= match all).
-  ///   * [weekdays] - The weekdays a Task should be started. Can be one of `int`, `List<int>` or `String` or `null` (= match all).
-  CronScheduledTrigger({
+  /// The cron job expression.
+  String cronExpression;
+
+  /// The duration (until stopped) of the the sampling.
+  /// If null, the sampling is never stopped (i.e., runs forever).
+  Duration duration;
+
+  /// Create a cron scheduled trigger based on specifying:
+  ///   * [triggerId] - a unique id for this trigger. Required if this trigger is to be remembered.
+  ///   * [minute] - The minute to trigger. `int` [0-59] or `null` (= match all).
+  ///   * [hour] - The hour to trigger. `int` [0-23] or `null` (= match all).
+  ///   * [day] - The day of the month to trigger. `int` [1-31] or `null` (= match all).
+  ///   * [month] - The month to trigger. `int` [1-12] or `null` (= match all).
+  ///   * [weekday] - The week day to trigger. `int` [0-6] or `null` (= match all).
+  ///   * [duration] - The duration (until stopped) of the the sampling. If null, the sampling is never stopped (i.e., runs forever).
+  factory CronScheduledTrigger({
     String triggerId,
-    dynamic minutes,
-    dynamic hours,
-    dynamic days,
-    dynamic months,
-    dynamic weekdays,
-  }) : super(triggerId: triggerId) {
-    schedule = cron.Schedule(minutes: minutes, hours: hours, days: days, months: months, weekdays: weekdays);
+    int minute,
+    int hour,
+    int day,
+    int month,
+    int weekday,
+    Duration duration,
+  }) {
+    assert(minute == null || (minute >= 0 && minute <= 59), 'minute must be in the range of [0-59] or null (=match all).');
+    assert(hour == null || (hour >= 0 && hour <= 23), 'hour must be in the range of [0-23] or null (=match all).');
+    assert(day == null || (day >= 1 && day <= 31), 'day must be in the range of [1-31] or null (=match all).');
+    assert(month == null || (month >= 1 && month <= 12), 'month must be in the range of [1-12] or null (=match all).');
+    assert(weekday == null || (weekday >= 0 && weekday <= 6), 'weekday must be in the range of [0-6] or null (=match all).');
+    return CronScheduledTrigger._(triggerId: triggerId, cronExpression: _cronToString(minute, hour, day, month, weekday), duration: duration);
   }
 
   /// Create a trigger based on a cron-formatted string expression.
   ///
-  /// See [crontab guru](https://crontab.guru/) for help in formatting cron jobs.
-  CronScheduledTrigger.parse(String cronFormat) {
-    schedule = cron.Schedule.parse(cronFormat);
+  ///   * [triggerId] - a unique id for this trigger. Required if this trigger is to be remembered.
+  ///   * [cronExpression] - The cron expression as a `String`.
+  ///   * [duration] - The duration (until stopped) of the the sampling. If null, the sampling is never stopped (i.e., runs forever).
+  ///
+  /// Cron format used is:
+  ///
+  ///    `<minutes> <hours> <days> <months> <weekdays>`
+  ///
+  /// For example `42 19 * * *` is "Everyday at 19:42".
+  ///
+  /// See e.g. [crontab guru](https://crontab.guru/) for help in formatting cron jobs.
+  factory CronScheduledTrigger.parse({
+    String triggerId,
+    @required String cronExpression,
+    Duration duration = const Duration(seconds: 1),
+  }) {
+    assert(cronExpression != null, 'Cannot use null to specify a cron job.');
+    return CronScheduledTrigger._(triggerId: triggerId, cronExpression: cronExpression, duration: duration);
   }
 
-  cron.Schedule schedule;
+  CronScheduledTrigger._({
+    String triggerId,
+    this.cronExpression,
+    this.duration = const Duration(seconds: 1),
+  }) : super(triggerId: triggerId);
+
+  static String _cronToString(int minute, int hour, int day, int month, int weekday) => '${_cf(minute)} ${_cf(hour)} ${_cf(day)} ${_cf(month)} ${_cf(weekday)}';
+  static String _cf(int exp) => (exp == null) ? '*' : exp.toString();
 
   static Function get fromJsonFunction => _$CronScheduledTriggerFromJson;
   factory CronScheduledTrigger.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$CronScheduledTriggerToJson(this);
 
-  String toString() =>
-      'RecurrentScheduledTrigger - type: $type, time: $time, separationCount: $separationCount, dayOfWeek: $dayOfWeek, firstOccurrence: $firstOccurrence, period; $period';
+  String toString() => "CronScheduledTrigger - triggerId: $triggerId, cron expression: '$cronExpression'";
 }
 
 /// A trigger that resume and pause sampling when some (other) sampling event occurs.

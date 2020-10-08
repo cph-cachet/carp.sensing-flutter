@@ -9,11 +9,12 @@ class Sensing {
 
   Sensing() : super() {
     // create/load and register external sampling packages
-    //SamplingPackageRegistry.register(ConnectivitySamplingPackage());
+    SamplingPackageRegistry().register(AppsSamplingPackage());
+    SamplingPackageRegistry().register(ConnectivitySamplingPackage());
     SamplingPackageRegistry().register(ContextSamplingPackage());
     SamplingPackageRegistry().register(CommunicationSamplingPackage());
     SamplingPackageRegistry().register(AudioSamplingPackage());
-    //SamplingPackageRegistry.instance.register(ESenseSamplingPackage());
+    //SamplingPackageRegistry().instance.register(ESenseSamplingPackage());
     SamplingPackageRegistry().register(SurveySamplingPackage());
     SamplingPackageRegistry().register(HealthSamplingPackage());
 
@@ -31,7 +32,6 @@ class Sensing {
     //controller = StudyController(study, privacySchemaName: PrivacySchema.DEFAULT); // a controller w. privacy
     await controller.initialize();
 
-    print('listen...');
     // listening on all data events from the study and print it (for debugging purpose).
     controller.events.listen((datum) => print(datum));
 
@@ -55,9 +55,9 @@ class LocalStudyManager implements StudyManager {
   Study _study;
 
   Future<Study> getStudy(String studyId) async {
-    return _getRecurrentScheduledTriggerStudy(studyId);
+    return _getTestingStudy(studyId);
 
-    //return _getTestingStudy(studyId);
+    //return _getRecurrentScheduledTriggerStudy(studyId);
     //return _getConditionalSamplingStudy(studyId);
     //return _getSurveyStudy(studyId);
     //return _getHealthStudy('#6-health');
@@ -99,16 +99,16 @@ class LocalStudyManager implements StudyManager {
 //                      ConnectivitySamplingPackage.CONNECTIVITY,
 //                    ],
 //                  ))
-//             ..addTriggerTask(
-//                 PeriodicTrigger(period: Duration(seconds: 20)),
-//                 Task()
-//                   ..measures = SamplingSchema.debug().getMeasureList(
-//                     namespace: NameSpace.CARP,
-//                     types: [
-//                       AppsSamplingPackage.APP_USAGE,
-//                       AppsSamplingPackage.APPS,
-//                     ],
-//                   ))
+            ..addTriggerTask(
+                PeriodicTrigger(period: Duration(seconds: 20)),
+                Task()
+                  ..measures = SamplingSchema.debug().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      AppsSamplingPackage.APP_USAGE,
+                      AppsSamplingPackage.APPS,
+                    ],
+                  ))
             ..addTriggerTask(
                 ImmediateTrigger(),
                 AutomaticTask()
@@ -121,17 +121,17 @@ class LocalStudyManager implements StudyManager {
                       DeviceSamplingPackage.SCREEN,
                     ],
                   ))
-//            ..addTriggerTask(
-//                PeriodicTrigger(period: Duration(seconds: 20)),
-//                AutomaticTask()
-//                  ..measures = SamplingSchema.debug().getMeasureList(
-//                    namespace: NameSpace.CARP,
-//                    types: [
-//                      ContextSamplingPackage.LOCATION,
-//                      ContextSamplingPackage.WEATHER,
-//                      //ContextSamplingPackage.AIR_QUALITY,
-//                    ],
-//                  ))
+            ..addTriggerTask(
+                PeriodicTrigger(period: Duration(seconds: 20)),
+                AutomaticTask()
+                  ..measures = SamplingSchema.debug().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      ContextSamplingPackage.LOCATION,
+                      ContextSamplingPackage.WEATHER,
+                      //ContextSamplingPackage.AIR_QUALITY,
+                    ],
+                  ))
 //            ..addTriggerTask(
 //                ImmediateTrigger(),
 //                AutomaticTask()
@@ -199,40 +199,58 @@ class LocalStudyManager implements StudyManager {
   Future<Study> _getRecurrentScheduledTriggerStudy(String studyId) async {
     if (_study == null) {
       _study = Study(studyId, bloc.username)
-        ..name = bloc.testStudyName
-        ..description = 'This is a example study for testing RecurrentScheduledTrigger.'
-        ..dataEndPoint = getDataEndpoint(DataEndPointTypes.PRINT)
-        // ..addTriggerTask(
-        //     ImmediateTrigger(),
-        //     AutomaticTask()
-        //       ..measures = SamplingSchema.common().getMeasureList(
-        //         namespace: NameSpace.CARP,
-        //         types: [
-        //           DeviceSamplingPackage.MEMORY,
-        //           DeviceSamplingPackage.DEVICE,
-        //           DeviceSamplingPackage.BATTERY,
-        //           DeviceSamplingPackage.SCREEN,
-        //           AudioSamplingPackage.NOISE,
-        //         ],
-        //       ))
-        ..addTriggerTask(
-            RecurrentScheduledTrigger(
-              triggerId: 'Well-being trigger',
-              type: RecurrentType.weekly,
-              dayOfWeek: DateTime.tuesday,
-              // separationCount: 1,
-              time: Time(hour: 12, minute: 49),
-              remember: true,
-            ),
-            AutomaticTask()
-              ..measures = SamplingSchema.common().getMeasureList(
-                namespace: NameSpace.CARP,
-                types: [
-                  ContextSamplingPackage.LOCATION,
-                  ContextSamplingPackage.WEATHER,
-                  DeviceSamplingPackage.MEMORY,
-                ],
-              ));
+            ..name = bloc.testStudyName
+            ..description = 'This is a example study for testing RecurrentScheduledTrigger.'
+            ..dataEndPoint = getDataEndpoint(DataEndPointTypes.PRINT)
+            // ..addTriggerTask(
+            //     ImmediateTrigger(),
+            //     AutomaticTask()
+            //       ..measures = SamplingSchema.debug().getMeasureList(
+            //         namespace: NameSpace.CARP,
+            //         types: [
+            //           DeviceSamplingPackage.DEVICE,
+            //           DeviceSamplingPackage.BATTERY,
+            //           DeviceSamplingPackage.SCREEN,
+            //           AudioSamplingPackage.NOISE,
+            //           // ContextSamplingPackage.LOCATION,
+            //           // ContextSamplingPackage.GEOLOCATION,
+            //           // ContextSamplingPackage.WEATHER,
+            //         ],
+            //       ))
+            ..addTriggerTask(
+                RecurrentScheduledTrigger(
+                  triggerId: 'RecurrentScheduledTrigger',
+                  type: RecurrentType.weekly,
+                  dayOfWeek: DateTime.thursday,
+                  // separationCount: 1,
+                  time: Time(hour: 17, minute: 10),
+                  remember: true,
+                ),
+                AutomaticTask()
+                  ..measures = SamplingSchema.debug().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      ContextSamplingPackage.LOCATION,
+                      ContextSamplingPackage.WEATHER,
+                    ],
+                  ))
+          // ..addTriggerTask(
+          //     CronScheduledTrigger(
+          //       triggerId: 'CronScheduledTrigger',
+          //       minute: 49,
+          //       hour: 21,
+          //     ),
+          //     AutomaticTask()
+          //       ..measures = SamplingSchema.debug().getMeasureList(
+          //         namespace: NameSpace.CARP,
+          //         types: [
+          //           // ContextSamplingPackage.LOCATION,
+          //           // ContextSamplingPackage.WEATHER,
+          //           DeviceSamplingPackage.MEMORY,
+          //         ],
+          //       ))
+          //
+          ;
     }
     return _study;
   }
@@ -628,7 +646,7 @@ class LocalStudyManager implements StudyManager {
     assert(type != null);
     switch (type) {
       case DataEndPointTypes.PRINT:
-        return new DataEndPoint(DataEndPointTypes.PRINT);
+        return DataEndPoint(DataEndPointTypes.PRINT);
       case DataEndPointTypes.FILE:
         return FileDataEndPoint(bufferSize: 50 * 1000, zip: true, encrypt: false);
       // case DataEndPointTypes.CARP:

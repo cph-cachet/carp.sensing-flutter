@@ -364,9 +364,6 @@ class CarpService {
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
 
-//    print('response code: $httpStatusCode');
-//    print(_encode(responseJson));
-
     if ((httpStatusCode == HttpStatus.ok) || (httpStatusCode == HttpStatus.created)) return ConsentDocument._(responseJson);
 
     // All other cases are treated as an error.
@@ -456,6 +453,7 @@ class CarpService {
 
   // ---------------------------------------------------------------------------------------------------------
   // DEPLOYMENTS
+  //  * feature: support for deployment endpoints using the `DeploymentReference` class
   // ---------------------------------------------------------------------------------------------------------
 
   /// The URL for the deployment RPC endpoint.
@@ -464,11 +462,13 @@ class CarpService {
   String get deploymentRPCEndpointUri => "${app.uri.toString()}/api/deployments/all";
 
   /// Gets a [DeploymentReference] for this master device.
+  @Deprecated("The Deployment endpoint is not yet properly tested - don't use yet....")
   DeploymentReference deployment({String masterDeviceRoleName}) => DeploymentReference._(this, masterDeviceRoleName);
 
   /// Get the list of active participation invitations for an [accountId].
   /// This will return all deployments that this account (user) is invited to.
   /// If [accountId] is not specified, then the account id of the currently authenticated [CarpUser] is used.
+  @Deprecated("The Deployment endpoint is not yet properly tested - don't use yet....")
   Future<List<ActiveParticipationInvitation>> invitations([String accountId]) async {
     accountId ??= currentUser.accountId;
     final String body = _encode(GetActiveParticipationInvitations(accountId).toJson());

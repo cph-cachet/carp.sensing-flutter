@@ -125,5 +125,17 @@ class ContextSamplingPackage implements SamplingPackage {
     ..type = SamplingSchemaType.DEBUG
     ..name = 'Debugging context sampling schema'
     ..powerAware = false
-    ..measures[WEATHER] = WeatherMeasure(MeasureType(NameSpace.CARP, WEATHER), name: 'Local Weather', apiKey: '12b6e28582eb9298577c734a31ba9f4f');
+    ..measures[GEOLOCATION] = LocationMeasure(
+      MeasureType(NameSpace.CARP, GEOLOCATION),
+      name: 'Geo-location',
+      enabled: true,
+      frequency: Duration(seconds: 3),
+      accuracy: GeolocationAccuracy.best,
+      distance: 0,
+    )
+    ..measures[WEATHER] = WeatherMeasure(
+      MeasureType(NameSpace.CARP, WEATHER),
+      name: 'Local Weather',
+      apiKey: '12b6e28582eb9298577c734a31ba9f4f',
+    );
 }

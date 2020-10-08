@@ -1,5 +1,6 @@
 part of runtime;
 
+/// A registry of [SamplingPackage] packages.
 class SamplingPackageRegistry {
   static final SamplingPackageRegistry _instance = SamplingPackageRegistry._();
 

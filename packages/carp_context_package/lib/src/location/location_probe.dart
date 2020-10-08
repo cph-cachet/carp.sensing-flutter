@@ -15,9 +15,7 @@ LocationManager locationManager = LocationManager.instance;
 /// Note that in order for location tracking to work with this probe, the
 /// phone must be online on the internet, since online Google APIs are used.
 class LocationProbe extends DatumProbe {
-  Future<Datum> getDatum() async => locationManager
-      .getCurrentLocation()
-      .then((dto) => LocationDatum.fromLocationDto(dto));
+  Future<Datum> getDatum() async => locationManager.getCurrentLocation().then((dto) => LocationDatum.fromLocationDto(dto));
 }
 
 /// Collects geolocation information from the underlying OS's location API.
@@ -36,11 +34,10 @@ class GeoLocationProbe extends StreamProbe {
     locationManager.notificationTitle = 'CARP Location Probe';
     locationManager.notificationMsg = 'CARP is tracking your location';
 
-    await locationManager.start();
+    await locationManager.start(askForPermission: false);
   }
 
   Stream<LocationDatum> get stream {
-    return locationManager.dtoStream
-        .map((dto) => LocationDatum.fromLocationDto(dto));
+    return locationManager.dtoStream.map((dto) => LocationDatum.fromLocationDto(dto));
   }
 }

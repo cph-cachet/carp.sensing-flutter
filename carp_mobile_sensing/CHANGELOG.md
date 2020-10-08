@@ -4,6 +4,8 @@
   * `ProbeRegistry`
   * `TransformerSchemaRegistry`
   * `DataManagerRegistry`
+* fix: fixed issue [#100](https://github.com/cph-cachet/carp.sensing-flutter/issues/100)
+* feature: support for the `CronScheduledTrigger` that takes a cron expression for scheduling
 
 
 ## 0.9.2

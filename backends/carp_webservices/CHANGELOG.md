@@ -1,8 +1,9 @@
 ## 0.5.0
 * **BREAKING**: Updated to CAMS v. 0.9.0 with new `$type` json serialization
-* feature: support for deployment endpoints using the `DeploymentReference` class
 * fix: OAuth token in `CarpUser` is now serialized ([#96](https://github.com/cph-cachet/carp.sensing-flutter/issues/96))
 * fix: fixed an error in the refresh token method.
+* feature: support for deployment endpoints using the `DeploymentReference` class
+   > **note** - this endpoint has not yet been properly tested...
 
 ## 0.4.6
 * feature: better support for authentication with stored tokens ([#79](https://github.com/cph-cachet/carp.sensing-flutter/issues/79)).

@@ -18,10 +18,7 @@ abstract class Executor extends AbstractProbe {
   Executor() : super();
 
   Future<void> onInitialize(Measure measure) async {
-    //executors.forEach((executor) => await executor.initialize(measure));
-    for (Probe probe in executors) {
-      await probe.initialize(measure);
-    }
+    executors.forEach((executor) async => await executor.initialize(measure));
   }
 
   Future<void> onPause() async {
@@ -109,6 +106,8 @@ TriggerExecutor getTriggerExecutor(Trigger trigger) {
       return ScheduledTriggerExecutor(trigger);
     case RecurrentScheduledTrigger:
       return RecurrentScheduledTriggerExecutor(trigger);
+    case CronScheduledTrigger:
+      return CronScheduledTriggerExecutor(trigger);
     case SamplingEventTrigger:
       return SamplingEventTriggerExecutor(trigger);
     case ConditionalSamplingEventTrigger:
@@ -268,7 +267,7 @@ class RecurrentScheduledTriggerExecutor extends PeriodicTriggerExecutor {
       if (_savedFirstOccurrence != null) {
         DateTime savedDate = DateTime.tryParse(_savedFirstOccurrence);
         if (savedDate.isBefore(DateTime.now())) {
-          // if there is a saved timestamp in the past, then resume this trigger once.
+          debug('There is a saved timestamp in the past - resuming this trigger now: ${DateTime.now().toString()}.');
           executors.forEach((executor) => executor.resume());
           // create a timer that pause the sampling after the specified duration.
           Timer(duration, () {
@@ -297,6 +296,32 @@ class RecurrentScheduledTriggerExecutor extends PeriodicTriggerExecutor {
         super.onResume();
       });
     }
+  }
+}
+
+/// Executes a [CronScheduledTrigger] based on the specified cron job.
+class CronScheduledTriggerExecutor extends TriggerExecutor {
+  cron.Cron _cron;
+  cron.Schedule _schedule;
+  cron.ScheduledTask _scheduledTask;
+
+  CronScheduledTriggerExecutor(CronScheduledTrigger trigger) : super(trigger) {
+    _schedule = cron.Schedule.parse(trigger.cronExpression);
+    _cron = cron.Cron();
+  }
+
+  Future<void> onResume() async {
+    debug('creating cron job : ${(trigger as CronScheduledTrigger).toString()}');
+    _scheduledTask = _cron.schedule(_schedule, () async {
+      debug('resuming cron job : ${DateTime.now().toString()}');
+      await super.onResume();
+      Timer((trigger as CronScheduledTrigger).duration, () => super.onPause());
+    });
+  }
+
+  Future<void> onPause() async {
+    await _scheduledTask.cancel();
+    await super.onPause();
   }
 }
 
