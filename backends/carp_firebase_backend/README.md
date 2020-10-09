@@ -143,7 +143,7 @@ Add the `carp_firebase_backend` plugin to the `pubspec.yaml` file.
 dependencies:
   flutter:
     sdk: flutter
-  carp_firebase_backend: ^0.3.0     # support for uploading CARP data to Firebase
+  carp_firebase_backend: ^0.5.0     # support for uploading CARP data to Firebase
 ```
 
 Run `flutter packages get`. For more information on managing packages and plugins, 
@@ -161,8 +161,8 @@ Using the library takes three steps.
 First you should register the data manager you want to use (or both) in the `DataManagerRegistry`.
 
 ````dart
-DataManagerRegistry.register(DataEndPointType.FIREBASE_STORAGE, new FirebaseStorageDataManager());
-DataManagerRegistry.register(DataEndPointType.FIREBASE_DATABASE, new FirebaseDatabaseDataManager());
+DataManagerRegistry().register(DataEndPointType.FIREBASE_STORAGE, new FirebaseStorageDataManager());
+DataManagerRegistry().register(DataEndPointType.FIREBASE_DATABASE, new FirebaseDatabaseDataManager());
 ````
 
 ### 2. Specify Access Details to the Firebase App

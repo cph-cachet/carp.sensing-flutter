@@ -56,16 +56,16 @@ class StudyController {
     settings.init();
 
     // create and register the two built-in data managers
-    DataManagerRegistry.register(ConsoleDataManager());
-    DataManagerRegistry.register(FileDataManager());
+    DataManagerRegistry().register(ConsoleDataManager());
+    DataManagerRegistry().register(FileDataManager());
 
     // if a data manager is provided, register this
-    if (dataManager != null) DataManagerRegistry.register(dataManager);
+    if (dataManager != null) DataManagerRegistry().register(dataManager);
 
     // now initialize optional parameters
     executor ??= StudyExecutor(study);
     samplingSchema ??= SamplingSchema.normal(powerAware: true);
-    dataManager ??= (study.dataEndPoint != null) ? DataManagerRegistry.lookup(study.dataEndPoint.type) : null;
+    dataManager ??= (study.dataEndPoint != null) ? DataManagerRegistry().lookup(study.dataEndPoint.type) : null;
     privacySchemaName ??= NameSpace.CARP;
     transformer ??= ((events) => events);
 
@@ -81,8 +81,8 @@ class StudyController {
     // 2. preferred data format as specified in the study protocol
     // 3. any custom transformer
     events = transformer(executor.events
-        .map((datum) => TransformerSchemaRegistry.instance.lookup(privacySchemaName).transform(datum))
-        .map((datum) => TransformerSchemaRegistry.instance.lookup(study.dataFormat).transform(datum)));
+        .map((datum) => TransformerSchemaRegistry().lookup(privacySchemaName).transform(datum))
+        .map((datum) => TransformerSchemaRegistry().lookup(study.dataFormat).transform(datum)));
 
     // old, simple version below
     // events = transformer(executor.events);
@@ -95,8 +95,8 @@ class StudyController {
     Device.getDeviceInfo();
 
     // setting up permissions
-    permissions = await PermissionHandlerPlatform.instance.requestPermissions(SamplingPackageRegistry.instance.permissions);
-    SamplingPackageRegistry.instance.permissions.forEach((permission) {
+    permissions = await PermissionHandlerPlatform.instance.requestPermissions(SamplingPackageRegistry().permissions);
+    SamplingPackageRegistry().permissions.forEach((permission) {
       PermissionStatus status = permissions[permission];
       if (status != PermissionStatus.granted) {
         warning('Permissions not granted for $permission, permission is $status');

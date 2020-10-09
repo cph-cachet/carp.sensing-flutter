@@ -5,7 +5,7 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 /// NOTE, however, that the code below will not run.
 /// See the documentation on how to use CAMS: https://github.com/cph-cachet/carp.sensing-flutter/wiki
 void main() async {
-  SamplingPackageRegistry.instance.register(CommunicationSamplingPackage());
+  SamplingPackageRegistry().register(CommunicationSamplingPackage());
 
   Study study = Study("1234", "bardram", name: "bardram study");
 

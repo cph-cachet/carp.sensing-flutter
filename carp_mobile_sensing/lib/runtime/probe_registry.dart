@@ -16,25 +16,31 @@ part of runtime;
 /// The [ProbeRegistry] can create, register, and lookup an instance of a relevant probe
 /// based on its [DataType].
 class ProbeRegistry {
-  static final Map<String, Probe> _probes = {};
+  static final ProbeRegistry _instance = ProbeRegistry._();
+  ProbeRegistry._();
+
+  /// Get the singleton [ProbeRegistry].
+  factory ProbeRegistry() => _instance;
+
+  final Map<String, Probe> _probes = {};
 
   /// Returns a list of running probes.
-  static Map<String, Probe> get probes => _probes;
+  Map<String, Probe> get probes => _probes;
 
   /// If you create a probe manually, i.e. outside of the [ProbeRegistry] you can register it here.
-  static void register(String type, Probe probe) => _probes[type] = probe;
+  void register(String type, Probe probe) => _probes[type] = probe;
 
   /// Lookup a [Probe] based on its [DataType].
-  static Probe lookup(String type) => _probes[type] ?? create(type);
+  Probe lookup(String type) => _probes[type] ?? create(type);
 
   /// Create an instance of a probe based on the measure.
   ///
   /// This methods search the [SamplingPackageRegistry] for a [SamplingPackage] which
   /// has a probe of the specified [type].
-  static Probe create(String type) {
+  Probe create(String type) {
     Probe _probe;
 
-    SamplingPackageRegistry.instance.packages.forEach((package) {
+    SamplingPackageRegistry().packages.forEach((package) {
       if (package.dataTypes.contains(type)) {
         _probe = package.create(type);
       }

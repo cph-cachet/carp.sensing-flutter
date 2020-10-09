@@ -821,6 +821,39 @@ const _$RecurrentTypeEnumMap = {
   RecurrentType.monthly: 'monthly',
 };
 
+CronScheduledTrigger _$CronScheduledTriggerFromJson(Map<String, dynamic> json) {
+  return CronScheduledTrigger(
+    triggerId: json['trigger_id'] as String,
+    duration: json['duration'] == null
+        ? null
+        : Duration(microseconds: json['duration'] as int),
+  )
+    ..$type = json[r'$type'] as String
+    ..tasks = (json['tasks'] as List)
+        ?.map(
+            (e) => e == null ? null : Task.fromJson(e as Map<String, dynamic>))
+        ?.toList()
+    ..cronExpression = json['cron_expression'] as String;
+}
+
+Map<String, dynamic> _$CronScheduledTriggerToJson(
+    CronScheduledTrigger instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(r'$type', instance.$type);
+  writeNotNull('trigger_id', instance.triggerId);
+  writeNotNull('tasks', instance.tasks);
+  writeNotNull('cron_expression', instance.cronExpression);
+  writeNotNull('duration', instance.duration?.inMicroseconds);
+  return val;
+}
+
 SamplingEventTrigger _$SamplingEventTriggerFromJson(Map<String, dynamic> json) {
   return SamplingEventTrigger(
     triggerId: json['trigger_id'] as String,

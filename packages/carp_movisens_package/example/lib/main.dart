@@ -6,7 +6,7 @@ import 'package:movisens_flutter/movisens_flutter.dart';
 /// NOTE, however, that the code below will not run.
 /// See the documentation on how to use CAMS: https://github.com/cph-cachet/carp.sensing-flutter/wiki
 void main() async {
-  SamplingPackageRegistry.instance.register(MovisensSamplingPackage());
+  SamplingPackageRegistry().register(MovisensSamplingPackage());
 
   Study study = Study("1234", "bardram", name: "bardram study");
 
@@ -14,8 +14,7 @@ void main() async {
   study.addTriggerTask(
       ImmediateTrigger(), // a simple trigger that starts immediately
       Task(name: 'Movisens Task')
-        ..addMeasure(MovisensMeasure(
-            MeasureType(NameSpace.CARP, MovisensSamplingPackage.MOVISENS),
+        ..addMeasure(MovisensMeasure(MeasureType(NameSpace.CARP, MovisensSamplingPackage.MOVISENS),
             name: "movisens",
             enabled: true,
             address: '06-00-00-00-00-00',

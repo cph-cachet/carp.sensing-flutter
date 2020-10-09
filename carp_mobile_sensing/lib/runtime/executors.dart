@@ -18,10 +18,7 @@ abstract class Executor extends AbstractProbe {
   Executor() : super();
 
   Future<void> onInitialize(Measure measure) async {
-    //executors.forEach((executor) => await executor.initialize(measure));
-    for (Probe probe in executors) {
-      await probe.initialize(measure);
-    }
+    executors.forEach((executor) async => await executor.initialize(measure));
   }
 
   Future<void> onPause() async {
@@ -109,6 +106,8 @@ TriggerExecutor getTriggerExecutor(Trigger trigger) {
       return ScheduledTriggerExecutor(trigger);
     case RecurrentScheduledTrigger:
       return RecurrentScheduledTriggerExecutor(trigger);
+    case CronScheduledTrigger:
+      return CronScheduledTriggerExecutor(trigger);
     case SamplingEventTrigger:
       return SamplingEventTriggerExecutor(trigger);
     case ConditionalSamplingEventTrigger:
@@ -197,7 +196,13 @@ class PeriodicTriggerExecutor extends TriggerExecutor {
   }
 
   Future<void> onResume() async {
-    // create a recurrent timer that resume sampling.
+    // resume first time, and pause after the specified duration.
+    await super.onResume();
+    Timer(duration, () {
+      super.onPause();
+    });
+
+    // then create a recurrent timer that resume periodically.
     timer = Timer.periodic(period, (t) {
       super.onResume();
       // create a timer that pause the sampling after the specified duration.
@@ -262,7 +267,7 @@ class RecurrentScheduledTriggerExecutor extends PeriodicTriggerExecutor {
       if (_savedFirstOccurrence != null) {
         DateTime savedDate = DateTime.tryParse(_savedFirstOccurrence);
         if (savedDate.isBefore(DateTime.now())) {
-          // if there is a saved timestamp in the past, then resume this trigger once.
+          debug('There is a saved timestamp in the past - resuming this trigger now: ${DateTime.now().toString()}.');
           executors.forEach((executor) => executor.resume());
           // create a timer that pause the sampling after the specified duration.
           Timer(duration, () {
@@ -273,20 +278,50 @@ class RecurrentScheduledTriggerExecutor extends PeriodicTriggerExecutor {
 
       // save the day of the first occurrence for later use
       await settings.preferences.setString(_myTrigger.triggerId, _myTrigger.firstOccurrence.toUtc().toString());
+      debug('saving firstOccurrence : ${_myTrigger.firstOccurrence.toUtc().toString()}');
     }
 
     // below is 'normal' (i.e., non-remember) behavior
     Duration _delay = _myTrigger.firstOccurrence.difference(DateTime.now());
+    debug('delay: $_delay');
     if (_myTrigger.end == null || _myTrigger.end.isAfter(DateTime.now())) {
       Timer(_delay, () {
+        debug('delay finished, now resuming...');
         if (_myTrigger.remember) {
           // replace the entry of the first occurrence to the next occurrence date
           DateTime nextOccurrence = DateTime.now().add(period);
           settings.preferences.setString(_myTrigger.triggerId, nextOccurrence.toUtc().toString());
+          debug('saving nextOccurrence: $nextOccurrence');
         }
         super.onResume();
       });
     }
+  }
+}
+
+/// Executes a [CronScheduledTrigger] based on the specified cron job.
+class CronScheduledTriggerExecutor extends TriggerExecutor {
+  cron.Cron _cron;
+  cron.Schedule _schedule;
+  cron.ScheduledTask _scheduledTask;
+
+  CronScheduledTriggerExecutor(CronScheduledTrigger trigger) : super(trigger) {
+    _schedule = cron.Schedule.parse(trigger.cronExpression);
+    _cron = cron.Cron();
+  }
+
+  Future<void> onResume() async {
+    debug('creating cron job : ${(trigger as CronScheduledTrigger).toString()}');
+    _scheduledTask = _cron.schedule(_schedule, () async {
+      debug('resuming cron job : ${DateTime.now().toString()}');
+      await super.onResume();
+      Timer((trigger as CronScheduledTrigger).duration, () => super.onPause());
+    });
+  }
+
+  Future<void> onPause() async {
+    await _scheduledTask.cancel();
+    await super.onPause();
   }
 }
 
@@ -300,7 +335,7 @@ class SamplingEventTriggerExecutor extends TriggerExecutor {
   Future<void> onResume() async {
     SamplingEventTrigger eventTrigger = trigger as SamplingEventTrigger;
     // start listen for events of the specified type
-    _subscription = ProbeRegistry.lookup(eventTrigger?.measureType?.name).events.listen((datum) {
+    _subscription = ProbeRegistry().lookup(eventTrigger?.measureType?.name).events.listen((datum) {
       if ((eventTrigger?.resumeCondition == null) || (datum == eventTrigger?.resumeCondition)) super.onResume();
       if (eventTrigger?.pauseCondition != null && datum == eventTrigger?.pauseCondition) super.onPause();
     });
@@ -325,7 +360,7 @@ class ConditionalSamplingEventTriggerExecutor extends TriggerExecutor {
     ConditionalSamplingEventTrigger eventTrigger = trigger as ConditionalSamplingEventTrigger;
 
     // listen for event of the specified type
-    _subscription = ProbeRegistry.lookup(eventTrigger.measureType.name).events.listen((datum) {
+    _subscription = ProbeRegistry().lookup(eventTrigger.measureType.name).events.listen((datum) {
       if (eventTrigger?.resumeCondition != null && eventTrigger?.resumeCondition(datum)) super.onResume();
       if (eventTrigger?.pauseCondition != null && eventTrigger?.pauseCondition(datum)) super.onPause();
     });
@@ -377,7 +412,7 @@ class TaskExecutor extends Executor {
     for (Measure measure in task.measures) {
       // create a new probe for each measure - this ensures that we can have
       // multiple measures of the same type, each using its own probe instance
-      Probe probe = ProbeRegistry.create(measure.type.name);
+      Probe probe = ProbeRegistry().create(measure.type.name);
       if (probe != null) {
         executors.add(probe);
         await _group.add(probe.events);

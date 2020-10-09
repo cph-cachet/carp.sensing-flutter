@@ -113,30 +113,27 @@
               "duration": 1000000
             },
             {
-              "$type": "AudioMeasure",
+              "$type": "Measure",
               "type": {
                 "$type": "MeasureType",
                 "namespace": "carp",
-                "name": "audio"
+                "name": "apps"
               },
-              "name": "Audio Recording",
+              "name": "Installed Apps",
               "enabled": true,
-              "configuration": {},
-              "study_id": "default_study"
+              "configuration": {}
             },
             {
-              "$type": "NoiseMeasure",
+              "$type": "MarkedMeasure",
               "type": {
                 "$type": "MeasureType",
                 "namespace": "carp",
-                "name": "noise"
+                "name": "app_usage"
               },
-              "name": "Ambient Noise",
-              "enabled": false,
+              "name": "Apps Usage",
+              "enabled": true,
               "configuration": {},
-              "frequency": 300000000,
-              "duration": 10000000,
-              "sampling_rate": 500
+              "history": 86400000000
             }
           ]
         }

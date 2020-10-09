@@ -55,27 +55,17 @@ class ContextSamplingPackage implements SamplingPackage {
   }
 
   void onRegister() {
-    FromJsonFactory.registerFromJsonFunction(
-        "LocationMeasure", LocationMeasure.fromJsonFunction);
-    FromJsonFactory.registerFromJsonFunction(
-        "WeatherMeasure", WeatherMeasure.fromJsonFunction);
-    FromJsonFactory.registerFromJsonFunction(
-        "GeofenceMeasure", GeofenceMeasure.fromJsonFunction);
-    FromJsonFactory.registerFromJsonFunction(
-        "AirQualityMeasure", AirQualityMeasure.fromJsonFunction);
-    FromJsonFactory.registerFromJsonFunction(
-        "GeoPosition", GeoPosition.fromJsonFunction);
-    FromJsonFactory.registerFromJsonFunction(
-        "MobilityMeasure", MobilityMeasure.fromJsonFunction);
+    FromJsonFactory.registerFromJsonFunction("LocationMeasure", LocationMeasure.fromJsonFunction);
+    FromJsonFactory.registerFromJsonFunction("WeatherMeasure", WeatherMeasure.fromJsonFunction);
+    FromJsonFactory.registerFromJsonFunction("GeofenceMeasure", GeofenceMeasure.fromJsonFunction);
+    FromJsonFactory.registerFromJsonFunction("AirQualityMeasure", AirQualityMeasure.fromJsonFunction);
+    FromJsonFactory.registerFromJsonFunction("GeoPosition", GeoPosition.fromJsonFunction);
+    FromJsonFactory.registerFromJsonFunction("MobilityMeasure", MobilityMeasure.fromJsonFunction);
 
     // registering the transformers from CARP to OMH for geolocation and physical activity.
     // we assume that there is an OMH schema registered already...
-    TransformerSchemaRegistry.instance
-        .lookup(NameSpace.OMH)
-        .add(LOCATION, OMHGeopositionDatum.transformer);
-    TransformerSchemaRegistry.instance
-        .lookup(NameSpace.OMH)
-        .add(ACTIVITY, OMHPhysicalActivityDatum.transformer);
+    TransformerSchemaRegistry().lookup(NameSpace.OMH).add(LOCATION, OMHGeopositionDatum.transformer);
+    TransformerSchemaRegistry().lookup(NameSpace.OMH).add(ACTIVITY, OMHPhysicalActivityDatum.transformer);
   }
 
   List<Permission> get permissions => [Permission.location, Permission.sensors];
@@ -87,8 +77,7 @@ class ContextSamplingPackage implements SamplingPackage {
     ..measures.addEntries([
       MapEntry(
         LOCATION,
-        Measure(MeasureType(NameSpace.CARP, LOCATION),
-            name: 'Location', enabled: true),
+        Measure(MeasureType(NameSpace.CARP, LOCATION), name: 'Location', enabled: true),
       ),
       MapEntry(
           GEOLOCATION,
@@ -102,37 +91,21 @@ class ContextSamplingPackage implements SamplingPackage {
           )),
       MapEntry(
         ACTIVITY,
-        Measure(MeasureType(NameSpace.CARP, ACTIVITY),
-            name: 'Activity Recognition', enabled: true),
+        Measure(MeasureType(NameSpace.CARP, ACTIVITY), name: 'Activity Recognition', enabled: true),
       ),
-      MapEntry(
-          WEATHER,
-          WeatherMeasure(MeasureType(NameSpace.CARP, WEATHER),
-              name: 'Local Weather',
-              enabled: true,
-              apiKey: '12b6e28582eb9298577c734a31ba9f4f')),
+      MapEntry(WEATHER, WeatherMeasure(MeasureType(NameSpace.CARP, WEATHER), name: 'Local Weather', enabled: true, apiKey: '12b6e28582eb9298577c734a31ba9f4f')),
       MapEntry(
           AIR_QUALITY,
           AirQualityMeasure(MeasureType(NameSpace.CARP, AIR_QUALITY),
-              name: 'Local Air Quality',
-              enabled: true,
-              apiKey: '9e538456b2b85c92647d8b65090e29f957638c77')),
+              name: 'Local Air Quality', enabled: true, apiKey: '9e538456b2b85c92647d8b65090e29f957638c77')),
       MapEntry(
           GEOFENCE,
           GeofenceMeasure(MeasureType(NameSpace.CARP, GEOFENCE),
-              enabled: true,
-              center: GeoPosition(55.7943601, 12.4461956),
-              radius: 500,
-              name: 'Geofence (Virum)')),
+              enabled: true, center: GeoPosition(55.7943601, 12.4461956), radius: 500, name: 'Geofence (Virum)')),
       MapEntry(
           MOBILITY,
           MobilityMeasure(MeasureType(NameSpace.CARP, MOBILITY),
-              name: 'Mobility Features',
-              enabled: true,
-              placeRadius: 50,
-              stopRadius: 25,
-              usePriorContexts: true,
-              stopDuration: Duration(minutes: 3))),
+              name: 'Mobility Features', enabled: true, placeRadius: 50, stopRadius: 25, usePriorContexts: true, stopDuration: Duration(minutes: 3))),
     ]);
 
   SamplingSchema get light => common
@@ -152,6 +125,17 @@ class ContextSamplingPackage implements SamplingPackage {
     ..type = SamplingSchemaType.DEBUG
     ..name = 'Debugging context sampling schema'
     ..powerAware = false
-    ..measures[WEATHER] = WeatherMeasure(MeasureType(NameSpace.CARP, WEATHER),
-        name: 'Local Weather', apiKey: '12b6e28582eb9298577c734a31ba9f4f');
+    ..measures[GEOLOCATION] = LocationMeasure(
+      MeasureType(NameSpace.CARP, GEOLOCATION),
+      name: 'Geo-location',
+      enabled: true,
+      frequency: Duration(seconds: 3),
+      accuracy: GeolocationAccuracy.best,
+      distance: 0,
+    )
+    ..measures[WEATHER] = WeatherMeasure(
+      MeasureType(NameSpace.CARP, WEATHER),
+      name: 'Local Weather',
+      apiKey: '12b6e28582eb9298577c734a31ba9f4f',
+    );
 }

@@ -10,7 +10,7 @@ void main() {
   final String testStudyId = "8";
 
   // first register the CARP data manager
-  DataManagerRegistry.register(CarpDataManager());
+  DataManagerRegistry().register(CarpDataManager());
 
   // create a CARP data endpoint that upload using the DATA_POINT method
   CarpDataEndPoint cdep = CarpDataEndPoint(CarpUploadMethod.DATA_POINT,

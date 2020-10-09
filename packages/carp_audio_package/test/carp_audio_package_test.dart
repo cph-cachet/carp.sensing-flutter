@@ -11,7 +11,7 @@ void main() {
   Study study;
 
   setUp(() {
-    SamplingPackageRegistry.instance.register(AudioSamplingPackage());
+    SamplingPackageRegistry().register(AudioSamplingPackage());
 
     study = Study("1234", "bardram", name: "bardram study")
       ..dataEndPoint = DataEndPoint(DataEndPointTypes.PRINT)

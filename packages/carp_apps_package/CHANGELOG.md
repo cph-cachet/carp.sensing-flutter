@@ -1,3 +1,7 @@
+## 0.9.3
+* upgrade to `carp_mobile_sensing` v. 0.9.3
+* fix: issue [#82](https://github.com/cph-cachet/carp.sensing-flutter/issues/82)
+
 ## 0.9.2
 * upgrade to `carp_mobile_sensing` v. 0.9.2
 
@@ -8,7 +12,7 @@
 * Formatted code according to dart specifications.
 
 ## 0.1.5 - Added example
-* Example code was added to illustrate usage.
+* docs: example code added to illustrate usage.
 
 ## 0.1.0 - Initial Release
 * This version springs out of Carp Mobile Sensing v. 0.8.2

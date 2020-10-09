@@ -31,8 +31,8 @@ this package only works together with `carp_mobile_sensing`.
 dependencies:
   flutter:
     sdk: flutter
-  carp_mobile_sensing: ^0.6.0
-  carp_context_package: ^0.6.0
+  carp_mobile_sensing: ^0.9.0
+  carp_context_package: ^0.9.0
   ...
 `````
 
@@ -47,18 +47,60 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
 
    ...
    
-   <!-- The following permissions are used for CARP Mobile Sensing -->
-   <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-   <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
-   <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" tools:ignore="ProtectedPermissions"/>
+    <!-- The following permissions are used for CARP Mobile Sensing -->
+    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" tools:ignore="ProtectedPermissions"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+    <!-- The following permissions are used in the Context Package -->
+    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
 
    <application
       ...
-      <!-- service for using the Android activity recognition API -->
-      <service android:name="at.resiverbindet.activityrecognition.activity.ActivityRecognizedService" />
+        <!-- service for using the Android activity recognition API -->
+        <service android:name="dk.cachet.activity_recognition_flutter.activity.ActivityRecognizedService" />
+        
+        <!-- Services for background location handling -->
+        <receiver
+                android:name="rekab.app.background_locator.LocatorBroadcastReceiver"
+                android:enabled="true"
+                android:exported="true"
+        />
+        <receiver android:name="rekab.app.background_locator.BootBroadcastReceiver"
+                  android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+        <service
+                android:name="rekab.app.background_locator.LocatorService"
+                android:permission="android.permission.BIND_JOB_SERVICE"
+                android:exported="true"
+        />
+        <service
+                android:name="rekab.app.background_locator.IsolateHolderService"
+                android:permission="android.permission.FOREGROUND_SERVICE"
+                android:exported="true"
+        />
+        <meta-data
+                android:name="flutterEmbedding"
+                android:value="2" />
+
     </application>
 </manifest>
 ````
+
+> **NOTE:** For Android 10 (API 29 and later) use the following permission instead:
+>
+> `<uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />`
+>
+> See [Privacy changes in Android 10](https://developer.android.com/about/versions/10/privacy/changes#physical-activity-recognition).
 
 > **NOTE:** Version 0.5.0 is migrated to AndroidX. This shouldn't result in any functional changes, but it requires any Android apps using this plugin to also 
 [migrate](https://developer.android.com/jetpack/androidx/migrate) if they're using the original support library. 
@@ -85,10 +127,35 @@ Add this permission in the `Info.plist` file located in `ios/Runner`:
   <string>fetch</string>
   <string>location</string>
 </array>
-
 ```
 
-> **NOTE:** Activity Recognition does not work on iOS (issue [#18](https://github.com/cph-cachet/carp.sensing-flutter/issues/18))
+Next, overwrite your `AppDelegate.swift` in the XCode project with:
+
+```swift
+import UIKit
+import Flutter
+
+import background_locator
+
+func registerPlugins(registry: FlutterPluginRegistry) -> () {
+    if (!registry.hasPlugin("BackgroundLocatorPlugin")) {
+        GeneratedPluginRegistrant.register(with: registry)
+    }
+}
+
+
+@UIApplicationMain
+@objc class AppDelegate: FlutterAppDelegate {
+  override func application(
+    _ application: UIApplication,
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+  ) -> Bool {
+    GeneratedPluginRegistrant.register(with: self)
+    BackgroundLocatorPlugin.setPluginRegistrantCallback(registerPlugins)
+    return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+  }
+}
+```
 
 ## Using it
 
@@ -101,8 +168,8 @@ import 'package:carp_context_package/context.dart';
 `````
 
 Before creating a study and running it, register this package in the 
-[SamplingPackageRegistry](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/runtime/SamplingPackageRegistry.html).
+[SamplingPackageRegistry](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SamplingPackageRegistry-class.html).
 
 `````dart
-SamplingPackageRegistry.instance.register(ContextSamplingPackage());
+SamplingPackageRegistry().register(ContextSamplingPackage());
 `````

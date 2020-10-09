@@ -21,6 +21,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:permission_handler_platform_interface/permission_handler_platform_interface.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
+import 'package:cron/cron.dart' as cron;
 
 part 'data_manager.dart';
 part 'executors.dart';
@@ -53,14 +54,10 @@ class DebugLevel {
 int globalDebugLevel = DebugLevel.WARNING;
 
 /// A simple method for printing warning messages to the console.
-void info(String message) =>
-    (globalDebugLevel >= DebugLevel.INFO) ? print('CAMS INFO - $message') : 0;
+void info(String message) => (globalDebugLevel >= DebugLevel.INFO) ? print('CAMS INFO - $message') : 0;
 
 /// A simple method for printing warning messages to the console.
-void warning(String message) => (globalDebugLevel >= DebugLevel.WARNING)
-    ? print('CAMS WARNING - $message')
-    : 0;
+void warning(String message) => (globalDebugLevel >= DebugLevel.WARNING) ? print('CAMS WARNING - $message') : 0;
 
 /// A simple method for printing debug messages to the console.
-void debug(String message) =>
-    (globalDebugLevel >= DebugLevel.DEBUG) ? print('CAMS DEBUG - $message') : 0;
+void debug(String message) => (globalDebugLevel >= DebugLevel.DEBUG) ? print('CAMS DEBUG - $message') : 0;

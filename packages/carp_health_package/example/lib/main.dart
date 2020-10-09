@@ -6,7 +6,7 @@ import 'package:health/health.dart';
 /// NOTE, however, that the code below will not run.
 /// See the documentation on how to use CAMS: https://github.com/cph-cachet/carp.sensing-flutter/wiki
 void main() async {
-  SamplingPackageRegistry.register(HealthSamplingPackage());
+  SamplingPackageRegistry().register(HealthSamplingPackage());
 
   Study study = Study("1234", "bardram", name: "bardram study");
 
@@ -23,15 +23,11 @@ void main() async {
       )
       ..addMeasure(
         HealthMeasure(MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
-            healthDataType: HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
-            history: Duration(days: 2),
-            name: 'Blood Pressure Diastolic'),
+            healthDataType: HealthDataType.BLOOD_PRESSURE_DIASTOLIC, history: Duration(days: 2), name: 'Blood Pressure Diastolic'),
       )
       ..addMeasure(
         HealthMeasure(MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
-            healthDataType: HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
-            history: Duration(days: 2),
-            name: 'Blood Pressure Systolic'),
+            healthDataType: HealthDataType.BLOOD_PRESSURE_SYSTOLIC, history: Duration(days: 2), name: 'Blood Pressure Systolic'),
       ),
   );
 

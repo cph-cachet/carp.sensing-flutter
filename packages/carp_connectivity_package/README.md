@@ -62,5 +62,5 @@ Before creating a study and running it, register this package in the
 [SamplingPackageRegistry](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/runtime/SamplingPackageRegistry.html).
 
 `````dart
-  SamplingPackageRegistry.register(ConnectivitySamplingPackage());
+  SamplingPackageRegistry().register(ConnectivitySamplingPackage());
 `````

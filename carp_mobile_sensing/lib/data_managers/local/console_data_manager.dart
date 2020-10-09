@@ -12,6 +12,11 @@ part of data_managers;
 class ConsoleDataManager extends AbstractDataManager {
   String get type => DataEndPointTypes.PRINT;
 
+  Future initialize(Study study, Stream<Datum> data) async {
+    assert(study.dataEndPoint is DataEndPoint);
+    await super.initialize(study, data);
+  }
+
   void onDatum(Datum datum) => print('>> ${jsonEncode(datum)}');
 
   void onDone() {}

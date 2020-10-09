@@ -21,7 +21,7 @@ dependencies:
 # Remove this before release of package
 #dependency_overrides:
 #  carp_mobile_sensing:
-#    path: ../carp_mobile_sensing/
+#    path: ../../carp_mobile_sensing/
 
 dev_dependencies:
   flutter_test:

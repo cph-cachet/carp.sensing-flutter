@@ -1,23 +1,24 @@
+## 0.9.3
+* upgrade: to `carp_mobile_sensing` v. 0.9.3
+* doc: update of README to reflect using new CARP plugins for background location and activity recognition.
+
 ## 0.9.2
-* upgrade to `carp_mobile_sensing` v. 0.9.2
+* upgrade: to `carp_mobile_sensing` v. 0.9.2
 
 ## 0.9.1
-* upgrade to `carp_mobile_sensing` v. 0.9.x
-
-## 0.9.0+3
-* Formatting
+* upgrade: to `carp_mobile_sensing` v. 0.9.x
 
 ## 0.9.0+2
-* Corrected static analysis errors caused by an old location plugin
-* Upgraded dependecies to their newest versions
-* In particular, MobilityFeatures was upgraded to the 2.x.x API
+* fix: corrected static analysis errors caused by an old location plugin
+* upgrade: dependencies to their newest versions
+    * in particular; `MobilityFeatures` was upgraded to the 2.x.x API
 
 ## 0.9.0+1
-* Corrected static analysis error caused by the new Activity Recognition API
-* Added example
+* fic: corrected static analysis error caused by the new Activity Recognition API
+* docs: added example
 
 ## 0.8.6
-* Removed the latitude and longitude fields from `WeatherMeasure` since they were not used.
+* refactor: removed the latitude and longitude fields from `WeatherMeasure` since they were not used.
 
 ## 0.8.5
 * Added mobility sampling via the [mobility_features](https://pub.dev/packages/mobility_features)  package

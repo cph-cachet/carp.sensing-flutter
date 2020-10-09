@@ -22,7 +22,7 @@ CarpDataEndPoint _$CarpDataEndPointFromJson(Map<String, dynamic> json) {
     encrypt: json['encrypt'],
     publicKey: json['public_key'],
   )
-    ..c__ = json['c__'] as String
+    ..$type = json[r'$type'] as String
     ..type = json['type'] as String;
 }
 
@@ -35,7 +35,7 @@ Map<String, dynamic> _$CarpDataEndPointToJson(CarpDataEndPoint instance) {
     }
   }
 
-  writeNotNull('c__', instance.c__);
+  writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
   writeNotNull('buffer_size', instance.bufferSize);
   writeNotNull('zip', instance.zip);

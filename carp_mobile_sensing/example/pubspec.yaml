@@ -24,7 +24,7 @@ dependencies:
   flutter:
     sdk: flutter
   carp_mobile_sensing:
-    path: ../
+    path: ../../carp_mobile_sensing/
 
 dev_dependencies:
   flutter_test:

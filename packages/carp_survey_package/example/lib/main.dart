@@ -8,7 +8,7 @@ import 'package:research_package/research_package.dart';
 ///
 /// Also take a look at the [CAMS Example app](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_mobile_sensing_app) for use of the Survey Package.
 void main() async {
-  SamplingPackageRegistry.instance.register(SurveySamplingPackage());
+  SamplingPackageRegistry().register(SurveySamplingPackage());
 
   Study study = Study("1234", "bardram", name: "bardram study");
 
