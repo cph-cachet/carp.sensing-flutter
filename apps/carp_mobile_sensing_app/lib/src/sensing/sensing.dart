@@ -399,8 +399,8 @@ class LocalStudyManager implements StudyManager {
 SamplingSchema get custom => SamplingSchema()
   ..type = SamplingSchemaType.NORMAL
   ..name = 'AWARE equivalent sampling schema'
-  ..description =
-      'This Study is a technical evaluation of the CARP Mobile Sensing framework. It simulates the AWARE configuration in order to compare data sampling and battery drain.'
+  ..description = 'This Study is a technical evaluation of the CARP Mobile Sensing framework. '
+      'It simulates the AWARE configuration in order to compare data sampling and battery drain.'
   ..powerAware = false
   ..measures.addEntries([
     MapEntry(
