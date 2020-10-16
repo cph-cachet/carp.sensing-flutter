@@ -157,6 +157,10 @@ func registerPlugins(registry: FlutterPluginRegistry) -> () {
 }
 ```
 
+Finally, in app settings enable `Background Modes` and check `Location Updates`.
+
+![iOS Setup](https://raw.githubusercontent.com/wiki/rekab-app/background_locator/images/background_location_update.png)
+
 ## Using it
 
 To use this package, import it into your app together with the

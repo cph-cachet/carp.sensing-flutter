@@ -20,22 +20,22 @@ class DeploymentReference extends CarpReference {
   /// The CARP study deployment ID.
   String get studyDeploymentId => service.app.study.deploymentId;
 
-  /// The device role name for this master device.
-  /// Default name is `Master`.
-  String masterDeviceRoleName = 'Master';
-
-  /// The role name of this device as specified in the [deployment] protocol.
-  String deviceRoleName;
-
-  /// A unique id for this device as registered at CARP.
-  String deviceId;
-
   MasterDeviceDeployment _deployment;
+  StudyDeploymentStatus _status;
+
+  /// The deployment status for this master device, once fetched from the server.
+  StudyDeploymentStatus get status => _status;
 
   /// The deployment for this master device, once fetched from the server.
   MasterDeviceDeployment get deployment => _deployment;
 
-  DeploymentReference._(CarpService service, [this.masterDeviceRoleName = 'Master']) : super._(service);
+  /// The role name of this device as specified in the [deployment] protocol.
+  //String deviceRoleName;
+
+  /// A unique id for this device as registered at CARP.
+  String deviceId;
+
+  DeploymentReference._(CarpService service) : super._(service);
 
   /// A generic RPC request to the CARP Server.
   Future<Map<String, dynamic>> _rpc(DeploymentServiceRequest request) async {
@@ -43,7 +43,8 @@ class DeploymentReference extends CarpReference {
     final String body = _encode(request.toJson());
 
     print('REQUEST: ${service.deploymentRPCEndpointUri}\n$body');
-    http.Response response = await httpr.post(Uri.encodeFull(service.deploymentRPCEndpointUri), headers: restHeaders, body: body);
+    http.Response response =
+        await httpr.post(Uri.encodeFull(service.deploymentRPCEndpointUri), headers: restHeaders, body: body);
     int httpStatusCode = response.statusCode;
     String responseBody = response.body;
     print('RESPONSE: $httpStatusCode\n$responseBody');
@@ -67,7 +68,10 @@ class DeploymentReference extends CarpReference {
   }
 
   /// Get the deployment status for this [DeploymentReference].
-  Future<StudyDeploymentStatus> status() async => StudyDeploymentStatus.fromJson(await _rpc(GetStudyDeploymentStatus(studyDeploymentId)));
+  Future<StudyDeploymentStatus> getStatus() async {
+    _status = StudyDeploymentStatus.fromJson(await _rpc(GetStudyDeploymentStatus(studyDeploymentId)));
+    return _status;
+  }
 
   /// Register a device for this deployment at the CARP server.
   ///  * [deviceRoleName] - the role name of the device, e.g. `phone`.
@@ -79,32 +83,67 @@ class DeploymentReference extends CarpReference {
     @required String deviceRoleName,
     String deviceId,
   }) async {
-    assert(deviceRoleName != null && deviceRoleName.length > 0, 'deviceRoleName has to be specified when registering a device in CARP.');
+    assert(deviceRoleName != null && deviceRoleName.length > 0,
+        'deviceRoleName has to be specified when registering a device in CARP.');
     deviceId ??= Uuid().v4().toString();
-    this.deviceRoleName = deviceRoleName;
-    this.deviceId = deviceId;
-    return StudyDeploymentStatus.fromJson(await _rpc(RegisterDevice(studyDeploymentId, deviceRoleName, DeviceRegistration(deviceId))));
+    //this.deviceRoleName = deviceRoleName;
+    //this.deviceId = deviceId;
+    _status = StudyDeploymentStatus.fromJson(
+        await _rpc(RegisterDevice(studyDeploymentId, deviceRoleName, DeviceRegistration(deviceId))));
+    return _status;
+  }
+
+  /// Register this device as the master device for this deployment at the CARP server.
+  ///  * [deviceId] - a unique id for this device. If not specified, a unique id will be generated and used.
+  ///
+  /// Returns the updated study deployment status if the registration is successful.
+  /// Throws a [CarpServiceException] if not.
+  Future<StudyDeploymentStatus> registerMasterDevice({String deviceId}) async {
+    assert(
+        status != null,
+        'The status of a deployment must be know before a master device can be registered. '
+        'Use the getStatus() method to get the deployment status');
+    return registerDevice(deviceRoleName: status.masterDeviceStatus.device.roleName, deviceId: deviceId);
   }
 
   /// Unregister a device for this deployment at the CARP server.
   ///  * [deviceRoleName] - the role name of the device, e.g. `phone`.
   ///
-  /// If [deviceRoleName] is not specified, then the name specified in when registering
-  /// this device in the [registerDevice] method is used.
-  ///
   /// Returns the updated study deployment status if the registration is successful.
   /// Throws a [CarpServiceException] if not.
-  Future<StudyDeploymentStatus> unRegisterDevice([String deviceRoleName]) async =>
-      StudyDeploymentStatus.fromJson(await _rpc(UnregisterDevice(studyDeploymentId, (deviceRoleName != null) ? deviceRoleName : this.deviceRoleName)));
+  Future<StudyDeploymentStatus> unRegisterDevice({@required String deviceRoleName}) async {
+    _status = StudyDeploymentStatus.fromJson(await _rpc(UnregisterDevice(studyDeploymentId, deviceRoleName)));
+    return _status;
+  }
 
   /// Get the deployment for this [DeploymentReference] for the specified [masterDeviceRoleName].
-  /// If [masterDeviceRoleName] is not specified, the previously used name is used, which is `Master` as default.
-  Future<MasterDeviceDeployment> get([String masterDeviceRoleName]) async {
-    if (masterDeviceRoleName != null) this.masterDeviceRoleName = masterDeviceRoleName;
-    _deployment = MasterDeviceDeployment.fromJson(await _rpc(GetDeviceDeploymentFor(studyDeploymentId, this.masterDeviceRoleName)));
+  /// If [masterDeviceRoleName] is not specified, the previously used name is used.
+  Future<MasterDeviceDeployment> get() async {
+    assert(
+        status != null,
+        'The status of a deployment must be know before a master device can be registered. '
+        'Use the getStatus() method to get the deployment status.');
+    _deployment = MasterDeviceDeployment.fromJson(
+        await _rpc(GetDeviceDeploymentFor(studyDeploymentId, status.masterDeviceStatus.device.roleName)));
     return _deployment;
   }
 
   /// Mark this deployment as a success on the server.
-  Future<StudyDeploymentStatus> success() async => StudyDeploymentStatus.fromJson(await _rpc(DeploymentSuccessful(studyDeploymentId, masterDeviceRoleName, deployment.lastUpdateDate)));
+  ///
+  /// Returns the updated study deployment status if the registration is successful.
+  /// Throws a [CarpServiceException] if not.
+  Future<StudyDeploymentStatus> success() async {
+    assert(
+        deployment != null,
+        'The deployment needs to be fetched before a master device can mark it successful. '
+        'Use the get() method to get the master device deployment.');
+
+    _status = StudyDeploymentStatus.fromJson(await _rpc(DeploymentSuccessful(
+      studyDeploymentId,
+      status.masterDeviceStatus.device.roleName,
+      deployment.lastUpdateDate,
+    )));
+
+    return _status;
+  }
 }

@@ -9,7 +9,7 @@ class Sensing {
 
   Sensing() : super() {
     // create and register external sampling packages
-    //SamplingPackageRegistry().register(ConnectivitySamplingPackage());
+    SamplingPackageRegistry().register(ConnectivitySamplingPackage());
     SamplingPackageRegistry().register(ContextSamplingPackage());
     SamplingPackageRegistry().register(CommunicationSamplingPackage());
     SamplingPackageRegistry().register(AudioSamplingPackage());
@@ -19,7 +19,10 @@ class Sensing {
   /// Initialize and setup sensing.
   Future<void> init() async {
     // Create a Study Controller that can manage this study, initialize it, and start it.
-    controller = StudyController(bloc.study);
+    controller = StudyController(
+      bloc.study,
+      samplingSchema: SamplingSchema.normal(powerAware: false),
+    );
 
     // The following study controller will use the default privacy schema, if used instead.
     //controller = StudyController(study, privacySchemaName: PrivacySchema.DEFAULT); // a controller w. privacy
@@ -28,7 +31,7 @@ class Sensing {
     await controller.initialize();
 
     // Listening on all data events from the study and print it (for debugging purpose).
-    controller.events.forEach(print);
+    controller.events.listen((event) => print(event));
 
     // Listening on a specific probe
     //ProbeRegistry.probes[DataType.LOCATION].events.forEach(print);
@@ -59,7 +62,8 @@ class LocalStudyManager implements StudyManager {
   ///  * creating the study by specifying [Trigger]s, [Task]s, and [Measure]s by hand
   ///
   Future<Study> getStudy(String studyId) async {
-    return _getStudyWithSelectedMeasuresFromCommonSamplingSchema(studyId);
+    return _getCoverageStudy(studyId);
+    //return _getStudyWithSelectedMeasuresFromCommonSamplingSchema(studyId);
     //return _getConditionalSamplingStudy('#1');
   }
 
@@ -72,6 +76,78 @@ class LocalStudyManager implements StudyManager {
         ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
         ..addTriggerTask(ImmediateTrigger(),
             Task()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
+    }
+    return _study;
+  }
+
+  Future<Study> _getCoverageStudy(String studyId) async {
+    if (_study == null) {
+      _study = Study(studyId, bloc.username)
+            ..name = studyId
+            ..description = 'This is a study for testing the coverage of sampling.'
+            ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
+            ..addTriggerTask(
+                ImmediateTrigger(),
+                AutomaticTask()
+                  ..measures = SamplingSchema.debug().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      SensorSamplingPackage.LIGHT, // 10 s
+                      //ConnectivitySamplingPackage.BLUETOOTH, // 60 s
+                      ConnectivitySamplingPackage.WIFI, // 60 s
+                      DeviceSamplingPackage.MEMORY, // 60 s
+                      AudioSamplingPackage.NOISE, // 60 s
+                    ],
+                  ))
+            ..addTriggerTask(
+                PeriodicTrigger(period: Duration(seconds: 30)),
+                AutomaticTask()
+                  ..measures = SamplingSchema.debug().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      ContextSamplingPackage.LOCATION, // 30 s
+                    ],
+                  ))
+            // ..addTriggerTask(
+            //     PeriodicTrigger(period: Duration(minutes: 5)), // 5 min
+            //     AutomaticTask()
+            //       ..measures = SamplingSchema.debug().getMeasureList(
+            //         namespace: NameSpace.CARP,
+            //         types: [
+            //           AppsSamplingPackage.APP_USAGE,
+            //         ],
+            //       ))
+            ..addTriggerTask(
+                PeriodicTrigger(period: Duration(minutes: 10)), // 10 min
+                AutomaticTask()
+                  ..measures = SamplingSchema.debug().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      ContextSamplingPackage.WEATHER,
+                      ContextSamplingPackage.AIR_QUALITY,
+                    ],
+                  ))
+          //
+          ;
+    }
+    return _study;
+  }
+
+  Future<Study> _getStudyForBackgroundSamplingTesting(String studyId) async {
+    if (_study == null) {
+      _study = Study(studyId, bloc.username)
+        ..name = 'CAMS Background Test Study'
+        ..description = 'This study tests background sampling.'
+        ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
+        ..addTriggerTask(
+            ImmediateTrigger(),
+            Task()
+              ..measures = SamplingSchema.debug().getMeasureList(
+                namespace: NameSpace.CARP,
+                types: [
+                  SensorSamplingPackage.LIGHT,
+                ],
+              ));
     }
     return _study;
   }

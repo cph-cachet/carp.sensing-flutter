@@ -54,9 +54,7 @@ class SensorSamplingPackage implements SamplingPackage {
               frequency: const Duration(milliseconds: 100),
               duration: const Duration(milliseconds: 1))),
       MapEntry(
-          PEDOMETER,
-          Measure(MeasureType(NameSpace.CARP, PEDOMETER),
-              name: 'Pedometer (Step Count)', enabled: true)),
+          PEDOMETER, Measure(MeasureType(NameSpace.CARP, PEDOMETER), name: 'Pedometer (Step Count)', enabled: true)),
       MapEntry(
           LIGHT,
           PeriodicMeasure(MeasureType(NameSpace.CARP, LIGHT),
@@ -81,7 +79,7 @@ class SensorSamplingPackage implements SamplingPackage {
   SamplingSchema get debug => SamplingSchema()
     ..type = SamplingSchemaType.COMMON
     ..name = 'Common (default) sensor sampling schema'
-    ..powerAware = true
+    ..powerAware = false
     ..measures.addEntries([
       MapEntry(
           ACCELEROMETER,
@@ -98,9 +96,7 @@ class SensorSamplingPackage implements SamplingPackage {
               frequency: const Duration(milliseconds: 1000),
               duration: const Duration(milliseconds: 10))),
       MapEntry(
-          PEDOMETER,
-          Measure(MeasureType(NameSpace.CARP, PEDOMETER),
-              name: 'Pedometer (Step Count)', enabled: true)),
+          PEDOMETER, Measure(MeasureType(NameSpace.CARP, PEDOMETER), name: 'Pedometer (Step Count)', enabled: true)),
       MapEntry(
           LIGHT,
           PeriodicMeasure(MeasureType(NameSpace.CARP, LIGHT),

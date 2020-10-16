@@ -40,8 +40,9 @@ void main() async {
 
   // first upload a file
   final File uploadFile = File("test/img.jpg");
-  final FileUploadTask uploadTask =
-      CarpService.instance.getFileStorageReference().upload(uploadFile, {'content-type': 'image/jpg', 'content-language': 'en', 'activity': 'test'});
+  final FileUploadTask uploadTask = CarpService.instance
+      .getFileStorageReference()
+      .upload(uploadFile, {'content-type': 'image/jpg', 'content-language': 'en', 'activity': 'test'});
   CarpFileResponse response = await uploadTask.onComplete;
   int id = response.id;
 
@@ -90,11 +91,14 @@ void main() async {
   // access an document
   //  - if the document id is not specified, a new document (with a new id) is created
   //  - if the collection (users) don't exist, it is created
-  DocumentSnapshot document = await CarpService.instance.collection('users').document().setData({'email': username, 'name': 'Administrator'});
+  DocumentSnapshot document =
+      await CarpService.instance.collection('users').document().setData({'email': username, 'name': 'Administrator'});
 
   // update the document
-  DocumentSnapshot updated_document =
-      await CarpService.instance.collection('/users').document(document.name).updateData({'email': username, 'name': 'Super User'});
+  DocumentSnapshot updated_document = await CarpService.instance
+      .collection('/users')
+      .document(document.name)
+      .updateData({'email': username, 'name': 'Super User'});
 
   // get the document
   DocumentSnapshot new_document = await CarpService.instance.collection('users').document(document.name).get();
@@ -117,10 +121,10 @@ void main() async {
   List<ActiveParticipationInvitation> invitations = await CarpService.instance.invitations();
 
   // get a deployment reference for this master device
-  DeploymentReference deploymentReference = CarpService.instance.deployment(masterDeviceRoleName: 'Master');
+  DeploymentReference deploymentReference = CarpService.instance.deployment();
 
   // get the status of this deployment
-  StudyDeploymentStatus status = await deploymentReference.status();
+  StudyDeploymentStatus status = await deploymentReference.getStatus();
 
   // register a device
   status = await deploymentReference.registerDevice(deviceRoleName: 'phone');

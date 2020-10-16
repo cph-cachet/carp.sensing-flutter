@@ -93,7 +93,10 @@ class ContextSamplingPackage implements SamplingPackage {
         ACTIVITY,
         Measure(MeasureType(NameSpace.CARP, ACTIVITY), name: 'Activity Recognition', enabled: true),
       ),
-      MapEntry(WEATHER, WeatherMeasure(MeasureType(NameSpace.CARP, WEATHER), name: 'Local Weather', enabled: true, apiKey: '12b6e28582eb9298577c734a31ba9f4f')),
+      MapEntry(
+          WEATHER,
+          WeatherMeasure(MeasureType(NameSpace.CARP, WEATHER),
+              name: 'Local Weather', enabled: true, apiKey: '12b6e28582eb9298577c734a31ba9f4f')),
       MapEntry(
           AIR_QUALITY,
           AirQualityMeasure(MeasureType(NameSpace.CARP, AIR_QUALITY),
@@ -105,7 +108,12 @@ class ContextSamplingPackage implements SamplingPackage {
       MapEntry(
           MOBILITY,
           MobilityMeasure(MeasureType(NameSpace.CARP, MOBILITY),
-              name: 'Mobility Features', enabled: true, placeRadius: 50, stopRadius: 25, usePriorContexts: true, stopDuration: Duration(minutes: 3))),
+              name: 'Mobility Features',
+              enabled: true,
+              placeRadius: 50,
+              stopRadius: 25,
+              usePriorContexts: true,
+              stopDuration: Duration(minutes: 3))),
     ]);
 
   SamplingSchema get light => common

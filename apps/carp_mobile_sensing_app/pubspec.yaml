@@ -16,8 +16,8 @@ dependencies:
   flutter_launcher_icons: ^0.8.0
   carp_mobile_sensing: ^0.9.3
   carp_communication_package: ^0.9.3
-  #carp_connectivity_package: ^0.9.3
-  carp_context_package: ^0.9.3
+  carp_connectivity_package: ^0.9.3
+  #carp_context_package: ^0.9.3
   carp_audio_package: ^0.9.3
   carp_apps_package: ^0.9.3
   #carp_survey_package: ^0.9.3
@@ -25,6 +25,12 @@ dependencies:
   #carp_backend: ^0.3.2
   #carp_health_package: ^1.1.1
   #carp_firebase_backend: ^0.5.0
+
+# Overriding carp libraries to use the local copy
+dependency_overrides:
+  carp_context_package:
+    path: ../../packages/carp_context_package/
+
 
 dev_dependencies:
   flutter_test:

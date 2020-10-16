@@ -16,6 +16,8 @@ import 'package:openmhealth_schemas/openmhealth_schemas.dart' as omh;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:air_quality/air_quality.dart';
 import 'package:mobility_features/mobility_features.dart';
+//import 'package:geolocator/geolocator.dart' as geolocator;
+import 'package:location/location.dart' as location;
 
 part 'src/activity/activity_datum.dart';
 

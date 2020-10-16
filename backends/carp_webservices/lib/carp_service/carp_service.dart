@@ -86,8 +86,11 @@ class CarpService {
   String get authEndpointUri => "${_app.uri.toString()}${_app.oauth.path.toString()}";
 
   /// The HTTP header for the authentication requests.
-  Map<String, String> get authenticationHeader =>
-      {"Authorization": "Basic $_authHeaderBase64", "Content-Type": "application/x-www-form-urlencoded", "Accept": "application/json"};
+  Map<String, String> get authenticationHeader => {
+        "Authorization": "Basic $_authHeaderBase64",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Accept": "application/json"
+      };
 
   /// Authenticate to this CARP service using a [username] and [password].
   ///
@@ -100,7 +103,8 @@ class CarpService {
     assert(username != null);
     assert(password != null);
 
-    if (_app == null) throw CarpServiceException(message: "CARP Service not initialized. Call 'CarpService.configure()' first.");
+    if (_app == null)
+      throw CarpServiceException(message: "CARP Service not initialized. Call 'CarpService.configure()' first.");
 
     _currentUser = new CarpUser(username: username);
 
@@ -158,7 +162,8 @@ class CarpService {
 
   /// Get a new (refreshed) access token for the current user based on the previously granted refresh token.
   Future<OAuthToken> refresh() async {
-    if (_app == null) throw new CarpServiceException(message: "CARP Service not initialized. Call 'CarpService.configure()' first.");
+    if (_app == null)
+      throw new CarpServiceException(message: "CARP Service not initialized. Call 'CarpService.configure()' first.");
 
     // --data "refresh_token=my-refresh-token&grant_type=refresh_token"
     final loginBody = {"refresh_token": "${_currentUser.token.refreshToken}", "grant_type": "refresh_token"};
@@ -193,9 +198,14 @@ class CarpService {
 
   /// The headers for any authenticated HTTP REST call to this [CarpService].
   Map<String, String> get headers {
-    if (_currentUser.token == null) throw new CarpServiceException(message: "OAuth token is null. Call 'CarpService.authenticate()' first.");
+    if (_currentUser.token == null)
+      throw new CarpServiceException(message: "OAuth token is null. Call 'CarpService.authenticate()' first.");
 
-    return {"Content-Type": "application/json", "Authorization": "bearer ${_currentUser.token.accessToken}", "cache-control": "no-cache"};
+    return {
+      "Content-Type": "application/json",
+      "Authorization": "bearer ${_currentUser.token.accessToken}",
+      "cache-control": "no-cache"
+    };
   }
 
   Map<String, String> getUserBody(String accountId, String password, String firstName, String lastName) => {
@@ -279,7 +289,8 @@ class CarpService {
   /// Create and invite a new participant to this study.
   ///
   /// Users of this method must be authenticated (logged in) as a researcher to this study.
-  @Deprecated('Creating participants is no longer supported. Participants needs to be invited to a study from the CARP side.')
+  @Deprecated(
+      'Creating participants is no longer supported. Participants needs to be invited to a study from the CARP side.')
   Future<CarpUser> createParticipantByInvite({
     @required String username,
     @required String password,
@@ -297,7 +308,8 @@ class CarpService {
     );
 
     http.Response response = await httpr.post(Uri.encodeFull('$userEndpointUri/invite-participant'),
-        headers: headers, body: json.encode(getUserBody(newUser.accountId, newUser.password, newUser.firstName, newUser.lastName)));
+        headers: headers,
+        body: json.encode(getUserBody(newUser.accountId, newUser.password, newUser.firstName, newUser.lastName)));
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
@@ -314,7 +326,8 @@ class CarpService {
   /// Create and invite a fellow researcher to this study.
   ///
   /// Users of this method must be authenticated (logged in) as a researcher to this study.
-  @Deprecated('Creating researchers is no longer supported. Researchers needs to be invited to a study from the CARP side.')
+  @Deprecated(
+      'Creating researchers is no longer supported. Researchers needs to be invited to a study from the CARP side.')
   Future<CarpUser> createResearcherByInvite({
     @required String username,
     @required String password,
@@ -332,7 +345,8 @@ class CarpService {
     );
 
     http.Response response = await httpr.post(Uri.encodeFull('$userEndpointUri/invite-researcher'),
-        headers: headers, body: json.encode(getUserBody(newUser.accountId, newUser.password, newUser.firstName, newUser.lastName)));
+        headers: headers,
+        body: json.encode(getUserBody(newUser.accountId, newUser.password, newUser.firstName, newUser.lastName)));
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
@@ -351,7 +365,8 @@ class CarpService {
   // ---------------------------------------------------------------------------------------------------------
 
   /// The URL for the consent document end point for this [CarpService].
-  String get consentDocumentEndpointUri => "${_app.uri.toString()}/api/deployments/${_app.study.deploymentId}/consent-documents";
+  String get consentDocumentEndpointUri =>
+      "${_app.uri.toString()}/api/deployments/${_app.study.deploymentId}/consent-documents";
 
   /// Create a new consent document.
   /// Returns the created [ConsentDocument] if the document is uploaded correctly.
@@ -359,12 +374,14 @@ class CarpService {
     assert(document != null);
 
     // POST the document to the CARP web service
-    http.Response response = await http.post(Uri.encodeFull(consentDocumentEndpointUri), headers: headers, body: json.encode(document));
+    http.Response response =
+        await http.post(Uri.encodeFull(consentDocumentEndpointUri), headers: headers, body: json.encode(document));
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
 
-    if ((httpStatusCode == HttpStatus.ok) || (httpStatusCode == HttpStatus.created)) return ConsentDocument._(responseJson);
+    if ((httpStatusCode == HttpStatus.ok) || (httpStatusCode == HttpStatus.created))
+      return ConsentDocument._(responseJson);
 
     // All other cases are treated as an error.
     throw CarpServiceException(
@@ -462,13 +479,13 @@ class CarpService {
   String get deploymentRPCEndpointUri => "${app.uri.toString()}/api/deployments/all";
 
   /// Gets a [DeploymentReference] for this master device.
-  @Deprecated("The Deployment endpoint is not yet properly tested - don't use yet....")
-  DeploymentReference deployment({String masterDeviceRoleName}) => DeploymentReference._(this, masterDeviceRoleName);
+  //@Deprecated("The Deployment endpoint is not yet properly tested - don't use yet....")
+  DeploymentReference deployment() => DeploymentReference._(this);
 
   /// Get the list of active participation invitations for an [accountId].
   /// This will return all deployments that this account (user) is invited to.
   /// If [accountId] is not specified, then the account id of the currently authenticated [CarpUser] is used.
-  @Deprecated("The Deployment endpoint is not yet properly tested - don't use yet....")
+  //@Deprecated("The Deployment endpoint is not yet properly tested - don't use yet....")
   Future<List<ActiveParticipationInvitation>> invitations([String accountId]) async {
     accountId ??= currentUser.accountId;
     final String body = _encode(GetActiveParticipationInvitations(accountId).toJson());
@@ -505,7 +522,11 @@ abstract class CarpReference {
     CarpUser user = service.currentUser;
     assert(user != null);
     final OAuthToken token = await user.getOAuthToken();
-    return {"Content-Type": "application/json", "Authorization": "bearer ${token.accessToken}", "cache-control": "no-cache"};
+    return {
+      "Content-Type": "application/json",
+      "Authorization": "bearer ${token.accessToken}",
+      "cache-control": "no-cache"
+    };
   }
 }
 
@@ -516,7 +537,8 @@ class CarpServiceException implements Exception {
 
   CarpServiceException({this.httpStatus, this.message});
 
-  String toString() => "CarpServiceException: ${(httpStatus != null) ? httpStatus.toString() + " - " : ""} ${message ?? ""}";
+  String toString() =>
+      "CarpServiceException: ${(httpStatus != null) ? httpStatus.toString() + " - " : ""} ${message ?? ""}";
 }
 
 /// Implements HTTP Response Code and associated Reason Phrase.
@@ -552,7 +574,8 @@ class HTTPStatus {
   String httpReasonPhrase;
 
   HTTPStatus(this.httpResponseCode, [String httpPhrase]) {
-    if ((httpPhrase == null) || (httpPhrase.length == 0)) this.httpReasonPhrase = httpStatusPhrases[httpResponseCode.toString()];
+    if ((httpPhrase == null) || (httpPhrase.length == 0))
+      this.httpReasonPhrase = httpStatusPhrases[httpResponseCode.toString()];
   }
 
   String toString() => "$httpResponseCode $httpReasonPhrase";
