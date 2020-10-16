@@ -31,7 +31,7 @@ These are the available CARP Mobile Sensing Flutter components in this repositor
 | [carp_backend](./backends/carp_backend) | Support for uploading data to a CARP data backend as JSON. | [![pub package](https://img.shields.io/pub/v/carp_backend.svg)](https://pub.dartlang.org/packages/carp_backend) |
 | [carp_firebase_backend](./backends/carp_firebase_backend) | Support for uploading data to Firebase as both zipped files and JSON data| [![pub package](https://img.shields.io/pub/v/carp_firebase_backend.svg)](https://pub.dartlang.org/packages/carp_firebase_backend) |
 | **Apps** | **Misc. mobile sensing apps** |  |
-| [carp_mobile_sensing_app](./apps/carp_mobile_sensing_app) | The CARP Mobile Sensing example app | N/A |
+| [carp_mobile_sensing_app](./apps/carp_mobile_sensing_app) | The CARP Mobile Sensing example app |  |
 
 ## Documentation
 
