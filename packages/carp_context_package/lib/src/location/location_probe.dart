@@ -7,9 +7,11 @@
 
 part of context;
 
-/// The [LocationManager] as a background service.
+/// The [LocationManager] runs as a background service.
 LocationManager locationManager = LocationManager.instance;
-location.Location locationProvider = new location.Location();
+
+/// Used to get location on request in the [LocationProbe].
+//location.Location locationProvider = new location.Location();
 
 /// Collects location information from the underlying OS's location API.
 /// Is a [DatumProbe] that collects a [LocationDatum] once when used.
@@ -23,11 +25,12 @@ class LocationProbe extends DatumProbe {
     await locationManager.start(askForPermission: false);
   }
 
-  //Future<Datum> getDatum() async => locationManager.getCurrentLocation().then((dto) => LocationDatum.fromLocationDto(dto));
+  // Future<Datum> getDatum() async =>
+  //     locationManager.getCurrentLocation().then((dto) => LocationDatum.fromLocationDto(dto));
   //Future<Datum> getDatum() async =>
-  //    geolocator.getCurrentPosition().then((position) => LocationDatum.fromPosition(position));
+  //    locationProvider.getLocation().then((location) => LocationDatum.fromLocation(location));
   Future<Datum> getDatum() async =>
-      locationProvider.getLocation().then((location) => LocationDatum.fromLocation(location));
+      Geolocator.getCurrentPosition().then((position) => LocationDatum.fromPosition(position));
 }
 
 /// Collects geolocation information from the underlying OS's location API.

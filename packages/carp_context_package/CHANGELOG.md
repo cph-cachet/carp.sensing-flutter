@@ -1,5 +1,5 @@
 ## 0.9.4
-* fix: reverting back to use the [geolocator](https://pub.dev/packages/geolocator) plugin for the `location` measure.
+* fix: reverting to use the [location](https://pub.dev/packages/location) plugin for the `location` measure.
 * fix: stabilizing `weather` and `air_quality` probes
 
 ## 0.9.3

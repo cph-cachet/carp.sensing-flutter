@@ -28,6 +28,8 @@ dependencies:
 
 # Overriding carp libraries to use the local copy
 dependency_overrides:
+#  carp_mobile_sensing:
+#    path: ../../carp_mobile_sensing/
   carp_context_package:
     path: ../../packages/carp_context_package/
 

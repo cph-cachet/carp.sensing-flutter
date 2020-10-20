@@ -203,7 +203,8 @@ abstract class AbstractProbe with MeasureListener implements Probe {
 
   /// Mark the latest sampling
   void mark() {
-    if (measure is MarkedMeasure) settings.preferences.setString((measure as MarkedMeasure).tag(), DateTime.now().toUtc().toString());
+    if (measure is MarkedMeasure)
+      settings.preferences.setString((measure as MarkedMeasure).tag(), DateTime.now().toUtc().toString());
   }
 
   /// Get the latest mark
@@ -244,13 +245,17 @@ abstract class _AbstractProbeState implements _ProbeStateMachine {
   // Default behavior is to print a warning.
   // If a state supports this method, this behavior is overwritten in
   // the state implementation classes below.
-  Future<void> initialize(Measure measure) async => warning("Trying to initialize a ${probe.runtimeType} in a state where this can't be done - state : $state");
+  Future<void> initialize(Measure measure) async =>
+      warning("Trying to initialize a ${probe.runtimeType} in a state where this can't be done - state : $state");
 
-  void restart() => warning("Trying to restart a ${probe.runtimeType} in a state where this can't be done - state : $state");
+  void restart() =>
+      warning("Trying to restart a ${probe.runtimeType} in a state where this can't be done - state : $state");
 
-  void resume() => warning("Trying to resume a ${probe.runtimeType} in a state where this can't be done - state : $state");
+  void resume() =>
+      warning("Trying to resume a ${probe.runtimeType} in a state where this can't be done - state : $state");
 
-  void pause() => warning("Trying to pause a ${probe.runtimeType} in a state where this can't be done - state : $state");
+  void pause() =>
+      warning("Trying to pause a ${probe.runtimeType} in a state where this can't be done - state : $state");
 
   // Default stop behavior. A probe can be stopped in all states.
   void stop() {

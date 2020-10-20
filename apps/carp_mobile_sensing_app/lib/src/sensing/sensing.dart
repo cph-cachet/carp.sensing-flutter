@@ -99,13 +99,23 @@ class LocalStudyManager implements StudyManager {
                       AudioSamplingPackage.NOISE, // 60 s
                     ],
                   ))
+            // ..addTriggerTask(
+            //     ImmediateTrigger(),
+            //     AutomaticTask()
+            //       ..measures = SamplingSchema.debug().getMeasureList(
+            //         namespace: NameSpace.CARP,
+            //         types: [
+            //           ContextSamplingPackage.GEOLOCATION, // ~3 s
+            //         ],
+            //       ))
             ..addTriggerTask(
                 PeriodicTrigger(period: Duration(seconds: 30)),
                 AutomaticTask()
                   ..measures = SamplingSchema.debug().getMeasureList(
                     namespace: NameSpace.CARP,
                     types: [
-                      ContextSamplingPackage.LOCATION, // 30 s
+                      DeviceSamplingPackage.DEVICE,
+                      ContextSamplingPackage.LOCATION,
                     ],
                   ))
             // ..addTriggerTask(
@@ -118,7 +128,8 @@ class LocalStudyManager implements StudyManager {
             //         ],
             //       ))
             ..addTriggerTask(
-                PeriodicTrigger(period: Duration(minutes: 10)), // 10 min
+                //PeriodicTrigger(period: Duration(minutes: 10)), // 10 min
+                PeriodicTrigger(period: Duration(seconds: 30)),
                 AutomaticTask()
                   ..measures = SamplingSchema.debug().getMeasureList(
                     namespace: NameSpace.CARP,

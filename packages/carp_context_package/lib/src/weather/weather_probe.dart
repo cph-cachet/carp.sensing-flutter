@@ -9,14 +9,18 @@ class WeatherProbe extends DatumProbe {
     WeatherMeasure wm = measure as WeatherMeasure;
     assert(wm.apiKey != null, 'In order to use the Weather API, an API key must be provided.');
     _wf = WeatherFactory(wm.apiKey);
+    // start the background location manager
+    //await locationManager.start(askForPermission: false);
   }
 
   /// Returns the [WeatherDatum] for this location.
   Future<Datum> getDatum() async {
     try {
-      //LocationDto location = await locationManager.getCurrentLocation();
-      //geolocator.Position location = await geolocator.getCurrentPosition();
-      location.LocationData loc = await locationProvider.getLocation();
+      print('$runtimeType - getDatum() - 1');
+      //LocationDto loc = await locationManager.getCurrentLocation();
+      //location.LocationData loc = await locationProvider.getLocation();
+      Position loc = await Geolocator.getCurrentPosition();
+      print('$runtimeType - getDatum() - 2 - $loc');
 
       if (loc != null) {
         Weather w = await _wf.currentWeatherByLocation(loc?.latitude, loc?.longitude);

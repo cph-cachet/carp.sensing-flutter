@@ -27,26 +27,26 @@ class LocationDatum extends CARPDatum {
         time = DateTime.fromMillisecondsSinceEpoch(dto.time.toInt()),
         super();
 
-  // LocationDatum.fromPosition(geolocator.Position position)
-  //     : latitude = position.latitude,
-  //       longitude = position.longitude,
-  //       altitude = position.altitude,
-  //       accuracy = position.accuracy,
-  //       speed = position.speed,
-  //       speedAccuracy = position.speedAccuracy,
-  //       heading = position.heading,
-  //       time = position.timestamp,
+  // LocationDatum.fromLocation(location.LocationData location)
+  //     : latitude = location.latitude,
+  //       longitude = location.longitude,
+  //       altitude = location.altitude,
+  //       accuracy = location.accuracy,
+  //       speed = location.speed,
+  //       speedAccuracy = location.speedAccuracy,
+  //       heading = location.heading,
+  //       time = DateTime.fromMillisecondsSinceEpoch(location.time.toInt()),
   //       super();
 
-  LocationDatum.fromLocation(location.LocationData location)
-      : latitude = location.latitude,
-        longitude = location.longitude,
-        altitude = location.altitude,
-        accuracy = location.accuracy,
-        speed = location.speed,
-        speedAccuracy = location.speedAccuracy,
-        heading = location.heading,
-        time = DateTime.fromMillisecondsSinceEpoch(location.time.toInt()),
+  LocationDatum.fromPosition(Position position)
+      : latitude = position.latitude,
+        longitude = position.longitude,
+        altitude = position.altitude,
+        accuracy = position.accuracy,
+        speed = position.speed,
+        speedAccuracy = position.speedAccuracy,
+        heading = position.heading,
+        time = position.timestamp,
         super();
 
   factory LocationDatum.fromJson(Map<String, dynamic> json) => _$LocationDatumFromJson(json);
