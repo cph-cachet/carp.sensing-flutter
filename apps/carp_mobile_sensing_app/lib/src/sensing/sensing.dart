@@ -128,8 +128,8 @@ class LocalStudyManager implements StudyManager {
             //         ],
             //       ))
             ..addTriggerTask(
-                //PeriodicTrigger(period: Duration(minutes: 10)), // 10 min
-                PeriodicTrigger(period: Duration(seconds: 30)),
+                PeriodicTrigger(period: Duration(minutes: 5)), // 10 min
+                //PeriodicTrigger(period: Duration(seconds: 30)),
                 AutomaticTask()
                   ..measures = SamplingSchema.debug().getMeasureList(
                     namespace: NameSpace.CARP,

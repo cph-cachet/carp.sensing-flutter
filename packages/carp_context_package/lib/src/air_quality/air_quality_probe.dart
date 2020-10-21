@@ -13,11 +13,7 @@ class AirQualityProbe extends DatumProbe {
   /// Returns the [AirQualityDatum] based on the location of the phone.
   Future<Datum> getDatum() async {
     try {
-      print('$runtimeType - getDatum() - 1');
-      //LocationDto loc = await locationManager.getCurrentLocation();
-      //location.LocationData loc = await locationProvider.getLocation();
-      Position loc = await Geolocator.getCurrentPosition();
-      print('$runtimeType - getDatum() - 2 - $loc');
+      Position loc = await getLastKnownPosition();
 
       if (loc != null) {
         AirQualityData q = await _waqi.feedFromGeoLocation(loc.latitude, loc.longitude);

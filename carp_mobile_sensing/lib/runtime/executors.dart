@@ -163,8 +163,13 @@ class ImmediateTriggerExecutor extends TriggerExecutor {
 /// Executes a [ManualTrigger].
 class ManualTriggerExecutor extends TriggerExecutor {
   ManualTriggerExecutor(ManualTrigger trigger) : super(trigger) {
-    trigger.executor = this;
+    trigger.executor = ImmediateTriggerExecutor(trigger);
   }
+
+  // A no-op methods since a ManualTrigger can only be resumed/paused
+  // using the resume/pause methods on the ManualTrigger.
+  Future<void> onResume() async {}
+  Future<void> onPause() async {}
 }
 
 /// Executes a [DelayedTrigger], i.e. resumes sampling after the specified delay.

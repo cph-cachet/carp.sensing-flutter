@@ -10,8 +10,10 @@ part of context;
 /// The [LocationManager] runs as a background service.
 LocationManager locationManager = LocationManager.instance;
 
-/// Used to get location on request in the [LocationProbe].
-//location.Location locationProvider = new location.Location();
+/// Get the last known position.
+/// If not known, tries to get it from the [Geolocator].
+Future<Position> getLastKnownPosition() async =>
+    await Geolocator.getLastKnownPosition() ?? await Geolocator.getCurrentPosition();
 
 /// Collects location information from the underlying OS's location API.
 /// Is a [DatumProbe] that collects a [LocationDatum] once when used.
@@ -21,14 +23,16 @@ LocationManager locationManager = LocationManager.instance;
 class LocationProbe extends DatumProbe {
   Future<void> onInitialize(Measure measure) async {
     super.onInitialize(measure);
+
     // start the background location manager
+    locationManager.notificationTitle = 'CARP Location Probe';
+    locationManager.notificationMsg = 'CARP location tracking';
     await locationManager.start(askForPermission: false);
   }
 
   // Future<Datum> getDatum() async =>
   //     locationManager.getCurrentLocation().then((dto) => LocationDatum.fromLocationDto(dto));
-  //Future<Datum> getDatum() async =>
-  //    locationProvider.getLocation().then((location) => LocationDatum.fromLocation(location));
+  // using the Geolocator package - seems more stable over long-term sampling.
   Future<Datum> getDatum() async =>
       Geolocator.getCurrentPosition().then((position) => LocationDatum.fromPosition(position));
 }
@@ -46,8 +50,8 @@ class GeoLocationProbe extends StreamProbe {
 
     locationManager.distanceFilter = (measure as LocationMeasure).distance;
     locationManager.interval = (measure as LocationMeasure).frequency.inSeconds;
-    locationManager.notificationTitle = 'CARP Location Probe';
-    locationManager.notificationMsg = 'CARP is tracking your location';
+    locationManager.notificationTitle = (measure as LocationMeasure).notificationTitle;
+    locationManager.notificationMsg = (measure as LocationMeasure).notificationMsg;
 
     await locationManager.start(askForPermission: false);
   }

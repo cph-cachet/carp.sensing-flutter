@@ -6,7 +6,7 @@ class SensingBLoC {
   final String password = "...";
   final String userId = "user@cachet.dk";
   final String uri = "https://cans.cachet.dk:443";
-  final String testStudyId = "#16 - coverage :: using geolocator package";
+  final String testStudyId = "#17 - coverage :: using geolocator package and lastKnowPosition";
 
   final Sensing sensing = Sensing();
   final StudyManager manager = LocalStudyManager();
