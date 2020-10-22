@@ -203,8 +203,9 @@ abstract class AbstractProbe with MeasureListener implements Probe {
 
   /// Mark the latest sampling
   void mark() {
-    if (measure is MarkedMeasure)
+    if (measure is MarkedMeasure) {
       settings.preferences.setString((measure as MarkedMeasure).tag(), DateTime.now().toUtc().toString());
+    }
   }
 
   /// Get the latest mark

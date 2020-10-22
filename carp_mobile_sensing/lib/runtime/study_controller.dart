@@ -92,7 +92,7 @@ class StudyController {
   /// and before [resume] is called.
   Future<void> initialize() async {
     // start getting basic device info.
-    Device.getDeviceInfo();
+    Device();
 
     // setting up permissions
     permissions = await PermissionHandlerPlatform.instance.requestPermissions(SamplingPackageRegistry().permissions);
@@ -109,8 +109,8 @@ class StudyController {
     info('         user : ${study.userId}');
     info('     endpoint : ${study.dataEndPoint}');
     info('  data format : ${study.dataFormat}');
-    info('     platform : ${Device.platform.toString()}');
-    info('    device ID : ${Device.deviceID.toString()}');
+    info('     platform : ${Device().platform.toString()}');
+    info('    device ID : ${Device().deviceID.toString()}');
     info(' data manager : ${dataManager?.toString()}');
     info('  permissions : ${permissions?.toString()}');
 

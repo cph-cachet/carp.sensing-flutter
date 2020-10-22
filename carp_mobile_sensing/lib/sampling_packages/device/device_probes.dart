@@ -31,7 +31,8 @@ class BatteryProbe extends StreamProbe {
         onResume: () => subscription.resume(),
         onCancel: () => subscription.cancel());
 
-    subscription = battery.onBatteryStateChanged.listen(onData, onError: (error) => controller.addError(error), onDone: () => controller.close());
+    subscription = battery.onBatteryStateChanged
+        .listen(onData, onError: (error) => controller.addError(error), onDone: () => controller.close());
 
     return controller.stream;
   }
@@ -82,11 +83,11 @@ class MemoryProbe extends PeriodicDatumProbe {
 /// A probe that collects the device info about this device.
 class DeviceProbe extends DatumProbe {
   Future<Datum> getDatum() async {
-    return DeviceDatum(Device.platform, Device.deviceID,
-        deviceName: Device.deviceName,
-        deviceModel: Device.deviceModel,
-        deviceManufacturer: Device.deviceManufacturer,
-        operatingSystem: Device.operatingSystem,
-        hardware: Device.hardware);
+    return DeviceDatum(Device().platform, Device().deviceID,
+        deviceName: Device().deviceName,
+        deviceModel: Device().deviceModel,
+        deviceManufacturer: Device().deviceManufacturer,
+        operatingSystem: Device().operatingSystem,
+        hardware: Device().hardware);
   }
 }

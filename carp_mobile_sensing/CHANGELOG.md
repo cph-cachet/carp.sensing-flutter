@@ -1,6 +1,8 @@
-## 0.9.4
+## 0.9.4+1
 * fix: issue [#106](https://github.com/cph-cachet/carp.sensing-flutter/issues/106).
 * fix: fix of race condition in `FileDataManager`
+* fix: small error in monthly recurrence in `RecurrentScheduledTrigger`
+* refactor: `Device()` is now a singleton.
 
 ## 0.9.3
 * refactor: all singleton adhering to the [Dart Singleton Pattern](https://scottt2.github.io/design-patterns-in-dart/singleton/).

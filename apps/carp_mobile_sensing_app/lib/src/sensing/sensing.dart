@@ -108,16 +108,16 @@ class LocalStudyManager implements StudyManager {
                       ContextSamplingPackage.ACTIVITY, // ~3 s
                     ],
                   ))
-          // ..addTriggerTask(
-          //     PeriodicTrigger(period: Duration(seconds: 30)),
-          //     AutomaticTask()
-          //       ..measures = SamplingSchema.debug().getMeasureList(
-          //         namespace: NameSpace.CARP,
-          //         types: [
-          //           DeviceSamplingPackage.DEVICE,
-          //           ContextSamplingPackage.LOCATION,
-          //         ],
-          //       ))
+            ..addTriggerTask(
+                PeriodicTrigger(period: Duration(seconds: 30)),
+                AutomaticTask()
+                  ..measures = SamplingSchema.debug().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      DeviceSamplingPackage.DEVICE,
+                      ContextSamplingPackage.LOCATION,
+                    ],
+                  ))
           // ..addTriggerTask(
           //     PeriodicTrigger(period: Duration(minutes: 5)), // 5 min
           //     AutomaticTask()
