@@ -68,5 +68,6 @@ class DeviceSamplingPackage implements SamplingPackage {
 
   SamplingSchema get debug => common
     ..type = SamplingSchemaType.DEBUG
+    ..powerAware = false
     ..name = 'Debug device sampling';
 }

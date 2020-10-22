@@ -80,7 +80,11 @@ void main() {
     });
 
     test('- service', () async {
-      app = new CarpApp(study: study, name: "Test", uri: Uri.parse(uri), oauth: OAuthEndPoint(clientID: clientID, clientSecret: clientSecret));
+      app = new CarpApp(
+          study: study,
+          name: "Test",
+          uri: Uri.parse(uri),
+          oauth: OAuthEndPoint(clientID: clientID, clientSecret: clientSecret));
       CarpService.configure(app);
 
       print('CarpService : ${CarpService.instance.app}');
@@ -118,7 +122,8 @@ void main() {
     // This test fails -- we do not have access to create users with the authenticated user.
     test('- create user', () async {
       int id = random.nextInt(1000);
-      CarpUser new_user = await CarpService.instance.createUser(username: 'user_$id@dtu.dk', password: 'underbar', firstName: 'CACHET User #$id');
+      CarpUser new_user = await CarpService.instance
+          .createUser(username: 'user_$id@dtu.dk', password: 'underbar', firstName: 'CACHET User #$id');
 
       // we expect this call to fail, since we're not authenticated as admin
       assert(new_user == null);
@@ -175,7 +180,8 @@ void main() {
     });
 
     test('- authentication with saved JSON token', () async {
-      CarpUser new_user = await CarpService.instance.authenticateWithToken(username: username, token: OAuthToken.fromJson(tokenAsJson));
+      CarpUser new_user =
+          await CarpService.instance.authenticateWithToken(username: username, token: OAuthToken.fromJson(tokenAsJson));
 
       assert(new_user != null);
       assert(new_user.isAuthenticated);
@@ -187,7 +193,8 @@ void main() {
 
   group('Informed Consent', () {
     test('- create', () async {
-      ConsentDocument uploaded = await CarpService.instance.createConsentDocument({"text": "The original terms text.", "signature": "Image Blob"});
+      ConsentDocument uploaded = await CarpService.instance
+          .createConsentDocument({"text": "The original terms text.", "signature": "Image Blob"});
 
       assert(uploaded != null);
       print(uploaded);
@@ -259,7 +266,10 @@ void main() {
     test(' - add document', () async {
       // is providing userId as the document name
       // if the collection don't exist, it is created (according to David).
-      document = await CarpService.instance.collection(collectionName).document(userId).setData({'email': userId, 'role': 'Administrator'});
+      document = await CarpService.instance
+          .collection(collectionName)
+          .document(userId)
+          .setData({'email': userId, 'role': 'Administrator'});
 
       print(document);
       print(_encode(document.data));
@@ -268,7 +278,10 @@ void main() {
       documentId = document.id;
 
       // create another document
-      await CarpService.instance.collection(collectionName).document(username).setData({'email': username, 'role': 'Participant'});
+      await CarpService.instance
+          .collection(collectionName)
+          .document(username)
+          .setData({'email': username, 'role': 'Participant'});
     });
 
     test(' - update document', () async {
@@ -279,7 +292,10 @@ void main() {
       print(_encode(original.data));
 
       // updating the role to super user
-      DocumentSnapshot updated = await CarpService.instance.collection(collectionName).document(document.name).updateData({'email': userId, 'role': 'Super User'});
+      DocumentSnapshot updated = await CarpService.instance
+          .collection(collectionName)
+          .document(document.name)
+          .updateData({'email': userId, 'role': 'Super User'});
 
       print('----------- updated -------------');
       print(updated);
@@ -299,7 +315,8 @@ void main() {
     });
 
     test(' - get document by path', () async {
-      DocumentSnapshot newDocument = await CarpService.instance.collection(collectionName).document(document.name).get();
+      DocumentSnapshot newDocument =
+          await CarpService.instance.collection(collectionName).document(document.name).get();
       print((newDocument));
       assert(newDocument.id == document.id);
     });
@@ -312,7 +329,8 @@ void main() {
       print(_encode(document.data));
 
       print('----------- renamed document -------------');
-      DocumentSnapshot renamed_document = await CarpService.instance.collection(collectionName).document(document.name).rename('new_name');
+      DocumentSnapshot renamed_document =
+          await CarpService.instance.collection(collectionName).document(document.name).rename('new_name');
       print(renamed_document);
       print(_encode(renamed_document.data));
 
@@ -349,8 +367,12 @@ void main() {
     test(' - add document in nested collections', () async {
       // is not providing an document id, so this should create a new document
       // if the collection don't exist, it is created (according to David).
-      DocumentSnapshot newDocument =
-          await CarpService.instance.collection(collectionName).document(userId).collection('activities').document('cooking').setData({'what': 'breakfast', 'time': 'morning'});
+      DocumentSnapshot newDocument = await CarpService.instance
+          .collection(collectionName)
+          .document(userId)
+          .collection('activities')
+          .document('cooking')
+          .setData({'what': 'breakfast', 'time': 'morning'});
 
       print(newDocument);
       assert(newDocument.id > 0);
@@ -359,7 +381,12 @@ void main() {
 
     test(' - get nested document', () async {
       assert(document != null);
-      DocumentSnapshot newDocument = await CarpService.instance.collection(collectionName).document(userId).collection('activities').document('cooking').get();
+      DocumentSnapshot newDocument = await CarpService.instance
+          .collection(collectionName)
+          .document(userId)
+          .collection('activities')
+          .document('cooking')
+          .get();
 
       print(newDocument);
       print(newDocument.snapshot);
@@ -374,7 +401,10 @@ void main() {
       CarpService.instance.currentUser.token.expire();
 
       print('trying to upload a document w/o a name...');
-      DocumentSnapshot d = await CarpService.instance.collection(collectionName).document().setData({'email': username, 'name': 'Administrator'});
+      DocumentSnapshot d = await CarpService.instance
+          .collection(collectionName)
+          .document()
+          .setData({'email': username, 'name': 'Administrator'});
 
       assert(d.id > 0);
       print(d);
@@ -472,7 +502,8 @@ void main() {
       });
     });
     test(" - list all nested documents in 'patients/s174238@student.dtu.dk/chapters' collection", () async {
-      List<DocumentSnapshot> documents = await CarpService.instance.collection('patients/s174238@student.dtu.dk/chapters').documents;
+      List<DocumentSnapshot> documents =
+          await CarpService.instance.collection('patients/s174238@student.dtu.dk/chapters').documents;
       documents.forEach((doc) {
         print(doc);
         doc.collections.forEach((col) => print(col));
@@ -486,7 +517,9 @@ void main() {
     test('- upload', () async {
       final File myFile = File("test/img.jpg");
 
-      final FileUploadTask uploadTask = CarpService.instance.getFileStorageReference().upload(myFile, {'content-type': 'image/jpg', 'content-language': 'en', 'activity': 'test'});
+      final FileUploadTask uploadTask = CarpService.instance
+          .getFileStorageReference()
+          .upload(myFile, {'content-type': 'image/jpg', 'content-language': 'en', 'activity': 'test'});
 
       assert(uploadTask != null);
 
@@ -542,48 +575,4 @@ void main() {
       print('result : $result');
     });
   }, skip: true);
-
-  group("Deployment", () {
-    DeploymentReference deploymentReference;
-
-    setUpAll(() async {
-      deploymentReference = CarpService.instance.deployment();
-    });
-
-    test('- get invitations for this account (user)', () async {
-      List<ActiveParticipationInvitation> invitations = await CarpService.instance.invitations();
-      invitations.forEach((invitation) => print(invitation));
-      //assert(invitations.length > 0);
-    }, skip: false);
-
-    test('- get deployment status', () async {
-      StudyDeploymentStatus status = await deploymentReference.status();
-      print(_encode(status.toJson()));
-      print(status);
-      expect(status.studyDeploymentId, study.deploymentId);
-    }, skip: false);
-
-    test('- register device', () async {
-      StudyDeploymentStatus status = await deploymentReference.registerDevice(deviceRoleName: 'phone');
-      print(status);
-      expect(status.studyDeploymentId, study.deploymentId);
-    }, skip: true);
-
-    test('- get master device deployment', () async {
-      MasterDeviceDeployment deployment = await deploymentReference.get();
-      //expect(deployment.studyDeploymentId, study.deploymentId);
-    }, skip: true);
-
-    test('- deployment success', () async {
-      StudyDeploymentStatus status = await deploymentReference.success();
-      print(status);
-      expect(status.studyDeploymentId, study.deploymentId);
-    }, skip: true);
-
-    test('- unregister device', () async {
-      StudyDeploymentStatus status = await deploymentReference.unRegisterDevice('phone');
-      print(status);
-      expect(status.studyDeploymentId, study.deploymentId);
-    }, skip: true);
-  }, skip: false);
 }

@@ -10,8 +10,7 @@ part of context;
 /// Holds location information using the GPS format.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class LocationDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, ContextSamplingPackage.LOCATION);
+  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, ContextSamplingPackage.LOCATION);
 
   DataFormat get format => CARP_DATA_FORMAT;
 
@@ -28,8 +27,29 @@ class LocationDatum extends CARPDatum {
         time = DateTime.fromMillisecondsSinceEpoch(dto.time.toInt()),
         super();
 
-  factory LocationDatum.fromJson(Map<String, dynamic> json) =>
-      _$LocationDatumFromJson(json);
+  // LocationDatum.fromLocation(location.LocationData location)
+  //     : latitude = location.latitude,
+  //       longitude = location.longitude,
+  //       altitude = location.altitude,
+  //       accuracy = location.accuracy,
+  //       speed = location.speed,
+  //       speedAccuracy = location.speedAccuracy,
+  //       heading = location.heading,
+  //       time = DateTime.fromMillisecondsSinceEpoch(location.time.toInt()),
+  //       super();
+
+  LocationDatum.fromPosition(Position position)
+      : latitude = position.latitude,
+        longitude = position.longitude,
+        altitude = position.altitude,
+        accuracy = position.accuracy,
+        speed = position.speed,
+        speedAccuracy = position.speedAccuracy,
+        heading = position.heading,
+        time = position.timestamp,
+        super();
+
+  factory LocationDatum.fromJson(Map<String, dynamic> json) => _$LocationDatumFromJson(json);
 
   Map<String, dynamic> toJson() => _$LocationDatumToJson(this);
 
@@ -65,11 +85,11 @@ class LocationDatum extends CARPDatum {
   String toString() =>
       super.toString() +
       'latitude: $latitude, '
-      'longitude: $longitude, '
-      'accuracy; $accuracy, '
-      'altitude: $altitude, '
-      'speed: $speed, '
-      'speed_accuracy: $speedAccuracy, '
-      'heading: $heading, '
-      'time: $time';
+          'longitude: $longitude, '
+          'accuracy; $accuracy, '
+          'altitude: $altitude, '
+          'speed: $speed, '
+          'speed_accuracy: $speedAccuracy, '
+          'heading: $heading, '
+          'time: $time';
 }

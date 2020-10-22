@@ -131,7 +131,6 @@ Map<String, dynamic> _$DeploymentSuccessfulToJson(
 ActiveParticipationInvitation _$ActiveParticipationInvitationFromJson(
     Map<String, dynamic> json) {
   return ActiveParticipationInvitation()
-    ..$type = json[r'$type'] as String
     ..participation = json['participation'] == null
         ? null
         : Participation.fromJson(json['participation'] as Map<String, dynamic>)
@@ -147,9 +146,7 @@ ActiveParticipationInvitation _$ActiveParticipationInvitationFromJson(
 
 Map<String, dynamic> _$ActiveParticipationInvitationToJson(
     ActiveParticipationInvitation instance) {
-  final val = <String, dynamic>{
-    r'$type': instance.$type,
-  };
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -165,16 +162,13 @@ Map<String, dynamic> _$ActiveParticipationInvitationToJson(
 
 Participation _$ParticipationFromJson(Map<String, dynamic> json) {
   return Participation()
-    ..$type = json[r'$type'] as String
     ..studyDeploymentId = json['studyDeploymentId'] as String
     ..id = json['id'] as String
     ..isRegistered = json['isRegistered'] as bool;
 }
 
 Map<String, dynamic> _$ParticipationToJson(Participation instance) {
-  final val = <String, dynamic>{
-    r'$type': instance.$type,
-  };
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -190,16 +184,13 @@ Map<String, dynamic> _$ParticipationToJson(Participation instance) {
 
 StudyInvitation _$StudyInvitationFromJson(Map<String, dynamic> json) {
   return StudyInvitation()
-    ..$type = json[r'$type'] as String
     ..name = json['name'] as String
     ..description = json['description'] as String
     ..applicationData = json['applicationData'] as String;
 }
 
 Map<String, dynamic> _$StudyInvitationToJson(StudyInvitation instance) {
-  final val = <String, dynamic>{
-    r'$type': instance.$type,
-  };
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -239,7 +230,6 @@ Map<String, dynamic> _$DeviceInvitationToJson(DeviceInvitation instance) {
 MasterDeviceDeployment _$MasterDeviceDeploymentFromJson(
     Map<String, dynamic> json) {
   return MasterDeviceDeployment()
-    ..$type = json[r'$type'] as String
     ..configuration = json['configuration'] == null
         ? null
         : DeviceRegistration.fromJson(
@@ -257,31 +247,20 @@ MasterDeviceDeployment _$MasterDeviceDeploymentFromJson(
               ? null
               : DeviceRegistration.fromJson(e as Map<String, dynamic>)),
     )
-    ..tasks = (json['tasks'] as List)
-        ?.map((e) => e == null
-            ? null
-            : TaskDescriptor.fromJson(e as Map<String, dynamic>))
-        ?.toList()
+    ..tasks =
+        (json['tasks'] as List)?.map((e) => e as Map<String, dynamic>)?.toList()
     ..triggers = (json['triggers'] as Map<String, dynamic>)?.map(
-      (k, e) => MapEntry(
-          k,
-          e == null
-              ? null
-              : TriggerDescriptor.fromJson(e as Map<String, dynamic>)),
+      (k, e) => MapEntry(k, e as Map<String, dynamic>),
     )
     ..triggeredTasks = (json['triggeredTasks'] as List)
-        ?.map((e) => e == null
-            ? null
-            : TriggeredTask.fromJson(e as Map<String, dynamic>))
+        ?.map((e) => e as Map<String, dynamic>)
         ?.toList()
     ..lastUpdateDate = json['lastUpdateDate'] as int;
 }
 
 Map<String, dynamic> _$MasterDeviceDeploymentToJson(
     MasterDeviceDeployment instance) {
-  final val = <String, dynamic>{
-    r'$type': instance.$type,
-  };
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -379,7 +358,6 @@ Map<String, dynamic> _$TriggerDescriptorToJson(TriggerDescriptor instance) {
 
 TriggeredTask _$TriggeredTaskFromJson(Map<String, dynamic> json) {
   return TriggeredTask()
-    ..$type = json[r'$type'] as String
     ..task = json['task'] == null
         ? null
         : TaskDescriptor.fromJson(json['task'] as Map<String, dynamic>)
@@ -390,9 +368,7 @@ TriggeredTask _$TriggeredTaskFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$TriggeredTaskToJson(TriggeredTask instance) {
-  final val = <String, dynamic>{
-    r'$type': instance.$type,
-  };
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -416,9 +392,7 @@ StudyDeploymentStatus _$StudyDeploymentStatusFromJson(
             ? null
             : DeviceDeploymentStatus.fromJson(e as Map<String, dynamic>))
         ?.toList()
-    ..startTime = json['startTime'] == null
-        ? null
-        : DateTime.parse(json['startTime'] as String);
+    ..startTime = json['startTime'] as int;
 }
 
 Map<String, dynamic> _$StudyDeploymentStatusToJson(
@@ -435,7 +409,7 @@ Map<String, dynamic> _$StudyDeploymentStatusToJson(
 
   writeNotNull('studyDeploymentId', instance.studyDeploymentId);
   writeNotNull('devicesStatus', instance.devicesStatus);
-  writeNotNull('startTime', instance.startTime?.toIso8601String());
+  writeNotNull('startTime', instance.startTime);
   return val;
 }
 

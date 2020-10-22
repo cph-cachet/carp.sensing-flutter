@@ -16,7 +16,8 @@ typedef DatumStreamTransformer = Stream<Datum> Function(Stream<Datum>);
 Datum noop(Datum data) => data;
 
 class TransformerSchemaRegistry {
-  static final TransformerSchemaRegistry _instance = TransformerSchemaRegistry._();
+  static final TransformerSchemaRegistry _instance =
+      TransformerSchemaRegistry._();
 
   /// The map between the namespace of a transformer schema and the schema.
   Map<String, TransformerSchema> get schemas => _schemas;
@@ -67,7 +68,8 @@ abstract class TransformerSchema {
   void onRegister();
 
   /// Add a transformer to this schema based on its type mapped to its [DataType].
-  void add(String type, DatumTransformer transformer) => transformers[type] = transformer;
+  void add(String type, DatumTransformer transformer) =>
+      transformers[type] = transformer;
 
   /// Transform the [data] according to the transformer for its type.
   Datum transform(Datum data) {

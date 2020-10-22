@@ -29,6 +29,14 @@ class LocationMeasure extends PeriodicMeasure {
   /// Specify 0 when you want to be notified of all movements. The default is 0.
   double distance = 0;
 
+  /// The title of the notification to be shown to the user when
+  /// location tracking takes place in the background.
+  String notificationTitle = 'CARP Location Probe';
+
+  /// The message in the notification to be shown to the user when
+  /// location tracking takes place in the background.
+  String notificationMsg = 'CARP location tracking';
+
   LocationMeasure(
     MeasureType type, {
     String name,
@@ -37,18 +45,13 @@ class LocationMeasure extends PeriodicMeasure {
     Duration duration,
     this.accuracy = GeolocationAccuracy.best,
     this.distance = 0,
-  })
-      : super(type,
-            name: name,
-            enabled: enabled,
-            frequency: frequency,
-            duration: duration);
+    this.notificationTitle,
+    this.notificationMsg,
+  }) : super(type, name: name, enabled: enabled, frequency: frequency, duration: duration);
 
   static Function get fromJsonFunction => _$LocationMeasureFromJson;
-
-  factory LocationMeasure.fromJson(Map<String, dynamic> json) => FromJsonFactory
-      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
-
+  factory LocationMeasure.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$LocationMeasureToJson(this);
 
   String toString() => super.toString() + ', accuracy: $accuracy';

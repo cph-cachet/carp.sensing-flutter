@@ -8,7 +8,7 @@
 part of sensors;
 
 /// The [LightProbe] listens to the phone's light sensor typically located near the front camera.
-/// Every value is in the SI unit Lux and will be stored in a [LightDatum] object.
+/// Every value is in the SI unit Lux and is stored in a [LightDatum] object.
 class LightProbe extends BufferingPeriodicStreamProbe {
   List<num> luxValues = [];
 

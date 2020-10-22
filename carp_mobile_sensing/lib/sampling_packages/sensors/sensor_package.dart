@@ -81,7 +81,7 @@ class SensorSamplingPackage implements SamplingPackage {
   SamplingSchema get debug => SamplingSchema()
     ..type = SamplingSchemaType.COMMON
     ..name = 'Common (default) sensor sampling schema'
-    ..powerAware = true
+    ..powerAware = false
     ..measures.addEntries([
       MapEntry(
           ACCELEROMETER,

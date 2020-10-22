@@ -1,6 +1,6 @@
 name: carp_context_package
 description: CARP context sampling package. Samples location, mobility, activity, weather, air-quality, and geofence.
-version: 0.9.3
+version: 0.9.4
 author:  CACHET Team <cph.cachet@gmail.com>
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/packages/carp_context_package
 
@@ -14,11 +14,12 @@ dependencies:
   carp_mobile_sensing: ^0.9.3
   weather: ^1.2.2
   air_quality: ^1.2.1
-  activity_recognition_flutter: ^1.0.3 # our own
+  activity_recognition_flutter: ^1.2.0 # our own
   openmhealth_schemas: ^0.1.4+1
   mobility_features: ^2.0.5
   permission_handler: ^5.0.1+1
   carp_background_location: ^1.0.1+1
+  geolocator: ^6.1.0
 
 # Overriding carp libraries to use the local copy
 # Remove this before release of package

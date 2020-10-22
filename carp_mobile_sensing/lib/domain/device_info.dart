@@ -7,6 +7,8 @@
 
 part of domain;
 
+//TODO - make this a singleton class -- e.g. Device().deviceID
+
 /// Provides (static) information about the local device.
 ///
 /// This class is a singleton that one time access the information from the
