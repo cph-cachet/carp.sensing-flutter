@@ -343,7 +343,7 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
           // we have a trigger of the following type: collect quarterly on the 11th day of the first month in each quarter at 21:30
           //   RecurrentScheduledTrigger(type: RecurrentType.monthly, dayOfMonth: 11, separationCount: 2, time: Time(hour: 21, minute: 30));
           int days = dayOfMonth - now.day;
-          int month = (days > 0) ? now.month + separationCount : now.month + separationCount - 1;
+          int month = (days > 0) ? now.month + separationCount : now.month + separationCount + 1;
           int year = now.year;
           if (month > 12) {
             year = now.year + 1;
