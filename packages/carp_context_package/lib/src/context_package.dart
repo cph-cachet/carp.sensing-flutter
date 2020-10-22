@@ -68,7 +68,7 @@ class ContextSamplingPackage implements SamplingPackage {
     TransformerSchemaRegistry().lookup(NameSpace.OMH).add(ACTIVITY, OMHPhysicalActivityDatum.transformer);
   }
 
-  List<Permission> get permissions => [Permission.location, Permission.sensors];
+  List<Permission> get permissions => [Permission.locationAlways, Permission.sensors, Permission.activityRecognition];
 
   SamplingSchema get common => SamplingSchema()
     ..type = SamplingSchemaType.COMMON

@@ -14,7 +14,7 @@ dependencies:
   carp_mobile_sensing: ^0.9.3
   weather: ^1.2.2
   air_quality: ^1.2.1
-  activity_recognition_flutter: ^1.0.3 # our own
+  activity_recognition_flutter: ^1.2.0 # our own
   openmhealth_schemas: ^0.1.4+1
   mobility_features: ^2.0.5
   permission_handler: ^5.0.1+1

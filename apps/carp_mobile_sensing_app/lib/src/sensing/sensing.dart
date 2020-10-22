@@ -99,45 +99,45 @@ class LocalStudyManager implements StudyManager {
                       AudioSamplingPackage.NOISE, // 60 s
                     ],
                   ))
-            // ..addTriggerTask(
-            //     ImmediateTrigger(),
-            //     AutomaticTask()
-            //       ..measures = SamplingSchema.debug().getMeasureList(
-            //         namespace: NameSpace.CARP,
-            //         types: [
-            //           ContextSamplingPackage.GEOLOCATION, // ~3 s
-            //         ],
-            //       ))
             ..addTriggerTask(
-                PeriodicTrigger(period: Duration(seconds: 30)),
+                ImmediateTrigger(),
                 AutomaticTask()
                   ..measures = SamplingSchema.debug().getMeasureList(
                     namespace: NameSpace.CARP,
                     types: [
-                      DeviceSamplingPackage.DEVICE,
-                      ContextSamplingPackage.LOCATION,
+                      ContextSamplingPackage.ACTIVITY, // ~3 s
                     ],
                   ))
-            // ..addTriggerTask(
-            //     PeriodicTrigger(period: Duration(minutes: 5)), // 5 min
-            //     AutomaticTask()
-            //       ..measures = SamplingSchema.debug().getMeasureList(
-            //         namespace: NameSpace.CARP,
-            //         types: [
-            //           AppsSamplingPackage.APP_USAGE,
-            //         ],
-            //       ))
-            ..addTriggerTask(
-                PeriodicTrigger(period: Duration(minutes: 5)), // 10 min
-                //PeriodicTrigger(period: Duration(seconds: 30)),
-                AutomaticTask()
-                  ..measures = SamplingSchema.debug().getMeasureList(
-                    namespace: NameSpace.CARP,
-                    types: [
-                      ContextSamplingPackage.WEATHER,
-                      ContextSamplingPackage.AIR_QUALITY,
-                    ],
-                  ))
+          // ..addTriggerTask(
+          //     PeriodicTrigger(period: Duration(seconds: 30)),
+          //     AutomaticTask()
+          //       ..measures = SamplingSchema.debug().getMeasureList(
+          //         namespace: NameSpace.CARP,
+          //         types: [
+          //           DeviceSamplingPackage.DEVICE,
+          //           ContextSamplingPackage.LOCATION,
+          //         ],
+          //       ))
+          // ..addTriggerTask(
+          //     PeriodicTrigger(period: Duration(minutes: 5)), // 5 min
+          //     AutomaticTask()
+          //       ..measures = SamplingSchema.debug().getMeasureList(
+          //         namespace: NameSpace.CARP,
+          //         types: [
+          //           AppsSamplingPackage.APP_USAGE,
+          //         ],
+          //       ))
+          // ..addTriggerTask(
+          //     PeriodicTrigger(period: Duration(minutes: 5)), // 10 min
+          //     //PeriodicTrigger(period: Duration(seconds: 30)),
+          //     AutomaticTask()
+          //       ..measures = SamplingSchema.debug().getMeasureList(
+          //         namespace: NameSpace.CARP,
+          //         types: [
+          //           ContextSamplingPackage.WEATHER,
+          //           ContextSamplingPackage.AIR_QUALITY,
+          //         ],
+          //       ))
           //
           ;
     }

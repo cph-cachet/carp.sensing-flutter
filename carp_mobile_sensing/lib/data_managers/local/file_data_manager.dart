@@ -124,17 +124,23 @@ class FileDataManager extends AbstractDataManager {
     final json = jsonEncode(_datapoint);
 
     await sink.then((_s) {
-      _s.write(json);
-      _s.write('\n,\n'); // write a ',' to separate json objects in the list
-      debug('Writing to file : ${data.toString()}');
+      try {
+        _s.write(json);
+        _s.write('\n,\n'); // write a ',' to separate json objects in the list
+        debug('Writing to file : ${data.toString()}');
 
-      file.then((_f) {
-        _f.length().then((len) {
-          if (len > _fileDataEndPoint.bufferSize) {
-            flush(_f, _s);
-          }
+        file.then((_f) {
+          _f.length().then((len) {
+            if (len > _fileDataEndPoint.bufferSize) {
+              flush(_f, _s);
+            }
+          });
         });
-      });
+      } catch (err) {
+        debug(err);
+        _initialized = false;
+        return write(data);
+      }
     });
 
     return true;
@@ -194,6 +200,7 @@ class FileDataManager extends AbstractDataManager {
   }
 
   Future close() async {
+    _initialized = false;
     await file.then((_f) {
       sink.then((_s) {
         flush(_f, _s);

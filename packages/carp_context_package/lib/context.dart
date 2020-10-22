@@ -58,5 +58,5 @@ part 'package:carp_context_package/src/mobility/mobility_measure.dart';
 
 part 'context.g.dart';
 
-/// auto generate code with:
-/// flutter pub run build_runner build --delete-conflicting-outputs
+/// auto generate json code (.g files) with:
+///   flutter pub run build_runner build --delete-conflicting-outputs

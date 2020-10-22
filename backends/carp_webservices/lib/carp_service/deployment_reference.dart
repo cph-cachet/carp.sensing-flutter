@@ -85,6 +85,16 @@ class DeploymentReference extends CarpReference {
   }) async {
     assert(deviceRoleName != null && deviceRoleName.length > 0,
         'deviceRoleName has to be specified when registering a device in CARP.');
+
+    // Set device ID
+    // TODO - use the phone device ID - but note that this will affect the unit tests, which does not run on a phone.
+    // DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+    // deviceId = (Platform.isAndroid)
+    //     ? await deviceInfoPlugin.androidInfo.then((val) => val.androidId)
+    //     : await deviceInfoPlugin.iosInfo.then((val) => val.identifierForVendor);
+    // TODO - use the CAMS Device class
+    // Device.deviceID;
+
     deviceId ??= Uuid().v4().toString();
     //this.deviceRoleName = deviceRoleName;
     //this.deviceId = deviceId;
