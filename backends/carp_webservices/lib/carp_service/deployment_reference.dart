@@ -32,8 +32,18 @@ class DeploymentReference extends CarpReference {
   /// The role name of this device as specified in the [deployment] protocol.
   //String deviceRoleName;
 
+  String _deviceId;
+
   /// A unique id for this device as registered at CARP.
-  String deviceId;
+  ///
+  /// Uses the phone's unique hardware id, if available.
+  /// Otherwise uses a v4 UUID.
+  String get deviceId {
+    if (_deviceId == null) {
+      _deviceId = Device().deviceID ?? Uuid().v4().toString();
+    }
+    return _deviceId;
+  }
 
   DeploymentReference._(CarpService service) : super._(service);
 
@@ -86,18 +96,8 @@ class DeploymentReference extends CarpReference {
     assert(deviceRoleName != null && deviceRoleName.length > 0,
         'deviceRoleName has to be specified when registering a device in CARP.');
 
-    // Set device ID
-    // TODO - use the phone device ID - but note that this will affect the unit tests, which does not run on a phone.
-    // DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
-    // deviceId = (Platform.isAndroid)
-    //     ? await deviceInfoPlugin.androidInfo.then((val) => val.androidId)
-    //     : await deviceInfoPlugin.iosInfo.then((val) => val.identifierForVendor);
-    // TODO - use the CAMS Device class
-    // Device.deviceID;
-
-    deviceId ??= Uuid().v4().toString();
-    //this.deviceRoleName = deviceRoleName;
-    //this.deviceId = deviceId;
+    // Set device ID, if provided
+    if (deviceId != null) _deviceId = deviceId;
     _status = StudyDeploymentStatus.fromJson(
         await _rpc(RegisterDevice(studyDeploymentId, deviceRoleName, DeviceRegistration(deviceId))));
     return _status;
