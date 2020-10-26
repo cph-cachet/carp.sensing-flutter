@@ -40,12 +40,15 @@ class Device {
 
     try {
       if (Platform.isAndroid) {
-        deviceData = _readAndroidDeviceInfo(await _deviceInfoPlugin.androidInfo);
+        deviceData =
+            _readAndroidDeviceInfo(await _deviceInfoPlugin.androidInfo);
       } else if (Platform.isIOS) {
         deviceData = _readIosDeviceInfo(await _deviceInfoPlugin.iosInfo);
       }
     } on PlatformException {
-      deviceData = <String, dynamic>{'Error:': 'Failed to get platform version.'};
+      deviceData = <String, dynamic>{
+        'Error:': 'Failed to get platform version.'
+      };
     }
     deviceData = _deviceData;
   }

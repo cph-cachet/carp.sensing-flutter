@@ -72,7 +72,6 @@ class CarpService {
   /// Configure the default instance of the [CarpService].
   static Future<CarpService> configure(CarpApp app) async {
     _instance = new CarpService._(app);
-    Device().deviceID;
     return _instance;
   }
 

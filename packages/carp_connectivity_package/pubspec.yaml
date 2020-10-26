@@ -12,7 +12,8 @@ dependencies:
     sdk: flutter
   json_annotation: ^3.0.0
   carp_mobile_sensing: ^0.9.3
-  connectivity: '>=0.4.8 <2.0.0'
+  connectivity: ^1.0.0
+  #wifi_info_flutter: ^1.0.0
   flutter_blue: ^0.7.0     # For bluetooth scan
 
 # Overriding carp libraries to use the local copy

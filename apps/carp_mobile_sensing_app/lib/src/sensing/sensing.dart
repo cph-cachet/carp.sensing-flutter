@@ -93,7 +93,7 @@ class LocalStudyManager implements StudyManager {
                     namespace: NameSpace.CARP,
                     types: [
                       SensorSamplingPackage.LIGHT, // 10 s
-                      //ConnectivitySamplingPackage.BLUETOOTH, // 60 s
+                      ConnectivitySamplingPackage.CONNECTIVITY,
                       ConnectivitySamplingPackage.WIFI, // 60 s
                       DeviceSamplingPackage.MEMORY, // 60 s
                       AudioSamplingPackage.NOISE, // 60 s
