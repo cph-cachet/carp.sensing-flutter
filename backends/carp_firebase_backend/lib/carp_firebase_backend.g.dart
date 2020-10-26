@@ -52,8 +52,8 @@ FirebaseDatabaseDataEndPoint _$FirebaseDatabaseDataEndPointFromJson(
   return FirebaseDatabaseDataEndPoint(
     json['firebase_end_point'] == null
         ? null
-        : FirebaseEndPoint.fromJson(
-            json['firebase_end_point'] as Map<String, dynamic>),
+        : FirebaseEndPoint
+            .fromJson(json['firebase_end_point'] as Map<String, dynamic>),
     collection: json['collection'] as String,
   )
     ..$type = json[r'$type'] as String
@@ -82,8 +82,8 @@ FirebaseStorageDataEndPoint _$FirebaseStorageDataEndPointFromJson(
   return FirebaseStorageDataEndPoint(
     json['firebase_end_point'] == null
         ? null
-        : FirebaseEndPoint.fromJson(
-            json['firebase_end_point'] as Map<String, dynamic>),
+        : FirebaseEndPoint
+            .fromJson(json['firebase_end_point'] as Map<String, dynamic>),
     path: json['path'] as String,
     bufferSize: json['buffer_size'],
     zip: json['zip'],

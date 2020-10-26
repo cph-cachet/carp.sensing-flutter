@@ -249,6 +249,8 @@ Please file feature requests and bug reports at the [issue tracker][tracker].
 
 ## License
 
-This software is copyright (c) 2018 [Copenhagen Center for Health Technology (CACHET)](http://www.cachet.dk/) at the [Technical University of Denmark (DTU)](http://www.dtu.dk).
-This software is made available 'as-is' in a MIT [license](/LICENSE).
+This software is copyright (c) [Copenhagen Center for Health Technology (CACHET)](https://www.cachet.dk/) 
+at the [Technical University of Denmark (DTU)](https://www.dtu.dk).
+This software is available 'as-is' under a [MIT license](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/backends/carp_firebase_backend/LICENSE).
+
 

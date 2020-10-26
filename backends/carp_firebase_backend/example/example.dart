@@ -15,8 +15,12 @@ void main() {
       email: "some_email@dtu.dk",
       password: "some_password");
 
-  final FirebaseStorageDataEndPoint storageEndPoint = new FirebaseStorageDataEndPoint(firebaseEndPoint_1,
-      path: 'sensing/data', bufferSize: 500 * 1000, zip: true, encrypt: false);
+  final FirebaseStorageDataEndPoint storageEndPoint =
+      new FirebaseStorageDataEndPoint(firebaseEndPoint_1,
+          path: 'sensing/data',
+          bufferSize: 500 * 1000,
+          zip: true,
+          encrypt: false);
 
   Study study_1 = new Study("1234", "user_1@dtu.dk", name: "Test study #1");
   study_1.dataEndPoint = storageEndPoint;
@@ -33,7 +37,8 @@ void main() {
       firebaseAuthenticationMethod: FireBaseAuthenticationMethods.GOOGLE);
 
   final FirebaseDatabaseDataEndPoint databaseEndPoint =
-      new FirebaseDatabaseDataEndPoint(firebaseEndPoint_2, collection: 'carp_data');
+      new FirebaseDatabaseDataEndPoint(firebaseEndPoint_2,
+          collection: 'carp_data');
 
   Study study_2 = new Study("5678", "user_2@dtu.dk", name: "Test study #2");
   study_2.dataEndPoint = databaseEndPoint;

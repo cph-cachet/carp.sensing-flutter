@@ -13,7 +13,7 @@ For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter
 ## Setup
 
 1. You need a CARP Web Service host running. See the [CARP Web Service API](https://github.com/cph-cachet/carp.webservices-docker) 
-documentation for how to do this. If you're part of the [CACHET](http://www.cachet.dk/) team, you can use the specified 
+documentation for how to do this. If you're part of the [CACHET](https://www.cachet.dk/) team, you can use the specified 
 test, staging, and production servers.
 
 1. Add `carp_services` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/).
@@ -32,7 +32,7 @@ Note that a valid [`Study`](https://pub.dev/documentation/carp_mobile_sensing/la
 with a valid **Study ID** and **Deployment ID** is needed.
 
 ````dart
-final String uri = "http://staging.carp.cachet.dk:8080";
+final String uri = "https://staging.carp.cachet.dk:8080";
 final String testDeploymentId = "d246170c-515e";
 final String testStudyId = "64c1784d-52d1-4c3d";
 
@@ -176,7 +176,7 @@ on a CARP web service and have methods for:
 ### File Management
 
 A [`FileStorageReference`](https://pub.dartlang.org/documentation/carp_webservices/latest/carp_services/FileStorageReference-class.html)
- is used to manage [files](http://staging.carp.cachet.dk:8080/swagger-ui.html#/file-controller) on a CARP web service and have methods for:
+ is used to manage files on a CARP web service and have methods for:
 
 * uploading a file
 * downloading a file
@@ -250,6 +250,6 @@ Please file feature requests and bug reports at the [issue tracker][tracker].
 
 ## License
 
-This software is copyright (c) 2018 [Copenhagen Center for Health Technology (CACHET)](http://www.cachet.dk/) at the [Technical University of Denmark (DTU)](http://www.dtu.dk).
+This software is copyright (c) [Copenhagen Center for Health Technology (CACHET)](https://www.cachet.dk/) at the [Technical University of Denmark (DTU)](https://www.dtu.dk).
 This software is made available 'as-is' in a MIT [license](/LICENSE).
 

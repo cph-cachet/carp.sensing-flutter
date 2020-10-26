@@ -84,6 +84,11 @@ void main() {
       print(" - signed in as: $user");
     }, skip: false);
 
+    test('- device ID', () async {
+      String id = CarpService.instance.deployment().deviceId;
+      print('Device ID : $id');
+    }, skip: false);
+
     test('- get invitations for this account (user)', () async {
       List<ActiveParticipationInvitation> invitations = await CarpService.instance.invitations();
       invitations.forEach((invitation) => print(invitation));

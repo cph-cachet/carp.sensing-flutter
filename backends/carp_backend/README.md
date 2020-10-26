@@ -10,10 +10,11 @@ For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter
 
 Upload of sensing data to the CARP web service can be done in four different ways:
 
-* as [CARP data points](http://staging.carp.cachet.dk:8080/swagger-ui.html#/data-point-controller)
-* as a CARP object in a [collection](http://staging.carp.cachet.dk:8080/swagger-ui.html#/collection-controller)
-* as a file to the CARP [file store](http://staging.carp.cachet.dk:8080/swagger-ui.html#/file-controller)
-* [batch upload](http://staging.carp.cachet.dk:8080/swagger-ui.html#/data-point-controller)
+* as individual CARP data points
+* as a batch upload of a file with multiple CARP data points
+* as a CARP object in a collection
+* as a file to the CARP file store
+
 ## Using the Plugin
 
 Add `carp_backend` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/) 
@@ -36,7 +37,7 @@ DataManagerRegistry().register(DataEndPointType.CARP, new CarpDataManager());
 
 ### 2. Create a CARP Data Endpoint 
 
-Create a `CarpDataEndPoint` that specify which method to use for upload of data, and the details. 
+Create a `CarpDataEndPoint` that specify which method to use for uploading data, and the details. 
 Upload methods are defined in the `CarpUploadMethod` class.
 
 For example, a `CarpDataEndPoint` that upload data points directly looks like this:
@@ -104,6 +105,6 @@ Please file feature requests and bug reports at the [issue tracker][tracker].
 
 ## License
 
-This software is copyright (c) 2018 [Copenhagen Center for Health Technology (CACHET)](http://www.cachet.dk/) at the [Technical University of Denmark (DTU)](http://www.dtu.dk).
+This software is copyright (c) [Copenhagen Center for Health Technology (CACHET)](https://www.cachet.dk/) at the [Technical University of Denmark (DTU)](https://www.dtu.dk).
 This software is made available 'as-is' in a MIT [license](/LICENSE).
 

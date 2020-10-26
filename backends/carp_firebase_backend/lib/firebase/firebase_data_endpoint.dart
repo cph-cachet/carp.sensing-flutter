@@ -64,7 +64,8 @@ class FirebaseEndPoint {
       : super();
 
   static Function get fromJsonFunction => _$FirebaseEndPointFromJson;
-  factory FirebaseEndPoint.fromJson(Map<String, dynamic> json) => _$FirebaseEndPointFromJson(json);
+  factory FirebaseEndPoint.fromJson(Map<String, dynamic> json) =>
+      _$FirebaseEndPointFromJson(json);
   Map<String, dynamic> toJson() => _$FirebaseEndPointToJson(this);
 }
 
@@ -77,7 +78,8 @@ abstract class FirebaseDataEndPoint {
 ///
 /// See [Cloud Firestore](https://firebase.google.com/docs/firestore) for description of the Firebase cloud database.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class FirebaseDatabaseDataEndPoint extends DataEndPoint with FirebaseDataEndPoint {
+class FirebaseDatabaseDataEndPoint extends DataEndPoint
+    with FirebaseDataEndPoint {
   /// When uploading to the Firebase Database using the [FirebaseDatabaseDataManager],
   /// [collection] hold the name of the collection to store json objects. May contain sub-collections separated with `/`.
   ///
@@ -87,12 +89,14 @@ class FirebaseDatabaseDataEndPoint extends DataEndPoint with FirebaseDataEndPoin
   String collection;
 
   /// Creates a [FirebaseDatabaseDataEndPoint].
-  FirebaseDatabaseDataEndPoint(FirebaseEndPoint firebaseEndPoint, {this.collection})
+  FirebaseDatabaseDataEndPoint(FirebaseEndPoint firebaseEndPoint,
+      {this.collection})
       : super(DataEndPointTypes.FIREBASE_DATABSE) {
     this.firebaseEndPoint = firebaseEndPoint;
   }
 
-  static Function get fromJsonFunction => _$FirebaseDatabaseDataEndPointFromJson;
+  static Function get fromJsonFunction =>
+      _$FirebaseDatabaseDataEndPointFromJson;
   factory FirebaseDatabaseDataEndPoint.fromJson(Map<String, dynamic> json) =>
       _$FirebaseDatabaseDataEndPointFromJson(json);
   Map<String, dynamic> toJson() => _$FirebaseDatabaseDataEndPointToJson(this);
@@ -102,7 +106,8 @@ class FirebaseDatabaseDataEndPoint extends DataEndPoint with FirebaseDataEndPoin
 ///
 /// See [Firebase Storage](https://firebase.google.com/docs/storage) for description of Firebase file storage.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class FirebaseStorageDataEndPoint extends FileDataEndPoint with FirebaseDataEndPoint {
+class FirebaseStorageDataEndPoint extends FileDataEndPoint
+    with FirebaseDataEndPoint {
   /// When uploading to the Firebase Storage using the [FirebaseStorageDataManager],
   /// [path] hold the folder path where to store files. May contain sub-folders separated with `/`.
   ///
@@ -112,8 +117,13 @@ class FirebaseStorageDataEndPoint extends FileDataEndPoint with FirebaseDataEndP
   String path;
 
   /// Creates a [FirebaseStorageDataEndPoint].
-  FirebaseStorageDataEndPoint(FirebaseEndPoint firebaseEndPoint, {this.path, bufferSize, zip, encrypt, publicKey})
-      : super(type: DataEndPointTypes.FIREBASE_STORAGE, bufferSize: bufferSize, zip: zip, encrypt: encrypt) {
+  FirebaseStorageDataEndPoint(FirebaseEndPoint firebaseEndPoint,
+      {this.path, bufferSize, zip, encrypt, publicKey})
+      : super(
+            type: DataEndPointTypes.FIREBASE_STORAGE,
+            bufferSize: bufferSize,
+            zip: zip,
+            encrypt: encrypt) {
     this.firebaseEndPoint = firebaseEndPoint;
   }
 
