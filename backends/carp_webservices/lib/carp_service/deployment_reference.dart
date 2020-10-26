@@ -29,7 +29,7 @@ class DeploymentReference extends CarpReference {
   /// The deployment for this master device, once fetched from the server.
   MasterDeviceDeployment get deployment => _deployment;
 
-  /// The role name of this device as specified in the [deployment] protocol.
+  // /// The role name of this device as specified in the [deployment] protocol.
   //String deviceRoleName;
 
   String _deviceId;

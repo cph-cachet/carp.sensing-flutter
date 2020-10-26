@@ -40,7 +40,7 @@ class Device {
 
     try {
       if (Platform.isAndroid) {
-        deviceData = _readAndroidBuildData(await _deviceInfoPlugin.androidInfo);
+        deviceData = _readAndroidDeviceInfo(await _deviceInfoPlugin.androidInfo);
       } else if (Platform.isIOS) {
         deviceData = _readIosDeviceInfo(await _deviceInfoPlugin.iosInfo);
       }
@@ -50,7 +50,7 @@ class Device {
     deviceData = _deviceData;
   }
 
-  Map<String, dynamic> _readAndroidBuildData(AndroidDeviceInfo info) {
+  Map<String, dynamic> _readAndroidDeviceInfo(AndroidDeviceInfo info) {
     platform = 'Android';
     hardware = info.hardware;
     deviceID = info.id;

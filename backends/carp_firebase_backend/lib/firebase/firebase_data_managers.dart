@@ -19,7 +19,8 @@ abstract class FirebaseDataManager extends AbstractDataManager {
   Future initialize(Study study, Stream<Datum> events) async {
     super.initialize(study, events);
     assert(study.dataEndPoint is FirebaseDataEndPoint);
-    firebaseEndPoint = (study.dataEndPoint as FirebaseDataEndPoint).firebaseEndPoint;
+    firebaseEndPoint =
+        (study.dataEndPoint as FirebaseDataEndPoint).firebaseEndPoint;
   }
 
   Future<FirebaseApp> get firebaseApp async {
@@ -27,7 +28,9 @@ abstract class FirebaseDataManager extends AbstractDataManager {
       _firebaseApp = await Firebase.initializeApp(
         name: firebaseEndPoint.name,
         options: new FirebaseOptions(
-          appId: Platform.isIOS ? firebaseEndPoint.iOSGoogleAppID : firebaseEndPoint.androidGoogleAppID,
+          appId: Platform.isIOS
+              ? firebaseEndPoint.iOSGoogleAppID
+              : firebaseEndPoint.androidGoogleAppID,
           messagingSenderId: firebaseEndPoint.gcmSenderID,
           apiKey: firebaseEndPoint.webAPIKey,
           projectId: firebaseEndPoint.projectID,
@@ -51,12 +54,14 @@ abstract class FirebaseDataManager extends AbstractDataManager {
         case FireBaseAuthenticationMethods.GOOGLE:
           {
             GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-            GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+            GoogleSignInAuthentication googleAuth =
+                await googleUser.authentication;
             final AuthCredential credential = GoogleAuthProvider.credential(
               accessToken: googleAuth.accessToken,
               idToken: googleAuth.idToken,
             );
-            UserCredential result = await _auth.signInWithCredential(credential);
+            UserCredential result =
+                await _auth.signInWithCredential(credential);
             _user = result.user;
             break;
           }
@@ -65,7 +70,8 @@ abstract class FirebaseDataManager extends AbstractDataManager {
             assert(firebaseEndPoint.email != null);
             assert(firebaseEndPoint.password != null);
             UserCredential result = await _auth.signInWithEmailAndPassword(
-                email: firebaseEndPoint.email, password: firebaseEndPoint.password);
+                email: firebaseEndPoint.email,
+                password: firebaseEndPoint.password);
             _user = result.user;
             break;
           }
@@ -74,7 +80,8 @@ abstract class FirebaseDataManager extends AbstractDataManager {
             //TODO : should probably throw a NotImplementedException
           }
       }
-      addEvent(FirebaseDataManagerEvent(FirebaseDataManagerEventTypes.authenticated));
+      addEvent(FirebaseDataManagerEvent(
+          FirebaseDataManagerEventTypes.authenticated));
       print("signed in as " + _user.email + " - uid: " + _user.uid);
     }
     return _user;
@@ -117,7 +124,8 @@ class FirebaseStorageDataManager extends FirebaseDataManager {
     fileDataManager.events
         .where((event) => event.runtimeType == FileDataManagerEvent)
         .where((event) => event.type == FileDataManagerEventTypes.FILE_CLOSED)
-        .listen((event) => _uploadFileToFirestore((event as FileDataManagerEvent).path));
+        .listen((event) =>
+            _uploadFileToFirestore((event as FileDataManagerEvent).path));
   }
 
   Future initialize(Study study, Stream<Datum> events) async {
@@ -134,27 +142,33 @@ class FirebaseStorageDataManager extends FirebaseDataManager {
     print(' Firebase URI  : ${firebaseEndPoint.uri}');
     print(' Folder path   : ${dataEndPoint.path}');
     print(' Storage       : ${storage.app.name}');
-    print(' Auth. user    : ${authenticatedUser.displayName} <${authenticatedUser.email}>\n');
+    print(
+        ' Auth. user    : ${authenticatedUser.displayName} <${authenticatedUser.email}>\n');
   }
 
   Future<FirebaseStorage> get firebaseStorage async {
     if (_firebaseStorage == null) {
       final FirebaseApp app = await firebaseApp;
-      _firebaseStorage = new FirebaseStorage(app: app, storageBucket: dataEndPoint.firebaseEndPoint.uri);
+      _firebaseStorage = new FirebaseStorage(
+          app: app, storageBucket: dataEndPoint.firebaseEndPoint.uri);
     }
     return _firebaseStorage;
   }
 
-  String get firebasePath => "${dataEndPoint.path}/${study.id}/${Device.deviceID.toString()}";
+  String get firebasePath =>
+      "${dataEndPoint.path}/${study.id}/${Device().deviceID.toString()}";
 
   Future<Uri> _uploadFileToFirestore(String localFilePath) async {
-    final String filename = localFilePath.substring(localFilePath.lastIndexOf('/') + 1);
+    final String filename =
+        localFilePath.substring(localFilePath.lastIndexOf('/') + 1);
 
-    print("Upload to Firestore started - path : '$firebasePath', filename : '$filename'");
+    print(
+        "Upload to Firestore started - path : '$firebasePath', filename : '$filename'");
 
-    final StorageReference ref = FirebaseStorage.instance.ref().child(firebasePath).child(filename);
+    final StorageReference ref =
+        FirebaseStorage.instance.ref().child(firebasePath).child(filename);
     final File file = new File(localFilePath);
-    final String deviceID = Device.deviceID.toString();
+    final String deviceID = Device().deviceID.toString();
     final String studyID = study.id;
     final String userID = (await user).email;
 
@@ -163,18 +177,27 @@ class FirebaseStorageDataManager extends FirebaseDataManager {
       new StorageMetadata(
         contentEncoding: 'application/json',
         contentType: 'application/zip',
-        customMetadata: <String, String>{'device_id': '$deviceID', 'study_id': '$studyID', 'user_id': '$userID'},
+        customMetadata: <String, String>{
+          'device_id': '$deviceID',
+          'study_id': '$studyID',
+          'user_id': '$userID'
+        },
         // TODO add location as metadata
       ),
     );
 
     // await the upload is successful
     final Uri downloadUrl = (await uploadTask.onComplete).uploadSessionUri;
-    addEvent(FirebaseDataManagerEvent(FirebaseDataManagerEventTypes.file_uploaded, file.path, downloadUrl.path));
-    print("Upload to Firestore finished - remote file uri  : ${downloadUrl.path}'");
+    addEvent(FirebaseDataManagerEvent(
+        FirebaseDataManagerEventTypes.file_uploaded,
+        file.path,
+        downloadUrl.path));
+    print(
+        "Upload to Firestore finished - remote file uri  : ${downloadUrl.path}'");
     // then delete the local file.
     file.delete();
-    addEvent(FileDataManagerEvent(FileDataManagerEventTypes.FILE_DELETED, file.path));
+    addEvent(FileDataManagerEvent(
+        FileDataManagerEventTypes.FILE_DELETED, file.path));
 
     return downloadUrl;
   }
@@ -209,7 +232,8 @@ class FirebaseDatabaseDataManager extends FirebaseDataManager {
     print(' Firebase URI    : ${firebaseEndPoint.uri}');
     print(' Collection path : ${dataEndPoint.collection}');
     print(' Database        : ${database.app.name}');
-    print(' Auth. user      : ${authenticatedUser.displayName} <${authenticatedUser.email}>\n');
+    print(
+        ' Auth. user      : ${authenticatedUser.displayName} <${authenticatedUser.email}>\n');
   }
 
   Future<FirebaseFirestore> get firebaseDatabase async {
@@ -227,11 +251,12 @@ class FirebaseDatabaseDataManager extends FirebaseDataManager {
     await user;
 
     if (user != null) {
-      final String deviceId = Device.deviceID.toString();
+      final String deviceId = Device().deviceID.toString();
       final String dataType = data.format.name;
 
       final jsonDataString = json.encode(data);
-      Map<String, dynamic> jsonData = json.decode(jsonDataString) as Map<String, dynamic>;
+      Map<String, dynamic> jsonData =
+          json.decode(jsonDataString) as Map<String, dynamic>;
 
       // add json data
       FirebaseFirestore.instance
@@ -261,9 +286,11 @@ class FirebaseDataManagerEvent extends DataManagerEvent {
   /// The URI of the file on the Firebase server.
   String firebaseUri;
 
-  FirebaseDataManagerEvent(String type, [this.path, this.firebaseUri]) : super(type);
+  FirebaseDataManagerEvent(String type, [this.path, this.firebaseUri])
+      : super(type);
 
-  String toString() => 'FirebaseDataManagerEvent - type: $type, path: $path, firebaseUri: $firebaseUri';
+  String toString() =>
+      'FirebaseDataManagerEvent - type: $type, path: $path, firebaseUri: $firebaseUri';
 }
 
 /// An enumeration of file data manager event types
