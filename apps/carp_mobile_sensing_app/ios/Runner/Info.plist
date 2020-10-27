@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>CARP Mobile Sensing</string>
+	<string>CAMS</string>
 	<key>CFBundleName</key>
 	<string>carp-mobile-sensing-app</string>
 	<key>CFBundleExecutable</key>
