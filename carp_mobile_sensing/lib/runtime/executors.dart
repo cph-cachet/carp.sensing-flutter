@@ -166,10 +166,17 @@ class ManualTriggerExecutor extends TriggerExecutor {
     trigger.executor = ImmediateTriggerExecutor(trigger);
   }
 
+  // Forward to the embedded trigger executor
+  Future<void> onInitialize(Measure measure) async => (trigger as ManualTrigger).executor.initialize(measure);
+
   // A no-op methods since a ManualTrigger can only be resumed/paused
   // using the resume/pause methods on the ManualTrigger.
   Future<void> onResume() async {}
   Future<void> onPause() async {}
+
+  // Forward to the embedded trigger executor
+  Future<void> onRestart({Measure measure}) async => (trigger as ManualTrigger).executor.restart();
+  Future<void> onStop() async => (trigger as ManualTrigger).executor.stop();
 }
 
 /// Executes a [DelayedTrigger], i.e. resumes sampling after the specified delay.

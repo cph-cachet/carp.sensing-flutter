@@ -12,7 +12,7 @@ class Sensing {
     SamplingPackageRegistry().register(ConnectivitySamplingPackage());
     SamplingPackageRegistry().register(ContextSamplingPackage());
     SamplingPackageRegistry().register(CommunicationSamplingPackage());
-    SamplingPackageRegistry().register(AudioSamplingPackage());
+    //SamplingPackageRegistry().register(AudioSamplingPackage());
     SamplingPackageRegistry().register(AppsSamplingPackage());
   }
 
@@ -96,7 +96,7 @@ class LocalStudyManager implements StudyManager {
                       ConnectivitySamplingPackage.CONNECTIVITY,
                       ConnectivitySamplingPackage.WIFI, // 60 s
                       DeviceSamplingPackage.MEMORY, // 60 s
-                      AudioSamplingPackage.NOISE, // 60 s
+                      //AudioSamplingPackage.NOISE, // 60 s
                     ],
                   ))
             ..addTriggerTask(
@@ -255,7 +255,7 @@ class LocalStudyManager implements StudyManager {
                 types: [
                   // Note that if the eSense devices are used (see below),
                   // noise will be collected from them, i.e. around the user's head.
-                  AudioSamplingPackage.NOISE,
+                  //AudioSamplingPackage.NOISE,
                 ],
               ))
         ..addTriggerTask(
@@ -317,7 +317,7 @@ class LocalStudyManager implements StudyManager {
                   ContextSamplingPackage.GEOLOCATION,
                   ContextSamplingPackage.ACTIVITY,
                   ContextSamplingPackage.GEOFENCE,
-                  AudioSamplingPackage.NOISE,
+                  //AudioSamplingPackage.NOISE,
                   ContextSamplingPackage.MOBILITY,
                 ],
               ));
@@ -398,15 +398,15 @@ class LocalStudyManager implements StudyManager {
                       ContextSamplingPackage.ACTIVITY,
                     ],
                   ))
-            // AUDIO and NOISE cannot be used in the same study since they conflict in using the microphone...
-            ..addTriggerTask(
-                PeriodicTrigger(period: Duration(minutes: 1), duration: Duration(seconds: 5)),
-                AutomaticTask(name: 'Audio')
-                  ..measures.add(AudioMeasure(
-                    MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO),
-                    name: "Audio Recording",
-                    studyId: studyId,
-                  )))
+          // AUDIO and NOISE cannot be used in the same study since they conflict in using the microphone...
+          // ..addTriggerTask(
+          //     PeriodicTrigger(period: Duration(minutes: 1), duration: Duration(seconds: 5)),
+          //     AutomaticTask(name: 'Audio')
+          //       ..measures.add(AudioMeasure(
+          //         MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO),
+          //         name: "Audio Recording",
+          //         studyId: studyId,
+          //       )))
           //
           ;
     }
