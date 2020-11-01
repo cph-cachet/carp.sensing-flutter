@@ -113,8 +113,8 @@ class Sensing implements StudyManager {
                 types: [
                   //DeviceSamplingPackage.DEVICE,
                   ContextSamplingPackage.LOCATION,
-                  //ContextSamplingPackage.WEATHER,
-                  //ContextSamplingPackage.AIR_QUALITY,
+                  ContextSamplingPackage.WEATHER,
+                  ContextSamplingPackage.AIR_QUALITY,
                 ],
               ))
         // ..addTriggerTask(

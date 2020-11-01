@@ -33,7 +33,7 @@ class AudioProbe extends DatumProbe {
   DateTime _startRecordingTime, _endRecordingTime;
   FlutterSoundRecorder _recorder = new FlutterSoundRecorder();
 
-  Future<void> onInitialize(Measure measure) async {
+  void onInitialize(Measure measure) {
     assert(measure is AudioMeasure);
     super.onInitialize(measure);
     this.studyId = (measure as AudioMeasure).studyId;
@@ -151,7 +151,7 @@ class DeprecatedAudioProbe extends BufferingPeriodicProbe {
   DateTime _startRecordingTime, _endRecordingTime;
   FlutterSoundRecorder _recorder = new FlutterSoundRecorder();
 
-  Future<void> onInitialize(Measure measure) async {
+  void onInitialize(Measure measure) {
     super.onInitialize(measure);
     this.studyId = (measure as AudioMeasure).studyId;
   }

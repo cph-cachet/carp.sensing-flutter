@@ -20,7 +20,7 @@ class NoiseProbe extends BufferingPeriodicStreamProbe {
 
   Stream get bufferingStream => _noiseMeter.noiseStream;
 
-  Future<void> onInitialize(Measure measure) async {
+  void onInitialize(Measure measure) {
     assert(measure is NoiseMeasure);
     super.onInitialize(measure);
   }
