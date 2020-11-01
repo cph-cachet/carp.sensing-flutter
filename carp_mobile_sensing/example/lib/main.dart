@@ -114,25 +114,35 @@ class Sensing {
 
     // create the study
     study = Study('2', 'user@cachet.dk',
-        name: 'A default / common study',
-        dataEndPoint: FileDataEndPoint()
-          ..bufferSize = 500 * 1000
-          ..zip = true
-          ..encrypt = false)
-      ..addTriggerTask(
-          ImmediateTrigger(),
-          AutomaticTask()
-            ..measures = SamplingSchema.debug().getMeasureList(
-              namespace: NameSpace.CARP,
-              types: [
-                SensorSamplingPackage.LIGHT,
-                SensorSamplingPackage.PEDOMETER,
-                DeviceSamplingPackage.MEMORY,
-                DeviceSamplingPackage.DEVICE,
-                DeviceSamplingPackage.BATTERY,
-                DeviceSamplingPackage.SCREEN,
-              ],
-            ));
+            name: 'A default / common study',
+            dataEndPoint: FileDataEndPoint()
+              ..bufferSize = 500 * 1000
+              ..zip = true
+              ..encrypt = false)
+          ..addTriggerTask(
+              ImmediateTrigger(),
+              AutomaticTask()
+                ..measures = SamplingSchema.debug().getMeasureList(
+                  namespace: NameSpace.CARP,
+                  types: [
+                    SensorSamplingPackage.LIGHT,
+                  ],
+                ))
+          ..addTriggerTask(
+              ImmediateTrigger(),
+              AutomaticTask()
+                ..measures = SamplingSchema.debug().getMeasureList(
+                  namespace: NameSpace.CARP,
+                  types: [
+                    SensorSamplingPackage.PEDOMETER,
+                    DeviceSamplingPackage.MEMORY,
+                    DeviceSamplingPackage.DEVICE,
+                    DeviceSamplingPackage.BATTERY,
+                    DeviceSamplingPackage.SCREEN,
+                  ],
+                ))
+        //
+        ;
 
     console.log("Setting up '${study.name}'...");
 
@@ -155,8 +165,7 @@ class Sensing {
   }
 
   /// Is sensing running, i.e. has the study executor been resumed?
-  bool get isRunning =>
-      (controller != null) && controller.executor.state == ProbeState.resumed;
+  bool get isRunning => (controller != null) && controller.executor.state == ProbeState.resumed;
 
   /// Resume sensing
   void resume() async {

@@ -43,7 +43,7 @@ class AudioProbe extends DatumProbe {
   Future<void> onResume() async {
     //soundFileName = await _startAudioRecording().catchError((err) => controller.addError(err));
     soundFileName = await _startAudioRecording();
-    debug('Audio recording resumed - soundfile : $soundFileName');
+    debug('Audio recording resumed - sound file : $soundFileName');
   }
 
   Future<void> onPause() async {
@@ -52,8 +52,7 @@ class AudioProbe extends DatumProbe {
       await _stopAudioRecording();
       getDatum().then((Datum data) {
         if (data != null) controller.add(data);
-      }).catchError(
-          (error, stacktrace) => controller.addError(error, stacktrace));
+      }).catchError((error, stacktrace) => controller.addError(error, stacktrace));
     }
   }
 
@@ -67,8 +66,7 @@ class AudioProbe extends DatumProbe {
   Future<String> _startAudioRecording() async {
     //if (_isRecording) throw new Exception('AudioProbe is already running');
     if (_isRecording) {
-      warning(
-          'Trying to strart audio recording, but recording is already running. '
+      warning('Trying to strart audio recording, but recording is already running. '
           'Make sure to pause this audio probe before resuming it.');
     } else {
       soundFileName = await filePath;
@@ -102,9 +100,9 @@ class AudioProbe extends DatumProbe {
       // get local working directory
       final localApplicationDir = await getApplicationDocumentsDirectory();
       // create a sub-directory for sound files
-      final directory = await Directory(
-              '${localApplicationDir.path}/${FileDataManager.CARP_FILE_PATH}/$studyId/$AUDIO_FILE_PATH')
-          .create(recursive: true);
+      final directory =
+          await Directory('${localApplicationDir.path}/${FileDataManager.CARP_FILE_PATH}/$studyId/$AUDIO_FILE_PATH')
+              .create(recursive: true);
 
       _path = directory.path;
     }
@@ -116,12 +114,8 @@ class AudioProbe extends DatumProbe {
   ///    * Android : `audio-yyyy-mm-dd-hh-mm-ss-ms.mp4`
   ///    * iOS : `audio-yyyy-mm-dd-hh-mm-ss-ms.m4a`
   String get filename {
-    String created = DateTime.now()
-        .toString()
-        .replaceAll(" ", "-")
-        .replaceAll(":", "-")
-        .replaceAll("_", "-")
-        .replaceAll(".", "-");
+    String created =
+        DateTime.now().toString().replaceAll(" ", "-").replaceAll(":", "-").replaceAll("_", "-").replaceAll(".", "-");
     String type = Platform.isIOS ? 'm4a' : 'mp4';
     return 'audio-$created.$type';
   }
@@ -172,11 +166,9 @@ class DeprecatedAudioProbe extends BufferingPeriodicProbe {
     super.onStop();
   }
 
-  void onSamplingStart() =>
-      _startAudioRecording().catchError((err) => controller.addError(err));
+  void onSamplingStart() => _startAudioRecording().catchError((err) => controller.addError(err));
 
-  void onSamplingEnd() =>
-      _stopAudioRecording().catchError((err) => controller.addError(err));
+  void onSamplingEnd() => _stopAudioRecording().catchError((err) => controller.addError(err));
 
   Future<String> _startAudioRecording() async {
     if (_isRecording) throw new Exception('AudioProbe is already running');
@@ -213,9 +205,9 @@ class DeprecatedAudioProbe extends BufferingPeriodicProbe {
       // get local working directory
       final localApplicationDir = await getApplicationDocumentsDirectory();
       // create a sub-directory for sound files
-      final directory = await Directory(
-              '${localApplicationDir.path}/${FileDataManager.CARP_FILE_PATH}/$studyId/$AUDIO_FILE_PATH')
-          .create(recursive: true);
+      final directory =
+          await Directory('${localApplicationDir.path}/${FileDataManager.CARP_FILE_PATH}/$studyId/$AUDIO_FILE_PATH')
+              .create(recursive: true);
 
       _path = directory.path;
     }
@@ -227,12 +219,8 @@ class DeprecatedAudioProbe extends BufferingPeriodicProbe {
   ///    * Android : `audio-yyyy-mm-dd-hh-mm-ss-ms.mp4`
   ///    * iOS : `audio-yyyy-mm-dd-hh-mm-ss-ms.m4a`
   String get filename {
-    String created = DateTime.now()
-        .toString()
-        .replaceAll(" ", "-")
-        .replaceAll(":", "-")
-        .replaceAll("_", "-")
-        .replaceAll(".", "-");
+    String created =
+        DateTime.now().toString().replaceAll(" ", "-").replaceAll(":", "-").replaceAll("_", "-").replaceAll(".", "-");
     String type = Platform.isIOS ? 'm4a' : 'mp4';
     return 'audio-$created.$type';
   }

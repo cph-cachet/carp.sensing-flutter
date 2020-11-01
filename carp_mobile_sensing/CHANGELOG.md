@@ -1,3 +1,8 @@
+## 0.9.5
+* feature: added the `validNextState()` method to the `Probe` class, which checks if a probe can be move to a next state.
+* fix : issue [#112](https://github.com/cph-cachet/carp.sensing-flutter/issues/112) 
+   * this means that the `initialize()` method is no longer a `Future` (and hence cannot be awaited)
+
 ## 0.9.4+1
 * fix: issue [#106](https://github.com/cph-cachet/carp.sensing-flutter/issues/106).
 * fix: fix of race condition in `FileDataManager`

@@ -74,7 +74,7 @@ class StudyController {
     //    dataManager != null,
     //    'Could not find a data manager for type ${study.dataEndPoint.type}. '
     //    'An instance of a DataManager can be specified as the dataManager argument when creating this StudyController.'
-    //    'Or you can registrer it in the DataManagerRegistry.');
+    //    'Or you can register it in the DataManagerRegistry.');
 
     // set up transformation in the following order:
     // 1. privacy schema
@@ -91,6 +91,9 @@ class StudyController {
   /// Initialize this controller. Must be called only once,
   /// and before [resume] is called.
   Future<void> initialize() async {
+    assert(executor.validNextState(ProbeState.initialized),
+        'The study executor cannot be initialized - it is in state ${executor.state}');
+
     // start getting basic device info.
     Device();
 
@@ -122,7 +125,8 @@ class StudyController {
     }
 
     await dataManager?.initialize(study, events);
-    await executor.initialize(Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR)));
+    //# await executor.initialize(Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR)));
+    executor.initialize(Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR)));
 
     await enablePowerAwareness();
 
@@ -146,7 +150,8 @@ class StudyController {
           }
         }
       });
-      await _battery.initialize(Measure(
+      //# await _battery.initialize(Measure(
+      _battery.initialize(Measure(
         MeasureType(NameSpace.CARP, DeviceSamplingPackage.BATTERY),
         name: 'PowerAwarenessProbe',
       ));

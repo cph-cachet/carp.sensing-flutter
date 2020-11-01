@@ -5,7 +5,7 @@ class MobilityProbe extends StreamProbe {
   /// Init the [MobilityFactory] singleton
   MobilityFactory _mobilityFactory = MobilityFactory.instance;
 
-  Future<void> onInitialize(Measure measure) async {
+  void onInitialize(Measure measure) {
     super.onInitialize(measure);
     MobilityMeasure m = measure as MobilityMeasure;
 
@@ -15,8 +15,8 @@ class MobilityProbe extends StreamProbe {
     _mobilityFactory.stopDuration = (m.stopDuration ?? Duration(minutes: 3));
 
     /// Start the Location Data stream from the LocationManager
-    Stream<LocationSample> stream = locationManager.dtoStream.map((e) =>
-        LocationSample(GeoLocation(e.latitude, e.longitude), DateTime.now()));
+    Stream<LocationSample> stream =
+        locationManager.dtoStream.map((e) => LocationSample(GeoLocation(e.latitude, e.longitude), DateTime.now()));
 
     /// Feed the Location Data Stream to the [MobilityFactory] singleton
     /// The [MobilityFactory] will in turn produce [MobilityContext]s
@@ -24,9 +24,7 @@ class MobilityProbe extends StreamProbe {
   }
 
   /// Get the [MobilityContext] stream from the [MobilityFactory] singleton
-  @override
-  Stream<Datum> get stream =>
-      _mobilityFactory.contextStream.map(_convertToDatum);
+  Stream<Datum> get stream => _mobilityFactory.contextStream.map(_convertToDatum);
 
   /// Converts a [MobilityContext] to a [MobilityDatum]
   MobilityDatum _convertToDatum(MobilityContext context) => MobilityDatum()

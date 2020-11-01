@@ -3,8 +3,7 @@ import 'dart:convert';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:test/test.dart';
 
-String _encode(Object object) =>
-    const JsonEncoder.withIndent(' ').convert(object);
+String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
 
 void main() {
   setUp(() {
@@ -33,39 +32,30 @@ void main() {
       RecurrentScheduledTrigger t;
 
       // collect every day at 13:30
-      t = RecurrentScheduledTrigger(
-          type: RecurrentType.daily, time: Time(hour: 13, minute: 30));
+      t = RecurrentScheduledTrigger(type: RecurrentType.daily, time: Time(hour: 13, minute: 30));
       //print(_encode(t));
       print('${t.firstOccurrence} - ${t.period}');
       expect(t.period.inHours, 24);
 
       // collect every day at 22:30
-      t = RecurrentScheduledTrigger(
-          type: RecurrentType.daily, time: Time(hour: 22, minute: 30));
+      t = RecurrentScheduledTrigger(type: RecurrentType.daily, time: Time(hour: 22, minute: 30));
       print('${t.firstOccurrence} - ${t.period}');
       expect(t.period.inHours, 24);
 
       // collect every other day at 13:30
-      t = RecurrentScheduledTrigger(
-          type: RecurrentType.daily,
-          separationCount: 1,
-          time: Time(hour: 13, minute: 30));
+      t = RecurrentScheduledTrigger(type: RecurrentType.daily, separationCount: 1, time: Time(hour: 13, minute: 30));
       print('${t.firstOccurrence} - ${t.period}');
       expect(t.period.inDays, 2);
 
       // collect every wednesday at 12:23
       t = RecurrentScheduledTrigger(
-          type: RecurrentType.weekly,
-          dayOfWeek: DateTime.wednesday,
-          time: Time(hour: 12, minute: 23));
+          type: RecurrentType.weekly, dayOfWeek: DateTime.wednesday, time: Time(hour: 12, minute: 23));
       print('${t.firstOccurrence} - ${t.period}');
       expect(t.period.inDays, 7);
 
       // collect every thursday at 14:23
       t = RecurrentScheduledTrigger(
-          type: RecurrentType.weekly,
-          dayOfWeek: DateTime.thursday,
-          time: Time(hour: 14, minute: 23));
+          type: RecurrentType.weekly, dayOfWeek: DateTime.thursday, time: Time(hour: 14, minute: 23));
       print('${t.firstOccurrence} - ${t.period}');
       expect(t.period.inDays, 7);
 
@@ -75,8 +65,7 @@ void main() {
           dayOfWeek: DateTime.thursday,
           separationCount: 1,
           time: Time(hour: 14, minute: 00));
-      print(
-          'weekly, Thursday at 14:00 :: first : ${t.firstOccurrence} - period : ${t.period}');
+      print('weekly, Thursday at 14:00 :: first : ${t.firstOccurrence} - period : ${t.period.inDays}');
       expect(t.period.inDays, 2 * 7);
 
       // the monthly trigger from iPDM-GO app
@@ -87,8 +76,7 @@ void main() {
         time: Time(hour: 18),
         remember: true,
       );
-      print(
-          'monthly, 1st day of month at 18:00 :: first : ${t.firstOccurrence} - period : ${t.period}');
+      print('monthly, 1st day of month at 18:00 :: first : ${t.firstOccurrence} - period : ${t.period.inDays}');
       expect(t.period.inDays, 1 * 30);
 
       // collect quarterly on the 11th day of the first month
@@ -99,8 +87,7 @@ void main() {
         separationCount: 2,
         time: Time(hour: 21, minute: 30),
       );
-      print(
-          'quarterly, 11th day of month at 21:30 :: first : ${t.firstOccurrence} - period : ${t.period}');
+      print('quarterly, 11th day of month at 21:30 :: first : ${t.firstOccurrence} - period : ${t.period.inDays}');
       expect(t.period.inDays, 3 * 30);
 
       // collect monthly in the second week on a monday at 14:30
@@ -111,7 +98,7 @@ void main() {
         time: Time(hour: 14, minute: 30),
       );
       print(
-          'monthly, 2nd week of month on Tuesday at 14:30 :: first : ${t.firstOccurrence} - period : ${t.period}');
+          'monthly, 2nd week of month on Tuesday at 14:30 :: first : ${t.firstOccurrence} - period : ${t.period.inDays}');
       expect(t.firstOccurrence.weekday, DateTime.tuesday);
       expect(t.period.inDays, 30);
 
@@ -125,8 +112,7 @@ void main() {
         time: Time(hour: 21, minute: 30),
         remember: true,
       );
-      print(
-          'quarterly, 11th day of month at 21:30 :: first : ${t.firstOccurrence} - period : ${t.period}');
+      print('quarterly, 11th day of month at 21:30 :: first : ${t.firstOccurrence} - period : ${t.period.inDays}');
       expect(t.period.inDays, 3 * 30);
     });
 
@@ -139,29 +125,19 @@ void main() {
         time: Time(hour: 13, minute: 30),
       );
 
-      RecurrentScheduledTrigger(
-          type: RecurrentType.weekly, time: Time(hour: 12, minute: 23));
+      RecurrentScheduledTrigger(type: RecurrentType.weekly, time: Time(hour: 12, minute: 23));
 
       RecurrentScheduledTrigger(
-          type: RecurrentType.monthly,
-          dayOfWeek: DateTime.monday,
-          time: Time(hour: 14, minute: 30));
+          type: RecurrentType.monthly, dayOfWeek: DateTime.monday, time: Time(hour: 14, minute: 30));
       RecurrentScheduledTrigger(
-          type: RecurrentType.monthly,
-          dayOfMonth: 43,
-          separationCount: 2,
-          time: Time(hour: 21, minute: 30));
+          type: RecurrentType.monthly, dayOfMonth: 43, separationCount: 2, time: Time(hour: 21, minute: 30));
       RecurrentScheduledTrigger(
-          type: RecurrentType.monthly,
-          weekOfMonth: 12,
-          dayOfWeek: DateTime.monday,
-          time: Time(hour: 14, minute: 30));
+          type: RecurrentType.monthly, weekOfMonth: 12, dayOfWeek: DateTime.monday, time: Time(hour: 14, minute: 30));
     }, skip: true);
 
     test(' - CronScheduledTrigger', () {
       print('cron job at 12:00 every day.');
-      CronScheduledTrigger t =
-          CronScheduledTrigger.parse(cronExpression: '0 12 * * *');
+      CronScheduledTrigger t = CronScheduledTrigger.parse(cronExpression: '0 12 * * *');
       print(t);
       print(_encode(t));
 
@@ -169,12 +145,7 @@ void main() {
       print(t);
 
       t = CronScheduledTrigger(
-          triggerId: 'id',
-          minute: 10,
-          hour: 12,
-          day: 5,
-          month: DateTime.april,
-          weekday: DateTime.tuesday);
+          triggerId: 'id', minute: 10, hour: 12, day: 5, month: DateTime.april, weekday: DateTime.tuesday);
       print(t);
     });
 
