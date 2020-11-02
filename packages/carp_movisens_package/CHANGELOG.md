@@ -1,3 +1,7 @@
+## 0.9.6
+* fix: implementing common sampling schema
+* doc: misc missing documentation
+
 ## 0.9.5
 * upgrade to `carp_mobile_sensing` v. 0.9.5
 
