@@ -4,7 +4,7 @@ part of context;
 class AirQualityProbe extends DatumProbe {
   AirQuality _waqi;
 
-  Future<void> onInitialize(Measure measure) async {
+  void onInitialize(Measure measure) {
     super.onInitialize(measure);
     assert((measure as AirQualityMeasure).apiKey != null, 'In order to use the WAQI API, an API key must be provided.');
     _waqi = AirQuality((measure as AirQualityMeasure).apiKey);

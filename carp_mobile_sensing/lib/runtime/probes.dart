@@ -104,6 +104,14 @@ abstract class Probe {
   /// state (e.g. from `resumed` to `paused`).
   Stream<ProbeState> get stateEvents;
 
+  /// Is [ProbeState] a valid next [state] for this probe?
+  ///
+  /// For example:
+  ///   * if the current state of this probe is `initialized` then a valid next state is `resumed`.
+  ///   * if the current state of this probe is `resumed` then a valid next state is `paused`.
+  ///   * if the current state of this probe is `resumed` then `initialized` is **not** a valid next state.
+  bool validNextState(ProbeState nextState);
+
   /// The [Measure] that configures this probe.
   Measure get measure;
 
@@ -116,7 +124,9 @@ abstract class Probe {
   /// Initialize the probe before starting it.
   ///
   /// The configuration of the probe is specified in the [measure].
-  Future<void> initialize(Measure measure);
+  /// Returns `true` if the probe was initialized successfully, `false` if not.
+  //Future<bool> initialize(Measure measure);
+  void initialize(Measure measure);
 
   /// Resume the probe.
   void resume();
@@ -150,6 +160,7 @@ abstract class AbstractProbe with MeasureListener implements Probe {
   String get name => measure.name ?? 'NO_NAME';
 
   ProbeState get state => _stateMachine.state;
+  bool validNextState(ProbeState nextState) => _stateMachine.validNextState(nextState);
 
   _ProbeStateMachine _stateMachine;
   void _setState(_ProbeStateMachine state) {
@@ -166,11 +177,13 @@ abstract class AbstractProbe with MeasureListener implements Probe {
   }
 
 // ProbeState handlers
-  Future<void> initialize(Measure measure) async {
+  //Future<bool> initialize(Measure measure) async {
+  void initialize(Measure measure) {
     assert(measure != null, 'Probe cannot be initialized with a null measure.');
     _measure = measure;
     measure.addMeasureListener(this);
-    await _stateMachine.initialize(measure);
+    //return await _stateMachine.initialize(measure);
+    return _stateMachine.initialize(measure);
   }
 
   void restart() => _stateMachine.restart();
@@ -184,7 +197,10 @@ abstract class AbstractProbe with MeasureListener implements Probe {
   void error() => _stateMachine.error();
 
   /// Callback for initialization of probe.
-  Future<void> onInitialize(Measure measure);
+  ///
+  /// Note that this is a non-async method and should hence be 'light-weight'
+  /// and not block execution for a long duration.
+  void onInitialize(Measure measure);
 
   /// Callback for resuming probe
   Future<void> onResume();
@@ -202,6 +218,7 @@ abstract class AbstractProbe with MeasureListener implements Probe {
   void hasChanged(Measure measure) => restart();
 
   /// Mark the latest sampling
+  @protected
   void mark() {
     if (measure is MarkedMeasure) {
       settings.preferences.setString((measure as MarkedMeasure).tag(), DateTime.now().toUtc().toString());
@@ -209,6 +226,7 @@ abstract class AbstractProbe with MeasureListener implements Probe {
   }
 
   /// Get the latest mark
+  @protected
   void marking() {
     if (measure is MarkedMeasure) {
       String mark = settings.preferences.get((measure as MarkedMeasure).tag());
@@ -230,7 +248,10 @@ abstract class AbstractProbe with MeasureListener implements Probe {
 
 abstract class _ProbeStateMachine {
   ProbeState get state;
-  Future<void> initialize(Measure measure);
+  bool validNextState(ProbeState nextState);
+
+  void initialize(Measure measure);
+  //Future<bool> initialize(Measure measure);
   void pause();
   void resume();
   void restart();
@@ -246,17 +267,10 @@ abstract class _AbstractProbeState implements _ProbeStateMachine {
   // Default behavior is to print a warning.
   // If a state supports this method, this behavior is overwritten in
   // the state implementation classes below.
-  Future<void> initialize(Measure measure) async =>
-      warning("Trying to initialize a ${probe.runtimeType} in a state where this can't be done - state : $state");
-
-  void restart() =>
-      warning("Trying to restart a ${probe.runtimeType} in a state where this can't be done - state : $state");
-
-  void resume() =>
-      warning("Trying to resume a ${probe.runtimeType} in a state where this can't be done - state : $state");
-
-  void pause() =>
-      warning("Trying to pause a ${probe.runtimeType} in a state where this can't be done - state : $state");
+  void initialize(Measure measure) => _printWarning('initialize');
+  void restart() => _printWarning('restart');
+  void resume() => _printWarning('resume');
+  void pause() => _printWarning('pause');
 
   // Default stop behavior. A probe can be stopped in all states.
   void stop() {
@@ -270,21 +284,30 @@ abstract class _AbstractProbeState implements _ProbeStateMachine {
     warning('Error in ${probe.runtimeType}.');
     probe._setState(_UndefinedState(probe));
   }
+
+  // Default implementation of next state. Can always be stopped.
+  bool validNextState(ProbeState nextState) => (nextState == ProbeState.stopped);
+
+  void _printWarning(String operation) =>
+      warning('Trying to $operation a ${probe.runtimeType} in a state where this cannot be done'
+          ' - state: $state, type: ${probe.type}, name: ${probe.name}');
 }
 
 class _CreatedState extends _AbstractProbeState implements _ProbeStateMachine {
   _CreatedState(Probe probe) : super(probe, ProbeState.created);
 
-  Future<void> initialize(Measure measure) async {
+  void initialize(Measure measure) {
     info('Initializing ${probe.runtimeType} - $measure');
     try {
-      await probe.onInitialize(measure);
+      probe.onInitialize(measure);
       probe._setState(_InitializedState(probe));
     } catch (error) {
       warning('Error initializing ${probe.runtimeType}: $error Probe is now in an undefined state.');
       probe._setState(_UndefinedState(probe));
     }
   }
+
+  bool validNextState(ProbeState nextState) => (nextState == ProbeState.initialized);
 
   String toString() => 'created';
 }
@@ -297,6 +320,8 @@ class _InitializedState extends _AbstractProbeState implements _ProbeStateMachin
     probe.onResume();
     probe._setState(_ResumedState(probe));
   }
+
+  bool validNextState(ProbeState nextState) => (nextState == ProbeState.resumed);
 
   String toString() => 'initialized';
 }
@@ -320,6 +345,8 @@ class _ResumedState extends _AbstractProbeState implements _ProbeStateMachine {
     probe._setState(_PausedState(probe));
   }
 
+  bool validNextState(ProbeState nextState) => (nextState == ProbeState.paused);
+
   String toString() => 'resumed';
 }
 
@@ -342,6 +369,8 @@ class _PausedState extends _AbstractProbeState implements _ProbeStateMachine {
       probe._setState(_ResumedState(probe));
     }
   }
+
+  bool validNextState(ProbeState nextState) => (nextState == ProbeState.resumed);
 
   String toString() => 'paused';
 }
@@ -367,7 +396,7 @@ abstract class DatumProbe extends AbstractProbe {
   StreamController<Datum> controller = StreamController<Datum>.broadcast();
   Stream<Datum> get events => controller.stream;
 
-  Future<void> onInitialize(Measure measure) async {}
+  void onInitialize(Measure measure) {}
 
   Future<void> onRestart() async {}
 
@@ -399,7 +428,7 @@ abstract class PeriodicDatumProbe extends DatumProbe {
 
   Stream<Datum> get events => controller.stream;
 
-  Future<void> onInitialize(Measure measure) async {
+  void onInitialize(Measure measure) {
     assert(measure is PeriodicMeasure);
     frequency = (measure as PeriodicMeasure).frequency;
     duration = (measure as PeriodicMeasure).duration;
@@ -450,7 +479,7 @@ abstract class StreamProbe extends AbstractProbe {
   Stream<Datum> get stream;
 
   // Do nothing here. Can be overwritten in subclasses.
-  Future<void> onInitialize(Measure measure) async {}
+  void onInitialize(Measure measure) {}
 
   Future<void> onRestart() async {
     // if we don't have a subscription yet, try to get one
@@ -509,10 +538,11 @@ abstract class PeriodicStreamProbe extends StreamProbe {
   Timer timer;
   Duration frequency, duration;
 
-  Future<void> onInitialize(Measure measure) async {
+  void onInitialize(Measure measure) {
     assert(measure is PeriodicMeasure);
     frequency = (measure as PeriodicMeasure).frequency;
     duration = (measure as PeriodicMeasure).duration;
+    super.onInitialize(measure);
   }
 
   Future<void> onRestart() async {
@@ -565,7 +595,7 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
   Timer timer;
   Duration frequency, duration;
 
-  Future<void> onInitialize(Measure measure) async {
+  void onInitialize(Measure measure) {
     assert(measure is PeriodicMeasure);
     frequency = (measure as PeriodicMeasure).frequency;
     duration = (measure as PeriodicMeasure).duration;
@@ -638,9 +668,9 @@ abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
   // we don't use the stream in the super class so we give it an empty non-null stream
   Stream<Datum> get stream => Stream<Datum>.empty();
 
-  Future<void> onInitialize(Measure measure) async {
-    await super.onInitialize(measure);
+  void onInitialize(Measure measure) {
     assert(bufferingStream != null, 'Buffering event stream must not be null');
+    super.onInitialize(measure);
   }
 
   Future<void> onResume() async {

@@ -4,22 +4,24 @@ version: 0.9.3
 author:  CACHET Team <cph.cachet@gmail.com>
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app
 
-# For information on the generic Dart part of this file, see the
-# following page: https://www.dartlang.org/tools/pub/pubspec
+# The following line prevents the package from being accidentally published to
+# pub.dev using `pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
   flutter_launcher_icons: ^0.8.0
   carp_mobile_sensing: ^0.9.0
-  carp_communication_package: ^0.9.0
+  #carp_communication_package: ^0.9.0
   carp_connectivity_package: ^0.9.0
   carp_context_package: ^0.9.0
-  carp_audio_package: ^0.9.0
-  carp_apps_package: ^0.9.0
+  #carp_audio_package: ^0.9.0
+  #carp_apps_package: ^0.9.0
   #carp_survey_package: ^0.9.0
   #carp_esense_package: ^0.9.0
   #carp_backend: ^0.3.2
@@ -27,7 +29,7 @@ dependencies:
   #carp_firebase_backend: ^0.5.0
 
 # Overriding carp libraries to use the local copy
-dependency_overrides:
+#dependency_overrides:
 #  carp_mobile_sensing:
 #    path: ../../carp_mobile_sensing/
 #  carp_context_package:
@@ -35,10 +37,12 @@ dependency_overrides:
 #  carp_connectivity_package:
 #    path: ../../packages/carp_connectivity_package/
 
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
 
 # Is used to change the default app launch icons on iOS and Android.
 # To install:
@@ -51,6 +55,7 @@ flutter_icons:
   ios: true
   image_path: "assets/cachet_logo.png"
 
+
 # The following section is specific to Flutter.
 flutter:
 
@@ -61,15 +66,15 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-   - assets/study.png
-   - assets/cachet_logo.png
-   - assets/logo.png
+    - assets/study.png
+    - assets/cachet_logo.png
+    - assets/logo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
-  # https://flutter.io/assets-and-images/#resolution-aware.
+  # https://flutter.dev/assets-and-images/#resolution-aware.
 
   # For details regarding adding assets from package dependencies, see
-  # https://flutter.io/assets-and-images/#from-packages
+  # https://flutter.dev/assets-and-images/#from-packages
 
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
@@ -89,4 +94,4 @@ flutter:
   #         weight: 700
   #
   # For details regarding fonts from package dependencies,
-  # see https://flutter.io/custom-fonts/#from-packages
+  # see https://flutter.dev/custom-fonts/#from-packages

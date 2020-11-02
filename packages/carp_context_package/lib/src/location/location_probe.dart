@@ -21,13 +21,13 @@ Future<Position> getLastKnownPosition() async =>
 /// Note that in order for location tracking to work with this probe, the
 /// phone must be online on the internet, since online Google APIs are used.
 class LocationProbe extends DatumProbe {
-  Future<void> onInitialize(Measure measure) async {
+  void onInitialize(Measure measure) {
     super.onInitialize(measure);
 
     // start the background location manager
     locationManager.notificationTitle = 'CARP Location Probe';
     locationManager.notificationMsg = 'CARP location tracking';
-    await locationManager.start(askForPermission: false);
+    locationManager.start(askForPermission: false);
   }
 
   // Future<Datum> getDatum() async =>
@@ -44,7 +44,7 @@ class LocationProbe extends DatumProbe {
 /// Note that in order for location tracking to work with this probe, the
 /// phone must be online on the internet, since Google APIs are used.
 class GeoLocationProbe extends StreamProbe {
-  Future<void> onInitialize(Measure measure) async {
+  void onInitialize(Measure measure) {
     assert(measure is LocationMeasure);
     super.onInitialize(measure);
 
@@ -53,7 +53,7 @@ class GeoLocationProbe extends StreamProbe {
     locationManager.notificationTitle = (measure as LocationMeasure).notificationTitle;
     locationManager.notificationMsg = (measure as LocationMeasure).notificationMsg;
 
-    await locationManager.start(askForPermission: false);
+    locationManager.start(askForPermission: false);
   }
 
   Stream<LocationDatum> get stream => locationManager.dtoStream.map((dto) => LocationDatum.fromLocationDto(dto));

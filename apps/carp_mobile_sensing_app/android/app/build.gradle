@@ -33,12 +33,11 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "dk.cachet.carpmobilesensingapp"
-        targetSdkVersion 29
+        applicationId "dk.cachet.carp_mobile_sensing_app"
         minSdkVersion 24
+        targetSdkVersion 29
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -53,22 +52,3 @@ android {
 flutter {
     source '../..'
 }
-
-dependencies {
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    // added the following line due to this ERROR:
-    //    >> Android dependency 'com.android.support:support-compat' has different version for the compile (26.1.0) and runtime (27.1.1) classpath.
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.firebase:firebase-auth:19.2.0'
-    // from firebase_auth plugin
-    implementation 'com.google.firebase:firebase-core:17.2.2'
-}
-
-// from firebase_auth plugin
-// see https://pub.dartlang.org/packages/firebase_auth
-apply plugin: 'com.google.gms.google-services' // Google Play services Gradle plugin
-// SDK 15 vs. 16 conflict resolution
-// See https://github.com/evollu/react-native-fcm/issues/1026
-// com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true

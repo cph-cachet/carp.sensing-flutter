@@ -61,7 +61,13 @@ Add this permission in the `Info.plist` file located in `ios/Runner`:
   <string>external-accessory</string>
   <string>fetch</string>
 </array>
+```
 
+The [`flutter_sound`]() plugin require an iOS platform >= 11.0. 
+Therefore, in your `Podfile` add
+
+```yaml
+platform :ios, '11.0'
 ```
 
 ## Using it

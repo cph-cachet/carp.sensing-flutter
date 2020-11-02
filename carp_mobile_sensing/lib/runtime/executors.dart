@@ -17,8 +17,8 @@ abstract class Executor extends AbstractProbe {
 
   Executor() : super();
 
-  Future<void> onInitialize(Measure measure) async {
-    executors.forEach((executor) async => await executor.initialize(measure));
+  void onInitialize(Measure measure) {
+    executors.forEach((executor) => executor.initialize(measure));
   }
 
   Future<void> onPause() async {
@@ -134,7 +134,6 @@ abstract class TriggerExecutor extends Executor {
 
     for (Task task in trigger.tasks) {
       TaskExecutor executor = getTaskExecutor(task);
-
       _group.add(executor.events);
       executors.add(executor);
     }
@@ -164,12 +163,23 @@ class ImmediateTriggerExecutor extends TriggerExecutor {
 class ManualTriggerExecutor extends TriggerExecutor {
   ManualTriggerExecutor(ManualTrigger trigger) : super(trigger) {
     trigger.executor = ImmediateTriggerExecutor(trigger);
+    _group.add(trigger.executor.events);
   }
+
+  // Forward to the embedded trigger executor
+  //Future<bool> onInitialize(Measure measure) async => await (trigger as ManualTrigger).executor.initialize(measure);
+  void onInitialize(Measure measure) => (trigger as ManualTrigger).executor.initialize(measure);
 
   // A no-op methods since a ManualTrigger can only be resumed/paused
   // using the resume/pause methods on the ManualTrigger.
   Future<void> onResume() async {}
   Future<void> onPause() async {}
+
+  // Forward to the embedded trigger executor
+  Future<void> onRestart({Measure measure}) async => (trigger as ManualTrigger).executor.restart();
+  Future<void> onStop() async => (trigger as ManualTrigger).executor.stop();
+
+  List<Probe> get probes => (trigger as ManualTrigger).executor.probes;
 }
 
 /// Executes a [DelayedTrigger], i.e. resumes sampling after the specified delay.
@@ -413,15 +423,15 @@ class TaskExecutor extends Executor {
     _task = task;
   }
 
-  Future<void> onInitialize(Measure ignored) async {
+  void onInitialize(Measure ignored) {
     for (Measure measure in task.measures) {
       // create a new probe for each measure - this ensures that we can have
       // multiple measures of the same type, each using its own probe instance
       Probe probe = ProbeRegistry().create(measure.type.name);
       if (probe != null) {
         executors.add(probe);
-        await _group.add(probe.events);
-        await probe.initialize(measure);
+        _group.add(probe.events);
+        probe.initialize(measure);
       } else {
         warning('A probe for measure type ${measure.type.name} could not be created. '
             'Check that the sampling package containing this probe has been registered in the SamplingPackageRegistry.');
@@ -433,14 +443,14 @@ class TaskExecutor extends Executor {
 /// Executes an [AutomaticTask].
 class AutomaticTaskExecutor extends TaskExecutor {
   AutomaticTaskExecutor(AutomaticTask task)
-      : assert(task is AutomaticTask, 'SensingTaskExecutor should be initialized with a SensingTask.'),
+      : assert(task is AutomaticTask, '$runtimeType should be initialized with a AutomaticTask.'),
         super(task);
 }
 
 /// Executes an [AppTask].
 class AppTaskExecutor extends TaskExecutor {
   AppTaskExecutor(AppTask task)
-      : assert(task is AppTask, 'AppTaskExecutor should be initialized with an AppTask.'),
+      : assert(task is AppTask, '$runtimeType should be initialized with an AppTask.'),
         super(task) {
     _appTask = task;
 
@@ -454,9 +464,20 @@ class AppTaskExecutor extends TaskExecutor {
   AppTask _appTask;
   TaskExecutor _taskExecutor;
 
-  Future<void> onInitialize(Measure measure) async {
-    await _taskExecutor.initialize(measure);
-    if (_appTask.onInitialize != null) _appTask.onInitialize(_taskExecutor);
+  // Future<bool> onInitialize(Measure measure) async {
+  //   bool initialized = await _taskExecutor.initialize(measure);
+  //   if (initialized && (_appTask.onInitialize != null)) {
+  //     _appTask.onInitialize(_taskExecutor);
+  //     return true;
+  //   }
+  //   return false;
+  // }
+
+  void onInitialize(Measure measure) {
+    _taskExecutor.initialize(measure);
+    if (_appTask.onInitialize != null) {
+      _appTask.onInitialize(_taskExecutor);
+    }
   }
 
   Future<void> onPause() async {

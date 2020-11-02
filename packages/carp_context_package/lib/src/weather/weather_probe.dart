@@ -4,7 +4,7 @@ part of context;
 class WeatherProbe extends DatumProbe {
   WeatherFactory _wf;
 
-  Future<void> onInitialize(Measure measure) async {
+  void onInitialize(Measure measure) {
     super.onInitialize(measure);
     WeatherMeasure wm = measure as WeatherMeasure;
     assert(wm.apiKey != null, 'In order to use the Weather API, an API key must be provided.');

@@ -13,7 +13,9 @@ part of communication;
 class PhoneLogProbe extends DatumProbe {
   Future<Datum> getDatum() async {
     MarkedMeasure m = (measure as MarkedMeasure);
-    int from = (m.lastTime != null) ? m.lastTime.millisecondsSinceEpoch : DateTime.now().subtract(m.history).millisecondsSinceEpoch;
+    int from = (m.lastTime != null)
+        ? m.lastTime.millisecondsSinceEpoch
+        : DateTime.now().subtract(m.history).millisecondsSinceEpoch;
     int now = DateTime.now().millisecondsSinceEpoch;
     Iterable<CallLogEntry> entries = await CallLog.query(dateFrom: from, dateTo: now) ?? List<CallLogEntry>();
     return PhoneLogDatum()..phoneLog = entries.map((call) => PhoneCall.fromCallLogEntry(call)).toList();
@@ -26,11 +28,11 @@ class PhoneLogProbe extends DatumProbe {
 class TextMessageLogProbe extends DatumProbe {
   SmsQuery query;
 
-  Future<void> onInitialize(Measure measure) async {
+  void onInitialize(Measure measure) {
     super.onInitialize(measure);
     // check if SMS is available (only available on Android)
     query = SmsQuery();
-    await query.querySms(start: 1, count: 2);
+    query.querySms(start: 1, count: 2);
   }
 
   Future<Datum> getDatum() async {
@@ -44,12 +46,13 @@ class TextMessageLogProbe extends DatumProbe {
 ///
 /// Only works on Android
 class TextMessageProbe extends StreamProbe {
-  Future<void> onInitialize(Measure measure) async {
+  void onInitialize(Measure measure) {
     super.onInitialize(measure);
     if (!Platform.isAndroid) throw SensingException('TextMessageProbe only available on Android.');
   }
 
-  Stream<Datum> get stream => SmsReceiver().onSmsReceived.map((event) => TextMessageDatum.fromTextMessage(TextMessage.fromSmsMessage(event)));
+  Stream<Datum> get stream =>
+      SmsReceiver().onSmsReceived.map((event) => TextMessageDatum.fromTextMessage(TextMessage.fromSmsMessage(event)));
 }
 
 /// A probe collecting calendar entries from the calendar on the phone.
@@ -61,7 +64,7 @@ class CalendarProbe extends DatumProbe {
   Iterator<Calendar> _calendarIterator;
   List<CalendarEvent> _events = [];
 
-  Future<void> onInitialize(Measure measure) async {
+  void onInitialize(Measure measure) {
     assert(measure is CalendarMeasure);
     super.onInitialize(measure);
     _retrieveCalendars();
@@ -86,7 +89,8 @@ class CalendarProbe extends DatumProbe {
     final startDate = new DateTime.now().subtract((measure as CalendarMeasure).past);
     final endDate = new DateTime.now().add((measure as CalendarMeasure).future);
 
-    var _calendarEventsResult = await _deviceCalendar.retrieveEvents(calendar.id, RetrieveEventsParams(startDate: startDate, endDate: endDate));
+    var _calendarEventsResult =
+        await _deviceCalendar.retrieveEvents(calendar.id, RetrieveEventsParams(startDate: startDate, endDate: endDate));
     List<Event> _calendarEvents = _calendarEventsResult?.data;
     if (_calendarEvents != null) _calendarEvents.forEach((event) => _events.add(CalendarEvent.fromEvent(event)));
 

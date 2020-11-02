@@ -14,7 +14,7 @@ class AppsProbe extends DatumProbe {
 
   Stream<Datum> get stream => null;
 
-  Future<void> onInitialize(Measure measure) async {
+  void onInitialize(Measure measure) {
     super.onInitialize(measure);
 
     // check if the DeviceApps plugin is available (only available on Android)
@@ -43,7 +43,7 @@ class AppUsageProbe extends DatumProbe {
 
   AppUsageProbe() : super();
 
-  Future<void> onInitialize(Measure measure) async {
+  void onInitialize(Measure measure) {
     super.onInitialize(measure);
     assert(measure is MarkedMeasure, 'An MarkedMeasure must be provided to use the AppUsageProbe.');
     markedMeasure = (measure as MarkedMeasure);

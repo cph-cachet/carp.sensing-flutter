@@ -1,3 +1,6 @@
+## 0.9.5
+* upgrade to `carp_mobile_sensing` v. 0.9.5
+
 ## 0.9.4
 * fix: using the [geolocator](https://pub.dev/packages/geolocator) plugin for the `location` measure.
 * fix: stabilizing `weather` and `air_quality` probes
