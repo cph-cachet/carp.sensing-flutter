@@ -4,7 +4,7 @@ part of mobile_sensing_app;
 class Sensing implements StudyManager {
   static final Sensing _instance = Sensing._();
   Study _study;
-  ManualTrigger _otwat = ManualTrigger(triggerId: 'OneTimeTrigger - WHO-5');
+  ManualTrigger _otwat = ManualTrigger(triggerId: 'OneTimeTrigger');
 
   StudyController controller;
 
@@ -16,7 +16,7 @@ class Sensing implements StudyManager {
 
   Sensing._() {
     // create and register external sampling packages
-    //SamplingPackageRegistry().register(ConnectivitySamplingPackage());
+    SamplingPackageRegistry().register(ConnectivitySamplingPackage());
     SamplingPackageRegistry().register(ContextSamplingPackage());
     //SamplingPackageRegistry().register(CommunicationSamplingPackage());
     //SamplingPackageRegistry().register(AudioSamplingPackage());
@@ -29,7 +29,7 @@ class Sensing implements StudyManager {
     controller = StudyController(
       bloc.study,
       samplingSchema: SamplingSchema.normal(powerAware: false),
-      debugLevel: DebugLevel.DEBUG,
+      //debugLevel: DebugLevel.DEBUG,
     );
 
     // The following study controller will use the default privacy schema, if used instead.
@@ -37,16 +37,16 @@ class Sensing implements StudyManager {
 
     // Initialize the controller -- remember to await initialization before resuming
     await controller.initialize();
-    controller.resume();
+    //controller.resume();
 
     // Listening on all data events from the study and print it (for debugging purpose).
     controller.events.listen((event) => print(event));
 
     // wait 3 secs and resume the weather & air quality trigger
-    Future.delayed(const Duration(seconds: 3), () {
-      print('>>> resuming $_otwat');
-      _otwat.resume();
-    });
+    // Future.delayed(const Duration(seconds: 3), () {
+    //   print('>>> resuming $_otwat');
+    //   _otwat.resume();
+    // });
   }
 
   /// Return a [Study] based on the [studyId].
@@ -80,75 +80,74 @@ class Sensing implements StudyManager {
   Future<Study> _getCoverageStudy(String studyId) async {
     if (_study == null) {
       _study = Study(studyId, bloc.username)
-        ..name = studyId
-        ..description = 'This is a study for testing the coverage of sampling.'
-        ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
-        ..addTriggerTask(
-            ImmediateTrigger(),
-            AutomaticTask()
-              ..measures = SamplingSchema.debug().getMeasureList(
-                namespace: NameSpace.CARP,
-                types: [
-                  SensorSamplingPackage.LIGHT, // 10 s
-                  //ConnectivitySamplingPackage.CONNECTIVITY,
-                  //ConnectivitySamplingPackage.WIFI, // 60 s
-                  DeviceSamplingPackage.MEMORY, // 60 s
-                  //AudioSamplingPackage.NOISE, // 60 s
-                ],
-              ))
-        ..addTriggerTask(
-            ImmediateTrigger(),
-            AutomaticTask()
-              ..measures = SamplingSchema.debug().getMeasureList(
-                namespace: NameSpace.CARP,
-                types: [
-                  ContextSamplingPackage.ACTIVITY, // ~3 s
-                ],
-              ))
-        ..addTriggerTask(
-            PeriodicTrigger(period: Duration(seconds: 30)),
-            AutomaticTask()
-              ..measures = SamplingSchema.debug().getMeasureList(
-                namespace: NameSpace.CARP,
-                types: [
-                  //DeviceSamplingPackage.DEVICE,
-                  ContextSamplingPackage.LOCATION,
-                  ContextSamplingPackage.WEATHER,
-                  ContextSamplingPackage.AIR_QUALITY,
-                ],
-              ))
-        // ..addTriggerTask(
-        //     PeriodicTrigger(period: Duration(minutes: 5)), // 5 min
-        //     AutomaticTask()
-        //       ..measures = SamplingSchema.debug().getMeasureList(
-        //         namespace: NameSpace.CARP,
-        //         types: [
-        //           AppsSamplingPackage.APP_USAGE,
-        //         ],
-        //       ))
-        // ..addTriggerTask(
-        //     PeriodicTrigger(period: Duration(minutes: 5)), // 10 min
-        //     //PeriodicTrigger(period: Duration(seconds: 30)),
-        //     AutomaticTask()
-        //       ..measures = SamplingSchema.debug().getMeasureList(
-        //         namespace: NameSpace.CARP,
-        //         types: [
-        //           ContextSamplingPackage.WEATHER,
-        //           ContextSamplingPackage.AIR_QUALITY,
-        //         ],
-        //       ))
-        //
-        ..addTriggerTask(
-            _otwat, // 10 min
-            AutomaticTask()
-              ..measures = SamplingSchema.debug().getMeasureList(
-                namespace: NameSpace.CARP,
-                types: [
-                  DeviceSamplingPackage.DEVICE,
-                  ContextSamplingPackage.WEATHER,
-                  ContextSamplingPackage.AIR_QUALITY,
-                ],
-              ));
+            ..name = studyId
+            ..description = 'This is a study for testing the coverage of sampling.'
+            ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
+            ..addTriggerTask(
+                ImmediateTrigger(),
+                AutomaticTask()
+                  ..measures = SamplingSchema.debug().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      SensorSamplingPackage.LIGHT, // 10 s
+                      ConnectivitySamplingPackage.CONNECTIVITY,
+                      ConnectivitySamplingPackage.WIFI, // 60 s
+                      DeviceSamplingPackage.MEMORY, // 60 s
+                      //AudioSamplingPackage.NOISE, // 60 s
+                    ],
+                  ))
+            ..addTriggerTask(
+                ImmediateTrigger(),
+                AutomaticTask()
+                  ..measures = SamplingSchema.debug().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      ContextSamplingPackage.ACTIVITY, // ~3 s
+                    ],
+                  ))
+            ..addTriggerTask(
+                PeriodicTrigger(period: Duration(minutes: 1)),
+                AutomaticTask()
+                  ..measures = SamplingSchema.debug().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      DeviceSamplingPackage.DEVICE,
+                      ContextSamplingPackage.LOCATION,
+                    ],
+                  ))
+            // ..addTriggerTask(
+            //     PeriodicTrigger(period: Duration(minutes: 5)), // 5 min
+            //     AutomaticTask()
+            //       ..measures = SamplingSchema.debug().getMeasureList(
+            //         namespace: NameSpace.CARP,
+            //         types: [
+            //           AppsSamplingPackage.APP_USAGE,
+            //         ],
+            //       ))
+            ..addTriggerTask(
+                PeriodicTrigger(period: Duration(minutes: 5)),
+                AutomaticTask()
+                  ..measures = SamplingSchema.debug().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      ContextSamplingPackage.WEATHER,
+                      ContextSamplingPackage.AIR_QUALITY,
+                    ],
+                  ))
+          //
+          // ..addTriggerTask(
+          //     _otwat, // 10 min
+          //     AutomaticTask()
+          //       ..measures = SamplingSchema.debug().getMeasureList(
+          //         namespace: NameSpace.CARP,
+          //         types: [
+          //           DeviceSamplingPackage.DEVICE,
+          //           ContextSamplingPackage.WEATHER,
+          //           ContextSamplingPackage.AIR_QUALITY,
+          //         ],
+          //       ))
+          //
+          ;
     }
     return _study;
   }
