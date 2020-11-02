@@ -21,7 +21,6 @@ class Sensing implements StudyManager {
     //SamplingPackageRegistry().register(CommunicationSamplingPackage());
     //SamplingPackageRegistry().register(AudioSamplingPackage());
     //SamplingPackageRegistry().register(AppsSamplingPackage());
-    SamplingPackageRegistry().register(MovisensSamplingPackage());
   }
 
   /// Initialize and setup sensing.
@@ -60,8 +59,7 @@ class Sensing implements StudyManager {
   ///  * creating the study by specifying [Trigger]s, [Task]s, and [Measure]s by hand
   ///
   Future<Study> getStudy(String studyId) async {
-    //return _getCoverageStudy(studyId);
-    return _getMovisensStudy(studyId);
+    return _getCoverageStudy(studyId);
     //return _getStudyWithSelectedMeasuresFromCommonSamplingSchema(studyId);
     //return _getConditionalSamplingStudy('#1');
   }
@@ -75,29 +73,6 @@ class Sensing implements StudyManager {
         ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
         ..addTriggerTask(ImmediateTrigger(),
             Task()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
-    }
-    return _study;
-  }
-
-  Future<Study> _getMovisensStudy(String studyId) async {
-    if (_study == null) {
-      _study = Study(studyId, bloc.username)
-        ..name = 'CAMS Movisens Demo Study'
-        ..description = 'This study demonstrates the use of the Movisens ECG Device'
-        ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
-        ..addTriggerTask(
-            ImmediateTrigger(),
-            Task()
-              ..addMeasure(MovisensMeasure(MeasureType(NameSpace.CARP, MovisensSamplingPackage.MOVISENS),
-                  name: "Movisens ECG Device",
-                  enabled: true,
-                  address: '00:07:80:78:63:A5',
-                  deviceName: "MOVISENS Sensor 00840",
-                  height: 178,
-                  weight: 77,
-                  age: 32,
-                  gender: Gender.male,
-                  sensorLocation: SensorLocation.chest)));
     }
     return _study;
   }
