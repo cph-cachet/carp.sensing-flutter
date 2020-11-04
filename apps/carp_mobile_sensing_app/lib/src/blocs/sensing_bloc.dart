@@ -6,7 +6,7 @@ class SensingBLoC {
   final String password = "...";
   final String userId = "user@cachet.dk";
   final String uri = "https://cans.cachet.dk:443";
-  final String testStudyId = "#20-iOS";
+  final String testStudyId = "#22-Audio";
 
   Study _study;
   Study get study => _study;

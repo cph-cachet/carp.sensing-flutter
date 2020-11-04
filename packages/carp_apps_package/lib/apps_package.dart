@@ -45,9 +45,7 @@ class AppsSamplingPackage implements SamplingPackage {
     ]);
 
   SamplingSchema get light => common;
-
   SamplingSchema get minimum => common;
-
   SamplingSchema get normal => common;
 
   SamplingSchema get debug => SamplingSchema()

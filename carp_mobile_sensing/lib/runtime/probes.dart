@@ -48,7 +48,7 @@ enum ProbeState {
 ///
 /// A probe's [state] can be set using the [initialize], [resume], [pause], and [stop] methods.
 /// A [restart] can be used to restart a probe when its [measure] has changed (e.g. disabling the probe).
-/// A probe can be stoped at any time.
+/// A probe can be stopped at any time.
 /// If an error occurs the state of a probe becomes [undefined]. This is, for example, used when an exception
 /// is caught or when a probe is not available (e.g. on iOS).
 ///
@@ -115,7 +115,8 @@ abstract class Probe {
   /// The [Measure] that configures this probe.
   Measure get measure;
 
-  /// A printer-friendly name for this probe. Takes its name from [Measure.name] as default.
+  /// A printer-friendly name for this probe.
+  /// Takes its name from [Measure.name] as default.
   String get name;
 
   /// A [Stream] generating sensor data events from this probe.
@@ -125,7 +126,6 @@ abstract class Probe {
   ///
   /// The configuration of the probe is specified in the [measure].
   /// Returns `true` if the probe was initialized successfully, `false` if not.
-  //Future<bool> initialize(Measure measure);
   void initialize(Measure measure);
 
   /// Resume the probe.
@@ -157,7 +157,7 @@ abstract class AbstractProbe with MeasureListener implements Probe {
 
   bool get enabled => measure.enabled ?? true;
   String get type => measure.type.name;
-  String get name => measure.name ?? 'NO_NAME';
+  String get name => measure.name ?? runtimeType;
 
   ProbeState get state => _stateMachine.state;
   bool validNextState(ProbeState nextState) => _stateMachine.validNextState(nextState);

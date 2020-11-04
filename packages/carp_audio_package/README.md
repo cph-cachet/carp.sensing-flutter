@@ -39,7 +39,8 @@ dependencies:
 Add the following to your app's `manifest.xml` file located in `android/app/src/main`:
 
 ````xml
- <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+<uses-permission android:name="android.permission.RECORD_AUDIO" />
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 ````
 
 > **NOTE:** Version 0.5.0 is migrated to AndroidX. This shouldn't result in any functional changes, but it requires any Android apps using this plugin to also 
@@ -61,13 +62,6 @@ Add this permission in the `Info.plist` file located in `ios/Runner`:
   <string>external-accessory</string>
   <string>fetch</string>
 </array>
-```
-
-The [`flutter_sound`]() plugin require an iOS platform >= 11.0. 
-Therefore, in your `Podfile` add
-
-```yaml
-platform :ios, '11.0'
 ```
 
 ## Using it

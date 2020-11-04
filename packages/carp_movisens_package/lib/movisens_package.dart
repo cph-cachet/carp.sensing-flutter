@@ -26,30 +26,50 @@ class MovisensSamplingPackage implements SamplingPackage {
 
     // registering the transformers from CARP to OMH for heart rate and step count.
     // we assume that there is an OMH schema registered already...
-    TransformerSchemaRegistry().lookup(NameSpace.OMH).add('${MovisensSamplingPackage.MOVISENS}.${MovisensSamplingPackage.HR}', OMHHeartRateDatum.transformer);
-    TransformerSchemaRegistry()
-        .lookup(NameSpace.OMH)
-        .add('${MovisensSamplingPackage.MOVISENS}.${MovisensSamplingPackage.STEP_COUNT}', OMHStepCountDatum.transformer);
+    TransformerSchemaRegistry().lookup(NameSpace.OMH).add(
+          '${MovisensSamplingPackage.MOVISENS}.${MovisensSamplingPackage.HR}',
+          OMHHeartRateDatum.transformer,
+        );
+    TransformerSchemaRegistry().lookup(NameSpace.OMH).add(
+          '${MovisensSamplingPackage.MOVISENS}.${MovisensSamplingPackage.STEP_COUNT}',
+          OMHStepCountDatum.transformer,
+        );
   }
 
   List<Permission> get permissions => []; // no special permissions needed
 
+  /// Create a [MovisensProbe].
   Probe create(String type) => (type == MOVISENS) ? MovisensProbe() : null;
 
   List<String> get dataTypes => [MOVISENS];
 
-  // TODO: implement common
-  SamplingSchema get common => null;
+  /// This common / default schema contains a [MovisensMeasure] for
+  /// a 25 year old male, height 175 cm, weight 75 kg, for a Movisens
+  /// device with address '88:6B:0F:CD:E7:F2' located on the person's
+  /// chest.
+  SamplingSchema get common => SamplingSchema()
+    ..type = SamplingSchemaType.COMMON
+    ..name = 'Common (default) app sampling schema'
+    ..powerAware = false
+    ..measures.addEntries([
+      MapEntry(
+          MOVISENS,
+          MovisensMeasure(
+            // Test data for a male 25 year old user.
+            MeasureType(NameSpace.CARP, MOVISENS),
+            name: 'Movisens ECG device',
+            address: '88:6B:0F:CD:E7:F2',
+            sensorLocation: SensorLocation.chest,
+            gender: Gender.male,
+            deviceName: 'Sensor 02655',
+            height: 175,
+            weight: 75,
+            age: 25,
+          )),
+    ]);
 
-  // TODO: implement light
-  SamplingSchema get light => null;
-
-  // TODO: implement minimum
-  SamplingSchema get minimum => null;
-
-  // TODO: implement normal
-  SamplingSchema get normal => null;
-
-  // TODO: implement debug
-  SamplingSchema get debug => null;
+  SamplingSchema get light => common;
+  SamplingSchema get minimum => common;
+  SamplingSchema get normal => common;
+  SamplingSchema get debug => common;
 }

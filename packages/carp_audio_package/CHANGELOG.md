@@ -1,3 +1,7 @@
+## 0.9.6
+* using the `record_mp3` package for the `audio` measure (replacing `flutter_sound`).
+* fix of issue [#118](https://github.com/cph-cachet/carp.sensing-flutter/issues/118)
+
 ## 0.9.5
 * upgrade to `carp_mobile_sensing` v. 0.9.5
 
