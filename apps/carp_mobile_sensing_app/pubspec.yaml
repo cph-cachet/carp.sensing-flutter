@@ -29,13 +29,15 @@ dependencies:
   #carp_firebase_backend: ^0.5.0
 
 # Overriding carp libraries to use the local copy
-#dependency_overrides:
+dependency_overrides:
 #  carp_mobile_sensing:
 #    path: ../../carp_mobile_sensing/
 #  carp_context_package:
 #    path: ../../packages/carp_context_package/
 #  carp_connectivity_package:
 #    path: ../../packages/carp_connectivity_package/
+  carp_audio_package:
+    path: ../../packages/carp_audio_package/
 
 dev_dependencies:
   flutter_test:
