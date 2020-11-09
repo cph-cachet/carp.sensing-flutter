@@ -1,6 +1,6 @@
 # CARP Mobile Sensing in Flutter
 
-This repo hold the source code for the [CACHET](http://www.cachet.dk/) Research Platform (CARP) Mobile Sensing (CAMS) Flutter software.
+This repo hold the source code for the [CACHET Research Platform (CARP)](https://carp.cachet.dk) Mobile Sensing (CAMS) Flutter software.
 It contains the source code for CACHET first-party (i.e., developed by the core CACHET team) CAMS framework, its packages, and example apps.
 
 In addition, the CARP team maintain a set of [Flutter plugins](https://github.com/cph-cachet/flutter-plugins) (mainly) for sensing purposes. Flutter plugins enable access to platform-specific APIs. For more information
