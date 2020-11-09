@@ -1,3 +1,5 @@
+![CARP-Mobile-Sensing-Vertical](https://user-images.githubusercontent.com/1196642/98542469-43eadd80-2291-11eb-9013-87542d0b23e6.png)
+
 # CARP Mobile Sensing in Flutter
 
 This repo hold the source code for the [CACHET Research Platform (CARP)](https://carp.cachet.dk) Mobile Sensing (CAMS) Flutter software.
