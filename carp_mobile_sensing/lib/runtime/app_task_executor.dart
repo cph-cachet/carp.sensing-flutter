@@ -226,16 +226,21 @@ class SensingUserTaskFactory implements UserTaskFactory {
 
 /// A non-UI sensing taks that collects sensor data.
 /// For example, a `noise` datum.
+///
+/// It resumes sensing when the [onStart] methods is called and
+/// pauses sensing when the [onDone] methods is called.
 class SensingUserTask extends UserTask {
   static const String SENSING_TYPE = 'sensing';
 
   SensingUserTask(AppTaskExecutor executor) : super(executor);
 
+  /// Resumes sensing.
   void onStart(BuildContext context) {
     super.onStart(context);
     executor?.resume();
   }
 
+  /// Pauses sensing.
   void onDone(BuildContext context, {dequeue = false}) {
     super.onDone(context, dequeue: dequeue);
     executor?.pause();
@@ -243,12 +248,16 @@ class SensingUserTask extends UserTask {
 }
 
 /// A non-UI sensing taks that collects sensor data once.
-/// For example a `location` datum.
+/// For example collecting a `location` datum.
+///
+/// It resumes sensing when the [onStart] methods is called and then
+/// automatically pauses after 10 seconds.
 class OneTimeSensingUserTask extends SensingUserTask {
   static const String ONE_TIME_SENSING_TYPE = 'one_time_sensing';
 
   OneTimeSensingUserTask(AppTaskExecutor executor) : super(executor);
 
+  /// Resume sensing for 10 seconds.
   void onStart(BuildContext context) {
     super.onStart(context);
     // after 10 seconds, pause the executor automatically

@@ -1,7 +1,7 @@
 ## 0.10.0 - AppTask model
 * **breaking**: a new `AppTask` model is implemented
    * see documentation on the CAMS [wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki/3.1-The-AppTask-Model).
-   * see the CAMS example app for how to use this new model.
+   * see the [Pulmonary app](https://github.com/cph-cachet/pulmonary_monitor_app) for an example on how to use this new model.
 * docs: addressed issue [#113](https://github.com/cph-cachet/carp.sensing-flutter/issues/113).
 * fix: issue [#98](https://github.com/cph-cachet/carp.sensing-flutter/issues/98)
 

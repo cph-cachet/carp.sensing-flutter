@@ -12,14 +12,17 @@ part of survey;
 /// This measure should be part of an [AppTask] in order for the app to handle how it wants to show the survey.
 ///
 /// The app task holding a survey measure can then be triggered in different ways. For example:
+///
 ///  * a [PeriodicTrigger] would allow to collect the survey on a regular basis (frequency)
 ///  * a [ScheduledTrigger] can be used to trigger the survey at a specific schedule (i.e., day and time)
 ///  * a [RecurrentScheduledTrigger] allow to schedule a recurrent survey, e.g every Monday at 8pm.
 ///
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class RPTaskMeasure extends Measure {
-  // TODO - fix when research_package supports serialization to JSON
-  @JsonKey(ignore: true)
+  /// The survey to be issued to the user.
+  @JsonKey(
+      ignore:
+          true) // TODO - remove when research_package supports serialization
   RPTask surveyTask;
 
   RPTaskMeasure(

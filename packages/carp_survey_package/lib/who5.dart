@@ -1,6 +1,17 @@
 part of survey;
 
-List<RPChoice> choices = [
+/// A task representing the
+/// [WHO-5 well-being index](https://www.psykiatri-regionh.dk/who-5/Pages/default.aspx).
+RPOrderedTask who5Task = RPOrderedTask("who5TaskID", [
+  _who5Question1,
+  _who5Question2,
+  _who5Question3,
+  _who5Question4,
+  _who5Question5,
+  _completionStep,
+]);
+
+List<RPChoice> _who5Choices = [
   RPChoice.withParams("All of the time", 5),
   RPChoice.withParams("Most of the time", 4),
   RPChoice.withParams("More than half of the time", 3),
@@ -9,48 +20,39 @@ List<RPChoice> choices = [
   RPChoice.withParams("At no time", 0),
 ];
 
-RPChoiceAnswerFormat choiceAnswerFormat =
-    RPChoiceAnswerFormat.withParams(ChoiceAnswerStyle.SingleChoice, choices);
+RPChoiceAnswerFormat _choiceAnswerFormat = RPChoiceAnswerFormat.withParams(
+    ChoiceAnswerStyle.SingleChoice, _who5Choices);
 
-RPQuestionStep who5Question1 = RPQuestionStep.withAnswerFormat(
+RPQuestionStep _who5Question1 = RPQuestionStep.withAnswerFormat(
   "who5_question1",
   "I have felt cheerful and in good spirits",
-  choiceAnswerFormat,
+  _choiceAnswerFormat,
 );
 
-RPQuestionStep who5Question2 = RPQuestionStep.withAnswerFormat(
+RPQuestionStep _who5Question2 = RPQuestionStep.withAnswerFormat(
   "who5_question2",
   "I have felt calm and relaxed",
-  choiceAnswerFormat,
+  _choiceAnswerFormat,
 );
 
-RPQuestionStep who5Question3 = RPQuestionStep.withAnswerFormat(
+RPQuestionStep _who5Question3 = RPQuestionStep.withAnswerFormat(
   "who5_question3",
   "I have felt active and vigorous",
-  choiceAnswerFormat,
+  _choiceAnswerFormat,
 );
 
-RPQuestionStep who5Question4 = RPQuestionStep.withAnswerFormat(
+RPQuestionStep _who5Question4 = RPQuestionStep.withAnswerFormat(
   "who5_question4",
   "I woke up feeling fresh and rested",
-  choiceAnswerFormat,
+  _choiceAnswerFormat,
 );
 
-RPQuestionStep who5Question5 = RPQuestionStep.withAnswerFormat(
+RPQuestionStep _who5Question5 = RPQuestionStep.withAnswerFormat(
   "who5_question5",
   "My daily life has been filled with things that interest me",
-  choiceAnswerFormat,
+  _choiceAnswerFormat,
 );
 
-RPCompletionStep completionStep = RPCompletionStep("completionID")
+RPCompletionStep _completionStep = RPCompletionStep("completionID")
   ..title = "Finished"
   ..text = "Thank you for filling out the survey!";
-
-RPOrderedTask who5Task = RPOrderedTask("who5TaskID", [
-  who5Question1,
-  who5Question2,
-  who5Question3,
-  who5Question4,
-  who5Question5,
-  completionStep,
-]);

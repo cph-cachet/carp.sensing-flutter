@@ -29,21 +29,21 @@ class SurveyUserTask extends UserTask {
   void onStart(BuildContext context) {
     // saving the build context for later use
     _context = context;
-    _surveyProbe.onSurveyTriggered = onSurveyTriggered;
-    _surveyProbe.onSurveySubmit = onSurveySubmit;
+    _surveyProbe.onSurveyTriggered = _onSurveyTriggered;
+    _surveyProbe.onSurveySubmit = _onSurveySubmit;
 
     super.onStart(context);
     executor?.resume();
   }
 
-  void onSurveyTriggered(SurveyPage surveyPage) {
+  void _onSurveyTriggered(SurveyPage surveyPage) {
     Navigator.push(
       _context,
       MaterialPageRoute(builder: (context) => surveyPage),
     );
   }
 
-  void onSurveySubmit(RPTaskResult result) {
+  void _onSurveySubmit(RPTaskResult result) {
     executor?.pause();
     super.onDone(_context);
   }
