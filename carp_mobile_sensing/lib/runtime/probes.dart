@@ -152,15 +152,17 @@ abstract class Probe {
 
 /// An abstract implementation of a [Probe] to extend from.
 abstract class AbstractProbe with MeasureListener implements Probe {
-  final StreamController<ProbeState> _stateEventController = StreamController.broadcast();
+  final StreamController<ProbeState> _stateEventController =
+      StreamController.broadcast();
   Stream<ProbeState> get stateEvents => _stateEventController.stream;
 
   bool get enabled => measure.enabled ?? true;
   String get type => measure.type.name;
-  String get name => measure.name ?? runtimeType;
+  String get name => measure.name ?? runtimeType.toString();
 
   ProbeState get state => _stateMachine.state;
-  bool validNextState(ProbeState nextState) => _stateMachine.validNextState(nextState);
+  bool validNextState(ProbeState nextState) =>
+      _stateMachine.validNextState(nextState);
 
   _ProbeStateMachine _stateMachine;
   void _setState(_ProbeStateMachine state) {
@@ -176,13 +178,10 @@ abstract class AbstractProbe with MeasureListener implements Probe {
     _stateMachine = _CreatedState(this);
   }
 
-// ProbeState handlers
-  //Future<bool> initialize(Measure measure) async {
   void initialize(Measure measure) {
     assert(measure != null, 'Probe cannot be initialized with a null measure.');
     _measure = measure;
     measure.addMeasureListener(this);
-    //return await _stateMachine.initialize(measure);
     return _stateMachine.initialize(measure);
   }
 
@@ -221,7 +220,8 @@ abstract class AbstractProbe with MeasureListener implements Probe {
   @protected
   void mark() {
     if (measure is MarkedMeasure) {
-      settings.preferences.setString((measure as MarkedMeasure).tag(), DateTime.now().toUtc().toString());
+      settings.preferences.setString(
+          (measure as MarkedMeasure).tag(), DateTime.now().toUtc().toString());
     }
   }
 
@@ -231,7 +231,8 @@ abstract class AbstractProbe with MeasureListener implements Probe {
     if (measure is MarkedMeasure) {
       String mark = settings.preferences.get((measure as MarkedMeasure).tag());
       debug('mark : $mark');
-      (measure as MarkedMeasure).lastTime = (mark != null) ? DateTime.tryParse(mark) : null;
+      (measure as MarkedMeasure).lastTime =
+          (mark != null) ? DateTime.tryParse(mark) : null;
     }
   }
 }
@@ -286,11 +287,12 @@ abstract class _AbstractProbeState implements _ProbeStateMachine {
   }
 
   // Default implementation of next state. Can always be stopped.
-  bool validNextState(ProbeState nextState) => (nextState == ProbeState.stopped);
+  bool validNextState(ProbeState nextState) =>
+      (nextState == ProbeState.stopped);
 
-  void _printWarning(String operation) =>
-      warning('Trying to $operation a ${probe.runtimeType} in a state where this cannot be done'
-          ' - state: $state, type: ${probe.type}, name: ${probe.name}');
+  void _printWarning(String operation) => warning(
+      'Trying to $operation a ${probe.runtimeType} in a state where this cannot be done'
+      ' - state: $state, type: ${probe.type}, name: ${probe.name}');
 }
 
 class _CreatedState extends _AbstractProbeState implements _ProbeStateMachine {
@@ -302,17 +304,20 @@ class _CreatedState extends _AbstractProbeState implements _ProbeStateMachine {
       probe.onInitialize(measure);
       probe._setState(_InitializedState(probe));
     } catch (error) {
-      warning('Error initializing ${probe.runtimeType}: $error Probe is now in an undefined state.');
+      warning(
+          'Error initializing ${probe.runtimeType}: $error Probe is now in an undefined state.');
       probe._setState(_UndefinedState(probe));
     }
   }
 
-  bool validNextState(ProbeState nextState) => (nextState == ProbeState.initialized);
+  bool validNextState(ProbeState nextState) =>
+      (nextState == ProbeState.initialized);
 
   String toString() => 'created';
 }
 
-class _InitializedState extends _AbstractProbeState implements _ProbeStateMachine {
+class _InitializedState extends _AbstractProbeState
+    implements _ProbeStateMachine {
   _InitializedState(Probe probe) : super(probe, ProbeState.initialized);
 
   void resume() {
@@ -321,7 +326,8 @@ class _InitializedState extends _AbstractProbeState implements _ProbeStateMachin
     probe._setState(_ResumedState(probe));
   }
 
-  bool validNextState(ProbeState nextState) => (nextState == ProbeState.resumed);
+  bool validNextState(ProbeState nextState) =>
+      (nextState == ProbeState.resumed);
 
   String toString() => 'initialized';
 }
@@ -370,7 +376,8 @@ class _PausedState extends _AbstractProbeState implements _ProbeStateMachine {
     }
   }
 
-  bool validNextState(ProbeState nextState) => (nextState == ProbeState.resumed);
+  bool validNextState(ProbeState nextState) =>
+      (nextState == ProbeState.resumed);
 
   String toString() => 'paused';
 }
@@ -380,7 +387,8 @@ class _StoppedState extends _AbstractProbeState implements _ProbeStateMachine {
   String toString() => 'stopped';
 }
 
-class _UndefinedState extends _AbstractProbeState implements _ProbeStateMachine {
+class _UndefinedState extends _AbstractProbeState
+    implements _ProbeStateMachine {
   _UndefinedState(Probe probe) : super(probe, ProbeState.undefined);
   String toString() => 'undefined';
 }
@@ -389,7 +397,8 @@ class _UndefinedState extends _AbstractProbeState implements _ProbeStateMachine 
 //                                SPECIALIZED PROBES
 //---------------------------------------------------------------------------------------
 
-/// When resumed collects one piece of [Datum], send its to its [events] stream, and then pause.
+/// When resumed collects one piece of [Datum], send its to its [events] stream,
+/// and then pause.
 ///
 /// The [Datum] to be collected should be implemented in the [getDatum] method.
 abstract class DatumProbe extends AbstractProbe {
@@ -446,7 +455,8 @@ abstract class PeriodicDatumProbe extends DatumProbe {
     timer = Timer.periodic(frequency, (Timer t) async {
       await getDatum().then((Datum data) {
         if (data != null) controller.add(data);
-      }).catchError((error, stacktrace) => controller.addError(error, stacktrace));
+      }).catchError(
+          (error, stacktrace) => controller.addError(error, stacktrace));
     });
   }
 
@@ -483,7 +493,8 @@ abstract class StreamProbe extends AbstractProbe {
 
   Future<void> onRestart() async {
     // if we don't have a subscription yet, try to get one
-    if (subscription == null && stream != null) subscription = stream.listen(onData, onError: onError, onDone: onDone);
+    if (subscription == null && stream != null)
+      subscription = stream.listen(onData, onError: onError, onDone: onDone);
   }
 
   Future<void> onResume() async {
@@ -616,7 +627,8 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
         // collect the datum
         getDatum().then((datum) {
           if (datum != null) controller.add(datum);
-        }).catchError((error, stacktrace) => controller.addError(error, stacktrace));
+        }).catchError(
+            (error, stacktrace) => controller.addError(error, stacktrace));
       });
     });
   }
@@ -626,7 +638,8 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
     // check if there are some buffered data that needs to be collected before pausing
     await getDatum().then((datum) {
       if (datum != null) controller.add(datum);
-    }).catchError((error, stacktrace) => controller.addError(error, stacktrace));
+    }).catchError(
+        (error, stacktrace) => controller.addError(error, stacktrace));
   }
 
   Future<void> onStop() async {
@@ -675,7 +688,8 @@ abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
 
   Future<void> onResume() async {
     // if we don't have a subscription yet, or it has been canceled, try to get one
-    subscription ??= bufferingStream?.listen(onSamplingData, onError: onError, onDone: onDone);
+    subscription ??= bufferingStream?.listen(onSamplingData,
+        onError: onError, onDone: onDone);
 
     subscription?.resume();
     timer = Timer.periodic(frequency, (Timer t) {
@@ -686,7 +700,8 @@ abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
         onSamplingEnd();
         getDatum().then((datum) {
           if (datum != null) controller.add(datum);
-        }).catchError((error, stacktrace) => controller.addError(error, stacktrace));
+        }).catchError(
+            (error, stacktrace) => controller.addError(error, stacktrace));
       });
     });
   }
@@ -697,7 +712,8 @@ abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
     // check if there are some buffered data that needs to be collected before pausing
     await getDatum().then((datum) {
       if (datum != null) controller.add(datum);
-    }).catchError((error, stacktrace) => controller.addError(error, stacktrace));
+    }).catchError(
+        (error, stacktrace) => controller.addError(error, stacktrace));
   }
 
   // Sub-classes should implement the following handler methods.
@@ -739,7 +755,8 @@ abstract class BufferingStreamProbe extends BufferingPeriodicStreamProbe {
       onSamplingStart();
       getDatum().then((datum) {
         if (datum != null) controller.add(datum);
-      }).catchError((error, stacktrace) => controller.addError(error, stacktrace));
+      }).catchError(
+          (error, stacktrace) => controller.addError(error, stacktrace));
     });
   }
 

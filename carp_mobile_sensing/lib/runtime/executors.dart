@@ -49,12 +49,14 @@ abstract class Executor extends AbstractProbe {
 /// Note that the [StudyExecutor] in itself is a [Probe] and hence work as a 'super probe'.
 /// This - amongst other things - imply that you can listen to datum [events] from a study executor.
 class StudyExecutor extends Executor {
-  final StreamController<Datum> _manualDatumController = StreamController<Datum>.broadcast();
+  final StreamController<Datum> _manualDatumController =
+      StreamController<Datum>.broadcast();
   Study get study => _study;
   Study _study;
 
   StudyExecutor(Study study)
-      : assert(study != null, 'Cannot initiate a StudyExecutor without a Study.'),
+      : assert(
+            study != null, 'Cannot initiate a StudyExecutor without a Study.'),
         super() {
     _study = study;
     _group.add(_manualDatumController.stream);
@@ -69,7 +71,8 @@ class StudyExecutor extends Executor {
   void addDatum(Datum datum) => _manualDatumController.add(datum);
 
   /// Add a error to the stream of events.
-  void addError(Object error, [StackTrace stacktrace]) => _manualDatumController.addError(error, stacktrace);
+  void addError(Object error, [StackTrace stacktrace]) =>
+      _manualDatumController.addError(error, stacktrace);
 
   /// Returns a list of the running probes in this study executor.
   /// This is a combination of the running probes in all trigger executors.
@@ -128,7 +131,8 @@ abstract class TriggerExecutor extends Executor {
   Trigger get trigger => _trigger;
 
   TriggerExecutor(Trigger trigger)
-      : assert(trigger != null, 'Cannot initiate a TriggerExecutor without a Trigger.'),
+      : assert(trigger != null,
+            'Cannot initiate a TriggerExecutor without a Trigger.'),
         super() {
     _trigger = trigger;
 
@@ -168,7 +172,8 @@ class ManualTriggerExecutor extends TriggerExecutor {
 
   // Forward to the embedded trigger executor
   //Future<bool> onInitialize(Measure measure) async => await (trigger as ManualTrigger).executor.initialize(measure);
-  void onInitialize(Measure measure) => (trigger as ManualTrigger).executor.initialize(measure);
+  void onInitialize(Measure measure) =>
+      (trigger as ManualTrigger).executor.initialize(measure);
 
   // A no-op methods since a ManualTrigger can only be resumed/paused
   // using the resume/pause methods on the ManualTrigger.
@@ -176,7 +181,8 @@ class ManualTriggerExecutor extends TriggerExecutor {
   Future<void> onPause() async {}
 
   // Forward to the embedded trigger executor
-  Future<void> onRestart({Measure measure}) async => (trigger as ManualTrigger).executor.restart();
+  Future<void> onRestart({Measure measure}) async =>
+      (trigger as ManualTrigger).executor.restart();
   Future<void> onStop() async => (trigger as ManualTrigger).executor.stop();
 
   List<Probe> get probes => (trigger as ManualTrigger).executor.probes;
@@ -204,8 +210,10 @@ class PeriodicTriggerExecutor extends TriggerExecutor {
   Timer timer;
 
   PeriodicTriggerExecutor(PeriodicTrigger trigger) : super(trigger) {
-    assert(trigger.period != null, 'The period in a PeriodicTrigger must be specified.');
-    assert(trigger.duration != null, 'The duration in a PeriodicTrigger must be specified.');
+    assert(trigger.period != null,
+        'The period in a PeriodicTrigger must be specified.');
+    assert(trigger.duration != null,
+        'The duration in a PeriodicTrigger must be specified.');
     period = trigger.period;
     duration = trigger.duration;
   }
@@ -239,8 +247,10 @@ class ScheduledTriggerExecutor extends TriggerExecutor {
   Timer timer;
 
   ScheduledTriggerExecutor(ScheduledTrigger trigger) : super(trigger) {
-    assert(trigger.schedule != null, 'The schedule of a ScheduledTrigger must be specified.');
-    assert(trigger.schedule.isAfter(DateTime.now()), 'The schedule of the ScheduledTrigger cannot be in the past.');
+    assert(trigger.schedule != null,
+        'The schedule of a ScheduledTrigger must be specified.');
+    assert(trigger.schedule.isAfter(DateTime.now()),
+        'The schedule of the ScheduledTrigger cannot be in the past.');
     delay = trigger.schedule.difference(DateTime.now());
     duration = trigger.duration;
   }
@@ -269,20 +279,23 @@ class ScheduledTriggerExecutor extends TriggerExecutor {
 class RecurrentScheduledTriggerExecutor extends PeriodicTriggerExecutor {
   RecurrentScheduledTrigger _myTrigger;
 
-  RecurrentScheduledTriggerExecutor(RecurrentScheduledTrigger trigger) : super(trigger) {
+  RecurrentScheduledTriggerExecutor(RecurrentScheduledTrigger trigger)
+      : super(trigger) {
     _myTrigger = trigger;
   }
 
   Future<void> onResume() async {
     // check if there is a remembered trigger date
     if (_myTrigger.remember) {
-      String _savedFirstOccurrence = settings.preferences.get(_myTrigger.triggerId);
+      String _savedFirstOccurrence =
+          settings.preferences.get(_myTrigger.triggerId);
       debug('savedFirstOccurrence : $_savedFirstOccurrence');
 
       if (_savedFirstOccurrence != null) {
         DateTime savedDate = DateTime.tryParse(_savedFirstOccurrence);
         if (savedDate.isBefore(DateTime.now())) {
-          debug('There is a saved timestamp in the past - resuming this trigger now: ${DateTime.now().toString()}.');
+          debug(
+              'There is a saved timestamp in the past - resuming this trigger now: ${DateTime.now().toString()}.');
           executors.forEach((executor) => executor.resume());
           // create a timer that pause the sampling after the specified duration.
           Timer(duration, () {
@@ -292,8 +305,10 @@ class RecurrentScheduledTriggerExecutor extends PeriodicTriggerExecutor {
       }
 
       // save the day of the first occurrence for later use
-      await settings.preferences.setString(_myTrigger.triggerId, _myTrigger.firstOccurrence.toUtc().toString());
-      debug('saving firstOccurrence : ${_myTrigger.firstOccurrence.toUtc().toString()}');
+      await settings.preferences.setString(
+          _myTrigger.triggerId, _myTrigger.firstOccurrence.toUtc().toString());
+      debug(
+          'saving firstOccurrence : ${_myTrigger.firstOccurrence.toUtc().toString()}');
     }
 
     // below is 'normal' (i.e., non-remember) behavior
@@ -305,7 +320,8 @@ class RecurrentScheduledTriggerExecutor extends PeriodicTriggerExecutor {
         if (_myTrigger.remember) {
           // replace the entry of the first occurrence to the next occurrence date
           DateTime nextOccurrence = DateTime.now().add(period);
-          settings.preferences.setString(_myTrigger.triggerId, nextOccurrence.toUtc().toString());
+          settings.preferences.setString(
+              _myTrigger.triggerId, nextOccurrence.toUtc().toString());
           debug('saving nextOccurrence: $nextOccurrence');
         }
         super.onResume();
@@ -326,7 +342,8 @@ class CronScheduledTriggerExecutor extends TriggerExecutor {
   }
 
   Future<void> onResume() async {
-    debug('creating cron job : ${(trigger as CronScheduledTrigger).toString()}');
+    debug(
+        'creating cron job : ${(trigger as CronScheduledTrigger).toString()}');
     _scheduledTask = _cron.schedule(_schedule, () async {
       debug('resuming cron job : ${DateTime.now().toString()}');
       await super.onResume();
@@ -350,9 +367,14 @@ class SamplingEventTriggerExecutor extends TriggerExecutor {
   Future<void> onResume() async {
     SamplingEventTrigger eventTrigger = trigger as SamplingEventTrigger;
     // start listen for events of the specified type
-    _subscription = ProbeRegistry().lookup(eventTrigger?.measureType?.name).events.listen((datum) {
-      if ((eventTrigger?.resumeCondition == null) || (datum == eventTrigger?.resumeCondition)) super.onResume();
-      if (eventTrigger?.pauseCondition != null && datum == eventTrigger?.pauseCondition) super.onPause();
+    _subscription = ProbeRegistry()
+        .lookup(eventTrigger?.measureType?.name)
+        .events
+        .listen((datum) {
+      if ((eventTrigger?.resumeCondition == null) ||
+          (datum == eventTrigger?.resumeCondition)) super.onResume();
+      if (eventTrigger?.pauseCondition != null &&
+          datum == eventTrigger?.pauseCondition) super.onPause();
     });
   }
 
@@ -364,20 +386,29 @@ class SamplingEventTriggerExecutor extends TriggerExecutor {
 }
 
 /// Executes a [ConditionalSamplingEventTrigger] based on the specified
-/// [ConditionalSamplingEventTrigger.measureType] and their [ConditionalSamplingEventTrigger.resumeCondition]
-/// and [ConditionalSamplingEventTrigger.pauseCondition].
+/// [ConditionalSamplingEventTrigger.measureType] and their
+/// [ConditionalSamplingEventTrigger.resumeCondition] and
+/// [ConditionalSamplingEventTrigger.pauseCondition].
 class ConditionalSamplingEventTriggerExecutor extends TriggerExecutor {
-  ConditionalSamplingEventTriggerExecutor(ConditionalSamplingEventTrigger trigger) : super(trigger);
+  ConditionalSamplingEventTriggerExecutor(
+      ConditionalSamplingEventTrigger trigger)
+      : super(trigger);
 
   StreamSubscription<Datum> _subscription;
 
   Future<void> onResume() async {
-    ConditionalSamplingEventTrigger eventTrigger = trigger as ConditionalSamplingEventTrigger;
+    ConditionalSamplingEventTrigger eventTrigger =
+        trigger as ConditionalSamplingEventTrigger;
 
     // listen for event of the specified type
-    _subscription = ProbeRegistry().lookup(eventTrigger.measureType.name).events.listen((datum) {
-      if (eventTrigger?.resumeCondition != null && eventTrigger?.resumeCondition(datum)) super.onResume();
-      if (eventTrigger?.pauseCondition != null && eventTrigger?.pauseCondition(datum)) super.onPause();
+    _subscription = ProbeRegistry()
+        .lookup(eventTrigger.measureType.name)
+        .events
+        .listen((datum) {
+      if (eventTrigger?.resumeCondition != null &&
+          eventTrigger?.resumeCondition(datum)) super.onResume();
+      if (eventTrigger?.pauseCondition != null &&
+          eventTrigger?.pauseCondition(datum)) super.onPause();
     });
   }
 
@@ -433,7 +464,8 @@ class TaskExecutor extends Executor {
         _group.add(probe.events);
         probe.initialize(measure);
       } else {
-        warning('A probe for measure type ${measure.type.name} could not be created. '
+        warning(
+            'A probe for measure type ${measure.type.name} could not be created. '
             'Check that the sampling package containing this probe has been registered in the SamplingPackageRegistry.');
       }
     }
@@ -443,53 +475,7 @@ class TaskExecutor extends Executor {
 /// Executes an [AutomaticTask].
 class AutomaticTaskExecutor extends TaskExecutor {
   AutomaticTaskExecutor(AutomaticTask task)
-      : assert(task is AutomaticTask, '$runtimeType should be initialized with a AutomaticTask.'),
+      : assert(task is AutomaticTask,
+            '$runtimeType should be initialized with a AutomaticTask.'),
         super(task);
-}
-
-/// Executes an [AppTask].
-class AppTaskExecutor extends TaskExecutor {
-  AppTaskExecutor(AppTask task)
-      : assert(task is AppTask, '$runtimeType should be initialized with an AppTask.'),
-        super(task) {
-    _appTask = task;
-
-    // create an embedded executor that later can be used to execute this task
-    _taskExecutor = TaskExecutor(task);
-
-    // add the events from the embedded executor to the overall stream of events
-    _group.add(_taskExecutor.events);
-  }
-
-  AppTask _appTask;
-  TaskExecutor _taskExecutor;
-
-  // Future<bool> onInitialize(Measure measure) async {
-  //   bool initialized = await _taskExecutor.initialize(measure);
-  //   if (initialized && (_appTask.onInitialize != null)) {
-  //     _appTask.onInitialize(_taskExecutor);
-  //     return true;
-  //   }
-  //   return false;
-  // }
-
-  void onInitialize(Measure measure) {
-    _taskExecutor.initialize(measure);
-    if (_appTask.onInitialize != null) {
-      _appTask.onInitialize(_taskExecutor);
-    }
-  }
-
-  Future<void> onPause() async {
-    if (_appTask.onPause != null) _appTask.onPause(_taskExecutor);
-  }
-
-  Future<void> onResume() async {
-    if (_appTask.onResume != null) _appTask.onResume(_taskExecutor);
-  }
-
-  Future<void> onStop() async {
-    if (_appTask.onInitialize != null) _appTask.onStop(_taskExecutor);
-    await super.onStop();
-  }
 }

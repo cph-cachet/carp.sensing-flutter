@@ -22,32 +22,17 @@ class RPTaskMeasure extends Measure {
   @JsonKey(ignore: true)
   RPTask surveyTask;
 
-//  /// The callback function providing a [SurveyPage] object to be displayed in the app.
-//  /// This function is called when the survey is triggered, i.e. in the [SurveyProbe.resume] method.
-//  ///
-//  /// This callback function needs to be provided by the app on runtime. I.e. this part of the measure
-//  /// cannot be specified in the JSON format of the measure as e.g. downloaded from a study manager.
-//  @JsonKey(ignore: true)
-//  void Function(SurveyPage) onSurveyTriggered;
-//
-//  /// The callback function to be called when the survey is submitted by the user (hits done).
-//  /// Carries the [RPTaskResult] result of the survey.
-//  @JsonKey(ignore: true)
-//  void Function(RPTaskResult) onSurveySubmit;
-
   RPTaskMeasure(
     MeasureType type, {
     String name,
     bool enabled,
     this.surveyTask,
-//    this.onSurveyTriggered,
-//    this.onSurveySubmit,
-  })
-      : super(type, name: name, enabled: enabled);
+  }) : super(type, name: name, enabled: enabled);
 
   static Function get fromJsonFunction => _$RPTaskMeasureFromJson;
-  factory RPTaskMeasure.fromJson(Map<String, dynamic> json) => FromJsonFactory
-      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory RPTaskMeasure.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory.fromJson(
+          json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$RPTaskMeasureToJson(this);
 }
 

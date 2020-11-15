@@ -21,8 +21,10 @@ part of audio;
 /// records everything - including human speech - in its proximity.
 ///
 /// The Audio probe generates an [AudioDatum] that holds the meta-data for each recording
-/// along with the actual recording in an audio file. How to upload this data to a data backend
-/// is up to the implementation of the [DataManager], which is used in the [Study].
+/// along with the actual recording in an audio file.
+/// Audio is recording in an MP3 format.
+/// How to upload this data to a data backend is up to the implementation of the
+/// [DataManager], which is used in the [Study].
 class AudioProbe extends DatumProbe {
   static const String AUDIO_FILE_PATH = 'audio';
 

@@ -496,6 +496,8 @@ Map<String, dynamic> _$AutomaticTaskToJson(AutomaticTask instance) {
 AppTask _$AppTaskFromJson(Map<String, dynamic> json) {
   return AppTask(
     name: json['name'] as String,
+    type: json['type'] as String,
+    title: json['title'] as String,
     description: json['description'] as String,
     instructions: json['instructions'] as String,
     minutesToComplete: json['minutes_to_complete'] as int,
@@ -520,6 +522,8 @@ Map<String, dynamic> _$AppTaskToJson(AppTask instance) {
   writeNotNull(r'$type', instance.$type);
   writeNotNull('name', instance.name);
   writeNotNull('measures', instance.measures);
+  writeNotNull('type', instance.type);
+  writeNotNull('title', instance.title);
   writeNotNull('description', instance.description);
   writeNotNull('instructions', instance.instructions);
   writeNotNull('minutes_to_complete', instance.minutesToComplete);
@@ -555,7 +559,7 @@ Map<String, dynamic> _$TriggerToJson(Trigger instance) {
 
 ImmediateTrigger _$ImmediateTriggerFromJson(Map<String, dynamic> json) {
   return ImmediateTrigger(
-    json['trigger_id'] as String,
+    triggerId: json['trigger_id'] as String,
   )
     ..$type = json[r'$type'] as String
     ..tasks = (json['tasks'] as List)

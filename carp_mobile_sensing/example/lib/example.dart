@@ -62,14 +62,10 @@ void example_2() async {
   study.addTriggerTask(
       DelayedTrigger(delay: Duration(seconds: 10)),
       AutomaticTask(name: 'Sensor Task')
-        ..addMeasure(PeriodicMeasure(
-            MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
-            frequency: const Duration(seconds: 10),
-            duration: const Duration(milliseconds: 100)))
-        ..addMeasure(PeriodicMeasure(
-            MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
-            frequency: const Duration(seconds: 20),
-            duration: const Duration(milliseconds: 100))));
+        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
+            frequency: const Duration(seconds: 10), duration: const Duration(milliseconds: 100)))
+        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
+            frequency: const Duration(seconds: 20), duration: const Duration(milliseconds: 100))));
 
   // create a light measure variable to be used later
   PeriodicMeasure lightMeasure = PeriodicMeasure(
@@ -79,8 +75,7 @@ void example_2() async {
     duration: const Duration(milliseconds: 100),
   );
   // add it to the study to start immediately
-  study.addTriggerTask(ImmediateTrigger(),
-      AutomaticTask(name: 'Light')..addMeasure(lightMeasure));
+  study.addTriggerTask(ImmediateTrigger(), AutomaticTask(name: 'Light')..addMeasure(lightMeasure));
 
   // Create a Study Controller that can manage this study.
   StudyController controller = StudyController(study);
@@ -93,14 +88,10 @@ void example_2() async {
   controller.events.forEach(print);
 
   // listen on only CARP events
-  controller.events
-      .where((datum) => datum.format.namespace == NameSpace.CARP)
-      .forEach(print);
+  controller.events.where((datum) => datum.format.namespace == NameSpace.CARP).forEach(print);
 
   // listen on LIGHT events only
-  controller.events
-      .where((datum) => datum.format.name == SensorSamplingPackage.LIGHT)
-      .forEach(print);
+  controller.events.where((datum) => datum.format.name == SensorSamplingPackage.LIGHT).forEach(print);
 
   // map events to JSON and then print
   controller.events.map((datum) => datum.toJson()).forEach(print);
@@ -110,8 +101,7 @@ void example_2() async {
   ProbeRegistry().probes[SensorSamplingPackage.LIGHT].events.forEach(print);
 
   // subscribe to events
-  StreamSubscription<Datum> subscription =
-      controller.events.listen((Datum datum) {
+  StreamSubscription<Datum> subscription = controller.events.listen((Datum datum) {
     // do something w. the datum, e.g. print the json
     print(JsonEncoder.withIndent(' ').convert(datum));
   });
@@ -145,33 +135,22 @@ void example_2() async {
 /// An example of how to use the [SamplingSchema] model.
 void samplingSchemaExample() async {
   // creating a sampling schema focused on activity and outdoor context (weather)
-  SamplingSchema activitySchema =
-      SamplingSchema(name: 'Connectivity Sampling Schema', powerAware: true)
-        ..measures.addEntries([
-          MapEntry(
-              SensorSamplingPackage.PEDOMETER,
-              PeriodicMeasure(
-                  MeasureType(NameSpace.CARP, SensorSamplingPackage.PEDOMETER),
-                  enabled: true,
-                  frequency: const Duration(minutes: 1))),
-          MapEntry(
-              DeviceSamplingPackage.SCREEN,
-              Measure(MeasureType(NameSpace.CARP, DeviceSamplingPackage.SCREEN),
-                  enabled: true)),
-        ]);
+  SamplingSchema activitySchema = SamplingSchema(name: 'Connectivity Sampling Schema', powerAware: true)
+    ..measures.addEntries([
+      MapEntry(
+          SensorSamplingPackage.PEDOMETER,
+          PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.PEDOMETER),
+              enabled: true, frequency: const Duration(minutes: 1))),
+      MapEntry(DeviceSamplingPackage.SCREEN,
+          Measure(MeasureType(NameSpace.CARP, DeviceSamplingPackage.SCREEN), enabled: true)),
+    ]);
 
   //creating a study
   Study study_1 = Study('2', 'user@cachet.dk')
     ..name = 'CARP Mobile Sensing - default configuration'
     ..dataEndPoint = DataEndPoint(DataEndPointTypes.PRINT)
-    ..addTriggerTask(
-        ImmediateTrigger(),
-        AutomaticTask()
-          ..measures = SamplingSchema
-              .common(namespace: NameSpace.CARP)
-              .measures
-              .values
-              .toList());
+    ..addTriggerTask(ImmediateTrigger(),
+        AutomaticTask()..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
   print(study_1);
 
   Study study = Study('2', 'user@cachet.dk',
@@ -207,9 +186,7 @@ void samplingSchemaExample() async {
 
   // adding all measure from the activity schema to one overall 'sensing' task
   study.addTriggerTask(
-      ImmediateTrigger(),
-      AutomaticTask(name: 'Sensing Task')
-        ..measures = activitySchema.measures.values);
+      ImmediateTrigger(), AutomaticTask(name: 'Sensing Task')..measures = activitySchema.measures.values);
 
   // adding the measures to two separate tasks, while also adding a new light measure to the 2nd task
   study.addTriggerTask(
@@ -239,8 +216,7 @@ void samplingSchemaExample() async {
           duration: const Duration(milliseconds: 100),
         )));
 
-  StudyController controller =
-      StudyController(study, samplingSchema: activitySchema);
+  StudyController controller = StudyController(study, samplingSchema: activitySchema);
 
   controller = StudyController(study);
   await controller.initialize();
@@ -258,48 +234,92 @@ void samplingSchemaExample() async {
 
 void recurrentScheduledTriggerExample() {
   // collect every day at 13:30
-  RecurrentScheduledTrigger(
-      type: RecurrentType.daily, time: Time(hour: 13, minute: 30));
+  RecurrentScheduledTrigger(type: RecurrentType.daily, time: Time(hour: 13, minute: 30));
 
   // collect every other day at 13:30
-  RecurrentScheduledTrigger(
-      type: RecurrentType.daily,
-      separationCount: 1,
-      time: Time(hour: 13, minute: 30));
+  RecurrentScheduledTrigger(type: RecurrentType.daily, separationCount: 1, time: Time(hour: 13, minute: 30));
 
   // collect every wednesday at 12:23
   RecurrentScheduledTrigger(
-      type: RecurrentType.weekly,
-      dayOfWeek: DateTime.wednesday,
-      time: Time(hour: 12, minute: 23));
+      type: RecurrentType.weekly, dayOfWeek: DateTime.wednesday, time: Time(hour: 12, minute: 23));
 
   // collect every 2nd monday at 12:23
   RecurrentScheduledTrigger(
-      type: RecurrentType.weekly,
-      dayOfWeek: DateTime.monday,
-      separationCount: 1,
-      time: Time(hour: 12, minute: 23));
+      type: RecurrentType.weekly, dayOfWeek: DateTime.monday, separationCount: 1, time: Time(hour: 12, minute: 23));
 
   // collect monthly in the second week on a monday at 14:30
   RecurrentScheduledTrigger(
-      type: RecurrentType.monthly,
-      weekOfMonth: 2,
-      dayOfWeek: DateTime.monday,
-      time: Time(hour: 14, minute: 30));
+      type: RecurrentType.monthly, weekOfMonth: 2, dayOfWeek: DateTime.monday, time: Time(hour: 14, minute: 30));
 
   // collect quarterly on the 11th day of the first month in each quarter at 21:30
   RecurrentScheduledTrigger(
-      type: RecurrentType.monthly,
-      dayOfMonth: 11,
-      separationCount: 2,
-      time: Time(hour: 21, minute: 30));
+      type: RecurrentType.monthly, dayOfMonth: 11, separationCount: 2, time: Time(hour: 21, minute: 30));
 }
 
 /// An example of how to configure a [StudyController] with the default privacy schema.
 void study_controller_example() async {
   Study study = Study('2', 'user@cachet.dk');
-  StudyController controller =
-      StudyController(study, privacySchemaName: PrivacySchema.DEFAULT);
+  StudyController controller = StudyController(study, privacySchemaName: PrivacySchema.DEFAULT);
   await controller.initialize();
   controller.resume();
+}
+
+/// An example of using the (new) AppTask model
+void app_task_example() async {
+  Study study = Study('2', 'user@cachet.dk')
+    ..addTriggerTask(
+        ImmediateTrigger(), // collect local weather and air quality as an app task
+        AppTask(
+          title: "Weather & Air Quality",
+          description: "Collect local weather and air quality",
+        )..measures = SamplingSchema.common().getMeasureList(
+            namespace: NameSpace.CARP,
+            types: [
+              ContextSamplingPackage.WEATHER,
+              ContextSamplingPackage.AIR_QUALITY,
+            ],
+          ))
+    ..addTriggerTask(
+        ImmediateTrigger(),
+        AppTask(
+          title: "Location",
+          description: "Collect current location",
+        )..measures = SamplingSchema.common().getMeasureList(
+            namespace: NameSpace.CARP,
+            types: [
+              ContextSamplingPackage.LOCATION,
+            ],
+          ));
+
+  StudyController controller = StudyController(study, privacySchemaName: PrivacySchema.DEFAULT);
+  await controller.initialize();
+  controller.resume();
+}
+
+void app_task_controller_example() async {
+  AppTaskController ctrl = AppTaskController();
+
+  ctrl.appTaskEvents.listen((event) {
+    AppTask _task = (executor.task as AppTask);
+    switch (event.state) {
+      case AppTaskState.initialized:
+        //
+        break;
+      case AppTaskState.enqueued:
+        //
+        break;
+      case AppTaskState.dequeued:
+        //
+        break;
+      case AppTaskState.started:
+        //
+        break;
+      case AppTaskState.onhold:
+        //
+        break;
+      case AppTaskState.done:
+        //
+        break;
+    }
+  });
 }
