@@ -77,6 +77,19 @@ try {
 }
 ```
 
+The user's password can be changed using the `changePassword()` method:
+
+```dart
+try {
+   user = await CarpService.instance.changePassword(
+        currentPassword: 'the_password',
+        newPassword: 'a_new_password',
+      );
+} catch (excp) {
+   ...;
+}
+```
+
 
 
 ### Informed Consent Document
