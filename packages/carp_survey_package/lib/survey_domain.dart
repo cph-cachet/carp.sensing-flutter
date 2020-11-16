@@ -9,9 +9,13 @@ part of survey;
 
 /// A class representing how to configure a [RPTask] survey as a sensing [Measure].
 ///
-/// This measure should be part of an [AppTask] in order for the app to handle how it wants to show the survey.
+/// This measure should be part of an [AppTask] in order for the app to handle
+/// how it wants to show the survey to the user.
+/// Note that only the first [RPTaskMeasure] in an [AppTask] is used.
+/// Hence, an [AppTask] should be used for each survey.
 ///
-/// The app task holding a survey measure can then be triggered in different ways. For example:
+/// The app task holding a survey measure can then be triggered in different ways.
+/// For example:
 ///
 ///  * a [PeriodicTrigger] would allow to collect the survey on a regular basis (frequency)
 ///  * a [ScheduledTrigger] can be used to trigger the survey at a specific schedule (i.e., day and time)

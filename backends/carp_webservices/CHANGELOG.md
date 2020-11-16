@@ -1,3 +1,8 @@
+## 0.5.2
+* feature: support for `changePassword()`
+* fix: password is no longer stored as part of `carp_webservices` neither in memory or serialized to json.
+* refactor: removal of old deprecated methods for inviting particpants and researchers.
+
 ## 0.5.1
 * feature: support for deployment endpoints using the `DeploymentReference` class
 
