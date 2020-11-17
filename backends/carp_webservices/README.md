@@ -59,7 +59,10 @@ Basic authentication is using username and password.
 ```dart
 CarpUser user;
 try {
-   user = await CarpService.instance.authenticate(username: "a_username", password: "the_password");
+   user = await CarpService.instance.authenticate(
+      username: "a_username", 
+      password: "the_password",
+   );
 } catch (excp) {
    ...;
 }
@@ -71,7 +74,10 @@ This can then later be used for authentication:
 
 ```dart
 try {
-   user = await CarpService.instance.authenticateWithToken(username: user.username, token: user.token);
+   user = await CarpService.instance.authenticateWithToken(
+      username: user.username, 
+      token: user.token,
+   );
 } catch (excp) {
    ...;
 }
