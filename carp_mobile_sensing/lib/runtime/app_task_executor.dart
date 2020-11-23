@@ -137,7 +137,7 @@ abstract class UserTask {
   String get description => _executor?.appTask?.description;
   String get instructions => _executor?.appTask?.instructions;
 
-  /// The time this task was added to the list (enqueued).
+  /// The time this task was added to the queue (enqueued).
   DateTime enqueued;
 
   /// The state of this task.
@@ -215,11 +215,11 @@ enum UserTaskState {
 class SensingUserTaskFactory implements UserTaskFactory {
   List<String> types = [
     SensingUserTask.SENSING_TYPE,
-    OneTimeSensingUserTask.ONE_TIME_SENSING_TYPE,
+    SensingUserTask.ONE_TIME_SENSING_TYPE,
   ];
 
   UserTask create(AppTaskExecutor executor) =>
-      (executor.appTask.type == OneTimeSensingUserTask.ONE_TIME_SENSING_TYPE)
+      (executor.appTask.type == SensingUserTask.ONE_TIME_SENSING_TYPE)
           ? OneTimeSensingUserTask(executor)
           : SensingUserTask(executor);
 }
@@ -230,7 +230,12 @@ class SensingUserTaskFactory implements UserTaskFactory {
 /// It resumes sensing when the [onStart] methods is called and
 /// pauses sensing when the [onDone] methods is called.
 class SensingUserTask extends UserTask {
+  /// A type of sensing user task which can be resumed and paused.
   static const String SENSING_TYPE = 'sensing';
+
+  /// A type of sensing user task which can be resumed once.
+  /// See [OneTimeSensingUserTask].
+  static const String ONE_TIME_SENSING_TYPE = 'one_time_sensing';
 
   SensingUserTask(AppTaskExecutor executor) : super(executor);
 
@@ -253,8 +258,6 @@ class SensingUserTask extends UserTask {
 /// It resumes sensing when the [onStart] methods is called and then
 /// automatically pauses after 10 seconds.
 class OneTimeSensingUserTask extends SensingUserTask {
-  static const String ONE_TIME_SENSING_TYPE = 'one_time_sensing';
-
   OneTimeSensingUserTask(AppTaskExecutor executor) : super(executor);
 
   /// Resume sensing for 10 seconds.

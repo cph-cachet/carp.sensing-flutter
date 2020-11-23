@@ -7,6 +7,11 @@
 
 part of survey;
 
+/// A [UserTask] that contains a survey.
+///
+/// A [SurveyUserTask] is enqued on the [AppTaskController]'s [userTaskQueue]
+/// and can be accessed from here. When a user starts this user task, the
+/// [onStart] method is called, and the survey (a [RPTask]) is shown.
 class SurveyUserTask extends UserTask {
   static const String SURVEY_TYPE = 'survey';
   static const String DEMOGRAPHIC_SURVEY_TYPE = 'demographic';
@@ -47,4 +52,15 @@ class SurveyUserTask extends UserTask {
     executor?.pause();
     super.onDone(_context);
   }
+}
+
+class SurveyUserTaskFactory implements UserTaskFactory {
+  List<String> types = [
+    SurveyUserTask.WHO5_SURVEY_TYPE,
+    SurveyUserTask.SURVEY_TYPE,
+    SurveyUserTask.DEMOGRAPHIC_SURVEY_TYPE,
+  ];
+
+  // always create a [SurveyUserTask]
+  UserTask create(AppTaskExecutor executor) => SurveyUserTask(executor);
 }

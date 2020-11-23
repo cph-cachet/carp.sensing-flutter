@@ -378,8 +378,9 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
           //   RecurrentScheduledTrigger(type: RecurrentType.monthly, weekOfMonth: 2, dayOfWeek: DateTime.monday, time: Time(hour: 14, minute: 30));
           firstDay = nextMonthlyDay(DateTime(now.year, now.month, 1));
           // check if this day is in the past - if so, move one month forward
-          if (firstDay.isBefore(now))
+          if (firstDay.isBefore(now)) {
             firstDay = nextMonthlyDay(DateTime(now.year, now.month + 1, 1));
+          }
         }
         break;
     }

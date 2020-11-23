@@ -30,6 +30,7 @@ class SurveySamplingPackage implements SamplingPackage {
   void onRegister() {
     FromJsonFactory.registerFromJsonFunction(
         "RPTaskMeasure", RPTaskMeasure.fromJsonFunction);
+    AppTaskController().registerUserTaskFactory(SurveyUserTaskFactory());
   }
 
   /// Adding WHO5 as the default survey.

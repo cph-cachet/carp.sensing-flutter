@@ -493,8 +493,9 @@ abstract class StreamProbe extends AbstractProbe {
 
   Future<void> onRestart() async {
     // if we don't have a subscription yet, try to get one
-    if (subscription == null && stream != null)
+    if (subscription == null && stream != null) {
       subscription = stream.listen(onData, onError: onError, onDone: onDone);
+    }
   }
 
   Future<void> onResume() async {
