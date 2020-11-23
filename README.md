@@ -1,13 +1,13 @@
-# CARP Mobile Sensing in Flutter
+![CARP-Mobile-Sensing-Vertical](https://user-images.githubusercontent.com/1196642/98542469-43eadd80-2291-11eb-9013-87542d0b23e6.png)
 
-This repo hold the source code for the [CACHET](http://www.cachet.dk/) Research Platform (CARP) Mobile Sensing (CAMS) Flutter software.
+This repo hold the source code for the [CACHET Research Platform (CARP)](https://carp.cachet.dk) Mobile Sensing (CAMS) Flutter software.
 It contains the source code for CACHET first-party (i.e., developed by the core CACHET team) CAMS framework, its packages, and example apps.
 
 In addition, the CARP team maintain a set of [Flutter plugins](https://github.com/cph-cachet/flutter-plugins) (mainly) for sensing purposes. Flutter plugins enable access to platform-specific APIs. For more information
 about plugins, and how to use them, see the
 [Flutter Packages](https://flutter.io/platform-plugins/) description.
 
-These plugins are also available on [pub](https://pub.dartlang.org/flutter/plugins).
+These plugins are also available on [pub](https://pub.dev/publishers/cachet.dk/packages).
 
 ## Software Components
 These are the available CARP Mobile Sensing Flutter components in this repository.
@@ -31,7 +31,7 @@ These are the available CARP Mobile Sensing Flutter components in this repositor
 | [carp_backend](./backends/carp_backend) | Support for uploading data to a CARP data backend as JSON. | [![pub package](https://img.shields.io/pub/v/carp_backend.svg)](https://pub.dartlang.org/packages/carp_backend) |
 | [carp_firebase_backend](./backends/carp_firebase_backend) | Support for uploading data to Firebase as both zipped files and JSON data| [![pub package](https://img.shields.io/pub/v/carp_firebase_backend.svg)](https://pub.dartlang.org/packages/carp_firebase_backend) |
 | **Apps** | **Misc. mobile sensing apps** |  |
-| [carp_mobile_sensing_app](./apps/carp_mobile_sensing_app) | The CARP Mobile Sensing example app | N/A |
+| [carp_mobile_sensing_app](./apps/carp_mobile_sensing_app) | The CARP Mobile Sensing example app |  |
 
 ## Documentation
 

@@ -28,7 +28,7 @@ dependencies:
   #carp_connectivity_package: ^0.9.0
   carp_context_package: ^0.9.0
   carp_audio_package: ^0.9.0
-  carp_apps_package: ^0.9.0
+  carp_apps_package: ^0.9.6
   #carp_survey_package: ^0.9.0
   #carp_esense_package: ^0.9.0
   #carp_backend: ^0.3.2
