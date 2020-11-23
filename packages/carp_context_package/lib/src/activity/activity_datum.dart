@@ -22,10 +22,10 @@ class ActivityDatum extends CARPDatum {
         type = map['type'],
         super();
 
-  factory ActivityDatum.fromActivity(Activity activity) {
+  factory ActivityDatum.fromActivity(ActivityEvent activityEvent) {
     ActivityDatum activityDatum = ActivityDatum();
-    activityDatum.confidence = activity.confidence;
-    activityDatum.type = activity.type.toString().split(".").last;
+    activityDatum.confidence = activityEvent.confidence;
+    activityDatum.type = activityEvent.type.toString().split(".").last;
     return activityDatum;
   }
 

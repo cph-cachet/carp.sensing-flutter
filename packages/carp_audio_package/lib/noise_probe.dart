@@ -15,19 +15,20 @@ part of audio;
 /// Does not record sound. Instead reports the audio level with a specified frequency,
 /// in a given sampling window as a [NoiseDatum].
 class NoiseProbe extends BufferingPeriodicStreamProbe {
-  NoiseMeter _noiseMeter = NoiseMeter();
+  NoiseMeter _noiseMeter;
   List<NoiseReading> _noiseReadings = new List<NoiseReading>();
 
   Stream get bufferingStream => _noiseMeter.noiseStream;
 
   void onInitialize(Measure measure) {
     assert(measure is NoiseMeasure);
+    _noiseMeter = NoiseMeter(onStop);
     super.onInitialize(measure);
   }
 
   Future<void> onRestart() async {
     super.onRestart();
-    _noiseMeter = NoiseMeter();
+    _noiseMeter = NoiseMeter(onStop);
   }
 
   Future<void> onStop() async {

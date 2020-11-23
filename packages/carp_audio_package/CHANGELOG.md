@@ -1,3 +1,6 @@
+## 0.9.7
+* upgrade to `noise_meter` v. 2.0.0
+
 ## 0.9.6
 * using the `record_mp3` package for the `audio` measure (replacing `flutter_sound`).
 * fix of issue [#118](https://github.com/cph-cachet/carp.sensing-flutter/issues/118)
