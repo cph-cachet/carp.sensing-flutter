@@ -368,8 +368,7 @@ class SamplingEventTriggerExecutor extends TriggerExecutor {
     SamplingEventTrigger eventTrigger = trigger as SamplingEventTrigger;
     // start listen for events of the specified type
     _subscription = ProbeRegistry()
-        .lookup(eventTrigger?.measureType?.name)
-        .events
+        .eventsByType(eventTrigger?.measureType?.name)
         .listen((datum) {
       if ((eventTrigger?.resumeCondition == null) ||
           (datum == eventTrigger?.resumeCondition)) super.onResume();
@@ -400,11 +399,11 @@ class ConditionalSamplingEventTriggerExecutor extends TriggerExecutor {
     ConditionalSamplingEventTrigger eventTrigger =
         trigger as ConditionalSamplingEventTrigger;
 
-    // listen for event of the specified type
+    // listen for events of the specified type
     _subscription = ProbeRegistry()
-        .lookup(eventTrigger.measureType.name)
-        .events
+        .eventsByType(eventTrigger.measureType.name)
         .listen((datum) {
+      debug('datum: $datum');
       if (eventTrigger?.resumeCondition != null &&
           eventTrigger?.resumeCondition(datum)) super.onResume();
       if (eventTrigger?.pauseCondition != null &&

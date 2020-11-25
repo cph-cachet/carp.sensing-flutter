@@ -4,6 +4,8 @@
    * see the [Pulmonary app](https://github.com/cph-cachet/pulmonary_monitor_app) for an example on how to use this new model.
 * docs: addressed issue [#113](https://github.com/cph-cachet/carp.sensing-flutter/issues/113).
 * fix: issue [#98](https://github.com/cph-cachet/carp.sensing-flutter/issues/98)
+* fix: issue [#114](https://github.com/cph-cachet/carp.sensing-flutter/issues/114)
+* fix: issue [#113](https://github.com/cph-cachet/carp.sensing-flutter/issues/113)
 
 ## 0.9.5
 * feature: added the `validNextState()` method to the `Probe` class, which checks if a probe can be move to a next state.
