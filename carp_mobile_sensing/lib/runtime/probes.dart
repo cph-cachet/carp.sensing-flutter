@@ -492,36 +492,18 @@ abstract class StreamProbe extends AbstractProbe {
   void onInitialize(Measure measure) {}
 
   Future<void> onRestart() async {
-    // if we don't have a subscription yet, try to get one
-    if (subscription == null && stream != null) {
-      subscription = stream.listen(onData, onError: onError, onDone: onDone);
-    }
+    await onResume();
   }
 
   Future<void> onResume() async {
     marking();
-
-    // if we don't have a subscription yet, or it has been canceled, try to get one
-    if (subscription == null && stream != null) {
+    if (stream != null) {
       subscription = stream.listen(onData, onError: onError, onDone: onDone);
-    } else if (stream != null && !stream.isBroadcast) subscription.resume();
+    }
   }
 
   Future<void> onPause() async {
-    // if the stream has disappeared, remove the subscription also
-    if (stream == null) subscription = null;
-    if (subscription != null) {
-      if (stream.isBroadcast) {
-        // If the underlying stream is gone or is a broadcast stream, it is better to cancel and later resume the
-        // subscription. See https://api.dart.dev/stable/2.4.0/dart-async/StreamSubscription/pause.html
-        // Most streams from platform channels are broadcast (e.g. activity, location, eSense, ...).
-        await subscription?.cancel();
-        subscription = null;
-      } else {
-        subscription?.pause();
-      }
-    }
-
+    await subscription?.cancel();
     mark();
   }
 
@@ -566,15 +548,13 @@ abstract class PeriodicStreamProbe extends StreamProbe {
   Future<void> onResume() async {
     marking();
 
-    // if we don't have a subscription yet, or it has been canceled, try to get one
-    subscription ??= stream?.listen(onData, onError: onError, onDone: onDone);
     if (subscription != null) {
       // create a recurrent timer that resume sampling.
       timer = Timer.periodic(frequency, (timer) {
-        subscription.resume();
+        subscription = stream?.listen(onData, onError: onError, onDone: onDone);
         // create a timer that pause the sampling after the specified duration.
-        Timer(duration, () {
-          subscription.pause();
+        Timer(duration, () async {
+          await subscription.cancel();
         });
       });
     }
@@ -582,8 +562,7 @@ abstract class PeriodicStreamProbe extends StreamProbe {
 
   Future<void> onPause() async {
     timer?.cancel();
-    subscription?.pause();
-    mark();
+    await super.onPause();
   }
 
   Future<void> onStop() async {
@@ -655,18 +634,15 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
   void onSamplingEnd();
 
   /// Subclasses should implement / override this method to collect the [Datum].
-  /// This method will be called every time data has been buffered for a [duration]
-  /// and should return the final [Datum] for the buffered data.
+  /// This method will be called every time data has been buffered for a
+  /// [duration] and should return the final [Datum] for the buffered data.
   Future<Datum> getDatum();
 }
 
-//typedef OnSamplingDataCallback = void Function(dynamic event);
-//typedef OnSamplingCallback = void Function();
-
 /// An abstract probe which can be used to sample data from a buffering stream,
-/// every [frequency] for a period of [duration]. These events are buffered, and
-/// once collected for the [duration], are collected from the [getDatum] method and
-/// send to the main [events] stream.
+/// every [frequency] for a period of [duration]. These events are buffered,
+/// and once collected for the [duration], are collected from the [getDatum]
+/// method and send to the main [events] stream.
 ///
 /// Sub-classes must implement the
 ///
@@ -688,18 +664,14 @@ abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
   }
 
   Future<void> onResume() async {
-    // if we don't have a subscription yet, or it has been canceled, try to get one
-    subscription ??= bufferingStream?.listen(onSamplingData,
-        onError: onError, onDone: onDone);
-
-    subscription?.resume();
     timer = Timer.periodic(frequency, (Timer t) {
       onSamplingStart();
-      subscription?.resume();
-      Timer(duration, () {
-        subscription?.pause();
+      subscription = bufferingStream?.listen(onSamplingData,
+          onError: onError, onDone: onDone);
+      Timer(duration, () async {
+        await subscription?.cancel();
         onSamplingEnd();
-        getDatum().then((datum) {
+        await getDatum().then((datum) {
           if (datum != null) controller.add(datum);
         }).catchError(
             (error, stacktrace) => controller.addError(error, stacktrace));
@@ -708,9 +680,8 @@ abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
   }
 
   Future<void> onPause() async {
-    timer?.cancel();
-    subscription?.pause();
-    // check if there are some buffered data that needs to be collected before pausing
+    await super.onPause();
+    onSamplingEnd();
     await getDatum().then((datum) {
       if (datum != null) controller.add(datum);
     }).catchError(

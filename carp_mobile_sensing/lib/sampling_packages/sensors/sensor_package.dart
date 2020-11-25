@@ -16,7 +16,7 @@ class SensorSamplingPackage implements SamplingPackage {
   Probe create(String type) {
     switch (type) {
       case ACCELEROMETER:
-        //  return AccelerometerProbe();
+        //return AccelerometerProbe();
         return BufferingAccelerometerProbe();
       case GYROSCOPE:
         //return GyroscopeProbe();
@@ -44,15 +44,15 @@ class SensorSamplingPackage implements SamplingPackage {
           PeriodicMeasure(MeasureType(NameSpace.CARP, ACCELEROMETER),
               name: 'Accelerometer',
               enabled: false,
-              frequency: const Duration(milliseconds: 100),
-              duration: const Duration(milliseconds: 1))),
+              frequency: const Duration(seconds: 5),
+              duration: const Duration(seconds: 1))),
       MapEntry(
           GYROSCOPE,
           PeriodicMeasure(MeasureType(NameSpace.CARP, GYROSCOPE),
               name: 'Gyroscope',
               enabled: false,
-              frequency: const Duration(milliseconds: 100),
-              duration: const Duration(milliseconds: 1))),
+              frequency: const Duration(seconds: 5),
+              duration: const Duration(seconds: 1))),
       MapEntry(
           PEDOMETER,
           Measure(MeasureType(NameSpace.CARP, PEDOMETER),
@@ -88,15 +88,15 @@ class SensorSamplingPackage implements SamplingPackage {
           PeriodicMeasure(MeasureType(NameSpace.CARP, ACCELEROMETER),
               name: 'Accelerometer',
               enabled: true,
-              frequency: const Duration(milliseconds: 1000),
-              duration: const Duration(milliseconds: 10))),
+              frequency: const Duration(seconds: 5),
+              duration: const Duration(seconds: 1))),
       MapEntry(
           GYROSCOPE,
           PeriodicMeasure(MeasureType(NameSpace.CARP, GYROSCOPE),
               name: 'Gyroscope',
               enabled: true,
-              frequency: const Duration(milliseconds: 1000),
-              duration: const Duration(milliseconds: 10))),
+              frequency: const Duration(seconds: 5),
+              duration: const Duration(seconds: 1))),
       MapEntry(
           PEDOMETER,
           Measure(MeasureType(NameSpace.CARP, PEDOMETER),

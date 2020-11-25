@@ -185,7 +185,6 @@ void main() {
       assert(user3.isAuthenticated);
       assert(user3.username == user1.username);
       print("signed in using the '$newPassword' password\n - user: $user3");
-      //print("   token  : ${user3.token}");
 
       // changing the password back to the old one
       CarpUser user4 = await CarpService.instance.changePassword(
@@ -194,7 +193,6 @@ void main() {
       );
       print(
           "Password has been changed back to '$oldPassword'\n - user : $user4");
-      //print("   token  : ${user3.token}");
     });
   });
 

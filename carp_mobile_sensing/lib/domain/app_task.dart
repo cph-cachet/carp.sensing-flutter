@@ -35,6 +35,7 @@ class AppTask extends Task {
   String instructions;
 
   /// How many minutes will it take for the user to perform this task?
+  /// Typically shown to the user before engaging into this task.
   int minutesToComplete;
 
   // TODO - implement this ;-)
