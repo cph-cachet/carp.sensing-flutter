@@ -1,3 +1,6 @@
+## 0.9.7
+* upgrade to `activity_recognition_flutter` v. 2.0.2
+
 ## 0.9.6
 * upgrade to `activity_recognition_flutter` v. 2.0.0
 
