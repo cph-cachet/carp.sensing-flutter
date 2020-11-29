@@ -1,3 +1,6 @@
+## 0.9.3
+* fix: issue [#113](https://github.com/cph-cachet/carp.sensing-flutter/issues/113)
+
 ## 0.9.5
 * feature: added the `validNextState()` method to the `Probe` class, which checks if a probe can be move to a next state.
 * fix : issue [#112](https://github.com/cph-cachet/carp.sensing-flutter/issues/112) 
