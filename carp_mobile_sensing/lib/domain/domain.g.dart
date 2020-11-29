@@ -555,7 +555,7 @@ Map<String, dynamic> _$TriggerToJson(Trigger instance) {
 
 ImmediateTrigger _$ImmediateTriggerFromJson(Map<String, dynamic> json) {
   return ImmediateTrigger(
-    json['trigger_id'] as String,
+    triggerId: json['trigger_id'] as String,
   )
     ..$type = json[r'$type'] as String
     ..tasks = (json['tasks'] as List)
