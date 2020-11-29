@@ -399,11 +399,10 @@ class ConditionalSamplingEventTriggerExecutor extends TriggerExecutor {
     ConditionalSamplingEventTrigger eventTrigger =
         trigger as ConditionalSamplingEventTrigger;
 
-    // listen for events of the specified type
+    // listen for event of the specified type
     _subscription = ProbeRegistry()
         .eventsByType(eventTrigger.measureType.name)
         .listen((datum) {
-      debug('datum: $datum');
       if (eventTrigger?.resumeCondition != null &&
           eventTrigger?.resumeCondition(datum)) super.onResume();
       if (eventTrigger?.pauseCondition != null &&
@@ -478,3 +477,4 @@ class AutomaticTaskExecutor extends TaskExecutor {
             '$runtimeType should be initialized with a AutomaticTask.'),
         super(task);
 }
+

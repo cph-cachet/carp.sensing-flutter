@@ -40,7 +40,6 @@ class ProbeRegistry {
   /// If you create a probe manually, i.e. outside of the [ProbeRegistry]
   /// you can register it here.
   void register(String type, Probe probe) {
-    //if (_probes[type] = null)
     _probes[type] ??= {};
     _probes[type].add(probe);
   }
