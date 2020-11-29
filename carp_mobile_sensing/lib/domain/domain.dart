@@ -24,5 +24,6 @@ part 'sampling_schema.dart';
 part 'serialization.dart';
 part 'study.dart';
 part 'tasks.dart';
+part 'app_task.dart';
 part 'transformers.dart';
 part 'triggers.dart';

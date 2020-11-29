@@ -1,3 +1,10 @@
+## 0.10.0 - AppTask model
+* **breaking**: a new `AppTask` model is implemented
+   * see documentation on the CAMS [wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki/3.1-The-AppTask-Model).
+   * see the [Pulmonary app](https://github.com/cph-cachet/pulmonary_monitor_app) for an example on how to use this new model.
+* fix: issue [#98](https://github.com/cph-cachet/carp.sensing-flutter/issues/98)
+* fix: issue [#114](https://github.com/cph-cachet/carp.sensing-flutter/issues/114)
+
 ## 0.9.6
 * fix: issue [#113](https://github.com/cph-cachet/carp.sensing-flutter/issues/113)
 
@@ -12,7 +19,7 @@
 * fix: small error in monthly recurrence in `RecurrentScheduledTrigger`
 * refactor: `Device()` is now a singleton.
 
-## 0.9.3
+## 0.9.3 - Singleton Pattern
 * refactor: all singleton adhering to the [Dart Singleton Pattern](https://scottt2.github.io/design-patterns-in-dart/singleton/).
   * `SamplingPackageRegistry`
   * `ProbeRegistry`
@@ -30,7 +37,7 @@
 ## 0.9.1
 * refactor: using [pedantic](https://pub.dev/packages/pedantic#using-the-lints)
 
-## 0.9.0
+## 0.9.0 - $type
 * refactor: new polymorphic JSON serialization using `$type` for class type identifier.
 * docs: update of documentation and examples ([#92](https://github.com/cph-cachet/carp.sensing-flutter/issues/92))
 

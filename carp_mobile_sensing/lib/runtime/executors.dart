@@ -385,8 +385,9 @@ class SamplingEventTriggerExecutor extends TriggerExecutor {
 }
 
 /// Executes a [ConditionalSamplingEventTrigger] based on the specified
-/// [ConditionalSamplingEventTrigger.measureType] and their [ConditionalSamplingEventTrigger.resumeCondition]
-/// and [ConditionalSamplingEventTrigger.pauseCondition].
+/// [ConditionalSamplingEventTrigger.measureType] and their
+/// [ConditionalSamplingEventTrigger.resumeCondition] and
+/// [ConditionalSamplingEventTrigger.pauseCondition].
 class ConditionalSamplingEventTriggerExecutor extends TriggerExecutor {
   ConditionalSamplingEventTriggerExecutor(
       ConditionalSamplingEventTrigger trigger)
@@ -477,50 +478,3 @@ class AutomaticTaskExecutor extends TaskExecutor {
         super(task);
 }
 
-/// Executes an [AppTask].
-class AppTaskExecutor extends TaskExecutor {
-  AppTaskExecutor(AppTask task)
-      : assert(task is AppTask,
-            '$runtimeType should be initialized with an AppTask.'),
-        super(task) {
-    _appTask = task;
-
-    // create an embedded executor that later can be used to execute this task
-    _taskExecutor = TaskExecutor(task);
-
-    // add the events from the embedded executor to the overall stream of events
-    _group.add(_taskExecutor.events);
-  }
-
-  AppTask _appTask;
-  TaskExecutor _taskExecutor;
-
-  // Future<bool> onInitialize(Measure measure) async {
-  //   bool initialized = await _taskExecutor.initialize(measure);
-  //   if (initialized && (_appTask.onInitialize != null)) {
-  //     _appTask.onInitialize(_taskExecutor);
-  //     return true;
-  //   }
-  //   return false;
-  // }
-
-  void onInitialize(Measure measure) {
-    _taskExecutor.initialize(measure);
-    if (_appTask.onInitialize != null) {
-      _appTask.onInitialize(_taskExecutor);
-    }
-  }
-
-  Future<void> onPause() async {
-    if (_appTask.onPause != null) _appTask.onPause(_taskExecutor);
-  }
-
-  Future<void> onResume() async {
-    if (_appTask.onResume != null) _appTask.onResume(_taskExecutor);
-  }
-
-  Future<void> onStop() async {
-    if (_appTask.onInitialize != null) _appTask.onStop(_taskExecutor);
-    await super.onStop();
-  }
-}

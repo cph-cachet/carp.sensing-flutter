@@ -21,3 +21,4 @@ part 'survey_domain.dart';
 part 'survey_runtime.dart';
 part 'survey_ui.dart';
 part 'who5.dart';
+part 'survey_user_task.dart';
