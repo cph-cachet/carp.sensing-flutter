@@ -27,7 +27,7 @@ part of runtime;
 class AppTaskExecutor extends TaskExecutor {
   AppTaskExecutor(AppTask task)
       : assert(task is AppTask,
-            '$runtimeType should be initialized with an AppTask.'),
+            'AppTaskExecutor should be initialized with an AppTask.'),
         super(task) {
     appTask = task;
 

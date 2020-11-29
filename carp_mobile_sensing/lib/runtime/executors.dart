@@ -474,7 +474,6 @@ class TaskExecutor extends Executor {
 class AutomaticTaskExecutor extends TaskExecutor {
   AutomaticTaskExecutor(AutomaticTask task)
       : assert(task is AutomaticTask,
-            '$runtimeType should be initialized with a AutomaticTask.'),
+            'AutomaticTaskExecutor should be initialized with a AutomaticTask.'),
         super(task);
 }
-
