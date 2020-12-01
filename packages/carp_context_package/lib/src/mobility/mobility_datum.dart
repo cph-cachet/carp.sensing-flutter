@@ -1,7 +1,6 @@
 part of context;
 
-/// A [Datum] that holds mobility features information collected through
-/// Mobility Features package
+/// A [Datum] that holds mobility features information.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MobilityDatum extends CARPDatum {
   static const DataFormat CARP_DATA_FORMAT =
@@ -9,14 +8,31 @@ class MobilityDatum extends CARPDatum {
 
   DataFormat get format => CARP_DATA_FORMAT;
 
-  DateTime date, timestamp;
+  /// The day of this mobility features.
+  DateTime date;
+
+  /// The timestamp at which the features were computed.
+  DateTime timestamp;
+
+  /// Number of places visited on [date].
   int numberOfPlaces;
-  double locationVariance,
-      entropy,
-      normalizedEntropy,
-      homeStay,
-      distanceTravelled,
-      routineIndex;
+
+  /// Location Variance on [date].
+  double locationVariance;
+
+  /// Location entropy
+  ///  * High entropy: Time is spent evenly among all places
+  ///  * Low  entropy: Time is mainly spent at a few of the places
+  double entropy;
+
+  /// Normalized entropy. A scalar between 0 and 1
+  double normalizedEntropy;
+
+  /// Home Stay today. A scalar between 0 and 1, i.e. from 0% to 100%
+  double homeStay;
+
+  /// Distance travelled today, in meters.
+  double distanceTravelled;
 
   MobilityDatum() : super();
 
@@ -32,6 +48,5 @@ class MobilityDatum extends CARPDatum {
       'entropy: $entropy\n' +
       'normalized entropy: $normalizedEntropy\n' +
       'home stay: $homeStay\n' +
-      'distance travelled: $distanceTravelled\n' +
-      'routine index: $routineIndex';
+      'distance travelled: $distanceTravelled\n';
 }

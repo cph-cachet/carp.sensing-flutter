@@ -31,8 +31,9 @@ class BatteryProbe extends StreamProbe {
         onResume: () => subscription.resume(),
         onCancel: () => subscription.cancel());
 
-    subscription = battery.onBatteryStateChanged
-        .listen(onData, onError: (error) => controller.addError(error), onDone: () => controller.close());
+    subscription = battery.onBatteryStateChanged.listen(onData,
+        onError: (error) => controller.addError(error),
+        onDone: () => controller.close());
 
     return controller.stream;
   }
@@ -58,10 +59,14 @@ class BatteryProbe extends StreamProbe {
 class ScreenProbe extends StreamProbe {
   void onInitialize(Measure measure) {
     super.onInitialize(measure);
-    if (!Platform.isAndroid) throw SensingException('ScreenProbe only available on Android.');
+    if (!Platform.isAndroid) {
+      throw SensingException('ScreenProbe only available on Android.');
+    }
   }
 
-  Stream<Datum> get stream => Screen().screenStateStream.map((event) => ScreenDatum.fromScreenStateEvent(event));
+  Stream<Datum> get stream => Screen()
+      .screenStateStream
+      .map((event) => ScreenDatum.fromScreenStateEvent(event));
 }
 
 /// A probe that collects free virtual memory on a regular basis

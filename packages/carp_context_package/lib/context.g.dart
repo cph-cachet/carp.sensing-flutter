@@ -87,6 +87,8 @@ LocationMeasure _$LocationMeasureFromJson(Map<String, dynamic> json) {
     accuracy:
         _$enumDecodeNullable(_$GeolocationAccuracyEnumMap, json['accuracy']),
     distance: (json['distance'] as num)?.toDouble(),
+    notificationTitle: json['notification_title'] as String,
+    notificationMsg: json['notification_msg'] as String,
   )
     ..$type = json[r'$type'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
@@ -112,6 +114,8 @@ Map<String, dynamic> _$LocationMeasureToJson(LocationMeasure instance) {
   writeNotNull('duration', instance.duration?.inMicroseconds);
   writeNotNull('accuracy', _$GeolocationAccuracyEnumMap[instance.accuracy]);
   writeNotNull('distance', instance.distance);
+  writeNotNull('notification_title', instance.notificationTitle);
+  writeNotNull('notification_msg', instance.notificationMsg);
   return val;
 }
 
@@ -438,8 +442,7 @@ MobilityDatum _$MobilityDatumFromJson(Map<String, dynamic> json) {
     ..entropy = (json['entropy'] as num)?.toDouble()
     ..normalizedEntropy = (json['normalized_entropy'] as num)?.toDouble()
     ..homeStay = (json['home_stay'] as num)?.toDouble()
-    ..distanceTravelled = (json['distance_travelled'] as num)?.toDouble()
-    ..routineIndex = (json['routine_index'] as num)?.toDouble();
+    ..distanceTravelled = (json['distance_travelled'] as num)?.toDouble();
 }
 
 Map<String, dynamic> _$MobilityDatumToJson(MobilityDatum instance) {
@@ -460,7 +463,6 @@ Map<String, dynamic> _$MobilityDatumToJson(MobilityDatum instance) {
   writeNotNull('normalized_entropy', instance.normalizedEntropy);
   writeNotNull('home_stay', instance.homeStay);
   writeNotNull('distance_travelled', instance.distanceTravelled);
-  writeNotNull('routine_index', instance.routineIndex);
   return val;
 }
 

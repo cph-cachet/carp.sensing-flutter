@@ -14,13 +14,14 @@ part of domain;
 class AppTask extends Task {
   AppTask({
     String name,
-    this.type,
+    @required this.type,
     this.title,
     this.description,
     this.instructions,
     this.minutesToComplete,
     this.notification = false,
-  }) : super(name: name);
+  })
+      : super(name: name);
 
   /// Type of task. For example a `survey`.
   String type;
@@ -43,8 +44,7 @@ class AppTask extends Task {
   bool notification = false;
 
   static Function get fromJsonFunction => _$AppTaskFromJson;
-  factory AppTask.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(
-          json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory AppTask.fromJson(Map<String, dynamic> json) => FromJsonFactory
+      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$AppTaskToJson(this);
 }

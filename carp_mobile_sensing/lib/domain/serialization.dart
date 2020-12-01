@@ -24,8 +24,9 @@ abstract class Serializable {
 
   /// Use this method to register a custom fromJson function for this class
   /// in the [FromJsonFactory].
-  void registerFromJson(Function fromJsonFunction) => FromJsonFactory
-      .registerFromJsonFunction(runtimeType.toString(), fromJsonFunction);
+  void registerFromJson(Function fromJsonFunction) =>
+      FromJsonFactory.registerFromJsonFunction(
+          runtimeType.toString(), fromJsonFunction);
 
   /// Return a JSON encoding of this object.
   Map<String, dynamic> toJson();

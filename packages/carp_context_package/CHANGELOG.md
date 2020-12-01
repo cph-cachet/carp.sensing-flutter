@@ -1,3 +1,9 @@
+## 0.10.0
+* upgrade to `carp_mobile_sensing` v. 0.10.x
+
+## 0.9.7
+* upgrade to `activity_recognition_flutter` v. 2.0.2
+
 ## 0.9.6
 * upgrade to `activity_recognition_flutter` v. 2.0.0
 
