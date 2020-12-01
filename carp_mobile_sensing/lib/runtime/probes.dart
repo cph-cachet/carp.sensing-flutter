@@ -498,6 +498,7 @@ abstract class StreamProbe extends AbstractProbe {
   Future<void> onResume() async {
     marking();
     if (stream != null) {
+      debug('Listening to stream in $runtimeType');
       subscription = stream.listen(onData, onError: onError, onDone: onDone);
     }
   }

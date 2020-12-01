@@ -30,7 +30,7 @@ class Sensing implements StudyManager {
     controller = StudyController(
       bloc.study,
       samplingSchema: SamplingSchema.normal(powerAware: false),
-      //debugLevel: DebugLevel.DEBUG,
+      debugLevel: DebugLevel.DEBUG,
     );
 
     // The following study controller will use the default privacy schema, if used instead.
@@ -60,11 +60,11 @@ class Sensing implements StudyManager {
   ///  * creating the study by specifying [Trigger]s, [Task]s, and [Measure]s by hand
   ///
   Future<Study> getStudy(String studyId) async {
-    //return _getCoverageStudy(studyId);
+    return _getCoverageStudy(studyId);
     //return _getStudyWithSelectedMeasuresFromCommonSamplingSchema(studyId);
     //return _getConditionalSamplingStudy('#1');
     //return _getStudyWithMostMeasuresFromDebugSamplingSchema(studyId);
-    return _getStudyForBackgroundSamplingTesting(studyId);
+    //return _getStudyForBackgroundSamplingTesting(studyId);
   }
 
   Future<Study> _getStudyWithAllMeasuresFromCommonSamplingSchema(

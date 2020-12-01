@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2018-2020 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -10,9 +10,9 @@ part of connectivity;
 /// The [ConnectivityProbe] listens to the connectivity status of the phone and
 /// collect a [ConnectivityDatum] every time the connectivity state changes.
 class ConnectivityProbe extends StreamProbe {
-  Stream<Datum> get stream => Connectivity()
-      .onConnectivityChanged
-      .map((ConnectivityResult event) => ConnectivityDatum.fromConnectivityResult(event));
+  Stream<Datum> get stream =>
+      Connectivity().onConnectivityChanged.map((ConnectivityResult event) =>
+          ConnectivityDatum.fromConnectivityResult(event));
 }
 
 // This probe requests access to location permissions (both on Android and iOS).
@@ -27,8 +27,8 @@ class ConnectivityProbe extends StreamProbe {
 ///  * [CNCopyCurrentNetworkInfo](https://developer.apple.com/documentation/systemconfiguration/1614126-cncopycurrentnetworkinfo)
 class WifiProbe extends PeriodicDatumProbe {
   Future<Datum> getDatum() async {
-    String ssid = await Connectivity().getWifiName();
-    String bssid = await Connectivity().getWifiBSSID();
+    String ssid = await WifiInfo().getWifiName();
+    String bssid = await WifiInfo().getWifiBSSID();
 
     return WifiDatum()
       ..ssid = ssid
@@ -49,8 +49,9 @@ class BluetoothProbe extends PeriodicDatumProbe {
   Future<Datum> getDatum() async {
     Datum datum;
     try {
-      List<ScanResult> results = await FlutterBlue.instance
-          .startScan(scanMode: ScanMode.lowLatency, timeout: duration ?? Duration(milliseconds: DEFAULT_TIMEOUT));
+      List<ScanResult> results = await FlutterBlue.instance.startScan(
+          scanMode: ScanMode.lowLatency,
+          timeout: duration ?? Duration(milliseconds: DEFAULT_TIMEOUT));
       datum = BluetoothDatum.fromScanResult(results);
     } catch (error) {
       await FlutterBlue.instance.stopScan();

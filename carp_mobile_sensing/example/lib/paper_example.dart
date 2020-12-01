@@ -34,6 +34,6 @@ void sensing() async {
     print(JsonEncoder.withIndent(' ').convert(datum));
   });
 
-  // listening on events from a specific probe
-  ProbeRegistry.lookup(DeviceSamplingPackage.SCREEN).events.forEach(print);
+  // listening on events of a specific type
+  ProbeRegistry().eventsByType(DeviceSamplingPackage.SCREEN).forEach(print);
 }

@@ -88,6 +88,9 @@ class AppTaskController {
   /// changes to the [userTaskQueue].
   Stream<UserTask> get userTaskEvents => _controller.stream;
 
+  /// Constructs a singleton instance of [AppTaskController].
+  ///
+  /// [AppTaskController] is designed to work as a singleton.
   factory AppTaskController() => _instance;
   AppTaskController._() {
     registerUserTaskFactory(SensingUserTaskFactory());

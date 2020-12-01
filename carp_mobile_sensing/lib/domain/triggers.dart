@@ -577,7 +577,7 @@ class ConditionalSamplingEventTrigger extends Trigger {
   ConditionalSamplingEventTrigger({
     String triggerId,
     @required this.measureType,
-    @required this.resumeCondition,
+    this.resumeCondition,
     this.pauseCondition,
   }) : super(triggerId: triggerId);
 

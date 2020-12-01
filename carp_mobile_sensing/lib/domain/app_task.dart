@@ -14,7 +14,7 @@ part of domain;
 class AppTask extends Task {
   AppTask({
     String name,
-    this.type,
+    @required this.type,
     this.title,
     this.description,
     this.instructions,
