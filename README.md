@@ -31,8 +31,8 @@ These are the available CARP Mobile Sensing Flutter components in this repositor
 | [carp_backend](./backends/carp_backend) | Support for uploading data to a CARP data backend as JSON. | [![pub package](https://img.shields.io/pub/v/carp_backend.svg)](https://pub.dartlang.org/packages/carp_backend) |
 | [carp_firebase_backend](./backends/carp_firebase_backend) | Support for uploading data to Firebase as both zipped files and JSON data| [![pub package](https://img.shields.io/pub/v/carp_firebase_backend.svg)](https://pub.dartlang.org/packages/carp_firebase_backend) |
 | **Apps** | **Misc. mobile sensing apps** |  |
-| [carp_mobile_sensing_app](./apps/carp_mobile_sensing_app) | The CARP Mobile Sensing example app |  |
-| [pulmonary_monitor_app](https://github.com/cph-cachet/pulmonary_monitor_app) | The CARP Pulmonary Monitor example app |  |
+| [carp_mobile_sensing_app](./apps/carp_mobile_sensing_app) | Demonstrates how basic mobile sensing can be implemented in a Flutter app using CAMS.  |  |
+| [pulmonary_monitor_app](https://github.com/cph-cachet/pulmonary_monitor_app) | Demonstrates how user tasks (aka. [AppTask](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/AppTask-class.html)) are supported in CAMS. |  |
 
 ## Documentation
 
