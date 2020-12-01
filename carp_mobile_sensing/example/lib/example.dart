@@ -168,7 +168,8 @@ void samplingSchemaExample() async {
     ..addTriggerTask(
         ImmediateTrigger(),
         AutomaticTask()
-          ..measures = SamplingSchema.common(namespace: NameSpace.CARP)
+          ..measures = SamplingSchema
+              .common(namespace: NameSpace.CARP)
               .measures
               .values
               .toList());
