@@ -23,8 +23,8 @@ dependencies:
   carp_audio_package: ^0.10.0
   carp_apps_package: ^0.10.0
   carp_survey_package: ^0.10.0
-  carp_esense_package: ^0.9.0
-  #carp_backend: ^0.3.2
+  carp_esense_package: ^0.10.0
+  carp_backend: ^0.3.2
   #carp_health_package: ^1.1.1
   #carp_firebase_backend: ^0.5.0
 

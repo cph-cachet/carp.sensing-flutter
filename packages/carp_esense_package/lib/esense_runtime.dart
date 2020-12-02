@@ -16,7 +16,8 @@ abstract class _ESenseProbe extends StreamProbe {
     assert(measure is ESenseMeasure);
     super.onInitialize(measure);
     deviceName = (measure as ESenseMeasure)?.deviceName;
-    assert(deviceName != null, 'Must specify a non-null device name for the eSense device.');
+    assert(deviceName != null,
+        'Must specify a non-null device name for the eSense device.');
     samplingRate ??= (measure as ESenseMeasure)?.samplingRate;
 
     // if you want to get the connection events when connecting, set up the listener BEFORE connecting...
@@ -47,7 +48,9 @@ class ESenseButtonProbe extends _ESenseProbe {
     return (ESenseManager.connected)
         ? ESenseManager.eSenseEvents
             .where((event) => event.runtimeType == ButtonEventChanged)
-            .map((event) => ESenseButtonDatum(deviceName: deviceName, pressed: (event as ButtonEventChanged).pressed))
+            .map((event) => ESenseButtonDatum(
+                deviceName: deviceName,
+                pressed: (event as ButtonEventChanged).pressed))
         : null;
   }
 }
@@ -58,8 +61,8 @@ class ESenseSensorProbe extends _ESenseProbe {
   Stream<Datum> get stream {
     if (!ESenseManager.connected) ESenseManager.connect(deviceName);
     return (ESenseManager.connected)
-        ? ESenseManager.sensorEvents
-            .map((event) => ESenseSensorDatum.fromSensorEvent(deviceName: deviceName, event: event))
+        ? ESenseManager.sensorEvents.map((event) => ESenseSensorDatum
+            .fromSensorEvent(deviceName: deviceName, event: event))
         : null;
   }
 }
