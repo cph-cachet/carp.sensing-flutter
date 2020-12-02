@@ -9,7 +9,8 @@ part of carp_apps_package;
 /// Holds a list of names of apps installed on the device.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class AppsDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, AppsSamplingPackage.APPS);
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, AppsSamplingPackage.APPS);
   DataFormat get format => CARP_DATA_FORMAT;
 
   /// List of names on installed apps.
@@ -17,7 +18,8 @@ class AppsDatum extends CARPDatum {
 
   AppsDatum() : super();
 
-  factory AppsDatum.fromJson(Map<String, dynamic> json) => _$AppsDatumFromJson(json);
+  factory AppsDatum.fromJson(Map<String, dynamic> json) =>
+      _$AppsDatumFromJson(json);
   Map<String, dynamic> toJson() => _$AppsDatumToJson(this);
   String toString() => super.toString() + ', installedApps: $installedApps';
 }
@@ -25,7 +27,8 @@ class AppsDatum extends CARPDatum {
 /// Holds a map of names of apps and their corresponding usage in seconds.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class AppUsageDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP, AppsSamplingPackage.APP_USAGE);
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, AppsSamplingPackage.APP_USAGE);
   DataFormat get format => CARP_DATA_FORMAT;
 
   DateTime start, end;
@@ -35,7 +38,9 @@ class AppUsageDatum extends CARPDatum {
 
   AppUsageDatum() : super();
 
-  factory AppUsageDatum.fromJson(Map<String, dynamic> json) => _$AppUsageDatumFromJson(json);
+  factory AppUsageDatum.fromJson(Map<String, dynamic> json) =>
+      _$AppUsageDatumFromJson(json);
   Map<String, dynamic> toJson() => _$AppUsageDatumToJson(this);
-  String toString() => super.toString() + ', start: $start, end: $end, usage: $usage';
+  String toString() =>
+      super.toString() + ', start: $start, end: $end, usage: $usage';
 }

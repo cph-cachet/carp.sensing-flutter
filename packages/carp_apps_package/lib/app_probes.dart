@@ -8,7 +8,8 @@ part of carp_apps_package;
 
 /// A probe collecting a list of installed applications on this device.
 ///
-/// Note that this probe only works on Android. On iOS, an empty list is returned.
+/// Note that this probe only works on Android. On iOS, an empty list is
+/// returned.
 class AppsProbe extends DatumProbe {
   AppsProbe() : super();
 
@@ -18,7 +19,9 @@ class AppsProbe extends DatumProbe {
     super.onInitialize(measure);
 
     // check if the DeviceApps plugin is available (only available on Android)
-    if (!Platform.isAndroid) throw SensingException("Error initializing AppsProbe -- only available on Android.");
+    if (!Platform.isAndroid)
+      throw SensingException(
+          "Error initializing AppsProbe -- only available on Android.");
   }
 
   Future<Datum> getDatum() async {
@@ -35,9 +38,11 @@ class AppsProbe extends DatumProbe {
   }
 }
 
-/// A probe collecting app usage information on apps that are installed on the device
+/// A probe collecting app usage information on apps that are installed on
+/// the device.
 ///
-/// Note that this probe only works on Android. On iOS, an exception is thrown and the probe is stopped.
+/// Note that this probe only works on Android. On iOS, an exception is thrown
+/// and the probe is stopped.
 class AppUsageProbe extends DatumProbe {
   MarkedMeasure markedMeasure;
 
@@ -45,19 +50,24 @@ class AppUsageProbe extends DatumProbe {
 
   void onInitialize(Measure measure) {
     super.onInitialize(measure);
-    assert(measure is MarkedMeasure, 'An MarkedMeasure must be provided to use the AppUsageProbe.');
+    assert(measure is MarkedMeasure,
+        'An MarkedMeasure must be provided to use the AppUsageProbe.');
     markedMeasure = (measure as MarkedMeasure);
 
     // check if AppUsage is available (only available on Android)
-    if (!Platform.isAndroid) throw SensingException("Error initializing AppUsageProbe -- only available on Android.");
+    if (!Platform.isAndroid)
+      throw SensingException(
+          "Error initializing AppUsageProbe -- only available on Android.");
   }
 
   Future<Datum> getDatum() async {
     // get the last mark - if null, go back one day
-    DateTime start = markedMeasure.lastTime ?? DateTime.now().subtract(markedMeasure.history);
+    DateTime start = markedMeasure.lastTime ??
+        DateTime.now().subtract(markedMeasure.history);
     DateTime end = DateTime.now();
 
-    debug('Collecting app usage - start: ${start.toUtc()}, end: ${end.toUtc()}');
+    debug(
+        'Collecting app usage - start: ${start.toUtc()}, end: ${end.toUtc()}');
     List<AppUsageInfo> infos = await AppUsage.getAppUsage(start, end);
 
     Map<String, int> usage = {};
