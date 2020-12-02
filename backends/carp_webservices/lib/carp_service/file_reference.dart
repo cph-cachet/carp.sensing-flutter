@@ -21,7 +21,8 @@ class FileStorageReference extends CarpReference {
   FileStorageReference._(CarpService service, [this.id]) : super._(service);
 
   /// The URL for the file end point for this [FileStorageReference].
-  String get fileEndpointUri => "${service.app.uri.toString()}/api/studies/${service.app.study.id}/files";
+  String get fileEndpointUri =>
+      "${service.app.uri.toString()}/api/studies/${service.app.study.id}/files";
 
   /// Asynchronously uploads a file to the currently specified
   /// [FileStorageReference], with optional [metadata].
@@ -48,7 +49,8 @@ class FileStorageReference extends CarpReference {
     final String url = "$fileEndpointUri/$id";
     final restHeaders = await headers;
 
-    http.Response response = await httpr.get(Uri.encodeFull(url), headers: restHeaders);
+    http.Response response =
+        await httpr.get(Uri.encodeFull(url), headers: restHeaders);
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> map = json.decode(response.body);
 
@@ -73,7 +75,8 @@ class FileStorageReference extends CarpReference {
     final String url = "$fileEndpointUri";
     final restHeaders = await headers;
 
-    http.Response response = await httpr.get(Uri.encodeFull(url), headers: restHeaders);
+    http.Response response =
+        await httpr.get(Uri.encodeFull(url), headers: restHeaders);
     int httpStatusCode = response.statusCode;
     List<dynamic> list = json.decode(response.body);
 
@@ -104,7 +107,8 @@ class FileStorageReference extends CarpReference {
     final String url = "$fileEndpointUri/$id";
     final restHeaders = await headers;
 
-    http.Response response = await httpr.delete(Uri.encodeFull(url), headers: restHeaders);
+    http.Response response =
+        await httpr.delete(Uri.encodeFull(url), headers: restHeaders);
     int httpStatusCode = response.statusCode;
 
     switch (httpStatusCode) {
@@ -127,8 +131,8 @@ class FileStorageReference extends CarpReference {
 }
 
 // TODO - This [FileMetadata] class is not used currently -- only a 'flat' Map is used.
-/// Metadata for a [FileStorageReference]. Metadata stores default attributes such as
-/// size and content type. Also allow for storing custom metadata.
+/// Metadata for a [FileStorageReference]. Metadata stores default attributes
+/// such as size and content type. Also allow for storing custom metadata.
 class FileMetadata {
   FileMetadata({
     this.cacheControl,
@@ -137,14 +141,16 @@ class FileMetadata {
     this.contentLanguage,
     this.contentType,
     Map<String, String> customMetadata,
-  })  : carpServiceName = null,
+  })
+      : carpServiceName = null,
         path = null,
         name = null,
         sizeBytes = null,
         creationTimeMillis = null,
         updatedTimeMillis = null,
         md5Hash = null,
-        customMetadata = customMetadata == null ? null : Map<String, String>.unmodifiable(customMetadata);
+        customMetadata =
+            (customMetadata == null) ? null : Map.unmodifiable(customMetadata);
 
   FileMetadata._fromMap(Map<dynamic, dynamic> map)
       : carpServiceName = map['carpServiceName'],
@@ -161,7 +167,7 @@ class FileMetadata {
         contentEncoding = map['contentEncoding'],
         customMetadata = map['customMetadata'] == null
             ? null
-            : Map<String, String>.unmodifiable(map['customMetadata'].cast<String, String>());
+            : Map.unmodifiable(map['customMetadata'].cast<String, String>());
 
   /// The owning CARP Web Service name the [FileStorageReference].
   final String carpServiceName;

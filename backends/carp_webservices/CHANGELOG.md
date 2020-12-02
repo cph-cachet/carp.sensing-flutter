@@ -1,3 +1,7 @@
+## 0.10.0
+* updated to carp_mobile_sensing v. 0.10.x
+* alligning version number
+
 ## 0.5.2
 * feature: support for `changePassword()`
 * fix: password is no longer stored as part of `carp_webservices` neither in memory or serialized to json.

@@ -33,7 +33,9 @@ class CarpDataManager extends AbstractDataManager {
     if ((carpEndPoint.uploadMethod == CarpUploadMethod.FILE) ||
         (carpEndPoint.uploadMethod == CarpUploadMethod.BATCH_DATA_POINT)) {
       // make sure that files are not zipped if using batch upload
-      assert(carpEndPoint.uploadMethod == CarpUploadMethod.BATCH_DATA_POINT ? carpEndPoint.zip == false : true);
+      assert(carpEndPoint.uploadMethod == CarpUploadMethod.BATCH_DATA_POINT
+          ? carpEndPoint.zip == false
+          : true);
 
       // Create a [FileDataManager] and wrap it.
       fileDataManager = new FileDataManager();
@@ -46,7 +48,8 @@ class CarpDataManager extends AbstractDataManager {
       fileDataManager.events
           .where((event) => event.runtimeType == FileDataManagerEvent)
           .where((event) => event.type == FileDataManagerEventTypes.FILE_CLOSED)
-          .listen((event) => _uploadDatumFileToCarp((event as FileDataManagerEvent).path));
+          .listen((event) =>
+              _uploadDatumFileToCarp((event as FileDataManagerEvent).path));
 
       // initialize the file data manager
       fileDataManager.initialize(study, events);
@@ -62,7 +65,9 @@ class CarpDataManager extends AbstractDataManager {
           study: study,
           name: carpEndPoint.name,
           uri: Uri.parse(carpEndPoint.uri),
-          oauth: OAuthEndPoint(clientID: carpEndPoint.clientId, clientSecret: carpEndPoint.clientSecret));
+          oauth: OAuthEndPoint(
+              clientID: carpEndPoint.clientId,
+              clientSecret: carpEndPoint.clientSecret));
     }
     return _app;
   }
@@ -73,8 +78,10 @@ class CarpDataManager extends AbstractDataManager {
     // check if the CARP webservice has already been configured and the user is logged in.
     if (!CarpService.isConfigured) await CarpService.configure(await app);
     if (CarpService.instance.currentUser == null) {
-      await CarpService.instance.authenticate(username: carpEndPoint.email, password: carpEndPoint.password);
-      print("CarpDataManager - signed in user: ${CarpService.instance.currentUser}");
+      await CarpService.instance.authenticate(
+          username: carpEndPoint.email, password: carpEndPoint.password);
+      print(
+          "CarpDataManager - signed in user: ${CarpService.instance.currentUser}");
     }
     _initialized = true;
     return CarpService.instance.currentUser;
@@ -87,7 +94,8 @@ class CarpDataManager extends AbstractDataManager {
     // Check if CARP authentication is ready before writing...
     if (!_initialized) {
       print("waiting for CARP authentication -- delaying for 10 sec...");
-      return Future.delayed(const Duration(seconds: 10), () => uploadData(data));
+      return Future.delayed(
+          const Duration(seconds: 10), () => uploadData(data));
     }
 
     await user;
@@ -103,7 +111,8 @@ class CarpDataManager extends AbstractDataManager {
         case CarpUploadMethod.DATA_POINT:
           return (await CarpService.instance
                   .getDataPointReference()
-                  .postDataPoint(CARPDataPoint.fromDatum(study.id, study.userId, data)) !=
+                  .postDataPoint(
+                      CARPDataPoint.fromDatum(study.id, study.userId, data)) !=
               null);
         case CarpUploadMethod.BATCH_DATA_POINT:
         case CarpUploadMethod.FILE:
@@ -123,7 +132,7 @@ class CarpDataManager extends AbstractDataManager {
 
   // This method upload a file of [Datum] data to CAPP.
   //TODO - implement support for offline store-and-wait for later upload when online.
-  Future<void> _uploadDatumFileToCarp(String path) async {
+  Future _uploadDatumFileToCarp(String path) async {
     print("File upload to CARP started - path : '$path'");
     final File file = File(path);
 
@@ -133,23 +142,32 @@ class CarpDataManager extends AbstractDataManager {
 
     switch (carpEndPoint.uploadMethod) {
       case CarpUploadMethod.BATCH_DATA_POINT:
-        await CarpService.instance.getDataPointReference().batchPostDataPoint(file);
+        await CarpService.instance
+            .getDataPointReference()
+            .batchPostDataPoint(file);
 
-        addEvent(CarpDataManagerEvent(CarpDataManagerEventTypes.file_uploaded, file.path, null,
+        addEvent(CarpDataManagerEvent(
+            CarpDataManagerEventTypes.file_uploaded,
+            file.path,
+            null,
             CarpService.instance.getDataPointReference().dataEndpointUri));
         print("Batch upload to CARP finished");
         break;
       case CarpUploadMethod.FILE:
         final FileUploadTask uploadTask = CarpService.instance
             .getFileStorageReference()
-            .upload(file, {'device_id': '$deviceID', 'study_id': '$studyID', 'user_id': '$userID'});
+            .upload(file, {
+          'device_id': '$deviceID',
+          'study_id': '$studyID',
+          'user_id': '$userID'
+        });
 
         // await the upload is successful
         CarpFileResponse response = await uploadTask.onComplete;
         int id = response.id;
 
-        addEvent(CarpDataManagerEvent(
-            CarpDataManagerEventTypes.file_uploaded, file.path, id, uploadTask.reference.fileEndpointUri));
+        addEvent(CarpDataManagerEvent(CarpDataManagerEventTypes.file_uploaded,
+            file.path, id, uploadTask.reference.fileEndpointUri));
         print("File upload to CARP finished - remote id : $id ");
         break;
       case CarpUploadMethod.DATA_POINT:
@@ -161,13 +179,15 @@ class CarpDataManager extends AbstractDataManager {
     if (carpEndPoint.deleteWhenUploaded) {
       // delete the local file once uploaded
       file.delete();
-      addEvent(FileDataManagerEvent(FileDataManagerEventTypes.FILE_DELETED, file.path));
+      addEvent(FileDataManagerEvent(
+          FileDataManagerEventTypes.FILE_DELETED, file.path));
     }
   }
 
   // This method upload a file attachment to CARP, i.e. one that is referenced in a [FileDatum].
-  Future<void> _uploadFileToCarp(FileDatum datum) async {
-    print("File attachment upload to CARP started - path : '${datum.filename}'");
+  Future _uploadFileToCarp(FileDatum datum) async {
+    print(
+        "File attachment upload to CARP started - path : '${datum.filename}'");
     final File file = File(datum.filename);
 
     final String deviceID = Device().deviceID.toString();
@@ -179,20 +199,23 @@ class CarpDataManager extends AbstractDataManager {
     datum.metadata['user_id'] = userID;
 
     // start upload
-    final FileUploadTask uploadTask = CarpService.instance.getFileStorageReference().upload(file, datum.metadata);
+    final FileUploadTask uploadTask = CarpService.instance
+        .getFileStorageReference()
+        .upload(file, datum.metadata);
 
     // await the upload is successful
     CarpFileResponse response = await uploadTask.onComplete;
     int id = response.id;
 
-    addEvent(CarpDataManagerEvent(
-        CarpDataManagerEventTypes.file_uploaded, file.path, id, uploadTask.reference.fileEndpointUri));
+    addEvent(CarpDataManagerEvent(CarpDataManagerEventTypes.file_uploaded,
+        file.path, id, uploadTask.reference.fileEndpointUri));
     print("File upload to CARP finished - remote id : $id ");
 
     // delete the local file once uploaded?
     if (carpEndPoint.deleteWhenUploaded) {
       file.delete();
-      addEvent(FileDataManagerEvent(FileDataManagerEventTypes.FILE_DELETED, file.path));
+      addEvent(FileDataManagerEvent(
+          FileDataManagerEventTypes.FILE_DELETED, file.path));
     }
   }
 
@@ -218,9 +241,11 @@ class CarpDataManagerEvent extends DataManagerEvent {
   /// The URI of the file on the CARP server.
   String fileEndpointUri;
 
-  CarpDataManagerEvent(String type, this.path, this.id, this.fileEndpointUri) : super(type);
+  CarpDataManagerEvent(String type, this.path, this.id, this.fileEndpointUri)
+      : super(type);
 
-  String toString() => 'CarpDataManagerEvent - type: $type, path: $path, id: $id, fileEndpointUri: $fileEndpointUri';
+  String toString() =>
+      'CarpDataManagerEvent - type: $type, path: $path, id: $id, fileEndpointUri: $fileEndpointUri';
 }
 
 /// An enumeration of file data manager event types

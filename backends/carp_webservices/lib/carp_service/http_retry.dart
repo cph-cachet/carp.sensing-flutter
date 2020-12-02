@@ -17,17 +17,20 @@ final HTTPRetry httpr = HTTPRetry();
 class HTTPRetry {
   /// Sends an generic HTTP [MultipartRequest] with the given headers to the given URL,
   /// which can be a [Uri] or a [String].
-  Future<http.StreamedResponse> send(http.MultipartRequest request) async => await retry(
+  Future<http.StreamedResponse> send(http.MultipartRequest request) async =>
+      await retry(
         () => request.send().timeout(Duration(seconds: 5)),
         delayFactor: Duration(seconds: 5),
         maxAttempts: 15,
         retryIf: (e) => e is SocketException || e is TimeoutException,
-        onRetry: (e) => print('${e.runtimeType} - Retrying to SEND ${request.url}'),
+        onRetry: (e) =>
+            print('${e.runtimeType} - Retrying to SEND ${request.url}'),
       );
 
   /// Sends an HTTP GET request with the given headers to the given URL, which can
   /// be a [Uri] or a [String].
-  Future<http.Response> get(url, {Map<String, String> headers}) async => await retry(
+  Future<http.Response> get(url, {Map<String, String> headers}) async =>
+      await retry(
         () => http
             .get(
               Uri.encodeFull(url),
@@ -42,7 +45,8 @@ class HTTPRetry {
 
   /// Sends an HTTP POST request with the given headers and body to the given URL,
   /// which can be a [Uri] or a [String].
-  Future<http.Response> post(url, {Map<String, String> headers, body, Encoding encoding}) async {
+  Future<http.Response> post(url,
+      {Map<String, String> headers, body, Encoding encoding}) async {
     // calling the http POST method using the retry approach
     final http.Response response = await retry(
       () => http
@@ -63,7 +67,8 @@ class HTTPRetry {
 
   /// Sends an HTTP PUT request with the given headers and body to the given URL,
   /// which can be a [Uri] or a [String].
-  Future<http.Response> put(url, {Map<String, String> headers, body, Encoding encoding}) async {
+  Future<http.Response> put(url,
+      {Map<String, String> headers, body, Encoding encoding}) async {
     // calling the http PUT method using the retry approach
     final http.Response response = await retry(
       () => http

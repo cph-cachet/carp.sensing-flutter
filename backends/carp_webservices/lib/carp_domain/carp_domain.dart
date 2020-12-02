@@ -6,7 +6,7 @@
  */
 library carp_domain;
 
-import 'dart:convert';
+//import 'dart:convert';
 
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:json_annotation/json_annotation.dart';

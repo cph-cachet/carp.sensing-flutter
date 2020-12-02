@@ -43,13 +43,13 @@ Upload methods are defined in the `CarpUploadMethod` class.
 For example, a `CarpDataEndPoint` that upload data points directly looks like this:
 
 `````dart
-CarpDataEndPoint cdep = CarpDataEndPoint(CarpUploadMethod.DATA_POINT,
+  CarpDataEndPoint cdep = CarpDataEndPoint(CarpUploadMethod.DATA_POINT,
       name: 'CARP Staging Server',
-      uri: uri,
-      clientId: clientID,
-      clientSecret: clientSecret,
-      email: username,
-      password: password);
+      uri: 'http://staging.carp.cachet.dk:8080',
+      clientId: 'carp',
+      clientSecret: 'a_secret',
+      email: 'username@cachet.dk',
+      password: 'password');
 `````
 
 A `CarpDataEndPoint` that uploads data as zipped files and keeps the file on the phone, looks like this:
@@ -57,30 +57,29 @@ A `CarpDataEndPoint` that uploads data as zipped files and keeps the file on the
 `````dart
   CarpDataEndPoint cdep = CarpDataEndPoint(CarpUploadMethod.FILE,
       name: 'CARP Staging Server',
-      uri: uri,
-      clientId: clientID,
-      clientSecret: clientSecret,
-      email: username,
-      password: password,
+      uri: 'http://staging.carp.cachet.dk:8080',
+      clientId: 'carp',
+      clientSecret: 'a_secret',
+      email: 'username@cachet.dk',
+      password: 'password',
       bufferSize: 500 * 1000,
-      zip: true
-      deleteWhenUploaded: false);
+      zip: true);
 `````
 
 And a `CarpDataEndPoint` that batch uploads data points in a json file (which is deleted when uploaded) looks like this:
 
-
 `````dart
-  CarpDataEndPoint cdep = CarpDataEndPoint(CarpUploadMethod.BATCH_DATA_POINT,
-      name: 'CARP Staging Server',
-      uri: uri,
-      clientId: clientID,
-      clientSecret: clientSecret,
-      email: username,
-      password: password,
-      bufferSize: 500 * 1000
-      deleteWhenUploaded: true);
-
+  CarpDataEndPoint cdep = CarpDataEndPoint(
+    CarpUploadMethod.BATCH_DATA_POINT,
+    name: 'CARP Staging Server',
+    uri: 'http://staging.carp.cachet.dk:8080',
+    clientId: 'carp',
+    clientSecret: 'a_secret',
+    email: 'username@cachet.dk',
+    password: 'password',
+    bufferSize: 500 * 1000,
+    deleteWhenUploaded: true,
+  );
 `````
 
 ### 3. Assign the CARP Data Endpoint to your Study
@@ -88,13 +87,17 @@ And a `CarpDataEndPoint` that batch uploads data points in a json file (which is
 To use the CARP Data Endpoint in you study, assign it to the study. And then start the study.
 
 `````dart
-  Study study = new Study(testStudyId, username, name: "Test study #$testStudyId");
+  Study study = new Study(
+    '1234',
+    'username@cachet.dk',
+    name: 'Test study #1234',
+  );
   study.dataEndPoint = cdep;
   
   // create a new executor, initialize it, and start it
   executor = new StudyExecutor(study);
   executor.initialize();
-  executor.start();
+  executor.resume();
 `````
  
 ## Features and bugs

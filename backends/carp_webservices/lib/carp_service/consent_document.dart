@@ -42,5 +42,6 @@ class ConsentDocument {
   /// Returns `true` if the document exists.
   bool get exists => document != null;
 
-  String toString() => "ConsentDocument - id : $id, study: $studyId, document size: ${document?.length}";
+  String toString() =>
+      "ConsentDocument - id : $id, study: $studyId, document size: ${document?.length}";
 }

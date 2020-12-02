@@ -10,7 +10,8 @@ part of carp_services;
 /// This code is based on a Firebase blog post and ported to Dart.
 /// https://firebase.googleblog.com/2015/02/the-2120-ways-to-ensure-unique_68.html
 class PushIdGenerator {
-  static const String PUSH_CHARS = '-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz';
+  static const String PUSH_CHARS =
+      '-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz';
 
   static final Random _random = Random();
 

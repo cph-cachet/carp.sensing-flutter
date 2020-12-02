@@ -96,14 +96,14 @@ class CarpUser {
   }
 
   /// Sign out the current user.
-  Future<void> signOut() async {
+  Future signOut() async {
     //TODO - implement sign out on the CARP Web Service
     token = null;
   }
 
   /// Manually refreshes the data of the current user (e.g., [fullName],
   /// [telephone], etc.) from the CARP web service.
-  Future<void> reload() async {
+  Future reload() async {
     if (CarpService.instance == null)
       throw new CarpServiceException(
           message:
@@ -115,7 +115,7 @@ class CarpUser {
   /// Deletes the user record from the CARP web service.
   ///
   /// TODO - not implemented, since there is currently no CARP endpoint for users.
-  Future<void> delete() async {}
+  Future delete() async {}
 
   factory CarpUser.fromJson(Map<String, dynamic> json) =>
       _$CarpUserFromJson(json);

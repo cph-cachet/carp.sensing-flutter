@@ -12,8 +12,8 @@ part of audio;
 /// See [NoiseMeasure] on how to configure this probe, including setting the
 /// frequency, duration and sampling rate of the sampling rate.
 ///
-/// Does not record sound. Instead reports the audio level with a specified frequency,
-/// in a given sampling window as a [NoiseDatum].
+/// Does not record sound. Instead reports the audio level with a specified
+/// frequency, in a given sampling window as a [NoiseDatum].
 class NoiseProbe extends BufferingPeriodicStreamProbe {
   NoiseMeter _noiseMeter;
   List<NoiseReading> _noiseReadings = new List<NoiseReading>();

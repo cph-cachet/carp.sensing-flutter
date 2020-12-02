@@ -15,13 +15,8 @@ import 'package:stats/stats.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 part 'audio_probe.dart';
-
 part 'noise_probe.dart';
-
 part 'audio_datum.dart';
-
 part 'audio_measures.dart';
-
 part 'audio_package.dart';
-
 part 'audio.g.dart';
