@@ -32,7 +32,8 @@ class OAuthToken {
   final DateTime issuedDate = new DateTime.now();
 
   /// Constructor
-  OAuthToken(this.accessToken, this.refreshToken, this.tokenType, this.expiresIn, this.scope);
+  OAuthToken(this.accessToken, this.refreshToken, this.tokenType,
+      this.expiresIn, this.scope);
 
   /// Constructor taking a Map.
   OAuthToken.fromMap(Map<String, dynamic> map)
@@ -43,7 +44,8 @@ class OAuthToken {
         scope = map['scope'];
 
   /// Clone this token.
-  OAuthToken clone() => OAuthToken(accessToken, refreshToken, tokenType, expiresIn, scope);
+  OAuthToken clone() =>
+      OAuthToken(accessToken, refreshToken, tokenType, expiresIn, scope);
 
   /// Calculate the date of expiration for the access token.
   ///
@@ -65,7 +67,8 @@ class OAuthToken {
       "Refresh Token: $refreshToken, "
       "Expiry date: $accessTokenExpiryDate";
 
-  factory OAuthToken.fromJson(Map<String, dynamic> json) => _$OAuthTokenFromJson(json);
+  factory OAuthToken.fromJson(Map<String, dynamic> json) =>
+      _$OAuthTokenFromJson(json);
   Map<String, dynamic> toJson() => _$OAuthTokenToJson(this);
 
   String toString() =>

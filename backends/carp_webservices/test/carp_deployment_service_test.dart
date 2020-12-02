@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'dart:io';
-import 'dart:math';
+//import 'dart:io';
+//import 'dart:math';
 
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
@@ -45,8 +45,6 @@ void main() {
   tearDownAll(() {});
 
   group("Deployment", () {
-    DeploymentReference deploymentReference;
-
     test('- authentication', () async {
       print('CarpService : ${CarpService.instance.app}');
       print(" - signed in as: $user");

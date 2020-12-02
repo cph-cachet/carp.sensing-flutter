@@ -43,7 +43,8 @@ class FileUploadTask extends CarpServiceTask {
   /// Metadata for the file.
   Map<String, String> metadata;
 
-  FileUploadTask._(FileStorageReference reference, this.file, [metadata]) : super._(reference) {
+  FileUploadTask._(FileStorageReference reference, this.file, [metadata])
+      : super._(reference) {
     this.metadata = (metadata == null) ? new Map<String, String>() : metadata;
   }
 
@@ -101,9 +102,11 @@ class FileUploadTask extends CarpServiceTask {
             // All other cases are treated as an error.
             {
               _state = TaskStateType.failure;
-              final HTTPStatus status = HTTPStatus(httpStatusCode, response.reasonPhrase);
+              final HTTPStatus status =
+                  HTTPStatus(httpStatusCode, response.reasonPhrase);
               _completer.completeError(status);
-              throw CarpServiceException(httpStatus: status, message: map["message"]);
+              throw CarpServiceException(
+                  httpStatus: status, message: map["message"]);
             }
         }
       });
@@ -125,7 +128,8 @@ class FileDownloadTask extends CarpServiceTask {
   /// The file has to be created before starting the download.
   File file;
 
-  FileDownloadTask._(FileStorageReference reference, this.file) : super._(reference);
+  FileDownloadTask._(FileStorageReference reference, this.file)
+      : super._(reference);
 
   /// Returns the HTTP status code when completed
   Completer<int> _completer = Completer<int>();
@@ -154,9 +158,11 @@ class FileDownloadTask extends CarpServiceTask {
           {
             _state = TaskStateType.failure;
             final Map<String, dynamic> map = json.decode(response.body);
-            final HTTPStatus status = HTTPStatus(httpStatusCode, response.reasonPhrase);
+            final HTTPStatus status =
+                HTTPStatus(httpStatusCode, response.reasonPhrase);
             _completer.completeError(httpStatusCode);
-            throw CarpServiceException(httpStatus: status, message: map["message"]);
+            throw CarpServiceException(
+                httpStatus: status, message: map["message"]);
           }
       }
     });

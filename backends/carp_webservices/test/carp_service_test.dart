@@ -4,7 +4,7 @@ import 'dart:math';
 
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
-import 'package:carp_webservices/carp_domain/carp_domain.dart';
+//import 'package:carp_webservices/carp_domain/carp_domain.dart';
 import 'package:carp_webservices/carp_service/carp_service.dart';
 import 'package:test/test.dart';
 
@@ -51,7 +51,7 @@ void main() {
 
     CarpService.configure(app);
 
-    CarpUser user = await CarpService.instance.authenticate(
+    await CarpService.instance.authenticate(
       username: username,
       password: password,
     );

@@ -50,7 +50,8 @@ String _encode(Object object) =>
 class CarpService {
   static CarpService _instance;
 
-  CarpService._(this._app) : assert(_app != null) {
+  CarpService._(this._app) {
+    assert(_app != null);
     registerFromJsonFunctions();
   }
 
@@ -289,7 +290,7 @@ class CarpService {
   }
 
   /// Sign out the current user.
-  Future<void> signOut() async {
+  Future signOut() async {
     _currentUser.signOut();
   }
 
@@ -503,7 +504,9 @@ class CarpService {
 abstract class CarpReference {
   CarpService service;
 
-  CarpReference._(this.service) : assert(service != null);
+  CarpReference._(this.service) {
+    assert(service != null);
+  }
 
   Future<Map<String, String>> get headers async {
     assert(service != null);

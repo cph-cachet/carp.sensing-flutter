@@ -73,8 +73,13 @@ class CarpDataEndPoint extends FileDataEndPoint {
       zip = true, // zip file pr. default
       encrypt = false, // don't encrypt pr. default
       publicKey})
-      : assert(uploadMethod != null),
-        super(type: DataEndPointTypes.CARP, bufferSize: bufferSize, zip: zip, encrypt: encrypt, publicKey: publicKey) {
+      : super(
+            type: DataEndPointTypes.CARP,
+            bufferSize: bufferSize,
+            zip: zip,
+            encrypt: encrypt,
+            publicKey: publicKey) {
+    assert(uploadMethod != null);
     // the CARP server cannot handle zipped files (yet)
     if (this.uploadMethod == CarpUploadMethod.BATCH_DATA_POINT) {
       this.zip = false;
@@ -83,7 +88,8 @@ class CarpDataEndPoint extends FileDataEndPoint {
   }
 
   static Function get fromJsonFunction => _$CarpDataEndPointFromJson;
-  factory CarpDataEndPoint.fromJson(Map<String, dynamic> json) => _$CarpDataEndPointFromJson(json);
+  factory CarpDataEndPoint.fromJson(Map<String, dynamic> json) =>
+      _$CarpDataEndPointFromJson(json);
   Map<String, dynamic> toJson() => _$CarpDataEndPointToJson(this);
 
   String toString() => 'CARP - $name [$uri]';
