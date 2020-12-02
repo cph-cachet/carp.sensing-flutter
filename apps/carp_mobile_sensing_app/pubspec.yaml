@@ -17,16 +17,16 @@ dependencies:
     sdk: flutter
   flutter_launcher_icons: ^0.8.0
   carp_mobile_sensing: ^0.10.0
-  carp_communication_package: ^0.10.0
   carp_connectivity_package: ^0.10.0
   carp_context_package: ^0.10.0
   carp_audio_package: ^0.10.0
-  carp_apps_package: ^0.10.0
-  carp_survey_package: ^0.10.0
-  carp_esense_package: ^0.10.0
-  carp_backend: ^0.10.0
-  carp_health_package: ^1.2.0
-  carp_firebase_backend: ^0.10.0
+  #carp_communication_package: ^0.10.0
+  #carp_apps_package: ^0.10.0
+  #carp_survey_package: ^0.10.0
+  #carp_esense_package: ^0.10.0
+  #carp_backend: ^0.10.0
+  #carp_health_package: ^1.2.0
+  #carp_firebase_backend: ^0.10.0
 
 # Overriding carp libraries to use the local copy
 dependency_overrides:
