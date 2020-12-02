@@ -1,3 +1,7 @@
+## 0.10.0
+* upgrade to `carp_mobile_sensing` v. 0.10.0
+* alignment of version numbering
+
 ## 0.5.2
 * **BREAKING**: Updated to CAMS v. 0.9.0 with new `$type` json serialization
 * upgrade: to the latest versions of Firebase Flutter packages
