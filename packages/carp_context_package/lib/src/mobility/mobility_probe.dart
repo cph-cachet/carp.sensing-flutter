@@ -26,7 +26,7 @@ class MobilityProbe extends StreamProbe {
   Stream<Datum> get stream =>
       _mobilityFactory.contextStream.map(_convertToDatum);
 
-  /// Converts a [MobilityContext] to a [MobilityDatum]
+  // Converts a [MobilityContext] to a [MobilityDatum]
   MobilityDatum _convertToDatum(MobilityContext context) => MobilityDatum()
     ..numberOfPlaces = context.numberOfSignificantPlaces
     ..homeStay = context.homeStay
