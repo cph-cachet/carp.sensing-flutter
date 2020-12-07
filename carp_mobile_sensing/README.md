@@ -8,7 +8,7 @@
 This library contains the core Flutter package for the CARP Mobile Sensing (CAMS) framework.
 Supports cross-platform (iOS and Android) mobile sensing.
 
-For an overview of all CAMS packages, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/README.md).
+For an overview of all CAMS packages, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter).
 For documentation on how to use CAMS, see the [CAMS wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki).
 
 ## Usage
