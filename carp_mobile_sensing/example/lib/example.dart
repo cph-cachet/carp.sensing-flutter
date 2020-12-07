@@ -64,12 +64,12 @@ void example_2() async {
       AutomaticTask(name: 'Sensor Task')
         ..addMeasure(PeriodicMeasure(
             MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
-            frequency: const Duration(seconds: 10),
-            duration: const Duration(milliseconds: 100)))
+            frequency: const Duration(seconds: 5),
+            duration: const Duration(seconds: 1)))
         ..addMeasure(PeriodicMeasure(
             MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
-            frequency: const Duration(seconds: 20),
-            duration: const Duration(milliseconds: 100))));
+            frequency: const Duration(seconds: 6),
+            duration: const Duration(seconds: 2))));
 
   // create a light measure variable to be used later
   PeriodicMeasure lightMeasure = PeriodicMeasure(
@@ -168,8 +168,7 @@ void samplingSchemaExample() async {
     ..addTriggerTask(
         ImmediateTrigger(),
         AutomaticTask()
-          ..measures = SamplingSchema
-              .common(namespace: NameSpace.CARP)
+          ..measures = SamplingSchema.common(namespace: NameSpace.CARP)
               .measures
               .values
               .toList());

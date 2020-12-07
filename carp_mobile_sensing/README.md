@@ -145,13 +145,17 @@ void example() async {
 
   // automatically collect accelerometer and gyroscope data
   // but delay the sampling by 10 seconds
-  study.addTriggerTask(
+    study.addTriggerTask(
       DelayedTrigger(delay: Duration(seconds: 10)),
       AutomaticTask(name: 'Sensor Task')
-        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
-            frequency: const Duration(seconds: 10), duration: const Duration(milliseconds: 100)))
-        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
-            frequency: const Duration(seconds: 20), duration: const Duration(milliseconds: 100))));
+        ..addMeasure(PeriodicMeasure(
+            MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
+            frequency: const Duration(seconds: 5),
+            duration: const Duration(seconds: 1)))
+        ..addMeasure(PeriodicMeasure(
+            MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
+            frequency: const Duration(seconds: 6),
+            duration: const Duration(seconds: 2))));
 
   // create a light measure variable to be used later
   PeriodicMeasure lightMeasure = PeriodicMeasure(
@@ -161,9 +165,10 @@ void example() async {
     duration: const Duration(milliseconds: 100),
   );
   // add it to the study to start immediately
-  study.addTriggerTask(ImmediateTrigger(), AutomaticTask(name: 'Light')..addMeasure(lightMeasure));
+  study.addTriggerTask(ImmediateTrigger(),
+      AutomaticTask(name: 'Light')..addMeasure(lightMeasure));
 
-  // Create a Study Controller that can manage this study.
+// Create a Study Controller that can manage this study.
   StudyController controller = StudyController(study);
 
   // await initialization before starting/resuming
@@ -174,20 +179,25 @@ void example() async {
   controller.events.forEach(print);
 
   // listen on only CARP events
-  controller.events.where((datum) => datum.format.namepace == NameSpace.CARP).forEach(print);
+  controller.events
+      .where((datum) => datum.format.namespace == NameSpace.CARP)
+      .forEach(print);
 
   // listen on LIGHT events only
-  controller.events.where((datum) => datum.format.name == SensorSamplingPackage.LIGHT).forEach(print);
+  controller.events
+      .where((datum) => datum.format.name == SensorSamplingPackage.LIGHT)
+      .forEach(print);
 
   // map events to JSON and then print
   controller.events.map((datum) => datum.toJson()).forEach(print);
 
-  // listening on a specific probe registered in the ProbeRegistry
+  // listening on a specific event type
   // this is equivalent to the statement above
-  ProbeRegistry().probes[SensorSamplingPackage.LIGHT].events.forEach(print);
+  ProbeRegistry().eventsByType(SensorSamplingPackage.LIGHT).forEach(print);
 
   // subscribe to events
-  StreamSubscription<Datum> subscription = controller.events.listen((Datum datum) {
+  StreamSubscription<Datum> subscription =
+      controller.events.listen((Datum datum) {
     // do something w. the datum, e.g. print the json
     print(JsonEncoder.withIndent(' ').convert(datum));
   });
@@ -196,9 +206,10 @@ void example() async {
   controller.pause();
   controller.resume();
 
-  // pause / resume specific probe(s)
-  ProbeRegistry().lookup(SensorSamplingPackage.ACCELEROMETER).pause();
-  ProbeRegistry().lookup(SensorSamplingPackage.ACCELEROMETER).resume();
+  // pause specific probe(s)
+  ProbeRegistry()
+      .lookup(SensorSamplingPackage.ACCELEROMETER)
+      .forEach((probe) => probe.pause());
 
   // adapt measures on the go - calling hasChanged() force a restart of
   // the probe, which will load the new measure
@@ -216,7 +227,7 @@ void example() async {
   // note that once a sampling has stopped, it cannot be restarted.
   controller.stop();
   subscription.cancel();
-}
+} 
 ```
 
 There is a very **simple** [example app](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/carp_mobile_sensing/example/lib/main.dart) app which shows how a study can be created with different tasks and measures.
