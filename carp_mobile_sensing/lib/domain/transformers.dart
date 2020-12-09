@@ -15,6 +15,8 @@ typedef DatumStreamTransformer = Stream<Datum> Function(Stream<Datum>);
 /// A no-operation transformer.
 Datum noop(Datum data) => data;
 
+/// A registry of [TransformerSchema]s which hold a set of
+/// [DatumTransformer]s.
 class TransformerSchemaRegistry {
   static final TransformerSchemaRegistry _instance =
       TransformerSchemaRegistry._();
@@ -51,23 +53,26 @@ abstract class TransformedDatum {
   static DatumTransformer get transformer => null;
 }
 
-/// An abstract class defining a transformer schema, which hold a set of [DatumTransformer],
-/// that can map from the native CARP namespace to another namespace. A [TransformerSchema]
-/// must be implemented for each supported namespace.
+/// An abstract class defining a transformer schema, which hold a set of
+/// [DatumTransformer]s, which that can map from the native CARP namespace
+/// to another namespace.
+/// A [TransformerSchema] must be implemented for each supported namespace.
 abstract class TransformerSchema {
-  /// The type of namespace that this package can transform to (see e.g. [NameSpace] for
-  /// pre-defined namespaces).
+  /// The type of namespace that this package can transform to (see e.g.
+  /// [NameSpace] for pre-defined namespaces).
   String get namespace;
 
   final Map<String, DatumTransformer> _transformers = {};
 
-  /// A map of transformers in this schema, indexed by the data type they can transform.
+  /// A map of transformers in this schema, indexed by the data type they
+  /// can transform.
   Map<String, DatumTransformer> get transformers => _transformers;
 
   /// Callback method when this schema is being registered.
   void onRegister();
 
-  /// Add a transformer to this schema based on its type mapped to its [DataType].
+  /// Add a transformer to this schema based on its type mapped to its
+  /// [DataType].
   void add(String type, DatumTransformer transformer) =>
       transformers[type] = transformer;
 

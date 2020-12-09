@@ -16,10 +16,10 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_launcher_icons: ^0.8.0
-  carp_mobile_sensing: ^0.10.0
-  carp_connectivity_package: ^0.10.0
-  carp_context_package: ^0.10.0
-  carp_audio_package: ^0.10.0
+  #carp_mobile_sensing: ^0.10.0
+  #carp_connectivity_package: ^0.10.0
+  #carp_context_package: ^0.10.0
+  #carp_audio_package: ^0.10.0
   #carp_communication_package: ^0.10.0
   #carp_apps_package: ^0.10.0
   #carp_survey_package: ^0.10.0
@@ -30,14 +30,14 @@ dependencies:
 
 # Overriding carp libraries to use the local copy
 dependency_overrides:
-#  carp_mobile_sensing:
-#    path: ../../carp_mobile_sensing/
-#  carp_context_package:
-#    path: ../../packages/carp_context_package/
-#  carp_connectivity_package:
-#    path: ../../packages/carp_connectivity_package/
-#  carp_audio_package:
-#    path: ../../packages/carp_audio_package/
+  carp_mobile_sensing:
+    path: ../../carp_mobile_sensing/
+  carp_context_package:
+    path: ../../packages/carp_context_package/
+  carp_connectivity_package:
+    path: ../../packages/carp_connectivity_package/
+  carp_audio_package:
+    path: ../../packages/carp_audio_package/
 
 dev_dependencies:
   flutter_test:

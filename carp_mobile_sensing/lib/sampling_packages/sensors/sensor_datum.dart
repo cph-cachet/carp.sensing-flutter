@@ -22,9 +22,11 @@ class AccelerometerDatum extends CARPDatum {
   /// Acceleration force along the z axis (including gravity) measured in m/s^2.
   double z;
 
-  AccelerometerDatum({this.x, this.y, this.z}) : super(multiDatum: true);
-  factory AccelerometerDatum.fromAccelerometerEvent(AccelerometerEvent event) =>
-      AccelerometerDatum()
+  AccelerometerDatum({bool multiDatum, this.x, this.y, this.z})
+      : super(multiDatum: multiDatum);
+  factory AccelerometerDatum.fromAccelerometerEvent(AccelerometerEvent event,
+          {bool multiDatum = false}) =>
+      AccelerometerDatum(multiDatum: multiDatum)
         ..x = event.x
         ..y = event.y
         ..z = event.z;
@@ -52,9 +54,11 @@ class GyroscopeDatum extends CARPDatum {
   /// Rate of rotation around the z axis measured in rad/s.
   double z;
 
-  GyroscopeDatum({this.x, this.y, this.z}) : super(multiDatum: true);
-  factory GyroscopeDatum.fromGyroscopeEvent(GyroscopeEvent event) =>
-      GyroscopeDatum()
+  GyroscopeDatum({bool multiDatum, this.x, this.y, this.z})
+      : super(multiDatum: multiDatum);
+  factory GyroscopeDatum.fromGyroscopeEvent(GyroscopeEvent event,
+          {bool multiDatum = false}) =>
+      GyroscopeDatum(multiDatum: multiDatum)
         ..x = event.x
         ..y = event.y
         ..z = event.z;

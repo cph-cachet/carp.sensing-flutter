@@ -37,8 +37,8 @@ class AccelerometerProbe extends StreamProbe {
 /// [frequency] and [duration] of the sampling rate.
 class BufferingAccelerometerProbe extends BufferingSensorProbe {
   Stream<dynamic> get bufferingStream => accelerometerEvents;
-  void onSamplingData(event) =>
-      datum.addDatum(AccelerometerDatum.fromAccelerometerEvent(event));
+  void onSamplingData(event) => datum.addDatum(
+      AccelerometerDatum.fromAccelerometerEvent(event, multiDatum: true));
 }
 
 /// A  probe collecting raw data from the gyroscope.
@@ -58,6 +58,6 @@ class GyroscopeProbe extends StreamProbe {
 /// [frequency] and [duration] of the sampling rate.
 class BufferingGyroscopeProbe extends BufferingSensorProbe {
   Stream<dynamic> get bufferingStream => gyroscopeEvents;
-  void onSamplingData(dynamic event) =>
-      datum.addDatum(GyroscopeDatum.fromGyroscopeEvent(event));
+  void onSamplingData(dynamic event) => datum
+      .addDatum(GyroscopeDatum.fromGyroscopeEvent(event, multiDatum: true));
 }

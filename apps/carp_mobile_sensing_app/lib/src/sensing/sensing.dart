@@ -31,6 +31,7 @@ class Sensing implements StudyManager {
       bloc.study,
       samplingSchema: SamplingSchema.normal(powerAware: false),
       debugLevel: DebugLevel.DEBUG,
+      privacySchemaName: PrivacySchema.DEFAULT,
     );
 
     // The following study controller will use the default privacy schema, if used instead.
@@ -41,7 +42,8 @@ class Sensing implements StudyManager {
     //controller.resume();
 
     // Listening on all data events from the study and print it (for debugging purpose).
-    controller.events.listen((event) => print(event));
+    //controller.events.listen((event) => print(event));
+    controller.events.listen(print);
 
     // wait 3 secs and resume the weather & air quality trigger
     // Future.delayed(const Duration(seconds: 3), () {

@@ -77,7 +77,7 @@ class ManualTrigger extends Trigger {
   Map<String, dynamic> toJson() => _$ManualTriggerToJson(this);
 }
 
-/// A trigger that delays sampling for [delay] milliseconds and then starts sampling.
+/// A trigger that delays sampling for [delay] and then starts sampling.
 /// Never stops sampling once started.
 ///
 /// The delay is measured from the start of the overall [Study].
