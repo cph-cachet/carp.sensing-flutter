@@ -90,24 +90,28 @@ void example_2() async {
   controller.resume();
 
   // listening on all data events from the study
-  controller.events.forEach(print);
+  controller.events.listen((event) => print(event));
 
   // listen on only CARP events
   controller.events
       .where((datum) => datum.format.namespace == NameSpace.CARP)
-      .forEach(print);
+      .listen((event) => print(event));
 
   // listen on LIGHT events only
   controller.events
       .where((datum) => datum.format.name == SensorSamplingPackage.LIGHT)
-      .forEach(print);
+      .listen((event) => print(event));
 
   // map events to JSON and then print
-  controller.events.map((datum) => datum.toJson()).forEach(print);
+  controller.events
+      .map((datum) => datum.toJson())
+      .listen((event) => print(event));
 
   // listening on a specific event type
   // this is equivalent to the statement above
-  ProbeRegistry().eventsByType(SensorSamplingPackage.LIGHT).forEach(print);
+  ProbeRegistry()
+      .eventsByType(SensorSamplingPackage.LIGHT)
+      .listen((event) => print(event));
 
   // subscribe to events
   StreamSubscription<Datum> subscription =

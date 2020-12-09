@@ -26,8 +26,12 @@ class ConnectivitySamplingPackage implements SamplingPackage {
 
   void onRegister() {
     // registering default privacy functions
-    TransformerSchemaRegistry().lookup(PrivacySchema.DEFAULT).add(BLUETOOTH, blueetothNameAnoymizer);
-    TransformerSchemaRegistry().lookup(PrivacySchema.DEFAULT).add(WIFI, wifiNameAnoymizer);
+    TransformerSchemaRegistry()
+        .lookup(PrivacySchema.DEFAULT)
+        .add(BLUETOOTH, blueetothNameAnoymizer);
+    TransformerSchemaRegistry()
+        .lookup(PrivacySchema.DEFAULT)
+        .add(WIFI, wifiNameAnoymizer);
   }
 
   //List<PermissionGroup> get permissions => [];

@@ -19,26 +19,58 @@ class StudyController {
   /// The permissions granted to this study from the OS.
   Map<Permission, PermissionStatus> permissions;
 
+  Stream<Datum> _events;
+
   /// The stream of all sampled data.
-  Stream<Datum> events;
+  ///
+  /// Datum in the [events] stream are transformed in the following order:
+  ///   1. privacy schema as specified in the [privacySchemaName]
+  ///   2. preferred data format as specified by [dataFormat] in the [study]
+  ///   3. any custom [transformer] provided
+  ///
+  /// This is a broadcast stream and supports multiple subscribers.
+  Stream<Datum> get events {
+    _events ??= transformer(executor.events
+        .map((datum) => TransformerSchemaRegistry()
+            .lookup(privacySchemaName)
+            .transform(datum))
+        .map((datum) => TransformerSchemaRegistry()
+            .lookup(study.dataFormat)
+            .transform(datum))).asBroadcastStream();
+
+    return _events;
+  }
+
   PowerAwarenessState powerAwarenessState = NormalSamplingState.instance;
 
-  /// The size of this current study in terms of number of [Datum] object that has been collected.
+  /// The sampling size of this [study] in terms of number of [Datum] object
+  /// that has been collected.
   int samplingSize = 0;
 
   /// Create a new [StudyController] to control the [study].
   ///
   /// A number of optional parameters can be specified:
-  ///    * A custom study [executor] can be specified. If null, the default [StudyExecutor] is used.
-  ///    * A specific [samplingSchema] can be used. If null, [SamplingSchema.normal] with power-awareness is used.
-  ///    * A specific [dataManager] can be provided. If null, a [DataManager] will be looked up in the
-  ///      [DataManagerRegistry] based on the type of the study's [DataEndPoint]. If no data manager is found in the
-  ///      registry, then no data management is done, but sensing can still be initiated. This is useful for apps
-  ///      which wants to use the framework for in-app consumption of sensing events without saving the data.
+  ///    * A custom study [executor] can be specified.
+  ///      If null, the default [StudyExecutor] is used.
+  ///    * A specific [samplingSchema] can be used.
+  ///      If null, [SamplingSchema.normal] with power-awareness is used.
+  ///    * A specific [dataManager] can be provided.
+  ///      If null, a [DataManager] will be looked up in the
+  ///      [DataManagerRegistry] based on the type of the study's [DataEndPoint].
+  ///      If no data manager is found in the registry, then no data management
+  ///      is done, but sensing can still be initiated. This is useful for apps
+  ///      which wants to use the framework for in-app consumption of sensing
+  ///      events without saving the data.
   ///    * The name of a [PrivacySchema] can be provided in [privacySchemaName].
-  ///      Use [PrivacySchema.DEFAULT] for the default, built-in schema. If null, no privacy schema is used.
+  ///      Use [PrivacySchema.DEFAULT] for the default, built-in schema.
+  ///      If null, no privacy schema is used.
   ///    * A generic [transformer] can be provided which transform each collected data.
   ///      If null, a 1:1 mapping is done, i.e. no transformation.
+  ///
+  /// Datum in the [events] stream are transformed in the following order:
+  ///   1. privacy schema as specified in the [privacySchemaName]
+  ///   2. preferred data format as specified by [dataFormat] in the [study]
+  ///   3. any custom [transformer] provided
   StudyController(
     this.study, {
     this.executor,
@@ -65,27 +97,11 @@ class StudyController {
     // now initialize optional parameters
     executor ??= StudyExecutor(study);
     samplingSchema ??= SamplingSchema.normal(powerAware: true);
-    dataManager ??= (study.dataEndPoint != null) ? DataManagerRegistry().lookup(study.dataEndPoint.type) : null;
+    dataManager ??= (study.dataEndPoint != null)
+        ? DataManagerRegistry().lookup(study.dataEndPoint.type)
+        : null;
     privacySchemaName ??= NameSpace.CARP;
     transformer ??= ((events) => events);
-
-    // In version 6.1 we allow for a null data manager - this allows for non-persistent sampling.
-    // assert(
-    //    dataManager != null,
-    //    'Could not find a data manager for type ${study.dataEndPoint.type}. '
-    //    'An instance of a DataManager can be specified as the dataManager argument when creating this StudyController.'
-    //    'Or you can register it in the DataManagerRegistry.');
-
-    // set up transformation in the following order:
-    // 1. privacy schema
-    // 2. preferred data format as specified in the study protocol
-    // 3. any custom transformer
-    events = transformer(executor.events
-        .map((datum) => TransformerSchemaRegistry().lookup(privacySchemaName).transform(datum))
-        .map((datum) => TransformerSchemaRegistry().lookup(study.dataFormat).transform(datum)));
-
-    // old, simple version below
-    // events = transformer(executor.events);
   }
 
   /// Initialize this controller. Must be called only once,
@@ -98,11 +114,13 @@ class StudyController {
     Device();
 
     // setting up permissions
-    permissions = await PermissionHandlerPlatform.instance.requestPermissions(SamplingPackageRegistry().permissions);
+    permissions = await PermissionHandlerPlatform.instance
+        .requestPermissions(SamplingPackageRegistry().permissions);
     SamplingPackageRegistry().permissions.forEach((permission) {
       PermissionStatus status = permissions[permission];
       if (status != PermissionStatus.granted) {
-        warning('Permissions not granted for $permission, permission is $status');
+        warning(
+            'Permissions not granted for $permission, permission is $status');
       }
     });
 
@@ -125,11 +143,10 @@ class StudyController {
     }
 
     await dataManager?.initialize(study, events);
-    //# await executor.initialize(Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR)));
-    executor.initialize(Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR)));
-
+    executor.initialize(
+      Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR)),
+    );
     await enablePowerAwareness();
-
     events.listen((datum) => samplingSize++);
   }
 
@@ -142,10 +159,12 @@ class StudyController {
         BatteryDatum batteryState = (datum as BatteryDatum);
         if (batteryState.batteryStatus == BatteryDatum.STATE_DISCHARGING) {
           // only apply power-awareness if not charging.
-          PowerAwarenessState newState = powerAwarenessState.adapt(batteryState.batteryLevel);
+          PowerAwarenessState newState =
+              powerAwarenessState.adapt(batteryState.batteryLevel);
           if (newState != powerAwarenessState) {
             powerAwarenessState = newState;
-            info('PowerAware: Going to $powerAwarenessState, level ${batteryState.batteryLevel}%');
+            info(
+                'PowerAware: Going to $powerAwarenessState, level ${batteryState.batteryLevel}%');
             study.adapt(powerAwarenessState.schema);
           }
         }

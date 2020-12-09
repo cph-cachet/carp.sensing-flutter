@@ -155,6 +155,7 @@ class Sensing {
     controller = StudyController(
       study,
       debugLevel: DebugLevel.DEBUG,
+      privacySchemaName: PrivacySchema.DEFAULT,
     );
     await controller.initialize();
 
@@ -163,7 +164,7 @@ class Sensing {
     console.log('Sensing started ...');
 
     // listening on all probe events from the study
-    controller.events.forEach(print);
+    controller.events.listen((event) => print(event));
   }
 
   /// Is sensing running, i.e. has the study executor been resumed?
