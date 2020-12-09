@@ -145,17 +145,13 @@ void example() async {
 
   // automatically collect accelerometer and gyroscope data
   // but delay the sampling by 10 seconds
-    study.addTriggerTask(
+  study.addTriggerTask(
       DelayedTrigger(delay: Duration(seconds: 10)),
       AutomaticTask(name: 'Sensor Task')
-        ..addMeasure(PeriodicMeasure(
-            MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
-            frequency: const Duration(seconds: 5),
-            duration: const Duration(seconds: 1)))
-        ..addMeasure(PeriodicMeasure(
-            MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
-            frequency: const Duration(seconds: 6),
-            duration: const Duration(seconds: 2))));
+        ..addMeasure(Measure(
+            MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER)))
+        ..addMeasure(Measure(
+            MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE))));
 
   // create a light measure variable to be used later
   PeriodicMeasure lightMeasure = PeriodicMeasure(
