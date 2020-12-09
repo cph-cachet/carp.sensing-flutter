@@ -1,5 +1,14 @@
-## 0.10.0
+## 0.10.1
 * fix: issue [#123](https://github.com/cph-cachet/carp.sensing-flutter/issues/123)
+* based on issue [#134](https://github.com/cph-cachet/carp.sensing-flutter/issues/134)
+  the following measures are added
+    * `periodic_accelerometer`
+    * `periodic_gyroscope`
+   and the "old" `accelerometer` and `gyroscope` measures are made to run continously. 
+   This implies that they need to be started and stopped using a `Trigger` instead. 
+   This, however, open up for triggering the collection of accelerometer data as
+   part of an `AppTask`. For example, sampling accelerometer data while a Parkinson's
+   patient fill in a survey.
 
 ## 0.10.0
 * **BREAKING**: a new `AppTask` model is implemented

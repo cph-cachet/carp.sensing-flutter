@@ -125,8 +125,10 @@ class Sensing {
                 ..measures = SamplingSchema.debug().getMeasureList(
                   namespace: NameSpace.CARP,
                   types: [
-                    SensorSamplingPackage.ACCELEROMETER,
-                    SensorSamplingPackage.GYROSCOPE,
+                    //SensorSamplingPackage.ACCELEROMETER,
+                    //SensorSamplingPackage.GYROSCOPE,
+                    SensorSamplingPackage.PERIODIC_ACCELEROMETER,
+                    SensorSamplingPackage.PERIODIC_GYROSCOPE,
                     SensorSamplingPackage.LIGHT,
                   ],
                 ))
