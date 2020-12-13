@@ -45,7 +45,7 @@ class Device {
       } else if (Platform.isIOS) {
         deviceData = _readIosDeviceInfo(await _deviceInfoPlugin.iosInfo);
       }
-    } on PlatformException {
+    } on Exception {
       deviceData = <String, dynamic>{
         'Error:': 'Failed to get platform version.'
       };

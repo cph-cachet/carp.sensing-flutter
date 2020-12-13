@@ -27,6 +27,10 @@ class FileDataManager extends AbstractDataManager {
   IOSink _sink;
   bool _initialized = false;
   int _flushingSink = 0;
+  FileDataManager() {
+    FromJsonFactory.registerFromJsonFunction(
+        'FileDataEndPoint', FileDataEndPoint.fromJsonFunction);
+  }
 
   Future initialize(Study study, Stream<Datum> data) async {
     assert(study.dataEndPoint is FileDataEndPoint);

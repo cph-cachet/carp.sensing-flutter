@@ -51,12 +51,12 @@ class FromJsonFactory {
   static void _() {
     if (_isInitialized) return;
 
-    //TODO : This should be done using reflection or a build_runner script
+    // TODO : This should be done using reflection or a build_runner script
     // that can auto-generate this.
     registerFromJsonFunction('Study', Study.fromJsonFunction);
     registerFromJsonFunction('DataEndPoint', DataEndPoint.fromJsonFunction);
-    registerFromJsonFunction(
-        'FileDataEndPoint', FileDataEndPoint.fromJsonFunction);
+    //registerFromJsonFunction(
+    //    'FileDataEndPoint', FileDataEndPoint.fromJsonFunction);
     registerFromJsonFunction('Task', Task.fromJsonFunction);
     registerFromJsonFunction('AutomaticTask', AutomaticTask.fromJsonFunction);
     registerFromJsonFunction('AppTask', AppTask.fromJsonFunction);

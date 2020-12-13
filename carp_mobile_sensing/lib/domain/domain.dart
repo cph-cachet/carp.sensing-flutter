@@ -8,7 +8,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:device_info/device_info.dart';
-import 'package:flutter/services.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 import 'package:uuid/uuid.dart';

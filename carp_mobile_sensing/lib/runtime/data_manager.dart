@@ -38,7 +38,8 @@ abstract class DataManager {
 abstract class AbstractDataManager implements DataManager {
   Study study;
 
-  StreamController<DataManagerEvent> controller = StreamController<DataManagerEvent>.broadcast();
+  StreamController<DataManagerEvent> controller =
+      StreamController<DataManagerEvent>.broadcast();
   Stream<DataManagerEvent> get events => controller.stream;
   void addEvent(DataManagerEvent event) => controller.add(event);
 
@@ -48,14 +49,16 @@ abstract class AbstractDataManager implements DataManager {
     addEvent(DataManagerEvent(DataManagerEventTypes.INITIALIZED));
   }
 
-  Future<void> close() async => addEvent(DataManagerEvent(DataManagerEventTypes.CLOSED));
+  Future<void> close() async =>
+      addEvent(DataManagerEvent(DataManagerEventTypes.CLOSED));
 
   void onDatum(Datum datum);
   void onDone();
   void onError(error);
 
   /// JSON encode an object.
-  String jsonEncode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
+  String jsonEncode(Object object) =>
+      const JsonEncoder.withIndent(' ').convert(object);
 }
 
 /// A registry of [DataManager]s.
