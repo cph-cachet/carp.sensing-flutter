@@ -253,13 +253,9 @@ class FileDataEndPoint extends DataEndPoint {
   /// The function which can transform this [FileDataEndPoint] into JSON.
   ///
   /// See [Serializable].
-  //static Function get fromJsonFunction => _$FileDataEndPointFromJson;
   Function get fromJsonFunction => _$FileDataEndPointFromJson;
 
   /// Create a [FileDataEndPoint] from a JSON map.
-  // factory FileDataEndPoint.fromJson(Map<String, dynamic> json) =>
-  //     FromJsonFactory.fromJson(
-  //         json[Serializable.CLASS_IDENTIFIER].toString(), json);
   factory FileDataEndPoint.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory()
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);

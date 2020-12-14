@@ -76,9 +76,6 @@ class Study extends Serializable {
   }
 
   Function get fromJsonFunction => _$StudyFromJson;
-  //static Function get fromJsonFunction => _$StudyFromJson;
-  // factory Study.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(
-  //     json[Serializable.CLASS_IDENTIFIER].toString(), json);
   factory Study.fromJson(Map<String, dynamic> json) => FromJsonFactory()
       .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$StudyToJson(this);
@@ -124,10 +121,6 @@ class DataEndPoint extends Serializable {
         super();
 
   Function get fromJsonFunction => _$DataEndPointFromJson;
-  //static Function get fromJsonFunction => _$DataEndPointFromJson;
-  // factory DataEndPoint.fromJson(Map<String, dynamic> json) =>
-  //     FromJsonFactory.fromJson(
-  //         json[Serializable.CLASS_IDENTIFIER].toString(), json);
   factory DataEndPoint.fromJson(Map<String, dynamic> json) => FromJsonFactory()
       .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$DataEndPointToJson(this);

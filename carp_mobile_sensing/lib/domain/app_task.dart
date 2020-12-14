@@ -44,11 +44,7 @@ class AppTask extends Task {
   /// Should a notification be send to the user on the phone?
   bool notification = false;
 
-  //static Function get fromJsonFunction => _$AppTaskFromJson;
   Function get fromJsonFunction => _$AppTaskFromJson;
-  // factory AppTask.fromJson(Map<String, dynamic> json) =>
-  //     FromJsonFactory.fromJson(
-  //         json[Serializable.CLASS_IDENTIFIER].toString(), json);
   factory AppTask.fromJson(Map<String, dynamic> json) => FromJsonFactory()
       .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$AppTaskToJson(this);

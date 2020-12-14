@@ -27,10 +27,6 @@ class Trigger extends Serializable {
 
   Trigger({this.triggerId}) : super();
 
-  // static Function get fromJsonFunction => _$TriggerFromJson;
-  // factory Trigger.fromJson(Map<String, dynamic> json) =>
-  //     FromJsonFactory.fromJson(
-  //         json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Function get fromJsonFunction => _$TriggerFromJson;
   factory Trigger.fromJson(Map<String, dynamic> json) => FromJsonFactory()
       .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
@@ -42,10 +38,6 @@ class Trigger extends Serializable {
 class ImmediateTrigger extends Trigger {
   ImmediateTrigger({String triggerId}) : super(triggerId: triggerId);
 
-  // static Function get fromJsonFunction => _$ImmediateTriggerFromJson;
-  // factory ImmediateTrigger.fromJson(Map<String, dynamic> json) =>
-  //     FromJsonFactory.fromJson(
-  //         json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Function get fromJsonFunction => _$ImmediateTriggerFromJson;
   factory ImmediateTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory()
@@ -77,10 +69,6 @@ class ManualTrigger extends Trigger {
   /// which again implies that all [Measure]s in these tasks are paused.
   void pause() => executor?.pause();
 
-  // static Function get fromJsonFunction => _$ManualTriggerFromJson;
-  // factory ManualTrigger.fromJson(Map<String, dynamic> json) =>
-  //     FromJsonFactory.fromJson(
-  //         json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Function get fromJsonFunction => _$ManualTriggerFromJson;
   factory ManualTrigger.fromJson(Map<String, dynamic> json) => FromJsonFactory()
       .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
@@ -99,10 +87,6 @@ class DelayedTrigger extends Trigger {
   DelayedTrigger({String triggerId, this.delay = const Duration(seconds: 1)})
       : super(triggerId: triggerId);
 
-  // static Function get fromJsonFunction => _$DelayedTriggerFromJson;
-  // factory DelayedTrigger.fromJson(Map<String, dynamic> json) =>
-  //     FromJsonFactory.fromJson(
-  //         json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Function get fromJsonFunction => _$DelayedTriggerFromJson;
   factory DelayedTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory()
@@ -132,10 +116,6 @@ class PeriodicTrigger extends Trigger {
     this.duration = const Duration(seconds: 1),
   }) : super(triggerId: triggerId);
 
-  // static Function get fromJsonFunction => _$PeriodicTriggerFromJson;
-  // factory PeriodicTrigger.fromJson(Map<String, dynamic> json) =>
-  //     FromJsonFactory.fromJson(
-  //         json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Function get fromJsonFunction => _$PeriodicTriggerFromJson;
   factory PeriodicTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory()
@@ -161,10 +141,6 @@ class ScheduledTrigger extends Trigger {
     this.duration,
   }) : super(triggerId: triggerId);
 
-  // static Function get fromJsonFunction => _$ScheduledTriggerFromJson;
-  // factory ScheduledTrigger.fromJson(Map<String, dynamic> json) =>
-  //     FromJsonFactory.fromJson(
-  //         json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Function get fromJsonFunction => _$ScheduledTriggerFromJson;
   factory ScheduledTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory()
@@ -192,9 +168,6 @@ class Time extends Serializable {
 
   Time({this.hour = 0, this.minute = 0, this.second = 0});
 
-  // static Function get fromJsonFunction => _$TimeFromJson;
-  // factory Time.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(
-  //     json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Function get fromJsonFunction => _$TimeFromJson;
   factory Time.fromJson(Map<String, dynamic> json) => FromJsonFactory()
       .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
@@ -437,10 +410,6 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
     }
   }
 
-  // static Function get fromJsonFunction => _$RecurrentScheduledTriggerFromJson;
-  // factory RecurrentScheduledTrigger.fromJson(Map<String, dynamic> json) =>
-  //     FromJsonFactory.fromJson(
-  //         json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Function get fromJsonFunction => _$RecurrentScheduledTriggerFromJson;
   factory RecurrentScheduledTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory()
@@ -532,10 +501,6 @@ class CronScheduledTrigger extends Trigger {
       '${_cf(minute)} ${_cf(hour)} ${_cf(day)} ${_cf(month)} ${_cf(weekday)}';
   static String _cf(int exp) => (exp == null) ? '*' : exp.toString();
 
-  // static Function get fromJsonFunction => _$CronScheduledTriggerFromJson;
-  // factory CronScheduledTrigger.fromJson(Map<String, dynamic> json) =>
-  //     FromJsonFactory.fromJson(
-  //         json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Function get fromJsonFunction => _$CronScheduledTriggerFromJson;
   factory CronScheduledTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory()
@@ -587,10 +552,6 @@ class SamplingEventTrigger extends Trigger {
   /// forever (unless paused manually).
   Datum pauseCondition;
 
-  // static Function get fromJsonFunction => _$SamplingEventTriggerFromJson;
-  // factory SamplingEventTrigger.fromJson(Map<String, dynamic> json) =>
-  //     FromJsonFactory.fromJson(
-  //         json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Function get fromJsonFunction => _$SamplingEventTriggerFromJson;
   factory SamplingEventTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory()
@@ -639,16 +600,11 @@ class ConditionalSamplingEventTrigger extends Trigger {
   /// The [EventConditionEvaluator] function evaluating if the event
   /// condition is meet for pausing this trigger.
   ///
-  /// If [pauseCondition] is not specified (null), sampling is never paused a
-  /// nd hence runs forever (unless paused manually).
+  /// If [pauseCondition] is not specified (null), sampling is never paused
+  /// and hence runs forever (unless paused manually).
   @JsonKey(ignore: true)
   EventConditionEvaluator pauseCondition;
 
-  // static Function get fromJsonFunction =>
-  //     _$ConditionalSamplingEventTriggerFromJson;
-  // factory ConditionalSamplingEventTrigger.fromJson(Map<String, dynamic> json) =>
-  //     FromJsonFactory.fromJson(
-  //         json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Function get fromJsonFunction => _$ConditionalSamplingEventTriggerFromJson;
   factory ConditionalSamplingEventTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory()

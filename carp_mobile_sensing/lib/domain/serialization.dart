@@ -89,9 +89,7 @@ class FromJsonFactory {
   /// To be used for registering [fromJsonFunction] functions to this Factory.
   /// Should be done for each [type] of class that needs to be deserialized
   /// from JSON to a CARP Flutter class.
-  //void registerFromJsonFunction(String type, Function f) => _registry[type] = f;
   void registerFromJsonFunction(Serializable type) {
-    print('type: ${type.runtimeType}');
     assert(type is Serializable);
     _registry['${type.runtimeType}'] = type.fromJsonFunction;
   }

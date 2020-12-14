@@ -111,10 +111,6 @@ class PeriodicMeasure extends Measure {
   }
 
   Function get fromJsonFunction => _$PeriodicMeasureFromJson;
-  //static Function get fromJsonFunction => _$PeriodicMeasureFromJson;
-  // factory PeriodicMeasure.fromJson(Map<String, dynamic> json) =>
-  //     FromJsonFactory.fromJson(
-  //         json[Serializable.CLASS_IDENTIFIER].toString(), json);
   factory PeriodicMeasure.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory()
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
@@ -174,11 +170,7 @@ class MarkedMeasure extends Measure {
     this.history = const Duration(days: 1),
   }) : super(type, name: name, enabled: enabled);
 
-  //static Function get fromJsonFunction => _$MarkedMeasureFromJson;
   Function get fromJsonFunction => _$MarkedMeasureFromJson;
-  // factory MarkedMeasure.fromJson(Map<String, dynamic> json) =>
-  //     FromJsonFactory.fromJson(
-  //         json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$MarkedMeasureToJson(this);
   factory MarkedMeasure.fromJson(Map<String, dynamic> json) => FromJsonFactory()
       .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
@@ -201,11 +193,7 @@ class MeasureType extends Serializable {
   /// Create a [MeasureType].
   MeasureType(this.namespace, this.name) : super();
 
-  //static Function get fromJsonFunction => _$MeasureTypeFromJson;
   Function get fromJsonFunction => _$MeasureTypeFromJson;
-  // factory MeasureType.fromJson(Map<String, dynamic> json) =>
-  //     FromJsonFactory.fromJson(
-  //         json[Serializable.CLASS_IDENTIFIER].toString(), json);
   factory MeasureType.fromJson(Map<String, dynamic> json) => FromJsonFactory()
       .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$MeasureTypeToJson(this);
