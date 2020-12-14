@@ -56,7 +56,7 @@ abstract class Serializable {
   Map<String, dynamic> toJson();
 }
 
-/// A factory class that holds [fromJson] functions to be used in JSON
+/// A factory that holds [fromJson] functions to be used in JSON
 /// deserialization.
 class FromJsonFactory {
   static final FromJsonFactory _instance = FromJsonFactory._();
@@ -64,32 +64,35 @@ class FromJsonFactory {
 
   final Map<String, Function> _registry = {};
 
+  // When initializing this factory, register all CAMS classes which should
+  // support deserialization from JSON.
   FromJsonFactory._() {
-    registerFromJsonFunction(Study._());
-    registerFromJsonFunction(DataEndPoint._());
-    registerFromJsonFunction(FileDataEndPoint());
-    registerFromJsonFunction(Task());
-    registerFromJsonFunction(AutomaticTask());
-    registerFromJsonFunction(AppTask._());
-    registerFromJsonFunction(Trigger());
-    registerFromJsonFunction(ImmediateTrigger());
-    registerFromJsonFunction(DelayedTrigger());
-    registerFromJsonFunction(PeriodicTrigger._());
-    registerFromJsonFunction(ScheduledTrigger._());
-    registerFromJsonFunction(Time());
-    registerFromJsonFunction(RecurrentScheduledTrigger._());
-    registerFromJsonFunction(SamplingEventTrigger._());
-    registerFromJsonFunction(ConditionalSamplingEventTrigger._());
-    registerFromJsonFunction(MeasureType._());
-    registerFromJsonFunction(Measure._());
-    registerFromJsonFunction(PeriodicMeasure._());
-    registerFromJsonFunction(MarkedMeasure._());
+    register(Study._());
+    register(DataEndPoint._());
+    register(FileDataEndPoint());
+    register(Task());
+    register(AutomaticTask());
+    register(AppTask._());
+    register(Trigger());
+    register(ImmediateTrigger());
+    register(DelayedTrigger());
+    register(PeriodicTrigger._());
+    register(ScheduledTrigger._());
+    register(Time());
+    register(RecurrentScheduledTrigger._());
+    register(SamplingEventTrigger._());
+    register(ConditionalSamplingEventTrigger._());
+    register(MeasureType._());
+    register(Measure._());
+    register(PeriodicMeasure._());
+    register(MarkedMeasure._());
   }
 
-  /// To be used for registering [fromJsonFunction] functions to this Factory.
-  /// Should be done for each [type] of class that needs to be deserialized
-  /// from JSON to a CARP Flutter class.
-  void registerFromJsonFunction(Serializable type) {
+  /// Register a [Serializable] [type] which can be deserialized from JSON.
+  ///
+  /// A type needs to be registered **before** a class can be deserialized from
+  /// JSON to a Flutter class.
+  void register(Serializable type) {
     assert(type is Serializable);
     _registry['${type.runtimeType}'] = type.fromJsonFunction;
   }
