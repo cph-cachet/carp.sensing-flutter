@@ -55,6 +55,8 @@ class Study extends Serializable {
   /// The set of [Trigger]s which can trigger [Task](s) in this study.
   List<Trigger> triggers = [];
 
+  Study._();
+
   /// Create a new [Study] object with a set of configurations.
   ///
   /// The [id] and [userId] are required for a new study.
@@ -73,9 +75,12 @@ class Study extends Serializable {
     dataFormat ??= NameSpace.CARP;
   }
 
-  static Function get fromJsonFunction => _$StudyFromJson;
-  factory Study.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(
-      json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Function get fromJsonFunction => _$StudyFromJson;
+  //static Function get fromJsonFunction => _$StudyFromJson;
+  // factory Study.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(
+  //     json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory Study.fromJson(Map<String, dynamic> json) => FromJsonFactory()
+      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$StudyToJson(this);
 
   /// Add a [Trigger] to this [Study]
@@ -111,15 +116,20 @@ class DataEndPoint extends Serializable {
   /// The type of endpoint as enumerated in [DataEndPointTypes].
   String type;
 
+  DataEndPoint._();
+
   /// Creates a [DataEndPoint]. [type] is defined in [DataEndPointTypes].
   DataEndPoint(this.type)
       : assert(type != null),
         super();
 
-  static Function get fromJsonFunction => _$DataEndPointFromJson;
-  factory DataEndPoint.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(
-          json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Function get fromJsonFunction => _$DataEndPointFromJson;
+  //static Function get fromJsonFunction => _$DataEndPointFromJson;
+  // factory DataEndPoint.fromJson(Map<String, dynamic> json) =>
+  //     FromJsonFactory.fromJson(
+  //         json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory DataEndPoint.fromJson(Map<String, dynamic> json) => FromJsonFactory()
+      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$DataEndPointToJson(this);
 
   String toString() => type;

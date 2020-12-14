@@ -26,9 +26,12 @@ class Task extends Serializable {
     name ??= 'Task #${_counter++}';
   }
 
-  static Function get fromJsonFunction => _$TaskFromJson;
-  factory Task.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(
-      json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Function get fromJsonFunction => _$TaskFromJson;
+  //static Function get fromJsonFunction => _$TaskFromJson;
+  // factory Task.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(
+  //     json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory Task.fromJson(Map<String, dynamic> json) => FromJsonFactory()
+      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$TaskToJson(this);
 
   /// Add a [Measure] to this task.
@@ -50,8 +53,12 @@ class Task extends Serializable {
 class AutomaticTask extends Task {
   AutomaticTask({String name}) : super(name: name);
 
-  static Function get fromJsonFunction => _$AutomaticTaskFromJson;
-  factory AutomaticTask.fromJson(Map<String, dynamic> json) => FromJsonFactory
+  // static Function get fromJsonFunction => _$AutomaticTaskFromJson;
+  // factory AutomaticTask.fromJson(Map<String, dynamic> json) =>
+  //     FromJsonFactory.fromJson(
+  //         json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Function get fromJsonFunction => _$AutomaticTaskFromJson;
+  factory AutomaticTask.fromJson(Map<String, dynamic> json) => FromJsonFactory()
       .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$AutomaticTaskToJson(this);
 }

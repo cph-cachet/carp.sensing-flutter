@@ -27,6 +27,8 @@ class Measure extends Serializable {
   bool _storedEnabled = true;
   final List<MeasureListener> _listeners = [];
 
+  Measure._();
+
   Measure(this.type, {this.name, this.enabled = true})
       : assert(type != null),
         super() {
@@ -34,10 +36,13 @@ class Measure extends Serializable {
     _storedEnabled = enabled;
   }
 
-  static Function get fromJsonFunction => _$MeasureFromJson;
-  factory Measure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(
-          json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  //static Function get fromJsonFunction => _$MeasureFromJson;
+  Function get fromJsonFunction => _$MeasureFromJson;
+  // factory Measure.fromJson(Map<String, dynamic> json) =>
+  //     FromJsonFactory.fromJson(
+  //         json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory Measure.fromJson(Map<String, dynamic> json) => FromJsonFactory()
+      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$MeasureToJson(this);
 
   /// Add a key-value pair as configuration for this measure.
@@ -95,6 +100,8 @@ class PeriodicMeasure extends Measure {
   Duration duration;
   Duration _storedDuration;
 
+  PeriodicMeasure._() : super._();
+
   /// Create a [PeriodicMeasure].
   PeriodicMeasure(MeasureType type,
       {String name, bool enabled, this.frequency, this.duration})
@@ -103,10 +110,14 @@ class PeriodicMeasure extends Measure {
     _storedDuration = duration;
   }
 
-  static Function get fromJsonFunction => _$PeriodicMeasureFromJson;
+  Function get fromJsonFunction => _$PeriodicMeasureFromJson;
+  //static Function get fromJsonFunction => _$PeriodicMeasureFromJson;
+  // factory PeriodicMeasure.fromJson(Map<String, dynamic> json) =>
+  //     FromJsonFactory.fromJson(
+  //         json[Serializable.CLASS_IDENTIFIER].toString(), json);
   factory PeriodicMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(
-          json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$PeriodicMeasureToJson(this);
 
   void adapt(Measure measure) {
@@ -154,6 +165,8 @@ class MarkedMeasure extends Measure {
   /// this measure be collected?
   Duration history;
 
+  MarkedMeasure._() : super._();
+
   MarkedMeasure(
     MeasureType type, {
     String name,
@@ -161,11 +174,14 @@ class MarkedMeasure extends Measure {
     this.history = const Duration(days: 1),
   }) : super(type, name: name, enabled: enabled);
 
-  static Function get fromJsonFunction => _$MarkedMeasureFromJson;
-  factory MarkedMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(
-          json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  //static Function get fromJsonFunction => _$MarkedMeasureFromJson;
+  Function get fromJsonFunction => _$MarkedMeasureFromJson;
+  // factory MarkedMeasure.fromJson(Map<String, dynamic> json) =>
+  //     FromJsonFactory.fromJson(
+  //         json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$MarkedMeasureToJson(this);
+  factory MarkedMeasure.fromJson(Map<String, dynamic> json) => FromJsonFactory()
+      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
 
   String toString() =>
       '${super.toString()}, mark: $lastTime, history: $history';
@@ -180,13 +196,18 @@ class MeasureType extends Serializable {
   /// The name of this data format. See [DataType].
   String name;
 
+  MeasureType._();
+
   /// Create a [MeasureType].
   MeasureType(this.namespace, this.name) : super();
 
-  static Function get fromJsonFunction => _$MeasureTypeFromJson;
-  factory MeasureType.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(
-          json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  //static Function get fromJsonFunction => _$MeasureTypeFromJson;
+  Function get fromJsonFunction => _$MeasureTypeFromJson;
+  // factory MeasureType.fromJson(Map<String, dynamic> json) =>
+  //     FromJsonFactory.fromJson(
+  //         json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory MeasureType.fromJson(Map<String, dynamic> json) => FromJsonFactory()
+      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$MeasureTypeToJson(this);
 
   String toString() => '$namespace.$name';
