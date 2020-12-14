@@ -19,7 +19,6 @@ part 'datum.dart';
 part 'device_info.dart';
 part 'domain.g.dart';
 part 'measures.dart';
-part 'sampling_schema.dart';
 part 'serialization.dart';
 part 'study.dart';
 part 'tasks.dart';

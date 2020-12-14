@@ -11,18 +11,20 @@ part of domain;
 ///
 /// Using this class allow for implementing both serialization and
 /// deserialization to/from JSON.
-/// This is done using the [json_serializable](https://pub.dev/packages/json_serializable) package.
+/// This is done using the [json_serializable](https://pub.dev/packages/json_serializable)
+/// package.
 ///
 /// To support serialization, each subclass should implement the [toJson] method.
-/// For example
+/// For example:
 ///
 ///     Map<String, dynamic> toJson() => _$StudyToJson(this);
 ///
 /// To support deserialization, each JSON object should inlude its [type]
 /// (i.e., class name) information. In JSON this is identified by the
 /// [CLASS_IDENTIFIER] static property.
-/// In order to support de-serialization, the [fromJsonFunction] getter
-/// and a class factory must be implemented. For example
+/// In order to support de-serialization for a specific Flutter class,
+/// the [fromJsonFunction] getter and a class factory must be implemented.
+/// For example:
 ///
 ///    Function get fromJsonFunction => _$StudyFromJson;
 ///    factory Study.fromJson(Map<String, dynamic> json) =>
@@ -66,6 +68,8 @@ class FromJsonFactory {
 
   // When initializing this factory, register all CAMS classes which should
   // support deserialization from JSON.
+  //
+  // TODO: Remember to add any new classes here.
   FromJsonFactory._() {
     register(Study._());
     register(DataEndPoint._());
