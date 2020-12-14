@@ -34,7 +34,7 @@ part of domain;
 /// Finally, the [fromJsonFunction] must be registered on app startup (before
 /// use of de-serialization) in the [FromJsonFactory] singleton, like this:
 ///
-///        registerFromJsonFunction(Study._());
+///        FromJsonFactory().register(Study._());
 ///
 /// Note that any constructur will work, since only the `fromJsonFunction`
 /// function is used. Hence, a private constructure like `Study._()` is fine.
@@ -46,7 +46,7 @@ abstract class Serializable {
   /// Used for deserialization from JSON objects.
   String $type;
 
-  /// Create a object that can be serialized to JSON.
+  /// Create an object that can be serialized to JSON.
   Serializable() {
     $type = runtimeType.toString();
   }

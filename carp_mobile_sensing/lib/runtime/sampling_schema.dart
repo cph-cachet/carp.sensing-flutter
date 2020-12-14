@@ -258,13 +258,13 @@ class SamplingSchema {
   }
 }
 
-/// A enumeration of known sampling schemas types.
-class SamplingSchemaType {
-  static const String MAXIMUM = 'MAXIMUM';
-  static const String COMMON = 'COMMON';
-  static const String NORMAL = 'NORMAL';
-  static const String LIGHT = 'LIGHT';
-  static const String MINIMUM = 'MINIMUM';
-  static const String NONE = 'NONE';
-  static const String DEBUG = 'DEBUG';
-}
+// /// A enumeration of known sampling schemas types.
+// class SamplingSchemaType {
+//   static const String MAXIMUM = 'MAXIMUM';
+//   static const String COMMON = 'COMMON';
+//   static const String NORMAL = 'NORMAL';
+//   static const String LIGHT = 'LIGHT';
+//   static const String MINIMUM = 'MINIMUM';
+//   static const String NONE = 'NONE';
+//   static const String DEBUG = 'DEBUG';
+// }

@@ -4,9 +4,7 @@
 /// obtained from a [StudyManager].
 library domain;
 
-import 'dart:convert';
 import 'dart:io';
-
 import 'package:device_info/device_info.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
@@ -25,3 +23,4 @@ part 'tasks.dart';
 part 'app_task.dart';
 part 'transformers.dart';
 part 'triggers.dart';
+part 'sampling_schema_types.dart';
