@@ -71,7 +71,7 @@ abstract class UserTaskFactory {
   UserTask create(AppTaskExecutor executor);
 }
 
-/// A singleton controller of active (resumed / paused) [AppTaskExecutor]s.
+/// A controller of [UserTask]s which accessible in the [userTaskQueue].
 class AppTaskController {
   static final AppTaskController _instance = AppTaskController._();
   final StreamController<UserTask> _controller =
@@ -94,6 +94,13 @@ class AppTaskController {
   factory AppTaskController() => _instance;
   AppTaskController._() {
     registerUserTaskFactory(SensingUserTaskFactory());
+
+    // set up a timer which cleans up in the queue once an hour
+    Timer.periodic(const Duration(hours: 1), (timer) {
+      userTaskQueue.forEach((task) {
+        if (task.expiresIn.isNegative) dequeue(task.id);
+      });
+    });
   }
 
   final Map<String, UserTaskFactory> _userTaskFactories = {};
@@ -129,7 +136,7 @@ class AppTaskController {
 
 /// A task that the user of the app needs to attend to.
 ///
-///
+/// A [UserTask] is enqueued in the [AppTaskController]'s queue.
 abstract class UserTask {
   final String _id = Uuid().v4();
   final AppTaskExecutor _executor;
@@ -142,6 +149,14 @@ abstract class UserTask {
 
   /// The time this task was added to the queue (enqueued).
   DateTime enqueued;
+
+  /// Returns a [Duration] until this task expires and is removed from the queue.
+  ///
+  /// The returned [Duration] will be negative if [this] has expired.
+  /// Returns `null` if this task never expires.
+  Duration get expiresIn => (_executor.appTask.expire == null)
+      ? null
+      : enqueued.add(_executor.appTask.expire).difference(DateTime.now());
 
   /// The state of this task.
   UserTaskState get state => _state;

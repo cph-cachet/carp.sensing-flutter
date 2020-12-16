@@ -67,6 +67,15 @@ class StudyExecutor extends Executor {
     }
   }
 
+  Future<void> onResume() async {
+    // check the start time for this study on this phone
+    // this will save it, the first time the study is executed
+    DateTime studyStartTimestamp = await settings.studyStartTimestamp;
+    info('Study was started on this phone on ${studyStartTimestamp.toUtc()}');
+
+    await super.onResume();
+  }
+
   /// Add a [Datum] object to the stream of events.
   void addDatum(Datum datum) => _manualDatumController.add(datum);
 

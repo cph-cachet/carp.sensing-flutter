@@ -14,7 +14,9 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 /// sampling schema. Used in the README file.
 void example_1() async {
   // Create a study using a local file to store data
-  Study study = Study('2', 'user@cachet.dk',
+  Study study = Study(
+      id: '2',
+      userId: 'user@cachet.dk',
       name: 'A study collecting ..',
       dataEndPoint: FileDataEndPoint()
         ..bufferSize = 500 * 1000
@@ -50,7 +52,9 @@ void example_1() async {
 /// This is a more elaborate example used in the README.md file.
 void example_2() async {
   // Create a study using a local file to store data
-  Study study = Study('1234', 'user@dtu.dk',
+  Study study = Study(
+      id: '1234',
+      userId: 'user@dtu.dk',
       name: 'An example study',
       dataEndPoint: FileDataEndPoint()
         ..bufferSize = 500 * 1000
@@ -63,13 +67,15 @@ void example_2() async {
       DelayedTrigger(delay: Duration(seconds: 10)),
       AutomaticTask(name: 'Sensor Task')
         ..addMeasure(Measure(
-            MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER)))
+            type: MeasureType(
+                NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER)))
         ..addMeasure(Measure(
-            MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE))));
+            type:
+                MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE))));
 
   // create a light measure variable to be used later
   PeriodicMeasure lightMeasure = PeriodicMeasure(
-    MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
+    type: MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
     name: 'Ambient Light',
     frequency: const Duration(seconds: 11),
     duration: const Duration(milliseconds: 100),
@@ -146,25 +152,27 @@ void example_2() async {
 /// An example of how to use the [SamplingSchema] model.
 void samplingSchemaExample() async {
   // creating a sampling schema focused on activity and outdoor context (weather)
-  SamplingSchema activitySchema =
-      SamplingSchema(name: 'Connectivity Sampling Schema', powerAware: true)
-        ..measures.addEntries([
-          MapEntry(
-              SensorSamplingPackage.PEDOMETER,
-              PeriodicMeasure(
+  SamplingSchema activitySchema = SamplingSchema(
+      name: 'Connectivity Sampling Schema', powerAware: true)
+    ..measures.addEntries([
+      MapEntry(
+          SensorSamplingPackage.PEDOMETER,
+          PeriodicMeasure(
+              type:
                   MeasureType(NameSpace.CARP, SensorSamplingPackage.PEDOMETER),
-                  enabled: true,
-                  frequency: const Duration(minutes: 1))),
-          MapEntry(
-              DeviceSamplingPackage.SCREEN,
-              Measure(MeasureType(NameSpace.CARP, DeviceSamplingPackage.SCREEN),
-                  enabled: true)),
-        ]);
+              enabled: true,
+              frequency: const Duration(minutes: 1))),
+      MapEntry(
+          DeviceSamplingPackage.SCREEN,
+          Measure(
+              type: MeasureType(NameSpace.CARP, DeviceSamplingPackage.SCREEN),
+              enabled: true)),
+    ]);
 
   //creating a study
-  Study study_1 = Study('2', 'user@cachet.dk')
+  Study study_1 = Study(id: '2', userId: 'user@cachet.dk')
     ..name = 'CARP Mobile Sensing - default configuration'
-    ..dataEndPoint = DataEndPoint(DataEndPointTypes.PRINT)
+    ..dataEndPoint = DataEndPoint(type: DataEndPointTypes.PRINT)
     ..addTriggerTask(
         ImmediateTrigger(),
         AutomaticTask()
@@ -174,7 +182,9 @@ void samplingSchemaExample() async {
               .toList());
   print(study_1);
 
-  Study study = Study('2', 'user@cachet.dk',
+  Study study = Study(
+      id: '2',
+      userId: 'user@cachet.dk',
       name: 'A outdoor activity study',
       dataFormat: NameSpace.OMH,
       dataEndPoint: FileDataEndPoint()
@@ -233,7 +243,7 @@ void samplingSchemaExample() async {
           ],
         )
         ..addMeasure(PeriodicMeasure(
-          MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
+          type: MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
           name: 'Ambient Light',
           frequency: const Duration(seconds: 11),
           duration: const Duration(milliseconds: 100),
@@ -297,7 +307,7 @@ void recurrentScheduledTriggerExample() {
 
 /// An example of how to configure a [StudyController] with the default privacy schema.
 void study_controller_example() async {
-  Study study = Study('2', 'user@cachet.dk');
+  Study study = Study(id: '2', userId: 'user@cachet.dk');
   StudyController controller =
       StudyController(study, privacySchemaName: PrivacySchema.DEFAULT);
   await controller.initialize();
@@ -306,7 +316,7 @@ void study_controller_example() async {
 
 /// An example of using the (new) AppTask model
 void app_task_example() async {
-  Study study = Study('2', 'user@cachet.dk')
+  Study study = Study(id: '2', userId: 'user@cachet.dk')
     ..addTriggerTask(
         ImmediateTrigger(), // collect local weather and air quality as an app task
         AppTask(

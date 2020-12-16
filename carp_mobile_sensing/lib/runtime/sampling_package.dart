@@ -18,7 +18,7 @@ class SamplingPackageRegistry {
   SamplingPackageRegistry._() {
     // HACK - creating a serializable object (such as a [Study]) ensures that
     // JSON deserialization in [Serializable] is initialized
-    Study('1234', 'unknown');
+    Study(id: '1234', userId: 'unknown');
 
     // add the basic permissions needed
     _permissions.add(Permission.storage);

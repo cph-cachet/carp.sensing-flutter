@@ -211,7 +211,7 @@ class SamplingSchema {
     SamplingSchema schema = SamplingSchema(
         type: SamplingSchemaType.NONE, name: 'No sampling', powerAware: true);
     DataType.all.forEach((key) => schema.measures[key] =
-        Measure(MeasureType(namespace, key), enabled: false));
+        Measure(type: MeasureType(namespace, key), enabled: false));
 
     return schema;
   }

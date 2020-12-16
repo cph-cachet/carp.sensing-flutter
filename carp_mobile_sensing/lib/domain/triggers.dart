@@ -108,8 +108,6 @@ class PeriodicTrigger extends Trigger {
   /// The duration (until paused) of the the sampling.
   Duration duration;
 
-  PeriodicTrigger._();
-
   PeriodicTrigger({
     String triggerId,
     @required this.period,
@@ -132,8 +130,6 @@ class ScheduledTrigger extends Trigger {
   /// The duration (until stopped) of the the sampling.
   /// If null, the sampling is never stopped (i.e., runs forever).
   Duration duration;
-
-  ScheduledTrigger._();
 
   ScheduledTrigger({
     String triggerId,
@@ -167,6 +163,11 @@ class Time extends Serializable {
   int second;
 
   Time({this.hour = 0, this.minute = 0, this.second = 0});
+
+  factory Time.now() {
+    DateTime now = DateTime.now();
+    return Time(hour: now.hour, minute: now.minute, second: now.second);
+  }
 
   Function get fromJsonFunction => _$TimeFromJson;
   factory Time.fromJson(Map<String, dynamic> json) => FromJsonFactory()
@@ -296,8 +297,6 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
   /// See [Issue #80](https://github.com/cph-cachet/carp.sensing-flutter/issues/80).
   bool remember = false;
 
-  RecurrentScheduledTrigger._();
-
   /// Creates a [RecurrentScheduledTrigger].
   RecurrentScheduledTrigger(
       {String triggerId,
@@ -313,7 +312,6 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
       this.remember = false,
       Duration duration = const Duration(seconds: 10)})
       : assert(duration != null, 'duration must be specified.'),
-        assert(time != null, 'time must be specified.'),
         assert(
             separationCount >= 0, 'Separation count must be zero or positive.'),
         super(
@@ -331,6 +329,7 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
       assert(weekOfMonth == null || (weekOfMonth >= 1 && weekOfMonth <= 4),
           'weekOfMonth must be in the range [1-4]');
     }
+    time ??= Time.now();
     if (remember) {
       assert(triggerId != null,
           'A unique trigger ID should be specified when remembering scheduled triggers.');
@@ -518,8 +517,6 @@ class CronScheduledTrigger extends Trigger {
 /// be `{'DTU','ENTER'}`
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class SamplingEventTrigger extends Trigger {
-  SamplingEventTrigger._();
-
   SamplingEventTrigger({
     String triggerId,
     @required this.measureType,
@@ -579,8 +576,6 @@ typedef EventConditionEvaluator = bool Function(Datum datum);
 /// instead.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ConditionalSamplingEventTrigger extends Trigger {
-  ConditionalSamplingEventTrigger._();
-
   /// Create a [ConditionalSamplingEventTrigger].
   ConditionalSamplingEventTrigger({
     String triggerId,

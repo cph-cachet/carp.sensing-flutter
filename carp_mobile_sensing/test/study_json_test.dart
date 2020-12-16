@@ -11,7 +11,7 @@ void main() {
   setUp(() {
     // This is a hack. Need to create a serialization object in order to
     // initialize serialization.
-    Study('1234', 'kkk');
+    Study(id: '1234', userId: 'kkk');
   });
 
   /// Test if we can load a raw JSON from a file and convert it into a [Study]

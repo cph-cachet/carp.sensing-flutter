@@ -1,3 +1,11 @@
+## 0.11.0
+* refactor: improved (de)serialization in the `Serialization` class.
+* feature: support for handling local settings on the phone in the `SettingsBLoC`.
+* feature: added `description` property to `Measure`.
+* feature: added support for an `AppTask` can expire, i.e. be removed from the queue.
+* fix: issue [#139](https://github.com/cph-cachet/carp.sensing-flutter/issues/139)
+* fix: issue [#140](https://github.com/cph-cachet/carp.sensing-flutter/issues/140)
+
 ## 0.10.1
 * fix: issue [#123](https://github.com/cph-cachet/carp.sensing-flutter/issues/123)
 * based on issue [#134](https://github.com/cph-cachet/carp.sensing-flutter/issues/134)

@@ -39,21 +39,21 @@ class DeviceSamplingPackage implements SamplingPackage {
     ..measures.addEntries([
       MapEntry(
           DEVICE,
-          Measure(MeasureType(NameSpace.CARP, DEVICE),
+          Measure(type: MeasureType(NameSpace.CARP, DEVICE),
               name: 'Basic Device Info', enabled: true)),
       MapEntry(
           MEMORY,
-          PeriodicMeasure(MeasureType(NameSpace.CARP, MEMORY),
+          PeriodicMeasure(type: MeasureType(NameSpace.CARP, MEMORY),
               name: 'Memory Usage',
               enabled: true,
               frequency: const Duration(minutes: 1))),
       MapEntry(
           BATTERY,
-          Measure(MeasureType(NameSpace.CARP, BATTERY),
+          Measure(type: MeasureType(NameSpace.CARP, BATTERY),
               name: 'Battery', enabled: true)),
       MapEntry(
           SCREEN,
-          Measure(MeasureType(NameSpace.CARP, SCREEN),
+          Measure(type: MeasureType(NameSpace.CARP, SCREEN),
               name: 'Screen Activity (lock/on/off)', enabled: true)),
     ]);
 

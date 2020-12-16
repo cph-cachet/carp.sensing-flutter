@@ -28,8 +28,7 @@ class SurveySamplingPackage implements SamplingPackage {
   }
 
   void onRegister() {
-    FromJsonFactory.registerFromJsonFunction(
-        "RPTaskMeasure", RPTaskMeasure.fromJsonFunction);
+    FromJsonFactory().register(RPTaskMeasure(type: null));
     AppTaskController().registerUserTaskFactory(SurveyUserTaskFactory());
   }
 
@@ -42,7 +41,7 @@ class SurveySamplingPackage implements SamplingPackage {
       MapEntry(
           SURVEY,
           RPTaskMeasure(
-            MeasureType(NameSpace.CARP, SURVEY),
+            type: MeasureType(NameSpace.CARP, SURVEY),
             name: 'WHO5',
             enabled: true,
             surveyTask: who5Task,

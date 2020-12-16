@@ -15,7 +15,11 @@ void main() {
     //SamplingPackageRegistry.register(CommunicationSamplingPackage());
     //SamplingPackageRegistry.register(ContextSamplingPackage());
 
-    study = Study('1234', 'bardram', name: 'bardram study', deploymentId: '#1');
+    study = Study(
+        id: '1234',
+        userId: 'bardram',
+        name: 'bardram study',
+        deploymentId: '#1');
     //study.dataEndPoint = DataEndPoint(DataEndPointType.PRINT);
     study.dataEndPoint = FileDataEndPoint()
       ..bufferSize = 50 * 1000
@@ -26,8 +30,7 @@ void main() {
     study.addTriggerTask(
         ImmediateTrigger(), // a simple trigger that starts immediately
         AutomaticTask(name: 'Sampling Task')
-          ..measures = SamplingSchema
-              .common(namespace: NameSpace.CARP)
+          ..measures = SamplingSchema.common(namespace: NameSpace.CARP)
               .measures
               .values
               .toList() // a task with all measures
@@ -99,7 +102,8 @@ void main() {
   });
 
   test('Triggers -> JSON', () async {
-    Study study_3 = Study('3', 'bardram', name: 'Multi Trigger Study');
+    Study study_3 =
+        Study(id: '3', userId: 'bardram', name: 'Multi Trigger Study');
     study_3.dataEndPoint = FileDataEndPoint()
       ..bufferSize = 50 * 1000
       ..zip = true
@@ -131,8 +135,7 @@ void main() {
     study_3.addTriggerTask(
         t1,
         AutomaticTask(name: 'Sensing Task #1')
-          ..measures = SamplingSchema
-              .common()
+          ..measures = SamplingSchema.common()
               .getMeasureList(types: [DeviceSamplingPackage.MEMORY]));
 
     // collect every other day at 13:30.
@@ -185,8 +188,7 @@ void main() {
                 MeasureType(NameSpace.CARP, DeviceSamplingPackage.BATTERY),
             resumeCondition: BatteryDatum()..batteryLevel = 10),
         AutomaticTask(name: 'Sensing Task #1')
-          ..measures = SamplingSchema
-              .common()
+          ..measures = SamplingSchema.common()
               .getMeasureList(types: [SensorSamplingPackage.LIGHT]));
 
     study_3.addTriggerTask(
@@ -196,8 +198,7 @@ void main() {
             resumeCondition: (datum) =>
                 (datum as BatteryDatum).batteryLevel == 10),
         AutomaticTask(name: 'Sensing Task #1')
-          ..measures = SamplingSchema
-              .common()
+          ..measures = SamplingSchema.common()
               .getMeasureList(types: [SensorSamplingPackage.LIGHT]));
 
     final studyJson = _encode(study_3);

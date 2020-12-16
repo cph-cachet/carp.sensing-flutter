@@ -55,13 +55,13 @@ class Study extends Serializable {
   /// The set of [Trigger]s which can trigger [Task](s) in this study.
   List<Trigger> triggers = [];
 
-  Study._();
-
   /// Create a new [Study] object with a set of configurations.
   ///
   /// The [id] and [userId] are required for a new study.
-  Study(this.id, this.userId,
-      {this.deploymentId,
+  Study(
+      {@required this.id,
+      @required this.userId,
+      this.deploymentId,
       this.name,
       this.description,
       this.samplingStrategy,
@@ -113,12 +113,8 @@ class DataEndPoint extends Serializable {
   /// The type of endpoint as enumerated in [DataEndPointTypes].
   String type;
 
-  DataEndPoint._();
-
   /// Creates a [DataEndPoint]. [type] is defined in [DataEndPointTypes].
-  DataEndPoint(this.type)
-      : assert(type != null),
-        super();
+  DataEndPoint({this.type}) : super();
 
   Function get fromJsonFunction => _$DataEndPointFromJson;
   factory DataEndPoint.fromJson(Map<String, dynamic> json) => FromJsonFactory()

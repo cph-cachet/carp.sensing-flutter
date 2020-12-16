@@ -35,7 +35,7 @@ class AccelerometerDatum extends CARPDatum {
       _$AccelerometerDatumFromJson(json);
   Map<String, dynamic> toJson() => _$AccelerometerDatumToJson(this);
 
-  String toString() => super.toString() + ', x: $x, y: $y, x: $z';
+  String toString() => super.toString() + ', x: $x, y: $y, z: $z';
 }
 
 /// A [Datum] that holds rotation data collected from the native gyroscope on the phone.
@@ -67,7 +67,7 @@ class GyroscopeDatum extends CARPDatum {
       _$GyroscopeDatumFromJson(json);
   Map<String, dynamic> toJson() => _$GyroscopeDatumToJson(this);
 
-  String toString() => super.toString() + ', x: $x, y: $y, x: $z';
+  String toString() => super.toString() + ', x: $x, y: $y, z: $z';
 }
 
 /// A [Datum] that holds light intensity in Lux from the light sensor on the phone.

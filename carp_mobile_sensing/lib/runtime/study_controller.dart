@@ -144,7 +144,7 @@ class StudyController {
 
     await dataManager?.initialize(study, events);
     executor.initialize(
-      Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR)),
+      Measure(type: MeasureType(NameSpace.CARP, DataType.EXECUTOR)),
     );
     await enablePowerAwareness();
     events.listen((datum) => samplingSize++);
@@ -171,7 +171,7 @@ class StudyController {
       });
       //# await _battery.initialize(Measure(
       _battery.initialize(Measure(
-        MeasureType(NameSpace.CARP, DeviceSamplingPackage.BATTERY),
+        type: MeasureType(NameSpace.CARP, DeviceSamplingPackage.BATTERY),
         name: 'PowerAwarenessProbe',
       ));
       //_battery.start();

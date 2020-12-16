@@ -19,10 +19,9 @@ class AppTask extends Task {
     this.description,
     this.instructions,
     this.minutesToComplete,
+    this.expire,
     this.notification = false,
   }) : super(name: name);
-
-  AppTask._();
 
   /// Type of task. For example a `survey`.
   String type;
@@ -39,6 +38,10 @@ class AppTask extends Task {
   /// How many minutes will it take for the user to perform this task?
   /// Typically shown to the user before engaging into this task.
   int minutesToComplete;
+
+  /// The duration of this app task, i.e. when it expire and is removed
+  /// from the [AppTaskController]'s queue.
+  Duration expire;
 
   // TODO - implement this ;-)
   /// Should a notification be send to the user on the phone?

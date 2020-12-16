@@ -146,7 +146,8 @@ abstract class Probe {
   void restart();
 
   /// Stop the probe. Once a probe is stopped, it cannot be started again.
-  /// If you need to restart a probe, use the [restart] or [pause] and [resume] methods.
+  /// If you need to restart a probe, use the [restart] or [pause] and
+  /// [resume] methods.
   void stop();
 }
 

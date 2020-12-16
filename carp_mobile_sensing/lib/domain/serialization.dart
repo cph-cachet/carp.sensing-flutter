@@ -71,25 +71,25 @@ class FromJsonFactory {
   //
   // TODO: Remember to add any new classes here.
   FromJsonFactory._() {
-    register(Study._());
-    register(DataEndPoint._());
+    register(Study(id: 'ignored', userId: 'ignored'));
+    register(DataEndPoint());
     register(FileDataEndPoint());
     register(Task());
     register(AutomaticTask());
-    register(AppTask._());
+    register(AppTask(type: 'ignored'));
     register(Trigger());
     register(ImmediateTrigger());
     register(DelayedTrigger());
-    register(PeriodicTrigger._());
-    register(ScheduledTrigger._());
+    register(PeriodicTrigger(period: null));
+    register(ScheduledTrigger(schedule: null));
     register(Time());
-    register(RecurrentScheduledTrigger._());
-    register(SamplingEventTrigger._());
-    register(ConditionalSamplingEventTrigger._());
-    register(MeasureType._());
-    register(Measure._());
-    register(PeriodicMeasure._());
-    register(MarkedMeasure._());
+    register(RecurrentScheduledTrigger(type: null, time: null));
+    register(SamplingEventTrigger(measureType: null));
+    register(ConditionalSamplingEventTrigger(measureType: null));
+    register(MeasureType('',''));
+    register(Measure(type: null));
+    register(PeriodicMeasure(type: null));
+    register(MarkedMeasure(type: null));
   }
 
   /// Register a [Serializable] [type] which can be deserialized from JSON.

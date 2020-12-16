@@ -248,7 +248,7 @@ class FileDataEndPoint extends DataEndPoint {
   /// [DataEndPointType.FILE] but specialized file types can be specified.
   FileDataEndPoint(
       {String type, this.bufferSize, this.zip, this.encrypt, this.publicKey})
-      : super(type ?? DataEndPointTypes.FILE);
+      : super(type: type ?? DataEndPointTypes.FILE);
 
   /// The function which can transform this [FileDataEndPoint] into JSON.
   ///

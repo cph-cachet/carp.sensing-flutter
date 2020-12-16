@@ -16,9 +16,11 @@ class Measure extends Serializable {
   /// A printer-friendly name for this measure.
   String name;
 
+  /// A longer description of this measure.
+  String description;
+
   /// Whether the measure is enabled - i.e. collecting data - when the
-  /// study is running.
-  /// A measure is enabled as default.
+  /// study is running. A measure is enabled as default.
   bool enabled = true;
 
   /// A key-value map holding any application-specific configuration.
@@ -27,20 +29,17 @@ class Measure extends Serializable {
   bool _storedEnabled = true;
   final List<MeasureListener> _listeners = [];
 
-  Measure._();
-
-  Measure(this.type, {this.name, this.enabled = true})
-      : assert(type != null),
-        super() {
+  Measure({
+    @required this.type,
+    this.name,
+    this.description,
+    this.enabled = true,
+  }) : super() {
     enabled = enabled ?? true;
     _storedEnabled = enabled;
   }
 
-  //static Function get fromJsonFunction => _$MeasureFromJson;
   Function get fromJsonFunction => _$MeasureFromJson;
-  // factory Measure.fromJson(Map<String, dynamic> json) =>
-  //     FromJsonFactory.fromJson(
-  //         json[Serializable.CLASS_IDENTIFIER].toString(), json);
   factory Measure.fromJson(Map<String, dynamic> json) => FromJsonFactory()
       .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$MeasureToJson(this);
@@ -100,12 +99,19 @@ class PeriodicMeasure extends Measure {
   Duration duration;
   Duration _storedDuration;
 
-  PeriodicMeasure._() : super._();
-
   /// Create a [PeriodicMeasure].
-  PeriodicMeasure(MeasureType type,
-      {String name, bool enabled, this.frequency, this.duration})
-      : super(type, name: name, enabled: enabled) {
+  PeriodicMeasure({
+    @required MeasureType type,
+    String name,
+    String description,
+    bool enabled,
+    this.frequency,
+    this.duration,
+  }) : super(
+            type: type,
+            name: name,
+            description: description,
+            enabled: enabled) {
     _storedFrequency = frequency;
     _storedDuration = duration;
   }
@@ -161,14 +167,18 @@ class MarkedMeasure extends Measure {
   /// this measure be collected?
   Duration history;
 
-  MarkedMeasure._() : super._();
-
-  MarkedMeasure(
-    MeasureType type, {
+  MarkedMeasure({
+    @required MeasureType type,
     String name,
+    String description,
     bool enabled,
     this.history = const Duration(days: 1),
-  }) : super(type, name: name, enabled: enabled);
+  }) : super(
+          type: type,
+          name: name,
+          description: description,
+          enabled: enabled,
+        );
 
   Function get fromJsonFunction => _$MarkedMeasureFromJson;
   Map<String, dynamic> toJson() => _$MarkedMeasureToJson(this);
@@ -187,8 +197,6 @@ class MeasureType extends Serializable {
 
   /// The name of this data format. See [DataType].
   String name;
-
-  MeasureType._();
 
   /// Create a [MeasureType].
   MeasureType(this.namespace, this.name) : super();
