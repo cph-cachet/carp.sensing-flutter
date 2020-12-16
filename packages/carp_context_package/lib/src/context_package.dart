@@ -55,12 +55,12 @@ class ContextSamplingPackage implements SamplingPackage {
   }
 
   void onRegister() {
-    FromJsonFactory().register(LocationMeasure(null));
-    FromJsonFactory().register(WeatherMeasure(null));
-    FromJsonFactory().register(GeofenceMeasure(null));
-    FromJsonFactory().register(AirQualityMeasure(null));
-    FromJsonFactory().register(GeoPosition(null));
-    FromJsonFactory().register(MobilityMeasure(null));
+    FromJsonFactory().register(LocationMeasure(type: null));
+    FromJsonFactory().register(WeatherMeasure(type: null));
+    FromJsonFactory().register(GeofenceMeasure(type: null));
+    FromJsonFactory().register(AirQualityMeasure(type: null));
+    FromJsonFactory().register(GeoPosition(0, 0));
+    FromJsonFactory().register(MobilityMeasure(type: null));
 
     // registering the transformers from CARP to OMH for geolocation and physical activity.
     // we assume that there is an OMH schema registered already...
@@ -85,13 +85,15 @@ class ContextSamplingPackage implements SamplingPackage {
     ..measures.addEntries([
       MapEntry(
         LOCATION,
-        Measure(MeasureType(NameSpace.CARP, LOCATION),
-            name: 'Location', enabled: true),
+        Measure(
+            type: MeasureType(NameSpace.CARP, LOCATION),
+            name: 'Location',
+            enabled: true),
       ),
       MapEntry(
           GEOLOCATION,
           LocationMeasure(
-            MeasureType(NameSpace.CARP, GEOLOCATION),
+            type: MeasureType(NameSpace.CARP, GEOLOCATION),
             name: 'Geo-location',
             enabled: true,
             frequency: Duration(seconds: 30),
@@ -100,31 +102,37 @@ class ContextSamplingPackage implements SamplingPackage {
           )),
       MapEntry(
         ACTIVITY,
-        Measure(MeasureType(NameSpace.CARP, ACTIVITY),
-            name: 'Activity Recognition', enabled: true),
+        Measure(
+            type: MeasureType(NameSpace.CARP, ACTIVITY),
+            name: 'Activity Recognition',
+            enabled: true),
       ),
       MapEntry(
           WEATHER,
-          WeatherMeasure(MeasureType(NameSpace.CARP, WEATHER),
+          WeatherMeasure(
+              type: MeasureType(NameSpace.CARP, WEATHER),
               name: 'Local Weather',
               enabled: true,
               apiKey: '12b6e28582eb9298577c734a31ba9f4f')),
       MapEntry(
           AIR_QUALITY,
-          AirQualityMeasure(MeasureType(NameSpace.CARP, AIR_QUALITY),
+          AirQualityMeasure(
+              type: MeasureType(NameSpace.CARP, AIR_QUALITY),
               name: 'Local Air Quality',
               enabled: true,
               apiKey: '9e538456b2b85c92647d8b65090e29f957638c77')),
       MapEntry(
           GEOFENCE,
-          GeofenceMeasure(MeasureType(NameSpace.CARP, GEOFENCE),
+          GeofenceMeasure(
+              type: MeasureType(NameSpace.CARP, GEOFENCE),
               enabled: true,
               center: GeoPosition(55.7943601, 12.4461956),
               radius: 500,
               name: 'Geofence (Virum)')),
       MapEntry(
           MOBILITY,
-          MobilityMeasure(MeasureType(NameSpace.CARP, MOBILITY),
+          MobilityMeasure(
+              type: MeasureType(NameSpace.CARP, MOBILITY),
               name: 'Mobility Features',
               enabled: true,
               placeRadius: 50,
@@ -151,7 +159,7 @@ class ContextSamplingPackage implements SamplingPackage {
     ..name = 'Debugging context sampling schema'
     ..powerAware = false
     ..measures[GEOLOCATION] = LocationMeasure(
-      MeasureType(NameSpace.CARP, GEOLOCATION),
+      type: MeasureType(NameSpace.CARP, GEOLOCATION),
       name: 'Geo-location',
       enabled: true,
       frequency: Duration(seconds: 3),
@@ -159,7 +167,7 @@ class ContextSamplingPackage implements SamplingPackage {
       distance: 0,
     )
     ..measures[WEATHER] = WeatherMeasure(
-      MeasureType(NameSpace.CARP, WEATHER),
+      type: MeasureType(NameSpace.CARP, WEATHER),
       name: 'Local Weather',
       apiKey: '12b6e28582eb9298577c734a31ba9f4f',
     );

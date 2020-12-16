@@ -17,7 +17,7 @@ void main() async {
           DelayedTrigger(delay: Duration(seconds: 30)),
           Task(name: 'WHO-5 Survey')
             ..measures.add(RPTaskMeasure(
-              MeasureType(NameSpace.CARP, SurveySamplingPackage.SURVEY),
+              type: MeasureType(NameSpace.CARP, SurveySamplingPackage.SURVEY),
               name: 'WHO5',
               enabled: true,
               surveyTask: who5Task,

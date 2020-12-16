@@ -16,14 +16,17 @@ class WeatherMeasure extends Measure {
 
 //  double latitude, longitude;
 
-  WeatherMeasure(MeasureType type, {name, enabled, this.apiKey})
-      : super(type, name: name, enabled: enabled);
+  WeatherMeasure({
+    @required MeasureType type,
+    name,
+    enabled,
+    this.apiKey,
+  }) : super(type: type, name: name, enabled: enabled);
 
-  static Function get fromJsonFunction => _$WeatherMeasureFromJson;
-
-  factory WeatherMeasure.fromJson(Map<String, dynamic> json) => FromJsonFactory
-      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
-
+  Function get fromJsonFunction => _$WeatherMeasureFromJson;
+  factory WeatherMeasure.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$WeatherMeasureToJson(this);
 
   String toString() => super.toString() + ', API key: $apiKey';

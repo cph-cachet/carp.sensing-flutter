@@ -55,12 +55,9 @@ class GeoPosition extends Serializable {
     return earthRadius * c;
   }
 
-  static Function get fromJsonFunction => _$GeoPositionFromJson;
-
-  factory GeoPosition.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(
-          json[Serializable.CLASS_IDENTIFIER].toString(), json);
-
+  Function get fromJsonFunction => _$GeoPositionFromJson;
+  factory GeoPosition.fromJson(Map<String, dynamic> json) => FromJsonFactory()
+      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$GeoPositionToJson(this);
 
   String toString() => 'GeoPosition (latitude:$latitude, longitude:$longitude)';
@@ -95,15 +92,17 @@ class GeofenceMeasure extends Measure {
   String name;
 
   /// Specify a geofence measure
-  GeofenceMeasure(MeasureType type,
-      {enabled, this.center, this.radius, this.name})
-      : super(type, enabled: enabled);
+  GeofenceMeasure({
+    @required MeasureType type,
+    enabled,
+    this.center,
+    this.radius,
+    this.name,
+  }) : super(type: type, enabled: enabled);
 
-  static Function get fromJsonFunction => _$GeofenceMeasureFromJson;
-
+  Function get fromJsonFunction => _$GeofenceMeasureFromJson;
   factory GeofenceMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(
-          json[Serializable.CLASS_IDENTIFIER].toString(), json);
-
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$GeofenceMeasureToJson(this);
 }
