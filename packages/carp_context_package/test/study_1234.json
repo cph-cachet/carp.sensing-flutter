@@ -5,208 +5,230 @@
   "user_id": "bardram",
   "sampling_strategy": "NORMAL",
   "data_end_point": {
-    "$type": "DataEndPoint",
-    "type": "PRINT"
+   "$type": "DataEndPoint",
+   "type": "PRINT"
   },
   "data_format": "carp",
   "triggers": [
-    {
-      "$type": "ImmediateTrigger",
-      "tasks": [
-        {
-          "$type": "AutomaticTask",
-          "name": "Task #1",
-          "measures": [
-            {
-              "$type": "Measure",
-              "type": {
-                "$type": "MeasureType",
-                "namespace": "carp",
-                "name": "device"
-              },
-              "name": "Basic Device Info",
-              "enabled": true,
-              "configuration": {}
-            },
-            {
-              "$type": "PeriodicMeasure",
-              "type": {
-                "$type": "MeasureType",
-                "namespace": "carp",
-                "name": "memory"
-              },
-              "name": "Memory Usage",
-              "enabled": true,
-              "configuration": {},
-              "frequency": 60000000
-            },
-            {
-              "$type": "Measure",
-              "type": {
-                "$type": "MeasureType",
-                "namespace": "carp",
-                "name": "battery"
-              },
-              "name": "Battery",
-              "enabled": true,
-              "configuration": {}
-            },
-            {
-              "$type": "Measure",
-              "type": {
-                "$type": "MeasureType",
-                "namespace": "carp",
-                "name": "screen"
-              },
-              "name": "Screen Activity (lock/on/off)",
-              "enabled": true,
-              "configuration": {}
-            },
-            {
-              "$type": "PeriodicMeasure",
-              "type": {
-                "$type": "MeasureType",
-                "namespace": "carp",
-                "name": "accelerometer"
-              },
-              "name": "Accelerometer",
-              "enabled": false,
-              "configuration": {},
-              "frequency": 100000,
-              "duration": 1000
-            },
-            {
-              "$type": "PeriodicMeasure",
-              "type": {
-                "$type": "MeasureType",
-                "namespace": "carp",
-                "name": "gyroscope"
-              },
-              "name": "Gyroscope",
-              "enabled": false,
-              "configuration": {},
-              "frequency": 100000,
-              "duration": 1000
-            },
-            {
-              "$type": "Measure",
-              "type": {
-                "$type": "MeasureType",
-                "namespace": "carp",
-                "name": "pedometer"
-              },
-              "name": "Pedometer (Step Count)",
-              "enabled": true,
-              "configuration": {}
-            },
-            {
-              "$type": "PeriodicMeasure",
-              "type": {
-                "$type": "MeasureType",
-                "namespace": "carp",
-                "name": "light"
-              },
-              "name": "Ambient Light",
-              "enabled": true,
-              "configuration": {},
-              "frequency": 60000000,
-              "duration": 1000000
-            },
-            {
-              "$type": "Measure",
-              "type": {
-                "$type": "MeasureType",
-                "namespace": "carp",
-                "name": "location"
-              },
-              "name": "Location",
-              "enabled": true,
-              "configuration": {}
-            },
-            {
-              "$type": "LocationMeasure",
-              "type": {
-                "$type": "MeasureType",
-                "namespace": "carp",
-                "name": "geolocation"
-              },
-              "name": "Geo-location",
-              "enabled": true,
-              "configuration": {},
-              "frequency": 30000000,
-              "accuracy": "low",
-              "distance": 3.0
-            },
-            {
-              "$type": "Measure",
-              "type": {
-                "$type": "MeasureType",
-                "namespace": "carp",
-                "name": "activity"
-              },
-              "name": "Activity Recognition",
-              "enabled": true,
-              "configuration": {}
-            },
-            {
-              "$type": "WeatherMeasure",
-              "type": {
-                "$type": "MeasureType",
-                "namespace": "carp",
-                "name": "weather"
-              },
-              "name": "Local Weather",
-              "enabled": true,
-              "configuration": {},
-              "api_key": "12b6e28582eb9298577c734a31ba9f4f"
-            },
-            {
-              "$type": "AirQualityMeasure",
-              "type": {
-                "$type": "MeasureType",
-                "namespace": "carp",
-                "name": "air_quality"
-              },
-              "name": "Local Air Quality",
-              "enabled": true,
-              "configuration": {},
-              "api_key": "9e538456b2b85c92647d8b65090e29f957638c77"
-            },
-            {
-              "$type": "GeofenceMeasure",
-              "type": {
-                "$type": "MeasureType",
-                "namespace": "carp",
-                "name": "geofence"
-              },
-              "enabled": true,
-              "configuration": {},
-              "center": {
-                "$type": "GeoPosition",
-                "latitude": 55.7943601,
-                "longitude": 12.4461956
-              },
-              "radius": 500.0,
-              "name": "Geofence (Virum)"
-            },
-            {
-              "$type": "MobilityMeasure",
-              "type": {
-                "$type": "MeasureType",
-                "namespace": "carp",
-                "name": "mobility"
-              },
-              "name": "Mobility Features",
-              "enabled": true,
-              "configuration": {},
-              "use_prior_contexts": true,
-              "stop_radius": 25.0,
-              "place_radius": 50.0,
-              "stop_duration": 180000000
-            }
-          ]
-        }
+   {
+    "$type": "ImmediateTrigger",
+    "tasks": [
+     {
+      "$type": "AutomaticTask",
+      "name": "Task #1",
+      "measures": [
+       {
+        "$type": "Measure",
+        "type": {
+         "$type": "MeasureType",
+         "namespace": "carp",
+         "name": "device"
+        },
+        "name": "Basic Device Info",
+        "enabled": true,
+        "configuration": {}
+       },
+       {
+        "$type": "PeriodicMeasure",
+        "type": {
+         "$type": "MeasureType",
+         "namespace": "carp",
+         "name": "memory"
+        },
+        "name": "Memory Usage",
+        "enabled": true,
+        "configuration": {},
+        "frequency": 60000000
+       },
+       {
+        "$type": "Measure",
+        "type": {
+         "$type": "MeasureType",
+         "namespace": "carp",
+         "name": "battery"
+        },
+        "name": "Battery",
+        "enabled": true,
+        "configuration": {}
+       },
+       {
+        "$type": "Measure",
+        "type": {
+         "$type": "MeasureType",
+         "namespace": "carp",
+         "name": "screen"
+        },
+        "name": "Screen Activity (lock/on/off)",
+        "enabled": true,
+        "configuration": {}
+       },
+       {
+        "$type": "Measure",
+        "type": {
+         "$type": "MeasureType",
+         "namespace": "carp",
+         "name": "accelerometer"
+        },
+        "name": "Accelerometer",
+        "enabled": false,
+        "configuration": {}
+       },
+       {
+        "$type": "Measure",
+        "type": {
+         "$type": "MeasureType",
+         "namespace": "carp",
+         "name": "gyroscope"
+        },
+        "name": "Gyroscope",
+        "enabled": false,
+        "configuration": {}
+       },
+       {
+        "$type": "PeriodicMeasure",
+        "type": {
+         "$type": "MeasureType",
+         "namespace": "carp",
+         "name": "periodic_accelerometer"
+        },
+        "name": "Accelerometer",
+        "enabled": false,
+        "configuration": {},
+        "frequency": 5000000,
+        "duration": 1000000
+       },
+       {
+        "$type": "PeriodicMeasure",
+        "type": {
+         "$type": "MeasureType",
+         "namespace": "carp",
+         "name": "periodic_gyroscope"
+        },
+        "name": "Gyroscope",
+        "enabled": false,
+        "configuration": {},
+        "frequency": 5000000,
+        "duration": 1000000
+       },
+       {
+        "$type": "Measure",
+        "type": {
+         "$type": "MeasureType",
+         "namespace": "carp",
+         "name": "pedometer"
+        },
+        "name": "Pedometer (Step Count)",
+        "enabled": true,
+        "configuration": {}
+       },
+       {
+        "$type": "PeriodicMeasure",
+        "type": {
+         "$type": "MeasureType",
+         "namespace": "carp",
+         "name": "light"
+        },
+        "name": "Ambient Light",
+        "enabled": true,
+        "configuration": {},
+        "frequency": 60000000,
+        "duration": 1000000
+       },
+       {
+        "$type": "Measure",
+        "type": {
+         "$type": "MeasureType",
+         "namespace": "carp",
+         "name": "location"
+        },
+        "name": "Location",
+        "enabled": true,
+        "configuration": {}
+       },
+       {
+        "$type": "LocationMeasure",
+        "type": {
+         "$type": "MeasureType",
+         "namespace": "carp",
+         "name": "geolocation"
+        },
+        "name": "Geo-location",
+        "enabled": true,
+        "configuration": {},
+        "frequency": 30000000,
+        "accuracy": "low",
+        "distance": 3.0
+       },
+       {
+        "$type": "Measure",
+        "type": {
+         "$type": "MeasureType",
+         "namespace": "carp",
+         "name": "activity"
+        },
+        "name": "Activity Recognition",
+        "enabled": true,
+        "configuration": {}
+       },
+       {
+        "$type": "WeatherMeasure",
+        "type": {
+         "$type": "MeasureType",
+         "namespace": "carp",
+         "name": "weather"
+        },
+        "name": "Local Weather",
+        "enabled": true,
+        "configuration": {},
+        "api_key": "12b6e28582eb9298577c734a31ba9f4f"
+       },
+       {
+        "$type": "AirQualityMeasure",
+        "type": {
+         "$type": "MeasureType",
+         "namespace": "carp",
+         "name": "air_quality"
+        },
+        "name": "Local Air Quality",
+        "enabled": true,
+        "configuration": {},
+        "api_key": "9e538456b2b85c92647d8b65090e29f957638c77"
+       },
+       {
+        "$type": "GeofenceMeasure",
+        "type": {
+         "$type": "MeasureType",
+         "namespace": "carp",
+         "name": "geofence"
+        },
+        "enabled": true,
+        "configuration": {},
+        "center": {
+         "$type": "GeoPosition",
+         "latitude": 55.7943601,
+         "longitude": 12.4461956
+        },
+        "radius": 500.0,
+        "name": "Geofence (Virum)"
+       },
+       {
+        "$type": "MobilityMeasure",
+        "type": {
+         "$type": "MeasureType",
+         "namespace": "carp",
+         "name": "mobility"
+        },
+        "name": "Mobility Features",
+        "enabled": true,
+        "configuration": {},
+        "use_prior_contexts": true,
+        "stop_radius": 25.0,
+        "place_radius": 50.0,
+        "stop_duration": 180000000
+       }
       ]
-    }
+     }
+    ]
+   }
   ]
-}
+ }

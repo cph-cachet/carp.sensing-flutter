@@ -26,12 +26,12 @@ class NoiseProbe extends BufferingPeriodicStreamProbe {
     super.onInitialize(measure);
   }
 
-  Future<void> onRestart() async {
+  Future onRestart() async {
     super.onRestart();
     _noiseMeter = NoiseMeter(onStop);
   }
 
-  Future<void> onStop() async {
+  Future onStop() async {
     super.onStop();
     _noiseMeter = null;
   }

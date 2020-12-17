@@ -146,12 +146,13 @@ abstract class Probe {
   void restart();
 
   /// Stop the probe. Once a probe is stopped, it cannot be started again.
-  /// If you need to restart a probe, use the [restart] or [pause] and [resume] methods.
+  /// If you need to restart a probe, use the [restart] or [pause] and
+  /// [resume] methods.
   void stop();
 }
 
 /// An abstract implementation of a [Probe] to extend from.
-abstract class AbstractProbe with MeasureListener implements Probe {
+abstract class AbstractProbe extends Probe implements MeasureListener {
   final StreamController<ProbeState> _stateEventController =
       StreamController.broadcast();
   Stream<ProbeState> get stateEvents => _stateEventController.stream;
@@ -202,16 +203,16 @@ abstract class AbstractProbe with MeasureListener implements Probe {
   void onInitialize(Measure measure);
 
   /// Callback for resuming probe
-  Future<void> onResume();
+  Future onResume();
 
   /// Callback for pausing probe
-  Future<void> onPause();
+  Future onPause();
 
   /// Callback for restarting probe
-  Future<void> onRestart();
+  Future onRestart();
 
   /// Callback for stopping probe
-  Future<void> onStop();
+  Future onStop();
 
   /// Callback when this probe's [measure] has changed.
   void hasChanged(Measure measure) => restart();
@@ -263,7 +264,9 @@ abstract class _ProbeStateMachine {
 abstract class _AbstractProbeState implements _ProbeStateMachine {
   ProbeState state;
   AbstractProbe probe;
-  _AbstractProbeState(this.probe, this.state) : assert(probe != null);
+  _AbstractProbeState(this.probe, this.state) {
+    assert(probe != null);
+  }
 
   // Default behavior is to print a warning.
   // If a state supports this method, this behavior is overwritten in
@@ -402,22 +405,22 @@ class _UndefinedState extends _AbstractProbeState
 ///
 /// The [Datum] to be collected should be implemented in the [getDatum] method.
 abstract class DatumProbe extends AbstractProbe {
-  StreamController<Datum> controller = StreamController<Datum>.broadcast();
+  StreamController<Datum> controller = StreamController.broadcast();
   Stream<Datum> get events => controller.stream;
 
   void onInitialize(Measure measure) {}
 
-  Future<void> onRestart() async {}
+  Future onRestart() async {}
 
-  Future<void> onResume() async {
+  Future onResume() async {
     marking();
     Datum data = await getDatum().catchError((err) => controller.addError(err));
     if (data != null) controller.add(data);
     mark();
   }
 
-  Future<void> onPause() async {}
-  Future<void> onStop() async {}
+  Future onPause() async {}
+  Future onStop() async {}
 
   /// Subclasses should implement this method to collect a [Datum].
   Future<Datum> getDatum();
@@ -432,7 +435,7 @@ abstract class DatumProbe extends AbstractProbe {
 /// See [MemoryProbe] for an example.
 abstract class PeriodicDatumProbe extends DatumProbe {
   Timer timer;
-  StreamController<Datum> controller = StreamController<Datum>.broadcast();
+  StreamController<Datum> controller = StreamController.broadcast();
   Duration frequency, duration;
 
   Stream<Datum> get events => controller.stream;
@@ -443,12 +446,12 @@ abstract class PeriodicDatumProbe extends DatumProbe {
     duration = (measure as PeriodicMeasure).duration;
   }
 
-  Future<void> onRestart() async {
+  Future onRestart() async {
     frequency = (measure as PeriodicMeasure).frequency;
     duration = (measure as PeriodicMeasure).duration;
   }
 
-  Future<void> onResume() async {
+  Future onResume() async {
     marking();
 
     // create a recurrent timer that gets the datum every [frequency].
@@ -460,12 +463,12 @@ abstract class PeriodicDatumProbe extends DatumProbe {
     });
   }
 
-  Future<void> onPause() async {
+  Future onPause() async {
     timer?.cancel();
     mark();
   }
 
-  Future<void> onStop() async {
+  Future onStop() async {
     timer?.cancel();
     await controller.close();
   }
@@ -482,7 +485,7 @@ abstract class PeriodicDatumProbe extends DatumProbe {
 /// sophisticated example.
 abstract class StreamProbe extends AbstractProbe {
   StreamSubscription<dynamic> subscription;
-  StreamController<Datum> controller = StreamController<Datum>.broadcast();
+  StreamController<Datum> controller = StreamController.broadcast();
   Stream<Datum> get events => controller.stream;
 
   /// The stream for this [StreamProbe]. Must be implemented by sub-classes.
@@ -491,11 +494,11 @@ abstract class StreamProbe extends AbstractProbe {
   // Do nothing here. Can be overwritten in subclasses.
   void onInitialize(Measure measure) {}
 
-  Future<void> onRestart() async {
+  Future onRestart() async {
     await onResume();
   }
 
-  Future<void> onResume() async {
+  Future onResume() async {
     marking();
     if (stream != null) {
       debug('Listening to stream in $runtimeType');
@@ -503,12 +506,12 @@ abstract class StreamProbe extends AbstractProbe {
     }
   }
 
-  Future<void> onPause() async {
+  Future onPause() async {
     await subscription?.cancel();
     mark();
   }
 
-  Future<void> onStop() async {
+  Future onStop() async {
     await subscription?.cancel();
     await controller?.close();
     subscription = null;
@@ -540,13 +543,13 @@ abstract class PeriodicStreamProbe extends StreamProbe {
     super.onInitialize(measure);
   }
 
-  Future<void> onRestart() async {
+  Future onRestart() async {
     frequency = (measure as PeriodicMeasure).frequency;
     duration = (measure as PeriodicMeasure).duration;
     await super.onRestart();
   }
 
-  Future<void> onResume() async {
+  Future onResume() async {
     marking();
 
     if (subscription != null) {
@@ -561,12 +564,12 @@ abstract class PeriodicStreamProbe extends StreamProbe {
     }
   }
 
-  Future<void> onPause() async {
+  Future onPause() async {
     timer?.cancel();
     await super.onPause();
   }
 
-  Future<void> onStop() async {
+  Future onStop() async {
     timer?.cancel();
     await super.onStop();
   }
@@ -582,7 +585,7 @@ abstract class PeriodicStreamProbe extends StreamProbe {
 ///
 /// See [AudioProbe] for an example.
 abstract class BufferingPeriodicProbe extends DatumProbe {
-  StreamController<Datum> controller = StreamController<Datum>.broadcast();
+  StreamController<Datum> controller = StreamController.broadcast();
   Stream<Datum> get events => controller.stream;
   Timer timer;
   Duration frequency, duration;
@@ -593,12 +596,12 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
     duration = (measure as PeriodicMeasure).duration;
   }
 
-  Future<void> onRestart() async {
+  Future onRestart() async {
     frequency = (measure as PeriodicMeasure).frequency;
     duration = (measure as PeriodicMeasure).duration;
   }
 
-  Future<void> onResume() async {
+  Future onResume() async {
     // create a recurrent timer that every [frequency] resumes the buffering.
     timer = Timer.periodic(frequency, (Timer t) {
       onSamplingStart();
@@ -614,7 +617,7 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
     });
   }
 
-  Future<void> onPause() async {
+  Future onPause() async {
     if (timer != null) timer.cancel();
     // check if there are some buffered data that needs to be collected before pausing
     await getDatum().then((datum) {
@@ -623,7 +626,7 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
         (error, stacktrace) => controller.addError(error, stacktrace));
   }
 
-  Future<void> onStop() async {
+  Future onStop() async {
     if (timer != null) timer.cancel();
     await controller.close();
   }
@@ -657,14 +660,14 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
 /// See [LightProbe] for an example.
 abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
   // we don't use the stream in the super class so we give it an empty non-null stream
-  Stream<Datum> get stream => Stream<Datum>.empty();
+  Stream<Datum> get stream => Stream.empty();
 
   void onInitialize(Measure measure) {
     assert(bufferingStream != null, 'Buffering event stream must not be null');
     super.onInitialize(measure);
   }
 
-  Future<void> onResume() async {
+  Future onResume() async {
     timer = Timer.periodic(frequency, (Timer t) {
       onSamplingStart();
       subscription = bufferingStream?.listen(onSamplingData,
@@ -680,7 +683,7 @@ abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
     });
   }
 
-  Future<void> onPause() async {
+  Future onPause() async {
     await super.onPause();
     onSamplingEnd();
     await getDatum().then((datum) {
@@ -722,7 +725,7 @@ abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
 ///
 /// When the sampling window ends, the [getDatum] method is called.
 abstract class BufferingStreamProbe extends BufferingPeriodicStreamProbe {
-  Future<void> onResume() async {
+  Future onResume() async {
     subscription.resume();
     timer = Timer.periodic(frequency, (Timer t) {
       onSamplingStart();

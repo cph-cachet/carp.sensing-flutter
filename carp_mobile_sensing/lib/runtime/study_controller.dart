@@ -79,8 +79,9 @@ class StudyController {
     this.privacySchemaName,
     this.transformer,
     this.debugLevel = DebugLevel.WARNING,
-  })  : assert(study != null),
-        super() {
+  })
+      : super() {
+    assert(study != null);
     // set global debug level
     globalDebugLevel = debugLevel;
 
@@ -106,12 +107,15 @@ class StudyController {
 
   /// Initialize this controller. Must be called only once,
   /// and before [resume] is called.
-  Future<void> initialize() async {
+  Future initialize() async {
     assert(executor.validNextState(ProbeState.initialized),
         'The study executor cannot be initialized - it is in state ${executor.state}');
 
     // start getting basic device info.
     Device();
+
+    // if no user is specified for this study, look up the local user id
+    study.userId ??= await settings.userId;
 
     // setting up permissions
     permissions = await PermissionHandlerPlatform.instance
@@ -144,7 +148,7 @@ class StudyController {
 
     await dataManager?.initialize(study, events);
     executor.initialize(
-      Measure(MeasureType(NameSpace.CARP, DataType.EXECUTOR)),
+      Measure(type: MeasureType(NameSpace.CARP, DataType.EXECUTOR)),
     );
     await enablePowerAwareness();
     events.listen((datum) => samplingSize++);
@@ -153,7 +157,7 @@ class StudyController {
   final BatteryProbe _battery = BatteryProbe();
 
   /// Enable power-aware sensing in this study. See [PowerAwarenessState].
-  Future<void> enablePowerAwareness() async {
+  Future enablePowerAwareness() async {
     if (samplingSchema.powerAware) {
       _battery.events.listen((datum) {
         BatteryDatum batteryState = (datum as BatteryDatum);
@@ -171,7 +175,7 @@ class StudyController {
       });
       //# await _battery.initialize(Measure(
       _battery.initialize(Measure(
-        MeasureType(NameSpace.CARP, DeviceSamplingPackage.BATTERY),
+        type: MeasureType(NameSpace.CARP, DeviceSamplingPackage.BATTERY),
         name: 'PowerAwarenessProbe',
       ));
       //_battery.start();

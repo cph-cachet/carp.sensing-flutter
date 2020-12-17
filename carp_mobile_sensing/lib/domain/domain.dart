@@ -4,11 +4,8 @@
 /// obtained from a [StudyManager].
 library domain;
 
-import 'dart:convert';
 import 'dart:io';
-
 import 'package:device_info/device_info.dart';
-import 'package:flutter/services.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 import 'package:uuid/uuid.dart';
@@ -20,10 +17,10 @@ part 'datum.dart';
 part 'device_info.dart';
 part 'domain.g.dart';
 part 'measures.dart';
-part 'sampling_schema.dart';
 part 'serialization.dart';
 part 'study.dart';
 part 'tasks.dart';
 part 'app_task.dart';
 part 'transformers.dart';
 part 'triggers.dart';
+part 'sampling_schema_types.dart';

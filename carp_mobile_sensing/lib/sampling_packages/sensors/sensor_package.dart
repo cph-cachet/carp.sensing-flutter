@@ -48,21 +48,21 @@ class SensorSamplingPackage implements SamplingPackage {
       MapEntry(
           ACCELEROMETER,
           Measure(
-            MeasureType(NameSpace.CARP, ACCELEROMETER),
+            type: MeasureType(NameSpace.CARP, ACCELEROMETER),
             name: 'Accelerometer',
             enabled: false,
           )),
       MapEntry(
           GYROSCOPE,
           Measure(
-            MeasureType(NameSpace.CARP, GYROSCOPE),
+            type: MeasureType(NameSpace.CARP, GYROSCOPE),
             name: 'Gyroscope',
             enabled: false,
           )),
       MapEntry(
           PERIODIC_ACCELEROMETER,
           PeriodicMeasure(
-            MeasureType(NameSpace.CARP, PERIODIC_ACCELEROMETER),
+            type: MeasureType(NameSpace.CARP, PERIODIC_ACCELEROMETER),
             name: 'Accelerometer',
             enabled: false,
             frequency: const Duration(seconds: 5),
@@ -71,7 +71,7 @@ class SensorSamplingPackage implements SamplingPackage {
       MapEntry(
           PERIODIC_GYROSCOPE,
           PeriodicMeasure(
-            MeasureType(NameSpace.CARP, PERIODIC_GYROSCOPE),
+            type: MeasureType(NameSpace.CARP, PERIODIC_GYROSCOPE),
             name: 'Gyroscope',
             enabled: false,
             frequency: const Duration(seconds: 5),
@@ -79,12 +79,14 @@ class SensorSamplingPackage implements SamplingPackage {
           )),
       MapEntry(
           PEDOMETER,
-          Measure(MeasureType(NameSpace.CARP, PEDOMETER),
-              name: 'Pedometer (Step Count)', enabled: true)),
+          Measure(
+              type: MeasureType(NameSpace.CARP, PEDOMETER),
+              name: 'Pedometer (Step Count)',
+              enabled: true)),
       MapEntry(
           LIGHT,
           PeriodicMeasure(
-            MeasureType(NameSpace.CARP, LIGHT),
+            type: MeasureType(NameSpace.CARP, LIGHT),
             name: 'Ambient Light',
             enabled: true,
             frequency: const Duration(minutes: 1),
@@ -111,14 +113,17 @@ class SensorSamplingPackage implements SamplingPackage {
     ..measures.addEntries([
       MapEntry(
           ACCELEROMETER,
-          Measure(MeasureType(NameSpace.CARP, ACCELEROMETER),
+          Measure(
+              type: MeasureType(NameSpace.CARP, ACCELEROMETER),
               name: 'Accelerometer')),
-      MapEntry(GYROSCOPE,
-          Measure(MeasureType(NameSpace.CARP, GYROSCOPE), name: 'Gyroscope')),
+      MapEntry(
+          GYROSCOPE,
+          Measure(
+              type: MeasureType(NameSpace.CARP, GYROSCOPE), name: 'Gyroscope')),
       MapEntry(
           PERIODIC_ACCELEROMETER,
           PeriodicMeasure(
-            MeasureType(NameSpace.CARP, PERIODIC_ACCELEROMETER),
+            type: MeasureType(NameSpace.CARP, PERIODIC_ACCELEROMETER),
             name: 'Accelerometer',
             frequency: const Duration(seconds: 5),
             duration: const Duration(seconds: 1),
@@ -126,19 +131,20 @@ class SensorSamplingPackage implements SamplingPackage {
       MapEntry(
           PERIODIC_GYROSCOPE,
           PeriodicMeasure(
-            MeasureType(NameSpace.CARP, PERIODIC_GYROSCOPE),
+            type: MeasureType(NameSpace.CARP, PERIODIC_GYROSCOPE),
             name: 'Gyroscope',
             frequency: const Duration(seconds: 5),
             duration: const Duration(seconds: 1),
           )),
       MapEntry(
           PEDOMETER,
-          Measure(MeasureType(NameSpace.CARP, PEDOMETER),
+          Measure(
+              type: MeasureType(NameSpace.CARP, PEDOMETER),
               name: 'Pedometer (Step Count)')),
       MapEntry(
           LIGHT,
           PeriodicMeasure(
-            MeasureType(NameSpace.CARP, LIGHT),
+            type: MeasureType(NameSpace.CARP, LIGHT),
             name: 'Ambient Light',
             frequency: const Duration(seconds: 10),
             duration: const Duration(seconds: 2),

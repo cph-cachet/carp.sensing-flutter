@@ -92,7 +92,9 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 void example() async {
   // Create a study using a local file to store data
-  Study study = Study("2", 'user@cachet.dk',
+  Study study = Study(
+      id: '2',
+      userId: 'user@cachet.dk',
       name: 'A study collecting ..',
       dataEndPoint: FileDataEndPoint()
         ..bufferSize = 500 * 1000
@@ -136,8 +138,10 @@ In the following example, a study is created "by hand", i.e. you specify each tr
 ```dart
 void example() async {
   // Create a study using a local file to store data
-  Study study = Study("1234", "user@dtu.dk",
-      name: "An example study",
+  Study study = Study(
+      id: '1234',
+      userId: 'user@dtu.dk',
+      name: 'An example study',
       dataEndPoint: FileDataEndPoint()
         ..bufferSize = 500 * 1000
         ..zip = true
@@ -149,14 +153,16 @@ void example() async {
       DelayedTrigger(delay: Duration(seconds: 10)),
       AutomaticTask(name: 'Sensor Task')
         ..addMeasure(Measure(
-            MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER)))
+            type: MeasureType(
+                NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER)))
         ..addMeasure(Measure(
-            MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE))));
+            type:
+                MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE))));
 
   // create a light measure variable to be used later
   PeriodicMeasure lightMeasure = PeriodicMeasure(
-    MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
-    name: "Ambient Light",
+    type: MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
+    name: 'Ambient Light',
     frequency: const Duration(seconds: 11),
     duration: const Duration(milliseconds: 100),
   );
@@ -174,12 +180,12 @@ void example() async {
   // listening on all data events from the study
   controller.events.forEach(print);
 
-  // listen on only CARP events
+  // listen only for CARP events
   controller.events
       .where((datum) => datum.format.namespace == NameSpace.CARP)
       .forEach(print);
 
-  // listen on LIGHT events only
+  // listen for LIGHT events only
   controller.events
       .where((datum) => datum.format.name == SensorSamplingPackage.LIGHT)
       .forEach(print);
@@ -189,7 +195,9 @@ void example() async {
 
   // listening on a specific event type
   // this is equivalent to the statement above
-  ProbeRegistry().eventsByType(SensorSamplingPackage.LIGHT).forEach(print);
+  ProbeRegistry()
+      .eventsByType(SensorSamplingPackage.LIGHT)
+      .listen((event) => print(event));
 
   // subscribe to events
   StreamSubscription<Datum> subscription =

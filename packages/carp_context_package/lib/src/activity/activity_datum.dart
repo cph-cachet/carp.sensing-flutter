@@ -25,7 +25,7 @@ class ActivityDatum extends CARPDatum {
   factory ActivityDatum.fromActivity(ActivityEvent activityEvent) {
     ActivityDatum activityDatum = ActivityDatum();
     activityDatum.confidence = activityEvent.confidence;
-    activityDatum.type = activityEvent.type.toString().split(".").last;
+    activityDatum.type = activityEvent.type;
     return activityDatum;
   }
 
@@ -58,8 +58,11 @@ class ActivityDatum extends CARPDatum {
   /// * automotive => IN_VEHICLE
   /// * cycling => ON_BICYCLE
   /// * unknown => UNKNOWN
-  String type;
+  ActivityType type;
+
+  /// Activity [type] as a string.
+  String get typeString => type.toString().split(".").last;
 
   String toString() =>
-      super.toString() + ', type: $type, confidence: $confidence';
+      super.toString() + ', type: $typeString, confidence: $confidence';
 }

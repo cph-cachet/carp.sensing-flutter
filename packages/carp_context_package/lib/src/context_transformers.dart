@@ -40,7 +40,7 @@ class OMHPhysicalActivityDatum extends CARPDatum implements TransformedDatum {
   OMHPhysicalActivityDatum(this.activity);
 
   factory OMHPhysicalActivityDatum.fromActivityDatum(ActivityDatum act) =>
-      OMHPhysicalActivityDatum(omh.PhysicalActivity(act.type));
+      OMHPhysicalActivityDatum(omh.PhysicalActivity(act.typeString));
 
   factory OMHPhysicalActivityDatum.fromJson(Map<String, dynamic> json) =>
       OMHPhysicalActivityDatum(omh.PhysicalActivity.fromJson(json));

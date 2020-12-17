@@ -25,10 +25,9 @@ part of runtime;
 /// and such factories can be registered in the [AppTaskController]
 /// using the `registerUserTaskFactory` method.
 class AppTaskExecutor extends TaskExecutor {
-  AppTaskExecutor(AppTask task)
-      : assert(task is AppTask,
-            'AppTaskExecutor should be initialized with an AppTask.'),
-        super(task) {
+  AppTaskExecutor(AppTask task) : super(task) {
+    assert(task is AppTask,
+        'AppTaskExecutor should be initialized with an AppTask.');
     appTask = task;
 
     // create an embedded executor that later can be used to execute this task
@@ -46,16 +45,16 @@ class AppTaskExecutor extends TaskExecutor {
     _taskExecutor.initialize(measure);
   }
 
-  Future<void> onResume() async {
+  Future onResume() async {
     // when an app task is resumed it has to be put on the queue
     AppTaskController().enqueue(this);
   }
 
-  Future<void> onPause() async {
+  Future onPause() async {
     // TODO - don't know what to do on pause????
   }
 
-  Future<void> onStop() async {
+  Future onStop() async {
     _taskExecutor.stop();
     await super.onStop();
   }
@@ -71,11 +70,10 @@ abstract class UserTaskFactory {
   UserTask create(AppTaskExecutor executor);
 }
 
-/// A singleton controller of active (resumed / paused) [AppTaskExecutor]s.
+/// A controller of [UserTask]s which accessible in the [userTaskQueue].
 class AppTaskController {
   static final AppTaskController _instance = AppTaskController._();
-  final StreamController<UserTask> _controller =
-      StreamController<UserTask>.broadcast();
+  final StreamController<UserTask> _controller = StreamController.broadcast();
 
   final Map<String, UserTask> _userTaskMap = {};
 
@@ -94,6 +92,13 @@ class AppTaskController {
   factory AppTaskController() => _instance;
   AppTaskController._() {
     registerUserTaskFactory(SensingUserTaskFactory());
+
+    // set up a timer which cleans up in the queue once an hour
+    Timer.periodic(const Duration(hours: 1), (timer) {
+      userTaskQueue.forEach((task) {
+        if (task.expiresIn.isNegative) dequeue(task.id);
+      });
+    });
   }
 
   final Map<String, UserTaskFactory> _userTaskFactories = {};
@@ -129,7 +134,7 @@ class AppTaskController {
 
 /// A task that the user of the app needs to attend to.
 ///
-///
+/// A [UserTask] is enqueued in the [AppTaskController]'s queue.
 abstract class UserTask {
   final String _id = Uuid().v4();
   final AppTaskExecutor _executor;
@@ -143,6 +148,14 @@ abstract class UserTask {
   /// The time this task was added to the queue (enqueued).
   DateTime enqueued;
 
+  /// Returns a [Duration] until this task expires and is removed from the queue.
+  ///
+  /// The returned [Duration] will be negative if [this] has expired.
+  /// Returns `null` if this task never expires.
+  Duration get expiresIn => (_executor.appTask.expire == null)
+      ? null
+      : enqueued.add(_executor.appTask.expire).difference(DateTime.now());
+
   /// The state of this task.
   UserTaskState get state => _state;
 
@@ -152,7 +165,7 @@ abstract class UserTask {
   }
 
   final StreamController<UserTaskState> _stateController =
-      StreamController<UserTaskState>.broadcast();
+      StreamController.broadcast();
 
   /// A stream of state changes of this user task.
   ///

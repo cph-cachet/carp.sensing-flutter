@@ -15,27 +15,29 @@ class MobilityMeasure extends Measure {
   /// The duration of a stop (minimum).
   Duration stopDuration;
 
-  MobilityMeasure(MeasureType type,
-      {name,
-      enabled,
-      this.usePriorContexts,
-      this.stopRadius,
-      this.placeRadius,
-      this.stopDuration})
-      : super(type, name: name, enabled: enabled);
+  MobilityMeasure({
+    @required MeasureType type,
+    name,
+    enabled,
+    this.usePriorContexts,
+    this.stopRadius,
+    this.placeRadius,
+    this.stopDuration,
+  })
+      : super(type: type, name: name, enabled: enabled);
 
-  static Function get fromJsonFunction => _$MobilityMeasureFromJson;
+  Function get fromJsonFunction => _$MobilityMeasureFromJson;
 
   factory MobilityMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(
-          json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
 
   Map<String, dynamic> toJson() => _$MobilityMeasureToJson(this);
 
   String toString() =>
       super.toString() +
       ',usePriorContext: $usePriorContexts,'
-          'stopRadius: $stopRadius,'
-          'placeRadius: $placeRadius,'
-          'stopDuration: $stopDuration';
+      'stopRadius: $stopRadius,'
+      'placeRadius: $placeRadius,'
+      'stopDuration: $stopDuration';
 }

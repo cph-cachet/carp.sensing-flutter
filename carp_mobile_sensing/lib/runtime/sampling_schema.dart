@@ -4,7 +4,7 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of domain;
+part of runtime;
 
 String _encode(Object object) =>
     const JsonEncoder.withIndent(' ').convert(object);
@@ -83,7 +83,8 @@ class SamplingSchema {
   /// would return a list with a [Measure] for bluetooth, connectivity, etc.,
   /// each with default configurations from the [SamplingSchema.common()] schema.
   ///
-  /// If [namespace] is specified, then the returned measures' [MeasureType] belong to this namespace.
+  /// If [namespace] is specified, then the returned measures' [MeasureType]
+  /// belong to this namespace.
   /// Otherwise, the [NameSpace.UNKNOWN] is applied.
   List<Measure> getMeasureList(
       {String namespace = NameSpace.UNKNOWN, @required List<String> types}) {
@@ -157,7 +158,8 @@ class SamplingSchema {
 
   /// A default light sampling schema.
   ///
-  /// This schema is used in the power-aware adaptation of sampling. See [PowerAwarenessState].
+  /// This schema is used in the power-aware adaptation of sampling.
+  /// See [PowerAwarenessState].
   /// This schema is intended for sampling on a daily basis with recharging
   /// at least once pr. day. This scheme is power-aware.
   ///
@@ -180,7 +182,8 @@ class SamplingSchema {
 
   /// A default minimum sampling schema.
   ///
-  /// This schema is used in the power-aware adaptation of sampling. See [PowerAwarenessState].
+  /// This schema is used in the power-aware adaptation of sampling.
+  /// See [PowerAwarenessState].
   factory SamplingSchema.minimum({String namespace}) {
     SamplingSchema schema = SamplingSchema()
       ..type = SamplingSchemaType.MINIMUM
@@ -199,7 +202,8 @@ class SamplingSchema {
 
   /// A non-sampling sampling schema.
   ///
-  /// This schema is used in the power-aware adaptation of sampling. See [PowerAwarenessState].
+  /// This schema is used in the power-aware adaptation of sampling.
+  /// See [PowerAwarenessState].
   /// This schema pauses all sampling by disabling all probes.
   /// Sampling will be restored to the minimum level, once the device is
   /// recharged above the [PowerAwarenessState.MINIMUM_SAMPLING_LEVEL] level.
@@ -207,13 +211,14 @@ class SamplingSchema {
     SamplingSchema schema = SamplingSchema(
         type: SamplingSchemaType.NONE, name: 'No sampling', powerAware: true);
     DataType.all.forEach((key) => schema.measures[key] =
-        Measure(MeasureType(namespace, key), enabled: false));
+        Measure(type: MeasureType(namespace, key), enabled: false));
 
     return schema;
   }
 
   /// A sampling schema for debugging purposes.
-  /// Collects and combines the [SamplingPackage.debug] [SamplingSchema]s for each package.
+  /// Collects and combines the [SamplingPackage.debug] [SamplingSchema]s
+  /// for each package.
   factory SamplingSchema.debug({String namespace = NameSpace.CARP}) {
     SamplingSchema schema = SamplingSchema()
       ..type = SamplingSchemaType.DEBUG
@@ -245,20 +250,21 @@ class SamplingSchema {
           // if an adapted measure exists in this schema, adapt to it
           measure.adapt(measures[measure.type.name]);
         }
-        // notify listeners that the measure has changed due to restoration and/or adaptation
+        // notify listeners that the measure has changed due to restoration
+        // and/or adaptation
         measure.hasChanged();
       });
     });
   }
 }
 
-/// A enumeration of known sampling schemas types.
-class SamplingSchemaType {
-  static const String MAXIMUM = 'MAXIMUM';
-  static const String COMMON = 'COMMON';
-  static const String NORMAL = 'NORMAL';
-  static const String LIGHT = 'LIGHT';
-  static const String MINIMUM = 'MINIMUM';
-  static const String NONE = 'NONE';
-  static const String DEBUG = 'DEBUG';
-}
+// /// A enumeration of known sampling schemas types.
+// class SamplingSchemaType {
+//   static const String MAXIMUM = 'MAXIMUM';
+//   static const String COMMON = 'COMMON';
+//   static const String NORMAL = 'NORMAL';
+//   static const String LIGHT = 'LIGHT';
+//   static const String MINIMUM = 'MINIMUM';
+//   static const String NONE = 'NONE';
+//   static const String DEBUG = 'DEBUG';
+// }

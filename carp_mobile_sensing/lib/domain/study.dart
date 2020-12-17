@@ -38,8 +38,7 @@ class Study extends Serializable {
   /// this study and its purpose.
   String description;
 
-  /// The ID of the user executing this study. May be [null] if no user is
-  /// known.
+  /// The ID of the user executing this study.
   String userId;
 
   /// The sampling strategy according to [SamplingSchemaType].
@@ -52,30 +51,38 @@ class Study extends Serializable {
   /// [DataFormatType]. Default using the [NameSpace.CARP].
   String dataFormat;
 
+  /// The public key in a PKI setup for encryption of data in the [dataEndPoint].
+  String publicKey;
+
   /// The set of [Trigger]s which can trigger [Task](s) in this study.
   List<Trigger> triggers = [];
 
   /// Create a new [Study] object with a set of configurations.
   ///
-  /// The [id] and [userId] are required for a new study.
-  Study(this.id, this.userId,
-      {this.deploymentId,
-      this.name,
-      this.description,
-      this.samplingStrategy,
-      this.dataEndPoint,
-      this.dataFormat})
-      : assert(id != null, 'Cannot create a Study without an id: id=null'),
-        assert(userId != null,
-            'Cannot create a Study without an user id: userId=null'),
-        super() {
+  /// The [id]  is required for a new study.
+  /// If a [userId] is not specified, an anonymous unique id will be created
+  /// for this user on this phone.
+  /// If no [dataFormat] the CARP namespace is used.
+  Study({
+    @required this.id,
+    this.userId,
+    this.deploymentId,
+    this.name,
+    this.description,
+    this.samplingStrategy,
+    this.dataEndPoint,
+    this.dataFormat,
+    this.publicKey,
+  })
+      : super() {
+    assert(id != null, 'Cannot create a Study without an id: id=null');
     samplingStrategy ??= SamplingSchemaType.NORMAL;
     dataFormat ??= NameSpace.CARP;
   }
 
-  static Function get fromJsonFunction => _$StudyFromJson;
-  factory Study.fromJson(Map<String, dynamic> json) => FromJsonFactory.fromJson(
-      json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Function get fromJsonFunction => _$StudyFromJson;
+  factory Study.fromJson(Map<String, dynamic> json) => FromJsonFactory()
+      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$StudyToJson(this);
 
   /// Add a [Trigger] to this [Study]
@@ -112,14 +119,11 @@ class DataEndPoint extends Serializable {
   String type;
 
   /// Creates a [DataEndPoint]. [type] is defined in [DataEndPointTypes].
-  DataEndPoint(this.type)
-      : assert(type != null),
-        super();
+  DataEndPoint({this.type}) : super();
 
-  static Function get fromJsonFunction => _$DataEndPointFromJson;
-  factory DataEndPoint.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(
-          json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Function get fromJsonFunction => _$DataEndPointFromJson;
+  factory DataEndPoint.fromJson(Map<String, dynamic> json) => FromJsonFactory()
+      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$DataEndPointToJson(this);
 
   String toString() => type;

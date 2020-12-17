@@ -23,23 +23,28 @@ part of survey;
 ///
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class RPTaskMeasure extends Measure {
+  // TODO - remove when research_package supports serialization
   /// The survey to be issued to the user.
-  @JsonKey(
-      ignore:
-          true) // TODO - remove when research_package supports serialization
+  @JsonKey(ignore: true)
   RPTask surveyTask;
 
-  RPTaskMeasure(
-    MeasureType type, {
+  RPTaskMeasure({
+    @required MeasureType type,
     String name,
+    String description,
     bool enabled,
     this.surveyTask,
-  }) : super(type, name: name, enabled: enabled);
+  })
+      : super(
+          type: type,
+          name: name,
+          description: description,
+          enabled: enabled,
+        );
 
-  static Function get fromJsonFunction => _$RPTaskMeasureFromJson;
-  factory RPTaskMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(
-          json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Function get fromJsonFunction => _$RPTaskMeasureFromJson;
+  factory RPTaskMeasure.fromJson(Map<String, dynamic> json) => FromJsonFactory()
+      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$RPTaskMeasureToJson(this);
 }
 

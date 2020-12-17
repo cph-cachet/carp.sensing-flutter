@@ -13,7 +13,8 @@ LocationManager locationManager = LocationManager.instance;
 /// Get the last known position.
 /// If not known, tries to get it from the [Geolocator].
 Future<Position> getLastKnownPosition() async =>
-    await Geolocator.getLastKnownPosition() ?? await Geolocator.getCurrentPosition();
+    await Geolocator.getLastKnownPosition() ??
+    await Geolocator.getCurrentPosition();
 
 /// Collects location information from the underlying OS's location API.
 /// Is a [DatumProbe] that collects a [LocationDatum] once when used.
@@ -33,8 +34,9 @@ class LocationProbe extends DatumProbe {
   // Future<Datum> getDatum() async =>
   //     locationManager.getCurrentLocation().then((dto) => LocationDatum.fromLocationDto(dto));
   // using the Geolocator package - seems more stable over long-term sampling.
-  Future<Datum> getDatum() async =>
-      Geolocator.getCurrentPosition().then((position) => LocationDatum.fromPosition(position));
+  Future<Datum> getDatum() async => Geolocator
+      .getCurrentPosition()
+      .then((position) => LocationDatum.fromPosition(position));
 }
 
 /// Collects geolocation information from the underlying OS's location API.
@@ -50,11 +52,14 @@ class GeoLocationProbe extends StreamProbe {
 
     locationManager.distanceFilter = (measure as LocationMeasure).distance;
     locationManager.interval = (measure as LocationMeasure).frequency.inSeconds;
-    locationManager.notificationTitle = (measure as LocationMeasure).notificationTitle;
-    locationManager.notificationMsg = (measure as LocationMeasure).notificationMsg;
+    locationManager.notificationTitle =
+        (measure as LocationMeasure).notificationTitle;
+    locationManager.notificationMsg =
+        (measure as LocationMeasure).notificationMsg;
 
     locationManager.start(askForPermission: false);
   }
 
-  Stream<LocationDatum> get stream => locationManager.dtoStream.map((dto) => LocationDatum.fromLocationDto(dto));
+  Stream<LocationDatum> get stream => locationManager.dtoStream
+      .map((dto) => LocationDatum.fromLocationDto(dto));
 }

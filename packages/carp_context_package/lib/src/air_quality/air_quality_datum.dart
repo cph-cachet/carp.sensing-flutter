@@ -17,7 +17,7 @@ class AirQualityDatum extends CARPDatum {
 
   int airQualityIndex;
   String source, place;
-  double latitude, longitude;
+  var latitude, longitude;
   AirQualityLevel airQualityLevel;
 
   AirQualityDatum() : super();

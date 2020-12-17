@@ -7,7 +7,7 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 void main() async {
   SamplingPackageRegistry().register(AppsSamplingPackage());
 
-  Study study = Study("1234", "xyz", name: "apps study");
+  Study study = Study(id: "1234", userId: "xyz", name: "apps study");
 
   // creating a task collecting a list of installed apps and app usage
   study.addTriggerTask(
@@ -15,13 +15,13 @@ void main() async {
       Task(name: 'Step and blood pressure')
         ..addMeasure(
           Measure(
-            MeasureType(NameSpace.CARP, AppsSamplingPackage.APP_USAGE),
+            type: MeasureType(NameSpace.CARP, AppsSamplingPackage.APP_USAGE),
             name: 'App usage',
           ),
         )
         ..addMeasure(
           Measure(
-            MeasureType(NameSpace.CARP, AppsSamplingPackage.APPS),
+            type: MeasureType(NameSpace.CARP, AppsSamplingPackage.APPS),
             name: 'Installed apps',
           ),
         ));

@@ -17,7 +17,7 @@ class WeatherDatum extends CARPDatum {
 
   String country, areaName, weatherMain, weatherDescription;
   DateTime date, sunrise, sunset;
-  double latitude,
+  var latitude,
       longitude,
       pressure,
       windSpeed,

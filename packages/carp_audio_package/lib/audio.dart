@@ -7,6 +7,7 @@ library audio;
 import 'dart:async';
 import 'dart:io';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+import 'package:flutter/material.dart';
 import 'package:record_mp3/record_mp3.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:json_annotation/json_annotation.dart';

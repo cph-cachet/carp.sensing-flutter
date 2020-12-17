@@ -19,6 +19,7 @@ class AppTask extends Task {
     this.description,
     this.instructions,
     this.minutesToComplete,
+    this.expire,
     this.notification = false,
   })
       : super(name: name);
@@ -39,12 +40,16 @@ class AppTask extends Task {
   /// Typically shown to the user before engaging into this task.
   int minutesToComplete;
 
+  /// The duration of this app task, i.e. when it expire and is removed
+  /// from the [AppTaskController]'s queue.
+  Duration expire;
+
   // TODO - implement this ;-)
   /// Should a notification be send to the user on the phone?
   bool notification = false;
 
-  static Function get fromJsonFunction => _$AppTaskFromJson;
-  factory AppTask.fromJson(Map<String, dynamic> json) => FromJsonFactory
+  Function get fromJsonFunction => _$AppTaskFromJson;
+  factory AppTask.fromJson(Map<String, dynamic> json) => FromJsonFactory()
       .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$AppTaskToJson(this);
 }

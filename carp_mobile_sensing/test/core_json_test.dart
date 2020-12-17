@@ -15,7 +15,11 @@ void main() {
     //SamplingPackageRegistry.register(CommunicationSamplingPackage());
     //SamplingPackageRegistry.register(ContextSamplingPackage());
 
-    study = Study('1234', 'bardram', name: 'bardram study', deploymentId: '#1');
+    study = Study(
+        id: '1234',
+        userId: 'bardram',
+        name: 'bardram study',
+        deploymentId: '#1');
     //study.dataEndPoint = DataEndPoint(DataEndPointType.PRINT);
     study.dataEndPoint = FileDataEndPoint()
       ..bufferSize = 50 * 1000
@@ -99,7 +103,8 @@ void main() {
   });
 
   test('Triggers -> JSON', () async {
-    Study study_3 = Study('3', 'bardram', name: 'Multi Trigger Study');
+    Study study_3 =
+        Study(id: '3', userId: 'bardram', name: 'Multi Trigger Study');
     study_3.dataEndPoint = FileDataEndPoint()
       ..bufferSize = 50 * 1000
       ..zip = true
