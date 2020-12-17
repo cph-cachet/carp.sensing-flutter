@@ -7,7 +7,7 @@ part of context;
 class GeofenceProbe extends StreamProbe {
   Geofence fence;
   StreamController<GeofenceDatum> geoFenceStreamController =
-      StreamController<GeofenceDatum>.broadcast();
+      StreamController.broadcast();
 
   void onInitialize(Measure measure) {
     assert(measure is GeofenceMeasure);

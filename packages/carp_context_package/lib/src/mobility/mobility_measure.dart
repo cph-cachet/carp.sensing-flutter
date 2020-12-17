@@ -23,7 +23,8 @@ class MobilityMeasure extends Measure {
     this.stopRadius,
     this.placeRadius,
     this.stopDuration,
-  }) : super(type: type, name: name, enabled: enabled);
+  })
+      : super(type: type, name: name, enabled: enabled);
 
   Function get fromJsonFunction => _$MobilityMeasureFromJson;
 
@@ -36,7 +37,7 @@ class MobilityMeasure extends Measure {
   String toString() =>
       super.toString() +
       ',usePriorContext: $usePriorContexts,'
-          'stopRadius: $stopRadius,'
-          'placeRadius: $placeRadius,'
-          'stopDuration: $stopDuration';
+      'stopRadius: $stopRadius,'
+      'placeRadius: $placeRadius,'
+      'stopDuration: $stopDuration';
 }

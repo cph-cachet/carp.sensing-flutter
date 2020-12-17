@@ -25,9 +25,10 @@ class GeoPosition extends Serializable {
   /// Longitude in GPS coordinates.
   final double longitude;
 
-  GeoPosition(this.latitude, this.longitude)
-      : assert(latitude != null),
-        assert(longitude != null);
+  GeoPosition(this.latitude, this.longitude) {
+    assert(latitude != null);
+    assert(longitude != null);
+  }
 
   GeoPosition.fromLocationDto(LocationDto location)
       : latitude = location.latitude,
@@ -96,7 +97,8 @@ class GeofenceMeasure extends Measure {
     this.center,
     this.radius,
     this.name,
-  }) : super(type: type, enabled: enabled);
+  })
+      : super(type: type, enabled: enabled);
 
   Function get fromJsonFunction => _$GeofenceMeasureFromJson;
   factory GeofenceMeasure.fromJson(Map<String, dynamic> json) =>

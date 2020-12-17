@@ -7,7 +7,8 @@ class WeatherProbe extends DatumProbe {
   void onInitialize(Measure measure) {
     super.onInitialize(measure);
     WeatherMeasure wm = measure as WeatherMeasure;
-    assert(wm.apiKey != null, 'In order to use the Weather API, an API key must be provided.');
+    assert(wm.apiKey != null,
+        'In order to use the Weather API, an API key must be provided.');
     _wf = WeatherFactory(wm.apiKey);
   }
 
@@ -17,7 +18,8 @@ class WeatherProbe extends DatumProbe {
       Position loc = await getLastKnownPosition();
 
       if (loc != null) {
-        Weather w = await _wf.currentWeatherByLocation(loc?.latitude, loc?.longitude);
+        Weather w =
+            await _wf.currentWeatherByLocation(loc?.latitude, loc?.longitude);
 
         if (w != null)
           return WeatherDatum()
