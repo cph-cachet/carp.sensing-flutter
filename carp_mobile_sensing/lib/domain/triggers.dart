@@ -112,7 +112,8 @@ class PeriodicTrigger extends Trigger {
     String triggerId,
     @required this.period,
     this.duration = const Duration(seconds: 1),
-  }) : super(triggerId: triggerId);
+  })
+      : super(triggerId: triggerId);
 
   Function get fromJsonFunction => _$PeriodicTriggerFromJson;
   factory PeriodicTrigger.fromJson(Map<String, dynamic> json) =>
@@ -135,7 +136,8 @@ class ScheduledTrigger extends Trigger {
     String triggerId,
     @required this.schedule,
     this.duration,
-  }) : super(triggerId: triggerId);
+  })
+      : super(triggerId: triggerId);
 
   Function get fromJsonFunction => _$ScheduledTriggerFromJson;
   factory ScheduledTrigger.fromJson(Map<String, dynamic> json) =>
@@ -311,13 +313,12 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
       //this.monthOfYear,
       this.remember = false,
       Duration duration = const Duration(seconds: 10)})
-      : assert(duration != null, 'duration must be specified.'),
-        assert(
-            separationCount >= 0, 'Separation count must be zero or positive.'),
-        super(
+      : super(
             triggerId: triggerId,
             period: const Duration(seconds: 1),
             duration: duration) {
+    assert(duration != null, 'duration must be specified.');
+    assert(separationCount >= 0, 'Separation count must be zero or positive.');
     if (type == RecurrentType.weekly) {
       assert(dayOfWeek != null,
           'dayOfWeek must be specified in a weekly recurrence.');
@@ -493,7 +494,8 @@ class CronScheduledTrigger extends Trigger {
     String triggerId,
     this.cronExpression,
     this.duration = const Duration(seconds: 1),
-  }) : super(triggerId: triggerId);
+  })
+      : super(triggerId: triggerId);
 
   static String _cronToString(
           int minute, int hour, int day, int month, int weekday) =>
@@ -522,7 +524,8 @@ class SamplingEventTrigger extends Trigger {
     @required this.measureType,
     this.resumeCondition,
     this.pauseCondition,
-  }) : super(triggerId: triggerId);
+  })
+      : super(triggerId: triggerId);
 
   /// The [MeasureType] of the event to look for.
   ///
@@ -582,7 +585,8 @@ class ConditionalSamplingEventTrigger extends Trigger {
     @required this.measureType,
     this.resumeCondition,
     this.pauseCondition,
-  }) : super(triggerId: triggerId);
+  })
+      : super(triggerId: triggerId);
 
   /// The [MeasureType] of the event to look for.
   MeasureType measureType;

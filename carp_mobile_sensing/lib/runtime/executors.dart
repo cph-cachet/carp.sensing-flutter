@@ -11,7 +11,7 @@ part of runtime;
 /// See [StudyExecutor] and [TaskExecutor] for examples.
 abstract class Executor extends AbstractProbe {
   static final Device deviceInfo = Device();
-  final StreamGroup<Datum> _group = StreamGroup<Datum>.broadcast();
+  final StreamGroup<Datum> _group = StreamGroup.broadcast();
   List<Probe> executors = [];
   Stream<Datum> get events => _group.stream;
 
@@ -21,19 +21,19 @@ abstract class Executor extends AbstractProbe {
     executors.forEach((executor) => executor.initialize(measure));
   }
 
-  Future<void> onPause() async {
+  Future onPause() async {
     executors.forEach((executor) => executor.pause());
   }
 
-  Future<void> onResume() async {
+  Future onResume() async {
     executors.forEach((executor) => executor.resume());
   }
 
-  Future<void> onRestart({Measure measure}) async {
+  Future onRestart({Measure measure}) async {
     executors.forEach((executor) => executor.restart());
   }
 
-  Future<void> onStop() async {
+  Future onStop() async {
     executors.forEach((executor) => executor.stop());
     executors = [];
   }
@@ -50,14 +50,12 @@ abstract class Executor extends AbstractProbe {
 /// This - amongst other things - imply that you can listen to datum [events] from a study executor.
 class StudyExecutor extends Executor {
   final StreamController<Datum> _manualDatumController =
-      StreamController<Datum>.broadcast();
+      StreamController.broadcast();
   Study get study => _study;
   Study _study;
 
-  StudyExecutor(Study study)
-      : assert(
-            study != null, 'Cannot initiate a StudyExecutor without a Study.'),
-        super() {
+  StudyExecutor(Study study) : super() {
+    assert(study != null, 'Cannot initiate a StudyExecutor without a Study.');
     _study = study;
     _group.add(_manualDatumController.stream);
     for (Trigger trigger in study.triggers) {
@@ -67,7 +65,7 @@ class StudyExecutor extends Executor {
     }
   }
 
-  Future<void> onResume() async {
+  Future onResume() async {
     // check the start time for this study on this phone
     // this will save it, the first time the study is executed
     DateTime studyStartTimestamp = await settings.studyStartTimestamp;
@@ -139,10 +137,9 @@ abstract class TriggerExecutor extends Executor {
   Trigger _trigger;
   Trigger get trigger => _trigger;
 
-  TriggerExecutor(Trigger trigger)
-      : assert(trigger != null,
-            'Cannot initiate a TriggerExecutor without a Trigger.'),
-        super() {
+  TriggerExecutor(Trigger trigger) : super() {
+    assert(trigger != null,
+        'Cannot initiate a TriggerExecutor without a Trigger.');
     _trigger = trigger;
 
     for (Task task in trigger.tasks) {
@@ -186,13 +183,13 @@ class ManualTriggerExecutor extends TriggerExecutor {
 
   // A no-op methods since a ManualTrigger can only be resumed/paused
   // using the resume/pause methods on the ManualTrigger.
-  Future<void> onResume() async {}
-  Future<void> onPause() async {}
+  Future onResume() async {}
+  Future onPause() async {}
 
   // Forward to the embedded trigger executor
-  Future<void> onRestart({Measure measure}) async =>
+  Future onRestart({Measure measure}) async =>
       (trigger as ManualTrigger).executor.restart();
-  Future<void> onStop() async => (trigger as ManualTrigger).executor.stop();
+  Future onStop() async => (trigger as ManualTrigger).executor.stop();
 
   List<Probe> get probes => (trigger as ManualTrigger).executor.probes;
 }
@@ -202,7 +199,7 @@ class ManualTriggerExecutor extends TriggerExecutor {
 class DelayedTriggerExecutor extends TriggerExecutor {
   DelayedTriggerExecutor(DelayedTrigger trigger) : super(trigger);
 
-  Future<void> onResume() async {
+  Future onResume() async {
     Timer((trigger as DelayedTrigger).delay, () {
       // after a delay, resume this trigger and its tasks
       super.onResume();
@@ -227,7 +224,7 @@ class PeriodicTriggerExecutor extends TriggerExecutor {
     duration = trigger.duration;
   }
 
-  Future<void> onResume() async {
+  Future onResume() async {
     // resume first time, and pause after the specified duration.
     await super.onResume();
     Timer(duration, () {
@@ -244,7 +241,7 @@ class PeriodicTriggerExecutor extends TriggerExecutor {
     });
   }
 
-  Future<void> onPause() async {
+  Future onPause() async {
     timer.cancel();
     await super.onPause();
   }
@@ -264,7 +261,7 @@ class ScheduledTriggerExecutor extends TriggerExecutor {
     duration = trigger.duration;
   }
 
-  Future<void> onResume() async {
+  Future onResume() async {
     timer = Timer(delay, () {
       // after the waiting time (delay) is over, resume this trigger
       super.onResume();
@@ -278,7 +275,7 @@ class ScheduledTriggerExecutor extends TriggerExecutor {
     });
   }
 
-  Future<void> onPause() async {
+  Future onPause() async {
     timer.cancel();
     await super.onPause();
   }
@@ -293,7 +290,7 @@ class RecurrentScheduledTriggerExecutor extends PeriodicTriggerExecutor {
     _myTrigger = trigger;
   }
 
-  Future<void> onResume() async {
+  Future onResume() async {
     // check if there is a remembered trigger date
     if (_myTrigger.remember) {
       String _savedFirstOccurrence =
@@ -350,7 +347,7 @@ class CronScheduledTriggerExecutor extends TriggerExecutor {
     _cron = cron.Cron();
   }
 
-  Future<void> onResume() async {
+  Future onResume() async {
     debug(
         'creating cron job : ${(trigger as CronScheduledTrigger).toString()}');
     _scheduledTask = _cron.schedule(_schedule, () async {
@@ -360,7 +357,7 @@ class CronScheduledTriggerExecutor extends TriggerExecutor {
     });
   }
 
-  Future<void> onPause() async {
+  Future onPause() async {
     await _scheduledTask.cancel();
     await super.onPause();
   }
@@ -373,7 +370,7 @@ class SamplingEventTriggerExecutor extends TriggerExecutor {
 
   StreamSubscription<Datum> _subscription;
 
-  Future<void> onResume() async {
+  Future onResume() async {
     SamplingEventTrigger eventTrigger = trigger as SamplingEventTrigger;
     // start listen for events of the specified type
     _subscription = ProbeRegistry()
@@ -386,7 +383,7 @@ class SamplingEventTriggerExecutor extends TriggerExecutor {
     });
   }
 
-  Future<void> onPause() async {
+  Future onPause() async {
     // stop the listening
     await _subscription.cancel();
     await super.onPause();
@@ -404,7 +401,7 @@ class ConditionalSamplingEventTriggerExecutor extends TriggerExecutor {
 
   StreamSubscription<Datum> _subscription;
 
-  Future<void> onResume() async {
+  Future onResume() async {
     ConditionalSamplingEventTrigger eventTrigger =
         trigger as ConditionalSamplingEventTrigger;
 
@@ -419,7 +416,7 @@ class ConditionalSamplingEventTriggerExecutor extends TriggerExecutor {
     });
   }
 
-  Future<void> onPause() async {
+  Future onPause() async {
     await _subscription.cancel();
     await super.onPause();
   }
@@ -455,9 +452,8 @@ class TaskExecutor extends Executor {
   /// Returns a list of the running probes in this task executor.
   List<Probe> get probes => executors;
 
-  TaskExecutor(Task task)
-      : assert(task != null, 'Cannot initiate a TaskExecutor without a Task.'),
-        super() {
+  TaskExecutor(Task task) : super() {
+    assert(task != null, 'Cannot initiate a TaskExecutor without a Task.');
     _task = task;
   }
 
@@ -481,8 +477,8 @@ class TaskExecutor extends Executor {
 
 /// Executes an [AutomaticTask].
 class AutomaticTaskExecutor extends TaskExecutor {
-  AutomaticTaskExecutor(AutomaticTask task)
-      : assert(task is AutomaticTask,
-            'AutomaticTaskExecutor should be initialized with a AutomaticTask.'),
-        super(task);
+  AutomaticTaskExecutor(AutomaticTask task) : super(task) {
+    assert(task is AutomaticTask,
+        'AutomaticTaskExecutor should be initialized with a AutomaticTask.');
+  }
 }

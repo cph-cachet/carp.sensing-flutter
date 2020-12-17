@@ -28,7 +28,7 @@ class ProbeRegistry {
   /// All running probes mapped according to their [DataType].
   Map<String, Set<Probe>> get probes => _probes;
 
-  final StreamGroup<Datum> _group = StreamGroup<Datum>.broadcast();
+  final StreamGroup<Datum> _group = StreamGroup.broadcast();
 
   /// A stream of all events from all probes.
   Stream<Datum> get events => _group.stream;

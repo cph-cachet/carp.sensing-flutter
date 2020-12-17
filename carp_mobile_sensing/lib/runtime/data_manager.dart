@@ -14,10 +14,10 @@ abstract class DataManager {
 
   /// Initialize the data manager by specifying the running [Study]
   /// and the stream of [Datum] events to handle.
-  Future<void> initialize(Study study, Stream<Datum> data);
+  Future initialize(Study study, Stream<Datum> data);
 
   /// Close the data manager (e.g. closing connections).
-  Future<void> close();
+  Future close();
 
   /// Stream of data manager events.
   Stream<DataManagerEvent> get events;
@@ -38,18 +38,17 @@ abstract class DataManager {
 abstract class AbstractDataManager implements DataManager {
   Study study;
 
-  StreamController<DataManagerEvent> controller =
-      StreamController<DataManagerEvent>.broadcast();
+  StreamController<DataManagerEvent> controller = StreamController.broadcast();
   Stream<DataManagerEvent> get events => controller.stream;
   void addEvent(DataManagerEvent event) => controller.add(event);
 
-  Future<void> initialize(Study study, Stream<Datum> data) async {
+  Future initialize(Study study, Stream<Datum> data) async {
     this.study = study;
     data.listen(onDatum, onError: onError, onDone: onDone);
     addEvent(DataManagerEvent(DataManagerEventTypes.INITIALIZED));
   }
 
-  Future<void> close() async =>
+  Future close() async =>
       addEvent(DataManagerEvent(DataManagerEventTypes.CLOSED));
 
   void onDatum(Datum datum);
@@ -92,7 +91,7 @@ class DataManagerRegistry {
 /// Is mainly used to get and save a [Study].
 abstract class StudyManager {
   /// Initialize the study receiver.
-  Future<void> initialize();
+  Future initialize();
 
   /// Get a [Study] based on its ID.
   Future<Study> getStudy(String studyId);

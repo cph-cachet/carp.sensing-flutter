@@ -79,8 +79,9 @@ class StudyController {
     this.privacySchemaName,
     this.transformer,
     this.debugLevel = DebugLevel.WARNING,
-  })  : assert(study != null),
-        super() {
+  })
+      : super() {
+    assert(study != null);
     // set global debug level
     globalDebugLevel = debugLevel;
 
@@ -106,7 +107,7 @@ class StudyController {
 
   /// Initialize this controller. Must be called only once,
   /// and before [resume] is called.
-  Future<void> initialize() async {
+  Future initialize() async {
     assert(executor.validNextState(ProbeState.initialized),
         'The study executor cannot be initialized - it is in state ${executor.state}');
 
@@ -156,7 +157,7 @@ class StudyController {
   final BatteryProbe _battery = BatteryProbe();
 
   /// Enable power-aware sensing in this study. See [PowerAwarenessState].
-  Future<void> enablePowerAwareness() async {
+  Future enablePowerAwareness() async {
     if (samplingSchema.powerAware) {
       _battery.events.listen((datum) {
         BatteryDatum batteryState = (datum as BatteryDatum);

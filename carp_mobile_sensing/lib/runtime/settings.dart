@@ -26,7 +26,7 @@ class SettingsBLoC {
 
   /// Package information
   PackageInfo get packageInfo => _packageInfo;
-  Future<void> init() async {
+  Future init() async {
     _preferences = await SharedPreferences.getInstance();
     _packageInfo = await PackageInfo.fromPlatform();
 

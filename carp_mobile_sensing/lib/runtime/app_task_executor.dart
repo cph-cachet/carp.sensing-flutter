@@ -25,10 +25,9 @@ part of runtime;
 /// and such factories can be registered in the [AppTaskController]
 /// using the `registerUserTaskFactory` method.
 class AppTaskExecutor extends TaskExecutor {
-  AppTaskExecutor(AppTask task)
-      : assert(task is AppTask,
-            'AppTaskExecutor should be initialized with an AppTask.'),
-        super(task) {
+  AppTaskExecutor(AppTask task) : super(task) {
+    assert(task is AppTask,
+        'AppTaskExecutor should be initialized with an AppTask.');
     appTask = task;
 
     // create an embedded executor that later can be used to execute this task
@@ -46,16 +45,16 @@ class AppTaskExecutor extends TaskExecutor {
     _taskExecutor.initialize(measure);
   }
 
-  Future<void> onResume() async {
+  Future onResume() async {
     // when an app task is resumed it has to be put on the queue
     AppTaskController().enqueue(this);
   }
 
-  Future<void> onPause() async {
+  Future onPause() async {
     // TODO - don't know what to do on pause????
   }
 
-  Future<void> onStop() async {
+  Future onStop() async {
     _taskExecutor.stop();
     await super.onStop();
   }
@@ -74,8 +73,7 @@ abstract class UserTaskFactory {
 /// A controller of [UserTask]s which accessible in the [userTaskQueue].
 class AppTaskController {
   static final AppTaskController _instance = AppTaskController._();
-  final StreamController<UserTask> _controller =
-      StreamController<UserTask>.broadcast();
+  final StreamController<UserTask> _controller = StreamController.broadcast();
 
   final Map<String, UserTask> _userTaskMap = {};
 
@@ -167,7 +165,7 @@ abstract class UserTask {
   }
 
   final StreamController<UserTaskState> _stateController =
-      StreamController<UserTaskState>.broadcast();
+      StreamController.broadcast();
 
   /// A stream of state changes of this user task.
   ///

@@ -73,8 +73,9 @@ class Study extends Serializable {
     this.dataEndPoint,
     this.dataFormat,
     this.publicKey,
-  })  : assert(id != null, 'Cannot create a Study without an id: id=null'),
-        super() {
+  })
+      : super() {
+    assert(id != null, 'Cannot create a Study without an id: id=null');
     samplingStrategy ??= SamplingSchemaType.NORMAL;
     dataFormat ??= NameSpace.CARP;
   }

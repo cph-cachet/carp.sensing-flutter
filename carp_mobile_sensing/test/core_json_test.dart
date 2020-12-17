@@ -30,7 +30,8 @@ void main() {
     study.addTriggerTask(
         ImmediateTrigger(), // a simple trigger that starts immediately
         AutomaticTask(name: 'Sampling Task')
-          ..measures = SamplingSchema.common(namespace: NameSpace.CARP)
+          ..measures = SamplingSchema
+              .common(namespace: NameSpace.CARP)
               .measures
               .values
               .toList() // a task with all measures
@@ -135,7 +136,8 @@ void main() {
     study_3.addTriggerTask(
         t1,
         AutomaticTask(name: 'Sensing Task #1')
-          ..measures = SamplingSchema.common()
+          ..measures = SamplingSchema
+              .common()
               .getMeasureList(types: [DeviceSamplingPackage.MEMORY]));
 
     // collect every other day at 13:30.
@@ -188,7 +190,8 @@ void main() {
                 MeasureType(NameSpace.CARP, DeviceSamplingPackage.BATTERY),
             resumeCondition: BatteryDatum()..batteryLevel = 10),
         AutomaticTask(name: 'Sensing Task #1')
-          ..measures = SamplingSchema.common()
+          ..measures = SamplingSchema
+              .common()
               .getMeasureList(types: [SensorSamplingPackage.LIGHT]));
 
     study_3.addTriggerTask(
@@ -198,7 +201,8 @@ void main() {
             resumeCondition: (datum) =>
                 (datum as BatteryDatum).batteryLevel == 10),
         AutomaticTask(name: 'Sensing Task #1')
-          ..measures = SamplingSchema.common()
+          ..measures = SamplingSchema
+              .common()
               .getMeasureList(types: [SensorSamplingPackage.LIGHT]));
 
     final studyJson = _encode(study_3);

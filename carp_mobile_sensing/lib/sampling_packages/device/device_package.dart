@@ -39,22 +39,29 @@ class DeviceSamplingPackage implements SamplingPackage {
     ..measures.addEntries([
       MapEntry(
           DEVICE,
-          Measure(type: MeasureType(NameSpace.CARP, DEVICE),
-              name: 'Basic Device Info', enabled: true)),
+          Measure(
+              type: MeasureType(NameSpace.CARP, DEVICE),
+              name: 'Basic Device Info',
+              enabled: true)),
       MapEntry(
           MEMORY,
-          PeriodicMeasure(type: MeasureType(NameSpace.CARP, MEMORY),
+          PeriodicMeasure(
+              type: MeasureType(NameSpace.CARP, MEMORY),
               name: 'Memory Usage',
               enabled: true,
               frequency: const Duration(minutes: 1))),
       MapEntry(
           BATTERY,
-          Measure(type: MeasureType(NameSpace.CARP, BATTERY),
-              name: 'Battery', enabled: true)),
+          Measure(
+              type: MeasureType(NameSpace.CARP, BATTERY),
+              name: 'Battery',
+              enabled: true)),
       MapEntry(
           SCREEN,
-          Measure(type: MeasureType(NameSpace.CARP, SCREEN),
-              name: 'Screen Activity (lock/on/off)', enabled: true)),
+          Measure(
+              type: MeasureType(NameSpace.CARP, SCREEN),
+              name: 'Screen Activity (lock/on/off)',
+              enabled: true)),
     ]);
 
   SamplingSchema get light => common
