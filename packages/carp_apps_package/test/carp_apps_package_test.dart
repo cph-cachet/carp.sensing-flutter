@@ -19,7 +19,8 @@ void main() {
       ..addTriggerTask(
           ImmediateTrigger(),
           AutomaticTask(name: 'Task #1')
-            ..measures = SamplingSchema.common(namespace: NameSpace.CARP)
+            ..measures = SamplingSchema
+                .common(namespace: NameSpace.CARP)
                 .measures
                 .values
                 .toList());
