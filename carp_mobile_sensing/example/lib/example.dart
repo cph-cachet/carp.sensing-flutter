@@ -94,7 +94,7 @@ void example_2() async {
   // listening on all data events from the study
   controller.events.listen((event) => print(event));
 
-  // listen on only CARP events
+  // listen only on CARP events
   controller.events
       .where((datum) => datum.format.namespace == NameSpace.CARP)
       .listen((event) => print(event));
@@ -176,8 +176,7 @@ void samplingSchemaExample() async {
     ..addTriggerTask(
         ImmediateTrigger(),
         AutomaticTask()
-          ..measures = SamplingSchema
-              .common(namespace: NameSpace.CARP)
+          ..measures = SamplingSchema.common(namespace: NameSpace.CARP)
               .measures
               .values
               .toList());
