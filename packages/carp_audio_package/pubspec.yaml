@@ -14,18 +14,18 @@ dependencies:
   flutter:
     sdk: flutter
   json_annotation: ^3.0.0
-  #carp_mobile_sensing: ^0.11.0
+  carp_mobile_sensing: ^0.11.0
   record_mp3: ^2.1.0  # audio probe, recording audio as mp3
   noise_meter: ^2.0.0     # Measuring noise level
   path_provider: ^1.6.0
   stats: ^1.0.0
-  permission_handler: ^5.0.1+1
+  permission_handler: ^5.0.0
 
 # Overriding carp libraries to use the local copy
 # Remove this before release of package
-dependency_overrides:
-  carp_mobile_sensing:
-    path: ../../carp_mobile_sensing/
+#dependency_overrides:
+#  carp_mobile_sensing:
+#    path: ../../carp_mobile_sensing/
 
 dev_dependencies:
   flutter_test:

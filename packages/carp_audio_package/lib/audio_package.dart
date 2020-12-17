@@ -37,8 +37,8 @@ class AudioSamplingPackage implements SamplingPackage {
   }
 
   void onRegister() {
-    FromJsonFactory().register(AudioMeasure());
-    FromJsonFactory().register(NoiseMeasure());
+    FromJsonFactory().register(AudioMeasure(type: null));
+    FromJsonFactory().register(NoiseMeasure(type: null));
   }
 
   List<Permission> get permissions => [Permission.microphone];
