@@ -14,13 +14,12 @@ void main() {
   setUp(() {
     SamplingPackageRegistry().register(AppsSamplingPackage());
 
-    study = Study("1234", "bardram", name: "bardram study")
-      ..dataEndPoint = DataEndPoint(DataEndPointTypes.PRINT)
+    study = Study(id: "1234", userId: "bardram", name: "bardram study")
+      ..dataEndPoint = DataEndPoint(type: DataEndPointTypes.PRINT)
       ..addTriggerTask(
           ImmediateTrigger(),
           AutomaticTask(name: 'Task #1')
-            ..measures = SamplingSchema
-                .common(namespace: NameSpace.CARP)
+            ..measures = SamplingSchema.common(namespace: NameSpace.CARP)
                 .measures
                 .values
                 .toList());

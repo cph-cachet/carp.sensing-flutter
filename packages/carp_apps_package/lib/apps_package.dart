@@ -32,13 +32,13 @@ class AppsSamplingPackage implements SamplingPackage {
       MapEntry(
           APPS,
           Measure(
-            MeasureType(NameSpace.CARP, APPS),
+            type: MeasureType(NameSpace.CARP, APPS),
             name: 'Installed Apps',
           )),
       MapEntry(
           APP_USAGE,
           MarkedMeasure(
-            MeasureType(NameSpace.CARP, APP_USAGE),
+            type: MeasureType(NameSpace.CARP, APP_USAGE),
             name: 'Apps Usage',
             enabled: true,
           )),
@@ -56,13 +56,13 @@ class AppsSamplingPackage implements SamplingPackage {
       MapEntry(
           APPS,
           Measure(
-            MeasureType(NameSpace.CARP, APPS),
+            type: MeasureType(NameSpace.CARP, APPS),
             name: 'Installed Apps',
           )),
       MapEntry(
           APP_USAGE,
           MarkedMeasure(
-            MeasureType(NameSpace.CARP, APP_USAGE),
+            type: MeasureType(NameSpace.CARP, APP_USAGE),
             name: 'Apps Usage',
             enabled: true,
           )),

@@ -10,7 +10,7 @@ String _encode(Object object) =>
 void main() {
   setUp(() {
     // This is a hack. Need to create some serialization object in order to intialize searialization.
-    Study('1234', 'kkk');
+    Study(id: '1234');
   });
 
   group('Apps Datum Tests', () {
