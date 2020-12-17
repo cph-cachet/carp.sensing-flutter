@@ -1,5 +1,6 @@
 ## 0.11.0
 * upgrade to `carp_mobile_sensing` v. 0.11.x
+* small improvements to `geofence` measure.
 
 ## 0.10.0
 * upgrade to `carp_mobile_sensing` v. 0.10.x

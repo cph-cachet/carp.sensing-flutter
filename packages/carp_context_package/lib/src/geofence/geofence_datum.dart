@@ -30,7 +30,10 @@ class GeofenceDatum extends CARPDatum {
   ///  - ENTER
   ///  - EXIT
   ///  - DWELL
-  String type;
+  //String type;
+  GeofenceType type;
 
   String toString() => super.toString() + ', name: $name, type: $type';
 }
+
+enum GeofenceType { ENTER, EXIT, DWELL }

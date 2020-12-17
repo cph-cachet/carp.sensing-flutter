@@ -6,14 +6,17 @@ part of context;
 /// for example using the [Trigger] model.
 class GeofenceProbe extends StreamProbe {
   Geofence fence;
-  StreamController<GeofenceDatum> geoFenceStreamController = StreamController<GeofenceDatum>.broadcast();
+  StreamController<GeofenceDatum> geoFenceStreamController =
+      StreamController<GeofenceDatum>.broadcast();
 
   void onInitialize(Measure measure) {
     assert(measure is GeofenceMeasure);
     super.onInitialize(measure);
     fence = Geofence.fromMeasure(measure);
     // listen in on the location service
-    locationManager.dtoStream.map((location) => GeoPosition.fromLocationDto(location)).listen((location) {
+    locationManager.dtoStream
+        .map((location) => GeoPosition.fromLocationDto(location))
+        .listen((location) {
       // when a location event is fired, check if the new location creates a new [GeofenceDatum] event.
       // if so -- add it to the main stream.
       GeofenceDatum datum = fence.moved(location);
@@ -28,15 +31,16 @@ class GeofenceProbe extends StreamProbe {
   Stream<GeofenceDatum> get stream => geoFenceStreamController.stream;
 }
 
-/// The possible states of a geofence event.
-enum GeofenceState { ENTER, EXIT, DWELL }
+/// The possible states of a geofence.
+enum GeofenceState { inside, outside, unknown }
 
-/// A class representing a circular geofence with a center, a radius (in meters) and a name.
+/// A class representing a circular geofence with a center,
+/// a radius (in meters) and a name.
 class Geofence {
   /// The last known state of this geofence.
-  GeofenceState state = GeofenceState.EXIT;
+  GeofenceState state = GeofenceState.unknown;
 
-  /// The last time an event was fired inside this geofence.
+  /// The last time an event was detected in this geofence.
   DateTime lastEvent = DateTime.now();
 
   /// The center of the geofence as a GPS location.
@@ -45,10 +49,9 @@ class Geofence {
   /// The radius of the geofence in meters.
   double radius;
 
-  /// The dwell time of this geofence in miliseconds.
-  /// If an object is located inside this geofence for more that [dwell] miliseconds,
-  /// the [GeofenceState.DWELL] event is fired.
-  int dwell;
+  /// The dwell time of this geofence. If an object is located inside this
+  /// geofence for more that [dwell], the [moved] function will return this.
+  Duration dwell;
 
   /// The name of this geofence.
   String name;
@@ -56,6 +59,7 @@ class Geofence {
   /// Specify a geofence.
   Geofence({this.center, this.radius, this.dwell, this.name}) : super();
 
+  // Create a [Geofence] based on a [GeofenceMeasure].
   Geofence.fromMeasure(GeofenceMeasure measure) {
     this.center = measure.center;
     this.radius = measure.radius;
@@ -68,35 +72,36 @@ class Geofence {
     if (center.distanceTo(location) < radius) {
       // we're inside the geofence
       switch (state) {
-        case GeofenceState.EXIT:
+        case GeofenceState.unknown:
+        case GeofenceState.outside:
           // if we came from outside the fence, we have now entered
-          state = GeofenceState.ENTER;
+          state = GeofenceState.inside;
           lastEvent = DateTime.now();
-          datum = GeofenceDatum(type: "ENTER", name: name);
+          datum = GeofenceDatum(type: GeofenceType.ENTER, name: name);
           break;
-        case GeofenceState.ENTER:
-        case GeofenceState.DWELL:
+        case GeofenceState.inside:
           // if we were already inside, check if dwelling takes place
-          if (dwell != null && DateTime.now().difference(lastEvent).inMilliseconds > dwell) {
+          if (dwell != null && lastEvent.add(dwell).isBefore(DateTime.now())) {
             // we have been dwelling in this geofence
-            state = GeofenceState.DWELL;
+            state = GeofenceState.inside;
             lastEvent = DateTime.now();
-            datum = GeofenceDatum(type: "DWELL", name: name);
+            datum = GeofenceDatum(type: GeofenceType.DWELL, name: name);
           }
           break;
       }
     } else {
       // we're outside the geofence - check if we have left
-      if (state != GeofenceState.EXIT) {
+      if (state != GeofenceState.outside) {
         // we have just left the geofence
-        state = GeofenceState.EXIT;
+        state = GeofenceState.outside;
         lastEvent = DateTime.now();
-        datum = GeofenceDatum(type: "EXIT", name: name);
+        datum = GeofenceDatum(type: GeofenceType.EXIT, name: name);
       }
     }
 
     return datum;
   }
 
-  String toString() => 'Geofence - center: $center, radius: $radius, dwell: $dwell, name: $name, state: $state';
+  String toString() =>
+      'Geofence - center: $center, radius: $radius, dwell: $dwell, name: $name, state: $state';
 }

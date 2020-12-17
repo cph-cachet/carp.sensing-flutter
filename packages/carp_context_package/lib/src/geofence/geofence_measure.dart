@@ -83,10 +83,8 @@ class GeofenceMeasure extends Measure {
   /// The radius of the geofence in meters.
   double radius;
 
-  /// The dwell time of this geofence in miliseconds.
-  /// If an object is located inside a geofence for more that [dwell] miliseconds,
-  /// [GeofenceState.DWELL] are fired.
-  int dwell;
+  /// The dwell time of this geofence.
+  Duration dwell;
 
   /// The name of this geofence.
   String name;

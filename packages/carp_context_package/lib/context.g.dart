@@ -304,7 +304,9 @@ GeofenceMeasure _$GeofenceMeasureFromJson(Map<String, dynamic> json) {
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
     )
-    ..dwell = json['dwell'] as int;
+    ..dwell = json['dwell'] == null
+        ? null
+        : Duration(microseconds: json['dwell'] as int);
 }
 
 Map<String, dynamic> _$GeofenceMeasureToJson(GeofenceMeasure instance) {
@@ -323,14 +325,14 @@ Map<String, dynamic> _$GeofenceMeasureToJson(GeofenceMeasure instance) {
   writeNotNull('configuration', instance.configuration);
   writeNotNull('center', instance.center);
   writeNotNull('radius', instance.radius);
-  writeNotNull('dwell', instance.dwell);
+  writeNotNull('dwell', instance.dwell?.inMicroseconds);
   writeNotNull('name', instance.name);
   return val;
 }
 
 GeofenceDatum _$GeofenceDatumFromJson(Map<String, dynamic> json) {
   return GeofenceDatum(
-    type: json['type'] as String,
+    type: _$enumDecodeNullable(_$GeofenceTypeEnumMap, json['type']),
     name: json['name'] as String,
   )
     ..id = json['id'] as String
@@ -351,9 +353,15 @@ Map<String, dynamic> _$GeofenceDatumToJson(GeofenceDatum instance) {
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
   writeNotNull('name', instance.name);
-  writeNotNull('type', instance.type);
+  writeNotNull('type', _$GeofenceTypeEnumMap[instance.type]);
   return val;
 }
+
+const _$GeofenceTypeEnumMap = {
+  GeofenceType.ENTER: 'ENTER',
+  GeofenceType.EXIT: 'EXIT',
+  GeofenceType.DWELL: 'DWELL',
+};
 
 AirQualityDatum _$AirQualityDatumFromJson(Map<String, dynamic> json) {
   return AirQualityDatum()
