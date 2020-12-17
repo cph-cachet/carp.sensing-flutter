@@ -17,7 +17,7 @@ class WeatherDatum extends CARPDatum {
 
   String country, areaName, weatherMain, weatherDescription;
   DateTime date, sunrise, sunset;
-  double latitude,
+  var latitude,
       longitude,
       pressure,
       windSpeed,
@@ -42,8 +42,8 @@ class WeatherDatum extends CARPDatum {
   String toString() =>
       super.toString() +
       ',place: $areaName ($country), '
-      'date: $date, '
-      'weather: $weatherMain, $weatherDescription, '
-      'temp: $temperature, temp (min): $tempMin, temp (max): $tempMax, '
-      'sunrise: $sunrise, sunset: $sunset';
+          'date: $date, '
+          'weather: $weatherMain, $weatherDescription, '
+          'temp: $temperature, temp (min): $tempMin, temp (max): $tempMax, '
+          'sunrise: $sunrise, sunset: $sunset';
 }

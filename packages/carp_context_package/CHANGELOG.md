@@ -1,6 +1,7 @@
 ## 0.11.0
 * upgrade to `carp_mobile_sensing` v. 0.11.x
 * small improvements to `geofence` measure.
+* enhacement: issue [#135](https://github.com/cph-cachet/carp.sensing-flutter/issues/135)
 
 ## 0.10.0
 * upgrade to `carp_mobile_sensing` v. 0.10.x

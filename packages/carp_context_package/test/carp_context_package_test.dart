@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:activity_recognition_flutter/activity_recognition_flutter.dart';
 import 'package:carp_context_package/context.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:test/test.dart';
@@ -73,6 +74,19 @@ void main() {
     expect(_encode(study_2), equals(studyJson));
   });
 
+  test('CARP Location', () {
+    LocationDatum loc = LocationDatum()
+      ..longitude = 12.23342
+      ..latitude = 3.34224
+      ..altitude = 124.2134235;
+    DataPoint dp_1 = DataPoint.fromDatum(study.id, study.userId, loc);
+    expect(dp_1.header.dataFormat.namespace, NameSpace.CARP);
+    print(_encode(dp_1));
+
+    loc.altitude = 'encrypted value';
+    print(_encode(dp_1));
+  });
+
   test('CARP Location -> OMH Geoposition', () {
     LocationDatum loc = LocationDatum()
       ..longitude = 12.23342
@@ -90,7 +104,7 @@ void main() {
   });
 
   test('CARP Activity -> OMH Physical Activity', () {
-    ActivityDatum act = ActivityDatum()..type = "walking";
+    ActivityDatum act = ActivityDatum()..type = ActivityType.WALKING;
     DataPoint dp_1 = DataPoint.fromDatum(study.id, study.userId, act);
     expect(dp_1.header.dataFormat.namespace, NameSpace.CARP);
     print(_encode(dp_1));
@@ -99,7 +113,7 @@ void main() {
         TransformerSchemaRegistry().lookup(NameSpace.OMH).transform(act);
     DataPoint dp_2 = DataPoint.fromDatum(study.id, study.userId, phy);
     expect(dp_2.header.dataFormat.namespace, NameSpace.OMH);
-    expect(phy.activity.activityName, act.type);
+    expect(phy.activity.activityName, act.typeString);
     print(_encode(dp_2));
   });
 

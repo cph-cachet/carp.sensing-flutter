@@ -13,7 +13,7 @@ ActivityDatum _$ActivityDatumFromJson(Map<String, dynamic> json) {
         ? null
         : DateTime.parse(json['timestamp'] as String)
     ..confidence = json['confidence'] as int
-    ..type = json['type'] as String;
+    ..type = _$enumDecodeNullable(_$ActivityTypeEnumMap, json['type']);
 }
 
 Map<String, dynamic> _$ActivityDatumToJson(ActivityDatum instance) {
@@ -28,9 +28,53 @@ Map<String, dynamic> _$ActivityDatumToJson(ActivityDatum instance) {
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
   writeNotNull('confidence', instance.confidence);
-  writeNotNull('type', instance.type);
+  writeNotNull('type', _$ActivityTypeEnumMap[instance.type]);
   return val;
 }
+
+T _$enumDecode<T>(
+  Map<T, dynamic> enumValues,
+  dynamic source, {
+  T unknownValue,
+}) {
+  if (source == null) {
+    throw ArgumentError('A value must be provided. Supported values: '
+        '${enumValues.values.join(', ')}');
+  }
+
+  final value = enumValues.entries
+      .singleWhere((e) => e.value == source, orElse: () => null)
+      ?.key;
+
+  if (value == null && unknownValue == null) {
+    throw ArgumentError('`$source` is not one of the supported values: '
+        '${enumValues.values.join(', ')}');
+  }
+  return value ?? unknownValue;
+}
+
+T _$enumDecodeNullable<T>(
+  Map<T, dynamic> enumValues,
+  dynamic source, {
+  T unknownValue,
+}) {
+  if (source == null) {
+    return null;
+  }
+  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
+}
+
+const _$ActivityTypeEnumMap = {
+  ActivityType.IN_VEHICLE: 'IN_VEHICLE',
+  ActivityType.ON_BICYCLE: 'ON_BICYCLE',
+  ActivityType.ON_FOOT: 'ON_FOOT',
+  ActivityType.RUNNING: 'RUNNING',
+  ActivityType.STILL: 'STILL',
+  ActivityType.TILTING: 'TILTING',
+  ActivityType.UNKNOWN: 'UNKNOWN',
+  ActivityType.WALKING: 'WALKING',
+  ActivityType.INVALID: 'INVALID',
+};
 
 LocationDatum _$LocationDatumFromJson(Map<String, dynamic> json) {
   return LocationDatum()
@@ -40,13 +84,13 @@ LocationDatum _$LocationDatumFromJson(Map<String, dynamic> json) {
         : DateTime.parse(json['timestamp'] as String)
     ..time =
         json['time'] == null ? null : DateTime.parse(json['time'] as String)
-    ..latitude = (json['latitude'] as num)?.toDouble()
-    ..longitude = (json['longitude'] as num)?.toDouble()
-    ..altitude = (json['altitude'] as num)?.toDouble()
-    ..accuracy = (json['accuracy'] as num)?.toDouble()
-    ..speed = (json['speed'] as num)?.toDouble()
-    ..speedAccuracy = (json['speed_accuracy'] as num)?.toDouble()
-    ..heading = (json['heading'] as num)?.toDouble();
+    ..latitude = json['latitude']
+    ..longitude = json['longitude']
+    ..altitude = json['altitude']
+    ..accuracy = json['accuracy']
+    ..speed = json['speed']
+    ..speedAccuracy = json['speed_accuracy']
+    ..heading = json['heading'];
 }
 
 Map<String, dynamic> _$LocationDatumToJson(LocationDatum instance) {
@@ -121,38 +165,6 @@ Map<String, dynamic> _$LocationMeasureToJson(LocationMeasure instance) {
   return val;
 }
 
-T _$enumDecode<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
-}) {
-  if (source == null) {
-    throw ArgumentError('A value must be provided. Supported values: '
-        '${enumValues.values.join(', ')}');
-  }
-
-  final value = enumValues.entries
-      .singleWhere((e) => e.value == source, orElse: () => null)
-      ?.key;
-
-  if (value == null && unknownValue == null) {
-    throw ArgumentError('`$source` is not one of the supported values: '
-        '${enumValues.values.join(', ')}');
-  }
-  return value ?? unknownValue;
-}
-
-T _$enumDecodeNullable<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
-}) {
-  if (source == null) {
-    return null;
-  }
-  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
-}
-
 const _$GeolocationAccuracyEnumMap = {
   GeolocationAccuracy.lowest: 'lowest',
   GeolocationAccuracy.low: 'low',
@@ -179,20 +191,20 @@ WeatherDatum _$WeatherDatumFromJson(Map<String, dynamic> json) {
         : DateTime.parse(json['sunrise'] as String)
     ..sunset =
         json['sunset'] == null ? null : DateTime.parse(json['sunset'] as String)
-    ..latitude = (json['latitude'] as num)?.toDouble()
-    ..longitude = (json['longitude'] as num)?.toDouble()
-    ..pressure = (json['pressure'] as num)?.toDouble()
-    ..windSpeed = (json['wind_speed'] as num)?.toDouble()
-    ..windDegree = (json['wind_degree'] as num)?.toDouble()
-    ..humidity = (json['humidity'] as num)?.toDouble()
-    ..cloudiness = (json['cloudiness'] as num)?.toDouble()
-    ..rainLastHour = (json['rain_last_hour'] as num)?.toDouble()
-    ..rainLast3Hours = (json['rain_last3_hours'] as num)?.toDouble()
-    ..snowLastHour = (json['snow_last_hour'] as num)?.toDouble()
-    ..snowLast3Hours = (json['snow_last3_hours'] as num)?.toDouble()
-    ..temperature = (json['temperature'] as num)?.toDouble()
-    ..tempMin = (json['temp_min'] as num)?.toDouble()
-    ..tempMax = (json['temp_max'] as num)?.toDouble();
+    ..latitude = json['latitude']
+    ..longitude = json['longitude']
+    ..pressure = json['pressure']
+    ..windSpeed = json['wind_speed']
+    ..windDegree = json['wind_degree']
+    ..humidity = json['humidity']
+    ..cloudiness = json['cloudiness']
+    ..rainLastHour = json['rain_last_hour']
+    ..rainLast3Hours = json['rain_last3_hours']
+    ..snowLastHour = json['snow_last_hour']
+    ..snowLast3Hours = json['snow_last3_hours']
+    ..temperature = json['temperature']
+    ..tempMin = json['temp_min']
+    ..tempMax = json['temp_max'];
 }
 
 Map<String, dynamic> _$WeatherDatumToJson(WeatherDatum instance) {
@@ -372,8 +384,8 @@ AirQualityDatum _$AirQualityDatumFromJson(Map<String, dynamic> json) {
     ..airQualityIndex = json['air_quality_index'] as int
     ..source = json['source'] as String
     ..place = json['place'] as String
-    ..latitude = (json['latitude'] as num)?.toDouble()
-    ..longitude = (json['longitude'] as num)?.toDouble()
+    ..latitude = json['latitude']
+    ..longitude = json['longitude']
     ..airQualityLevel = _$enumDecodeNullable(
         _$AirQualityLevelEnumMap, json['air_quality_level']);
 }

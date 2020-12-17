@@ -1,5 +1,6 @@
 ## 0.11.0
 * refactor: improved (de)serialization in the `Serialization` class.
+* refactor: named constructors in the `Study` and `Measure` classes.
 * feature: support for handling local settings on the phone in the `SettingsBLoC`.
 * feature: added `description` property to `Measure`.
 * feature: added support for an `AppTask` can expire, i.e. be removed from the queue.
