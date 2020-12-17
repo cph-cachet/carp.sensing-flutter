@@ -1,6 +1,6 @@
 part of runtime;
 
-class SettingsBLoC {
+class Settings {
   static const String USER_ID_KEY = 'user_id';
   static const String INSTALL_DATE_KEY = 'install_date';
   static const String STUDY_START_KEY = 'study_start';
@@ -8,16 +8,20 @@ class SettingsBLoC {
   SharedPreferences _preferences;
   PackageInfo _packageInfo;
 
-  /// The app name. `CFBundleDisplayName` on iOS, `application/label` on Android.
+  /// The app name.
+  /// `CFBundleDisplayName` on iOS, `application/label` on Android.
   String appName;
 
-  /// The package name. `bundleIdentifier` on iOS, `getPackageName` on Android.
+  /// The package name.
+  /// `bundleIdentifier` on iOS, `getPackageName` on Android.
   String packageName;
 
-  /// The package version. `CFBundleShortVersionString` on iOS, `versionName` on Android.
+  /// The package version.
+  /// `CFBundleShortVersionString` on iOS, `versionName` on Android.
   String version;
 
-  /// The build number. `CFBundleVersion` on iOS, `versionCode` on Android.
+  /// The build number.
+  /// `CFBundleVersion` on iOS, `versionCode` on Android.
   String buildNumber;
 
   /// Wraps NSUserDefaults (on iOS) and SharedPreferences (on Android), providing
@@ -84,6 +88,6 @@ class SettingsBLoC {
 }
 
 /// Misc. settings for CAMS.
-/// See [SettingsBLoC] for a list of useful methods for accessing the
+/// See [Settings] for a list of useful methods for accessing the
 /// shared preferences on this phone.
-final settings = SettingsBLoC();
+final settings = Settings();
