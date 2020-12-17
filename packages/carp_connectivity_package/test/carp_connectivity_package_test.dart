@@ -16,7 +16,7 @@ void main() {
     //SamplingPackageRegistry.register(CommunicationSamplingPackage());
     //SamplingPackageRegistry.register(ContextSamplingPackage());
 
-    study = Study("1234", "bardram", name: "bardram study");
+    study = Study(id: "1234", userId: "bardram", name: "bardram study");
     //study.dataEndPoint = DataEndPoint(DataEndPointType.PRINT);
     study.dataEndPoint = FileDataEndPoint()
       ..bufferSize = 50 * 1000
@@ -27,8 +27,7 @@ void main() {
     study.addTriggerTask(
         ImmediateTrigger(), // a simple trigger that starts immediately
         Task(name: 'Sampling Task')
-          ..measures = SamplingSchema
-              .common(namespace: NameSpace.CARP)
+          ..measures = SamplingSchema.common(namespace: NameSpace.CARP)
               .measures
               .values
               .toList());
@@ -102,7 +101,8 @@ void main() {
   });
 
   test('Triggers -> JSON', () async {
-    Study study_3 = Study("3", "bardram", name: "Multi Trigger Study");
+    Study study_3 =
+        Study(id: "3", userId: "bardram", name: "Multi Trigger Study");
     study_3.dataEndPoint = FileDataEndPoint()
       ..bufferSize = 50 * 1000
       ..zip = true
@@ -142,8 +142,7 @@ void main() {
     study_3.addTriggerTask(
         t1,
         Task(name: 'Sensing Task #1')
-          ..measures = SamplingSchema
-              .common()
+          ..measures = SamplingSchema.common()
               .getMeasureList(types: [DeviceSamplingPackage.MEMORY]));
 
     // collect every other day at 13:30.
@@ -196,8 +195,7 @@ void main() {
                 MeasureType(NameSpace.CARP, ConnectivitySamplingPackage.WIFI),
             resumeCondition: WifiDatum()..ssid = 'wifi.bardram.net'),
         Task(name: 'Sensing Task #1')
-          ..measures = SamplingSchema
-              .common()
+          ..measures = SamplingSchema.common()
               .getMeasureList(types: [ConnectivitySamplingPackage.BLUETOOTH]));
 
     // ConditionalSamplingEventTrigger cannot be serialized to JSON, so not included in test

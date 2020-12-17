@@ -34,7 +34,8 @@ class RPTaskMeasure extends Measure {
     String description,
     bool enabled,
     this.surveyTask,
-  }) : super(
+  })
+      : super(
           type: type,
           name: name,
           description: description,

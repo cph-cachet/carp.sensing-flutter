@@ -268,7 +268,8 @@ class Sensing implements StudyManager {
                     duration: Duration(seconds: 10)),
                 Task()
                   ..measures.add(AudioMeasure(
-                    MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO),
+                    type:
+                        MeasureType(NameSpace.CARP, AudioSamplingPackage.AUDIO),
                     name: "Audio Recording",
                     studyId: studyId,
                   )))

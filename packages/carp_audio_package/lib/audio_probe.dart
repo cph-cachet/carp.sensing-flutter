@@ -40,12 +40,12 @@ class AudioProbe extends DatumProbe {
     this.studyId = (measure as AudioMeasure).studyId;
   }
 
-  Future<void> onResume() async {
+  Future onResume() async {
     soundFileName = await _startAudioRecording();
     debug('Audio recording resumed - sound file : $soundFileName');
   }
 
-  Future<void> onPause() async {
+  Future onPause() async {
     // when pausing the audio sampling, stop recording and collect the datum
     if (_isRecording) {
       await _stopAudioRecording();
@@ -56,7 +56,7 @@ class AudioProbe extends DatumProbe {
     }
   }
 
-  Future<void> onStop() async {
+  Future onStop() async {
     if (_isRecording) await onPause();
     RecordMp3.instance.stop();
     super.onStop();
@@ -79,7 +79,7 @@ class AudioProbe extends DatumProbe {
     return soundFileName;
   }
 
-  Future<void> _stopAudioRecording() async {
+  Future _stopAudioRecording() async {
     _endRecordingTime = DateTime.now();
     _isRecording = false;
     RecordMp3.instance.stop();
@@ -115,7 +115,8 @@ class AudioProbe extends DatumProbe {
   ///    * Android : `audio-yyyy-mm-dd-hh-mm-ss-ms.mp4`
   ///    * iOS : `audio-yyyy-mm-dd-hh-mm-ss-ms.m4a`
   String get filename {
-    String created = DateTime.now()
+    String created = DateTime
+        .now()
         .toString()
         .replaceAll(" ", "-")
         .replaceAll(":", "-")

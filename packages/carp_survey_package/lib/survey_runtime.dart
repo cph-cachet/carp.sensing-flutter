@@ -61,7 +61,7 @@ class SurveySamplingPackage implements SamplingPackage {
 /// Once the survey is submitted later, then a [RPTaskResultDatum] is added to
 /// the [carp_mobile_sensing] event queue.
 class SurveyProbe extends AbstractProbe {
-  StreamController<Datum> controller = StreamController<Datum>.broadcast();
+  StreamController<Datum> controller = StreamController.broadcast();
   Stream<Datum> get events => controller.stream;
   RPTaskMeasure get surveyMeasure => (measure as RPTaskMeasure);
 
@@ -93,7 +93,7 @@ class SurveyProbe extends AbstractProbe {
     surveyTask = surveyMeasure.surveyTask;
   }
 
-  Future<void> onResume() async {
+  Future onResume() async {
     onSurveyTriggered(SurveyPage(
       surveyTask,
       _onSurveySubmit,
@@ -101,9 +101,9 @@ class SurveyProbe extends AbstractProbe {
     ));
   }
 
-  Future<void> onRestart() async {}
-  Future<void> onPause() async {}
-  Future<void> onStop() async {}
+  Future onRestart() async {}
+  Future onPause() async {}
+  Future onStop() async {}
 
   void _onSurveySubmit(RPTaskResult result) {
     // when we have the survey result, add it to the event stream
