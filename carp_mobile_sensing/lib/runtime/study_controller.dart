@@ -113,6 +113,9 @@ class StudyController {
     // start getting basic device info.
     Device();
 
+    // if no user is specified for this study, look up the local user id
+    study.userId ??= await settings.userId;
+
     // setting up permissions
     permissions = await PermissionHandlerPlatform.instance
         .requestPermissions(SamplingPackageRegistry().permissions);

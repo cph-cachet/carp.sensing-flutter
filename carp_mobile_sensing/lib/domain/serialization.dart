@@ -71,7 +71,7 @@ class FromJsonFactory {
   //
   // TODO: Remember to add any new classes here.
   FromJsonFactory._() {
-    register(Study(id: 'ignored', userId: 'ignored'));
+    register(Study(id: 'ignored'));
     register(DataEndPoint());
     register(FileDataEndPoint());
     register(Task());
@@ -86,7 +86,7 @@ class FromJsonFactory {
     register(RecurrentScheduledTrigger(type: null, time: null));
     register(SamplingEventTrigger(measureType: null));
     register(ConditionalSamplingEventTrigger(measureType: null));
-    register(MeasureType('',''));
+    register(MeasureType('', ''));
     register(Measure(type: null));
     register(PeriodicMeasure(type: null));
     register(MarkedMeasure(type: null));

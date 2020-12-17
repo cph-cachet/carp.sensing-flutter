@@ -38,8 +38,7 @@ class Study extends Serializable {
   /// this study and its purpose.
   String description;
 
-  /// The ID of the user executing this study. May be [null] if no user is
-  /// known.
+  /// The ID of the user executing this study.
   String userId;
 
   /// The sampling strategy according to [SamplingSchemaType].
@@ -52,24 +51,29 @@ class Study extends Serializable {
   /// [DataFormatType]. Default using the [NameSpace.CARP].
   String dataFormat;
 
+  /// The public key in a PKI setup for encryption of data in the [dataEndPoint].
+  String publicKey;
+
   /// The set of [Trigger]s which can trigger [Task](s) in this study.
   List<Trigger> triggers = [];
 
   /// Create a new [Study] object with a set of configurations.
   ///
-  /// The [id] and [userId] are required for a new study.
-  Study(
-      {@required this.id,
-      @required this.userId,
-      this.deploymentId,
-      this.name,
-      this.description,
-      this.samplingStrategy,
-      this.dataEndPoint,
-      this.dataFormat})
-      : assert(id != null, 'Cannot create a Study without an id: id=null'),
-        assert(userId != null,
-            'Cannot create a Study without an user id: userId=null'),
+  /// The [id]  is required for a new study.
+  /// If a [userId] is not specified, an anonymous unique id will be created
+  /// for this user on this phone.
+  /// If no [dataFormat] the CARP namespace is used.
+  Study({
+    @required this.id,
+    this.userId,
+    this.deploymentId,
+    this.name,
+    this.description,
+    this.samplingStrategy,
+    this.dataEndPoint,
+    this.dataFormat,
+    this.publicKey,
+  })  : assert(id != null, 'Cannot create a Study without an id: id=null'),
         super() {
     samplingStrategy ??= SamplingSchemaType.NORMAL;
     dataFormat ??= NameSpace.CARP;

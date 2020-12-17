@@ -397,6 +397,7 @@ Study _$StudyFromJson(Map<String, dynamic> json) {
         ? null
         : DataEndPoint.fromJson(json['data_end_point'] as Map<String, dynamic>),
     dataFormat: json['data_format'] as String,
+    publicKey: json['public_key'] as String,
   )
     ..$type = json[r'$type'] as String
     ..triggers = (json['triggers'] as List)
@@ -423,6 +424,7 @@ Map<String, dynamic> _$StudyToJson(Study instance) {
   writeNotNull('sampling_strategy', instance.samplingStrategy);
   writeNotNull('data_end_point', instance.dataEndPoint);
   writeNotNull('data_format', instance.dataFormat);
+  writeNotNull('public_key', instance.publicKey);
   writeNotNull('triggers', instance.triggers);
   return val;
 }
