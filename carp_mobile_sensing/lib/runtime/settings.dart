@@ -1,6 +1,6 @@
 part of runtime;
 
-class Settings {
+class _Settings {
   static const String USER_ID_KEY = 'user_id';
   static const String INSTALL_DATE_KEY = 'install_date';
   static const String STUDY_START_KEY = 'study_start';
@@ -88,6 +88,6 @@ class Settings {
 }
 
 /// Misc. settings for CAMS.
-/// See [Settings] for a list of useful methods for accessing the
+/// See [_Settings] for a list of useful methods for accessing the
 /// shared preferences on this phone.
-final settings = Settings();
+final settings = _Settings();
