@@ -27,7 +27,8 @@ void main() {
     study.addTriggerTask(
         ImmediateTrigger(), // a simple trigger that starts immediately
         Task(name: 'Sampling Task')
-          ..measures = SamplingSchema.common(namespace: NameSpace.CARP)
+          ..measures = SamplingSchema
+              .common(namespace: NameSpace.CARP)
               .measures
               .values
               .toList());
@@ -142,7 +143,8 @@ void main() {
     study_3.addTriggerTask(
         t1,
         Task(name: 'Sensing Task #1')
-          ..measures = SamplingSchema.common()
+          ..measures = SamplingSchema
+              .common()
               .getMeasureList(types: [DeviceSamplingPackage.MEMORY]));
 
     // collect every other day at 13:30.
@@ -195,7 +197,8 @@ void main() {
                 MeasureType(NameSpace.CARP, ConnectivitySamplingPackage.WIFI),
             resumeCondition: WifiDatum()..ssid = 'wifi.bardram.net'),
         Task(name: 'Sensing Task #1')
-          ..measures = SamplingSchema.common()
+          ..measures = SamplingSchema
+              .common()
               .getMeasureList(types: [ConnectivitySamplingPackage.BLUETOOTH]));
 
     // ConditionalSamplingEventTrigger cannot be serialized to JSON, so not included in test

@@ -1,3 +1,6 @@
+## 0.11.0
+* upgrade to `carp_mobile_sensing` v. 0.11.0
+
 ## 0.10.0
 * upgrade to `carp_mobile_sensing` v. 0.10.0
 * using `wifi_info_flutter` for getting connectivity information
