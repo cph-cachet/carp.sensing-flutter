@@ -21,7 +21,9 @@ class CarpDataManager extends AbstractDataManager {
 
   FileDataManager fileDataManager;
 
-  CarpDataManager() : super();
+  CarpDataManager() : super() {
+    FromJsonFactory().register(CarpDataEndPoint(CarpUploadMethod.FILE));
+  }
 
   String get type => DataEndPointTypes.CARP;
 

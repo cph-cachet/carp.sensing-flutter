@@ -92,13 +92,18 @@ class FromJsonFactory {
     register(MarkedMeasure(type: null));
   }
 
-  /// Register a [Serializable] [type] which can be deserialized from JSON.
+  /// Register a [Serializable] class which can be deserialized from JSON.
+  ///
+  /// If [type] is specified, then this is used as the type indentifier as
+  /// specified in [CLASS_IDENTIFIER]. Othervise the Dart class [runtimeType]
+  /// is used as default.
   ///
   /// A type needs to be registered **before** a class can be deserialized from
   /// JSON to a Flutter class.
-  void register(Serializable type) {
-    assert(type is Serializable);
-    _registry['${type.runtimeType}'] = type.fromJsonFunction;
+  void register(Serializable serializable, {String type}) {
+    assert(serializable is Serializable);
+    type ??= serializable.runtimeType.toString();
+    _registry['$type'] = serializable.fromJsonFunction;
   }
 
   /// Deserialize [json] of the specified class [type].

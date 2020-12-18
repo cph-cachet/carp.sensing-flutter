@@ -22,12 +22,17 @@ void main() {
   //CarpUser user;
   Study study;
   int dataPointId;
-  LightDatum datum = LightDatum(
+  LightDatum datum1 = LightDatum(
     maxLux: 12,
     meanLux: 23,
     minLux: 0.3,
     stdLux: 0.4,
   );
+  DeviceDatum datum2 = DeviceDatum(
+    'Android',
+    '12345jE',
+  );
+
   DocumentSnapshot document;
   int documentId;
   int consentDocumentId;
@@ -37,8 +42,8 @@ void main() {
   /// Runs once before all tests.
   setUpAll(() async {
     study = new Study(
-      testStudyId,
-      userId,
+      id: testStudyId,
+      userId: userId,
       deploymentId: testDeploymentId,
       name: "Test study",
     );
@@ -223,7 +228,7 @@ void main() {
   group("Data points", () {
     test('- post', () async {
       final CARPDataPoint data =
-          CARPDataPoint.fromDatum(study.id, study.userId, datum);
+          CARPDataPoint.fromDatum(study.id, study.userId, datum1);
 
       print(_encode(data.toJson()));
 
@@ -250,21 +255,34 @@ void main() {
 
       print(_encode(data.toJson()));
       assert(data.id == dataPointId);
-      assert(data.carpBody['id'] == datum.id);
+      assert(data.carpBody['id'] == datum1.id);
     });
 
     test('- get all', () async {
       List<CARPDataPoint> data =
           await CarpService.instance.getDataPointReference().getAllDataPoint();
 
-      data.forEach((datapoint) => print(_encode((datapoint.toJson()))));
-      assert(data.length > 0);
+      //data.forEach((datapoint) => print(_encode((datapoint.toJson()))));
+      assert(data.length >= 0);
+      print('N=${data.length}');
     });
 
     test('- query', () async {
-      String query =
-          'carp_header.user_id==$userId;carp_body.timestamp>2019-11-02T12:53:40.219598Z';
+      dataPointId = await CarpService.instance
+          .getDataPointReference()
+          .postDataPoint(
+              CARPDataPoint.fromDatum(study.id, study.userId, datum1));
+      dataPointId = await CarpService.instance
+          .getDataPointReference()
+          .postDataPoint(
+              CARPDataPoint.fromDatum(study.id, study.userId, datum2));
+
+      // String query =
+      //     'carp_header.user_id==$userId;carp_body.timestamp>2019-11-02T12:53:40.219598Z';
+      //String query = 'carp_header.start_time>2019';
       //String query = 'carp_header.user_id==$userId';
+      String query = 'carp_body.timestamp>2019-11-02T12:53:40.219598Z';
+      //String query = 'carp_header.data_format.namespace=in=(carp,omh)';
       print("query : $query");
       List<CARPDataPoint> data = await CarpService.instance
           .getDataPointReference()
@@ -280,7 +298,27 @@ void main() {
           .getDataPointReference()
           .deleteDataPoint(dataPointId);
     });
-  }, skip: true);
+
+    test('- delete all', () async {
+      List<CARPDataPoint> data =
+          await CarpService.instance.getDataPointReference().getAllDataPoint();
+
+      print('N=${data.length}');
+      print('deleting...');
+      data.forEach((datapoint) async {
+        print(' ${datapoint.id}');
+        await CarpService.instance
+            .getDataPointReference()
+            .deleteDataPoint(datapoint.id);
+      });
+
+      List<CARPDataPoint> empty =
+          await CarpService.instance.getDataPointReference().getAllDataPoint();
+
+      print('N=${empty.length}');
+      assert(empty.length == 0);
+    });
+  }, skip: false);
 
   group("Documents & Collections", () {
     test(' - add document', () async {
@@ -355,34 +393,34 @@ void main() {
       print(_encode(document.data));
 
       print('----------- renamed document -------------');
-      DocumentSnapshot renamed_document = await CarpService.instance
+      DocumentSnapshot renamedDocument = await CarpService.instance
           .collection(collectionName)
           .document(document.name)
           .rename('new_name');
-      print(renamed_document);
-      print(_encode(renamed_document.data));
+      print(renamedDocument);
+      print(_encode(renamedDocument.data));
 
       // get the document back from the server
 //      DocumentSnapshot server_document =
 //          await CarpService.instance.collection(collectionName).document(renamed_document.name).get();
 
       print('----------- server document by ID -------------');
-      DocumentSnapshot server_document =
+      DocumentSnapshot serverDocument =
           await CarpService.instance.documentById(documentId).get();
-      print(server_document);
-      print(_encode(server_document.data));
+      print(serverDocument);
+      print(_encode(serverDocument.data));
 
       print('----------- server document by NAME -------------');
-      server_document = await CarpService.instance
+      serverDocument = await CarpService.instance
           .collection(collectionName)
-          .document(renamed_document.name)
+          .document(renamedDocument.name)
           .get();
-      print(server_document);
-      print(_encode(server_document.data));
+      print(serverDocument);
+      print(_encode(serverDocument.data));
 
-      assert(server_document.id > 0);
-      assert(server_document.name == renamed_document.name);
-      assert(server_document.data.length == document.data.length);
+      assert(serverDocument.id > 0);
+      assert(serverDocument.name == renamedDocument.name);
+      assert(serverDocument.data.length == document.data.length);
     }, skip: true);
 
     test(' - get document by query', () async {

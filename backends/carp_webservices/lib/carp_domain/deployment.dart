@@ -25,10 +25,10 @@ class DeploymentServiceRequest extends Serializable {
   /// The CARP study deployment ID.
   String studyDeploymentId;
 
-  static Function get fromJsonFunction => _$DeploymentServiceRequestFromJson;
+  Function get fromJsonFunction => _$DeploymentServiceRequestFromJson;
   factory DeploymentServiceRequest.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(
-          json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$DeploymentServiceRequestToJson(this);
 
   String toString() => "$runtimeType - studyDeploymentId: $studyDeploymentId";
@@ -48,12 +48,11 @@ class GetActiveParticipationInvitations extends DeploymentServiceRequest {
   /// The CARP account (user) ID.
   String accountId;
 
-  static Function get fromJsonFunction =>
-      _$GetActiveParticipationInvitationsFromJson;
+  Function get fromJsonFunction => _$GetActiveParticipationInvitationsFromJson;
   factory GetActiveParticipationInvitations.fromJson(
           Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(
-          json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() =>
       _$GetActiveParticipationInvitationsToJson(this);
 
@@ -69,10 +68,10 @@ class GetStudyDeploymentStatus extends DeploymentServiceRequest {
         'dk.cachet.carp.deployment.infrastructure.DeploymentServiceRequest.GetStudyDeploymentStatus';
   }
 
-  static Function get fromJsonFunction => _$GetStudyDeploymentStatusFromJson;
+  Function get fromJsonFunction => _$GetStudyDeploymentStatusFromJson;
   factory GetStudyDeploymentStatus.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(
-          json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$GetStudyDeploymentStatusToJson(this);
 
   String toString() => super.toString();
@@ -94,9 +93,10 @@ class RegisterDevice extends DeploymentServiceRequest {
   /// The registration.
   DeviceRegistration registration;
 
-  static Function get fromJsonFunction => _$RegisterDeviceFromJson;
-  factory RegisterDevice.fromJson(Map<String, dynamic> json) => FromJsonFactory
-      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Function get fromJsonFunction => _$RegisterDeviceFromJson;
+  factory RegisterDevice.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$RegisterDeviceToJson(this);
 
   String toString() => '${super.toString()}, deviceRoleName: $deviceRoleName';
@@ -114,10 +114,10 @@ class UnregisterDevice extends DeploymentServiceRequest {
   /// The role name of this device.
   String deviceRoleName;
 
-  static Function get fromJsonFunction => _$UnregisterDeviceFromJson;
+  Function get fromJsonFunction => _$UnregisterDeviceFromJson;
   factory UnregisterDevice.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(
-          json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$UnregisterDeviceToJson(this);
 
   String toString() => '${super.toString()}, deviceRoleName: $deviceRoleName';
@@ -140,10 +140,10 @@ class DeviceRegistration extends Serializable {
   /// A unique id for this device.
   String deviceId;
 
-  static Function get fromJsonFunction => _$DeviceRegistrationFromJson;
+  Function get fromJsonFunction => _$DeviceRegistrationFromJson;
   factory DeviceRegistration.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(
-          json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$DeviceRegistrationToJson(this);
 
   String toString() =>
@@ -162,10 +162,10 @@ class GetDeviceDeploymentFor extends DeploymentServiceRequest {
   /// The role name of this master device.
   String masterDeviceRoleName;
 
-  static Function get fromJsonFunction => _$GetDeviceDeploymentForFromJson;
+  Function get fromJsonFunction => _$GetDeviceDeploymentForFromJson;
   factory GetDeviceDeploymentFor.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(
-          json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$GetDeviceDeploymentForToJson(this);
 
   String toString() =>
@@ -185,10 +185,10 @@ class DeploymentSuccessful extends GetDeviceDeploymentFor {
   /// Timestamp when this was last updated.
   int deviceDeploymentLastUpdateDate;
 
-  static Function get fromJsonFunction => _$DeploymentSuccessfulFromJson;
+  Function get fromJsonFunction => _$DeploymentSuccessfulFromJson;
   factory DeploymentSuccessful.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(
-          json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$DeploymentSuccessfulToJson(this);
 
   String toString() =>
@@ -285,10 +285,10 @@ class DeviceInvitation extends Serializable {
   /// In case a device is registered, it needs to be unregistered first before a new device can be registered.
   bool isRegistered;
 
-  static Function get fromJsonFunction => _$DeviceInvitationFromJson;
+  Function get fromJsonFunction => _$DeviceInvitationFromJson;
   factory DeviceInvitation.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(
-          json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$DeviceInvitationToJson(this);
 
   String toString() => "$runtimeType - deviceRoleName: $deviceRoleName";
@@ -346,9 +346,10 @@ class TaskDescriptor extends Serializable {
   /// The data which needs to be collected/measured as part of this task.
   List<Measure> measures;
 
-  static Function get fromJsonFunction => _$TaskDescriptorFromJson;
-  factory TaskDescriptor.fromJson(Map<String, dynamic> json) => FromJsonFactory
-      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Function get fromJsonFunction => _$TaskDescriptorFromJson;
+  factory TaskDescriptor.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$TaskDescriptorToJson(this);
 
   String toString() =>
@@ -365,10 +366,10 @@ class CustomProtocolTask extends TaskDescriptor {
   ///A definition on how to run a study on a master device, serialized as a string.
   String studyProtocol;
 
-  static Function get fromJsonFunction => _$CustomProtocolTaskFromJson;
+  Function get fromJsonFunction => _$CustomProtocolTaskFromJson;
   factory CustomProtocolTask.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(
-          json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$CustomProtocolTaskToJson(this);
 
   String toString() => "${super.toString()}, studyProtocol: $studyProtocol";
@@ -388,10 +389,10 @@ class TriggerDescriptor extends Serializable {
   /// Determines whether the trigger needs to be evaluated on a master device ([MasterDeviceDescriptor]).
   bool requiresMasterDevice;
 
-  static Function get fromJsonFunction => _$TriggerDescriptorFromJson;
+  Function get fromJsonFunction => _$TriggerDescriptorFromJson;
   factory TriggerDescriptor.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(
-          json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$TriggerDescriptorToJson(this);
 
   String toString() =>
@@ -448,10 +449,10 @@ class StudyDeploymentStatus extends DeploymentDomainObject {
   DeviceDeploymentStatus get masterDeviceStatus =>
       devicesStatus?.firstWhere((element) => element.device?.isMasterDevice);
 
-  static Function get fromJsonFunction => _$StudyDeploymentStatusFromJson;
+  Function get fromJsonFunction => _$StudyDeploymentStatusFromJson;
   factory StudyDeploymentStatus.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(
-          json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$StudyDeploymentStatusToJson(this);
 
   String toString() =>
@@ -485,10 +486,10 @@ class DeviceDeploymentStatus extends DeploymentDomainObject {
   /// * NeedsRedeployment
   String get status => $type.split('.').last;
 
-  static Function get fromJsonFunction => _$DeviceDeploymentStatusFromJson;
+  Function get fromJsonFunction => _$DeviceDeploymentStatusFromJson;
   factory DeviceDeploymentStatus.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(
-          json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$DeviceDeploymentStatusToJson(this);
 
   String toString() => "$runtimeType - status: $status";
@@ -513,10 +514,10 @@ class DeviceDescriptor extends DeploymentDomainObject {
   /// Get the type of this device, like `Smartphone`.
   String get deviceType => $type.split('.').last;
 
-  static Function get fromJsonFunction => _$DeviceDescriptorFromJson;
+  Function get fromJsonFunction => _$DeviceDescriptorFromJson;
   factory DeviceDescriptor.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(
-          json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$DeviceDescriptorToJson(this);
 
   String toString() =>
@@ -525,72 +526,66 @@ class DeviceDescriptor extends DeploymentDomainObject {
 
 /// Register all the fromJson functions for the deployment domain classes.
 void registerFromJsonFunctions() {
-  print(
-      'Register all the fromJson function for the deployment domain classes.');
-  FromJsonFactory.registerFromJsonFunction(
-      "dk.cachet.carp.deployment.infrastructure.DeploymentServiceRequest.GetStudyDeploymentStatus",
-      GetStudyDeploymentStatus.fromJsonFunction);
+  info('Register all the fromJson function for the deployment domain classes.');
+  FromJsonFactory().register(GetStudyDeploymentStatus('ignored'),
+      type:
+          "dk.cachet.carp.deployment.infrastructure.DeploymentServiceRequest.GetStudyDeploymentStatus");
+  FromJsonFactory().register(StudyDeploymentStatus('ignored'),
+      type: "dk.cachet.carp.deployment.domain.StudyDeploymentStatus.Invited");
+  FromJsonFactory().register(StudyDeploymentStatus('ignored'),
+      type:
+          "dk.cachet.carp.deployment.domain.StudyDeploymentStatus.DeployingDevices");
+  FromJsonFactory().register(StudyDeploymentStatus('ignored'),
+      type:
+          "dk.cachet.carp.deployment.domain.StudyDeploymentStatus.DeploymentReady");
+  FromJsonFactory().register(StudyDeploymentStatus('ignored'),
+      type: "dk.cachet.carp.deployment.domain.StudyDeploymentStatus.Stopped");
 
-  FromJsonFactory.registerFromJsonFunction(
-      "dk.cachet.carp.deployment.domain.StudyDeploymentStatus.Invited",
-      StudyDeploymentStatus.fromJsonFunction);
-  FromJsonFactory.registerFromJsonFunction(
-      "dk.cachet.carp.deployment.domain.StudyDeploymentStatus.DeployingDevices",
-      StudyDeploymentStatus.fromJsonFunction);
-  FromJsonFactory.registerFromJsonFunction(
-      "dk.cachet.carp.deployment.domain.StudyDeploymentStatus.DeploymentReady",
-      StudyDeploymentStatus.fromJsonFunction);
-  FromJsonFactory.registerFromJsonFunction(
-      "dk.cachet.carp.deployment.domain.StudyDeploymentStatus.Stopped",
-      StudyDeploymentStatus.fromJsonFunction);
+  FromJsonFactory().register(
+    DeviceDeploymentStatus(),
+    type:
+        "dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.Unregistered",
+  );
+  FromJsonFactory().register(
+    DeviceDeploymentStatus(),
+    type: "dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.Registered",
+  );
+  FromJsonFactory().register(
+    DeviceDeploymentStatus(),
+    type: "dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.Deployed",
+  );
+  FromJsonFactory().register(DeviceDeploymentStatus(),
+      type:
+          "dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.NeedsRedeployment");
+  FromJsonFactory().register(DeviceDescriptor(),
+      type: "dk.cachet.carp.protocols.domain.devices.Smartphone");
+  // FromJsonFactory().register(MasterDeviceDeployment(),
+  //     type: "dk.cachet.carp.protocols.domain.MasterDeviceDeployment");
+  FromJsonFactory().register(DeviceRegistration(),
+      type: "dk.cachet.carp.protocols.domain.devices.DeviceRegistration");
+  FromJsonFactory().register(DeviceRegistration(),
+      type:
+          "dk.cachet.carp.protocols.domain.devices.DefaultDeviceRegistration");
+  FromJsonFactory().register(TaskDescriptor(),
+      type: "dk.cachet.carp.protocols.domain.tasks.TaskDescriptor");
+  FromJsonFactory().register(TaskDescriptor(),
+      type: "dk.cachet.carp.protocols.domain.tasks.ConcurrentTask");
+  FromJsonFactory().register(TriggerDescriptor(),
+      type: "dk.cachet.carp.protocols.domain.triggers.TriggerDescriptor");
+  // FromJsonFactory().register(TriggeredTask(),
+  //     type: "dk.cachet.carp.protocols.domain.triggers.TriggeredTask", );
+  // FromJsonFactory().register(Measure(),
+  //     type: "dk.cachet.carp.protocols.domain.tasks.measures.Measure", );
+  // FromJsonFactory().register(Measure(),
+  //     type: "dk.cachet.carp.protocols.domain.tasks.measures.PhoneSensorMeasure", );
 
-  FromJsonFactory.registerFromJsonFunction(
-      "dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.Unregistered",
-      DeviceDeploymentStatus.fromJsonFunction);
-  FromJsonFactory.registerFromJsonFunction(
-      "dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.Registered",
-      DeviceDeploymentStatus.fromJsonFunction);
-  FromJsonFactory.registerFromJsonFunction(
-      "dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.Deployed",
-      DeviceDeploymentStatus.fromJsonFunction);
-  FromJsonFactory.registerFromJsonFunction(
-      "dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.NeedsRedeployment",
-      DeviceDeploymentStatus.fromJsonFunction);
-  FromJsonFactory.registerFromJsonFunction(
-      "dk.cachet.carp.protocols.domain.devices.Smartphone",
-      DeviceDescriptor.fromJsonFunction);
-
-  // FromJsonFactory.registerFromJsonFunction(
-  //     "dk.cachet.carp.protocols.domain.MasterDeviceDeployment", MasterDeviceDeployment.fromJsonFunction);
-  FromJsonFactory.registerFromJsonFunction(
-      "dk.cachet.carp.protocols.domain.devices.DeviceRegistration",
-      DeviceRegistration.fromJsonFunction);
-  FromJsonFactory.registerFromJsonFunction(
-      "dk.cachet.carp.protocols.domain.devices.DefaultDeviceRegistration",
-      DeviceRegistration.fromJsonFunction);
-  FromJsonFactory.registerFromJsonFunction(
-      "dk.cachet.carp.protocols.domain.tasks.TaskDescriptor",
-      TaskDescriptor.fromJsonFunction);
-  FromJsonFactory.registerFromJsonFunction(
-      "dk.cachet.carp.protocols.domain.tasks.ConcurrentTask",
-      TaskDescriptor.fromJsonFunction);
-  FromJsonFactory.registerFromJsonFunction(
-      "dk.cachet.carp.protocols.domain.triggers.TriggerDescriptor",
-      TriggerDescriptor.fromJsonFunction);
-  // FromJsonFactory.registerFromJsonFunction(
-  //     "dk.cachet.carp.protocols.domain.triggers.TriggeredTask", TriggeredTask.fromJsonFunction);
-  // FromJsonFactory.registerFromJsonFunction(
-  //     "dk.cachet.carp.protocols.domain.tasks.measures.Measure", Measure.fromJsonFunction);
-  // FromJsonFactory.registerFromJsonFunction(
-  //     "dk.cachet.carp.protocols.domain.tasks.measures.PhoneSensorMeasure", Measure.fromJsonFunction);
-
-  // FromJsonFactory.registerFromJsonFunction("dk.cachet.carp.deployment.domain.users.ActiveParticipationInvitation",
-  //     ActiveParticipationInvitation.fromJsonFunction);
-  FromJsonFactory.registerFromJsonFunction(
-      "dk.cachet.carp.deployment.domain.users.ActiveParticipationInvitation.DeviceInvitation",
-      DeviceInvitation.fromJsonFunction);
-  // FromJsonFactory.registerFromJsonFunction(
-  //     "dk.cachet.carp.deployment.domain.users.Participation", Participation.fromJsonFunction);
-  // FromJsonFactory.registerFromJsonFunction(
-  //     "dk.cachet.carp.deployment.domain.users.StudyInvitation", StudyInvitation.fromJsonFunction);
+  // FromJsonFactory().register(type: "dk.cachet.carp.deployment.domain.users.ActiveParticipationInvitation",
+  //     ActiveParticipationInvitation());
+  FromJsonFactory().register(DeviceInvitation(),
+      type:
+          "dk.cachet.carp.deployment.domain.users.ActiveParticipationInvitation.DeviceInvitation");
+  // FromJsonFactory().register(Participation(),
+  //     type: "dk.cachet.carp.deployment.domain.users.Participation");
+  // FromJsonFactory().register(StudyInvitation(),
+  //     type: "dk.cachet.carp.deployment.domain.users.StudyInvitation");
 }

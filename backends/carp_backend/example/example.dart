@@ -45,8 +45,8 @@ void main() {
 
   // create a study and allocate this data point to it.
   Study study = new Study(
-    '1234',
-    'username@cachet.dk',
+    id: '1234',
+    userId: 'username@cachet.dk',
     name: 'Test study #1234',
   );
   study.dataEndPoint = cdep;
