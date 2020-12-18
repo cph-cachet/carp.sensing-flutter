@@ -52,8 +52,8 @@ void main() {
     }, skip: false);
 
     test('- device ID', () async {
-      String id = CarpService.instance.deployment().deviceId;
-      print('Device ID : $id');
+      String id = CarpService.instance.deployment().registeredDeviceId;
+      print('Registered Device ID : $id');
     }, skip: false);
 
     test('- get invitations for this account (user)', () async {

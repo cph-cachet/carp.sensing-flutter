@@ -32,18 +32,14 @@ class DeploymentReference extends CarpReference {
   // /// The role name of this device as specified in the [deployment] protocol.
   //String deviceRoleName;
 
-  String _deviceId;
+  String _registeredDeviceId;
 
   /// A unique id for this device as registered at CARP.
   ///
   /// Uses the phone's unique hardware id, if available.
   /// Otherwise uses a v4 UUID.
-  String get deviceId {
-    if (_deviceId == null) {
-      _deviceId = Device().deviceID ?? Uuid().v4().toString();
-    }
-    return _deviceId;
-  }
+  String get registeredDeviceId =>
+      _registeredDeviceId ??= Device().deviceID ?? Uuid().v4().toString();
 
   DeploymentReference._(CarpService service) : super._(service);
 
@@ -81,8 +77,8 @@ class DeploymentReference extends CarpReference {
 
   /// Get the deployment status for this [DeploymentReference].
   Future<StudyDeploymentStatus> getStatus() async {
-    _status = StudyDeploymentStatus
-        .fromJson(await _rpc(GetStudyDeploymentStatus(studyDeploymentId)));
+    _status = StudyDeploymentStatus.fromJson(
+        await _rpc(GetStudyDeploymentStatus(studyDeploymentId)));
     return _status;
   }
 
@@ -99,10 +95,17 @@ class DeploymentReference extends CarpReference {
     assert(deviceRoleName != null && deviceRoleName.length > 0,
         'deviceRoleName has to be specified when registering a device in CARP.');
 
-    // Set device ID, if provided
-    if (deviceId != null) _deviceId = deviceId;
+    // Set device ID, if  provided
+    if (deviceId != null) _registeredDeviceId = deviceId;
+    // _registeredDeviceId = Device().deviceID ?? Uuid().v4().toString();
+    //   else
+
+    print('deviceId = $deviceId - _registeredDeviceId = $_registeredDeviceId');
+
     _status = StudyDeploymentStatus.fromJson(await _rpc(RegisterDevice(
-        studyDeploymentId, deviceRoleName, DeviceRegistration(deviceId))));
+        studyDeploymentId,
+        deviceRoleName,
+        DeviceRegistration(registeredDeviceId))));
     return _status;
   }
 

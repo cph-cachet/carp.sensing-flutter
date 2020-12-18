@@ -128,7 +128,9 @@ class UnregisterDevice extends DeploymentServiceRequest {
 class DeviceRegistration extends Serializable {
   /// Create a new [DeviceRegistration]
   ///  * [deviceId] - a unique id for this device.
-  ///  * [registrationCreationDate] - the timestamp in milliseconds when this registration was created. If not specified, the time of creation will be used.
+  ///    If not specified, a unique id will be generated.
+  ///  * [registrationCreationDate] - the timestamp in milliseconds when this registration was created.
+  ///    If not specified, the time of creation will be used.
   DeviceRegistration([this.deviceId, this.registrationCreationDate]) : super() {
     $type = 'dk.cachet.carp.protocols.domain.devices.DefaultDeviceRegistration';
     registrationCreationDate ??= DateTime.now().millisecondsSinceEpoch;
@@ -175,9 +177,11 @@ class GetDeviceDeploymentFor extends DeploymentServiceRequest {
 /// A request for reporting this deployment as successful.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class DeploymentSuccessful extends GetDeviceDeploymentFor {
-  DeploymentSuccessful(String studyDeploymentId, String masterDeviceRoleName,
-      this.deviceDeploymentLastUpdateDate)
-      : super(studyDeploymentId, masterDeviceRoleName) {
+  DeploymentSuccessful(
+    String studyDeploymentId,
+    String masterDeviceRoleName,
+    this.deviceDeploymentLastUpdateDate,
+  ) : super(studyDeploymentId, masterDeviceRoleName) {
     $type =
         'dk.cachet.carp.deployment.infrastructure.DeploymentServiceRequest.DeploymentSuccessful';
   }
