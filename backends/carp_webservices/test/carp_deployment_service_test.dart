@@ -1,6 +1,4 @@
 import 'dart:convert';
-//import 'dart:io';
-//import 'dart:math';
 
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
@@ -23,8 +21,11 @@ void main() {
   /// Setup CARP and authenticate.
   /// Runs once before all tests.
   setUpAll(() async {
-    study = new Study(testStudyId, userId,
-        deploymentId: testDeploymentId, name: "Test study");
+    study = new Study(
+        id: testStudyId,
+        userId: userId,
+        deploymentId: testDeploymentId,
+        name: "Test study");
     app = new CarpApp(
       study: study,
       name: "Test",

@@ -13,8 +13,8 @@ void main() async {
   CarpApp app;
   Study study;
 
-  study =
-      new Study(testStudyId, "user@dtu.dk", name: "Test study #$testStudyId");
+  study = new Study(
+      id: testStudyId, userId: "user@dtu.dk", name: "Test study #$testStudyId");
   app = new CarpApp(
       study: study,
       name: "any_display_friendly_name_is_fine",
@@ -84,13 +84,13 @@ void main() async {
   final CARPDataPoint data =
       CARPDataPoint.fromDatum(study.id, study.userId, datum);
   // post it to the CARP server, which returns the ID of the data point
-  int data_point_id =
+  int dataPointId =
       await CarpService.instance.getDataPointReference().postDataPoint(data);
 
   // get the data point back from the server
-  CARPDataPoint data_point = await CarpService.instance
+  CARPDataPoint dataPoint = await CarpService.instance
       .getDataPointReference()
-      .getDataPoint(data_point_id);
+      .getDataPoint(dataPointId);
 
   // batch upload a list of raw json data points in a file
   final File file = File("test/batch.json");
@@ -99,7 +99,7 @@ void main() async {
   // delete the data point
   await CarpService.instance
       .getDataPointReference()
-      .deleteDataPoint(data_point_id);
+      .deleteDataPoint(dataPointId);
 
   // ------------------- COLLECTIONS AND DOCUMENTS --------------------------------
 
@@ -112,19 +112,19 @@ void main() async {
       .setData({'email': username, 'name': 'Administrator'});
 
   // update the document
-  DocumentSnapshot updated_document = await CarpService.instance
+  DocumentSnapshot updatedDocument = await CarpService.instance
       .collection('/users')
       .document(document.name)
       .updateData({'email': username, 'name': 'Super User'});
 
   // get the document
-  DocumentSnapshot new_document = await CarpService.instance
+  DocumentSnapshot newDocument = await CarpService.instance
       .collection('users')
       .document(document.name)
       .get();
 
   // get the document by its unique ID
-  new_document = await CarpService.instance.documentById(document.id).get();
+  newDocument = await CarpService.instance.documentById(document.id).get();
 
   // delete the document
   await CarpService.instance
@@ -133,7 +133,7 @@ void main() async {
       .delete();
 
   // get all collections from a document
-  List<String> collections = new_document.collections;
+  List<String> collections = newDocument.collections;
 
   // get all documents in a collection.
   List<DocumentSnapshot> documents =

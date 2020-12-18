@@ -110,11 +110,14 @@ class DataPointReference extends CarpReference {
   /// Be careful using this method - this might potential return an enormous amount of data.
   Future<List<CARPDataPoint>> getAllDataPoint() async => queryDataPoint('');
 
-  /// Query for [CARPDataPoint]s from the CARP backend using HTTP GET.
+  /// Query for [CARPDataPoint]s from the CARP backend using
+  /// [REST SQL (RSQL)](https://github.com/jirutka/rsql-parser).
   ///
-  /// The [query] string can be build by querying data point _fields_ using _logical operations_.
+  /// The [query] string can be build by querying data point _fields_ using
+  /// _logical operations_.
   ///
-  /// Query fields can be any field in a data point JSON, including nested fields. Examples include:
+  /// Query fields can be any field in a data point JSON, including nested fields.
+  /// Examples include:
   ///
   ///  * Data point fields such as `id`, `study_id` and `created_at`.
   ///  * Header fields such as `carp_header.start_time`, `carp_header.user_id`, and `carp_header.data_format.name`
@@ -122,19 +125,21 @@ class DataPointReference extends CarpReference {
   ///
   /// Note that field names are nested using the dot-notation.
   ///
+  /// See [here](https://github.com/jirutka/rsql-parser) for details on grammar and semantic.
+  ///
   /// The logical operations include:
   ///
-  ///   * Logical AND : `;`
-  ///   * Logical OR : `,`
-  ///   * Equal to : `==`
+  ///   * Logical AND : `;` or `and`
+  ///   * Logical OR : `,` or `or`
   ///
   /// Comparison operations include.
   ///
+  ///   * Equal to : `==`
   ///   * Not equal to : `!=`
-  ///   * Less than : `<`
-  ///   * Less than or equal to : `<=`
-  ///   * Greater than operator : `>`
-  ///   * Greater than or equal to : `>=`
+  ///   * Less than : `=lt=` or `<`
+  ///   * Less than or equal to : `=le=` or `<=`
+  ///   * Greater than operator : `=gt=` or `>`
+  ///   * Greater than or equal to : `=ge=` or `>=`
   ///   * In : `=in=`
   ///   * Not in : `=out=`
   ///
@@ -188,7 +193,6 @@ class DataPointReference extends CarpReference {
     assert(query != null, 'A query string must be specified.');
     String url =
         (query.length == 0) ? dataEndpointUri : "$dataEndpointUri?query=$query";
-    print('url : $url');
     final restHeaders = await headers;
 
     // GET the data points from the CARP web service
