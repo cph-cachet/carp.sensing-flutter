@@ -22,7 +22,8 @@ void main() {
           zip: true,
           encrypt: false);
 
-  Study study_1 = new Study("1234", "user_1@dtu.dk", name: "Test study #1");
+  Study study_1 =
+      new Study(id: "1234", userId: "user_1@dtu.dk", name: "Test study #1");
   study_1.dataEndPoint = storageEndPoint;
 
   // Using Google Sign-In as authentication
@@ -40,6 +41,7 @@ void main() {
       new FirebaseDatabaseDataEndPoint(firebaseEndPoint_2,
           collection: 'carp_data');
 
-  Study study_2 = new Study("5678", "user_2@dtu.dk", name: "Test study #2");
+  Study study_2 =
+      new Study(id: "5678", userId: "user_2@dtu.dk", name: "Test study #2");
   study_2.dataEndPoint = databaseEndPoint;
 }

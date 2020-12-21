@@ -22,7 +22,7 @@ class MovisensSamplingPackage implements SamplingPackage {
   static const String CONNECTION_STATUS = "connection_status";
 
   void onRegister() {
-    FromJsonFactory.registerFromJsonFunction("MovisensMeasure", MovisensMeasure.fromJsonFunction);
+    FromJsonFactory().register(MovisensMeasure());
 
     // registering the transformers from CARP to OMH for heart rate and step count.
     // we assume that there is an OMH schema registered already...
@@ -56,7 +56,7 @@ class MovisensSamplingPackage implements SamplingPackage {
           MOVISENS,
           MovisensMeasure(
             // Test data for a male 25 year old user.
-            MeasureType(NameSpace.CARP, MOVISENS),
+            type: MeasureType(NameSpace.CARP, MOVISENS),
             name: 'Movisens ECG device',
             address: '88:6B:0F:CD:E7:F2',
             sensorLocation: SensorLocation.chest,

@@ -19,15 +19,18 @@ class ESenseMeasure extends Measure {
   /// Default sampling rate is 10 Hz.
   int samplingRate = 10;
 
-  ESenseMeasure(MeasureType type,
-      {name, enabled = true, this.deviceName, this.samplingRate = 10})
-      : super(type, name: name, enabled: enabled);
+  ESenseMeasure({
+    MeasureType type,
+    name,
+    enabled = true,
+    this.deviceName,
+    this.samplingRate = 10,
+  })
+      : super(type: type, name: name, enabled: enabled);
 
-  static Function get fromJsonFunction => _$ESenseMeasureFromJson;
-
-  factory ESenseMeasure.fromJson(Map<String, dynamic> json) => FromJsonFactory
+  Function get fromJsonFunction => _$ESenseMeasureFromJson;
+  factory ESenseMeasure.fromJson(Map<String, dynamic> json) => FromJsonFactory()
       .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
-
   Map<String, dynamic> toJson() => _$ESenseMeasureToJson(this);
 
   String toString() => super.toString() + ', deviceName: $deviceName';
@@ -45,7 +48,7 @@ abstract class ESenseDatum extends CARPDatum {
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ESenseButtonDatum extends ESenseDatum {
   static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, ESenseSamplingPackage.BUTTON);
+      DataFormat(NameSpace.CARP, ESenseSamplingPackage.ESENSE_BUTTON);
 
   DataFormat get format => CARP_DATA_FORMAT;
 
@@ -72,7 +75,7 @@ class ESenseButtonDatum extends ESenseDatum {
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ESenseSensorDatum extends ESenseDatum {
   static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, ESenseSamplingPackage.SENSOR);
+      DataFormat(NameSpace.CARP, ESenseSamplingPackage.ESENSE_SENSOR);
 
   DataFormat get format => CARP_DATA_FORMAT;
 

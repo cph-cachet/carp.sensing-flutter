@@ -1,29 +1,27 @@
 part of health_package;
 
 class HealthProbe extends StreamProbe {
-  StreamController<HealthDatum> _ctrl =
-      StreamController<HealthDatum>.broadcast();
+  StreamController<HealthDatum> _ctrl = StreamController.broadcast();
 
   Stream<HealthDatum> get stream => _ctrl.stream;
   HealthMeasure healthMeasure;
-  HealthFactory _healthFactory = HealthFactory();
 
   HealthProbe() : super();
 
   void onInitialize(Measure measure) {
     super.onInitialize(measure);
     assert(measure is HealthMeasure,
-        'An HealthMeasure must be provided to use the HealthProbe.');
+        'A HealthMeasure must be provided to use the HealthProbe.');
     healthMeasure = (measure as HealthMeasure);
 
-    /// Request access to the health data type before starting sampling
+    // Request access to the health data type before starting sampling
     _healthFactory.requestAuthorization([healthMeasure.healthDataType]);
   }
 
-  Future<void> onResume() async {
+  Future onResume() async {
     super.onResume();
 
-    debug('healthMeasure : $healthMeasure');
+    debug('Collecting health data - Measure : $healthMeasure');
 
     DateTime start = healthMeasure.lastTime ??
         DateTime.now().subtract(healthMeasure.history);

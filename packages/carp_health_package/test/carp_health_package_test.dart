@@ -15,8 +15,8 @@ void main() {
   setUp(() {
     SamplingPackageRegistry().register(HealthSamplingPackage());
 
-    study = Study("1234", "bardram", name: "bardram study")
-      ..dataEndPoint = DataEndPoint(DataEndPointTypes.PRINT)
+    study = Study(id: "1234", userId: "bardram", name: "bardram study")
+      ..dataEndPoint = DataEndPoint(type: DataEndPointTypes.PRINT)
       ..addTriggerTask(
           ImmediateTrigger(),
           AutomaticTask(name: 'Task #1')
@@ -32,7 +32,7 @@ void main() {
   group("Health Study", () {
     test(' - measure -> json', () async {
       HealthMeasure mh = HealthMeasure(
-        MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
+        type: MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
         healthDataType: HealthDataType.STEPS,
       );
       print(mh.toJson());
@@ -132,8 +132,9 @@ void main() {
   test(
     'iPDM-GO Study',
     () async {
-      study = Study("1234", "user@dtu.dk", name: "iPDM-GO sample study")
-        ..dataEndPoint = DataEndPoint(DataEndPointTypes.PRINT)
+      study = Study(
+          id: "1234", userId: "user@dtu.dk", name: "iPDM-GO sample study")
+        ..dataEndPoint = DataEndPoint(type: DataEndPointTypes.PRINT)
         ..addTriggerTask(
             // collect continuously
             ImmediateTrigger(),
@@ -152,23 +153,23 @@ void main() {
             PeriodicTrigger(period: Duration(minutes: 60)),
             AutomaticTask()
               ..measures.add(HealthMeasure(
-                MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
+                type: MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
                 healthDataType: HealthDataType.BLOOD_GLUCOSE,
               ))
               ..measures.add(HealthMeasure(
-                MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
+                type: MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
                 healthDataType: HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
               ))
               ..measures.add(HealthMeasure(
-                MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
+                type: MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
                 healthDataType: HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
               ))
               ..measures.add(HealthMeasure(
-                MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
+                type: MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
                 healthDataType: HealthDataType.HEART_RATE,
               ))
               ..measures.add(HealthMeasure(
-                MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
+                type: MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
                 name: 'Steps',
                 healthDataType: HealthDataType.STEPS,
               ))
@@ -180,7 +181,7 @@ void main() {
                 type: RecurrentType.daily, time: Time(hour: 23, minute: 00)),
             AutomaticTask()
               ..measures.add(HealthMeasure(
-                MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
+                type: MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
                 healthDataType: HealthDataType.WEIGHT,
               ))
             //

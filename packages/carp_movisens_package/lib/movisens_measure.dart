@@ -30,8 +30,8 @@ class MovisensMeasure extends Measure {
   /// Sensor placement on body
   SensorLocation sensorLocation;
 
-  MovisensMeasure(
-    MeasureType type, {
+  MovisensMeasure({
+    MeasureType type,
     name,
     enabled,
     this.address,
@@ -41,10 +41,12 @@ class MovisensMeasure extends Measure {
     this.height,
     this.weight,
     this.age,
-  }) : super(type, name: name, enabled: enabled);
+  })
+      : super(type: type, name: name, enabled: enabled);
 
-  static Function get fromJsonFunction => _$MovisensMeasureFromJson;
+  Function get fromJsonFunction => _$MovisensMeasureFromJson;
   factory MovisensMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$MovisensMeasureToJson(this);
 }

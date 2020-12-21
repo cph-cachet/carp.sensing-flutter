@@ -91,12 +91,11 @@ class FirebaseDatabaseDataEndPoint extends DataEndPoint
   /// Creates a [FirebaseDatabaseDataEndPoint].
   FirebaseDatabaseDataEndPoint(FirebaseEndPoint firebaseEndPoint,
       {this.collection})
-      : super(DataEndPointTypes.FIREBASE_DATABSE) {
+      : super(type: DataEndPointTypes.FIREBASE_DATABSE) {
     this.firebaseEndPoint = firebaseEndPoint;
   }
 
-  static Function get fromJsonFunction =>
-      _$FirebaseDatabaseDataEndPointFromJson;
+  Function get fromJsonFunction => _$FirebaseDatabaseDataEndPointFromJson;
   factory FirebaseDatabaseDataEndPoint.fromJson(Map<String, dynamic> json) =>
       _$FirebaseDatabaseDataEndPointFromJson(json);
   Map<String, dynamic> toJson() => _$FirebaseDatabaseDataEndPointToJson(this);
@@ -127,7 +126,7 @@ class FirebaseStorageDataEndPoint extends FileDataEndPoint
     this.firebaseEndPoint = firebaseEndPoint;
   }
 
-  static Function get fromJsonFunction => _$FirebaseStorageDataEndPointFromJson;
+  Function get fromJsonFunction => _$FirebaseStorageDataEndPointFromJson;
   factory FirebaseStorageDataEndPoint.fromJson(Map<String, dynamic> json) =>
       _$FirebaseStorageDataEndPointFromJson(json);
   Map<String, dynamic> toJson() => _$FirebaseStorageDataEndPointToJson(this);

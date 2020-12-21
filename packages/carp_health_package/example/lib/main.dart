@@ -8,7 +8,7 @@ import 'package:health/health.dart';
 void main() async {
   SamplingPackageRegistry().register(HealthSamplingPackage());
 
-  Study study = Study("1234", "bardram", name: "bardram study");
+  Study study = Study(id: "1234", userId: "bardram", name: "bardram study");
 
   // creating a task collecting step counts and blood pressure data for the last two days
   study.addTriggerTask(
@@ -16,19 +16,21 @@ void main() async {
     Task(name: 'Step and blood pressure')
       ..addMeasure(
         HealthMeasure(
-          MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
+          type: MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
           healthDataType: HealthDataType.STEPS,
           name: 'Steps',
         ),
       )
       ..addMeasure(
-        HealthMeasure(MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
+        HealthMeasure(
+            type: MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
             healthDataType: HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
             history: Duration(days: 2),
             name: 'Blood Pressure Diastolic'),
       )
       ..addMeasure(
-        HealthMeasure(MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
+        HealthMeasure(
+            type: MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
             healthDataType: HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
             history: Duration(days: 2),
             name: 'Blood Pressure Systolic'),

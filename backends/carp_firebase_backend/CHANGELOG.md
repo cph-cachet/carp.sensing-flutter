@@ -1,3 +1,7 @@
+## 0.11.0
+* upgrade to `carp_mobile_sensing` v. 0.11.0
+* upgrade to latest `firebase_storage` v. 5.2.0
+
 ## 0.10.0
 * upgrade to `carp_mobile_sensing` v. 0.10.0
 * alignment of version numbering

@@ -39,8 +39,8 @@ this package only works together with `carp_mobile_sensing`.
 dependencies:
   flutter:
     sdk: flutter
-  carp_mobile_sensing: ^0.6.0
-  carp_health_package: ^0.6.0
+  carp_mobile_sensing: ^0.11.0
+  carp_health_package: ^0.11.0
   ...
 `````
 

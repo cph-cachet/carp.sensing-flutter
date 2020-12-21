@@ -7,7 +7,7 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 void main() async {
   SamplingPackageRegistry().register(ESenseSamplingPackage());
 
-  Study study = Study("1234", "bardram", name: "bardram study");
+  Study study = Study(id: "1234", userId: "bardram", name: "bardram study");
 
   // creating a task collecting step counts and blood pressure data for the last two days
   study
@@ -17,8 +17,8 @@ void main() async {
           ..measures = SamplingSchema.debug().getMeasureList(
             namespace: NameSpace.CARP,
             types: [
-              ESenseSamplingPackage.BUTTON,
-              ESenseSamplingPackage.SENSOR,
+              ESenseSamplingPackage.ESENSE_BUTTON,
+              ESenseSamplingPackage.ESENSE_SENSOR,
             ],
           ));
 

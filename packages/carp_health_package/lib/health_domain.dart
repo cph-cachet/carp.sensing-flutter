@@ -47,25 +47,23 @@ class HealthMeasure extends MarkedMeasure {
   /// The [HealthDataType](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html) to collect.
   HealthDataType healthDataType;
 
-  HealthMeasure(
-    MeasureType type, {
+  HealthMeasure({
+    MeasureType type,
     String name,
     bool enabled,
     Duration history = const Duration(days: 1),
-    @required this.healthDataType,
+    this.healthDataType,
   })
       : super(
-          type,
+          type: type,
           name: name,
           enabled: enabled,
           history: history,
         );
 
-  static Function get fromJsonFunction => _$HealthMeasureFromJson;
-
-  factory HealthMeasure.fromJson(Map<String, dynamic> json) => FromJsonFactory
+  Function get fromJsonFunction => _$HealthMeasureFromJson;
+  factory HealthMeasure.fromJson(Map<String, dynamic> json) => FromJsonFactory()
       .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
-
   Map<String, dynamic> toJson() => _$HealthMeasureToJson(this);
 
   String tag() => '$type.$healthDataType';

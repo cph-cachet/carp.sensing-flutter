@@ -15,24 +15,23 @@ part of esense;
 ///   SamplingPackageRegistry.register(ESenseSamplingPackage());
 /// ```
 class ESenseSamplingPackage implements SamplingPackage {
-  static const String BUTTON = "esense.button";
-  static const String SENSOR = "esense.sensor";
+  static const String ESENSE_BUTTON = "esense.button";
+  static const String ESENSE_SENSOR = "esense.sensor";
 
-  List<String> get dataTypes => [BUTTON, SENSOR];
+  List<String> get dataTypes => [ESENSE_BUTTON, ESENSE_SENSOR];
 
   Probe create(String type) {
     switch (type) {
-      case BUTTON:
+      case ESENSE_BUTTON:
         return ESenseButtonProbe();
-      case SENSOR:
+      case ESENSE_SENSOR:
         return ESenseSensorProbe();
       default:
         return null;
     }
   }
 
-  void onRegister() => FromJsonFactory.registerFromJsonFunction(
-      "ESenseMeasure", ESenseMeasure.fromJsonFunction);
+  void onRegister() => FromJsonFactory().register(ESenseMeasure());
 
   List<Permission> get permissions =>
       [Permission.location, Permission.microphone];
@@ -43,15 +42,17 @@ class ESenseSamplingPackage implements SamplingPackage {
     ..powerAware = true
     ..measures.addEntries([
       MapEntry(
-          BUTTON,
-          ESenseMeasure(MeasureType(NameSpace.CARP, BUTTON),
+          ESENSE_BUTTON,
+          ESenseMeasure(
+              type: MeasureType(NameSpace.CARP, ESENSE_BUTTON),
               name: 'eSense - Button',
               enabled: true,
               deviceName: '',
               samplingRate: 10)),
       MapEntry(
-          SENSOR,
-          ESenseMeasure(MeasureType(NameSpace.CARP, SENSOR),
+          ESENSE_SENSOR,
+          ESenseMeasure(
+              type: MeasureType(NameSpace.CARP, ESENSE_SENSOR),
               name: 'eSense - Sensors',
               enabled: true,
               deviceName: '',
@@ -65,17 +66,18 @@ class ESenseSamplingPackage implements SamplingPackage {
   SamplingSchema get minimum => light
     ..type = SamplingSchemaType.MINIMUM
     ..name = 'Minimum eSense sampling'
-    ..measures[BUTTON].enabled = false
-    ..measures[SENSOR].enabled = false;
+    ..measures[ESENSE_BUTTON].enabled = false
+    ..measures[ESENSE_SENSOR].enabled = false;
 
   SamplingSchema get normal => common;
 
   // This is the debug sampling schema used by bardram
   // His eSense devices are
   //
-  //            name         id
-  //  right  eSense-0917  00:04:79:00:0F:4D
-  //  left   eSense-0332  00:04:79:00:0D:04
+  //        |     name    |     id
+  //  ------+-------------+--------------------
+  //  right | eSense-0917 |  00:04:79:00:0F:4D
+  //  left  | eSense-0332 |  00:04:79:00:0D:04
   //
   // As recommended;:
   //   "it would be better to use the right earbud to record only sound samples
@@ -87,14 +89,16 @@ class ESenseSamplingPackage implements SamplingPackage {
     ..powerAware = false
     ..measures.addEntries([
       MapEntry(
-          BUTTON,
-          ESenseMeasure(MeasureType(NameSpace.CARP, BUTTON),
+          ESENSE_BUTTON,
+          ESenseMeasure(
+              type: MeasureType(NameSpace.CARP, ESENSE_BUTTON),
               name: 'eSense - Button',
               enabled: true,
               deviceName: 'eSense-0332')),
       MapEntry(
-          SENSOR,
-          ESenseMeasure(MeasureType(NameSpace.CARP, SENSOR),
+          ESENSE_SENSOR,
+          ESenseMeasure(
+              type: MeasureType(NameSpace.CARP, ESENSE_SENSOR),
               name: 'eSense - Sensors',
               enabled: true,
               deviceName: 'eSense-0332',

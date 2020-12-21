@@ -18,13 +18,14 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_mobile_sensing/domain/domain.dart';
 import 'package:health/health.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:meta/meta.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
 
 part 'health_domain.dart';
 part 'health_package.g.dart';
 part 'health_probe.dart';
+
+HealthFactory _healthFactory = HealthFactory();
 
 /// This is the base class for this health sampling package.
 ///
@@ -43,12 +44,20 @@ class HealthSamplingPackage implements SamplingPackage {
   Probe create(String type) => type == HEALTH ? HealthProbe() : null;
 
   void onRegister() {
-    FromJsonFactory.registerFromJsonFunction(
-        "HealthMeasure", HealthMeasure.fromJsonFunction);
+    FromJsonFactory().register(HealthMeasure());
   }
 
   List<Permission> get permissions => [];
 
+  /// Request access to GoogleFit/Apple HealthKit.
+  /// This method can be used from the app to request access at a 'convinient'
+  /// time and will typically be done before sampling is started for
+  /// all [types] that are needed.
+  Future<bool> requestAuthorization(List<HealthDataType> types) async =>
+      _healthFactory.requestAuthorization(types);
+
+  /// The `common` sampling schema for health.
+  /// Mainly returns a sampling schema collecting step counts.
   SamplingSchema get common => SamplingSchema()
     ..type = SamplingSchemaType.COMMON
     ..name = 'Common (default) health sampling schema'
@@ -57,7 +66,7 @@ class HealthSamplingPackage implements SamplingPackage {
       MapEntry(
           HEALTH,
           HealthMeasure(
-            MeasureType(NameSpace.CARP, HEALTH),
+            type: MeasureType(NameSpace.CARP, HEALTH),
             name: "Steps",
             healthDataType: HealthDataType.STEPS,
           )),
