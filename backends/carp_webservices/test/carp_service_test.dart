@@ -277,18 +277,19 @@ void main() {
           .postDataPoint(
               CARPDataPoint.fromDatum(study.id, study.userId, datum2));
 
-      // String query =
-      //     'carp_header.user_id==$userId;carp_body.timestamp>2019-11-02T12:53:40.219598Z';
-      //String query = 'carp_header.start_time>2019';
-      //String query = 'carp_header.user_id==$userId';
-      String query = 'carp_body.timestamp>2019-11-02T12:53:40.219598Z';
+      String query =
+          'carp_header.user_id==$userId;carp_body.timestamp>2019-11-02T12:53:40.219598Z';
+      // String query = 'carp_header.user_id==$userId';
+      //String query = 'carp_body.timestamp>2019-11-02T12:53:40.219598Z';
       //String query = 'carp_header.data_format.namespace=in=(carp,omh)';
       print("query : $query");
       List<CARPDataPoint> data = await CarpService.instance
           .getDataPointReference()
           .queryDataPoint(query);
 
+      print('N=${data.length}');
       data.forEach((datapoint) => print(_encode((datapoint.toJson()))));
+
       assert(data.length > 0);
     });
 
@@ -311,6 +312,9 @@ void main() {
             .getDataPointReference()
             .deleteDataPoint(datapoint.id);
       });
+
+      // wait for the delete requests to finish
+      await Future.delayed(const Duration(seconds: 2), () {});
 
       List<CARPDataPoint> empty =
           await CarpService.instance.getDataPointReference().getAllDataPoint();
