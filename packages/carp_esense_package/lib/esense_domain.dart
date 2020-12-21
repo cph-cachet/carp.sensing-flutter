@@ -48,7 +48,7 @@ abstract class ESenseDatum extends CARPDatum {
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ESenseButtonDatum extends ESenseDatum {
   static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, ESenseSamplingPackage.BUTTON);
+      DataFormat(NameSpace.CARP, ESenseSamplingPackage.ESENSE_BUTTON);
 
   DataFormat get format => CARP_DATA_FORMAT;
 
@@ -75,7 +75,7 @@ class ESenseButtonDatum extends ESenseDatum {
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ESenseSensorDatum extends ESenseDatum {
   static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, ESenseSamplingPackage.SENSOR);
+      DataFormat(NameSpace.CARP, ESenseSamplingPackage.ESENSE_SENSOR);
 
   DataFormat get format => CARP_DATA_FORMAT;
 

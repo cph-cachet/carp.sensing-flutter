@@ -17,8 +17,8 @@ void main() async {
           ..measures = SamplingSchema.debug().getMeasureList(
             namespace: NameSpace.CARP,
             types: [
-              ESenseSamplingPackage.BUTTON,
-              ESenseSamplingPackage.SENSOR,
+              ESenseSamplingPackage.ESENSE_BUTTON,
+              ESenseSamplingPackage.ESENSE_SENSOR,
             ],
           ));
 
