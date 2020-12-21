@@ -167,7 +167,8 @@ Once the package is registered, a `MovisensMeasure` can be added to a study like
   study.addTriggerTask(
       ImmediateTrigger(), // a simple trigger that starts immediately
       Task('Movisens Task')
-        ..addMeasure(MovisensMeasure(MeasureType(NameSpace.CARP, MovisensSamplingPackage.MOVISENS),
+        ..addMeasure(MovisensMeasure(
+            type: MeasureType(NameSpace.CARP, MovisensSamplingPackage.MOVISENS),
             name: "movisens",
             enabled: true,
             address: '06-00-00-00-00-00',

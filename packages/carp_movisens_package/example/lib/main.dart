@@ -8,13 +8,14 @@ import 'package:movisens_flutter/movisens_flutter.dart';
 void main() async {
   SamplingPackageRegistry().register(MovisensSamplingPackage());
 
-  Study study = Study("1234", "bardram", name: "bardram study");
+  Study study = Study(id: "1234", userId: "bardram", name: "bardram study");
 
   // adding a movisens measure
   study.addTriggerTask(
       ImmediateTrigger(), // a simple trigger that starts immediately
       Task(name: 'Movisens Task')
-        ..addMeasure(MovisensMeasure(MeasureType(NameSpace.CARP, MovisensSamplingPackage.MOVISENS),
+        ..addMeasure(MovisensMeasure(
+            type: MeasureType(NameSpace.CARP, MovisensSamplingPackage.MOVISENS),
             name: "movisens",
             enabled: true,
             address: '06-00-00-00-00-00',

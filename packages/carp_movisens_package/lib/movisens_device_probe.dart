@@ -14,14 +14,16 @@ class MovisensProbe extends StreamProbe {
   /// User data from the [MovisensMeasure]. Only available after initialized.
   UserData get userData => _userData;
 
-  Future<void> onInitialize(Measure measure) async {
+  Future onInitialize(Measure measure) async {
     assert(measure is MovisensMeasure);
     super.onInitialize(measure);
     MovisensMeasure m = measure as MovisensMeasure;
-    _userData = UserData(m.weight, m.height, m.gender, m.age, m.sensorLocation, m.address, m.deviceName);
+    _userData = UserData(m.weight, m.height, m.gender, m.age, m.sensorLocation,
+        m.address, m.deviceName);
     _movisens = new Movisens(_userData);
   }
 
-  Stream<MovisensDatum> get stream =>
-      (_movisens != null) ? _movisens.movisensStream.map((event) => MovisensDatum.fromMap(event)) : null;
+  Stream<MovisensDatum> get stream => (_movisens != null)
+      ? _movisens.movisensStream.map((event) => MovisensDatum.fromMap(event))
+      : null;
 }
