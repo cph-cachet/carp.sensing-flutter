@@ -99,11 +99,12 @@ abstract class FirebaseDataManager extends AbstractDataManager {
 }
 
 /// Stores files with [Datum] json objects in the Firebase Storage file store.
-/// Works closely with the [FileDataManager] which is responsible for writing and zipping
-/// files to the local device.
+/// Works closely with the [FileDataManager] which is responsible for writing
+/// and zipping files to the local device.
 ///
 /// Files are transferred when the device is online and buffered when offline.
-/// Once the file has been transferred to Firebase, it is deleted on the local device.
+/// Once the file has been transferred to Firebase, it is deleted on the local
+/// device.
 class FirebaseStorageDataManager extends FirebaseDataManager {
   FileDataManager fileDataManager;
   FirebaseStorageDataEndPoint dataEndPoint;
@@ -119,8 +120,8 @@ class FirebaseStorageDataManager extends FirebaseDataManager {
     // merge the file data manager's events into this CARP data manager's event stream
     fileDataManager.events.forEach((event) => controller.add(event));
 
-    // listen to data manager events, but only those from the file manager and only closing events
-    // on a close event, upload the file to CARP
+    // listen to data manager events, but only those from the file manager and
+    // only closing events on a close event, upload the file to CARP
     fileDataManager.events
         .where((event) => event.runtimeType == FileDataManagerEvent)
         .where((event) => event.type == FileDataManagerEventTypes.FILE_CLOSED)
@@ -138,19 +139,19 @@ class FirebaseStorageDataManager extends FirebaseDataManager {
     final FirebaseStorage storage = await firebaseStorage;
     final User authenticatedUser = await user;
 
-    print('Initializig FirebaseStorageDataManager...');
-    print(' Firebase URI  : ${firebaseEndPoint.uri}');
-    print(' Folder path   : ${dataEndPoint.path}');
-    print(' Storage       : ${storage.app.name}');
-    print(
+    info('Initializig FirebaseStorageDataManager...');
+    info(' Firebase URI  : ${firebaseEndPoint.uri}');
+    info(' Folder path   : ${dataEndPoint.path}');
+    info(' Storage       : ${storage.app.name}');
+    info(
         ' Auth. user    : ${authenticatedUser.displayName} <${authenticatedUser.email}>\n');
   }
 
   Future<FirebaseStorage> get firebaseStorage async {
     if (_firebaseStorage == null) {
       final FirebaseApp app = await firebaseApp;
-      _firebaseStorage = new FirebaseStorage(
-          app: app, storageBucket: dataEndPoint.firebaseEndPoint.uri);
+      _firebaseStorage = FirebaseStorage.instanceFor(
+          app: app, bucket: dataEndPoint.firebaseEndPoint.uri);
     }
     return _firebaseStorage;
   }
@@ -158,23 +159,23 @@ class FirebaseStorageDataManager extends FirebaseDataManager {
   String get firebasePath =>
       "${dataEndPoint.path}/${study.id}/${Device().deviceID.toString()}";
 
-  Future<Uri> _uploadFileToFirestore(String localFilePath) async {
+  Future<String> _uploadFileToFirestore(String localFilePath) async {
     final String filename =
         localFilePath.substring(localFilePath.lastIndexOf('/') + 1);
 
-    print(
+    info(
         "Upload to Firestore started - path : '$firebasePath', filename : '$filename'");
 
-    final StorageReference ref =
+    final Reference ref =
         FirebaseStorage.instance.ref().child(firebasePath).child(filename);
     final File file = new File(localFilePath);
     final String deviceID = Device().deviceID.toString();
     final String studyID = study.id;
     final String userID = (await user).email;
 
-    final StorageUploadTask uploadTask = ref.putFile(
+    final UploadTask uploadTask = ref.putFile(
       file,
-      new StorageMetadata(
+      SettableMetadata(
         contentEncoding: 'application/json',
         contentType: 'application/zip',
         customMetadata: <String, String>{
@@ -182,22 +183,27 @@ class FirebaseStorageDataManager extends FirebaseDataManager {
           'study_id': '$studyID',
           'user_id': '$userID'
         },
-        // TODO add location as metadata
+        // TODO - add location as metadata
       ),
     );
 
+    ref.fullPath;
+
     // await the upload is successful
-    final Uri downloadUrl = (await uploadTask.onComplete).uploadSessionUri;
-    addEvent(FirebaseDataManagerEvent(
+    String downloadUrl = await ref.getDownloadURL();
+
+    await uploadTask.whenComplete(() {
+      addEvent(FirebaseDataManagerEvent(
         FirebaseDataManagerEventTypes.file_uploaded,
         file.path,
-        downloadUrl.path));
-    print(
-        "Upload to Firestore finished - remote file uri  : ${downloadUrl.path}'");
-    // then delete the local file.
-    file.delete();
-    addEvent(FileDataManagerEvent(
-        FileDataManagerEventTypes.FILE_DELETED, file.path));
+        downloadUrl,
+      ));
+      info('Upload to Firestore finished - remote file url  : $downloadUrl');
+      // then delete the local file.
+      file.delete();
+      addEvent(FileDataManagerEvent(
+          FileDataManagerEventTypes.FILE_DELETED, file.path));
+    });
 
     return downloadUrl;
   }
@@ -210,7 +216,8 @@ class FirebaseStorageDataManager extends FirebaseDataManager {
 ///
 /// Every time a CARP json data object is created, it is uploaded to Firebase.
 /// Hence, this interface only works when the device is online.
-/// If offline data storage and forward is needed, use the [FirebaseStorageDataManager] instead.
+/// If offline data storage and forward is needed, use the [FirebaseStorageDataManager]
+/// instead.
 class FirebaseDatabaseDataManager extends FirebaseDataManager {
   FirebaseDatabaseDataEndPoint dataEndPoint;
 
