@@ -1,7 +1,8 @@
 part of health_package;
 
 class HealthProbe extends StreamProbe {
-  StreamController<HealthDatum> _ctrl = StreamController.broadcast();
+  StreamController<HealthDatum> _ctrl =
+      StreamController<HealthDatum>.broadcast();
 
   Stream<HealthDatum> get stream => _ctrl.stream;
   HealthMeasure healthMeasure;
@@ -14,6 +15,9 @@ class HealthProbe extends StreamProbe {
     assert(measure is HealthMeasure,
         'An HealthMeasure must be provided to use the HealthProbe.');
     healthMeasure = (measure as HealthMeasure);
+
+    /// Request access to the health data type before starting sampling
+    _healthFactory.requestAuthorization([healthMeasure.healthDataType]);
   }
 
   Future<void> onResume() async {
