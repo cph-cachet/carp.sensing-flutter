@@ -14,8 +14,8 @@ void main() {
   setUp(() {
     SamplingPackageRegistry().register(CommunicationSamplingPackage());
 
-    study = Study("1234", "bardram", name: "bardram study")
-      ..dataEndPoint = DataEndPoint(DataEndPointTypes.PRINT)
+    study = Study(id: "1234", userId: "bardram", name: "bardram study")
+      ..dataEndPoint = DataEndPoint(type: DataEndPointTypes.PRINT)
       ..addTriggerTask(
           ImmediateTrigger(),
           Task(name: 'Task #1')

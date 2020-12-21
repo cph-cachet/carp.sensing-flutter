@@ -7,7 +7,7 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 void main() async {
   SamplingPackageRegistry().register(CommunicationSamplingPackage());
 
-  Study study = Study("1234", "bardram", name: "bardram study");
+  Study study = Study(id: "1234", userId: "bardram", name: "bardram study");
 
   // adding all measure from the common schema to one one trigger and one task
   study.addTriggerTask(

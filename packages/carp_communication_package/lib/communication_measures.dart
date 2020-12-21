@@ -17,17 +17,18 @@ class CalendarMeasure extends Measure {
   /// The time duration ahead in time to collect calendar events.
   Duration future;
 
-  CalendarMeasure(
-    MeasureType type, {
+  CalendarMeasure({
+    MeasureType type,
     name,
     enabled,
     this.past = const Duration(days: DEFAULT_NUMBER_OF_DAYS),
     this.future = const Duration(days: DEFAULT_NUMBER_OF_DAYS),
   })
-      : super(type, enabled: enabled, name: name);
+      : super(type: type, enabled: enabled, name: name);
 
-  static Function get fromJsonFunction => _$CalendarMeasureFromJson;
-  factory CalendarMeasure.fromJson(Map<String, dynamic> json) => FromJsonFactory
-      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Function get fromJsonFunction => _$CalendarMeasureFromJson;
+  factory CalendarMeasure.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$CalendarMeasureToJson(this);
 }

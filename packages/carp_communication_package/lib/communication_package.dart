@@ -47,8 +47,7 @@ class CommunicationSamplingPackage implements SamplingPackage {
   }
 
   void onRegister() {
-    FromJsonFactory.registerFromJsonFunction(
-        "CalendarMeasure", CalendarMeasure.fromJsonFunction);
+    FromJsonFactory().register(CalendarMeasure());
 
     TransformerSchemaRegistry()
         .lookup(PrivacySchema.DEFAULT)
@@ -75,26 +74,26 @@ class CommunicationSamplingPackage implements SamplingPackage {
       MapEntry(
           PHONE_LOG,
           MarkedMeasure(
-            MeasureType(NameSpace.CARP, PHONE_LOG),
+            type: MeasureType(NameSpace.CARP, PHONE_LOG),
             name: 'Phone Log',
             history: Duration(days: 1),
           )),
       MapEntry(
           TEXT_MESSAGE_LOG,
           Measure(
-            MeasureType(NameSpace.CARP, TEXT_MESSAGE_LOG),
+            type: MeasureType(NameSpace.CARP, TEXT_MESSAGE_LOG),
             name: 'Text Message (SMS) Log',
           )),
       MapEntry(
           TEXT_MESSAGE,
           Measure(
-            MeasureType(NameSpace.CARP, TEXT_MESSAGE),
+            type: MeasureType(NameSpace.CARP, TEXT_MESSAGE),
             name: 'Text Message (SMS)',
           )),
       MapEntry(
           CALENDAR,
           CalendarMeasure(
-            MeasureType(NameSpace.CARP, CALENDAR),
+            type: MeasureType(NameSpace.CARP, CALENDAR),
             name: 'Calendar Events',
             past: Duration(days: 1),
             future: Duration(days: 1),
@@ -118,14 +117,14 @@ class CommunicationSamplingPackage implements SamplingPackage {
     ..name = 'Debugging communication sampling schema'
     ..powerAware = false
     ..measures[PHONE_LOG] = MarkedMeasure(
-        MeasureType(NameSpace.CARP, PHONE_LOG),
+        type: MeasureType(NameSpace.CARP, PHONE_LOG),
         name: 'Phone Log',
         history: Duration(days: 1))
     ..measures[TEXT_MESSAGE_LOG] = Measure(
-        MeasureType(NameSpace.CARP, TEXT_MESSAGE_LOG),
+        type: MeasureType(NameSpace.CARP, TEXT_MESSAGE_LOG),
         name: 'Text Message (SMS) Log')
     ..measures[CALENDAR] = CalendarMeasure(
-      MeasureType(NameSpace.CARP, CALENDAR),
+      type: MeasureType(NameSpace.CARP, CALENDAR),
       name: 'Calendar Events',
       past: Duration(days: 1),
       future: Duration(days: 1),

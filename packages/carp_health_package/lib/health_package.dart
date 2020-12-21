@@ -18,7 +18,6 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_mobile_sensing/domain/domain.dart';
 import 'package:health/health.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:meta/meta.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
 
@@ -45,8 +44,7 @@ class HealthSamplingPackage implements SamplingPackage {
   Probe create(String type) => type == HEALTH ? HealthProbe() : null;
 
   void onRegister() {
-    FromJsonFactory().register(HealthMeasure(MeasureType('ignored', 'ignored'),
-        healthDataType: HealthDataType.ACTIVE_ENERGY_BURNED));
+    FromJsonFactory().register(HealthMeasure());
   }
 
   List<Permission> get permissions => [];
@@ -68,7 +66,7 @@ class HealthSamplingPackage implements SamplingPackage {
       MapEntry(
           HEALTH,
           HealthMeasure(
-            MeasureType(NameSpace.CARP, HEALTH),
+            type: MeasureType(NameSpace.CARP, HEALTH),
             name: "Steps",
             healthDataType: HealthDataType.STEPS,
           )),

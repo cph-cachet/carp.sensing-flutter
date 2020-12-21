@@ -8,7 +8,7 @@ part of health_package;
 
 HealthMeasure _$HealthMeasureFromJson(Map<String, dynamic> json) {
   return HealthMeasure(
-    json['type'] == null
+    type: json['type'] == null
         ? null
         : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
     name: json['name'] as String,

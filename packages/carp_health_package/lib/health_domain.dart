@@ -47,12 +47,12 @@ class HealthMeasure extends MarkedMeasure {
   /// The [HealthDataType](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html) to collect.
   HealthDataType healthDataType;
 
-  HealthMeasure(
-    MeasureType type, {
+  HealthMeasure({
+    MeasureType type,
     String name,
     bool enabled,
     Duration history = const Duration(days: 1),
-    @required this.healthDataType,
+    this.healthDataType,
   })
       : super(
           type: type,

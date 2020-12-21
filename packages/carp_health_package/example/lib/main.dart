@@ -16,19 +16,21 @@ void main() async {
     Task(name: 'Step and blood pressure')
       ..addMeasure(
         HealthMeasure(
-          MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
+          type: MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
           healthDataType: HealthDataType.STEPS,
           name: 'Steps',
         ),
       )
       ..addMeasure(
-        HealthMeasure(MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
+        HealthMeasure(
+            type: MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
             healthDataType: HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
             history: Duration(days: 2),
             name: 'Blood Pressure Diastolic'),
       )
       ..addMeasure(
-        HealthMeasure(MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
+        HealthMeasure(
+            type: MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
             healthDataType: HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
             history: Duration(days: 2),
             name: 'Blood Pressure Systolic'),
