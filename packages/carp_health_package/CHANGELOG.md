@@ -1,8 +1,10 @@
 ## 1.2.0
+* upgrade to `health` v. 3.0.0
 * upgrade to `carp_mobile_sensing` v. 0.10.0
 
 ## 1.1.2
 * upgrade to `carp_mobile_sensing` v. 0.9.5
+
 
 ## 1.1.1
 * upgrade to `carp_mobile_sensing` v. 0.9.3
