@@ -15,8 +15,8 @@ void main() {
   setUp(() {
     SamplingPackageRegistry().register(HealthSamplingPackage());
 
-    study = Study("1234", "bardram", name: "bardram study")
-      ..dataEndPoint = DataEndPoint(DataEndPointTypes.PRINT)
+    study = Study(id: "1234", userId: "bardram", name: "bardram study")
+      ..dataEndPoint = DataEndPoint(type: DataEndPointTypes.PRINT)
       ..addTriggerTask(
           ImmediateTrigger(),
           AutomaticTask(name: 'Task #1')
@@ -132,59 +132,61 @@ void main() {
   test(
     'iPDM-GO Study',
     () async {
-      study = Study("1234", "user@dtu.dk", name: "iPDM-GO sample study")
-        ..dataEndPoint = DataEndPoint(DataEndPointTypes.PRINT)
-        ..addTriggerTask(
-            // collect continuously
-            ImmediateTrigger(),
-            AutomaticTask()
-              ..measures = SamplingSchema.common().getMeasureList(
-                namespace: NameSpace.CARP,
-                types: [
-                  SensorSamplingPackage.PEDOMETER,
-                  //ContextSamplingPackage.GEOLOCATION,
-                  //ContextSamplingPackage.ACTIVITY,
-                  //ContextSamplingPackage.WEATHER,
-                ],
-              ))
-        ..addTriggerTask(
-            // collect every hour
-            PeriodicTrigger(period: Duration(minutes: 60)),
-            AutomaticTask()
-              ..measures.add(HealthMeasure(
-                MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
-                healthDataType: HealthDataType.BLOOD_GLUCOSE,
-              ))
-              ..measures.add(HealthMeasure(
-                MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
-                healthDataType: HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
-              ))
-              ..measures.add(HealthMeasure(
-                MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
-                healthDataType: HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
-              ))
-              ..measures.add(HealthMeasure(
-                MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
-                healthDataType: HealthDataType.HEART_RATE,
-              ))
-              ..measures.add(HealthMeasure(
-                MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
-                name: 'Steps',
-                healthDataType: HealthDataType.STEPS,
-              ))
-            //
-            )
-        ..addTriggerTask(
-            // collect every day at 23:00
-            RecurrentScheduledTrigger(
-                type: RecurrentType.daily, time: Time(hour: 23, minute: 00)),
-            AutomaticTask()
-              ..measures.add(HealthMeasure(
-                MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
-                healthDataType: HealthDataType.WEIGHT,
-              ))
-            //
-            );
+      study =
+          Study(id: "1234", userId: "user@dtu.dk", name: "iPDM-GO sample study")
+            ..dataEndPoint = DataEndPoint(type: DataEndPointTypes.PRINT)
+            ..addTriggerTask(
+                // collect continuously
+                ImmediateTrigger(),
+                AutomaticTask()
+                  ..measures = SamplingSchema.common().getMeasureList(
+                    namespace: NameSpace.CARP,
+                    types: [
+                      SensorSamplingPackage.PEDOMETER,
+                      //ContextSamplingPackage.GEOLOCATION,
+                      //ContextSamplingPackage.ACTIVITY,
+                      //ContextSamplingPackage.WEATHER,
+                    ],
+                  ))
+            ..addTriggerTask(
+                // collect every hour
+                PeriodicTrigger(period: Duration(minutes: 60)),
+                AutomaticTask()
+                  ..measures.add(HealthMeasure(
+                    MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
+                    healthDataType: HealthDataType.BLOOD_GLUCOSE,
+                  ))
+                  ..measures.add(HealthMeasure(
+                    MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
+                    healthDataType: HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
+                  ))
+                  ..measures.add(HealthMeasure(
+                    MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
+                    healthDataType: HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
+                  ))
+                  ..measures.add(HealthMeasure(
+                    MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
+                    healthDataType: HealthDataType.HEART_RATE,
+                  ))
+                  ..measures.add(HealthMeasure(
+                    MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
+                    name: 'Steps',
+                    healthDataType: HealthDataType.STEPS,
+                  ))
+                //
+                )
+            ..addTriggerTask(
+                // collect every day at 23:00
+                RecurrentScheduledTrigger(
+                    type: RecurrentType.daily,
+                    time: Time(hour: 23, minute: 00)),
+                AutomaticTask()
+                  ..measures.add(HealthMeasure(
+                    MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
+                    healthDataType: HealthDataType.WEIGHT,
+                  ))
+                //
+                );
 
       DateTime to = DateTime.now();
       DateTime from = to.subtract(Duration(milliseconds: 10000));

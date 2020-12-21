@@ -8,7 +8,7 @@ import 'package:health/health.dart';
 void main() async {
   SamplingPackageRegistry().register(HealthSamplingPackage());
 
-  Study study = Study("1234", "bardram", name: "bardram study");
+  Study study = Study(id: "1234", userId: "bardram", name: "bardram study");
 
   // creating a task collecting step counts and blood pressure data for the last two days
   study.addTriggerTask(
