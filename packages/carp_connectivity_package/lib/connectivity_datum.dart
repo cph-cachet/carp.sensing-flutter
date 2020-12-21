@@ -141,7 +141,8 @@ class BluetoothDevice {
       ', rssi: $rssi';
 }
 
-/// A [Datum] that holds wifi connectivity status in terms of connected SSID and BSSID.
+/// A [Datum] that holds wifi connectivity status in terms of connected SSID
+/// and BSSID.
 ///
 /// Note that it wifi information cannot be collected on emulators.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)

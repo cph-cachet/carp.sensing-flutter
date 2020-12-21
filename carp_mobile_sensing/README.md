@@ -8,7 +8,7 @@
 This library contains the core Flutter package for the CARP Mobile Sensing (CAMS) framework.
 Supports cross-platform (iOS and Android) mobile sensing.
 
-For an overview of all CAMS packages, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/README.md).
+For an overview of all CAMS packages, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter).
 For documentation on how to use CAMS, see the [CAMS wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki).
 
 ## Usage
@@ -92,7 +92,9 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 void example() async {
   // Create a study using a local file to store data
-  Study study = Study("2", 'user@cachet.dk',
+  Study study = Study(
+      id: '2',
+      userId: 'user@cachet.dk',
       name: 'A study collecting ..',
       dataEndPoint: FileDataEndPoint()
         ..bufferSize = 500 * 1000
@@ -136,8 +138,10 @@ In the following example, a study is created "by hand", i.e. you specify each tr
 ```dart
 void example() async {
   // Create a study using a local file to store data
-  Study study = Study("1234", "user@dtu.dk",
-      name: "An example study",
+  Study study = Study(
+      id: '1234',
+      userId: 'user@dtu.dk',
+      name: 'An example study',
       dataEndPoint: FileDataEndPoint()
         ..bufferSize = 500 * 1000
         ..zip = true
@@ -148,22 +152,25 @@ void example() async {
   study.addTriggerTask(
       DelayedTrigger(delay: Duration(seconds: 10)),
       AutomaticTask(name: 'Sensor Task')
-        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
-            frequency: const Duration(seconds: 10), duration: const Duration(milliseconds: 100)))
-        ..addMeasure(PeriodicMeasure(MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
-            frequency: const Duration(seconds: 20), duration: const Duration(milliseconds: 100))));
+        ..addMeasure(Measure(
+            type: MeasureType(
+                NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER)))
+        ..addMeasure(Measure(
+            type:
+                MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE))));
 
   // create a light measure variable to be used later
   PeriodicMeasure lightMeasure = PeriodicMeasure(
-    MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
-    name: "Ambient Light",
+    type: MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
+    name: 'Ambient Light',
     frequency: const Duration(seconds: 11),
     duration: const Duration(milliseconds: 100),
   );
   // add it to the study to start immediately
-  study.addTriggerTask(ImmediateTrigger(), AutomaticTask(name: 'Light')..addMeasure(lightMeasure));
+  study.addTriggerTask(ImmediateTrigger(),
+      AutomaticTask(name: 'Light')..addMeasure(lightMeasure));
 
-  // Create a Study Controller that can manage this study.
+// Create a Study Controller that can manage this study.
   StudyController controller = StudyController(study);
 
   // await initialization before starting/resuming
@@ -173,21 +180,28 @@ void example() async {
   // listening on all data events from the study
   controller.events.forEach(print);
 
-  // listen on only CARP events
-  controller.events.where((datum) => datum.format.namepace == NameSpace.CARP).forEach(print);
+  // listen only for CARP events
+  controller.events
+      .where((datum) => datum.format.namespace == NameSpace.CARP)
+      .forEach(print);
 
-  // listen on LIGHT events only
-  controller.events.where((datum) => datum.format.name == SensorSamplingPackage.LIGHT).forEach(print);
+  // listen for LIGHT events only
+  controller.events
+      .where((datum) => datum.format.name == SensorSamplingPackage.LIGHT)
+      .forEach(print);
 
   // map events to JSON and then print
   controller.events.map((datum) => datum.toJson()).forEach(print);
 
-  // listening on a specific probe registered in the ProbeRegistry
+  // listening on a specific event type
   // this is equivalent to the statement above
-  ProbeRegistry().probes[SensorSamplingPackage.LIGHT].events.forEach(print);
+  ProbeRegistry()
+      .eventsByType(SensorSamplingPackage.LIGHT)
+      .listen((event) => print(event));
 
   // subscribe to events
-  StreamSubscription<Datum> subscription = controller.events.listen((Datum datum) {
+  StreamSubscription<Datum> subscription =
+      controller.events.listen((Datum datum) {
     // do something w. the datum, e.g. print the json
     print(JsonEncoder.withIndent(' ').convert(datum));
   });
@@ -196,9 +210,10 @@ void example() async {
   controller.pause();
   controller.resume();
 
-  // pause / resume specific probe(s)
-  ProbeRegistry().lookup(SensorSamplingPackage.ACCELEROMETER).pause();
-  ProbeRegistry().lookup(SensorSamplingPackage.ACCELEROMETER).resume();
+  // pause specific probe(s)
+  ProbeRegistry()
+      .lookup(SensorSamplingPackage.ACCELEROMETER)
+      .forEach((probe) => probe.pause());
 
   // adapt measures on the go - calling hasChanged() force a restart of
   // the probe, which will load the new measure
@@ -216,7 +231,7 @@ void example() async {
   // note that once a sampling has stopped, it cannot be restarted.
   controller.stop();
   subscription.cancel();
-}
+} 
 ```
 
 There is a very **simple** [example app](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/carp_mobile_sensing/example/lib/main.dart) app which shows how a study can be created with different tasks and measures.

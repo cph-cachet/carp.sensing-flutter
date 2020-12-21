@@ -4,7 +4,9 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 void sensing() async {
   // create the study
-  Study study = Study('2', 'user@gmail.com',
+  Study study = Study(
+      id: '2',
+      userId: 'user@gmail.com',
       name: 'A simple example study',
       dataEndPoint: FileDataEndPoint()
         ..bufferSize = 500 * 1000
@@ -34,6 +36,6 @@ void sensing() async {
     print(JsonEncoder.withIndent(' ').convert(datum));
   });
 
-  // listening on events from a specific probe
-  ProbeRegistry.lookup(DeviceSamplingPackage.SCREEN).events.forEach(print);
+  // listening on events of a specific type
+  ProbeRegistry().eventsByType(DeviceSamplingPackage.SCREEN).forEach(print);
 }

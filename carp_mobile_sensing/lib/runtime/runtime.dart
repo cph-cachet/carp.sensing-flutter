@@ -25,6 +25,7 @@ import 'package:cron/cron.dart' as cron;
 
 part 'data_manager.dart';
 part 'executors.dart';
+part 'app_task_executor.dart';
 part 'permission_handler.dart';
 part 'probe_controller.dart';
 part 'probe_registry.dart';
@@ -32,6 +33,7 @@ part 'probes.dart';
 part 'sampling_package.dart';
 part 'settings.dart';
 part 'study_controller.dart';
+part 'sampling_schema.dart';
 
 /// Generic sensing exception.
 class SensingException implements Exception {

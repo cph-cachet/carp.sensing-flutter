@@ -6,7 +6,8 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:health/health.dart';
 import 'package:test/test.dart';
 
-String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
+String _encode(Object object) =>
+    const JsonEncoder.withIndent(' ').convert(object);
 
 void main() {
   Study study;
@@ -20,7 +21,9 @@ void main() {
           ImmediateTrigger(),
           AutomaticTask(name: 'Task #1')
             //..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
-            ..measures = SamplingSchema.common().getMeasureList(namespace: NameSpace.CARP, types: [
+            ..measures = SamplingSchema
+                .common()
+                .getMeasureList(namespace: NameSpace.CARP, types: [
               DeviceSamplingPackage.BATTERY,
               HealthSamplingPackage.HEALTH,
             ]));
@@ -43,7 +46,8 @@ void main() {
 
     test(' - json -> study', () async {
       final studyJson = _encode(study);
-      Study study_2 = Study.fromJson(json.decode(studyJson) as Map<String, dynamic>);
+      Study study_2 =
+          Study.fromJson(json.decode(studyJson) as Map<String, dynamic>);
       expect(study_2.id, study.id);
       print(_encode(study_2));
     });
@@ -70,13 +74,15 @@ void main() {
       DateTime to = DateTime.now();
       DateTime from = to.subtract(Duration(milliseconds: 10000));
       double value = 500;
-      String unit = enumToString(dasesDataTypeToUnit[DasesHealthDataType.CALORIES_INTAKE]);
+      String unit = enumToString(
+          dasesDataTypeToUnit[DasesHealthDataType.CALORIES_INTAKE]);
       String type = enumToString(DasesHealthDataType.CALORIES_INTAKE);
       String platform = enumToString(PlatformType.ANDROID);
       String deviceId = '1234';
       String uuid = "4321";
 
-      HealthDatum hd = HealthDatum(value, unit, type, from, to, platform, deviceId, uuid);
+      HealthDatum hd =
+          HealthDatum(value, unit, type, from, to, platform, deviceId, uuid);
 
       DataPoint dp_1 = DataPoint.fromDatum(study.id, study.userId, hd);
       expect(dp_1.header.dataFormat.namespace, NameSpace.CARP);
@@ -87,8 +93,15 @@ void main() {
     test(' - ALCOHOL', () {
       DateTime to = DateTime.now();
       DateTime from = to.subtract(Duration(milliseconds: 10000));
-      HealthDatum hd = HealthDatum(6, enumToString(dasesDataTypeToUnit[DasesHealthDataType.ALCOHOL]), enumToString(DasesHealthDataType.ALCOHOL), from, to,
-          enumToString(PlatformType.IOS), '1234', '4321');
+      HealthDatum hd = HealthDatum(
+          6,
+          enumToString(dasesDataTypeToUnit[DasesHealthDataType.ALCOHOL]),
+          enumToString(DasesHealthDataType.ALCOHOL),
+          from,
+          to,
+          enumToString(PlatformType.IOS),
+          '1234',
+          '4321');
 
       DataPoint dp_1 = DataPoint.fromDatum(study.id, study.userId, hd);
       expect(dp_1.header.dataFormat.namespace, NameSpace.CARP);
@@ -99,8 +112,15 @@ void main() {
     test(' - SLEEP', () {
       DateTime to = DateTime.now();
       DateTime from = to.subtract(Duration(hours: 8));
-      HealthDatum hd = HealthDatum(6, enumToString(dasesDataTypeToUnit[DasesHealthDataType.SLEEP]), enumToString(DasesHealthDataType.SLEEP), from, to,
-          enumToString(PlatformType.IOS), '1234', '4321');
+      HealthDatum hd = HealthDatum(
+          6,
+          enumToString(dasesDataTypeToUnit[DasesHealthDataType.SLEEP]),
+          enumToString(DasesHealthDataType.SLEEP),
+          from,
+          to,
+          enumToString(PlatformType.IOS),
+          '1234',
+          '4321');
 
       DataPoint dp_1 = DataPoint.fromDatum(study.id, study.userId, hd);
       expect(dp_1.header.dataFormat.namespace, NameSpace.CARP);
@@ -156,7 +176,8 @@ void main() {
             )
         ..addTriggerTask(
             // collect every day at 23:00
-            RecurrentScheduledTrigger(type: RecurrentType.daily, time: Time(hour: 23, minute: 00)),
+            RecurrentScheduledTrigger(
+                type: RecurrentType.daily, time: Time(hour: 23, minute: 00)),
             AutomaticTask()
               ..measures.add(HealthMeasure(
                 MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
@@ -179,8 +200,17 @@ void main() {
       // as a HealthDatum and added to the CAMS event stream
 
       // create an alcohol health datum object
-      HealthDatum alcohol = HealthDatum(6, enumToString(dasesDataTypeToUnit[DasesHealthDataType.ALCOHOL]), enumToString(DasesHealthDataType.ALCOHOL), from, to,
-          (Platform.isAndroid) ? enumToString(PlatformType.ANDROID) : enumToString(PlatformType.IOS), '1234', '4321');
+      HealthDatum alcohol = HealthDatum(
+          6,
+          enumToString(dasesDataTypeToUnit[DasesHealthDataType.ALCOHOL]),
+          enumToString(DasesHealthDataType.ALCOHOL),
+          from,
+          to,
+          (Platform.isAndroid)
+              ? enumToString(PlatformType.ANDROID)
+              : enumToString(PlatformType.IOS),
+          '1234',
+          '4321');
 
       // manually add the datum to the event stream
       controller.executor.addDatum(alcohol);
@@ -188,11 +218,14 @@ void main() {
       // report smoking
       HealthDatum smoking = HealthDatum(
           12,
-          enumToString(dasesDataTypeToUnit[DasesHealthDataType.SMOKED_CIGARETTES]),
+          enumToString(
+              dasesDataTypeToUnit[DasesHealthDataType.SMOKED_CIGARETTES]),
           enumToString(DasesHealthDataType.SMOKED_CIGARETTES),
           from,
           to,
-          (Platform.isAndroid) ? enumToString(PlatformType.ANDROID) : enumToString(PlatformType.IOS),
+          (Platform.isAndroid)
+              ? enumToString(PlatformType.ANDROID)
+              : enumToString(PlatformType.IOS),
           '1234',
           '4321');
 

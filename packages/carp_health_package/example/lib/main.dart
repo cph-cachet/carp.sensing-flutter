@@ -23,11 +23,15 @@ void main() async {
       )
       ..addMeasure(
         HealthMeasure(MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
-            healthDataType: HealthDataType.BLOOD_PRESSURE_DIASTOLIC, history: Duration(days: 2), name: 'Blood Pressure Diastolic'),
+            healthDataType: HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
+            history: Duration(days: 2),
+            name: 'Blood Pressure Diastolic'),
       )
       ..addMeasure(
         HealthMeasure(MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
-            healthDataType: HealthDataType.BLOOD_PRESSURE_SYSTOLIC, history: Duration(days: 2), name: 'Blood Pressure Systolic'),
+            healthDataType: HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
+            history: Duration(days: 2),
+            name: 'Blood Pressure Systolic'),
       ),
   );
 

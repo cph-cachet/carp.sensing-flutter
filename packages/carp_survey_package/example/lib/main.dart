@@ -10,14 +10,14 @@ import 'package:research_package/research_package.dart';
 void main() async {
   SamplingPackageRegistry().register(SurveySamplingPackage());
 
-  Study study = Study("1234", "bardram", name: "bardram study");
+  Study study = Study(id: "1234", userId: "bardram", name: "bardram study");
 
   // adding all measure from the common schema to one one trigger and one task
   study.addTriggerTask(
           DelayedTrigger(delay: Duration(seconds: 30)),
           Task(name: 'WHO-5 Survey')
             ..measures.add(RPTaskMeasure(
-              MeasureType(NameSpace.CARP, SurveySamplingPackage.SURVEY),
+              type: MeasureType(NameSpace.CARP, SurveySamplingPackage.SURVEY),
               name: 'WHO5',
               enabled: true,
               surveyTask: who5Task,

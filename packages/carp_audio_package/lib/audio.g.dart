@@ -80,7 +80,7 @@ Map<String, dynamic> _$NoiseDatumToJson(NoiseDatum instance) {
 
 AudioMeasure _$AudioMeasureFromJson(Map<String, dynamic> json) {
   return AudioMeasure(
-    json['type'] == null
+    type: json['type'] == null
         ? null
         : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
     name: json['name'] as String,
@@ -88,6 +88,7 @@ AudioMeasure _$AudioMeasureFromJson(Map<String, dynamic> json) {
     studyId: json['study_id'] as String,
   )
     ..$type = json[r'$type'] as String
+    ..description = json['description'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
     );
@@ -105,6 +106,7 @@ Map<String, dynamic> _$AudioMeasureToJson(AudioMeasure instance) {
   writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
   writeNotNull('name', instance.name);
+  writeNotNull('description', instance.description);
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
   writeNotNull('study_id', instance.studyId);
@@ -113,7 +115,7 @@ Map<String, dynamic> _$AudioMeasureToJson(AudioMeasure instance) {
 
 NoiseMeasure _$NoiseMeasureFromJson(Map<String, dynamic> json) {
   return NoiseMeasure(
-    json['type'] == null
+    type: json['type'] == null
         ? null
         : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
     name: json['name'] as String,
@@ -127,6 +129,7 @@ NoiseMeasure _$NoiseMeasureFromJson(Map<String, dynamic> json) {
     samplingRate: json['sampling_rate'] as int,
   )
     ..$type = json[r'$type'] as String
+    ..description = json['description'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
     );
@@ -144,6 +147,7 @@ Map<String, dynamic> _$NoiseMeasureToJson(NoiseMeasure instance) {
   writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
   writeNotNull('name', instance.name);
+  writeNotNull('description', instance.description);
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
   writeNotNull('frequency', instance.frequency?.inMicroseconds);

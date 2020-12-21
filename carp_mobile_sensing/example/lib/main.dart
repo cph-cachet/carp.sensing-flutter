@@ -113,7 +113,9 @@ class Sensing {
     console.log('Setting up study...');
 
     // create the study
-    study = Study('2', 'user@cachet.dk',
+    study = Study(
+            id: '2',
+            userId: 'user@cachet.dk',
             name: 'A default / common study',
             dataEndPoint: FileDataEndPoint()
               ..bufferSize = 500 * 1000
@@ -125,6 +127,10 @@ class Sensing {
                 ..measures = SamplingSchema.debug().getMeasureList(
                   namespace: NameSpace.CARP,
                   types: [
+                    //SensorSamplingPackage.ACCELEROMETER,
+                    //SensorSamplingPackage.GYROSCOPE,
+                    SensorSamplingPackage.PERIODIC_ACCELEROMETER,
+                    SensorSamplingPackage.PERIODIC_GYROSCOPE,
                     SensorSamplingPackage.LIGHT,
                   ],
                 ))
@@ -153,6 +159,7 @@ class Sensing {
     controller = StudyController(
       study,
       debugLevel: DebugLevel.DEBUG,
+      privacySchemaName: PrivacySchema.DEFAULT,
     );
     await controller.initialize();
 
@@ -161,11 +168,12 @@ class Sensing {
     console.log('Sensing started ...');
 
     // listening on all probe events from the study
-    controller.events.forEach(print);
+    controller.events.listen((event) => print(event));
   }
 
   /// Is sensing running, i.e. has the study executor been resumed?
-  bool get isRunning => (controller != null) && controller.executor.state == ProbeState.resumed;
+  bool get isRunning =>
+      (controller != null) && controller.executor.state == ProbeState.resumed;
 
   /// Resume sensing
   void resume() async {

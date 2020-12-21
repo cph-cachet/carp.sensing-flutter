@@ -6,6 +6,8 @@
 .packages
 .pub/
 pubspec.lock
+lib/.flutter-plugins-dependencies
+example/.flutter-plugins-dependencies
 
 
 # IntelliJ

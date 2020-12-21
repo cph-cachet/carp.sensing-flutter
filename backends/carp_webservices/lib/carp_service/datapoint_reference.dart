@@ -26,12 +26,14 @@ class DataPointReference extends CarpReference {
     final restHeaders = await headers;
 
     // POST the data point to the CARP web service
-    http.Response response = await httpr.post(Uri.encodeFull(url), headers: restHeaders, body: json.encode(data));
+    http.Response response = await httpr.post(Uri.encodeFull(url),
+        headers: restHeaders, body: json.encode(data));
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
 
-    if ((httpStatusCode == HttpStatus.ok) || (httpStatusCode == HttpStatus.created)) return responseJson["id"];
+    if ((httpStatusCode == HttpStatus.ok) ||
+        (httpStatusCode == HttpStatus.created)) return responseJson["id"];
 
     // All other cases are treated as an error.
     throw CarpServiceException(
@@ -40,13 +42,14 @@ class DataPointReference extends CarpReference {
     );
   }
 
-  /// Batch upload a file with [CARPDataPoint]s to the CARP backend using HTTP POST.
+  /// Batch upload a file with [CARPDataPoint]s to the CARP backend using
+  /// HTTP POST.
   ///
   /// A file can be created using a [FileDataManager] in `carp_mobile_sensing`.
   /// Note that the file should be raw JSON, and hence _not_ zipped.
   ///
   /// Returns when successful. Throws an [CarpServiceException] if not.
-  Future<void> batchPostDataPoint(File file) async {
+  Future batchPostDataPoint(File file) async {
     assert(file != null);
     final String url = "$dataEndpointUri/batch";
     final restHeaders = await headers;
@@ -56,14 +59,17 @@ class DataPointReference extends CarpReference {
     request.headers['Content-Type'] = 'multipart/form-data';
     request.headers['cache-control'] = 'no-cache';
 
-    request.files.add(http.MultipartFile.fromBytes('file', file != null ? file.readAsBytesSync() : List<int>(),
-        filename: file != null ? file.path : '', contentType: MediaType('application', 'json')));
+    request.files.add(http.MultipartFile.fromBytes(
+        'file', file != null ? file.readAsBytesSync() : List<int>(),
+        filename: file != null ? file.path : '',
+        contentType: MediaType('application', 'json')));
 
     // sending the request using the retry approach
     httpr.send(request).then((response) async {
       final int httpStatusCode = response.statusCode;
 
-      if ((httpStatusCode == HttpStatus.ok) || (httpStatusCode == HttpStatus.created))
+      if ((httpStatusCode == HttpStatus.ok) ||
+          (httpStatusCode == HttpStatus.created))
         return; // CARP web service returns "200 OK" or "201 Created" when a file is uploaded to the server.
 
       // everything else is an exception
@@ -83,12 +89,14 @@ class DataPointReference extends CarpReference {
     final restHeaders = await headers;
 
     // GET the data point from the CARP web service
-    http.Response response = await httpr.get(Uri.encodeFull(url), headers: restHeaders);
+    http.Response response =
+        await httpr.get(Uri.encodeFull(url), headers: restHeaders);
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
 
-    if (httpStatusCode == HttpStatus.ok) return CARPDataPoint.fromJson(responseJson);
+    if (httpStatusCode == HttpStatus.ok)
+      return CARPDataPoint.fromJson(responseJson);
 
     // All other cases are treated as an error.
     throw CarpServiceException(
@@ -102,11 +110,14 @@ class DataPointReference extends CarpReference {
   /// Be careful using this method - this might potential return an enormous amount of data.
   Future<List<CARPDataPoint>> getAllDataPoint() async => queryDataPoint('');
 
-  /// Query for [CARPDataPoint]s from the CARP backend using HTTP GET.
+  /// Query for [CARPDataPoint]s from the CARP backend using
+  /// [REST SQL (RSQL)](https://github.com/jirutka/rsql-parser).
   ///
-  /// The [query] string can be build by querying data point _fields_ using _logical operations_.
+  /// The [query] string can be build by querying data point _fields_ using
+  /// _logical operations_.
   ///
-  /// Query fields can be any field in a data point JSON, including nested fields. Examples include:
+  /// Query fields can be any field in a data point JSON, including nested fields.
+  /// Examples include:
   ///
   ///  * Data point fields such as `id`, `study_id` and `created_at`.
   ///  * Header fields such as `carp_header.start_time`, `carp_header.user_id`, and `carp_header.data_format.name`
@@ -114,19 +125,21 @@ class DataPointReference extends CarpReference {
   ///
   /// Note that field names are nested using the dot-notation.
   ///
+  /// See [here](https://github.com/jirutka/rsql-parser) for details on grammar and semantic.
+  ///
   /// The logical operations include:
   ///
-  ///   * Logical AND : `;`
-  ///   * Logical OR : `,`
-  ///   * Equal to : `==`
+  ///   * Logical AND : `;` or `and`
+  ///   * Logical OR : `,` or `or`
   ///
   /// Comparison operations include.
   ///
+  ///   * Equal to : `==`
   ///   * Not equal to : `!=`
-  ///   * Less than : `<`
-  ///   * Less than or equal to : `<=`
-  ///   * Greater than operator : `>`
-  ///   * Greater than or equal to : `>=`
+  ///   * Less than : `=lt=` or `<`
+  ///   * Less than or equal to : `=le=` or `<=`
+  ///   * Greater than operator : `=gt=` or `>`
+  ///   * Greater than or equal to : `=ge=` or `>=`
   ///   * In : `=in=`
   ///   * Not in : `=out=`
   ///
@@ -178,8 +191,8 @@ class DataPointReference extends CarpReference {
   ///
   Future<List<CARPDataPoint>> queryDataPoint(String query) async {
     assert(query != null, 'A query string must be specified.');
-    String url = (query.length == 0) ? dataEndpointUri : "$dataEndpointUri?query=$query";
-    print('url : $url');
+    String url =
+        (query.length == 0) ? dataEndpointUri : "$dataEndpointUri?query=$query";
     final restHeaders = await headers;
 
     // GET the data points from the CARP web service
@@ -206,12 +219,13 @@ class DataPointReference extends CarpReference {
   }
 
   /// Delete a [CARPDataPoint] from the CARP backend using HTTP DELETE
-  Future<void> deleteDataPoint(int id) async {
+  Future deleteDataPoint(int id) async {
     String url = "$dataEndpointUri/$id";
     final restHeaders = await headers;
 
     // DELETE the data point
-    http.Response response = await httpr.delete(Uri.encodeFull(url), headers: restHeaders);
+    http.Response response =
+        await httpr.delete(Uri.encodeFull(url), headers: restHeaders);
     final int httpStatusCode = response.statusCode;
 
     if (httpStatusCode == HttpStatus.ok) return;

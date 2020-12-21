@@ -12,10 +12,10 @@ linter:
 
 analyzer:
   exclude:
-    - lib/data_managers/*.g.dart
-    - lib/domain/*.g.dart
-    - lib/sampling_packages/device/*.g.dart
-    - lib/sampling_packages/sensors/*.g.dart
-    - test/*.dart
-    - example/**
+    #- lib/data_managers/*.g.dart
+    #- lib/domain/*.g.dart
+    #- lib/sampling_packages/device/*.g.dart
+    #- lib/sampling_packages/sensors/*.g.dart
+    #- test/*.dart
+    #- example/**
 

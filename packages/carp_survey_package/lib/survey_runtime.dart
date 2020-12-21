@@ -15,7 +15,8 @@ class SurveySamplingPackage implements SamplingPackage {
         SURVEY,
       ];
 
-  List<Permission> get permissions => []; // Research Package don't need any permission on the phone
+  List<Permission> get permissions =>
+      []; // Research Package don't need any permission on the phone
 
   Probe create(String type) {
     switch (type) {
@@ -27,7 +28,8 @@ class SurveySamplingPackage implements SamplingPackage {
   }
 
   void onRegister() {
-    FromJsonFactory.registerFromJsonFunction("RPTaskMeasure", RPTaskMeasure.fromJsonFunction);
+    FromJsonFactory().register(RPTaskMeasure(type: null));
+    AppTaskController().registerUserTaskFactory(SurveyUserTaskFactory());
   }
 
   /// Adding WHO5 as the default survey.
@@ -39,7 +41,7 @@ class SurveySamplingPackage implements SamplingPackage {
       MapEntry(
           SURVEY,
           RPTaskMeasure(
-            MeasureType(NameSpace.CARP, SURVEY),
+            type: MeasureType(NameSpace.CARP, SURVEY),
             name: 'WHO5',
             enabled: true,
             surveyTask: who5Task,
@@ -59,7 +61,7 @@ class SurveySamplingPackage implements SamplingPackage {
 /// Once the survey is submitted later, then a [RPTaskResultDatum] is added to
 /// the [carp_mobile_sensing] event queue.
 class SurveyProbe extends AbstractProbe {
-  StreamController<Datum> controller = StreamController<Datum>.broadcast();
+  StreamController<Datum> controller = StreamController.broadcast();
   Stream<Datum> get events => controller.stream;
   RPTaskMeasure get surveyMeasure => (measure as RPTaskMeasure);
 
@@ -81,7 +83,9 @@ class SurveyProbe extends AbstractProbe {
   /// The optional [RPTaskResult] is provided at it's current state. Can be null.
   void Function([RPTaskResult]) onSurveyCancel;
 
-  SurveyProbe({this.onSurveyTriggered, this.onSurveySubmit, this.onSurveyCancel}) : super();
+  SurveyProbe(
+      {this.onSurveyTriggered, this.onSurveySubmit, this.onSurveyCancel})
+      : super();
 
   void onInitialize(Measure measure) {
     assert(measure is RPTaskMeasure);
@@ -89,7 +93,7 @@ class SurveyProbe extends AbstractProbe {
     surveyTask = surveyMeasure.surveyTask;
   }
 
-  Future<void> onResume() async {
+  Future onResume() async {
     onSurveyTriggered(SurveyPage(
       surveyTask,
       _onSurveySubmit,
@@ -97,9 +101,9 @@ class SurveyProbe extends AbstractProbe {
     ));
   }
 
-  Future<void> onRestart() async {}
-  Future<void> onPause() async {}
-  Future<void> onStop() async {}
+  Future onRestart() async {}
+  Future onPause() async {}
+  Future onStop() async {}
 
   void _onSurveySubmit(RPTaskResult result) {
     // when we have the survey result, add it to the event stream

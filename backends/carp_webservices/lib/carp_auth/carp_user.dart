@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2018-2020 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -21,9 +21,6 @@ class CarpUser {
 
   /// Is this user activated in any studies?
   bool isActivated;
-
-  /// CARP password
-  String password;
 
   /// The user's email
   String email;
@@ -59,7 +56,6 @@ class CarpUser {
     @required this.username,
     this.id,
     this.accountId,
-    this.password,
     this.firstName,
     this.lastName,
     this.phone,
@@ -79,10 +75,17 @@ class CarpUser {
   /// Returns true if the user's email is verified.
   bool get isEmailVerified => ((username != null) && (token != null));
 
-  /// Obtains the OAuth token for the current user, forcing a [refresh] if desired.
+  /// Obtains the OAuth token for the current user, forcing a [refresh] i
+  /// f desired.
   Future<OAuthToken> getOAuthToken({bool refresh = false}) async {
-    if (CarpService.instance == null) throw new CarpServiceException(message: "CARP Service not initialized. Call 'CarpService.configure()' first.");
-    if (token == null) throw new CarpServiceException(message: "OAuth token is null. Call 'CarpService.authenticate()' first.");
+    if (CarpService.instance == null)
+      throw new CarpServiceException(
+          message:
+              "CARP Service not initialized. Call 'CarpService.configure()' first.");
+    if (token == null)
+      throw new CarpServiceException(
+          message:
+              "OAuth token is null. Call 'CarpService.authenticate()' first.");
 
     // check if we need to refresh the token.
     if (token.hasExpired || refresh) {
@@ -93,15 +96,18 @@ class CarpUser {
   }
 
   /// Sign out the current user.
-  Future<void> signOut() async {
+  Future signOut() async {
     //TODO - implement sign out on the CARP Web Service
     token = null;
   }
 
-  /// Manually refreshes the data of the current user (e.g., [fullName], [telephone], etc.)
-  /// from the CARP web service.
-  Future<void> reload() async {
-    if (CarpService.instance == null) throw new CarpServiceException(message: "CARP Service not initialized. Call 'CarpService.configure()' first.");
+  /// Manually refreshes the data of the current user (e.g., [fullName],
+  /// [telephone], etc.) from the CARP web service.
+  Future reload() async {
+    if (CarpService.instance == null)
+      throw new CarpServiceException(
+          message:
+              "CARP Service not initialized. Call 'CarpService.configure()' first.");
 
     CarpService.instance.getCurrentUserProfile();
   }
@@ -109,10 +115,12 @@ class CarpUser {
   /// Deletes the user record from the CARP web service.
   ///
   /// TODO - not implemented, since there is currently no CARP endpoint for users.
-  Future<void> delete() async {}
+  Future delete() async {}
 
-  factory CarpUser.fromJson(Map<String, dynamic> json) => _$CarpUserFromJson(json);
+  factory CarpUser.fromJson(Map<String, dynamic> json) =>
+      _$CarpUserFromJson(json);
   Map<String, dynamic> toJson() => _$CarpUserToJson(this);
 
-  String toString() => 'CARP User: $username [$id] - $firstName $lastName [account id: $accountId]';
+  String toString() =>
+      'CARP User: $username [$id] - $firstName $lastName [account id: $accountId]';
 }

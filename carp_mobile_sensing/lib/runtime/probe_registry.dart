@@ -10,7 +10,8 @@ part of runtime;
 //TODO : change probes to use Dart Isolates in order to support dynamic class loading (and isolation).
 // Right now registration of probes has to be done manually.
 // Later this will be implemented using Dart Isolates.
-// HOWEVER, Dart isolates do not support calling a platform channel method from a another isolate
+// HOWEVER, Dart isolates do not support calling a platform channel method from
+// another isolate.
 // See issue #13937 >> https://github.com/flutter/flutter/issues/13937
 
 /// The [ProbeRegistry] can create, register, and lookup an instance of a relevant probe
@@ -22,21 +23,34 @@ class ProbeRegistry {
   /// Get the singleton [ProbeRegistry].
   factory ProbeRegistry() => _instance;
 
-  final Map<String, Probe> _probes = {};
+  final Map<String, Set<Probe>> _probes = {};
 
-  /// Returns a list of running probes.
-  Map<String, Probe> get probes => _probes;
+  /// All running probes mapped according to their [DataType].
+  Map<String, Set<Probe>> get probes => _probes;
 
-  /// If you create a probe manually, i.e. outside of the [ProbeRegistry] you can register it here.
-  void register(String type, Probe probe) => _probes[type] = probe;
+  final StreamGroup<Datum> _group = StreamGroup.broadcast();
 
-  /// Lookup a [Probe] based on its [DataType].
-  Probe lookup(String type) => _probes[type] ?? create(type);
+  /// A stream of all events from all probes.
+  Stream<Datum> get events => _group.stream;
+
+  /// A stream of all events from probes of a specific [DataType].
+  Stream<Datum> eventsByType(String type) =>
+      _group.stream.where((Datum datum) => datum.format.name == type);
+
+  /// If you create a probe manually, i.e. outside of the [ProbeRegistry]
+  /// you can register it here.
+  void register(String type, Probe probe) {
+    _probes[type] ??= {};
+    _probes[type].add(probe);
+  }
+
+  /// Lookup a set of [Probe]s based on its [DataType].
+  Set<Probe> lookup(String type) => _probes[type] ?? create(type);
 
   /// Create an instance of a probe based on the measure.
   ///
-  /// This methods search the [SamplingPackageRegistry] for a [SamplingPackage] which
-  /// has a probe of the specified [type].
+  /// This methods search the [SamplingPackageRegistry] for a [SamplingPackage]
+  /// which has a probe of the specified [type].
   Probe create(String type) {
     Probe _probe;
 
@@ -46,7 +60,10 @@ class ProbeRegistry {
       }
     });
 
-    if (_probe != null) register(type, _probe);
+    if (_probe != null) {
+      register(type, _probe);
+      _group.add(_probe.events);
+    }
     return _probe;
   }
 }

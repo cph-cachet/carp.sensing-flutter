@@ -26,8 +26,12 @@ class ConnectivitySamplingPackage implements SamplingPackage {
 
   void onRegister() {
     // registering default privacy functions
-    TransformerSchemaRegistry().lookup(PrivacySchema.DEFAULT).add(BLUETOOTH, blueetothNameAnoymizer);
-    TransformerSchemaRegistry().lookup(PrivacySchema.DEFAULT).add(WIFI, wifiNameAnoymizer);
+    TransformerSchemaRegistry()
+        .lookup(PrivacySchema.DEFAULT)
+        .add(BLUETOOTH, blueetothNameAnoymizer);
+    TransformerSchemaRegistry()
+        .lookup(PrivacySchema.DEFAULT)
+        .add(WIFI, wifiNameAnoymizer);
   }
 
   //List<PermissionGroup> get permissions => [];
@@ -43,14 +47,14 @@ class ConnectivitySamplingPackage implements SamplingPackage {
       MapEntry(
           CONNECTIVITY,
           Measure(
-            MeasureType(NameSpace.CARP, CONNECTIVITY),
+            type: MeasureType(NameSpace.CARP, CONNECTIVITY),
             name: 'Connectivity (wifi/3G/...)',
             enabled: true,
           )),
       MapEntry(
           BLUETOOTH,
           PeriodicMeasure(
-            MeasureType(NameSpace.CARP, BLUETOOTH),
+            type: MeasureType(NameSpace.CARP, BLUETOOTH),
             name: 'Nearby Devices (Bluetooth Scan)',
             enabled: true,
             frequency: Duration(minutes: 10),
@@ -59,7 +63,7 @@ class ConnectivitySamplingPackage implements SamplingPackage {
       MapEntry(
           WIFI,
           PeriodicMeasure(
-            MeasureType(NameSpace.CARP, WIFI),
+            type: MeasureType(NameSpace.CARP, WIFI),
             name: 'Wifi network names (SSID / BSSID)',
             enabled: true,
             frequency: Duration(minutes: 10),
@@ -88,14 +92,14 @@ class ConnectivitySamplingPackage implements SamplingPackage {
       MapEntry(
           CONNECTIVITY,
           Measure(
-            MeasureType(NameSpace.CARP, CONNECTIVITY),
+            type: MeasureType(NameSpace.CARP, CONNECTIVITY),
             name: 'Connectivity (wifi/3G/...)',
             enabled: true,
           )),
       MapEntry(
           BLUETOOTH,
           PeriodicMeasure(
-            MeasureType(NameSpace.CARP, BLUETOOTH),
+            type: MeasureType(NameSpace.CARP, BLUETOOTH),
             name: 'Nearby Devices (Bluetooth Scan)',
             enabled: true,
             frequency: Duration(minutes: 1),
@@ -104,7 +108,7 @@ class ConnectivitySamplingPackage implements SamplingPackage {
       MapEntry(
           WIFI,
           PeriodicMeasure(
-            MeasureType(NameSpace.CARP, WIFI),
+            type: MeasureType(NameSpace.CARP, WIFI),
             name: 'Wifi network names (SSID / BSSID)',
             enabled: true,
             frequency: Duration(minutes: 1),

@@ -11,7 +11,8 @@ class StudyModel {
   String get dataEndpoint => study.dataEndPoint.toString();
 
   /// Events on the state of the study executor
-  Stream<ProbeState> get studyExecutorStateEvents => Sensing().controller.executor.stateEvents;
+  Stream<ProbeState> get studyExecutorStateEvents =>
+      Sensing().controller.executor.stateEvents;
 
   /// Current state of the study executor (e.g., resumed, paused, ...)
   ProbeState get studyState => Sensing().controller.executor.state;
@@ -23,6 +24,7 @@ class StudyModel {
   int get samplingSize => Sensing().controller.samplingSize;
 
   StudyModel(this.study)
-      : assert(study != null, 'A StudyModel must be initialized with a real Study.'),
+      : assert(study != null,
+            'A StudyModel must be initialized with a real Study.'),
         super();
 }

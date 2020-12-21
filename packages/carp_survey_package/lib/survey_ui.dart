@@ -1,5 +1,6 @@
 part of survey;
 
+/// A full-screen widget that shows a survey (a [RPTask]).
 class SurveyPage extends StatelessWidget {
   /// The task to present
   final RPTask task;

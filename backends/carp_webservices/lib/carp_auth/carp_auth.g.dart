@@ -38,7 +38,6 @@ CarpUser _$CarpUserFromJson(Map<String, dynamic> json) {
     username: json['username'] as String,
     id: json['id'] as int,
     accountId: json['account_id'] as String,
-    password: json['password'] as String,
     firstName: json['first_name'] as String,
     lastName: json['last_name'] as String,
     phone: json['phone'] as String,
@@ -72,7 +71,6 @@ Map<String, dynamic> _$CarpUserToJson(CarpUser instance) {
   writeNotNull('id', instance.id);
   writeNotNull('account_id', instance.accountId);
   writeNotNull('is_activated', instance.isActivated);
-  writeNotNull('password', instance.password);
   writeNotNull('email', instance.email);
   writeNotNull('first_name', instance.firstName);
   writeNotNull('last_name', instance.lastName);

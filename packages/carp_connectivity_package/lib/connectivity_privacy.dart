@@ -1,8 +1,9 @@
 part of connectivity;
 
-/// A [BluetoothDatum] anonymizer function. Anonymizes the name and discovery name of each
-/// discovered bluetooth device. Bluetooth devices' names may contain participants'
-/// real name because people use their names to name their computers and phones.
+/// A [BluetoothDatum] anonymizer function. Anonymizes the name and discovery
+/// name of each discovered bluetooth device.
+/// Bluetooth devices' names may contain participants' real name because people
+/// use their names to name their computers and phones.
 Datum blueetothNameAnoymizer(Datum datum) {
   assert(datum is BluetoothDatum);
   BluetoothDatum bt = datum as BluetoothDatum;
@@ -15,9 +16,9 @@ Datum blueetothNameAnoymizer(Datum datum) {
   return bt;
 }
 
-/// A [WifiDatum] anonymizer function. Anonymizes the wifi name (SSID) of the wifi network.
-/// Wifi network names may contain participants' or house holds' real name because people use
-/// their names to name their wifi.
+/// A [WifiDatum] anonymizer function. Anonymizes the wifi name (SSID) of the
+/// wifi network. Wifi network names may contain participants' or house holds'
+/// real name because people use their names to name their wifi.
 Datum wifiNameAnoymizer(Datum datum) {
   assert(datum is WifiDatum);
   WifiDatum wd = datum as WifiDatum;

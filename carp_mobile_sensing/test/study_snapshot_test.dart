@@ -14,8 +14,8 @@ void main() {
     //SamplingPackageRegistry.register(CommunicationSamplingPackage());
     //SamplingPackageRegistry.register(ContextSamplingPackage());
 
-    study = Study('1234', 'bardram', name: 'bardram study');
-    study.dataEndPoint = DataEndPoint(DataEndPointTypes.PRINT);
+    study = Study(id: '1234', userId: 'bardram', name: 'bardram study');
+    study.dataEndPoint = DataEndPoint(type: DataEndPointTypes.PRINT);
 //    study.dataEndPoint = FileDataEndPoint()
 //      ..bufferSize = 50 * 1000
 //      ..zip = true
@@ -43,11 +43,13 @@ void main() {
         ImmediateTrigger(),
         AutomaticTask(name: 'Sensor Task')
           ..addMeasure(PeriodicMeasure(
-              MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
+              type: MeasureType(
+                  NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
               frequency: const Duration(seconds: 10),
               duration: const Duration(milliseconds: 100)))
           ..addMeasure(PeriodicMeasure(
-              MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
+              type:
+                  MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
               frequency: const Duration(seconds: 20),
               duration: const Duration(milliseconds: 100))));
 

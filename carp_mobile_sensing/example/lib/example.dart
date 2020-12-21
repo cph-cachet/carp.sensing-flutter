@@ -14,7 +14,9 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 /// sampling schema. Used in the README file.
 void example_1() async {
   // Create a study using a local file to store data
-  Study study = Study('2', 'user@cachet.dk',
+  Study study = Study(
+      id: '2',
+      userId: 'user@cachet.dk',
       name: 'A study collecting ..',
       dataEndPoint: FileDataEndPoint()
         ..bufferSize = 500 * 1000
@@ -50,7 +52,9 @@ void example_1() async {
 /// This is a more elaborate example used in the README.md file.
 void example_2() async {
   // Create a study using a local file to store data
-  Study study = Study('1234', 'user@dtu.dk',
+  Study study = Study(
+      id: '1234',
+      userId: 'user@dtu.dk',
       name: 'An example study',
       dataEndPoint: FileDataEndPoint()
         ..bufferSize = 500 * 1000
@@ -62,18 +66,16 @@ void example_2() async {
   study.addTriggerTask(
       DelayedTrigger(delay: Duration(seconds: 10)),
       AutomaticTask(name: 'Sensor Task')
-        ..addMeasure(PeriodicMeasure(
-            MeasureType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
-            frequency: const Duration(seconds: 10),
-            duration: const Duration(milliseconds: 100)))
-        ..addMeasure(PeriodicMeasure(
-            MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
-            frequency: const Duration(seconds: 20),
-            duration: const Duration(milliseconds: 100))));
+        ..addMeasure(Measure(
+            type: MeasureType(
+                NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER)))
+        ..addMeasure(Measure(
+            type:
+                MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE))));
 
   // create a light measure variable to be used later
   PeriodicMeasure lightMeasure = PeriodicMeasure(
-    MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
+    type: MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
     name: 'Ambient Light',
     frequency: const Duration(seconds: 11),
     duration: const Duration(milliseconds: 100),
@@ -90,24 +92,28 @@ void example_2() async {
   controller.resume();
 
   // listening on all data events from the study
-  controller.events.forEach(print);
+  controller.events.listen((event) => print(event));
 
-  // listen on only CARP events
+  // listen only on CARP events
   controller.events
       .where((datum) => datum.format.namespace == NameSpace.CARP)
-      .forEach(print);
+      .listen((event) => print(event));
 
   // listen on LIGHT events only
   controller.events
       .where((datum) => datum.format.name == SensorSamplingPackage.LIGHT)
-      .forEach(print);
+      .listen((event) => print(event));
 
   // map events to JSON and then print
-  controller.events.map((datum) => datum.toJson()).forEach(print);
+  controller.events
+      .map((datum) => datum.toJson())
+      .listen((event) => print(event));
 
-  // listening on a specific probe registered in the ProbeRegistry
+  // listening on a specific event type
   // this is equivalent to the statement above
-  ProbeRegistry().probes[SensorSamplingPackage.LIGHT].events.forEach(print);
+  ProbeRegistry()
+      .eventsByType(SensorSamplingPackage.LIGHT)
+      .listen((event) => print(event));
 
   // subscribe to events
   StreamSubscription<Datum> subscription =
@@ -120,9 +126,10 @@ void example_2() async {
   controller.pause();
   controller.resume();
 
-  // pause / resume specific probe(s)
-  ProbeRegistry().lookup(SensorSamplingPackage.ACCELEROMETER).pause();
-  ProbeRegistry().lookup(SensorSamplingPackage.ACCELEROMETER).resume();
+  // pause specific probe(s)
+  ProbeRegistry()
+      .lookup(SensorSamplingPackage.ACCELEROMETER)
+      .forEach((probe) => probe.pause());
 
   // adapt measures on the go - calling hasChanged() force a restart of
   // the probe, which will load the new measure
@@ -145,25 +152,27 @@ void example_2() async {
 /// An example of how to use the [SamplingSchema] model.
 void samplingSchemaExample() async {
   // creating a sampling schema focused on activity and outdoor context (weather)
-  SamplingSchema activitySchema =
-      SamplingSchema(name: 'Connectivity Sampling Schema', powerAware: true)
-        ..measures.addEntries([
-          MapEntry(
-              SensorSamplingPackage.PEDOMETER,
-              PeriodicMeasure(
+  SamplingSchema activitySchema = SamplingSchema(
+      name: 'Connectivity Sampling Schema', powerAware: true)
+    ..measures.addEntries([
+      MapEntry(
+          SensorSamplingPackage.PEDOMETER,
+          PeriodicMeasure(
+              type:
                   MeasureType(NameSpace.CARP, SensorSamplingPackage.PEDOMETER),
-                  enabled: true,
-                  frequency: const Duration(minutes: 1))),
-          MapEntry(
-              DeviceSamplingPackage.SCREEN,
-              Measure(MeasureType(NameSpace.CARP, DeviceSamplingPackage.SCREEN),
-                  enabled: true)),
-        ]);
+              enabled: true,
+              frequency: const Duration(minutes: 1))),
+      MapEntry(
+          DeviceSamplingPackage.SCREEN,
+          Measure(
+              type: MeasureType(NameSpace.CARP, DeviceSamplingPackage.SCREEN),
+              enabled: true)),
+    ]);
 
   //creating a study
-  Study study_1 = Study('2', 'user@cachet.dk')
+  Study study_1 = Study(id: '2', userId: 'user@cachet.dk')
     ..name = 'CARP Mobile Sensing - default configuration'
-    ..dataEndPoint = DataEndPoint(DataEndPointTypes.PRINT)
+    ..dataEndPoint = DataEndPoint(type: DataEndPointTypes.PRINT)
     ..addTriggerTask(
         ImmediateTrigger(),
         AutomaticTask()
@@ -174,7 +183,9 @@ void samplingSchemaExample() async {
               .toList());
   print(study_1);
 
-  Study study = Study('2', 'user@cachet.dk',
+  Study study = Study(
+      id: '2',
+      userId: 'user@cachet.dk',
       name: 'A outdoor activity study',
       dataFormat: NameSpace.OMH,
       dataEndPoint: FileDataEndPoint()
@@ -233,7 +244,7 @@ void samplingSchemaExample() async {
           ],
         )
         ..addMeasure(PeriodicMeasure(
-          MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
+          type: MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
           name: 'Ambient Light',
           frequency: const Duration(seconds: 11),
           duration: const Duration(milliseconds: 100),
@@ -249,8 +260,8 @@ void samplingSchemaExample() async {
   // listening on all data events from the study
   controller.events.forEach(print);
 
-  // listening on events from a specific probe
-  ProbeRegistry.lookup(DeviceSamplingPackage.SCREEN).events.forEach(print);
+  // listening on events of a specific type
+  ProbeRegistry().eventsByType(DeviceSamplingPackage.SCREEN).forEach(print);
 
   // listening on data manager events
   controller.dataManager.events.forEach(print);
@@ -297,9 +308,75 @@ void recurrentScheduledTriggerExample() {
 
 /// An example of how to configure a [StudyController] with the default privacy schema.
 void study_controller_example() async {
-  Study study = Study('2', 'user@cachet.dk');
+  Study study = Study(id: '2', userId: 'user@cachet.dk');
   StudyController controller =
       StudyController(study, privacySchemaName: PrivacySchema.DEFAULT);
   await controller.initialize();
   controller.resume();
+}
+
+/// An example of using the (new) AppTask model
+void app_task_example() async {
+  Study study = Study(id: '2', userId: 'user@cachet.dk')
+    ..addTriggerTask(
+        ImmediateTrigger(), // collect local weather and air quality as an app task
+        AppTask(
+          type: SensingUserTask.ONE_TIME_SENSING_TYPE,
+          title: "Weather & Air Quality",
+          description: "Collect device info",
+        )..measures = SamplingSchema.common().getMeasureList(
+            namespace: NameSpace.CARP,
+            types: [
+              DeviceSamplingPackage.DEVICE,
+            ],
+          ))
+    ..addTriggerTask(
+        ImmediateTrigger(),
+        AppTask(
+          type: SensingUserTask.SENSING_TYPE,
+          title: "Screen",
+          description: "Collect screen events",
+        )..measures = SamplingSchema.common().getMeasureList(
+            namespace: NameSpace.CARP,
+            types: [
+              DeviceSamplingPackage.SCREEN,
+            ],
+          ));
+
+  StudyController controller =
+      StudyController(study, privacySchemaName: PrivacySchema.DEFAULT);
+  await controller.initialize();
+  controller.resume();
+}
+
+void app_task_controller_example() async {
+  AppTaskController ctrl = AppTaskController();
+
+  ctrl.userTaskEvents.listen((event) {
+    AppTask _task = (event.executor.task as AppTask);
+    print('Task: ${_task.title}');
+    switch (event.state) {
+      case UserTaskState.initialized:
+        //
+        break;
+      case UserTaskState.enqueued:
+        //
+        break;
+      case UserTaskState.dequeued:
+        //
+        break;
+      case UserTaskState.started:
+        event.executor.resume();
+        break;
+      case UserTaskState.onhold:
+        //
+        break;
+      case UserTaskState.done:
+        event.executor.pause();
+        break;
+      default:
+        //
+        break;
+    }
+  });
 }

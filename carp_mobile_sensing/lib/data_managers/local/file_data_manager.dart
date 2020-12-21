@@ -249,17 +249,17 @@ class FileDataEndPoint extends DataEndPoint {
   /// [DataEndPointType.FILE] but specialized file types can be specified.
   FileDataEndPoint(
       {String type, this.bufferSize, this.zip, this.encrypt, this.publicKey})
-      : super(type ?? DataEndPointTypes.FILE);
+      : super(type: type ?? DataEndPointTypes.FILE);
 
   /// The function which can transform this [FileDataEndPoint] into JSON.
   ///
   /// See [Serializable].
-  static Function get fromJsonFunction => _$FileDataEndPointFromJson;
+  Function get fromJsonFunction => _$FileDataEndPointFromJson;
 
   /// Create a [FileDataEndPoint] from a JSON map.
   factory FileDataEndPoint.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory.fromJson(
-          json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
 
   /// Serialize this [FileDataEndPoint] as a JSON map.
   Map<String, dynamic> toJson() => _$FileDataEndPointToJson(this);

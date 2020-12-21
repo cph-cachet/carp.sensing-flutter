@@ -4,99 +4,74 @@ import 'dart:math';
 
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
-import 'package:carp_webservices/carp_domain/carp_domain.dart';
+//import 'package:carp_webservices/carp_domain/carp_domain.dart';
 import 'package:carp_webservices/carp_service/carp_service.dart';
 import 'package:test/test.dart';
 
 import 'credentials.dart';
 
-String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
+String _encode(Object object) =>
+    const JsonEncoder.withIndent(' ').convert(object);
 
 void main() {
-  // CANS DEV
-  final String uri = "http://cans.cachet.dk:8087";
-
-  // CANS PROD
-  //final String uri = "https://cans.cachet.dk:443";
-
-  // from Barnabas / iPDM-GO test 2020-07-14
-  //final String testDeploymentId = "d1f01720-1714-46ee-a16d-da2a566b979e";
-  //final String testStudyId = "bc1d3178-c541-46f3-8af2-f313cc9d72fb";
-
-  // from Richard / iPDM-GO test 2020-07-16
-  //final String testDeploymentId = "d246170c-515e-40c3-8424-ec1f054f6ba4";
-  //final String testStudyId = "64c1784d-52d1-4c3d-99de-24c97fe06939";
-
-  // from Alban - production testing 2020-08-13
-  //  final String testDeploymentId = "ab00aeda-9cd0-44d8-902c-9736fec24ab5";
-  //  final String testStudyId = "c695ab41-e635-42d7-9b89-57530d0ae3da";
-
-  // from Lori - production testing 2020-08-21
-  //final String testDeploymentId = "bb9c2550-f6b7-4948-967f-2e62bdddd840";
-  //final String testStudyId = "42ca52da-c768-44f3-9dc5-7f094c192892";
-
-  // from Richard - new JSON model at DEV 2020-09-18
-  //final String testStudyId = '682e11d1-ffb8-41fc-81c5-78d2e82fbe94';
-  //final String testDeploymentId = 'e286e04b-31c5-4fb2-b4b0-db37c4510ae0';
-
-  // from Richard - new study/deployment at DEV 2020-09-25
-  // final String testStudyId = '19d79948-c4f3-4d0b-91c5-7f55a390e338';
-  // final String testDeploymentId = '5b4a3a4d-87df-4c09-adf1-fd47e6a78cc7';
-
-  // from Richard - new study/deployment at DEV 2020-10-01
-  final String testStudyId = '624482c4-d8a7-4385-8473-6548b1e283d7';
-  final String testDeploymentId = 'f38bab7a-66f7-4089-88ef-bafacaa7cab1';
-
   final String userId = "user@dtu.dk";
   final String collectionName = 'test_patients';
   final String newCollectionName = 'new_patients_3';
 
-  Map<String, dynamic> tokenAsJson;
   CarpApp app;
-  CarpUser user;
+  //CarpUser user;
   Study study;
   int dataPointId;
-  LightDatum datum;
+  LightDatum datum1 = LightDatum(
+    maxLux: 12,
+    meanLux: 23,
+    minLux: 0.3,
+    stdLux: 0.4,
+  );
+  DeviceDatum datum2 = DeviceDatum(
+    'Android',
+    '12345jE',
+  );
+
   DocumentSnapshot document;
   int documentId;
   int consentDocumentId;
   Random random = Random();
 
-  group("Setup Carp Service", () {
-    // Runs before all tests.
-    setUpAll(() {});
+  /// Setup CARP and authenticate.
+  /// Runs once before all tests.
+  setUpAll(() async {
+    study = new Study(
+      id: testStudyId,
+      userId: userId,
+      deploymentId: testDeploymentId,
+      name: "Test study",
+    );
+    app = new CarpApp(
+      study: study,
+      name: "Test",
+      uri: Uri.parse(uri),
+      oauth: OAuthEndPoint(clientID: clientID, clientSecret: clientSecret),
+    );
 
-    test('- study', () async {
-      study = new Study(testStudyId, userId, deploymentId: testDeploymentId, name: "Test study");
+    CarpService.configure(app);
 
-      // Create a test datum
-      datum = LightDatum(
-        maxLux: 12,
-        meanLux: 23,
-        minLux: 0.3,
-        stdLux: 0.4,
-      );
-      print('Study: $study');
-    });
-
-    test('- service', () async {
-      app = new CarpApp(
-          study: study,
-          name: "Test",
-          uri: Uri.parse(uri),
-          oauth: OAuthEndPoint(clientID: clientID, clientSecret: clientSecret));
-      CarpService.configure(app);
-
-      print('CarpService : ${CarpService.instance.app}');
-    });
+    await CarpService.instance.authenticate(
+      username: username,
+      password: password,
+    );
   });
 
-  group("CARP Base Services", () {
-    // Runs before each test.
-    setUp(() {});
+  /// Close connection to CARP.
+  /// Runs once after all tests.
+  tearDownAll(() {});
 
+  group("CARP Base Services", () {
+    test('- service', () async {
+      print('CarpService : ${CarpService.instance.app}');
+    });
     test('- authentication w. username and password', () async {
-      user = await CarpService.instance.authenticate(
+      CarpUser user = await CarpService.instance.authenticate(
         username: username,
         password: password,
       );
@@ -111,90 +86,126 @@ void main() {
     });
 
     test('- get user profile', () async {
-      CarpUser new_user = await CarpService.instance.getCurrentUserProfile();
+      CarpUser newUser = await CarpService.instance.getCurrentUserProfile();
 
-      assert(new_user != null);
+      assert(newUser != null);
 
-      print("signed in : $new_user");
-      print("   name   : ${new_user.firstName} ${new_user.lastName}");
+      print("signed in : $newUser");
+      print("   name   : ${newUser.firstName} ${newUser.lastName}");
     });
 
     // This test fails -- we do not have access to create users with the authenticated user.
     test('- create user', () async {
       int id = random.nextInt(1000);
-      CarpUser new_user = await CarpService.instance
-          .createUser(username: 'user_$id@dtu.dk', password: 'underbar', firstName: 'CACHET User #$id');
+      CarpUser newUser = await CarpService.instance.createUser(
+          username: 'user_$id@dtu.dk',
+          password: 'underbar',
+          firstName: 'CACHET User #$id');
 
       // we expect this call to fail, since we're not authenticated as admin
-      assert(new_user == null);
+      assert(newUser == null);
 
-      print("create  : $new_user");
-      print("   name : ${new_user.firstName} ${new_user.lastName}");
+      print("create  : $newUser");
+      print("   name : ${newUser.firstName} ${newUser.lastName}");
     }, skip: true);
-
-//    test('- create participant by invite', () async {
-//      int id = random.nextInt(1000);
-//      CarpUser new_user = await CarpService.instance.createParticipantByInvite(
-//          username: 'participant_$id@dtu.dk', password: 'underbar', firstName: 'CACHET Participant #$id');
-//
-//      assert(new_user != null);
-//
-//      print("create  : $new_user");
-//      print("   name : ${new_user.firstName} ${new_user.lastName}");
-//    });
-//
-//    test('- create researcher by invite', () async {
-//      int id = random.nextInt(1000);
-//      CarpUser new_user = await CarpService.instance.createResearcherByInvite(
-//          username: 'researcher_$id@dtu.dk', password: 'underbar', firstName: 'CACHET Researcher #$id');
-//
-//      assert(new_user != null);
-//
-//      print("create  : $new_user");
-//      print("   name : ${new_user.firstName} ${new_user.lastName}");
-//    });
 
     test('- refresh token', () async {
       print('expiring token...');
       CarpService.instance.currentUser.token.expire();
 
       await CarpService.instance.currentUser.getOAuthToken(refresh: true);
+      CarpUser user = CarpService.instance.currentUser;
 
       assert(user.token != null);
       print("signed in : $user");
       print("   token  : ${user.token}\n");
-
-      //saving token as json for later
-      tokenAsJson = user.token.toJson();
-      print(_encode(tokenAsJson));
     });
 
     test('- authentication with saved token', () async {
-      CarpUser new_user = await CarpService.instance.authenticateWithToken(username: user.username, token: user.token);
+      CarpUser user = await CarpService.instance.authenticate(
+        username: username,
+        password: password,
+      );
 
-      assert(new_user != null);
-      assert(new_user.isAuthenticated);
+      CarpUser newUser = await CarpService.instance
+          .authenticateWithToken(username: user.username, token: user.token);
 
-      print("signed in : $new_user");
-      print("   token  : ${new_user.token}");
+      assert(newUser != null);
+      assert(newUser.isAuthenticated);
+      assert(newUser.username == user.username);
+
+      print("signed in : $newUser");
+      print("   token  : ${newUser.token}");
     });
 
     test('- authentication with saved JSON token', () async {
-      CarpUser new_user =
-          await CarpService.instance.authenticateWithToken(username: username, token: OAuthToken.fromJson(tokenAsJson));
+      CarpUser user = await CarpService.instance.authenticate(
+        username: username,
+        password: password,
+      );
 
-      assert(new_user != null);
-      assert(new_user.isAuthenticated);
+      //saving token as json
+      Map<String, dynamic> tokenAsJson = user.token.toJson();
+      print(_encode(tokenAsJson));
 
-      print("signed in : $new_user");
-      print("   token  : ${new_user.token}");
+      CarpUser newUser = await CarpService.instance.authenticateWithToken(
+          username: username, token: OAuthToken.fromJson(tokenAsJson));
+
+      assert(newUser != null);
+      assert(newUser.isAuthenticated);
+      assert(newUser.username == user.username);
+
+      print("signed in : $newUser");
+      print("   token  : ${newUser.token}");
+    });
+
+    test('- change password', () async {
+      CarpUser user1 = await CarpService.instance.authenticate(
+        username: username,
+        password: password,
+      );
+
+      // saving password
+      String oldPassword = password;
+      String newPassword = 'new_$password';
+
+      // changing password to the new one
+      CarpUser user2 = await CarpService.instance.changePassword(
+        currentPassword: password,
+        newPassword: newPassword,
+      );
+
+      assert(user2 != null);
+      assert(user2.isAuthenticated);
+      assert(user2.username == user1.username);
+      print("Password has been changed to '$newPassword'\n - user : $user2");
+
+      // check if we can authenticate with the new password
+      CarpUser user3 = await CarpService.instance.authenticate(
+        username: username,
+        password: newPassword,
+      );
+
+      assert(user3 != null);
+      assert(user3.isAuthenticated);
+      assert(user3.username == user1.username);
+      print("signed in using the '$newPassword' password\n - user: $user3");
+
+      // changing the password back to the old one
+      CarpUser user4 = await CarpService.instance.changePassword(
+        currentPassword: newPassword,
+        newPassword: oldPassword,
+      );
+      print(
+          "Password has been changed back to '$oldPassword'\n - user : $user4");
     });
   });
 
   group('Informed Consent', () {
     test('- create', () async {
       ConsentDocument uploaded = await CarpService.instance
-          .createConsentDocument({"text": "The original terms text.", "signature": "Image Blob"});
+          .createConsentDocument(
+              {"text": "The original terms text.", "signature": "Image Blob"});
 
       assert(uploaded != null);
       print(uploaded);
@@ -204,22 +215,26 @@ void main() {
     });
 
     test('- get', () async {
-      ConsentDocument downloaded = await CarpService.instance.getConsentDocument(consentDocumentId);
+      ConsentDocument downloaded =
+          await CarpService.instance.getConsentDocument(consentDocumentId);
 
       assert(downloaded != null);
       assert(downloaded.id == consentDocumentId);
       print(downloaded);
       print(downloaded.createdAt);
     });
-  }, skip: true);
+  }, skip: false);
 
   group("Data points", () {
     test('- post', () async {
-      final CARPDataPoint data = CARPDataPoint.fromDatum(study.id, study.userId, datum);
+      final CARPDataPoint data =
+          CARPDataPoint.fromDatum(study.id, study.userId, datum1);
 
       print(_encode(data.toJson()));
 
-      dataPointId = await CarpService.instance.getDataPointReference().postDataPoint(data);
+      dataPointId = await CarpService.instance
+          .getDataPointReference()
+          .postDataPoint(data);
 
       assert(dataPointId > 0);
       print("data_point_id : $dataPointId");
@@ -227,40 +242,87 @@ void main() {
 
     test('- batch', () async {
       final File file = File("test/batch.json");
-      await CarpService.instance.getDataPointReference().batchPostDataPoint(file);
+      await CarpService.instance
+          .getDataPointReference()
+          .batchPostDataPoint(file);
     });
 
     test('- get by id', () async {
       print("GET data_point_id : $dataPointId");
-      CARPDataPoint data = await CarpService.instance.getDataPointReference().getDataPoint(dataPointId);
+      CARPDataPoint data = await CarpService.instance
+          .getDataPointReference()
+          .getDataPoint(dataPointId);
 
       print(_encode(data.toJson()));
       assert(data.id == dataPointId);
-      assert(data.carpBody['id'] == datum.id);
+      assert(data.carpBody['id'] == datum1.id);
     });
 
     test('- get all', () async {
-      List<CARPDataPoint> data = await CarpService.instance.getDataPointReference().getAllDataPoint();
+      List<CARPDataPoint> data =
+          await CarpService.instance.getDataPointReference().getAllDataPoint();
 
-      data.forEach((datapoint) => print(_encode((datapoint.toJson()))));
-      assert(data.length > 0);
+      //data.forEach((datapoint) => print(_encode((datapoint.toJson()))));
+      assert(data.length >= 0);
+      print('N=${data.length}');
     });
 
     test('- query', () async {
-      String query = 'carp_header.user_id==$userId;carp_body.timestamp>2019-11-02T12:53:40.219598Z';
-      //String query = 'carp_header.user_id==$userId';
-      print("query : $query");
-      List<CARPDataPoint> data = await CarpService.instance.getDataPointReference().queryDataPoint(query);
+      dataPointId = await CarpService.instance
+          .getDataPointReference()
+          .postDataPoint(
+              CARPDataPoint.fromDatum(study.id, study.userId, datum1));
+      dataPointId = await CarpService.instance
+          .getDataPointReference()
+          .postDataPoint(
+              CARPDataPoint.fromDatum(study.id, study.userId, datum2));
 
+      String query =
+          'carp_header.user_id==$userId;carp_body.timestamp>2019-11-02T12:53:40.219598Z';
+      // String query = 'carp_header.user_id==$userId';
+      //String query = 'carp_body.timestamp>2019-11-02T12:53:40.219598Z';
+      //String query = 'carp_header.data_format.namespace=in=(carp,omh)';
+      print("query : $query");
+      List<CARPDataPoint> data = await CarpService.instance
+          .getDataPointReference()
+          .queryDataPoint(query);
+
+      print('N=${data.length}');
       data.forEach((datapoint) => print(_encode((datapoint.toJson()))));
+
       assert(data.length > 0);
     });
 
     test('- delete', () async {
       print("DELETE data_point_id : $dataPointId");
-      await CarpService.instance.getDataPointReference().deleteDataPoint(dataPointId);
+      await CarpService.instance
+          .getDataPointReference()
+          .deleteDataPoint(dataPointId);
     });
-  }, skip: true);
+
+    test('- delete all', () async {
+      List<CARPDataPoint> data =
+          await CarpService.instance.getDataPointReference().getAllDataPoint();
+
+      print('N=${data.length}');
+      print('deleting...');
+      data.forEach((datapoint) async {
+        print(' ${datapoint.id}');
+        await CarpService.instance
+            .getDataPointReference()
+            .deleteDataPoint(datapoint.id);
+      });
+
+      // wait for the delete requests to finish
+      await Future.delayed(const Duration(seconds: 2), () {});
+
+      List<CARPDataPoint> empty =
+          await CarpService.instance.getDataPointReference().getAllDataPoint();
+
+      print('N=${empty.length}');
+      assert(empty.length == 0);
+    });
+  }, skip: false);
 
   group("Documents & Collections", () {
     test(' - add document', () async {
@@ -288,7 +350,10 @@ void main() {
       assert(document != null);
       print(document);
 
-      DocumentSnapshot original = await CarpService.instance.collection(collectionName).document(document.name).get();
+      DocumentSnapshot original = await CarpService.instance
+          .collection(collectionName)
+          .document(document.name)
+          .get();
       print(_encode(original.data));
 
       // updating the role to super user
@@ -307,7 +372,8 @@ void main() {
 
     test(' - get document by id', () async {
       assert(document != null);
-      DocumentSnapshot newDocument = await CarpService.instance.documentById(documentId).get();
+      DocumentSnapshot newDocument =
+          await CarpService.instance.documentById(documentId).get();
 
       print((newDocument));
       assert(newDocument.id == document.id);
@@ -315,8 +381,10 @@ void main() {
     });
 
     test(' - get document by path', () async {
-      DocumentSnapshot newDocument =
-          await CarpService.instance.collection(collectionName).document(document.name).get();
+      DocumentSnapshot newDocument = await CarpService.instance
+          .collection(collectionName)
+          .document(document.name)
+          .get();
       print((newDocument));
       assert(newDocument.id == document.id);
     });
@@ -329,34 +397,41 @@ void main() {
       print(_encode(document.data));
 
       print('----------- renamed document -------------');
-      DocumentSnapshot renamed_document =
-          await CarpService.instance.collection(collectionName).document(document.name).rename('new_name');
-      print(renamed_document);
-      print(_encode(renamed_document.data));
+      DocumentSnapshot renamedDocument = await CarpService.instance
+          .collection(collectionName)
+          .document(document.name)
+          .rename('new_name');
+      print(renamedDocument);
+      print(_encode(renamedDocument.data));
 
       // get the document back from the server
 //      DocumentSnapshot server_document =
 //          await CarpService.instance.collection(collectionName).document(renamed_document.name).get();
 
       print('----------- server document by ID -------------');
-      DocumentSnapshot server_document = await CarpService.instance.documentById(documentId).get();
-      print(server_document);
-      print(_encode(server_document.data));
+      DocumentSnapshot serverDocument =
+          await CarpService.instance.documentById(documentId).get();
+      print(serverDocument);
+      print(_encode(serverDocument.data));
 
       print('----------- server document by NAME -------------');
-      server_document = await CarpService.instance.collection(collectionName).document(renamed_document.name).get();
-      print(server_document);
-      print(_encode(server_document.data));
+      serverDocument = await CarpService.instance
+          .collection(collectionName)
+          .document(renamedDocument.name)
+          .get();
+      print(serverDocument);
+      print(_encode(serverDocument.data));
 
-      assert(server_document.id > 0);
-      assert(server_document.name == renamed_document.name);
-      assert(server_document.data.length == document.data.length);
+      assert(serverDocument.id > 0);
+      assert(serverDocument.name == renamedDocument.name);
+      assert(serverDocument.data.length == document.data.length);
     }, skip: true);
 
     test(' - get document by query', () async {
       assert(document != null);
       String query = 'name==$userId';
-      List<DocumentSnapshot> documents = await CarpService.instance.documentsByQuery(query);
+      List<DocumentSnapshot> documents =
+          await CarpService.instance.documentsByQuery(query);
 
       print('Found ${documents.length} document(s)');
       documents.forEach((document) => print(' - $document'));
@@ -411,22 +486,29 @@ void main() {
     });
 
     test(" - get the '$collectionName' collection", () async {
-      CollectionReference collection = await CarpService.instance.collection(collectionName).get();
+      CollectionReference collection =
+          await CarpService.instance.collection(collectionName).get();
       print(collection);
     });
 
     test(" - list documents in '$collectionName' collection", () async {
-      List<DocumentSnapshot> documents = await CarpService.instance.collection(collectionName).documents;
+      List<DocumentSnapshot> documents =
+          await CarpService.instance.collection(collectionName).documents;
       documents.forEach((doc) => print(doc));
     });
 
     test(" - list collections in the 'user@dtu.dk' document", () async {
-      DocumentSnapshot newDocument = await CarpService.instance.collection(collectionName).document(userId).get();
+      DocumentSnapshot newDocument = await CarpService.instance
+          .collection(collectionName)
+          .document(userId)
+          .get();
       newDocument.collections.forEach((ref) => print(ref));
     });
 
-    test(" - list all nested documents in '$collectionName' collection", () async {
-      List<DocumentSnapshot> documents = await CarpService.instance.collection(collectionName).documents;
+    test(" - list all nested documents in '$collectionName' collection",
+        () async {
+      List<DocumentSnapshot> documents =
+          await CarpService.instance.collection(collectionName).documents;
       documents.forEach((doc) {
         print(doc);
         doc.collections.forEach((col) => print(col));
@@ -452,58 +534,72 @@ void main() {
 //    });
 
     test(' - get collection from path', () async {
-      CollectionReference collection = await CarpService.instance.collection(collectionName).get();
+      CollectionReference collection =
+          await CarpService.instance.collection(collectionName).get();
       assert(collection.id > 0);
       print(collection);
     });
 
     test(' - delete document', () async {
       assert(document != null);
-      await CarpService.instance.collection(collectionName).document(document.name).delete();
+      await CarpService.instance
+          .collection(collectionName)
+          .document(document.name)
+          .delete();
     });
 
     test(' - rename collection', () async {
-      CollectionReference collection = await CarpService.instance.collection(collectionName).get();
+      CollectionReference collection =
+          await CarpService.instance.collection(collectionName).get();
       print('Collection before rename: $collection');
       await collection.rename(newCollectionName);
       expect(collection.name, newCollectionName);
       print('Collection after rename: $collection');
-      collection = await CarpService.instance.collection(newCollectionName).get();
+      collection =
+          await CarpService.instance.collection(newCollectionName).get();
       expect(collection.name, newCollectionName);
       print('Collection after get: $collection');
     });
 
     test(' - delete collection', () async {
-      CollectionReference collection = await CarpService.instance.collection(newCollectionName).get();
+      CollectionReference collection =
+          await CarpService.instance.collection(newCollectionName).get();
       await collection.delete();
       expect(collection.id, -1);
       print(collection);
       try {
-        collection = await CarpService.instance.collection(newCollectionName).get();
+        collection =
+            await CarpService.instance.collection(newCollectionName).get();
       } catch (error) {
         print(error);
-        expect((error as CarpServiceException).httpStatus.httpResponseCode, HttpStatus.notFound);
+        expect((error as CarpServiceException).httpStatus.httpResponseCode,
+            HttpStatus.notFound);
       }
     });
-  }, skip: true);
+  }, skip: false);
 
   group("iPDM-GO", () {
     test(" - get 'patients' collection from path", () async {
-      CollectionReference collection = await CarpService.instance.collection('patients').get();
+      CollectionReference collection =
+          await CarpService.instance.collection('patients').get();
       assert(collection.id > 0);
       print(collection);
     });
 
     test(" - list all nested documents in 'patients' collection", () async {
-      List<DocumentSnapshot> documents = await CarpService.instance.collection('patients').documents;
+      List<DocumentSnapshot> documents =
+          await CarpService.instance.collection('patients').documents;
       documents.forEach((doc) {
         print(doc);
         doc.collections.forEach((col) => print(col));
       });
     });
-    test(" - list all nested documents in 'patients/s174238@student.dtu.dk/chapters' collection", () async {
-      List<DocumentSnapshot> documents =
-          await CarpService.instance.collection('patients/s174238@student.dtu.dk/chapters').documents;
+    test(
+        " - list all nested documents in 'patients/s174238@student.dtu.dk/chapters' collection",
+        () async {
+      List<DocumentSnapshot> documents = await CarpService.instance
+          .collection('patients/s174238@student.dtu.dk/chapters')
+          .documents;
       documents.forEach((doc) {
         print(doc);
         doc.collections.forEach((col) => print(col));
@@ -519,7 +615,11 @@ void main() {
 
       final FileUploadTask uploadTask = CarpService.instance
           .getFileStorageReference()
-          .upload(myFile, {'content-type': 'image/jpg', 'content-language': 'en', 'activity': 'test'});
+          .upload(myFile, {
+        'content-type': 'image/jpg',
+        'content-language': 'en',
+        'activity': 'test'
+      });
 
       assert(uploadTask != null);
 
@@ -533,7 +633,8 @@ void main() {
     });
 
     test('- get', () async {
-      final CarpFileResponse result = await CarpService.instance.getFileStorageReference(id).get();
+      final CarpFileResponse result =
+          await CarpService.instance.getFileStorageReference(id).get();
 
       assert(result.id == id);
       print('result : $result');
@@ -541,18 +642,21 @@ void main() {
 
     test('- get non-existing', () async {
       try {
-        final CarpFileResponse result = await CarpService.instance.getFileStorageReference(876872).get();
+        final CarpFileResponse result =
+            await CarpService.instance.getFileStorageReference(876872).get();
       } catch (error) {
         print(error);
         assert(error is CarpServiceException);
-        expect((error as CarpServiceException).httpStatus.httpResponseCode, HttpStatus.notFound);
+        expect((error as CarpServiceException).httpStatus.httpResponseCode,
+            HttpStatus.notFound);
       }
     });
 
     test('- download', () async {
       final File myFile = File("test/img-$id.jpg");
 
-      final FileDownloadTask downloadTask = CarpService.instance.getFileStorageReference(id).download(myFile);
+      final FileDownloadTask downloadTask =
+          CarpService.instance.getFileStorageReference(id).download(myFile);
 
       assert(downloadTask != null);
 
@@ -562,14 +666,16 @@ void main() {
     });
 
     test('- get all', () async {
-      final List<CarpFileResponse> results = await CarpService.instance.getFileStorageReference(id).getAll();
+      final List<CarpFileResponse> results =
+          await CarpService.instance.getFileStorageReference(id).getAll();
 
       //assert(result.id == id);
       print('result : $results');
     });
 
     test('- delete', () async {
-      final int result = await CarpService.instance.getFileStorageReference(id).delete();
+      final int result =
+          await CarpService.instance.getFileStorageReference(id).delete();
 
       assert(result > 0);
       print('result : $result');

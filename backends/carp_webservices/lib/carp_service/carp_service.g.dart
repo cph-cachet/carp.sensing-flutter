@@ -10,8 +10,8 @@ CARPDataPoint _$CARPDataPointFromJson(Map<String, dynamic> json) {
   return CARPDataPoint(
     json['carp_header'] == null
         ? null
-        : CARPDataPointHeader.fromJson(
-            json['carp_header'] as Map<String, dynamic>),
+        : CARPDataPointHeader
+            .fromJson(json['carp_header'] as Map<String, dynamic>),
     json['carp_body'] as Map<String, dynamic>,
   )
     ..id = json['id'] as int
