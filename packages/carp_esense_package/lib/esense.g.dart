@@ -8,7 +8,7 @@ part of esense;
 
 ESenseMeasure _$ESenseMeasureFromJson(Map<String, dynamic> json) {
   return ESenseMeasure(
-    json['type'] == null
+    type: json['type'] == null
         ? null
         : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
     name: json['name'],
@@ -17,6 +17,7 @@ ESenseMeasure _$ESenseMeasureFromJson(Map<String, dynamic> json) {
     samplingRate: json['sampling_rate'] as int,
   )
     ..$type = json[r'$type'] as String
+    ..description = json['description'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
     );
@@ -34,6 +35,7 @@ Map<String, dynamic> _$ESenseMeasureToJson(ESenseMeasure instance) {
   writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
   writeNotNull('name', instance.name);
+  writeNotNull('description', instance.description);
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
   writeNotNull('device_name', instance.deviceName);

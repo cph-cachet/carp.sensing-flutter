@@ -19,15 +19,18 @@ class ESenseMeasure extends Measure {
   /// Default sampling rate is 10 Hz.
   int samplingRate = 10;
 
-  ESenseMeasure(MeasureType type,
-      {name, enabled = true, this.deviceName, this.samplingRate = 10})
-      : super(type, name: name, enabled: enabled);
+  ESenseMeasure({
+    MeasureType type,
+    name,
+    enabled = true,
+    this.deviceName,
+    this.samplingRate = 10,
+  })
+      : super(type: type, name: name, enabled: enabled);
 
-  static Function get fromJsonFunction => _$ESenseMeasureFromJson;
-
-  factory ESenseMeasure.fromJson(Map<String, dynamic> json) => FromJsonFactory
+  Function get fromJsonFunction => _$ESenseMeasureFromJson;
+  factory ESenseMeasure.fromJson(Map<String, dynamic> json) => FromJsonFactory()
       .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
-
   Map<String, dynamic> toJson() => _$ESenseMeasureToJson(this);
 
   String toString() => super.toString() + ', deviceName: $deviceName';
