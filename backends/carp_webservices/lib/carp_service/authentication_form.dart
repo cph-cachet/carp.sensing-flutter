@@ -7,48 +7,56 @@
 part of carp_services;
 
 class CarpAuthenticationForm extends StatefulWidget {
-  String username;
+  final String username;
   CarpAuthenticationForm({this.username});
   _CarpAuthenticationFormState createState() =>
       _CarpAuthenticationFormState(username: username);
 }
 
 class _CarpAuthenticationFormState extends State<CarpAuthenticationForm> {
-  GlobalKey<FormState> formkey = GlobalKey<FormState>();
-  String username = '';
+  final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+  final String username;
 
   _CarpAuthenticationFormState({this.username});
 
-  String validatePassword(String value) {
-    if (value.isEmpty) {
-      return "* Required";
-    } else if (value.length < 6) {
-      return "Password should be atleast 6 characters";
-    } else if (value.length > 15) {
-      return "Password should not be greater than 15 characters";
-    } else
-      return null;
+  // String validatePassword(String value) {
+  //   if (value.isEmpty) {
+  //     return "* Required";
+  //   } else if (value.length < 6) {
+  //     return "Password should be atleast 6 characters";
+  //   } else if (value.length > 15) {
+  //     return "Password should not be greater than 15 characters";
+  //   } else
+  //     return null;
+  // }
+
+  bool get _isEntryIsValid {
+    print('validate() = ${_formkey.currentState?.validate()}');
+    return true;
   }
 
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text("Login Page"),
+        title: Text("CARP Login"),
       ),
       body: SingleChildScrollView(
         child: Form(
           autovalidateMode: AutovalidateMode.onUserInteraction,
-          key: formkey,
+          key: _formkey,
           child: Column(
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(top: 60.0),
                 child: Center(
                   child: Container(
-                      width: 200,
+                      //width: 300,
                       height: 150,
-                      child: Image.asset('asset/images/cachet_logo.png')),
+                      child: Image.asset(
+                        'asset/images/carp_logo_small.png',
+                        package: 'carp_webservices',
+                      )),
                 ),
               ),
               Padding(
@@ -99,17 +107,15 @@ class _CarpAuthenticationFormState extends State<CarpAuthenticationForm> {
                 decoration: BoxDecoration(
                     color: Colors.blue, borderRadius: BorderRadius.circular(5)),
                 child: TextButton(
-                  onPressed: () {
-                    if (formkey.currentState.validate()) {
-                      print("Validated");
-                      //TODO - try authentication
-                      Navigator.pop(context);
-                      // Navigator.push(context,
-                      //     MaterialPageRoute(builder: (_) => HomePage()));
-                    } else {
-                      print("Not Validated");
-                    }
-                  },
+                  onPressed: (_isEntryIsValid)
+                      ? () {
+                          if (_formkey.currentState.validate()) {
+                            print("Trying to authenticate....");
+                            //TODO - try authentication
+                          }
+                          Navigator.pop(context);
+                        }
+                      : null,
                   child: Text(
                     'LOGIN',
                     style: TextStyle(color: Colors.white, fontSize: 25),
@@ -119,7 +125,17 @@ class _CarpAuthenticationFormState extends State<CarpAuthenticationForm> {
               SizedBox(
                 height: 100,
               ),
-              Text('Copenhagen Center for Health Technology (CACHET)')
+              Align(
+                alignment: Alignment.centerRight,
+                child: Container(
+                    width: 200,
+                    //height: 150,
+                    child: Image.asset(
+                      'asset/images/cachet_logo.png',
+                      package: 'carp_webservices',
+                    )),
+              ),
+              //Text('CACHET Research Platform (CARP)')
             ],
           ),
         ),

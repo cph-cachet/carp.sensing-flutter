@@ -23,14 +23,14 @@ void main() async {
           clientID: "the_client_id", clientSecret: "the_client_secret"));
 
   // Configure the CARP Service with this app.
-  CarpService.configure(app);
+  CarpService().configure(app);
 
   // ------------------- AUTHENTICATION --------------------------------
 
   // Try to authenticate
   CarpUser user;
   try {
-    user = await CarpService.instance
+    user = await CarpService()
         .authenticate(username: "a_username", password: "the_password");
   } catch (excp) {
     print(excp);
@@ -41,7 +41,7 @@ void main() async {
 
   // first upload a file
   final File uploadFile = File("test/img.jpg");
-  final FileUploadTask uploadTask = CarpService.instance
+  final FileUploadTask uploadTask = CarpService()
       .getFileStorageReference()
       .upload(uploadFile, {
     'content-type': 'image/jpg',
@@ -53,22 +53,21 @@ void main() async {
 
   // then get its description back from the server
   final CarpFileResponse result =
-      await CarpService.instance.getFileStorageReference(id).get();
+      await CarpService().getFileStorageReference(id).get();
 
   // then download the file again
   // note that a local file to download is needed
   final File downloadFile = File("test/img-$id.jpg");
   final FileDownloadTask downloadTask =
-      CarpService.instance.getFileStorageReference(id).download(downloadFile);
+      CarpService().getFileStorageReference(id).download(downloadFile);
   int responseCode = await downloadTask.onComplete;
 
   // now get references to ALL files in this study
   final List<CarpFileResponse> results =
-      await CarpService.instance.getFileStorageReference(id).getAll();
+      await CarpService().getFileStorageReference(id).getAll();
 
   // finally, delete the file
-  responseCode =
-      await CarpService.instance.getFileStorageReference(id).delete();
+  responseCode = await CarpService().getFileStorageReference(id).delete();
 
   // ------------------- DATA POINTS --------------------------------
 
@@ -85,68 +84,60 @@ void main() async {
       CARPDataPoint.fromDatum(study.id, study.userId, datum);
   // post it to the CARP server, which returns the ID of the data point
   int dataPointId =
-      await CarpService.instance.getDataPointReference().postDataPoint(data);
+      await CarpService().getDataPointReference().postDataPoint(data);
 
   // get the data point back from the server
-  CARPDataPoint dataPoint = await CarpService.instance
-      .getDataPointReference()
-      .getDataPoint(dataPointId);
+  CARPDataPoint dataPoint =
+      await CarpService().getDataPointReference().getDataPoint(dataPointId);
 
   // batch upload a list of raw json data points in a file
   final File file = File("test/batch.json");
-  await CarpService.instance.getDataPointReference().batchPostDataPoint(file);
+  await CarpService().getDataPointReference().batchPostDataPoint(file);
 
   // delete the data point
-  await CarpService.instance
-      .getDataPointReference()
-      .deleteDataPoint(dataPointId);
+  await CarpService().getDataPointReference().deleteDataPoint(dataPointId);
 
   // ------------------- COLLECTIONS AND DOCUMENTS --------------------------------
 
   // access an document
   //  - if the document id is not specified, a new document (with a new id) is created
   //  - if the collection (users) don't exist, it is created
-  DocumentSnapshot document = await CarpService.instance
+  DocumentSnapshot document = await CarpService()
       .collection('users')
       .document()
       .setData({'email': username, 'name': 'Administrator'});
 
   // update the document
-  DocumentSnapshot updatedDocument = await CarpService.instance
+  DocumentSnapshot updatedDocument = await CarpService()
       .collection('/users')
       .document(document.name)
       .updateData({'email': username, 'name': 'Super User'});
 
   // get the document
-  DocumentSnapshot newDocument = await CarpService.instance
-      .collection('users')
-      .document(document.name)
-      .get();
+  DocumentSnapshot newDocument =
+      await CarpService().collection('users').document(document.name).get();
 
   // get the document by its unique ID
-  newDocument = await CarpService.instance.documentById(document.id).get();
+  newDocument = await CarpService().documentById(document.id).get();
 
   // delete the document
-  await CarpService.instance
-      .collection('users')
-      .document(document.name)
-      .delete();
+  await CarpService().collection('users').document(document.name).delete();
 
   // get all collections from a document
   List<String> collections = newDocument.collections;
 
   // get all documents in a collection.
   List<DocumentSnapshot> documents =
-      await CarpService.instance.collection("users").documents;
+      await CarpService().collection("users").documents;
 
   // ------------------- DEPLOYMENTS --------------------------------
 
   // get invitations for this account (user)
   List<ActiveParticipationInvitation> invitations =
-      await CarpService.instance.invitations();
+      await CarpService().invitations();
 
   // get a deployment reference for this master device
-  DeploymentReference deploymentReference = CarpService.instance.deployment();
+  DeploymentReference deploymentReference = CarpService().deployment();
 
   // get the status of this deployment
   StudyDeploymentStatus status = await deploymentReference.getStatus();

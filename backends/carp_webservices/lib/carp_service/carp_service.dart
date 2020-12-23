@@ -47,19 +47,21 @@ String _encode(Object object) =>
 /// to one CARP web service backend. Therefore this is a singleton and should be used like:
 ///
 /// ```
-/// await CarpService.configure(myApp);
-/// CarpUser user = await CarpService.instance.authenticate(username: "user@dtu.dk", password: "password");
+/// CarpService().configure(myApp);
+/// CarpUser user = await CarpService().authenticate(username: "user@dtu.dk", password: "password");
 /// ```
 class CarpService {
-  static CarpService _instance;
+  static CarpService _instance = CarpService._();
+  CarpApp _app;
+  CarpUser _currentUser;
 
-  CarpService._(this._app) {
-    assert(_app != null);
+  CarpService._() {
     registerFromJsonFunctions();
   }
 
-  CarpApp _app;
-  CarpUser _currentUser;
+  /// Returns the singleton default instance of the [CarpService].
+  /// Before this instance can be used, it must be configured using the [configure] method.
+  factory CarpService() => _instance;
 
   /// The CARP app associated with the CARP Web Service.
   CarpApp get app => _app;
@@ -67,17 +69,13 @@ class CarpService {
   /// Gets the current user.
   CarpUser get currentUser => _currentUser;
 
-  /// Returns the singleton default instance of the [CarpService].
-  /// Before this instance can be used, it must be configured using the [configure] method.
-  static CarpService get instance => _instance;
-
   /// Has this service been configured?
-  static bool get isConfigured => (_instance != null);
+  bool get isConfigured => (_app != null);
 
   /// Configure the default instance of the [CarpService].
-  static Future<CarpService> configure(CarpApp app) async {
-    _instance = new CarpService._(app);
-    return _instance;
+  void configure(CarpApp app) async {
+    assert(app != null);
+    this._app = app;
   }
 
   // ---------------------------------------------------------------------------------------------------------

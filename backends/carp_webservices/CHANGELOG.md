@@ -1,5 +1,7 @@
 ## 0.11.1
 * support for authentication using a form (UI).
+* the singleton CarpService is accessed using `CarpService()` (instead of the old `CarpService.instance`) 
+  in order to be consist with the rest of CAMS.
 
 ## 0.11.0
 * updated to carp_mobile_sensing v. 0.11.x
