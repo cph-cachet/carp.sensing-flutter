@@ -20,6 +20,8 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 import 'package:retry/retry.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter/material.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 
 import '../carp_domain/carp_domain.dart';
 
@@ -34,6 +36,7 @@ part 'document_reference.dart';
 part 'file_reference.dart';
 part 'http_retry.dart';
 part 'push_id_generator.dart';
+part 'authentication_form.dart';
 
 String _encode(Object object) =>
     const JsonEncoder.withIndent(' ').convert(object);
@@ -163,6 +166,25 @@ class CarpService {
     _currentUser.authenticated(refreshedToken);
 
     return await getCurrentUserProfile();
+  }
+
+  /// Authenticate to this CARP service by showing a form for the user to enter
+  /// his/her username and password.
+  /// If the [username] is provide, this is transfered as default to the form.
+  ///
+  /// Return the signed in user (with an [OAuthToken] access token), if successful.
+  /// Throws a [CarpServiceException] if not successful.
+  Future<CarpUser> authenticateWithForm({
+    String username,
+  }) async {
+    if (_app == null)
+      throw CarpServiceException(
+          message:
+              "CARP Service not initialized. Call 'CarpService.configure()' first.");
+
+    _currentUser = new CarpUser(username: username);
+
+    return _currentUser;
   }
 
   /// Get a new (refreshed) access token for the current user based on the previously granted refresh token.

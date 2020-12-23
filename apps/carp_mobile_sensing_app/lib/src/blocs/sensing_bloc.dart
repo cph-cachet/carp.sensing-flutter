@@ -12,13 +12,16 @@ class SensingBLoC {
   Study get study => _study;
 
   /// Is sensing running, i.e. has the study executor been resumed?
-  bool get isRunning => (Sensing().controller != null) && Sensing().controller.executor.state == ProbeState.resumed;
+  bool get isRunning =>
+      (Sensing().controller != null) &&
+      Sensing().controller.executor.state == ProbeState.resumed;
 
   /// Get the study for this app.
   StudyModel get studyModel => study != null ? StudyModel(study) : null;
 
   /// Get a list of running probes
-  Iterable<ProbeModel> get runningProbes => Sensing().runningProbes.map((probe) => ProbeModel(probe));
+  Iterable<ProbeModel> get runningProbes =>
+      Sensing().runningProbes.map((probe) => ProbeModel(probe));
 
   /// Get the data model for this study.
   DataModel get data => null;
@@ -26,6 +29,9 @@ class SensingBLoC {
   void init() async {
     // set global debug level
     globalDebugLevel = DebugLevel.DEBUG;
+
+    await settings.init();
+
     _study ??= await Sensing().getStudy(testStudyId);
     debug('Study : $study');
     await Sensing().initialize();

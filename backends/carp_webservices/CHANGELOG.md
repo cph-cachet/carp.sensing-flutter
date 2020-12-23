@@ -1,3 +1,6 @@
+## 0.11.1
+* support for authentication using a form (UI).
+
 ## 0.11.0
 * updated to carp_mobile_sensing v. 0.11.x
 

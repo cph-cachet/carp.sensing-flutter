@@ -21,8 +21,7 @@ class AppTask extends Task {
     this.minutesToComplete,
     this.expire,
     this.notification = false,
-  })
-      : super(name: name);
+  }) : super(name: name);
 
   /// Type of task. For example a `survey`.
   String type;
@@ -44,7 +43,7 @@ class AppTask extends Task {
   /// from the [AppTaskController]'s queue.
   Duration expire;
 
-  // TODO - implement this ;-)
+  // TODO - implement notifications on the local device
   /// Should a notification be send to the user on the phone?
   bool notification = false;
 
