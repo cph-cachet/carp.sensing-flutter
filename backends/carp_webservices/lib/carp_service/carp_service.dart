@@ -110,7 +110,7 @@ class CarpService {
     if (_app == null)
       throw CarpServiceException(
           message:
-              "CARP Service not initialized. Call 'CarpService.configure()' first.");
+              "CARP Service not initialized. Call 'CarpService().configure()' first.");
 
     _currentUser = new CarpUser(username: username);
 
@@ -168,17 +168,18 @@ class CarpService {
 
   /// Authenticate to this CARP service by showing a form for the user to enter
   /// his/her username and password.
-  /// If the [username] is provide, this is transfered as default to the form.
+  /// If the [username] is provide, this is shown as default in the form.
   ///
   /// Return the signed in user (with an [OAuthToken] access token), if successful.
   /// Throws a [CarpServiceException] if not successful.
-  Future<CarpUser> authenticateWithForm({
+  Future<CarpUser> authenticateWithForm(
+    BuildContext context, {
     String username,
   }) async {
     if (_app == null)
       throw CarpServiceException(
           message:
-              "CARP Service not initialized. Call 'CarpService.configure()' first.");
+              "CARP Service not initialized. Call 'CarpService().configure()' first.");
 
     _currentUser = new CarpUser(username: username);
 
@@ -190,7 +191,7 @@ class CarpService {
     if (_app == null)
       throw new CarpServiceException(
           message:
-              "CARP Service not initialized. Call 'CarpService.configure()' first.");
+              "CARP Service not initialized. Call 'CarpService().configure()' first.");
 
     // --data "refresh_token=my-refresh-token&grant_type=refresh_token"
     final loginBody = {
@@ -233,7 +234,7 @@ class CarpService {
     if (_currentUser.token == null)
       throw new CarpServiceException(
           message:
-              "OAuth token is null. Call 'CarpService.authenticate()' first.");
+              "OAuth token is null. Call 'CarpService().authenticate()' first.");
 
     return {
       "Content-Type": "application/json",
@@ -525,7 +526,8 @@ abstract class CarpReference {
   CarpService service;
 
   CarpReference._(this.service) {
-    assert(service != null);
+    assert(service != null, 'A valid CARP service must be provided.');
+    assert(service.app.study != null, 'A valid study must be provided in the service app before study-specific resources in CARP can be accessed.');
   }
 
   Future<Map<String, String>> get headers async {

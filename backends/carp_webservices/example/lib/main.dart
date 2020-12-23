@@ -1,10 +1,11 @@
-//library carp_webservices_example_app;
+library carp_webservices_example_app;
 
 import 'package:flutter/material.dart';
-//import 'package:carp_webservices/carp_service/carp_service.dart';
+import 'package:carp_webservices/carp_service/carp_service.dart';
+import 'package:carp_webservices/carp_auth/carp_auth.dart';
 
-//part 'homepage.dart';
-import 'homepage.dart';
+part 'homepage.dart';
+part 'app_bloc.dart';
 
 void main() {
   runApp(MyApp());

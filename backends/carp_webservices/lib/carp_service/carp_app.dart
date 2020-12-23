@@ -8,25 +8,31 @@ part of carp_services;
 
 /// Represents a CARP web service app endpoint.
 class CarpApp {
+  /// The name of this app.
+  final String name;
+
+  /// URI of the CARP web service
+  final Uri uri;
+
+  /// The OAuth 2.0 endpoint.
+  final OAuthEndPoint oauth;
+
   /// The CARP study for this app.
   Study study;
 
-  /// The name of this app.
-  String name;
-
-  /// URI of the CARP web service
-  Uri uri;
-
-  /// The OAuth 2.0 endpoint.
-  OAuthEndPoint oauth;
-
+  /// Create a [CarpApp] which know how to access a CARP backend.
+  ///
+  /// [name], [uri], and [oauth] are required parameters in order to identify,
+  /// address, and authenticate this client.
+  ///
+  /// A [study] with its [studyId] and [deploymentId] may be specified, if
+  /// known at the creation time.
   CarpApp({
-    @required this.study,
     @required this.name,
     @required this.uri,
     @required this.oauth,
+    this.study,
   }) {
-    assert(study != null);
     assert(name != null);
     assert(uri != null);
     assert(oauth != null);
@@ -38,5 +44,6 @@ class CarpApp {
 
   bool operator ==(other) => name == other;
 
-  String toString() => 'CarpApp - name: $name, uri: $uri, study: ${study.name}';
+  String toString() =>
+      'CarpApp - name: $name, uri: $uri, study: ${study?.name}';
 }

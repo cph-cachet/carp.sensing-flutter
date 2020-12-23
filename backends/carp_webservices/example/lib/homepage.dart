@@ -1,6 +1,4 @@
-//part of carp_webservices_example_app;
-import 'package:flutter/material.dart';
-import 'package:carp_webservices/carp_service/carp_service.dart';
+part of carp_webservices_example_app;
 
 class HomePage extends StatefulWidget {
   @override

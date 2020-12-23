@@ -6,21 +6,25 @@ import 'package:carp_webservices/carp_domain/carp_domain.dart';
 import 'package:carp_webservices/carp_service/carp_service.dart';
 
 void main() async {
-  final String username = "researcher";
-  final String uri = "http://staging.carp.cachet.dk:8080";
-  final String testStudyId = "8";
+  final String username = 'researcher';
+  final String uri = 'http://staging.carp.cachet.dk:8080';
+  final String testStudyId = '8';
 
   CarpApp app;
   Study study;
 
-  study = new Study(
-      id: testStudyId, userId: "user@dtu.dk", name: "Test study #$testStudyId");
-  app = new CarpApp(
-      study: study,
-      name: "any_display_friendly_name_is_fine",
-      uri: Uri.parse(uri),
-      oauth: OAuthEndPoint(
-          clientID: "the_client_id", clientSecret: "the_client_secret"));
+  study = Study(
+    id: testStudyId,
+    userId: 'user@dtu.dk',
+    name: 'Test study #$testStudyId',
+  );
+  app = CarpApp(
+    name: 'any_display_friendly_name_is_fine',
+    uri: Uri.parse(uri),
+    oauth: OAuthEndPoint(
+        clientID: 'the_client_id', clientSecret: 'the_client_secret'),
+    study: study,
+  );
 
   // Configure the CARP Service with this app.
   CarpService().configure(app);
@@ -30,17 +34,33 @@ void main() async {
   // Try to authenticate
   CarpUser user;
   try {
-    user = await CarpService()
-        .authenticate(username: "a_username", password: "the_password");
+    user = await CarpService().authenticate(
+      username: 'a_username',
+      password: 'the_password',
+    );
   } catch (excp) {
     print(excp);
   }
   print('$user authenticated.');
 
-  // ------------------- FILE MANAGEMENT --------------------------------
+// ------------------- INFORMED CONSENT -------------------------------
+
+  try {
+    ConsentDocument uploaded = await CarpService().createConsentDocument({
+      'text': 'The original terms text.',
+      'signature': 'Image Blob',
+    });
+
+    ConsentDocument downloaded =
+        await CarpService().getConsentDocument(uploaded.id);
+  } catch (excp) {
+    print(excp);
+  }
+
+// ------------------- FILE MANAGEMENT --------------------------------
 
   // first upload a file
-  final File uploadFile = File("test/img.jpg");
+  final File uploadFile = File('test/img.jpg');
   final FileUploadTask uploadTask = CarpService()
       .getFileStorageReference()
       .upload(uploadFile, {
@@ -57,7 +77,7 @@ void main() async {
 
   // then download the file again
   // note that a local file to download is needed
-  final File downloadFile = File("test/img-$id.jpg");
+  final File downloadFile = File('test/img-$id.jpg');
   final FileDownloadTask downloadTask =
       CarpService().getFileStorageReference(id).download(downloadFile);
   int responseCode = await downloadTask.onComplete;
@@ -82,6 +102,7 @@ void main() async {
   // create a CARP data point
   final CARPDataPoint data =
       CARPDataPoint.fromDatum(study.id, study.userId, datum);
+
   // post it to the CARP server, which returns the ID of the data point
   int dataPointId =
       await CarpService().getDataPointReference().postDataPoint(data);
@@ -91,7 +112,7 @@ void main() async {
       await CarpService().getDataPointReference().getDataPoint(dataPointId);
 
   // batch upload a list of raw json data points in a file
-  final File file = File("test/batch.json");
+  final File file = File('test/batch.json');
   await CarpService().getDataPointReference().batchPostDataPoint(file);
 
   // delete the data point
@@ -99,7 +120,7 @@ void main() async {
 
   // ------------------- COLLECTIONS AND DOCUMENTS --------------------------------
 
-  // access an document
+  // access a document
   //  - if the document id is not specified, a new document (with a new id) is created
   //  - if the collection (users) don't exist, it is created
   DocumentSnapshot document = await CarpService()
@@ -128,7 +149,7 @@ void main() async {
 
   // get all documents in a collection.
   List<DocumentSnapshot> documents =
-      await CarpService().collection("users").documents;
+      await CarpService().collection('users').documents;
 
   // ------------------- DEPLOYMENTS --------------------------------
 
