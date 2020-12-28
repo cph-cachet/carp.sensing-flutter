@@ -1,39 +1,59 @@
 part of carp_webservices_example_app;
 
+// import 'package:carp_webservices/carp_service/carp_service.dart';
+// import 'package:flutter/material.dart';
+// import 'app_bloc.dart';
+
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  @override
+  void initState() {
+    super.initState();
+    bloc.init();
+  }
+
+  void dispose() {
+    bloc.dispose();
+    super.dispose();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('CARP Authentication Example App'),
+        title: Text('CARP Authentication Example'),
       ),
       body: Center(
-        child: Container(
-          height: 80,
-          width: 150,
-          decoration: BoxDecoration(
-              color: Colors.blue, borderRadius: BorderRadius.circular(10)),
-          child: FlatButton(
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (_) => CarpAuthenticationForm(
-                            username: 'sys1admin1DK@cachet.dk',
-                          )));
-            },
-            child: Text(
-              'LOGIN',
-              style: TextStyle(color: Colors.white, fontSize: 25),
+          child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Container(
+            height: 80,
+            width: 150,
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+            child: TextButton.icon(
+              onPressed: () {
+                bloc.authenticate(context, username: 'sys1admin1DK@cachet.dk');
+              },
+              icon: Icon(Icons.login),
+              label: Text(
+                'LOGIN',
+                //style: TextStyle(color: Colors.white, fontSize: 25),
+              ),
             ),
           ),
-        ),
-      ),
+          StreamBuilder(
+            stream: CarpService().authStateChanges,
+            builder: (BuildContext context, AsyncSnapshot<AuthEvent> event) =>
+                Padding(
+                    padding: EdgeInsets.fromLTRB(10, 30, 10, 0),
+                    child: Text(
+                        'Authentication status: ${(CarpService().authenticated) ? 'Authenticated' : 'Not authenticated'}')),
+          )
+        ],
+      )),
     );
   }
 }

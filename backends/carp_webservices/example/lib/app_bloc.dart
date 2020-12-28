@@ -1,13 +1,12 @@
 part of carp_webservices_example_app;
 
-// CANS PROD
-
 class AppBLoC {
-  final String uri = "https://cans.cachet.dk:443";
+  final String uri = "https://cans.cachet.dk:443"; // CANS PROD
+
   CarpApp _app;
   CarpApp get app => _app;
 
-  Future<void> init() async {
+  Future init() async {
     _app = CarpApp(
       name: 'carp_webservices_example_app',
       uri: Uri.parse(uri),
@@ -17,8 +16,12 @@ class AppBLoC {
     CarpService().configure(app);
   }
 
-  Future<CarpUser> authenticate(String username) async =>
+  void dispose() async {}
+
+  Future<CarpUser> authenticate(BuildContext context,
+          {String username}) async =>
       await CarpService().authenticateWithForm(
+        context,
         username: username,
       );
 }
