@@ -6,13 +6,6 @@
  */
 part of carp_services;
 
-/// Signature of a login callback that returns the username and password.
-typedef LoginCallback = void Function(String username, String password);
-
-/// Signature of the callback that the user wants to reset the password for
-/// his/her username (email).
-typedef ForgotPasswordCallback = void Function(String username);
-
 class CARPEmailValidator extends TextFieldValidator {
   /// regex pattern to validate email inputs.
   final Pattern _emailPattern =
@@ -25,12 +18,7 @@ class CARPEmailValidator extends TextFieldValidator {
 
 class CarpAuthenticationForm extends StatefulWidget {
   final String username;
-  final LoginCallback loginCallback;
-  final ForgotPasswordCallback forgotPasswordCallback;
-
-  CarpAuthenticationForm(
-      {this.username, this.loginCallback, this.forgotPasswordCallback});
-
+  CarpAuthenticationForm({this.username});
   _CarpAuthenticationFormState createState() => _CarpAuthenticationFormState();
 }
 
@@ -163,8 +151,6 @@ class _InputState extends State<_InputWidget> {
 
     if (success) {
       Navigator.pop(context);
-      // wait for the snackbar to be shown and then pop this login form
-      //new Timer(Duration(seconds: delay), () => Navigator.pop(context));
     } else {
       Scaffold.of(context).showSnackBar(_getSnackBar(failure: true));
     }
@@ -192,7 +178,7 @@ class _ResetPasswordState extends State<_ResetPasswordWidget> {
     return new FlatButton(
       child: Text('Forgot passord?',
           style: TextStyle(
-            color: ThemeData.light().buttonColor,
+            //color: ThemeData.light().buttonColor,
             fontSize: 18.0,
             fontWeight: FontWeight.w300,
           )),
@@ -319,152 +305,3 @@ class _LogoWidget extends StatelessWidget {
         ));
   }
 }
-
-// class _MessageWidget extends StatefulWidget {
-//   _MessageState createState() => _MessageState();
-// }
-
-// class _MessageState extends State<_MessageWidget> {
-//   Widget build(BuildContext context) {
-//     String _errorMessage = "Error Message....";
-//     if (_errorMessage.length > 0 && _errorMessage != null) {
-//       return Text(
-//         _errorMessage,
-//         style: TextStyle(
-//             fontSize: 13.0,
-//             color: Colors.red,
-//             height: 1.0,
-//             fontWeight: FontWeight.w300),
-//       );
-//     } else {
-//       return Container(
-//         height: 0.0,
-//       );
-//     }
-//   }
-
-// Widget _build(BuildContext context) {
-//   return Scaffold(
-//       backgroundColor: Colors.white,
-//       appBar: AppBar(
-//         title: Text("CACHET Research Platform"),
-//       ),
-//       body: Builder(
-//           // Create an inner BuildContext so that the onPressed methods
-//           // can refer to the Scaffold with Scaffold.of().
-//           builder: (BuildContext context) {
-//         return SingleChildScrollView(
-//           child: Form(
-//             autovalidateMode: AutovalidateMode.onUserInteraction,
-//             key: _formkey,
-//             child: Column(
-//               children: <Widget>[
-//                 Padding(
-//                   padding: const EdgeInsets.only(top: 60.0),
-//                   child: Center(
-//                     child: Container(
-//                       //width: 300,
-//                       height: 150,
-//                       // child: Image.asset('asset/images/carp_logo_small.png',
-//                       //     package: 'carp_webservices'),
-//                     ),
-//                   ),
-//                 ),
-//                 Padding(
-//                   padding: EdgeInsets.symmetric(horizontal: 15),
-//                   child: TextFormField(
-//                     key: _usernameKey,
-//                     initialValue: _username,
-//                     keyboardType: TextInputType.emailAddress,
-//                     decoration: InputDecoration(
-//                         border: OutlineInputBorder(),
-//                         labelText: 'Email',
-//                         hintText: 'Enter email as abc@cachet.dk'),
-//                     validator: MultiValidator([
-//                       RequiredValidator(errorText: "* Required"),
-//                       CARPEmailValidator(errorText: "Enter valid email."),
-//                     ]),
-//                     onSaved: (value) => _username = value,
-//                   ),
-//                 ),
-//                 Padding(
-//                   padding: const EdgeInsets.only(
-//                       left: 15.0, right: 15.0, top: 15, bottom: 0),
-//                   child: TextFormField(
-//                     key: _passwordKey,
-//                     obscureText: true,
-//                     decoration: InputDecoration(
-//                         border: OutlineInputBorder(),
-//                         labelText: 'Password',
-//                         hintText: 'Enter password'),
-//                     validator: MultiValidator([
-//                       RequiredValidator(errorText: "* Required"),
-//                       MinLengthValidator(8,
-//                           errorText:
-//                               "Password should be atleast 8 characters"),
-//                     ]),
-//                     onSaved: (value) => _password = value,
-//                   ),
-//                 ),
-//                 Padding(
-//                   padding: const EdgeInsets.only(
-//                       left: 15.0, right: 15.0, top: 15, bottom: 0),
-//                   child: Container(
-//                     height: 50,
-//                     width: 250,
-//                     decoration: BoxDecoration(
-//                         color: Colors.blue,
-//                         borderRadius: BorderRadius.circular(5)),
-//                     child: TextButton.icon(
-//                       onPressed: () {
-//                         _username = _usernameKey.currentState.value;
-//                         _password = _passwordKey.currentState.value;
-//                         print(
-//                             ' -> username: $_username, password: $_password');
-//                         if (_formkey.currentState.validate()) {
-//                           if (loginCallback != null)
-//                             loginCallback(_username, _password);
-//                         }
-//                         Navigator.pop(context);
-//                       },
-//                       icon: Image.asset('asset/images/carp_logo_tiny.png',
-//                           package: 'carp_webservices'),
-//                       label: Text(
-//                         'Sign in with CARP',
-//                         style: TextStyle(
-//                           color: Colors.white,
-//                           fontSize: 20,
-//                         ),
-//                       ),
-//                     ),
-//                   ),
-//                 ),
-//                 TextButton(
-//                   onPressed: () {
-//                     //TODO FORGOT PASSWORD SCREEN GOES HERE
-//                   },
-//                   child: Text(
-//                     'Forgot Password',
-//                     style: TextStyle(color: Colors.blue, fontSize: 15),
-//                   ),
-//                 ),
-//                 SizedBox(
-//                   height: 100,
-//                 ),
-//                 Align(
-//                   alignment: Alignment.centerRight,
-//                   child: Container(
-//                       width: 200,
-//                       //height: 150,
-//                       child: Image.asset(
-//                         'asset/images/cachet_logo.png',
-//                         package: 'carp_webservices',
-//                       )),
-//                 ),
-//                 //Text('CACHET Research Platform (CARP)')
-//               ],
-//             ),
-//           ),
-//         );
-//       }));
-// }

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:carp_webservices/carp_service/carp_service.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 
-part 'HomePage.dart';
+part 'home_page.dart';
 part 'app_bloc.dart';
 
 void main() {

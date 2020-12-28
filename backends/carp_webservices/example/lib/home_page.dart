@@ -1,9 +1,5 @@
 part of carp_webservices_example_app;
 
-// import 'package:carp_webservices/carp_service/carp_service.dart';
-// import 'package:flutter/material.dart';
-// import 'app_bloc.dart';
-
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -31,7 +27,7 @@ class _HomePageState extends State<HomePage> {
         children: <Widget>[
           Container(
             height: 80,
-            width: 150,
+            width: 200,
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
             child: TextButton.icon(
               onPressed: () {
@@ -40,7 +36,7 @@ class _HomePageState extends State<HomePage> {
               icon: Icon(Icons.login),
               label: Text(
                 'LOGIN',
-                //style: TextStyle(color: Colors.white, fontSize: 25),
+                style: TextStyle(fontSize: 35),
               ),
             ),
           ),

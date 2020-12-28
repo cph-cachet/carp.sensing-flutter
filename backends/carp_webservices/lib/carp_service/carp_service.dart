@@ -46,9 +46,9 @@ String _encode(Object object) =>
 /// The (current) assumption is that each Flutter app (using this library) will only connect
 /// to one CARP web service backend. Therefore this is a singleton and should be used like:
 ///
-/// ```
-/// CarpService().configure(myApp);
-/// CarpUser user = await CarpService().authenticate(username: "user@dtu.dk", password: "password");
+/// ```dart
+///   CarpService().configure(myApp);
+///   CarpUser user = await CarpService().authenticate(username: "user@dtu.dk", password: "password");
 /// ```
 class CarpService {
   static CarpService _instance = CarpService._();
@@ -98,13 +98,13 @@ class CarpService {
       };
 
   /// Is a user authenticated?
-  /// If `true`, the authenticated used is [currentUser].
+  /// If `true`, the authenticated user is [currentUser].
   bool get authenticated => (_currentUser != null);
 
   StreamController<AuthEvent> _authEventController = StreamController();
 
   /// Notifies about changes to the user's authentication state (such as sign-in or
-  /// sign-out) as defined in [authEvent].
+  /// sign-out) as defined in [AuthEvent].
   Stream<AuthEvent> get authStateChanges =>
       _authEventController.stream.asBroadcastStream();
 
@@ -186,11 +186,14 @@ class CarpService {
 
   /// Authenticate to this CARP service by showing a form for the user to enter
   /// his/her username and password.
+  /// Also allow the user to reset the password.
   ///
-  /// The [context] is needed in order to show the login page in the right context.
+  /// The [context] is required in order to show the login page in the right context.
   /// If the [username] is provide, this is shown as default in the form.
   ///
-  /// Throws a [CarpServiceException] if not successful.
+  /// In contrast to the other authentication methods, this method does **not**
+  /// throws a [CarpServiceException] if authentication is not successful.
+  /// Instead it shown a message to the user (in a snackbar).
   Future authenticateWithForm(
     BuildContext context, {
     String username,
@@ -204,25 +207,8 @@ class CarpService {
         context,
         MaterialPageRoute(
             builder: (_) => CarpAuthenticationForm(
-                username: username,
-                loginCallback: (username, password) async {
-                  info(
-                      'Trying to authenticate - username : $username, password : $password');
-
-                  final snackBar = SnackBar(
-                      content: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Signing in...'),
-                      CircularProgressIndicator(),
-                    ],
-                  ));
-                  Scaffold.of(context).showSnackBar(snackBar);
-                  await authenticate(username: username, password: password);
-                },
-                forgotPasswordCallback: (username) async {
-                  info('Sending reset email for $username');
-                })));
+                  username: username,
+                )));
   }
 
   /// Get a new access token for the current user based on the
@@ -251,7 +237,7 @@ class CarpService {
     if (httpStatusCode == HttpStatus.ok) {
       OAuthToken refreshedToken = OAuthToken.fromMap(responseJson);
       _currentUser.authenticated(refreshedToken);
-      _authEventController.add(AuthEvent.refresh);
+      _authEventController.add(AuthEvent.refreshed);
       return refreshedToken;
     }
 
@@ -611,8 +597,8 @@ enum AuthEvent {
   /// The user has been unauthenticated (signed out).
   unauthenticated,
 
-  /// The user's token has successfull been refreshed.
-  refresh,
+  /// The user's token has successfully been refreshed.
+  refreshed,
 
   /// A password reset email has been send to the user.
   reset,
