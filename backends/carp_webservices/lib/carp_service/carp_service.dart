@@ -557,7 +557,11 @@ class CarpService {
 
   /// Get the list of active participation invitations for an [accountId].
   /// This will return all deployments that this account (user) is invited to.
-  /// If [accountId] is not specified, then the account id of the currently authenticated [CarpUser] is used.
+  ///
+  /// Note that the [accountId] is the unique CARP account id (and not the
+  /// username).
+  /// If [accountId] is not specified, then the account id of the currently
+  /// authenticated [CarpUser] is used.
   Future<List<ActiveParticipationInvitation>> invitations(
       [String accountId]) async {
     accountId ??= currentUser.accountId;

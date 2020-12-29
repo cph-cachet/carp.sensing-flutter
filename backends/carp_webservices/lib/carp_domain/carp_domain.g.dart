@@ -54,8 +54,8 @@ RegisterDevice _$RegisterDeviceFromJson(Map<String, dynamic> json) {
     json['deviceRoleName'] as String,
     json['registration'] == null
         ? null
-        : DeviceRegistration
-            .fromJson(json['registration'] as Map<String, dynamic>),
+        : DeviceRegistration.fromJson(
+            json['registration'] as Map<String, dynamic>),
   )..$type = json[r'$type'] as String;
 }
 
@@ -206,15 +206,12 @@ Map<String, dynamic> _$StudyInvitationToJson(StudyInvitation instance) {
 
 DeviceInvitation _$DeviceInvitationFromJson(Map<String, dynamic> json) {
   return DeviceInvitation()
-    ..$type = json[r'$type'] as String
     ..deviceRoleName = json['deviceRoleName'] as String
     ..isRegistered = json['isRegistered'] as bool;
 }
 
 Map<String, dynamic> _$DeviceInvitationToJson(DeviceInvitation instance) {
-  final val = <String, dynamic>{
-    r'$type': instance.$type,
-  };
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -232,8 +229,8 @@ MasterDeviceDeployment _$MasterDeviceDeploymentFromJson(
   return MasterDeviceDeployment()
     ..configuration = json['configuration'] == null
         ? null
-        : DeviceRegistration
-            .fromJson(json['configuration'] as Map<String, dynamic>)
+        : DeviceRegistration.fromJson(
+            json['configuration'] as Map<String, dynamic>)
     ..connectedDevices = (json['connectedDevices'] as List)
         ?.map((e) => e == null
             ? null
@@ -363,8 +360,8 @@ TriggeredTask _$TriggeredTaskFromJson(Map<String, dynamic> json) {
         : TaskDescriptor.fromJson(json['task'] as Map<String, dynamic>)
     ..targetDevice = json['targetDevice'] == null
         ? null
-        : DeviceDescriptor
-            .fromJson(json['targetDevice'] as Map<String, dynamic>);
+        : DeviceDescriptor.fromJson(
+            json['targetDevice'] as Map<String, dynamic>);
 }
 
 Map<String, dynamic> _$TriggeredTaskToJson(TriggeredTask instance) {

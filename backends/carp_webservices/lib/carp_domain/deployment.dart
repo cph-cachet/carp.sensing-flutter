@@ -181,8 +181,7 @@ class DeploymentSuccessful extends GetDeviceDeploymentFor {
     String studyDeploymentId,
     String masterDeviceRoleName,
     this.deviceDeploymentLastUpdateDate,
-  )
-      : super(studyDeploymentId, masterDeviceRoleName) {
+  ) : super(studyDeploymentId, masterDeviceRoleName) {
     $type =
         'dk.cachet.carp.deployment.infrastructure.DeploymentServiceRequest.DeploymentSuccessful';
   }
@@ -280,7 +279,7 @@ class StudyInvitation {
 
 /// Holds device invitation details.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class DeviceInvitation extends Serializable {
+class DeviceInvitation {
   DeviceInvitation() : super();
 
   /// The role name of the device in this invitation.
@@ -290,10 +289,8 @@ class DeviceInvitation extends Serializable {
   /// In case a device is registered, it needs to be unregistered first before a new device can be registered.
   bool isRegistered;
 
-  Function get fromJsonFunction => _$DeviceInvitationFromJson;
   factory DeviceInvitation.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      _$DeviceInvitationFromJson(json);
   Map<String, dynamic> toJson() => _$DeviceInvitationToJson(this);
 
   String toString() => "$runtimeType - deviceRoleName: $deviceRoleName";
@@ -586,9 +583,9 @@ void registerFromJsonFunctions() {
 
   // FromJsonFactory().register(type: "dk.cachet.carp.deployment.domain.users.ActiveParticipationInvitation",
   //     ActiveParticipationInvitation());
-  FromJsonFactory().register(DeviceInvitation(),
-      type:
-          "dk.cachet.carp.deployment.domain.users.ActiveParticipationInvitation.DeviceInvitation");
+  // FromJsonFactory().register(DeviceInvitation(),
+  //     type:
+  //         "dk.cachet.carp.deployment.domain.users.ActiveParticipationInvitation.DeviceInvitation");
   // FromJsonFactory().register(Participation(),
   //     type: "dk.cachet.carp.deployment.domain.users.Participation");
   // FromJsonFactory().register(StudyInvitation(),
