@@ -125,6 +125,7 @@ class _InputState extends State<_InputWidget> {
         padding: EdgeInsets.fromLTRB(0.0, 45.0, 0.0, 0.0),
         child: SizedBox(
           height: 40.0,
+          width: 300,
           child: new RaisedButton(
             elevation: 5.0,
             shape: new RoundedRectangleBorder(
