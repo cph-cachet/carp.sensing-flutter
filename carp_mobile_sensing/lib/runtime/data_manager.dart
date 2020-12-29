@@ -86,21 +86,6 @@ class DataManagerRegistry {
   }
 }
 
-/// An interface defining a manger of a [Study].
-///
-/// Is mainly used to get and save a [Study].
-abstract class StudyManager {
-  /// Initialize the study receiver.
-  Future initialize();
-
-  /// Get a [Study] based on its ID.
-  Future<Study> getStudy(String studyId);
-
-  /// Save a [Study].
-  /// Returns `true` if successful, `false` otherwise.
-  Future<bool> saveStudy(Study study);
-}
-
 /// An event for a data manager.
 class DataManagerEvent {
   /// The event type, see [DataManagerEventTypes].

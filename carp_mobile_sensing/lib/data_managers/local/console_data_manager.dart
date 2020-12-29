@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of data_managers;
+part of managers;
 
 /// A very simple data manager that just "uploads" the data to the
 /// console (i.e., prints it). Used mainly for testing and debugging purposes.

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of data_managers;
+part of managers;
 
 // **************************************************************************
 // JsonSerializableGenerator

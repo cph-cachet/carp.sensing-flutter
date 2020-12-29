@@ -1,3 +1,6 @@
+## 0.11.1
+* feature: support for storing and retrieving study json protocols on the local file system.
+
 ## 0.11.0
 * refactor: improved (de)serialization in the `Serialization` class.
 * refactor: named constructors in the `Study` and `Measure` classes.
