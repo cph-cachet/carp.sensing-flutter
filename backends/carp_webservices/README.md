@@ -103,6 +103,22 @@ try {
 }
 ```
 
+The plugin also comes with a user interface for authenticating at a CARP server using the `authenticateWithForm()` method.
+For example, in the example app the login is available on a TextButton like this:
+
+```dart
+    child: TextButton.icon(
+      onPressed: () => CarpService().authenticateWithForm(
+        context,
+        username: 'user@cachet.dk',
+      ),
+      icon: Icon(Icons.login),
+      label: Text(
+        'LOGIN',
+        style: TextStyle(fontSize: 35),
+      ),
+   ),
+```
 
 
 ### Informed Consent Document

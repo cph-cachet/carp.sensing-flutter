@@ -138,7 +138,7 @@ class _InputState extends State<_InputWidget> {
         ));
   }
 
-  Future<void> _validateAndSubmit() async {
+  Future _validateAndSubmit() async {
     bool success = true;
     Scaffold.of(context).showSnackBar(_getSnackBar());
 
@@ -187,7 +187,7 @@ class _ResetPasswordState extends State<_ResetPasswordWidget> {
     );
   }
 
-  Future<void> _sendResetPasswordEmail() async {
+  Future _sendResetPasswordEmail() async {
     bool success = true;
     Scaffold.of(context).showSnackBar(_resettingSnackBar);
 
@@ -201,7 +201,8 @@ class _ResetPasswordState extends State<_ResetPasswordWidget> {
       success = false;
     }
 
-    Scaffold.of(context)
+    Scaffold
+        .of(context)
         .showSnackBar(success ? _successfulSnackBar : _failureSnackBar);
   }
 

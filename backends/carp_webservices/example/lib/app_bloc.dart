@@ -18,8 +18,7 @@ class AppBLoC {
 
   void dispose() async {}
 
-  Future<CarpUser> authenticate(BuildContext context,
-          {String username}) async =>
+  Future authenticate(BuildContext context, {String username}) async =>
       await CarpService().authenticateWithForm(
         context,
         username: username,
