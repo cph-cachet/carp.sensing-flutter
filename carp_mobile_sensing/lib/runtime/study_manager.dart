@@ -13,6 +13,9 @@ abstract class StudyManager {
   /// Initialize the study manager.
   Future initialize();
 
+  /// Dispose of this study manager.
+  Future dispose();
+
   /// Get a [Study] based on its ID.
   Future<Study> getStudy(String studyId);
 

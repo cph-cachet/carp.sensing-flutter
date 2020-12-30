@@ -74,5 +74,7 @@ class FileStudyManager implements StudyManager {
   ///
   ///   `carp/study/study-<study_id>.json`
   ///
-  String filename(String studyId) => '$path/study-$studyId.json';
+  String filename(String studyId) => '$_path/study-$studyId.json';
+
+  Future dispose() {}
 }

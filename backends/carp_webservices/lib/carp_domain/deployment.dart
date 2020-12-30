@@ -242,18 +242,18 @@ class Participation {
   /// Unique id for this participation.
   String id;
 
-  Participation() : super();
-
   /// True when the device is already registered in the study deployment; false otherwise.
   /// In case a device is registered, it needs to be unregistered first before a new device can be registered.
   bool isRegistered;
+
+  Participation() : super();
 
   factory Participation.fromJson(Map<String, dynamic> json) =>
       _$ParticipationFromJson(json);
   Map<String, dynamic> toJson() => _$ParticipationToJson(this);
 
   String toString() =>
-      "${super.toString()}, id: $id, isRegistered: $isRegistered";
+      "${super.toString()}, id: $id, studyDeploymentId: $studyDeploymentId, isRegistered: $isRegistered";
 }
 
 /// A description of a study, shared with participants once they are invited to a study.

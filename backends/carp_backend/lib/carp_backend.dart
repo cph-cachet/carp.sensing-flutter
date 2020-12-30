@@ -14,8 +14,11 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_service/carp_service.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
+import 'package:carp_webservices/carp_domain/carp_domain.dart';
+import 'package:flutter/material.dart';
 
-part 'carp_data_managers.dart';
+part 'carp_data_manager.dart';
+part 'carp_study_manager.dart';
 part 'carp_backend.g.dart';
 
 /// Specify a CARP Web Service endpoint.

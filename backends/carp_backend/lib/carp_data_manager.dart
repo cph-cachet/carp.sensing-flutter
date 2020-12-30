@@ -78,15 +78,14 @@ class CarpDataManager extends AbstractDataManager {
   /// this method will authenticate the user and sign him/her in.
   Future<CarpUser> get user async {
     // check if the CARP webservice has already been configured and the user is logged in.
-    if (!CarpService.isConfigured) await CarpService.configure(await app);
-    if (CarpService.instance.currentUser == null) {
-      await CarpService.instance.authenticate(
+    if (!CarpService().isConfigured) CarpService().configure(await app);
+    if (CarpService().currentUser == null) {
+      await CarpService().authenticate(
           username: carpEndPoint.email, password: carpEndPoint.password);
-      print(
-          "CarpDataManager - signed in user: ${CarpService.instance.currentUser}");
+      print("CarpDataManager - signed in user: ${CarpService().currentUser}");
     }
     _initialized = true;
-    return CarpService.instance.currentUser;
+    return CarpService().currentUser;
   }
 
   /// Handle upload of data depending on the specified [CarpUploadMethod].
@@ -111,17 +110,15 @@ class CarpDataManager extends AbstractDataManager {
       // then upload the datum as specified in the upload method.
       switch (carpEndPoint.uploadMethod) {
         case CarpUploadMethod.DATA_POINT:
-          return (await CarpService.instance
-                  .getDataPointReference()
-                  .postDataPoint(
-                      CARPDataPoint.fromDatum(study.id, study.userId, data)) !=
+          return (await CarpService().getDataPointReference().postDataPoint(
+                  CARPDataPoint.fromDatum(study.id, study.userId, data)) !=
               null);
         case CarpUploadMethod.BATCH_DATA_POINT:
         case CarpUploadMethod.FILE:
           // In both cases, forward to [FileDataManager], which collects data in a file before upload.
           return fileDataManager.write(data);
         case CarpUploadMethod.DOCUMENT:
-          return (await CarpService.instance
+          return (await CarpService()
                   .collection('/${carpEndPoint.collection}')
                   .document()
                   .setData(json.decode(json.encode(data))) !=
@@ -144,19 +141,17 @@ class CarpDataManager extends AbstractDataManager {
 
     switch (carpEndPoint.uploadMethod) {
       case CarpUploadMethod.BATCH_DATA_POINT:
-        await CarpService.instance
-            .getDataPointReference()
-            .batchPostDataPoint(file);
+        await CarpService().getDataPointReference().batchPostDataPoint(file);
 
         addEvent(CarpDataManagerEvent(
             CarpDataManagerEventTypes.file_uploaded,
             file.path,
             null,
-            CarpService.instance.getDataPointReference().dataEndpointUri));
+            CarpService().getDataPointReference().dataEndpointUri));
         print("Batch upload to CARP finished");
         break;
       case CarpUploadMethod.FILE:
-        final FileUploadTask uploadTask = CarpService.instance
+        final FileUploadTask uploadTask = CarpService()
             .getFileStorageReference()
             .upload(file, {
           'device_id': '$deviceID',
@@ -201,9 +196,8 @@ class CarpDataManager extends AbstractDataManager {
     datum.metadata['user_id'] = userID;
 
     // start upload
-    final FileUploadTask uploadTask = CarpService.instance
-        .getFileStorageReference()
-        .upload(file, datum.metadata);
+    final FileUploadTask uploadTask =
+        CarpService().getFileStorageReference().upload(file, datum.metadata);
 
     // await the upload is successful
     CarpFileResponse response = await uploadTask.onComplete;

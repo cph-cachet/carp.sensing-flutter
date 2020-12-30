@@ -22,6 +22,7 @@ import 'package:retry/retry.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 import '../carp_domain/carp_domain.dart';
 
@@ -37,6 +38,7 @@ part 'file_reference.dart';
 part 'http_retry.dart';
 part 'push_id_generator.dart';
 part 'authentication_form.dart';
+part 'authentication_dialog.dart';
 
 String _encode(Object object) =>
     const JsonEncoder.withIndent(' ').convert(object);
@@ -184,17 +186,44 @@ class CarpService {
     return _currentUser;
   }
 
-  /// Authenticate to this CARP service by showing a form for the user to enter
-  /// his/her username and password.
-  /// Also allow the user to reset the password.
+  // /// Authenticate to this CARP service by showing a form for the user to enter
+  // /// his/her username and password.
+  // /// Also allow the user to reset the password.
+  // ///
+  // /// The [context] is required in order to show the login page in the right context.
+  // /// If the [username] is provide, this is shown as default in the form.
+  // ///
+  // /// In contrast to the other authentication methods, this method does **not**
+  // /// throws a [CarpServiceException] if authentication is not successful.
+  // /// Instead it shown a message to the user (in a snackbar).
+  // Future authenticateWithForm(
+  //   BuildContext context, {
+  //   String username,
+  // }) async {
+  //   if (_app == null)
+  //     throw CarpServiceException(
+  //         message:
+  //             "CARP Service not initialized. Call 'CarpService().configure()' first.");
+
+  //   Navigator.push(
+  //       context,
+  //       MaterialPageRoute(
+  //           builder: (_) => CarpAuthenticationForm(
+  //                 username: username,
+  //               )));
+  // }
+
+  /// Authenticate to this CARP service by showing a modal dialog form for the
+  /// user to enter his/her username and password.
   ///
   /// The [context] is required in order to show the login page in the right context.
   /// If the [username] is provide, this is shown as default in the form.
   ///
   /// In contrast to the other authentication methods, this method does **not**
   /// throws a [CarpServiceException] if authentication is not successful.
-  /// Instead it shown a message to the user (in a snackbar).
-  Future authenticateWithForm(
+  /// Instead the dialog is kept open until authentication is successful, or
+  /// closed manually by the user.
+  Future authenticateWithDialog(
     BuildContext context, {
     String username,
   }) async {
@@ -203,12 +232,7 @@ class CarpService {
           message:
               "CARP Service not initialized. Call 'CarpService().configure()' first.");
 
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (_) => CarpAuthenticationForm(
-                  username: username,
-                )));
+    await AuthenticationDialog().build(context, username: username).show();
   }
 
   /// Get a new access token for the current user based on the
