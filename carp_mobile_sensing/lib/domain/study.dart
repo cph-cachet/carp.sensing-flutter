@@ -25,12 +25,6 @@ class Study extends Serializable {
   /// The id of this [Study].
   String id;
 
-  /// The deployment id of this [Study].
-  ///
-  /// A study can be deployed multiple times.
-  /// Use this id to keep track of different deployments of the same study.
-  String deploymentId;
-
   /// A printer-friendly name for this study.
   String name;
 
@@ -66,15 +60,13 @@ class Study extends Serializable {
   Study({
     @required this.id,
     this.userId,
-    this.deploymentId,
     this.name,
     this.description,
     this.samplingStrategy,
     this.dataEndPoint,
     this.dataFormat,
     this.publicKey,
-  })
-      : super() {
+  }) : super() {
     assert(id != null, 'Cannot create a Study without an id: id=null');
     samplingStrategy ??= SamplingSchemaType.NORMAL;
     dataFormat ??= NameSpace.CARP;

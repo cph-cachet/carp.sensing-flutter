@@ -103,12 +103,12 @@ try {
 }
 ```
 
-The plugin also comes with a user interface for authenticating at a CARP server using the `authenticateWithForm()` method.
-For example, in the example app the login is available on a TextButton like this:
+The plugin also comes with a user interface for authenticating at a CARP server using the `authenticateWithDialog()` method.
+For example, the login can be implemeted as part of a TextButton like this:
 
 ```dart
     child: TextButton.icon(
-      onPressed: () => CarpService().authenticateWithForm(
+      onPressed: () => CarpService().authenticateWithDialog(
         context,
         username: 'user@cachet.dk',
       ),
@@ -277,7 +277,7 @@ This subsystem is used for accessing `deployment` configurations, i.e. configura
 data sampling in a study should take place. 
 The CARP web service have methods for:
 
- * getting a list of invitation for a specific `accountId`, i.e. a user - default is the user who is authenticated to the CARP Service.
+ * getting invitations for a specific `accountId`, i.e. a user - default is the user who is authenticated to the CARP Service.
  * getting a deployment reference, which then can be used to query status, register devices, and get the deployment specification.
 
 ````dart
@@ -300,6 +300,15 @@ The CARP web service have methods for:
   // mark the deployment as a success
   status = await deploymentReference.success();
 ````
+
+There is also support for shwing a modal dialog for the user to select amongst several invitations. 
+This is done using the `getStudyIdByInvitation` method, like this:
+
+```dart
+  String studyId = await CarpService().getStudyIdByInvitation(context);
+  print('CARP Study Deployment ID: $studyId');
+```
+
 
 ## Features and bugs
 

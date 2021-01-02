@@ -1,3 +1,7 @@
+## 0.11.1
+* updated to carp_mobile_sensing v. 0.11.1
+* added the `CarpStudyManager` with support for getting a CAMS `Study` from a CARP server.
+
 ## 0.11.0
 * updated to carp_mobile_sensing v. 0.11.x
 

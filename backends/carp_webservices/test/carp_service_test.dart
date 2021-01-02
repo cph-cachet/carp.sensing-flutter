@@ -44,11 +44,11 @@ void main() {
     study = new Study(
       id: testStudyId,
       userId: userId,
-      deploymentId: testDeploymentId,
       name: "Test study",
     );
     app = new CarpApp(
       study: study,
+      studyDeploymentId: testDeploymentId,
       name: "Test",
       uri: Uri.parse(uri),
       oauth: OAuthEndPoint(clientID: clientID, clientSecret: clientSecret),

@@ -389,7 +389,6 @@ Study _$StudyFromJson(Map<String, dynamic> json) {
   return Study(
     id: json['id'] as String,
     userId: json['user_id'] as String,
-    deploymentId: json['deployment_id'] as String,
     name: json['name'] as String,
     description: json['description'] as String,
     samplingStrategy: json['sampling_strategy'] as String,
@@ -417,7 +416,6 @@ Map<String, dynamic> _$StudyToJson(Study instance) {
 
   writeNotNull(r'$type', instance.$type);
   writeNotNull('id', instance.id);
-  writeNotNull('deployment_id', instance.deploymentId);
   writeNotNull('name', instance.name);
   writeNotNull('description', instance.description);
   writeNotNull('user_id', instance.userId);

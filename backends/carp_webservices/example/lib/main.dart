@@ -9,7 +9,7 @@ void main() {
 class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'CARP Web Service Demo',
+      title: 'CARP Backend Demo',
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
       home: HomePage(),
@@ -35,9 +35,9 @@ class _HomePageState extends State<HomePage> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('CARP Authentication Example'),
-      ),
+      // appBar: AppBar(
+      //   title: Text('CARP Authentication Example'),
+      // ),
       body: Center(
           child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -49,11 +49,24 @@ class _HomePageState extends State<HomePage> {
             child: TextButton.icon(
               onPressed: () => bloc.authenticate(
                 context,
-                username: 'jakba@dtu.dk',
+                username: 'sys1admin1DK@cachet.dk',
               ),
               icon: Icon(Icons.login),
               label: Text(
                 'LOGIN',
+                style: TextStyle(fontSize: 35),
+              ),
+            ),
+          ),
+          Container(
+            height: 80,
+            width: 400,
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+            child: TextButton.icon(
+              onPressed: () => bloc.getStudyId(context),
+              icon: Icon(Icons.mail),
+              label: Text(
+                'GET STUDY',
                 style: TextStyle(fontSize: 35),
               ),
             ),
@@ -74,13 +87,15 @@ class _HomePageState extends State<HomePage> {
 
 class AppBLoC {
   final String uri = "https://cans.cachet.dk:443"; // CANS PROD
+  String _studyId;
+  String get studyId => _studyId;
 
   CarpApp _app;
   CarpApp get app => _app;
 
   Future init() async {
     _app = CarpApp(
-      name: 'carp_webservices_example_app',
+      name: 'carp_backend_example_app',
       uri: Uri.parse(uri),
       oauth: OAuthEndPoint(clientID: 'carp', clientSecret: 'carp'),
     );
@@ -95,6 +110,12 @@ class AppBLoC {
         context,
         username: username,
       );
+
+  Future<String> getStudyId(BuildContext context) async {
+    _studyId = await CarpService().getStudyIdByInvitation(context);
+    print('CARP Study Deployment ID: $_studyId');
+    return _studyId;
+  }
 }
 
 final bloc = AppBLoC();

@@ -22,7 +22,9 @@ void main() async {
     name: 'any_display_friendly_name_is_fine',
     uri: Uri.parse(uri),
     oauth: OAuthEndPoint(
-        clientID: 'the_client_id', clientSecret: 'the_client_secret'),
+      clientID: 'the_client_id',
+      clientSecret: 'the_client_secret',
+    ),
     study: study,
   );
 
@@ -158,7 +160,8 @@ void main() async {
       await CarpService().invitations();
 
   // get a deployment reference for this master device
-  DeploymentReference deploymentReference = CarpService().deployment();
+  DeploymentReference deploymentReference =
+      CarpService().deployment('the_study_deployment_id');
 
   // get the status of this deployment
   StudyDeploymentStatus status = await deploymentReference.getStatus();

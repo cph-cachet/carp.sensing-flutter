@@ -8,7 +8,8 @@ part of carp_backend;
 
 CarpDataEndPoint _$CarpDataEndPointFromJson(Map<String, dynamic> json) {
   return CarpDataEndPoint(
-    _$enumDecodeNullable(_$CarpUploadMethodEnumMap, json['upload_method']),
+    uploadMethod:
+        _$enumDecodeNullable(_$CarpUploadMethodEnumMap, json['upload_method']),
     name: json['name'] as String,
     uri: json['uri'] as String,
     clientId: json['client_id'] as String,

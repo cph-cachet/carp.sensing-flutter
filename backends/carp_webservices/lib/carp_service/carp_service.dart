@@ -39,6 +39,7 @@ part 'http_retry.dart';
 part 'push_id_generator.dart';
 part 'authentication_form.dart';
 part 'authentication_dialog.dart';
+part 'invitations_dialog.dart';
 
 String _encode(Object object) =>
     const JsonEncoder.withIndent(' ').convert(object);
@@ -455,7 +456,7 @@ class CarpService {
 
   /// The URL for the consent document end point for this [CarpService].
   String get consentDocumentEndpointUri =>
-      "${_app.uri.toString()}/api/deployments/${_app.study.deploymentId}/consent-documents";
+      "${_app.uri.toString()}/api/deployments/${_app.studyDeploymentId}/consent-documents";
 
   /// Create a new consent document.
   /// Returns the created [ConsentDocument] if the document is uploaded correctly.
@@ -576,8 +577,11 @@ class CarpService {
   String get deploymentRPCEndpointUri =>
       "${app.uri.toString()}/api/deployments/all";
 
-  /// Gets a [DeploymentReference] for this master device.
-  DeploymentReference deployment() => DeploymentReference._(this);
+  /// Gets a [DeploymentReference] for a [studyDeploymentId].
+  /// If the [studyDeploymentId] is not provided, the study deployment id
+  /// specified in the [CarpApp] is used.
+  DeploymentReference deployment([String studyDeploymentId]) =>
+      DeploymentReference._(this, studyDeploymentId);
 
   /// Get the list of active participation invitations for an [accountId].
   /// This will return all deployments that this account (user) is invited to.
@@ -592,12 +596,12 @@ class CarpService {
     final String body =
         _encode(GetActiveParticipationInvitations(accountId).toJson());
 
-    print('REQUEST: $deploymentRPCEndpointUri\n$body');
+    //print('REQUEST: $deploymentRPCEndpointUri\n$body');
     http.Response response = await httpr.post(
         Uri.encodeFull(deploymentRPCEndpointUri),
         headers: headers,
         body: body);
-    print('RESPONSE: ${response.statusCode}\n${response.body}');
+    //print('RESPONSE: ${response.statusCode}\n${response.body}');
 
     if (response.statusCode == HttpStatus.ok) {
       List<dynamic> items = json.decode(response.body);
@@ -614,6 +618,41 @@ class CarpService {
       httpStatus: HTTPStatus(response.statusCode, response.reasonPhrase),
       message: responseJson["message"],
     );
+  }
+
+  /// Get the study id for the current user based on an invitation from CARP.
+  ///
+  /// Returns `null` if the user has no invitations.
+  ///
+  /// If the user is invited to more than one study and [showInvitations] is `true`,
+  /// a user-interface dialog for selecting amongs the invitations is shown.
+  /// If not, the study id of the first invitation is returned.
+  ///
+  /// Throws a [CarpServiceException] if not successful.
+  Future<String> getStudyIdByInvitation(
+    BuildContext context, {
+    bool showInvitations = true,
+  }) async {
+    if (!CarpService().isConfigured)
+      throw CarpServiceException(
+          message:
+              "CARP Service not initialized. Call 'CarpService().configure()' first.");
+
+    if (!CarpService().authenticated)
+      throw CarpServiceException(
+          message:
+              "The current user is not authenticated to CARP. Call 'CarpService().authenticate...()' first.");
+
+    List<ActiveParticipationInvitation> invitations =
+        await CarpService().invitations();
+
+    if (invitations.isEmpty) return null;
+    if (invitations.length == 1 || !showInvitations)
+      return invitations[0].studyDeploymentId;
+
+    InvitationsDialog dialog = InvitationsDialog();
+    await dialog.build(context, invitations).show();
+    return dialog.studyDeploymentId;
   }
 }
 
@@ -638,8 +677,6 @@ abstract class CarpReference {
 
   CarpReference._(this.service) {
     assert(service != null, 'A valid CARP service must be provided.');
-    assert(service.app.study != null,
-        'A valid study must be provided in the service app before study-specific resources in CARP can be accessed.');
   }
 
   Future<Map<String, String>> get headers async {

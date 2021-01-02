@@ -22,7 +22,8 @@ class CarpDataManager extends AbstractDataManager {
   FileDataManager fileDataManager;
 
   CarpDataManager() : super() {
-    FromJsonFactory().register(CarpDataEndPoint(CarpUploadMethod.FILE));
+    FromJsonFactory()
+        .register(CarpDataEndPoint(uploadMethod: CarpUploadMethod.FILE));
   }
 
   String get type => DataEndPointTypes.CARP;
@@ -43,7 +44,7 @@ class CarpDataManager extends AbstractDataManager {
       fileDataManager = new FileDataManager();
 
       // merge the file data manager's events into this CARP data manager's event stream
-      fileDataManager.events.forEach((event) => controller.add(event));
+      fileDataManager.events.listen((event) => controller.add(event));
 
       // listen to data manager events, but only those from the file manager and only closing events
       // on a close event, upload the file to CARP
@@ -75,14 +76,15 @@ class CarpDataManager extends AbstractDataManager {
   }
 
   /// The current signed in user. If the user is not already signed in,
-  /// this method will authenticate the user and sign him/her in.
+  /// this method will authenticate the user based on the username and
+  /// password specified in [carpEndPoint].
   Future<CarpUser> get user async {
     // check if the CARP webservice has already been configured and the user is logged in.
     if (!CarpService().isConfigured) CarpService().configure(await app);
-    if (CarpService().currentUser == null) {
+    if (!CarpService().authenticated) {
       await CarpService().authenticate(
           username: carpEndPoint.email, password: carpEndPoint.password);
-      print("CarpDataManager - signed in user: ${CarpService().currentUser}");
+      info("CarpDataManager - signed in user: ${CarpService().currentUser}");
     }
     _initialized = true;
     return CarpService().currentUser;
@@ -94,7 +96,7 @@ class CarpDataManager extends AbstractDataManager {
 
     // Check if CARP authentication is ready before writing...
     if (!_initialized) {
-      print("waiting for CARP authentication -- delaying for 10 sec...");
+      warning("Waiting for CARP authentication -- delaying for 10 sec...");
       return Future.delayed(
           const Duration(seconds: 10), () => uploadData(data));
     }
@@ -130,9 +132,9 @@ class CarpDataManager extends AbstractDataManager {
   }
 
   // This method upload a file of [Datum] data to CAPP.
-  //TODO - implement support for offline store-and-wait for later upload when online.
+  // TODO - implement support for offline store-and-wait for later upload when online.
   Future _uploadDatumFileToCarp(String path) async {
-    print("File upload to CARP started - path : '$path'");
+    info("File upload to CARP started - path : '$path'");
     final File file = File(path);
 
     final String deviceID = Device().deviceID.toString();
@@ -148,7 +150,7 @@ class CarpDataManager extends AbstractDataManager {
             file.path,
             null,
             CarpService().getDataPointReference().dataEndpointUri));
-        print("Batch upload to CARP finished");
+        info("Batch upload to CARP finished");
         break;
       case CarpUploadMethod.FILE:
         final FileUploadTask uploadTask = CarpService()
@@ -165,7 +167,7 @@ class CarpDataManager extends AbstractDataManager {
 
         addEvent(CarpDataManagerEvent(CarpDataManagerEventTypes.file_uploaded,
             file.path, id, uploadTask.reference.fileEndpointUri));
-        print("File upload to CARP finished - remote id : $id ");
+        info("File upload to CARP finished - remote id : $id ");
         break;
       case CarpUploadMethod.DATA_POINT:
       case CarpUploadMethod.DOCUMENT:
@@ -183,8 +185,7 @@ class CarpDataManager extends AbstractDataManager {
 
   // This method upload a file attachment to CARP, i.e. one that is referenced in a [FileDatum].
   Future _uploadFileToCarp(FileDatum datum) async {
-    print(
-        "File attachment upload to CARP started - path : '${datum.filename}'");
+    info("File attachment upload to CARP started - path : '${datum.filename}'");
     final File file = File(datum.filename);
 
     final String deviceID = Device().deviceID.toString();
@@ -205,7 +206,7 @@ class CarpDataManager extends AbstractDataManager {
 
     addEvent(CarpDataManagerEvent(CarpDataManagerEventTypes.file_uploaded,
         file.path, id, uploadTask.reference.fileEndpointUri));
-    print("File upload to CARP finished - remote id : $id ");
+    info("File upload to CARP finished - remote id : $id ");
 
     // delete the local file once uploaded?
     if (carpEndPoint.deleteWhenUploaded) {

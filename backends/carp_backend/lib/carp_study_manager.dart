@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2021 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -19,54 +19,63 @@ part of carp_backend;
 ///  3. Register this device as part of this deployment.
 ///  4. Get the study deployment configuration.
 class CarpStudyManager implements StudyManager {
-  Future initialize() {
-    // TODO: implement initialize
-    throw UnimplementedError();
-  }
+  Future initialize() {}
 
-  /// Get the study id for the current user based on an invitation from CARP.
+  /// Get a CAMS [Study] from the CARP backend.
   ///
-  /// Returns `null` if the user has no invitations.
-  ///
-  /// If the user is invited to more than one study and [showInvitations] is `true`,
-  /// a user-interface for selecting amongs the invitations is shown.
-  /// If not, the study id of the first invitation is returned.
+  /// Note that in the CARP backend, a CAMS study is empbedded as a
+  /// [CustomProtocolTask] and deployed as part of a so-called
+  /// [Participation] for a user, with a specific [studyDeploymentId].
   ///
   /// Throws a [CarpServiceException] if not successful.
-  Future<String> getStudyIdByInvitation(
-    BuildContext context, {
-    bool showInvitations,
-  }) async {
-    if (!CarpService().isConfigured)
+  Future<Study> getStudy(String studyDeploymentId) async {
+    DeploymentReference reference = CarpService().deployment(studyDeploymentId);
+    // get status
+    StudyDeploymentStatus status = await reference.getStatus();
+
+    if (status.masterDeviceStatus.device != null) {
+      if (status.status == 'DeployingDevices') {
+        // register this master device, if not already done
+        status = await reference.registerDevice(
+            deviceRoleName: status.masterDeviceStatus.device.roleName);
+      }
+      // get the deployment
+      MasterDeviceDeployment deployment = await reference.get();
+      if (deployment.tasks.isNotEmpty) {
+        // asume that this deployment only contains one custom task
+        TaskDescriptor task = deployment.tasks[0];
+        if (task is CustomProtocolTask) {
+          Study study = Study.fromJson(
+              json.decode(task.studyProtocol) as Map<String, dynamic>);
+          // mark this deployment as successful
+          await reference.success();
+          return study;
+        } else {
+          await reference.unRegisterDevice(
+              deviceRoleName: status.masterDeviceStatus.device.roleName);
+          throw CarpServiceException(
+              message:
+                  'The deployment does not contain a CustomProtocolTask - task: $task');
+        }
+      } else {
+        await reference.unRegisterDevice(
+            deviceRoleName: status.masterDeviceStatus.device.roleName);
+        throw CarpServiceException(
+            message:
+                'The deployment does not contain any tasks - deployment: $deployment');
+      }
+    } else {
       throw CarpServiceException(
           message:
-              "CARP Service not initialized. Call 'CarpService().configure()' first.");
-
-    if (!CarpService().authenticated)
-      throw CarpServiceException(
-          message:
-              "The current user is not authenticated to CARP. Call 'CarpService().authenticate...()' first.");
-
-    List<ActiveParticipationInvitation> invitations =
-        await CarpService().invitations();
-
-    if (invitations.isEmpty) return '123';
+              'There is not Master Device defined in this Deployment: $status');
+    }
   }
 
-  Future<Study> getStudy(String studyId) {
-    // TODO: implement getStudy
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<bool> saveStudy(Study study) {
-    // TODO: implement saveStudy
-    throw UnimplementedError();
-  }
-
-  @override
-  Future dispose() {
-    // TODO: implement dispose
-    throw UnimplementedError();
+  /// This method is not implemented as there is no support for saving
+  /// studies in CARP from the phone.
+  Future<bool> saveStudy(Study study) async {
+    throw CarpServiceException(
+        message:
+            'There is no support for saving studies in CARP from the phone.');
   }
 }

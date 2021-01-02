@@ -1,5 +1,6 @@
 ## 0.11.1
 * feature: support for storing and retrieving study json protocols on the local file system.
+* refactor: the `deploymentId` has been removed from `Study` since this is CARP specific info.
 
 ## 0.11.0
 * refactor: improved (de)serialization in the `Serialization` class.

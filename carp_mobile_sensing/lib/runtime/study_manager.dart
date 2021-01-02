@@ -9,12 +9,11 @@ part of runtime;
 /// An interface defining a manger of a [Study].
 ///
 /// Is mainly used to get and save a [Study].
+/// See [FileStudyManager] for an implementation which can load and save
+/// study json configurations on the local file system.
 abstract class StudyManager {
   /// Initialize the study manager.
   Future initialize();
-
-  /// Dispose of this study manager.
-  Future dispose();
 
   /// Get a [Study] based on its ID.
   Future<Study> getStudy(String studyId);

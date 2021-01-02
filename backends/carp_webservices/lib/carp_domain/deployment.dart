@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2020 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -31,7 +31,7 @@ class DeploymentServiceRequest extends Serializable {
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$DeploymentServiceRequestToJson(this);
 
-  String toString() => "$runtimeType - studyDeploymentId: $studyDeploymentId";
+  String toString() => '$runtimeType - studyDeploymentId: $studyDeploymentId';
 }
 
 /// A request for getting the deployment invitations for an account id.
@@ -56,7 +56,7 @@ class GetActiveParticipationInvitations extends DeploymentServiceRequest {
   Map<String, dynamic> toJson() =>
       _$GetActiveParticipationInvitationsToJson(this);
 
-  String toString() => "$runtimeType - accountId: $accountId";
+  String toString() => '$runtimeType - accountId: $accountId';
 }
 
 /// A request for getting the status of a study deployment.
@@ -204,11 +204,12 @@ class DeploymentSuccessful extends GetDeviceDeploymentFor {
 // See https://github.com/cph-cachet/carp.core-kotlin/tree/develop/carp.deployment.core/src/commonMain/kotlin/dk/cachet/carp/deployment/domain
 // -----------------------------------------------------
 
+/// The base class for all [Deployment Domain Classes](https://github.com/cph-cachet/carp.core-kotlin/tree/develop/carp.deployment.core/src/commonMain/kotlin/dk/cachet/carp/deployment/domain).
 abstract class DeploymentDomainObject extends Serializable {
   /// The CARP study deployment ID.
   String studyDeploymentId;
   DeploymentDomainObject({this.studyDeploymentId});
-  String toString() => "$runtimeType - studyDeploymentId: $studyDeploymentId";
+  String toString() => '$runtimeType - studyDeploymentId: $studyDeploymentId';
 }
 
 /// An [invitation] to participate in an active study deployment using the specified master [devices].
@@ -230,7 +231,7 @@ class ActiveParticipationInvitation {
   Map<String, dynamic> toJson() => _$ActiveParticipationInvitationToJson(this);
 
   String toString() =>
-      "$runtimeType - participation: $participation, invitation: $invitation, devices size: ${devices.length}";
+      '$runtimeType - participation: $participation, invitation: $invitation, devices size: ${devices.length}';
 }
 
 /// Uniquely identifies the participation of an account in a study deployment.
@@ -253,7 +254,7 @@ class Participation {
   Map<String, dynamic> toJson() => _$ParticipationToJson(this);
 
   String toString() =>
-      "${super.toString()}, id: $id, studyDeploymentId: $studyDeploymentId, isRegistered: $isRegistered";
+      '${super.toString()}, id: $id, studyDeploymentId: $studyDeploymentId, isRegistered: $isRegistered';
 }
 
 /// A description of a study, shared with participants once they are invited to a study.
@@ -274,7 +275,7 @@ class StudyInvitation {
       _$StudyInvitationFromJson(json);
   Map<String, dynamic> toJson() => _$StudyInvitationToJson(this);
 
-  String toString() => "$runtimeType - name: $name, description: $description";
+  String toString() => '$runtimeType - name: $name, description: $description';
 }
 
 /// Holds device invitation details.
@@ -293,7 +294,7 @@ class DeviceInvitation {
       _$DeviceInvitationFromJson(json);
   Map<String, dynamic> toJson() => _$DeviceInvitationToJson(this);
 
-  String toString() => "$runtimeType - deviceRoleName: $deviceRoleName";
+  String toString() => '$runtimeType - deviceRoleName: $deviceRoleName';
 }
 
 /// The deployment data for a master device as read from the CARP web service
@@ -313,8 +314,8 @@ class MasterDeviceDeployment {
   Map<String, DeviceRegistration> connectedDeviceConfigurations;
 
   /// All tasks which should be able to be executed on this or connected devices.
-  //List<TaskDescriptor> tasks;
-  List<Map<String, dynamic>> tasks;
+  List<TaskDescriptor> tasks;
+  //List<Map<String, dynamic>> tasks;
 
   /// All triggers originating from this device and connected devices, stored per assigned id unique within the study protocol.
   //Map<String, TriggerDescriptor> triggers;
@@ -332,10 +333,10 @@ class MasterDeviceDeployment {
       _$MasterDeviceDeploymentFromJson(json);
   Map<String, dynamic> toJson() => _$MasterDeviceDeploymentToJson(this);
 
-  String toString() => "$runtimeType - configuration: $configuration";
+  String toString() => '$runtimeType - configuration: $configuration';
 }
 
-/// Describes requested measures to be collected on a device.
+/// Describes a task, which specifies the measures to be collected on a device.
 ///
 /// See [TaskDescriptor.kt](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/carp.protocols.core/src/commonMain/kotlin/dk/cachet/carp/protocols/domain/tasks/TaskDescriptor.kt).
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
@@ -346,7 +347,7 @@ class TaskDescriptor extends Serializable {
   String name;
 
   /// The data which needs to be collected/measured as part of this task.
-  List<Measure> measures;
+  List<DataTypeMeasure> measures;
 
   Function get fromJsonFunction => _$TaskDescriptorFromJson;
   factory TaskDescriptor.fromJson(Map<String, dynamic> json) =>
@@ -355,10 +356,11 @@ class TaskDescriptor extends Serializable {
   Map<String, dynamic> toJson() => _$TaskDescriptorToJson(this);
 
   String toString() =>
-      "$runtimeType - name: $name, measures size: ${measures.length}";
+      '$runtimeType - name: $name, measures size: ${measures.length}';
 }
 
-/// A [TaskDescriptor] which contains a definition on how to run tasks, measures, and triggers which differs from the CARP domain model.
+/// A [TaskDescriptor] which contains a definition on how to run tasks,
+/// measures, and triggers which differs from the carp.core domain model.
 ///
 /// See [CustomProtocolTask.kt](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/carp.protocols.core/src/commonMain/kotlin/dk/cachet/carp/protocols/domain/tasks/CustomProtocolTask.kt).
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
@@ -374,11 +376,66 @@ class CustomProtocolTask extends TaskDescriptor {
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$CustomProtocolTaskToJson(this);
 
-  String toString() => "${super.toString()}, studyProtocol: $studyProtocol";
+  String toString() => '${super.toString()}, studyProtocol: $studyProtocol';
 }
 
-/// Any condition on a device ([DeviceDescriptor]) which starts or stops tasks at certain points in time when the condition applies.
-/// The condition can either be time-bound, based on data streams, initiated by a user of the platform, or a combination of these.
+/// Defines data that needs to be measured/collected from a data stream on a
+/// [DeviceDescriptor], as part of a task defined by [TaskDescriptor].
+///
+/// See [Measure.kt](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/carp.protocols.core/src/commonMain/kotlin/dk/cachet/carp/protocols/domain/tasks/measures/DataTypeMeasure.kt).
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class DataTypeMeasure extends Serializable {
+  DataTypeMeasure() : super();
+
+  /// The type of data this measure collects.
+  String type;
+
+  Function get fromJsonFunction => _$DataTypeMeasureFromJson;
+  factory DataTypeMeasure.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$DataTypeMeasureToJson(this);
+
+  String toString() => '$runtimeType - type: $type';
+}
+
+/// Defines data that needs to be measured/collected from a data stream on a
+/// [DeviceDescriptor], as part of a task defined by [TaskDescriptor].
+///
+/// See [Measure.kt](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/carp.protocols.core/src/commonMain/kotlin/dk/cachet/carp/protocols/domain/tasks/measures/PhoneSensorMeasure.kt).
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class PhoneSensorMeasure extends DataTypeMeasure {
+  PhoneSensorMeasure() : super();
+
+  CarpTime duration;
+
+  Function get fromJsonFunction => _$PhoneSensorMeasureFromJson;
+  factory PhoneSensorMeasure.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$PhoneSensorMeasureToJson(this);
+
+  String toString() => '${super.toString()}, duration: $duration';
+}
+
+/// Time as specified in carp.core as a value in 'microseconds'.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class CarpTime {
+  CarpTime() : super();
+
+  int microseconds;
+
+  factory CarpTime.fromJson(Map<String, dynamic> json) =>
+      _$CarpTimeFromJson(json);
+  Map<String, dynamic> toJson() => _$CarpTimeToJson(this);
+
+  String toString() => '$runtimeType - microseconds: $microseconds';
+}
+
+/// Any condition on a device ([DeviceDescriptor]) which starts or stops tasks
+/// at certain points in time when the condition applies.
+/// The condition can either be time-bound, based on data streams, initiated
+/// by a user of the platform, or a combination of these.
 ///
 /// See [Trigger.kt](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/carp.protocols.core/src/commonMain/kotlin/dk/cachet/carp/protocols/domain/triggers/Trigger.kt).
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
@@ -398,7 +455,7 @@ class TriggerDescriptor extends Serializable {
   Map<String, dynamic> toJson() => _$TriggerDescriptorToJson(this);
 
   String toString() =>
-      "$runtimeType - sourceDeviceRoleName: $sourceDeviceRoleName, requiresMasterDevice: $requiresMasterDevice";
+      '$runtimeType - sourceDeviceRoleName: $sourceDeviceRoleName, requiresMasterDevice: $requiresMasterDevice';
 }
 
 /// Specifies a task which at some point during a [StudyProtocol] gets sent to a specific device.
@@ -416,7 +473,7 @@ class TriggeredTask {
   Map<String, dynamic> toJson() => _$TriggeredTaskToJson(this);
 
   String toString() =>
-      "$runtimeType - task: $task, targetDevice: $targetDevice";
+      '$runtimeType - task: $task, targetDevice: $targetDevice';
 }
 
 /// A [StudyDeploymentStatus] represents the status of a deployment as returned from the CARP web service.
@@ -458,7 +515,7 @@ class StudyDeploymentStatus extends DeploymentDomainObject {
   Map<String, dynamic> toJson() => _$StudyDeploymentStatusToJson(this);
 
   String toString() =>
-      "$runtimeType - deploymentId: $studyDeploymentId, status: $status";
+      '$runtimeType - deploymentId: $studyDeploymentId, status: $status';
 }
 
 /// A [DeviceDeploymentStatus] represents the status of a device in a deployment.
@@ -494,7 +551,7 @@ class DeviceDeploymentStatus extends DeploymentDomainObject {
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$DeviceDeploymentStatusToJson(this);
 
-  String toString() => "$runtimeType - status: $status";
+  String toString() => '$runtimeType - status: $status';
 }
 
 /// A [DeviceDescriptor] represents the status of a deployment as returned from the CARP web service.
@@ -506,7 +563,7 @@ class DeviceDescriptor extends DeploymentDomainObject {
   bool isMasterDevice;
 
   /// The role name of this device in a specific deployment.
-  /// For example, "Patient's phone"
+  /// For example, 'Patient's phone'
   String roleName;
 
   /// Sampling configurations for data types available on this device which override the default configuration.
@@ -523,7 +580,7 @@ class DeviceDescriptor extends DeploymentDomainObject {
   Map<String, dynamic> toJson() => _$DeviceDescriptorToJson(this);
 
   String toString() =>
-      "$runtimeType - isMasterDevice: $isMasterDevice, roleName: $roleName, deviceType: $deviceType";
+      '$runtimeType - isMasterDevice: $isMasterDevice, roleName: $roleName, deviceType: $deviceType';
 }
 
 /// Register all the fromJson functions for the deployment domain classes.
@@ -531,63 +588,71 @@ void registerFromJsonFunctions() {
   info('Register all the fromJson function for the deployment domain classes.');
   FromJsonFactory().register(GetStudyDeploymentStatus('ignored'),
       type:
-          "dk.cachet.carp.deployment.infrastructure.DeploymentServiceRequest.GetStudyDeploymentStatus");
+          'dk.cachet.carp.deployment.infrastructure.DeploymentServiceRequest.GetStudyDeploymentStatus');
   FromJsonFactory().register(StudyDeploymentStatus('ignored'),
-      type: "dk.cachet.carp.deployment.domain.StudyDeploymentStatus.Invited");
-  FromJsonFactory().register(StudyDeploymentStatus('ignored'),
-      type:
-          "dk.cachet.carp.deployment.domain.StudyDeploymentStatus.DeployingDevices");
+      type: 'dk.cachet.carp.deployment.domain.StudyDeploymentStatus.Invited');
   FromJsonFactory().register(StudyDeploymentStatus('ignored'),
       type:
-          "dk.cachet.carp.deployment.domain.StudyDeploymentStatus.DeploymentReady");
+          'dk.cachet.carp.deployment.domain.StudyDeploymentStatus.DeployingDevices');
   FromJsonFactory().register(StudyDeploymentStatus('ignored'),
-      type: "dk.cachet.carp.deployment.domain.StudyDeploymentStatus.Stopped");
+      type:
+          'dk.cachet.carp.deployment.domain.StudyDeploymentStatus.DeploymentReady');
+  FromJsonFactory().register(StudyDeploymentStatus('ignored'),
+      type: 'dk.cachet.carp.deployment.domain.StudyDeploymentStatus.Stopped');
 
   FromJsonFactory().register(
     DeviceDeploymentStatus(),
     type:
-        "dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.Unregistered",
+        'dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.Unregistered',
   );
   FromJsonFactory().register(
     DeviceDeploymentStatus(),
-    type: "dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.Registered",
+    type: 'dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.Registered',
   );
   FromJsonFactory().register(
     DeviceDeploymentStatus(),
-    type: "dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.Deployed",
+    type: 'dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.Deployed',
   );
   FromJsonFactory().register(DeviceDeploymentStatus(),
       type:
-          "dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.NeedsRedeployment");
+          'dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.NeedsRedeployment');
   FromJsonFactory().register(DeviceDescriptor(),
-      type: "dk.cachet.carp.protocols.domain.devices.Smartphone");
+      type: 'dk.cachet.carp.protocols.domain.devices.Smartphone');
   // FromJsonFactory().register(MasterDeviceDeployment(),
-  //     type: "dk.cachet.carp.protocols.domain.MasterDeviceDeployment");
+  //     type: 'dk.cachet.carp.protocols.domain.MasterDeviceDeployment');
   FromJsonFactory().register(DeviceRegistration(),
-      type: "dk.cachet.carp.protocols.domain.devices.DeviceRegistration");
+      type: 'dk.cachet.carp.protocols.domain.devices.DeviceRegistration');
   FromJsonFactory().register(DeviceRegistration(),
       type:
-          "dk.cachet.carp.protocols.domain.devices.DefaultDeviceRegistration");
+          'dk.cachet.carp.protocols.domain.devices.DefaultDeviceRegistration');
   FromJsonFactory().register(TaskDescriptor(),
-      type: "dk.cachet.carp.protocols.domain.tasks.TaskDescriptor");
+      type: 'dk.cachet.carp.protocols.domain.tasks.TaskDescriptor');
   FromJsonFactory().register(TaskDescriptor(),
-      type: "dk.cachet.carp.protocols.domain.tasks.ConcurrentTask");
-  FromJsonFactory().register(TriggerDescriptor(),
-      type: "dk.cachet.carp.protocols.domain.triggers.TriggerDescriptor");
-  // FromJsonFactory().register(TriggeredTask(),
-  //     type: "dk.cachet.carp.protocols.domain.triggers.TriggeredTask", );
-  // FromJsonFactory().register(Measure(),
-  //     type: "dk.cachet.carp.protocols.domain.tasks.measures.Measure", );
-  // FromJsonFactory().register(Measure(),
-  //     type: "dk.cachet.carp.protocols.domain.tasks.measures.PhoneSensorMeasure", );
+      type: 'dk.cachet.carp.protocols.domain.tasks.ConcurrentTask');
+  FromJsonFactory().register(CustomProtocolTask(),
+      type: 'dk.cachet.carp.protocols.domain.tasks.CustomProtocolTask');
 
-  // FromJsonFactory().register(type: "dk.cachet.carp.deployment.domain.users.ActiveParticipationInvitation",
+  FromJsonFactory().register(DataTypeMeasure(),
+      type: 'dk.cachet.carp.protocols.domain.tasks.measures.DataTypeMeasure');
+  FromJsonFactory().register(PhoneSensorMeasure(),
+      type:
+          'dk.cachet.carp.protocols.domain.tasks.measures.PhoneSensorMeasure');
+  FromJsonFactory().register(TriggerDescriptor(),
+      type: 'dk.cachet.carp.protocols.domain.triggers.TriggerDescriptor');
+  // FromJsonFactory().register(TriggeredTask(),
+  //     type: 'dk.cachet.carp.protocols.domain.triggers.TriggeredTask', );
+  // FromJsonFactory().register(Measure(),
+  //     type: 'dk.cachet.carp.protocols.domain.tasks.measures.Measure', );
+  // FromJsonFactory().register(Measure(),
+  //     type: 'dk.cachet.carp.protocols.domain.tasks.measures.PhoneSensorMeasure', );
+
+  // FromJsonFactory().register(type: 'dk.cachet.carp.deployment.domain.users.ActiveParticipationInvitation',
   //     ActiveParticipationInvitation());
   // FromJsonFactory().register(DeviceInvitation(),
   //     type:
-  //         "dk.cachet.carp.deployment.domain.users.ActiveParticipationInvitation.DeviceInvitation");
+  //         'dk.cachet.carp.deployment.domain.users.ActiveParticipationInvitation.DeviceInvitation');
   // FromJsonFactory().register(Participation(),
-  //     type: "dk.cachet.carp.deployment.domain.users.Participation");
+  //     type: 'dk.cachet.carp.deployment.domain.users.Participation');
   // FromJsonFactory().register(StudyInvitation(),
-  //     type: "dk.cachet.carp.deployment.domain.users.StudyInvitation");
+  //     type: 'dk.cachet.carp.deployment.domain.users.StudyInvitation');
 }
