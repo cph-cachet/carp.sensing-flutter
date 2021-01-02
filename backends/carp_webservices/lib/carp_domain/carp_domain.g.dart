@@ -206,15 +206,12 @@ Map<String, dynamic> _$StudyInvitationToJson(StudyInvitation instance) {
 
 DeviceInvitation _$DeviceInvitationFromJson(Map<String, dynamic> json) {
   return DeviceInvitation()
-    ..$type = json[r'$type'] as String
     ..deviceRoleName = json['deviceRoleName'] as String
     ..isRegistered = json['isRegistered'] as bool;
 }
 
 Map<String, dynamic> _$DeviceInvitationToJson(DeviceInvitation instance) {
-  final val = <String, dynamic>{
-    r'$type': instance.$type,
-  };
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -247,8 +244,11 @@ MasterDeviceDeployment _$MasterDeviceDeploymentFromJson(
               ? null
               : DeviceRegistration.fromJson(e as Map<String, dynamic>)),
     )
-    ..tasks =
-        (json['tasks'] as List)?.map((e) => e as Map<String, dynamic>)?.toList()
+    ..tasks = (json['tasks'] as List)
+        ?.map((e) => e == null
+            ? null
+            : TaskDescriptor.fromJson(e as Map<String, dynamic>))
+        ?.toList()
     ..triggers = (json['triggers'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as Map<String, dynamic>),
     )
@@ -284,8 +284,9 @@ TaskDescriptor _$TaskDescriptorFromJson(Map<String, dynamic> json) {
     ..$type = json[r'$type'] as String
     ..name = json['name'] as String
     ..measures = (json['measures'] as List)
-        ?.map((e) =>
-            e == null ? null : Measure.fromJson(e as Map<String, dynamic>))
+        ?.map((e) => e == null
+            ? null
+            : DataTypeMeasure.fromJson(e as Map<String, dynamic>))
         ?.toList();
 }
 
@@ -310,8 +311,9 @@ CustomProtocolTask _$CustomProtocolTaskFromJson(Map<String, dynamic> json) {
     ..$type = json[r'$type'] as String
     ..name = json['name'] as String
     ..measures = (json['measures'] as List)
-        ?.map((e) =>
-            e == null ? null : Measure.fromJson(e as Map<String, dynamic>))
+        ?.map((e) => e == null
+            ? null
+            : DataTypeMeasure.fromJson(e as Map<String, dynamic>))
         ?.toList()
     ..studyProtocol = json['studyProtocol'] as String;
 }
@@ -330,6 +332,69 @@ Map<String, dynamic> _$CustomProtocolTaskToJson(CustomProtocolTask instance) {
   writeNotNull('name', instance.name);
   writeNotNull('measures', instance.measures);
   writeNotNull('studyProtocol', instance.studyProtocol);
+  return val;
+}
+
+DataTypeMeasure _$DataTypeMeasureFromJson(Map<String, dynamic> json) {
+  return DataTypeMeasure()
+    ..$type = json[r'$type'] as String
+    ..type = json['type'] as String;
+}
+
+Map<String, dynamic> _$DataTypeMeasureToJson(DataTypeMeasure instance) {
+  final val = <String, dynamic>{
+    r'$type': instance.$type,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('type', instance.type);
+  return val;
+}
+
+PhoneSensorMeasure _$PhoneSensorMeasureFromJson(Map<String, dynamic> json) {
+  return PhoneSensorMeasure()
+    ..$type = json[r'$type'] as String
+    ..type = json['type'] as String
+    ..duration = json['duration'] == null
+        ? null
+        : CarpTime.fromJson(json['duration'] as Map<String, dynamic>);
+}
+
+Map<String, dynamic> _$PhoneSensorMeasureToJson(PhoneSensorMeasure instance) {
+  final val = <String, dynamic>{
+    r'$type': instance.$type,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('type', instance.type);
+  writeNotNull('duration', instance.duration);
+  return val;
+}
+
+CarpTime _$CarpTimeFromJson(Map<String, dynamic> json) {
+  return CarpTime()..microseconds = json['microseconds'] as int;
+}
+
+Map<String, dynamic> _$CarpTimeToJson(CarpTime instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('microseconds', instance.microseconds);
   return val;
 }
 

@@ -29,28 +29,35 @@ import 'package:carp_webservices/carp_service/carp_service.dart';
 The [`CarpService`](https://pub.dartlang.org/documentation/carp_webservices/latest/carp_services/CarpService-class.html)
 is a singleton and needs to be configured once.
 Note that a valid [`Study`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/Study-class.html) 
-with a valid **Study ID** and **Deployment ID** is needed.
+with a valid **Study ID** and **Deployment ID** is needed before any study-specifc resources in CARP can be accessed.
 
 ````dart
 final String uri = "https://staging.carp.cachet.dk:8080";
 final String testDeploymentId = "d246170c-515e";
 final String testStudyId = "64c1784d-52d1-4c3d";
 
-CarpApp app;
-Study study;
+  CarpApp app;
+  Study study;
 
-study = new Study(testStudyId, "user@dtu.dk", deploymentId: testDeploymentId, name: "Test study");
-app = new CarpApp(
-      study: study,
-      name: "any_display_friendly_name_is_fine",
-      uri: Uri.parse(uri),
-      oauth: OAuthEndPoint(clientID: "the_client_id", clientSecret: "the_client_secret"));
+  study = Study(
+    id: testStudyId,
+    userId: 'user@dtu.dk',
+    name: 'Test study #$testStudyId',
+  );
+  app = CarpApp(
+    name: 'any_display_friendly_name_is_fine',
+    uri: Uri.parse(uri),
+    oauth: OAuthEndPoint(
+        clientID: 'the_client_id', clientSecret: 'the_client_secret'),
+    study: study,
+  );
 
-CarpService.configure(app);
+  // Configure the CARP Service with this app.
+  CarpService().configure(app);
 
 ```` 
 
-The singleton can then be accessed via `CarpService.instance`.
+The singleton can then be accessed via `CarpService()`.
 
 ### Authentication
 
@@ -59,7 +66,7 @@ Basic authentication is using username and password.
 ```dart
 CarpUser user;
 try {
-   user = await CarpService.instance.authenticate(
+   user = await CarpService().authenticate(
       username: "a_username", 
       password: "the_password",
    );
@@ -74,7 +81,7 @@ This can then later be used for authentication:
 
 ```dart
 try {
-   user = await CarpService.instance.authenticateWithToken(
+   user = await CarpService().authenticateWithToken(
       username: user.username, 
       token: user.token,
    );
@@ -87,7 +94,7 @@ The user's password can be changed using the `changePassword()` method:
 
 ```dart
 try {
-   user = await CarpService.instance.changePassword(
+   user = await CarpService().changePassword(
         currentPassword: 'the_password',
         newPassword: 'a_new_password',
       );
@@ -96,6 +103,22 @@ try {
 }
 ```
 
+The plugin also comes with a user interface for authenticating at a CARP server using the `authenticateWithDialog()` method.
+For example, the login can be implemeted as part of a TextButton like this:
+
+```dart
+    child: TextButton.icon(
+      onPressed: () => CarpService().authenticateWithDialog(
+        context,
+        username: 'user@cachet.dk',
+      ),
+      icon: Icon(Icons.login),
+      label: Text(
+        'LOGIN',
+        style: TextStyle(fontSize: 35),
+      ),
+   ),
+```
 
 
 ### Informed Consent Document
@@ -104,13 +127,17 @@ A [ConsentDocument](https://pub.dev/documentation/carp_webservices/latest/carp_s
 can be uploaded and downloaded from CARP.
 
 ```dart
-try {
-  ConsentDocument uploaded = await CarpService.instance.createConsentDocument({"text": "The original terms text.", "signature": "Image Blob"});
-  ...
-  ConsentDocument downloaded = await CarpService.instance.getConsentDocument(uploaded.id);
-} catch (excp) {
-   ...;
-}
+  try {
+    ConsentDocument uploaded = await CarpService().createConsentDocument({
+      'text': 'The original terms text.',
+      'signature': 'Image Blob',
+    });
+
+    ConsentDocument downloaded =
+        await CarpService().getConsentDocument(uploaded.id);
+  } catch (excp) {
+    print(excp);
+  }
 ```
 
 ### Data Points
@@ -125,30 +152,32 @@ on a CARP web service and have CRUD methods for:
 * delete data points
 
 ````dart
-// Create a test location datum
-LocationDatum datum = LocationDatum.fromMap(<String, dynamic>{
-  "latitude": 23454.345,
-  "longitude": 23.4,
-  "altitude": 43.3,
-  "accuracy": 12.4,
-  "speed": 2.3,
-  "speedAccuracy": 12.3
-});
+  LightDatum datum = LightDatum(
+    maxLux: 12,
+    meanLux: 23,
+    minLux: 0.3,
+    stdLux: 0.4,
+  );
 
-// create a CARP data point
-final CARPDataPoint data = CARPDataPoint.fromDatum(study.id, study.userId, datum);
-// post it to the CARP server, which returns the ID of the data point
-data_point_id = await CarpService.instance.getDataPointReference().postDataPoint(data);
+  // create a CARP data point
+  final CARPDataPoint data =
+      CARPDataPoint.fromDatum(study.id, study.userId, datum);
 
-// get the data point back from the server
-CARPDataPoint data = await CarpService.instance.getDataPointReference().getDataPoint(data_point_id);
+  // post it to the CARP server, which returns the ID of the data point
+  int dataPointId =
+      await CarpService().getDataPointReference().postDataPoint(data);
 
-// batch upload a list of raw json data points in a file
-final File file = File("test/batch.json");
-await CarpService.instance.getDataPointReference().batchPostDataPoint(file);
+  // get the data point back from the server
+  CARPDataPoint dataPoint =
+      await CarpService().getDataPointReference().getDataPoint(dataPointId);
 
-// delete the data point
-await CarpService.instance.getDataPointReference().deleteDataPoint(data_point_id);
+  // batch upload a list of raw json data points in a file
+  final File file = File('test/batch.json');
+  await CarpService().getDataPointReference().batchPostDataPoint(file);
+
+  // delete the data point
+  await CarpService().getDataPointReference().deleteDataPoint(dataPointId);
+
 ````
 
 
@@ -163,32 +192,36 @@ on a CARP web service and have methods for:
 * accessing documents in collections
 
 `````dart
-  // access an document
+  // access a document
   //  - if the document id is not specified, a new document (with a new id) is created
   //  - if the collection (users) don't exist, it is created
-  DocumentSnapshot document =
-      await CarpService.instance.collection('users').document().setData({'email': username, 'name': 'Administrator'});
+  DocumentSnapshot document = await CarpService()
+      .collection('users')
+      .document()
+      .setData({'email': username, 'name': 'Administrator'});
 
   // update the document
-  DocumentSnapshot updated_document = await CarpService.instance
+  DocumentSnapshot updatedDocument = await CarpService()
       .collection('/users')
       .document(document.name)
       .updateData({'email': username, 'name': 'Super User'});
 
-  // get the document by its path in collection(s).
-  DocumentSnapshot new_document = await CarpService.instance.collection('users').document(document.name).get();
+  // get the document
+  DocumentSnapshot newDocument =
+      await CarpService().collection('users').document(document.name).get();
 
   // get the document by its unique ID
-  new_document = await CarpService.instance.documentById(document.id).get();
+  newDocument = await CarpService().documentById(document.id).get();
 
   // delete the document
-  await CarpService.instance.collection('users').document(document.name).delete();
+  await CarpService().collection('users').document(document.name).delete();
 
   // get all collections from a document
-  List<String> collections = new_document.collections;
+  List<String> collections = newDocument.collections;
 
   // get all documents in a collection.
-  List<DocumentSnapshot> documents = await CarpService.instance.collection("users").documents;
+  List<DocumentSnapshot> documents =
+      await CarpService().collection('users').documents;
 `````
 
 
@@ -206,29 +239,35 @@ A [`FileStorageReference`](https://pub.dartlang.org/documentation/carp_webservic
 When uploading a file, you can add metadata as a `Map<String, String>`.
 
 ````dart
-// first upload a file
-final File myFile = File("test/img.jpg");
-final FileUploadTask uploadTask = CarpService.instance
-   .getFileStorageReference()
-   .upload(myFile, {'content-type': 'image/jpg', 'content-language': 'en', 'activity': 'test'});
-CarpFileResponse response = await uploadTask.onComplete;
-int id = response.id;
+  // first upload a file
+  final File uploadFile = File('test/img.jpg');
+  final FileUploadTask uploadTask = CarpService()
+      .getFileStorageReference()
+      .upload(uploadFile, {
+    'content-type': 'image/jpg',
+    'content-language': 'en',
+    'activity': 'test'
+  });
+  CarpFileResponse response = await uploadTask.onComplete;
+  int id = response.id;
 
-// then get its description back from the server
-final CarpFileResponse result = await CarpService.instance.getFileStorageReference(id).get();
+  // then get its description back from the server
+  final CarpFileResponse result =
+      await CarpService().getFileStorageReference(id).get();
 
-// then download the file again
-// note that a local file to download is needed
-final File myFile = File("test/img-$id.jpg");
-final FileDownloadTask downloadTask = CarpService.instance.getFileStorageReference(id).download(myFile);
-int response = await downloadTask.onComplete;
+  // then download the file again
+  // note that a local file to download is needed
+  final File downloadFile = File('test/img-$id.jpg');
+  final FileDownloadTask downloadTask =
+      CarpService().getFileStorageReference(id).download(downloadFile);
+  int responseCode = await downloadTask.onComplete;
 
-// now get references to ALL files in this study
-final List<CarpFileResponse> results = await CarpService.instance.getFileStorageReference(id).getAll();
+  // now get references to ALL files in this study
+  final List<CarpFileResponse> results =
+      await CarpService().getFileStorageReference(id).getAll();
 
-// finally, delete the file
-final int result = await CarpService.instance.getFileStorageReference(id).delete();
-
+  // finally, delete the file
+  responseCode = await CarpService().getFileStorageReference(id).delete();
 ````
 
 ### Deployments
@@ -238,18 +277,19 @@ This subsystem is used for accessing `deployment` configurations, i.e. configura
 data sampling in a study should take place. 
 The CARP web service have methods for:
 
- * getting a list of invitation for a specific `accountId`, i.e. a user - default is the user who is authenticated to the CARP Service.
+ * getting invitations for a specific `accountId`, i.e. a user - default is the user who is authenticated to the CARP Service.
  * getting a deployment reference, which then can be used to query status, register devices, and get the deployment specification.
 
 ````dart
   // get invitations for this account (user)
-  List<ActiveParticipationInvitation> invitations = await CarpService.instance.invitations();
+  List<ActiveParticipationInvitation> invitations =
+      await CarpService().invitations();
 
   // get a deployment reference for this master device
-  DeploymentReference deploymentReference = CarpService.instance.deployment(masterDeviceRoleName: 'Master');
+  DeploymentReference deploymentReference = CarpService().deployment();
 
   // get the status of this deployment
-  StudyDeploymentStatus status = await deploymentReference.status();
+  StudyDeploymentStatus status = await deploymentReference.getStatus();
 
   // register a device
   status = await deploymentReference.registerDevice(deviceRoleName: 'phone');
@@ -260,6 +300,15 @@ The CARP web service have methods for:
   // mark the deployment as a success
   status = await deploymentReference.success();
 ````
+
+There is also support for shwing a modal dialog for the user to select amongst several invitations. 
+This is done using the `getStudyIdByInvitation` method, like this:
+
+```dart
+  String studyId = await CarpService().getStudyIdByInvitation(context);
+  print('CARP Study Deployment ID: $studyId');
+```
+
 
 ## Features and bugs
 

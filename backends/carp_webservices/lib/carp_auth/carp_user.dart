@@ -78,7 +78,7 @@ class CarpUser {
   /// Obtains the OAuth token for the current user, forcing a [refresh] i
   /// f desired.
   Future<OAuthToken> getOAuthToken({bool refresh = false}) async {
-    if (CarpService.instance == null)
+    if (CarpService() == null)
       throw new CarpServiceException(
           message:
               "CARP Service not initialized. Call 'CarpService.configure()' first.");
@@ -89,7 +89,7 @@ class CarpUser {
 
     // check if we need to refresh the token.
     if (token.hasExpired || refresh) {
-      this.token = await CarpService.instance.refresh();
+      this.token = await CarpService().refresh();
     }
 
     return token;
@@ -104,12 +104,12 @@ class CarpUser {
   /// Manually refreshes the data of the current user (e.g., [fullName],
   /// [telephone], etc.) from the CARP web service.
   Future reload() async {
-    if (CarpService.instance == null)
+    if (CarpService() == null)
       throw new CarpServiceException(
           message:
               "CARP Service not initialized. Call 'CarpService.configure()' first.");
 
-    CarpService.instance.getCurrentUserProfile();
+    CarpService().getCurrentUserProfile();
   }
 
   /// Deletes the user record from the CARP web service.

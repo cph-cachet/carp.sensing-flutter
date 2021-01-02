@@ -16,7 +16,7 @@ class DataPointReference extends CarpReference {
 
   /// The URL for the data end point for this [DataPointReference].
   String get dataEndpointUri =>
-      "${service.app.uri.toString()}/api/deployments/${service.app.study.deploymentId}/data-points";
+      "${service.app.uri.toString()}/api/deployments/${service.app.studyDeploymentId}/data-points";
 
   /// Upload a [CARPDataPoint] to the CARP backend using HTTP POST.
   ///

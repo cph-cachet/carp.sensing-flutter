@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of data_managers;
+part of managers;
 
 /// Stores [Datum] json objects on the device's local storage media.
 /// Supports compression (zip) and encryption.
@@ -15,7 +15,7 @@ part of data_managers;
 ///   `carp/data/<study_id>/carp-data-yyyy-mm-dd-hh-mm-ss-ms.json.zip`
 ///
 class FileDataManager extends AbstractDataManager {
-  /// The path to use on the device for storing CARP files.
+  /// The path to use on the device for storing CARP data files.
   static const String CARP_FILE_PATH = 'carp/data';
 
   String get type => DataEndPointTypes.FILE;

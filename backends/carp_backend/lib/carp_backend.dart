@@ -10,12 +10,15 @@ library carp_backend;
 import 'dart:async';
 import 'dart:io';
 import 'dart:convert';
+import 'package:meta/meta.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_service/carp_service.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
+import 'package:carp_webservices/carp_domain/carp_domain.dart';
 
-part 'carp_data_managers.dart';
+part 'carp_data_manager.dart';
+part 'carp_study_manager.dart';
 part 'carp_backend.g.dart';
 
 /// Specify a CARP Web Service endpoint.
@@ -24,11 +27,12 @@ class CarpDataEndPoint extends FileDataEndPoint {
   /// The default collection name.
   static const String DEFAULT_COLLECTION = "carp_sensing";
 
-  /// The method used to upload to CARP -- see [CarpUploadMethod] for options.
+  /// The method used to upload to CARP.
+  /// See [CarpUploadMethod] for options.
   CarpUploadMethod uploadMethod;
 
-  /// The name of the CARP endpoint.
-  /// Can be anything, but its recommended to name it according to the CARP service name.
+  /// The name of the CARP endpoint. Can be anything, but its recommended
+  /// to name it according to the CARP service name.
   String name;
 
   /// The URI of the CARP endpoint.
@@ -45,7 +49,12 @@ class CarpDataEndPoint extends FileDataEndPoint {
 
   /// Password used in password authentication.
   ///
-  /// TODO : right now in clear text -- not so good.
+  /// Note that the password is in **clear text** and should hence only be used
+  /// if the study is created locally on the phone in Dart.
+  ///
+  /// If the study configuration is downloaded via a [CarpStudyManager], then
+  /// the password may be `null` or empty, in which case the user's credential
+  /// for downloading the study is used.
   String password;
 
   /// When uploading to the CARP using the [CarpUploadMethod.DOCUMENT] method,
@@ -60,8 +69,9 @@ class CarpDataEndPoint extends FileDataEndPoint {
   /// Creates a [CarpDataEndPoint].
   ///
   /// [uploadMethod] specified the upload method as enumerated in [CarpUploadMethod].
-  CarpDataEndPoint(this.uploadMethod,
-      {this.name,
+  CarpDataEndPoint(
+      {@required this.uploadMethod,
+      this.name,
       this.uri,
       this.clientId,
       this.clientSecret,

@@ -6,7 +6,7 @@
  */
 
 /// A library for handling data stores.
-library data_managers;
+library managers;
 
 import 'dart:async';
 import 'dart:convert';
@@ -21,3 +21,4 @@ import '../carp_mobile_sensing.dart';
 part 'data_managers.g.dart';
 part 'local/console_data_manager.dart';
 part 'local/file_data_manager.dart';
+part 'local/file_study_manager.dart';

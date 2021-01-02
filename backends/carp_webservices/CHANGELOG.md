@@ -1,3 +1,14 @@
+## 0.11.2
+* updated to carp_mobile_sensing v. 0.11.1
+* support for getting a list of deployment invitation using a modal dialog (UI).
+* misc refactor and optimization of API
+
+## 0.11.1
+* the singleton CarpService is accessed using `CarpService()` (instead of the old `CarpService.instance`) 
+  in order to be consist with the rest of CAMS.
+* support for authentication using a modal dialog (UI).
+* support for sending 'forgotten password' emails using the `sendForgottenPasswordEmail()` method.
+
 ## 0.11.0
 * updated to carp_mobile_sensing v. 0.11.x
 

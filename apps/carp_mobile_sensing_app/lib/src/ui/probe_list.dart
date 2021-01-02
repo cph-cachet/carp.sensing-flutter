@@ -2,18 +2,19 @@ part of mobile_sensing_app;
 
 class ProbesList extends StatefulWidget {
   const ProbesList({Key key}) : super(key: key);
-
   static const String routeName = '/probelist';
-
   _ProbeListState createState() => _ProbeListState();
 }
 
 class _ProbeListState extends State<ProbesList> {
-  static final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  static final GlobalKey<ScaffoldState> scaffoldKey =
+      GlobalKey<ScaffoldState>();
 
   Widget build(BuildContext context) {
     Iterable<Widget> probes = ListTile.divideTiles(
-        context: context, tiles: bloc.runningProbes.map<Widget>((probe) => _buildProbeListTile(context, probe)));
+        context: context,
+        tiles: bloc.runningProbes
+            .map<Widget>((probe) => _buildProbeListTile(context, probe)));
 
     return Scaffold(
       key: scaffoldKey,
@@ -23,7 +24,9 @@ class _ProbeListState extends State<ProbesList> {
         actions: <Widget>[
           IconButton(
             icon: Icon(
-              Theme.of(context).platform == TargetPlatform.iOS ? Icons.more_horiz : Icons.more_vert,
+              Theme.of(context).platform == TargetPlatform.iOS
+                  ? Icons.more_horiz
+                  : Icons.more_vert,
             ),
             tooltip: 'Settings',
             onPressed: _showSettings,
@@ -62,6 +65,7 @@ class _ProbeListState extends State<ProbesList> {
   }
 
   void _showSettings() {
-    Scaffold.of(context).showSnackBar(const SnackBar(content: Text('Settings not implemented yet...')));
+    Scaffold.of(context).showSnackBar(
+        const SnackBar(content: Text('Settings not implemented yet...')));
   }
 }

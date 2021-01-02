@@ -17,8 +17,11 @@ part of carp_services;
 ///   - [success()] - report the deployment as successful
 ///   - [unRegisterDevice()] - unregister this - or other - device if no longer used
 class DeploymentReference extends CarpReference {
+  String _studyDeploymentId;
+
   /// The CARP study deployment ID.
-  String get studyDeploymentId => service.app.study.deploymentId;
+  String get studyDeploymentId =>
+      _studyDeploymentId ?? service.app.studyDeploymentId;
 
   MasterDeviceDeployment _deployment;
   StudyDeploymentStatus _status;
@@ -41,7 +44,8 @@ class DeploymentReference extends CarpReference {
   String get registeredDeviceId =>
       _registeredDeviceId ??= Device().deviceID ?? Uuid().v4().toString();
 
-  DeploymentReference._(CarpService service) : super._(service);
+  DeploymentReference._(CarpService service, this._studyDeploymentId)
+      : super._(service);
 
   /// A generic RPC request to the CARP Server.
   Future<Map<String, dynamic>> _rpc(DeploymentServiceRequest request) async {
@@ -77,8 +81,8 @@ class DeploymentReference extends CarpReference {
 
   /// Get the deployment status for this [DeploymentReference].
   Future<StudyDeploymentStatus> getStatus() async {
-    _status = StudyDeploymentStatus.fromJson(
-        await _rpc(GetStudyDeploymentStatus(studyDeploymentId)));
+    _status = StudyDeploymentStatus
+        .fromJson(await _rpc(GetStudyDeploymentStatus(studyDeploymentId)));
     return _status;
   }
 

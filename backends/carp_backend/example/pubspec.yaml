@@ -12,7 +12,9 @@ dependencies:
     sdk: flutter
 
 #  carp_mobile_sensing:
-#    path: ../../carp_mobile_sensing
+#    path: ../../../carp_mobile_sensing
+#  carp_webservices:
+#    path: ../../carp_webservices
   carp_backend:
     path: ../
 
@@ -23,3 +25,7 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
+  uses-material-design: true
+  #assets:
+  #  - asset/images/
+

@@ -253,7 +253,6 @@ abstract class _ProbeStateMachine {
   bool validNextState(ProbeState nextState);
 
   void initialize(Measure measure);
-  //Future<bool> initialize(Measure measure);
   void pause();
   void resume();
   void restart();

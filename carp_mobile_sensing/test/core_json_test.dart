@@ -16,10 +16,10 @@ void main() {
     //SamplingPackageRegistry.register(ContextSamplingPackage());
 
     study = Study(
-        id: '1234',
-        userId: 'bardram',
-        name: 'bardram study',
-        deploymentId: '#1');
+      id: '1234',
+      userId: 'bardram',
+      name: 'bardram study',
+    );
     //study.dataEndPoint = DataEndPoint(DataEndPointType.PRINT);
     study.dataEndPoint = FileDataEndPoint()
       ..bufferSize = 50 * 1000
@@ -42,7 +42,6 @@ void main() {
     print(_encode(study));
 
     expect(study.id, '1234');
-    expect(study.deploymentId, '#1');
   });
 
   test('JSON -> Study, assert study id', () async {
@@ -51,7 +50,6 @@ void main() {
     Study study_2 =
         Study.fromJson(json.decode(studyJson) as Map<String, dynamic>);
     expect(study_2.id, study.id);
-    expect(study.deploymentId, '#1');
 
     print(_encode(study_2));
   });
