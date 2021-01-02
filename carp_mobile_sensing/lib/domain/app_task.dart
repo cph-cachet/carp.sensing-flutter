@@ -21,7 +21,8 @@ class AppTask extends Task {
     this.minutesToComplete,
     this.expire,
     this.notification = false,
-  }) : super(name: name);
+  })
+      : super(name: name);
 
   /// Type of task. For example a `survey`.
   String type;

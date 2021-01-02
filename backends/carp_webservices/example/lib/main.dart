@@ -48,9 +48,9 @@ class _HomePageState extends State<HomePage> {
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
             child: TextButton.icon(
               onPressed: () => bloc.authenticate(
-                context,
-                username: 'sys1admin1DK@cachet.dk',
-              ),
+                    context,
+                    username: 'sys1admin1DK@cachet.dk',
+                  ),
               icon: Icon(Icons.login),
               label: Text(
                 'LOGIN',

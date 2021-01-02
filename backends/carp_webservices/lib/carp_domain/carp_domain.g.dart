@@ -54,8 +54,8 @@ RegisterDevice _$RegisterDeviceFromJson(Map<String, dynamic> json) {
     json['deviceRoleName'] as String,
     json['registration'] == null
         ? null
-        : DeviceRegistration.fromJson(
-            json['registration'] as Map<String, dynamic>),
+        : DeviceRegistration
+            .fromJson(json['registration'] as Map<String, dynamic>),
   )..$type = json[r'$type'] as String;
 }
 
@@ -229,8 +229,8 @@ MasterDeviceDeployment _$MasterDeviceDeploymentFromJson(
   return MasterDeviceDeployment()
     ..configuration = json['configuration'] == null
         ? null
-        : DeviceRegistration.fromJson(
-            json['configuration'] as Map<String, dynamic>)
+        : DeviceRegistration
+            .fromJson(json['configuration'] as Map<String, dynamic>)
     ..connectedDevices = (json['connectedDevices'] as List)
         ?.map((e) => e == null
             ? null
@@ -428,8 +428,8 @@ TriggeredTask _$TriggeredTaskFromJson(Map<String, dynamic> json) {
         : TaskDescriptor.fromJson(json['task'] as Map<String, dynamic>)
     ..targetDevice = json['targetDevice'] == null
         ? null
-        : DeviceDescriptor.fromJson(
-            json['targetDevice'] as Map<String, dynamic>);
+        : DeviceDescriptor
+            .fromJson(json['targetDevice'] as Map<String, dynamic>);
 }
 
 Map<String, dynamic> _$TriggeredTaskToJson(TriggeredTask instance) {

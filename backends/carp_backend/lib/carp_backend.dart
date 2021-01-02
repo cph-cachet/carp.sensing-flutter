@@ -9,8 +9,8 @@ library carp_backend;
 
 import 'dart:async';
 import 'dart:io';
-import 'package:meta/meta.dart';
 import 'dart:convert';
+import 'package:meta/meta.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_service/carp_service.dart';
