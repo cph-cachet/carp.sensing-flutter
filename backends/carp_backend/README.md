@@ -6,7 +6,7 @@
 [![MIT License](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
 
 
-This package integrates the [CARP Mobile Sensing]](https://github.com/cph-cachet/carp.sensing) 
+This package integrates the [CARP Mobile Sensing](https://github.com/cph-cachet/carp.sensing) 
 Framework with the [CARP web service backend](https://carp.cachet.dk).
 It support downloading a study configuration and uploading collected data.
 
