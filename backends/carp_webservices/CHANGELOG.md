@@ -1,3 +1,7 @@
+## 0.11.3
+* update of `CarpApp` to handle study ID from the server (as opposed to from a local `Study` configuration)
+* refactor of the `getStudyInvitation` method
+
 ## 0.11.2
 * updated to carp_mobile_sensing v. 0.11.1
 * support for getting a list of deployment invitation using a modal dialog (UI).

@@ -224,6 +224,9 @@ class ActiveParticipationInvitation {
   StudyInvitation invitation;
   List<DeviceInvitation> devices;
 
+  /// The CARP study ID.
+  String get studyId => invitation?.applicationData;
+
   /// The CARP study deployment ID.
   String get studyDeploymentId => participation?.studyDeploymentId;
 
@@ -270,13 +273,16 @@ class StudyInvitation {
   String description;
 
   /// Application-specific data to be shared with clients when they are invited to a study.
+  ///
+  /// In CARP this normally contains the study ID.
   String applicationData;
 
   factory StudyInvitation.fromJson(Map<String, dynamic> json) =>
       _$StudyInvitationFromJson(json);
   Map<String, dynamic> toJson() => _$StudyInvitationToJson(this);
 
-  String toString() => '$runtimeType - name: $name, description: $description';
+  String toString() =>
+      '$runtimeType - name: $name, description: $description, applicationData: $applicationData';
 }
 
 /// Holds device invitation details.

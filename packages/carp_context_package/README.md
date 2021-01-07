@@ -12,7 +12,7 @@ This packages supports sampling of the following [`Measure`](https://pub.dartlan
 * `weather`
 * `geofence`
 * `air_quality`
-* `mobility_features`
+* `mobility`
 
 See the [wiki]() for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types)
 and [sampling schemas](https://github.com/cph-cachet/carp.sensing-flutter/wiki/D.-Sampling-Schemas).

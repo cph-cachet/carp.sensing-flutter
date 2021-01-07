@@ -17,7 +17,6 @@ void main() {
 
   CarpApp app;
   CarpUser user;
-  //Study study;
   CarpStudyManager manager = CarpStudyManager();
 
   /// Setup CARP and authenticate.

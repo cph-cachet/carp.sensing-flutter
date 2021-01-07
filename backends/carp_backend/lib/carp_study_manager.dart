@@ -47,6 +47,8 @@ class CarpStudyManager implements StudyManager {
         if (task is CustomProtocolTask) {
           Study study = Study.fromJson(
               json.decode(task.studyProtocol) as Map<String, dynamic>);
+          // make sure that the study has the correct id as defined by the server
+          study.id = CarpService().app.studyId ?? study.id;
           // mark this deployment as successful
           await reference.success();
           return study;
