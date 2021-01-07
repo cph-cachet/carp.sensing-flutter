@@ -532,7 +532,7 @@ class CarpService {
 
   /// The URL for the document end point for this [CarpService].
   String get documentEndpointUri =>
-      "${_app.uri.toString()}/api/studies/${_app.study.id}/documents";
+      "${_app.uri.toString()}/api/studies/${_app.studyId}/documents";
 
   /// Get a list documents from a query.
   Future<List<DocumentSnapshot>> documentsByQuery(String query) async {
@@ -620,7 +620,8 @@ class CarpService {
     );
   }
 
-  /// Get the study id for the current user based on an invitation from CARP.
+  /// Get a study invitation from CARP by allowing the user to select from
+  /// multiple invitations (if more than one is available).
   ///
   /// Returns `null` if the user has no invitations.
   ///
@@ -629,7 +630,7 @@ class CarpService {
   /// If not, the study id of the first invitation is returned.
   ///
   /// Throws a [CarpServiceException] if not successful.
-  Future<String> getStudyIdByInvitation(
+  Future<ActiveParticipationInvitation> getStudyInvitation(
     BuildContext context, {
     bool showInvitations = true,
   }) async {
@@ -646,13 +647,23 @@ class CarpService {
     List<ActiveParticipationInvitation> invitations =
         await CarpService().invitations();
 
-    if (invitations.isEmpty) return null;
-    if (invitations.length == 1 || !showInvitations)
-      return invitations[0].studyDeploymentId;
+    ActiveParticipationInvitation _invitation;
 
-    InvitationsDialog dialog = InvitationsDialog();
-    await dialog.build(context, invitations).show();
-    return dialog.studyDeploymentId;
+    if (invitations.isEmpty) return null;
+
+    if (invitations.length == 1 || !showInvitations) {
+      _invitation = invitations[0];
+    } else {
+      InvitationsDialog dialog = InvitationsDialog();
+      await dialog.build(context, invitations).show();
+      _invitation = dialog.invitation;
+    }
+
+    // make sure that the correct study and deployment ids are saved in the app
+    CarpService().app.studyId = _invitation.studyId;
+    CarpService().app.studyDeploymentId = _invitation.studyDeploymentId;
+
+    return _invitation;
   }
 }
 

@@ -17,7 +17,6 @@ class CarpDataManager extends AbstractDataManager {
   bool _initialized = false;
   CarpDataEndPoint carpEndPoint;
   CarpApp _app;
-  //CarpUser _user;
 
   FileDataManager fileDataManager;
 
@@ -44,7 +43,7 @@ class CarpDataManager extends AbstractDataManager {
       fileDataManager = new FileDataManager();
 
       // merge the file data manager's events into this CARP data manager's event stream
-      fileDataManager.events.listen((event) => controller.add(event));
+      fileDataManager.events.listen((event) => addEvent(event));
 
       // listen to data manager events, but only those from the file manager and only closing events
       // on a close event, upload the file to CARP
@@ -65,7 +64,7 @@ class CarpDataManager extends AbstractDataManager {
   Future<CarpApp> get app async {
     if (_app == null) {
       _app = new CarpApp(
-          study: study,
+          studyId: study.id,
           name: carpEndPoint.name,
           uri: Uri.parse(carpEndPoint.uri),
           oauth: OAuthEndPoint(

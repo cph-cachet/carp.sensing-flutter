@@ -16,14 +16,12 @@ void main() {
 
   CarpApp app;
   CarpUser user;
-  Study study;
 
   /// Setup CARP and authenticate.
   /// Runs once before all tests.
   setUpAll(() async {
-    study = new Study(id: testStudyId, userId: userId, name: "Test study");
     app = new CarpApp(
-      study: study,
+      studyId: testStudyId,
       studyDeploymentId: testDeploymentId,
       name: "Test",
       uri: Uri.parse(uri),

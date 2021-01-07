@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carp_webservices/carp_service/carp_service.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
+import 'package:carp_webservices/carp_domain/carp_domain.dart';
 
 void main() {
   runApp(MyApp());
@@ -63,7 +64,7 @@ class _HomePageState extends State<HomePage> {
             width: 400,
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
             child: TextButton.icon(
-              onPressed: () => bloc.getStudyId(context),
+              onPressed: () => bloc.getStudyInvitation(context),
               icon: Icon(Icons.mail),
               label: Text(
                 'GET STUDY',
@@ -87,8 +88,9 @@ class _HomePageState extends State<HomePage> {
 
 class AppBLoC {
   final String uri = "https://cans.cachet.dk:443"; // CANS PROD
-  String _studyId;
-  String get studyId => _studyId;
+  ActiveParticipationInvitation _invitation;
+  String get studyId => _invitation?.studyId;
+  String get studyDeploymentId => _invitation?.studyDeploymentId;
 
   CarpApp _app;
   CarpApp get app => _app;
@@ -111,10 +113,13 @@ class AppBLoC {
         username: username,
       );
 
-  Future<String> getStudyId(BuildContext context) async {
-    _studyId = await CarpService().getStudyIdByInvitation(context);
-    print('CARP Study Deployment ID: $_studyId');
-    return _studyId;
+  Future<ActiveParticipationInvitation> getStudyInvitation(
+      BuildContext context) async {
+    _invitation = await CarpService().getStudyInvitation(context);
+    print('CARP Study Invitation: $_invitation');
+    // check that the app has been updated to reflect the study id and deployment id
+    print('Study ID: ${app.studyId}, Deployment ID: ${app.studyDeploymentId}');
+    return _invitation;
   }
 }
 

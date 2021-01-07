@@ -25,7 +25,7 @@ void main() async {
       clientID: 'the_client_id',
       clientSecret: 'the_client_secret',
     ),
-    study: study,
+    studyId: testStudyId,
   );
 
   // Configure the CARP Service with this app.

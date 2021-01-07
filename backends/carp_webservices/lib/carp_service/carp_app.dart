@@ -17,11 +17,14 @@ class CarpApp {
   /// The OAuth 2.0 endpoint.
   final OAuthEndPoint oauth;
 
+  /// The CARP study id for this app.
+  String studyId;
+
   /// The CARP study deployment id of this app.
   String studyDeploymentId;
 
-  /// The CARP study for this app.
-  Study study;
+  // /// The CARP study for this app.
+  // Study study;
 
   /// Create a [CarpApp] which know how to access a CARP backend.
   ///
@@ -35,7 +38,7 @@ class CarpApp {
     @required this.uri,
     @required this.oauth,
     this.studyDeploymentId,
-    this.study,
+    this.studyId,
   }) {
     assert(name != null);
     assert(uri != null);
@@ -49,5 +52,5 @@ class CarpApp {
   bool operator ==(other) => name == other;
 
   String toString() =>
-      'CarpApp - name: $name, uri: $uri, studyDeploymentId: $studyDeploymentId, study: ${study?.name}';
+      'CarpApp - name: $name, uri: $uri, studyDeploymentId: $studyDeploymentId, studyId: $studyId';
 }

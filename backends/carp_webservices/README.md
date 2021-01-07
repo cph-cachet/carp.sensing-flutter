@@ -302,11 +302,11 @@ The CARP web service have methods for:
 ````
 
 There is also support for shwing a modal dialog for the user to select amongst several invitations. 
-This is done using the `getStudyIdByInvitation` method, like this:
+This is done using the `getStudyInvitation` method, like this:
 
 ```dart
-  String studyId = await CarpService().getStudyIdByInvitation(context);
-  print('CARP Study Deployment ID: $studyId');
+    ActiveParticipationInvitation invitation = await CarpService().getStudyInvitation(context);
+    print('CARP Study Invitation: $invitation');
 ```
 
 

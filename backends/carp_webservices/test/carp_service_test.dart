@@ -47,7 +47,7 @@ void main() {
       name: "Test study",
     );
     app = new CarpApp(
-      study: study,
+      studyId: testStudyId,
       studyDeploymentId: testDeploymentId,
       name: "Test",
       uri: Uri.parse(uri),
@@ -626,8 +626,7 @@ void main() {
 
     test('- get non-existing', () async {
       try {
-        final CarpFileResponse result =
-            await CarpService().getFileStorageReference(876872).get();
+        await CarpService().getFileStorageReference(876872).get();
       } catch (error) {
         print(error);
         assert(error is CarpServiceException);

@@ -6,13 +6,20 @@
  */
 part of carp_services;
 
-/// A modal dialog shown to the user to input username and password.
+/// A modal dialog shown a list of [ActiveParticipationInvitation] for the
+/// user to select one from.
 class InvitationsDialog {
-  String _studyDeploymentId;
+  // String _studyDeploymentId;
 
-  /// The selected study id.
+  // /// The selected study id.
+  // /// Returns `null` if no selection is made.
+  // String get studyDeploymentId => _studyDeploymentId;
+
+  ActiveParticipationInvitation _selectedInvitation;
+
+  /// The selected invitation.
   /// Returns `null` if no selection is made.
-  String get studyDeploymentId => _studyDeploymentId;
+  ActiveParticipationInvitation get invitation => _selectedInvitation;
 
   Alert build(context, List<ActiveParticipationInvitation> invitations) {
     Iterable<Widget> _invitationWidgets = ListTile.divideTiles(
@@ -45,7 +52,8 @@ class InvitationsDialog {
             ? Text('No description provided...')
             : Text(shortStudyDescription(invitation.invitation.description)),
         onTap: () {
-          _studyDeploymentId = invitation.studyDeploymentId;
+          //_studyDeploymentId = invitation.studyDeploymentId;
+          _selectedInvitation = invitation;
           Navigator.pop(context);
         },
       );

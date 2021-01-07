@@ -22,7 +22,7 @@ class FileStorageReference extends CarpReference {
 
   /// The URL for the file end point for this [FileStorageReference].
   String get fileEndpointUri =>
-      "${service.app.uri.toString()}/api/studies/${service.app.study.id}/files";
+      "${service.app.uri.toString()}/api/studies/${service.app.studyId}/files";
 
   /// Asynchronously uploads a file to the currently specified
   /// [FileStorageReference], with optional [metadata].

@@ -49,14 +49,14 @@ class CollectionReference extends CarpReference {
 
   /// The full CARP web service path to this collection.
   String get carpPath =>
-      '/api/studies/${service.app.study.id}/collections/$path';
+      '/api/studies/${service.app.studyId}/collections/$path';
 
   /// The full URI for the collection endpoint for this [CollectionReference].
   String get collectionUri => "${service.app.uri.toString()}$carpPath";
 
   /// The full URI for the collection endpoint for this [CollectionReference] by its unique [id].
   String get collectionUriByID =>
-      '${service.app.uri.toString()}/api/studies/${service.app.study.id}/collections/id/$id';
+      '${service.app.uri.toString()}/api/studies/${service.app.studyId}/collections/id/$id';
 
   /// Reads the collection referenced by this [CollectionReference] from the server.
   ///
@@ -217,8 +217,8 @@ class DocumentReference extends CarpReference {
   /// If the id of this document is known, use the `documents` CARP endpoint,
   /// otherwise use the `collections` endpoint.
   String get carpPath => (_id != null)
-      ? "/api/studies/${service.app.study.id}/documents/$id"
-      : "/api/studies/${service.app.study.id}/collections/$path";
+      ? "/api/studies/${service.app.studyId}/documents/$id"
+      : "/api/studies/${service.app.studyId}/collections/$path";
 
   /// The full URI for the document endpoint for this document.
   String get documentUri => "${service.app.uri.toString()}$carpPath";
