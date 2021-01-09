@@ -30,8 +30,8 @@ this package only works together with `carp_mobile_sensing`.
 dependencies:
   flutter:
     sdk: flutter
-  carp_mobile_sensing: ^0.6.0
-  carp_esense_package: ^0.1.2
+  carp_mobile_sensing: ^0.11.0
+  carp_esense_package: ^0.11.0
   ...
 `````
 
@@ -96,3 +96,34 @@ Before creating a study and running it, register this package in the
 `````dart
 SamplingPackageRegistry().register(ESenseSamplingPackage());
 `````
+
+Once the package is registered, `ESenseMeasure`s can be added to a study like this.
+
+```dart
+  // creating a eSense task collecting the inertial measurement unit (IMU)
+  // sensor events and button press/release events from the eSense device.
+  study
+    ..addTriggerTask(
+        ImmediateTrigger(),
+        Task(name: 'eSense Sampling')
+          ..addMeasure(ESenseMeasure(
+            type: MeasureType(
+              NameSpace.CARP,
+              ESenseSamplingPackage.ESENSE_SENSOR,
+            ),
+            name: 'eSense - Sensors',
+            enabled: true,
+            deviceName: 'eSense-0332',
+            samplingRate: 10,
+          ))
+          ..addMeasure(ESenseMeasure(
+            type: MeasureType(
+              NameSpace.CARP,
+              ESenseSamplingPackage.ESENSE_BUTTON,
+            ),
+            name: 'eSense - Button',
+            enabled: true,
+            deviceName: 'eSense-0332',
+          )));
+
+````

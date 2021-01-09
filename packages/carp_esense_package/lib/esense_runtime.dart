@@ -22,7 +22,7 @@ abstract class _ESenseProbe extends StreamProbe {
 
     // if you want to get the connection events when connecting, set up the listener BEFORE connecting...
     ESenseManager.connectionEvents.listen((event) {
-      print('eSense connection : $event');
+      info('eSense connection : $event');
       // wait until connection is established before listening to events.
       if (!connected && event.type == ConnectionType.connected) {
         connected = true;
