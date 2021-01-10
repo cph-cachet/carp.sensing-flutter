@@ -48,6 +48,9 @@ class Study extends Serializable {
   /// The public key in a PKI setup for encryption of data in the [dataEndPoint].
   String publicKey;
 
+  /// The devices this device needs to connect to.
+  List<DeviceDescriptor> connectedDevices = [];
+
   /// The set of [Trigger]s which can trigger [Task](s) in this study.
   List<Trigger> triggers = [];
 
@@ -66,8 +69,7 @@ class Study extends Serializable {
     this.dataEndPoint,
     this.dataFormat,
     this.publicKey,
-  })
-      : super() {
+  }) : super() {
     assert(id != null, 'Cannot create a Study without an id: id=null');
     samplingStrategy ??= SamplingSchemaType.NORMAL;
     dataFormat ??= NameSpace.CARP;

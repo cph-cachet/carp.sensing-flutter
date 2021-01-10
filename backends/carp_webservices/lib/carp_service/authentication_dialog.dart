@@ -16,7 +16,11 @@ class AuthenticationDialog {
 
   Alert build(context, {String username}) => Alert(
           context: context,
-          title: "LOGIN",
+          title: "Sign in with CARP",
+          image: Padding(
+              padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
+              child: Image.asset('asset/images/cachet_logo_new.png',
+                  package: 'carp_webservices')),
           content: Form(
               key: _formkey,
               autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -67,7 +71,7 @@ class AuthenticationDialog {
               },
               color: Colors.blue[900],
               child: Text(
-                "Sign in with CARP",
+                "LOGIN",
                 style: TextStyle(color: Colors.white, fontSize: 20),
               ),
             )

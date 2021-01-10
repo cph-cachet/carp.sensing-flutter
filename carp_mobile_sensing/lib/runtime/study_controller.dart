@@ -79,8 +79,7 @@ class StudyController {
     this.privacySchemaName,
     this.transformer,
     this.debugLevel = DebugLevel.WARNING,
-  })
-      : super() {
+  }) : super() {
     assert(study != null);
     // set global debug level
     globalDebugLevel = debugLevel;
@@ -159,6 +158,7 @@ class StudyController {
   /// Enable power-aware sensing in this study. See [PowerAwarenessState].
   Future enablePowerAwareness() async {
     if (samplingSchema.powerAware) {
+      info('Enabling power awareness ...');
       _battery.events.listen((datum) {
         BatteryDatum batteryState = (datum as BatteryDatum);
         if (batteryState.batteryStatus == BatteryDatum.STATE_DISCHARGING) {
@@ -173,12 +173,10 @@ class StudyController {
           }
         }
       });
-      //# await _battery.initialize(Measure(
       _battery.initialize(Measure(
         type: MeasureType(NameSpace.CARP, DeviceSamplingPackage.BATTERY),
         name: 'PowerAwarenessProbe',
       ));
-      //_battery.start();
       _battery.resume();
     }
   }
@@ -188,19 +186,22 @@ class StudyController {
     _battery.stop();
   }
 
-  /// Resume this controller, i.e. resume data collection according to the specified [study] and [samplingSchema].
+  /// Resume this controller, i.e. resume data collection according to the
+  /// specified [study] and [samplingSchema].
   @Deprecated('Use the resume() method instead')
   void start() {
     resume();
   }
 
-  /// Resume this controller, i.e. resume data collection according to the specified [study] and [samplingSchema].
+  /// Resume this controller, i.e. resume data collection according to the
+  /// specified [study] and [samplingSchema].
   void resume() {
     info('Resuming data sampling ...');
     executor.resume();
   }
 
-  /// Pause this controller, which will pause data collection and close the data manager.
+  /// Pause this controller, which will pause data collection and close the
+  /// data manager.
   void pause() {
     info('Pausing data sampling ...');
     executor.pause();

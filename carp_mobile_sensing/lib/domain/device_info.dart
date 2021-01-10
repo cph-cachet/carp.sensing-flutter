@@ -7,6 +7,8 @@
 
 part of domain;
 
+// TODO - rename this class to DeviceInfo - Device is to be used elsewhere
+
 /// Provides (static) information about the local device.
 ///
 /// This class is a singleton that one time access the information from the

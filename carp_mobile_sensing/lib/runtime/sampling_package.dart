@@ -40,11 +40,20 @@ class SamplingPackageRegistry {
   }
 }
 
-/// Interface for a sampling package that holds a set of sampling
-///  - types
-///  - probes
-///  - schemas
+/// Interface for a sampling package.
+///
+/// A sampling package provides information on sampling:
+///  - types supported
+///  - schemas - common and for power aware sampling
+///  - permissions needed
+///
+/// It also contains factory methods for:
+///  - creating a [Probe] based on a [Measure] type
+///  - creating a [DeviceRegistration] based on a device type
 abstract class SamplingPackage {
+  /// The list of data type this package supports.
+  List<String> get dataTypes;
+
   /// The default (common) sampling schema for all measures in this package.
   SamplingSchema get common;
 
@@ -64,9 +73,6 @@ abstract class SamplingPackage {
   /// Typically provides very detailed and frequent sampling in order to debug the probes.
   SamplingSchema get debug;
 
-  /// The list of data type this package supports.
-  List<String> get dataTypes;
-
   /// The list of permissions that this package need.
   ///
   /// See [PermissionGroup](https://pub.dev/documentation/permission_handler/latest/permission_handler/PermissionGroup-class.html)
@@ -77,6 +83,15 @@ abstract class SamplingPackage {
 
   /// Creates a new [Probe] of the specified [type].
   Probe create(String type);
+
+  /// What device type is this package supporting?
+  ///
+  /// Note that is is assumed that a sampling package only supports **one**
+  /// type of device.
+  String get deviceType;
+
+  /// Get a [DeviceRegistration] for the type of device in this package.
+  DeviceRegistration get deviceRegistration;
 
   /// Callback method when this package is being registered.
   void onRegister();

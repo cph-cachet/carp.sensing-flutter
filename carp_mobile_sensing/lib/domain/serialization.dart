@@ -70,10 +70,12 @@ class FromJsonFactory {
   // support deserialization from JSON.
   //
   // TODO: Remember to add any new classes here.
+  // TODO: This could be auto-generated using a builder....
   FromJsonFactory._() {
     register(Study(id: 'ignored'));
     register(DataEndPoint());
     register(FileDataEndPoint());
+    register(DeviceDescriptor());
     register(Task());
     register(AutomaticTask());
     register(AppTask(type: 'ignored'));

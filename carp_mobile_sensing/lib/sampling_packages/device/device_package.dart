@@ -28,6 +28,10 @@ class DeviceSamplingPackage implements SamplingPackage {
     }
   }
 
+  String get deviceType => DeviceDescriptor.DEVICE_TYPE_SMARTPHONE;
+
+  DeviceRegistration get deviceRegistration;
+
   void onRegister() {} // does nothing for this device sampling package
 
   List<Permission> get permissions => [];

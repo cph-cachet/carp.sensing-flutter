@@ -181,8 +181,7 @@ class DeploymentSuccessful extends GetDeviceDeploymentFor {
     String studyDeploymentId,
     String masterDeviceRoleName,
     this.deviceDeploymentLastUpdateDate,
-  )
-      : super(studyDeploymentId, masterDeviceRoleName) {
+  ) : super(studyDeploymentId, masterDeviceRoleName) {
     $type =
         'dk.cachet.carp.deployment.infrastructure.DeploymentServiceRequest.DeploymentSuccessful';
   }
@@ -293,8 +292,10 @@ class DeviceInvitation {
   /// The role name of the device in this invitation.
   String deviceRoleName;
 
-  /// True when the device is already registered in the study deployment; false otherwise.
-  /// In case a device is registered, it needs to be unregistered first before a new device can be registered.
+  /// True when the device is already registered in the study deployment,
+  /// false otherwise.
+  /// In case a device is registered, it needs to be unregistered first
+  /// before a new device can be registered.
   bool isRegistered;
 
   factory DeviceInvitation.fromJson(Map<String, dynamic> json) =>
@@ -304,7 +305,8 @@ class DeviceInvitation {
   String toString() => '$runtimeType - deviceRoleName: $deviceRoleName';
 }
 
-/// The deployment data for a master device as read from the CARP web service
+/// The deployment configuration for a master device as read from the CARP
+/// web service.
 ///
 /// See [MasterDeviceDeployment.kt](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/carp.deployment.core/src/commonMain/kotlin/dk/cachet/carp/deployment/domain/MasterDeviceDeployment.kt)
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
@@ -317,14 +319,16 @@ class MasterDeviceDeployment {
   /// The devices this device needs to connect to.
   List<DeviceDescriptor> connectedDevices;
 
-  /// Preregistration of connected devices, including configuration such as connection properties, stored per role name.
+  /// Preregistration of connected devices, including configuration such as
+  /// connection properties, stored per role name.
   Map<String, DeviceRegistration> connectedDeviceConfigurations;
 
   /// All tasks which should be able to be executed on this or connected devices.
   List<TaskDescriptor> tasks;
   //List<Map<String, dynamic>> tasks;
 
-  /// All triggers originating from this device and connected devices, stored per assigned id unique within the study protocol.
+  /// All triggers originating from this device and connected devices, stored
+  /// per assigned id unique within the study protocol.
   //Map<String, TriggerDescriptor> triggers;
   Map<String, Map<String, dynamic>> triggers;
 
@@ -333,7 +337,8 @@ class MasterDeviceDeployment {
   List<Map<String, dynamic>> triggeredTasks;
 
   /// The time when this device deployment was last updated.
-  /// This corresponds to the most recent device registration as part of this device deployment.
+  /// This corresponds to the most recent device registration as part of this
+  /// device deployment.
   int lastUpdateDate;
 
   factory MasterDeviceDeployment.fromJson(Map<String, dynamic> json) =>
@@ -561,7 +566,8 @@ class DeviceDeploymentStatus extends DeploymentDomainObject {
   String toString() => '$runtimeType - status: $status';
 }
 
-/// A [DeviceDescriptor] represents the status of a deployment as returned from the CARP web service.
+/// A [DeviceDescriptor] represents the status of a deployment as returned from
+/// the CARP web service.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class DeviceDescriptor extends DeploymentDomainObject {
   DeviceDescriptor() : super();
@@ -573,7 +579,8 @@ class DeviceDescriptor extends DeploymentDomainObject {
   /// For example, 'Patient's phone'
   String roleName;
 
-  /// Sampling configurations for data types available on this device which override the default configuration.
+  /// Sampling configurations for data types available on this device which
+  /// override the default configuration.
   // TODO: This has not been designed -- see https://github.com/cph-cachet/carp.core-kotlin/blob/develop/carp.protocols.core/src/commonMain/kotlin/dk/cachet/carp/protocols/domain/devices/DeviceDescriptor.kt
   Map<String, dynamic> samplingConfiguration;
 
