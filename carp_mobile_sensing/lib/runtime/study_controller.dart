@@ -111,7 +111,7 @@ class StudyController {
         'The study executor cannot be initialized - it is in state ${executor.state}');
 
     // start getting basic device info.
-    Device();
+    DeviceInfo();
 
     // if no user is specified for this study, look up the local user id
     study.userId ??= await settings.userId;
@@ -133,8 +133,8 @@ class StudyController {
     info('         user : ${study.userId}');
     info('     endpoint : ${study.dataEndPoint}');
     info('  data format : ${study.dataFormat}');
-    info('     platform : ${Device().platform.toString()}');
-    info('    device ID : ${Device().deviceID.toString()}');
+    info('     platform : ${DeviceInfo().platform.toString()}');
+    info('    device ID : ${DeviceInfo().deviceID.toString()}');
     info(' data manager : ${dataManager?.toString()}');
     info('  permissions : ${permissions?.toString()}');
 
@@ -145,7 +145,9 @@ class StudyController {
       study.adapt(samplingSchema, restore: false);
     }
 
+    // initialize the data manager, device registry, and study executor
     await dataManager?.initialize(study, events);
+    await DeviceRegistry().initialize(study, events);
     executor.initialize(
       Measure(type: MeasureType(NameSpace.CARP, DataType.EXECUTOR)),
     );

@@ -6,28 +6,62 @@
  */
 part of runtime;
 
-/// A [DeviceManager] handles runtime managenent of all devices used in a
+/// A [DeviceRegistry] handles runtime managenent of all devices used in a
 /// study configuration.
-class DeviceManager {
+class DeviceRegistry {
+  static final DeviceRegistry _instance = DeviceRegistry._();
+
+  /// Get the singleton [DeviceRegistry].
+  factory DeviceRegistry() => _instance;
+  DeviceRegistry._();
+
   /// The list of devices running on this phone as part of a study.
-  /// Mapped to their unique id.
-  final Map<String, DeviceRegistration> devices = {};
-  final Study _study;
+  /// Mapped to their device type.
+  /// Note that this model entails that only one device of the same
+  /// type can be connected to a Device Manager (i.e., phone).
+  final Map<String, DeviceManager> devices = {};
+  Study _study;
   Study get study => _study;
 
   /// Initialize the device manager by specifying the running [Study].
-  DeviceManager(this._study) {
-    _study.connectedDevices
-        .forEach((device) => devices.add(DeviceRegistration(device)));
+  /// and the stream of [Datum] events to handle.
+  Future initialize(Study study, Stream<Datum> data) async {
+    _study = study;
+    //data.listen(onDatum, onError: onError, onDone: onDone);
+
+    _study.connectedDevices.forEach((device) async {
+      DeviceManager _manager = create(device.deviceType);
+      info('Creating device manager $_manager');
+      await _manager.initialize(device, data);
+      devices[device.deviceType] = _manager;
+    });
+
+    //addEvent(DataManagerEvent(DataManagerEventTypes.INITIALIZED));
   }
 
-  /// Initialize by providing the stream of [Datum] events to handle.
-  Future initialize(Stream<Datum> data) {}
+  /// Create an instance of a device manager based on the device type.
+  ///
+  /// This methods search the [SamplingPackageRegistry] for a [DeviceManager]
+  /// which has a probe of the specified [type].
+  DeviceManager create(String deviceType) {
+    DeviceManager _deviceManager;
+
+    SamplingPackageRegistry().packages.forEach((package) {
+      if (package.deviceType == deviceType) {
+        _deviceManager = package.deviceManager;
+      }
+    });
+
+    // if (_deviceManager != null) {
+    //   register(type, _deviceManager);
+    //   _group.add(_deviceManager.events);
+    // }
+    return _deviceManager;
+  }
 }
 
-/// A [DeviceRegistration] holds information on how a [DeviceDescriptor] has
-/// been instansiated locally on runtime on the phone.
-abstract class DeviceRegistration {
+/// A [DeviceManager] handles a device on runtime.
+abstract class DeviceManager {
   final StreamController<DeviceStatus> _eventController =
       StreamController.broadcast();
 
@@ -36,6 +70,9 @@ abstract class DeviceRegistration {
 
   /// A unique runtime id of this device.
   String get id;
+
+  /// The number of measures collected by this device.
+  //int get samplingSize;
 
   DeviceStatus _status = DeviceStatus.unknown;
 
@@ -48,22 +85,49 @@ abstract class DeviceRegistration {
     _eventController.add(newStatus);
   }
 
-  final DeviceDescriptor _descriptor;
+  DeviceDescriptor _descriptor;
 
   /// The device description for this device as specified in the
   /// [Study] protocol.
   DeviceDescriptor get descriptor => _descriptor;
 
   /// The runtime battery level of this device.
-  int batteryLevel = 0;
+  int get batteryLevel;
 
-  DeviceRegistration(this._descriptor);
+  /// Initialize the device manager by specifying the [DeviceDescriptor].
+  /// and the stream of [Datum] events to handle.
+  Future initialize(DeviceDescriptor descriptor, Stream<Datum> data) async {
+    info('Initializing device manager, descriptor: $_descriptor');
+    _descriptor = descriptor;
+    // data.listen(onDatum, onError: onError, onDone: onDone);
+
+    // addEvent(DataManagerEvent(DataManagerEventTypes.INITIALIZED));
+  }
 }
 
-class SmartphoneDeviceRegistration extends DeviceRegistration {
-  SmartphoneDeviceRegistration(DeviceDescriptor descriptor) : super(descriptor);
+class SmartphoneDeviceManager extends DeviceManager {
+  String get id => DeviceInfo().deviceID;
 
-  String get id => throw UnimplementedError();
+  Future initialize(DeviceDescriptor descriptor, Stream<Datum> data) async {
+    await super.initialize(descriptor, data);
+    BatteryProbe()
+      ..events.listen(
+          (datum) => _batteryLevel = (datum as BatteryDatum).batteryLevel)
+      ..initialize(Measure(
+        type: MeasureType(NameSpace.CARP, DeviceSamplingPackage.BATTERY),
+      ))
+      ..resume();
+    status = DeviceStatus.connected;
+  }
+
+  int _batteryLevel = 0;
+  int get batteryLevel => _batteryLevel;
+}
+
+abstract class BTLEDeviceManager extends DeviceManager {
+  /// The Bluetooth address of this BTLE device in the form
+  /// `00:04:79:00:0F:4D`.
+  String get macAddress;
 }
 
 /// Different status for a device.

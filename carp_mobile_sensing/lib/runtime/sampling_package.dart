@@ -49,7 +49,7 @@ class SamplingPackageRegistry {
 ///
 /// It also contains factory methods for:
 ///  - creating a [Probe] based on a [Measure] type
-///  - creating a [DeviceRegistration] based on a device type
+///  - creating a [DeviceManager] based on a device type
 abstract class SamplingPackage {
   /// The list of data type this package supports.
   List<String> get dataTypes;
@@ -84,15 +84,23 @@ abstract class SamplingPackage {
   /// Creates a new [Probe] of the specified [type].
   Probe create(String type);
 
-  /// What device type is this package supporting?
+  /// What device type is this package using?
   ///
-  /// Note that is is assumed that a sampling package only supports **one**
+  /// Note that it is assumed that a sampling package only supports **one**
   /// type of device.
   String get deviceType;
 
-  /// Get a [DeviceRegistration] for the type of device in this package.
-  DeviceRegistration get deviceRegistration;
+  /// Get a [DeviceManager] for the type of device in this package.
+  DeviceManager get deviceManager;
 
   /// Callback method when this package is being registered.
   void onRegister();
+}
+
+/// An abstract class for all sampling packages that run on the phone itself.
+abstract class SmartphoneSamplingPackage implements SamplingPackage {
+  static final String DEVICE_TYPE_SMARTPHONE = 'smarthone';
+
+  String get deviceType => DEVICE_TYPE_SMARTPHONE;
+  DeviceManager get deviceManager => SmartphoneDeviceManager();
 }

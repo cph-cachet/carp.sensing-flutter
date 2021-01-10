@@ -7,7 +7,7 @@
 
 part of runtime;
 
-//TODO : change probes to use Dart Isolates in order to support dynamic class loading (and isolation).
+// TODO : change probes to use Dart Isolates in order to support dynamic class loading (and isolation).
 // Right now registration of probes has to be done manually.
 // Later this will be implemented using Dart Isolates.
 // HOWEVER, Dart isolates do not support calling a platform channel method from

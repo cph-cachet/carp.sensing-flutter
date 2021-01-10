@@ -12,6 +12,10 @@ class Sensing implements StudyManager {
   List<Probe> get runningProbes =>
       (controller != null) ? controller.executor.probes : List();
 
+  /// the list of running - i.e. used - probes in this study.
+  List<DeviceManager> get runningDevices =>
+      DeviceRegistry().devices.values.toList();
+
   /// Get the singleton sensing instance
   factory Sensing() => _instance;
 
@@ -96,6 +100,13 @@ class Sensing implements StudyManager {
             ..description =
                 'This is a study for testing the coverage of sampling.'
             ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
+            ..connectedDevices = [
+              DeviceDescriptor(
+                deviceType: SmartphoneSamplingPackage.DEVICE_TYPE_SMARTPHONE,
+                name: 'Smartphone',
+                isMasterDevice: true,
+              )
+            ]
             ..addTriggerTask(
                 ImmediateTrigger(),
                 AutomaticTask()

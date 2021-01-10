@@ -13,8 +13,6 @@ part of domain;
 /// device (potentially itself).
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class DeviceDescriptor extends Serializable {
-  static final String DEVICE_TYPE_SMARTPHONE = 'smarthone';
-
   DeviceDescriptor({
     this.deviceType,
     this.name,

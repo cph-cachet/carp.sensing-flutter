@@ -1,6 +1,6 @@
 ## 0.12.0
 * feature: support for handling devices as part of a study configuration.
-* 
+* refactor: rename of `Device` to `DeviceInfo`
 
 ## 0.11.1
 * feature: support for storing and retrieving study json protocols on the local file system.

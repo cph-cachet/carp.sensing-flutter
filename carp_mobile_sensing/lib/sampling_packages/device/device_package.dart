@@ -1,6 +1,6 @@
 part of device;
 
-class DeviceSamplingPackage implements SamplingPackage {
+class DeviceSamplingPackage extends SmartphoneSamplingPackage {
   static const String DEVICE = 'device';
   static const String MEMORY = 'memory';
   static const String BATTERY = 'battery';
@@ -27,10 +27,6 @@ class DeviceSamplingPackage implements SamplingPackage {
         return null;
     }
   }
-
-  String get deviceType => DeviceDescriptor.DEVICE_TYPE_SMARTPHONE;
-
-  DeviceRegistration get deviceRegistration;
 
   void onRegister() {} // does nothing for this device sampling package
 
