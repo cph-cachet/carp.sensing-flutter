@@ -12,6 +12,10 @@ class Sensing implements StudyManager {
   List<Probe> get runningProbes =>
       (controller != null) ? controller.executor.probes : List();
 
+  /// the list of running - i.e. used - probes in this study.
+  List<DeviceManager> get runningDevices =>
+      DeviceRegistry().devices.values.toList();
+
   /// Get the singleton sensing instance
   factory Sensing() => _instance;
 
@@ -22,6 +26,7 @@ class Sensing implements StudyManager {
     //SamplingPackageRegistry().register(CommunicationSamplingPackage());
     SamplingPackageRegistry().register(AudioSamplingPackage());
     //SamplingPackageRegistry().register(AppsSamplingPackage());
+    SamplingPackageRegistry().register(ESenseSamplingPackage());
   }
 
   /// Initialize and setup sensing.
@@ -96,28 +101,40 @@ class Sensing implements StudyManager {
             ..description =
                 'This is a study for testing the coverage of sampling.'
             ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
+            ..connectedDevices = [
+              DeviceDescriptor(
+                deviceType: SmartphoneSamplingPackage.SMARTPHONE_DEVICE_TYPE,
+                name: 'Smartphone',
+                isMasterDevice: true,
+              ),
+              DeviceDescriptor(
+                deviceType: ESenseSamplingPackage.ESENSE_DEVICE_TYPE,
+                name: 'eSense',
+                isMasterDevice: false,
+              ),
+            ]
             ..addTriggerTask(
                 ImmediateTrigger(),
                 AutomaticTask()
                   ..measures = SamplingSchema.debug().getMeasureList(
                     namespace: NameSpace.CARP,
                     types: [
-                      SensorSamplingPackage.LIGHT, // 10 s
+                      // SensorSamplingPackage.LIGHT, // 10 s
                       ConnectivitySamplingPackage.CONNECTIVITY,
                       ConnectivitySamplingPackage.WIFI, // 60 s
                       DeviceSamplingPackage.MEMORY, // 60 s
                       AudioSamplingPackage.NOISE, // 60 s
                     ],
                   ))
-            ..addTriggerTask(
-                ImmediateTrigger(),
-                AutomaticTask()
-                  ..measures = SamplingSchema.debug().getMeasureList(
-                    namespace: NameSpace.CARP,
-                    types: [
-                      ContextSamplingPackage.ACTIVITY, // ~3 s
-                    ],
-                  ))
+            // ..addTriggerTask(
+            //     ImmediateTrigger(),
+            //     AutomaticTask()
+            //       ..measures = SamplingSchema.debug().getMeasureList(
+            //         namespace: NameSpace.CARP,
+            //         types: [
+            //           ContextSamplingPackage.ACTIVITY, // ~3 s
+            //         ],
+            //       ))
             ..addTriggerTask(
                 PeriodicTrigger(period: Duration(minutes: 1)),
                 AutomaticTask()
@@ -137,14 +154,24 @@ class Sensing implements StudyManager {
             //           AppsSamplingPackage.APP_USAGE,
             //         ],
             //       ))
+            // ..addTriggerTask(
+            //     PeriodicTrigger(period: Duration(minutes: 5)),
+            //     AutomaticTask()
+            //       ..measures = SamplingSchema.debug().getMeasureList(
+            //         namespace: NameSpace.CARP,
+            //         types: [
+            //           ContextSamplingPackage.WEATHER,
+            //           ContextSamplingPackage.AIR_QUALITY,
+            //         ],
+            //       ))
             ..addTriggerTask(
-                PeriodicTrigger(period: Duration(minutes: 5)),
+                ImmediateTrigger(),
                 AutomaticTask()
                   ..measures = SamplingSchema.debug().getMeasureList(
                     namespace: NameSpace.CARP,
                     types: [
-                      ContextSamplingPackage.WEATHER,
-                      ContextSamplingPackage.AIR_QUALITY,
+                      ESenseSamplingPackage.ESENSE_BUTTON,
+                      // ESenseSamplingPackage.ESENSE_SENSOR,
                     ],
                   ))
           //

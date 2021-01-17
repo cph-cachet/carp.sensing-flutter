@@ -21,7 +21,8 @@ class CarpMobileSensingAppState extends State<CarpMobileSensingApp> {
   final _pages = [
     StudyVisualization(),
     ProbesList(),
-    DataVisualization(),
+    // DataVisualization(),
+    DevicesList(),
   ];
 
   void initState() {
@@ -41,7 +42,8 @@ class CarpMobileSensingAppState extends State<CarpMobileSensingApp> {
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.school), label: 'Study'),
           BottomNavigationBarItem(icon: Icon(Icons.adb), label: 'Probes'),
-          BottomNavigationBarItem(icon: Icon(Icons.show_chart), label: 'DataViz'),
+          // BottomNavigationBarItem(icon: Icon(Icons.show_chart), label: 'Data'),
+          BottomNavigationBarItem(icon: Icon(Icons.watch), label: 'Devices'),
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,

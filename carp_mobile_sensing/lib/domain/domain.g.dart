@@ -252,6 +252,37 @@ Map<String, dynamic> _$DataFormatToJson(DataFormat instance) {
   return val;
 }
 
+DeviceDescriptor _$DeviceDescriptorFromJson(Map<String, dynamic> json) {
+  return DeviceDescriptor()
+    ..$type = json[r'$type'] as String
+    ..deviceType = json['device_type'] as String
+    ..name = json['name'] as String
+    ..isMasterDevice = json['is_master_device'] as bool
+    ..roleName = json['role_name'] as String
+    ..collectingMeasureTypes = (json['collecting_measure_types'] as List)
+        ?.map((e) =>
+            e == null ? null : MeasureType.fromJson(e as Map<String, dynamic>))
+        ?.toList();
+}
+
+Map<String, dynamic> _$DeviceDescriptorToJson(DeviceDescriptor instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(r'$type', instance.$type);
+  writeNotNull('device_type', instance.deviceType);
+  writeNotNull('name', instance.name);
+  writeNotNull('is_master_device', instance.isMasterDevice);
+  writeNotNull('role_name', instance.roleName);
+  writeNotNull('collecting_measure_types', instance.collectingMeasureTypes);
+  return val;
+}
+
 Measure _$MeasureFromJson(Map<String, dynamic> json) {
   return Measure(
     type: json['type'] == null
@@ -399,6 +430,11 @@ Study _$StudyFromJson(Map<String, dynamic> json) {
     publicKey: json['public_key'] as String,
   )
     ..$type = json[r'$type'] as String
+    ..connectedDevices = (json['connected_devices'] as List)
+        ?.map((e) => e == null
+            ? null
+            : DeviceDescriptor.fromJson(e as Map<String, dynamic>))
+        ?.toList()
     ..triggers = (json['triggers'] as List)
         ?.map((e) =>
             e == null ? null : Trigger.fromJson(e as Map<String, dynamic>))
@@ -423,6 +459,7 @@ Map<String, dynamic> _$StudyToJson(Study instance) {
   writeNotNull('data_end_point', instance.dataEndPoint);
   writeNotNull('data_format', instance.dataFormat);
   writeNotNull('public_key', instance.publicKey);
+  writeNotNull('connected_devices', instance.connectedDevices);
   writeNotNull('triggers', instance.triggers);
   return val;
 }

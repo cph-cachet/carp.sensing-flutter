@@ -15,6 +15,7 @@ import '../carp_mobile_sensing.dart';
 part 'datapoint.dart';
 part 'datum.dart';
 part 'device_info.dart';
+part 'device.dart';
 part 'domain.g.dart';
 part 'measures.dart';
 part 'serialization.dart';

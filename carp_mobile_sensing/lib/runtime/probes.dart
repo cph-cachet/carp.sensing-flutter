@@ -200,18 +200,23 @@ abstract class AbstractProbe extends Probe implements MeasureListener {
   ///
   /// Note that this is a non-async method and should hence be 'light-weight'
   /// and not block execution for a long duration.
+  @protected
   void onInitialize(Measure measure);
 
   /// Callback for resuming probe
+  @protected
   Future onResume();
 
   /// Callback for pausing probe
+  @protected
   Future onPause();
 
   /// Callback for restarting probe
+  @protected
   Future onRestart();
 
   /// Callback for stopping probe
+  @protected
   Future onStop();
 
   /// Callback when this probe's [measure] has changed.
@@ -342,7 +347,6 @@ class _ResumedState extends _AbstractProbeState implements _ProbeStateMachine {
     probe.pause(); // first pause probe, setting it in a paused state
     probe.onRestart();
     if (probe.enabled) {
-      // check if it has been enabled
       probe.resume();
     }
   }
@@ -365,7 +369,7 @@ class _PausedState extends _AbstractProbeState implements _ProbeStateMachine {
     info('Restarting ${probe.runtimeType}');
     probe.onRestart();
     if (probe.enabled) {
-      // check if probe is enabled
+      // only resume if probe is enabled
       probe.resume();
     }
   }
@@ -494,18 +498,17 @@ abstract class StreamProbe extends AbstractProbe {
   void onInitialize(Measure measure) {}
 
   Future onRestart() async {
-    await onResume();
+    //await onResume();
   }
 
   Future onResume() async {
     marking();
-    if (stream != null) {
-      debug('Listening to stream in $runtimeType');
-      subscription = stream.listen(onData, onError: onError, onDone: onDone);
-    }
+    debug('$runtimeType :: listening to stream: $stream');
+    subscription = stream?.listen(onData, onError: onError, onDone: onDone);
   }
 
   Future onPause() async {
+    //print('subscription: $subscription');
     await subscription?.cancel();
     mark();
   }

@@ -1,3 +1,6 @@
+## 0.12.0
+* upgrade to `carp_mobile_sensing` v. 0.12.x
+
 ## 0.11.1
 * fix: issue [#150](https://github.com/cph-cachet/carp.sensing-flutter/issues/150)
 

@@ -16,7 +16,7 @@ part of audio;
 /// ```
 ///   SamplingPackageRegistry.register(AudioSamplingPackage());
 /// ```
-class AudioSamplingPackage implements SamplingPackage {
+class AudioSamplingPackage extends SmartphoneSamplingPackage {
   static const String AUDIO = "audio";
   static const String NOISE = "noise";
 

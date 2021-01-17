@@ -48,8 +48,24 @@ class Study extends Serializable {
   /// The public key in a PKI setup for encryption of data in the [dataEndPoint].
   String publicKey;
 
+  /// The devices this device needs to connect to.
+  List<DeviceDescriptor> connectedDevices = [];
+
   /// The set of [Trigger]s which can trigger [Task](s) in this study.
   List<Trigger> triggers = [];
+
+  List<Measure> _measures;
+
+  /// Get the list of all [Mesure] in this study.
+  List<Measure> get measures {
+    if (_measures == null) {
+      _measures = [];
+      triggers.forEach((trigger) =>
+          trigger.tasks.forEach((task) => _measures.addAll(task.measures)));
+    }
+
+    return _measures;
+  }
 
   /// Create a new [Study] object with a set of configurations.
   ///

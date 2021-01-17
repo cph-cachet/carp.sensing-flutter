@@ -1,6 +1,6 @@
 part of connectivity;
 
-class ConnectivitySamplingPackage implements SamplingPackage {
+class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
   static const String CONNECTIVITY = "connectivity";
   static const String BLUETOOTH = "bluetooth";
   static const String WIFI = "wifi";

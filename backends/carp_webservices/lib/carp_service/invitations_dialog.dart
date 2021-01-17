@@ -29,6 +29,10 @@ class InvitationsDialog {
 
     return Alert(
       context: context,
+      image: Padding(
+          padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
+          child: Image.asset('asset/images/cachet_logo_new.png',
+              package: 'carp_webservices')),
       title: "INVITATIONS",
       content: ListView(
         shrinkWrap: true,

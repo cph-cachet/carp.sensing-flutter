@@ -12,6 +12,7 @@ part of esense;
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ESenseMeasure extends Measure {
   /// The name of the eSense device.
+  /// Used for connecting to the eSense hardware device over BTLE.
   String deviceName;
 
   /// The sampling rate in Hz of getting sensor data from the device.
@@ -19,6 +20,8 @@ class ESenseMeasure extends Measure {
   /// Default sampling rate is 10 Hz.
   int samplingRate = 10;
 
+  /// Create an eSense messure confgiration.
+  /// [type] and [deviceName] are required.
   ESenseMeasure({
     MeasureType type,
     name,

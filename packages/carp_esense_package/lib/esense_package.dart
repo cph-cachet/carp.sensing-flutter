@@ -17,6 +17,7 @@ part of esense;
 class ESenseSamplingPackage implements SamplingPackage {
   static const String ESENSE_BUTTON = "esense.button";
   static const String ESENSE_SENSOR = "esense.sensor";
+  static const String ESENSE_DEVICE_TYPE = 'esense';
 
   List<String> get dataTypes => [ESENSE_BUTTON, ESENSE_SENSOR];
 
@@ -36,40 +37,17 @@ class ESenseSamplingPackage implements SamplingPackage {
   List<Permission> get permissions =>
       [Permission.location, Permission.microphone];
 
-  SamplingSchema get common => SamplingSchema()
-    ..type = SamplingSchemaType.COMMON
-    ..name = 'Common (default) eSense sampling schema'
-    ..powerAware = true
-    ..measures.addEntries([
-      MapEntry(
-          ESENSE_BUTTON,
-          ESenseMeasure(
-              type: MeasureType(NameSpace.CARP, ESENSE_BUTTON),
-              name: 'eSense - Button',
-              enabled: true,
-              deviceName: '',
-              samplingRate: 10)),
-      MapEntry(
-          ESENSE_SENSOR,
-          ESenseMeasure(
-              type: MeasureType(NameSpace.CARP, ESENSE_SENSOR),
-              name: 'eSense - Sensors',
-              enabled: true,
-              deviceName: '',
-              samplingRate: 10)),
-    ]);
+  String get deviceType => ESENSE_DEVICE_TYPE;
 
-  SamplingSchema get light => common
-    ..type = SamplingSchemaType.LIGHT
-    ..name = 'Light eSense sampling';
+  DeviceManager get deviceManager => ESenseDeviceManager();
 
-  SamplingSchema get minimum => light
-    ..type = SamplingSchemaType.MINIMUM
-    ..name = 'Minimum eSense sampling'
-    ..measures[ESENSE_BUTTON].enabled = false
-    ..measures[ESENSE_SENSOR].enabled = false;
-
-  SamplingSchema get normal => common;
+  // Since the configuration of the eSense devices require the device name
+  // it is not possible to offer any 'common' device configuration.
+  // Hence, all the sampling schema getter return null.
+  SamplingSchema get common => null;
+  SamplingSchema get light => null;
+  SamplingSchema get minimum => null;
+  SamplingSchema get normal => null;
 
   // This is the debug sampling schema used by bardram
   // His eSense devices are

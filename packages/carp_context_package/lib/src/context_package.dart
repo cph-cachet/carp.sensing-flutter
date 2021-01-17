@@ -14,7 +14,7 @@ part of context;
 /// ```
 ///   SamplingPackageRegistry.register(ContextSamplingPackage());
 /// ```
-class ContextSamplingPackage implements SamplingPackage {
+class ContextSamplingPackage extends SmartphoneSamplingPackage {
   static const String LOCATION = "location";
   static const String GEOLOCATION = "geolocation";
   static const String ACTIVITY = "activity";

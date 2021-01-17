@@ -1,6 +1,6 @@
 part of carp_apps_package;
 
-class AppsSamplingPackage implements SamplingPackage {
+class AppsSamplingPackage extends SmartphoneSamplingPackage {
   static const String APPS = "apps";
   static const String APP_USAGE = "app_usage";
 

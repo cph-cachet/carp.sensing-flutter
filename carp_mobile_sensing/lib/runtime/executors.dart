@@ -10,7 +10,7 @@ part of runtime;
 /// An abstract class used to implement executors.
 /// See [StudyExecutor] and [TaskExecutor] for examples.
 abstract class Executor extends AbstractProbe {
-  static final Device deviceInfo = Device();
+  static final DeviceInfo deviceInfo = DeviceInfo();
   final StreamGroup<Datum> _group = StreamGroup.broadcast();
   List<Probe> executors = [];
   Stream<Datum> get events => _group.stream;

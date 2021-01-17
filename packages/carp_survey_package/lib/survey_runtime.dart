@@ -8,7 +8,7 @@
 part of survey;
 
 /// A [SamplingPackage] that knows how to collect data from user surveys based on the [research_package] package.
-class SurveySamplingPackage implements SamplingPackage {
+class SurveySamplingPackage extends SmartphoneSamplingPackage {
   static const String SURVEY = "survey";
 
   List<String> get dataTypes => [

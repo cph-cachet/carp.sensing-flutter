@@ -40,44 +40,74 @@ class SamplingPackageRegistry {
   }
 }
 
-/// Interface for a sampling package that holds a set of sampling
-///  - types
-///  - probes
-///  - schemas
+/// Interface for a sampling package.
+///
+/// A sampling package provides information on sampling:
+///  - types supported
+///  - schemas - common and for power aware sampling
+///  - permissions needed
+///
+/// It also contains factory methods for:
+///  - creating a [Probe] based on a [Measure] type
+///  - creating a [DeviceManager] based on a device type
 abstract class SamplingPackage {
+  /// The list of data type this package supports.
+  List<String> get dataTypes;
+
   /// The default (common) sampling schema for all measures in this package.
   SamplingSchema get common;
 
-  /// The sampling schema for normal sampling, when power-aware sampling is enabled.
-  /// See [PowerAwarenessState].
+  /// The sampling schema for normal sampling, when power-aware sampling
+  /// is enabled. See [PowerAwarenessState].
   SamplingSchema get normal;
 
-  /// The sampling schema for light sampling, when power-aware sampling is enabled.
-  /// See [PowerAwarenessState].
+  /// The sampling schema for light sampling, when power-aware sampling is
+  /// enabled. See [PowerAwarenessState].
   SamplingSchema get light;
 
-  /// The sampling schema for minimum sampling, when power-aware sampling is enabled.
-  /// See [PowerAwarenessState].
+  /// The sampling schema for minimum sampling, when power-aware sampling is
+  /// enabled. See [PowerAwarenessState].
   SamplingSchema get minimum;
 
   /// A debugging sampling schema for all measures in this package.
-  /// Typically provides very detailed and frequent sampling in order to debug the probes.
+  /// Typically provides very detailed and frequent sampling in order to
+  /// debug the probes.
   SamplingSchema get debug;
-
-  /// The list of data type this package supports.
-  List<String> get dataTypes;
 
   /// The list of permissions that this package need.
   ///
   /// See [PermissionGroup](https://pub.dev/documentation/permission_handler/latest/permission_handler/PermissionGroup-class.html)
   /// for a list of possible permissions.
   ///
-  /// For Android permission in the Manifest.xml file, see [Manifest.permission](https://developer.android.com/reference/android/Manifest.permission.html)
+  /// For Android permission in the Manifest.xml file,
+  /// see [Manifest.permission](https://developer.android.com/reference/android/Manifest.permission.html)
   List<Permission> get permissions;
 
   /// Creates a new [Probe] of the specified [type].
   Probe create(String type);
 
+  /// What device type is this package using?
+  ///
+  /// Default value is a smartphone. Override this if another type is supported.
+  ///
+  /// Note that it is assumed that a sampling package only supports **one**
+  /// type of device.
+  String get deviceType;
+
+  /// Get a [DeviceManager] for the type of device in this package.
+  ///
+  /// Default manager is a smartphone.
+  /// Override this if another type of manager  is supported.
+  DeviceManager get deviceManager;
+
   /// Callback method when this package is being registered.
   void onRegister();
+}
+
+/// An abstract class for all sampling packages that run on the phone itself.
+abstract class SmartphoneSamplingPackage implements SamplingPackage {
+  static const String SMARTPHONE_DEVICE_TYPE = 'smarthone';
+
+  String get deviceType => SMARTPHONE_DEVICE_TYPE;
+  DeviceManager get deviceManager => SmartphoneDeviceManager();
 }

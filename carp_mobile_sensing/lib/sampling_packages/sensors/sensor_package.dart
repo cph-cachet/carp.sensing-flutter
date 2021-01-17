@@ -1,6 +1,6 @@
 part of sensors;
 
-class SensorSamplingPackage implements SamplingPackage {
+class SensorSamplingPackage extends SmartphoneSamplingPackage {
   static const String ACCELEROMETER = 'accelerometer';
   static const String GYROSCOPE = 'gyroscope';
   static const String PERIODIC_ACCELEROMETER = 'periodic_accelerometer';

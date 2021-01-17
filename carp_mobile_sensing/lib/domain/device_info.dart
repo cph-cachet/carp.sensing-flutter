@@ -7,19 +7,21 @@
 
 part of domain;
 
+// TODO - rename this class to DeviceInfo - Device is to be used elsewhere
+
 /// Provides (static) information about the local device.
 ///
 /// This class is a singleton that one time access the information from the
 /// local device to be used in the sensing framework.
-class Device {
+class DeviceInfo {
   final DeviceInfoPlugin _deviceInfoPlugin = DeviceInfoPlugin();
 
-  static final Device _instance = Device._();
-  Device._() {
+  static final DeviceInfo _instance = DeviceInfo._();
+  DeviceInfo._() {
     _getDeviceInfo();
   }
 
-  factory Device() => _instance;
+  factory DeviceInfo() => _instance;
 
   String platform;
   String hardware;
