@@ -181,7 +181,8 @@ class DeploymentSuccessful extends GetDeviceDeploymentFor {
     String studyDeploymentId,
     String masterDeviceRoleName,
     this.deviceDeploymentLastUpdateDate,
-  ) : super(studyDeploymentId, masterDeviceRoleName) {
+  )
+      : super(studyDeploymentId, masterDeviceRoleName) {
     $type =
         'dk.cachet.carp.deployment.infrastructure.DeploymentServiceRequest.DeploymentSuccessful';
   }
