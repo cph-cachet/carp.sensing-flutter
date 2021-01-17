@@ -12,7 +12,8 @@ part of context;
 class ActivityProbe extends StreamProbe {
   // Since this probe runs alongside location, which runs a foreground service
   // this probe does not need to run one.
-  Stream<Datum> get stream => ActivityRecognition
-      .activityStream(runForegroundService: false)
-      .map((activity) => ActivityDatum.fromActivity(activity));
+  Stream<Datum> get stream =>
+      ActivityRecognition.activityStream(runForegroundService: false)
+          .map((activity) => ActivityDatum.fromActivity(activity))
+          .asBroadcastStream();
 }

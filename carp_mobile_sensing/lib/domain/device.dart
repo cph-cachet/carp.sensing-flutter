@@ -17,12 +17,12 @@ class DeviceDescriptor extends Serializable {
     this.deviceType,
     this.name,
     this.roleName,
-    this.isMasterDevice,
+    this.isMasterDevice = false,
     this.collectingMeasureTypes,
   }) : super();
 
   /// The unique device type.
-  /// For example [DEVICE_TYPE_SMARTPHONE].
+  /// For example [SMARTPHONE_DEVICE_TYPE].
   String deviceType;
 
   /// A printer-fiendly name of this device.

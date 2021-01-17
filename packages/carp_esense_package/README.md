@@ -127,3 +127,5 @@ Once the package is registered, `ESenseMeasure`s can be added to a study like th
           )));
 
 ````
+
+Note that the eSense device must be paired with the phone via BTLE before CAMS can connect to it.

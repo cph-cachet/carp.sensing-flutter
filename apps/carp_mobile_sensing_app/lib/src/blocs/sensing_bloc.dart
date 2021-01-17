@@ -23,9 +23,13 @@ class SensingBLoC {
   Iterable<ProbeModel> get runningProbes =>
       Sensing().runningProbes.map((probe) => ProbeModel(probe));
 
-  /// Get a list of running probes
+  /// Get a list of running devices
   Iterable<DeviceModel> get runningDevices =>
       Sensing().runningDevices.map((device) => DeviceModel(device));
+
+  void connectToDevice(DeviceModel device) {
+    DeviceRegistry().devices[device.type].connect();
+  }
 
   /// Get the data model for this study.
   DataModel get data => null;

@@ -30,7 +30,7 @@ class DeviceRegistry {
     //data.listen(onDatum, onError: onError, onDone: onDone);
 
     _study.connectedDevices.forEach((device) async {
-      DeviceManager _manager = create(device.deviceType);
+      DeviceManager _manager = await create(device.deviceType);
       info('Creating device manager $_manager');
       await _manager.initialize(device, data);
       devices[device.deviceType] = _manager;
@@ -42,8 +42,8 @@ class DeviceRegistry {
   /// Create an instance of a device manager based on the device type.
   ///
   /// This methods search the [SamplingPackageRegistry] for a [DeviceManager]
-  /// which has a probe of the specified [type].
-  DeviceManager create(String deviceType) {
+  /// which has a device manager of the specified [deviceType].
+  Future<DeviceManager> create(String deviceType) async {
     DeviceManager _deviceManager;
 
     SamplingPackageRegistry().packages.forEach((package) {
@@ -103,6 +103,12 @@ abstract class DeviceManager {
 
     // addEvent(DataManagerEvent(DataManagerEventTypes.INITIALIZED));
   }
+
+  /// Ask this [DeviceManager] to connect to the device.
+  Future connect();
+
+  /// Ask this [DeviceManager] to disconnect from the device.
+  Future disconnect();
 }
 
 class SmartphoneDeviceManager extends DeviceManager {
@@ -122,12 +128,16 @@ class SmartphoneDeviceManager extends DeviceManager {
 
   int _batteryLevel = 0;
   int get batteryLevel => _batteryLevel;
+
+  Future connect() {} // always connected to the phone
+
+  Future disconnect() {} // cannot disconnect from the phone
 }
 
 abstract class BTLEDeviceManager extends DeviceManager {
   /// The Bluetooth address of this BTLE device in the form
   /// `00:04:79:00:0F:4D`.
-  String get macAddress;
+  String get btleAddress;
 }
 
 /// Different status for a device.
@@ -140,6 +150,10 @@ enum DeviceStatus {
 
   /// The device is disconnected.
   disconnected,
+
+  /// The device is paired with this phone.
+  /// Mainly used for [BTLEDeviceManager].
+  paired,
 
   /// The device is connected.
   connected,

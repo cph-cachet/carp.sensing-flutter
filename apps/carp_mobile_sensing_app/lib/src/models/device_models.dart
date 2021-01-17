@@ -8,14 +8,22 @@ class DevicesModel {
 class DeviceModel {
   DeviceManager deviceManager;
   String get type => deviceManager.descriptor.deviceType;
-  DeviceStatus get state => deviceManager.status;
+  DeviceStatus get status => deviceManager.status;
   Stream<DeviceStatus> get deviceEvents => deviceManager.deviceEvents;
 
-  ///A printer-friendly name for this device.
+  /// The device id.
+  String get id => deviceManager.id;
+
+  /// A printer-friendly name for this device.
   String get name => deviceManager.descriptor.name;
 
-  ///A printer-friendly description of this device.
-  String get description => deviceTypeDescription[type];
+  /// A printer-friendly description of this device.
+  //String get description => deviceTypeDescription[type];
+  String get description => (id == null)
+      ? 'Device name will appear when the device is connected'
+      : '${deviceTypeDescription[type]} - $statusString\n$batteryLevel% battery remaining.';
+
+  String get statusString => status.toString().split('.').last;
 
   /// The battery level of this device.
   int get batteryLevel => deviceManager.batteryLevel;
@@ -24,7 +32,7 @@ class DeviceModel {
   Icon get icon => deviceTypeIcon[type];
 
   /// The icon for the runtime state of this device.
-  Icon get stateIcon => deviceStateIcon[state];
+  Icon get stateIcon => deviceStateIcon[status];
 
   DeviceModel(this.deviceManager)
       : assert(deviceManager != null,
@@ -32,12 +40,15 @@ class DeviceModel {
         super();
 
   static Map<String, String> get deviceTypeDescription => {
-        SmartphoneSamplingPackage.DEVICE_TYPE_SMARTPHONE: 'This phone',
+        SmartphoneSamplingPackage.SMARTPHONE_DEVICE_TYPE: 'This phone',
+        ESenseSamplingPackage.ESENSE_DEVICE_TYPE: 'eSense ear plug',
       };
 
   static Map<String, Icon> get deviceTypeIcon => {
-        SmartphoneSamplingPackage.DEVICE_TYPE_SMARTPHONE:
+        SmartphoneSamplingPackage.SMARTPHONE_DEVICE_TYPE:
             Icon(Icons.phone_android, size: 50, color: CACHET.GREY_4),
+        ESenseSamplingPackage.ESENSE_DEVICE_TYPE:
+            Icon(Icons.headset, size: 50, color: CACHET.CACHET_BLUE),
       };
 
   static Map<DeviceStatus, Icon> get deviceStateIcon => {
@@ -46,5 +57,7 @@ class DeviceModel {
         DeviceStatus.disconnected: Icon(Icons.close, color: CACHET.YELLOW),
         DeviceStatus.connected: Icon(Icons.check, color: CACHET.GREEN),
         DeviceStatus.sampling: Icon(Icons.save_alt, color: CACHET.ORANGE),
+        DeviceStatus.paired:
+            Icon(Icons.bluetooth_connected, color: CACHET.DARK_BLUE),
       };
 }

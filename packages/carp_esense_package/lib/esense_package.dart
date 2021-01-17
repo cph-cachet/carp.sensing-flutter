@@ -17,6 +17,7 @@ part of esense;
 class ESenseSamplingPackage implements SamplingPackage {
   static const String ESENSE_BUTTON = "esense.button";
   static const String ESENSE_SENSOR = "esense.sensor";
+  static const String ESENSE_DEVICE_TYPE = 'esense';
 
   List<String> get dataTypes => [ESENSE_BUTTON, ESENSE_SENSOR];
 
@@ -35,6 +36,10 @@ class ESenseSamplingPackage implements SamplingPackage {
 
   List<Permission> get permissions =>
       [Permission.location, Permission.microphone];
+
+  String get deviceType => ESENSE_DEVICE_TYPE;
+
+  DeviceManager get deviceManager => ESenseDeviceManager();
 
   // Since the configuration of the eSense devices require the device name
   // it is not possible to offer any 'common' device configuration.

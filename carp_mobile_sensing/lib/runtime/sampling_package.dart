@@ -57,20 +57,21 @@ abstract class SamplingPackage {
   /// The default (common) sampling schema for all measures in this package.
   SamplingSchema get common;
 
-  /// The sampling schema for normal sampling, when power-aware sampling is enabled.
-  /// See [PowerAwarenessState].
+  /// The sampling schema for normal sampling, when power-aware sampling
+  /// is enabled. See [PowerAwarenessState].
   SamplingSchema get normal;
 
-  /// The sampling schema for light sampling, when power-aware sampling is enabled.
-  /// See [PowerAwarenessState].
+  /// The sampling schema for light sampling, when power-aware sampling is
+  /// enabled. See [PowerAwarenessState].
   SamplingSchema get light;
 
-  /// The sampling schema for minimum sampling, when power-aware sampling is enabled.
-  /// See [PowerAwarenessState].
+  /// The sampling schema for minimum sampling, when power-aware sampling is
+  /// enabled. See [PowerAwarenessState].
   SamplingSchema get minimum;
 
   /// A debugging sampling schema for all measures in this package.
-  /// Typically provides very detailed and frequent sampling in order to debug the probes.
+  /// Typically provides very detailed and frequent sampling in order to
+  /// debug the probes.
   SamplingSchema get debug;
 
   /// The list of permissions that this package need.
@@ -78,7 +79,8 @@ abstract class SamplingPackage {
   /// See [PermissionGroup](https://pub.dev/documentation/permission_handler/latest/permission_handler/PermissionGroup-class.html)
   /// for a list of possible permissions.
   ///
-  /// For Android permission in the Manifest.xml file, see [Manifest.permission](https://developer.android.com/reference/android/Manifest.permission.html)
+  /// For Android permission in the Manifest.xml file,
+  /// see [Manifest.permission](https://developer.android.com/reference/android/Manifest.permission.html)
   List<Permission> get permissions;
 
   /// Creates a new [Probe] of the specified [type].
@@ -86,11 +88,16 @@ abstract class SamplingPackage {
 
   /// What device type is this package using?
   ///
+  /// Default value is a smartphone. Override this if another type is supported.
+  ///
   /// Note that it is assumed that a sampling package only supports **one**
   /// type of device.
   String get deviceType;
 
   /// Get a [DeviceManager] for the type of device in this package.
+  ///
+  /// Default manager is a smartphone.
+  /// Override this if another type of manager  is supported.
   DeviceManager get deviceManager;
 
   /// Callback method when this package is being registered.
@@ -99,8 +106,8 @@ abstract class SamplingPackage {
 
 /// An abstract class for all sampling packages that run on the phone itself.
 abstract class SmartphoneSamplingPackage implements SamplingPackage {
-  static final String DEVICE_TYPE_SMARTPHONE = 'smarthone';
+  static const String SMARTPHONE_DEVICE_TYPE = 'smarthone';
 
-  String get deviceType => DEVICE_TYPE_SMARTPHONE;
+  String get deviceType => SMARTPHONE_DEVICE_TYPE;
   DeviceManager get deviceManager => SmartphoneDeviceManager();
 }
