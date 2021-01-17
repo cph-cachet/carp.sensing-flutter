@@ -14,7 +14,7 @@ part of communication;
 /// ```
 ///   SamplingPackageRegistry.register(CommunicationSamplingPackage());
 /// ```
-class CommunicationSamplingPackage implements SamplingPackage {
+class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
   static const String PHONE_LOG = "phone_log";
   static const String TELEPHONY = "telephony";
   static const String TEXT_MESSAGE_LOG = "text_message_log";

@@ -7,7 +7,7 @@
 part of movisens;
 
 /// The Movisens sampling package
-class MovisensSamplingPackage implements SamplingPackage {
+class MovisensSamplingPackage extends SmartphoneSamplingPackage {
   static const String MOVISENS = "movisens";
   static const String MET_LEVEL = "met_level";
   static const String MET = "met";

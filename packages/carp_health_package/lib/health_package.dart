@@ -34,7 +34,7 @@ HealthFactory _healthFactory = HealthFactory();
 /// ```
 ///   SamplingPackageRegistry.register(HealthSamplingPackage());
 /// ```
-class HealthSamplingPackage implements SamplingPackage {
+class HealthSamplingPackage extends SmartphoneSamplingPackage {
   static const String HEALTH = "health";
 
   List<String> get dataTypes => [
