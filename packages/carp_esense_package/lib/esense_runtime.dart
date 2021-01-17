@@ -32,12 +32,9 @@ abstract class _ESenseProbe extends StreamProbe {
           // this is a hack! - don't know why, but the sensorEvents stream
           // needs a kick in the ass to get started...
           ESenseManager().sensorEvents.listen(null);
-          ESenseManager().eSenseEvents.listen(null);
+          // ESenseManager().eSenseEvents.listen(null);
           // if the device (re)connects, then restart the sampling
-          // this.restart();
-          this.resume();
-          // this.pause();
-          // Timer(Duration(seconds: 10), () => this.resume());
+          this.restart();
           break;
         default:
           // all other cases, the device is not connected
@@ -129,7 +126,7 @@ class ESenseDeviceManager extends DeviceManager {
         case ConnectionType.device_not_found:
         case ConnectionType.disconnected:
           status = DeviceStatus.disconnected;
-          _eventSubscription.cancel();
+          _eventSubscription?.cancel();
           break;
       }
     });

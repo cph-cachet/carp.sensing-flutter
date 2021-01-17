@@ -136,7 +136,7 @@ class CarpDataManager extends AbstractDataManager {
     info("File upload to CARP started - path : '$path'");
     final File file = File(path);
 
-    final String deviceID = Device().deviceID.toString();
+    final String deviceID = DeviceInfo().deviceID.toString();
     final String studyID = study.id;
     final String userID = (await user).email;
 
@@ -187,7 +187,7 @@ class CarpDataManager extends AbstractDataManager {
     info("File attachment upload to CARP started - path : '${datum.filename}'");
     final File file = File(datum.filename);
 
-    final String deviceID = Device().deviceID.toString();
+    final String deviceID = DeviceInfo().deviceID.toString();
     final String studyID = study.id;
     final String userID = (await user).email;
 

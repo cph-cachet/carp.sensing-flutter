@@ -42,7 +42,7 @@ class DeploymentReference extends CarpReference {
   /// Uses the phone's unique hardware id, if available.
   /// Otherwise uses a v4 UUID.
   String get registeredDeviceId =>
-      _registeredDeviceId ??= Device().deviceID ?? Uuid().v4().toString();
+      _registeredDeviceId ??= DeviceInfo().deviceID ?? Uuid().v4().toString();
 
   DeploymentReference._(CarpService service, this._studyDeploymentId)
       : super._(service);
@@ -81,8 +81,8 @@ class DeploymentReference extends CarpReference {
 
   /// Get the deployment status for this [DeploymentReference].
   Future<StudyDeploymentStatus> getStatus() async {
-    _status = StudyDeploymentStatus
-        .fromJson(await _rpc(GetStudyDeploymentStatus(studyDeploymentId)));
+    _status = StudyDeploymentStatus.fromJson(
+        await _rpc(GetStudyDeploymentStatus(studyDeploymentId)));
     return _status;
   }
 

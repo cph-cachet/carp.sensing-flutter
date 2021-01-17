@@ -54,6 +54,19 @@ class Study extends Serializable {
   /// The set of [Trigger]s which can trigger [Task](s) in this study.
   List<Trigger> triggers = [];
 
+  List<Measure> _measures;
+
+  /// Get the list of all [Mesure] in this study.
+  List<Measure> get measures {
+    if (_measures == null) {
+      _measures = [];
+      triggers.forEach((trigger) =>
+          trigger.tasks.forEach((task) => _measures.addAll(task.measures)));
+    }
+
+    return _measures;
+  }
+
   /// Create a new [Study] object with a set of configurations.
   ///
   /// The [id]  is required for a new study.
@@ -69,7 +82,8 @@ class Study extends Serializable {
     this.dataEndPoint,
     this.dataFormat,
     this.publicKey,
-  }) : super() {
+  })
+      : super() {
     assert(id != null, 'Cannot create a Study without an id: id=null');
     samplingStrategy ??= SamplingSchemaType.NORMAL;
     dataFormat ??= NameSpace.CARP;

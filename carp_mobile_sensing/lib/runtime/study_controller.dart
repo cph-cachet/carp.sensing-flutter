@@ -43,9 +43,11 @@ class StudyController {
 
   PowerAwarenessState powerAwarenessState = NormalSamplingState.instance;
 
+  int _samplingSize = 0;
+
   /// The sampling size of this [study] in terms of number of [Datum] object
   /// that has been collected.
-  int samplingSize = 0;
+  int get samplingSize => _samplingSize;
 
   /// Create a new [StudyController] to control the [study].
   ///
@@ -79,7 +81,8 @@ class StudyController {
     this.privacySchemaName,
     this.transformer,
     this.debugLevel = DebugLevel.WARNING,
-  }) : super() {
+  })
+      : super() {
     assert(study != null);
     // set global debug level
     globalDebugLevel = debugLevel;
@@ -152,7 +155,7 @@ class StudyController {
       Measure(type: MeasureType(NameSpace.CARP, DataType.EXECUTOR)),
     );
     await enablePowerAwareness();
-    events.listen((datum) => samplingSize++);
+    events.listen((datum) => _samplingSize++);
   }
 
   final BatteryProbe _battery = BatteryProbe();

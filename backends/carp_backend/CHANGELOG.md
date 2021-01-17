@@ -1,3 +1,6 @@
+## 0.12.0
+* updated to carp_mobile_sensing v. 0.12.x
+
 ## 0.11.2
 * updated to carp_webservices v. 0.11.3
 * support for getting study id via application data from CARP server

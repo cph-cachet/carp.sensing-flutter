@@ -19,7 +19,8 @@ class DeviceDescriptor extends Serializable {
     this.roleName,
     this.isMasterDevice = false,
     this.collectingMeasureTypes,
-  }) : super();
+  })
+      : super();
 
   /// The unique device type.
   /// For example [SMARTPHONE_DEVICE_TYPE].

@@ -1,3 +1,6 @@
+## 0.12.0
+* updated to carp_mobile_sensing v. 0.12.x
+
 ## 0.11.3
 * update of `CarpApp` to handle study ID from the server (as opposed to from a local `Study` configuration)
 * refactor of the `getStudyInvitation` method

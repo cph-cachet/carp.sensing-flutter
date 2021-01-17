@@ -1,5 +1,6 @@
 ## 0.12.0
 * upgrade to `carp_mobile_sensing` v. 0.12.x
+* fix of small bug in activity probe.
 
 ## 0.11.0
 * upgrade to `carp_mobile_sensing` v. 0.11.x

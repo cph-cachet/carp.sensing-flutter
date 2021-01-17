@@ -40,8 +40,8 @@ dependency_overrides:
     path: ../../packages/carp_audio_package/
   carp_esense_package:
     path: ../../packages/carp_esense_package/
-  esense_flutter:
-    path: ../../../../flutter-plugins/packages/esense_flutter/
+#  esense_flutter:
+#    path: ../../../../flutter-plugins/packages/esense_flutter/
 
 dev_dependencies:
   flutter_test:

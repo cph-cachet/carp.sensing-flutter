@@ -10,10 +10,15 @@ part of context;
 /// Collects activity information from the underlying OS's activity recognition
 /// API. It generates an [ActivityDatum] every time an activity is detected.
 class ActivityProbe extends StreamProbe {
+  Stream<Datum> _stream;
   // Since this probe runs alongside location, which runs a foreground service
   // this probe does not need to run one.
-  Stream<Datum> get stream =>
-      ActivityRecognition.activityStream(runForegroundService: false)
+  Stream<Datum> get stream {
+    if (_stream == null) {
+      _stream = ActivityRecognition.activityStream(runForegroundService: false)
           .map((activity) => ActivityDatum.fromActivity(activity))
           .asBroadcastStream();
+    }
+    return _stream;
+  }
 }
