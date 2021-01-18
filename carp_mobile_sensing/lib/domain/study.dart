@@ -49,7 +49,7 @@ class Study extends Serializable {
   String publicKey;
 
   /// The devices this device needs to connect to.
-  List<DeviceDescriptor> connectedDevices = [];
+  List<Device> devices = [];
 
   /// The set of [Trigger]s which can trigger [Task](s) in this study.
   List<Trigger> triggers = [];

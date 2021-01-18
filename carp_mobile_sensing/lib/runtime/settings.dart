@@ -2,7 +2,6 @@ part of runtime;
 
 class _Settings {
   static const String USER_ID_KEY = 'user_id';
-  static const String INSTALL_DATE_KEY = 'install_date';
   static const String STUDY_START_KEY = 'study_start';
 
   SharedPreferences _preferences;

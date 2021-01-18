@@ -29,7 +29,7 @@ class DeviceRegistry {
     _study = study;
     //data.listen(onDatum, onError: onError, onDone: onDone);
 
-    _study.connectedDevices.forEach((device) async {
+    _study.devices.forEach((device) async {
       DeviceManager _manager = await create(device.deviceType);
       info('Creating device manager $_manager');
       await _manager.initialize(device, data);
@@ -85,20 +85,20 @@ abstract class DeviceManager {
     _eventController.add(newStatus);
   }
 
-  DeviceDescriptor _descriptor;
+  Device _device;
 
   /// The device description for this device as specified in the
   /// [Study] protocol.
-  DeviceDescriptor get descriptor => _descriptor;
+  Device get descriptor => _device;
 
   /// The runtime battery level of this device.
   int get batteryLevel;
 
-  /// Initialize the device manager by specifying the [DeviceDescriptor].
+  /// Initialize the device manager by specifying the [Device].
   /// and the stream of [Datum] events to handle.
-  Future initialize(DeviceDescriptor descriptor, Stream<Datum> data) async {
-    info('Initializing device manager, descriptor: $_descriptor');
-    _descriptor = descriptor;
+  Future initialize(Device device, Stream<Datum> data) async {
+    info('Initializing device manager, descriptor: $_device');
+    _device = device;
     // data.listen(onDatum, onError: onError, onDone: onDone);
 
     // addEvent(DataManagerEvent(DataManagerEventTypes.INITIALIZED));
@@ -114,7 +114,7 @@ abstract class DeviceManager {
 class SmartphoneDeviceManager extends DeviceManager {
   String get id => DeviceInfo().deviceID;
 
-  Future initialize(DeviceDescriptor descriptor, Stream<Datum> data) async {
+  Future initialize(Device descriptor, Stream<Datum> data) async {
     await super.initialize(descriptor, data);
     BatteryProbe()
       ..events.listen(
@@ -129,9 +129,9 @@ class SmartphoneDeviceManager extends DeviceManager {
   int _batteryLevel = 0;
   int get batteryLevel => _batteryLevel;
 
-  Future connect() {} // always connected to the phone
+  Future connect() => null; // always connected to the phone
 
-  Future disconnect() {} // cannot disconnect from the phone
+  Future disconnect() => null; // cannot disconnect from the phone
 }
 
 abstract class BTLEDeviceManager extends DeviceManager {
