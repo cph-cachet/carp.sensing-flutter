@@ -11,7 +11,6 @@ abstract class _ESenseProbe extends StreamProbe {
   bool connected = false;
   String deviceName;
   int samplingRate = 10;
-  Stream<Datum> _stream;
 
   void onInitialize(Measure measure) {
     assert(measure is ESenseMeasure);
@@ -52,34 +51,27 @@ abstract class _ESenseProbe extends StreamProbe {
 /// Collects eSense button pressed events. It generates an [ESenseButtonDatum]
 /// every time the button is pressed or released.
 class ESenseButtonProbe extends _ESenseProbe {
-  Stream<Datum> get stream {
-    //if (!ESenseManager().connected) ESenseManager().connect(deviceName);
-    return (ESenseManager().connected)
-        ? ESenseManager()
-            .eSenseEvents
-            .where((event) => event.runtimeType == ButtonEventChanged)
-            .map((event) => ESenseButtonDatum(
-                deviceName: deviceName,
-                pressed: (event as ButtonEventChanged).pressed))
-            .asBroadcastStream()
-        : null;
-  }
+  Stream<Datum> get stream => (ESenseManager().connected)
+      ? ESenseManager()
+          .eSenseEvents
+          .where((event) => event.runtimeType == ButtonEventChanged)
+          .map((event) => ESenseButtonDatum(
+              deviceName: deviceName,
+              pressed: (event as ButtonEventChanged).pressed))
+          .asBroadcastStream()
+      : null;
 }
 
 /// Collects eSense sensor events.
 /// It generates an [ESenseSensorDatum] for each sensor event.
 class ESenseSensorProbe extends _ESenseProbe {
-  Stream<Datum> get stream {
-    //if (!ESenseManager().connected) ESenseManager().connect(deviceName);
-    if (ESenseManager().connected) {
-      _stream = ESenseManager()
+  Stream<Datum> get stream => (ESenseManager().connected)
+      ? ESenseManager()
           .sensorEvents
           .map((event) => ESenseSensorDatum.fromSensorEvent(
               deviceName: deviceName, event: event))
-          .asBroadcastStream();
-    }
-    return _stream;
-  }
+          .asBroadcastStream()
+      : null;
 }
 
 class ESenseDeviceManager extends DeviceManager {
