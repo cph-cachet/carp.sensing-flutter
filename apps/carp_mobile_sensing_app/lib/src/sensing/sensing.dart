@@ -101,13 +101,13 @@ class Sensing implements StudyManager {
             ..description =
                 'This is a study for testing the coverage of sampling.'
             ..dataEndPoint = getDataEndpoint(DataEndPointTypes.FILE)
-            ..connectedDevices = [
-              DeviceDescriptor(
+            ..devices = [
+              Device(
                 deviceType: SmartphoneSamplingPackage.SMARTPHONE_DEVICE_TYPE,
                 name: 'Smartphone',
                 isMasterDevice: true,
               ),
-              DeviceDescriptor(
+              Device(
                 deviceType: ESenseSamplingPackage.ESENSE_DEVICE_TYPE,
                 name: 'eSense',
                 isMasterDevice: false,
@@ -171,7 +171,7 @@ class Sensing implements StudyManager {
                     namespace: NameSpace.CARP,
                     types: [
                       ESenseSamplingPackage.ESENSE_BUTTON,
-                      // ESenseSamplingPackage.ESENSE_SENSOR,
+                      ESenseSamplingPackage.ESENSE_SENSOR,
                     ],
                   ))
           //

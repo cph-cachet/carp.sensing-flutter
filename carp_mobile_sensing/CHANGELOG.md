@@ -1,3 +1,6 @@
+## 0.12.1
+* small refactor for `Device` model.
+
 ## 0.12.0
 * feature: support for handling devices as part of a study configuration.
 * refactor: rename of `Device` to `DeviceInfo`

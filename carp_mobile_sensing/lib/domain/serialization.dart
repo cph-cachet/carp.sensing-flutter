@@ -75,7 +75,7 @@ class FromJsonFactory {
     register(Study(id: 'ignored'));
     register(DataEndPoint());
     register(FileDataEndPoint());
-    register(DeviceDescriptor());
+    register(Device());
     register(Task());
     register(AutomaticTask());
     register(AppTask(type: 'ignored'));

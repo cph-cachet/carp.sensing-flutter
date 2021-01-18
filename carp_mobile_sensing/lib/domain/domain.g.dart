@@ -252,20 +252,20 @@ Map<String, dynamic> _$DataFormatToJson(DataFormat instance) {
   return val;
 }
 
-DeviceDescriptor _$DeviceDescriptorFromJson(Map<String, dynamic> json) {
-  return DeviceDescriptor()
-    ..$type = json[r'$type'] as String
-    ..deviceType = json['device_type'] as String
-    ..name = json['name'] as String
-    ..isMasterDevice = json['is_master_device'] as bool
-    ..roleName = json['role_name'] as String
-    ..collectingMeasureTypes = (json['collecting_measure_types'] as List)
+Device _$DeviceFromJson(Map<String, dynamic> json) {
+  return Device(
+    deviceType: json['device_type'] as String,
+    name: json['name'] as String,
+    roleName: json['role_name'] as String,
+    isMasterDevice: json['is_master_device'] as bool,
+    collectingMeasureTypes: (json['collecting_measure_types'] as List)
         ?.map((e) =>
             e == null ? null : MeasureType.fromJson(e as Map<String, dynamic>))
-        ?.toList();
+        ?.toList(),
+  )..$type = json[r'$type'] as String;
 }
 
-Map<String, dynamic> _$DeviceDescriptorToJson(DeviceDescriptor instance) {
+Map<String, dynamic> _$DeviceToJson(Device instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -430,10 +430,9 @@ Study _$StudyFromJson(Map<String, dynamic> json) {
     publicKey: json['public_key'] as String,
   )
     ..$type = json[r'$type'] as String
-    ..connectedDevices = (json['connected_devices'] as List)
-        ?.map((e) => e == null
-            ? null
-            : DeviceDescriptor.fromJson(e as Map<String, dynamic>))
+    ..devices = (json['devices'] as List)
+        ?.map((e) =>
+            e == null ? null : Device.fromJson(e as Map<String, dynamic>))
         ?.toList()
     ..triggers = (json['triggers'] as List)
         ?.map((e) =>
@@ -459,7 +458,7 @@ Map<String, dynamic> _$StudyToJson(Study instance) {
   writeNotNull('data_end_point', instance.dataEndPoint);
   writeNotNull('data_format', instance.dataFormat);
   writeNotNull('public_key', instance.publicKey);
-  writeNotNull('connected_devices', instance.connectedDevices);
+  writeNotNull('devices', instance.devices);
   writeNotNull('triggers', instance.triggers);
   return val;
 }

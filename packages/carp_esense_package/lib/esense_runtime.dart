@@ -89,8 +89,8 @@ class ESenseDeviceManager extends DeviceManager {
 
   String get id => ESenseManager().eSenseDeviceName;
 
-  Future initialize(DeviceDescriptor descriptor, Stream<Datum> data) async {
-    await super.initialize(descriptor, data);
+  Future initialize(Device device, Stream<Datum> data) async {
+    await super.initialize(device, data);
 
     // listen for connection events
     ESenseManager().connectionEvents.listen((event) {
@@ -151,10 +151,7 @@ class ESenseDeviceManager extends DeviceManager {
   /// which gives; `B = 1.19V - 3.91`.
   ///
   /// See e.g. https://en.wikipedia.org/wiki/State_of_charge#Voltage_method
-  int get batteryLevel {
-    print('voltage level: $_voltageLevel');
-    return ((1.19 * _voltageLevel - 3.91) * 100).toInt().round();
-  }
+  int get batteryLevel => ((1.19 * _voltageLevel - 3.91) * 100).toInt();
 
   Future connect() async => await ESenseManager().connect(id);
   Future disconnect() async => await ESenseManager().disconnect();
