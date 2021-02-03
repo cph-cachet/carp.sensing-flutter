@@ -568,14 +568,20 @@ class CarpService {
   }
 
   // ---------------------------------------------------------------------------------------------------------
-  // DEPLOYMENTS
+  // STUDY DEPLOYMENTS
   // ---------------------------------------------------------------------------------------------------------
 
-  /// The URL for the deployment RPC endpoint.
+  /// The URL for the deployment endpoint.
   ///
   /// {{PROTOCOL}}://{{SERVER_HOST}}:{{SERVER_PORT}}/api/deployments/all
   String get deploymentRPCEndpointUri =>
-      "${app.uri.toString()}/api/deployments/all";
+      "${app.uri.toString()}/api/deployment-service";
+
+  /// The URL for the participation endpoint.
+  ///
+  /// {{PROTOCOL}}://{{SERVER_HOST}}:{{SERVER_PORT}}/api/participation-service
+  String get participationEndpointUri =>
+      "${app.uri.toString()}/api/participation-service";
 
   /// Gets a [DeploymentReference] for a [studyDeploymentId].
   /// If the [studyDeploymentId] is not provided, the study deployment id
@@ -596,12 +602,12 @@ class CarpService {
     final String body =
         _encode(GetActiveParticipationInvitations(accountId).toJson());
 
-    //print('REQUEST: $deploymentRPCEndpointUri\n$body');
+    print('REQUEST: $participationEndpointUri\n$body');
     http.Response response = await httpr.post(
-        Uri.encodeFull(deploymentRPCEndpointUri),
+        Uri.encodeFull(participationEndpointUri),
         headers: headers,
         body: body);
-    //print('RESPONSE: ${response.statusCode}\n${response.body}');
+    print('RESPONSE: ${response.statusCode}\n${response.body}');
 
     if (response.statusCode == HttpStatus.ok) {
       List<dynamic> items = json.decode(response.body);

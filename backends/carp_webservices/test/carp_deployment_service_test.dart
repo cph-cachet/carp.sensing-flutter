@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_domain/carp_domain.dart';
 import 'package:carp_webservices/carp_service/carp_service.dart';
@@ -12,8 +11,6 @@ String _encode(Object object) =>
     const JsonEncoder.withIndent(' ').convert(object);
 
 void main() {
-  final String userId = "user@dtu.dk";
-
   CarpApp app;
   CarpUser user;
 
@@ -21,7 +18,7 @@ void main() {
   /// Runs once before all tests.
   setUpAll(() async {
     app = new CarpApp(
-      studyId: testStudyId,
+      // studyId: testStudyId,
       studyDeploymentId: testDeploymentId,
       name: "Test",
       uri: Uri.parse(uri),
@@ -56,7 +53,7 @@ void main() {
       List<ActiveParticipationInvitation> invitations =
           await CarpService().invitations();
       invitations.forEach((invitation) => print(invitation));
-      //assert(invitations.length > 0);
+      assert(invitations.length > 0);
     }, skip: false);
 
     test('- get deployment status', () async {

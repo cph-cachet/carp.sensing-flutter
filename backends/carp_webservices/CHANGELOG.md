@@ -1,3 +1,6 @@
+## 0.13.0
+* update to CARP core version 28
+
 ## 0.12.0
 * updated to carp_mobile_sensing v. 0.12.x
 
