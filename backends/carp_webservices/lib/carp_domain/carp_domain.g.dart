@@ -84,14 +84,17 @@ Map<String, dynamic> _$UnregisterDeviceToJson(UnregisterDevice instance) =>
 DeviceRegistration _$DeviceRegistrationFromJson(Map<String, dynamic> json) {
   return DeviceRegistration(
     json['deviceId'] as String,
-    json['registrationCreationDate'] as int,
+    json['registrationCreationDate'] == null
+        ? null
+        : DateTime.parse(json['registrationCreationDate'] as String),
   )..$type = json[r'$type'] as String;
 }
 
 Map<String, dynamic> _$DeviceRegistrationToJson(DeviceRegistration instance) =>
     <String, dynamic>{
       r'$type': instance.$type,
-      'registrationCreationDate': instance.registrationCreationDate,
+      'registrationCreationDate':
+          instance.registrationCreationDate?.toIso8601String(),
       'deviceId': instance.deviceId,
     };
 
@@ -115,7 +118,9 @@ DeploymentSuccessful _$DeploymentSuccessfulFromJson(Map<String, dynamic> json) {
   return DeploymentSuccessful(
     json['studyDeploymentId'] as String,
     json['masterDeviceRoleName'] as String,
-    json['deviceDeploymentLastUpdateDate'] as int,
+    json['deviceDeploymentLastUpdateDate'] == null
+        ? null
+        : DateTime.parse(json['deviceDeploymentLastUpdateDate'] as String),
   )..$type = json[r'$type'] as String;
 }
 
@@ -125,7 +130,8 @@ Map<String, dynamic> _$DeploymentSuccessfulToJson(
       r'$type': instance.$type,
       'studyDeploymentId': instance.studyDeploymentId,
       'masterDeviceRoleName': instance.masterDeviceRoleName,
-      'deviceDeploymentLastUpdateDate': instance.deviceDeploymentLastUpdateDate,
+      'deviceDeploymentLastUpdateDate':
+          instance.deviceDeploymentLastUpdateDate?.toIso8601String(),
     };
 
 ActiveParticipationInvitation _$ActiveParticipationInvitationFromJson(
@@ -255,7 +261,9 @@ MasterDeviceDeployment _$MasterDeviceDeploymentFromJson(
     ..triggeredTasks = (json['triggeredTasks'] as List)
         ?.map((e) => e as Map<String, dynamic>)
         ?.toList()
-    ..lastUpdateDate = json['lastUpdateDate'] as int;
+    ..lastUpdateDate = json['lastUpdateDate'] == null
+        ? null
+        : DateTime.parse(json['lastUpdateDate'] as String);
 }
 
 Map<String, dynamic> _$MasterDeviceDeploymentToJson(
@@ -275,7 +283,7 @@ Map<String, dynamic> _$MasterDeviceDeploymentToJson(
   writeNotNull('tasks', instance.tasks);
   writeNotNull('triggers', instance.triggers);
   writeNotNull('triggeredTasks', instance.triggeredTasks);
-  writeNotNull('lastUpdateDate', instance.lastUpdateDate);
+  writeNotNull('lastUpdateDate', instance.lastUpdateDate?.toIso8601String());
   return val;
 }
 

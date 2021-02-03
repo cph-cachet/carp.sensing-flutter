@@ -36,9 +36,6 @@ class _HomePageState extends State<HomePage> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text('CARP Authentication Example'),
-      // ),
       body: Center(
           child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -49,9 +46,9 @@ class _HomePageState extends State<HomePage> {
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
             child: TextButton.icon(
               onPressed: () => bloc.authenticate(
-                    context,
-                    username: 'sys1admin1DK@cachet.dk',
-                  ),
+                context,
+                username: 'username@cachet.dk',
+              ),
               icon: Icon(Icons.login),
               label: Text(
                 'LOGIN',

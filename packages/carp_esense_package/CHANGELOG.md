@@ -1,3 +1,6 @@
+## 0.12.2
+* fix bug in sensor probe - did not restart sensing on reconnect.
+
 ## 0.12.1
 * upgrade to `carp_mobile_sensing` v. 0.12.1
 

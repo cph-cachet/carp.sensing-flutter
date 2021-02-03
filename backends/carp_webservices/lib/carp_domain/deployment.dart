@@ -39,7 +39,7 @@ class DeploymentServiceRequest extends Serializable {
 class GetActiveParticipationInvitations extends DeploymentServiceRequest {
   GetActiveParticipationInvitations(this.accountId) : super('') {
     $type =
-        'dk.cachet.carp.deployment.infrastructure.DeploymentServiceRequest.GetActiveParticipationInvitations';
+        'dk.cachet.carp.deployment.infrastructure.ParticipationServiceRequest.GetActiveParticipationInvitations';
   }
 
   @JsonKey(ignore: true)
@@ -133,11 +133,11 @@ class DeviceRegistration extends Serializable {
   ///    If not specified, the time of creation will be used.
   DeviceRegistration([this.deviceId, this.registrationCreationDate]) : super() {
     $type = 'dk.cachet.carp.protocols.domain.devices.DefaultDeviceRegistration';
-    registrationCreationDate ??= DateTime.now().millisecondsSinceEpoch;
+    registrationCreationDate ??= DateTime.now().toUtc();
   }
 
-  /// The registration time in milliseconds since epoch.
-  int registrationCreationDate;
+  /// The registration time in zulu time.
+  DateTime registrationCreationDate;
 
   /// A unique id for this device.
   String deviceId;
@@ -187,8 +187,8 @@ class DeploymentSuccessful extends GetDeviceDeploymentFor {
         'dk.cachet.carp.deployment.infrastructure.DeploymentServiceRequest.DeploymentSuccessful';
   }
 
-  /// Timestamp when this was last updated.
-  int deviceDeploymentLastUpdateDate;
+  /// Timestamp when this was last updated in UTC
+  DateTime deviceDeploymentLastUpdateDate;
 
   Function get fromJsonFunction => _$DeploymentSuccessfulFromJson;
   factory DeploymentSuccessful.fromJson(Map<String, dynamic> json) =>
@@ -340,7 +340,7 @@ class MasterDeviceDeployment {
   /// The time when this device deployment was last updated.
   /// This corresponds to the most recent device registration as part of this
   /// device deployment.
-  int lastUpdateDate;
+  DateTime lastUpdateDate;
 
   factory MasterDeviceDeployment.fromJson(Map<String, dynamic> json) =>
       _$MasterDeviceDeploymentFromJson(json);
@@ -631,10 +631,18 @@ void registerFromJsonFunctions() {
   FromJsonFactory().register(DeviceDeploymentStatus(),
       type:
           'dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.NeedsRedeployment');
+
+  // different types of device descriptors
   FromJsonFactory().register(DeviceDescriptor(),
       type: 'dk.cachet.carp.protocols.domain.devices.Smartphone');
-  // FromJsonFactory().register(MasterDeviceDeployment(),
-  //     type: 'dk.cachet.carp.protocols.domain.MasterDeviceDeployment');
+  FromJsonFactory().register(DeviceDescriptor(),
+      type:
+          'dk.cachet.carp.protocols.infrastructure.test.StubMasterDeviceDescriptor');
+  FromJsonFactory().register(DeviceDescriptor(),
+      type:
+          'dk.cachet.carp.protocols.infrastructure.test.StubDeviceDescriptor');
+  //  FromJsonFactory().register(MasterDeviceDeployment(),
+  //      type: 'dk.cachet.carp.protocols.domain.MasterDeviceDeployment');
   FromJsonFactory().register(DeviceRegistration(),
       type: 'dk.cachet.carp.protocols.domain.devices.DeviceRegistration');
   FromJsonFactory().register(DeviceRegistration(),
