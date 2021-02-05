@@ -1,3 +1,6 @@
+## 0.13.0
+* updated to carp_webservices v. 0.13.x
+
 ## 0.12.0
 * updated to carp_mobile_sensing v. 0.12.x
 

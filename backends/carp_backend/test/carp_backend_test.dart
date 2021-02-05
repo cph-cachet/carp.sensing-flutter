@@ -13,8 +13,6 @@ String _encode(Object object) =>
     const JsonEncoder.withIndent(' ').convert(object);
 
 void main() {
-  //final String userId = "user@dtu.dk";
-
   CarpApp app;
   CarpUser user;
   CarpStudyManager manager = CarpStudyManager();
@@ -100,6 +98,7 @@ void main() {
           CarpService().deployment(testDeploymentId);
       StudyDeploymentStatus status_1 = await reference.getStatus();
       MasterDeviceDeployment deployment = await reference.get();
+      print(deployment);
       StudyDeploymentStatus status_2 = await reference.success();
       print(status_2);
       expect(status_1.studyDeploymentId, status_2.studyDeploymentId);
