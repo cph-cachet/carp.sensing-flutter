@@ -19,7 +19,7 @@ part of carp_backend;
 ///  3. Register this device as part of this deployment.
 ///  4. Get the study deployment configuration.
 class CarpStudyManager implements StudyManager {
-  Future initialize() {}
+  Future initialize() async {}
 
   /// Get a CAMS [Study] from the CARP backend.
   ///
