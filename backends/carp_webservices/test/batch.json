@@ -1,272 +1,375 @@
 [
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:08:54.461836Z","data_format":{"namespace":"carp","name":"device"}},"body":{"id":"c2573040-23ec-11eb-9d48-3d587b0bc1d5","timestamp":"2020-11-11T07:08:54.461836Z","platform":"Android","device_id":"QP1A.190711.020","hardware":"exynos9820","device_name":"beyond0","device_manufacturer":"samsung","device_model":"SM-G970F","operating_system":"REL"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:08:54.497900Z","data_format":{"namespace":"carp","name":"connectivity"}},"body":{"id":"c25bc420-23ec-11eb-9cda-031b45d6176a","timestamp":"2020-11-11T07:08:54.497900Z","connectivity_status":"wifi"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:08:54.543193Z","data_format":{"namespace":"carp","name":"activity"}},"body":{"id":"c262a1f0-23ec-11eb-87c2-8d1d82d96300","timestamp":"2020-11-11T07:08:54.543193Z","confidence":100,"type":"STILL"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:08:54.596717Z","data_format":{"namespace":"carp","name":"location"}},"body":{"id":"c26adf50-23ec-11eb-9980-cf711b586ffa","timestamp":"2020-11-11T07:08:54.596717Z","time":"2020-11-11T07:08:54.527Z","latitude":55.7943494,"longitude":12.4462944,"altitude":75.4000015258789,"accuracy":20.0,"speed":0.007781201042234898,"speed_accuracy":0.0,"heading":269.30877685546875}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:08:54.884231Z","data_format":{"namespace":"carp","name":"weather"}},"body":{"id":"c296aa40-23ec-11eb-b9bb-177598f260df","timestamp":"2020-11-11T07:08:54.884231Z","country":"DK","area_name":"Virum","weather_main":"Clouds","weather_description":"overcast clouds","date":"2020-11-11T08:08:55.000","sunrise":"2020-11-11T07:38:10.000","sunset":"2020-11-11T16:10:30.000","latitude":55.79,"longitude":12.45,"pressure":1028.0,"wind_speed":3.36,"wind_degree":159.0,"humidity":89.0,"cloudiness":100.0,"rain_last_hour":0.0,"rain_last3_hours":0.0,"snow_last_hour":0.0,"snow_last3_hours":0.0,"temperature":6.4500000000000455,"temp_min":6.110000000000014,"temp_max":6.670000000000016}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:08:56.669860Z","data_format":{"namespace":"carp","name":"air_quality"}},"body":{"id":"c3a72fe0-23ec-11eb-8b10-85432edc1eee","timestamp":"2020-11-11T07:08:56.669860Z","air_quality_index":16,"source":"The Department of Environmental Science at Aarhus University","place":"H.C. Ørsted Institutet, Copenhagen, Denmark","latitude":55.7007621,"longitude":12.5613124,"air_quality_level":"GOOD"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:09:06.459244Z","data_format":{"namespace":"carp","name":"light"}},"body":{"id":"c97cdeb0-23ec-11eb-b42f-59812d98e110","timestamp":"2020-11-11T07:09:06.459244Z","mean_lux":138.5,"std_lux":0.5,"min_lux":138,"max_lux":139}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:09:16.458602Z","data_format":{"namespace":"carp","name":"light"}},"body":{"id":"cf72bfb0-23ec-11eb-acec-5317f899b573","timestamp":"2020-11-11T07:09:16.458602Z","mean_lux":138.1764705882353,"std_lux":0.7058823529411766,"min_lux":137,"max_lux":139}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:09:26.461087Z","data_format":{"namespace":"carp","name":"light"}},"body":{"id":"d568eed0-23ec-11eb-b573-83cee375cd01","timestamp":"2020-11-11T07:09:26.461087Z","mean_lux":137.36363636363637,"std_lux":0.6428243465332251,"min_lux":136,"max_lux":138}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:09:36.460530Z","data_format":{"namespace":"carp","name":"light"}},"body":{"id":"db5ea8c0-23ec-11eb-88f9-c9eb1ce58ade","timestamp":"2020-11-11T07:09:36.460530Z","mean_lux":137.2,"std_lux":0.7483314773547883,"min_lux":136,"max_lux":138}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:09:46.455358Z","data_format":{"namespace":"carp","name":"light"}},"body":{"id":"e153c670-23ec-11eb-9ad8-518679c0ca07","timestamp":"2020-11-11T07:09:46.455358Z","mean_lux":137.11111111111111,"std_lux":0.8089010988089466,"min_lux":136,"max_lux":139}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:09:54.468836Z","data_format":{"namespace":"carp","name":"memory"}},"body":{"id":"e61a9d50-23ec-11eb-bd61-d99e1fc48be1","timestamp":"2020-11-11T07:09:54.468836Z","free_physical_memory":209620992,"free_virtual_memory":2011332608}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:09:54.620651Z","data_format":{"namespace":"carp","name":"device"}},"body":{"id":"e631ced0-23ec-11eb-8760-170f1d75cd61","timestamp":"2020-11-11T07:09:54.620651Z","platform":"Android","device_id":"QP1A.190711.020","hardware":"exynos9820","device_name":"beyond0","device_manufacturer":"samsung","device_model":"SM-G970F","operating_system":"REL"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:09:54.626811Z","data_format":{"namespace":"carp","name":"wifi"}},"body":{"id":"e632b930-23ec-11eb-9a49-5d778a62b11f","timestamp":"2020-11-11T07:09:54.626811Z","ssid":"wifi.bardram.net","bssid":"c4:41:1e:73:81:62"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:09:54.674446Z","data_format":{"namespace":"carp","name":"location"}},"body":{"id":"e63a0c30-23ec-11eb-961d-0d2c1c58494a","timestamp":"2020-11-11T07:09:54.674446Z","time":"2020-11-11T07:09:54.659Z","latitude":55.7943495,"longitude":12.4462948,"altitude":75.4000015258789,"accuracy":20.0,"speed":0.0009999487083405256,"speed_accuracy":0.0,"heading":317.71240234375}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:09:56.464923Z","data_format":{"namespace":"carp","name":"light"}},"body":{"id":"e74b2e10-23ec-11eb-95b6-cd609e1e2705","timestamp":"2020-11-11T07:09:56.464923Z","mean_lux":136.88888888888889,"std_lux":0.737027731190089,"min_lux":136,"max_lux":138}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:09:59.609130Z","data_format":{"namespace":"carp","name":"noise"}},"body":{"id":"e92aea90-23ec-11eb-8cb4-dbf7f761883a","timestamp":"2020-11-11T07:09:59.609130Z","mean_decibel":25.536525207484775,"std_decibel":6.3228132674932365,"min_decibel":20.82811877952488,"max_decibel":78.86124729652852}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:10:06.452736Z","data_format":{"namespace":"carp","name":"light"}},"body":{"id":"ed3f3a50-23ec-11eb-be12-69bcb4fed724","timestamp":"2020-11-11T07:10:06.452736Z","mean_lux":88.11111111111111,"std_lux":65.95527852592315,"min_lux":13,"max_lux":210}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:10:16.455568Z","data_format":{"namespace":"carp","name":"light"}},"body":{"id":"f3356970-23ec-11eb-a5fb-d1956fc83d5c","timestamp":"2020-11-11T07:10:16.455568Z","mean_lux":18.958333333333332,"std_lux":1.670308521068954,"min_lux":16,"max_lux":22}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:10:19.461626Z","data_format":{"namespace":"carp","name":"activity"}},"body":{"id":"f5001750-23ec-11eb-bc0c-0f63ea9c13ed","timestamp":"2020-11-11T07:10:19.461626Z","confidence":100,"type":"STILL"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:10:26.454988Z","data_format":{"namespace":"carp","name":"light"}},"body":{"id":"f92b4a70-23ec-11eb-9e83-2d198c989f14","timestamp":"2020-11-11T07:10:26.454988Z","mean_lux":16.77777777777778,"std_lux":1.547598697464902,"min_lux":14,"max_lux":19}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:10:36.454088Z","data_format":{"namespace":"carp","name":"light"}},"body":{"id":"ff210460-23ec-11eb-b52a-5f4c62cd057a","timestamp":"2020-11-11T07:10:36.454088Z","mean_lux":19.0,"std_lux":0.0,"min_lux":19,"max_lux":19}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:10:46.458029Z","data_format":{"namespace":"carp","name":"light"}},"body":{"id":"051781a0-23ed-11eb-99ad-dbc4e292dafd","timestamp":"2020-11-11T07:10:46.458029Z","mean_lux":18.333333333333332,"std_lux":0.4714045207910317,"min_lux":18,"max_lux":19}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:10:54.453791Z","data_format":{"namespace":"carp","name":"memory"}},"body":{"id":"09dbc070-23ed-11eb-87cf-a5da99c411d9","timestamp":"2020-11-11T07:10:54.453791Z","free_physical_memory":202747904,"free_virtual_memory":2004267008}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:10:54.607698Z","data_format":{"namespace":"carp","name":"device"}},"body":{"id":"09f31900-23ed-11eb-b660-734fabe511fb","timestamp":"2020-11-11T07:10:54.607698Z","platform":"Android","device_id":"QP1A.190711.020","hardware":"exynos9820","device_name":"beyond0","device_manufacturer":"samsung","device_model":"SM-G970F","operating_system":"REL"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:10:54.614582Z","data_format":{"namespace":"carp","name":"wifi"}},"body":{"id":"09f40360-23ed-11eb-8289-9f6cb863f105","timestamp":"2020-11-11T07:10:54.614582Z","ssid":"wifi.bardram.net","bssid":"c4:41:1e:73:81:62"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:10:54.865799Z","data_format":{"namespace":"carp","name":"location"}},"body":{"id":"0a1a7720-23ed-11eb-b0bb-5557a99305ed","timestamp":"2020-11-11T07:10:54.865799Z","time":"2020-11-11T07:10:54.811Z","latitude":55.7943563,"longitude":12.4461519,"altitude":75.4000015258789,"accuracy":8.211999893188477,"speed":0.018146708607673645,"speed_accuracy":-1.0,"heading":30.070262908935547}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:10:56.450808Z","data_format":{"namespace":"carp","name":"light"}},"body":{"id":"0b0c5130-23ed-11eb-bc6c-03668422d627","timestamp":"2020-11-11T07:10:56.450808Z","mean_lux":17.5,"std_lux":0.5,"min_lux":17,"max_lux":18}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:10:59.627542Z","data_format":{"namespace":"carp","name":"noise"}},"body":{"id":"0cf0efb0-23ed-11eb-ac92-176061f3684c","timestamp":"2020-11-11T07:10:59.627542Z","mean_decibel":28.20878000515843,"std_decibel":9.187833259623572,"min_decibel":20.82811877952488,"max_decibel":84.57083862350403}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:11:06.455184Z","data_format":{"namespace":"carp","name":"light"}},"body":{"id":"1102ce70-23ed-11eb-92b7-85d9d96a4ff3","timestamp":"2020-11-11T07:11:06.455184Z","mean_lux":17.4,"std_lux":0.4898979485566356,"min_lux":17,"max_lux":18}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:11:16.467420Z","data_format":{"namespace":"carp","name":"light"}},"body":{"id":"16fa8430-23ed-11eb-ae81-6b9c0d443071","timestamp":"2020-11-11T07:11:16.467420Z","mean_lux":16.77777777777778,"std_lux":0.9162456945817022,"min_lux":15,"max_lux":18}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:11:26.452616Z","data_format":{"namespace":"carp","name":"light"}},"body":{"id":"1cee1b40-23ed-11eb-a2b3-21cb1fbaed87","timestamp":"2020-11-11T07:11:26.452616Z","mean_lux":16.571428571428573,"std_lux":0.4948716593053935,"min_lux":16,"max_lux":17}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:11:31.943555Z","data_format":{"namespace":"carp","name":"activity"}},"body":{"id":"2033f770-23ed-11eb-b1a0-7182b83be410","timestamp":"2020-11-11T07:11:31.943555Z","confidence":100,"type":"STILL"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:11:36.488173Z","data_format":{"namespace":"carp","name":"light"}},"body":{"id":"22e97a80-23ed-11eb-8649-cb738660a36d","timestamp":"2020-11-11T07:11:36.488173Z","mean_lux":18.333333333333332,"std_lux":1.0274023338281628,"min_lux":17,"max_lux":20}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:11:42.497707Z","data_format":{"namespace":"carp","name":"activity"}},"body":{"id":"267e6110-23ed-11eb-af65-cb81de41617d","timestamp":"2020-11-11T07:11:42.497707Z","confidence":100,"type":"STILL"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:11:46.470862Z","data_format":{"namespace":"carp","name":"light"}},"body":{"id":"28dcc370-23ed-11eb-b66f-6b38e26580d1","timestamp":"2020-11-11T07:11:46.470862Z","mean_lux":17.771428571428572,"std_lux":8.918954821168276,"min_lux":0,"max_lux":42}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:11:54.452298Z","data_format":{"namespace":"carp","name":"memory"}},"body":{"id":"2d9e9140-23ed-11eb-b270-e74232776741","timestamp":"2020-11-11T07:11:54.452298Z","free_physical_memory":400224256,"free_virtual_memory":2248003584}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:11:54.656158Z","data_format":{"namespace":"carp","name":"device"}},"body":{"id":"2dbdb200-23ed-11eb-91af-a5d657562299","timestamp":"2020-11-11T07:11:54.656158Z","platform":"Android","device_id":"QP1A.190711.020","hardware":"exynos9820","device_name":"beyond0","device_manufacturer":"samsung","device_model":"SM-G970F","operating_system":"REL"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:11:54.663711Z","data_format":{"namespace":"carp","name":"wifi"}},"body":{"id":"2dbec370-23ed-11eb-9b1f-41df86b98542","timestamp":"2020-11-11T07:11:54.663711Z","ssid":"wifi.bardram.net","bssid":"c4:41:1e:73:81:62"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:11:55.028055Z","data_format":{"namespace":"carp","name":"location"}},"body":{"id":"2df67540-23ed-11eb-b1d2-1bc64d3d719d","timestamp":"2020-11-11T07:11:55.028055Z","time":"2020-11-11T07:11:56.000Z","latitude":55.7943632,"longitude":12.4462355,"altitude":75.4000015258789,"accuracy":12.409000396728516,"speed":0.005936542991548777,"speed_accuracy":0.0,"heading":97.68549346923828}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:11:59.665089Z","data_format":{"namespace":"carp","name":"noise"}},"body":{"id":"30ba0210-23ed-11eb-97c1-f5f042a7b6b8","timestamp":"2020-11-11T07:11:59.665089Z","mean_decibel":33.19740533815629,"std_decibel":15.561224159907603,"min_decibel":20.82811877952488,"max_decibel":89.34087778567732}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:12:03.407270Z","data_format":{"namespace":"carp","name":"activity"}},"body":{"id":"32f4fdf0-23ed-11eb-9e17-3d76de833efb","timestamp":"2020-11-11T07:12:03.407270Z","confidence":100,"type":"TILTING"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:12:03.447898Z","data_format":{"namespace":"carp","name":"activity"}},"body":{"id":"32fb3f80-23ed-11eb-a73d-03ace9042107","timestamp":"2020-11-11T07:12:03.447898Z","confidence":40,"type":"UNKNOWN"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:12:17.463555Z","data_format":{"namespace":"carp","name":"activity"}},"body":{"id":"3b55c470-23ed-11eb-956f-c7248e477650","timestamp":"2020-11-11T07:12:17.463555Z","confidence":40,"type":"UNKNOWN"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:12:31.664773Z","data_format":{"namespace":"carp","name":"activity"}},"body":{"id":"43ccab00-23ed-11eb-861a-ed5e45d6dba6","timestamp":"2020-11-11T07:12:31.664773Z","confidence":40,"type":"UNKNOWN"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:12:44.457763Z","data_format":{"namespace":"carp","name":"activity"}},"body":{"id":"4b6cb990-23ed-11eb-b71a-4f9ef09f68c4","timestamp":"2020-11-11T07:12:44.457763Z","confidence":40,"type":"UNKNOWN"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:12:54.451961Z","data_format":{"namespace":"carp","name":"memory"}},"body":{"id":"5161d740-23ed-11eb-8def-4fb45b1e66e1","timestamp":"2020-11-11T07:12:54.451961Z","free_physical_memory":425869312,"free_virtual_memory":2277941248}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:12:54.640482Z","data_format":{"namespace":"carp","name":"device"}},"body":{"id":"517e8700-23ed-11eb-9ce3-e1f86c8a06b0","timestamp":"2020-11-11T07:12:54.640482Z","platform":"Android","device_id":"QP1A.190711.020","hardware":"exynos9820","device_name":"beyond0","device_manufacturer":"samsung","device_model":"SM-G970F","operating_system":"REL"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:12:54.647465Z","data_format":{"namespace":"carp","name":"wifi"}},"body":{"id":"517f9870-23ed-11eb-af14-21f0720e6587","timestamp":"2020-11-11T07:12:54.647465Z","ssid":"wifi.bardram.net","bssid":"c4:41:1e:73:81:62"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:12:55.033543Z","data_format":{"namespace":"carp","name":"location"}},"body":{"id":"51ba7e90-23ed-11eb-95d8-256901101d77","timestamp":"2020-11-11T07:12:55.033543Z","time":"2020-11-11T07:12:56.000Z","latitude":55.7943589,"longitude":12.4462654,"altitude":75.4000015258789,"accuracy":10.144000053405762,"speed":0.13935628533363342,"speed_accuracy":0.0,"heading":71.51652526855469}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:12:56.457654Z","data_format":{"namespace":"carp","name":"activity"}},"body":{"id":"5293c790-23ed-11eb-a217-3984cb65bebe","timestamp":"2020-11-11T07:12:56.457654Z","confidence":40,"type":"UNKNOWN"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:12:59.652229Z","data_format":{"namespace":"carp","name":"noise"}},"body":{"id":"547b4c40-23ed-11eb-929f-8da584a75763","timestamp":"2020-11-11T07:12:59.652229Z","mean_decibel":40.38895173736002,"std_decibel":19.207121920082244,"min_decibel":20.82811877952488,"max_decibel":89.51339834000983}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:13:08.442917Z","data_format":{"namespace":"carp","name":"activity"}},"body":{"id":"59b8b2b0-23ed-11eb-826c-43063f235a57","timestamp":"2020-11-11T07:13:08.442917Z","confidence":40,"type":"UNKNOWN"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:13:20.051462Z","data_format":{"namespace":"carp","name":"activity"}},"body":{"id":"60a3f030-23ed-11eb-9074-b73b8c1b9aae","timestamp":"2020-11-11T07:13:20.051462Z","confidence":40,"type":"UNKNOWN"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:13:31.429910Z","data_format":{"namespace":"carp","name":"activity"}},"body":{"id":"676c3c60-23ed-11eb-a558-4b30b199d99e","timestamp":"2020-11-11T07:13:31.429910Z","confidence":40,"type":"UNKNOWN"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:13:39.407232Z","data_format":{"namespace":"carp","name":"activity"}},"body":{"id":"6c2d6df0-23ed-11eb-9de1-812470f6ad4c","timestamp":"2020-11-11T07:13:39.407232Z","confidence":100,"type":"STILL"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:13:50.147127Z","data_format":{"namespace":"carp","name":"activity"}},"body":{"id":"72943930-23ed-11eb-92a7-49c947c8a8c4","timestamp":"2020-11-11T07:13:50.147127Z","confidence":40,"type":"UNKNOWN"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:13:54.452662Z","data_format":{"namespace":"carp","name":"memory"}},"body":{"id":"75251d40-23ed-11eb-9cbd-0b54bf9f5b11","timestamp":"2020-11-11T07:13:54.452662Z","free_physical_memory":385286144,"free_virtual_memory":2238382080}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:13:54.607069Z","data_format":{"namespace":"carp","name":"device"}},"body":{"id":"753cc3f0-23ed-11eb-b038-4da7a15c8b2a","timestamp":"2020-11-11T07:13:54.607069Z","platform":"Android","device_id":"QP1A.190711.020","hardware":"exynos9820","device_name":"beyond0","device_manufacturer":"samsung","device_model":"SM-G970F","operating_system":"REL"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:13:54.613210Z","data_format":{"namespace":"carp","name":"wifi"}},"body":{"id":"753dae50-23ed-11eb-9131-43460869ac6e","timestamp":"2020-11-11T07:13:54.613210Z","ssid":"wifi.bardram.net","bssid":"c4:41:1e:73:81:62"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:13:54.971327Z","data_format":{"namespace":"carp","name":"location"}},"body":{"id":"75744eb0-23ed-11eb-877f-31319d73a2e1","timestamp":"2020-11-11T07:13:54.971327Z","time":"2020-11-11T07:13:54.913Z","latitude":55.7943369,"longitude":12.4463901,"altitude":75.4000015258789,"accuracy":9.767999649047852,"speed":0.5713986158370972,"speed_accuracy":0.0,"heading":114.98251342773438}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:13:55.149998Z","data_format":{"namespace":"carp","name":"weather"}},"body":{"id":"758f9ee0-23ed-11eb-8d1e-57803e1ccadc","timestamp":"2020-11-11T07:13:55.149998Z","country":"DK","area_name":"Virum","weather_main":"Clouds","weather_description":"overcast clouds","date":"2020-11-11T08:08:55.000","sunrise":"2020-11-11T07:38:10.000","sunset":"2020-11-11T16:10:30.000","latitude":55.79,"longitude":12.45,"pressure":1028.0,"wind_speed":3.36,"wind_degree":159.0,"humidity":89.0,"cloudiness":100.0,"rain_last_hour":0.0,"rain_last3_hours":0.0,"snow_last_hour":0.0,"snow_last3_hours":0.0,"temperature":6.4500000000000455,"temp_min":6.110000000000014,"temp_max":6.670000000000016}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:13:59.614778Z","data_format":{"namespace":"carp","name":"noise"}},"body":{"id":"7838ecf0-23ed-11eb-bb71-7122c95359ed","timestamp":"2020-11-11T07:13:59.614778Z","mean_decibel":45.657913203122845,"std_decibel":20.624018566942578,"min_decibel":20.82811877952488,"max_decibel":89.69679245804925}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:14:00.384836Z","data_format":{"namespace":"carp","name":"activity"}},"body":{"id":"78ae6b10-23ed-11eb-ade3-17a73c0c7b38","timestamp":"2020-11-11T07:14:00.384836Z","confidence":40,"type":"UNKNOWN"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:14:04.240831Z","data_format":{"namespace":"carp","name":"air_quality"}},"body":{"id":"7afacc10-23ed-11eb-8531-1fd0b2ca9edb","timestamp":"2020-11-11T07:14:04.240831Z","air_quality_index":16,"source":"The Department of Environmental Science at Aarhus University","place":"H.C. Ørsted Institutet, Copenhagen, Denmark","latitude":55.7007621,"longitude":12.5613124,"air_quality_level":"GOOD"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:14:12.090792Z","data_format":{"namespace":"carp","name":"activity"}},"body":{"id":"7fa89cb0-23ed-11eb-8326-49d160f28c2d","timestamp":"2020-11-11T07:14:12.090792Z","confidence":40,"type":"UNKNOWN"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:14:54.452399Z","data_format":{"namespace":"carp","name":"memory"}},"body":{"id":"98e86340-23ed-11eb-bdfe-efa066e2b87a","timestamp":"2020-11-11T07:14:54.452399Z","free_physical_memory":432046080,"free_virtual_memory":2286374912}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:14:54.644265Z","data_format":{"namespace":"carp","name":"device"}},"body":{"id":"9905af40-23ed-11eb-94ce-755d24fbdcfe","timestamp":"2020-11-11T07:14:54.644265Z","platform":"Android","device_id":"QP1A.190711.020","hardware":"exynos9820","device_name":"beyond0","device_manufacturer":"samsung","device_model":"SM-G970F","operating_system":"REL"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:14:54.650660Z","data_format":{"namespace":"carp","name":"wifi"}},"body":{"id":"990699a0-23ed-11eb-bad0-c35b2ff3bea3","timestamp":"2020-11-11T07:14:54.650660Z","ssid":"wifi.bardram.net","bssid":"c4:41:1e:73:81:64"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:14:56.204537Z","data_format":{"namespace":"carp","name":"location"}},"body":{"id":"99f3b8c0-23ed-11eb-a070-b92c6a64062c","timestamp":"2020-11-11T07:14:56.204537Z","time":"2020-11-11T07:14:56.121Z","latitude":55.7943325,"longitude":12.4463972,"altitude":75.4000015258789,"accuracy":10.354999542236328,"speed":0.12525643408298492,"speed_accuracy":0.0,"heading":169.0405731201172}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:14:59.651620Z","data_format":{"namespace":"carp","name":"noise"}},"body":{"id":"9c01b130-23ed-11eb-8f9e-2f4d37af240d","timestamp":"2020-11-11T07:14:59.651620Z","mean_decibel":48.602783674869926,"std_decibel":20.387148330589294,"min_decibel":20.82811877952488,"max_decibel":90.11736775774033}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:15:54.451663Z","data_format":{"namespace":"carp","name":"memory"}},"body":{"id":"bcab8230-23ed-11eb-b068-536c98b2239a","timestamp":"2020-11-11T07:15:54.451663Z","free_physical_memory":425893888,"free_virtual_memory":2280628224}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:15:54.639417Z","data_format":{"namespace":"carp","name":"device"}},"body":{"id":"bcc831f0-23ed-11eb-9e0d-b145c0cd2a0d","timestamp":"2020-11-11T07:15:54.639417Z","platform":"Android","device_id":"QP1A.190711.020","hardware":"exynos9820","device_name":"beyond0","device_manufacturer":"samsung","device_model":"SM-G970F","operating_system":"REL"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:15:54.644908Z","data_format":{"namespace":"carp","name":"wifi"}},"body":{"id":"bcc91c50-23ed-11eb-8011-6d1a896cc08f","timestamp":"2020-11-11T07:15:54.644908Z","ssid":"wifi.bardram.net","bssid":"c4:41:1e:73:81:64"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:15:55.020916Z","data_format":{"namespace":"carp","name":"location"}},"body":{"id":"bd027bd0-23ed-11eb-b48a-41bb406dc81f","timestamp":"2020-11-11T07:15:55.020916Z","time":"2020-11-11T07:15:55.999Z","latitude":55.7942796,"longitude":12.4461191,"altitude":75.4000015258789,"accuracy":12.0,"speed":0.004584070760756731,"speed_accuracy":0.49109068512916565,"heading":278.718505859375}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:15:59.652193Z","data_format":{"namespace":"carp","name":"noise"}},"body":{"id":"bfc51e40-23ed-11eb-9581-bdd3d30e98d3","timestamp":"2020-11-11T07:15:59.652193Z","mean_decibel":49.74609048439898,"std_decibel":19.55219521076861,"min_decibel":20.82811877952488,"max_decibel":90.11736775774033}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:16:54.467806Z","data_format":{"namespace":"carp","name":"memory"}},"body":{"id":"e0716040-23ed-11eb-a380-cfd148469868","timestamp":"2020-11-11T07:16:54.467806Z","free_physical_memory":441606144,"free_virtual_memory":2296741888}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:16:54.577778Z","data_format":{"namespace":"carp","name":"device"}},"body":{"id":"e0822920-23ed-11eb-8d78-c79e366f45b4","timestamp":"2020-11-11T07:16:54.577778Z","platform":"Android","device_id":"QP1A.190711.020","hardware":"exynos9820","device_name":"beyond0","device_manufacturer":"samsung","device_model":"SM-G970F","operating_system":"REL"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:16:54.582229Z","data_format":{"namespace":"carp","name":"wifi"}},"body":{"id":"e082c560-23ed-11eb-b471-07125a97afea","timestamp":"2020-11-11T07:16:54.582229Z","ssid":"wifi.bardram.net","bssid":"c4:41:1e:73:81:64"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:16:55.048235Z","data_format":{"namespace":"carp","name":"location"}},"body":{"id":"e0c9e080-23ed-11eb-9968-8135bb7662f5","timestamp":"2020-11-11T07:16:55.048235Z","time":"2020-11-11T07:16:55.999Z","latitude":55.7942839,"longitude":12.4461667,"altitude":75.4000015258789,"accuracy":12.0,"speed":0.009655484929680824,"speed_accuracy":0.4877420961856842,"heading":285.0215148925781}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:16:59.584834Z","data_format":{"namespace":"carp","name":"noise"}},"body":{"id":"e37e2b10-23ed-11eb-bfe5-73d0616df65d","timestamp":"2020-11-11T07:16:59.584834Z","mean_decibel":49.57243363189045,"std_decibel":18.65665977246665,"min_decibel":20.82811877952488,"max_decibel":90.11736775774033}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:17:54.452230Z","data_format":{"namespace":"carp","name":"memory"}},"body":{"id":"04323540-23ee-11eb-8858-c976faca441a","timestamp":"2020-11-11T07:17:54.452230Z","free_physical_memory":447029248,"free_virtual_memory":2301169664}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:17:54.605878Z","data_format":{"namespace":"carp","name":"device"}},"body":{"id":"0449b4e0-23ee-11eb-8425-757e8fd38fc2","timestamp":"2020-11-11T07:17:54.605878Z","platform":"Android","device_id":"QP1A.190711.020","hardware":"exynos9820","device_name":"beyond0","device_manufacturer":"samsung","device_model":"SM-G970F","operating_system":"REL"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:17:54.611592Z","data_format":{"namespace":"carp","name":"wifi"}},"body":{"id":"044a7830-23ee-11eb-b40a-9706fa3da7ea","timestamp":"2020-11-11T07:17:54.611592Z","ssid":"wifi.bardram.net","bssid":"c4:41:1e:73:81:64"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:17:55.010932Z","data_format":{"namespace":"carp","name":"location"}},"body":{"id":"04878130-23ee-11eb-bdcf-776b29409a55","timestamp":"2020-11-11T07:17:55.010932Z","time":"2020-11-11T07:17:55.999Z","latitude":55.7942785,"longitude":12.4461833,"altitude":75.4000015258789,"accuracy":12.0,"speed":0.033715639263391495,"speed_accuracy":0.6909898519515991,"heading":283.16131591796875}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:17:59.631549Z","data_format":{"namespace":"carp","name":"noise"}},"body":{"id":"074875f0-23ee-11eb-a636-17df629eb83e","timestamp":"2020-11-11T07:17:59.631549Z","mean_decibel":49.20323449002685,"std_decibel":17.879826201975014,"min_decibel":20.82811877952488,"max_decibel":90.11736775774033}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:18:54.451960Z","data_format":{"namespace":"carp","name":"memory"}},"body":{"id":"27f57b40-23ee-11eb-98ce-71cf2beb3056","timestamp":"2020-11-11T07:18:54.451960Z","free_physical_memory":424812544,"free_virtual_memory":2279206912}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:18:54.657527Z","data_format":{"namespace":"carp","name":"device"}},"body":{"id":"2814c310-23ee-11eb-8f5b-8baeb4dc43a6","timestamp":"2020-11-11T07:18:54.657527Z","platform":"Android","device_id":"QP1A.190711.020","hardware":"exynos9820","device_name":"beyond0","device_manufacturer":"samsung","device_model":"SM-G970F","operating_system":"REL"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:18:54.662963Z","data_format":{"namespace":"carp","name":"wifi"}},"body":{"id":"2815ad70-23ee-11eb-bd0c-f99357747da6","timestamp":"2020-11-11T07:18:54.662963Z","ssid":"wifi.bardram.net","bssid":"c4:41:1e:73:81:64"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:18:54.863963Z","data_format":{"namespace":"carp","name":"weather"}},"body":{"id":"28345900-23ee-11eb-937e-437b70f9aab0","timestamp":"2020-11-11T07:18:54.863963Z","country":"DK","area_name":"Virum","weather_main":"Clouds","weather_description":"overcast clouds","date":"2020-11-11T08:08:55.000","sunrise":"2020-11-11T07:38:10.000","sunset":"2020-11-11T16:10:30.000","latitude":55.79,"longitude":12.45,"pressure":1028.0,"wind_speed":3.36,"wind_degree":159.0,"humidity":89.0,"cloudiness":100.0,"rain_last_hour":0.0,"rain_last3_hours":0.0,"snow_last_hour":0.0,"snow_last3_hours":0.0,"temperature":6.4500000000000455,"temp_min":6.110000000000014,"temp_max":6.670000000000016}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:18:55.033226Z","data_format":{"namespace":"carp","name":"location"}},"body":{"id":"284e2290-23ee-11eb-beb7-17e8ff09a906","timestamp":"2020-11-11T07:18:55.033226Z","time":"2020-11-11T07:18:55.999Z","latitude":55.7943218,"longitude":12.4461916,"altitude":75.4000015258789,"accuracy":12.0,"speed":0.015035413205623627,"speed_accuracy":0.42193835973739624,"heading":284.966796875}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:18:58.898237Z","data_format":{"namespace":"carp","name":"air_quality"}},"body":{"id":"2a9be320-23ee-11eb-a14d-8fe7fbf9feba","timestamp":"2020-11-11T07:18:58.898237Z","air_quality_index":16,"source":"The Department of Environmental Science at Aarhus University","place":"H.C. Ørsted Institutet, Copenhagen, Denmark","latitude":55.7007621,"longitude":12.5613124,"air_quality_level":"GOOD"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:18:59.668699Z","data_format":{"namespace":"carp","name":"noise"}},"body":{"id":"2b116140-23ee-11eb-8303-6f368b62be83","timestamp":"2020-11-11T07:18:59.668699Z","mean_decibel":48.85175761755713,"std_decibel":17.24725462584256,"min_decibel":20.82811877952488,"max_decibel":90.11736775774033}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:19:54.452291Z","data_format":{"namespace":"carp","name":"memory"}},"body":{"id":"4bb8c140-23ee-11eb-b907-cde3d63f8261","timestamp":"2020-11-11T07:19:54.452291Z","free_physical_memory":425410560,"free_virtual_memory":2280017920}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:19:54.586924Z","data_format":{"namespace":"carp","name":"device"}},"body":{"id":"4bcd5ab0-23ee-11eb-adf9-0db3b4725432","timestamp":"2020-11-11T07:19:54.586924Z","platform":"Android","device_id":"QP1A.190711.020","hardware":"exynos9820","device_name":"beyond0","device_manufacturer":"samsung","device_model":"SM-G970F","operating_system":"REL"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:19:54.592633Z","data_format":{"namespace":"carp","name":"wifi"}},"body":{"id":"4bce1e00-23ee-11eb-a525-ef0edf07746c","timestamp":"2020-11-11T07:19:54.592633Z","ssid":"wifi.bardram.net","bssid":"c4:41:1e:73:81:64"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:19:55.065088Z","data_format":{"namespace":"carp","name":"location"}},"body":{"id":"4c164a90-23ee-11eb-b529-5557fdcaf9d1","timestamp":"2020-11-11T07:19:55.065088Z","time":"2020-11-11T07:19:55.999Z","latitude":55.7943155,"longitude":12.4462343,"altitude":75.4000015258789,"accuracy":12.0,"speed":0.00031514474540017545,"speed_accuracy":0.44297686219215393,"heading":284.343505859375}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:19:59.603089Z","data_format":{"namespace":"carp","name":"noise"}},"body":{"id":"4ecabc30-23ee-11eb-b7ee-890ca005f53f","timestamp":"2020-11-11T07:19:59.603089Z","mean_decibel":48.453201110326575,"std_decibel":16.704766160644635,"min_decibel":20.82811877952488,"max_decibel":90.11736775774033}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:20:54.452121Z","data_format":{"namespace":"carp","name":"memory"}},"body":{"id":"6f7c0740-23ee-11eb-a8f9-f1884d21d914","timestamp":"2020-11-11T07:20:54.452121Z","free_physical_memory":359051264,"free_virtual_memory":2218360832}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:20:54.624669Z","data_format":{"namespace":"carp","name":"device"}},"body":{"id":"6f964600-23ee-11eb-93e5-e76bfeb2d7fe","timestamp":"2020-11-11T07:20:54.624669Z","platform":"Android","device_id":"QP1A.190711.020","hardware":"exynos9820","device_name":"beyond0","device_manufacturer":"samsung","device_model":"SM-G970F","operating_system":"REL"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:20:54.630601Z","data_format":{"namespace":"carp","name":"wifi"}},"body":{"id":"6f973060-23ee-11eb-9b48-35c27c3b8f1a","timestamp":"2020-11-11T07:20:54.630601Z","ssid":"wifi.bardram.net","bssid":"c4:41:1e:73:81:64"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:20:55.015590Z","data_format":{"namespace":"carp","name":"location"}},"body":{"id":"6fd1ef70-23ee-11eb-82c9-152a2277a8a7","timestamp":"2020-11-11T07:20:55.015590Z","time":"2020-11-11T07:20:55.999Z","latitude":55.7943278,"longitude":12.4462396,"altitude":75.4000015258789,"accuracy":16.0,"speed":0.0002762890071608126,"speed_accuracy":0.6498504877090454,"heading":281.4354553222656}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:20:59.641365Z","data_format":{"namespace":"carp","name":"noise"}},"body":{"id":"7293ce90-23ee-11eb-88ae-edfe6568cfe3","timestamp":"2020-11-11T07:20:59.641365Z","mean_decibel":48.33207923960867,"std_decibel":16.255289213130048,"min_decibel":20.82811877952488,"max_decibel":90.11736775774033}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:21:54.453016Z","data_format":{"namespace":"carp","name":"memory"}},"body":{"id":"933f7450-23ee-11eb-adea-01e497a90ee3","timestamp":"2020-11-11T07:21:54.453016Z","free_physical_memory":347205632,"free_virtual_memory":2205609984}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:21:54.644711Z","data_format":{"namespace":"carp","name":"device"}},"body":{"id":"935cc050-23ee-11eb-9139-ede7591215da","timestamp":"2020-11-11T07:21:54.644711Z","platform":"Android","device_id":"QP1A.190711.020","hardware":"exynos9820","device_name":"beyond0","device_manufacturer":"samsung","device_model":"SM-G970F","operating_system":"REL"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:21:54.649751Z","data_format":{"namespace":"carp","name":"wifi"}},"body":{"id":"935d5c90-23ee-11eb-a15e-21bf1c5d1312","timestamp":"2020-11-11T07:21:54.649751Z","ssid":"wifi.bardram.net","bssid":"c4:41:1e:73:81:64"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:21:55.037696Z","data_format":{"namespace":"carp","name":"location"}},"body":{"id":"939890d0-23ee-11eb-a6ac-e1f7e75f479f","timestamp":"2020-11-11T07:21:55.037696Z","time":"2020-11-11T07:21:55.999Z","latitude":55.7943002,"longitude":12.4463044,"altitude":75.4000015258789,"accuracy":24.0,"speed":0.0003335416840855032,"speed_accuracy":1.451027512550354,"heading":287.9508056640625}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:21:59.663026Z","data_format":{"namespace":"carp","name":"noise"}},"body":{"id":"965a6ff0-23ee-11eb-a2e1-0b36cd441e8c","timestamp":"2020-11-11T07:21:59.663026Z","mean_decibel":48.34151030950034,"std_decibel":15.927242553699303,"min_decibel":20.82811877952488,"max_decibel":90.11736775774033}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:22:54.452469Z","data_format":{"namespace":"carp","name":"memory"}},"body":{"id":"b7029340-23ee-11eb-a9bd-a58c70d672e3","timestamp":"2020-11-11T07:22:54.452469Z","free_physical_memory":340795392,"free_virtual_memory":2200260608}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:22:54.610367Z","data_format":{"namespace":"carp","name":"device"}},"body":{"id":"b71aaf20-23ee-11eb-9587-c5f7f1e8458c","timestamp":"2020-11-11T07:22:54.610367Z","platform":"Android","device_id":"QP1A.190711.020","hardware":"exynos9820","device_name":"beyond0","device_manufacturer":"samsung","device_model":"SM-G970F","operating_system":"REL"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:22:54.615277Z","data_format":{"namespace":"carp","name":"wifi"}},"body":{"id":"b71b7270-23ee-11eb-a4f6-f1439afebe97","timestamp":"2020-11-11T07:22:54.615277Z","ssid":"wifi.bardram.net","bssid":"c4:41:1e:73:81:64"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:22:55.019406Z","data_format":{"namespace":"carp","name":"location"}},"body":{"id":"b75917b0-23ee-11eb-9ba9-71a8ac5f7107","timestamp":"2020-11-11T07:22:55.019406Z","time":"2020-11-11T07:22:55.999Z","latitude":55.794292,"longitude":12.446283,"altitude":75.4000015258789,"accuracy":16.0,"speed":0.5236877202987671,"speed_accuracy":0.9013704657554626,"heading":246.04324340820312}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:22:59.627340Z","data_format":{"namespace":"carp","name":"noise"}},"body":{"id":"ba1837b0-23ee-11eb-8d37-9f033730bee1","timestamp":"2020-11-11T07:22:59.627340Z","mean_decibel":47.97463792503111,"std_decibel":15.550835891017488,"min_decibel":20.82811877952488,"max_decibel":90.11736775774033}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:23:54.451826Z","data_format":{"namespace":"carp","name":"memory"}},"body":{"id":"dac5d940-23ee-11eb-bb7f-7740370a84e5","timestamp":"2020-11-11T07:23:54.451826Z","free_physical_memory":357171200,"free_virtual_memory":2216022016}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:23:54.614847Z","data_format":{"namespace":"carp","name":"device"}},"body":{"id":"dadeb870-23ee-11eb-90a1-5772b99d0471","timestamp":"2020-11-11T07:23:54.614847Z","platform":"Android","device_id":"QP1A.190711.020","hardware":"exynos9820","device_name":"beyond0","device_manufacturer":"samsung","device_model":"SM-G970F","operating_system":"REL"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:23:54.619529Z","data_format":{"namespace":"carp","name":"wifi"}},"body":{"id":"dadf54b0-23ee-11eb-b0ad-8bc89c560c1c","timestamp":"2020-11-11T07:23:54.619529Z","ssid":"wifi.bardram.net","bssid":"c4:41:1e:73:81:64"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:23:54.830250Z","data_format":{"namespace":"carp","name":"weather"}},"body":{"id":"daff86e0-23ee-11eb-824c-057a5a4179ac","timestamp":"2020-11-11T07:23:54.830250Z","country":"DK","area_name":"Virum","weather_main":"Clouds","weather_description":"overcast clouds","date":"2020-11-11T08:23:55.000","sunrise":"2020-11-11T07:38:10.000","sunset":"2020-11-11T16:10:30.000","latitude":55.79,"longitude":12.45,"pressure":1028.0,"wind_speed":3.36,"wind_degree":159.0,"humidity":90.0,"cloudiness":100.0,"rain_last_hour":0.0,"rain_last3_hours":0.0,"snow_last_hour":0.0,"snow_last3_hours":0.0,"temperature":6.460000000000036,"temp_min":6.110000000000014,"temp_max":6.670000000000016}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:23:55.038874Z","data_format":{"namespace":"carp","name":"location"}},"body":{"id":"db1f6af0-23ee-11eb-b177-d1aef6d3c115","timestamp":"2020-11-11T07:23:55.038874Z","time":"2020-11-11T07:23:55.999Z","latitude":55.7942965,"longitude":12.4463662,"altitude":75.4000015258789,"accuracy":16.0,"speed":0.2742372453212738,"speed_accuracy":0.8753643035888672,"heading":250.99508666992188}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:23:58.831778Z","data_format":{"namespace":"carp","name":"air_quality"}},"body":{"id":"dd622f00-23ee-11eb-8dfe-6d8d287485ed","timestamp":"2020-11-11T07:23:58.831778Z","air_quality_index":16,"source":"The Department of Environmental Science at Aarhus University","place":"H.C. Ørsted Institutet, Copenhagen, Denmark","latitude":55.7007621,"longitude":12.5613124,"air_quality_level":"GOOD"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:23:59.627933Z","data_format":{"namespace":"carp","name":"noise"}},"body":{"id":"dddba4c0-23ee-11eb-89cb-c5f75270b429","timestamp":"2020-11-11T07:23:59.627933Z","mean_decibel":47.49803849670974,"std_decibel":15.183716602542011,"min_decibel":20.82811877952488,"max_decibel":90.11736775774033}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:24:54.453414Z","data_format":{"namespace":"carp","name":"memory"}},"body":{"id":"fe894650-23ee-11eb-bdde-e57d2a0a9ed3","timestamp":"2020-11-11T07:24:54.453414Z","free_physical_memory":359403520,"free_virtual_memory":2218385408}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:24:54.608733Z","data_format":{"namespace":"carp","name":"device"}},"body":{"id":"fea11410-23ee-11eb-ae38-910b93c8bef9","timestamp":"2020-11-11T07:24:54.608733Z","platform":"Android","device_id":"QP1A.190711.020","hardware":"exynos9820","device_name":"beyond0","device_manufacturer":"samsung","device_model":"SM-G970F","operating_system":"REL"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:24:54.613834Z","data_format":{"namespace":"carp","name":"wifi"}},"body":{"id":"fea1d760-23ee-11eb-8036-3517d5706a30","timestamp":"2020-11-11T07:24:54.613834Z","ssid":"wifi.bardram.net","bssid":"c4:41:1e:73:81:64"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:24:55.030476Z","data_format":{"namespace":"carp","name":"location"}},"body":{"id":"fee15160-23ee-11eb-8665-d783269a5e8b","timestamp":"2020-11-11T07:24:55.030476Z","time":"2020-11-11T07:24:55.999Z","latitude":55.7943238,"longitude":12.4463404,"altitude":75.4000015258789,"accuracy":12.0,"speed":0.019108930602669716,"speed_accuracy":0.510219156742096,"heading":250.8967742919922}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:24:59.629755Z","data_format":{"namespace":"carp","name":"noise"}},"body":{"id":"019f38e0-23ef-11eb-910f-87c5c33da5c3","timestamp":"2020-11-11T07:24:59.629755Z","mean_decibel":47.085630258511884,"std_decibel":14.843413711796426,"min_decibel":20.82811877952488,"max_decibel":90.11736775774033}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:25:54.452779Z","data_format":{"namespace":"carp","name":"memory"}},"body":{"id":"224c8c50-23ef-11eb-84fb-d71a152c6759","timestamp":"2020-11-11T07:25:54.452779Z","free_physical_memory":341860352,"free_virtual_memory":2200543232}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:25:54.611965Z","data_format":{"namespace":"carp","name":"device"}},"body":{"id":"2264cf40-23ef-11eb-a728-8b646503280e","timestamp":"2020-11-11T07:25:54.611965Z","platform":"Android","device_id":"QP1A.190711.020","hardware":"exynos9820","device_name":"beyond0","device_manufacturer":"samsung","device_model":"SM-G970F","operating_system":"REL"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:25:54.629323Z","data_format":{"namespace":"carp","name":"wifi"}},"body":{"id":"22676750-23ef-11eb-aa98-cf7fa2534df4","timestamp":"2020-11-11T07:25:54.629323Z","ssid":"wifi.bardram.net","bssid":"c4:41:1e:73:81:64"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:25:55.048501Z","data_format":{"namespace":"carp","name":"location"}},"body":{"id":"22a75680-23ef-11eb-9a67-81757c33868c","timestamp":"2020-11-11T07:25:55.048501Z","time":"2020-11-11T07:25:55.999Z","latitude":55.794326,"longitude":12.4463364,"altitude":75.4000015258789,"accuracy":12.0,"speed":0.016743822023272514,"speed_accuracy":0.45350152254104614,"heading":250.9184112548828}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:25:59.630790Z","data_format":{"namespace":"carp","name":"noise"}},"body":{"id":"2562a5f0-23ef-11eb-9c2f-8f77600b7925","timestamp":"2020-11-11T07:25:59.630790Z","mean_decibel":46.82793016711907,"std_decibel":14.528494164654106,"min_decibel":20.82811877952488,"max_decibel":90.11736775774033}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:26:54.452183Z","data_format":{"namespace":"carp","name":"memory"}},"body":{"id":"460fab40-23ef-11eb-9518-1fcf34f1b612","timestamp":"2020-11-11T07:26:54.452183Z","free_physical_memory":352817152,"free_virtual_memory":2211618816}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:26:54.610871Z","data_format":{"namespace":"carp","name":"device"}},"body":{"id":"4627ee30-23ef-11eb-9c0b-01b6d5753694","timestamp":"2020-11-11T07:26:54.610871Z","platform":"Android","device_id":"QP1A.190711.020","hardware":"exynos9820","device_name":"beyond0","device_manufacturer":"samsung","device_model":"SM-G970F","operating_system":"REL"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:26:54.615674Z","data_format":{"namespace":"carp","name":"wifi"}},"body":{"id":"46288a70-23ef-11eb-8d36-dda1801bdb2d","timestamp":"2020-11-11T07:26:54.615674Z","ssid":"wifi.bardram.net","bssid":"c4:41:1e:73:81:64"}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:26:55.045950Z","data_format":{"namespace":"carp","name":"location"}},"body":{"id":"466a4e60-23ef-11eb-b37c-b1e64cee3928","timestamp":"2020-11-11T07:26:55.045950Z","time":"2020-11-11T07:26:55.999Z","latitude":55.7943771,"longitude":12.4463378,"altitude":75.4000015258789,"accuracy":8.0,"speed":0.003455216297879815,"speed_accuracy":0.5076921582221985,"heading":8.896402359008789}}
-    ,
-    {"header":{"study_id":"#23-Coverage","user_id":"user","start_time":"2020-11-11T07:26:59.639199Z","data_format":{"namespace":"carp","name":"noise"}},"body":{"id":"49272470-23ef-11eb-b62a-cf932bd6f1f8","timestamp":"2020-11-11T07:26:59.639199Z","mean_decibel":46.58546423321733,"std_decibel":14.196606456575623,"min_decibel":20.82811877952488,"max_decibel":90.11736775774033}}
-    ]
-    
+    {
+        "carp_header": {
+         "study_id": "01cf04a7-d154-40f0-9a75-ab759cf74eb3",
+         "device_role_name": "unknown",
+         "trigger_id": "unknown",
+         "user_id": "user@dtu.dk",
+         "start_time": "2021-02-04T19:15:58.063024Z",
+         "data_format": {
+          "namespace": "carp",
+          "name": "light"
+         }
+        },
+        "carp_body": {
+         "id": "6924bd20-671d-11eb-a3d5-af31e148b652",
+         "timestamp": "2021-02-04T19:15:58.063024Z",
+         "mean_lux": 23,
+         "std_lux": 0.4,
+         "min_lux": 0.3,
+         "max_lux": 12
+        }
+    }
+    ,
+    {
+        "carp_header": {
+         "study_id": "01cf04a7-d154-40f0-9a75-ab759cf74eb3",
+         "device_role_name": "unknown",
+         "trigger_id": "unknown",
+         "user_id": "user@dtu.dk",
+         "start_time": "2021-02-04T19:15:58.063024Z",
+         "data_format": {
+          "namespace": "carp",
+          "name": "light"
+         }
+        },
+        "carp_body": {
+         "id": "6924bd20-671d-11eb-a3d5-af31e148b652",
+         "timestamp": "2021-02-04T19:15:58.063024Z",
+         "mean_lux": 23,
+         "std_lux": 0.4,
+         "min_lux": 0.3,
+         "max_lux": 12
+        }
+    }
+    ,
+    {
+        "carp_header": {
+         "study_id": "01cf04a7-d154-40f0-9a75-ab759cf74eb3",
+         "device_role_name": "unknown",
+         "trigger_id": "unknown",
+         "user_id": "user@dtu.dk",
+         "start_time": "2021-02-04T19:15:58.063024Z",
+         "data_format": {
+          "namespace": "carp",
+          "name": "light"
+         }
+        },
+        "carp_body": {
+         "id": "6924bd20-671d-11eb-a3d5-af31e148b652",
+         "timestamp": "2021-02-04T19:15:58.063024Z",
+         "mean_lux": 23,
+         "std_lux": 0.4,
+         "min_lux": 0.3,
+         "max_lux": 12
+        }
+    }
+    ,
+    {
+        "carp_header": {
+         "study_id": "01cf04a7-d154-40f0-9a75-ab759cf74eb3",
+         "device_role_name": "unknown",
+         "trigger_id": "unknown",
+         "user_id": "user@dtu.dk",
+         "start_time": "2021-02-04T19:15:58.063024Z",
+         "data_format": {
+          "namespace": "carp",
+          "name": "light"
+         }
+        },
+        "carp_body": {
+         "id": "6924bd20-671d-11eb-a3d5-af31e148b652",
+         "timestamp": "2021-02-04T19:15:58.063024Z",
+         "mean_lux": 23,
+         "std_lux": 0.4,
+         "min_lux": 0.3,
+         "max_lux": 12
+        }
+    }
+    ,
+    {
+        "carp_header": {
+         "study_id": "01cf04a7-d154-40f0-9a75-ab759cf74eb3",
+         "device_role_name": "unknown",
+         "trigger_id": "unknown",
+         "user_id": "user@dtu.dk",
+         "start_time": "2021-02-04T19:15:58.063024Z",
+         "data_format": {
+          "namespace": "carp",
+          "name": "light"
+         }
+        },
+        "carp_body": {
+         "id": "6924bd20-671d-11eb-a3d5-af31e148b652",
+         "timestamp": "2021-02-04T19:15:58.063024Z",
+         "mean_lux": 23,
+         "std_lux": 0.4,
+         "min_lux": 0.3,
+         "max_lux": 12
+        }
+    }
+    ,
+    {
+        "carp_header": {
+         "study_id": "01cf04a7-d154-40f0-9a75-ab759cf74eb3",
+         "device_role_name": "unknown",
+         "trigger_id": "unknown",
+         "user_id": "user@dtu.dk",
+         "start_time": "2021-02-04T19:15:58.063024Z",
+         "data_format": {
+          "namespace": "carp",
+          "name": "light"
+         }
+        },
+        "carp_body": {
+         "id": "6924bd20-671d-11eb-a3d5-af31e148b652",
+         "timestamp": "2021-02-04T19:15:58.063024Z",
+         "mean_lux": 23,
+         "std_lux": 0.4,
+         "min_lux": 0.3,
+         "max_lux": 12
+        }
+    }
+    ,
+    {
+        "carp_header": {
+         "study_id": "01cf04a7-d154-40f0-9a75-ab759cf74eb3",
+         "device_role_name": "unknown",
+         "trigger_id": "unknown",
+         "user_id": "user@dtu.dk",
+         "start_time": "2021-02-04T19:15:58.063024Z",
+         "data_format": {
+          "namespace": "carp",
+          "name": "light"
+         }
+        },
+        "carp_body": {
+         "id": "6924bd20-671d-11eb-a3d5-af31e148b652",
+         "timestamp": "2021-02-04T19:15:58.063024Z",
+         "mean_lux": 23,
+         "std_lux": 0.4,
+         "min_lux": 0.3,
+         "max_lux": 12
+        }
+    }
+    ,
+    {
+        "carp_header": {
+         "study_id": "01cf04a7-d154-40f0-9a75-ab759cf74eb3",
+         "device_role_name": "unknown",
+         "trigger_id": "unknown",
+         "user_id": "user@dtu.dk",
+         "start_time": "2021-02-04T19:15:58.063024Z",
+         "data_format": {
+          "namespace": "carp",
+          "name": "light"
+         }
+        },
+        "carp_body": {
+         "id": "6924bd20-671d-11eb-a3d5-af31e148b652",
+         "timestamp": "2021-02-04T19:15:58.063024Z",
+         "mean_lux": 23,
+         "std_lux": 0.4,
+         "min_lux": 0.3,
+         "max_lux": 12
+        }
+    }
+    ,
+    {
+        "carp_header": {
+         "study_id": "01cf04a7-d154-40f0-9a75-ab759cf74eb3",
+         "device_role_name": "unknown",
+         "trigger_id": "unknown",
+         "user_id": "user@dtu.dk",
+         "start_time": "2021-02-04T19:15:58.063024Z",
+         "data_format": {
+          "namespace": "carp",
+          "name": "light"
+         }
+        },
+        "carp_body": {
+         "id": "6924bd20-671d-11eb-a3d5-af31e148b652",
+         "timestamp": "2021-02-04T19:15:58.063024Z",
+         "mean_lux": 23,
+         "std_lux": 0.4,
+         "min_lux": 0.3,
+         "max_lux": 12
+        }
+    }
+    ,
+    {
+        "carp_header": {
+         "study_id": "01cf04a7-d154-40f0-9a75-ab759cf74eb3",
+         "device_role_name": "unknown",
+         "trigger_id": "unknown",
+         "user_id": "user@dtu.dk",
+         "start_time": "2021-02-04T19:15:58.063024Z",
+         "data_format": {
+          "namespace": "carp",
+          "name": "light"
+         }
+        },
+        "carp_body": {
+         "id": "6924bd20-671d-11eb-a3d5-af31e148b652",
+         "timestamp": "2021-02-04T19:15:58.063024Z",
+         "mean_lux": 23,
+         "std_lux": 0.4,
+         "min_lux": 0.3,
+         "max_lux": 12
+        }
+    }
+    ,
+    {
+        "carp_header": {
+         "study_id": "01cf04a7-d154-40f0-9a75-ab759cf74eb3",
+         "device_role_name": "unknown",
+         "trigger_id": "unknown",
+         "user_id": "user@dtu.dk",
+         "start_time": "2021-02-04T19:15:58.063024Z",
+         "data_format": {
+          "namespace": "carp",
+          "name": "light"
+         }
+        },
+        "carp_body": {
+         "id": "6924bd20-671d-11eb-a3d5-af31e148b652",
+         "timestamp": "2021-02-04T19:15:58.063024Z",
+         "mean_lux": 23,
+         "std_lux": 0.4,
+         "min_lux": 0.3,
+         "max_lux": 12
+        }
+    }
+    ,
+    {
+        "carp_header": {
+         "study_id": "01cf04a7-d154-40f0-9a75-ab759cf74eb3",
+         "device_role_name": "unknown",
+         "trigger_id": "unknown",
+         "user_id": "user@dtu.dk",
+         "start_time": "2021-02-04T19:15:58.063024Z",
+         "data_format": {
+          "namespace": "carp",
+          "name": "light"
+         }
+        },
+        "carp_body": {
+         "id": "6924bd20-671d-11eb-a3d5-af31e148b652",
+         "timestamp": "2021-02-04T19:15:58.063024Z",
+         "mean_lux": 23,
+         "std_lux": 0.4,
+         "min_lux": 0.3,
+         "max_lux": 12
+        }
+    }
+    ,
+    {
+        "carp_header": {
+         "study_id": "01cf04a7-d154-40f0-9a75-ab759cf74eb3",
+         "device_role_name": "unknown",
+         "trigger_id": "unknown",
+         "user_id": "user@dtu.dk",
+         "start_time": "2021-02-04T19:15:58.063024Z",
+         "data_format": {
+          "namespace": "carp",
+          "name": "light"
+         }
+        },
+        "carp_body": {
+         "id": "6924bd20-671d-11eb-a3d5-af31e148b652",
+         "timestamp": "2021-02-04T19:15:58.063024Z",
+         "mean_lux": 23,
+         "std_lux": 0.4,
+         "min_lux": 0.3,
+         "max_lux": 12
+        }
+    }
+    ,
+    {
+        "carp_header": {
+         "study_id": "01cf04a7-d154-40f0-9a75-ab759cf74eb3",
+         "device_role_name": "unknown",
+         "trigger_id": "unknown",
+         "user_id": "user@dtu.dk",
+         "start_time": "2021-02-04T19:15:58.063024Z",
+         "data_format": {
+          "namespace": "carp",
+          "name": "light"
+         }
+        },
+        "carp_body": {
+         "id": "6924bd20-671d-11eb-a3d5-af31e148b652",
+         "timestamp": "2021-02-04T19:15:58.063024Z",
+         "mean_lux": 23,
+         "std_lux": 0.4,
+         "min_lux": 0.3,
+         "max_lux": 12
+        }
+    }
+    ,
+    {
+        "carp_header": {
+         "study_id": "01cf04a7-d154-40f0-9a75-ab759cf74eb3",
+         "device_role_name": "unknown",
+         "trigger_id": "unknown",
+         "user_id": "user@dtu.dk",
+         "start_time": "2021-02-04T19:15:58.063024Z",
+         "data_format": {
+          "namespace": "carp",
+          "name": "light"
+         }
+        },
+        "carp_body": {
+         "id": "6924bd20-671d-11eb-a3d5-af31e148b652",
+         "timestamp": "2021-02-04T19:15:58.063024Z",
+         "mean_lux": 23,
+         "std_lux": 0.4,
+         "min_lux": 0.3,
+         "max_lux": 12
+        }
+    }
+    ,
+    {
+        "carp_header": {
+         "study_id": "01cf04a7-d154-40f0-9a75-ab759cf74eb3",
+         "device_role_name": "unknown",
+         "trigger_id": "unknown",
+         "user_id": "user@dtu.dk",
+         "start_time": "2021-02-04T19:15:58.063024Z",
+         "data_format": {
+          "namespace": "carp",
+          "name": "light"
+         }
+        },
+        "carp_body": {
+         "id": "6924bd20-671d-11eb-a3d5-af31e148b652",
+         "timestamp": "2021-02-04T19:15:58.063024Z",
+         "mean_lux": 23,
+         "std_lux": 0.4,
+         "min_lux": 0.3,
+         "max_lux": 12
+        }
+    }
+    ,
+    {
+        "carp_header": {
+         "study_id": "01cf04a7-d154-40f0-9a75-ab759cf74eb3",
+         "device_role_name": "unknown",
+         "trigger_id": "unknown",
+         "user_id": "user@dtu.dk",
+         "start_time": "2021-02-04T19:15:58.063024Z",
+         "data_format": {
+          "namespace": "carp",
+          "name": "light"
+         }
+        },
+        "carp_body": {
+         "id": "6924bd20-671d-11eb-a3d5-af31e148b652",
+         "timestamp": "2021-02-04T19:15:58.063024Z",
+         "mean_lux": 23,
+         "std_lux": 0.4,
+         "min_lux": 0.3,
+         "max_lux": 12
+        }
+    }
+]

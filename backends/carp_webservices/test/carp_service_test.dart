@@ -243,13 +243,20 @@ void main() {
     });
 
     test('- get by id', () async {
-      print("GET data_point_id : $dataPointId");
-      CARPDataPoint data =
+      final CARPDataPoint dataPost =
+          CARPDataPoint.fromDatum(study.id, study.userId, datum1);
+
+      dataPointId =
+          await CarpService().getDataPointReference().postDataPoint(dataPost);
+
+      assert(dataPointId > 0);
+
+      CARPDataPoint dataGet =
           await CarpService().getDataPointReference().getDataPoint(dataPointId);
 
-      print(_encode(data.toJson()));
-      assert(data.id == dataPointId);
-      assert(data.carpBody['id'] == datum1.id);
+      print(_encode(dataGet.toJson()));
+      assert(dataGet.id == dataPointId);
+      assert(dataGet.carpBody['id'] == datum1.id);
     });
 
     test('- get all', () async {
