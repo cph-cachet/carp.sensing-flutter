@@ -104,7 +104,8 @@ class CarpService {
   /// If `true`, the authenticated user is [currentUser].
   bool get authenticated => (_currentUser != null);
 
-  StreamController<AuthEvent> _authEventController = StreamController();
+  StreamController<AuthEvent> _authEventController =
+      StreamController.broadcast();
 
   /// Notifies about changes to the user's authentication state (such as sign-in or
   /// sign-out) as defined in [AuthEvent].
@@ -154,7 +155,9 @@ class CarpService {
       return _currentUser;
     }
 
-    // All other cases are treated as an error.
+    // All other cases are treated as a failed attempt and throws an error
+    _authEventController.add(AuthEvent.failed);
+
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
       message: responseJson["error_description"],
@@ -266,7 +269,9 @@ class CarpService {
       return refreshedToken;
     }
 
-    // All other cases are treated as an error.
+    // All other cases are treated as a failed attempt and throws an error
+    _authEventController.add(AuthEvent.failed);
+
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
       message: responseJson["error_description"],
@@ -305,7 +310,7 @@ class CarpService {
       return responseJson['emailAddress'];
     }
 
-    // All other cases are treated as an error.
+    // All other cases are treated as an error
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
       message: responseJson["error_description"],
@@ -680,6 +685,9 @@ enum AuthEvent {
 
   /// The user has been unauthenticated (signed out).
   unauthenticated,
+
+  /// Authentication failed.
+  failed,
 
   /// The user's token has successfully been refreshed.
   refreshed,

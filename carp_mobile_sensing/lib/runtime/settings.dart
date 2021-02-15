@@ -1,6 +1,6 @@
 part of runtime;
 
-class _Settings {
+class Settings {
   static const String USER_ID_KEY = 'user_id';
   static const String STUDY_START_KEY = 'study_start';
 
@@ -47,7 +47,7 @@ class _Settings {
   String _userId;
   String get _userIdKey => '$appName.$USER_ID_KEY'.toLowerCase();
 
-  /// Get a user id that is;
+  /// Generate a user id that is;
   ///  * unique
   ///  * anonymous
   ///  * persistent
@@ -86,7 +86,8 @@ class _Settings {
   }
 }
 
-/// Misc. settings for CAMS.
-/// See [_Settings] for a list of useful methods for accessing the
+/// Misc. settings for CAMS and methods for storing them locally on the phone.
+///
+/// See [Settings] for a list of useful methods for accessing the
 /// shared preferences on this phone.
-final settings = _Settings();
+final settings = Settings();

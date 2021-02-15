@@ -1,3 +1,7 @@
+## 0.13.1
+* error message to authentication dialog
+* `AuthEvent` events exended with a `failed` event on authentication failure
+
 ## 0.13.0
 * update to CARP core version 28
 
