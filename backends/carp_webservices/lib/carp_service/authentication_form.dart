@@ -259,51 +259,51 @@ class _LogoWidget extends StatelessWidget {
     );
   }
 
-  Widget _build0(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 60.0),
-      child: Center(
-        child: Container(
-          width: 300,
-          //height: 150,
-          child: Image.asset('asset/images/carp_logo.png',
-              package: 'carp_webservices'),
-        ),
-      ),
-    );
-  }
+  // Widget _build0(BuildContext context) {
+  //   return Padding(
+  //     padding: const EdgeInsets.only(top: 60.0),
+  //     child: Center(
+  //       child: Container(
+  //         width: 300,
+  //         //height: 150,
+  //         child: Image.asset('asset/images/carp_logo.png',
+  //             package: 'carp_webservices'),
+  //       ),
+  //     ),
+  //   );
+  // }
 
-  Widget _buildLogo1() {
-    return Image.asset('asset/images/carp_logo.png',
-        package: 'carp_webservices');
-  }
+  // Widget _buildLogo1() {
+  //   return Image.asset('asset/images/carp_logo.png',
+  //       package: 'carp_webservices');
+  // }
 
-  Widget _buildLogo2() {
-    return Container(
-      width: 300,
-      height: 150,
-      child: Image.asset('asset/images/carp_logo_small.png',
-          package: 'carp_webservices'),
-    );
-  }
+  // Widget _buildLogo2() {
+  //   return Container(
+  //     width: 300,
+  //     height: 150,
+  //     child: Image.asset('asset/images/carp_logo_small.png',
+  //         package: 'carp_webservices'),
+  //   );
+  // }
 
-  Widget _buildLogo3() {
-    return new Hero(
-        tag: 'hero',
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(0.0, 70.0, 0.0, 0.0),
-          child: Image.asset(
-            'assets/images/carp_logo_small.png',
-            package: 'carp_webservices',
-            // child: CircleAvatar(
-            //   backgroundColor: Colors.transparent,
-            //   radius: 48.0,
-            //   child: Image.asset(
-            //     'assets/images/carp_logo_small.png',
-            //     package: 'carp_webservices',
-            //   ),
-            // ),
-          ),
-        ));
-  }
+  // Widget _buildLogo3() {
+  //   return new Hero(
+  //       tag: 'hero',
+  //       child: Padding(
+  //         padding: EdgeInsets.fromLTRB(0.0, 70.0, 0.0, 0.0),
+  //         child: Image.asset(
+  //           'assets/images/carp_logo_small.png',
+  //           package: 'carp_webservices',
+  //           // child: CircleAvatar(
+  //           //   backgroundColor: Colors.transparent,
+  //           //   radius: 48.0,
+  //           //   child: Image.asset(
+  //           //     'assets/images/carp_logo_small.png',
+  //           //     package: 'carp_webservices',
+  //           //   ),
+  //           // ),
+  //         ),
+  //       ));
+  // }
 }

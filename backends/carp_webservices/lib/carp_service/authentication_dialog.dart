@@ -55,6 +55,20 @@ class AuthenticationDialog {
                       hintText: 'Enter password',
                     ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+                    child: StreamBuilder(
+                        stream: CarpService().authStateChanges,
+                        builder: (BuildContext context,
+                                AsyncSnapshot<AuthEvent> event) =>
+                            (event.hasData && event.data == AuthEvent.failed)
+                                ? Text(
+                                    'Sign in failed. Please retry.',
+                                    style: TextStyle(
+                                        fontSize: 12, color: Colors.red),
+                                  )
+                                : Text('')),
+                  ),
                 ],
               )),
           buttons: [
@@ -65,8 +79,7 @@ class AuthenticationDialog {
                       .authenticate(username: _username, password: _password);
                   Navigator.pop(context);
                 } catch (exception) {
-                  warning(
-                      'Exception in authentication via dialog - $exception');
+                  warning('Exception in authentication dialog - $exception');
                 }
               },
               color: Colors.blue[900],

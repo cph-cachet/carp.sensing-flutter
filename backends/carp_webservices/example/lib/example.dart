@@ -55,6 +55,7 @@ void main() async {
 
     ConsentDocument downloaded =
         await CarpService().getConsentDocument(uploaded.id);
+    print(downloaded);
   } catch (excp) {
     print(excp);
   }
@@ -76,20 +77,22 @@ void main() async {
   // then get its description back from the server
   final CarpFileResponse result =
       await CarpService().getFileStorageReference(id).get();
+  print(result);
 
   // then download the file again
   // note that a local file to download is needed
   final File downloadFile = File('test/img-$id.jpg');
   final FileDownloadTask downloadTask =
       CarpService().getFileStorageReference(id).download(downloadFile);
-  int responseCode = await downloadTask.onComplete;
+  await downloadTask.onComplete;
 
   // now get references to ALL files in this study
   final List<CarpFileResponse> results =
       await CarpService().getFileStorageReference(id).getAll();
+  print(results);
 
   // finally, delete the file
-  responseCode = await CarpService().getFileStorageReference(id).delete();
+  await CarpService().getFileStorageReference(id).delete();
 
   // ------------------- DATA POINTS --------------------------------
 
@@ -112,6 +115,7 @@ void main() async {
   // get the data point back from the server
   CARPDataPoint dataPoint =
       await CarpService().getDataPointReference().getDataPoint(dataPointId);
+  print(dataPoint);
 
   // batch upload a list of raw json data points in a file
   final File file = File('test/batch.json');
@@ -136,6 +140,8 @@ void main() async {
       .document(document.name)
       .updateData({'email': username, 'name': 'Super User'});
 
+  print(updatedDocument);
+
   // get the document
   DocumentSnapshot newDocument =
       await CarpService().collection('users').document(document.name).get();
@@ -148,16 +154,19 @@ void main() async {
 
   // get all collections from a document
   List<String> collections = newDocument.collections;
+  collections.forEach(print);
 
   // get all documents in a collection.
   List<DocumentSnapshot> documents =
       await CarpService().collection('users').documents;
+  documents.forEach(print);
 
   // ------------------- DEPLOYMENTS --------------------------------
 
   // get invitations for this account (user)
   List<ActiveParticipationInvitation> invitations =
       await CarpService().invitations();
+  invitations.forEach(print);
 
   // get a deployment reference for this master device
   DeploymentReference deploymentReference =
@@ -165,12 +174,14 @@ void main() async {
 
   // get the status of this deployment
   StudyDeploymentStatus status = await deploymentReference.getStatus();
+  print(status);
 
   // register a device
   status = await deploymentReference.registerDevice(deviceRoleName: 'phone');
 
   // get the master device deployment
   MasterDeviceDeployment deployment = await deploymentReference.get();
+  print(deployment);
 
   // mark the deployment as a success
   status = await deploymentReference.success();

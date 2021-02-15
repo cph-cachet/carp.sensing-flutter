@@ -11,8 +11,9 @@ final HTTPRetry httpr = HTTPRetry();
 
 /// A class wrapping all HTTP operations (GET, POST, PUT, DELETE) in a retry manner.
 ///
-/// In case of network problems ([SocketException] or [TimeoutException]), this method will retry
-/// the HTTP operation N=15 times, with an increasing delay time as 2^(N+1) * 5 secs (20, 40, , ..., 10,240).
+/// In case of network problems ([SocketException] or [TimeoutException]),
+/// this method will retry the HTTP operation N=15 times, with an increasing
+/// delay time as 2^(N+1) * 5 secs (20, 40, , ..., 10.240).
 /// I.e., maximum retry time is ca. three hours.
 class HTTPRetry {
   /// Sends an generic HTTP [MultipartRequest] with the given headers to the given URL,
