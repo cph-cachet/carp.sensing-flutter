@@ -35,7 +35,8 @@ class CARPDataPoint {
 
   CARPDataPoint(this.carpHeader, this.carpBody);
 
-  /// Create a [CARPDataPoint] based on a [DataPoint] generated in the CARP Mobile Sensing Framework.
+  /// Create a [CARPDataPoint] based on a [DataPoint] generated in the
+  /// CARP Mobile Sensing Framework.
   CARPDataPoint.fromDataPoint(DataPoint dataPoint) {
     CARPDataPointHeader header = new CARPDataPointHeader(
         dataPoint.header.studyId.toString(), dataPoint.header.userId);
@@ -48,7 +49,8 @@ class CARPDataPoint {
     this.carpBody = dataPoint.body.toJson();
   }
 
-  /// Create a [CARPDataPoint] based on a [CARPDatum] generated in the CARP Mobile Sensing Framework.
+  /// Create a [CARPDataPoint] based on a [CARPDatum] generated in the
+  /// CARP Mobile Sensing Framework.
   CARPDataPoint.fromDatum(String studyId, String userId, CARPDatum datum) {
     CARPDataPointHeader header =
         new CARPDataPointHeader(studyId.toString(), userId);
