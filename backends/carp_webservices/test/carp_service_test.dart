@@ -20,13 +20,15 @@ void main() {
   CarpApp app;
   //CarpUser user;
   Study study;
-  int dataPointId;
+  // int dataPointId;
+
   LightDatum datum1 = LightDatum(
     maxLux: 12,
     meanLux: 23,
     minLux: 0.3,
     stdLux: 0.4,
   );
+
   DeviceDatum datum2 = DeviceDatum(
     'Android',
     '12345jE',
@@ -230,7 +232,7 @@ void main() {
 
       print(_encode(data.toJson()));
 
-      dataPointId =
+      int dataPointId =
           await CarpService().getDataPointReference().postDataPoint(data);
 
       assert(dataPointId > 0);
@@ -240,13 +242,27 @@ void main() {
     test('- batch', () async {
       final File file = File("test/batch.json");
       await CarpService().getDataPointReference().batchPostDataPoint(file);
+
+      // wait for the batch requests to finish
+      await Future.delayed(const Duration(seconds: 2), () {});
+
+      String query = 'carp_header.data_format.namespace==test';
+      print("query : $query");
+
+      List<CARPDataPoint> data =
+          await CarpService().getDataPointReference().queryDataPoint(query);
+
+      print('N=${data.length}');
+      // data.forEach((datapoint) => print(_encode((datapoint.toJson()))));
+
+      assert(data.length > 0);
     });
 
     test('- get by id', () async {
       final CARPDataPoint dataPost =
           CARPDataPoint.fromDatum(study.id, study.userId, datum1);
 
-      dataPointId =
+      int dataPointId =
           await CarpService().getDataPointReference().postDataPoint(dataPost);
 
       assert(dataPointId > 0);
@@ -269,13 +285,15 @@ void main() {
     });
 
     test('- query', () async {
-      dataPointId = await CarpService().getDataPointReference().postDataPoint(
+      await CarpService().getDataPointReference().postDataPoint(
           CARPDataPoint.fromDatum(study.id, study.userId, datum1));
-      dataPointId = await CarpService().getDataPointReference().postDataPoint(
+      await CarpService().getDataPointReference().postDataPoint(
           CARPDataPoint.fromDatum(study.id, study.userId, datum2));
 
-      String query =
-          'carp_header.user_id==$userId;carp_body.timestamp>2019-11-02T12:53:40.219598Z';
+      // String query =
+      //     'carp_header.user_id==$userId;carp_body.timestamp>2019-11-02T12:53:40.219598Z';
+      String query = 'carp_header.data_format.namespace==test';
+      // String query = 'carp_header.data_format.name==light';
       // String query = 'carp_header.user_id==$userId';
       //String query = 'carp_body.timestamp>2019-11-02T12:53:40.219598Z';
       //String query = 'carp_header.data_format.namespace=in=(carp,omh)';
@@ -290,6 +308,10 @@ void main() {
     });
 
     test('- delete', () async {
+      int dataPointId = await CarpService()
+          .getDataPointReference()
+          .postDataPoint(
+              CARPDataPoint.fromDatum(study.id, study.userId, datum1));
       print("DELETE data_point_id : $dataPointId");
       await CarpService().getDataPointReference().deleteDataPoint(dataPointId);
     });
