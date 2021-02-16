@@ -240,7 +240,7 @@ void main() {
     });
 
     test('- batch', () async {
-      final File file = File("test/batch.json");
+      final File file = File("test/batch_2.json");
       await CarpService().getDataPointReference().batchPostDataPoint(file);
 
       // wait for the batch requests to finish

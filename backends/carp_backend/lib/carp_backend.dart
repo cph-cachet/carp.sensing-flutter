@@ -108,4 +108,16 @@ class CarpDataEndPoint extends FileDataEndPoint {
 }
 
 /// A enumeration of upload methods to CARP
-enum CarpUploadMethod { DATA_POINT, BATCH_DATA_POINT, FILE, DOCUMENT }
+enum CarpUploadMethod {
+  /// Upload each data point separately
+  DATA_POINT,
+
+  /// Collect data points in a file locally and then upload as a batch
+  BATCH_DATA_POINT,
+
+  /// Collect data points in a file locally and upload it as a file
+  FILE,
+
+  /// Upload each data point as a json document in the [collection] folder
+  DOCUMENT,
+}
