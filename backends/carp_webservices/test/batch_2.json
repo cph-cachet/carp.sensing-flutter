@@ -278,5 +278,4 @@
 {"header":{"study_id":"2","user_id":"72c04755-5189-4f8e-87be-19962cffe1b4","start_time":"2020-12-13T22:03:14.025597Z","data_format":{"namespace":"test","name":"light"}},"body":{"id":"ff25f4a0-3d8e-11eb-b9d1-a517a6ce18b8","timestamp":"2020-12-13T22:03:14.025597Z","mean_lux":104.5,"std_lux":0.5,"min_lux":104,"max_lux":105}}
 ,
 {"header":{"study_id":"2","user_id":"72c04755-5189-4f8e-87be-19962cffe1b4","start_time":"2020-12-13T22:03:14.592919Z","data_format":{"namespace":"test","name":"air_quality"}},"body":{"id":"ff7c7910-3d8e-11eb-b727-6f118311cc18","timestamp":"2020-12-13T22:03:14.592919Z","air_quality_index":10,"source":"The Department of Environmental Science at Aarhus University","place":"H.C. Ørsted Institutet, Copenhagen, Denmark","latitude":55.7007621,"longitude":12.5613124,"air_quality_level":"GOOD"}}
-,
-{}]
+]
