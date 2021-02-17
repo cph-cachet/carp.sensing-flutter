@@ -1,3 +1,6 @@
+## 0.12.1
+* support for canceling a survey
+
 ## 0.12.0
 * upgrade to `carp_mobile_sensing` v. 0.12.x
 

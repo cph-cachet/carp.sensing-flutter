@@ -187,12 +187,20 @@ abstract class UserTask {
     state = UserTaskState.started;
   }
 
-  /// Callback from app when this task is to be set on hold.
-  void onHold(BuildContext context) {
-    state = UserTaskState.onhold;
+  /// Callback from app if this task is canceled.
+  ///
+  /// If [dequeue] is `true` the task is removed from the queue.
+  /// Othervise, it it kept on the queue ready for later use.
+  void onCancel(BuildContext context, {dequeue = false}) {
+    state = UserTaskState.canceled;
+    (dequeue)
+        ? AppTaskController().dequeue(id)
+        : state = UserTaskState.enqueued;
   }
 
   /// Callback from app when this task is done.
+  ///
+  /// If [dequeue] is `true` the task is removed from the queue.
   void onDone(BuildContext context, {dequeue = false}) {
     state = UserTaskState.done;
     if (dequeue) {
@@ -206,6 +214,7 @@ abstract class UserTask {
 
 /// The states of a [UserTask].
 enum UserTaskState {
+  /// Initialized and ready.
   initialized,
 
   /// Put on the [AppTaskController] queue.
@@ -217,11 +226,14 @@ enum UserTaskState {
   /// Started by the user.
   started,
 
-  /// Put on hold by the user.
-  onhold,
+  /// Canceled by the user.
+  canceled,
 
   /// Done by the user.
   done,
+
+  /// An undefined state and cannot be used.
+  /// Task Should be ignored.
   undefined,
 }
 

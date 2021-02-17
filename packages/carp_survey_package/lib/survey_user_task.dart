@@ -36,6 +36,7 @@ class SurveyUserTask extends UserTask {
     _context = context;
     _surveyProbe.onSurveyTriggered = _onSurveyTriggered;
     _surveyProbe.onSurveySubmit = _onSurveySubmit;
+    _surveyProbe.onSurveyCancel = _onSurveyCancel;
 
     super.onStart(context);
     executor?.resume();
@@ -49,6 +50,11 @@ class SurveyUserTask extends UserTask {
   }
 
   void _onSurveySubmit(RPTaskResult result) {
+    executor?.pause();
+    super.onDone(_context);
+  }
+
+  void _onSurveyCancel(RPTaskResult result) {
     executor?.pause();
     super.onDone(_context);
   }

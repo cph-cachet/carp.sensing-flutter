@@ -368,7 +368,7 @@ void app_task_controller_example() async {
       case UserTaskState.started:
         event.executor.resume();
         break;
-      case UserTaskState.onhold:
+      case UserTaskState.canceled:
         //
         break;
       case UserTaskState.done:
