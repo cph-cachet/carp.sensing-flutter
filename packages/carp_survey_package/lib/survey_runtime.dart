@@ -69,13 +69,16 @@ class SurveyProbe extends AbstractProbe {
   RPTask surveyTask;
 
   /// The callback function providing a [SurveyPage] object to be displayed in the app.
-  /// This function is called when the survey is triggered, i.e. in the [SurveyProbe.resume] method.
+  /// This function is called when the survey is triggered, i.e. in the
+  /// [SurveyProbe.resume] method.
   ///
-  /// This callback function needs to be provided by the app on runtime. I.e. this part of the measure
-  /// cannot be specified in the JSON format of the measure as e.g. downloaded from a study manager.
+  /// This callback function needs to be provided by the app on runtime.
+  /// I.e. this part of the measure cannot be specified in the JSON format of
+  /// the measure as e.g. downloaded from a study manager.
   void Function(SurveyPage) onSurveyTriggered;
 
-  /// The callback function to be called when the survey is submitted by the user (hits done).
+  /// The callback function to be called when the survey is submitted by the
+  /// user (hits done).
   /// Carries the [RPTaskResult] result of the survey.
   void Function(RPTaskResult) onSurveySubmit;
 
@@ -89,7 +92,6 @@ class SurveyProbe extends AbstractProbe {
 
   void onInitialize(Measure measure) {
     assert(measure is RPTaskMeasure);
-    //surveyMeasure = (measure as RPTaskMeasure);
     surveyTask = surveyMeasure.surveyTask;
   }
 

@@ -240,7 +240,7 @@ void main() {
     });
 
     test('- batch', () async {
-      final File file = File("test/batch_2.json");
+      final File file = File("test/batch-correct-test.json");
       await CarpService().getDataPointReference().batchPostDataPoint(file);
 
       // wait for the batch requests to finish
@@ -255,7 +255,35 @@ void main() {
       print('N=${data.length}');
       // data.forEach((datapoint) => print(_encode((datapoint.toJson()))));
 
-      assert(data.length > 0);
+      assert(data.length >= 0);
+    });
+
+    test('- query for test data points', () async {
+      String query = 'carp_header.data_format.namespace==test';
+      print("query : $query");
+      List<CARPDataPoint> data =
+          await CarpService().getDataPointReference().queryDataPoint(query);
+
+      print('N=${data.length}');
+      data.forEach((datapoint) => print(_encode((datapoint.toJson()))));
+
+      assert(data.length >= 0);
+    });
+
+    test('- delete test data points', () async {
+      String query = 'carp_header.data_format.namespace==test';
+      print("query : $query");
+      List<CARPDataPoint> data =
+          await CarpService().getDataPointReference().queryDataPoint(query);
+
+      print('N=${data.length}');
+      print('deleting...');
+      data.forEach((datapoint) async {
+        print(' ${datapoint.id}');
+        await CarpService()
+            .getDataPointReference()
+            .deleteDataPoint(datapoint.id);
+      });
     });
 
     test('- get by id', () async {
@@ -292,8 +320,8 @@ void main() {
 
       // String query =
       //     'carp_header.user_id==$userId;carp_body.timestamp>2019-11-02T12:53:40.219598Z';
-      String query = 'carp_header.data_format.namespace==test';
-      // String query = 'carp_header.data_format.name==light';
+      //String query = 'carp_header.data_format.namespace==test';
+      String query = 'carp_header.data_format.name==light';
       // String query = 'carp_header.user_id==$userId';
       //String query = 'carp_body.timestamp>2019-11-02T12:53:40.219598Z';
       //String query = 'carp_header.data_format.namespace=in=(carp,omh)';
@@ -301,10 +329,13 @@ void main() {
       List<CARPDataPoint> data =
           await CarpService().getDataPointReference().queryDataPoint(query);
 
+      assert(data.length >= 0);
       print('N=${data.length}');
-      data.forEach((datapoint) => print(_encode((datapoint.toJson()))));
-
-      assert(data.length > 0);
+      String str = '[';
+      data.forEach((datapoint) => str += '${datapoint.id},');
+      // data.forEach((datapoint) => print(_encode((datapoint.toJson()))));
+      str += ']';
+      print(str);
     });
 
     test('- delete', () async {

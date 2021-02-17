@@ -117,6 +117,8 @@ class CarpDataManager extends AbstractDataManager {
         case CarpUploadMethod.BATCH_DATA_POINT:
         case CarpUploadMethod.FILE:
           // In both cases, forward to [FileDataManager], which collects data in a file before upload.
+          // TODO - when forwarding to the file, it is the wrong data type format being writte
+          // See issue #162
           return fileDataManager.write(data);
         case CarpUploadMethod.DOCUMENT:
           return (await CarpService()

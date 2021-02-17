@@ -1,3 +1,6 @@
+## 0.12.2
+* support for canceling `UserTask`
+
 ## 0.12.1
 * small refactor for `Device` model.
 
