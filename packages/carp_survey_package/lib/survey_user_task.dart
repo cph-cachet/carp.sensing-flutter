@@ -54,7 +54,7 @@ class SurveyUserTask extends UserTask {
     super.onDone(_context);
   }
 
-  void _onSurveyCancel(RPTaskResult result) {
+  void _onSurveyCancel([RPTaskResult result]) {
     executor?.pause();
     super.onCancel(_context);
   }
