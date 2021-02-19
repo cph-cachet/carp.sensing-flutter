@@ -15,8 +15,8 @@ class ActivityProbe extends StreamProbe {
   // this probe does not need to run one.
   Stream<Datum> get stream {
     if (_stream == null) {
-      _stream = ActivityRecognition
-          .activityStream(runForegroundService: false)
+      _stream = ActivityRecognition.activityStream(runForegroundService: false)
+          .where((event) => event.type != ActivityType.UNKNOWN)
           .map((activity) => ActivityDatum.fromActivity(activity))
           .asBroadcastStream();
     }

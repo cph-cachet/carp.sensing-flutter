@@ -1,3 +1,6 @@
+## 0.12.3
+* extension of `Study` to include `purpose`, `title` and `PrincipalInvestigator`
+
 ## 0.12.2
 * support for canceling `UserTask`
 
