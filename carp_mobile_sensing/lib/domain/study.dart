@@ -25,12 +25,21 @@ class Study extends Serializable {
   /// The id of this [Study].
   String id;
 
-  /// A printer-friendly name for this study.
+  /// A short printer-friendly name for this study.
   String name;
 
-  /// A longer description of this study. To be used to inform the user about
-  /// this study and its purpose.
+  /// A longer printer-friendly title for this study.
+  String title;
+
+  /// A longer description of this study.
   String description;
+
+  /// The purpose of the study. To be used to inform the user about
+  /// this study and its purpose.
+  String purpose;
+
+  /// The PI of this study.
+  PrincipalInvestigator pi;
 
   /// The ID of the user executing this study.
   String userId;
@@ -70,14 +79,15 @@ class Study extends Serializable {
   /// Create a new [Study] object with a set of configurations.
   ///
   /// The [id]  is required for a new study.
-  /// If a [userId] is not specified, an anonymous unique id will be created
-  /// for this user on this phone.
   /// If no [dataFormat] the CARP namespace is used.
   Study({
     @required this.id,
     this.userId,
+    this.pi,
     this.name,
+    this.title,
     this.description,
+    this.purpose,
     this.samplingStrategy,
     this.dataEndPoint,
     this.dataFormat,
@@ -119,6 +129,32 @@ class Study extends Serializable {
   }
 
   String toString() => name;
+}
+
+/// A Principal Investigator (PI) is reposnibile for a [Study].
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+class PrincipalInvestigator extends Serializable {
+  String name;
+  String title;
+  String email;
+  String address;
+  String affiliation;
+
+  PrincipalInvestigator({
+    this.name,
+    this.title,
+    this.email,
+    this.affiliation,
+    this.address,
+  });
+
+  Function get fromJsonFunction => _$PrincipalInvestigatorFromJson;
+  factory PrincipalInvestigator.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$PrincipalInvestigatorToJson(this);
+
+  String toString() => '$name, $title <$email>';
 }
 
 /// Specify an endpoint where a [DataManager] can upload data.

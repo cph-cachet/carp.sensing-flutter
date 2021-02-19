@@ -16,7 +16,6 @@ void example_1() async {
   // Create a study using a local file to store data
   Study study = Study(
       id: '2',
-      userId: 'user@cachet.dk',
       name: 'A study collecting ..',
       dataEndPoint: FileDataEndPoint()
         ..bufferSize = 500 * 1000

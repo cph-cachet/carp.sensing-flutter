@@ -419,9 +419,13 @@ Map<String, dynamic> _$MeasureTypeToJson(MeasureType instance) {
 Study _$StudyFromJson(Map<String, dynamic> json) {
   return Study(
     id: json['id'] as String,
-    userId: json['user_id'] as String,
+    pi: json['pi'] == null
+        ? null
+        : PrincipalInvestigator.fromJson(json['pi'] as Map<String, dynamic>),
     name: json['name'] as String,
+    title: json['title'] as String,
     description: json['description'] as String,
+    purpose: json['purpose'] as String,
     samplingStrategy: json['sampling_strategy'] as String,
     dataEndPoint: json['data_end_point'] == null
         ? null
@@ -452,14 +456,46 @@ Map<String, dynamic> _$StudyToJson(Study instance) {
   writeNotNull(r'$type', instance.$type);
   writeNotNull('id', instance.id);
   writeNotNull('name', instance.name);
+  writeNotNull('title', instance.title);
   writeNotNull('description', instance.description);
-  writeNotNull('user_id', instance.userId);
+  writeNotNull('purpose', instance.purpose);
+  writeNotNull('pi', instance.pi);
   writeNotNull('sampling_strategy', instance.samplingStrategy);
   writeNotNull('data_end_point', instance.dataEndPoint);
   writeNotNull('data_format', instance.dataFormat);
   writeNotNull('public_key', instance.publicKey);
   writeNotNull('devices', instance.devices);
   writeNotNull('triggers', instance.triggers);
+  return val;
+}
+
+PrincipalInvestigator _$PrincipalInvestigatorFromJson(
+    Map<String, dynamic> json) {
+  return PrincipalInvestigator(
+    name: json['name'] as String,
+    title: json['title'] as String,
+    email: json['email'] as String,
+    affiliation: json['affiliation'] as String,
+    address: json['address'] as String,
+  )..$type = json[r'$type'] as String;
+}
+
+Map<String, dynamic> _$PrincipalInvestigatorToJson(
+    PrincipalInvestigator instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(r'$type', instance.$type);
+  writeNotNull('name', instance.name);
+  writeNotNull('title', instance.title);
+  writeNotNull('email', instance.email);
+  writeNotNull('address', instance.address);
+  writeNotNull('affiliation', instance.affiliation);
   return val;
 }
 
