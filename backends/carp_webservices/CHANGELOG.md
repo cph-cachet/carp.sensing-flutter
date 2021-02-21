@@ -1,3 +1,6 @@
+## 0.13.2
+* fix of small render error in invitation dialog on iOS
+
 ## 0.13.1
 * error message to authentication dialog
 * `AuthEvent` events exended with a `failed` event on authentication failure
