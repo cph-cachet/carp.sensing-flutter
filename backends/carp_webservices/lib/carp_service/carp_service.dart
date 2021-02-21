@@ -607,12 +607,12 @@ class CarpService {
     final String body =
         _encode(GetActiveParticipationInvitations(accountId).toJson());
 
-    print('REQUEST: $participationEndpointUri\n$body');
+    debug('REQUEST: $participationEndpointUri\n$body');
     http.Response response = await httpr.post(
         Uri.encodeFull(participationEndpointUri),
         headers: headers,
         body: body);
-    print('RESPONSE: ${response.statusCode}\n${response.body}');
+    debug('RESPONSE: ${response.statusCode}\n${response.body}');
 
     if (response.statusCode == HttpStatus.ok) {
       List<dynamic> items = json.decode(response.body);
@@ -665,14 +665,20 @@ class CarpService {
     if (invitations.length == 1 || !showInvitations) {
       _invitation = invitations[0];
     } else {
-      InvitationsDialog dialog = InvitationsDialog();
-      await dialog.build(context, invitations).show();
-      _invitation = dialog.invitation;
+      // old version below - does not work on iOS...?
+      // InvitationsDialog dialog = InvitationsDialog();
+      // await dialog.build(context, invitations).show();
+      // _invitation = dialog.invitation;
+
+      _invitation = await showDialog<ActiveParticipationInvitation>(
+          context: context,
+          builder: (BuildContext context) =>
+              SimpleInvitationsDialog().build(context, invitations));
     }
 
     // make sure that the correct study and deployment ids are saved in the app
-    CarpService().app.studyId = _invitation.studyId;
-    CarpService().app.studyDeploymentId = _invitation.studyDeploymentId;
+    CarpService().app.studyId = _invitation?.studyId;
+    CarpService().app.studyDeploymentId = _invitation?.studyDeploymentId;
 
     return _invitation;
   }

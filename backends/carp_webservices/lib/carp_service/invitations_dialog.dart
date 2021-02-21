@@ -8,13 +8,52 @@ part of carp_services;
 
 /// A modal dialog shown a list of [ActiveParticipationInvitation] for the
 /// user to select one from.
+class SimpleInvitationsDialog {
+  SimpleDialog build(
+    context,
+    List<ActiveParticipationInvitation> invitations,
+  ) =>
+      SimpleDialog(
+        title: const Text('Select invitation'),
+        children: invitations
+            .map<Widget>((invitation) =>
+                _buildInvitationDialogOption(context, invitation))
+            .toList(),
+      );
+
+  String shortDeploymentStudyId(String studyDeploymentId) => studyDeploymentId
+      .substring(studyDeploymentId.length - 5, studyDeploymentId.length);
+
+  String shortStudyDescription(String studyDescription) =>
+      (studyDescription.length < 80)
+          ? studyDescription
+          : '${studyDescription.substring(0, 60)}...';
+
+  SimpleDialogOption _buildInvitationDialogOption(
+          BuildContext context, ActiveParticipationInvitation invitation) =>
+      SimpleDialogOption(
+          onPressed: () {
+            Navigator.pop(context, invitation);
+          },
+          child: ListTile(
+            isThreeLine: true,
+            leading: Icon(
+              Icons.mail,
+              color: Color.fromRGBO(234, 91, 12, 1.0),
+            ),
+            title: Text('${invitation.invitation.name} '
+                '[...${shortDeploymentStudyId(invitation.studyDeploymentId)}]'),
+            subtitle: (invitation.invitation.description.isEmpty)
+                ? Text('No description provided...')
+                : Text(
+                    shortStudyDescription(invitation.invitation.description)),
+          ));
+}
+
+// This is the old version using the Alert package -- BUT doesn't work on iOS....
+/// A modal dialog shown a list of [ActiveParticipationInvitation] for the
+/// user to select one from.
 class InvitationsDialog {
-  // String _studyDeploymentId;
-
-  // /// The selected study id.
-  // /// Returns `null` if no selection is made.
-  // String get studyDeploymentId => _studyDeploymentId;
-
   ActiveParticipationInvitation _selectedInvitation;
 
   /// The selected invitation.
@@ -28,22 +67,27 @@ class InvitationsDialog {
             (invitation) => _buildInvitationTile(context, invitation)));
 
     return Alert(
-      context: context,
-      image: Padding(
-          padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
-          child: Image.asset('asset/images/cachet_logo_new.png',
-              package: 'carp_webservices')),
-      title: "INVITATIONS",
-      content: ListView(
-        shrinkWrap: true,
-        padding: EdgeInsets.zero,
-        children: _invitationWidgets.toList(),
-      ),
-    );
+        context: context,
+        image: Padding(
+            padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
+            child: Image.asset('asset/images/cachet_logo_new.png',
+                package: 'carp_webservices')),
+        title: "INVITATIONS",
+        content: Container(
+            width: double.maxFinite,
+            child: ListView.builder(
+              shrinkWrap: true,
+              padding: EdgeInsets.zero,
+              itemCount: invitations.length,
+              itemBuilder: (BuildContext context, int index) =>
+                  _buildInvitationTile(context, invitations[index]),
+            )));
   }
 
   Widget _buildInvitationTile(
-          BuildContext context, ActiveParticipationInvitation invitation) =>
+    BuildContext context,
+    ActiveParticipationInvitation invitation,
+  ) =>
       ListTile(
         isThreeLine: true,
         leading: Icon(
@@ -56,7 +100,6 @@ class InvitationsDialog {
             ? Text('No description provided...')
             : Text(shortStudyDescription(invitation.invitation.description)),
         onTap: () {
-          //_studyDeploymentId = invitation.studyDeploymentId;
           _selectedInvitation = invitation;
           Navigator.pop(context);
         },
