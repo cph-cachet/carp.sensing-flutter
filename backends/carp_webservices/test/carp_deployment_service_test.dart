@@ -100,6 +100,7 @@ void main() {
       StudyDeploymentStatus status_1 = await reference.getStatus();
       MasterDeviceDeployment deployment = await reference.get();
       StudyDeploymentStatus status_2 = await reference.success();
+      print(deployment);
       print(status_2);
       expect(status_1.studyDeploymentId, status_2.studyDeploymentId);
       expect(status_2.studyDeploymentId, testDeploymentId);

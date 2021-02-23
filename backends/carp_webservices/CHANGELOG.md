@@ -1,5 +1,6 @@
-## 0.13.2
+## 0.13.2+1
 * fix of small render error in invitation dialog on iOS
+* code cleanup
 
 ## 0.13.1
 * error message to authentication dialog
