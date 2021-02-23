@@ -20,6 +20,10 @@ class FileDataManager extends AbstractDataManager {
 
   String get type => DataEndPointTypes.FILE;
 
+  FileDataManager() {
+    FromJsonFactory().register(FileDataEndPoint());
+  }
+
   FileDataEndPoint _fileDataEndPoint;
   String _path;
   String _filename;
@@ -76,8 +80,7 @@ class FileDataManager extends AbstractDataManager {
   Future<String> get filename async {
     if (_filename == null) {
       final path = await studyPath;
-      final created = DateTime
-          .now()
+      final created = DateTime.now()
           .toString()
           .replaceAll(RegExp(r':'), '-')
           .replaceAll(RegExp(r' '), '-')

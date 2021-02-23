@@ -10,7 +10,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 import 'package:uuid/uuid.dart';
 
-import '../carp_mobile_sensing.dart';
+// import '../carp_mobile_sensing.dart';
 
 part 'datapoint.dart';
 part 'datum.dart';
