@@ -1,7 +1,6 @@
 {
   "$type": "Study",
   "id": "1234",
-  "deployment_id": "#1",
   "name": "bardram study",
   "user_id": "bardram",
   "sampling_strategy": "NORMAL",
@@ -13,6 +12,7 @@
    "encrypt": false
   },
   "data_format": "carp",
+  "devices": [],
   "triggers": [
    {
     "$type": "ImmediateTrigger",

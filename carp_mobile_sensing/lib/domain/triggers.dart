@@ -54,7 +54,7 @@ class ManualTrigger extends Trigger {
   ManualTrigger({String triggerId}) : super(triggerId: triggerId);
 
   @JsonKey(ignore: true)
-  TriggerExecutor executor;
+  dynamic executor;
 
   /// Called when data sampling in this [Trigger] is to be resumed.
   ///
@@ -112,8 +112,7 @@ class PeriodicTrigger extends Trigger {
     String triggerId,
     @required this.period,
     this.duration = const Duration(seconds: 1),
-  })
-      : super(triggerId: triggerId);
+  }) : super(triggerId: triggerId);
 
   Function get fromJsonFunction => _$PeriodicTriggerFromJson;
   factory PeriodicTrigger.fromJson(Map<String, dynamic> json) =>
@@ -136,8 +135,7 @@ class ScheduledTrigger extends Trigger {
     String triggerId,
     @required this.schedule,
     this.duration,
-  })
-      : super(triggerId: triggerId);
+  }) : super(triggerId: triggerId);
 
   Function get fromJsonFunction => _$ScheduledTriggerFromJson;
   factory ScheduledTrigger.fromJson(Map<String, dynamic> json) =>
@@ -494,8 +492,7 @@ class CronScheduledTrigger extends Trigger {
     String triggerId,
     this.cronExpression,
     this.duration = const Duration(seconds: 1),
-  })
-      : super(triggerId: triggerId);
+  }) : super(triggerId: triggerId);
 
   static String _cronToString(
           int minute, int hour, int day, int month, int weekday) =>
@@ -524,8 +521,7 @@ class SamplingEventTrigger extends Trigger {
     @required this.measureType,
     this.resumeCondition,
     this.pauseCondition,
-  })
-      : super(triggerId: triggerId);
+  }) : super(triggerId: triggerId);
 
   /// The [MeasureType] of the event to look for.
   ///
@@ -585,8 +581,7 @@ class ConditionalSamplingEventTrigger extends Trigger {
     @required this.measureType,
     this.resumeCondition,
     this.pauseCondition,
-  })
-      : super(triggerId: triggerId);
+  }) : super(triggerId: triggerId);
 
   /// The [MeasureType] of the event to look for.
   MeasureType measureType;

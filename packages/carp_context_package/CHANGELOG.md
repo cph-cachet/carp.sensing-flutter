@@ -1,4 +1,4 @@
-## 0.12.1
+## 0.12.1+1
 * removed collection of UNKNOWN activity types (was generating a lot of events on iOS) 
 * updating dependencies
 

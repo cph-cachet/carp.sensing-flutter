@@ -88,3 +88,17 @@ class CARPTransformerSchema extends TransformerSchema {
   String get namespace => NameSpace.CARP;
   void onRegister() {}
 }
+
+/// A default [TransformerSchema] for Open mHealth (OMH) transformers
+class OMHTransformerSchema extends TransformerSchema {
+  String get namespace => NameSpace.OMH;
+  void onRegister() {}
+}
+
+/// A default [TransformerSchema] for privacy transformers
+class PrivacySchema extends TransformerSchema {
+  static const String DEFAULT = 'default-privacy-schema';
+
+  String get namespace => DEFAULT;
+  void onRegister() {}
+}

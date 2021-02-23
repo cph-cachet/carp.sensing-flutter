@@ -15,6 +15,9 @@ void main() {
     //SamplingPackageRegistry.register(CommunicationSamplingPackage());
     //SamplingPackageRegistry.register(ContextSamplingPackage());
 
+    // create a file data manager in order to support the file data endpoint
+    FileDataManager();
+
     study = Study(
       id: '1234',
       userId: 'bardram',
@@ -30,7 +33,7 @@ void main() {
     study.addTriggerTask(
         ImmediateTrigger(), // a simple trigger that starts immediately
         AutomaticTask(name: 'Sampling Task')
-          ..measures = SamplingSchema
+          ..measures = SamplingPackageRegistry()
               .common(namespace: NameSpace.CARP)
               .measures
               .values
@@ -111,19 +114,21 @@ void main() {
     study_3.addTriggerTask(
         DelayedTrigger(delay: Duration(seconds: 10)),
         AutomaticTask(name: 'Sensing Task #1')
-          ..measures = SamplingSchema.common().getMeasureList(types: [
-            SensorSamplingPackage.PEDOMETER,
-            DeviceSamplingPackage.SCREEN
-          ]));
+          ..measures = SamplingPackageRegistry().common().getMeasureList(
+              types: [
+                SensorSamplingPackage.PEDOMETER,
+                DeviceSamplingPackage.SCREEN
+              ]));
 
     study_3.addTriggerTask(
         PeriodicTrigger(
             period: const Duration(minutes: 1)), // collect every min.
         AutomaticTask(name: 'Sensing Task #2')
-          ..measures = SamplingSchema.common().getMeasureList(types: [
-            SensorSamplingPackage.LIGHT,
-            DeviceSamplingPackage.DEVICE
-          ]));
+          ..measures = SamplingPackageRegistry().common().getMeasureList(
+              types: [
+                SensorSamplingPackage.LIGHT,
+                DeviceSamplingPackage.DEVICE
+              ]));
 
     RecurrentScheduledTrigger t1, t2, t3, t4;
 
@@ -134,7 +139,7 @@ void main() {
     study_3.addTriggerTask(
         t1,
         AutomaticTask(name: 'Sensing Task #1')
-          ..measures = SamplingSchema
+          ..measures = SamplingPackageRegistry()
               .common()
               .getMeasureList(types: [DeviceSamplingPackage.MEMORY]));
 
@@ -147,10 +152,11 @@ void main() {
     study_3.addTriggerTask(
         t2,
         AutomaticTask(name: 'Sensing Task #1')
-          ..measures = SamplingSchema.common().getMeasureList(types: [
-            SensorSamplingPackage.LIGHT,
-            DeviceSamplingPackage.MEMORY
-          ]));
+          ..measures = SamplingPackageRegistry().common().getMeasureList(
+              types: [
+                SensorSamplingPackage.LIGHT,
+                DeviceSamplingPackage.MEMORY
+              ]));
 
     // collect every wednesday at 12:23.
     t3 = RecurrentScheduledTrigger(
@@ -161,10 +167,11 @@ void main() {
     study_3.addTriggerTask(
         t3,
         AutomaticTask(name: 'Sensing Task #1')
-          ..measures = SamplingSchema.common().getMeasureList(types: [
-            SensorSamplingPackage.LIGHT,
-            DeviceSamplingPackage.BATTERY
-          ]));
+          ..measures = SamplingPackageRegistry().common().getMeasureList(
+              types: [
+                SensorSamplingPackage.LIGHT,
+                DeviceSamplingPackage.BATTERY
+              ]));
 
     // collect every 2nd monday at 12:23.
     t4 = RecurrentScheduledTrigger(
@@ -176,7 +183,7 @@ void main() {
     study_3.addTriggerTask(
         t4,
         AutomaticTask(name: 'Sensing Task #1')
-          ..measures = SamplingSchema.common().getMeasureList(types: [
+          ..measures = DeviceSamplingPackage().common.getMeasureList(types: [
             DeviceSamplingPackage.SCREEN,
             DeviceSamplingPackage.MEMORY
           ]));
@@ -188,8 +195,8 @@ void main() {
                 MeasureType(NameSpace.CARP, DeviceSamplingPackage.BATTERY),
             resumeCondition: BatteryDatum()..batteryLevel = 10),
         AutomaticTask(name: 'Sensing Task #1')
-          ..measures = SamplingSchema
-              .common()
+          ..measures = SensorSamplingPackage()
+              .common
               .getMeasureList(types: [SensorSamplingPackage.LIGHT]));
 
     study_3.addTriggerTask(
@@ -199,8 +206,8 @@ void main() {
             resumeCondition: (datum) =>
                 (datum as BatteryDatum).batteryLevel == 10),
         AutomaticTask(name: 'Sensing Task #1')
-          ..measures = SamplingSchema
-              .common()
+          ..measures = SensorSamplingPackage()
+              .common
               .getMeasureList(types: [SensorSamplingPackage.LIGHT]));
 
     final studyJson = _encode(study_3);

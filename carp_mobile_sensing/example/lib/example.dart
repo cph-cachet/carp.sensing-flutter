@@ -27,15 +27,20 @@ void example_1() async {
   study.addTriggerTask(
       ImmediateTrigger(),
       AutomaticTask()
-        ..measures = SamplingSchema.common().getMeasureList(
+        ..addMeasures(SensorSamplingPackage().common.getMeasureList(
           namespace: NameSpace.CARP,
           types: [
             SensorSamplingPackage.PEDOMETER,
             SensorSamplingPackage.LIGHT,
+          ],
+        ))
+        ..addMeasures(DeviceSamplingPackage().common.getMeasureList(
+          namespace: NameSpace.CARP,
+          types: [
             DeviceSamplingPackage.SCREEN,
             DeviceSamplingPackage.BATTERY,
           ],
-        ));
+        )));
 
   // Create a Study Controller that can manage this study.
   StudyController controller = StudyController(study);
@@ -168,20 +173,6 @@ void samplingSchemaExample() async {
               enabled: true)),
     ]);
 
-  //creating a study
-  Study study_1 = Study(id: '2', userId: 'user@cachet.dk')
-    ..name = 'CARP Mobile Sensing - default configuration'
-    ..dataEndPoint = DataEndPoint(type: DataEndPointTypes.PRINT)
-    ..addTriggerTask(
-        ImmediateTrigger(),
-        AutomaticTask()
-          ..measures = SamplingSchema
-              .common(namespace: NameSpace.CARP)
-              .measures
-              .values
-              .toList());
-  print(study_1);
-
   Study study = Study(
       id: '2',
       userId: 'user@cachet.dk',
@@ -196,20 +187,21 @@ void samplingSchemaExample() async {
   study.addTriggerTask(
       ImmediateTrigger(),
       AutomaticTask(name: 'Sensing Task #1')
-        ..measures = SamplingSchema.common().getMeasureList(
+        ..measures = DeviceSamplingPackage().common.getMeasureList(
           namespace: NameSpace.CARP,
           types: [
-            SensorSamplingPackage.PEDOMETER,
             DeviceSamplingPackage.SCREEN,
+            DeviceSamplingPackage.BATTERY,
           ],
         ));
 
   study.addTriggerTask(
       ImmediateTrigger(),
       AutomaticTask(name: 'One Common Sensing Task')
-        ..measures = SamplingSchema.common().getMeasureList(
+        ..measures = SensorSamplingPackage().common.getMeasureList(
           namespace: NameSpace.CARP,
           types: [
+            SensorSamplingPackage.PEDOMETER,
             SensorSamplingPackage.ACCELEROMETER,
             SensorSamplingPackage.GYROSCOPE,
           ],
@@ -321,26 +313,18 @@ void app_task_example() async {
         ImmediateTrigger(), // collect local weather and air quality as an app task
         AppTask(
           type: SensingUserTask.ONE_TIME_SENSING_TYPE,
-          title: "Weather & Air Quality",
+          title: "Device",
           description: "Collect device info",
-        )..measures = SamplingSchema.common().getMeasureList(
-            namespace: NameSpace.CARP,
-            types: [
-              DeviceSamplingPackage.DEVICE,
-            ],
-          ))
+        )..addMeasure(Measure(
+            type: MeasureType(NameSpace.CARP, DeviceSamplingPackage.DEVICE))))
     ..addTriggerTask(
         ImmediateTrigger(),
         AppTask(
           type: SensingUserTask.SENSING_TYPE,
           title: "Screen",
           description: "Collect screen events",
-        )..measures = SamplingSchema.common().getMeasureList(
-            namespace: NameSpace.CARP,
-            types: [
-              DeviceSamplingPackage.SCREEN,
-            ],
-          ));
+        )..addMeasure(Measure(
+            type: MeasureType(NameSpace.CARP, DeviceSamplingPackage.SCREEN))));
 
   StudyController controller =
       StudyController(study, privacySchemaName: PrivacySchema.DEFAULT);

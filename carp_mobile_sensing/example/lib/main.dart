@@ -124,7 +124,7 @@ class Sensing {
           ..addTriggerTask(
               ImmediateTrigger(),
               AutomaticTask()
-                ..measures = SamplingSchema.debug().getMeasureList(
+                ..measures = SamplingPackageRegistry().debug().getMeasureList(
                   namespace: NameSpace.CARP,
                   types: [
                     //SensorSamplingPackage.ACCELEROMETER,
@@ -137,7 +137,7 @@ class Sensing {
           ..addTriggerTask(
               ImmediateTrigger(),
               AutomaticTask()
-                ..measures = SamplingSchema.debug().getMeasureList(
+                ..measures = SamplingPackageRegistry().debug().getMeasureList(
                   namespace: NameSpace.CARP,
                   types: [
                     SensorSamplingPackage.PEDOMETER,

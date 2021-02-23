@@ -36,6 +36,11 @@ class Task extends Serializable {
     measures.add(measure);
   }
 
+  /// Add a list of [Measure]s to this task.
+  void addMeasures(Iterable<Measure> list) {
+    measures.addAll(list);
+  }
+
   /// Remove a [Measure] from this task.
   void removeMeasure(Measure measure) {
     measures.remove(measure);

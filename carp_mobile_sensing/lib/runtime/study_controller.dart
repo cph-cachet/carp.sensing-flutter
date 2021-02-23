@@ -81,8 +81,7 @@ class StudyController {
     this.privacySchemaName,
     this.transformer,
     this.debugLevel = DebugLevel.WARNING,
-  })
-      : super() {
+  }) : super() {
     assert(study != null);
     // set global debug level
     globalDebugLevel = debugLevel;
@@ -254,7 +253,7 @@ class NoSamplingState implements PowerAwarenessState {
     }
   }
 
-  SamplingSchema get schema => SamplingSchema.none();
+  SamplingSchema get schema => SamplingPackageRegistry().none();
 
   String toString() => 'Disabled Sampling Mode';
 }
@@ -272,7 +271,7 @@ class MinimumSamplingState implements PowerAwarenessState {
     }
   }
 
-  SamplingSchema get schema => SamplingSchema.minimum();
+  SamplingSchema get schema => SamplingPackageRegistry().minimum();
 
   String toString() => 'Minimun Sampling Mode';
 }
@@ -290,7 +289,7 @@ class LightSamplingState implements PowerAwarenessState {
     }
   }
 
-  SamplingSchema get schema => SamplingSchema.light();
+  SamplingSchema get schema => SamplingPackageRegistry().light();
 
   String toString() => 'Light Sampling Mode';
 }

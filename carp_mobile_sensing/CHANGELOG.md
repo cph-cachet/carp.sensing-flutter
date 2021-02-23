@@ -1,3 +1,6 @@
+## 0.20.0
+* splitting domain model into carp_core
+
 ## 0.12.3
 * extension of `Study` to include `purpose`, `title` and `PrincipalInvestigator`
 

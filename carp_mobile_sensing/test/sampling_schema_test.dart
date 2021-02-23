@@ -20,11 +20,9 @@ void main() {
     study.addTriggerTask(
       ImmediateTrigger(),
       AutomaticTask()
-        ..measures = SamplingSchema.common().getMeasureList(
+        ..measures = DeviceSamplingPackage().common.getMeasureList(
           namespace: NameSpace.CARP,
           types: [
-//            AppsSamplingPackage.APPS,
-//            AppsSamplingPackage.APP_USAGE,
             DeviceSamplingPackage.SCREEN,
             DeviceSamplingPackage.BATTERY,
             DeviceSamplingPackage.DEVICE,

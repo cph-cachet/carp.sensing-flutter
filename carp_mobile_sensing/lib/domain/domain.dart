@@ -5,6 +5,7 @@
 library domain;
 
 import 'dart:io';
+import 'dart:convert';
 import 'package:device_info/device_info.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
@@ -25,3 +26,4 @@ part 'app_task.dart';
 part 'transformers.dart';
 part 'triggers.dart';
 part 'sampling_schema_types.dart';
+part 'sampling_schema.dart';

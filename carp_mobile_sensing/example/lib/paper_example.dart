@@ -16,7 +16,8 @@ void sensing() async {
     ..addTriggerTask(
         ImmediateTrigger(),
         Task(name: 'One Common Sensing Task')
-          ..measures = SamplingSchema.common().getMeasureList(types: [
+          ..measures =
+              SamplingPackageRegistry().common().getMeasureList(types: [
             SensorSamplingPackage.ACCELEROMETER,
             SensorSamplingPackage.GYROSCOPE,
             DeviceSamplingPackage.SCREEN,

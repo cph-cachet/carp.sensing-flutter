@@ -177,7 +177,6 @@ class ManualTriggerExecutor extends TriggerExecutor {
   }
 
   // Forward to the embedded trigger executor
-  //Future<bool> onInitialize(Measure measure) async => await (trigger as ManualTrigger).executor.initialize(measure);
   void onInitialize(Measure measure) =>
       (trigger as ManualTrigger).executor.initialize(measure);
 

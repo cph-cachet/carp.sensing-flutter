@@ -419,6 +419,7 @@ Map<String, dynamic> _$MeasureTypeToJson(MeasureType instance) {
 Study _$StudyFromJson(Map<String, dynamic> json) {
   return Study(
     id: json['id'] as String,
+    userId: json['user_id'] as String,
     pi: json['pi'] == null
         ? null
         : PrincipalInvestigator.fromJson(json['pi'] as Map<String, dynamic>),
@@ -460,6 +461,7 @@ Map<String, dynamic> _$StudyToJson(Study instance) {
   writeNotNull('description', instance.description);
   writeNotNull('purpose', instance.purpose);
   writeNotNull('pi', instance.pi);
+  writeNotNull('user_id', instance.userId);
   writeNotNull('sampling_strategy', instance.samplingStrategy);
   writeNotNull('data_end_point', instance.dataEndPoint);
   writeNotNull('data_format', instance.dataFormat);

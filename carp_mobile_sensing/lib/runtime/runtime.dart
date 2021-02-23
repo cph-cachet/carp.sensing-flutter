@@ -35,7 +35,6 @@ part 'probes.dart';
 part 'sampling_package.dart';
 part 'settings.dart';
 part 'study_controller.dart';
-part 'sampling_schema.dart';
 
 /// Generic sensing exception.
 class SensingException implements Exception {
