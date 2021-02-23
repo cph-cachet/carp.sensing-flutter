@@ -436,43 +436,43 @@ void main() {
       assert(newDocument.id == document.id);
     });
 
-    test(' - rename document', () async {
-      assert(document != null);
+//     test(' - rename document', () async {
+//       assert(document != null);
 
-      print('----------- local document -------------');
-      print(document);
-      print(_encode(document.data));
+//       print('----------- local document -------------');
+//       print(document);
+//       print(_encode(document.data));
 
-      print('----------- renamed document -------------');
-      DocumentSnapshot renamedDocument = await CarpService()
-          .collection(collectionName)
-          .document(document.name)
-          .rename('new_name');
-      print(renamedDocument);
-      print(_encode(renamedDocument.data));
+//       print('----------- renamed document -------------');
+//       DocumentSnapshot renamedDocument = await CarpService()
+//           .collection(collectionName)
+//           .document(document.name)
+//           .rename('new_name');
+//       print(renamedDocument);
+//       print(_encode(renamedDocument.data));
 
-      // get the document back from the server
-//      DocumentSnapshot server_document =
-//          await CarpService().collection(collectionName).document(renamed_document.name).get();
+//       // get the document back from the server
+// //      DocumentSnapshot server_document =
+// //          await CarpService().collection(collectionName).document(renamed_document.name).get();
 
-      print('----------- server document by ID -------------');
-      DocumentSnapshot serverDocument =
-          await CarpService().documentById(documentId).get();
-      print(serverDocument);
-      print(_encode(serverDocument.data));
+//       print('----------- server document by ID -------------');
+//       DocumentSnapshot serverDocument =
+//           await CarpService().documentById(documentId).get();
+//       print(serverDocument);
+//       print(_encode(serverDocument.data));
 
-      print('----------- server document by NAME -------------');
-      serverDocument = await CarpService()
-          .collection(collectionName)
-          .document(renamedDocument.name)
-          .get();
-      print(serverDocument);
-      print(_encode(serverDocument.data));
+//       print('----------- server document by NAME -------------');
+//       serverDocument = await CarpService()
+//           .collection(collectionName)
+//           .document(renamedDocument.name)
+//           .get();
+//       print(serverDocument);
+//       print(_encode(serverDocument.data));
 
-      assert(serverDocument.id > 0);
-      assert(serverDocument.name == renamedDocument.name);
-      assert(serverDocument.data.length == document.data.length);
-    }, skip: true);
+//       assert(serverDocument.id > 0);
+//       assert(serverDocument.name == renamedDocument.name);
+//       assert(serverDocument.data.length == document.data.length);
+//     }, skip: true);
 
     test(' - get document by query', () async {
       assert(document != null);

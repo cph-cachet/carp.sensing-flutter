@@ -152,22 +152,22 @@ class FileMetadata {
         customMetadata =
             (customMetadata == null) ? null : Map.unmodifiable(customMetadata);
 
-  FileMetadata._fromMap(Map<dynamic, dynamic> map)
-      : carpServiceName = map['carpServiceName'],
-        path = map['path'],
-        name = map['name'],
-        sizeBytes = map['sizeBytes'],
-        creationTimeMillis = map['creationTimeMillis'],
-        updatedTimeMillis = map['updatedTimeMillis'],
-        md5Hash = map['md5Hash'],
-        cacheControl = map['cacheControl'],
-        contentDisposition = map['contentDisposition'],
-        contentLanguage = map['contentLanguage'],
-        contentType = map['contentType'],
-        contentEncoding = map['contentEncoding'],
-        customMetadata = map['customMetadata'] == null
-            ? null
-            : Map.unmodifiable(map['customMetadata'].cast<String, String>());
+  // FileMetadata._fromMap(Map<dynamic, dynamic> map)
+  //     : carpServiceName = map['carpServiceName'],
+  //       path = map['path'],
+  //       name = map['name'],
+  //       sizeBytes = map['sizeBytes'],
+  //       creationTimeMillis = map['creationTimeMillis'],
+  //       updatedTimeMillis = map['updatedTimeMillis'],
+  //       md5Hash = map['md5Hash'],
+  //       cacheControl = map['cacheControl'],
+  //       contentDisposition = map['contentDisposition'],
+  //       contentLanguage = map['contentLanguage'],
+  //       contentType = map['contentType'],
+  //       contentEncoding = map['contentEncoding'],
+  //       customMetadata = map['customMetadata'] == null
+  //           ? null
+  //           : Map.unmodifiable(map['customMetadata'].cast<String, String>());
 
   /// The owning CARP Web Service name the [FileStorageReference].
   final String carpServiceName;

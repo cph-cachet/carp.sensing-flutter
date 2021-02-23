@@ -61,11 +61,6 @@ class InvitationsDialog {
   ActiveParticipationInvitation get invitation => _selectedInvitation;
 
   Alert build(context, List<ActiveParticipationInvitation> invitations) {
-    Iterable<Widget> _invitationWidgets = ListTile.divideTiles(
-        context: context,
-        tiles: invitations.map<Widget>(
-            (invitation) => _buildInvitationTile(context, invitation)));
-
     return Alert(
         context: context,
         image: Padding(
