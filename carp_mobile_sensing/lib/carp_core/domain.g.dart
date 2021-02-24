@@ -460,11 +460,10 @@ Map<String, dynamic> _$MeasureTypeToJson(MeasureType instance) {
 
 StudyProtocol _$StudyProtocolFromJson(Map<String, dynamic> json) {
   return StudyProtocol(
-    id: json['id'] as String,
     userId: json['user_id'] as String,
-    pi: json['pi'] == null
+    owner: json['owner'] == null
         ? null
-        : PrincipalInvestigator.fromJson(json['pi'] as Map<String, dynamic>),
+        : ProtocolOwner.fromJson(json['owner'] as Map<String, dynamic>),
     name: json['name'] as String,
     title: json['title'] as String,
     description: json['description'] as String,
@@ -477,6 +476,7 @@ StudyProtocol _$StudyProtocolFromJson(Map<String, dynamic> json) {
     publicKey: json['public_key'] as String,
   )
     ..$type = json[r'$type'] as String
+    ..id = json['id'] as String
     ..devices = (json['devices'] as List)
         ?.map((e) =>
             e == null ? null : Device.fromJson(e as Map<String, dynamic>))
@@ -502,7 +502,7 @@ Map<String, dynamic> _$StudyProtocolToJson(StudyProtocol instance) {
   writeNotNull('title', instance.title);
   writeNotNull('description', instance.description);
   writeNotNull('purpose', instance.purpose);
-  writeNotNull('pi', instance.pi);
+  writeNotNull('owner', instance.owner);
   writeNotNull('user_id', instance.userId);
   writeNotNull('sampling_strategy', instance.samplingStrategy);
   writeNotNull('data_end_point', instance.dataEndPoint);
@@ -513,9 +513,9 @@ Map<String, dynamic> _$StudyProtocolToJson(StudyProtocol instance) {
   return val;
 }
 
-PrincipalInvestigator _$PrincipalInvestigatorFromJson(
-    Map<String, dynamic> json) {
-  return PrincipalInvestigator(
+ProtocolOwner _$ProtocolOwnerFromJson(Map<String, dynamic> json) {
+  return ProtocolOwner(
+    id: json['id'] as String,
     name: json['name'] as String,
     title: json['title'] as String,
     email: json['email'] as String,
@@ -524,8 +524,7 @@ PrincipalInvestigator _$PrincipalInvestigatorFromJson(
   )..$type = json[r'$type'] as String;
 }
 
-Map<String, dynamic> _$PrincipalInvestigatorToJson(
-    PrincipalInvestigator instance) {
+Map<String, dynamic> _$ProtocolOwnerToJson(ProtocolOwner instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -535,6 +534,7 @@ Map<String, dynamic> _$PrincipalInvestigatorToJson(
   }
 
   writeNotNull(r'$type', instance.$type);
+  writeNotNull('id', instance.id);
   writeNotNull('name', instance.name);
   writeNotNull('title', instance.title);
   writeNotNull('email', instance.email);

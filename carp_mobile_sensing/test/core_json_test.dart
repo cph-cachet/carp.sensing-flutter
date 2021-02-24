@@ -19,7 +19,6 @@ void main() {
     FileDataManager();
 
     study = StudyProtocol(
-      id: '1234',
       userId: 'bardram',
       name: 'bardram study',
     );
@@ -105,7 +104,7 @@ void main() {
 
   test('Triggers -> JSON', () async {
     StudyProtocol study_3 =
-        StudyProtocol(id: '3', userId: 'bardram', name: 'Multi Trigger Study');
+        StudyProtocol(userId: 'bardram', name: 'Multi Trigger Study');
     study_3.dataEndPoint = FileDataEndPoint()
       ..bufferSize = 50 * 1000
       ..zip = true

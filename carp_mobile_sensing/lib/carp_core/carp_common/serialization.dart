@@ -72,7 +72,7 @@ class FromJsonFactory {
   // TODO: Remember to add any new classes here.
   // TODO: This could be auto-generated using a builder....
   FromJsonFactory._() {
-    register(StudyProtocol(id: 'ignored'));
+    register(StudyProtocol());
     register(DataEndPoint());
     // register(FileDataEndPoint());
     register(Device());

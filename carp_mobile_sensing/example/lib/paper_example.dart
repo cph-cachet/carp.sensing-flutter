@@ -5,7 +5,6 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 void sensing() async {
   // create the study
   StudyProtocol study = StudyProtocol(
-      id: '2',
       userId: 'user@gmail.com',
       name: 'A simple example study',
       dataEndPoint: FileDataEndPoint()

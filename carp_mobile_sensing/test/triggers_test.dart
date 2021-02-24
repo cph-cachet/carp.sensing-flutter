@@ -9,7 +9,7 @@ String _encode(Object object) =>
 void main() {
   setUp(() {
     // This is a hack. Need to create some serialization object in order to intialize searialization.
-    StudyProtocol(id: '1234', userId: 'kkk');
+    StudyProtocol();
   });
 
 //  /// Test if we can load a raw JSON from a file and convert it into a [Study] object with all its [Task]s and [Measure]s.

@@ -373,8 +373,12 @@ class DeviceDeploymentStatus extends DeploymentDomainObject {
   String toString() => '$runtimeType - status: $status';
 }
 
-/// A [DeviceDescriptor] represents the status of a deployment as returned from
-/// the CARP web service.
+/// Describes any type of electronic device, such as a sensor, video camera,
+/// desktop computer, or smartphone that collects data which can be incorporated
+/// into the platform after it has been processed by a master device
+/// (potentially itself).
+///
+/// Optionally, a device can present output and receive user input.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class DeviceDescriptor extends DeploymentDomainObject {
   DeviceDescriptor() : super();

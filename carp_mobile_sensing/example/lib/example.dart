@@ -15,7 +15,6 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 void example_1() async {
   // Create a study using a local file to store data
   StudyProtocol study = StudyProtocol(
-      id: '2',
       name: 'A study collecting ..',
       dataEndPoint: FileDataEndPoint()
         ..bufferSize = 500 * 1000
@@ -57,7 +56,6 @@ void example_1() async {
 void example_2() async {
   // Create a study using a local file to store data
   StudyProtocol study = StudyProtocol(
-      id: '1234',
       userId: 'user@dtu.dk',
       name: 'An example study',
       dataEndPoint: FileDataEndPoint()
@@ -174,7 +172,6 @@ void samplingSchemaExample() async {
     ]);
 
   StudyProtocol study = StudyProtocol(
-      id: '2',
       userId: 'user@cachet.dk',
       name: 'A outdoor activity study',
       dataFormat: NameSpace.OMH,
@@ -299,7 +296,7 @@ void recurrentScheduledTriggerExample() {
 
 /// An example of how to configure a [StudyController] with the default privacy schema.
 void study_controller_example() async {
-  StudyProtocol study = StudyProtocol(id: '2', userId: 'user@cachet.dk');
+  StudyProtocol study = StudyProtocol(userId: 'user@cachet.dk');
   StudyController controller =
       StudyController(study, privacySchemaName: PrivacySchema.DEFAULT);
   await controller.initialize();
@@ -308,7 +305,7 @@ void study_controller_example() async {
 
 /// An example of using the (new) AppTask model
 void app_task_example() async {
-  StudyProtocol study = StudyProtocol(id: '2', userId: 'user@cachet.dk')
+  StudyProtocol study = StudyProtocol(userId: 'user@cachet.dk')
     ..addTriggerTask(
         ImmediateTrigger(), // collect local weather and air quality as an app task
         AppTask(

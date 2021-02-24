@@ -14,7 +14,7 @@ void main() {
     //SamplingPackageRegistry.register(CommunicationSamplingPackage());
     //SamplingPackageRegistry.register(ContextSamplingPackage());
 
-    study = StudyProtocol(id: '1234', userId: 'bardram', name: 'bardram study');
+    study = StudyProtocol(userId: 'bardram', name: 'bardram study');
     study.dataEndPoint = DataEndPoint(type: DataEndPointTypes.PRINT);
 
     study.addTriggerTask(

@@ -114,7 +114,6 @@ class Sensing {
 
     // create the study
     study = StudyProtocol(
-            id: '2',
             userId: 'user@cachet.dk',
             name: 'A default / common study',
             dataEndPoint: FileDataEndPoint()

@@ -14,10 +14,11 @@ part of carp_core_domain;
 /// A [StudyProtocol] defining the master device ([MasterDeviceDescriptor])
 /// responsible for aggregating data (typically this phone), the optional
 /// devices ([DeviceDescriptor]) connected to the master device,
-/// and the [CAMSTrigger]'s which lead to data collection on said devices.
+/// and the [Trigger]'s which lead to data collection on said devices.
 ///
-/// A study may be fetched in a [StudyManager] who knows how to fetch a study
-/// protocol for this device.
+/// A study may be fetched via a [DeploymentService] that knows how to fetch a
+/// study protocol for this device.
+///
 /// A study is controlled and executed by a [StudyController].
 /// Data from the study is uploaded to the specified [DataEndPoint] in the
 /// specified [dataFormat].
@@ -39,8 +40,8 @@ class StudyProtocol extends Serializable {
   /// this study and its purpose.
   String purpose;
 
-  /// The PI of this study.
-  PrincipalInvestigator pi;
+  /// The owner of this study.
+  ProtocolOwner owner;
 
   /// The ID of the user executing this study.
   String userId;
@@ -61,12 +62,12 @@ class StudyProtocol extends Serializable {
   /// The devices this device needs to connect to.
   List<Device> devices = [];
 
-  /// The set of [CAMSTrigger]s which can trigger [Task](s) in this study.
+  /// The set of [CAMSTrigger]s which can trigger [Task]s in this study.
   List<CAMSTrigger> triggers = [];
 
   List<Measure> _measures;
 
-  /// Get the list of all [Mesure] in this study.
+  /// Get the list of all [Mesure]s in this study.
   List<Measure> get measures {
     if (_measures == null) {
       _measures = [];
@@ -79,12 +80,10 @@ class StudyProtocol extends Serializable {
 
   /// Create a new [StudyProtocol] object with a set of configurations.
   ///
-  /// The [id]  is required for a new study.
   /// If no [dataFormat] the CARP namespace is used.
   StudyProtocol({
-    @required this.id,
     this.userId,
-    this.pi,
+    this.owner,
     this.name,
     this.title,
     this.description,
@@ -95,6 +94,7 @@ class StudyProtocol extends Serializable {
     this.publicKey,
   }) : super() {
     assert(id != null, 'Cannot create a Study without an id: id=null');
+    id ??= Uuid().v1();
     samplingStrategy ??= SamplingSchemaType.NORMAL;
     dataFormat ??= NameSpace.CARP;
   }
@@ -131,16 +131,19 @@ class StudyProtocol extends Serializable {
   String toString() => name;
 }
 
-/// A Principal Investigator (PI) is reposnibile for a [StudyProtocol].
+/// A person that created a [StudyProtocol].
+/// Typically the Principal Investigator (PI) who is reposnibile for the study.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class PrincipalInvestigator extends Serializable {
+class ProtocolOwner extends Serializable {
+  String id;
   String name;
   String title;
   String email;
   String address;
   String affiliation;
 
-  PrincipalInvestigator({
+  ProtocolOwner({
+    this.id,
     this.name,
     this.title,
     this.email,
@@ -148,11 +151,10 @@ class PrincipalInvestigator extends Serializable {
     this.address,
   });
 
-  Function get fromJsonFunction => _$PrincipalInvestigatorFromJson;
-  factory PrincipalInvestigator.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
-  Map<String, dynamic> toJson() => _$PrincipalInvestigatorToJson(this);
+  Function get fromJsonFunction => _$ProtocolOwnerFromJson;
+  factory ProtocolOwner.fromJson(Map<String, dynamic> json) => FromJsonFactory()
+      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$ProtocolOwnerToJson(this);
 
   String toString() => '$name, $title <$email>';
 }
