@@ -1,11 +1,11 @@
 /*
- * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2021 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
 
-/// A library for handling data stores.
+/// A library for handling data managers.
 library managers;
 
 import 'dart:async';
@@ -21,4 +21,4 @@ import '../carp_mobile_sensing.dart';
 part 'data_managers.g.dart';
 part 'local/console_data_manager.dart';
 part 'local/file_data_manager.dart';
-part 'local/file_study_manager.dart';
+part 'local/file_deployment_service.dart';

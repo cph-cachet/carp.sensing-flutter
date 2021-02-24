@@ -7,13 +7,14 @@
 
 part of managers;
 
-/// Retrieve and store [StudyProtocol] json definitions on the device's local file system.
+/// Retrieve and store [StudyProtocol] json definitions on the device's local
+/// file system.
 ///
 /// The path and filename format is
 ///
 ///   `carp/study/study-<study_id>.json`
 ///
-class FileStudyManager implements StudyManager {
+class FileStudyManager implements DeploymentService {
   /// The path to use on the device for storing CARP study files.
   static const String CARP_STUDY_FILE_PATH = 'carp/study';
 
@@ -28,7 +29,7 @@ class FileStudyManager implements StudyManager {
   }
 
   /// Get a study stored on the local file system.
-  Future<StudyProtocol> getStudy(String studyId) async {
+  Future<StudyProtocol> getDeviceDeploymentFor(String studyId) async {
     info("Loading study '$studyId'.");
     StudyProtocol study;
 
