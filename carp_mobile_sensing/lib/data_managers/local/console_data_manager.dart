@@ -12,7 +12,7 @@ part of managers;
 class ConsoleDataManager extends AbstractDataManager {
   String get type => DataEndPointTypes.PRINT;
 
-  Future initialize(Study study, Stream<Datum> data) async {
+  Future initialize(StudyProtocol study, Stream<Datum> data) async {
     assert(study.dataEndPoint is DataEndPoint);
     await super.initialize(study, data);
   }

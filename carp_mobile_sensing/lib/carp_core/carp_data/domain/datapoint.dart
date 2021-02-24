@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of domain;
+part of carp_core_domain;
 
 /// A data point storing meta-information and the data.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
@@ -39,7 +39,7 @@ class DataPoint {
 /// The header (meta-data) attached to all [DataPoint]s.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class DataPointHeader {
-  /// The ID of the [Study] from which this data point was generated.
+  /// The ID of the [StudyProtocol] from which this data point was generated.
   String studyId;
 
   /// The ID of the user (if known).

@@ -4,7 +4,7 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of domain;
+part of carp_core_domain;
 
 /// Signature of a data transformer.
 typedef DatumTransformer = Datum Function(Datum);

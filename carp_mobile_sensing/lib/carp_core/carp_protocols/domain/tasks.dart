@@ -5,9 +5,9 @@
  * found in the LICENSE file.
  */
 
-part of domain;
+part of carp_core_domain;
 
-/// A [Task] holds information about each task to be triggered by a [Trigger] as part of a [Study].
+/// A [Task] holds information about each task to be triggered by a [Trigger] as part of a [StudyProtocol].
 /// Each [Task] holds a list of [Measure]s to be done as part of this task.
 /// A [Task] is hence merely an aggregation of [Measure]s.
 ///
@@ -16,7 +16,7 @@ part of domain;
 class Task extends Serializable {
   static int _counter = 0;
 
-  /// The name of this task. Unique for this [Study].
+  /// The name of this task. Unique for this [StudyProtocol].
   String name;
 
   /// A list of [Measure]s to be done as part of this task.

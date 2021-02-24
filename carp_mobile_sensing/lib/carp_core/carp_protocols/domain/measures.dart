@@ -4,10 +4,10 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of domain;
+part of carp_core_domain;
 
 /// A [Measure] holds information about what measure to do/collect for a
-/// [Task] in a [Study].
+/// [Task] in a [StudyProtocol].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class Measure extends Serializable {
   /// The type of measure to do.
@@ -34,8 +34,7 @@ class Measure extends Serializable {
     this.name,
     this.description,
     this.enabled = true,
-  })
-      : super() {
+  }) : super() {
     enabled = enabled ?? true;
     _storedEnabled = enabled;
   }
@@ -108,8 +107,7 @@ class PeriodicMeasure extends Measure {
     bool enabled,
     this.frequency,
     this.duration,
-  })
-      : super(
+  }) : super(
             type: type,
             name: name,
             description: description,
@@ -175,8 +173,7 @@ class MarkedMeasure extends Measure {
     String description,
     bool enabled,
     this.history = const Duration(days: 1),
-  })
-      : super(
+  }) : super(
           type: type,
           name: name,
           description: description,

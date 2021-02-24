@@ -12,9 +12,9 @@ abstract class DataManager {
   /// The type of this data manager as enumerated in [DataEndPointType].
   String get type;
 
-  /// Initialize the data manager by specifying the running [Study]
+  /// Initialize the data manager by specifying the running [StudyProtocol]
   /// and the stream of [Datum] events to handle.
-  Future initialize(Study study, Stream<Datum> data);
+  Future initialize(StudyProtocol study, Stream<Datum> data);
 
   /// Close the data manager (e.g. closing connections).
   Future close();
@@ -36,13 +36,13 @@ abstract class DataManager {
 ///
 /// Takes data from a [Stream] and uploads these. Also supports JSON encoding.
 abstract class AbstractDataManager implements DataManager {
-  Study study;
+  StudyProtocol study;
 
   StreamController<DataManagerEvent> controller = StreamController.broadcast();
   Stream<DataManagerEvent> get events => controller.stream;
   void addEvent(DataManagerEvent event) => controller.add(event);
 
-  Future initialize(Study study, Stream<Datum> data) async {
+  Future initialize(StudyProtocol study, Stream<Datum> data) async {
     this.study = study;
     data.listen(onDatum, onError: onError, onDone: onDone);
     addEvent(DataManagerEvent(DataManagerEventTypes.INITIALIZED));

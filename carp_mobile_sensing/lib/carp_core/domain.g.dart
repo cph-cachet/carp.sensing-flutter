@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of domain;
+part of carp_core_domain;
 
 // **************************************************************************
 // JsonSerializableGenerator
@@ -252,6 +252,48 @@ Map<String, dynamic> _$DataFormatToJson(DataFormat instance) {
   return val;
 }
 
+AppTask _$AppTaskFromJson(Map<String, dynamic> json) {
+  return AppTask(
+    name: json['name'] as String,
+    type: json['type'] as String,
+    title: json['title'] as String,
+    description: json['description'] as String,
+    instructions: json['instructions'] as String,
+    minutesToComplete: json['minutes_to_complete'] as int,
+    expire: json['expire'] == null
+        ? null
+        : Duration(microseconds: json['expire'] as int),
+    notification: json['notification'] as bool,
+  )
+    ..$type = json[r'$type'] as String
+    ..measures = (json['measures'] as List)
+        ?.map((e) =>
+            e == null ? null : Measure.fromJson(e as Map<String, dynamic>))
+        ?.toList();
+}
+
+Map<String, dynamic> _$AppTaskToJson(AppTask instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(r'$type', instance.$type);
+  writeNotNull('name', instance.name);
+  writeNotNull('measures', instance.measures);
+  writeNotNull('type', instance.type);
+  writeNotNull('title', instance.title);
+  writeNotNull('description', instance.description);
+  writeNotNull('instructions', instance.instructions);
+  writeNotNull('minutes_to_complete', instance.minutesToComplete);
+  writeNotNull('expire', instance.expire?.inMicroseconds);
+  writeNotNull('notification', instance.notification);
+  return val;
+}
+
 Device _$DeviceFromJson(Map<String, dynamic> json) {
   return Device(
     deviceType: json['device_type'] as String,
@@ -416,8 +458,8 @@ Map<String, dynamic> _$MeasureTypeToJson(MeasureType instance) {
   return val;
 }
 
-Study _$StudyFromJson(Map<String, dynamic> json) {
-  return Study(
+StudyProtocol _$StudyProtocolFromJson(Map<String, dynamic> json) {
+  return StudyProtocol(
     id: json['id'] as String,
     userId: json['user_id'] as String,
     pi: json['pi'] == null
@@ -445,7 +487,7 @@ Study _$StudyFromJson(Map<String, dynamic> json) {
         ?.toList();
 }
 
-Map<String, dynamic> _$StudyToJson(Study instance) {
+Map<String, dynamic> _$StudyProtocolToJson(StudyProtocol instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -570,48 +612,6 @@ Map<String, dynamic> _$AutomaticTaskToJson(AutomaticTask instance) {
   writeNotNull(r'$type', instance.$type);
   writeNotNull('name', instance.name);
   writeNotNull('measures', instance.measures);
-  return val;
-}
-
-AppTask _$AppTaskFromJson(Map<String, dynamic> json) {
-  return AppTask(
-    name: json['name'] as String,
-    type: json['type'] as String,
-    title: json['title'] as String,
-    description: json['description'] as String,
-    instructions: json['instructions'] as String,
-    minutesToComplete: json['minutes_to_complete'] as int,
-    expire: json['expire'] == null
-        ? null
-        : Duration(microseconds: json['expire'] as int),
-    notification: json['notification'] as bool,
-  )
-    ..$type = json[r'$type'] as String
-    ..measures = (json['measures'] as List)
-        ?.map((e) =>
-            e == null ? null : Measure.fromJson(e as Map<String, dynamic>))
-        ?.toList();
-}
-
-Map<String, dynamic> _$AppTaskToJson(AppTask instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull(r'$type', instance.$type);
-  writeNotNull('name', instance.name);
-  writeNotNull('measures', instance.measures);
-  writeNotNull('type', instance.type);
-  writeNotNull('title', instance.title);
-  writeNotNull('description', instance.description);
-  writeNotNull('instructions', instance.instructions);
-  writeNotNull('minutes_to_complete', instance.minutesToComplete);
-  writeNotNull('expire', instance.expire?.inMicroseconds);
-  writeNotNull('notification', instance.notification);
   return val;
 }
 

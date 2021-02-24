@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of domain;
+part of carp_core_domain;
 
 /// This is the base class for all JSON serializable objects.
 ///
@@ -72,7 +72,7 @@ class FromJsonFactory {
   // TODO: Remember to add any new classes here.
   // TODO: This could be auto-generated using a builder....
   FromJsonFactory._() {
-    register(Study(id: 'ignored'));
+    register(StudyProtocol(id: 'ignored'));
     register(DataEndPoint());
     // register(FileDataEndPoint());
     register(Device());

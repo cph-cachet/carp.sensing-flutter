@@ -4,7 +4,7 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of domain;
+part of carp_core_domain;
 
 /// A [Trigger] is a specification of any condition which starts and stops [Task]s at
 /// certain points in time when the condition applies. The condition can either
@@ -78,7 +78,7 @@ class ManualTrigger extends Trigger {
 /// A trigger that delays sampling for [delay] and then starts sampling.
 /// Never stops sampling once started.
 ///
-/// The delay is measured from the start of the overall [Study].
+/// The delay is measured from the start of the overall [StudyProtocol].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class DelayedTrigger extends Trigger {
   /// Delay before this trigger is executed.
@@ -566,10 +566,10 @@ typedef EventConditionEvaluator = bool Function(Datum datum);
 /// [EventConditionEvaluator] function which cannot be serialized to/from JSON.
 /// In contrast to other [Trigger]s, this trigger cannot be de/serialized
 /// from/to JSON.
-/// This implies that it can not be retrieved as part of a [Study] from a
+/// This implies that it can not be retrieved as part of a [StudyProtocol] from a
 /// [StudyManager] since it relies on specifying a Dart-specific function as
 /// the [EventConditionEvaluator] methods. Hence, this trigger is mostly
-/// useful when creating a [Study] directly in the app using Dart code.
+/// useful when creating a [StudyProtocol] directly in the app using Dart code.
 ///
 /// If you need to de/serialize an event trigger, use the [SamplingEventTrigger]
 /// instead.

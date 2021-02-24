@@ -7,7 +7,7 @@
 
 part of managers;
 
-/// Retrieve and store [Study] json definitions on the device's local file system.
+/// Retrieve and store [StudyProtocol] json definitions on the device's local file system.
 ///
 /// The path and filename format is
 ///
@@ -28,13 +28,14 @@ class FileStudyManager implements StudyManager {
   }
 
   /// Get a study stored on the local file system.
-  Future<Study> getStudy(String studyId) async {
+  Future<StudyProtocol> getStudy(String studyId) async {
     info("Loading study '$studyId'.");
-    Study study;
+    StudyProtocol study;
 
     try {
       String jsonString = File(filename(studyId)).readAsStringSync();
-      study = Study.fromJson(json.decode(jsonString) as Map<String, dynamic>);
+      study = StudyProtocol.fromJson(
+          json.decode(jsonString) as Map<String, dynamic>);
     } catch (exception) {
       warning("Failed to load study '$studyId' - $exception");
     }
@@ -43,7 +44,7 @@ class FileStudyManager implements StudyManager {
 
   /// Save a study on the local file system.
   /// Returns `true` if successful.
-  Future<bool> saveStudy(Study study) async {
+  Future<bool> saveStudy(StudyProtocol study) async {
     bool success = true;
     info("Saving study '${study.id}}'.");
     try {

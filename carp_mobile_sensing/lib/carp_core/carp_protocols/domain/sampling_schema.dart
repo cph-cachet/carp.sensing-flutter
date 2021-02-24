@@ -4,7 +4,7 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of domain;
+part of carp_core_domain;
 
 String _encode(Object object) =>
     const JsonEncoder.withIndent(' ').convert(object);
@@ -150,7 +150,7 @@ class SamplingSchema {
   ///
   /// This schema is used in the power-aware adaptation of sampling. See [PowerAwarenessState].
   /// [SamplingSchema.normal] is an empty schema and therefore don't change anything when
-  /// used to adapt a [Study] and its [Measure]s in the [adapt] method.
+  /// used to adapt a [StudyProtocol] and its [Measure]s in the [adapt] method.
   factory SamplingSchema.normal({String namespace, bool powerAware}) =>
       SamplingSchema(
           type: SamplingSchemaType.NORMAL,
@@ -236,13 +236,13 @@ class SamplingSchema {
   //   return schema;
   // }
 
-  /// Adapts all [Measure]s in a [Study] to this [SamplingSchema].
+  /// Adapts all [Measure]s in a [StudyProtocol] to this [SamplingSchema].
   ///
   /// The following parameters are adapted
   ///   * [enabled] - a measure can be enabled / disabled based on this schema
   ///   * [frequency] - the sampling frequency can be adjusted based on this schema
   ///   * [duration] - the sampling duration can be adjusted based on this schema
-  void adapt(Study study, {bool restore = true}) {
+  void adapt(StudyProtocol study, {bool restore = true}) {
     study.tasks.forEach((task) {
       task.measures.forEach((measure) {
         // first restore each measure in the study+tasks to its previous value

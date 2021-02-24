@@ -18,7 +18,7 @@ class SamplingPackageRegistry {
   SamplingPackageRegistry._() {
     // HACK - creating a serializable object (such as a [Study]) ensures that
     // JSON deserialization in [Serializable] is initialized
-    Study(id: '1234');
+    StudyProtocol(id: '1234');
 
     // add the basic permissions needed
     _permissions.add(Permission.storage);
@@ -74,7 +74,7 @@ class SamplingPackageRegistry {
   ///
   /// This schema is used in the power-aware adaptation of sampling. See [PowerAwarenessState].
   /// [SamplingSchema.normal] is an empty schema and therefore don't change anything when
-  /// used to adapt a [Study] and its [Measure]s in the [adapt] method.
+  /// used to adapt a [StudyProtocol] and its [Measure]s in the [adapt] method.
   SamplingSchema normal({String namespace, bool powerAware}) => SamplingSchema(
       type: SamplingSchemaType.NORMAL,
       name: 'Default sampling',

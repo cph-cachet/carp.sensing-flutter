@@ -5,9 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of domain;
-
-// TODO - rename this class to DeviceInfo - Device is to be used elsewhere
+part of carp_core_domain;
 
 /// Provides (static) information about the local device.
 ///

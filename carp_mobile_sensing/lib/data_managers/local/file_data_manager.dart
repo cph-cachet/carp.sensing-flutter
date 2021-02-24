@@ -32,7 +32,7 @@ class FileDataManager extends AbstractDataManager {
   bool _initialized = false;
   int _flushingSink = 0;
 
-  Future initialize(Study study, Stream<Datum> data) async {
+  Future initialize(StudyProtocol study, Stream<Datum> data) async {
     assert(study.dataEndPoint is FileDataEndPoint);
     await super.initialize(study, data);
 

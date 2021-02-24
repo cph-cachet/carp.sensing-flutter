@@ -20,12 +20,12 @@ class DeviceRegistry {
   /// Note that this model entails that only one device of the same
   /// type can be connected to a Device Manager (i.e., phone).
   final Map<String, DeviceManager> devices = {};
-  Study _study;
-  Study get study => _study;
+  StudyProtocol _study;
+  StudyProtocol get study => _study;
 
-  /// Initialize the device manager by specifying the running [Study].
+  /// Initialize the device manager by specifying the running [StudyProtocol].
   /// and the stream of [Datum] events to handle.
-  Future initialize(Study study, Stream<Datum> data) async {
+  Future initialize(StudyProtocol study, Stream<Datum> data) async {
     _study = study;
     //data.listen(onDatum, onError: onError, onDone: onDone);
 
@@ -88,7 +88,7 @@ abstract class DeviceManager {
   Device _device;
 
   /// The device description for this device as specified in the
-  /// [Study] protocol.
+  /// [StudyProtocol] protocol.
   Device get descriptor => _device;
 
   /// The runtime battery level of this device.

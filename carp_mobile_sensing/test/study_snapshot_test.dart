@@ -7,14 +7,14 @@ String _encode(Object object) =>
     const JsonEncoder.withIndent(' ').convert(object);
 
 void main() {
-  Study study;
+  StudyProtocol study;
 
   setUp(() {
     //SamplingPackageRegistry.register(AudioSamplingPackage());
     //SamplingPackageRegistry.register(CommunicationSamplingPackage());
     //SamplingPackageRegistry.register(ContextSamplingPackage());
 
-    study = Study(id: '1234', userId: 'bardram', name: 'bardram study');
+    study = StudyProtocol(id: '1234', userId: 'bardram', name: 'bardram study');
     study.dataEndPoint = DataEndPoint(type: DataEndPointTypes.PRINT);
 //    study.dataEndPoint = FileDataEndPoint()
 //      ..bufferSize = 50 * 1000
@@ -80,7 +80,7 @@ void main() {
   }
 
   void _restore() {
-    study = Study.fromJson(json.decode(_stringSnapshot));
+    study = StudyProtocol.fromJson(json.decode(_stringSnapshot));
   }
 
   test('json.encode II', () {

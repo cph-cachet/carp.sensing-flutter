@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of domain;
+part of carp_core_domain;
 
 /// A [Task] that notifies the app when it is triggered.
 ///
@@ -21,8 +21,7 @@ class AppTask extends Task {
     this.minutesToComplete,
     this.expire,
     this.notification = false,
-  })
-      : super(name: name);
+  }) : super(name: name);
 
   /// Type of task. For example a `survey`.
   String type;

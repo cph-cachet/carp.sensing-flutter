@@ -8,7 +8,7 @@ String _encode(Object object) =>
     const JsonEncoder.withIndent(' ').convert(object);
 
 void main() {
-  Study study;
+  StudyProtocol study;
 
   setUp(() {
     //SamplingPackageRegistry.register(AudioSamplingPackage());
@@ -18,7 +18,7 @@ void main() {
     // create a file data manager in order to support the file data endpoint
     FileDataManager();
 
-    study = Study(
+    study = StudyProtocol(
       id: '1234',
       userId: 'bardram',
       name: 'bardram study',
@@ -50,8 +50,8 @@ void main() {
   test('JSON -> Study, assert study id', () async {
     final studyJson = _encode(study);
 
-    Study study_2 =
-        Study.fromJson(json.decode(studyJson) as Map<String, dynamic>);
+    StudyProtocol study_2 =
+        StudyProtocol.fromJson(json.decode(studyJson) as Map<String, dynamic>);
     expect(study_2.id, study.id);
 
     print(_encode(study_2));
@@ -60,16 +60,16 @@ void main() {
   test('JSON -> Study, deep assert', () async {
     final studyJson = _encode(study);
 
-    Study study_2 =
-        Study.fromJson(json.decode(studyJson) as Map<String, dynamic>);
+    StudyProtocol study_2 =
+        StudyProtocol.fromJson(json.decode(studyJson) as Map<String, dynamic>);
     expect(_encode(study_2), equals(studyJson));
   });
 
   test('Configuration -> JSON', () async {
     final studyJson = _encode(study);
 
-    Study study_2 =
-        Study.fromJson(json.decode(studyJson) as Map<String, dynamic>);
+    StudyProtocol study_2 =
+        StudyProtocol.fromJson(json.decode(studyJson) as Map<String, dynamic>);
     expect(study_2.name, study.name);
   });
 
@@ -78,14 +78,14 @@ void main() {
     String plainStudyJson = File('test/study_1234.json').readAsStringSync();
     print(plainStudyJson);
 
-    Study plainStudy =
-        Study.fromJson(json.decode(plainStudyJson) as Map<String, dynamic>);
+    StudyProtocol plainStudy = StudyProtocol.fromJson(
+        json.decode(plainStudyJson) as Map<String, dynamic>);
     expect(plainStudy.id, study.id);
 
     final studyJson = _encode(study);
 
-    Study study_2 =
-        Study.fromJson(json.decode(plainStudyJson) as Map<String, dynamic>);
+    StudyProtocol study_2 = StudyProtocol.fromJson(
+        json.decode(plainStudyJson) as Map<String, dynamic>);
     expect(_encode(study_2), equals(studyJson));
   });
 
@@ -104,8 +104,8 @@ void main() {
   });
 
   test('Triggers -> JSON', () async {
-    Study study_3 =
-        Study(id: '3', userId: 'bardram', name: 'Multi Trigger Study');
+    StudyProtocol study_3 =
+        StudyProtocol(id: '3', userId: 'bardram', name: 'Multi Trigger Study');
     study_3.dataEndPoint = FileDataEndPoint()
       ..bufferSize = 50 * 1000
       ..zip = true
@@ -214,8 +214,8 @@ void main() {
 
     print(studyJson);
 
-    Study study_4 =
-        Study.fromJson(json.decode(studyJson) as Map<String, dynamic>);
+    StudyProtocol study_4 =
+        StudyProtocol.fromJson(json.decode(studyJson) as Map<String, dynamic>);
     expect(study_4.id, study_3.id);
   });
 }

@@ -43,7 +43,7 @@ abstract class Executor extends AbstractProbe {
 // STUDY EXECUTOR
 // ---------------------------------------------------------------------------------------------------------
 
-/// The [StudyExecutor] is responsible for executing the [Study].
+/// The [StudyExecutor] is responsible for executing the [StudyProtocol].
 /// For each trigger in this study, it starts a [TriggerExecutor].
 ///
 /// Note that the [StudyExecutor] in itself is a [Probe] and hence work as a 'super probe'.
@@ -51,10 +51,10 @@ abstract class Executor extends AbstractProbe {
 class StudyExecutor extends Executor {
   final StreamController<Datum> _manualDatumController =
       StreamController.broadcast();
-  Study get study => _study;
-  Study _study;
+  StudyProtocol get study => _study;
+  StudyProtocol _study;
 
-  StudyExecutor(Study study) : super() {
+  StudyExecutor(StudyProtocol study) : super() {
     assert(study != null, 'Cannot initiate a StudyExecutor without a Study.');
     _study = study;
     _group.add(_manualDatumController.stream);
@@ -129,7 +129,7 @@ TriggerExecutor getTriggerExecutor(Trigger trigger) {
   }
 }
 
-/// Responsible for handling the timing of a [Trigger] in the [Study].
+/// Responsible for handling the timing of a [Trigger] in the [StudyProtocol].
 ///
 /// This is an abstract class. For each specific type of [Trigger],
 /// a corresponding implementation of a [TriggerExecutor] exists.
@@ -439,7 +439,7 @@ TaskExecutor getTaskExecutor(Task task) {
   }
 }
 
-/// The [TaskExecutor] is responsible for executing a [Task] in the [Study].
+/// The [TaskExecutor] is responsible for executing a [Task] in the [StudyProtocol].
 /// For each task it looks up appropriate [Probe]s to collect data.
 ///
 /// Note that a [TaskExecutor] in itself is a [Probe] and hence work as a 'super probe'.

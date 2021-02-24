@@ -6,10 +6,10 @@
  */
 part of runtime;
 
-/// A [StudyController] controls the execution of a [Study].
+/// A [StudyController] controls the execution of a [StudyProtocol].
 class StudyController {
   int debugLevel = DebugLevel.WARNING;
-  Study study;
+  StudyProtocol study;
   StudyExecutor executor;
   DataManager dataManager;
   SamplingSchema samplingSchema;

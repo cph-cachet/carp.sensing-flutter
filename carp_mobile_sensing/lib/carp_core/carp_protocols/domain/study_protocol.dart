@@ -5,15 +5,16 @@
  * found in the LICENSE file.
  */
 
-part of domain;
+part of carp_core_domain;
 
-/// The [Study] holds information about the study to be performed on this
-/// device.
+/// A description of how a study is to be executed.
 ///
-/// A [Study] specify a set of [Trigger]s, each consisting of a set of [Task]s,
-/// which again consists of a list of [Measure]s.
+/// This is part of the [carp.protocols](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-protocols.md) domain model.
 ///
-///   `Study---*Trigger---*Task---*Measure`
+/// A [StudyProtocol] defining the master device ([MasterDeviceDescriptor])
+/// responsible for aggregating data (typically this phone), the optional
+/// devices ([DeviceDescriptor]) connected to the master device,
+/// and the [Trigger]'s which lead to data collection on said devices.
 ///
 /// A study may be fetched in a [StudyManager] who knows how to fetch a study
 /// protocol for this device.
@@ -21,8 +22,8 @@ part of domain;
 /// Data from the study is uploaded to the specified [DataEndPoint] in the
 /// specified [dataFormat].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class Study extends Serializable {
-  /// The id of this [Study].
+class StudyProtocol extends Serializable {
+  /// The id of this [StudyProtocol].
   String id;
 
   /// A short printer-friendly name for this study.
@@ -76,11 +77,11 @@ class Study extends Serializable {
     return _measures;
   }
 
-  /// Create a new [Study] object with a set of configurations.
+  /// Create a new [StudyProtocol] object with a set of configurations.
   ///
   /// The [id]  is required for a new study.
   /// If no [dataFormat] the CARP namespace is used.
-  Study({
+  StudyProtocol({
     @required this.id,
     this.userId,
     this.pi,
@@ -92,35 +93,34 @@ class Study extends Serializable {
     this.dataEndPoint,
     this.dataFormat,
     this.publicKey,
-  })
-      : super() {
+  }) : super() {
     assert(id != null, 'Cannot create a Study without an id: id=null');
     samplingStrategy ??= SamplingSchemaType.NORMAL;
     dataFormat ??= NameSpace.CARP;
   }
 
-  Function get fromJsonFunction => _$StudyFromJson;
-  factory Study.fromJson(Map<String, dynamic> json) => FromJsonFactory()
+  Function get fromJsonFunction => _$StudyProtocolFromJson;
+  factory StudyProtocol.fromJson(Map<String, dynamic> json) => FromJsonFactory()
       .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
-  Map<String, dynamic> toJson() => _$StudyToJson(this);
+  Map<String, dynamic> toJson() => _$StudyProtocolToJson(this);
 
-  /// Add a [Trigger] to this [Study]
+  /// Add a [Trigger] to this [StudyProtocol]
   void addTrigger(Trigger trigger) => triggers.add(trigger);
 
-  /// Add a [Task] with a [Trigger] to this [Study]
+  /// Add a [Task] with a [Trigger] to this [StudyProtocol]
   void addTriggerTask(Trigger trigger, Task task) {
     if (!triggers.contains(trigger)) triggers.add(trigger);
     trigger.addTask(task);
   }
 
-  /// The list of all [Task]s in this [Study].
+  /// The list of all [Task]s in this [StudyProtocol].
   List<Task> get tasks {
     List<Task> _tasks = [];
     triggers.forEach((trigger) => _tasks.addAll(trigger.tasks));
     return _tasks;
   }
 
-  /// Adapt the sampling [Measure]s of this [Study] to the specified
+  /// Adapt the sampling [Measure]s of this [StudyProtocol] to the specified
   /// [SamplingSchema].
   void adapt(SamplingSchema schema, {bool restore = true}) {
     assert(schema != null);
@@ -131,7 +131,7 @@ class Study extends Serializable {
   String toString() => name;
 }
 
-/// A Principal Investigator (PI) is reposnibile for a [Study].
+/// A Principal Investigator (PI) is reposnibile for a [StudyProtocol].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class PrincipalInvestigator extends Serializable {
   String name;

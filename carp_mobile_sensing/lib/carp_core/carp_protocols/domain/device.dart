@@ -5,11 +5,11 @@
  * found in the LICENSE file.
  */
 
-part of domain;
+part of carp_core_domain;
 
 /// Describes any type of electronic device, such as a smartphone, wearable
 /// device, a sensor, or internet service (e.g. FitBit API) that collects data
-/// which can be part of a [Study] configuration and which collects measures
+/// which can be part of a [StudyProtocol] configuration and which collects measures
 /// via probes.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class Device extends Serializable {
@@ -19,8 +19,7 @@ class Device extends Serializable {
     this.roleName,
     this.isMasterDevice = false,
     this.collectingMeasureTypes,
-  })
-      : super();
+  }) : super();
 
   /// The unique device type.
   /// For example `phone`.
@@ -32,12 +31,12 @@ class Device extends Serializable {
   /// Is this the master device?
   bool isMasterDevice;
 
-  /// The role name of this device in a specific [Study].
+  /// The role name of this device in a specific [StudyProtocol].
   /// For example, 'Patient's phone'
   String roleName;
 
   /// The list of measures that this device is collecting as part of a
-  /// [Study].
+  /// [StudyProtocol].
   List<MeasureType> collectingMeasureTypes = [];
 
   Function get fromJsonFunction => _$DeviceFromJson;

@@ -97,12 +97,12 @@ class Console extends State<ConsolePage> {
   }
 }
 
-/// This class implements sensing incl. setting up a [Study] with [Task]s and [Measure]s.
+/// This class implements sensing incl. setting up a [StudyProtocol] with [Task]s and [Measure]s.
 ///
 /// This example is useful for creating a Business Logical Object (BLOC) in a Flutter app.
 /// See e.g. the CARP Mobile Sensing App.
 class Sensing {
-  Study study;
+  StudyProtocol study;
   Console console;
   StudyController controller;
 
@@ -113,7 +113,7 @@ class Sensing {
     console.log('Setting up study...');
 
     // create the study
-    study = Study(
+    study = StudyProtocol(
             id: '2',
             userId: 'user@cachet.dk',
             name: 'A default / common study',
