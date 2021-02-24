@@ -7,7 +7,7 @@
 
 part of carp_core_domain;
 
-/// A [Task] holds information about each task to be triggered by a [Trigger] as part of a [StudyProtocol].
+/// A [Task] holds information about each task to be triggered by a [CAMSTrigger] as part of a [StudyProtocol].
 /// Each [Task] holds a list of [Measure]s to be done as part of this task.
 /// A [Task] is hence merely an aggregation of [Measure]s.
 ///

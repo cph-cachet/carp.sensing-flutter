@@ -58,7 +58,7 @@ class StudyExecutor extends Executor {
     assert(study != null, 'Cannot initiate a StudyExecutor without a Study.');
     _study = study;
     _group.add(_manualDatumController.stream);
-    for (Trigger trigger in study.triggers) {
+    for (CAMSTrigger trigger in study.triggers) {
       TriggerExecutor executor = getTriggerExecutor(trigger);
       _group.add(executor.events);
       executors.add(executor);
@@ -101,11 +101,11 @@ class StudyExecutor extends Executor {
 // ---------------------------------------------------------------------------------------------------------
 
 /// Returns the relevant [TriggerExecutor] based on the type of [trigger].
-TriggerExecutor getTriggerExecutor(Trigger trigger) {
+TriggerExecutor getTriggerExecutor(CAMSTrigger trigger) {
   switch (trigger.runtimeType) {
     // actually, the base Trigger class is not supposed to be used
     // but if it is, treat it as an ImmediateTrigger
-    case Trigger:
+    case CAMSTrigger:
     case ImmediateTrigger:
       return ImmediateTriggerExecutor(trigger);
     case DelayedTrigger:
@@ -129,15 +129,15 @@ TriggerExecutor getTriggerExecutor(Trigger trigger) {
   }
 }
 
-/// Responsible for handling the timing of a [Trigger] in the [StudyProtocol].
+/// Responsible for handling the timing of a [CAMSTrigger] in the [StudyProtocol].
 ///
-/// This is an abstract class. For each specific type of [Trigger],
+/// This is an abstract class. For each specific type of [CAMSTrigger],
 /// a corresponding implementation of a [TriggerExecutor] exists.
 abstract class TriggerExecutor extends Executor {
-  Trigger _trigger;
-  Trigger get trigger => _trigger;
+  CAMSTrigger _trigger;
+  CAMSTrigger get trigger => _trigger;
 
-  TriggerExecutor(Trigger trigger) : super() {
+  TriggerExecutor(CAMSTrigger trigger) : super() {
     assert(trigger != null,
         'Cannot initiate a TriggerExecutor without a Trigger.');
     _trigger = trigger;
@@ -166,7 +166,7 @@ abstract class TriggerExecutor extends Executor {
 
 /// Executes a [ImmediateTrigger], i.e. starts sampling immediately.
 class ImmediateTriggerExecutor extends TriggerExecutor {
-  ImmediateTriggerExecutor(Trigger trigger) : super(trigger);
+  ImmediateTriggerExecutor(CAMSTrigger trigger) : super(trigger);
 }
 
 /// Executes a [ManualTrigger].

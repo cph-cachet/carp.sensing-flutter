@@ -79,7 +79,7 @@ class FromJsonFactory {
     register(Task());
     register(AutomaticTask());
     register(AppTask(type: 'ignored'));
-    register(Trigger());
+    register(CAMSTrigger());
     register(ImmediateTrigger());
     register(DelayedTrigger());
     register(PeriodicTrigger(period: null));

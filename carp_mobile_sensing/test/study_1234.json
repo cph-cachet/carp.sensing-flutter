@@ -1,146 +1,146 @@
 {
-  "$type": "Study",
-  "id": "1234",
-  "name": "bardram study",
-  "user_id": "bardram",
-  "sampling_strategy": "NORMAL",
-  "data_end_point": {
-   "$type": "FileDataEndPoint",
-   "type": "FILE",
-   "buffer_size": 50000,
-   "zip": true,
-   "encrypt": false
-  },
-  "data_format": "carp",
-  "devices": [],
-  "triggers": [
-   {
-    "$type": "ImmediateTrigger",
-    "tasks": [
-     {
-      "$type": "AutomaticTask",
-      "name": "Sampling Task",
-      "measures": [
-       {
-        "$type": "Measure",
-        "type": {
-         "$type": "MeasureType",
-         "namespace": "carp",
-         "name": "device"
-        },
-        "name": "Basic Device Info",
-        "enabled": true,
-        "configuration": {}
+ "$type": "StudyProtocol",
+ "id": "1234",
+ "name": "bardram study",
+ "user_id": "bardram",
+ "sampling_strategy": "NORMAL",
+ "data_end_point": {
+  "$type": "FileDataEndPoint",
+  "type": "FILE",
+  "buffer_size": 50000,
+  "zip": true,
+  "encrypt": false
+ },
+ "data_format": "carp",
+ "devices": [],
+ "triggers": [
+  {
+   "$type": "ImmediateTrigger",
+   "tasks": [
+    {
+     "$type": "AutomaticTask",
+     "name": "Sampling Task",
+     "measures": [
+      {
+       "$type": "Measure",
+       "type": {
+        "$type": "MeasureType",
+        "namespace": "carp",
+        "name": "device"
        },
-       {
-        "$type": "PeriodicMeasure",
-        "type": {
-         "$type": "MeasureType",
-         "namespace": "carp",
-         "name": "memory"
-        },
-        "name": "Memory Usage",
-        "enabled": true,
-        "configuration": {},
-        "frequency": 60000000
+       "name": "Basic Device Info",
+       "enabled": true,
+       "configuration": {}
+      },
+      {
+       "$type": "PeriodicMeasure",
+       "type": {
+        "$type": "MeasureType",
+        "namespace": "carp",
+        "name": "memory"
        },
-       {
-        "$type": "Measure",
-        "type": {
-         "$type": "MeasureType",
-         "namespace": "carp",
-         "name": "battery"
-        },
-        "name": "Battery",
-        "enabled": true,
-        "configuration": {}
+       "name": "Memory Usage",
+       "enabled": true,
+       "configuration": {},
+       "frequency": 60000000
+      },
+      {
+       "$type": "Measure",
+       "type": {
+        "$type": "MeasureType",
+        "namespace": "carp",
+        "name": "battery"
        },
-       {
-        "$type": "Measure",
-        "type": {
-         "$type": "MeasureType",
-         "namespace": "carp",
-         "name": "screen"
-        },
-        "name": "Screen Activity (lock/on/off)",
-        "enabled": true,
-        "configuration": {}
+       "name": "Battery",
+       "enabled": true,
+       "configuration": {}
+      },
+      {
+       "$type": "Measure",
+       "type": {
+        "$type": "MeasureType",
+        "namespace": "carp",
+        "name": "screen"
        },
-       {
-        "$type": "Measure",
-        "type": {
-         "$type": "MeasureType",
-         "namespace": "carp",
-         "name": "accelerometer"
-        },
-        "name": "Accelerometer",
-        "enabled": false,
-        "configuration": {}
+       "name": "Screen Activity (lock/on/off)",
+       "enabled": true,
+       "configuration": {}
+      },
+      {
+       "$type": "Measure",
+       "type": {
+        "$type": "MeasureType",
+        "namespace": "carp",
+        "name": "accelerometer"
        },
-       {
-        "$type": "Measure",
-        "type": {
-         "$type": "MeasureType",
-         "namespace": "carp",
-         "name": "gyroscope"
-        },
-        "name": "Gyroscope",
-        "enabled": false,
-        "configuration": {}
+       "name": "Accelerometer",
+       "enabled": false,
+       "configuration": {}
+      },
+      {
+       "$type": "Measure",
+       "type": {
+        "$type": "MeasureType",
+        "namespace": "carp",
+        "name": "gyroscope"
        },
-       {
-        "$type": "PeriodicMeasure",
-        "type": {
-         "$type": "MeasureType",
-         "namespace": "carp",
-         "name": "periodic_accelerometer"
-        },
-        "name": "Accelerometer",
-        "enabled": false,
-        "configuration": {},
-        "frequency": 5000000,
-        "duration": 1000000
+       "name": "Gyroscope",
+       "enabled": false,
+       "configuration": {}
+      },
+      {
+       "$type": "PeriodicMeasure",
+       "type": {
+        "$type": "MeasureType",
+        "namespace": "carp",
+        "name": "periodic_accelerometer"
        },
-       {
-        "$type": "PeriodicMeasure",
-        "type": {
-         "$type": "MeasureType",
-         "namespace": "carp",
-         "name": "periodic_gyroscope"
-        },
-        "name": "Gyroscope",
-        "enabled": false,
-        "configuration": {},
-        "frequency": 5000000,
-        "duration": 1000000
+       "name": "Accelerometer",
+       "enabled": false,
+       "configuration": {},
+       "frequency": 5000000,
+       "duration": 1000000
+      },
+      {
+       "$type": "PeriodicMeasure",
+       "type": {
+        "$type": "MeasureType",
+        "namespace": "carp",
+        "name": "periodic_gyroscope"
        },
-       {
-        "$type": "Measure",
-        "type": {
-         "$type": "MeasureType",
-         "namespace": "carp",
-         "name": "pedometer"
-        },
-        "name": "Pedometer (Step Count)",
-        "enabled": true,
-        "configuration": {}
+       "name": "Gyroscope",
+       "enabled": false,
+       "configuration": {},
+       "frequency": 5000000,
+       "duration": 1000000
+      },
+      {
+       "$type": "Measure",
+       "type": {
+        "$type": "MeasureType",
+        "namespace": "carp",
+        "name": "pedometer"
        },
-       {
-        "$type": "PeriodicMeasure",
-        "type": {
-         "$type": "MeasureType",
-         "namespace": "carp",
-         "name": "light"
-        },
-        "name": "Ambient Light",
-        "enabled": true,
-        "configuration": {},
-        "frequency": 60000000,
-        "duration": 1000000
-       }
-      ]
-     }
-    ]
-   }
-  ]
- }
+       "name": "Pedometer (Step Count)",
+       "enabled": true,
+       "configuration": {}
+      },
+      {
+       "$type": "PeriodicMeasure",
+       "type": {
+        "$type": "MeasureType",
+        "namespace": "carp",
+        "name": "light"
+       },
+       "name": "Ambient Light",
+       "enabled": true,
+       "configuration": {},
+       "frequency": 60000000,
+       "duration": 1000000
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

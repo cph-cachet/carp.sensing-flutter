@@ -14,7 +14,7 @@ part of carp_core_domain;
 /// A [StudyProtocol] defining the master device ([MasterDeviceDescriptor])
 /// responsible for aggregating data (typically this phone), the optional
 /// devices ([DeviceDescriptor]) connected to the master device,
-/// and the [Trigger]'s which lead to data collection on said devices.
+/// and the [CAMSTrigger]'s which lead to data collection on said devices.
 ///
 /// A study may be fetched in a [StudyManager] who knows how to fetch a study
 /// protocol for this device.
@@ -61,8 +61,8 @@ class StudyProtocol extends Serializable {
   /// The devices this device needs to connect to.
   List<Device> devices = [];
 
-  /// The set of [Trigger]s which can trigger [Task](s) in this study.
-  List<Trigger> triggers = [];
+  /// The set of [CAMSTrigger]s which can trigger [Task](s) in this study.
+  List<CAMSTrigger> triggers = [];
 
   List<Measure> _measures;
 
@@ -104,11 +104,11 @@ class StudyProtocol extends Serializable {
       .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$StudyProtocolToJson(this);
 
-  /// Add a [Trigger] to this [StudyProtocol]
-  void addTrigger(Trigger trigger) => triggers.add(trigger);
+  /// Add a [CAMSTrigger] to this [StudyProtocol]
+  void addTrigger(CAMSTrigger trigger) => triggers.add(trigger);
 
-  /// Add a [Task] with a [Trigger] to this [StudyProtocol]
-  void addTriggerTask(Trigger trigger, Task task) {
+  /// Add a [Task] with a [CAMSTrigger] to this [StudyProtocol]
+  void addTriggerTask(CAMSTrigger trigger, Task task) {
     if (!triggers.contains(trigger)) triggers.add(trigger);
     trigger.addTask(task);
   }

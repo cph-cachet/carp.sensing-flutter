@@ -483,7 +483,7 @@ StudyProtocol _$StudyProtocolFromJson(Map<String, dynamic> json) {
         ?.toList()
     ..triggers = (json['triggers'] as List)
         ?.map((e) =>
-            e == null ? null : Trigger.fromJson(e as Map<String, dynamic>))
+            e == null ? null : CAMSTrigger.fromJson(e as Map<String, dynamic>))
         ?.toList();
 }
 
@@ -615,8 +615,8 @@ Map<String, dynamic> _$AutomaticTaskToJson(AutomaticTask instance) {
   return val;
 }
 
-Trigger _$TriggerFromJson(Map<String, dynamic> json) {
-  return Trigger(
+CAMSTrigger _$CAMSTriggerFromJson(Map<String, dynamic> json) {
+  return CAMSTrigger(
     triggerId: json['trigger_id'] as String,
   )
     ..$type = json[r'$type'] as String
@@ -626,7 +626,7 @@ Trigger _$TriggerFromJson(Map<String, dynamic> json) {
         ?.toList();
 }
 
-Map<String, dynamic> _$TriggerToJson(Trigger instance) {
+Map<String, dynamic> _$CAMSTriggerToJson(CAMSTrigger instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {

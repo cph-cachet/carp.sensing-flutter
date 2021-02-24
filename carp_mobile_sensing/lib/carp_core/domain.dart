@@ -25,6 +25,6 @@ part 'carp_protocols/domain/measures.dart';
 part 'carp_protocols/domain/sampling_schema.dart';
 part 'carp_protocols/domain/study_protocol.dart';
 part 'carp_protocols/domain/tasks.dart';
-part 'carp_protocols/domain/triggers.dart';
+part 'carp_protocols/domain/cams_triggers.dart';
 
 part 'domain.g.dart';

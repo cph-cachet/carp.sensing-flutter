@@ -6,36 +6,36 @@
  */
 part of carp_core_domain;
 
-/// A [Trigger] is a specification of any condition which starts and stops [Task]s at
+/// A [CAMSTrigger] is a specification of any condition which starts and stops [Task]s at
 /// certain points in time when the condition applies. The condition can either
 /// be time-bound, based on data streams, initiated by a user of the platform,
 /// or a combination of these.
 ///
-/// The [Trigger] class is abstract. Use sub-classes of [Trigger] implements
+/// The [CAMSTrigger] class is abstract. Use sub-classes of [CAMSTrigger] implements
 /// the specific behavior / timing of a trigger.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class Trigger extends Serializable {
+class CAMSTrigger extends Serializable {
   /// A unique id of this trigger.
   /// Is used when storing data to know what triggered the data collection.
   String triggerId;
 
-  /// The list of [Task]s in this [Trigger].
+  /// The list of [Task]s in this [CAMSTrigger].
   List<Task> tasks = [];
 
-  /// Add a [Task] to this [Trigger]
+  /// Add a [Task] to this [CAMSTrigger]
   void addTask(Task task) => tasks.add(task);
 
-  Trigger({this.triggerId}) : super();
+  CAMSTrigger({this.triggerId}) : super();
 
-  Function get fromJsonFunction => _$TriggerFromJson;
-  factory Trigger.fromJson(Map<String, dynamic> json) => FromJsonFactory()
+  Function get fromJsonFunction => _$CAMSTriggerFromJson;
+  factory CAMSTrigger.fromJson(Map<String, dynamic> json) => FromJsonFactory()
       .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
-  Map<String, dynamic> toJson() => _$TriggerToJson(this);
+  Map<String, dynamic> toJson() => _$CAMSTriggerToJson(this);
 }
 
 /// A trigger that starts sampling immediately and never stops.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class ImmediateTrigger extends Trigger {
+class ImmediateTrigger extends CAMSTrigger {
   ImmediateTrigger({String triggerId}) : super(triggerId: triggerId);
 
   Function get fromJsonFunction => _$ImmediateTriggerFromJson;
@@ -50,20 +50,20 @@ class ImmediateTrigger extends Trigger {
 ///
 /// Note that sampling continues until it is manually paused.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class ManualTrigger extends Trigger {
+class ManualTrigger extends CAMSTrigger {
   ManualTrigger({String triggerId}) : super(triggerId: triggerId);
 
   @JsonKey(ignore: true)
   dynamic executor;
 
-  /// Called when data sampling in this [Trigger] is to be resumed.
+  /// Called when data sampling in this [CAMSTrigger] is to be resumed.
   ///
   /// Starting a trigger implies that all [Task]s in this trigger is started,
   /// which again implies that all [Measure]s in these tasks are started.
   /// Therefore, all measures to be started should be 'bundled' into this trigger.
   void resume() => executor?.resume();
 
-  /// Called when data sampling in this [Trigger] is to paused.
+  /// Called when data sampling in this [CAMSTrigger] is to paused.
   ///
   /// Stopping a trigger implies that all [Task]s in this trigger is paused,
   /// which again implies that all [Measure]s in these tasks are paused.
@@ -80,7 +80,7 @@ class ManualTrigger extends Trigger {
 ///
 /// The delay is measured from the start of the overall [StudyProtocol].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class DelayedTrigger extends Trigger {
+class DelayedTrigger extends CAMSTrigger {
   /// Delay before this trigger is executed.
   Duration delay;
 
@@ -101,7 +101,7 @@ class DelayedTrigger extends Trigger {
 ///
 /// Weekly and montly recurrent triggers can be specified using the [RecurrentScheduledTrigger].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class PeriodicTrigger extends Trigger {
+class PeriodicTrigger extends CAMSTrigger {
   /// The period (reciprocal of frequency) of sampling.
   Duration period;
 
@@ -123,7 +123,7 @@ class PeriodicTrigger extends Trigger {
 
 /// A trigger that starts sampling based on a [schedule] (date / time) and runs for a specific [duration].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class ScheduledTrigger extends Trigger {
+class ScheduledTrigger extends CAMSTrigger {
   /// The scheduled date and time for resuming sampling.
   DateTime schedule;
 
@@ -422,7 +422,7 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
 ///
 /// Bases on the [`cron`](https://pub.dev/packages/cron) package.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class CronScheduledTrigger extends Trigger {
+class CronScheduledTrigger extends CAMSTrigger {
   /// The cron job expression.
   String cronExpression;
 
@@ -515,7 +515,7 @@ class CronScheduledTrigger extends Trigger {
 /// For example, if [measureType] is `carp.geofence` the [resumeCondition] can
 /// be `{'DTU','ENTER'}`
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class SamplingEventTrigger extends Trigger {
+class SamplingEventTrigger extends CAMSTrigger {
   SamplingEventTrigger({
     String triggerId,
     @required this.measureType,
@@ -564,7 +564,7 @@ typedef EventConditionEvaluator = bool Function(Datum datum);
 ///
 /// Note that the [resumeCondition] and [pauseCondition] are an
 /// [EventConditionEvaluator] function which cannot be serialized to/from JSON.
-/// In contrast to other [Trigger]s, this trigger cannot be de/serialized
+/// In contrast to other [CAMSTrigger]s, this trigger cannot be de/serialized
 /// from/to JSON.
 /// This implies that it can not be retrieved as part of a [StudyProtocol] from a
 /// [StudyManager] since it relies on specifying a Dart-specific function as
@@ -574,7 +574,7 @@ typedef EventConditionEvaluator = bool Function(Datum datum);
 /// If you need to de/serialize an event trigger, use the [SamplingEventTrigger]
 /// instead.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class ConditionalSamplingEventTrigger extends Trigger {
+class ConditionalSamplingEventTrigger extends CAMSTrigger {
   /// Create a [ConditionalSamplingEventTrigger].
   ConditionalSamplingEventTrigger({
     String triggerId,
