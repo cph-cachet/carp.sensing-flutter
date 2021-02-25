@@ -35,7 +35,7 @@ class SamplingPackageRegistry {
         (!_permissions.contains(permission))
             ? _permissions.add(permission)
             : null);
-    DataType.add(package.dataTypes);
+    CAMSDataType.add(package.dataTypes);
     package.onRegister();
   }
 
@@ -130,8 +130,8 @@ class SamplingPackageRegistry {
   SamplingSchema none({String namespace = NameSpace.CARP}) {
     SamplingSchema schema = SamplingSchema(
         type: SamplingSchemaType.NONE, name: 'No sampling', powerAware: true);
-    DataType.all.forEach((key) => schema.measures[key] =
-        Measure(type: MeasureType(namespace, key), enabled: false));
+    CAMSDataType.all.forEach((key) => schema.measures[key] =
+        Measure(type: DataType(namespace, key), enabled: false));
 
     return schema;
   }

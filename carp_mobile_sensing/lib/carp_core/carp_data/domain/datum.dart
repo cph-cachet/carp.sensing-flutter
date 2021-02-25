@@ -27,7 +27,7 @@ class Datum {
 class CARPDatum extends Datum {
   /// The [DataFormat] of this type of [CARPDatum].
   static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, DataType.NONE);
+      DataFormat(NameSpace.CARP, CAMSDataType.NONE);
 
   DataFormat get format => CARP_DATA_FORMAT;
 
@@ -64,7 +64,7 @@ class CARPDatum extends Datum {
 class StringDatum extends CARPDatum {
   /// The [DataFormat] of this type of [CARPDatum].
   static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, DataType.STRING);
+      DataFormat(NameSpace.CARP, CAMSDataType.STRING);
   DataFormat get format => CARP_DATA_FORMAT;
 
   /// The string data for this Datum.
@@ -86,7 +86,7 @@ class StringDatum extends CARPDatum {
 class MapDatum extends CARPDatum {
   /// The [DataFormat] of this type of [CARPDatum].
   static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, DataType.MAP);
+      DataFormat(NameSpace.CARP, CAMSDataType.MAP);
   DataFormat get format => CARP_DATA_FORMAT;
 
   /// The data map.
@@ -107,7 +107,7 @@ class MapDatum extends CARPDatum {
 class ErrorDatum extends CARPDatum {
   /// The [DataFormat] of this type of [CARPDatum].
   static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, DataType.ERROR);
+      DataFormat(NameSpace.CARP, CAMSDataType.ERROR);
   DataFormat get format => CARP_DATA_FORMAT;
 
   /// The original error message returned from the probe, if available.
@@ -129,7 +129,7 @@ class ErrorDatum extends CARPDatum {
 class FileDatum extends CARPDatum {
   /// The [DataFormat] of this type of [CARPDatum].
   static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, DataType.FILE);
+      DataFormat(NameSpace.CARP, CAMSDataType.FILE);
   DataFormat get format => CARP_DATA_FORMAT;
 
   /// The path to the attached file.
@@ -195,8 +195,8 @@ class DataFormat {
   /// Create a new [DataFormat] based on a [namespace] and a [name].
   const DataFormat(this.namespace, this.name) : super();
 
-  /// Create a [DataFormat] based on a [MeasureType].
-  factory DataFormat.fromDataType(MeasureType type) =>
+  /// Create a [DataFormat] based on a [DataType].
+  factory DataFormat.fromDataType(DataType type) =>
       DataFormat(type.namespace, type.name);
 
   /// Create a [DataFormat] from a JSON map.
@@ -228,7 +228,7 @@ class DataFormatType {
 
 /// Enumeration of data type namespaces.
 ///
-/// Namespaces are used both in specification of [MeasureType]
+/// Namespaces are used both in specification of [DataType]
 /// and in [DataFormat].
 ///
 /// Currently know namespaces include:
@@ -240,8 +240,8 @@ class NameSpace {
   static const String CARP = 'carp';
 }
 
-/// Enumeration of data types used in [MeasureType].
-class DataType {
+/// Enumeration of data types used in [DataType].
+class CAMSDataType {
   static const String UNKNOWN = 'unknown';
   static const String NONE = 'none';
   static const String EXECUTOR = 'executor';

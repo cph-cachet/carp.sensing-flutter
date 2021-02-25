@@ -25,7 +25,7 @@ part of carp_core_domain;
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class StudyProtocol extends Serializable {
   /// The id of this [StudyProtocol].
-  String id;
+  // String id;
 
   /// A short printer-friendly name for this study.
   String name;
@@ -44,7 +44,7 @@ class StudyProtocol extends Serializable {
   ProtocolOwner owner;
 
   /// The ID of the user executing this study.
-  String userId;
+  // String userId;
 
   /// The sampling strategy according to [SamplingSchemaType].
   String samplingStrategy = SamplingSchemaType.NORMAL;
@@ -56,33 +56,30 @@ class StudyProtocol extends Serializable {
   /// [DataFormatType]. Default using the [NameSpace.CARP].
   String dataFormat;
 
-  /// The public key in a PKI setup for encryption of data in the [dataEndPoint].
-  String publicKey;
+  /// The [masterDevice] which is responsible for aggregating and synchronizing
+  /// incoming data. Typically this phone.
+  MasterDeviceDescriptor masterDeviceDescriptor;
 
   /// The devices this device needs to connect to.
-  List<Device> devices = [];
+  List<DeviceDescriptor> connectedDevices = [];
 
-  /// The set of [CAMSTrigger]s which can trigger [Task]s in this study.
-  List<CAMSTrigger> triggers = [];
+  final List<Trigger> _triggers = [];
 
-  List<Measure> _measures;
+  /// The set of [Trigger]s which can trigger [TaskDescriptor]s in this study protocol.
+  List<Trigger> get triggers => _triggers;
 
-  /// Get the list of all [Mesure]s in this study.
-  List<Measure> get measures {
-    if (_measures == null) {
-      _measures = [];
-      triggers.forEach((trigger) =>
-          trigger.tasks.forEach((task) => _measures.addAll(task.measures)));
-    }
+  List<TaskDescriptor> _tasks;
 
-    return _measures;
-  }
+  /// The set of tasks which can be triggered as part of this protocol.
+  List<TaskDescriptor> get tasks => _tasks;
+
+  final Map<Trigger, Set<TriggeredTask>> _triggeredTasks = {};
 
   /// Create a new [StudyProtocol] object with a set of configurations.
   ///
   /// If no [dataFormat] the CARP namespace is used.
   StudyProtocol({
-    this.userId,
+    // this.userId,
     this.owner,
     this.name,
     this.title,
@@ -91,33 +88,80 @@ class StudyProtocol extends Serializable {
     this.samplingStrategy,
     this.dataEndPoint,
     this.dataFormat,
-    this.publicKey,
+    // this.publicKey,
   }) : super() {
-    assert(id != null, 'Cannot create a Study without an id: id=null');
-    id ??= Uuid().v1();
+    // id ??= Uuid().v1();
     samplingStrategy ??= SamplingSchemaType.NORMAL;
     dataFormat ??= NameSpace.CARP;
   }
 
-  Function get fromJsonFunction => _$StudyProtocolFromJson;
-  factory StudyProtocol.fromJson(Map<String, dynamic> json) => FromJsonFactory()
-      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
-  Map<String, dynamic> toJson() => _$StudyProtocolToJson(this);
+  /// Add the [trigger] to this protocol.
+  void addTrigger(Trigger trigger) => _triggers.add(trigger);
 
-  /// Add a [CAMSTrigger] to this [StudyProtocol]
-  void addTrigger(CAMSTrigger trigger) => triggers.add(trigger);
+  /// Add a [TaskDescriptor] with a [CAMSTrigger] to this [StudyProtocol]
+  void addTriggeredTask(
+    Trigger trigger,
+    TaskDescriptor task, {
+    DeviceDescriptor targetDevice,
+  }) {
+    // Add trigger and task to ensure they are included in the protocol.
+    if (!triggers.contains(trigger)) addTrigger(trigger);
+    addTask(task);
 
-  /// Add a [Task] with a [CAMSTrigger] to this [StudyProtocol]
-  void addTriggerTask(CAMSTrigger trigger, Task task) {
-    if (!triggers.contains(trigger)) triggers.add(trigger);
-    trigger.addTask(task);
+    // if no target device is specified, asume this phone
+    targetDevice ??= masterDeviceDescriptor;
+
+    // Add triggered task.
+    if (_triggeredTasks[trigger] = null) _triggeredTasks[trigger] = {};
+    _triggeredTasks[trigger].add(TriggeredTask(task, targetDevice));
   }
 
-  /// The list of all [Task]s in this [StudyProtocol].
-  List<Task> get tasks {
-    List<Task> _tasks = [];
-    triggers.forEach((trigger) => _tasks.addAll(trigger.tasks));
-    return _tasks;
+  /// Gets all the tasks (and the devices they are triggered to) for the
+  /// specified [trigger].
+  Set<TriggeredTask> getTriggeredTasks(Trigger trigger) {
+    assert(_triggers.contains(trigger),
+        'The passed trigger is not part of this study protocol.');
+    return _triggeredTasks[trigger];
+  }
+
+  /// Gets all the tasks triggered for the specified [device].
+  Set<TaskDescriptor> getTasksForDevice(DeviceDescriptor device) {
+    assert(connectedDevices.contains(device),
+        'The passed device is not part of this study protocol.');
+
+    final Set<TaskDescriptor> deviceTasks = {};
+    _triggeredTasks.values.forEach((tasks) {
+      tasks.forEach((triggered) {
+        if (triggered.targetDevice == device) deviceTasks.add(triggered.task);
+      });
+    });
+
+    return deviceTasks;
+  }
+
+  /// Add the [task] to this protocol.
+  void addTask(TaskDescriptor task) => tasks.add(task);
+
+  /// Remove the [task] currently present in this configuration
+  /// including removing it from any [Trigger]'s which initiate it.
+  void removeTask(TaskDescriptor task) {
+    // Remove task from triggered tasks
+    _triggeredTasks.values.forEach((tasks) {
+      tasks.forEach((triggered) {
+        if (triggered.task == task) tasks.remove(task);
+      });
+    });
+
+    // Remove task itself.
+    _tasks.remove(task);
+  }
+
+  /// Get the list of all [Mesure]s in this study protocol.
+  List<Measure> get measures {
+    List<Measure> _measures = [];
+    tasks.forEach((task) => _measures.addAll(task.measures));
+
+    return _measures;
   }
 
   /// Adapt the sampling [Measure]s of this [StudyProtocol] to the specified
@@ -128,7 +172,12 @@ class StudyProtocol extends Serializable {
     schema.adapt(this, restore: restore);
   }
 
-  String toString() => name;
+  Function get fromJsonFunction => _$StudyProtocolFromJson;
+  factory StudyProtocol.fromJson(Map<String, dynamic> json) => FromJsonFactory()
+      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$StudyProtocolToJson(this);
+
+  String toString() => '$runtimeType - $name, $title';
 }
 
 /// A person that created a [StudyProtocol].
@@ -156,7 +205,7 @@ class ProtocolOwner extends Serializable {
       .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$ProtocolOwnerToJson(this);
 
-  String toString() => '$name, $title <$email>';
+  String toString() => '$runtimeType - $name, $title <$email>';
 }
 
 /// Specify an endpoint where a [DataManager] can upload data.
@@ -165,8 +214,11 @@ class DataEndPoint extends Serializable {
   /// The type of endpoint as enumerated in [DataEndPointTypes].
   String type;
 
+  /// The public key in a PKI setup for encryption of data
+  String publicKey;
+
   /// Creates a [DataEndPoint]. [type] is defined in [DataEndPointTypes].
-  DataEndPoint({this.type}) : super();
+  DataEndPoint({this.type, this.publicKey}) : super();
 
   Function get fromJsonFunction => _$DataEndPointFromJson;
   factory DataEndPoint.fromJson(Map<String, dynamic> json) => FromJsonFactory()

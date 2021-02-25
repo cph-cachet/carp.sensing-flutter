@@ -97,7 +97,7 @@ class Console extends State<ConsolePage> {
   }
 }
 
-/// This class implements sensing incl. setting up a [StudyProtocol] with [Task]s and [Measure]s.
+/// This class implements sensing incl. setting up a [StudyProtocol] with [TaskDescriptor]s and [Measure]s.
 ///
 /// This example is useful for creating a Business Logical Object (BLOC) in a Flutter app.
 /// See e.g. the CARP Mobile Sensing App.
@@ -120,9 +120,9 @@ class Sensing {
               ..bufferSize = 500 * 1000
               ..zip = true
               ..encrypt = false)
-          ..addTriggerTask(
+          ..addTriggeredTask(
               ImmediateTrigger(),
-              AutomaticTask()
+              AutomaticTaskDescriptor()
                 ..measures = SamplingPackageRegistry().debug().getMeasureList(
                   namespace: NameSpace.CARP,
                   types: [
@@ -133,9 +133,9 @@ class Sensing {
                     SensorSamplingPackage.LIGHT,
                   ],
                 ))
-          ..addTriggerTask(
+          ..addTriggeredTask(
               ImmediateTrigger(),
-              AutomaticTask()
+              AutomaticTaskDescriptor()
                 ..measures = SamplingPackageRegistry().debug().getMeasureList(
                   namespace: NameSpace.CARP,
                   types: [

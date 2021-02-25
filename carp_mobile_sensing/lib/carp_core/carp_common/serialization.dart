@@ -75,9 +75,9 @@ class FromJsonFactory {
     register(StudyProtocol());
     register(DataEndPoint());
     // register(FileDataEndPoint());
-    register(Device());
-    register(Task());
-    register(AutomaticTask());
+    register(DeviceDescriptor());
+    register(TaskDescriptor());
+    register(AutomaticTaskDescriptor());
     register(AppTask(type: 'ignored'));
     register(CAMSTrigger());
     register(ImmediateTrigger());
@@ -88,7 +88,7 @@ class FromJsonFactory {
     register(RecurrentScheduledTrigger(type: null, time: null));
     register(SamplingEventTrigger(measureType: null));
     register(ConditionalSamplingEventTrigger(measureType: null));
-    register(MeasureType('', ''));
+    register(DataType('', ''));
     register(Measure(type: null));
     register(PeriodicMeasure(type: null));
     register(MarkedMeasure(type: null));

@@ -64,7 +64,7 @@ abstract class Probe {
   /// Is this probe enabled, i.e. available for collection of data using the [resume] method.
   bool get enabled;
 
-  /// The type of this probe according to [DataType].
+  /// The type of this probe according to [CAMSDataType].
   String get type;
 
   /// The runtime state of this probe.

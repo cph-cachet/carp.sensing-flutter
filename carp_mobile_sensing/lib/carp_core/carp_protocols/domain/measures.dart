@@ -7,11 +7,11 @@
 part of carp_core_domain;
 
 /// A [Measure] holds information about what measure to do/collect for a
-/// [Task] in a [StudyProtocol].
+/// [TaskDescriptor] in a [StudyProtocol].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class Measure extends Serializable {
   /// The type of measure to do.
-  MeasureType type;
+  DataType type;
 
   /// A printer-friendly name for this measure.
   String name;
@@ -101,7 +101,7 @@ class PeriodicMeasure extends Measure {
 
   /// Create a [PeriodicMeasure].
   PeriodicMeasure({
-    @required MeasureType type,
+    @required DataType type,
     String name,
     String description,
     bool enabled,
@@ -168,7 +168,7 @@ class MarkedMeasure extends Measure {
   Duration history;
 
   MarkedMeasure({
-    @required MeasureType type,
+    @required DataType type,
     String name,
     String description,
     bool enabled,
@@ -187,39 +187,6 @@ class MarkedMeasure extends Measure {
 
   String toString() =>
       '${super.toString()}, mark: $lastTime, history: $history';
-}
-
-/// Specifies the type of a [Measure].
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class MeasureType extends Serializable {
-  /// The data type namespace. See [NameSpace].
-  String namespace;
-
-  /// The name of this data format. See [DataType].
-  String name;
-
-  /// Create a [MeasureType].
-  MeasureType(this.namespace, this.name) : super();
-
-  Function get fromJsonFunction => _$MeasureTypeFromJson;
-  factory MeasureType.fromJson(Map<String, dynamic> json) => FromJsonFactory()
-      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
-  Map<String, dynamic> toJson() => _$MeasureTypeToJson(this);
-
-  String toString() => '$namespace.$name';
-
-  bool operator ==(other) {
-    if (other is! MeasureType) return false;
-    return (other.namespace == namespace && other.name == name);
-  }
-
-  // taken from https://dart.dev/guides/libraries/library-tour#implementing-map-keys
-  int get hashCode {
-    var result = 17;
-    result = 37 * result + namespace.hashCode;
-    result = 37 * result + name.hashCode;
-    return result;
-  }
 }
 
 /// A Listener that can listen on changes to a [Measure].

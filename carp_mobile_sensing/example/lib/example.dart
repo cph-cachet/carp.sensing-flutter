@@ -23,9 +23,9 @@ void example_1() async {
 
   // Add an automatic task that immediately starts collecting
   // step counts, ambient light, screen activity, and battery level
-  study.addTriggerTask(
+  study.addTriggeredTask(
       ImmediateTrigger(),
-      AutomaticTask()
+      AutomaticTaskDescriptor()
         ..addMeasures(SensorSamplingPackage().common.getMeasureList(
           namespace: NameSpace.CARP,
           types: [
@@ -65,26 +65,25 @@ void example_2() async {
 
   // automatically collect accelerometer and gyroscope data
   // but delay the sampling by 10 seconds
-  study.addTriggerTask(
+  study.addTriggeredTask(
       DelayedTrigger(delay: Duration(seconds: 10)),
-      AutomaticTask(name: 'Sensor Task')
-        ..addMeasure(Measure(
-            type: MeasureType(
-                NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER)))
+      AutomaticTaskDescriptor(name: 'Sensor Task')
         ..addMeasure(Measure(
             type:
-                MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE))));
+                DataType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER)))
+        ..addMeasure(Measure(
+            type: DataType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE))));
 
   // create a light measure variable to be used later
   PeriodicMeasure lightMeasure = PeriodicMeasure(
-    type: MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
+    type: DataType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
     name: 'Ambient Light',
     frequency: const Duration(seconds: 11),
     duration: const Duration(milliseconds: 100),
   );
   // add it to the study to start immediately
-  study.addTriggerTask(ImmediateTrigger(),
-      AutomaticTask(name: 'Light')..addMeasure(lightMeasure));
+  study.addTriggeredTask(ImmediateTrigger(),
+      AutomaticTaskDescriptor(name: 'Light')..addMeasure(lightMeasure));
 
   // Create a Study Controller that can manage this study.
   StudyController controller = StudyController(study);
@@ -154,22 +153,22 @@ void example_2() async {
 /// An example of how to use the [SamplingSchema] model.
 void samplingSchemaExample() async {
   // creating a sampling schema focused on activity and outdoor context (weather)
-  SamplingSchema activitySchema = SamplingSchema(
-      name: 'Connectivity Sampling Schema', powerAware: true)
-    ..measures.addEntries([
-      MapEntry(
-          SensorSamplingPackage.PEDOMETER,
-          PeriodicMeasure(
-              type:
-                  MeasureType(NameSpace.CARP, SensorSamplingPackage.PEDOMETER),
-              enabled: true,
-              frequency: const Duration(minutes: 1))),
-      MapEntry(
-          DeviceSamplingPackage.SCREEN,
-          Measure(
-              type: MeasureType(NameSpace.CARP, DeviceSamplingPackage.SCREEN),
-              enabled: true)),
-    ]);
+  SamplingSchema activitySchema =
+      SamplingSchema(name: 'Connectivity Sampling Schema', powerAware: true)
+        ..measures.addEntries([
+          MapEntry(
+              SensorSamplingPackage.PEDOMETER,
+              PeriodicMeasure(
+                  type:
+                      DataType(NameSpace.CARP, SensorSamplingPackage.PEDOMETER),
+                  enabled: true,
+                  frequency: const Duration(minutes: 1))),
+          MapEntry(
+              DeviceSamplingPackage.SCREEN,
+              Measure(
+                  type: DataType(NameSpace.CARP, DeviceSamplingPackage.SCREEN),
+                  enabled: true)),
+        ]);
 
   StudyProtocol study = StudyProtocol(
       userId: 'user@cachet.dk',
@@ -181,9 +180,9 @@ void samplingSchemaExample() async {
         ..encrypt = false);
 
   // adding a set of specific measures from the `common` sampling schema to one overall task
-  study.addTriggerTask(
+  study.addTriggeredTask(
       ImmediateTrigger(),
-      AutomaticTask(name: 'Sensing Task #1')
+      AutomaticTaskDescriptor(name: 'Sensing Task #1')
         ..measures = DeviceSamplingPackage().common.getMeasureList(
           namespace: NameSpace.CARP,
           types: [
@@ -192,9 +191,9 @@ void samplingSchemaExample() async {
           ],
         ));
 
-  study.addTriggerTask(
+  study.addTriggeredTask(
       ImmediateTrigger(),
-      AutomaticTask(name: 'One Common Sensing Task')
+      AutomaticTaskDescriptor(name: 'One Common Sensing Task')
         ..measures = SensorSamplingPackage().common.getMeasureList(
           namespace: NameSpace.CARP,
           types: [
@@ -205,15 +204,15 @@ void samplingSchemaExample() async {
         ));
 
   // adding all measure from the activity schema to one overall 'sensing' task
-  study.addTriggerTask(
+  study.addTriggeredTask(
       ImmediateTrigger(),
-      AutomaticTask(name: 'Sensing Task')
+      AutomaticTaskDescriptor(name: 'Sensing Task')
         ..measures = activitySchema.measures.values);
 
   // adding the measures to two separate tasks, while also adding a new light measure to the 2nd task
-  study.addTriggerTask(
+  study.addTriggeredTask(
       ImmediateTrigger(),
-      AutomaticTask(name: 'Activity Sensing Task #1')
+      AutomaticTaskDescriptor(name: 'Activity Sensing Task #1')
         ..measures = activitySchema.getMeasureList(
           namespace: NameSpace.CARP,
           types: [
@@ -222,9 +221,9 @@ void samplingSchemaExample() async {
           ],
         ));
 
-  study.addTriggerTask(
+  study.addTriggeredTask(
       ImmediateTrigger(),
-      AutomaticTask(name: 'Phone Sensing Task #2')
+      AutomaticTaskDescriptor(name: 'Phone Sensing Task #2')
         ..measures = activitySchema.getMeasureList(
           namespace: NameSpace.CARP,
           types: [
@@ -232,7 +231,7 @@ void samplingSchemaExample() async {
           ],
         )
         ..addMeasure(PeriodicMeasure(
-          type: MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
+          type: DataType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
           name: 'Ambient Light',
           frequency: const Duration(seconds: 11),
           duration: const Duration(milliseconds: 100),
@@ -306,22 +305,22 @@ void study_controller_example() async {
 /// An example of using the (new) AppTask model
 void app_task_example() async {
   StudyProtocol study = StudyProtocol(userId: 'user@cachet.dk')
-    ..addTriggerTask(
+    ..addTriggeredTask(
         ImmediateTrigger(), // collect local weather and air quality as an app task
         AppTask(
           type: SensingUserTask.ONE_TIME_SENSING_TYPE,
           title: "Device",
           description: "Collect device info",
         )..addMeasure(Measure(
-            type: MeasureType(NameSpace.CARP, DeviceSamplingPackage.DEVICE))))
-    ..addTriggerTask(
+            type: DataType(NameSpace.CARP, DeviceSamplingPackage.DEVICE))))
+    ..addTriggeredTask(
         ImmediateTrigger(),
         AppTask(
           type: SensingUserTask.SENSING_TYPE,
           title: "Screen",
           description: "Collect screen events",
         )..addMeasure(Measure(
-            type: MeasureType(NameSpace.CARP, DeviceSamplingPackage.SCREEN))));
+            type: DataType(NameSpace.CARP, DeviceSamplingPackage.SCREEN))));
 
   StudyController controller =
       StudyController(study, privacySchemaName: PrivacySchema.DEFAULT);

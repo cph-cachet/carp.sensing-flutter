@@ -29,9 +29,9 @@ void main() {
       ..encrypt = false;
 
     // adding all measure from the common schema to one one trigger and one task
-    study.addTriggerTask(
+    study.addTriggeredTask(
         ImmediateTrigger(), // a simple trigger that starts immediately
-        AutomaticTask(name: 'Sampling Task')
+        AutomaticTaskDescriptor(name: 'Sampling Task')
           ..measures = SamplingPackageRegistry()
               .common(namespace: NameSpace.CARP)
               .measures
@@ -110,19 +110,19 @@ void main() {
       ..zip = true
       ..encrypt = false;
 
-    study_3.addTriggerTask(
+    study_3.addTriggeredTask(
         DelayedTrigger(delay: Duration(seconds: 10)),
-        AutomaticTask(name: 'Sensing Task #1')
+        AutomaticTaskDescriptor(name: 'Sensing Task #1')
           ..measures = SamplingPackageRegistry().common().getMeasureList(
               types: [
                 SensorSamplingPackage.PEDOMETER,
                 DeviceSamplingPackage.SCREEN
               ]));
 
-    study_3.addTriggerTask(
+    study_3.addTriggeredTask(
         PeriodicTrigger(
             period: const Duration(minutes: 1)), // collect every min.
-        AutomaticTask(name: 'Sensing Task #2')
+        AutomaticTaskDescriptor(name: 'Sensing Task #2')
           ..measures = SamplingPackageRegistry().common().getMeasureList(
               types: [
                 SensorSamplingPackage.LIGHT,
@@ -135,9 +135,9 @@ void main() {
     t1 = RecurrentScheduledTrigger(
         type: RecurrentType.daily, time: Time(hour: 21, minute: 30));
     print('$t1');
-    study_3.addTriggerTask(
+    study_3.addTriggeredTask(
         t1,
-        AutomaticTask(name: 'Sensing Task #1')
+        AutomaticTaskDescriptor(name: 'Sensing Task #1')
           ..measures = SamplingPackageRegistry()
               .common()
               .getMeasureList(types: [DeviceSamplingPackage.MEMORY]));
@@ -148,9 +148,9 @@ void main() {
         time: Time(hour: 13, minute: 30),
         separationCount: 1);
     print('$t2');
-    study_3.addTriggerTask(
+    study_3.addTriggeredTask(
         t2,
-        AutomaticTask(name: 'Sensing Task #1')
+        AutomaticTaskDescriptor(name: 'Sensing Task #1')
           ..measures = SamplingPackageRegistry().common().getMeasureList(
               types: [
                 SensorSamplingPackage.LIGHT,
@@ -163,9 +163,9 @@ void main() {
         time: Time(hour: 12, minute: 23),
         dayOfWeek: DateTime.wednesday);
     print('$t3');
-    study_3.addTriggerTask(
+    study_3.addTriggeredTask(
         t3,
-        AutomaticTask(name: 'Sensing Task #1')
+        AutomaticTaskDescriptor(name: 'Sensing Task #1')
           ..measures = SamplingPackageRegistry().common().getMeasureList(
               types: [
                 SensorSamplingPackage.LIGHT,
@@ -179,32 +179,32 @@ void main() {
         dayOfWeek: DateTime.monday,
         separationCount: 1);
     print('$t4');
-    study_3.addTriggerTask(
+    study_3.addTriggeredTask(
         t4,
-        AutomaticTask(name: 'Sensing Task #1')
+        AutomaticTaskDescriptor(name: 'Sensing Task #1')
           ..measures = DeviceSamplingPackage().common.getMeasureList(types: [
             DeviceSamplingPackage.SCREEN,
             DeviceSamplingPackage.MEMORY
           ]));
 
     // when battery level is 10% then sample light
-    study_3.addTriggerTask(
+    study_3.addTriggeredTask(
         SamplingEventTrigger(
             measureType:
-                MeasureType(NameSpace.CARP, DeviceSamplingPackage.BATTERY),
+                DataType(NameSpace.CARP, DeviceSamplingPackage.BATTERY),
             resumeCondition: BatteryDatum()..batteryLevel = 10),
-        AutomaticTask(name: 'Sensing Task #1')
+        AutomaticTaskDescriptor(name: 'Sensing Task #1')
           ..measures = SensorSamplingPackage()
               .common
               .getMeasureList(types: [SensorSamplingPackage.LIGHT]));
 
-    study_3.addTriggerTask(
+    study_3.addTriggeredTask(
         ConditionalSamplingEventTrigger(
             measureType:
-                MeasureType(NameSpace.CARP, DeviceSamplingPackage.BATTERY),
+                DataType(NameSpace.CARP, DeviceSamplingPackage.BATTERY),
             resumeCondition: (datum) =>
                 (datum as BatteryDatum).batteryLevel == 10),
-        AutomaticTask(name: 'Sensing Task #1')
+        AutomaticTaskDescriptor(name: 'Sensing Task #1')
           ..measures = SensorSamplingPackage()
               .common
               .getMeasureList(types: [SensorSamplingPackage.LIGHT]));

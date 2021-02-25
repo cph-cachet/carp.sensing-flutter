@@ -142,7 +142,7 @@ abstract class TriggerExecutor extends Executor {
         'Cannot initiate a TriggerExecutor without a Trigger.');
     _trigger = trigger;
 
-    for (Task task in trigger.tasks) {
+    for (TaskDescriptor task in trigger.tasks) {
       TaskExecutor executor = getTaskExecutor(task);
       _group.add(executor.events);
       executors.add(executor);
@@ -426,11 +426,11 @@ class ConditionalSamplingEventTriggerExecutor extends TriggerExecutor {
 // ---------------------------------------------------------------------------------------------------------
 
 /// Returns the relevant [TaskExecutor] based on the type of [task].
-TaskExecutor getTaskExecutor(Task task) {
+TaskExecutor getTaskExecutor(TaskDescriptor task) {
   switch (task.runtimeType) {
-    case Task:
+    case TaskDescriptor:
       return TaskExecutor(task);
-    case AutomaticTask:
+    case AutomaticTaskDescriptor:
       return AutomaticTaskExecutor(task);
     case AppTask:
       return AppTaskExecutor(task);
@@ -439,19 +439,19 @@ TaskExecutor getTaskExecutor(Task task) {
   }
 }
 
-/// The [TaskExecutor] is responsible for executing a [Task] in the [StudyProtocol].
+/// The [TaskExecutor] is responsible for executing a [TaskDescriptor] in the [StudyProtocol].
 /// For each task it looks up appropriate [Probe]s to collect data.
 ///
 /// Note that a [TaskExecutor] in itself is a [Probe] and hence work as a 'super probe'.
 /// This - amongst other things - imply that you can listen to datum [events] from a task executor.
 class TaskExecutor extends Executor {
-  Task get task => _task;
-  Task _task;
+  TaskDescriptor get task => _task;
+  TaskDescriptor _task;
 
   /// Returns a list of the running probes in this task executor.
   List<Probe> get probes => executors;
 
-  TaskExecutor(Task task) : super() {
+  TaskExecutor(TaskDescriptor task) : super() {
     assert(task != null, 'Cannot initiate a TaskExecutor without a Task.');
     _task = task;
   }
@@ -474,10 +474,10 @@ class TaskExecutor extends Executor {
   }
 }
 
-/// Executes an [AutomaticTask].
+/// Executes an [AutomaticTaskDescriptor].
 class AutomaticTaskExecutor extends TaskExecutor {
-  AutomaticTaskExecutor(AutomaticTask task) : super(task) {
-    assert(task is AutomaticTask,
+  AutomaticTaskExecutor(AutomaticTaskDescriptor task) : super(task) {
+    assert(task is AutomaticTaskDescriptor,
         'AutomaticTaskExecutor should be initialized with a AutomaticTask.');
   }
 }

@@ -64,7 +64,7 @@ class SamplingSchema {
   }
 
   /// Returns a list of [Measure]s from this [SamplingSchema] for
-  /// a list of [MeasureType]s as specified in [types].
+  /// a list of [DataType]s as specified in [types].
   ///
   /// This method is a convenient way to get a list of pre-configured
   /// measures of the correct type with default settings.
@@ -83,7 +83,7 @@ class SamplingSchema {
   /// would return a list with a [Measure] for bluetooth, connectivity, etc.,
   /// each with default configurations from the [SamplingSchema.common()] schema.
   ///
-  /// If [namespace] is specified, then the returned measures' [MeasureType]
+  /// If [namespace] is specified, then the returned measures' [DataType]
   /// belong to this namespace.
   /// Otherwise, the [NameSpace.UNKNOWN] is applied.
   List<Measure> getMeasureList({

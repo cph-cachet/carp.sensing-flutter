@@ -14,32 +14,35 @@ part of managers;
 ///
 ///   `carp/study/study-<study_id>.json`
 ///
-class FileDeploymentService implements DeploymentService {
+class FileDeploymentService extends LocalDeploymentService {
   /// The path to use on the device for storing CARP study files.
   static const String CARP_STUDY_FILE_PATH = 'carp/study';
 
   String _path;
 
-  /// Initializing the the local study manager
+  /// Initializing the the local FileDeploymentService
   Future initialize() async {
     final _studyPath = await path;
 
-    info('Initializing FileStudyManager...');
+    info('Initializing FileDeploymentService...');
     info('Study file path : $_studyPath');
   }
 
-  /// Get a study stored on the local file system.
-  Future<StudyProtocol> getDeviceDeploymentFor(String studyId) async {
-    info("Loading study '$studyId'.");
+  @override
+  Future<MasterDeviceDeployment> getDeviceDeploymentFor(
+      String studyDeploymentId,
+      {String masterDeviceRoleName}) {
+    info("Loading study '$studyDeploymentId'.");
     StudyProtocol study;
 
     try {
-      String jsonString = File(filename(studyId)).readAsStringSync();
+      String jsonString = File(filename(studyDeploymentId)).readAsStringSync();
       study = StudyProtocol.fromJson(
           json.decode(jsonString) as Map<String, dynamic>);
     } catch (exception) {
-      warning("Failed to load study '$studyId' - $exception");
+      warning("Failed to load study '$studyDeploymentId' - $exception");
     }
+
     return study;
   }
 

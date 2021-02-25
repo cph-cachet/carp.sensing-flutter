@@ -6,7 +6,7 @@
  */
 part of carp_core_domain;
 
-/// A [CAMSTrigger] is a specification of any condition which starts and stops [Task]s at
+/// A [CAMSTrigger] is a specification of any condition which starts and stops [TaskDescriptor]s at
 /// certain points in time when the condition applies. The condition can either
 /// be time-bound, based on data streams, initiated by a user of the platform,
 /// or a combination of these.
@@ -19,11 +19,11 @@ class CAMSTrigger extends Serializable {
   /// Is used when storing data to know what triggered the data collection.
   String triggerId;
 
-  /// The list of [Task]s in this [CAMSTrigger].
-  List<Task> tasks = [];
+  /// The list of [TaskDescriptor]s in this [CAMSTrigger].
+  List<TaskDescriptor> tasks = [];
 
-  /// Add a [Task] to this [CAMSTrigger]
-  void addTask(Task task) => tasks.add(task);
+  /// Add a [TaskDescriptor] to this [CAMSTrigger]
+  void addTask(TaskDescriptor task) => tasks.add(task);
 
   CAMSTrigger({this.triggerId}) : super();
 
@@ -58,14 +58,14 @@ class ManualTrigger extends CAMSTrigger {
 
   /// Called when data sampling in this [CAMSTrigger] is to be resumed.
   ///
-  /// Starting a trigger implies that all [Task]s in this trigger is started,
+  /// Starting a trigger implies that all [TaskDescriptor]s in this trigger is started,
   /// which again implies that all [Measure]s in these tasks are started.
   /// Therefore, all measures to be started should be 'bundled' into this trigger.
   void resume() => executor?.resume();
 
   /// Called when data sampling in this [CAMSTrigger] is to paused.
   ///
-  /// Stopping a trigger implies that all [Task]s in this trigger is paused,
+  /// Stopping a trigger implies that all [TaskDescriptor]s in this trigger is paused,
   /// which again implies that all [Measure]s in these tasks are paused.
   void pause() => executor?.pause();
 
@@ -523,11 +523,11 @@ class SamplingEventTrigger extends CAMSTrigger {
     this.pauseCondition,
   }) : super(triggerId: triggerId);
 
-  /// The [MeasureType] of the event to look for.
+  /// The [DataType] of the event to look for.
   ///
   /// If [resumeCondition] is null, sampling will be triggered for all events
   /// of this type.
-  MeasureType measureType;
+  DataType measureType;
 
   /// The [Datum] specifying a specific sampling value to compare with for
   /// resuming this trigger.
@@ -583,8 +583,8 @@ class ConditionalSamplingEventTrigger extends CAMSTrigger {
     this.pauseCondition,
   }) : super(triggerId: triggerId);
 
-  /// The [MeasureType] of the event to look for.
-  MeasureType measureType;
+  /// The [DataType] of the event to look for.
+  DataType measureType;
 
   /// The [EventConditionEvaluator] function evaluating if the event
   /// condition is meet for resuming this trigger

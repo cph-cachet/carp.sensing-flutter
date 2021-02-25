@@ -12,9 +12,9 @@ void sensing() async {
         ..zip = true
         ..encrypt = false)
     ..dataFormat = NameSpace.OMH
-    ..addTriggerTask(
+    ..addTriggeredTask(
         ImmediateTrigger(),
-        Task(name: 'One Common Sensing Task')
+        TaskDescriptor(name: 'One Common Sensing Task')
           ..measures =
               SamplingPackageRegistry().common().getMeasureList(types: [
             SensorSamplingPackage.ACCELEROMETER,

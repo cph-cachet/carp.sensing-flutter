@@ -17,9 +17,9 @@ void main() {
     study = StudyProtocol(userId: 'bardram', name: 'bardram study');
     study.dataEndPoint = DataEndPoint(type: DataEndPointTypes.PRINT);
 
-    study.addTriggerTask(
+    study.addTriggeredTask(
       ImmediateTrigger(),
-      AutomaticTask()
+      AutomaticTaskDescriptor()
         ..measures = DeviceSamplingPackage().common.getMeasureList(
           namespace: NameSpace.CARP,
           types: [
@@ -31,17 +31,16 @@ void main() {
         ),
     );
 
-    study.addTriggerTask(
+    study.addTriggeredTask(
         ImmediateTrigger(),
-        AutomaticTask(name: 'Sensor Task')
+        AutomaticTaskDescriptor(name: 'Sensor Task')
           ..addMeasure(PeriodicMeasure(
-              type: MeasureType(
-                  NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
+              type:
+                  DataType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
               frequency: const Duration(seconds: 10),
               duration: const Duration(milliseconds: 100)))
           ..addMeasure(PeriodicMeasure(
-              type:
-                  MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
+              type: DataType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
               frequency: const Duration(seconds: 20),
               duration: const Duration(milliseconds: 100))));
   });

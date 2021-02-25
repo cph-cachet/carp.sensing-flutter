@@ -7,6 +7,30 @@
 
 part of carp_services;
 
+// VERSION 1.2
+//
+// {
+//   "carp_header":
+//   {
+//     "study_deployment_id": "ace89584-..",          // UUID defined by server
+//     "device_role_name": "Patient's phone",
+//     "trigger_id": "Sensor Task",
+//     "user_id": "'user@cachet.dk",
+//     "data_format": {
+//       "namespace": "omh",
+//       "name": "acceleration",
+//     }
+//     "upload_time": "2018-08-27T21:40:29.693587",   // Set by server
+//     "start_time": "2018-08-27T21:40:29.693587",    // Start time of measure in the body
+//     "end_time": "2018-08-27T21:40:29.693587",      // Optional
+//
+//   },
+//   "carp_body":
+//   {
+//     // e.g., Open mHealth header and body
+//   }
+// }
+
 /// A CARP Data Point which can be up/downloaded to/from the CARP Web Services API.
 ///
 /// See https://github.com/cph-cachet/carp.webservices

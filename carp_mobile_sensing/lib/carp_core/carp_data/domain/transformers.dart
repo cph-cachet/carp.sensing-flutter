@@ -72,7 +72,7 @@ abstract class TransformerSchema {
   void onRegister();
 
   /// Add a transformer to this schema based on its type mapped to its
-  /// [DataType].
+  /// [CAMSDataType].
   void add(String type, DatumTransformer transformer) =>
       transformers[type] = transformer;
 

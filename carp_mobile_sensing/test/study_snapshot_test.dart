@@ -39,17 +39,16 @@ void main() {
 //      ..addMeasure(PeriodicMeasure(DataFormat('carp', 'apps'), frequency: 3, duration: 8))
 //      ..addMeasure(Measure(DataFormat('carp', 'weather'))));
 
-    study.addTriggerTask(
+    study.addTriggeredTask(
         ImmediateTrigger(),
-        AutomaticTask(name: 'Sensor Task')
+        AutomaticTaskDescriptor(name: 'Sensor Task')
           ..addMeasure(PeriodicMeasure(
-              type: MeasureType(
-                  NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
+              type:
+                  DataType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
               frequency: const Duration(seconds: 10),
               duration: const Duration(milliseconds: 100)))
           ..addMeasure(PeriodicMeasure(
-              type:
-                  MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
+              type: DataType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE),
               frequency: const Duration(seconds: 20),
               duration: const Duration(milliseconds: 100))));
 

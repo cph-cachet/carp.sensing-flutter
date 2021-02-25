@@ -29,7 +29,7 @@ class DeviceRegistry {
     _study = study;
     //data.listen(onDatum, onError: onError, onDone: onDone);
 
-    _study.devices.forEach((device) async {
+    _study.connectedDevices.forEach((device) async {
       DeviceManager _manager = await create(device.deviceType);
       info('Creating device manager $_manager');
       await _manager.initialize(device, data);
@@ -85,18 +85,18 @@ abstract class DeviceManager {
     _eventController.add(newStatus);
   }
 
-  Device _device;
+  DeviceDescriptor _device;
 
   /// The device description for this device as specified in the
   /// [StudyProtocol] protocol.
-  Device get descriptor => _device;
+  DeviceDescriptor get descriptor => _device;
 
   /// The runtime battery level of this device.
   int get batteryLevel;
 
-  /// Initialize the device manager by specifying the [Device].
+  /// Initialize the device manager by specifying the [DeviceDescriptor].
   /// and the stream of [Datum] events to handle.
-  Future initialize(Device device, Stream<Datum> data) async {
+  Future initialize(DeviceDescriptor device, Stream<Datum> data) async {
     info('Initializing device manager, descriptor: $_device');
     _device = device;
     // data.listen(onDatum, onError: onError, onDone: onDone);
@@ -114,13 +114,13 @@ abstract class DeviceManager {
 class SmartphoneDeviceManager extends DeviceManager {
   String get id => DeviceInfo().deviceID;
 
-  Future initialize(Device descriptor, Stream<Datum> data) async {
+  Future initialize(DeviceDescriptor descriptor, Stream<Datum> data) async {
     await super.initialize(descriptor, data);
     BatteryProbe()
       ..events.listen(
           (datum) => _batteryLevel = (datum as BatteryDatum).batteryLevel)
       ..initialize(Measure(
-        type: MeasureType(NameSpace.CARP, DeviceSamplingPackage.BATTERY),
+        type: DataType(NameSpace.CARP, DeviceSamplingPackage.BATTERY),
       ))
       ..resume();
     status = DeviceStatus.connected;

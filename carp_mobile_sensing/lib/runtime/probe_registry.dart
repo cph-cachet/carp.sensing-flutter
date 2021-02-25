@@ -15,7 +15,7 @@ part of runtime;
 // See issue #13937 >> https://github.com/flutter/flutter/issues/13937
 
 /// The [ProbeRegistry] can create, register, and lookup an instance of a relevant probe
-/// based on its [DataType].
+/// based on its [CAMSDataType].
 class ProbeRegistry {
   static final ProbeRegistry _instance = ProbeRegistry._();
   ProbeRegistry._();
@@ -25,7 +25,7 @@ class ProbeRegistry {
 
   final Map<String, Set<Probe>> _probes = {};
 
-  /// All running probes mapped according to their [DataType].
+  /// All running probes mapped according to their [CAMSDataType].
   Map<String, Set<Probe>> get probes => _probes;
 
   final StreamGroup<Datum> _group = StreamGroup.broadcast();
@@ -33,7 +33,7 @@ class ProbeRegistry {
   /// A stream of all events from all probes.
   Stream<Datum> get events => _group.stream;
 
-  /// A stream of all events from probes of a specific [DataType].
+  /// A stream of all events from probes of a specific [CAMSDataType].
   Stream<Datum> eventsByType(String type) =>
       _group.stream.where((Datum datum) => datum.format.name == type);
 
@@ -44,7 +44,7 @@ class ProbeRegistry {
     _probes[type].add(probe);
   }
 
-  /// Lookup a set of [Probe]s based on its [DataType].
+  /// Lookup a set of [Probe]s based on its [CAMSDataType].
   Set<Probe> lookup(String type) => _probes[type] ?? create(type);
 
   /// Create an instance of a probe based on the measure.

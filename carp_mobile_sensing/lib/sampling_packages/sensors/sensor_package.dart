@@ -48,21 +48,21 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
       MapEntry(
           ACCELEROMETER,
           Measure(
-            type: MeasureType(NameSpace.CARP, ACCELEROMETER),
+            type: DataType(NameSpace.CARP, ACCELEROMETER),
             name: 'Accelerometer',
             enabled: false,
           )),
       MapEntry(
           GYROSCOPE,
           Measure(
-            type: MeasureType(NameSpace.CARP, GYROSCOPE),
+            type: DataType(NameSpace.CARP, GYROSCOPE),
             name: 'Gyroscope',
             enabled: false,
           )),
       MapEntry(
           PERIODIC_ACCELEROMETER,
           PeriodicMeasure(
-            type: MeasureType(NameSpace.CARP, PERIODIC_ACCELEROMETER),
+            type: DataType(NameSpace.CARP, PERIODIC_ACCELEROMETER),
             name: 'Accelerometer',
             enabled: false,
             frequency: const Duration(seconds: 5),
@@ -71,7 +71,7 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
       MapEntry(
           PERIODIC_GYROSCOPE,
           PeriodicMeasure(
-            type: MeasureType(NameSpace.CARP, PERIODIC_GYROSCOPE),
+            type: DataType(NameSpace.CARP, PERIODIC_GYROSCOPE),
             name: 'Gyroscope',
             enabled: false,
             frequency: const Duration(seconds: 5),
@@ -80,13 +80,13 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
       MapEntry(
           PEDOMETER,
           Measure(
-              type: MeasureType(NameSpace.CARP, PEDOMETER),
+              type: DataType(NameSpace.CARP, PEDOMETER),
               name: 'Pedometer (Step Count)',
               enabled: true)),
       MapEntry(
           LIGHT,
           PeriodicMeasure(
-            type: MeasureType(NameSpace.CARP, LIGHT),
+            type: DataType(NameSpace.CARP, LIGHT),
             name: 'Ambient Light',
             enabled: true,
             frequency: const Duration(minutes: 1),
@@ -114,16 +114,16 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
       MapEntry(
           ACCELEROMETER,
           Measure(
-              type: MeasureType(NameSpace.CARP, ACCELEROMETER),
+              type: DataType(NameSpace.CARP, ACCELEROMETER),
               name: 'Accelerometer')),
       MapEntry(
           GYROSCOPE,
           Measure(
-              type: MeasureType(NameSpace.CARP, GYROSCOPE), name: 'Gyroscope')),
+              type: DataType(NameSpace.CARP, GYROSCOPE), name: 'Gyroscope')),
       MapEntry(
           PERIODIC_ACCELEROMETER,
           PeriodicMeasure(
-            type: MeasureType(NameSpace.CARP, PERIODIC_ACCELEROMETER),
+            type: DataType(NameSpace.CARP, PERIODIC_ACCELEROMETER),
             name: 'Accelerometer',
             frequency: const Duration(seconds: 5),
             duration: const Duration(seconds: 1),
@@ -131,7 +131,7 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
       MapEntry(
           PERIODIC_GYROSCOPE,
           PeriodicMeasure(
-            type: MeasureType(NameSpace.CARP, PERIODIC_GYROSCOPE),
+            type: DataType(NameSpace.CARP, PERIODIC_GYROSCOPE),
             name: 'Gyroscope',
             frequency: const Duration(seconds: 5),
             duration: const Duration(seconds: 1),
@@ -139,12 +139,12 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
       MapEntry(
           PEDOMETER,
           Measure(
-              type: MeasureType(NameSpace.CARP, PEDOMETER),
+              type: DataType(NameSpace.CARP, PEDOMETER),
               name: 'Pedometer (Step Count)')),
       MapEntry(
           LIGHT,
           PeriodicMeasure(
-            type: MeasureType(NameSpace.CARP, LIGHT),
+            type: DataType(NameSpace.CARP, LIGHT),
             name: 'Ambient Light',
             frequency: const Duration(seconds: 10),
             duration: const Duration(seconds: 2),
