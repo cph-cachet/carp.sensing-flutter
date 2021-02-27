@@ -4,16 +4,11 @@
 /// obtained from a [StudyManager].
 library carp_core_domain;
 
-import 'dart:io';
-// import 'dart:convert';
-import 'package:device_info/device_info.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 import 'package:uuid/uuid.dart';
 
 export 'carp_core_domain.dart';
-
-part 'device_info.dart';
 
 part 'carp_common/serialization.dart';
 
