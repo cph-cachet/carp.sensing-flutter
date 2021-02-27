@@ -89,7 +89,7 @@ void main() {
   });
 
   test('Data point -> JSON', () async {
-    var dp = DataPoint.fromDatum(study.id, study.userId,
+    var dp = DataPoint.fromData(study.id, study.userId,
         MapDatum({'item_1': '12.23423452345', 'item_2': '3.82375823475'}));
     print(_encode(dp));
 
@@ -97,7 +97,7 @@ void main() {
       ..batteryLevel = 10
       ..batteryStatus = 'charging';
 
-    final DataPoint data = DataPoint.fromDatum(study.id, study.userId, datum);
+    final DataPoint data = DataPoint.fromData(study.id, study.userId, datum);
 
     print(_encode(data.toJson()));
   });
@@ -133,7 +133,7 @@ void main() {
 
     // collect every day at 13:30.
     t1 = RecurrentScheduledTrigger(
-        type: RecurrentType.daily, time: Time(hour: 21, minute: 30));
+        format: RecurrentType.daily, time: Time(hour: 21, minute: 30));
     print('$t1');
     study_3.addTriggeredTask(
         t1,
@@ -144,7 +144,7 @@ void main() {
 
     // collect every other day at 13:30.
     t2 = RecurrentScheduledTrigger(
-        type: RecurrentType.daily,
+        format: RecurrentType.daily,
         time: Time(hour: 13, minute: 30),
         separationCount: 1);
     print('$t2');
@@ -159,7 +159,7 @@ void main() {
 
     // collect every wednesday at 12:23.
     t3 = RecurrentScheduledTrigger(
-        type: RecurrentType.weekly,
+        format: RecurrentType.weekly,
         time: Time(hour: 12, minute: 23),
         dayOfWeek: DateTime.wednesday);
     print('$t3');
@@ -174,7 +174,7 @@ void main() {
 
     // collect every 2nd monday at 12:23.
     t4 = RecurrentScheduledTrigger(
-        type: RecurrentType.weekly,
+        format: RecurrentType.weekly,
         time: Time(hour: 12, minute: 23),
         dayOfWeek: DateTime.monday,
         separationCount: 1);

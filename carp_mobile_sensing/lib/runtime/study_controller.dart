@@ -100,7 +100,7 @@ class StudyController {
     executor ??= StudyExecutor(study);
     samplingSchema ??= SamplingSchema.normal(powerAware: true);
     dataManager ??= (study.dataEndPoint != null)
-        ? DataManagerRegistry().lookup(study.dataEndPoint.type)
+        ? DataManagerRegistry().lookup(study.dataEndPoint.format)
         : null;
     privacySchemaName ??= NameSpace.CARP;
     transformer ??= ((events) => events);

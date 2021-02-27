@@ -13,15 +13,15 @@ part of carp_core_domain;
 ///
 /// The [Trigger] class is abstract. Use sub-classes of [CAMSTrigger] implements
 /// the specific behavior / timing of a trigger.
-class Trigger {
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+class Trigger extends Serializable {
   /// The device role name from which the trigger originates.
   String sourceDeviceRoleName;
 
-  /// Determines whether the trigger needs to be evaluated on a master
-  /// device ([MasterDeviceDescriptor]).
-  /// For example, this is the case when the trigger is time bound and needs
-  /// to be evaluated by a task scheduler running on a master device.
-  bool requiresMasterDevice;
-
   Trigger() : super();
+
+  Function get fromJsonFunction => _$TriggerFromJson;
+  factory Trigger.fromJson(Map<String, dynamic> json) => FromJsonFactory()
+      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$TriggerToJson(this);
 }

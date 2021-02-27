@@ -98,7 +98,7 @@ class SamplingSchema {
         final _json = _encode(measures[type]);
         final Measure _clone =
             Measure.fromJson(json.decode(_json) as Map<String, dynamic>);
-        _clone.type.namespace = namespace ?? NameSpace.UNKNOWN;
+        _clone.format.namespace = namespace ?? NameSpace.UNKNOWN;
         _list.add(_clone);
       }
     });
@@ -247,9 +247,9 @@ class SamplingSchema {
       task.measures.forEach((measure) {
         // first restore each measure in the study+tasks to its previous value
         if (restore) measure.restore();
-        if (measures.containsKey(measure.type.name)) {
+        if (measures.containsKey(measure.format.name)) {
           // if an adapted measure exists in this schema, adapt to it
-          measure.adapt(measures[measure.type.name]);
+          measure.adapt(measures[measure.format.name]);
         }
         // notify listeners that the measure has changed due to restoration
         // and/or adaptation

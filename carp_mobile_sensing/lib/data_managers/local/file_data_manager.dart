@@ -123,7 +123,7 @@ class FileDataManager extends AbstractDataManager {
       return Future.delayed(const Duration(seconds: 2), () => write(data));
     }
 
-    final _datapoint = DataPoint.fromDatum(study.id, study.userId, data);
+    final _datapoint = DataPoint.fromData(study.id, study.userId, data);
     final json = jsonEncode(_datapoint);
 
     await sink.then((_s) {
@@ -252,7 +252,7 @@ class FileDataEndPoint extends DataEndPoint {
   /// [DataEndPointType.FILE] but specialized file types can be specified.
   FileDataEndPoint(
       {String type, this.bufferSize, this.zip, this.encrypt, this.publicKey})
-      : super(type: type ?? DataEndPointTypes.FILE);
+      : super(format: type ?? DataEndPointTypes.FILE);
 
   /// The function which can transform this [FileDataEndPoint] into JSON.
   ///

@@ -27,7 +27,8 @@ abstract class DeploymentService {
   Future<Set<String>> removeStudyDeployments(Set<String> studyDeploymentIds);
 
   /// Get the status for a study deployment with the given [studyDeploymentId].
-  StudyDeploymentStatus getStudyDeploymentStatus(String studyDeploymentId);
+  Future<StudyDeploymentStatus> getStudyDeploymentStatus(
+      String studyDeploymentId);
 
   /// Register the device with the specified [deviceRoleName] for the study
   /// deployment with [studyDeploymentId].
@@ -51,8 +52,8 @@ abstract class DeploymentService {
   /// using the deployment with the specified [deviceDeploymentLastUpdateDate],
   /// i.e., that the study deployment was loaded on the device and that the necessary runtime is available to run it.
   Future<StudyDeploymentStatus> deploymentSuccessful(
-    String studyDeploymentId,
-    String masterDeviceRoleName, {
+    String studyDeploymentId, {
+    String masterDeviceRoleName,
     DateTime deviceDeploymentLastUpdateDate,
   });
 

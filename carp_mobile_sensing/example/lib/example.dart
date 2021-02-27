@@ -76,7 +76,7 @@ void example_2() async {
 
   // create a light measure variable to be used later
   PeriodicMeasure lightMeasure = PeriodicMeasure(
-    type: DataType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
+    format: DataType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
     name: 'Ambient Light',
     frequency: const Duration(seconds: 11),
     duration: const Duration(milliseconds: 100),
@@ -159,7 +159,7 @@ void samplingSchemaExample() async {
           MapEntry(
               SensorSamplingPackage.PEDOMETER,
               PeriodicMeasure(
-                  type:
+                  format:
                       DataType(NameSpace.CARP, SensorSamplingPackage.PEDOMETER),
                   enabled: true,
                   frequency: const Duration(minutes: 1))),
@@ -231,7 +231,7 @@ void samplingSchemaExample() async {
           ],
         )
         ..addMeasure(PeriodicMeasure(
-          type: DataType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
+          format: DataType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
           name: 'Ambient Light',
           frequency: const Duration(seconds: 11),
           duration: const Duration(milliseconds: 100),
@@ -257,37 +257,37 @@ void samplingSchemaExample() async {
 void recurrentScheduledTriggerExample() {
   // collect every day at 13:30
   RecurrentScheduledTrigger(
-      type: RecurrentType.daily, time: Time(hour: 13, minute: 30));
+      format: RecurrentType.daily, time: Time(hour: 13, minute: 30));
 
   // collect every other day at 13:30
   RecurrentScheduledTrigger(
-      type: RecurrentType.daily,
+      format: RecurrentType.daily,
       separationCount: 1,
       time: Time(hour: 13, minute: 30));
 
   // collect every wednesday at 12:23
   RecurrentScheduledTrigger(
-      type: RecurrentType.weekly,
+      format: RecurrentType.weekly,
       dayOfWeek: DateTime.wednesday,
       time: Time(hour: 12, minute: 23));
 
   // collect every 2nd monday at 12:23
   RecurrentScheduledTrigger(
-      type: RecurrentType.weekly,
+      format: RecurrentType.weekly,
       dayOfWeek: DateTime.monday,
       separationCount: 1,
       time: Time(hour: 12, minute: 23));
 
   // collect monthly in the second week on a monday at 14:30
   RecurrentScheduledTrigger(
-      type: RecurrentType.monthly,
+      format: RecurrentType.monthly,
       weekOfMonth: 2,
       dayOfWeek: DateTime.monday,
       time: Time(hour: 14, minute: 30));
 
   // collect quarterly on the 11th day of the first month in each quarter at 21:30
   RecurrentScheduledTrigger(
-      type: RecurrentType.monthly,
+      format: RecurrentType.monthly,
       dayOfMonth: 11,
       separationCount: 2,
       time: Time(hour: 21, minute: 30));
@@ -308,7 +308,7 @@ void app_task_example() async {
     ..addTriggeredTask(
         ImmediateTrigger(), // collect local weather and air quality as an app task
         AppTask(
-          type: SensingUserTask.ONE_TIME_SENSING_TYPE,
+          format: SensingUserTask.ONE_TIME_SENSING_TYPE,
           title: "Device",
           description: "Collect device info",
         )..addMeasure(Measure(
@@ -316,7 +316,7 @@ void app_task_example() async {
     ..addTriggeredTask(
         ImmediateTrigger(),
         AppTask(
-          type: SensingUserTask.SENSING_TYPE,
+          format: SensingUserTask.SENSING_TYPE,
           title: "Screen",
           description: "Collect screen events",
         )..addMeasure(Measure(

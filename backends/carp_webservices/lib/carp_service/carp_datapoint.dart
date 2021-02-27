@@ -7,29 +7,33 @@
 
 part of carp_services;
 
-// VERSION 1.2
+// VERSION 1.2 -- EXAMPLE
 //
 // {
-//   "carp_header":
-//   {
-//     "study_deployment_id": "ace89584-..",          // UUID defined by server
-//     "device_role_name": "Patient's phone",
-//     "trigger_id": "Sensor Task",
-//     "user_id": "'user@cachet.dk",
-//     "data_format": {
-//       "namespace": "omh",
-//       "name": "acceleration",
-//     }
-//     "upload_time": "2018-08-27T21:40:29.693587",   // Set by server
-//     "start_time": "2018-08-27T21:40:29.693587",    // Start time of measure in the body
-//     "end_time": "2018-08-27T21:40:29.693587",      // Optional
-//
-//   },
-//   "carp_body":
-//   {
-//     // e.g., Open mHealth header and body
+//  "id": 224038,  # set by the server, not used in upload
+//  "carp_header": {
+//   "study_id": "01cf04a7-d154-40f0-9a75-ab759cf74eb3",
+//   "device_role_name": "unknown",
+//   "trigger_id": "unknown",
+//   "user_id": "user@dtu.dk",
+//   "upload_time": "2021-02-27T12:27:14.933672Z",   # set by the server, not used in upload
+//   "start_time": "2021-02-27T12:27:12.902614Z",
+//   "end_time": "2021-02-27T12:27:14.933672Z",
+//   "data_format": {
+//    "namespace": "carp",
+//    "name": "light"
 //   }
+//  },
+//  "carp_body": {
+//   "max_lux": 12,
+//   "mean_lux": 23,
+//   "id": "1e828ea0-78f7-11eb-a4c1-8518ece21966",
+//   "min_lux": 0.3,
+//   "std_lux": 0.4,
+//   "timestamp": "2021-02-27T12:27:12.902614Z"
+//  }
 // }
+//
 
 /// A CARP Data Point which can be up/downloaded to/from the CARP Web Services API.
 ///
@@ -128,8 +132,8 @@ class CARPDataPointHeader {
     if (endTime != null) endTime.toUtc();
     // [deviceRoleName] and [triggerId] has to be specified when sending this data point to the CARP web service.
     // TODO - need to add device and triggers to the domain model.
-    if (deviceRoleName == null) deviceRoleName = "unknown";
-    if (triggerId == null) triggerId = "unknown";
+    deviceRoleName ??= "unknown";
+    triggerId ??= "unknown";
   }
 
   factory CARPDataPointHeader.fromJson(Map<String, dynamic> json) =>

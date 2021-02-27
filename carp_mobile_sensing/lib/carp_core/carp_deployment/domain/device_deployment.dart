@@ -61,19 +61,7 @@ class DeviceRegistration {
   String toString() => '$runtimeType - deviceId: $deviceId';
 }
 
-class StudyDeploymentStatus {
-  /// The unique study deployment id
-  String studyDeploymentId;
-
-  /// The list of all devices part of this study deployment and their status.
-
-  List<DeviceDeploymentStatus> devicesStatus;
-
-  /// The time when the study deployment was ready for the first
-  /// time (all devices deployed); null otherwise.
-  DateTime startTime;
-}
-
+/// The status of a [DeviceDeployment].
 class DeviceDeploymentStatus {
   /// The status of the deployment
   DeviceDeploymentStatusTypes status;

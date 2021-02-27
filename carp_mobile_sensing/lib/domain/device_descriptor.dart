@@ -11,7 +11,8 @@ part of carp_core_domain;
 /// device, a sensor, or internet service (e.g. FitBit API) that collects data
 /// which can be part of a [StudyProtocol] configuration and which collects measures
 /// via probes.
-class DeviceDescriptor {
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+class DeviceDescriptor extends Serializable {
   DeviceDescriptor({
     this.deviceType,
     this.name,
@@ -37,6 +38,12 @@ class DeviceDescriptor {
   /// [StudyProtocol].
   List<DataType> collectingMeasureTypes = [];
 
+  Function get fromJsonFunction => _$DeviceDescriptorFromJson;
+  factory DeviceDescriptor.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$DeviceDescriptorToJson(this);
+
   String toString() =>
       '$runtimeType - deviceType: $deviceType, name: $name, isMasterDevice: $isMasterDevice, roleName: $roleName';
 }
@@ -44,6 +51,7 @@ class DeviceDescriptor {
 /// A device which aggregates, synchronizes, and optionally uploads incoming
 /// data received from one or more connected devices (potentially just itself).
 /// Typically this phone for a [StudyProtocol] running on this phone.
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MasterDeviceDescriptor extends DeviceDescriptor {
   /// The type of a smartphone master device (like this phone)
   static const String SMARTPHONE_DEVICE_TYPE = 'smarthone';
@@ -60,4 +68,10 @@ class MasterDeviceDescriptor extends DeviceDescriptor {
           isMasterDevice: true,
           collectingMeasureTypes: collectingMeasureTypes,
         );
+
+  Function get fromJsonFunction => _$MasterDeviceDescriptorFromJson;
+  factory MasterDeviceDescriptor.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$MasterDeviceDescriptorToJson(this);
 }

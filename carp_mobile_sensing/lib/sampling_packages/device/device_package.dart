@@ -33,7 +33,7 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
   List<Permission> get permissions => [];
 
   SamplingSchema get common => SamplingSchema()
-    ..type = SamplingSchemaType.COMMON
+    ..format = SamplingSchemaType.COMMON
     ..name = 'Common (default) device sampling schema'
     ..powerAware = true
     ..measures.addEntries([
@@ -46,7 +46,7 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
       MapEntry(
           MEMORY,
           PeriodicMeasure(
-              type: DataType(NameSpace.CARP, MEMORY),
+              format: DataType(NameSpace.CARP, MEMORY),
               name: 'Memory Usage',
               enabled: true,
               frequency: const Duration(minutes: 1))),
@@ -65,7 +65,7 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
     ]);
 
   SamplingSchema get light => common
-    ..type = SamplingSchemaType.LIGHT
+    ..format = SamplingSchemaType.LIGHT
     ..name = 'Light sensor sampling'
     ..measures[MEMORY].enabled = false;
 
@@ -74,7 +74,7 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
   SamplingSchema get normal => common;
 
   SamplingSchema get debug => common
-    ..type = SamplingSchemaType.DEBUG
+    ..format = SamplingSchemaType.DEBUG
     ..powerAware = false
     ..name = 'Debug device sampling';
 }

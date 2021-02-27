@@ -41,7 +41,7 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
   List<Permission> get permissions => [Permission.sensors];
 
   SamplingSchema get common => SamplingSchema()
-    ..type = SamplingSchemaType.COMMON
+    ..format = SamplingSchemaType.COMMON
     ..name = 'Common (default) sensor sampling schema'
     ..powerAware = true
     ..measures.addEntries([
@@ -62,7 +62,7 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
       MapEntry(
           PERIODIC_ACCELEROMETER,
           PeriodicMeasure(
-            type: DataType(NameSpace.CARP, PERIODIC_ACCELEROMETER),
+            format: DataType(NameSpace.CARP, PERIODIC_ACCELEROMETER),
             name: 'Accelerometer',
             enabled: false,
             frequency: const Duration(seconds: 5),
@@ -71,7 +71,7 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
       MapEntry(
           PERIODIC_GYROSCOPE,
           PeriodicMeasure(
-            type: DataType(NameSpace.CARP, PERIODIC_GYROSCOPE),
+            format: DataType(NameSpace.CARP, PERIODIC_GYROSCOPE),
             name: 'Gyroscope',
             enabled: false,
             frequency: const Duration(seconds: 5),
@@ -86,7 +86,7 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
       MapEntry(
           LIGHT,
           PeriodicMeasure(
-            type: DataType(NameSpace.CARP, LIGHT),
+            format: DataType(NameSpace.CARP, LIGHT),
             name: 'Ambient Light',
             enabled: true,
             frequency: const Duration(minutes: 1),
@@ -95,19 +95,19 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
     ]);
 
   SamplingSchema get light => common
-    ..type = SamplingSchemaType.LIGHT
+    ..format = SamplingSchemaType.LIGHT
     ..name = 'Light sensor sampling'
     ..measures[LIGHT].enabled = false;
 
   SamplingSchema get minimum => common
-    ..type = SamplingSchemaType.LIGHT
+    ..format = SamplingSchemaType.LIGHT
     ..name = 'Light sensor sampling'
     ..measures[PEDOMETER].enabled = false;
 
   SamplingSchema get normal => common;
 
   SamplingSchema get debug => SamplingSchema()
-    ..type = SamplingSchemaType.DEBUG
+    ..format = SamplingSchemaType.DEBUG
     ..name = 'Common (default) sensor sampling schema'
     ..powerAware = false
     ..measures.addEntries([
@@ -123,7 +123,7 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
       MapEntry(
           PERIODIC_ACCELEROMETER,
           PeriodicMeasure(
-            type: DataType(NameSpace.CARP, PERIODIC_ACCELEROMETER),
+            format: DataType(NameSpace.CARP, PERIODIC_ACCELEROMETER),
             name: 'Accelerometer',
             frequency: const Duration(seconds: 5),
             duration: const Duration(seconds: 1),
@@ -131,7 +131,7 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
       MapEntry(
           PERIODIC_GYROSCOPE,
           PeriodicMeasure(
-            type: DataType(NameSpace.CARP, PERIODIC_GYROSCOPE),
+            format: DataType(NameSpace.CARP, PERIODIC_GYROSCOPE),
             name: 'Gyroscope',
             frequency: const Duration(seconds: 5),
             duration: const Duration(seconds: 1),
@@ -144,7 +144,7 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
       MapEntry(
           LIGHT,
           PeriodicMeasure(
-            type: DataType(NameSpace.CARP, LIGHT),
+            format: DataType(NameSpace.CARP, LIGHT),
             name: 'Ambient Light',
             frequency: const Duration(seconds: 10),
             duration: const Duration(seconds: 2),

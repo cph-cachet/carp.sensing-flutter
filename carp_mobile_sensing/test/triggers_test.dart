@@ -34,20 +34,20 @@ void main() {
 
       // collect every day at 13:30
       t = RecurrentScheduledTrigger(
-          type: RecurrentType.daily, time: Time(hour: 13, minute: 30));
+          format: RecurrentType.daily, time: Time(hour: 13, minute: 30));
       //print(_encode(t));
       print('${t.firstOccurrence} - ${t.period}');
       expect(t.period.inHours, 24);
 
       // collect every day at 22:30
       t = RecurrentScheduledTrigger(
-          type: RecurrentType.daily, time: Time(hour: 22, minute: 30));
+          format: RecurrentType.daily, time: Time(hour: 22, minute: 30));
       print('${t.firstOccurrence} - ${t.period}');
       expect(t.period.inHours, 24);
 
       // collect every other day at 13:30
       t = RecurrentScheduledTrigger(
-          type: RecurrentType.daily,
+          format: RecurrentType.daily,
           separationCount: 1,
           time: Time(hour: 13, minute: 30));
       print('${t.firstOccurrence} - ${t.period}');
@@ -55,7 +55,7 @@ void main() {
 
       // collect every wednesday at 12:23
       t = RecurrentScheduledTrigger(
-          type: RecurrentType.weekly,
+          format: RecurrentType.weekly,
           dayOfWeek: DateTime.wednesday,
           time: Time(hour: 12, minute: 23));
       print('${t.firstOccurrence} - ${t.period}');
@@ -63,7 +63,7 @@ void main() {
 
       // collect every thursday at 14:23
       t = RecurrentScheduledTrigger(
-          type: RecurrentType.weekly,
+          format: RecurrentType.weekly,
           dayOfWeek: DateTime.thursday,
           time: Time(hour: 14, minute: 23));
       print('${t.firstOccurrence} - ${t.period}');
@@ -71,7 +71,7 @@ void main() {
 
       // collect every 2nd thursday at 14:00
       t = RecurrentScheduledTrigger(
-          type: RecurrentType.weekly,
+          format: RecurrentType.weekly,
           dayOfWeek: DateTime.thursday,
           separationCount: 1,
           time: Time(hour: 14, minute: 00));
@@ -82,7 +82,7 @@ void main() {
       // the monthly trigger from iPDM-GO app
       t = RecurrentScheduledTrigger(
         triggerId: 'Blood glucose events trigger',
-        type: RecurrentType.monthly,
+        format: RecurrentType.monthly,
         dayOfMonth: 1,
         time: Time(hour: 18),
         remember: true,
@@ -94,7 +94,7 @@ void main() {
       // collect quarterly on the 11th day of the first month
       // in each quarter at 21:30
       t = RecurrentScheduledTrigger(
-        type: RecurrentType.monthly,
+        format: RecurrentType.monthly,
         dayOfMonth: 11,
         separationCount: 2,
         time: Time(hour: 21, minute: 30),
@@ -105,7 +105,7 @@ void main() {
 
       // collect monthly in the second week on a monday at 14:30
       t = RecurrentScheduledTrigger(
-        type: RecurrentType.monthly,
+        format: RecurrentType.monthly,
         weekOfMonth: 2,
         dayOfWeek: DateTime.tuesday,
         time: Time(hour: 14, minute: 30),
@@ -119,7 +119,7 @@ void main() {
       // but remember this trigger across app shutdown
       t = RecurrentScheduledTrigger(
         triggerId: '1234wef',
-        type: RecurrentType.monthly,
+        format: RecurrentType.monthly,
         dayOfMonth: 11,
         separationCount: 2,
         time: Time(hour: 21, minute: 30),
@@ -133,29 +133,29 @@ void main() {
     test(' - RecurrentScheduledTrigger - assert failures', () {
       // all of the following should fail due to assert
       RecurrentScheduledTrigger(
-        type: RecurrentType.daily,
+        format: RecurrentType.daily,
         time: Time(hour: 13, minute: 30),
       );
       RecurrentScheduledTrigger(
-        type: RecurrentType.daily,
+        format: RecurrentType.daily,
         separationCount: -1,
         time: Time(hour: 13, minute: 30),
       );
 
       RecurrentScheduledTrigger(
-          type: RecurrentType.weekly, time: Time(hour: 12, minute: 23));
+          format: RecurrentType.weekly, time: Time(hour: 12, minute: 23));
 
       RecurrentScheduledTrigger(
-          type: RecurrentType.monthly,
+          format: RecurrentType.monthly,
           dayOfWeek: DateTime.monday,
           time: Time(hour: 14, minute: 30));
       RecurrentScheduledTrigger(
-          type: RecurrentType.monthly,
+          format: RecurrentType.monthly,
           dayOfMonth: 43,
           separationCount: 2,
           time: Time(hour: 21, minute: 30));
       RecurrentScheduledTrigger(
-          type: RecurrentType.monthly,
+          format: RecurrentType.monthly,
           weekOfMonth: 12,
           dayOfWeek: DateTime.monday,
           time: Time(hour: 14, minute: 30));

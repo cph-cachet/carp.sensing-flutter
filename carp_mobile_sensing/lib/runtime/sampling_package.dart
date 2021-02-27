@@ -44,7 +44,7 @@ class SamplingPackageRegistry {
   /// Takes its settings from the [SamplingSchema.common()] schema, but
   /// enables all measures.
   SamplingSchema maximum({String namespace}) => common(namespace: namespace)
-    ..type = SamplingSchemaType.MAXIMUM
+    ..format = SamplingSchemaType.MAXIMUM
     ..name = 'Default ALL sampling'
     ..powerAware = true
     ..measures.values.forEach((measure) => measure.enabled = true);
@@ -58,14 +58,14 @@ class SamplingPackageRegistry {
   /// These default settings are described in this [table](https://github.com/cph-cachet/carp.sensing-flutter/wiki/Schemas#samplingschemacommon).
   SamplingSchema common({String namespace = NameSpace.UNKNOWN}) {
     SamplingSchema schema = SamplingSchema()
-      ..type = SamplingSchemaType.COMMON
+      ..format = SamplingSchemaType.COMMON
       ..name = 'Common (default) sampling'
       ..powerAware = true;
 
     // join sampling schemas from each registered sampling package.
     packages.forEach((package) => schema.addSamplingSchema(package.common));
     schema.measures.values
-        .forEach((measure) => measure.type.namespace = namespace);
+        .forEach((measure) => measure.format.namespace = namespace);
 
     return schema;
   }
@@ -76,7 +76,7 @@ class SamplingPackageRegistry {
   /// [SamplingSchema.normal] is an empty schema and therefore don't change anything when
   /// used to adapt a [StudyProtocol] and its [Measure]s in the [adapt] method.
   SamplingSchema normal({String namespace, bool powerAware}) => SamplingSchema(
-      type: SamplingSchemaType.NORMAL,
+      format: SamplingSchemaType.NORMAL,
       name: 'Default sampling',
       powerAware: powerAware);
 
@@ -90,14 +90,14 @@ class SamplingPackageRegistry {
   /// See this [table](https://github.com/cph-cachet/carp.sensing-flutter/wiki/Schemas#samplingschemalight) for an overview.
   SamplingSchema light({String namespace}) {
     SamplingSchema schema = SamplingSchema()
-      ..type = SamplingSchemaType.LIGHT
+      ..format = SamplingSchemaType.LIGHT
       ..name = 'Light sampling'
       ..powerAware = true;
 
     // join sampling schemas from each registered sampling package.
     packages.forEach((package) => schema.addSamplingSchema(package.light));
     schema.measures.values
-        .forEach((measure) => measure.type.namespace = namespace);
+        .forEach((measure) => measure.format.namespace = namespace);
 
     return schema;
   }
@@ -108,14 +108,14 @@ class SamplingPackageRegistry {
   /// See [PowerAwarenessState].
   SamplingSchema minimum({String namespace}) {
     SamplingSchema schema = SamplingSchema()
-      ..type = SamplingSchemaType.MINIMUM
+      ..format = SamplingSchemaType.MINIMUM
       ..name = 'Minimum sampling'
       ..powerAware = true;
 
     // join sampling schemas from each registered sampling package.
     packages.forEach((package) => schema.addSamplingSchema(package.minimum));
     schema.measures.values
-        .forEach((measure) => measure.type.namespace = namespace);
+        .forEach((measure) => measure.format.namespace = namespace);
 
     return schema;
   }
@@ -129,7 +129,7 @@ class SamplingPackageRegistry {
   /// recharged above the [PowerAwarenessState.MINIMUM_SAMPLING_LEVEL] level.
   SamplingSchema none({String namespace = NameSpace.CARP}) {
     SamplingSchema schema = SamplingSchema(
-        type: SamplingSchemaType.NONE, name: 'No sampling', powerAware: true);
+        format: SamplingSchemaType.NONE, name: 'No sampling', powerAware: true);
     CAMSDataType.all.forEach((key) => schema.measures[key] =
         Measure(type: DataType(namespace, key), enabled: false));
 
@@ -141,14 +141,14 @@ class SamplingPackageRegistry {
   /// for each package.
   SamplingSchema debug({String namespace = NameSpace.CARP}) {
     SamplingSchema schema = SamplingSchema()
-      ..type = SamplingSchemaType.DEBUG
+      ..format = SamplingSchemaType.DEBUG
       ..name = 'Debugging sampling'
       ..powerAware = false;
 
     // join sampling schemas from each registered sampling package.
     packages.forEach((package) => schema.addSamplingSchema(package.debug));
     schema.measures.values
-        .forEach((measure) => measure.type.namespace = namespace);
+        .forEach((measure) => measure.format.namespace = namespace);
 
     return schema;
   }

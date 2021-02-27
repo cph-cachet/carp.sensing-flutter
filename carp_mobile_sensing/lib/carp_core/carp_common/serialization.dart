@@ -19,7 +19,7 @@ part of carp_core_domain;
 ///
 ///     Map<String, dynamic> toJson() => _$StudyToJson(this);
 ///
-/// To support deserialization, each JSON object should inlude its [type]
+/// To support deserialization, each JSON object should inlude its [format]
 /// (i.e., class name) information. In JSON this is identified by the
 /// [CLASS_IDENTIFIER] static property.
 /// In order to support de-serialization for a specific Flutter class,
@@ -72,26 +72,26 @@ class FromJsonFactory {
   // TODO: Remember to add any new classes here.
   // TODO: This could be auto-generated using a builder....
   FromJsonFactory._() {
-    register(StudyProtocol());
-    register(DataEndPoint());
-    // register(FileDataEndPoint());
-    register(DeviceDescriptor());
-    register(TaskDescriptor());
-    register(AutomaticTaskDescriptor());
-    register(AppTask(type: 'ignored'));
-    register(CAMSTrigger());
-    register(ImmediateTrigger());
-    register(DelayedTrigger());
-    register(PeriodicTrigger(period: null));
-    register(ScheduledTrigger(schedule: null));
-    register(Time());
-    register(RecurrentScheduledTrigger(type: null, time: null));
-    register(SamplingEventTrigger(measureType: null));
-    register(ConditionalSamplingEventTrigger(measureType: null));
-    register(DataType('', ''));
-    register(Measure(type: null));
-    register(PeriodicMeasure(type: null));
-    register(MarkedMeasure(type: null));
+    // register(StudyProtocol());
+    // register(DataEndPoint());
+    // // register(FileDataEndPoint());
+    // register(DeviceDescriptor());
+    // register(TaskDescriptor());
+    // register(AutomaticTaskDescriptor());
+    // register(AppTask(type: 'ignored'));
+    // register(CAMSTrigger());
+    // register(ImmediateTrigger());
+    // register(DelayedTrigger());
+    // register(PeriodicTrigger(period: null));
+    // register(ScheduledTrigger(schedule: null));
+    // register(Time());
+    // register(RecurrentScheduledTrigger(type: null, time: null));
+    // register(SamplingEventTrigger(measureType: null));
+    // register(ConditionalSamplingEventTrigger(measureType: null));
+    // register(DataType('', ''));
+    // register(Measure(type: null));
+    // register(PeriodicMeasure(type: null));
+    // register(MarkedMeasure(type: null));
   }
 
   /// Register a [Serializable] class which can be deserialized from JSON.

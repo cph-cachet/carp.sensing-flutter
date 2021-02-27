@@ -4,6 +4,7 @@
 /// obtained from a [StudyManager].
 library carp_core_application;
 
-import 'domain.dart';
+import 'carp_core_domain.dart';
 
 part 'carp_deployment/application/deployment_service.dart';
+part 'carp_deployment/application/participation_service.dart';

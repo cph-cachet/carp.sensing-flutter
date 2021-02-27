@@ -130,7 +130,6 @@ class SmartphoneDeviceManager extends DeviceManager {
   int get batteryLevel => _batteryLevel;
 
   Future connect() => null; // always connected to the phone
-
   Future disconnect() => null; // cannot disconnect from the phone
 }
 
