@@ -4,7 +4,7 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of carp_core_domain;
+part of domain;
 
 /// Specifies the type of a [Measure] or [DataPoint].
 ///
@@ -14,7 +14,8 @@ part of carp_core_domain;
 /// can be collected on a device, how to upload it, how to process it in a
 /// secondary data stream, or how triggers can act on it.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class DataType extends Serializable {
+class DataType extends carp_core_domain.Serializable
+    with carp_core_domain.DataType {
   /// The data type namespace. See [NameSpace].
   ///
   /// Uniquely identifies the organization/person who determines how to

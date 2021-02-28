@@ -5,14 +5,15 @@
  * found in the LICENSE file.
  */
 
-part of carp_core_domain;
+part of domain;
 
 /// Describes any type of electronic device, such as a smartphone, wearable
 /// device, a sensor, or internet service (e.g. FitBit API) that collects data
 /// which can be part of a [StudyProtocol] configuration and which collects measures
 /// via probes.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class DeviceDescriptor extends Serializable {
+class DeviceDescriptor extends carp_core_domain.Serializable
+    with carp_core_domain.DeviceDescriptor {
   DeviceDescriptor({
     this.deviceType,
     this.name,

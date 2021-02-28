@@ -4,12 +4,13 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of carp_core_domain;
+part of domain;
 
 /// A [Measure] holds information about what measure to do/collect for a
 /// [TaskDescriptor] in a [StudyProtocol].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class Measure extends Serializable {
+class Measure extends carp_core_domain.Serializable
+    with carp_core_domain.Measure {
   /// The type of measure to do.
   DataType type;
 

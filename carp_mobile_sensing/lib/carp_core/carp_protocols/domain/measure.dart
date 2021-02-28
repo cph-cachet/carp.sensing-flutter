@@ -4,41 +4,21 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of carp_core_domain;
+part of carp_core;
 
 /// A [Measure] holds information about what measure to do/collect for a
 /// [TaskDescriptor] in a [StudyProtocol].
-class Measure {
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class Measure extends Serializable {
   /// The type of measure to do.
   DataType type;
 
-  /// A printer-friendly name for this measure.
-  String name;
+  Measure({this.type}) : super();
 
-  /// A longer description of this measure.
-  String description;
+  Function get fromJsonFunction => _$MeasureFromJson;
+  factory Measure.fromJson(Map<String, dynamic> json) => FromJsonFactory()
+      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$MeasureToJson(this);
 
-  /// Whether the measure is enabled - i.e. collecting data - when the
-  /// study is running.
-  /// A measure is enabled as default.
-  bool enabled = true;
-
-  /// A key-value map holding any application-specific configuration.
-  Map<String, String> configuration = {};
-
-  Measure({
-    @required this.type,
-    this.name,
-    this.description,
-    this.enabled = true,
-  }) : super() {
-    enabled = enabled ?? true;
-  }
-
-  /// Add a key-value pair as configuration for this measure.
-  void setConfiguration(String key, String configuration) =>
-      this.configuration[key] = configuration;
-
-  /// Get value from the configuration for this measure.
-  String getConfiguration(String key) => configuration[key];
+  String toString() => '$runtimeType: type: $type';
 }

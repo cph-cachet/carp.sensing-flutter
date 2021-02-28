@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:test/test.dart';
 
-import '../carp_core_domain.dart';
+import '../carp_core.dart';
 
 String _encode(Object object) =>
     const JsonEncoder.withIndent(' ').convert(object);
@@ -37,11 +37,36 @@ void main() {
   });
 
   test('StudyProtocol', () async {
+    // Create a new study protocol.
     StudyProtocol protocol = StudyProtocol()
-      ..name = 'Test Protocol'
+      ..name = 'Track patient movement'
       ..ownerId = 'jakba@dtu.dk';
 
+    // Define which devices are used for data collection.
+    Smartphone phone = Smartphone(name: 'SM-A320FL', roleName: 'masterphone');
+    DeviceDescriptor eSense = DeviceDescriptor(
+      deviceType: 'eSense',
+      name: 'eSense ear plug',
+      roleName: 'eSense',
+    );
+
+    protocol
+      ..addMasterDevice(phone)
+      ..addConnectedDevice(eSense);
+
+    // Define what needs to be measured, on which device, when.
+    List<Measure> measures = [
+      Measure(type: DataType(NameSpace.CARP, 'light')),
+      Measure(type: DataType(NameSpace.CARP, 'gps')),
+      Measure(type: DataType(NameSpace.CARP, 'steps')),
+    ];
+
+    ConcurrentTask task = ConcurrentTask(name: "Start measures")
+      ..addMeasures(measures);
+    protocol.addTriggeredTask(Trigger(), task, phone);
+
     print(protocol);
+    print(_encode(protocol));
     expect(protocol.ownerId, 'jakba@dtu.dk');
   });
 

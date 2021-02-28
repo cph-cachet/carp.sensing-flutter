@@ -4,11 +4,11 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of carp_core_domain;
+part of domain;
 
 /// A base (abstract) class for a single unit of sensed information.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class Datum {
+class Datum with carp_core_domain.Data {
   /// The [DataFormat] of this [Datum].
   DataFormat get format => DataFormat.UNKNOWN;
 

@@ -5,16 +5,33 @@
  * found in the LICENSE file.
  */
 
-part of carp_core_domain;
+part of carp_core;
 
 /// Uniquely identifies the participation of an account in a study deployment.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class Participation {
+  /// The CARP study deployment ID.
   String studyDeploymentId;
+
+  /// Unique id for this participation.
   String id;
+
+  /// True when the device is already registered in the study deployment; false otherwise.
+  /// In case a device is registered, it needs to be unregistered first before a new device can be registered.
+  bool isRegistered;
+
+  Participation() : super();
+
+  factory Participation.fromJson(Map<String, dynamic> json) =>
+      _$ParticipationFromJson(json);
+  Map<String, dynamic> toJson() => _$ParticipationToJson(this);
+
+  String toString() =>
+      '${super.toString()}, id: $id, studyDeploymentId: $studyDeploymentId, isRegistered: $isRegistered';
 }
 
-/// A description of a study, shared with participants once they are invited
-/// to a study.
+/// A description of a study, shared with participants once they are invited to a study.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class StudyInvitation {
   /// A descriptive name for the study to be shown to participants.
   String name;
@@ -29,30 +46,60 @@ class StudyInvitation {
   /// exchanging additional data between the study and client subsystems,
   /// outside of scope or not yet supported by CARP core.
   String applicationData;
+
+  StudyInvitation() : super();
+
+  factory StudyInvitation.fromJson(Map<String, dynamic> json) =>
+      _$StudyInvitationFromJson(json);
+  Map<String, dynamic> toJson() => _$StudyInvitationToJson(this);
+
+  String toString() =>
+      '$runtimeType - name: $name, description: $description, applicationData: $applicationData';
 }
 
 /// An [invitation] to participate in an active study deployment using the
-/// [assignedDevices].
+/// specified master [devices].
 /// Some of the devices which the participant is invited to might already be
 /// registered. If the participant wants to use a different device, they will
 /// need to unregister the existing device first.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ActiveParticipationInvitation {
   Participation participation;
   StudyInvitation invitation;
-  Set<AssignedMasterDevice> assignedDevices;
-}
+  List<DeviceInvitation> devices;
 
-/// Master [device] and its current [registration] assigned to participants as
-/// part of a [ParticipantGroup].
-class AssignedMasterDevice {
-  MasterDeviceDescriptor device;
-  DeviceRegistration registration;
+  /// The CARP study ID.
+  String get studyId => invitation?.applicationData;
+
+  /// The CARP study deployment ID.
+  String get studyDeploymentId => participation?.studyDeploymentId;
+
+  ActiveParticipationInvitation() : super();
+
+  factory ActiveParticipationInvitation.fromJson(Map<String, dynamic> json) =>
+      _$ActiveParticipationInvitationFromJson(json);
+  Map<String, dynamic> toJson() => _$ActiveParticipationInvitationToJson(this);
+
+  String toString() =>
+      '$runtimeType - participation: $participation, invitation: $invitation, devices size: ${devices.length}';
 }
 
 /// Set [data] for all expected participant data in the study deployment
 /// with [studyDeploymentId].
 /// Data which is not set equals null.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ParticipantData {
   String studyDeploymentId;
-  Map<DataType, Data> data;
+  Map<String, Data> data;
+
+  ParticipantData() : super();
+
+  getData(DataType type) => data[type.toString()];
+  setData(DataType type, Data someData) => data[type.toString()] = someData;
+
+  factory ParticipantData.fromJson(Map<String, dynamic> json) =>
+      _$ParticipantDataFromJson(json);
+  Map<String, dynamic> toJson() => _$ParticipantDataToJson(this);
+
+  String toString() => '$runtimeType - studyDeploymentId: $studyDeploymentId';
 }

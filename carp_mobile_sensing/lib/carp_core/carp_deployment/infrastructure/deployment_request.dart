@@ -4,7 +4,7 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of carp_domain;
+part of carp_core;
 
 // -----------------------------------------------------
 // Deployment Service Requests
@@ -121,35 +121,6 @@ class UnregisterDevice extends DeploymentServiceRequest {
   Map<String, dynamic> toJson() => _$UnregisterDeviceToJson(this);
 
   String toString() => '${super.toString()}, deviceRoleName: $deviceRoleName';
-}
-
-/// A device registration description used in a [RegisterDevice] request.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
-class DeviceRegistration extends Serializable {
-  /// Create a new [DeviceRegistration]
-  ///  * [deviceId] - a unique id for this device.
-  ///    If not specified, a unique id will be generated.
-  ///  * [registrationCreationDate] - the timestamp in milliseconds when this registration was created.
-  ///    If not specified, the time of creation will be used.
-  DeviceRegistration([this.deviceId, this.registrationCreationDate]) : super() {
-    $type = 'dk.cachet.carp.protocols.domain.devices.DefaultDeviceRegistration';
-    registrationCreationDate ??= DateTime.now().toUtc();
-  }
-
-  /// The registration time in zulu time.
-  DateTime registrationCreationDate;
-
-  /// A unique id for this device.
-  String deviceId;
-
-  Function get fromJsonFunction => _$DeviceRegistrationFromJson;
-  factory DeviceRegistration.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
-  Map<String, dynamic> toJson() => _$DeviceRegistrationToJson(this);
-
-  String toString() =>
-      '$runtimeType - deviceId: $deviceId, registrationCreationDate: $registrationCreationDate';
 }
 
 /// A request for getting the deployment for this master device.

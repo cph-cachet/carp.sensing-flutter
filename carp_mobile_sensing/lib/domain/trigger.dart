@@ -4,7 +4,7 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of carp_core_domain;
+part of domain;
 
 /// Any condition on a device ([DeviceDescriptor]) which starts or stops [TaskDescriptor]s
 /// at certain points in time when the condition applies.
@@ -14,10 +14,8 @@ part of carp_core_domain;
 /// The [Trigger] class is abstract. Use sub-classes of [CAMSTrigger] implements
 /// the specific behavior / timing of a trigger.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class Trigger extends Serializable {
-  /// The device role name from which the trigger originates.
-  String sourceDeviceRoleName;
-
+class Trigger extends carp_core_domain.Serializable
+    with carp_core_domain.Trigger {
   Trigger() : super();
 
   Function get fromJsonFunction => _$TriggerFromJson;

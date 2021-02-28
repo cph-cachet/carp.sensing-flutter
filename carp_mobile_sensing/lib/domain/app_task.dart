@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_core_domain;
+part of domain;
 
 /// A [TaskDescriptor] that notifies the app when it is triggered.
 ///

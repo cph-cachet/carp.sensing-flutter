@@ -7,9 +7,29 @@
 
 part of domain;
 
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+class TestStudyProtocol extends carp_core_domain.Serializable
+    with carp_core_domain.StudyProtocol {
+  /// A longer printer-friendly title for this study.
+  String title;
+
+  DataType get dataType => DataType('1', '2');
+
+  MasterDeviceDescriptor get masterDevice =>
+      masterDevices.first as MasterDeviceDescriptor;
+
+  @override
+  // TODO: implement fromJsonFunction
+  Function get fromJsonFunction => throw UnimplementedError();
+
+  @override
+  Map<String, dynamic> toJson() {
+    // TODO: implement toJson
+    throw UnimplementedError();
+  }
+}
+
 /// A description of how a study is to be executed.
-///
-/// This is part of the [carp.protocols](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-protocols.md) domain model.
 ///
 /// A [StudyProtocol] defining the master device ([MasterDeviceDescriptor])
 /// responsible for aggregating data (typically this phone), the optional
@@ -23,7 +43,8 @@ part of domain;
 /// Data from the study is uploaded to the specified [DataEndPoint] in the
 /// specified [dataFormat].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class CAMSStudyProtocol extends Serializable with StudyProtocol {
+class StudyProtocol extends carp_core_domain.Serializable
+    with carp_core_domain.StudyProtocol {
   /// A longer printer-friendly title for this study.
   String title;
 
@@ -48,12 +69,13 @@ class CAMSStudyProtocol extends Serializable with StudyProtocol {
 
   /// The [masterDevice] which is responsible for aggregating and synchronizing
   /// incoming data. Typically this phone.
-  MasterDeviceDescriptor get masterDevice => masterDevices.first;
+  MasterDeviceDescriptor get masterDevice =>
+      masterDevices.first as MasterDeviceDescriptor;
 
-  /// Create a new [CAMSStudyProtocol].
+  /// Create a new [StudyProtocol].
   ///
   /// If no [dataFormat] the CARP namespace is used.
-  CAMSStudyProtocol({
+  StudyProtocol({
     this.owner,
     String name,
     this.title,
@@ -67,17 +89,6 @@ class CAMSStudyProtocol extends Serializable with StudyProtocol {
     super.description = description;
     samplingStrategy ??= SamplingSchemaType.NORMAL;
     dataFormat ??= NameSpace.CARP;
-  }
-
-  @override
-  void addTriggeredTask(
-    Trigger trigger,
-    TaskDescriptor task,
-    DeviceDescriptor targetDevice,
-  ) {
-    // if no target device is specified, asume this phone
-    targetDevice ??= masterDevice;
-    super.addTriggeredTask(trigger, task, targetDevice);
   }
 
   /// Get the list of all [Mesure]s in this study protocol.
@@ -97,9 +108,8 @@ class CAMSStudyProtocol extends Serializable with StudyProtocol {
   }
 
   Function get fromJsonFunction => _$CAMSStudyProtocolFromJson;
-  factory CAMSStudyProtocol.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory StudyProtocol.fromJson(Map<String, dynamic> json) => FromJsonFactory()
+      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$CAMSStudyProtocolToJson(this);
 
   String toString() => '$runtimeType - $name, $title';
@@ -108,7 +118,7 @@ class CAMSStudyProtocol extends Serializable with StudyProtocol {
 /// A person that created a [StudyProtocol].
 /// Typically the Principal Investigator (PI) who is reposnibile for the study.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class ProtocolOwner extends Serializable {
+class ProtocolOwner extends carp_core_domain.Serializable {
   String id;
   String name;
   String title;
@@ -135,7 +145,7 @@ class ProtocolOwner extends Serializable {
 
 /// Specify an endpoint where a [DataManager] can upload data.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class DataEndPoint extends Serializable {
+class DataEndPoint extends carp_core_domain.Serializable {
   /// The type of endpoint as enumerated in [DataEndPointTypes].
   String type;
 

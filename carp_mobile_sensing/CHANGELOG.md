@@ -1,5 +1,5 @@
 ## 0.20.0 
-* **BREAKING**: Now using the carp_core domain models in order to align with the overall [domain-driven design of CARP](https://carp.cachet.dk/core/). This has mainly an impact on the **naming** using in the API. The most important changes are:
+* **BREAKING**: Now using the `carp_core` domain models in order to align with the overall [domain-driven design of CARP](https://carp.cachet.dk/core/). This has mainly an impact on the **naming** used in the API. The most important changes are:
     * `Study` is now called `StudyProtocol`
     * `Datum` is now called `Data`
     * `Task` is now called `TaskDescriptor`

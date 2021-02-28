@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_core_domain;
+part of carp_core;
 
 // VERSION 1.2 -- EXAMPLE
 //
@@ -99,7 +99,7 @@ class DataPointHeader {
   /// If this data point does not cover a period, [endTime] will be null.
   DateTime endTime;
 
-  /// The data format. See [DataType] and [NameSpace].
+  /// The data format. See [DataFormat] and [NameSpace].
   DataFormat dataFormat;
 
   /// Create a new [DataPointHeader]. [studyId] is required.
@@ -135,15 +135,31 @@ class DataPointHeader {
 }
 
 /// Specifies the format of the [Data] in a [DataPoint].
+///
+/// Note that the only reason why we have both a [DataType] and a [DataFormat]
+/// class definition is because the JSON serialization is different in data
+/// upload versus download from CANS.... :-?
+/// Upload is `FieldRename.snake` while download is `FieldRename.none`.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class DataFormat with DataType {
+class DataFormat {
   static final DataFormat UNKNOWN = DataFormat(NameSpace.CARP, 'unknown');
 
+  /// The data type namespace. See [NameSpace].
+  ///
+  /// Uniquely identifies the organization/person who determines how to
+  /// interpret [name].
+  /// To prevent conflicts, a reverse domain namespace is suggested:
+  /// e.g., "org.openmhealth" or "dk.cachet.carp".
+  String namespace;
+
+  /// The name of this data format. See [DataType].
+  ///
+  /// Uniquely identifies something within the [namespace].
+  /// The name may not contain any periods. Periods are reserved for namespaces.
+  String name;
+
   /// Create a [DataFormat].
-  DataFormat(String namespace, String name) : super() {
-    super.namespace = namespace;
-    super.name = name;
-  }
+  DataFormat(this.namespace, this.name) : super();
 
   factory DataFormat.fromJson(Map<String, dynamic> json) =>
       _$DataFormatFromJson(json);

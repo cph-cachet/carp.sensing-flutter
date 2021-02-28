@@ -4,14 +4,15 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of carp_core_domain;
+part of carp_core;
 
 /// A base (abstract) class for a single unit of sensed information.
 /// Holds data for a [DataType].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class Data {
-  // /// The [DataFormat] of this [Data].
-  // DataFormat format;
+  /// The [DataType] of this [Data].
+  @JsonKey(ignore: true)
+  DataType format;
 
   /// Unique identifier for the current Datum, unique across all data generated.
   String id;

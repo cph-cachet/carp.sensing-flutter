@@ -5,10 +5,11 @@
  * found in the LICENSE file.
  */
 
-part of carp_core_domain;
+part of carp_core;
 
 /// Contains the entire description and configuration for how a single master
 /// device participates in running a study.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class MasterDeviceDeployment {
   MasterDeviceDeployment() : super();
 
@@ -31,77 +32,113 @@ class MasterDeviceDeployment {
   /// All triggers originating from this device and connected devices, stored
   /// per assigned id unique within the study protocol.
   Map<String, Trigger> triggers;
+  //   Map<String, Map<String, dynamic>> triggers;
 
   /// The specification of tasks triggered and the devices they are sent to.
   List<TriggeredTask> triggeredTasks;
+  // List<Map<String, dynamic>> triggeredTasks;
 
   /// The time when this device deployment was last updated.
   /// This corresponds to the most recent device registration as part of this
   /// device deployment.
   DateTime lastUpdateDate;
 
+  factory MasterDeviceDeployment.fromJson(Map<String, dynamic> json) =>
+      _$MasterDeviceDeploymentFromJson(json);
+  Map<String, dynamic> toJson() => _$MasterDeviceDeploymentToJson(this);
+
   String toString() => '$runtimeType - configuration: $configuration';
 }
 
 /// A [DeviceRegistration] configures a [DeviceDescriptor] as part of the
 /// deployment of a [StudyProtocol].
-class DeviceRegistration {
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+class DeviceRegistration extends Serializable {
+  /// Create a new [DeviceRegistration]
+  ///  * [deviceId] - a unique id for this device.
+  ///    If not specified, a unique id will be generated.
+  ///  * [registrationCreationDate] - the timestamp in milliseconds when this registration was created.
+  ///    If not specified, the time of creation will be used.
+  DeviceRegistration([this.deviceId, this.registrationCreationDate]) : super() {
+    $type = 'dk.cachet.carp.protocols.domain.devices.DefaultDeviceRegistration';
+    registrationCreationDate ??= DateTime.now().toUtc();
+  }
+
+  /// The registration time in zulu time.
+  DateTime registrationCreationDate;
+
   /// An ID for the device, used to disambiguate between devices of the same type,
   /// as provided by the device itself.
   /// It is up to specific types of devices to guarantee uniqueness across all
   /// devices of the same type.
   String deviceId;
 
-  DateTime registrationCreationDate;
+  Function get fromJsonFunction => _$DeviceRegistrationFromJson;
+  factory DeviceRegistration.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$DeviceRegistrationToJson(this);
 
-  DeviceRegistration() : super() {
-    registrationCreationDate = DateTime.now();
-  }
-
-  String toString() => '$runtimeType - deviceId: $deviceId';
+  String toString() =>
+      '$runtimeType - deviceId: $deviceId, registrationCreationDate: $registrationCreationDate';
 }
 
-/// The status of a [DeviceDeployment].
-class DeviceDeploymentStatus {
-  /// The status of the deployment
-  DeviceDeploymentStatusTypes status;
+/// A [DeviceDeploymentStatus] represents the status of a device in a deployment.
+///
+/// See [DeviceDeploymentStatus.kt](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/carp.deployment.core/src/commonMain/kotlin/dk/cachet/carp/deployment/domain/DeviceDeploymentStatus.kt).
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class DeviceDeploymentStatus extends Serializable {
+  /// The CARP study deployment ID.
+  String studyDeploymentId;
 
   /// The description of the device.
   DeviceDescriptor device;
 
-  /// Determines whether the device requires a device deployment by retrieving
-  /// [MasterDeviceDeployment].
-  /// Not all master devices necessarily need deployment; chained master
-  /// devices do not.
+  /// Determines whether the device requires a device deployment by retrieving [MasterDeviceDeployment].
+  /// Not all master devices necessarily need deployment; chained master devices do not.
   bool requiresDeployment;
 
-  /// Determines whether the device requires a device deployment, and if so,
-  /// whether the deployment configuration (to initialize the device environment)
-  /// can be obtained.
-  /// This requires the specified device and all other master devices it depends
-  /// on to be registered.
-  bool get canObtainDeviceDeployment =>
-      status == DeviceDeploymentStatusTypes.Deployed;
+  /// The role names of devices which need to be registered before the deployment information for this device can be obtained.
+  List<String> remainingDevicesToRegisterToObtainDeployment;
 
-  // get() = this is Deployed || (this is NotDeployed && this.remainingDevicesToRegisterToObtainDeployment.isEmpty())
+  /// The role names of devices which need to be registered before this device can be declared as successfully deployed.
+  List<String> remainingDevicesToRegisterBeforeDeployment;
+
+  /// Get the status of this device deployment:
+  /// * Unregistered
+  /// * Registered
+  /// * Deployed
+  /// * NeedsRedeployment
+  String get status => $type.split('.').last;
+
+  DeviceDeploymentStatus() : super();
+
+  Function get fromJsonFunction => _$DeviceDeploymentStatusFromJson;
+  factory DeviceDeploymentStatus.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$DeviceDeploymentStatusToJson(this);
+
+  String toString() => '$runtimeType - status: $status';
 }
 
-enum DeviceDeploymentStatusTypes {
-  /// A device deployment status which indicates the correct deployment has
-  /// not been deployed yet.
-  NotDeployed,
+/// Holds device invitation details.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class DeviceInvitation {
+  DeviceInvitation() : super();
 
-  /// Device deployment status for when a device has not been registered.
-  Unregistered,
+  /// The role name of the device in this invitation.
+  String deviceRoleName;
 
-  /// Device deployment status for when a device has been registered.
-  Registered,
+  /// True when the device is already registered in the study deployment,
+  /// false otherwise.
+  /// In case a device is registered, it needs to be unregistered first
+  /// before a new device can be registered.
+  bool isRegistered;
 
-  /// Device deployment status when the device has retrieved its [MasterDeviceDeployment]
-  /// and was able to load all the necessary plugins to execute the study.
-  Deployed,
+  factory DeviceInvitation.fromJson(Map<String, dynamic> json) =>
+      _$DeviceInvitationFromJson(json);
+  Map<String, dynamic> toJson() => _$DeviceInvitationToJson(this);
 
-  /// Device deployment status when the device has previously been deployed
-  /// correctly, but due to changes in device registrations needs to be redeployed.
-  NeedsRedeployment,
+  String toString() => '$runtimeType - deviceRoleName: $deviceRoleName';
 }

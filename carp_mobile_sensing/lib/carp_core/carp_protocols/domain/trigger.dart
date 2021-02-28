@@ -4,7 +4,7 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of carp_core_domain;
+part of carp_core;
 
 /// Any condition on a device ([DeviceDescriptor]) which starts or stops [TaskDescriptor]s
 /// at certain points in time when the condition applies.
@@ -13,7 +13,8 @@ part of carp_core_domain;
 ///
 /// The [Trigger] class is abstract. Use sub-classes of [CAMSTrigger] implements
 /// the specific behavior / timing of a trigger.
-class Trigger {
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class Trigger extends Serializable {
   /// The device role name from which the trigger originates.
   String sourceDeviceRoleName;
 
@@ -24,6 +25,11 @@ class Trigger {
   bool requiresMasterDevice;
 
   Trigger() : super();
+
+  Function get fromJsonFunction => _$TriggerFromJson;
+  factory Trigger.fromJson(Map<String, dynamic> json) => FromJsonFactory()
+      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$TriggerToJson(this);
 }
 
 /// A trigger which starts a task after a specified amount of time has elapsed
@@ -32,8 +38,36 @@ class Trigger {
 /// deployment of all participating devices.
 /// This trigger needs to be evaluated on a master device since it is time
 /// bound and therefore requires a task scheduler.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ElapsedTimeTrigger extends Trigger {
   Duration elapsedTime;
+
+  ElapsedTimeTrigger({this.elapsedTime}) : super();
+
+  Function get fromJsonFunction => _$ElapsedTimeTriggerFromJson;
+  factory ElapsedTimeTrigger.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$ElapsedTimeTriggerToJson(this);
+}
+
+/// A trigger initiated by a user, i.e., the user decides when to start a task.
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+class ManualTrigger extends Trigger {
+  /// A short label to describe the action performed once the user chooses
+  /// to initiate this trigger.
+  String label;
+
+  /// An optional description elaborating on what happens when initiating
+  /// this trigger.
+  String description;
+
+  ManualTrigger({this.label, this.description}) : super();
+
+  Function get fromJsonFunction => _$ManualTriggerFromJson;
+  factory ManualTrigger.fromJson(Map<String, dynamic> json) => FromJsonFactory()
+      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$ManualTriggerToJson(this);
 }
 
 /// A trigger which starts a task according to a recurring schedule starting on
@@ -44,29 +78,42 @@ class ElapsedTimeTrigger extends Trigger {
 ///
 /// This trigger needs to be evaluated on a master device since it is time bound
 /// and therefore requires a task scheduler.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ScheduledTrigger extends Trigger {
   TimeOfDay time;
   RecurrenceRule recurrenceRule;
 
-  ScheduledTrigger() {
+  ScheduledTrigger({this.time, this.recurrenceRule}) : super() {
     // TODO: implement ScheduledTrigger
     throw UnimplementedError();
   }
+
+  Function get fromJsonFunction => _$ScheduledTriggerFromJson;
+  factory ScheduledTrigger.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$ScheduledTriggerToJson(this);
 }
 
 /// A time on a day. Used in a [ScheduledTrigger].
 ///
 /// Follows the conventions in the [DartTime] class, but only uses the Time
 /// part in a 24 hour time format.
-class TimeOfDay {
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class TimeOfDay extends Serializable {
   /// 24 hour format.
   int hour;
   int minute;
   int second;
 
-  TimeOfDay({this.hour = 0, this.minute = 0, this.second = 0});
+  TimeOfDay({this.hour = 0, this.minute = 0, this.second = 0}) : super();
 
   static String _twoDigits(int n) => (n >= 10) ? '$n' : '0$n';
+
+  Function get fromJsonFunction => _$TimeOfDayFromJson;
+  factory TimeOfDay.fromJson(Map<String, dynamic> json) => FromJsonFactory()
+      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$TimeOfDayToJson(this);
 
   /// Output as ISO 8601 extended time format with seconds accuracy, omitting
   /// the 24th hour and 60th leap second. E.g., "09:30:00".
@@ -79,9 +126,8 @@ class TimeOfDay {
 ///
 /// However, since date times are relative to the start time of a study,
 /// they are replaced with time spans representing elapsed time since the start of the study.
-class RecurrenceRule {
-  static const End _never = End(EndType.NEVER);
-
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class RecurrenceRule extends Serializable {
   /// Specifies the type of interval at which to repeat events, or multiples thereof.
   Frequency frequency;
 
@@ -94,7 +140,7 @@ class RecurrenceRule {
   /// Default recurrence is forever.
   End end = End.never();
 
-  RecurrenceRule(this.frequency, {this.interval = 1, this.end = _never});
+  RecurrenceRule(this.frequency, {this.interval = 1, this.end}) : super();
 
   /// Initialize a [RecurrenceRule] based on a [rrule] string.
   factory RecurrenceRule.fromString(String rrule) {
@@ -115,6 +161,12 @@ class RecurrenceRule {
 
     return rule;
   }
+
+  Function get fromJsonFunction => _$RecurrenceRuleFromJson;
+  factory RecurrenceRule.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$RecurrenceRuleToJson(this);
 }
 
 /// Specify repeating events based on an interval of a chosen type or multiples thereof.
@@ -122,12 +174,13 @@ enum Frequency { SECONDLY, MINUTELY, HOURLY, DAILY, WEEKLY, MONTHLY, YEARLY }
 
 enum EndType { UNTIL, COUNT, NEVER }
 
-class End {
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class End extends Serializable {
   final EndType type;
   final Duration elapsedTime;
   final int count;
 
-  const End(this.type, {this.elapsedTime, this.count});
+  End(this.type, {this.elapsedTime, this.count}) : super();
 
   /// Bounds the recurrence rule in an inclusive manner to the associated
   /// start date of this rule plus [elapsedTime].
@@ -140,4 +193,9 @@ class End {
 
   /// The recurrence repeats forever.
   factory End.never() => End(EndType.NEVER);
+
+  Function get fromJsonFunction => _$EndFromJson;
+  factory End.fromJson(Map<String, dynamic> json) => FromJsonFactory()
+      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$EndToJson(this);
 }

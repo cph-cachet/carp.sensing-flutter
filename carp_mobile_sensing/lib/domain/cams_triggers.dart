@@ -4,7 +4,7 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of carp_core_domain;
+part of domain;
 
 /// A [CAMSTrigger] is a specification of any condition which starts and stops [TaskDescriptor]s at
 /// certain points in time when the condition applies. The condition can either
@@ -14,7 +14,7 @@ part of carp_core_domain;
 /// The [CAMSTrigger] class is abstract. Use sub-classes of [CAMSTrigger] implements
 /// the specific behavior / timing of a trigger.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class CAMSTrigger extends Serializable {
+class CAMSTrigger extends Trigger {
   /// A unique id of this trigger.
   /// Is used when storing data to know what triggered the data collection.
   String triggerId;
@@ -154,7 +154,8 @@ enum RecurrentType {
 
 /// A time on a day. Used in a [RecurrentScheduledTrigger].
 ///
-/// Follows the conventions in the [DartTime] class, but only uses the Time part in a 24 hour time format.
+/// Follows the conventions in the [DartTime] class, but only uses the Time
+/// part in a 24 hour time format.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class Time extends Serializable {
   /// 24 hour format.

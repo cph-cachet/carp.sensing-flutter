@@ -4,15 +4,16 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of carp_core_domain;
+part of carp_core;
 
-/// Specifies the type of a [Measure] or [DataPoint].
+/// Specifies the type of a [Measure].
 ///
 /// Defines a type of data which can be processed by the platform
 /// (e.g., measured / collected / uploaded).
 /// This is used by the infrastructure to determine whether the requested data
 /// can be collected on a device, how to upload it, how to process it in a
 /// secondary data stream, or how triggers can act on it.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class DataType {
   /// The data type namespace. See [NameSpace].
   ///
@@ -28,8 +29,8 @@ class DataType {
   /// The name may not contain any periods. Periods are reserved for namespaces.
   String name;
 
-  // /// Create a [DataType].
-  // DataType(this.namespace, this.name) : super();
+  /// Create a [DataType].
+  DataType(this.namespace, this.name) : super();
 
   String toString() => '$namespace.$name';
 
@@ -45,6 +46,10 @@ class DataType {
     result = 37 * result + name.hashCode;
     return result;
   }
+
+  factory DataType.fromJson(Map<String, dynamic> json) =>
+      _$DataTypeFromJson(json);
+  Map<String, dynamic> toJson() => _$DataTypeToJson(this);
 }
 
 /// Enumeration of data type namespaces.

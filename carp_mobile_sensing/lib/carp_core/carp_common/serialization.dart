@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_core_domain;
+part of carp_core;
 
 /// This is the base class for all JSON serializable objects.
 ///

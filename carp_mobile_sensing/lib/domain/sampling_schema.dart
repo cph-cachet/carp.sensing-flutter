@@ -4,7 +4,7 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of carp_core_domain;
+part of domain;
 
 String _encode(Object object) =>
     const JsonEncoder.withIndent(' ').convert(object);
@@ -40,7 +40,7 @@ String _encode(Object object) =>
 ///
 /// See the [documentation](https://github.com/cph-cachet/carp.sensing-flutter/wiki/Schemas) for further details.
 ///
-class SamplingSchema {
+class SamplingSchema with carp_core_domain.DataTypeSamplingSchemeList {
   /// The sampling schema type according to [SamplingSchemaType].
   String type;
 
