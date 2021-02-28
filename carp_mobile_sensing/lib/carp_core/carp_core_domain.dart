@@ -21,9 +21,10 @@ part 'carp_data/domain/datatype.dart';
 part 'carp_data/domain/data.dart';
 
 part 'carp_protocols/domain/device_descriptor.dart';
-part 'carp_protocols/domain/measures.dart';
+part 'carp_protocols/domain/measure.dart';
 part 'carp_protocols/domain/study_protocol.dart';
 part 'carp_protocols/domain/task_descriptor.dart';
 part 'carp_protocols/domain/trigger.dart';
+part 'carp_protocols/domain/sampling_configuration.dart';
 
 part 'carp_core_domain.g.dart';

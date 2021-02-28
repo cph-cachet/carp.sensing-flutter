@@ -43,13 +43,9 @@ class DeviceDescriptor {
 
 /// A device which aggregates, synchronizes, and optionally uploads incoming
 /// data received from one or more connected devices (potentially just itself).
-/// Typically this phone for a [StudyProtocol] running on this phone.
 class MasterDeviceDescriptor extends DeviceDescriptor {
-  /// The type of a smartphone master device (like this phone)
-  static const String SMARTPHONE_DEVICE_TYPE = 'smarthone';
-
   MasterDeviceDescriptor({
-    String deviceType = SMARTPHONE_DEVICE_TYPE,
+    String deviceType,
     String name,
     String roleName,
     List<DataType> collectingMeasureTypes,
@@ -58,6 +54,24 @@ class MasterDeviceDescriptor extends DeviceDescriptor {
           name: name,
           roleName: roleName,
           isMasterDevice: true,
+          collectingMeasureTypes: collectingMeasureTypes,
+        );
+}
+
+/// An internet-connected phone with built-in sensors.
+/// Typically this phone for a [StudyProtocol] running on this phone.
+class Smartphone extends MasterDeviceDescriptor {
+  /// The type of a smartphone master device.
+  static const String SMARTPHONE_DEVICE_TYPE = 'smarthone';
+
+  Smartphone({
+    String name,
+    String roleName,
+    List<DataType> collectingMeasureTypes,
+  }) : super(
+          deviceType: SMARTPHONE_DEVICE_TYPE,
+          name: name,
+          roleName: roleName,
           collectingMeasureTypes: collectingMeasureTypes,
         );
 }

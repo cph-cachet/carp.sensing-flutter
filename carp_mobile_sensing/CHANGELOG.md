@@ -2,17 +2,16 @@
 * **BREAKING**: Now using the carp_core domain models in order to align with the overall [domain-driven design of CARP](https://carp.cachet.dk/core/). This has mainly an impact on the **naming** using in the API. The most important changes are:
     * `Study` is now called `StudyProtocol`
     * `Datum` is now called `Data`
+    * `Task` is now called `TaskDescriptor`
+    * `Device` is now called `DeviceDescriptor`
+    * `DataFormat` is now called `DataType`
     * `` is now called ``
     * `` is now called ``
     * `` is now called ``
     * `` is now called ``
     * `` is now called ``
-    * `` is now called ``
-    * `` is now called ``
-    * `` is now called ``
+* A `StudyProtocol` now uses the concept of a `TriggeredTask` which is slightly different to the previous `Study` model. See the example in the README text.
 
-
-* splitting domain model into carp_core
 
 ## 0.12.3
 * extension of `Study` to include `purpose`, `title` and `PrincipalInvestigator`

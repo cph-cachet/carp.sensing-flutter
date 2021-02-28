@@ -25,3 +25,119 @@ class Trigger {
 
   Trigger() : super();
 }
+
+/// A trigger which starts a task after a specified amount of time has elapsed
+/// since the start of a study deployment.
+/// The start of a study deployment is determined by the first successful
+/// deployment of all participating devices.
+/// This trigger needs to be evaluated on a master device since it is time
+/// bound and therefore requires a task scheduler.
+class ElapsedTimeTrigger extends Trigger {
+  Duration elapsedTime;
+}
+
+/// A trigger which starts a task according to a recurring schedule starting on
+/// the date that the study starts.
+///
+/// The iCalendar RFC 5545 standard is used to specify the recurrence
+/// rule: https://tools.ietf.org/html/rfc5545#section-3.3.10
+///
+/// This trigger needs to be evaluated on a master device since it is time bound
+/// and therefore requires a task scheduler.
+class ScheduledTrigger extends Trigger {
+  TimeOfDay time;
+  RecurrenceRule recurrenceRule;
+
+  ScheduledTrigger() {
+    // TODO: implement ScheduledTrigger
+    throw UnimplementedError();
+  }
+}
+
+/// A time on a day. Used in a [ScheduledTrigger].
+///
+/// Follows the conventions in the [DartTime] class, but only uses the Time
+/// part in a 24 hour time format.
+class TimeOfDay {
+  /// 24 hour format.
+  int hour;
+  int minute;
+  int second;
+
+  TimeOfDay({this.hour = 0, this.minute = 0, this.second = 0});
+
+  static String _twoDigits(int n) => (n >= 10) ? '$n' : '0$n';
+
+  /// Output as ISO 8601 extended time format with seconds accuracy, omitting
+  /// the 24th hour and 60th leap second. E.g., "09:30:00".
+  String toString() =>
+      '${_twoDigits(hour)}:${_twoDigits(minute)}:${_twoDigits(second)}';
+}
+
+/// Represents the iCalendar RFC 5545 standard recurrence rule to specify
+/// repeating events: https://tools.ietf.org/html/rfc5545#section-3.3.10
+///
+/// However, since date times are relative to the start time of a study,
+/// they are replaced with time spans representing elapsed time since the start of the study.
+class RecurrenceRule {
+  static const End _never = End(EndType.NEVER);
+
+  /// Specifies the type of interval at which to repeat events, or multiples thereof.
+  Frequency frequency;
+
+  /// The interval at which [frequency] repeats.
+  /// The default is 1. For example, with [Frequency.DAILY], a value
+  /// of "8" means every eight days.
+  int interval = 1;
+
+  /// Specifies when, if ever, to stop repeating events.
+  /// Default recurrence is forever.
+  End end = End.never();
+
+  RecurrenceRule(this.frequency, {this.interval = 1, this.end = _never});
+
+  /// Initialize a [RecurrenceRule] based on a [rrule] string.
+  factory RecurrenceRule.fromString(String rrule) {
+    // TODO: implement RecurrenceRule.fromString
+    throw UnimplementedError();
+  }
+
+  /// A valid RFC 5545 string representation of this recurrence rule, except
+  /// when [end] is specified as [End.Until].
+  /// When [End.Until] is specified, 'UNTIL' holds the total number of microseconds
+  /// which need to be added to a desired start date.
+  /// 'UNTIL' should be reassigned to a calculated end date time, formatted using
+  /// the RFC 5545 specifications: https://tools.ietf.org/html/rfc5545#section-3.3.5
+  String toString() {
+    String rule = "RRULE:FREQ=$frequency";
+    rule += (interval != 1) ? ";INTERVAL=$interval" : "";
+    rule += (end.type != EndType.NEVER) ? rule += ";$end" : "";
+
+    return rule;
+  }
+}
+
+/// Specify repeating events based on an interval of a chosen type or multiples thereof.
+enum Frequency { SECONDLY, MINUTELY, HOURLY, DAILY, WEEKLY, MONTHLY, YEARLY }
+
+enum EndType { UNTIL, COUNT, NEVER }
+
+class End {
+  final EndType type;
+  final Duration elapsedTime;
+  final int count;
+
+  const End(this.type, {this.elapsedTime, this.count});
+
+  /// Bounds the recurrence rule in an inclusive manner to the associated
+  /// start date of this rule plus [elapsedTime].
+  factory End.until(Duration elapsedTime) =>
+      End(EndType.UNTIL, elapsedTime: elapsedTime);
+
+  /// Specify a number of occurrences at which to range-bound the recurrence.
+  /// The start date time always counts as the first occurrence.
+  factory End.count(int count) => End(EndType.COUNT, count: count);
+
+  /// The recurrence repeats forever.
+  factory End.never() => End(EndType.NEVER);
+}
