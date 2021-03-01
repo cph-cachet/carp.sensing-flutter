@@ -145,7 +145,9 @@ class DeploymentSuccessful extends GetDeviceDeploymentFor {
     String studyDeploymentId,
     String masterDeviceRoleName,
     this.deviceDeploymentLastUpdateDate,
-  ) : super(studyDeploymentId, masterDeviceRoleName);
+  ) : super(studyDeploymentId, masterDeviceRoleName) {
+    this.deviceDeploymentLastUpdateDate.toUtc();
+  }
 
   /// Timestamp when this was last updated in UTC
   DateTime deviceDeploymentLastUpdateDate;

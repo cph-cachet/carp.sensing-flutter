@@ -46,6 +46,8 @@ class DeviceDescriptor extends Serializable {
       FromJsonFactory()
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$DeviceDescriptorToJson(this);
+  String get jsonType =>
+      'dk.cachet.carp.protocols.domain.devices.DeviceDescriptor';
 }
 
 /// A device which aggregates, synchronizes, and optionally uploads incoming
@@ -70,6 +72,8 @@ class MasterDeviceDescriptor extends DeviceDescriptor {
       FromJsonFactory()
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$MasterDeviceDescriptorToJson(this);
+  String get jsonType =>
+      'dk.cachet.carp.protocols.domain.devices.MasterDeviceDescriptor';
 }
 
 /// An internet-connected phone with built-in sensors.
@@ -94,4 +98,5 @@ class Smartphone extends MasterDeviceDescriptor {
   factory Smartphone.fromJson(Map<String, dynamic> json) => FromJsonFactory()
       .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$SmartphoneToJson(this);
+  String get jsonType => 'dk.cachet.carp.protocols.domain.devices.Smartphone';
 }

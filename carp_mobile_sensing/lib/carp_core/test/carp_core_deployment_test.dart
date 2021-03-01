@@ -15,7 +15,7 @@ void main() {
   });
 
   test('GetActiveParticipationInvitations -> JSON', () async {
-    print(_encode(GetActiveParticipationInvitations('1234')));
+    print(_encode(GetActiveParticipationInvitations('jakba@dtu.dk')));
   });
   test('GetStudyDeploymentStatus -> JSON', () async {
     print(_encode(GetStudyDeploymentStatus('1234')));

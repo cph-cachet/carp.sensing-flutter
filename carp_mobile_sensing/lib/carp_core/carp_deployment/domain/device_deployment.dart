@@ -60,8 +60,8 @@ class DeviceRegistration extends Serializable {
   ///  * [registrationCreationDate] - the timestamp in milliseconds when this registration was created.
   ///    If not specified, the time of creation will be used.
   DeviceRegistration([this.deviceId, this.registrationCreationDate]) : super() {
-    $type = 'dk.cachet.carp.protocols.domain.devices.DefaultDeviceRegistration';
     registrationCreationDate ??= DateTime.now().toUtc();
+    deviceId ??= Uuid().v1();
   }
 
   /// The registration time in zulu time.
@@ -78,6 +78,8 @@ class DeviceRegistration extends Serializable {
       FromJsonFactory()
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$DeviceRegistrationToJson(this);
+  String get jsonType =>
+      'dk.cachet.carp.protocols.domain.devices.DeviceRegistration';
 
   String toString() =>
       '$runtimeType - deviceId: $deviceId, registrationCreationDate: $registrationCreationDate';
@@ -118,6 +120,8 @@ class DeviceDeploymentStatus extends Serializable {
       FromJsonFactory()
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$DeviceDeploymentStatusToJson(this);
+  String get jsonType =>
+      'dk.cachet.carp.deployment.domain.DeviceDeploymentStatus';
 
   String toString() => '$runtimeType - status: $status';
 }

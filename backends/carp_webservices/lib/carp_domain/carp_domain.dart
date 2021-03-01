@@ -58,8 +58,8 @@ void registerFromJsonFunctions() {
   FromJsonFactory().register(DeviceDescriptor(),
       type:
           'dk.cachet.carp.protocols.infrastructure.test.StubDeviceDescriptor');
-  //  FromJsonFactory().register(MasterDeviceDeployment(),
-  //      type: 'dk.cachet.carp.protocols.domain.MasterDeviceDeployment');
+  // FromJsonFactory().register(MasterDeviceDeployment(),
+  //     type: 'dk.cachet.carp.protocols.domain.MasterDeviceDeployment');
   FromJsonFactory().register(DeviceRegistration(),
       type: 'dk.cachet.carp.protocols.domain.devices.DeviceRegistration');
   FromJsonFactory().register(DeviceRegistration(),

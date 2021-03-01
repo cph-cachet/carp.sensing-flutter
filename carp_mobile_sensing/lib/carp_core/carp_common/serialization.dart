@@ -76,36 +76,69 @@ class FromJsonFactory {
   // TODO: Remember to add any new classes here.
   // TODO: This could be auto-generated using a builder....
   FromJsonFactory._() {
-// DEPLOYMENT
-// REQUESTS
+    // DEPLOYMENT
+    register(DeviceRegistration());
+    register(DeviceRegistration(),
+        type:
+            'dk.cachet.carp.protocols.domain.devices.DefaultDeviceRegistration');
 
-    // register(StudyProtocol());
-    // register(DataEndPoint());
-    // // register(FileDataEndPoint());
-    // register(DeviceDescriptor());
-    // register(TaskDescriptor());
-    // register(AutomaticTaskDescriptor());
-    // register(AppTask(type: 'ignored'));
-    // register(CAMSTrigger());
-    // register(ImmediateTrigger());
-    // register(DelayedTrigger());
-    // register(PeriodicTrigger(period: null));
-    // register(ScheduledTrigger();
-    // register(Time());
-    // register(RecurrentScheduledTrigger(type: null, time: null));
-    // register(SamplingEventTrigger(measureType: null));
-    // register(ConditionalSamplingEventTrigger(measureType: null));
-    // register(DataType('', ''));
-    // register(Measure());
-    // register(PeriodicMeasure(type: null));
-    // register(MarkedMeasure(type: null));
+    register(DeviceDeploymentStatus());
+    register(
+      DeviceDeploymentStatus(),
+      type:
+          'dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.Unregistered',
+    );
+    register(
+      DeviceDeploymentStatus(),
+      type:
+          'dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.Registered',
+    );
+    register(
+      DeviceDeploymentStatus(),
+      type: 'dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.Deployed',
+    );
+    register(DeviceDeploymentStatus(),
+        type:
+            'dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.NeedsRedeployment');
+
+    register(StudyDeploymentStatus());
+    register(StudyDeploymentStatus(),
+        type: 'dk.cachet.carp.deployment.domain.StudyDeploymentStatus.Invited');
+    register(StudyDeploymentStatus(),
+        type:
+            'dk.cachet.carp.deployment.domain.StudyDeploymentStatus.DeployingDevices');
+    register(StudyDeploymentStatus(),
+        type:
+            'dk.cachet.carp.deployment.domain.StudyDeploymentStatus.DeploymentReady');
+    register(StudyDeploymentStatus(),
+        type: 'dk.cachet.carp.deployment.domain.StudyDeploymentStatus.Stopped');
+
+    // PROTOCOL
+    register(StudyProtocol());
+    register(Trigger());
+    register(TaskDescriptor());
+    register(ConcurrentTask());
+    register(CustomProtocolTask());
+    register(Measure());
+    register(DataTypeMeasure());
+    register(PhoneSensorMeasure());
+
+    register(DeviceDescriptor());
+    register(MasterDeviceDescriptor());
+    register(Smartphone());
+    register(DeviceDescriptor(),
+        type:
+            'dk.cachet.carp.protocols.infrastructure.test.StubMasterDeviceDescriptor');
+    register(DeviceDescriptor(),
+        type:
+            'dk.cachet.carp.protocols.infrastructure.test.StubDeviceDescriptor');
   }
 
   /// Register a [Serializable] class which can be deserialized from JSON.
   ///
   /// If [type] is specified, then this is used as the type indentifier as
-  /// specified in [CLASS_IDENTIFIER]. Othervise the Dart class [runtimeType]
-  /// is used as default.
+  /// specified in [CLASS_IDENTIFIER]. Othervise the [Serializable] class [jsonType]
+  /// is used.
   ///
   /// A type needs to be registered **before** a class can be deserialized from
   /// JSON to a Flutter class.

@@ -690,6 +690,73 @@ Map<String, dynamic> _$MeasureToJson(Measure instance) {
   return val;
 }
 
+DataTypeMeasure _$DataTypeMeasureFromJson(Map<String, dynamic> json) {
+  return DataTypeMeasure(
+    type: json['type'] == null
+        ? null
+        : DataType.fromJson(json['type'] as Map<String, dynamic>),
+  )..$type = json[r'$type'] as String;
+}
+
+Map<String, dynamic> _$DataTypeMeasureToJson(DataTypeMeasure instance) {
+  final val = <String, dynamic>{
+    r'$type': instance.$type,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('type', instance.type);
+  return val;
+}
+
+PhoneSensorMeasure _$PhoneSensorMeasureFromJson(Map<String, dynamic> json) {
+  return PhoneSensorMeasure()
+    ..$type = json[r'$type'] as String
+    ..type = json['type'] == null
+        ? null
+        : DataType.fromJson(json['type'] as Map<String, dynamic>)
+    ..duration = json['duration'] == null
+        ? null
+        : CarpTime.fromJson(json['duration'] as Map<String, dynamic>);
+}
+
+Map<String, dynamic> _$PhoneSensorMeasureToJson(PhoneSensorMeasure instance) {
+  final val = <String, dynamic>{
+    r'$type': instance.$type,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('type', instance.type);
+  writeNotNull('duration', instance.duration);
+  return val;
+}
+
+CarpTime _$CarpTimeFromJson(Map<String, dynamic> json) {
+  return CarpTime()..microseconds = json['microseconds'] as int;
+}
+
+Map<String, dynamic> _$CarpTimeToJson(CarpTime instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('microseconds', instance.microseconds);
+  return val;
+}
+
 StudyProtocol _$StudyProtocolFromJson(Map<String, dynamic> json) {
   return StudyProtocol(
     ownerId: json['ownerId'] as String,
@@ -828,20 +895,21 @@ Map<String, dynamic> _$CustomProtocolTaskToJson(CustomProtocolTask instance) {
 
 TriggeredTask _$TriggeredTaskFromJson(Map<String, dynamic> json) {
   return TriggeredTask(
-    json['task'] == null
+    task: json['task'] == null
         ? null
         : TaskDescriptor.fromJson(json['task'] as Map<String, dynamic>),
-    json['targetDevice'] == null
+    targetDevice: json['targetDevice'] == null
         ? null
         : DeviceDescriptor.fromJson(
             json['targetDevice'] as Map<String, dynamic>),
-  )..$type = json[r'$type'] as String;
+  )
+    ..triggerId = json['triggerId'] as int
+    ..taskName = json['taskName'] as String
+    ..destinationDeviceRoleName = json['destinationDeviceRoleName'] as String;
 }
 
 Map<String, dynamic> _$TriggeredTaskToJson(TriggeredTask instance) {
-  final val = <String, dynamic>{
-    r'$type': instance.$type,
-  };
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -849,6 +917,9 @@ Map<String, dynamic> _$TriggeredTaskToJson(TriggeredTask instance) {
     }
   }
 
+  writeNotNull('triggerId', instance.triggerId);
+  writeNotNull('taskName', instance.taskName);
+  writeNotNull('destinationDeviceRoleName', instance.destinationDeviceRoleName);
   writeNotNull('task', instance.task);
   writeNotNull('targetDevice', instance.targetDevice);
   return val;

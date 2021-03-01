@@ -171,6 +171,8 @@ class StudyDeploymentStatus extends Serializable {
       FromJsonFactory()
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$StudyDeploymentStatusToJson(this);
+  String get jsonType =>
+      'dk.cachet.carp.deployment.domain.StudyDeploymentStatus';
 
   String toString() =>
       '$runtimeType - deploymentId: $studyDeploymentId, status: ${status.toString().split('.').last}';

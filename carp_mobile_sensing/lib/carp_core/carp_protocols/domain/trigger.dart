@@ -6,8 +6,8 @@
  */
 part of carp_core;
 
-/// Any condition on a device ([DeviceDescriptor]) which starts or stops [TaskDescriptor]s
-/// at certain points in time when the condition applies.
+/// Any condition on a device ([DeviceDescriptor]) which starts or stops
+/// [TaskDescriptor]s at certain points in time when the condition applies.
 /// The condition can either be time-bound, based on data streams,
 /// initiated by a user of the platform, or a combination of these.
 ///
@@ -30,6 +30,7 @@ class Trigger extends Serializable {
   factory Trigger.fromJson(Map<String, dynamic> json) => FromJsonFactory()
       .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$TriggerToJson(this);
+  String get jsonType => 'dk.cachet.carp.protocols.domain.triggers.Trigger';
 }
 
 /// A trigger which starts a task after a specified amount of time has elapsed
@@ -49,6 +50,8 @@ class ElapsedTimeTrigger extends Trigger {
       FromJsonFactory()
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$ElapsedTimeTriggerToJson(this);
+  String get jsonType =>
+      'dk.cachet.carp.protocols.domain.triggers.ElapsedTimeTrigger';
 }
 
 /// A trigger initiated by a user, i.e., the user decides when to start a task.
@@ -68,6 +71,8 @@ class ManualTrigger extends Trigger {
   factory ManualTrigger.fromJson(Map<String, dynamic> json) => FromJsonFactory()
       .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$ManualTriggerToJson(this);
+  String get jsonType =>
+      'dk.cachet.carp.protocols.domain.triggers.ManualTrigger';
 }
 
 /// A trigger which starts a task according to a recurring schedule starting on
@@ -93,6 +98,8 @@ class ScheduledTrigger extends Trigger {
       FromJsonFactory()
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$ScheduledTriggerToJson(this);
+  String get jsonType =>
+      'dk.cachet.carp.protocols.domain.triggers.ScheduledTrigger';
 }
 
 /// A time on a day. Used in a [ScheduledTrigger].
@@ -114,6 +121,7 @@ class TimeOfDay extends Serializable {
   factory TimeOfDay.fromJson(Map<String, dynamic> json) => FromJsonFactory()
       .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$TimeOfDayToJson(this);
+  String get jsonType => 'dk.cachet.carp.common.TimeOfDay';
 
   /// Output as ISO 8601 extended time format with seconds accuracy, omitting
   /// the 24th hour and 60th leap second. E.g., "09:30:00".
@@ -167,6 +175,7 @@ class RecurrenceRule extends Serializable {
       FromJsonFactory()
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$RecurrenceRuleToJson(this);
+  String get jsonType => 'dk.cachet.carp.common.RecurrenceRule';
 }
 
 /// Specify repeating events based on an interval of a chosen type or multiples thereof.
@@ -198,4 +207,5 @@ class End extends Serializable {
   factory End.fromJson(Map<String, dynamic> json) => FromJsonFactory()
       .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$EndToJson(this);
+  String get jsonType => 'dk.cachet.carp.common.End';
 }

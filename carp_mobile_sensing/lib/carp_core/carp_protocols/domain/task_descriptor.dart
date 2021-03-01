@@ -40,6 +40,7 @@ class TaskDescriptor extends Serializable {
       FromJsonFactory()
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$TaskDescriptorToJson(this);
+  String get jsonType => 'dk.cachet.carp.protocols.domain.tasks.TaskDescriptor';
 
   String toString() =>
       '$runtimeType - name: $name, measures size: ${measures.length}';
@@ -58,6 +59,7 @@ class ConcurrentTask extends TaskDescriptor {
       FromJsonFactory()
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$ConcurrentTaskToJson(this);
+  String get jsonType => 'dk.cachet.carp.protocols.domain.tasks.ConcurrentTask';
 }
 
 /// A [TaskDescriptor] which contains a definition on how to run tasks, measures,
@@ -77,6 +79,8 @@ class CustomProtocolTask extends TaskDescriptor {
       FromJsonFactory()
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$CustomProtocolTaskToJson(this);
+  String get jsonType =>
+      'dk.cachet.carp.protocols.domain.tasks.CustomProtocolTask';
 
   String toString() => '${super.toString()}, studyProtocol: $studyProtocol';
 }
@@ -84,17 +88,21 @@ class CustomProtocolTask extends TaskDescriptor {
 /// Specifies a task which at some point during a [StudyProtocol] gets sent
 /// to a specific device.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class TriggeredTask extends Serializable {
+class TriggeredTask {
+  int triggerId;
+  String taskName;
+  String destinationDeviceRoleName;
+
   TaskDescriptor task;
+
   DeviceDescriptor targetDevice;
 
-  TriggeredTask(this.task, this.targetDevice) : super();
+  TriggeredTask({this.task, this.targetDevice}) : super();
 
-  Function get fromJsonFunction => _$TriggeredTaskFromJson;
-  factory TriggeredTask.fromJson(Map<String, dynamic> json) => FromJsonFactory()
-      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory TriggeredTask.fromJson(Map<String, dynamic> json) =>
+      _$TriggeredTaskFromJson(json);
   Map<String, dynamic> toJson() => _$TriggeredTaskToJson(this);
 
   String toString() =>
-      '$runtimeType - task: $task, targetDevice: $targetDevice';
+      '$runtimeType - triggerId: $triggerId, task: $taskName, destinationDeviceRoleName: $destinationDeviceRoleName';
 }

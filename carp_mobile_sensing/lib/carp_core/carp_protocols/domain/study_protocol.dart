@@ -78,7 +78,8 @@ class StudyProtocol extends Serializable {
 
     // Add triggered task to both the list and the map
     if (_triggeredTasksMap[trigger] == null) _triggeredTasksMap[trigger] = {};
-    TriggeredTask triggeredTask = TriggeredTask(task, targetDevice);
+    TriggeredTask triggeredTask =
+        TriggeredTask(task: task, targetDevice: targetDevice);
     _triggeredTasksMap[trigger].add(triggeredTask);
     triggeredTasks.add(triggeredTask);
   }
@@ -130,6 +131,7 @@ class StudyProtocol extends Serializable {
   factory StudyProtocol.fromJson(Map<String, dynamic> json) => FromJsonFactory()
       .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$StudyProtocolToJson(this);
+  String get jsonType => 'dk.cachet.carp.protocols.domain.StudyProtocol';
 
   String toString() => '$runtimeType - $name';
 }
