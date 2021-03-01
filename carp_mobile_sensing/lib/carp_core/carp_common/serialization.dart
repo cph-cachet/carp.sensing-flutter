@@ -48,7 +48,7 @@ abstract class Serializable {
 
   /// Create an object that can be serialized to JSON.
   Serializable() {
-    $type = runtimeType.toString();
+    $type = jsonType;
   }
 
   /// The function which can convert a JSON string to an object of this type.
@@ -56,6 +56,10 @@ abstract class Serializable {
 
   /// Return a JSON encoding of this object.
   Map<String, dynamic> toJson();
+
+  /// Return the [$type] to be used for JSON serialization of this class.
+  /// Default is [runtimeType]. Only specify this if you need another type.
+  String get jsonType => this.runtimeType.toString();
 }
 
 /// A factory that holds [fromJson] functions to be used in JSON
@@ -72,6 +76,9 @@ class FromJsonFactory {
   // TODO: Remember to add any new classes here.
   // TODO: This could be auto-generated using a builder....
   FromJsonFactory._() {
+// DEPLOYMENT
+// REQUESTS
+
     // register(StudyProtocol());
     // register(DataEndPoint());
     // // register(FileDataEndPoint());
@@ -83,13 +90,13 @@ class FromJsonFactory {
     // register(ImmediateTrigger());
     // register(DelayedTrigger());
     // register(PeriodicTrigger(period: null));
-    // register(ScheduledTrigger(schedule: null));
+    // register(ScheduledTrigger();
     // register(Time());
     // register(RecurrentScheduledTrigger(type: null, time: null));
     // register(SamplingEventTrigger(measureType: null));
     // register(ConditionalSamplingEventTrigger(measureType: null));
     // register(DataType('', ''));
-    // register(Measure(type: null));
+    // register(Measure());
     // register(PeriodicMeasure(type: null));
     // register(MarkedMeasure(type: null));
   }
@@ -104,7 +111,7 @@ class FromJsonFactory {
   /// JSON to a Flutter class.
   void register(Serializable serializable, {String type}) {
     assert(serializable is Serializable);
-    type ??= serializable.runtimeType.toString();
+    type ??= serializable.jsonType;
     _registry['$type'] = serializable.fromJsonFunction;
   }
 

@@ -12,7 +12,6 @@ import 'package:uuid/uuid.dart';
 export 'carp_core.dart';
 
 part 'carp_common/serialization.dart';
-part 'carp_common/common.dart';
 
 part 'carp_data/domain/datapoint.dart';
 part 'carp_data/domain/datatype.dart';

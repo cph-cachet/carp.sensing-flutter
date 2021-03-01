@@ -290,9 +290,7 @@ AppTask _$AppTaskFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$AppTaskToJson(AppTask instance) {
-  final val = <String, dynamic>{
-    r'$type': instance.$type,
-  };
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -300,6 +298,7 @@ Map<String, dynamic> _$AppTaskToJson(AppTask instance) {
     }
   }
 
+  writeNotNull(r'$type', instance.$type);
   writeNotNull('name', instance.name);
   writeNotNull('measures', instance.measures);
   writeNotNull('type', instance.type);
@@ -479,9 +478,7 @@ Time _$TimeFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$TimeToJson(Time instance) {
-  final val = <String, dynamic>{
-    r'$type': instance.$type,
-  };
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -489,6 +486,7 @@ Map<String, dynamic> _$TimeToJson(Time instance) {
     }
   }
 
+  writeNotNull(r'$type', instance.$type);
   writeNotNull('hour', instance.hour);
   writeNotNull('minute', instance.minute);
   writeNotNull('second', instance.second);
@@ -904,9 +902,7 @@ AutomaticTaskDescriptor _$AutomaticTaskDescriptorFromJson(
 
 Map<String, dynamic> _$AutomaticTaskDescriptorToJson(
     AutomaticTaskDescriptor instance) {
-  final val = <String, dynamic>{
-    r'$type': instance.$type,
-  };
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -914,6 +910,7 @@ Map<String, dynamic> _$AutomaticTaskDescriptorToJson(
     }
   }
 
+  writeNotNull(r'$type', instance.$type);
   writeNotNull('name', instance.name);
   writeNotNull('measures', instance.measures);
   return val;

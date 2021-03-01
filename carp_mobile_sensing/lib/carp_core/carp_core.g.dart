@@ -6,23 +6,6 @@ part of carp_core;
 // JsonSerializableGenerator
 // **************************************************************************
 
-CarpTime _$CarpTimeFromJson(Map<String, dynamic> json) {
-  return CarpTime()..microseconds = json['microseconds'] as int;
-}
-
-Map<String, dynamic> _$CarpTimeToJson(CarpTime instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('microseconds', instance.microseconds);
-  return val;
-}
-
 DataPoint _$DataPointFromJson(Map<String, dynamic> json) {
   return DataPoint(
     json['carp_header'] == null

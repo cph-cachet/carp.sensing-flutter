@@ -36,7 +36,7 @@ void main() {
     //     );
   });
 
-  test('StudyProtocol', () async {
+  test('StudyProtocol -> JSON', () async {
     // Create a new study protocol.
     StudyProtocol protocol = StudyProtocol()
       ..name = 'Track patient movement'
