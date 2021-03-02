@@ -44,10 +44,12 @@ class SamplingPackageRegistry {
   /// Takes its settings from the [SamplingSchema.common()] schema, but
   /// enables all measures.
   SamplingSchema maximum({String namespace}) => common(namespace: namespace)
-    ..format = SamplingSchemaType.MAXIMUM
+    ..type = SamplingSchemaType.maximum
     ..name = 'Default ALL sampling'
     ..powerAware = true
-    ..measures.values.forEach((measure) => measure.enabled = true);
+    ..measures
+        .values
+        .forEach((measure) => (measure as CAMSMeasure)?.enabled = true);
 
   /// A default `common` sampling schema.
   ///
@@ -58,7 +60,7 @@ class SamplingPackageRegistry {
   /// These default settings are described in this [table](https://github.com/cph-cachet/carp.sensing-flutter/wiki/Schemas#samplingschemacommon).
   SamplingSchema common({String namespace = NameSpace.UNKNOWN}) {
     SamplingSchema schema = SamplingSchema()
-      ..format = SamplingSchemaType.COMMON
+      ..type = SamplingSchemaType.common
       ..name = 'Common (default) sampling'
       ..powerAware = true;
 

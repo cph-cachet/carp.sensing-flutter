@@ -8,12 +8,8 @@ part of domain;
 
 /// A [Measure] holds information about what measure to do/collect for a
 /// [TaskDescriptor] in a [StudyProtocol].
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class Measure extends carp_core_domain.Serializable
-    with carp_core_domain.Measure {
-  /// The type of measure to do.
-  DataType type;
-
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class CAMSMeasure extends Measure {
   /// A printer-friendly name for this measure.
   String name;
 
@@ -30,20 +26,15 @@ class Measure extends carp_core_domain.Serializable
   bool _storedEnabled = true;
   final List<MeasureListener> _listeners = [];
 
-  Measure({
-    @required this.type,
+  CAMSMeasure({
+    @required DataType type,
     this.name,
     this.description,
     this.enabled = true,
-  }) : super() {
+  }) : super(type: type.toString()) {
     enabled = enabled ?? true;
     _storedEnabled = enabled;
   }
-
-  Function get fromJsonFunction => _$MeasureFromJson;
-  factory Measure.fromJson(Map<String, dynamic> json) => FromJsonFactory()
-      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
-  Map<String, dynamic> toJson() => _$MeasureToJson(this);
 
   /// Add a key-value pair as configuration for this measure.
   void setConfiguration(String key, String configuration) =>
@@ -66,7 +57,7 @@ class Measure extends carp_core_domain.Serializable
         "Don't adapt a measure to a null measure. If you want to disable a "
         'measure, set the enabled property to false.');
     _storedEnabled = enabled;
-    enabled = measure.enabled ?? true;
+    enabled = (measure is CAMSMeasure) ? measure.enabled ?? true : true;
   }
 
   // TODO - support a stack-based approach to adapt/restore.
@@ -82,6 +73,11 @@ class Measure extends carp_core_domain.Serializable
   Future hasChanged() async =>
       _listeners.forEach((listener) => listener.hasChanged(this));
 
+  Function get fromJsonFunction => _$CAMSMeasureFromJson;
+  factory CAMSMeasure.fromJson(Map<String, dynamic> json) => FromJsonFactory()
+      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$CAMSMeasureToJson(this);
+
   String toString() => '$runtimeType: type: $type, enabled: $enabled';
 }
 
@@ -90,8 +86,8 @@ class Measure extends carp_core_domain.Serializable
 /// Data collection will be started as specified by the [frequency] for a time
 /// interval specified as the [duration]. Useful for listening in on a
 /// sensor (e.g. the accelerometer) on a regular, but limited time window.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class PeriodicMeasure extends Measure {
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class PeriodicMeasure extends CAMSMeasure {
   /// Sampling frequency (i.e., delay between sampling).
   Duration frequency;
   Duration _storedFrequency;
@@ -154,8 +150,8 @@ class PeriodicMeasure extends Measure {
 /// A [MarkedMeasure] can only be used with [DatumProbe], [StreamProbe]
 /// and [PeriodicStreamProbe] probes. The mark is read when the probe is
 /// resumed and saved when the probe is paused.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class MarkedMeasure extends Measure {
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class MarkedMeasure extends CAMSMeasure {
   /// The date and time of the last time this measure was collected.
   @JsonKey(ignore: true)
   DateTime lastTime;

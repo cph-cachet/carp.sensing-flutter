@@ -118,27 +118,10 @@ Map<String, dynamic> _$DataTypeToJson(DataType instance) {
 }
 
 Data _$DataFromJson(Map<String, dynamic> json) {
-  return Data(
-    id: json['id'] as String,
-    timestamp: json['timestamp'] == null
-        ? null
-        : DateTime.parse(json['timestamp'] as String),
-  );
+  return Data();
 }
 
-Map<String, dynamic> _$DataToJson(Data instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
-  return val;
-}
+Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{};
 
 MasterDeviceDeployment _$MasterDeviceDeploymentFromJson(
     Map<String, dynamic> json) {
@@ -657,7 +640,9 @@ Map<String, dynamic> _$MeasureToJson(Measure instance) {
 
 DataTypeMeasure _$DataTypeMeasureFromJson(Map<String, dynamic> json) {
   return DataTypeMeasure(
-    type: json['type'] as String,
+    type: json['type'] == null
+        ? null
+        : DataType.fromJson(json['type'] as Map<String, dynamic>),
   )..$type = json[r'$type'] as String;
 }
 
@@ -677,9 +662,12 @@ Map<String, dynamic> _$DataTypeMeasureToJson(DataTypeMeasure instance) {
 }
 
 PhoneSensorMeasure _$PhoneSensorMeasureFromJson(Map<String, dynamic> json) {
-  return PhoneSensorMeasure()
+  return PhoneSensorMeasure(
+    type: json['type'] == null
+        ? null
+        : DataType.fromJson(json['type'] as Map<String, dynamic>),
+  )
     ..$type = json[r'$type'] as String
-    ..type = json['type'] as String
     ..duration = json['duration'] as int;
 }
 

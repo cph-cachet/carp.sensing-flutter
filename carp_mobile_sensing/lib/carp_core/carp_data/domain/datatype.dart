@@ -15,28 +15,31 @@ part of carp_core;
 /// secondary data stream, or how triggers can act on it.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class DataType {
+  static const DataType UNKNOWN = DataType(NameSpace.UNKNOWN, 'unknown');
+
   /// The data type namespace. See [NameSpace].
   ///
   /// Uniquely identifies the organization/person who determines how to
   /// interpret [name].
   /// To prevent conflicts, a reverse domain namespace is suggested:
   /// e.g., "org.openmhealth" or "dk.cachet.carp".
-  String namespace;
+  final String namespace;
 
   /// The name of this data format. See [DataType].
   ///
   /// Uniquely identifies something within the [namespace].
   /// The name may not contain any periods. Periods are reserved for namespaces.
-  String name;
+  final String name;
 
   /// Create a [DataType].
-  DataType(this.namespace, this.name) : super();
+  const DataType(this.namespace, this.name) : super();
 
-  DataType.fromString(String type) {
+  factory DataType.fromString(String type) {
     assert(type.contains('.'),
         "A data type must contain both a namespace and a name separated with a '.'");
-    this.name = type.split('.').last;
-    this.namespace = type.substring(0, type.indexOf(name) - 1);
+    final String name = type.split('.').last;
+    final String namespace = type.substring(0, type.indexOf(name) - 1);
+    return DataType(namespace, name);
   }
 
   String toString() => '$namespace.$name';

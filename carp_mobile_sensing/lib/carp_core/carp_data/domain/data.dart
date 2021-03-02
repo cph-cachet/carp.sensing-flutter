@@ -14,16 +14,7 @@ class Data {
   @JsonKey(ignore: true)
   DataType format;
 
-  /// Unique identifier for the current Datum, unique across all data generated.
-  String id;
-
-  /// The UTC timestamp when this data was generated on the device.
-  DateTime timestamp;
-
-  Data({this.id, this.timestamp}) {
-    id ??= Uuid().v1();
-    timestamp ??= DateTime.now().toUtc();
-  }
+  Data();
 
   /// Create a Dart object from a JSON map.
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);

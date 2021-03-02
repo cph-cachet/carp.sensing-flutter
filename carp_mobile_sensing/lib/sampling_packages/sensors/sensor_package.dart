@@ -41,113 +41,94 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
   List<Permission> get permissions => [Permission.sensors];
 
   SamplingSchema get common => SamplingSchema()
-    ..format = SamplingSchemaType.COMMON
+    ..type = SamplingSchemaType.common
     ..name = 'Common (default) sensor sampling schema'
     ..powerAware = true
-    ..measures.addEntries([
-      MapEntry(
-          ACCELEROMETER,
-          Measure(
-            type: DataType(NameSpace.CARP, ACCELEROMETER),
-            name: 'Accelerometer',
-            enabled: false,
-          )),
-      MapEntry(
-          GYROSCOPE,
-          Measure(
-            type: DataType(NameSpace.CARP, GYROSCOPE),
-            name: 'Gyroscope',
-            enabled: false,
-          )),
-      MapEntry(
-          PERIODIC_ACCELEROMETER,
-          PeriodicMeasure(
-            format: DataType(NameSpace.CARP, PERIODIC_ACCELEROMETER),
-            name: 'Accelerometer',
-            enabled: false,
-            frequency: const Duration(seconds: 5),
-            duration: const Duration(seconds: 1),
-          )),
-      MapEntry(
-          PERIODIC_GYROSCOPE,
-          PeriodicMeasure(
-            format: DataType(NameSpace.CARP, PERIODIC_GYROSCOPE),
-            name: 'Gyroscope',
-            enabled: false,
-            frequency: const Duration(seconds: 5),
-            duration: const Duration(seconds: 1),
-          )),
-      MapEntry(
-          PEDOMETER,
-          Measure(
-              type: DataType(NameSpace.CARP, PEDOMETER),
-              name: 'Pedometer (Step Count)',
-              enabled: true)),
-      MapEntry(
-          LIGHT,
-          PeriodicMeasure(
-            format: DataType(NameSpace.CARP, LIGHT),
-            name: 'Ambient Light',
-            enabled: true,
-            frequency: const Duration(minutes: 1),
-            duration: const Duration(seconds: 1),
-          )),
+    ..addMeasures([
+      CAMSMeasure(
+        type: DataType(NameSpace.CARP, ACCELEROMETER),
+        name: 'Accelerometer',
+        enabled: false,
+      ),
+      CAMSMeasure(
+        type: DataType(NameSpace.CARP, GYROSCOPE),
+        name: 'Gyroscope',
+        enabled: false,
+      ),
+      PeriodicMeasure(
+        type: DataType(NameSpace.CARP, PERIODIC_ACCELEROMETER),
+        name: 'Accelerometer',
+        enabled: false,
+        frequency: const Duration(seconds: 5),
+        duration: const Duration(seconds: 1),
+      ),
+      PeriodicMeasure(
+        type: DataType(NameSpace.CARP, PERIODIC_GYROSCOPE),
+        name: 'Gyroscope',
+        enabled: false,
+        frequency: const Duration(seconds: 5),
+        duration: const Duration(seconds: 1),
+      ),
+      CAMSMeasure(
+        type: DataType(NameSpace.CARP, PEDOMETER),
+        name: 'Pedometer (Step Count)',
+      ),
+      PeriodicMeasure(
+        type: DataType(NameSpace.CARP, LIGHT),
+        name: 'Ambient Light',
+        frequency: const Duration(minutes: 1),
+        duration: const Duration(seconds: 1),
+      ),
     ]);
 
-  SamplingSchema get light => common
-    ..format = SamplingSchemaType.LIGHT
-    ..name = 'Light sensor sampling'
-    ..measures[LIGHT].enabled = false;
+  SamplingSchema get light {
+    SamplingSchema light = common
+      ..type = SamplingSchemaType.light
+      ..name = 'Light sensor sampling';
+    (light.measures[DataType(NameSpace.CARP, LIGHT)] as CAMSMeasure).enabled =
+        false;
+    return light;
+  }
 
-  SamplingSchema get minimum => common
-    ..format = SamplingSchemaType.LIGHT
-    ..name = 'Light sensor sampling'
-    ..measures[PEDOMETER].enabled = false;
+  SamplingSchema get minimum {
+    SamplingSchema minimum = common
+      ..type = SamplingSchemaType.light
+      ..name = 'Light sensor sampling';
+    (minimum.measures[DataType(NameSpace.CARP, PEDOMETER)] as CAMSMeasure)
+        .enabled = false;
+    return minimum;
+  }
 
   SamplingSchema get normal => common;
 
   SamplingSchema get debug => SamplingSchema()
-    ..format = SamplingSchemaType.DEBUG
-    ..name = 'Common (default) sensor sampling schema'
+    ..type = SamplingSchemaType.debug
+    ..name = 'Debugging sensor sampling schema'
     ..powerAware = false
-    ..measures.addEntries([
-      MapEntry(
-          ACCELEROMETER,
-          Measure(
-              type: DataType(NameSpace.CARP, ACCELEROMETER),
-              name: 'Accelerometer')),
-      MapEntry(
-          GYROSCOPE,
-          Measure(
-              type: DataType(NameSpace.CARP, GYROSCOPE), name: 'Gyroscope')),
-      MapEntry(
-          PERIODIC_ACCELEROMETER,
-          PeriodicMeasure(
-            format: DataType(NameSpace.CARP, PERIODIC_ACCELEROMETER),
-            name: 'Accelerometer',
-            frequency: const Duration(seconds: 5),
-            duration: const Duration(seconds: 1),
-          )),
-      MapEntry(
-          PERIODIC_GYROSCOPE,
-          PeriodicMeasure(
-            format: DataType(NameSpace.CARP, PERIODIC_GYROSCOPE),
-            name: 'Gyroscope',
-            frequency: const Duration(seconds: 5),
-            duration: const Duration(seconds: 1),
-          )),
-      MapEntry(
-          PEDOMETER,
-          Measure(
-              type: DataType(NameSpace.CARP, PEDOMETER),
-              name: 'Pedometer (Step Count)')),
-      MapEntry(
-          LIGHT,
-          PeriodicMeasure(
-            format: DataType(NameSpace.CARP, LIGHT),
-            name: 'Ambient Light',
-            frequency: const Duration(seconds: 10),
-            duration: const Duration(seconds: 2),
-          )),
+    ..addMeasures([
+      CAMSMeasure(
+          type: DataType(NameSpace.CARP, ACCELEROMETER), name: 'Accelerometer'),
+      CAMSMeasure(type: DataType(NameSpace.CARP, GYROSCOPE), name: 'Gyroscope'),
+      PeriodicMeasure(
+        type: DataType(NameSpace.CARP, PERIODIC_ACCELEROMETER),
+        name: 'Accelerometer',
+        frequency: const Duration(seconds: 5),
+        duration: const Duration(seconds: 1),
+      ),
+      PeriodicMeasure(
+        type: DataType(NameSpace.CARP, PERIODIC_GYROSCOPE),
+        name: 'Gyroscope',
+        frequency: const Duration(seconds: 5),
+        duration: const Duration(seconds: 1),
+      ),
+      CAMSMeasure(
+          type: DataType(NameSpace.CARP, PEDOMETER),
+          name: 'Pedometer (Step Count)'),
+      PeriodicMeasure(
+        type: DataType(NameSpace.CARP, LIGHT),
+        name: 'Ambient Light',
+        frequency: const Duration(seconds: 10),
+        duration: const Duration(seconds: 2),
+      ),
     ]);
 }

@@ -13,7 +13,7 @@ part of domain;
 ///
 /// The [CAMSTrigger] class is abstract. Use sub-classes of [CAMSTrigger] implements
 /// the specific behavior / timing of a trigger.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class CAMSTrigger extends Trigger {
   /// A unique id of this trigger.
   /// Is used when storing data to know what triggered the data collection.
@@ -34,7 +34,7 @@ class CAMSTrigger extends Trigger {
 }
 
 /// A trigger that starts sampling immediately and never stops.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ImmediateTrigger extends CAMSTrigger {
   ImmediateTrigger({String triggerId}) : super(triggerId: triggerId);
 
@@ -49,37 +49,37 @@ class ImmediateTrigger extends CAMSTrigger {
 /// and paused by calling the [pause] method.
 ///
 /// Note that sampling continues until it is manually paused.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class ManualTrigger extends CAMSTrigger {
-  ManualTrigger({String triggerId}) : super(triggerId: triggerId);
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class SimpleTrigger extends CAMSTrigger {
+  SimpleTrigger({String triggerId}) : super(triggerId: triggerId);
 
   @JsonKey(ignore: true)
   dynamic executor;
 
-  /// Called when data sampling in this [CAMSTrigger] is to be resumed.
+  /// Called when data sampling in this trigger is to be resumed.
   ///
-  /// Starting a trigger implies that all [TaskDescriptor]s in this trigger is started,
+  /// Starting a trigger implies that all tasks in this trigger is started,
   /// which again implies that all [Measure]s in these tasks are started.
   /// Therefore, all measures to be started should be 'bundled' into this trigger.
   void resume() => executor?.resume();
 
-  /// Called when data sampling in this [CAMSTrigger] is to paused.
+  /// Called when data sampling in this trigger is to paused.
   ///
-  /// Stopping a trigger implies that all [TaskDescriptor]s in this trigger is paused,
+  /// Stopping a trigger implies that all tasks in this trigger is paused,
   /// which again implies that all [Measure]s in these tasks are paused.
   void pause() => executor?.pause();
 
-  Function get fromJsonFunction => _$ManualTriggerFromJson;
-  factory ManualTrigger.fromJson(Map<String, dynamic> json) => FromJsonFactory()
+  Function get fromJsonFunction => _$SimpleTriggerFromJson;
+  factory SimpleTrigger.fromJson(Map<String, dynamic> json) => FromJsonFactory()
       .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
-  Map<String, dynamic> toJson() => _$ManualTriggerToJson(this);
+  Map<String, dynamic> toJson() => _$SimpleTriggerToJson(this);
 }
 
 /// A trigger that delays sampling for [delay] and then starts sampling.
 /// Never stops sampling once started.
 ///
 /// The delay is measured from the start of the overall [StudyProtocol].
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class DelayedTrigger extends CAMSTrigger {
   /// Delay before this trigger is executed.
   Duration delay;
@@ -100,7 +100,7 @@ class DelayedTrigger extends CAMSTrigger {
 /// the timing of resuming and pausing sampling.
 ///
 /// Weekly and montly recurrent triggers can be specified using the [RecurrentScheduledTrigger].
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class PeriodicTrigger extends CAMSTrigger {
   /// The period (reciprocal of frequency) of sampling.
   Duration period;
@@ -121,9 +121,10 @@ class PeriodicTrigger extends CAMSTrigger {
   Map<String, dynamic> toJson() => _$PeriodicTriggerToJson(this);
 }
 
-/// A trigger that starts sampling based on a [schedule] (date / time) and runs for a specific [duration].
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class ScheduledTrigger extends CAMSTrigger {
+/// A trigger that starts sampling based on a [schedule] of a date and time,
+/// and runs for a specific [duration].
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class DateTimeTrigger extends CAMSTrigger {
   /// The scheduled date and time for resuming sampling.
   DateTime schedule;
 
@@ -131,17 +132,17 @@ class ScheduledTrigger extends CAMSTrigger {
   /// If null, the sampling is never stopped (i.e., runs forever).
   Duration duration;
 
-  ScheduledTrigger({
+  DateTimeTrigger({
     String triggerId,
     @required this.schedule,
     this.duration,
   }) : super(triggerId: triggerId);
 
-  Function get fromJsonFunction => _$ScheduledTriggerFromJson;
-  factory ScheduledTrigger.fromJson(Map<String, dynamic> json) =>
+  Function get fromJsonFunction => _$DateTimeTriggerFromJson;
+  factory DateTimeTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory()
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
-  Map<String, dynamic> toJson() => _$ScheduledTriggerToJson(this);
+  Map<String, dynamic> toJson() => _$DateTimeTriggerToJson(this);
 }
 
 /// Type of recurrence for a [RecurrentScheduledTrigger].
@@ -156,7 +157,7 @@ enum RecurrentType {
 ///
 /// Follows the conventions in the [DartTime] class, but only uses the Time
 /// part in a 24 hour time format.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class Time extends Serializable {
   /// 24 hour format.
   int hour;
@@ -232,7 +233,7 @@ class Time extends Serializable {
 /// We are, however, not using yearly recurrence.
 /// Moreover, monthly recurrences make little sense in mobile sensing, even though it is supported.
 ///
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class RecurrentScheduledTrigger extends PeriodicTrigger {
   static const int daysPerWeek = 7;
   static const int daysPerMonth = 30;
@@ -422,7 +423,7 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
 /// A trigger that resume and pause sampling based on a cron job specification.
 ///
 /// Bases on the [`cron`](https://pub.dev/packages/cron) package.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class CronScheduledTrigger extends CAMSTrigger {
   /// The cron job expression.
   String cronExpression;
@@ -515,7 +516,7 @@ class CronScheduledTrigger extends CAMSTrigger {
 ///
 /// For example, if [measureType] is `carp.geofence` the [resumeCondition] can
 /// be `{'DTU','ENTER'}`
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class SamplingEventTrigger extends CAMSTrigger {
   SamplingEventTrigger({
     String triggerId,
@@ -574,7 +575,7 @@ typedef EventConditionEvaluator = bool Function(Datum datum);
 ///
 /// If you need to de/serialize an event trigger, use the [SamplingEventTrigger]
 /// instead.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ConditionalSamplingEventTrigger extends CAMSTrigger {
   /// Create a [ConditionalSamplingEventTrigger].
   ConditionalSamplingEventTrigger({

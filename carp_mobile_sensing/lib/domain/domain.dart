@@ -18,39 +18,37 @@ part 'sampling_schema.dart';
 part 'measures.dart';
 part 'device_descriptor.dart';
 part 'app_task.dart';
-part 'cams_triggers.dart';
-part 'datatype.dart';
+part 'triggers.dart';
 part 'datum.dart';
 part 'device_info.dart';
 part 'task_descriptor.dart';
 part 'transformers.dart';
-part 'trigger.dart';
 
 part 'domain.g.dart';
 
 /// Register all the fromJson functions for the deployment domain classes.
 void registerFromJsonFunctions() {
-  info('Register all the fromJson function for the CAMS domain classes.');
+  // info('Register all the fromJson function for the CAMS domain classes.');
 
-  FromJsonFactory().register(StudyProtocol());
-  FromJsonFactory().register(DataEndPoint());
-  // FromJsonFactory().register(FileDataEndPoint());
-  FromJsonFactory().register(DeviceDescriptor());
-  FromJsonFactory().register(TaskDescriptor());
-  FromJsonFactory().register(AutomaticTaskDescriptor());
-  FromJsonFactory().register(AppTask(type: 'ignored'));
-  FromJsonFactory().register(CAMSTrigger());
-  FromJsonFactory().register(ImmediateTrigger());
-  FromJsonFactory().register(DelayedTrigger());
-  FromJsonFactory().register(PeriodicTrigger(period: null));
-  FromJsonFactory().register(ScheduledTrigger(schedule: null));
-  FromJsonFactory().register(Time());
-  FromJsonFactory().register(RecurrentScheduledTrigger(type: null, time: null));
-  FromJsonFactory().register(SamplingEventTrigger(measureType: null));
-  FromJsonFactory()
-      .register(ConditionalSamplingEventTrigger(measureType: null));
-  FromJsonFactory().register(DataType('', ''));
-  FromJsonFactory().register(Measure(type: null));
-  FromJsonFactory().register(PeriodicMeasure(type: null));
-  FromJsonFactory().register(MarkedMeasure(type: null));
+  // FromJsonFactory().register(StudyProtocol());
+  // FromJsonFactory().register(DataEndPoint());
+  // // FromJsonFactory().register(FileDataEndPoint());
+  // FromJsonFactory().register(DeviceDescriptor());
+  // FromJsonFactory().register(TaskDescriptor());
+  // FromJsonFactory().register(AutomaticTaskDescriptor());
+  // FromJsonFactory().register(AppTask(type: 'ignored'));
+  // FromJsonFactory().register(CAMSTrigger());
+  // FromJsonFactory().register(ImmediateTrigger());
+  // FromJsonFactory().register(DelayedTrigger());
+  // FromJsonFactory().register(PeriodicTrigger(period: null));
+  // FromJsonFactory().register(ScheduledTrigger(schedule: null));
+  // FromJsonFactory().register(Time());
+  // FromJsonFactory().register(RecurrentScheduledTrigger(type: null, time: null));
+  // FromJsonFactory().register(SamplingEventTrigger(measureType: null));
+  // FromJsonFactory()
+  //     .register(ConditionalSamplingEventTrigger(measureType: null));
+  // FromJsonFactory().register(DataType('', ''));
+  // FromJsonFactory().register(Measure(type: null));
+  // FromJsonFactory().register(PeriodicMeasure(type: null));
+  // FromJsonFactory().register(MarkedMeasure(type: null));
 }

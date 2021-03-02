@@ -54,9 +54,9 @@ void main() {
 
     // Define what needs to be measured, on which device, when.
     List<Measure> measures = [
-      Measure(type: DataType(NameSpace.CARP, 'light').toString()),
-      Measure(type: DataType(NameSpace.CARP, 'gps').toString()),
-      Measure(type: DataType(NameSpace.CARP, 'steps').toString()),
+      DataTypeMeasure(type: DataType(NameSpace.CARP, 'light')),
+      DataTypeMeasure(type: DataType(NameSpace.CARP, 'gps')),
+      DataTypeMeasure(type: DataType(NameSpace.CARP, 'steps')),
     ];
 
     ConcurrentTask task = ConcurrentTask(name: "Start measures")
@@ -79,6 +79,6 @@ void main() {
 
     print(dataPoint);
     print(_encode(dataPoint));
-    assert(dataPoint.carpBody.id != null);
+    assert(dataPoint.carpBody != null);
   });
 }

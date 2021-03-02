@@ -8,13 +8,17 @@ part of carp_core;
 
 /// A [Measure] holds information about what measure to do/collect for a
 /// [TaskDescriptor] in a [StudyProtocol].
+///
+/// See [Measure](https://github.com/cph-cachet/carp.core-kotlin/blob/master/carp.protocols.core/src/commonMain/kotlin/dk/cachet/carp/protocols/domain/tasks/measures/Measure.kt).
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class Measure extends Serializable {
   /// The type of measure to do.
   String type;
 
-  Measure({this.type}) : super();
+  /// The type of measure to do as a [DataType].
+  DataType get dataType => DataType.fromString(type);
 
+  Measure({this.type}) : super();
   Function get fromJsonFunction => _$MeasureFromJson;
   factory Measure.fromJson(Map<String, dynamic> json) => FromJsonFactory()
       .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
@@ -28,10 +32,10 @@ class Measure extends Serializable {
 /// Defines data that needs to be measured/collected from a data stream on a
 /// [DeviceDescriptor], as part of a task defined by [TaskDescriptor].
 ///
-/// See [Measure.kt](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/carp.protocols.core/src/commonMain/kotlin/dk/cachet/carp/protocols/domain/tasks/measures/DataTypeMeasure.kt).
+/// See [DataTypeMeasure.kt](https://github.com/cph-cachet/carp.core-kotlin/blob/master/carp.protocols.core/src/commonMain/kotlin/dk/cachet/carp/protocols/domain/tasks/measures/DataTypeMeasure.kt).
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class DataTypeMeasure extends Measure {
-  DataTypeMeasure({String type}) : super(type: type);
+  DataTypeMeasure({DataType type}) : super(type: type.toString());
 
   Function get fromJsonFunction => _$DataTypeMeasureFromJson;
   factory DataTypeMeasure.fromJson(Map<String, dynamic> json) =>
@@ -40,17 +44,15 @@ class DataTypeMeasure extends Measure {
   Map<String, dynamic> toJson() => _$DataTypeMeasureToJson(this);
   String get jsonType =>
       'dk.cachet.carp.protocols.domain.tasks.measures.DataTypeMeasure';
-
-  String toString() => '$runtimeType - type: $type';
 }
 
 /// Defines data that needs to be measured/collected from a data stream on a
 /// [DeviceDescriptor], as part of a task defined by [TaskDescriptor].
 ///
-/// See [Measure.kt](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/carp.protocols.core/src/commonMain/kotlin/dk/cachet/carp/protocols/domain/tasks/measures/PhoneSensorMeasure.kt).
+/// See [Measure.kt](https://github.com/cph-cachet/carp.core-kotlin/blob/master/carp.protocols.core/src/commonMain/kotlin/dk/cachet/carp/protocols/domain/tasks/measures/PhoneSensorMeasure.kt).
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class PhoneSensorMeasure extends DataTypeMeasure {
-  PhoneSensorMeasure() : super();
+  PhoneSensorMeasure({DataType type}) : super(type: type);
 
   int duration;
 

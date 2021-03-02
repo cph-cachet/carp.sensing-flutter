@@ -40,9 +40,11 @@ String _encode(Object object) =>
 ///
 /// See the [documentation](https://github.com/cph-cachet/carp.sensing-flutter/wiki/Schemas) for further details.
 ///
-class SamplingSchema with carp_core_domain.DataTypeSamplingSchemeList {
+class SamplingSchema extends DataTypeSamplingSchemeList {
+  final Map<DataType, Measure> _measures = {};
+
   /// The sampling schema type according to [SamplingSchemaType].
-  String type;
+  SamplingSchemaType type;
 
   /// A printer-friendly name of this [SamplingSchema].
   String name;
@@ -50,11 +52,25 @@ class SamplingSchema with carp_core_domain.DataTypeSamplingSchemeList {
   /// A description of this [SamplingSchema].
   String description;
 
-  /// A map of default [Measure]s for this sampling schema.
-  ///
-  /// These default measures can be manually populated by
-  /// adding [Measure]s to this map.
-  final Map<String, Measure> measures = {};
+  /// A map of default [Measure]s for different [DataType]s for this sampling
+  /// schema.
+  Map<DataType, Measure> get measures => _measures;
+
+  /// Is this sampling schema power-aware, i.e. adapting its sampling strategy
+  /// to the battery power status. See [PowerAwarenessState].
+  bool powerAware = false;
+
+  SamplingSchema({this.type, this.name, this.powerAware = false}) : super();
+
+  /// Add a default measure to this schema.
+  void addMeasure(Measure measure) => _measures[measure.dataType] = measure;
+
+  /// Remove a measure from this schema.
+  void removeMeasure(Measure measure) => _measures.remove(measure.dataType);
+
+  /// Add a list of default measures to this schema.
+  void addMeasures(List<Measure> measures) =>
+      measures.forEach((measure) => _measures[measure.dataType] = measure);
 
   /// Adds all measures from [schema] to this sampling schema.
   ///
@@ -82,14 +98,7 @@ class SamplingSchema with carp_core_domain.DataTypeSamplingSchemeList {
   ///
   /// would return a list with a [Measure] for bluetooth, connectivity, etc.,
   /// each with default configurations from the [SamplingSchema.common()] schema.
-  ///
-  /// If [namespace] is specified, then the returned measures' [DataType]
-  /// belong to this namespace.
-  /// Otherwise, the [NameSpace.UNKNOWN] is applied.
-  List<Measure> getMeasureList({
-    String namespace = NameSpace.UNKNOWN,
-    @required List<String> types,
-  }) {
+  List<Measure> getMeasureList({List<DataType> types}) {
     List<Measure> _list = [];
 
     types.forEach((type) {
@@ -98,19 +107,12 @@ class SamplingSchema with carp_core_domain.DataTypeSamplingSchemeList {
         final _json = _encode(measures[type]);
         final Measure _clone =
             Measure.fromJson(json.decode(_json) as Map<String, dynamic>);
-        _clone.format.namespace = namespace ?? NameSpace.UNKNOWN;
         _list.add(_clone);
       }
     });
 
     return _list;
   }
-
-  /// Is this sampling schema power-aware, i.e. adapting its sampling strategy
-  /// to the battery power status. See [PowerAwarenessState].
-  bool powerAware = false;
-
-  SamplingSchema({this.type, this.name, this.powerAware}) : super();
 
   // /// A schema that does maximum sampling.
   // ///
@@ -153,7 +155,7 @@ class SamplingSchema with carp_core_domain.DataTypeSamplingSchemeList {
   /// used to adapt a [StudyProtocol] and its [Measure]s in the [adapt] method.
   factory SamplingSchema.normal({String namespace, bool powerAware}) =>
       SamplingSchema(
-          type: SamplingSchemaType.NORMAL,
+          type: SamplingSchemaType.normal,
           name: 'Default sampling',
           powerAware: powerAware);
 
@@ -245,27 +247,40 @@ class SamplingSchema with carp_core_domain.DataTypeSamplingSchemeList {
   void adapt(StudyProtocol study, {bool restore = true}) {
     study.tasks.forEach((task) {
       task.measures.forEach((measure) {
-        // first restore each measure in the study+tasks to its previous value
-        if (restore) measure.restore();
-        if (measures.containsKey(measure.format.name)) {
-          // if an adapted measure exists in this schema, adapt to it
-          measure.adapt(measures[measure.format.name]);
+        if (measure is CAMSMeasure) {
+          // first restore each measure in the study+tasks to its previous value
+          if (restore) measure.restore();
+          if (measures.containsKey(measure.dataType)) {
+            // if an adapted measure exists in this schema, adapt to it
+            measure.adapt(measures[measure.dataType]);
+          }
+          // notify listeners that the measure has changed due to restoration
+          // and/or adaptation
+          measure.hasChanged();
         }
-        // notify listeners that the measure has changed due to restoration
-        // and/or adaptation
-        measure.hasChanged();
       });
     });
   }
 }
 
 /// A enumeration of known sampling schemas types.
-class SamplingSchemaType {
-  static const String MAXIMUM = 'MAXIMUM';
-  static const String COMMON = 'COMMON';
-  static const String NORMAL = 'NORMAL';
-  static const String LIGHT = 'LIGHT';
-  static const String MINIMUM = 'MINIMUM';
-  static const String NONE = 'NONE';
-  static const String DEBUG = 'DEBUG';
+enum SamplingSchemaType {
+  maximum,
+  common,
+  normal,
+  light,
+  minimum,
+  none,
+  debug,
 }
+
+// /// A enumeration of known sampling schemas types.
+// class SamplingSchemaType {
+//   static const String MAXIMUM = 'MAXIMUM';
+//   static const String COMMON = 'COMMON';
+//   static const String NORMAL = 'NORMAL';
+//   static const String LIGHT = 'LIGHT';
+//   static const String MINIMUM = 'MINIMUM';
+//   static const String NONE = 'NONE';
+//   static const String DEBUG = 'DEBUG';
+// }

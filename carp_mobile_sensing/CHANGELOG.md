@@ -5,12 +5,14 @@
     * `Task` is now called `TaskDescriptor`
     * `Device` is now called `DeviceDescriptor`
     * `DataFormat` is now called `DataType`
-    * `` is now called ``
+    * `ManualTrigger` is now called `SimpleTrigger`
     * `` is now called ``
     * `` is now called ``
     * `` is now called ``
     * `` is now called ``
 * A `StudyProtocol` now uses the concept of a `TriggeredTask` which is slightly different to the previous `Study` model. See the example in the README text.
+* All json serialization now used `camelCase` instead of `snake_case` to be consistent with `carp_core`
+
 
 
 ## 0.12.3

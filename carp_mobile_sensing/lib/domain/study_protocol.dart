@@ -7,28 +7,6 @@
 
 part of domain;
 
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class TestStudyProtocol extends carp_core_domain.Serializable
-    with carp_core_domain.StudyProtocol {
-  /// A longer printer-friendly title for this study.
-  String title;
-
-  DataType get dataType => DataType('1', '2');
-
-  MasterDeviceDescriptor get masterDevice =>
-      masterDevices.first as MasterDeviceDescriptor;
-
-  @override
-  // TODO: implement fromJsonFunction
-  Function get fromJsonFunction => throw UnimplementedError();
-
-  @override
-  Map<String, dynamic> toJson() {
-    // TODO: implement toJson
-    throw UnimplementedError();
-  }
-}
-
 /// A description of how a study is to be executed.
 ///
 /// A [StudyProtocol] defining the master device ([MasterDeviceDescriptor])
@@ -42,9 +20,8 @@ class TestStudyProtocol extends carp_core_domain.Serializable
 /// A study is controlled and executed by a [StudyController].
 /// Data from the study is uploaded to the specified [DataEndPoint] in the
 /// specified [dataFormat].
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class StudyProtocol extends carp_core_domain.Serializable
-    with carp_core_domain.StudyProtocol {
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class CAMSStudyProtocol extends StudyProtocol {
   /// A longer printer-friendly title for this study.
   String title;
 
@@ -58,7 +35,7 @@ class StudyProtocol extends carp_core_domain.Serializable
   String get ownerId => owner.id;
 
   /// The sampling strategy according to [SamplingSchemaType].
-  String samplingStrategy = SamplingSchemaType.NORMAL;
+  SamplingSchemaType samplingStrategy = SamplingSchemaType.normal;
 
   /// Specify where and how to upload this study data.
   DataEndPoint dataEndPoint;
@@ -75,7 +52,7 @@ class StudyProtocol extends carp_core_domain.Serializable
   /// Create a new [StudyProtocol].
   ///
   /// If no [dataFormat] the CARP namespace is used.
-  StudyProtocol({
+  CAMSStudyProtocol({
     this.owner,
     String name,
     this.title,
@@ -87,7 +64,7 @@ class StudyProtocol extends carp_core_domain.Serializable
   }) : super() {
     super.name = name;
     super.description = description;
-    samplingStrategy ??= SamplingSchemaType.NORMAL;
+    samplingStrategy ??= SamplingSchemaType.normal;
     dataFormat ??= NameSpace.CARP;
   }
 
@@ -103,13 +80,14 @@ class StudyProtocol extends carp_core_domain.Serializable
   /// [SamplingSchema].
   void adapt(SamplingSchema schema, {bool restore = true}) {
     assert(schema != null);
-    samplingStrategy = schema.format;
+    samplingStrategy = schema.type;
     schema.adapt(this, restore: restore);
   }
 
   Function get fromJsonFunction => _$CAMSStudyProtocolFromJson;
-  factory StudyProtocol.fromJson(Map<String, dynamic> json) => FromJsonFactory()
-      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory CAMSStudyProtocol.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$CAMSStudyProtocolToJson(this);
 
   String toString() => '$runtimeType - $name, $title';
@@ -117,8 +95,8 @@ class StudyProtocol extends carp_core_domain.Serializable
 
 /// A person that created a [StudyProtocol].
 /// Typically the Principal Investigator (PI) who is reposnibile for the study.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class ProtocolOwner extends carp_core_domain.Serializable {
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class ProtocolOwner extends Serializable {
   String id;
   String name;
   String title;
@@ -144,8 +122,8 @@ class ProtocolOwner extends carp_core_domain.Serializable {
 }
 
 /// Specify an endpoint where a [DataManager] can upload data.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class DataEndPoint extends carp_core_domain.Serializable {
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class DataEndPoint extends Serializable {
   /// The type of endpoint as enumerated in [DataEndPointTypes].
   String type;
 

@@ -33,48 +33,43 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
   List<Permission> get permissions => [];
 
   SamplingSchema get common => SamplingSchema()
-    ..format = SamplingSchemaType.COMMON
+    ..type = SamplingSchemaType.common
     ..name = 'Common (default) device sampling schema'
     ..powerAware = true
-    ..measures.addEntries([
-      MapEntry(
-          DEVICE,
-          Measure(
-              type: DataType(NameSpace.CARP, DEVICE),
-              name: 'Basic Device Info',
-              enabled: true)),
-      MapEntry(
-          MEMORY,
-          PeriodicMeasure(
-              format: DataType(NameSpace.CARP, MEMORY),
-              name: 'Memory Usage',
-              enabled: true,
-              frequency: const Duration(minutes: 1))),
-      MapEntry(
-          BATTERY,
-          Measure(
-              type: DataType(NameSpace.CARP, BATTERY),
-              name: 'Battery',
-              enabled: true)),
-      MapEntry(
-          SCREEN,
-          Measure(
-              type: DataType(NameSpace.CARP, SCREEN),
-              name: 'Screen Activity (lock/on/off)',
-              enabled: true)),
+    ..addMeasures([
+      CAMSMeasure(
+        type: DataType(NameSpace.CARP, DEVICE),
+        name: 'Basic Device Info',
+      ),
+      PeriodicMeasure(
+          type: DataType(NameSpace.CARP, MEMORY),
+          name: 'Memory Usage',
+          frequency: const Duration(minutes: 1)),
+      CAMSMeasure(
+        type: DataType(NameSpace.CARP, BATTERY),
+        name: 'Battery',
+      ),
+      CAMSMeasure(
+        type: DataType(NameSpace.CARP, SCREEN),
+        name: 'Screen Activity (lock/on/off)',
+      ),
     ]);
 
-  SamplingSchema get light => common
-    ..format = SamplingSchemaType.LIGHT
-    ..name = 'Light sensor sampling'
-    ..measures[MEMORY].enabled = false;
+  SamplingSchema get light {
+    SamplingSchema light = common
+      ..type = SamplingSchemaType.light
+      ..name = 'Light sensor sampling';
+    (light.measures[DataType(NameSpace.CARP, MEMORY)] as CAMSMeasure).enabled =
+        false;
+    return light;
+  }
 
-  SamplingSchema get minimum => light;
+  SamplingSchema get minimum => light..type = SamplingSchemaType.minimum;
 
-  SamplingSchema get normal => common;
+  SamplingSchema get normal => common..type = SamplingSchemaType.normal;
 
   SamplingSchema get debug => common
-    ..format = SamplingSchemaType.DEBUG
+    ..type = SamplingSchemaType.debug
     ..powerAware = false
     ..name = 'Debug device sampling';
 }
