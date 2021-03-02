@@ -90,12 +90,12 @@ class ActiveParticipationInvitation {
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ParticipantData {
   String studyDeploymentId;
-  Map<String, Data> data;
+  Map<String, dynamic> data;
 
   ParticipantData() : super();
 
   getData(DataType type) => data[type.toString()];
-  setData(DataType type, Data someData) => data[type.toString()] = someData;
+  setData(DataType type, dynamic someData) => data[type.toString()] = someData;
 
   factory ParticipantData.fromJson(Map<String, dynamic> json) =>
       _$ParticipantDataFromJson(json);

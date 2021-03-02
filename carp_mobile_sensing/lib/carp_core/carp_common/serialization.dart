@@ -116,12 +116,17 @@ class FromJsonFactory {
     // PROTOCOL
     register(StudyProtocol());
     register(Trigger());
+    register(ElapsedTimeTrigger());
+    register(ManualTrigger());
+    register(ScheduledTrigger());
+
     register(TaskDescriptor());
     register(ConcurrentTask());
     register(CustomProtocolTask());
     register(Measure());
     register(DataTypeMeasure());
     register(PhoneSensorMeasure());
+    register(SamplingConfiguration());
 
     register(DeviceDescriptor());
     register(MasterDeviceDescriptor());

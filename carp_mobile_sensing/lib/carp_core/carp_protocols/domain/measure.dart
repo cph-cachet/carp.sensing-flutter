@@ -11,7 +11,7 @@ part of carp_core;
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class Measure extends Serializable {
   /// The type of measure to do.
-  DataType type;
+  String type;
 
   Measure({this.type}) : super();
 
@@ -31,7 +31,7 @@ class Measure extends Serializable {
 /// See [Measure.kt](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/carp.protocols.core/src/commonMain/kotlin/dk/cachet/carp/protocols/domain/tasks/measures/DataTypeMeasure.kt).
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class DataTypeMeasure extends Measure {
-  DataTypeMeasure({DataType type}) : super(type: type);
+  DataTypeMeasure({String type}) : super(type: type);
 
   Function get fromJsonFunction => _$DataTypeMeasureFromJson;
   factory DataTypeMeasure.fromJson(Map<String, dynamic> json) =>
@@ -52,7 +52,7 @@ class DataTypeMeasure extends Measure {
 class PhoneSensorMeasure extends DataTypeMeasure {
   PhoneSensorMeasure() : super();
 
-  CarpTime duration;
+  int duration;
 
   Function get fromJsonFunction => _$PhoneSensorMeasureFromJson;
   factory PhoneSensorMeasure.fromJson(Map<String, dynamic> json) =>
@@ -65,16 +65,16 @@ class PhoneSensorMeasure extends DataTypeMeasure {
   String toString() => '${super.toString()}, duration: $duration';
 }
 
-/// Time as specified in carp.core as a value in 'microseconds'.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class CarpTime {
-  CarpTime() : super();
+// /// Time as specified in carp.core as a value in 'microseconds'.
+// @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+// class CarpTime {
+//   CarpTime() : super();
 
-  int microseconds;
+//   int microseconds;
 
-  factory CarpTime.fromJson(Map<String, dynamic> json) =>
-      _$CarpTimeFromJson(json);
-  Map<String, dynamic> toJson() => _$CarpTimeToJson(this);
+//   factory CarpTime.fromJson(Map<String, dynamic> json) =>
+//       _$CarpTimeFromJson(json);
+//   Map<String, dynamic> toJson() => _$CarpTimeToJson(this);
 
-  String toString() => '$runtimeType - microseconds: $microseconds';
-}
+//   String toString() => '$runtimeType - microseconds: $microseconds';
+// }

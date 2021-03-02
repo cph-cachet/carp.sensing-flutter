@@ -14,18 +14,10 @@ part of carp_core;
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class DeviceDescriptor extends Serializable {
   DeviceDescriptor({
-    this.deviceType,
-    this.name,
     this.roleName,
     this.isMasterDevice = false,
-    this.collectingMeasureTypes,
+    this.supportedDataTypes,
   }) : super();
-
-  /// The unique device type. For example `phone`.
-  String deviceType;
-
-  /// A printer-fiendly name of this device.
-  String name;
 
   /// Is this the master device?
   bool isMasterDevice;
@@ -34,12 +26,15 @@ class DeviceDescriptor extends Serializable {
   /// For example, 'Patient's phone'
   String roleName;
 
-  /// The list of measures that this device is collecting as part of a
-  /// [StudyProtocol].
-  List<DataType> collectingMeasureTypes = [];
+  ///The set of [DataType]s defining which data can be collected on this device.
+  List<String> supportedDataTypes = [];
+
+  /// Sampling configurations for data types available on this device which
+  /// override the default configuration.
+  Map<String, SamplingConfiguration> samplingConfiguration = {};
 
   String toString() =>
-      '$runtimeType - deviceType: $deviceType, name: $name, isMasterDevice: $isMasterDevice, roleName: $roleName';
+      '$runtimeType - isMasterDevice: $isMasterDevice, roleName: $roleName';
 
   Function get fromJsonFunction => _$DeviceDescriptorFromJson;
   factory DeviceDescriptor.fromJson(Map<String, dynamic> json) =>
@@ -58,13 +53,11 @@ class MasterDeviceDescriptor extends DeviceDescriptor {
     String deviceType,
     String name,
     String roleName,
-    List<DataType> collectingMeasureTypes,
+    List<String> supportedDataTypes,
   }) : super(
-          deviceType: deviceType,
-          name: name,
           roleName: roleName,
           isMasterDevice: true,
-          collectingMeasureTypes: collectingMeasureTypes,
+          supportedDataTypes: supportedDataTypes,
         );
 
   Function get fromJsonFunction => _$MasterDeviceDescriptorFromJson;
@@ -86,12 +79,12 @@ class Smartphone extends MasterDeviceDescriptor {
   Smartphone({
     String name,
     String roleName,
-    List<DataType> collectingMeasureTypes,
+    List<String> supportedDataTypes,
   }) : super(
           deviceType: SMARTPHONE_DEVICE_TYPE,
           name: name,
           roleName: roleName,
-          collectingMeasureTypes: collectingMeasureTypes,
+          supportedDataTypes: supportedDataTypes,
         );
 
   Function get fromJsonFunction => _$SmartphoneFromJson;

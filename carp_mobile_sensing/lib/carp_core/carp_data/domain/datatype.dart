@@ -32,6 +32,13 @@ class DataType {
   /// Create a [DataType].
   DataType(this.namespace, this.name) : super();
 
+  DataType.fromString(String type) {
+    assert(type.contains('.'),
+        "A data type must contain both a namespace and a name separated with a '.'");
+    this.name = type.split('.').last;
+    this.namespace = type.substring(0, type.indexOf(name) - 1);
+  }
+
   String toString() => '$namespace.$name';
 
   bool operator ==(other) {

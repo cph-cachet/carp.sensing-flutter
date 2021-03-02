@@ -45,8 +45,6 @@ void main() {
     // Define which devices are used for data collection.
     Smartphone phone = Smartphone(name: 'SM-A320FL', roleName: 'masterphone');
     DeviceDescriptor eSense = DeviceDescriptor(
-      deviceType: 'eSense',
-      name: 'eSense ear plug',
       roleName: 'eSense',
     );
 
@@ -56,9 +54,9 @@ void main() {
 
     // Define what needs to be measured, on which device, when.
     List<Measure> measures = [
-      Measure(type: DataType(NameSpace.CARP, 'light')),
-      Measure(type: DataType(NameSpace.CARP, 'gps')),
-      Measure(type: DataType(NameSpace.CARP, 'steps')),
+      Measure(type: DataType(NameSpace.CARP, 'light').toString()),
+      Measure(type: DataType(NameSpace.CARP, 'gps').toString()),
+      Measure(type: DataType(NameSpace.CARP, 'steps').toString()),
     ];
 
     ConcurrentTask task = ConcurrentTask(name: "Start measures")

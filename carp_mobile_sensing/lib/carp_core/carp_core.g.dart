@@ -294,9 +294,9 @@ StudyDeploymentStatus _$StudyDeploymentStatusFromJson(
             ? null
             : DeviceDeploymentStatus.fromJson(e as Map<String, dynamic>))
         ?.toList()
-    ..startTime = json['startTime'] as int
-    ..status = _$enumDecodeNullable(
-        _$StudyDeploymentStatusTypesEnumMap, json['status']);
+    ..startTime = json['startTime'] == null
+        ? null
+        : DateTime.parse(json['startTime'] as String);
 }
 
 Map<String, dynamic> _$StudyDeploymentStatusToJson(
@@ -313,49 +313,9 @@ Map<String, dynamic> _$StudyDeploymentStatusToJson(
 
   writeNotNull('studyDeploymentId', instance.studyDeploymentId);
   writeNotNull('devicesStatus', instance.devicesStatus);
-  writeNotNull('startTime', instance.startTime);
-  writeNotNull('status', _$StudyDeploymentStatusTypesEnumMap[instance.status]);
+  writeNotNull('startTime', instance.startTime?.toIso8601String());
   return val;
 }
-
-T _$enumDecode<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
-}) {
-  if (source == null) {
-    throw ArgumentError('A value must be provided. Supported values: '
-        '${enumValues.values.join(', ')}');
-  }
-
-  final value = enumValues.entries
-      .singleWhere((e) => e.value == source, orElse: () => null)
-      ?.key;
-
-  if (value == null && unknownValue == null) {
-    throw ArgumentError('`$source` is not one of the supported values: '
-        '${enumValues.values.join(', ')}');
-  }
-  return value ?? unknownValue;
-}
-
-T _$enumDecodeNullable<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
-}) {
-  if (source == null) {
-    return null;
-  }
-  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
-}
-
-const _$StudyDeploymentStatusTypesEnumMap = {
-  StudyDeploymentStatusTypes.Invited: 'Invited',
-  StudyDeploymentStatusTypes.DeployingDevices: 'DeployingDevices',
-  StudyDeploymentStatusTypes.DeploymentReady: 'DeploymentReady',
-  StudyDeploymentStatusTypes.Stopped: 'Stopped',
-};
 
 Participation _$ParticipationFromJson(Map<String, dynamic> json) {
   return Participation()
@@ -436,10 +396,7 @@ Map<String, dynamic> _$ActiveParticipationInvitationToJson(
 ParticipantData _$ParticipantDataFromJson(Map<String, dynamic> json) {
   return ParticipantData()
     ..studyDeploymentId = json['studyDeploymentId'] as String
-    ..data = (json['data'] as Map<String, dynamic>)?.map(
-      (k, e) => MapEntry(
-          k, e == null ? null : Data.fromJson(e as Map<String, dynamic>)),
-    );
+    ..data = json['data'] as Map<String, dynamic>;
 }
 
 Map<String, dynamic> _$ParticipantDataToJson(ParticipantData instance) {
@@ -569,15 +526,20 @@ Map<String, dynamic> _$DeploymentSuccessfulToJson(
 
 DeviceDescriptor _$DeviceDescriptorFromJson(Map<String, dynamic> json) {
   return DeviceDescriptor(
-    deviceType: json['deviceType'] as String,
-    name: json['name'] as String,
     roleName: json['roleName'] as String,
     isMasterDevice: json['isMasterDevice'] as bool,
-    collectingMeasureTypes: (json['collectingMeasureTypes'] as List)
-        ?.map((e) =>
-            e == null ? null : DataType.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
-  )..$type = json[r'$type'] as String;
+    supportedDataTypes:
+        (json['supportedDataTypes'] as List)?.map((e) => e as String)?.toList(),
+  )
+    ..$type = json[r'$type'] as String
+    ..samplingConfiguration =
+        (json['samplingConfiguration'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(
+          k,
+          e == null
+              ? null
+              : SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
+    );
 }
 
 Map<String, dynamic> _$DeviceDescriptorToJson(DeviceDescriptor instance) {
@@ -591,27 +553,30 @@ Map<String, dynamic> _$DeviceDescriptorToJson(DeviceDescriptor instance) {
     }
   }
 
-  writeNotNull('deviceType', instance.deviceType);
-  writeNotNull('name', instance.name);
   writeNotNull('isMasterDevice', instance.isMasterDevice);
   writeNotNull('roleName', instance.roleName);
-  writeNotNull('collectingMeasureTypes', instance.collectingMeasureTypes);
+  writeNotNull('supportedDataTypes', instance.supportedDataTypes);
+  writeNotNull('samplingConfiguration', instance.samplingConfiguration);
   return val;
 }
 
 MasterDeviceDescriptor _$MasterDeviceDescriptorFromJson(
     Map<String, dynamic> json) {
   return MasterDeviceDescriptor(
-    deviceType: json['deviceType'] as String,
-    name: json['name'] as String,
     roleName: json['roleName'] as String,
-    collectingMeasureTypes: (json['collectingMeasureTypes'] as List)
-        ?.map((e) =>
-            e == null ? null : DataType.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
+    supportedDataTypes:
+        (json['supportedDataTypes'] as List)?.map((e) => e as String)?.toList(),
   )
     ..$type = json[r'$type'] as String
-    ..isMasterDevice = json['isMasterDevice'] as bool;
+    ..isMasterDevice = json['isMasterDevice'] as bool
+    ..samplingConfiguration =
+        (json['samplingConfiguration'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(
+          k,
+          e == null
+              ? null
+              : SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
+    );
 }
 
 Map<String, dynamic> _$MasterDeviceDescriptorToJson(
@@ -626,26 +591,29 @@ Map<String, dynamic> _$MasterDeviceDescriptorToJson(
     }
   }
 
-  writeNotNull('deviceType', instance.deviceType);
-  writeNotNull('name', instance.name);
   writeNotNull('isMasterDevice', instance.isMasterDevice);
   writeNotNull('roleName', instance.roleName);
-  writeNotNull('collectingMeasureTypes', instance.collectingMeasureTypes);
+  writeNotNull('supportedDataTypes', instance.supportedDataTypes);
+  writeNotNull('samplingConfiguration', instance.samplingConfiguration);
   return val;
 }
 
 Smartphone _$SmartphoneFromJson(Map<String, dynamic> json) {
   return Smartphone(
-    name: json['name'] as String,
     roleName: json['roleName'] as String,
-    collectingMeasureTypes: (json['collectingMeasureTypes'] as List)
-        ?.map((e) =>
-            e == null ? null : DataType.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
+    supportedDataTypes:
+        (json['supportedDataTypes'] as List)?.map((e) => e as String)?.toList(),
   )
     ..$type = json[r'$type'] as String
-    ..deviceType = json['deviceType'] as String
-    ..isMasterDevice = json['isMasterDevice'] as bool;
+    ..isMasterDevice = json['isMasterDevice'] as bool
+    ..samplingConfiguration =
+        (json['samplingConfiguration'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(
+          k,
+          e == null
+              ? null
+              : SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
+    );
 }
 
 Map<String, dynamic> _$SmartphoneToJson(Smartphone instance) {
@@ -659,19 +627,16 @@ Map<String, dynamic> _$SmartphoneToJson(Smartphone instance) {
     }
   }
 
-  writeNotNull('deviceType', instance.deviceType);
-  writeNotNull('name', instance.name);
   writeNotNull('isMasterDevice', instance.isMasterDevice);
   writeNotNull('roleName', instance.roleName);
-  writeNotNull('collectingMeasureTypes', instance.collectingMeasureTypes);
+  writeNotNull('supportedDataTypes', instance.supportedDataTypes);
+  writeNotNull('samplingConfiguration', instance.samplingConfiguration);
   return val;
 }
 
 Measure _$MeasureFromJson(Map<String, dynamic> json) {
   return Measure(
-    type: json['type'] == null
-        ? null
-        : DataType.fromJson(json['type'] as Map<String, dynamic>),
+    type: json['type'] as String,
   )..$type = json[r'$type'] as String;
 }
 
@@ -692,9 +657,7 @@ Map<String, dynamic> _$MeasureToJson(Measure instance) {
 
 DataTypeMeasure _$DataTypeMeasureFromJson(Map<String, dynamic> json) {
   return DataTypeMeasure(
-    type: json['type'] == null
-        ? null
-        : DataType.fromJson(json['type'] as Map<String, dynamic>),
+    type: json['type'] as String,
   )..$type = json[r'$type'] as String;
 }
 
@@ -716,12 +679,8 @@ Map<String, dynamic> _$DataTypeMeasureToJson(DataTypeMeasure instance) {
 PhoneSensorMeasure _$PhoneSensorMeasureFromJson(Map<String, dynamic> json) {
   return PhoneSensorMeasure()
     ..$type = json[r'$type'] as String
-    ..type = json['type'] == null
-        ? null
-        : DataType.fromJson(json['type'] as Map<String, dynamic>)
-    ..duration = json['duration'] == null
-        ? null
-        : CarpTime.fromJson(json['duration'] as Map<String, dynamic>);
+    ..type = json['type'] as String
+    ..duration = json['duration'] as int;
 }
 
 Map<String, dynamic> _$PhoneSensorMeasureToJson(PhoneSensorMeasure instance) {
@@ -737,23 +696,6 @@ Map<String, dynamic> _$PhoneSensorMeasureToJson(PhoneSensorMeasure instance) {
 
   writeNotNull('type', instance.type);
   writeNotNull('duration', instance.duration);
-  return val;
-}
-
-CarpTime _$CarpTimeFromJson(Map<String, dynamic> json) {
-  return CarpTime()..microseconds = json['microseconds'] as int;
-}
-
-Map<String, dynamic> _$CarpTimeToJson(CarpTime instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('microseconds', instance.microseconds);
   return val;
 }
 
@@ -1042,13 +984,11 @@ TimeOfDay _$TimeOfDayFromJson(Map<String, dynamic> json) {
     hour: json['hour'] as int,
     minute: json['minute'] as int,
     second: json['second'] as int,
-  )..$type = json[r'$type'] as String;
+  );
 }
 
 Map<String, dynamic> _$TimeOfDayToJson(TimeOfDay instance) {
-  final val = <String, dynamic>{
-    r'$type': instance.$type,
-  };
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -1069,13 +1009,11 @@ RecurrenceRule _$RecurrenceRuleFromJson(Map<String, dynamic> json) {
     end: json['end'] == null
         ? null
         : End.fromJson(json['end'] as Map<String, dynamic>),
-  )..$type = json[r'$type'] as String;
+  );
 }
 
 Map<String, dynamic> _$RecurrenceRuleToJson(RecurrenceRule instance) {
-  final val = <String, dynamic>{
-    r'$type': instance.$type,
-  };
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -1087,6 +1025,38 @@ Map<String, dynamic> _$RecurrenceRuleToJson(RecurrenceRule instance) {
   writeNotNull('interval', instance.interval);
   writeNotNull('end', instance.end);
   return val;
+}
+
+T _$enumDecode<T>(
+  Map<T, dynamic> enumValues,
+  dynamic source, {
+  T unknownValue,
+}) {
+  if (source == null) {
+    throw ArgumentError('A value must be provided. Supported values: '
+        '${enumValues.values.join(', ')}');
+  }
+
+  final value = enumValues.entries
+      .singleWhere((e) => e.value == source, orElse: () => null)
+      ?.key;
+
+  if (value == null && unknownValue == null) {
+    throw ArgumentError('`$source` is not one of the supported values: '
+        '${enumValues.values.join(', ')}');
+  }
+  return value ?? unknownValue;
+}
+
+T _$enumDecodeNullable<T>(
+  Map<T, dynamic> enumValues,
+  dynamic source, {
+  T unknownValue,
+}) {
+  if (source == null) {
+    return null;
+  }
+  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
 }
 
 const _$FrequencyEnumMap = {
@@ -1106,13 +1076,11 @@ End _$EndFromJson(Map<String, dynamic> json) {
         ? null
         : Duration(microseconds: json['elapsedTime'] as int),
     count: json['count'] as int,
-  )..$type = json[r'$type'] as String;
+  );
 }
 
 Map<String, dynamic> _$EndToJson(End instance) {
-  final val = <String, dynamic>{
-    r'$type': instance.$type,
-  };
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -1131,3 +1099,14 @@ const _$EndTypeEnumMap = {
   EndType.COUNT: 'COUNT',
   EndType.NEVER: 'NEVER',
 };
+
+SamplingConfiguration _$SamplingConfigurationFromJson(
+    Map<String, dynamic> json) {
+  return SamplingConfiguration()..$type = json[r'$type'] as String;
+}
+
+Map<String, dynamic> _$SamplingConfigurationToJson(
+        SamplingConfiguration instance) =>
+    <String, dynamic>{
+      r'$type': instance.$type,
+    };

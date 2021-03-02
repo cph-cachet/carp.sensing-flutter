@@ -7,7 +7,17 @@
 part of carp_core;
 
 /// Contains configuration on how to sample a data stream of a given type.
-abstract class SamplingConfiguration {}
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class SamplingConfiguration extends Serializable {
+  SamplingConfiguration() : super();
+  Function get fromJsonFunction => _$SamplingConfigurationFromJson;
+  factory SamplingConfiguration.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$SamplingConfigurationToJson(this);
+  String get jsonType =>
+      'dk.cachet.carp.protocols.domain.sampling.SamplingConfiguration';
+}
 
 ///Specifies the sampling scheme for a [DataType], including possible options,
 ///defaults, and constraints.

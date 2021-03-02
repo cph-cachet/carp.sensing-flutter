@@ -88,10 +88,7 @@ class ScheduledTrigger extends Trigger {
   TimeOfDay time;
   RecurrenceRule recurrenceRule;
 
-  ScheduledTrigger({this.time, this.recurrenceRule}) : super() {
-    // TODO: implement ScheduledTrigger
-    throw UnimplementedError();
-  }
+  ScheduledTrigger({this.time, this.recurrenceRule}) : super();
 
   Function get fromJsonFunction => _$ScheduledTriggerFromJson;
   factory ScheduledTrigger.fromJson(Map<String, dynamic> json) =>
@@ -107,7 +104,7 @@ class ScheduledTrigger extends Trigger {
 /// Follows the conventions in the [DartTime] class, but only uses the Time
 /// part in a 24 hour time format.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class TimeOfDay extends Serializable {
+class TimeOfDay {
   /// 24 hour format.
   int hour;
   int minute;
@@ -117,11 +114,9 @@ class TimeOfDay extends Serializable {
 
   static String _twoDigits(int n) => (n >= 10) ? '$n' : '0$n';
 
-  Function get fromJsonFunction => _$TimeOfDayFromJson;
-  factory TimeOfDay.fromJson(Map<String, dynamic> json) => FromJsonFactory()
-      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory TimeOfDay.fromJson(Map<String, dynamic> json) =>
+      _$TimeOfDayFromJson(json);
   Map<String, dynamic> toJson() => _$TimeOfDayToJson(this);
-  String get jsonType => 'dk.cachet.carp.common.TimeOfDay';
 
   /// Output as ISO 8601 extended time format with seconds accuracy, omitting
   /// the 24th hour and 60th leap second. E.g., "09:30:00".
@@ -135,7 +130,7 @@ class TimeOfDay extends Serializable {
 /// However, since date times are relative to the start time of a study,
 /// they are replaced with time spans representing elapsed time since the start of the study.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class RecurrenceRule extends Serializable {
+class RecurrenceRule {
   /// Specifies the type of interval at which to repeat events, or multiples thereof.
   Frequency frequency;
 
@@ -170,12 +165,9 @@ class RecurrenceRule extends Serializable {
     return rule;
   }
 
-  Function get fromJsonFunction => _$RecurrenceRuleFromJson;
   factory RecurrenceRule.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      _$RecurrenceRuleFromJson(json);
   Map<String, dynamic> toJson() => _$RecurrenceRuleToJson(this);
-  String get jsonType => 'dk.cachet.carp.common.RecurrenceRule';
 }
 
 /// Specify repeating events based on an interval of a chosen type or multiples thereof.
@@ -184,7 +176,7 @@ enum Frequency { SECONDLY, MINUTELY, HOURLY, DAILY, WEEKLY, MONTHLY, YEARLY }
 enum EndType { UNTIL, COUNT, NEVER }
 
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class End extends Serializable {
+class End {
   final EndType type;
   final Duration elapsedTime;
   final int count;
@@ -203,9 +195,6 @@ class End extends Serializable {
   /// The recurrence repeats forever.
   factory End.never() => End(EndType.NEVER);
 
-  Function get fromJsonFunction => _$EndFromJson;
-  factory End.fromJson(Map<String, dynamic> json) => FromJsonFactory()
-      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory End.fromJson(Map<String, dynamic> json) => _$EndFromJson(json);
   Map<String, dynamic> toJson() => _$EndToJson(this);
-  String get jsonType => 'dk.cachet.carp.common.End';
 }

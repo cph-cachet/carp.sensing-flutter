@@ -123,18 +123,16 @@ class StudyDeploymentStatus extends Serializable {
   /// The list of all devices part of this study deployment and their status.
   List<DeviceDeploymentStatus> devicesStatus;
 
-  /// The time (milliseconds since epoc) when the study deployment was ready
-  /// for the first time (all devices deployed).
-  int startTime;
-
-  /// The time when the study deployment was ready (all devices deployed).
-  DateTime get startDateTime => DateTime.fromMillisecondsSinceEpoch(startTime);
+  /// The time when the study deployment was ready for the first
+  /// time (all devices deployed); null otherwise.
+  DateTime startTime;
 
   /// Get the status of this device deployment:
   /// * Invited
   /// * DeployingDevices
   /// * DeploymentReady
   /// * Stopped
+  @JsonKey(ignore: true)
   StudyDeploymentStatusTypes get status {
     // if this object has been created locally, then we know the status
     if ($type == runtimeType) return _status;
