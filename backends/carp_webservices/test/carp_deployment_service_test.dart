@@ -54,6 +54,7 @@ void main() {
           await CarpService().invitations();
       invitations.forEach((invitation) => print(invitation));
       assert(invitations.length > 0);
+      print(_encode(invitations));
     }, skip: false);
 
     test('- get deployment status', () async {
@@ -62,6 +63,7 @@ void main() {
       print(_encode(status.toJson()));
       print(status);
       print(status.masterDeviceStatus.device);
+      print(_encode(status));
       expect(status.studyDeploymentId, testDeploymentId);
     }, skip: false);
 

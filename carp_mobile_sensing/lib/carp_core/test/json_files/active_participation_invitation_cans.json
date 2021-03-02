@@ -1,0 +1,17 @@
+{
+    "participation": {
+     "studyDeploymentId": "208b2069-992b-4ff5-916f-3de570c8b1bd",
+     "id": "44fcd7f1-75de-441f-92d9-1748a3433973"
+    },
+    "invitation": {
+     "name": "iPDM-GO-DK pilotundersøgelse",
+     "description": "Afprøvning af et nyt digitalt værktøj til håndtering af type 2 diabetes: iPDM-GO-DK-projektet",
+     "applicationData": "294a5748-d8fa-4617-b475-99c6980032c8"
+    },
+    "devices": [
+     {
+      "deviceRoleName": "Stub master device",
+      "isRegistered": false
+     }
+    ]
+   }
