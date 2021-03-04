@@ -15,7 +15,7 @@ class LocalDeploymentService implements DeploymentService {
   final Map<String, StudyDeployment> _repository = {};
 
   @override
-  Future initialize() {}
+  Future<void> initialize() {}
 
   Future<StudyDeploymentStatus> createStudyDeployment(
       StudyProtocol protocol) async {
