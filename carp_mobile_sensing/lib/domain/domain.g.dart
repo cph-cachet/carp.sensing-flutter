@@ -6,8 +6,8 @@ part of domain;
 // JsonSerializableGenerator
 // **************************************************************************
 
-CAMSStudyProtocol _$CAMSStudyProtocolFromJson(Map<String, dynamic> json) {
-  return CAMSStudyProtocol(
+SensingStudyProtocol _$CAMSStudyProtocolFromJson(Map<String, dynamic> json) {
+  return SensingStudyProtocol(
     owner: json['owner'] == null
         ? null
         : ProtocolOwner.fromJson(json['owner'] as Map<String, dynamic>),
@@ -50,7 +50,7 @@ CAMSStudyProtocol _$CAMSStudyProtocolFromJson(Map<String, dynamic> json) {
     ..ownerId = json['ownerId'] as String;
 }
 
-Map<String, dynamic> _$CAMSStudyProtocolToJson(CAMSStudyProtocol instance) {
+Map<String, dynamic> _$CAMSStudyProtocolToJson(SensingStudyProtocol instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {

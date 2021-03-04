@@ -9,62 +9,66 @@ part of managers;
 
 /// A local (in-memory) implementation of a [DeploymentService].
 class LocalDeploymentService implements DeploymentService {
-  final Map<String, StudyDeployment> repository = {};
+  /// A default rolename for this master phone device.
+  static final String DEFAULT_MASTER_DEVICE_ROLENAME = 'phone';
+
+  final Map<String, StudyDeployment> _repository = {};
 
   @override
-  Future initialize() {
-    // TODO: implement initialize
-    throw UnimplementedError();
-  }
+  Future initialize() {}
 
   Future<StudyDeploymentStatus> createStudyDeployment(
       StudyProtocol protocol) async {
     StudyDeployment deployment = StudyDeployment(protocol);
-    repository[deployment.studyDeploymentId] = deployment;
+    _repository[deployment.studyDeploymentId] = deployment;
     return deployment.status;
   }
 
   @override
   Future<StudyDeploymentStatus> deploymentSuccessful(
-    String studyDeploymentId, {
-    String masterDeviceRoleName,
+    String studyDeploymentId,
+    String masterDeviceRoleName, {
     DateTime deviceDeploymentLastUpdateDate,
-  }) {
-    // TODO: implement deploymentSuccessful
-    throw UnimplementedError();
+  }) async {
+    masterDeviceRoleName ??= DEFAULT_MASTER_DEVICE_ROLENAME;
+    deviceDeploymentLastUpdateDate ??= DateTime.now();
+
+    StudyDeployment deployment = _repository[studyDeploymentId];
+    DeviceDescriptor device = deployment.registeredDevices.keys.firstWhere(
+        (descriptor) => descriptor.roleName == masterDeviceRoleName);
+
+    deployment.deviceDeployed(device, deviceDeploymentLastUpdateDate);
+
+    return deployment.status;
   }
 
   @override
   Future<MasterDeviceDeployment> getDeviceDeploymentFor(
-      String studyDeploymentId,
-      {String masterDeviceRoleName}) {
-    // TODO: implement getDeviceDeploymentFor
-    throw UnimplementedError();
+      String studyDeploymentId, String masterDeviceRoleName) async {
+    masterDeviceRoleName ??= DEFAULT_MASTER_DEVICE_ROLENAME;
+    StudyDeployment deployment = _repository[studyDeploymentId];
+    DeviceDescriptor device = deployment.registeredDevices.keys.firstWhere(
+        (descriptor) => descriptor.roleName == masterDeviceRoleName);
+
+    return deployment.getDeviceDeploymentFor(device);
   }
 
   Future<StudyDeploymentStatus> getStudyDeploymentStatus(
           String studyDeploymentId) async =>
-      repository[studyDeploymentId]?.status;
+      _repository[studyDeploymentId]?.status;
 
   @override
   Future<StudyDeploymentStatus> registerDevice(String studyDeploymentId,
       String deviceRoleName, DeviceRegistration registration) async {
-    StudyDeployment deployment = repository[studyDeploymentId];
+    StudyDeployment deployment = _repository[studyDeploymentId];
     DeviceDescriptor device = DeviceDescriptor();
     // TODO - inclde this
     // getRegistrableDevice(deployment, deviceRoleName).device;
 
-    // Early out when the device is already registered.
-    if (deployment.registeredDevices.contains(deviceRoleName))
-      return deployment.status;
-
-    // Register device and save/distribute changes.
-    deployment.registerDevice(device, registration);
-
-    // repository.update( deployment )
-    // val registered = DeploymentService.Event.DeviceRegistrationChanged( studyDeploymentId, device, registration )
-    // eventBus.publish( registered )
-
+    if (!deployment.registeredDevices.values.contains(deviceRoleName)) {
+      // If not alreadu registered, register device
+      deployment.registerDevice(device, registration);
+    }
     return deployment.status;
   }
 
@@ -72,8 +76,8 @@ class LocalDeploymentService implements DeploymentService {
       Set<String> studyDeploymentIds) async {
     Set<String> removedKeys = {};
     studyDeploymentIds.forEach((key) {
-      if (repository.containsKey(key)) {
-        repository.remove(key);
+      if (_repository.containsKey(key)) {
+        _repository.remove(key);
         removedKeys.add(key);
       }
     });
@@ -92,10 +96,4 @@ class LocalDeploymentService implements DeploymentService {
     // TODO: implement unregisterDevice
     throw UnimplementedError();
   }
-
-  //   RegistrableDevice _getRegistrableDevice( StudyDeployment deployment , String deviceRoleName)
-  // {
-  //     return deployment.registrableDevices.firstOrNull { it.device.roleName == deviceRoleName }
-  //         ?: throw IllegalArgumentException( "A device with the role name '$deviceRoleName' could not be found in the study deployment." )
-  // }
 }

@@ -17,29 +17,32 @@ part of carp_core;
 class StudyDeployment {
   String _studyDeploymentId;
   DateTime _creationDate;
-  final StudyProtocol _studyProtocol;
-  Set<String> _registeredDevices;
-  Map<String, List<DeviceRegistration>> _deviceRegistrationHistory;
-  Set<String> _deployedDevices;
-  Set<String> _invalidatedDeployedDevices;
+  final StudyProtocol _protocol;
+  final Map<DeviceDescriptor, DeviceRegistration> _registeredDevices = {};
+  final Map<DeviceDescriptor, List<DeviceRegistration>>
+      _deviceRegistrationHistory = {};
+  final Set<DeviceDescriptor> _deployedDevices = {};
+  final Set<DeviceDescriptor> _invalidatedDeployedDevices = {};
   DateTime _startTime;
   bool _isStopped = false;
 
   String get studyDeploymentId => _studyDeploymentId;
   DateTime get creationDate => _creationDate;
-  StudyProtocol get studyProtocol => _studyProtocol;
+  StudyProtocol get protocol => _protocol;
 
   /// The set of devices which are currently registered for this study deployment.
-  Set<String> get registeredDevices => _registeredDevices;
+  Map<DeviceDescriptor, DeviceRegistration> get registeredDevices =>
+      _registeredDevices;
 
   /// Per device, a list of all device registrations (included old registrations)
   /// in the order they were registered.
-  Map<String, List<DeviceRegistration>> get deviceRegistrationHistory =>
-      _deviceRegistrationHistory;
+  Map<DeviceDescriptor, List<DeviceRegistration>>
+      get deviceRegistrationHistory => _deviceRegistrationHistory;
 
   /// The set of devices which have been deployed correctly.
-  Set<String> get deployedDevices => _deployedDevices;
-  Set<String> get invalidatedDeployedDevices => _invalidatedDeployedDevices;
+  Set<DeviceDescriptor> get deployedDevices => _deployedDevices;
+  Set<DeviceDescriptor> get invalidatedDeployedDevices =>
+      _invalidatedDeployedDevices;
 
   ///The time when the study deployment was ready for the first
   ///time (all devices deployed); null otherwise.
@@ -49,8 +52,8 @@ class StudyDeployment {
   /// further modifications are allowed.
   bool get isStopped => _isStopped;
 
-  StudyDeployment(this._studyProtocol) {
-    assert(_studyProtocol != null,
+  StudyDeployment(this._protocol) {
+    assert(_protocol != null,
         'Cannot create a StudyDeployment without a protocol.');
     _studyDeploymentId = Uuid().v1();
     _creationDate = DateTime.now();
@@ -65,29 +68,84 @@ class StudyDeployment {
     status.devicesStatus = [];
 
     // TODO - check that all devices are ready, before setting the overall status
-    status.status = StudyDeploymentStatusTypes.DeploymentReady;
+
+    status.status = (isStopped)
+        ? StudyDeploymentStatusTypes.Stopped
+        : StudyDeploymentStatusTypes.DeploymentReady;
 
     return status;
   }
 
-  /// Register the specified [device] for this deployment using the [registration] options.
+  /// Register the specified [device] for this deployment using the [registration]
+  /// options.
   void registerDevice(
       DeviceDescriptor device, DeviceRegistration registration) {
-    // TODO: implement registerDevice
-    throw UnimplementedError();
+    // Add device to currently registered devices and also store it in registration history.
+    _registeredDevices[device] = registration;
+    if (_deviceRegistrationHistory[device] == null)
+      _deviceRegistrationHistory[device] = [];
+    _deviceRegistrationHistory[device].add(registration);
   }
 
   /// Remove the current device registration for the [device] in this deployment.
-  /// This will invalidate the deployment of any devices which depend on the this [device].
   void unregisterDevice(DeviceDescriptor device) {
-    // TODO: implement unregisterDevice
-    throw UnimplementedError();
+    _registeredDevices.remove(device);
+    _deployedDevices.remove(device);
   }
 
-  /// Get the deployment configuration for the specified [device] in this study deployment.
+  /// Get the deployment configuration for the specified master [device] in
+  /// this study deployment.
   MasterDeviceDeployment getDeviceDeploymentFor(MasterDeviceDescriptor device) {
-    // TODO: implement getDeviceDeploymentFor
-    throw UnimplementedError();
+    // Verify whether the specified device is part of the protocol of this deployment.
+    assert(_protocol.masterDevices.contains(device),
+        "The specified master device is not part of the protocol of this deployment.");
+
+    // TODO - Verify whether the specified device is ready to be deployed.
+    DeviceRegistration configuration = _registeredDevices[device];
+
+    // Determine which devices this device needs to connect to
+    // TODO - retrieve configuration for preregistered devices
+    List<DeviceDescriptor> connectedDevices = _protocol.connectedDevices;
+
+    Map<String, DeviceRegistration> deviceRegistrations = {};
+    _registeredDevices.forEach((descriptor, registration) =>
+        deviceRegistrations[descriptor.roleName] = registration);
+
+    // Get all tasks which might need to be executed on this or connected devices.
+    List<TaskDescriptor> tasks = [];
+    connectedDevices.forEach(
+        (descriptor) => tasks.addAll(protocol.getTasksForDevice(descriptor)));
+
+    // Get all trigger information for this and connected devices.
+    // TODO - The trigger IDs assigned by snapshot are reused to identify them within the protocol.
+    int index = 0;
+    Map<String, Trigger> usedTriggers = {};
+    _protocol.triggers
+        .forEach((trigger) => usedTriggers['${++index}'] = trigger);
+
+    List<TriggeredTask> triggeredTasks = _protocol.triggeredTasks;
+
+    return MasterDeviceDeployment(
+        deviceDescriptor: device,
+        configuration: configuration,
+        connectedDevices: connectedDevices,
+        connectedDeviceConfigurations: deviceRegistrations,
+        tasks: tasks,
+        triggers: usedTriggers,
+        triggeredTasks: triggeredTasks)
+      .._protocol = _protocol;
+  }
+
+  /// Indicate that the specified [device] was deployed successfully using
+  /// the deployment with the specified [deviceDeploymentLastUpdateDate].
+  void deviceDeployed(
+    MasterDeviceDescriptor device,
+    DateTime deviceDeploymentLastUpdateDate,
+  ) {
+    assert(_protocol.masterDevices.contains(device),
+        'The specified master device is not part of the protocol of this deployment.');
+
+    _startTime = deviceDeploymentLastUpdateDate;
   }
 
   /// Stop this study deployment. No further changes to this deployment

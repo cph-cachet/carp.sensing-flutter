@@ -11,7 +11,10 @@ part of carp_core;
 /// device participates in running a study.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class MasterDeviceDeployment {
-  MasterDeviceDeployment() : super();
+  StudyProtocol _protocol;
+
+  /// The original [StudyProtocol] behind this deployment.
+  StudyProtocol get protocol => _protocol;
 
   // The descriptor for the master device this deployment is intended for.
   MasterDeviceDescriptor deviceDescriptor;
@@ -43,6 +46,18 @@ class MasterDeviceDeployment {
   /// device deployment.
   DateTime lastUpdateDate;
 
+  MasterDeviceDeployment({
+    this.deviceDescriptor,
+    this.configuration,
+    this.connectedDevices,
+    this.connectedDeviceConfigurations,
+    this.tasks,
+    this.triggers,
+    this.triggeredTasks,
+  }) {
+    this.lastUpdateDate = DateTime.now();
+  }
+
   factory MasterDeviceDeployment.fromJson(Map<String, dynamic> json) =>
       _$MasterDeviceDeploymentFromJson(json);
   Map<String, dynamic> toJson() => _$MasterDeviceDeploymentToJson(this);
@@ -54,6 +69,15 @@ class MasterDeviceDeployment {
 /// deployment of a [StudyProtocol].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class DeviceRegistration extends Serializable {
+  /// The registration time in zulu time.
+  DateTime registrationCreationDate;
+
+  /// An ID for the device, used to disambiguate between devices of the same type,
+  /// as provided by the device itself.
+  /// It is up to specific types of devices to guarantee uniqueness across all
+  /// devices of the same type.
+  String deviceId;
+
   /// Create a new [DeviceRegistration]
   ///  * [deviceId] - a unique id for this device.
   ///    If not specified, a unique id will be generated.
@@ -63,15 +87,6 @@ class DeviceRegistration extends Serializable {
     registrationCreationDate ??= DateTime.now().toUtc();
     deviceId ??= Uuid().v1();
   }
-
-  /// The registration time in zulu time.
-  DateTime registrationCreationDate;
-
-  /// An ID for the device, used to disambiguate between devices of the same type,
-  /// as provided by the device itself.
-  /// It is up to specific types of devices to guarantee uniqueness across all
-  /// devices of the same type.
-  String deviceId;
 
   Function get fromJsonFunction => _$DeviceRegistrationFromJson;
   factory DeviceRegistration.fromJson(Map<String, dynamic> json) =>

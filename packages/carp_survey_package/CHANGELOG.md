@@ -1,3 +1,6 @@
+## 0.12.2
+* upgrade to `research_package` v. 0.4.x
+
 ## 0.12.1
 * support for canceling a survey
 

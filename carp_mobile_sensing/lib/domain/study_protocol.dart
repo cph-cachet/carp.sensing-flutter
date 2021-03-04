@@ -7,9 +7,9 @@
 
 part of domain;
 
-/// A description of how a study is to be executed.
+/// A description of how a study is to be executed as part of CAMS.
 ///
-/// A [StudyProtocol] defining the master device ([MasterDeviceDescriptor])
+/// A [SensingStudyProtocol] defining the master device ([MasterDeviceDescriptor])
 /// responsible for aggregating data (typically this phone), the optional
 /// devices ([DeviceDescriptor]) connected to the master device,
 /// and the [Trigger]'s which lead to data collection on said devices.
@@ -21,7 +21,7 @@ part of domain;
 /// Data from the study is uploaded to the specified [DataEndPoint] in the
 /// specified [dataFormat].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class CAMSStudyProtocol extends StudyProtocol {
+class SensingStudyProtocol extends StudyProtocol {
   /// A longer printer-friendly title for this study.
   String title;
 
@@ -46,13 +46,12 @@ class CAMSStudyProtocol extends StudyProtocol {
 
   /// The [masterDevice] which is responsible for aggregating and synchronizing
   /// incoming data. Typically this phone.
-  MasterDeviceDescriptor get masterDevice =>
-      masterDevices.first as MasterDeviceDescriptor;
+  MasterDeviceDescriptor get masterDevice => masterDevices.first;
 
   /// Create a new [StudyProtocol].
   ///
   /// If no [dataFormat] the CARP namespace is used.
-  CAMSStudyProtocol({
+  SensingStudyProtocol({
     this.owner,
     String name,
     this.title,
@@ -85,7 +84,7 @@ class CAMSStudyProtocol extends StudyProtocol {
   }
 
   Function get fromJsonFunction => _$CAMSStudyProtocolFromJson;
-  factory CAMSStudyProtocol.fromJson(Map<String, dynamic> json) =>
+  factory SensingStudyProtocol.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory()
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$CAMSStudyProtocolToJson(this);

@@ -45,15 +45,14 @@ abstract class DeploymentService {
   /// Get the deployment configuration for the master device with
   /// [masterDeviceRoleName] in the study deployment with [studyDeploymentId].
   Future<MasterDeviceDeployment> getDeviceDeploymentFor(
-      String studyDeploymentId,
-      {String masterDeviceRoleName});
+      String studyDeploymentId, String masterDeviceRoleName);
 
   /// Indicate to stakeholders in the study deployment with [studyDeploymentId] that the device with [masterDeviceRoleName] was deployed successfully,
   /// using the deployment with the specified [deviceDeploymentLastUpdateDate],
   /// i.e., that the study deployment was loaded on the device and that the necessary runtime is available to run it.
   Future<StudyDeploymentStatus> deploymentSuccessful(
-    String studyDeploymentId, {
-    String masterDeviceRoleName,
+    String studyDeploymentId,
+    String masterDeviceRoleName, {
     DateTime deviceDeploymentLastUpdateDate,
   });
 
