@@ -14,9 +14,6 @@ part of carp_core;
 /// See [FileDeploymentService] for an implementation which can load and save
 /// study json configurations on the local file system.
 abstract class DeploymentService {
-  /// Initialize the deployment service.
-  Future initialize();
-
   /// Instantiate a study deployment for a given [StudyProtocolSnapshot].
   Future<StudyDeploymentStatus> createStudyDeployment(StudyProtocol protocol);
 

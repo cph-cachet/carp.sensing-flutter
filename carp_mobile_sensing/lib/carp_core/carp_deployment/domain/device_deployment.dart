@@ -11,11 +11,6 @@ part of carp_core;
 /// device participates in running a study.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class MasterDeviceDeployment {
-  StudyProtocol _protocol;
-
-  /// The original [StudyProtocol] behind this deployment.
-  StudyProtocol get protocol => _protocol;
-
   // The descriptor for the master device this deployment is intended for.
   MasterDeviceDescriptor deviceDescriptor;
 

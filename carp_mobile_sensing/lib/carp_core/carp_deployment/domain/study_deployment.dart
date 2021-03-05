@@ -132,8 +132,7 @@ class StudyDeployment {
         connectedDeviceConfigurations: deviceRegistrations,
         tasks: tasks,
         triggers: usedTriggers,
-        triggeredTasks: triggeredTasks)
-      .._protocol = _protocol;
+        triggeredTasks: triggeredTasks);
   }
 
   /// Indicate that the specified [device] was deployed successfully using

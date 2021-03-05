@@ -54,9 +54,12 @@ void main() {
 
     // Define what needs to be measured, on which device, when.
     List<Measure> measures = [
-      DataTypeMeasure(type: DataType(NameSpace.CARP, 'light')),
-      DataTypeMeasure(type: DataType(NameSpace.CARP, 'gps')),
-      DataTypeMeasure(type: DataType(NameSpace.CARP, 'steps')),
+      Measure(type: DataType(NameSpace.CARP, 'light').toString()),
+      DataTypeMeasure(type: DataType(NameSpace.CARP, 'gps').toString()),
+      PhoneSensorMeasure(
+        type: DataType(NameSpace.CARP, 'steps').toString(),
+        duration: 10,
+      ),
     ];
 
     ConcurrentTask task = ConcurrentTask(name: "Start measures")
@@ -66,6 +69,19 @@ void main() {
     print(protocol);
     print(_encode(protocol));
     expect(protocol.ownerId, 'jakba@dtu.dk');
+  });
+
+  test('JSON -> StudyProtocol', () async {
+    // Read the study protocol from json file
+    String plainJson =
+        File('lib/carp_core/test/json_files/study_1.json').readAsStringSync();
+
+    StudyProtocol protocol =
+        StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
+
+    expect(protocol.ownerId, 'jakba@dtu.dk');
+    expect(protocol.masterDevices.first.roleName, 'masterphone');
+    print(_encode(protocol));
   });
 
   test('DataPoint -> JSON', () async {

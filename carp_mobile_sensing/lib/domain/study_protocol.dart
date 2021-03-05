@@ -9,7 +9,7 @@ part of domain;
 
 /// A description of how a study is to be executed as part of CAMS.
 ///
-/// A [SensingStudyProtocol] defining the master device ([MasterDeviceDescriptor])
+/// A [CAMSStudyProtocol] defining the master device ([MasterDeviceDescriptor])
 /// responsible for aggregating data (typically this phone), the optional
 /// devices ([DeviceDescriptor]) connected to the master device,
 /// and the [Trigger]'s which lead to data collection on said devices.
@@ -21,7 +21,10 @@ part of domain;
 /// Data from the study is uploaded to the specified [DataEndPoint] in the
 /// specified [dataFormat].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class SensingStudyProtocol extends StudyProtocol {
+class CAMSStudyProtocol extends StudyProtocol {
+  /// A unique id for this study, generated when created.
+  String studyId;
+
   /// A longer printer-friendly title for this study.
   String title;
 
@@ -51,20 +54,19 @@ class SensingStudyProtocol extends StudyProtocol {
   /// Create a new [StudyProtocol].
   ///
   /// If no [dataFormat] the CARP namespace is used.
-  SensingStudyProtocol({
+  CAMSStudyProtocol({
     this.owner,
     String name,
     this.title,
     String description,
     this.purpose,
-    this.samplingStrategy,
+    this.samplingStrategy = SamplingSchemaType.normal,
     this.dataEndPoint,
-    this.dataFormat,
+    this.dataFormat = NameSpace.CARP,
   }) : super() {
+    studyId = Uuid().v1();
     super.name = name;
     super.description = description;
-    samplingStrategy ??= SamplingSchemaType.normal;
-    dataFormat ??= NameSpace.CARP;
   }
 
   /// Get the list of all [Mesure]s in this study protocol.
@@ -84,7 +86,7 @@ class SensingStudyProtocol extends StudyProtocol {
   }
 
   Function get fromJsonFunction => _$CAMSStudyProtocolFromJson;
-  factory SensingStudyProtocol.fromJson(Map<String, dynamic> json) =>
+  factory CAMSStudyProtocol.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory()
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$CAMSStudyProtocolToJson(this);

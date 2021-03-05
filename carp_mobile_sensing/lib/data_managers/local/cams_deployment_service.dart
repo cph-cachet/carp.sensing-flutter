@@ -7,15 +7,13 @@
 
 part of managers;
 
-/// A local (in-memory) implementation of a [DeploymentService].
-class LocalDeploymentService implements DeploymentService {
+/// A local (in-memory) implementation of a [DeploymentService] useful in
+/// CAMS studies to be deployed locally on the phone.
+class CAMSDeploymentService implements DeploymentService {
   /// A default rolename for this master phone device.
   static final String DEFAULT_MASTER_DEVICE_ROLENAME = 'phone';
 
   final Map<String, StudyDeployment> _repository = {};
-
-  @override
-  Future<void> initialize() {}
 
   Future<StudyDeploymentStatus> createStudyDeployment(
       StudyProtocol protocol) async {
@@ -43,14 +41,30 @@ class LocalDeploymentService implements DeploymentService {
   }
 
   @override
-  Future<MasterDeviceDeployment> getDeviceDeploymentFor(
+  Future<CAMSMasterDeviceDeployment> getDeviceDeploymentFor(
       String studyDeploymentId, String masterDeviceRoleName) async {
     masterDeviceRoleName ??= DEFAULT_MASTER_DEVICE_ROLENAME;
     StudyDeployment deployment = _repository[studyDeploymentId];
     DeviceDescriptor device = deployment.registeredDevices.keys.firstWhere(
         (descriptor) => descriptor.roleName == masterDeviceRoleName);
 
-    return deployment.getDeviceDeploymentFor(device);
+    MasterDeviceDeployment deviceDeployment =
+        deployment.getDeviceDeploymentFor(device);
+
+    CAMSStudyProtocol protocol = (deployment.protocol is CAMSStudyProtocol)
+        ? deployment.protocol as CAMSStudyProtocol
+        : null;
+
+    return CAMSMasterDeviceDeployment.fromMasterDeviceDeployment(
+      studyId: '',
+      studyDeploymentId: studyDeploymentId,
+      name: deployment.protocol.name,
+      title: protocol.title ?? '',
+      description: deployment.protocol.description,
+      purpose: protocol.purpose ?? '',
+      owner: protocol.owner ?? null,
+      masterDeviceDeployment: deviceDeployment,
+    );
   }
 
   Future<StudyDeploymentStatus> getStudyDeploymentStatus(
@@ -61,12 +75,14 @@ class LocalDeploymentService implements DeploymentService {
   Future<StudyDeploymentStatus> registerDevice(String studyDeploymentId,
       String deviceRoleName, DeviceRegistration registration) async {
     StudyDeployment deployment = _repository[studyDeploymentId];
-    DeviceDescriptor device = DeviceDescriptor();
-    // TODO - inclde this
-    // getRegistrableDevice(deployment, deviceRoleName).device;
 
-    if (!deployment.registeredDevices.values.contains(deviceRoleName)) {
-      // If not alreadu registered, register device
+    // check if already registered
+    DeviceDescriptor device = deployment.registeredDevices.keys
+        .firstWhere((descriptor) => descriptor.roleName == deviceRoleName);
+
+    if (device == null) {
+      // If not already registered, register device
+      device ??= DeviceDescriptor(roleName: deviceRoleName);
       deployment.registerDevice(device, registration);
     }
     return deployment.status;
@@ -85,15 +101,21 @@ class LocalDeploymentService implements DeploymentService {
   }
 
   @override
-  Future<StudyDeploymentStatus> stop(String studyDeploymentId) {
-    // TODO: implement stop
-    throw UnimplementedError();
+  Future<StudyDeploymentStatus> stop(String studyDeploymentId) async {
+    StudyDeployment deployment = _repository[studyDeploymentId];
+    deployment.stop();
+    return deployment.status;
   }
 
   @override
   Future<StudyDeploymentStatus> unregisterDevice(
-      String studyDeploymentId, String deviceRoleName) {
-    // TODO: implement unregisterDevice
-    throw UnimplementedError();
+      String studyDeploymentId, String deviceRoleName) async {
+    StudyDeployment deployment = _repository[studyDeploymentId];
+    DeviceDescriptor device = deployment.registeredDevices.keys
+        .firstWhere((descriptor) => descriptor.roleName == deviceRoleName);
+
+    deployment.unregisterDevice(device);
+
+    return deployment.status;
   }
 }

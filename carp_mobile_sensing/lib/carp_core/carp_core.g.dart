@@ -125,45 +125,45 @@ Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{};
 
 MasterDeviceDeployment _$MasterDeviceDeploymentFromJson(
     Map<String, dynamic> json) {
-  return MasterDeviceDeployment()
-    ..deviceDescriptor = json['deviceDescriptor'] == null
+  return MasterDeviceDeployment(
+    deviceDescriptor: json['deviceDescriptor'] == null
         ? null
         : MasterDeviceDescriptor.fromJson(
-            json['deviceDescriptor'] as Map<String, dynamic>)
-    ..configuration = json['configuration'] == null
+            json['deviceDescriptor'] as Map<String, dynamic>),
+    configuration: json['configuration'] == null
         ? null
         : DeviceRegistration.fromJson(
-            json['configuration'] as Map<String, dynamic>)
-    ..connectedDevices = (json['connectedDevices'] as List)
+            json['configuration'] as Map<String, dynamic>),
+    connectedDevices: (json['connectedDevices'] as List)
         ?.map((e) => e == null
             ? null
             : DeviceDescriptor.fromJson(e as Map<String, dynamic>))
-        ?.toList()
-    ..connectedDeviceConfigurations =
+        ?.toList(),
+    connectedDeviceConfigurations:
         (json['connectedDeviceConfigurations'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(
           k,
           e == null
               ? null
               : DeviceRegistration.fromJson(e as Map<String, dynamic>)),
-    )
-    ..tasks = (json['tasks'] as List)
+    ),
+    tasks: (json['tasks'] as List)
         ?.map((e) => e == null
             ? null
             : TaskDescriptor.fromJson(e as Map<String, dynamic>))
-        ?.toList()
-    ..triggers = (json['triggers'] as Map<String, dynamic>)?.map(
+        ?.toList(),
+    triggers: (json['triggers'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(
           k, e == null ? null : Trigger.fromJson(e as Map<String, dynamic>)),
-    )
-    ..triggeredTasks = (json['triggeredTasks'] as List)
+    ),
+    triggeredTasks: (json['triggeredTasks'] as List)
         ?.map((e) => e == null
             ? null
             : TriggeredTask.fromJson(e as Map<String, dynamic>))
-        ?.toList()
-    ..lastUpdateDate = json['lastUpdateDate'] == null
-        ? null
-        : DateTime.parse(json['lastUpdateDate'] as String);
+        ?.toList(),
+  )..lastUpdateDate = json['lastUpdateDate'] == null
+      ? null
+      : DateTime.parse(json['lastUpdateDate'] as String);
 }
 
 Map<String, dynamic> _$MasterDeviceDeploymentToJson(
@@ -640,9 +640,7 @@ Map<String, dynamic> _$MeasureToJson(Measure instance) {
 
 DataTypeMeasure _$DataTypeMeasureFromJson(Map<String, dynamic> json) {
   return DataTypeMeasure(
-    type: json['type'] == null
-        ? null
-        : DataType.fromJson(json['type'] as Map<String, dynamic>),
+    type: json['type'] as String,
   )..$type = json[r'$type'] as String;
 }
 
@@ -663,12 +661,9 @@ Map<String, dynamic> _$DataTypeMeasureToJson(DataTypeMeasure instance) {
 
 PhoneSensorMeasure _$PhoneSensorMeasureFromJson(Map<String, dynamic> json) {
   return PhoneSensorMeasure(
-    type: json['type'] == null
-        ? null
-        : DataType.fromJson(json['type'] as Map<String, dynamic>),
-  )
-    ..$type = json[r'$type'] as String
-    ..duration = json['duration'] as int;
+    type: json['type'] as String,
+    duration: json['duration'] as int,
+  )..$type = json[r'$type'] as String;
 }
 
 Map<String, dynamic> _$PhoneSensorMeasureToJson(PhoneSensorMeasure instance) {
@@ -824,15 +819,7 @@ Map<String, dynamic> _$CustomProtocolTaskToJson(CustomProtocolTask instance) {
 }
 
 TriggeredTask _$TriggeredTaskFromJson(Map<String, dynamic> json) {
-  return TriggeredTask(
-    task: json['task'] == null
-        ? null
-        : TaskDescriptor.fromJson(json['task'] as Map<String, dynamic>),
-    targetDevice: json['targetDevice'] == null
-        ? null
-        : DeviceDescriptor.fromJson(
-            json['targetDevice'] as Map<String, dynamic>),
-  )
+  return TriggeredTask()
     ..triggerId = json['triggerId'] as int
     ..taskName = json['taskName'] as String
     ..destinationDeviceRoleName = json['destinationDeviceRoleName'] as String;
@@ -850,8 +837,6 @@ Map<String, dynamic> _$TriggeredTaskToJson(TriggeredTask instance) {
   writeNotNull('triggerId', instance.triggerId);
   writeNotNull('taskName', instance.taskName);
   writeNotNull('destinationDeviceRoleName', instance.destinationDeviceRoleName);
-  writeNotNull('task', instance.task);
-  writeNotNull('targetDevice', instance.targetDevice);
   return val;
 }
 

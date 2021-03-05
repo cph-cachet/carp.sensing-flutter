@@ -17,6 +17,7 @@ part 'study_protocol.dart';
 part 'sampling_schema.dart';
 part 'measures.dart';
 part 'device_descriptor.dart';
+part 'device_deployment.dart';
 part 'app_task.dart';
 part 'triggers.dart';
 part 'datum.dart';

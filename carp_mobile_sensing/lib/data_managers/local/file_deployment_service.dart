@@ -14,7 +14,7 @@ part of managers;
 ///
 ///   `carp/study/study-<study_id>.json`
 ///
-class FileDeploymentService extends LocalDeploymentService {
+class FileDeploymentService extends CAMSDeploymentService {
   /// The path to use on the device for storing CARP study files.
   static const String CARP_STUDY_FILE_PATH = 'carp/study';
 

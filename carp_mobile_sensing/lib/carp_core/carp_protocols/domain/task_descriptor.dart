@@ -111,8 +111,8 @@ class TriggeredTask {
 
   TriggeredTask({this.task, this.targetDevice}) : super() {
     this.triggerId = _counter++;
-    this.taskName = task.name;
-    this.destinationDeviceRoleName = targetDevice.roleName;
+    this.taskName = task?.name;
+    this.destinationDeviceRoleName = targetDevice?.roleName;
   }
 
   factory TriggeredTask.fromJson(Map<String, dynamic> json) =>
