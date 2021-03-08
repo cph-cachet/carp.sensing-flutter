@@ -8,12 +8,12 @@
 part of runtime;
 
 /// An abstract class used to implement executors.
-/// See [StudyExecutor] and [TaskExecutor] for examples.
+/// See [StudyDeploymentExecutor] and [TaskExecutor] for examples.
 abstract class Executor extends AbstractProbe {
   static final DeviceInfo deviceInfo = DeviceInfo();
-  final StreamGroup<Datum> _group = StreamGroup.broadcast();
+  final StreamGroup<DataPoint> _group = StreamGroup.broadcast();
   List<Probe> executors = [];
-  Stream<Datum> get events => _group.stream;
+  Stream<DataPoint> get events => _group.stream;
 
   Executor() : super();
 
@@ -40,53 +40,67 @@ abstract class Executor extends AbstractProbe {
 }
 
 // ---------------------------------------------------------------------------------------------------------
-// STUDY EXECUTOR
+// STUDY DEPLOYMENT EXECUTOR
 // ---------------------------------------------------------------------------------------------------------
 
-/// The [StudyExecutor] is responsible for executing the [StudyProtocol].
-/// For each trigger in this study, it starts a [TriggerExecutor].
+/// The [StudyDeploymentExecutor] is responsible for executing a [MasterDeviceDeployment].
+/// For each triggered task in this deployment, it starts a [TriggeredTaskExecutor].
 ///
-/// Note that the [StudyExecutor] in itself is a [Probe] and hence work as a 'super probe'.
-/// This - amongst other things - imply that you can listen to datum [events] from a study executor.
-class StudyExecutor extends Executor {
-  final StreamController<Datum> _manualDatumController =
+/// Note that the [StudyDeploymentExecutor] in itself is a [Probe] and hence work
+/// as a 'super probe'.
+/// This - amongst other things - imply that you can listen to data point
+/// [events] from a study executor.
+class StudyDeploymentExecutor extends Executor {
+  final StreamController<DataPoint> _manualDataPointController =
       StreamController.broadcast();
-  StudyProtocol get study => _study;
-  StudyProtocol _study;
+  MasterDeviceDeployment get deployment => _deployment;
+  MasterDeviceDeployment _deployment;
 
-  StudyExecutor(StudyProtocol study) : super() {
-    assert(study != null, 'Cannot initiate a StudyExecutor without a Study.');
-    _study = study;
-    _group.add(_manualDatumController.stream);
-    for (CAMSTrigger trigger in study.triggers) {
-      TriggerExecutor executor = getTriggerExecutor(trigger);
+  StudyDeploymentExecutor(MasterDeviceDeployment deployment) : super() {
+    assert(deployment != null,
+        'Cannot initiate a StudyDeploymentExecutor without a MasterDeviceDeployment.');
+    _deployment = deployment;
+    _group.add(_manualDataPointController.stream);
+
+    deployment.triggeredTasks.forEach((triggeredTask) {
+      // get the trigger based on the trigger id
+      Trigger trigger = _deployment.triggers[triggeredTask.triggerId];
+      // get the task based on the task name
+      TaskDescriptor task = _deployment.getTaskByName(triggeredTask.taskName);
+
+      TriggeredTaskExecutor executor = getTriggeredTaskExecutor(trigger, task);
+      executor.triggerId = triggeredTask.triggerId;
+      executor.deviceRoleName = triggeredTask.destinationDeviceRoleName;
+
       _group.add(executor.events);
       executors.add(executor);
-    }
+    });
   }
 
   Future onResume() async {
     // check the start time for this study on this phone
     // this will save it, the first time the study is executed
     DateTime studyStartTimestamp = await settings.studyStartTimestamp;
-    info('Study was started on this phone on ${studyStartTimestamp.toUtc()}');
+    info(
+        'Study deployment was started on this phone on ${studyStartTimestamp.toUtc()}');
 
     await super.onResume();
   }
 
-  /// Add a [Datum] object to the stream of events.
-  void addDatum(Datum datum) => _manualDatumController.add(datum);
+  /// Add a [DataPoint] object to the stream of events.
+  void addDataPoint(DataPoint dataPoint) =>
+      _manualDataPointController.add(dataPoint);
 
   /// Add a error to the stream of events.
   void addError(Object error, [StackTrace stacktrace]) =>
-      _manualDatumController.addError(error, stacktrace);
+      _manualDataPointController.addError(error, stacktrace);
 
   /// Returns a list of the running probes in this study executor.
   /// This is a combination of the running probes in all trigger executors.
   List<Probe> get probes {
     List<Probe> _probes = [];
     executors.forEach((executor) {
-      if (executor is TriggerExecutor) {
+      if (executor is TriggeredTaskExecutor) {
         executor.probes.forEach((probe) {
           _probes.add(probe);
         });
@@ -100,53 +114,65 @@ class StudyExecutor extends Executor {
 // TRIGGER EXECUTORS
 // ---------------------------------------------------------------------------------------------------------
 
-/// Returns the relevant [TriggerExecutor] based on the type of [trigger].
-TriggerExecutor getTriggerExecutor(CAMSTrigger trigger) {
+/// Returns the relevant [TriggeredTaskExecutor] based on the type of [trigger].
+TriggeredTaskExecutor getTriggeredTaskExecutor(
+    Trigger trigger, TaskDescriptor task) {
   switch (trigger.runtimeType) {
-    // actually, the base Trigger class is not supposed to be used
+    // actually, the base Trigger and CAMSTrigger classes is not supposed to be used
     // but if it is, treat it as an ImmediateTrigger
+    case Trigger:
     case CAMSTrigger:
     case ImmediateTrigger:
-      return ImmediateTriggerExecutor(trigger);
+      return ImmediateTriggerExecutor(trigger, task);
     case DelayedTrigger:
-      return DelayedTriggerExecutor(trigger);
+      return DelayedTriggerExecutor(trigger, task);
     case PeriodicTrigger:
-      return PeriodicTriggerExecutor(trigger);
-    case ScheduledTrigger:
-      return ScheduledTriggerExecutor(trigger);
+      return PeriodicTriggerExecutor(trigger, task);
+    case DateTimeTrigger:
+      return DateTimeTriggerExecutor(trigger, task);
     case RecurrentScheduledTrigger:
-      return RecurrentScheduledTriggerExecutor(trigger);
+      return RecurrentScheduledTriggerExecutor(trigger, task);
     case CronScheduledTrigger:
-      return CronScheduledTriggerExecutor(trigger);
+      return CronScheduledTriggerExecutor(trigger, task);
     case SamplingEventTrigger:
-      return SamplingEventTriggerExecutor(trigger);
+      return SamplingEventTriggerExecutor(trigger, task);
     case ConditionalSamplingEventTrigger:
-      return ConditionalSamplingEventTriggerExecutor(trigger);
+      return ConditionalSamplingEventTriggerExecutor(trigger, task);
     case ManualTrigger:
-      return ManualTriggerExecutor(trigger);
+      return PassiveTriggerExecutor(trigger, task);
     default:
-      return ImmediateTriggerExecutor(trigger);
+      return ImmediateTriggerExecutor(trigger, task);
   }
 }
 
-/// Responsible for handling the timing of a [CAMSTrigger] in the [StudyProtocol].
+/// Responsible for handling the execution of a [TriggeredTask].
 ///
-/// This is an abstract class. For each specific type of [CAMSTrigger],
-/// a corresponding implementation of a [TriggerExecutor] exists.
-abstract class TriggerExecutor extends Executor {
+/// This is an abstract class. For each specific type of [Trigger],
+/// a corresponding implementation of a [TriggeredTaskExecutor] exists.
+abstract class TriggeredTaskExecutor extends Executor {
   CAMSTrigger _trigger;
+  TaskDescriptor _task;
+
   CAMSTrigger get trigger => _trigger;
+  TaskDescriptor get task => _task;
 
-  TriggerExecutor(CAMSTrigger trigger) : super() {
+  TriggeredTaskExecutor(CAMSTrigger trigger, TaskDescriptor task) : super() {
     assert(trigger != null,
-        'Cannot initiate a TriggerExecutor without a Trigger.');
+        'Cannot initiate a TriggeredTaskExecutor without a Trigger.');
     _trigger = trigger;
+    assert(task != null,
+        'Cannot initiate a TriggeredTaskExecutor without a Task.');
+    _task = task;
 
-    for (TaskDescriptor task in trigger.tasks) {
-      TaskExecutor executor = getTaskExecutor(task);
-      _group.add(executor.events);
-      executors.add(executor);
-    }
+    TaskExecutor executor = getTaskExecutor(task);
+    _group.add(executor.events);
+    executors.add(executor);
+
+    // for (TaskDescriptor task in trigger.tasks) {
+    //   TaskExecutor executor = getTaskExecutor(task);
+    //   _group.add(executor.events);
+    //   executors.add(executor);
+    // }
   }
 
   /// Returns a list of the running probes in this trigger executor.
@@ -165,20 +191,22 @@ abstract class TriggerExecutor extends Executor {
 }
 
 /// Executes a [ImmediateTrigger], i.e. starts sampling immediately.
-class ImmediateTriggerExecutor extends TriggerExecutor {
-  ImmediateTriggerExecutor(CAMSTrigger trigger) : super(trigger);
+class ImmediateTriggerExecutor extends TriggeredTaskExecutor {
+  ImmediateTriggerExecutor(CAMSTrigger trigger, TaskDescriptor task)
+      : super(trigger, task);
 }
 
 /// Executes a [ManualTrigger].
-class ManualTriggerExecutor extends TriggerExecutor {
-  ManualTriggerExecutor(ManualTrigger trigger) : super(trigger) {
-    trigger.executor = ImmediateTriggerExecutor(trigger);
+class PassiveTriggerExecutor extends TriggeredTaskExecutor {
+  PassiveTriggerExecutor(PassiveTrigger trigger, TaskDescriptor task)
+      : super(trigger, task) {
+    trigger.executor = ImmediateTriggerExecutor(trigger, task);
     _group.add(trigger.executor.events);
   }
 
   // Forward to the embedded trigger executor
   void onInitialize(Measure measure) =>
-      (trigger as ManualTrigger).executor.initialize(measure);
+      (trigger as PassiveTrigger).executor.initialize(measure);
 
   // A no-op methods since a ManualTrigger can only be resumed/paused
   // using the resume/pause methods on the ManualTrigger.
@@ -187,16 +215,17 @@ class ManualTriggerExecutor extends TriggerExecutor {
 
   // Forward to the embedded trigger executor
   Future onRestart({Measure measure}) async =>
-      (trigger as ManualTrigger).executor.restart();
-  Future onStop() async => (trigger as ManualTrigger).executor.stop();
+      (trigger as PassiveTrigger).executor.restart();
+  Future onStop() async => (trigger as PassiveTrigger).executor.stop();
 
-  List<Probe> get probes => (trigger as ManualTrigger).executor.probes;
+  List<Probe> get probes => (trigger as PassiveTrigger).executor.probes;
 }
 
 /// Executes a [DelayedTrigger], i.e. resumes sampling after the specified delay.
 /// Once started, it can be paused / resumed as any other [Executor].
-class DelayedTriggerExecutor extends TriggerExecutor {
-  DelayedTriggerExecutor(DelayedTrigger trigger) : super(trigger);
+class DelayedTriggerExecutor extends TriggeredTaskExecutor {
+  DelayedTriggerExecutor(DelayedTrigger trigger, TaskDescriptor task)
+      : super(trigger, task);
 
   Future onResume() async {
     Timer((trigger as DelayedTrigger).delay, () {
@@ -210,11 +239,12 @@ class DelayedTriggerExecutor extends TriggerExecutor {
 ///
 /// It is required that both the [period] and the [duration] of the [PeriodicTrigger] is specified
 /// to make sure that this executor is properly resumed and paused again.
-class PeriodicTriggerExecutor extends TriggerExecutor {
+class PeriodicTriggerExecutor extends TriggeredTaskExecutor {
   Duration period, duration;
   Timer timer;
 
-  PeriodicTriggerExecutor(PeriodicTrigger trigger) : super(trigger) {
+  PeriodicTriggerExecutor(PeriodicTrigger trigger, TaskDescriptor task)
+      : super(trigger, task) {
     assert(trigger.period != null,
         'The period in a PeriodicTrigger must be specified.');
     assert(trigger.duration != null,
@@ -246,12 +276,13 @@ class PeriodicTriggerExecutor extends TriggerExecutor {
   }
 }
 
-/// Executes a [ScheduledTrigger] on the specified [ScheduledTrigger.schedule] date and time.
-class ScheduledTriggerExecutor extends TriggerExecutor {
+/// Executes a [DateTimeTrigger] on the specified [DateTimeTrigger.schedule] date and time.
+class DateTimeTriggerExecutor extends TriggeredTaskExecutor {
   Duration delay, duration;
   Timer timer;
 
-  ScheduledTriggerExecutor(ScheduledTrigger trigger) : super(trigger) {
+  DateTimeTriggerExecutor(DateTimeTrigger trigger, TaskDescriptor task)
+      : super(trigger, task) {
     assert(trigger.schedule != null,
         'The schedule of a ScheduledTrigger must be specified.');
     assert(trigger.schedule.isAfter(DateTime.now()),
@@ -284,8 +315,9 @@ class ScheduledTriggerExecutor extends TriggerExecutor {
 class RecurrentScheduledTriggerExecutor extends PeriodicTriggerExecutor {
   RecurrentScheduledTrigger _myTrigger;
 
-  RecurrentScheduledTriggerExecutor(RecurrentScheduledTrigger trigger)
-      : super(trigger) {
+  RecurrentScheduledTriggerExecutor(
+      RecurrentScheduledTrigger trigger, TaskDescriptor task)
+      : super(trigger, task) {
     _myTrigger = trigger;
   }
 
@@ -336,12 +368,14 @@ class RecurrentScheduledTriggerExecutor extends PeriodicTriggerExecutor {
 }
 
 /// Executes a [CronScheduledTrigger] based on the specified cron job.
-class CronScheduledTriggerExecutor extends TriggerExecutor {
+class CronScheduledTriggerExecutor extends TriggeredTaskExecutor {
   cron.Cron _cron;
   cron.Schedule _schedule;
   cron.ScheduledTask _scheduledTask;
 
-  CronScheduledTriggerExecutor(CronScheduledTrigger trigger) : super(trigger) {
+  CronScheduledTriggerExecutor(
+      CronScheduledTrigger trigger, TaskDescriptor task)
+      : super(trigger, task) {
     _schedule = cron.Schedule.parse(trigger.cronExpression);
     _cron = cron.Cron();
   }
@@ -364,8 +398,10 @@ class CronScheduledTriggerExecutor extends TriggerExecutor {
 
 /// Executes a [SamplingEventTrigger] based on the specified
 /// [SamplingEventTrigger.measureType] and [SamplingEventTrigger.resumeCondition].
-class SamplingEventTriggerExecutor extends TriggerExecutor {
-  SamplingEventTriggerExecutor(SamplingEventTrigger trigger) : super(trigger);
+class SamplingEventTriggerExecutor extends TriggeredTaskExecutor {
+  SamplingEventTriggerExecutor(
+      SamplingEventTrigger trigger, TaskDescriptor task)
+      : super(trigger, task);
 
   StreamSubscription<Datum> _subscription;
 
@@ -393,10 +429,10 @@ class SamplingEventTriggerExecutor extends TriggerExecutor {
 /// [ConditionalSamplingEventTrigger.measureType] and their
 /// [ConditionalSamplingEventTrigger.resumeCondition] and
 /// [ConditionalSamplingEventTrigger.pauseCondition].
-class ConditionalSamplingEventTriggerExecutor extends TriggerExecutor {
+class ConditionalSamplingEventTriggerExecutor extends TriggeredTaskExecutor {
   ConditionalSamplingEventTriggerExecutor(
-      ConditionalSamplingEventTrigger trigger)
-      : super(trigger);
+      ConditionalSamplingEventTrigger trigger, TaskDescriptor task)
+      : super(trigger, task);
 
   StreamSubscription<Datum> _subscription;
 
@@ -418,66 +454,5 @@ class ConditionalSamplingEventTriggerExecutor extends TriggerExecutor {
   Future onPause() async {
     await _subscription.cancel();
     await super.onPause();
-  }
-}
-
-// ---------------------------------------------------------------------------------------------------------
-// TASK EXECUTORS
-// ---------------------------------------------------------------------------------------------------------
-
-/// Returns the relevant [TaskExecutor] based on the type of [task].
-TaskExecutor getTaskExecutor(TaskDescriptor task) {
-  switch (task.runtimeType) {
-    case TaskDescriptor:
-      return TaskExecutor(task);
-    case AutomaticTaskDescriptor:
-      return AutomaticTaskExecutor(task);
-    case AppTask:
-      return AppTaskExecutor(task);
-    default:
-      return TaskExecutor(task);
-  }
-}
-
-/// The [TaskExecutor] is responsible for executing a [TaskDescriptor] in the [StudyProtocol].
-/// For each task it looks up appropriate [Probe]s to collect data.
-///
-/// Note that a [TaskExecutor] in itself is a [Probe] and hence work as a 'super probe'.
-/// This - amongst other things - imply that you can listen to datum [events] from a task executor.
-class TaskExecutor extends Executor {
-  TaskDescriptor get task => _task;
-  TaskDescriptor _task;
-
-  /// Returns a list of the running probes in this task executor.
-  List<Probe> get probes => executors;
-
-  TaskExecutor(TaskDescriptor task) : super() {
-    assert(task != null, 'Cannot initiate a TaskExecutor without a Task.');
-    _task = task;
-  }
-
-  void onInitialize(Measure ignored) {
-    for (Measure measure in task.measures) {
-      // create a new probe for each measure - this ensures that we can have
-      // multiple measures of the same type, each using its own probe instance
-      Probe probe = ProbeRegistry().create(measure.type.name);
-      if (probe != null) {
-        executors.add(probe);
-        _group.add(probe.events);
-        probe.initialize(measure);
-      } else {
-        warning(
-            'A probe for measure type ${measure.type.name} could not be created. '
-            'Check that the sampling package containing this probe has been registered in the SamplingPackageRegistry.');
-      }
-    }
-  }
-}
-
-/// Executes an [AutomaticTaskDescriptor].
-class AutomaticTaskExecutor extends TaskExecutor {
-  AutomaticTaskExecutor(AutomaticTaskDescriptor task) : super(task) {
-    assert(task is AutomaticTaskDescriptor,
-        'AutomaticTaskExecutor should be initialized with a AutomaticTask.');
   }
 }

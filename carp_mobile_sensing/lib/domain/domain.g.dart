@@ -15,8 +15,6 @@ CAMSStudyProtocol _$CAMSStudyProtocolFromJson(Map<String, dynamic> json) {
     title: json['title'] as String,
     description: json['description'] as String,
     purpose: json['purpose'] as String,
-    samplingStrategy: _$enumDecodeNullable(
-        _$SamplingSchemaTypeEnumMap, json['samplingStrategy']),
     dataEndPoint: json['dataEndPoint'] == null
         ? null
         : DataEndPoint.fromJson(json['dataEndPoint'] as Map<String, dynamic>),
@@ -74,54 +72,10 @@ Map<String, dynamic> _$CAMSStudyProtocolToJson(CAMSStudyProtocol instance) {
   writeNotNull('purpose', instance.purpose);
   writeNotNull('owner', instance.owner);
   writeNotNull('ownerId', instance.ownerId);
-  writeNotNull('samplingStrategy',
-      _$SamplingSchemaTypeEnumMap[instance.samplingStrategy]);
   writeNotNull('dataEndPoint', instance.dataEndPoint);
   writeNotNull('dataFormat', instance.dataFormat);
   return val;
 }
-
-T _$enumDecode<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
-}) {
-  if (source == null) {
-    throw ArgumentError('A value must be provided. Supported values: '
-        '${enumValues.values.join(', ')}');
-  }
-
-  final value = enumValues.entries
-      .singleWhere((e) => e.value == source, orElse: () => null)
-      ?.key;
-
-  if (value == null && unknownValue == null) {
-    throw ArgumentError('`$source` is not one of the supported values: '
-        '${enumValues.values.join(', ')}');
-  }
-  return value ?? unknownValue;
-}
-
-T _$enumDecodeNullable<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
-}) {
-  if (source == null) {
-    return null;
-  }
-  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
-}
-
-const _$SamplingSchemaTypeEnumMap = {
-  SamplingSchemaType.maximum: 'maximum',
-  SamplingSchemaType.common: 'common',
-  SamplingSchemaType.normal: 'normal',
-  SamplingSchemaType.light: 'light',
-  SamplingSchemaType.minimum: 'minimum',
-  SamplingSchemaType.none: 'none',
-  SamplingSchemaType.debug: 'debug',
-};
 
 ProtocolOwner _$ProtocolOwnerFromJson(Map<String, dynamic> json) {
   return ProtocolOwner(
@@ -445,8 +399,8 @@ Map<String, dynamic> _$ImmediateTriggerToJson(ImmediateTrigger instance) {
   return val;
 }
 
-SimpleTrigger _$SimpleTriggerFromJson(Map<String, dynamic> json) {
-  return SimpleTrigger(
+PassiveTrigger _$PassiveTriggerFromJson(Map<String, dynamic> json) {
+  return PassiveTrigger(
     triggerId: json['triggerId'] as String,
   )
     ..$type = json[r'$type'] as String
@@ -459,7 +413,7 @@ SimpleTrigger _$SimpleTriggerFromJson(Map<String, dynamic> json) {
         ?.toList();
 }
 
-Map<String, dynamic> _$SimpleTriggerToJson(SimpleTrigger instance) {
+Map<String, dynamic> _$PassiveTriggerToJson(PassiveTrigger instance) {
   final val = <String, dynamic>{
     r'$type': instance.$type,
   };
@@ -680,6 +634,38 @@ Map<String, dynamic> _$RecurrentScheduledTriggerToJson(
   return val;
 }
 
+T _$enumDecode<T>(
+  Map<T, dynamic> enumValues,
+  dynamic source, {
+  T unknownValue,
+}) {
+  if (source == null) {
+    throw ArgumentError('A value must be provided. Supported values: '
+        '${enumValues.values.join(', ')}');
+  }
+
+  final value = enumValues.entries
+      .singleWhere((e) => e.value == source, orElse: () => null)
+      ?.key;
+
+  if (value == null && unknownValue == null) {
+    throw ArgumentError('`$source` is not one of the supported values: '
+        '${enumValues.values.join(', ')}');
+  }
+  return value ?? unknownValue;
+}
+
+T _$enumDecodeNullable<T>(
+  Map<T, dynamic> enumValues,
+  dynamic source, {
+  T unknownValue,
+}) {
+  if (source == null) {
+    return null;
+  }
+  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
+}
+
 const _$RecurrentTypeEnumMap = {
   RecurrentType.daily: 'daily',
   RecurrentType.weekly: 'weekly',
@@ -840,7 +826,7 @@ StringDatum _$StringDatumFromJson(Map<String, dynamic> json) {
         : DateTime.parse(json['timestamp'] as String)
     ..format = json['format'] == null
         ? null
-        : DataType.fromJson(json['format'] as Map<String, dynamic>);
+        : DataFormat.fromJson(json['format'] as Map<String, dynamic>);
 }
 
 Map<String, dynamic> _$StringDatumToJson(StringDatum instance) {
@@ -871,7 +857,7 @@ MapDatum _$MapDatumFromJson(Map<String, dynamic> json) {
         : DateTime.parse(json['timestamp'] as String)
     ..format = json['format'] == null
         ? null
-        : DataType.fromJson(json['format'] as Map<String, dynamic>);
+        : DataFormat.fromJson(json['format'] as Map<String, dynamic>);
 }
 
 Map<String, dynamic> _$MapDatumToJson(MapDatum instance) {
@@ -900,7 +886,7 @@ ErrorDatum _$ErrorDatumFromJson(Map<String, dynamic> json) {
         : DateTime.parse(json['timestamp'] as String)
     ..format = json['format'] == null
         ? null
-        : DataType.fromJson(json['format'] as Map<String, dynamic>);
+        : DataFormat.fromJson(json['format'] as Map<String, dynamic>);
 }
 
 Map<String, dynamic> _$ErrorDatumToJson(ErrorDatum instance) {
@@ -930,7 +916,7 @@ FileDatum _$FileDatumFromJson(Map<String, dynamic> json) {
         : DateTime.parse(json['timestamp'] as String)
     ..format = json['format'] == null
         ? null
-        : DataType.fromJson(json['format'] as Map<String, dynamic>)
+        : DataFormat.fromJson(json['format'] as Map<String, dynamic>)
     ..metadata = (json['metadata'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
     );
@@ -966,7 +952,7 @@ MultiDatum _$MultiDatumFromJson(Map<String, dynamic> json) {
         ?.toList()
     ..format = json['format'] == null
         ? null
-        : DataType.fromJson(json['format'] as Map<String, dynamic>);
+        : DataFormat.fromJson(json['format'] as Map<String, dynamic>);
 }
 
 Map<String, dynamic> _$MultiDatumToJson(MultiDatum instance) {

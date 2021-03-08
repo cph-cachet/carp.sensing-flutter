@@ -16,7 +16,8 @@ DataPoint _$DataPointFromJson(Map<String, dynamic> json) {
         : Data.fromJson(json['carp_body'] as Map<String, dynamic>),
   )
     ..id = json['id'] as int
-    ..createdByUserId = json['created_by_user_id'] as int;
+    ..createdByUserId = json['created_by_user_id'] as int
+    ..studyId = json['study_id'] as String;
 }
 
 Map<String, dynamic> _$DataPointToJson(DataPoint instance) {
@@ -30,6 +31,7 @@ Map<String, dynamic> _$DataPointToJson(DataPoint instance) {
 
   writeNotNull('id', instance.id);
   writeNotNull('created_by_user_id', instance.createdByUserId);
+  writeNotNull('study_id', instance.studyId);
   writeNotNull('carp_header', instance.carpHeader);
   writeNotNull('carp_body', instance.carpBody);
   return val;
@@ -819,8 +821,9 @@ Map<String, dynamic> _$CustomProtocolTaskToJson(CustomProtocolTask instance) {
 }
 
 TriggeredTask _$TriggeredTaskFromJson(Map<String, dynamic> json) {
-  return TriggeredTask()
-    ..triggerId = json['triggerId'] as int
+  return TriggeredTask(
+    triggerId: json['triggerId'] as int,
+  )
     ..taskName = json['taskName'] as String
     ..destinationDeviceRoleName = json['destinationDeviceRoleName'] as String;
 }

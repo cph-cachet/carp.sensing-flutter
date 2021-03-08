@@ -104,7 +104,7 @@ class Console extends State<ConsolePage> {
 class Sensing {
   StudyProtocol study;
   Console console;
-  StudyController controller;
+  StudyDeploymentController controller;
 
   Sensing(this.console);
 
@@ -155,7 +155,7 @@ class Sensing {
     console.log(study.toString());
 
     // Create a Study Controller that can manage this study and initialize it.
-    controller = StudyController(
+    controller = StudyDeploymentController(
       study,
       debugLevel: DebugLevel.DEBUG,
       privacySchemaName: PrivacySchema.DEFAULT,

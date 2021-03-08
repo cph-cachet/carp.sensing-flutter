@@ -117,13 +117,18 @@ class StudyDeployment {
         (descriptor) => tasks.addAll(protocol.getTasksForDevice(descriptor)));
 
     // Get all trigger information for this and connected devices.
-    // TODO - The trigger IDs assigned by snapshot are reused to identify them within the protocol.
-    int index = 0;
+    // The trigger IDs assigned are reused to identify them within the protocol
     Map<String, Trigger> usedTriggers = {};
-    _protocol.triggers
-        .forEach((trigger) => usedTriggers['${++index}'] = trigger);
-
-    List<TriggeredTask> triggeredTasks = _protocol.triggeredTasks;
+    List<TriggeredTask> triggeredTasks = [];
+    int index = 0;
+    _protocol.triggers.forEach((trigger) {
+      usedTriggers['${++index}'] = trigger;
+      Set<TriggeredTask> tt = _protocol.getTriggeredTasks(trigger);
+      tt.forEach((triggeredTask) {
+        triggeredTask.triggerId = index;
+        triggeredTasks.add(triggeredTask);
+      });
+    });
 
     return MasterDeviceDeployment(
         deviceDescriptor: device,

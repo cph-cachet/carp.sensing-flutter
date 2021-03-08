@@ -21,5 +21,5 @@ import '../carp_mobile_sensing.dart';
 part 'data_managers.g.dart';
 part 'local/console_data_manager.dart';
 part 'local/file_data_manager.dart';
-part 'local/file_deployment_service.dart';
+part 'local/file_study_manager.dart';
 part 'local/cams_deployment_service.dart';

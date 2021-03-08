@@ -12,9 +12,12 @@ abstract class DataManager {
   /// The type of this data manager as enumerated in [DataEndPointType].
   String get type;
 
-  /// Initialize the data manager by specifying the running [StudyProtocol]
+  /// Initialize the data manager by specifying the running [DataEndPoint]
   /// and the stream of [Datum] events to handle.
-  Future initialize(StudyProtocol study, Stream<Datum> data);
+  Future initialize(
+    CAMSMasterDeviceDeployment deployment,
+    Stream<DataPoint> data,
+  );
 
   /// Close the data manager (e.g. closing connections).
   Future close();
@@ -22,8 +25,8 @@ abstract class DataManager {
   /// Stream of data manager events.
   Stream<DataManagerEvent> get events;
 
-  /// On each data event from the data stream, the [onDatum] handler is called.
-  void onDatum(Datum datum);
+  /// On each data event from the data stream, the [onDataPoint] handler is called.
+  void onDataPoint(DataPoint dataPoint);
 
   /// When the data stream closes, the [onDone] handler is called.
   void onDone();
@@ -36,22 +39,39 @@ abstract class DataManager {
 ///
 /// Takes data from a [Stream] and uploads these. Also supports JSON encoding.
 abstract class AbstractDataManager implements DataManager {
-  StudyProtocol study;
+  // CAMSStudyProtocol study;
+  DataEndPoint get dataEndPoint => _deployment.dataEndPoint;
+  CAMSMasterDeviceDeployment _deployment;
+  CAMSMasterDeviceDeployment get deployment => _deployment;
 
   StreamController<DataManagerEvent> controller = StreamController.broadcast();
   Stream<DataManagerEvent> get events => controller.stream;
   void addEvent(DataManagerEvent event) => controller.add(event);
 
-  Future initialize(StudyProtocol study, Stream<Datum> data) async {
-    this.study = study;
-    data.listen(onDatum, onError: onError, onDone: onDone);
+  Future initialize(
+    CAMSMasterDeviceDeployment deployment,
+    Stream<DataPoint> data,
+  ) async {
+    // this.dataEndPoint = dataE\ndPoint;
+    _deployment = deployment;
+    data.listen(
+      (dataPoint) {
+        // set the header data for study and user id
+        dataPoint.carpHeader.studyId = deployment.studyId;
+        dataPoint.carpHeader.userId = deployment.userId;
+        // forward to sub-class
+        onDataPoint(dataPoint);
+      },
+      onError: onError,
+      onDone: onDone,
+    );
     addEvent(DataManagerEvent(DataManagerEventTypes.INITIALIZED));
   }
 
   Future close() async =>
       addEvent(DataManagerEvent(DataManagerEventTypes.CLOSED));
 
-  void onDatum(Datum datum);
+  void onDataPoint(DataPoint dataPoint);
   void onDone();
   void onError(error);
 

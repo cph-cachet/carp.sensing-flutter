@@ -71,21 +71,21 @@ class ScreenProbe extends StreamProbe {
 
 /// A probe that collects free virtual memory on a regular basis
 /// as specified in [PeriodicMeasure.frequency].
-class MemoryProbe extends PeriodicDatumProbe {
+class MemoryProbe extends PeriodicDataPointProbe {
   void onInitialize(Measure measure) {
     super.onInitialize(measure);
     // check if SysInfo is available (seems not to be available on iOS)
     SysInfo.getFreePhysicalMemory();
   }
 
-  Future<Datum> getDatum() async => FreeMemoryDatum()
+  Future<Datum> getDataPoint() async => FreeMemoryDatum()
     ..freePhysicalMemory = SysInfo.getFreePhysicalMemory()
     ..freeVirtualMemory = SysInfo.getFreeVirtualMemory();
 }
 
 /// A probe that collects the device info about this device.
-class DeviceProbe extends DatumProbe {
-  Future<Datum> getDatum() async {
+class DeviceProbe extends DataPointProbe {
+  Future<Datum> getDataPoint() async {
     return DeviceDatum(DeviceInfo().platform, DeviceInfo().deviceID,
         deviceName: DeviceInfo().deviceName,
         deviceModel: DeviceInfo().deviceModel,

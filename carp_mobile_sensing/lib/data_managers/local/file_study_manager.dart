@@ -14,7 +14,7 @@ part of managers;
 ///
 ///   `carp/study/study-<study_id>.json`
 ///
-class FileDeploymentService extends CAMSDeploymentService {
+class FileStudyProtocolManager implements StudyProtocolManager {
   /// The path to use on the device for storing CARP study files.
   static const String CARP_STUDY_FILE_PATH = 'carp/study';
 
@@ -29,18 +29,16 @@ class FileDeploymentService extends CAMSDeploymentService {
   }
 
   @override
-  Future<MasterDeviceDeployment> getDeviceDeploymentFor(
-      String studyDeploymentId,
-      {String masterDeviceRoleName}) {
-    info("Loading study '$studyDeploymentId'.");
+  Future<StudyProtocol> getStudyProtocol(String studyId) async {
+    info("Loading study '$studyId'.");
     StudyProtocol study;
 
     try {
-      String jsonString = File(filename(studyDeploymentId)).readAsStringSync();
+      String jsonString = File(filename(studyId)).readAsStringSync();
       study = StudyProtocol.fromJson(
           json.decode(jsonString) as Map<String, dynamic>);
     } catch (exception) {
-      warning("Failed to load study '$studyDeploymentId' - $exception");
+      warning("Failed to load study '$studyId' - $exception");
     }
 
     return study;
@@ -48,15 +46,15 @@ class FileDeploymentService extends CAMSDeploymentService {
 
   /// Save a study on the local file system.
   /// Returns `true` if successful.
-  Future<bool> saveStudy(StudyProtocol study) async {
+  Future<bool> saveStudyProtocol(String studyId, StudyProtocol study) async {
     bool success = true;
-    info("Saving study '${study.id}}'.");
+    info("Saving study '${studyId}}'.");
     try {
       final json = jsonEncode(study);
-      File(filename(study.id)).writeAsStringSync(json);
+      File(filename(studyId)).writeAsStringSync(json);
     } catch (exception) {
       success = false;
-      warning("Failed to save study '${study.id}' - $exception");
+      warning("Failed to save study '${studyId}' - $exception");
     }
     return success;
   }

@@ -6,7 +6,7 @@
  */
 
 /// Contains classes for running the sensing framework incl.
-/// the [StudyExecutor], [TaskExecutor] and different types of
+/// the [StudyDeploymentExecutor], [TaskExecutor] and different types of
 /// abstract [Probe]s.
 library runtime;
 
@@ -25,7 +25,8 @@ import 'package:cron/cron.dart' as cron;
 
 part 'data_manager.dart';
 part 'device_manager.dart';
-part 'executors.dart';
+part 'trigger_executors.dart';
+part 'task_executors.dart';
 part 'app_task_executor.dart';
 part 'permission_handler.dart';
 part 'probe_controller.dart';
@@ -34,6 +35,7 @@ part 'probes.dart';
 part 'sampling_package.dart';
 part 'settings.dart';
 part 'study_controller.dart';
+part 'study_manager.dart';
 
 /// Generic sensing exception.
 class SensingException implements Exception {
@@ -50,7 +52,7 @@ class DebugLevel {
 
 /// The global debug level setting.
 ///
-/// Typically set when instantiating a [StudyController].
+/// Typically set when instantiating a [StudyDeploymentController].
 /// See [DebugLevel] for valid debug level settings.
 /// Can be changed on runtime.
 int globalDebugLevel = DebugLevel.WARNING;

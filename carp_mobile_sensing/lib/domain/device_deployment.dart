@@ -13,9 +13,24 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
   String _studyId;
   String _studyDeploymentId;
   ProtocolOwner _owner;
+  String _dataFormat = NameSpace.CARP;
+  DataEndPoint _dataEndPoint;
 
   String get studyId => _studyId;
   String get studyDeploymentId => _studyDeploymentId;
+
+  /// The unique id of the user that this deployment collects data from.
+  ///
+  /// This [userId] may, or may not, be identical to the id of the
+  /// user who is logged into an app or uploads data.
+  ///
+  /// By being able to separate who collects (and potentially uploads) a data
+  /// point from who the data point belongs to, allows for one user to collect
+  /// data on behalf of another user. For example, a parent on behalf of a child.
+  ///
+  /// See [DataPoint]. This user id is stored in the
+  /// [DataPointHeader] as the [userId].
+  String userId;
 
   /// A short printer-friendly name for this study.
   String name;
@@ -33,6 +48,15 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
   /// The owner of this study.
   ProtocolOwner get owner => _owner;
 
+  /// Where and how to upload this deployment data.
+  DataEndPoint get dataEndPoint => _dataEndPoint;
+
+  /// The preferred format of the data to be uploaded according to
+  /// [DataFormatType]. Default using the [NameSpace.CARP].
+  String get dataFormat => _dataFormat;
+
+  SamplingSchemaType samplingStrategy;
+
   CAMSMasterDeviceDeployment({
     String studyId,
     String studyDeploymentId,
@@ -41,6 +65,8 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
     this.description,
     this.purpose,
     ProtocolOwner owner,
+    String dataFormat,
+    DataEndPoint dataEndPoint,
     MasterDeviceDescriptor deviceDescriptor,
     DeviceRegistration configuration,
     List<DeviceDescriptor> connectedDevices,
@@ -60,6 +86,8 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
     this._studyId = studyId;
     this._studyDeploymentId = studyDeploymentId;
     this._owner = owner;
+    this._dataFormat = dataFormat ?? NameSpace.CARP;
+    this._dataEndPoint = dataEndPoint;
   }
 
   CAMSMasterDeviceDeployment.fromMasterDeviceDeployment({
@@ -84,5 +112,21 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
     this._studyId = studyId;
     this._studyDeploymentId = studyDeploymentId;
     this._owner = owner;
+  }
+
+  /// Get the list of all [Mesure]s in this study protocol.
+  List<Measure> get measures {
+    List<Measure> _measures = [];
+    tasks.forEach((task) => _measures.addAll(task.measures));
+
+    return _measures;
+  }
+
+  /// Adapt the sampling [Measure]s of this [StudyProtocol] to the specified
+  /// [SamplingSchema].
+  void adapt(SamplingSchema schema, {bool restore = true}) {
+    assert(schema != null);
+    samplingStrategy = schema.type;
+    schema.adapt(this, restore: restore);
   }
 }

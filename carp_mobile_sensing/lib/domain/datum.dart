@@ -10,10 +10,10 @@ part of domain;
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class Datum extends Data {
   /// The [DataFormat] of this type of [Datum].
-  static const DataType CARP_DATA_FORMAT =
-      DataType(NameSpace.CARP, CAMSDataType.NONE);
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, CAMSDataType.NONE);
 
-  DataType get format => CARP_DATA_FORMAT;
+  DataFormat get format => CARP_DATA_FORMAT;
 
   /// Unique identifier for the current Datum, unique across all data generated.
   String id;
@@ -46,9 +46,9 @@ class Datum extends Data {
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class StringDatum extends Datum {
   /// The [DataFormat] of this type of [Datum].
-  static const DataType CARP_DATA_FORMAT =
-      DataType(NameSpace.CARP, CAMSDataType.STRING);
-  DataType get format => CARP_DATA_FORMAT;
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, CAMSDataType.STRING);
+  DataFormat get format => CARP_DATA_FORMAT;
 
   /// The string data for this Datum.
   String str;
@@ -68,9 +68,9 @@ class StringDatum extends Datum {
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MapDatum extends Datum {
   /// The [DataFormat] of this type of [Datum].
-  static const DataType CARP_DATA_FORMAT =
-      DataType(NameSpace.CARP, CAMSDataType.MAP);
-  DataType get format => CARP_DATA_FORMAT;
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, CAMSDataType.MAP);
+  DataFormat get format => CARP_DATA_FORMAT;
 
   /// The data map.
   Map<String, String> map;
@@ -89,9 +89,9 @@ class MapDatum extends Datum {
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ErrorDatum extends Datum {
   /// The [DataFormat] of this type of [Datum].
-  static const DataType CARP_DATA_FORMAT =
-      DataType(NameSpace.CARP, CAMSDataType.ERROR);
-  DataType get format => CARP_DATA_FORMAT;
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, CAMSDataType.ERROR);
+  DataFormat get format => CARP_DATA_FORMAT;
 
   /// The original error message returned from the probe, if available.
   String message;
@@ -111,9 +111,9 @@ class ErrorDatum extends Datum {
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class FileDatum extends Datum {
   /// The [DataFormat] of this type of [Datum].
-  static const DataType CARP_DATA_FORMAT =
-      DataType(NameSpace.CARP, CAMSDataType.FILE);
-  DataType get format => CARP_DATA_FORMAT;
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, CAMSDataType.FILE);
+  DataFormat get format => CARP_DATA_FORMAT;
 
   /// The path to the attached file.
   String filename;
@@ -150,7 +150,7 @@ class MultiDatum extends Datum {
   /// Create an empty [MultiDatum].
   MultiDatum() : super();
 
-  DataType get format =>
+  DataFormat get format =>
       (data.isNotEmpty) ? data.first.format : DataType.UNKNOWN;
 
   /// Create a [MultiDatum] from a JSON map.

@@ -9,10 +9,6 @@ part of carp_core;
 /// Application service which allows deploying [StudyProtocol]s and
 /// retrieving [MasterDeviceDeployment]s for participating master devices as
 /// defined in the protocol.
-///
-/// Is mainly used to get and save a [StudyProtocol].
-/// See [FileDeploymentService] for an implementation which can load and save
-/// study json configurations on the local file system.
 abstract class DeploymentService {
   /// Instantiate a study deployment for a given [StudyProtocolSnapshot].
   Future<StudyDeploymentStatus> createStudyDeployment(StudyProtocol protocol);

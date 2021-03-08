@@ -32,11 +32,14 @@ class FileDataManager extends AbstractDataManager {
   bool _initialized = false;
   int _flushingSink = 0;
 
-  Future initialize(StudyProtocol study, Stream<Datum> data) async {
-    assert(study.dataEndPoint is FileDataEndPoint);
-    await super.initialize(study, data);
+  Future initialize(
+    CAMSMasterDeviceDeployment deployment,
+    Stream<DataPoint> data,
+  ) async {
+    await super.initialize(deployment, data);
+    assert(dataEndPoint is FileDataEndPoint);
 
-    _fileDataEndPoint = study.dataEndPoint as FileDataEndPoint;
+    _fileDataEndPoint = dataEndPoint as FileDataEndPoint;
 
     if (_fileDataEndPoint.encrypt) {
       assert(_fileDataEndPoint.publicKey != null);
@@ -53,9 +56,14 @@ class FileDataManager extends AbstractDataManager {
     info('Buffer size : ${_fileDataEndPoint.bufferSize.toString()} bytes');
   }
 
-  void onDatum(Datum datum) => write(datum);
+  void onDataPoint(DataPoint dataPoint) => write(dataPoint);
 
-  void onError(Object error) => write(ErrorDatum(error.toString()));
+  void onError(Object error) => write(DataPoint(
+      DataPointHeader(
+          studyId: deployment.studyId,
+          userId: deployment.userId,
+          dataFormat: ErrorDatum.CARP_DATA_FORMAT),
+      ErrorDatum(error.toString())));
 
   void onDone() => close();
 
@@ -66,7 +74,7 @@ class FileDataManager extends AbstractDataManager {
       final localApplicationDir = await getApplicationDocumentsDirectory();
       // create a sub-directory for this study named as the study ID
       final directory = await Directory(
-              '${localApplicationDir.path}/$CARP_FILE_PATH/${study.id}')
+              '${localApplicationDir.path}/$CARP_FILE_PATH/${deployment.studyDeploymentId}')
           .create(recursive: true);
       _path = directory.path;
     }
@@ -116,21 +124,20 @@ class FileDataManager extends AbstractDataManager {
   }
 
   /// Writes a JSON encoded [Datum] to the file
-  Future<bool> write(Datum data) async {
+  Future<bool> write(DataPoint dataPoint) async {
     // Check if the sink is ready for writing...
     if (!_initialized) {
       info('File sink not ready -- delaying for 2 sec...');
-      return Future.delayed(const Duration(seconds: 2), () => write(data));
+      return Future.delayed(const Duration(seconds: 2), () => write(dataPoint));
     }
 
-    final _datapoint = DataPoint.fromData(study.id, study.userId, data);
-    final json = jsonEncode(_datapoint);
+    final json = jsonEncode(dataPoint);
 
     await sink.then((_s) {
       try {
         _s.write(json);
         _s.write('\n,\n'); // write a ',' to separate json objects in the list
-        debug('Writing to file : ${data.toString()}');
+        debug('Writing to file : ${dataPoint.toString()}');
 
         file.then((_f) {
           _f.length().then((len) {
@@ -142,7 +149,7 @@ class FileDataManager extends AbstractDataManager {
       } catch (err) {
         debug(err);
         _initialized = false;
-        return write(data);
+        return write(dataPoint);
       }
     });
 
@@ -252,7 +259,7 @@ class FileDataEndPoint extends DataEndPoint {
   /// [DataEndPointType.FILE] but specialized file types can be specified.
   FileDataEndPoint(
       {String type, this.bufferSize, this.zip, this.encrypt, this.publicKey})
-      : super(format: type ?? DataEndPointTypes.FILE);
+      : super(type: type ?? DataEndPointTypes.FILE);
 
   /// The function which can transform this [FileDataEndPoint] into JSON.
   ///

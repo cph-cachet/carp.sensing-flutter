@@ -37,9 +37,6 @@ class CAMSStudyProtocol extends StudyProtocol {
 
   String get ownerId => owner.id;
 
-  /// The sampling strategy according to [SamplingSchemaType].
-  SamplingSchemaType samplingStrategy = SamplingSchemaType.normal;
-
   /// Specify where and how to upload this study data.
   DataEndPoint dataEndPoint;
 
@@ -60,29 +57,12 @@ class CAMSStudyProtocol extends StudyProtocol {
     this.title,
     String description,
     this.purpose,
-    this.samplingStrategy = SamplingSchemaType.normal,
     this.dataEndPoint,
     this.dataFormat = NameSpace.CARP,
-  }) : super() {
+  }) : super(ownerId: owner.id, name: name, description: description) {
     studyId = Uuid().v1();
     super.name = name;
     super.description = description;
-  }
-
-  /// Get the list of all [Mesure]s in this study protocol.
-  List<Measure> get measures {
-    List<Measure> _measures = [];
-    tasks.forEach((task) => _measures.addAll(task.measures));
-
-    return _measures;
-  }
-
-  /// Adapt the sampling [Measure]s of this [StudyProtocol] to the specified
-  /// [SamplingSchema].
-  void adapt(SamplingSchema schema, {bool restore = true}) {
-    assert(schema != null);
-    samplingStrategy = schema.type;
-    schema.adapt(this, restore: restore);
   }
 
   Function get fromJsonFunction => _$CAMSStudyProtocolFromJson;

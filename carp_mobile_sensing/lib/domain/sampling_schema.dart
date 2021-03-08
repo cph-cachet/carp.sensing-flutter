@@ -238,14 +238,14 @@ class SamplingSchema extends DataTypeSamplingSchemeList {
   //   return schema;
   // }
 
-  /// Adapts all [Measure]s in a [StudyProtocol] to this [SamplingSchema].
+  /// Adapts all [Measure]s in a [MasterDeviceDeployment] to this [SamplingSchema].
   ///
   /// The following parameters are adapted
   ///   * [enabled] - a measure can be enabled / disabled based on this schema
   ///   * [frequency] - the sampling frequency can be adjusted based on this schema
   ///   * [duration] - the sampling duration can be adjusted based on this schema
-  void adapt(StudyProtocol study, {bool restore = true}) {
-    study.tasks.forEach((task) {
+  void adapt(MasterDeviceDeployment deployment, {bool restore = true}) {
+    deployment.tasks.forEach((task) {
       task.measures.forEach((measure) {
         if (measure is CAMSMeasure) {
           // first restore each measure in the study+tasks to its previous value

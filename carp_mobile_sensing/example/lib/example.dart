@@ -42,7 +42,7 @@ void example_1() async {
         )));
 
   // Create a Study Controller that can manage this study.
-  StudyController controller = StudyController(study);
+  StudyDeploymentController controller = StudyDeploymentController(study);
 
   // await initialization before starting/resuming
   await controller.initialize();
@@ -86,7 +86,7 @@ void example_2() async {
       AutomaticTaskDescriptor(name: 'Light')..addMeasure(lightMeasure));
 
   // Create a Study Controller that can manage this study.
-  StudyController controller = StudyController(study);
+  StudyDeploymentController controller = StudyDeploymentController(study);
 
   // await initialization before starting/resuming
   await controller.initialize();
@@ -237,10 +237,10 @@ void samplingSchemaExample() async {
           duration: const Duration(milliseconds: 100),
         )));
 
-  StudyController controller =
-      StudyController(study, samplingSchema: activitySchema);
+  StudyDeploymentController controller =
+      StudyDeploymentController(study, samplingSchema: activitySchema);
 
-  controller = StudyController(study);
+  controller = StudyDeploymentController(study);
   await controller.initialize();
   controller.resume();
 
@@ -293,11 +293,11 @@ void recurrentScheduledTriggerExample() {
       time: Time(hour: 21, minute: 30));
 }
 
-/// An example of how to configure a [StudyController] with the default privacy schema.
+/// An example of how to configure a [StudyDeploymentController] with the default privacy schema.
 void study_controller_example() async {
   StudyProtocol study = StudyProtocol(userId: 'user@cachet.dk');
-  StudyController controller =
-      StudyController(study, privacySchemaName: PrivacySchema.DEFAULT);
+  StudyDeploymentController controller = StudyDeploymentController(study,
+      privacySchemaName: PrivacySchema.DEFAULT);
   await controller.initialize();
   controller.resume();
 }
@@ -322,8 +322,8 @@ void app_task_example() async {
         )..addMeasure(Measure(
             type: DataType(NameSpace.CARP, DeviceSamplingPackage.SCREEN))));
 
-  StudyController controller =
-      StudyController(study, privacySchemaName: PrivacySchema.DEFAULT);
+  StudyDeploymentController controller = StudyDeploymentController(study,
+      privacySchemaName: PrivacySchema.DEFAULT);
   await controller.initialize();
   controller.resume();
 }

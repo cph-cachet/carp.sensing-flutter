@@ -7,12 +7,12 @@
 part of carp_core;
 
 /// A base (abstract) class for a single unit of sensed information.
-/// Holds data for a [DataType].
+/// Holds data for a [DataFormat].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class Data {
-  /// The [DataType] of this [Data].
+  /// The [DataFormat] of this [Data].
   @JsonKey(ignore: true)
-  DataType format;
+  DataFormat format;
 
   Data();
 

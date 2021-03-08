@@ -7,28 +7,29 @@
 part of domain;
 
 /// Signature of a data transformer.
-typedef DatumTransformer = Datum Function(Datum);
+typedef DataPointTransformer = DataPoint Function(DataPoint);
 
 /// Signature of a data stream transformer.
-typedef DatumStreamTransformer = Stream<Datum> Function(Stream<Datum>);
+typedef DataPointStreamTransformer = Stream<DataPoint> Function(
+    Stream<DataPoint>);
 
 /// A no-operation transformer.
-Datum noop(Datum data) => data;
+DataPoint noop(DataPoint data) => data;
 
-/// A registry of [TransformerSchema]s which hold a set of
-/// [DatumTransformer]s.
-class TransformerSchemaRegistry {
-  static final TransformerSchemaRegistry _instance =
-      TransformerSchemaRegistry._();
+/// A registry of [DataPointTransformerSchema]s which hold a set of
+/// [DataPointTransformer]s.
+class DataPointTransformerSchemaRegistry {
+  static final DataPointTransformerSchemaRegistry _instance =
+      DataPointTransformerSchemaRegistry._();
 
   /// The map between the namespace of a transformer schema and the schema.
-  Map<String, TransformerSchema> get schemas => _schemas;
-  final Map<String, TransformerSchema> _schemas = {};
+  Map<String, DataPointTransformerSchema> get schemas => _schemas;
+  final Map<String, DataPointTransformerSchema> _schemas = {};
 
-  /// Get the singleton instance of the [TransformerSchemaRegistry].
-  factory TransformerSchemaRegistry() => _instance;
+  /// Get the singleton instance of the [DataPointTransformerSchemaRegistry].
+  factory DataPointTransformerSchemaRegistry() => _instance;
 
-  TransformerSchemaRegistry._() {
+  DataPointTransformerSchemaRegistry._() {
     // register 3 default transformer schemas:
     // 1. a no-operation CARP schema
     // 2. a default OMH schema
@@ -39,64 +40,64 @@ class TransformerSchemaRegistry {
   }
 
   /// Register a transformer schema.
-  void register(TransformerSchema schema) {
+  void register(DataPointTransformerSchema schema) {
     _schemas[schema.namespace] = schema;
     schema.onRegister();
   }
 
   /// Lookup a transformer schema based on its namespace.
-  TransformerSchema lookup(String namespace) => _schemas[namespace];
+  DataPointTransformerSchema lookup(String namespace) => _schemas[namespace];
 }
 
 /// An interface for Datum that is created from a transformer.
 abstract class TransformedDatum {
-  static DatumTransformer get transformer => null;
+  static DataPointTransformer get transformer => null;
 }
 
 /// An abstract class defining a transformer schema, which hold a set of
-/// [DatumTransformer]s, which that can map from the native CARP namespace
+/// [DataPointTransformer]s, which that can map from the native CARP namespace
 /// to another namespace.
-/// A [TransformerSchema] must be implemented for each supported namespace.
-abstract class TransformerSchema {
+/// A [DataPointTransformerSchema] must be implemented for each supported namespace.
+abstract class DataPointTransformerSchema {
   /// The type of namespace that this package can transform to (see e.g.
   /// [NameSpace] for pre-defined namespaces).
   String get namespace;
 
-  final Map<String, DatumTransformer> _transformers = {};
+  final Map<String, DataPointTransformer> _transformers = {};
 
   /// A map of transformers in this schema, indexed by the data type they
   /// can transform.
-  Map<String, DatumTransformer> get transformers => _transformers;
+  Map<String, DataPointTransformer> get transformers => _transformers;
 
   /// Callback method when this schema is being registered.
   void onRegister();
 
   /// Add a transformer to this schema based on its type mapped to its
-  /// [CAMSDataType].
-  void add(String type, DatumTransformer transformer) =>
+  /// [DataType].
+  void add(String type, DataPointTransformer transformer) =>
       transformers[type] = transformer;
 
-  /// Transform the [data] according to the transformer for its type.
-  Datum transform(Datum data) {
-    Function transformer = transformers[data.format.name];
+  /// Transform the [data] according to the transformer for its data type.
+  DataPoint transform(DataPoint data) {
+    Function transformer = transformers[data.carpHeader.dataFormat];
     return (transformer != null) ? transformer(data) : data;
   }
 }
 
-/// A default [TransformerSchema] for CARP no-operation transformers
-class CARPTransformerSchema extends TransformerSchema {
+/// A default [DataPointTransformerSchema] for CARP no-operation transformers
+class CARPTransformerSchema extends DataPointTransformerSchema {
   String get namespace => NameSpace.CARP;
   void onRegister() {}
 }
 
-/// A default [TransformerSchema] for Open mHealth (OMH) transformers
-class OMHTransformerSchema extends TransformerSchema {
+/// A default [DataPointTransformerSchema] for Open mHealth (OMH) transformers
+class OMHTransformerSchema extends DataPointTransformerSchema {
   String get namespace => NameSpace.OMH;
   void onRegister() {}
 }
 
-/// A default [TransformerSchema] for privacy transformers
-class PrivacySchema extends TransformerSchema {
+/// A default [DataPointTransformerSchema] for privacy transformers
+class PrivacySchema extends DataPointTransformerSchema {
   static const String DEFAULT = 'default-privacy-schema';
 
   String get namespace => DEFAULT;

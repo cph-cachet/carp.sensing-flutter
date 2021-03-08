@@ -6,37 +6,40 @@
  */
 part of runtime;
 
-/// A [StudyController] controls the execution of a [StudyProtocol].
-class StudyController {
+/// A [StudyDeploymentController] controls the execution of a [CAMSMasterDeviceDeployment].
+///
+///
+class StudyDeploymentController {
   int debugLevel = DebugLevel.WARNING;
-  StudyProtocol study;
-  StudyExecutor executor;
+  // StudyProtocol study;
+  CAMSMasterDeviceDeployment deployment;
+  StudyDeploymentExecutor executor;
   DataManager dataManager;
   SamplingSchema samplingSchema;
   String privacySchemaName;
-  DatumStreamTransformer transformer;
+  DataPointStreamTransformer transformer;
 
   /// The permissions granted to this study from the OS.
   Map<Permission, PermissionStatus> permissions;
 
-  Stream<Datum> _events;
+  Stream<DataPoint> _events;
 
   /// The stream of all sampled data.
   ///
   /// Datum in the [events] stream are transformed in the following order:
   ///   1. privacy schema as specified in the [privacySchemaName]
-  ///   2. preferred data format as specified by [dataFormat] in the [study]
+  ///   2. preferred data format as specified by [dataFormat] in the [deployment]
   ///   3. any custom [transformer] provided
   ///
   /// This is a broadcast stream and supports multiple subscribers.
-  Stream<Datum> get events {
+  Stream<DataPoint> get events {
     _events ??= transformer(executor.events
-        .map((datum) => TransformerSchemaRegistry()
+        .map((dataPoint) => DataPointTransformerSchemaRegistry()
             .lookup(privacySchemaName)
-            .transform(datum))
-        .map((datum) => TransformerSchemaRegistry()
-            .lookup(study.dataFormat)
-            .transform(datum))).asBroadcastStream();
+            .transform(dataPoint))
+        .map((dataPoint) => DataPointTransformerSchemaRegistry()
+            .lookup(deployment.dataFormat)
+            .transform(dataPoint))).asBroadcastStream();
 
     return _events;
   }
@@ -45,11 +48,11 @@ class StudyController {
 
   int _samplingSize = 0;
 
-  /// The sampling size of this [study] in terms of number of [Datum] object
+  /// The sampling size of this [deployment] in terms of number of [Datum] object
   /// that has been collected.
   int get samplingSize => _samplingSize;
 
-  /// Create a new [StudyController] to control the [study].
+  /// Create a new [StudyDeploymentController] to control the [deployment].
   ///
   /// A number of optional parameters can be specified:
   ///    * A custom study [executor] can be specified.
@@ -71,10 +74,10 @@ class StudyController {
   ///
   /// Datum in the [events] stream are transformed in the following order:
   ///   1. privacy schema as specified in the [privacySchemaName]
-  ///   2. preferred data format as specified by [dataFormat] in the [study]
+  ///   2. preferred data format as specified by [dataFormat] in the [deployment]
   ///   3. any custom [transformer] provided
-  StudyController(
-    this.study, {
+  StudyDeploymentController(
+    this.deployment, {
     this.executor,
     this.samplingSchema,
     this.dataManager,
@@ -82,7 +85,7 @@ class StudyController {
     this.transformer,
     this.debugLevel = DebugLevel.WARNING,
   }) : super() {
-    assert(study != null);
+    assert(deployment != null);
     // set global debug level
     globalDebugLevel = debugLevel;
 
@@ -97,10 +100,10 @@ class StudyController {
     if (dataManager != null) DataManagerRegistry().register(dataManager);
 
     // now initialize optional parameters
-    executor ??= StudyExecutor(study);
+    executor ??= StudyDeploymentExecutor(deployment);
     samplingSchema ??= SamplingSchema.normal(powerAware: true);
-    dataManager ??= (study.dataEndPoint != null)
-        ? DataManagerRegistry().lookup(study.dataEndPoint.format)
+    dataManager ??= (deployment.dataEndPoint != null)
+        ? DataManagerRegistry().lookup(deployment.dataEndPoint.type)
         : null;
     privacySchemaName ??= NameSpace.CARP;
     transformer ??= ((events) => events);
@@ -116,7 +119,7 @@ class StudyController {
     DeviceInfo();
 
     // if no user is specified for this study, look up the local user id
-    study.userId ??= await settings.userId;
+    deployment.userId ??= await settings.userId;
 
     // setting up permissions
     permissions = await PermissionHandlerPlatform.instance
@@ -130,29 +133,29 @@ class StudyController {
     });
 
     info('CARP Mobile Sensing (CAMS) - Initializing Study Controller: ');
-    info('     study id : ${study.id}');
-    info('   study name : ${study.name}');
-    info('         user : ${study.userId}');
-    info('     endpoint : ${study.dataEndPoint}');
-    info('  data format : ${study.dataFormat}');
-    info('     platform : ${DeviceInfo().platform.toString()}');
-    info('    device ID : ${DeviceInfo().deviceID.toString()}');
-    info(' data manager : ${dataManager?.toString()}');
-    info('  permissions : ${permissions?.toString()}');
+    info('      study id : ${deployment.studyId}');
+    info(' deployment id : ${deployment.studyDeploymentId}');
+    info('    study name : ${deployment.name}');
+    info('          user : ${deployment.userId}');
+    info('      endpoint : ${deployment.dataEndPoint}');
+    info('   data format : ${deployment.dataFormat}');
+    info('      platform : ${DeviceInfo().platform.toString()}');
+    info('     device ID : ${DeviceInfo().deviceID.toString()}');
+    info('  data manager : ${dataManager?.toString()}');
+    info('   permissions : ${permissions?.toString()}');
 
     if (samplingSchema != null) {
       // doing two adaptation is a bit of a hack; used to ensure that
       // restoration values are set to the specified sampling schema
-      study.adapt(samplingSchema, restore: false);
-      study.adapt(samplingSchema, restore: false);
+      deployment.adapt(samplingSchema, restore: false);
+      deployment.adapt(samplingSchema, restore: false);
     }
 
     // initialize the data manager, device registry, and study executor
-    await dataManager?.initialize(study, events);
-    await DeviceRegistry().initialize(study, events);
-    executor.initialize(
-      Measure(type: DataType(NameSpace.CARP, CAMSDataType.EXECUTOR)),
-    );
+    await dataManager?.initialize(deployment.dataEndPoint, events);
+    await DeviceRegistry().initialize(deployment, events);
+    executor.initialize(Measure(
+        type: DataType(NameSpace.CARP, CAMSDataType.EXECUTOR).toString()));
     await enablePowerAwareness();
     events.listen((datum) => _samplingSize++);
   }
@@ -173,14 +176,13 @@ class StudyController {
             powerAwarenessState = newState;
             info(
                 'PowerAware: Going to $powerAwarenessState, level ${batteryState.batteryLevel}%');
-            study.adapt(powerAwarenessState.schema);
+            deployment.adapt(powerAwarenessState.schema);
           }
         }
       });
       _battery.initialize(Measure(
-        type: DataType(NameSpace.CARP, DeviceSamplingPackage.BATTERY),
-        name: 'PowerAwarenessProbe',
-      ));
+          type: DataType(NameSpace.CARP, DeviceSamplingPackage.BATTERY)
+              .toString()));
       _battery.resume();
     }
   }
@@ -191,14 +193,14 @@ class StudyController {
   }
 
   /// Resume this controller, i.e. resume data collection according to the
-  /// specified [study] and [samplingSchema].
+  /// specified [deployment] and [samplingSchema].
   @Deprecated('Use the resume() method instead')
   void start() {
     resume();
   }
 
   /// Resume this controller, i.e. resume data collection according to the
-  /// specified [study] and [samplingSchema].
+  /// specified [deployment] and [samplingSchema].
   void resume() {
     info('Resuming data sampling ...');
     executor.resume();

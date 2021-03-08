@@ -26,7 +26,7 @@ void sensing() async {
           ]));
 
   // setup and start the sampling runtime
-  StudyController controller = StudyController(study);
+  StudyDeploymentController controller = StudyDeploymentController(study);
   await controller.initialize();
   controller.resume();
 

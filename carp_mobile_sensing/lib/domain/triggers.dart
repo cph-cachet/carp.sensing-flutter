@@ -45,13 +45,13 @@ class ImmediateTrigger extends CAMSTrigger {
   Map<String, dynamic> toJson() => _$ImmediateTriggerToJson(this);
 }
 
-/// A trigger that can be started manually by calling the [resume] method
-/// and paused by calling the [pause] method.
+/// A trigger that waits to be started until the [resume] method is called.
+/// Is paused by calling the [pause] method.
 ///
-/// Note that sampling continues until it is manually paused.
+/// Note that sampling continues until it is explicitly paused.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class SimpleTrigger extends CAMSTrigger {
-  SimpleTrigger({String triggerId}) : super(triggerId: triggerId);
+class PassiveTrigger extends CAMSTrigger {
+  PassiveTrigger({String triggerId}) : super(triggerId: triggerId);
 
   @JsonKey(ignore: true)
   dynamic executor;
@@ -69,10 +69,11 @@ class SimpleTrigger extends CAMSTrigger {
   /// which again implies that all [Measure]s in these tasks are paused.
   void pause() => executor?.pause();
 
-  Function get fromJsonFunction => _$SimpleTriggerFromJson;
-  factory SimpleTrigger.fromJson(Map<String, dynamic> json) => FromJsonFactory()
-      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
-  Map<String, dynamic> toJson() => _$SimpleTriggerToJson(this);
+  Function get fromJsonFunction => _$PassiveTriggerFromJson;
+  factory PassiveTrigger.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$PassiveTriggerToJson(this);
 }
 
 /// A trigger that delays sampling for [delay] and then starts sampling.

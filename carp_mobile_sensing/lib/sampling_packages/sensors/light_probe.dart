@@ -21,7 +21,7 @@ class LightProbe extends BufferingPeriodicStreamProbe {
     super.onInitialize(measure);
   }
 
-  Future<Datum> getDatum() async {
+  Future<Datum> getDataPoint() async {
     if (luxValues.isNotEmpty) {
       Stats stats = Stats.fromData(luxValues);
       return LightDatum(
