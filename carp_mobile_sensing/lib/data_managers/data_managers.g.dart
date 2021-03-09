@@ -17,9 +17,7 @@ FileDataEndPoint _$FileDataEndPointFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$FileDataEndPointToJson(FileDataEndPoint instance) {
-  final val = <String, dynamic>{
-    r'$type': instance.$type,
-  };
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -27,6 +25,7 @@ Map<String, dynamic> _$FileDataEndPointToJson(FileDataEndPoint instance) {
     }
   }
 
+  writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
   writeNotNull('buffer_size', instance.bufferSize);
   writeNotNull('zip', instance.zip);

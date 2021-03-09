@@ -1,10 +1,10 @@
 part of device;
 
 class DeviceSamplingPackage extends SmartphoneSamplingPackage {
-  static const String DEVICE = 'device';
-  static const String MEMORY = 'memory';
-  static const String BATTERY = 'battery';
-  static const String SCREEN = 'screen';
+  static const String DEVICE = 'dk.cachet.device';
+  static const String MEMORY = 'dk.cachet.memory';
+  static const String BATTERY = 'dk.cachet.battery';
+  static const String SCREEN = 'dk.cachet.screen';
 
   List<String> get dataTypes => [
         DEVICE,
@@ -38,19 +38,19 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
     ..powerAware = true
     ..addMeasures([
       CAMSMeasure(
-        type: DataType(NameSpace.CARP, DEVICE),
+        type: DataType.fromString(DEVICE),
         name: 'Basic Device Info',
       ),
       PeriodicMeasure(
-          type: DataType(NameSpace.CARP, MEMORY),
+          type: DataType.fromString(MEMORY),
           name: 'Memory Usage',
           frequency: const Duration(minutes: 1)),
       CAMSMeasure(
-        type: DataType(NameSpace.CARP, BATTERY),
+        type: DataType.fromString(BATTERY),
         name: 'Battery',
       ),
       CAMSMeasure(
-        type: DataType(NameSpace.CARP, SCREEN),
+        type: DataType.fromString(SCREEN),
         name: 'Screen Activity (lock/on/off)',
       ),
     ]);
@@ -59,7 +59,7 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
     SamplingSchema light = common
       ..type = SamplingSchemaType.light
       ..name = 'Light sensor sampling';
-    (light.measures[DataType(NameSpace.CARP, MEMORY)] as CAMSMeasure).enabled =
+    (light.measures[DataType.fromString(MEMORY)] as CAMSMeasure).enabled =
         false;
     return light;
   }

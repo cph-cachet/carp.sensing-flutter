@@ -10,22 +10,26 @@ part of device;
 /// The [BatteryProbe] listens to the hardware battery and collect a [BatteryDatum]
 /// every time the battery state changes. For example, battery level or charging mode.
 class BatteryProbe extends StreamProbe {
-  Stream<Datum> get stream {
+  Stream<DataPoint> get stream {
     Battery battery = Battery();
-    StreamController<Datum> controller;
+    StreamController<DataPoint> controller;
     StreamSubscription<BatteryState> subscription;
 
     void onData(state) async {
       try {
         int level = await battery.batteryLevel;
-        Datum datum = BatteryDatum.fromBatteryState(level, state);
-        controller.add(datum);
+        DataPoint dataPoint = DataPoint.fromData(
+          BatteryDatum.fromBatteryState(level, state),
+          triggerId: triggerId,
+          deviceRoleName: deviceRoleName,
+        );
+        controller.add(dataPoint);
       } catch (error) {
         controller.addError(error);
       }
     }
 
-    controller = StreamController<Datum>(
+    controller = StreamController<DataPoint>(
         onListen: () => subscription.resume(),
         onPause: () => subscription.pause(),
         onResume: () => subscription.resume(),
@@ -64,9 +68,12 @@ class ScreenProbe extends StreamProbe {
     }
   }
 
-  Stream<Datum> get stream => Screen()
-      .screenStateStream
-      .map((event) => ScreenDatum.fromScreenStateEvent(event));
+  Stream<DataPoint> get stream =>
+      Screen().screenStateStream.map((event) => DataPoint.fromData(
+            ScreenDatum.fromScreenStateEvent(event),
+            triggerId: triggerId,
+            deviceRoleName: deviceRoleName,
+          ));
 }
 
 /// A probe that collects free virtual memory on a regular basis
@@ -78,19 +85,23 @@ class MemoryProbe extends PeriodicDataPointProbe {
     SysInfo.getFreePhysicalMemory();
   }
 
-  Future<Datum> getDataPoint() async => FreeMemoryDatum()
-    ..freePhysicalMemory = SysInfo.getFreePhysicalMemory()
-    ..freeVirtualMemory = SysInfo.getFreeVirtualMemory();
+  Future<DataPoint> getDataPoint() async => DataPoint.fromData(
+      FreeMemoryDatum()
+        ..freePhysicalMemory = SysInfo.getFreePhysicalMemory()
+        ..freeVirtualMemory = SysInfo.getFreeVirtualMemory(),
+      triggerId: triggerId,
+      deviceRoleName: deviceRoleName);
 }
 
 /// A probe that collects the device info about this device.
 class DeviceProbe extends DataPointProbe {
-  Future<Datum> getDataPoint() async {
-    return DeviceDatum(DeviceInfo().platform, DeviceInfo().deviceID,
-        deviceName: DeviceInfo().deviceName,
-        deviceModel: DeviceInfo().deviceModel,
-        deviceManufacturer: DeviceInfo().deviceManufacturer,
-        operatingSystem: DeviceInfo().operatingSystem,
-        hardware: DeviceInfo().hardware);
-  }
+  Future<DataPoint> getDataPoint() async => DataPoint.fromData(
+      DeviceDatum(DeviceInfo().platform, DeviceInfo().deviceID,
+          deviceName: DeviceInfo().deviceName,
+          deviceModel: DeviceInfo().deviceModel,
+          deviceManufacturer: DeviceInfo().deviceManufacturer,
+          operatingSystem: DeviceInfo().operatingSystem,
+          hardware: DeviceInfo().hardware),
+      triggerId: triggerId,
+      deviceRoleName: deviceRoleName);
 }

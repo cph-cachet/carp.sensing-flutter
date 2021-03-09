@@ -19,14 +19,14 @@ class Datum extends Data {
   String id;
 
   /// The UTC timestamp when this data was generated on the device.
-  DateTime timestamp;
+  // DateTime timestamp;
 
   /// Create a datum.
   ///
   /// If [multiDatum] is true, then multiple [Datum] objects are stored in a
   /// list with the same header.
   Datum({bool multiDatum = false}) : super() {
-    timestamp = DateTime.now().toUtc();
+    // timestamp = DateTime.now().toUtc();
     if (!multiDatum) {
       id = Uuid().v1(); // Generates a time-based version 1 UUID.
     }
@@ -39,7 +39,8 @@ class Datum extends Data {
   Map<String, dynamic> toJson() => _$DatumToJson(this);
 
   String toString() =>
-      '$runtimeType - format: $format, id: $id, timestamp: $timestamp';
+      // '$runtimeType - format: $format, id: $id, timestamp: $timestamp';
+      '$runtimeType - format: $format, id: $id';
 }
 
 /// A very simple [Datum] that only holds a string datum object.
@@ -225,12 +226,12 @@ class MultiDatum extends Datum {
 
 /// Enumeration of data types used in [DataType].
 class CAMSDataType {
-  static const String UNKNOWN = 'unknown';
-  static const String NONE = 'none';
+  static const String UNKNOWN = 'dk.cachet.unknown';
+  static const String NONE = 'dk.cachet.none';
+  static const String STRING = 'dk.cachet.string';
+  static const String MAP = 'dk.cachet.map';
+  static const String ERROR = 'dk.cachet.error';
   static const String EXECUTOR = 'executor';
-  static const String STRING = 'string';
-  static const String MAP = 'map';
-  static const String ERROR = 'error';
   static const String FILE = 'file';
 
   static final List<String> _allTypes = [];

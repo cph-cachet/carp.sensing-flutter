@@ -152,7 +152,7 @@ class StudyDeploymentController {
     }
 
     // initialize the data manager, device registry, and study executor
-    await dataManager?.initialize(deployment.dataEndPoint, events);
+    await dataManager?.initialize(deployment, events);
     await DeviceRegistry().initialize(deployment, events);
     executor.initialize(Measure(
         type: DataType(NameSpace.CARP, CAMSDataType.EXECUTOR).toString()));

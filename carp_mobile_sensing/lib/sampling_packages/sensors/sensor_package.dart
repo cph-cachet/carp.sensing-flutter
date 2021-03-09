@@ -1,12 +1,13 @@
 part of sensors;
 
 class SensorSamplingPackage extends SmartphoneSamplingPackage {
-  static const String ACCELEROMETER = 'accelerometer';
-  static const String GYROSCOPE = 'gyroscope';
-  static const String PERIODIC_ACCELEROMETER = 'periodic_accelerometer';
-  static const String PERIODIC_GYROSCOPE = 'periodic_gyroscope';
-  static const String PEDOMETER = 'pedometer';
-  static const String LIGHT = 'light';
+  static const String ACCELEROMETER = 'dk.cachet.accelerometer';
+  static const String GYROSCOPE = 'dk.cachet.gyroscope';
+  static const String PERIODIC_ACCELEROMETER =
+      'dk.cachet.periodic_accelerometer';
+  static const String PERIODIC_GYROSCOPE = 'dk.cachet.periodic_gyroscope';
+  static const String PEDOMETER = 'dk.cachet.pedometer';
+  static const String LIGHT = 'dk.cachet.light';
 
   List<String> get dataTypes => [
         ACCELEROMETER,
@@ -46,35 +47,35 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
     ..powerAware = true
     ..addMeasures([
       CAMSMeasure(
-        type: DataType(NameSpace.CARP, ACCELEROMETER),
+        type: DataType.fromString(ACCELEROMETER),
         name: 'Accelerometer',
         enabled: false,
       ),
       CAMSMeasure(
-        type: DataType(NameSpace.CARP, GYROSCOPE),
+        type: DataType.fromString(GYROSCOPE),
         name: 'Gyroscope',
         enabled: false,
       ),
       PeriodicMeasure(
-        type: DataType(NameSpace.CARP, PERIODIC_ACCELEROMETER),
+        type: DataType.fromString(PERIODIC_ACCELEROMETER),
         name: 'Accelerometer',
         enabled: false,
         frequency: const Duration(seconds: 5),
         duration: const Duration(seconds: 1),
       ),
       PeriodicMeasure(
-        type: DataType(NameSpace.CARP, PERIODIC_GYROSCOPE),
+        type: DataType.fromString(PERIODIC_GYROSCOPE),
         name: 'Gyroscope',
         enabled: false,
         frequency: const Duration(seconds: 5),
         duration: const Duration(seconds: 1),
       ),
       CAMSMeasure(
-        type: DataType(NameSpace.CARP, PEDOMETER),
+        type: DataType.fromString(PEDOMETER),
         name: 'Pedometer (Step Count)',
       ),
       PeriodicMeasure(
-        type: DataType(NameSpace.CARP, LIGHT),
+        type: DataType.fromString(LIGHT),
         name: 'Ambient Light',
         frequency: const Duration(minutes: 1),
         duration: const Duration(seconds: 1),
@@ -85,8 +86,7 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
     SamplingSchema light = common
       ..type = SamplingSchemaType.light
       ..name = 'Light sensor sampling';
-    (light.measures[DataType(NameSpace.CARP, LIGHT)] as CAMSMeasure).enabled =
-        false;
+    (light.measures[DataType.fromString(LIGHT)] as CAMSMeasure).enabled = false;
     return light;
   }
 
@@ -94,8 +94,8 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
     SamplingSchema minimum = common
       ..type = SamplingSchemaType.light
       ..name = 'Light sensor sampling';
-    (minimum.measures[DataType(NameSpace.CARP, PEDOMETER)] as CAMSMeasure)
-        .enabled = false;
+    (minimum.measures[DataType.fromString(PEDOMETER)] as CAMSMeasure).enabled =
+        false;
     return minimum;
   }
 
@@ -107,25 +107,24 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
     ..powerAware = false
     ..addMeasures([
       CAMSMeasure(
-          type: DataType(NameSpace.CARP, ACCELEROMETER), name: 'Accelerometer'),
+          type: DataType.fromString(ACCELEROMETER), name: 'Accelerometer'),
       CAMSMeasure(type: DataType(NameSpace.CARP, GYROSCOPE), name: 'Gyroscope'),
       PeriodicMeasure(
-        type: DataType(NameSpace.CARP, PERIODIC_ACCELEROMETER),
+        type: DataType.fromString(PERIODIC_ACCELEROMETER),
         name: 'Accelerometer',
         frequency: const Duration(seconds: 5),
         duration: const Duration(seconds: 1),
       ),
       PeriodicMeasure(
-        type: DataType(NameSpace.CARP, PERIODIC_GYROSCOPE),
+        type: DataType.fromString(PERIODIC_GYROSCOPE),
         name: 'Gyroscope',
         frequency: const Duration(seconds: 5),
         duration: const Duration(seconds: 1),
       ),
       CAMSMeasure(
-          type: DataType(NameSpace.CARP, PEDOMETER),
-          name: 'Pedometer (Step Count)'),
+          type: DataType.fromString(PEDOMETER), name: 'Pedometer (Step Count)'),
       PeriodicMeasure(
-        type: DataType(NameSpace.CARP, LIGHT),
+        type: DataType.fromString(LIGHT),
         name: 'Ambient Light',
         frequency: const Duration(seconds: 10),
         duration: const Duration(seconds: 2),

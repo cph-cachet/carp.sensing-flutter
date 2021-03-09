@@ -11,11 +11,16 @@ part of sensors;
 /// sensor probes.
 abstract class BufferingSensorProbe extends BufferingPeriodicStreamProbe {
   MultiDatum datum = MultiDatum();
+  DateTime samplingStart;
 
-  Future<Datum> getDataPoint() async => datum;
+  Future<DataPoint> getDataPoint() async => DataPoint.fromData(datum,
+      triggerId: triggerId, deviceRoleName: deviceRoleName)
+    ..carpHeader.startTime = samplingStart
+    ..carpHeader.endTime = DateTime.now();
 
   void onSamplingStart() {
     datum = MultiDatum();
+    samplingStart = DateTime.now();
   }
 
   void onSamplingEnd() {}
@@ -26,8 +31,9 @@ abstract class BufferingSensorProbe extends BufferingPeriodicStreamProbe {
 /// Note that this probe generates a lot of data and should be used
 /// with caution.
 class AccelerometerProbe extends StreamProbe {
-  Stream<Datum> get stream => accelerometerEvents
-      .map((event) => AccelerometerDatum.fromAccelerometerEvent(event));
+  Stream<DataPoint> get stream => accelerometerEvents.map((event) =>
+      DataPoint.fromData(AccelerometerDatum.fromAccelerometerEvent(event),
+          triggerId: triggerId, deviceRoleName: deviceRoleName));
 }
 
 /// A probe that collects accelerometer events and buffers them and return
@@ -46,8 +52,9 @@ class BufferingAccelerometerProbe extends BufferingSensorProbe {
 /// Note that this probe generates a lot of data and should be used
 /// with caution.
 class GyroscopeProbe extends StreamProbe {
-  Stream<Datum> get stream =>
-      gyroscopeEvents.map((event) => GyroscopeDatum.fromGyroscopeEvent(event));
+  Stream<DataPoint> get stream => gyroscopeEvents.map((event) =>
+      DataPoint.fromData(GyroscopeDatum.fromGyroscopeEvent(event),
+          triggerId: triggerId, deviceRoleName: deviceRoleName));
 }
 
 /// A probe that collects gyroscope events and buffers them and return

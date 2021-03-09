@@ -28,14 +28,14 @@ class ProbeRegistry {
   /// All running probes mapped according to their [CAMSDataType].
   Map<String, Set<Probe>> get probes => _probes;
 
-  final StreamGroup<Datum> _group = StreamGroup.broadcast();
+  final StreamGroup<DataPoint> _group = StreamGroup.broadcast();
 
   /// A stream of all events from all probes.
-  Stream<Datum> get events => _group.stream;
+  Stream<DataPoint> get events => _group.stream;
 
-  /// A stream of all events from probes of a specific [CAMSDataType].
-  Stream<Datum> eventsByType(String type) =>
-      _group.stream.where((Datum datum) => datum.format.name == type);
+  /// A stream of all events from probes of a specific [DataType].
+  Stream<DataPoint> eventsByType(String type) => _group.stream
+      .where((dataPoint) => dataPoint.carpHeader.dataFormat == type);
 
   /// If you create a probe manually, i.e. outside of the [ProbeRegistry]
   /// you can register it here.

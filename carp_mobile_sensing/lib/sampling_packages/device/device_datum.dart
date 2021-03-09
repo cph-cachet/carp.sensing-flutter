@@ -14,9 +14,9 @@ part of device;
 ///   * [IosDeviceInfo](https://pub.dev/documentation/device_info/latest/device_info/IosDeviceInfo-class.html)
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class DeviceDatum extends Datum {
-  static const DataType CARP_DATA_FORMAT =
-      DataType(NameSpace.CARP, DeviceSamplingPackage.DEVICE);
-  DataType get format => CARP_DATA_FORMAT;
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, DeviceSamplingPackage.DEVICE);
+  DataFormat get format => CARP_DATA_FORMAT;
 
   ///The platform type from which this Datum was collected.
   /// * `Android`
@@ -76,9 +76,9 @@ class DeviceDatum extends Datum {
 /// A [Datum] that holds battery level collected from the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class BatteryDatum extends Datum {
-  static const DataType CARP_DATA_FORMAT =
-      DataType(NameSpace.CARP, DeviceSamplingPackage.BATTERY);
-  DataType get format => CARP_DATA_FORMAT;
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, DeviceSamplingPackage.BATTERY);
+  DataFormat get format => CARP_DATA_FORMAT;
 
   static const String STATE_FULL = 'full';
   static const String STATE_CHARGING = 'charging';
@@ -126,9 +126,9 @@ class BatteryDatum extends Datum {
 /// Holds information about free memory on the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class FreeMemoryDatum extends Datum {
-  static const DataType CARP_DATA_FORMAT =
-      DataType(NameSpace.CARP, DeviceSamplingPackage.MEMORY);
-  DataType get format => CARP_DATA_FORMAT;
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, DeviceSamplingPackage.MEMORY);
+  DataFormat get format => CARP_DATA_FORMAT;
 
   /// Amount of free physical memory in bytes.
   int freePhysicalMemory;
@@ -150,9 +150,9 @@ class FreeMemoryDatum extends Datum {
 /// Holds a screen event collected from the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ScreenDatum extends Datum {
-  static const DataType CARP_DATA_FORMAT =
-      DataType(NameSpace.CARP, DeviceSamplingPackage.SCREEN);
-  DataType get format => CARP_DATA_FORMAT;
+  static const DataFormat CARP_DATA_FORMAT =
+      DataFormat(NameSpace.CARP, DeviceSamplingPackage.SCREEN);
+  DataFormat get format => CARP_DATA_FORMAT;
 
   /// A screen event:
   /// - SCREEN_OFF

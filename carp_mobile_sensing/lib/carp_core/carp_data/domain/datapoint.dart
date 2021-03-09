@@ -72,6 +72,21 @@ class DataPoint {
   /// Create a new [DataPoint].
   DataPoint(this.carpHeader, this.carpBody);
 
+  /// Create a [DataPoint] from a [Data].
+  factory DataPoint.fromData(
+    Data data, {
+    int triggerId,
+    String deviceRoleName,
+  }) =>
+      DataPoint(
+          DataPointHeader(
+            dataFormat: data.format,
+            triggerId: (triggerId != null) ? '$triggerId' : '',
+            deviceRoleName: deviceRoleName ?? '',
+            startTime: DateTime.now(),
+          ),
+          data);
+
   /// Create a [DataPoint] from a JSON map.
   factory DataPoint.fromJson(Map<String, dynamic> json) =>
       _$DataPointFromJson(json);
@@ -113,9 +128,9 @@ class DataPointHeader {
   /// The data format. See [DataFormat] and [NameSpace].
   DataFormat dataFormat;
 
-  /// Create a new [DataPointHeader]. [studyId] is required.
+  /// Create a new [DataPointHeader].
   DataPointHeader({
-    @required this.studyId,
+    this.studyId,
     this.userId,
     this.deviceRoleName,
     this.triggerId,

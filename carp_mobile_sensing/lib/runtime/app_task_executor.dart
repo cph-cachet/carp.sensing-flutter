@@ -114,7 +114,7 @@ class AppTaskController {
   /// Put [executor] on the [userTaskQueue] for later access by the app.
   void enqueue(AppTaskExecutor executor) {
     UserTask userTask =
-        _userTaskFactories[executor.appTask.format].create(executor);
+        _userTaskFactories[executor.appTask.type].create(executor);
     userTask.state = UserTaskState.enqueued;
     userTask.enqueued = DateTime.now();
     _userTaskMap[userTask.id] = userTask;
@@ -140,7 +140,7 @@ abstract class UserTask {
   final AppTaskExecutor _executor;
   UserTaskState _state = UserTaskState.initialized;
   String get id => _id;
-  String get type => _executor?.appTask?.format;
+  String get type => _executor?.appTask?.type;
   String get title => _executor?.appTask?.title;
   String get description => _executor?.appTask?.description;
   String get instructions => _executor?.appTask?.instructions;
@@ -247,7 +247,7 @@ class SensingUserTaskFactory implements UserTaskFactory {
   ];
 
   UserTask create(AppTaskExecutor executor) =>
-      (executor.appTask.format == SensingUserTask.ONE_TIME_SENSING_TYPE)
+      (executor.appTask.type == SensingUserTask.ONE_TIME_SENSING_TYPE)
           ? OneTimeSensingUserTask(executor)
           : SensingUserTask(executor);
 }

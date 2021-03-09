@@ -43,7 +43,7 @@ class SamplingPackageRegistry {
   ///
   /// Takes its settings from the [SamplingSchema.common()] schema, but
   /// enables all measures.
-  SamplingSchema maximum({String namespace}) => common(namespace: namespace)
+  SamplingSchema maximum({String namespace}) => common()
     ..type = SamplingSchemaType.maximum
     ..name = 'Default ALL sampling'
     ..powerAware = true
@@ -58,7 +58,7 @@ class SamplingPackageRegistry {
   /// at least once pr. day. This scheme is power-aware.
   ///
   /// These default settings are described in this [table](https://github.com/cph-cachet/carp.sensing-flutter/wiki/Schemas#samplingschemacommon).
-  SamplingSchema common({String namespace = NameSpace.UNKNOWN}) {
+  SamplingSchema common() {
     SamplingSchema schema = SamplingSchema()
       ..type = SamplingSchemaType.common
       ..name = 'Common (default) sampling'
@@ -66,8 +66,6 @@ class SamplingPackageRegistry {
 
     // join sampling schemas from each registered sampling package.
     packages.forEach((package) => schema.addSamplingSchema(package.common));
-    schema.measures.values
-        .forEach((measure) => measure.format.namespace = namespace);
 
     return schema;
   }
@@ -77,8 +75,8 @@ class SamplingPackageRegistry {
   /// This schema is used in the power-aware adaptation of sampling. See [PowerAwarenessState].
   /// [SamplingSchema.normal] is an empty schema and therefore don't change anything when
   /// used to adapt a [StudyProtocol] and its [Measure]s in the [adapt] method.
-  SamplingSchema normal({String namespace, bool powerAware}) => SamplingSchema(
-      format: SamplingSchemaType.NORMAL,
+  SamplingSchema normal({bool powerAware = true}) => SamplingSchema(
+      type: SamplingSchemaType.normal,
       name: 'Default sampling',
       powerAware: powerAware);
 
@@ -90,16 +88,14 @@ class SamplingPackageRegistry {
   /// at least once pr. day. This scheme is power-aware.
   ///
   /// See this [table](https://github.com/cph-cachet/carp.sensing-flutter/wiki/Schemas#samplingschemalight) for an overview.
-  SamplingSchema light({String namespace}) {
+  SamplingSchema light() {
     SamplingSchema schema = SamplingSchema()
-      ..format = SamplingSchemaType.LIGHT
+      ..type = SamplingSchemaType.light
       ..name = 'Light sampling'
       ..powerAware = true;
 
     // join sampling schemas from each registered sampling package.
     packages.forEach((package) => schema.addSamplingSchema(package.light));
-    schema.measures.values
-        .forEach((measure) => measure.format.namespace = namespace);
 
     return schema;
   }
@@ -108,16 +104,13 @@ class SamplingPackageRegistry {
   ///
   /// This schema is used in the power-aware adaptation of sampling.
   /// See [PowerAwarenessState].
-  SamplingSchema minimum({String namespace}) {
+  SamplingSchema minimum() {
     SamplingSchema schema = SamplingSchema()
-      ..format = SamplingSchemaType.MINIMUM
+      ..type = SamplingSchemaType.minimum
       ..name = 'Minimum sampling'
       ..powerAware = true;
 
-    // join sampling schemas from each registered sampling package.
     packages.forEach((package) => schema.addSamplingSchema(package.minimum));
-    schema.measures.values
-        .forEach((measure) => measure.format.namespace = namespace);
 
     return schema;
   }
@@ -129,11 +122,16 @@ class SamplingPackageRegistry {
   /// This schema pauses all sampling by disabling all probes.
   /// Sampling will be restored to the minimum level, once the device is
   /// recharged above the [PowerAwarenessState.MINIMUM_SAMPLING_LEVEL] level.
-  SamplingSchema none({String namespace = NameSpace.CARP}) {
+  SamplingSchema none() {
     SamplingSchema schema = SamplingSchema(
-        format: SamplingSchemaType.NONE, name: 'No sampling', powerAware: true);
-    CAMSDataType.all.forEach((key) => schema.measures[key] =
-        Measure(type: DataType(namespace, key), enabled: false));
+      type: SamplingSchemaType.none,
+      name: 'No sampling',
+      powerAware: true,
+    );
+    CAMSDataType.all.forEach((type) {
+      DataType dataType = DataType.fromString(type);
+      schema.measures[dataType] = CAMSMeasure(type: dataType, enabled: false);
+    });
 
     return schema;
   }
@@ -141,16 +139,13 @@ class SamplingPackageRegistry {
   /// A sampling schema for debugging purposes.
   /// Collects and combines the [SamplingPackage.debug] [SamplingSchema]s
   /// for each package.
-  SamplingSchema debug({String namespace = NameSpace.CARP}) {
+  SamplingSchema debug() {
     SamplingSchema schema = SamplingSchema()
-      ..format = SamplingSchemaType.DEBUG
+      ..type = SamplingSchemaType.debug
       ..name = 'Debugging sampling'
       ..powerAware = false;
 
-    // join sampling schemas from each registered sampling package.
     packages.forEach((package) => schema.addSamplingSchema(package.debug));
-    schema.measures.values
-        .forEach((measure) => measure.format.namespace = namespace);
 
     return schema;
   }
