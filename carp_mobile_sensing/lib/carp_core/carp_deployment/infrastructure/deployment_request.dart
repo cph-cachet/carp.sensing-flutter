@@ -18,6 +18,8 @@ part of carp_core;
 /// [carp.core-kotlin](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/carp.deployment.core/src/commonMain/kotlin/dk/cachet/carp/deployment/infrastructure/DeploymentServiceRequest.kt)
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class DeploymentServiceRequest extends Serializable {
+  String _infrastructurePackageNamespace =
+      'dk.cachet.carp.deployment.infrastructure';
   DeploymentServiceRequest(this.studyDeploymentId) : super();
 
   /// The CARP study deployment ID.
@@ -28,15 +30,22 @@ class DeploymentServiceRequest extends Serializable {
       FromJsonFactory()
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$DeploymentServiceRequestToJson(this);
-  String get jsonType =>
-      'dk.cachet.carp.deployment.infrastructure.DeploymentServiceRequest';
+  String get jsonType => '$_infrastructurePackageNamespace.$runtimeType';
 
   String toString() => '$runtimeType - studyDeploymentId: $studyDeploymentId';
 }
 
+abstract class ParticipationServiceRequest extends DeploymentServiceRequest {
+  String _serviceRequestPackageNamespace =
+      'dk.cachet.carp.deployment.infrastructure.ParticipationServiceRequest';
+  ParticipationServiceRequest(String studyDeploymentId)
+      : super(studyDeploymentId);
+  String get jsonType => '$_serviceRequestPackageNamespace.$runtimeType';
+}
+
 /// A request for getting the deployment invitations for an account id.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
-class GetActiveParticipationInvitations extends DeploymentServiceRequest {
+class GetActiveParticipationInvitations extends ParticipationServiceRequest {
   GetActiveParticipationInvitations(this.accountId) : super('');
 
   @JsonKey(ignore: true)
@@ -52,15 +61,13 @@ class GetActiveParticipationInvitations extends DeploymentServiceRequest {
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() =>
       _$GetActiveParticipationInvitationsToJson(this);
-  String get jsonType =>
-      'dk.cachet.carp.deployment.infrastructure.ParticipationServiceRequest.GetActiveParticipationInvitations';
 
   String toString() => '$runtimeType - accountId: $accountId';
 }
 
 /// A request for getting the status of a study deployment.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
-class GetStudyDeploymentStatus extends DeploymentServiceRequest {
+class GetStudyDeploymentStatus extends ParticipationServiceRequest {
   GetStudyDeploymentStatus(String studyDeploymentId) : super(studyDeploymentId);
 
   Function get fromJsonFunction => _$GetStudyDeploymentStatusFromJson;
@@ -68,9 +75,6 @@ class GetStudyDeploymentStatus extends DeploymentServiceRequest {
       FromJsonFactory()
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$GetStudyDeploymentStatusToJson(this);
-  String get jsonType =>
-      'dk.cachet.carp.deployment.infrastructure.DeploymentServiceRequest.GetStudyDeploymentStatus';
-  String toString() => super.toString();
 }
 
 /// A request for registering this device.
@@ -91,15 +95,13 @@ class RegisterDevice extends DeploymentServiceRequest {
       FromJsonFactory()
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$RegisterDeviceToJson(this);
-  String get jsonType =>
-      'dk.cachet.carp.deployment.infrastructure.DeploymentServiceRequest.RegisterDevice';
 
   String toString() => '${super.toString()}, deviceRoleName: $deviceRoleName';
 }
 
 /// A request for unregistering this device.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
-class UnregisterDevice extends DeploymentServiceRequest {
+class UnregisterDevice extends ParticipationServiceRequest {
   UnregisterDevice(String studyDeploymentId, this.deviceRoleName)
       : super(studyDeploymentId);
 
@@ -111,15 +113,13 @@ class UnregisterDevice extends DeploymentServiceRequest {
       FromJsonFactory()
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$UnregisterDeviceToJson(this);
-  String get jsonType =>
-      'dk.cachet.carp.deployment.infrastructure.DeploymentServiceRequest.UnregisterDevice';
 
   String toString() => '${super.toString()}, deviceRoleName: $deviceRoleName';
 }
 
 /// A request for getting the deployment for this master device.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
-class GetDeviceDeploymentFor extends DeploymentServiceRequest {
+class GetDeviceDeploymentFor extends ParticipationServiceRequest {
   GetDeviceDeploymentFor(String studyDeploymentId, this.masterDeviceRoleName)
       : super(studyDeploymentId);
 
@@ -131,8 +131,6 @@ class GetDeviceDeploymentFor extends DeploymentServiceRequest {
       FromJsonFactory()
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$GetDeviceDeploymentForToJson(this);
-  String get jsonType =>
-      'dk.cachet.carp.deployment.infrastructure.DeploymentServiceRequest.GetDeviceDeploymentFor';
 
   String toString() =>
       '${super.toString()}, masterDeviceRoleName: $masterDeviceRoleName';
@@ -157,8 +155,6 @@ class DeploymentSuccessful extends GetDeviceDeploymentFor {
       FromJsonFactory()
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$DeploymentSuccessfulToJson(this);
-  String get jsonType =>
-      'dk.cachet.carp.deployment.infrastructure.DeploymentServiceRequest.DeploymentSuccessful';
 
   String toString() =>
       '${super.toString()}, masterDeviceRoleName: $masterDeviceRoleName';

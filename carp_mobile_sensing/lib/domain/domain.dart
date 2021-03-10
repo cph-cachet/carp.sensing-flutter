@@ -31,6 +31,9 @@ part 'domain.g.dart';
 void registerFromJsonFunctions() {
   // info('Register all the fromJson function for the CAMS domain classes.');
 
+  FromJsonFactory().register(CAMSStudyProtocol());
+  FromJsonFactory().register(ProtocolOwner());
+
   // FromJsonFactory().register(StudyProtocol());
   // FromJsonFactory().register(DataEndPoint());
   // // FromJsonFactory().register(FileDataEndPoint());

@@ -8,39 +8,23 @@ String _encode(Object object) =>
     const JsonEncoder.withIndent(' ').convert(object);
 
 void main() {
-  StudyProtocol protocol;
+  // StudyProtocol protocol;
 
   setUp(() {
-    // // create a file data manager in order to support the file data endpoint
-    // FileDataManager();
-
-    // protocol = StudyProtocol(
-    //   userId: 'bardram',
-    //   name: 'bardram study',
-    // );
-    // //study.dataEndPoint = DataEndPoint(DataEndPointType.PRINT);
-    // protocol.dataEndPoint = FileDataEndPoint()
-    //   ..bufferSize = 50 * 1000
-    //   ..zip = true
-    //   ..encrypt = false;
-
-    // // adding all measure from the common schema to one one trigger and one task
-    // protocol.addTriggeredTask(
-    //     ImmediateTrigger(), // a simple trigger that starts immediately
-    //     AutomaticTaskDescriptor(name: 'Sampling Task')
-    //       ..measures = SamplingPackageRegistry()
-    //           .common(namespace: NameSpace.CARP)
-    //           .measures
-    //           .values
-    //           .toList() // a task with all measures
-    //     );
+    // FromJsonFactory().register(CAMSStudyProtocol());
+    // FromJsonFactory().register(ProtocolOwner());
+    registerFromJsonFunctions();
   });
 
   test('CAMSStudyProtocol -> JSON', () async {
     // Create a new study protocol.
     CAMSStudyProtocol protocol = CAMSStudyProtocol()
       ..name = 'Track patient movement'
-      ..ownerId = 'jakba@dtu.dk';
+      ..owner = ProtocolOwner(
+        id: 'jakba',
+        name: 'Jakob E. Bardram',
+        email: 'jakba@dtu.dk',
+      );
 
     // Define which devices are used for data collection.
     Smartphone phone = Smartphone(name: 'SM-A320FL', roleName: 'masterphone');
@@ -68,18 +52,17 @@ void main() {
 
     print(protocol);
     print(_encode(protocol));
-    expect(protocol.ownerId, 'jakba@dtu.dk');
+    expect(protocol.ownerId, 'jakba');
   });
 
   test('JSON -> StudyProtocol', () async {
     // Read the study protocol from json file
-    String plainJson =
-        File('lib/carp_core/test/json_files/study_1.json').readAsStringSync();
+    String plainJson = File('test/json/study_1.json').readAsStringSync();
 
-    StudyProtocol protocol =
-        StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
+    CAMSStudyProtocol protocol = CAMSStudyProtocol.fromJson(
+        json.decode(plainJson) as Map<String, dynamic>);
 
-    expect(protocol.ownerId, 'jakba@dtu.dk');
+    expect(protocol.ownerId, 'jakba');
     expect(protocol.masterDevices.first.roleName, 'masterphone');
     print(_encode(protocol));
   });

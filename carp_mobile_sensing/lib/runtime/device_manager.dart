@@ -20,42 +20,37 @@ class DeviceRegistry {
   /// Note that this model entails that only one device of the same
   /// type can be connected to a Device Manager (i.e., phone).
   final Map<String, DeviceManager> devices = {};
-  StudyProtocol _study;
-  StudyProtocol get study => _study;
+  MasterDeviceDeployment _deployment;
+  MasterDeviceDeployment get deployment => _deployment;
 
-  /// Initialize the device manager by specifying the running [StudyProtocol].
+  /// Initialize the device manager by specifying the running [MasterDeviceDeployment].
   /// and the stream of [Datum] events to handle.
-  Future initialize(StudyProtocol study, Stream<Datum> data) async {
-    _study = study;
-    //data.listen(onDatum, onError: onError, onDone: onDone);
+  Future initialize(
+      MasterDeviceDeployment deployment, Stream<DataPoint> data) async {
+    _deployment = deployment;
 
-    _study.connectedDevices.forEach((device) async {
-      DeviceManager _manager = await create(device.deviceType);
+    _deployment.connectedDevices.forEach((device) async {
+      DeviceManager _manager = await create(device.roleName);
       info('Creating device manager $_manager');
       await _manager.initialize(device, data);
-      devices[device.deviceType] = _manager;
+      devices[device.roleName] = _manager;
     });
-
-    //addEvent(DataManagerEvent(DataManagerEventTypes.INITIALIZED));
   }
 
-  /// Create an instance of a device manager based on the device type.
+  /// Create an instance of a device manager based on the device's role.
   ///
   /// This methods search the [SamplingPackageRegistry] for a [DeviceManager]
-  /// which has a device manager of the specified [deviceType].
-  Future<DeviceManager> create(String deviceType) async {
+  /// which has a device manager of the specified [roleName].
+  Future<DeviceManager> create(String roleName) async {
     DeviceManager _deviceManager;
 
     SamplingPackageRegistry().packages.forEach((package) {
-      if (package.deviceType == deviceType) {
+      // match the role name with the device type in a package
+      if (package.deviceType == roleName) {
         _deviceManager = package.deviceManager;
       }
     });
 
-    // if (_deviceManager != null) {
-    //   register(type, _deviceManager);
-    //   _group.add(_deviceManager.events);
-    // }
     return _deviceManager;
   }
 }
@@ -96,11 +91,9 @@ abstract class DeviceManager {
 
   /// Initialize the device manager by specifying the [DeviceDescriptor].
   /// and the stream of [Datum] events to handle.
-  Future initialize(DeviceDescriptor device, Stream<Datum> data) async {
+  Future initialize(DeviceDescriptor device, Stream<DataPoint> data) async {
     info('Initializing device manager, descriptor: $_device');
     _device = device;
-    // data.listen(onDatum, onError: onError, onDone: onDone);
-
     // addEvent(DataManagerEvent(DataManagerEventTypes.INITIALIZED));
   }
 
@@ -114,14 +107,12 @@ abstract class DeviceManager {
 class SmartphoneDeviceManager extends DeviceManager {
   String get id => DeviceInfo().deviceID;
 
-  Future initialize(DeviceDescriptor descriptor, Stream<Datum> data) async {
+  Future initialize(DeviceDescriptor descriptor, Stream<DataPoint> data) async {
     await super.initialize(descriptor, data);
     BatteryProbe()
       ..events.listen(
           (datum) => _batteryLevel = (datum as BatteryDatum).batteryLevel)
-      ..initialize(Measure(
-        type: DataType(NameSpace.CARP, DeviceSamplingPackage.BATTERY),
-      ))
+      ..initialize(Measure(type: DeviceSamplingPackage.BATTERY))
       ..resume();
     status = DeviceStatus.connected;
   }

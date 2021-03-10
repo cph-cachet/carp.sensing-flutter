@@ -34,9 +34,9 @@ void main() {
   });
   test(' -> JSON', () async {});
   test('JSON -> ActiveParticipationInvitation', () async {
-    String plainJson = File(
-            'lib/carp_core/test/json_files/active_participation_invitation.json')
-        .readAsStringSync();
+    String plainJson =
+        File('lib/carp_core/test/json/active_participation_invitation.json')
+            .readAsStringSync();
 
     ActiveParticipationInvitation invitation =
         ActiveParticipationInvitation.fromJson(
@@ -46,7 +46,7 @@ void main() {
   });
   test('JSON -> ActiveParticipationInvitation CANS', () async {
     String plainJson = File(
-            'lib/carp_core/test/json_files/active_participation_invitation_cans.json')
+            'lib/carp_core/test/json/active_participation_invitation_cans.json')
         .readAsStringSync();
 
     ActiveParticipationInvitation invitation =
@@ -58,7 +58,7 @@ void main() {
   });
   test('JSON -> MasterDeviceDeployment', () async {
     String plainJson =
-        File('lib/carp_core/test/json_files/master_device_deployment.json')
+        File('lib/carp_core/test/json/master_device_deployment.json')
             .readAsStringSync();
 
     MasterDeviceDeployment deployment = MasterDeviceDeployment.fromJson(
@@ -67,9 +67,8 @@ void main() {
     print(_encode(deployment));
   });
   test('JSON -> ParticipantData', () async {
-    String plainJson =
-        File('lib/carp_core/test/json_files/participant_data.json')
-            .readAsStringSync();
+    String plainJson = File('lib/carp_core/test/json/participant_data.json')
+        .readAsStringSync();
 
     ParticipantData data = ParticipantData.fromJson(
         json.decode(plainJson) as Map<String, dynamic>);
@@ -78,7 +77,7 @@ void main() {
   });
   test('JSON -> StudyDeploymentStatus', () async {
     String plainJson =
-        File('lib/carp_core/test/json_files/study_deployment_status.json')
+        File('lib/carp_core/test/json/study_deployment_status.json')
             .readAsStringSync();
 
     StudyDeploymentStatus status = StudyDeploymentStatus.fromJson(
@@ -89,7 +88,7 @@ void main() {
   });
   test('JSON -> StudyDeploymentStatus CANS', () async {
     String plainJson =
-        File('lib/carp_core/test/json_files/study_deployment_status_cans.json')
+        File('lib/carp_core/test/json/study_deployment_status_cans.json')
             .readAsStringSync();
 
     StudyDeploymentStatus status = StudyDeploymentStatus.fromJson(

@@ -2,6 +2,9 @@ part of runtime;
 
 /// A registry of [SamplingPackage] packages.
 class SamplingPackageRegistry {
+  final List<SamplingPackage> _packages = [];
+  final List<Permission> _permissions = [];
+
   static final SamplingPackageRegistry _instance = SamplingPackageRegistry._();
 
   /// Get the singleton [SamplingPackageRegistry].
@@ -9,11 +12,9 @@ class SamplingPackageRegistry {
 
   /// A list of registered packages.
   List<SamplingPackage> get packages => _packages;
-  final List<SamplingPackage> _packages = [];
 
   /// The list of [Permission] needed for the entire list of packages (combined list).
   List<Permission> get permissions => _permissions;
-  final List<Permission> _permissions = [];
 
   SamplingPackageRegistry._() {
     // HACK - creating a serializable object (such as a [Study]) ensures that
@@ -198,6 +199,10 @@ abstract class SamplingPackage {
   Probe create(String type);
 
   /// What device type is this package using?
+  ///
+  /// This device type is matched with the [DeviceDescriptor.roleName] when a
+  /// [MasterDeviceDeployment] is deployed on the phone and executed by a
+  /// [StudyDeploymentController].
   ///
   /// Default value is a smartphone. Override this if another type is supported.
   ///

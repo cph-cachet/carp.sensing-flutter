@@ -131,7 +131,7 @@ class StudyProtocol extends Serializable {
   factory StudyProtocol.fromJson(Map<String, dynamic> json) => FromJsonFactory()
       .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$StudyProtocolToJson(this);
-  String get jsonType => 'dk.cachet.carp.protocols.domain.StudyProtocol';
+  String get jsonType => 'dk.cachet.carp.protocols.domain.$runtimeType';
 
   String toString() => '$runtimeType - $name';
 }

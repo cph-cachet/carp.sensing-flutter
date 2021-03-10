@@ -142,8 +142,8 @@ class FromJsonFactory {
   /// Register a [Serializable] class which can be deserialized from JSON.
   ///
   /// If [type] is specified, then this is used as the type indentifier as
-  /// specified in [CLASS_IDENTIFIER]. Othervise the [Serializable] class [jsonType]
-  /// is used.
+  /// specified in [CLASS_IDENTIFIER].
+  /// Othervise the [Serializable] class [jsonType] is used.
   ///
   /// A type needs to be registered **before** a class can be deserialized from
   /// JSON to a Flutter class.

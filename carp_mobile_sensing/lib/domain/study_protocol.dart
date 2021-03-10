@@ -35,7 +35,7 @@ class CAMSStudyProtocol extends StudyProtocol {
   /// The owner of this study.
   ProtocolOwner owner;
 
-  String get ownerId => owner.id;
+  String get ownerId => owner?.id;
 
   /// Specify where and how to upload this study data.
   DataEndPoint dataEndPoint;
@@ -59,7 +59,7 @@ class CAMSStudyProtocol extends StudyProtocol {
     this.purpose,
     this.dataEndPoint,
     this.dataFormat = NameSpace.CARP,
-  }) : super(ownerId: owner.id, name: name, description: description) {
+  }) : super(ownerId: owner?.id, name: name, description: description) {
     studyId = Uuid().v1();
     super.name = name;
     super.description = description;
@@ -71,7 +71,7 @@ class CAMSStudyProtocol extends StudyProtocol {
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$CAMSStudyProtocolToJson(this);
 
-  String toString() => '$runtimeType - $name, $title';
+  String toString() => '$runtimeType - $name [$ownerId]';
 }
 
 /// A person that created a [StudyProtocol].

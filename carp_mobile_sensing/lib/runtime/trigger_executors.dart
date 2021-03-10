@@ -403,18 +403,19 @@ class SamplingEventTriggerExecutor extends TriggeredTaskExecutor {
       SamplingEventTrigger trigger, TaskDescriptor task)
       : super(trigger, task);
 
-  StreamSubscription<Datum> _subscription;
+  StreamSubscription<DataPoint> _subscription;
 
   Future onResume() async {
     SamplingEventTrigger eventTrigger = trigger as SamplingEventTrigger;
     // start listen for events of the specified type
     _subscription = ProbeRegistry()
-        .eventsByType(eventTrigger?.measureType?.name)
-        .listen((datum) {
+        .eventsByType(eventTrigger?.measureType?.toString())
+        .listen((dataPoint) {
       if ((eventTrigger?.resumeCondition == null) ||
-          (datum == eventTrigger?.resumeCondition)) super.onResume();
+          (dataPoint.carpBody == eventTrigger?.resumeCondition))
+        super.onResume();
       if (eventTrigger?.pauseCondition != null &&
-          datum == eventTrigger?.pauseCondition) super.onPause();
+          dataPoint.carpBody == eventTrigger?.pauseCondition) super.onPause();
     });
   }
 
@@ -434,7 +435,7 @@ class ConditionalSamplingEventTriggerExecutor extends TriggeredTaskExecutor {
       ConditionalSamplingEventTrigger trigger, TaskDescriptor task)
       : super(trigger, task);
 
-  StreamSubscription<Datum> _subscription;
+  StreamSubscription<DataPoint> _subscription;
 
   Future onResume() async {
     ConditionalSamplingEventTrigger eventTrigger =
@@ -442,12 +443,12 @@ class ConditionalSamplingEventTriggerExecutor extends TriggeredTaskExecutor {
 
     // listen for event of the specified type
     _subscription = ProbeRegistry()
-        .eventsByType(eventTrigger.measureType.name)
-        .listen((datum) {
+        .eventsByType(eventTrigger?.measureType.toString())
+        .listen((dataPoint) {
       if (eventTrigger?.resumeCondition != null &&
-          eventTrigger?.resumeCondition(datum)) super.onResume();
+          eventTrigger?.resumeCondition(dataPoint)) super.onResume();
       if (eventTrigger?.pauseCondition != null &&
-          eventTrigger?.pauseCondition(datum)) super.onPause();
+          eventTrigger?.pauseCondition(dataPoint)) super.onPause();
     });
   }
 

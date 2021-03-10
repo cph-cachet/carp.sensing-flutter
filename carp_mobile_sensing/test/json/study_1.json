@@ -1,0 +1,62 @@
+{
+    "$type": "dk.cachet.carp.protocols.domain.CAMSStudyProtocol",
+    "name": "Track patient movement",
+    "masterDevices": [
+     {
+      "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
+      "isMasterDevice": true,
+      "roleName": "masterphone",
+      "samplingConfiguration": {}
+     }
+    ],
+    "connectedDevices": [
+     {
+      "$type": "dk.cachet.carp.protocols.domain.devices.DeviceDescriptor",
+      "isMasterDevice": false,
+      "roleName": "eSense",
+      "samplingConfiguration": {}
+     }
+    ],
+    "triggers": [
+     {
+      "$type": "dk.cachet.carp.protocols.domain.triggers.Trigger"
+     }
+    ],
+    "tasks": [
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.ConcurrentTask",
+      "name": "Start measures",
+      "measures": [
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.light"
+       },
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.DataTypeMeasure",
+        "type": "dk.cachet.carp.gps"
+       },
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PhoneSensorMeasure",
+        "type": "dk.cachet.carp.steps",
+        "duration": 10
+       }
+      ]
+     }
+    ],
+    "triggeredTasks": [
+     {
+      "triggerId": 0,
+      "taskName": "Start measures",
+      "destinationDeviceRoleName": "masterphone"
+     }
+    ],
+    "studyId": "7b49cc30-81c0-11eb-b949-75af23a0745c",
+    "owner": {
+     "$type": "ProtocolOwner",
+     "id": "jakba",
+     "name": "Jakob E. Bardram",
+     "email": "jakba@dtu.dk"
+    },
+    "ownerId": "jakba",
+    "dataFormat": "dk.cachet.carp"
+   }

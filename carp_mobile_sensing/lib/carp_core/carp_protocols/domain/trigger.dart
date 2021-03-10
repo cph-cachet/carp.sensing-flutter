@@ -15,6 +15,8 @@ part of carp_core;
 /// the specific behavior / timing of a trigger.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class Trigger extends Serializable {
+  String _triggerNamespace = 'dk.cachet.carp.protocols.domain.triggers';
+
   /// The device role name from which the trigger originates.
   String sourceDeviceRoleName;
 
@@ -30,7 +32,7 @@ class Trigger extends Serializable {
   factory Trigger.fromJson(Map<String, dynamic> json) => FromJsonFactory()
       .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$TriggerToJson(this);
-  String get jsonType => 'dk.cachet.carp.protocols.domain.triggers.Trigger';
+  String get jsonType => '$_triggerNamespace.Trigger';
 }
 
 /// A trigger which starts a task after a specified amount of time has elapsed
@@ -50,8 +52,7 @@ class ElapsedTimeTrigger extends Trigger {
       FromJsonFactory()
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$ElapsedTimeTriggerToJson(this);
-  String get jsonType =>
-      'dk.cachet.carp.protocols.domain.triggers.ElapsedTimeTrigger';
+  String get jsonType => '$_triggerNamespace.ElapsedTimeTrigger';
 }
 
 /// A trigger initiated by a user, i.e., the user decides when to start a task.
@@ -71,8 +72,7 @@ class ManualTrigger extends Trigger {
   factory ManualTrigger.fromJson(Map<String, dynamic> json) => FromJsonFactory()
       .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$ManualTriggerToJson(this);
-  String get jsonType =>
-      'dk.cachet.carp.protocols.domain.triggers.ManualTrigger';
+  String get jsonType => '$_triggerNamespace.ManualTrigger';
 }
 
 /// A trigger which starts a task according to a recurring schedule starting on
@@ -95,8 +95,7 @@ class ScheduledTrigger extends Trigger {
       FromJsonFactory()
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$ScheduledTriggerToJson(this);
-  String get jsonType =>
-      'dk.cachet.carp.protocols.domain.triggers.ScheduledTrigger';
+  String get jsonType => '$_triggerNamespace.ScheduledTrigger';
 }
 
 /// A time on a day. Used in a [ScheduledTrigger].

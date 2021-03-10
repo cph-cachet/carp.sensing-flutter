@@ -1,10 +1,10 @@
 part of device;
 
 class DeviceSamplingPackage extends SmartphoneSamplingPackage {
-  static const String DEVICE = 'dk.cachet.device';
-  static const String MEMORY = 'dk.cachet.memory';
-  static const String BATTERY = 'dk.cachet.battery';
-  static const String SCREEN = 'dk.cachet.screen';
+  static const String DEVICE = 'dk.cachet.carp.device';
+  static const String MEMORY = 'dk.cachet.carp.memory';
+  static const String BATTERY = 'dk.cachet.carp.battery';
+  static const String SCREEN = 'dk.cachet.carp.screen';
 
   List<String> get dataTypes => [
         DEVICE,

@@ -1,13 +1,13 @@
 part of sensors;
 
 class SensorSamplingPackage extends SmartphoneSamplingPackage {
-  static const String ACCELEROMETER = 'dk.cachet.accelerometer';
-  static const String GYROSCOPE = 'dk.cachet.gyroscope';
+  static const String ACCELEROMETER = 'dk.cachet.carp.accelerometer';
+  static const String GYROSCOPE = 'dk.cachet.carp.gyroscope';
   static const String PERIODIC_ACCELEROMETER =
-      'dk.cachet.periodic_accelerometer';
-  static const String PERIODIC_GYROSCOPE = 'dk.cachet.periodic_gyroscope';
-  static const String PEDOMETER = 'dk.cachet.pedometer';
-  static const String LIGHT = 'dk.cachet.light';
+      'dk.cachet.carp.periodic_accelerometer';
+  static const String PERIODIC_GYROSCOPE = 'dk.cachet.carp.periodic_gyroscope';
+  static const String PEDOMETER = 'dk.cachet.carp.pedometer';
+  static const String LIGHT = 'dk.cachet.carp.light';
 
   List<String> get dataTypes => [
         ACCELEROMETER,
