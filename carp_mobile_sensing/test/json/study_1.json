@@ -5,7 +5,7 @@
      {
       "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
       "isMasterDevice": true,
-      "roleName": "masterphone",
+      "roleName": "phone",
       "samplingConfiguration": {}
      }
     ],
@@ -13,13 +13,16 @@
      {
       "$type": "dk.cachet.carp.protocols.domain.devices.DeviceDescriptor",
       "isMasterDevice": false,
-      "roleName": "eSense",
+      "roleName": "esense",
       "samplingConfiguration": {}
      }
     ],
     "triggers": [
      {
       "$type": "dk.cachet.carp.protocols.domain.triggers.Trigger"
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
      }
     ],
     "tasks": [
@@ -41,16 +44,104 @@
         "duration": 10
        }
       ]
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
+      "name": "Task #3",
+      "measures": [
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.device",
+        "name": "Basic Device Info",
+        "enabled": true,
+        "configuration": {}
+       },
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.memory",
+        "name": "Memory Usage",
+        "enabled": true,
+        "configuration": {},
+        "frequency": 60000000
+       },
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.battery",
+        "name": "Battery",
+        "enabled": true,
+        "configuration": {}
+       },
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.screen",
+        "name": "Screen Activity (lock/on/off)",
+        "enabled": true,
+        "configuration": {}
+       },
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.accelerometer",
+        "name": "Accelerometer",
+        "enabled": false,
+        "configuration": {}
+       },
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.gyroscope",
+        "name": "Gyroscope",
+        "enabled": false,
+        "configuration": {}
+       },
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.periodic_accelerometer",
+        "name": "Accelerometer",
+        "enabled": false,
+        "configuration": {},
+        "frequency": 5000000,
+        "duration": 1000000
+       },
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.periodic_gyroscope",
+        "name": "Gyroscope",
+        "enabled": false,
+        "configuration": {},
+        "frequency": 5000000,
+        "duration": 1000000
+       },
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.pedometer",
+        "name": "Pedometer (Step Count)",
+        "enabled": true,
+        "configuration": {}
+       },
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.light",
+        "name": "Ambient Light",
+        "enabled": true,
+        "configuration": {},
+        "frequency": 60000000,
+        "duration": 1000000
+       }
+      ]
      }
     ],
     "triggeredTasks": [
      {
       "triggerId": 0,
       "taskName": "Start measures",
-      "destinationDeviceRoleName": "masterphone"
+      "destinationDeviceRoleName": "phone"
+     },
+     {
+      "triggerId": 1,
+      "taskName": "Task #3",
+      "destinationDeviceRoleName": "phone"
      }
     ],
-    "studyId": "7b49cc30-81c0-11eb-b949-75af23a0745c",
+    "studyId": "23960410-82a9-11eb-8aa6-a7df55aa2135",
     "owner": {
      "$type": "ProtocolOwner",
      "id": "jakba",

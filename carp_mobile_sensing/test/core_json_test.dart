@@ -31,7 +31,7 @@ void main() {
     // adding all measure from the common schema to one one trigger and one task
     study.addTriggeredTask(
         ImmediateTrigger(), // a simple trigger that starts immediately
-        AutomaticTaskDescriptor(name: 'Sampling Task')
+        AutomaticTask(name: 'Sampling Task')
           ..measures = SamplingPackageRegistry()
               .common(namespace: NameSpace.CARP)
               .measures
@@ -112,7 +112,7 @@ void main() {
 
     study_3.addTriggeredTask(
         DelayedTrigger(delay: Duration(seconds: 10)),
-        AutomaticTaskDescriptor(name: 'Sensing Task #1')
+        AutomaticTask(name: 'Sensing Task #1')
           ..measures = SamplingPackageRegistry().common().getMeasureList(
               types: [
                 SensorSamplingPackage.PEDOMETER,
@@ -122,7 +122,7 @@ void main() {
     study_3.addTriggeredTask(
         PeriodicTrigger(
             period: const Duration(minutes: 1)), // collect every min.
-        AutomaticTaskDescriptor(name: 'Sensing Task #2')
+        AutomaticTask(name: 'Sensing Task #2')
           ..measures = SamplingPackageRegistry().common().getMeasureList(
               types: [
                 SensorSamplingPackage.LIGHT,
@@ -137,7 +137,7 @@ void main() {
     print('$t1');
     study_3.addTriggeredTask(
         t1,
-        AutomaticTaskDescriptor(name: 'Sensing Task #1')
+        AutomaticTask(name: 'Sensing Task #1')
           ..measures = SamplingPackageRegistry()
               .common()
               .getMeasureList(types: [DeviceSamplingPackage.MEMORY]));
@@ -150,7 +150,7 @@ void main() {
     print('$t2');
     study_3.addTriggeredTask(
         t2,
-        AutomaticTaskDescriptor(name: 'Sensing Task #1')
+        AutomaticTask(name: 'Sensing Task #1')
           ..measures = SamplingPackageRegistry().common().getMeasureList(
               types: [
                 SensorSamplingPackage.LIGHT,
@@ -165,7 +165,7 @@ void main() {
     print('$t3');
     study_3.addTriggeredTask(
         t3,
-        AutomaticTaskDescriptor(name: 'Sensing Task #1')
+        AutomaticTask(name: 'Sensing Task #1')
           ..measures = SamplingPackageRegistry().common().getMeasureList(
               types: [
                 SensorSamplingPackage.LIGHT,
@@ -181,7 +181,7 @@ void main() {
     print('$t4');
     study_3.addTriggeredTask(
         t4,
-        AutomaticTaskDescriptor(name: 'Sensing Task #1')
+        AutomaticTask(name: 'Sensing Task #1')
           ..measures = DeviceSamplingPackage().common.getMeasureList(types: [
             DeviceSamplingPackage.SCREEN,
             DeviceSamplingPackage.MEMORY
@@ -193,7 +193,7 @@ void main() {
             measureType:
                 DataType(NameSpace.CARP, DeviceSamplingPackage.BATTERY),
             resumeCondition: BatteryDatum()..batteryLevel = 10),
-        AutomaticTaskDescriptor(name: 'Sensing Task #1')
+        AutomaticTask(name: 'Sensing Task #1')
           ..measures = SensorSamplingPackage()
               .common
               .getMeasureList(types: [SensorSamplingPackage.LIGHT]));
@@ -204,7 +204,7 @@ void main() {
                 DataType(NameSpace.CARP, DeviceSamplingPackage.BATTERY),
             resumeCondition: (datum) =>
                 (datum as BatteryDatum).batteryLevel == 10),
-        AutomaticTaskDescriptor(name: 'Sensing Task #1')
+        AutomaticTask(name: 'Sensing Task #1')
           ..measures = SensorSamplingPackage()
               .common
               .getMeasureList(types: [SensorSamplingPackage.LIGHT]));

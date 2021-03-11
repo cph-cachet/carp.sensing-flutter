@@ -25,6 +25,7 @@ class StudyDeployment {
   final Set<DeviceDescriptor> _invalidatedDeployedDevices = {};
   DateTime _startTime;
   bool _isStopped = false;
+  StudyDeploymentStatus _status;
 
   String get studyDeploymentId => _studyDeploymentId;
   DateTime get creationDate => _creationDate;
@@ -57,29 +58,37 @@ class StudyDeployment {
         'Cannot create a StudyDeployment without a protocol.');
     _studyDeploymentId = Uuid().v1();
     _creationDate = DateTime.now();
+    _status = StudyDeploymentStatus(studyDeploymentId: _studyDeploymentId);
   }
 
   /// Get the status of this [StudyDeployment].
-  StudyDeploymentStatus get status {
-    StudyDeploymentStatus status =
-        StudyDeploymentStatus(studyDeploymentId: studyDeploymentId);
+  StudyDeploymentStatus get status => _status;
 
-    // TODO - set the device status
-    status.devicesStatus = [];
+  /// Set the status of this [StudyDeployment].
+  // void set status(StudyDeploymentStatus status) => _status = status;
+  // {
+  //   StudyDeploymentStatus status =
+  //       StudyDeploymentStatus(studyDeploymentId: studyDeploymentId);
 
-    // TODO - check that all devices are ready, before setting the overall status
+  //   // TODO - set the device status
+  //   status.devicesStatus = [];
 
-    status.status = (isStopped)
-        ? StudyDeploymentStatusTypes.Stopped
-        : StudyDeploymentStatusTypes.DeploymentReady;
+  //   // TODO - check that all devices are ready, before setting the overall status
 
-    return status;
-  }
+  //   status.status = (isStopped)
+  //       ? StudyDeploymentStatusTypes.Stopped
+  //       : StudyDeploymentStatusTypes.DeploymentReady;
+
+  //   return status;
+  // }
 
   /// Register the specified [device] for this deployment using the [registration]
   /// options.
   void registerDevice(
-      DeviceDescriptor device, DeviceRegistration registration) {
+    DeviceDescriptor device,
+    DeviceRegistration registration,
+  ) {
+    _status.status = StudyDeploymentStatusTypes.DeployingDevices;
     // Add device to currently registered devices and also store it in registration history.
     _registeredDevices[device] = registration;
     if (_deviceRegistrationHistory[device] == null)
@@ -97,8 +106,8 @@ class StudyDeployment {
   /// this study deployment.
   MasterDeviceDeployment getDeviceDeploymentFor(MasterDeviceDescriptor device) {
     // Verify whether the specified device is part of the protocol of this deployment.
-    assert(_protocol.masterDevices.contains(device),
-        "The specified master device is not part of the protocol of this deployment.");
+    // assert(_protocol.masterDevices.contains(device),
+    //     "The specified master device is not part of the protocol of this deployment.");
 
     // TODO - Verify whether the specified device is ready to be deployed.
     DeviceRegistration configuration = _registeredDevices[device];
@@ -113,8 +122,8 @@ class StudyDeployment {
 
     // Get all tasks which might need to be executed on this or connected devices.
     List<TaskDescriptor> tasks = [];
-    connectedDevices.forEach(
-        (descriptor) => tasks.addAll(protocol.getTasksForDevice(descriptor)));
+    deviceRegistrations.keys.forEach((deviceRoleName) =>
+        tasks.addAll(protocol.getTasksForDeviceRoleName(deviceRoleName)));
 
     // Get all trigger information for this and connected devices.
     // The trigger IDs assigned are reused to identify them within the protocol
@@ -122,13 +131,16 @@ class StudyDeployment {
     List<TriggeredTask> triggeredTasks = [];
     int index = 0;
     _protocol.triggers.forEach((trigger) {
-      usedTriggers['${++index}'] = trigger;
+      usedTriggers['${index}'] = trigger;
       Set<TriggeredTask> tt = _protocol.getTriggeredTasks(trigger);
       tt.forEach((triggeredTask) {
         triggeredTask.triggerId = index;
         triggeredTasks.add(triggeredTask);
       });
+      index++;
     });
+
+    status.status = StudyDeploymentStatusTypes.DeploymentReady;
 
     return MasterDeviceDeployment(
         deviceDescriptor: device,
@@ -154,7 +166,10 @@ class StudyDeployment {
 
   /// Stop this study deployment. No further changes to this deployment
   /// are allowed and no more data should be collected.
-  void stop() => _isStopped = true;
+  void stop() {
+    _isStopped = true;
+    status.status = StudyDeploymentStatusTypes.Stopped;
+  }
 }
 
 enum StudyDeploymentStatusTypes {
@@ -177,7 +192,7 @@ enum StudyDeploymentStatusTypes {
 /// See [StudyDeploymentStatus.kt](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/carp.deployment.core/src/commonMain/kotlin/dk/cachet/carp/deployment/domain/StudyDeploymentStatus.kt).
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class StudyDeploymentStatus extends Serializable {
-  StudyDeploymentStatusTypes _status = StudyDeploymentStatusTypes.Invited;
+  StudyDeploymentStatusTypes _status;
 
   /// The CARP study deployment ID.
   String studyDeploymentId;
@@ -197,9 +212,10 @@ class StudyDeploymentStatus extends Serializable {
   @JsonKey(ignore: true)
   StudyDeploymentStatusTypes get status {
     // if this object has been created locally, then we know the status
-    if ($type == runtimeType) return _status;
+    if (_status != null) return _status;
 
-    // if this object was create from json deserialization, the $type reflects the status
+    // if this object was create from json deserialization,
+    // the $type reflects the status
     switch ($type.split('.').last) {
       case 'Invited':
         return StudyDeploymentStatusTypes.Invited;
@@ -224,7 +240,9 @@ class StudyDeploymentStatus extends Serializable {
   DeviceDeploymentStatus get masterDeviceStatus =>
       devicesStatus?.firstWhere((element) => element.device?.isMasterDevice);
 
-  StudyDeploymentStatus({this.studyDeploymentId}) : super();
+  StudyDeploymentStatus({this.studyDeploymentId}) : super() {
+    _status = StudyDeploymentStatusTypes.Invited;
+  }
 
   Function get fromJsonFunction => _$StudyDeploymentStatusFromJson;
   factory StudyDeploymentStatus.fromJson(Map<String, dynamic> json) =>

@@ -41,7 +41,7 @@ void main() {
 
     study.addTriggeredTask(
         ImmediateTrigger(),
-        AutomaticTaskDescriptor(name: 'Sensor Task')
+        AutomaticTask(name: 'Sensor Task')
           ..addMeasure(PeriodicMeasure(
               format:
                   DataType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),

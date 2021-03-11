@@ -15,6 +15,9 @@ part of carp_core;
 /// This is part of the [carp.protocols](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-protocols.md) domain model.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class StudyProtocol extends Serializable {
+  Map<Trigger, Set<TriggeredTask>> _triggeredTasksMap = {};
+  Map<String, TaskDescriptor> _taskMap = {};
+
   /// The owner of this study.
   String ownerId;
 
@@ -39,8 +42,6 @@ class StudyProtocol extends Serializable {
   /// The tasks (and the devices they are triggered to) for the specified [trigger].
   List<TriggeredTask> triggeredTasks = [];
 
-  Map<Trigger, Set<TriggeredTask>> _triggeredTasksMap = {};
-
   /// Create a new [StudyProtocol].
   StudyProtocol({
     this.ownerId,
@@ -63,8 +64,9 @@ class StudyProtocol extends Serializable {
 
   /// Add a [task] to be sent to a [targetDevice] once a [trigger] within this
   /// protocol is initiated.
-  /// In case the [trigger] or [task] is not yet included in this study protocol,
-  /// it will be added.
+  ///
+  /// In case the [trigger] or [task] are not yet included in this study protocol,
+  /// they will be added. Note that the [task.name] has to be unique within a protocol.
   /// The [targetDevice] needs to be added prior to this call since it needs to
   /// be set up as either a master device or connected device.
   void addTriggeredTask(
@@ -84,6 +86,19 @@ class StudyProtocol extends Serializable {
     triggeredTasks.add(triggeredTask);
   }
 
+  /// Add a set of [tasks] to be sent to a [targetDevice] once a [trigger] within this
+  /// protocol is initiated.
+  /// In case the [trigger] or [tasks] are not yet included in this study protocol,
+  /// they will be added.
+  /// The [targetDevice] needs to be added prior to this call since it needs to
+  /// be set up as either a master device or connected device.
+  void addTriggeredTasks(
+    Trigger trigger,
+    List<TaskDescriptor> tasks,
+    DeviceDescriptor targetDevice,
+  ) =>
+      tasks.forEach((task) => addTriggeredTask(trigger, task, targetDevice));
+
   /// Gets all the tasks (and the devices they are triggered to) for the
   /// specified [trigger].
   Set<TriggeredTask> getTriggeredTasks(Trigger trigger) {
@@ -92,23 +107,11 @@ class StudyProtocol extends Serializable {
     return _triggeredTasksMap[trigger];
   }
 
-  /// Gets all the tasks triggered for the specified [device].
-  Set<TaskDescriptor> getTasksForDevice(DeviceDescriptor device) {
-    assert(connectedDevices.contains(device),
-        'The passed device is not part of this study protocol.');
-
-    final Set<TaskDescriptor> deviceTasks = {};
-    _triggeredTasksMap.values.forEach((tasks) {
-      tasks.forEach((triggered) {
-        if (triggered.targetDevice == device) deviceTasks.add(triggered.task);
-      });
-    });
-
-    return deviceTasks;
-  }
-
   /// Add the [task] to this protocol.
-  void addTask(TaskDescriptor task) => tasks.add(task);
+  void addTask(TaskDescriptor task) {
+    tasks.add(task);
+    _taskMap[task.name] = task;
+  }
 
   /// Remove the [task] currently present in this configuration
   /// including removing it from any [Trigger]'s which initiate it.
@@ -125,6 +128,38 @@ class StudyProtocol extends Serializable {
 
     // Remove task itself.
     tasks.remove(task);
+    _taskMap.remove(task.name);
+  }
+
+  /// Gets all the tasks triggered for the specified [device].
+  /// The [device] must be part of either [masterDevices]
+  /// or [connectedDevices].
+  Set<TaskDescriptor> getTasksForDevice(DeviceDescriptor device) {
+    assert(connectedDevices.contains(device) || masterDevices.contains(device),
+        'The passed device is not part of this study protocol.');
+
+    final Set<TaskDescriptor> deviceTasks = {};
+
+    triggeredTasks.forEach((triggeredTask) {
+      if (triggeredTask.destinationDeviceRoleName == device.roleName)
+        deviceTasks.add(_taskMap[triggeredTask.taskName]);
+    });
+
+    return deviceTasks;
+  }
+
+  /// Gets all the tasks triggered for the specified [deviceRoleName].
+  /// Return an empty set if the device is not part of [masterDevices]
+  /// or [connectedDevices].
+  Set<TaskDescriptor> getTasksForDeviceRoleName(String deviceRoleName) {
+    final Set<TaskDescriptor> deviceTasks = {};
+
+    triggeredTasks.forEach((triggeredTask) {
+      if (triggeredTask.destinationDeviceRoleName == deviceRoleName)
+        deviceTasks.add(_taskMap[triggeredTask.taskName]);
+    });
+
+    return deviceTasks;
   }
 
   Function get fromJsonFunction => _$StudyProtocolFromJson;

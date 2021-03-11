@@ -1,19 +1,18 @@
 ## 0.20.0 
 * **BREAKING**: Now using the `carp_core` domain models in order to align with the overall [domain-driven design of CARP](https://carp.cachet.dk/core/). This has mainly an impact on the **naming** used in the API. The most important changes are:
-    * `Study` is now called `SensingStudyProtocol`
-    * `Datum` is now called `Data`
+    * `Study` is now called `StudyProtocol` and a CAMS-specific protocol called `CAMSStudyProtocol` is available
+    * `PrincipalInvestigator` is now called `StudyOwner`
     * `Task` is now called `TaskDescriptor`
     * `Device` is now called `DeviceDescriptor`
     * `DataFormat` is now called `DataType`
     * `ManualTrigger` is now called `PassiveTrigger`
-    * `` is now called ``
-    * `` is now called ``
+    * `ScheduledTrigger` is now called `DateTimeTrigger`
+    * `Datum` is now called `Data`
     * `` is now called ``
     * `` is now called ``
 * A `StudyProtocol` now uses the concept of a `TriggeredTask` which is slightly different to the previous `Study` model. See the example in the README text.
-* All json serialization now used `camelCase` instead of `snake_case` to be consistent with `carp_core`
+* All json serialization now used `camelCase` instead of `snake_case` to be consistent with `carp_core`.
 * All the `events` stream now streams `DataPoint` data objects (instead of just the `Datum` data objects). This include the meta-data in the `CarpHeader` about e.g. which device the data comes from, timestamps, etc.
-
 
 
 ## 0.12.3

@@ -40,7 +40,7 @@ class TaskDescriptor extends Serializable {
       FromJsonFactory()
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$TaskDescriptorToJson(this);
-  String get jsonType => 'dk.cachet.carp.protocols.domain.tasks.TaskDescriptor';
+  String get jsonType => 'dk.cachet.carp.protocols.domain.tasks.$runtimeType';
 
   String toString() =>
       '$runtimeType - name: $name, measures size: ${measures.length}';
@@ -59,7 +59,6 @@ class ConcurrentTask extends TaskDescriptor {
       FromJsonFactory()
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$ConcurrentTaskToJson(this);
-  String get jsonType => 'dk.cachet.carp.protocols.domain.tasks.ConcurrentTask';
 }
 
 /// A [TaskDescriptor] which contains a definition on how to run tasks, measures,
@@ -79,8 +78,6 @@ class CustomProtocolTask extends TaskDescriptor {
       FromJsonFactory()
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$CustomProtocolTaskToJson(this);
-  String get jsonType =>
-      'dk.cachet.carp.protocols.domain.tasks.CustomProtocolTask';
 
   String toString() => '${super.toString()}, studyProtocol: $studyProtocol';
 }

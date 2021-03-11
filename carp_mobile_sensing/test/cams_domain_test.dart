@@ -8,17 +8,13 @@ String _encode(Object object) =>
     const JsonEncoder.withIndent(' ').convert(object);
 
 void main() {
-  // StudyProtocol protocol;
+  CAMSStudyProtocol protocol;
 
   setUp(() {
-    // FromJsonFactory().register(CAMSStudyProtocol());
-    // FromJsonFactory().register(ProtocolOwner());
     registerFromJsonFunctions();
-  });
 
-  test('CAMSStudyProtocol -> JSON', () async {
     // Create a new study protocol.
-    CAMSStudyProtocol protocol = CAMSStudyProtocol()
+    protocol = CAMSStudyProtocol()
       ..name = 'Track patient movement'
       ..owner = ProtocolOwner(
         id: 'jakba',
@@ -27,9 +23,12 @@ void main() {
       );
 
     // Define which devices are used for data collection.
-    Smartphone phone = Smartphone(name: 'SM-A320FL', roleName: 'masterphone');
+    Smartphone phone = Smartphone(
+      name: 'SM-A320FL',
+      roleName: CAMSDeploymentService.DEFAULT_MASTER_DEVICE_ROLENAME,
+    );
     DeviceDescriptor eSense = DeviceDescriptor(
-      roleName: 'eSense',
+      roleName: 'esense',
     );
 
     protocol
@@ -50,6 +49,17 @@ void main() {
       ..addMeasures(measures);
     protocol.addTriggeredTask(Trigger(), task, phone);
 
+    // adding all measure from the common schema to one one trigger and one task
+    protocol.addTriggeredTask(
+      ImmediateTrigger(), // a simple trigger that starts immediately
+      AutomaticTask()
+        ..measures =
+            SamplingPackageRegistry().common().measures.values.toList(),
+      phone, // a task with all measures
+    );
+  });
+
+  test('CAMSStudyProtocol -> JSON', () async {
     print(protocol);
     print(_encode(protocol));
     expect(protocol.ownerId, 'jakba');
@@ -63,21 +73,56 @@ void main() {
         json.decode(plainJson) as Map<String, dynamic>);
 
     expect(protocol.ownerId, 'jakba');
-    expect(protocol.masterDevices.first.roleName, 'masterphone');
+    expect(protocol.masterDevices.first.roleName,
+        CAMSDeploymentService.DEFAULT_MASTER_DEVICE_ROLENAME);
     print(_encode(protocol));
   });
 
-  test('DataPoint -> JSON', () async {
-    DataPoint dataPoint = DataPoint(
-      DataPointHeader(
-        studyId: '1234',
-        dataFormat: DataFormat(NameSpace.CARP, 'light'),
-      ),
-      Data(),
-    );
+  test('Register Device', () async {
+    StudyDeploymentStatus status_1 =
+        await CAMSDeploymentService().createStudyDeployment(protocol);
+    print(status_1);
+    assert(status_1.studyDeploymentId != null);
+    assert(status_1.status == StudyDeploymentStatusTypes.Invited);
 
-    print(dataPoint);
-    print(_encode(dataPoint));
-    assert(dataPoint.carpBody != null);
+    StudyDeploymentStatus status_2 = await CAMSDeploymentService()
+        .registerDevice(
+            status_1.studyDeploymentId, 'esense', DeviceRegistration());
+    print(status_2);
+    assert(status_2.studyDeploymentId == status_1.studyDeploymentId);
+    assert(status_2.status == StudyDeploymentStatusTypes.DeployingDevices);
+    assert(status_2 == status_1);
+
+    StudyDeploymentStatus status_3 = await CAMSDeploymentService()
+        .registerDevice(
+            status_1.studyDeploymentId, 'nonsense', DeviceRegistration());
+    assert(status_3.status == StudyDeploymentStatusTypes.DeployingDevices);
+    assert(status_3.studyDeploymentId == status_1.studyDeploymentId);
+    print(status_3);
+  });
+
+  test('Study Deployment', () async {
+    StudyDeploymentStatus status_1 =
+        await CAMSDeploymentService().createStudyDeployment(protocol);
+
+    print(status_1);
+    print(_encode(status_1));
+    assert(status_1.studyDeploymentId != null);
+
+    StudyDeploymentStatus status_2 = await CAMSDeploymentService()
+        .registerDevice(
+            status_1.studyDeploymentId, 'esense', DeviceRegistration());
+
+    print(status_2);
+    print(_encode(status_2));
+    assert(status_2.studyDeploymentId == status_1.studyDeploymentId);
+
+    CAMSMasterDeviceDeployment deployment = await CAMSDeploymentService()
+        .getDeviceDeploymentFor(status_1.studyDeploymentId, null);
+    print(deployment);
+    print(_encode(deployment));
+    assert(deployment.studyDeploymentId == status_1.studyDeploymentId);
+
+    // CAMSDeploymentService().deploymentSuccessful
   });
 }

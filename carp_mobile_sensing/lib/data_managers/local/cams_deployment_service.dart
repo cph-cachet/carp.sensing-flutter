@@ -16,15 +16,25 @@ class CAMSDeploymentService implements DeploymentService {
   // key = studyDeploymentId
   final Map<String, StudyDeployment> _repository = {};
 
+  static CAMSDeploymentService _instance = CAMSDeploymentService._();
+  CAMSDeploymentService._();
+
+  /// Get the singlton [CAMSDeploymentService].
+  factory CAMSDeploymentService() => _instance;
+
   Future<StudyDeploymentStatus> createStudyDeployment(
       StudyProtocol protocol) async {
     StudyDeployment deployment = StudyDeployment(protocol);
     _repository[deployment.studyDeploymentId] = deployment;
+
     // make sure to register this phone as a master device
     deployment.registerDevice(
-        DeviceDescriptor(
-            roleName: DEFAULT_MASTER_DEVICE_ROLENAME, isMasterDevice: true),
+        MasterDeviceDescriptor(roleName: DEFAULT_MASTER_DEVICE_ROLENAME),
         DeviceRegistration());
+
+    // set the deployment status to "invited" as the initial status.
+    deployment.status.status = StudyDeploymentStatusTypes.Invited;
+
     return deployment.status;
   }
 
@@ -50,8 +60,9 @@ class CAMSDeploymentService implements DeploymentService {
     StudyDeployment deployment = _repository[studyDeploymentId];
 
     // check if already registered
-    DeviceDescriptor device = deployment.registeredDevices.keys
-        .firstWhere((descriptor) => descriptor.roleName == deviceRoleName);
+    DeviceDescriptor device = deployment.registeredDevices.keys.firstWhere(
+        (descriptor) => descriptor.roleName == deviceRoleName,
+        orElse: () => null);
 
     if (device == null) {
       // If not already registered, register device
@@ -73,7 +84,7 @@ class CAMSDeploymentService implements DeploymentService {
     return deployment.status;
   }
 
-  /// Get the deployment configuration for this master device with
+  /// Get the deployment configuration for a master device with
   /// [studyDeploymentId].
   ///
   /// If [masterDeviceRoleName] is `null` then [DEFAULT_MASTER_DEVICE_ROLENAME]
@@ -85,6 +96,9 @@ class CAMSDeploymentService implements DeploymentService {
     StudyDeployment deployment = _repository[studyDeploymentId];
     DeviceDescriptor device = deployment.registeredDevices.keys.firstWhere(
         (descriptor) => descriptor.roleName == masterDeviceRoleName);
+
+    assert(device.isMasterDevice,
+        "The specified '$masterDeviceRoleName' device is not registered as a master device");
 
     MasterDeviceDeployment deviceDeployment =
         deployment.getDeviceDeploymentFor(device);
@@ -104,6 +118,11 @@ class CAMSDeploymentService implements DeploymentService {
       masterDeviceDeployment: deviceDeployment,
     );
   }
+
+  /// Get the deployment configuration for this master device (phone).
+  Future<CAMSMasterDeviceDeployment> getDeviceDeploymentForThisMasterDevice(
+          String studyDeploymentId) async =>
+      await getDeviceDeploymentFor(studyDeploymentId, null);
 
   @override
   Future<StudyDeploymentStatus> deploymentSuccessful(

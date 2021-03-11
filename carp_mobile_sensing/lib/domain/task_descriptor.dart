@@ -10,14 +10,13 @@ part of domain;
 /// A [TaskDescriptor] that automatically collects data from the specified measures.
 /// Runs without any interaction with the user or UI of the app.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class AutomaticTaskDescriptor extends TaskDescriptor {
-  AutomaticTaskDescriptor({String name}) : super(name: name);
+class AutomaticTask extends TaskDescriptor {
+  AutomaticTask({String name}) : super(name: name);
 
-  Function get fromJsonFunction => _$AutomaticTaskDescriptorFromJson;
-  factory AutomaticTaskDescriptor.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
-  Map<String, dynamic> toJson() => _$AutomaticTaskDescriptorToJson(this);
+  Function get fromJsonFunction => _$AutomaticTaskFromJson;
+  factory AutomaticTask.fromJson(Map<String, dynamic> json) => FromJsonFactory()
+      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$AutomaticTaskToJson(this);
 }
 
 // /// A [TaskDescriptor] holds information about each task to be triggered by a [CAMSTrigger] as part of a [StudyProtocol].

@@ -12,7 +12,7 @@ TaskExecutor getTaskExecutor(TaskDescriptor task) {
   switch (task.runtimeType) {
     case TaskDescriptor:
       return TaskExecutor(task);
-    case AutomaticTaskDescriptor:
+    case AutomaticTask:
       return AutomaticTaskExecutor(task);
     case AppTask:
       return AppTaskExecutor(task);
@@ -56,10 +56,10 @@ class TaskExecutor extends Executor {
   }
 }
 
-/// Executes an [AutomaticTaskDescriptor].
+/// Executes an [AutomaticTask].
 class AutomaticTaskExecutor extends TaskExecutor {
-  AutomaticTaskExecutor(AutomaticTaskDescriptor task) : super(task) {
-    assert(task is AutomaticTaskDescriptor,
+  AutomaticTaskExecutor(AutomaticTask task) : super(task) {
+    assert(task is AutomaticTask,
         'AutomaticTaskExecutor should be initialized with a AutomaticTask.');
   }
 }

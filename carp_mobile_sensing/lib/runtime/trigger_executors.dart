@@ -196,7 +196,7 @@ class ImmediateTriggerExecutor extends TriggeredTaskExecutor {
       : super(trigger, task);
 }
 
-/// Executes a [ManualTrigger].
+/// Executes a [PassiveTrigger].
 class PassiveTriggerExecutor extends TriggeredTaskExecutor {
   PassiveTriggerExecutor(PassiveTrigger trigger, TaskDescriptor task)
       : super(trigger, task) {
@@ -276,7 +276,8 @@ class PeriodicTriggerExecutor extends TriggeredTaskExecutor {
   }
 }
 
-/// Executes a [DateTimeTrigger] on the specified [DateTimeTrigger.schedule] date and time.
+/// Executes a [DateTimeTrigger] on the specified [DateTimeTrigger.schedule]
+/// date and time.
 class DateTimeTriggerExecutor extends TriggeredTaskExecutor {
   Duration delay, duration;
   Timer timer;
@@ -420,7 +421,6 @@ class SamplingEventTriggerExecutor extends TriggeredTaskExecutor {
   }
 
   Future onPause() async {
-    // stop the listening
     await _subscription.cancel();
     await super.onPause();
   }

@@ -122,7 +122,7 @@ class Sensing {
               ..encrypt = false)
           ..addTriggeredTask(
               ImmediateTrigger(),
-              AutomaticTaskDescriptor()
+              AutomaticTask()
                 ..measures = SamplingPackageRegistry().debug().getMeasureList(
                   namespace: NameSpace.CARP,
                   types: [
@@ -135,7 +135,7 @@ class Sensing {
                 ))
           ..addTriggeredTask(
               ImmediateTrigger(),
-              AutomaticTaskDescriptor()
+              AutomaticTask()
                 ..measures = SamplingPackageRegistry().debug().getMeasureList(
                   namespace: NameSpace.CARP,
                   types: [

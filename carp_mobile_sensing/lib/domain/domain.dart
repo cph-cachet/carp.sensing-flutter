@@ -33,16 +33,14 @@ void registerFromJsonFunctions() {
 
   FromJsonFactory().register(CAMSStudyProtocol());
   FromJsonFactory().register(ProtocolOwner());
+  FromJsonFactory().register(DataEndPoint());
+  // FromJsonFactory().register(FileDataEndPoint());
 
-  // FromJsonFactory().register(StudyProtocol());
-  // FromJsonFactory().register(DataEndPoint());
-  // // FromJsonFactory().register(FileDataEndPoint());
-  // FromJsonFactory().register(DeviceDescriptor());
-  // FromJsonFactory().register(TaskDescriptor());
-  // FromJsonFactory().register(AutomaticTaskDescriptor());
-  // FromJsonFactory().register(AppTask(type: 'ignored'));
+  FromJsonFactory().register(AutomaticTask());
+  FromJsonFactory().register(AppTask(type: 'ignored'));
+
   // FromJsonFactory().register(CAMSTrigger());
-  // FromJsonFactory().register(ImmediateTrigger());
+  FromJsonFactory().register(ImmediateTrigger());
   // FromJsonFactory().register(DelayedTrigger());
   // FromJsonFactory().register(PeriodicTrigger(period: null));
   // FromJsonFactory().register(ScheduledTrigger(schedule: null));

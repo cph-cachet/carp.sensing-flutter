@@ -32,7 +32,7 @@ class Trigger extends Serializable {
   factory Trigger.fromJson(Map<String, dynamic> json) => FromJsonFactory()
       .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$TriggerToJson(this);
-  String get jsonType => '$_triggerNamespace.Trigger';
+  String get jsonType => '$_triggerNamespace.$runtimeType';
 }
 
 /// A trigger which starts a task after a specified amount of time has elapsed
@@ -52,7 +52,6 @@ class ElapsedTimeTrigger extends Trigger {
       FromJsonFactory()
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$ElapsedTimeTriggerToJson(this);
-  String get jsonType => '$_triggerNamespace.ElapsedTimeTrigger';
 }
 
 /// A trigger initiated by a user, i.e., the user decides when to start a task.
@@ -72,7 +71,6 @@ class ManualTrigger extends Trigger {
   factory ManualTrigger.fromJson(Map<String, dynamic> json) => FromJsonFactory()
       .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$ManualTriggerToJson(this);
-  String get jsonType => '$_triggerNamespace.ManualTrigger';
 }
 
 /// A trigger which starts a task according to a recurring schedule starting on
@@ -95,7 +93,6 @@ class ScheduledTrigger extends Trigger {
       FromJsonFactory()
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$ScheduledTriggerToJson(this);
-  String get jsonType => '$_triggerNamespace.ScheduledTrigger';
 }
 
 /// A time on a day. Used in a [ScheduledTrigger].

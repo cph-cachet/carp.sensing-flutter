@@ -19,11 +19,11 @@ class CAMSTrigger extends Trigger {
   /// Is used when storing data to know what triggered the data collection.
   String triggerId;
 
-  /// The list of [TaskDescriptor]s in this [CAMSTrigger].
-  List<TaskDescriptor> tasks = [];
+  // /// The list of [TaskDescriptor]s in this [CAMSTrigger].
+  // List<TaskDescriptor> tasks = [];
 
-  /// Add a [TaskDescriptor] to this [CAMSTrigger]
-  void addTask(TaskDescriptor task) => tasks.add(task);
+  // /// Add a [TaskDescriptor] to this [CAMSTrigger]
+  // void addTask(TaskDescriptor task) => tasks.add(task);
 
   CAMSTrigger({this.triggerId}) : super();
 

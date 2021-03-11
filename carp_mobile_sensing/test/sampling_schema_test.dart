@@ -19,7 +19,7 @@ void main() {
 
     study.addTriggeredTask(
       ImmediateTrigger(),
-      AutomaticTaskDescriptor()
+      AutomaticTask()
         ..measures = DeviceSamplingPackage().common.getMeasureList(
           namespace: NameSpace.CARP,
           types: [
@@ -33,7 +33,7 @@ void main() {
 
     study.addTriggeredTask(
         ImmediateTrigger(),
-        AutomaticTaskDescriptor(name: 'Sensor Task')
+        AutomaticTask(name: 'Sensor Task')
           ..addMeasure(PeriodicMeasure(
               format:
                   DataType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER),
