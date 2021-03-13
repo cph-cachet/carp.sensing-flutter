@@ -11,7 +11,7 @@ part of managers;
 /// CAMS studies to be deployed locally on this phone.
 class CAMSDeploymentService implements DeploymentService {
   /// The default rolename for this master phone device.
-  static final String DEFAULT_MASTER_DEVICE_ROLENAME = 'phone';
+  static const String DEFAULT_MASTER_DEVICE_ROLENAME = 'phone';
 
   // key = studyDeploymentId
   final Map<String, StudyDeployment> _repository = {};
@@ -84,7 +84,7 @@ class CAMSDeploymentService implements DeploymentService {
     return deployment.status;
   }
 
-  /// Get the deployment configuration for a master device with
+  /// Get a deployment configuration for a master device with
   /// [studyDeploymentId].
   ///
   /// If [masterDeviceRoleName] is `null` then [DEFAULT_MASTER_DEVICE_ROLENAME]
@@ -119,13 +119,14 @@ class CAMSDeploymentService implements DeploymentService {
     );
   }
 
-  /// Get the deployment configuration for this master device (phone).
-  Future<CAMSMasterDeviceDeployment> getDeviceDeploymentForThisMasterDevice(
+  /// Get a deployment configuration for this master device (phone)
+  /// for [studyDeploymentId].
+  Future<CAMSMasterDeviceDeployment> getDeviceDeployment(
           String studyDeploymentId) async =>
       await getDeviceDeploymentFor(studyDeploymentId, null);
 
   @override
-  Future<StudyDeploymentStatus> deploymentSuccessful(
+  Future<StudyDeploymentStatus> deploymentSuccessfulFor(
     String studyDeploymentId,
     String masterDeviceRoleName, {
     DateTime deviceDeploymentLastUpdateDate,
@@ -135,12 +136,28 @@ class CAMSDeploymentService implements DeploymentService {
 
     StudyDeployment deployment = _repository[studyDeploymentId];
     DeviceDescriptor device = deployment.registeredDevices.keys.firstWhere(
-        (descriptor) => descriptor.roleName == masterDeviceRoleName);
+        (descriptor) => descriptor.roleName == masterDeviceRoleName,
+        orElse: () => null);
 
-    deployment.deviceDeployed(device, deviceDeploymentLastUpdateDate);
+    print('>> $device');
+    assert(device != null && device.isMasterDevice,
+        "The specified device with rolename '$masterDeviceRoleName' is not a master device.");
+
+    deployment.deviceDeployed(
+        (device as MasterDeviceDescriptor), deviceDeploymentLastUpdateDate);
 
     return deployment.status;
   }
+
+  /// Mark the study deployment with [studyDeploymentId] as deployed successfully
+  /// to this master device (phone), i.e., that the study deployment was loaded
+  /// on the device and that the necessary runtime is available to run it.
+  Future<StudyDeploymentStatus> deploymentSuccessful(
+    String studyDeploymentId, {
+    DateTime deviceDeploymentLastUpdateDate,
+  }) async =>
+      deploymentSuccessfulFor(studyDeploymentId, null,
+          deviceDeploymentLastUpdateDate: deviceDeploymentLastUpdateDate);
 
   @override
   Future<StudyDeploymentStatus> stop(String studyDeploymentId) async {

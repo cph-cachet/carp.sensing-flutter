@@ -50,7 +50,9 @@ CAMSStudyProtocol _$CAMSStudyProtocolFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$CAMSStudyProtocolToJson(CAMSStudyProtocol instance) {
-  final val = <String, dynamic>{};
+  final val = <String, dynamic>{
+    r'$type': instance.$type,
+  };
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -58,7 +60,6 @@ Map<String, dynamic> _$CAMSStudyProtocolToJson(CAMSStudyProtocol instance) {
     }
   }
 
-  writeNotNull(r'$type', instance.$type);
   writeNotNull('name', instance.name);
   writeNotNull('description', instance.description);
   writeNotNull('masterDevices', instance.masterDevices);
@@ -88,7 +89,9 @@ ProtocolOwner _$ProtocolOwnerFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$ProtocolOwnerToJson(ProtocolOwner instance) {
-  final val = <String, dynamic>{};
+  final val = <String, dynamic>{
+    r'$type': instance.$type,
+  };
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -96,7 +99,6 @@ Map<String, dynamic> _$ProtocolOwnerToJson(ProtocolOwner instance) {
     }
   }
 
-  writeNotNull(r'$type', instance.$type);
   writeNotNull('id', instance.id);
   writeNotNull('name', instance.name);
   writeNotNull('title', instance.title);
@@ -114,7 +116,9 @@ DataEndPoint _$DataEndPointFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$DataEndPointToJson(DataEndPoint instance) {
-  final val = <String, dynamic>{};
+  final val = <String, dynamic>{
+    r'$type': instance.$type,
+  };
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -122,7 +126,6 @@ Map<String, dynamic> _$DataEndPointToJson(DataEndPoint instance) {
     }
   }
 
-  writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
   writeNotNull('publicKey', instance.publicKey);
   return val;
@@ -144,7 +147,9 @@ CAMSMeasure _$CAMSMeasureFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$CAMSMeasureToJson(CAMSMeasure instance) {
-  final val = <String, dynamic>{};
+  final val = <String, dynamic>{
+    r'$type': instance.$type,
+  };
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -152,7 +157,6 @@ Map<String, dynamic> _$CAMSMeasureToJson(CAMSMeasure instance) {
     }
   }
 
-  writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
   writeNotNull('name', instance.name);
   writeNotNull('description', instance.description);
@@ -183,7 +187,9 @@ PeriodicMeasure _$PeriodicMeasureFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$PeriodicMeasureToJson(PeriodicMeasure instance) {
-  final val = <String, dynamic>{};
+  final val = <String, dynamic>{
+    r'$type': instance.$type,
+  };
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -191,7 +197,6 @@ Map<String, dynamic> _$PeriodicMeasureToJson(PeriodicMeasure instance) {
     }
   }
 
-  writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
   writeNotNull('name', instance.name);
   writeNotNull('description', instance.description);
@@ -221,7 +226,9 @@ MarkedMeasure _$MarkedMeasureFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$MarkedMeasureToJson(MarkedMeasure instance) {
-  final val = <String, dynamic>{};
+  final val = <String, dynamic>{
+    r'$type': instance.$type,
+  };
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -229,7 +236,6 @@ Map<String, dynamic> _$MarkedMeasureToJson(MarkedMeasure instance) {
     }
   }
 
-  writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
   writeNotNull('name', instance.name);
   writeNotNull('description', instance.description);
@@ -266,7 +272,9 @@ ConnectableDeviceDescriptor _$ConnectableDeviceDescriptorFromJson(
 
 Map<String, dynamic> _$ConnectableDeviceDescriptorToJson(
     ConnectableDeviceDescriptor instance) {
-  final val = <String, dynamic>{};
+  final val = <String, dynamic>{
+    r'$type': instance.$type,
+  };
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -274,7 +282,6 @@ Map<String, dynamic> _$ConnectableDeviceDescriptorToJson(
     }
   }
 
-  writeNotNull(r'$type', instance.$type);
   writeNotNull('isMasterDevice', instance.isMasterDevice);
   writeNotNull('roleName', instance.roleName);
   writeNotNull('supportedDataTypes', instance.supportedDataTypes);
@@ -306,7 +313,9 @@ AppTask _$AppTaskFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$AppTaskToJson(AppTask instance) {
-  final val = <String, dynamic>{};
+  final val = <String, dynamic>{
+    r'$type': instance.$type,
+  };
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -314,7 +323,6 @@ Map<String, dynamic> _$AppTaskToJson(AppTask instance) {
     }
   }
 
-  writeNotNull(r'$type', instance.$type);
   writeNotNull('name', instance.name);
   writeNotNull('measures', instance.measures);
   writeNotNull('type', instance.type);
@@ -337,7 +345,9 @@ CAMSTrigger _$CAMSTriggerFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$CAMSTriggerToJson(CAMSTrigger instance) {
-  final val = <String, dynamic>{};
+  final val = <String, dynamic>{
+    r'$type': instance.$type,
+  };
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -345,7 +355,6 @@ Map<String, dynamic> _$CAMSTriggerToJson(CAMSTrigger instance) {
     }
   }
 
-  writeNotNull(r'$type', instance.$type);
   writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
   writeNotNull('requiresMasterDevice', instance.requiresMasterDevice);
   writeNotNull('triggerId', instance.triggerId);
@@ -362,7 +371,9 @@ ImmediateTrigger _$ImmediateTriggerFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$ImmediateTriggerToJson(ImmediateTrigger instance) {
-  final val = <String, dynamic>{};
+  final val = <String, dynamic>{
+    r'$type': instance.$type,
+  };
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -370,7 +381,6 @@ Map<String, dynamic> _$ImmediateTriggerToJson(ImmediateTrigger instance) {
     }
   }
 
-  writeNotNull(r'$type', instance.$type);
   writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
   writeNotNull('requiresMasterDevice', instance.requiresMasterDevice);
   writeNotNull('triggerId', instance.triggerId);
@@ -387,7 +397,9 @@ PassiveTrigger _$PassiveTriggerFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$PassiveTriggerToJson(PassiveTrigger instance) {
-  final val = <String, dynamic>{};
+  final val = <String, dynamic>{
+    r'$type': instance.$type,
+  };
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -395,7 +407,6 @@ Map<String, dynamic> _$PassiveTriggerToJson(PassiveTrigger instance) {
     }
   }
 
-  writeNotNull(r'$type', instance.$type);
   writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
   writeNotNull('requiresMasterDevice', instance.requiresMasterDevice);
   writeNotNull('triggerId', instance.triggerId);
@@ -415,7 +426,9 @@ DelayedTrigger _$DelayedTriggerFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$DelayedTriggerToJson(DelayedTrigger instance) {
-  final val = <String, dynamic>{};
+  final val = <String, dynamic>{
+    r'$type': instance.$type,
+  };
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -423,7 +436,6 @@ Map<String, dynamic> _$DelayedTriggerToJson(DelayedTrigger instance) {
     }
   }
 
-  writeNotNull(r'$type', instance.$type);
   writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
   writeNotNull('requiresMasterDevice', instance.requiresMasterDevice);
   writeNotNull('triggerId', instance.triggerId);
@@ -447,7 +459,9 @@ PeriodicTrigger _$PeriodicTriggerFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$PeriodicTriggerToJson(PeriodicTrigger instance) {
-  final val = <String, dynamic>{};
+  final val = <String, dynamic>{
+    r'$type': instance.$type,
+  };
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -455,7 +469,6 @@ Map<String, dynamic> _$PeriodicTriggerToJson(PeriodicTrigger instance) {
     }
   }
 
-  writeNotNull(r'$type', instance.$type);
   writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
   writeNotNull('requiresMasterDevice', instance.requiresMasterDevice);
   writeNotNull('triggerId', instance.triggerId);
@@ -480,7 +493,9 @@ DateTimeTrigger _$DateTimeTriggerFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$DateTimeTriggerToJson(DateTimeTrigger instance) {
-  final val = <String, dynamic>{};
+  final val = <String, dynamic>{
+    r'$type': instance.$type,
+  };
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -488,7 +503,6 @@ Map<String, dynamic> _$DateTimeTriggerToJson(DateTimeTrigger instance) {
     }
   }
 
-  writeNotNull(r'$type', instance.$type);
   writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
   writeNotNull('requiresMasterDevice', instance.requiresMasterDevice);
   writeNotNull('triggerId', instance.triggerId);
@@ -506,7 +520,9 @@ Time _$TimeFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$TimeToJson(Time instance) {
-  final val = <String, dynamic>{};
+  final val = <String, dynamic>{
+    r'$type': instance.$type,
+  };
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -514,7 +530,6 @@ Map<String, dynamic> _$TimeToJson(Time instance) {
     }
   }
 
-  writeNotNull(r'$type', instance.$type);
   writeNotNull('hour', instance.hour);
   writeNotNull('minute', instance.minute);
   writeNotNull('second', instance.second);
@@ -550,7 +565,9 @@ RecurrentScheduledTrigger _$RecurrentScheduledTriggerFromJson(
 
 Map<String, dynamic> _$RecurrentScheduledTriggerToJson(
     RecurrentScheduledTrigger instance) {
-  final val = <String, dynamic>{};
+  final val = <String, dynamic>{
+    r'$type': instance.$type,
+  };
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -558,7 +575,6 @@ Map<String, dynamic> _$RecurrentScheduledTriggerToJson(
     }
   }
 
-  writeNotNull(r'$type', instance.$type);
   writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
   writeNotNull('requiresMasterDevice', instance.requiresMasterDevice);
   writeNotNull('triggerId', instance.triggerId);
@@ -629,7 +645,9 @@ CronScheduledTrigger _$CronScheduledTriggerFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$CronScheduledTriggerToJson(
     CronScheduledTrigger instance) {
-  final val = <String, dynamic>{};
+  final val = <String, dynamic>{
+    r'$type': instance.$type,
+  };
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -637,7 +655,6 @@ Map<String, dynamic> _$CronScheduledTriggerToJson(
     }
   }
 
-  writeNotNull(r'$type', instance.$type);
   writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
   writeNotNull('requiresMasterDevice', instance.requiresMasterDevice);
   writeNotNull('triggerId', instance.triggerId);
@@ -666,7 +683,9 @@ SamplingEventTrigger _$SamplingEventTriggerFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$SamplingEventTriggerToJson(
     SamplingEventTrigger instance) {
-  final val = <String, dynamic>{};
+  final val = <String, dynamic>{
+    r'$type': instance.$type,
+  };
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -674,7 +693,6 @@ Map<String, dynamic> _$SamplingEventTriggerToJson(
     }
   }
 
-  writeNotNull(r'$type', instance.$type);
   writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
   writeNotNull('requiresMasterDevice', instance.requiresMasterDevice);
   writeNotNull('triggerId', instance.triggerId);
@@ -699,7 +717,9 @@ ConditionalSamplingEventTrigger _$ConditionalSamplingEventTriggerFromJson(
 
 Map<String, dynamic> _$ConditionalSamplingEventTriggerToJson(
     ConditionalSamplingEventTrigger instance) {
-  final val = <String, dynamic>{};
+  final val = <String, dynamic>{
+    r'$type': instance.$type,
+  };
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -707,7 +727,6 @@ Map<String, dynamic> _$ConditionalSamplingEventTriggerToJson(
     }
   }
 
-  writeNotNull(r'$type', instance.$type);
   writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
   writeNotNull('requiresMasterDevice', instance.requiresMasterDevice);
   writeNotNull('triggerId', instance.triggerId);
@@ -879,7 +898,9 @@ AutomaticTask _$AutomaticTaskFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$AutomaticTaskToJson(AutomaticTask instance) {
-  final val = <String, dynamic>{};
+  final val = <String, dynamic>{
+    r'$type': instance.$type,
+  };
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -887,7 +908,6 @@ Map<String, dynamic> _$AutomaticTaskToJson(AutomaticTask instance) {
     }
   }
 
-  writeNotNull(r'$type', instance.$type);
   writeNotNull('name', instance.name);
   writeNotNull('measures', instance.measures);
   return val;

@@ -118,11 +118,15 @@ void main() {
     assert(status_2.studyDeploymentId == status_1.studyDeploymentId);
 
     CAMSMasterDeviceDeployment deployment = await CAMSDeploymentService()
-        .getDeviceDeploymentFor(status_1.studyDeploymentId, null);
+        .getDeviceDeployment(status_1.studyDeploymentId);
     print(deployment);
     print(_encode(deployment));
     assert(deployment.studyDeploymentId == status_1.studyDeploymentId);
 
-    // CAMSDeploymentService().deploymentSuccessful
+    StudyDeploymentStatus status_3 = await CAMSDeploymentService()
+        .deploymentSuccessful(status_1.studyDeploymentId);
+    assert(status_3.status == StudyDeploymentStatusTypes.DeploymentReady);
+    assert(status_3.studyDeploymentId == status_1.studyDeploymentId);
+    print(status_3);
   });
 }

@@ -279,9 +279,7 @@ StudyDeploymentStatus _$StudyDeploymentStatusFromJson(
             ? null
             : DeviceDeploymentStatus.fromJson(e as Map<String, dynamic>))
         ?.toList()
-    ..startTime = json['startTime'] == null
-        ? null
-        : DateTime.parse(json['startTime'] as String);
+    ..startTime = json['startTime'] as int;
 }
 
 Map<String, dynamic> _$StudyDeploymentStatusToJson(
@@ -298,7 +296,7 @@ Map<String, dynamic> _$StudyDeploymentStatusToJson(
 
   writeNotNull('studyDeploymentId', instance.studyDeploymentId);
   writeNotNull('devicesStatus', instance.devicesStatus);
-  writeNotNull('startTime', instance.startTime?.toIso8601String());
+  writeNotNull('startTime', instance.startTime);
   return val;
 }
 

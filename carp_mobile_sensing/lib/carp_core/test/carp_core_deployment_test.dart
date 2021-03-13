@@ -86,6 +86,7 @@ void main() {
     expect(status.status, StudyDeploymentStatusTypes.Invited);
     print(_encode(status));
   });
+
   test('JSON -> StudyDeploymentStatus CANS', () async {
     String plainJson =
         File('lib/carp_core/test/json/study_deployment_status_cans.json')
@@ -95,6 +96,18 @@ void main() {
         json.decode(plainJson) as Map<String, dynamic>);
     expect(status.studyDeploymentId, 'ae8076a3-7170-4bcf-b66c-64639a7a9eee');
     expect(status.status, StudyDeploymentStatusTypes.DeployingDevices);
+    print(_encode(status));
+  });
+
+  test('JSON -> StudyDeploymentStatus Successful', () async {
+    String plainJson =
+        File('lib/carp_core/test/json/study_deployment_status_successful.json')
+            .readAsStringSync();
+
+    StudyDeploymentStatus status = StudyDeploymentStatus.fromJson(
+        json.decode(plainJson) as Map<String, dynamic>);
+    expect(status.studyDeploymentId, '1cbbd021-161b-470d-b421-6f08a9636b58');
+    expect(status.status, StudyDeploymentStatusTypes.DeploymentReady);
     print(_encode(status));
   });
   test('JSON -> ', () async {});
