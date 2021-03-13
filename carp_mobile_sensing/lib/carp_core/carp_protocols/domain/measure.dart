@@ -19,13 +19,13 @@ class Measure extends Serializable {
   @JsonKey(ignore: true)
   DataType get dataType => DataType.fromString(type);
 
-  Measure({this.type}) : super();
+  Measure({@required this.type}) : super();
   Function get fromJsonFunction => _$MeasureFromJson;
   factory Measure.fromJson(Map<String, dynamic> json) => FromJsonFactory()
       .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$MeasureToJson(this);
   String get jsonType =>
-      'dk.cachet.carp.protocols.domain.tasks.measures.Measure';
+      'dk.cachet.carp.protocols.domain.tasks.measures.$runtimeType';
 
   String toString() => '$runtimeType: type: $type';
 }
@@ -36,15 +36,13 @@ class Measure extends Serializable {
 /// See [DataTypeMeasure.kt](https://github.com/cph-cachet/carp.core-kotlin/blob/master/carp.protocols.core/src/commonMain/kotlin/dk/cachet/carp/protocols/domain/tasks/measures/DataTypeMeasure.kt).
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class DataTypeMeasure extends Measure {
-  DataTypeMeasure({String type}) : super(type: type);
+  DataTypeMeasure({@required String type}) : super(type: type);
 
   Function get fromJsonFunction => _$DataTypeMeasureFromJson;
   factory DataTypeMeasure.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory()
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$DataTypeMeasureToJson(this);
-  String get jsonType =>
-      'dk.cachet.carp.protocols.domain.tasks.measures.DataTypeMeasure';
 }
 
 /// Defines data that needs to be measured/collected from a data stream on a
@@ -53,7 +51,8 @@ class DataTypeMeasure extends Measure {
 /// See [PhoneSensorMeasure.kt](https://github.com/cph-cachet/carp.core-kotlin/blob/master/carp.protocols.core/src/commonMain/kotlin/dk/cachet/carp/protocols/domain/tasks/measures/PhoneSensorMeasure.kt).
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class PhoneSensorMeasure extends Measure {
-  PhoneSensorMeasure({String type, this.duration}) : super(type: type);
+  PhoneSensorMeasure({@required String type, this.duration})
+      : super(type: type);
 
   int duration;
 
@@ -62,8 +61,6 @@ class PhoneSensorMeasure extends Measure {
       FromJsonFactory()
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$PhoneSensorMeasureToJson(this);
-  String get jsonType =>
-      'dk.cachet.carp.protocols.domain.tasks.measures.PhoneSensorMeasure';
 
   String toString() => '${super.toString()}, duration: $duration';
 }

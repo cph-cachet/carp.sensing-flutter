@@ -27,11 +27,11 @@ class CAMSMeasure extends Measure {
   final List<MeasureListener> _listeners = [];
 
   CAMSMeasure({
-    @required DataType type,
+    @required String type,
     this.name,
     this.description,
     this.enabled = true,
-  }) : super(type: type.toString()) {
+  }) : super(type: type) {
     enabled = enabled ?? true;
     _storedEnabled = enabled;
   }
@@ -98,7 +98,7 @@ class PeriodicMeasure extends CAMSMeasure {
 
   /// Create a [PeriodicMeasure].
   PeriodicMeasure({
-    @required DataType type,
+    @required String type,
     String name,
     String description,
     bool enabled,
@@ -165,7 +165,7 @@ class MarkedMeasure extends CAMSMeasure {
   Duration history;
 
   MarkedMeasure({
-    @required DataType type,
+    @required String type,
     String name,
     String description,
     bool enabled,

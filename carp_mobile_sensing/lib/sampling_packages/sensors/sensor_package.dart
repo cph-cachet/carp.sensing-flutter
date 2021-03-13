@@ -47,35 +47,35 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
     ..powerAware = true
     ..addMeasures([
       CAMSMeasure(
-        type: DataType.fromString(ACCELEROMETER),
+        type: ACCELEROMETER,
         name: 'Accelerometer',
         enabled: false,
       ),
       CAMSMeasure(
-        type: DataType.fromString(GYROSCOPE),
+        type: GYROSCOPE,
         name: 'Gyroscope',
         enabled: false,
       ),
       PeriodicMeasure(
-        type: DataType.fromString(PERIODIC_ACCELEROMETER),
+        type: PERIODIC_ACCELEROMETER,
         name: 'Accelerometer',
         enabled: false,
         frequency: const Duration(seconds: 5),
         duration: const Duration(seconds: 1),
       ),
       PeriodicMeasure(
-        type: DataType.fromString(PERIODIC_GYROSCOPE),
+        type: PERIODIC_GYROSCOPE,
         name: 'Gyroscope',
         enabled: false,
         frequency: const Duration(seconds: 5),
         duration: const Duration(seconds: 1),
       ),
       CAMSMeasure(
-        type: DataType.fromString(PEDOMETER),
+        type: PEDOMETER,
         name: 'Pedometer (Step Count)',
       ),
       PeriodicMeasure(
-        type: DataType.fromString(LIGHT),
+        type: LIGHT,
         name: 'Ambient Light',
         frequency: const Duration(minutes: 1),
         duration: const Duration(seconds: 1),
@@ -107,24 +107,31 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
     ..powerAware = false
     ..addMeasures([
       CAMSMeasure(
-          type: DataType.fromString(ACCELEROMETER), name: 'Accelerometer'),
-      CAMSMeasure(type: DataType(NameSpace.CARP, GYROSCOPE), name: 'Gyroscope'),
+        type: ACCELEROMETER,
+        name: 'Accelerometer',
+      ),
+      CAMSMeasure(
+        type: GYROSCOPE,
+        name: 'Gyroscope',
+      ),
       PeriodicMeasure(
-        type: DataType.fromString(PERIODIC_ACCELEROMETER),
+        type: PERIODIC_ACCELEROMETER,
         name: 'Accelerometer',
         frequency: const Duration(seconds: 5),
         duration: const Duration(seconds: 1),
       ),
       PeriodicMeasure(
-        type: DataType.fromString(PERIODIC_GYROSCOPE),
+        type: PERIODIC_GYROSCOPE,
         name: 'Gyroscope',
         frequency: const Duration(seconds: 5),
         duration: const Duration(seconds: 1),
       ),
       CAMSMeasure(
-          type: DataType.fromString(PEDOMETER), name: 'Pedometer (Step Count)'),
+        type: PEDOMETER,
+        name: 'Pedometer (Step Count)',
+      ),
       PeriodicMeasure(
-        type: DataType.fromString(LIGHT),
+        type: LIGHT,
         name: 'Ambient Light',
         frequency: const Duration(seconds: 10),
         duration: const Duration(seconds: 2),

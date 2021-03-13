@@ -38,19 +38,19 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
     ..powerAware = true
     ..addMeasures([
       CAMSMeasure(
-        type: DataType.fromString(DEVICE),
+        type: DEVICE,
         name: 'Basic Device Info',
       ),
       PeriodicMeasure(
-          type: DataType.fromString(MEMORY),
+          type: MEMORY,
           name: 'Memory Usage',
           frequency: const Duration(minutes: 1)),
       CAMSMeasure(
-        type: DataType.fromString(BATTERY),
+        type: BATTERY,
         name: 'Battery',
       ),
       CAMSMeasure(
-        type: DataType.fromString(SCREEN),
+        type: SCREEN,
         name: 'Screen Activity (lock/on/off)',
       ),
     ]);

@@ -65,7 +65,17 @@ void main() {
     expect(protocol.ownerId, 'jakba');
   });
 
-  test('JSON -> StudyProtocol', () async {
+  test('StudyProtocol -> JSON -> StudyProtocol :: deep assert', () async {
+    print('#1 : $protocol');
+    final studyJson = _encode(protocol);
+
+    StudyProtocol protocolFromJson =
+        StudyProtocol.fromJson(json.decode(studyJson) as Map<String, dynamic>);
+    expect(_encode(protocolFromJson), equals(studyJson));
+    print('#2 : $protocolFromJson');
+  });
+
+  test('JSON File -> StudyProtocol', () async {
     // Read the study protocol from json file
     String plainJson = File('test/json/study_1.json').readAsStringSync();
 

@@ -39,18 +39,18 @@ void registerFromJsonFunctions() {
   FromJsonFactory().register(AutomaticTask());
   FromJsonFactory().register(AppTask(type: 'ignored'));
 
-  // FromJsonFactory().register(CAMSTrigger());
+  FromJsonFactory().register(CAMSTrigger());
   FromJsonFactory().register(ImmediateTrigger());
-  // FromJsonFactory().register(DelayedTrigger());
-  // FromJsonFactory().register(PeriodicTrigger(period: null));
-  // FromJsonFactory().register(ScheduledTrigger(schedule: null));
-  // FromJsonFactory().register(Time());
-  // FromJsonFactory().register(RecurrentScheduledTrigger(type: null, time: null));
-  // FromJsonFactory().register(SamplingEventTrigger(measureType: null));
-  // FromJsonFactory()
-  //     .register(ConditionalSamplingEventTrigger(measureType: null));
+  FromJsonFactory().register(DelayedTrigger());
+  FromJsonFactory().register(PeriodicTrigger(period: null));
+  FromJsonFactory().register(DateTimeTrigger(schedule: null));
+  FromJsonFactory().register(Time());
+  FromJsonFactory().register(RecurrentScheduledTrigger(type: null, time: null));
+  FromJsonFactory().register(SamplingEventTrigger(measureType: null));
+  FromJsonFactory()
+      .register(ConditionalSamplingEventTrigger(measureType: null));
   // FromJsonFactory().register(DataType('', ''));
-  // FromJsonFactory().register(Measure(type: null));
-  // FromJsonFactory().register(PeriodicMeasure(type: null));
-  // FromJsonFactory().register(MarkedMeasure(type: null));
+  FromJsonFactory().register(CAMSMeasure());
+  FromJsonFactory().register(PeriodicMeasure());
+  FromJsonFactory().register(MarkedMeasure());
 }
