@@ -62,7 +62,7 @@ class FileDataManager extends AbstractDataManager {
       DataPointHeader(
           studyId: deployment.studyId,
           userId: deployment.userId,
-          dataFormat: ErrorDatum.CARP_DATA_FORMAT),
+          dataFormat: DataFormat.fromString(CAMSDataType.ERROR)),
       ErrorDatum(error.toString())));
 
   void onDone() => close();

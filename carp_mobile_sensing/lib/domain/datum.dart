@@ -10,11 +10,8 @@ part of domain;
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class Datum extends Data {
   /// The [DataFormat] of this type of [Datum].
-  static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, CAMSDataType.NONE);
-
   @JsonKey(ignore: true)
-  DataFormat get format => CARP_DATA_FORMAT;
+  DataFormat get format => DataFormat.fromString(CAMSDataType.NONE);
 
   /// An identifier for this [Datum], unique across all data generated.
   String id;
@@ -49,10 +46,7 @@ class Datum extends Data {
 /// A very simple [Datum] that only holds a string datum object.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class StringDatum extends Datum {
-  /// The [DataFormat] of this type of [Datum].
-  static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, CAMSDataType.STRING);
-  DataFormat get format => CARP_DATA_FORMAT;
+  DataFormat get format => DataFormat.fromString(CAMSDataType.STRING);
 
   /// The string data for this Datum.
   String str;
@@ -71,10 +65,7 @@ class StringDatum extends Datum {
 /// A generic [Datum] that holds a map of key, value string objects.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MapDatum extends Datum {
-  /// The [DataFormat] of this type of [Datum].
-  static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, CAMSDataType.MAP);
-  DataFormat get format => CARP_DATA_FORMAT;
+  DataFormat get format => DataFormat.fromString(CAMSDataType.MAP);
 
   /// The data map.
   Map<String, String> map;
@@ -92,10 +83,7 @@ class MapDatum extends Datum {
 /// sort of error, which is reported back.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ErrorDatum extends Datum {
-  /// The [DataFormat] of this type of [Datum].
-  static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, CAMSDataType.ERROR);
-  DataFormat get format => CARP_DATA_FORMAT;
+  DataFormat get format => DataFormat.fromString(CAMSDataType.ERROR);
 
   /// The original error message returned from the probe, if available.
   String message;
@@ -114,10 +102,7 @@ class ErrorDatum extends Datum {
 /// A [Datum] object holding a link to a file.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class FileDatum extends Datum {
-  /// The [DataFormat] of this type of [Datum].
-  static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, CAMSDataType.FILE);
-  DataFormat get format => CARP_DATA_FORMAT;
+  DataFormat get format => DataFormat.fromString(CAMSDataType.FILE);
 
   /// The path to the attached file.
   String filename;
@@ -154,8 +139,9 @@ class MultiDatum extends Datum {
   /// Create an empty [MultiDatum].
   MultiDatum() : super();
 
-  DataFormat get format =>
-      (data.isNotEmpty) ? data.first.format : DataType.UNKNOWN;
+  DataFormat get format => (data.isNotEmpty)
+      ? data.first.format
+      : DataFormat.fromString(CAMSDataType.UNKNOWN);
 
   /// Create a [MultiDatum] from a JSON map.
   factory MultiDatum.fromJson(Map<String, dynamic> json) =>
@@ -167,75 +153,15 @@ class MultiDatum extends Datum {
   String toString() => '${super.toString()}, size: ${data.length}';
 }
 
-// /// Specifies the data format of a [Datum].
-// @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-// class DataFormat {
-//   /// The default "unknown" data format.
-//   static const DataFormat UNKNOWN = DataFormat(NameSpace.UNKNOWN, 'unknown');
-
-//   /// The data format namespace. See [NameSpace].
-//   final String namespace;
-
-//   /// The name of this data format.
-//   final String name;
-
-//   /// Create a new [DataFormat] based on a [namespace] and a [name].
-//   const DataFormat(this.namespace, this.name) : super();
-
-//   /// Create a [DataFormat] based on a [DataType].
-//   factory DataFormat.fromDataType(DataType type) =>
-//       DataFormat(type.namespace, type.name);
-
-//   /// Create a [DataFormat] from a JSON map.
-//   factory DataFormat.fromJson(Map<String, dynamic> json) =>
-//       _$DataFormatFromJson(json);
-
-//   /// Serialize this object to JSON.
-//   Map<String, dynamic> toJson() => _$DataFormatToJson(this);
-
-//   String toString() => '$namespace.$name';
-// }
-
-// /// Enumeration of data format types.
-// ///
-// /// Currently know data format types include:
-// /// * `csv`  : Comma-separated values
-// /// * `json` : JSON
-// /// * `omh`  : Open mHealth
-// class DataFormatType {
-//   /// Comma-separated values
-//   static const String CSV = 'csv';
-
-//   /// JavaScript Object Notation (JSON)
-//   static const String JSON = 'json';
-
-//   /// Open mHealth (OMH)
-//   static const String OMH = 'omh';
-// }
-
-// /// Enumeration of data type namespaces.
-// ///
-// /// Namespaces are used both in specification of [DataType]
-// /// and in [DataFormat].
-// ///
-// /// Currently know namespaces include:
-// /// * `omh`  : Open mHealth
-// /// * `carp` : CACHET Research Platform (CARP)
-// class NameSpace {
-//   static const String UNKNOWN = 'unknown';
-//   static const String OMH = 'omh';
-//   static const String CARP = 'carp';
-// }
-
-/// Enumeration of data types used in [String].
+/// Enumeration of data types used in [DataType] and [DataFormat].
 class CAMSDataType {
-  static const String UNKNOWN = 'dk.cachet.unknown';
-  static const String NONE = 'dk.cachet.none';
-  static const String STRING = 'dk.cachet.string';
-  static const String MAP = 'dk.cachet.map';
-  static const String ERROR = 'dk.cachet.error';
-  static const String EXECUTOR = 'executor';
-  static const String FILE = 'file';
+  static const String UNKNOWN = 'dk.cachet.carp.unknown';
+  static const String NONE = 'dk.cachet.carp.none';
+  static const String STRING = 'dk.cachet.carp.string';
+  static const String MAP = 'dk.cachet.carp.map';
+  static const String ERROR = 'dk.cachet.carp.error';
+  static const String EXECUTOR = 'dk.cachet.carp.executor';
+  static const String FILE = 'dk.cachet.carp.file';
 
   static final List<String> _allTypes = [];
 

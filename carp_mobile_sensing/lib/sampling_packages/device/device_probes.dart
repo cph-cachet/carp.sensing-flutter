@@ -20,8 +20,6 @@ class BatteryProbe extends StreamProbe {
         int level = await battery.batteryLevel;
         DataPoint dataPoint = DataPoint.fromData(
           BatteryDatum.fromBatteryState(level, state),
-          // triggerId: triggerId,
-          // deviceRoleName: deviceRoleName,
         );
         controller.add(dataPoint);
       } catch (error) {
@@ -68,12 +66,8 @@ class ScreenProbe extends StreamProbe {
     }
   }
 
-  Stream<DataPoint> get stream =>
-      Screen().screenStateStream.map((event) => DataPoint.fromData(
-            ScreenDatum.fromScreenStateEvent(event),
-            // triggerId: triggerId,
-            // deviceRoleName: deviceRoleName,
-          ));
+  Stream<DataPoint> get stream => Screen().screenStateStream.map(
+      (event) => DataPoint.fromData(ScreenDatum.fromScreenStateEvent(event)));
 }
 
 /// A probe that collects free virtual memory on a regular basis
@@ -89,8 +83,6 @@ class MemoryProbe extends PeriodicDataPointProbe {
         FreeMemoryDatum()
           ..freePhysicalMemory = SysInfo.getFreePhysicalMemory()
           ..freeVirtualMemory = SysInfo.getFreeVirtualMemory(),
-        // triggerId: triggerId,
-        // deviceRoleName: deviceRoleName,
       );
 }
 
@@ -103,7 +95,5 @@ class DeviceProbe extends DataPointProbe {
             deviceManufacturer: DeviceInfo().deviceManufacturer,
             operatingSystem: DeviceInfo().operatingSystem,
             hardware: DeviceInfo().hardware),
-        // triggerId: triggerId,
-        // deviceRoleName: deviceRoleName,
       );
 }

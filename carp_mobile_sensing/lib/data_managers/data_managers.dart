@@ -16,7 +16,8 @@ import 'package:archive/archive_io.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../carp_mobile_sensing.dart';
+import 'package:carp_core/carp_core.dart';
+import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 part 'data_managers.g.dart';
 part 'local/console_data_manager.dart';

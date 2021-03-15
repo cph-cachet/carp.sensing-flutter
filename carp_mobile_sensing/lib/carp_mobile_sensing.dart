@@ -3,7 +3,6 @@
 library carp_mobile_sensing;
 
 export 'data_managers/data_managers.dart';
-export 'carp_core/carp_core.dart';
 export 'domain/domain.dart';
 export 'runtime/runtime.dart';
 export 'sampling_packages/device/device.dart';

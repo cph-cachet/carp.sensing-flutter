@@ -61,7 +61,7 @@ class CAMSStudyProtocol extends StudyProtocol {
     this.purpose,
     this.dataEndPoint,
     this.dataFormat = NameSpace.CARP,
-  }) : super(ownerId: owner?.id, name: name, description: description) {
+  }) : super(owner: owner, name: name, description: description) {
     registerFromJsonFunctions();
     // studyId ??= Uuid().v1();
     super.name = name;

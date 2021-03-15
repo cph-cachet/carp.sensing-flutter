@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+
 import 'package:test/test.dart';
 
 void main() {
@@ -203,7 +205,7 @@ void main() {
 
     StudyProtocol protocol_2 =
         StudyProtocol.fromJson(json.decode(studyJson) as Map<String, dynamic>);
-    expect(protocol_2.ownerId, protocol.ownerId);
+    expect(protocol_2.owner.id, protocol.ownerId);
 
     print('#1 : $protocol');
 

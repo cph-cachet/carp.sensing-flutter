@@ -13,7 +13,7 @@ FileDataEndPoint _$FileDataEndPointFromJson(Map<String, dynamic> json) {
     zip: json['zip'] as bool,
     encrypt: json['encrypt'] as bool,
     publicKey: json['public_key'] as String,
-  );
+  )..$type = json[r'$type'] as String;
 }
 
 Map<String, dynamic> _$FileDataEndPointToJson(FileDataEndPoint instance) {
@@ -25,6 +25,7 @@ Map<String, dynamic> _$FileDataEndPointToJson(FileDataEndPoint instance) {
     }
   }
 
+  writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
   writeNotNull('buffer_size', instance.bufferSize);
   writeNotNull('zip', instance.zip);

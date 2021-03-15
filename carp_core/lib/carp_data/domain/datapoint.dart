@@ -73,19 +73,12 @@ class DataPoint {
   DataPoint(this.carpHeader, this.carpBody);
 
   /// Create a [DataPoint] from a [Data].
-  factory DataPoint.fromData(
-    Data data, {
-    int triggerId,
-    String deviceRoleName,
-  }) =>
-      DataPoint(
-          DataPointHeader(
-            dataFormat: data.format,
-            triggerId: (triggerId != null) ? '$triggerId' : null,
-            deviceRoleName: deviceRoleName,
-            startTime: DateTime.now(),
-          ),
-          data);
+  factory DataPoint.fromData(Data data) => DataPoint(
+      DataPointHeader(
+        dataFormat: data.format,
+        startTime: DateTime.now(),
+      ),
+      data);
 
   /// Create a [DataPoint] from a JSON map.
   factory DataPoint.fromJson(Map<String, dynamic> json) =>
@@ -154,7 +147,7 @@ class DataPointHeader {
 
 /// Specifies the format of the [Data] in a [DataPoint].
 ///
-/// Note that the only reason why we have both a [String] and a [DataFormat]
+/// Note that the only reason why we have both a [DataType] and a [DataFormat]
 /// class definition is because the JSON serialization is different in data
 /// upload versus download from CANS.... :-?
 /// Upload is `FieldRename.snake` while download is `FieldRename.none`.
@@ -178,6 +171,14 @@ class DataFormat {
 
   /// Create a [DataFormat].
   const DataFormat(this.namespace, this.name) : super();
+
+  factory DataFormat.fromString(String type) {
+    assert(type.contains('.'),
+        "A data type must contain both a namespace and a name separated with a '.'");
+    final String name = type.split('.').last;
+    final String namespace = type.substring(0, type.indexOf(name) - 1);
+    return DataFormat(namespace, name);
+  }
 
   factory DataFormat.fromJson(Map<String, dynamic> json) =>
       _$DataFormatFromJson(json);
