@@ -11,4 +11,4 @@ This package does nothing on its own.
 
 For an overview of all CAMS packages, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter).
 For documentation on how to use CAMS, see the [CAMS wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki).
-For a thorough description of the CARP Core domain model, see the [carp.core-kotlin](https://github.com/cph-cachet/carp.core-kotlin) repro.
+For a thorough description of the CARP Core domain model, see the [carp.core-kotlin](https://github.com/cph-cachet/carp.core-kotlin) reprository.
