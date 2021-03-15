@@ -57,7 +57,10 @@ class MasterDeviceDeployment {
 
   /// Get the task based on its task name in this deployment.
   TaskDescriptor getTaskByName(String name) {
-    if (_taskMap == null) tasks.forEach((task) => _taskMap[task.name] = task);
+    if (_taskMap == null) {
+      _taskMap = {};
+      tasks.forEach((task) => _taskMap[task.name] = task);
+    }
     return _taskMap[name];
   }
 

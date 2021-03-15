@@ -107,6 +107,9 @@ class PedometerDatum extends Datum {
 
   PedometerDatum([this.stepCount]) : super();
 
+  /// Returns `true` if the [stepCount] is equal.
+  bool equivalentTo(ConditionalEvent event) => stepCount == event['stepCount'];
+
   factory PedometerDatum.fromJson(Map<String, dynamic> json) =>
       _$PedometerDatumFromJson(json);
   Map<String, dynamic> toJson() => _$PedometerDatumToJson(this);

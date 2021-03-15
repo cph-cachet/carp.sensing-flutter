@@ -26,7 +26,7 @@ class DeviceDescriptor extends Serializable {
   /// For example, 'Patient's phone'
   String roleName;
 
-  ///The set of [DataType]s defining which data can be collected on this device.
+  ///The set of [String]s defining which data can be collected on this device.
   List<String> supportedDataTypes = [];
 
   /// Sampling configurations for data types available on this device which
@@ -34,15 +34,14 @@ class DeviceDescriptor extends Serializable {
   Map<String, SamplingConfiguration> samplingConfiguration = {};
 
   String toString() =>
-      '$runtimeType - isMasterDevice: $isMasterDevice, roleName: $roleName';
+      '$runtimeType - roleName: $roleName, isMasterDevice: $isMasterDevice';
 
   Function get fromJsonFunction => _$DeviceDescriptorFromJson;
   factory DeviceDescriptor.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory()
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$DeviceDescriptorToJson(this);
-  String get jsonType =>
-      'dk.cachet.carp.protocols.domain.devices.DeviceDescriptor';
+  String get jsonType => 'dk.cachet.carp.protocols.domain.devices.$runtimeType';
 }
 
 /// A device which aggregates, synchronizes, and optionally uploads incoming
@@ -65,8 +64,6 @@ class MasterDeviceDescriptor extends DeviceDescriptor {
       FromJsonFactory()
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$MasterDeviceDescriptorToJson(this);
-  String get jsonType =>
-      'dk.cachet.carp.protocols.domain.devices.MasterDeviceDescriptor';
 }
 
 /// An internet-connected phone with built-in sensors.
@@ -91,5 +88,4 @@ class Smartphone extends MasterDeviceDescriptor {
   factory Smartphone.fromJson(Map<String, dynamic> json) => FromJsonFactory()
       .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$SmartphoneToJson(this);
-  String get jsonType => 'dk.cachet.carp.protocols.domain.devices.Smartphone';
 }

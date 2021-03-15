@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2021 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -10,23 +10,23 @@ part of carp_core;
 // VERSION 1.2 -- EXAMPLE
 //
 // {
-//  "id": 224038,  # set by the server, not used in upload
-//  "created_by_user_id": 1,
-//  "study_id": "c9d341ae-2209-4a70-b9a1-09446bb05dca",
+//  "id": 224038,                                   # set by the server, not used in upload
+//  "created_by_user_id": 1,                        # set by the server, not used in upload
+//  "study_id": "c9d341ae",                         # set by the server, not used in upload
 //  "carp_header": {
-//   "study_id": "01cf04a7-d154-40f0-9a75-ab759cf74eb3",
-//   "device_role_name": "unknown",
-//   "trigger_id": "unknown",
-//   "user_id": "user@dtu.dk",
-//   "upload_time": "2021-02-27T12:27:14.933672Z",   # set by the server, not used in upload
-//   "start_time": "2021-02-27T12:27:12.902614Z",
-//   "end_time": "2021-02-27T12:27:14.933672Z",
-//   "data_format": {
+//   "study_id": "01cf04a7",                        # required
+//   "device_role_name": "phone",                   # optional
+//   "trigger_id": "1",                             # optional
+//   "user_id": "user@dtu.dk",                      # required
+//   "upload_time": "2021-02-27T12:27:14.933672Z",  # set by the server, not used in upload
+//   "start_time": "2021-02-27T12:27:12.902614Z",   # optional
+//   "end_time": "2021-02-27T12:27:14.933672Z",     # optional
+//   "data_format": {                               # required
 //    "namespace": "carp",
 //    "name": "light"
 //   }
 //  },
-//  "carp_body": {
+//  "carp_body": {                                  # required
 //   "id": "1e828ea0-78f7-11eb-a4c1-8518ece21966",
 //   "timestamp": "2021-02-27T12:27:12.902614Z"
 //   "max_lux": 12,
@@ -81,8 +81,8 @@ class DataPoint {
       DataPoint(
           DataPointHeader(
             dataFormat: data.format,
-            triggerId: (triggerId != null) ? '$triggerId' : '',
-            deviceRoleName: deviceRoleName ?? '',
+            triggerId: (triggerId != null) ? '$triggerId' : null,
+            deviceRoleName: deviceRoleName,
             startTime: DateTime.now(),
           ),
           data);
@@ -100,9 +100,9 @@ class DataPoint {
 class DataPointHeader {
   /// An ID of this study.
   ///
-  /// This is typically the study deployment id of the [StudyDeployment] from
-  /// which this data point was generated. But it may be different, in which case
-  /// it denotes a user-specified id for this study.
+  /// This is the [studyId] from the [CAMSStudyProtocol], if specified.
+  /// If not specified in the [CAMSStudyProtocol], it is the study deployment
+  /// id of the [StudyDeployment] from which this data point was generated.
   String studyId;
 
   /// The role of the device that collected this data point.
@@ -132,23 +132,15 @@ class DataPointHeader {
   DataPointHeader({
     this.studyId,
     this.userId,
+    this.dataFormat,
     this.deviceRoleName,
     this.triggerId,
     this.startTime,
     this.endTime,
-    this.dataFormat,
   }) {
-    assert(
-      studyId != null,
-      'Must specify what study this data point belongs to',
-    );
     // make sure that timestamps are in UTC
     if (startTime != null) startTime.toUtc();
     if (endTime != null) endTime.toUtc();
-    // [deviceRoleName] and [triggerId] has to be specified when sending this data point to the CARP web service.
-    // TODO - need to add device and triggers to the domain model.
-    deviceRoleName ??= "unknown";
-    triggerId ??= "unknown";
     dataFormat ??= DataFormat.UNKNOWN;
   }
 
@@ -162,7 +154,7 @@ class DataPointHeader {
 
 /// Specifies the format of the [Data] in a [DataPoint].
 ///
-/// Note that the only reason why we have both a [DataType] and a [DataFormat]
+/// Note that the only reason why we have both a [String] and a [DataFormat]
 /// class definition is because the JSON serialization is different in data
 /// upload versus download from CANS.... :-?
 /// Upload is `FieldRename.snake` while download is `FieldRename.none`.
@@ -178,7 +170,7 @@ class DataFormat {
   /// e.g., "org.openmhealth" or "dk.cachet.carp".
   final String namespace;
 
-  /// The name of this data format. See [DataType].
+  /// The name of this data format. See [String].
   ///
   /// Uniquely identifies something within the [namespace].
   /// The name may not contain any periods. Periods are reserved for namespaces.

@@ -1,10 +1,5 @@
-import 'dart:convert';
-
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:test/test.dart';
-
-String _encode(Object object) =>
-    const JsonEncoder.withIndent(' ').convert(object);
 
 void main() {
   setUp(() {
@@ -20,7 +15,7 @@ void main() {
 //    Study plainStudy = Study.fromJson(json.decode(plainStudyJson) as Map<String, dynamic>);
 //    expect(plainStudy.id, '1234');
 //
-//    print(_encode(plainStudy));
+//    print(toJsonString(plainStudy));
 //  });
 //
 //  /// Test template.
@@ -34,20 +29,20 @@ void main() {
 
       // collect every day at 13:30
       t = RecurrentScheduledTrigger(
-          format: RecurrentType.daily, time: Time(hour: 13, minute: 30));
-      //print(_encode(t));
+          type: RecurrentType.daily, time: Time(hour: 13, minute: 30));
+      //print(toJsonString(t));
       print('${t.firstOccurrence} - ${t.period}');
       expect(t.period.inHours, 24);
 
       // collect every day at 22:30
       t = RecurrentScheduledTrigger(
-          format: RecurrentType.daily, time: Time(hour: 22, minute: 30));
+          type: RecurrentType.daily, time: Time(hour: 22, minute: 30));
       print('${t.firstOccurrence} - ${t.period}');
       expect(t.period.inHours, 24);
 
       // collect every other day at 13:30
       t = RecurrentScheduledTrigger(
-          format: RecurrentType.daily,
+          type: RecurrentType.daily,
           separationCount: 1,
           time: Time(hour: 13, minute: 30));
       print('${t.firstOccurrence} - ${t.period}');
@@ -55,7 +50,7 @@ void main() {
 
       // collect every wednesday at 12:23
       t = RecurrentScheduledTrigger(
-          format: RecurrentType.weekly,
+          type: RecurrentType.weekly,
           dayOfWeek: DateTime.wednesday,
           time: Time(hour: 12, minute: 23));
       print('${t.firstOccurrence} - ${t.period}');
@@ -63,7 +58,7 @@ void main() {
 
       // collect every thursday at 14:23
       t = RecurrentScheduledTrigger(
-          format: RecurrentType.weekly,
+          type: RecurrentType.weekly,
           dayOfWeek: DateTime.thursday,
           time: Time(hour: 14, minute: 23));
       print('${t.firstOccurrence} - ${t.period}');
@@ -71,7 +66,7 @@ void main() {
 
       // collect every 2nd thursday at 14:00
       t = RecurrentScheduledTrigger(
-          format: RecurrentType.weekly,
+          type: RecurrentType.weekly,
           dayOfWeek: DateTime.thursday,
           separationCount: 1,
           time: Time(hour: 14, minute: 00));
@@ -82,7 +77,7 @@ void main() {
       // the monthly trigger from iPDM-GO app
       t = RecurrentScheduledTrigger(
         triggerId: 'Blood glucose events trigger',
-        format: RecurrentType.monthly,
+        type: RecurrentType.monthly,
         dayOfMonth: 1,
         time: Time(hour: 18),
         remember: true,
@@ -94,7 +89,7 @@ void main() {
       // collect quarterly on the 11th day of the first month
       // in each quarter at 21:30
       t = RecurrentScheduledTrigger(
-        format: RecurrentType.monthly,
+        type: RecurrentType.monthly,
         dayOfMonth: 11,
         separationCount: 2,
         time: Time(hour: 21, minute: 30),
@@ -105,7 +100,7 @@ void main() {
 
       // collect monthly in the second week on a monday at 14:30
       t = RecurrentScheduledTrigger(
-        format: RecurrentType.monthly,
+        type: RecurrentType.monthly,
         weekOfMonth: 2,
         dayOfWeek: DateTime.tuesday,
         time: Time(hour: 14, minute: 30),
@@ -119,7 +114,7 @@ void main() {
       // but remember this trigger across app shutdown
       t = RecurrentScheduledTrigger(
         triggerId: '1234wef',
-        format: RecurrentType.monthly,
+        type: RecurrentType.monthly,
         dayOfMonth: 11,
         separationCount: 2,
         time: Time(hour: 21, minute: 30),
@@ -133,29 +128,29 @@ void main() {
     test(' - RecurrentScheduledTrigger - assert failures', () {
       // all of the following should fail due to assert
       RecurrentScheduledTrigger(
-        format: RecurrentType.daily,
+        type: RecurrentType.daily,
         time: Time(hour: 13, minute: 30),
       );
       RecurrentScheduledTrigger(
-        format: RecurrentType.daily,
+        type: RecurrentType.daily,
         separationCount: -1,
         time: Time(hour: 13, minute: 30),
       );
 
       RecurrentScheduledTrigger(
-          format: RecurrentType.weekly, time: Time(hour: 12, minute: 23));
+          type: RecurrentType.weekly, time: Time(hour: 12, minute: 23));
 
       RecurrentScheduledTrigger(
-          format: RecurrentType.monthly,
+          type: RecurrentType.monthly,
           dayOfWeek: DateTime.monday,
           time: Time(hour: 14, minute: 30));
       RecurrentScheduledTrigger(
-          format: RecurrentType.monthly,
+          type: RecurrentType.monthly,
           dayOfMonth: 43,
           separationCount: 2,
           time: Time(hour: 21, minute: 30));
       RecurrentScheduledTrigger(
-          format: RecurrentType.monthly,
+          type: RecurrentType.monthly,
           weekOfMonth: 12,
           dayOfWeek: DateTime.monday,
           time: Time(hour: 14, minute: 30));
@@ -166,7 +161,7 @@ void main() {
       CronScheduledTrigger t =
           CronScheduledTrigger.parse(cronExpression: '0 12 * * *');
       print(t);
-      print(_encode(t));
+      print(toJsonString(t));
 
       t = CronScheduledTrigger(triggerId: 'id', minute: 0, hour: 12);
       print(t);

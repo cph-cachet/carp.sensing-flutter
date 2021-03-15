@@ -92,7 +92,6 @@ class CAMSDeploymentService implements DeploymentService {
   @override
   Future<CAMSMasterDeviceDeployment> getDeviceDeploymentFor(
       String studyDeploymentId, String masterDeviceRoleName) async {
-    masterDeviceRoleName ??= DEFAULT_MASTER_DEVICE_ROLENAME;
     StudyDeployment deployment = _repository[studyDeploymentId];
     DeviceDescriptor device = deployment.registeredDevices.keys.firstWhere(
         (descriptor) => descriptor.roleName == masterDeviceRoleName);
@@ -108,7 +107,7 @@ class CAMSDeploymentService implements DeploymentService {
         : null;
 
     return CAMSMasterDeviceDeployment.fromMasterDeviceDeployment(
-      studyId: '',
+      studyId: protocol.studyId ?? studyDeploymentId,
       studyDeploymentId: studyDeploymentId,
       name: deployment.protocol.name,
       title: protocol?.title ?? '',
@@ -123,7 +122,8 @@ class CAMSDeploymentService implements DeploymentService {
   /// for [studyDeploymentId].
   Future<CAMSMasterDeviceDeployment> getDeviceDeployment(
           String studyDeploymentId) async =>
-      await getDeviceDeploymentFor(studyDeploymentId, null);
+      await getDeviceDeploymentFor(
+          studyDeploymentId, DEFAULT_MASTER_DEVICE_ROLENAME);
 
   @override
   Future<StudyDeploymentStatus> deploymentSuccessfulFor(
@@ -131,7 +131,6 @@ class CAMSDeploymentService implements DeploymentService {
     String masterDeviceRoleName, {
     DateTime deviceDeploymentLastUpdateDate,
   }) async {
-    masterDeviceRoleName ??= DEFAULT_MASTER_DEVICE_ROLENAME;
     deviceDeploymentLastUpdateDate ??= DateTime.now();
 
     StudyDeployment deployment = _repository[studyDeploymentId];
@@ -156,8 +155,11 @@ class CAMSDeploymentService implements DeploymentService {
     String studyDeploymentId, {
     DateTime deviceDeploymentLastUpdateDate,
   }) async =>
-      deploymentSuccessfulFor(studyDeploymentId, null,
-          deviceDeploymentLastUpdateDate: deviceDeploymentLastUpdateDate);
+      deploymentSuccessfulFor(
+        studyDeploymentId,
+        DEFAULT_MASTER_DEVICE_ROLENAME,
+        deviceDeploymentLastUpdateDate: deviceDeploymentLastUpdateDate,
+      );
 
   @override
   Future<StudyDeploymentStatus> stop(String studyDeploymentId) async {

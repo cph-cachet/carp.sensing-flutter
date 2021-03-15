@@ -22,7 +22,8 @@ part of domain;
 /// specified [dataFormat].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class CAMSStudyProtocol extends StudyProtocol {
-  /// A unique id for this study, generated when created.
+  /// A unique id for this study.
+  /// If specified, this is used as the [studyId] in the [DataPointHeader].
   String studyId;
 
   /// A longer printer-friendly title for this study.
@@ -50,8 +51,9 @@ class CAMSStudyProtocol extends StudyProtocol {
 
   /// Create a new [StudyProtocol].
   ///
-  /// If no [dataFormat] the CARP namespace is used.
+  /// If no [dataFormat] is specified, the CARP namespace is used.
   CAMSStudyProtocol({
+    this.studyId,
     this.owner,
     String name,
     this.title,
@@ -60,7 +62,8 @@ class CAMSStudyProtocol extends StudyProtocol {
     this.dataEndPoint,
     this.dataFormat = NameSpace.CARP,
   }) : super(ownerId: owner?.id, name: name, description: description) {
-    studyId = Uuid().v1();
+    registerFromJsonFunctions();
+    // studyId ??= Uuid().v1();
     super.name = name;
     super.description = description;
   }

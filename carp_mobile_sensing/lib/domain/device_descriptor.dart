@@ -32,7 +32,7 @@ class ConnectableDeviceDescriptor extends DeviceDescriptor {
 
   /// The list of measures that this device is collecting as part of a
   /// [StudyProtocol].
-  List<DataType> collectingMeasureTypes = [];
+  List<String> collectingMeasureTypes = [];
 
   Function get fromJsonFunction => _$ConnectableDeviceDescriptorFromJson;
   factory ConnectableDeviceDescriptor.fromJson(Map<String, dynamic> json) =>

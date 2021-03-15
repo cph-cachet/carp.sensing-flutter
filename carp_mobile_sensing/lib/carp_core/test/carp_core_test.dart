@@ -4,9 +4,6 @@ import 'package:test/test.dart';
 
 import '../carp_core.dart';
 
-String _encode(Object object) =>
-    const JsonEncoder.withIndent(' ').convert(object);
-
 void main() {
   StudyProtocol protocol;
 
@@ -42,7 +39,7 @@ void main() {
 
   test('StudyProtocol -> JSON', () async {
     print(protocol);
-    print(_encode(protocol));
+    print(toJsonString(protocol));
     expect(protocol.ownerId, 'jakba@dtu.dk');
   });
 
@@ -56,7 +53,7 @@ void main() {
 
     expect(protocol.ownerId, 'jakba@dtu.dk');
     expect(protocol.masterDevices.first.roleName, 'masterphone');
-    print(_encode(protocol));
+    print(toJsonString(protocol));
   });
 
   test('DataPoint -> JSON', () async {
@@ -69,7 +66,7 @@ void main() {
     );
 
     print(dataPoint);
-    print(_encode(dataPoint));
+    print(toJsonString(dataPoint));
     assert(dataPoint.carpBody != null);
   });
 }

@@ -19,11 +19,11 @@ class SamplingConfiguration extends Serializable {
       'dk.cachet.carp.protocols.domain.sampling.SamplingConfiguration';
 }
 
-///Specifies the sampling scheme for a [DataType], including possible options,
+///Specifies the sampling scheme for a [String], including possible options,
 ///defaults, and constraints.
 abstract class DataTypeSamplingScheme {
-  /// The [DataType] this sampling scheme relates to.
-  DataType type;
+  /// The [String] this sampling scheme relates to.
+  String type;
 
   /// The default configuration of a [Measure] for the [type].
   Measure defaultMeasure;
@@ -41,5 +41,5 @@ abstract class DataTypeSamplingSchemeList {
   ///
   /// This method is a convenient way to get a list of pre-configured
   /// measures of the correct type with default settings.
-  List<Measure> getMeasureList({List<DataType> types});
+  List<Measure> getMeasureList({List<String> types});
 }

@@ -94,8 +94,8 @@ class ParticipantData {
 
   ParticipantData() : super();
 
-  getData(DataType type) => data[type.toString()];
-  setData(DataType type, dynamic someData) => data[type.toString()] = someData;
+  getData(String type) => data[type.toString()];
+  setData(String type, dynamic someData) => data[type.toString()] = someData;
 
   factory ParticipantData.fromJson(Map<String, dynamic> json) =>
       _$ParticipantDataFromJson(json);

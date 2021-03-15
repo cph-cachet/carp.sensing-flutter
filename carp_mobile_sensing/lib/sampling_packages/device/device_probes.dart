@@ -20,8 +20,8 @@ class BatteryProbe extends StreamProbe {
         int level = await battery.batteryLevel;
         DataPoint dataPoint = DataPoint.fromData(
           BatteryDatum.fromBatteryState(level, state),
-          triggerId: triggerId,
-          deviceRoleName: deviceRoleName,
+          // triggerId: triggerId,
+          // deviceRoleName: deviceRoleName,
         );
         controller.add(dataPoint);
       } catch (error) {
@@ -71,8 +71,8 @@ class ScreenProbe extends StreamProbe {
   Stream<DataPoint> get stream =>
       Screen().screenStateStream.map((event) => DataPoint.fromData(
             ScreenDatum.fromScreenStateEvent(event),
-            triggerId: triggerId,
-            deviceRoleName: deviceRoleName,
+            // triggerId: triggerId,
+            // deviceRoleName: deviceRoleName,
           ));
 }
 
@@ -86,22 +86,24 @@ class MemoryProbe extends PeriodicDataPointProbe {
   }
 
   Future<DataPoint> getDataPoint() async => DataPoint.fromData(
-      FreeMemoryDatum()
-        ..freePhysicalMemory = SysInfo.getFreePhysicalMemory()
-        ..freeVirtualMemory = SysInfo.getFreeVirtualMemory(),
-      triggerId: triggerId,
-      deviceRoleName: deviceRoleName);
+        FreeMemoryDatum()
+          ..freePhysicalMemory = SysInfo.getFreePhysicalMemory()
+          ..freeVirtualMemory = SysInfo.getFreeVirtualMemory(),
+        // triggerId: triggerId,
+        // deviceRoleName: deviceRoleName,
+      );
 }
 
 /// A probe that collects the device info about this device.
 class DeviceProbe extends DataPointProbe {
   Future<DataPoint> getDataPoint() async => DataPoint.fromData(
-      DeviceDatum(DeviceInfo().platform, DeviceInfo().deviceID,
-          deviceName: DeviceInfo().deviceName,
-          deviceModel: DeviceInfo().deviceModel,
-          deviceManufacturer: DeviceInfo().deviceManufacturer,
-          operatingSystem: DeviceInfo().operatingSystem,
-          hardware: DeviceInfo().hardware),
-      triggerId: triggerId,
-      deviceRoleName: deviceRoleName);
+        DeviceDatum(DeviceInfo().platform, DeviceInfo().deviceID,
+            deviceName: DeviceInfo().deviceName,
+            deviceModel: DeviceInfo().deviceModel,
+            deviceManufacturer: DeviceInfo().deviceManufacturer,
+            operatingSystem: DeviceInfo().operatingSystem,
+            hardware: DeviceInfo().hardware),
+        // triggerId: triggerId,
+        // deviceRoleName: deviceRoleName,
+      );
 }

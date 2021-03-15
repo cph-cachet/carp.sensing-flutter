@@ -239,6 +239,24 @@ void main() {
       print("data_point_id : $dataPointId");
     });
 
+    test('- post w/o trigger id & device role name', () async {
+      final CARPDataPoint data =
+          CARPDataPoint.fromDatum(study.id, study.userId, datum1);
+
+      data.carpHeader.triggerId = null;
+      data.carpHeader.deviceRoleName = null;
+      data.carpHeader.startTime = null;
+      data.carpHeader.endTime = null;
+
+      print(_encode(data.toJson()));
+
+      int dataPointId =
+          await CarpService().getDataPointReference().postDataPoint(data);
+
+      assert(dataPointId > 0);
+      print("data_point_id : $dataPointId");
+    });
+
     test('- batch', () async {
       final File file = File("test/batch-correct-test.json");
       await CarpService().getDataPointReference().batchPostDataPoint(file);

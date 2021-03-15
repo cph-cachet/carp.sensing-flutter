@@ -56,6 +56,9 @@ class DeviceDatum extends Datum {
       this.hardware})
       : super();
 
+  /// Returns `true` if the [deviceId] is equal.
+  bool equivalentTo(ConditionalEvent event) => deviceId == event['deviceId'];
+
   factory DeviceDatum.fromJson(Map<String, dynamic> json) =>
       _$DeviceDatumFromJson(json);
   Map<String, dynamic> toJson() => _$DeviceDatumToJson(this);
@@ -114,6 +117,10 @@ class BatteryDatum extends Datum {
         return STATE_UNKNOWN;
     }
   }
+
+  /// Returns `true` if the [batteryLevel] is equal.
+  bool equivalentTo(ConditionalEvent event) =>
+      batteryLevel == event['batteryLevel'];
 
   factory BatteryDatum.fromJson(Map<String, dynamic> json) =>
       _$BatteryDatumFromJson(json);
@@ -178,6 +185,10 @@ class ScreenDatum extends Datum {
     }
     return sd;
   }
+
+  /// Returns `true` if the [screenEvent] is equal.
+  bool equivalentTo(ConditionalEvent event) =>
+      screenEvent == event['screenEvent'];
 
   factory ScreenDatum.fromJson(Map<String, dynamic> json) =>
       _$ScreenDatumFromJson(json);

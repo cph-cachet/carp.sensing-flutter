@@ -73,7 +73,7 @@ abstract class DataPointTransformerSchema {
   void onRegister();
 
   /// Add a transformer to this schema based on its type mapped to its
-  /// [DataType].
+  /// [String].
   void add(String type, DataPointTransformer transformer) =>
       transformers[type] = transformer;
 

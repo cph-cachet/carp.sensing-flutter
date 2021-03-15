@@ -41,6 +41,9 @@ DataPointHeader _$DataPointHeaderFromJson(Map<String, dynamic> json) {
   return DataPointHeader(
     studyId: json['study_id'] as String,
     userId: json['user_id'] as String,
+    dataFormat: json['data_format'] == null
+        ? null
+        : DataFormat.fromJson(json['data_format'] as Map<String, dynamic>),
     deviceRoleName: json['device_role_name'] as String,
     triggerId: json['trigger_id'] as String,
     startTime: json['start_time'] == null
@@ -49,9 +52,6 @@ DataPointHeader _$DataPointHeaderFromJson(Map<String, dynamic> json) {
     endTime: json['end_time'] == null
         ? null
         : DateTime.parse(json['end_time'] as String),
-    dataFormat: json['data_format'] == null
-        ? null
-        : DataFormat.fromJson(json['data_format'] as Map<String, dynamic>),
   )..uploadTime = json['upload_time'] == null
       ? null
       : DateTime.parse(json['upload_time'] as String);

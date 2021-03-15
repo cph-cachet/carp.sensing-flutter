@@ -4,33 +4,30 @@ import 'package:test/test.dart';
 
 import '../carp_core.dart';
 
-String _encode(Object object) =>
-    const JsonEncoder.withIndent(' ').convert(object);
-
 void main() {
   setUp(() {});
 
   test('DeploymentServiceRequest -> JSON', () async {
-    print(_encode(DeploymentServiceRequest('1234')));
+    print(toJsonString(DeploymentServiceRequest('1234')));
   });
 
   test('GetActiveParticipationInvitations -> JSON', () async {
-    print(_encode(GetActiveParticipationInvitations('jakba@dtu.dk')));
+    print(toJsonString(GetActiveParticipationInvitations('jakba@dtu.dk')));
   });
   test('GetStudyDeploymentStatus -> JSON', () async {
-    print(_encode(GetStudyDeploymentStatus('1234')));
+    print(toJsonString(GetStudyDeploymentStatus('1234')));
   });
   test('RegisterDevice -> JSON', () async {
-    print(_encode(RegisterDevice('1234', 'phone', DeviceRegistration())));
+    print(toJsonString(RegisterDevice('1234', 'phone', DeviceRegistration())));
   });
   test('UnregisterDevice -> JSON', () async {
-    print(_encode(UnregisterDevice('1234', 'phone')));
+    print(toJsonString(UnregisterDevice('1234', 'phone')));
   });
   test('GetDeviceDeploymentFor -> JSON', () async {
-    print(_encode(GetDeviceDeploymentFor('1234', 'phone')));
+    print(toJsonString(GetDeviceDeploymentFor('1234', 'phone')));
   });
   test('DeploymentSuccessful -> JSON', () async {
-    print(_encode(DeploymentSuccessful('1234', 'phone', DateTime.now())));
+    print(toJsonString(DeploymentSuccessful('1234', 'phone', DateTime.now())));
   });
   test(' -> JSON', () async {});
   test('JSON -> ActiveParticipationInvitation', () async {
@@ -42,7 +39,7 @@ void main() {
         ActiveParticipationInvitation.fromJson(
             json.decode(plainJson) as Map<String, dynamic>);
     expect(invitation.participation.id, '3cf97adf-4cdf-4211-b344-67946934b657');
-    print(_encode(invitation));
+    print(toJsonString(invitation));
   });
   test('JSON -> ActiveParticipationInvitation CANS', () async {
     String plainJson = File(
@@ -54,7 +51,7 @@ void main() {
             json.decode(plainJson) as Map<String, dynamic>);
     expect(invitation.invitation.applicationData,
         '294a5748-d8fa-4617-b475-99c6980032c8');
-    print(_encode(invitation));
+    print(toJsonString(invitation));
   });
   test('JSON -> MasterDeviceDeployment', () async {
     String plainJson =
@@ -64,7 +61,7 @@ void main() {
     MasterDeviceDeployment deployment = MasterDeviceDeployment.fromJson(
         json.decode(plainJson) as Map<String, dynamic>);
     expect(deployment.deviceDescriptor.roleName, 'phone');
-    print(_encode(deployment));
+    print(toJsonString(deployment));
   });
   test('JSON -> ParticipantData', () async {
     String plainJson = File('lib/carp_core/test/json/participant_data.json')
@@ -73,7 +70,7 @@ void main() {
     ParticipantData data = ParticipantData.fromJson(
         json.decode(plainJson) as Map<String, dynamic>);
     expect(data.data['dk.cachet.carp.input.sex'], 'Male');
-    print(_encode(data));
+    print(toJsonString(data));
   });
   test('JSON -> StudyDeploymentStatus', () async {
     String plainJson =
@@ -84,7 +81,7 @@ void main() {
         json.decode(plainJson) as Map<String, dynamic>);
     expect(status.studyDeploymentId, 'b1575ac0-1289-4eeb-9048-a3681ad93ff8');
     expect(status.status, StudyDeploymentStatusTypes.Invited);
-    print(_encode(status));
+    print(toJsonString(status));
   });
 
   test('JSON -> StudyDeploymentStatus CANS', () async {
@@ -96,7 +93,7 @@ void main() {
         json.decode(plainJson) as Map<String, dynamic>);
     expect(status.studyDeploymentId, 'ae8076a3-7170-4bcf-b66c-64639a7a9eee');
     expect(status.status, StudyDeploymentStatusTypes.DeployingDevices);
-    print(_encode(status));
+    print(toJsonString(status));
   });
 
   test('JSON -> StudyDeploymentStatus Successful', () async {
@@ -108,7 +105,7 @@ void main() {
         json.decode(plainJson) as Map<String, dynamic>);
     expect(status.studyDeploymentId, '1cbbd021-161b-470d-b421-6f08a9636b58');
     expect(status.status, StudyDeploymentStatusTypes.DeploymentReady);
-    print(_encode(status));
+    print(toJsonString(status));
   });
   test('JSON -> ', () async {});
 }

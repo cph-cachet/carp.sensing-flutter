@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 import 'package:uuid/uuid.dart';
+import 'dart:convert';
 
 export 'carp_core.dart';
 
@@ -34,3 +35,7 @@ part 'carp_deployment/application/deployment_service.dart';
 part 'carp_deployment/application/participation_service.dart';
 
 part 'carp_core.g.dart';
+
+/// A convient function to convert a Dart object into a JSON string.
+String toJsonString(Object object) =>
+    const JsonEncoder.withIndent(' ').convert(object);

@@ -129,11 +129,8 @@ class SamplingPackageRegistry {
       name: 'No sampling',
       powerAware: true,
     );
-    CAMSDataType.all.forEach((type) {
-      DataType dataType = DataType.fromString(type);
-      schema.measures[dataType] =
-          CAMSMeasure(type: dataType.toString(), enabled: false);
-    });
+    CAMSDataType.all.forEach((type) =>
+        schema.measures[type] = CAMSMeasure(type: type, enabled: false));
 
     return schema;
   }

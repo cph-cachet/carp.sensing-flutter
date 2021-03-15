@@ -48,5 +48,5 @@ abstract class ParticipationService {
   /// Returns all data for the specified study deployment, including the newly
   /// set data.
   ParticipantData setParticipantData(
-      String studyDeploymentId, DataType inputDataType, Data data);
+      String studyDeploymentId, String inputDataType, Data data);
 }

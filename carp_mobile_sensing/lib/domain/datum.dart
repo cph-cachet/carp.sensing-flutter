@@ -13,9 +13,10 @@ class Datum extends Data {
   static const DataFormat CARP_DATA_FORMAT =
       DataFormat(NameSpace.CARP, CAMSDataType.NONE);
 
+  @JsonKey(ignore: true)
   DataFormat get format => CARP_DATA_FORMAT;
 
-  /// Unique identifier for the current Datum, unique across all data generated.
+  /// An identifier for this [Datum], unique across all data generated.
   String id;
 
   /// The UTC timestamp when this data was generated on the device.
@@ -31,6 +32,8 @@ class Datum extends Data {
       id = Uuid().v1(); // Generates a time-based version 1 UUID.
     }
   }
+
+  bool equivalentTo(ConditionalEvent event) => false;
 
   /// Create a [Datum] from a JSON map.
   factory Datum.fromJson(Map<String, dynamic> json) => _$DatumFromJson(json);
@@ -224,7 +227,7 @@ class MultiDatum extends Datum {
 //   static const String CARP = 'carp';
 // }
 
-/// Enumeration of data types used in [DataType].
+/// Enumeration of data types used in [String].
 class CAMSDataType {
   static const String UNKNOWN = 'dk.cachet.unknown';
   static const String NONE = 'dk.cachet.none';

@@ -4,11 +4,9 @@ import 'dart:io';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:test/test.dart';
 
-String _encode(Object object) =>
-    const JsonEncoder.withIndent(' ').convert(object);
-
 void main() {
   CAMSStudyProtocol protocol;
+  Smartphone phone;
 
   setUp(() {
     registerFromJsonFunctions();
@@ -23,7 +21,7 @@ void main() {
       );
 
     // Define which devices are used for data collection.
-    Smartphone phone = Smartphone(
+    phone = Smartphone(
       name: 'SM-A320FL',
       roleName: CAMSDeploymentService.DEFAULT_MASTER_DEVICE_ROLENAME,
     );
@@ -61,17 +59,17 @@ void main() {
 
   test('CAMSStudyProtocol -> JSON', () async {
     print(protocol);
-    print(_encode(protocol));
+    print(toJsonString(protocol));
     expect(protocol.ownerId, 'jakba');
   });
 
   test('StudyProtocol -> JSON -> StudyProtocol :: deep assert', () async {
     print('#1 : $protocol');
-    final studyJson = _encode(protocol);
+    final studyJson = toJsonString(protocol);
 
     StudyProtocol protocolFromJson =
         StudyProtocol.fromJson(json.decode(studyJson) as Map<String, dynamic>);
-    expect(_encode(protocolFromJson), equals(studyJson));
+    expect(toJsonString(protocolFromJson), equals(studyJson));
     print('#2 : $protocolFromJson');
   });
 
@@ -85,7 +83,134 @@ void main() {
     expect(protocol.ownerId, 'jakba');
     expect(protocol.masterDevices.first.roleName,
         CAMSDeploymentService.DEFAULT_MASTER_DEVICE_ROLENAME);
-    print(_encode(protocol));
+    print(toJsonString(protocol));
+  });
+
+  test('Triggers -> JSON -> Triggers', () async {
+    protocol.addTriggeredTask(
+        DelayedTrigger(delay: Duration(seconds: 10)),
+        AutomaticTask()
+          ..measures = SamplingPackageRegistry().common().getMeasureList(
+              types: [
+                SensorSamplingPackage.PEDOMETER,
+                DeviceSamplingPackage.SCREEN
+              ]),
+        phone);
+
+    protocol.addTriggeredTask(
+        PeriodicTrigger(
+            period: const Duration(minutes: 1)), // collect every min.
+        AutomaticTask()
+          ..measures = SamplingPackageRegistry().common().getMeasureList(
+              types: [
+                SensorSamplingPackage.LIGHT,
+                DeviceSamplingPackage.DEVICE
+              ]),
+        phone);
+
+    RecurrentScheduledTrigger t1, t2, t3, t4;
+
+    // collect every day at 13:30.
+    t1 = RecurrentScheduledTrigger(
+        type: RecurrentType.daily, time: Time(hour: 21, minute: 30));
+    print('$t1');
+    protocol.addTriggeredTask(
+        t1,
+        AutomaticTask()
+          ..measures = SamplingPackageRegistry()
+              .common()
+              .getMeasureList(types: [DeviceSamplingPackage.MEMORY]),
+        phone);
+
+    // collect every other day at 13:30.
+    t2 = RecurrentScheduledTrigger(
+        type: RecurrentType.daily,
+        time: Time(hour: 13, minute: 30),
+        separationCount: 1);
+    print('$t2');
+    protocol.addTriggeredTask(
+        t2,
+        AutomaticTask()
+          ..measures = SamplingPackageRegistry().common().getMeasureList(
+              types: [
+                SensorSamplingPackage.LIGHT,
+                DeviceSamplingPackage.MEMORY
+              ]),
+        phone);
+
+    // collect every wednesday at 12:23.
+    t3 = RecurrentScheduledTrigger(
+        type: RecurrentType.weekly,
+        time: Time(hour: 12, minute: 23),
+        dayOfWeek: DateTime.wednesday);
+    print('$t3');
+    protocol.addTriggeredTask(
+        t3,
+        AutomaticTask()
+          ..measures = SamplingPackageRegistry().common().getMeasureList(
+              types: [
+                SensorSamplingPackage.LIGHT,
+                DeviceSamplingPackage.BATTERY
+              ]),
+        phone);
+
+    // collect every 2nd monday at 12:23.
+    t4 = RecurrentScheduledTrigger(
+        type: RecurrentType.weekly,
+        time: Time(hour: 12, minute: 23),
+        dayOfWeek: DateTime.monday,
+        separationCount: 1);
+    print('$t4');
+    protocol.addTriggeredTask(
+        t4,
+        AutomaticTask()
+          ..measures = DeviceSamplingPackage().common.getMeasureList(types: [
+            DeviceSamplingPackage.SCREEN,
+            DeviceSamplingPackage.MEMORY
+          ]),
+        phone);
+
+    ConditionalEvent({
+      'name': 'DTU',
+      'type': 'ENTER',
+    });
+
+    // when battery level is 10% then sample light
+    protocol.addTriggeredTask(
+        SamplingEventTrigger(
+            measureType: DeviceSamplingPackage.BATTERY,
+            resumeCondition: ConditionalEvent({'batteryLevel': 10})),
+        AutomaticTask()
+          ..measures = SensorSamplingPackage()
+              .common
+              .getMeasureList(types: [SensorSamplingPackage.LIGHT]),
+        phone);
+
+    protocol.addTriggeredTask(
+        ConditionalSamplingEventTrigger(
+            measureType: DeviceSamplingPackage.BATTERY,
+            resumeCondition: (dataPoint) =>
+                (dataPoint.carpBody as BatteryDatum).batteryLevel == 10),
+        AutomaticTask()
+          ..measures = SensorSamplingPackage()
+              .common
+              .getMeasureList(types: [SensorSamplingPackage.LIGHT]),
+        phone);
+
+    final studyJson = toJsonString(protocol);
+
+    print(studyJson);
+
+    StudyProtocol protocol_2 =
+        StudyProtocol.fromJson(json.decode(studyJson) as Map<String, dynamic>);
+    expect(protocol_2.ownerId, protocol.ownerId);
+
+    print('#1 : $protocol');
+
+    StudyProtocol protocolFromJson =
+        StudyProtocol.fromJson(json.decode(studyJson) as Map<String, dynamic>);
+    expect(toJsonString(protocolFromJson), equals(studyJson));
+    print('#2 : $protocolFromJson');
   });
 
   test('Register Device', () async {
@@ -116,7 +241,7 @@ void main() {
         await CAMSDeploymentService().createStudyDeployment(protocol);
 
     print(status_1);
-    print(_encode(status_1));
+    print(toJsonString(status_1));
     assert(status_1.studyDeploymentId != null);
 
     StudyDeploymentStatus status_2 = await CAMSDeploymentService()
@@ -124,13 +249,13 @@ void main() {
             status_1.studyDeploymentId, 'esense', DeviceRegistration());
 
     print(status_2);
-    print(_encode(status_2));
+    print(toJsonString(status_2));
     assert(status_2.studyDeploymentId == status_1.studyDeploymentId);
 
     CAMSMasterDeviceDeployment deployment = await CAMSDeploymentService()
         .getDeviceDeployment(status_1.studyDeploymentId);
     print(deployment);
-    print(_encode(deployment));
+    print(toJsonString(deployment));
     assert(deployment.studyDeploymentId == status_1.studyDeploymentId);
 
     StudyDeploymentStatus status_3 = await CAMSDeploymentService()

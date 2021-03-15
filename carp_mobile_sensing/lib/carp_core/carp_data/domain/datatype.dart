@@ -25,13 +25,13 @@ class DataType {
   /// e.g., "org.openmhealth" or "dk.cachet.carp".
   final String namespace;
 
-  /// The name of this data format. See [DataType].
+  /// The name of this data format. See [String].
   ///
   /// Uniquely identifies something within the [namespace].
   /// The name may not contain any periods. Periods are reserved for namespaces.
   final String name;
 
-  /// Create a [DataType].
+  /// Create a [String].
   const DataType(this.namespace, this.name) : super();
 
   factory DataType.fromString(String type) {
@@ -45,7 +45,7 @@ class DataType {
   String toString() => '$namespace.$name';
 
   bool operator ==(other) {
-    if (other is! DataType) return false;
+    if (other is! String) return false;
     return (other.namespace == namespace && other.name == name);
   }
 
@@ -64,7 +64,7 @@ class DataType {
 
 /// Enumeration of data type namespaces.
 ///
-/// Namespaces are used in specification of [DataType] both when sensing
+/// Namespaces are used in specification of [String] both when sensing
 /// and uploading [Data].
 ///
 /// Currently know namespaces include:

@@ -69,14 +69,13 @@ void example_2() async {
       DelayedTrigger(delay: Duration(seconds: 10)),
       AutomaticTask(name: 'Sensor Task')
         ..addMeasure(Measure(
-            type:
-                DataType(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER)))
+            type: String(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER)))
         ..addMeasure(Measure(
-            type: DataType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE))));
+            type: String(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE))));
 
   // create a light measure variable to be used later
   PeriodicMeasure lightMeasure = PeriodicMeasure(
-    format: DataType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
+    format: String(NameSpace.CARP, SensorSamplingPackage.LIGHT),
     name: 'Ambient Light',
     frequency: const Duration(seconds: 11),
     duration: const Duration(milliseconds: 100),
@@ -160,13 +159,13 @@ void samplingSchemaExample() async {
               SensorSamplingPackage.PEDOMETER,
               PeriodicMeasure(
                   format:
-                      DataType(NameSpace.CARP, SensorSamplingPackage.PEDOMETER),
+                      String(NameSpace.CARP, SensorSamplingPackage.PEDOMETER),
                   enabled: true,
                   frequency: const Duration(minutes: 1))),
           MapEntry(
               DeviceSamplingPackage.SCREEN,
               Measure(
-                  type: DataType(NameSpace.CARP, DeviceSamplingPackage.SCREEN),
+                  type: String(NameSpace.CARP, DeviceSamplingPackage.SCREEN),
                   enabled: true)),
         ]);
 
@@ -231,7 +230,7 @@ void samplingSchemaExample() async {
           ],
         )
         ..addMeasure(PeriodicMeasure(
-          format: DataType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
+          format: String(NameSpace.CARP, SensorSamplingPackage.LIGHT),
           name: 'Ambient Light',
           frequency: const Duration(seconds: 11),
           duration: const Duration(milliseconds: 100),
@@ -312,7 +311,7 @@ void app_task_example() async {
           title: "Device",
           description: "Collect device info",
         )..addMeasure(Measure(
-            type: DataType(NameSpace.CARP, DeviceSamplingPackage.DEVICE))))
+            type: String(NameSpace.CARP, DeviceSamplingPackage.DEVICE))))
     ..addTriggeredTask(
         ImmediateTrigger(),
         AppTask(
@@ -320,7 +319,7 @@ void app_task_example() async {
           title: "Screen",
           description: "Collect screen events",
         )..addMeasure(Measure(
-            type: DataType(NameSpace.CARP, DeviceSamplingPackage.SCREEN))));
+            type: String(NameSpace.CARP, DeviceSamplingPackage.SCREEN))));
 
   StudyDeploymentController controller = StudyDeploymentController(study,
       privacySchemaName: PrivacySchema.DEFAULT);

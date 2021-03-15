@@ -16,6 +16,7 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
   String _dataFormat = NameSpace.CARP;
   DataEndPoint _dataEndPoint;
 
+  /// The unique id of this study. Used in the [DataPointHeader] header.
   String get studyId => _studyId;
   String get studyDeploymentId => _studyDeploymentId;
 

@@ -41,7 +41,7 @@ String _encode(Object object) =>
 /// See the [documentation](https://github.com/cph-cachet/carp.sensing-flutter/wiki/Schemas) for further details.
 ///
 class SamplingSchema extends DataTypeSamplingSchemeList {
-  final Map<DataType, Measure> _measures = {};
+  final Map<String, Measure> _measures = {};
 
   /// The sampling schema type according to [SamplingSchemaType].
   SamplingSchemaType type;
@@ -52,9 +52,9 @@ class SamplingSchema extends DataTypeSamplingSchemeList {
   /// A description of this [SamplingSchema].
   String description;
 
-  /// A map of default [Measure]s for different [DataType]s for this sampling
+  /// A map of default [Measure]s for different [String]s for this sampling
   /// schema.
-  Map<DataType, Measure> get measures => _measures;
+  Map<String, Measure> get measures => _measures;
 
   /// Is this sampling schema power-aware, i.e. adapting its sampling strategy
   /// to the battery power status. See [PowerAwarenessState].
@@ -63,14 +63,14 @@ class SamplingSchema extends DataTypeSamplingSchemeList {
   SamplingSchema({this.type, this.name, this.powerAware = false}) : super();
 
   /// Add a default measure to this schema.
-  void addMeasure(Measure measure) => _measures[measure.dataType] = measure;
+  void addMeasure(Measure measure) => _measures[measure.type] = measure;
 
   /// Remove a measure from this schema.
   void removeMeasure(Measure measure) => _measures.remove(measure.dataType);
 
   /// Add a list of default measures to this schema.
   void addMeasures(List<Measure> measures) =>
-      measures.forEach((measure) => _measures[measure.dataType] = measure);
+      measures.forEach((measure) => _measures[measure.type] = measure);
 
   /// Adds all measures from [schema] to this sampling schema.
   ///
@@ -80,7 +80,7 @@ class SamplingSchema extends DataTypeSamplingSchemeList {
   }
 
   /// Returns a list of [Measure]s from this [SamplingSchema] for
-  /// a list of [DataType]s as specified in [types].
+  /// a list of [String]s as specified in [types].
   ///
   /// This method is a convenient way to get a list of pre-configured
   /// measures of the correct type with default settings.
@@ -98,7 +98,7 @@ class SamplingSchema extends DataTypeSamplingSchemeList {
   ///
   /// would return a list with a [Measure] for bluetooth, connectivity, etc.,
   /// each with default configurations from the [SamplingSchema.common()] schema.
-  List<Measure> getMeasureList({List<DataType> types}) {
+  List<Measure> getMeasureList({List<String> types}) {
     List<Measure> _list = [];
 
     types.forEach((type) {

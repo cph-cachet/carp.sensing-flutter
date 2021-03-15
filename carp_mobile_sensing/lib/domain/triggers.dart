@@ -516,7 +516,13 @@ class CronScheduledTrigger extends CAMSTrigger {
 /// occurs.
 ///
 /// For example, if [measureType] is `dk.cachet.carp.geofence` the [resumeCondition]
-/// can be `{'DTU','ENTER'}`
+/// can be;
+/// ```
+///   ConditionalEvent({
+///     'name': 'DTU',
+///     'type': 'ENTER',
+///   });
+/// ```
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class SamplingEventTrigger extends CAMSTrigger {
   SamplingEventTrigger({
@@ -526,30 +532,31 @@ class SamplingEventTrigger extends CAMSTrigger {
     this.pauseCondition,
   }) : super(triggerId: triggerId);
 
-  /// The [DataType] of the event to look for.
+  /// The data type of the event to look for.
   ///
   /// If [resumeCondition] is null, sampling will be triggered for all events
   /// of this type.
-  DataType measureType;
+  String measureType;
 
-  /// The [Data] specifying a specific sampling value to compare with for
-  /// resuming this trigger.
+  /// The [ConditionalEvent] specifying a specific sampling value to compare
+  /// with for resuming this trigger.
   ///
-  /// When comparing, the `==` operator is used. Hence, the sampled datum and
-  /// this datum must be equal (`==`) in order to start sampling based on an
-  /// event. Note that the `==` operator can be overwritten in
-  /// application-specific [Data]s to support this.
+  /// When comparing, the [Datum.equivalentTo] method. is used. Hence, the
+  /// sampled datum must be "equivalent" to this resumeCondition in order to
+  /// start sampling based on an event.
+  /// Note that the `equivalentTo` method must be overwritten in
+  /// application-specific [Datum] classes to support this.
   ///
   /// If [resumeCondition] is null, sampling will be triggered / resumed on
   /// every sampling event that matches the specified [measureType].
-  Data resumeCondition;
+  ConditionalEvent resumeCondition;
 
-  /// The [Data] specifying a specific sampling value to compare with for
-  /// pausing this trigger.
+  /// The [ConditionalEvent] specifying a specific sampling value to compare
+  /// with for pausing this trigger.
   ///
   /// If [pauseCondition] is null, sampling is never paused and hence runs
   /// forever (unless paused manually).
-  Data pauseCondition;
+  ConditionalEvent pauseCondition;
 
   Function get fromJsonFunction => _$SamplingEventTriggerFromJson;
   factory SamplingEventTrigger.fromJson(Map<String, dynamic> json) =>
@@ -558,20 +565,40 @@ class SamplingEventTrigger extends CAMSTrigger {
   Map<String, dynamic> toJson() => _$SamplingEventTriggerToJson(this);
 }
 
+/// Specified the configuration of an event in a [SamplingEventTrigger].
+///
+/// The [condition] is a key-value map of values that can be checked in
+/// the [Datum.equivalentTo] method.
+/// This `equivalentTo` method must be implemented for each [Datum] used
+/// in a [SamplingEventTrigger].
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class ConditionalEvent extends Serializable {
+  Map<String, dynamic> condition;
+  ConditionalEvent(this.condition) : super();
+
+  operator [](String index) => condition[index];
+
+  Function get fromJsonFunction => _$ConditionalEventFromJson;
+  factory ConditionalEvent.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$ConditionalEventToJson(this);
+}
+
 /// Takes a [DataPoint] from a sampling stream and evaluates if an event has
 /// occurred. Returns [true] if the event has occurred, [false] otherwise.
-typedef EventConditionEvaluator = bool Function(DataPoint dataPoint);
+typedef ConditionalEventEvaluator = bool Function(DataPoint dataPoint);
 
 /// A trigger that resume and pause sampling when some (other) sampling event
 /// occurs and a application-specific condition is meet.
 ///
 /// Note that the [resumeCondition] and [pauseCondition] are an
-/// [EventConditionEvaluator] function which cannot be serialized to/from JSON.
+/// [ConditionalEventEvaluator] function which cannot be serialized to/from JSON.
 /// In contrast to other [Trigger]s, this trigger cannot be de/serialized
 /// from/to JSON.
 /// This implies that it can not be retrieved as part of a [StudyProtocol] from a
 /// [DeploymentService] since it relies on specifying a Dart-specific function as
-/// the [EventConditionEvaluator] methods. Hence, this trigger is mostly
+/// the [ConditionalEventEvaluator] methods. Hence, this trigger is mostly
 /// useful when creating a [StudyProtocol] directly in the app using Dart code.
 ///
 /// If you need to de/serialize an event trigger, use the [SamplingEventTrigger]
@@ -586,21 +613,21 @@ class ConditionalSamplingEventTrigger extends CAMSTrigger {
     this.pauseCondition,
   }) : super(triggerId: triggerId);
 
-  /// The [DataType] of the event to look for.
-  DataType measureType;
+  /// The data type of the event to look for.
+  String measureType;
 
-  /// The [EventConditionEvaluator] function evaluating if the event
+  /// The [ConditionalEventEvaluator] function evaluating if the event
   /// condition is meet for resuming this trigger
   @JsonKey(ignore: true)
-  EventConditionEvaluator resumeCondition;
+  ConditionalEventEvaluator resumeCondition;
 
-  /// The [EventConditionEvaluator] function evaluating if the event
+  /// The [ConditionalEventEvaluator] function evaluating if the event
   /// condition is meet for pausing this trigger.
   ///
   /// If [pauseCondition] is not specified (null), sampling is never paused
   /// and hence runs forever (unless paused manually).
   @JsonKey(ignore: true)
-  EventConditionEvaluator pauseCondition;
+  ConditionalEventEvaluator pauseCondition;
 
   Function get fromJsonFunction => _$ConditionalSamplingEventTriggerFromJson;
   factory ConditionalSamplingEventTrigger.fromJson(Map<String, dynamic> json) =>

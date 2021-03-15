@@ -53,10 +53,10 @@ abstract class Executor extends AbstractProbe {
 class StudyDeploymentExecutor extends Executor {
   final StreamController<DataPoint> _manualDataPointController =
       StreamController.broadcast();
-  MasterDeviceDeployment get deployment => _deployment;
-  MasterDeviceDeployment _deployment;
+  CAMSMasterDeviceDeployment get deployment => _deployment;
+  CAMSMasterDeviceDeployment _deployment;
 
-  StudyDeploymentExecutor(MasterDeviceDeployment deployment) : super() {
+  StudyDeploymentExecutor(CAMSMasterDeviceDeployment deployment) : super() {
     assert(deployment != null,
         'Cannot initiate a StudyDeploymentExecutor without a MasterDeviceDeployment.');
     _deployment = deployment;
@@ -64,18 +64,32 @@ class StudyDeploymentExecutor extends Executor {
 
     deployment.triggeredTasks.forEach((triggeredTask) {
       // get the trigger based on the trigger id
-      Trigger trigger = _deployment.triggers[triggeredTask.triggerId];
+      Trigger trigger = _deployment.triggers['${triggeredTask.triggerId}'];
       // get the task based on the task name
       TaskDescriptor task = _deployment.getTaskByName(triggeredTask.taskName);
 
-      TriggeredTaskExecutor executor = getTriggeredTaskExecutor(trigger, task);
-      executor.triggerId = triggeredTask.triggerId;
-      executor.deviceRoleName = triggeredTask.destinationDeviceRoleName;
+      print('>> triggeredTask: $triggeredTask');
+      print('>> trigger: $trigger');
+      print('>> task: $task');
+
+      TriggeredTaskExecutor executor = TriggeredTaskExecutor(
+        triggeredTask,
+        trigger,
+        task,
+      );
 
       _group.add(executor.events);
       executors.add(executor);
     });
   }
+
+  /// Get the aggregated stream of [DataPoint] data sampled by all executors
+  /// and probes in this study deployment.
+  ///
+  /// Makes sure to set the user and study id from the deployment configuration.
+  Stream<DataPoint> get events => _group.stream.map((dataPoint) => dataPoint
+    ..carpHeader.studyId = deployment.studyId
+    ..carpHeader.userId = deployment.userId);
 
   Future onResume() async {
     // check the start time for this study on this phone
@@ -110,53 +124,27 @@ class StudyDeploymentExecutor extends Executor {
   }
 }
 
-// ---------------------------------------------------------------------------------------------------------
-// TRIGGER EXECUTORS
-// ---------------------------------------------------------------------------------------------------------
-
-/// Returns the relevant [TriggeredTaskExecutor] based on the type of [trigger].
-TriggeredTaskExecutor getTriggeredTaskExecutor(
-    Trigger trigger, TaskDescriptor task) {
-  switch (trigger.runtimeType) {
-    // actually, the base Trigger and CAMSTrigger classes is not supposed to be used
-    // but if it is, treat it as an ImmediateTrigger
-    case Trigger:
-    case CAMSTrigger:
-    case ImmediateTrigger:
-      return ImmediateTriggerExecutor(trigger, task);
-    case DelayedTrigger:
-      return DelayedTriggerExecutor(trigger, task);
-    case PeriodicTrigger:
-      return PeriodicTriggerExecutor(trigger, task);
-    case DateTimeTrigger:
-      return DateTimeTriggerExecutor(trigger, task);
-    case RecurrentScheduledTrigger:
-      return RecurrentScheduledTriggerExecutor(trigger, task);
-    case CronScheduledTrigger:
-      return CronScheduledTriggerExecutor(trigger, task);
-    case SamplingEventTrigger:
-      return SamplingEventTriggerExecutor(trigger, task);
-    case ConditionalSamplingEventTrigger:
-      return ConditionalSamplingEventTriggerExecutor(trigger, task);
-    case ManualTrigger:
-      return PassiveTriggerExecutor(trigger, task);
-    default:
-      return ImmediateTriggerExecutor(trigger, task);
-  }
-}
-
 /// Responsible for handling the execution of a [TriggeredTask].
 ///
 /// This is an abstract class. For each specific type of [Trigger],
 /// a corresponding implementation of a [TriggeredTaskExecutor] exists.
-abstract class TriggeredTaskExecutor extends Executor {
+class TriggeredTaskExecutor extends Executor {
   CAMSTrigger _trigger;
   TaskDescriptor _task;
+  TriggeredTask _triggeredTask;
 
   CAMSTrigger get trigger => _trigger;
   TaskDescriptor get task => _task;
+  TriggeredTask get triggeredTask => _triggeredTask;
 
-  TriggeredTaskExecutor(CAMSTrigger trigger, TaskDescriptor task) : super() {
+  TriggeredTaskExecutor(
+    TriggeredTask triggeredTask,
+    CAMSTrigger trigger,
+    TaskDescriptor task,
+  ) : super() {
+    assert(triggeredTask != null,
+        'Cannot initiate a TriggeredTaskExecutor without a Triggered Task.');
+    _triggeredTask = triggeredTask;
     assert(trigger != null,
         'Cannot initiate a TriggeredTaskExecutor without a Trigger.');
     _trigger = trigger;
@@ -164,18 +152,83 @@ abstract class TriggeredTaskExecutor extends Executor {
         'Cannot initiate a TriggeredTaskExecutor without a Task.');
     _task = task;
 
-    TaskExecutor executor = getTaskExecutor(task);
-    _group.add(executor.events);
-    executors.add(executor);
+    // get the trigger executor and add it to this stream
+    TriggerExecutor triggerExecutor = getTriggerExecutor(trigger);
+    _group.add(triggerExecutor.events);
+    executors.add(triggerExecutor);
 
-    // for (TaskDescriptor task in trigger.tasks) {
-    //   TaskExecutor executor = getTaskExecutor(task);
-    //   _group.add(executor.events);
-    //   executors.add(executor);
-    // }
+    // get the task executor and add it to the trigger executor stream
+    TaskExecutor taskExecutor = getTaskExecutor(task);
+    triggerExecutor._group.add(taskExecutor.events);
+    triggerExecutor.executors.add(taskExecutor);
   }
 
-  /// Returns a list of the running probes in this trigger executor.
+  /// Get the aggregated stream of [DataPoint] data sampled by all executors
+  /// and probes in this triggered task executor.
+  ///
+  /// Makes sure to set the trigger id and device role name.
+  Stream<DataPoint> get events => _group.stream.map((dataPoint) => dataPoint
+    ..carpHeader.triggerId = '${triggeredTask.triggerId}'
+    ..carpHeader.deviceRoleName = triggeredTask.destinationDeviceRoleName);
+
+  /// Returns a list of the running probes in this [TriggeredTaskExecutor].
+  /// This is a combination of the running probes in all task executors.
+  List<Probe> get probes {
+    List<Probe> _probes = [];
+    executors.forEach((executor) {
+      if (executor is TriggerExecutor) {
+        executor.probes.forEach((probe) {
+          _probes.add(probe);
+        });
+      }
+    });
+    return _probes;
+  }
+}
+
+// ---------------------------------------------------------------------------------------------------------
+// TRIGGER EXECUTORS
+// ---------------------------------------------------------------------------------------------------------
+
+/// Returns the relevant [TriggerExecutor] based on the type of [trigger].
+TriggerExecutor getTriggerExecutor(Trigger trigger) {
+  switch (trigger.runtimeType) {
+    // actually, the base Trigger and CAMSTrigger classes is not supposed to be used
+    // but if it is, treat it as an ImmediateTrigger
+    case Trigger:
+    case CAMSTrigger:
+    case ImmediateTrigger:
+      return ImmediateTriggerExecutor(trigger);
+    case DelayedTrigger:
+      return DelayedTriggerExecutor(trigger);
+    case PeriodicTrigger:
+      return PeriodicTriggerExecutor(trigger);
+    case DateTimeTrigger:
+      return DateTimeTriggerExecutor(trigger);
+    case RecurrentScheduledTrigger:
+      return RecurrentScheduledTriggerExecutor(trigger);
+    case CronScheduledTrigger:
+      return CronScheduledTriggerExecutor(trigger);
+    case SamplingEventTrigger:
+      return SamplingEventTriggerExecutor(trigger);
+    case ConditionalSamplingEventTrigger:
+      return ConditionalSamplingEventTriggerExecutor(trigger);
+    case ManualTrigger:
+      return PassiveTriggerExecutor(trigger);
+    default:
+      return ImmediateTriggerExecutor(trigger);
+  }
+}
+
+/// Responsible for handling the execution of a [Trigger].
+///
+/// This is an abstract class. For each specific type of [Trigger],
+/// a corresponding implementation of this class exists.
+abstract class TriggerExecutor extends Executor {
+  CAMSTrigger trigger;
+  TriggerExecutor(this.trigger);
+
+  /// Returns a list of the running probes in this [TriggerExecutor].
   /// This is a combination of the running probes in all task executors.
   List<Probe> get probes {
     List<Probe> _probes = [];
@@ -191,16 +244,14 @@ abstract class TriggeredTaskExecutor extends Executor {
 }
 
 /// Executes a [ImmediateTrigger], i.e. starts sampling immediately.
-class ImmediateTriggerExecutor extends TriggeredTaskExecutor {
-  ImmediateTriggerExecutor(CAMSTrigger trigger, TaskDescriptor task)
-      : super(trigger, task);
+class ImmediateTriggerExecutor extends TriggerExecutor {
+  ImmediateTriggerExecutor(CAMSTrigger trigger) : super(trigger);
 }
 
 /// Executes a [PassiveTrigger].
-class PassiveTriggerExecutor extends TriggeredTaskExecutor {
-  PassiveTriggerExecutor(PassiveTrigger trigger, TaskDescriptor task)
-      : super(trigger, task) {
-    trigger.executor = ImmediateTriggerExecutor(trigger, task);
+class PassiveTriggerExecutor extends TriggerExecutor {
+  PassiveTriggerExecutor(PassiveTrigger trigger) : super(trigger) {
+    trigger.executor = ImmediateTriggerExecutor(trigger);
     _group.add(trigger.executor.events);
   }
 
@@ -223,9 +274,8 @@ class PassiveTriggerExecutor extends TriggeredTaskExecutor {
 
 /// Executes a [DelayedTrigger], i.e. resumes sampling after the specified delay.
 /// Once started, it can be paused / resumed as any other [Executor].
-class DelayedTriggerExecutor extends TriggeredTaskExecutor {
-  DelayedTriggerExecutor(DelayedTrigger trigger, TaskDescriptor task)
-      : super(trigger, task);
+class DelayedTriggerExecutor extends TriggerExecutor {
+  DelayedTriggerExecutor(DelayedTrigger trigger) : super(trigger);
 
   Future onResume() async {
     Timer((trigger as DelayedTrigger).delay, () {
@@ -239,12 +289,11 @@ class DelayedTriggerExecutor extends TriggeredTaskExecutor {
 ///
 /// It is required that both the [period] and the [duration] of the [PeriodicTrigger] is specified
 /// to make sure that this executor is properly resumed and paused again.
-class PeriodicTriggerExecutor extends TriggeredTaskExecutor {
+class PeriodicTriggerExecutor extends TriggerExecutor {
   Duration period, duration;
   Timer timer;
 
-  PeriodicTriggerExecutor(PeriodicTrigger trigger, TaskDescriptor task)
-      : super(trigger, task) {
+  PeriodicTriggerExecutor(PeriodicTrigger trigger) : super(trigger) {
     assert(trigger.period != null,
         'The period in a PeriodicTrigger must be specified.');
     assert(trigger.duration != null,
@@ -278,12 +327,11 @@ class PeriodicTriggerExecutor extends TriggeredTaskExecutor {
 
 /// Executes a [DateTimeTrigger] on the specified [DateTimeTrigger.schedule]
 /// date and time.
-class DateTimeTriggerExecutor extends TriggeredTaskExecutor {
+class DateTimeTriggerExecutor extends TriggerExecutor {
   Duration delay, duration;
   Timer timer;
 
-  DateTimeTriggerExecutor(DateTimeTrigger trigger, TaskDescriptor task)
-      : super(trigger, task) {
+  DateTimeTriggerExecutor(DateTimeTrigger trigger) : super(trigger) {
     assert(trigger.schedule != null,
         'The schedule of a ScheduledTrigger must be specified.');
     assert(trigger.schedule.isAfter(DateTime.now()),
@@ -316,9 +364,8 @@ class DateTimeTriggerExecutor extends TriggeredTaskExecutor {
 class RecurrentScheduledTriggerExecutor extends PeriodicTriggerExecutor {
   RecurrentScheduledTrigger _myTrigger;
 
-  RecurrentScheduledTriggerExecutor(
-      RecurrentScheduledTrigger trigger, TaskDescriptor task)
-      : super(trigger, task) {
+  RecurrentScheduledTriggerExecutor(RecurrentScheduledTrigger trigger)
+      : super(trigger) {
     _myTrigger = trigger;
   }
 
@@ -369,14 +416,12 @@ class RecurrentScheduledTriggerExecutor extends PeriodicTriggerExecutor {
 }
 
 /// Executes a [CronScheduledTrigger] based on the specified cron job.
-class CronScheduledTriggerExecutor extends TriggeredTaskExecutor {
+class CronScheduledTriggerExecutor extends TriggerExecutor {
   cron.Cron _cron;
   cron.Schedule _schedule;
   cron.ScheduledTask _scheduledTask;
 
-  CronScheduledTriggerExecutor(
-      CronScheduledTrigger trigger, TaskDescriptor task)
-      : super(trigger, task) {
+  CronScheduledTriggerExecutor(CronScheduledTrigger trigger) : super(trigger) {
     _schedule = cron.Schedule.parse(trigger.cronExpression);
     _cron = cron.Cron();
   }
@@ -399,10 +444,8 @@ class CronScheduledTriggerExecutor extends TriggeredTaskExecutor {
 
 /// Executes a [SamplingEventTrigger] based on the specified
 /// [SamplingEventTrigger.measureType] and [SamplingEventTrigger.resumeCondition].
-class SamplingEventTriggerExecutor extends TriggeredTaskExecutor {
-  SamplingEventTriggerExecutor(
-      SamplingEventTrigger trigger, TaskDescriptor task)
-      : super(trigger, task);
+class SamplingEventTriggerExecutor extends TriggerExecutor {
+  SamplingEventTriggerExecutor(SamplingEventTrigger trigger) : super(trigger);
 
   StreamSubscription<DataPoint> _subscription;
 
@@ -412,11 +455,17 @@ class SamplingEventTriggerExecutor extends TriggeredTaskExecutor {
     _subscription = ProbeRegistry()
         .eventsByType(eventTrigger?.measureType?.toString())
         .listen((dataPoint) {
+      // if ((eventTrigger?.resumeCondition == null) ||
+      //     (dataPoint.carpBody == eventTrigger?.resumeCondition))
+      //   super.onResume();
+      // if (eventTrigger?.pauseCondition != null &&
+      //     dataPoint.carpBody == eventTrigger?.pauseCondition) super.onPause();
       if ((eventTrigger?.resumeCondition == null) ||
-          (dataPoint.carpBody == eventTrigger?.resumeCondition))
-        super.onResume();
+          (dataPoint.carpBody as Datum)
+              .equivalentTo(eventTrigger?.resumeCondition)) super.onResume();
       if (eventTrigger?.pauseCondition != null &&
-          dataPoint.carpBody == eventTrigger?.pauseCondition) super.onPause();
+          (dataPoint.carpBody as Datum)
+              .equivalentTo(eventTrigger?.pauseCondition)) super.onPause();
     });
   }
 
@@ -430,10 +479,10 @@ class SamplingEventTriggerExecutor extends TriggeredTaskExecutor {
 /// [ConditionalSamplingEventTrigger.measureType] and their
 /// [ConditionalSamplingEventTrigger.resumeCondition] and
 /// [ConditionalSamplingEventTrigger.pauseCondition].
-class ConditionalSamplingEventTriggerExecutor extends TriggeredTaskExecutor {
+class ConditionalSamplingEventTriggerExecutor extends TriggerExecutor {
   ConditionalSamplingEventTriggerExecutor(
-      ConditionalSamplingEventTrigger trigger, TaskDescriptor task)
-      : super(trigger, task);
+      ConditionalSamplingEventTrigger trigger)
+      : super(trigger);
 
   StreamSubscription<DataPoint> _subscription;
 

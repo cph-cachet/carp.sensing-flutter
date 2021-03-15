@@ -64,7 +64,7 @@ abstract class Probe {
   /// Is this probe enabled, i.e. available for collection of data using the [resume] method.
   bool get enabled;
 
-  /// The type of this probe according to [DataType].
+  /// The type of this probe according to [String].
   String get type;
 
   /// The runtime state of this probe.
@@ -119,10 +119,10 @@ abstract class Probe {
   String get name;
 
   /// The ID of the [TriggeredTask] that triggered this probe.
-  int triggerId;
+  // int triggerId;
 
   /// The role name of the device which this probes samples data from.
-  String deviceRoleName;
+  // String deviceRoleName;
 
   /// A stream of generating data point from this probe.
   Stream<DataPoint> get events;
@@ -190,8 +190,8 @@ abstract class AbstractProbe extends Probe implements MeasureListener {
   void initialize(Measure measure, {int triggerId, String deviceRoleName}) {
     assert(measure != null, 'Probe cannot be initialized with a null measure.');
     this._measure = measure;
-    this.triggerId = triggerId;
-    this.deviceRoleName = deviceRoleName;
+    // this.triggerId = triggerId;
+    // this.deviceRoleName = deviceRoleName;
     if (measure is CAMSMeasure) measure.addMeasureListener(this);
     return _stateMachine.initialize(measure);
   }

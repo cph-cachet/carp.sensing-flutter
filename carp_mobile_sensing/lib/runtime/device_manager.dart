@@ -30,10 +30,15 @@ class DeviceRegistry {
     _deployment = deployment;
 
     _deployment.connectedDevices.forEach((device) async {
-      DeviceManager _manager = await create(device.roleName);
-      info('Creating device manager $_manager');
-      await _manager.initialize(device, data);
-      devices[device.roleName] = _manager;
+      debug('Creating device manager for $device');
+      DeviceManager manager = await create(device.roleName);
+      if (manager == null) {
+        warning('No device manager found for device: $device');
+      } else {
+        info('Initializing device manager: $manager');
+        await manager.initialize(device, data);
+        devices[device.roleName] = manager;
+      }
     });
   }
 

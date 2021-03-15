@@ -27,30 +27,40 @@ part 'transformers.dart';
 
 part 'domain.g.dart';
 
+bool _fromJsonFunctionsRegistrered = false;
+
 /// Register all the fromJson functions for the deployment domain classes.
 void registerFromJsonFunctions() {
-  // info('Register all the fromJson function for the CAMS domain classes.');
+  if (_fromJsonFunctionsRegistrered) return;
+  _fromJsonFunctionsRegistrered = true;
 
+  // Protocol classes
   FromJsonFactory().register(CAMSStudyProtocol());
   FromJsonFactory().register(ProtocolOwner());
   FromJsonFactory().register(DataEndPoint());
   // FromJsonFactory().register(FileDataEndPoint());
 
+  // Task classes
   FromJsonFactory().register(AutomaticTask());
-  FromJsonFactory().register(AppTask(type: 'ignored'));
+  FromJsonFactory().register(AppTask());
 
+  // Trigger classes
   FromJsonFactory().register(CAMSTrigger());
   FromJsonFactory().register(ImmediateTrigger());
   FromJsonFactory().register(DelayedTrigger());
-  FromJsonFactory().register(PeriodicTrigger(period: null));
-  FromJsonFactory().register(DateTimeTrigger(schedule: null));
+  FromJsonFactory().register(PeriodicTrigger());
+  FromJsonFactory().register(DateTimeTrigger());
   FromJsonFactory().register(Time());
-  FromJsonFactory().register(RecurrentScheduledTrigger(type: null, time: null));
-  FromJsonFactory().register(SamplingEventTrigger(measureType: null));
-  FromJsonFactory()
-      .register(ConditionalSamplingEventTrigger(measureType: null));
+  FromJsonFactory().register(RecurrentScheduledTrigger());
+  FromJsonFactory().register(SamplingEventTrigger());
+  FromJsonFactory().register(ConditionalEvent({}));
+  FromJsonFactory().register(ConditionalSamplingEventTrigger());
+
+  // Measure classes
   // FromJsonFactory().register(DataType('', ''));
   FromJsonFactory().register(CAMSMeasure());
   FromJsonFactory().register(PeriodicMeasure());
   FromJsonFactory().register(MarkedMeasure());
+
+  // Datum classes
 }

@@ -11,11 +11,7 @@ AccelerometerDatum _$AccelerometerDatumFromJson(Map<String, dynamic> json) {
     x: (json['x'] as num)?.toDouble(),
     y: (json['y'] as num)?.toDouble(),
     z: (json['z'] as num)?.toDouble(),
-  )
-    ..id = json['id'] as String
-    ..format = json['format'] == null
-        ? null
-        : DataFormat.fromJson(json['format'] as Map<String, dynamic>);
+  )..id = json['id'] as String;
 }
 
 Map<String, dynamic> _$AccelerometerDatumToJson(AccelerometerDatum instance) {
@@ -28,7 +24,6 @@ Map<String, dynamic> _$AccelerometerDatumToJson(AccelerometerDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('format', instance.format);
   writeNotNull('x', instance.x);
   writeNotNull('y', instance.y);
   writeNotNull('z', instance.z);
@@ -40,11 +35,7 @@ GyroscopeDatum _$GyroscopeDatumFromJson(Map<String, dynamic> json) {
     x: (json['x'] as num)?.toDouble(),
     y: (json['y'] as num)?.toDouble(),
     z: (json['z'] as num)?.toDouble(),
-  )
-    ..id = json['id'] as String
-    ..format = json['format'] == null
-        ? null
-        : DataFormat.fromJson(json['format'] as Map<String, dynamic>);
+  )..id = json['id'] as String;
 }
 
 Map<String, dynamic> _$GyroscopeDatumToJson(GyroscopeDatum instance) {
@@ -57,7 +48,6 @@ Map<String, dynamic> _$GyroscopeDatumToJson(GyroscopeDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  val['format'] = instance.format;
   val['x'] = instance.x;
   val['y'] = instance.y;
   val['z'] = instance.z;
@@ -70,11 +60,7 @@ LightDatum _$LightDatumFromJson(Map<String, dynamic> json) {
     stdLux: json['std_lux'] as num,
     minLux: json['min_lux'] as num,
     maxLux: json['max_lux'] as num,
-  )
-    ..id = json['id'] as String
-    ..format = json['format'] == null
-        ? null
-        : DataFormat.fromJson(json['format'] as Map<String, dynamic>);
+  )..id = json['id'] as String;
 }
 
 Map<String, dynamic> _$LightDatumToJson(LightDatum instance) {
@@ -87,7 +73,6 @@ Map<String, dynamic> _$LightDatumToJson(LightDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('format', instance.format);
   writeNotNull('mean_lux', instance.meanLux);
   writeNotNull('std_lux', instance.stdLux);
   writeNotNull('min_lux', instance.minLux);
@@ -98,11 +83,7 @@ Map<String, dynamic> _$LightDatumToJson(LightDatum instance) {
 PedometerDatum _$PedometerDatumFromJson(Map<String, dynamic> json) {
   return PedometerDatum(
     json['step_count'] as int,
-  )
-    ..id = json['id'] as String
-    ..format = json['format'] == null
-        ? null
-        : DataFormat.fromJson(json['format'] as Map<String, dynamic>);
+  )..id = json['id'] as String;
 }
 
 Map<String, dynamic> _$PedometerDatumToJson(PedometerDatum instance) {
@@ -115,7 +96,6 @@ Map<String, dynamic> _$PedometerDatumToJson(PedometerDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('format', instance.format);
   writeNotNull('step_count', instance.stepCount);
   return val;
 }

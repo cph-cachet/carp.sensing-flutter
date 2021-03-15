@@ -11,7 +11,6 @@ part of runtime;
 ///
 class StudyDeploymentController {
   int debugLevel = DebugLevel.WARNING;
-  // StudyProtocol study;
   CAMSMasterDeviceDeployment deployment;
   StudyDeploymentExecutor executor;
   DataManager dataManager;
@@ -115,8 +114,11 @@ class StudyDeploymentController {
     assert(executor.validNextState(ProbeState.initialized),
         'The study executor cannot be initialized - it is in state ${executor.state}');
 
-    // start getting basic device info.
-    DeviceInfo();
+    // initialize settings
+    await settings.init();
+
+    // initialize access to basic device info
+    await DeviceInfo().init();
 
     // if no user is specified for this study, look up the local user id
     deployment.userId ??= await settings.userId;
@@ -166,8 +168,8 @@ class StudyDeploymentController {
   Future enablePowerAwareness() async {
     if (samplingSchema.powerAware) {
       info('Enabling power awareness ...');
-      _battery.events.listen((datum) {
-        BatteryDatum batteryState = (datum as BatteryDatum);
+      _battery.events.listen((dataPoint) {
+        BatteryDatum batteryState = (dataPoint.carpBody as BatteryDatum);
         if (batteryState.batteryStatus == BatteryDatum.STATE_DISCHARGING) {
           // only apply power-awareness if not charging.
           PowerAwarenessState newState =

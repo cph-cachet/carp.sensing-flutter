@@ -20,5 +20,5 @@ abstract class StudyProtocolManager {
 
   /// Save a [StudyProtocol] with the ID [studyId].
   /// Returns `true` if successful, `false` otherwise.
-  Future<bool> saveStudyProtocol(String studyId, StudyProtocol study);
+  Future<bool> saveStudyProtocol(String studyId, StudyProtocol protocol);
 }
