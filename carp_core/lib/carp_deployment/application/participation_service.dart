@@ -23,7 +23,7 @@ abstract class ParticipationService {
   Participation addParticipation(
     String studyDeploymentId,
     Set<String> assignedMasterDeviceRoleNames,
-    AccountIdentityidentity,
+    AccountIdentity identity,
     StudyInvitation invitation,
   );
 
@@ -49,4 +49,9 @@ abstract class ParticipationService {
   /// set data.
   ParticipantData setParticipantData(
       String studyDeploymentId, String inputDataType, Data data);
+}
+
+class AccountIdentity {
+  String emailAddress;
+  AccountIdentity(this.emailAddress);
 }

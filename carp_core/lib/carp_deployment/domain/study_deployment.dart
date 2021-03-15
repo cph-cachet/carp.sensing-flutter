@@ -141,7 +141,7 @@ class StudyDeployment {
     List<TriggeredTask> triggeredTasks = [];
     int index = 0;
     _protocol.triggers.forEach((trigger) {
-      usedTriggers['${index}'] = trigger;
+      usedTriggers['$index'] = trigger;
       Set<TriggeredTask> tt = _protocol.getTriggeredTasks(trigger);
       tt.forEach((triggeredTask) {
         triggeredTask.triggerId = index;

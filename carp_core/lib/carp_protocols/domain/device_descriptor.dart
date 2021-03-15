@@ -17,7 +17,8 @@ class DeviceDescriptor extends Serializable {
     this.roleName,
     this.isMasterDevice = false,
     this.supportedDataTypes,
-  }) : super();
+  })
+      : super();
 
   /// Is this the master device?
   bool isMasterDevice;
@@ -53,7 +54,8 @@ class MasterDeviceDescriptor extends DeviceDescriptor {
     String name,
     String roleName,
     List<String> supportedDataTypes,
-  }) : super(
+  })
+      : super(
           roleName: roleName,
           isMasterDevice: true,
           supportedDataTypes: supportedDataTypes,
@@ -77,7 +79,8 @@ class Smartphone extends MasterDeviceDescriptor {
     String name,
     String roleName,
     List<String> supportedDataTypes,
-  }) : super(
+  })
+      : super(
           deviceType: SMARTPHONE_DEVICE_TYPE,
           name: name,
           roleName: roleName,

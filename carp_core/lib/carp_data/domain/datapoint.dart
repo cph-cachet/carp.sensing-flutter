@@ -160,7 +160,7 @@ class DataPointHeader {
 /// Upload is `FieldRename.snake` while download is `FieldRename.none`.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class DataFormat {
-  static final DataFormat UNKNOWN = DataFormat(NameSpace.CARP, 'unknown');
+  static const DataFormat UNKNOWN = DataFormat(NameSpace.CARP, 'unknown');
 
   /// The data type namespace. See [NameSpace].
   ///

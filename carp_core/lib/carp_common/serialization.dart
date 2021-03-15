@@ -123,9 +123,9 @@ class FromJsonFactory {
     register(TaskDescriptor());
     register(ConcurrentTask());
     register(CustomProtocolTask());
-    register(Measure());
-    register(DataTypeMeasure());
-    register(PhoneSensorMeasure());
+    register(Measure(type: 'ignored'));
+    register(DataTypeMeasure(type: 'ignored'));
+    register(PhoneSensorMeasure(type: 'ignored'));
     register(SamplingConfiguration());
 
     register(DeviceDescriptor());
