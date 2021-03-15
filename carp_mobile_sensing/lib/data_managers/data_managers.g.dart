@@ -13,13 +13,11 @@ FileDataEndPoint _$FileDataEndPointFromJson(Map<String, dynamic> json) {
     zip: json['zip'] as bool,
     encrypt: json['encrypt'] as bool,
     publicKey: json['public_key'] as String,
-  )..$type = json[r'$type'] as String;
+  );
 }
 
 Map<String, dynamic> _$FileDataEndPointToJson(FileDataEndPoint instance) {
-  final val = <String, dynamic>{
-    r'$type': instance.$type,
-  };
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {

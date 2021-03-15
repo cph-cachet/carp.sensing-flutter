@@ -130,12 +130,12 @@ MasterDeviceDeployment _$MasterDeviceDeploymentFromJson(
   return MasterDeviceDeployment(
     deviceDescriptor: json['deviceDescriptor'] == null
         ? null
-        : MasterDeviceDescriptor.fromJson(
-            json['deviceDescriptor'] as Map<String, dynamic>),
+        : MasterDeviceDescriptor
+            .fromJson(json['deviceDescriptor'] as Map<String, dynamic>),
     configuration: json['configuration'] == null
         ? null
-        : DeviceRegistration.fromJson(
-            json['configuration'] as Map<String, dynamic>),
+        : DeviceRegistration
+            .fromJson(json['configuration'] as Map<String, dynamic>),
     connectedDevices: (json['connectedDevices'] as List)
         ?.map((e) => e == null
             ? null
@@ -444,8 +444,8 @@ RegisterDevice _$RegisterDeviceFromJson(Map<String, dynamic> json) {
     json['deviceRoleName'] as String,
     json['registration'] == null
         ? null
-        : DeviceRegistration.fromJson(
-            json['registration'] as Map<String, dynamic>),
+        : DeviceRegistration
+            .fromJson(json['registration'] as Map<String, dynamic>),
   )..$type = json[r'$type'] as String;
 }
 
@@ -960,8 +960,8 @@ ScheduledTrigger _$ScheduledTriggerFromJson(Map<String, dynamic> json) {
         : TimeOfDay.fromJson(json['time'] as Map<String, dynamic>),
     recurrenceRule: json['recurrenceRule'] == null
         ? null
-        : RecurrenceRule.fromJson(
-            json['recurrenceRule'] as Map<String, dynamic>),
+        : RecurrenceRule
+            .fromJson(json['recurrenceRule'] as Map<String, dynamic>),
   )
     ..$type = json[r'$type'] as String
     ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String
