@@ -1,6 +1,9 @@
 {
     "$type": "dk.cachet.carp.protocols.domain.StudyProtocol",
-    "ownerId": "jakba@dtu.dk",
+    "owner": {
+     "$type": "ProtocolOwner",
+     "id": "jakba@dtu.dk"
+    },
     "name": "Track patient movement",
     "masterDevices": [
      {

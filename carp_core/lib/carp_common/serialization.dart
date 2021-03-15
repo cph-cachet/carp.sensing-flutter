@@ -115,6 +115,7 @@ class FromJsonFactory {
 
     // PROTOCOL
     register(StudyProtocol());
+    register(ProtocolOwner());
     register(Trigger());
     register(ElapsedTimeTrigger());
     register(ManualTrigger());

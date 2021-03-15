@@ -19,7 +19,7 @@ class StudyProtocol extends Serializable {
   Map<String, TaskDescriptor> _taskMap = {};
 
   /// The owner of this study.
-  String ownerId;
+  ProtocolOwner owner;
 
   /// A short printer-friendly name for this study.
   String name;
@@ -44,11 +44,10 @@ class StudyProtocol extends Serializable {
 
   /// Create a new [StudyProtocol].
   StudyProtocol({
-    this.ownerId,
+    this.owner,
     this.name,
     this.description,
-  })
-      : super();
+  }) : super();
 
   /// Add a [masterDevice] which is responsible for aggregating and synchronizing
   /// incoming data. Its role name should be unique in the protocol.

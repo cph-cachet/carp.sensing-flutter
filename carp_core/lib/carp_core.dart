@@ -26,6 +26,7 @@ part 'carp_deployment/infrastructure/deployment_request.dart';
 part 'carp_protocols/domain/device_descriptor.dart';
 part 'carp_protocols/domain/measure.dart';
 part 'carp_protocols/domain/study_protocol.dart';
+part 'carp_protocols/domain/protocol_owner.dart';
 part 'carp_protocols/domain/task_descriptor.dart';
 part 'carp_protocols/domain/triggered_task.dart';
 part 'carp_protocols/domain/trigger.dart';

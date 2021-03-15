@@ -130,12 +130,12 @@ MasterDeviceDeployment _$MasterDeviceDeploymentFromJson(
   return MasterDeviceDeployment(
     deviceDescriptor: json['deviceDescriptor'] == null
         ? null
-        : MasterDeviceDescriptor
-            .fromJson(json['deviceDescriptor'] as Map<String, dynamic>),
+        : MasterDeviceDescriptor.fromJson(
+            json['deviceDescriptor'] as Map<String, dynamic>),
     configuration: json['configuration'] == null
         ? null
-        : DeviceRegistration
-            .fromJson(json['configuration'] as Map<String, dynamic>),
+        : DeviceRegistration.fromJson(
+            json['configuration'] as Map<String, dynamic>),
     connectedDevices: (json['connectedDevices'] as List)
         ?.map((e) => e == null
             ? null
@@ -444,8 +444,8 @@ RegisterDevice _$RegisterDeviceFromJson(Map<String, dynamic> json) {
     json['deviceRoleName'] as String,
     json['registration'] == null
         ? null
-        : DeviceRegistration
-            .fromJson(json['registration'] as Map<String, dynamic>),
+        : DeviceRegistration.fromJson(
+            json['registration'] as Map<String, dynamic>),
   )..$type = json[r'$type'] as String;
 }
 
@@ -684,7 +684,9 @@ Map<String, dynamic> _$PhoneSensorMeasureToJson(PhoneSensorMeasure instance) {
 
 StudyProtocol _$StudyProtocolFromJson(Map<String, dynamic> json) {
   return StudyProtocol(
-    ownerId: json['ownerId'] as String,
+    owner: json['owner'] == null
+        ? null
+        : ProtocolOwner.fromJson(json['owner'] as Map<String, dynamic>),
     name: json['name'] as String,
     description: json['description'] as String,
   )
@@ -726,7 +728,7 @@ Map<String, dynamic> _$StudyProtocolToJson(StudyProtocol instance) {
     }
   }
 
-  writeNotNull('ownerId', instance.ownerId);
+  writeNotNull('owner', instance.owner);
   writeNotNull('name', instance.name);
   writeNotNull('description', instance.description);
   writeNotNull('masterDevices', instance.masterDevices);
@@ -734,6 +736,37 @@ Map<String, dynamic> _$StudyProtocolToJson(StudyProtocol instance) {
   writeNotNull('triggers', instance.triggers);
   writeNotNull('tasks', instance.tasks);
   writeNotNull('triggeredTasks', instance.triggeredTasks);
+  return val;
+}
+
+ProtocolOwner _$ProtocolOwnerFromJson(Map<String, dynamic> json) {
+  return ProtocolOwner(
+    id: json['id'] as String,
+    name: json['name'] as String,
+    title: json['title'] as String,
+    email: json['email'] as String,
+    affiliation: json['affiliation'] as String,
+    address: json['address'] as String,
+  )..$type = json[r'$type'] as String;
+}
+
+Map<String, dynamic> _$ProtocolOwnerToJson(ProtocolOwner instance) {
+  final val = <String, dynamic>{
+    r'$type': instance.$type,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', instance.id);
+  writeNotNull('name', instance.name);
+  writeNotNull('title', instance.title);
+  writeNotNull('email', instance.email);
+  writeNotNull('address', instance.address);
+  writeNotNull('affiliation', instance.affiliation);
   return val;
 }
 
@@ -927,8 +960,8 @@ ScheduledTrigger _$ScheduledTriggerFromJson(Map<String, dynamic> json) {
         : TimeOfDay.fromJson(json['time'] as Map<String, dynamic>),
     recurrenceRule: json['recurrenceRule'] == null
         ? null
-        : RecurrenceRule
-            .fromJson(json['recurrenceRule'] as Map<String, dynamic>),
+        : RecurrenceRule.fromJson(
+            json['recurrenceRule'] as Map<String, dynamic>),
   )
     ..$type = json[r'$type'] as String
     ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String
