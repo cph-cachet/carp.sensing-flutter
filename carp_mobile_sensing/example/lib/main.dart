@@ -27,16 +27,18 @@ class ConsolePage extends StatefulWidget {
   Console createState() => Console();
 }
 
-/// A simple UI with a console that print the sensed data in a json format.
+/// A simple UI with a console that logs/prints the sensed data in a json format.
 class Console extends State<ConsolePage> {
   String _log = '';
   Sensing sensing;
 
   void initState() {
     super.initState();
-    sensing = Sensing(this);
+    sensing = Sensing();
     settings.init().then((future) {
-      sensing.init();
+      sensing.init().then((future) {
+        log("Setting up study protocol: ${sensing.protocol}");
+      });
     });
   }
 
@@ -83,8 +85,10 @@ class Console extends State<ConsolePage> {
     setState(() {
       if (sensing.isRunning) {
         sensing.pause();
+        log('\nSensing paused ...');
       } else {
         sensing.resume();
+        log('\nSensing resumed ...');
       }
     });
   }
@@ -97,27 +101,22 @@ class Console extends State<ConsolePage> {
 ///  * register devices
 ///  * get the deployment configuration
 ///  * mark the deployment successful
-///  * create and initializ a [StudyDeploymentController]
+///  * create and initialize a [StudyDeploymentController]
 ///  * start/pause/resume/stop sensing via this study controller
 ///
 /// This example is useful for creating a Business Logical Object (BLOC) in a
-/// Flutter app.
-/// See e.g. the CARP Mobile Sensing App.
+/// Flutter app. See e.g. the CARP Mobile Sensing App.
 class Sensing {
   StudyProtocol protocol;
   StudyDeploymentStatus _status;
-  Console console;
   StudyDeploymentController controller;
 
-  Sensing(this.console);
+  Sensing();
 
   /// Initialize sensing.
-  void init() async {
+  Future init() async {
     // get the protocol from the local protocol manager (defined below)
     protocol = await LocalStudyProtocolManager().getStudyProtocol('ignored');
-
-    console.log("Setting up study protocol: '${protocol.name}'...");
-    console.log(protocol.toString());
 
     // deploy this protocol using the on-phone deployment service
     _status = await CAMSDeploymentService().createStudyDeployment(protocol);
@@ -158,23 +157,13 @@ class Sensing {
       (controller != null) && controller.executor.state == ProbeState.resumed;
 
   /// Resume sensing
-  void resume() async {
-    console.log('\nSensing resumed ...');
-    controller.resume();
-  }
+  void resume() async => controller.resume();
 
   /// Pause sensing
-  void pause() async {
-    console.log('\nSensing paused ...');
-    controller.pause();
-  }
+  void pause() async => controller.pause();
 
   /// Stop sensing.
-  void stop() async {
-    controller.stop();
-    protocol = null;
-    console.log('\nSensing stopped ...');
-  }
+  void stop() async => controller.stop();
 }
 
 /// This is a simple local [StudyProtocolManager].
@@ -182,7 +171,6 @@ class Sensing {
 /// This class shows how to configure a [StudyProtocol] with [Tigger]s,
 /// [TaskDescriptor]s and [Measure]s.
 class LocalStudyProtocolManager implements StudyProtocolManager {
-  @override
   Future initialize() async {}
 
   /// Create a new CAMS study protocol.

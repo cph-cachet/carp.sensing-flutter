@@ -7,9 +7,14 @@
 part of runtime;
 
 /// A [StudyDeploymentController] controls the execution of a [CAMSMasterDeviceDeployment].
-///
-///
 class StudyDeploymentController {
+  int _samplingSize = 0;
+  Stream<DataPoint> _events;
+  StreamController<StudyDeploymentControllerState> _stateEventsController =
+      StreamController();
+  StudyDeploymentControllerState _state =
+      StudyDeploymentControllerState.unknown;
+
   int debugLevel = DebugLevel.WARNING;
   CAMSMasterDeviceDeployment deployment;
   StudyDeploymentExecutor executor;
@@ -21,11 +26,9 @@ class StudyDeploymentController {
   /// The permissions granted to this study from the OS.
   Map<Permission, PermissionStatus> permissions;
 
-  Stream<DataPoint> _events;
-
-  /// The stream of all sampled data.
+  /// The stream of all sampled data points.
   ///
-  /// Datum in the [events] stream are transformed in the following order:
+  /// Data points in the [events] stream are transformed in the following order:
   ///   1. privacy schema as specified in the [privacySchemaName]
   ///   2. preferred data format as specified by [dataFormat] in the [deployment]
   ///   3. any custom [transformer] provided
@@ -43,9 +46,20 @@ class StudyDeploymentController {
     return _events;
   }
 
-  PowerAwarenessState powerAwarenessState = NormalSamplingState.instance;
+  /// The stream of state events for this controller.
+  Stream<StudyDeploymentControllerState> get stateEvents =>
+      _stateEventsController.stream;
 
-  int _samplingSize = 0;
+  /// The current runtime state of this controller.
+  StudyDeploymentControllerState get state => _state;
+
+  /// Set the state of this controller.
+  void set state(StudyDeploymentControllerState newState) {
+    _state = newState;
+    _stateEventsController.add(newState);
+  }
+
+  PowerAwarenessState powerAwarenessState = NormalSamplingState.instance;
 
   /// The sampling size of this [deployment] in terms of number of [Datum] object
   /// that has been collected.
@@ -106,6 +120,8 @@ class StudyDeploymentController {
         : null;
     privacySchemaName ??= NameSpace.CARP;
     transformer ??= ((events) => events);
+
+    state = StudyDeploymentControllerState.created;
   }
 
   /// Initialize this controller. Must be called only once,
@@ -160,6 +176,8 @@ class StudyDeploymentController {
         type: DataType(NameSpace.CARP, CAMSDataType.EXECUTOR).toString()));
     await enablePowerAwareness();
     events.listen((datum) => _samplingSize++);
+
+    state = StudyDeploymentControllerState.initialized;
   }
 
   final BatteryProbe _battery = BatteryProbe();
@@ -206,6 +224,7 @@ class StudyDeploymentController {
   void resume() {
     info('Resuming data sampling ...');
     executor.resume();
+    state = StudyDeploymentControllerState.resumed;
   }
 
   /// Pause this controller, which will pause data collection and close the
@@ -213,6 +232,7 @@ class StudyDeploymentController {
   void pause() {
     info('Pausing data sampling ...');
     executor.pause();
+    state = StudyDeploymentControllerState.paused;
     dataManager?.close();
   }
 
@@ -225,7 +245,18 @@ class StudyDeploymentController {
     disablePowerAwareness();
     dataManager?.close();
     executor.stop();
+    state = StudyDeploymentControllerState.stopped;
   }
+}
+
+/// Enumerates the stat a [StudyDeploymentController] can be in.
+enum StudyDeploymentControllerState {
+  unknown,
+  created,
+  initialized,
+  resumed,
+  paused,
+  stopped,
 }
 
 /// This default power-awareness schema operates with four power states:
