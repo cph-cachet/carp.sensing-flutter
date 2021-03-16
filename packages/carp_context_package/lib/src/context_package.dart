@@ -64,10 +64,10 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
 
     // registering the transformers from CARP to OMH for geolocation and physical activity.
     // we assume that there is an OMH schema registered already...
-    TransformerSchemaRegistry()
+    DataPointTransformerSchemaRegistry()
         .lookup(NameSpace.OMH)
         .add(LOCATION, OMHGeopositionDatum.transformer);
-    TransformerSchemaRegistry()
+    DataPointTransformerSchemaRegistry()
         .lookup(NameSpace.OMH)
         .add(ACTIVITY, OMHPhysicalActivityDatum.transformer);
   }
@@ -79,21 +79,18 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
       ];
 
   SamplingSchema get common => SamplingSchema()
-    ..type = SamplingSchemaType.COMMON
+    ..type = SamplingSchemaType.common
     ..name = 'Common (default) context sampling schema'
     ..powerAware = true
     ..measures.addEntries([
       MapEntry(
         LOCATION,
-        Measure(
-            type: MeasureType(NameSpace.CARP, LOCATION),
-            name: 'Location',
-            enabled: true),
+        CAMSMeasure(type: LOCATION, name: 'Location', enabled: true),
       ),
       MapEntry(
           GEOLOCATION,
           LocationMeasure(
-            type: MeasureType(NameSpace.CARP, GEOLOCATION),
+            type: GEOLOCATION,
             name: 'Geo-location',
             enabled: true,
             frequency: Duration(seconds: 30),
@@ -102,29 +99,29 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
           )),
       MapEntry(
         ACTIVITY,
-        Measure(
-            type: MeasureType(NameSpace.CARP, ACTIVITY),
-            name: 'Activity Recognition',
-            enabled: true),
+        CAMSMeasure(
+            type: ACTIVITY, name: 'Activity Recognition', enabled: true),
       ),
       MapEntry(
           WEATHER,
           WeatherMeasure(
-              type: MeasureType(NameSpace.CARP, WEATHER),
+              type: WEATHER,
               name: 'Local Weather',
               enabled: true,
+              // TODO - remove this
               apiKey: '12b6e28582eb9298577c734a31ba9f4f')),
       MapEntry(
           AIR_QUALITY,
           AirQualityMeasure(
-              type: MeasureType(NameSpace.CARP, AIR_QUALITY),
+              type: AIR_QUALITY,
               name: 'Local Air Quality',
               enabled: true,
+              // TODO - remove this
               apiKey: '9e538456b2b85c92647d8b65090e29f957638c77')),
       MapEntry(
           GEOFENCE,
           GeofenceMeasure(
-              type: MeasureType(NameSpace.CARP, GEOFENCE),
+              type: GEOFENCE,
               enabled: true,
               center: GeoPosition(55.7943601, 12.4461956),
               radius: 500,
@@ -132,7 +129,7 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
       MapEntry(
           MOBILITY,
           MobilityMeasure(
-              type: MeasureType(NameSpace.CARP, MOBILITY),
+              type: MOBILITY,
               name: 'Mobility Features',
               enabled: true,
               placeRadius: 50,
@@ -141,25 +138,31 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
               stopDuration: Duration(minutes: 3))),
     ]);
 
-  SamplingSchema get light => common
-    ..type = SamplingSchemaType.LIGHT
-    ..name = 'Light context sampling'
-    ..measures[WEATHER].enabled = false;
+  SamplingSchema get light {
+    SamplingSchema light = common
+      ..type = SamplingSchemaType.light
+      ..name = 'Light context sampling';
+    (light.measures[WEATHER] as WeatherMeasure).enabled = false;
+    return light;
+  }
 
-  SamplingSchema get minimum => light
-    ..type = SamplingSchemaType.MINIMUM
-    ..name = 'Minimum context sampling'
-    ..measures[ACTIVITY].enabled = false
-    ..measures[GEOFENCE].enabled = false;
+  SamplingSchema get minimum {
+    SamplingSchema minimum = light
+      ..type = SamplingSchemaType.minimum
+      ..name = 'Minimum context sampling';
+    (minimum.measures[ACTIVITY] as CAMSMeasure).enabled = false;
+    (minimum.measures[GEOFENCE] as LocationMeasure).enabled = false;
+    return minimum;
+  }
 
   SamplingSchema get normal => common;
 
   SamplingSchema get debug => common
-    ..type = SamplingSchemaType.DEBUG
+    ..type = SamplingSchemaType.debug
     ..name = 'Debugging context sampling schema'
     ..powerAware = false
     ..measures[GEOLOCATION] = LocationMeasure(
-      type: MeasureType(NameSpace.CARP, GEOLOCATION),
+      type: GEOLOCATION,
       name: 'Geo-location',
       enabled: true,
       frequency: Duration(seconds: 3),
@@ -167,7 +170,7 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
       distance: 0,
     )
     ..measures[WEATHER] = WeatherMeasure(
-      type: MeasureType(NameSpace.CARP, WEATHER),
+      type: WEATHER,
       name: 'Local Weather',
       apiKey: '12b6e28582eb9298577c734a31ba9f4f',
     );

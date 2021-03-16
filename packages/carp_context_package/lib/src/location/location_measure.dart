@@ -38,7 +38,7 @@ class LocationMeasure extends PeriodicMeasure {
   String notificationMsg = 'CARP location tracking';
 
   LocationMeasure({
-    @required MeasureType type,
+    @required String type,
     String name,
     bool enabled,
     Duration frequency,
@@ -47,8 +47,7 @@ class LocationMeasure extends PeriodicMeasure {
     this.distance = 0,
     this.notificationTitle,
     this.notificationMsg,
-  })
-      : super(
+  }) : super(
             type: type,
             name: name,
             enabled: enabled,

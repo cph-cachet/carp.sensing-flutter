@@ -71,7 +71,7 @@ void example_1() async {
   controller.resume();
 
   // listening and print all data events from the study
-  controller.events.forEach(print);
+  controller.data.forEach(print);
 }
 
 /// This is a more elaborate example used in the README.md file.
@@ -135,23 +135,23 @@ void example_2() async {
   await controller.initialize();
   controller.resume();
 
-  // listening on all data events from the study
-  controller.events.listen((dataPoint) => print(dataPoint));
+  // listening to the stream of all data events from the controller
+  controller.data.listen((dataPoint) => print(dataPoint));
 
   // listen only on CARP events
-  controller.events
+  controller.data
       .where(
           (dataPoint) => dataPoint.carpBody.format.namespace == NameSpace.CARP)
       .listen((event) => print(event));
 
   // listen on LIGHT events only
-  controller.events
+  controller.data
       .where((dataPoint) =>
           dataPoint.carpBody.format.toString() == SensorSamplingPackage.LIGHT)
       .listen((event) => print(event));
 
   // map events to JSON and then print
-  controller.events
+  controller.data
       .map((dataPoint) => dataPoint.toJson())
       .listen((event) => print(event));
 
@@ -161,9 +161,9 @@ void example_2() async {
       .eventsByType(SensorSamplingPackage.LIGHT)
       .listen((dataPoint) => print(dataPoint));
 
-  // subscribe to events
+  // subscribe to the stream of data
   StreamSubscription<DataPoint> subscription =
-      controller.events.listen((DataPoint dataPoint) {
+      controller.data.listen((DataPoint dataPoint) {
     // do something w. the datum, e.g. print the json
     print(JsonEncoder.withIndent(' ').convert(dataPoint));
   });

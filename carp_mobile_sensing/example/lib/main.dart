@@ -55,7 +55,7 @@ class Console extends State<ConsolePage> {
       ),
       body: SingleChildScrollView(
         child: StreamBuilder(
-          stream: sensing.controller?.events,
+          stream: sensing.controller?.data,
           builder: (context, AsyncSnapshot<DataPoint> snapshot) {
             if (snapshot.hasData) _log += '${toJsonString(snapshot.data)}\n';
             return Text(_log);
@@ -139,13 +139,14 @@ class Sensing {
       deployment,
       debugLevel: DebugLevel.DEBUG,
       privacySchemaName: PrivacySchema.DEFAULT,
+      transformer: ((datum) => datum),
     );
 
     // initialize the controller
     await controller.initialize();
 
-    // listening on all data events and print them as json to the debug console
-    controller.events.listen((data) => print(toJsonString(data)));
+    // listening on the data stream and print them as json to the debug console
+    controller.data.listen((data) => print(toJsonString(data)));
   }
 
   /// Get the status of the study deployment.

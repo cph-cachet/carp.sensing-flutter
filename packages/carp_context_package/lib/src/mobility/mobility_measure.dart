@@ -2,7 +2,7 @@ part of context;
 
 /// Specify the configuration on how to measure mobility features
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class MobilityMeasure extends Measure {
+class MobilityMeasure extends CAMSMeasure {
   /// Should prior computed context be used?
   bool usePriorContexts;
 
@@ -16,15 +16,14 @@ class MobilityMeasure extends Measure {
   Duration stopDuration;
 
   MobilityMeasure({
-    @required MeasureType type,
+    @required String type,
     name,
     enabled,
     this.usePriorContexts,
     this.stopRadius,
     this.placeRadius,
     this.stopDuration,
-  })
-      : super(type: type, name: name, enabled: enabled);
+  }) : super(type: type, name: name, enabled: enabled);
 
   Function get fromJsonFunction => _$MobilityMeasureFromJson;
 
@@ -37,7 +36,7 @@ class MobilityMeasure extends Measure {
   String toString() =>
       super.toString() +
       ',usePriorContext: $usePriorContexts,'
-      'stopRadius: $stopRadius,'
-      'placeRadius: $placeRadius,'
-      'stopDuration: $stopDuration';
+          'stopRadius: $stopRadius,'
+          'placeRadius: $placeRadius,'
+          'stopDuration: $stopDuration';
 }

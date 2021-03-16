@@ -76,7 +76,7 @@ void sensing() async {
   controller.resume();
 
   // subscribe to events
-  controller.events.listen((DataPoint dataPoint) {
+  controller.data.listen((DataPoint dataPoint) {
     // do something w. the data, e.g. print the json
     print(JsonEncoder.withIndent(' ').convert(dataPoint));
   });

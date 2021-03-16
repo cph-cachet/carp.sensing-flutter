@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2018-2021 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -9,7 +9,7 @@ part of runtime;
 /// A [StudyDeploymentController] controls the execution of a [CAMSMasterDeviceDeployment].
 class StudyDeploymentController {
   int _samplingSize = 0;
-  Stream<DataPoint> _events;
+  Stream<DataPoint> _data;
   StreamController<StudyDeploymentControllerState> _stateEventsController =
       StreamController();
   StudyDeploymentControllerState _state =
@@ -21,30 +21,27 @@ class StudyDeploymentController {
   DataManager dataManager;
   SamplingSchema samplingSchema;
   String privacySchemaName;
-  DataPointStreamTransformer transformer;
+  // DatumStreamTransformer transformer;
+  DatumTransformer transformer;
 
   /// The permissions granted to this study from the OS.
   Map<Permission, PermissionStatus> permissions;
 
   /// The stream of all sampled data points.
   ///
-  /// Data points in the [events] stream are transformed in the following order:
+  /// Data points in the [data] stream are transformed in the following order:
   ///   1. privacy schema as specified in the [privacySchemaName]
   ///   2. preferred data format as specified by [dataFormat] in the [deployment]
   ///   3. any custom [transformer] provided
   ///
   /// This is a broadcast stream and supports multiple subscribers.
-  Stream<DataPoint> get events {
-    _events ??= transformer(executor.data
-        .map((dataPoint) => DataPointTransformerSchemaRegistry()
-            .lookup(privacySchemaName)
-            .transform(dataPoint))
-        .map((dataPoint) => DataPointTransformerSchemaRegistry()
+  Stream<DataPoint> get data => _data ??= executor.data.map((dataPoint) =>
+      dataPoint
+        ..carpBody = transformer(TransformerSchemaRegistry()
             .lookup(deployment.dataFormat)
-            .transform(dataPoint))).asBroadcastStream();
-
-    return _events;
-  }
+            .transform(TransformerSchemaRegistry()
+                .lookup(privacySchemaName)
+                .transform(dataPoint.carpBody))));
 
   /// The stream of state events for this controller.
   Stream<StudyDeploymentControllerState> get stateEvents =>
@@ -85,7 +82,7 @@ class StudyDeploymentController {
   ///    * A generic [transformer] can be provided which transform each collected data.
   ///      If null, a 1:1 mapping is done, i.e. no transformation.
   ///
-  /// Datum in the [events] stream are transformed in the following order:
+  /// Datum in the [data] stream are transformed in the following order:
   ///   1. privacy schema as specified in the [privacySchemaName]
   ///   2. preferred data format as specified by [dataFormat] in the [deployment]
   ///   3. any custom [transformer] provided
@@ -170,12 +167,12 @@ class StudyDeploymentController {
     }
 
     // initialize the data manager, device registry, and study executor
-    await dataManager?.initialize(deployment, events);
-    await DeviceRegistry().initialize(deployment, events);
+    await dataManager?.initialize(deployment, data);
+    await DeviceRegistry().initialize(deployment, data);
     executor.initialize(Measure(
         type: DataType(NameSpace.CARP, CAMSDataType.EXECUTOR).toString()));
     await enablePowerAwareness();
-    events.listen((datum) => _samplingSize++);
+    data.listen((datum) => _samplingSize++);
 
     state = StudyDeploymentControllerState.initialized;
   }

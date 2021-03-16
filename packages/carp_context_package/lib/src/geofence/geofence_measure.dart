@@ -77,7 +77,7 @@ class GeoPosition extends Serializable {
 ///  - name
 /// of the geofence.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class GeofenceMeasure extends Measure {
+class GeofenceMeasure extends CAMSMeasure {
   /// The center of the geofence as a GPS location.
   GeoPosition center;
 
@@ -92,13 +92,12 @@ class GeofenceMeasure extends Measure {
 
   /// Specify a geofence measure
   GeofenceMeasure({
-    @required MeasureType type,
+    @required String type,
     enabled,
     this.center,
     this.radius,
     this.name,
-  })
-      : super(type: type, enabled: enabled);
+  }) : super(type: type, enabled: enabled);
 
   Function get fromJsonFunction => _$GeofenceMeasureFromJson;
   factory GeofenceMeasure.fromJson(Map<String, dynamic> json) =>
