@@ -76,6 +76,7 @@ abstract class DatumTransformerSchema {
   /// Transform the [datum] according to the transformer for its data type.
   Datum transform(Datum datum) {
     Function transformer = transformers[datum.format.toString()];
+    print('>> ${datum.format.toString()} -> $transformer');
     return (transformer != null) ? transformer(datum) : datum;
   }
 }

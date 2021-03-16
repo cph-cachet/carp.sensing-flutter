@@ -178,9 +178,9 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     CAMSStudyProtocol protocol = CAMSStudyProtocol()
       ..name = 'Track patient movement'
       ..owner = ProtocolOwner(
-        id: 'jakba',
-        name: 'Jakob E. Bardram',
-        email: 'jakba@dtu.dk',
+        id: 'AB',
+        name: 'Alex Boyon',
+        email: 'alex@uni.dk',
       );
 
     // Define which devices are used for data collection.

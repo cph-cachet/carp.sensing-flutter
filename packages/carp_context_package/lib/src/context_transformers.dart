@@ -1,7 +1,7 @@
 part of context;
 
 /// A [TransformedDatum] that holds an OMH [Geoposition](https://pub.dartlang.org/documentation/openmhealth_schemas/latest/domain_omh_geoposition/Geoposition-class.html)
-class OMHGeopositionDatum extends CARPDatum implements TransformedDatum {
+class OMHGeopositionDatum extends Datum implements TransformedDatum {
   static const DataFormat DATA_FORMAT = DataFormat(
       omh.SchemaSupport.OMH_NAMESPACE, omh.SchemaSupport.GEOPOSITION);
 
@@ -29,7 +29,7 @@ class OMHGeopositionDatum extends CARPDatum implements TransformedDatum {
 }
 
 /// A [TransformedDatum] that holds an OMH [PhysicalActivity](https://pub.dartlang.org/documentation/openmhealth_schemas/latest/domain_omh_activity/PhysicalActivity-class.html)
-class OMHPhysicalActivityDatum extends CARPDatum implements TransformedDatum {
+class OMHPhysicalActivityDatum extends Datum implements TransformedDatum {
   static const DataFormat DATA_FORMAT = DataFormat(
       omh.SchemaSupport.OMH_NAMESPACE, omh.SchemaSupport.GEOPOSITION);
 

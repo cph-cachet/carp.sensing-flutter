@@ -64,10 +64,10 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
 
     // registering the transformers from CARP to OMH for geolocation and physical activity.
     // we assume that there is an OMH schema registered already...
-    DataPointTransformerSchemaRegistry()
+    TransformerSchemaRegistry()
         .lookup(NameSpace.OMH)
         .add(LOCATION, OMHGeopositionDatum.transformer);
-    DataPointTransformerSchemaRegistry()
+    TransformerSchemaRegistry()
         .lookup(NameSpace.OMH)
         .add(ACTIVITY, OMHPhysicalActivityDatum.transformer);
   }

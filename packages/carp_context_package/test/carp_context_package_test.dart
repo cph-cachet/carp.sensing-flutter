@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:activity_recognition_flutter/activity_recognition_flutter.dart';
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_context_package/context.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:test/test.dart';
@@ -10,21 +11,43 @@ String _encode(Object object) =>
     const JsonEncoder.withIndent(' ').convert(object);
 
 void main() {
-  Study study;
+  CAMSStudyProtocol protocol;
+  Smartphone phone;
 
   setUp(() {
+    // register the context sampling package
     SamplingPackageRegistry().register(ContextSamplingPackage());
 
-    study = Study(id: "1234", userId: "bardram", name: "bardram study")
-      ..dataEndPoint = DataEndPoint(type: DataEndPointTypes.PRINT)
-      ..addTriggerTask(
-          ImmediateTrigger(),
-          AutomaticTask(name: 'Task #1')
-            ..measures = SamplingSchema
-                .common(namespace: NameSpace.CARP)
-                .measures
-                .values
-                .toList());
+    // Create a new study protocol.
+    protocol = CAMSStudyProtocol()
+      ..name = 'Context package test'
+      ..owner = ProtocolOwner(
+        id: 'jakba',
+        name: 'Jakob E. Bardram',
+        email: 'jakba@dtu.dk',
+      );
+
+    // Define which devices are used for data collection.
+    phone = Smartphone(
+      name: 'SM-A320FL',
+      roleName: CAMSDeploymentService.DEFAULT_MASTER_DEVICE_ROLENAME,
+    );
+    DeviceDescriptor eSense = DeviceDescriptor(
+      roleName: 'esense',
+    );
+
+    protocol
+      ..addMasterDevice(phone)
+      ..addConnectedDevice(eSense);
+
+    // adding all measure from the common schema to one one trigger and one task
+    protocol.addTriggeredTask(
+      ImmediateTrigger(), // a simple trigger that starts immediately
+      AutomaticTask()
+        ..measures =
+            SamplingPackageRegistry().common().measures.values.toList(),
+      phone, // a task with all measures
+    );
   });
 
 //  test('Weather', () {
@@ -35,44 +58,33 @@ void main() {
 //
 //  });
 
-  test('Study -> JSON', () async {
-    print(_encode(study));
-
-    expect(study.id, "1234");
+  test('CAMSStudyProtocol -> JSON', () async {
+    print(protocol);
+    print(toJsonString(protocol));
+    expect(protocol.ownerId, 'jakba');
   });
 
-  test('JSON -> Study, assert study id', () async {
-    final studyJson = _encode(study);
+  test('StudyProtocol -> JSON -> StudyProtocol :: deep assert', () async {
+    print('#1 : $protocol');
+    final studyJson = toJsonString(protocol);
 
-    Study study_2 =
-        Study.fromJson(json.decode(studyJson) as Map<String, dynamic>);
-    expect(study_2.id, study.id);
-
-    print(_encode(study_2));
+    StudyProtocol protocolFromJson =
+        StudyProtocol.fromJson(json.decode(studyJson) as Map<String, dynamic>);
+    expect(toJsonString(protocolFromJson), equals(studyJson));
+    print('#2 : $protocolFromJson');
   });
 
-  test('JSON -> Study, deep assert', () async {
-    final studyJson = _encode(study);
+  test('JSON File -> StudyProtocol', () async {
+    // Read the study protocol from json file
+    String plainJson = File('test/json/study_1.json').readAsStringSync();
 
-    Study study_2 =
-        Study.fromJson(json.decode(studyJson) as Map<String, dynamic>);
-    expect(_encode(study_2), equals(studyJson));
-  });
+    CAMSStudyProtocol protocol = CAMSStudyProtocol
+        .fromJson(json.decode(plainJson) as Map<String, dynamic>);
 
-  test('Plain JSON string -> Study object', () async {
-    print(Directory.current.toString());
-    String plainStudyJson = File("test/study_1234.json").readAsStringSync();
-    print(plainStudyJson);
-
-    Study plainStudy =
-        Study.fromJson(json.decode(plainStudyJson) as Map<String, dynamic>);
-    expect(plainStudy.id, study.id);
-
-    final studyJson = _encode(study);
-
-    Study study_2 =
-        Study.fromJson(json.decode(plainStudyJson) as Map<String, dynamic>);
-    expect(_encode(study_2), equals(studyJson));
+    expect(protocol.ownerId, 'jakba');
+    expect(protocol.masterDevices.first.roleName,
+        CAMSDeploymentService.DEFAULT_MASTER_DEVICE_ROLENAME);
+    print(toJsonString(protocol));
   });
 
   test('CARP Location', () {
@@ -80,8 +92,8 @@ void main() {
       ..longitude = 12.23342
       ..latitude = 3.34224
       ..altitude = 124.2134235;
-    DataPoint dp_1 = DataPoint.fromDatum(study.id, study.userId, loc);
-    expect(dp_1.header.dataFormat.namespace, NameSpace.CARP);
+    DataPoint dp_1 = DataPoint.fromData(loc);
+    expect(dp_1.carpHeader.dataFormat.namespace, NameSpace.CARP);
     print(_encode(dp_1));
 
     loc.altitude = 'encrypted value';
@@ -92,28 +104,28 @@ void main() {
     LocationDatum loc = LocationDatum()
       ..longitude = 12.23342
       ..latitude = 3.34224;
-    DataPoint dp_1 = DataPoint.fromDatum(study.id, study.userId, loc);
-    expect(dp_1.header.dataFormat.namespace, NameSpace.CARP);
+    DataPoint dp_1 = DataPoint.fromData(loc);
+    expect(dp_1.carpHeader.dataFormat.namespace, NameSpace.CARP);
     print(_encode(dp_1));
 
     OMHGeopositionDatum geo =
         TransformerSchemaRegistry().lookup(NameSpace.OMH).transform(loc);
-    DataPoint dp_2 = DataPoint.fromDatum(study.id, study.userId, geo);
-    expect(dp_2.header.dataFormat.namespace, NameSpace.OMH);
+    DataPoint dp_2 = DataPoint.fromData(geo);
+    expect(dp_2.carpHeader.dataFormat.namespace, NameSpace.OMH);
     expect(geo.geoposition.latitude.value, loc.latitude);
     print(_encode(dp_2));
   });
 
   test('CARP Activity -> OMH Physical Activity', () {
     ActivityDatum act = ActivityDatum()..type = ActivityType.WALKING;
-    DataPoint dp_1 = DataPoint.fromDatum(study.id, study.userId, act);
-    expect(dp_1.header.dataFormat.namespace, NameSpace.CARP);
+    DataPoint dp_1 = DataPoint.fromData(act);
+    expect(dp_1.carpHeader.dataFormat.namespace, NameSpace.CARP);
     print(_encode(dp_1));
 
     OMHPhysicalActivityDatum phy =
         TransformerSchemaRegistry().lookup(NameSpace.OMH).transform(act);
-    DataPoint dp_2 = DataPoint.fromDatum(study.id, study.userId, phy);
-    expect(dp_2.header.dataFormat.namespace, NameSpace.OMH);
+    DataPoint dp_2 = DataPoint.fromData(phy);
+    expect(dp_2.carpHeader.dataFormat.namespace, NameSpace.OMH);
     expect(phy.activity.activityName, act.typeString);
     print(_encode(dp_2));
   });

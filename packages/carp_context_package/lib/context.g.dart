@@ -117,9 +117,7 @@ Map<String, dynamic> _$LocationDatumToJson(LocationDatum instance) {
 
 LocationMeasure _$LocationMeasureFromJson(Map<String, dynamic> json) {
   return LocationMeasure(
-    type: json['type'] == null
-        ? null
-        : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
+    type: json['type'] as String,
     name: json['name'] as String,
     enabled: json['enabled'] as bool,
     frequency: json['frequency'] == null
@@ -244,9 +242,7 @@ Map<String, dynamic> _$WeatherDatumToJson(WeatherDatum instance) {
 
 WeatherMeasure _$WeatherMeasureFromJson(Map<String, dynamic> json) {
   return WeatherMeasure(
-    type: json['type'] == null
-        ? null
-        : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
+    type: json['type'] as String,
     name: json['name'],
     enabled: json['enabled'],
     apiKey: json['api_key'] as String,
@@ -301,9 +297,7 @@ Map<String, dynamic> _$GeoPositionToJson(GeoPosition instance) {
 
 GeofenceMeasure _$GeofenceMeasureFromJson(Map<String, dynamic> json) {
   return GeofenceMeasure(
-    type: json['type'] == null
-        ? null
-        : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
+    type: json['type'] as String,
     enabled: json['enabled'],
     center: json['center'] == null
         ? null
@@ -424,9 +418,7 @@ const _$AirQualityLevelEnumMap = {
 
 AirQualityMeasure _$AirQualityMeasureFromJson(Map<String, dynamic> json) {
   return AirQualityMeasure(
-    type: json['type'] == null
-        ? null
-        : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
+    type: json['type'] as String,
     name: json['name'],
     enabled: json['enabled'],
     apiKey: json['api_key'] as String,
@@ -496,9 +488,7 @@ Map<String, dynamic> _$MobilityDatumToJson(MobilityDatum instance) {
 
 MobilityMeasure _$MobilityMeasureFromJson(Map<String, dynamic> json) {
   return MobilityMeasure(
-    type: json['type'] == null
-        ? null
-        : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
+    type: json['type'] as String,
     name: json['name'],
     enabled: json['enabled'],
     usePriorContexts: json['use_prior_contexts'] as bool,

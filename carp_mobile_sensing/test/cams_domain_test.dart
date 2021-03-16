@@ -11,8 +11,6 @@ void main() {
   Smartphone phone;
 
   setUp(() {
-    registerFromJsonFunctions();
-
     // Create a new study protocol.
     protocol = CAMSStudyProtocol()
       ..name = 'Track patient movement'

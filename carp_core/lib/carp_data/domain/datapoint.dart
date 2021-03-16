@@ -180,6 +180,8 @@ class DataFormat {
     return DataFormat(namespace, name);
   }
 
+  String toString() => '$namespace.$name';
+
   factory DataFormat.fromJson(Map<String, dynamic> json) =>
       _$DataFormatFromJson(json);
   Map<String, dynamic> toJson() => _$DataFormatToJson(this);

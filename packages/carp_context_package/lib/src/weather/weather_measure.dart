@@ -21,7 +21,8 @@ class WeatherMeasure extends CAMSMeasure {
     name,
     enabled,
     this.apiKey,
-  }) : super(type: type, name: name, enabled: enabled);
+  })
+      : super(type: type, name: name, enabled: enabled);
 
   Function get fromJsonFunction => _$WeatherMeasureFromJson;
   factory WeatherMeasure.fromJson(Map<String, dynamic> json) =>

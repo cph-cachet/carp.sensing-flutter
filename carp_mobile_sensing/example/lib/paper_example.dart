@@ -7,9 +7,9 @@ void sensing() async {
   CAMSStudyProtocol protocol = CAMSStudyProtocol()
     ..name = 'Track patient movement'
     ..owner = ProtocolOwner(
-      id: 'jakba',
-      name: 'Jakob E. Bardram',
-      email: 'jakba@dtu.dk',
+      id: 'AB',
+      name: 'Alex Boyon',
+      email: 'alex@uni.dk',
     )
     ..dataEndPoint = FileDataEndPoint(
       bufferSize: 500 * 1000,
