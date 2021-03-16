@@ -9,11 +9,9 @@ part of context;
 
 /// A [Datum] that holds weather information collected through OpenWeatherMap.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class WeatherDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, ContextSamplingPackage.WEATHER);
-
-  DataFormat get format => CARP_DATA_FORMAT;
+class WeatherDatum extends Datum {
+  DataFormat get format =>
+      DataFormat.fromString(ContextSamplingPackage.WEATHER);
 
   String country, areaName, weatherMain, weatherDescription;
   DateTime date, sunrise, sunset;
@@ -42,8 +40,8 @@ class WeatherDatum extends CARPDatum {
   String toString() =>
       super.toString() +
       ',place: $areaName ($country), '
-      'date: $date, '
-      'weather: $weatherMain, $weatherDescription, '
-      'temp: $temperature, temp (min): $tempMin, temp (max): $tempMax, '
-      'sunrise: $sunrise, sunset: $sunset';
+          'date: $date, '
+          'weather: $weatherMain, $weatherDescription, '
+          'temp: $temperature, temp (min): $tempMin, temp (max): $tempMax, '
+          'sunrise: $sunrise, sunset: $sunset';
 }

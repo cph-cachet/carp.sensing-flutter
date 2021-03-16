@@ -13,7 +13,7 @@ abstract class Executor extends AbstractProbe {
   static final DeviceInfo deviceInfo = DeviceInfo();
   final StreamGroup<DataPoint> _group = StreamGroup.broadcast();
   List<Probe> executors = [];
-  Stream<DataPoint> get events => _group.stream;
+  Stream<DataPoint> get data => _group.stream;
 
   Executor() : super();
 
@@ -49,7 +49,7 @@ abstract class Executor extends AbstractProbe {
 /// Note that the [StudyDeploymentExecutor] in itself is a [Probe] and hence work
 /// as a 'super probe'.
 /// This - amongst other things - imply that you can listen to data point
-/// [events] from a study executor.
+/// [data] from a study executor.
 class StudyDeploymentExecutor extends Executor {
   final StreamController<DataPoint> _manualDataPointController =
       StreamController.broadcast();
@@ -78,7 +78,7 @@ class StudyDeploymentExecutor extends Executor {
         task,
       );
 
-      _group.add(executor.events);
+      _group.add(executor.data);
       executors.add(executor);
     });
   }
@@ -87,7 +87,7 @@ class StudyDeploymentExecutor extends Executor {
   /// and probes in this study deployment.
   ///
   /// Makes sure to set the user and study id from the deployment configuration.
-  Stream<DataPoint> get events => _group.stream.map((dataPoint) => dataPoint
+  Stream<DataPoint> get data => _group.stream.map((dataPoint) => dataPoint
     ..carpHeader.studyId = deployment.studyId
     ..carpHeader.userId = deployment.userId);
 
@@ -154,12 +154,12 @@ class TriggeredTaskExecutor extends Executor {
 
     // get the trigger executor and add it to this stream
     TriggerExecutor triggerExecutor = getTriggerExecutor(trigger);
-    _group.add(triggerExecutor.events);
+    _group.add(triggerExecutor.data);
     executors.add(triggerExecutor);
 
     // get the task executor and add it to the trigger executor stream
     TaskExecutor taskExecutor = getTaskExecutor(task);
-    triggerExecutor._group.add(taskExecutor.events);
+    triggerExecutor._group.add(taskExecutor.data);
     triggerExecutor.executors.add(taskExecutor);
   }
 
@@ -167,7 +167,7 @@ class TriggeredTaskExecutor extends Executor {
   /// and probes in this triggered task executor.
   ///
   /// Makes sure to set the trigger id and device role name.
-  Stream<DataPoint> get events => _group.stream.map((dataPoint) => dataPoint
+  Stream<DataPoint> get data => _group.stream.map((dataPoint) => dataPoint
     ..carpHeader.triggerId = '${triggeredTask.triggerId}'
     ..carpHeader.deviceRoleName = triggeredTask.destinationDeviceRoleName);
 
@@ -252,7 +252,7 @@ class ImmediateTriggerExecutor extends TriggerExecutor {
 class PassiveTriggerExecutor extends TriggerExecutor {
   PassiveTriggerExecutor(PassiveTrigger trigger) : super(trigger) {
     trigger.executor = ImmediateTriggerExecutor(trigger);
-    _group.add(trigger.executor.events);
+    _group.add(trigger.executor.data);
   }
 
   // Forward to the embedded trigger executor

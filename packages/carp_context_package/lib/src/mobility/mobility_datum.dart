@@ -2,11 +2,9 @@ part of context;
 
 /// A [Datum] that holds mobility features information.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class MobilityDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, ContextSamplingPackage.MOBILITY);
-
-  DataFormat get format => CARP_DATA_FORMAT;
+class MobilityDatum extends Datum {
+  DataFormat get format =>
+      DataFormat.fromString(ContextSamplingPackage.MOBILITY);
 
   /// The day of this mobility features.
   DateTime date;

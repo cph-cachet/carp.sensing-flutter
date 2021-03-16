@@ -17,14 +17,16 @@ class Datum extends Data {
   String id;
 
   /// The UTC timestamp when this data was generated on the device.
-  // DateTime timestamp;
+  DateTime timestamp;
 
   /// Create a datum.
   ///
   /// If [multiDatum] is true, then multiple [Datum] objects are stored in a
   /// list with the same header.
   Datum({bool multiDatum = false}) : super() {
-    // timestamp = DateTime.now().toUtc();
+    // add a timestamp to each datum if part of a list of many
+    timestamp = (multiDatum) ? DateTime.now().toUtc() : null;
+    // only add an id to the multi-datum, not the individual ones
     id = (!multiDatum) ? Uuid().v1() : null;
   }
 
@@ -37,8 +39,8 @@ class Datum extends Data {
   Map<String, dynamic> toJson() => _$DatumToJson(this);
 
   String toString() =>
-      // '$runtimeType - format: $format, id: $id, timestamp: $timestamp';
-      '$runtimeType - format: $format, id: $id';
+      '$runtimeType - format: $format, id: $id, timestamp: $timestamp';
+  // '$runtimeType - format: $format, id: $id';
 }
 
 /// A simple [Datum] that only holds a string datum object.

@@ -25,7 +25,7 @@ TaskExecutor getTaskExecutor(TaskDescriptor task) {
 /// For each task it looks up appropriate [Probe]s to collect data.
 ///
 /// Note that a [TaskExecutor] in itself is a [Probe] and hence work as a 'super probe'.
-/// This - amongst other things - imply that you can listen to datum [events] from a task executor.
+/// This - amongst other things - imply that you can listen to datum [data] from a task executor.
 class TaskExecutor extends Executor {
   TaskDescriptor get task => _task;
   TaskDescriptor _task;
@@ -45,7 +45,7 @@ class TaskExecutor extends Executor {
       Probe probe = ProbeRegistry().create(measure.type);
       if (probe != null) {
         executors.add(probe);
-        _group.add(probe.events);
+        _group.add(probe.data);
         probe.initialize(measure);
       } else {
         warning(

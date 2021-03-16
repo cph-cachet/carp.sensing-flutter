@@ -695,7 +695,11 @@ Map<String, dynamic> _$ConditionalSamplingEventTriggerToJson(
 }
 
 Datum _$DatumFromJson(Map<String, dynamic> json) {
-  return Datum()..id = json['id'] as String;
+  return Datum()
+    ..id = json['id'] as String
+    ..timestamp = json['timestamp'] == null
+        ? null
+        : DateTime.parse(json['timestamp'] as String);
 }
 
 Map<String, dynamic> _$DatumToJson(Datum instance) {
@@ -708,13 +712,18 @@ Map<String, dynamic> _$DatumToJson(Datum instance) {
   }
 
   writeNotNull('id', instance.id);
+  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
   return val;
 }
 
 StringDatum _$StringDatumFromJson(Map<String, dynamic> json) {
   return StringDatum(
     json['str'] as String,
-  )..id = json['id'] as String;
+  )
+    ..id = json['id'] as String
+    ..timestamp = json['timestamp'] == null
+        ? null
+        : DateTime.parse(json['timestamp'] as String);
 }
 
 Map<String, dynamic> _$StringDatumToJson(StringDatum instance) {
@@ -727,6 +736,7 @@ Map<String, dynamic> _$StringDatumToJson(StringDatum instance) {
   }
 
   writeNotNull('id', instance.id);
+  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
   writeNotNull('str', instance.str);
   return val;
 }
@@ -736,7 +746,11 @@ MapDatum _$MapDatumFromJson(Map<String, dynamic> json) {
     (json['map'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
     ),
-  )..id = json['id'] as String;
+  )
+    ..id = json['id'] as String
+    ..timestamp = json['timestamp'] == null
+        ? null
+        : DateTime.parse(json['timestamp'] as String);
 }
 
 Map<String, dynamic> _$MapDatumToJson(MapDatum instance) {
@@ -749,6 +763,7 @@ Map<String, dynamic> _$MapDatumToJson(MapDatum instance) {
   }
 
   writeNotNull('id', instance.id);
+  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
   writeNotNull('map', instance.map);
   return val;
 }
@@ -756,7 +771,11 @@ Map<String, dynamic> _$MapDatumToJson(MapDatum instance) {
 ErrorDatum _$ErrorDatumFromJson(Map<String, dynamic> json) {
   return ErrorDatum(
     json['message'] as String,
-  )..id = json['id'] as String;
+  )
+    ..id = json['id'] as String
+    ..timestamp = json['timestamp'] == null
+        ? null
+        : DateTime.parse(json['timestamp'] as String);
 }
 
 Map<String, dynamic> _$ErrorDatumToJson(ErrorDatum instance) {
@@ -769,6 +788,7 @@ Map<String, dynamic> _$ErrorDatumToJson(ErrorDatum instance) {
   }
 
   writeNotNull('id', instance.id);
+  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
   writeNotNull('message', instance.message);
   return val;
 }
@@ -779,6 +799,9 @@ FileDatum _$FileDatumFromJson(Map<String, dynamic> json) {
     upload: json['upload'] as bool,
   )
     ..id = json['id'] as String
+    ..timestamp = json['timestamp'] == null
+        ? null
+        : DateTime.parse(json['timestamp'] as String)
     ..metadata = (json['metadata'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
     );
@@ -794,6 +817,7 @@ Map<String, dynamic> _$FileDatumToJson(FileDatum instance) {
   }
 
   writeNotNull('id', instance.id);
+  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
   writeNotNull('filename', instance.filename);
   writeNotNull('upload', instance.upload);
   writeNotNull('metadata', instance.metadata);
@@ -803,6 +827,9 @@ Map<String, dynamic> _$FileDatumToJson(FileDatum instance) {
 MultiDatum _$MultiDatumFromJson(Map<String, dynamic> json) {
   return MultiDatum()
     ..id = json['id'] as String
+    ..timestamp = json['timestamp'] == null
+        ? null
+        : DateTime.parse(json['timestamp'] as String)
     ..data = (json['data'] as List)
         ?.map(
             (e) => e == null ? null : Datum.fromJson(e as Map<String, dynamic>))
@@ -819,6 +846,7 @@ Map<String, dynamic> _$MultiDatumToJson(MultiDatum instance) {
   }
 
   writeNotNull('id', instance.id);
+  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
   writeNotNull('data', instance.data);
   return val;
 }

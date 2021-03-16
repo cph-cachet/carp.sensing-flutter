@@ -7,12 +7,11 @@
     * `DataFormat` is now called `DataType`
     * `ManualTrigger` is now called `PassiveTrigger`
     * `ScheduledTrigger` is now called `DateTimeTrigger`
-    * `Datum` is now called `Data`
     * `` is now called ``
     * `` is now called ``
 * A `StudyProtocol` now uses the concept of a `TriggeredTask` which is slightly different to the previous `Study` model. See the example in the README text.
 * All json serialization now used `camelCase` instead of `snake_case` to be consistent with `carp_core`.
-* All the `events` stream now streams `DataPoint` data objects (instead of just the `Datum` data objects). This include the meta-data in the `CarpHeader` about e.g. which device the data comes from, timestamps, etc.
+* All the `events` stream is now called `data` and streams `DataPoint` data objects (instead of just the `Datum` data objects). This include the meta-data in the `CarpHeader` about e.g. which device the data comes from, timestamps, etc.
 
 
 ## 0.12.3

@@ -199,10 +199,10 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         AutomaticTask()
           ..measures = SamplingPackageRegistry().debug().getMeasureList(
             types: [
-              //SensorSamplingPackage.ACCELEROMETER,
-              //SensorSamplingPackage.GYROSCOPE,
-              // SensorSamplingPackage.PERIODIC_ACCELEROMETER,
-              // SensorSamplingPackage.PERIODIC_GYROSCOPE,
+              // SensorSamplingPackage.ACCELEROMETER,
+              // SensorSamplingPackage.GYROSCOPE,
+              SensorSamplingPackage.PERIODIC_ACCELEROMETER,
+              SensorSamplingPackage.PERIODIC_GYROSCOPE,
               SensorSamplingPackage.PEDOMETER,
               SensorSamplingPackage.LIGHT,
             ],

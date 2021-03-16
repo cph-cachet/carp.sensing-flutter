@@ -115,7 +115,7 @@ class SmartphoneDeviceManager extends DeviceManager {
   Future initialize(DeviceDescriptor descriptor, Stream<DataPoint> data) async {
     await super.initialize(descriptor, data);
     BatteryProbe()
-      ..events.listen(
+      ..data.listen(
           (datum) => _batteryLevel = (datum as BatteryDatum).batteryLevel)
       ..initialize(Measure(type: DeviceSamplingPackage.BATTERY))
       ..resume();

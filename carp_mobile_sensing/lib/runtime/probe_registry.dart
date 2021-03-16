@@ -62,7 +62,7 @@ class ProbeRegistry {
 
     if (_probe != null) {
       register(type, _probe);
-      _group.add(_probe.events);
+      _group.add(_probe.data);
     }
     return _probe;
   }

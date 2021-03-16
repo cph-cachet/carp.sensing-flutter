@@ -15,13 +15,13 @@ part of context;
 ///   SamplingPackageRegistry.register(ContextSamplingPackage());
 /// ```
 class ContextSamplingPackage extends SmartphoneSamplingPackage {
-  static const String LOCATION = "location";
-  static const String GEOLOCATION = "geolocation";
-  static const String ACTIVITY = "activity";
-  static const String WEATHER = "weather";
-  static const String AIR_QUALITY = "air_quality";
-  static const String GEOFENCE = "geofence";
-  static const String MOBILITY = "mobility";
+  static const String LOCATION = "dk.cachet.carp.location";
+  static const String GEOLOCATION = "dk.cachet.carp.geolocation";
+  static const String ACTIVITY = "dk.cachet.carp.activity";
+  static const String WEATHER = "dk.cachet.carp.weather";
+  static const String AIR_QUALITY = "dk.cachet.carp.air_quality";
+  static const String GEOFENCE = "dk.cachet.carp.geofence";
+  static const String MOBILITY = "dk.cachet.carp.mobility";
 
   List<String> get dataTypes => [
         LOCATION,

@@ -9,11 +9,9 @@ part of context;
 
 /// Holds activity information.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class ActivityDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, ContextSamplingPackage.ACTIVITY);
-
-  DataFormat get format => CARP_DATA_FORMAT;
+class ActivityDatum extends Datum {
+  DataFormat get format =>
+      DataFormat.fromString(ContextSamplingPackage.ACTIVITY);
 
   ActivityDatum() : super();
 

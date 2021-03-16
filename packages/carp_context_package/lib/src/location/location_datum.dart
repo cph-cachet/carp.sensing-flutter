@@ -9,11 +9,9 @@ part of context;
 
 /// Holds location information using the GPS format.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class LocationDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, ContextSamplingPackage.LOCATION);
-
-  DataFormat get format => CARP_DATA_FORMAT;
+class LocationDatum extends Datum {
+  DataFormat get format =>
+      DataFormat.fromString(ContextSamplingPackage.LOCATION);
 
   LocationDatum() : super();
 
@@ -87,11 +85,11 @@ class LocationDatum extends CARPDatum {
   String toString() =>
       super.toString() +
       'latitude: $latitude, '
-      'longitude: $longitude, '
-      'accuracy; $accuracy, '
-      'altitude: $altitude, '
-      'speed: $speed, '
-      'speed_accuracy: $speedAccuracy, '
-      'heading: $heading, '
-      'time: $time';
+          'longitude: $longitude, '
+          'accuracy; $accuracy, '
+          'altitude: $altitude, '
+          'speed: $speed, '
+          'speed_accuracy: $speedAccuracy, '
+          'heading: $heading, '
+          'time: $time';
 }

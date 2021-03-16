@@ -35,7 +35,7 @@ class StudyDeploymentController {
   ///
   /// This is a broadcast stream and supports multiple subscribers.
   Stream<DataPoint> get events {
-    _events ??= transformer(executor.events
+    _events ??= transformer(executor.data
         .map((dataPoint) => DataPointTransformerSchemaRegistry()
             .lookup(privacySchemaName)
             .transform(dataPoint))
@@ -186,7 +186,7 @@ class StudyDeploymentController {
   Future enablePowerAwareness() async {
     if (samplingSchema.powerAware) {
       info('Enabling power awareness ...');
-      _battery.events.listen((dataPoint) {
+      _battery.data.listen((dataPoint) {
         BatteryDatum batteryState = (dataPoint.carpBody as BatteryDatum);
         if (batteryState.batteryStatus == BatteryDatum.STATE_DISCHARGING) {
           // only apply power-awareness if not charging.
