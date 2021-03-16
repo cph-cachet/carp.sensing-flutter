@@ -14,10 +14,6 @@ part of sensors;
 ///
 /// Note that the [Pedometer] plugin returns the steps taken since last system boot.
 class PedometerProbe extends StreamProbe {
-  Stream<DataPoint> get stream =>
-      Pedometer.stepCountStream.map((StepCount count) => DataPoint.fromData(
-            PedometerDatum(count.steps),
-            // triggerId: triggerId,
-            // deviceRoleName: deviceRoleName,
-          ));
+  Stream<DataPoint> get stream => Pedometer.stepCountStream.map(
+      (StepCount count) => DataPoint.fromData(PedometerDatum(count.steps)));
 }

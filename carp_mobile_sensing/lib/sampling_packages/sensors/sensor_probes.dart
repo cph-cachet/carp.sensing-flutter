@@ -13,13 +13,9 @@ abstract class BufferingSensorProbe extends BufferingPeriodicStreamProbe {
   MultiDatum datum = MultiDatum();
   DateTime samplingStart;
 
-  Future<DataPoint> getDataPoint() async => DataPoint.fromData(
-        datum,
-        // triggerId: triggerId,
-        // deviceRoleName: deviceRoleName,
-      )
-        ..carpHeader.startTime = samplingStart
-        ..carpHeader.endTime = DateTime.now();
+  Future<DataPoint> getDataPoint() async => DataPoint.fromData(datum)
+    ..carpHeader.startTime = samplingStart
+    ..carpHeader.endTime = DateTime.now();
 
   void onSamplingStart() {
     datum = MultiDatum();

@@ -112,8 +112,6 @@ class Sensing {
   StudyDeploymentStatus _status;
   StudyDeploymentController controller;
 
-  Sensing();
-
   /// Initialize sensing.
   Future init() async {
     // get the protocol from the local protocol manager (defined below)
@@ -132,11 +130,11 @@ class Sensing {
     // automatically in the CAMSDeploymentService.
     // But - you should register devices connected to this phone, if applicable
 
-    // now ready to get the device deployment configuration for this phone
+    // now we're ready to get the device deployment configuration for this phone
     CAMSMasterDeviceDeployment deployment = await CAMSDeploymentService()
         .getDeviceDeployment(status.studyDeploymentId);
 
-    // Create a study deployment controller that can manage this deployment
+    // create a study deployment controller that can manage this deployment
     controller = StudyDeploymentController(
       deployment,
       debugLevel: DebugLevel.DEBUG,

@@ -24,15 +24,11 @@ class LightProbe extends BufferingPeriodicStreamProbe {
   Future<DataPoint> getDataPoint() async {
     if (luxValues.isNotEmpty) {
       Stats stats = Stats.fromData(luxValues);
-      return DataPoint.fromData(
-        LightDatum(
-            meanLux: stats.average,
-            stdLux: stats.standardDeviation,
-            minLux: stats.min,
-            maxLux: stats.max),
-        // triggerId: triggerId,
-        // deviceRoleName: deviceRoleName,
-      );
+      return DataPoint.fromData(LightDatum(
+          meanLux: stats.average,
+          stdLux: stats.standardDeviation,
+          minLux: stats.min,
+          maxLux: stats.max));
     } else {
       return null;
     }

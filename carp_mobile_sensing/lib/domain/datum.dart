@@ -25,9 +25,7 @@ class Datum extends Data {
   /// list with the same header.
   Datum({bool multiDatum = false}) : super() {
     // timestamp = DateTime.now().toUtc();
-    if (!multiDatum) {
-      id = Uuid().v1(); // Generates a time-based version 1 UUID.
-    }
+    id = (!multiDatum) ? Uuid().v1() : null;
   }
 
   bool equivalentTo(ConditionalEvent event) => false;
@@ -43,7 +41,7 @@ class Datum extends Data {
       '$runtimeType - format: $format, id: $id';
 }
 
-/// A very simple [Datum] that only holds a string datum object.
+/// A simple [Datum] that only holds a string datum object.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class StringDatum extends Datum {
   DataFormat get format => DataFormat.fromString(CAMSDataType.STRING);
