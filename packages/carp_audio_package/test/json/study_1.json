@@ -105,68 +105,22 @@
       "duration": 1000000
      },
      {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
-      "type": "dk.cachet.carp.location",
-      "name": "Location",
-      "enabled": true,
-      "configuration": {}
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.LocationMeasure",
-      "type": "dk.cachet.carp.geolocation",
-      "name": "Geo-location",
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.AudioMeasure",
+      "type": "audio",
+      "name": "Audio Recording",
       "enabled": true,
       "configuration": {},
-      "frequency": 30000000,
-      "accuracy": "low",
-      "distance": 3.0
+      "study_id": "default_study"
      },
      {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
-      "type": "dk.cachet.carp.activity",
-      "name": "Activity Recognition",
-      "enabled": true,
-      "configuration": {}
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.WeatherMeasure",
-      "type": "dk.cachet.carp.weather",
-      "name": "Local Weather",
-      "enabled": true,
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.NoiseMeasure",
+      "type": "noise",
+      "name": "Ambient Noise",
+      "enabled": false,
       "configuration": {},
-      "api_key": "12b6e28582eb9298577c734a31ba9f4f"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.AirQualityMeasure",
-      "type": "dk.cachet.carp.air_quality",
-      "name": "Local Air Quality",
-      "enabled": true,
-      "configuration": {},
-      "api_key": "9e538456b2b85c92647d8b65090e29f957638c77"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.GeofenceMeasure",
-      "type": "dk.cachet.carp.geofence",
-      "enabled": true,
-      "configuration": {},
-      "center": {
-       "$type": "GeoPosition",
-       "latitude": 55.7943601,
-       "longitude": 12.4461956
-      },
-      "radius": 500.0,
-      "name": "Geofence (Virum)"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.MobilityMeasure",
-      "type": "dk.cachet.carp.mobility",
-      "name": "Mobility Features",
-      "enabled": true,
-      "configuration": {},
-      "use_prior_contexts": true,
-      "stop_radius": 25.0,
-      "place_radius": 50.0,
-      "stop_duration": 180000000
+      "frequency": 300000000,
+      "duration": 10000000,
+      "sampling_rate": 500
      }
     ]
    }

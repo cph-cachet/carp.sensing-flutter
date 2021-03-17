@@ -44,20 +44,21 @@ class AudioSamplingPackage extends SmartphoneSamplingPackage {
   List<Permission> get permissions => [Permission.microphone];
 
   SamplingSchema get common => SamplingSchema()
-    ..type = SamplingSchemaType.COMMON
+    ..type = SamplingSchemaType.common
     ..name = 'Common (default) context sampling schema'
     ..powerAware = true
     ..measures.addEntries([
       MapEntry(
           AUDIO,
           AudioMeasure(
-              type: MeasureType(NameSpace.CARP, AUDIO),
-              name: 'Audio Recording',
-              enabled: true)),
+            type: AUDIO,
+            name: 'Audio Recording',
+            enabled: true,
+          )),
       MapEntry(
           NOISE,
           NoiseMeasure(
-            type: MeasureType(NameSpace.CARP, NOISE),
+            type: NOISE,
             name: 'Ambient Noise',
             enabled: false,
             frequency: Duration(minutes: 5),
@@ -65,28 +66,35 @@ class AudioSamplingPackage extends SmartphoneSamplingPackage {
           )),
     ]);
 
-  SamplingSchema get light => common
-    ..type = SamplingSchemaType.LIGHT
-    ..name = 'Light audio sampling'
-    ..measures[AUDIO].enabled = false;
+  SamplingSchema get light {
+    SamplingSchema light = common
+      ..type = SamplingSchemaType.light
+      ..name = 'Light context sampling';
+    (light.measures[AUDIO] as AudioMeasure).enabled = false;
+    return light;
+  }
 
-  SamplingSchema get minimum => light
-    ..type = SamplingSchemaType.MINIMUM
-    ..name = 'Minimum audio sampling'
-    ..measures[NOISE].enabled = false;
+  SamplingSchema get minimum {
+    SamplingSchema minimum = light
+      ..type = SamplingSchemaType.minimum
+      ..name = 'Minimum context sampling';
+    (minimum.measures[NOISE] as NoiseMeasure).enabled = false;
+    return minimum;
+  }
 
   SamplingSchema get normal => common;
 
   SamplingSchema get debug => common
-    ..type = SamplingSchemaType.DEBUG
+    ..type = SamplingSchemaType.debug
     ..name = 'Debugging audio sampling schema'
     ..powerAware = false
     ..measures[AUDIO] = AudioMeasure(
-        type: MeasureType(NameSpace.CARP, AUDIO),
-        name: 'Audio Recording',
-        enabled: true)
+      type: AUDIO,
+      name: 'Audio Recording',
+      enabled: true,
+    )
     ..measures[NOISE] = NoiseMeasure(
-      type: MeasureType(NameSpace.CARP, NOISE),
+      type: NOISE,
       name: 'Ambient Noise',
       enabled: true,
       frequency: Duration(minutes: 1),

@@ -22,9 +22,9 @@ void main() {
     protocol = CAMSStudyProtocol()
       ..name = 'Context package test'
       ..owner = ProtocolOwner(
-        id: 'jakba',
-        name: 'Jakob E. Bardram',
-        email: 'jakba@dtu.dk',
+        id: 'AB',
+        name: 'Alex Boyon',
+        email: 'alex@uni.dk',
       );
 
     // Define which devices are used for data collection.
@@ -61,7 +61,7 @@ void main() {
   test('CAMSStudyProtocol -> JSON', () async {
     print(protocol);
     print(toJsonString(protocol));
-    expect(protocol.ownerId, 'jakba');
+    expect(protocol.ownerId, 'AB');
   });
 
   test('StudyProtocol -> JSON -> StudyProtocol :: deep assert', () async {
@@ -81,7 +81,7 @@ void main() {
     CAMSStudyProtocol protocol = CAMSStudyProtocol.fromJson(
         json.decode(plainJson) as Map<String, dynamic>);
 
-    expect(protocol.ownerId, 'jakba');
+    expect(protocol.ownerId, 'AB');
     expect(protocol.masterDevices.first.roleName,
         CAMSDeploymentService.DEFAULT_MASTER_DEVICE_ROLENAME);
     print(toJsonString(protocol));
