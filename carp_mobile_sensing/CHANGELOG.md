@@ -1,17 +1,15 @@
 ## 0.20.0 
-* **BREAKING**: Now using the `carp_core` domain models in order to align with the overall [domain-driven design of CARP](https://carp.cachet.dk/core/). This has mainly an impact on the **naming** used in the API. The most important changes are:
+* **BREAKING**: Now using the [`carp_core`](https://pub.dev/packages/carp_core) domain models in order to align with the overall [domain-driven design of CARP](https://carp.cachet.dk/core/). This has mainly an impact on the **naming** used in the API. The most important changes are:
     * `Study` is now called `StudyProtocol` and a CAMS-specific protocol called `CAMSStudyProtocol` is available
     * `PrincipalInvestigator` is now called `StudyOwner`
     * `Task` is now called `TaskDescriptor`
     * `Device` is now called `DeviceDescriptor`
-    * `DataFormat` is now called `DataType`
     * `ManualTrigger` is now called `PassiveTrigger`
     * `ScheduledTrigger` is now called `DateTimeTrigger`
-    * `TransformerSchemaRegistry` is now called `DataPointTransformerSchemaRegistry`
     * `` is now called ``
-* A `StudyProtocol` now uses the concept of a `TriggeredTask` which is slightly different to the previous `Study` model. See the example in the README text.
-* All json serialization now used `camelCase` instead of `snake_case` to be consistent with `carp_core`.
-* All the `events` stream is now called `data` and streams `DataPoint` data objects (instead of just the `Datum` data objects). This include the meta-data in the `CarpHeader` about e.g. which device the data comes from, timestamps, etc.
+* A `StudyProtocol` now uses the concept of a [`TriggeredTask`](https://pub.dev/documentation/carp_core/latest/carp_core/TriggeredTask-class.html) which is slightly different to the previous `Study` model. See the [example](https://pub.dev/packages/carp_core/example).
+* All json serialization now used `camelCase` instead of `snake_case` to be consistent with `carp_core` in Kotlin.
+* All the `events` stream is now called `data` and streams `DataPoint` data objects (instead of just the `Datum` data objects). 
 
 
 ## 0.12.3

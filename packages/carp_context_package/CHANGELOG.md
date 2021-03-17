@@ -1,3 +1,6 @@
+## 0.20.0
+* **BREAKING:** upgrade to `carp_mobile_sensing` v. 0.20.x
+
 ## 0.12.1+1
 * removed collection of UNKNOWN activity types (was generating a lot of events on iOS) 
 * updating dependencies

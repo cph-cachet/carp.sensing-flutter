@@ -1,9 +1,9 @@
 part of connectivity;
 
 class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
-  static const String CONNECTIVITY = "connectivity";
-  static const String BLUETOOTH = "bluetooth";
-  static const String WIFI = "wifi";
+  static const String CONNECTIVITY = "dk.cachet.carp.connectivity";
+  static const String BLUETOOTH = "dk.cachet.carp.bluetooth";
+  static const String WIFI = "dk.cachet.carp.wifi";
 
   List<String> get dataTypes => [
         CONNECTIVITY,
@@ -40,21 +40,21 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
   List<Permission> get permissions => [Permission.location];
 
   SamplingSchema get common => SamplingSchema()
-    ..type = SamplingSchemaType.COMMON
+    ..type = SamplingSchemaType.common
     ..name = 'Common (default) connectivity sampling schema'
     ..powerAware = true
     ..measures.addEntries([
       MapEntry(
           CONNECTIVITY,
-          Measure(
-            type: MeasureType(NameSpace.CARP, CONNECTIVITY),
+          CAMSMeasure(
+            type: CONNECTIVITY,
             name: 'Connectivity (wifi/3G/...)',
             enabled: true,
           )),
       MapEntry(
           BLUETOOTH,
           PeriodicMeasure(
-            type: MeasureType(NameSpace.CARP, BLUETOOTH),
+            type: BLUETOOTH,
             name: 'Nearby Devices (Bluetooth Scan)',
             enabled: true,
             frequency: Duration(minutes: 10),
@@ -63,7 +63,7 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
       MapEntry(
           WIFI,
           PeriodicMeasure(
-            type: MeasureType(NameSpace.CARP, WIFI),
+            type: WIFI,
             name: 'Wifi network names (SSID / BSSID)',
             enabled: true,
             frequency: Duration(minutes: 10),
@@ -71,35 +71,41 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
           )),
     ]);
 
-  SamplingSchema get light => common
-    ..type = SamplingSchemaType.LIGHT
-    ..name = 'Light connectivity sampling'
-    ..measures[BLUETOOTH].enabled = false;
+  SamplingSchema get light {
+    SamplingSchema light = common
+      ..type = SamplingSchemaType.light
+      ..name = 'Light context sampling';
+    (light.measures[BLUETOOTH] as PeriodicMeasure).enabled = false;
+    return light;
+  }
 
-  SamplingSchema get minimum => light
-    ..type = SamplingSchemaType.MINIMUM
-    ..name = 'Minimum connectivity sampling'
-    ..measures[CONNECTIVITY].enabled = false
-    ..measures[WIFI].enabled = false;
+  SamplingSchema get minimum {
+    SamplingSchema minimum = light
+      ..type = SamplingSchemaType.light
+      ..name = 'Light context sampling';
+    (minimum.measures[CONNECTIVITY] as CAMSMeasure).enabled = false;
+    (minimum.measures[WIFI] as PeriodicMeasure).enabled = false;
+    return minimum;
+  }
 
-  SamplingSchema get normal => common..type = SamplingSchemaType.NORMAL;
+  SamplingSchema get normal => common..type = SamplingSchemaType.normal;
 
   SamplingSchema get debug => SamplingSchema()
-    ..type = SamplingSchemaType.DEBUG
+    ..type = SamplingSchemaType.debug
     ..name = 'Debug connectivity sampling'
     ..powerAware = true
     ..measures.addEntries([
       MapEntry(
           CONNECTIVITY,
-          Measure(
-            type: MeasureType(NameSpace.CARP, CONNECTIVITY),
+          CAMSMeasure(
+            type: CONNECTIVITY,
             name: 'Connectivity (wifi/3G/...)',
             enabled: true,
           )),
       MapEntry(
           BLUETOOTH,
           PeriodicMeasure(
-            type: MeasureType(NameSpace.CARP, BLUETOOTH),
+            type: BLUETOOTH,
             name: 'Nearby Devices (Bluetooth Scan)',
             enabled: true,
             frequency: Duration(minutes: 1),
@@ -108,7 +114,7 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
       MapEntry(
           WIFI,
           PeriodicMeasure(
-            type: MeasureType(NameSpace.CARP, WIFI),
+            type: WIFI,
             name: 'Wifi network names (SSID / BSSID)',
             enabled: true,
             frequency: Duration(minutes: 1),
