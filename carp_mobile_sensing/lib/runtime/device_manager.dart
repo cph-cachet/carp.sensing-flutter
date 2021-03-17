@@ -24,7 +24,7 @@ class DeviceRegistry {
   MasterDeviceDeployment get deployment => _deployment;
 
   /// Initialize the device manager by specifying the running [MasterDeviceDeployment].
-  /// and the stream of [Datum] events to handle.
+  /// and the stream of [DataPoint] events to handle.
   Future initialize(
       MasterDeviceDeployment deployment, Stream<DataPoint> data) async {
     _deployment = deployment;
@@ -36,7 +36,7 @@ class DeviceRegistry {
         warning('No device manager found for device: $device');
       } else {
         info('Initializing device manager: $manager');
-        await manager.initialize(device, data);
+        await manager.initialize(device);
         devices[device.roleName] = manager;
       }
     });
@@ -62,6 +62,7 @@ class DeviceRegistry {
 
 /// A [DeviceManager] handles a device on runtime.
 abstract class DeviceManager {
+  DeviceDescriptor _device;
   final StreamController<DeviceStatus> _eventController =
       StreamController.broadcast();
 
@@ -85,8 +86,6 @@ abstract class DeviceManager {
     _eventController.add(newStatus);
   }
 
-  DeviceDescriptor _device;
-
   /// The device description for this device as specified in the
   /// [StudyProtocol] protocol.
   DeviceDescriptor get descriptor => _device;
@@ -95,11 +94,9 @@ abstract class DeviceManager {
   int get batteryLevel;
 
   /// Initialize the device manager by specifying the [DeviceDescriptor].
-  /// and the stream of [Datum] events to handle.
-  Future initialize(DeviceDescriptor device, Stream<DataPoint> data) async {
+  Future initialize(DeviceDescriptor device) async {
     info('Initializing device manager, descriptor: $_device');
     _device = device;
-    // addEvent(DataManagerEvent(DataManagerEventTypes.INITIALIZED));
   }
 
   /// Ask this [DeviceManager] to connect to the device.
@@ -112,8 +109,8 @@ abstract class DeviceManager {
 class SmartphoneDeviceManager extends DeviceManager {
   String get id => DeviceInfo().deviceID;
 
-  Future initialize(DeviceDescriptor descriptor, Stream<DataPoint> data) async {
-    await super.initialize(descriptor, data);
+  Future initialize(DeviceDescriptor descriptor) async {
+    await super.initialize(descriptor);
     BatteryProbe()
       ..data.listen(
           (datum) => _batteryLevel = (datum as BatteryDatum).batteryLevel)

@@ -81,8 +81,8 @@ class ESenseDeviceManager extends DeviceManager {
 
   String get id => ESenseManager().eSenseDeviceName;
 
-  Future initialize(Device device, Stream<Datum> data) async {
-    await super.initialize(device, data);
+  Future initialize(DeviceDescriptor device) async {
+    await super.initialize(device);
 
     // listen for connection events
     ESenseManager().connectionEvents.listen((event) {

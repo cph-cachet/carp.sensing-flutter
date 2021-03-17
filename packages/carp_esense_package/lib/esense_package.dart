@@ -15,8 +15,8 @@ part of esense;
 ///   SamplingPackageRegistry.register(ESenseSamplingPackage());
 /// ```
 class ESenseSamplingPackage implements SamplingPackage {
-  static const String ESENSE_BUTTON = "esense.button";
-  static const String ESENSE_SENSOR = "esense.sensor";
+  static const String ESENSE_BUTTON = "dk.cachet.carp.esense-button";
+  static const String ESENSE_SENSOR = "dk.cachet.carp.esense-sensor";
   static const String ESENSE_DEVICE_TYPE = 'esense';
 
   List<String> get dataTypes => [ESENSE_BUTTON, ESENSE_SENSOR];
@@ -62,21 +62,21 @@ class ESenseSamplingPackage implements SamplingPackage {
   //    and the left earbud to record only IMU data."
   // Hence, connect the right earbud (eSense-0917) to the phone.
   SamplingSchema get debug => SamplingSchema()
-    ..type = SamplingSchemaType.DEBUG
+    ..type = SamplingSchemaType.debug
     ..name = 'Debugging eSense sampling schema'
     ..powerAware = false
     ..measures.addEntries([
       MapEntry(
           ESENSE_BUTTON,
           ESenseMeasure(
-              type: MeasureType(NameSpace.CARP, ESENSE_BUTTON),
+              type: ESENSE_BUTTON,
               name: 'eSense - Button',
               enabled: true,
               deviceName: 'eSense-0332')),
       MapEntry(
           ESENSE_SENSOR,
           ESenseMeasure(
-              type: MeasureType(NameSpace.CARP, ESENSE_SENSOR),
+              type: ESENSE_SENSOR,
               name: 'eSense - Sensors',
               enabled: true,
               deviceName: 'eSense-0332',

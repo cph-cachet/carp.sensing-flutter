@@ -8,9 +8,7 @@ part of esense;
 
 ESenseMeasure _$ESenseMeasureFromJson(Map<String, dynamic> json) {
   return ESenseMeasure(
-    type: json['type'] == null
-        ? null
-        : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
+    type: json['type'] as String,
     name: json['name'],
     enabled: json['enabled'],
     deviceName: json['device_name'] as String,
