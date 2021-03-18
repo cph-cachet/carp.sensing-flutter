@@ -1,8 +1,8 @@
 part of carp_apps_package;
 
 class AppsSamplingPackage extends SmartphoneSamplingPackage {
-  static const String APPS = "apps";
-  static const String APP_USAGE = "app_usage";
+  static const String APPS = "dk.cachet.carp.apps";
+  static const String APP_USAGE = "dk.cachet.carp.app_usage";
 
   List<String> get dataTypes => [
         APPS,
@@ -25,20 +25,20 @@ class AppsSamplingPackage extends SmartphoneSamplingPackage {
   void onRegister() {} // does nothing for this device sampling package
 
   SamplingSchema get common => SamplingSchema()
-    ..type = SamplingSchemaType.COMMON
+    ..type = SamplingSchemaType.common
     ..name = 'Common (default) app sampling schema'
     ..powerAware = true
     ..measures.addEntries([
       MapEntry(
           APPS,
-          Measure(
-            type: MeasureType(NameSpace.CARP, APPS),
+          CAMSMeasure(
+            type: APPS,
             name: 'Installed Apps',
           )),
       MapEntry(
           APP_USAGE,
           MarkedMeasure(
-            type: MeasureType(NameSpace.CARP, APP_USAGE),
+            type: APP_USAGE,
             name: 'Apps Usage',
             enabled: true,
           )),
@@ -49,20 +49,20 @@ class AppsSamplingPackage extends SmartphoneSamplingPackage {
   SamplingSchema get normal => common;
 
   SamplingSchema get debug => SamplingSchema()
-    ..type = SamplingSchemaType.DEBUG
+    ..type = SamplingSchemaType.debug
     ..name = 'Debugging app sampling schema'
     ..powerAware = true
     ..measures.addEntries([
       MapEntry(
           APPS,
-          Measure(
-            type: MeasureType(NameSpace.CARP, APPS),
+          CAMSMeasure(
+            type: APPS,
             name: 'Installed Apps',
           )),
       MapEntry(
           APP_USAGE,
           MarkedMeasure(
-            type: MeasureType(NameSpace.CARP, APP_USAGE),
+            type: APP_USAGE,
             name: 'Apps Usage',
             enabled: true,
           )),

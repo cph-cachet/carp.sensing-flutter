@@ -4,7 +4,7 @@
 
 This library contains a sampling package for app-related sampling to work with 
 the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) framework.
-This packages supports sampling of the following [`Measure`](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/domain/Measure-class.html) types:
+This packages supports sampling of the following [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core/Measure-class.html) types:
 
 * `apps`
 * `app_usage`
@@ -12,7 +12,7 @@ This packages supports sampling of the following [`Measure`](https://pub.dartlan
 See the [wiki]() for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types)
 and [sampling schemas](https://github.com/cph-cachet/carp.sensing-flutter/wiki/D.-Sampling-Schemas).
 
-For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/README.md).
+For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter).
 
 If you're interested in writing you own sampling packages for CARP, see the description on
 how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.-Extending-CARP-Mobile-Sensing) CARP on the wiki.
@@ -26,8 +26,9 @@ this package only works together with `carp_mobile_sensing`.
 dependencies:
   flutter:
     sdk: flutter
-  carp_mobile_sensing: # see the newest version
-  carp_apps_package: # see the newest version
+  carp_core: ^0.20.0
+  carp_mobile_sensing: ^0.20.0
+  carp_apps_package: ^0.20.0
   ...
 `````
 
@@ -49,36 +50,19 @@ Edit your app's `manifest.xml` file such that it contains the following:
 Not supported.
 
 ## Using it
-See the example.
+
+To use this package, import it into your app together with the
+[`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package:
+
+`````dart
+import 'package:carp_core/carp_core.dart';
+import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+import 'package:carp_connectivity_package/connectivity.dart';
+`````
+
+Before creating a study and running it, register this package in the 
+[SamplingPackageRegistry](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/runtime/SamplingPackageRegistry.html).
 
 `````dart
   SamplingPackageRegistry().register(AppsSamplingPackage());
-
-  Study study = Study("1234", "bardram", name: "bardram study");
-
-  // creating a task collecting step counts and blood pressure data for the last two days
-  study.addTriggerTask(
-    ImmediateTrigger(), // a simple trigger that starts immediately
-    Task(name: 'Step and blood pressure')
-      ..addMeasure(
-        Measure(
-          MeasureType(NameSpace.CARP, AppsSamplingPackage.APP_USAGE),
-          name: 'App usage',
-        ),
-      )
-      ..addMeasure(
-          Measure( MeasureType(NameSpace.CARP, AppsSamplingPackage.APPS),
-            name: 'Blood Pressure Diastolic'),
-      )
-  );
-
-  // Create a Study Controller that can manage this study, initialize it, and start it.
-  StudyController controller = StudyController(study);
-
-  // await initialization before starting
-  await controller.initialize();
-  controller.resume();
-
-  // listening on all data events from the study
-  controller.events.forEach(print);
 `````
