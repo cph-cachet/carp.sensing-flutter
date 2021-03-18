@@ -118,7 +118,7 @@ class ESenseDeviceManager extends DeviceManager {
         case ConnectionType.device_not_found:
         case ConnectionType.disconnected:
           status = DeviceStatus.disconnected;
-          _eventSubscription?.cancel();
+          // _eventSubscription?.cancel();
           break;
       }
     });

@@ -1,14 +1,15 @@
 part of mobile_sensing_app;
 
-class StudyModel {
-  Study study;
+class StudyDeploymentModel {
+  CAMSMasterDeviceDeployment deployment;
 
-  String get name => study.name;
-  String get description => study.description ?? 'No description available.';
+  String get name => deployment?.name ?? '';
+  String get description =>
+      deployment?.description ?? 'No description available.';
   Image get image => Image.asset('assets/study.png');
-  String get userID => study.userId;
-  String get samplingStrategy => study.samplingStrategy;
-  String get dataEndpoint => study.dataEndPoint.toString();
+  String get userID => deployment?.userId ?? '';
+  String get samplingStrategy => 'NORMAL';
+  String get dataEndpoint => deployment?.dataEndPoint.toString() ?? '';
 
   /// Events on the state of the study executor
   Stream<ProbeState> get studyExecutorStateEvents =>
@@ -18,13 +19,13 @@ class StudyModel {
   ProbeState get studyState => Sensing().controller.executor.state;
 
   /// Get all sesing events (i.e. all [Datum] objects being collected).
-  Stream<Datum> get samplingEvents => Sensing().controller.events;
+  Stream<DataPoint> get data => Sensing().controller.data;
 
   /// The total sampling size so far since this study was started.
   int get samplingSize => Sensing().controller.samplingSize;
 
-  StudyModel(this.study)
-      : assert(study != null,
+  StudyDeploymentModel(this.deployment)
+      : assert(deployment != null,
             'A StudyModel must be initialized with a real Study.'),
         super();
 }

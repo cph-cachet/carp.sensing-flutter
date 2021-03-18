@@ -1,15 +1,8 @@
 part of mobile_sensing_app;
 
 class SensingBLoC {
-  //  User credentials
-  final String username = "user";
-  final String password = "...";
-  final String userId = "user@cachet.dk";
-  final String uri = "https://cans.cachet.dk:443";
-  final String testStudyId = "#23-Coverage";
-
-  Study _study;
-  Study get study => _study;
+  CAMSMasterDeviceDeployment get deployment => Sensing().deployment;
+  StudyDeploymentModel _model;
 
   /// Is sensing running, i.e. has the study executor been resumed?
   bool get isRunning =>
@@ -17,7 +10,8 @@ class SensingBLoC {
       Sensing().controller.executor.state == ProbeState.resumed;
 
   /// Get the study for this app.
-  StudyModel get studyModel => study != null ? StudyModel(study) : null;
+  StudyDeploymentModel get studyDeploymentModel =>
+      _model ??= StudyDeploymentModel(deployment);
 
   /// Get a list of running probes
   Iterable<ProbeModel> get runningProbes =>
@@ -34,15 +28,11 @@ class SensingBLoC {
   /// Get the data model for this study.
   DataModel get data => null;
 
-  void init() async {
-    // set global debug level
+  Future init() async {
     globalDebugLevel = DebugLevel.DEBUG;
-
     await settings.init();
-
-    _study ??= await Sensing().getStudy(testStudyId);
-    debug('Study : $study');
     await Sensing().initialize();
+    info('$runtimeType initialized');
   }
 
   void resume() async => Sensing().controller.resume();

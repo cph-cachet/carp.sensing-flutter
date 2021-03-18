@@ -8,8 +8,7 @@ void main() {
 
   setUp(() {
     protocol = StudyProtocol(
-        owner: ProtocolOwner(id: 'jakba@dtu.dk'),
-        name: 'Track patient movement');
+        owner: ProtocolOwner(id: 'xyz@dtu.dk'), name: 'Track patient movement');
 
     // Define which devices are used for data collection.
     Smartphone phone = Smartphone(name: 'SM-A320FL', roleName: 'masterphone');
@@ -39,7 +38,7 @@ void main() {
   test('StudyProtocol -> JSON', () async {
     print(protocol);
     print(toJsonString(protocol));
-    expect(protocol.owner.id, 'jakba@dtu.dk');
+    expect(protocol.owner.id, 'xyz@dtu.dk');
   });
 
   test('JSON -> StudyProtocol', () async {
@@ -49,7 +48,7 @@ void main() {
     StudyProtocol protocol =
         StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
 
-    expect(protocol.owner.id, 'jakba@dtu.dk');
+    expect(protocol.owner.id, 'xyz@dtu.dk');
     expect(protocol.masterDevices.first.roleName, 'masterphone');
     print(toJsonString(protocol));
   });

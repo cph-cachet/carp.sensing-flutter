@@ -169,8 +169,7 @@ class StudyDeploymentController {
     // initialize the data manager, device registry, and study executor
     await dataManager?.initialize(deployment, data);
     await DeviceRegistry().initialize(deployment, data);
-    executor.initialize(Measure(
-        type: DataType(NameSpace.CARP, CAMSDataType.EXECUTOR).toString()));
+    executor.initialize(Measure(type: CAMSDataType.EXECUTOR));
     await enablePowerAwareness();
     data.listen((datum) => _samplingSize++);
 

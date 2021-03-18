@@ -17,8 +17,8 @@ part of audio;
 ///   SamplingPackageRegistry.register(AudioSamplingPackage());
 /// ```
 class AudioSamplingPackage extends SmartphoneSamplingPackage {
-  static const String AUDIO = "audio";
-  static const String NOISE = "noise";
+  static const String AUDIO = "dk.cachet.carp.audio";
+  static const String NOISE = "dk.cachet.carp.noise";
 
   List<String> get dataTypes => [
         AUDIO,

@@ -99,6 +99,8 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
     this.description,
     this.purpose,
     ProtocolOwner owner,
+    String dataFormat,
+    DataEndPoint dataEndPoint,
     MasterDeviceDeployment masterDeviceDeployment,
   }) : super(
           deviceDescriptor: masterDeviceDeployment.deviceDescriptor,
@@ -113,6 +115,8 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
     this._studyId = studyId;
     this._studyDeploymentId = studyDeploymentId;
     this._owner = owner;
+    this._dataFormat = dataFormat ?? NameSpace.CARP;
+    this._dataEndPoint = dataEndPoint;
   }
 
   /// Get the list of all [Mesure]s in this study protocol.

@@ -27,7 +27,7 @@ class Measure extends Serializable {
   String get jsonType =>
       'dk.cachet.carp.protocols.domain.tasks.measures.$runtimeType';
 
-  String toString() => '$runtimeType: type: $type';
+  String toString() => '$runtimeType - type: $type';
 }
 
 /// Defines data that needs to be measured/collected from a data stream on a

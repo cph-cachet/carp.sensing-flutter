@@ -47,17 +47,17 @@
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
-      "name": "Task #3",
+      "name": "Task #5",
       "measures": [
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
         "type": "dk.cachet.carp.device",
         "name": "Basic Device Info",
         "enabled": true,
         "configuration": {}
        },
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
         "type": "dk.cachet.carp.memory",
         "name": "Memory Usage",
         "enabled": true,
@@ -65,35 +65,35 @@
         "frequency": 60000000
        },
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
         "type": "dk.cachet.carp.battery",
         "name": "Battery",
         "enabled": true,
         "configuration": {}
        },
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
         "type": "dk.cachet.carp.screen",
         "name": "Screen Activity (lock/on/off)",
         "enabled": true,
         "configuration": {}
        },
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
         "type": "dk.cachet.carp.accelerometer",
         "name": "Accelerometer",
         "enabled": false,
         "configuration": {}
        },
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
         "type": "dk.cachet.carp.gyroscope",
         "name": "Gyroscope",
         "enabled": false,
         "configuration": {}
        },
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
         "type": "dk.cachet.carp.periodic_accelerometer",
         "name": "Accelerometer",
         "enabled": false,
@@ -102,7 +102,7 @@
         "duration": 1000000
        },
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
         "type": "dk.cachet.carp.periodic_gyroscope",
         "name": "Gyroscope",
         "enabled": false,
@@ -111,14 +111,14 @@
         "duration": 1000000
        },
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
         "type": "dk.cachet.carp.pedometer",
         "name": "Pedometer (Step Count)",
         "enabled": true,
         "configuration": {}
        },
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
         "type": "dk.cachet.carp.light",
         "name": "Ambient Light",
         "enabled": true,
@@ -137,17 +137,15 @@
      },
      {
       "triggerId": 1,
-      "taskName": "Task #3",
+      "taskName": "Task #5",
       "destinationDeviceRoleName": "phone"
      }
     ],
-    "studyId": "23960410-82a9-11eb-8aa6-a7df55aa2135",
     "owner": {
      "$type": "ProtocolOwner",
-     "id": "jakba",
-     "name": "Jakob E. Bardram",
-     "email": "jakba@dtu.dk"
+     "id": "AB",
+     "name": "Alex Boyon",
+     "email": "alex@uni.dk"
     },
-    "ownerId": "jakba",
     "dataFormat": "dk.cachet.carp"
    }

@@ -26,7 +26,9 @@ class DeviceRegistry {
   /// Initialize the device manager by specifying the running [MasterDeviceDeployment].
   /// and the stream of [DataPoint] events to handle.
   Future initialize(
-      MasterDeviceDeployment deployment, Stream<DataPoint> data) async {
+    MasterDeviceDeployment deployment,
+    Stream<DataPoint> data,
+  ) async {
     _deployment = deployment;
 
     _deployment.connectedDevices.forEach((device) async {

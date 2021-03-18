@@ -114,6 +114,8 @@ class CAMSDeploymentService implements DeploymentService {
       description: deployment.protocol.description,
       purpose: protocol?.purpose ?? '',
       owner: protocol?.owner ?? null,
+      dataFormat: protocol?.dataFormat,
+      dataEndPoint: protocol?.dataEndPoint,
       masterDeviceDeployment: deviceDeployment,
     );
   }

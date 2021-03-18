@@ -7,7 +7,7 @@ class DevicesModel {
 
 class DeviceModel {
   DeviceManager deviceManager;
-  String get type => deviceManager.descriptor.deviceType;
+  String get type => deviceManager.descriptor.roleName;
   DeviceStatus get status => deviceManager.status;
   Stream<DeviceStatus> get deviceEvents => deviceManager.deviceEvents;
 
@@ -15,7 +15,7 @@ class DeviceModel {
   String get id => deviceManager.id;
 
   /// A printer-friendly name for this device.
-  String get name => deviceManager.descriptor.name;
+  String get name => deviceTypeName[type];
 
   /// A printer-friendly description of this device.
   //String get description => deviceTypeDescription[type];
@@ -38,6 +38,11 @@ class DeviceModel {
       : assert(deviceManager != null,
             'A DeviceModel must be initialized with a real Device.'),
         super();
+
+  static Map<String, String> get deviceTypeName => {
+        SmartphoneSamplingPackage.SMARTPHONE_DEVICE_TYPE: 'Phone',
+        ESenseSamplingPackage.ESENSE_DEVICE_TYPE: 'eSense',
+      };
 
   static Map<String, String> get deviceTypeDescription => {
         SmartphoneSamplingPackage.SMARTPHONE_DEVICE_TYPE: 'This phone',

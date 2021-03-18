@@ -2,8 +2,7 @@ part of mobile_sensing_app;
 
 class ProbeDescription {
   static Map<String, String> get probeTypeDescription => {
-        DataType.UNKNOWN: 'Unknown Probe',
-        DataType.NONE: 'Non-configured Probe',
+        DataType.UNKNOWN.toString(): 'Unknown Probe',
         DeviceSamplingPackage.MEMORY:
             'Collecting free physical and virtual memory.',
         DeviceSamplingPackage.DEVICE: 'Basic Device (Phone) Information.',
@@ -50,9 +49,8 @@ class ProbeDescription {
       };
 
   static Map<String, Icon> get probeTypeIcon => {
-        DataType.UNKNOWN: Icon(Icons.error, size: 50, color: CACHET.GREY_4),
-        DataType.NONE:
-            Icon(Icons.report_problem, size: 50, color: CACHET.GREY_4),
+        DataType.UNKNOWN.toString():
+            Icon(Icons.error, size: 50, color: CACHET.GREY_4),
         DeviceSamplingPackage.MEMORY:
             Icon(Icons.memory, size: 50, color: CACHET.GREY_4),
         DeviceSamplingPackage.DEVICE:
