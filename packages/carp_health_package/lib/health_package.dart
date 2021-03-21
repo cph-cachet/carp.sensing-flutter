@@ -14,12 +14,14 @@ library health_package;
 
 import 'dart:async';
 
-import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_mobile_sensing/domain/domain.dart';
 import 'package:health/health.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
+
+import 'package:carp_core/carp_core.dart';
+import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 part 'health_domain.dart';
 part 'health_package.g.dart';
@@ -35,7 +37,7 @@ HealthFactory _healthFactory = HealthFactory();
 ///   SamplingPackageRegistry.register(HealthSamplingPackage());
 /// ```
 class HealthSamplingPackage extends SmartphoneSamplingPackage {
-  static const String HEALTH = "health";
+  static const String HEALTH = "${NameSpace.CARP}.health";
 
   List<String> get dataTypes => [
         HEALTH,
@@ -59,14 +61,14 @@ class HealthSamplingPackage extends SmartphoneSamplingPackage {
   /// The `common` sampling schema for health.
   /// Mainly returns a sampling schema collecting step counts.
   SamplingSchema get common => SamplingSchema()
-    ..type = SamplingSchemaType.COMMON
+    ..type = SamplingSchemaType.common
     ..name = 'Common (default) health sampling schema'
     ..powerAware = true
     ..measures.addEntries([
       MapEntry(
           HEALTH,
           HealthMeasure(
-            type: MeasureType(NameSpace.CARP, HEALTH),
+            type: HEALTH,
             name: "Steps",
             healthDataType: HealthDataType.STEPS,
           )),

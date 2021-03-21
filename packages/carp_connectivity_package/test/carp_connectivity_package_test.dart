@@ -21,9 +21,9 @@ void main() {
     protocol = CAMSStudyProtocol()
       ..name = 'Context package test'
       ..owner = ProtocolOwner(
-        id: 'jakba',
-        name: 'Jakob E. Bardram',
-        email: 'jakba@dtu.dk',
+        id: 'AB',
+        name: 'Alex Boyon',
+        email: 'alex@uni.dk',
       );
 
     // Define which devices are used for data collection.
@@ -69,8 +69,8 @@ void main() {
     // Read the study protocol from json file
     String plainJson = File('test/json/study_1.json').readAsStringSync();
 
-    CAMSStudyProtocol protocol = CAMSStudyProtocol
-        .fromJson(json.decode(plainJson) as Map<String, dynamic>);
+    CAMSStudyProtocol protocol = CAMSStudyProtocol.fromJson(
+        json.decode(plainJson) as Map<String, dynamic>);
 
     expect(protocol.ownerId, 'jakba');
     expect(protocol.masterDevices.first.roleName,

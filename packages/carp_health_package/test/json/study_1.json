@@ -1,0 +1,223 @@
+{
+  "$type": "dk.cachet.carp.protocols.domain.CAMSStudyProtocol",
+  "name": "Context package test",
+  "masterDevices": [
+   {
+    "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
+    "isMasterDevice": true,
+    "roleName": "phone",
+    "samplingConfiguration": {}
+   }
+  ],
+  "connectedDevices": [
+   {
+    "$type": "dk.cachet.carp.protocols.domain.devices.DeviceDescriptor",
+    "isMasterDevice": false,
+    "roleName": "esense",
+    "samplingConfiguration": {}
+   }
+  ],
+  "triggers": [
+   {
+    "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
+   },
+   {
+    "$type": "dk.cachet.carp.protocols.domain.triggers.PeriodicTrigger",
+    "period": 3600000000,
+    "duration": 1000000
+   },
+   {
+    "$type": "dk.cachet.carp.protocols.domain.triggers.RecurrentScheduledTrigger",
+    "duration": 10000000,
+    "type": "daily",
+    "time": {
+     "$type": "Time",
+     "hour": 23,
+     "minute": 0,
+     "second": 0
+    },
+    "separationCount": 0,
+    "remember": false,
+    "period": 86400000000
+   }
+  ],
+  "tasks": [
+   {
+    "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
+    "name": "Task #5",
+    "measures": [
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
+      "type": "dk.cachet.carp.device",
+      "name": "Basic Device Info",
+      "enabled": true,
+      "configuration": {}
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
+      "type": "dk.cachet.carp.memory",
+      "name": "Memory Usage",
+      "enabled": true,
+      "configuration": {},
+      "frequency": 60000000
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
+      "type": "dk.cachet.carp.battery",
+      "name": "Battery",
+      "enabled": true,
+      "configuration": {}
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
+      "type": "dk.cachet.carp.screen",
+      "name": "Screen Activity (lock/on/off)",
+      "enabled": true,
+      "configuration": {}
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
+      "type": "dk.cachet.carp.accelerometer",
+      "name": "Accelerometer",
+      "enabled": false,
+      "configuration": {}
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
+      "type": "dk.cachet.carp.gyroscope",
+      "name": "Gyroscope",
+      "enabled": false,
+      "configuration": {}
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
+      "type": "dk.cachet.carp.periodic_accelerometer",
+      "name": "Accelerometer",
+      "enabled": false,
+      "configuration": {},
+      "frequency": 5000000,
+      "duration": 1000000
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
+      "type": "dk.cachet.carp.periodic_gyroscope",
+      "name": "Gyroscope",
+      "enabled": false,
+      "configuration": {},
+      "frequency": 5000000,
+      "duration": 1000000
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
+      "type": "dk.cachet.carp.pedometer",
+      "name": "Pedometer (Step Count)",
+      "enabled": true,
+      "configuration": {}
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
+      "type": "dk.cachet.carp.light",
+      "name": "Ambient Light",
+      "enabled": true,
+      "configuration": {},
+      "frequency": 60000000,
+      "duration": 1000000
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.HealthMeasure",
+      "type": "dk.cachet.carp.health",
+      "name": "Steps",
+      "enabled": true,
+      "configuration": {},
+      "history": 86400000000,
+      "health_data_type": "STEPS"
+     }
+    ]
+   },
+   {
+    "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
+    "name": "Task #6",
+    "measures": [
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.HealthMeasure",
+      "type": "dk.cachet.carp.health",
+      "enabled": true,
+      "configuration": {},
+      "history": 86400000000,
+      "health_data_type": "BLOOD_GLUCOSE"
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.HealthMeasure",
+      "type": "dk.cachet.carp.health",
+      "enabled": true,
+      "configuration": {},
+      "history": 86400000000,
+      "health_data_type": "BLOOD_PRESSURE_DIASTOLIC"
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.HealthMeasure",
+      "type": "dk.cachet.carp.health",
+      "enabled": true,
+      "configuration": {},
+      "history": 86400000000,
+      "health_data_type": "BLOOD_PRESSURE_SYSTOLIC"
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.HealthMeasure",
+      "type": "dk.cachet.carp.health",
+      "enabled": true,
+      "configuration": {},
+      "history": 86400000000,
+      "health_data_type": "HEART_RATE"
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.HealthMeasure",
+      "type": "dk.cachet.carp.health",
+      "name": "Steps",
+      "enabled": true,
+      "configuration": {},
+      "history": 86400000000,
+      "health_data_type": "STEPS"
+     }
+    ]
+   },
+   {
+    "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
+    "name": "Task #7",
+    "measures": [
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.HealthMeasure",
+      "type": "dk.cachet.carp.health",
+      "enabled": true,
+      "configuration": {},
+      "history": 86400000000,
+      "health_data_type": "WEIGHT"
+     }
+    ]
+   }
+  ],
+  "triggeredTasks": [
+   {
+    "triggerId": 0,
+    "taskName": "Task #5",
+    "destinationDeviceRoleName": "phone"
+   },
+   {
+    "triggerId": 1,
+    "taskName": "Task #6",
+    "destinationDeviceRoleName": "phone"
+   },
+   {
+    "triggerId": 2,
+    "taskName": "Task #7",
+    "destinationDeviceRoleName": "phone"
+   }
+  ],
+  "owner": {
+   "$type": "ProtocolOwner",
+   "id": "AB",
+   "name": "Alex Boyon",
+   "email": "alex@uni.dk"
+  },
+  "dataFormat": "dk.cachet.carp"
+ }

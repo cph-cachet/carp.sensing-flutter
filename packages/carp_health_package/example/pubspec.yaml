@@ -9,10 +9,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  carp_core:
+    path: ../../../carp_core
+  carp_mobile_sensing:
+    path: ../../../carp_mobile_sensing
   carp_health_package:
     path: ../
-  #carp_mobile_sensing:
-  #  path: ../../../carp_mobile_sensing
 
 dev_dependencies:
   flutter_test:
