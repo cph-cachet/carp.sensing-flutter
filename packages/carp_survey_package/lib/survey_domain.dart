@@ -22,20 +22,19 @@ part of survey;
 ///  * a [RecurrentScheduledTrigger] allow to schedule a recurrent survey, e.g every Monday at 8pm.
 ///
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class RPTaskMeasure extends Measure {
+class RPTaskMeasure extends CAMSMeasure {
   // TODO - remove when research_package supports serialization
   /// The survey to be issued to the user.
   @JsonKey(ignore: true)
   RPTask surveyTask;
 
   RPTaskMeasure({
-    @required MeasureType type,
+    @required String type,
     String name,
     String description,
     bool enabled,
     this.surveyTask,
-  })
-      : super(
+  }) : super(
           type: type,
           name: name,
           description: description,
@@ -50,10 +49,8 @@ class RPTaskMeasure extends Measure {
 
 /// Holds information about the result of a survey.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class RPTaskResultDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, SurveySamplingPackage.SURVEY);
-  DataFormat get format => CARP_DATA_FORMAT;
+class RPTaskResultDatum extends Datum {
+  DataFormat get format => DataFormat.fromString(SurveySamplingPackage.SURVEY);
 
   RPTaskResult surveyResult;
 

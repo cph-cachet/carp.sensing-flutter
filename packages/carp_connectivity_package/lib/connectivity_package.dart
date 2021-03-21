@@ -1,9 +1,9 @@
 part of connectivity;
 
 class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
-  static const String CONNECTIVITY = "dk.cachet.carp.connectivity";
-  static const String BLUETOOTH = "dk.cachet.carp.bluetooth";
-  static const String WIFI = "dk.cachet.carp.wifi";
+  static const String CONNECTIVITY = "${NameSpace.CARP}.connectivity";
+  static const String BLUETOOTH = "${NameSpace.CARP}.bluetooth";
+  static const String WIFI = "${NameSpace.CARP}.wifi";
 
   List<String> get dataTypes => [
         CONNECTIVITY,

@@ -8,9 +8,7 @@ part of survey;
 
 RPTaskMeasure _$RPTaskMeasureFromJson(Map<String, dynamic> json) {
   return RPTaskMeasure(
-    type: json['type'] == null
-        ? null
-        : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
+    type: json['type'] as String,
     name: json['name'] as String,
     description: json['description'] as String,
     enabled: json['enabled'] as bool,
