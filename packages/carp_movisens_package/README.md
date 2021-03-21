@@ -4,12 +4,12 @@
 
 This library contains a sampling package for sampling data from the [Movisens Move4 and ECGMove4 devices](https://www.movisens.com/en/products/ecg-sensor/) to work with 
 the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package.
-This packages supports sampling a `movisens` [`Measure`](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/domain/Measure-class.html).
+This packages supports sampling a Movisens data as configured using the [`MovisensMeasure`](https://pub.dev/documentation/carp_movisens_package/latest/movisens/MovisensMeasure-class.html).
 
 See the [wiki]() for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types)
 and [sampling schemas](https://github.com/cph-cachet/carp.sensing-flutter/wiki/D.-Sampling-Schemas).
 
-When running, the `MovisensProbe` of this package return different [`Datum`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/Datum-class.html) formats:
+When running, the `MovisensProbe` of this package return different [`MovisensDatum`](https://pub.dev/documentation/carp_movisens_package/latest/movisens/MovisensDatum-class.html) formats:
 
 * `movisens.met_level`
 * `movisens.met`
@@ -23,7 +23,7 @@ When running, the `MovisensProbe` of this package return different [`Datum`](htt
 * `movisens.battery_level`
 * `movisens.connection_status` 
 
-For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/README.md).
+For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter).
 
 If you're interested in writing you own sampling packages for CARP, see the description on
 how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.-Extending-CARP-Mobile-Sensing) CARP on the wiki.
@@ -38,8 +38,9 @@ this package only works together with `carp_mobile_sensing`.
 dependencies:
   flutter:
     sdk: flutter
-  carp_mobile_sensing: ^0.6.0
-  carp_movisens_package: ^0.1.6
+  carp_core: ^0.20.0
+  carp_mobile_sensing: ^0.20.0
+  carp_movisens_package: ^0.20.0
   ...
 `````
 
@@ -150,6 +151,7 @@ To use this package, import it into your app together with the
 [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package:
 
 `````dart
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:movisens_package/movisens.dart';
 `````

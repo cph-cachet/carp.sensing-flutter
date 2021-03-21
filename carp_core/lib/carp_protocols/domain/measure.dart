@@ -15,7 +15,7 @@ class Measure extends Serializable {
   /// The type of measure to do.
   String type;
 
-  /// The type of measure to do as a [String].
+  /// The type of measure to do as a [DataType].
   @JsonKey(ignore: true)
   DataType get dataType => DataType.fromString(type);
 

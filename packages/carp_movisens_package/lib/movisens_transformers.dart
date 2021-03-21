@@ -7,7 +7,7 @@
 part of movisens;
 
 /// A [TransformedDatum] that holds an OMH [HeartRate](https://pub.dev/documentation/openmhealth_schemas/latest/domain_omh_cardio/HeartRate-class.html)
-class OMHHeartRateDatum extends CARPDatum implements TransformedDatum {
+class OMHHeartRateDatum extends Datum implements TransformedDatum {
   static const DataFormat DATA_FORMAT =
       DataFormat(omh.SchemaSupport.OMH_NAMESPACE, omh.SchemaSupport.HEART_RATE);
   DataFormat get format => DATA_FORMAT;
@@ -31,7 +31,7 @@ class OMHHeartRateDatum extends CARPDatum implements TransformedDatum {
 }
 
 /// A [TransformedDatum] that holds an OMH [StepCount](https://pub.dev/documentation/openmhealth_schemas/latest/domain_omh_activity/StepCount-class.html)
-class OMHStepCountDatum extends CARPDatum implements TransformedDatum {
+class OMHStepCountDatum extends Datum implements TransformedDatum {
   static const DataFormat DATA_FORMAT =
       DataFormat(omh.SchemaSupport.OMH_NAMESPACE, omh.SchemaSupport.STEP_COUNT);
   DataFormat get format => DATA_FORMAT;

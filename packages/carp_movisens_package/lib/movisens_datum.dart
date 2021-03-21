@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2019-2021 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -8,10 +8,9 @@ part of movisens;
 
 /// An abstract Datum for all Movisens data points.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class MovisensDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, MovisensSamplingPackage.MOVISENS);
-  DataFormat get format => CARP_DATA_FORMAT;
+class MovisensDatum extends Datum {
+  DataFormat get format =>
+      DataFormat.fromString(MovisensSamplingPackage.MOVISENS);
 
   String movisensTimestamp;
 
@@ -30,8 +29,8 @@ class MovisensDatum extends CARPDatum {
     if (map.containsKey("StepCount"))
       return MovisensStepCountDatum.fromMap(map["StepCount"]);
     if (map.containsKey("MovementAcceleration"))
-      return MovisensMovementAccelerationDatum
-          .fromMap(map["MovementAcceleration"]);
+      return MovisensMovementAccelerationDatum.fromMap(
+          map["MovementAcceleration"]);
     if (map.containsKey("TapMarker"))
       return MovisensTapMarkerDatum.fromMap(map["TapMarker"]);
     if (map.containsKey("BatteryLevel"))
@@ -58,9 +57,8 @@ String _movisensTimestampToUTC(String timestamp) {
 class MovisensMETLevelDatum extends MovisensDatum {
   MovisensMETLevelDatum() : super();
 
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP,
-      '${MovisensSamplingPackage.MOVISENS}.${MovisensSamplingPackage.MET_LEVEL}');
-  DataFormat get format => CARP_DATA_FORMAT;
+  DataFormat get format =>
+      DataFormat.fromString(MovisensSamplingPackage.MET_LEVEL);
 
   factory MovisensMETLevelDatum.fromMap(String value) {
     MovisensMETLevelDatum metLevelDatum = MovisensMETLevelDatum();
@@ -92,9 +90,8 @@ class MovisensMovementAccelerationDatum extends MovisensDatum {
 
   MovisensMovementAccelerationDatum() : super();
 
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP,
-      '${MovisensSamplingPackage.MOVISENS}.${MovisensSamplingPackage.MOVEMENT_ACCELERATION}');
-  DataFormat get format => CARP_DATA_FORMAT;
+  DataFormat get format =>
+      DataFormat.fromString(MovisensSamplingPackage.MOVEMENT_ACCELERATION);
 
   factory MovisensMovementAccelerationDatum.fromMap(String value) {
     MovisensMovementAccelerationDatum movementAccelerationDatum =
@@ -122,9 +119,8 @@ class MovisensTapMarkerDatum extends MovisensDatum {
 
   MovisensTapMarkerDatum() : super();
 
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP,
-      '${MovisensSamplingPackage.MOVISENS}.${MovisensSamplingPackage.TAP_MARKER}');
-  DataFormat get format => CARP_DATA_FORMAT;
+  DataFormat get format =>
+      DataFormat.fromString(MovisensSamplingPackage.TAP_MARKER);
 
   factory MovisensTapMarkerDatum.fromMap(String value) {
     MovisensTapMarkerDatum tapMakerDatum = MovisensTapMarkerDatum();
@@ -144,12 +140,10 @@ class MovisensTapMarkerDatum extends MovisensDatum {
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MovisensBatteryLevelDatum extends MovisensDatum {
   String batteryLevel;
+  DataFormat get format =>
+      DataFormat.fromString(MovisensSamplingPackage.BATTERY_LEVEL);
 
   MovisensBatteryLevelDatum() : super();
-
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP,
-      '${MovisensSamplingPackage.MOVISENS}.${MovisensSamplingPackage.BATTERY_LEVEL}');
-  DataFormat get format => CARP_DATA_FORMAT;
 
   factory MovisensBatteryLevelDatum.fromMap(String value) {
     MovisensBatteryLevelDatum batteryLevelDatum = MovisensBatteryLevelDatum();
@@ -170,12 +164,10 @@ class MovisensBatteryLevelDatum extends MovisensDatum {
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MovisensBodyPositionDatum extends MovisensDatum {
   String bodyPosition;
+  DataFormat get format =>
+      DataFormat.fromString(MovisensSamplingPackage.BODY_POSITION);
 
   MovisensBodyPositionDatum() : super();
-
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP,
-      '${MovisensSamplingPackage.MOVISENS}.${MovisensSamplingPackage.BODY_POSITION}');
-  DataFormat get format => CARP_DATA_FORMAT;
 
   factory MovisensBodyPositionDatum.fromMap(String value) {
     MovisensBodyPositionDatum bodyPositionDatum = MovisensBodyPositionDatum();
@@ -195,12 +187,9 @@ class MovisensBodyPositionDatum extends MovisensDatum {
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MovisensMETDatum extends MovisensDatum {
   String met;
+  DataFormat get format => DataFormat.fromString(MovisensSamplingPackage.MET);
 
   MovisensMETDatum() : super();
-
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP,
-      '${MovisensSamplingPackage.MOVISENS}.${MovisensSamplingPackage.MET}');
-  DataFormat get format => CARP_DATA_FORMAT;
 
   factory MovisensMETDatum.fromMap(String value) {
     MovisensMETDatum metDatum = MovisensMETDatum();
@@ -222,11 +211,9 @@ class MovisensHRDatum extends MovisensDatum {
   /// Heart Rate (HR) in beats pr. minute (BPM).
   String hr;
 
-  MovisensHRDatum() : super();
+  DataFormat get format => DataFormat.fromString(MovisensSamplingPackage.HR);
 
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP,
-      '${MovisensSamplingPackage.MOVISENS}.${MovisensSamplingPackage.HR}');
-  DataFormat get format => CARP_DATA_FORMAT;
+  MovisensHRDatum() : super();
 
   factory MovisensHRDatum.fromMap(String value) {
     MovisensHRDatum hrDatum = MovisensHRDatum();
@@ -247,11 +234,9 @@ class MovisensHRDatum extends MovisensDatum {
 class MovisensHRVDatum extends MovisensDatum {
   String hrv;
 
-  MovisensHRVDatum() : super();
+  DataFormat get format => DataFormat.fromString(MovisensSamplingPackage.HRV);
 
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP,
-      '${MovisensSamplingPackage.MOVISENS}.${MovisensSamplingPackage.HRV}');
-  DataFormat get format => CARP_DATA_FORMAT;
+  MovisensHRVDatum() : super();
 
   factory MovisensHRVDatum.fromMap(String value) {
     MovisensHRVDatum hrvDatum = MovisensHRVDatum();
@@ -271,11 +256,10 @@ class MovisensHRVDatum extends MovisensDatum {
 class MovisensIsHrvValidDatum extends MovisensDatum {
   String isHrvValid;
 
-  MovisensIsHrvValidDatum() : super();
+  DataFormat get format =>
+      DataFormat.fromString(MovisensSamplingPackage.IS_HRV_VALID);
 
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP,
-      '${MovisensSamplingPackage.MOVISENS}.${MovisensSamplingPackage.IS_HRV_VALID}');
-  DataFormat get format => CARP_DATA_FORMAT;
+  MovisensIsHrvValidDatum() : super();
 
   factory MovisensIsHrvValidDatum.fromMap(String value) {
     MovisensIsHrvValidDatum isHrvValidDatum = MovisensIsHrvValidDatum();
@@ -296,11 +280,10 @@ class MovisensIsHrvValidDatum extends MovisensDatum {
 class MovisensStepCountDatum extends MovisensDatum {
   String stepCount;
 
-  MovisensStepCountDatum() : super();
+  DataFormat get format =>
+      DataFormat.fromString(MovisensSamplingPackage.STEP_COUNT);
 
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP,
-      '${MovisensSamplingPackage.MOVISENS}.${MovisensSamplingPackage.STEP_COUNT}');
-  DataFormat get format => CARP_DATA_FORMAT;
+  MovisensStepCountDatum() : super();
 
   factory MovisensStepCountDatum.fromMap(String value) {
     MovisensStepCountDatum stepCountDatum = MovisensStepCountDatum();
@@ -320,11 +303,10 @@ class MovisensStepCountDatum extends MovisensDatum {
 class MovisensConnectionStatusDatum extends MovisensDatum {
   String connectionStatus;
 
-  MovisensConnectionStatusDatum() : super();
+  DataFormat get format =>
+      DataFormat.fromString(MovisensSamplingPackage.CONNECTION_STATUS);
 
-  static const DataFormat CARP_DATA_FORMAT = DataFormat(NameSpace.CARP,
-      '${MovisensSamplingPackage.MOVISENS}.${MovisensSamplingPackage.CONNECTION_STATUS}');
-  DataFormat get format => CARP_DATA_FORMAT;
+  MovisensConnectionStatusDatum() : super();
 
   factory MovisensConnectionStatusDatum.fromMap(String value) {
     MovisensConnectionStatusDatum connectionStatusDatum =

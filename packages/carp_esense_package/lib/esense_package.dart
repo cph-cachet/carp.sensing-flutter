@@ -15,8 +15,8 @@ part of esense;
 ///   SamplingPackageRegistry.register(ESenseSamplingPackage());
 /// ```
 class ESenseSamplingPackage implements SamplingPackage {
-  static const String ESENSE_BUTTON = "dk.cachet.carp.esense-button";
-  static const String ESENSE_SENSOR = "dk.cachet.carp.esense-sensor";
+  static const String ESENSE_BUTTON = "dk.cachet.carp.esense.button";
+  static const String ESENSE_SENSOR = "dk.cachet.carp.esense.sensor";
   static const String ESENSE_DEVICE_TYPE = 'esense';
 
   List<String> get dataTypes => [ESENSE_BUTTON, ESENSE_SENSOR];

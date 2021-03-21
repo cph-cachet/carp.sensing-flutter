@@ -25,13 +25,13 @@ class DataType {
   /// e.g., "org.openmhealth" or "dk.cachet.carp".
   final String namespace;
 
-  /// The name of this data format. See [String].
+  /// The name of this data format.
   ///
   /// Uniquely identifies something within the [namespace].
   /// The name may not contain any periods. Periods are reserved for namespaces.
   final String name;
 
-  /// Create a [String].
+  /// Create a [DataType].
   const DataType(this.namespace, this.name) : super();
 
   factory DataType.fromString(String type) {

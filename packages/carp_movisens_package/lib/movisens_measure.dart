@@ -8,7 +8,7 @@ part of movisens;
 
 /// A [Measure] for configuring a Movisens EcgMove device.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class MovisensMeasure extends Measure {
+class MovisensMeasure extends CAMSMeasure {
   /// The MAC address of the sensor.
   String address;
 
@@ -31,7 +31,7 @@ class MovisensMeasure extends Measure {
   SensorLocation sensorLocation;
 
   MovisensMeasure({
-    MeasureType type,
+    String type,
     name,
     enabled,
     this.address,
@@ -41,8 +41,7 @@ class MovisensMeasure extends Measure {
     this.height,
     this.weight,
     this.age,
-  })
-      : super(type: type, name: name, enabled: enabled);
+  }) : super(type: type, name: name, enabled: enabled);
 
   Function get fromJsonFunction => _$MovisensMeasureFromJson;
   factory MovisensMeasure.fromJson(Map<String, dynamic> json) =>

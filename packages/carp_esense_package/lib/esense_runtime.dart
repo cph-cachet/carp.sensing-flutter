@@ -75,7 +75,7 @@ class ESenseSensorProbe extends _ESenseProbe {
 }
 
 class ESenseDeviceManager extends DeviceManager {
-  // the voltage level of the eSense device
+  // the last known voltage level of the eSense device
   double _voltageLevel = 4;
   StreamSubscription<ESenseEvent> _eventSubscription;
 
@@ -101,8 +101,8 @@ class ESenseDeviceManager extends DeviceManager {
             _voltageLevel = (event as BatteryRead).voltage;
           });
 
-          // set up a timer that asks for the voltage level every minute
-          Timer.periodic(const Duration(seconds: 10), (timer) {
+          // set up a timer that asks for the voltage level
+          Timer.periodic(const Duration(minutes: 5), (timer) {
             if (status == DeviceStatus.connected) {
               info('$runtimeType :: requesting voltage');
               ESenseManager().getBatteryVoltage();

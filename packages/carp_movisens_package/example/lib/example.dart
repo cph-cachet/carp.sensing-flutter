@@ -1,15 +1,15 @@
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
-import 'package:carp_esense_package/esense.dart';
+import 'package:carp_movisens_package/movisens.dart';
+import 'package:movisens_flutter/movisens_flutter.dart';
 
 /// This is a very simple example of how this sampling package is used with
 /// CARP Mobile Sensing (CAMS).
 /// NOTE, however, that the code below will not run.
-/// See the documentation on how to use CAMS:
-/// https://github.com/cph-cachet/carp.sensing-flutter/wiki
+/// See the documentation on how to use CAMS: https://github.com/cph-cachet/carp.sensing-flutter/wiki
 void main() async {
   // register this sampling package before using its measures
-  SamplingPackageRegistry().register(ESenseSamplingPackage());
+  SamplingPackageRegistry().register(MovisensSamplingPackage());
 
   // Create a study protocol using a local file to store data
   CAMSStudyProtocol protocol = CAMSStudyProtocol()
@@ -25,45 +25,45 @@ void main() async {
       encrypt: false,
     );
 
-  // define which devices are used for data collection - both phone and eSense
+  // define which devices are used for data collection - both phone and MoviSens
   Smartphone phone = Smartphone(
     name: 'SM-A320FL',
     roleName: CAMSDeploymentService.DEFAULT_MASTER_DEVICE_ROLENAME,
   );
-  DeviceDescriptor eSense = DeviceDescriptor(
-    roleName: ESenseSamplingPackage.ESENSE_DEVICE_TYPE,
+  DeviceDescriptor movisens = DeviceDescriptor(
+    roleName: MovisensSamplingPackage.MOVISENS_DEVICE_TYPE,
     isMasterDevice: false,
   );
 
   protocol
     ..addMasterDevice(phone)
-    ..addConnectedDevice(eSense);
+    ..addConnectedDevice(movisens);
 
-  // Add an automatic task that immediately starts collecting eSense button and sensor events.
+  // adding a movisens measure
   protocol.addTriggeredTask(
-      ImmediateTrigger(),
-      AutomaticTask()
-        ..addMeasures([
-          ESenseMeasure(
-              type: ESenseSamplingPackage.ESENSE_BUTTON,
-              name: 'eSense - Button',
-              deviceName: 'eSense-0332'),
-          ESenseMeasure(
-              type: ESenseSamplingPackage.ESENSE_SENSOR,
-              name: 'eSense - Sensors',
-              deviceName: 'eSense-0332',
-              samplingRate: 5),
-        ]),
-      phone);
+      ImmediateTrigger(), // a simple trigger that starts immediately
+      AutomaticTask(name: 'Movisens Task')
+        ..addMeasure(MovisensMeasure(
+            type: MovisensSamplingPackage.MOVISENS,
+            name: "movisens",
+            enabled: true,
+            address: '06-00-00-00-00-00',
+            deviceName: "ECG-223",
+            height: 178,
+            weight: 77,
+            age: 32,
+            gender: Gender.male,
+            sensorLocation: SensorLocation.chest)),
+      movisens);
 
   // deploy this protocol using the on-phone deployment service
   StudyDeploymentStatus status =
       await CAMSDeploymentService().createStudyDeployment(protocol);
 
-  // at this time we can register an eSensee device which are connected to this phone (master device)
+// at this time we can register an eSensee device which are connected to this phone (master device)
   CAMSDeploymentService().registerDevice(
     status.studyDeploymentId,
-    ESenseSamplingPackage.ESENSE_DEVICE_TYPE,
+    MovisensSamplingPackage.MOVISENS_DEVICE_TYPE,
     DeviceRegistration('some device id'),
   );
 
