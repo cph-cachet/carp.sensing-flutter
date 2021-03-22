@@ -15,7 +15,7 @@ dependencies:
   #carp_mobile_sensing: ^0.20.0
   connectivity: ^2.0.0         # connectivity events
   wifi_info_flutter: ^1.0.0    # wifi ssid name
-  flutter_blue: ^0.7.0         # bluetooth scan
+  flutter_blue: ^0.7.3         # bluetooth scan
   crypto: ^2.1.0               # hashing sensitive data
   permission_handler: ^5.0.0
   

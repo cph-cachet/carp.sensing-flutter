@@ -35,39 +35,9 @@ class DeploymentServiceRequest extends Serializable {
   String toString() => '$runtimeType - studyDeploymentId: $studyDeploymentId';
 }
 
-abstract class ParticipationServiceRequest extends DeploymentServiceRequest {
-  String _serviceRequestPackageNamespace =
-      'dk.cachet.carp.deployment.infrastructure.ParticipationServiceRequest';
-  ParticipationServiceRequest(String studyDeploymentId)
-      : super(studyDeploymentId);
-  String get jsonType => '$_serviceRequestPackageNamespace.$runtimeType';
-}
-
-/// A request for getting the deployment invitations for an account id.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
-class GetActiveParticipationInvitations extends ParticipationServiceRequest {
-  GetActiveParticipationInvitations(this.accountId) : super('');
-
-  @JsonKey(ignore: true)
-  String studyDeploymentId;
-
-  /// The CARP account (user) ID.
-  String accountId;
-
-  Function get fromJsonFunction => _$GetActiveParticipationInvitationsFromJson;
-  factory GetActiveParticipationInvitations.fromJson(
-          Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
-  Map<String, dynamic> toJson() =>
-      _$GetActiveParticipationInvitationsToJson(this);
-
-  String toString() => '$runtimeType - accountId: $accountId';
-}
-
 /// A request for getting the status of a study deployment.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
-class GetStudyDeploymentStatus extends ParticipationServiceRequest {
+class GetStudyDeploymentStatus extends DeploymentServiceRequest {
   GetStudyDeploymentStatus(String studyDeploymentId) : super(studyDeploymentId);
 
   Function get fromJsonFunction => _$GetStudyDeploymentStatusFromJson;
@@ -101,7 +71,7 @@ class RegisterDevice extends DeploymentServiceRequest {
 
 /// A request for unregistering this device.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
-class UnregisterDevice extends ParticipationServiceRequest {
+class UnregisterDevice extends DeploymentServiceRequest {
   UnregisterDevice(String studyDeploymentId, this.deviceRoleName)
       : super(studyDeploymentId);
 
@@ -119,7 +89,7 @@ class UnregisterDevice extends ParticipationServiceRequest {
 
 /// A request for getting the deployment for this master device.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
-class GetDeviceDeploymentFor extends ParticipationServiceRequest {
+class GetDeviceDeploymentFor extends DeploymentServiceRequest {
   GetDeviceDeploymentFor(String studyDeploymentId, this.masterDeviceRoleName)
       : super(studyDeploymentId);
 
@@ -143,8 +113,7 @@ class DeploymentSuccessful extends GetDeviceDeploymentFor {
     String studyDeploymentId,
     String masterDeviceRoleName,
     this.deviceDeploymentLastUpdateDate,
-  )
-      : super(studyDeploymentId, masterDeviceRoleName) {
+  ) : super(studyDeploymentId, masterDeviceRoleName) {
     this.deviceDeploymentLastUpdateDate.toUtc();
   }
 

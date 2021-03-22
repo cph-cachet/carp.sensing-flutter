@@ -25,9 +25,6 @@ class SensingBLoC {
     DeviceRegistry().devices[device.type].connect();
   }
 
-  /// Get the data model for this study.
-  DataModel get data => null;
-
   Future init() async {
     globalDebugLevel = DebugLevel.DEBUG;
     await settings.init();

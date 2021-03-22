@@ -20,8 +20,10 @@ part 'carp_data/domain/data.dart';
 
 part 'carp_deployment/domain/device_deployment.dart';
 part 'carp_deployment/domain/study_deployment.dart';
+part 'carp_deployment/domain/participation.dart';
 part 'carp_deployment/domain/users.dart';
 part 'carp_deployment/infrastructure/deployment_request.dart';
+part 'carp_deployment/infrastructure/participation_request.dart';
 
 part 'carp_protocols/domain/device_descriptor.dart';
 part 'carp_protocols/domain/measure.dart';
@@ -40,3 +42,6 @@ part 'carp_core.g.dart';
 /// A convient function to convert a Dart object into a JSON string.
 String toJsonString(Object object) =>
     const JsonEncoder.withIndent(' ').convert(object);
+
+// auto generate json code (.g files) with:
+//   flutter pub run build_runner build --delete-conflicting-outputs

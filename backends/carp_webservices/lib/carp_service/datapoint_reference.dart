@@ -21,7 +21,7 @@ class DataPointReference extends CarpReference {
   /// Upload a [CARPDataPoint] to the CARP backend using HTTP POST.
   ///
   /// Returns the server-generated ID for this data point.
-  Future<int> postDataPoint(CARPDataPoint data) async {
+  Future<int> postDataPoint(DataPoint data) async {
     final String url = "$dataEndpointUri";
     final restHeaders = await headers;
 
@@ -83,8 +83,8 @@ class DataPointReference extends CarpReference {
     });
   }
 
-  /// Get a [CARPDataPoint] from the CARP backend using HTTP GET
-  Future<CARPDataPoint> getDataPoint(int id) async {
+  /// Get a [DataPoint] from the CARP backend using HTTP GET
+  Future<DataPoint> getDataPoint(int id) async {
     String url = "$dataEndpointUri/$id";
     final restHeaders = await headers;
 
@@ -96,7 +96,7 @@ class DataPointReference extends CarpReference {
     Map<String, dynamic> responseJson = json.decode(response.body);
 
     if (httpStatusCode == HttpStatus.ok)
-      return CARPDataPoint.fromJson(responseJson);
+      return DataPoint.fromJson(responseJson);
 
     // All other cases are treated as an error.
     throw CarpServiceException(
@@ -108,7 +108,7 @@ class DataPointReference extends CarpReference {
   /// Get all [CARPDataPoint]s for this study.
   ///
   /// Be careful using this method - this might potential return an enormous amount of data.
-  Future<List<CARPDataPoint>> getAllDataPoint() async => queryDataPoint('');
+  Future<List<DataPoint>> getAllDataPoint() async => queryDataPoint('');
 
   /// Query for [CARPDataPoint]s from the CARP backend using
   /// [REST SQL (RSQL)](https://github.com/jirutka/rsql-parser).
@@ -189,7 +189,7 @@ class DataPointReference extends CarpReference {
   ///  }
   /// ````
   ///
-  Future<List<CARPDataPoint>> queryDataPoint(String query) async {
+  Future<List<DataPoint>> queryDataPoint(String query) async {
     assert(query != null, 'A query string must be specified.');
     String url =
         (query.length == 0) ? dataEndpointUri : "$dataEndpointUri?query=$query";
@@ -204,9 +204,9 @@ class DataPointReference extends CarpReference {
 
     if (httpStatusCode == HttpStatus.ok) {
       List<dynamic> list = json.decode(response.body);
-      List<CARPDataPoint> datapoints = new List<CARPDataPoint>();
+      List<DataPoint> datapoints = new List<DataPoint>();
       for (var item in list) {
-        datapoints.add(CARPDataPoint.fromJson(item));
+        datapoints.add(DataPoint.fromJson(item));
       }
       return datapoints;
     }

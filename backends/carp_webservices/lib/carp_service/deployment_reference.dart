@@ -63,7 +63,7 @@ class DeploymentReference extends CarpReference {
 
     // check if this is a json list, and if so turn it into a json map with one item called 'items'
     if (responseBody.startsWith('[')) {
-      responseBody = '{"items": $responseBody}';
+      responseBody = '{"items":$responseBody}';
     }
 
     Map<String, dynamic> responseJson = json.decode(responseBody);
@@ -81,8 +81,8 @@ class DeploymentReference extends CarpReference {
 
   /// Get the deployment status for this [DeploymentReference].
   Future<StudyDeploymentStatus> getStatus() async {
-    _status = StudyDeploymentStatus
-        .fromJson(await _rpc(GetStudyDeploymentStatus(studyDeploymentId)));
+    _status = StudyDeploymentStatus.fromJson(
+        await _rpc(GetStudyDeploymentStatus(studyDeploymentId)));
     return _status;
   }
 

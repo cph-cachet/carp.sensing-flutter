@@ -12,11 +12,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
-import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
-import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 import 'package:retry/retry.dart';
 import 'package:uuid/uuid.dart';
@@ -24,15 +22,15 @@ import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
-import '../carp_domain/carp_domain.dart';
+import 'package:carp_core/carp_core.dart';
+import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 part 'carp_app.dart';
-part 'carp_datapoint.dart';
-part 'carp_service.g.dart';
 part 'carp_tasks.dart';
 part 'consent_document.dart';
 part 'datapoint_reference.dart';
 part 'deployment_reference.dart';
+part 'participation_reference.dart';
 part 'document_reference.dart';
 part 'file_reference.dart';
 part 'http_retry.dart';
@@ -44,10 +42,11 @@ part 'invitations_dialog.dart';
 String _encode(Object object) =>
     const JsonEncoder.withIndent(' ').convert(object);
 
-/// Provide access to the CARP web services endpoint.
+/// Provide access to a CARP web service endpoint.
 ///
 /// The (current) assumption is that each Flutter app (using this library) will only connect
-/// to one CARP web service backend. Therefore this is a singleton and should be used like:
+/// to one CARP web service backend.
+/// Therefore all `CarpService` classes are a singleton and should be used like:
 ///
 /// ```dart
 ///   CarpService().configure(myApp);
@@ -582,17 +581,27 @@ class CarpService {
   String get deploymentRPCEndpointUri =>
       "${app.uri.toString()}/api/deployment-service";
 
-  /// The URL for the participation endpoint.
-  ///
-  /// {{PROTOCOL}}://{{SERVER_HOST}}:{{SERVER_PORT}}/api/participation-service
-  String get participationEndpointUri =>
-      "${app.uri.toString()}/api/participation-service";
-
   /// Gets a [DeploymentReference] for a [studyDeploymentId].
   /// If the [studyDeploymentId] is not provided, the study deployment id
   /// specified in the [CarpApp] is used.
   DeploymentReference deployment([String studyDeploymentId]) =>
       DeploymentReference._(this, studyDeploymentId);
+
+  // --------------------------------------------------------------------------
+  // PARTICIPATION SERVICE REQUESTS
+  // --------------------------------------------------------------------------
+
+  /// The URL for the participation endpoint.
+  ///
+  /// {{PROTOCOL}}://{{SERVER_HOST}}:{{SERVER_PORT}}/api/participation-service
+  String get participationRPCEndpointUri =>
+      "${app.uri.toString()}/api/participation-service";
+
+  /// Gets a [ParticipationReference] for a [studyDeploymentId].
+  /// If the [studyDeploymentId] is not provided, the study deployment id
+  /// specified in the [CarpApp] is used.
+  ParticipationReference participation([String studyDeploymentId]) =>
+      ParticipationReference._(this, studyDeploymentId);
 
   /// Get the list of active participation invitations for an [accountId].
   /// This will return all deployments that this account (user) is invited to.
@@ -607,9 +616,9 @@ class CarpService {
     final String body =
         _encode(GetActiveParticipationInvitations(accountId).toJson());
 
-    debug('REQUEST: $participationEndpointUri\n$body');
+    debug('REQUEST: $participationRPCEndpointUri\n$body');
     http.Response response = await httpr.post(
-        Uri.encodeFull(participationEndpointUri),
+        Uri.encodeFull(participationRPCEndpointUri),
         headers: headers,
         body: body);
     debug('RESPONSE: ${response.statusCode}\n${response.body}');

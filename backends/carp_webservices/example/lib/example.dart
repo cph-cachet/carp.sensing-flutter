@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
-import 'package:carp_webservices/carp_domain/carp_domain.dart';
 import 'package:carp_webservices/carp_service/carp_service.dart';
+import 'package:carp_core/carp_core.dart';
 
 void main() async {
   final String username = 'researcher';
@@ -11,13 +11,25 @@ void main() async {
   final String testStudyId = '8';
 
   CarpApp app;
-  Study study;
+  StudyProtocol protocol;
+  Smartphone phone;
 
-  study = Study(
-    id: testStudyId,
-    userId: 'user@dtu.dk',
-    name: 'Test study #$testStudyId',
+  // Create a new study protocol.
+  protocol = CAMSStudyProtocol()
+    ..name = 'Context package test'
+    ..owner = ProtocolOwner(
+      id: 'AB',
+      name: 'Alex Boyon',
+      email: 'alex@uni.dk',
+    );
+
+  // Define which devices are used for data collection.
+  phone = Smartphone(
+    name: 'SM-A320FL',
+    roleName: CAMSDeploymentService.DEFAULT_MASTER_DEVICE_ROLENAME,
   );
+
+  protocol..addMasterDevice(phone);
   app = CarpApp(
     name: 'any_display_friendly_name_is_fine',
     uri: Uri.parse(uri),
@@ -105,15 +117,14 @@ void main() async {
   );
 
   // create a CARP data point
-  final CARPDataPoint data =
-      CARPDataPoint.fromDatum(study.id, study.userId, datum);
+  final DataPoint data = DataPoint.fromData(datum);
 
   // post it to the CARP server, which returns the ID of the data point
   int dataPointId =
       await CarpService().getDataPointReference().postDataPoint(data);
 
   // get the data point back from the server
-  CARPDataPoint dataPoint =
+  DataPoint dataPoint =
       await CarpService().getDataPointReference().getDataPoint(dataPointId);
   print(dataPoint);
 

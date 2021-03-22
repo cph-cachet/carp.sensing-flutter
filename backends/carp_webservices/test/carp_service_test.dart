@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_service/carp_service.dart';
@@ -18,9 +19,8 @@ void main() {
   final String newCollectionName = 'new_patients_3';
 
   CarpApp app;
-  //CarpUser user;
-  Study study;
-  // int dataPointId;
+  CAMSStudyProtocol protocol;
+  Smartphone phone;
 
   LightDatum datum1 = LightDatum(
     maxLux: 12,
@@ -42,11 +42,23 @@ void main() {
   /// Setup CARP and authenticate.
   /// Runs once before all tests.
   setUpAll(() async {
-    study = new Study(
-      id: testStudyId,
-      userId: userId,
-      name: "Test study",
+    // Create a new study protocol.
+    protocol = CAMSStudyProtocol()
+      ..name = 'Context package test'
+      ..owner = ProtocolOwner(
+        id: 'AB',
+        name: 'Alex Boyon',
+        email: 'alex@uni.dk',
+      );
+
+    // Define which devices are used for data collection.
+    phone = Smartphone(
+      name: 'SM-A320FL',
+      roleName: CAMSDeploymentService.DEFAULT_MASTER_DEVICE_ROLENAME,
     );
+
+    protocol..addMasterDevice(phone);
+
     app = new CarpApp(
       studyId: testStudyId,
       studyDeploymentId: testDeploymentId,
@@ -227,8 +239,7 @@ void main() {
 
   group("Data points", () {
     test('- post', () async {
-      final CARPDataPoint data =
-          CARPDataPoint.fromDatum(study.id, study.userId, datum1);
+      final DataPoint data = DataPoint.fromData(datum1);
 
       print(_encode(data.toJson()));
 
@@ -240,8 +251,7 @@ void main() {
     });
 
     test('- post w/o trigger id & device role name', () async {
-      final CARPDataPoint data =
-          CARPDataPoint.fromDatum(study.id, study.userId, datum1);
+      final DataPoint data = DataPoint.fromData(datum1);
 
       data.carpHeader.triggerId = null;
       data.carpHeader.deviceRoleName = null;
@@ -267,7 +277,7 @@ void main() {
       String query = 'carp_header.data_format.namespace==test';
       print("query : $query");
 
-      List<CARPDataPoint> data =
+      List<DataPoint> data =
           await CarpService().getDataPointReference().queryDataPoint(query);
 
       print('N=${data.length}');
@@ -279,7 +289,7 @@ void main() {
     test('- query for test data points', () async {
       String query = 'carp_header.data_format.namespace==test';
       print("query : $query");
-      List<CARPDataPoint> data =
+      List<DataPoint> data =
           await CarpService().getDataPointReference().queryDataPoint(query);
 
       print('N=${data.length}');
@@ -291,7 +301,7 @@ void main() {
     test('- delete test data points', () async {
       String query = 'carp_header.data_format.namespace==test';
       print("query : $query");
-      List<CARPDataPoint> data =
+      List<DataPoint> data =
           await CarpService().getDataPointReference().queryDataPoint(query);
 
       print('N=${data.length}');
@@ -305,24 +315,22 @@ void main() {
     });
 
     test('- get by id', () async {
-      final CARPDataPoint dataPost =
-          CARPDataPoint.fromDatum(study.id, study.userId, datum1);
+      final DataPoint dataPost = DataPoint.fromData(datum1);
 
       int dataPointId =
           await CarpService().getDataPointReference().postDataPoint(dataPost);
 
       assert(dataPointId > 0);
 
-      CARPDataPoint dataGet =
+      DataPoint dataGet =
           await CarpService().getDataPointReference().getDataPoint(dataPointId);
 
       print(_encode(dataGet.toJson()));
       assert(dataGet.id == dataPointId);
-      assert(dataGet.carpBody['id'] == datum1.id);
     });
 
     test('- get all', () async {
-      List<CARPDataPoint> data =
+      List<DataPoint> data =
           await CarpService().getDataPointReference().getAllDataPoint();
 
       //data.forEach((datapoint) => print(_encode((datapoint.toJson()))));
@@ -331,10 +339,12 @@ void main() {
     });
 
     test('- query', () async {
-      await CarpService().getDataPointReference().postDataPoint(
-          CARPDataPoint.fromDatum(study.id, study.userId, datum1));
-      await CarpService().getDataPointReference().postDataPoint(
-          CARPDataPoint.fromDatum(study.id, study.userId, datum2));
+      await CarpService()
+          .getDataPointReference()
+          .postDataPoint(DataPoint.fromData(datum1));
+      await CarpService()
+          .getDataPointReference()
+          .postDataPoint(DataPoint.fromData(datum2));
 
       // String query =
       //     'carp_header.user_id==$userId;carp_body.timestamp>2019-11-02T12:53:40.219598Z';
@@ -344,7 +354,7 @@ void main() {
       //String query = 'carp_body.timestamp>2019-11-02T12:53:40.219598Z';
       //String query = 'carp_header.data_format.namespace=in=(carp,omh)';
       print("query : $query");
-      List<CARPDataPoint> data =
+      List<DataPoint> data =
           await CarpService().getDataPointReference().queryDataPoint(query);
 
       assert(data.length >= 0);
@@ -359,14 +369,13 @@ void main() {
     test('- delete', () async {
       int dataPointId = await CarpService()
           .getDataPointReference()
-          .postDataPoint(
-              CARPDataPoint.fromDatum(study.id, study.userId, datum1));
+          .postDataPoint(DataPoint.fromData(datum1));
       print("DELETE data_point_id : $dataPointId");
       await CarpService().getDataPointReference().deleteDataPoint(dataPointId);
     });
 
     test('- delete all', () async {
-      List<CARPDataPoint> data =
+      List<DataPoint> data =
           await CarpService().getDataPointReference().getAllDataPoint();
 
       print('N=${data.length}');
@@ -381,7 +390,7 @@ void main() {
       // wait for the delete requests to finish
       await Future.delayed(const Duration(seconds: 2), () {});
 
-      List<CARPDataPoint> empty =
+      List<DataPoint> empty =
           await CarpService().getDataPointReference().getAllDataPoint();
 
       print('N=${empty.length}');

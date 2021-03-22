@@ -83,23 +83,3 @@ class ActiveParticipationInvitation {
   String toString() =>
       '$runtimeType - participation: $participation, invitation: $invitation, devices size: ${devices.length}';
 }
-
-/// Set [data] for all expected participant data in the study deployment
-/// with [studyDeploymentId].
-/// Data which is not set equals null.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class ParticipantData {
-  String studyDeploymentId;
-  Map<String, dynamic> data;
-
-  ParticipantData() : super();
-
-  getData(String type) => data[type.toString()];
-  setData(String type, dynamic someData) => data[type.toString()] = someData;
-
-  factory ParticipantData.fromJson(Map<String, dynamic> json) =>
-      _$ParticipantDataFromJson(json);
-  Map<String, dynamic> toJson() => _$ParticipantDataToJson(this);
-
-  String toString() => '$runtimeType - studyDeploymentId: $studyDeploymentId';
-}

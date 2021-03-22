@@ -1,7 +1,7 @@
 import 'dart:convert';
 
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
-import 'package:carp_webservices/carp_domain/carp_domain.dart';
 import 'package:carp_webservices/carp_service/carp_service.dart';
 import 'package:test/test.dart';
 

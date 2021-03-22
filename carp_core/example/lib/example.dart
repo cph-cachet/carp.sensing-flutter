@@ -2,7 +2,13 @@ import 'package:carp_core/carp_core.dart';
 
 // This example tries to mimic the example from the carp_core Kotlin
 // example at https://github.com/cph-cachet/carp.core-kotlin/tree/master
-void protocol() async {
+//
+// It is a very simple example. Much better examples are found at the
+// documentation of CARP Mobile Sensing at
+//
+//  * https://github.com/cph-cachet/carp.sensing-flutter
+//  * https://github.com/cph-cachet/carp.sensing-flutter/wiki
+void main(List<String> args) async {
   // Create a new study protocol.
   ProtocolOwner owner = ProtocolOwner();
   StudyProtocol protocol =

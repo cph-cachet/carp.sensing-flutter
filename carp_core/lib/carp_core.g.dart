@@ -130,12 +130,12 @@ MasterDeviceDeployment _$MasterDeviceDeploymentFromJson(
   return MasterDeviceDeployment(
     deviceDescriptor: json['deviceDescriptor'] == null
         ? null
-        : MasterDeviceDescriptor
-            .fromJson(json['deviceDescriptor'] as Map<String, dynamic>),
+        : MasterDeviceDescriptor.fromJson(
+            json['deviceDescriptor'] as Map<String, dynamic>),
     configuration: json['configuration'] == null
         ? null
-        : DeviceRegistration
-            .fromJson(json['configuration'] as Map<String, dynamic>),
+        : DeviceRegistration.fromJson(
+            json['configuration'] as Map<String, dynamic>),
     connectedDevices: (json['connectedDevices'] as List)
         ?.map((e) => e == null
             ? null
@@ -300,6 +300,27 @@ Map<String, dynamic> _$StudyDeploymentStatusToJson(
   return val;
 }
 
+ParticipantData _$ParticipantDataFromJson(Map<String, dynamic> json) {
+  return ParticipantData(
+    studyDeploymentId: json['studyDeploymentId'] as String,
+    data: json['data'] as Map<String, dynamic>,
+  );
+}
+
+Map<String, dynamic> _$ParticipantDataToJson(ParticipantData instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('studyDeploymentId', instance.studyDeploymentId);
+  writeNotNull('data', instance.data);
+  return val;
+}
+
 Participation _$ParticipationFromJson(Map<String, dynamic> json) {
   return Participation()
     ..studyDeploymentId = json['studyDeploymentId'] as String
@@ -376,26 +397,6 @@ Map<String, dynamic> _$ActiveParticipationInvitationToJson(
   return val;
 }
 
-ParticipantData _$ParticipantDataFromJson(Map<String, dynamic> json) {
-  return ParticipantData()
-    ..studyDeploymentId = json['studyDeploymentId'] as String
-    ..data = json['data'] as Map<String, dynamic>;
-}
-
-Map<String, dynamic> _$ParticipantDataToJson(ParticipantData instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('studyDeploymentId', instance.studyDeploymentId);
-  writeNotNull('data', instance.data);
-  return val;
-}
-
 DeploymentServiceRequest _$DeploymentServiceRequestFromJson(
     Map<String, dynamic> json) {
   return DeploymentServiceRequest(
@@ -408,20 +409,6 @@ Map<String, dynamic> _$DeploymentServiceRequestToJson(
     <String, dynamic>{
       r'$type': instance.$type,
       'studyDeploymentId': instance.studyDeploymentId,
-    };
-
-GetActiveParticipationInvitations _$GetActiveParticipationInvitationsFromJson(
-    Map<String, dynamic> json) {
-  return GetActiveParticipationInvitations(
-    json['accountId'] as String,
-  )..$type = json[r'$type'] as String;
-}
-
-Map<String, dynamic> _$GetActiveParticipationInvitationsToJson(
-        GetActiveParticipationInvitations instance) =>
-    <String, dynamic>{
-      r'$type': instance.$type,
-      'accountId': instance.accountId,
     };
 
 GetStudyDeploymentStatus _$GetStudyDeploymentStatusFromJson(
@@ -444,8 +431,8 @@ RegisterDevice _$RegisterDeviceFromJson(Map<String, dynamic> json) {
     json['deviceRoleName'] as String,
     json['registration'] == null
         ? null
-        : DeviceRegistration
-            .fromJson(json['registration'] as Map<String, dynamic>),
+        : DeviceRegistration.fromJson(
+            json['registration'] as Map<String, dynamic>),
   )..$type = json[r'$type'] as String;
 }
 
@@ -505,6 +492,64 @@ Map<String, dynamic> _$DeploymentSuccessfulToJson(
       'masterDeviceRoleName': instance.masterDeviceRoleName,
       'deviceDeploymentLastUpdateDate':
           instance.deviceDeploymentLastUpdateDate?.toIso8601String(),
+    };
+
+GetActiveParticipationInvitations _$GetActiveParticipationInvitationsFromJson(
+    Map<String, dynamic> json) {
+  return GetActiveParticipationInvitations(
+    json['accountId'] as String,
+  )..$type = json[r'$type'] as String;
+}
+
+Map<String, dynamic> _$GetActiveParticipationInvitationsToJson(
+        GetActiveParticipationInvitations instance) =>
+    <String, dynamic>{
+      r'$type': instance.$type,
+      'accountId': instance.accountId,
+    };
+
+GetParticipantData _$GetParticipantDataFromJson(Map<String, dynamic> json) {
+  return GetParticipantData(
+    json['studyDeploymentId'] as String,
+  )..$type = json[r'$type'] as String;
+}
+
+Map<String, dynamic> _$GetParticipantDataToJson(GetParticipantData instance) =>
+    <String, dynamic>{
+      r'$type': instance.$type,
+      'studyDeploymentId': instance.studyDeploymentId,
+    };
+
+GetParticipantDataList _$GetParticipantDataListFromJson(
+    Map<String, dynamic> json) {
+  return GetParticipantDataList(
+    json['studyDeploymentId'] as String,
+  )..$type = json[r'$type'] as String;
+}
+
+Map<String, dynamic> _$GetParticipantDataListToJson(
+        GetParticipantDataList instance) =>
+    <String, dynamic>{
+      r'$type': instance.$type,
+      'studyDeploymentId': instance.studyDeploymentId,
+    };
+
+SetParticipantData _$SetParticipantDataFromJson(Map<String, dynamic> json) {
+  return SetParticipantData(
+    json['studyDeploymentId'] as String,
+    json['inputDataType'] as String,
+    json['data'] == null
+        ? null
+        : ParticipantData.fromJson(json['data'] as Map<String, dynamic>),
+  )..$type = json[r'$type'] as String;
+}
+
+Map<String, dynamic> _$SetParticipantDataToJson(SetParticipantData instance) =>
+    <String, dynamic>{
+      r'$type': instance.$type,
+      'studyDeploymentId': instance.studyDeploymentId,
+      'inputDataType': instance.inputDataType,
+      'data': instance.data,
     };
 
 DeviceDescriptor _$DeviceDescriptorFromJson(Map<String, dynamic> json) {
@@ -960,8 +1005,8 @@ ScheduledTrigger _$ScheduledTriggerFromJson(Map<String, dynamic> json) {
         : TimeOfDay.fromJson(json['time'] as Map<String, dynamic>),
     recurrenceRule: json['recurrenceRule'] == null
         ? null
-        : RecurrenceRule
-            .fromJson(json['recurrenceRule'] as Map<String, dynamic>),
+        : RecurrenceRule.fromJson(
+            json['recurrenceRule'] as Map<String, dynamic>),
   )
     ..$type = json[r'$type'] as String
     ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String
