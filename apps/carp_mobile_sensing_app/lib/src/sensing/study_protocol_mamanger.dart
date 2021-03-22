@@ -19,7 +19,6 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     CAMSStudyProtocol protocol = CAMSStudyProtocol()
       ..studyId = studyId
       ..name = '#23-Coverage'
-      ..description = 'This is a study for testing the coverage of sampling.'
       ..dataEndPoint = FileDataEndPoint(
         bufferSize: 50 * 1000,
         zip: true,
@@ -29,7 +28,13 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         id: 'AB',
         name: 'Alex Boyon',
         email: 'alex@uni.dk',
-      );
+      )
+      ..protocolDescription = {
+        'en': StudyProtocolDescription(
+          title: 'Sensing Coverage Study',
+          description: 'This is a study for testing the coverage of sampling.',
+        ),
+      };
 
     // Define which devices are used for data collection.
     Smartphone phone = Smartphone(

@@ -40,6 +40,15 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
   /// and purpose of this study protocol organized according to language locales.
   Map<String, StudyProtocolDescription> protocolDescription = {};
 
+  /// The default description (the English one).
+  String get description => protocolDescription['en']?.description;
+
+  /// The default title (the English one).
+  String get title => protocolDescription['en']?.title;
+
+  /// The default purpose (the English one).
+  String get purpose => protocolDescription['en']?.purpose;
+
   /// The owner of this study.
   ProtocolOwner get owner => _owner;
 

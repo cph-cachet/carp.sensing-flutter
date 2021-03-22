@@ -4,11 +4,12 @@ class StudyDeploymentModel {
   CAMSMasterDeviceDeployment deployment;
 
   String get name => deployment?.name ?? '';
+  String get title => deployment?.title ?? '';
   String get description =>
       deployment?.description ?? 'No description available.';
   Image get image => Image.asset('assets/study.png');
   String get userID => deployment?.userId ?? '';
-  String get samplingStrategy => 'NORMAL';
+  // String get samplingStrategy => 'NORMAL';
   String get dataEndpoint => deployment?.dataEndPoint.toString() ?? '';
 
   /// Events on the state of the study executor

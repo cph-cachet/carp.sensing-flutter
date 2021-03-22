@@ -16,28 +16,8 @@ class _StudyVizState extends State<StudyVisualization> {
 
   _StudyVizState(this.studyDeploymentModel) : super();
 
-  Widget build(BuildContext context) {
-    // if (bloc.studyDeploymentModel != null) {
-    return _buildStudyVisualization(context, bloc.studyDeploymentModel);
-    // } else {
-    //   return _buildEmptyStudyPanel(context);
-    // }
-  }
-
-  Widget _buildEmptyStudyPanel(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Study'),
-      ),
-      body: Center(
-        child: Icon(
-          Icons.school,
-          size: 100,
-          color: CACHET.ORANGE,
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) =>
+      _buildStudyVisualization(context, bloc.studyDeploymentModel);
 
   Widget _buildStudyVisualization(
     BuildContext context,
@@ -126,11 +106,11 @@ class _StudyVizState extends State<StudyVisualization> {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                    _StudyControllerLine(studyDeploymentModel.title,
+                        heading: 'Title'),
                     _StudyControllerLine(studyDeploymentModel.description),
                     _StudyControllerLine(studyDeploymentModel.userID,
                         heading: 'User'),
-                    _StudyControllerLine(studyDeploymentModel.samplingStrategy,
-                        heading: 'Sampling Strategy'),
                     _StudyControllerLine(studyDeploymentModel.dataEndpoint,
                         heading: 'Data Endpoint'),
                     StreamBuilder<ProbeState>(

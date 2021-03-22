@@ -64,15 +64,6 @@ class CAMSStudyProtocol extends StudyProtocol {
     super.description = description;
   }
 
-  /// The default description (the English one).
-  String get description => protocolDescription['en'].description;
-
-  /// The default title (the English one).
-  String get title => protocolDescription['en'].title;
-
-  /// The default purpose (the English one).
-  String get purpose => protocolDescription['en'].purpose;
-
   /// Get the [StudyProtocolDescription] for a language locale.
   StudyProtocolDescription getDescription(String key) =>
       protocolDescription[key];
