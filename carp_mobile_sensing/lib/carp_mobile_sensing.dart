@@ -7,3 +7,6 @@ export 'domain/domain.dart';
 export 'runtime/runtime.dart';
 export 'sampling_packages/device/device.dart';
 export 'sampling_packages/sensors/sensors.dart';
+
+// auto generate json code (.g files) with:
+//   flutter pub run build_runner build --delete-conflicting-outputs

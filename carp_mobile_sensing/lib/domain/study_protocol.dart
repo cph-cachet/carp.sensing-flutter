@@ -26,16 +26,14 @@ class CAMSStudyProtocol extends StudyProtocol {
   /// If specified, this is used as the [studyId] in the [DataPointHeader].
   String studyId;
 
-  /// A longer printer-friendly title for this study.
-  String title;
-
-  /// The purpose of the study. To be used to inform the user about
-  /// this study and its purpose.
-  String purpose;
+  /// The textual [StudyProtocolDescription] containing the title, description
+  /// and purpose of this study protocol organized according to language locales.
+  Map<String, StudyProtocolDescription> protocolDescription = {};
 
   /// The owner of this study.
   ProtocolOwner owner;
 
+  /// The unique id of the owner.
   String get ownerId => owner?.id;
 
   /// Specify where and how to upload this study data.
@@ -54,19 +52,30 @@ class CAMSStudyProtocol extends StudyProtocol {
   /// If no [dataFormat] is specified, the CARP namespace is used.
   CAMSStudyProtocol({
     this.studyId,
-    this.owner,
     String name,
-    this.title,
-    String description,
-    this.purpose,
+    this.owner,
+    this.protocolDescription,
     this.dataEndPoint,
     this.dataFormat = NameSpace.CARP,
-  }) : super(owner: owner, name: name, description: description) {
+  }) : super(owner: owner, name: name) {
     registerFromJsonFunctions();
     // studyId ??= Uuid().v1();
     super.name = name;
     super.description = description;
   }
+
+  /// The default description (the English one).
+  String get description => protocolDescription['en'].description;
+
+  /// The default title (the English one).
+  String get title => protocolDescription['en'].title;
+
+  /// The default purpose (the English one).
+  String get purpose => protocolDescription['en'].purpose;
+
+  /// Get the [StudyProtocolDescription] for a language locale.
+  StudyProtocolDescription getDescription(String key) =>
+      protocolDescription[key];
 
   Function get fromJsonFunction => _$CAMSStudyProtocolFromJson;
   factory CAMSStudyProtocol.fromJson(Map<String, dynamic> json) =>
@@ -75,6 +84,30 @@ class CAMSStudyProtocol extends StudyProtocol {
   Map<String, dynamic> toJson() => _$CAMSStudyProtocolToJson(this);
 
   String toString() => '$runtimeType - $name [$ownerId]';
+}
+
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class StudyProtocolDescription extends Serializable {
+  /// A longer printer-friendly title for this study.
+  String title;
+
+  /// The description of this study.
+  String description;
+
+  /// The purpose of the study. To be used to inform the user about
+  /// this study and its purpose.
+  String purpose;
+
+  StudyProtocolDescription({this.title, this.description, this.purpose});
+
+  Function get fromJsonFunction => _$StudyProtocolDescriptionFromJson;
+  factory StudyProtocolDescription.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$StudyProtocolDescriptionToJson(this);
+
+  String toString() =>
+      '$runtimeType - title: $title, description: $description';
 }
 
 /// Specify an endpoint where a [DataManager] can upload data.

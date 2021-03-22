@@ -13,9 +13,14 @@ CAMSStudyProtocol _$CAMSStudyProtocolFromJson(Map<String, dynamic> json) {
         ? null
         : ProtocolOwner.fromJson(json['owner'] as Map<String, dynamic>),
     name: json['name'] as String,
-    title: json['title'] as String,
-    description: json['description'] as String,
-    purpose: json['purpose'] as String,
+    protocolDescription:
+        (json['protocolDescription'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(
+          k,
+          e == null
+              ? null
+              : StudyProtocolDescription.fromJson(e as Map<String, dynamic>)),
+    ),
     dataEndPoint: json['dataEndPoint'] == null
         ? null
         : DataEndPoint.fromJson(json['dataEndPoint'] as Map<String, dynamic>),
@@ -45,7 +50,8 @@ CAMSStudyProtocol _$CAMSStudyProtocolFromJson(Map<String, dynamic> json) {
         ?.map((e) => e == null
             ? null
             : TriggeredTask.fromJson(e as Map<String, dynamic>))
-        ?.toList();
+        ?.toList()
+    ..description = json['description'] as String;
 }
 
 Map<String, dynamic> _$CAMSStudyProtocolToJson(CAMSStudyProtocol instance) {
@@ -59,18 +65,43 @@ Map<String, dynamic> _$CAMSStudyProtocolToJson(CAMSStudyProtocol instance) {
 
   writeNotNull(r'$type', instance.$type);
   writeNotNull('name', instance.name);
-  writeNotNull('description', instance.description);
   writeNotNull('masterDevices', instance.masterDevices);
   writeNotNull('connectedDevices', instance.connectedDevices);
   writeNotNull('triggers', instance.triggers);
   writeNotNull('tasks', instance.tasks);
   writeNotNull('triggeredTasks', instance.triggeredTasks);
   writeNotNull('studyId', instance.studyId);
-  writeNotNull('title', instance.title);
-  writeNotNull('purpose', instance.purpose);
+  writeNotNull('protocolDescription', instance.protocolDescription);
   writeNotNull('owner', instance.owner);
   writeNotNull('dataEndPoint', instance.dataEndPoint);
   writeNotNull('dataFormat', instance.dataFormat);
+  writeNotNull('description', instance.description);
+  return val;
+}
+
+StudyProtocolDescription _$StudyProtocolDescriptionFromJson(
+    Map<String, dynamic> json) {
+  return StudyProtocolDescription(
+    title: json['title'] as String,
+    description: json['description'] as String,
+    purpose: json['purpose'] as String,
+  )..$type = json[r'$type'] as String;
+}
+
+Map<String, dynamic> _$StudyProtocolDescriptionToJson(
+    StudyProtocolDescription instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(r'$type', instance.$type);
+  writeNotNull('title', instance.title);
+  writeNotNull('description', instance.description);
+  writeNotNull('purpose', instance.purpose);
   return val;
 }
 

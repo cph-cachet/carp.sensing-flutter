@@ -36,15 +36,9 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
   /// A short printer-friendly name for this study.
   String name;
 
-  /// A longer printer-friendly title for this study.
-  String title;
-
-  /// A longer description of this study.
-  String description;
-
-  /// The purpose of the study. To be used to inform the user about
-  /// this study and its purpose.
-  String purpose;
+  /// The textual [StudyProtocolDescription] containing the title, description
+  /// and purpose of this study protocol organized according to language locales.
+  Map<String, StudyProtocolDescription> protocolDescription = {};
 
   /// The owner of this study.
   ProtocolOwner get owner => _owner;
@@ -62,9 +56,7 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
     String studyId,
     String studyDeploymentId,
     this.name,
-    this.title,
-    this.description,
-    this.purpose,
+    this.protocolDescription,
     ProtocolOwner owner,
     String dataFormat,
     DataEndPoint dataEndPoint,
@@ -95,9 +87,7 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
     String studyId,
     String studyDeploymentId,
     this.name,
-    this.title,
-    this.description,
-    this.purpose,
+    this.protocolDescription,
     ProtocolOwner owner,
     String dataFormat,
     DataEndPoint dataEndPoint,

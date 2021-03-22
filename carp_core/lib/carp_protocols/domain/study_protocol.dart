@@ -21,7 +21,7 @@ class StudyProtocol extends Serializable {
   /// The owner of this study.
   ProtocolOwner owner;
 
-  /// A short printer-friendly name for this study.
+  /// A unique descriptive name for the protocol assigned by the [ProtocolOwner].
   String name;
 
   /// A longer description of this study.
@@ -47,8 +47,7 @@ class StudyProtocol extends Serializable {
     this.owner,
     this.name,
     this.description,
-  })
-      : super();
+  }) : super();
 
   /// Add a [masterDevice] which is responsible for aggregating and synchronizing
   /// incoming data. Its role name should be unique in the protocol.

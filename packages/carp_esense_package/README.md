@@ -5,7 +5,7 @@
 This library contains a sampling package for
 the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) framework
 to work with the [eSense](https://www.esense.io) earable computing platform.
-This packages supports sampling of the following [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core/Measure-class.html) types (not that the package defines its own namespace of `dk.cachet.carp.esense`):
+This packages supports sampling of the following [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core/Measure-class.html) types (note that the package defines its own namespace of `dk.cachet.carp.esense`):
 
 * `dk.cachet.carp.esense.button` : eSense button pressed / released events
 * `dk.cachet.carp.esense.sensor` : eSense sensor (accelerometer & gyroscope) events.
