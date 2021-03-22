@@ -137,7 +137,8 @@ void main() {
           HealthDatum(value, unit, type, from, to, platform, deviceId, uuid);
 
       DataPoint dp_1 = DataPoint.fromData(hd);
-      expect(dp_1.carpHeader.dataFormat.namespace, '${NameSpace.CARP}.health');
+      expect(dp_1.carpHeader.dataFormat.namespace,
+          HealthSamplingPackage.HEALTH_NAMESPACE);
       expect(dp_1.carpHeader.dataFormat.name, "calories_intake");
       print(_encode(dp_1));
     });
@@ -156,7 +157,8 @@ void main() {
           '4321');
 
       DataPoint dp_1 = DataPoint.fromData(hd);
-      expect(dp_1.carpHeader.dataFormat.namespace, '${NameSpace.CARP}.health');
+      expect(dp_1.carpHeader.dataFormat.namespace,
+          HealthSamplingPackage.HEALTH_NAMESPACE);
       expect(dp_1.carpHeader.dataFormat.name, "alcohol");
       print(_encode(dp_1));
     });
@@ -175,7 +177,8 @@ void main() {
           '4321');
 
       DataPoint dp_1 = DataPoint.fromData(hd);
-      expect(dp_1.carpHeader.dataFormat.namespace, '${NameSpace.CARP}.health');
+      expect(dp_1.carpHeader.dataFormat.namespace,
+          HealthSamplingPackage.HEALTH_NAMESPACE);
       expect(dp_1.carpHeader.dataFormat.name, "sleep");
       print(_encode(dp_1));
     });
@@ -198,7 +201,8 @@ void main() {
           '4321');
 
       DataPoint dp_1 = DataPoint.fromData(smoking);
-      expect(dp_1.carpHeader.dataFormat.namespace, '${NameSpace.CARP}.health');
+      expect(dp_1.carpHeader.dataFormat.namespace,
+          HealthSamplingPackage.HEALTH_NAMESPACE);
       expect(dp_1.carpHeader.dataFormat.name, "smoked_cigarettes");
       print(_encode(dp_1));
     });

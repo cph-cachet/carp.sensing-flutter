@@ -15,9 +15,10 @@ part of esense;
 ///   SamplingPackageRegistry.register(ESenseSamplingPackage());
 /// ```
 class ESenseSamplingPackage implements SamplingPackage {
-  static const String ESENSE_BUTTON = "dk.cachet.carp.esense.button";
-  static const String ESENSE_SENSOR = "dk.cachet.carp.esense.sensor";
   static const String ESENSE_DEVICE_TYPE = 'esense';
+  static const String ESENSE_NAMESPACE = "${NameSpace.CARP}.esense";
+  static const String ESENSE_BUTTON = "$ESENSE_NAMESPACE.button";
+  static const String ESENSE_SENSOR = "$ESENSE_NAMESPACE.sensor";
 
   List<String> get dataTypes => [ESENSE_BUTTON, ESENSE_SENSOR];
 

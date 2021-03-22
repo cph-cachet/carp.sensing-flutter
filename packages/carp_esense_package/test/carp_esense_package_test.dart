@@ -96,6 +96,8 @@ void main() {
       ..deviceName = 'eSense-123';
 
     final DataPoint data = DataPoint.fromData(datum);
+    expect(data.carpHeader.dataFormat.namespace,
+        ESenseSamplingPackage.ESENSE_NAMESPACE);
 
     print(_encode(data.toJson()));
   });
