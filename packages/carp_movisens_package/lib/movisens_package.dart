@@ -9,6 +9,7 @@ part of movisens;
 /// The Movisens sampling package
 class MovisensSamplingPackage extends SmartphoneSamplingPackage {
   static const String MOVISENS_DEVICE_TYPE = 'esense';
+  static const String MOVISENS = "${NameSpace.CARP}.movisens";
 
   static const String MOVISENS_NAMESPACE = "${NameSpace.CARP}.movisens";
   static const String MET_LEVEL = "$MOVISENS_NAMESPACE.met_level";

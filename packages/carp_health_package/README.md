@@ -6,7 +6,7 @@ This library contains a sampling package for sampling health data from Apple Hea
 the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) framework.
 This packages supports sampling of the following [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core/Measure-class.html) types:
 
-* `health`
+* `dk.cachet.carp.health`
 
 A [`HealthMeasure`](https://pub.dev/documentation/carp_health_package/latest/health_lib/HealthMeasure-class.html) can be configured to collect a specific [`HealthDataType`](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html).
 

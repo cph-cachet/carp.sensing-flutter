@@ -6,13 +6,13 @@ This library contains a sampling package for connectivity sampling to work with
 the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package.
 This packages supports sampling of the following [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core/Measure-class.html) types:
 
-* `location`
-* `geolocation`
-* `activity`
-* `weather`
-* `geofence`
-* `air_quality`
-* `mobility`
+* `dk.cachet.carp.location`
+* `dk.cachet.carp.geolocation`
+* `dk.cachet.carp.activity`
+* `dk.cachet.carp.weather`
+* `dk.cachet.carp.geofence`
+* `dk.cachet.carp.air_quality`
+* `dk.cachet.carp.mobility`
 
 See the [wiki]() for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types)
 and [sampling schemas](https://github.com/cph-cachet/carp.sensing-flutter/wiki/D.-Sampling-Schemas).

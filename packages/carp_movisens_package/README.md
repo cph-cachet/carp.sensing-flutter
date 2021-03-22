@@ -4,24 +4,26 @@
 
 This library contains a sampling package for sampling data from the [Movisens Move4 and ECGMove4 devices](https://www.movisens.com/en/products/ecg-sensor/) to work with 
 the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package.
-This packages supports sampling a Movisens data as configured using the [`MovisensMeasure`](https://pub.dev/documentation/carp_movisens_package/latest/movisens/MovisensMeasure-class.html).
+This packages supports sampling a Movisens data as configured using the [`MovisensMeasure`](https://pub.dev/documentation/carp_movisens_package/latest/movisens/MovisensMeasure-class.html). The type is:
+
+* `dk.cachet.carp.movisens`
 
 See the [wiki]() for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types)
 and [sampling schemas](https://github.com/cph-cachet/carp.sensing-flutter/wiki/D.-Sampling-Schemas).
 
-When running, the `MovisensProbe` of this package return different [`MovisensDatum`](https://pub.dev/documentation/carp_movisens_package/latest/movisens/MovisensDatum-class.html) formats:
+When running, the `MovisensProbe` of this package return different [`MovisensDatum`](https://pub.dev/documentation/carp_movisens_package/latest/movisens/MovisensDatum-class.html) formats (note that the package defines its own namespace of `dk.cachet.carp.movisens`):
 
-* `movisens.met_level`
-* `movisens.met`
-* `movisens.hr`
-* `movisens.hrv`
-* `movisens.is_hrv_valid`
-* `movisens.body_position`
-* `movisens.step_count`
-* `movisens.movement_acceleration`
-* `movisens.tap_marker`
-* `movisens.battery_level`
-* `movisens.connection_status` 
+* `dk.cachet.carp.movisens.met_level`
+* `dk.cachet.carp.movisens.met`
+* `dk.cachet.carp.movisens.hr`
+* `dk.cachet.carp.movisens.hrv`
+* `dk.cachet.carp.movisens.is_hrv_valid`
+* `dk.cachet.carp.movisens.body_position`
+* `dk.cachet.carp.movisens.step_count`
+* `dk.cachet.carp.movisens.movement_acceleration`
+* `dk.cachet.carp.movisens.tap_marker`
+* `dk.cachet.carp.movisens.battery_level`
+* `dk.cachet.carp.movisens.connection_status` 
 
 For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter).
 
