@@ -37,7 +37,7 @@ class FileDataManager extends AbstractDataManager {
     Stream<DataPoint> data,
   ) async {
     await super.initialize(deployment, data);
-    assert(dataEndPoint is FileDataEndPoint);
+    assert(deployment.dataEndPoint is FileDataEndPoint);
 
     _fileDataEndPoint = dataEndPoint as FileDataEndPoint;
 
@@ -83,7 +83,7 @@ class FileDataManager extends AbstractDataManager {
 
   /// Current path and filename according to this format:
   ///
-  ///   `carp/data/<study_id>/carp-data-yyyy-mm-dd-hh-mm-ss-ms.json.zip`
+  ///   `carp/data/<studyDeploymentId>/carp-data-yyyy-mm-dd-hh-mm-ss-ms.json.zip`
   ///
   Future<String> get filename async {
     if (_filename == null) {

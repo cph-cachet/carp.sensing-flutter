@@ -18,7 +18,7 @@ part of carp_backend;
 ///  2. Get the deployment status of the specific deployment.
 ///  3. Register this device as part of this deployment.
 ///  4. Get the study deployment configuration.
-class CarpStudyManager implements StudyManager {
+class CarpStudyProtocolManager implements StudyProtocolManager {
   Future initialize() async {}
 
   /// Get a CAMS [Study] from the CARP backend.
@@ -28,13 +28,13 @@ class CarpStudyManager implements StudyManager {
   /// [Participation] for a user, with a specific [studyDeploymentId].
   ///
   /// Throws a [CarpServiceException] if not successful.
-  Future<Study> getStudy(String studyDeploymentId) async {
+  Future<StudyProtocol> getStudyProtocol(String studyDeploymentId) async {
     DeploymentReference reference = CarpService().deployment(studyDeploymentId);
     // get status
     StudyDeploymentStatus status = await reference.getStatus();
 
     if (status.masterDeviceStatus.device != null) {
-      if (status.status == 'DeployingDevices') {
+      if (status.status == StudyDeploymentStatusTypes.DeployingDevices) {
         // register this master device, if not already done
         status = await reference.registerDevice(
             deviceRoleName: status.masterDeviceStatus.device.roleName);
@@ -45,13 +45,13 @@ class CarpStudyManager implements StudyManager {
         // asume that this deployment only contains one custom task
         TaskDescriptor task = deployment.tasks[0];
         if (task is CustomProtocolTask) {
-          Study study = Study.fromJson(
+          CAMSStudyProtocol protocol = CAMSStudyProtocol.fromJson(
               json.decode(task.studyProtocol) as Map<String, dynamic>);
           // make sure that the study has the correct id as defined by the server
-          study.id = CarpService().app.studyId ?? study.id;
+          protocol.studyId = CarpService().app.studyId ?? protocol.studyId;
           // mark this deployment as successful
           await reference.success();
-          return study;
+          return protocol;
         } else {
           await reference.unRegisterDevice(
               deviceRoleName: status.masterDeviceStatus.device.roleName);
@@ -75,7 +75,7 @@ class CarpStudyManager implements StudyManager {
 
   /// This method is not implemented as there is no support for saving
   /// studies in CARP from the phone.
-  Future<bool> saveStudy(Study study) async {
+  Future<bool> saveStudyProtocol(String studyId, StudyProtocol study) async {
     throw CarpServiceException(
         message:
             'There is no support for saving studies in CARP from the phone.');

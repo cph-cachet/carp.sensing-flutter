@@ -20,7 +20,7 @@ part of carp_core;
 class DeploymentServiceRequest extends Serializable {
   String _infrastructurePackageNamespace =
       'dk.cachet.carp.deployment.infrastructure';
-  DeploymentServiceRequest(this.studyDeploymentId) : super();
+  DeploymentServiceRequest([this.studyDeploymentId]) : super();
 
   /// The CARP study deployment ID.
   String studyDeploymentId;
@@ -30,9 +30,26 @@ class DeploymentServiceRequest extends Serializable {
       FromJsonFactory()
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$DeploymentServiceRequestToJson(this);
-  String get jsonType => '$_infrastructurePackageNamespace.$runtimeType';
+  String get jsonType =>
+      '$_infrastructurePackageNamespace.DeploymentServiceRequest.$runtimeType';
 
   String toString() => '$runtimeType - studyDeploymentId: $studyDeploymentId';
+}
+
+/// A request for creating a deployment based on the [protocol].
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+class CreateStudyDeployment extends DeploymentServiceRequest {
+  StudyProtocol protocol;
+
+  CreateStudyDeployment(this.protocol) : super();
+
+  Function get fromJsonFunction => _$CreateStudyDeploymentFromJson;
+  factory CreateStudyDeployment.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$CreateStudyDeploymentToJson(this);
+
+  String toString() => '$runtimeType - protocol: ${protocol.name}}';
 }
 
 /// A request for getting the status of a study deployment.

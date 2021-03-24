@@ -101,8 +101,6 @@ class DeploymentReference extends CarpReference {
 
     // Set device ID, if  provided
     if (deviceId != null) _registeredDeviceId = deviceId;
-    // _registeredDeviceId = Device().deviceID ?? Uuid().v4().toString();
-    //   else
 
     print('deviceId = $deviceId - _registeredDeviceId = $_registeredDeviceId');
 

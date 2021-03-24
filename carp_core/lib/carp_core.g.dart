@@ -11,13 +11,11 @@ DataPoint _$DataPointFromJson(Map<String, dynamic> json) {
     json['carp_header'] == null
         ? null
         : DataPointHeader.fromJson(json['carp_header'] as Map<String, dynamic>),
-    json['carp_body'] == null
-        ? null
-        : Data.fromJson(json['carp_body'] as Map<String, dynamic>),
   )
     ..id = json['id'] as int
     ..createdByUserId = json['created_by_user_id'] as int
-    ..studyId = json['study_id'] as String;
+    ..studyId = json['study_id'] as String
+    ..carpBody = json['carp_body'] as Map<String, dynamic>;
 }
 
 Map<String, dynamic> _$DataPointToJson(DataPoint instance) {
@@ -409,6 +407,25 @@ Map<String, dynamic> _$DeploymentServiceRequestToJson(
     <String, dynamic>{
       r'$type': instance.$type,
       'studyDeploymentId': instance.studyDeploymentId,
+    };
+
+CreateStudyDeployment _$CreateStudyDeploymentFromJson(
+    Map<String, dynamic> json) {
+  return CreateStudyDeployment(
+    json['protocol'] == null
+        ? null
+        : StudyProtocol.fromJson(json['protocol'] as Map<String, dynamic>),
+  )
+    ..$type = json[r'$type'] as String
+    ..studyDeploymentId = json['studyDeploymentId'] as String;
+}
+
+Map<String, dynamic> _$CreateStudyDeploymentToJson(
+        CreateStudyDeployment instance) =>
+    <String, dynamic>{
+      r'$type': instance.$type,
+      'studyDeploymentId': instance.studyDeploymentId,
+      'protocol': instance.protocol,
     };
 
 GetStudyDeploymentStatus _$GetStudyDeploymentStatusFromJson(

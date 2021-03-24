@@ -7,31 +7,6 @@
 
 part of audio;
 
-/// Specify the configuration on how to collect an audio recording.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class AudioMeasure extends CAMSMeasure {
-  static const String DEFAULT_STUDY_ID = 'default_study';
-
-  /// The study id for the study recording this audio. Needed for
-  /// storing the audio file correctly in the device's file system.
-  /// If no [studyId] is provide, `default_study` will be used as the default id.
-  String studyId = DEFAULT_STUDY_ID;
-
-  AudioMeasure({
-    @required String type,
-    String name,
-    bool enabled = true,
-    this.studyId = DEFAULT_STUDY_ID,
-  }) : super(type: type, name: name, enabled: enabled);
-
-  Function get fromJsonFunction => _$AudioMeasureFromJson;
-  factory AudioMeasure.fromJson(Map<String, dynamic> json) => FromJsonFactory()
-      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
-  Map<String, dynamic> toJson() => _$AudioMeasureToJson(this);
-
-  String toString() => super.toString() + ', studyId: $studyId';
-}
-
 /// Specify how to collect noise data, including setting the
 /// [frequency], [duration], and [samplingRate] for collecting audio.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)

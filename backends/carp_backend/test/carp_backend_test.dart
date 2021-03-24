@@ -1,9 +1,8 @@
 import 'dart:convert';
 
-import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
-import 'package:carp_webservices/carp_domain/carp_domain.dart';
-import 'package:carp_webservices/carp_service/carp_service.dart';
+import 'package:carp_webservices/carp_services/carp_services.dart';
 import 'package:test/test.dart';
 import 'package:carp_backend/carp_backend.dart';
 
@@ -15,7 +14,7 @@ String _encode(Object object) =>
 void main() {
   CarpApp app;
   CarpUser user;
-  CarpStudyManager manager = CarpStudyManager();
+  CarpStudyProtocolManager manager = CarpStudyProtocolManager();
 
   /// Setup CARP and authenticate.
   /// Runs once before all tests.
@@ -119,9 +118,9 @@ void main() {
     }, skip: false);
   }, skip: true);
 
-  group("Study Manager", () {
-    test('- get study', () async {
-      Study study = await manager.getStudy(testDeploymentId);
+  group("Study Protocol Manager", () {
+    test('- get study protocol', () async {
+      StudyProtocol study = await manager.getStudyProtocol(testDeploymentId);
       print('study: $study');
       print(_encode(study));
     }, skip: false);

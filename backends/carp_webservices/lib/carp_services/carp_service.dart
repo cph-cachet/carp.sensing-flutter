@@ -5,48 +5,13 @@
  * found in the LICENSE file.
  */
 
-library carp_services;
-
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-import 'dart:math';
-
-import 'package:carp_webservices/carp_auth/carp_auth.dart';
-import 'package:http/http.dart' as http;
-import 'package:http_parser/http_parser.dart';
-import 'package:meta/meta.dart';
-import 'package:retry/retry.dart';
-import 'package:uuid/uuid.dart';
-import 'package:flutter/material.dart';
-import 'package:form_field_validator/form_field_validator.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
-
-import 'package:carp_core/carp_core.dart';
-import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
-
-part 'carp_app.dart';
-part 'carp_tasks.dart';
-part 'consent_document.dart';
-part 'datapoint_reference.dart';
-part 'deployment_reference.dart';
-part 'participation_reference.dart';
-part 'document_reference.dart';
-part 'file_reference.dart';
-part 'http_retry.dart';
-part 'push_id_generator.dart';
-part 'authentication_form.dart';
-part 'authentication_dialog.dart';
-part 'invitations_dialog.dart';
-
-String _encode(Object object) =>
-    const JsonEncoder.withIndent(' ').convert(object);
+part of carp_services;
 
 /// Provide access to a CARP web service endpoint.
 ///
 /// The (current) assumption is that each Flutter app (using this library) will only connect
 /// to one CARP web service backend.
-/// Therefore all `CarpService` classes are a singleton and should be used like:
+/// Therefore the `CarpService` class is a singleton and should be used like:
 ///
 /// ```dart
 ///   CarpService().configure(myApp);
@@ -572,7 +537,7 @@ class CarpService {
   }
 
   // --------------------------------------------------------------------------
-  // STUDY DEPLOYMENTS
+  // STUDY DEPLOYMENT REQUESTS
   // --------------------------------------------------------------------------
 
   /// The URL for the deployment endpoint.
@@ -586,6 +551,31 @@ class CarpService {
   /// specified in the [CarpApp] is used.
   DeploymentReference deployment([String studyDeploymentId]) =>
       DeploymentReference._(this, studyDeploymentId);
+
+  /// Deploy the [protocol] at this carp service.
+  Future<StudyDeploymentStatus> createStudyDeployment(
+      StudyProtocol protocol) async {
+    assert(protocol != null, 'Cannot deploy a null study protocol.');
+
+    final String body = _encode(CreateStudyDeployment(protocol).toJson());
+
+    debug('REQUEST: $deploymentRPCEndpointUri\n$body');
+    http.Response response = await httpr.post(
+        Uri.encodeFull(deploymentRPCEndpointUri),
+        headers: headers,
+        body: body);
+    debug('RESPONSE: ${response.statusCode}\n${response.body}');
+
+    Map<String, dynamic> responseJson = json.decode(response.body);
+    if (response.statusCode == HttpStatus.ok)
+      return StudyDeploymentStatus.fromJson(responseJson);
+
+    // All other cases are treated as an error.
+    throw CarpServiceException(
+      httpStatus: HTTPStatus(response.statusCode, response.reasonPhrase),
+      message: responseJson["message"],
+    );
+  }
 
   // --------------------------------------------------------------------------
   // PARTICIPATION SERVICE REQUESTS
@@ -731,55 +721,4 @@ abstract class CarpReference {
       "cache-control": "no-cache"
     };
   }
-}
-
-/// Exception for CARP REST/HTTP service communication.
-class CarpServiceException implements Exception {
-  HTTPStatus httpStatus;
-  String message;
-
-  CarpServiceException({this.httpStatus, this.message});
-
-  String toString() =>
-      "CarpServiceException: ${(httpStatus != null) ? httpStatus.toString() + " - " : ""} ${message ?? ""}";
-}
-
-/// Implements HTTP Response Code and associated Reason Phrase.
-/// See https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-class HTTPStatus {
-  /// Mapping of the most common HTTP status code to text.
-  /// See https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-  static const Map<String, String> httpStatusPhrases = {
-    "100": "Continue",
-    "200": "OK",
-    "201": "Created",
-    "202": "Accepted",
-    "300": "Multiple Choices",
-    "301": "Moved Permanently",
-    "400": "Bad Request",
-    "401": "Unauthorized",
-    "402": "Payment Required",
-    "403": "Forbidden",
-    "404": "Not Found",
-    "405": "Method Not Allowed",
-    "408": "Request Timeout",
-    "409": "Conflict",
-    "410": "Gone",
-    "500": "Internal Server Error",
-    "501": "Not Implemented",
-    "502": "Bad Gateway",
-    "503": "Service Unavailable",
-    "504": "Gateway Timeout",
-    "505": "HTTP Version Not Supported",
-  };
-
-  int httpResponseCode;
-  String httpReasonPhrase;
-
-  HTTPStatus(this.httpResponseCode, [String httpPhrase]) {
-    if ((httpPhrase == null) || (httpPhrase.length == 0))
-      this.httpReasonPhrase = httpStatusPhrases[httpResponseCode.toString()];
-  }
-
-  String toString() => "$httpResponseCode $httpReasonPhrase";
 }

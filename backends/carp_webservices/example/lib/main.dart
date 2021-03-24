@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:carp_webservices/carp_service/carp_service.dart';
+import 'package:carp_webservices/carp_services/carp_services.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_core/carp_core.dart';
 

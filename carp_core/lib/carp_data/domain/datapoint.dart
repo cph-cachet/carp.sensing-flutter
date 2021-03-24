@@ -67,16 +67,33 @@ class DataPoint {
   DataPointHeader carpHeader;
 
   /// The CARP data point body. Can be any payload modelled as a [Data].
-  Data carpBody;
+  @JsonKey(ignore: true)
+  Data data;
+
+  Map<String, dynamic> _carpBody;
+
+  /// The CARP data point body. Can be any JSON payload.
+  ///
+  /// When this data point is created locally on the phone, the [carpBody] is
+  /// a json serialization of [data].
+  /// If this data point is deserialized from json, the [carpBody] is the raw
+  /// json.
+  ///
+  /// Note that we do *not* support type/schema checking in this data pay load.
+  /// CARP allow for any json formatted data to be uploaded and stored.
+  Map<String, dynamic> get carpBody =>
+      (data != null) ? data.toJson() : _carpBody;
+
+  set carpBody(Map<String, dynamic> data) => _carpBody = data;
 
   /// Create a new [DataPoint].
-  DataPoint(this.carpHeader, this.carpBody);
+  DataPoint([this.carpHeader, this.data]);
 
   /// Create a [DataPoint] from a [Data].
   factory DataPoint.fromData(Data data) => DataPoint(
       DataPointHeader(
         dataFormat: data.format,
-        startTime: DateTime.now(),
+        startTime: DateTime.now().toUtc(),
       ),
       data);
 

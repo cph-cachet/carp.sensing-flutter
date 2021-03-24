@@ -140,14 +140,13 @@ void example_2() async {
 
   // listen only on CARP events
   controller.data
-      .where(
-          (dataPoint) => dataPoint.carpBody.format.namespace == NameSpace.CARP)
+      .where((dataPoint) => dataPoint.data.format.namespace == NameSpace.CARP)
       .listen((event) => print(event));
 
   // listen on LIGHT events only
   controller.data
       .where((dataPoint) =>
-          dataPoint.carpBody.format.toString() == SensorSamplingPackage.LIGHT)
+          dataPoint.data.format.toString() == SensorSamplingPackage.LIGHT)
       .listen((event) => print(event));
 
   // map events to JSON and then print

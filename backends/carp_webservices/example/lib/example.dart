@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
-import 'package:carp_webservices/carp_service/carp_service.dart';
+import 'package:carp_webservices/carp_services/carp_services.dart';
 import 'package:carp_core/carp_core.dart';
 
 void main() async {
@@ -30,6 +30,7 @@ void main() async {
   );
 
   protocol..addMasterDevice(phone);
+
   app = CarpApp(
     name: 'any_display_friendly_name_is_fine',
     uri: Uri.parse(uri),

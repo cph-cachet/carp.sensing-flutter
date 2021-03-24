@@ -28,17 +28,12 @@ part of audio;
 class AudioProbe extends DatumProbe {
   static const String AUDIO_FILE_PATH = 'audio';
 
-  String studyId;
-  String soundFileName;
   String _path;
   bool _isRecording = false;
   DateTime _startRecordingTime, _endRecordingTime;
+  AudioDatum _datum;
 
-  void onInitialize(Measure measure) {
-    assert(measure is AudioMeasure);
-    super.onInitialize(measure);
-    this.studyId = (measure as AudioMeasure).studyId;
-  }
+  String soundFileName;
 
   Future onResume() async {
     soundFileName = await _startAudioRecording();
@@ -68,8 +63,12 @@ class AudioProbe extends DatumProbe {
           'Trying to start audio recording, but recording is already running. '
           'Make sure to pause this audio probe before resuming it.');
     } else {
+      _datum = AudioDatum();
       soundFileName = await filePath;
       _startRecordingTime = DateTime.now();
+      _datum
+        ..filename = soundFileName.split("/").last
+        ..startRecordingTime = _startRecordingTime;
       _isRecording = true;
       RecordMp3.instance.start(
           soundFileName,
@@ -85,14 +84,8 @@ class AudioProbe extends DatumProbe {
     RecordMp3.instance.stop();
   }
 
-  Future<Datum> getDatum() async {
-    return (soundFileName != null)
-        ? AudioDatum(
-            filename: soundFileName.split("/").last,
-            startRecordingTime: _startRecordingTime,
-            endRecordingTime: _endRecordingTime)
-        : null;
-  }
+  Future<Datum> getDatum() async =>
+      _datum..endRecordingTime = _endRecordingTime;
 
   /// Returns the local path on the device where sound files can be stored.
   /// Creates the directory, if not existing.
@@ -102,7 +95,7 @@ class AudioProbe extends DatumProbe {
       final localApplicationDir = await getApplicationDocumentsDirectory();
       // create a sub-directory for sound files
       final directory = await Directory(
-              '${localApplicationDir.path}/${FileDataManager.CARP_FILE_PATH}/$studyId/$AUDIO_FILE_PATH')
+              '${localApplicationDir.path}/${FileDataManager.CARP_FILE_PATH}/$AUDIO_FILE_PATH')
           .create(recursive: true);
 
       _path = directory.path;
@@ -111,20 +104,8 @@ class AudioProbe extends DatumProbe {
   }
 
   /// Returns the  filename of the sound file.
-  /// The filename format is
-  ///    * Android : `audio-yyyy-mm-dd-hh-mm-ss-ms.mp4`
-  ///    * iOS : `audio-yyyy-mm-dd-hh-mm-ss-ms.m4a`
-  String get filename {
-    String created = DateTime
-        .now()
-        .toString()
-        .replaceAll(" ", "-")
-        .replaceAll(":", "-")
-        .replaceAll("_", "-")
-        .replaceAll(".", "-");
-    String type = 'mp3';
-    return 'audio-$created.$type';
-  }
+  /// The file is named by the unique id (uuid) of the [AudioDatum]
+  String get filename => '${_datum.id}.mp3';
 
   /// Returns the full file path to the sound file.
   Future<String> get filePath async {

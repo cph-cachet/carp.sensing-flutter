@@ -37,11 +37,11 @@ class StudyDeploymentController {
   /// This is a broadcast stream and supports multiple subscribers.
   Stream<DataPoint> get data => _data ??= executor.data.map((dataPoint) =>
       dataPoint
-        ..carpBody = transformer(TransformerSchemaRegistry()
+        ..data = transformer(TransformerSchemaRegistry()
             .lookup(deployment.dataFormat)
             .transform(TransformerSchemaRegistry()
                 .lookup(privacySchemaName)
-                .transform(dataPoint.carpBody))));
+                .transform(dataPoint.data))));
 
   /// The stream of state events for this controller.
   Stream<StudyDeploymentControllerState> get stateEvents =>

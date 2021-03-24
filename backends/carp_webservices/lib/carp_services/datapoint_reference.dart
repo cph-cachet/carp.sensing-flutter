@@ -87,10 +87,12 @@ class DataPointReference extends CarpReference {
   Future<DataPoint> getDataPoint(int id) async {
     String url = "$dataEndpointUri/$id";
     final restHeaders = await headers;
+    // print('REQUEST: $url');
 
     // GET the data point from the CARP web service
     http.Response response =
         await httpr.get(Uri.encodeFull(url), headers: restHeaders);
+    // print('RESPONSE: ${response.statusCode}}\n${response.body}');
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);

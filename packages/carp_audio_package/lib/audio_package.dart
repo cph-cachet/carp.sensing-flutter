@@ -37,7 +37,6 @@ class AudioSamplingPackage extends SmartphoneSamplingPackage {
   }
 
   void onRegister() {
-    FromJsonFactory().register(AudioMeasure(type: null));
     FromJsonFactory().register(NoiseMeasure(type: null));
   }
 
@@ -50,7 +49,7 @@ class AudioSamplingPackage extends SmartphoneSamplingPackage {
     ..measures.addEntries([
       MapEntry(
           AUDIO,
-          AudioMeasure(
+          CAMSMeasure(
             type: AUDIO,
             name: 'Audio Recording',
             enabled: true,
@@ -70,7 +69,7 @@ class AudioSamplingPackage extends SmartphoneSamplingPackage {
     SamplingSchema light = common
       ..type = SamplingSchemaType.light
       ..name = 'Light context sampling';
-    (light.measures[AUDIO] as AudioMeasure).enabled = false;
+    (light.measures[AUDIO] as CAMSMeasure).enabled = false;
     return light;
   }
 
@@ -88,7 +87,7 @@ class AudioSamplingPackage extends SmartphoneSamplingPackage {
     ..type = SamplingSchemaType.debug
     ..name = 'Debugging audio sampling schema'
     ..powerAware = false
-    ..measures[AUDIO] = AudioMeasure(
+    ..measures[AUDIO] = CAMSMeasure(
       type: AUDIO,
       name: 'Audio Recording',
       enabled: true,
