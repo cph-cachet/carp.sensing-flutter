@@ -37,7 +37,7 @@ void main() {
   /// Runs once after all tests.
   tearDownAll(() {});
 
-  group("Deployment", () {
+  group("Base services", () {
     test('- authentication', () async {
       print('CarpService : ${CarpService().app}');
       print(" - signed in as: $user");
@@ -48,15 +48,64 @@ void main() {
       String id = CarpService().deployment().registeredDeviceId;
       print('Registered Device ID : $id');
     }, skip: false);
+  });
 
-    test('- get invitations for this account (user)', () async {
-      List<ActiveParticipationInvitation> invitations =
-          await CarpService().invitations();
-      invitations.forEach((invitation) => print(invitation));
-      assert(invitations.length > 0);
-      print(_encode(invitations));
-    }, skip: false);
+  group("Participation - deployment id: $testDeploymentId", () {
+    test(
+      '- get invitations for this account (user)',
+      () async {
+        List<ActiveParticipationInvitation> invitations =
+            await CarpService().invitations();
+        invitations.forEach((invitation) => print(invitation));
+        assert(invitations.length > 0);
+        print(_encode(invitations));
+      },
+      skip: false,
+    );
 
+    test(
+      '- get participant data',
+      () async {
+        ParticipationReference participation =
+            CarpService().participation(testDeploymentId);
+
+        ParticipantData data = await participation.getParticipantData();
+        print(_encode(data));
+        assert(data != null);
+      },
+      skip: false,
+    );
+
+    test(
+      '- set participant data',
+      () async {
+        ParticipationReference participation =
+            CarpService().participation(testDeploymentId);
+
+        ParticipantData data_1 = ParticipantData(
+          studyDeploymentId: testDeploymentId,
+          data: {'name': 'Ole Pedersen'},
+        );
+
+        print(_encode(data_1));
+
+        ParticipantData data_2 = await participation.setParticipantData(
+          'dk.cachet.carp.input.name',
+          data_1,
+        );
+        print(_encode(data_2));
+
+        // expect();
+
+        // ParticipantData data = await participation.getParticipantData();
+        // print(_encode(data));
+        // assert(data != null);
+      },
+      skip: false,
+    );
+  });
+
+  group("Deployment", () {
     test('- get deployment status', () async {
       StudyDeploymentStatus status =
           await CarpService().deployment().getStatus();

@@ -319,6 +319,28 @@ Map<String, dynamic> _$ParticipantDataToJson(ParticipantData instance) {
   return val;
 }
 
+EmailAccountIdentity _$EmailAccountIdentityFromJson(Map<String, dynamic> json) {
+  return EmailAccountIdentity(
+    json['emailAddress'] as String,
+  )..$type = json[r'$type'] as String;
+}
+
+Map<String, dynamic> _$EmailAccountIdentityToJson(
+    EmailAccountIdentity instance) {
+  final val = <String, dynamic>{
+    r'$type': instance.$type,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('emailAddress', instance.emailAddress);
+  return val;
+}
+
 Participation _$ParticipationFromJson(Map<String, dynamic> json) {
   return Participation()
     ..studyDeploymentId = json['studyDeploymentId'] as String

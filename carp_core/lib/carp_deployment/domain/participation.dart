@@ -26,3 +26,23 @@ class ParticipantData {
 
   String toString() => '$runtimeType - studyDeploymentId: $studyDeploymentId';
 }
+
+/// Identifies an [Account].
+abstract class AccountIdentity extends Serializable {
+  String get jsonType => 'dk.cachet.carp.common.users.$runtimeType';
+}
+
+/// Identifies an [AccountIdentity] using an email adress.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class EmailAccountIdentity extends AccountIdentity {
+  String emailAddress;
+  EmailAccountIdentity([this.emailAddress]);
+
+  Function get fromJsonFunction => _$EmailAccountIdentityToJson;
+  factory EmailAccountIdentity.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$EmailAccountIdentityToJson(this);
+
+  String toString() => '$runtimeType - emailAddress: $emailAddress';
+}

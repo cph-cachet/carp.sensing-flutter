@@ -58,7 +58,7 @@ class GetParticipantData extends ParticipationServiceRequest {
   Map<String, dynamic> toJson() => _$GetParticipantDataToJson(this);
 }
 
-/// A request for getting the status of a study deployment.
+/// A request for getting the list of partication data for this a study deployment.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class GetParticipantDataList extends ParticipationServiceRequest {
   GetParticipantDataList(String studyDeploymentId) : super(studyDeploymentId);

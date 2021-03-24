@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2021 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -11,11 +11,8 @@ part of carp_services;
 /// According to CARP core, the protocol for using the
 /// [deployment sub-system](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-deployment.md) is:
 ///
-///   - [status()] - get the study deployment status of this deployment.
-///   - [registerDevice()] - register this device - and associated devices - in this deployment
-///   - [get()] - get the deployment for this master device
-///   - [success()] - report the deployment as successful
-///   - [unRegisterDevice()] - unregister this - or other - device if no longer used
+///   - [getParticipantData()] - get participation data from this deployment.
+///   - [setParticipantData()] - set participation data in this deployment
 class ParticipationReference extends CarpReference {
   String _studyDeploymentId;
 
@@ -58,8 +55,8 @@ class ParticipationReference extends CarpReference {
     );
   }
 
-  /// Get currently set data for all expected participant data in this study deployment
-  /// with [studyDeploymentId].
+  /// Get currently set data for all expected participant data in this study
+  /// deployment with [studyDeploymentId].
   /// Data which is not set equals null.
   Future<ParticipantData> getParticipantData() async {
     ParticipantData data = ParticipantData.fromJson(

@@ -20,7 +20,7 @@ abstract class ParticipationService {
   /// An [invitation] (and account details) is delivered to the person managing
   /// the [identity], or should be handed out manually to the relevant participant
   /// by the person managing the specified [identity].
-  Participation addParticipation(
+  Future<Participation> addParticipation(
     String studyDeploymentId,
     Set<String> assignedMasterDeviceRoleNames,
     AccountIdentity identity,
@@ -29,32 +29,28 @@ abstract class ParticipationService {
 
   /// Get all participations of active study deployments the account with the
   /// given [accountId] has been invited to.
-  Set<ActiveParticipationInvitation> getActiveParticipationInvitations(
+  Future<Set<ActiveParticipationInvitation>> getActiveParticipationInvitations(
       String accountId);
 
   /// Get currently set data for all expected participant data in the study
   /// deployment with [studyDeploymentId].
   /// Data which is not set equals null.
-  ParticipantData getParticipantData(String studyDeploymentId);
+  Future<ParticipantData> getParticipantData(String studyDeploymentId);
 
   /// Get currently set data for all expected participant data for a set of study
   /// deployments with [studyDeploymentIds].
   /// Data which is not set equals null.
-  List<ParticipantData> getParticipantDataList(Set<String> studyDeploymentIds);
+  Future<List<ParticipantData>> getParticipantDataList(
+      Set<String> studyDeploymentIds);
 
   /// Set participant [data] for the given [inputDataType] in the study deployment
   /// with [studyDeploymentId].
   ///
   /// Returns all data for the specified study deployment, including the newly
   /// set data.
-  ParticipantData setParticipantData(
+  Future<ParticipantData> setParticipantData(
     String studyDeploymentId,
     String inputDataType,
-    Data data,
+    ParticipantData data,
   );
-}
-
-class AccountIdentity {
-  String emailAddress;
-  AccountIdentity(this.emailAddress);
 }
