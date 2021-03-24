@@ -30,6 +30,10 @@ class CAMSStudyProtocol extends StudyProtocol {
   /// and purpose of this study protocol organized according to language locales.
   Map<String, StudyProtocolDescription> protocolDescription = {};
 
+  /// The informed consent to be show to the user as a list of [ConsentSection]
+  /// sections. Mapped according to the language locale.
+  Map<String, List<ConsentSection>> consent = {};
+
   /// The owner of this study.
   ProtocolOwner owner;
 
@@ -68,6 +72,9 @@ class CAMSStudyProtocol extends StudyProtocol {
   StudyProtocolDescription getDescription(String key) =>
       protocolDescription[key];
 
+  /// Get the list of [ConsentSection] sections for a language locale.
+  List<ConsentSection> getInformedConsent(String key) => consent[key];
+
   Function get fromJsonFunction => _$CAMSStudyProtocolFromJson;
   factory CAMSStudyProtocol.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory()
@@ -99,6 +106,32 @@ class StudyProtocolDescription extends Serializable {
 
   String toString() =>
       '$runtimeType - title: $title, description: $description';
+}
+
+/// A content section in the informed consent flow.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class ConsentSection extends Serializable {
+  /// The type of the section.
+  String type;
+
+  /// The title of the consent section.
+  String title;
+
+  /// A short summary of the section.
+  String summary;
+
+  /// A longer content text of the section.
+  String content;
+
+  ConsentSection({this.type, this.title, this.summary, this.content});
+
+  Function get fromJsonFunction => _$ConsentSectionFromJson;
+  factory ConsentSection.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$ConsentSectionToJson(this);
+
+  String toString() => '$runtimeType - title: $title, summary: $summary';
 }
 
 /// Specify an endpoint where a [DataManager] can upload data.

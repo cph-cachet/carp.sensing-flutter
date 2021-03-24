@@ -9,10 +9,10 @@ part of domain;
 CAMSStudyProtocol _$CAMSStudyProtocolFromJson(Map<String, dynamic> json) {
   return CAMSStudyProtocol(
     studyId: json['studyId'] as String,
+    name: json['name'] as String,
     owner: json['owner'] == null
         ? null
         : ProtocolOwner.fromJson(json['owner'] as Map<String, dynamic>),
-    name: json['name'] as String,
     protocolDescription:
         (json['protocolDescription'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(
@@ -27,6 +27,7 @@ CAMSStudyProtocol _$CAMSStudyProtocolFromJson(Map<String, dynamic> json) {
     dataFormat: json['dataFormat'] as String,
   )
     ..$type = json[r'$type'] as String
+    ..description = json['description'] as String
     ..masterDevices = (json['masterDevices'] as List)
         ?.map((e) => e == null
             ? null
@@ -50,8 +51,7 @@ CAMSStudyProtocol _$CAMSStudyProtocolFromJson(Map<String, dynamic> json) {
         ?.map((e) => e == null
             ? null
             : TriggeredTask.fromJson(e as Map<String, dynamic>))
-        ?.toList()
-    ..description = json['description'] as String;
+        ?.toList();
 }
 
 Map<String, dynamic> _$CAMSStudyProtocolToJson(CAMSStudyProtocol instance) {
@@ -65,6 +65,7 @@ Map<String, dynamic> _$CAMSStudyProtocolToJson(CAMSStudyProtocol instance) {
 
   writeNotNull(r'$type', instance.$type);
   writeNotNull('name', instance.name);
+  writeNotNull('description', instance.description);
   writeNotNull('masterDevices', instance.masterDevices);
   writeNotNull('connectedDevices', instance.connectedDevices);
   writeNotNull('triggers', instance.triggers);
@@ -75,7 +76,6 @@ Map<String, dynamic> _$CAMSStudyProtocolToJson(CAMSStudyProtocol instance) {
   writeNotNull('owner', instance.owner);
   writeNotNull('dataEndPoint', instance.dataEndPoint);
   writeNotNull('dataFormat', instance.dataFormat);
-  writeNotNull('description', instance.description);
   return val;
 }
 
@@ -102,6 +102,32 @@ Map<String, dynamic> _$StudyProtocolDescriptionToJson(
   writeNotNull('title', instance.title);
   writeNotNull('description', instance.description);
   writeNotNull('purpose', instance.purpose);
+  return val;
+}
+
+ConsentSection _$ConsentSectionFromJson(Map<String, dynamic> json) {
+  return ConsentSection(
+    type: json['type'] as String,
+    title: json['title'] as String,
+    summary: json['summary'] as String,
+    content: json['content'] as String,
+  )..$type = json[r'$type'] as String;
+}
+
+Map<String, dynamic> _$ConsentSectionToJson(ConsentSection instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(r'$type', instance.$type);
+  writeNotNull('type', instance.type);
+  writeNotNull('title', instance.title);
+  writeNotNull('summary', instance.summary);
+  writeNotNull('content', instance.content);
   return val;
 }
 
