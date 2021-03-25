@@ -33,6 +33,7 @@ part 'movisens_probe.dart';
 part 'movisens_package.dart';
 part "movisens.g.dart";
 part 'movisens_transformers.dart';
+part 'movisens_device_manager.dart';
 
 // auto generate json code (.g files) with:
 //   flutter pub run build_runner build --delete-conflicting-outputs

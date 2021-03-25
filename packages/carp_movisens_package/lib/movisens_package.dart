@@ -7,7 +7,7 @@
 part of movisens;
 
 /// The Movisens sampling package
-class MovisensSamplingPackage extends SmartphoneSamplingPackage {
+class MovisensSamplingPackage implements SamplingPackage {
   static const String MOVISENS_DEVICE_TYPE = 'esense';
   static const String MOVISENS = "${NameSpace.CARP}.movisens";
 
@@ -40,6 +40,9 @@ class MovisensSamplingPackage extends SmartphoneSamplingPackage {
           OMHStepCountDatum.transformer,
         );
   }
+
+  String get deviceType => MOVISENS_DEVICE_TYPE;
+  DeviceManager get deviceManager => MovisensDeviceManager();
 
   List<Permission> get permissions => []; // no special permissions needed
 

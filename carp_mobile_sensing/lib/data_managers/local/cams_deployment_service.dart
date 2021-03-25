@@ -54,7 +54,6 @@ class CAMSDeploymentService implements DeploymentService {
           String studyDeploymentId) async =>
       _repository[studyDeploymentId]?.status;
 
-  @override
   Future<StudyDeploymentStatus> registerDevice(String studyDeploymentId,
       String deviceRoleName, DeviceRegistration registration) async {
     StudyDeployment deployment = _repository[studyDeploymentId];
@@ -72,7 +71,6 @@ class CAMSDeploymentService implements DeploymentService {
     return deployment.status;
   }
 
-  @override
   Future<StudyDeploymentStatus> unregisterDevice(
       String studyDeploymentId, String deviceRoleName) async {
     StudyDeployment deployment = _repository[studyDeploymentId];
@@ -86,12 +84,10 @@ class CAMSDeploymentService implements DeploymentService {
 
   /// Get a deployment configuration for a master device with
   /// [studyDeploymentId].
-  ///
-  /// If [masterDeviceRoleName] is `null` then [DEFAULT_MASTER_DEVICE_ROLENAME]
-  /// is used.
-  @override
   Future<CAMSMasterDeviceDeployment> getDeviceDeploymentFor(
-      String studyDeploymentId, String masterDeviceRoleName) async {
+    String studyDeploymentId,
+    String masterDeviceRoleName,
+  ) async {
     StudyDeployment deployment = _repository[studyDeploymentId];
     DeviceDescriptor device = deployment.registeredDevices.keys.firstWhere(
         (descriptor) => descriptor.roleName == masterDeviceRoleName);
@@ -125,7 +121,6 @@ class CAMSDeploymentService implements DeploymentService {
       await getDeviceDeploymentFor(
           studyDeploymentId, DEFAULT_MASTER_DEVICE_ROLENAME);
 
-  @override
   Future<StudyDeploymentStatus> deploymentSuccessfulFor(
     String studyDeploymentId,
     String masterDeviceRoleName, {
@@ -161,7 +156,7 @@ class CAMSDeploymentService implements DeploymentService {
         deviceDeploymentLastUpdateDate: deviceDeploymentLastUpdateDate,
       );
 
-  @override
+  /// Stop the study deployment with [studyDeploymentId].
   Future<StudyDeploymentStatus> stop(String studyDeploymentId) async {
     StudyDeployment deployment = _repository[studyDeploymentId];
     deployment.stop();

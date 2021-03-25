@@ -37,9 +37,7 @@ class ESenseSamplingPackage implements SamplingPackage {
 
   List<Permission> get permissions =>
       [Permission.location, Permission.microphone];
-
   String get deviceType => ESENSE_DEVICE_TYPE;
-
   DeviceManager get deviceManager => ESenseDeviceManager();
 
   // Since the configuration of the eSense devices require the device name

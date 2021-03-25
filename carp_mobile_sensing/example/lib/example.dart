@@ -77,7 +77,6 @@ void example_1() async {
 /// This is a more elaborate example used in the README.md file.
 void example_2() async {
   // Create a study using a local file to store data
-  // Create a study using a local file to store data
   CAMSStudyProtocol protocol = CAMSStudyProtocol()
     ..name = 'Track patient movement'
     ..owner = ProtocolOwner(
@@ -192,6 +191,43 @@ void example_2() async {
   // note that once a sampling has stopped, it cannot be restarted.
   controller.stop();
   subscription.cancel();
+}
+
+/// Example of device management.
+void example_3() async {
+  // in this example we assume that the protocol has been deployed
+  // (e.g. to the CARP server) and that we get it from there.
+
+  // the study deployment id is obtained from an invitation
+  String studyDeploymentId = '2938y4h-rfhklwe98-erhui';
+
+  // register available devices, starting with the phone itself
+  String type = SmartphoneSamplingPackage.SMARTPHONE_DEVICE_TYPE;
+  DeviceRegistry().registerDevice(type);
+  String deviceId = DeviceRegistry().devices[type].id;
+  DeviceRegistration registration = DeviceRegistration(deviceId);
+  // (all of the above can actually be handled directly by the CAMSDeploymentService.registerDevice() method)
+
+  // register devices available on this phone.... BUT
+  //  * how do I know the deviceRoleName?
+  //  * I don't have access to the protocol or deployment (yet)
+  //  * but I need to register devices before I can get the deployment for them?????
+  CAMSDeploymentService()
+      .registerDevice(studyDeploymentId, deviceRoleName, registration);
+
+  // get the study deployment for this master device and its registered devices
+  CAMSMasterDeviceDeployment deployment =
+      await CAMSDeploymentService().getDeviceDeployment(studyDeploymentId);
+
+  // Create a study deployment controller that can manage this deployment
+  StudyDeploymentController controller = StudyDeploymentController(deployment);
+
+  // initialize the controller and resume sampling
+  await controller.initialize();
+  controller.resume();
+
+  // listening to the stream of all data events from the controller
+  controller.data.listen((dataPoint) => print(dataPoint));
 }
 
 /// An example of how to use the [SamplingSchema] model.

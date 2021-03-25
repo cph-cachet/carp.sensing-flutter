@@ -83,8 +83,8 @@ void main() {
     MovisensHRDatum hr = MovisensHRDatum()..hr = '78';
 
     DataPoint dp_1 = DataPoint.fromData(hr);
-    expect(
-        dp_1.carpHeader.dataFormat.namespace, MovisensSamplingPackage.MOVISENS);
+    expect(dp_1.carpHeader.dataFormat.namespace,
+        MovisensSamplingPackage.MOVISENS_NAMESPACE);
     print(_encode(dp_1));
 
     OMHHeartRateDatum omhSteps =
@@ -100,8 +100,8 @@ void main() {
     steps..movisensTimestamp = DateTime.now().toUtc().toString();
 
     DataPoint dp_1 = DataPoint.fromData(steps);
-    expect(
-        dp_1.carpHeader.dataFormat.namespace, MovisensSamplingPackage.MOVISENS);
+    expect(dp_1.carpHeader.dataFormat.namespace,
+        MovisensSamplingPackage.MOVISENS_NAMESPACE);
     print(_encode(dp_1));
 
     OMHStepCountDatum omhSteps =

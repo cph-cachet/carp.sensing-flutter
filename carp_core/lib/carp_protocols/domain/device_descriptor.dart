@@ -17,8 +17,7 @@ class DeviceDescriptor extends Serializable {
     this.roleName,
     this.isMasterDevice = false,
     this.supportedDataTypes,
-  })
-      : super();
+  }) : super();
 
   /// Is this the master device?
   bool isMasterDevice;
@@ -27,7 +26,7 @@ class DeviceDescriptor extends Serializable {
   /// For example, 'Patient's phone'
   String roleName;
 
-  ///The set of [String]s defining which data can be collected on this device.
+  /// The set of data types which can be collected on this device.
   List<String> supportedDataTypes = [];
 
   /// Sampling configurations for data types available on this device which
@@ -54,8 +53,7 @@ class MasterDeviceDescriptor extends DeviceDescriptor {
     String name,
     String roleName,
     List<String> supportedDataTypes,
-  })
-      : super(
+  }) : super(
           roleName: roleName,
           isMasterDevice: true,
           supportedDataTypes: supportedDataTypes,
@@ -79,8 +77,7 @@ class Smartphone extends MasterDeviceDescriptor {
     String name,
     String roleName,
     List<String> supportedDataTypes,
-  })
-      : super(
+  }) : super(
           deviceType: SMARTPHONE_DEVICE_TYPE,
           name: name,
           roleName: roleName,

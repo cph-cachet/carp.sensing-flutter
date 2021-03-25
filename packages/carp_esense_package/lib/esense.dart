@@ -12,6 +12,7 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 part 'esense_package.dart';
 part 'esense_domain.dart';
 part 'esense_runtime.dart';
+part 'esense_device_manager.dart';
 part 'esense.g.dart';
 
 // auto generate json code (.g files) with:

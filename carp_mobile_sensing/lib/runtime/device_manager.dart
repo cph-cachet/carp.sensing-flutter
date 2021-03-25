@@ -10,6 +10,7 @@ part of runtime;
 /// study configuration.
 class DeviceRegistry {
   static final DeviceRegistry _instance = DeviceRegistry._();
+  final Map<String, DeviceManager> _devices = {};
 
   /// Get the singleton [DeviceRegistry].
   factory DeviceRegistry() => _instance;
@@ -19,41 +20,34 @@ class DeviceRegistry {
   /// Mapped to their device type.
   /// Note that this model entails that only one device of the same
   /// type can be connected to a Device Manager (i.e., phone).
-  final Map<String, DeviceManager> devices = {};
-  MasterDeviceDeployment _deployment;
-  MasterDeviceDeployment get deployment => _deployment;
+  Map<String, DeviceManager> get devices => _devices;
 
-  /// Initialize the device manager by specifying the running [MasterDeviceDeployment].
-  /// and the stream of [DataPoint] events to handle.
-  Future initialize(
-    MasterDeviceDeployment deployment,
-    Stream<DataPoint> data,
-  ) async {
-    _deployment = deployment;
-
-    _deployment.connectedDevices.forEach((device) async {
-      debug('Creating device manager for $device');
-      DeviceManager manager = await create(device.roleName);
-      if (manager == null) {
-        warning('No device manager found for device: $device');
-      } else {
-        info('Initializing device manager: $manager');
-        await manager.initialize(device);
-        devices[device.roleName] = manager;
-      }
-    });
+  // Create and add the device of [type] to the registry.
+  Future registerDevice(String type) async {
+    debug('Creating device manager for device type: $type');
+    DeviceManager manager = await create(type);
+    if (manager == null) {
+      warning('No device manager found for device: $type');
+    } else {
+      info('Initializing device manager: $manager');
+      await manager.initialize(type);
+      devices[type] = manager;
+    }
   }
 
-  /// Create an instance of a device manager based on the device's role.
+  // Remove the device of [type] from the registry.
+  void unregisterDevice(String type) => _devices.remove(type);
+
+  /// Create the device manager based on the device's [type].
   ///
   /// This methods search the [SamplingPackageRegistry] for a [DeviceManager]
-  /// which has a device manager of the specified [roleName].
-  Future<DeviceManager> create(String roleName) async {
+  /// which has a device manager of the specified [type].
+  Future<DeviceManager> create(String type) async {
     DeviceManager _deviceManager;
 
     SamplingPackageRegistry().packages.forEach((package) {
       // match the role name with the device type in a package
-      if (package.deviceType == roleName) {
+      if (package.deviceType == type) {
         _deviceManager = package.deviceManager;
       }
     });
@@ -64,12 +58,15 @@ class DeviceRegistry {
 
 /// A [DeviceManager] handles a device on runtime.
 abstract class DeviceManager {
-  DeviceDescriptor _device;
+  String _type;
   final StreamController<DeviceStatus> _eventController =
       StreamController.broadcast();
 
   /// The stream of status events for this device.
   Stream<DeviceStatus> get deviceEvents => _eventController.stream;
+
+  /// The type of device
+  String get type => _type;
 
   /// A unique runtime id of this device.
   String get id;
@@ -88,17 +85,13 @@ abstract class DeviceManager {
     _eventController.add(newStatus);
   }
 
-  /// The device description for this device as specified in the
-  /// [StudyProtocol] protocol.
-  DeviceDescriptor get descriptor => _device;
-
   /// The runtime battery level of this device.
   int get batteryLevel;
 
-  /// Initialize the device manager by specifying the [DeviceDescriptor].
-  Future initialize(DeviceDescriptor device) async {
-    info('Initializing device manager, descriptor: $_device');
-    _device = device;
+  /// Initialize the device manager by specifying its [type].
+  Future initialize(String type) async {
+    info('Initializing device manager, type: $type');
+    _type = type;
   }
 
   /// Ask this [DeviceManager] to connect to the device.
@@ -111,8 +104,8 @@ abstract class DeviceManager {
 class SmartphoneDeviceManager extends DeviceManager {
   String get id => DeviceInfo().deviceID;
 
-  Future initialize(DeviceDescriptor descriptor) async {
-    await super.initialize(descriptor);
+  Future initialize(String type) async {
+    await super.initialize(type);
     BatteryProbe()
       ..data.listen(
           (datum) => _batteryLevel = (datum as BatteryDatum).batteryLevel)

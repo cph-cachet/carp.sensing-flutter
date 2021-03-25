@@ -64,8 +64,6 @@ class CAMSStudyProtocol extends StudyProtocol {
   }) : super(owner: owner, name: name) {
     registerFromJsonFunctions();
     // studyId ??= Uuid().v1();
-    super.name = name;
-    super.description = description;
   }
 
   /// Get the [StudyProtocolDescription] for a language locale.

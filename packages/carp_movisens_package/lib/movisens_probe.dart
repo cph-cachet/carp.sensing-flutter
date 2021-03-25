@@ -18,8 +18,15 @@ class MovisensProbe extends StreamProbe {
     assert(measure is MovisensMeasure);
     super.onInitialize(measure);
     MovisensMeasure m = measure as MovisensMeasure;
-    _userData = UserData(m.weight, m.height, m.gender, m.age, m.sensorLocation,
-        m.address, m.deviceName);
+    _userData = UserData(
+      m.weight,
+      m.height,
+      m.gender,
+      m.age,
+      m.sensorLocation,
+      m.address,
+      m.deviceName,
+    );
     _movisens = new Movisens(_userData);
   }
 
