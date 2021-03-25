@@ -19,6 +19,10 @@ class DeviceDescriptor extends Serializable {
     this.supportedDataTypes,
   }) : super();
 
+  /// The device type identifier
+  @JsonKey(ignore: true)
+  String get type => jsonType;
+
   /// Is this the master device?
   bool isMasterDevice;
 
@@ -49,7 +53,6 @@ class DeviceDescriptor extends Serializable {
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class MasterDeviceDescriptor extends DeviceDescriptor {
   MasterDeviceDescriptor({
-    String deviceType,
     String name,
     String roleName,
     List<String> supportedDataTypes,
@@ -78,7 +81,6 @@ class Smartphone extends MasterDeviceDescriptor {
     String roleName,
     List<String> supportedDataTypes,
   }) : super(
-          deviceType: SMARTPHONE_DEVICE_TYPE,
           name: name,
           roleName: roleName,
           supportedDataTypes: supportedDataTypes,

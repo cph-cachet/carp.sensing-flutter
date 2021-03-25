@@ -17,12 +17,15 @@ class DeviceRegistry {
   DeviceRegistry._();
 
   /// The list of devices running on this phone as part of a study.
-  /// Mapped to their device type.
+  /// Mapped to the device type.
   /// Note that this model entails that only one device of the same
-  /// type can be connected to a Device Manager (i.e., phone).
+  /// type can be connected to a this phone's device registry.
   Map<String, DeviceManager> get devices => _devices;
 
-  // Create and add the device of [type] to the registry.
+  /// Returns true if the registry contain a device of the given [type].
+  bool hasDevice(String type) => devices.containsKey(type);
+
+  /// Create and add the device of [type] to the registry.
   Future registerDevice(String type) async {
     debug('Creating device manager for device type: $type');
     DeviceManager manager = await create(type);
@@ -45,12 +48,8 @@ class DeviceRegistry {
   Future<DeviceManager> create(String type) async {
     DeviceManager _deviceManager;
 
-    SamplingPackageRegistry().packages.forEach((package) {
-      // match the role name with the device type in a package
-      if (package.deviceType == type) {
-        _deviceManager = package.deviceManager;
-      }
-    });
+    SamplingPackageRegistry().packages.forEach((package) => _deviceManager =
+        (package.deviceType == type) ? package.deviceManager : null);
 
     return _deviceManager;
   }

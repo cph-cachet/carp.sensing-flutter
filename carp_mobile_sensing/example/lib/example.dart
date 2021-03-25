@@ -194,28 +194,47 @@ void example_2() async {
 }
 
 /// Example of device management.
+///
+/// In this example we assume that the protocol has been deployed
+/// (e.g. to the CARP server) and that we get it from there.
+///
+/// The steps involved in this example is then:
+///  * get the study deployment status
+///  * create the devices needed in the protocol
+///  * register the devices which are available
+///  * get the study deployment for this master device
+///  * start the sensing
 void example_3() async {
-  // in this example we assume that the protocol has been deployed
-  // (e.g. to the CARP server) and that we get it from there.
-
-  // the study deployment id is obtained from an invitation
+  // we assume that we know the study deployment id
+  // this might have been obtained from an invitation
   String studyDeploymentId = '2938y4h-rfhklwe98-erhui';
 
-  // register available devices, starting with the phone itself
-  String type = SmartphoneSamplingPackage.SMARTPHONE_DEVICE_TYPE;
-  DeviceRegistry().registerDevice(type);
-  String deviceId = DeviceRegistry().devices[type].id;
-  DeviceRegistration registration = DeviceRegistration(deviceId);
-  // (all of the above can actually be handled directly by the CAMSDeploymentService.registerDevice() method)
+  // get the status of this deployment
+  StudyDeploymentStatus status =
+      await CAMSDeploymentService().getStudyDeploymentStatus(studyDeploymentId);
 
-  // register devices available on this phone.... BUT
-  //  * how do I know the deviceRoleName?
-  //  * I don't have access to the protocol or deployment (yet)
-  //  * but I need to register devices before I can get the deployment for them?????
-  CAMSDeploymentService()
-      .registerDevice(studyDeploymentId, deviceRoleName, registration);
+  // register the needed devices - listed in the deployment status
+  status.devicesStatus.forEach((deviceStatus) async {
+    String type = deviceStatus.device.type;
+    String deviceRoleName = deviceStatus.device.roleName;
 
-  // get the study deployment for this master device and its registered devices
+    // create and register the device in the CAMS DeviceRegistry
+    await DeviceRegistry().registerDevice(type);
+
+    // if the device manager is created succesfully on the phone
+    if (DeviceRegistry().hasDevice(type)) {
+      // ask the device manager for a unique id of the device
+      String deviceId = DeviceRegistry().devices[type].id;
+      DeviceRegistration registration = DeviceRegistration(deviceId);
+      // (all of the above can actually be handled directly by the CAMSDeploymentService.registerDevice() method)
+
+      // register the device in the deployment service
+      CAMSDeploymentService()
+          .registerDevice(studyDeploymentId, deviceRoleName, registration);
+    }
+  });
+
+  // now get the study deployment for this master device and its registered devices
   CAMSMasterDeviceDeployment deployment =
       await CAMSDeploymentService().getDeviceDeployment(studyDeploymentId);
 
