@@ -243,6 +243,17 @@ void main() {
     print(status_1);
     print(toJsonString(status_1));
     assert(status_1.studyDeploymentId != null);
+    // we expect the phone and esense devices
+    expect(status_1.devicesStatus.length, 2);
+    expect(status_1.status, StudyDeploymentStatusTypes.Invited);
+    expect(status_1.devicesStatus[0].device.roleName, 'phone');
+    // the phone as a master device is always registred by the CAMSDeploymentService
+    expect(status_1.devicesStatus[0].status,
+        DeviceDeploymentStatusTypes.Registered);
+    // but we do not expect the esense device to be registrered (yet)
+    expect(status_1.devicesStatus[1].device.roleName, 'esense');
+    expect(status_1.devicesStatus[1].status,
+        DeviceDeploymentStatusTypes.Unregistered);
 
     StudyDeploymentStatus status_2 = await CAMSDeploymentService()
         .registerDevice(
@@ -250,18 +261,30 @@ void main() {
 
     print(status_2);
     print(toJsonString(status_2));
-    assert(status_2.studyDeploymentId == status_1.studyDeploymentId);
+    expect(status_2.studyDeploymentId, status_1.studyDeploymentId);
+    expect(status_1.devicesStatus[1].device.roleName, 'esense');
+    expect(status_1.devicesStatus[1].status,
+        DeviceDeploymentStatusTypes.Registered);
 
     CAMSMasterDeviceDeployment deployment = await CAMSDeploymentService()
         .getDeviceDeployment(status_1.studyDeploymentId);
     print(deployment);
     print(toJsonString(deployment));
-    assert(deployment.studyDeploymentId == status_1.studyDeploymentId);
+    expect(deployment.studyDeploymentId, status_1.studyDeploymentId);
 
     StudyDeploymentStatus status_3 = await CAMSDeploymentService()
         .deploymentSuccessful(status_1.studyDeploymentId);
-    assert(status_3.status == StudyDeploymentStatusTypes.DeploymentReady);
-    assert(status_3.studyDeploymentId == status_1.studyDeploymentId);
+    expect(status_3.status, StudyDeploymentStatusTypes.DeploymentReady);
+    expect(status_3.studyDeploymentId, status_1.studyDeploymentId);
     print(status_3);
+    print(toJsonString(status_3));
+    expect(
+      status_3.devicesStatus[0].status,
+      DeviceDeploymentStatusTypes.Deployed,
+    );
+    expect(
+      status_3.devicesStatus[1].status,
+      DeviceDeploymentStatusTypes.Deployed,
+    );
   });
 }

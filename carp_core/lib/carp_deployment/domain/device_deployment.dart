@@ -110,27 +110,23 @@ class DeviceRegistration extends Serializable {
 /// See [DeviceDeploymentStatus.kt](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/carp.deployment.core/src/commonMain/kotlin/dk/cachet/carp/deployment/domain/DeviceDeploymentStatus.kt).
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class DeviceDeploymentStatus extends Serializable {
-  DeviceDeploymentStatusTypes _status;
-
-  // /// The study deployment id.
-  // String studyDeploymentId;
+  DeviceDeploymentStatusTypes _status =
+      DeviceDeploymentStatusTypes.Unregistered;
 
   /// The description of the device.
   DeviceDescriptor device;
 
   /// Determines whether the device requires a device deployment by retrieving [MasterDeviceDeployment].
   /// Not all master devices necessarily need deployment; chained master devices do not.
-  bool requiresDeployment;
+  bool requiresDeployment = false;
 
   /// The role names of devices which need to be registered before the deployment
   /// information for this device can be obtained.
-  List<String> remainingDevicesToRegisterToObtainDeployment;
+  List<String> remainingDevicesToRegisterToObtainDeployment = [];
 
   /// The role names of devices which need to be registered before this device
   /// can be declared as successfully deployed.
-  List<String> remainingDevicesToRegisterBeforeDeployment;
-
-  // String get status => $type.split('.').last;
+  List<String> remainingDevicesToRegisterBeforeDeployment = [];
 
   /// Get the status of this device deployment:
   /// * Unregistered
