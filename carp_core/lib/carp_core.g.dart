@@ -207,12 +207,12 @@ Map<String, dynamic> _$DeviceRegistrationToJson(DeviceRegistration instance) =>
 
 DeviceDeploymentStatus _$DeviceDeploymentStatusFromJson(
     Map<String, dynamic> json) {
-  return DeviceDeploymentStatus()
-    ..$type = json[r'$type'] as String
-    ..studyDeploymentId = json['studyDeploymentId'] as String
-    ..device = json['device'] == null
+  return DeviceDeploymentStatus(
+    device: json['device'] == null
         ? null
-        : DeviceDescriptor.fromJson(json['device'] as Map<String, dynamic>)
+        : DeviceDescriptor.fromJson(json['device'] as Map<String, dynamic>),
+  )
+    ..$type = json[r'$type'] as String
     ..requiresDeployment = json['requiresDeployment'] as bool
     ..remainingDevicesToRegisterToObtainDeployment =
         (json['remainingDevicesToRegisterToObtainDeployment'] as List)
@@ -236,7 +236,6 @@ Map<String, dynamic> _$DeviceDeploymentStatusToJson(
     }
   }
 
-  writeNotNull('studyDeploymentId', instance.studyDeploymentId);
   writeNotNull('device', instance.device);
   writeNotNull('requiresDeployment', instance.requiresDeployment);
   writeNotNull('remainingDevicesToRegisterToObtainDeployment',
@@ -270,13 +269,13 @@ StudyDeploymentStatus _$StudyDeploymentStatusFromJson(
     Map<String, dynamic> json) {
   return StudyDeploymentStatus(
     studyDeploymentId: json['studyDeploymentId'] as String,
-  )
-    ..$type = json[r'$type'] as String
-    ..devicesStatus = (json['devicesStatus'] as List)
+    devicesStatus: (json['devicesStatus'] as List)
         ?.map((e) => e == null
             ? null
             : DeviceDeploymentStatus.fromJson(e as Map<String, dynamic>))
-        ?.toList()
+        ?.toList(),
+  )
+    ..$type = json[r'$type'] as String
     ..startTime = json['startTime'] as int;
 }
 

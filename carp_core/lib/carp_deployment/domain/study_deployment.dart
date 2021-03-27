@@ -19,10 +19,10 @@ class StudyDeployment {
   DateTime _creationDate;
   final StudyProtocol _protocol;
 
-  // the list of devices registrered, mapped to their rolename
+  // the list of registred devices, mapped to their rolename
   final Map<String, DeviceRegistration> _registeredDevices = {};
 
-  // the list of devices, mapped to their rolename
+  // the list of registrered devices' descriptions, mapped to their rolename
   final Map<String, DeviceDescriptor> _registeredDeviceDescriptors = {};
   final Map<DeviceDescriptor, List<DeviceRegistration>>
       _deviceRegistrationHistory = {};
@@ -68,26 +68,28 @@ class StudyDeployment {
     _status = StudyDeploymentStatus(studyDeploymentId: _studyDeploymentId);
   }
 
-  /// Get the status of this [StudyDeployment].
-  StudyDeploymentStatus get status => _status;
+  // /// Get the status of this [StudyDeployment].
+  // StudyDeploymentStatus get status => _status;
 
   /// Set the status of this [StudyDeployment].
   // void set status(StudyDeploymentStatus status) => _status = status;
-  // {
-  //   StudyDeploymentStatus status =
-  //       StudyDeploymentStatus(studyDeploymentId: studyDeploymentId);
 
-  //   // TODO - set the device status
-  //   status.devicesStatus = [];
+  /// Get the status of this [StudyDeployment].
+  StudyDeploymentStatus get status {
+    // TODO - set the device status
+    _status.devicesStatus = [];
 
-  //   // TODO - check that all devices are ready, before setting the overall status
+    // TODO - check that all devices are ready, before setting the overall status
 
-  //   status.status = (isStopped)
-  //       ? StudyDeploymentStatusTypes.Stopped
-  //       : StudyDeploymentStatusTypes.DeploymentReady;
+    status.status = (isStopped)
+        ? StudyDeploymentStatusTypes.Stopped
+        : StudyDeploymentStatusTypes.DeploymentReady;
 
-  //   return status;
-  // }
+    return status;
+  }
+
+  /// Get the status of a device in this [StudyDeployment].
+  DeviceDeploymentStatus getDeviceStatus(DeviceDescriptor device) {}
 
   /// Register the specified [device] for this deployment using the [registration]
   /// options.
@@ -182,6 +184,7 @@ class StudyDeployment {
   }
 }
 
+/// The types of study deployment status.
 enum StudyDeploymentStatusTypes {
   /// Initial study deployment status, indicating the invited participants
   /// have not yet acted on the invitation.
@@ -251,7 +254,7 @@ class StudyDeploymentStatus extends Serializable {
   DeviceDeploymentStatus get masterDeviceStatus =>
       devicesStatus?.firstWhere((element) => element.device?.isMasterDevice);
 
-  StudyDeploymentStatus({this.studyDeploymentId}) : super();
+  StudyDeploymentStatus({this.studyDeploymentId, this.devicesStatus}) : super();
 
   Function get fromJsonFunction => _$StudyDeploymentStatusFromJson;
   factory StudyDeploymentStatus.fromJson(Map<String, dynamic> json) =>

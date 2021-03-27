@@ -47,10 +47,8 @@ class DeviceRegistry {
   /// which has a device manager of the specified [type].
   Future<DeviceManager> create(String type) async {
     DeviceManager _deviceManager;
-
     SamplingPackageRegistry().packages.forEach((package) => _deviceManager =
         (package.deviceType == type) ? package.deviceManager : null);
-
     return _deviceManager;
   }
 }
@@ -64,7 +62,7 @@ abstract class DeviceManager {
   /// The stream of status events for this device.
   Stream<DeviceStatus> get deviceEvents => _eventController.stream;
 
-  /// The type of device
+  /// The type of this device
   String get type => _type;
 
   /// A unique runtime id of this device.

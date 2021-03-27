@@ -27,7 +27,7 @@ class DeviceDescriptor extends Serializable {
   bool isMasterDevice;
 
   /// The role name of this device in a specific [StudyProtocol].
-  /// For example, 'Patient's phone'
+  /// For example, 'Parent's phone' or 'Child phone'.
   String roleName;
 
   /// The set of data types which can be collected on this device.

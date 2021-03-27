@@ -110,8 +110,10 @@ class DeviceRegistration extends Serializable {
 /// See [DeviceDeploymentStatus.kt](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/carp.deployment.core/src/commonMain/kotlin/dk/cachet/carp/deployment/domain/DeviceDeploymentStatus.kt).
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class DeviceDeploymentStatus extends Serializable {
-  /// The CARP study deployment ID.
-  String studyDeploymentId;
+  DeviceDeploymentStatusTypes _status;
+
+  // /// The study deployment id.
+  // String studyDeploymentId;
 
   /// The description of the device.
   DeviceDescriptor device;
@@ -120,20 +122,46 @@ class DeviceDeploymentStatus extends Serializable {
   /// Not all master devices necessarily need deployment; chained master devices do not.
   bool requiresDeployment;
 
-  /// The role names of devices which need to be registered before the deployment information for this device can be obtained.
+  /// The role names of devices which need to be registered before the deployment
+  /// information for this device can be obtained.
   List<String> remainingDevicesToRegisterToObtainDeployment;
 
-  /// The role names of devices which need to be registered before this device can be declared as successfully deployed.
+  /// The role names of devices which need to be registered before this device
+  /// can be declared as successfully deployed.
   List<String> remainingDevicesToRegisterBeforeDeployment;
+
+  // String get status => $type.split('.').last;
 
   /// Get the status of this device deployment:
   /// * Unregistered
   /// * Registered
   /// * Deployed
   /// * NeedsRedeployment
-  String get status => $type.split('.').last;
+  @JsonKey(ignore: true)
+  DeviceDeploymentStatusTypes get status {
+    // if this object has been created locally, then we know the status
+    if (_status != null) return _status;
 
-  DeviceDeploymentStatus() : super();
+    // if this object was create from json deserialization,
+    // the $type reflects the status
+    switch ($type.split('.').last) {
+      case 'Unregistered':
+        return DeviceDeploymentStatusTypes.Unregistered;
+      case 'Registered':
+        return DeviceDeploymentStatusTypes.Registered;
+      case 'Deployed':
+        return DeviceDeploymentStatusTypes.Deployed;
+      case 'NeedsRedeployment':
+        return DeviceDeploymentStatusTypes.NeedsRedeployment;
+      default:
+        return DeviceDeploymentStatusTypes.Deployed;
+    }
+  }
+
+  /// Set the status of this device deployment.
+  set status(DeviceDeploymentStatusTypes status) => _status = status;
+
+  DeviceDeploymentStatus({this.device}) : super();
 
   Function get fromJsonFunction => _$DeviceDeploymentStatusFromJson;
   factory DeviceDeploymentStatus.fromJson(Map<String, dynamic> json) =>
@@ -142,7 +170,25 @@ class DeviceDeploymentStatus extends Serializable {
   Map<String, dynamic> toJson() => _$DeviceDeploymentStatusToJson(this);
   String get jsonType => 'dk.cachet.carp.deployment.domain.$runtimeType';
 
-  String toString() => '$runtimeType - status: $status';
+  String toString() => '$runtimeType - device: $device, status: $status';
+}
+
+/// The types of device deployment status.
+enum DeviceDeploymentStatusTypes {
+  /// Device deployment status for when a device has not been registered.
+  Unregistered,
+
+  /// Device deployment status for when a device has been registered.
+  Registered,
+
+  /// Device deployment status when the device has retrieved its
+  /// [MasterDeviceDeployment] and was able to load all the necessary
+  /// plugins to execute the study.
+  Deployed,
+
+  /// Device deployment status when the device has previously been deployed
+  /// correctly, but due to changes in device registrations needs to be redeployed.
+  NeedsRedeployment,
 }
 
 /// Holds device invitation details.
