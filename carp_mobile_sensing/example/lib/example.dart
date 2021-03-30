@@ -110,7 +110,6 @@ void example_2() async {
   // create a light measure variable to be used later
   PeriodicMeasure lightMeasure = PeriodicMeasure(
     type: SensorSamplingPackage.LIGHT,
-    name: 'Ambient Light',
     frequency: const Duration(seconds: 11),
     duration: const Duration(milliseconds: 100),
   );
@@ -322,7 +321,6 @@ void samplingSchemaExample() async {
         )
         ..addMeasure(PeriodicMeasure(
           type: SensorSamplingPackage.LIGHT,
-          name: 'Ambient Light',
           frequency: const Duration(seconds: 11),
           duration: const Duration(milliseconds: 100),
         )),

@@ -39,19 +39,41 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
     ..addMeasures([
       CAMSMeasure(
         type: DEVICE,
-        name: 'Basic Device Info',
+        measureDescription: {
+          'en': MeasureDescription(
+            name: 'Basic Device Info',
+            description: 'Collects basic information about the phone.',
+          )
+        },
       ),
       PeriodicMeasure(
           type: MEMORY,
-          name: 'Memory Usage',
+          measureDescription: {
+            'en': MeasureDescription(
+              name: 'Memory Usage',
+              description: 'Collects information about use of memory.',
+            )
+          },
           frequency: const Duration(minutes: 1)),
       CAMSMeasure(
         type: BATTERY,
-        name: 'Battery',
+        measureDescription: {
+          'en': MeasureDescription(
+            name: 'Battery',
+            description:
+                'Collects information about the battery charging level.',
+          )
+        },
       ),
       CAMSMeasure(
         type: SCREEN,
-        name: 'Screen Activity (lock/on/off)',
+        measureDescription: {
+          'en': MeasureDescription(
+            name: 'Screen Activity (lock/on/off)',
+            description:
+                "Collects information about lock/unlock event of the phone's screen.",
+          )
+        },
       ),
     ]);
 
@@ -65,7 +87,6 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
   }
 
   SamplingSchema get minimum => light..type = SamplingSchemaType.minimum;
-
   SamplingSchema get normal => common..type = SamplingSchemaType.normal;
 
   SamplingSchema get debug => common

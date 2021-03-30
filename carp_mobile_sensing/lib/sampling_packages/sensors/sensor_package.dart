@@ -48,35 +48,71 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
     ..addMeasures([
       CAMSMeasure(
         type: ACCELEROMETER,
-        name: 'Accelerometer',
+        measureDescription: {
+          'en': MeasureDescription(
+            name: 'Accelerometer',
+            description:
+                'Collects movement data based on the onboard phone accelerometer sensor.',
+          )
+        },
         enabled: false,
       ),
       CAMSMeasure(
         type: GYROSCOPE,
-        name: 'Gyroscope',
+        measureDescription: {
+          'en': MeasureDescription(
+            name: 'Gyroscope',
+            description:
+                'Collects movement data based on the onboard phone gyroscope sensor.',
+          )
+        },
         enabled: false,
       ),
       PeriodicMeasure(
         type: PERIODIC_ACCELEROMETER,
-        name: 'Accelerometer',
+        measureDescription: {
+          'en': MeasureDescription(
+            name: 'Accelerometer',
+            description:
+                'Collects movement data based on the onboard phone accelerometer sensor.',
+          )
+        },
         enabled: false,
         frequency: const Duration(seconds: 5),
         duration: const Duration(seconds: 1),
       ),
       PeriodicMeasure(
         type: PERIODIC_GYROSCOPE,
-        name: 'Gyroscope',
+        measureDescription: {
+          'en': MeasureDescription(
+            name: 'Gyroscope',
+            description:
+                'Collects movement data based on the onboard phone gyroscope sensor.',
+          )
+        },
         enabled: false,
         frequency: const Duration(seconds: 5),
         duration: const Duration(seconds: 1),
       ),
       CAMSMeasure(
         type: PEDOMETER,
-        name: 'Pedometer (Step Count)',
+        measureDescription: {
+          'en': MeasureDescription(
+            name: 'Pedometer (Step Count)',
+            description:
+                'Collects step events from the onboard phone step sensor.',
+          )
+        },
       ),
       PeriodicMeasure(
         type: LIGHT,
-        name: 'Ambient Light',
+        measureDescription: {
+          'en': MeasureDescription(
+            name: 'Ambient Light',
+            description:
+                'Collects ambient light from the light sensor on the phone.',
+          )
+        },
         frequency: const Duration(minutes: 1),
         duration: const Duration(seconds: 1),
       ),
@@ -100,41 +136,5 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
   }
 
   SamplingSchema get normal => common;
-
-  SamplingSchema get debug => SamplingSchema()
-    ..type = SamplingSchemaType.debug
-    ..name = 'Debugging sensor sampling schema'
-    ..powerAware = false
-    ..addMeasures([
-      CAMSMeasure(
-        type: ACCELEROMETER,
-        name: 'Accelerometer',
-      ),
-      CAMSMeasure(
-        type: GYROSCOPE,
-        name: 'Gyroscope',
-      ),
-      PeriodicMeasure(
-        type: PERIODIC_ACCELEROMETER,
-        name: 'Accelerometer',
-        frequency: const Duration(seconds: 5),
-        duration: const Duration(seconds: 1),
-      ),
-      PeriodicMeasure(
-        type: PERIODIC_GYROSCOPE,
-        name: 'Gyroscope',
-        frequency: const Duration(seconds: 5),
-        duration: const Duration(seconds: 1),
-      ),
-      CAMSMeasure(
-        type: PEDOMETER,
-        name: 'Pedometer (Step Count)',
-      ),
-      PeriodicMeasure(
-        type: LIGHT,
-        name: 'Ambient Light',
-        frequency: const Duration(seconds: 10),
-        duration: const Duration(seconds: 2),
-      ),
-    ]);
+  SamplingSchema get debug => common;
 }

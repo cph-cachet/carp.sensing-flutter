@@ -51,7 +51,16 @@ CAMSStudyProtocol _$CAMSStudyProtocolFromJson(Map<String, dynamic> json) {
         ?.map((e) => e == null
             ? null
             : TriggeredTask.fromJson(e as Map<String, dynamic>))
-        ?.toList();
+        ?.toList()
+    ..consent = (json['consent'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(
+          k,
+          (e as List)
+              ?.map((e) => e == null
+                  ? null
+                  : ConsentSection.fromJson(e as Map<String, dynamic>))
+              ?.toList()),
+    );
 }
 
 Map<String, dynamic> _$CAMSStudyProtocolToJson(CAMSStudyProtocol instance) {
@@ -73,6 +82,7 @@ Map<String, dynamic> _$CAMSStudyProtocolToJson(CAMSStudyProtocol instance) {
   writeNotNull('triggeredTasks', instance.triggeredTasks);
   writeNotNull('studyId', instance.studyId);
   writeNotNull('protocolDescription', instance.protocolDescription);
+  writeNotNull('consent', instance.consent);
   writeNotNull('owner', instance.owner);
   writeNotNull('dataEndPoint', instance.dataEndPoint);
   writeNotNull('dataFormat', instance.dataFormat);
@@ -156,8 +166,14 @@ Map<String, dynamic> _$DataEndPointToJson(DataEndPoint instance) {
 CAMSMeasure _$CAMSMeasureFromJson(Map<String, dynamic> json) {
   return CAMSMeasure(
     type: json['type'] as String,
-    name: json['name'] as String,
-    description: json['description'] as String,
+    measureDescription:
+        (json['measureDescription'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(
+          k,
+          e == null
+              ? null
+              : MeasureDescription.fromJson(e as Map<String, dynamic>)),
+    ),
     enabled: json['enabled'] as bool,
   )
     ..$type = json[r'$type'] as String
@@ -177,18 +193,37 @@ Map<String, dynamic> _$CAMSMeasureToJson(CAMSMeasure instance) {
 
   writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
-  writeNotNull('name', instance.name);
-  writeNotNull('description', instance.description);
+  writeNotNull('measureDescription', instance.measureDescription);
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
+  return val;
+}
+
+MeasureDescription _$MeasureDescriptionFromJson(Map<String, dynamic> json) {
+  return MeasureDescription(
+    name: json['name'] as String,
+    description: json['description'] as String,
+  )..$type = json[r'$type'] as String;
+}
+
+Map<String, dynamic> _$MeasureDescriptionToJson(MeasureDescription instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(r'$type', instance.$type);
+  writeNotNull('name', instance.name);
+  writeNotNull('description', instance.description);
   return val;
 }
 
 PeriodicMeasure _$PeriodicMeasureFromJson(Map<String, dynamic> json) {
   return PeriodicMeasure(
     type: json['type'] as String,
-    name: json['name'] as String,
-    description: json['description'] as String,
     enabled: json['enabled'] as bool,
     frequency: json['frequency'] == null
         ? null
@@ -198,6 +233,14 @@ PeriodicMeasure _$PeriodicMeasureFromJson(Map<String, dynamic> json) {
         : Duration(microseconds: json['duration'] as int),
   )
     ..$type = json[r'$type'] as String
+    ..measureDescription =
+        (json['measureDescription'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(
+          k,
+          e == null
+              ? null
+              : MeasureDescription.fromJson(e as Map<String, dynamic>)),
+    )
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
     );
@@ -214,8 +257,7 @@ Map<String, dynamic> _$PeriodicMeasureToJson(PeriodicMeasure instance) {
 
   writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
-  writeNotNull('name', instance.name);
-  writeNotNull('description', instance.description);
+  writeNotNull('measureDescription', instance.measureDescription);
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
   writeNotNull('frequency', instance.frequency?.inMicroseconds);
@@ -226,14 +268,20 @@ Map<String, dynamic> _$PeriodicMeasureToJson(PeriodicMeasure instance) {
 MarkedMeasure _$MarkedMeasureFromJson(Map<String, dynamic> json) {
   return MarkedMeasure(
     type: json['type'] as String,
-    name: json['name'] as String,
-    description: json['description'] as String,
     enabled: json['enabled'] as bool,
     history: json['history'] == null
         ? null
         : Duration(microseconds: json['history'] as int),
   )
     ..$type = json[r'$type'] as String
+    ..measureDescription =
+        (json['measureDescription'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(
+          k,
+          e == null
+              ? null
+              : MeasureDescription.fromJson(e as Map<String, dynamic>)),
+    )
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
     );
@@ -250,8 +298,7 @@ Map<String, dynamic> _$MarkedMeasureToJson(MarkedMeasure instance) {
 
   writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
-  writeNotNull('name', instance.name);
-  writeNotNull('description', instance.description);
+  writeNotNull('measureDescription', instance.measureDescription);
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
   writeNotNull('history', instance.history?.inMicroseconds);
