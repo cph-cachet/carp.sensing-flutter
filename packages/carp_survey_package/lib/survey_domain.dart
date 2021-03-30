@@ -30,14 +30,12 @@ class RPTaskMeasure extends CAMSMeasure {
 
   RPTaskMeasure({
     @required String type,
-    String name,
-    String description,
+    Map<String, MeasureDescription> measureDescription,
     bool enabled,
     this.surveyTask,
   }) : super(
           type: type,
-          name: name,
-          description: description,
+          measureDescription: measureDescription,
           enabled: enabled,
         );
 

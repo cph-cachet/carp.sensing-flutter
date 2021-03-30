@@ -85,13 +85,27 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
     ..measures.addEntries([
       MapEntry(
         LOCATION,
-        CAMSMeasure(type: LOCATION, name: 'Location', enabled: true),
+        CAMSMeasure(
+          type: LOCATION,
+          measureDescription: {
+            'en': MeasureDescription(
+              name: 'Location',
+              description: "Collects location from the phone's GPS sensor",
+            )
+          },
+          enabled: true,
+        ),
       ),
       MapEntry(
           GEOLOCATION,
           LocationMeasure(
             type: GEOLOCATION,
-            name: 'Geo-location',
+            measureDescription: {
+              'en': MeasureDescription(
+                name: 'Geo-location',
+                description: "Collects location from the phone's GPS sensor",
+              )
+            },
             enabled: true,
             frequency: Duration(seconds: 30),
             accuracy: GeolocationAccuracy.low,
@@ -100,13 +114,28 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
       MapEntry(
         ACTIVITY,
         CAMSMeasure(
-            type: ACTIVITY, name: 'Activity Recognition', enabled: true),
+          type: ACTIVITY,
+          measureDescription: {
+            'en': MeasureDescription(
+              name: 'Activity Recognition',
+              description:
+                  "Collects activity type from the phone's activity recognition module",
+            )
+          },
+          enabled: true,
+        ),
       ),
       MapEntry(
           WEATHER,
           WeatherMeasure(
               type: WEATHER,
-              name: 'Local Weather',
+              measureDescription: {
+                'en': MeasureDescription(
+                  name: 'Weather',
+                  description:
+                      "Collects local weather from the WeatherAPI web service",
+                )
+              },
               enabled: true,
               // TODO - remove this
               apiKey: '12b6e28582eb9298577c734a31ba9f4f')),
@@ -114,7 +143,13 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
           AIR_QUALITY,
           AirQualityMeasure(
               type: AIR_QUALITY,
-              name: 'Local Air Quality',
+              measureDescription: {
+                'en': MeasureDescription(
+                  name: 'Air Quality',
+                  description:
+                      "Collects local air quality from the OpenWeatherMap (OWM) web service",
+                )
+              },
               enabled: true,
               // TODO - remove this
               apiKey: '9e538456b2b85c92647d8b65090e29f957638c77')),
@@ -125,12 +160,25 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
               enabled: true,
               center: GeoPosition(55.7943601, 12.4461956),
               radius: 500,
+              measureDescription: {
+                'en': MeasureDescription(
+                  name: 'Geofence',
+                  description:
+                      "Collects geofence events when then phone enters, leaves, or dwell in a geographic area",
+                )
+              },
               name: 'Geofence (Virum)')),
       MapEntry(
           MOBILITY,
           MobilityMeasure(
               type: MOBILITY,
-              name: 'Mobility Features',
+              measureDescription: {
+                'en': MeasureDescription(
+                  name: 'Mobility Features',
+                  description:
+                      "Extracts mobility features based on location tracking",
+                )
+              },
               enabled: true,
               placeRadius: 50,
               stopRadius: 25,
@@ -163,7 +211,6 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
     ..powerAware = false
     ..measures[GEOLOCATION] = LocationMeasure(
       type: GEOLOCATION,
-      name: 'Geo-location',
       enabled: true,
       frequency: Duration(seconds: 3),
       accuracy: GeolocationAccuracy.best,
@@ -171,7 +218,6 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
     )
     ..measures[WEATHER] = WeatherMeasure(
       type: WEATHER,
-      name: 'Local Weather',
       apiKey: '12b6e28582eb9298577c734a31ba9f4f',
     );
 }

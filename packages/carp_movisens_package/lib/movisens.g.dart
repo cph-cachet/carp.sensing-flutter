@@ -9,7 +9,14 @@ part of movisens;
 MovisensMeasure _$MovisensMeasureFromJson(Map<String, dynamic> json) {
   return MovisensMeasure(
     type: json['type'] as String,
-    name: json['name'],
+    measureDescription:
+        (json['measure_description'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(
+          k,
+          e == null
+              ? null
+              : MeasureDescription.fromJson(e as Map<String, dynamic>)),
+    ),
     enabled: json['enabled'],
     address: json['address'] as String,
     sensorLocation:
@@ -21,7 +28,6 @@ MovisensMeasure _$MovisensMeasureFromJson(Map<String, dynamic> json) {
     age: json['age'] as int,
   )
     ..$type = json[r'$type'] as String
-    ..description = json['description'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
     );
@@ -38,8 +44,7 @@ Map<String, dynamic> _$MovisensMeasureToJson(MovisensMeasure instance) {
 
   writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
-  writeNotNull('name', instance.name);
-  writeNotNull('description', instance.description);
+  writeNotNull('measure_description', instance.measureDescription);
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
   writeNotNull('address', instance.address);

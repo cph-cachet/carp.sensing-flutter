@@ -38,7 +38,12 @@ void main() async {
       AppTask(type: 'survey', name: 'WHO-5 Survey')
         ..measures.add(RPTaskMeasure(
           type: SurveySamplingPackage.SURVEY,
-          name: 'WHO5',
+          measureDescription: {
+            'en': MeasureDescription(
+              name: 'WHO-5',
+              description: "The WHO well-being survey",
+            )
+          },
           enabled: true,
           surveyTask: who5Task,
         )),

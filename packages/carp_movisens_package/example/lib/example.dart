@@ -45,7 +45,13 @@ void main() async {
       AutomaticTask(name: 'Movisens Task')
         ..addMeasure(MovisensMeasure(
             type: MovisensSamplingPackage.MOVISENS,
-            name: "movisens",
+            measureDescription: {
+              'en': MeasureDescription(
+                name: 'Movisens ECG device',
+                description:
+                    "Collects heart rythm data from the Movisens EcgMove4 sensor",
+              )
+            },
             enabled: true,
             address: '06-00-00-00-00-00',
             deviceName: "ECG-223",
@@ -60,7 +66,7 @@ void main() async {
   StudyDeploymentStatus status =
       await CAMSDeploymentService().createStudyDeployment(protocol);
 
-// at this time we can register an eSensee device which are connected to this phone (master device)
+  // at this time we can register an eSensee device which are connected to this phone (master device)
   CAMSDeploymentService().registerDevice(
     status.studyDeploymentId,
     MovisensSamplingPackage.MOVISENS_DEVICE_TYPE,

@@ -66,7 +66,13 @@ class MovisensSamplingPackage implements SamplingPackage {
           MovisensMeasure(
             // Test data for a male 25 year old user.
             type: MOVISENS_NAMESPACE,
-            name: 'Movisens ECG device',
+            measureDescription: {
+              'en': MeasureDescription(
+                name: 'Movisens ECG device',
+                description:
+                    "Collects heart rythm data from the Movisens EcgMove4 sensor",
+              )
+            },
             address: '88:6B:0F:CD:E7:F2',
             sensorLocation: SensorLocation.chest,
             gender: Gender.male,

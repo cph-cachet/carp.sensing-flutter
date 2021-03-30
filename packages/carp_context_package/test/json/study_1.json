@@ -30,14 +30,26 @@
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
       "type": "dk.cachet.carp.device",
-      "name": "Basic Device Info",
+      "measureDescription": {
+       "en": {
+        "$type": "MeasureDescription",
+        "name": "Basic Device Info",
+        "description": "Collects basic information about the phone."
+       }
+      },
       "enabled": true,
       "configuration": {}
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
       "type": "dk.cachet.carp.memory",
-      "name": "Memory Usage",
+      "measureDescription": {
+       "en": {
+        "$type": "MeasureDescription",
+        "name": "Memory Usage",
+        "description": "Collects information about use of memory."
+       }
+      },
       "enabled": true,
       "configuration": {},
       "frequency": 60000000
@@ -45,35 +57,65 @@
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
       "type": "dk.cachet.carp.battery",
-      "name": "Battery",
+      "measureDescription": {
+       "en": {
+        "$type": "MeasureDescription",
+        "name": "Battery",
+        "description": "Collects information about the battery charging level."
+       }
+      },
       "enabled": true,
       "configuration": {}
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
       "type": "dk.cachet.carp.screen",
-      "name": "Screen Activity (lock/on/off)",
+      "measureDescription": {
+       "en": {
+        "$type": "MeasureDescription",
+        "name": "Screen Activity (lock/on/off)",
+        "description": "Collects information about lock/unlock event of the phone's screen."
+       }
+      },
       "enabled": true,
       "configuration": {}
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
       "type": "dk.cachet.carp.accelerometer",
-      "name": "Accelerometer",
+      "measureDescription": {
+       "en": {
+        "$type": "MeasureDescription",
+        "name": "Accelerometer",
+        "description": "Collects movement data based on the onboard phone accelerometer sensor."
+       }
+      },
       "enabled": false,
       "configuration": {}
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
       "type": "dk.cachet.carp.gyroscope",
-      "name": "Gyroscope",
+      "measureDescription": {
+       "en": {
+        "$type": "MeasureDescription",
+        "name": "Gyroscope",
+        "description": "Collects movement data based on the onboard phone gyroscope sensor."
+       }
+      },
       "enabled": false,
       "configuration": {}
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
       "type": "dk.cachet.carp.periodic_accelerometer",
-      "name": "Accelerometer",
+      "measureDescription": {
+       "en": {
+        "$type": "MeasureDescription",
+        "name": "Accelerometer",
+        "description": "Collects movement data based on the onboard phone accelerometer sensor."
+       }
+      },
       "enabled": false,
       "configuration": {},
       "frequency": 5000000,
@@ -82,7 +124,13 @@
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
       "type": "dk.cachet.carp.periodic_gyroscope",
-      "name": "Gyroscope",
+      "measureDescription": {
+       "en": {
+        "$type": "MeasureDescription",
+        "name": "Gyroscope",
+        "description": "Collects movement data based on the onboard phone gyroscope sensor."
+       }
+      },
       "enabled": false,
       "configuration": {},
       "frequency": 5000000,
@@ -91,14 +139,26 @@
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
       "type": "dk.cachet.carp.pedometer",
-      "name": "Pedometer (Step Count)",
+      "measureDescription": {
+       "en": {
+        "$type": "MeasureDescription",
+        "name": "Pedometer (Step Count)",
+        "description": "Collects step events from the onboard phone step sensor."
+       }
+      },
       "enabled": true,
       "configuration": {}
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
       "type": "dk.cachet.carp.light",
-      "name": "Ambient Light",
+      "measureDescription": {
+       "en": {
+        "$type": "MeasureDescription",
+        "name": "Ambient Light",
+        "description": "Collects ambient light from the light sensor on the phone."
+       }
+      },
       "enabled": true,
       "configuration": {},
       "frequency": 60000000,
@@ -107,14 +167,26 @@
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
       "type": "dk.cachet.carp.location",
-      "name": "Location",
+      "measureDescription": {
+       "en": {
+        "$type": "MeasureDescription",
+        "name": "Location",
+        "description": "Collects location from the phone's GPS sensor"
+       }
+      },
       "enabled": true,
       "configuration": {}
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.LocationMeasure",
       "type": "dk.cachet.carp.geolocation",
-      "name": "Geo-location",
+      "measure_description": {
+       "en": {
+        "$type": "MeasureDescription",
+        "name": "Geo-location",
+        "description": "Collects location from the phone's GPS sensor"
+       }
+      },
       "enabled": true,
       "configuration": {},
       "frequency": 30000000,
@@ -124,14 +196,26 @@
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
       "type": "dk.cachet.carp.activity",
-      "name": "Activity Recognition",
+      "measureDescription": {
+       "en": {
+        "$type": "MeasureDescription",
+        "name": "Activity Recognition",
+        "description": "Collects activity type from the phone's activity recognition module"
+       }
+      },
       "enabled": true,
       "configuration": {}
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.WeatherMeasure",
       "type": "dk.cachet.carp.weather",
-      "name": "Local Weather",
+      "measure_description": {
+       "en": {
+        "$type": "MeasureDescription",
+        "name": "Weather",
+        "description": "Collects local weather from the WeatherAPI web service"
+       }
+      },
       "enabled": true,
       "configuration": {},
       "api_key": "12b6e28582eb9298577c734a31ba9f4f"
@@ -139,7 +223,13 @@
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.AirQualityMeasure",
       "type": "dk.cachet.carp.air_quality",
-      "name": "Local Air Quality",
+      "measure_description": {
+       "en": {
+        "$type": "MeasureDescription",
+        "name": "Air Quality",
+        "description": "Collects local air quality from the OpenWeatherMap (OWM) web service"
+       }
+      },
       "enabled": true,
       "configuration": {},
       "api_key": "9e538456b2b85c92647d8b65090e29f957638c77"
@@ -147,6 +237,13 @@
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.GeofenceMeasure",
       "type": "dk.cachet.carp.geofence",
+      "measure_description": {
+       "en": {
+        "$type": "MeasureDescription",
+        "name": "Geofence",
+        "description": "Collects geofence events when then phone enters, leaves, or dwell in a geographic area"
+       }
+      },
       "enabled": true,
       "configuration": {},
       "center": {
@@ -154,13 +251,18 @@
        "latitude": 55.7943601,
        "longitude": 12.4461956
       },
-      "radius": 500.0,
-      "name": "Geofence (Virum)"
+      "radius": 500.0
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.MobilityMeasure",
       "type": "dk.cachet.carp.mobility",
-      "name": "Mobility Features",
+      "measure_description": {
+       "en": {
+        "$type": "MeasureDescription",
+        "name": "Mobility Features",
+        "description": "Extracts mobility features based on location tracking"
+       }
+      },
       "enabled": true,
       "configuration": {},
       "use_prior_contexts": true,
@@ -178,6 +280,7 @@
     "destinationDeviceRoleName": "phone"
    }
   ],
+  "consent": {},
   "owner": {
    "$type": "ProtocolOwner",
    "id": "AB",

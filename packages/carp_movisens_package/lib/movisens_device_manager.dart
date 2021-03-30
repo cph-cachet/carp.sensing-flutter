@@ -9,75 +9,38 @@ part of movisens;
 
 class MovisensDeviceManager extends DeviceManager {
   // the last known voltage level of the eSense device
-  double _voltageLevel = 4;
-  StreamSubscription<ESenseEvent> _eventSubscription;
+  int _batteryLevel = 100;
+  String _connectionStatus;
+  StreamSubscription<Map<String, dynamic>> _eventSubscription;
 
-  String get id => ESenseManager().eSenseDeviceName;
+  String get id => userData?.sensorName ?? 'movisens-123';
 
   Future initialize(String type) async {
     await super.initialize(type);
 
-    // listen for connection events
-    ESenseManager().connectionEvents.listen((event) {
+    // TODO - should be possible to init a device manager before connecting to the probe.....
+    assert(movisens != null, 'The Movisens probe has not been initialized.');
+
+    // listen for Movisens events
+    movisens.movisensStream.listen((event) {
       info('$runtimeType :: eSense event : $event');
 
-      switch (event.type) {
-        case ConnectionType.connected:
-          status = DeviceStatus.connected;
+      if (event.containsKey("BatteryLevel"))
+        _batteryLevel =
+            int.parse(jsonDecode(event["BatteryLevel"])[BATTERY_LEVEL]);
 
-          // when connected, listen for battery events
-          _eventSubscription = ESenseManager()
-              .eSenseEvents
-              .where((event) => event is BatteryRead)
-              .listen((event) {
-            info('$runtimeType :: eSense event : $event');
-            _voltageLevel = (event as BatteryRead).voltage;
-          });
-
-          // set up a timer that asks for the voltage level
-          Timer.periodic(const Duration(minutes: 5), (timer) {
-            if (status == DeviceStatus.connected) {
-              info('$runtimeType :: requesting voltage');
-              ESenseManager().getBatteryVoltage();
-            }
-          });
-          break;
-        case ConnectionType.unknown:
-          status = DeviceStatus.unknown;
-          break;
-        case ConnectionType.device_found:
-          status = DeviceStatus.paired;
-          break;
-        case ConnectionType.device_not_found:
-        case ConnectionType.disconnected:
-          status = DeviceStatus.disconnected;
-          // _eventSubscription?.cancel();
-          break;
+      if (event.containsKey("ConnectionStatus")) {
+        _connectionStatus =
+            jsonDecode(event["ConnectionStatus"])[CONNECTION_STATUS];
+        // TODO - set the right connection status - can this be other than connected?
+        status = DeviceStatus.connected;
       }
     });
   }
 
-  /// A estimate of the battery level of the eSense device.
-  ///
-  /// It assumes a liniar relationship based on a regression on
-  /// these measures:
-  ///
-  /// ```
-  ///   B  |  V
-  ///  ----+------
-  ///  1.0	| 4.1
-  ///  0.8	| 3.9
-  ///  0.6	| 3.8
-  ///  0.4	| 3.7
-  ///  0.2	| 3.4
-  ///  0.0  | 3.1
-  /// ```
-  ///
-  /// which gives; `B = 1.19V - 3.91`.
-  ///
-  /// See e.g. https://en.wikipedia.org/wiki/State_of_charge#Voltage_method
-  int get batteryLevel => ((1.19 * _voltageLevel - 3.91) * 100).toInt();
+  /// The latest read of the battery level of the Movisens device.
+  int get batteryLevel => _batteryLevel;
 
-  Future connect() async => await ESenseManager().connect(id);
-  Future disconnect() async => await ESenseManager().disconnect();
+  Future connect() async {}
+  Future disconnect() async {}
 }

@@ -93,12 +93,15 @@ class GeofenceMeasure extends CAMSMeasure {
   /// Specify a geofence measure
   GeofenceMeasure({
     @required String type,
+    Map<String, MeasureDescription> measureDescription,
     enabled,
     this.center,
     this.radius,
     this.name,
-  })
-      : super(type: type, enabled: enabled);
+  }) : super(
+            type: type,
+            measureDescription: measureDescription,
+            enabled: enabled);
 
   Function get fromJsonFunction => _$GeofenceMeasureFromJson;
   factory GeofenceMeasure.fromJson(Map<String, dynamic> json) =>

@@ -17,14 +17,16 @@ class MobilityMeasure extends CAMSMeasure {
 
   MobilityMeasure({
     @required String type,
-    name,
+    Map<String, MeasureDescription> measureDescription,
     enabled,
     this.usePriorContexts,
     this.stopRadius,
     this.placeRadius,
     this.stopDuration,
-  })
-      : super(type: type, name: name, enabled: enabled);
+  }) : super(
+            type: type,
+            measureDescription: measureDescription,
+            enabled: enabled);
 
   Function get fromJsonFunction => _$MobilityMeasureFromJson;
 
@@ -37,7 +39,7 @@ class MobilityMeasure extends CAMSMeasure {
   String toString() =>
       super.toString() +
       ',usePriorContext: $usePriorContexts,'
-      'stopRadius: $stopRadius,'
-      'placeRadius: $placeRadius,'
-      'stopDuration: $stopDuration';
+          'stopRadius: $stopRadius,'
+          'placeRadius: $placeRadius,'
+          'stopDuration: $stopDuration';
 }

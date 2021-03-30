@@ -69,14 +69,25 @@ class ESenseSamplingPackage implements SamplingPackage {
           ESENSE_BUTTON,
           ESenseMeasure(
               type: ESENSE_BUTTON,
-              name: 'eSense - Button',
+              measureDescription: {
+                'en': MeasureDescription(
+                  name: 'eSense - Button',
+                  description: "Collects button event from the eSense device",
+                )
+              },
               enabled: true,
               deviceName: 'eSense-0332')),
       MapEntry(
           ESENSE_SENSOR,
           ESenseMeasure(
               type: ESENSE_SENSOR,
-              name: 'eSense - Sensors',
+              measureDescription: {
+                'en': MeasureDescription(
+                  name: 'eSense - Sensor',
+                  description:
+                      "Collects movement data from the eSense inertial measurement unit (IMU) sensor",
+                )
+              },
               enabled: true,
               deviceName: 'eSense-0332',
               samplingRate: 5)),

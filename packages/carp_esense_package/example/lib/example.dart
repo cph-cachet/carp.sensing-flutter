@@ -46,11 +46,22 @@ void main() async {
         ..addMeasures([
           ESenseMeasure(
               type: ESenseSamplingPackage.ESENSE_BUTTON,
-              name: 'eSense - Button',
+              measureDescription: {
+                'en': MeasureDescription(
+                  name: 'eSense - Button',
+                  description: "Collects button event from the eSense device",
+                )
+              },
               deviceName: 'eSense-0332'),
           ESenseMeasure(
               type: ESenseSamplingPackage.ESENSE_SENSOR,
-              name: 'eSense - Sensors',
+              measureDescription: {
+                'en': MeasureDescription(
+                  name: 'eSense - Sensor',
+                  description:
+                      "Collects movement data from the eSense inertial measurement unit (IMU) sensor",
+                )
+              },
               deviceName: 'eSense-0332',
               samplingRate: 5),
         ]),

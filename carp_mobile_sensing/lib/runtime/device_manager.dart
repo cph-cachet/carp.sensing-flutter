@@ -54,6 +54,7 @@ class DeviceRegistry {
 }
 
 /// A [DeviceManager] handles a device on runtime.
+// TODO - should be/extend an [Executor] and handle the triggered task associated with this device.... and its probes....
 abstract class DeviceManager {
   String _type;
   final StreamController<DeviceStatus> _eventController =

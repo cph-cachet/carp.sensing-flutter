@@ -1,0 +1,142 @@
+{
+  "$type": "dk.cachet.carp.protocols.domain.CAMSStudyProtocol",
+  "name": "Context package test",
+  "masterDevices": [
+   {
+    "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
+    "isMasterDevice": true,
+    "roleName": "phone",
+    "samplingConfiguration": {}
+   }
+  ],
+  "connectedDevices": [
+   {
+    "$type": "dk.cachet.carp.protocols.domain.devices.DeviceDescriptor",
+    "isMasterDevice": false,
+    "roleName": "esense",
+    "samplingConfiguration": {}
+   }
+  ],
+  "triggers": [
+   {
+    "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
+   }
+  ],
+  "tasks": [
+   {
+    "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
+    "name": "Task #5",
+    "measures": [
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
+      "type": "dk.cachet.carp.device",
+      "name": "Basic Device Info",
+      "enabled": true,
+      "configuration": {}
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
+      "type": "dk.cachet.carp.memory",
+      "name": "Memory Usage",
+      "enabled": true,
+      "configuration": {},
+      "frequency": 60000000
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
+      "type": "dk.cachet.carp.battery",
+      "name": "Battery",
+      "enabled": true,
+      "configuration": {}
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
+      "type": "dk.cachet.carp.screen",
+      "name": "Screen Activity (lock/on/off)",
+      "enabled": true,
+      "configuration": {}
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
+      "type": "dk.cachet.carp.accelerometer",
+      "name": "Accelerometer",
+      "enabled": false,
+      "configuration": {}
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
+      "type": "dk.cachet.carp.gyroscope",
+      "name": "Gyroscope",
+      "enabled": false,
+      "configuration": {}
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
+      "type": "dk.cachet.carp.periodic_accelerometer",
+      "name": "Accelerometer",
+      "enabled": false,
+      "configuration": {},
+      "frequency": 5000000,
+      "duration": 1000000
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
+      "type": "dk.cachet.carp.periodic_gyroscope",
+      "name": "Gyroscope",
+      "enabled": false,
+      "configuration": {},
+      "frequency": 5000000,
+      "duration": 1000000
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
+      "type": "dk.cachet.carp.pedometer",
+      "name": "Pedometer (Step Count)",
+      "enabled": true,
+      "configuration": {}
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
+      "type": "dk.cachet.carp.light",
+      "name": "Ambient Light",
+      "enabled": true,
+      "configuration": {},
+      "frequency": 60000000,
+      "duration": 1000000
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.AudioMeasure",
+      "type": "audio",
+      "name": "Audio Recording",
+      "enabled": true,
+      "configuration": {},
+      "study_id": "default_study"
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.NoiseMeasure",
+      "type": "noise",
+      "name": "Ambient Noise",
+      "enabled": false,
+      "configuration": {},
+      "frequency": 300000000,
+      "duration": 10000000,
+      "sampling_rate": 500
+     }
+    ]
+   }
+  ],
+  "triggeredTasks": [
+   {
+    "triggerId": 0,
+    "taskName": "Task #5",
+    "destinationDeviceRoleName": "phone"
+   }
+  ],
+  "owner": {
+   "$type": "ProtocolOwner",
+   "id": "AB",
+   "name": "Alex Boyon",
+   "email": "alex@uni.dk"
+  },
+  "dataFormat": "dk.cachet.carp"
+ }
