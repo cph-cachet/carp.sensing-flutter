@@ -17,14 +17,14 @@ class NoiseMeasure extends PeriodicMeasure {
 
   NoiseMeasure({
     @required String type,
-    String name,
+    Map<String, MeasureDescription> measureDescription,
     bool enabled = true,
     Duration frequency,
     Duration duration,
     this.samplingRate = DEFAULT_SAMPLING_RATE,
   }) : super(
           type: type,
-          name: name,
+          measureDescription: measureDescription,
           enabled: enabled,
           frequency: frequency,
           duration: duration,

@@ -68,7 +68,7 @@ class MasterDeviceDeployment {
       _$MasterDeviceDeploymentFromJson(json);
   Map<String, dynamic> toJson() => _$MasterDeviceDeploymentToJson(this);
 
-  String toString() => '$runtimeType - configuration: $configuration';
+  String toString() => '$runtimeType - device: ${deviceDescriptor.roleName}}';
 }
 
 /// A [DeviceRegistration] configures a [DeviceDescriptor] as part of the

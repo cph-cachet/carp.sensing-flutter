@@ -26,7 +26,13 @@ void example_1() async {
       bufferSize: 500 * 1000,
       zip: true,
       encrypt: false,
-    );
+    )
+    ..protocolDescription = {
+      'en': StudyProtocolDescription(
+          title: 'Test Study',
+          purpose: 'For testing purposes',
+          description: 'Testing'),
+    };
 
   // define which devices are used for data collection
   // in this case, its only this smartphone

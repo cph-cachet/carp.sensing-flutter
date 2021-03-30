@@ -110,7 +110,11 @@ class StudyProtocolDescription extends Serializable {
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ConsentSection extends Serializable {
   /// The type of the section.
-  String type;
+  ///
+  /// If using the [`research_package`](https://pub.dev/packages/research_package)
+  /// the this type can reflect the [`RPConsentSectionType`](https://pub.dev/documentation/research_package/latest/research_package_model/RPConsentSectionType-class.html).
+  /// For example, to specify an "About Us" section using `RPConsentSectionType.AboutUs.index` as the [type].
+  int type;
 
   /// The title of the consent section.
   String title;

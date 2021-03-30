@@ -9,6 +9,7 @@ part of domain;
 
 /// Contains the entire description and configuration for how a CAMS master
 /// device participates in running a study.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
   String _studyId;
   String _studyDeploymentId;
@@ -33,20 +34,25 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
   /// [DataPointHeader] as the [userId].
   String userId;
 
-  /// A short printer-friendly name for this study.
+  /// A technical printer-friendly name for this study.
+  /// This name is not localized.
   String name;
 
   /// The textual [StudyProtocolDescription] containing the title, description
   /// and purpose of this study protocol organized according to language locales.
   Map<String, StudyProtocolDescription> protocolDescription = {};
 
-  /// The default description (the English one).
+  /// The informed consent to be show to the user as a list of [ConsentSection]
+  /// sections. Mapped according to the language locale.
+  Map<String, List<ConsentSection>> consent = {};
+
+  /// The default English description.
   String get description => protocolDescription['en']?.description;
 
-  /// The default title (the English one).
+  /// The default English title.
   String get title => protocolDescription['en']?.title;
 
-  /// The default purpose (the English one).
+  /// The default English purpose.
   String get purpose => protocolDescription['en']?.purpose;
 
   /// The owner of this study.
@@ -66,6 +72,7 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
     String studyDeploymentId,
     this.name,
     this.protocolDescription,
+    this.consent,
     ProtocolOwner owner,
     String dataFormat,
     DataEndPoint dataEndPoint,
@@ -97,6 +104,7 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
     String studyDeploymentId,
     this.name,
     this.protocolDescription,
+    this.consent,
     ProtocolOwner owner,
     String dataFormat,
     DataEndPoint dataEndPoint,
@@ -133,4 +141,12 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
     samplingStrategy = schema.type;
     schema.adapt(this, restore: restore);
   }
+
+  factory CAMSMasterDeviceDeployment.fromJson(Map<String, dynamic> json) =>
+      _$CAMSMasterDeviceDeploymentFromJson(json);
+  Map<String, dynamic> toJson() => _$CAMSMasterDeviceDeploymentToJson(this);
+
+  String toString() => '${super.toString()} - studyId: $studyId, '
+      'studyDeploymentId: $studyDeploymentId, '
+      'name: $name, owner: $owner}';
 }

@@ -32,6 +32,13 @@ void main() {
             purpose: 'Test af protokol',
             description: 'Tester'),
       }
+      ..consent = {
+        'en': [
+          ConsentSection(type: 11, title: 'A'),
+          ConsentSection(type: 1, title: 'B'),
+          ConsentSection(type: 13, title: 'C'),
+        ]
+      }
       ..dataEndPoint = FileDataEndPoint(bufferSize: 500);
 
     // Define which devices are used for data collection.
@@ -285,6 +292,7 @@ void main() {
     print(deployment);
     print(toJsonString(deployment));
     expect(deployment.studyDeploymentId, status_1.studyDeploymentId);
+    expect(deployment.consent['en'].first.type, 11);
 
     StudyDeploymentStatus status_3 = await CAMSDeploymentService()
         .deploymentSuccessful(status_1.studyDeploymentId);

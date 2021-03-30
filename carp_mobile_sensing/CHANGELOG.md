@@ -8,8 +8,10 @@
     * `ScheduledTrigger` is now called `DateTimeTrigger`
     * `` is now called ``
 * A `StudyProtocol` now uses the concept of a [`TriggeredTask`](https://pub.dev/documentation/carp_core/latest/carp_core/TriggeredTask-class.html) which is slightly different to the previous `Study` model. See the [example](https://pub.dev/packages/carp_core/example).
+* A `CAMSStudyProtocol` now supports localization. A `StudyProtocolDescription` and a list of `ConsentSection` can be added to a protocol for each locale (i.e., language code).
+* Similarly, measures now also supports localization. For each `CAMSMeasure` there is the option to specify its `MeasureDescription` for each locale.  
 * All json serialization now used `camelCase` instead of `snake_case` to be consistent with `carp_core` in Kotlin.
-* All the `events` stream is now called `data` and streams `DataPoint` data objects (instead of just the `Datum` data objects). 
+* All the `events` streams are now called `data` and streams `DataPoint` data objects (instead of just the `Datum` data objects). 
 
 
 ## 0.12.3

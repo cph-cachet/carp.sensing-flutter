@@ -39,7 +39,7 @@ void registerFromJsonFunctions() {
   FromJsonFactory().register(ProtocolOwner());
   FromJsonFactory().register(DataEndPoint());
   FromJsonFactory().register(StudyProtocolDescription());
-  // FromJsonFactory().register(FileDataEndPoint());
+  FromJsonFactory().register(ConsentSection());
 
   // Task classes
   FromJsonFactory().register(AutomaticTask());
@@ -59,9 +59,8 @@ void registerFromJsonFunctions() {
 
   // Measure classes
   // FromJsonFactory().register(DataType('', ''));
+  FromJsonFactory().register(MeasureDescription());
   FromJsonFactory().register(CAMSMeasure());
   FromJsonFactory().register(PeriodicMeasure());
   FromJsonFactory().register(MarkedMeasure());
-
-  // Datum classes
 }
