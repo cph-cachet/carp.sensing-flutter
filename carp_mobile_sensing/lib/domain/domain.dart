@@ -38,6 +38,7 @@ void registerFromJsonFunctions() {
   FromJsonFactory().register(CAMSStudyProtocol());
   FromJsonFactory().register(ProtocolOwner());
   FromJsonFactory().register(DataEndPoint());
+  FromJsonFactory().register(StudyProtocolDescription());
   // FromJsonFactory().register(FileDataEndPoint());
 
   // Task classes

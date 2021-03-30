@@ -11,6 +11,9 @@ void main() {
   Smartphone phone;
 
   setUp(() {
+    // create a file data manger, since we're using a file data endpoint in the protocol.
+    FileDataManager();
+
     // Create a new study protocol.
     protocol = CAMSStudyProtocol()
       ..name = 'Track patient movement'
@@ -18,7 +21,18 @@ void main() {
         id: 'AB',
         name: 'Alex Boyon',
         email: 'alex@uni.dk',
-      );
+      )
+      ..protocolDescription = {
+        'en': StudyProtocolDescription(
+            title: 'Test Study',
+            purpose: 'For testing purposes',
+            description: 'Testing'),
+        'dk': StudyProtocolDescription(
+            title: 'Test studie',
+            purpose: 'Test af protokol',
+            description: 'Tester'),
+      }
+      ..dataEndPoint = FileDataEndPoint(bufferSize: 500);
 
     // Define which devices are used for data collection.
     phone = Smartphone(

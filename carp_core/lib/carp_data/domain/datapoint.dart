@@ -89,7 +89,7 @@ class DataPoint {
   /// Create a new [DataPoint].
   DataPoint([this.carpHeader, this.data]);
 
-  /// Create a [DataPoint] from a [Data].
+  /// Create a [DataPoint] from a [Data] object.
   factory DataPoint.fromData(Data data) => DataPoint(
       DataPointHeader(
         dataFormat: data.format,
@@ -162,7 +162,7 @@ class DataPointHeader {
   Map<String, dynamic> toJson() => _$DataPointHeaderToJson(this);
 }
 
-/// Specifies the format of the [Data] in a [DataPoint].
+/// Specifies the format of the [data] in a [DataPoint].
 ///
 /// Note that the only reason why we have both a [DataType] and a [DataFormat]
 /// class definition is because the JSON serialization is different in data

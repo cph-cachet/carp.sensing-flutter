@@ -138,14 +138,33 @@
      {
       "triggerId": 1,
       "taskName": "Task #5",
-      "destinationDeviceRoleName": "phone"
+      "destinationDeviceRoleName": "esense"
      }
     ],
+    "protocolDescription": {
+     "en": {
+      "$type": "StudyProtocolDescription",
+      "title": "Test Study",
+      "description": "Testing",
+      "purpose": "For testing purposes"
+     },
+     "dk": {
+      "$type": "StudyProtocolDescription",
+      "title": "Test studie",
+      "description": "Tester",
+      "purpose": "Test af protokol"
+     }
+    },
     "owner": {
      "$type": "ProtocolOwner",
      "id": "AB",
      "name": "Alex Boyon",
      "email": "alex@uni.dk"
+    },
+    "dataEndPoint": {
+     "$type": "FileDataEndPoint",
+     "type": "FILE",
+     "buffer_size": 500
     },
     "dataFormat": "dk.cachet.carp"
    }
