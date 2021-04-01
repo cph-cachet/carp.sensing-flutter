@@ -66,8 +66,14 @@ void main() {
           ))
           ..measures.add(HealthMeasure(
             type: HealthSamplingPackage.HEALTH,
-            name: 'Steps',
             healthDataType: HealthDataType.STEPS,
+            measureDescription: {
+              'en': MeasureDescription(
+                name: 'Step Counts',
+                description:
+                    "Collects the step counts from Apple Health / Google Fit",
+              )
+            },
           )),
         phone);
 

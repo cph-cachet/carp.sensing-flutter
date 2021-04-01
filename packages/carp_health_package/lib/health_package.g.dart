@@ -9,7 +9,14 @@ part of health_package;
 HealthMeasure _$HealthMeasureFromJson(Map<String, dynamic> json) {
   return HealthMeasure(
     type: json['type'] as String,
-    name: json['name'] as String,
+    measureDescription:
+        (json['measure_description'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(
+          k,
+          e == null
+              ? null
+              : MeasureDescription.fromJson(e as Map<String, dynamic>)),
+    ),
     enabled: json['enabled'] as bool,
     history: json['history'] == null
         ? null
@@ -18,7 +25,6 @@ HealthMeasure _$HealthMeasureFromJson(Map<String, dynamic> json) {
         _$enumDecodeNullable(_$HealthDataTypeEnumMap, json['health_data_type']),
   )
     ..$type = json[r'$type'] as String
-    ..description = json['description'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
     );
@@ -35,8 +41,8 @@ Map<String, dynamic> _$HealthMeasureToJson(HealthMeasure instance) {
 
   writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
-  writeNotNull('name', instance.name);
-  writeNotNull('description', instance.description);
+  writeNotNull('measure_description',
+      instance.measureDescription?.map((k, e) => MapEntry(k, e?.toJson())));
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
   writeNotNull('history', instance.history?.inMicroseconds);

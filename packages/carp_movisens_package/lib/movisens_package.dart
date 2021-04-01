@@ -52,11 +52,12 @@ class MovisensSamplingPackage implements SamplingPackage {
 
   List<String> get dataTypes => [MOVISENS_NAMESPACE];
 
-  /// This common / default schema contains a [MovisensMeasure] for
-  /// a 25 year old male, height 175 cm, weight 75 kg, for a Movisens
-  /// device with address '88:6B:0F:CD:E7:F2' located on the person's
-  /// chest.
-  SamplingSchema get common => SamplingSchema()
+  /// This debug schema contains a [MovisensMeasure] for a 25 year old male,
+  /// height 175 cm, weight 75 kg, for a Movisens device with address
+  /// '88:6B:0F:CD:E7:F2' located on the person's chest.
+  ///
+  /// This is a device (and person) used for debugging at CACHET.
+  SamplingSchema get debug => SamplingSchema()
     ..type = SamplingSchemaType.common
     ..name = 'Common (default) app sampling schema'
     ..powerAware = false
@@ -83,8 +84,10 @@ class MovisensSamplingPackage implements SamplingPackage {
           )),
     ]);
 
-  SamplingSchema get light => common;
-  SamplingSchema get minimum => common;
-  SamplingSchema get normal => common;
-  SamplingSchema get debug => common;
+  // All other sampling schemas return null since we cannot provide default
+  // schemas for Movisens devices. They are custom to the person wearing it.
+  SamplingSchema get light => null;
+  SamplingSchema get minimum => null;
+  SamplingSchema get normal => null;
+  SamplingSchema get common => null;
 }

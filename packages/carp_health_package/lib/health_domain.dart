@@ -49,13 +49,13 @@ class HealthMeasure extends MarkedMeasure {
 
   HealthMeasure({
     String type,
-    String name,
+    Map<String, MeasureDescription> measureDescription,
     bool enabled,
     Duration history = const Duration(days: 1),
     this.healthDataType,
   }) : super(
           type: type,
-          name: name,
+          measureDescription: measureDescription,
           enabled: enabled,
           history: history,
         );
