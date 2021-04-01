@@ -27,7 +27,6 @@ class CAMSMeasure extends Measure {
 
   /// Whether the measure is enabled - i.e. collecting data - when the
   /// study is running. A measure is enabled as default.
-  @override
   bool enabled = true;
 
   /// A key-value map holding any application-specific configuration.

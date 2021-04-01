@@ -15,11 +15,11 @@ part of communication;
 ///   SamplingPackageRegistry.register(CommunicationSamplingPackage());
 /// ```
 class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
-  static const String PHONE_LOG = "phone_log";
-  static const String TELEPHONY = "telephony";
-  static const String TEXT_MESSAGE_LOG = "text_message_log";
-  static const String TEXT_MESSAGE = "text_message";
-  static const String CALENDAR = "calendar";
+  static const String PHONE_LOG = "dk.cachet.carp.phone_log";
+  static const String TELEPHONY = "dk.cachet.carp.telephony";
+  static const String TEXT_MESSAGE_LOG = "dk.cachet.carp.text_message_log";
+  static const String TEXT_MESSAGE = "dk.cachet.carp.text_message";
+  static const String CALENDAR = "dk.cachet.carp.calendar";
 
   List<String> get dataTypes => [
         PHONE_LOG,
@@ -47,7 +47,7 @@ class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
   }
 
   void onRegister() {
-    FromJsonFactory().register(CalendarMeasure());
+    FromJsonFactory().register(CalendarMeasure(type: 'ignored'));
 
     TransformerSchemaRegistry()
         .lookup(PrivacySchema.DEFAULT)
@@ -67,7 +67,7 @@ class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
       [Permission.phone, Permission.sms, Permission.calendar];
 
   SamplingSchema get common => SamplingSchema()
-    ..type = SamplingSchemaType.COMMON
+    ..type = SamplingSchemaType.common
     ..name = 'Common (default) communication sampling schema'
     ..powerAware = true
     ..measures.addEntries([
@@ -104,7 +104,7 @@ class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
               'en': MeasureDescription(
                 name: 'Text Messages',
                 description:
-                    "Collects the event when a text messages (SMS) is send or received",
+                    "Collects the event when a text messages (SMS) is sent or received",
               )
             },
           )),
@@ -124,20 +124,23 @@ class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
           )),
     ]);
 
-  SamplingSchema get light => common
-    ..type = SamplingSchemaType.LIGHT
-    ..name = 'Light communication sampling'
-    ..measures[PHONE_LOG].enabled = false
-    ..measures[TEXT_MESSAGE_LOG].enabled = false
-    ..measures[TEXT_MESSAGE].enabled = false
-    ..measures[CALENDAR].enabled = false;
+  SamplingSchema get light {
+    SamplingSchema light = common
+      ..type = SamplingSchemaType.light
+      ..name = 'Light communication sampling';
+    (light.measures[PHONE_LOG] as CAMSMeasure).enabled = false;
+    (light.measures[TEXT_MESSAGE_LOG] as CAMSMeasure).enabled = false;
+    (light.measures[TEXT_MESSAGE] as CAMSMeasure).enabled = false;
+    (light.measures[CALENDAR] as CAMSMeasure).enabled = false;
+    return light;
+  }
 
   SamplingSchema get minimum => light..type = SamplingSchemaType.minimum;
 
   SamplingSchema get normal => common;
 
   SamplingSchema get debug => common
-    ..type = SamplingSchemaType.DEBUG
+    ..type = SamplingSchemaType.debug
     ..name = 'Debugging communication sampling schema'
     ..powerAware = false
     ..measures[PHONE_LOG] =
