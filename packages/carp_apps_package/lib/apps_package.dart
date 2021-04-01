@@ -33,13 +33,24 @@ class AppsSamplingPackage extends SmartphoneSamplingPackage {
           APPS,
           CAMSMeasure(
             type: APPS,
-            name: 'Installed Apps',
+            measureDescription: {
+              'en': MeasureDescription(
+                name: 'Installed Apps',
+                description:
+                    "Collects an list of the apps installed on this phone",
+              )
+            },
           )),
       MapEntry(
           APP_USAGE,
           MarkedMeasure(
             type: APP_USAGE,
-            name: 'Apps Usage',
+            measureDescription: {
+              'en': MeasureDescription(
+                name: 'Apps Usage',
+                description: "Collects an log of the use of apps on the phone",
+              )
+            },
             enabled: true,
           )),
     ]);
@@ -57,13 +68,11 @@ class AppsSamplingPackage extends SmartphoneSamplingPackage {
           APPS,
           CAMSMeasure(
             type: APPS,
-            name: 'Installed Apps',
           )),
       MapEntry(
           APP_USAGE,
           MarkedMeasure(
             type: APP_USAGE,
-            name: 'Apps Usage',
             enabled: true,
           )),
     ]);

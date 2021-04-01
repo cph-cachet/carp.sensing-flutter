@@ -48,14 +48,24 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
           CONNECTIVITY,
           CAMSMeasure(
             type: CONNECTIVITY,
-            name: 'Connectivity (wifi/3G/...)',
+            measureDescription: {
+              'en': MeasureDescription(
+                name: 'Connectivity (wifi/3G/...)',
+                description: "Collects the phone's connectivity status",
+              )
+            },
             enabled: true,
           )),
       MapEntry(
           BLUETOOTH,
           PeriodicMeasure(
             type: BLUETOOTH,
-            name: 'Nearby Devices (Bluetooth Scan)',
+            measureDescription: {
+              'en': MeasureDescription(
+                name: 'Nearby Devices',
+                description: "Collects nearby devices using Bluetooth LE",
+              )
+            },
             enabled: true,
             frequency: Duration(minutes: 10),
             duration: Duration(seconds: 5),
@@ -64,7 +74,13 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
           WIFI,
           PeriodicMeasure(
             type: WIFI,
-            name: 'Wifi network names (SSID / BSSID)',
+            measureDescription: {
+              'en': MeasureDescription(
+                name: 'Wifi network names',
+                description:
+                    "Collects the SSID and BSSID of nearby wifi network",
+              )
+            },
             enabled: true,
             frequency: Duration(minutes: 10),
             duration: Duration(seconds: 5),
@@ -99,14 +115,12 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
           CONNECTIVITY,
           CAMSMeasure(
             type: CONNECTIVITY,
-            name: 'Connectivity (wifi/3G/...)',
             enabled: true,
           )),
       MapEntry(
           BLUETOOTH,
           PeriodicMeasure(
             type: BLUETOOTH,
-            name: 'Nearby Devices (Bluetooth Scan)',
             enabled: true,
             frequency: Duration(minutes: 1),
             duration: Duration(seconds: 2),
@@ -115,7 +129,6 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
           WIFI,
           PeriodicMeasure(
             type: WIFI,
-            name: 'Wifi network names (SSID / BSSID)',
             enabled: true,
             frequency: Duration(minutes: 1),
             duration: Duration(seconds: 5),

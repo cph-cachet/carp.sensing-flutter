@@ -74,27 +74,51 @@ class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
       MapEntry(
           PHONE_LOG,
           MarkedMeasure(
-            type: MeasureType(NameSpace.CARP, PHONE_LOG),
-            name: 'Phone Log',
+            type: PHONE_LOG,
+            measureDescription: {
+              'en': MeasureDescription(
+                name: 'Phone Log',
+                description:
+                    "Collects the log on in- and out-going calls from the phone",
+              )
+            },
             history: Duration(days: 1),
           )),
       MapEntry(
           TEXT_MESSAGE_LOG,
-          Measure(
-            type: MeasureType(NameSpace.CARP, TEXT_MESSAGE_LOG),
-            name: 'Text Message (SMS) Log',
+          CAMSMeasure(
+            type: TEXT_MESSAGE_LOG,
+            measureDescription: {
+              'en': MeasureDescription(
+                name: 'Text Messages Log',
+                description:
+                    "Collects the log on in- and out-going text messages (SMS) from the phone",
+              )
+            },
           )),
       MapEntry(
           TEXT_MESSAGE,
-          Measure(
-            type: MeasureType(NameSpace.CARP, TEXT_MESSAGE),
-            name: 'Text Message (SMS)',
+          CAMSMeasure(
+            type: TEXT_MESSAGE,
+            measureDescription: {
+              'en': MeasureDescription(
+                name: 'Text Messages',
+                description:
+                    "Collects the event when a text messages (SMS) is send or received",
+              )
+            },
           )),
       MapEntry(
           CALENDAR,
           CalendarMeasure(
-            type: MeasureType(NameSpace.CARP, CALENDAR),
-            name: 'Calendar Events',
+            type: CALENDAR,
+            measureDescription: {
+              'en': MeasureDescription(
+                name: 'Calendar Events',
+                description:
+                    "Collects the list of calendar events on the calenders on the phone",
+              )
+            },
             past: Duration(days: 1),
             future: Duration(days: 1),
           )),
@@ -108,7 +132,7 @@ class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
     ..measures[TEXT_MESSAGE].enabled = false
     ..measures[CALENDAR].enabled = false;
 
-  SamplingSchema get minimum => light..type = SamplingSchemaType.MINIMUM;
+  SamplingSchema get minimum => light..type = SamplingSchemaType.minimum;
 
   SamplingSchema get normal => common;
 
@@ -116,16 +140,11 @@ class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
     ..type = SamplingSchemaType.DEBUG
     ..name = 'Debugging communication sampling schema'
     ..powerAware = false
-    ..measures[PHONE_LOG] = MarkedMeasure(
-        type: MeasureType(NameSpace.CARP, PHONE_LOG),
-        name: 'Phone Log',
-        history: Duration(days: 1))
-    ..measures[TEXT_MESSAGE_LOG] = Measure(
-        type: MeasureType(NameSpace.CARP, TEXT_MESSAGE_LOG),
-        name: 'Text Message (SMS) Log')
+    ..measures[PHONE_LOG] =
+        MarkedMeasure(type: PHONE_LOG, history: Duration(days: 1))
+    ..measures[TEXT_MESSAGE_LOG] = CAMSMeasure(type: TEXT_MESSAGE_LOG)
     ..measures[CALENDAR] = CalendarMeasure(
-      type: MeasureType(NameSpace.CARP, CALENDAR),
-      name: 'Calendar Events',
+      type: CALENDAR,
       past: Duration(days: 1),
       future: Duration(days: 1),
     );

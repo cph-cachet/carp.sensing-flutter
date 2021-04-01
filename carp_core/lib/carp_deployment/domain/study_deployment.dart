@@ -213,7 +213,13 @@ enum StudyDeploymentStatusTypes {
 /// See [StudyDeploymentStatus.kt](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/carp.deployment.core/src/commonMain/kotlin/dk/cachet/carp/deployment/domain/StudyDeploymentStatus.kt).
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class StudyDeploymentStatus extends Serializable {
-  StudyDeploymentStatusTypes _status = StudyDeploymentStatusTypes.Invited;
+  /// The status of this device deployment:
+  /// * Invited
+  /// * DeployingDevices
+  /// * DeploymentReady
+  /// * Stopped
+  @JsonKey(ignore: true)
+  StudyDeploymentStatusTypes status = StudyDeploymentStatusTypes.Invited;
 
   /// The CARP study deployment ID.
   String studyDeploymentId;
@@ -226,35 +232,6 @@ class StudyDeploymentStatus extends Serializable {
   int startTime;
   //DateTime startTime;
 
-  /// Get the status of this device deployment:
-  /// * Invited
-  /// * DeployingDevices
-  /// * DeploymentReady
-  /// * Stopped
-  @JsonKey(ignore: true)
-  StudyDeploymentStatusTypes get status {
-    // if this object has been created locally, then we know the status
-    if (_status != null) return _status;
-
-    // if this object was create from json deserialization,
-    // the $type reflects the status
-    switch ($type.split('.').last) {
-      case 'Invited':
-        return StudyDeploymentStatusTypes.Invited;
-      case 'DeployingDevices':
-        return StudyDeploymentStatusTypes.DeployingDevices;
-      case 'DeploymentReady':
-        return StudyDeploymentStatusTypes.DeploymentReady;
-      case 'Stopped':
-        return StudyDeploymentStatusTypes.Stopped;
-      default:
-        return StudyDeploymentStatusTypes.Invited;
-    }
-  }
-
-  /// Set the status of this deployment.
-  set status(StudyDeploymentStatusTypes status) => _status = status;
-
   /// The [DeviceDeploymentStatus] for the master device of this deployment,
   /// which is typically this phone.
   ///
@@ -265,9 +242,31 @@ class StudyDeploymentStatus extends Serializable {
   StudyDeploymentStatus({this.studyDeploymentId, this.devicesStatus}) : super();
 
   Function get fromJsonFunction => _$StudyDeploymentStatusFromJson;
-  factory StudyDeploymentStatus.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+
+  factory StudyDeploymentStatus.fromJson(Map<String, dynamic> json) {
+    StudyDeploymentStatus status = FromJsonFactory()
+        .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+    // when this object was create from json deserialization,
+    // the last part of the $type reflects the status
+    switch (status.$type.split('.').last) {
+      case 'Invited':
+        status.status = StudyDeploymentStatusTypes.Invited;
+        break;
+      case 'DeployingDevices':
+        status.status = StudyDeploymentStatusTypes.DeployingDevices;
+        break;
+      case 'DeploymentReady':
+        status.status = StudyDeploymentStatusTypes.DeploymentReady;
+        break;
+      case 'Stopped':
+        status.status = StudyDeploymentStatusTypes.Stopped;
+        break;
+      default:
+        status.status = StudyDeploymentStatusTypes.Invited;
+    }
+    return status;
+  }
+
   Map<String, dynamic> toJson() => _$StudyDeploymentStatusToJson(this);
   String get jsonType => 'dk.cachet.carp.deployment.domain.$runtimeType';
 
