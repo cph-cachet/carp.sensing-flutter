@@ -101,7 +101,6 @@ class StudyDeploymentController {
 
     // initialize settings
     settings.init();
-
     // create and register the two built-in data managers
     DataManagerRegistry().register(ConsoleDataManager());
     DataManagerRegistry().register(FileDataManager());
@@ -147,7 +146,8 @@ class StudyDeploymentController {
       }
     });
 
-    info('CARP Mobile Sensing (CAMS) - Initializing Study Controller: ');
+    info(
+        'CARP Mobile Sensing (CAMS) - Initializing Study Deployment Controller:');
     info('      study id : ${deployment.studyId}');
     info(' deployment id : ${deployment.studyDeploymentId}');
     info('    study name : ${deployment.name}');
@@ -157,7 +157,7 @@ class StudyDeploymentController {
     info('      platform : ${DeviceInfo().platform.toString()}');
     info('     device ID : ${DeviceInfo().deviceID.toString()}');
     info('  data manager : ${dataManager?.toString()}');
-    info('   permissions : ${permissions?.toString()}');
+    info('       devices : ${DeviceController().devicesToString()}');
 
     if (samplingSchema != null) {
       // doing two adaptation is a bit of a hack; used to ensure that
@@ -183,7 +183,7 @@ class StudyDeploymentController {
     if (samplingSchema.powerAware) {
       info('Enabling power awareness ...');
       _battery.data.listen((dataPoint) {
-        BatteryDatum batteryState = (dataPoint.carpBody as BatteryDatum);
+        BatteryDatum batteryState = (dataPoint.data as BatteryDatum);
         if (batteryState.batteryStatus == BatteryDatum.STATE_DISCHARGING) {
           // only apply power-awareness if not charging.
           PowerAwarenessState newState =
@@ -208,7 +208,7 @@ class StudyDeploymentController {
     _battery.stop();
   }
 
-  /// Resume this controller, i.e. resume data collection according to the
+  /// Start this controller, i.e. resume data collection according to the
   /// specified [deployment] and [samplingSchema].
   @Deprecated('Use the resume() method instead')
   void start() {

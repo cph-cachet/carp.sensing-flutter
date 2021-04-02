@@ -220,8 +220,6 @@ abstract class SamplingPackage {
 
 /// An abstract class for all sampling packages that run on the phone itself.
 abstract class SmartphoneSamplingPackage implements SamplingPackage {
-  static const String SMARTPHONE_DEVICE_TYPE = 'smarthone';
-
-  String get deviceType => SMARTPHONE_DEVICE_TYPE;
+  String get deviceType => Smartphone.DEVICE_TYPE;
   DeviceManager get deviceManager => SmartphoneDeviceManager();
 }

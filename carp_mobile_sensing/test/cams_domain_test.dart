@@ -9,6 +9,7 @@ import 'package:test/test.dart';
 void main() {
   CAMSStudyProtocol protocol;
   Smartphone phone;
+  DeviceDescriptor eSense;
 
   setUp(() {
     // create a file data manger, since we're using a file data endpoint in the protocol.
@@ -42,13 +43,8 @@ void main() {
       ..dataEndPoint = FileDataEndPoint(bufferSize: 500);
 
     // Define which devices are used for data collection.
-    phone = Smartphone(
-      name: 'SM-A320FL',
-      roleName: CAMSDeploymentService.DEFAULT_MASTER_DEVICE_ROLENAME,
-    );
-    DeviceDescriptor eSense = DeviceDescriptor(
-      roleName: 'esense',
-    );
+    phone = Smartphone();
+    eSense = DeviceDescriptor(roleName: 'esense');
 
     protocol
       ..addMasterDevice(phone)
@@ -74,8 +70,20 @@ void main() {
       AutomaticTask()
         ..measures =
             SamplingPackageRegistry().common().measures.values.toList(),
-      eSense, // a task with all measures
+      phone, // a task with all measures
     );
+
+    // adding two measures to another device
+    protocol.addTriggeredTask(
+        ImmediateTrigger(),
+        AutomaticTask()
+          ..measures = SamplingPackageRegistry().debug().getMeasureList(
+            types: [
+              SensorSamplingPackage.LIGHT, // 10 s
+              DeviceSamplingPackage.MEMORY, // 60 s
+            ],
+          ),
+        eSense);
   });
 
   test('CAMSStudyProtocol -> JSON', () async {
@@ -103,7 +111,7 @@ void main() {
 
     expect(protocol.ownerId, 'AB');
     expect(protocol.masterDevices.first.roleName,
-        CAMSDeploymentService.DEFAULT_MASTER_DEVICE_ROLENAME);
+        CAMSDeploymentService().thisPhone.roleName);
     print(toJsonString(protocol));
   });
 
@@ -267,7 +275,8 @@ void main() {
     // we expect the phone and esense devices
     expect(status_1.devicesStatus.length, 2);
     expect(status_1.status, StudyDeploymentStatusTypes.Invited);
-    expect(status_1.devicesStatus[0].device.roleName, 'phone');
+    expect(
+        status_1.devicesStatus[0].device.roleName, Smartphone.DEFAULT_ROLENAME);
     // the phone as a master device is always registred by the CAMSDeploymentService
     expect(status_1.devicesStatus[0].status,
         DeviceDeploymentStatusTypes.Registered);
@@ -293,6 +302,8 @@ void main() {
     print(toJsonString(deployment));
     expect(deployment.studyDeploymentId, status_1.studyDeploymentId);
     expect(deployment.consent['en'].first.type, 11);
+    expect(deployment.tasks.length, protocol.tasks.length);
+    expect(deployment.triggeredTasks.length, protocol.triggeredTasks.length);
 
     StudyDeploymentStatus status_3 = await CAMSDeploymentService()
         .deploymentSuccessful(status_1.studyDeploymentId);

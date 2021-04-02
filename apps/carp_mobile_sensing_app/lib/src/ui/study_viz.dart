@@ -188,14 +188,14 @@ class _TaskPanel extends StatelessWidget {
       decoration: BoxDecoration(
           border: Border(bottom: BorderSide(color: themeData.dividerColor))),
       child: DefaultTextStyle(
-          style: Theme.of(context).textTheme.subhead,
+          style: Theme.of(context).textTheme.subtitle1,
           child: SafeArea(
               top: false,
               bottom: false,
               child: Column(children: <Widget>[
                 Row(children: <Widget>[
                   Icon(Icons.description, size: 40, color: CACHET.ORANGE),
-                  Text('  ${task.name}', style: themeData.textTheme.title),
+                  Text('  ${task.name}', style: themeData.textTheme.headline6),
                 ]),
                 Column(children: children)
                 //Expanded(child: Column(children: children))

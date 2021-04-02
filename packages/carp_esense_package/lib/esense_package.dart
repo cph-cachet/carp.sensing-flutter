@@ -15,10 +15,11 @@ part of esense;
 ///   SamplingPackageRegistry.register(ESenseSamplingPackage());
 /// ```
 class ESenseSamplingPackage implements SamplingPackage {
-  static const String ESENSE_DEVICE_TYPE = 'esense';
   static const String ESENSE_NAMESPACE = "${NameSpace.CARP}.esense";
   static const String ESENSE_BUTTON = "$ESENSE_NAMESPACE.button";
   static const String ESENSE_SENSOR = "$ESENSE_NAMESPACE.sensor";
+
+  // static ESenseDevice esense = ESenseDevice();
 
   List<String> get dataTypes => [ESENSE_BUTTON, ESENSE_SENSOR];
 
@@ -33,11 +34,14 @@ class ESenseSamplingPackage implements SamplingPackage {
     }
   }
 
-  void onRegister() => FromJsonFactory().register(ESenseMeasure());
+  void onRegister() {
+    FromJsonFactory().register(ESenseMeasure());
+    FromJsonFactory().register(ESenseDevice());
+  }
 
   List<Permission> get permissions =>
       [Permission.location, Permission.microphone];
-  String get deviceType => ESENSE_DEVICE_TYPE;
+  String get deviceType => ESenseDevice.DEVICE_TYPE;
   DeviceManager get deviceManager => ESenseDeviceManager();
 
   // Since the configuration of the eSense devices require the device name

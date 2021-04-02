@@ -21,7 +21,7 @@ part 'src/models/probe_description.dart';
 part 'src/models/deployment_model.dart';
 part 'src/models/data_models.dart';
 part 'src/blocs/sensing_bloc.dart';
-part 'src/sensing/study_protocol_mamanger.dart';
+part 'src/sensing/study_protocol_mananger.dart';
 part 'src/ui/probe_list.dart';
 part 'src/ui/device_list.dart';
 part 'src/ui/data_viz.dart';

@@ -27,7 +27,6 @@ void main() async {
   // define which devices are used for data collection
   // in this case, its only this smartphone
   Smartphone phone = Smartphone(
-    name: 'SM-A320FL',
     roleName: CAMSDeploymentService.DEFAULT_MASTER_DEVICE_ROLENAME,
   );
   protocol.addMasterDevice(phone);

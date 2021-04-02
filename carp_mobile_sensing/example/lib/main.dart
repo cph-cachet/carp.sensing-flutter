@@ -123,7 +123,7 @@ class Sensing {
     // at this time we can register this phone as a master device like this
     CAMSDeploymentService().registerDevice(
       status.studyDeploymentId,
-      CAMSDeploymentService.DEFAULT_MASTER_DEVICE_ROLENAME,
+      CAMSDeploymentService().thisPhone.roleName,
       DeviceRegistration(),
     );
     // but this is actually not needed, since a phone is always registrered
@@ -184,10 +184,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
       );
 
     // Define which devices are used for data collection.
-    Smartphone phone = Smartphone(
-      name: 'SM-A320FL',
-      roleName: CAMSDeploymentService.DEFAULT_MASTER_DEVICE_ROLENAME,
-    );
+    Smartphone phone = Smartphone();
     DeviceDescriptor eSense = DeviceDescriptor(roleName: 'esense');
 
     protocol

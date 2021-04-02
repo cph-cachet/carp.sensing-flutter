@@ -7,7 +7,7 @@ class DevicesModel {
 
 class DeviceModel {
   DeviceManager deviceManager;
-  String get type => deviceManager.descriptor.roleName;
+  String get type => deviceManager.type;
   DeviceStatus get status => deviceManager.status;
   Stream<DeviceStatus> get deviceEvents => deviceManager.deviceEvents;
 
@@ -40,19 +40,19 @@ class DeviceModel {
         super();
 
   static Map<String, String> get deviceTypeName => {
-        SmartphoneSamplingPackage.SMARTPHONE_DEVICE_TYPE: 'Phone',
-        ESenseSamplingPackage.ESENSE_DEVICE_TYPE: 'eSense',
+        Smartphone.DEVICE_TYPE: 'Phone',
+        ESenseDevice.DEVICE_TYPE: 'eSense',
       };
 
   static Map<String, String> get deviceTypeDescription => {
-        SmartphoneSamplingPackage.SMARTPHONE_DEVICE_TYPE: 'This phone',
-        ESenseSamplingPackage.ESENSE_DEVICE_TYPE: 'eSense ear plug',
+        Smartphone.DEVICE_TYPE: 'This phone',
+        ESenseDevice.DEVICE_TYPE: 'eSense ear plug',
       };
 
   static Map<String, Icon> get deviceTypeIcon => {
-        SmartphoneSamplingPackage.SMARTPHONE_DEVICE_TYPE:
+        Smartphone.DEVICE_TYPE:
             Icon(Icons.phone_android, size: 50, color: CACHET.GREY_4),
-        ESenseSamplingPackage.ESENSE_DEVICE_TYPE:
+        ESenseDevice.DEVICE_TYPE:
             Icon(Icons.headset, size: 50, color: CACHET.CACHET_BLUE),
       };
 

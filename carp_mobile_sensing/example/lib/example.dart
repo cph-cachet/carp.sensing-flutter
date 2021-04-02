@@ -36,10 +36,7 @@ void example_1() async {
 
   // define which devices are used for data collection
   // in this case, its only this smartphone
-  Smartphone phone = Smartphone(
-    name: 'SM-A320FL',
-    roleName: CAMSDeploymentService.DEFAULT_MASTER_DEVICE_ROLENAME,
-  );
+  Smartphone phone = Smartphone();
   protocol.addMasterDevice(phone);
 
   // Add an automatic task that immediately starts collecting
@@ -98,10 +95,7 @@ void example_2() async {
 
   // define which devices are used for data collection
   // in this case, its only this smartphone
-  Smartphone phone = Smartphone(
-    name: 'SM-A320FL',
-    roleName: CAMSDeploymentService.DEFAULT_MASTER_DEVICE_ROLENAME,
-  );
+  Smartphone phone = Smartphone();
   protocol.addMasterDevice(phone);
 
   // automatically collect accelerometer and gyroscope data
@@ -224,12 +218,12 @@ void example_3() async {
     String deviceRoleName = deviceStatus.device.roleName;
 
     // create and register the device in the CAMS DeviceRegistry
-    await DeviceRegistry().registerDevice(type);
+    await DeviceController().registerDevice(type);
 
     // if the device manager is created succesfully on the phone
-    if (DeviceRegistry().hasDevice(type)) {
+    if (DeviceController().hasDevice(type)) {
       // ask the device manager for a unique id of the device
-      String deviceId = DeviceRegistry().devices[type].id;
+      String deviceId = DeviceController().devices[type].id;
       DeviceRegistration registration = DeviceRegistration(deviceId);
       // (all of the above can actually be handled directly by the CAMSDeploymentService.registerDevice() method)
 
@@ -271,7 +265,7 @@ void samplingSchemaExample() async {
         ]);
 
   CAMSStudyProtocol protocol = CAMSStudyProtocol();
-  Smartphone phone = Smartphone(name: 'SM-A320FL', roleName: 'phone');
+  Smartphone phone = Smartphone(roleName: 'phone');
   protocol.addMasterDevice(phone);
 
   // adding a set of specific measures from the `common` sampling schema to one overall task
@@ -389,7 +383,7 @@ void study_controller_example() async {
 
 /// An example of using the (new) AppTask model
 void app_task_example() async {
-  Smartphone phone = Smartphone(name: 'SM-A320FL', roleName: 'phone');
+  Smartphone phone = Smartphone(roleName: 'phone');
 
   StudyProtocol protocol = StudyProtocol()
     ..addTriggeredTask(

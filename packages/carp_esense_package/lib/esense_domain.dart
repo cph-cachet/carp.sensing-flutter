@@ -119,3 +119,28 @@ class ESenseSensorDatum extends ESenseDatum {
       super.toString() +
       ', packetIndex: $packetIndex, accl: [${accel[0]},${accel[1]},${accel[2]}], gyro: [${gyro[0]},${gyro[1]},${gyro[2]}]';
 }
+
+/// A [DeviceDescriptor] for an eSense device used in a [StudyProtocol].
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class ESenseDevice extends DeviceDescriptor {
+  /// The type of a eSense device.
+  static const String DEVICE_TYPE =
+      '${DeviceDescriptor.DEVICE_NAMESPACE}.ESenseDevice';
+
+  /// The default rolename for a eSense device.
+  static const String DEFAULT_ROLENAME = 'esense';
+
+  ESenseDevice({
+    String roleName = DEFAULT_ROLENAME,
+    List<String> supportedDataTypes,
+  }) : super(
+          roleName: roleName,
+          isMasterDevice: false,
+          supportedDataTypes: supportedDataTypes,
+        );
+
+  Function get fromJsonFunction => _$ESenseDeviceFromJson;
+  factory ESenseDevice.fromJson(Map<String, dynamic> json) => FromJsonFactory()
+      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$ESenseDeviceToJson(this);
+}

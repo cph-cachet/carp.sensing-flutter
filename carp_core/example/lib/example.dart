@@ -15,10 +15,7 @@ void main(List<String> args) async {
       StudyProtocol(owner: owner, name: "Track patient movement");
 
   // Define which devices are used for data collection.
-  Smartphone phone = Smartphone(
-    name: 'SM-A320FL',
-    roleName: 'phone',
-  );
+  Smartphone phone = Smartphone(roleName: 'phone');
   protocol.addMasterDevice(phone);
 
   // Define what needs to be measured, on which device, when.

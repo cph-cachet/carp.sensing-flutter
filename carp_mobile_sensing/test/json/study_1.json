@@ -5,7 +5,7 @@
      {
       "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
       "isMasterDevice": true,
-      "roleName": "phone",
+      "roleName": "masterphone",
       "samplingConfiguration": {}
      }
     ],
@@ -193,7 +193,7 @@
      {
       "triggerId": 0,
       "taskName": "Start measures",
-      "destinationDeviceRoleName": "phone"
+      "destinationDeviceRoleName": "masterphone"
      },
      {
       "triggerId": 1,

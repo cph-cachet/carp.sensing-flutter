@@ -12,6 +12,7 @@ String _encode(Object object) =>
 void main() {
   CAMSStudyProtocol protocol;
   Smartphone phone;
+  ESenseDevice eSense;
 
   setUp(() {
     // register the context sampling package
@@ -27,13 +28,8 @@ void main() {
       );
 
     // Define which devices are used for data collection.
-    phone = Smartphone(
-      name: 'SM-A320FL',
-      roleName: CAMSDeploymentService.DEFAULT_MASTER_DEVICE_ROLENAME,
-    );
-    DeviceDescriptor eSense = DeviceDescriptor(
-      roleName: 'esense',
-    );
+    phone = Smartphone(roleName: 'SM-A320FL');
+    eSense = ESenseDevice(roleName: 'esense');
 
     protocol
       ..addMasterDevice(phone)
@@ -58,7 +54,7 @@ void main() {
               ESenseSamplingPackage.ESENSE_SENSOR,
             ],
           )),
-        phone);
+        eSense);
   });
 
   test('CAMSStudyProtocol -> JSON', () async {
@@ -85,8 +81,8 @@ void main() {
         json.decode(plainJson) as Map<String, dynamic>);
 
     expect(protocol.ownerId, 'AB');
-    expect(protocol.masterDevices.first.roleName,
-        CAMSDeploymentService.DEFAULT_MASTER_DEVICE_ROLENAME);
+    expect(protocol.masterDevices.first.roleName, phone.roleName);
+    expect(protocol.connectedDevices.first.roleName, eSense.roleName);
     print(toJsonString(protocol));
   });
 

@@ -509,7 +509,6 @@ abstract class StreamProbe extends AbstractProbe {
 
   Future onResume() async {
     marking();
-    debug('$runtimeType :: listening to stream: $stream');
     subscription = stream?.listen(onData, onError: onError, onDone: onDone);
   }
 

@@ -7,7 +7,8 @@
 
 part of mobile_sensing_app;
 
-/// This class implements the sensing layer incl. setting up a [Study] with [Task]s and [Measure]s.
+/// This class implements the sensing layer incl. setting up a [StudyProtocol]
+/// with [Task]s and [Measure]s.
 class Sensing {
   static final Sensing _instance = Sensing._();
   CAMSMasterDeviceDeployment _deployment;
@@ -17,7 +18,7 @@ class Sensing {
 
   CAMSMasterDeviceDeployment get deployment => _deployment;
 
-  /// Get the status of the study deployment.
+  /// Get the latest status of the study deployment.
   StudyDeploymentStatus get status => _status;
   StudyProtocol get protocol => _protocol;
   StudyDeploymentController get controller => _controller;
@@ -28,7 +29,7 @@ class Sensing {
 
   /// the list of running - i.e. used - probes in this study.
   List<DeviceManager> get runningDevices =>
-      DeviceRegistry().devices.values.toList();
+      DeviceController().devices.values.toList();
 
   /// Get the singleton sensing instance
   factory Sensing() => _instance;
@@ -51,21 +52,9 @@ class Sensing {
     // deploy this protocol using the on-phone deployment service
     _status = await CAMSDeploymentService().createStudyDeployment(_protocol);
 
-    // at this time we can register this phone as a master device like this
-    await CAMSDeploymentService().registerDevice(
-      status.studyDeploymentId,
-      CAMSDeploymentService.DEFAULT_MASTER_DEVICE_ROLENAME,
-      DeviceRegistration(),
-    );
-    // but this is actually not needed, since a phone is always registrered
-    // automatically in the CAMSDeploymentService.
-
-    // But - you should register devices connected to this phone, like eSense
-    await CAMSDeploymentService().registerDevice(
-      status.studyDeploymentId,
-      ESenseSamplingPackage.ESENSE_DEVICE_TYPE,
-      DeviceRegistration(),
-    );
+    // initialize the local device controller with the deployment status,
+    // which contains the list of needed devices
+    await DeviceController().initialize(_status, CAMSDeploymentService());
 
     // now we're ready to get the device deployment configuration for this phone
     _deployment = await CAMSDeploymentService()

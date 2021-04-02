@@ -158,7 +158,6 @@ class StudyProtocol extends Serializable {
       if (triggeredTask.destinationDeviceRoleName == deviceRoleName)
         deviceTasks.add(_taskMap[triggeredTask.taskName]);
     });
-
     return deviceTasks;
   }
 

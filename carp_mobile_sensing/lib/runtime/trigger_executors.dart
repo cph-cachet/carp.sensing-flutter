@@ -62,15 +62,16 @@ class StudyDeploymentExecutor extends Executor {
     _deployment = deployment;
     _group.add(_manualDataPointController.stream);
 
-    deployment.triggeredTasks.forEach((triggeredTask) {
+    _deployment.triggeredTasks.forEach((triggeredTask) {
       // get the trigger based on the trigger id
       Trigger trigger = _deployment.triggers['${triggeredTask.triggerId}'];
       // get the task based on the task name
       TaskDescriptor task = _deployment.getTaskByName(triggeredTask.taskName);
 
-      print('>> triggeredTask: $triggeredTask');
-      print('>> trigger: $trigger');
-      print('>> task: $task');
+      // print('>> triggeredTask: $triggeredTask');
+      // print('>> trigger: $trigger');
+      // print('>> task name: ${triggeredTask.taskName}');
+      // print('>> task: $task');
 
       TriggeredTaskExecutor executor = TriggeredTaskExecutor(
         triggeredTask,

@@ -37,14 +37,8 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
       };
 
     // Define which devices are used for data collection.
-    Smartphone phone = Smartphone(
-      name: 'SM-A320FL',
-      roleName: CAMSDeploymentService.DEFAULT_MASTER_DEVICE_ROLENAME,
-    );
-    DeviceDescriptor eSense = DeviceDescriptor(
-      roleName: ESenseSamplingPackage.ESENSE_DEVICE_TYPE,
-      isMasterDevice: false,
-    );
+    Smartphone phone = Smartphone();
+    ESenseDevice eSense = ESenseDevice();
 
     protocol
       ..addMasterDevice(phone)
@@ -55,12 +49,13 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         AutomaticTask()
           ..measures = SamplingPackageRegistry().debug().getMeasureList(
             types: [
-              // SensorSamplingPackage.LIGHT, // 10 s
+              SensorSamplingPackage.LIGHT, // 10 s
               ConnectivitySamplingPackage.CONNECTIVITY,
               ConnectivitySamplingPackage.WIFI, // 60 s
               DeviceSamplingPackage.MEMORY, // 60 s
               AudioSamplingPackage.NOISE, // 60 s
-              // ContextSamplingPackage.ACTIVITY, // ~3 s
+              ContextSamplingPackage.ACTIVITY, // ~3 s
+              ContextSamplingPackage.MOBILITY, // ~3 s
             ],
           ),
         phone);
@@ -81,7 +76,6 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         AutomaticTask()
           ..measures = SamplingPackageRegistry().debug().getMeasureList(
             types: [
-              // AppsSamplingPackage.APP_USAGE,
               ContextSamplingPackage.WEATHER,
               ContextSamplingPackage.AIR_QUALITY,
             ],

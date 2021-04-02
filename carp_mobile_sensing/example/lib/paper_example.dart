@@ -19,10 +19,7 @@ void sensing() async {
 
   // define which devices are used for data collection
   // in this case, its only this smartphone
-  Smartphone phone = Smartphone(
-    name: 'SM-A320FL',
-    roleName: CAMSDeploymentService.DEFAULT_MASTER_DEVICE_ROLENAME,
-  );
+  Smartphone phone = Smartphone();
 
   protocol.addMasterDevice(phone);
 
@@ -51,7 +48,7 @@ void sensing() async {
   // at this time we can register this phone as a master device like this
   CAMSDeploymentService().registerDevice(
     status.studyDeploymentId,
-    CAMSDeploymentService.DEFAULT_MASTER_DEVICE_ROLENAME,
+    CAMSDeploymentService().thisPhone.roleName,
     DeviceRegistration(),
   );
   // but this is actually not needed, since a phone is always registrered

@@ -22,7 +22,7 @@ class SensingBLoC {
       Sensing().runningDevices.map((device) => DeviceModel(device));
 
   void connectToDevice(DeviceModel device) {
-    DeviceRegistry().devices[device.type].connect();
+    DeviceController().devices[device.type].connect();
   }
 
   Future init() async {

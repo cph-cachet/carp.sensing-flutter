@@ -22,5 +22,8 @@ Datum blueetothNameAnoymizer(Datum datum) {
 Datum wifiNameAnoymizer(Datum datum) {
   assert(datum is WifiDatum);
   WifiDatum wd = datum as WifiDatum;
-  return wd..ssid = sha1.convert(utf8.encode(wd.ssid)).toString();
+  return wd
+    ..ssid = (wd.ssid != null)
+        ? sha1.convert(utf8.encode(wd.ssid)).toString()
+        : wd.ssid;
 }

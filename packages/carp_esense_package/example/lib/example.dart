@@ -27,12 +27,10 @@ void main() async {
 
   // define which devices are used for data collection - both phone and eSense
   Smartphone phone = Smartphone(
-    name: 'SM-A320FL',
-    roleName: CAMSDeploymentService.DEFAULT_MASTER_DEVICE_ROLENAME,
+    roleName: 'The main phone',
   );
-  DeviceDescriptor eSense = DeviceDescriptor(
-    roleName: ESenseSamplingPackage.ESENSE_DEVICE_TYPE,
-    isMasterDevice: false,
+  DeviceDescriptor eSense = ESenseDevice(
+    roleName: 'The left eSense earplug',
   );
 
   protocol
@@ -74,7 +72,7 @@ void main() async {
   // at this time we can register an eSensee device which are connected to this phone (master device)
   CAMSDeploymentService().registerDevice(
     status.studyDeploymentId,
-    ESenseSamplingPackage.ESENSE_DEVICE_TYPE,
+    'The left eSense earbud',
     DeviceRegistration('some device id'),
   );
 

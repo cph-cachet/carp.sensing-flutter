@@ -137,7 +137,8 @@ class FileDataManager extends AbstractDataManager {
       try {
         _s.write(json);
         _s.write('\n,\n'); // write a ',' to separate json objects in the list
-        debug('Writing to file : ${dataPoint.toString()}');
+        debug(
+            'Writing data point to file - type: ${dataPoint.carpHeader.dataFormat}');
 
         file.then((_f) {
           _f.length().then((len) {

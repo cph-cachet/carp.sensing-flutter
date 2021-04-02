@@ -276,9 +276,7 @@ StudyDeploymentStatus _$StudyDeploymentStatusFromJson(
         ?.toList(),
   )
     ..$type = json[r'$type'] as String
-    ..startTime = json['startTime'] as int
-    ..status = _$enumDecodeNullable(
-        _$StudyDeploymentStatusTypesEnumMap, json['status']);
+    ..startTime = json['startTime'] as int;
 }
 
 Map<String, dynamic> _$StudyDeploymentStatusToJson(
@@ -296,48 +294,8 @@ Map<String, dynamic> _$StudyDeploymentStatusToJson(
   writeNotNull('studyDeploymentId', instance.studyDeploymentId);
   writeNotNull('devicesStatus', instance.devicesStatus);
   writeNotNull('startTime', instance.startTime);
-  writeNotNull('status', _$StudyDeploymentStatusTypesEnumMap[instance.status]);
   return val;
 }
-
-T _$enumDecode<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
-}) {
-  if (source == null) {
-    throw ArgumentError('A value must be provided. Supported values: '
-        '${enumValues.values.join(', ')}');
-  }
-
-  final value = enumValues.entries
-      .singleWhere((e) => e.value == source, orElse: () => null)
-      ?.key;
-
-  if (value == null && unknownValue == null) {
-    throw ArgumentError('`$source` is not one of the supported values: '
-        '${enumValues.values.join(', ')}');
-  }
-  return value ?? unknownValue;
-}
-
-T _$enumDecodeNullable<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
-}) {
-  if (source == null) {
-    return null;
-  }
-  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
-}
-
-const _$StudyDeploymentStatusTypesEnumMap = {
-  StudyDeploymentStatusTypes.Invited: 'Invited',
-  StudyDeploymentStatusTypes.DeployingDevices: 'DeployingDevices',
-  StudyDeploymentStatusTypes.DeploymentReady: 'DeploymentReady',
-  StudyDeploymentStatusTypes.Stopped: 'Stopped',
-};
 
 ParticipantData _$ParticipantDataFromJson(Map<String, dynamic> json) {
   return ParticipantData(
@@ -1157,6 +1115,38 @@ Map<String, dynamic> _$RecurrenceRuleToJson(RecurrenceRule instance) {
   writeNotNull('interval', instance.interval);
   writeNotNull('end', instance.end);
   return val;
+}
+
+T _$enumDecode<T>(
+  Map<T, dynamic> enumValues,
+  dynamic source, {
+  T unknownValue,
+}) {
+  if (source == null) {
+    throw ArgumentError('A value must be provided. Supported values: '
+        '${enumValues.values.join(', ')}');
+  }
+
+  final value = enumValues.entries
+      .singleWhere((e) => e.value == source, orElse: () => null)
+      ?.key;
+
+  if (value == null && unknownValue == null) {
+    throw ArgumentError('`$source` is not one of the supported values: '
+        '${enumValues.values.join(', ')}');
+  }
+  return value ?? unknownValue;
+}
+
+T _$enumDecodeNullable<T>(
+  Map<T, dynamic> enumValues,
+  dynamic source, {
+  T unknownValue,
+}) {
+  if (source == null) {
+    return null;
+  }
+  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
 }
 
 const _$FrequencyEnumMap = {

@@ -11,7 +11,7 @@ part of managers;
 /// CAMS studies to be deployed locally on this phone.
 class CAMSDeploymentService implements DeploymentService {
   /// The default rolename for this master phone device.
-  static const String DEFAULT_MASTER_DEVICE_ROLENAME = 'phone';
+  // static const String DEFAULT_MASTER_DEVICE_ROLENAME = 'phone';
 
   // key = studyDeploymentId
   final Map<String, StudyDeployment> _repository = {};
@@ -22,15 +22,16 @@ class CAMSDeploymentService implements DeploymentService {
   /// Get the singlton [CAMSDeploymentService].
   factory CAMSDeploymentService() => _instance;
 
+  /// The device description for this phone.
+  Smartphone thisPhone = Smartphone();
+
   Future<StudyDeploymentStatus> createStudyDeployment(
       StudyProtocol protocol) async {
     StudyDeployment deployment = StudyDeployment(protocol);
     _repository[deployment.studyDeploymentId] = deployment;
 
     // make sure to register this phone as a master device
-    deployment.registerDevice(
-        MasterDeviceDescriptor(roleName: DEFAULT_MASTER_DEVICE_ROLENAME),
-        DeviceRegistration());
+    deployment.registerDevice(thisPhone, DeviceRegistration());
 
     // set the deployment status to "invited" as the initial status.
     deployment.status.status = StudyDeploymentStatusTypes.Invited;
@@ -119,8 +120,7 @@ class CAMSDeploymentService implements DeploymentService {
   /// for [studyDeploymentId].
   Future<CAMSMasterDeviceDeployment> getDeviceDeployment(
           String studyDeploymentId) async =>
-      await getDeviceDeploymentFor(
-          studyDeploymentId, DEFAULT_MASTER_DEVICE_ROLENAME);
+      await getDeviceDeploymentFor(studyDeploymentId, thisPhone.roleName);
 
   Future<StudyDeploymentStatus> deploymentSuccessfulFor(
     String studyDeploymentId,
@@ -134,7 +134,6 @@ class CAMSDeploymentService implements DeploymentService {
         (descriptor) => descriptor.roleName == masterDeviceRoleName,
         orElse: () => null);
 
-    print('>> $device');
     assert(device != null && device.isMasterDevice,
         "The specified device with rolename '$masterDeviceRoleName' is not a master device.");
 
@@ -153,7 +152,7 @@ class CAMSDeploymentService implements DeploymentService {
   }) async =>
       deploymentSuccessfulFor(
         studyDeploymentId,
-        DEFAULT_MASTER_DEVICE_ROLENAME,
+        thisPhone.roleName,
         deviceDeploymentLastUpdateDate: deviceDeploymentLastUpdateDate,
       );
 

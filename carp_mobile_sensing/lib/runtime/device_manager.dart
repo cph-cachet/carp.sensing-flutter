@@ -6,15 +6,59 @@
  */
 part of runtime;
 
-/// A [DeviceRegistry] handles runtime managenent of all devices used in a
-/// study configuration.
-class DeviceRegistry {
-  static final DeviceRegistry _instance = DeviceRegistry._();
+/// A [DeviceController] handles runtime managenent of all devices used in a
+/// study deployment.
+class DeviceController {
+  static final DeviceController _instance = DeviceController._();
   final Map<String, DeviceManager> _devices = {};
 
-  /// Get the singleton [DeviceRegistry].
-  factory DeviceRegistry() => _instance;
-  DeviceRegistry._();
+  /// Get the singleton [DeviceController].
+  factory DeviceController() => _instance;
+  DeviceController._();
+
+  /// Returns true if this controller supports a device of the given [type].
+  /// Note that even though a certain [type] of device is supported,
+  /// its device mananger is not loaded until [registerDevice] is called.
+  bool supportsDevice(String type) {
+    for (var package in SamplingPackageRegistry().packages)
+      if (package.deviceType == type) return true;
+
+    return false;
+  }
+
+  /// Initialize this device controller based on a deployment.
+  ///
+  /// The [status] lists the devices needed to be deployed on this device.
+  /// If a [DeploymentService] is specified, then devices which are
+  /// available on this phone is registrered at this deployment service.
+  ///
+  /// This is a convinient method for synchronizing the devices neeeded for a
+  /// deployment and the available devices on this phone.
+  Future initialize(
+    StudyDeploymentStatus status, [
+    DeploymentService deploymentService,
+  ]) async {
+    // register the needed devices - listed in the deployment status
+
+    for (var deviceStatus in status.devicesStatus) {
+      String type = deviceStatus.device.type;
+      String deviceRoleName = deviceStatus.device.roleName;
+
+      // if this phone supports the device, register it
+      if (supportsDevice(type)) await registerDevice(type);
+
+      // register at the deployment manager (if available)
+      if (hasDevice(type) && deploymentService != null) {
+        // ask the device manager for a unique id of the device
+        String deviceId = DeviceController().devices[type].id;
+        DeviceRegistration registration = DeviceRegistration(deviceId);
+
+        // register the device in the deployment service
+        await deploymentService.registerDevice(
+            status.studyDeploymentId, deviceRoleName, registration);
+      }
+    }
+  }
 
   /// The list of devices running on this phone as part of a study.
   /// Mapped to the device type.
@@ -22,19 +66,21 @@ class DeviceRegistry {
   /// type can be connected to a this phone's device registry.
   Map<String, DeviceManager> get devices => _devices;
 
-  /// Returns true if the registry contain a device of the given [type].
+  String devicesToString() =>
+      devices.keys.map((key) => key.split('.').last).toString();
+
+  /// Returns true if the registry contain a device manager of the given [type].
   bool hasDevice(String type) => devices.containsKey(type);
 
   /// Create and add the device of [type] to the registry.
   Future registerDevice(String type) async {
-    debug('Creating device manager for device type: $type');
+    info('Creating device manager for device type: $type');
     DeviceManager manager = await create(type);
     if (manager == null) {
       warning('No device manager found for device: $type');
     } else {
-      info('Initializing device manager: $manager');
       await manager.initialize(type);
-      devices[type] = manager;
+      _devices[type] = manager;
     }
   }
 
@@ -46,10 +92,10 @@ class DeviceRegistry {
   /// This methods search the [SamplingPackageRegistry] for a [DeviceManager]
   /// which has a device manager of the specified [type].
   Future<DeviceManager> create(String type) async {
-    DeviceManager _deviceManager;
-    SamplingPackageRegistry().packages.forEach((package) => _deviceManager =
-        (package.deviceType == type) ? package.deviceManager : null);
-    return _deviceManager;
+    for (var package in SamplingPackageRegistry().packages)
+      if (package.deviceType == type) return package.deviceManager;
+
+    return null;
   }
 }
 
@@ -105,8 +151,8 @@ class SmartphoneDeviceManager extends DeviceManager {
   Future initialize(String type) async {
     await super.initialize(type);
     BatteryProbe()
-      ..data.listen(
-          (datum) => _batteryLevel = (datum as BatteryDatum).batteryLevel)
+      ..data.listen((dataPoint) =>
+          _batteryLevel = (dataPoint.data as BatteryDatum).batteryLevel)
       ..initialize(Measure(type: DeviceSamplingPackage.BATTERY))
       ..resume();
     status = DeviceStatus.connected;

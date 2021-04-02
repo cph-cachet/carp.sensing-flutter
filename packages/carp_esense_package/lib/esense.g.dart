@@ -102,3 +102,38 @@ Map<String, dynamic> _$ESenseSensorDatumToJson(ESenseSensorDatum instance) {
   writeNotNull('gyro', instance.gyro);
   return val;
 }
+
+ESenseDevice _$ESenseDeviceFromJson(Map<String, dynamic> json) {
+  return ESenseDevice(
+    roleName: json['roleName'] as String,
+    supportedDataTypes:
+        (json['supportedDataTypes'] as List)?.map((e) => e as String)?.toList(),
+  )
+    ..$type = json[r'$type'] as String
+    ..isMasterDevice = json['isMasterDevice'] as bool
+    ..samplingConfiguration =
+        (json['samplingConfiguration'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(
+          k,
+          e == null
+              ? null
+              : SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
+    );
+}
+
+Map<String, dynamic> _$ESenseDeviceToJson(ESenseDevice instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(r'$type', instance.$type);
+  writeNotNull('isMasterDevice', instance.isMasterDevice);
+  writeNotNull('roleName', instance.roleName);
+  writeNotNull('supportedDataTypes', instance.supportedDataTypes);
+  writeNotNull('samplingConfiguration', instance.samplingConfiguration);
+  return val;
+}

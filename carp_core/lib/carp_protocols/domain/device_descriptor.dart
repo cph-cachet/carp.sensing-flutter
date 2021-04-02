@@ -13,6 +13,8 @@ part of carp_core;
 /// via probes.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class DeviceDescriptor extends Serializable {
+  static const DEVICE_NAMESPACE = 'dk.cachet.carp.protocols.domain.devices';
+
   DeviceDescriptor({
     this.roleName,
     this.isMasterDevice = false,
@@ -45,7 +47,7 @@ class DeviceDescriptor extends Serializable {
       FromJsonFactory()
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$DeviceDescriptorToJson(this);
-  String get jsonType => 'dk.cachet.carp.protocols.domain.devices.$runtimeType';
+  String get jsonType => '$DEVICE_NAMESPACE.$runtimeType';
 }
 
 /// A device which aggregates, synchronizes, and optionally uploads incoming
@@ -53,7 +55,6 @@ class DeviceDescriptor extends Serializable {
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class MasterDeviceDescriptor extends DeviceDescriptor {
   MasterDeviceDescriptor({
-    String name,
     String roleName,
     List<String> supportedDataTypes,
   }) : super(
@@ -74,14 +75,16 @@ class MasterDeviceDescriptor extends DeviceDescriptor {
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class Smartphone extends MasterDeviceDescriptor {
   /// The type of a smartphone master device.
-  static const String SMARTPHONE_DEVICE_TYPE = 'smarthone';
+  static const String DEVICE_TYPE =
+      '${DeviceDescriptor.DEVICE_NAMESPACE}.Smartphone';
+
+  /// The default rolename for a smartphone master device.
+  static const String DEFAULT_ROLENAME = 'masterphone';
 
   Smartphone({
-    String name,
-    String roleName,
+    String roleName = DEFAULT_ROLENAME,
     List<String> supportedDataTypes,
   }) : super(
-          name: name,
           roleName: roleName,
           supportedDataTypes: supportedDataTypes,
         );

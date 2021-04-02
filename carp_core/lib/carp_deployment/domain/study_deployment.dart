@@ -19,7 +19,7 @@ class StudyDeployment {
   DateTime _creationDate;
   final StudyProtocol _protocol;
 
-  // the list of registred devices, mapped to their rolename
+  // the list of all registred devices, mapped to their rolename
   final Map<String, DeviceRegistration> _registeredDevices = {};
 
   // the list of registrered devices' descriptions, mapped to their rolename
@@ -107,6 +107,7 @@ class StudyDeployment {
     // Add device to currently registered devices and also store it in registration history.
     _registeredDeviceDescriptors[device.roleName] = device;
     _registeredDevices[device.roleName] = registration;
+
     if (_deviceRegistrationHistory[device] == null)
       _deviceRegistrationHistory[device] = [];
     _deviceRegistrationHistory[device].add(registration);
@@ -127,23 +128,25 @@ class StudyDeployment {
     //     "The specified master device is not part of the protocol of this deployment.");
 
     // TODO - Verify whether the specified device is ready to be deployed.
-    DeviceRegistration configuration = _registeredDevices[device];
+    DeviceRegistration configuration = _registeredDevices[device.roleName];
 
     // mark all registrered devices as deployed
     _deployedDevices.addAll(_registeredDevices.keys);
 
-    // Determine which devices this device needs to connect to
-    // TODO - retrieve configuration for preregistered devices
+    // determine which devices this device needs to connect to
+    // TODO - only retrieve configuration for preregistered devices
     List<DeviceDescriptor> connectedDevices = _protocol.connectedDevices;
 
-    Map<String, DeviceRegistration> deviceRegistrations = {};
-    _registeredDevices.forEach((descriptor, registration) =>
-        deviceRegistrations[descriptor] = registration);
+    // create a map of device registration for the connected devices
+    Map<String, DeviceRegistration> connectedDeviceConfigurations = {};
+    connectedDevices.forEach((descriptor) =>
+        connectedDeviceConfigurations[descriptor.roleName] =
+            _registeredDevices[descriptor.roleName]);
 
-    // Get all tasks which might need to be executed on this or connected devices.
+    // get all tasks which might need to be executed on this or connected devices.
     List<TaskDescriptor> tasks = [];
-    deviceRegistrations.keys.forEach((deviceRoleName) =>
-        tasks.addAll(protocol.getTasksForDeviceRoleName(deviceRoleName)));
+    _registeredDevices.keys.forEach((rolename) =>
+        tasks.addAll(protocol.getTasksForDeviceRoleName(rolename)));
 
     // Get all trigger information for this and connected devices.
     // The trigger IDs assigned are reused to identify them within the protocol
@@ -166,7 +169,7 @@ class StudyDeployment {
         deviceDescriptor: device,
         configuration: configuration,
         connectedDevices: connectedDevices,
-        connectedDeviceConfigurations: deviceRegistrations,
+        connectedDeviceConfigurations: connectedDeviceConfigurations,
         tasks: tasks,
         triggers: usedTriggers,
         triggeredTasks: triggeredTasks);

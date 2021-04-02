@@ -17,8 +17,10 @@ class CAMSMeasure extends Measure {
   /// The default English name for this measure.
   /// If the English name is not set, then the measure's [type] is returned.
   @JsonKey(ignore: true)
-  String get name => measureDescription.containsKey('en')
-      ? measureDescription['en'].name
+  String get name => (measureDescription != null)
+      ? measureDescription.containsKey('en')
+          ? measureDescription['en'].name
+          : type
       : type;
 
   /// The default English description of this measure.
@@ -42,6 +44,7 @@ class CAMSMeasure extends Measure {
   }) : super(type: type) {
     enabled = enabled ?? true;
     _storedEnabled = enabled;
+    measureDescription ??= {};
   }
 
   MeasureDescription getDescription(String locale) =>

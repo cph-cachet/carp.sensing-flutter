@@ -11,7 +11,7 @@ void main() {
         owner: ProtocolOwner(id: 'xyz@dtu.dk'), name: 'Track patient movement');
 
     // Define which devices are used for data collection.
-    Smartphone phone = Smartphone(name: 'SM-A320FL', roleName: 'masterphone');
+    Smartphone phone = Smartphone(roleName: 'masterphone');
     DeviceDescriptor eSense = DeviceDescriptor(
       roleName: 'eSense',
     );
