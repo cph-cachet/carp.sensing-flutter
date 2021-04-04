@@ -44,7 +44,7 @@ void main() {
       phone, // a task with all measures
     );
 
-    // add an automatic task that immediately starts collecting eSense button and sensor events.
+    // add an automatic task that immediately starts collecting eSense button and sensor events
     protocol.addTriggeredTask(
         ImmediateTrigger(),
         AutomaticTask()

@@ -52,10 +52,7 @@ void main() {
       );
 
     // Define which devices are used for data collection.
-    phone = Smartphone(
-      name: 'SM-A320FL',
-      roleName: CAMSDeploymentService.DEFAULT_MASTER_DEVICE_ROLENAME,
-    );
+    phone = Smartphone();
 
     protocol..addMasterDevice(phone);
 

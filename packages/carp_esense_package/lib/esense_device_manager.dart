@@ -7,6 +7,31 @@
 
 part of esense;
 
+/// A [DeviceDescriptor] for an eSense device used in a [StudyProtocol].
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class ESenseDevice extends DeviceDescriptor {
+  /// The type of a eSense device.
+  static const String DEVICE_TYPE =
+      '${DeviceDescriptor.DEVICE_NAMESPACE}.ESenseDevice';
+
+  /// The default rolename for a eSense device.
+  static const String DEFAULT_ROLENAME = 'esense';
+
+  ESenseDevice({
+    String roleName = DEFAULT_ROLENAME,
+    List<String> supportedDataTypes,
+  }) : super(
+          roleName: roleName,
+          isMasterDevice: false,
+          supportedDataTypes: supportedDataTypes,
+        );
+
+  Function get fromJsonFunction => _$ESenseDeviceFromJson;
+  factory ESenseDevice.fromJson(Map<String, dynamic> json) => FromJsonFactory()
+      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$ESenseDeviceToJson(this);
+}
+
 class ESenseDeviceManager extends DeviceManager {
   // the last known voltage level of the eSense device
   double _voltageLevel = 4;

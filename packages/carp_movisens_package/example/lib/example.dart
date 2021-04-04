@@ -26,14 +26,8 @@ void main() async {
     );
 
   // define which devices are used for data collection - both phone and MoviSens
-  Smartphone phone = Smartphone(
-    name: 'SM-A320FL',
-    roleName: CAMSDeploymentService.DEFAULT_MASTER_DEVICE_ROLENAME,
-  );
-  DeviceDescriptor movisens = DeviceDescriptor(
-    roleName: MovisensSamplingPackage.MOVISENS_DEVICE_TYPE,
-    isMasterDevice: false,
-  );
+  Smartphone phone = Smartphone();
+  DeviceDescriptor movisens = DeviceDescriptor();
 
   protocol
     ..addMasterDevice(phone)
@@ -69,7 +63,7 @@ void main() async {
   // at this time we can register an eSensee device which are connected to this phone (master device)
   CAMSDeploymentService().registerDevice(
     status.studyDeploymentId,
-    MovisensSamplingPackage.MOVISENS_DEVICE_TYPE,
+    MovisensDevice.DEFAULT_ROLENAME,
     DeviceRegistration('some device id'),
   );
 

@@ -5,7 +5,7 @@
    {
     "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
     "isMasterDevice": true,
-    "roleName": "phone",
+    "roleName": "masterphone",
     "samplingConfiguration": {}
    }
   ],
@@ -13,7 +13,6 @@
    {
     "$type": "dk.cachet.carp.protocols.domain.devices.DeviceDescriptor",
     "isMasterDevice": false,
-    "roleName": "esense",
     "samplingConfiguration": {}
    }
   ],
@@ -30,14 +29,26 @@
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
       "type": "dk.cachet.carp.device",
-      "name": "Basic Device Info",
+      "measureDescription": {
+       "en": {
+        "$type": "MeasureDescription",
+        "name": "Basic Device Info",
+        "description": "Collects basic information about the phone."
+       }
+      },
       "enabled": true,
       "configuration": {}
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
       "type": "dk.cachet.carp.memory",
-      "name": "Memory Usage",
+      "measureDescription": {
+       "en": {
+        "$type": "MeasureDescription",
+        "name": "Memory Usage",
+        "description": "Collects information about use of memory."
+       }
+      },
       "enabled": true,
       "configuration": {},
       "frequency": 60000000
@@ -45,35 +56,65 @@
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
       "type": "dk.cachet.carp.battery",
-      "name": "Battery",
+      "measureDescription": {
+       "en": {
+        "$type": "MeasureDescription",
+        "name": "Battery",
+        "description": "Collects information about the battery charging level."
+       }
+      },
       "enabled": true,
       "configuration": {}
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
       "type": "dk.cachet.carp.screen",
-      "name": "Screen Activity (lock/on/off)",
+      "measureDescription": {
+       "en": {
+        "$type": "MeasureDescription",
+        "name": "Screen Activity (lock/on/off)",
+        "description": "Collects information about lock/unlock event of the phone's screen."
+       }
+      },
       "enabled": true,
       "configuration": {}
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
       "type": "dk.cachet.carp.accelerometer",
-      "name": "Accelerometer",
+      "measureDescription": {
+       "en": {
+        "$type": "MeasureDescription",
+        "name": "Accelerometer",
+        "description": "Collects movement data based on the onboard phone accelerometer sensor."
+       }
+      },
       "enabled": false,
       "configuration": {}
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
       "type": "dk.cachet.carp.gyroscope",
-      "name": "Gyroscope",
+      "measureDescription": {
+       "en": {
+        "$type": "MeasureDescription",
+        "name": "Gyroscope",
+        "description": "Collects movement data based on the onboard phone gyroscope sensor."
+       }
+      },
       "enabled": false,
       "configuration": {}
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
       "type": "dk.cachet.carp.periodic_accelerometer",
-      "name": "Accelerometer",
+      "measureDescription": {
+       "en": {
+        "$type": "MeasureDescription",
+        "name": "Accelerometer",
+        "description": "Collects movement data based on the onboard phone accelerometer sensor."
+       }
+      },
       "enabled": false,
       "configuration": {},
       "frequency": 5000000,
@@ -82,7 +123,13 @@
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
       "type": "dk.cachet.carp.periodic_gyroscope",
-      "name": "Gyroscope",
+      "measureDescription": {
+       "en": {
+        "$type": "MeasureDescription",
+        "name": "Gyroscope",
+        "description": "Collects movement data based on the onboard phone gyroscope sensor."
+       }
+      },
       "enabled": false,
       "configuration": {},
       "frequency": 5000000,
@@ -91,36 +138,43 @@
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
       "type": "dk.cachet.carp.pedometer",
-      "name": "Pedometer (Step Count)",
+      "measureDescription": {
+       "en": {
+        "$type": "MeasureDescription",
+        "name": "Pedometer (Step Count)",
+        "description": "Collects step events from the onboard phone step sensor."
+       }
+      },
       "enabled": true,
       "configuration": {}
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
       "type": "dk.cachet.carp.light",
-      "name": "Ambient Light",
+      "measureDescription": {
+       "en": {
+        "$type": "MeasureDescription",
+        "name": "Ambient Light",
+        "description": "Collects ambient light from the light sensor on the phone."
+       }
+      },
       "enabled": true,
       "configuration": {},
       "frequency": 60000000,
       "duration": 1000000
      },
      {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.AudioMeasure",
-      "type": "audio",
-      "name": "Audio Recording",
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.RPTaskMeasure",
+      "type": "dk.cachet.carp.survey",
+      "measure_description": {
+       "en": {
+        "$type": "MeasureDescription",
+        "name": "WHO-5",
+        "description": "The WHO well-being survey"
+       }
+      },
       "enabled": true,
-      "configuration": {},
-      "study_id": "default_study"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.NoiseMeasure",
-      "type": "noise",
-      "name": "Ambient Noise",
-      "enabled": false,
-      "configuration": {},
-      "frequency": 300000000,
-      "duration": 10000000,
-      "sampling_rate": 500
+      "configuration": {}
      }
     ]
    }
@@ -129,9 +183,10 @@
    {
     "triggerId": 0,
     "taskName": "Task #5",
-    "destinationDeviceRoleName": "phone"
+    "destinationDeviceRoleName": "masterphone"
    }
   ],
+  "consent": {},
   "owner": {
    "$type": "ProtocolOwner",
    "id": "AB",

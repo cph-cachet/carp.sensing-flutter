@@ -81,6 +81,8 @@ class Smartphone extends MasterDeviceDescriptor {
   /// The default rolename for a smartphone master device.
   static const String DEFAULT_ROLENAME = 'masterphone';
 
+  /// Create a new Smartphone device descriptor.
+  /// If [roleName] is not specified, then the  [DEFAULT_ROLENAME] is used.
   Smartphone({
     String roleName = DEFAULT_ROLENAME,
     List<String> supportedDataTypes,

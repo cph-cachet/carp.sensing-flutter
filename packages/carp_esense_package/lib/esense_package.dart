@@ -19,8 +19,6 @@ class ESenseSamplingPackage implements SamplingPackage {
   static const String ESENSE_BUTTON = "$ESENSE_NAMESPACE.button";
   static const String ESENSE_SENSOR = "$ESENSE_NAMESPACE.sensor";
 
-  // static ESenseDevice esense = ESenseDevice();
-
   List<String> get dataTypes => [ESENSE_BUTTON, ESENSE_SENSOR];
 
   Probe create(String type) {

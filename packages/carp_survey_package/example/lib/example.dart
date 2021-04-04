@@ -26,10 +26,7 @@ void main() async {
 
   // define which devices are used for data collection
   // in this case, its only this smartphone
-  Smartphone phone = Smartphone(
-    name: 'SM-A320FL',
-    roleName: CAMSDeploymentService.DEFAULT_MASTER_DEVICE_ROLENAME,
-  );
+  Smartphone phone = Smartphone();
   protocol.addMasterDevice(phone);
 
 // add a WHO-5 survey to an app task for this protocol

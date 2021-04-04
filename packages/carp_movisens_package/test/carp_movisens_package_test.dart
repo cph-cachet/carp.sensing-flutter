@@ -28,17 +28,12 @@ void main() {
       );
 
     // Define which devices are used for data collection.
-    phone = Smartphone(
-      name: 'SM-A320FL',
-      roleName: CAMSDeploymentService.DEFAULT_MASTER_DEVICE_ROLENAME,
-    );
-    DeviceDescriptor eSense = DeviceDescriptor(
-      roleName: 'esense',
-    );
+    phone = Smartphone();
+    MovisensDevice movisens = MovisensDevice();
 
     protocol
       ..addMasterDevice(phone)
-      ..addConnectedDevice(eSense);
+      ..addConnectedDevice(movisens);
 
     // adding all measure from the common schema to one one trigger and one task
     protocol.addTriggeredTask(
@@ -48,6 +43,17 @@ void main() {
             SamplingPackageRegistry().common().measures.values.toList(),
       phone, // a task with all measures
     );
+
+    // add an automatic task that immediately starts collecting Movisens events
+    protocol.addTriggeredTask(
+        ImmediateTrigger(),
+        AutomaticTask()
+          ..addMeasures(MovisensSamplingPackage().debug.getMeasureList(
+            types: [
+              MovisensSamplingPackage.MOVISENS,
+            ],
+          )),
+        movisens);
   });
 
   test('CAMSStudyProtocol -> JSON', () async {
@@ -74,8 +80,10 @@ void main() {
         json.decode(plainJson) as Map<String, dynamic>);
 
     expect(protocol.ownerId, 'jakba');
-    expect(protocol.masterDevices.first.roleName,
-        CAMSDeploymentService.DEFAULT_MASTER_DEVICE_ROLENAME);
+    expect(protocol.masterDevices.first.roleName, Smartphone.DEFAULT_ROLENAME);
+    expect(protocol.connectedDevices.first.roleName,
+        MovisensDevice.DEFAULT_ROLENAME);
+
     print(toJsonString(protocol));
   });
 

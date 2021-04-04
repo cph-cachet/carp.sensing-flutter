@@ -7,8 +7,34 @@
 
 part of movisens;
 
+/// A [DeviceDescriptor] for a Movisens device used in a [StudyProtocol].
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class MovisensDevice extends DeviceDescriptor {
+  /// The type of a Movisens device.
+  static const String DEVICE_TYPE =
+      '${DeviceDescriptor.DEVICE_NAMESPACE}.MovisensDevice';
+
+  /// The default rolename for a Movisens device.
+  static const String DEFAULT_ROLENAME = 'movisens';
+
+  MovisensDevice({
+    String roleName = DEFAULT_ROLENAME,
+    List<String> supportedDataTypes,
+  }) : super(
+          roleName: roleName,
+          isMasterDevice: false,
+          supportedDataTypes: supportedDataTypes,
+        );
+
+  Function get fromJsonFunction => _$MovisensDeviceFromJson;
+  factory MovisensDevice.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$MovisensDeviceToJson(this);
+}
+
 class MovisensDeviceManager extends DeviceManager {
-  // the last known voltage level of the eSense device
+  // the last known voltage level of the Movisens device
   int _batteryLevel = 100;
   String _connectionStatus;
   StreamSubscription<Map<String, dynamic>> _eventSubscription;
@@ -23,7 +49,7 @@ class MovisensDeviceManager extends DeviceManager {
 
     // listen for Movisens events
     movisens.movisensStream.listen((event) {
-      info('$runtimeType :: eSense event : $event');
+      info('$runtimeType :: Movisens event : $event');
 
       if (event.containsKey("BatteryLevel"))
         _batteryLevel =

@@ -8,7 +8,6 @@ part of movisens;
 
 /// The Movisens sampling package
 class MovisensSamplingPackage implements SamplingPackage {
-  static const String MOVISENS_DEVICE_TYPE = 'esense';
   static const String MOVISENS = "${NameSpace.CARP}.movisens";
 
   static const String MOVISENS_NAMESPACE = "${NameSpace.CARP}.movisens";
@@ -28,6 +27,7 @@ class MovisensSamplingPackage implements SamplingPackage {
 
   void onRegister() {
     FromJsonFactory().register(MovisensMeasure());
+    FromJsonFactory().register(MovisensDevice());
 
     // registering the transformers from CARP to OMH for heart rate and step count.
     // we assume that there is an OMH schema registered already...
@@ -41,7 +41,7 @@ class MovisensSamplingPackage implements SamplingPackage {
         );
   }
 
-  String get deviceType => MOVISENS_DEVICE_TYPE;
+  String get deviceType => MovisensDevice.DEVICE_TYPE;
   DeviceManager get deviceManager => MovisensDeviceManager();
 
   List<Permission> get permissions => []; // no special permissions needed

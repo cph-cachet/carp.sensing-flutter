@@ -5,7 +5,7 @@
    {
     "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
     "isMasterDevice": true,
-    "roleName": "phone",
+    "roleName": "masterphone",
     "samplingConfiguration": {}
    }
   ],
@@ -200,6 +200,7 @@
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.HealthMeasure",
       "type": "dk.cachet.carp.health",
+      "measure_description": {},
       "enabled": true,
       "configuration": {},
       "history": 86400000000,
@@ -208,6 +209,7 @@
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.HealthMeasure",
       "type": "dk.cachet.carp.health",
+      "measure_description": {},
       "enabled": true,
       "configuration": {},
       "history": 86400000000,
@@ -216,6 +218,7 @@
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.HealthMeasure",
       "type": "dk.cachet.carp.health",
+      "measure_description": {},
       "enabled": true,
       "configuration": {},
       "history": 86400000000,
@@ -224,6 +227,7 @@
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.HealthMeasure",
       "type": "dk.cachet.carp.health",
+      "measure_description": {},
       "enabled": true,
       "configuration": {},
       "history": 86400000000,
@@ -253,6 +257,7 @@
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.HealthMeasure",
       "type": "dk.cachet.carp.health",
+      "measure_description": {},
       "enabled": true,
       "configuration": {},
       "history": 86400000000,
@@ -265,17 +270,17 @@
    {
     "triggerId": 0,
     "taskName": "Task #5",
-    "destinationDeviceRoleName": "phone"
+    "destinationDeviceRoleName": "masterphone"
    },
    {
     "triggerId": 1,
     "taskName": "Task #6",
-    "destinationDeviceRoleName": "phone"
+    "destinationDeviceRoleName": "masterphone"
    },
    {
     "triggerId": 2,
     "taskName": "Task #7",
-    "destinationDeviceRoleName": "phone"
+    "destinationDeviceRoleName": "masterphone"
    }
   ],
   "consent": {},

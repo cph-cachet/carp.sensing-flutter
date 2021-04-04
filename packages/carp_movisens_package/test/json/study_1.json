@@ -5,19 +5,22 @@
    {
     "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
     "isMasterDevice": true,
-    "roleName": "phone",
+    "roleName": "masterphone",
     "samplingConfiguration": {}
    }
   ],
   "connectedDevices": [
    {
-    "$type": "dk.cachet.carp.protocols.domain.devices.DeviceDescriptor",
+    "$type": "dk.cachet.carp.protocols.domain.devices.MovisensDevice",
     "isMasterDevice": false,
-    "roleName": "esense",
+    "roleName": "movisens",
     "samplingConfiguration": {}
    }
   ],
   "triggers": [
+   {
+    "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
+   },
    {
     "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
    }
@@ -30,14 +33,26 @@
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
       "type": "dk.cachet.carp.device",
-      "name": "Basic Device Info",
+      "measureDescription": {
+       "en": {
+        "$type": "MeasureDescription",
+        "name": "Basic Device Info",
+        "description": "Collects basic information about the phone."
+       }
+      },
       "enabled": true,
       "configuration": {}
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
       "type": "dk.cachet.carp.memory",
-      "name": "Memory Usage",
+      "measureDescription": {
+       "en": {
+        "$type": "MeasureDescription",
+        "name": "Memory Usage",
+        "description": "Collects information about use of memory."
+       }
+      },
       "enabled": true,
       "configuration": {},
       "frequency": 60000000
@@ -45,35 +60,65 @@
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
       "type": "dk.cachet.carp.battery",
-      "name": "Battery",
+      "measureDescription": {
+       "en": {
+        "$type": "MeasureDescription",
+        "name": "Battery",
+        "description": "Collects information about the battery charging level."
+       }
+      },
       "enabled": true,
       "configuration": {}
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
       "type": "dk.cachet.carp.screen",
-      "name": "Screen Activity (lock/on/off)",
+      "measureDescription": {
+       "en": {
+        "$type": "MeasureDescription",
+        "name": "Screen Activity (lock/on/off)",
+        "description": "Collects information about lock/unlock event of the phone's screen."
+       }
+      },
       "enabled": true,
       "configuration": {}
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
       "type": "dk.cachet.carp.accelerometer",
-      "name": "Accelerometer",
+      "measureDescription": {
+       "en": {
+        "$type": "MeasureDescription",
+        "name": "Accelerometer",
+        "description": "Collects movement data based on the onboard phone accelerometer sensor."
+       }
+      },
       "enabled": false,
       "configuration": {}
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
       "type": "dk.cachet.carp.gyroscope",
-      "name": "Gyroscope",
+      "measureDescription": {
+       "en": {
+        "$type": "MeasureDescription",
+        "name": "Gyroscope",
+        "description": "Collects movement data based on the onboard phone gyroscope sensor."
+       }
+      },
       "enabled": false,
       "configuration": {}
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
       "type": "dk.cachet.carp.periodic_accelerometer",
-      "name": "Accelerometer",
+      "measureDescription": {
+       "en": {
+        "$type": "MeasureDescription",
+        "name": "Accelerometer",
+        "description": "Collects movement data based on the onboard phone accelerometer sensor."
+       }
+      },
       "enabled": false,
       "configuration": {},
       "frequency": 5000000,
@@ -82,7 +127,13 @@
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
       "type": "dk.cachet.carp.periodic_gyroscope",
-      "name": "Gyroscope",
+      "measureDescription": {
+       "en": {
+        "$type": "MeasureDescription",
+        "name": "Gyroscope",
+        "description": "Collects movement data based on the onboard phone gyroscope sensor."
+       }
+      },
       "enabled": false,
       "configuration": {},
       "frequency": 5000000,
@@ -91,23 +142,47 @@
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
       "type": "dk.cachet.carp.pedometer",
-      "name": "Pedometer (Step Count)",
+      "measureDescription": {
+       "en": {
+        "$type": "MeasureDescription",
+        "name": "Pedometer (Step Count)",
+        "description": "Collects step events from the onboard phone step sensor."
+       }
+      },
       "enabled": true,
       "configuration": {}
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
       "type": "dk.cachet.carp.light",
-      "name": "Ambient Light",
+      "measureDescription": {
+       "en": {
+        "$type": "MeasureDescription",
+        "name": "Ambient Light",
+        "description": "Collects ambient light from the light sensor on the phone."
+       }
+      },
       "enabled": true,
       "configuration": {},
       "frequency": 60000000,
       "duration": 1000000
-     },
+     }
+    ]
+   },
+   {
+    "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
+    "name": "Task #6",
+    "measures": [
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.MovisensMeasure",
       "type": "dk.cachet.carp.movisens",
-      "name": "Movisens ECG device",
+      "measure_description": {
+       "en": {
+        "$type": "MeasureDescription",
+        "name": "Movisens ECG device",
+        "description": "Collects heart rythm data from the Movisens EcgMove4 sensor"
+       }
+      },
       "enabled": true,
       "configuration": {},
       "address": "88:6B:0F:CD:E7:F2",
@@ -125,9 +200,15 @@
    {
     "triggerId": 0,
     "taskName": "Task #5",
-    "destinationDeviceRoleName": "phone"
+    "destinationDeviceRoleName": "masterphone"
+   },
+   {
+    "triggerId": 1,
+    "taskName": "Task #6",
+    "destinationDeviceRoleName": "movisens"
    }
   ],
+  "consent": {},
   "owner": {
    "$type": "ProtocolOwner",
    "id": "jakba",
