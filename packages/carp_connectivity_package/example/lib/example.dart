@@ -26,9 +26,7 @@ void main() async {
 
   // define which devices are used for data collection
   // in this case, its only this smartphone
-  Smartphone phone = Smartphone(
-    roleName: CAMSDeploymentService.DEFAULT_MASTER_DEVICE_ROLENAME,
-  );
+  Smartphone phone = Smartphone();
   protocol.addMasterDevice(phone);
 
   // Add an automatic task that immediately starts collecting connectivity,

@@ -23,10 +23,7 @@ AudioDatum _$AudioDatumFromJson(Map<String, dynamic> json) {
     ..upload = json['upload'] as bool
     ..metadata = (json['metadata'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
-    )
-    ..format = json['format'] == null
-        ? null
-        : DataFormat.fromJson(json['format'] as Map<String, dynamic>);
+    );
 }
 
 Map<String, dynamic> _$AudioDatumToJson(AudioDatum instance) {
@@ -43,7 +40,6 @@ Map<String, dynamic> _$AudioDatumToJson(AudioDatum instance) {
   writeNotNull('filename', instance.filename);
   writeNotNull('upload', instance.upload);
   writeNotNull('metadata', instance.metadata);
-  writeNotNull('format', instance.format);
   writeNotNull(
       'start_recording_time', instance.startRecordingTime?.toIso8601String());
   writeNotNull(

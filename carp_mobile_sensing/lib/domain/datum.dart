@@ -26,7 +26,7 @@ class Datum extends Data {
   Datum({bool multiDatum = false}) : super() {
     // add a timestamp to each datum if part of a list of many
     timestamp = (multiDatum) ? DateTime.now().toUtc() : null;
-    // only add an id to the multi-datum, not the individual ones
+    // only add an id to single datums - not to each multi-datum
     id = (!multiDatum) ? Uuid().v1() : null;
   }
 
@@ -40,12 +40,12 @@ class Datum extends Data {
 
   String toString() =>
       '$runtimeType - format: $format, id: $id, timestamp: $timestamp';
-  // '$runtimeType - format: $format, id: $id';
 }
 
 /// A simple [Datum] that only holds a string datum object.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class StringDatum extends Datum {
+  @JsonKey(ignore: true)
   DataFormat get format => DataFormat.fromString(CAMSDataType.STRING);
 
   /// The string data for this Datum.
@@ -65,6 +65,7 @@ class StringDatum extends Datum {
 /// A generic [Datum] that holds a map of key, value string objects.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MapDatum extends Datum {
+  @JsonKey(ignore: true)
   DataFormat get format => DataFormat.fromString(CAMSDataType.MAP);
 
   /// The data map.
@@ -83,6 +84,7 @@ class MapDatum extends Datum {
 /// sort of error, which is reported back.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ErrorDatum extends Datum {
+  @JsonKey(ignore: true)
   DataFormat get format => DataFormat.fromString(CAMSDataType.ERROR);
 
   /// The original error message returned from the probe, if available.
@@ -102,6 +104,7 @@ class ErrorDatum extends Datum {
 /// A [Datum] object holding a link to a file.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class FileDatum extends Datum {
+  @JsonKey(ignore: true)
   DataFormat get format => DataFormat.fromString(CAMSDataType.FILE);
 
   /// The path to the attached file.
@@ -139,6 +142,7 @@ class MultiDatum extends Datum {
   /// Create an empty [MultiDatum].
   MultiDatum() : super();
 
+  @JsonKey(ignore: true)
   DataFormat get format => (data.isNotEmpty)
       ? data.first.format
       : DataFormat.fromString(CAMSDataType.UNKNOWN);

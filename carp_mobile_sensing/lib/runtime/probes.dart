@@ -58,7 +58,7 @@ enum ProbeState {
 /// Probes return sensed data in a [Stream] as [data]. This is the main
 /// usage of a probe. For example, to listens to events and print them;
 ///
-///     probe.events.forEach(print);
+///     probe.data.forEach(print);
 ///
 abstract class Probe {
   /// Is this probe enabled, i.e. available for collection of data using the [resume] method.
@@ -118,12 +118,14 @@ abstract class Probe {
   /// A printer-friendly name for this probe.
   String get name;
 
-  /// A stream of generating [DataPoint] from this probe.
+  /// The stream of [DataPoint] generated from this probe.
   Stream<DataPoint> get data;
 
   /// Initialize the probe before starting it.
   ///
   /// The configuration of the probe is specified in the [measure].
+  /// The study deployment that this probe is part of can be specified
+  /// as the [studyDeploymentId].
   void initialize(Measure measure);
 
   /// Resume the probe.

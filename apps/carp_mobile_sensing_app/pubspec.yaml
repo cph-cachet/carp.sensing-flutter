@@ -16,7 +16,9 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_launcher_icons: ^0.8.0
-  #carp_mobile_sensing: ^0.11.0
+  
+  #carp_core: ^0.20.0      # the core CARP domain model
+  #carp_mobile_sensing: ^0.20.0
   #carp_connectivity_package: ^0.11.0
   #carp_context_package: ^0.11.0
   #carp_audio_package: ^0.11.0

@@ -63,4 +63,17 @@ void main() {
     expect(protocol.masterDevices.first.roleName, Smartphone.DEFAULT_ROLENAME);
     print(toJsonString(protocol));
   });
+  test('Audio Data Point', () async {
+    AudioDatum datum = AudioDatum(
+      filename: "filename.mp3",
+      startRecordingTime: DateTime.now().subtract(Duration(days: 1)),
+      endRecordingTime: DateTime.now(),
+    );
+
+    DataPoint dataPoint = DataPoint.fromData(datum);
+
+    print(dataPoint);
+    print(toJsonString(dataPoint));
+    assert(dataPoint.carpBody != null);
+  });
 }
