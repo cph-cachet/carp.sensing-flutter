@@ -24,17 +24,8 @@ void main() {
       );
 
     // Define which devices are used for data collection.
-    phone = Smartphone(
-      name: 'SM-A320FL',
-      roleName: CAMSDeploymentService.DEFAULT_MASTER_DEVICE_ROLENAME,
-    );
-    DeviceDescriptor eSense = DeviceDescriptor(
-      roleName: 'esense',
-    );
-
-    protocol
-      ..addMasterDevice(phone)
-      ..addConnectedDevice(eSense);
+    phone = Smartphone();
+    protocol.addMasterDevice(phone);
 
     // adding all measure from the common schema to one one trigger and one task
     protocol.addTriggeredTask(
@@ -69,9 +60,7 @@ void main() {
         json.decode(plainJson) as Map<String, dynamic>);
 
     expect(protocol.ownerId, 'AB');
-    expect(protocol.masterDevices.first.roleName,
-        CAMSDeploymentService.DEFAULT_MASTER_DEVICE_ROLENAME);
+    expect(protocol.masterDevices.first.roleName, Smartphone.DEFAULT_ROLENAME);
     print(toJsonString(protocol));
   });
-  test('', () {});
 }
