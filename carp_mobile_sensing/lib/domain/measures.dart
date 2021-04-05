@@ -14,6 +14,11 @@ class CAMSMeasure extends Measure {
   /// of this measure organized according to language locales.
   Map<String, MeasureDescription> measureDescription = {};
 
+  /// The study deployment id that this measure is part of.
+  /// Set on runtime.
+  @JsonKey(ignore: true)
+  String studyDeploymentId;
+
   /// The default English name for this measure.
   /// If the English name is not set, then the measure's [type] is returned.
   @JsonKey(ignore: true)

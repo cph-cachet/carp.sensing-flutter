@@ -132,7 +132,7 @@ class CarpDataManager extends AbstractDataManager {
         case CarpUploadMethod.BATCH_DATA_POINT:
         case CarpUploadMethod.FILE:
           // In both cases, forward to [FileDataManager], which collects data in a file before upload.
-          // TODO - when forwarding to the file, it is the wrong data type format being writte
+          // TODO - when forwarding to the file, it is the wrong data type format being written
           // See issue #162
           return fileDataManager.write(dataPoint);
         case CarpUploadMethod.DOCUMENT:
@@ -197,11 +197,12 @@ class CarpDataManager extends AbstractDataManager {
   // This method upload a file attachment to CARP, i.e. one that is referenced in a [FileDatum].
   Future _uploadFileToCarp(FileDatum datum) async {
     info("File attachment upload to CARP started - path : '${datum.filename}'");
+    // TODO - check that this gets the right file - files are located in the 'files folder.
     final File file = File(datum.filename);
 
+    // TODO - check that we really want to add this as meta data?
     final String deviceID = DeviceInfo().deviceID.toString();
     final String userID = (await user).email;
-
     datum.metadata['device_id'] = deviceID;
     datum.metadata['user_id'] = userID;
 

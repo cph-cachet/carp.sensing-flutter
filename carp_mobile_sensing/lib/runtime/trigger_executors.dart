@@ -66,7 +66,11 @@ class StudyDeploymentExecutor extends Executor {
       // get the trigger based on the trigger id
       Trigger trigger = _deployment.triggers['${triggeredTask.triggerId}'];
       // get the task based on the task name
+      // and the set the study deployment id (some probes need this)
       TaskDescriptor task = _deployment.getTaskByName(triggeredTask.taskName);
+      for (var measure in task?.measures)
+        if (measure is CAMSMeasure)
+          measure.studyDeploymentId = _deployment.studyDeploymentId;
 
       // print('>> triggeredTask: $triggeredTask');
       // print('>> trigger: $trigger');

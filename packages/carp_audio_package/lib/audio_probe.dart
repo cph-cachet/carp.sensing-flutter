@@ -26,8 +26,6 @@ part of audio;
 /// How to upload this data to a data backend is up to the implementation of the
 /// [DataManager], which is used in the [Study].
 class AudioProbe extends DatumProbe {
-  static const String AUDIO_FILE_PATH = 'audio';
-
   String _path;
   bool _isRecording = false;
   DateTime _startRecordingTime, _endRecordingTime;
@@ -87,6 +85,10 @@ class AudioProbe extends DatumProbe {
   Future<Datum> getDatum() async =>
       _datum..endRecordingTime = _endRecordingTime;
 
+  String get studyDeploymentPath => (measure is CAMSMeasure)
+      ? '/${(measure as CAMSMeasure).studyDeploymentId}'
+      : '';
+
   /// Returns the local path on the device where sound files can be stored.
   /// Creates the directory, if not existing.
   Future<String> get path async {
@@ -95,7 +97,7 @@ class AudioProbe extends DatumProbe {
       final localApplicationDir = await getApplicationDocumentsDirectory();
       // create a sub-directory for sound files
       final directory = await Directory(
-              '${localApplicationDir.path}/${FileDataManager.CARP_FILE_PATH}/$AUDIO_FILE_PATH')
+              '${localApplicationDir.path}/${FileDataManager.CARP_FILE_PATH}$studyDeploymentPath/${FileDataManager.FILES_PATH}')
           .create(recursive: true);
 
       _path = directory.path;
