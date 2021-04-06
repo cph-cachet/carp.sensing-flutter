@@ -18,9 +18,6 @@ class FileDataManager extends AbstractDataManager {
   /// The path to use on the device for storing CARP data files.
   static const String CARP_FILE_PATH = 'carp/data';
 
-  /// The path to use for storing files collected as a [FileDatum].
-  static const String FILES_PATH = 'files';
-
   String get type => DataEndPointTypes.FILE;
 
   FileDataManager() {

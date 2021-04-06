@@ -17,6 +17,7 @@ class CarpDataManager extends AbstractDataManager {
   bool _initialized = false;
   CarpDataEndPoint carpEndPoint;
   CarpApp _app;
+  String _path;
 
   FileDataManager fileDataManager;
 
@@ -105,7 +106,8 @@ class CarpDataManager extends AbstractDataManager {
 
   /// Handle upload of data depending on the specified [CarpUploadMethod].
   Future<bool> uploadData(DataPoint dataPoint) async {
-    assert(dataPoint.data is Datum);
+    info(
+        'Uploading data point to CARP - format: ${dataPoint.carpHeader.dataFormat}');
 
     // Check if CARP authentication is ready before writing...
     if (!_initialized) {
@@ -196,33 +198,36 @@ class CarpDataManager extends AbstractDataManager {
 
   // This method upload a file attachment to CARP, i.e. one that is referenced in a [FileDatum].
   Future _uploadFileToCarp(FileDatum datum) async {
-    info("File attachment upload to CARP started - path : '${datum.filename}'");
-    // TODO - check that this gets the right file - files are located in the 'files folder.
-    final File file = File(datum.filename);
+    info("File attachment upload to CARP started - path : '${datum.path}'");
+    final File file = File(datum.path);
 
-    // TODO - check that we really want to add this as meta data?
-    final String deviceID = DeviceInfo().deviceID.toString();
-    final String userID = (await user).email;
-    datum.metadata['device_id'] = deviceID;
-    datum.metadata['user_id'] = userID;
+    if (!file.existsSync()) {
+      warning('The file attachment is not found - skipping upload.');
+    } else {
+      final String deviceID = DeviceInfo().deviceID.toString();
+      datum.metadata['device_id'] = deviceID;
+      datum.metadata['study_deployment_id'] = deployment.studyDeploymentId;
+      datum.metadata['study_id'] = deployment.studyId;
+      datum.metadata['user_id'] = deployment.userId;
 
-    // start upload
-    final FileUploadTask uploadTask =
-        CarpService().getFileStorageReference().upload(file, datum.metadata);
+      // start upload
+      final FileUploadTask uploadTask =
+          CarpService().getFileStorageReference().upload(file, datum.metadata);
 
-    // await the upload is successful
-    CarpFileResponse response = await uploadTask.onComplete;
-    int id = response.id;
+      // await the upload is successful
+      CarpFileResponse response = await uploadTask.onComplete;
+      int id = response.id;
 
-    addEvent(CarpDataManagerEvent(CarpDataManagerEventTypes.file_uploaded,
-        file.path, id, uploadTask.reference.fileEndpointUri));
-    info("File upload to CARP finished - remote id : $id ");
+      addEvent(CarpDataManagerEvent(CarpDataManagerEventTypes.file_uploaded,
+          file.path, id, uploadTask.reference.fileEndpointUri));
+      info("File upload to CARP finished - remote id : $id ");
 
-    // delete the local file once uploaded?
-    if (carpEndPoint.deleteWhenUploaded) {
-      file.delete();
-      addEvent(FileDataManagerEvent(
-          FileDataManagerEventTypes.FILE_DELETED, file.path));
+      // delete the local file once uploaded?
+      if (carpEndPoint.deleteWhenUploaded) {
+        file.delete();
+        addEvent(FileDataManagerEvent(
+            FileDataManagerEventTypes.FILE_DELETED, file.path));
+      }
     }
   }
 

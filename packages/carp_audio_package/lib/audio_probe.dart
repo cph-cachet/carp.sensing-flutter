@@ -26,6 +26,9 @@ part of audio;
 /// How to upload this data to a data backend is up to the implementation of the
 /// [DataManager], which is used in the [Study].
 class AudioProbe extends DatumProbe {
+  /// The path to use for storing files collected as a [FileDatum].
+  static const String AUDIO_FILES_PATH = 'audio';
+
   String _path;
   bool _isRecording = false;
   DateTime _startRecordingTime, _endRecordingTime;
@@ -65,6 +68,7 @@ class AudioProbe extends DatumProbe {
       soundFileName = await filePath;
       _startRecordingTime = DateTime.now();
       _datum
+        ..path = soundFileName
         ..filename = soundFileName.split("/").last
         ..startRecordingTime = _startRecordingTime;
       _isRecording = true;
@@ -97,7 +101,7 @@ class AudioProbe extends DatumProbe {
       final localApplicationDir = await getApplicationDocumentsDirectory();
       // create a sub-directory for sound files
       final directory = await Directory(
-              '${localApplicationDir.path}/${FileDataManager.CARP_FILE_PATH}$studyDeploymentPath/${FileDataManager.FILES_PATH}')
+              '${localApplicationDir.path}/${FileDataManager.CARP_FILE_PATH}$studyDeploymentPath/$AUDIO_FILES_PATH')
           .create(recursive: true);
 
       _path = directory.path;

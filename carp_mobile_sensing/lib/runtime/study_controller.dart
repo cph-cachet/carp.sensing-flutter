@@ -117,6 +117,10 @@ class StudyDeploymentController {
     privacySchemaName ??= NameSpace.CARP;
     transformer ??= ((events) => events);
 
+    if (dataManager == null)
+      warning(
+          "No data manager for the specified data endpoint found: '${deployment.dataEndPoint}'.");
+
     state = StudyDeploymentControllerState.created;
   }
 

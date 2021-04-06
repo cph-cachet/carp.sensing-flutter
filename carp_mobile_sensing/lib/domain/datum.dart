@@ -107,7 +107,13 @@ class FileDatum extends Datum {
   @JsonKey(ignore: true)
   DataFormat get format => DataFormat.fromString(CAMSDataType.FILE);
 
-  /// The path to the attached file.
+  /// The local path to the attached file on the phone where it is sampled.
+  /// This is used by e.g. a data manager to get and manage the file on
+  /// the phone.
+  @JsonKey(ignore: true)
+  String path;
+
+  /// The name to the attached file.
   String filename;
 
   /// Should this file be uploaded together with the [Datum] description.
