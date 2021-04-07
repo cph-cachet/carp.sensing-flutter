@@ -173,7 +173,7 @@
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.LocationMeasure",
       "type": "dk.cachet.carp.geolocation",
-      "measure_description": {
+      "measureDescription": {
        "en": {
         "$type": "MeasureDescription",
         "name": "Geo-location",
@@ -202,7 +202,7 @@
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.WeatherMeasure",
       "type": "dk.cachet.carp.weather",
-      "measure_description": {
+      "measureDescription": {
        "en": {
         "$type": "MeasureDescription",
         "name": "Weather",
@@ -211,12 +211,12 @@
       },
       "enabled": true,
       "configuration": {},
-      "api_key": "12b6e28582eb9298577c734a31ba9f4f"
+      "apiKey": "12b6e28582eb9298577c734a31ba9f4f"
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.AirQualityMeasure",
       "type": "dk.cachet.carp.air_quality",
-      "measure_description": {
+      "measureDescription": {
        "en": {
         "$type": "MeasureDescription",
         "name": "Air Quality",
@@ -225,12 +225,12 @@
       },
       "enabled": true,
       "configuration": {},
-      "api_key": "9e538456b2b85c92647d8b65090e29f957638c77"
+      "apiKey": "9e538456b2b85c92647d8b65090e29f957638c77"
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.GeofenceMeasure",
       "type": "dk.cachet.carp.geofence",
-      "measure_description": {
+      "measureDescription": {
        "en": {
         "$type": "MeasureDescription",
         "name": "Geofence",
@@ -249,7 +249,7 @@
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.MobilityMeasure",
       "type": "dk.cachet.carp.mobility",
-      "measure_description": {
+      "measureDescription": {
        "en": {
         "$type": "MeasureDescription",
         "name": "Mobility Features",
@@ -258,10 +258,10 @@
       },
       "enabled": true,
       "configuration": {},
-      "use_prior_contexts": true,
-      "stop_radius": 25.0,
-      "place_radius": 50.0,
-      "stop_duration": 180000000
+      "usePriorContexts": true,
+      "stopRadius": 25.0,
+      "placeRadius": 50.0,
+      "stopDuration": 180000000
      }
     ]
    }

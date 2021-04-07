@@ -21,7 +21,7 @@ part of survey;
 ///  * a [ScheduledTrigger] can be used to trigger the survey at a specific schedule (i.e., day and time)
 ///  * a [RecurrentScheduledTrigger] allow to schedule a recurrent survey, e.g every Monday at 8pm.
 ///
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class RPTaskMeasure extends CAMSMeasure {
   // TODO - remove when research_package supports serialization
   /// The survey to be issued to the user.

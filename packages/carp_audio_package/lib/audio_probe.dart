@@ -26,7 +26,7 @@ part of audio;
 /// How to upload this data to a data backend is up to the implementation of the
 /// [DataManager], which is used in the [Study].
 class AudioProbe extends DatumProbe {
-  /// The path to use for storing files collected as a [FileDatum].
+  /// The name of the folder used for storing audio files.
   static const String AUDIO_FILES_PATH = 'audio';
 
   String _path;

@@ -68,7 +68,7 @@ class MasterDeviceDeployment {
       _$MasterDeviceDeploymentFromJson(json);
   Map<String, dynamic> toJson() => _$MasterDeviceDeploymentToJson(this);
 
-  String toString() => '$runtimeType - device: ${deviceDescriptor.roleName}}';
+  String toString() => '$runtimeType - device: ${deviceDescriptor.roleName}';
 }
 
 /// A [DeviceRegistration] configures a [DeviceDescriptor] as part of the
@@ -99,7 +99,8 @@ class DeviceRegistration extends Serializable {
       FromJsonFactory()
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$DeviceRegistrationToJson(this);
-  String get jsonType => 'dk.cachet.carp.protocols.domain.devices.$runtimeType';
+  String get jsonType =>
+      'dk.cachet.carp.protocols.domain.devices.DefaultDeviceRegistration';
 
   String toString() =>
       '$runtimeType - deviceId: $deviceId, registrationCreationDate: $registrationCreationDate';

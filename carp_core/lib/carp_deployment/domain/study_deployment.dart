@@ -232,8 +232,7 @@ class StudyDeploymentStatus extends Serializable {
 
   /// The time when the study deployment was ready for the first
   /// time (all devices deployed); null otherwise.
-  int startTime;
-  //DateTime startTime;
+  DateTime startTime;
 
   /// The [DeviceDeploymentStatus] for the master device of this deployment,
   /// which is typically this phone.

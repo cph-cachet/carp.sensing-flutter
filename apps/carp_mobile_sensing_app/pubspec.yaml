@@ -46,6 +46,11 @@ dependency_overrides:
     path: ../../packages/carp_esense_package/
 #  esense_flutter:
 #    path: ../../../../flutter-plugins/packages/esense_flutter/
+  carp_backend:
+    path: ../../backends/carp_backend/
+  carp_webservices:
+    path: ../../backends/carp_webservices/
+
 
 dev_dependencies:
   flutter_test:

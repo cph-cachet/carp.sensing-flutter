@@ -1,8 +1,13 @@
 part of mobile_sensing_app;
 
 class SensingBLoC {
+  static const String PROD_URI = "https://cans.cachet.dk:443";
+
   CAMSMasterDeviceDeployment get deployment => Sensing().deployment;
   StudyDeploymentModel _model;
+  CarpApp _app;
+
+  CarpApp get app => _app;
 
   /// Is sensing running, i.e. has the study executor been resumed?
   bool get isRunning =>
@@ -28,6 +33,16 @@ class SensingBLoC {
   Future init() async {
     globalDebugLevel = DebugLevel.DEBUG;
     await settings.init();
+    _app = CarpApp(
+      name: "CANS Production @ DTU",
+      uri: Uri.parse(uri),
+      oauth: OAuthEndPoint(clientID: clientID, clientSecret: clientSecret),
+    );
+
+    // configure and authenticate
+    CarpService().configure(app);
+    await CarpService().authenticate(username: username, password: password);
+
     await Sensing().initialize();
     info('$runtimeType initialized');
   }

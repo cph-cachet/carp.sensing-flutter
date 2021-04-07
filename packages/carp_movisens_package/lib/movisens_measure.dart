@@ -7,7 +7,7 @@
 part of movisens;
 
 /// A [Measure] for configuring a Movisens EcgMove device.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class MovisensMeasure extends CAMSMeasure {
   /// The MAC address of the sensor.
   String address;

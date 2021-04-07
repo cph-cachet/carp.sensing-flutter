@@ -225,7 +225,7 @@ class FileDataManager extends AbstractDataManager {
 
 /// Specify an endpoint where a file-based [DataManager] can store JSON
 /// data as files on the local device.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class FileDataEndPoint extends DataEndPoint {
   /// The buffer size of the raw JSON file in bytes.
   ///

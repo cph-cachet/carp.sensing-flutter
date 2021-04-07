@@ -9,7 +9,7 @@ part of context;
 
 /// Specify the configuration on how to collect air quality data.
 /// Needs an [apiKey] for the [World's Air Quality Index (WAQI) API](https://aqicn.org/data-platform/token/#/).
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class AirQualityMeasure extends CAMSMeasure {
   /// API key for the OpenWeatherMap API.
   String apiKey;

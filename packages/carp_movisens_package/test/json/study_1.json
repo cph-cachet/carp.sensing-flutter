@@ -176,7 +176,7 @@
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.MovisensMeasure",
       "type": "dk.cachet.carp.movisens",
-      "measure_description": {
+      "measureDescription": {
        "en": {
         "$type": "MeasureDescription",
         "name": "Movisens ECG device",
@@ -186,12 +186,12 @@
       "enabled": true,
       "configuration": {},
       "address": "88:6B:0F:CD:E7:F2",
-      "device_name": "Sensor 02655",
+      "deviceName": "Sensor 02655",
       "weight": 75,
       "height": 175,
       "age": 25,
       "gender": "male",
-      "sensor_location": "chest"
+      "sensorLocation": "chest"
      }
     ]
    }

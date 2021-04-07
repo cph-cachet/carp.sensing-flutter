@@ -9,7 +9,7 @@ part of audio;
 
 /// Specify how to collect noise data, including setting the
 /// [frequency], [duration], and [samplingRate] for collecting audio.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class NoiseMeasure extends PeriodicMeasure {
   static const int DEFAULT_SAMPLING_RATE = 500;
 

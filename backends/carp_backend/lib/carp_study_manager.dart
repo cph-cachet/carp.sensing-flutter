@@ -21,7 +21,7 @@ part of carp_backend;
 class CarpStudyProtocolManager implements StudyProtocolManager {
   Future initialize() async {}
 
-  /// Get a CAMS [Study] from the CARP backend.
+  /// Get a CAMS [StudyProtocol] from the CARP backend.
   ///
   /// Note that in the CARP backend, a CAMS study is empbedded as a
   /// [CustomProtocolTask] and deployed as part of a so-called
@@ -29,15 +29,29 @@ class CarpStudyProtocolManager implements StudyProtocolManager {
   ///
   /// Throws a [CarpServiceException] if not successful.
   Future<StudyProtocol> getStudyProtocol(String studyDeploymentId) async {
+    print('>> studyDeploymentId: $studyDeploymentId');
+    print('>> CarpService(): ${CarpService()}');
+    print('>> CarpService().isConfigured: ${CarpService().isConfigured}');
+    assert(CarpService().isConfigured,
+        "CARP Service has not been configured - call 'CarpService().configure()' first.");
+    assert(CarpService().currentUser != null,
+        "No user is authenticated - call 'CarpService().authenticate()' first.");
+    info(
+        'Retrieving study protocol from CARP web service - studyDeploymentId: $studyDeploymentId');
     DeploymentReference reference = CarpService().deployment(studyDeploymentId);
-    // get status
-    StudyDeploymentStatus status = await reference.getStatus();
+    print('>> reference: $reference');
 
-    if (status.masterDeviceStatus.device != null) {
-      if (status.status == StudyDeploymentStatusTypes.DeployingDevices) {
+    // get status
+    StudyDeploymentStatus deploymentStatus = await reference.getStatus();
+    print('>> deploymentStatus: $deploymentStatus');
+
+    if (deploymentStatus?.masterDeviceStatus?.device != null) {
+      if (deploymentStatus.status ==
+          StudyDeploymentStatusTypes.DeployingDevices) {
         // register this master device, if not already done
-        status = await reference.registerDevice(
-            deviceRoleName: status.masterDeviceStatus.device.roleName);
+        deploymentStatus = await reference.registerDevice(
+            deviceRoleName:
+                deploymentStatus.masterDeviceStatus.device.roleName);
       }
       // get the deployment
       MasterDeviceDeployment deployment = await reference.get();
@@ -54,14 +68,16 @@ class CarpStudyProtocolManager implements StudyProtocolManager {
           return protocol;
         } else {
           await reference.unRegisterDevice(
-              deviceRoleName: status.masterDeviceStatus.device.roleName);
+              deviceRoleName:
+                  deploymentStatus.masterDeviceStatus.device.roleName);
           throw CarpServiceException(
               message:
                   'The deployment does not contain a CustomProtocolTask - task: $task');
         }
       } else {
         await reference.unRegisterDevice(
-            deviceRoleName: status.masterDeviceStatus.device.roleName);
+            deviceRoleName:
+                deploymentStatus.masterDeviceStatus.device.roleName);
         throw CarpServiceException(
             message:
                 'The deployment does not contain any tasks - deployment: $deployment');
@@ -69,7 +85,7 @@ class CarpStudyProtocolManager implements StudyProtocolManager {
     } else {
       throw CarpServiceException(
           message:
-              'There is not Master Device defined in this Deployment: $status');
+              'There is not Master Device defined in this deployment: $deploymentStatus');
     }
   }
 

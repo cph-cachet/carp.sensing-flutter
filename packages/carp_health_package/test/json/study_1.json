@@ -179,7 +179,7 @@
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.HealthMeasure",
       "type": "dk.cachet.carp.health",
-      "measure_description": {
+      "measureDescription": {
        "en": {
         "$type": "MeasureDescription",
         "name": "Step Counts",
@@ -189,7 +189,7 @@
       "enabled": true,
       "configuration": {},
       "history": 86400000000,
-      "health_data_type": "STEPS"
+      "healthDataType": "STEPS"
      }
     ]
    },
@@ -200,43 +200,43 @@
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.HealthMeasure",
       "type": "dk.cachet.carp.health",
-      "measure_description": {},
+      "measureDescription": {},
       "enabled": true,
       "configuration": {},
       "history": 86400000000,
-      "health_data_type": "BLOOD_GLUCOSE"
+      "healthDataType": "BLOOD_GLUCOSE"
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.HealthMeasure",
       "type": "dk.cachet.carp.health",
-      "measure_description": {},
+      "measureDescription": {},
       "enabled": true,
       "configuration": {},
       "history": 86400000000,
-      "health_data_type": "BLOOD_PRESSURE_DIASTOLIC"
+      "healthDataType": "BLOOD_PRESSURE_DIASTOLIC"
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.HealthMeasure",
       "type": "dk.cachet.carp.health",
-      "measure_description": {},
+      "measureDescription": {},
       "enabled": true,
       "configuration": {},
       "history": 86400000000,
-      "health_data_type": "BLOOD_PRESSURE_SYSTOLIC"
+      "healthDataType": "BLOOD_PRESSURE_SYSTOLIC"
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.HealthMeasure",
       "type": "dk.cachet.carp.health",
-      "measure_description": {},
+      "measureDescription": {},
       "enabled": true,
       "configuration": {},
       "history": 86400000000,
-      "health_data_type": "HEART_RATE"
+      "healthDataType": "HEART_RATE"
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.HealthMeasure",
       "type": "dk.cachet.carp.health",
-      "measure_description": {
+      "measureDescription": {
        "en": {
         "$type": "MeasureDescription",
         "name": "Step Counts",
@@ -246,7 +246,7 @@
       "enabled": true,
       "configuration": {},
       "history": 86400000000,
-      "health_data_type": "STEPS"
+      "healthDataType": "STEPS"
      }
     ]
    },
@@ -257,11 +257,11 @@
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.HealthMeasure",
       "type": "dk.cachet.carp.health",
-      "measure_description": {},
+      "measureDescription": {},
       "enabled": true,
       "configuration": {},
       "history": 86400000000,
-      "health_data_type": "WEIGHT"
+      "healthDataType": "WEIGHT"
      }
     ]
    }

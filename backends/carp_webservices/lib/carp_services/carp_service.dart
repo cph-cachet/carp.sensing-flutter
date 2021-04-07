@@ -9,8 +9,8 @@ part of carp_services;
 
 /// Provide access to a CARP web service endpoint.
 ///
-/// The (current) assumption is that each Flutter app (using this library) will only connect
-/// to one CARP web service backend.
+/// The (current) assumption is that each Flutter app (using this library) will
+/// only connect to one CARP web service backend.
 /// Therefore the `CarpService` class is a singleton and should be used like:
 ///
 /// ```dart
@@ -27,7 +27,8 @@ class CarpService {
   }
 
   /// Returns the singleton default instance of the [CarpService].
-  /// Before this instance can be used, it must be configured using the [configure] method.
+  /// Before this instance can be used, it must be configured using the
+  /// [configure] method.
   factory CarpService() => _instance;
 
   /// The CARP app associated with the CARP Web Service.

@@ -70,6 +70,30 @@ class MasterDeviceDescriptor extends DeviceDescriptor {
   Map<String, dynamic> toJson() => _$MasterDeviceDescriptorToJson(this);
 }
 
+/// A general-purpose master device for custom protols.
+/// Only used when downloading custom protocols from the CARP web service.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class CustomProtocolDevice extends MasterDeviceDescriptor {
+  /// The default rolename for a custom protocol device.
+  static const String DEFAULT_ROLENAME = 'Custom device';
+
+  /// Create a new Smartphone device descriptor.
+  /// If [roleName] is not specified, then the  [DEFAULT_ROLENAME] is used.
+  CustomProtocolDevice({
+    String roleName = DEFAULT_ROLENAME,
+    List<String> supportedDataTypes,
+  }) : super(
+          roleName: roleName,
+          supportedDataTypes: supportedDataTypes,
+        );
+
+  Function get fromJsonFunction => _$CustomProtocolDeviceFromJson;
+  factory CustomProtocolDevice.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$CustomProtocolDeviceToJson(this);
+}
+
 /// An internet-connected phone with built-in sensors.
 /// Typically this phone for a [StudyProtocol] running on this phone.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)

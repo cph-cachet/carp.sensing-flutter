@@ -10,7 +10,7 @@ ESenseMeasure _$ESenseMeasureFromJson(Map<String, dynamic> json) {
   return ESenseMeasure(
     type: json['type'] as String,
     measureDescription:
-        (json['measure_description'] as Map<String, dynamic>)?.map(
+        (json['measureDescription'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(
           k,
           e == null
@@ -18,8 +18,8 @@ ESenseMeasure _$ESenseMeasureFromJson(Map<String, dynamic> json) {
               : MeasureDescription.fromJson(e as Map<String, dynamic>)),
     ),
     enabled: json['enabled'],
-    deviceName: json['device_name'] as String,
-    samplingRate: json['sampling_rate'] as int,
+    deviceName: json['deviceName'] as String,
+    samplingRate: json['samplingRate'] as int,
   )
     ..$type = json[r'$type'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
@@ -38,11 +38,11 @@ Map<String, dynamic> _$ESenseMeasureToJson(ESenseMeasure instance) {
 
   writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
-  writeNotNull('measure_description', instance.measureDescription);
+  writeNotNull('measureDescription', instance.measureDescription);
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
-  writeNotNull('device_name', instance.deviceName);
-  writeNotNull('sampling_rate', instance.samplingRate);
+  writeNotNull('deviceName', instance.deviceName);
+  writeNotNull('samplingRate', instance.samplingRate);
   return val;
 }
 

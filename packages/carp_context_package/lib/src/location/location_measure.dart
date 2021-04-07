@@ -17,7 +17,7 @@ enum GeolocationAccuracy {
 }
 
 /// Specify the configuration on how to collect location data.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class LocationMeasure extends PeriodicMeasure {
   /// Defines the desired accuracy that should be used to determine the location data.
   ///

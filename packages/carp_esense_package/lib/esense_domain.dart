@@ -9,7 +9,7 @@ part of esense;
 
 /// Specify the configuration on how to collect eSense data.
 /// Needs an [deviceName] for the eSense device to connect to.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ESenseMeasure extends CAMSMeasure {
   /// The name of the eSense device.
   /// Used for connecting to the eSense hardware device over BTLE.

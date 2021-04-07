@@ -76,7 +76,7 @@ class GeoPosition extends Serializable {
 ///  - radius
 ///  - name
 /// of the geofence.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class GeofenceMeasure extends CAMSMeasure {
   /// The center of the geofence as a GPS location.
   GeoPosition center;

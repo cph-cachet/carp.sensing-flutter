@@ -276,7 +276,9 @@ StudyDeploymentStatus _$StudyDeploymentStatusFromJson(
         ?.toList(),
   )
     ..$type = json[r'$type'] as String
-    ..startTime = json['startTime'] as int;
+    ..startTime = json['startTime'] == null
+        ? null
+        : DateTime.parse(json['startTime'] as String);
 }
 
 Map<String, dynamic> _$StudyDeploymentStatusToJson(
@@ -293,7 +295,7 @@ Map<String, dynamic> _$StudyDeploymentStatusToJson(
 
   writeNotNull('studyDeploymentId', instance.studyDeploymentId);
   writeNotNull('devicesStatus', instance.devicesStatus);
-  writeNotNull('startTime', instance.startTime);
+  writeNotNull('startTime', instance.startTime?.toIso8601String());
   return val;
 }
 
@@ -647,6 +649,43 @@ MasterDeviceDescriptor _$MasterDeviceDescriptorFromJson(
 
 Map<String, dynamic> _$MasterDeviceDescriptorToJson(
     MasterDeviceDescriptor instance) {
+  final val = <String, dynamic>{
+    r'$type': instance.$type,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('isMasterDevice', instance.isMasterDevice);
+  writeNotNull('roleName', instance.roleName);
+  writeNotNull('supportedDataTypes', instance.supportedDataTypes);
+  writeNotNull('samplingConfiguration', instance.samplingConfiguration);
+  return val;
+}
+
+CustomProtocolDevice _$CustomProtocolDeviceFromJson(Map<String, dynamic> json) {
+  return CustomProtocolDevice(
+    roleName: json['roleName'] as String,
+    supportedDataTypes:
+        (json['supportedDataTypes'] as List)?.map((e) => e as String)?.toList(),
+  )
+    ..$type = json[r'$type'] as String
+    ..isMasterDevice = json['isMasterDevice'] as bool
+    ..samplingConfiguration =
+        (json['samplingConfiguration'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(
+          k,
+          e == null
+              ? null
+              : SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
+    );
+}
+
+Map<String, dynamic> _$CustomProtocolDeviceToJson(
+    CustomProtocolDevice instance) {
   final val = <String, dynamic>{
     r'$type': instance.$type,
   };

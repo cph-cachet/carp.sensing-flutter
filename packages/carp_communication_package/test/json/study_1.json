@@ -200,7 +200,7 @@
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CalendarMeasure",
       "type": "dk.cachet.carp.calendar",
-      "measure_description": {
+      "measureDescription": {
        "en": {
         "$type": "MeasureDescription",
         "name": "Calendar Events",

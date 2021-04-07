@@ -9,7 +9,7 @@ part of context;
 
 /// Specify the configuration on how to collect weather data.
 /// Needs an [apiKey] for the OpenWeatherMap API.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class WeatherMeasure extends CAMSMeasure {
   /// API key for the OpenWeatherMap API.
   String apiKey;

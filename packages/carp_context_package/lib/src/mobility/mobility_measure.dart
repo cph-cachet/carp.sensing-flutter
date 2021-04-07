@@ -1,7 +1,7 @@
 part of context;
 
 /// Specify the configuration on how to measure mobility features
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class MobilityMeasure extends CAMSMeasure {
   /// Should prior computed context be used?
   bool usePriorContexts;

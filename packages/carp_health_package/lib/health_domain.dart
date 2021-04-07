@@ -42,7 +42,7 @@ const Map<DasesHealthDataType, HealthDataUnit> dasesDataTypeToUnit = {
 /// The [healthDataType] specify which [HealthDataType](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html)
 /// to collect.
 @JsonSerializable(
-    fieldRename: FieldRename.snake, includeIfNull: false, explicitToJson: true)
+    fieldRename: FieldRename.none, includeIfNull: false, explicitToJson: true)
 class HealthMeasure extends MarkedMeasure {
   /// The [HealthDataType](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html) to collect.
   HealthDataType healthDataType;

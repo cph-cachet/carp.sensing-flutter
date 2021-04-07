@@ -131,6 +131,7 @@ class FromJsonFactory {
 
     register(DeviceDescriptor());
     register(MasterDeviceDescriptor());
+    register(CustomProtocolDevice());
     register(Smartphone());
     register(DeviceDescriptor(),
         type:

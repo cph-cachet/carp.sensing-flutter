@@ -10,7 +10,7 @@ HealthMeasure _$HealthMeasureFromJson(Map<String, dynamic> json) {
   return HealthMeasure(
     type: json['type'] as String,
     measureDescription:
-        (json['measure_description'] as Map<String, dynamic>)?.map(
+        (json['measureDescription'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(
           k,
           e == null
@@ -22,7 +22,7 @@ HealthMeasure _$HealthMeasureFromJson(Map<String, dynamic> json) {
         ? null
         : Duration(microseconds: json['history'] as int),
     healthDataType:
-        _$enumDecodeNullable(_$HealthDataTypeEnumMap, json['health_data_type']),
+        _$enumDecodeNullable(_$HealthDataTypeEnumMap, json['healthDataType']),
   )
     ..$type = json[r'$type'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
@@ -41,13 +41,13 @@ Map<String, dynamic> _$HealthMeasureToJson(HealthMeasure instance) {
 
   writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
-  writeNotNull('measure_description',
+  writeNotNull('measureDescription',
       instance.measureDescription?.map((k, e) => MapEntry(k, e?.toJson())));
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
   writeNotNull('history', instance.history?.inMicroseconds);
   writeNotNull(
-      'health_data_type', _$HealthDataTypeEnumMap[instance.healthDataType]);
+      'healthDataType', _$HealthDataTypeEnumMap[instance.healthDataType]);
   return val;
 }
 

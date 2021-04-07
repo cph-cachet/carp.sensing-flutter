@@ -10,7 +10,7 @@ MovisensMeasure _$MovisensMeasureFromJson(Map<String, dynamic> json) {
   return MovisensMeasure(
     type: json['type'] as String,
     measureDescription:
-        (json['measure_description'] as Map<String, dynamic>)?.map(
+        (json['measureDescription'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(
           k,
           e == null
@@ -20,9 +20,9 @@ MovisensMeasure _$MovisensMeasureFromJson(Map<String, dynamic> json) {
     enabled: json['enabled'],
     address: json['address'] as String,
     sensorLocation:
-        _$enumDecodeNullable(_$SensorLocationEnumMap, json['sensor_location']),
+        _$enumDecodeNullable(_$SensorLocationEnumMap, json['sensorLocation']),
     gender: _$enumDecodeNullable(_$GenderEnumMap, json['gender']),
-    deviceName: json['device_name'] as String,
+    deviceName: json['deviceName'] as String,
     height: json['height'] as int,
     weight: json['weight'] as int,
     age: json['age'] as int,
@@ -44,17 +44,17 @@ Map<String, dynamic> _$MovisensMeasureToJson(MovisensMeasure instance) {
 
   writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
-  writeNotNull('measure_description', instance.measureDescription);
+  writeNotNull('measureDescription', instance.measureDescription);
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
   writeNotNull('address', instance.address);
-  writeNotNull('device_name', instance.deviceName);
+  writeNotNull('deviceName', instance.deviceName);
   writeNotNull('weight', instance.weight);
   writeNotNull('height', instance.height);
   writeNotNull('age', instance.age);
   writeNotNull('gender', _$GenderEnumMap[instance.gender]);
   writeNotNull(
-      'sensor_location', _$SensorLocationEnumMap[instance.sensorLocation]);
+      'sensorLocation', _$SensorLocationEnumMap[instance.sensorLocation]);
   return val;
 }
 
