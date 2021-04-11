@@ -44,15 +44,17 @@ class Sensing {
     //SamplingPackageRegistry().register(AppsSamplingPackage());
     SamplingPackageRegistry().register(ESenseSamplingPackage());
 
-    // manager = LocalStudyProtocolManager();
-    manager = CARPStudyProtocolManager();
+    manager = LocalStudyProtocolManager();
+
+    // used for downloading the study protocol from the CARP server
+    // TODO - obtain deployment id from an invitaiton
+    // manager = CARPStudyProtocolManager();
   }
 
   /// Initialize and setup sensing.
   Future<void> initialize() async {
     // get the protocol from the study protocol manager based on the
     // study deployment id
-    // TODO - obtain deployment id from an invitaiton
     _protocol = await manager.getStudyProtocol(testStudyDeploymentId);
 
     // deploy this protocol using the on-phone deployment service

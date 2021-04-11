@@ -54,7 +54,8 @@ class StudyProtocol extends Serializable {
     this.owner,
     this.name,
     this.description,
-  }) : super();
+  })
+      : super();
 
   /// Add a [masterDevice] which is responsible for aggregating and synchronizing
   /// incoming data. Its role name should be unique in the protocol.

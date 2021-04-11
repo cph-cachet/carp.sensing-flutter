@@ -38,7 +38,7 @@ class EmailAccountIdentity extends AccountIdentity {
   String emailAddress;
   EmailAccountIdentity([this.emailAddress]);
 
-  Function get fromJsonFunction => _$EmailAccountIdentityToJson;
+  Function get fromJsonFunction => _$EmailAccountIdentityFromJson;
   factory EmailAccountIdentity.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory()
           .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);

@@ -1,3 +1,6 @@
+## 0.20.2
+* `DataPoint` updated to support both up- and download to the CARP server
+
 ## 0.20.1
 * `ProtocolOwner` class added
 * example added
