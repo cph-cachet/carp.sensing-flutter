@@ -20,7 +20,8 @@ class MovisensDevice extends DeviceDescriptor {
   MovisensDevice({
     String roleName = DEFAULT_ROLENAME,
     List<String> supportedDataTypes,
-  }) : super(
+  })
+      : super(
           roleName: roleName,
           isMasterDevice: false,
           supportedDataTypes: supportedDataTypes,
@@ -37,9 +38,10 @@ class MovisensDeviceManager extends DeviceManager {
   // the last known voltage level of the Movisens device
   int _batteryLevel = 100;
   String _connectionStatus;
-  StreamSubscription<Map<String, dynamic>> _eventSubscription;
+  // StreamSubscription<Map<String, dynamic>> _eventSubscription;
 
   String get id => userData?.sensorName ?? 'movisens-123';
+  String get connectionStatus => _connectionStatus;
 
   Future initialize(String type) async {
     await super.initialize(type);

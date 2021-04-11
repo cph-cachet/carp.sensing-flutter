@@ -29,8 +29,8 @@ class MovisensDatum extends Datum {
     if (map.containsKey("StepCount"))
       return MovisensStepCountDatum.fromMap(map["StepCount"]);
     if (map.containsKey("MovementAcceleration"))
-      return MovisensMovementAccelerationDatum.fromMap(
-          map["MovementAcceleration"]);
+      return MovisensMovementAccelerationDatum
+          .fromMap(map["MovementAcceleration"]);
     if (map.containsKey("TapMarker"))
       return MovisensTapMarkerDatum.fromMap(map["TapMarker"]);
     if (map.containsKey("BatteryLevel"))
@@ -40,6 +40,9 @@ class MovisensDatum extends Datum {
 
     return MovisensDatum();
   }
+  factory MovisensDatum.fromJson(Map<String, dynamic> json) =>
+      _$MovisensDatumFromJson(json);
+  Map<String, dynamic> toJson() => _$MovisensDatumToJson(this);
 }
 
 /// Make a Movisens timestamp into UTC format

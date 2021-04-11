@@ -41,7 +41,8 @@ class MovisensMeasure extends CAMSMeasure {
     this.height,
     this.weight,
     this.age,
-  }) : super(
+  })
+      : super(
             type: type,
             measureDescription: measureDescription,
             enabled: enabled);

@@ -165,15 +165,47 @@ Before creating a study and running it, register this package in the
  SamplingPackageRegistry().register(MovisensSamplingPackage());
 `````
 
-Once the package is registered, a `MovisensMeasure` can be added to a study like this.
+Once the package is registered, a `MovisensMeasure` can be added to a study protocol like this.
 
 ````dart
-  study.addTriggerTask(
+  // register this sampling package before using its measures
+  SamplingPackageRegistry().register(MovisensSamplingPackage());
+
+  // create a study protocol using a local file to store data
+  CAMSStudyProtocol protocol = CAMSStudyProtocol()
+    ..name = 'Track patient movement'
+    ..owner = ProtocolOwner(
+      id: 'AB',
+      name: 'Alex Boyon',
+      email: 'alex@uni.dk',
+    )
+    ..dataEndPoint = FileDataEndPoint(
+      bufferSize: 500 * 1000,
+      zip: true,
+      encrypt: false,
+    );
+
+  // define which devices are used for data collection - both phone and Movisens
+  Smartphone phone = Smartphone();
+  DeviceDescriptor movisens = DeviceDescriptor();
+
+  protocol
+    ..addMasterDevice(phone)
+    ..addConnectedDevice(movisens);
+
+  // adding a movisens measure
+  protocol.addTriggeredTask(
       ImmediateTrigger(), // a simple trigger that starts immediately
-      Task('Movisens Task')
+      AutomaticTask(name: 'Movisens Task')
         ..addMeasure(MovisensMeasure(
-            type: MeasureType(NameSpace.CARP, MovisensSamplingPackage.MOVISENS),
-            name: "movisens",
+            type: MovisensSamplingPackage.MOVISENS,
+            measureDescription: {
+              'en': MeasureDescription(
+                name: 'Movisens ECG device',
+                description:
+                    "Collects heart rythm data from the Movisens EcgMove4 sensor",
+              )
+            },
             enabled: true,
             address: '06-00-00-00-00-00',
             deviceName: "ECG-223",
@@ -181,6 +213,7 @@ Once the package is registered, a `MovisensMeasure` can be added to a study like
             weight: 77,
             age: 32,
             gender: Gender.male,
-            sensorLocation: SensorLocation.chest)));
+            sensorLocation: SensorLocation.chest)),
+      movisens);
 ````
 
