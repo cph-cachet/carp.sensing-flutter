@@ -15,7 +15,6 @@
    * Note, however, that `DataPoint` objects are still serialized as `snake_case` json.
 * All the `events` streams are now called `data` and streams `DataPoint` data objects (instead of just the `Datum` data objects). 
 
-
 ## 0.12.3
 * extension of `Study` to include `purpose`, `title` and `PrincipalInvestigator`
 

@@ -402,6 +402,8 @@ void app_task_example() async {
           description: "Collect screen events",
         )..addMeasure(Measure(type: DeviceSamplingPackage.SCREEN)),
         phone);
+
+  print(protocol);
 }
 
 void app_task_controller_example() async {

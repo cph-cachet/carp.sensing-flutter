@@ -113,7 +113,8 @@ class PeriodicTrigger extends CAMSTrigger {
     String triggerId,
     @required this.period,
     this.duration = const Duration(seconds: 1),
-  }) : super(triggerId: triggerId);
+  })
+      : super(triggerId: triggerId);
 
   Function get fromJsonFunction => _$PeriodicTriggerFromJson;
   factory PeriodicTrigger.fromJson(Map<String, dynamic> json) =>
@@ -137,7 +138,8 @@ class DateTimeTrigger extends CAMSTrigger {
     String triggerId,
     @required this.schedule,
     this.duration,
-  }) : super(triggerId: triggerId);
+  })
+      : super(triggerId: triggerId);
 
   Function get fromJsonFunction => _$DateTimeTriggerFromJson;
   factory DateTimeTrigger.fromJson(Map<String, dynamic> json) =>
@@ -495,7 +497,8 @@ class CronScheduledTrigger extends CAMSTrigger {
     String triggerId,
     this.cronExpression,
     this.duration = const Duration(seconds: 1),
-  }) : super(triggerId: triggerId);
+  })
+      : super(triggerId: triggerId);
 
   static String _cronToString(
           int minute, int hour, int day, int month, int weekday) =>
@@ -530,7 +533,8 @@ class SamplingEventTrigger extends CAMSTrigger {
     @required this.measureType,
     this.resumeCondition,
     this.pauseCondition,
-  }) : super(triggerId: triggerId);
+  })
+      : super(triggerId: triggerId);
 
   /// The data type of the event to look for.
   ///
@@ -611,7 +615,8 @@ class ConditionalSamplingEventTrigger extends CAMSTrigger {
     @required this.measureType,
     this.resumeCondition,
     this.pauseCondition,
-  }) : super(triggerId: triggerId);
+  })
+      : super(triggerId: triggerId);
 
   /// The data type of the event to look for.
   String measureType;

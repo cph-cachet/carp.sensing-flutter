@@ -24,7 +24,8 @@ class ConnectableDeviceDescriptor extends DeviceDescriptor {
     this.name,
     String roleName,
     List<String> supportedDataTypes,
-  }) : super(
+  })
+      : super(
           roleName: roleName,
           isMasterDevice: false,
           supportedDataTypes: supportedDataTypes,

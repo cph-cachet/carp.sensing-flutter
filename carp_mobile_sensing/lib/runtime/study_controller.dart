@@ -94,7 +94,8 @@ class StudyDeploymentController {
     this.privacySchemaName,
     this.transformer,
     this.debugLevel = DebugLevel.WARNING,
-  }) : super() {
+  })
+      : super() {
     assert(deployment != null);
     // set global debug level
     globalDebugLevel = debugLevel;
