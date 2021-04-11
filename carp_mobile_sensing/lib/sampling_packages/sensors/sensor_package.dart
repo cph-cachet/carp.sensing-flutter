@@ -1,12 +1,13 @@
 part of sensors;
 
 class SensorSamplingPackage extends SmartphoneSamplingPackage {
-  static const String ACCELEROMETER = 'accelerometer';
-  static const String GYROSCOPE = 'gyroscope';
-  static const String PERIODIC_ACCELEROMETER = 'periodic_accelerometer';
-  static const String PERIODIC_GYROSCOPE = 'periodic_gyroscope';
-  static const String PEDOMETER = 'pedometer';
-  static const String LIGHT = 'light';
+  static const String ACCELEROMETER = 'dk.cachet.carp.accelerometer';
+  static const String GYROSCOPE = 'dk.cachet.carp.gyroscope';
+  static const String PERIODIC_ACCELEROMETER =
+      'dk.cachet.carp.periodic_accelerometer';
+  static const String PERIODIC_GYROSCOPE = 'dk.cachet.carp.periodic_gyroscope';
+  static const String PEDOMETER = 'dk.cachet.carp.pedometer';
+  static const String LIGHT = 'dk.cachet.carp.light';
 
   List<String> get dataTypes => [
         ACCELEROMETER,
@@ -41,113 +42,99 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
   List<Permission> get permissions => [Permission.sensors];
 
   SamplingSchema get common => SamplingSchema()
-    ..type = SamplingSchemaType.COMMON
+    ..type = SamplingSchemaType.common
     ..name = 'Common (default) sensor sampling schema'
     ..powerAware = true
-    ..measures.addEntries([
-      MapEntry(
-          ACCELEROMETER,
-          Measure(
-            type: MeasureType(NameSpace.CARP, ACCELEROMETER),
+    ..addMeasures([
+      CAMSMeasure(
+        type: ACCELEROMETER,
+        measureDescription: {
+          'en': MeasureDescription(
             name: 'Accelerometer',
-            enabled: false,
-          )),
-      MapEntry(
-          GYROSCOPE,
-          Measure(
-            type: MeasureType(NameSpace.CARP, GYROSCOPE),
+            description:
+                'Collects movement data based on the onboard phone accelerometer sensor.',
+          )
+        },
+        enabled: false,
+      ),
+      CAMSMeasure(
+        type: GYROSCOPE,
+        measureDescription: {
+          'en': MeasureDescription(
             name: 'Gyroscope',
-            enabled: false,
-          )),
-      MapEntry(
-          PERIODIC_ACCELEROMETER,
-          PeriodicMeasure(
-            type: MeasureType(NameSpace.CARP, PERIODIC_ACCELEROMETER),
+            description:
+                'Collects movement data based on the onboard phone gyroscope sensor.',
+          )
+        },
+        enabled: false,
+      ),
+      PeriodicMeasure(
+        type: PERIODIC_ACCELEROMETER,
+        measureDescription: {
+          'en': MeasureDescription(
             name: 'Accelerometer',
-            enabled: false,
-            frequency: const Duration(seconds: 5),
-            duration: const Duration(seconds: 1),
-          )),
-      MapEntry(
-          PERIODIC_GYROSCOPE,
-          PeriodicMeasure(
-            type: MeasureType(NameSpace.CARP, PERIODIC_GYROSCOPE),
+            description:
+                'Collects movement data based on the onboard phone accelerometer sensor.',
+          )
+        },
+        enabled: false,
+        frequency: const Duration(seconds: 5),
+        duration: const Duration(seconds: 1),
+      ),
+      PeriodicMeasure(
+        type: PERIODIC_GYROSCOPE,
+        measureDescription: {
+          'en': MeasureDescription(
             name: 'Gyroscope',
-            enabled: false,
-            frequency: const Duration(seconds: 5),
-            duration: const Duration(seconds: 1),
-          )),
-      MapEntry(
-          PEDOMETER,
-          Measure(
-              type: MeasureType(NameSpace.CARP, PEDOMETER),
-              name: 'Pedometer (Step Count)',
-              enabled: true)),
-      MapEntry(
-          LIGHT,
-          PeriodicMeasure(
-            type: MeasureType(NameSpace.CARP, LIGHT),
+            description:
+                'Collects movement data based on the onboard phone gyroscope sensor.',
+          )
+        },
+        enabled: false,
+        frequency: const Duration(seconds: 5),
+        duration: const Duration(seconds: 1),
+      ),
+      CAMSMeasure(
+        type: PEDOMETER,
+        measureDescription: {
+          'en': MeasureDescription(
+            name: 'Pedometer (Step Count)',
+            description:
+                'Collects step events from the onboard phone step sensor.',
+          )
+        },
+      ),
+      PeriodicMeasure(
+        type: LIGHT,
+        measureDescription: {
+          'en': MeasureDescription(
             name: 'Ambient Light',
-            enabled: true,
-            frequency: const Duration(minutes: 1),
-            duration: const Duration(seconds: 1),
-          )),
+            description:
+                'Collects ambient light from the light sensor on the phone.',
+          )
+        },
+        frequency: const Duration(minutes: 1),
+        duration: const Duration(seconds: 1),
+      ),
     ]);
 
-  SamplingSchema get light => common
-    ..type = SamplingSchemaType.LIGHT
-    ..name = 'Light sensor sampling'
-    ..measures[LIGHT].enabled = false;
+  SamplingSchema get light {
+    SamplingSchema light = common
+      ..type = SamplingSchemaType.light
+      ..name = 'Light sensor sampling';
+    (light.measures[DataType.fromString(LIGHT)] as CAMSMeasure).enabled = false;
+    return light;
+  }
 
-  SamplingSchema get minimum => common
-    ..type = SamplingSchemaType.LIGHT
-    ..name = 'Light sensor sampling'
-    ..measures[PEDOMETER].enabled = false;
+  SamplingSchema get minimum {
+    SamplingSchema minimum = common
+      ..type = SamplingSchemaType.light
+      ..name = 'Light sensor sampling';
+    (minimum.measures[DataType.fromString(PEDOMETER)] as CAMSMeasure).enabled =
+        false;
+    return minimum;
+  }
 
   SamplingSchema get normal => common;
-
-  SamplingSchema get debug => SamplingSchema()
-    ..type = SamplingSchemaType.DEBUG
-    ..name = 'Common (default) sensor sampling schema'
-    ..powerAware = false
-    ..measures.addEntries([
-      MapEntry(
-          ACCELEROMETER,
-          Measure(
-              type: MeasureType(NameSpace.CARP, ACCELEROMETER),
-              name: 'Accelerometer')),
-      MapEntry(
-          GYROSCOPE,
-          Measure(
-              type: MeasureType(NameSpace.CARP, GYROSCOPE), name: 'Gyroscope')),
-      MapEntry(
-          PERIODIC_ACCELEROMETER,
-          PeriodicMeasure(
-            type: MeasureType(NameSpace.CARP, PERIODIC_ACCELEROMETER),
-            name: 'Accelerometer',
-            frequency: const Duration(seconds: 5),
-            duration: const Duration(seconds: 1),
-          )),
-      MapEntry(
-          PERIODIC_GYROSCOPE,
-          PeriodicMeasure(
-            type: MeasureType(NameSpace.CARP, PERIODIC_GYROSCOPE),
-            name: 'Gyroscope',
-            frequency: const Duration(seconds: 5),
-            duration: const Duration(seconds: 1),
-          )),
-      MapEntry(
-          PEDOMETER,
-          Measure(
-              type: MeasureType(NameSpace.CARP, PEDOMETER),
-              name: 'Pedometer (Step Count)')),
-      MapEntry(
-          LIGHT,
-          PeriodicMeasure(
-            type: MeasureType(NameSpace.CARP, LIGHT),
-            name: 'Ambient Light',
-            frequency: const Duration(seconds: 10),
-            duration: const Duration(seconds: 2),
-          )),
-    ]);
+  SamplingSchema get debug => common;
 }

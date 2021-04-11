@@ -42,21 +42,21 @@ const Map<DasesHealthDataType, HealthDataUnit> dasesDataTypeToUnit = {
 /// The [healthDataType] specify which [HealthDataType](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html)
 /// to collect.
 @JsonSerializable(
-    fieldRename: FieldRename.snake, includeIfNull: false, explicitToJson: true)
+    fieldRename: FieldRename.none, includeIfNull: false, explicitToJson: true)
 class HealthMeasure extends MarkedMeasure {
   /// The [HealthDataType](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html) to collect.
   HealthDataType healthDataType;
 
   HealthMeasure({
-    MeasureType type,
-    String name,
+    String type,
+    Map<String, MeasureDescription> measureDescription,
     bool enabled,
     Duration history = const Duration(days: 1),
     this.healthDataType,
   })
       : super(
           type: type,
-          name: name,
+          measureDescription: measureDescription,
           enabled: enabled,
           history: history,
         );
@@ -73,14 +73,11 @@ class HealthMeasure extends MarkedMeasure {
 
 /// A [Datum] that holds a [HealthDataPoint](https://pub.dev/documentation/health/latest/health/HealthDataPoint-class.html) data point information.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class HealthDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, HealthSamplingPackage.HEALTH);
-
+class HealthDatum extends Datum {
   /// The format of this health datum is `carp.health.<healthdatatype>`,
   /// where `<healthdatatype>` is the lowercase of the [HealthDataType](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html) collected.
-  DataFormat get format => DataFormat(NameSpace.CARP,
-      '${HealthSamplingPackage.HEALTH}.${dataType.toLowerCase()}');
+  DataFormat get format => DataFormat
+      .fromString('${HealthSamplingPackage.HEALTH}.${dataType.toLowerCase()}');
 
   /// The value of the health data.
   num value;

@@ -16,7 +16,9 @@ class ProbeModel {
   String get name => probe.name;
 
   ///A printer-friendly description of this probe.
-  String get description => ProbeDescription.probeTypeDescription[type];
+  String get description => (probe.measure is CAMSMeasure)
+      ? (probe.measure as CAMSMeasure).description
+      : ProbeDescription.probeTypeDescription[type];
 
   /// The icon for this type of probe.
   Icon get icon => ProbeDescription.probeTypeIcon[type];
@@ -25,7 +27,8 @@ class ProbeModel {
   Icon get stateIcon => ProbeDescription.probeStateIcon[state];
 
   ProbeModel(this.probe)
-      : assert(probe != null, 'A ProbeModel must be initialized with a real Probe.'),
+      : assert(probe != null,
+            'A ProbeModel must be initialized with a real Probe.'),
         super();
 }
 

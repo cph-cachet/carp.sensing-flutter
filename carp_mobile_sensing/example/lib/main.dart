@@ -1,17 +1,16 @@
 /*
- * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2021 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(CARPMobileSensingApp());
 
 class CARPMobileSensingApp extends StatelessWidget {
-  // This widget is the root of your application.
-  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'CARP Mobile Sensing Demo',
@@ -24,34 +23,24 @@ class CARPMobileSensingApp extends StatelessWidget {
 }
 
 class ConsolePage extends StatefulWidget {
-  ConsolePage({Key key, this.title}) : super(key: key);
-
   final String title;
-
-  @override
+  ConsolePage({Key key, this.title}) : super(key: key);
   Console createState() => Console();
 }
 
+/// A simple UI with a console that logs/prints the sensed data in a json format.
 class Console extends State<ConsolePage> {
   String _log = '';
   Sensing sensing;
 
-  void log(String msg) {
-    setState(() {
-      _log += '$msg\n';
-    });
-  }
-
-  void clearLog() {
-    setState(() {
-      _log += '';
-    });
-  }
-
   void initState() {
     super.initState();
-    sensing = Sensing(this);
-    sensing.start();
+    sensing = Sensing();
+    settings.init().then((future) {
+      sensing.init().then((future) {
+        log("Setting up study protocol: ${sensing.protocol}");
+      });
+    });
   }
 
   void dispose() {
@@ -66,131 +55,176 @@ class Console extends State<ConsolePage> {
       ),
       body: SingleChildScrollView(
         child: StreamBuilder(
-          stream: sensing.controller.events,
-          builder: (context, AsyncSnapshot<Datum> snapshot) {
-            if (snapshot.hasData) {
-              _log += '${snapshot.data.toString()}\n';
-              return Text(_log);
-            } else if (snapshot.hasError) {
-              return Text(snapshot.error.toString());
-            }
-            return Center(child: CircularProgressIndicator());
+          stream: sensing.controller?.data,
+          builder: (context, AsyncSnapshot<DataPoint> snapshot) {
+            if (snapshot.hasData) _log += '${toJsonString(snapshot.data)}\n';
+            return Text(_log);
           },
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _restart,
+        onPressed: restart,
         tooltip: 'Restart study & probes',
         child: sensing.isRunning ? Icon(Icons.pause) : Icon(Icons.play_arrow),
       ),
     );
   }
 
-  void _restart() {
+  void log(String msg) {
+    setState(() {
+      _log += '$msg\n';
+    });
+  }
+
+  void clearLog() {
+    setState(() {
+      _log += '';
+    });
+  }
+
+  void restart() {
     setState(() {
       if (sensing.isRunning) {
         sensing.pause();
+        log('\nSensing paused ...');
       } else {
         sensing.resume();
+        log('\nSensing resumed ...');
       }
     });
   }
 }
 
-/// This class implements sensing incl. setting up a [Study] with [Task]s and [Measure]s.
+/// This class handles sensing with the following business logic flow:
 ///
-/// This example is useful for creating a Business Logical Object (BLOC) in a Flutter app.
-/// See e.g. the CARP Mobile Sensing App.
+///  * create a [StudyProtocol]
+///  * deploy the protocol
+///  * register devices
+///  * get the deployment configuration
+///  * mark the deployment successful
+///  * create and initialize a [StudyDeploymentController]
+///  * start/pause/resume/stop sensing via this study controller
+///
+/// This example is useful for creating a Business Logical Object (BLOC) in a
+/// Flutter app. See e.g. the CARP Mobile Sensing App.
 class Sensing {
-  Study study;
-  Console console;
-  StudyController controller;
+  StudyProtocol protocol;
+  StudyDeploymentStatus _status;
+  StudyDeploymentController controller;
 
-  Sensing(this.console);
+  /// Initialize sensing.
+  Future init() async {
+    // get the protocol from the local protocol manager (defined below)
+    protocol = await LocalStudyProtocolManager().getStudyProtocol('ignored');
 
-  /// Start sensing.
-  void start() async {
-    console.log('Setting up study...');
+    // deploy this protocol using the on-phone deployment service
+    _status = await CAMSDeploymentService().createStudyDeployment(protocol);
 
-    // create the study
-    study = Study(
-            id: '2',
-            userId: 'user@cachet.dk',
-            name: 'A default / common study',
-            dataEndPoint: FileDataEndPoint()
-              ..bufferSize = 500 * 1000
-              ..zip = true
-              ..encrypt = false)
-          ..addTriggerTask(
-              ImmediateTrigger(),
-              AutomaticTask()
-                ..measures = SamplingSchema.debug().getMeasureList(
-                  namespace: NameSpace.CARP,
-                  types: [
-                    //SensorSamplingPackage.ACCELEROMETER,
-                    //SensorSamplingPackage.GYROSCOPE,
-                    SensorSamplingPackage.PERIODIC_ACCELEROMETER,
-                    SensorSamplingPackage.PERIODIC_GYROSCOPE,
-                    SensorSamplingPackage.LIGHT,
-                  ],
-                ))
-          ..addTriggerTask(
-              ImmediateTrigger(),
-              AutomaticTask()
-                ..measures = SamplingSchema.debug().getMeasureList(
-                  namespace: NameSpace.CARP,
-                  types: [
-                    SensorSamplingPackage.PEDOMETER,
-                    DeviceSamplingPackage.MEMORY,
-                    DeviceSamplingPackage.DEVICE,
-                    DeviceSamplingPackage.BATTERY,
-                    DeviceSamplingPackage.SCREEN,
-                  ],
-                ))
-        //
-        ;
+    // at this time we can register this phone as a master device like this
+    CAMSDeploymentService().registerDevice(
+      status.studyDeploymentId,
+      CAMSDeploymentService().thisPhone.roleName,
+      DeviceRegistration(),
+    );
+    // but this is actually not needed, since a phone is always registrered
+    // automatically in the CAMSDeploymentService.
+    // But - you should register devices connected to this phone, if applicable
 
-    console.log("Setting up '${study.name}'...");
+    // now we're ready to get the device deployment configuration for this phone
+    CAMSMasterDeviceDeployment deployment = await CAMSDeploymentService()
+        .getDeviceDeployment(status.studyDeploymentId);
 
-    // print the study to the console
-    console.log(study.toString());
-
-    // Create a Study Controller that can manage this study and initialize it.
-    controller = StudyController(
-      study,
+    // create a study deployment controller that can manage this deployment
+    controller = StudyDeploymentController(
+      deployment,
       debugLevel: DebugLevel.DEBUG,
       privacySchemaName: PrivacySchema.DEFAULT,
+      transformer: ((datum) => datum),
     );
+
+    // initialize the controller
     await controller.initialize();
 
-    // Resume (i.e. start) data sampling.
-    controller.resume();
-    console.log('Sensing started ...');
-
-    // listening on all probe events from the study
-    controller.events.listen((event) => print(event));
+    // listening on the data stream and print them as json to the debug console
+    controller.data.listen((data) => print(toJsonString(data)));
   }
+
+  /// Get the status of the study deployment.
+  StudyDeploymentStatus get status => _status;
 
   /// Is sensing running, i.e. has the study executor been resumed?
   bool get isRunning =>
       (controller != null) && controller.executor.state == ProbeState.resumed;
 
   /// Resume sensing
-  void resume() async {
-    console.log('\nSensing resumed ...\n');
-    controller.resume();
-  }
+  void resume() async => controller.resume();
 
   /// Pause sensing
-  void pause() async {
-    console.log('\nSensing paused ...\n');
-    controller.pause();
-  }
+  void pause() async => controller.pause();
 
   /// Stop sensing.
-  void stop() async {
-    controller.stop();
-    study = null;
-    console.log('Sensing stopped ...');
+  void stop() async => controller.stop();
+}
+
+/// This is a simple local [StudyProtocolManager].
+///
+/// This class shows how to configure a [StudyProtocol] with [Tigger]s,
+/// [TaskDescriptor]s and [Measure]s.
+class LocalStudyProtocolManager implements StudyProtocolManager {
+  Future initialize() async {}
+
+  /// Create a new CAMS study protocol.
+  Future<StudyProtocol> getStudyProtocol(String studyId) async {
+    CAMSStudyProtocol protocol = CAMSStudyProtocol()
+      ..name = 'Track patient movement'
+      ..owner = ProtocolOwner(
+        id: 'AB',
+        name: 'Alex Boyon',
+        email: 'alex@uni.dk',
+      );
+
+    // Define which devices are used for data collection.
+    Smartphone phone = Smartphone();
+    DeviceDescriptor eSense = DeviceDescriptor(roleName: 'esense');
+
+    protocol
+      ..addMasterDevice(phone)
+      ..addConnectedDevice(eSense);
+
+    // add default measures from the SensorSamplingPackage
+    protocol.addTriggeredTask(
+        ImmediateTrigger(),
+        AutomaticTask()
+          ..measures = SamplingPackageRegistry().debug().getMeasureList(
+            types: [
+              // SensorSamplingPackage.ACCELEROMETER,
+              // SensorSamplingPackage.GYROSCOPE,
+              SensorSamplingPackage.PERIODIC_ACCELEROMETER,
+              SensorSamplingPackage.PERIODIC_GYROSCOPE,
+              SensorSamplingPackage.PEDOMETER,
+              SensorSamplingPackage.LIGHT,
+            ],
+          ),
+        phone);
+
+    // add default measures from the DeviceSamplingPackage
+    protocol.addTriggeredTask(
+        ImmediateTrigger(),
+        AutomaticTask()
+          ..measures = SamplingPackageRegistry().debug().getMeasureList(
+            types: [
+              DeviceSamplingPackage.MEMORY,
+              DeviceSamplingPackage.DEVICE,
+              DeviceSamplingPackage.BATTERY,
+              DeviceSamplingPackage.SCREEN,
+            ],
+          ),
+        phone);
+
+    return protocol;
+  }
+
+  Future<bool> saveStudyProtocol(String studyId, StudyProtocol protocol) async {
+    throw UnimplementedError();
   }
 }

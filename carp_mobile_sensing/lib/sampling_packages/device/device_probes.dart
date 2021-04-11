@@ -85,12 +85,11 @@ class MemoryProbe extends PeriodicDatumProbe {
 
 /// A probe that collects the device info about this device.
 class DeviceProbe extends DatumProbe {
-  Future<Datum> getDatum() async {
-    return DeviceDatum(DeviceInfo().platform, DeviceInfo().deviceID,
-        deviceName: DeviceInfo().deviceName,
-        deviceModel: DeviceInfo().deviceModel,
-        deviceManufacturer: DeviceInfo().deviceManufacturer,
-        operatingSystem: DeviceInfo().operatingSystem,
-        hardware: DeviceInfo().hardware);
-  }
+  Future<Datum> getDatum() async =>
+      DeviceDatum(DeviceInfo().platform, DeviceInfo().deviceID,
+          deviceName: DeviceInfo().deviceName,
+          deviceModel: DeviceInfo().deviceModel,
+          deviceManufacturer: DeviceInfo().deviceManufacturer,
+          operatingSystem: DeviceInfo().operatingSystem,
+          hardware: DeviceInfo().hardware);
 }

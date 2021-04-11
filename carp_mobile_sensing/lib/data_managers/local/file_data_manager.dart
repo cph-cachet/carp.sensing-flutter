@@ -12,7 +12,7 @@ part of managers;
 ///
 /// The path and filename format is
 ///
-///   `carp/data/<study_id>/carp-data-yyyy-mm-dd-hh-mm-ss-ms.json.zip`
+///   `carp/data/<study_deployment_id>/carp-data-yyyy-mm-dd-hh-mm-ss-ms.json.zip`
 ///
 class FileDataManager extends AbstractDataManager {
   /// The path to use on the device for storing CARP data files.
@@ -28,11 +28,14 @@ class FileDataManager extends AbstractDataManager {
   bool _initialized = false;
   int _flushingSink = 0;
 
-  Future initialize(Study study, Stream<Datum> data) async {
-    assert(study.dataEndPoint is FileDataEndPoint);
-    await super.initialize(study, data);
+  Future initialize(
+    CAMSMasterDeviceDeployment deployment,
+    Stream<DataPoint> data,
+  ) async {
+    await super.initialize(deployment, data);
+    assert(deployment.dataEndPoint is FileDataEndPoint);
 
-    _fileDataEndPoint = study.dataEndPoint as FileDataEndPoint;
+    _fileDataEndPoint = dataEndPoint as FileDataEndPoint;
 
     if (_fileDataEndPoint.encrypt) {
       assert(_fileDataEndPoint.publicKey != null);
@@ -49,9 +52,14 @@ class FileDataManager extends AbstractDataManager {
     info('Buffer size : ${_fileDataEndPoint.bufferSize.toString()} bytes');
   }
 
-  void onDatum(Datum datum) => write(datum);
+  void onDataPoint(DataPoint dataPoint) => write(dataPoint);
 
-  void onError(Object error) => write(ErrorDatum(error.toString()));
+  void onError(Object error) => write(DataPoint(
+      DataPointHeader(
+          studyId: deployment.studyId,
+          userId: deployment.userId,
+          dataFormat: DataFormat.fromString(CAMSDataType.ERROR)),
+      ErrorDatum(error.toString())));
 
   void onDone() => close();
 
@@ -62,7 +70,7 @@ class FileDataManager extends AbstractDataManager {
       final localApplicationDir = await getApplicationDocumentsDirectory();
       // create a sub-directory for this study named as the study ID
       final directory = await Directory(
-              '${localApplicationDir.path}/$CARP_FILE_PATH/${study.id}')
+              '${localApplicationDir.path}/$CARP_FILE_PATH/${deployment.studyDeploymentId}')
           .create(recursive: true);
       _path = directory.path;
     }
@@ -71,7 +79,7 @@ class FileDataManager extends AbstractDataManager {
 
   /// Current path and filename according to this format:
   ///
-  ///   `carp/data/<study_id>/carp-data-yyyy-mm-dd-hh-mm-ss-ms.json.zip`
+  ///   `carp/data/<studyDeploymentId>/carp-data-yyyy-mm-dd-hh-mm-ss-ms.json.zip`
   ///
   Future<String> get filename async {
     if (_filename == null) {
@@ -113,21 +121,21 @@ class FileDataManager extends AbstractDataManager {
   }
 
   /// Writes a JSON encoded [Datum] to the file
-  Future<bool> write(Datum data) async {
+  Future<bool> write(DataPoint dataPoint) async {
     // Check if the sink is ready for writing...
     if (!_initialized) {
       info('File sink not ready -- delaying for 2 sec...');
-      return Future.delayed(const Duration(seconds: 2), () => write(data));
+      return Future.delayed(const Duration(seconds: 2), () => write(dataPoint));
     }
 
-    final _datapoint = DataPoint.fromDatum(study.id, study.userId, data);
-    final json = jsonEncode(_datapoint);
+    final json = jsonEncode(dataPoint);
 
     await sink.then((_s) {
       try {
         _s.write(json);
         _s.write('\n,\n'); // write a ',' to separate json objects in the list
-        debug('Writing to file : ${data.toString()}');
+        debug(
+            'Writing data point to file - type: ${dataPoint.carpHeader.dataFormat}');
 
         file.then((_f) {
           _f.length().then((len) {
@@ -139,7 +147,7 @@ class FileDataManager extends AbstractDataManager {
       } catch (err) {
         debug(err);
         _initialized = false;
-        return write(data);
+        return write(dataPoint);
       }
     });
 
@@ -210,62 +218,6 @@ class FileDataManager extends AbstractDataManager {
   }
 
   String toString() => 'FileDataManager';
-}
-
-/// Specify an endpoint where a file-based [DataManager] can store JSON
-/// data as files on the local device.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class FileDataEndPoint extends DataEndPoint {
-  /// The buffer size of the raw JSON file in bytes.
-  ///
-  /// All Probed data will be written to a JSON file until the buffer is
-  /// filled, at which time the file will be zipped. There is not a single-best
-  /// [bufferSize] value.
-  /// If data are collected at high rates, a higher value will be best to
-  /// minimize zip operations. If data are collected at low rates, a lower
-  /// value will be best to minimize the likelihood of data loss when the app
-  /// is killed or crashes. Default size is 500 KB.
-  int bufferSize = 500 * 1000;
-
-  /// Is data to be compressed (zipped) before storing in a file.
-  /// True as default.
-  ///
-  /// If zipped, the JSON file will be reduced to 1/5 of its size.
-  /// For example, the 500 KB buffer typically is reduced to ~100 KB.
-  bool zip = true;
-
-  ///Is data to be encrypted before storing. False as default.
-  ///
-  /// Support only one-way encryption using a public key.
-  bool encrypt = false;
-
-  /// If [encrypt] is true, this should hold the public key in a RSA KPI
-  /// encryption of data.
-  String publicKey;
-
-  /// Creates a [FileDataEndPoint].
-  ///
-  /// [type] is defined in [DataEndPointTypes]. Is typically of type
-  /// [DataEndPointType.FILE] but specialized file types can be specified.
-  FileDataEndPoint(
-      {String type, this.bufferSize, this.zip, this.encrypt, this.publicKey})
-      : super(type: type ?? DataEndPointTypes.FILE);
-
-  /// The function which can transform this [FileDataEndPoint] into JSON.
-  ///
-  /// See [Serializable].
-  Function get fromJsonFunction => _$FileDataEndPointFromJson;
-
-  /// Create a [FileDataEndPoint] from a JSON map.
-  factory FileDataEndPoint.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
-
-  /// Serialize this [FileDataEndPoint] as a JSON map.
-  Map<String, dynamic> toJson() => _$FileDataEndPointToJson(this);
-
-  String toString() => 'FILE - buffer ${(bufferSize / 1000).round()} KB'
-      '${zip ? ', zipped' : ''}${encrypt ? ', encrypted' : ''}';
 }
 
 /// A status event for this file data manager.

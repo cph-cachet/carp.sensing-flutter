@@ -1,10 +1,10 @@
 part of device;
 
 class DeviceSamplingPackage extends SmartphoneSamplingPackage {
-  static const String DEVICE = 'device';
-  static const String MEMORY = 'memory';
-  static const String BATTERY = 'battery';
-  static const String SCREEN = 'screen';
+  static const String DEVICE = 'dk.cachet.carp.device';
+  static const String MEMORY = 'dk.cachet.carp.memory';
+  static const String BATTERY = 'dk.cachet.carp.battery';
+  static const String SCREEN = 'dk.cachet.carp.screen';
 
   List<String> get dataTypes => [
         DEVICE,
@@ -33,48 +33,64 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
   List<Permission> get permissions => [];
 
   SamplingSchema get common => SamplingSchema()
-    ..type = SamplingSchemaType.COMMON
+    ..type = SamplingSchemaType.common
     ..name = 'Common (default) device sampling schema'
     ..powerAware = true
-    ..measures.addEntries([
-      MapEntry(
-          DEVICE,
-          Measure(
-              type: MeasureType(NameSpace.CARP, DEVICE),
-              name: 'Basic Device Info',
-              enabled: true)),
-      MapEntry(
-          MEMORY,
-          PeriodicMeasure(
-              type: MeasureType(NameSpace.CARP, MEMORY),
+    ..addMeasures([
+      CAMSMeasure(
+        type: DEVICE,
+        measureDescription: {
+          'en': MeasureDescription(
+            name: 'Basic Device Info',
+            description: 'Collects basic information about the phone.',
+          )
+        },
+      ),
+      PeriodicMeasure(
+          type: MEMORY,
+          measureDescription: {
+            'en': MeasureDescription(
               name: 'Memory Usage',
-              enabled: true,
-              frequency: const Duration(minutes: 1))),
-      MapEntry(
-          BATTERY,
-          Measure(
-              type: MeasureType(NameSpace.CARP, BATTERY),
-              name: 'Battery',
-              enabled: true)),
-      MapEntry(
-          SCREEN,
-          Measure(
-              type: MeasureType(NameSpace.CARP, SCREEN),
-              name: 'Screen Activity (lock/on/off)',
-              enabled: true)),
+              description: 'Collects information about use of memory.',
+            )
+          },
+          frequency: const Duration(minutes: 1)),
+      CAMSMeasure(
+        type: BATTERY,
+        measureDescription: {
+          'en': MeasureDescription(
+            name: 'Battery',
+            description:
+                'Collects information about the battery charging level.',
+          )
+        },
+      ),
+      CAMSMeasure(
+        type: SCREEN,
+        measureDescription: {
+          'en': MeasureDescription(
+            name: 'Screen Activity (lock/on/off)',
+            description:
+                "Collects information about lock/unlock event of the phone's screen.",
+          )
+        },
+      ),
     ]);
 
-  SamplingSchema get light => common
-    ..type = SamplingSchemaType.LIGHT
-    ..name = 'Light sensor sampling'
-    ..measures[MEMORY].enabled = false;
+  SamplingSchema get light {
+    SamplingSchema light = common
+      ..type = SamplingSchemaType.light
+      ..name = 'Light sensor sampling';
+    (light.measures[DataType.fromString(MEMORY)] as CAMSMeasure).enabled =
+        false;
+    return light;
+  }
 
-  SamplingSchema get minimum => light;
-
-  SamplingSchema get normal => common;
+  SamplingSchema get minimum => light..type = SamplingSchemaType.minimum;
+  SamplingSchema get normal => common..type = SamplingSchemaType.normal;
 
   SamplingSchema get debug => common
-    ..type = SamplingSchemaType.DEBUG
+    ..type = SamplingSchemaType.debug
     ..powerAware = false
     ..name = 'Debug device sampling';
 }

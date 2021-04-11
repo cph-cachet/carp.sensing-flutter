@@ -10,19 +10,20 @@ library carp_backend;
 import 'dart:async';
 import 'dart:io';
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
-import 'package:carp_webservices/carp_service/carp_service.dart';
+import 'package:carp_webservices/carp_services/carp_services.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
-import 'package:carp_webservices/carp_domain/carp_domain.dart';
+import 'package:carp_core/carp_core.dart';
 
 part 'carp_data_manager.dart';
 part 'carp_study_manager.dart';
 part 'carp_backend.g.dart';
 
 /// Specify a CARP Web Service endpoint.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class CarpDataEndPoint extends FileDataEndPoint {
   /// The default collection name.
   static const String DEFAULT_COLLECTION = "carp_sensing";

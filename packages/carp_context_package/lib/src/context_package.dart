@@ -15,13 +15,13 @@ part of context;
 ///   SamplingPackageRegistry.register(ContextSamplingPackage());
 /// ```
 class ContextSamplingPackage extends SmartphoneSamplingPackage {
-  static const String LOCATION = "location";
-  static const String GEOLOCATION = "geolocation";
-  static const String ACTIVITY = "activity";
-  static const String WEATHER = "weather";
-  static const String AIR_QUALITY = "air_quality";
-  static const String GEOFENCE = "geofence";
-  static const String MOBILITY = "mobility";
+  static const String LOCATION = "dk.cachet.carp.location";
+  static const String GEOLOCATION = "dk.cachet.carp.geolocation";
+  static const String ACTIVITY = "dk.cachet.carp.activity";
+  static const String WEATHER = "dk.cachet.carp.weather";
+  static const String AIR_QUALITY = "dk.cachet.carp.air_quality";
+  static const String GEOFENCE = "dk.cachet.carp.geofence";
+  static const String MOBILITY = "dk.cachet.carp.mobility";
 
   List<String> get dataTypes => [
         LOCATION,
@@ -79,22 +79,33 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
       ];
 
   SamplingSchema get common => SamplingSchema()
-    ..type = SamplingSchemaType.COMMON
+    ..type = SamplingSchemaType.common
     ..name = 'Common (default) context sampling schema'
     ..powerAware = true
     ..measures.addEntries([
       MapEntry(
         LOCATION,
-        Measure(
-            type: MeasureType(NameSpace.CARP, LOCATION),
-            name: 'Location',
-            enabled: true),
+        CAMSMeasure(
+          type: LOCATION,
+          measureDescription: {
+            'en': MeasureDescription(
+              name: 'Location',
+              description: "Collects location from the phone's GPS sensor",
+            )
+          },
+          enabled: true,
+        ),
       ),
       MapEntry(
           GEOLOCATION,
           LocationMeasure(
-            type: MeasureType(NameSpace.CARP, GEOLOCATION),
-            name: 'Geo-location',
+            type: GEOLOCATION,
+            measureDescription: {
+              'en': MeasureDescription(
+                name: 'Geo-location',
+                description: "Collects location from the phone's GPS sensor",
+              )
+            },
             enabled: true,
             frequency: Duration(seconds: 30),
             accuracy: GeolocationAccuracy.low,
@@ -102,38 +113,72 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
           )),
       MapEntry(
         ACTIVITY,
-        Measure(
-            type: MeasureType(NameSpace.CARP, ACTIVITY),
-            name: 'Activity Recognition',
-            enabled: true),
+        CAMSMeasure(
+          type: ACTIVITY,
+          measureDescription: {
+            'en': MeasureDescription(
+              name: 'Activity Recognition',
+              description:
+                  "Collects activity type from the phone's activity recognition module",
+            )
+          },
+          enabled: true,
+        ),
       ),
       MapEntry(
           WEATHER,
           WeatherMeasure(
-              type: MeasureType(NameSpace.CARP, WEATHER),
-              name: 'Local Weather',
+              type: WEATHER,
+              measureDescription: {
+                'en': MeasureDescription(
+                  name: 'Weather',
+                  description:
+                      "Collects local weather from the WeatherAPI web service",
+                )
+              },
               enabled: true,
+              // TODO - remove this
               apiKey: '12b6e28582eb9298577c734a31ba9f4f')),
       MapEntry(
           AIR_QUALITY,
           AirQualityMeasure(
-              type: MeasureType(NameSpace.CARP, AIR_QUALITY),
-              name: 'Local Air Quality',
+              type: AIR_QUALITY,
+              measureDescription: {
+                'en': MeasureDescription(
+                  name: 'Air Quality',
+                  description:
+                      "Collects local air quality from the OpenWeatherMap (OWM) web service",
+                )
+              },
               enabled: true,
+              // TODO - remove this
               apiKey: '9e538456b2b85c92647d8b65090e29f957638c77')),
       MapEntry(
           GEOFENCE,
           GeofenceMeasure(
-              type: MeasureType(NameSpace.CARP, GEOFENCE),
+              type: GEOFENCE,
               enabled: true,
               center: GeoPosition(55.7943601, 12.4461956),
               radius: 500,
+              measureDescription: {
+                'en': MeasureDescription(
+                  name: 'Geofence',
+                  description:
+                      "Collects geofence events when then phone enters, leaves, or dwell in a geographic area",
+                )
+              },
               name: 'Geofence (Virum)')),
       MapEntry(
           MOBILITY,
           MobilityMeasure(
-              type: MeasureType(NameSpace.CARP, MOBILITY),
-              name: 'Mobility Features',
+              type: MOBILITY,
+              measureDescription: {
+                'en': MeasureDescription(
+                  name: 'Mobility Features',
+                  description:
+                      "Extracts mobility features based on location tracking",
+                )
+              },
               enabled: true,
               placeRadius: 50,
               stopRadius: 25,
@@ -141,34 +186,38 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
               stopDuration: Duration(minutes: 3))),
     ]);
 
-  SamplingSchema get light => common
-    ..type = SamplingSchemaType.LIGHT
-    ..name = 'Light context sampling'
-    ..measures[WEATHER].enabled = false;
+  SamplingSchema get light {
+    SamplingSchema light = common
+      ..type = SamplingSchemaType.light
+      ..name = 'Light context sampling';
+    (light.measures[WEATHER] as WeatherMeasure).enabled = false;
+    return light;
+  }
 
-  SamplingSchema get minimum => light
-    ..type = SamplingSchemaType.MINIMUM
-    ..name = 'Minimum context sampling'
-    ..measures[ACTIVITY].enabled = false
-    ..measures[GEOFENCE].enabled = false;
+  SamplingSchema get minimum {
+    SamplingSchema minimum = light
+      ..type = SamplingSchemaType.minimum
+      ..name = 'Minimum context sampling';
+    (minimum.measures[ACTIVITY] as CAMSMeasure).enabled = false;
+    (minimum.measures[GEOFENCE] as LocationMeasure).enabled = false;
+    return minimum;
+  }
 
   SamplingSchema get normal => common;
 
   SamplingSchema get debug => common
-    ..type = SamplingSchemaType.DEBUG
+    ..type = SamplingSchemaType.debug
     ..name = 'Debugging context sampling schema'
     ..powerAware = false
     ..measures[GEOLOCATION] = LocationMeasure(
-      type: MeasureType(NameSpace.CARP, GEOLOCATION),
-      name: 'Geo-location',
+      type: GEOLOCATION,
       enabled: true,
       frequency: Duration(seconds: 3),
       accuracy: GeolocationAccuracy.best,
       distance: 0,
     )
     ..measures[WEATHER] = WeatherMeasure(
-      type: MeasureType(NameSpace.CARP, WEATHER),
-      name: 'Local Weather',
+      type: WEATHER,
       apiKey: '12b6e28582eb9298577c734a31ba9f4f',
     );
 }

@@ -1,0 +1,180 @@
+{
+    "$type": "dk.cachet.carp.protocols.domain.CAMSStudyProtocol",
+    "name": "#23-Coverage",
+    "masterDevices": [
+     {
+      "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
+      "isMasterDevice": true,
+      "roleName": "masterphone",
+      "samplingConfiguration": {}
+     }
+    ],
+    "connectedDevices": [
+     {
+      "$type": "dk.cachet.carp.protocols.domain.devices.ESenseDevice",
+      "isMasterDevice": false,
+      "roleName": "esense",
+      "samplingConfiguration": {}
+     }
+    ],
+    "triggers": [
+     {
+      "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.triggers.PeriodicTrigger",
+      "period": 60000000,
+      "duration": 1000000
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.triggers.PeriodicTrigger",
+      "period": 300000000,
+      "duration": 1000000
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
+     }
+    ],
+    "tasks": [
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
+      "name": "Task #5",
+      "measures": [
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
+        "type": "dk.cachet.carp.light",
+        "measureDescription": {
+         "en": {
+          "$type": "MeasureDescription",
+          "name": "Ambient Light",
+          "description": "Collects ambient light from the light sensor on the phone."
+         }
+        },
+        "enabled": true,
+        "configuration": {},
+        "frequency": 60000000,
+        "duration": 1000000
+       },
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
+        "type": "dk.cachet.carp.memory",
+        "measureDescription": {
+         "en": {
+          "$type": "MeasureDescription",
+          "name": "Memory Usage",
+          "description": "Collects information about use of memory."
+         }
+        },
+        "enabled": true,
+        "configuration": {},
+        "frequency": 60000000
+       }
+      ]
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
+      "name": "Task #6",
+      "measures": [
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
+        "type": "dk.cachet.carp.device",
+        "measureDescription": {
+         "en": {
+          "$type": "MeasureDescription",
+          "name": "Basic Device Info",
+          "description": "Collects basic information about the phone."
+         }
+        },
+        "enabled": true,
+        "configuration": {}
+       }
+      ]
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
+      "name": "Task #7",
+      "measures": []
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
+      "name": "Task #8",
+      "measures": [
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.ESenseMeasure",
+        "type": "dk.cachet.carp.esense.button",
+        "measureDescription": {
+         "en": {
+          "$type": "MeasureDescription",
+          "name": "eSense - Button",
+          "description": "Collects button event from the eSense device"
+         }
+        },
+        "enabled": true,
+        "configuration": {},
+        "deviceName": "eSense-0332",
+        "samplingRate": 10
+       },
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.ESenseMeasure",
+        "type": "dk.cachet.carp.esense.sensor",
+        "measureDescription": {
+         "en": {
+          "$type": "MeasureDescription",
+          "name": "eSense - Sensor",
+          "description": "Collects movement data from the eSense inertial measurement unit (IMU) sensor"
+         }
+        },
+        "enabled": true,
+        "configuration": {},
+        "deviceName": "eSense-0332",
+        "samplingRate": 5
+       }
+      ]
+     }
+    ],
+    "triggeredTasks": [
+     {
+      "triggerId": 0,
+      "taskName": "Task #5",
+      "destinationDeviceRoleName": "masterphone"
+     },
+     {
+      "triggerId": 1,
+      "taskName": "Task #6",
+      "destinationDeviceRoleName": "masterphone"
+     },
+     {
+      "triggerId": 2,
+      "taskName": "Task #7",
+      "destinationDeviceRoleName": "masterphone"
+     },
+     {
+      "triggerId": 3,
+      "taskName": "Task #8",
+      "destinationDeviceRoleName": "esense"
+     }
+    ],
+    "studyId": "1234",
+    "protocolDescription": {
+     "en": {
+      "$type": "StudyProtocolDescription",
+      "title": "Sensing Coverage Study",
+      "description": "This is a study for testing the coverage of sampling."
+     }
+    },
+    "consent": {},
+    "owner": {
+     "$type": "ProtocolOwner",
+     "id": "AB",
+     "name": "Alex Boyon",
+     "email": "alex@uni.dk"
+    },
+    "dataEndPoint": {
+     "$type": "FileDataEndPoint",
+     "type": "FILE",
+     "bufferSize": 50000,
+     "zip": true,
+     "encrypt": false
+    },
+    "dataFormat": "dk.cachet.carp"
+   }

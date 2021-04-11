@@ -9,10 +9,9 @@ part of connectivity;
 
 /// A [Datum] that holds connectivity status of the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class ConnectivityDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, ConnectivitySamplingPackage.CONNECTIVITY);
-  DataFormat get format => CARP_DATA_FORMAT;
+class ConnectivityDatum extends Datum {
+  DataFormat get format =>
+      DataFormat.fromString(ConnectivitySamplingPackage.CONNECTIVITY);
 
   /// The status of the connectivity.
   /// - WiFi: Device connected via Wi-Fi
@@ -49,10 +48,9 @@ class ConnectivityDatum extends CARPDatum {
 
 /// A [Datum] that holds information of nearby Bluetooth devices.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class BluetoothDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, ConnectivitySamplingPackage.BLUETOOTH);
-  DataFormat get format => CARP_DATA_FORMAT;
+class BluetoothDatum extends Datum {
+  DataFormat get format =>
+      DataFormat.fromString(ConnectivitySamplingPackage.BLUETOOTH);
 
   List<BluetoothDevice> scanResult = new List<BluetoothDevice>();
 
@@ -146,10 +144,9 @@ class BluetoothDevice {
 ///
 /// Note that it wifi information cannot be collected on emulators.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class WifiDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, ConnectivitySamplingPackage.WIFI);
-  DataFormat get format => CARP_DATA_FORMAT;
+class WifiDatum extends Datum {
+  DataFormat get format =>
+      DataFormat.fromString(ConnectivitySamplingPackage.WIFI);
 
   /// The wifi service set ID (SSID) of the connected network
   String ssid;

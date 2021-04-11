@@ -33,7 +33,7 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
 </manifest>
 ````
 > **NOTE:** Other CAMS sampling packages require additional permissions in the `manifest.xml` file. 
->See the documentation for each package. 
+> See the documentation for each package. 
 
 > **NOTE:** Version 0.5.0 is migrated to AndroidX. It requires any Android apps using this plugin to also 
 [migrate](https://developer.android.com/jetpack/androidx/migrate) if they're using the original support library. 
@@ -61,7 +61,7 @@ how to use it by create a [`Study` configuration](https://github.com/cph-cachet/
 how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.-Extending-CARP-Mobile-Sensing) it, and
 an overview of the different [`Measure` types available](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types).
 
-A more scientific documentation of CAMS is available at *[arxiv.org](https://arxiv.org/abs/2006.11904)*:
+A more scientific documentation of CAMS is available at [arxiv.org](https://arxiv.org/abs/2006.11904):
 
  *  Bardram, Jakob E. "The CARP Mobile Sensing Framework--A Cross-platform, Reactive, Programming Framework and Runtime Environment for Digital Phenotyping." arXiv preprint arXiv:2006.11904 (2020). [[pdf](https://arxiv.org/pdf/2006.11904.pdf)]
 
@@ -76,135 +76,167 @@ A more scientific documentation of CAMS is available at *[arxiv.org](https://arx
 
 Please use this as a reference in any scientific papers using CAMS.
 
-## Examples
+## Examples of configuring and using CAMS
 
-In CAMS, sensing is configured in a [`Study`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/Study-class.html) object 
-and sensing is controlled by a [`StudyController`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/StudyController-class.html).
+There is a very **simple** [example app](https://pub.dev/packages/carp_mobile_sensing/example) app which shows how a study can be created with different tasks and measures.
+This app just prints the sensing data to a console screen on the phone. 
+There is also a range of different [examples](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/carp_mobile_sensing/example/lib/example.dart) on how to create a study to take inspiration from.
 
-Below is a simple example of how to set up a study that sense step counts (`pedometer`), ambient light (`light`), 
-screen activity (`screen`), and power consumption (`battery`). This data is stores as 
-[json](https://github.com/cph-cachet/carp.sensing-flutter/wiki/B.-Sampling-Data-Formats) 
-to a [local file](https://github.com/cph-cachet/carp.sensing-flutter/wiki/C.-Data-Backends) on the phone.
+However, the [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app) provides a **MUCH** better example of how to use the package in a Flutter BLoC architecture, including good documentation of how to do this.
+
+However, below is a small primer in the use of CAMS.
+
+Following [`carp_core`](https://pub.dev/documentation/carp_core/latest/), a CAMS study is created in three steps:
+
+1. Define a [`StudyProtcol`](https://pub.dev/documentation/carp_core/latest/carp_core/StudyProtocol-class.html).
+2. Deploy this protocol to a [`DeploymentService`](https://pub.dev/documentation/carp_core/latest/carp_core/DeploymentService-class.html).
+3. Start executing the study deployment on the phone using a [`StudyDeploymentController`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/StudyDeploymentController-class.html).
+4. Use the generated data locally in the app.
+
+
+### Defining a `StudyProtcol`
+
+In CAMS, a sensing protocol is configured in a [`CAMSStudyProtocol`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/CAMSStudyProtocol-class.html). Below is a simple example of how to set up a protocol that sense step counts (`pedometer`), ambient light (`light`), screen activity (`screen`), and power consumption (`battery`). This data is stored as [json](https://github.com/cph-cachet/carp.sensing-flutter/wiki/B.-Sampling-Data-Formats) to a [local file](https://github.com/cph-cachet/carp.sensing-flutter/wiki/C.-Data-Backends) on the phone.
 
 ```dart
 // Import package
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
-void example() async {
-  // Create a study using a local file to store data
-  Study study = Study(
-      id: '2',
-      userId: 'user@cachet.dk',
-      name: 'A study collecting ..',
-      dataEndPoint: FileDataEndPoint()
-        ..bufferSize = 500 * 1000
-        ..zip = true
-        ..encrypt = false);
+void example_1() async {
+  // create a protocol using a local file to store data
+  CAMSStudyProtocol protocol = CAMSStudyProtocol()
+    ..name = 'Track patient movement'
+    ..owner = ProtocolOwner(
+      id: 'AB',
+      name: 'Alex Boyon',
+      email: 'alex@uni.dk',
+    )
+    ..dataEndPoint = FileDataEndPoint(
+      bufferSize: 500 * 1000,
+      zip: true,
+      encrypt: false,
+    );
+
+  // define which devices are used for data collection
+  // in this case, its only this smartphone
+  Smartphone phone = Smartphone();
+  protocol.addMasterDevice(phone);
 
   // Add an automatic task that immediately starts collecting
   // step counts, ambient light, screen activity, and battery level
-  study.addTriggerTask(
+  protocol.addTriggeredTask(
       ImmediateTrigger(),
       AutomaticTask()
-        ..measures = SamplingSchema.common().getMeasureList(
-          namespace: NameSpace.CARP,
+        ..addMeasures(SensorSamplingPackage().common.getMeasureList(
           types: [
             SensorSamplingPackage.PEDOMETER,
             SensorSamplingPackage.LIGHT,
+          ],
+        ))
+        ..addMeasures(DeviceSamplingPackage().common.getMeasureList(
+          types: [
             DeviceSamplingPackage.SCREEN,
             DeviceSamplingPackage.BATTERY,
           ],
-        ));
-
-  // Create a Study Controller that can manage this study.
-  StudyController controller = StudyController(study);
-
-  // await initialization before starting/resuming
-  await controller.initialize();
-  controller.resume();
-
-  // listening and print all data events from the study
-  controller.events.forEach(print);
+        )),
+      phone);
 }
 ```
 
 The above example make use of the pre-defined [`SamplingSchema`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/SamplingSchema-class.html) 
 named `common`. This sampling schema contains a set of default settings for how to sample the different measures. 
 
-Sampling can be configured in a very sophisticated ways, by specifying different types of triggers, tasks, and measures -
-see the  CAMS [domain model](https://github.com/cph-cachet/carp.sensing-flutter/wiki/2.-Domain-Model) for an overview.
-In the following example, a study is created "by hand", i.e. you specify each trigger, task and measure in the study.
+Sampling can be configured in a very sophisticated ways, by specifying different types of triggers, tasks, and measures - see the  CAMS [domain model](https://github.com/cph-cachet/carp.sensing-flutter/wiki/2.-Domain-Model) for an overview.
+
+
+### Using a `DeploymentService`
+
+A `StudyProtocol` can be deployed to a `DeploymentService` which handles the deployment of protocols for different devices. CAMS comes with a very simple deployment service which runs locally on the phone. This can be used to deploy a protocol and get back a [`MasterDeviceDeployment`](https://pub.dev/documentation/carp_core/latest/carp_core/MasterDeviceDeployment-class.html), which can be executed on the phone.
 
 ```dart
-void example() async {
-  // Create a study using a local file to store data
-  Study study = Study(
-      id: '1234',
-      userId: 'user@dtu.dk',
-      name: 'An example study',
-      dataEndPoint: FileDataEndPoint()
-        ..bufferSize = 500 * 1000
-        ..zip = true
-        ..encrypt = false);
+  ...
 
-  // automatically collect accelerometer and gyroscope data
-  // but delay the sampling by 10 seconds
-  study.addTriggerTask(
-      DelayedTrigger(delay: Duration(seconds: 10)),
-      AutomaticTask(name: 'Sensor Task')
-        ..addMeasure(Measure(
-            type: MeasureType(
-                NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER)))
-        ..addMeasure(Measure(
-            type:
-                MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE))));
+  // deploy this protocol using the on-phone deployment service
+  StudyDeploymentStatus status =
+      await CAMSDeploymentService().createStudyDeployment(protocol);
 
-  // create a light measure variable to be used later
-  PeriodicMeasure lightMeasure = PeriodicMeasure(
-    type: MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
-    name: 'Ambient Light',
-    frequency: const Duration(seconds: 11),
-    duration: const Duration(milliseconds: 100),
-  );
-  // add it to the study to start immediately
-  study.addTriggerTask(ImmediateTrigger(),
-      AutomaticTask(name: 'Light')..addMeasure(lightMeasure));
+  // now ready to get the device deployment configuration for this phone
+  CAMSMasterDeviceDeployment deployment = await CAMSDeploymentService()
+      .getDeviceDeployment(status.studyDeploymentId);
 
-// Create a Study Controller that can manage this study.
-  StudyController controller = StudyController(study);
+  ...
+```
 
-  // await initialization before starting/resuming
+
+### Running a `StudyDeploymentController`
+
+When we have a master device deployment for the phone, this deployment can be excuted and sensing is started. Sensing is controlled by a [`StudyDeploymentController`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/StudyDeploymentController-class.html).
+
+
+```dart
+  ...
+
+  // Create a study deployment controller that can manage this deployment
+  StudyDeploymentController controller = StudyDeploymentController(deployment);
+
+  // initialize the controller and resume sampling
   await controller.initialize();
   controller.resume();
 
-  // listening on all data events from the study
-  controller.events.forEach(print);
+  // listening and print all data events from the study
+  controller.data.forEach(print);
 
-  // listen only for CARP events
-  controller.events
-      .where((datum) => datum.format.namespace == NameSpace.CARP)
-      .forEach(print);
+  ...
+```
 
-  // listen for LIGHT events only
-  controller.events
-      .where((datum) => datum.format.name == SensorSamplingPackage.LIGHT)
-      .forEach(print);
+### Using the generated data
 
-  // map events to JSON and then print
-  controller.events.map((datum) => datum.toJson()).forEach(print);
+Sensing can be controlled in a number of ways and the generated data can be accessed and used in the app. Access to data is done by listening on the `data` streams from the study deployment controller or some of its underlying executors or probes. Below are a few examples on how to listen on data streams.
 
-  // listening on a specific event type
+```dart
+  ...
+
+  // listening to the stream of all data events from the controller
+  controller.data.listen((dataPoint) => print(dataPoint));
+
+  // listen only on CARP events
+  controller.data
+      .where((dataPoint) => dataPoint.data.format.namespace == NameSpace.CARP)
+      .listen((event) => print(event));
+
+  // listen on LIGHT events only
+  controller.data
+      .where((dataPoint) =>
+          dataPoint.data.format.toString() == SensorSamplingPackage.LIGHT)
+      .listen((event) => print(event));
+
+  // listening on the data generated from all probes 
   // this is equivalent to the statement above
   ProbeRegistry()
       .eventsByType(SensorSamplingPackage.LIGHT)
+      .listen((dataPoint) => print(dataPoint));
+
+  // map events to JSON and then print
+  controller.data
+      .map((dataPoint) => dataPoint.toJson())
       .listen((event) => print(event));
 
-  // subscribe to events
-  StreamSubscription<Datum> subscription =
-      controller.events.listen((Datum datum) {
+  // subscribe to the stream of data
+  StreamSubscription<DataPoint> subscription =
+      controller.data.listen((DataPoint dataPoint) {
     // do something w. the datum, e.g. print the json
-    print(JsonEncoder.withIndent(' ').convert(datum));
+    print(JsonEncoder.withIndent(' ').convert(dataPoint));
   });
+
+  ...
+```
+
+The execution of sensing can be controlled on runtime. For example:
+
+
+```dart
+  ...
 
   // sampling can be paused and resumed
   controller.pause();
@@ -231,16 +263,9 @@ void example() async {
   // note that once a sampling has stopped, it cannot be restarted.
   controller.stop();
   subscription.cancel();
-} 
+
+  ...
 ```
-
-There is a very **simple** [example app](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/carp_mobile_sensing/example/lib/main.dart) app which shows how a study can be created with different tasks and measures.
-This app just prints the sensing data to a console screen on the phone. 
-There is also a range of different [examples](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/carp_mobile_sensing/example/lib/example.dart) on how to create a study to take inspiration from.
-
-However, the [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app) 
-provides a **MUCH** better example of how to use the package in a Flutter BLoC architecture, including good documentation of how to do this.
-
 
 ## Features and bugs
 
@@ -250,7 +275,6 @@ Please read about existing issues and file new feature requests and bug reports 
 
 ## License
 
-This software is copyright (c) [Copenhagen Center for Health Technology (CACHET)](https://www.cachet.dk/) 
-at the [Technical University of Denmark (DTU)](https://www.dtu.dk).
+This software is copyright (c) [Copenhagen Center for Health Technology (CACHET)](https://www.cachet.dk/) at the [Technical University of Denmark (DTU)](https://www.dtu.dk).
 This software is available 'as-is' under a [MIT license](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/LICENSE).
 

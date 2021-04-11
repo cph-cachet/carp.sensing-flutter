@@ -1,3 +1,20 @@
+## 0.20.0 
+* **BREAKING**: Now using the [`carp_core`](https://pub.dev/packages/carp_core) domain models in order to align with the overall [domain-driven design of CARP](https://carp.cachet.dk/core/). 
+* This has an impact on the **naming** used in the API. The most important changes are:
+    * `Study` is now called `StudyProtocol` and a CAMS-specific protocol called `CAMSStudyProtocol` is available
+    * `PrincipalInvestigator` is now called `ProtocolOwner`
+    * `Task` is now called `TaskDescriptor`
+    * `Device` is now called `DeviceDescriptor`
+    * `ManualTrigger` is now called `PassiveTrigger`
+    * `ScheduledTrigger` is now called `DateTimeTrigger`
+    * `` is now called ``
+* A `StudyProtocol` now uses the concept of a [`TriggeredTask`](https://pub.dev/documentation/carp_core/latest/carp_core/TriggeredTask-class.html) which is slightly different to the previous `Study` model. See the [example](https://pub.dev/packages/carp_core/example).
+* A `CAMSStudyProtocol` now supports localization. A `StudyProtocolDescription` and a list of `ConsentSection` can be added to a protocol for each locale (i.e., language code).
+* Similarly, measures now also supports localization. For each `CAMSMeasure` there is the option to specify its `MeasureDescription` for each locale.  
+* All json serialization of a protocol now use `camelCase` instead of `snake_case` to be consistent with `carp_core` in Kotlin.
+   * Note, however, that `DataPoint` objects are still serialized as `snake_case` json.
+* All the `events` streams are now called `data` and streams `DataPoint` data objects (instead of just the `Datum` data objects). 
+
 ## 0.12.3
 * extension of `Study` to include `purpose`, `title` and `PrincipalInvestigator`
 

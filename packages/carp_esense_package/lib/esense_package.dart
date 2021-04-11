@@ -15,9 +15,9 @@ part of esense;
 ///   SamplingPackageRegistry.register(ESenseSamplingPackage());
 /// ```
 class ESenseSamplingPackage implements SamplingPackage {
-  static const String ESENSE_BUTTON = "esense.button";
-  static const String ESENSE_SENSOR = "esense.sensor";
-  static const String ESENSE_DEVICE_TYPE = 'esense';
+  static const String ESENSE_NAMESPACE = "${NameSpace.CARP}.esense";
+  static const String ESENSE_BUTTON = "$ESENSE_NAMESPACE.button";
+  static const String ESENSE_SENSOR = "$ESENSE_NAMESPACE.sensor";
 
   List<String> get dataTypes => [ESENSE_BUTTON, ESENSE_SENSOR];
 
@@ -32,13 +32,14 @@ class ESenseSamplingPackage implements SamplingPackage {
     }
   }
 
-  void onRegister() => FromJsonFactory().register(ESenseMeasure());
+  void onRegister() {
+    FromJsonFactory().register(ESenseMeasure());
+    FromJsonFactory().register(ESenseDevice());
+  }
 
   List<Permission> get permissions =>
       [Permission.location, Permission.microphone];
-
-  String get deviceType => ESENSE_DEVICE_TYPE;
-
+  String get deviceType => ESenseDevice.DEVICE_TYPE;
   DeviceManager get deviceManager => ESenseDeviceManager();
 
   // Since the configuration of the eSense devices require the device name
@@ -62,22 +63,33 @@ class ESenseSamplingPackage implements SamplingPackage {
   //    and the left earbud to record only IMU data."
   // Hence, connect the right earbud (eSense-0917) to the phone.
   SamplingSchema get debug => SamplingSchema()
-    ..type = SamplingSchemaType.DEBUG
+    ..type = SamplingSchemaType.debug
     ..name = 'Debugging eSense sampling schema'
     ..powerAware = false
     ..measures.addEntries([
       MapEntry(
           ESENSE_BUTTON,
           ESenseMeasure(
-              type: MeasureType(NameSpace.CARP, ESENSE_BUTTON),
-              name: 'eSense - Button',
+              type: ESENSE_BUTTON,
+              measureDescription: {
+                'en': MeasureDescription(
+                  name: 'eSense - Button',
+                  description: "Collects button event from the eSense device",
+                )
+              },
               enabled: true,
               deviceName: 'eSense-0332')),
       MapEntry(
           ESENSE_SENSOR,
           ESenseMeasure(
-              type: MeasureType(NameSpace.CARP, ESENSE_SENSOR),
-              name: 'eSense - Sensors',
+              type: ESENSE_SENSOR,
+              measureDescription: {
+                'en': MeasureDescription(
+                  name: 'eSense - Sensor',
+                  description:
+                      "Collects movement data from the eSense inertial measurement unit (IMU) sensor",
+                )
+              },
               enabled: true,
               deviceName: 'eSense-0332',
               samplingRate: 5)),

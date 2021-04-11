@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:carp_health_package/health_package.dart';
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:health/health.dart';
 import 'package:test/test.dart';
@@ -10,63 +11,116 @@ String _encode(Object object) =>
     const JsonEncoder.withIndent(' ').convert(object);
 
 void main() {
-  Study study;
+  CAMSStudyProtocol protocol;
+  Smartphone phone;
 
   setUp(() {
+    // register the context sampling package
     SamplingPackageRegistry().register(HealthSamplingPackage());
 
-    study = Study(id: "1234", userId: "bardram", name: "bardram study")
-      ..dataEndPoint = DataEndPoint(type: DataEndPointTypes.PRINT)
-      ..addTriggerTask(
-          ImmediateTrigger(),
-          AutomaticTask(name: 'Task #1')
-            //..measures = SamplingSchema.common(namespace: NameSpace.CARP).measures.values.toList());
-            ..measures = SamplingSchema
-                .common()
-                .getMeasureList(namespace: NameSpace.CARP, types: [
-              DeviceSamplingPackage.BATTERY,
-              HealthSamplingPackage.HEALTH,
-            ]));
+    // Create a new study protocol.
+    protocol = CAMSStudyProtocol()
+      ..name = 'Context package test'
+      ..owner = ProtocolOwner(
+        id: 'AB',
+        name: 'Alex Boyon',
+        email: 'alex@uni.dk',
+      );
+
+    // Define which devices are used for data collection.
+    phone = Smartphone();
+
+    protocol..addMasterDevice(phone);
+
+    // adding all measure from the common schema to one one trigger and one task
+    protocol.addTriggeredTask(
+      ImmediateTrigger(), // a simple trigger that starts immediately
+      AutomaticTask()
+        ..measures =
+            SamplingPackageRegistry().common().measures.values.toList(),
+      phone, // a task with all measures
+    );
+
+    protocol.addTriggeredTask(
+        // collect every hour
+        PeriodicTrigger(period: Duration(minutes: 60)),
+        AutomaticTask()
+          ..measures.add(HealthMeasure(
+            type: HealthSamplingPackage.HEALTH,
+            healthDataType: HealthDataType.BLOOD_GLUCOSE,
+          ))
+          ..measures.add(HealthMeasure(
+            type: HealthSamplingPackage.HEALTH,
+            healthDataType: HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
+          ))
+          ..measures.add(HealthMeasure(
+            type: HealthSamplingPackage.HEALTH,
+            healthDataType: HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
+          ))
+          ..measures.add(HealthMeasure(
+            type: HealthSamplingPackage.HEALTH,
+            healthDataType: HealthDataType.HEART_RATE,
+          ))
+          ..measures.add(HealthMeasure(
+            type: HealthSamplingPackage.HEALTH,
+            healthDataType: HealthDataType.STEPS,
+            measureDescription: {
+              'en': MeasureDescription(
+                name: 'Step Counts',
+                description:
+                    "Collects the step counts from Apple Health / Google Fit",
+              )
+            },
+          )),
+        phone);
+
+    protocol.addTriggeredTask(
+        // collect every day at 23:00
+        RecurrentScheduledTrigger(
+            type: RecurrentType.daily, time: Time(hour: 23, minute: 00)),
+        AutomaticTask()
+          ..measures.add(HealthMeasure(
+            type: HealthSamplingPackage.HEALTH,
+            healthDataType: HealthDataType.WEIGHT,
+          )),
+        phone);
   });
 
-  group("Health Study", () {
-    test(' - measure -> json', () async {
-      HealthMeasure mh = HealthMeasure(
-        type: MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
-        healthDataType: HealthDataType.STEPS,
-      );
-      print(mh.toJson());
-      print(_encode(mh));
-    });
+  test('CAMSStudyProtocol -> JSON', () async {
+    print(protocol);
+    print(toJsonString(protocol));
+    expect(protocol.ownerId, 'AB');
+  });
 
-    test(' - study -> json', () async {
-      print(_encode(study));
-      expect(study.id, "1234");
-    });
+  test('StudyProtocol -> JSON -> StudyProtocol :: deep assert', () async {
+    print('#1 : $protocol');
+    final studyJson = toJsonString(protocol);
 
-    test(' - json -> study', () async {
-      final studyJson = _encode(study);
-      Study study_2 =
-          Study.fromJson(json.decode(studyJson) as Map<String, dynamic>);
-      expect(study_2.id, study.id);
-      print(_encode(study_2));
-    });
+    StudyProtocol protocolFromJson =
+        StudyProtocol.fromJson(json.decode(studyJson) as Map<String, dynamic>);
+    expect(toJsonString(protocolFromJson), equals(studyJson));
+    print('#2 : $protocolFromJson');
+  });
 
-    /// @jakba Why is this study being tested here?
-//    test(' - json file -> study', () async {
-//      String plainStudyJson = File("test/study_1234.json").readAsStringSync();
-//      print(plainStudyJson);
-//
-//      Study plainStudy =
-//          Study.fromJson(json.decode(plainStudyJson) as Map<String, dynamic>);
-//      expect(plainStudy.id, study.id);
-//
-//      final studyJson = _encode(study);
-//
-//      Study study_2 =
-//          Study.fromJson(json.decode(plainStudyJson) as Map<String, dynamic>);
-//      expect(_encode(study_2), equals(studyJson));
-//    });
+  test('JSON File -> StudyProtocol', () async {
+    // Read the study protocol from json file
+    String plainJson = File('test/json/study_1.json').readAsStringSync();
+
+    CAMSStudyProtocol protocol = CAMSStudyProtocol
+        .fromJson(json.decode(plainJson) as Map<String, dynamic>);
+
+    expect(protocol.ownerId, 'AB');
+    expect(protocol.masterDevices.first.roleName, Smartphone.DEFAULT_ROLENAME);
+    print(toJsonString(protocol));
+  });
+
+  test(' - measure -> json', () async {
+    HealthMeasure mh = HealthMeasure(
+      type: HealthSamplingPackage.HEALTH,
+      healthDataType: HealthDataType.STEPS,
+    );
+    print(mh.toJson());
+    print(_encode(mh));
   });
 
   group("DASES Data Types", () {
@@ -84,9 +138,10 @@ void main() {
       HealthDatum hd =
           HealthDatum(value, unit, type, from, to, platform, deviceId, uuid);
 
-      DataPoint dp_1 = DataPoint.fromDatum(study.id, study.userId, hd);
-      expect(dp_1.header.dataFormat.namespace, NameSpace.CARP);
-      expect(dp_1.header.dataFormat.name, "health.calories_intake");
+      DataPoint dp_1 = DataPoint.fromData(hd);
+      expect(dp_1.carpHeader.dataFormat.namespace,
+          HealthSamplingPackage.HEALTH_NAMESPACE);
+      expect(dp_1.carpHeader.dataFormat.name, "calories_intake");
       print(_encode(dp_1));
     });
 
@@ -103,9 +158,10 @@ void main() {
           '1234',
           '4321');
 
-      DataPoint dp_1 = DataPoint.fromDatum(study.id, study.userId, hd);
-      expect(dp_1.header.dataFormat.namespace, NameSpace.CARP);
-      expect(dp_1.header.dataFormat.name, "health.alcohol");
+      DataPoint dp_1 = DataPoint.fromData(hd);
+      expect(dp_1.carpHeader.dataFormat.namespace,
+          HealthSamplingPackage.HEALTH_NAMESPACE);
+      expect(dp_1.carpHeader.dataFormat.name, "alcohol");
       print(_encode(dp_1));
     });
 
@@ -122,101 +178,17 @@ void main() {
           '1234',
           '4321');
 
-      DataPoint dp_1 = DataPoint.fromDatum(study.id, study.userId, hd);
-      expect(dp_1.header.dataFormat.namespace, NameSpace.CARP);
-      expect(dp_1.header.dataFormat.name, "health.sleep");
+      DataPoint dp_1 = DataPoint.fromData(hd);
+      expect(dp_1.carpHeader.dataFormat.namespace,
+          HealthSamplingPackage.HEALTH_NAMESPACE);
+      expect(dp_1.carpHeader.dataFormat.name, "sleep");
       print(_encode(dp_1));
     });
-  });
 
-  test(
-    'iPDM-GO Study',
-    () async {
-      study = Study(
-          id: "1234", userId: "user@dtu.dk", name: "iPDM-GO sample study")
-        ..dataEndPoint = DataEndPoint(type: DataEndPointTypes.PRINT)
-        ..addTriggerTask(
-            // collect continuously
-            ImmediateTrigger(),
-            AutomaticTask()
-              ..measures = SamplingSchema.common().getMeasureList(
-                namespace: NameSpace.CARP,
-                types: [
-                  SensorSamplingPackage.PEDOMETER,
-                  //ContextSamplingPackage.GEOLOCATION,
-                  //ContextSamplingPackage.ACTIVITY,
-                  //ContextSamplingPackage.WEATHER,
-                ],
-              ))
-        ..addTriggerTask(
-            // collect every hour
-            PeriodicTrigger(period: Duration(minutes: 60)),
-            AutomaticTask()
-              ..measures.add(HealthMeasure(
-                type: MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
-                healthDataType: HealthDataType.BLOOD_GLUCOSE,
-              ))
-              ..measures.add(HealthMeasure(
-                type: MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
-                healthDataType: HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
-              ))
-              ..measures.add(HealthMeasure(
-                type: MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
-                healthDataType: HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
-              ))
-              ..measures.add(HealthMeasure(
-                type: MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
-                healthDataType: HealthDataType.HEART_RATE,
-              ))
-              ..measures.add(HealthMeasure(
-                type: MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
-                name: 'Steps',
-                healthDataType: HealthDataType.STEPS,
-              ))
-            //
-            )
-        ..addTriggerTask(
-            // collect every day at 23:00
-            RecurrentScheduledTrigger(
-                type: RecurrentType.daily, time: Time(hour: 23, minute: 00)),
-            AutomaticTask()
-              ..measures.add(HealthMeasure(
-                type: MeasureType(NameSpace.CARP, HealthSamplingPackage.HEALTH),
-                healthDataType: HealthDataType.WEIGHT,
-              ))
-            //
-            );
-
+    test(' - SMOKING', () {
       DateTime to = DateTime.now();
-      DateTime from = to.subtract(Duration(milliseconds: 10000));
+      DateTime from = to.subtract(Duration(hours: 8));
 
-      // Create a Study Controller that can manage this study.
-      StudyController controller = StudyController(study);
-
-      // await initialization before starting/resuming
-      await controller.initialize();
-      controller.resume();
-
-      // later, somewhere else in the app, input from the user can be captured
-      // as a HealthDatum and added to the CAMS event stream
-
-      // create an alcohol health datum object
-      HealthDatum alcohol = HealthDatum(
-          6,
-          enumToString(dasesDataTypeToUnit[DasesHealthDataType.ALCOHOL]),
-          enumToString(DasesHealthDataType.ALCOHOL),
-          from,
-          to,
-          (Platform.isAndroid)
-              ? enumToString(PlatformType.ANDROID)
-              : enumToString(PlatformType.IOS),
-          '1234',
-          '4321');
-
-      // manually add the datum to the event stream
-      controller.executor.addDatum(alcohol);
-
-      // report smoking
       HealthDatum smoking = HealthDatum(
           12,
           enumToString(
@@ -230,8 +202,11 @@ void main() {
           '1234',
           '4321');
 
-      controller.executor.addDatum(smoking);
-    },
-    skip: true, // this cannot be executed since it creates a study controller
-  );
+      DataPoint dp_1 = DataPoint.fromData(smoking);
+      expect(dp_1.carpHeader.dataFormat.namespace,
+          HealthSamplingPackage.HEALTH_NAMESPACE);
+      expect(dp_1.carpHeader.dataFormat.name, "smoked_cigarettes");
+      print(_encode(dp_1));
+    });
+  });
 }

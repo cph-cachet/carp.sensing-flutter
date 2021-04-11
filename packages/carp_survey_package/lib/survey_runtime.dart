@@ -9,7 +9,7 @@ part of survey;
 
 /// A [SamplingPackage] that knows how to collect data from user surveys based on the [research_package] package.
 class SurveySamplingPackage extends SmartphoneSamplingPackage {
-  static const String SURVEY = "survey";
+  static const String SURVEY = "${NameSpace.CARP}.survey";
 
   List<String> get dataTypes => [
         SURVEY,
@@ -34,15 +34,20 @@ class SurveySamplingPackage extends SmartphoneSamplingPackage {
 
   /// Adding WHO5 as the default survey.
   SamplingSchema get common => SamplingSchema()
-    ..type = SamplingSchemaType.COMMON
+    ..type = SamplingSchemaType.common
     ..name = 'Default survey measure - the WHO5 well-being index survey'
     ..powerAware = false
     ..measures.addEntries([
       MapEntry(
           SURVEY,
           RPTaskMeasure(
-            type: MeasureType(NameSpace.CARP, SURVEY),
-            name: 'WHO5',
+            type: SURVEY,
+            measureDescription: {
+              'en': MeasureDescription(
+                name: 'WHO-5',
+                description: "The WHO well-being survey",
+              )
+            },
             enabled: true,
             surveyTask: who5Task,
           )),
@@ -61,8 +66,8 @@ class SurveySamplingPackage extends SmartphoneSamplingPackage {
 /// Once the survey is submitted later, then a [RPTaskResultDatum] is added to
 /// the [carp_mobile_sensing] event queue.
 class SurveyProbe extends AbstractProbe {
-  StreamController<Datum> controller = StreamController.broadcast();
-  Stream<Datum> get events => controller.stream;
+  StreamController<DataPoint> controller = StreamController.broadcast();
+  Stream<DataPoint> get data => controller.stream;
   RPTaskMeasure get surveyMeasure => (measure as RPTaskMeasure);
 
   /// The survey to be filled in
@@ -109,7 +114,7 @@ class SurveyProbe extends AbstractProbe {
 
   void _onSurveySubmit(RPTaskResult result) {
     // when we have the survey result, add it to the event stream
-    controller?.add(RPTaskResultDatum(result));
+    controller?.add(DataPoint.fromData(RPTaskResultDatum(result)));
     onSurveySubmit(result);
   }
 }

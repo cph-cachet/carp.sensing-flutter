@@ -7,8 +7,6 @@
 
 part of domain;
 
-// TODO - rename this class to DeviceInfo - Device is to be used elsewhere
-
 /// Provides (static) information about the local device.
 ///
 /// This class is a singleton that one time access the information from the
@@ -17,11 +15,8 @@ class DeviceInfo {
   final DeviceInfoPlugin _deviceInfoPlugin = DeviceInfoPlugin();
 
   static final DeviceInfo _instance = DeviceInfo._();
-  DeviceInfo._() {
-    _getDeviceInfo();
-  }
-
   factory DeviceInfo() => _instance;
+  DeviceInfo._() {}
 
   String platform;
   String hardware;
@@ -36,8 +31,8 @@ class DeviceInfo {
   /// The device info for this device.
   Map<String, dynamic> deviceData = <String, dynamic>{};
 
-  /// Get the device info using the [DeviceInfoPlugin].
-  void _getDeviceInfo() async {
+  /// Initialize the device info using the [DeviceInfoPlugin].
+  Future init() async {
     Map<String, dynamic> _deviceData;
 
     try {

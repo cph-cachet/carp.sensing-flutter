@@ -12,8 +12,7 @@ For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter
 
 ## Setup
 
-1. You need a CARP Web Service host running. See the [CARP Web Service API](https://github.com/cph-cachet/carp.webservices-docker) 
-documentation for how to do this. If you're part of the [CACHET](https://www.cachet.dk/) team, you can use the specified 
+1. You need a CARP Web Service host running. See the [CARP Web Service API](https://github.com/cph-cachet/carp.webservices-docker) documentation for how to do this. If you're part of the [CACHET](https://www.cachet.dk/) team, you can use the specified 
 test, staging, and production servers.
 
 1. Add `carp_services` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/).
@@ -21,40 +20,31 @@ test, staging, and production servers.
 ## Usage
 
 ```dart
-import 'package:carp_webservices/carp_service/carp_service.dart';
+import 'package:carp_core/carp_core.dart';
+import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+import 'package:carp_webservices/carp_auth/carp_auth.dart';
+import 'package:carp_webservices/carp_services/carp_services.dart';
 ```
 
 ### Configuration
 
-The [`CarpService`](https://pub.dartlang.org/documentation/carp_webservices/latest/carp_services/CarpService-class.html)
-is a singleton and needs to be configured once.
-Note that a valid [`Study`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/Study-class.html) 
-with a valid **Study ID** and **Deployment ID** is needed before any study-specifc resources in CARP can be accessed.
+The [`CarpService`](https://pub.dartlang.org/documentation/carp_webservices/latest/carp_services/CarpService-class.html) is a singleton and needs to be configured once.
 
 ````dart
-final String uri = "https://staging.carp.cachet.dk:8080";
-final String testDeploymentId = "d246170c-515e";
-final String testStudyId = "64c1784d-52d1-4c3d";
-
+  final String uri = "https://cans.cachet.dk:443";
   CarpApp app;
-  Study study;
 
-  study = Study(
-    id: testStudyId,
-    userId: 'user@dtu.dk',
-    name: 'Test study #$testStudyId',
-  );
   app = CarpApp(
     name: 'any_display_friendly_name_is_fine',
     uri: Uri.parse(uri),
     oauth: OAuthEndPoint(
-        clientID: 'the_client_id', clientSecret: 'the_client_secret'),
-    study: study,
+      clientID: 'the_client_id',
+      clientSecret: 'the_client_secret',
+    ),
   );
 
   // Configure the CARP Service with this app.
   CarpService().configure(app);
-
 ```` 
 
 The singleton can then be accessed via `CarpService()`.
@@ -75,8 +65,7 @@ try {
 }
 ```
 
-Since the [CarpUser](https://pub.dev/documentation/carp_webservices/latest/carp_auth/CarpUser-class.html)
-can be serialized to JSON, the OAuth token can be stored on the phone. 
+Since the [CarpUser](https://pub.dev/documentation/carp_webservices/latest/carp_auth/CarpUser-class.html) can be serialized to JSON, the OAuth token can be stored on the phone. 
 This can then later be used for authentication:
 
 ```dart
@@ -273,8 +262,7 @@ When uploading a file, you can add metadata as a `Map<String, String>`.
 ### Deployments
 
 A core notion of CARP is the [Deployment subsystem](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-deployment.md).
-This subsystem is used for accessing `deployment` configurations, i.e. configurations that describe how 
-data sampling in a study should take place. 
+This subsystem is used for accessing `deployment` configurations, i.e. configurations that describe how data sampling in a study should take place. 
 The CARP web service have methods for:
 
  * getting invitations for a specific `accountId`, i.e. a user - default is the user who is authenticated to the CARP Service.
@@ -306,7 +294,7 @@ This is done using the `getStudyInvitation` method, like this:
 
 ```dart
     ActiveParticipationInvitation invitation = await CarpService().getStudyInvitation(context);
-    print('CARP Study Invitation: $invitation');
+    print('Selected CARP Study Invitation: $invitation');
 ```
 
 

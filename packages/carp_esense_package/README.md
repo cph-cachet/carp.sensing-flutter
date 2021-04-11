@@ -5,10 +5,10 @@
 This library contains a sampling package for
 the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) framework
 to work with the [eSense](https://www.esense.io) earable computing platform.
-This packages supports sampling of the following [`Measure`](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/domain/Measure-class.html) types(s)
+This packages supports sampling of the following [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core/Measure-class.html) types (note that the package defines its own namespace of `dk.cachet.carp.esense`):
 
-* `esense.button` : eSense button pressed / released events
-* `esense.sensor` : eSense sensor (accelerometer & gyroscope) events.
+* `dk.cachet.carp.esense.button` : eSense button pressed / released events
+* `dk.cachet.carp.esense.sensor` : eSense sensor (accelerometer & gyroscope) events.
 
 See the user documentation on the [eSense device](https://www.esense.io/share/eSense-User-Documentation.pdf) for how to use the device. 
 See the [`esense_flutter`](https://pub.dev/packages/esense_flutter) Flutter plugin and its [API](https://pub.dev/documentation/esense_flutter/latest/) documentation to understand how sensor data is generated and their data formats. 
@@ -16,7 +16,7 @@ See the [`esense_flutter`](https://pub.dev/packages/esense_flutter) Flutter plug
 See the `carp_mobile_sensing` [wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki) for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types)
 and [sampling schemas](https://github.com/cph-cachet/carp.sensing-flutter/wiki/D.-Sampling-Schemas).
 
-For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/README.md).
+For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter).
 
 If you're interested in writing you own sampling packages for CARP, see the description on
 how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.-Extending-CARP-Mobile-Sensing) CARP on the wiki.
@@ -30,8 +30,9 @@ this package only works together with `carp_mobile_sensing`.
 dependencies:
   flutter:
     sdk: flutter
-  carp_mobile_sensing: ^0.11.0
-  carp_esense_package: ^0.11.0
+  carp_core: ^0.20.0
+  carp_mobile_sensing: ^0.20.0
+  carp_esense_package: ^0.20.0
   ...
 `````
 
@@ -86,6 +87,7 @@ To use this package, import it into your app together with the
 [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package:
 
 `````dart
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_esense_package/esense.dart';
 `````
@@ -97,35 +99,64 @@ Before creating a study and running it, register this package in the
 SamplingPackageRegistry().register(ESenseSamplingPackage());
 `````
 
-Once the package is registered, `ESenseMeasure`s can be added to a study like this.
+Once the package is registered, `ESenseMeasure`s can be added to a study protocol like this.
 
 ```dart
   // creating a eSense task collecting the inertial measurement unit (IMU)
   // sensor events and button press/release events from the eSense device.
-  study
-    ..addTriggerTask(
-        ImmediateTrigger(),
-        Task(name: 'eSense Sampling')
-          ..addMeasure(ESenseMeasure(
-            type: MeasureType(
-              NameSpace.CARP,
-              ESenseSamplingPackage.ESENSE_SENSOR,
-            ),
-            name: 'eSense - Sensors',
-            enabled: true,
-            deviceName: 'eSense-0332',
-            samplingRate: 10,
-          ))
-          ..addMeasure(ESenseMeasure(
-            type: MeasureType(
-              NameSpace.CARP,
-              ESenseSamplingPackage.ESENSE_BUTTON,
-            ),
-            name: 'eSense - Button',
-            enabled: true,
-            deviceName: 'eSense-0332',
-          )));
 
+  // register this sampling package before using its measures
+  SamplingPackageRegistry().register(ESenseSamplingPackage());
+
+  // Create a study protocol using a local file to store data
+  CAMSStudyProtocol protocol = CAMSStudyProtocol()
+    ..name = 'Track patient movement'
+    ..owner = ProtocolOwner(
+      id: 'AB',
+      name: 'Alex Boyon',
+      email: 'alex@uni.dk',
+    )
+    ..dataEndPoint = FileDataEndPoint(
+      bufferSize: 500 * 1000,
+      zip: true,
+      encrypt: false,
+    );
+
+  // define which devices are used for data collection - both phone and eSense
+  Smartphone phone = Smartphone(roleName: 'The main phone');
+  DeviceDescriptor eSense = ESenseDevice(roleName: 'The left eSense earplug');
+
+  protocol
+    ..addMasterDevice(phone)
+    ..addConnectedDevice(eSense);
+
+  // Add an automatic task that immediately starts collecting eSense button and sensor events.
+  protocol.addTriggeredTask(
+      ImmediateTrigger(),
+      AutomaticTask()
+        ..addMeasures([
+          ESenseMeasure(
+              type: ESenseSamplingPackage.ESENSE_BUTTON,
+              measureDescription: {
+                'en': MeasureDescription(
+                  name: 'eSense - Button',
+                  description: "Collects button event from the eSense device",
+                )
+              },
+              deviceName: 'eSense-0332'),
+          ESenseMeasure(
+              type: ESenseSamplingPackage.ESENSE_SENSOR,
+              measureDescription: {
+                'en': MeasureDescription(
+                  name: 'eSense - Sensor',
+                  description:
+                      "Collects movement data from the eSense inertial measurement unit (IMU) sensor",
+                )
+              },
+              deviceName: 'eSense-0332',
+              samplingRate: 5),
+        ]),
+      phone);
 ````
 
-Note that the eSense device must be paired with the phone via BTLE before CAMS can connect to it.
+> Note that the eSense device must be paired with the phone via BTLE **before** CAMS can connect to it.

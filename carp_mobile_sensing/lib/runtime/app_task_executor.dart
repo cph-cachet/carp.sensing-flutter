@@ -34,7 +34,7 @@ class AppTaskExecutor extends TaskExecutor {
     _taskExecutor = TaskExecutor(task);
 
     // add the events from the embedded executor to the overall stream of events
-    _group.add(_taskExecutor.events);
+    _group.add(_taskExecutor.data);
   }
 
   /// The [AppTask] to be executed.

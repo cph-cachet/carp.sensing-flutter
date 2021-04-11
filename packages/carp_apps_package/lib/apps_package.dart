@@ -1,8 +1,8 @@
 part of carp_apps_package;
 
 class AppsSamplingPackage extends SmartphoneSamplingPackage {
-  static const String APPS = "apps";
-  static const String APP_USAGE = "app_usage";
+  static const String APPS = "dk.cachet.carp.apps";
+  static const String APP_USAGE = "dk.cachet.carp.app_usage";
 
   List<String> get dataTypes => [
         APPS,
@@ -25,21 +25,32 @@ class AppsSamplingPackage extends SmartphoneSamplingPackage {
   void onRegister() {} // does nothing for this device sampling package
 
   SamplingSchema get common => SamplingSchema()
-    ..type = SamplingSchemaType.COMMON
+    ..type = SamplingSchemaType.common
     ..name = 'Common (default) app sampling schema'
     ..powerAware = true
     ..measures.addEntries([
       MapEntry(
           APPS,
-          Measure(
-            type: MeasureType(NameSpace.CARP, APPS),
-            name: 'Installed Apps',
+          CAMSMeasure(
+            type: APPS,
+            measureDescription: {
+              'en': MeasureDescription(
+                name: 'Installed Apps',
+                description:
+                    "Collects an list of the apps installed on this phone",
+              )
+            },
           )),
       MapEntry(
           APP_USAGE,
           MarkedMeasure(
-            type: MeasureType(NameSpace.CARP, APP_USAGE),
-            name: 'Apps Usage',
+            type: APP_USAGE,
+            measureDescription: {
+              'en': MeasureDescription(
+                name: 'Apps Usage',
+                description: "Collects an log of the use of apps on the phone",
+              )
+            },
             enabled: true,
           )),
     ]);
@@ -49,21 +60,19 @@ class AppsSamplingPackage extends SmartphoneSamplingPackage {
   SamplingSchema get normal => common;
 
   SamplingSchema get debug => SamplingSchema()
-    ..type = SamplingSchemaType.DEBUG
+    ..type = SamplingSchemaType.debug
     ..name = 'Debugging app sampling schema'
     ..powerAware = true
     ..measures.addEntries([
       MapEntry(
           APPS,
-          Measure(
-            type: MeasureType(NameSpace.CARP, APPS),
-            name: 'Installed Apps',
+          CAMSMeasure(
+            type: APPS,
           )),
       MapEntry(
           APP_USAGE,
           MarkedMeasure(
-            type: MeasureType(NameSpace.CARP, APP_USAGE),
-            name: 'Apps Usage',
+            type: APP_USAGE,
             enabled: true,
           )),
     ]);

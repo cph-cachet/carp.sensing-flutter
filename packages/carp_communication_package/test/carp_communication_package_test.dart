@@ -1,71 +1,67 @@
 import 'dart:convert';
 import 'dart:io';
-
-import 'package:carp_communication_package/communication.dart';
-import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:test/test.dart';
 
-String _encode(Object object) =>
-    const JsonEncoder.withIndent(' ').convert(object);
+import 'package:carp_communication_package/communication.dart';
+import 'package:carp_core/carp_core.dart';
+import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 void main() {
-  Study study;
+  CAMSStudyProtocol protocol;
+  Smartphone phone;
 
   setUp(() {
+    // register the context sampling package
     SamplingPackageRegistry().register(CommunicationSamplingPackage());
 
-    study = Study(id: "1234", userId: "bardram", name: "bardram study")
-      ..dataEndPoint = DataEndPoint(type: DataEndPointTypes.PRINT)
-      ..addTriggerTask(
-          ImmediateTrigger(),
-          Task(name: 'Task #1')
-            ..measures = SamplingSchema
-                .common(namespace: NameSpace.CARP)
-                .measures
-                .values
-                .toList());
+    // Create a new study protocol.
+    protocol = CAMSStudyProtocol()
+      ..name = 'Context package test'
+      ..owner = ProtocolOwner(
+        id: 'AB',
+        name: 'Alex Boyon',
+        email: 'alex@uni.dk',
+      );
 
-    //..addTask(Task('Communication Task')..measures = CommunicationSamplingPackage.common.measures.values.toList())
+    // Define which devices are used for data collection.
+    phone = Smartphone();
+    protocol.addMasterDevice(phone);
+
+    // adding all measure from the common schema to one one trigger and one task
+    protocol.addTriggeredTask(
+      ImmediateTrigger(), // a simple trigger that starts immediately
+      AutomaticTask()
+        ..measures =
+            SamplingPackageRegistry().common().measures.values.toList(),
+      phone, // a task with all measures
+    );
   });
 
-  test('Study -> JSON', () async {
-    print(_encode(study));
-
-    expect(study.id, "1234");
+  test('CAMSStudyProtocol -> JSON', () async {
+    print(protocol);
+    print(toJsonString(protocol));
+    expect(protocol.ownerId, 'AB');
   });
 
-  test('JSON -> Study, assert study id', () async {
-    final studyJson = _encode(study);
+  test('StudyProtocol -> JSON -> StudyProtocol :: deep assert', () async {
+    print('#1 : $protocol');
+    final studyJson = toJsonString(protocol);
 
-    Study study_2 =
-        Study.fromJson(json.decode(studyJson) as Map<String, dynamic>);
-    expect(study_2.id, study.id);
-
-    print(_encode(study_2));
+    StudyProtocol protocolFromJson =
+        StudyProtocol.fromJson(json.decode(studyJson) as Map<String, dynamic>);
+    expect(toJsonString(protocolFromJson), equals(studyJson));
+    print('#2 : $protocolFromJson');
   });
+  test('JSON File -> StudyProtocol', () async {
+    // Read the study protocol from json file
+    String plainJson = File('test/json/study_1.json').readAsStringSync();
 
-  test('JSON -> Study, deep assert', () async {
-    final studyJson = _encode(study);
+    CAMSStudyProtocol protocol = CAMSStudyProtocol
+        .fromJson(json.decode(plainJson) as Map<String, dynamic>);
 
-    Study study_2 =
-        Study.fromJson(json.decode(studyJson) as Map<String, dynamic>);
-    expect(_encode(study_2), equals(studyJson));
-  });
-
-  test('Plain JSON string -> Study object', () async {
-    print(Directory.current.toString());
-    String plainStudyJson = File("test/study_1234.json").readAsStringSync();
-    print(plainStudyJson);
-
-    Study plainStudy =
-        Study.fromJson(json.decode(plainStudyJson) as Map<String, dynamic>);
-    expect(plainStudy.id, study.id);
-
-    final studyJson = _encode(study);
-
-    Study study_2 =
-        Study.fromJson(json.decode(plainStudyJson) as Map<String, dynamic>);
-    expect(_encode(study_2), equals(studyJson));
+    expect(protocol.ownerId, 'AB');
+    expect(protocol.masterDevices.first.roleName, Smartphone.DEFAULT_ROLENAME);
+    print(toJsonString(protocol));
   });
 
   test('Privacy - TextMessageDatum', () {
@@ -73,7 +69,7 @@ void main() {
         TextMessage(id: 123, address: '25550446', body: 'Hej Jakob'));
     print(msg);
 
-    print(_encode(msg));
+    print(toJsonString(msg));
 
     TextMessageDatum pMsg = TransformerSchemaRegistry()
         .lookup(PrivacySchema.DEFAULT)
@@ -90,7 +86,7 @@ void main() {
       ..textMessageLog
           .add(TextMessage(id: 1232, address: '25550467', body: 'Hej Eva'));
 
-    print(_encode(log));
+    print(toJsonString(log));
 
     log.textMessageLog.forEach(print);
 
@@ -109,7 +105,7 @@ void main() {
       ..phoneLog.add(PhoneCall(
           DateTime.now(), 'ingoing', 2344444, '2555 0467', '25550457', 'Eva'));
 
-    print(_encode(log));
+    print(toJsonString(log));
 
     log.phoneLog.forEach(print);
 
@@ -126,13 +122,11 @@ void main() {
       ..calendarEvents.add(CalendarEvent('122', 'wer', 'møde #1'))
       ..calendarEvents.add(CalendarEvent('122', 'wer', 'møde #1'));
 
-    print(_encode(cal));
+    print(toJsonString(cal));
 
     CalendarDatum pCal = TransformerSchemaRegistry()
         .lookup(PrivacySchema.DEFAULT)
         .transform(cal);
-    print(_encode(pCal));
+    print(toJsonString(pCal));
   });
-
-  test('', () {});
 }

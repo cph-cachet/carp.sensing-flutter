@@ -2,6 +2,9 @@ part of runtime;
 
 /// A registry of [SamplingPackage] packages.
 class SamplingPackageRegistry {
+  final List<SamplingPackage> _packages = [];
+  final List<Permission> _permissions = [];
+
   static final SamplingPackageRegistry _instance = SamplingPackageRegistry._();
 
   /// Get the singleton [SamplingPackageRegistry].
@@ -9,16 +12,14 @@ class SamplingPackageRegistry {
 
   /// A list of registered packages.
   List<SamplingPackage> get packages => _packages;
-  final List<SamplingPackage> _packages = [];
 
   /// The list of [Permission] needed for the entire list of packages (combined list).
   List<Permission> get permissions => _permissions;
-  final List<Permission> _permissions = [];
 
   SamplingPackageRegistry._() {
     // HACK - creating a serializable object (such as a [Study]) ensures that
     // JSON deserialization in [Serializable] is initialized
-    Study(id: '1234');
+    StudyProtocol();
 
     // add the basic permissions needed
     _permissions.add(Permission.storage);
@@ -35,8 +36,117 @@ class SamplingPackageRegistry {
         (!_permissions.contains(permission))
             ? _permissions.add(permission)
             : null);
-    DataType.add(package.dataTypes);
+    CAMSDataType.add(package.dataTypes);
     package.onRegister();
+  }
+
+  /// A schema that does maximum sampling.
+  ///
+  /// Takes its settings from the [SamplingSchema.common()] schema, but
+  /// enables all measures.
+  SamplingSchema maximum({String namespace}) => common()
+    ..type = SamplingSchemaType.maximum
+    ..name = 'Default ALL sampling'
+    ..powerAware = true
+    ..measures
+        .values
+        .forEach((measure) => (measure as CAMSMeasure)?.enabled = true);
+
+  /// A default `common` sampling schema.
+  ///
+  /// This schema contains measure configurations based on best-effort
+  /// experience and is intended for sampling on a daily basis with recharging
+  /// at least once pr. day. This scheme is power-aware.
+  ///
+  /// These default settings are described in this [table](https://github.com/cph-cachet/carp.sensing-flutter/wiki/Schemas#samplingschemacommon).
+  SamplingSchema common() {
+    SamplingSchema schema = SamplingSchema()
+      ..type = SamplingSchemaType.common
+      ..name = 'Common (default) sampling'
+      ..powerAware = true;
+
+    // join sampling schemas from each registered sampling package.
+    packages.forEach((package) => schema.addSamplingSchema(package.common));
+
+    return schema;
+  }
+
+  /// A sampling schema that does not adapt any [Measure]s.
+  ///
+  /// This schema is used in the power-aware adaptation of sampling. See [PowerAwarenessState].
+  /// [SamplingSchema.normal] is an empty schema and therefore don't change anything when
+  /// used to adapt a [StudyProtocol] and its [Measure]s in the [adapt] method.
+  SamplingSchema normal({bool powerAware = true}) => SamplingSchema(
+      type: SamplingSchemaType.normal,
+      name: 'Default sampling',
+      powerAware: powerAware);
+
+  /// A default light sampling schema.
+  ///
+  /// This schema is used in the power-aware adaptation of sampling.
+  /// See [PowerAwarenessState].
+  /// This schema is intended for sampling on a daily basis with recharging
+  /// at least once pr. day. This scheme is power-aware.
+  ///
+  /// See this [table](https://github.com/cph-cachet/carp.sensing-flutter/wiki/Schemas#samplingschemalight) for an overview.
+  SamplingSchema light() {
+    SamplingSchema schema = SamplingSchema()
+      ..type = SamplingSchemaType.light
+      ..name = 'Light sampling'
+      ..powerAware = true;
+
+    // join sampling schemas from each registered sampling package.
+    packages.forEach((package) => schema.addSamplingSchema(package.light));
+
+    return schema;
+  }
+
+  /// A default minimum sampling schema.
+  ///
+  /// This schema is used in the power-aware adaptation of sampling.
+  /// See [PowerAwarenessState].
+  SamplingSchema minimum() {
+    SamplingSchema schema = SamplingSchema()
+      ..type = SamplingSchemaType.minimum
+      ..name = 'Minimum sampling'
+      ..powerAware = true;
+
+    packages.forEach((package) => schema.addSamplingSchema(package.minimum));
+
+    return schema;
+  }
+
+  /// A non-sampling sampling schema.
+  ///
+  /// This schema is used in the power-aware adaptation of sampling.
+  /// See [PowerAwarenessState].
+  /// This schema pauses all sampling by disabling all probes.
+  /// Sampling will be restored to the minimum level, once the device is
+  /// recharged above the [PowerAwarenessState.MINIMUM_SAMPLING_LEVEL] level.
+  SamplingSchema none() {
+    SamplingSchema schema = SamplingSchema(
+      type: SamplingSchemaType.none,
+      name: 'No sampling',
+      powerAware: true,
+    );
+    CAMSDataType.all.forEach((type) =>
+        schema.measures[type] = CAMSMeasure(type: type, enabled: false));
+
+    return schema;
+  }
+
+  /// A sampling schema for debugging purposes.
+  /// Collects and combines the [SamplingPackage.debug] [SamplingSchema]s
+  /// for each package.
+  SamplingSchema debug() {
+    SamplingSchema schema = SamplingSchema()
+      ..type = SamplingSchemaType.debug
+      ..name = 'Debugging sampling'
+      ..powerAware = false;
+
+    packages.forEach((package) => schema.addSamplingSchema(package.debug));
+
+    return schema;
   }
 }
 
@@ -88,6 +198,10 @@ abstract class SamplingPackage {
 
   /// What device type is this package using?
   ///
+  /// This device type is matched with the [DeviceDescriptor.roleName] when a
+  /// [MasterDeviceDeployment] is deployed on the phone and executed by a
+  /// [StudyDeploymentController].
+  ///
   /// Default value is a smartphone. Override this if another type is supported.
   ///
   /// Note that it is assumed that a sampling package only supports **one**
@@ -106,8 +220,6 @@ abstract class SamplingPackage {
 
 /// An abstract class for all sampling packages that run on the phone itself.
 abstract class SmartphoneSamplingPackage implements SamplingPackage {
-  static const String SMARTPHONE_DEVICE_TYPE = 'smarthone';
-
-  String get deviceType => SMARTPHONE_DEVICE_TYPE;
+  String get deviceType => Smartphone.DEVICE_TYPE;
   DeviceManager get deviceManager => SmartphoneDeviceManager();
 }

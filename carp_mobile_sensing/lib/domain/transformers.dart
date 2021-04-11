@@ -9,21 +9,18 @@ part of domain;
 /// Signature of a data transformer.
 typedef DatumTransformer = Datum Function(Datum);
 
-/// Signature of a data stream transformer.
-typedef DatumStreamTransformer = Stream<Datum> Function(Stream<Datum>);
-
 /// A no-operation transformer.
-Datum noop(Datum data) => data;
+Datum noop(Datum datum) => datum;
 
-/// A registry of [TransformerSchema]s which hold a set of
+/// A registry of [DatumTransformerSchema]s which hold a set of
 /// [DatumTransformer]s.
 class TransformerSchemaRegistry {
   static final TransformerSchemaRegistry _instance =
       TransformerSchemaRegistry._();
 
   /// The map between the namespace of a transformer schema and the schema.
-  Map<String, TransformerSchema> get schemas => _schemas;
-  final Map<String, TransformerSchema> _schemas = {};
+  Map<String, DatumTransformerSchema> get schemas => _schemas;
+  final Map<String, DatumTransformerSchema> _schemas = {};
 
   /// Get the singleton instance of the [TransformerSchemaRegistry].
   factory TransformerSchemaRegistry() => _instance;
@@ -39,13 +36,13 @@ class TransformerSchemaRegistry {
   }
 
   /// Register a transformer schema.
-  void register(TransformerSchema schema) {
+  void register(DatumTransformerSchema schema) {
     _schemas[schema.namespace] = schema;
     schema.onRegister();
   }
 
   /// Lookup a transformer schema based on its namespace.
-  TransformerSchema lookup(String namespace) => _schemas[namespace];
+  DatumTransformerSchema lookup(String namespace) => _schemas[namespace];
 }
 
 /// An interface for Datum that is created from a transformer.
@@ -56,8 +53,8 @@ abstract class TransformedDatum {
 /// An abstract class defining a transformer schema, which hold a set of
 /// [DatumTransformer]s, which that can map from the native CARP namespace
 /// to another namespace.
-/// A [TransformerSchema] must be implemented for each supported namespace.
-abstract class TransformerSchema {
+/// A [DatumTransformerSchema] must be implemented for each supported namespace.
+abstract class DatumTransformerSchema {
   /// The type of namespace that this package can transform to (see e.g.
   /// [NameSpace] for pre-defined namespaces).
   String get namespace;
@@ -72,19 +69,34 @@ abstract class TransformerSchema {
   void onRegister();
 
   /// Add a transformer to this schema based on its type mapped to its
-  /// [DataType].
+  /// [String].
   void add(String type, DatumTransformer transformer) =>
       transformers[type] = transformer;
 
-  /// Transform the [data] according to the transformer for its type.
-  Datum transform(Datum data) {
-    Function transformer = transformers[data.format.name];
-    return (transformer != null) ? transformer(data) : data;
+  /// Transform the [datum] according to the transformer for its data type.
+  Datum transform(Datum datum) {
+    Function transformer = transformers[datum.format.toString()];
+    print('>> ${datum.format.toString()} -> $transformer');
+    return (transformer != null) ? transformer(datum) : datum;
   }
 }
 
-/// A default [TransformerSchema] for CARP no-operation transformers
-class CARPTransformerSchema extends TransformerSchema {
+/// A default [DatumTransformerSchema] for CARP no-operation transformers
+class CARPTransformerSchema extends DatumTransformerSchema {
   String get namespace => NameSpace.CARP;
+  void onRegister() {}
+}
+
+/// A default [DatumTransformerSchema] for Open mHealth (OMH) transformers
+class OMHTransformerSchema extends DatumTransformerSchema {
+  String get namespace => NameSpace.OMH;
+  void onRegister() {}
+}
+
+/// A default [DatumTransformerSchema] for privacy transformers
+class PrivacySchema extends DatumTransformerSchema {
+  static const String DEFAULT = 'default-privacy-schema';
+
+  String get namespace => DEFAULT;
   void onRegister() {}
 }

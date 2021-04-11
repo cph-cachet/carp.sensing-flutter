@@ -9,10 +9,9 @@ part of communication;
 
 /// Holds a list of text (SMS) messages from the device.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class TextMessageLogDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, CommunicationSamplingPackage.TEXT_MESSAGE_LOG);
-  DataFormat get format => CARP_DATA_FORMAT;
+class TextMessageLogDatum extends Datum {
+  DataFormat get format =>
+      DataFormat.fromString(CommunicationSamplingPackage.TEXT_MESSAGE_LOG);
 
   List<TextMessage> textMessageLog;
 
@@ -31,10 +30,9 @@ class TextMessageLogDatum extends CARPDatum {
 ///
 /// Wraps a [TextMessage].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class TextMessageDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, CommunicationSamplingPackage.TEXT_MESSAGE);
-  DataFormat get format => CARP_DATA_FORMAT;
+class TextMessageDatum extends Datum {
+  DataFormat get format =>
+      DataFormat.fromString(CommunicationSamplingPackage.TEXT_MESSAGE);
 
   TextMessage textMessage;
 
@@ -149,10 +147,9 @@ class TextMessage {
 
 /// Holds a phone log, i.e. a list of phone calls made on the device.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class PhoneLogDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, CommunicationSamplingPackage.PHONE_LOG);
-  DataFormat get format => CARP_DATA_FORMAT;
+class PhoneLogDatum extends Datum {
+  DataFormat get format =>
+      DataFormat.fromString(CommunicationSamplingPackage.PHONE_LOG);
 
   List<PhoneCall> phoneLog = new List<PhoneCall>();
 
@@ -246,10 +243,9 @@ class PhoneCall {
 
 /// Holds a list of calendar events from the device.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class CalendarDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, CommunicationSamplingPackage.CALENDAR);
-  DataFormat get format => CARP_DATA_FORMAT;
+class CalendarDatum extends Datum {
+  DataFormat get format =>
+      DataFormat.fromString(CommunicationSamplingPackage.CALENDAR);
 
   List<CalendarEvent> calendarEvents = new List<CalendarEvent>();
 

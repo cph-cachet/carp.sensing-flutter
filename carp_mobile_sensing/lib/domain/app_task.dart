@@ -7,11 +7,11 @@
 
 part of domain;
 
-/// A [Task] that notifies the app when it is triggered.
+/// A [TaskDescriptor] that notifies the app when it is triggered.
 ///
 /// See [AppTaskExecutor] on how this work on runtime.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class AppTask extends Task {
+class AppTask extends TaskDescriptor {
   AppTask({
     String name,
     @required this.type,

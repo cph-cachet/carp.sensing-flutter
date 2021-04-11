@@ -4,17 +4,17 @@
 
 This library contains a sampling package for connectivity sampling to work with 
 the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package.
-This packages supports sampling of the following [`Measure`](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/domain/Measure-class.html) types:
+This packages supports sampling of the following [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core/Measure-class.html) types:
 
-* `wifi`
-* `connectivity`
-* `bluetooth`
+* `dk.cachet.carp.wifi`
+* `dk.cachet.carp.connectivity`
+* `dk.cachet.carp.bluetooth`
 
 See the [wiki]() for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types)
 and [sampling schemas](https://github.com/cph-cachet/carp.sensing-flutter/wiki/D.-Sampling-Schemas).
 There is privacy protection of wifi and bluetooth names as part of the default [Privacy Schema](https://github.com/cph-cachet/carp.sensing-flutter/wiki/3.-Using-CARP-Mobile-Sensing#privacy-schema).
 
-For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/README.md).
+For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter).
 
 If you're interested in writing you own sampling packages for CARP, see the description on
 how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.-Extending-CARP-Mobile-Sensing) CARP on the wiki.
@@ -28,10 +28,36 @@ this package only works together with `carp_mobile_sensing`.
 dependencies:
   flutter:
     sdk: flutter
-  carp_mobile_sensing: ^0.6.3
-  carp_connectivity_package: ^0.1.0
+  carp_core: ^0.20.0
+  carp_mobile_sensing: ^0.20.0
+  carp_connectivity_package: ^0.20.0
   ...
 `````
+
+### Android Integration
+
+As explained in the Android [Wi-Fi scanning overview](https://developer.android.com/guide/topics/connectivity/wifi-scan), access to wifi information required different permission to be set. 
+For Android >= 10 (API level 29) it is `ACCESS_FINE_LOCATION`, `ACCESS_COARSE_LOCATION` and 
+`CHANGE_WIFI_STATE`.
+
+Add the following to your app's `manifest.xml` file located in `android/app/src/main`:
+
+````xml
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="<your_package_name>"
+    xmlns:tools="http://schemas.android.com/tools">
+
+   ...
+
+    <!-- The following permissions are used in the Connectivity Package -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+
+
+</manifest>
+````
+
 
 ### iOS Integration
 
@@ -57,6 +83,7 @@ To use this package, import it into your app together with the
 [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package:
 
 `````dart
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_connectivity_package/connectivity.dart';
 `````

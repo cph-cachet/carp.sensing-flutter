@@ -11,10 +11,7 @@ part of audio;
 /// as well as the timestamps of when the recording was started and stopped
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class AudioDatum extends FileDatum {
-  static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, AudioSamplingPackage.AUDIO);
-
-  DataFormat get format => CARP_DATA_FORMAT;
+  DataFormat get format => DataFormat.fromString(AudioSamplingPackage.AUDIO);
 
   /// The timestamp for start of recording.
   DateTime startRecordingTime;
@@ -36,11 +33,8 @@ class AudioDatum extends FileDatum {
 
 /// A [NoiseDatum] that holds the noise level in decibel of a noise sampling.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class NoiseDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, AudioSamplingPackage.NOISE);
-
-  DataFormat get format => CARP_DATA_FORMAT;
+class NoiseDatum extends Datum {
+  DataFormat get format => DataFormat.fromString(AudioSamplingPackage.NOISE);
 
   // The sound intensity [dB] measurement statistics for a given sampling window.
 

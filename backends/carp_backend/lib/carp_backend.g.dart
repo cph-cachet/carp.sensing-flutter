@@ -9,19 +9,19 @@ part of carp_backend;
 CarpDataEndPoint _$CarpDataEndPointFromJson(Map<String, dynamic> json) {
   return CarpDataEndPoint(
     uploadMethod:
-        _$enumDecodeNullable(_$CarpUploadMethodEnumMap, json['upload_method']),
+        _$enumDecodeNullable(_$CarpUploadMethodEnumMap, json['uploadMethod']),
     name: json['name'] as String,
     uri: json['uri'] as String,
-    clientId: json['client_id'] as String,
-    clientSecret: json['client_secret'] as String,
+    clientId: json['clientId'] as String,
+    clientSecret: json['clientSecret'] as String,
     email: json['email'] as String,
     password: json['password'] as String,
     collection: json['collection'] as String,
-    deleteWhenUploaded: json['delete_when_uploaded'] as bool,
-    bufferSize: json['buffer_size'],
+    deleteWhenUploaded: json['deleteWhenUploaded'] as bool,
+    bufferSize: json['bufferSize'],
     zip: json['zip'],
     encrypt: json['encrypt'],
-    publicKey: json['public_key'],
+    publicKey: json['publicKey'],
   )
     ..$type = json[r'$type'] as String
     ..type = json['type'] as String;
@@ -38,20 +38,20 @@ Map<String, dynamic> _$CarpDataEndPointToJson(CarpDataEndPoint instance) {
 
   writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
-  writeNotNull('buffer_size', instance.bufferSize);
+  writeNotNull('bufferSize', instance.bufferSize);
   writeNotNull('zip', instance.zip);
   writeNotNull('encrypt', instance.encrypt);
-  writeNotNull('public_key', instance.publicKey);
+  writeNotNull('publicKey', instance.publicKey);
   writeNotNull(
-      'upload_method', _$CarpUploadMethodEnumMap[instance.uploadMethod]);
+      'uploadMethod', _$CarpUploadMethodEnumMap[instance.uploadMethod]);
   writeNotNull('name', instance.name);
   writeNotNull('uri', instance.uri);
-  writeNotNull('client_id', instance.clientId);
-  writeNotNull('client_secret', instance.clientSecret);
+  writeNotNull('clientId', instance.clientId);
+  writeNotNull('clientSecret', instance.clientSecret);
   writeNotNull('email', instance.email);
   writeNotNull('password', instance.password);
   writeNotNull('collection', instance.collection);
-  writeNotNull('delete_when_uploaded', instance.deleteWhenUploaded);
+  writeNotNull('deleteWhenUploaded', instance.deleteWhenUploaded);
   return val;
 }
 

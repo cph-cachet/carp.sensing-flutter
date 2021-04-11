@@ -9,18 +9,21 @@ part of context;
 
 /// Specify the configuration on how to collect air quality data.
 /// Needs an [apiKey] for the [World's Air Quality Index (WAQI) API](https://aqicn.org/data-platform/token/#/).
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class AirQualityMeasure extends Measure {
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class AirQualityMeasure extends CAMSMeasure {
   /// API key for the OpenWeatherMap API.
   String apiKey;
 
   AirQualityMeasure({
-    @required MeasureType type,
-    name,
+    @required String type,
+    Map<String, MeasureDescription> measureDescription,
     enabled,
     this.apiKey,
   })
-      : super(type: type, name: name, enabled: enabled);
+      : super(
+            type: type,
+            measureDescription: measureDescription,
+            enabled: enabled);
 
   Function get fromJsonFunction => _$AirQualityMeasureFromJson;
   factory AirQualityMeasure.fromJson(Map<String, dynamic> json) =>

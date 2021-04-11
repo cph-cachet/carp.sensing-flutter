@@ -4,26 +4,28 @@
 
 This library contains a sampling package for sampling data from the [Movisens Move4 and ECGMove4 devices](https://www.movisens.com/en/products/ecg-sensor/) to work with 
 the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package.
-This packages supports sampling a `movisens` [`Measure`](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/domain/Measure-class.html).
+This packages supports sampling a Movisens data as configured using the [`MovisensMeasure`](https://pub.dev/documentation/carp_movisens_package/latest/movisens/MovisensMeasure-class.html). The type is:
+
+* `dk.cachet.carp.movisens`
 
 See the [wiki]() for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types)
 and [sampling schemas](https://github.com/cph-cachet/carp.sensing-flutter/wiki/D.-Sampling-Schemas).
 
-When running, the `MovisensProbe` of this package return different [`Datum`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/Datum-class.html) formats:
+When running, the `MovisensProbe` of this package return different [`MovisensDatum`](https://pub.dev/documentation/carp_movisens_package/latest/movisens/MovisensDatum-class.html) formats (note that the package defines its own namespace of `dk.cachet.carp.movisens`):
 
-* `movisens.met_level`
-* `movisens.met`
-* `movisens.hr`
-* `movisens.hrv`
-* `movisens.is_hrv_valid`
-* `movisens.body_position`
-* `movisens.step_count`
-* `movisens.movement_acceleration`
-* `movisens.tap_marker`
-* `movisens.battery_level`
-* `movisens.connection_status` 
+* `dk.cachet.carp.movisens.met_level`
+* `dk.cachet.carp.movisens.met`
+* `dk.cachet.carp.movisens.hr`
+* `dk.cachet.carp.movisens.hrv`
+* `dk.cachet.carp.movisens.is_hrv_valid`
+* `dk.cachet.carp.movisens.body_position`
+* `dk.cachet.carp.movisens.step_count`
+* `dk.cachet.carp.movisens.movement_acceleration`
+* `dk.cachet.carp.movisens.tap_marker`
+* `dk.cachet.carp.movisens.battery_level`
+* `dk.cachet.carp.movisens.connection_status` 
 
-For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/README.md).
+For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter).
 
 If you're interested in writing you own sampling packages for CARP, see the description on
 how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.-Extending-CARP-Mobile-Sensing) CARP on the wiki.
@@ -38,8 +40,9 @@ this package only works together with `carp_mobile_sensing`.
 dependencies:
   flutter:
     sdk: flutter
-  carp_mobile_sensing: ^0.6.0
-  carp_movisens_package: ^0.1.6
+  carp_core: ^0.20.0
+  carp_mobile_sensing: ^0.20.0
+  carp_movisens_package: ^0.20.0
   ...
 `````
 
@@ -150,6 +153,7 @@ To use this package, import it into your app together with the
 [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package:
 
 `````dart
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:movisens_package/movisens.dart';
 `````
@@ -161,15 +165,47 @@ Before creating a study and running it, register this package in the
  SamplingPackageRegistry().register(MovisensSamplingPackage());
 `````
 
-Once the package is registered, a `MovisensMeasure` can be added to a study like this.
+Once the package is registered, a `MovisensMeasure` can be added to a study protocol like this.
 
 ````dart
-  study.addTriggerTask(
+  // register this sampling package before using its measures
+  SamplingPackageRegistry().register(MovisensSamplingPackage());
+
+  // create a study protocol using a local file to store data
+  CAMSStudyProtocol protocol = CAMSStudyProtocol()
+    ..name = 'Track patient movement'
+    ..owner = ProtocolOwner(
+      id: 'AB',
+      name: 'Alex Boyon',
+      email: 'alex@uni.dk',
+    )
+    ..dataEndPoint = FileDataEndPoint(
+      bufferSize: 500 * 1000,
+      zip: true,
+      encrypt: false,
+    );
+
+  // define which devices are used for data collection - both phone and Movisens
+  Smartphone phone = Smartphone();
+  DeviceDescriptor movisens = DeviceDescriptor();
+
+  protocol
+    ..addMasterDevice(phone)
+    ..addConnectedDevice(movisens);
+
+  // adding a movisens measure
+  protocol.addTriggeredTask(
       ImmediateTrigger(), // a simple trigger that starts immediately
-      Task('Movisens Task')
+      AutomaticTask(name: 'Movisens Task')
         ..addMeasure(MovisensMeasure(
-            type: MeasureType(NameSpace.CARP, MovisensSamplingPackage.MOVISENS),
-            name: "movisens",
+            type: MovisensSamplingPackage.MOVISENS,
+            measureDescription: {
+              'en': MeasureDescription(
+                name: 'Movisens ECG device',
+                description:
+                    "Collects heart rythm data from the Movisens EcgMove4 sensor",
+              )
+            },
             enabled: true,
             address: '06-00-00-00-00-00',
             deviceName: "ECG-223",
@@ -177,6 +213,7 @@ Once the package is registered, a `MovisensMeasure` can be added to a study like
             weight: 77,
             age: 32,
             gender: Gender.male,
-            sensorLocation: SensorLocation.chest)));
+            sensorLocation: SensorLocation.chest)),
+      movisens);
 ````
 

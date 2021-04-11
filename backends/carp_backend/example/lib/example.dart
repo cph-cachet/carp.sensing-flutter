@@ -1,8 +1,8 @@
 import 'package:carp_backend/carp_backend.dart';
-import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
-import 'package:carp_webservices/carp_domain/carp_domain.dart';
-import 'package:carp_webservices/carp_service/carp_service.dart';
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
+import 'package:carp_webservices/carp_services/carp_services.dart';
+import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 void main() async {
   // final String username = "researcher";
@@ -37,11 +37,11 @@ void main() async {
   String studyDeploymentId = invitations[0].studyDeploymentId;
 
   // create a study manager, and initialize it
-  CarpStudyManager manager = CarpStudyManager();
+  CARPStudyProtocolManager manager = CARPStudyProtocolManager();
   await manager.initialize();
 
   // get the study from CARP
-  Study study = await manager.getStudy(studyDeploymentId);
+  StudyProtocol study = await manager.getStudyProtocol(studyDeploymentId);
   print('study: $study');
 
   // -----------------------------------------------
@@ -89,11 +89,10 @@ void main() async {
   );
   print('$cdep_3');
 
-  // create a study and allocate this data point to it.
-  Study study_1 = Study(
-    id: '1234',
-    userId: 'username@cachet.dk',
+  // create a study protocol and allocate this data point to it.
+  CAMSStudyProtocol protocol = CAMSStudyProtocol(
+    studyId: '123',
     name: 'Test study #1234',
   );
-  study_1.dataEndPoint = cdep;
+  protocol.dataEndPoint = cdep;
 }

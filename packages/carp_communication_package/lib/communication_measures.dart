@@ -7,8 +7,8 @@
 
 part of communication;
 
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class CalendarMeasure extends Measure {
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class CalendarMeasure extends CAMSMeasure {
   static const int DEFAULT_NUMBER_OF_DAYS = 1;
 
   /// The time duration back in time to collect calendar events.
@@ -18,13 +18,16 @@ class CalendarMeasure extends Measure {
   Duration future;
 
   CalendarMeasure({
-    MeasureType type,
-    name,
+    @required String type,
+    Map<String, MeasureDescription> measureDescription,
     enabled,
     this.past = const Duration(days: DEFAULT_NUMBER_OF_DAYS),
     this.future = const Duration(days: DEFAULT_NUMBER_OF_DAYS),
   })
-      : super(type: type, enabled: enabled, name: name);
+      : super(
+            type: type,
+            enabled: enabled,
+            measureDescription: measureDescription);
 
   Function get fromJsonFunction => _$CalendarMeasureFromJson;
   factory CalendarMeasure.fromJson(Map<String, dynamic> json) =>

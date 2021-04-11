@@ -8,117 +8,161 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 /// This is an example of how to set up a study by using the `common`
 /// sampling schema. Used in the README file.
 void example_1() async {
   // Create a study using a local file to store data
-  Study study = Study(
-      id: '2',
-      name: 'A study collecting ..',
-      dataEndPoint: FileDataEndPoint()
-        ..bufferSize = 500 * 1000
-        ..zip = true
-        ..encrypt = false);
+  CAMSStudyProtocol protocol = CAMSStudyProtocol()
+    ..name = 'Track patient movement'
+    ..owner = ProtocolOwner(
+      id: 'AB',
+      name: 'Alex Boyon',
+      email: 'alex@uni.dk',
+    )
+    ..dataEndPoint = FileDataEndPoint(
+      bufferSize: 500 * 1000,
+      zip: true,
+      encrypt: false,
+    )
+    ..protocolDescription = {
+      'en': StudyProtocolDescription(
+          title: 'Test Study',
+          purpose: 'For testing purposes',
+          description: 'Testing'),
+    };
+
+  // define which devices are used for data collection
+  // in this case, its only this smartphone
+  Smartphone phone = Smartphone();
+  protocol.addMasterDevice(phone);
 
   // Add an automatic task that immediately starts collecting
   // step counts, ambient light, screen activity, and battery level
-  study.addTriggerTask(
+  protocol.addTriggeredTask(
       ImmediateTrigger(),
       AutomaticTask()
-        ..measures = SamplingSchema.common().getMeasureList(
-          namespace: NameSpace.CARP,
+        ..addMeasures(SensorSamplingPackage().common.getMeasureList(
           types: [
             SensorSamplingPackage.PEDOMETER,
             SensorSamplingPackage.LIGHT,
+          ],
+        ))
+        ..addMeasures(DeviceSamplingPackage().common.getMeasureList(
+          types: [
             DeviceSamplingPackage.SCREEN,
             DeviceSamplingPackage.BATTERY,
           ],
-        ));
+        )),
+      phone);
 
-  // Create a Study Controller that can manage this study.
-  StudyController controller = StudyController(study);
+  // deploy this protocol using the on-phone deployment service
+  StudyDeploymentStatus status =
+      await CAMSDeploymentService().createStudyDeployment(protocol);
 
-  // await initialization before starting/resuming
+  // now ready to get the device deployment configuration for this phone
+  CAMSMasterDeviceDeployment deployment = await CAMSDeploymentService()
+      .getDeviceDeployment(status.studyDeploymentId);
+
+  // Create a study deployment controller that can manage this deployment
+  StudyDeploymentController controller = StudyDeploymentController(deployment);
+
+  // initialize the controller and resume sampling
   await controller.initialize();
   controller.resume();
 
   // listening and print all data events from the study
-  controller.events.forEach(print);
+  controller.data.forEach(print);
 }
 
 /// This is a more elaborate example used in the README.md file.
 void example_2() async {
   // Create a study using a local file to store data
-  Study study = Study(
-      id: '1234',
-      userId: 'user@dtu.dk',
-      name: 'An example study',
-      dataEndPoint: FileDataEndPoint()
-        ..bufferSize = 500 * 1000
-        ..zip = true
-        ..encrypt = false);
+  CAMSStudyProtocol protocol = CAMSStudyProtocol()
+    ..name = 'Track patient movement'
+    ..owner = ProtocolOwner(
+      id: 'AB',
+      name: 'Alex Boyon',
+      email: 'alex@uni.dk',
+    )
+    ..dataEndPoint = FileDataEndPoint(
+      bufferSize: 500 * 1000,
+      zip: true,
+      encrypt: false,
+    );
+
+  // define which devices are used for data collection
+  // in this case, its only this smartphone
+  Smartphone phone = Smartphone();
+  protocol.addMasterDevice(phone);
 
   // automatically collect accelerometer and gyroscope data
   // but delay the sampling by 10 seconds
-  study.addTriggerTask(
+  protocol.addTriggeredTask(
       DelayedTrigger(delay: Duration(seconds: 10)),
       AutomaticTask(name: 'Sensor Task')
-        ..addMeasure(Measure(
-            type: MeasureType(
-                NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER)))
-        ..addMeasure(Measure(
-            type:
-                MeasureType(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE))));
+        ..addMeasure(Measure(type: SensorSamplingPackage.ACCELEROMETER))
+        ..addMeasure(Measure(type: SensorSamplingPackage.GYROSCOPE)),
+      phone);
 
   // create a light measure variable to be used later
   PeriodicMeasure lightMeasure = PeriodicMeasure(
-    type: MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
-    name: 'Ambient Light',
+    type: SensorSamplingPackage.LIGHT,
     frequency: const Duration(seconds: 11),
     duration: const Duration(milliseconds: 100),
   );
   // add it to the study to start immediately
-  study.addTriggerTask(ImmediateTrigger(),
-      AutomaticTask(name: 'Light')..addMeasure(lightMeasure));
+  protocol.addTriggeredTask(
+    ImmediateTrigger(),
+    AutomaticTask(name: 'Light')..addMeasure(lightMeasure),
+    phone,
+  );
 
-  // Create a Study Controller that can manage this study.
-  StudyController controller = StudyController(study);
+// deploy and get this protocol using the on-phone deployment service
+  StudyDeploymentStatus status =
+      await CAMSDeploymentService().createStudyDeployment(protocol);
+  CAMSMasterDeviceDeployment deployment = await CAMSDeploymentService()
+      .getDeviceDeployment(status.studyDeploymentId);
 
-  // await initialization before starting/resuming
+  // Create a study deployment controller that can manage this deployment
+  StudyDeploymentController controller = StudyDeploymentController(deployment);
+
+  // initialize the controller and resume sampling
   await controller.initialize();
   controller.resume();
 
-  // listening on all data events from the study
-  controller.events.listen((event) => print(event));
+  // listening to the stream of all data events from the controller
+  controller.data.listen((dataPoint) => print(dataPoint));
 
   // listen only on CARP events
-  controller.events
-      .where((datum) => datum.format.namespace == NameSpace.CARP)
+  controller.data
+      .where((dataPoint) => dataPoint.data.format.namespace == NameSpace.CARP)
       .listen((event) => print(event));
 
   // listen on LIGHT events only
-  controller.events
-      .where((datum) => datum.format.name == SensorSamplingPackage.LIGHT)
+  controller.data
+      .where((dataPoint) =>
+          dataPoint.data.format.toString() == SensorSamplingPackage.LIGHT)
       .listen((event) => print(event));
 
   // map events to JSON and then print
-  controller.events
-      .map((datum) => datum.toJson())
+  controller.data
+      .map((dataPoint) => dataPoint.toJson())
       .listen((event) => print(event));
 
   // listening on a specific event type
   // this is equivalent to the statement above
   ProbeRegistry()
       .eventsByType(SensorSamplingPackage.LIGHT)
-      .listen((event) => print(event));
+      .listen((dataPoint) => print(dataPoint));
 
-  // subscribe to events
-  StreamSubscription<Datum> subscription =
-      controller.events.listen((Datum datum) {
+  // subscribe to the stream of data
+  StreamSubscription<DataPoint> subscription =
+      controller.data.listen((DataPoint dataPoint) {
     // do something w. the datum, e.g. print the json
-    print(JsonEncoder.withIndent(' ').convert(datum));
+    print(JsonEncoder.withIndent(' ').convert(dataPoint));
   });
 
   // sampling can be paused and resumed
@@ -148,122 +192,139 @@ void example_2() async {
   subscription.cancel();
 }
 
+/// Example of device management.
+///
+/// In this example we assume that the protocol has been deployed
+/// (e.g. to the CARP server) and that we get it from there.
+///
+/// The steps involved in this example is then:
+///  * get the study deployment status
+///  * create the devices needed in the protocol
+///  * register the devices which are available
+///  * get the study deployment for this master device
+///  * start the sensing
+void example_3() async {
+  // we assume that we know the study deployment id
+  // this might have been obtained from an invitation
+  String studyDeploymentId = '2938y4h-rfhklwe98-erhui';
+
+  // get the status of this deployment
+  StudyDeploymentStatus status =
+      await CAMSDeploymentService().getStudyDeploymentStatus(studyDeploymentId);
+
+  // register the needed devices - listed in the deployment status
+  status.devicesStatus.forEach((deviceStatus) async {
+    String type = deviceStatus.device.type;
+    String deviceRoleName = deviceStatus.device.roleName;
+
+    // create and register the device in the CAMS DeviceRegistry
+    await DeviceController().registerDevice(type);
+
+    // if the device manager is created succesfully on the phone
+    if (DeviceController().hasDevice(type)) {
+      // ask the device manager for a unique id of the device
+      String deviceId = DeviceController().devices[type].id;
+      DeviceRegistration registration = DeviceRegistration(deviceId);
+      // (all of the above can actually be handled directly by the CAMSDeploymentService.registerDevice() method)
+
+      // register the device in the deployment service
+      CAMSDeploymentService()
+          .registerDevice(studyDeploymentId, deviceRoleName, registration);
+    }
+  });
+
+  // now get the study deployment for this master device and its registered devices
+  CAMSMasterDeviceDeployment deployment =
+      await CAMSDeploymentService().getDeviceDeployment(studyDeploymentId);
+
+  // Create a study deployment controller that can manage this deployment
+  StudyDeploymentController controller = StudyDeploymentController(deployment);
+
+  // initialize the controller and resume sampling
+  await controller.initialize();
+  controller.resume();
+
+  // listening to the stream of all data events from the controller
+  controller.data.listen((dataPoint) => print(dataPoint));
+}
+
 /// An example of how to use the [SamplingSchema] model.
 void samplingSchemaExample() async {
   // creating a sampling schema focused on activity and outdoor context (weather)
-  SamplingSchema activitySchema = SamplingSchema(
-      name: 'Connectivity Sampling Schema', powerAware: true)
-    ..measures.addEntries([
-      MapEntry(
-          SensorSamplingPackage.PEDOMETER,
-          PeriodicMeasure(
-              type:
-                  MeasureType(NameSpace.CARP, SensorSamplingPackage.PEDOMETER),
-              enabled: true,
-              frequency: const Duration(minutes: 1))),
-      MapEntry(
-          DeviceSamplingPackage.SCREEN,
-          Measure(
-              type: MeasureType(NameSpace.CARP, DeviceSamplingPackage.SCREEN),
-              enabled: true)),
-    ]);
+  SamplingSchema activitySchema =
+      SamplingSchema(name: 'Connectivity Sampling Schema', powerAware: true)
+        ..measures.addEntries([
+          MapEntry(
+              SensorSamplingPackage.PEDOMETER,
+              PeriodicMeasure(
+                  type: SensorSamplingPackage.PEDOMETER,
+                  enabled: true,
+                  frequency: const Duration(minutes: 1))),
+          MapEntry(DeviceSamplingPackage.SCREEN,
+              Measure(type: DeviceSamplingPackage.SCREEN)),
+        ]);
 
-  //creating a study
-  Study study_1 = Study(id: '2', userId: 'user@cachet.dk')
-    ..name = 'CARP Mobile Sensing - default configuration'
-    ..dataEndPoint = DataEndPoint(type: DataEndPointTypes.PRINT)
-    ..addTriggerTask(
-        ImmediateTrigger(),
-        AutomaticTask()
-          ..measures = SamplingSchema
-              .common(namespace: NameSpace.CARP)
-              .measures
-              .values
-              .toList());
-  print(study_1);
-
-  Study study = Study(
-      id: '2',
-      userId: 'user@cachet.dk',
-      name: 'A outdoor activity study',
-      dataFormat: NameSpace.OMH,
-      dataEndPoint: FileDataEndPoint()
-        ..bufferSize = 500 * 1000
-        ..zip = true
-        ..encrypt = false);
+  CAMSStudyProtocol protocol = CAMSStudyProtocol();
+  Smartphone phone = Smartphone(roleName: 'phone');
+  protocol.addMasterDevice(phone);
 
   // adding a set of specific measures from the `common` sampling schema to one overall task
-  study.addTriggerTask(
+  protocol.addTriggeredTask(
       ImmediateTrigger(),
       AutomaticTask(name: 'Sensing Task #1')
-        ..measures = SamplingSchema.common().getMeasureList(
-          namespace: NameSpace.CARP,
+        ..measures = DeviceSamplingPackage().common.getMeasureList(
           types: [
-            SensorSamplingPackage.PEDOMETER,
             DeviceSamplingPackage.SCREEN,
+            DeviceSamplingPackage.BATTERY,
           ],
-        ));
+        ),
+      phone);
 
-  study.addTriggerTask(
+  protocol.addTriggeredTask(
       ImmediateTrigger(),
       AutomaticTask(name: 'One Common Sensing Task')
-        ..measures = SamplingSchema.common().getMeasureList(
-          namespace: NameSpace.CARP,
+        ..measures = SensorSamplingPackage().common.getMeasureList(
           types: [
+            SensorSamplingPackage.PEDOMETER,
             SensorSamplingPackage.ACCELEROMETER,
             SensorSamplingPackage.GYROSCOPE,
           ],
-        ));
+        ),
+      phone);
 
   // adding all measure from the activity schema to one overall 'sensing' task
-  study.addTriggerTask(
+  protocol.addTriggeredTask(
       ImmediateTrigger(),
       AutomaticTask(name: 'Sensing Task')
-        ..measures = activitySchema.measures.values);
+        ..measures = activitySchema.measures.values,
+      phone);
 
   // adding the measures to two separate tasks, while also adding a new light measure to the 2nd task
-  study.addTriggerTask(
+  protocol.addTriggeredTask(
       ImmediateTrigger(),
       AutomaticTask(name: 'Activity Sensing Task #1')
         ..measures = activitySchema.getMeasureList(
-          namespace: NameSpace.CARP,
           types: [
             SensorSamplingPackage.PEDOMETER,
             SensorSamplingPackage.ACCELEROMETER,
           ],
-        ));
+        ),
+      phone);
 
-  study.addTriggerTask(
+  protocol.addTriggeredTask(
       ImmediateTrigger(),
       AutomaticTask(name: 'Phone Sensing Task #2')
         ..measures = activitySchema.getMeasureList(
-          namespace: NameSpace.CARP,
           types: [
             DeviceSamplingPackage.SCREEN,
           ],
         )
         ..addMeasure(PeriodicMeasure(
-          type: MeasureType(NameSpace.CARP, SensorSamplingPackage.LIGHT),
-          name: 'Ambient Light',
+          type: SensorSamplingPackage.LIGHT,
           frequency: const Duration(seconds: 11),
           duration: const Duration(milliseconds: 100),
-        )));
-
-  StudyController controller =
-      StudyController(study, samplingSchema: activitySchema);
-
-  controller = StudyController(study);
-  await controller.initialize();
-  controller.resume();
-
-  // listening on all data events from the study
-  controller.events.forEach(print);
-
-  // listening on events of a specific type
-  ProbeRegistry().eventsByType(DeviceSamplingPackage.SCREEN).forEach(print);
-
-  // listening on data manager events
-  controller.dataManager.events.forEach(print);
+        )),
+      phone);
 }
 
 void recurrentScheduledTriggerExample() {
@@ -305,47 +366,44 @@ void recurrentScheduledTriggerExample() {
       time: Time(hour: 21, minute: 30));
 }
 
-/// An example of how to configure a [StudyController] with the default privacy schema.
+/// An example of how to configure a [StudyDeploymentController] with the
+/// default privacy schema.
 void study_controller_example() async {
-  Study study = Study(id: '2', userId: 'user@cachet.dk');
-  StudyController controller =
-      StudyController(study, privacySchemaName: PrivacySchema.DEFAULT);
+  CAMSMasterDeviceDeployment deployment =
+      await CAMSDeploymentService().getDeviceDeployment('1234');
+
+  StudyDeploymentController controller = StudyDeploymentController(
+    deployment,
+    privacySchemaName: PrivacySchema.DEFAULT,
+  );
+
   await controller.initialize();
   controller.resume();
 }
 
 /// An example of using the (new) AppTask model
 void app_task_example() async {
-  Study study = Study(id: '2', userId: 'user@cachet.dk')
-    ..addTriggerTask(
-        ImmediateTrigger(), // collect local weather and air quality as an app task
+  Smartphone phone = Smartphone(roleName: 'phone');
+
+  StudyProtocol protocol = StudyProtocol()
+    ..addTriggeredTask(
+        ImmediateTrigger(), // collect device info as an app task
         AppTask(
           type: SensingUserTask.ONE_TIME_SENSING_TYPE,
-          title: "Weather & Air Quality",
+          title: "Device",
           description: "Collect device info",
-        )..measures = SamplingSchema.common().getMeasureList(
-            namespace: NameSpace.CARP,
-            types: [
-              DeviceSamplingPackage.DEVICE,
-            ],
-          ))
-    ..addTriggerTask(
-        ImmediateTrigger(),
+        )..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
+        phone)
+    ..addTriggeredTask(
+        ImmediateTrigger(), // start collecting screen events as an app task
         AppTask(
           type: SensingUserTask.SENSING_TYPE,
           title: "Screen",
           description: "Collect screen events",
-        )..measures = SamplingSchema.common().getMeasureList(
-            namespace: NameSpace.CARP,
-            types: [
-              DeviceSamplingPackage.SCREEN,
-            ],
-          ));
+        )..addMeasure(Measure(type: DeviceSamplingPackage.SCREEN)),
+        phone);
 
-  StudyController controller =
-      StudyController(study, privacySchemaName: PrivacySchema.DEFAULT);
-  await controller.initialize();
-  controller.resume();
+  print(protocol);
 }
 
 void app_task_controller_example() async {

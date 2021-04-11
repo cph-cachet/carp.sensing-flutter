@@ -13,10 +13,8 @@ part of device;
 ///   * [AndroidDeviceInfo](https://pub.dev/documentation/device_info/latest/device_info/AndroidDeviceInfo-class.html)
 ///   * [IosDeviceInfo](https://pub.dev/documentation/device_info/latest/device_info/IosDeviceInfo-class.html)
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class DeviceDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, DeviceSamplingPackage.DEVICE);
-  DataFormat get format => CARP_DATA_FORMAT;
+class DeviceDatum extends Datum {
+  DataFormat get format => DataFormat.fromString(DeviceSamplingPackage.DEVICE);
 
   ///The platform type from which this Datum was collected.
   /// * `Android`
@@ -56,6 +54,9 @@ class DeviceDatum extends CARPDatum {
       this.hardware})
       : super();
 
+  /// Returns `true` if the [deviceId] is equal.
+  bool equivalentTo(ConditionalEvent event) => deviceId == event['deviceId'];
+
   factory DeviceDatum.fromJson(Map<String, dynamic> json) =>
       _$DeviceDatumFromJson(json);
   Map<String, dynamic> toJson() => _$DeviceDatumToJson(this);
@@ -75,10 +76,8 @@ class DeviceDatum extends CARPDatum {
 
 /// A [Datum] that holds battery level collected from the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class BatteryDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, DeviceSamplingPackage.BATTERY);
-  DataFormat get format => CARP_DATA_FORMAT;
+class BatteryDatum extends Datum {
+  DataFormat get format => DataFormat.fromString(DeviceSamplingPackage.BATTERY);
 
   static const String STATE_FULL = 'full';
   static const String STATE_CHARGING = 'charging';
@@ -115,6 +114,10 @@ class BatteryDatum extends CARPDatum {
     }
   }
 
+  /// Returns `true` if the [batteryLevel] is equal.
+  bool equivalentTo(ConditionalEvent event) =>
+      batteryLevel == event['batteryLevel'];
+
   factory BatteryDatum.fromJson(Map<String, dynamic> json) =>
       _$BatteryDatumFromJson(json);
   Map<String, dynamic> toJson() => _$BatteryDatumToJson(this);
@@ -125,10 +128,8 @@ class BatteryDatum extends CARPDatum {
 
 /// Holds information about free memory on the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class FreeMemoryDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, DeviceSamplingPackage.MEMORY);
-  DataFormat get format => CARP_DATA_FORMAT;
+class FreeMemoryDatum extends Datum {
+  DataFormat get format => DataFormat.fromString(DeviceSamplingPackage.MEMORY);
 
   /// Amount of free physical memory in bytes.
   int freePhysicalMemory;
@@ -149,10 +150,10 @@ class FreeMemoryDatum extends CARPDatum {
 
 /// Holds a screen event collected from the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class ScreenDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, DeviceSamplingPackage.SCREEN);
-  DataFormat get format => CARP_DATA_FORMAT;
+class ScreenDatum extends Datum {
+  // static const DataFormat CARP_DATA_FORMAT =
+  //     DataFormat(NameSpace.CARP, DeviceSamplingPackage.SCREEN);
+  DataFormat get format => DataFormat.fromString(DeviceSamplingPackage.SCREEN);
 
   /// A screen event:
   /// - SCREEN_OFF
@@ -178,6 +179,10 @@ class ScreenDatum extends CARPDatum {
     }
     return sd;
   }
+
+  /// Returns `true` if the [screenEvent] is equal.
+  bool equivalentTo(ConditionalEvent event) =>
+      screenEvent == event['screenEvent'];
 
   factory ScreenDatum.fromJson(Map<String, dynamic> json) =>
       _$ScreenDatumFromJson(json);

@@ -17,7 +17,7 @@ enum GeolocationAccuracy {
 }
 
 /// Specify the configuration on how to collect location data.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class LocationMeasure extends PeriodicMeasure {
   /// Defines the desired accuracy that should be used to determine the location data.
   ///
@@ -38,8 +38,8 @@ class LocationMeasure extends PeriodicMeasure {
   String notificationMsg = 'CARP location tracking';
 
   LocationMeasure({
-    @required MeasureType type,
-    String name,
+    @required String type,
+    Map<String, MeasureDescription> measureDescription,
     bool enabled,
     Duration frequency,
     Duration duration,
@@ -50,7 +50,7 @@ class LocationMeasure extends PeriodicMeasure {
   })
       : super(
             type: type,
-            name: name,
+            measureDescription: measureDescription,
             enabled: enabled,
             frequency: frequency,
             duration: duration);

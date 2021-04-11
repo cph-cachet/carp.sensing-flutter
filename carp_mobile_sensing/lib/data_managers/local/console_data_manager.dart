@@ -12,12 +12,15 @@ part of managers;
 class ConsoleDataManager extends AbstractDataManager {
   String get type => DataEndPointTypes.PRINT;
 
-  Future initialize(Study study, Stream<Datum> data) async {
-    assert(study.dataEndPoint is DataEndPoint);
-    await super.initialize(study, data);
+  Future initialize(
+    CAMSMasterDeviceDeployment deployment,
+    Stream<DataPoint> data,
+  ) async {
+    await super.initialize(deployment, data);
+    assert(dataEndPoint is DataEndPoint);
   }
 
-  void onDatum(Datum datum) => print('>> ${jsonEncode(datum)}');
+  void onDataPoint(DataPoint dataPoint) => print('>> ${jsonEncode(dataPoint)}');
 
   void onDone() {}
 

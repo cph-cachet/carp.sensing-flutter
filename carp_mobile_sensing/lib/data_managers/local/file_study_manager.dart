@@ -7,51 +7,54 @@
 
 part of managers;
 
-/// Retrieve and store [Study] json definitions on the device's local file system.
+/// Retrieve and store [StudyProtocol] json definitions on the device's local
+/// file system.
 ///
 /// The path and filename format is
 ///
 ///   `carp/study/study-<study_id>.json`
 ///
-class FileStudyManager implements StudyManager {
+class FileStudyProtocolManager implements StudyProtocolManager {
   /// The path to use on the device for storing CARP study files.
   static const String CARP_STUDY_FILE_PATH = 'carp/study';
 
   String _path;
 
-  /// Initializing the the local study manager
+  /// Initializing the the local FileDeploymentService
   Future initialize() async {
     final _studyPath = await path;
 
-    info('Initializing FileStudyManager...');
+    info('Initializing FileDeploymentService...');
     info('Study file path : $_studyPath');
   }
 
-  /// Get a study stored on the local file system.
-  Future<Study> getStudy(String studyId) async {
+  @override
+  Future<StudyProtocol> getStudyProtocol(String studyId) async {
     info("Loading study '$studyId'.");
-    Study study;
+    StudyProtocol study;
 
     try {
       String jsonString = File(filename(studyId)).readAsStringSync();
-      study = Study.fromJson(json.decode(jsonString) as Map<String, dynamic>);
+      study = StudyProtocol.fromJson(
+          json.decode(jsonString) as Map<String, dynamic>);
     } catch (exception) {
       warning("Failed to load study '$studyId' - $exception");
     }
+
     return study;
   }
 
   /// Save a study on the local file system.
   /// Returns `true` if successful.
-  Future<bool> saveStudy(Study study) async {
+  Future<bool> saveStudyProtocol(String studyId, StudyProtocol study) async {
     bool success = true;
-    info("Saving study '${study.id}}'.");
+    info("Saving study '$studyId'.");
     try {
       final json = jsonEncode(study);
-      File(filename(study.id)).writeAsStringSync(json);
+      File(filename(studyId)).writeAsStringSync(json);
     } catch (exception) {
       success = false;
-      warning("Failed to save study '${study.id}' - $exception");
+      warning("Failed to save study '$studyId' - $exception");
     }
     return success;
   }

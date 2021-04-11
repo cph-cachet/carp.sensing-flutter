@@ -8,10 +8,9 @@ part of sensors;
 
 /// A [Datum] that holds acceleration data collected from the native accelerometer on the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class AccelerometerDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, SensorSamplingPackage.ACCELEROMETER);
-  DataFormat get format => CARP_DATA_FORMAT;
+class AccelerometerDatum extends Datum {
+  DataFormat get format =>
+      DataFormat.fromString(SensorSamplingPackage.ACCELEROMETER);
 
   /// Acceleration force along the x axis (including gravity) measured in m/s^2.
   double x;
@@ -40,10 +39,9 @@ class AccelerometerDatum extends CARPDatum {
 
 /// A [Datum] that holds rotation data collected from the native gyroscope on the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: true)
-class GyroscopeDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, SensorSamplingPackage.GYROSCOPE);
-  DataFormat get format => CARP_DATA_FORMAT;
+class GyroscopeDatum extends Datum {
+  DataFormat get format =>
+      DataFormat.fromString(SensorSamplingPackage.GYROSCOPE);
 
   /// Rate of rotation around the x axis measured in rad/s.
   double x;
@@ -72,10 +70,8 @@ class GyroscopeDatum extends CARPDatum {
 
 /// A [Datum] that holds light intensity in Lux from the light sensor on the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class LightDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, SensorSamplingPackage.LIGHT);
-  DataFormat get format => CARP_DATA_FORMAT;
+class LightDatum extends Datum {
+  DataFormat get format => DataFormat.fromString(SensorSamplingPackage.LIGHT);
 
   /// Intensity in Lux
   num meanLux;
@@ -97,15 +93,17 @@ class LightDatum extends CARPDatum {
 
 /// Holds the step count.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class PedometerDatum extends CARPDatum {
-  static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, SensorSamplingPackage.PEDOMETER);
-  DataFormat get format => CARP_DATA_FORMAT;
+class PedometerDatum extends Datum {
+  DataFormat get format =>
+      DataFormat.fromString(SensorSamplingPackage.PEDOMETER);
 
   /// The amount of steps.
   int stepCount;
 
   PedometerDatum([this.stepCount]) : super();
+
+  /// Returns `true` if the [stepCount] is equal.
+  bool equivalentTo(ConditionalEvent event) => stepCount == event['stepCount'];
 
   factory PedometerDatum.fromJson(Map<String, dynamic> json) =>
       _$PedometerDatumFromJson(json);

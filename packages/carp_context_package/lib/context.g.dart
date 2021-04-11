@@ -117,10 +117,15 @@ Map<String, dynamic> _$LocationDatumToJson(LocationDatum instance) {
 
 LocationMeasure _$LocationMeasureFromJson(Map<String, dynamic> json) {
   return LocationMeasure(
-    type: json['type'] == null
-        ? null
-        : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
-    name: json['name'] as String,
+    type: json['type'] as String,
+    measureDescription:
+        (json['measureDescription'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(
+          k,
+          e == null
+              ? null
+              : MeasureDescription.fromJson(e as Map<String, dynamic>)),
+    ),
     enabled: json['enabled'] as bool,
     frequency: json['frequency'] == null
         ? null
@@ -131,11 +136,10 @@ LocationMeasure _$LocationMeasureFromJson(Map<String, dynamic> json) {
     accuracy:
         _$enumDecodeNullable(_$GeolocationAccuracyEnumMap, json['accuracy']),
     distance: (json['distance'] as num)?.toDouble(),
-    notificationTitle: json['notification_title'] as String,
-    notificationMsg: json['notification_msg'] as String,
+    notificationTitle: json['notificationTitle'] as String,
+    notificationMsg: json['notificationMsg'] as String,
   )
     ..$type = json[r'$type'] as String
-    ..description = json['description'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
     );
@@ -152,16 +156,15 @@ Map<String, dynamic> _$LocationMeasureToJson(LocationMeasure instance) {
 
   writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
-  writeNotNull('name', instance.name);
-  writeNotNull('description', instance.description);
+  writeNotNull('measureDescription', instance.measureDescription);
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
   writeNotNull('frequency', instance.frequency?.inMicroseconds);
   writeNotNull('duration', instance.duration?.inMicroseconds);
   writeNotNull('accuracy', _$GeolocationAccuracyEnumMap[instance.accuracy]);
   writeNotNull('distance', instance.distance);
-  writeNotNull('notification_title', instance.notificationTitle);
-  writeNotNull('notification_msg', instance.notificationMsg);
+  writeNotNull('notificationTitle', instance.notificationTitle);
+  writeNotNull('notificationMsg', instance.notificationMsg);
   return val;
 }
 
@@ -244,15 +247,19 @@ Map<String, dynamic> _$WeatherDatumToJson(WeatherDatum instance) {
 
 WeatherMeasure _$WeatherMeasureFromJson(Map<String, dynamic> json) {
   return WeatherMeasure(
-    type: json['type'] == null
-        ? null
-        : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
-    name: json['name'],
+    type: json['type'] as String,
+    measureDescription:
+        (json['measureDescription'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(
+          k,
+          e == null
+              ? null
+              : MeasureDescription.fromJson(e as Map<String, dynamic>)),
+    ),
     enabled: json['enabled'],
-    apiKey: json['api_key'] as String,
+    apiKey: json['apiKey'] as String,
   )
     ..$type = json[r'$type'] as String
-    ..description = json['description'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
     );
@@ -269,11 +276,10 @@ Map<String, dynamic> _$WeatherMeasureToJson(WeatherMeasure instance) {
 
   writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
-  writeNotNull('name', instance.name);
-  writeNotNull('description', instance.description);
+  writeNotNull('measureDescription', instance.measureDescription);
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
-  writeNotNull('api_key', instance.apiKey);
+  writeNotNull('apiKey', instance.apiKey);
   return val;
 }
 
@@ -301,18 +307,22 @@ Map<String, dynamic> _$GeoPositionToJson(GeoPosition instance) {
 
 GeofenceMeasure _$GeofenceMeasureFromJson(Map<String, dynamic> json) {
   return GeofenceMeasure(
-    type: json['type'] == null
-        ? null
-        : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
+    type: json['type'] as String,
+    measureDescription:
+        (json['measureDescription'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(
+          k,
+          e == null
+              ? null
+              : MeasureDescription.fromJson(e as Map<String, dynamic>)),
+    ),
     enabled: json['enabled'],
     center: json['center'] == null
         ? null
         : GeoPosition.fromJson(json['center'] as Map<String, dynamic>),
     radius: (json['radius'] as num)?.toDouble(),
-    name: json['name'] as String,
   )
     ..$type = json[r'$type'] as String
-    ..description = json['description'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
     )
@@ -332,13 +342,12 @@ Map<String, dynamic> _$GeofenceMeasureToJson(GeofenceMeasure instance) {
 
   writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
-  writeNotNull('description', instance.description);
+  writeNotNull('measureDescription', instance.measureDescription);
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
   writeNotNull('center', instance.center);
   writeNotNull('radius', instance.radius);
   writeNotNull('dwell', instance.dwell?.inMicroseconds);
-  writeNotNull('name', instance.name);
   return val;
 }
 
@@ -424,15 +433,19 @@ const _$AirQualityLevelEnumMap = {
 
 AirQualityMeasure _$AirQualityMeasureFromJson(Map<String, dynamic> json) {
   return AirQualityMeasure(
-    type: json['type'] == null
-        ? null
-        : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
-    name: json['name'],
+    type: json['type'] as String,
+    measureDescription:
+        (json['measureDescription'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(
+          k,
+          e == null
+              ? null
+              : MeasureDescription.fromJson(e as Map<String, dynamic>)),
+    ),
     enabled: json['enabled'],
-    apiKey: json['api_key'] as String,
+    apiKey: json['apiKey'] as String,
   )
     ..$type = json[r'$type'] as String
-    ..description = json['description'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
     );
@@ -449,11 +462,10 @@ Map<String, dynamic> _$AirQualityMeasureToJson(AirQualityMeasure instance) {
 
   writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
-  writeNotNull('name', instance.name);
-  writeNotNull('description', instance.description);
+  writeNotNull('measureDescription', instance.measureDescription);
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
-  writeNotNull('api_key', instance.apiKey);
+  writeNotNull('apiKey', instance.apiKey);
   return val;
 }
 
@@ -496,20 +508,24 @@ Map<String, dynamic> _$MobilityDatumToJson(MobilityDatum instance) {
 
 MobilityMeasure _$MobilityMeasureFromJson(Map<String, dynamic> json) {
   return MobilityMeasure(
-    type: json['type'] == null
-        ? null
-        : MeasureType.fromJson(json['type'] as Map<String, dynamic>),
-    name: json['name'],
+    type: json['type'] as String,
+    measureDescription:
+        (json['measureDescription'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(
+          k,
+          e == null
+              ? null
+              : MeasureDescription.fromJson(e as Map<String, dynamic>)),
+    ),
     enabled: json['enabled'],
-    usePriorContexts: json['use_prior_contexts'] as bool,
-    stopRadius: (json['stop_radius'] as num)?.toDouble(),
-    placeRadius: (json['place_radius'] as num)?.toDouble(),
-    stopDuration: json['stop_duration'] == null
+    usePriorContexts: json['usePriorContexts'] as bool,
+    stopRadius: (json['stopRadius'] as num)?.toDouble(),
+    placeRadius: (json['placeRadius'] as num)?.toDouble(),
+    stopDuration: json['stopDuration'] == null
         ? null
-        : Duration(microseconds: json['stop_duration'] as int),
+        : Duration(microseconds: json['stopDuration'] as int),
   )
     ..$type = json[r'$type'] as String
-    ..description = json['description'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
     );
@@ -526,13 +542,12 @@ Map<String, dynamic> _$MobilityMeasureToJson(MobilityMeasure instance) {
 
   writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
-  writeNotNull('name', instance.name);
-  writeNotNull('description', instance.description);
+  writeNotNull('measureDescription', instance.measureDescription);
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
-  writeNotNull('use_prior_contexts', instance.usePriorContexts);
-  writeNotNull('stop_radius', instance.stopRadius);
-  writeNotNull('place_radius', instance.placeRadius);
-  writeNotNull('stop_duration', instance.stopDuration?.inMicroseconds);
+  writeNotNull('usePriorContexts', instance.usePriorContexts);
+  writeNotNull('stopRadius', instance.stopRadius);
+  writeNotNull('placeRadius', instance.placeRadius);
+  writeNotNull('stopDuration', instance.stopDuration?.inMicroseconds);
   return val;
 }

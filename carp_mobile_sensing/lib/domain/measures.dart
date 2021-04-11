@@ -7,17 +7,30 @@
 part of domain;
 
 /// A [Measure] holds information about what measure to do/collect for a
-/// [Task] in a [Study].
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class Measure extends Serializable {
-  /// The type of measure to do.
-  MeasureType type;
+/// [TaskDescriptor] in a [StudyProtocol].
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class CAMSMeasure extends Measure {
+  /// The textual [MeasureDescription] containing the name and description
+  /// of this measure organized according to language locales.
+  Map<String, MeasureDescription> measureDescription = {};
 
-  /// A printer-friendly name for this measure.
-  String name;
+  /// The study deployment id that this measure is part of.
+  /// Set on runtime.
+  @JsonKey(ignore: true)
+  String studyDeploymentId;
 
-  /// A longer description of this measure.
-  String description;
+  /// The default English name for this measure.
+  /// If the English name is not set, then the measure's [type] is returned.
+  @JsonKey(ignore: true)
+  String get name => (measureDescription != null)
+      ? measureDescription.containsKey('en')
+          ? measureDescription['en'].name
+          : type
+      : type;
+
+  /// The default English description of this measure.
+  @JsonKey(ignore: true)
+  String get description => getDescription('en').description;
 
   /// Whether the measure is enabled - i.e. collecting data - when the
   /// study is running. A measure is enabled as default.
@@ -29,21 +42,23 @@ class Measure extends Serializable {
   bool _storedEnabled = true;
   final List<MeasureListener> _listeners = [];
 
-  Measure({
-    @required this.type,
-    this.name,
-    this.description,
+  CAMSMeasure({
+    @required String type,
+    this.measureDescription,
     this.enabled = true,
   })
-      : super() {
+      : super(type: type) {
     enabled = enabled ?? true;
     _storedEnabled = enabled;
+    measureDescription ??= {};
   }
 
-  Function get fromJsonFunction => _$MeasureFromJson;
-  factory Measure.fromJson(Map<String, dynamic> json) => FromJsonFactory()
-      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
-  Map<String, dynamic> toJson() => _$MeasureToJson(this);
+  MeasureDescription getDescription(String locale) =>
+      measureDescription[locale] ??
+      MeasureDescription(
+        name: 'No name for locale: $locale',
+        description: 'No description for locale: $locale',
+      );
 
   /// Add a key-value pair as configuration for this measure.
   void setConfiguration(String key, String configuration) =>
@@ -66,7 +81,7 @@ class Measure extends Serializable {
         "Don't adapt a measure to a null measure. If you want to disable a "
         'measure, set the enabled property to false.');
     _storedEnabled = enabled;
-    enabled = measure.enabled ?? true;
+    enabled = (measure is CAMSMeasure) ? measure.enabled ?? true : true;
   }
 
   // TODO - support a stack-based approach to adapt/restore.
@@ -82,7 +97,31 @@ class Measure extends Serializable {
   Future hasChanged() async =>
       _listeners.forEach((listener) => listener.hasChanged(this));
 
-  String toString() => '$runtimeType: type: $type, enabled: $enabled';
+  Function get fromJsonFunction => _$CAMSMeasureFromJson;
+  factory CAMSMeasure.fromJson(Map<String, dynamic> json) => FromJsonFactory()
+      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$CAMSMeasureToJson(this);
+
+  String toString() => '$runtimeType - type: $type, enabled: $enabled';
+}
+
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class MeasureDescription extends Serializable {
+  /// A printer-friendly name for this measure.
+  String name;
+
+  /// A longer description of this measure.
+  String description;
+
+  MeasureDescription({this.name, this.description});
+
+  Function get fromJsonFunction => _$MeasureDescriptionFromJson;
+  factory MeasureDescription.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory()
+          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$MeasureDescriptionToJson(this);
+
+  String toString() => '$runtimeType - name: $name, description: $description';
 }
 
 /// A [PeriodicMeasure] specify how to collect data on a regular basis.
@@ -90,8 +129,8 @@ class Measure extends Serializable {
 /// Data collection will be started as specified by the [frequency] for a time
 /// interval specified as the [duration]. Useful for listening in on a
 /// sensor (e.g. the accelerometer) on a regular, but limited time window.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class PeriodicMeasure extends Measure {
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class PeriodicMeasure extends CAMSMeasure {
   /// Sampling frequency (i.e., delay between sampling).
   Duration frequency;
   Duration _storedFrequency;
@@ -102,17 +141,15 @@ class PeriodicMeasure extends Measure {
 
   /// Create a [PeriodicMeasure].
   PeriodicMeasure({
-    @required MeasureType type,
-    String name,
-    String description,
+    @required String type,
+    Map<String, MeasureDescription> measureDescription,
     bool enabled,
     this.frequency,
     this.duration,
   })
       : super(
             type: type,
-            name: name,
-            description: description,
+            measureDescription: measureDescription,
             enabled: enabled) {
     _storedFrequency = frequency;
     _storedDuration = duration;
@@ -155,8 +192,8 @@ class PeriodicMeasure extends Measure {
 /// A [MarkedMeasure] can only be used with [DatumProbe], [StreamProbe]
 /// and [PeriodicStreamProbe] probes. The mark is read when the probe is
 /// resumed and saved when the probe is paused.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class MarkedMeasure extends Measure {
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class MarkedMeasure extends CAMSMeasure {
   /// The date and time of the last time this measure was collected.
   @JsonKey(ignore: true)
   DateTime lastTime;
@@ -170,16 +207,14 @@ class MarkedMeasure extends Measure {
   Duration history;
 
   MarkedMeasure({
-    @required MeasureType type,
-    String name,
-    String description,
+    @required String type,
+    Map<String, MeasureDescription> measureDescription,
     bool enabled,
     this.history = const Duration(days: 1),
   })
       : super(
           type: type,
-          name: name,
-          description: description,
+          measureDescription: measureDescription,
           enabled: enabled,
         );
 
@@ -190,39 +225,6 @@ class MarkedMeasure extends Measure {
 
   String toString() =>
       '${super.toString()}, mark: $lastTime, history: $history';
-}
-
-/// Specifies the type of a [Measure].
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class MeasureType extends Serializable {
-  /// The data type namespace. See [NameSpace].
-  String namespace;
-
-  /// The name of this data format. See [DataType].
-  String name;
-
-  /// Create a [MeasureType].
-  MeasureType(this.namespace, this.name) : super();
-
-  Function get fromJsonFunction => _$MeasureTypeFromJson;
-  factory MeasureType.fromJson(Map<String, dynamic> json) => FromJsonFactory()
-      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
-  Map<String, dynamic> toJson() => _$MeasureTypeToJson(this);
-
-  String toString() => '$namespace.$name';
-
-  bool operator ==(other) {
-    if (other is! MeasureType) return false;
-    return (other.namespace == namespace && other.name == name);
-  }
-
-  // taken from https://dart.dev/guides/libraries/library-tour#implementing-map-keys
-  int get hashCode {
-    var result = 17;
-    result = 37 * result + namespace.hashCode;
-    result = 37 * result + name.hashCode;
-    return result;
-  }
 }
 
 /// A Listener that can listen on changes to a [Measure].

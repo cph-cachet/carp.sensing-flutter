@@ -1,29 +1,32 @@
 name: carp_context_package
 description: CARP context sampling package. Samples location, mobility, activity, weather, air-quality, and geofence.
-version: 0.12.1
+version: 0.20.0
 author:  CACHET Team <cph.cachet@gmail.com>
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/packages/carp_context_package
 
 environment:
-  sdk: ">=2.3.0 <3.0.0"
+  sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  json_annotation: ^3.0.1
-  carp_mobile_sensing: ^0.12.0
+  carp_core: ^0.20.0      # the core CARP domain model
+  carp_mobile_sensing: ^0.20.0
+  json_annotation: ^3.0.0
   weather: ^1.2.2
   air_quality: ^1.2.1
-  activity_recognition_flutter: ^2.0.2
+  activity_recognition_flutter: ^3.0.0
   openmhealth_schemas: ^0.1.4+1
   mobility_features: ^2.0.5
   permission_handler: ^5.0.1+1
-  carp_background_location: ^1.0.1+1
-  geolocator: ^6.1.0
+  carp_background_location: ^1.0.2
+  geolocator: ^6.2.0
 
 # Overriding carp libraries to use the local copy
 # Remove this before release of package
 #dependency_overrides:
+#  carp_core:
+#    path: ../../carp_core/
 #  carp_mobile_sensing:
 #    path: ../../carp_mobile_sensing/
 #  openmhealth_schemas:
@@ -32,6 +35,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  pedantic: ^1.9.0        # For pedantic Dart linter
   build_runner: ^1.10.0
   json_serializable: ^3.0.0
   test:

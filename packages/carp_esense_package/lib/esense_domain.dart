@@ -9,8 +9,8 @@ part of esense;
 
 /// Specify the configuration on how to collect eSense data.
 /// Needs an [deviceName] for the eSense device to connect to.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class ESenseMeasure extends Measure {
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class ESenseMeasure extends CAMSMeasure {
   /// The name of the eSense device.
   /// Used for connecting to the eSense hardware device over BTLE.
   String deviceName;
@@ -23,13 +23,16 @@ class ESenseMeasure extends Measure {
   /// Create an eSense messure confgiration.
   /// [type] and [deviceName] are required.
   ESenseMeasure({
-    MeasureType type,
-    name,
+    String type,
+    Map<String, MeasureDescription> measureDescription,
     enabled = true,
     this.deviceName,
     this.samplingRate = 10,
   })
-      : super(type: type, name: name, enabled: enabled);
+      : super(
+            type: type,
+            measureDescription: measureDescription,
+            enabled: enabled);
 
   Function get fromJsonFunction => _$ESenseMeasureFromJson;
   factory ESenseMeasure.fromJson(Map<String, dynamic> json) => FromJsonFactory()
@@ -40,7 +43,7 @@ class ESenseMeasure extends Measure {
 }
 
 /// Abstract eSense datum class.
-abstract class ESenseDatum extends CARPDatum {
+abstract class ESenseDatum extends Datum {
   /// The name of eSense device.
   String deviceName;
 
@@ -50,10 +53,8 @@ abstract class ESenseDatum extends CARPDatum {
 /// Holds information about an eSense button pressed event.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ESenseButtonDatum extends ESenseDatum {
-  static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, ESenseSamplingPackage.ESENSE_BUTTON);
-
-  DataFormat get format => CARP_DATA_FORMAT;
+  DataFormat get format =>
+      DataFormat.fromString(ESenseSamplingPackage.ESENSE_BUTTON);
 
   ESenseButtonDatum({String deviceName, this.pressed}) : super(deviceName);
 
@@ -77,10 +78,8 @@ class ESenseButtonDatum extends ESenseDatum {
 /// eSense [SensorEvent](https://pub.dev/documentation/esense/latest/esense/SensorEvent-class.html) event.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ESenseSensorDatum extends ESenseDatum {
-  static const DataFormat CARP_DATA_FORMAT =
-      DataFormat(NameSpace.CARP, ESenseSamplingPackage.ESENSE_SENSOR);
-
-  DataFormat get format => CARP_DATA_FORMAT;
+  DataFormat get format =>
+      DataFormat.fromString(ESenseSamplingPackage.ESENSE_SENSOR);
 
   /// Sequential number of sensor packet
   ///

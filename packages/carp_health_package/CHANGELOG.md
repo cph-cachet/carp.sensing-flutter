@@ -1,3 +1,6 @@
+## 1.5.0
+* **BREAKING:** upgrade to `carp_mobile_sensing` v. 0.20.x
+
 ## 1.4.0
 * upgrade to `carp_mobile_sensing` v. 0.12.0
 
@@ -10,7 +13,6 @@
 
 ## 1.1.2
 * upgrade to `carp_mobile_sensing` v. 0.9.5
-
 
 ## 1.1.1
 * upgrade to `carp_mobile_sensing` v. 0.9.3

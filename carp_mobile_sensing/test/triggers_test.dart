@@ -1,15 +1,11 @@
-import 'dart:convert';
-
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:test/test.dart';
-
-String _encode(Object object) =>
-    const JsonEncoder.withIndent(' ').convert(object);
 
 void main() {
   setUp(() {
     // This is a hack. Need to create some serialization object in order to intialize searialization.
-    Study(id: '1234', userId: 'kkk');
+    StudyProtocol();
   });
 
 //  /// Test if we can load a raw JSON from a file and convert it into a [Study] object with all its [Task]s and [Measure]s.
@@ -20,7 +16,7 @@ void main() {
 //    Study plainStudy = Study.fromJson(json.decode(plainStudyJson) as Map<String, dynamic>);
 //    expect(plainStudy.id, '1234');
 //
-//    print(_encode(plainStudy));
+//    print(toJsonString(plainStudy));
 //  });
 //
 //  /// Test template.
@@ -35,7 +31,7 @@ void main() {
       // collect every day at 13:30
       t = RecurrentScheduledTrigger(
           type: RecurrentType.daily, time: Time(hour: 13, minute: 30));
-      //print(_encode(t));
+      //print(toJsonString(t));
       print('${t.firstOccurrence} - ${t.period}');
       expect(t.period.inHours, 24);
 
@@ -166,7 +162,7 @@ void main() {
       CronScheduledTrigger t =
           CronScheduledTrigger.parse(cronExpression: '0 12 * * *');
       print(t);
-      print(_encode(t));
+      print(toJsonString(t));
 
       t = CronScheduledTrigger(triggerId: 'id', minute: 0, hour: 12);
       print(t);

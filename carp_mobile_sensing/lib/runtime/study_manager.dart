@@ -6,19 +6,19 @@
  */
 part of runtime;
 
-/// An interface defining a manger of a [Study].
+/// An interface defining a manger of a [StudyProtocol].
 ///
-/// Is mainly used to get and save a [Study].
-/// See [FileStudyManager] for an implementation which can load and save
+/// Is mainly used to get and save a [StudyProtocol].
+/// See [FileStudyProtocol] for an implementation which can load and save
 /// study json configurations on the local file system.
-abstract class StudyManager {
+abstract class StudyProtocolManager {
   /// Initialize the study manager.
   Future initialize();
 
-  /// Get a [Study] based on its ID.
-  Future<Study> getStudy(String studyId);
+  /// Get a [StudyProtocol] based on its ID.
+  Future<StudyProtocol> getStudyProtocol(String studyId);
 
-  /// Save a [Study].
+  /// Save a [StudyProtocol] with the ID [studyId].
   /// Returns `true` if successful, `false` otherwise.
-  Future<bool> saveStudy(Study study);
+  Future<bool> saveStudyProtocol(String studyId, StudyProtocol protocol);
 }

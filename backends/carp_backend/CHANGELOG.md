@@ -1,3 +1,8 @@
+## 0.20.0
+* **BREAKING**: Now using the [`carp_core`](https://pub.dev/packages/carp_core) domain models in order to align with the overall [domain-driven design of CARP](https://carp.cachet.dk/core/)
+* upgrade to `carp_mobile_sensing` v. 0.20.x
+* upgrade to `carp_webservices` v. 0.20.x
+
 ## 0.13.0
 * updated to carp_webservices v. 0.13.x
 
