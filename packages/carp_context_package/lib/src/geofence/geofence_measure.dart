@@ -98,7 +98,8 @@ class GeofenceMeasure extends CAMSMeasure {
     this.center,
     this.radius,
     this.name,
-  }) : super(
+  })
+      : super(
             type: type,
             measureDescription: measureDescription,
             enabled: enabled);

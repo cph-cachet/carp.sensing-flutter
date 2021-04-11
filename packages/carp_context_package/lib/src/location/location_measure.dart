@@ -47,7 +47,8 @@ class LocationMeasure extends PeriodicMeasure {
     this.distance = 0,
     this.notificationTitle,
     this.notificationMsg,
-  }) : super(
+  })
+      : super(
             type: type,
             measureDescription: measureDescription,
             enabled: enabled,

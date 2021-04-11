@@ -23,7 +23,8 @@ class MobilityMeasure extends CAMSMeasure {
     this.stopRadius,
     this.placeRadius,
     this.stopDuration,
-  }) : super(
+  })
+      : super(
             type: type,
             measureDescription: measureDescription,
             enabled: enabled);
@@ -39,7 +40,7 @@ class MobilityMeasure extends CAMSMeasure {
   String toString() =>
       super.toString() +
       ',usePriorContext: $usePriorContexts,'
-          'stopRadius: $stopRadius,'
-          'placeRadius: $placeRadius,'
-          'stopDuration: $stopDuration';
+      'stopRadius: $stopRadius,'
+      'placeRadius: $placeRadius,'
+      'stopDuration: $stopDuration';
 }

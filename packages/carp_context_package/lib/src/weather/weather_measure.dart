@@ -21,7 +21,8 @@ class WeatherMeasure extends CAMSMeasure {
     Map<String, MeasureDescription> measureDescription,
     enabled,
     this.apiKey,
-  }) : super(
+  })
+      : super(
             type: type,
             measureDescription: measureDescription,
             enabled: enabled);
