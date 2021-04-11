@@ -35,8 +35,8 @@ class FileStudyProtocolManager implements StudyProtocolManager {
 
     try {
       String jsonString = File(filename(studyId)).readAsStringSync();
-      study = StudyProtocol
-          .fromJson(json.decode(jsonString) as Map<String, dynamic>);
+      study = StudyProtocol.fromJson(
+          json.decode(jsonString) as Map<String, dynamic>);
     } catch (exception) {
       warning("Failed to load study '$studyId' - $exception");
     }
@@ -48,13 +48,13 @@ class FileStudyProtocolManager implements StudyProtocolManager {
   /// Returns `true` if successful.
   Future<bool> saveStudyProtocol(String studyId, StudyProtocol study) async {
     bool success = true;
-    info("Saving study '${studyId}}'.");
+    info("Saving study '$studyId'.");
     try {
       final json = jsonEncode(study);
       File(filename(studyId)).writeAsStringSync(json);
     } catch (exception) {
       success = false;
-      warning("Failed to save study '${studyId}' - $exception");
+      warning("Failed to save study '$studyId' - $exception");
     }
     return success;
   }
