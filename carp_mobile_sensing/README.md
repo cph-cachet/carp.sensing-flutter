@@ -78,7 +78,7 @@ Please use this as a reference in any scientific papers using CAMS.
 
 ## Examples of configuring and using CAMS
 
-There is a very **simple** [example app](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/carp_mobile_sensing/example/lib/main.dart) app which shows how a study can be created with different tasks and measures.
+There is a very **simple** [example app](https://pub.dev/packages/carp_mobile_sensing/example) app which shows how a study can be created with different tasks and measures.
 This app just prints the sensing data to a console screen on the phone. 
 There is also a range of different [examples](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/carp_mobile_sensing/example/lib/example.dart) on how to create a study to take inspiration from.
 
@@ -90,7 +90,7 @@ Following [`carp_core`](https://pub.dev/documentation/carp_core/latest/), a CAMS
 
 1. Define a [`StudyProtcol`](https://pub.dev/documentation/carp_core/latest/carp_core/StudyProtocol-class.html).
 2. Deploy this protocol to a [`DeploymentService`](https://pub.dev/documentation/carp_core/latest/carp_core/DeploymentService-class.html).
-3. Start executing the study deployment on the phone using a `StudyDeploymentController`.
+3. Start executing the study deployment on the phone using a [`StudyDeploymentController`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/StudyDeploymentController-class.html).
 4. Use the generated data locally in the app.
 
 
@@ -192,7 +192,7 @@ When we have a master device deployment for the phone, this deployment can be ex
 
 ### Using the generated data
 
-Sensing can be controlled in a number of ways and the generated data can be assessed and used in the app. Access to data is done by listening in on the `data` streams from the study deployment controller or some of its underlying executors or probes. Below are a few examples on how to listen on data streams.
+Sensing can be controlled in a number of ways and the generated data can be accessed and used in the app. Access to data is done by listening on the `data` streams from the study deployment controller or some of its underlying executors or probes. Below are a few examples on how to listen on data streams.
 
 ```dart
   ...
