@@ -28,7 +28,8 @@ class ESenseMeasure extends CAMSMeasure {
     enabled = true,
     this.deviceName,
     this.samplingRate = 10,
-  }) : super(
+  })
+      : super(
             type: type,
             measureDescription: measureDescription,
             enabled: enabled);

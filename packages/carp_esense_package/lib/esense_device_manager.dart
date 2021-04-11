@@ -20,7 +20,8 @@ class ESenseDevice extends DeviceDescriptor {
   ESenseDevice({
     String roleName = DEFAULT_ROLENAME,
     List<String> supportedDataTypes,
-  }) : super(
+  })
+      : super(
           roleName: roleName,
           isMasterDevice: false,
           supportedDataTypes: supportedDataTypes,
@@ -35,7 +36,6 @@ class ESenseDevice extends DeviceDescriptor {
 class ESenseDeviceManager extends DeviceManager {
   // the last known voltage level of the eSense device
   double _voltageLevel = 4;
-  StreamSubscription<ESenseEvent> _eventSubscription;
 
   String get id => ESenseManager().eSenseDeviceName;
 
@@ -51,7 +51,7 @@ class ESenseDeviceManager extends DeviceManager {
           status = DeviceStatus.connected;
 
           // when connected, listen for battery events
-          _eventSubscription = ESenseManager()
+          ESenseManager()
               .eSenseEvents
               .where((event) => event is BatteryRead)
               .listen((event) {

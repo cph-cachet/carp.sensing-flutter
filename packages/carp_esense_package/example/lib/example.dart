@@ -26,12 +26,8 @@ void main() async {
     );
 
   // define which devices are used for data collection - both phone and eSense
-  Smartphone phone = Smartphone(
-    roleName: 'The main phone',
-  );
-  DeviceDescriptor eSense = ESenseDevice(
-    roleName: 'The left eSense earplug',
-  );
+  Smartphone phone = Smartphone(roleName: 'The main phone');
+  DeviceDescriptor eSense = ESenseDevice(roleName: 'The left eSense earplug');
 
   protocol
     ..addMasterDevice(phone)
