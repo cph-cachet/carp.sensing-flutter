@@ -89,10 +89,10 @@ void main() async {
   );
   print('$cdep_3');
 
-  // create a study and allocate this data point to it.
-  CAMSStudyProtocol study_1 = CAMSStudyProtocol(
+  // create a study protocol and allocate this data point to it.
+  CAMSStudyProtocol protocol = CAMSStudyProtocol(
     studyId: '123',
     name: 'Test study #1234',
   );
-  study_1.dataEndPoint = cdep;
+  protocol.dataEndPoint = cdep;
 }

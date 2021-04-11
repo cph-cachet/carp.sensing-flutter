@@ -15,8 +15,7 @@ For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter
 
 ## Using the Plugin
 
-Add `carp_backend` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/) 
-and import the library along with the [`carp_mobile_sensing`](https://pub.dev/packages/carp_mobile_sensing) library.
+Add `carp_backend` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/) and import the library along with the [`carp_mobile_sensing`](https://pub.dev/packages/carp_mobile_sensing) library.
 
 ```dart
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
@@ -27,7 +26,7 @@ import 'package:carp_backend/carp_backend.dart';
 
 ## Downloading a study configuration from CARP
 
-Getting a study configuration from CARP is done using a `CarpStudyManager`.
+Getting a study configuration from CARP is done using a `CARPStudyProtocolManager`.
 But in order to authenticate to CARP and get the available studies for the user, 
 we make use of the [`carp_webservices`](https://pub.dev/packages/carp_webservices) API.
 
@@ -36,7 +35,7 @@ To get a study, you basically go through the following steps:
  1. Create and configure a `CarpApp` that points to the correct CARP web service.
  2. Authenticate to the CARP web service
  3. Get the list of study invitations for the authenticated user.
- 4. Get a specific study via a `CarpStudyManager`
+ 4. Get a specific study via a `CARPStudyProtocolManager`
 
 The following code illustrates how this is done:
 
@@ -66,11 +65,11 @@ The following code illustrates how this is done:
   String studyDeploymentId = invitations[0].studyDeploymentId;
 
   // create a study manager, and initialize it
-  CarpStudyManager manager = CarpStudyManager();
+  CARPStudyProtocolManager manager = CARPStudyProtocolManager();
   await manager.initialize();
 
-  // get the study from CARP
-  Study study = await manager.getStudy(studyDeploymentId);
+  // get the study protocol from CARP
+  StudyProtocol study = await manager.getStudyProtocol(studyDeploymentId);
   print('study: $study');
   ````
 
@@ -92,7 +91,7 @@ Using the library takes three steps.
 First you should register the data manager in the [`DataManagerRegistry`](https://pub.dartlang.org/documentation/carp_core/latest/carp_core/DataManagerRegistry-class.html).
 
 ````dart
-  DataManagerRegistry().register(DataEndPointType.CARP, CarpDataManager());
+  DataManagerRegistry().register(CarpDataManager());
 ````
 
 ### 2. Create a CARP Data Endpoint 
@@ -144,15 +143,14 @@ And a `CarpDataEndPoint` that batch uploads data points in a json file (which is
 
 ### 3. Assign the CARP Data Endpoint to your Study
 
-To use the CARP Data Endpoint in you study, assign it to the study. 
+To use the CARP Data Endpoint in you study, assign it to the protocol. 
 
 `````dart
-  Study study = new Study(
-    id: '1234',
-    userId: 'username@cachet.dk',
+  CAMSStudyProtocol protocol = CAMSStudyProtocol(
+    studyId: '123',
     name: 'Test study #1234',
   );
-  study.dataEndPoint = cdep;
+  protocol.dataEndPoint = cdep;
 ````` 
 
 ## Features and bugs

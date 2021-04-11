@@ -17,7 +17,6 @@ class CarpDataManager extends AbstractDataManager {
   bool _initialized = false;
   CarpDataEndPoint carpEndPoint;
   CarpApp _app;
-  String _path;
 
   FileDataManager fileDataManager;
 
