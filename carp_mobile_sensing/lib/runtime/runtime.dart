@@ -27,6 +27,7 @@ import 'package:cron/cron.dart' as cron;
 
 part 'data_manager.dart';
 part 'device_manager.dart';
+part 'executors.dart';
 part 'trigger_executors.dart';
 part 'task_executors.dart';
 part 'app_task_executor.dart';
