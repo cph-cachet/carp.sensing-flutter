@@ -6,14 +6,13 @@ This library contains a sampling package for communication sampling to work with
 the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package.
 This packages supports sampling of the following [`Measure`](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/domain/Measure-class.html) types:
 
-* `phone_log`
-* `telephony`
-* `text-message-log`
-* `text-message`
-* `calendar`
+* `dk.cachet.carp.phone_log`
+* `dk.cachet.carp.telephony`
+* `dk.cachet.carp.text-message-log`
+* `dk.cachet.carp.text-message`
+* `dk.cachet.carp.calendar`
 
-See the [wiki]() for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types)
-and [sampling schemas](https://github.com/cph-cachet/carp.sensing-flutter/wiki/D.-Sampling-Schemas).
+See the [wiki]() for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types) and [sampling schemas](https://github.com/cph-cachet/carp.sensing-flutter/wiki/D.-Sampling-Schemas).
 There is privacy protection of text messages and phone numbers in the default [Privacy Schema](https://github.com/cph-cachet/carp.sensing-flutter/wiki/3.-Using-CARP-Mobile-Sensing#privacy-schema).
 
 For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/README.md).
@@ -30,8 +29,9 @@ this package only works together with `carp_mobile_sensing`.
 dependencies:
   flutter:
     sdk: flutter
-  carp_mobile_sensing: ^0.5.0
-  carp_communication_package: ^0.5.0
+  carp_core: ^0.20.0
+  carp_mobile_sensing: ^0.20.0
+  carp_communication_package: ^0.20.0
   ...
 `````
 
@@ -79,8 +79,9 @@ To use this package, import it into your app together with the
 [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package:
 
 `````dart
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
-import 'package:carp_comunication_package/context.dart';
+import 'package:carp_communication_package/communication.dart';
 `````
 
 Before creating a study and running it, register this package in the 
