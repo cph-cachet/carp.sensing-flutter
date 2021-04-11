@@ -7,8 +7,7 @@ import 'package:carp_core/carp_core.dart';
 
 void main() async {
   final String username = 'researcher';
-  final String uri = 'http://staging.carp.cachet.dk:8080';
-  final String testStudyId = '8';
+  final String uri = "https://cans.cachet.dk:443";
 
   CarpApp app;
   StudyProtocol protocol;
@@ -35,7 +34,6 @@ void main() async {
       clientID: 'the_client_id',
       clientSecret: 'the_client_secret',
     ),
-    studyId: testStudyId,
   );
 
   // Configure the CARP Service with this app.

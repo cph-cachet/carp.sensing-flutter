@@ -57,8 +57,6 @@ void main() {
     protocol..addMasterDevice(phone);
 
     app = new CarpApp(
-      studyId: testStudyId,
-      studyDeploymentId: testDeploymentId,
       name: "Test",
       uri: Uri.parse(uri),
       oauth: OAuthEndPoint(clientID: clientID, clientSecret: clientSecret),
