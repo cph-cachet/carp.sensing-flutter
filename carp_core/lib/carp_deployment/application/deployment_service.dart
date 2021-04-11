@@ -10,8 +10,13 @@ part of carp_core;
 /// retrieving [MasterDeviceDeployment]s for participating master devices as
 /// defined in the protocol.
 abstract class DeploymentService {
-  /// Instantiate a study deployment for a given [StudyProtocolSnapshot].
-  Future<StudyDeploymentStatus> createStudyDeployment(StudyProtocol protocol);
+  /// Create a new [StudyDeployment] based on a [StudyProtocol].
+  /// [studyDeploymentId] specifies the study deployment id.
+  /// If not specified, an UUID v1 id is generated.
+  Future<StudyDeploymentStatus> createStudyDeployment(
+    StudyProtocol protocol, [
+    String studyDeploymentId,
+  ]);
 
   /// Remove study deployments with the given [studyDeploymentIds].
   ///

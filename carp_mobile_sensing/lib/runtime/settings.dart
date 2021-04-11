@@ -30,6 +30,10 @@ class Settings {
   /// Package information
   PackageInfo get packageInfo => _packageInfo;
 
+  Settings() {
+    registerFromJsonFunctions();
+  }
+
   /// Initialize settings. Call before start using it.
   Future init() async {
     _preferences ??= await SharedPreferences.getInstance();

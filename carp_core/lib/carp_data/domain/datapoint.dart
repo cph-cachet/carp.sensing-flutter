@@ -59,8 +59,7 @@ class DataPoint {
   int createdByUserId;
 
   /// The unique study deployment id that this data point belongs to / is uploaded
-  /// as part of. Set by the server.
-  /// `null` if this data point is not yet stored.
+  /// as part of. Set by the server. `null` if this data point is not yet stored.
   String studyId;
 
   /// The data point header.

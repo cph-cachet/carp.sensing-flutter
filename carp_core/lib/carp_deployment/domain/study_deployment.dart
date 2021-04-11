@@ -61,10 +61,13 @@ class StudyDeployment {
   /// further modifications are allowed.
   bool get isStopped => _isStopped;
 
-  StudyDeployment(this._protocol) {
+  /// Create a new [StudyDeployment] based on a [StudyProtocol].
+  /// [studyDeploymentId] specify the study deployment id.
+  /// If not specified, an UUID v1 id is generated.
+  StudyDeployment(this._protocol, [String studyDeploymentId]) {
     assert(_protocol != null,
         'Cannot create a StudyDeployment without a protocol.');
-    _studyDeploymentId = Uuid().v1();
+    _studyDeploymentId = studyDeploymentId ?? Uuid().v1();
     _creationDate = DateTime.now();
     _status = StudyDeploymentStatus(studyDeploymentId: _studyDeploymentId);
   }

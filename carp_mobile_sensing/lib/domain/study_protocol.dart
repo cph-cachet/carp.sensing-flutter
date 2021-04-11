@@ -22,8 +22,12 @@ part of domain;
 /// specified [dataFormat].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class CAMSStudyProtocol extends StudyProtocol {
-  /// A unique id for this study.
-  /// If specified, this is used as the [studyId] in the [DataPointHeader].
+  /// A unique id for this study protcol.  If specified, this id is used as
+  /// the [studyId] in the [DataPointHeader].
+  ///
+  /// This [studyId] should **NOT** be confused with the study deployment id,
+  /// which is typically generated when this protocol is deployed using a
+  /// [DeploymentService].
   String studyId;
 
   /// The textual [StudyProtocolDescription] containing the title, description
@@ -62,6 +66,8 @@ class CAMSStudyProtocol extends StudyProtocol {
     this.dataEndPoint,
     this.dataFormat = NameSpace.CARP,
   }) : super(owner: owner, name: name) {
+    // TODO - move this elsewhere.... can't assumed that the programmer
+    // create a protocol - s/he might download it e.g. from CARP.
     registerFromJsonFunctions();
     // studyId ??= Uuid().v1();
   }
@@ -134,40 +140,4 @@ class ConsentSection extends Serializable {
   Map<String, dynamic> toJson() => _$ConsentSectionToJson(this);
 
   String toString() => '$runtimeType - title: $title, summary: $summary';
-}
-
-/// Specify an endpoint where a [DataManager] can upload data.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class DataEndPoint extends Serializable {
-  /// The type of endpoint as enumerated in [DataEndPointTypes].
-  String type;
-
-  /// The public key in a PKI setup for encryption of data
-  String publicKey;
-
-  /// Creates a [DataEndPoint]. [type] is defined in [DataEndPointTypes].
-  DataEndPoint({this.type, this.publicKey}) : super();
-
-  Function get fromJsonFunction => _$DataEndPointFromJson;
-  factory DataEndPoint.fromJson(Map<String, dynamic> json) => FromJsonFactory()
-      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
-  Map<String, dynamic> toJson() => _$DataEndPointToJson(this);
-
-  String toString() => type;
-}
-
-/// A enumeration of known (but not necessarily implemented) endpoint API types.
-///
-/// Note that the type is basically a [String], which allow for extension of
-/// new application-specific data endpoints.
-class DataEndPointTypes {
-  static const String UNKNOWN = 'UNKNOWN';
-  static const String PRINT = 'PRINT';
-  static const String FILE = 'FILE';
-  static const String SQLITE = 'SQLITE';
-  static const String FIREBASE_STORAGE = 'FIREBASE_STORAGE';
-  static const String FIREBASE_DATABSE = 'FIREBASE_DATABSE';
-  static const String CARP = 'CARP';
-  static const String OMH = 'OMH';
-  static const String AWS = 'AWS';
 }

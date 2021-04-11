@@ -12,9 +12,6 @@ void main() {
   DeviceDescriptor eSense;
 
   setUp(() {
-    // create a file data manger, since we're using a file data endpoint in the protocol.
-    FileDataManager();
-
     // Create a new study protocol.
     protocol = CAMSStudyProtocol()
       ..name = 'Track patient movement'

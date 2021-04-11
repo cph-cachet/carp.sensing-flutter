@@ -38,6 +38,7 @@ part 'sampling_package.dart';
 part 'settings.dart';
 part 'study_controller.dart';
 part 'study_manager.dart';
+part 'cams_deployment_service.dart';
 
 /// Generic sensing exception.
 class SensingException implements Exception {

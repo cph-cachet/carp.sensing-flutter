@@ -34,7 +34,6 @@ void main() {
       ..addMeasures(measures);
     protocol.addTriggeredTask(Trigger(), task, phone);
   });
-
   test('StudyProtocol -> JSON', () async {
     print(protocol);
     print(toJsonString(protocol));

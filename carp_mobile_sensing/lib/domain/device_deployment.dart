@@ -19,6 +19,8 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
 
   /// The unique id of this study. Used in the [DataPointHeader] header.
   String get studyId => _studyId;
+
+  /// The unique id of this study deployment.
   String get studyDeploymentId => _studyDeploymentId;
 
   /// The unique id of the user that this deployment collects data from.

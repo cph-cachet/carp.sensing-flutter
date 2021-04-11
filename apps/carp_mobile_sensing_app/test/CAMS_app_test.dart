@@ -2,9 +2,13 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:test/test.dart';
 
-import 'package:carp_esense_package/esense.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+import 'package:carp_connectivity_package/connectivity.dart';
+import 'package:carp_esense_package/esense.dart';
+import 'package:carp_context_package/context.dart';
+import 'package:carp_audio_package/audio.dart';
+
 import '../lib/main.dart';
 
 String _encode(Object object) =>
@@ -16,9 +20,10 @@ void main() {
   ESenseDevice eSense;
 
   setUp(() async {
-    // initialize a file manager, since we're using a file data endpoint
-    FileDataManager();
-    // register the eSense sampling package
+    // register the eSense sampling package since we're using eSense measures
+    SamplingPackageRegistry().register(ConnectivitySamplingPackage());
+    SamplingPackageRegistry().register(ContextSamplingPackage());
+    SamplingPackageRegistry().register(AudioSamplingPackage());
     SamplingPackageRegistry().register(ESenseSamplingPackage());
 
     // Define which devices are used for data collection.

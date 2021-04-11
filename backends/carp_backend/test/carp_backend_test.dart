@@ -14,7 +14,7 @@ String _encode(Object object) =>
 void main() {
   CarpApp app;
   CarpUser user;
-  CarpStudyProtocolManager manager = CarpStudyProtocolManager();
+  CARPStudyProtocolManager manager = CARPStudyProtocolManager();
 
   /// Setup CARP and authenticate.
   /// Runs once before all tests.

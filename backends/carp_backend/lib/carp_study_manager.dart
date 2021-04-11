@@ -7,18 +7,12 @@
 
 part of carp_backend;
 
-/// Retrieve and store [Study] json definitions from the CARP backend.
+/// Retrieve and store [StudyProtocol] json definitions at the CARP backend.
 ///
-/// Retrieving a study from the CARP backend is basically made up of a number
-/// of steps, as specified in the [carp.core](https://github.com/cph-cachet/carp.core-kotlin)
-/// [deployment](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-deployment.md)
-/// sub-system:
-///
-///  1. Get a study invitation for the user (note that a user might be invited to multiple studies).
-///  2. Get the deployment status of the specific deployment.
-///  3. Register this device as part of this deployment.
-///  4. Get the study deployment configuration.
-class CarpStudyProtocolManager implements StudyProtocolManager {
+/// In the CARP web service, a CAMS study protocol is modelled as a custom
+/// protcol, which has only one taks, namely a [CustomProtocolTask]. This
+/// custom task hold the raw json desription of a [CAMSStudyProtocol].
+class CARPStudyProtocolManager implements StudyProtocolManager {
   Future initialize() async {}
 
   /// Get a CAMS [StudyProtocol] from the CARP backend.
@@ -29,9 +23,6 @@ class CarpStudyProtocolManager implements StudyProtocolManager {
   ///
   /// Throws a [CarpServiceException] if not successful.
   Future<StudyProtocol> getStudyProtocol(String studyDeploymentId) async {
-    print('>> studyDeploymentId: $studyDeploymentId');
-    print('>> CarpService(): ${CarpService()}');
-    print('>> CarpService().isConfigured: ${CarpService().isConfigured}');
     assert(CarpService().isConfigured,
         "CARP Service has not been configured - call 'CarpService().configure()' first.");
     assert(CarpService().currentUser != null,
@@ -39,32 +30,46 @@ class CarpStudyProtocolManager implements StudyProtocolManager {
     info(
         'Retrieving study protocol from CARP web service - studyDeploymentId: $studyDeploymentId');
     DeploymentReference reference = CarpService().deployment(studyDeploymentId);
-    print('>> reference: $reference');
 
     // get status
     StudyDeploymentStatus deploymentStatus = await reference.getStatus();
-    print('>> deploymentStatus: $deploymentStatus');
 
     if (deploymentStatus?.masterDeviceStatus?.device != null) {
-      if (deploymentStatus.status ==
-          StudyDeploymentStatusTypes.DeployingDevices) {
-        // register this master device, if not already done
-        deploymentStatus = await reference.registerDevice(
-            deviceRoleName:
-                deploymentStatus.masterDeviceStatus.device.roleName);
+      // register the remaining devices needed for deployment
+      if (deploymentStatus.masterDeviceStatus
+              ?.remainingDevicesToRegisterToObtainDeployment !=
+          null) {
+        for (String deviceRolename in deploymentStatus
+            .masterDeviceStatus.remainingDevicesToRegisterToObtainDeployment) {
+          info("Registring device: '$deviceRolename'");
+          deploymentStatus =
+              await reference.registerDevice(deviceRoleName: deviceRolename);
+        }
       }
+
       // get the deployment
       MasterDeviceDeployment deployment = await reference.get();
+
       if (deployment.tasks.isNotEmpty) {
         // asume that this deployment only contains one custom task
         TaskDescriptor task = deployment.tasks[0];
         if (task is CustomProtocolTask) {
-          CAMSStudyProtocol protocol = CAMSStudyProtocol.fromJson(
+          StudyProtocol protocol = StudyProtocol.fromJson(
               json.decode(task.studyProtocol) as Map<String, dynamic>);
-          // make sure that the study has the correct id as defined by the server
-          protocol.studyId = CarpService().app.studyId ?? protocol.studyId;
+
+          // set the protocol's study id - in the following order:
+          //  1. the study id from the server specified in an invitation and save in the CarpService().app
+          //  2. the study id provided in the downloaded (custom) protocol
+          //  3. the study deployment id
+          if (protocol is CAMSStudyProtocol)
+            protocol.studyId =
+                (CarpService().app.studyId ?? protocol.studyId) ??
+                    studyDeploymentId;
+
           // mark this deployment as successful
           await reference.success();
+          info(
+              "Study deployment '$studyDeploymentId' successfully deployed on this phone.");
           return protocol;
         } else {
           await reference.unRegisterDevice(
@@ -94,6 +99,6 @@ class CarpStudyProtocolManager implements StudyProtocolManager {
   Future<bool> saveStudyProtocol(String studyId, StudyProtocol study) async {
     throw CarpServiceException(
         message:
-            'There is no support for saving studies in CARP from the phone.');
+            'There is no support for saving studies in the CARP web service from the phone.');
   }
 }

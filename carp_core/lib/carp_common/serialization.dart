@@ -133,6 +133,7 @@ class FromJsonFactory {
     register(MasterDeviceDescriptor());
     register(CustomProtocolDevice());
     register(Smartphone());
+    register(AltBeacon());
     register(DeviceDescriptor(),
         type:
             'dk.cachet.carp.protocols.infrastructure.test.StubMasterDeviceDescriptor');

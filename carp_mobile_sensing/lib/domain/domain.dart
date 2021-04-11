@@ -14,6 +14,7 @@ import 'package:uuid/uuid.dart';
 import 'package:carp_core/carp_core.dart';
 
 part 'study_protocol.dart';
+part 'data_endpoint.dart';
 part 'sampling_schema.dart';
 part 'measures.dart';
 part 'device_descriptor.dart';
@@ -38,6 +39,7 @@ void registerFromJsonFunctions() {
   FromJsonFactory().register(CAMSStudyProtocol());
   FromJsonFactory().register(ProtocolOwner());
   FromJsonFactory().register(DataEndPoint());
+  FromJsonFactory().register(FileDataEndPoint());
   FromJsonFactory().register(StudyProtocolDescription());
   FromJsonFactory().register(ConsentSection());
 

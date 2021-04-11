@@ -8,6 +8,8 @@ class StudyDeploymentModel {
   String get description =>
       deployment?.description ?? 'No description available.';
   Image get image => Image.asset('assets/study.png');
+  String get studyId => deployment?.studyId ?? '';
+  String get studyDeploymentId => deployment?.studyDeploymentId ?? '';
   String get userID => deployment?.userId ?? '';
   // String get samplingStrategy => 'NORMAL';
   String get dataEndpoint => deployment?.dataEndPoint.toString() ?? '';

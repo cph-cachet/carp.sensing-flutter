@@ -101,6 +101,7 @@ class StudyDeploymentController {
 
     // initialize settings
     settings.init();
+
     // create and register the two built-in data managers
     DataManagerRegistry().register(ConsoleDataManager());
     DataManagerRegistry().register(FileDataManager());
@@ -129,6 +130,7 @@ class StudyDeploymentController {
   Future initialize() async {
     assert(executor.validNextState(ProbeState.initialized),
         'The study executor cannot be initialized - it is in state ${executor.state}');
+    info('Initializing $runtimeType');
 
     // initialize settings
     await settings.init();

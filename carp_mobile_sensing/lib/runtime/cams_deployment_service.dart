@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of managers;
+part of runtime;
 
 /// A local (in-memory) implementation of a [DeploymentService] useful in
 /// CAMS studies to be deployed locally on this phone.
@@ -25,9 +25,14 @@ class CAMSDeploymentService implements DeploymentService {
   /// The device description for this phone.
   Smartphone thisPhone = Smartphone();
 
+  /// Create a new [StudyDeployment] based on a [StudyProtocol].
+  /// [studyDeploymentId] specify the study deployment id.
+  /// If not specified, an UUID v1 id is generated.
   Future<StudyDeploymentStatus> createStudyDeployment(
-      StudyProtocol protocol) async {
-    StudyDeployment deployment = StudyDeployment(protocol);
+    StudyProtocol protocol, [
+    String studyDeploymentId,
+  ]) async {
+    StudyDeployment deployment = StudyDeployment(protocol, studyDeploymentId);
     _repository[deployment.studyDeploymentId] = deployment;
 
     // make sure to register this phone as a master device

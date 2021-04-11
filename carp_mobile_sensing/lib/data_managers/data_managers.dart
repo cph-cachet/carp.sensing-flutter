@@ -13,14 +13,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:archive/archive_io.dart';
-import 'package:json_annotation/json_annotation.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
-part 'data_managers.g.dart';
 part 'local/console_data_manager.dart';
 part 'local/file_data_manager.dart';
 part 'local/file_study_manager.dart';
-part 'local/cams_deployment_service.dart';

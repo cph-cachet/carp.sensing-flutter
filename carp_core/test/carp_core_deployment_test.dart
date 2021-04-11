@@ -104,7 +104,7 @@ void main() {
 
     StudyDeploymentStatus status = StudyDeploymentStatus.fromJson(
         json.decode(plainJson) as Map<String, dynamic>);
-    expect(status.studyDeploymentId, '1cbbd021-161b-470d-b421-6f08a9636b58');
+    expect(status.studyDeploymentId, 'd396c31b-dabc-4fc7-b5fd-97031fc1de4c');
     expect(status.status, StudyDeploymentStatusTypes.DeploymentReady);
     print(toJsonString(status));
   });

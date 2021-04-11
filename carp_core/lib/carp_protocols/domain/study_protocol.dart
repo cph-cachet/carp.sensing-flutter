@@ -15,8 +15,15 @@ part of carp_core;
 /// This is part of the [carp.protocols](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-protocols.md) domain model.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class StudyProtocol extends Serializable {
-  Map<Trigger, Set<TriggeredTask>> _triggeredTasksMap = {};
-  Map<String, TaskDescriptor> _taskMap = {};
+  // maps a task's name and the task
+  Map<String, TaskDescriptor> _taskMapProperty;
+  Map<String, TaskDescriptor> get _taskMap {
+    if (_taskMapProperty == null) {
+      _taskMapProperty = {};
+      tasks.forEach((task) => _taskMapProperty[task.name] = task);
+    }
+    return _taskMapProperty;
+  }
 
   /// The owner of this study.
   ProtocolOwner owner;
@@ -74,15 +81,14 @@ class StudyProtocol extends Serializable {
     TaskDescriptor task,
     DeviceDescriptor targetDevice,
   ) {
-    // Add trigger and task to ensure they are included in the protocol.
+    // add trigger and task to ensure they are included in the protocol
     if (!triggers.contains(trigger)) addTrigger(trigger);
     addTask(task);
 
-    // Add triggered task to both the list and the map
-    if (_triggeredTasksMap[trigger] == null) _triggeredTasksMap[trigger] = {};
-    TriggeredTask triggeredTask =
-        TriggeredTask(task: task, targetDevice: targetDevice);
-    _triggeredTasksMap[trigger].add(triggeredTask);
+    // create and add triggered task
+    int triggerId = triggers.indexOf(trigger);
+    TriggeredTask triggeredTask = TriggeredTask(
+        triggerId: triggerId, task: task, targetDevice: targetDevice);
     triggeredTasks.add(triggeredTask);
   }
 
@@ -104,7 +110,17 @@ class StudyProtocol extends Serializable {
   Set<TriggeredTask> getTriggeredTasks(Trigger trigger) {
     assert(triggers.contains(trigger),
         'The passed trigger is not part of this study protocol.');
-    return _triggeredTasksMap[trigger];
+    int triggerId = triggers.indexOf(trigger);
+
+    Set<TriggeredTask> tt = {};
+    // search the list of triggered tasks
+    triggeredTasks.forEach((triggeredTask) {
+      if (triggeredTask.triggerId == triggerId) {
+        tt.add(triggeredTask);
+      }
+    });
+
+    return tt;
   }
 
   /// Add the [task] to this protocol.
@@ -117,18 +133,14 @@ class StudyProtocol extends Serializable {
   /// including removing it from any [Trigger]'s which initiate it.
   void removeTask(TaskDescriptor task) {
     // Remove task from triggered tasks
-    _triggeredTasksMap.values.forEach((tasks) {
-      tasks.forEach((triggeredTask) {
-        if (triggeredTask.task == task) {
-          tasks.remove(task);
-          triggeredTasks.remove(triggeredTask);
-        }
-      });
+    triggeredTasks.forEach((triggeredTask) {
+      if (triggeredTask.taskName == task.name)
+        triggeredTasks.remove(triggeredTask);
     });
 
     // Remove task itself.
     tasks.remove(task);
-    _taskMap.remove(task.name);
+    _taskMap?.remove(task.name);
   }
 
   /// Gets all the tasks triggered for the specified [device].

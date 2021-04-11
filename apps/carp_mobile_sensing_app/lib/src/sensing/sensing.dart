@@ -45,22 +45,22 @@ class Sensing {
     SamplingPackageRegistry().register(ESenseSamplingPackage());
 
     // manager = LocalStudyProtocolManager();
-    manager = CarpStudyProtocolManager();
+    manager = CARPStudyProtocolManager();
   }
 
   /// Initialize and setup sensing.
   Future<void> initialize() async {
-    print('>> #1');
-    // get the protocol from the CARP protocol manager based on the
+    // get the protocol from the study protocol manager based on the
     // study deployment id
     // TODO - obtain deployment id from an invitaiton
     _protocol = await manager.getStudyProtocol(testStudyDeploymentId);
-    print('>> #2');
-    print('protocol: $_protocol');
 
     // deploy this protocol using the on-phone deployment service
-    _status = await CAMSDeploymentService().createStudyDeployment(_protocol);
-    print('>> #3');
+    // reuse the study deployment id, so we have the same id on the phone deployment
+    _status = await CAMSDeploymentService().createStudyDeployment(
+      _protocol,
+      testStudyDeploymentId,
+    );
 
     // initialize the local device controller with the deployment status,
     // which contains the list of needed devices

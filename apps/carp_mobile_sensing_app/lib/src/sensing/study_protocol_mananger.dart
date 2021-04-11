@@ -15,9 +15,8 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
   Future initialize() async {}
 
   /// Create a new CAMS study protocol.
-  Future<StudyProtocol> getStudyProtocol(String studyId) async {
+  Future<StudyProtocol> getStudyProtocol(String ignored) async {
     CAMSStudyProtocol protocol = CAMSStudyProtocol()
-      ..studyId = studyId
       ..name = '#23-Coverage'
       ..dataEndPoint = FileDataEndPoint(
         bufferSize: 50 * 1000,

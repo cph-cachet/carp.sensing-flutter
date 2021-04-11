@@ -1,17 +1,22 @@
 {
-    "$type": "dk.cachet.carp.deployment.domain.StudyDeploymentStatus.DeploymentReady",
-    "studyDeploymentId": "1cbbd021-161b-470d-b421-6f08a9636b58",
-    "devicesStatus": [
-        {
-            "$type": "dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.Deployed",
-            "device": {
-                "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
-                "isMasterDevice": true,
-                "roleName": "phone",
-                "samplingConfiguration": {}
-            },
-            "requiresDeployment": true
-        }
+    "$type":"dk.cachet.carp.deployment.domain.StudyDeploymentStatus.DeploymentReady",
+    "studyDeploymentId":"d396c31b-dabc-4fc7-b5fd-97031fc1de4c",
+    "devicesStatus":[
+       {
+          "$type":"dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.Deployed",
+          "device":{
+             "$type":"dk.cachet.carp.protocols.domain.devices.CustomProtocolDevice",
+             "isMasterDevice":true,
+             "roleName":"Custom device",
+             "supportedDataTypes":[
+                
+             ],
+             "samplingConfiguration":{
+                
+             }
+          },
+          "requiresDeployment":true
+       }
     ],
-    "startTime": 1601037693038
-}
+    "startTime":"2021-04-06T20:28:43.584Z"
+ }

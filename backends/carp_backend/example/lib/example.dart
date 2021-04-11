@@ -37,7 +37,7 @@ void main() async {
   String studyDeploymentId = invitations[0].studyDeploymentId;
 
   // create a study manager, and initialize it
-  CarpStudyProtocolManager manager = CarpStudyProtocolManager();
+  CARPStudyProtocolManager manager = CARPStudyProtocolManager();
   await manager.initialize();
 
   // get the study from CARP

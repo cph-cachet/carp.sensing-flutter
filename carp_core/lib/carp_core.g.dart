@@ -739,6 +739,42 @@ Map<String, dynamic> _$SmartphoneToJson(Smartphone instance) {
   return val;
 }
 
+AltBeacon _$AltBeaconFromJson(Map<String, dynamic> json) {
+  return AltBeacon(
+    roleName: json['roleName'] as String,
+    supportedDataTypes:
+        (json['supportedDataTypes'] as List)?.map((e) => e as String)?.toList(),
+  )
+    ..$type = json[r'$type'] as String
+    ..isMasterDevice = json['isMasterDevice'] as bool
+    ..samplingConfiguration =
+        (json['samplingConfiguration'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(
+          k,
+          e == null
+              ? null
+              : SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
+    );
+}
+
+Map<String, dynamic> _$AltBeaconToJson(AltBeacon instance) {
+  final val = <String, dynamic>{
+    r'$type': instance.$type,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('isMasterDevice', instance.isMasterDevice);
+  writeNotNull('roleName', instance.roleName);
+  writeNotNull('supportedDataTypes', instance.supportedDataTypes);
+  writeNotNull('samplingConfiguration', instance.samplingConfiguration);
+  return val;
+}
+
 Measure _$MeasureFromJson(Map<String, dynamic> json) {
   return Measure(
     type: json['type'] as String,

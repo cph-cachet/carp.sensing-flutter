@@ -120,3 +120,21 @@ class Smartphone extends MasterDeviceDescriptor {
       .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
   Map<String, dynamic> toJson() => _$SmartphoneToJson(this);
 }
+
+/// A beacon meeting the open AltBeacon standard.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class AltBeacon extends DeviceDescriptor {
+  AltBeacon({
+    String roleName,
+    List<String> supportedDataTypes,
+  }) : super(
+          roleName: roleName,
+          isMasterDevice: false,
+          supportedDataTypes: supportedDataTypes,
+        );
+
+  Function get fromJsonFunction => _$AltBeaconFromJson;
+  factory AltBeacon.fromJson(Map<String, dynamic> json) => FromJsonFactory()
+      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  Map<String, dynamic> toJson() => _$AltBeaconToJson(this);
+}

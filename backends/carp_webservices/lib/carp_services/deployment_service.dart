@@ -24,8 +24,13 @@ class CANSDeploymentService implements DeploymentService {
   /// Configure the default instance of the [CarpService].
   void configure(CarpApp app) async => CarpService().configure(app);
 
+  /// Create a new deployment in CANS based on a [StudyProtocol].
+  /// The [studyDeploymentId] is ignored, since CANS generated its own
+  /// study deployment id.
   Future<StudyDeploymentStatus> createStudyDeployment(
-          StudyProtocol protocol) async =>
+    StudyProtocol protocol, [
+    String studyDeploymentId,
+  ]) async =>
       await CarpService().createStudyDeployment(protocol);
 
   Future<Set<String>> removeStudyDeployments(Set<String> studyDeploymentIds) =>

@@ -44,7 +44,7 @@ class ESenseDeviceManager extends DeviceManager {
 
     // listen for connection events
     ESenseManager().connectionEvents.listen((event) {
-      info('$runtimeType :: eSense event : $event');
+      debug('$runtimeType :: eSense event : $event');
 
       switch (event.type) {
         case ConnectionType.connected:
@@ -55,14 +55,14 @@ class ESenseDeviceManager extends DeviceManager {
               .eSenseEvents
               .where((event) => event is BatteryRead)
               .listen((event) {
-            info('$runtimeType :: eSense event : $event');
+            debug('$runtimeType :: eSense event : $event');
             _voltageLevel = (event as BatteryRead).voltage;
           });
 
           // set up a timer that asks for the voltage level
           Timer.periodic(const Duration(minutes: 5), (timer) {
             if (status == DeviceStatus.connected) {
-              info('$runtimeType :: requesting voltage');
+              debug('$runtimeType :: requesting voltage');
               ESenseManager().getBatteryVoltage();
             }
           });
