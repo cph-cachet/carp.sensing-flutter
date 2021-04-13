@@ -37,8 +37,7 @@ class ConnectableDeviceDescriptor extends DeviceDescriptor {
 
   Function get fromJsonFunction => _$ConnectableDeviceDescriptorFromJson;
   factory ConnectableDeviceDescriptor.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$ConnectableDeviceDescriptorToJson(this);
 
   String toString() =>

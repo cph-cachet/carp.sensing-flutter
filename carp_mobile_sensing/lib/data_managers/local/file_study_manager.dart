@@ -35,8 +35,8 @@ class FileStudyProtocolManager implements StudyProtocolManager {
 
     try {
       String jsonString = File(filename(studyId)).readAsStringSync();
-      study = StudyProtocol.fromJson(
-          json.decode(jsonString) as Map<String, dynamic>);
+      study = StudyProtocol
+          .fromJson(json.decode(jsonString) as Map<String, dynamic>);
     } catch (exception) {
       warning("Failed to load study '$studyId' - $exception");
     }

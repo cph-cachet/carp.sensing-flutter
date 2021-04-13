@@ -28,8 +28,8 @@ class CAMSTrigger extends Trigger {
   CAMSTrigger({this.triggerId}) : super();
 
   Function get fromJsonFunction => _$CAMSTriggerFromJson;
-  factory CAMSTrigger.fromJson(Map<String, dynamic> json) => FromJsonFactory()
-      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory CAMSTrigger.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$CAMSTriggerToJson(this);
 }
 
@@ -40,8 +40,7 @@ class ImmediateTrigger extends CAMSTrigger {
 
   Function get fromJsonFunction => _$ImmediateTriggerFromJson;
   factory ImmediateTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$ImmediateTriggerToJson(this);
 }
 
@@ -71,8 +70,7 @@ class PassiveTrigger extends CAMSTrigger {
 
   Function get fromJsonFunction => _$PassiveTriggerFromJson;
   factory PassiveTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$PassiveTriggerToJson(this);
 }
 
@@ -90,8 +88,7 @@ class DelayedTrigger extends CAMSTrigger {
 
   Function get fromJsonFunction => _$DelayedTriggerFromJson;
   factory DelayedTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$DelayedTriggerToJson(this);
 }
 
@@ -118,8 +115,7 @@ class PeriodicTrigger extends CAMSTrigger {
 
   Function get fromJsonFunction => _$PeriodicTriggerFromJson;
   factory PeriodicTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$PeriodicTriggerToJson(this);
 }
 
@@ -143,8 +139,7 @@ class DateTimeTrigger extends CAMSTrigger {
 
   Function get fromJsonFunction => _$DateTimeTriggerFromJson;
   factory DateTimeTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$DateTimeTriggerToJson(this);
 }
 
@@ -175,8 +170,8 @@ class Time extends Serializable {
   }
 
   Function get fromJsonFunction => _$TimeFromJson;
-  factory Time.fromJson(Map<String, dynamic> json) => FromJsonFactory()
-      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory Time.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$TimeToJson(this);
 
   static String _twoDigits(int n) => (n >= 10) ? '$n' : '0$n';
@@ -415,8 +410,7 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
 
   Function get fromJsonFunction => _$RecurrentScheduledTriggerFromJson;
   factory RecurrentScheduledTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$RecurrentScheduledTriggerToJson(this);
 
   String toString() =>
@@ -507,8 +501,7 @@ class CronScheduledTrigger extends CAMSTrigger {
 
   Function get fromJsonFunction => _$CronScheduledTriggerFromJson;
   factory CronScheduledTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$CronScheduledTriggerToJson(this);
 
   String toString() =>
@@ -564,8 +557,7 @@ class SamplingEventTrigger extends CAMSTrigger {
 
   Function get fromJsonFunction => _$SamplingEventTriggerFromJson;
   factory SamplingEventTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$SamplingEventTriggerToJson(this);
 }
 
@@ -584,8 +576,7 @@ class ConditionalEvent extends Serializable {
 
   Function get fromJsonFunction => _$ConditionalEventFromJson;
   factory ConditionalEvent.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$ConditionalEventToJson(this);
 }
 
@@ -636,8 +627,7 @@ class ConditionalSamplingEventTrigger extends CAMSTrigger {
 
   Function get fromJsonFunction => _$ConditionalSamplingEventTriggerFromJson;
   factory ConditionalSamplingEventTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() =>
       _$ConditionalSamplingEventTriggerToJson(this);
 }

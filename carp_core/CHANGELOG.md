@@ -1,6 +1,6 @@
-## 0.20.2
+## 0.20.3
 * improvements to the ` FromJsonFactory().fromJson()` method.
-* added a example of how to support json serialization of polymorphic classes using `Serialization`.
+* added a example of how to support json serialization of polymorphic classes using the `Serialization` class.
 
 ## 0.20.2
 * `DataPoint` updated to support both up- and download to the CARP server
