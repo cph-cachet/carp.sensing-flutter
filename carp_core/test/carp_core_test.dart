@@ -2,6 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:test/test.dart';
 import 'package:carp_core/carp_core.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'carp_core_test.g.dart';
 
 void main() {
   StudyProtocol protocol;
@@ -65,4 +68,39 @@ void main() {
     print(toJsonString(dataPoint));
     assert(dataPoint.carpBody != null);
   });
+  test('A & B -> JSON', () async {
+    A a = A();
+    B b = B();
+    a.index = 1;
+    b..str = 'abc';
+
+    print(toJsonString(a));
+    print(toJsonString(b));
+  });
+}
+
+/// An example class.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class A extends Serializable {
+  int index;
+
+  A() : super();
+
+  Function get fromJsonFunction => _$AFromJson;
+  factory A.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json);
+  Map<String, dynamic> toJson() => _$AToJson(this);
+}
+
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class B extends A {
+  String str;
+
+  B() : super();
+
+  Function get fromJsonFunction => _$BFromJson;
+  factory B.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json);
+  Map<String, dynamic> toJson() => _$BToJson(this);
+  String get jsonType => 'dk.cachet.$runtimeType';
 }
