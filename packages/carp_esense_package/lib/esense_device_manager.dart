@@ -20,16 +20,15 @@ class ESenseDevice extends DeviceDescriptor {
   ESenseDevice({
     String roleName = DEFAULT_ROLENAME,
     List<String> supportedDataTypes,
-  })
-      : super(
+  }) : super(
           roleName: roleName,
           isMasterDevice: false,
           supportedDataTypes: supportedDataTypes,
         );
 
   Function get fromJsonFunction => _$ESenseDeviceFromJson;
-  factory ESenseDevice.fromJson(Map<String, dynamic> json) => FromJsonFactory()
-      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory ESenseDevice.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$ESenseDeviceToJson(this);
 }
 

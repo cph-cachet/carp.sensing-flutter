@@ -47,8 +47,7 @@ class LocationMeasure extends PeriodicMeasure {
     this.distance = 0,
     this.notificationTitle,
     this.notificationMsg,
-  })
-      : super(
+  }) : super(
             type: type,
             measureDescription: measureDescription,
             enabled: enabled,
@@ -57,8 +56,7 @@ class LocationMeasure extends PeriodicMeasure {
 
   Function get fromJsonFunction => _$LocationMeasureFromJson;
   factory LocationMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$LocationMeasureToJson(this);
 
   String toString() => super.toString() + ', accuracy: $accuracy';

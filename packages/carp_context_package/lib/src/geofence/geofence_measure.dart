@@ -57,8 +57,8 @@ class GeoPosition extends Serializable {
   }
 
   Function get fromJsonFunction => _$GeoPositionFromJson;
-  factory GeoPosition.fromJson(Map<String, dynamic> json) => FromJsonFactory()
-      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory GeoPosition.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$GeoPositionToJson(this);
 
   String toString() => 'GeoPosition (latitude:$latitude, longitude:$longitude)';
@@ -98,15 +98,13 @@ class GeofenceMeasure extends CAMSMeasure {
     this.center,
     this.radius,
     this.name,
-  })
-      : super(
+  }) : super(
             type: type,
             measureDescription: measureDescription,
             enabled: enabled);
 
   Function get fromJsonFunction => _$GeofenceMeasureFromJson;
   factory GeofenceMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$GeofenceMeasureToJson(this);
 }

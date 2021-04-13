@@ -33,16 +33,15 @@ class RPTaskMeasure extends CAMSMeasure {
     Map<String, MeasureDescription> measureDescription,
     bool enabled,
     this.surveyTask,
-  })
-      : super(
+  }) : super(
           type: type,
           measureDescription: measureDescription,
           enabled: enabled,
         );
 
   Function get fromJsonFunction => _$RPTaskMeasureFromJson;
-  factory RPTaskMeasure.fromJson(Map<String, dynamic> json) => FromJsonFactory()
-      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory RPTaskMeasure.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$RPTaskMeasureToJson(this);
 }
 

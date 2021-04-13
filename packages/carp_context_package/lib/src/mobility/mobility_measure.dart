@@ -23,8 +23,7 @@ class MobilityMeasure extends CAMSMeasure {
     this.stopRadius,
     this.placeRadius,
     this.stopDuration,
-  })
-      : super(
+  }) : super(
             type: type,
             measureDescription: measureDescription,
             enabled: enabled);
@@ -32,15 +31,14 @@ class MobilityMeasure extends CAMSMeasure {
   Function get fromJsonFunction => _$MobilityMeasureFromJson;
 
   factory MobilityMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory().fromJson(json);
 
   Map<String, dynamic> toJson() => _$MobilityMeasureToJson(this);
 
   String toString() =>
       super.toString() +
       ',usePriorContext: $usePriorContexts,'
-      'stopRadius: $stopRadius,'
-      'placeRadius: $placeRadius,'
-      'stopDuration: $stopDuration';
+          'stopRadius: $stopRadius,'
+          'placeRadius: $placeRadius,'
+          'stopDuration: $stopDuration';
 }
