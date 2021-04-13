@@ -69,7 +69,7 @@ part of carp_core;
 ///
 /// Polymorphic serialization is handled by setting the `$type` property in the
 /// [Serializable] class. Per default, an object's `runtimeType` is used as the
-/// `§type` for an object. Hence, the json of object of type `A` and `B` would
+/// `$type` for an object. Hence, the json of object of type `A` and `B` would
 /// look like this:
 ///
 /// ```json
@@ -85,7 +85,7 @@ part of carp_core;
 ///
 /// However, if you want to specify your own object/class type (e.g., if you get
 /// json serialized from another language which uses a package structure like
-/// Java, C# or Kotlin), you can specify the json type in the `jsonType` property
+/// Java, C# or Kotlin), you can specify the json type in the [jsonType] property
 /// of the class.
 ///
 /// For example, if the class `B` above should use a different `$type` annotation,
@@ -222,16 +222,11 @@ class FromJsonFactory {
   ///
   /// A type needs to be registered **before** a class can be deserialized from
   /// JSON to a Flutter class.
-  void register(Serializable serializable, {String type}) {
-    type ??= serializable.jsonType;
-    _registry['$type'] = serializable.fromJsonFunction;
-    print('$type -> ${serializable.runtimeType}');
-  }
+  void register(Serializable serializable, {String type}) =>
+      _registry['${type ?? serializable.jsonType}'] =
+          serializable.fromJsonFunction;
 
   /// Deserialize [json] based on its type.
-  Serializable fromJson(Map<String, dynamic> json) {
-    print('applying type: ${Serializable.CLASS_IDENTIFIER}');
-    return Function.apply(
-        _registry[json[Serializable.CLASS_IDENTIFIER]], [json]);
-  }
+  Serializable fromJson(Map<String, dynamic> json) =>
+      Function.apply(_registry[json[Serializable.CLASS_IDENTIFIER]], [json]);
 }
