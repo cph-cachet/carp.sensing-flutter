@@ -29,8 +29,8 @@ class Trigger extends Serializable {
   Trigger() : super();
 
   Function get fromJsonFunction => _$TriggerFromJson;
-  factory Trigger.fromJson(Map<String, dynamic> json) => FromJsonFactory()
-      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory Trigger.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$TriggerToJson(this);
   String get jsonType => '$_triggerNamespace.$runtimeType';
 }
@@ -49,8 +49,7 @@ class ElapsedTimeTrigger extends Trigger {
 
   Function get fromJsonFunction => _$ElapsedTimeTriggerFromJson;
   factory ElapsedTimeTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$ElapsedTimeTriggerToJson(this);
 }
 
@@ -68,8 +67,8 @@ class ManualTrigger extends Trigger {
   ManualTrigger({this.label, this.description}) : super();
 
   Function get fromJsonFunction => _$ManualTriggerFromJson;
-  factory ManualTrigger.fromJson(Map<String, dynamic> json) => FromJsonFactory()
-      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory ManualTrigger.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$ManualTriggerToJson(this);
 }
 
@@ -90,8 +89,7 @@ class ScheduledTrigger extends Trigger {
 
   Function get fromJsonFunction => _$ScheduledTriggerFromJson;
   factory ScheduledTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$ScheduledTriggerToJson(this);
 }
 

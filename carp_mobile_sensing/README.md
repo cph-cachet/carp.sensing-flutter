@@ -4,6 +4,7 @@
 [![style: effective dart](https://img.shields.io/badge/style-pedandic_dart-40c4ff.svg)](https://pub.dev/packages/pedandic_dart)
 [![github stars](https://img.shields.io/github/stars/cph-cachet/carp.sensing-flutter.svg?style=flat&logo=github&colorB=deeppink&label=stars)](https://github.com/cph-cachet/carp.sensing-flutter)
 [![MIT License](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
+[![arXiv](https://img.shields.io/badge/arXiv-2006.11904-green.svg)](https://arxiv.org/abs/2006.11904)
 
 This library contains the core Flutter package for the CARP Mobile Sensing (CAMS) framework.
 Supports cross-platform (iOS and Android) mobile sensing.
@@ -12,7 +13,15 @@ For an overview of all CAMS packages, see [CARP Mobile Sensing in Flutter](https
 For documentation on how to use CAMS, see the [CAMS wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki).
 
 ## Usage
-To use this plugin, add `carp_mobile_sensing` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/).
+To use this plugin, add [`carp_core`](https://pub.dev/packages/carp_core) and [`carp_mobile_sensing`](https://pub.dev/packages/carp_mobile_sensing) as [dependencies in your `pubspec.yaml` file](https://flutter.io/platform-plugins/).
+
+`````yaml
+dependencies:
+  flutter:
+    sdk: flutter
+  carp_core: ^0.20.0
+  carp_mobile_sensing: ^0.20.0
+`````
 
 ### Android Integration
 

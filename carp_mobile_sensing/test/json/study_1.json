@@ -235,7 +235,7 @@
      ]
     },
     "owner": {
-     "$type": "ProtocolOwner",
+     "$type": "dk.cachet.carp.protocols.domain.ProtocolOwner",
      "id": "AB",
      "name": "Alex Boyon",
      "email": "alex@uni.dk"

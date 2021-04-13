@@ -82,8 +82,7 @@ class CAMSStudyProtocol extends StudyProtocol {
 
   Function get fromJsonFunction => _$CAMSStudyProtocolFromJson;
   factory CAMSStudyProtocol.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$CAMSStudyProtocolToJson(this);
 
   String toString() => '$runtimeType - $name [$ownerId]';
@@ -105,8 +104,7 @@ class StudyProtocolDescription extends Serializable {
 
   Function get fromJsonFunction => _$StudyProtocolDescriptionFromJson;
   factory StudyProtocolDescription.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$StudyProtocolDescriptionToJson(this);
 
   String toString() =>
@@ -136,8 +134,7 @@ class ConsentSection extends Serializable {
 
   Function get fromJsonFunction => _$ConsentSectionFromJson;
   factory ConsentSection.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$ConsentSectionToJson(this);
 
   String toString() => '$runtimeType - title: $title, summary: $summary';

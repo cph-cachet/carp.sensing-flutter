@@ -1,7 +1,7 @@
 {
     "$type": "dk.cachet.carp.protocols.domain.StudyProtocol",
     "owner": {
-     "$type": "ProtocolOwner",
+     "$type": "dk.cachet.carp.protocols.domain.ProtocolOwner",
      "id": "xyz@dtu.dk"
     },
     "name": "Track patient movement",

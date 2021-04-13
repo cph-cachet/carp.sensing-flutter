@@ -249,8 +249,7 @@ class StudyDeploymentStatus extends Serializable {
   Function get fromJsonFunction => _$StudyDeploymentStatusFromJson;
 
   factory StudyDeploymentStatus.fromJson(Map<String, dynamic> json) {
-    StudyDeploymentStatus status = FromJsonFactory()
-        .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+    StudyDeploymentStatus status = FromJsonFactory().fromJson(json);
     // when this object was create from json deserialization,
     // the last part of the $type reflects the status
     switch (status.$type.split('.').last) {

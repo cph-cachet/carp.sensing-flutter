@@ -21,16 +21,14 @@ class WeatherMeasure extends CAMSMeasure {
     Map<String, MeasureDescription> measureDescription,
     enabled,
     this.apiKey,
-  })
-      : super(
+  }) : super(
             type: type,
             measureDescription: measureDescription,
             enabled: enabled);
 
   Function get fromJsonFunction => _$WeatherMeasureFromJson;
   factory WeatherMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$WeatherMeasureToJson(this);
 
   String toString() => super.toString() + ', API key: $apiKey';

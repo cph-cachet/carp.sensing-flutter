@@ -20,8 +20,8 @@ class DataEndPoint extends Serializable {
   DataEndPoint({this.type, this.publicKey}) : super();
 
   Function get fromJsonFunction => _$DataEndPointFromJson;
-  factory DataEndPoint.fromJson(Map<String, dynamic> json) => FromJsonFactory()
-      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory DataEndPoint.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$DataEndPointToJson(this);
 
   String toString() => type;
@@ -89,8 +89,7 @@ class FileDataEndPoint extends DataEndPoint {
 
   /// Create a [FileDataEndPoint] from a JSON map.
   factory FileDataEndPoint.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory().fromJson(json);
 
   /// Serialize this [FileDataEndPoint] as a JSON map.
   Map<String, dynamic> toJson() => _$FileDataEndPointToJson(this);

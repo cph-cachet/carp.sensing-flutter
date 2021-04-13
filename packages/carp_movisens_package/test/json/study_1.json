@@ -210,7 +210,7 @@
   ],
   "consent": {},
   "owner": {
-   "$type": "ProtocolOwner",
+   "$type": "dk.cachet.carp.protocols.domain.ProtocolOwner",
    "id": "jakba",
    "name": "Jakob E. Bardram",
    "email": "jakba@dtu.dk"

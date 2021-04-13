@@ -40,8 +40,7 @@ class EmailAccountIdentity extends AccountIdentity {
 
   Function get fromJsonFunction => _$EmailAccountIdentityFromJson;
   factory EmailAccountIdentity.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$EmailAccountIdentityToJson(this);
 
   String toString() => '$runtimeType - emailAddress: $emailAddress';

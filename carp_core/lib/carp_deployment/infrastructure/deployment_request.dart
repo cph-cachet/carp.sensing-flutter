@@ -27,8 +27,7 @@ class DeploymentServiceRequest extends Serializable {
 
   Function get fromJsonFunction => _$DeploymentServiceRequestFromJson;
   factory DeploymentServiceRequest.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$DeploymentServiceRequestToJson(this);
   String get jsonType =>
       '$_infrastructurePackageNamespace.DeploymentServiceRequest.$runtimeType';
@@ -45,8 +44,7 @@ class CreateStudyDeployment extends DeploymentServiceRequest {
 
   Function get fromJsonFunction => _$CreateStudyDeploymentFromJson;
   factory CreateStudyDeployment.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$CreateStudyDeploymentToJson(this);
 
   String toString() => '$runtimeType - protocol: ${protocol.name}}';
@@ -59,8 +57,7 @@ class GetStudyDeploymentStatus extends DeploymentServiceRequest {
 
   Function get fromJsonFunction => _$GetStudyDeploymentStatusFromJson;
   factory GetStudyDeploymentStatus.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$GetStudyDeploymentStatusToJson(this);
 }
 
@@ -79,8 +76,7 @@ class RegisterDevice extends DeploymentServiceRequest {
 
   Function get fromJsonFunction => _$RegisterDeviceFromJson;
   factory RegisterDevice.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$RegisterDeviceToJson(this);
 
   String toString() => '${super.toString()}, deviceRoleName: $deviceRoleName';
@@ -97,8 +93,7 @@ class UnregisterDevice extends DeploymentServiceRequest {
 
   Function get fromJsonFunction => _$UnregisterDeviceFromJson;
   factory UnregisterDevice.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$UnregisterDeviceToJson(this);
 
   String toString() => '${super.toString()}, deviceRoleName: $deviceRoleName';
@@ -115,8 +110,7 @@ class GetDeviceDeploymentFor extends DeploymentServiceRequest {
 
   Function get fromJsonFunction => _$GetDeviceDeploymentForFromJson;
   factory GetDeviceDeploymentFor.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$GetDeviceDeploymentForToJson(this);
 
   String toString() =>
@@ -130,8 +124,7 @@ class DeploymentSuccessful extends GetDeviceDeploymentFor {
     String studyDeploymentId,
     String masterDeviceRoleName,
     this.deviceDeploymentLastUpdateDate,
-  )
-      : super(studyDeploymentId, masterDeviceRoleName) {
+  ) : super(studyDeploymentId, masterDeviceRoleName) {
     this.deviceDeploymentLastUpdateDate.toUtc();
   }
 
@@ -140,8 +133,7 @@ class DeploymentSuccessful extends GetDeviceDeploymentFor {
 
   Function get fromJsonFunction => _$DeploymentSuccessfulFromJson;
   factory DeploymentSuccessful.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$DeploymentSuccessfulToJson(this);
 
   String toString() =>

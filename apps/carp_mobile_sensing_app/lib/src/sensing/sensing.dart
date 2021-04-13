@@ -44,11 +44,11 @@ class Sensing {
     //SamplingPackageRegistry().register(AppsSamplingPackage());
     SamplingPackageRegistry().register(ESenseSamplingPackage());
 
-    manager = LocalStudyProtocolManager();
+    // manager = LocalStudyProtocolManager();
 
     // used for downloading the study protocol from the CARP server
     // TODO - obtain deployment id from an invitaiton
-    // manager = CARPStudyProtocolManager();
+    manager = CARPStudyProtocolManager();
   }
 
   /// Initialize and setup sensing.

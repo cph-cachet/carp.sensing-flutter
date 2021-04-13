@@ -49,7 +49,7 @@ class AppTask extends TaskDescriptor {
   bool notification = false;
 
   Function get fromJsonFunction => _$AppTaskFromJson;
-  factory AppTask.fromJson(Map<String, dynamic> json) => FromJsonFactory()
-      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory AppTask.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$AppTaskToJson(this);
 }

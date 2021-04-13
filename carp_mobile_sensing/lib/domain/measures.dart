@@ -98,8 +98,8 @@ class CAMSMeasure extends Measure {
       _listeners.forEach((listener) => listener.hasChanged(this));
 
   Function get fromJsonFunction => _$CAMSMeasureFromJson;
-  factory CAMSMeasure.fromJson(Map<String, dynamic> json) => FromJsonFactory()
-      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory CAMSMeasure.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$CAMSMeasureToJson(this);
 
   String toString() => '$runtimeType - type: $type, enabled: $enabled';
@@ -117,8 +117,7 @@ class MeasureDescription extends Serializable {
 
   Function get fromJsonFunction => _$MeasureDescriptionFromJson;
   factory MeasureDescription.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$MeasureDescriptionToJson(this);
 
   String toString() => '$runtimeType - name: $name, description: $description';
@@ -157,8 +156,7 @@ class PeriodicMeasure extends CAMSMeasure {
 
   Function get fromJsonFunction => _$PeriodicMeasureFromJson;
   factory PeriodicMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$PeriodicMeasureToJson(this);
 
   void adapt(Measure measure) {
@@ -220,8 +218,8 @@ class MarkedMeasure extends CAMSMeasure {
 
   Function get fromJsonFunction => _$MarkedMeasureFromJson;
   Map<String, dynamic> toJson() => _$MarkedMeasureToJson(this);
-  factory MarkedMeasure.fromJson(Map<String, dynamic> json) => FromJsonFactory()
-      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory MarkedMeasure.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json);
 
   String toString() =>
       '${super.toString()}, mark: $lastTime, history: $history';

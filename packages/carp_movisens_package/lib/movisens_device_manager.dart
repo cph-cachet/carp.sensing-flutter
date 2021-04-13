@@ -20,8 +20,7 @@ class MovisensDevice extends DeviceDescriptor {
   MovisensDevice({
     String roleName = DEFAULT_ROLENAME,
     List<String> supportedDataTypes,
-  })
-      : super(
+  }) : super(
           roleName: roleName,
           isMasterDevice: false,
           supportedDataTypes: supportedDataTypes,
@@ -29,8 +28,7 @@ class MovisensDevice extends DeviceDescriptor {
 
   Function get fromJsonFunction => _$MovisensDeviceFromJson;
   factory MovisensDevice.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$MovisensDeviceToJson(this);
 }
 

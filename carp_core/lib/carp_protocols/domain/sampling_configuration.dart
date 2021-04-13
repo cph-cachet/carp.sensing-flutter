@@ -12,8 +12,7 @@ class SamplingConfiguration extends Serializable {
   SamplingConfiguration() : super();
   Function get fromJsonFunction => _$SamplingConfigurationFromJson;
   factory SamplingConfiguration.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$SamplingConfigurationToJson(this);
   String get jsonType =>
       'dk.cachet.carp.protocols.domain.sampling.SamplingConfiguration';

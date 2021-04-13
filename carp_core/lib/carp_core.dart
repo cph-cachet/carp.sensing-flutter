@@ -1,7 +1,9 @@
-/// The core CARP domain classes like [StudyProtocol], [TaskDescriptor], and [Measure].
-/// Also hold JSON serialization logic to serialize [Datum] objects
-/// into a [DataPoint] as well as deseralization of [StudyProtocol] objects
-/// obtained from a [StudyManager].
+/// The core CARP domain classes like [StudyProtocol], [TaskDescriptor], [Measure],
+/// and [DataPoint].
+///
+/// Also hold serialization logic to (de)serialize Dart classes to/from
+/// JSON including support for polymorphic.
+/// See the [Serializable] class, which contains the logic for polymorphic serialization.
 library carp_core;
 
 import 'package:flutter/foundation.dart';

@@ -101,8 +101,7 @@ class CarpDataEndPoint extends FileDataEndPoint {
   Function get fromJsonFunction => _$CarpDataEndPointFromJson;
 
   factory CarpDataEndPoint.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$CarpDataEndPointToJson(this);
 
   String toString() => 'CARP - $name [$uri]';
