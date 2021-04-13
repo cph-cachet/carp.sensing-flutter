@@ -15,6 +15,8 @@ part of carp_core;
 /// This is part of the [carp.protocols](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-protocols.md) domain model.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class StudyProtocol extends Serializable {
+  static const String PROTOCOL_NAMESPACE = 'dk.cachet.carp.protocols.domain';
+
   // maps a task's name and the task
   Map<String, TaskDescriptor> _taskMapProperty;
   Map<String, TaskDescriptor> get _taskMap {
@@ -174,10 +176,10 @@ class StudyProtocol extends Serializable {
   }
 
   Function get fromJsonFunction => _$StudyProtocolFromJson;
-  factory StudyProtocol.fromJson(Map<String, dynamic> json) => FromJsonFactory()
-      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory StudyProtocol.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$StudyProtocolToJson(this);
-  String get jsonType => 'dk.cachet.carp.protocols.domain.$runtimeType';
+  String get jsonType => '$PROTOCOL_NAMESPACE.$runtimeType';
 
   String toString() => '$runtimeType - $name';
 }

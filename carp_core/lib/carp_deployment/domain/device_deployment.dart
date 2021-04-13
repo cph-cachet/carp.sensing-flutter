@@ -96,8 +96,7 @@ class DeviceRegistration extends Serializable {
 
   Function get fromJsonFunction => _$DeviceRegistrationFromJson;
   factory DeviceRegistration.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$DeviceRegistrationToJson(this);
   String get jsonType =>
       'dk.cachet.carp.protocols.domain.devices.DefaultDeviceRegistration';
@@ -162,8 +161,7 @@ class DeviceDeploymentStatus extends Serializable {
 
   Function get fromJsonFunction => _$DeviceDeploymentStatusFromJson;
   factory DeviceDeploymentStatus.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$DeviceDeploymentStatusToJson(this);
   String get jsonType => 'dk.cachet.carp.deployment.domain.$runtimeType';
 

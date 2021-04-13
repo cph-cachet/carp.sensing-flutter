@@ -28,9 +28,10 @@ class ProtocolOwner extends Serializable {
   });
 
   Function get fromJsonFunction => _$ProtocolOwnerFromJson;
-  factory ProtocolOwner.fromJson(Map<String, dynamic> json) => FromJsonFactory()
-      .fromJson(json[Serializable.CLASS_IDENTIFIER].toString(), json);
+  factory ProtocolOwner.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$ProtocolOwnerToJson(this);
+  String get jsonType => '${StudyProtocol.PROTOCOL_NAMESPACE}.$runtimeType';
 
   String toString() => '$runtimeType - $name, $title <$email>';
 }

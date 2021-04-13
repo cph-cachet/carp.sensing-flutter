@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2020 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2018-2021 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -151,12 +151,15 @@ class FromJsonFactory {
   /// A type needs to be registered **before** a class can be deserialized from
   /// JSON to a Flutter class.
   void register(Serializable serializable, {String type}) {
-    assert(serializable is Serializable);
     type ??= serializable.jsonType;
     _registry['$type'] = serializable.fromJsonFunction;
+    print('$type -> ${serializable.runtimeType}');
   }
 
-  /// Deserialize [json] of the specified class [type].
-  Serializable fromJson(String type, Map<String, dynamic> json) =>
-      Function.apply(_registry[type], [json]);
+  /// Deserialize [json] based on its type.
+  Serializable fromJson(Map<String, dynamic> json) {
+    print('applying type: ${Serializable.CLASS_IDENTIFIER}');
+    return Function.apply(
+        _registry[json[Serializable.CLASS_IDENTIFIER]], [json]);
+  }
 }
