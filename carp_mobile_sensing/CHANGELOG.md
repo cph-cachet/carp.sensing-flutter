@@ -1,4 +1,4 @@
-## 0.20.3
+## 0.20.4
 * removed localization support again - this has to be handled on an application level, not as part of sensing.
 * removed the `ConsentSection` also - again, this is separate to sensing.
 
