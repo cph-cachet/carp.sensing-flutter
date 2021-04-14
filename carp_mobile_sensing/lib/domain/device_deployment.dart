@@ -42,20 +42,7 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
 
   /// The textual [StudyProtocolDescription] containing the title, description
   /// and purpose of this study protocol organized according to language locales.
-  Map<String, StudyProtocolDescription> protocolDescription = {};
-
-  /// The informed consent to be show to the user as a list of [ConsentSection]
-  /// sections. Mapped according to the language locale.
-  Map<String, List<ConsentSection>> consent = {};
-
-  /// The default English description.
-  String get description => protocolDescription['en']?.description;
-
-  /// The default English title.
-  String get title => protocolDescription['en']?.title;
-
-  /// The default English purpose.
-  String get purpose => protocolDescription['en']?.purpose;
+  StudyProtocolDescription protocolDescription;
 
   /// The owner of this study.
   ProtocolOwner get owner => _owner;
@@ -74,7 +61,6 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
     String studyDeploymentId,
     this.name,
     this.protocolDescription,
-    this.consent,
     ProtocolOwner owner,
     String dataFormat,
     DataEndPoint dataEndPoint,
@@ -85,8 +71,7 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
     List<TaskDescriptor> tasks,
     Map<String, Trigger> triggers,
     List<TriggeredTask> triggeredTasks,
-  })
-      : super(
+  }) : super(
           deviceDescriptor: deviceDescriptor,
           configuration: configuration,
           connectedDevices: connectedDevices,
@@ -107,13 +92,11 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
     String studyDeploymentId,
     this.name,
     this.protocolDescription,
-    this.consent,
     ProtocolOwner owner,
     String dataFormat,
     DataEndPoint dataEndPoint,
     MasterDeviceDeployment masterDeviceDeployment,
-  })
-      : super(
+  }) : super(
           deviceDescriptor: masterDeviceDeployment.deviceDescriptor,
           configuration: masterDeviceDeployment.configuration,
           connectedDevices: masterDeviceDeployment.connectedDevices,

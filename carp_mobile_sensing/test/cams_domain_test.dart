@@ -20,23 +20,10 @@ void main() {
         name: 'Alex Boyon',
         email: 'alex@uni.dk',
       )
-      ..protocolDescription = {
-        'en': StudyProtocolDescription(
-            title: 'Test Study',
-            purpose: 'For testing purposes',
-            description: 'Testing'),
-        'dk': StudyProtocolDescription(
-            title: 'Test studie',
-            purpose: 'Test af protokol',
-            description: 'Tester'),
-      }
-      ..consent = {
-        'en': [
-          ConsentSection(type: 11, title: 'A'),
-          ConsentSection(type: 1, title: 'B'),
-          ConsentSection(type: 13, title: 'C'),
-        ]
-      }
+      ..protocolDescription = StudyProtocolDescription(
+          title: 'Test Study',
+          purpose: 'For testing purposes',
+          description: 'Testing')
       ..dataEndPoint = FileDataEndPoint(bufferSize: 500);
 
     // Define which devices are used for data collection.
@@ -103,8 +90,8 @@ void main() {
     // Read the study protocol from json file
     String plainJson = File('test/json/study_1.json').readAsStringSync();
 
-    CAMSStudyProtocol protocol = CAMSStudyProtocol
-        .fromJson(json.decode(plainJson) as Map<String, dynamic>);
+    CAMSStudyProtocol protocol = CAMSStudyProtocol.fromJson(
+        json.decode(plainJson) as Map<String, dynamic>);
 
     expect(protocol.ownerId, 'AB');
     expect(protocol.masterDevices.first.roleName,
@@ -298,7 +285,6 @@ void main() {
     print(deployment);
     print(toJsonString(deployment));
     expect(deployment.studyDeploymentId, status_1.studyDeploymentId);
-    expect(deployment.consent['en'].first.type, 11);
     expect(deployment.tasks.length, protocol.tasks.length);
     expect(deployment.triggeredTasks.length, protocol.triggeredTasks.length);
 

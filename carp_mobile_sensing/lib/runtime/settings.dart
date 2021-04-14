@@ -76,16 +76,16 @@ class Settings {
   String get _studyStartTimestampKey =>
       '$appName.$STUDY_START_KEY'.toLowerCase();
 
-  /// The timestamp when the current study was started on this phone.
+  /// The timestamp (in UTC) when the current study was started on this phone.
   /// This timestamp is save on the phone the first time a study is started.
   Future<DateTime> get studyStartTimestamp async {
     if (_studyStartTimestamp == null) {
       String str = (preferences).get(_studyStartTimestampKey);
       _studyStartTimestamp = (str != null) ? DateTime.parse(str) : null;
       if (_studyStartTimestamp == null) {
-        _studyStartTimestamp = DateTime.now();
+        _studyStartTimestamp = DateTime.now().toUtc();
         await preferences.setString(
-            _studyStartTimestampKey, _studyStartTimestamp.toUtc().toString());
+            _studyStartTimestampKey, _studyStartTimestamp.toString());
       }
     }
     return _studyStartTimestamp;

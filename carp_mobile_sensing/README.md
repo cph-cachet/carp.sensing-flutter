@@ -280,7 +280,7 @@ The execution of sensing can be controlled on runtime. For example:
 
 Please read about existing issues and file new feature requests and bug reports at the [issue tracker][tracker].
 
-[tracker]: https://github.com/cph-cachet/carp.sensing/issues
+[tracker]: https://github.com/cph-cachet/carp.sensing-flutter/issues
 
 ## License
 

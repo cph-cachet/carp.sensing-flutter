@@ -39,41 +39,24 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
     ..addMeasures([
       CAMSMeasure(
         type: DEVICE,
-        measureDescription: {
-          'en': MeasureDescription(
-            name: 'Basic Device Info',
-            description: 'Collects basic information about the phone.',
-          )
-        },
+        name: 'Basic Device Info',
+        description: 'Collects basic information about the phone.',
       ),
       PeriodicMeasure(
           type: MEMORY,
-          measureDescription: {
-            'en': MeasureDescription(
-              name: 'Memory Usage',
-              description: 'Collects information about use of memory.',
-            )
-          },
+          name: 'Memory Usage',
+          description: 'Collects information about use of memory.',
           frequency: const Duration(minutes: 1)),
       CAMSMeasure(
         type: BATTERY,
-        measureDescription: {
-          'en': MeasureDescription(
-            name: 'Battery',
-            description:
-                'Collects information about the battery charging level.',
-          )
-        },
+        name: 'Battery',
+        description: 'Collects information about the battery charging level.',
       ),
       CAMSMeasure(
         type: SCREEN,
-        measureDescription: {
-          'en': MeasureDescription(
-            name: 'Screen Activity (lock/on/off)',
-            description:
-                "Collects information about lock/unlock event of the phone's screen.",
-          )
-        },
+        name: 'Screen Activity (lock/on/off)',
+        description:
+            "Collects information about lock/unlock event of the phone's screen.",
       ),
     ]);
 
