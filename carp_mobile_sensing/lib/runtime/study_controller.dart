@@ -51,7 +51,7 @@ class StudyDeploymentController {
   StudyDeploymentControllerState get state => _state;
 
   /// Set the state of this controller.
-  void set state(StudyDeploymentControllerState newState) {
+  set state(StudyDeploymentControllerState newState) {
     _state = newState;
     _stateEventsController.add(newState);
   }
@@ -94,8 +94,7 @@ class StudyDeploymentController {
     this.privacySchemaName,
     this.transformer,
     this.debugLevel = DebugLevel.WARNING,
-  })
-      : super() {
+  }) : super() {
     assert(deployment != null);
     // set global debug level
     globalDebugLevel = debugLevel;

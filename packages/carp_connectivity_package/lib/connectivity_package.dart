@@ -46,24 +46,16 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
           CONNECTIVITY,
           CAMSMeasure(
             type: CONNECTIVITY,
-            measureDescription: {
-              'en': MeasureDescription(
-                name: 'Connectivity (wifi/3G/...)',
-                description: "Collects the phone's connectivity status",
-              )
-            },
+            name: 'Connectivity (wifi/3G/...)',
+            description: "Collects the phone's connectivity status",
             enabled: true,
           )),
       MapEntry(
           BLUETOOTH,
           PeriodicMeasure(
             type: BLUETOOTH,
-            measureDescription: {
-              'en': MeasureDescription(
-                name: 'Nearby Devices',
-                description: "Collects nearby devices using Bluetooth LE",
-              )
-            },
+            name: 'Nearby Devices',
+            description: "Collects nearby devices using Bluetooth LE",
             enabled: true,
             frequency: Duration(minutes: 10),
             duration: Duration(seconds: 5),
@@ -72,13 +64,8 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
           WIFI,
           PeriodicMeasure(
             type: WIFI,
-            measureDescription: {
-              'en': MeasureDescription(
-                name: 'Wifi network names',
-                description:
-                    "Collects the SSID and BSSID of nearby wifi network",
-              )
-            },
+            name: 'Wifi network names',
+            description: "Collects the SSID and BSSID of nearby wifi network",
             enabled: true,
             frequency: Duration(minutes: 10),
             duration: Duration(seconds: 5),

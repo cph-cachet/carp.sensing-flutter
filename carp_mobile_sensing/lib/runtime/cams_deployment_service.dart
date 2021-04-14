@@ -113,7 +113,6 @@ class CAMSDeploymentService implements DeploymentService {
       studyDeploymentId: studyDeploymentId,
       name: deployment.protocol.name,
       protocolDescription: protocol?.protocolDescription ?? {},
-      consent: protocol?.consent ?? {},
       owner: protocol?.owner ?? null,
       dataFormat: protocol?.dataFormat,
       dataEndPoint: protocol?.dataEndPoint,

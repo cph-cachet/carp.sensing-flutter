@@ -16,13 +16,12 @@ class AirQualityMeasure extends CAMSMeasure {
 
   AirQualityMeasure({
     @required String type,
-    Map<String, MeasureDescription> measureDescription,
+    String name,
+    String description,
     enabled,
     this.apiKey,
   }) : super(
-            type: type,
-            measureDescription: measureDescription,
-            enabled: enabled);
+            type: type, name: name, description: description, enabled: enabled);
 
   Function get fromJsonFunction => _$AirQualityMeasureFromJson;
   factory AirQualityMeasure.fromJson(Map<String, dynamic> json) =>

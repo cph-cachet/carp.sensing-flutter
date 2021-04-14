@@ -118,14 +118,8 @@ Map<String, dynamic> _$LocationDatumToJson(LocationDatum instance) {
 LocationMeasure _$LocationMeasureFromJson(Map<String, dynamic> json) {
   return LocationMeasure(
     type: json['type'] as String,
-    measureDescription:
-        (json['measureDescription'] as Map<String, dynamic>)?.map(
-      (k, e) => MapEntry(
-          k,
-          e == null
-              ? null
-              : MeasureDescription.fromJson(e as Map<String, dynamic>)),
-    ),
+    name: json['name'] as String,
+    description: json['description'] as String,
     enabled: json['enabled'] as bool,
     frequency: json['frequency'] == null
         ? null
@@ -156,7 +150,8 @@ Map<String, dynamic> _$LocationMeasureToJson(LocationMeasure instance) {
 
   writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
-  writeNotNull('measureDescription', instance.measureDescription);
+  writeNotNull('name', instance.name);
+  writeNotNull('description', instance.description);
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
   writeNotNull('frequency', instance.frequency?.inMicroseconds);
@@ -248,15 +243,9 @@ Map<String, dynamic> _$WeatherDatumToJson(WeatherDatum instance) {
 WeatherMeasure _$WeatherMeasureFromJson(Map<String, dynamic> json) {
   return WeatherMeasure(
     type: json['type'] as String,
-    measureDescription:
-        (json['measureDescription'] as Map<String, dynamic>)?.map(
-      (k, e) => MapEntry(
-          k,
-          e == null
-              ? null
-              : MeasureDescription.fromJson(e as Map<String, dynamic>)),
-    ),
-    enabled: json['enabled'],
+    name: json['name'] as String,
+    description: json['description'] as String,
+    enabled: json['enabled'] as bool,
     apiKey: json['apiKey'] as String,
   )
     ..$type = json[r'$type'] as String
@@ -276,7 +265,8 @@ Map<String, dynamic> _$WeatherMeasureToJson(WeatherMeasure instance) {
 
   writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
-  writeNotNull('measureDescription', instance.measureDescription);
+  writeNotNull('name', instance.name);
+  writeNotNull('description', instance.description);
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
   writeNotNull('apiKey', instance.apiKey);
@@ -308,19 +298,14 @@ Map<String, dynamic> _$GeoPositionToJson(GeoPosition instance) {
 GeofenceMeasure _$GeofenceMeasureFromJson(Map<String, dynamic> json) {
   return GeofenceMeasure(
     type: json['type'] as String,
-    measureDescription:
-        (json['measureDescription'] as Map<String, dynamic>)?.map(
-      (k, e) => MapEntry(
-          k,
-          e == null
-              ? null
-              : MeasureDescription.fromJson(e as Map<String, dynamic>)),
-    ),
-    enabled: json['enabled'],
+    name: json['name'] as String,
+    description: json['description'] as String,
+    enabled: json['enabled'] as bool,
     center: json['center'] == null
         ? null
         : GeoPosition.fromJson(json['center'] as Map<String, dynamic>),
     radius: (json['radius'] as num)?.toDouble(),
+    label: json['label'] as String,
   )
     ..$type = json[r'$type'] as String
     ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
@@ -342,12 +327,14 @@ Map<String, dynamic> _$GeofenceMeasureToJson(GeofenceMeasure instance) {
 
   writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
-  writeNotNull('measureDescription', instance.measureDescription);
+  writeNotNull('name', instance.name);
+  writeNotNull('description', instance.description);
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
   writeNotNull('center', instance.center);
   writeNotNull('radius', instance.radius);
   writeNotNull('dwell', instance.dwell?.inMicroseconds);
+  writeNotNull('label', instance.label);
   return val;
 }
 
@@ -434,14 +421,8 @@ const _$AirQualityLevelEnumMap = {
 AirQualityMeasure _$AirQualityMeasureFromJson(Map<String, dynamic> json) {
   return AirQualityMeasure(
     type: json['type'] as String,
-    measureDescription:
-        (json['measureDescription'] as Map<String, dynamic>)?.map(
-      (k, e) => MapEntry(
-          k,
-          e == null
-              ? null
-              : MeasureDescription.fromJson(e as Map<String, dynamic>)),
-    ),
+    name: json['name'] as String,
+    description: json['description'] as String,
     enabled: json['enabled'],
     apiKey: json['apiKey'] as String,
   )
@@ -462,7 +443,8 @@ Map<String, dynamic> _$AirQualityMeasureToJson(AirQualityMeasure instance) {
 
   writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
-  writeNotNull('measureDescription', instance.measureDescription);
+  writeNotNull('name', instance.name);
+  writeNotNull('description', instance.description);
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
   writeNotNull('apiKey', instance.apiKey);
@@ -509,15 +491,9 @@ Map<String, dynamic> _$MobilityDatumToJson(MobilityDatum instance) {
 MobilityMeasure _$MobilityMeasureFromJson(Map<String, dynamic> json) {
   return MobilityMeasure(
     type: json['type'] as String,
-    measureDescription:
-        (json['measureDescription'] as Map<String, dynamic>)?.map(
-      (k, e) => MapEntry(
-          k,
-          e == null
-              ? null
-              : MeasureDescription.fromJson(e as Map<String, dynamic>)),
-    ),
-    enabled: json['enabled'],
+    name: json['name'] as String,
+    description: json['description'] as String,
+    enabled: json['enabled'] as bool,
     usePriorContexts: json['usePriorContexts'] as bool,
     stopRadius: (json['stopRadius'] as num)?.toDouble(),
     placeRadius: (json['placeRadius'] as num)?.toDouble(),
@@ -542,7 +518,8 @@ Map<String, dynamic> _$MobilityMeasureToJson(MobilityMeasure instance) {
 
   writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
-  writeNotNull('measureDescription', instance.measureDescription);
+  writeNotNull('name', instance.name);
+  writeNotNull('description', instance.description);
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
   writeNotNull('usePriorContexts', instance.usePriorContexts);

@@ -23,26 +23,16 @@
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
       "type": "dk.cachet.carp.device",
-      "measureDescription": {
-       "en": {
-        "$type": "MeasureDescription",
-        "name": "Basic Device Info",
-        "description": "Collects basic information about the phone."
-       }
-      },
+      "name": "Basic Device Info",
+      "description": "Collects basic information about the phone.",
       "enabled": true,
       "configuration": {}
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
       "type": "dk.cachet.carp.memory",
-      "measureDescription": {
-       "en": {
-        "$type": "MeasureDescription",
-        "name": "Memory Usage",
-        "description": "Collects information about use of memory."
-       }
-      },
+      "name": "Memory Usage",
+      "description": "Collects information about use of memory.",
       "enabled": true,
       "configuration": {},
       "frequency": 60000000
@@ -50,65 +40,40 @@
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
       "type": "dk.cachet.carp.battery",
-      "measureDescription": {
-       "en": {
-        "$type": "MeasureDescription",
-        "name": "Battery",
-        "description": "Collects information about the battery charging level."
-       }
-      },
+      "name": "Battery",
+      "description": "Collects information about the battery charging level.",
       "enabled": true,
       "configuration": {}
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
       "type": "dk.cachet.carp.screen",
-      "measureDescription": {
-       "en": {
-        "$type": "MeasureDescription",
-        "name": "Screen Activity (lock/on/off)",
-        "description": "Collects information about lock/unlock event of the phone's screen."
-       }
-      },
+      "name": "Screen Activity (lock/on/off)",
+      "description": "Collects information about lock/unlock event of the phone's screen.",
       "enabled": true,
       "configuration": {}
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
       "type": "dk.cachet.carp.accelerometer",
-      "measureDescription": {
-       "en": {
-        "$type": "MeasureDescription",
-        "name": "Accelerometer",
-        "description": "Collects movement data based on the onboard phone accelerometer sensor."
-       }
-      },
+      "name": "Accelerometer",
+      "description": "Collects movement data based on the onboard phone accelerometer sensor.",
       "enabled": false,
       "configuration": {}
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
       "type": "dk.cachet.carp.gyroscope",
-      "measureDescription": {
-       "en": {
-        "$type": "MeasureDescription",
-        "name": "Gyroscope",
-        "description": "Collects movement data based on the onboard phone gyroscope sensor."
-       }
-      },
+      "name": "Gyroscope",
+      "description": "Collects movement data based on the onboard phone gyroscope sensor.",
       "enabled": false,
       "configuration": {}
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
       "type": "dk.cachet.carp.periodic_accelerometer",
-      "measureDescription": {
-       "en": {
-        "$type": "MeasureDescription",
-        "name": "Accelerometer",
-        "description": "Collects movement data based on the onboard phone accelerometer sensor."
-       }
-      },
+      "name": "Accelerometer",
+      "description": "Collects movement data based on the onboard phone accelerometer sensor.",
       "enabled": false,
       "configuration": {},
       "frequency": 5000000,
@@ -117,13 +82,8 @@
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
       "type": "dk.cachet.carp.periodic_gyroscope",
-      "measureDescription": {
-       "en": {
-        "$type": "MeasureDescription",
-        "name": "Gyroscope",
-        "description": "Collects movement data based on the onboard phone gyroscope sensor."
-       }
-      },
+      "name": "Gyroscope",
+      "description": "Collects movement data based on the onboard phone gyroscope sensor.",
       "enabled": false,
       "configuration": {},
       "frequency": 5000000,
@@ -132,26 +92,16 @@
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
       "type": "dk.cachet.carp.pedometer",
-      "measureDescription": {
-       "en": {
-        "$type": "MeasureDescription",
-        "name": "Pedometer (Step Count)",
-        "description": "Collects step events from the onboard phone step sensor."
-       }
-      },
+      "name": "Pedometer (Step Count)",
+      "description": "Collects step events from the onboard phone step sensor.",
       "enabled": true,
       "configuration": {}
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
       "type": "dk.cachet.carp.light",
-      "measureDescription": {
-       "en": {
-        "$type": "MeasureDescription",
-        "name": "Ambient Light",
-        "description": "Collects ambient light from the light sensor on the phone."
-       }
-      },
+      "name": "Ambient Light",
+      "description": "Collects ambient light from the light sensor on the phone.",
       "enabled": true,
       "configuration": {},
       "frequency": 60000000,
@@ -160,31 +110,21 @@
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
       "type": "dk.cachet.carp.audio",
-      "measureDescription": {
-       "en": {
-        "$type": "MeasureDescription",
-        "name": "Audio Recording",
-        "description": "Collects an audio recording from the phone's microphone"
-       }
-      },
+      "name": "Audio Recording",
+      "description": "Collects an audio recording from the phone's microphone",
       "enabled": true,
       "configuration": {}
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.NoiseMeasure",
       "type": "dk.cachet.carp.noise",
-      "measure_description": {
-       "en": {
-        "$type": "MeasureDescription",
-        "name": "Ambient Noise",
-        "description": "Collects noise in the background from the phone's microphone"
-       }
-      },
+      "name": "Ambient Noise",
+      "description": "Collects noise in the background from the phone's microphone",
       "enabled": false,
       "configuration": {},
       "frequency": 300000000,
       "duration": 10000000,
-      "sampling_rate": 500
+      "samplingRate": 500
      }
     ]
    }
@@ -196,7 +136,6 @@
     "destinationDeviceRoleName": "masterphone"
    }
   ],
-  "consent": {},
   "owner": {
    "$type": "dk.cachet.carp.protocols.domain.ProtocolOwner",
    "id": "AB",

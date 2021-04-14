@@ -24,7 +24,7 @@ how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.-Exten
 ## Installing
 
 To use this package, add the following to you `pubspc.yaml` file. Note that
-this package only works together with `carp_mobile_sensing`.
+this package only works together with [`carp_mobile_sensing`](https://pub.dev/packages/carp_mobile_sensing).
 
 `````dart
 dependencies:

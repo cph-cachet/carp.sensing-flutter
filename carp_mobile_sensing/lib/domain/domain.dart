@@ -41,7 +41,6 @@ void registerFromJsonFunctions() {
   FromJsonFactory().register(DataEndPoint());
   FromJsonFactory().register(FileDataEndPoint());
   FromJsonFactory().register(StudyProtocolDescription());
-  FromJsonFactory().register(ConsentSection());
 
   // Task classes
   FromJsonFactory().register(AutomaticTask());
@@ -62,8 +61,6 @@ void registerFromJsonFunctions() {
       .register(ConditionalSamplingEventTrigger(measureType: 'ignored'));
 
   // Measure classes
-  // FromJsonFactory().register(DataType('', ''));
-  FromJsonFactory().register(MeasureDescription());
   FromJsonFactory().register(CAMSMeasure(type: 'ignored'));
   FromJsonFactory().register(PeriodicMeasure(type: 'ignored'));
   FromJsonFactory().register(MarkedMeasure(type: 'ignored'));

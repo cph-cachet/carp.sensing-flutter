@@ -17,16 +17,15 @@ class MobilityMeasure extends CAMSMeasure {
 
   MobilityMeasure({
     @required String type,
-    Map<String, MeasureDescription> measureDescription,
-    enabled,
+    String name,
+    String description,
+    bool enabled,
     this.usePriorContexts,
     this.stopRadius,
     this.placeRadius,
     this.stopDuration,
   }) : super(
-            type: type,
-            measureDescription: measureDescription,
-            enabled: enabled);
+            type: type, name: name, description: description, enabled: enabled);
 
   Function get fromJsonFunction => _$MobilityMeasureFromJson;
 

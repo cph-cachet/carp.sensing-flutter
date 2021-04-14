@@ -9,14 +9,8 @@ part of health_package;
 HealthMeasure _$HealthMeasureFromJson(Map<String, dynamic> json) {
   return HealthMeasure(
     type: json['type'] as String,
-    measureDescription:
-        (json['measureDescription'] as Map<String, dynamic>)?.map(
-      (k, e) => MapEntry(
-          k,
-          e == null
-              ? null
-              : MeasureDescription.fromJson(e as Map<String, dynamic>)),
-    ),
+    name: json['name'] as String,
+    description: json['description'] as String,
     enabled: json['enabled'] as bool,
     history: json['history'] == null
         ? null
@@ -41,8 +35,8 @@ Map<String, dynamic> _$HealthMeasureToJson(HealthMeasure instance) {
 
   writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
-  writeNotNull('measureDescription',
-      instance.measureDescription?.map((k, e) => MapEntry(k, e?.toJson())));
+  writeNotNull('name', instance.name);
+  writeNotNull('description', instance.description);
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
   writeNotNull('history', instance.history?.inMicroseconds);

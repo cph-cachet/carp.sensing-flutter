@@ -75,50 +75,34 @@ class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
           PHONE_LOG,
           MarkedMeasure(
             type: PHONE_LOG,
-            measureDescription: {
-              'en': MeasureDescription(
-                name: 'Phone Log',
-                description:
-                    "Collects the log on in- and out-going calls from the phone",
-              )
-            },
+            name: 'Phone Log',
+            description:
+                "Collects the log on in- and out-going calls from the phone",
             history: Duration(days: 1),
           )),
       MapEntry(
           TEXT_MESSAGE_LOG,
           CAMSMeasure(
             type: TEXT_MESSAGE_LOG,
-            measureDescription: {
-              'en': MeasureDescription(
-                name: 'Text Messages Log',
-                description:
-                    "Collects the log on in- and out-going text messages (SMS) from the phone",
-              )
-            },
+            name: 'Text Messages Log',
+            description:
+                "Collects the log on in- and out-going text messages (SMS) from the phone",
           )),
       MapEntry(
           TEXT_MESSAGE,
           CAMSMeasure(
             type: TEXT_MESSAGE,
-            measureDescription: {
-              'en': MeasureDescription(
-                name: 'Text Messages',
-                description:
-                    "Collects the event when a text messages (SMS) is sent or received",
-              )
-            },
+            name: 'Text Messages',
+            description:
+                "Collects the event when a text messages (SMS) is sent or received",
           )),
       MapEntry(
           CALENDAR,
           CalendarMeasure(
             type: CALENDAR,
-            measureDescription: {
-              'en': MeasureDescription(
-                name: 'Calendar Events',
-                description:
-                    "Collects the list of calendar events on the calenders on the phone",
-              )
-            },
+            name: 'Calendar Events',
+            description:
+                "Collects the list of calendar events on the calenders on the phone",
             past: Duration(days: 1),
             future: Duration(days: 1),
           )),

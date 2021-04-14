@@ -16,7 +16,7 @@ class DeviceInfo {
 
   static final DeviceInfo _instance = DeviceInfo._();
   factory DeviceInfo() => _instance;
-  DeviceInfo._() {}
+  DeviceInfo._();
 
   String platform;
   String hardware;

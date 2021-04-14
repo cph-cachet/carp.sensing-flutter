@@ -39,7 +39,8 @@ class LocationMeasure extends PeriodicMeasure {
 
   LocationMeasure({
     @required String type,
-    Map<String, MeasureDescription> measureDescription,
+    String name,
+    String description,
     bool enabled,
     Duration frequency,
     Duration duration,
@@ -49,7 +50,8 @@ class LocationMeasure extends PeriodicMeasure {
     this.notificationMsg,
   }) : super(
             type: type,
-            measureDescription: measureDescription,
+            name: name,
+            description: description,
             enabled: enabled,
             frequency: frequency,
             duration: duration);

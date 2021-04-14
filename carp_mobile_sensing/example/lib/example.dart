@@ -27,12 +27,10 @@ void example_1() async {
       zip: true,
       encrypt: false,
     )
-    ..protocolDescription = {
-      'en': StudyProtocolDescription(
-          title: 'Test Study',
-          purpose: 'For testing purposes',
-          description: 'Testing'),
-    };
+    ..protocolDescription = StudyProtocolDescription(
+        title: 'Test Study',
+        purpose: 'For testing purposes',
+        description: 'Testing');
 
   // define which devices are used for data collection
   // in this case, its only this smartphone

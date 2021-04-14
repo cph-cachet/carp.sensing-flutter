@@ -31,12 +31,8 @@ class CAMSStudyProtocol extends StudyProtocol {
   String studyId;
 
   /// The textual [StudyProtocolDescription] containing the title, description
-  /// and purpose of this study protocol organized according to language locales.
-  Map<String, StudyProtocolDescription> protocolDescription = {};
-
-  /// The informed consent to be show to the user as a list of [ConsentSection]
-  /// sections. Mapped according to the language locale.
-  Map<String, List<ConsentSection>> consent = {};
+  /// and purpose of this study protocol.
+  StudyProtocolDescription protocolDescription;
 
   /// The owner of this study.
   ProtocolOwner owner;
@@ -65,20 +61,12 @@ class CAMSStudyProtocol extends StudyProtocol {
     this.protocolDescription,
     this.dataEndPoint,
     this.dataFormat = NameSpace.CARP,
-  })
-      : super(owner: owner, name: name) {
+  }) : super(owner: owner, name: name) {
     // TODO - move this elsewhere.... can't assumed that the programmer
     // create a protocol - s/he might download it e.g. from CARP.
     registerFromJsonFunctions();
     // studyId ??= Uuid().v1();
   }
-
-  /// Get the [StudyProtocolDescription] for a language locale.
-  StudyProtocolDescription getDescription(String key) =>
-      protocolDescription[key];
-
-  /// Get the list of [ConsentSection] sections for a language locale.
-  List<ConsentSection> getInformedConsent(String key) => consent[key];
 
   Function get fromJsonFunction => _$CAMSStudyProtocolFromJson;
   factory CAMSStudyProtocol.fromJson(Map<String, dynamic> json) =>
@@ -109,33 +97,4 @@ class StudyProtocolDescription extends Serializable {
 
   String toString() =>
       '$runtimeType - title: $title, description: $description';
-}
-
-/// A content section in the informed consent flow.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class ConsentSection extends Serializable {
-  /// The type of the section.
-  ///
-  /// If using the [`research_package`](https://pub.dev/packages/research_package)
-  /// the this type can reflect the [`RPConsentSectionType`](https://pub.dev/documentation/research_package/latest/research_package_model/RPConsentSectionType-class.html).
-  /// For example, to specify an "About Us" section using `RPConsentSectionType.AboutUs.index` as the [type].
-  int type;
-
-  /// The title of the consent section.
-  String title;
-
-  /// A short summary of the section.
-  String summary;
-
-  /// A longer content text of the section.
-  String content;
-
-  ConsentSection({this.type, this.title, this.summary, this.content});
-
-  Function get fromJsonFunction => _$ConsentSectionFromJson;
-  factory ConsentSection.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
-  Map<String, dynamic> toJson() => _$ConsentSectionToJson(this);
-
-  String toString() => '$runtimeType - title: $title, summary: $summary';
 }

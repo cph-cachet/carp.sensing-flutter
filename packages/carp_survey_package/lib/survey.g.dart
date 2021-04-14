@@ -9,14 +9,8 @@ part of survey;
 RPTaskMeasure _$RPTaskMeasureFromJson(Map<String, dynamic> json) {
   return RPTaskMeasure(
     type: json['type'] as String,
-    measureDescription:
-        (json['measureDescription'] as Map<String, dynamic>)?.map(
-      (k, e) => MapEntry(
-          k,
-          e == null
-              ? null
-              : MeasureDescription.fromJson(e as Map<String, dynamic>)),
-    ),
+    name: json['name'] as String,
+    description: json['description'] as String,
     enabled: json['enabled'] as bool,
   )
     ..$type = json[r'$type'] as String
@@ -36,7 +30,8 @@ Map<String, dynamic> _$RPTaskMeasureToJson(RPTaskMeasure instance) {
 
   writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
-  writeNotNull('measureDescription', instance.measureDescription);
+  writeNotNull('name', instance.name);
+  writeNotNull('description', instance.description);
   writeNotNull('enabled', instance.enabled);
   writeNotNull('configuration', instance.configuration);
   return val;

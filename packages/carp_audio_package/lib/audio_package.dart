@@ -51,26 +51,18 @@ class AudioSamplingPackage extends SmartphoneSamplingPackage {
           AUDIO,
           CAMSMeasure(
             type: AUDIO,
-            measureDescription: {
-              'en': MeasureDescription(
-                name: 'Audio Recording',
-                description:
-                    "Collects an audio recording from the phone's microphone",
-              )
-            },
+            name: 'Audio Recording',
+            description:
+                "Collects an audio recording from the phone's microphone",
             enabled: true,
           )),
       MapEntry(
           NOISE,
           NoiseMeasure(
             type: NOISE,
-            measureDescription: {
-              'en': MeasureDescription(
-                name: 'Ambient Noise',
-                description:
-                    "Collects noise in the background from the phone's microphone",
-              )
-            },
+            name: 'Ambient Noise',
+            description:
+                "Collects noise in the background from the phone's microphone",
             enabled: false,
             frequency: Duration(minutes: 5),
             duration: Duration(seconds: 10),
@@ -101,24 +93,15 @@ class AudioSamplingPackage extends SmartphoneSamplingPackage {
     ..powerAware = false
     ..measures[AUDIO] = CAMSMeasure(
       type: AUDIO,
-      measureDescription: {
-        'en': MeasureDescription(
-          name: 'Audio Recording',
-          description:
-              "Collects an audio recording from the phone's microphone",
-        )
-      },
+      name: 'Audio Recording',
+      description: "Collects an audio recording from the phone's microphone",
       enabled: true,
     )
     ..measures[NOISE] = NoiseMeasure(
       type: NOISE,
-      measureDescription: {
-        'en': MeasureDescription(
-          name: 'Ambient Noise',
-          description:
-              "Collects noise in the background from the phone's microphone",
-        )
-      },
+      name: 'Ambient Noise',
+      description:
+          "Collects noise in the background from the phone's microphone",
       enabled: true,
       frequency: Duration(minutes: 1),
       duration: Duration(seconds: 5),

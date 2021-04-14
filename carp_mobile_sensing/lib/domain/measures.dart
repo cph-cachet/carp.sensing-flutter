@@ -10,27 +10,16 @@ part of domain;
 /// [TaskDescriptor] in a [StudyProtocol].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class CAMSMeasure extends Measure {
-  /// The textual [MeasureDescription] containing the name and description
-  /// of this measure organized according to language locales.
-  Map<String, MeasureDescription> measureDescription = {};
+  /// A printer-friendly name for this measure.
+  String name;
+
+  /// A longer description of this measure.
+  String description;
 
   /// The study deployment id that this measure is part of.
   /// Set on runtime.
   @JsonKey(ignore: true)
   String studyDeploymentId;
-
-  /// The default English name for this measure.
-  /// If the English name is not set, then the measure's [type] is returned.
-  @JsonKey(ignore: true)
-  String get name => (measureDescription != null)
-      ? measureDescription.containsKey('en')
-          ? measureDescription['en'].name
-          : type
-      : type;
-
-  /// The default English description of this measure.
-  @JsonKey(ignore: true)
-  String get description => getDescription('en').description;
 
   /// Whether the measure is enabled - i.e. collecting data - when the
   /// study is running. A measure is enabled as default.
@@ -44,21 +33,13 @@ class CAMSMeasure extends Measure {
 
   CAMSMeasure({
     @required String type,
-    this.measureDescription,
+    this.name,
+    this.description,
     this.enabled = true,
-  })
-      : super(type: type) {
+  }) : super(type: type) {
     enabled = enabled ?? true;
     _storedEnabled = enabled;
-    measureDescription ??= {};
   }
-
-  MeasureDescription getDescription(String locale) =>
-      measureDescription[locale] ??
-      MeasureDescription(
-        name: 'No name for locale: $locale',
-        description: 'No description for locale: $locale',
-      );
 
   /// Add a key-value pair as configuration for this measure.
   void setConfiguration(String key, String configuration) =>
@@ -105,24 +86,6 @@ class CAMSMeasure extends Measure {
   String toString() => '$runtimeType - type: $type, enabled: $enabled';
 }
 
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class MeasureDescription extends Serializable {
-  /// A printer-friendly name for this measure.
-  String name;
-
-  /// A longer description of this measure.
-  String description;
-
-  MeasureDescription({this.name, this.description});
-
-  Function get fromJsonFunction => _$MeasureDescriptionFromJson;
-  factory MeasureDescription.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
-  Map<String, dynamic> toJson() => _$MeasureDescriptionToJson(this);
-
-  String toString() => '$runtimeType - name: $name, description: $description';
-}
-
 /// A [PeriodicMeasure] specify how to collect data on a regular basis.
 ///
 /// Data collection will be started as specified by the [frequency] for a time
@@ -141,14 +104,15 @@ class PeriodicMeasure extends CAMSMeasure {
   /// Create a [PeriodicMeasure].
   PeriodicMeasure({
     @required String type,
-    Map<String, MeasureDescription> measureDescription,
+    String name,
+    String description,
     bool enabled,
     this.frequency,
     this.duration,
-  })
-      : super(
+  }) : super(
             type: type,
-            measureDescription: measureDescription,
+            name: name,
+            description: description,
             enabled: enabled) {
     _storedFrequency = frequency;
     _storedDuration = duration;
@@ -206,13 +170,14 @@ class MarkedMeasure extends CAMSMeasure {
 
   MarkedMeasure({
     @required String type,
-    Map<String, MeasureDescription> measureDescription,
+    String name,
+    String description,
     bool enabled,
     this.history = const Duration(days: 1),
-  })
-      : super(
+  }) : super(
           type: type,
-          measureDescription: measureDescription,
+          name: name,
+          description: description,
           enabled: enabled,
         );
 
