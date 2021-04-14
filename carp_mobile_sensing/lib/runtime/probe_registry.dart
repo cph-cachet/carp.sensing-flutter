@@ -33,9 +33,9 @@ class ProbeRegistry {
   /// A stream of all events from all probes.
   Stream<DataPoint> get events => _group.stream;
 
-  /// A stream of all events from probes of a specific [String].
+  /// A stream of all events from probes of a specific [type].
   Stream<DataPoint> eventsByType(String type) => _group.stream
-      .where((dataPoint) => dataPoint.carpHeader.dataFormat == type);
+      .where((dataPoint) => dataPoint.carpHeader.dataFormat.toString() == type);
 
   /// If you create a probe manually, i.e. outside of the [ProbeRegistry]
   /// you can register it here.
