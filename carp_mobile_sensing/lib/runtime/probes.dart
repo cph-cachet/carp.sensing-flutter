@@ -422,8 +422,12 @@ abstract class DatumProbe extends AbstractProbe {
 
   Future onResume() async {
     marking();
-    Datum datum =
-        await getDatum().catchError((err) => controller.addError(err));
+    Datum datum;
+    try {
+      datum = await getDatum();
+    } catch (error) {
+      controller.addError(error);
+    }
     if (datum != null) controller.add(datum);
     mark();
   }

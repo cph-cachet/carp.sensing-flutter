@@ -1,3 +1,6 @@
+## 1.5.2
+* update to `carp_mobile_sensing` v. 0.20.4
+
 ## 1.5.1
 * update to `carp_core` v. 0.20.3 (json serialization)
 

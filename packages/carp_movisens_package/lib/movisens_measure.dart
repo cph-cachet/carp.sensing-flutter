@@ -32,8 +32,9 @@ class MovisensMeasure extends CAMSMeasure {
 
   MovisensMeasure({
     String type,
-    Map<String, MeasureDescription> measureDescription,
-    enabled,
+    String name,
+    String description,
+    bool enabled,
     this.address,
     this.sensorLocation,
     this.gender,
@@ -42,9 +43,7 @@ class MovisensMeasure extends CAMSMeasure {
     this.weight,
     this.age,
   }) : super(
-            type: type,
-            measureDescription: measureDescription,
-            enabled: enabled);
+            type: type, name: name, description: description, enabled: enabled);
 
   Function get fromJsonFunction => _$MovisensMeasureFromJson;
   factory MovisensMeasure.fromJson(Map<String, dynamic> json) =>

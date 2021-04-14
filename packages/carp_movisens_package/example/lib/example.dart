@@ -39,13 +39,9 @@ void main() async {
       AutomaticTask(name: 'Movisens Task')
         ..addMeasure(MovisensMeasure(
             type: MovisensSamplingPackage.MOVISENS,
-            measureDescription: {
-              'en': MeasureDescription(
-                name: 'Movisens ECG device',
-                description:
-                    "Collects heart rythm data from the Movisens EcgMove4 sensor",
-              )
-            },
+            name: 'Movisens ECG device',
+            description:
+                "Collects heart rythm data from the Movisens EcgMove4 sensor",
             enabled: true,
             address: '06-00-00-00-00-00',
             deviceName: "ECG-223",

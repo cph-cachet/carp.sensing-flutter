@@ -87,12 +87,8 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
         LOCATION,
         CAMSMeasure(
           type: LOCATION,
-          measureDescription: {
-            'en': MeasureDescription(
-              name: 'Location',
-              description: "Collects location from the phone's GPS sensor",
-            )
-          },
+          name: 'Location',
+          description: "Collects location from the phone's GPS sensor",
           enabled: true,
         ),
       ),
@@ -100,12 +96,8 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
           GEOLOCATION,
           LocationMeasure(
             type: GEOLOCATION,
-            measureDescription: {
-              'en': MeasureDescription(
-                name: 'Geo-location',
-                description: "Collects location from the phone's GPS sensor",
-              )
-            },
+            name: 'Geo-location',
+            description: "Collects location from the phone's GPS sensor",
             enabled: true,
             frequency: Duration(seconds: 30),
             accuracy: GeolocationAccuracy.low,
@@ -115,13 +107,9 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
         ACTIVITY,
         CAMSMeasure(
           type: ACTIVITY,
-          measureDescription: {
-            'en': MeasureDescription(
-              name: 'Activity Recognition',
-              description:
-                  "Collects activity type from the phone's activity recognition module",
-            )
-          },
+          name: 'Activity Recognition',
+          description:
+              "Collects activity type from the phone's activity recognition module",
           enabled: true,
         ),
       ),
@@ -129,13 +117,9 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
           WEATHER,
           WeatherMeasure(
               type: WEATHER,
-              measureDescription: {
-                'en': MeasureDescription(
-                  name: 'Weather',
-                  description:
-                      "Collects local weather from the WeatherAPI web service",
-                )
-              },
+              name: 'Weather',
+              description:
+                  "Collects local weather from the WeatherAPI web service",
               enabled: true,
               // TODO - remove this
               apiKey: '12b6e28582eb9298577c734a31ba9f4f')),
@@ -143,13 +127,9 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
           AIR_QUALITY,
           AirQualityMeasure(
               type: AIR_QUALITY,
-              measureDescription: {
-                'en': MeasureDescription(
-                  name: 'Air Quality',
-                  description:
-                      "Collects local air quality from the OpenWeatherMap (OWM) web service",
-                )
-              },
+              name: 'Air Quality',
+              description:
+                  "Collects local air quality from the OpenWeatherMap (OWM) web service",
               enabled: true,
               // TODO - remove this
               apiKey: '9e538456b2b85c92647d8b65090e29f957638c77')),
@@ -160,25 +140,17 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
               enabled: true,
               center: GeoPosition(55.7943601, 12.4461956),
               radius: 500,
-              measureDescription: {
-                'en': MeasureDescription(
-                  name: 'Geofence',
-                  description:
-                      "Collects geofence events when then phone enters, leaves, or dwell in a geographic area",
-                )
-              },
-              name: 'Geofence (Virum)')),
+              name: 'Geofence',
+              description:
+                  "Collects geofence events when then phone enters, leaves, or dwell in a geographic area",
+              label: 'Geofence (Virum)')),
       MapEntry(
           MOBILITY,
           MobilityMeasure(
               type: MOBILITY,
-              measureDescription: {
-                'en': MeasureDescription(
-                  name: 'Mobility Features',
-                  description:
-                      "Extracts mobility features based on location tracking",
-                )
-              },
+              name: 'Mobility Features',
+              description:
+                  "Extracts mobility features based on location tracking",
               enabled: true,
               placeRadius: 50,
               stopRadius: 25,
