@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
-import 'package:carp_connectivity_package/connectivity.dart';
+// import 'package:carp_connectivity_package/connectivity.dart';
 import 'package:carp_esense_package/esense.dart';
 import 'package:carp_context_package/context.dart';
 import 'package:carp_audio_package/audio.dart';
@@ -21,7 +21,7 @@ void main() {
 
   setUp(() async {
     // register the eSense sampling package since we're using eSense measures
-    SamplingPackageRegistry().register(ConnectivitySamplingPackage());
+    // SamplingPackageRegistry().register(ConnectivitySamplingPackage());
     SamplingPackageRegistry().register(ContextSamplingPackage());
     SamplingPackageRegistry().register(AudioSamplingPackage());
     SamplingPackageRegistry().register(ESenseSamplingPackage());

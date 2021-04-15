@@ -132,11 +132,13 @@ class FileDownloadTask extends CarpServiceTask {
   FileDownloadTask._(FileStorageReference reference, this.file)
       : super._(reference);
 
-  /// Returns the HTTP status code when completed
   Completer<int> _completer = Completer<int>();
+
+  /// Returns the HTTP status code when completed
   Future<int> get onComplete => _completer.future;
 
-  /// Start the the download task. Returns the HTTP status code (200 for successful download).
+  /// Start the the download task.
+  /// Returns the HTTP status code (200 for successful download).
   Future<int> _start() async {
     super._start();
     final String url = '${reference.fileEndpointUri}/${reference.id}/download';

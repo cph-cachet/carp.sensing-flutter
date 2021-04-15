@@ -6,7 +6,7 @@ import 'dart:async';
 
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
-import 'package:carp_connectivity_package/connectivity.dart';
+// import 'package:carp_connectivity_package/connectivity.dart';
 import 'package:carp_esense_package/esense.dart';
 import 'package:carp_context_package/context.dart';
 import 'package:carp_audio_package/audio.dart';

@@ -16,12 +16,12 @@ class ProbeDescription {
             "Collecting sensor data from the phone's onboard gyroscope.",
         SensorSamplingPackage.LIGHT:
             'Measures ambient light in lux on a regular basis.',
-        ConnectivitySamplingPackage.BLUETOOTH:
-            'Collecting nearby bluetooth devices on a regular basis.',
-        ConnectivitySamplingPackage.WIFI:
-            'Collecting names of connected wifi networks (SSID and BSSID)',
-        ConnectivitySamplingPackage.CONNECTIVITY:
-            'Collecting information on connectivity status and mode.',
+        // ConnectivitySamplingPackage.BLUETOOTH:
+        //     'Collecting nearby bluetooth devices on a regular basis.',
+        // ConnectivitySamplingPackage.WIFI:
+        //     'Collecting names of connected wifi networks (SSID and BSSID)',
+        // ConnectivitySamplingPackage.CONNECTIVITY:
+        //     'Collecting information on connectivity status and mode.',
         AudioSamplingPackage.AUDIO: 'Records ambient sound on a regular basis.',
         AudioSamplingPackage.NOISE:
             'Measures noise level in decibel on a regular basis.',
@@ -65,12 +65,12 @@ class ProbeDescription {
             Icon(Icons.adb, size: 50, color: CACHET.GREY_4),
         SensorSamplingPackage.LIGHT:
             Icon(Icons.highlight, size: 50, color: CACHET.YELLOW),
-        ConnectivitySamplingPackage.BLUETOOTH:
-            Icon(Icons.bluetooth_searching, size: 50, color: CACHET.DARK_BLUE),
-        ConnectivitySamplingPackage.WIFI:
-            Icon(Icons.wifi, size: 50, color: CACHET.LIGHT_PURPLE),
-        ConnectivitySamplingPackage.CONNECTIVITY:
-            Icon(Icons.cast_connected, size: 50, color: CACHET.GREEN),
+        // ConnectivitySamplingPackage.BLUETOOTH:
+        //     Icon(Icons.bluetooth_searching, size: 50, color: CACHET.DARK_BLUE),
+        // ConnectivitySamplingPackage.WIFI:
+        //     Icon(Icons.wifi, size: 50, color: CACHET.LIGHT_PURPLE),
+        // ConnectivitySamplingPackage.CONNECTIVITY:
+        //     Icon(Icons.cast_connected, size: 50, color: CACHET.GREEN),
         AudioSamplingPackage.AUDIO:
             Icon(Icons.mic, size: 50, color: CACHET.ORANGE),
         AudioSamplingPackage.NOISE:

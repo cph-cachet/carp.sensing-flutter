@@ -37,8 +37,10 @@ class ESenseSamplingPackage implements SamplingPackage {
     FromJsonFactory().register(ESenseDevice());
   }
 
-  List<Permission> get permissions =>
-      [Permission.location, Permission.microphone];
+  List<Permission> get permissions => [
+        Permission.location,
+        Permission.microphone,
+      ];
   String get deviceType => ESenseDevice.DEVICE_TYPE;
   DeviceManager get deviceManager => ESenseDeviceManager();
 

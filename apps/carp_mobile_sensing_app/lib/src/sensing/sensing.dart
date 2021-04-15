@@ -37,18 +37,18 @@ class Sensing {
 
   Sensing._() {
     // create and register external sampling packages
-    SamplingPackageRegistry().register(ConnectivitySamplingPackage());
+    // SamplingPackageRegistry().register(ConnectivitySamplingPackage());
     SamplingPackageRegistry().register(ContextSamplingPackage());
     SamplingPackageRegistry().register(AudioSamplingPackage());
     //SamplingPackageRegistry().register(CommunicationSamplingPackage());
     //SamplingPackageRegistry().register(AppsSamplingPackage());
     SamplingPackageRegistry().register(ESenseSamplingPackage());
 
-    // manager = LocalStudyProtocolManager();
+    manager = LocalStudyProtocolManager();
 
     // used for downloading the study protocol from the CARP server
     // TODO - obtain deployment id from an invitaiton
-    manager = CARPStudyProtocolManager();
+    // manager = CARPStudyProtocolManager();
   }
 
   /// Initialize and setup sensing.

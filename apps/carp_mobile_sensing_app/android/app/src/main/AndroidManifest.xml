@@ -40,6 +40,10 @@
     <!-- Even though we only want to READ the calendar, for some unknown reason we also need to add the WRITE permission. -->
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
 
+    <!-- The following permissions are used in the eSense Package -->
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+
     <!-- io.flutter.app.FlutterApplication is an android.app.Application that
          calls FlutterMain.startInitialization(this); in its onCreate method.
          In most cases you can leave this as-is, but you if you want to provide

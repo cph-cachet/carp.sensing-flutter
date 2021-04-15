@@ -482,8 +482,31 @@ class CarpService {
   /// See [research_package](https://pub.dev/packages/research_package) for a
   /// description on how to create an informed consent in the research package
   /// domain model.
-  Future<RPOrderedTask> getInformedConsent() {
+  ///
+  /// If there is no informed consent json file on the CARP server, `null` is
+  /// returned.
+  Future<RPOrderedTask> getInformedConsent() async {
     const String INFORMED_CONSENT_FILE_NAME = 'informed_consent.json';
+
+    info('Downloading informed consent as file : $INFORMED_CONSENT_FILE_NAME');
+    FileStorageReference informedConsentReference =
+        await getFileStorageReferenceByName(INFORMED_CONSENT_FILE_NAME);
+    final File myFile = File("$localFilePath/$INFORMED_CONSENT_FILE_NAME");
+
+    final FileDownloadTask downloadTask =
+        informedConsentReference.download(myFile);
+
+    int response = await downloadTask.onComplete;
+
+    RPOrderedTask informedConsent;
+    if (response == 200) {
+      info('Informed consent downloaded : $INFORMED_CONSENT_FILE_NAME');
+      String jsonString = myFile.readAsStringSync();
+      // TODO - implement when json is implemented....
+      // informedConsent = RPOrderedTask.fromJson(
+      //     json.decode(jsonString) as Map<String, dynamic>);
+    }
+    return informedConsent;
   }
 
   // --------------------------------------------------------------------------
@@ -497,6 +520,19 @@ class CarpService {
   // --------------------------------------------------------------------------
   // FILES
   // --------------------------------------------------------------------------
+
+  String _path;
+
+  ///Returns the local path on the device where files can be written.
+  Future<String> get localFilePath async {
+    if (_path == null) {
+      final localApplicationDir = await getApplicationDocumentsDirectory();
+      final directory = await Directory('${localApplicationDir.path}/downloads')
+          .create(recursive: true);
+      _path = directory.path;
+    }
+    return _path;
+  }
 
   /// The URL for the file end point for this [CarpService].
   String get fileEndpointUri =>

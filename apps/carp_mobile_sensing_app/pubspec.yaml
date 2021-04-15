@@ -38,8 +38,8 @@ dependency_overrides:
     path: ../../carp_mobile_sensing/
   carp_context_package:
     path: ../../packages/carp_context_package/
-  carp_connectivity_package:
-    path: ../../packages/carp_connectivity_package/
+#  carp_connectivity_package:
+#    path: ../../packages/carp_connectivity_package/
   carp_audio_package:
     path: ../../packages/carp_audio_package/
   carp_esense_package:

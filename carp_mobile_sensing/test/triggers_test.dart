@@ -179,8 +179,10 @@ void main() {
 
     test(' - RandomRecurrentTrigger', () {
       RandomRecurrentTrigger t = RandomRecurrentTrigger(
-        startTime: Time(minute: 0, hour: 8),
-        endTime: Time(minute: 0, hour: 20),
+        // startTime: Time(hour: 8, minute: 0),
+        // endTime: Time(hour: 20, minute: 0),
+        startTime: Time(hour: 8, minute: 56),
+        endTime: Time(hour: 20, minute: 10),
         minNumberOfTriggers: 2,
         maxNumberOfTriggers: 8,
       );
