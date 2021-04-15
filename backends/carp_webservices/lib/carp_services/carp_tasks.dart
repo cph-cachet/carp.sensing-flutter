@@ -95,7 +95,8 @@ class FileUploadTask extends CarpServiceTask {
           case 201:
             {
               _state = TaskStateType.success;
-              _completer.complete(CarpFileResponse._(reference, map));
+              // _completer.complete(CarpFileResponse._(reference, map));
+              _completer.complete(CarpFileResponse._(map));
               break;
             }
           default:
@@ -177,9 +178,9 @@ class FileDownloadTask extends CarpServiceTask {
   }
 }
 
-/// Represents the response from the CARP server when getting file objects.
+/// A file object as retrieved from the CARP server.
 class CarpFileResponse {
-  CarpFileResponse._(this.ref, this.map)
+  CarpFileResponse._(this.map)
       : id = map['id'],
         storageName = map['storage_name'],
         originalName = map['original_name'],
@@ -190,7 +191,6 @@ class CarpFileResponse {
         studyId = map['study_id'];
 
   final Map<dynamic, dynamic> map;
-  final FileStorageReference ref;
   final int id;
   final String storageName;
   final String originalName;

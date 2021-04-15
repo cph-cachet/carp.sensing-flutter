@@ -47,9 +47,9 @@ class CarpService {
     this._app = app;
   }
 
-  // ---------------------------------------------------------------------------------------------------------
+  // --------------------------------------------------------------------------
   // AUTHENTICATION
-  // ---------------------------------------------------------------------------------------------------------
+  // --------------------------------------------------------------------------
 
   String get _authHeaderBase64 => base64
       .encode(utf8.encode("${_app.oauth.clientID}:${_app.oauth.clientSecret}"));
@@ -282,9 +282,9 @@ class CarpService {
     );
   }
 
-  // ---------------------------------------------------------------------------------------------------------
+  // --------------------------------------------------------------------------
   // USERS
-  // ---------------------------------------------------------------------------------------------------------
+  // --------------------------------------------------------------------------
 
   /// The URL for the current user end point for this [CarpService].
   String get currentUserEndpointUri =>
@@ -420,15 +420,15 @@ class CarpService {
     );
   }
 
-  // ---------------------------------------------------------------------------------------------------------
+  // --------------------------------------------------------------------------
   // CONSENT DOCUMENT
-  // ---------------------------------------------------------------------------------------------------------
+  // --------------------------------------------------------------------------
 
   /// The URL for the consent document end point for this [CarpService].
   String get consentDocumentEndpointUri =>
       "${_app.uri.toString()}/api/deployments/${_app.studyDeploymentId}/consent-documents";
 
-  /// Create a new consent document.
+  /// Create a new (signed) consent document for this user.
   /// Returns the created [ConsentDocument] if the document is uploaded correctly.
   Future<ConsentDocument> createConsentDocument(
       Map<String, dynamic> document) async {
@@ -454,7 +454,7 @@ class CarpService {
     );
   }
 
-  /// Asynchronously gets a [ConsentDocument].
+  /// Asynchronously gets an uploaded (signed) [ConsentDocument] based on its id.
   Future<ConsentDocument> getConsentDocument(int id) async {
     String url = "$consentDocumentEndpointUri/$id";
 
@@ -475,18 +475,91 @@ class CarpService {
     );
   }
 
-  // ---------------------------------------------------------------------------------------------------------
-  // DATA POINT & FILES & DOCUMENTS & COLLECTIONS
-  // ---------------------------------------------------------------------------------------------------------
+  /// Get the informed consent to be shown for this study.
+  ///
+  /// This method return a [RPOrderedTask] which is an ordered list of [RPStep]
+  /// which are shown to the user as the informed consent flow.
+  /// See [research_package](https://pub.dev/packages/research_package) for a
+  /// description on how to create an informed consent in the research package
+  /// domain model.
+  Future<RPOrderedTask> getInformedConsent() {
+    const String INFORMED_CONSENT_FILE_NAME = 'informed_consent.json';
+  }
+
+  // --------------------------------------------------------------------------
+  // DATA POINT
+  // --------------------------------------------------------------------------
 
   /// Creates a new [DataPointReference] initialized at the current
   /// CarpService storage location.
   DataPointReference getDataPointReference() => DataPointReference._(this);
 
-  /// Creates a new [FileStorageReference] initialized at the current CarpService storage location.
+  // --------------------------------------------------------------------------
+  // FILES
+  // --------------------------------------------------------------------------
+
+  /// The URL for the file end point for this [CarpService].
+  String get fileEndpointUri =>
+      "${_app.uri.toString()}/api/studies/${_app.studyId}/files";
+
+  /// Get a [FileStorageReference] that reference a file at the current
+  /// CarpService storage location.
   /// [id] can be omitted if a local file is not uploaded yet.
   FileStorageReference getFileStorageReference([int id]) =>
       FileStorageReference._(this, id);
+
+  /// Get a [FileStorageReference] that reference a file with the original name
+  /// [name] at the current CarpService storage location.
+  ///
+  /// If more than one file with the same name exists, the first one is returned.
+  /// If no files with that name exists, `null` is returned.
+  Future<FileStorageReference> getFileStorageReferenceByName(
+      String name) async {
+    final List<CarpFileResponse> files =
+        await queryFiles('original_name==$name');
+
+    return (files.isNotEmpty)
+        ? FileStorageReference._(this, files[0].id)
+        : null;
+  }
+
+  /// Get all file objects in the [Study].
+  Future<List<CarpFileResponse>> getAllFiles() async => await queryFiles();
+
+  /// Query for file objects in the [Study].
+  Future<List<CarpFileResponse>> queryFiles([String query]) async {
+    final String url =
+        (query != null) ? "$fileEndpointUri?query=$query" : "$fileEndpointUri";
+
+    http.Response response =
+        await httpr.get(Uri.encodeFull(url), headers: headers);
+    int httpStatusCode = response.statusCode;
+    List<dynamic> list = json.decode(response.body);
+
+    switch (httpStatusCode) {
+      case 200:
+        {
+          List<CarpFileResponse> fileList = new List<CarpFileResponse>();
+          list.forEach((element) {
+            fileList.add(CarpFileResponse._(element));
+          });
+          return fileList;
+        }
+      default:
+        // All other cases are treated as an error.
+        {
+          Map<String, dynamic> responseJson = json.decode(response.body);
+          throw CarpServiceException(
+            httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
+            message: responseJson["message"],
+          );
+        }
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  // DOCUMENTS & COLLECTIONS
+  // --------------------------------------------------------------------------
 
   /// Gets a [DocumentReference] for the specified unique id.
   DocumentReference documentById(int id) {

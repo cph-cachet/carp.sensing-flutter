@@ -6,10 +6,11 @@
  */
 part of carp_services;
 
-/// A [ConsentDocument] contains data read from a consent document in the CARP web service
+/// A [ConsentDocument] contains data read from a consent document in the CARP
+/// web service
 ///
-/// The document can be extracted with the [document] property or by using subscript
-/// syntax to access a specific field.
+/// The document can be extracted with the [document] property or by using
+/// subscript syntax to access a specific field.
 class ConsentDocument {
   ConsentDocument._(this._snapshot);
 

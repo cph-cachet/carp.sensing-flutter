@@ -24,6 +24,7 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+import 'package:research_package/model.dart';
 
 part 'carp_service.dart';
 part 'deployment_service.dart';
