@@ -852,6 +852,49 @@ Map<String, dynamic> _$ConditionalSamplingEventTriggerToJson(
   return val;
 }
 
+RandomRecurrentTrigger _$RandomRecurrentTriggerFromJson(
+    Map<String, dynamic> json) {
+  return RandomRecurrentTrigger(
+    triggerId: json['triggerId'] as String,
+    minNumberOfTriggers: json['minNumberOfSampling'] as int,
+    maxNumberOfTriggers: json['maxNumberOfSampling'] as int,
+    startTime: json['startTime'] == null
+        ? null
+        : Time.fromJson(json['startTime'] as Map<String, dynamic>),
+    endTime: json['endTime'] == null
+        ? null
+        : Time.fromJson(json['endTime'] as Map<String, dynamic>),
+    duration: json['duration'] == null
+        ? null
+        : Duration(microseconds: json['duration'] as int),
+  )
+    ..$type = json[r'$type'] as String
+    ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String
+    ..requiresMasterDevice = json['requiresMasterDevice'] as bool;
+}
+
+Map<String, dynamic> _$RandomRecurrentTriggerToJson(
+    RandomRecurrentTrigger instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(r'$type', instance.$type);
+  writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
+  writeNotNull('requiresMasterDevice', instance.requiresMasterDevice);
+  writeNotNull('triggerId', instance.triggerId);
+  writeNotNull('startTime', instance.startTime);
+  writeNotNull('endTime', instance.endTime);
+  writeNotNull('maxNumberOfSampling', instance.maxNumberOfTriggers);
+  writeNotNull('minNumberOfSampling', instance.minNumberOfTriggers);
+  writeNotNull('duration', instance.duration?.inMicroseconds);
+  return val;
+}
+
 Datum _$DatumFromJson(Map<String, dynamic> json) {
   return Datum()
     ..id = json['id'] as String

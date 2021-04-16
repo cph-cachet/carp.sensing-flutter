@@ -95,7 +95,8 @@ class FileUploadTask extends CarpServiceTask {
           case 201:
             {
               _state = TaskStateType.success;
-              _completer.complete(CarpFileResponse._(reference, map));
+              // _completer.complete(CarpFileResponse._(reference, map));
+              _completer.complete(CarpFileResponse._(map));
               break;
             }
           default:
@@ -131,11 +132,13 @@ class FileDownloadTask extends CarpServiceTask {
   FileDownloadTask._(FileStorageReference reference, this.file)
       : super._(reference);
 
-  /// Returns the HTTP status code when completed
   Completer<int> _completer = Completer<int>();
+
+  /// Returns the HTTP status code when completed
   Future<int> get onComplete => _completer.future;
 
-  /// Start the the download task. Returns the HTTP status code (200 for successful download).
+  /// Start the the download task.
+  /// Returns the HTTP status code (200 for successful download).
   Future<int> _start() async {
     super._start();
     final String url = '${reference.fileEndpointUri}/${reference.id}/download';
@@ -177,9 +180,9 @@ class FileDownloadTask extends CarpServiceTask {
   }
 }
 
-/// Represents the response from the CARP server when getting file objects.
+/// A file object as retrieved from the CARP server.
 class CarpFileResponse {
-  CarpFileResponse._(this.ref, this.map)
+  CarpFileResponse._(this.map)
       : id = map['id'],
         storageName = map['storage_name'],
         originalName = map['original_name'],
@@ -190,7 +193,6 @@ class CarpFileResponse {
         studyId = map['study_id'];
 
   final Map<dynamic, dynamic> map;
-  final FileStorageReference ref;
   final int id;
   final String storageName;
   final String originalName;

@@ -94,9 +94,8 @@ void main() async {
       CarpService().getFileStorageReference(id).download(downloadFile);
   await downloadTask.onComplete;
 
-  // now get references to ALL files in this study
-  final List<CarpFileResponse> results =
-      await CarpService().getFileStorageReference(id).getAll();
+  // now get references to ALL files
+  final List<CarpFileResponse> results = await CarpService().getAllFiles();
   print(results);
 
   // finally, delete the file

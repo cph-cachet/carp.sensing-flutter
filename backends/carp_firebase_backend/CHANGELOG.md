@@ -1,3 +1,6 @@
+## 0.20.0
+* upgrade to `carp_mobile_sensing` v. 0.20.x
+
 ## 0.11.0
 * upgrade to `carp_mobile_sensing` v. 0.11.0
 * upgrade to latest `firebase_storage` v. 5.2.0

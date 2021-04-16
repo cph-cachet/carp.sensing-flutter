@@ -94,8 +94,8 @@ class DelayedTrigger extends CAMSTrigger {
 
 /// A trigger that resume/pause sampling every [period] for a specific [duration].
 ///
-/// It is important to specify **both** the [period] and the [duration] in order to specify
-/// the timing of resuming and pausing sampling.
+/// It is important to specify **both** the [period] and the [duration] in order
+/// to specify the timing of resuming and pausing sampling.
 ///
 /// Weekly and montly recurrent triggers can be specified using the [RecurrentScheduledTrigger].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
@@ -110,8 +110,7 @@ class PeriodicTrigger extends CAMSTrigger {
     String triggerId,
     @required this.period,
     this.duration = const Duration(seconds: 1),
-  })
-      : super(triggerId: triggerId);
+  }) : super(triggerId: triggerId);
 
   Function get fromJsonFunction => _$PeriodicTriggerFromJson;
   factory PeriodicTrigger.fromJson(Map<String, dynamic> json) =>
@@ -134,8 +133,7 @@ class DateTimeTrigger extends CAMSTrigger {
     String triggerId,
     @required this.schedule,
     this.duration,
-  })
-      : super(triggerId: triggerId);
+  }) : super(triggerId: triggerId);
 
   Function get fromJsonFunction => _$DateTimeTriggerFromJson;
   factory DateTimeTrigger.fromJson(Map<String, dynamic> json) =>
@@ -151,10 +149,12 @@ enum RecurrentType {
   //yearly,
 }
 
-/// A time on a day. Used in a [RecurrentScheduledTrigger].
+/// A time on a day.
 ///
 /// Follows the conventions in the [DartTime] class, but only uses the Time
 /// part in a 24 hour time format.
+///
+/// Used in a [RecurrentScheduledTrigger] and [RandomRecurrentTrigger].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class Time extends Serializable {
   /// 24 hour format.
@@ -168,6 +168,27 @@ class Time extends Serializable {
     DateTime now = DateTime.now();
     return Time(hour: now.hour, minute: now.minute, second: now.second);
   }
+
+  /// Returns true if [this] occurs before [other].
+  ///
+  /// The comparison is independent of whether the time is in UTC or in
+  /// the local time zone.
+  bool isBefore(Time other) => DateTime(2021, 1, hour, minute, second)
+      .isBefore(DateTime(2021, 1, other.hour, other.minute, other.second));
+
+  /// Returns true if [this] occurs after [other].
+  ///
+  /// The comparison is independent of whether the time is in UTC or in
+  /// the local time zone.
+  bool isAfter(Time other) => DateTime(2021, 1, hour, minute, second)
+      .isAfter(DateTime(2021, 1, other.hour, other.minute, other.second));
+
+  /// Returns a [Duration] with the difference when subtracting [other] from
+  /// [this].
+  ///
+  ///  The returned [Duration] will be negative if [other] occurs after [this].
+  Duration difference(Time other) => DateTime(2021, 1, hour, minute, second)
+      .difference(DateTime(2021, 1, other.hour, other.minute, other.second));
 
   Function get fromJsonFunction => _$TimeFromJson;
   factory Time.fromJson(Map<String, dynamic> json) =>
@@ -491,8 +512,7 @@ class CronScheduledTrigger extends CAMSTrigger {
     String triggerId,
     this.cronExpression,
     this.duration = const Duration(seconds: 1),
-  })
-      : super(triggerId: triggerId);
+  }) : super(triggerId: triggerId);
 
   static String _cronToString(
           int minute, int hour, int day, int month, int weekday) =>
@@ -526,8 +546,7 @@ class SamplingEventTrigger extends CAMSTrigger {
     @required this.measureType,
     this.resumeCondition,
     this.pauseCondition,
-  })
-      : super(triggerId: triggerId);
+  }) : super(triggerId: triggerId);
 
   /// The data type of the event to look for.
   ///
@@ -606,8 +625,7 @@ class ConditionalSamplingEventTrigger extends CAMSTrigger {
     @required this.measureType,
     this.resumeCondition,
     this.pauseCondition,
-  })
-      : super(triggerId: triggerId);
+  }) : super(triggerId: triggerId);
 
   /// The data type of the event to look for.
   String measureType;
@@ -630,4 +648,48 @@ class ConditionalSamplingEventTrigger extends CAMSTrigger {
       FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() =>
       _$ConditionalSamplingEventTriggerToJson(this);
+}
+
+/// A trigger that triggers a random number of times within a defined
+/// period of time in a day.
+///
+/// The random value is between the [minNumberOfTriggers] and [maxNumberOfTriggers]
+/// numbers specified.
+/// The time period is defined by a [startTime] and an [endTime].
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class RandomRecurrentTrigger extends CAMSTrigger {
+  /// Start time of the day where the trigger can happen.
+  Time startTime;
+
+  /// End time of the day where the trigger can happen.
+  Time endTime;
+
+  /// Minimum number of trigger per day.
+  int minNumberOfTriggers;
+
+  /// Maximum number of trigger per day.
+  int maxNumberOfTriggers;
+
+  /// The duration (until paused) of the the sampling.
+  Duration duration;
+
+  /// Create a [RandomRecurrentTrigger].
+  ///
+  /// [minNumberOfTriggers] and [maxNumberOfTriggers] specified the range of
+  /// the random samples (e.g., between 3 and 8 times pr. day).
+  /// [startTime] and [endTime] specified the period within a day the sampling
+  /// should take place (e.g., between 08:00 and 20:00).
+  RandomRecurrentTrigger({
+    String triggerId,
+    @required this.minNumberOfTriggers,
+    @required this.maxNumberOfTriggers,
+    @required this.startTime,
+    @required this.endTime,
+    this.duration = const Duration(seconds: 2),
+  }) : super(triggerId: triggerId);
+
+  Function get fromJsonFunction => _$RandomRecurrentTriggerFromJson;
+  factory RandomRecurrentTrigger.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json);
+  Map<String, dynamic> toJson() => _$RandomRecurrentTriggerToJson(this);
 }

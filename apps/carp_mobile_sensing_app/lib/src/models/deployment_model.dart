@@ -4,9 +4,10 @@ class StudyDeploymentModel {
   CAMSMasterDeviceDeployment deployment;
 
   String get name => deployment?.name ?? '';
-  String get title => deployment?.title ?? '';
+  String get title => deployment?.protocolDescription?.title ?? '';
   String get description =>
-      deployment?.description ?? 'No description available.';
+      deployment?.protocolDescription?.description ??
+      'No description available.';
   Image get image => Image.asset('assets/study.png');
   String get studyId => deployment?.studyId ?? '';
   String get studyDeploymentId => deployment?.studyDeploymentId ?? '';

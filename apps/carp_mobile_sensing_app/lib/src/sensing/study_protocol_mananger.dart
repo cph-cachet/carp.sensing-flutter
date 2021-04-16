@@ -7,7 +7,7 @@
 
 part of mobile_sensing_app;
 
-// This is a simple local [StudyProtocolManager].
+/// This is a simple local [StudyProtocolManager].
 ///
 /// This class shows how to configure a [StudyProtocol] with [Tigger]s,
 /// [TaskDescriptor]s and [Measure]s.
@@ -28,12 +28,10 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         name: 'Alex Boyon',
         email: 'alex@uni.dk',
       )
-      ..protocolDescription = {
-        'en': StudyProtocolDescription(
-          title: 'Sensing Coverage Study',
-          description: 'This is a study for testing the coverage of sampling.',
-        ),
-      };
+      ..protocolDescription = StudyProtocolDescription(
+        title: 'Sensing Coverage Study',
+        description: 'This is a study for testing the coverage of sampling.',
+      );
 
     // Define which devices are used for data collection.
     Smartphone phone = Smartphone();
@@ -49,8 +47,8 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           ..measures = SamplingPackageRegistry().debug().getMeasureList(
             types: [
               SensorSamplingPackage.LIGHT, // 10 s
-              ConnectivitySamplingPackage.CONNECTIVITY,
-              ConnectivitySamplingPackage.WIFI, // 60 s
+              // ConnectivitySamplingPackage.CONNECTIVITY,
+              // ConnectivitySamplingPackage.WIFI, // 60 s
               DeviceSamplingPackage.MEMORY, // 60 s
               AudioSamplingPackage.NOISE, // 60 s
               ContextSamplingPackage.ACTIVITY, // ~3 s
@@ -60,7 +58,12 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         phone);
 
     protocol.addTriggeredTask(
-        PeriodicTrigger(period: Duration(minutes: 1)),
+        RandomRecurrentTrigger(
+          startTime: Time(hour: 23, minute: 56),
+          endTime: Time(hour: 24, minute: 0),
+          minNumberOfTriggers: 2,
+          maxNumberOfTriggers: 8,
+        ),
         AutomaticTask()
           ..measures = SamplingPackageRegistry().debug().getMeasureList(
             types: [
@@ -69,6 +72,17 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
             ],
           ),
         phone);
+
+    // protocol.addTriggeredTask(
+    //     PeriodicTrigger(period: Duration(minutes: 1)),
+    //     AutomaticTask()
+    //       ..measures = SamplingPackageRegistry().debug().getMeasureList(
+    //         types: [
+    //           DeviceSamplingPackage.DEVICE,
+    //           ContextSamplingPackage.LOCATION,
+    //         ],
+    //       ),
+    //     phone);
 
     protocol.addTriggeredTask(
         PeriodicTrigger(period: Duration(minutes: 5)), // 5 min

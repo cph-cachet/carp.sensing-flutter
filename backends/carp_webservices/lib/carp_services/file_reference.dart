@@ -34,7 +34,8 @@ class FileStorageReference extends CarpReference {
     return task;
   }
 
-  /// Asynchronously downloads the object at this [FileStorageReference] to a specified local file.
+  /// Asynchronously downloads the object at this [FileStorageReference]
+  /// to a specified local file.
   FileDownloadTask download(File file) {
     assert(file != null);
     assert(id > 0);
@@ -57,7 +58,7 @@ class FileStorageReference extends CarpReference {
     switch (httpStatusCode) {
       case 200:
         {
-          return CarpFileResponse._(this, map);
+          return CarpFileResponse._(map);
         }
       default:
         // All other cases are treated as an error.
@@ -65,37 +66,6 @@ class FileStorageReference extends CarpReference {
           throw CarpServiceException(
             httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
             message: map["message"],
-          );
-        }
-    }
-  }
-
-  /// Get all file objects for the [Study] in this [FileStorageReference].
-  Future<List<CarpFileResponse>> getAll() async {
-    final String url = "$fileEndpointUri";
-    final restHeaders = await headers;
-
-    http.Response response =
-        await httpr.get(Uri.encodeFull(url), headers: restHeaders);
-    int httpStatusCode = response.statusCode;
-    List<dynamic> list = json.decode(response.body);
-
-    switch (httpStatusCode) {
-      case 200:
-        {
-          List<CarpFileResponse> fileList = new List<CarpFileResponse>();
-          list.forEach((element) {
-            fileList.add(CarpFileResponse._(this, element));
-          });
-          return fileList;
-        }
-      default:
-        // All other cases are treated as an error.
-        {
-          Map<String, dynamic> responseJson = json.decode(response.body);
-          throw CarpServiceException(
-            httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-            message: responseJson["message"],
           );
         }
     }

@@ -177,6 +177,21 @@ void main() {
       print(t);
     });
 
+    test(' - RandomRecurrentTrigger', () {
+      RandomRecurrentTrigger t = RandomRecurrentTrigger(
+        // startTime: Time(hour: 8, minute: 0),
+        // endTime: Time(hour: 20, minute: 0),
+        startTime: Time(hour: 8, minute: 56),
+        endTime: Time(hour: 20, minute: 10),
+        minNumberOfTriggers: 2,
+        maxNumberOfTriggers: 8,
+      );
+      print(toJsonString(t));
+
+      RandomRecurrentTriggerExecutor ex = RandomRecurrentTriggerExecutor(t);
+      print(ex.samplingTimes);
+    });
+
     /// Test template.
     test('...', () {
       // test template

@@ -11,7 +11,7 @@ part of runtime;
 TriggerExecutor getTriggerExecutor(Trigger trigger) {
   switch (trigger.runtimeType) {
     // actually, the base Trigger and CAMSTrigger classes is not supposed to be used
-    // but if it is, treat it as an ImmediateTrigger
+    // but if used, treat them as an ImmediateTrigger
     case Trigger:
     case CAMSTrigger:
     case ImmediateTrigger:
@@ -30,6 +30,8 @@ TriggerExecutor getTriggerExecutor(Trigger trigger) {
       return SamplingEventTriggerExecutor(trigger);
     case ConditionalSamplingEventTrigger:
       return ConditionalSamplingEventTriggerExecutor(trigger);
+    case RandomRecurrentTrigger:
+      return RandomRecurrentTriggerExecutor(trigger);
     case ManualTrigger:
       return PassiveTriggerExecutor(trigger);
     default:
@@ -221,7 +223,7 @@ class RecurrentScheduledTriggerExecutor extends PeriodicTriggerExecutor {
     Duration _delay = _myTrigger.firstOccurrence.difference(DateTime.now());
     debug('delay: $_delay');
     if (_myTrigger.end == null || _myTrigger.end.isAfter(DateTime.now())) {
-      Timer(_delay, () {
+      Timer(_delay, () async {
         debug('delay finished, now resuming...');
         if (_myTrigger.remember) {
           // replace the entry of the first occurrence to the next occurrence date
@@ -230,7 +232,7 @@ class RecurrentScheduledTriggerExecutor extends PeriodicTriggerExecutor {
               _myTrigger.triggerId, nextOccurrence.toUtc().toString());
           debug('saving nextOccurrence: $nextOccurrence');
         }
-        super.onResume();
+        await super.onResume();
       });
     }
   }
@@ -276,11 +278,6 @@ class SamplingEventTriggerExecutor extends TriggerExecutor {
     _subscription = ProbeRegistry()
         .eventsByType(eventTrigger?.measureType?.toString())
         .listen((dataPoint) {
-      // if ((eventTrigger?.resumeCondition == null) ||
-      //     (dataPoint.carpBody == eventTrigger?.resumeCondition))
-      //   super.onResume();
-      // if (eventTrigger?.pauseCondition != null &&
-      //     dataPoint.carpBody == eventTrigger?.pauseCondition) super.onPause();
       if ((eventTrigger?.resumeCondition == null) ||
           (dataPoint.carpBody as Datum)
               .equivalentTo(eventTrigger?.resumeCondition)) super.onResume();
@@ -324,6 +321,86 @@ class ConditionalSamplingEventTriggerExecutor extends TriggerExecutor {
 
   Future onPause() async {
     await _subscription.cancel();
+    await super.onPause();
+  }
+}
+
+/// Executes a [RandomRecurrentTrigger] triggering N times per day within a
+/// defined period of time.
+class RandomRecurrentTriggerExecutor extends TriggerExecutor {
+  cron.Cron _cron = cron.Cron();
+  cron.ScheduledTask _scheduledTask;
+  List<Timer> _timers = [];
+
+  RandomRecurrentTriggerExecutor(RandomRecurrentTrigger trigger)
+      : super(trigger);
+
+  Time get startTime => (trigger as RandomRecurrentTrigger).startTime;
+  Time get endTime => (trigger as RandomRecurrentTrigger).endTime;
+  int get minNumberOfTriggers =>
+      (trigger as RandomRecurrentTrigger).minNumberOfTriggers;
+  int get maxNumberOfTriggers =>
+      (trigger as RandomRecurrentTrigger).maxNumberOfTriggers;
+  Duration get duration => (trigger as RandomRecurrentTrigger).duration;
+
+  /// Get a random number of samples for the day
+  int get numberOfSampling =>
+      Random().nextInt(maxNumberOfTriggers) + minNumberOfTriggers;
+
+  /// Generate N random times between startTime and endTime
+  List<Time> get samplingTimes {
+    List<Time> _samplingTimes = [];
+    for (int i = 0; i <= numberOfSampling; i++) {
+      int randomHour =
+          Random().nextInt(endTime.hour - startTime.hour) + startTime.hour;
+      int randomMinutes = Random().nextInt(60);
+      Time randomTime = Time(hour: randomHour, minute: randomMinutes);
+
+      // check edge-cases
+      randomTime = (randomTime.isAfter(endTime))
+          ? Time(hour: randomHour - 1, minute: randomMinutes)
+          : randomTime;
+      randomTime = (randomTime.isBefore(startTime))
+          ? Time(hour: randomHour + 1, minute: randomMinutes)
+          : randomTime;
+
+      _samplingTimes.add(randomTime);
+    }
+    return _samplingTimes;
+  }
+
+  Future onResume() async {
+    // set up a cron job that generates the random triggers once pr day at [startTime]
+    final String cronJob = '${startTime.minute} ${startTime.hour} * * *';
+    debug('$runtimeType - creating cron job : $cronJob');
+
+    _scheduledTask = _cron.schedule(cron.Schedule.parse(cronJob), () async {
+      debug('$runtimeType - resuming cron job : ${DateTime.now().toString()}');
+
+      // empty the list of timers.
+      _timers = [];
+
+      // get a random number of trigger time for today, and for each set up a
+      // timer that triggers the super.onResum() method.
+      samplingTimes.forEach((time) {
+        // find the delay - note, that none of the delays can be negative,
+        // since we are at [startTime]
+        Duration delay = time.difference(startTime);
+        Timer timer = Timer(delay, () async {
+          await super.onResume();
+          // now set up a timer that waits until the sampling duration ends
+          Timer(duration, () => super.onPause());
+        });
+        _timers.add(timer);
+      });
+    });
+  }
+
+  Future onPause() async {
+    // cancel all the timer that might have been started
+    for (var timer in _timers) timer.cancel();
+    // cancel the daily cronn job
+    await _scheduledTask.cancel();
     await super.onPause();
   }
 }

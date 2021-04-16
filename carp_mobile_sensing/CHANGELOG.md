@@ -1,3 +1,6 @@
+## 0.20.5
+* Added a `RandomRecurrentTrigger` as a new trigger type (Issue [#170](https://github.com/cph-cachet/carp.sensing-flutter/issues/170))
+
 ## 0.20.4
 * removed localization support again - this has to be handled on an application level, not as part of sensing.
 * removed the `ConsentSection` also - again, this is separate to sensing.
@@ -14,13 +17,14 @@
     * `Device` is now called `DeviceDescriptor`
     * `ManualTrigger` is now called `PassiveTrigger`
     * `ScheduledTrigger` is now called `DateTimeTrigger`
-    * `` is now called ``
+    * `Measure` is now called `CAMSMeasure` (but `Measure` is part of `carp_core`)
 * A `StudyProtocol` now uses the concept of a [`TriggeredTask`](https://pub.dev/documentation/carp_core/latest/carp_core/TriggeredTask-class.html) which is slightly different to the previous `Study` model. See the [example](https://pub.dev/packages/carp_core/example).
 * A `CAMSStudyProtocol` now supports localization. A `StudyProtocolDescription` and a list of `ConsentSection` can be added to a protocol for each locale (i.e., language code).
 * Similarly, measures now also supports localization. For each `CAMSMeasure` there is the option to specify its `MeasureDescription` for each locale.  
 * All json serialization of a protocol now use `camelCase` instead of `snake_case` to be consistent with `carp_core` in Kotlin.
    * Note, however, that `DataPoint` objects are still serialized as `snake_case` json.
 * All the `events` streams are now called `data` and streams `DataPoint` data objects (instead of just the `Datum` data objects). 
+* The `DataPoint` comply to version 1.2 definition (Issue [#162](https://github.com/cph-cachet/carp.sensing-flutter/issues/162))
 
 ## 0.12.3
 * extension of `Study` to include `purpose`, `title` and `PrincipalInvestigator`

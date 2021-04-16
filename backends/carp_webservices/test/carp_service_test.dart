@@ -58,6 +58,7 @@ void main() {
 
     app = new CarpApp(
       name: "Test",
+      studyId: testStudyId,
       uri: Uri.parse(uri),
       oauth: OAuthEndPoint(clientID: clientID, clientSecret: clientSecret),
     );
@@ -216,7 +217,9 @@ void main() {
 
       assert(uploaded != null);
       print(uploaded);
-      print(uploaded.createdAt);
+      print('createdAt : ${uploaded.createdAt}');
+      print('createdByUserId : ${uploaded.createdByUserId}');
+      print('document : ${uploaded.document}');
 
       consentDocumentId = uploaded.id;
     });
@@ -228,7 +231,9 @@ void main() {
       assert(downloaded != null);
       assert(downloaded.id == consentDocumentId);
       print(downloaded);
-      print(downloaded.createdAt);
+      print('createdAt : ${downloaded.createdAt}');
+      print('createdByUserId : ${downloaded.createdByUserId}');
+      print('document : ${downloaded.document}');
     });
   }, skip: false);
 
@@ -766,11 +771,25 @@ void main() {
     });
 
     test('- get all', () async {
-      final List<CarpFileResponse> results =
-          await CarpService().getFileStorageReference(id).getAll();
-
-      //assert(result.id == id);
+      final List<CarpFileResponse> results = await CarpService().getAllFiles();
       print('result : $results');
+    });
+
+    test('- query', () async {
+      final List<CarpFileResponse> results =
+          await CarpService().queryFiles('original_name==img.jpg');
+
+      expect(results[0].originalName, 'img.jpg');
+      print('result : $results');
+    });
+
+    test('- get by name', () async {
+      final FileStorageReference reference =
+          await CarpService().getFileStorageReferenceByName('img.jpg');
+      final CarpFileResponse result = await reference.get();
+
+      assert(result.originalName == 'img.jpg');
+      print('result : $result');
     });
 
     test('- delete', () async {

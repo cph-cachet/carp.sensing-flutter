@@ -2,7 +2,7 @@
 # following page: https://www.dartlang.org/tools/pub/pubspec
 name: carp_firebase_backend
 description: CARP Mobile Sensing data backend for uploading data to Google Firebase.
-version: 0.11.0
+version: 0.20.0
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/backends/carp_firebase_backend
 author:  CACHET Team <cph.cachet@gmail.com>
 
@@ -17,15 +17,18 @@ dependencies:
   firebase_storage: ^5.2.0
   firebase_auth: ^0.18.0
   cloud_firestore: ^0.14.0
-  carp_mobile_sensing: ^0.11.0
   firebase_core: ^0.5.0
+  carp_mobile_sensing: ^0.20.0
+  carp_core: ^0.20.0      # the core CARP domain model
 
 
 # Overriding carp_mobile_sensing and carp_core to use the local copy
 # Remove this when done development
 #dependency_overrides:
+#  carp_core:
+#    path: ../../carp_core/
 #  carp_mobile_sensing:
-#    path: ../carp_mobile_sensing/
+#    path: ../../carp_mobile_sensing/
 
 dev_dependencies:
   flutter_test:
