@@ -22,9 +22,10 @@ void main() {
           zip: true,
           encrypt: false);
 
-  Study study_1 =
-      new Study(id: "1234", userId: "user_1@dtu.dk", name: "Test study #1");
-  study_1.dataEndPoint = storageEndPoint;
+  CAMSStudyProtocol study_1 = CAMSStudyProtocol()
+    ..dataEndPoint = storageEndPoint;
+
+  print(study_1);
 
   // Using Google Sign-In as authentication
   final FirebaseEndPoint firebaseEndPoint_2 = new FirebaseEndPoint(
@@ -41,7 +42,8 @@ void main() {
       new FirebaseDatabaseDataEndPoint(firebaseEndPoint_2,
           collection: 'carp_data');
 
-  Study study_2 =
-      new Study(id: "5678", userId: "user_2@dtu.dk", name: "Test study #2");
-  study_2.dataEndPoint = databaseEndPoint;
+  CAMSStudyProtocol study_2 = CAMSStudyProtocol()
+    ..dataEndPoint = databaseEndPoint;
+
+  print(study_2);
 }

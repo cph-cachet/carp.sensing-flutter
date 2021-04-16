@@ -1,3 +1,6 @@
+## 0.20.4
+* support for uploading and downloading informed consent to be shown to the user
+
 ## 0.20.3
 * update to `carp_core` v. 0.20.3 (json serialization)
 

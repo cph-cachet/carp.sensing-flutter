@@ -47,7 +47,7 @@ class CarpUser {
   DateTime created;
 
   /// The list of roles that this user has in CARP.
-  List<String> role = List<String>();
+  List<String> role = [];
 
   /// The OAuth 2.0 [OAuthToken] for this user, once authenticated to CARP
   OAuthToken token;

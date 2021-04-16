@@ -13,7 +13,6 @@ dependencies:
 
   carp_core: ^0.20.0            # the core CARP domain model
   carp_mobile_sensing: ^0.20.0  # the CAMS domain model
-  research_package: ^0.4.0      # the informed consent domain model
 
   http: ^0.12.0
   http_parser: ^3.1.0
@@ -23,7 +22,6 @@ dependencies:
   meta: ^1.2.0
   form_field_validator: ^1.0.1
   rflutter_alert: ^1.1.0
-  path_provider: ^1.2.0
 
 
 # Overriding carp libraries to use the local copy

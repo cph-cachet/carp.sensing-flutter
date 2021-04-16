@@ -111,7 +111,8 @@ class FileMetadata {
     this.contentLanguage,
     this.contentType,
     Map<String, String> customMetadata,
-  })  : carpServiceName = null,
+  })
+      : carpServiceName = null,
         path = null,
         name = null,
         sizeBytes = null,

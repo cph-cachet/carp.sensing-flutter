@@ -16,11 +16,14 @@ abstract class FirebaseDataManager extends AbstractDataManager {
 
   FirebaseDataManager();
 
-  Future initialize(Study study, Stream<Datum> events) async {
-    super.initialize(study, events);
-    assert(study.dataEndPoint is FirebaseDataEndPoint);
+  Future initialize(
+    CAMSMasterDeviceDeployment deployment,
+    Stream<DataPoint> data,
+  ) async {
+    super.initialize(deployment, data);
+    assert(deployment.dataEndPoint is FirebaseDataEndPoint);
     firebaseEndPoint =
-        (study.dataEndPoint as FirebaseDataEndPoint).firebaseEndPoint;
+        (deployment.dataEndPoint as FirebaseDataEndPoint).firebaseEndPoint;
   }
 
   Future<FirebaseApp> get firebaseApp async {
@@ -129,12 +132,15 @@ class FirebaseStorageDataManager extends FirebaseDataManager {
             _uploadFileToFirestore((event as FileDataManagerEvent).path));
   }
 
-  Future initialize(Study study, Stream<Datum> events) async {
-    super.initialize(study, events);
-    assert(study.dataEndPoint is FirebaseStorageDataEndPoint);
-    dataEndPoint = study.dataEndPoint as FirebaseStorageDataEndPoint;
+  Future initialize(
+    CAMSMasterDeviceDeployment deployment,
+    Stream<DataPoint> data,
+  ) async {
+    super.initialize(deployment, data);
+    assert(deployment.dataEndPoint is FirebaseStorageDataEndPoint);
+    dataEndPoint = deployment.dataEndPoint as FirebaseStorageDataEndPoint;
 
-    fileDataManager.initialize(study, events);
+    fileDataManager.initialize(deployment, data);
 
     final FirebaseStorage storage = await firebaseStorage;
     final User authenticatedUser = await user;
@@ -157,7 +163,7 @@ class FirebaseStorageDataManager extends FirebaseDataManager {
   }
 
   String get firebasePath =>
-      "${dataEndPoint.path}/${study.id}/${Device().deviceID.toString()}";
+      "${dataEndPoint.path}/${deployment.studyDeploymentId}/${DeviceInfo().deviceID.toString()}";
 
   Future<String> _uploadFileToFirestore(String localFilePath) async {
     final String filename =
@@ -169,8 +175,8 @@ class FirebaseStorageDataManager extends FirebaseDataManager {
     final Reference ref =
         FirebaseStorage.instance.ref().child(firebasePath).child(filename);
     final File file = new File(localFilePath);
-    final String deviceID = Device().deviceID.toString();
-    final String studyID = study.id;
+    final String deviceID = DeviceInfo().deviceID.toString();
+    final String studyDeploymentId = deployment.studyDeploymentId;
     final String userID = (await user).email;
 
     final UploadTask uploadTask = ref.putFile(
@@ -180,7 +186,7 @@ class FirebaseStorageDataManager extends FirebaseDataManager {
         contentType: 'application/zip',
         customMetadata: <String, String>{
           'device_id': '$deviceID',
-          'study_id': '$studyID',
+          'study_deployment_id': '$studyDeploymentId',
           'user_id': '$userID'
         },
         // TODO - add location as metadata
@@ -209,7 +215,7 @@ class FirebaseStorageDataManager extends FirebaseDataManager {
   }
 
   // forward to file data manager
-  void onDatum(Datum datum) => fileDataManager.write(datum);
+  void onDataPoint(DataPoint dataPoint) => fileDataManager.write(dataPoint);
 }
 
 /// Stores CARP json objects in the Firebase Database.
@@ -227,10 +233,13 @@ class FirebaseDatabaseDataManager extends FirebaseDataManager {
 
   String get type => DataEndPointTypes.FIREBASE_DATABSE;
 
-  Future initialize(Study study, Stream<Datum> events) async {
-    super.initialize(study, events);
-    assert(study.dataEndPoint is FirebaseDatabaseDataEndPoint);
-    dataEndPoint = study.dataEndPoint as FirebaseDatabaseDataEndPoint;
+  Future initialize(
+    CAMSMasterDeviceDeployment deployment,
+    Stream<DataPoint> data,
+  ) async {
+    super.initialize(deployment, data);
+    assert(deployment.dataEndPoint is FirebaseDatabaseDataEndPoint);
+    dataEndPoint = deployment.dataEndPoint as FirebaseDatabaseDataEndPoint;
 
     final FirebaseFirestore database = await firebaseDatabase;
     final User authenticatedUser = await user;
@@ -252,27 +261,28 @@ class FirebaseDatabaseDataManager extends FirebaseDataManager {
   }
 
   /// Called every time a JSON CARP [data] object is to be uploaded.
-  Future<bool> uploadData(Datum data) async {
-    assert(data is CARPDatum);
-    final carpData = data as CARPDatum;
+  Future<bool> uploadData(DataPoint dataPoint) async {
+    assert(dataPoint.data is Datum);
+    final datum = dataPoint.data as Datum;
+
     await user;
 
     if (user != null) {
-      final String deviceId = Device().deviceID.toString();
-      final String dataType = data.format.name;
+      final String deviceId = DeviceInfo().deviceID.toString();
+      final String dataType = dataPoint.carpHeader.dataFormat.toString();
 
-      final jsonDataString = json.encode(data);
+      final jsonDataString = json.encode(dataPoint);
       Map<String, dynamic> jsonData =
           json.decode(jsonDataString) as Map<String, dynamic>;
 
       // add json data
       FirebaseFirestore.instance
           .collection(dataEndPoint.collection)
-          .doc(study.id) // study id
+          .doc(deployment.studyDeploymentId) // study deployment id
           .collection(deviceId) // device id
           .doc('upload') // the default upload document is called 'upload'
           .collection(dataType) // data/measure type
-          .doc(carpData.id) // data id
+          .doc(datum.id) // data id
           .set(jsonData);
 
       return true;
@@ -281,7 +291,7 @@ class FirebaseDatabaseDataManager extends FirebaseDataManager {
     return false;
   }
 
-  void onDatum(Datum datum) => uploadData(datum);
+  void onDataPoint(DataPoint dataPoint) => uploadData(dataPoint);
 }
 
 /// A status event for this Firebase data manager.

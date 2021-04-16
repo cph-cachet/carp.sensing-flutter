@@ -2,7 +2,7 @@
 * support for more file endpoints
    * `getAllFiles()` - gettting all files in a study
    * `queryFiles()` - query for specific files in a study
-* support for uploading and downloading informed consent to be shown to the user
+* fixed a bug in token refresh
 
 ## 0.20.0
 * **BREAKING**: Now using the [`carp_core`](https://pub.dev/packages/carp_core) domain models in order to align with the overall [domain-driven design of CARP](https://carp.cachet.dk/core/)

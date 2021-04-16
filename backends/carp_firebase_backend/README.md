@@ -221,8 +221,7 @@ final FirebaseStorageDataEndPoint storageEndPoint = new FirebaseStorageDataEndPo
    zip: true, 
    encrypt: false);
 
-Study study_1 = new Study(id: "1234", userId: "user_1@dtu.dk", name: "Test study #1");
-study_1.dataEndPoint = storageEndPoint;
+CAMSStudyProtocol study = CAMSStudyProtocol()..dataEndPoint = storageEndPoint;
 ````
 
 Note that a `FirebaseStorageDataEndPoint` extends the `FileDataEndPoint` class and parameters related to 
@@ -236,8 +235,8 @@ In the example above, the file buffer size is set to 1 MB, which is zipped befor
 final FirebaseDatabaseDataEndPoint databaseEndPoint =
     new FirebaseDatabaseDataEndPoint(firebaseEndPoint, collection: 'carp_data');
 
-Study study_2 = new Study(id: "5678", userId: "user_2@dtu.dk", name: "Test study #2");
-study_2.dataEndPoint = databaseEndPoint;
+
+CAMSStudyProtocol study = CAMSStudyProtocol()..dataEndPoint = databaseEndPoint;
 ````
 
  
@@ -245,7 +244,7 @@ study_2.dataEndPoint = databaseEndPoint;
 
 Please file feature requests and bug reports at the [issue tracker][tracker].
 
-[tracker]: https://github.com/cph-cachet/carp.sensing/issues
+[tracker]: https://github.com/cph-cachet/carp.sensing-flutter/issues
 
 ## License
 

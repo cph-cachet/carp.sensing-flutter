@@ -7,7 +7,7 @@
 
 part of mobile_sensing_app;
 
-// This is a simple local [StudyProtocolManager].
+/// This is a simple local [StudyProtocolManager].
 ///
 /// This class shows how to configure a [StudyProtocol] with [Tigger]s,
 /// [TaskDescriptor]s and [Measure]s.

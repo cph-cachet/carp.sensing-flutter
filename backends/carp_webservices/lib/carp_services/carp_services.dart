@@ -21,11 +21,9 @@ import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-import 'package:path_provider/path_provider.dart';
 
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
-import 'package:research_package/model.dart';
 
 part 'carp_service.dart';
 part 'deployment_service.dart';

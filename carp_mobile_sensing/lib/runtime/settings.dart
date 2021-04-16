@@ -48,6 +48,7 @@ class Settings {
     _preferences
         .getKeys()
         .forEach((key) => debug('[$key] = ${_preferences.get(key)}'));
+    info('$runtimeType initialized');
   }
 
   String _userId;
