@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_core;
+part of carp_core_protocols;
 
 /// Describes any type of electronic device, such as a smartphone, wearable
 /// device, a sensor, or internet service (e.g. FitBit API) that collects data

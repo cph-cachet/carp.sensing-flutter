@@ -40,7 +40,8 @@ part 'sampling_package.dart';
 part 'settings.dart';
 part 'study_controller.dart';
 part 'study_manager.dart';
-part 'cams_deployment_service.dart';
+part 'deployment_service.dart';
+part 'client_manager.dart';
 
 /// Generic sensing exception.
 class SensingException implements Exception {
@@ -48,29 +49,17 @@ class SensingException implements Exception {
   SensingException([this.message]);
 }
 
-class DebugLevel {
-  static const int NONE = 0;
-  static const int INFO = 1;
-  static const int WARNING = 2;
-  static const int DEBUG = 3;
-}
-
-/// The global debug level setting.
-///
-/// Typically set when instantiating a [StudyDeploymentController].
-/// See [DebugLevel] for valid debug level settings.
-/// Can be changed on runtime.
-int globalDebugLevel = DebugLevel.WARNING;
+/// A simple method for printing warning messages to the console.
+void info(String message) => (settings.debugLevel >= DebugLevel.INFO)
+    ? print('CAMS INFO - $message')
+    : 0;
 
 /// A simple method for printing warning messages to the console.
-void info(String message) =>
-    (globalDebugLevel >= DebugLevel.INFO) ? print('CAMS INFO - $message') : 0;
-
-/// A simple method for printing warning messages to the console.
-void warning(String message) => (globalDebugLevel >= DebugLevel.WARNING)
+void warning(String message) => (settings.debugLevel >= DebugLevel.WARNING)
     ? print('CAMS WARNING - $message')
     : 0;
 
 /// A simple method for printing debug messages to the console.
-void debug(String message) =>
-    (globalDebugLevel >= DebugLevel.DEBUG) ? print('CAMS DEBUG - $message') : 0;
+void debug(String message) => (settings.debugLevel >= DebugLevel.DEBUG)
+    ? print('CAMS DEBUG - $message')
+    : 0;

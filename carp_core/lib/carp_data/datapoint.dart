@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_core;
+part of carp_core_data;
 
 // VERSION 1.2 -- EXAMPLE
 //

@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_core;
+part of carp_core_deployment;
 
 /// Set [data] for all expected participant data in the study deployment
 /// with [studyDeploymentId].

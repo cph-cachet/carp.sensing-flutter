@@ -95,7 +95,7 @@ void main() {
 
     expect(protocol.ownerId, 'AB');
     expect(protocol.masterDevices.first.roleName,
-        CAMSDeploymentService().thisPhone.roleName);
+        SmartphoneDeploymentService().thisPhone.roleName);
     print(toJsonString(protocol));
   });
 
@@ -228,12 +228,12 @@ void main() {
 
   test('Register Device', () async {
     StudyDeploymentStatus status_1 =
-        await CAMSDeploymentService().createStudyDeployment(protocol);
+        await SmartphoneDeploymentService().createStudyDeployment(protocol);
     print(status_1);
     assert(status_1.studyDeploymentId != null);
     assert(status_1.status == StudyDeploymentStatusTypes.Invited);
 
-    StudyDeploymentStatus status_2 = await CAMSDeploymentService()
+    StudyDeploymentStatus status_2 = await SmartphoneDeploymentService()
         .registerDevice(
             status_1.studyDeploymentId, 'esense', DeviceRegistration());
     print(status_2);
@@ -241,7 +241,7 @@ void main() {
     assert(status_2.status == StudyDeploymentStatusTypes.DeployingDevices);
     assert(status_2 == status_1);
 
-    StudyDeploymentStatus status_3 = await CAMSDeploymentService()
+    StudyDeploymentStatus status_3 = await SmartphoneDeploymentService()
         .registerDevice(
             status_1.studyDeploymentId, 'nonsense', DeviceRegistration());
     assert(status_3.status == StudyDeploymentStatusTypes.DeployingDevices);
@@ -251,7 +251,7 @@ void main() {
 
   test('Study Deployment', () async {
     StudyDeploymentStatus status_1 =
-        await CAMSDeploymentService().createStudyDeployment(protocol);
+        await SmartphoneDeploymentService().createStudyDeployment(protocol);
 
     print(status_1);
     print(toJsonString(status_1));
@@ -269,7 +269,7 @@ void main() {
     expect(status_1.devicesStatus[1].status,
         DeviceDeploymentStatusTypes.Unregistered);
 
-    StudyDeploymentStatus status_2 = await CAMSDeploymentService()
+    StudyDeploymentStatus status_2 = await SmartphoneDeploymentService()
         .registerDevice(
             status_1.studyDeploymentId, 'esense', DeviceRegistration());
 
@@ -280,7 +280,7 @@ void main() {
     expect(status_1.devicesStatus[1].status,
         DeviceDeploymentStatusTypes.Registered);
 
-    CAMSMasterDeviceDeployment deployment = await CAMSDeploymentService()
+    CAMSMasterDeviceDeployment deployment = await SmartphoneDeploymentService()
         .getDeviceDeployment(status_1.studyDeploymentId);
     print(deployment);
     print(toJsonString(deployment));
@@ -288,7 +288,7 @@ void main() {
     expect(deployment.tasks.length, protocol.tasks.length);
     expect(deployment.triggeredTasks.length, protocol.triggeredTasks.length);
 
-    StudyDeploymentStatus status_3 = await CAMSDeploymentService()
+    StudyDeploymentStatus status_3 = await SmartphoneDeploymentService()
         .deploymentSuccessful(status_1.studyDeploymentId);
     expect(status_3.status, StudyDeploymentStatusTypes.DeploymentReady);
     expect(status_3.studyDeploymentId, status_1.studyDeploymentId);

@@ -9,18 +9,19 @@ part of runtime;
 
 /// A local (in-memory) implementation of a [DeploymentService] useful in
 /// CAMS studies to be deployed locally on this phone.
-class CAMSDeploymentService implements DeploymentService {
+class SmartphoneDeploymentService implements DeploymentService {
   /// The default rolename for this master phone device.
   // static const String DEFAULT_MASTER_DEVICE_ROLENAME = 'phone';
 
   // key = studyDeploymentId
   final Map<String, StudyDeployment> _repository = {};
 
-  static CAMSDeploymentService _instance = CAMSDeploymentService._();
-  CAMSDeploymentService._();
+  static SmartphoneDeploymentService _instance =
+      SmartphoneDeploymentService._();
+  SmartphoneDeploymentService._();
 
-  /// Get the singlton [CAMSDeploymentService].
-  factory CAMSDeploymentService() => _instance;
+  /// Get the singlton [SmartphoneDeploymentService].
+  factory SmartphoneDeploymentService() => _instance;
 
   /// The device description for this phone.
   Smartphone thisPhone = Smartphone();
@@ -112,7 +113,7 @@ class CAMSDeploymentService implements DeploymentService {
       studyId: protocol.studyId ?? studyDeploymentId,
       studyDeploymentId: studyDeploymentId,
       name: deployment.protocol.name,
-      protocolDescription: protocol?.protocolDescription ?? {},
+      protocolDescription: protocol?.protocolDescription ?? null,
       owner: protocol?.owner ?? null,
       dataFormat: protocol?.dataFormat,
       dataEndPoint: protocol?.dataEndPoint,

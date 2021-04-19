@@ -43,34 +43,27 @@ void sensing() async {
 
   // deploy this protocol using the on-phone deployment service
   StudyDeploymentStatus status =
-      await CAMSDeploymentService().createStudyDeployment(protocol);
+      await SmartphoneDeploymentService().createStudyDeployment(protocol);
 
-  // at this time we can register this phone as a master device like this
-  CAMSDeploymentService().registerDevice(
-    status.studyDeploymentId,
-    CAMSDeploymentService().thisPhone.roleName,
-    DeviceRegistration(),
-  );
-  // but this is actually not needed, since a phone is always registrered
-  // automatically in the CAMSDeploymentService.
-  // But - you should register devices connected to this phone, if applicable
+  String studyDeploymentId = status.studyDeploymentId;
+  String deviceRolename = status.masterDeviceStatus.device.roleName;
 
-  // now ready to get the device deployment configuration for this phone
-  CAMSMasterDeviceDeployment deployment = await CAMSDeploymentService()
-      .getDeviceDeployment(status.studyDeploymentId);
+  // create and configure a client manager for this phone
+  SmartPhoneClientManager client = SmartPhoneClientManager();
+  client.configure();
 
-  // Create a study deployment controller that can manage this deployment
-  StudyDeploymentController controller = StudyDeploymentController(
-    deployment,
-    debugLevel: DebugLevel.DEBUG,
+  StudyDeploymentController controller =
+      await client.addStudy(studyDeploymentId, deviceRolename);
+
+  // configure the controller and resume sampling
+  await controller.configure(
     privacySchemaName: PrivacySchema.DEFAULT,
+    transformer: ((datum) => datum),
   );
-
-  // initialize the controller
-  await controller.initialize();
-
-  // resume sampling
   controller.resume();
+
+  // listening on the data stream and print them as json to the debug console
+  controller.data.listen((data) => print(toJsonString(data)));
 
   // subscribe to events
   controller.data.listen((DataPoint dataPoint) {

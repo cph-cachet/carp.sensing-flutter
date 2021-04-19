@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_core;
+part of carp_core_deployment;
 
 /// Uniquely identifies the participation of an account in a study deployment.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)

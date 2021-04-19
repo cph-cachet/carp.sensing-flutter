@@ -29,11 +29,12 @@ class DeviceInfo {
   String release;
 
   /// The device info for this device.
-  Map<String, dynamic> deviceData = <String, dynamic>{};
+  Map<String, dynamic> deviceData = {};
 
   /// Initialize the device info using the [DeviceInfoPlugin].
   Future init() async {
-    Map<String, dynamic> _deviceData;
+    // early out
+    if (deviceData.isNotEmpty) return;
 
     try {
       if (Platform.isAndroid) {
@@ -43,11 +44,8 @@ class DeviceInfo {
         deviceData = _readIosDeviceInfo(await _deviceInfoPlugin.iosInfo);
       }
     } on Exception {
-      deviceData = <String, dynamic>{
-        'Error:': 'Failed to get platform version.'
-      };
+      deviceData = {};
     }
-    deviceData = _deviceData;
   }
 
   Map<String, dynamic> _readAndroidDeviceInfo(AndroidDeviceInfo info) {
