@@ -22,7 +22,8 @@ class WeatherMeasure extends CAMSMeasure {
     String description,
     bool enabled,
     this.apiKey,
-  }) : super(
+  })
+      : super(
             type: type, name: name, description: description, enabled: enabled);
 
   Function get fromJsonFunction => _$WeatherMeasureFromJson;
