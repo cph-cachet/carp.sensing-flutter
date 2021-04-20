@@ -19,8 +19,8 @@ To use this plugin, add [`carp_core`](https://pub.dev/packages/carp_core) and [`
 dependencies:
   flutter:
     sdk: flutter
-  carp_core: ^0.20.0
-  carp_mobile_sensing: ^0.20.0
+  carp_core: ^0.21.0
+  carp_mobile_sensing: ^0.21.0
 `````
 
 ### Android Integration
@@ -93,15 +93,16 @@ There is also a range of different [examples](https://github.com/cph-cachet/carp
 
 However, the [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app) provides a **MUCH** better example of how to use the package in a Flutter BLoC architecture, including good documentation of how to do this.
 
-However, below is a small primer in the use of CAMS.
+Below is a small primer in the use of CAMS.
 
-Following [`carp_core`](https://pub.dev/documentation/carp_core/latest/), a CAMS study is created in three steps:
+Following [`carp_core`](https://pub.dev/documentation/carp_core/latest/), a CAMS study can be configured, deployed, executed, and used in different steps:
 
 1. Define a [`StudyProtcol`](https://pub.dev/documentation/carp_core/latest/carp_core/StudyProtocol-class.html).
 2. Deploy this protocol to a [`DeploymentService`](https://pub.dev/documentation/carp_core/latest/carp_core/DeploymentService-class.html).
-3. Start executing the study deployment on the phone using a [`StudyDeploymentController`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/StudyDeploymentController-class.html).
+3. Get a study deployment for the phone and start executing this study deployment using a [`SmartPhoneClientManager`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/SmartPhoneClientManager-class.html).
 4. Use the generated data locally in the app.
 
+Note that as a mobile sensing framework running on a phone, CAMS could be limited to support 3-4. However, to support the 'full cycle', CAMS also supports 1-2. This allows for local creation, deployment, and execution of study protocols (which in many [applications](https://carp.cachet.dk/#applications) have shown to be useful).
 
 ### Defining a `StudyProtcol`
 
@@ -161,7 +162,7 @@ Sampling can be configured in a very sophisticated ways, by specifying different
 
 ### Using a `DeploymentService`
 
-A `StudyProtocol` can be deployed to a `DeploymentService` which handles the deployment of protocols for different devices. CAMS comes with a very simple deployment service which runs locally on the phone. This can be used to deploy a protocol and get back a [`MasterDeviceDeployment`](https://pub.dev/documentation/carp_core/latest/carp_core/MasterDeviceDeployment-class.html), which can be executed on the phone.
+A `StudyProtocol` can be deployed to a `DeploymentService` which handles the deployment of protocols for different devices. CAMS comes with a simple deployment service which runs locally on the phone. This can be used to deploy a protocol and get back a [`MasterDeviceDeployment`](https://pub.dev/documentation/carp_core/latest/carp_core/MasterDeviceDeployment-class.html), which can be executed on the phone.
 
 ```dart
   ...
@@ -180,20 +181,28 @@ A `StudyProtocol` can be deployed to a `DeploymentService` which handles the dep
 
 ### Running a `StudyDeploymentController`
 
-When we have a master device deployment for the phone, this deployment can be excuted and sensing is started. Sensing is controlled by a [`StudyDeploymentController`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/StudyDeploymentController-class.html).
+A study deployment for a phone (master device) is add to a [`SmartPhoneClientManager`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SmartPhoneClientManager-class.html).
+This client manager now hold a [`StudyDeploymentController`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/StudyDeploymentController-class.html) which control the execution of a study deployment.
 
 
 ```dart
   ...
 
-  // Create a study deployment controller that can manage this deployment
-  StudyDeploymentController controller = StudyDeploymentController(deployment);
+  String studyDeploymentId = ... // any id obtained e.g. from an invitation
+  String deviceRolename = ... // the rolename of this phone in the protocol;
 
-  // initialize the controller and resume sampling
-  await controller.initialize();
+  // create and configure a client manager for this phone
+  SmartPhoneClientManager client = SmartPhoneClientManager();
+  await client.configure();
+
+  // create a study runtime to control this deployment
+  StudyDeploymentController controller = await client.addStudy(studyDeploymentId, deviceRolename);
+
+  // configure the controller and resume sampling
+  await controller.configure();
   controller.resume();
 
-  // listening and print all data events from the study
+  // listening and print all data collected by the controller
   controller.data.forEach(print);
 
   ...

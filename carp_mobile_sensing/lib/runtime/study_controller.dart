@@ -29,7 +29,6 @@ class StudyDeploymentController extends StudyRuntime {
   ///   3. any custom [transformer] provided
   ///
   /// This is a broadcast stream and supports multiple subscribers.
-  @override
   Stream<DataPoint> get data => executor.data.map((dataPoint) => dataPoint
     ..data = transformer(TransformerSchemaRegistry()
         .lookup(masterDeployment.dataFormat)

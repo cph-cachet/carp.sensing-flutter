@@ -61,8 +61,9 @@ void example_1() async {
 
   // create and configure a client manager for this phone
   SmartPhoneClientManager client = SmartPhoneClientManager();
-  client.configure();
+  await client.configure();
 
+  // create a study runtime to control this deployment
   StudyDeploymentController controller =
       await client.addStudy(studyDeploymentId, deviceRolename);
 
@@ -238,6 +239,8 @@ void example_3() async {
   // now get the study deployment for this master device and its registered devices
   CAMSMasterDeviceDeployment deployment = await SmartphoneDeploymentService()
       .getDeviceDeployment(studyDeploymentId);
+
+  print(deployment);
 }
 
 /// An example of how to use the [SamplingSchema] model.
@@ -450,7 +453,7 @@ void carp_core_client_example() async {
       deviceController: DeviceController());
 
   // which is equivalent to
-  SmartPhoneClientManager equivalent_client = SmartPhoneClientManager();
+  client = SmartPhoneClientManager();
 
   client.configure();
 
