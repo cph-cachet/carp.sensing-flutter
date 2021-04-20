@@ -12,7 +12,7 @@ import 'package:carp_core/carp_core.dart';
 //   * https://github.com/cph-cachet/carp.sensing-flutter/wiki
 
 /// Example of how to use the **protocol** sub-system domain models
-void carp_core_protocol_example() async {
+void carpCoreProtocolExample() async {
   // Create a new study protocol.
   ProtocolOwner owner = ProtocolOwner();
   StudyProtocol protocol =
@@ -40,7 +40,7 @@ void carp_core_protocol_example() async {
 }
 
 /// Example of how to use the protocol sub-system domain models
-void carp_core_deployment_example() async {
+void carpCoreDeploymentExample() async {
   DeploymentService deploymentService;
   StudyProtocol trackPatientStudy;
   Smartphone patientPhone = trackPatientStudy.masterDevices.first as Smartphone;
@@ -78,7 +78,7 @@ void carp_core_deployment_example() async {
 }
 
 /// Example of how to use the **client** sub-system domain models
-void carp_core_client_example() async {
+void carpCoreClientExample() async {
   ParticipationService participationService;
   DeploymentService deploymentService;
   DeviceDataCollectorFactory dataCollectorFactory;

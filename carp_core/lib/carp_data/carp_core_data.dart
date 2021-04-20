@@ -6,11 +6,7 @@
 /// See the [Serializable] class, which contains the logic for polymorphic serialization.
 library carp_core_data;
 
-import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:meta/meta.dart';
-import 'package:uuid/uuid.dart';
-import 'dart:convert';
 
 export 'carp_core_data.dart';
 

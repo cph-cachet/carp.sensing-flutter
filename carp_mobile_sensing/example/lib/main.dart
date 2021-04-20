@@ -130,15 +130,14 @@ class Sensing {
     SmartPhoneClientManager client = SmartPhoneClientManager();
     await client.configure();
 
-    StudyDeploymentController controller =
-        await client.addStudy(studyDeploymentId, deviceRolename);
+    controller = await client.addStudy(studyDeploymentId, deviceRolename);
 
     // configure the controller and resume sampling
     await controller.configure(
       privacySchemaName: PrivacySchema.DEFAULT,
       transformer: ((datum) => datum),
     );
-    controller.resume();
+    // controller.resume();
 
     // listening on the data stream and print them as json to the debug console
     controller.data.listen((data) => print(toJsonString(data)));

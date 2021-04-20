@@ -7,9 +7,7 @@
 library carp_core;
 
 import 'carp_common/carp_core_common.dart';
-import 'carp_client/carp_core_client.dart';
 import 'carp_protocols/carp_core_protocols.dart';
-import 'carp_deployment/carp_core_deployment.dart';
 import 'carp_data/carp_core_data.dart';
 
 export 'carp_core.dart';
