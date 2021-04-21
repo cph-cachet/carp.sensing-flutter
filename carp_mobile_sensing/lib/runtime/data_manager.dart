@@ -6,7 +6,7 @@
  */
 part of runtime;
 
-/// The [DataManager] interface is used to upload [Datum] objects to any
+/// The [DataManager] interface is used to upload [DataPoint] objects to any
 /// data manager that implements this interface.
 abstract class DataManager {
   /// The type of this data manager as enumerated in [DataEndPointType].

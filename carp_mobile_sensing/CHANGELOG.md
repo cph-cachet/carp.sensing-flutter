@@ -1,3 +1,8 @@
+## 0.21.0
+* update to `carp_core` v. 0.21.0 client domain model
+* support for using a `SmartPhoneClientManager` for executing multiple studies
+* adjusted examples and example app to use the carp_core_client domain model
+
 ## 0.20.5
 * Added a `RandomRecurrentTrigger` as a new trigger type (Issue [#170](https://github.com/cph-cachet/carp.sensing-flutter/issues/170))
 

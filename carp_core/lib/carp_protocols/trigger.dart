@@ -4,7 +4,7 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of carp_core;
+part of carp_core_protocols;
 
 /// Any condition on a device ([DeviceDescriptor]) which starts or stops
 /// [TaskDescriptor]s at certain points in time when the condition applies.

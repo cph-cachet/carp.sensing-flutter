@@ -47,7 +47,7 @@ void main() {
 
     expect(protocol.ownerId, 'AB');
     expect(protocol.masterDevices.first.roleName,
-        CAMSDeploymentService().thisPhone.roleName);
+        SmartphoneDeploymentService().thisPhone.roleName);
     print(toJsonString(protocol));
   });
 
@@ -60,10 +60,10 @@ void main() {
 
     expect(protocol.ownerId, 'AB');
     expect(protocol.masterDevices.first.roleName,
-        CAMSDeploymentService().thisPhone.roleName);
+        SmartphoneDeploymentService().thisPhone.roleName);
 
     StudyDeploymentStatus status =
-        await CAMSDeploymentService().createStudyDeployment(protocol);
+        await SmartphoneDeploymentService().createStudyDeployment(protocol);
     print(toJsonString(status));
   });
 
@@ -75,8 +75,8 @@ void main() {
         StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
 
     StudyDeploymentStatus status =
-        await CAMSDeploymentService().createStudyDeployment(protocol);
-    CAMSMasterDeviceDeployment deployment = await CAMSDeploymentService()
+        await SmartphoneDeploymentService().createStudyDeployment(protocol);
+    CAMSMasterDeviceDeployment deployment = await SmartphoneDeploymentService()
         .getDeviceDeployment(status.studyDeploymentId);
 
     expect(status.studyDeploymentId, deployment.studyDeploymentId);

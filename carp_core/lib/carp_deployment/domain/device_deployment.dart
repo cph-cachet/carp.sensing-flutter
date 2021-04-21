@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_core;
+part of carp_core_deployment;
 
 /// Contains the entire description and configuration for how a single master
 /// device participates in running a study.
@@ -87,7 +87,7 @@ class DeviceRegistration extends Serializable {
   /// Create a new [DeviceRegistration]
   ///  * [deviceId] - a unique id for this device.
   ///    If not specified, a unique id will be generated.
-  ///  * [registrationCreationDate] - the timestamp in milliseconds when this registration was created.
+  ///  * [registrationCreationDate] - the timestamp in zulu when this registration was created.
   ///    If not specified, the time of creation will be used.
   DeviceRegistration([this.deviceId, this.registrationCreationDate]) : super() {
     registrationCreationDate ??= DateTime.now().toUtc();

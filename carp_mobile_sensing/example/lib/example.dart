@@ -14,7 +14,7 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 /// This is an example of how to set up a study by using the `common`
 /// sampling schema. Used in the README file.
 void example_1() async {
-  // Create a study using a local file to store data
+  // Create a study protocol using a local file to store data
   CAMSStudyProtocol protocol = CAMSStudyProtocol()
     ..name = 'Track patient movement'
     ..owner = ProtocolOwner(
@@ -46,10 +46,6 @@ void example_1() async {
           types: [
             SensorSamplingPackage.PEDOMETER,
             SensorSamplingPackage.LIGHT,
-          ],
-        ))
-        ..addMeasures(DeviceSamplingPackage().common.getMeasureList(
-          types: [
             DeviceSamplingPackage.SCREEN,
             DeviceSamplingPackage.BATTERY,
           ],
@@ -58,17 +54,21 @@ void example_1() async {
 
   // deploy this protocol using the on-phone deployment service
   StudyDeploymentStatus status =
-      await CAMSDeploymentService().createStudyDeployment(protocol);
+      await SmartphoneDeploymentService().createStudyDeployment(protocol);
 
-  // now ready to get the device deployment configuration for this phone
-  CAMSMasterDeviceDeployment deployment = await CAMSDeploymentService()
-      .getDeviceDeployment(status.studyDeploymentId);
+  String studyDeploymentId = status.studyDeploymentId;
+  String deviceRolename = status.masterDeviceStatus.device.roleName;
 
-  // Create a study deployment controller that can manage this deployment
-  StudyDeploymentController controller = StudyDeploymentController(deployment);
+  // create and configure a client manager for this phone
+  SmartPhoneClientManager client = SmartPhoneClientManager();
+  await client.configure();
 
-  // initialize the controller and resume sampling
-  await controller.initialize();
+  // create a study runtime to control this deployment
+  StudyDeploymentController controller =
+      await client.addStudy(studyDeploymentId, deviceRolename);
+
+  // configure the controller and resume sampling
+  await controller.configure();
   controller.resume();
 
   // listening and print all data events from the study
@@ -118,17 +118,22 @@ void example_2() async {
     phone,
   );
 
-// deploy and get this protocol using the on-phone deployment service
+  // deploy this protocol using the on-phone deployment service
   StudyDeploymentStatus status =
-      await CAMSDeploymentService().createStudyDeployment(protocol);
-  CAMSMasterDeviceDeployment deployment = await CAMSDeploymentService()
-      .getDeviceDeployment(status.studyDeploymentId);
+      await SmartphoneDeploymentService().createStudyDeployment(protocol);
 
-  // Create a study deployment controller that can manage this deployment
-  StudyDeploymentController controller = StudyDeploymentController(deployment);
+  String studyDeploymentId = status.studyDeploymentId;
+  String deviceRolename = status.masterDeviceStatus.device.roleName;
 
-  // initialize the controller and resume sampling
-  await controller.initialize();
+  // create and configure a client manager for this phone
+  SmartPhoneClientManager client = SmartPhoneClientManager();
+  client.configure();
+
+  StudyDeploymentController controller =
+      await client.addStudy(studyDeploymentId, deviceRolename);
+
+  // configure the controller and resume sampling
+  await controller.configure();
   controller.resume();
 
   // listening to the stream of all data events from the controller
@@ -207,8 +212,8 @@ void example_3() async {
   String studyDeploymentId = '2938y4h-rfhklwe98-erhui';
 
   // get the status of this deployment
-  StudyDeploymentStatus status =
-      await CAMSDeploymentService().getStudyDeploymentStatus(studyDeploymentId);
+  StudyDeploymentStatus status = await SmartphoneDeploymentService()
+      .getStudyDeploymentStatus(studyDeploymentId);
 
   // register the needed devices - listed in the deployment status
   status.devicesStatus.forEach((deviceStatus) async {
@@ -216,34 +221,26 @@ void example_3() async {
     String deviceRoleName = deviceStatus.device.roleName;
 
     // create and register the device in the CAMS DeviceRegistry
-    await DeviceController().registerDevice(type);
+    await DeviceController().createDeviceDataCollector(type);
 
     // if the device manager is created succesfully on the phone
-    if (DeviceController().hasDevice(type)) {
+    if (DeviceController().hasDeviceDataCollector(type)) {
       // ask the device manager for a unique id of the device
-      String deviceId = DeviceController().devices[type].id;
+      String deviceId = DeviceController().getDeviceDataCollector(type).id;
       DeviceRegistration registration = DeviceRegistration(deviceId);
       // (all of the above can actually be handled directly by the CAMSDeploymentService.registerDevice() method)
 
       // register the device in the deployment service
-      CAMSDeploymentService()
+      SmartphoneDeploymentService()
           .registerDevice(studyDeploymentId, deviceRoleName, registration);
     }
   });
 
   // now get the study deployment for this master device and its registered devices
-  CAMSMasterDeviceDeployment deployment =
-      await CAMSDeploymentService().getDeviceDeployment(studyDeploymentId);
+  CAMSMasterDeviceDeployment deployment = await SmartphoneDeploymentService()
+      .getDeviceDeployment(studyDeploymentId);
 
-  // Create a study deployment controller that can manage this deployment
-  StudyDeploymentController controller = StudyDeploymentController(deployment);
-
-  // initialize the controller and resume sampling
-  await controller.initialize();
-  controller.resume();
-
-  // listening to the stream of all data events from the controller
-  controller.data.listen((dataPoint) => print(dataPoint));
+  print(deployment);
 }
 
 /// An example of how to use the [SamplingSchema] model.
@@ -367,19 +364,21 @@ void recurrentScheduledTriggerExample() {
 /// An example of how to configure a [StudyDeploymentController] with the
 /// default privacy schema.
 void study_controller_example() async {
-  CAMSMasterDeviceDeployment deployment =
-      await CAMSDeploymentService().getDeviceDeployment('1234');
+  // create and configure a client manager for this phone
+  SmartPhoneClientManager client = SmartPhoneClientManager();
+  client.configure();
 
-  StudyDeploymentController controller = StudyDeploymentController(
-    deployment,
+  StudyDeploymentController controller =
+      await client.addStudy('1234', 'master_phone');
+
+  // configure the controller with the default privacy schema and resume sampling
+  await controller.configure(
     privacySchemaName: PrivacySchema.DEFAULT,
   );
-
-  await controller.initialize();
   controller.resume();
 }
 
-/// An example of using the (new) AppTask model
+/// An example of using the AppTask model
 void app_task_example() async {
   Smartphone phone = Smartphone(roleName: 'phone');
 
@@ -434,4 +433,50 @@ void app_task_controller_example() async {
         break;
     }
   });
+}
+
+/// This is an example of how the carp_core client library works.
+/// Example is similar to the carp_core client example in Kotlin at
+///
+///   https://github.com/cph-cachet/carp.core-kotlin#example
+///
+void carp_core_client_example() async {
+  var deploymentService = SmartphoneDeploymentService();
+
+  ActiveParticipationInvitation invitation; // get the invitation somehow
+  String studyDeploymentId = invitation.studyDeploymentId;
+  String deviceToUse = invitation.devices.first.deviceRoleName;
+
+  // create a client manager for this phone
+  SmartPhoneClientManager client = SmartPhoneClientManager(
+      deploymentService: deploymentService,
+      deviceController: DeviceController());
+
+  // which is equivalent to
+  client = SmartPhoneClientManager();
+
+  client.configure();
+
+  StudyDeploymentController controller =
+      await client.addStudy(studyDeploymentId, deviceToUse);
+
+  if (controller.status == StudyRuntimeStatus.RegisteringDevices) {
+    var connectedDevice = controller.remainingDevicesToRegister.first;
+    var connectedRegistration = DeviceRegistration();
+    deploymentService.registerDevice(
+        studyDeploymentId, connectedDevice.roleName, connectedRegistration);
+  }
+
+  // another (more convinient) way to register a connected device
+  // that are available on this phone
+  var connectedDevice = controller.remainingDevicesToRegister.first;
+  await controller.tryRegisterConnectedDevice(connectedDevice);
+
+  // another (even more convinient) way to register all connected device
+  // that are available on this phone
+  await controller.tryRegisterConnectedDevices();
+
+  await controller.configure();
+  controller.resume();
+  controller.data.forEach(print);
 }

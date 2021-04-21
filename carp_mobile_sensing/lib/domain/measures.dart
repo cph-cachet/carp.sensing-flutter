@@ -6,8 +6,8 @@
  */
 part of domain;
 
-/// A [Measure] holds information about what measure to do/collect for a
-/// [TaskDescriptor] in a [StudyProtocol].
+/// A CAMS-specific [Measure] that holds information about what measure to collect
+/// in a task.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class CAMSMeasure extends Measure {
   /// A printer-friendly name for this measure.
@@ -36,7 +36,8 @@ class CAMSMeasure extends Measure {
     this.name,
     this.description,
     this.enabled = true,
-  }) : super(type: type) {
+  })
+      : super(type: type) {
     enabled = enabled ?? true;
     _storedEnabled = enabled;
   }
@@ -109,7 +110,8 @@ class PeriodicMeasure extends CAMSMeasure {
     bool enabled,
     this.frequency,
     this.duration,
-  }) : super(
+  })
+      : super(
             type: type,
             name: name,
             description: description,
@@ -174,7 +176,8 @@ class MarkedMeasure extends CAMSMeasure {
     String description,
     bool enabled,
     this.history = const Duration(days: 1),
-  }) : super(
+  })
+      : super(
           type: type,
           name: name,
           description: description,

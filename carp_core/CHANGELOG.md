@@ -1,3 +1,6 @@
+## 0.21.0
+* implementation of the `client` sub-system domain classes
+
 ## 0.20.3
 * improvements to the ` FromJsonFactory().fromJson()` method.
 * added a example of how to support json serialization of polymorphic classes using the `Serialization` class.

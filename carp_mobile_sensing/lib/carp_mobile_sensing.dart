@@ -2,6 +2,8 @@
 /// framework implemented in Flutter. Supports cross-platform (iOS and Android) sensing.
 library carp_mobile_sensing;
 
+export 'package:carp_core/carp_core.dart';
+
 export 'data_managers/data_managers.dart';
 export 'domain/domain.dart';
 export 'runtime/runtime.dart';

@@ -114,36 +114,30 @@ class Sensing {
 
   /// Initialize sensing.
   Future init() async {
+    settings.debugLevel = DebugLevel.DEBUG;
+
     // get the protocol from the local protocol manager (defined below)
     protocol = await LocalStudyProtocolManager().getStudyProtocol('ignored');
 
     // deploy this protocol using the on-phone deployment service
-    _status = await CAMSDeploymentService().createStudyDeployment(protocol);
+    _status =
+        await SmartphoneDeploymentService().createStudyDeployment(protocol);
 
-    // at this time we can register this phone as a master device like this
-    CAMSDeploymentService().registerDevice(
-      status.studyDeploymentId,
-      CAMSDeploymentService().thisPhone.roleName,
-      DeviceRegistration(),
-    );
-    // but this is actually not needed, since a phone is always registrered
-    // automatically in the CAMSDeploymentService.
-    // But - you should register devices connected to this phone, if applicable
+    String studyDeploymentId = _status.studyDeploymentId;
+    String deviceRolename = _status.masterDeviceStatus.device.roleName;
 
-    // now we're ready to get the device deployment configuration for this phone
-    CAMSMasterDeviceDeployment deployment = await CAMSDeploymentService()
-        .getDeviceDeployment(status.studyDeploymentId);
+    // create and configure a client manager for this phone
+    SmartPhoneClientManager client = SmartPhoneClientManager();
+    await client.configure();
 
-    // create a study deployment controller that can manage this deployment
-    controller = StudyDeploymentController(
-      deployment,
-      debugLevel: DebugLevel.DEBUG,
+    controller = await client.addStudy(studyDeploymentId, deviceRolename);
+
+    // configure the controller and resume sampling
+    await controller.configure(
       privacySchemaName: PrivacySchema.DEFAULT,
       transformer: ((datum) => datum),
     );
-
-    // initialize the controller
-    await controller.initialize();
+    // controller.resume();
 
     // listening on the data stream and print them as json to the debug console
     controller.data.listen((data) => print(toJsonString(data)));

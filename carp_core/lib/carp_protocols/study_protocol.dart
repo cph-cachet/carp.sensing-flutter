@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_core;
+part of carp_core_protocols;
 
 /// A description of how a study is to be executed, defining the type(s) of
 /// master device(s) ([MasterDeviceDescriptor]) responsible for aggregating data,
@@ -56,7 +56,8 @@ class StudyProtocol extends Serializable {
     this.owner,
     this.name,
     this.description,
-  }) : super();
+  })
+      : super();
 
   /// Add a [masterDevice] which is responsible for aggregating and synchronizing
   /// incoming data. Its role name should be unique in the protocol.

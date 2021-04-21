@@ -88,7 +88,6 @@ class GeofenceMeasure extends CAMSMeasure {
   Duration dwell;
 
   /// A label for this geofence.
-  @override
   String label;
 
   /// Specify a geofence measure
@@ -100,7 +99,8 @@ class GeofenceMeasure extends CAMSMeasure {
     this.center,
     this.radius,
     this.label,
-  }) : super(
+  })
+      : super(
             type: type, name: name, description: description, enabled: enabled);
 
   Function get fromJsonFunction => _$GeofenceMeasureFromJson;

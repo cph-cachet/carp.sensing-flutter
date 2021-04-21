@@ -4,18 +4,17 @@
 /// Also hold serialization logic to (de)serialize Dart classes to/from
 /// JSON including support for polymorphic.
 /// See the [Serializable] class, which contains the logic for polymorphic serialization.
-library carp_core;
+library carp_core_data;
 
-import 'carp_common/carp_core_common.dart';
-import 'carp_protocols/carp_core_protocols.dart';
-import 'carp_data/carp_core_data.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-export 'carp_core.dart';
-export 'carp_common/carp_core_common.dart';
-export 'carp_client/carp_core_client.dart';
-export 'carp_protocols/carp_core_protocols.dart';
-export 'carp_deployment/carp_core_deployment.dart';
-export 'carp_data/carp_core_data.dart';
+export 'carp_core_data.dart';
+
+part 'datapoint.dart';
+part 'datatype.dart';
+part 'data.dart';
+
+part 'carp_core_data.g.dart';
 
 // auto generate json code (.g files) with:
 //   flutter pub run build_runner build --delete-conflicting-outputs

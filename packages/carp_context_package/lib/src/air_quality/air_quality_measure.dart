@@ -20,7 +20,8 @@ class AirQualityMeasure extends CAMSMeasure {
     String description,
     enabled,
     this.apiKey,
-  }) : super(
+  })
+      : super(
             type: type, name: name, description: description, enabled: enabled);
 
   Function get fromJsonFunction => _$AirQualityMeasureFromJson;

@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_core;
+part of carp_core_protocols;
 
 /// A [TaskDescriptor] holds information about each task to be triggered by
 /// a [Trigger] as part of a [StudyProtocol].

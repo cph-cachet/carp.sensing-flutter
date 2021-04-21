@@ -7,6 +7,12 @@ class Settings {
   SharedPreferences _preferences;
   PackageInfo _packageInfo;
 
+  /// The global debug level setting.
+  ///
+  /// See [DebugLevel] for valid debug level settings.
+  /// Can be changed on runtime.
+  int debugLevel = DebugLevel.WARNING;
+
   /// The app name.
   /// `CFBundleDisplayName` on iOS, `application/label` on Android.
   String appName;
@@ -91,6 +97,13 @@ class Settings {
     }
     return _studyStartTimestamp;
   }
+}
+
+class DebugLevel {
+  static const int NONE = 0;
+  static const int INFO = 1;
+  static const int WARNING = 2;
+  static const int DEBUG = 3;
 }
 
 /// Misc. settings for CAMS and methods for storing them locally on the phone.

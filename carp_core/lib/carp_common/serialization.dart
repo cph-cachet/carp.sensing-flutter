@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_core;
+part of carp_core_common;
 
 /// This is the base class for all JSON serializable objects.
 ///
@@ -230,3 +230,7 @@ class FromJsonFactory {
   Serializable fromJson(Map<String, dynamic> json) =>
       Function.apply(_registry[json[Serializable.CLASS_IDENTIFIER]], [json]);
 }
+
+/// A convient function to convert a Dart object into a JSON string.
+String toJsonString(Object object) =>
+    const JsonEncoder.withIndent(' ').convert(object);

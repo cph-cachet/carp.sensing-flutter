@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_core;
+part of carp_core_protocols;
 
 /// A person that created a [StudyProtocol].
 /// Typically the Principal Investigator (PI) who is reposnibile for the study.

@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_core;
+part of carp_core_protocols;
 
 /// Specifies a task which at some point during a [StudyProtocol] gets sent
 /// to a specific device.

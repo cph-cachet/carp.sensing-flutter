@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_core;
+part of carp_core_deployment;
 
 /// A single instantiation of a [StudyProtocol], taking care of common concerns
 /// related to devices when 'running' a study.
