@@ -81,7 +81,7 @@ void carpCoreDeploymentExample() async {
 void carpCoreClientExample() async {
   ParticipationService participationService;
   DeploymentService deploymentService;
-  DeviceDataCollectorFactory dataCollectorFactory;
+  DeviceRegistry dataCollectorFactory;
 
   // Retrieve invitation to participate in the study using a specific device.
   ActiveParticipationInvitation invitation = (await participationService
@@ -93,7 +93,7 @@ void carpCoreClientExample() async {
   // Create a study runtime for the study.
   var client = ClientManager(
       deploymentService: deploymentService,
-      deviceCollectorFactory: dataCollectorFactory);
+      deviceRegistry: dataCollectorFactory);
   client.configure(
     // Device-specific registration options can be accessed from here.
     // Depending on the device type, different options are available.

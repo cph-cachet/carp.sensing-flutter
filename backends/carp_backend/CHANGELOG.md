@@ -1,5 +1,6 @@
-## 0.20.4
+## 0.21.0
 * support for uploading and downloading informed consent to be shown to the user
+* upgrade to `carp_mobile_sensing` v. 0.21.x
 
 ## 0.20.3
 * update to `carp_core` v. 0.20.3 (json serialization)

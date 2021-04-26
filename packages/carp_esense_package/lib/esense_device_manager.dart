@@ -102,6 +102,7 @@ class ESenseDeviceManager extends DeviceManager {
   /// See e.g. https://en.wikipedia.org/wiki/State_of_charge#Voltage_method
   int get batteryLevel => ((1.19 * _voltageLevel - 3.91) * 100).toInt();
 
+  bool canConnect() => status == DeviceStatus.paired;
   Future connect() async => await ESenseManager().connect(id);
   Future disconnect() async => await ESenseManager().disconnect();
 }

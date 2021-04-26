@@ -2,10 +2,14 @@ import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_context_package/context.dart';
 
-/// This is a very simple example of how this sampling package is used with
-/// CARP Mobile Sensing (CAMS).
-/// NOTE, however, that the code below will not run.
-/// See the documentation on how to use CAMS: https://github.com/cph-cachet/carp.sensing-flutter/wiki
+/// This is a very simple example of how this sampling package is used as part
+/// of defining a study protocol in CARP Mobile Sensing (CAMS).
+///
+/// NOTE, however, that the code below will not run on it own. A study protocol
+/// needs to be deployed and executed in the CAMS framework.
+///
+/// See the documentation on how to use CAMS:
+/// https://github.com/cph-cachet/carp.sensing-flutter/wiki
 void main() async {
   // register this sampling package before using its measures
   SamplingPackageRegistry().register(ContextSamplingPackage());
@@ -55,26 +59,4 @@ void main() async {
           ],
         )),
       phone);
-
-  // deploy this protocol using the on-phone deployment service
-  StudyDeploymentStatus status =
-      await SmartphoneDeploymentService().createStudyDeployment(protocol);
-
-  String studyDeploymentId = status.studyDeploymentId;
-  String deviceRolename = status.masterDeviceStatus.device.roleName;
-
-  // create and configure a client manager for this phone
-  SmartPhoneClientManager client = SmartPhoneClientManager();
-  await client.configure();
-
-  // create a study runtime to control this deployment
-  StudyDeploymentController controller =
-      await client.addStudy(studyDeploymentId, deviceRolename);
-
-  // configure the controller and resume sampling
-  await controller.configure();
-  controller.resume();
-
-  // listening and print all data events from the study
-  controller.data.forEach(print);
 }

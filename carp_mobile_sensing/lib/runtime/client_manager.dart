@@ -10,12 +10,15 @@ part of runtime;
 class SmartPhoneClientManager extends ClientManager {
   SmartPhoneClientManager({
     DeploymentService deploymentService,
-    DeviceDataCollectorFactory deviceController,
+    DeviceController deviceRegistry,
   }) {
     // if not specified, use default services
     this.deploymentService ??= SmartphoneDeploymentService();
-    this.deviceCollectorFactory ??= DeviceController();
+    this.deviceRegistry ??= DeviceController();
   }
+
+  @override
+  DeviceController get deviceRegistry => super.deviceRegistry;
 
   @override
   Future<DeviceRegistration> configure({String deviceId}) async {
@@ -42,7 +45,7 @@ class SmartPhoneClientManager extends ClientManager {
 
     await controller.initialize(
       deploymentService,
-      deviceCollectorFactory,
+      deviceRegistry,
       studyDeploymentId,
       deviceRoleName,
       registration,

@@ -1,3 +1,6 @@
+## 0.21.0
+* upgrade to `carp_mobile_sensing` v. 0.21.x
+
 ## 0.20.1
 * support for more file endpoints
    * `getAllFiles()` - gettting all files in a study

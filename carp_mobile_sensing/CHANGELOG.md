@@ -1,3 +1,6 @@
+## 0.21.1
+* update to `carp_core` v. 0.21.0
+
 ## 0.21.0
 * update to `carp_core` v. 0.21.0 client domain model
 * support for using a `SmartPhoneClientManager` for executing multiple studies

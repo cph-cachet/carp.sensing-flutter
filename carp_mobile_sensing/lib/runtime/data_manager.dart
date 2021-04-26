@@ -9,13 +9,17 @@ part of runtime;
 /// The [DataManager] interface is used to upload [DataPoint] objects to any
 /// data manager that implements this interface.
 abstract class DataManager {
+  /// The ID of the study deployment that this manager is handling.
+  String get studyDeploymentId;
+
   /// The type of this data manager as enumerated in [DataEndPointType].
   String get type;
 
-  /// Initialize the data manager by specifying the running [DataEndPoint]
-  /// and the stream of [Datum] events to handle.
+  /// Initialize the data manager by specifying the study deployment id, the
+  /// [DataEndPoint], and the stream of [DataPoint] events to handle.
   Future initialize(
-    CAMSMasterDeviceDeployment deployment,
+    String studyDeploymentId,
+    DataEndPoint dataEndPoint,
     Stream<DataPoint> data,
   );
 
@@ -39,29 +43,24 @@ abstract class DataManager {
 ///
 /// Takes data from a [Stream] and uploads these. Also supports JSON encoding.
 abstract class AbstractDataManager implements DataManager {
-  // CAMSStudyProtocol study;
-  DataEndPoint get dataEndPoint => _deployment.dataEndPoint;
-  CAMSMasterDeviceDeployment _deployment;
-  CAMSMasterDeviceDeployment get deployment => _deployment;
+  String _studyDeploymentId;
+  String get studyDeploymentId => _studyDeploymentId;
+  DataEndPoint _dataEndPoint;
+  DataEndPoint get dataEndPoint => _dataEndPoint;
 
   StreamController<DataManagerEvent> controller = StreamController.broadcast();
   Stream<DataManagerEvent> get events => controller.stream;
   void addEvent(DataManagerEvent event) => controller.add(event);
 
   Future initialize(
-    CAMSMasterDeviceDeployment deployment,
+    String studyDeploymentId,
+    DataEndPoint dataEndPoint,
     Stream<DataPoint> data,
   ) async {
-    // this.dataEndPoint = dataE\ndPoint;
-    _deployment = deployment;
+    this._dataEndPoint = dataEndPoint;
+    this._studyDeploymentId = studyDeploymentId;
     data.listen(
-      (dataPoint) {
-        // set the header data for study and user id
-        dataPoint.carpHeader.studyId = deployment.studyId;
-        dataPoint.carpHeader.userId = deployment.userId;
-        // forward to sub-class
-        onDataPoint(dataPoint);
-      },
+      (dataPoint) => onDataPoint(dataPoint),
       onError: onError,
       onDone: onDone,
     );

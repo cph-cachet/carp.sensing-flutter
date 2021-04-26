@@ -11,5 +11,4 @@ export 'carp_core_client.dart';
 
 part 'client_manager.dart';
 part 'study_runtime.dart';
-part 'data_collector.dart';
 part 'device_manager.dart';

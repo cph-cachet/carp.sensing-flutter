@@ -221,12 +221,12 @@ void example_3() async {
     String deviceRoleName = deviceStatus.device.roleName;
 
     // create and register the device in the CAMS DeviceRegistry
-    await DeviceController().createDeviceDataCollector(type);
+    await DeviceController().registerDevice(type);
 
     // if the device manager is created succesfully on the phone
-    if (DeviceController().hasDeviceDataCollector(type)) {
+    if (DeviceController().hasDevice(type)) {
       // ask the device manager for a unique id of the device
-      String deviceId = DeviceController().getDeviceDataCollector(type).id;
+      String deviceId = DeviceController().getDevice(type).id;
       DeviceRegistration registration = DeviceRegistration(deviceId);
       // (all of the above can actually be handled directly by the CAMSDeploymentService.registerDevice() method)
 
@@ -449,8 +449,9 @@ void carp_core_client_example() async {
 
   // create a client manager for this phone
   SmartPhoneClientManager client = SmartPhoneClientManager(
-      deploymentService: deploymentService,
-      deviceController: DeviceController());
+    deploymentService: deploymentService,
+    deviceRegistry: DeviceController(),
+  );
 
   // which is equivalent to
   client = SmartPhoneClientManager();

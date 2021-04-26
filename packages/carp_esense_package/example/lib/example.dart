@@ -2,9 +2,12 @@ import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_esense_package/esense.dart';
 
-/// This is a very simple example of how this sampling package is used with
-/// CARP Mobile Sensing (CAMS).
-/// NOTE, however, that the code below will not run.
+/// This is a very simple example of how this sampling package is used as part
+/// of defining a study protocol in CARP Mobile Sensing (CAMS).
+///
+/// NOTE, however, that the code below will not run on it own. A study protocol
+/// needs to be deployed and executed in the CAMS framework.
+///
 /// See the documentation on how to use CAMS:
 /// https://github.com/cph-cachet/carp.sensing-flutter/wiki
 void main() async {
@@ -33,7 +36,23 @@ void main() async {
     ..addMasterDevice(phone)
     ..addConnectedDevice(eSense);
 
-  // Add an automatic task that immediately starts collecting eSense button and sensor events.
+  // Add an automatic task that immediately starts collecting
+  // step counts, ambient light, screen activity, and battery level
+  protocol.addTriggeredTask(
+      ImmediateTrigger(),
+      AutomaticTask()
+        ..addMeasures(SensorSamplingPackage().common.getMeasureList(
+          types: [
+            SensorSamplingPackage.PEDOMETER,
+            SensorSamplingPackage.LIGHT,
+            DeviceSamplingPackage.SCREEN,
+            DeviceSamplingPackage.BATTERY,
+          ],
+        )),
+      phone);
+
+  // Add an automatic task that immediately starts collecting eSense button and
+  // sensor events from the eSense device.
   protocol.addTriggeredTask(
       ImmediateTrigger(),
       AutomaticTask()
@@ -51,30 +70,5 @@ void main() async {
               deviceName: 'eSense-0332',
               samplingRate: 5),
         ]),
-      phone);
-
-  // deploy this protocol using the on-phone deployment service
-  StudyDeploymentStatus status =
-      await CAMSDeploymentService().createStudyDeployment(protocol);
-
-  // at this time we can register an eSensee device which are connected to this phone (master device)
-  CAMSDeploymentService().registerDevice(
-    status.studyDeploymentId,
-    'The left eSense earbud',
-    DeviceRegistration('some device id'),
-  );
-
-  // now ready to get the device deployment configuration for this phone
-  CAMSMasterDeviceDeployment deployment = await CAMSDeploymentService()
-      .getDeviceDeployment(status.studyDeploymentId);
-
-  // Create a study deployment controller that can manage this deployment
-  StudyDeploymentController controller = StudyDeploymentController(deployment);
-
-  // initialize the controller and resume sampling
-  await controller.initialize();
-  controller.resume();
-
-  // listening and print all data events from the study
-  controller.data.forEach(print);
+      eSense);
 }

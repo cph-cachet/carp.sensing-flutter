@@ -140,7 +140,11 @@ class StudyDeploymentController extends StudyRuntime {
     }
 
     // initialize the data manager, device registry, and study executor
-    await dataManager?.initialize(deployment, data);
+    await dataManager?.initialize(
+      masterDeployment.studyDeploymentId,
+      masterDeployment.dataEndPoint,
+      data,
+    );
     // await DeviceRegistry().initialize(deployment, data);
     executor.initialize(Measure(type: CAMSDataType.EXECUTOR));
     await enablePowerAwareness();

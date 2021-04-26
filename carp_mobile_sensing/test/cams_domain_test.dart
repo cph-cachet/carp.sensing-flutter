@@ -23,8 +23,7 @@ void main() {
       ..protocolDescription = StudyProtocolDescription(
           title: 'Test Study',
           purpose: 'For testing purposes',
-          description: 'Testing')
-      ..dataEndPoint = FileDataEndPoint(bufferSize: 500);
+          description: 'Testing');
 
     // Define which devices are used for data collection.
     phone = Smartphone();
@@ -90,8 +89,8 @@ void main() {
     // Read the study protocol from json file
     String plainJson = File('test/json/study_1.json').readAsStringSync();
 
-    CAMSStudyProtocol protocol = CAMSStudyProtocol
-        .fromJson(json.decode(plainJson) as Map<String, dynamic>);
+    CAMSStudyProtocol protocol = CAMSStudyProtocol.fromJson(
+        json.decode(plainJson) as Map<String, dynamic>);
 
     expect(protocol.ownerId, 'AB');
     expect(protocol.masterDevices.first.roleName,

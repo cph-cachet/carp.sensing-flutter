@@ -1,3 +1,6 @@
+## 0.21.1
+* small improvement to the `client` sub-system domain classes
+
 ## 0.21.0
 * implementation of the `client` sub-system domain classes
 

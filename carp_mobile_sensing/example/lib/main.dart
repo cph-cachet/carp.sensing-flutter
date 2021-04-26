@@ -132,7 +132,7 @@ class Sensing {
 
     controller = await client.addStudy(studyDeploymentId, deviceRolename);
 
-    // configure the controller and resume sampling
+    // configure the controller
     await controller.configure(
       privacySchemaName: PrivacySchema.DEFAULT,
       transformer: ((datum) => datum),

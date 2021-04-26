@@ -19,10 +19,10 @@ class ClientManager {
   /// this client, can be managed and retrieved.
   DeploymentService deploymentService;
 
-  /// Determines which [DeviceDataCollector] to use to collect data locally on
+  /// Determines which [DeviceRegistry] to use to collect data locally on
   /// this master device and this factory is used to create [ConnectedDeviceDataCollector]
   /// instances for connected devices.
-  DeviceDataCollectorFactory deviceCollectorFactory;
+  DeviceRegistry deviceRegistry;
 
   // private val dataListener: DataListener = DataListener( dataCollectorFactory )
 
@@ -30,7 +30,7 @@ class ClientManager {
   /// which is necessary to start adding [StudyRuntime]s.
   bool get isConfigured => registration != null;
 
-  ClientManager({this.deploymentService, this.deviceCollectorFactory});
+  ClientManager({this.deploymentService, this.deviceRegistry});
 
   /// Configure the [DeviceRegistration] used to register this client device
   /// in study deployments managed by the [deploymentService].
@@ -60,22 +60,7 @@ class ClientManager {
         !repository
             .containsKey(StudyRuntimeId(studyDeploymentId, deviceRoleName)),
         'A study with the same study deployment ID and device role name has already been added.');
-
-    // Create the study runtime.
-    // val deviceRegistration = repository.getDeviceRegistration()!!
-
-    StudyRuntime runtime = StudyRuntime();
-
-    await runtime.initialize(
-      deploymentService,
-      deviceCollectorFactory,
-      studyDeploymentId,
-      deviceRoleName,
-      registration,
-    );
-
-    repository[StudyRuntimeId(studyDeploymentId, deviceRoleName)] = runtime;
-    return runtime;
+    return StudyRuntime();
   }
 
   /// Verifies whether the device is ready for deployment of the study runtime identified by [studyRuntimeId],
