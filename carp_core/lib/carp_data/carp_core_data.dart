@@ -1,9 +1,8 @@
-/// The core CARP domain classes like [StudyProtocol], [TaskDescriptor], [Measure],
-/// and [DataPoint].
+/// Contains the core data classes like [Data], [DataPoint],
+/// [DataFormat], and [DataType].
 ///
-/// Also hold serialization logic to (de)serialize Dart classes to/from
-/// JSON including support for polymorphic.
-/// See the [Serializable] class, which contains the logic for polymorphic serialization.
+/// The the `carp.data` sub-system is not yet defined in the Kotlin implementation of
+/// carp_core.
 library carp_core_data;
 
 import 'package:json_annotation/json_annotation.dart';

@@ -13,7 +13,5 @@ export 'carp_core_common.dart';
 
 part 'serialization.dart';
 
-// part 'carp_core_common.g.dart';
-
 // auto generate json code (.g files) with:
 //   flutter pub run build_runner build --delete-conflicting-outputs

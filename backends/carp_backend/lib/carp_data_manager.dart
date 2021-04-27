@@ -38,9 +38,11 @@ class CarpDataManager extends AbstractDataManager {
     if ((carpEndPoint.uploadMethod == CarpUploadMethod.FILE) ||
         (carpEndPoint.uploadMethod == CarpUploadMethod.BATCH_DATA_POINT)) {
       // make sure that files are not zipped if using batch upload
-      assert(carpEndPoint.uploadMethod == CarpUploadMethod.BATCH_DATA_POINT
-          ? carpEndPoint.zip == false
-          : true);
+      assert(
+          carpEndPoint.uploadMethod == CarpUploadMethod.BATCH_DATA_POINT
+              ? carpEndPoint.zip == false
+              : true,
+          'Files uploaded to CARP must not be zipped.');
 
       // Create a [FileDataManager] and wrap it.
       fileDataManager = new FileDataManager();
