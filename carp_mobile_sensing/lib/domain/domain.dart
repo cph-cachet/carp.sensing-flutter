@@ -11,7 +11,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 import 'package:uuid/uuid.dart';
 
-import 'package:carp_core/carp_core.dart';
+import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 part 'study_protocol.dart';
 part 'data_endpoint.dart';

@@ -15,7 +15,6 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
-import 'package:carp_core/carp_core.dart';
 
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';

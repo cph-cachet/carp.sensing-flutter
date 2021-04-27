@@ -1,3 +1,6 @@
+## 0.21.2
+* update to `carp_core` v. 0.21.2
+
 ## 0.21.1
 * update to `carp_core` v. 0.21.0
 

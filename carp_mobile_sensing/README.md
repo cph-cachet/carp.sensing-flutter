@@ -13,13 +13,12 @@ For an overview of all CAMS packages, see [CARP Mobile Sensing in Flutter](https
 For documentation on how to use CAMS, see the [CAMS wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki).
 
 ## Usage
-To use this plugin, add [`carp_core`](https://pub.dev/packages/carp_core) and [`carp_mobile_sensing`](https://pub.dev/packages/carp_mobile_sensing) as [dependencies in your `pubspec.yaml` file](https://flutter.io/platform-plugins/).
+To use this plugin, add [`carp_mobile_sensing`](https://pub.dev/packages/carp_mobile_sensing) as [dependencies in your `pubspec.yaml` file](https://flutter.io/platform-plugins/).
 
 `````yaml
 dependencies:
   flutter:
     sdk: flutter
-  carp_core: ^0.21.0
   carp_mobile_sensing: ^0.21.0
 `````
 
@@ -66,9 +65,9 @@ The [Dart API doc](https://pub.dartlang.org/documentation/carp_mobile_sensing/la
 
 The [wiki](https://github.com/cph-cachet/carp.sensing/wiki) contains detailed documentation on the CARP Mobile Sensing Framework, including 
 the [domain model](https://github.com/cph-cachet/carp.sensing-flutter/wiki/2.-Domain-Model), 
-how to use it by create a [`Study` configuration](https://github.com/cph-cachet/carp.sensing-flutter/wiki/3.-Using-CARP-Mobile-Sensing), 
+how to use it by create a [Study configuration](https://github.com/cph-cachet/carp.sensing-flutter/wiki/3.-Using-CARP-Mobile-Sensing), 
 how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.-Extending-CARP-Mobile-Sensing) it, and
-an overview of the different [`Measure` types available](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types).
+an overview of the different [Measure types available](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types).
 
 A more scientific documentation of CAMS is available at [arxiv.org](https://arxiv.org/abs/2006.11904):
 
@@ -171,7 +170,10 @@ A `StudyProtocol` can be deployed to a `DeploymentService` which handles the dep
   StudyDeploymentStatus status =
       await CAMSDeploymentService().createStudyDeployment(protocol);
 
-  // now ready to get the device deployment configuration for this phone
+  ...
+
+  // you can get the device deployment configuration for this phone....
+  // ... but this is rarely needed - see below
   CAMSMasterDeviceDeployment deployment = await CAMSDeploymentService()
       .getDeviceDeployment(status.studyDeploymentId);
 
@@ -181,7 +183,7 @@ A `StudyProtocol` can be deployed to a `DeploymentService` which handles the dep
 
 ### Running a `StudyDeploymentController`
 
-A study deployment for a phone (master device) is add to a [`SmartPhoneClientManager`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SmartPhoneClientManager-class.html).
+A study deployment for a phone (master device) is handled by a [`SmartPhoneClientManager`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SmartPhoneClientManager-class.html).
 This client manager now hold a [`StudyDeploymentController`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/StudyDeploymentController-class.html) which control the execution of a study deployment.
 
 

@@ -60,7 +60,8 @@ class CAMSStudyProtocol extends StudyProtocol {
     this.owner,
     this.protocolDescription,
     this.dataFormat = NameSpace.CARP,
-  }) : super(owner: owner, name: name) {
+  })
+      : super(owner: owner, name: name) {
     // TODO - move this elsewhere.... can't assumed that the programmer
     // create a protocol - s/he might download it e.g. from CARP.
     registerFromJsonFunctions();
