@@ -1,7 +1,7 @@
 part of carp_backend;
 
-/// A Localization implementation that support loading localization from the CARP
-/// web service.
+/// A Localization implementation that support loading localization from the
+/// CARP web service.
 class CarpLocalizations {
   final Locale locale;
 

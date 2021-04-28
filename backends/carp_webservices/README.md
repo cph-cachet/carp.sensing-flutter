@@ -36,6 +36,8 @@ The [`CarpService`](https://pub.dartlang.org/documentation/carp_webservices/late
 
   app = CarpApp(
     name: 'any_display_friendly_name_is_fine',
+    studyId: 'the_study_id',
+    studyDeploymentId: 'the_study_deployment_id',
     uri: Uri.parse(uri),
     oauth: OAuthEndPoint(
       clientID: 'the_client_id',
@@ -46,6 +48,10 @@ The [`CarpService`](https://pub.dartlang.org/documentation/carp_webservices/late
   // Configure the CARP Service with this app.
   CarpService().configure(app);
 ```` 
+
+> Note that you need a valid `clientID` and `clientSecret` from a CARP Service to use it.
+
+> Also note that you need the `studyId` and  `studyDeploymentId` for you study in the CARP Service. These can be obtained from an invitation (see below). But if you want to use the CARP Service endpoints directly, you have to specify these IDs in the CarpApp configuration. 
 
 The singleton can then be accessed via `CarpService()`.
 

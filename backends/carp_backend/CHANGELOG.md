@@ -1,6 +1,7 @@
 ## 0.21.0
-* support for uploading and downloading informed consent to be shown to the user
 * upgrade to `carp_mobile_sensing` v. 0.21.x
+* support for uploading and downloading informed consent to be shown to the user
+* support for uploading and downloading localization setting for different languages
 
 ## 0.20.3
 * update to `carp_core` v. 0.20.3 (json serialization)

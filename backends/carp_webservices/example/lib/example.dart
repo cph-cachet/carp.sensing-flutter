@@ -29,6 +29,8 @@ void main() async {
 
   app = CarpApp(
     name: 'any_display_friendly_name_is_fine',
+    studyId: 'the_study_id',
+    studyDeploymentId: 'the_study_deployment_id',
     uri: Uri.parse(uri),
     oauth: OAuthEndPoint(
       clientID: 'the_client_id',
