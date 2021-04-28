@@ -230,7 +230,7 @@ abstract class AbstractProbe extends Probe implements MeasureListener {
   @protected
   void mark() {
     if (measure is MarkedMeasure) {
-      settings.preferences.setString(
+      Settings().preferences.setString(
           (measure as MarkedMeasure).tag(), DateTime.now().toUtc().toString());
     }
   }
@@ -239,7 +239,8 @@ abstract class AbstractProbe extends Probe implements MeasureListener {
   @protected
   void marking() {
     if (measure is MarkedMeasure) {
-      String mark = settings.preferences.get((measure as MarkedMeasure).tag());
+      String mark =
+          Settings().preferences.get((measure as MarkedMeasure).tag());
       debug('mark : $mark');
       (measure as MarkedMeasure).lastTime =
           (mark != null) ? DateTime.tryParse(mark) : null;

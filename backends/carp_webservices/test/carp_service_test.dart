@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
-import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
@@ -537,7 +536,7 @@ void main() {
 //       assert(serverDocument.data.length == document.data.length);
 //     }, skip: true);
 
-    test(' - get document by query', () async {
+    test(' - get documents by query', () async {
       assert(document != null);
       String query = 'name==$userId';
       List<DocumentSnapshot> documents =
@@ -547,6 +546,14 @@ void main() {
       documents.forEach((document) => print(' - $document'));
 
       assert(documents.length != 0);
+    });
+
+    test(' - get all documents', () async {
+      List<DocumentSnapshot> documents = await CarpService().documents();
+
+      print('Found ${documents.length} document(s)');
+      documents.forEach((document) => print(' - $document'));
+      // assert(documents.length != 0);
     });
 
     test(' - add document in nested collections', () async {

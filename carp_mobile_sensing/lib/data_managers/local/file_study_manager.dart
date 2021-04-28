@@ -24,6 +24,8 @@ class FileStudyProtocolManager implements StudyProtocolManager {
   Future initialize() async {
     final _studyPath = await path;
 
+    CAMSStudyProtocol(); // to initialize json serialization for CAMS classes
+
     info('Initializing FileDeploymentService...');
     info('Study file path : $_studyPath');
   }
@@ -35,8 +37,8 @@ class FileStudyProtocolManager implements StudyProtocolManager {
 
     try {
       String jsonString = File(filename(studyId)).readAsStringSync();
-      study = StudyProtocol
-          .fromJson(json.decode(jsonString) as Map<String, dynamic>);
+      study = StudyProtocol.fromJson(
+          json.decode(jsonString) as Map<String, dynamic>);
     } catch (exception) {
       warning("Failed to load study '$studyId' - $exception");
     }

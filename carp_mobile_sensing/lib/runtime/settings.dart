@@ -1,8 +1,26 @@
 part of runtime;
 
+/// Misc. settings for CAMS.
+///
+/// This class is a singleton, access using `Settings()`.
+///
+/// Supports:
+///  * setting debug level - see [debugLevel]
+///  * getting shared preferences - see [preferences]
+///  * getting app info - see [packageInfo]
+///  * generating a unique and annonymous user id - see [userId]
+///  * keeping track of study start time - see [studyStartTimestamp]
+///
 class Settings {
   static const String USER_ID_KEY = 'user_id';
   static const String STUDY_START_KEY = 'study_start';
+  static final Settings _instance = Settings._();
+
+  factory Settings() => _instance;
+
+  Settings._() {
+    // registerFromJsonFunctions();
+  }
 
   SharedPreferences _preferences;
   PackageInfo _packageInfo;
@@ -35,10 +53,6 @@ class Settings {
 
   /// Package information
   PackageInfo get packageInfo => _packageInfo;
-
-  Settings() {
-    registerFromJsonFunctions();
-  }
 
   /// Initialize settings. Call before start using it.
   Future init() async {
@@ -105,9 +119,3 @@ class DebugLevel {
   static const int WARNING = 2;
   static const int DEBUG = 3;
 }
-
-/// Misc. settings for CAMS and methods for storing them locally on the phone.
-///
-/// See [Settings] for a list of useful methods for accessing the
-/// shared preferences on this phone.
-final settings = Settings();

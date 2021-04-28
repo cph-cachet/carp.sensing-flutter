@@ -3,6 +3,7 @@ description: An example of how to usee the carp_backend package to upload data t
 version: 0.0.1
 author:  CACHET Team <cph.cachet@gmail.com>
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_core
+publish_to: none
 
 environment:
   sdk: ">=2.3.0 <3.0.0"
@@ -11,12 +12,10 @@ dependencies:
   flutter:
     sdk: flutter
 
-#  carp_core:
-#    path: ../../../carp_core
 #  carp_mobile_sensing:
 #    path: ../../../carp_mobile_sensing
-#  carp_webservices:
-#    path: ../../carp_webservices
+  carp_webservices:
+    path: ../../carp_webservices
   carp_backend:
     path: ../
 

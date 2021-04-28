@@ -36,7 +36,7 @@ class Console extends State<ConsolePage> {
   void initState() {
     super.initState();
     sensing = Sensing();
-    settings.init().then((future) {
+    Settings().init().then((future) {
       sensing.init().then((future) {
         log("Setting up study protocol: ${sensing.protocol}");
       });
@@ -114,7 +114,7 @@ class Sensing {
 
   /// Initialize sensing.
   Future init() async {
-    settings.debugLevel = DebugLevel.DEBUG;
+    Settings().debugLevel = DebugLevel.DEBUG;
 
     // get the protocol from the local protocol manager (defined below)
     protocol = await LocalStudyProtocolManager().getStudyProtocol('ignored');

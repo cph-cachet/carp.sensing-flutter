@@ -1,5 +1,4 @@
 import 'package:carp_connectivity_package/connectivity.dart';
-import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 /// This is a very simple example of how this sampling package is used with
@@ -45,17 +44,21 @@ void main() async {
 
   // deploy this protocol using the on-phone deployment service
   StudyDeploymentStatus status =
-      await CAMSDeploymentService().createStudyDeployment(protocol);
+      await SmartphoneDeploymentService().createStudyDeployment(protocol);
 
-  // now ready to get the device deployment configuration for this phone
-  CAMSMasterDeviceDeployment deployment = await CAMSDeploymentService()
-      .getDeviceDeployment(status.studyDeploymentId);
+  String studyDeploymentId = status.studyDeploymentId;
+  String deviceRolename = status.masterDeviceStatus.device.roleName;
 
-  // Create a study deployment controller that can manage this deployment
-  StudyDeploymentController controller = StudyDeploymentController(deployment);
+  // create and configure a client manager for this phone
+  SmartPhoneClientManager client = SmartPhoneClientManager();
+  await client.configure();
 
-  // initialize the controller and resume sampling
-  await controller.initialize();
+  // create a study runtime to control this deployment
+  StudyDeploymentController controller =
+      await client.addStudy(studyDeploymentId, deviceRolename);
+
+  // configure the controller and resume sampling
+  await controller.configure();
   controller.resume();
 
   // listening and print all data events from the study

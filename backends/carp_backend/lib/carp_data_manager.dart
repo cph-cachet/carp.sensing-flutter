@@ -7,7 +7,7 @@
 
 part of carp_backend;
 
-/// Stores CARP json data points in the CARP backend.
+/// Stores CAMS data points in the CARP backend.
 ///
 /// Every time a CARP json data object is created, it is uploaded to CARP.
 /// Hence, this interface only works when the device is online.
@@ -28,12 +28,13 @@ class CarpDataManager extends AbstractDataManager {
   String get type => DataEndPointTypes.CARP;
 
   Future initialize(
-    CAMSMasterDeviceDeployment deployment,
+    String studyDeploymentId,
+    DataEndPoint dataEndPoint,
     Stream<DataPoint> data,
   ) async {
-    super.initialize(deployment, data);
-    assert(deployment.dataEndPoint is CarpDataEndPoint);
-    carpEndPoint = deployment.dataEndPoint as CarpDataEndPoint;
+    super.initialize(studyDeploymentId, dataEndPoint, data);
+    assert(dataEndPoint is CarpDataEndPoint);
+    carpEndPoint = dataEndPoint as CarpDataEndPoint;
 
     if ((carpEndPoint.uploadMethod == CarpUploadMethod.FILE) ||
         (carpEndPoint.uploadMethod == CarpUploadMethod.BATCH_DATA_POINT)) {
@@ -59,7 +60,7 @@ class CarpDataManager extends AbstractDataManager {
               _uploadDatumFileToCarp((event as FileDataManagerEvent).path));
 
       // initialize the file data manager
-      fileDataManager.initialize(deployment, data);
+      fileDataManager.initialize(studyDeploymentId, dataEndPoint, data);
     }
 
     await user; // This will trigger authentication to the CARP server
@@ -69,7 +70,7 @@ class CarpDataManager extends AbstractDataManager {
   Future<CarpApp> get app async {
     if (_app == null) {
       _app = new CarpApp(
-          studyId: deployment.studyId,
+          studyDeploymentId: studyDeploymentId,
           name: carpEndPoint.name,
           uri: Uri.parse(carpEndPoint.uri),
           oauth: OAuthEndPoint(
@@ -96,12 +97,9 @@ class CarpDataManager extends AbstractDataManager {
 
   void onDataPoint(DataPoint dataPoint) => uploadData(dataPoint);
 
-  void onError(Object error) => uploadData(DataPoint(
-      DataPointHeader(
-          studyId: deployment.studyId,
-          userId: deployment.userId,
-          dataFormat: DataFormat.fromString(CAMSDataType.ERROR)),
-      ErrorDatum(error.toString())));
+  void onError(Object error) =>
+      uploadData(DataPoint.fromData(ErrorDatum(error.toString()))
+        ..carpHeader.dataFormat = DataFormat.fromString(CAMSDataType.ERROR));
 
   void onDone() => close();
 
@@ -207,9 +205,7 @@ class CarpDataManager extends AbstractDataManager {
     } else {
       final String deviceID = DeviceInfo().deviceID.toString();
       datum.metadata['device_id'] = deviceID;
-      datum.metadata['study_deployment_id'] = deployment.studyDeploymentId;
-      datum.metadata['study_id'] = deployment.studyId;
-      datum.metadata['user_id'] = deployment.userId;
+      datum.metadata['study_deployment_id'] = studyDeploymentId;
 
       // start upload
       final FileUploadTask uploadTask =

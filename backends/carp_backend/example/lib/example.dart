@@ -1,12 +1,10 @@
 import 'package:carp_backend/carp_backend.dart';
-import 'package:carp_core/carp_core.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+import 'package:research_package/model.dart';
 
 void main() async {
-  // final String username = "researcher";
-
   // -----------------------------------------------
   // EXAMPLE OF GETTING A STUDY FROM CARP
   // -----------------------------------------------
@@ -95,4 +93,29 @@ void main() async {
     name: 'Test study #1234',
   );
   protocol.dataEndPoint = cdep;
+
+  // --------------------------------------------------
+  // EXAMPLE OF GETTING AN INFORMED CONSENT FROM CARP
+  // --------------------------------------------------
+
+  // create and initialize the informed consent manager
+  ResourceManager icManager = ResourceManager();
+  icManager.initialize();
+
+  // get the informed consent as a RP ordered task
+  RPOrderedTask informedConsent = await icManager.getInformedConsent();
+
+  print(informedConsent);
+
+  // upload another informed consent to CARP
+  RPOrderedTask anotherInformedConsent = RPOrderedTask('12', [
+    RPInstructionStep(
+      "1",
+      title: "Welcome!",
+    )..text = "Welcome to this study! ",
+    RPCompletionStep("2")
+      ..title = "Thank You!"
+      ..text = "We saved your consent document.",
+  ]);
+  await icManager.setInformedConsent(anotherInformedConsent);
 }

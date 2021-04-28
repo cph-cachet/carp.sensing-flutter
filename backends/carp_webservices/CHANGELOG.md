@@ -1,5 +1,6 @@
-## 0.21.0
+## 0.21.1
 * upgrade to `carp_mobile_sensing` v. 0.21.x
+* small bug in `DocumentReference.get()` fixed
 
 ## 0.20.1
 * support for more file endpoints

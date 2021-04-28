@@ -46,7 +46,7 @@ class StudyDeploymentController extends StudyRuntime {
   /// of this study [deployment].
   StudyDeploymentController() : super() {
     // initialize settings
-    settings.init();
+    Settings().init();
 
     // create and register the two built-in data managers
     DataManagerRegistry().register(ConsoleDataManager());
@@ -106,7 +106,7 @@ class StudyDeploymentController extends StudyRuntime {
     this.transformer = transformer ?? ((datum) => datum);
 
     // if no user is specified for this study, look up the local user id
-    masterDeployment.userId ??= await settings.userId;
+    masterDeployment.userId ??= await Settings().userId;
 
     // setting up permissions
     permissions = await PermissionHandlerPlatform.instance

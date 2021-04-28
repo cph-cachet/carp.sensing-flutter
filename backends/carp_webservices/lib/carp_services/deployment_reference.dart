@@ -81,8 +81,8 @@ class DeploymentReference extends CarpReference {
 
   /// Get the deployment status for this [DeploymentReference].
   Future<StudyDeploymentStatus> getStatus() async {
-    _status = StudyDeploymentStatus
-        .fromJson(await _rpc(GetStudyDeploymentStatus(studyDeploymentId)));
+    _status = StudyDeploymentStatus.fromJson(
+        await _rpc(GetStudyDeploymentStatus(studyDeploymentId)));
     return _status;
   }
 
@@ -102,7 +102,7 @@ class DeploymentReference extends CarpReference {
     // Set device ID, if  provided
     if (deviceId != null) _registeredDeviceId = deviceId;
 
-    print('deviceId = $deviceId - _registeredDeviceId = $_registeredDeviceId');
+    print('deviceId = $deviceId - registeredDeviceId = $registeredDeviceId');
 
     _status = StudyDeploymentStatus.fromJson(await _rpc(RegisterDevice(
         studyDeploymentId,

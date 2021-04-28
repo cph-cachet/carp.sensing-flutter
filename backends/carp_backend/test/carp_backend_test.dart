@@ -1,10 +1,12 @@
 import 'dart:convert';
 
-import 'package:carp_core/carp_core.dart';
+import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
+import 'package:flutter/material.dart';
 import 'package:test/test.dart';
 import 'package:carp_backend/carp_backend.dart';
+import 'package:research_package/model.dart';
 
 import 'credentials.dart';
 
@@ -19,8 +21,11 @@ void main() {
   /// Setup CARP and authenticate.
   /// Runs once before all tests.
   setUpAll(() async {
+    // registerFromJsonFunctions();
+
     app = new CarpApp(
       name: "Test",
+      studyId: testStudyId,
       uri: Uri.parse(uri),
       oauth: OAuthEndPoint(clientID: clientID, clientSecret: clientSecret),
     );
@@ -124,5 +129,104 @@ void main() {
       print('study: $study');
       print(_encode(study));
     }, skip: false);
+  });
+
+  group("Informed Consent", () {
+    test('- get', () async {
+      RPOrderedTask informedConsent =
+          await ResourceManager().getInformedConsent();
+
+      // print("Informed Consent: $informedConsent");
+      print(_encode(informedConsent));
+    });
+
+    test('- set', () async {
+      RPOrderedTask anotherInformedConsent = RPOrderedTask('12', [
+        RPInstructionStep(
+          "1",
+          title: "Welcome!",
+        )..text = "Welcome to this study! ",
+        RPCompletionStep("2")
+          ..title = "Thank You!"
+          ..text = "We saved your consent document - VIII",
+      ]);
+
+      bool success =
+          await ResourceManager().setInformedConsent(anotherInformedConsent);
+      print('updated: $success');
+      RPOrderedTask informedConsent =
+          await ResourceManager().getInformedConsent();
+
+      // print("Informed Consent: $informedConsent");
+      print(_encode(informedConsent));
+    });
+
+    test('- delete', () async {
+      bool success = await ResourceManager().deleteInformedConsent();
+      print('deleted: $success');
+    });
+  });
+
+  group("Localizations", () {
+    Locale locale = Locale('da');
+
+    test('- get', () async {
+      Map<String, String> localizations =
+          await ResourceManager().getLocalizations(locale);
+
+      print(_encode(localizations));
+    });
+
+    test('- set', () async {
+      Map<String, String> daLocalizations = {
+        'Hi': 'Hej',
+        'Bye': 'Farvel',
+      };
+
+      bool success =
+          await ResourceManager().setLocalizations(locale, daLocalizations);
+      print('updated: $success');
+
+      Map<String, String> localizations =
+          await ResourceManager().getLocalizations(locale);
+      expect(localizations, localizations);
+      print(_encode(localizations));
+    });
+
+    test('- delete', () async {
+      bool success = await ResourceManager().deleteLocalizations(locale);
+      print('deleted: $success');
+    });
+  });
+
+  group("Documents & Collections", () {
+    test('- get by id', () async {
+      DocumentSnapshot doc = await CarpService().documentById(167).get();
+      print(doc);
+    });
+
+    test('- get by collection', () async {
+      CollectionReference ref =
+          await CarpService().collection('localizations').get();
+      print((ref));
+    });
+
+    test(' - get document by path', () async {
+      DocumentSnapshot doc =
+          await CarpService().document('localizations/da').get();
+      print((doc));
+    });
+
+    test(' - get all documents', () async {
+      List<DocumentSnapshot> documents = await CarpService().documents();
+
+      print('Found ${documents.length} document(s)');
+      documents.forEach((document) => print(' - $document'));
+    });
+
+    test(' - delete old document', () async {
+      DocumentReference doc = CarpService().documentById(167);
+      doc.delete();
+    });
   });
 }

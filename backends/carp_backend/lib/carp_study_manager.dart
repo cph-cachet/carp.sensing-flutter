@@ -13,7 +13,9 @@ part of carp_backend;
 /// protcol, which has only one taks, namely a [CustomProtocolTask]. This
 /// custom task hold the raw json desription of a [CAMSStudyProtocol].
 class CARPStudyProtocolManager implements StudyProtocolManager {
-  Future initialize() async {}
+  Future initialize() async {
+    CAMSStudyProtocol(); // to initialize json serialization for CAMS classes
+  }
 
   /// Get a CAMS [StudyProtocol] from the CARP backend.
   ///

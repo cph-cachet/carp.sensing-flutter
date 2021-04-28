@@ -1,3 +1,7 @@
+## 0.21.3
+* setting are now a singleton accessed using `Settings()`
+* better support for handling json functions
+
 ## 0.21.2
 * update to `carp_core` v. 0.21.2
 

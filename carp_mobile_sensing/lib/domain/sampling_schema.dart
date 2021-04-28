@@ -100,6 +100,10 @@ class SamplingSchema extends DataTypeSamplingSchemeList {
   List<Measure> getMeasureList({List<String> types}) {
     List<Measure> _list = [];
 
+    // since we're using json serialization below, make sure that the json
+    // functions have been registred
+    _registerFromJsonFunctions();
+
     types.forEach((type) {
       if (measures.containsKey(type)) {
         // using json encoding/decoding to clone the measure object

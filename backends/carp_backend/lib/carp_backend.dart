@@ -16,13 +16,12 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
-import 'package:carp_core/carp_core.dart';
 import 'package:research_package/model.dart';
-import 'package:path_provider/path_provider.dart';
 
 part 'carp_data_manager.dart';
 part 'carp_study_manager.dart';
-part 'informed_consent_manager.dart';
+part 'resource_manager.dart';
+part 'carp_localization.dart';
 part 'carp_backend.g.dart';
 
 /// Specify a CARP Web Service endpoint.

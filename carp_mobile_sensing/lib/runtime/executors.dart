@@ -94,7 +94,7 @@ class StudyDeploymentExecutor extends Executor {
   Future onResume() async {
     // check the start time for this study on this phone
     // this will save it, the first time the study is executed
-    DateTime studyStartTimestamp = await settings.studyStartTimestamp;
+    DateTime studyStartTimestamp = await Settings().studyStartTimestamp;
     info(
         'Study deployment was started on this phone on ${studyStartTimestamp.toUtc()}');
 
@@ -141,8 +141,7 @@ class TriggeredTaskExecutor extends Executor {
     TriggeredTask triggeredTask,
     CAMSTrigger trigger,
     TaskDescriptor task,
-  )
-      : super() {
+  ) : super() {
     assert(triggeredTask != null,
         'Cannot initiate a TriggeredTaskExecutor without a Triggered Task.');
     _triggeredTask = triggeredTask;

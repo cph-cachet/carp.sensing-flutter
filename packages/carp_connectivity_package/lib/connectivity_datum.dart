@@ -52,7 +52,7 @@ class BluetoothDatum extends Datum {
   DataFormat get format =>
       DataFormat.fromString(ConnectivitySamplingPackage.BLUETOOTH);
 
-  List<BluetoothDevice> scanResult = new List<BluetoothDevice>();
+  List<BluetoothDevice> scanResult = [];
 
   BluetoothDatum() : super();
   factory BluetoothDatum.fromScanResult(
@@ -132,11 +132,11 @@ class BluetoothDevice {
   String toString() =>
       '${this.runtimeType} - ' +
       ', advertisementName: $advertisementName'
-      ', id: $bluetoothDeviceId'
-      ', name: $bluetoothDeviceName'
-      ', type: $bluetoothDeviceType'
-      ', connectable: $connectable'
-      ', rssi: $rssi';
+          ', id: $bluetoothDeviceId'
+          ', name: $bluetoothDeviceName'
+          ', type: $bluetoothDeviceType'
+          ', connectable: $connectable'
+          ', rssi: $rssi';
 }
 
 /// A [Datum] that holds wifi connectivity status in terms of connected SSID

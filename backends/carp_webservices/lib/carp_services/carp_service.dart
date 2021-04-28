@@ -560,7 +560,7 @@ class CarpService {
     return DocumentReference._id(this, id);
   }
 
-  /// Gets a [DocumentReference] for the specified CARP Service path.
+  /// Gets a [DocumentReference] for the specified [path].
   DocumentReference document(String path) {
     assert(path != null);
     return DocumentReference._path(this, path);
@@ -580,7 +580,7 @@ class CarpService {
 
     if (httpStatusCode == HttpStatus.ok) {
       List<dynamic> documentsJson = json.decode(response.body);
-      List<DocumentSnapshot> documents = new List<DocumentSnapshot>();
+      List<DocumentSnapshot> documents = [];
       for (var item in documentsJson) {
         Map<String, dynamic> documentJson = item;
         String key = documentJson["name"];
@@ -597,7 +597,35 @@ class CarpService {
     );
   }
 
-  /// Gets a [CollectionReference] for the current CARP Service path.
+  /// Get all documents for this study.
+  ///
+  /// Note that this might return a very long list of documents and the
+  /// retquest may time out.
+  Future<List<DocumentSnapshot>> documents() async {
+    http.Response response =
+        await httpr.get(Uri.encodeFull(documentEndpointUri), headers: headers);
+    int httpStatusCode = response.statusCode;
+
+    if (httpStatusCode == HttpStatus.ok) {
+      List<dynamic> documentsJson = json.decode(response.body);
+      List<DocumentSnapshot> documents = [];
+      for (var item in documentsJson) {
+        Map<String, dynamic> documentJson = item;
+        String key = documentJson["name"];
+        documents.add(DocumentSnapshot._("$key", documentJson));
+      }
+      return documents;
+    }
+
+    // All other cases are treated as an error.
+    Map<String, dynamic> responseJson = json.decode(response.body);
+    throw CarpServiceException(
+      httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
+      message: responseJson["message"],
+    );
+  }
+
+  /// Gets a [CollectionReference] for the specified [path].
   CollectionReference collection(String path) {
     assert(path != null);
     return CollectionReference._(this, path);

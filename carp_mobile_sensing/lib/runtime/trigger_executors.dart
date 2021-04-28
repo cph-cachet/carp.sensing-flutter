@@ -196,7 +196,7 @@ class RecurrentScheduledTriggerExecutor extends PeriodicTriggerExecutor {
     // check if there is a remembered trigger date
     if (_myTrigger.remember) {
       String _savedFirstOccurrence =
-          settings.preferences.get(_myTrigger.triggerId);
+          Settings().preferences.get(_myTrigger.triggerId);
       debug('savedFirstOccurrence : $_savedFirstOccurrence');
 
       if (_savedFirstOccurrence != null) {
@@ -213,7 +213,7 @@ class RecurrentScheduledTriggerExecutor extends PeriodicTriggerExecutor {
       }
 
       // save the day of the first occurrence for later use
-      await settings.preferences.setString(
+      await Settings().preferences.setString(
           _myTrigger.triggerId, _myTrigger.firstOccurrence.toUtc().toString());
       debug(
           'saving firstOccurrence : ${_myTrigger.firstOccurrence.toUtc().toString()}');
@@ -228,7 +228,7 @@ class RecurrentScheduledTriggerExecutor extends PeriodicTriggerExecutor {
         if (_myTrigger.remember) {
           // replace the entry of the first occurrence to the next occurrence date
           DateTime nextOccurrence = DateTime.now().add(period);
-          settings.preferences.setString(
+          Settings().preferences.setString(
               _myTrigger.triggerId, nextOccurrence.toUtc().toString());
           debug('saving nextOccurrence: $nextOccurrence');
         }

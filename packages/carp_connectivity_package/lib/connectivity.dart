@@ -13,7 +13,6 @@ import 'package:crypto/crypto.dart';
 import 'dart:convert';
 import 'package:permission_handler/permission_handler.dart';
 
-import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 part 'connectivity_probes.dart';

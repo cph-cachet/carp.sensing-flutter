@@ -71,8 +71,7 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
     List<TaskDescriptor> tasks,
     Map<String, Trigger> triggers,
     List<TriggeredTask> triggeredTasks,
-  })
-      : super(
+  }) : super(
           deviceDescriptor: deviceDescriptor,
           configuration: configuration,
           connectedDevices: connectedDevices,
@@ -81,6 +80,8 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
           triggers: triggers,
           triggeredTasks: triggeredTasks,
         ) {
+    _registerFromJsonFunctions();
+
     this._studyId = studyId;
     this._studyDeploymentId = studyDeploymentId;
     this._owner = owner;
@@ -97,8 +98,7 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
     String dataFormat,
     DataEndPoint dataEndPoint,
     MasterDeviceDeployment masterDeviceDeployment,
-  })
-      : super(
+  }) : super(
           deviceDescriptor: masterDeviceDeployment.deviceDescriptor,
           configuration: masterDeviceDeployment.configuration,
           connectedDevices: masterDeviceDeployment.connectedDevices,
@@ -108,6 +108,8 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
           triggers: masterDeviceDeployment.triggers,
           triggeredTasks: masterDeviceDeployment.triggeredTasks,
         ) {
+    _registerFromJsonFunctions();
+
     this._studyId = studyId;
     this._studyDeploymentId = studyDeploymentId;
     this._owner = owner;
