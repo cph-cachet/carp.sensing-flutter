@@ -31,8 +31,8 @@ class SensingBLoC {
   }
 
   Future init() async {
-    await settings.init();
-    settings.debugLevel = DebugLevel.DEBUG;
+    await Settings().init();
+    Settings().debugLevel = DebugLevel.DEBUG;
     _app = CarpApp(
       name: "CANS Production @ DTU",
       uri: Uri.parse(uri),
