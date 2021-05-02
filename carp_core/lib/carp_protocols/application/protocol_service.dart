@@ -12,7 +12,7 @@ abstract class ProtocolService {
   /// Add the specified study [protocol].
   ///
   /// [versionTag] is an optional label used to identify this first version of
-  /// the [protocol]. "Initial" by default.
+  /// the [protocol]. Timestamp of initial creation by default.
   Future add(StudyProtocol protocol, [String versionTag]);
 
   /// Add a new version for the specified study [protocol], of which a previous

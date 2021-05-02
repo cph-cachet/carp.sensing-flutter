@@ -13,7 +13,7 @@ String _encode(Object object) =>
 void main() {
   CarpApp app;
   CarpUser user;
-  String ownerId;
+  String ownerId, name;
 
   /// Setup CARP and authenticate.
   /// Runs once before all tests.
@@ -34,12 +34,10 @@ void main() {
     );
 
     ownerId = CarpService().currentUser.accountId;
-    // CANSParticipationService().configureFrom(CarpService());
-    // CANSDeploymentService().configureFrom(CarpService());
+    name = 'test_protocol';
     CANSProtocolService().configureFrom(CarpService());
   });
 
-  /// Close connection to CARP.
   /// Runs once after all tests.
   tearDownAll(() {});
 
@@ -55,12 +53,20 @@ void main() {
     test(
       '- add',
       () async {
-        StudyProtocol protocol = StudyProtocol(
-            ownerId: ownerId,
-            name: 'CAMS Test Protocol',
-            description: 'Generated from carp_webservices unit test.');
+        // StudyProtocol protocol = StudyProtocol(
+        //     ownerId: ownerId,
+        //     name: name,
+        //     description: 'Generated from carp_webservices unit test.');
 
-        CANSProtocolService().add(protocol);
+        StudyProtocol protocol =
+            await CANSProtocolService().createCustomProtocol(
+          ownerId,
+          name,
+          'Made from Dart unit test.',
+          '{"version":1}',
+        );
+
+        await CANSProtocolService().add(protocol);
       },
     );
 
@@ -76,7 +82,11 @@ void main() {
 
     test(
       '- getBy',
-      () async {},
+      () async {
+        StudyProtocol protocol =
+            await CANSProtocolService().getBy(StudyProtocolId(ownerId, name));
+        print(protocol);
+      },
     );
 
     test(
@@ -90,7 +100,11 @@ void main() {
 
     test(
       '- getVersionHistoryFor',
-      () async {},
+      () async {
+        List<ProtocolVersion> versions = await CANSProtocolService()
+            .getVersionHistoryFor(StudyProtocolId(ownerId, name));
+        print(versions);
+      },
     );
 
     test(
@@ -99,12 +113,12 @@ void main() {
         StudyProtocol protocol =
             await CANSProtocolService().createCustomProtocol(
           ownerId,
-          'Test Protocol',
+          name,
           'Made from Dart unit test.',
           '{"version":1}',
         );
 
-        print(protocol);
+        print(_encode(protocol));
       },
     );
   });

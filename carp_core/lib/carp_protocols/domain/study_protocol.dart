@@ -178,7 +178,7 @@ class StudyProtocol {
     final Set<TaskDescriptor> deviceTasks = {};
 
     triggeredTasks.forEach((triggeredTask) {
-      if (triggeredTask.destinationDeviceRoleName == device.roleName)
+      if (triggeredTask.targetDeviceRoleName == device.roleName)
         deviceTasks.add(_taskMap[triggeredTask.taskName]);
     });
 
@@ -192,7 +192,7 @@ class StudyProtocol {
     final Set<TaskDescriptor> deviceTasks = {};
 
     triggeredTasks.forEach((triggeredTask) {
-      if (triggeredTask.destinationDeviceRoleName == deviceRoleName)
+      if (triggeredTask.targetDeviceRoleName == deviceRoleName)
         deviceTasks.add(_taskMap[triggeredTask.taskName]);
     });
     return deviceTasks;

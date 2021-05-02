@@ -20,6 +20,8 @@ class Add extends ProtocolServiceRequest {
   final StudyProtocol protocol;
   String versionTag;
 
+  /// Create a new add request.
+  /// If [versionTag] is `null` the version tag is current timestamp.
   Add(this.protocol, this.versionTag) : super() {
     versionTag ??= DateTime.now().toUtc().toString();
   }
@@ -64,6 +66,8 @@ class UpdateParticipantDataConfiguration extends ProtocolServiceRequest {
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class GetBy extends ProtocolServiceRequest {
   final StudyProtocolId protocolId;
+
+  @JsonKey(includeIfNull: false)
   final String versionTag;
 
   GetBy(this.protocolId, this.versionTag) : super();

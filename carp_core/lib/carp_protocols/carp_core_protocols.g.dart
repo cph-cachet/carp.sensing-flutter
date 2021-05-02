@@ -392,7 +392,7 @@ TriggeredTask _$TriggeredTaskFromJson(Map<String, dynamic> json) {
     triggerId: json['triggerId'] as int,
   )
     ..taskName = json['taskName'] as String
-    ..destinationDeviceRoleName = json['destinationDeviceRoleName'] as String;
+    ..targetDeviceRoleName = json['targetDeviceRoleName'] as String;
 }
 
 Map<String, dynamic> _$TriggeredTaskToJson(TriggeredTask instance) {
@@ -406,7 +406,7 @@ Map<String, dynamic> _$TriggeredTaskToJson(TriggeredTask instance) {
 
   writeNotNull('triggerId', instance.triggerId);
   writeNotNull('taskName', instance.taskName);
-  writeNotNull('destinationDeviceRoleName', instance.destinationDeviceRoleName);
+  writeNotNull('targetDeviceRoleName', instance.targetDeviceRoleName);
   return val;
 }
 
@@ -756,11 +756,21 @@ GetBy _$GetByFromJson(Map<String, dynamic> json) {
   )..$type = json[r'$type'] as String;
 }
 
-Map<String, dynamic> _$GetByToJson(GetBy instance) => <String, dynamic>{
-      r'$type': instance.$type,
-      'protocolId': instance.protocolId,
-      'versionTag': instance.versionTag,
-    };
+Map<String, dynamic> _$GetByToJson(GetBy instance) {
+  final val = <String, dynamic>{
+    r'$type': instance.$type,
+    'protocolId': instance.protocolId,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('versionTag', instance.versionTag);
+  return val;
+}
 
 GetAllFor _$GetAllForFromJson(Map<String, dynamic> json) {
   return GetAllFor(
