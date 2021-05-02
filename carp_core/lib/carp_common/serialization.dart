@@ -229,85 +229,29 @@ class FromJsonFactory {
   /// Rester all [serializables].
   ///
   /// A convinient way to call [register] for multiple types.
-  void registerAll(List<Serializable> serializables) {}
+  void registerAll(List<Serializable> serializables) =>
+      serializables.forEach((serializable) => register(serializable));
 
   /// Deserialize [json] based on its type.
-  Serializable fromJson(Map<String, dynamic> json) =>
-      Function.apply(_registry[json[Serializable.CLASS_IDENTIFIER]], [json]);
+  Serializable fromJson(Map<String, dynamic> json) {
+    final String type = json[Serializable.CLASS_IDENTIFIER];
+    if (!_registry.containsKey(type))
+      throw SerializationException(
+          "A 'fromJson' function was not found in the FromJsonFactory for the type '$type'. "
+          "Register a Serializable class using the 'FromJsonFactory().register()' method.");
+    return Function.apply(_registry[type], [json]);
+  }
 }
 
 /// A convient function to convert a Dart object into a JSON string.
 String toJsonString(Object object) =>
     const JsonEncoder.withIndent(' ').convert(object);
 
-// bool _fromJsonFunctionsRegistrered = false;
-
-// // Register all the fromJson functions for the deployment domain classes.
-// void _registerFromJsonFunctions() {
-//   if (_fromJsonFunctionsRegistrered) return;
-//   _fromJsonFunctionsRegistrered = true;
-
-//   // DEPLOYMENT
-//   FromJsonFactory().register(DeviceRegistration());
-//   FromJsonFactory().register(DeviceRegistration(),
-//       type:
-//           'dk.cachet.carp.protocols.domain.devices.DefaultDeviceRegistration');
-
-//   FromJsonFactory().register(DeviceDeploymentStatus());
-//   FromJsonFactory().register(
-//     DeviceDeploymentStatus(),
-//     type:
-//         'dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.Unregistered',
-//   );
-//   FromJsonFactory().register(
-//     DeviceDeploymentStatus(),
-//     type: 'dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.Registered',
-//   );
-//   FromJsonFactory().register(
-//     DeviceDeploymentStatus(),
-//     type: 'dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.Deployed',
-//   );
-//   FromJsonFactory().register(DeviceDeploymentStatus(),
-//       type:
-//           'dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.NeedsRedeployment');
-
-//   FromJsonFactory().register(StudyDeploymentStatus());
-//   FromJsonFactory().register(StudyDeploymentStatus(),
-//       type: 'dk.cachet.carp.deployment.domain.StudyDeploymentStatus.Invited');
-//   FromJsonFactory().register(StudyDeploymentStatus(),
-//       type:
-//           'dk.cachet.carp.deployment.domain.StudyDeploymentStatus.DeployingDevices');
-//   FromJsonFactory().register(StudyDeploymentStatus(),
-//       type:
-//           'dk.cachet.carp.deployment.domain.StudyDeploymentStatus.DeploymentReady');
-//   FromJsonFactory().register(StudyDeploymentStatus(),
-//       type: 'dk.cachet.carp.deployment.domain.StudyDeploymentStatus.Stopped');
-
-//   // PROTOCOL
-//   FromJsonFactory().register(StudyProtocol());
-//   FromJsonFactory().register(ProtocolOwner());
-//   FromJsonFactory().register(Trigger());
-//   FromJsonFactory().register(ElapsedTimeTrigger());
-//   FromJsonFactory().register(ManualTrigger());
-//   FromJsonFactory().register(ScheduledTrigger());
-
-//   FromJsonFactory().register(TaskDescriptor());
-//   FromJsonFactory().register(ConcurrentTask());
-//   FromJsonFactory().register(CustomProtocolTask());
-//   FromJsonFactory().register(Measure(type: 'ignored'));
-//   FromJsonFactory().register(DataTypeMeasure(type: 'ignored'));
-//   FromJsonFactory().register(PhoneSensorMeasure(type: 'ignored'));
-//   FromJsonFactory().register(SamplingConfiguration());
-
-//   FromJsonFactory().register(DeviceDescriptor());
-//   FromJsonFactory().register(MasterDeviceDescriptor());
-//   FromJsonFactory().register(CustomProtocolDevice());
-//   FromJsonFactory().register(Smartphone());
-//   FromJsonFactory().register(AltBeacon());
-//   FromJsonFactory().register(DeviceDescriptor(),
-//       type:
-//           'dk.cachet.carp.protocols.infrastructure.test.StubMasterDeviceDescriptor');
-//   FromJsonFactory().register(DeviceDescriptor(),
-//       type:
-//           'dk.cachet.carp.protocols.infrastructure.test.StubDeviceDescriptor');
-// }
+/// Throws when serialization to/from json fails.
+class SerializationException implements Exception {
+  final _message;
+  String get message => _message;
+  SerializationException([this._message]);
+  @override
+  String toString() => '$runtimeType - $_message';
+}
