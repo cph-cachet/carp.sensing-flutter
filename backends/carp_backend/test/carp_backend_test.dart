@@ -51,8 +51,8 @@ void main() {
     test('- authentication', () async {
       print('CarpService : ${CarpService().app}');
       print(" - signed in as: $user");
-      //expect(user.accountId, testParticipantId);
-    }, skip: false);
+      expect(user.accountId, accountId);
+    });
 
     test('- get invitations for this account (user)', () async {
       List<ActiveParticipationInvitation> invitations =
