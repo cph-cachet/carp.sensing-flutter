@@ -31,6 +31,7 @@ void _registerFromJsonFunctions() {
   FromJsonFactory().register(ConditionalEvent({}));
   FromJsonFactory()
       .register(ConditionalSamplingEventTrigger(measureType: 'ignored'));
+  FromJsonFactory().register(RandomRecurrentTrigger());
 
   // Measure classes
   FromJsonFactory().register(CAMSMeasure(type: 'ignored'));
