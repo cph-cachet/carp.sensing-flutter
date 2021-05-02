@@ -167,4 +167,11 @@ class SmartphoneDeploymentService implements DeploymentService {
     deployment.stop();
     return deployment.status;
   }
+
+  @override
+  Future<List<StudyDeploymentStatus>> getStudyDeploymentStatusList(
+      List<String> studyDeploymentIds) {
+    // TODO: implement getStudyDeploymentStatusList
+    throw UnimplementedError();
+  }
 }

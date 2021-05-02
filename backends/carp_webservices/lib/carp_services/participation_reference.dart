@@ -13,54 +13,30 @@ part of carp_services;
 ///
 ///   - [getParticipantData()] - get participation data from this deployment.
 ///   - [setParticipantData()] - set participation data in this deployment
-class ParticipationReference extends CarpReference {
+class ParticipationReference extends RPCCarpReference {
   String _studyDeploymentId;
 
   /// The CARP study deployment ID.
   String get studyDeploymentId =>
       _studyDeploymentId ?? service.app.studyDeploymentId;
 
-  ParticipationReference._(CarpService service, this._studyDeploymentId)
+  ParticipationReference._(
+      CANSParticipationService service, this._studyDeploymentId)
       : super._(service);
 
-  /// A generic RPC request to the CARP Server.
-  Future<Map<String, dynamic>> _rpc(ParticipationServiceRequest request) async {
-    final restHeaders = await headers;
-    final String body = _encode(request.toJson());
-
-    print('REQUEST: ${service.participationRPCEndpointUri}\n$body');
-    http.Response response = await httpr.post(
-        Uri.encodeFull(service.participationRPCEndpointUri),
-        headers: restHeaders,
-        body: body);
-    int httpStatusCode = response.statusCode;
-    String responseBody = response.body;
-    print('RESPONSE: $httpStatusCode\n$responseBody');
-
-    // check if this is a json list, and if so turn it into a json map with one item called 'items'
-    if (responseBody.startsWith('[')) {
-      responseBody = '{"items":$responseBody}';
-    }
-
-    Map<String, dynamic> responseJson = json.decode(responseBody);
-
-    if (httpStatusCode == HttpStatus.ok) {
-      return responseJson;
-    }
-
-    // All other cases are treated as an error.
-    throw CarpServiceException(
-      httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: responseJson["message"],
-    );
-  }
+  /// The URL for the participation endpoint.
+  ///
+  /// {{PROTOCOL}}://{{SERVER_HOST}}:{{SERVER_PORT}}/api/participation-service
+  @override
+  String get rpcEndpointUri =>
+      "${service.app.uri.toString()}/api/participation-service";
 
   /// Get currently set data for all expected participant data in this study
   /// deployment with [studyDeploymentId].
   /// Data which is not set equals null.
   Future<ParticipantData> getParticipantData() async {
-    ParticipantData data = ParticipantData
-        .fromJson(await _rpc(GetParticipantData(studyDeploymentId)));
+    ParticipantData data = ParticipantData.fromJson(
+        await _rpc(GetParticipantData(studyDeploymentId)));
     return data;
   }
 

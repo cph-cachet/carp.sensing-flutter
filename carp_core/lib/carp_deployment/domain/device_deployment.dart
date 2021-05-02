@@ -30,11 +30,9 @@ class MasterDeviceDeployment {
   /// All triggers originating from this device and connected devices, stored
   /// per assigned id unique within the study protocol.
   Map<String, Trigger> triggers;
-  //   Map<String, Map<String, dynamic>> triggers;
 
   /// The specification of tasks triggered and the devices they are sent to.
   List<TriggeredTask> triggeredTasks;
-  // List<Map<String, dynamic>> triggeredTasks;
 
   /// The time when this device deployment was last updated.
   /// This corresponds to the most recent device registration as part of this

@@ -17,35 +17,18 @@ part of carp_services;
 ///   CarpService().configure(myApp);
 ///   CarpUser user = await CarpService().authenticate(username: "user@dtu.dk", password: "password");
 /// ```
-class CarpService {
+class CarpService extends CarpBaseService {
   static CarpService _instance = CarpService._();
-  CarpApp _app;
-  CarpUser _currentUser;
-
-  CarpService._() {
-    registerFromJsonFunctions();
-  }
+  CarpService._();
 
   /// Returns the singleton default instance of the [CarpService].
   /// Before this instance can be used, it must be configured using the
   /// [configure] method.
   factory CarpService() => _instance;
 
-  /// The CARP app associated with the CARP Web Service.
-  CarpApp get app => _app;
-
-  /// Gets the current user.
-  /// Returns `null` if no user is authenticated.
-  CarpUser get currentUser => _currentUser;
-
-  /// Has this service been configured?
-  bool get isConfigured => (_app != null);
-
-  /// Configure the default instance of the [CarpService].
-  void configure(CarpApp app) async {
-    assert(app != null);
-    this._app = app;
-  }
+  @override
+  // RPC is not used in the CarpService endpoints which are named differently.
+  String get rpcEndpointName => throw UnimplementedError();
 
   // --------------------------------------------------------------------------
   // AUTHENTICATION
@@ -245,7 +228,7 @@ class CarpService {
   }
 
   /// The URL for sending email about a forgotten password.
-  String get forgottenPasswordEmail =>
+  String get forgottenPasswordEmailUri =>
       "${_app.uri.toString()}/api/users/forgotten-password/send";
 
   /// Triggers the CARP backend to send a password-reset email to the given
@@ -532,7 +515,7 @@ class CarpService {
     switch (httpStatusCode) {
       case 200:
         {
-          List<CarpFileResponse> fileList = new List<CarpFileResponse>();
+          List<CarpFileResponse> fileList = [];
           list.forEach((element) {
             fileList.add(CarpFileResponse._(element));
           });
@@ -630,152 +613,6 @@ class CarpService {
     assert(path != null);
     return CollectionReference._(this, path);
   }
-
-  // --------------------------------------------------------------------------
-  // STUDY DEPLOYMENT REQUESTS
-  // --------------------------------------------------------------------------
-
-  /// The URL for the deployment endpoint.
-  ///
-  /// {{PROTOCOL}}://{{SERVER_HOST}}:{{SERVER_PORT}}/api/deployments/all
-  String get deploymentRPCEndpointUri =>
-      "${app.uri.toString()}/api/deployment-service";
-
-  /// Gets a [DeploymentReference] for a [studyDeploymentId].
-  /// If the [studyDeploymentId] is not provided, the study deployment id
-  /// specified in the [CarpApp] is used.
-  DeploymentReference deployment([String studyDeploymentId]) =>
-      DeploymentReference._(this, studyDeploymentId);
-
-  /// Deploy the [protocol] at this carp service.
-  Future<StudyDeploymentStatus> createStudyDeployment(
-      StudyProtocol protocol) async {
-    assert(protocol != null, 'Cannot deploy a null study protocol.');
-
-    final String body = _encode(CreateStudyDeployment(protocol).toJson());
-
-    debug('REQUEST: $deploymentRPCEndpointUri\n$body');
-    http.Response response = await httpr.post(
-        Uri.encodeFull(deploymentRPCEndpointUri),
-        headers: headers,
-        body: body);
-    debug('RESPONSE: ${response.statusCode}\n${response.body}');
-
-    Map<String, dynamic> responseJson = json.decode(response.body);
-    if (response.statusCode == HttpStatus.ok)
-      return StudyDeploymentStatus.fromJson(responseJson);
-
-    // All other cases are treated as an error.
-    throw CarpServiceException(
-      httpStatus: HTTPStatus(response.statusCode, response.reasonPhrase),
-      message: responseJson["message"],
-    );
-  }
-
-  // --------------------------------------------------------------------------
-  // PARTICIPATION SERVICE REQUESTS
-  // --------------------------------------------------------------------------
-
-  /// The URL for the participation endpoint.
-  ///
-  /// {{PROTOCOL}}://{{SERVER_HOST}}:{{SERVER_PORT}}/api/participation-service
-  String get participationRPCEndpointUri =>
-      "${app.uri.toString()}/api/participation-service";
-
-  /// Gets a [ParticipationReference] for a [studyDeploymentId].
-  /// If the [studyDeploymentId] is not provided, the study deployment id
-  /// specified in the [CarpApp] is used.
-  ParticipationReference participation([String studyDeploymentId]) =>
-      ParticipationReference._(this, studyDeploymentId);
-
-  /// Get the list of active participation invitations for an [accountId].
-  /// This will return all deployments that this account (user) is invited to.
-  ///
-  /// Note that the [accountId] is the unique CARP account id (and not the
-  /// username).
-  /// If [accountId] is not specified, then the account id of the currently
-  /// authenticated [CarpUser] is used.
-  Future<List<ActiveParticipationInvitation>> invitations(
-      [String accountId]) async {
-    accountId ??= currentUser.accountId;
-    final String body =
-        _encode(GetActiveParticipationInvitations(accountId).toJson());
-
-    debug('REQUEST: $participationRPCEndpointUri\n$body');
-    http.Response response = await httpr.post(
-        Uri.encodeFull(participationRPCEndpointUri),
-        headers: headers,
-        body: body);
-    debug('RESPONSE: ${response.statusCode}\n${response.body}');
-
-    if (response.statusCode == HttpStatus.ok) {
-      List<dynamic> items = json.decode(response.body);
-      List<ActiveParticipationInvitation> invitations = [];
-      items.forEach((item) =>
-          invitations.add(ActiveParticipationInvitation.fromJson(item)));
-
-      return invitations;
-    }
-
-    // All other cases are treated as an error.
-    Map<String, dynamic> responseJson = json.decode(response.body);
-    throw CarpServiceException(
-      httpStatus: HTTPStatus(response.statusCode, response.reasonPhrase),
-      message: responseJson["message"],
-    );
-  }
-
-  /// Get a study invitation from CARP by allowing the user to select from
-  /// multiple invitations (if more than one is available).
-  ///
-  /// Returns `null` if the user has no invitations.
-  ///
-  /// If the user is invited to more than one study and [showInvitations] is `true`,
-  /// a user-interface dialog for selecting amongs the invitations is shown.
-  /// If not, the study id of the first invitation is returned.
-  ///
-  /// Throws a [CarpServiceException] if not successful.
-  Future<ActiveParticipationInvitation> getStudyInvitation(
-    BuildContext context, {
-    bool showInvitations = true,
-  }) async {
-    if (!CarpService().isConfigured)
-      throw CarpServiceException(
-          message:
-              "CARP Service not initialized. Call 'CarpService().configure()' first.");
-
-    if (!CarpService().authenticated)
-      throw CarpServiceException(
-          message:
-              "The current user is not authenticated to CARP. Call 'CarpService().authenticate...()' first.");
-
-    List<ActiveParticipationInvitation> invitations =
-        await CarpService().invitations();
-
-    ActiveParticipationInvitation _invitation;
-
-    if (invitations.isEmpty) return null;
-
-    if (invitations.length == 1 || !showInvitations) {
-      _invitation = invitations[0];
-    } else {
-      // old version below - does not work on iOS...?
-      // InvitationsDialog dialog = InvitationsDialog();
-      // await dialog.build(context, invitations).show();
-      // _invitation = dialog.invitation;
-
-      _invitation = await showDialog<ActiveParticipationInvitation>(
-          context: context,
-          builder: (BuildContext context) =>
-              SimpleInvitationsDialog().build(context, invitations));
-    }
-
-    // make sure that the correct study and deployment ids are saved in the app
-    CarpService().app.studyId = _invitation?.studyId;
-    CarpService().app.studyDeploymentId = _invitation?.studyDeploymentId;
-
-    return _invitation;
-  }
 }
 
 /// Authentication state change events.
@@ -794,26 +631,4 @@ enum AuthEvent {
 
   /// A password reset email has been send to the user.
   reset,
-}
-
-/// Abstract CARP web service references.
-abstract class CarpReference {
-  CarpService service;
-
-  CarpReference._(this.service) {
-    assert(service != null, 'A valid CARP service must be provided.');
-  }
-
-  Future<Map<String, String>> get headers async {
-    assert(service != null);
-    CarpUser user = service.currentUser;
-    assert(user != null);
-    final OAuthToken token = await user.getOAuthToken();
-
-    return {
-      "Content-Type": "application/json",
-      "Authorization": "bearer ${token.accessToken}",
-      "cache-control": "no-cache"
-    };
-  }
 }

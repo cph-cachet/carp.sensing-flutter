@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
-import 'package:carp_core/carp_core.dart';
 
 void main() async {
   final String username = 'researcher';
@@ -171,14 +170,25 @@ void main() async {
 
   // ------------------- DEPLOYMENTS --------------------------------
 
+  // This example uses the
+  //  * [CANSDeploymentService]
+  //  * [CANSParticipationService]
+  //
+  // To use these, we first must configure them and authenticate.
+  // However, the [configureFrom] method is a convinient way to do this based
+  // on an existing service, which has been configured.
+
+  CANSParticipationService().configureFrom(CarpService());
+  CANSDeploymentService().configureFrom(CarpService());
+
   // get invitations for this account (user)
   List<ActiveParticipationInvitation> invitations =
-      await CarpService().invitations();
+      await CANSParticipationService().getActiveParticipationInvitations();
   invitations.forEach(print);
 
   // get a deployment reference for this master device
   DeploymentReference deploymentReference =
-      CarpService().deployment('the_study_deployment_id');
+      CANSDeploymentService().deployment('the_study_deployment_id');
 
   // get the status of this deployment
   StudyDeploymentStatus status = await deploymentReference.getStatus();

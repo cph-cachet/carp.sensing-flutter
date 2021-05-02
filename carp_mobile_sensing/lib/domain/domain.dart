@@ -14,6 +14,7 @@ import 'package:uuid/uuid.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 part 'study_protocol.dart';
+part 'protocol_owner.dart';
 part 'data_endpoint.dart';
 part 'sampling_schema.dart';
 part 'measures.dart';

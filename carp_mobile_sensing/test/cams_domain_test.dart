@@ -71,6 +71,13 @@ void main() {
     print(protocol);
     print(toJsonString(protocol));
     expect(protocol.ownerId, 'AB');
+    expect(protocol.owner.id, 'AB');
+    expect(protocol.masterDevices.length, 1);
+    expect(protocol.connectedDevices.length, 1);
+    expect(protocol.triggers.length, 3);
+    expect(protocol.triggers.keys.first, "0");
+    expect(protocol.tasks.length, 3);
+    expect(protocol.triggeredTasks.length, 3);
   });
 
   test('StudyProtocol -> JSON -> StudyProtocol :: deep assert', () async {
@@ -85,10 +92,10 @@ void main() {
 
   test('JSON File -> StudyProtocol', () async {
     // Read the study protocol from json file
-    String plainJson = File('test/json/study_1.json').readAsStringSync();
+    String plainJson = File('test/json/study_protocol.json').readAsStringSync();
 
-    CAMSStudyProtocol protocol = CAMSStudyProtocol
-        .fromJson(json.decode(plainJson) as Map<String, dynamic>);
+    CAMSStudyProtocol protocol = CAMSStudyProtocol.fromJson(
+        json.decode(plainJson) as Map<String, dynamic>);
 
     expect(protocol.ownerId, 'AB');
     expect(protocol.masterDevices.first.roleName,
@@ -213,7 +220,7 @@ void main() {
 
     StudyProtocol protocol_2 =
         StudyProtocol.fromJson(json.decode(studyJson) as Map<String, dynamic>);
-    expect(protocol_2.owner.id, protocol.ownerId);
+    expect(protocol_2.ownerId, protocol.ownerId);
 
     print('#1 : $protocol');
 

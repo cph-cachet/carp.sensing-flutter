@@ -48,10 +48,9 @@ class FileStorageReference extends CarpReference {
   Future<CarpFileResponse> get() async {
     assert(id > 0);
     final String url = "$fileEndpointUri/$id";
-    final restHeaders = await headers;
 
     http.Response response =
-        await httpr.get(Uri.encodeFull(url), headers: restHeaders);
+        await httpr.get(Uri.encodeFull(url), headers: headers);
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> map = json.decode(response.body);
 
@@ -75,10 +74,9 @@ class FileStorageReference extends CarpReference {
   Future<int> delete() async {
     assert(id > 0);
     final String url = "$fileEndpointUri/$id";
-    final restHeaders = await headers;
 
     http.Response response =
-        await httpr.delete(Uri.encodeFull(url), headers: restHeaders);
+        await httpr.delete(Uri.encodeFull(url), headers: headers);
     int httpStatusCode = response.statusCode;
 
     switch (httpStatusCode) {
@@ -111,8 +109,7 @@ class FileMetadata {
     this.contentLanguage,
     this.contentType,
     Map<String, String> customMetadata,
-  })
-      : carpServiceName = null,
+  })  : carpServiceName = null,
         path = null,
         name = null,
         sizeBytes = null,

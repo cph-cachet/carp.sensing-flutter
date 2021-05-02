@@ -14,8 +14,8 @@ dependencies:
 
 #  carp_mobile_sensing:
 #    path: ../../../carp_mobile_sensing
-  carp_webservices:
-    path: ../../carp_webservices
+#  carp_webservices:
+#    path: ../../carp_webservices
   carp_backend:
     path: ../
 

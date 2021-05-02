@@ -1,5 +1,4 @@
 {
-    "$type": "dk.cachet.carp.protocols.domain.CAMSStudyProtocol",
     "name": "Track patient movement",
     "masterDevices": [
      {
@@ -17,17 +16,17 @@
       "samplingConfiguration": {}
      }
     ],
-    "triggers": [
-     {
+    "triggers": {
+     "0": {
       "$type": "dk.cachet.carp.protocols.domain.triggers.Trigger"
      },
-     {
+     "1": {
       "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
      },
-     {
+     "2": {
       "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
      }
-    ],
+    },
     "tasks": [
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.ConcurrentTask",
@@ -196,10 +195,6 @@
      "name": "Alex Boyon",
      "email": "alex@uni.dk"
     },
-    "dataEndPoint": {
-     "$type": "FileDataEndPoint",
-     "type": "FILE",
-     "bufferSize": 500
-    },
+    "ownerId": "AB",
     "dataFormat": "dk.cachet.carp"
    }

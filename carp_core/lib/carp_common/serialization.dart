@@ -186,8 +186,7 @@ class FromJsonFactory {
         type: 'dk.cachet.carp.deployment.domain.StudyDeploymentStatus.Stopped');
 
     // PROTOCOL
-    register(StudyProtocol());
-    register(ProtocolOwner());
+    // register(StudyProtocol());
     register(Trigger());
     register(ElapsedTimeTrigger());
     register(ManualTrigger());

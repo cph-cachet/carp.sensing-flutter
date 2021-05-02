@@ -6,7 +6,7 @@ A Flutter plugin to access the [CARP Web Service API](https://cachet.postman.co/
 
 For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/README.md).
 
-*Note*: This plugin is still under development, and some APIs might not be available yet. 
+> **Note**: This plugin is still under development, and some APIs might not be available yet. 
 [Feedback](https://github.com/cph-cachet/carp.sensing-flutter/issues) and 
 [Pull Requests](https://github.com/cph-cachet/carp.sensing-flutter/pulls) are most welcome!
 
@@ -49,11 +49,11 @@ The [`CarpService`](https://pub.dartlang.org/documentation/carp_webservices/late
   CarpService().configure(app);
 ```` 
 
-> Note that you need a valid `clientID` and `clientSecret` from a CARP Service to use it.
+> Note that you need a valid `clientID` and `clientSecret` from a CARP Web Service to use it.
 
-> Also note that you need the `studyId` and  `studyDeploymentId` for you study in the CARP Service. These can be obtained from an invitation (see below). But if you want to use the CARP Service endpoints directly, you have to specify these IDs in the CarpApp configuration. 
+> Also note that you need the `studyId` and  `studyDeploymentId` for your study in the CARP Web Service. These can be obtained from an invitation (see below). But if you want to use the CARP Service endpoints directly, you have to specify these IDs in the CarpApp configuration. 
 
-The singleton can then be accessed via `CarpService()`.
+The singleton can now be accessed via `CarpService()`.
 
 ### Authentication
 

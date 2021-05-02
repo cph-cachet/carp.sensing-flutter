@@ -15,11 +15,10 @@ CAMSStudyProtocol _$CAMSStudyProtocolFromJson(Map<String, dynamic> json) {
         : ProtocolOwner.fromJson(json['owner'] as Map<String, dynamic>),
     protocolDescription: json['protocolDescription'] == null
         ? null
-        : StudyProtocolDescription
-            .fromJson(json['protocolDescription'] as Map<String, dynamic>),
+        : StudyProtocolDescription.fromJson(
+            json['protocolDescription'] as Map<String, dynamic>),
     dataFormat: json['dataFormat'] as String,
   )
-    ..$type = json[r'$type'] as String
     ..description = json['description'] as String
     ..masterDevices = (json['masterDevices'] as List)
         ?.map((e) => e == null
@@ -31,20 +30,24 @@ CAMSStudyProtocol _$CAMSStudyProtocolFromJson(Map<String, dynamic> json) {
             ? null
             : DeviceDescriptor.fromJson(e as Map<String, dynamic>))
         ?.toList()
-    ..triggers = (json['triggers'] as List)
-        ?.map((e) =>
-            e == null ? null : Trigger.fromJson(e as Map<String, dynamic>))
-        ?.toList()
+    ..triggers = (json['triggers'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(
+          k, e == null ? null : Trigger.fromJson(e as Map<String, dynamic>)),
+    )
     ..tasks = (json['tasks'] as List)
         ?.map((e) => e == null
             ? null
             : TaskDescriptor.fromJson(e as Map<String, dynamic>))
-        ?.toList()
+        ?.toSet()
     ..triggeredTasks = (json['triggeredTasks'] as List)
         ?.map((e) => e == null
             ? null
             : TriggeredTask.fromJson(e as Map<String, dynamic>))
-        ?.toList();
+        ?.toList()
+    ..ownerId = json['ownerId'] as String
+    ..dataEndPoint = json['dataEndPoint'] == null
+        ? null
+        : DataEndPoint.fromJson(json['dataEndPoint'] as Map<String, dynamic>);
 }
 
 Map<String, dynamic> _$CAMSStudyProtocolToJson(CAMSStudyProtocol instance) {
@@ -56,17 +59,18 @@ Map<String, dynamic> _$CAMSStudyProtocolToJson(CAMSStudyProtocol instance) {
     }
   }
 
-  writeNotNull(r'$type', instance.$type);
   writeNotNull('name', instance.name);
   writeNotNull('description', instance.description);
   writeNotNull('masterDevices', instance.masterDevices);
   writeNotNull('connectedDevices', instance.connectedDevices);
   writeNotNull('triggers', instance.triggers);
-  writeNotNull('tasks', instance.tasks);
+  writeNotNull('tasks', instance.tasks?.toList());
   writeNotNull('triggeredTasks', instance.triggeredTasks);
   writeNotNull('studyId', instance.studyId);
   writeNotNull('protocolDescription', instance.protocolDescription);
   writeNotNull('owner', instance.owner);
+  writeNotNull('ownerId', instance.ownerId);
+  writeNotNull('dataEndPoint', instance.dataEndPoint);
   writeNotNull('dataFormat', instance.dataFormat);
   return val;
 }
@@ -94,6 +98,36 @@ Map<String, dynamic> _$StudyProtocolDescriptionToJson(
   writeNotNull('title', instance.title);
   writeNotNull('description', instance.description);
   writeNotNull('purpose', instance.purpose);
+  return val;
+}
+
+ProtocolOwner _$ProtocolOwnerFromJson(Map<String, dynamic> json) {
+  return ProtocolOwner(
+    id: json['id'] as String,
+    name: json['name'] as String,
+    title: json['title'] as String,
+    email: json['email'] as String,
+    affiliation: json['affiliation'] as String,
+    address: json['address'] as String,
+  )..$type = json[r'$type'] as String;
+}
+
+Map<String, dynamic> _$ProtocolOwnerToJson(ProtocolOwner instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(r'$type', instance.$type);
+  writeNotNull('id', instance.id);
+  writeNotNull('name', instance.name);
+  writeNotNull('title', instance.title);
+  writeNotNull('email', instance.email);
+  writeNotNull('address', instance.address);
+  writeNotNull('affiliation', instance.affiliation);
   return val;
 }
 
@@ -305,8 +339,8 @@ CAMSMasterDeviceDeployment _$CAMSMasterDeviceDeploymentFromJson(
     name: json['name'] as String,
     protocolDescription: json['protocolDescription'] == null
         ? null
-        : StudyProtocolDescription
-            .fromJson(json['protocolDescription'] as Map<String, dynamic>),
+        : StudyProtocolDescription.fromJson(
+            json['protocolDescription'] as Map<String, dynamic>),
     owner: json['owner'] == null
         ? null
         : ProtocolOwner.fromJson(json['owner'] as Map<String, dynamic>),
@@ -316,12 +350,12 @@ CAMSMasterDeviceDeployment _$CAMSMasterDeviceDeploymentFromJson(
         : DataEndPoint.fromJson(json['dataEndPoint'] as Map<String, dynamic>),
     deviceDescriptor: json['deviceDescriptor'] == null
         ? null
-        : MasterDeviceDescriptor
-            .fromJson(json['deviceDescriptor'] as Map<String, dynamic>),
+        : MasterDeviceDescriptor.fromJson(
+            json['deviceDescriptor'] as Map<String, dynamic>),
     configuration: json['configuration'] == null
         ? null
-        : DeviceRegistration
-            .fromJson(json['configuration'] as Map<String, dynamic>),
+        : DeviceRegistration.fromJson(
+            json['configuration'] as Map<String, dynamic>),
     connectedDevices: (json['connectedDevices'] as List)
         ?.map((e) => e == null
             ? null
@@ -767,12 +801,12 @@ SamplingEventTrigger _$SamplingEventTriggerFromJson(Map<String, dynamic> json) {
     measureType: json['measureType'] as String,
     resumeCondition: json['resumeCondition'] == null
         ? null
-        : ConditionalEvent
-            .fromJson(json['resumeCondition'] as Map<String, dynamic>),
+        : ConditionalEvent.fromJson(
+            json['resumeCondition'] as Map<String, dynamic>),
     pauseCondition: json['pauseCondition'] == null
         ? null
-        : ConditionalEvent
-            .fromJson(json['pauseCondition'] as Map<String, dynamic>),
+        : ConditionalEvent.fromJson(
+            json['pauseCondition'] as Map<String, dynamic>),
   )
     ..$type = json[r'$type'] as String
     ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String

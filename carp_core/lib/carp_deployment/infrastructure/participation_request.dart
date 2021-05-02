@@ -11,15 +11,15 @@ part of carp_core_deployment;
 // See https://github.com/cph-cachet/carp.core-kotlin/blob/develop/carp.deployment.core/src/commonMain/kotlin/dk/cachet/carp/deployment/infrastructure/ParticipationServiceRequest.kt
 // -----------------------------------------------------
 
-/// A [ParticipationServiceRequest] contains the data for sending a participant request
-/// to the CARP web service.
+/// A [ParticipationServiceRequest] and its sub-classes contain the data for
+/// sending a participant request to the CARP web service.
 ///
 /// All participant requests to the CARP Service is defined in
 /// [carp.core-kotlin](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/carp.deployment.core/src/commonMain/kotlin/dk/cachet/carp/deployment/infrastructure/ParticipationServiceRequest.kt)
 abstract class ParticipationServiceRequest extends DeploymentServiceRequest {
   String _serviceRequestPackageNamespace =
       'dk.cachet.carp.deployment.infrastructure.ParticipationServiceRequest';
-  ParticipationServiceRequest(String studyDeploymentId)
+  ParticipationServiceRequest([String studyDeploymentId])
       : super(studyDeploymentId);
   String get jsonType => '$_serviceRequestPackageNamespace.$runtimeType';
 }
@@ -56,10 +56,12 @@ class GetParticipantData extends ParticipationServiceRequest {
   Map<String, dynamic> toJson() => _$GetParticipantDataToJson(this);
 }
 
-/// A request for getting the list of partication data for this a study deployment.
+/// A request for getting the list of partication data for this a list
+/// of [studyDeploymentIds].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class GetParticipantDataList extends ParticipationServiceRequest {
-  GetParticipantDataList(String studyDeploymentId) : super(studyDeploymentId);
+  List<String> studyDeploymentIds;
+  GetParticipantDataList(this.studyDeploymentIds) : super();
 
   Function get fromJsonFunction => _$GetParticipantDataListFromJson;
   factory GetParticipantDataList.fromJson(Map<String, dynamic> json) =>

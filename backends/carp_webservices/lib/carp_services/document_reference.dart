@@ -57,16 +57,10 @@ class DocumentReference extends CarpReference {
 
     // If this document does not already exist on the server (i.e., have an ID), then create it
     if (id == null) {
-      final restHeaders = await headers;
-
-      //print("url : $documentUri");
-
       http.Response response = await httpr.post(Uri.encodeFull(documentUri),
-          headers: restHeaders, body: json.encode(data));
+          headers: headers, body: json.encode(data));
       int httpStatusCode = response.statusCode;
       Map<String, dynamic> responseJson = json.decode(response.body);
-
-      //print("body :\n${response.body}");
 
       if ((httpStatusCode == HttpStatus.ok) ||
           (httpStatusCode == HttpStatus.created))
@@ -89,10 +83,9 @@ class DocumentReference extends CarpReference {
     // if we don't have the document ID, get it first.
     if (id == null) _id = (await this.get()).id;
 
-    final restHeaders = await headers;
     Map<String, dynamic> payload = {'data': data};
     http.Response response = await httpr.put(Uri.encodeFull(documentUri),
-        headers: restHeaders, body: json.encode(payload));
+        headers: headers, body: json.encode(payload));
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
@@ -117,10 +110,9 @@ class DocumentReference extends CarpReference {
     // if we don't have the document ID, get it first.
     if (id == null) _id = (await this.get()).id;
 
-    final restHeaders = await headers;
     Map<String, dynamic> payload = {'name': name};
     http.Response response = await httpr.put(Uri.encodeFull(documentUri),
-        headers: restHeaders, body: json.encode(payload));
+        headers: headers, body: json.encode(payload));
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
@@ -138,10 +130,8 @@ class DocumentReference extends CarpReference {
   ///
   /// If no document exists, the read will return null.
   Future<DocumentSnapshot> get() async {
-    final restHeaders = await headers;
-
     http.Response response =
-        await httpr.get(Uri.encodeFull(documentUri), headers: restHeaders);
+        await httpr.get(Uri.encodeFull(documentUri), headers: headers);
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> jsonResponse = json.decode(response.body);
@@ -160,9 +150,8 @@ class DocumentReference extends CarpReference {
     if (id == null) _id = (await this.get())?.id;
     if (_id == null) return; // early out if this document does not exist
 
-    final restHeaders = await headers;
     http.Response response =
-        await http.delete(Uri.encodeFull(documentUri), headers: restHeaders);
+        await http.delete(Uri.encodeFull(documentUri), headers: headers);
 
     int httpStatusCode = response.statusCode;
     if (httpStatusCode == HttpStatus.ok)
@@ -178,7 +167,7 @@ class DocumentReference extends CarpReference {
 
   /// Returns the reference of a collection contained inside of this document.
   CollectionReference collection(String name) =>
-      service.collection("$path/$name");
+      (service as CarpService).collection("$path/$name");
 
   // TODO - this is deprecated and not working for now.
 //  /// Fetch the list of collections (names) in this collection.

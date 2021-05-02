@@ -17,9 +17,10 @@ import 'package:carp_core/carp_client/carp_core_client.dart';
 /// Example of how to use the **protocol** sub-system domain models
 void carpCoreProtocolExample() async {
   // Create a new study protocol.
-  ProtocolOwner owner = ProtocolOwner();
-  StudyProtocol protocol =
-      StudyProtocol(owner: owner, name: "Track patient movement");
+  StudyProtocol protocol = StudyProtocol(
+    ownerId: 'owner@dtu.dk',
+    name: 'Track patient movement',
+  );
 
   // Define which devices are used for data collection.
   Smartphone phone = Smartphone(roleName: 'phone');

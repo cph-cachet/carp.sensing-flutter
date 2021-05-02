@@ -1,3 +1,6 @@
+## 0.21.3
+* added support for `ProtocolService` including request classes for using this.
+
 ## 0.21.2
 * removal of the overall `carp_core` library - now only using the sub-system libraries. This make the API documentation much more readable.
 * update and improval of API documentation

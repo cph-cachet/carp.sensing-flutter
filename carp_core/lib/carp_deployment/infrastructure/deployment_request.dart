@@ -11,13 +11,12 @@ part of carp_core_deployment;
 // See https://github.com/cph-cachet/carp.core-kotlin/blob/develop/carp.deployment.core/src/commonMain/kotlin/dk/cachet/carp/deployment/infrastructure/DeploymentServiceRequest.kt
 // -----------------------------------------------------
 
-/// A [DeploymentServiceRequest] contains the data for sending a request
-/// to the CARP web service.
+/// A [DeploymentServiceRequest] and all its sub-classes contain the data for
+/// sending a RPC request to the CARP web service.
 ///
 /// All deployment requests to the CARP Service is defined in
 /// [carp.core-kotlin](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/carp.deployment.core/src/commonMain/kotlin/dk/cachet/carp/deployment/infrastructure/DeploymentServiceRequest.kt)
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
-class DeploymentServiceRequest extends Serializable {
+abstract class DeploymentServiceRequest extends ServiceRequest {
   String _infrastructurePackageNamespace =
       'dk.cachet.carp.deployment.infrastructure';
   DeploymentServiceRequest([this.studyDeploymentId]) : super();
@@ -25,10 +24,6 @@ class DeploymentServiceRequest extends Serializable {
   /// The CARP study deployment ID.
   String studyDeploymentId;
 
-  Function get fromJsonFunction => _$DeploymentServiceRequestFromJson;
-  factory DeploymentServiceRequest.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
-  Map<String, dynamic> toJson() => _$DeploymentServiceRequestToJson(this);
   String get jsonType =>
       '$_infrastructurePackageNamespace.DeploymentServiceRequest.$runtimeType';
 
@@ -59,6 +54,19 @@ class GetStudyDeploymentStatus extends DeploymentServiceRequest {
   factory GetStudyDeploymentStatus.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$GetStudyDeploymentStatusToJson(this);
+}
+
+/// A request for getting the status of a list of study deployment.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+class GetStudyDeploymentStatusList extends DeploymentServiceRequest {
+  List<String> studyDeploymentIds;
+
+  GetStudyDeploymentStatusList(this.studyDeploymentIds) : super();
+
+  Function get fromJsonFunction => _$GetStudyDeploymentStatusListFromJson;
+  factory GetStudyDeploymentStatusList.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json);
+  Map<String, dynamic> toJson() => _$GetStudyDeploymentStatusListToJson(this);
 }
 
 /// A request for registering this device.
@@ -124,8 +132,7 @@ class DeploymentSuccessful extends GetDeviceDeploymentFor {
     String studyDeploymentId,
     String masterDeviceRoleName,
     this.deviceDeploymentLastUpdateDate,
-  )
-      : super(studyDeploymentId, masterDeviceRoleName) {
+  ) : super(studyDeploymentId, masterDeviceRoleName) {
     this.deviceDeploymentLastUpdateDate.toUtc();
   }
 

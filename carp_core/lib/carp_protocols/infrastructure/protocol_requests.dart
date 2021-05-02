@@ -1,0 +1,117 @@
+/*
+ * Copyright 2021 Copenhagen Center for Health Technology (CACHET) at the
+ * Technical University of Denmark (DTU).
+ * Use of this source code is governed by a MIT-style license that can be
+ * found in the LICENSE file.
+ */
+part of carp_core_protocols;
+
+/// Serializable application service requests to [ProtocolService].
+abstract class ProtocolServiceRequest extends ServiceRequest {
+  String _infrastructurePackageNamespace =
+      'dk.cachet.carp.protocols.infrastructure';
+  ProtocolServiceRequest() : super();
+  String get jsonType =>
+      '$_infrastructurePackageNamespace.ProtocolServiceRequest.$runtimeType';
+}
+
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+class Add extends ProtocolServiceRequest {
+  StudyProtocol protocol;
+  String versionTag = "Initial";
+
+  Add(this.protocol, this.versionTag) : super();
+
+  Function get fromJsonFunction => _$AddFromJson;
+  factory Add.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json);
+  Map<String, dynamic> toJson() => _$AddToJson(this);
+}
+
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+class AddVersion extends ProtocolServiceRequest {
+  StudyProtocol protocol;
+  String versionTag;
+
+  AddVersion(this.protocol, this.versionTag) : super();
+
+  Function get fromJsonFunction => _$AddVersionFromJson;
+  factory AddVersion.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json);
+  Map<String, dynamic> toJson() => _$AddVersionToJson(this);
+}
+
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+class UpdateParticipantDataConfiguration extends ProtocolServiceRequest {
+  StudyProtocolId protocolId;
+  String versionTag;
+  List<ParticipantAttribute> expectedParticipantData;
+
+  UpdateParticipantDataConfiguration(
+      this.protocolId, this.versionTag, this.expectedParticipantData)
+      : super();
+
+  Function get fromJsonFunction => _$UpdateParticipantDataConfigurationFromJson;
+  factory UpdateParticipantDataConfiguration.fromJson(
+          Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json);
+  Map<String, dynamic> toJson() =>
+      _$UpdateParticipantDataConfigurationToJson(this);
+}
+
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+class GetBy extends ProtocolServiceRequest {
+  StudyProtocolId protocolId;
+  String versionTag;
+
+  GetBy(this.protocolId, this.versionTag) : super();
+
+  Function get fromJsonFunction => _$GetByFromJson;
+  factory GetBy.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json);
+  Map<String, dynamic> toJson() => _$GetByToJson(this);
+}
+
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+class GetAllFor extends ProtocolServiceRequest {
+  String ownerId;
+
+  GetAllFor(this.ownerId) : super();
+
+  Function get fromJsonFunction => _$GetAllForFromJson;
+  factory GetAllFor.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json);
+  Map<String, dynamic> toJson() => _$GetAllForToJson(this);
+}
+
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+class GetVersionHistoryFor extends ProtocolServiceRequest {
+  StudyProtocolId protocolId;
+
+  GetVersionHistoryFor(this.protocolId) : super();
+
+  Function get fromJsonFunction => _$GetVersionHistoryForFromJson;
+  factory GetVersionHistoryFor.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json);
+  Map<String, dynamic> toJson() => _$GetVersionHistoryForToJson(this);
+}
+
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+class CreateCustomProtocol extends ProtocolServiceRequest {
+  String ownerId;
+  String name;
+  String description;
+  String customProtocol;
+
+  CreateCustomProtocol(
+      this.ownerId, this.name, this.description, this.customProtocol)
+      : super();
+
+  String get jsonType =>
+      '$_infrastructurePackageNamespace.ProtocolFactoryServiceRequest.$runtimeType';
+
+  Function get fromJsonFunction => _$CreateCustomProtocolFromJson;
+  factory CreateCustomProtocol.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json);
+  Map<String, dynamic> toJson() => _$CreateCustomProtocolToJson(this);
+}

@@ -38,7 +38,8 @@ class CAMSStudyProtocol extends StudyProtocol {
   ProtocolOwner owner;
 
   /// The unique id of the owner.
-  String get ownerId => owner?.id;
+  @override
+  String get ownerId => (owner != null) ? owner.id : super.ownerId;
 
   /// Specify where and how to upload this study data.
   DataEndPoint dataEndPoint;
@@ -60,16 +61,15 @@ class CAMSStudyProtocol extends StudyProtocol {
     this.owner,
     this.protocolDescription,
     this.dataFormat = NameSpace.CARP,
-  }) : super(owner: owner, name: name) {
+  }) : super(ownerId: owner?.id, name: name) {
     // TODO - move this elsewhere.... can't assumed that the programmer
     // create a protocol - s/he might download it e.g. from CARP.
     _registerFromJsonFunctions();
     // studyId ??= Uuid().v1();
   }
 
-  Function get fromJsonFunction => _$CAMSStudyProtocolFromJson;
   factory CAMSStudyProtocol.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      _$CAMSStudyProtocolFromJson(json);
   Map<String, dynamic> toJson() => _$CAMSStudyProtocolToJson(this);
 
   String toString() => '$runtimeType - $name [$ownerId]';

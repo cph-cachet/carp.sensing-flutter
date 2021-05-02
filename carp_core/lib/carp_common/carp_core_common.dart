@@ -12,6 +12,7 @@ import 'package:carp_core/carp_deployment/carp_core_deployment.dart';
 export 'carp_core_common.dart';
 
 part 'serialization.dart';
+part 'service_request.dart';
 
 // auto generate json code (.g files) with:
 //   flutter pub run build_runner build --delete-conflicting-outputs

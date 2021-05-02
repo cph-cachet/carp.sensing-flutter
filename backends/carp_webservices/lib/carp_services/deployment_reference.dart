@@ -16,7 +16,7 @@ part of carp_services;
 ///   - [get()] - get the deployment for this master device
 ///   - [success()] - report the deployment as successful
 ///   - [unRegisterDevice()] - unregister this - or other - device if no longer used
-class DeploymentReference extends CarpReference {
+class DeploymentReference extends RPCCarpReference {
   String _studyDeploymentId;
 
   /// The CARP study deployment ID.
@@ -32,8 +32,12 @@ class DeploymentReference extends CarpReference {
   /// The deployment for this master device, once fetched from the server.
   MasterDeviceDeployment get deployment => _deployment;
 
-  // /// The role name of this device as specified in the [deployment] protocol.
-  //String deviceRoleName;
+  /// The URL for the deployment endpoint.
+  ///
+  /// {{PROTOCOL}}://{{SERVER_HOST}}:{{SERVER_PORT}}/api/deployment-service
+  @override
+  String get rpcEndpointUri =>
+      "${service.app.uri.toString()}/api/deployment-service";
 
   String _registeredDeviceId;
 
@@ -44,40 +48,8 @@ class DeploymentReference extends CarpReference {
   String get registeredDeviceId =>
       _registeredDeviceId ??= DeviceInfo().deviceID ?? Uuid().v4().toString();
 
-  DeploymentReference._(CarpService service, this._studyDeploymentId)
+  DeploymentReference._(CarpBaseService service, this._studyDeploymentId)
       : super._(service);
-
-  /// A generic RPC request to the CARP Server.
-  Future<Map<String, dynamic>> _rpc(DeploymentServiceRequest request) async {
-    final restHeaders = await headers;
-    final String body = _encode(request.toJson());
-
-    print('REQUEST: ${service.deploymentRPCEndpointUri}\n$body');
-    http.Response response = await httpr.post(
-        Uri.encodeFull(service.deploymentRPCEndpointUri),
-        headers: restHeaders,
-        body: body);
-    int httpStatusCode = response.statusCode;
-    String responseBody = response.body;
-    print('RESPONSE: $httpStatusCode\n$responseBody');
-
-    // check if this is a json list, and if so turn it into a json map with one item called 'items'
-    if (responseBody.startsWith('[')) {
-      responseBody = '{"items":$responseBody}';
-    }
-
-    Map<String, dynamic> responseJson = json.decode(responseBody);
-
-    if (httpStatusCode == HttpStatus.ok) {
-      return responseJson;
-    }
-
-    // All other cases are treated as an error.
-    throw CarpServiceException(
-      httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: responseJson["message"],
-    );
-  }
 
   /// Get the deployment status for this [DeploymentReference].
   Future<StudyDeploymentStatus> getStatus() async {

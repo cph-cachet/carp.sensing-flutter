@@ -23,11 +23,10 @@ class DataPointReference extends CarpReference {
   /// Returns the server-generated ID for this data point.
   Future<int> postDataPoint(DataPoint data) async {
     final String url = "$dataEndpointUri";
-    final restHeaders = await headers;
 
     // POST the data point to the CARP web service
     http.Response response = await httpr.post(Uri.encodeFull(url),
-        headers: restHeaders, body: json.encode(data));
+        headers: headers, body: json.encode(data));
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
@@ -52,15 +51,14 @@ class DataPointReference extends CarpReference {
   Future batchPostDataPoint(File file) async {
     assert(file != null);
     final String url = "$dataEndpointUri/batch";
-    final restHeaders = await headers;
 
     var request = http.MultipartRequest("POST", Uri.parse(url));
-    request.headers['Authorization'] = restHeaders['Authorization'];
+    request.headers['Authorization'] = headers['Authorization'];
     request.headers['Content-Type'] = 'multipart/form-data';
     request.headers['cache-control'] = 'no-cache';
 
     request.files.add(http.MultipartFile.fromBytes(
-        'file', file != null ? file.readAsBytesSync() : List<int>(),
+        'file', file != null ? file.readAsBytesSync() : [],
         filename: file != null ? file.path : '',
         contentType: MediaType('application', 'json')));
 
@@ -86,13 +84,10 @@ class DataPointReference extends CarpReference {
   /// Get a [DataPoint] from the CARP backend using HTTP GET
   Future<DataPoint> getDataPoint(int id) async {
     String url = "$dataEndpointUri/$id";
-    final restHeaders = await headers;
-    // print('REQUEST: $url');
 
     // GET the data point from the CARP web service
     http.Response response =
-        await httpr.get(Uri.encodeFull(url), headers: restHeaders);
-    // print('RESPONSE: ${response.statusCode}}\n${response.body}');
+        await httpr.get(Uri.encodeFull(url), headers: headers);
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
@@ -195,18 +190,17 @@ class DataPointReference extends CarpReference {
     assert(query != null, 'A query string must be specified.');
     String url =
         (query.length == 0) ? dataEndpointUri : "$dataEndpointUri?query=$query";
-    final restHeaders = await headers;
 
     // GET the data points from the CARP web service
     // TODO - for some reason the CARP web service don't like encoded url's....
     //http.Response response = await httpr.get(Uri.encodeFull(url), headers: restHeaders);
-    http.Response response = await httpr.get(url, headers: restHeaders);
+    http.Response response = await httpr.get(url, headers: headers);
 
     int httpStatusCode = response.statusCode;
 
     if (httpStatusCode == HttpStatus.ok) {
       List<dynamic> list = json.decode(response.body);
-      List<DataPoint> datapoints = new List<DataPoint>();
+      List<DataPoint> datapoints = [];
       for (var item in list) {
         datapoints.add(DataPoint.fromJson(item));
       }
@@ -223,11 +217,9 @@ class DataPointReference extends CarpReference {
   /// Delete a [CARPDataPoint] from the CARP backend using HTTP DELETE
   Future deleteDataPoint(int id) async {
     String url = "$dataEndpointUri/$id";
-    final restHeaders = await headers;
 
-    // DELETE the data point
     http.Response response =
-        await httpr.delete(Uri.encodeFull(url), headers: restHeaders);
+        await httpr.delete(Uri.encodeFull(url), headers: headers);
     final int httpStatusCode = response.statusCode;
 
     if (httpStatusCode == HttpStatus.ok) return;

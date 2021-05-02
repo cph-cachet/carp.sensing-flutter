@@ -1,10 +1,5 @@
 {
-    "$type": "dk.cachet.carp.protocols.domain.StudyProtocol",
-    "owner": {
-     "$type": "dk.cachet.carp.protocols.domain.ProtocolOwner",
-     "id": "xyz@dtu.dk"
-    },
-    "name": "Track patient movement",
+    "ownerId": "xyz@dtu.dk",
     "masterDevices": [
      {
       "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
@@ -21,11 +16,14 @@
       "samplingConfiguration": {}
      }
     ],
-    "triggers": [
-     {
+    "triggers": {
+     "0": {
       "$type": "dk.cachet.carp.protocols.domain.triggers.Trigger"
+     },
+     "1": {
+      "$type": "dk.cachet.carp.protocols.domain.triggers.ManualTrigger"
      }
-    ],
+    },
     "tasks": [
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.ConcurrentTask",
@@ -50,6 +48,11 @@
     "triggeredTasks": [
      {
       "triggerId": 0,
+      "taskName": "Start measures",
+      "destinationDeviceRoleName": "masterphone"
+     },
+     {
+      "triggerId": 1,
       "taskName": "Start measures",
       "destinationDeviceRoleName": "masterphone"
      }

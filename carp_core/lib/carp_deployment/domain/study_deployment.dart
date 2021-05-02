@@ -152,19 +152,23 @@ class StudyDeployment {
         tasks.addAll(protocol.getTasksForDeviceRoleName(rolename)));
 
     // Get all trigger information for this and connected devices.
-    // The trigger IDs assigned are reused to identify them within the protocol
-    Map<String, Trigger> usedTriggers = {};
-    List<TriggeredTask> triggeredTasks = [];
-    int index = 0;
-    _protocol.triggers.forEach((trigger) {
-      usedTriggers['$index'] = trigger;
-      Set<TriggeredTask> tt = _protocol.getTriggeredTasks(trigger);
-      tt.forEach((triggeredTask) {
-        triggeredTask.triggerId = index;
-        triggeredTasks.add(triggeredTask);
-      });
-      index++;
-    });
+    // TODO - this implementation just returns all triggers and triggered tasks.
+    //      - but should check which devices are available
+    Map<String, Trigger> usedTriggers = _protocol.triggers;
+    List<TriggeredTask> triggeredTasks = _protocol.triggeredTasks;
+
+    // Map<String, Trigger> usedTriggers = {};
+    // List<TriggeredTask> triggeredTasks = [];
+    // int index = 0;
+    // _protocol.triggers.forEach((trigger) {
+    //   usedTriggers['$index'] = trigger;
+    //   Set<TriggeredTask> tt = _protocol.getTriggeredTasks(trigger);
+    //   tt.forEach((triggeredTask) {
+    //     triggeredTask.triggerId = index;
+    //     triggeredTasks.add(triggeredTask);
+    //   });
+    //   index++;
+    // });
 
     _status.status = StudyDeploymentStatusTypes.DeploymentReady;
 

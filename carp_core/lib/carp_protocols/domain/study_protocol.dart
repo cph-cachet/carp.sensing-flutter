@@ -14,7 +14,7 @@ part of carp_core_protocols;
 ///
 /// This is part of the [carp.protocols](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-protocols.md) domain model.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class StudyProtocol extends Serializable {
+class StudyProtocol {
   static const String PROTOCOL_NAMESPACE = 'dk.cachet.carp.protocols.domain';
 
   // maps a task's name and the task
@@ -27,8 +27,9 @@ class StudyProtocol extends Serializable {
     return _taskMapProperty;
   }
 
-  /// The owner of this study.
-  ProtocolOwner owner;
+  /// The owner id of this study.
+  /// This property mainly used when the protocol is de-serialized from json.
+  String ownerId;
 
   /// A unique descriptive name for the protocol assigned by the [ProtocolOwner].
   String name;
@@ -43,21 +44,20 @@ class StudyProtocol extends Serializable {
   List<DeviceDescriptor> connectedDevices = [];
 
   /// The set of [Trigger]s which can trigger [TaskDescriptor]s in this study protocol.
-  List<Trigger> triggers = [];
+  Map<String, Trigger> triggers = {};
 
   /// The set of tasks which can be triggered as part of this protocol.
-  List<TaskDescriptor> tasks = [];
+  Set<TaskDescriptor> tasks = {};
 
   /// The tasks (and the devices they are triggered to) for the specified [trigger].
   List<TriggeredTask> triggeredTasks = [];
 
   /// Create a new [StudyProtocol].
   StudyProtocol({
-    this.owner,
+    this.ownerId,
     this.name,
     this.description,
-  })
-      : super();
+  }) : super();
 
   /// Add a [masterDevice] which is responsible for aggregating and synchronizing
   /// incoming data. Its role name should be unique in the protocol.
@@ -70,7 +70,28 @@ class StudyProtocol extends Serializable {
       connectedDevices.add(device);
 
   /// Add the [trigger] to this protocol.
-  void addTrigger(Trigger trigger) => triggers.add(trigger);
+  void addTrigger(Trigger trigger) {
+    if (triggers.values.contains(trigger))
+      return; // only store a trigger once
+    else
+      triggers['${triggers.length}'] = trigger;
+  }
+
+  /// Returns the index of the [trigger] in the [triggers].
+  /// Returns `-1` if not found.
+  int indexOfTrigger(Trigger trigger) {
+    // early out if not in the triggers
+    if (!triggers.containsValue(trigger)) return -1;
+    int index = -1;
+    triggers.forEach((key, value) {
+      if (trigger == value) index = int.parse(key);
+    });
+    return index;
+    // for (int index = 0; index < triggers.length; index++)
+    //   if (triggers.containsKey('$index')) return index;
+
+    // return -1;
+  }
 
   /// Add a [task] to be sent to a [targetDevice] once a [trigger] within this
   /// protocol is initiated.
@@ -85,14 +106,16 @@ class StudyProtocol extends Serializable {
     DeviceDescriptor targetDevice,
   ) {
     // add trigger and task to ensure they are included in the protocol
-    if (!triggers.contains(trigger)) addTrigger(trigger);
+    addTrigger(trigger);
     addTask(task);
 
     // create and add triggered task
-    int triggerId = triggers.indexOf(trigger);
-    TriggeredTask triggeredTask = TriggeredTask(
-        triggerId: triggerId, task: task, targetDevice: targetDevice);
-    triggeredTasks.add(triggeredTask);
+    int triggerId = indexOfTrigger(trigger);
+
+    print(triggerId);
+    if (triggerId >= 0)
+      triggeredTasks.add(TriggeredTask(
+          triggerId: triggerId, task: task, targetDevice: targetDevice));
   }
 
   /// Add a set of [tasks] to be sent to a [targetDevice] once a [trigger] within this
@@ -111,9 +134,9 @@ class StudyProtocol extends Serializable {
   /// Gets all the tasks (and the devices they are triggered to) for the
   /// specified [trigger].
   Set<TriggeredTask> getTriggeredTasks(Trigger trigger) {
-    assert(triggers.contains(trigger),
+    assert(triggers.values.contains(trigger),
         'The passed trigger is not part of this study protocol.');
-    int triggerId = triggers.indexOf(trigger);
+    int triggerId = indexOfTrigger(trigger);
 
     Set<TriggeredTask> tt = {};
     // search the list of triggered tasks
@@ -176,11 +199,9 @@ class StudyProtocol extends Serializable {
     return deviceTasks;
   }
 
-  Function get fromJsonFunction => _$StudyProtocolFromJson;
-  factory StudyProtocol.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$StudyProtocolToJson(this);
-  String get jsonType => '$PROTOCOL_NAMESPACE.$runtimeType';
+  factory StudyProtocol.fromJson(Map<String, dynamic> json) =>
+      _$StudyProtocolFromJson(json);
 
   String toString() => '$runtimeType - $name';
 }

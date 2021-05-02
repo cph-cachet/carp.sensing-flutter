@@ -28,6 +28,10 @@ abstract class DeploymentService {
   Future<StudyDeploymentStatus> getStudyDeploymentStatus(
       String studyDeploymentId);
 
+  /// Get the statuses for a set of deployments with the specified [studyDeploymentIds].
+  Future<List<StudyDeploymentStatus>> getStudyDeploymentStatusList(
+      List<String> studyDeploymentIds);
+
   /// Register the device with the specified [deviceRoleName] for the study
   /// deployment with [studyDeploymentId].
   ///

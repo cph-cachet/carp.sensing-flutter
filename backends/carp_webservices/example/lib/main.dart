@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
-import 'package:carp_core/carp_core.dart';
+import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 void main() {
   runApp(MyApp());
@@ -46,9 +46,9 @@ class _HomePageState extends State<HomePage> {
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
             child: TextButton.icon(
               onPressed: () => bloc.authenticate(
-                    context,
-                    username: 'jakob@bardram.net',
-                  ),
+                context,
+                username: 'jakob@bardram.net',
+              ),
               icon: Icon(Icons.login),
               label: Text(
                 'LOGIN',
@@ -112,7 +112,9 @@ class AppBLoC {
 
   Future<ActiveParticipationInvitation> getStudyInvitation(
       BuildContext context) async {
-    _invitation = await CarpService().getStudyInvitation(context);
+    // configure a participant service based on the carp service already configured
+    CANSParticipationService().configureFrom(CarpService());
+    _invitation = await CANSParticipationService().getStudyInvitation(context);
     print('CARP Study Invitation: $_invitation');
     // check that the app has been updated to reflect the study id and deployment id
     print('Study ID: ${app.studyId}, Deployment ID: ${app.studyDeploymentId}');

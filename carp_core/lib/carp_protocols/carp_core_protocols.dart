@@ -20,14 +20,17 @@ import 'package:carp_core/carp_data/carp_core_data.dart';
 
 export 'carp_core_protocols.dart';
 
-part 'device_descriptor.dart';
-part 'measure.dart';
-part 'study_protocol.dart';
-part 'protocol_owner.dart';
-part 'task_descriptor.dart';
-part 'triggered_task.dart';
-part 'trigger.dart';
-part 'sampling_configuration.dart';
+part 'domain/device_descriptor.dart';
+part 'domain/measure.dart';
+part 'domain/study_protocol.dart';
+part 'domain/task_descriptor.dart';
+part 'domain/triggered_task.dart';
+part 'domain/trigger.dart';
+part 'domain/sampling_configuration.dart';
+
+part 'application/protocol_service.dart';
+part 'application/protocol_classes.dart';
+part 'infrastructure/protocol_requests.dart';
 
 part 'carp_core_protocols.g.dart';
 
