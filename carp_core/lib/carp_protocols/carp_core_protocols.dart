@@ -21,6 +21,7 @@ import 'package:carp_core/carp_data/carp_core_data.dart';
 export 'carp_core_protocols.dart';
 
 part 'domain/device_descriptor.dart';
+part 'domain/device_connection.dart';
 part 'domain/measure.dart';
 part 'domain/study_protocol.dart';
 part 'domain/task_descriptor.dart';

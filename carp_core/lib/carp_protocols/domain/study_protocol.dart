@@ -37,11 +37,16 @@ class StudyProtocol {
   /// A longer description of this study.
   String description;
 
+  /// The timestamp of the creation of this protocol in Zulu time.
+  String creationDate;
+
   /// The master devices involved in this protocol.
   List<MasterDeviceDescriptor> masterDevices = [];
 
   /// The devices this device needs to connect to.
   List<DeviceDescriptor> connectedDevices = [];
+
+  List<DeviceConnection> connections = [];
 
   /// The set of [Trigger]s which can trigger [TaskDescriptor]s in this study protocol.
   Map<String, Trigger> triggers = {};
@@ -52,12 +57,16 @@ class StudyProtocol {
   /// The tasks (and the devices they are triggered to) for the specified [trigger].
   List<TriggeredTask> triggeredTasks = [];
 
+  List<Map<String, dynamic>> expectedParticipantData = [];
+
   /// Create a new [StudyProtocol].
   StudyProtocol({
     this.ownerId,
     this.name,
     this.description,
-  }) : super();
+  }) : super() {
+    this.creationDate = DateTime.now().toUtc().toString();
+  }
 
   /// Add a [masterDevice] which is responsible for aggregating and synchronizing
   /// incoming data. Its role name should be unique in the protocol.
