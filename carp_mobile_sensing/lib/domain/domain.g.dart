@@ -20,6 +20,7 @@ CAMSStudyProtocol _$CAMSStudyProtocolFromJson(Map<String, dynamic> json) {
     dataFormat: json['dataFormat'] as String,
   )
     ..description = json['description'] as String
+    ..creationDate = json['creationDate'] as String
     ..masterDevices = (json['masterDevices'] as List)
         ?.map((e) => e == null
             ? null
@@ -29,6 +30,11 @@ CAMSStudyProtocol _$CAMSStudyProtocolFromJson(Map<String, dynamic> json) {
         ?.map((e) => e == null
             ? null
             : DeviceDescriptor.fromJson(e as Map<String, dynamic>))
+        ?.toList()
+    ..connections = (json['connections'] as List)
+        ?.map((e) => e == null
+            ? null
+            : DeviceConnection.fromJson(e as Map<String, dynamic>))
         ?.toList()
     ..triggers = (json['triggers'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(
@@ -43,6 +49,9 @@ CAMSStudyProtocol _$CAMSStudyProtocolFromJson(Map<String, dynamic> json) {
         ?.map((e) => e == null
             ? null
             : TriggeredTask.fromJson(e as Map<String, dynamic>))
+        ?.toList()
+    ..expectedParticipantData = (json['expectedParticipantData'] as List)
+        ?.map((e) => e as Map<String, dynamic>)
         ?.toList()
     ..ownerId = json['ownerId'] as String
     ..dataEndPoint = json['dataEndPoint'] == null
@@ -61,11 +70,14 @@ Map<String, dynamic> _$CAMSStudyProtocolToJson(CAMSStudyProtocol instance) {
 
   writeNotNull('name', instance.name);
   writeNotNull('description', instance.description);
+  writeNotNull('creationDate', instance.creationDate);
   writeNotNull('masterDevices', instance.masterDevices);
   writeNotNull('connectedDevices', instance.connectedDevices);
+  writeNotNull('connections', instance.connections);
   writeNotNull('triggers', instance.triggers);
   writeNotNull('tasks', instance.tasks?.toList());
   writeNotNull('triggeredTasks', instance.triggeredTasks);
+  writeNotNull('expectedParticipantData', instance.expectedParticipantData);
   writeNotNull('studyId', instance.studyId);
   writeNotNull('protocolDescription', instance.protocolDescription);
   writeNotNull('owner', instance.owner);

@@ -1,6 +1,6 @@
 {
     "ownerId": "xyz@dtu.dk",
-    "creationDate": "2021-05-02 14:07:29.935532Z",
+    "creationDate": "2021-05-02 14:25:14.042890Z",
     "masterDevices": [
      {
       "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
@@ -17,6 +17,7 @@
       "samplingConfiguration": {}
      }
     ],
+    "connections": [],
     "triggers": {
      "0": {
       "$type": "dk.cachet.carp.protocols.domain.triggers.Trigger"
@@ -57,5 +58,6 @@
       "taskName": "Start measures",
       "targetDeviceRoleName": "masterphone"
      }
-    ]
+    ],
+    "expectedParticipantData": []
    }

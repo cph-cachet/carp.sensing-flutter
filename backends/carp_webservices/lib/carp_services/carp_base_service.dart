@@ -95,15 +95,15 @@ abstract class CarpBaseService {
     String responseBody = response.body;
     print('RESPONSE: $httpStatusCode\n$responseBody');
 
-    // check if this is a json list, and if so turn it into a json map with one
-    // item called 'items'
-    if (responseBody.startsWith('[')) {
-      responseBody = '{"items":$responseBody}';
-    }
+    // check if this is a json list or an empty string
+    // if so turn it into a valid json map
+    if (responseBody.startsWith('[')) responseBody = '{"items":$responseBody}';
+    if (responseBody.isEmpty) responseBody = '{}';
 
     Map<String, dynamic> responseJson = json.decode(responseBody);
 
-    if (httpStatusCode == HttpStatus.ok) return responseJson;
+    if (httpStatusCode == HttpStatus.ok || httpStatusCode == HttpStatus.created)
+      return responseJson;
 
     // All other cases are treated as an error.
     throw CarpServiceException(
