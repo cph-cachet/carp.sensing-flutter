@@ -112,7 +112,6 @@ class StudyProtocol {
     // create and add triggered task
     int triggerId = indexOfTrigger(trigger);
 
-    print(triggerId);
     if (triggerId >= 0)
       triggeredTasks.add(TriggeredTask(
           triggerId: triggerId, task: task, targetDevice: targetDevice));

@@ -80,12 +80,13 @@ void main() {
     expect(protocol.triggeredTasks.length, 3);
   });
 
-  test('StudyProtocol -> JSON -> StudyProtocol :: deep assert', () async {
+  test('CAMSStudyProtocol -> JSON -> CAMSStudyProtocol :: deep assert',
+      () async {
     print('#1 : $protocol');
     final studyJson = toJsonString(protocol);
 
-    StudyProtocol protocolFromJson =
-        StudyProtocol.fromJson(json.decode(studyJson) as Map<String, dynamic>);
+    CAMSStudyProtocol protocolFromJson = CAMSStudyProtocol.fromJson(
+        json.decode(studyJson) as Map<String, dynamic>);
     expect(toJsonString(protocolFromJson), equals(studyJson));
     print('#2 : $protocolFromJson');
   });
@@ -218,14 +219,14 @@ void main() {
 
     print(studyJson);
 
-    StudyProtocol protocol_2 =
-        StudyProtocol.fromJson(json.decode(studyJson) as Map<String, dynamic>);
+    CAMSStudyProtocol protocol_2 = CAMSStudyProtocol.fromJson(
+        json.decode(studyJson) as Map<String, dynamic>);
     expect(protocol_2.ownerId, protocol.ownerId);
 
     print('#1 : $protocol');
 
-    StudyProtocol protocolFromJson =
-        StudyProtocol.fromJson(json.decode(studyJson) as Map<String, dynamic>);
+    CAMSStudyProtocol protocolFromJson = CAMSStudyProtocol.fromJson(
+        json.decode(studyJson) as Map<String, dynamic>);
     expect(toJsonString(protocolFromJson), equals(studyJson));
     print('#2 : $protocolFromJson');
   });

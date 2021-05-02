@@ -91,7 +91,8 @@ class SmartphoneDeploymentService implements DeploymentService {
 
   /// Get a deployment configuration for a master device with
   /// [studyDeploymentId].
-  Future<CAMSMasterDeviceDeployment> getDeviceDeploymentFor(
+  @override
+  Future<MasterDeviceDeployment> getDeviceDeploymentFor(
     String studyDeploymentId,
     String masterDeviceRoleName,
   ) async {
@@ -105,20 +106,22 @@ class SmartphoneDeploymentService implements DeploymentService {
     MasterDeviceDeployment deviceDeployment =
         deployment.getDeviceDeploymentFor(device);
 
-    CAMSStudyProtocol protocol = (deployment.protocol is CAMSStudyProtocol)
-        ? deployment.protocol as CAMSStudyProtocol
-        : null;
+    if (deployment.protocol is CAMSStudyProtocol) {
+      CAMSStudyProtocol protocol = deployment.protocol as CAMSStudyProtocol;
 
-    return CAMSMasterDeviceDeployment.fromMasterDeviceDeployment(
-      studyId: protocol.studyId ?? studyDeploymentId,
-      studyDeploymentId: studyDeploymentId,
-      name: deployment.protocol.name,
-      protocolDescription: protocol?.protocolDescription ?? null,
-      owner: protocol?.owner ?? null,
-      dataFormat: protocol?.dataFormat,
-      dataEndPoint: protocol?.dataEndPoint,
-      masterDeviceDeployment: deviceDeployment,
-    );
+      return CAMSMasterDeviceDeployment.fromMasterDeviceDeployment(
+        studyId: protocol?.studyId ?? studyDeploymentId,
+        studyDeploymentId: studyDeploymentId,
+        name: protocol?.name,
+        protocolDescription: protocol?.protocolDescription ?? null,
+        owner: protocol?.owner ?? null,
+        dataFormat: protocol?.dataFormat,
+        dataEndPoint: protocol?.dataEndPoint,
+        masterDeviceDeployment: deviceDeployment,
+      );
+    } else {
+      return deviceDeployment;
+    }
   }
 
   /// Get a deployment configuration for this master device (phone)

@@ -38,7 +38,7 @@ void main() {
 
   test('JSON File -> StudyProtocol', () async {
     // Read the study protocol from json file
-    String plainJson = File('test/json/study_1.json').readAsStringSync();
+    String plainJson = File('test/json/study_protocol.json').readAsStringSync();
 
     CAMSStudyProtocol protocol = CAMSStudyProtocol.fromJson(
         json.decode(plainJson) as Map<String, dynamic>);
@@ -51,7 +51,7 @@ void main() {
 
   test('Deploy protocol -> CAMSDeploymentService()', () async {
     // Read the study protocol from json file
-    String plainJson = File('test/json/study_1.json').readAsStringSync();
+    String plainJson = File('test/json/study_protocol.json').readAsStringSync();
 
     CAMSStudyProtocol protocol = CAMSStudyProtocol.fromJson(
         json.decode(plainJson) as Map<String, dynamic>);
@@ -67,10 +67,10 @@ void main() {
 
   test('Get deployment <- CAMSDeploymentService()', () async {
     // Read the study protocol from json file
-    String plainJson = File('test/json/study_1.json').readAsStringSync();
+    String plainJson = File('test/json/study_protocol.json').readAsStringSync();
 
-    StudyProtocol protocol =
-        StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
+    CAMSStudyProtocol protocol = CAMSStudyProtocol.fromJson(
+        json.decode(plainJson) as Map<String, dynamic>);
 
     StudyDeploymentStatus status =
         await SmartphoneDeploymentService().createStudyDeployment(protocol);
