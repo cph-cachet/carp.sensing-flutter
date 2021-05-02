@@ -13,6 +13,17 @@ class StudyProtocolId {
   String name;
   StudyProtocolId(this.ownerId, this.name);
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is StudyProtocolId &&
+          runtimeType == other.runtimeType &&
+          ownerId == other.ownerId &&
+          name == other.name;
+
+  @override
+  int get hashCode => (ownerId + name).hashCode;
+
   factory StudyProtocolId.fromJson(Map<String, dynamic> json) =>
       _$StudyProtocolIdFromJson(json);
   Map<String, dynamic> toJson() => _$StudyProtocolIdToJson(this);

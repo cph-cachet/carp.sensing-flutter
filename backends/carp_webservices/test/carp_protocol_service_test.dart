@@ -37,10 +37,6 @@ void main() {
     // CANSParticipationService().configureFrom(CarpService());
     // CANSDeploymentService().configureFrom(CarpService());
     CANSProtocolService().configureFrom(CarpService());
-
-    StudyProtocol();
-    CAMSStudyProtocol();
-    FromJsonFactory();
   });
 
   /// Close connection to CARP.
@@ -58,7 +54,14 @@ void main() {
   group("Protocol", () {
     test(
       '- add',
-      () async {},
+      () async {
+        StudyProtocol protocol = StudyProtocol(
+            ownerId: ownerId,
+            name: 'CAMS Test Protocol',
+            description: 'Generated from carp_webservices unit test.');
+
+        CANSProtocolService().add(protocol);
+      },
     );
 
     test(
@@ -78,7 +81,11 @@ void main() {
 
     test(
       '- getAllFor',
-      () async {},
+      () async {
+        List<StudyProtocol> protocols =
+            await CANSProtocolService().getAllFor(ownerId);
+        print(protocols);
+      },
     );
 
     test(

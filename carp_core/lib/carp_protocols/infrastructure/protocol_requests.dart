@@ -17,10 +17,12 @@ abstract class ProtocolServiceRequest extends ServiceRequest {
 
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class Add extends ProtocolServiceRequest {
-  StudyProtocol protocol;
-  String versionTag = "Initial";
+  final StudyProtocol protocol;
+  String versionTag;
 
-  Add(this.protocol, this.versionTag) : super();
+  Add(this.protocol, this.versionTag) : super() {
+    versionTag ??= DateTime.now().toUtc().toString();
+  }
 
   Function get fromJsonFunction => _$AddFromJson;
   factory Add.fromJson(Map<String, dynamic> json) =>
@@ -30,8 +32,8 @@ class Add extends ProtocolServiceRequest {
 
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class AddVersion extends ProtocolServiceRequest {
-  StudyProtocol protocol;
-  String versionTag;
+  final StudyProtocol protocol;
+  final String versionTag;
 
   AddVersion(this.protocol, this.versionTag) : super();
 
@@ -43,9 +45,9 @@ class AddVersion extends ProtocolServiceRequest {
 
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class UpdateParticipantDataConfiguration extends ProtocolServiceRequest {
-  StudyProtocolId protocolId;
-  String versionTag;
-  List<ParticipantAttribute> expectedParticipantData;
+  final StudyProtocolId protocolId;
+  final String versionTag;
+  final List<ParticipantAttribute> expectedParticipantData;
 
   UpdateParticipantDataConfiguration(
       this.protocolId, this.versionTag, this.expectedParticipantData)
@@ -61,8 +63,8 @@ class UpdateParticipantDataConfiguration extends ProtocolServiceRequest {
 
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class GetBy extends ProtocolServiceRequest {
-  StudyProtocolId protocolId;
-  String versionTag;
+  final StudyProtocolId protocolId;
+  final String versionTag;
 
   GetBy(this.protocolId, this.versionTag) : super();
 
@@ -74,7 +76,7 @@ class GetBy extends ProtocolServiceRequest {
 
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class GetAllFor extends ProtocolServiceRequest {
-  String ownerId;
+  final String ownerId;
 
   GetAllFor(this.ownerId) : super();
 
@@ -86,7 +88,7 @@ class GetAllFor extends ProtocolServiceRequest {
 
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class GetVersionHistoryFor extends ProtocolServiceRequest {
-  StudyProtocolId protocolId;
+  final StudyProtocolId protocolId;
 
   GetVersionHistoryFor(this.protocolId) : super();
 
@@ -98,10 +100,10 @@ class GetVersionHistoryFor extends ProtocolServiceRequest {
 
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class CreateCustomProtocol extends ProtocolServiceRequest {
-  String ownerId;
-  String name;
-  String description;
-  String customProtocol;
+  final String ownerId;
+  final String name;
+  final String description;
+  final String customProtocol;
 
   CreateCustomProtocol(
       this.ownerId, this.name, this.description, this.customProtocol)
