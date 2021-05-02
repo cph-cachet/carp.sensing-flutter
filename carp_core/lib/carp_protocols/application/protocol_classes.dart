@@ -27,6 +27,8 @@ class StudyProtocolId {
   factory StudyProtocolId.fromJson(Map<String, dynamic> json) =>
       _$StudyProtocolIdFromJson(json);
   Map<String, dynamic> toJson() => _$StudyProtocolIdToJson(this);
+
+  String toString() => '$runtimeType - ownerId: $ownerId, name: $name';
 }
 
 /// Describes expected data related to one or multiple participants in a study.
@@ -57,4 +59,6 @@ class ProtocolVersion {
   factory ProtocolVersion.fromJson(Map<String, dynamic> json) =>
       _$ProtocolVersionFromJson(json);
   Map<String, dynamic> toJson() => _$ProtocolVersionToJson(this);
+
+  String toString() => '$runtimeType - tag: $tag, date: $date';
 }

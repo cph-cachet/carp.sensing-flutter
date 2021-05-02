@@ -72,7 +72,17 @@ void main() {
 
     test(
       '- addVersion',
-      () async {},
+      () async {
+        StudyProtocol protocol =
+            await CANSProtocolService().createCustomProtocol(
+          ownerId,
+          name,
+          'Made from Dart unit test.',
+          '{"version":2}',
+        );
+
+        await CANSProtocolService().addVersion(protocol);
+      },
     );
 
     test(
@@ -93,7 +103,7 @@ void main() {
       '- getAllFor',
       () async {
         List<StudyProtocol> protocols =
-            await CANSProtocolService().getAllFor(ownerId);
+            await CANSProtocolService().getAllFor(accountId);
         print(protocols);
       },
     );

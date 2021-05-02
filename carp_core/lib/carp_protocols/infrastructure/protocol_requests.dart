@@ -33,11 +33,9 @@ class Add extends ProtocolServiceRequest {
 }
 
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
-class AddVersion extends ProtocolServiceRequest {
-  final StudyProtocol protocol;
-  final String versionTag;
-
-  AddVersion(this.protocol, this.versionTag) : super();
+class AddVersion extends Add {
+  AddVersion(StudyProtocol protocol, String versionTag)
+      : super(protocol, versionTag);
 
   Function get fromJsonFunction => _$AddVersionFromJson;
   factory AddVersion.fromJson(Map<String, dynamic> json) =>
