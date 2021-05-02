@@ -21,15 +21,20 @@ void main() async {
     ),
   );
 
+  // configure the CARP service
   CarpService().configure(app);
 
   // authenticate at CARP
   await CarpService()
       .authenticate(username: 'the_username', password: 'the_password');
 
+  // configure the other services needed
+  CANSParticipationService().configureFrom(CarpService());
+  CANSDeploymentService().configureFrom(CarpService());
+
   // get the invitations to studies from CARP for this user
   List<ActiveParticipationInvitation> invitations =
-      await CarpService().invitations();
+      await CANSParticipationService().getActiveParticipationInvitations();
 
   // use the first (i.e. latest) invitation
   String studyDeploymentId = invitations[0].studyDeploymentId;

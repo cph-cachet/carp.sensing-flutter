@@ -211,5 +211,5 @@ class StudyProtocol {
   factory StudyProtocol.fromJson(Map<String, dynamic> json) =>
       _$StudyProtocolFromJson(json);
 
-  String toString() => '$runtimeType - $name';
+  String toString() => '$runtimeType - name: $name, ownerId: $ownerId';
 }

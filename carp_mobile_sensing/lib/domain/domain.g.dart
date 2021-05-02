@@ -10,6 +10,7 @@ CAMSStudyProtocol _$CAMSStudyProtocolFromJson(Map<String, dynamic> json) {
   return CAMSStudyProtocol(
     studyId: json['studyId'] as String,
     name: json['name'] as String,
+    description: json['description'] as String,
     owner: json['owner'] == null
         ? null
         : ProtocolOwner.fromJson(json['owner'] as Map<String, dynamic>),
@@ -19,7 +20,6 @@ CAMSStudyProtocol _$CAMSStudyProtocolFromJson(Map<String, dynamic> json) {
             json['protocolDescription'] as Map<String, dynamic>),
     dataFormat: json['dataFormat'] as String,
   )
-    ..description = json['description'] as String
     ..creationDate = json['creationDate'] as String
     ..masterDevices = (json['masterDevices'] as List)
         ?.map((e) => e == null

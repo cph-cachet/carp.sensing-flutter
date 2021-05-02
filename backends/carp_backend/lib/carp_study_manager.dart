@@ -17,23 +17,26 @@ class CARPStudyProtocolManager implements StudyProtocolManager {
     CAMSStudyProtocol(); // to initialize json serialization for CAMS classes
   }
 
-  /// Get a [StudyProtocol] from the CARP backend.
-  ///
-  /// Normally, this method would return a [CAMSStudyProtocol].
+  /// Get a [CAMSStudyProtocol] from the CARP backend.
   ///
   /// Note that in the CARP backend, a CAMS study is empbedded as a
   /// [CustomProtocolTask] and deployed as part of a so-called
   /// [Participation] for a user, with a specific [studyDeploymentId].
   ///
   /// Throws a [CarpServiceException] if not successful.
-  Future<StudyProtocol> getStudyProtocol(String studyDeploymentId) async {
+  Future<CAMSStudyProtocol> getStudyProtocol(String studyDeploymentId) async {
     assert(CarpService().isConfigured,
         "CARP Service has not been configured - call 'CarpService().configure()' first.");
     assert(CarpService().currentUser != null,
         "No user is authenticated - call 'CarpService().authenticate()' first.");
     info(
         'Retrieving study protocol from CARP web service - studyDeploymentId: $studyDeploymentId');
-    DeploymentReference reference = CarpService().deployment(studyDeploymentId);
+
+    if (!CANSDeploymentService().isConfigured)
+      CANSDeploymentService().configureFrom(CarpService());
+
+    DeploymentReference reference =
+        CANSDeploymentService().deployment(studyDeploymentId);
 
     // get status
     StudyDeploymentStatus deploymentStatus = await reference.getStatus();

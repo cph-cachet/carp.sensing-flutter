@@ -58,10 +58,11 @@ class CAMSStudyProtocol extends StudyProtocol {
   CAMSStudyProtocol({
     this.studyId,
     String name,
+    String description,
     this.owner,
     this.protocolDescription,
     this.dataFormat = NameSpace.CARP,
-  }) : super(ownerId: owner?.id, name: name) {
+  }) : super(ownerId: owner?.id, name: name, description: description) {
     // TODO - move this elsewhere.... can't assumed that the programmer
     // create a protocol - s/he might download it e.g. from CARP.
     _registerFromJsonFunctions();
@@ -72,7 +73,7 @@ class CAMSStudyProtocol extends StudyProtocol {
       _$CAMSStudyProtocolFromJson(json);
   Map<String, dynamic> toJson() => _$CAMSStudyProtocolToJson(this);
 
-  String toString() => '$runtimeType - $name [$ownerId]';
+  String toString() => '${super.toString()}, studyId: $studyId';
 }
 
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
@@ -95,5 +96,5 @@ class StudyProtocolDescription extends Serializable {
   Map<String, dynamic> toJson() => _$StudyProtocolDescriptionToJson(this);
 
   String toString() =>
-      '$runtimeType - title: $title, description: $description';
+      '$runtimeType -  title: $title, description: $description. purpose: $purpose';
 }
