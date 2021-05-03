@@ -150,6 +150,8 @@ class StudyDeployment {
     List<TaskDescriptor> tasks = [];
     _registeredDevices.keys.forEach((rolename) =>
         tasks.addAll(protocol.getTasksForDeviceRoleName(rolename)));
+    connectedDevices.forEach((descriptor) =>
+        tasks.addAll(protocol.getTasksForDeviceRoleName(descriptor.roleName)));
 
     // Get all trigger information for this and connected devices.
     // TODO - this implementation just returns all triggers and triggered tasks.

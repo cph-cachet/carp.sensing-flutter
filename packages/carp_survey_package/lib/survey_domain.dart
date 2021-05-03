@@ -23,9 +23,7 @@ part of survey;
 ///
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class RPTaskMeasure extends CAMSMeasure {
-  // TODO - remove when research_package supports serialization
   /// The survey to be issued to the user.
-  @JsonKey(ignore: true)
   RPTask surveyTask;
 
   RPTaskMeasure({

@@ -49,8 +49,13 @@ class CARPStudyProtocolManager implements StudyProtocolManager {
         for (String deviceRolename in deploymentStatus
             .masterDeviceStatus.remainingDevicesToRegisterToObtainDeployment) {
           info("Registring device: '$deviceRolename'");
-          deploymentStatus =
-              await reference.registerDevice(deviceRoleName: deviceRolename);
+          try {
+            deploymentStatus =
+                await reference.registerDevice(deviceRoleName: deviceRolename);
+          } catch (error) {
+            // we only print a warning - often an exception here arise when the device is already registrered
+            warning("Error registring device '$deviceRolename' - $error");
+          }
         }
       }
 

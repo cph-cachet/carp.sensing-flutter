@@ -2,6 +2,7 @@ name: carp_survey_package_example
 description: Examples of how to use the carp_survey_package.
 version: 0.6.0
 author:  CACHET Team <cph.cachet@gmail.com>
+publish_to: none
 
 environment:
   sdk: ">=2.1.0-dev <3.0.0"
@@ -9,10 +10,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-#  carp_core:
-#    path: ../../../carp_core
-#  carp_mobile_sensing:
-#    path: ../../../carp_mobile_sensing
+  carp_core:
+    path: ../../../carp_core
+  carp_mobile_sensing:
+    path: ../../../carp_mobile_sensing
   carp_survey_package:
     path: ../
 

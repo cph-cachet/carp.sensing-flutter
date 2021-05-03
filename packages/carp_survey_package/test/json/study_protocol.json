@@ -1,6 +1,6 @@
 {
-  "$type": "dk.cachet.carp.protocols.domain.CAMSStudyProtocol",
   "name": "Context package test",
+  "creationDate": "2021-05-02 22:23:07.440756Z",
   "masterDevices": [
    {
     "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
@@ -16,11 +16,12 @@
     "samplingConfiguration": {}
    }
   ],
-  "triggers": [
-   {
+  "connections": [],
+  "triggers": {
+   "0": {
     "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
    }
-  ],
+  },
   "tasks": [
    {
     "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
@@ -128,14 +129,16 @@
    {
     "triggerId": 0,
     "taskName": "Task #5",
-    "destinationDeviceRoleName": "masterphone"
+    "targetDeviceRoleName": "masterphone"
    }
   ],
+  "expectedParticipantData": [],
   "owner": {
-   "$type": "dk.cachet.carp.protocols.domain.ProtocolOwner",
+   "$type": "ProtocolOwner",
    "id": "AB",
    "name": "Alex Boyon",
    "email": "alex@uni.dk"
   },
+  "ownerId": "AB",
   "dataFormat": "dk.cachet.carp"
  }

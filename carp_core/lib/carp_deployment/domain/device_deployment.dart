@@ -51,6 +51,7 @@ class MasterDeviceDeployment {
     this.lastUpdateDate = DateTime.now();
   }
 
+  // internal map, mapping task name to the task
   Map<String, TaskDescriptor> _taskMap;
 
   /// Get the task based on its task name in this deployment.
@@ -58,6 +59,7 @@ class MasterDeviceDeployment {
     if (_taskMap == null) {
       _taskMap = {};
       tasks.forEach((task) => _taskMap[task.name] = task);
+      print(_taskMap);
     }
     return _taskMap[name];
   }

@@ -195,7 +195,8 @@ class StudyProtocol {
   }
 
   /// Gets all the tasks triggered for the specified [deviceRoleName].
-  /// Return an empty set if the device is not part of [masterDevices]
+  ///
+  /// Returns an empty set if the device is not part of [masterDevices]
   /// or [connectedDevices].
   Set<TaskDescriptor> getTasksForDeviceRoleName(String deviceRoleName) {
     final Set<TaskDescriptor> deviceTasks = {};

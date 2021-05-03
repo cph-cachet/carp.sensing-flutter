@@ -15,7 +15,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:research_package/research_package.dart';
 import 'package:flutter/material.dart';
 
-import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 part 'survey.g.dart';
