@@ -1,3 +1,8 @@
+## 0.21.0
+* update to `carp_mobile_sensing` v. 0.21.x
+* update to `research.package` v. 0.5.x with support for json serialization
+* support for de/serialization of the `RPTask` survey in the `RPTaskMeasure`
+
 ## 0.20.4
 * update to `carp_mobile_sensing` v. 0.20.4
 
