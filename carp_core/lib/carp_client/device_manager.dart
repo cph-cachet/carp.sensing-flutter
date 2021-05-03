@@ -11,6 +11,11 @@ part of carp_core_client;
 
 /// Collects [Data] for a single device.
 abstract class DeviceDataCollector {
+  String _type;
+
+  /// The type of this device
+  String get type => _type;
+
   /// The registration for this device.
   DeviceRegistration deviceRegistration;
 
@@ -20,18 +25,24 @@ abstract class DeviceDataCollector {
   /// Get a unique id for this device.
   String get id;
 
-  /// The type of this device
-  String get type;
-
   /// Determines whether a connection can be made at this point in time to the device.
   bool canConnect();
 
   DeviceDataCollector([this.deviceRegistration]);
+
+  /// Initialize the device data collector by specifying its [type].
+  ///
+  /// Is often overriden in sub-classes. Note, however, that it must not be
+  /// doing a lot of work on startup.
+  @mustCallSuper
+  void initialize(String type) {
+    _type = type;
+  }
 }
 
 // This class is called [DeviceDataCollectorFactory] in carp_core - "#€!"#
 //
-/// Supports creating and holding a registry of [DeviceManager]s for devices.
+/// Supports creating and holding a registry of [DeviceDataCollector]s for devices.
 abstract class DeviceRegistry {
   /// The devices available in this [DeviceRegistry] mapped to their device type.
   Map<String, DeviceDataCollector> get devices;
@@ -47,8 +58,11 @@ abstract class DeviceRegistry {
   /// Returns true if this factory contain a device manager of the given [deviceType].
   bool hasDevice(String deviceType);
 
-  /// Create and register a [DeviceDataCollector] for a [deviceType].
-  Future<DeviceDataCollector> registerDevice(String deviceType);
+  /// Register and initialize a [DeviceDataCollector] for a [deviceType].
+  void registerDevice(String deviceType, DeviceDataCollector collector);
+
+  /// Create and register a [DeviceDataCollector] based on a [deviceType].
+  Future<DeviceDataCollector> createDevice(String deviceType);
 
   // Remove the device of [deviceType] from this registry.
   void unregisterDevice(String deviceType);

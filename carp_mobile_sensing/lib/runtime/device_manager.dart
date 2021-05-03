@@ -6,15 +6,18 @@
  */
 part of runtime;
 
-/// A [DeviceController] handles runtime managenent of all devices used in a
-/// study deployment.
+/// A [DeviceController] handles runtime managenent of all devices connected to
+/// this phone, including the phone itsel.
 class DeviceController implements DeviceRegistry {
   static final DeviceController _instance = DeviceController._();
   final Map<String, DeviceManager> _devices = {};
 
   /// Get the singleton [DeviceController].
   factory DeviceController() => _instance;
-  DeviceController._();
+  DeviceController._() {
+    // always register this phone in the device registry
+    // registerDevice(Smartphone.DEVICE_TYPE);
+  }
 
   @override
   Map<String, DeviceManager> get devices => _devices;
@@ -34,24 +37,37 @@ class DeviceController implements DeviceRegistry {
   bool hasDevice(String deviceType) => _devices.containsKey(deviceType);
 
   @override
-  Future<DeviceManager> registerDevice(String deviceType) async {
-    info('Creating device manager for device type: $deviceType');
-
+  Future<DeviceManager> createDevice(String deviceType) async {
     // early out if already registrered
     if (_devices.containsKey(deviceType)) return _devices[deviceType];
+
+    info('Creating device manager for device type: $deviceType');
 
     // look for a device manager of this type in the sampling packages
     DeviceManager manager;
     for (var package in SamplingPackageRegistry().packages)
       if (package.deviceType == deviceType) manager = package.deviceManager;
 
-    if (manager == null) {
+    if (manager == null)
       warning('No device manager found for device: $deviceType');
-    } else {
-      await manager.initialize(deviceType);
-      _devices[deviceType] = manager;
-    }
+    else
+      registerDevice(deviceType, manager);
+
     return manager;
+  }
+
+  /// A convinient method for creating and registring all devices which are
+  /// available in each [SamplingPackage] that has been registred in the
+  /// [SamplingPackageRegistry].
+  void registerAllAvailableDevices() {
+    for (var package in SamplingPackageRegistry().packages)
+      registerDevice(package.deviceType, package.deviceManager);
+  }
+
+  @override
+  void registerDevice(String deviceType, DeviceDataCollector manager) {
+    _devices[deviceType] = manager;
+    manager.initialize(deviceType);
   }
 
   @override
@@ -64,7 +80,6 @@ class DeviceController implements DeviceRegistry {
 /// A [DeviceManager] handles a device on runtime.
 // TODO - should be/extend an [Executor] and handle the triggered task associated with this device.... and its probes....
 abstract class DeviceManager extends DeviceDataCollector {
-  String _type;
   final StreamController<DeviceStatus> _eventController =
       StreamController.broadcast();
   Set<String> _supportedDataTypes = {};
@@ -77,9 +92,6 @@ abstract class DeviceManager extends DeviceDataCollector {
 
   /// The stream of status events for this device.
   Stream<DeviceStatus> get statusEvents => _eventController.stream;
-
-  /// The type of this device
-  String get type => _type;
 
   DeviceStatus _status = DeviceStatus.unknown;
 
@@ -95,10 +107,10 @@ abstract class DeviceManager extends DeviceDataCollector {
   /// The runtime battery level of this device.
   int get batteryLevel;
 
-  /// Initialize the device manager by specifying its [type].
-  Future initialize(String type) async {
+  @override
+  void initialize(String type) {
+    super.initialize(type);
     info('Initializing device manager, type: $type');
-    _type = type;
   }
 
   /// Ask this [DeviceManager] to connect to the device.
@@ -108,11 +120,12 @@ abstract class DeviceManager extends DeviceDataCollector {
   Future disconnect();
 }
 
+/// A device manager for this smartphone.
 class SmartphoneDeviceManager extends DeviceManager {
   String get id => DeviceInfo().deviceID;
 
-  Future initialize(String type) async {
-    await super.initialize(type);
+  void initialize(String type) {
+    super.initialize(type);
 
     // listen to the battery
     BatteryProbe()

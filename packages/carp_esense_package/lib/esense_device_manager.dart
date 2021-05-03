@@ -20,8 +20,7 @@ class ESenseDevice extends DeviceDescriptor {
   ESenseDevice({
     String roleName = DEFAULT_ROLENAME,
     List<String> supportedDataTypes,
-  })
-      : super(
+  }) : super(
           roleName: roleName,
           isMasterDevice: false,
           supportedDataTypes: supportedDataTypes,
@@ -39,8 +38,8 @@ class ESenseDeviceManager extends DeviceManager {
 
   String get id => ESenseManager().eSenseDeviceName;
 
-  Future initialize(String type) async {
-    await super.initialize(type);
+  void initialize(String type) {
+    super.initialize(type);
 
     // listen for connection events
     ESenseManager().connectionEvents.listen((event) {

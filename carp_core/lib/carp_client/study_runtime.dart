@@ -144,7 +144,7 @@ class StudyRuntime {
 
     // if this phone supports the device, register it locally
     if (deviceRegistry.supportsDevice(deviceType))
-      await deviceRegistry.registerDevice(deviceType);
+      await deviceRegistry.createDevice(deviceType);
 
     // if successful, register at the deployment service
     if (deviceRegistry.hasDevice(deviceType)) {

@@ -7,18 +7,17 @@
 
 part of mobile_sensing_app;
 
-/// This class implements the sensing layer incl. setting up a [StudyProtocol]
-/// with [Task]s and [Measure]s.
+/// This class implements the sensing layer.
 class Sensing {
   static final Sensing _instance = Sensing._();
-  CAMSMasterDeviceDeployment _deployment;
+  // CAMSMasterDeviceDeployment _deployment;
   StudyDeploymentStatus _status;
   StudyProtocol _protocol;
   StudyDeploymentController _controller;
   StudyProtocolManager manager;
   SmartPhoneClientManager client;
 
-  CAMSMasterDeviceDeployment get deployment => _deployment;
+  CAMSMasterDeviceDeployment get deployment => _controller?.deployment;
 
   /// Get the latest status of the study deployment.
   StudyDeploymentStatus get status => _status;
@@ -31,8 +30,14 @@ class Sensing {
       (_controller != null) ? _controller.executor.probes : [];
 
   /// the list of connected devices.
-  List<DeviceManager> get runningDevices =>
-      client?.deviceRegistry?.devices?.values?.toList();
+  List<DeviceManager> get runningDevices {
+    print('client: $client');
+    print(client.deviceRegistry);
+    print(client.deviceRegistry.devices);
+    print(client.deviceRegistry.devices.values);
+
+    return client?.deviceRegistry?.devices?.values?.toList();
+  }
 
   /// Get the singleton sensing instance
   factory Sensing() => _instance;
@@ -53,8 +58,11 @@ class Sensing {
     // manager = CARPStudyProtocolManager();
   }
 
-  /// Initialize and setup sensing.
+  /// Initialize and set up sensing.
   Future<void> initialize() async {
+    // set up the devices available on this phone
+    DeviceController().registerAllAvailableDevices();
+
     // get the protocol from the study protocol manager based on the
     // study deployment id
     _protocol = await manager.getStudyProtocol(testStudyDeploymentId);
@@ -69,7 +77,7 @@ class Sensing {
     String deviceRolename = _status.masterDeviceStatus.device.roleName;
 
     // create and configure a client manager for this phone
-    SmartPhoneClientManager client = SmartPhoneClientManager();
+    client = SmartPhoneClientManager();
     await client.configure();
 
     _controller = await client.addStudy(testStudyDeploymentId, deviceRolename);

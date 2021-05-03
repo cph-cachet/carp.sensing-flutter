@@ -16,7 +16,7 @@ class ProbeModel {
   String get name => probe.name;
 
   ///A printer-friendly description of this probe.
-  String get description => (probe.measure is CAMSMeasure)
+  String get description => ((probe.measure as CAMSMeasure).description != null)
       ? (probe.measure as CAMSMeasure).description
       : ProbeDescription.probeTypeDescription[type];
 

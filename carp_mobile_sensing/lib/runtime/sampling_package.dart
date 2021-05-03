@@ -17,9 +17,9 @@ class SamplingPackageRegistry {
   List<Permission> get permissions => _permissions;
 
   SamplingPackageRegistry._() {
-    // HACK - creating a serializable object (such as a [Study]) ensures that
+    // HACK - creating a serializable object (such as a [CAMSStudyProtocol]) ensures that
     // JSON deserialization in [Serializable] is initialized
-    StudyProtocol();
+    CAMSStudyProtocol();
 
     // add the basic permissions needed
     _permissions.add(Permission.storage);
