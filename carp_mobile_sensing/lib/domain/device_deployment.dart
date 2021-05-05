@@ -104,6 +104,33 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
     this._owner = owner;
   }
 
+  /// Create a [CAMSMasterDeviceDeployment] based on a [CAMSStudyProtocol].
+  /// This method basically makes a 1:1 mapping between a protocol and
+  /// a deployment.
+  CAMSMasterDeviceDeployment.fromCAMSStudyProtocol({
+    String studyDeploymentId,
+    String masterDeviceRoleName,
+    DataEndPoint dataEndPoint,
+    CAMSStudyProtocol protocol,
+  }) : super(
+          deviceDescriptor: Smartphone(roleName: masterDeviceRoleName),
+          configuration: DeviceRegistration(),
+          connectedDevices: protocol.connectedDevices,
+          connectedDeviceConfigurations: {},
+          tasks: protocol.tasks.toList(),
+          triggers: protocol.triggers,
+          triggeredTasks: protocol.triggeredTasks,
+          dataEndPoint: dataEndPoint,
+        ) {
+    _registerFromJsonFunctions();
+
+    this._studyId = protocol.studyId;
+    this._studyDeploymentId = studyDeploymentId;
+    this._owner = protocol.owner;
+    this.protocolDescription = protocol.protocolDescription;
+    this.name = protocol.name;
+  }
+
   /// Get the list of all [Mesure]s in this study protocol.
   List<Measure> get measures {
     List<Measure> _measures = [];

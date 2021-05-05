@@ -10,9 +10,6 @@ part of runtime;
 /// A local (in-memory) implementation of a [DeploymentService] useful in
 /// CAMS studies to be deployed locally on this phone.
 class SmartphoneDeploymentService implements DeploymentService {
-  /// The default rolename for this master phone device.
-  // static const String DEFAULT_MASTER_DEVICE_ROLENAME = 'phone';
-
   // key = studyDeploymentId
   final Map<String, StudyDeployment> _repository = {};
 

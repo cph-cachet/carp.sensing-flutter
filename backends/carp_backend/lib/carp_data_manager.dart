@@ -80,9 +80,13 @@ class CarpDataManager extends AbstractDataManager {
     return _app;
   }
 
-  /// The current signed in user. If the user is not already signed in,
-  /// this method will authenticate the user based on the username and
-  /// password specified in [carpEndPoint].
+  /// The currently signed in user.
+  ///
+  /// If a user is already autheticated to the [CarpService], then this account is
+  /// used for uploading the data to CARP.
+  ///
+  /// If the user is not authenticated, this method will try to authenticate the user
+  /// based on the username and password specified in [carpEndPoint].
   Future<CarpUser> get user async {
     // check if the CARP webservice has already been configured and the user is logged in.
     if (!CarpService().isConfigured) CarpService().configure(await app);
@@ -183,7 +187,8 @@ class CarpDataManager extends AbstractDataManager {
         break;
       case CarpUploadMethod.DATA_POINT:
       case CarpUploadMethod.DOCUMENT:
-        // do nothing -- no file to upload since data point has already been uploaded (see uploadData method)
+        // do nothing -- no file to upload since data point has already been
+        // uploaded (see uploadData method)
         break;
     }
 

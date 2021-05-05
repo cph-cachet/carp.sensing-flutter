@@ -82,8 +82,7 @@ class CARPStudyProtocolManager implements StudyProtocolManager {
 
           // mark this deployment as successful
           await reference.success();
-          info(
-              "Study deployment '$studyDeploymentId' successfully deployed on this phone.");
+          info("Study protocol '$studyDeploymentId' successfully downloaded.");
           return protocol;
         } else {
           await reference.unRegisterDevice(

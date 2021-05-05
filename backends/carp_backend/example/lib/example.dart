@@ -39,7 +39,7 @@ void main() async {
   // use the first (i.e. latest) invitation
   String studyDeploymentId = invitations[0].studyDeploymentId;
 
-  // create a study manager, and initialize it
+  // create a study manager and initialize it
   CARPStudyProtocolManager manager = CARPStudyProtocolManager();
   await manager.initialize();
 
