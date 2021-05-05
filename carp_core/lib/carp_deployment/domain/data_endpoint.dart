@@ -19,8 +19,11 @@ class DataEndPoint extends Serializable {
 
   /// Creates a [DataEndPoint].
   /// [type] is defined in [DataEndPointTypes].
-  /// [dataFormat] is defined in [NameSpace].
-  DataEndPoint({this.type, this.dataFormat = NameSpace.CARP}) : super();
+  /// [dataFormat] is defined in [NameSpace]. Default is [NameSpace.CARP].
+  @mustCallSuper
+  DataEndPoint({this.type, this.dataFormat = NameSpace.CARP}) : super() {
+    this.dataFormat ??= NameSpace.CARP;
+  }
 
   Function get fromJsonFunction => _$DataEndPointFromJson;
   factory DataEndPoint.fromJson(Map<String, dynamic> json) =>

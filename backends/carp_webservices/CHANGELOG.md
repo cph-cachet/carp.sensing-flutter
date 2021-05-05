@@ -1,3 +1,6 @@
+## 0.22.0
+* upgrade to `carp_mobile_sensing` v. 0.22.x
+
 ## 0.21.1
 * upgrade to `carp_mobile_sensing` v. 0.21.x
 * small bug in `DocumentReference.get()` fixed
