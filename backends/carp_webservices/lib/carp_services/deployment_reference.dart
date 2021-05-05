@@ -1,18 +1,19 @@
 /*
- * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2021 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
 part of carp_services;
 
-/// Provide a deployment endpoint reference to a CARP web service.
+/// Provides a reference to the deployment endpoint in a CARP web service that can
+/// handle a specific [MasterDeviceDeployment].
 ///
 /// According to CARP core, the protocol for using the
 /// [deployment sub-system](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-deployment.md) is:
 ///
 ///   - [status()] - get the study deployment status of this deployment.
-///   - [registerDevice()] - register this device - and associated devices - in this deployment
+///   - [registerDevice()] - register this device - and connected devices - in this deployment
 ///   - [get()] - get the deployment for this master device
 ///   - [success()] - report the deployment as successful
 ///   - [unRegisterDevice()] - unregister this - or other - device if no longer used
@@ -73,8 +74,6 @@ class DeploymentReference extends RPCCarpReference {
 
     // Set device ID, if  provided
     if (deviceId != null) _registeredDeviceId = deviceId;
-
-    print('deviceId = $deviceId - registeredDeviceId = $registeredDeviceId');
 
     _status = StudyDeploymentStatus.fromJson(await _rpc(RegisterDevice(
         studyDeploymentId,

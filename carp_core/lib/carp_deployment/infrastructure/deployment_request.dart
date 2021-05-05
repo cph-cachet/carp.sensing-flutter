@@ -128,16 +128,17 @@ class GetDeviceDeploymentFor extends DeploymentServiceRequest {
 /// A request for reporting this deployment as successful.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class DeploymentSuccessful extends GetDeviceDeploymentFor {
+  /// Timestamp when this was last updated in UTC
+  DateTime deviceDeploymentLastUpdateDate;
+
   DeploymentSuccessful(
     String studyDeploymentId,
     String masterDeviceRoleName,
-    this.deviceDeploymentLastUpdateDate,
+    DateTime deviceDeploymentLastUpdateDate,
   ) : super(studyDeploymentId, masterDeviceRoleName) {
-    this.deviceDeploymentLastUpdateDate.toUtc();
+    this.deviceDeploymentLastUpdateDate =
+        deviceDeploymentLastUpdateDate?.toUtc() ?? DateTime.now().toUtc();
   }
-
-  /// Timestamp when this was last updated in UTC
-  DateTime deviceDeploymentLastUpdateDate;
 
   Function get fromJsonFunction => _$DeploymentSuccessfulFromJson;
   factory DeploymentSuccessful.fromJson(Map<String, dynamic> json) =>

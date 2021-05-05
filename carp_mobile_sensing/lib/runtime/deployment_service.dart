@@ -145,9 +145,9 @@ class SmartphoneDeploymentService implements DeploymentService {
   @override
   Future<StudyDeploymentStatus> deploymentSuccessfulFor(
     String studyDeploymentId,
-    String masterDeviceRoleName, {
+    String masterDeviceRoleName,
     DateTime deviceDeploymentLastUpdateDate,
-  }) async {
+  ) async {
     deviceDeploymentLastUpdateDate ??= DateTime.now();
 
     StudyDeployment deployment = _repository[studyDeploymentId];
@@ -174,7 +174,7 @@ class SmartphoneDeploymentService implements DeploymentService {
       deploymentSuccessfulFor(
         studyDeploymentId,
         thisPhone.roleName,
-        deviceDeploymentLastUpdateDate: deviceDeploymentLastUpdateDate,
+        deviceDeploymentLastUpdateDate,
       );
 
   /// Stop the study deployment with [studyDeploymentId].

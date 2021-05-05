@@ -50,7 +50,8 @@ class CANSDeploymentService extends CarpBaseService
   @override
   Future<StudyDeploymentStatus> getStudyDeploymentStatus(
           String studyDeploymentId) async =>
-      await deployment(studyDeploymentId).getStatus();
+      StudyDeploymentStatus.fromJson(
+          await _rpc(GetStudyDeploymentStatus(studyDeploymentId)));
 
   @override
   Future<List<StudyDeploymentStatus>> getStudyDeploymentStatusList(
@@ -75,25 +76,35 @@ class CANSDeploymentService extends CarpBaseService
     String deviceRoleName,
     DeviceRegistration registration,
   ) async =>
-      await deployment(studyDeploymentId).registerDevice(
-          deviceRoleName: deviceRoleName, deviceId: registration.deviceId);
+      StudyDeploymentStatus.fromJson(await _rpc(RegisterDevice(
+        studyDeploymentId,
+        deviceRoleName,
+        registration,
+      )));
 
   @override
   Future<StudyDeploymentStatus> unregisterDevice(
           String studyDeploymentId, String deviceRoleName) async =>
-      await deployment(studyDeploymentId)
-          .unRegisterDevice(deviceRoleName: deviceRoleName);
+      StudyDeploymentStatus.fromJson(
+          await _rpc(UnregisterDevice(studyDeploymentId, deviceRoleName)));
 
   @override
   Future<MasterDeviceDeployment> getDeviceDeploymentFor(
           String studyDeploymentId, String masterDeviceRoleName) async =>
-      await deployment(studyDeploymentId).get();
+      MasterDeviceDeployment.fromJson(await _rpc(
+          GetDeviceDeploymentFor(studyDeploymentId, masterDeviceRoleName)));
 
   @override
   Future<StudyDeploymentStatus> deploymentSuccessfulFor(
-          String studyDeploymentId, String masterDeviceRoleName,
-          {DateTime deviceDeploymentLastUpdateDate}) async =>
-      await deployment(studyDeploymentId).success();
+    String studyDeploymentId,
+    String masterDeviceRoleName,
+    DateTime deviceDeploymentLastUpdateDate,
+  ) async =>
+      StudyDeploymentStatus.fromJson(await _rpc(DeploymentSuccessful(
+        studyDeploymentId,
+        masterDeviceRoleName,
+        deviceDeploymentLastUpdateDate,
+      )));
 
   @override
   Future<StudyDeploymentStatus> stop(String studyDeploymentId) =>

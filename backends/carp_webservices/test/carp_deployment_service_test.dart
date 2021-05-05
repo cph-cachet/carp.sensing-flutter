@@ -109,7 +109,7 @@ void main() {
     );
   });
 
-  group("Deployment", () {
+  group("Deployment - using DeploymentReference", () {
     test('- get deployment status', () async {
       StudyDeploymentStatus status =
           await CANSDeploymentService().deployment().getStatus();
@@ -160,6 +160,86 @@ void main() {
       expect(status_1.studyDeploymentId, status_2.studyDeploymentId);
       expect(status_2.studyDeploymentId, testDeploymentId);
     }, skip: false);
+
+    test('- unregister device', () async {
+      DeploymentReference reference =
+          CANSDeploymentService().deployment(testDeploymentId);
+      StudyDeploymentStatus status = await reference.getStatus();
+      print(status);
+      expect(status.masterDeviceStatus.device, isNotNull);
+      print(status.masterDeviceStatus.device);
+      status = await reference.unRegisterDevice(
+          deviceRoleName: status.masterDeviceStatus.device.roleName);
+      print(status);
+      expect(status.studyDeploymentId, testDeploymentId);
+    }, skip: false);
+  }, skip: true);
+
+  group("Deployment - using CANSDeploymentService()", () {
+    test('- get deployment status', () async {
+      StudyDeploymentStatus status = await CANSDeploymentService()
+          .getStudyDeploymentStatus(testDeploymentId);
+      print(_encode(status.toJson()));
+      print(status);
+      print(status.masterDeviceStatus.device);
+      print(_encode(status));
+      expect(status.studyDeploymentId, testDeploymentId);
+    }, skip: false);
+
+    test('- register device', () async {
+      StudyDeploymentStatus status = await CANSDeploymentService()
+          .getStudyDeploymentStatus(testDeploymentId);
+      print(status);
+      expect(status.masterDeviceStatus.device, isNotNull);
+      print(status.masterDeviceStatus.device);
+      status = await CANSDeploymentService().registerDevice(testDeploymentId,
+          status.masterDeviceStatus.device.roleName, DeviceRegistration());
+      print(status);
+      expect(status.studyDeploymentId, testDeploymentId);
+    }, skip: false);
+
+    test('- get master device deployment', () async {
+      StudyDeploymentStatus status = await CANSDeploymentService()
+          .getStudyDeploymentStatus(testDeploymentId);
+      print(status);
+      expect(status.masterDeviceStatus.device, isNotNull);
+      print(status.masterDeviceStatus.device);
+      MasterDeviceDeployment deployment =
+          await CANSDeploymentService().getDeviceDeploymentFor(
+        testDeploymentId,
+        status.masterDeviceStatus.device.roleName,
+      );
+      print(deployment);
+      deployment.tasks.forEach((task) {
+        print(task);
+        task?.measures?.forEach(print);
+      });
+      expect(deployment.configuration.deviceId, isNotNull);
+    }, skip: false);
+
+    test('- deployment success', () async {
+      StudyDeploymentStatus status_1 = await CANSDeploymentService()
+          .getStudyDeploymentStatus(testDeploymentId);
+      print(status_1);
+      expect(status_1.masterDeviceStatus.device, isNotNull);
+      print(status_1.masterDeviceStatus.device);
+      MasterDeviceDeployment deployment =
+          await CANSDeploymentService().getDeviceDeploymentFor(
+        testDeploymentId,
+        status_1.masterDeviceStatus.device.roleName,
+      );
+      print(deployment);
+
+      StudyDeploymentStatus status_2 =
+          await CANSDeploymentService().deploymentSuccessfulFor(
+        testDeploymentId,
+        status_1.masterDeviceStatus.device.roleName,
+        deployment.lastUpdateDate,
+      );
+      print(status_2);
+      expect(status_1.studyDeploymentId, status_2.studyDeploymentId);
+      expect(status_2.studyDeploymentId, testDeploymentId);
+    });
 
     test('- unregister device', () async {
       DeploymentReference reference =
