@@ -11,11 +11,11 @@ class SmartPhoneClientManager extends ClientManager {
   SmartPhoneClientManager({
     DeploymentService deploymentService,
     DeviceController deviceRegistry,
-  }) {
-    // if not specified, use default services
-    this.deploymentService ??= SmartphoneDeploymentService();
-    this.deviceRegistry ??= DeviceController();
-  }
+  }) : super(
+          // if not specified, use default services
+          deploymentService: deploymentService ?? SmartphoneDeploymentService(),
+          deviceRegistry: deviceRegistry ?? DeviceController(),
+        );
 
   @override
   DeviceController get deviceRegistry => super.deviceRegistry;
@@ -32,11 +32,7 @@ class SmartPhoneClientManager extends ClientManager {
     String studyDeploymentId,
     String deviceRoleName,
   ) async {
-    assert(isConfigured, 'The client manager has not been configured yet.');
-    assert(
-        !repository
-            .containsKey(StudyRuntimeId(studyDeploymentId, deviceRoleName)),
-        'A study with the same study deployment ID and device role name has already been added.');
+    super.addStudy(studyDeploymentId, deviceRoleName);
 
     // Create the study runtime.
     // val deviceRegistration = repository.getDeviceRegistration()!!

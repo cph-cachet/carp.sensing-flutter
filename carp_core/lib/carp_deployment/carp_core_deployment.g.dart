@@ -44,9 +44,13 @@ MasterDeviceDeployment _$MasterDeviceDeploymentFromJson(
             ? null
             : TriggeredTask.fromJson(e as Map<String, dynamic>))
         ?.toList(),
-  )..lastUpdateDate = json['lastUpdateDate'] == null
-      ? null
-      : DateTime.parse(json['lastUpdateDate'] as String);
+  )
+    ..lastUpdateDate = json['lastUpdateDate'] == null
+        ? null
+        : DateTime.parse(json['lastUpdateDate'] as String)
+    ..dataEndPoint = json['dataEndPoint'] == null
+        ? null
+        : DataEndPoint.fromJson(json['dataEndPoint'] as Map<String, dynamic>);
 }
 
 Map<String, dynamic> _$MasterDeviceDeploymentToJson(
@@ -68,6 +72,7 @@ Map<String, dynamic> _$MasterDeviceDeploymentToJson(
   writeNotNull('triggers', instance.triggers);
   writeNotNull('triggeredTasks', instance.triggeredTasks);
   writeNotNull('lastUpdateDate', instance.lastUpdateDate?.toIso8601String());
+  writeNotNull('dataEndPoint', instance.dataEndPoint);
   return val;
 }
 
@@ -298,6 +303,29 @@ Map<String, dynamic> _$ActiveParticipationInvitationToJson(
   writeNotNull('participation', instance.participation);
   writeNotNull('invitation', instance.invitation);
   writeNotNull('devices', instance.devices);
+  return val;
+}
+
+DataEndPoint _$DataEndPointFromJson(Map<String, dynamic> json) {
+  return DataEndPoint(
+    type: json['type'] as String,
+    dataFormat: json['dataFormat'] as String,
+  )..$type = json[r'$type'] as String;
+}
+
+Map<String, dynamic> _$DataEndPointToJson(DataEndPoint instance) {
+  final val = <String, dynamic>{
+    r'$type': instance.$type,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('type', instance.type);
+  writeNotNull('dataFormat', instance.dataFormat);
   return val;
 }
 

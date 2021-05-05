@@ -119,6 +119,7 @@ abstract class Serializable {
   String $type;
 
   /// Create an object that can be serialized to JSON.
+  @mustCallSuper
   Serializable() {
     $type = jsonType;
   }

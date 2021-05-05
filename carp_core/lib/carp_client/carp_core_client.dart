@@ -29,3 +29,4 @@ export 'carp_core_client.dart';
 part 'client_manager.dart';
 part 'study_runtime.dart';
 part 'device_manager.dart';
+part 'data_manager.dart';

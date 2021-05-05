@@ -17,6 +17,7 @@ import 'package:uuid/uuid.dart';
 
 import 'package:carp_core/carp_common/carp_core_common.dart';
 import 'package:carp_core/carp_protocols/carp_core_protocols.dart';
+import 'package:carp_core/carp_data/carp_core_data.dart';
 
 export 'carp_core_deployment.dart';
 
@@ -24,6 +25,7 @@ part 'domain/device_deployment.dart';
 part 'domain/study_deployment.dart';
 part 'domain/participation.dart';
 part 'domain/users.dart';
+part 'domain/data_endpoint.dart';
 part 'infrastructure/deployment_request.dart';
 part 'infrastructure/participation_request.dart';
 part 'application/deployment_service.dart';

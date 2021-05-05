@@ -7,41 +7,44 @@
 
 part of domain;
 
-/// Specify an endpoint where a [DataManager] can upload data.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class DataEndPoint extends Serializable {
-  /// The type of endpoint as enumerated in [DataEndPointTypes].
-  String type;
+// /// Specify an endpoint where a [DataManager] can upload data.
+// @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+// class DataEndPoint extends Serializable {
+//   /// The type of endpoint as enumerated in [DataEndPointTypes].
+//   String type;
 
-  /// The public key in a PKI setup for encryption of data
-  String publicKey;
+//   /// The preferred format of the data to be uploaded according to
+//   /// [NameSpace]. Default using the [NameSpace.CARP].
+//   String dataFormat;
 
-  /// Creates a [DataEndPoint]. [type] is defined in [DataEndPointTypes].
-  DataEndPoint({this.type, this.publicKey}) : super();
+//   /// Creates a [DataEndPoint].
+//   /// [type] is defined in [DataEndPointTypes].
+//   /// [dataFormat] is defined in [NameSpace].
+//   DataEndPoint({this.type, this.dataFormat = NameSpace.CARP}) : super();
 
-  Function get fromJsonFunction => _$DataEndPointFromJson;
-  factory DataEndPoint.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
-  Map<String, dynamic> toJson() => _$DataEndPointToJson(this);
+//   Function get fromJsonFunction => _$DataEndPointFromJson;
+//   factory DataEndPoint.fromJson(Map<String, dynamic> json) =>
+//       FromJsonFactory().fromJson(json);
+//   Map<String, dynamic> toJson() => _$DataEndPointToJson(this);
 
-  String toString() => type;
-}
+//   String toString() => type;
+// }
 
-/// A enumeration of known (but not necessarily implemented) endpoint API types.
-///
-/// Note that the type is basically a [String], which allow for extension of
-/// new application-specific data endpoints.
-class DataEndPointTypes {
-  static const String UNKNOWN = 'UNKNOWN';
-  static const String PRINT = 'PRINT';
-  static const String FILE = 'FILE';
-  static const String SQLITE = 'SQLITE';
-  static const String FIREBASE_STORAGE = 'FIREBASE_STORAGE';
-  static const String FIREBASE_DATABSE = 'FIREBASE_DATABSE';
-  static const String CARP = 'CARP';
-  static const String OMH = 'OMH';
-  static const String AWS = 'AWS';
-}
+// /// A enumeration of known (but not necessarily implemented) endpoint API types.
+// ///
+// /// Note that the type is basically a [String], which allow for extension of
+// /// new application-specific data endpoints.
+// class DataEndPointTypes {
+//   static const String UNKNOWN = 'UNKNOWN';
+//   static const String PRINT = 'PRINT';
+//   static const String FILE = 'FILE';
+//   static const String SQLITE = 'SQLITE';
+//   static const String FIREBASE_STORAGE = 'FIREBASE_STORAGE';
+//   static const String FIREBASE_DATABSE = 'FIREBASE_DATABSE';
+//   static const String CARP = 'CARP';
+//   static const String OMH = 'OMH';
+//   static const String AWS = 'AWS';
+// }
 
 /// Specify an endpoint where a file-based [DataManager] can store JSON
 /// data as files on the local device.
@@ -65,7 +68,7 @@ class FileDataEndPoint extends DataEndPoint {
   /// For example, the 500 KB buffer typically is reduced to ~100 KB.
   bool zip = true;
 
-  ///Is data to be encrypted before storing. False as default.
+  /// Is data to be encrypted before storing. False as default.
   ///
   /// Support only one-way encryption using a public key.
   bool encrypt = false;
@@ -78,9 +81,14 @@ class FileDataEndPoint extends DataEndPoint {
   ///
   /// [type] is defined in [DataEndPointTypes]. Is typically of type
   /// [DataEndPointType.FILE] but specialized file types can be specified.
-  FileDataEndPoint(
-      {String type, this.bufferSize, this.zip, this.encrypt, this.publicKey})
-      : super(type: type ?? DataEndPointTypes.FILE);
+  FileDataEndPoint({
+    String type,
+    String dataFormat,
+    this.bufferSize,
+    this.zip = true,
+    this.encrypt = false,
+    this.publicKey,
+  }) : super(type: type ?? DataEndPointTypes.FILE, dataFormat: dataFormat);
 
   /// The function which can transform this [FileDataEndPoint] into JSON.
   ///

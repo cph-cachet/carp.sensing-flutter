@@ -99,20 +99,21 @@ Following [`carp_core`](https://pub.dev/documentation/carp_core/latest/), a CAMS
 1. Define a [`StudyProtcol`](https://pub.dev/documentation/carp_core/latest/carp_core/StudyProtocol-class.html).
 2. Deploy this protocol to a [`DeploymentService`](https://pub.dev/documentation/carp_core/latest/carp_core/DeploymentService-class.html).
 3. Get a study deployment for the phone and start executing this study deployment using a [`SmartPhoneClientManager`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/SmartPhoneClientManager-class.html).
-4. Use the generated data locally in the app.
+4. Use the generated data locally in the app or specify how and where to store or upload it using a [`DataEndPoint](https://pub.dev/documentation/carp_core_deployment/latest/domain/DataEndPoint-class.html).
 
 Note that as a mobile sensing framework running on a phone, CAMS could be limited to support 3-4. However, to support the 'full cycle', CAMS also supports 1-2. This allows for local creation, deployment, and execution of study protocols (which in many [applications](https://carp.cachet.dk/#applications) have shown to be useful).
 
 ### Defining a `StudyProtcol`
 
-In CAMS, a sensing protocol is configured in a [`CAMSStudyProtocol`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/CAMSStudyProtocol-class.html). Below is a simple example of how to set up a protocol that sense step counts (`pedometer`), ambient light (`light`), screen activity (`screen`), and power consumption (`battery`). This data is stored as [json](https://github.com/cph-cachet/carp.sensing-flutter/wiki/B.-Sampling-Data-Formats) to a [local file](https://github.com/cph-cachet/carp.sensing-flutter/wiki/C.-Data-Backends) on the phone.
+In CAMS, a sensing protocol is configured in a [`CAMSStudyProtocol`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/CAMSStudyProtocol-class.html). 
+Below is a simple example of how to set up a protocol that sense step counts (`pedometer`), ambient light (`light`), screen activity (`screen`), and power consumption (`battery`). This data is stored as [json](https://github.com/cph-cachet/carp.sensing-flutter/wiki/B.-Sampling-Data-Formats) to a [local file](https://github.com/cph-cachet/carp.sensing-flutter/wiki/C.-Data-Backends) on the phone.
 
 ```dart
 // Import package
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
-void example_1() async {
+void example() async {
   // create a protocol using a local file to store data
   CAMSStudyProtocol protocol = CAMSStudyProtocol()
     ..name = 'Track patient movement'
@@ -120,11 +121,6 @@ void example_1() async {
       id: 'AB',
       name: 'Alex Boyon',
       email: 'alex@uni.dk',
-    )
-    ..dataEndPoint = FileDataEndPoint(
-      bufferSize: 500 * 1000,
-      zip: true,
-      encrypt: false,
     );
 
   // define which devices are used for data collection
@@ -161,20 +157,23 @@ Sampling can be configured in a very sophisticated ways, by specifying different
 
 ### Using a `DeploymentService`
 
-A `StudyProtocol` can be deployed to a `DeploymentService` which handles the deployment of protocols for different devices. CAMS comes with a simple deployment service which runs locally on the phone. This can be used to deploy a protocol and get back a [`MasterDeviceDeployment`](https://pub.dev/documentation/carp_core/latest/carp_core/MasterDeviceDeployment-class.html), which can be executed on the phone.
+A device deployment specifies how a study protocol is executed on a specific device - in this case a smartphone - including how to store or upload the sampled data.
+
+A `StudyProtocol` can be deployed to a `DeploymentService` which handles the deployment of protocols for different devices. CAMS comes with a simple deployment service (the `SmartphoneDeploymentService`) which runs locally on the phone. This can be used to deploy a protocol and get back a [`MasterDeviceDeployment`](https://pub.dev/documentation/carp_core/latest/carp_core/MasterDeviceDeployment-class.html), which can be executed on the phone.
+Per default, the local device deployment service configures the deployment to store sampled data in a file, using a `FileDataEndPoint`. 
 
 ```dart
   ...
 
   // deploy this protocol using the on-phone deployment service
   StudyDeploymentStatus status =
-      await CAMSDeploymentService().createStudyDeployment(protocol);
+      await SmartphoneDeploymentService().createStudyDeployment(protocol);
 
   ...
 
   // you can get the device deployment configuration for this phone....
   // ... but this is rarely needed - see below
-  CAMSMasterDeviceDeployment deployment = await CAMSDeploymentService()
+  CAMSMasterDeviceDeployment deployment = await SmartphoneDeploymentService()
       .getDeviceDeployment(status.studyDeploymentId);
 
   ...
@@ -184,7 +183,7 @@ A `StudyProtocol` can be deployed to a `DeploymentService` which handles the dep
 ### Running a `StudyDeploymentController`
 
 A study deployment for a phone (master device) is handled by a [`SmartPhoneClientManager`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SmartPhoneClientManager-class.html).
-This client manager now hold a [`StudyDeploymentController`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/StudyDeploymentController-class.html) which control the execution of a study deployment.
+This client manager is able to create a [`StudyDeploymentController`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/StudyDeploymentController-class.html) which controls the execution of a study deployment.
 
 
 ```dart
@@ -197,7 +196,7 @@ This client manager now hold a [`StudyDeploymentController`](https://pub.dev/doc
   SmartPhoneClientManager client = SmartPhoneClientManager();
   await client.configure();
 
-  // create a study runtime to control this deployment
+  // create a study runtime controller to execute and control this deployment
   StudyDeploymentController controller = await client.addStudy(studyDeploymentId, deviceRolename);
 
   // configure the controller and resume sampling
@@ -210,9 +209,39 @@ This client manager now hold a [`StudyDeploymentController`](https://pub.dev/doc
   ...
 ```
 
+A `SmartPhoneClientManager` per default uses the local `SmartphoneDeploymentService` which per default saves data to zipped files (see more on [data backends on the wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki/C.-Data-Backends)). 
+If you want to use another data backend, this can be configured in two ways: 
+(i) either as part of the deployment or
+(ii) as part of the configuration - like this:
+
+```dart
+  ...
+
+  // you can change the deployment locally, before starting the
+  // execution of it - e.g. setting another data endpoint.
+  controller.deployment.dataEndPoint = FileDataEndPoint(
+    bufferSize: 500 * 1000,
+    zip: true,
+    encrypt: false,
+  );
+
+  // you can also configure the controller with a data endpoint 
+  // this has the same effect as above
+  await controller.configure(
+    dataEndPoint: FileDataEndPoint(
+      bufferSize: 500 * 1000,
+      zip: true,
+      encrypt: false,
+    ),
+  );
+  ...
+```
+
+You can write your own `DataEndPoint` definitions and coresponding `DataManager`s for uploading data to your own data endpoint. See the wiki on how to [add a new data manager](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.-Extending-CARP-Mobile-Sensing#adding-a-new-data-manager).
+
 ### Using the generated data
 
-Sensing can be controlled in a number of ways and the generated data can be accessed and used in the app. Access to data is done by listening on the `data` streams from the study deployment controller or some of its underlying executors or probes. Below are a few examples on how to listen on data streams.
+The generated data can be accessed and used in the app. Access to data is done by listening on the `data` streams from the study deployment controller or some of its underlying executors or probes. Below are a few examples on how to listen on data streams.
 
 ```dart
   ...
@@ -252,7 +281,9 @@ Sensing can be controlled in a number of ways and the generated data can be acce
   ...
 ```
 
-The execution of sensing can be controlled on runtime. For example:
+### Controlling the sampling of data
+
+The execution of sensing can be controlled on runtime in a number of ways. For example:
 
 
 ```dart

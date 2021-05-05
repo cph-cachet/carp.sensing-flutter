@@ -72,26 +72,24 @@ class StudyRuntime {
 
   StudyRuntime();
 
-  /// Instantiate a [StudyRuntime] by registering the client device in the [deploymentService].
+  /// Instantiate a [StudyRuntime] by registering the client device in a [DeploymentService].
   /// In case the device is immediately ready for deployment, also deploy.
+  ///
+  ///  * [deploymentService] - the deployment service to use to retrieve and manage
+  ///    the study deployment with [studyDeploymentId].
+  ///  * [deviceRegistry] - the device factory to handle the devices used in this study deployment.
+  ///  * [studyDeploymentId] - the ID of the deployed study for which to collect data.
+  ///  * [deviceRoleName] – the role which the client device this runtime is intended
+  ///    for plays inthe deployment identified by [studyDeploymentId].
+  ///  * [deviceRegistration] - the device configuration for the device this study
+  ///    runtime runs on, identified by [deviceRoleName] in the study deployment
+  ///    with [studyDeploymentId].
+  ///
   Future initialize(
-    /// The deployment service to use to retrieve and manage the study deployment
-    /// with [studyDeploymentId].
-    /// This deployment service should have the deployment with [studyDeploymentId] available.
     DeploymentService deploymentService,
-
-    /// The device factory to handle the devices used in this study deployment.
     DeviceRegistry deviceRegistry,
-
-    /// The ID of the deployed study for which to collect data.
     String studyDeploymentId,
-
-    /// The role which the client device this runtime is intended for plays in
-    /// the deployment identified by [studyDeploymentId].
     String deviceRoleName,
-
-    /// The device configuration for the device this study runtime runs on,
-    /// identified by [deviceRoleName] in the study deployment with [studyDeploymentId].
     DeviceRegistration deviceRegistration,
   ) async {
     assert(deploymentService != null,

@@ -9,14 +9,28 @@ part of runtime;
 /// A [StudyDeploymentController] controls the execution of a [CAMSMasterDeviceDeployment].
 class StudyDeploymentController extends StudyRuntime {
   int _samplingSize = 0;
+  DataManager _dataManager;
+  DataEndPoint _dataEndPoint;
+  StudyDeploymentExecutor _executor;
+  SamplingSchema _samplingSchema;
+  String _privacySchemaName;
+  DatumTransformer _transformer;
 
+  /// The master device deployment running in this controller.
   CAMSMasterDeviceDeployment get masterDeployment =>
       deployment as CAMSMasterDeviceDeployment;
-  StudyDeploymentExecutor executor;
-  DataManager dataManager;
-  SamplingSchema samplingSchema;
-  String privacySchemaName;
-  DatumTransformer transformer;
+
+  /// The executor executing this [masterDeployment].
+  StudyDeploymentExecutor get executor => _executor;
+
+  /// The configuration of the data endpoint, i.e. how data is saved or uploaded.
+  DataEndPoint get dataEndPoint => _dataEndPoint;
+
+  /// The data manager responsible for handling the data collected by this controller.
+  DataManager get dataManager => _dataManager;
+
+  /// The privacy schema used to encrypt data before upload.
+  String get privacySchemaName => _privacySchemaName;
 
   /// The permissions granted to this study from the OS.
   Map<Permission, PermissionStatus> permissions;
@@ -24,16 +38,16 @@ class StudyDeploymentController extends StudyRuntime {
   /// The stream of all sampled data points.
   ///
   /// Data points in the [data] stream are transformed in the following order:
-  ///   1. privacy schema as specified in the [privacySchemaName]
+  ///   1. privacy schema as specified in the [_privacySchemaName]
   ///   2. preferred data format as specified by [dataFormat] in the [deployment]
-  ///   3. any custom [transformer] provided
+  ///   3. any custom [_transformer] provided
   ///
   /// This is a broadcast stream and supports multiple subscribers.
-  Stream<DataPoint> get data => executor.data.map((dataPoint) => dataPoint
-    ..data = transformer(TransformerSchemaRegistry()
-        .lookup(masterDeployment.dataFormat)
+  Stream<DataPoint> get data => _executor.data.map((dataPoint) => dataPoint
+    ..data = _transformer(TransformerSchemaRegistry()
+        .lookup(masterDeployment.dataEndPoint.dataFormat)
         .transform(TransformerSchemaRegistry()
-            .lookup(privacySchemaName)
+            .lookup(_privacySchemaName)
             .transform(dataPoint.data))));
 
   PowerAwarenessState powerAwarenessState = NormalSamplingState.instance;
@@ -53,30 +67,36 @@ class StudyDeploymentController extends StudyRuntime {
     DataManagerRegistry().register(FileDataManager());
   }
 
-  /// Configure this controller.
+  /// Configure this [StudyDeploymentController].
   /// Must be called only once, and before [resume] is called.
+  /// This will also request permissions for all [SamplingPackage]s' permissions.
   ///
   /// A number of optional parameters can be specified:
-  ///    * A specific [samplingSchema] can be used.
-  ///      If null, [SamplingSchema.normal] with power-awareness is used.
-  ///    * A specific [dataManager] can be provided.
-  ///      If null, a [DataManager] will be looked up in the
-  ///      [DataManagerRegistry] based on the type of the study's [DataEndPoint].
-  ///      If no data manager is found in the registry, then no data management
+  ///
+  ///    * [samplingSchema] - custom [SamplingSchema], i.e. configuration of [Measure]s.
+  ///      If not specified, [SamplingSchema.normal] with power-awareness is used.
+  ///    * [dataEndPoint] - A specific [DataEndPoint] specifying where to save or upload data.
+  ///      If not specified, the [MasterDeviceDeployment.dataEndPoint] is used.
+  ///      If no data endpoint is found, then no data management
   ///      is done, but sensing can still be started. This is useful for apps
   ///      which wants to use the framework for in-app consumption of sensing
   ///      events without saving the data.
-  ///    * The name of a [PrivacySchema] can be provided in [privacySchemaName].
+  ///    * [privacySchemaName] - the name of a [PrivacySchema].
   ///      Use [PrivacySchema.DEFAULT] for the default, built-in schema.
-  ///      If null, no privacy schema is used.
-  ///    * A generic [transformer] can be provided which transform each collected data.
-  ///      If null, a 1:1 mapping is done, i.e. no transformation.
+  ///      If  not specified, no privacy schema is used and data is saved as sensed.
+  ///    * [transformer] - a generic [DatumTransformer] function which transform
+  ///      each collected [Datum].
+  ///      If not specified, a 1:1 mapping is done, i.e. no transformation.
+  ///    * [askForPermissions] - automatically ask for permissions for all sampling
+  ///      packages at once. Default to `true`. If you want the app to handle
+  ///      permissions, set this to `false`.
   ///
   Future configure({
     SamplingSchema samplingSchema,
-    DataManager dataManager,
+    DataEndPoint dataEndPoint,
     String privacySchemaName,
     DatumTransformer transformer,
+    bool askForPermissions = true,
   }) async {
     assert(deployment != null,
         'Cannot configure a Study Controller without a deployment.');
@@ -84,38 +104,39 @@ class StudyDeploymentController extends StudyRuntime {
         'A CAMS study controller can only work with a CAMS Master Device Deployment');
     info('Configuring $runtimeType');
 
-    executor = StudyDeploymentExecutor(deployment);
-
-    // if a data manager is provided, register and use this
-    if (dataManager != null) {
-      DataManagerRegistry().register(dataManager);
-      this.dataManager = dataManager;
-    } else {
-      this.dataManager = (masterDeployment.dataEndPoint != null)
-          ? DataManagerRegistry().lookup(masterDeployment.dataEndPoint.type)
-          : null;
-    }
-    if (dataManager == null)
-      warning(
-          "No data manager for the specified data endpoint found: '${masterDeployment.dataEndPoint}'.");
+    _executor = StudyDeploymentExecutor(deployment);
 
     // initialize optional parameters
-    this.samplingSchema =
+    this._samplingSchema =
         samplingSchema ?? SamplingSchema.normal(powerAware: true);
-    this.privacySchemaName = privacySchemaName ?? NameSpace.CARP;
-    this.transformer = transformer ?? ((datum) => datum);
+    this._dataEndPoint = dataEndPoint ?? masterDeployment.dataEndPoint;
+    this._privacySchemaName = privacySchemaName ?? NameSpace.CARP;
+    this._transformer = transformer ?? ((datum) => datum);
+
+    if (_dataEndPoint != null)
+      _dataManager = DataManagerRegistry().lookup(_dataEndPoint.type);
+
+    if (_dataManager == null)
+      warning(
+          "No data manager for the specified data endpoint found: '$_dataEndPoint'.");
 
     // if no user is specified for this study, look up the local user id
     masterDeployment.userId ??= await Settings().userId;
 
     // setting up permissions
-    permissions = await PermissionHandlerPlatform.instance
-        .requestPermissions(SamplingPackageRegistry().permissions);
-    SamplingPackageRegistry().permissions.forEach((permission) {
-      PermissionStatus status = permissions[permission];
+    if (askForPermissions) {
+      info('Asking for permission for all measure types.');
+      permissions = await PermissionHandlerPlatform.instance
+          .requestPermissions(SamplingPackageRegistry().permissions);
+    }
+
+    // check if needed permission are set
+    SamplingPackageRegistry().permissions.forEach((permission) async {
+      PermissionStatus status = await PermissionHandlerPlatform.instance
+          .checkPermissionStatus(permission);
       if (status != PermissionStatus.granted) {
         warning(
-            'Permissions not granted for $permission, permission is $status');
+            "Permissions not granted for $permission -  permission is $status");
       }
     });
 
@@ -125,11 +146,10 @@ class StudyDeploymentController extends StudyRuntime {
     info(' deployment id : ${masterDeployment.studyDeploymentId}');
     info('    study name : ${masterDeployment.name}');
     info('          user : ${masterDeployment.userId}');
-    info('      endpoint : ${masterDeployment.dataEndPoint}');
-    info('   data format : ${masterDeployment.dataFormat}');
+    info(' data endpoint : ${this._dataEndPoint}');
     info('      platform : ${DeviceInfo().platform.toString()}');
     info('     device ID : ${DeviceInfo().deviceID.toString()}');
-    info('  data manager : ${dataManager?.toString()}');
+    info('  data manager : ${_dataManager}');
     info('       devices : ${DeviceController().devicesToString()}');
 
     if (samplingSchema != null) {
@@ -140,13 +160,13 @@ class StudyDeploymentController extends StudyRuntime {
     }
 
     // initialize the data manager, device registry, and study executor
-    await dataManager?.initialize(
+    await _dataManager?.initialize(
       masterDeployment.studyDeploymentId,
       masterDeployment.dataEndPoint,
       data,
     );
     // await DeviceRegistry().initialize(deployment, data);
-    executor.initialize(Measure(type: CAMSDataType.EXECUTOR));
+    _executor.initialize(Measure(type: CAMSDataType.EXECUTOR));
     await enablePowerAwareness();
     data.listen((dataPoint) => _samplingSize++);
 
@@ -157,7 +177,7 @@ class StudyDeploymentController extends StudyRuntime {
 
   /// Enable power-aware sensing in this study. See [PowerAwarenessState].
   Future enablePowerAwareness() async {
-    if (samplingSchema.powerAware) {
+    if (_samplingSchema.powerAware) {
       info('Enabling power awareness ...');
       _battery.data.listen((dataPoint) {
         BatteryDatum batteryState = (dataPoint.data as BatteryDatum);
@@ -184,11 +204,11 @@ class StudyDeploymentController extends StudyRuntime {
   void disablePowerAwareness() => _battery.stop();
 
   /// Resume this controller, i.e. resume data collection according to the
-  /// specified [deployment] and [samplingSchema].
+  /// specified [deployment] and [_samplingSchema].
   void resume() {
     info('Resuming data sampling ...');
     super.resume();
-    executor.resume();
+    _executor.resume();
   }
 
   /// Pause this controller, which will pause data collection and close the
@@ -196,8 +216,8 @@ class StudyDeploymentController extends StudyRuntime {
   void pause() {
     info('Pausing data sampling ...');
     super.pause();
-    executor.pause();
-    dataManager?.close();
+    _executor.pause();
+    _dataManager?.close();
   }
 
   /// Stop the sampling.
@@ -207,8 +227,8 @@ class StudyDeploymentController extends StudyRuntime {
   void stop() {
     info('Stopping data sampling ...');
     disablePowerAwareness();
-    dataManager?.close();
-    executor.stop();
+    _dataManager?.close();
+    _executor.stop();
     super.stop();
   }
 }

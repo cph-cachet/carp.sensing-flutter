@@ -29,6 +29,7 @@ class SmartphoneDeploymentService implements DeploymentService {
   /// Create a new [StudyDeployment] based on a [StudyProtocol].
   /// [studyDeploymentId] specify the study deployment id.
   /// If not specified, an UUID v1 id is generated.
+  @override
   Future<StudyDeploymentStatus> createStudyDeployment(
     StudyProtocol protocol, [
     String studyDeploymentId,
@@ -45,6 +46,7 @@ class SmartphoneDeploymentService implements DeploymentService {
     return deployment.status;
   }
 
+  @override
   Future<Set<String>> removeStudyDeployments(
       Set<String> studyDeploymentIds) async {
     Set<String> removedKeys = {};
@@ -57,10 +59,12 @@ class SmartphoneDeploymentService implements DeploymentService {
     return removedKeys;
   }
 
+  @override
   Future<StudyDeploymentStatus> getStudyDeploymentStatus(
           String studyDeploymentId) async =>
       _repository[studyDeploymentId]?.status;
 
+  @override
   Future<StudyDeploymentStatus> registerDevice(String studyDeploymentId,
       String deviceRoleName, DeviceRegistration registration) async {
     StudyDeployment deployment = _repository[studyDeploymentId];
@@ -78,6 +82,7 @@ class SmartphoneDeploymentService implements DeploymentService {
     return deployment.status;
   }
 
+  @override
   Future<StudyDeploymentStatus> unregisterDevice(
       String studyDeploymentId, String deviceRoleName) async {
     StudyDeployment deployment = _repository[studyDeploymentId];
@@ -89,8 +94,6 @@ class SmartphoneDeploymentService implements DeploymentService {
     return deployment.status;
   }
 
-  /// Get a deployment configuration for a master device with
-  /// [studyDeploymentId].
   @override
   Future<MasterDeviceDeployment> getDeviceDeploymentFor(
     String studyDeploymentId,
@@ -109,14 +112,20 @@ class SmartphoneDeploymentService implements DeploymentService {
     if (deployment.protocol is CAMSStudyProtocol) {
       CAMSStudyProtocol protocol = deployment.protocol as CAMSStudyProtocol;
 
+      // this local deployment service use a file dataendpoint per default
+      DataEndPoint dataEndPoint = FileDataEndPoint(
+        bufferSize: 500 * 1000,
+        zip: true,
+        encrypt: false,
+      );
+
       return CAMSMasterDeviceDeployment.fromMasterDeviceDeployment(
         studyId: protocol?.studyId ?? studyDeploymentId,
         studyDeploymentId: studyDeploymentId,
         name: protocol?.name,
         protocolDescription: protocol?.protocolDescription ?? null,
         owner: protocol?.owner ?? null,
-        dataFormat: protocol?.dataFormat,
-        dataEndPoint: protocol?.dataEndPoint,
+        dataEndPoint: dataEndPoint,
         masterDeviceDeployment: deviceDeployment,
       );
     } else {
@@ -126,10 +135,14 @@ class SmartphoneDeploymentService implements DeploymentService {
 
   /// Get a deployment configuration for this master device (phone)
   /// for [studyDeploymentId].
+  ///
+  /// The default data endpoint is set to a [FileDataEndPoint], i.e. storing
+  /// the data locally on the phone as zipped files.
   Future<CAMSMasterDeviceDeployment> getDeviceDeployment(
           String studyDeploymentId) async =>
       await getDeviceDeploymentFor(studyDeploymentId, thisPhone.roleName);
 
+  @override
   Future<StudyDeploymentStatus> deploymentSuccessfulFor(
     String studyDeploymentId,
     String masterDeviceRoleName, {
@@ -165,6 +178,7 @@ class SmartphoneDeploymentService implements DeploymentService {
       );
 
   /// Stop the study deployment with [studyDeploymentId].
+  @override
   Future<StudyDeploymentStatus> stop(String studyDeploymentId) async {
     StudyDeployment deployment = _repository[studyDeploymentId];
     deployment.stop();

@@ -14,8 +14,6 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
   String _studyId;
   String _studyDeploymentId;
   ProtocolOwner _owner;
-  String _dataFormat = NameSpace.CARP;
-  DataEndPoint _dataEndPoint;
 
   /// The unique id of this study. Used in the [DataPointHeader] header.
   String get studyId => _studyId;
@@ -47,13 +45,6 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
   /// The owner of this study.
   ProtocolOwner get owner => _owner;
 
-  /// Where and how to upload this deployment data.
-  DataEndPoint get dataEndPoint => _dataEndPoint;
-
-  /// The preferred format of the data to be uploaded according to
-  /// [DataFormatType]. Default using the [NameSpace.CARP].
-  String get dataFormat => _dataFormat;
-
   SamplingSchemaType samplingStrategy;
 
   CAMSMasterDeviceDeployment({
@@ -62,7 +53,6 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
     this.name,
     this.protocolDescription,
     ProtocolOwner owner,
-    String dataFormat,
     DataEndPoint dataEndPoint,
     MasterDeviceDescriptor deviceDescriptor,
     DeviceRegistration configuration,
@@ -79,14 +69,13 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
           tasks: tasks,
           triggers: triggers,
           triggeredTasks: triggeredTasks,
+          dataEndPoint: dataEndPoint,
         ) {
     _registerFromJsonFunctions();
 
     this._studyId = studyId;
     this._studyDeploymentId = studyDeploymentId;
     this._owner = owner;
-    this._dataFormat = dataFormat ?? NameSpace.CARP;
-    this._dataEndPoint = dataEndPoint;
   }
 
   CAMSMasterDeviceDeployment.fromMasterDeviceDeployment({
@@ -95,7 +84,6 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
     this.name,
     this.protocolDescription,
     ProtocolOwner owner,
-    String dataFormat,
     DataEndPoint dataEndPoint,
     MasterDeviceDeployment masterDeviceDeployment,
   }) : super(
@@ -107,14 +95,13 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
           tasks: masterDeviceDeployment.tasks,
           triggers: masterDeviceDeployment.triggers,
           triggeredTasks: masterDeviceDeployment.triggeredTasks,
+          dataEndPoint: dataEndPoint,
         ) {
     _registerFromJsonFunctions();
 
     this._studyId = studyId;
     this._studyDeploymentId = studyDeploymentId;
     this._owner = owner;
-    this._dataFormat = dataFormat ?? NameSpace.CARP;
-    this._dataEndPoint = dataEndPoint;
   }
 
   /// Get the list of all [Mesure]s in this study protocol.

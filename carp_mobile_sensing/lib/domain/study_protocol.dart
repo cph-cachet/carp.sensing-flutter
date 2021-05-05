@@ -42,26 +42,19 @@ class CAMSStudyProtocol extends StudyProtocol {
   String get ownerId => (owner != null) ? owner.id : super.ownerId;
 
   /// Specify where and how to upload this study data.
-  DataEndPoint dataEndPoint;
-
-  /// The preferred format of the data to be uploaded according to
-  /// [DataFormatType]. Default using the [NameSpace.CARP].
-  String dataFormat;
+  // DataEndPoint dataEndPoint;
 
   /// The [masterDevice] which is responsible for aggregating and synchronizing
   /// incoming data. Typically this phone.
   MasterDeviceDescriptor get masterDevice => masterDevices.first;
 
   /// Create a new [StudyProtocol].
-  ///
-  /// If no [dataFormat] is specified, the CARP namespace is used.
   CAMSStudyProtocol({
     this.studyId,
     String name,
     String description,
     this.owner,
     this.protocolDescription,
-    this.dataFormat = NameSpace.CARP,
   }) : super(ownerId: owner?.id, name: name, description: description) {
     // TODO - move this elsewhere.... can't assumed that the programmer
     // create a protocol - s/he might download it e.g. from CARP.

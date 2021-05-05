@@ -1,5 +1,6 @@
-## 0.21.3
-* added support for `ProtocolService` including request classes for using this.
+## 0.22.0
+* added support for `ProtocolService` sub-system including request classes for using this.
+* added support for `DataEndPoint` and `DataManager` handling as part of `MasterDeviceDeployment`.
 
 ## 0.21.2
 * removal of the overall `carp_core` library - now only using the sub-system libraries. This make the API documentation much more readable.

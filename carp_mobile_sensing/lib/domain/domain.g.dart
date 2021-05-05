@@ -18,7 +18,6 @@ CAMSStudyProtocol _$CAMSStudyProtocolFromJson(Map<String, dynamic> json) {
         ? null
         : StudyProtocolDescription.fromJson(
             json['protocolDescription'] as Map<String, dynamic>),
-    dataFormat: json['dataFormat'] as String,
   )
     ..creationDate = json['creationDate'] as String
     ..masterDevices = (json['masterDevices'] as List)
@@ -53,10 +52,7 @@ CAMSStudyProtocol _$CAMSStudyProtocolFromJson(Map<String, dynamic> json) {
     ..expectedParticipantData = (json['expectedParticipantData'] as List)
         ?.map((e) => e as Map<String, dynamic>)
         ?.toList()
-    ..ownerId = json['ownerId'] as String
-    ..dataEndPoint = json['dataEndPoint'] == null
-        ? null
-        : DataEndPoint.fromJson(json['dataEndPoint'] as Map<String, dynamic>);
+    ..ownerId = json['ownerId'] as String;
 }
 
 Map<String, dynamic> _$CAMSStudyProtocolToJson(CAMSStudyProtocol instance) {
@@ -82,8 +78,6 @@ Map<String, dynamic> _$CAMSStudyProtocolToJson(CAMSStudyProtocol instance) {
   writeNotNull('protocolDescription', instance.protocolDescription);
   writeNotNull('owner', instance.owner);
   writeNotNull('ownerId', instance.ownerId);
-  writeNotNull('dataEndPoint', instance.dataEndPoint);
-  writeNotNull('dataFormat', instance.dataFormat);
   return val;
 }
 
@@ -143,31 +137,10 @@ Map<String, dynamic> _$ProtocolOwnerToJson(ProtocolOwner instance) {
   return val;
 }
 
-DataEndPoint _$DataEndPointFromJson(Map<String, dynamic> json) {
-  return DataEndPoint(
-    type: json['type'] as String,
-    publicKey: json['publicKey'] as String,
-  )..$type = json[r'$type'] as String;
-}
-
-Map<String, dynamic> _$DataEndPointToJson(DataEndPoint instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull(r'$type', instance.$type);
-  writeNotNull('type', instance.type);
-  writeNotNull('publicKey', instance.publicKey);
-  return val;
-}
-
 FileDataEndPoint _$FileDataEndPointFromJson(Map<String, dynamic> json) {
   return FileDataEndPoint(
     type: json['type'] as String,
+    dataFormat: json['dataFormat'] as String,
     bufferSize: json['bufferSize'] as int,
     zip: json['zip'] as bool,
     encrypt: json['encrypt'] as bool,
@@ -186,6 +159,7 @@ Map<String, dynamic> _$FileDataEndPointToJson(FileDataEndPoint instance) {
 
   writeNotNull(r'$type', instance.$type);
   writeNotNull('type', instance.type);
+  writeNotNull('dataFormat', instance.dataFormat);
   writeNotNull('bufferSize', instance.bufferSize);
   writeNotNull('zip', instance.zip);
   writeNotNull('encrypt', instance.encrypt);
@@ -356,7 +330,6 @@ CAMSMasterDeviceDeployment _$CAMSMasterDeviceDeploymentFromJson(
     owner: json['owner'] == null
         ? null
         : ProtocolOwner.fromJson(json['owner'] as Map<String, dynamic>),
-    dataFormat: json['dataFormat'] as String,
     dataEndPoint: json['dataEndPoint'] == null
         ? null
         : DataEndPoint.fromJson(json['dataEndPoint'] as Map<String, dynamic>),
@@ -423,14 +396,13 @@ Map<String, dynamic> _$CAMSMasterDeviceDeploymentToJson(
   writeNotNull('triggers', instance.triggers);
   writeNotNull('triggeredTasks', instance.triggeredTasks);
   writeNotNull('lastUpdateDate', instance.lastUpdateDate?.toIso8601String());
+  writeNotNull('dataEndPoint', instance.dataEndPoint);
   writeNotNull('studyId', instance.studyId);
   writeNotNull('studyDeploymentId', instance.studyDeploymentId);
   writeNotNull('userId', instance.userId);
   writeNotNull('name', instance.name);
   writeNotNull('protocolDescription', instance.protocolDescription);
   writeNotNull('owner', instance.owner);
-  writeNotNull('dataEndPoint', instance.dataEndPoint);
-  writeNotNull('dataFormat', instance.dataFormat);
   writeNotNull('samplingStrategy',
       _$SamplingSchemaTypeEnumMap[instance.samplingStrategy]);
   return val;
