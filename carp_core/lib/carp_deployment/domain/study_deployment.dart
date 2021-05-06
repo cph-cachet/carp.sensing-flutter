@@ -146,12 +146,19 @@ class StudyDeployment {
         connectedDeviceConfigurations[descriptor.roleName] =
             _registeredDevices[descriptor.roleName]);
 
-    // get all tasks which might need to be executed on this or connected devices.
     List<TaskDescriptor> tasks = [];
-    _registeredDevices.keys.forEach((rolename) =>
-        tasks.addAll(protocol.getTasksForDeviceRoleName(rolename)));
-    connectedDevices.forEach((descriptor) =>
-        tasks.addAll(protocol.getTasksForDeviceRoleName(descriptor.roleName)));
+    // get all tasks which need to be executed on this master device
+    String rolename = device.roleName;
+    print('$rolename tasks: ${protocol.getTasksForDeviceRoleName(rolename)}');
+    tasks.addAll(protocol.getTasksForDeviceRoleName(rolename));
+
+    // .. and connected devices
+    // note that connected devices need NOT to be registrered to be included
+    connectedDevices.forEach((descriptor) {
+      print(
+          '$descriptor tasks: ${protocol.getTasksForDeviceRoleName(descriptor.roleName)}');
+      tasks.addAll(protocol.getTasksForDeviceRoleName(descriptor.roleName));
+    });
 
     // Get all trigger information for this and connected devices.
     // TODO - this implementation just returns all triggers and triggered tasks.

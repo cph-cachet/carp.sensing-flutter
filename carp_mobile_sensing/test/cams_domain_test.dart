@@ -282,6 +282,7 @@ void main() {
     print(toJsonString(status_2));
     expect(status_2.studyDeploymentId, status_1.studyDeploymentId);
     expect(status_1.devicesStatus[1].device.roleName, 'esense');
+    // now we expect the esense device to be registred
     expect(status_1.devicesStatus[1].status,
         DeviceDeploymentStatusTypes.Registered);
 
@@ -291,6 +292,7 @@ void main() {
     print(toJsonString(deployment));
     expect(deployment.studyDeploymentId, status_1.studyDeploymentId);
     expect(deployment.tasks.length, protocol.tasks.length);
+    expect(deployment.triggers.length, protocol.triggers.length);
     expect(deployment.triggeredTasks.length, protocol.triggeredTasks.length);
 
     StudyDeploymentStatus status_3 = await SmartphoneDeploymentService()
