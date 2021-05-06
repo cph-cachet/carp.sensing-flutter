@@ -178,17 +178,17 @@ void main() async {
   // However, the [configureFrom] method is a convinient way to do this based
   // on an existing service, which has been configured.
 
-  CANSParticipationService().configureFrom(CarpService());
-  CANSDeploymentService().configureFrom(CarpService());
+  CarpParticipationService().configureFrom(CarpService());
+  CarpDeploymentService().configureFrom(CarpService());
 
   // get invitations for this account (user)
   List<ActiveParticipationInvitation> invitations =
-      await CANSParticipationService().getActiveParticipationInvitations();
+      await CarpParticipationService().getActiveParticipationInvitations();
   invitations.forEach(print);
 
   // get a deployment reference for this master device
   DeploymentReference deploymentReference =
-      CANSDeploymentService().deployment('the_study_deployment_id');
+      CarpDeploymentService().deployment('the_study_deployment_id');
 
   // get the status of this deployment
   StudyDeploymentStatus status = await deploymentReference.getStatus();

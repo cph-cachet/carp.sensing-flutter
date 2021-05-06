@@ -12,7 +12,7 @@ part of carp_backend;
 /// In the CARP web service, a CAMS study protocol is modelled as a custom
 /// protcol, which has only one taks, namely a [CustomProtocolTask]. This
 /// custom task hold the raw json desription of a [CAMSStudyProtocol].
-class CARPStudyProtocolManager implements StudyProtocolManager {
+class CarpStudyProtocolManager implements StudyProtocolManager {
   Future initialize() async {
     CAMSStudyProtocol(); // to initialize json serialization for CAMS classes
   }
@@ -32,11 +32,11 @@ class CARPStudyProtocolManager implements StudyProtocolManager {
     info(
         'Retrieving study protocol from CARP web service - studyDeploymentId: $studyDeploymentId');
 
-    if (!CANSDeploymentService().isConfigured)
-      CANSDeploymentService().configureFrom(CarpService());
+    if (!CarpDeploymentService().isConfigured)
+      CarpDeploymentService().configureFrom(CarpService());
 
     DeploymentReference reference =
-        CANSDeploymentService().deployment(studyDeploymentId);
+        CarpDeploymentService().deployment(studyDeploymentId);
 
     // get status
     StudyDeploymentStatus deploymentStatus = await reference.getStatus();

@@ -7,17 +7,16 @@
 
 part of carp_services;
 
-/// A [ParticipationService] that talks to the CARP Nervous System (CANS), i.e.,
-/// the CARP backend server(s).
-class CANSParticipationService extends CarpBaseService
+/// A [ParticipationService] that talks to the CARP backend server(s).
+class CarpParticipationService extends CarpBaseService
     implements ParticipationService {
-  static CANSParticipationService _instance = CANSParticipationService._();
+  static CarpParticipationService _instance = CarpParticipationService._();
 
-  CANSParticipationService._();
+  CarpParticipationService._();
 
-  /// Returns the singleton default instance of the [CANSParticipationService].
+  /// Returns the singleton default instance of the [CarpParticipationService].
   /// Before this instance can be used, it must be configured using the [configure] method.
-  factory CANSParticipationService() => _instance;
+  factory CarpParticipationService() => _instance;
 
   @override
   String get rpcEndpointName => "participation-service";

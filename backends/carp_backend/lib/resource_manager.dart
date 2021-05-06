@@ -15,11 +15,11 @@ part of carp_backend;
 ///    definitions at the CARP backend.
 ///  * Retrive and store langunage localization mappings.
 ///
-class ResourceManager {
-  static final ResourceManager _instance = ResourceManager._();
-  factory ResourceManager() => _instance;
+class CarpResourceManager {
+  static final CarpResourceManager _instance = CarpResourceManager._();
+  factory CarpResourceManager() => _instance;
 
-  ResourceManager._() {
+  CarpResourceManager._() {
     RPOrderedTask('', []); // to initialize json serialization for RP classes
   }
 

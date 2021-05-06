@@ -21,7 +21,7 @@ class ParticipationReference extends RPCCarpReference {
       _studyDeploymentId ?? service.app.studyDeploymentId;
 
   ParticipationReference._(
-      CANSParticipationService service, this._studyDeploymentId)
+      CarpParticipationService service, this._studyDeploymentId)
       : super._(service);
 
   /// The URL for the participation endpoint.

@@ -6,7 +6,7 @@ import 'package:research_package/model.dart';
 
 void main() async {
   // -----------------------------------------------
-  // EXAMPLE OF GETTING A STUDY FROM CARP
+  // EXAMPLE OF CONFIGURING THE CARP APP
   // -----------------------------------------------
 
   final String uri = "https://cans.cachet.dk:443";
@@ -29,26 +29,29 @@ void main() async {
       .authenticate(username: 'the_username', password: 'the_password');
 
   // configure the other services needed
-  CANSParticipationService().configureFrom(CarpService());
-  CANSDeploymentService().configureFrom(CarpService());
+  CarpParticipationService().configureFrom(CarpService());
+  CarpDeploymentService().configureFrom(CarpService());
 
   // get the invitations to studies from CARP for this user
   List<ActiveParticipationInvitation> invitations =
-      await CANSParticipationService().getActiveParticipationInvitations();
+      await CarpParticipationService().getActiveParticipationInvitations();
 
   // use the first (i.e. latest) invitation
   String studyDeploymentId = invitations[0].studyDeploymentId;
 
-  // create a study manager and initialize it
-  CARPStudyProtocolManager manager = CARPStudyProtocolManager();
+  // -----------------------------------------------
+  // EXAMPLE OF GETTING A STUDY PROTOCOL FROM CARP
+  // -----------------------------------------------
+
+  // create a CARP study manager and initialize it
+  CarpStudyProtocolManager manager = CarpStudyProtocolManager();
   await manager.initialize();
 
   // get the study from CARP
-  StudyProtocol study = await manager.getStudyProtocol(studyDeploymentId);
-  print('study: $study');
+  StudyProtocol study = await manager.getStudyProtocol('protocol_id');
 
   // -----------------------------------------------
-  // EXAMPLE OF UPLOADING DATA TO CARP
+  // DIFFERENT WAYS TO UPLOAD DATA TO CARP
   // -----------------------------------------------
 
   // first register the CARP data manager
@@ -92,19 +95,26 @@ void main() async {
   );
   print('$cdep_3');
 
-  // create a study protocol and allocate this data point to it.
-  CAMSStudyProtocol protocol = CAMSStudyProtocol(
-    studyId: '123',
-    name: 'Test study #1234',
+  StudyDeploymentStatus status =
+      await CarpDeploymentService().getStudyDeploymentStatus(studyDeploymentId);
+
+  // get the master device deployment
+  MasterDeviceDeployment deployment =
+      await CarpDeploymentService().getDeviceDeploymentFor(
+    status.studyDeploymentId,
+    status.masterDeviceStatus.device.roleName,
   );
-  // protocol.dataEndPoint = cdep;
+
+  /// change a master device deployment to use another data endpoint before
+  /// it is being executed
+  deployment.dataEndPoint = cdep_2;
 
   // --------------------------------------------------
   // EXAMPLE OF GETTING AN INFORMED CONSENT FROM CARP
   // --------------------------------------------------
 
   // create and initialize the informed consent manager
-  ResourceManager icManager = ResourceManager();
+  CarpResourceManager icManager = CarpResourceManager();
   icManager.initialize();
 
   // get the informed consent as a RP ordered task

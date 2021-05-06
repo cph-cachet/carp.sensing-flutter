@@ -32,8 +32,8 @@ void main() {
       password: password,
     );
 
-    CANSParticipationService().configureFrom(CarpService());
-    CANSDeploymentService().configureFrom(CarpService());
+    CarpParticipationService().configureFrom(CarpService());
+    CarpDeploymentService().configureFrom(CarpService());
   });
 
   /// Close connection to CARP.
@@ -48,7 +48,7 @@ void main() {
     }, skip: false);
 
     test('- device ID', () async {
-      String id = CANSDeploymentService().deployment().registeredDeviceId;
+      String id = CarpDeploymentService().deployment().registeredDeviceId;
       print('Registered Device ID : $id');
     }, skip: false);
   });
@@ -58,7 +58,7 @@ void main() {
       '- get invitations for this account (user)',
       () async {
         List<ActiveParticipationInvitation> invitations =
-            await CANSParticipationService()
+            await CarpParticipationService()
                 .getActiveParticipationInvitations();
         invitations.forEach((invitation) => print(invitation));
         assert(invitations.length > 0);
@@ -71,7 +71,7 @@ void main() {
       '- get participant data',
       () async {
         ParticipationReference participation =
-            CANSParticipationService().participation(testDeploymentId);
+            CarpParticipationService().participation(testDeploymentId);
 
         ParticipantData data = await participation.getParticipantData();
         print(_encode(data));
@@ -84,7 +84,7 @@ void main() {
       '- set participant data',
       () async {
         ParticipationReference participation =
-            CANSParticipationService().participation(testDeploymentId);
+            CarpParticipationService().participation(testDeploymentId);
 
         ParticipantData data_1 = ParticipantData(
           studyDeploymentId: testDeploymentId,
@@ -112,7 +112,7 @@ void main() {
   group("Deployment - using DeploymentReference", () {
     test('- get deployment status', () async {
       StudyDeploymentStatus status =
-          await CANSDeploymentService().deployment().getStatus();
+          await CarpDeploymentService().deployment().getStatus();
       print(_encode(status.toJson()));
       print(status);
       print(status.masterDeviceStatus.device);
@@ -122,7 +122,7 @@ void main() {
 
     test('- register device', () async {
       DeploymentReference reference =
-          CANSDeploymentService().deployment(testDeploymentId);
+          CarpDeploymentService().deployment(testDeploymentId);
       StudyDeploymentStatus status = await reference.getStatus();
       print(status);
       expect(status.masterDeviceStatus.device, isNotNull);
@@ -135,7 +135,7 @@ void main() {
 
     test('- get master device deployment', () async {
       DeploymentReference reference =
-          CANSDeploymentService().deployment(testDeploymentId);
+          CarpDeploymentService().deployment(testDeploymentId);
       StudyDeploymentStatus status = await reference.getStatus();
       print(status);
       expect(status.masterDeviceStatus.device, isNotNull);
@@ -151,7 +151,7 @@ void main() {
 
     test('- deployment success', () async {
       DeploymentReference reference =
-          CANSDeploymentService().deployment(testDeploymentId);
+          CarpDeploymentService().deployment(testDeploymentId);
       StudyDeploymentStatus status_1 = await reference.getStatus();
       MasterDeviceDeployment deployment = await reference.get();
       StudyDeploymentStatus status_2 = await reference.success();
@@ -163,7 +163,7 @@ void main() {
 
     test('- unregister device', () async {
       DeploymentReference reference =
-          CANSDeploymentService().deployment(testDeploymentId);
+          CarpDeploymentService().deployment(testDeploymentId);
       StudyDeploymentStatus status = await reference.getStatus();
       print(status);
       expect(status.masterDeviceStatus.device, isNotNull);
@@ -177,7 +177,7 @@ void main() {
 
   group("Deployment - using CANSDeploymentService()", () {
     test('- get deployment status', () async {
-      StudyDeploymentStatus status = await CANSDeploymentService()
+      StudyDeploymentStatus status = await CarpDeploymentService()
           .getStudyDeploymentStatus(testDeploymentId);
       print(_encode(status.toJson()));
       print(status);
@@ -187,25 +187,25 @@ void main() {
     }, skip: false);
 
     test('- register device', () async {
-      StudyDeploymentStatus status = await CANSDeploymentService()
+      StudyDeploymentStatus status = await CarpDeploymentService()
           .getStudyDeploymentStatus(testDeploymentId);
       print(status);
       expect(status.masterDeviceStatus.device, isNotNull);
       print(status.masterDeviceStatus.device);
-      status = await CANSDeploymentService().registerDevice(testDeploymentId,
+      status = await CarpDeploymentService().registerDevice(testDeploymentId,
           status.masterDeviceStatus.device.roleName, DeviceRegistration());
       print(status);
       expect(status.studyDeploymentId, testDeploymentId);
     }, skip: false);
 
     test('- get master device deployment', () async {
-      StudyDeploymentStatus status = await CANSDeploymentService()
+      StudyDeploymentStatus status = await CarpDeploymentService()
           .getStudyDeploymentStatus(testDeploymentId);
       print(status);
       expect(status.masterDeviceStatus.device, isNotNull);
       print(status.masterDeviceStatus.device);
       MasterDeviceDeployment deployment =
-          await CANSDeploymentService().getDeviceDeploymentFor(
+          await CarpDeploymentService().getDeviceDeploymentFor(
         testDeploymentId,
         status.masterDeviceStatus.device.roleName,
       );
@@ -218,20 +218,20 @@ void main() {
     }, skip: false);
 
     test('- deployment success', () async {
-      StudyDeploymentStatus status_1 = await CANSDeploymentService()
+      StudyDeploymentStatus status_1 = await CarpDeploymentService()
           .getStudyDeploymentStatus(testDeploymentId);
       print(status_1);
       expect(status_1.masterDeviceStatus.device, isNotNull);
       print(status_1.masterDeviceStatus.device);
       MasterDeviceDeployment deployment =
-          await CANSDeploymentService().getDeviceDeploymentFor(
+          await CarpDeploymentService().getDeviceDeploymentFor(
         testDeploymentId,
         status_1.masterDeviceStatus.device.roleName,
       );
       print(deployment);
 
       StudyDeploymentStatus status_2 =
-          await CANSDeploymentService().deploymentSuccessfulFor(
+          await CarpDeploymentService().deploymentSuccessfulFor(
         testDeploymentId,
         status_1.masterDeviceStatus.device.roleName,
         deployment.lastUpdateDate,
@@ -243,7 +243,7 @@ void main() {
 
     test('- unregister device', () async {
       DeploymentReference reference =
-          CANSDeploymentService().deployment(testDeploymentId);
+          CarpDeploymentService().deployment(testDeploymentId);
       StudyDeploymentStatus status = await reference.getStatus();
       print(status);
       expect(status.masterDeviceStatus.device, isNotNull);

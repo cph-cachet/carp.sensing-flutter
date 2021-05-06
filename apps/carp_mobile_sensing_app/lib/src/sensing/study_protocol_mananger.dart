@@ -18,11 +18,6 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
   Future<StudyProtocol> getStudyProtocol(String ignored) async {
     CAMSStudyProtocol protocol = CAMSStudyProtocol()
       ..name = '#23-Coverage'
-      ..dataEndPoint = FileDataEndPoint(
-        bufferSize: 50 * 1000,
-        zip: true,
-        encrypt: false,
-      )
       ..owner = ProtocolOwner(
         id: 'AB',
         name: 'Alex Boyon',

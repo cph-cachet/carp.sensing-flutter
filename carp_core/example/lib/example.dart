@@ -71,8 +71,7 @@ void carpCoreDeploymentExample() async {
     DateTime deploymentDate =
         deploymentInformation.lastUpdateDate; // To verify correct deployment.
     await deploymentService.deploymentSuccessfulFor(
-        studyDeploymentId, patientPhone.roleName,
-        deviceDeploymentLastUpdateDate: deploymentDate);
+        studyDeploymentId, patientPhone.roleName, deploymentDate);
   }
 
   // Now that all devices have been registered and deployed, the deployment is ready.

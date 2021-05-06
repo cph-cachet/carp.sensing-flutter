@@ -7,17 +7,16 @@
 
 part of carp_services;
 
-/// A [DeploymentService] that talks to the CARP Nervous System (CANS), i.e.,
-/// the CARP backend server(s).
-class CANSDeploymentService extends CarpBaseService
+/// A [DeploymentService] that talks to the CARP backend server(s).
+class CarpDeploymentService extends CarpBaseService
     implements DeploymentService {
-  static CANSDeploymentService _instance = CANSDeploymentService._();
+  static CarpDeploymentService _instance = CarpDeploymentService._();
 
-  CANSDeploymentService._();
+  CarpDeploymentService._();
 
-  /// Returns the singleton default instance of the [CANSDeploymentService].
+  /// Returns the singleton default instance of the [CarpDeploymentService].
   /// Before this instance can be used, it must be configured using the [configure] method.
-  factory CANSDeploymentService() => _instance;
+  factory CarpDeploymentService() => _instance;
 
   String get rpcEndpointName => "deployment-service";
 

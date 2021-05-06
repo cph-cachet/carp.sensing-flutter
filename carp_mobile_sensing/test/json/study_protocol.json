@@ -1,5 +1,6 @@
 {
     "name": "Track patient movement",
+    "creationDate": "2021-05-06 21:08:54.092147Z",
     "masterDevices": [
      {
       "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
@@ -16,6 +17,7 @@
       "samplingConfiguration": {}
      }
     ],
+    "connections": [],
     "triggers": {
      "0": {
       "$type": "dk.cachet.carp.protocols.domain.triggers.Trigger"
@@ -170,19 +172,20 @@
      {
       "triggerId": 0,
       "taskName": "Start measures",
-      "destinationDeviceRoleName": "masterphone"
+      "targetDeviceRoleName": "masterphone"
      },
      {
       "triggerId": 1,
       "taskName": "Task #5",
-      "destinationDeviceRoleName": "masterphone"
+      "targetDeviceRoleName": "masterphone"
      },
      {
       "triggerId": 2,
       "taskName": "Task #6",
-      "destinationDeviceRoleName": "esense"
+      "targetDeviceRoleName": "esense"
      }
     ],
+    "expectedParticipantData": [],
     "protocolDescription": {
      "$type": "StudyProtocolDescription",
      "title": "Test Study",
@@ -190,11 +193,10 @@
      "purpose": "For testing purposes"
     },
     "owner": {
-     "$type": "dk.cachet.carp.protocols.domain.ProtocolOwner",
+     "$type": "ProtocolOwner",
      "id": "AB",
      "name": "Alex Boyon",
      "email": "alex@uni.dk"
     },
-    "ownerId": "AB",
-    "dataFormat": "dk.cachet.carp"
+    "ownerId": "AB"
    }

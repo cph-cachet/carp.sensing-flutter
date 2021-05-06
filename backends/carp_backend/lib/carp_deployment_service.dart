@@ -7,12 +7,13 @@
 
 part of carp_backend;
 
-/// A local (in-memory) [DeploymentService] that works with the [CARPStudyProtocolManager]
-/// to handle a [MasterDeviceDeployment] based on a [CAMSStudyProtocol].
+/// A local (in-memory) [DeploymentService] that works with the [CarpStudyProtocolManager]
+/// to handle a [MasterDeviceDeployment] based on a [CAMSStudyProtocol], which is
+/// store as a custom protocol on the CARP server.
 ///
 /// This deployment service basically reads a [CAMSStudyProtocol] as a custom
 /// protocol from the CARP web server, and translate this into a [MasterDeviceDeployment]
-/// which can be used on this phone. It also add a [CarpDataEndPoint] to the
+/// which can be used on this phone. It also adds a [CarpDataEndPoint] to the
 /// device deployment, which makes sure that data is stored back on the CARP server.
 ///
 /// Its main responsibility is to:
@@ -36,17 +37,18 @@ part of carp_backend;
 /// which is deleted once uploaded.
 /// If another data enpoint is needed, this can be changed in the deployment
 /// before it is deployed and started on the local phone.
-class CarpDeploymentService implements DeploymentService {
-  static final CarpDeploymentService _instance = CarpDeploymentService._();
+class CustomProtocolDeploymentService implements DeploymentService {
+  static final CustomProtocolDeploymentService _instance =
+      CustomProtocolDeploymentService._();
   final StreamController<CarpBackendEvents> _eventController =
       StreamController.broadcast();
 
-  CarpDeploymentService._() {
+  CustomProtocolDeploymentService._() {
     manager.initialize();
   }
-  factory CarpDeploymentService() => _instance;
+  factory CustomProtocolDeploymentService() => _instance;
 
-  CARPStudyProtocolManager manager = CARPStudyProtocolManager();
+  CarpStudyProtocolManager manager = CarpStudyProtocolManager();
   CAMSStudyProtocol protocol;
   Stream get carpBackendEvents => _eventController.stream;
 
@@ -61,8 +63,8 @@ class CarpDeploymentService implements DeploymentService {
       throw CARPBackendException(
           "No user is authenticated - call 'CarpService().authenticate()' first.");
 
-    if (!CANSDeploymentService().isConfigured) {
-      CANSDeploymentService().configureFrom(CarpService());
+    if (!CarpDeploymentService().isConfigured) {
+      CarpDeploymentService().configureFrom(CarpService());
       _eventController.add(CarpBackendEvents.Initialized);
     }
   }
@@ -78,7 +80,7 @@ class CarpDeploymentService implements DeploymentService {
   Future<StudyDeploymentStatus> getStudyDeploymentStatus(
       String studyDeploymentId) async {
     checkConfigured();
-    StudyDeploymentStatus status = await CANSDeploymentService()
+    StudyDeploymentStatus status = await CarpDeploymentService()
         .getStudyDeploymentStatus(studyDeploymentId);
     _eventController.add(CarpBackendEvents.DeploymentStatusRetrieved);
     return status;

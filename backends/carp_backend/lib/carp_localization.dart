@@ -14,7 +14,7 @@ class CarpLocalizations {
   Map<String, String> _localizedStrings;
 
   Future load() async {
-    _localizedStrings = await ResourceManager().getLocalizations(locale);
+    _localizedStrings = await CarpResourceManager().getLocalizations(locale);
     if (_localizedStrings == null)
       warning('Could not load localizations for locale: $locale');
   }
@@ -40,7 +40,7 @@ class _CarpLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      (ResourceManager().getLocalizations(locale) != null);
+      (CarpResourceManager().getLocalizations(locale) != null);
 
   @override
   Future<CarpLocalizations> load(Locale locale) async {

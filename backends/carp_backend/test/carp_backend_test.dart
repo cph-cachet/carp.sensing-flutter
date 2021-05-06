@@ -19,7 +19,7 @@ String _encode(Object object) =>
 void main() {
   CarpApp app;
   CarpUser user;
-  CARPStudyProtocolManager manager = CARPStudyProtocolManager();
+  CarpStudyProtocolManager manager = CarpStudyProtocolManager();
 
   // register the eSense & audio sampling package
   // this is used to be able to deserialize the downloaded protocol
@@ -48,8 +48,8 @@ void main() {
     );
 
     // configure the other services needed
-    CANSParticipationService().configureFrom(CarpService());
-    CANSDeploymentService().configureFrom(CarpService());
+    CarpParticipationService().configureFrom(CarpService());
+    CarpDeploymentService().configureFrom(CarpService());
   });
 
   /// Close connection to CARP.
@@ -65,7 +65,7 @@ void main() {
 
     test('- get invitations for this account (user)', () async {
       List<ActiveParticipationInvitation> invitations =
-          await CANSParticipationService().getActiveParticipationInvitations();
+          await CarpParticipationService().getActiveParticipationInvitations();
       invitations.forEach((invitation) => print(invitation));
       //assert(invitations.length > 0);
     }, skip: false);
@@ -74,7 +74,7 @@ void main() {
       CarpService().app.studyDeploymentId = testDeploymentId;
 
       StudyDeploymentStatus status =
-          await CANSDeploymentService().deployment().getStatus();
+          await CarpDeploymentService().deployment().getStatus();
       print(_encode(status.toJson()));
       print(status);
       print(status.masterDeviceStatus.device);
@@ -83,7 +83,7 @@ void main() {
 
     test('- register device', () async {
       DeploymentReference reference =
-          CANSDeploymentService().deployment(testDeploymentId);
+          CarpDeploymentService().deployment(testDeploymentId);
       StudyDeploymentStatus status = await reference.getStatus();
       print(status);
       expect(status.masterDeviceStatus.device, isNotNull);
@@ -96,7 +96,7 @@ void main() {
 
     test('- get master device deployment', () async {
       DeploymentReference reference =
-          CANSDeploymentService().deployment(testDeploymentId);
+          CarpDeploymentService().deployment(testDeploymentId);
       StudyDeploymentStatus status = await reference.getStatus();
       print(status);
       expect(status.masterDeviceStatus.device, isNotNull);
@@ -112,7 +112,7 @@ void main() {
 
     test('- deployment success', () async {
       DeploymentReference reference =
-          CANSDeploymentService().deployment(testDeploymentId);
+          CarpDeploymentService().deployment(testDeploymentId);
       StudyDeploymentStatus status_1 = await reference.getStatus();
       MasterDeviceDeployment deployment = await reference.get();
       print(deployment);
@@ -124,7 +124,7 @@ void main() {
 
     test('- unregister device', () async {
       DeploymentReference reference =
-          CANSDeploymentService().deployment(testDeploymentId);
+          CarpDeploymentService().deployment(testDeploymentId);
       StudyDeploymentStatus status = await reference.getStatus();
       print(status);
       expect(status.masterDeviceStatus.device, isNotNull);
@@ -146,7 +146,7 @@ void main() {
 
   group("CARP Deployment Service", () {
     test('- get deployment status', () async {
-      StudyDeploymentStatus status = await CarpDeploymentService()
+      StudyDeploymentStatus status = await CustomProtocolDeploymentService()
           .getStudyDeploymentStatus(testDeploymentId);
 
       print(_encode(status.toJson()));
@@ -156,7 +156,7 @@ void main() {
     }, skip: false);
 
     test('- get master device deployment', () async {
-      StudyDeploymentStatus status = await CarpDeploymentService()
+      StudyDeploymentStatus status = await CustomProtocolDeploymentService()
           .getStudyDeploymentStatus(testDeploymentId);
       print(status);
       expect(status.masterDeviceStatus.device, isNotNull);
@@ -178,7 +178,7 @@ void main() {
   group("Informed Consent", () {
     test('- get', () async {
       RPOrderedTask informedConsent =
-          await ResourceManager().getInformedConsent();
+          await CarpResourceManager().getInformedConsent();
 
       // print("Informed Consent: $informedConsent");
       print(_encode(informedConsent));
@@ -195,18 +195,18 @@ void main() {
           ..text = "We saved your consent document - VIII",
       ]);
 
-      bool success =
-          await ResourceManager().setInformedConsent(anotherInformedConsent);
+      bool success = await CarpResourceManager()
+          .setInformedConsent(anotherInformedConsent);
       print('updated: $success');
       RPOrderedTask informedConsent =
-          await ResourceManager().getInformedConsent();
+          await CarpResourceManager().getInformedConsent();
 
       // print("Informed Consent: $informedConsent");
       print(_encode(informedConsent));
     });
 
     test('- delete', () async {
-      bool success = await ResourceManager().deleteInformedConsent();
+      bool success = await CarpResourceManager().deleteInformedConsent();
       print('deleted: $success');
     });
   });
@@ -216,7 +216,7 @@ void main() {
 
     test('- get', () async {
       Map<String, String> localizations =
-          await ResourceManager().getLocalizations(locale);
+          await CarpResourceManager().getLocalizations(locale);
 
       print(_encode(localizations));
     });
@@ -228,17 +228,17 @@ void main() {
       };
 
       bool success =
-          await ResourceManager().setLocalizations(locale, daLocalizations);
+          await CarpResourceManager().setLocalizations(locale, daLocalizations);
       print('updated: $success');
 
       Map<String, String> localizations =
-          await ResourceManager().getLocalizations(locale);
+          await CarpResourceManager().getLocalizations(locale);
       expect(localizations, localizations);
       print(_encode(localizations));
     });
 
     test('- delete', () async {
-      bool success = await ResourceManager().deleteLocalizations(locale);
+      bool success = await CarpResourceManager().deleteLocalizations(locale);
       print('deleted: $success');
     });
   });

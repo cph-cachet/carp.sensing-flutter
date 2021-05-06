@@ -1,6 +1,6 @@
 name: carp_core
 description: The core domain model for the CARP Mobile Sensing Framework in Flutter. 
-version: 0.21.3
+version: 0.22.0
 homepage: https://github.com/cph-cachet/carp.sensing-flutter
 author:  CACHET Team <cph.cachet@gmail.com>
 
