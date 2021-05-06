@@ -20,11 +20,38 @@ part of carp_backend;
 ///  - transform it into a study deployment
 ///  - add a [CarpDataEndPoint] to the deployment
 ///
-class CARPDeploymentService implements DeploymentService {
+/// The [CarpDataEndPoint] is the following:
+///
+/// ´´´dart
+///    CarpDataEndPoint(
+///       uploadMethod: CarpUploadMethod.BATCH_DATA_POINT,
+///       name: CarpService().app.name,
+///       uri: CarpService().app.uri.toString(),
+///       bufferSize: 500 * 1000,
+///       deleteWhenUploaded: true,
+///    );
+/// ````
+///
+/// Hence, data is uploaded in batches using a local file (500 KB) as a buffer,
+/// which is deleted once uploaded.
+/// If another data enpoint is needed, this can be changed in the deployment
+/// before it is deployed and started on the local phone.
+class CarpDeploymentService implements DeploymentService {
+  static final CarpDeploymentService _instance = CarpDeploymentService._();
+  final StreamController<CarpBackendEvents> _eventController =
+      StreamController.broadcast();
+
+  CarpDeploymentService._() {
+    manager.initialize();
+  }
+  factory CarpDeploymentService() => _instance;
+
   CARPStudyProtocolManager manager = CARPStudyProtocolManager();
   CAMSStudyProtocol protocol;
+  Stream get carpBackendEvents => _eventController.stream;
 
-  CARPDeploymentService();
+  void addCarpBackendEvent(CarpBackendEvents event) =>
+      _eventController.add(event);
 
   void checkConfigured() {
     if (!CarpService().isConfigured)
@@ -34,8 +61,10 @@ class CARPDeploymentService implements DeploymentService {
       throw CARPBackendException(
           "No user is authenticated - call 'CarpService().authenticate()' first.");
 
-    if (!CANSDeploymentService().isConfigured)
+    if (!CANSDeploymentService().isConfigured) {
       CANSDeploymentService().configureFrom(CarpService());
+      _eventController.add(CarpBackendEvents.Initialized);
+    }
   }
 
   @override
@@ -49,8 +78,10 @@ class CARPDeploymentService implements DeploymentService {
   Future<StudyDeploymentStatus> getStudyDeploymentStatus(
       String studyDeploymentId) async {
     checkConfigured();
-    return await CANSDeploymentService()
+    StudyDeploymentStatus status = await CANSDeploymentService()
         .getStudyDeploymentStatus(studyDeploymentId);
+    _eventController.add(CarpBackendEvents.DeploymentStatusRetrieved);
+    return status;
   }
 
   @override
@@ -60,6 +91,7 @@ class CARPDeploymentService implements DeploymentService {
 
     // get the protocol from the study protocol manager
     protocol = await manager.getStudyProtocol(studyDeploymentId);
+    _eventController.add(CarpBackendEvents.ProtocolRetrieved);
 
     // configure a data endpoint which can send data back to CARP
     // note that files must not be zipped.
@@ -68,6 +100,7 @@ class CARPDeploymentService implements DeploymentService {
       name: CarpService().app.name,
       uri: CarpService().app.uri.toString(),
       bufferSize: 500 * 1000,
+      zip: false,
       deleteWhenUploaded: true,
     );
 
@@ -78,6 +111,7 @@ class CARPDeploymentService implements DeploymentService {
       dataEndPoint: dataEndPoint,
       protocol: protocol,
     );
+    _eventController.add(CarpBackendEvents.DeploymentRetrieved);
 
     return deployment;
   }

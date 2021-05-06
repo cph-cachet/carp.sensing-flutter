@@ -40,6 +40,7 @@ class CARPStudyProtocolManager implements StudyProtocolManager {
 
     // get status
     StudyDeploymentStatus deploymentStatus = await reference.getStatus();
+    info('Deployment status: $deploymentStatus');
 
     if (deploymentStatus?.masterDeviceStatus?.device != null) {
       // register the remaining devices needed for deployment
@@ -61,6 +62,7 @@ class CARPStudyProtocolManager implements StudyProtocolManager {
 
       // get the deployment
       MasterDeviceDeployment deployment = await reference.get();
+      info('Deployment retrieved: $deployment');
 
       if (deployment.tasks.isNotEmpty) {
         // asume that this deployment only contains one custom task

@@ -14,7 +14,7 @@ void main() {
   ESenseDevice eSense;
 
   setUp(() {
-    // register the context sampling package
+    // register the eSense sampling package
     SamplingPackageRegistry().register(ESenseSamplingPackage());
 
     // Create a new study protocol.

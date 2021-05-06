@@ -97,7 +97,7 @@ void main() async {
     studyId: '123',
     name: 'Test study #1234',
   );
-  protocol.dataEndPoint = cdep;
+  // protocol.dataEndPoint = cdep;
 
   // --------------------------------------------------
   // EXAMPLE OF GETTING AN INFORMED CONSENT FROM CARP

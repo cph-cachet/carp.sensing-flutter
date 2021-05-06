@@ -7,6 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:test/test.dart';
 import 'package:carp_backend/carp_backend.dart';
 import 'package:research_package/model.dart';
+import 'package:carp_esense_package/esense.dart';
+import 'package:carp_audio_package/audio.dart';
+import 'package:carp_context_package/context.dart';
 
 import 'credentials.dart';
 
@@ -17,6 +20,12 @@ void main() {
   CarpApp app;
   CarpUser user;
   CARPStudyProtocolManager manager = CARPStudyProtocolManager();
+
+  // register the eSense & audio sampling package
+  // this is used to be able to deserialize the downloaded protocol
+  SamplingPackageRegistry().register(ContextSamplingPackage());
+  SamplingPackageRegistry().register(ESenseSamplingPackage());
+  SamplingPackageRegistry().register(AudioSamplingPackage());
 
   /// Setup CARP and authenticate.
   /// Runs once before all tests.
@@ -132,6 +141,37 @@ void main() {
       StudyProtocol study = await manager.getStudyProtocol(testDeploymentId);
       print('study: $study');
       print(_encode(study));
+    }, skip: false);
+  });
+
+  group("CARP Deployment Service", () {
+    test('- get deployment status', () async {
+      StudyDeploymentStatus status = await CarpDeploymentService()
+          .getStudyDeploymentStatus(testDeploymentId);
+
+      print(_encode(status.toJson()));
+      print(status);
+      print(status.masterDeviceStatus.device);
+      expect(status.studyDeploymentId, testDeploymentId);
+    }, skip: false);
+
+    test('- get master device deployment', () async {
+      StudyDeploymentStatus status = await CarpDeploymentService()
+          .getStudyDeploymentStatus(testDeploymentId);
+      print(status);
+      expect(status.masterDeviceStatus.device, isNotNull);
+      print(status.masterDeviceStatus.device);
+      MasterDeviceDeployment deployment =
+          await CarpDeploymentService().getDeviceDeploymentFor(
+        status.studyDeploymentId,
+        status.masterDeviceStatus.device.roleName,
+      );
+      print(deployment);
+      deployment.tasks.forEach((task) {
+        print(task);
+        task?.measures?.forEach(print);
+      });
+      expect(deployment.configuration.deviceId, isNotNull);
     }, skip: false);
   });
 
