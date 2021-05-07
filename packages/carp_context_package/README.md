@@ -30,9 +30,8 @@ this package only works together with [`carp_mobile_sensing`](https://pub.dev/pa
 dependencies:
   flutter:
     sdk: flutter
-  carp_core: ^0.20.0
-  carp_mobile_sensing: ^0.20.0
-  carp_context_package: ^0.20.0
+  carp_mobile_sensing: ^0.21.0
+  carp_context_package: ^0.21.0
   ...
 `````
 

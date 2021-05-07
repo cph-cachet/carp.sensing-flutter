@@ -57,8 +57,9 @@ class Sensing {
   }
 
   /// Initialize and set up sensing.
-  Future<void> initialize(
-      [DeploymentMode deploymentMode = DeploymentMode.LOCAL]) async {
+  Future<void> initialize([DeploymentMode deploymentMode]) async {
+    deploymentMode ??= DeploymentMode.LOCAL;
+
     // set up the devices available on this phone
     DeviceController().registerAllAvailableDevices();
 
