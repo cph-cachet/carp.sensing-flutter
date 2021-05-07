@@ -1,12 +1,12 @@
-## 0.22.0
-* **BREAKING** - `DataEndPoint` is no longer specified as part of a `StudyProtocol`. 
+## 0.21.3
+* **NOTE** - `DataEndPoint` is no longer specified as part of a `StudyProtocol`. 
     * Specifying where and how to store or upload data is really not part of specifying a study protocol, but rather a deployment issues. Therefore, the `DataEndPoint` is now part of a `MasterDeviceDeployment`. 
     * The `SmartphoneDeploymentService` will use the `FileDataEndpoint` per default if not specified in the deployment. Hence, data is saved as files on the phone.
     * The `StudyDeploymentController.configure()` method now takes an optional `DataEndPoint` parameter to specify the data endpoint, if it should be different to what is specified in the deployment.
     * The `StudyDeploymentController.configure()` method also takes a `askForPermissions` parameter - if `false`, then CAMS will not ask for permissions, but hands this over to the app, which can show appropiate information to the user.
-* setting are now a singleton accessed using `Settings()`
+* settings are now a singleton accessed using `Settings()` (similar to other singletons in the framework)
 * better support for handling json functions
-
+ 
 ## 0.21.2
 * update to `carp_core` v. 0.21.2
 

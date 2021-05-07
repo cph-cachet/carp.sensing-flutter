@@ -88,7 +88,7 @@ void main() {
 
   CarpApp app;
   CarpUser user;
-  CARPStudyProtocolManager manager = CARPStudyProtocolManager();
+  CarpStudyProtocolManager manager = CarpStudyProtocolManager();
 
   group("CARP Study Protocol Manager", () {
     setUp(() async {

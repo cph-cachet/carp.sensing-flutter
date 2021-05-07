@@ -1,5 +1,7 @@
-## 0.22.0
-* upgrade to `carp_mobile_sensing` v. 0.22.x
+## 0.21.2
+* Rename of all `CARP...` services to `Carp..` 
+* Clean-up in `CarpDeploymentService` 
+* Added the `CarpParticipationService` and `ParticipationReference` to support the participation CARP endpoint
 
 ## 0.21.1
 * upgrade to `carp_mobile_sensing` v. 0.21.x

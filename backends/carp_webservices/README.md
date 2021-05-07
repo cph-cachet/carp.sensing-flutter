@@ -275,12 +275,24 @@ The CARP web service have methods for:
  * getting a deployment reference, which then can be used to query status, register devices, and get the deployment specification.
 
 ````dart
+  // This example uses the
+  //  * CarpDeploymentService
+  //  * CarpParticipationService
+  // 
+  // To use these, we first must configure them and authenticate.
+  // However, the [configureFrom] method is a convinient way to do this based
+  // on an existing service, which has been configured.
+
+  CarpParticipationService().configureFrom(CarpService());
+  CarpDeploymentService().configureFrom(CarpService());
+
   // get invitations for this account (user)
   List<ActiveParticipationInvitation> invitations =
-      await CarpService().invitations();
+      await CarpParticipationService().getActiveParticipationInvitations();
 
   // get a deployment reference for this master device
-  DeploymentReference deploymentReference = CarpService().deployment();
+  DeploymentReference deploymentReference =
+      CarpDeploymentService().deployment('the_study_deployment_id');
 
   // get the status of this deployment
   StudyDeploymentStatus status = await deploymentReference.getStatus();
@@ -293,6 +305,7 @@ The CARP web service have methods for:
 
   // mark the deployment as a success
   status = await deploymentReference.success();
+
 ````
 
 There is also support for shwing a modal dialog for the user to select amongst several invitations. 

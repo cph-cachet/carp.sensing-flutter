@@ -171,8 +171,8 @@ void main() async {
   // ------------------- DEPLOYMENTS --------------------------------
 
   // This example uses the
-  //  * [CANSDeploymentService]
-  //  * [CANSParticipationService]
+  //  * [CarpDeploymentService]
+  //  * [CarpParticipationService]
   //
   // To use these, we first must configure them and authenticate.
   // However, the [configureFrom] method is a convinient way to do this based

@@ -8,38 +8,42 @@
 part of mobile_sensing_app;
 
 /// This class implements the sensing layer.
+///
+/// Call [initialize] to setup a deployment, either locally or using a CARP
+/// deployment. Once initialized, the runtime [controller] can be used to
+/// control the study execution (e.g., resume, pause, stop).
 class Sensing {
   static final Sensing _instance = Sensing._();
-  // CAMSMasterDeviceDeployment _deployment;
   StudyDeploymentStatus _status;
-  StudyProtocol _protocol;
   StudyDeploymentController _controller;
-  StudyProtocolManager manager;
+
+  DeploymentService deploymentService;
   SmartPhoneClientManager client;
 
+  /// The deployment running on this phone.
   CAMSMasterDeviceDeployment get deployment => _controller?.deployment;
 
   /// Get the latest status of the study deployment.
   StudyDeploymentStatus get status => _status;
-  StudyProtocol get protocol => _protocol;
-  StudyDeploymentController get controller => _controller;
+
+  /// The role name of this device in the deployed study
   String get deviceRolename => _status?.masterDeviceStatus?.device?.roleName;
+
+  /// The study deployment id of the deployment running on this phone.
+  String get studyDeploymentId => _status?.studyDeploymentId;
+
+  /// The study runtime controller for this deployment
+  StudyDeploymentController get controller => _controller;
 
   /// the list of running - i.e. used - probes in this study.
   List<Probe> get runningProbes =>
       (_controller != null) ? _controller.executor.probes : [];
 
-  /// the list of connected devices.
-  List<DeviceManager> get runningDevices {
-    print('client: $client');
-    print(client.deviceRegistry);
-    print(client.deviceRegistry.devices);
-    print(client.deviceRegistry.devices.values);
+  /// The list of connected devices.
+  List<DeviceManager> get runningDevices =>
+      client?.deviceRegistry?.devices?.values?.toList();
 
-    return client?.deviceRegistry?.devices?.values?.toList();
-  }
-
-  /// Get the singleton sensing instance
+  /// The singleton sensing instance
   factory Sensing() => _instance;
 
   Sensing._() {
@@ -50,39 +54,62 @@ class Sensing {
     //SamplingPackageRegistry().register(CommunicationSamplingPackage());
     //SamplingPackageRegistry().register(AppsSamplingPackage());
     SamplingPackageRegistry().register(ESenseSamplingPackage());
-
-    manager = LocalStudyProtocolManager();
-
-    // used for downloading the study protocol from the CARP server
-    // TODO - obtain deployment id from an invitaiton
-    // manager = CARPStudyProtocolManager();
   }
 
   /// Initialize and set up sensing.
-  Future<void> initialize() async {
+  Future<void> initialize(
+      [DeploymentMode deploymentMode = DeploymentMode.LOCAL]) async {
     // set up the devices available on this phone
     DeviceController().registerAllAvailableDevices();
 
-    // get the protocol from the study protocol manager based on the
-    // study deployment id
-    _protocol = await manager.getStudyProtocol(testStudyDeploymentId);
+    switch (deploymentMode) {
+      case DeploymentMode.LOCAL:
+        // use the local, phone-based deployment service
+        deploymentService = SmartphoneDeploymentService();
 
-    // deploy this protocol using the on-phone deployment service
-    // reuse the study deployment id, so we have the same id on the phone deployment
-    _status = await SmartphoneDeploymentService().createStudyDeployment(
-      _protocol,
-      testStudyDeploymentId,
-    );
+        // get the protocol from the local study protocol manager
+        // note that the study id is not used
+        StudyProtocol protocol =
+            await LocalStudyProtocolManager().getStudyProtocol('');
 
-    String deviceRolename = _status.masterDeviceStatus.device.roleName;
+        // deploy this protocol using the on-phone deployment service
+        _status = await SmartphoneDeploymentService().createStudyDeployment(
+          protocol,
+        );
+
+        break;
+      case DeploymentMode.CARP:
+        // use the CARP deployment service that knows how to download a
+        // custom protocol
+        deploymentService = CustomProtocolDeploymentService();
+
+        // authenticate the user
+        // this would normally trigger a dialogue, but for demo/testing we're using
+        // the username/password in the 'credentials.dart' file
+        if (!CarpService().authenticated)
+          await CarpService()
+              .authenticate(username: username, password: password);
+
+        // get the study deployment id
+        // this would normally be done by getting the invitations for this user,
+        // but for demo/testing we're using the deployment id in the 'credentials.dart' file
+        _status = await CustomProtocolDeploymentService()
+            .getStudyDeploymentStatus(testStudyDeploymentId);
+
+        break;
+    }
 
     // create and configure a client manager for this phone
-    client = SmartPhoneClientManager();
+    client = SmartPhoneClientManager(
+      deploymentService: deploymentService,
+      deviceRegistry: DeviceController(),
+    );
     await client.configure();
 
-    _controller = await client.addStudy(testStudyDeploymentId, deviceRolename);
+    // add and deploy this deployment
+    _controller = await client.addStudy(studyDeploymentId, deviceRolename);
 
-    // configure the controller and resume sampling
+    // configure the controller with the default privacy schema
     await _controller.configure(
       privacySchemaName: PrivacySchema.DEFAULT,
     );

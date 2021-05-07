@@ -19,6 +19,7 @@ import 'src/sensing/credentials.dart';
 
 part 'src/app.dart';
 part 'src/sensing/sensing.dart';
+part 'src/sensing/study_deployment_manager.dart';
 part 'src/models/probe_models.dart';
 part 'src/models/device_models.dart';
 part 'src/models/probe_description.dart';

@@ -20,7 +20,7 @@ import 'package:research_package/model.dart';
 
 part 'carp_data_manager.dart';
 part 'carp_study_manager.dart';
-part 'resource_manager.dart';
+part 'carp_resource_manager.dart';
 part 'carp_localization.dart';
 part 'carp_backend.g.dart';
 part 'carp_deployment_service.dart';

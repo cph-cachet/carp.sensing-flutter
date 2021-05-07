@@ -9,6 +9,9 @@ class SensingBLoC {
 
   CarpApp get app => _app;
 
+  /// What kind of deployment are we running - local or CARP?
+  DeploymentMode deploymentMode = DeploymentMode.LOCAL;
+
   /// Is sensing running, i.e. has the study executor been resumed?
   bool get isRunning =>
       (Sensing().controller != null) &&
@@ -30,7 +33,9 @@ class SensingBLoC {
     Sensing().client?.deviceRegistry?.devices[device.type].connect();
   }
 
-  Future init() async {
+  Future init([DeploymentMode deploymentMode]) async {
+    this.deploymentMode = deploymentMode ?? DeploymentMode.LOCAL;
+
     await Settings().init();
     Settings().debugLevel = DebugLevel.DEBUG;
     _app = CarpApp(
@@ -43,7 +48,7 @@ class SensingBLoC {
     CarpService().configure(app);
     await CarpService().authenticate(username: username, password: password);
 
-    await Sensing().initialize();
+    await Sensing().initialize(deploymentMode);
     info('$runtimeType initialized');
   }
 
@@ -54,3 +59,6 @@ class SensingBLoC {
 }
 
 final bloc = SensingBLoC();
+
+
+
