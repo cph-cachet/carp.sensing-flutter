@@ -24,6 +24,10 @@ class SmartPhoneClientManager extends ClientManager {
   Future<DeviceRegistration> configure({String deviceId}) async {
     await DeviceInfo().init();
     deviceId ??= DeviceInfo().deviceID;
+    info('Configuring $runtimeType:');
+    info('  deployment service : $deploymentService');
+    info('     device registry : $deviceRegistry');
+    info('           device ID : $deviceId');
     return super.configure(deviceId: deviceId);
   }
 
@@ -32,6 +36,8 @@ class SmartPhoneClientManager extends ClientManager {
     String studyDeploymentId,
     String deviceRoleName,
   ) async {
+    info(
+        'Adding study to $runtimeType - studyDeploymentId: $studyDeploymentId, deviceRoleName: $deviceRoleName');
     super.addStudy(studyDeploymentId, deviceRoleName);
 
     // Create the study runtime.

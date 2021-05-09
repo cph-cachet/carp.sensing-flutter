@@ -61,7 +61,8 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
     List<TaskDescriptor> tasks,
     Map<String, Trigger> triggers,
     List<TriggeredTask> triggeredTasks,
-  }) : super(
+  })
+      : super(
           deviceDescriptor: deviceDescriptor,
           configuration: configuration,
           connectedDevices: connectedDevices,
@@ -86,7 +87,8 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
     ProtocolOwner owner,
     DataEndPoint dataEndPoint,
     MasterDeviceDeployment masterDeviceDeployment,
-  }) : super(
+  })
+      : super(
           deviceDescriptor: masterDeviceDeployment.deviceDescriptor,
           configuration: masterDeviceDeployment.configuration,
           connectedDevices: masterDeviceDeployment.connectedDevices,
@@ -112,7 +114,8 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
     String masterDeviceRoleName,
     DataEndPoint dataEndPoint,
     CAMSStudyProtocol protocol,
-  }) : super(
+  })
+      : super(
           deviceDescriptor: Smartphone(roleName: masterDeviceRoleName),
           configuration: DeviceRegistration(),
           connectedDevices: protocol.connectedDevices,

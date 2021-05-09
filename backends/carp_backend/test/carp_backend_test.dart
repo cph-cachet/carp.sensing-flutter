@@ -7,9 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:test/test.dart';
 import 'package:carp_backend/carp_backend.dart';
 import 'package:research_package/model.dart';
-import 'package:carp_esense_package/esense.dart';
-import 'package:carp_audio_package/audio.dart';
-import 'package:carp_context_package/context.dart';
+// import 'package:carp_esense_package/esense.dart';
+// import 'package:carp_audio_package/audio.dart';
+// import 'package:carp_context_package/context.dart';
 
 import 'credentials.dart';
 
@@ -23,9 +23,9 @@ void main() {
 
   // register the eSense & audio sampling package
   // this is used to be able to deserialize the downloaded protocol
-  SamplingPackageRegistry().register(ContextSamplingPackage());
-  SamplingPackageRegistry().register(ESenseSamplingPackage());
-  SamplingPackageRegistry().register(AudioSamplingPackage());
+  // SamplingPackageRegistry().register(ContextSamplingPackage());
+  // SamplingPackageRegistry().register(ESenseSamplingPackage());
+  // SamplingPackageRegistry().register(AudioSamplingPackage());
 
   /// Setup CARP and authenticate.
   /// Runs once before all tests.

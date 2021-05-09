@@ -43,7 +43,7 @@ void carpCoreProtocolExample() async {
   print(json);
 }
 
-/// Example of how to use the protocol sub-system domain models
+/// Example of how to use the **deployment** sub-system domain models
 void carpCoreDeploymentExample() async {
   DeploymentService deploymentService;
   StudyProtocol trackPatientStudy;

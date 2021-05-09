@@ -36,8 +36,8 @@ class CarpDeploymentService extends CarpBaseService
   ]) async {
     assert(protocol != null, 'Cannot deploy a null study protocol.');
 
-    return StudyDeploymentStatus.fromJson(
-        await _rpc(CreateStudyDeployment(protocol)));
+    return StudyDeploymentStatus
+        .fromJson(await _rpc(CreateStudyDeployment(protocol)));
   }
 
   @override
@@ -49,8 +49,8 @@ class CarpDeploymentService extends CarpBaseService
   @override
   Future<StudyDeploymentStatus> getStudyDeploymentStatus(
           String studyDeploymentId) async =>
-      StudyDeploymentStatus.fromJson(
-          await _rpc(GetStudyDeploymentStatus(studyDeploymentId)));
+      StudyDeploymentStatus
+          .fromJson(await _rpc(GetStudyDeploymentStatus(studyDeploymentId)));
 
   @override
   Future<List<StudyDeploymentStatus>> getStudyDeploymentStatusList(

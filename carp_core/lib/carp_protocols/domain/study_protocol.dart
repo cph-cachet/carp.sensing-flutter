@@ -64,7 +64,8 @@ class StudyProtocol {
     this.ownerId,
     this.name,
     this.description,
-  }) : super() {
+  })
+      : super() {
     this.creationDate = DateTime.now().toUtc().toString();
   }
 

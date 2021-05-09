@@ -23,8 +23,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  carp_core:
-    path: ../../carp_core
+  #carp_core:
+  #  path: ../../carp_core
   carp_mobile_sensing:
     path: ../../carp_mobile_sensing/
 

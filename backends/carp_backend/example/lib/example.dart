@@ -49,6 +49,35 @@ void main() async {
 
   // get the study from CARP
   StudyProtocol study = await manager.getStudyProtocol('protocol_id');
+  print(study);
+
+  // -----------------------------------------------
+  // EXAMPLE OF GETTING A STUDY DEPLOYMENT FROM CARP
+  // -----------------------------------------------
+
+  // get the status of the deployment
+  StudyDeploymentStatus status = await CustomProtocolDeploymentService()
+      .getStudyDeploymentStatus(studyDeploymentId);
+
+  // create and configure a client manager for this phone
+  SmartPhoneClientManager client = SmartPhoneClientManager(
+    deploymentService: CustomProtocolDeploymentService(),
+    deviceRegistry: DeviceController(),
+  );
+  await client.configure();
+
+  String deviceRolename = status?.masterDeviceStatus?.device?.roleName;
+
+  // add and deploy this deployment using its rolename
+  StudyDeploymentController controller =
+      await client.addStudy(studyDeploymentId, deviceRolename);
+
+  // configure the controller with the default privacy schema
+  await controller.configure();
+  // controller.resume();
+
+  // listening on the data stream and print them as json to the debug console
+  controller.data.listen((data) => print(toJsonString(data)));
 
   // -----------------------------------------------
   // DIFFERENT WAYS TO UPLOAD DATA TO CARP
@@ -95,7 +124,7 @@ void main() async {
   );
   print('$cdep_3');
 
-  StudyDeploymentStatus status =
+  StudyDeploymentStatus status_2 =
       await CarpDeploymentService().getStudyDeploymentStatus(studyDeploymentId);
 
   // get the master device deployment
@@ -107,7 +136,10 @@ void main() async {
 
   /// change a master device deployment to use another data endpoint before
   /// it is being executed
-  deployment.dataEndPoint = cdep_2;
+  deployment.dataEndPoint = cdep;
+
+  // ... or configure the controller with this data endpoint
+  await controller.configure(dataEndPoint: cdep);
 
   // --------------------------------------------------
   // EXAMPLE OF GETTING AN INFORMED CONSENT FROM CARP

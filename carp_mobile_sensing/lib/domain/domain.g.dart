@@ -16,8 +16,8 @@ CAMSStudyProtocol _$CAMSStudyProtocolFromJson(Map<String, dynamic> json) {
         : ProtocolOwner.fromJson(json['owner'] as Map<String, dynamic>),
     protocolDescription: json['protocolDescription'] == null
         ? null
-        : StudyProtocolDescription.fromJson(
-            json['protocolDescription'] as Map<String, dynamic>),
+        : StudyProtocolDescription
+            .fromJson(json['protocolDescription'] as Map<String, dynamic>),
   )
     ..creationDate = json['creationDate'] as String
     ..masterDevices = (json['masterDevices'] as List)
@@ -325,8 +325,8 @@ CAMSMasterDeviceDeployment _$CAMSMasterDeviceDeploymentFromJson(
     name: json['name'] as String,
     protocolDescription: json['protocolDescription'] == null
         ? null
-        : StudyProtocolDescription.fromJson(
-            json['protocolDescription'] as Map<String, dynamic>),
+        : StudyProtocolDescription
+            .fromJson(json['protocolDescription'] as Map<String, dynamic>),
     owner: json['owner'] == null
         ? null
         : ProtocolOwner.fromJson(json['owner'] as Map<String, dynamic>),
@@ -335,12 +335,12 @@ CAMSMasterDeviceDeployment _$CAMSMasterDeviceDeploymentFromJson(
         : DataEndPoint.fromJson(json['dataEndPoint'] as Map<String, dynamic>),
     deviceDescriptor: json['deviceDescriptor'] == null
         ? null
-        : MasterDeviceDescriptor.fromJson(
-            json['deviceDescriptor'] as Map<String, dynamic>),
+        : MasterDeviceDescriptor
+            .fromJson(json['deviceDescriptor'] as Map<String, dynamic>),
     configuration: json['configuration'] == null
         ? null
-        : DeviceRegistration.fromJson(
-            json['configuration'] as Map<String, dynamic>),
+        : DeviceRegistration
+            .fromJson(json['configuration'] as Map<String, dynamic>),
     connectedDevices: (json['connectedDevices'] as List)
         ?.map((e) => e == null
             ? null
@@ -785,12 +785,12 @@ SamplingEventTrigger _$SamplingEventTriggerFromJson(Map<String, dynamic> json) {
     measureType: json['measureType'] as String,
     resumeCondition: json['resumeCondition'] == null
         ? null
-        : ConditionalEvent.fromJson(
-            json['resumeCondition'] as Map<String, dynamic>),
+        : ConditionalEvent
+            .fromJson(json['resumeCondition'] as Map<String, dynamic>),
     pauseCondition: json['pauseCondition'] == null
         ? null
-        : ConditionalEvent.fromJson(
-            json['pauseCondition'] as Map<String, dynamic>),
+        : ConditionalEvent
+            .fromJson(json['pauseCondition'] as Map<String, dynamic>),
   )
     ..$type = json[r'$type'] as String
     ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String

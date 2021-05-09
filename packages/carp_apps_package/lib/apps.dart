@@ -8,7 +8,6 @@ import 'package:app_usage/app_usage.dart';
 import 'dart:io';
 import 'package:permission_handler/permission_handler.dart';
 
-import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 part 'apps_datum.dart';

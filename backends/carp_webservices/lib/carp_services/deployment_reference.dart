@@ -54,8 +54,8 @@ class DeploymentReference extends RPCCarpReference {
 
   /// Get the deployment status for this [DeploymentReference].
   Future<StudyDeploymentStatus> getStatus() async {
-    _status = StudyDeploymentStatus.fromJson(
-        await _rpc(GetStudyDeploymentStatus(studyDeploymentId)));
+    _status = StudyDeploymentStatus
+        .fromJson(await _rpc(GetStudyDeploymentStatus(studyDeploymentId)));
     return _status;
   }
 

@@ -6,7 +6,6 @@
 library carp_core_data;
 
 import 'package:json_annotation/json_annotation.dart';
-import 'package:carp_core/carp_common/carp_core_common.dart';
 
 export 'carp_core_data.dart';
 

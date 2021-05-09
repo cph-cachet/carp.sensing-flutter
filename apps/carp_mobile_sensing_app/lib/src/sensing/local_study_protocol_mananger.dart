@@ -17,7 +17,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
   /// Create a new CAMS study protocol.
   Future<StudyProtocol> getStudyProtocol(String ignored) async {
     CAMSStudyProtocol protocol = CAMSStudyProtocol()
-      ..name = '#23-Coverage'
+      ..name = '#24-Local CAMS app protocol'
       ..owner = ProtocolOwner(
         id: 'AB',
         name: 'Alex Boyon',
@@ -25,7 +25,8 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
       )
       ..protocolDescription = StudyProtocolDescription(
         title: 'Sensing Coverage Study',
-        description: 'This is a study for testing the coverage of sampling.',
+        description: 'This is a study for testing the coverage of sampling. '
+            'This is the version of the protocol generated locally on the phone.',
       );
 
     // Define which devices are used for data collection.

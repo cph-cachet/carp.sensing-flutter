@@ -50,12 +50,15 @@ class CustomProtocolDeploymentService implements DeploymentService {
 
   CarpStudyProtocolManager manager = CarpStudyProtocolManager();
   CAMSStudyProtocol protocol;
+
+  /// The stream of [CarpBackendEvents] reflecting the state of this service.
   Stream get carpBackendEvents => _eventController.stream;
 
   void addCarpBackendEvent(CarpBackendEvents event) =>
       _eventController.add(event);
 
-  void checkConfigured() {
+  /// Is this service configured and authenticated to CARP?
+  bool isConfigured() {
     if (!CarpService().isConfigured)
       throw CARPBackendException(
           "CARP Service has not been configured - call 'CarpService().configure()' first.");
@@ -67,69 +70,90 @@ class CustomProtocolDeploymentService implements DeploymentService {
       CarpDeploymentService().configureFrom(CarpService());
       _eventController.add(CarpBackendEvents.Initialized);
     }
+    return CarpDeploymentService().isConfigured;
   }
 
   @override
   Future<StudyDeploymentStatus> createStudyDeployment(StudyProtocol protocol,
       [String studyDeploymentId]) {
     throw CARPBackendException(
-        'Study protocols cannot be created in a CARPDeploymentService');
+        'Study protocols cannot be created using this CustomProtocolDeploymentService.');
   }
 
   @override
   Future<StudyDeploymentStatus> getStudyDeploymentStatus(
       String studyDeploymentId) async {
-    checkConfigured();
-    StudyDeploymentStatus status = await CarpDeploymentService()
-        .getStudyDeploymentStatus(studyDeploymentId);
-    _eventController.add(CarpBackendEvents.DeploymentStatusRetrieved);
+    StudyDeploymentStatus status;
+    if (isConfigured()) {
+      status = await CarpDeploymentService()
+          .getStudyDeploymentStatus(studyDeploymentId);
+      _eventController.add(CarpBackendEvents.DeploymentStatusRetrieved);
+    }
     return status;
   }
 
   @override
   Future<MasterDeviceDeployment> getDeviceDeploymentFor(
-      String studyDeploymentId, String masterDeviceRoleName) async {
-    checkConfigured();
+    String studyDeploymentId,
+    String masterDeviceRoleName,
+  ) async {
+    CAMSMasterDeviceDeployment deployment;
 
-    // get the protocol from the study protocol manager
-    protocol = await manager.getStudyProtocol(studyDeploymentId);
-    _eventController.add(CarpBackendEvents.ProtocolRetrieved);
+    if (isConfigured()) {
+      // get the protocol from the study protocol manager
+      protocol = await manager.getStudyProtocol(studyDeploymentId);
+      _eventController.add(CarpBackendEvents.ProtocolRetrieved);
 
-    // configure a data endpoint which can send data back to CARP
-    // note that files must not be zipped.
-    DataEndPoint dataEndPoint = CarpDataEndPoint(
-      uploadMethod: CarpUploadMethod.BATCH_DATA_POINT,
-      name: CarpService().app.name,
-      uri: CarpService().app.uri.toString(),
-      bufferSize: 500 * 1000,
-      zip: false,
-      deleteWhenUploaded: true,
-    );
+      // configure a data endpoint which can send data back to CARP
+      // note that files must not be zipped.
+      DataEndPoint dataEndPoint = CarpDataEndPoint(
+        uploadMethod: CarpUploadMethod.BATCH_DATA_POINT,
+        name: CarpService().app.name,
+        uri: CarpService().app.uri.toString(),
+        bufferSize: 50 * 1000,
+        zip: false,
+        deleteWhenUploaded: true,
+      );
 
-    CAMSMasterDeviceDeployment deployment =
-        CAMSMasterDeviceDeployment.fromCAMSStudyProtocol(
-      studyDeploymentId: studyDeploymentId,
-      masterDeviceRoleName: masterDeviceRoleName,
-      dataEndPoint: dataEndPoint,
-      protocol: protocol,
-    );
-    _eventController.add(CarpBackendEvents.DeploymentRetrieved);
-
+      deployment = CAMSMasterDeviceDeployment.fromCAMSStudyProtocol(
+        studyDeploymentId: studyDeploymentId,
+        masterDeviceRoleName: masterDeviceRoleName,
+        dataEndPoint: dataEndPoint,
+        protocol: protocol,
+      );
+      _eventController.add(CarpBackendEvents.DeploymentRetrieved);
+    }
     return deployment;
+  }
+
+  @override
+  Future<StudyDeploymentStatus> registerDevice(
+    String studyDeploymentId,
+    String deviceRoleName,
+    DeviceRegistration registration,
+  ) async {
+    StudyDeploymentStatus status;
+    if (isConfigured()) {
+      try {
+        status = await CarpDeploymentService()
+            .registerDevice(studyDeploymentId, deviceRoleName, registration);
+      } on CarpServiceException catch (cse) {
+        // a CarpServiceException is typically because the device is already registred
+        warning(cse.toString());
+        status = await getStudyDeploymentStatus(studyDeploymentId);
+      } catch (error) {
+        // other errors can be rethrown
+        rethrow;
+      }
+    }
+    return status;
   }
 
   @override
   Future<List<StudyDeploymentStatus>> getStudyDeploymentStatusList(
       List<String> studyDeploymentIds) {
     throw CARPBackendException(
-        'getStudyDeploymentStatusList() is not supported.');
-  }
-
-  @override
-  Future<StudyDeploymentStatus> registerDevice(String studyDeploymentId,
-      String deviceRoleName, DeviceRegistration registration) {
-    throw CARPBackendException(
-        'registerDevice() is not supported. This happens automatically.');
+        'getStudyDeploymentStatusList() is not supported using this CustomProtocolDeploymentService.');
   }
 
   @override
@@ -156,4 +180,7 @@ class CustomProtocolDeploymentService implements DeploymentService {
       String studyDeploymentId, String deviceRoleName) {
     throw CARPBackendException('unregisterDevice() is not supported.');
   }
+
+  @override
+  String toString() => runtimeType.toString();
 }

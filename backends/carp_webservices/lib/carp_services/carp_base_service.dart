@@ -47,7 +47,7 @@ abstract class CarpBaseService {
   ///
   /// Typically on the form:
   /// `{{PROTOCOL}}://{{SERVER_HOST}}:{{SERVER_PORT}}/api/...`
-  // String get rpcEndpointUri => "${app.uri.toString()}/api/$rpcEndpointName";
+  String get rpcEndpointUri => "${app.uri.toString()}/api/$rpcEndpointName";
 
   /// The headers for any authenticated HTTP REST call to a [CarpBaseService].
   Map<String, String> get headers {
@@ -86,7 +86,6 @@ abstract class CarpBaseService {
       [String endpointName]) async {
     final String body = _encode(request.toJson());
     endpointName ??= rpcEndpointName;
-    final String rpcEndpointUri = "${app.uri.toString()}/api/$endpointName";
 
     print('REQUEST: $rpcEndpointUri\n$body');
     http.Response response = await httpr.post(Uri.encodeFull(rpcEndpointUri),

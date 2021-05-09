@@ -35,8 +35,8 @@ class ParticipationReference extends RPCCarpReference {
   /// deployment with [studyDeploymentId].
   /// Data which is not set equals null.
   Future<ParticipantData> getParticipantData() async {
-    ParticipantData data = ParticipantData.fromJson(
-        await _rpc(GetParticipantData(studyDeploymentId)));
+    ParticipantData data = ParticipantData
+        .fromJson(await _rpc(GetParticipantData(studyDeploymentId)));
     return data;
   }
 

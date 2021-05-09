@@ -36,7 +36,8 @@ class CAMSMeasure extends Measure {
     this.name,
     this.description,
     this.enabled = true,
-  }) : super(type: type) {
+  })
+      : super(type: type) {
     enabled = enabled ?? true;
     _storedEnabled = enabled;
   }
@@ -109,7 +110,8 @@ class PeriodicMeasure extends CAMSMeasure {
     bool enabled,
     this.frequency,
     this.duration,
-  }) : super(
+  })
+      : super(
             type: type,
             name: name,
             description: description,
@@ -174,7 +176,8 @@ class MarkedMeasure extends CAMSMeasure {
     String description,
     bool enabled,
     this.history = const Duration(days: 1),
-  }) : super(
+  })
+      : super(
           type: type,
           name: name,
           description: description,

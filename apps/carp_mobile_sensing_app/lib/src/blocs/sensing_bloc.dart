@@ -1,13 +1,8 @@
 part of mobile_sensing_app;
 
 class SensingBLoC {
-  static const String PROD_URI = "https://cans.cachet.dk:443";
-
   CAMSMasterDeviceDeployment get deployment => Sensing().deployment;
   StudyDeploymentModel _model;
-  CarpApp _app;
-
-  CarpApp get app => _app;
 
   /// What kind of deployment are we running - local or CARP?
   DeploymentMode deploymentMode = DeploymentMode.LOCAL;
@@ -33,22 +28,9 @@ class SensingBLoC {
     Sensing().client?.deviceRegistry?.devices[device.type].connect();
   }
 
-  Future init([DeploymentMode deploymentMode]) async {
+  Future initialize([DeploymentMode deploymentMode]) async {
     this.deploymentMode = deploymentMode ?? DeploymentMode.LOCAL;
-
     await Settings().init();
-    Settings().debugLevel = DebugLevel.DEBUG;
-    _app = CarpApp(
-      name: "CANS Production @ DTU",
-      uri: Uri.parse(uri),
-      oauth: OAuthEndPoint(clientID: clientID, clientSecret: clientSecret),
-    );
-
-    // configure and authenticate
-    CarpService().configure(app);
-    await CarpService().authenticate(username: username, password: password);
-
-    await Sensing().initialize(deploymentMode);
     info('$runtimeType initialized');
   }
 
@@ -59,6 +41,3 @@ class SensingBLoC {
 }
 
 final bloc = SensingBLoC();
-
-
-

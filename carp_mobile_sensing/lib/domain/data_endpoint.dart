@@ -88,7 +88,8 @@ class FileDataEndPoint extends DataEndPoint {
     this.zip = true,
     this.encrypt = false,
     this.publicKey,
-  }) : super(type: type ?? DataEndPointTypes.FILE, dataFormat: dataFormat);
+  })
+      : super(type: type ?? DataEndPointTypes.FILE, dataFormat: dataFormat);
 
   /// The function which can transform this [FileDataEndPoint] into JSON.
   ///

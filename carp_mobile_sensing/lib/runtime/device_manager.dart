@@ -75,6 +75,9 @@ class DeviceController implements DeviceRegistry {
 
   String devicesToString() =>
       _devices.keys.map((key) => key.split('.').last).toString();
+
+  @override
+  String toString() => '$runtimeType [${_devices.length}]';
 }
 
 /// A [DeviceManager] handles a device on runtime.

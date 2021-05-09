@@ -188,4 +188,7 @@ class SmartphoneDeploymentService implements DeploymentService {
     // TODO: implement getStudyDeploymentStatusList
     throw UnimplementedError();
   }
+
+  @override
+  String toString() => runtimeType.toString();
 }

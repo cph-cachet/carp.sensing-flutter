@@ -106,7 +106,7 @@ Note that as a mobile sensing framework running on a phone, CAMS could be limite
 ### Defining a `StudyProtcol`
 
 In CAMS, a sensing protocol is configured in a [`CAMSStudyProtocol`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/CAMSStudyProtocol-class.html). 
-Below is a simple example of how to set up a protocol that sense step counts (`pedometer`), ambient light (`light`), screen activity (`screen`), and power consumption (`battery`). This data is stored as [json](https://github.com/cph-cachet/carp.sensing-flutter/wiki/B.-Sampling-Data-Formats) to a [local file](https://github.com/cph-cachet/carp.sensing-flutter/wiki/C.-Data-Backends) on the phone.
+Below is a simple example of how to set up a protocol that sense step counts (`pedometer`), ambient light (`light`), screen activity (`screen`), and power consumption (`battery`). 
 
 ```dart
 // Import package
@@ -209,7 +209,7 @@ This client manager is able to create a [`StudyDeploymentController`](https://pu
   ...
 ```
 
-A `SmartPhoneClientManager` per default uses the local `SmartphoneDeploymentService` which per default saves data to zipped files (see more on [data backends on the wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki/C.-Data-Backends)). 
+A `SmartPhoneClientManager` per default uses the local `SmartphoneDeploymentService` which per default saves data in json to zipped files (see more on [data backends on the wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki/C.-Data-Backends)). 
 If you want to use another data backend, this can be configured in two ways: 
 (i) either as part of the deployment or
 (ii) as part of the configuration - like this:
@@ -225,7 +225,7 @@ If you want to use another data backend, this can be configured in two ways:
     encrypt: false,
   );
 
-  // you can also configure the controller with a data endpoint 
+  // or you can configure the controller with a data endpoint 
   // this has the same effect as above
   await controller.configure(
     dataEndPoint: FileDataEndPoint(
@@ -236,6 +236,8 @@ If you want to use another data backend, this can be configured in two ways:
   );
   ...
 ```
+
+Note that the data endpoint has to be set **before** sampling is resumed.
 
 You can write your own `DataEndPoint` definitions and coresponding `DataManager`s for uploading data to your own data endpoint. See the wiki on how to [add a new data manager](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.-Extending-CARP-Mobile-Sensing#adding-a-new-data-manager).
 

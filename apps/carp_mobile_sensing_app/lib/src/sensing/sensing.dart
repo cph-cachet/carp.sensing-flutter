@@ -57,13 +57,13 @@ class Sensing {
   }
 
   /// Initialize and set up sensing.
-  Future<void> initialize([DeploymentMode deploymentMode]) async {
-    deploymentMode ??= DeploymentMode.LOCAL;
+  Future<void> initialize() async {
+    info('Initializing $runtimeType - mode: ${bloc.deploymentMode}');
 
     // set up the devices available on this phone
     DeviceController().registerAllAvailableDevices();
 
-    switch (deploymentMode) {
+    switch (bloc.deploymentMode) {
       case DeploymentMode.LOCAL:
         // use the local, phone-based deployment service
         deploymentService = SmartphoneDeploymentService();
@@ -118,5 +118,7 @@ class Sensing {
 
     // listening on the data stream and print them as json to the debug console
     _controller.data.listen((data) => print(toJsonString(data)));
+
+    info('$runtimeType initialized');
   }
 }

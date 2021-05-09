@@ -30,7 +30,7 @@ class AppsProbe extends DatumProbe {
   }
 
   List<String> _getAppNames(List<Application> apps) {
-    List<String> names = new List();
+    List<String> names = [];
     apps.forEach((a) {
       names.add(a.appName);
     });
