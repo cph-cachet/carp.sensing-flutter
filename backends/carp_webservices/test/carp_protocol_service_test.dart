@@ -53,18 +53,19 @@ void main() {
     test(
       '- add',
       () async {
-        // StudyProtocol protocol = StudyProtocol(
-        //     ownerId: ownerId,
-        //     name: name,
-        //     description: 'Generated from carp_webservices unit test.');
+        StudyProtocol protocol = StudyProtocol(
+            ownerId: ownerId,
+            name: name,
+            description: 'Generated from carp_webservices unit test.')
+          ..addMasterDevice(Smartphone(roleName: 'smartphone'));
 
-        StudyProtocol protocol =
-            await CANSProtocolService().createCustomProtocol(
-          ownerId,
-          name,
-          'Made from Dart unit test.',
-          '{"version":1}',
-        );
+        // StudyProtocol protocol =
+        //     await CANSProtocolService().createCustomProtocol(
+        //   ownerId,
+        //   name,
+        //   'Made from Dart unit test.',
+        //   '{"version":1}',
+        // );
 
         await CANSProtocolService().add(protocol);
       },

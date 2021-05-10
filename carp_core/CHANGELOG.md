@@ -1,3 +1,6 @@
+## 0.21.4
+* small bug fix in json serialization
+
 ## 0.21.3
 * added support for `ProtocolService` sub-system including request classes for using this.
 * added support for `DataEndPoint` and `DataManager` handling as part of `MasterDeviceDeployment`.

@@ -119,9 +119,9 @@ class CarpStudyProtocolManager implements StudyProtocolManager {
   /// [Participation] for a user, with a specific [studyDeploymentId].
   ///
   /// Throws a [CarpServiceException] if not successful.
-  Future<bool> saveStudyProtocol(String ignored, StudyProtocol protocol) async {
+  Future<bool> saveStudyProtocol(String studyId, StudyProtocol protocol) async {
     throw CarpServiceException(
         message:
-            'There is no support for saving studies in the CARP web service from the phone.');
+            'There is no support for saving studies in the CARP web service from the client (yet).');
   }
 }

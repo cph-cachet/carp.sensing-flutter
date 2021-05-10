@@ -1,6 +1,6 @@
 {
     "ownerId": "xyz@dtu.dk",
-    "creationDate": "2021-05-02 14:25:14.042890Z",
+    "creationDate": "2021-05-10T14:06:25.652663Z",
     "masterDevices": [
      {
       "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",

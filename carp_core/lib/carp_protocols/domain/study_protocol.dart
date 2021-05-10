@@ -38,7 +38,7 @@ class StudyProtocol {
   String description;
 
   /// The timestamp of the creation of this protocol in Zulu time.
-  String creationDate;
+  DateTime creationDate;
 
   /// The master devices involved in this protocol.
   List<MasterDeviceDescriptor> masterDevices = [];
@@ -64,9 +64,8 @@ class StudyProtocol {
     this.ownerId,
     this.name,
     this.description,
-  })
-      : super() {
-    this.creationDate = DateTime.now().toUtc().toString();
+  }) : super() {
+    this.creationDate = DateTime.now().toUtc();
   }
 
   /// Add a [masterDevice] which is responsible for aggregating and synchronizing

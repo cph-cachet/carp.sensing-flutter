@@ -36,10 +36,11 @@ class CANSProtocolService extends CarpBaseService
   /// Returns the last version of each [StudyProtocol] owned by the requested owner,
   /// or an empty list when none are found.
   @override
-  Future<List<StudyProtocol>> getAllFor(String ownerId) async =>
-      (await _rpc(GetAllFor(ownerId)))['items']
-          .map((item) => StudyProtocol.fromJson(item))
-          .toList();
+  Future<List<StudyProtocol>> getAllFor(String ownerId) async {
+    Map<String, dynamic> response = await _rpc(GetAllFor(ownerId));
+    List<dynamic> items = response['items'];
+    return items.map((item) => StudyProtocol.fromJson(item)).toList();
+  }
 
   @override
   Future<StudyProtocol> getBy(StudyProtocolId protocolId,

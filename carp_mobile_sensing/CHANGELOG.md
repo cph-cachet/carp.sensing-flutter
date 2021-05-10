@@ -1,3 +1,7 @@
+## 0.21.4
+* small bug fixes
+* upgrade to carp_code `0.21.4`
+
 ## 0.21.3
 * **NOTE** - `DataEndPoint` is no longer specified as part of a `StudyProtocol`. 
     * Specifying where and how to store or upload data is really not part of specifying a study protocol, but rather a deployment issues. Therefore, the `DataEndPoint` is now part of a `MasterDeviceDeployment`. 
