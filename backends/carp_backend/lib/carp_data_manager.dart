@@ -109,12 +109,9 @@ class CarpDataManager extends AbstractDataManager {
 
   /// Handle upload of data depending on the specified [CarpUploadMethod].
   Future<bool> uploadData(DataPoint dataPoint) async {
-    info(
-        'Uploading data point to CARP - format: ${dataPoint.carpHeader.dataFormat}');
-
     // Check if CARP authentication is ready before writing...
     if (!_initialized) {
-      warning("Waiting for CARP authentication -- delaying for 10 sec...");
+      warning("Waiting for CARP to be initialized -- delaying for 10 sec...");
       return Future.delayed(
           const Duration(seconds: 10), () => uploadData(dataPoint));
     }
@@ -130,17 +127,20 @@ class CarpDataManager extends AbstractDataManager {
       // then upload the datum as specified in the upload method.
       switch (carpEndPoint.uploadMethod) {
         case CarpUploadMethod.DATA_POINT:
+          info(
+              'Uploading data point to CARP - ${dataPoint.carpHeader.dataFormat}');
           return (await CarpService()
                   .getDataPointReference()
                   .postDataPoint(dataPoint) !=
               null);
         case CarpUploadMethod.BATCH_DATA_POINT:
         case CarpUploadMethod.FILE:
-          // In both cases, forward to [FileDataManager], which collects data in a file before upload.
-          // TODO - when forwarding to the file, it is the wrong data type format being written
-          // See issue #162
+          // In both cases, forward to [FileDataManager], which collects data
+          // in a file before upload.
           return fileDataManager.write(dataPoint);
         case CarpUploadMethod.DOCUMENT:
+          info(
+              'Uploading data point document to CARP - ${dataPoint.carpHeader.dataFormat}');
           return (await CarpService()
                   .collection('/${carpEndPoint.collection}')
                   .document()
@@ -183,7 +183,7 @@ class CarpDataManager extends AbstractDataManager {
 
         addEvent(CarpDataManagerEvent(CarpDataManagerEventTypes.file_uploaded,
             file.path, id, uploadTask.reference.fileEndpointUri));
-        info("File upload to CARP finished - remote id : $id ");
+        info("File upload to CARP finished - remote id: '$id' ");
         break;
       case CarpUploadMethod.DATA_POINT:
       case CarpUploadMethod.DOCUMENT:
@@ -195,6 +195,7 @@ class CarpDataManager extends AbstractDataManager {
     if (carpEndPoint.deleteWhenUploaded) {
       // delete the local file once uploaded
       file.delete();
+      info("Locale file deleted - path: '${file.path}'.");
       addEvent(FileDataManagerEvent(
           FileDataManagerEventTypes.FILE_DELETED, file.path));
     }
