@@ -157,3 +157,4 @@ backends/carp_backend/example/.flutter-plugins-dependencies
 packages/carp_communication_package/example/.flutter-plugins-dependencies
 packages/carp_movisens_package/example/.flutter-plugins-dependencies
 packages/carp_movisens_package/example/.flutter-plugins-dependencies
+backends/carp_firebase_backend/example/.flutter-plugins-dependencies

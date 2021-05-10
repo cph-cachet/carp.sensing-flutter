@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2020 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2018-2021 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -17,13 +17,13 @@ abstract class FirebaseDataManager extends AbstractDataManager {
   FirebaseDataManager();
 
   Future initialize(
-    CAMSMasterDeviceDeployment deployment,
+    String studyDeploymentId,
+    DataEndPoint dataEndPoint,
     Stream<DataPoint> data,
   ) async {
-    super.initialize(deployment, data);
-    assert(deployment.dataEndPoint is FirebaseDataEndPoint);
-    firebaseEndPoint =
-        (deployment.dataEndPoint as FirebaseDataEndPoint).firebaseEndPoint;
+    super.initialize(studyDeploymentId, dataEndPoint, data);
+    assert(dataEndPoint is FirebaseDataEndPoint);
+    firebaseEndPoint = (dataEndPoint as FirebaseDataEndPoint).firebaseEndPoint;
   }
 
   Future<FirebaseApp> get firebaseApp async {
@@ -109,10 +109,10 @@ abstract class FirebaseDataManager extends AbstractDataManager {
 /// Once the file has been transferred to Firebase, it is deleted on the local
 /// device.
 class FirebaseStorageDataManager extends FirebaseDataManager {
-  FileDataManager fileDataManager;
-  FirebaseStorageDataEndPoint dataEndPoint;
-
   FirebaseStorage _firebaseStorage;
+
+  FileDataManager fileDataManager;
+  FirebaseStorageDataEndPoint firebaseStorageDataEndPoint;
 
   String get type => DataEndPointTypes.FIREBASE_STORAGE;
 
@@ -133,21 +133,24 @@ class FirebaseStorageDataManager extends FirebaseDataManager {
   }
 
   Future initialize(
-    CAMSMasterDeviceDeployment deployment,
+    String studyDeploymentId,
+    DataEndPoint dataEdPoint,
     Stream<DataPoint> data,
   ) async {
-    super.initialize(deployment, data);
-    assert(deployment.dataEndPoint is FirebaseStorageDataEndPoint);
-    dataEndPoint = deployment.dataEndPoint as FirebaseStorageDataEndPoint;
+    super.initialize(studyDeploymentId, dataEndPoint, data);
+    assert(dataEndPoint is FirebaseStorageDataEndPoint);
+    this.firebaseStorageDataEndPoint =
+        dataEndPoint as FirebaseStorageDataEndPoint;
 
-    fileDataManager.initialize(deployment, data);
+    fileDataManager.initialize(studyDeploymentId, dataEndPoint, data);
 
     final FirebaseStorage storage = await firebaseStorage;
     final User authenticatedUser = await user;
 
     info('Initializig FirebaseStorageDataManager...');
-    info(' Firebase URI  : ${firebaseEndPoint.uri}');
-    info(' Folder path   : ${dataEndPoint.path}');
+    info(
+        ' Firebase URI  : ${firebaseStorageDataEndPoint.firebaseEndPoint.uri}');
+    info(' Folder path   : ${firebaseStorageDataEndPoint.path}');
     info(' Storage       : ${storage.app.name}');
     info(
         ' Auth. user    : ${authenticatedUser.displayName} <${authenticatedUser.email}>\n');
@@ -157,13 +160,13 @@ class FirebaseStorageDataManager extends FirebaseDataManager {
     if (_firebaseStorage == null) {
       final FirebaseApp app = await firebaseApp;
       _firebaseStorage = FirebaseStorage.instanceFor(
-          app: app, bucket: dataEndPoint.firebaseEndPoint.uri);
+          app: app, bucket: firebaseStorageDataEndPoint.firebaseEndPoint.uri);
     }
     return _firebaseStorage;
   }
 
   String get firebasePath =>
-      "${dataEndPoint.path}/${deployment.studyDeploymentId}/${DeviceInfo().deviceID.toString()}";
+      "${firebaseStorageDataEndPoint.path}/$studyDeploymentId/${DeviceInfo().deviceID.toString()}";
 
   Future<String> _uploadFileToFirestore(String localFilePath) async {
     final String filename =
@@ -176,7 +179,6 @@ class FirebaseStorageDataManager extends FirebaseDataManager {
         FirebaseStorage.instance.ref().child(firebasePath).child(filename);
     final File file = new File(localFilePath);
     final String deviceID = DeviceInfo().deviceID.toString();
-    final String studyDeploymentId = deployment.studyDeploymentId;
     final String userID = (await user).email;
 
     final UploadTask uploadTask = ref.putFile(
@@ -225,28 +227,29 @@ class FirebaseStorageDataManager extends FirebaseDataManager {
 /// If offline data storage and forward is needed, use the [FirebaseStorageDataManager]
 /// instead.
 class FirebaseDatabaseDataManager extends FirebaseDataManager {
-  FirebaseDatabaseDataEndPoint dataEndPoint;
-
   FirebaseFirestore _firebaseDatabase;
+  FirebaseDatabaseDataEndPoint firebaseDatabaseDataEndPoint;
 
   FirebaseDatabaseDataManager();
 
   String get type => DataEndPointTypes.FIREBASE_DATABSE;
 
   Future initialize(
-    CAMSMasterDeviceDeployment deployment,
+    String studyDeploymentId,
+    DataEndPoint dataEdPoint,
     Stream<DataPoint> data,
   ) async {
-    super.initialize(deployment, data);
-    assert(deployment.dataEndPoint is FirebaseDatabaseDataEndPoint);
-    dataEndPoint = deployment.dataEndPoint as FirebaseDatabaseDataEndPoint;
+    super.initialize(studyDeploymentId, dataEndPoint, data);
+    assert(dataEndPoint is FirebaseDatabaseDataEndPoint);
+    firebaseDatabaseDataEndPoint = dataEndPoint as FirebaseDatabaseDataEndPoint;
 
     final FirebaseFirestore database = await firebaseDatabase;
     final User authenticatedUser = await user;
 
     print('Initializig FirebaseStorageDataManager...');
-    print(' Firebase URI    : ${firebaseEndPoint.uri}');
-    print(' Collection path : ${dataEndPoint.collection}');
+    print(
+        ' Firebase URI    : ${firebaseDatabaseDataEndPoint.firebaseEndPoint.uri}');
+    print(' Collection path : ${firebaseDatabaseDataEndPoint.collection}');
     print(' Database        : ${database.app.name}');
     print(
         ' Auth. user      : ${authenticatedUser.displayName} <${authenticatedUser.email}>\n');
@@ -277,8 +280,8 @@ class FirebaseDatabaseDataManager extends FirebaseDataManager {
 
       // add json data
       FirebaseFirestore.instance
-          .collection(dataEndPoint.collection)
-          .doc(deployment.studyDeploymentId) // study deployment id
+          .collection(firebaseDatabaseDataEndPoint.collection)
+          .doc(studyDeploymentId) // study deployment id
           .collection(deviceId) // device id
           .doc('upload') // the default upload document is called 'upload'
           .collection(dataType) // data/measure type
