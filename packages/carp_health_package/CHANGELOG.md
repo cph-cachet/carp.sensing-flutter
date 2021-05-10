@@ -1,4 +1,4 @@
-## 0.21.0
+## 1.6.0
 * update to `carp_mobile_sensing` v. 0.21.x
 
 ## 1.5.2
