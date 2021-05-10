@@ -24,7 +24,8 @@ class CalendarMeasure extends CAMSMeasure {
     enabled,
     this.past = const Duration(days: DEFAULT_NUMBER_OF_DAYS),
     this.future = const Duration(days: DEFAULT_NUMBER_OF_DAYS),
-  }) : super(
+  })
+      : super(
           type: type,
           enabled: enabled,
           name: name,
