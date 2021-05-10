@@ -54,7 +54,8 @@ class HealthMeasure extends MarkedMeasure {
     bool enabled,
     Duration history = const Duration(days: 1),
     this.healthDataType,
-  }) : super(
+  })
+      : super(
           type: type,
           name: name,
           description: description,
@@ -77,8 +78,8 @@ class HealthMeasure extends MarkedMeasure {
 class HealthDatum extends Datum {
   /// The format of this health datum is `carp.health.<healthdatatype>`,
   /// where `<healthdatatype>` is the lowercase of the [HealthDataType](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html) collected.
-  DataFormat get format => DataFormat.fromString(
-      '${HealthSamplingPackage.HEALTH}.${dataType.toLowerCase()}');
+  DataFormat get format => DataFormat
+      .fromString('${HealthSamplingPackage.HEALTH}.${dataType.toLowerCase()}');
 
   /// The value of the health data.
   num value;
@@ -126,9 +127,9 @@ class HealthDatum extends Datum {
   String toString() =>
       super.toString() +
       ', dataType: $dataType, '
-          'platform: $platform, '
-          'value: $value, '
-          'unit: $unit, '
-          'dateFrom: $dateFrom, '
-          'dateTo: $dateTo';
+      'platform: $platform, '
+      'value: $value, '
+      'unit: $unit, '
+      'dateFrom: $dateFrom, '
+      'dateTo: $dateTo';
 }

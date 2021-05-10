@@ -27,7 +27,7 @@ class HealthProbe extends StreamProbe {
         DateTime.now().subtract(healthMeasure.history);
     DateTime end = DateTime.now();
     HealthDataType healthDataType = healthMeasure.healthDataType;
-    List<HealthDataPoint> data = List<HealthDataPoint>();
+    List<HealthDataPoint> data = [];
 
     debug(
         'Collecting health data - type: $healthDataType, start: ${start.toUtc()}, end: ${end.toUtc()}');

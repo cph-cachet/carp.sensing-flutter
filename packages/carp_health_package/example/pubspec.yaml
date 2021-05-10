@@ -2,6 +2,7 @@ name: carp_health_package_example
 description: Examples of how to use the carp_health_package.
 version: 0.0.1
 author:  CACHET Team <cph.cachet@gmail.com>
+publish_to: none
 
 environment:
   sdk: ">=2.1.0-dev <3.0.0"
