@@ -87,12 +87,12 @@ abstract class CarpBaseService {
     final String body = _encode(request.toJson());
     endpointName ??= rpcEndpointName;
 
-    print('REQUEST: $rpcEndpointUri\n$body');
+    debug('REQUEST: $rpcEndpointUri\n$body');
     http.Response response = await httpr.post(Uri.encodeFull(rpcEndpointUri),
         headers: headers, body: body);
     int httpStatusCode = response.statusCode;
     String responseBody = response.body;
-    print('RESPONSE: $httpStatusCode\n$responseBody');
+    debug('RESPONSE: $httpStatusCode\n$responseBody');
 
     // check if this is a json list or an empty string
     // if so turn it into a valid json map

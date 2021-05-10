@@ -1,3 +1,6 @@
+## 0.21.4
+* upgrade to `carp_mobile_sensing` v. 0.21.4
+
 ## 0.21.2
 * Rename of all `CARP...` services to `Carp..` 
 * Clean-up in `CarpDeploymentService` 
