@@ -97,6 +97,9 @@ class Sensing {
         _status = await CustomProtocolDeploymentService()
             .getStudyDeploymentStatus(testStudyDeploymentId);
 
+        // now register the CARP data manager for uploading data back to CARP
+        DataManagerRegistry().register(CarpDataManager());
+
         break;
     }
 
