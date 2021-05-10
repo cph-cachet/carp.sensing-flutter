@@ -1,3 +1,6 @@
+## 0.21.1
+* upgrade to `carp_mobile_sensing` and `carp_webservices` v. 0.21.4
+
 ## 0.21.0
 * upgrade to `carp_mobile_sensing` and `carp_webservices` v. 0.21.x
 * added the `CarptudyProtocolManager` which allow getting `CAMSStudyProtocol`s from CARP

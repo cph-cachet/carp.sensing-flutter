@@ -126,6 +126,7 @@ void main() async {
 
   StudyDeploymentStatus status_2 =
       await CarpDeploymentService().getStudyDeploymentStatus(studyDeploymentId);
+  print(status_2);
 
   // get the master device deployment
   MasterDeviceDeployment deployment =
