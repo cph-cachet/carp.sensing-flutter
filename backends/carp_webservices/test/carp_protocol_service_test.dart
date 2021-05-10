@@ -55,7 +55,7 @@ void main() {
       () async {
         StudyProtocol protocol = StudyProtocol(
             ownerId: ownerId,
-            name: name,
+            name: '$name-1.0',
             description: 'Generated from carp_webservices unit test.')
           ..addMasterDevice(Smartphone(roleName: 'smartphone'));
 
@@ -67,7 +67,7 @@ void main() {
         //   '{"version":1}',
         // );
 
-        await CANSProtocolService().add(protocol);
+        await CANSProtocolService().add(protocol, '1.1');
       },
     );
 
