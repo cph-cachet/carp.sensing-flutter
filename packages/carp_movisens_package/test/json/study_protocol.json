@@ -1,6 +1,6 @@
 {
-  "$type": "dk.cachet.carp.protocols.domain.CAMSStudyProtocol",
   "name": "Context package test",
+  "creationDate": "2021-05-10 11:54:41.612Z",
   "masterDevices": [
    {
     "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
@@ -17,14 +17,15 @@
     "samplingConfiguration": {}
    }
   ],
-  "triggers": [
-   {
+  "connections": [],
+  "triggers": {
+   "0": {
     "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
    },
-   {
+   "1": {
     "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
    }
-  ],
+  },
   "tasks": [
    {
     "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
@@ -145,19 +146,20 @@
    {
     "triggerId": 0,
     "taskName": "Task #5",
-    "destinationDeviceRoleName": "masterphone"
+    "targetDeviceRoleName": "masterphone"
    },
    {
     "triggerId": 1,
     "taskName": "Task #6",
-    "destinationDeviceRoleName": "movisens"
+    "targetDeviceRoleName": "movisens"
    }
   ],
+  "expectedParticipantData": [],
   "owner": {
-   "$type": "dk.cachet.carp.protocols.domain.ProtocolOwner",
+   "$type": "ProtocolOwner",
    "id": "jakba",
    "name": "Jakob E. Bardram",
    "email": "jakba@dtu.dk"
   },
-  "dataFormat": "dk.cachet.carp"
+  "ownerId": "jakba"
  }

@@ -20,7 +20,8 @@ class MovisensDevice extends DeviceDescriptor {
   MovisensDevice({
     String roleName = DEFAULT_ROLENAME,
     List<String> supportedDataTypes,
-  }) : super(
+  })
+      : super(
           roleName: roleName,
           isMasterDevice: false,
           supportedDataTypes: supportedDataTypes,
@@ -42,7 +43,7 @@ class MovisensDeviceManager extends DeviceManager {
   String get connectionStatus => _connectionStatus;
 
   Future initialize(String type) async {
-    await super.initialize(type);
+    super.initialize(type);
 
     // TODO - should be possible to init a device manager before connecting to the probe.....
     assert(movisens != null, 'The Movisens probe has not been initialized.');
@@ -67,6 +68,7 @@ class MovisensDeviceManager extends DeviceManager {
   /// The latest read of the battery level of the Movisens device.
   int get batteryLevel => _batteryLevel;
 
+  bool canConnect() => true;
   Future connect() async {}
   Future disconnect() async {}
 }

@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:carp_movisens_package/movisens.dart';
 import 'package:test/test.dart';
 
-import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 String _encode(Object object) =>
@@ -66,15 +65,15 @@ void main() {
     print('#1 : $protocol');
     final studyJson = toJsonString(protocol);
 
-    StudyProtocol protocolFromJson =
-        StudyProtocol.fromJson(json.decode(studyJson) as Map<String, dynamic>);
+    CAMSStudyProtocol protocolFromJson = CAMSStudyProtocol
+        .fromJson(json.decode(studyJson) as Map<String, dynamic>);
     expect(toJsonString(protocolFromJson), equals(studyJson));
     print('#2 : $protocolFromJson');
   });
 
   test('JSON File -> StudyProtocol', () async {
     // Read the study protocol from json file
-    String plainJson = File('test/json/study_1.json').readAsStringSync();
+    String plainJson = File('test/json/study_protocol.json').readAsStringSync();
 
     CAMSStudyProtocol protocol = CAMSStudyProtocol
         .fromJson(json.decode(plainJson) as Map<String, dynamic>);

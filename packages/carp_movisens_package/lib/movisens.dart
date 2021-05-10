@@ -24,7 +24,6 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:openmhealth_schemas/openmhealth_schemas.dart' as omh;
 import 'package:permission_handler/permission_handler.dart';
 
-import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 part 'movisens_measure.dart';

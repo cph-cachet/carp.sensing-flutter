@@ -11,8 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   json_annotation: ^3.0.0
-  carp_core: ^0.20.0      # the core CARP domain model
-  carp_mobile_sensing: ^0.20.0
+  carp_mobile_sensing: ^0.21.0
   movisens_flutter: ^0.1.5
   convert: ^2.1.1
   openmhealth_schemas: ^0.1.4

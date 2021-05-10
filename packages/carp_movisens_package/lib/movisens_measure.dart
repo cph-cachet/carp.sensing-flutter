@@ -42,7 +42,8 @@ class MovisensMeasure extends CAMSMeasure {
     this.height,
     this.weight,
     this.age,
-  }) : super(
+  })
+      : super(
             type: type, name: name, description: description, enabled: enabled);
 
   Function get fromJsonFunction => _$MovisensMeasureFromJson;
