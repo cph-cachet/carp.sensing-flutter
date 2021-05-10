@@ -24,6 +24,8 @@ class FileStudyProtocolManager implements StudyProtocolManager {
   Future initialize() async {
     final _studyPath = await path;
 
+    CAMSStudyProtocol(); // to initialize json serialization for CAMS classes
+
     info('Initializing FileDeploymentService...');
     info('Study file path : $_studyPath');
   }

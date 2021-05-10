@@ -10,9 +10,6 @@ part of runtime;
 /// A local (in-memory) implementation of a [DeploymentService] useful in
 /// CAMS studies to be deployed locally on this phone.
 class SmartphoneDeploymentService implements DeploymentService {
-  /// The default rolename for this master phone device.
-  // static const String DEFAULT_MASTER_DEVICE_ROLENAME = 'phone';
-
   // key = studyDeploymentId
   final Map<String, StudyDeployment> _repository = {};
 
@@ -29,6 +26,7 @@ class SmartphoneDeploymentService implements DeploymentService {
   /// Create a new [StudyDeployment] based on a [StudyProtocol].
   /// [studyDeploymentId] specify the study deployment id.
   /// If not specified, an UUID v1 id is generated.
+  @override
   Future<StudyDeploymentStatus> createStudyDeployment(
     StudyProtocol protocol, [
     String studyDeploymentId,
@@ -45,6 +43,7 @@ class SmartphoneDeploymentService implements DeploymentService {
     return deployment.status;
   }
 
+  @override
   Future<Set<String>> removeStudyDeployments(
       Set<String> studyDeploymentIds) async {
     Set<String> removedKeys = {};
@@ -57,10 +56,12 @@ class SmartphoneDeploymentService implements DeploymentService {
     return removedKeys;
   }
 
+  @override
   Future<StudyDeploymentStatus> getStudyDeploymentStatus(
           String studyDeploymentId) async =>
       _repository[studyDeploymentId]?.status;
 
+  @override
   Future<StudyDeploymentStatus> registerDevice(String studyDeploymentId,
       String deviceRoleName, DeviceRegistration registration) async {
     StudyDeployment deployment = _repository[studyDeploymentId];
@@ -78,6 +79,7 @@ class SmartphoneDeploymentService implements DeploymentService {
     return deployment.status;
   }
 
+  @override
   Future<StudyDeploymentStatus> unregisterDevice(
       String studyDeploymentId, String deviceRoleName) async {
     StudyDeployment deployment = _repository[studyDeploymentId];
@@ -89,9 +91,8 @@ class SmartphoneDeploymentService implements DeploymentService {
     return deployment.status;
   }
 
-  /// Get a deployment configuration for a master device with
-  /// [studyDeploymentId].
-  Future<CAMSMasterDeviceDeployment> getDeviceDeploymentFor(
+  @override
+  Future<MasterDeviceDeployment> getDeviceDeploymentFor(
     String studyDeploymentId,
     String masterDeviceRoleName,
   ) async {
@@ -105,33 +106,45 @@ class SmartphoneDeploymentService implements DeploymentService {
     MasterDeviceDeployment deviceDeployment =
         deployment.getDeviceDeploymentFor(device);
 
-    CAMSStudyProtocol protocol = (deployment.protocol is CAMSStudyProtocol)
-        ? deployment.protocol as CAMSStudyProtocol
-        : null;
+    if (deployment.protocol is CAMSStudyProtocol) {
+      CAMSStudyProtocol protocol = deployment.protocol as CAMSStudyProtocol;
 
-    return CAMSMasterDeviceDeployment.fromMasterDeviceDeployment(
-      studyId: protocol.studyId ?? studyDeploymentId,
-      studyDeploymentId: studyDeploymentId,
-      name: deployment.protocol.name,
-      protocolDescription: protocol?.protocolDescription ?? null,
-      owner: protocol?.owner ?? null,
-      dataFormat: protocol?.dataFormat,
-      dataEndPoint: protocol?.dataEndPoint,
-      masterDeviceDeployment: deviceDeployment,
-    );
+      // this local deployment service use a file dataendpoint per default
+      DataEndPoint dataEndPoint = FileDataEndPoint(
+        bufferSize: 500 * 1000,
+        zip: true,
+        encrypt: false,
+      );
+
+      return CAMSMasterDeviceDeployment.fromMasterDeviceDeployment(
+        studyId: protocol?.studyId ?? studyDeploymentId,
+        studyDeploymentId: studyDeploymentId,
+        name: protocol?.name,
+        protocolDescription: protocol?.protocolDescription ?? null,
+        owner: protocol?.owner ?? null,
+        dataEndPoint: dataEndPoint,
+        masterDeviceDeployment: deviceDeployment,
+      );
+    } else {
+      return deviceDeployment;
+    }
   }
 
   /// Get a deployment configuration for this master device (phone)
   /// for [studyDeploymentId].
+  ///
+  /// The default data endpoint is set to a [FileDataEndPoint], i.e. storing
+  /// the data locally on the phone as zipped files.
   Future<CAMSMasterDeviceDeployment> getDeviceDeployment(
           String studyDeploymentId) async =>
       await getDeviceDeploymentFor(studyDeploymentId, thisPhone.roleName);
 
+  @override
   Future<StudyDeploymentStatus> deploymentSuccessfulFor(
     String studyDeploymentId,
-    String masterDeviceRoleName, {
+    String masterDeviceRoleName,
     DateTime deviceDeploymentLastUpdateDate,
-  }) async {
+  ) async {
     deviceDeploymentLastUpdateDate ??= DateTime.now();
 
     StudyDeployment deployment = _repository[studyDeploymentId];
@@ -158,13 +171,24 @@ class SmartphoneDeploymentService implements DeploymentService {
       deploymentSuccessfulFor(
         studyDeploymentId,
         thisPhone.roleName,
-        deviceDeploymentLastUpdateDate: deviceDeploymentLastUpdateDate,
+        deviceDeploymentLastUpdateDate,
       );
 
   /// Stop the study deployment with [studyDeploymentId].
+  @override
   Future<StudyDeploymentStatus> stop(String studyDeploymentId) async {
     StudyDeployment deployment = _repository[studyDeploymentId];
     deployment.stop();
     return deployment.status;
   }
+
+  @override
+  Future<List<StudyDeploymentStatus>> getStudyDeploymentStatusList(
+      List<String> studyDeploymentIds) {
+    // TODO: implement getStudyDeploymentStatusList
+    throw UnimplementedError();
+  }
+
+  @override
+  String toString() => runtimeType.toString();
 }

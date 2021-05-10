@@ -6,182 +6,6 @@
  */
 part of carp_services;
 
-/// Provide a collection reference to a CARP web service.
-///
-/// The Collections endpoint allows you to store and query custom documents to
-/// suit your specific application's needs.
-///
-/// Note that the collection / document structure is like this:
-///
-/// `collection/document/collection/document/...`
-///
-/// I.e., that a collection holds a list of documents, which each can hold a list of collections, etc.
-/// For example, the following
-///
-/// `activities/running/geopositions/pos_1`
-///
-/// is a reference to the geoposition document `pos_1` in the collection `geopositions` in the document `running`
-/// in the collection `activities`.
-class CollectionReference extends CarpReference {
-  int _id;
-  String _path;
-
-  /// Creates a [CollectionReference] based on the path to the
-  /// collection, relative to the root of the web service.
-  ///
-  /// Note that [path] should be relative and NOT start with `/`.
-  /// For example; `activities/running/geopositions`
-  CollectionReference._(CarpService service, this._path) : super._(service) {
-    assert(_path != null);
-    assert(!(_path.startsWith('/')) || _path.length == 0);
-  }
-
-  /// ID of the referenced collection.
-  ///
-  /// If [id] is -1, then this collection has been deleted and is no longer available on the server.
-  int get id => _id;
-
-  /// The name of the referenced collection.
-  String get name => path.split('/').last;
-
-  /// Returns the path of this collection (relative to the root of the web service).
-  String get path => _path;
-
-  /// The full CARP web service path to this collection.
-  String get carpPath =>
-      '/api/studies/${service.app.studyId}/collections/$path';
-
-  /// The full URI for the collection endpoint for this [CollectionReference].
-  String get collectionUri => "${service.app.uri.toString()}$carpPath";
-
-  /// The full URI for the collection endpoint for this [CollectionReference] by its unique [id].
-  String get collectionUriByID =>
-      '${service.app.uri.toString()}/api/studies/${service.app.studyId}/collections/id/$id';
-
-  /// Reads the collection referenced by this [CollectionReference] from the server.
-  ///
-  /// If no collection exists on the server (yet), this local CollectionReference is returned.
-  Future<CollectionReference> get() async {
-    final restHeaders = await headers;
-
-    http.Response response =
-        await httpr.get(Uri.encodeFull(collectionUri), headers: restHeaders);
-    int httpStatusCode = response.statusCode;
-
-    Map<String, dynamic> responseJson = json.decode(response.body);
-    if (httpStatusCode == HttpStatus.ok)
-      return this
-        .._id = responseJson['id']
-        .._path = responseJson["name"];
-
-    // All other cases are treated as an error.
-    throw CarpServiceException(
-      httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: responseJson["message"],
-    );
-  }
-
-  /// Get the documents in this collection.
-  Future<List<DocumentSnapshot>> get documents async {
-    final restHeaders = await headers;
-
-    //print('uri :: $collectionUri');
-    http.Response response =
-        await httpr.get(Uri.encodeFull(collectionUri), headers: restHeaders);
-    int httpStatusCode = response.statusCode;
-
-    Map<String, dynamic> responseJson = json.decode(response.body);
-    if (httpStatusCode == HttpStatus.ok) {
-      List<dynamic> documentsJson = responseJson['documents'];
-      List<DocumentSnapshot> documents = new List<DocumentSnapshot>();
-      for (var documentJson in documentsJson) {
-        String key = documentJson["name"];
-        documents.add(DocumentSnapshot._("$path/$key", documentJson));
-      }
-
-      return documents;
-    }
-
-    // All other cases are treated as an error.
-    throw CarpServiceException(
-      httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: responseJson["message"],
-    );
-  }
-
-  /// Returns a [DocumentReference] with the provided name in this collection.
-  ///
-  /// If no [name] is provided, an auto-generated name is used.
-  DocumentReference document([String name]) {
-    String documentPath;
-    if (name == null) {
-      final String key = PushIdGenerator.generatePushChildName();
-      documentPath = "$path/$key";
-    } else {
-      documentPath = "$path/$name";
-    }
-
-    return DocumentReference._path(service, documentPath);
-  }
-
-  /// Add a data document to this collection and returns a [DocumentReference] to this document.
-  ///
-  /// If no [name] is provided, an auto-generated name is used.
-  /// If no (data] is provided now, this can be set later using the [DocumentReference.setData()] method.
-  Future<DocumentReference> add(
-      [String name, Map<String, dynamic> data]) async {
-    final DocumentReference newDocument = document(name);
-    if (data != null) await newDocument.setData(data);
-    return newDocument;
-  }
-
-  /// Rename this collection.
-  Future rename(String newName) async {
-    assert(newName != null);
-    final restHeaders = await headers;
-
-    // PUT the new name of this collection to the CARP web service
-    http.Response response = await httpr.put(Uri.encodeFull(collectionUriByID),
-        headers: restHeaders, body: '{"name":"$newName"}');
-    int httpStatusCode = response.statusCode;
-    Map<String, dynamic> responseJson = json.decode(response.body);
-
-    if (httpStatusCode == HttpStatus.ok) {
-      int start = _path.length - _path.split('/').last.length;
-      _path = _path.replaceRange(start, _path.length,
-          newName); // renaming path, i.e. the last part of the path
-      return;
-    }
-    // All other cases are treated as an error.
-    throw CarpServiceException(
-      httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: responseJson["message"],
-    );
-  }
-
-  /// Deletes the collection referred to by this [CollectionReference].
-  Future delete() async {
-    final restHeaders = await headers;
-
-    http.Response response = await httpr
-        .delete(Uri.encodeFull(collectionUriByID), headers: restHeaders);
-
-    int httpStatusCode = response.statusCode;
-    if (httpStatusCode == HttpStatus.ok) {
-      this._id = -1;
-      return;
-    } else {
-      final Map<String, dynamic> responseJson = json.decode(response.body);
-      throw CarpServiceException(
-        httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-        message: responseJson["message"],
-      );
-    }
-  }
-
-  String toString() => 'CollectionReference - id: $id, path: $path';
-}
-
 /// A [DocumentReference] refers to a document in a CARP collection
 /// and can be used to write, read, or delete this document.
 ///
@@ -233,16 +57,10 @@ class DocumentReference extends CarpReference {
 
     // If this document does not already exist on the server (i.e., have an ID), then create it
     if (id == null) {
-      final restHeaders = await headers;
-
-      //print("url : $documentUri");
-
       http.Response response = await httpr.post(Uri.encodeFull(documentUri),
-          headers: restHeaders, body: json.encode(data));
+          headers: headers, body: json.encode(data));
       int httpStatusCode = response.statusCode;
       Map<String, dynamic> responseJson = json.decode(response.body);
-
-      //print("body :\n${response.body}");
 
       if ((httpStatusCode == HttpStatus.ok) ||
           (httpStatusCode == HttpStatus.created))
@@ -265,10 +83,9 @@ class DocumentReference extends CarpReference {
     // if we don't have the document ID, get it first.
     if (id == null) _id = (await this.get()).id;
 
-    final restHeaders = await headers;
     Map<String, dynamic> payload = {'data': data};
     http.Response response = await httpr.put(Uri.encodeFull(documentUri),
-        headers: restHeaders, body: json.encode(payload));
+        headers: headers, body: json.encode(payload));
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
@@ -293,10 +110,9 @@ class DocumentReference extends CarpReference {
     // if we don't have the document ID, get it first.
     if (id == null) _id = (await this.get()).id;
 
-    final restHeaders = await headers;
     Map<String, dynamic> payload = {'name': name};
     http.Response response = await httpr.put(Uri.encodeFull(documentUri),
-        headers: restHeaders, body: json.encode(payload));
+        headers: headers, body: json.encode(payload));
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
@@ -314,27 +130,28 @@ class DocumentReference extends CarpReference {
   ///
   /// If no document exists, the read will return null.
   Future<DocumentSnapshot> get() async {
-    final restHeaders = await headers;
-
     http.Response response =
-        await httpr.get(Uri.encodeFull(documentUri), headers: restHeaders);
+        await httpr.get(Uri.encodeFull(documentUri), headers: headers);
 
     int httpStatusCode = response.statusCode;
+    Map<String, dynamic> jsonResponse = json.decode(response.body);
 
-    if (httpStatusCode == HttpStatus.ok)
-      return DocumentSnapshot._(path, json.decode(response.body));
-    else
+    if (httpStatusCode == HttpStatus.ok) {
+      _id = jsonResponse['id'];
+      return DocumentSnapshot._(path, jsonResponse);
+    } else {
       return null;
+    }
   }
 
   /// Deletes the document referred to by this [DocumentReference].
   Future delete() async {
     // if we don't have the document ID, get it first.
-    if (id == null) _id = (await this.get()).id;
+    if (id == null) _id = (await this.get())?.id;
+    if (_id == null) return; // early out if this document does not exist
 
-    final restHeaders = await headers;
     http.Response response =
-        await http.delete(Uri.encodeFull(documentUri), headers: restHeaders);
+        await http.delete(Uri.encodeFull(documentUri), headers: headers);
 
     int httpStatusCode = response.statusCode;
     if (httpStatusCode == HttpStatus.ok)
@@ -350,7 +167,7 @@ class DocumentReference extends CarpReference {
 
   /// Returns the reference of a collection contained inside of this document.
   CollectionReference collection(String name) =>
-      service.collection("$path/$name");
+      (service as CarpService).collection("$path/$name");
 
   // TODO - this is deprecated and not working for now.
 //  /// Fetch the list of collections (names) in this collection.
@@ -421,7 +238,7 @@ class DocumentSnapshot {
   DateTime get updatedAt => DateTime.parse(_snapshot['updated_at']);
 
   List<String> get collections {
-    List<String> collections = new List<String>();
+    List<String> collections = [];
     for (var item in _snapshot['collections']) {
       String key = item["name"];
       collections.add(key);

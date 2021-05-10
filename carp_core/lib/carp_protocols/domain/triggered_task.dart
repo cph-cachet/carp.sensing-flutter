@@ -23,7 +23,7 @@ class TriggeredTask {
 
   /// The role name of the device to which to send the task with [taskName]
   /// when the [trigger] condition is met.
-  String destinationDeviceRoleName;
+  String targetDeviceRoleName;
 
   @JsonKey(ignore: true)
   TaskDescriptor task;
@@ -34,7 +34,7 @@ class TriggeredTask {
   TriggeredTask({this.triggerId, this.task, this.targetDevice}) : super() {
     this.triggerId ??= _counter++;
     this.taskName = task?.name;
-    this.destinationDeviceRoleName = targetDevice?.roleName;
+    this.targetDeviceRoleName = targetDevice?.roleName;
   }
 
   factory TriggeredTask.fromJson(Map<String, dynamic> json) =>
@@ -42,5 +42,5 @@ class TriggeredTask {
   Map<String, dynamic> toJson() => _$TriggeredTaskToJson(this);
 
   String toString() =>
-      '$runtimeType - triggerId: $triggerId, task: $taskName, destinationDeviceRoleName: $destinationDeviceRoleName';
+      '$runtimeType - triggerId: $triggerId, task: $taskName, targetDeviceRoleName: $targetDeviceRoleName';
 }

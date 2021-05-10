@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_core_protocols;
+part of domain;
 
 /// A person that created a [StudyProtocol].
 /// Typically the Principal Investigator (PI) who is reposnibile for the study.
@@ -31,7 +31,6 @@ class ProtocolOwner extends Serializable {
   factory ProtocolOwner.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json);
   Map<String, dynamic> toJson() => _$ProtocolOwnerToJson(this);
-  String get jsonType => '${StudyProtocol.PROTOCOL_NAMESPACE}.$runtimeType';
 
   String toString() => '$runtimeType - $name, $title <$email>';
 }

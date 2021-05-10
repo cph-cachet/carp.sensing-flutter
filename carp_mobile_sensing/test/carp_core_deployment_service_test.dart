@@ -1,16 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:test/test.dart';
-import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_mobile_sensing/runtime/runtime.dart';
 
 void main() {
-  StudyProtocol protocol;
+  CAMSStudyProtocol protocol;
 
   setUp(() {
-    CAMSStudyProtocol();
-    protocol = StudyProtocol(
+    protocol = CAMSStudyProtocol(
         owner: ProtocolOwner(id: 'xyz@dtu.dk'), name: 'Track patient movement');
 
     // Define which devices are used for data collection.
@@ -40,7 +38,7 @@ void main() {
 
   test('JSON File -> StudyProtocol', () async {
     // Read the study protocol from json file
-    String plainJson = File('test/json/study_1.json').readAsStringSync();
+    String plainJson = File('test/json/study_protocol.json').readAsStringSync();
 
     CAMSStudyProtocol protocol = CAMSStudyProtocol
         .fromJson(json.decode(plainJson) as Map<String, dynamic>);
@@ -53,7 +51,7 @@ void main() {
 
   test('Deploy protocol -> CAMSDeploymentService()', () async {
     // Read the study protocol from json file
-    String plainJson = File('test/json/study_1.json').readAsStringSync();
+    String plainJson = File('test/json/study_protocol.json').readAsStringSync();
 
     CAMSStudyProtocol protocol = CAMSStudyProtocol
         .fromJson(json.decode(plainJson) as Map<String, dynamic>);
@@ -69,10 +67,10 @@ void main() {
 
   test('Get deployment <- CAMSDeploymentService()', () async {
     // Read the study protocol from json file
-    String plainJson = File('test/json/study_1.json').readAsStringSync();
+    String plainJson = File('test/json/study_protocol.json').readAsStringSync();
 
-    StudyProtocol protocol =
-        StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
+    CAMSStudyProtocol protocol = CAMSStudyProtocol
+        .fromJson(json.decode(plainJson) as Map<String, dynamic>);
 
     StudyDeploymentStatus status =
         await SmartphoneDeploymentService().createStudyDeployment(protocol);

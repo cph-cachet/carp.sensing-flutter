@@ -9,7 +9,7 @@ class DeviceModel {
   DeviceManager deviceManager;
   String get type => deviceManager.type;
   DeviceStatus get status => deviceManager.status;
-  Stream<DeviceStatus> get deviceEvents => deviceManager.deviceEvents;
+  Stream<DeviceStatus> get deviceEvents => deviceManager.statusEvents;
 
   /// The device id.
   String get id => deviceManager.id;

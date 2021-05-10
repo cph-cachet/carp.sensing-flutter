@@ -13,10 +13,11 @@ class ConsoleDataManager extends AbstractDataManager {
   String get type => DataEndPointTypes.PRINT;
 
   Future initialize(
-    CAMSMasterDeviceDeployment deployment,
+    String studyDeploymentId,
+    DataEndPoint dataEndPoint,
     Stream<DataPoint> data,
   ) async {
-    await super.initialize(deployment, data);
+    await super.initialize(studyDeploymentId, dataEndPoint, data);
     assert(dataEndPoint is DataEndPoint);
   }
 

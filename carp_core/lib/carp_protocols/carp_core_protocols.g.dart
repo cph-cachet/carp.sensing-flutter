@@ -184,6 +184,28 @@ Map<String, dynamic> _$AltBeaconToJson(AltBeacon instance) {
   return val;
 }
 
+DeviceConnection _$DeviceConnectionFromJson(Map<String, dynamic> json) {
+  return DeviceConnection(
+    json['roleName'] as String,
+    json['connectedToRoleName'] as String,
+  )..$type = json[r'$type'] as String;
+}
+
+Map<String, dynamic> _$DeviceConnectionToJson(DeviceConnection instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(r'$type', instance.$type);
+  writeNotNull('roleName', instance.roleName);
+  writeNotNull('connectedToRoleName', instance.connectedToRoleName);
+  return val;
+}
+
 Measure _$MeasureFromJson(Map<String, dynamic> json) {
   return Measure(
     type: json['type'] as String,
@@ -248,13 +270,13 @@ Map<String, dynamic> _$PhoneSensorMeasureToJson(PhoneSensorMeasure instance) {
 
 StudyProtocol _$StudyProtocolFromJson(Map<String, dynamic> json) {
   return StudyProtocol(
-    owner: json['owner'] == null
-        ? null
-        : ProtocolOwner.fromJson(json['owner'] as Map<String, dynamic>),
+    ownerId: json['ownerId'] as String,
     name: json['name'] as String,
     description: json['description'] as String,
   )
-    ..$type = json[r'$type'] as String
+    ..creationDate = json['creationDate'] == null
+        ? null
+        : DateTime.parse(json['creationDate'] as String)
     ..masterDevices = (json['masterDevices'] as List)
         ?.map((e) => e == null
             ? null
@@ -265,19 +287,27 @@ StudyProtocol _$StudyProtocolFromJson(Map<String, dynamic> json) {
             ? null
             : DeviceDescriptor.fromJson(e as Map<String, dynamic>))
         ?.toList()
-    ..triggers = (json['triggers'] as List)
-        ?.map((e) =>
-            e == null ? null : Trigger.fromJson(e as Map<String, dynamic>))
+    ..connections = (json['connections'] as List)
+        ?.map((e) => e == null
+            ? null
+            : DeviceConnection.fromJson(e as Map<String, dynamic>))
         ?.toList()
+    ..triggers = (json['triggers'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(
+          k, e == null ? null : Trigger.fromJson(e as Map<String, dynamic>)),
+    )
     ..tasks = (json['tasks'] as List)
         ?.map((e) => e == null
             ? null
             : TaskDescriptor.fromJson(e as Map<String, dynamic>))
-        ?.toList()
+        ?.toSet()
     ..triggeredTasks = (json['triggeredTasks'] as List)
         ?.map((e) => e == null
             ? null
             : TriggeredTask.fromJson(e as Map<String, dynamic>))
+        ?.toList()
+    ..expectedParticipantData = (json['expectedParticipantData'] as List)
+        ?.map((e) => e as Map<String, dynamic>)
         ?.toList();
 }
 
@@ -290,45 +320,17 @@ Map<String, dynamic> _$StudyProtocolToJson(StudyProtocol instance) {
     }
   }
 
-  writeNotNull(r'$type', instance.$type);
-  writeNotNull('owner', instance.owner);
+  writeNotNull('ownerId', instance.ownerId);
   writeNotNull('name', instance.name);
   writeNotNull('description', instance.description);
+  writeNotNull('creationDate', instance.creationDate?.toIso8601String());
   writeNotNull('masterDevices', instance.masterDevices);
   writeNotNull('connectedDevices', instance.connectedDevices);
+  writeNotNull('connections', instance.connections);
   writeNotNull('triggers', instance.triggers);
-  writeNotNull('tasks', instance.tasks);
+  writeNotNull('tasks', instance.tasks?.toList());
   writeNotNull('triggeredTasks', instance.triggeredTasks);
-  return val;
-}
-
-ProtocolOwner _$ProtocolOwnerFromJson(Map<String, dynamic> json) {
-  return ProtocolOwner(
-    id: json['id'] as String,
-    name: json['name'] as String,
-    title: json['title'] as String,
-    email: json['email'] as String,
-    affiliation: json['affiliation'] as String,
-    address: json['address'] as String,
-  )..$type = json[r'$type'] as String;
-}
-
-Map<String, dynamic> _$ProtocolOwnerToJson(ProtocolOwner instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull(r'$type', instance.$type);
-  writeNotNull('id', instance.id);
-  writeNotNull('name', instance.name);
-  writeNotNull('title', instance.title);
-  writeNotNull('email', instance.email);
-  writeNotNull('address', instance.address);
-  writeNotNull('affiliation', instance.affiliation);
+  writeNotNull('expectedParticipantData', instance.expectedParticipantData);
   return val;
 }
 
@@ -415,7 +417,7 @@ TriggeredTask _$TriggeredTaskFromJson(Map<String, dynamic> json) {
     triggerId: json['triggerId'] as int,
   )
     ..taskName = json['taskName'] as String
-    ..destinationDeviceRoleName = json['destinationDeviceRoleName'] as String;
+    ..targetDeviceRoleName = json['targetDeviceRoleName'] as String;
 }
 
 Map<String, dynamic> _$TriggeredTaskToJson(TriggeredTask instance) {
@@ -429,7 +431,7 @@ Map<String, dynamic> _$TriggeredTaskToJson(TriggeredTask instance) {
 
   writeNotNull('triggerId', instance.triggerId);
   writeNotNull('taskName', instance.taskName);
-  writeNotNull('destinationDeviceRoleName', instance.destinationDeviceRoleName);
+  writeNotNull('targetDeviceRoleName', instance.targetDeviceRoleName);
   return val;
 }
 
@@ -516,8 +518,8 @@ ScheduledTrigger _$ScheduledTriggerFromJson(Map<String, dynamic> json) {
         : TimeOfDay.fromJson(json['time'] as Map<String, dynamic>),
     recurrenceRule: json['recurrenceRule'] == null
         ? null
-        : RecurrenceRule
-            .fromJson(json['recurrenceRule'] as Map<String, dynamic>),
+        : RecurrenceRule.fromJson(
+            json['recurrenceRule'] as Map<String, dynamic>),
   )
     ..$type = json[r'$type'] as String
     ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String
@@ -678,5 +680,217 @@ Map<String, dynamic> _$SamplingConfigurationToJson(
   }
 
   writeNotNull(r'$type', instance.$type);
+  return val;
+}
+
+StudyProtocolId _$StudyProtocolIdFromJson(Map<String, dynamic> json) {
+  return StudyProtocolId(
+    json['ownerId'] as String,
+    json['name'] as String,
+  );
+}
+
+Map<String, dynamic> _$StudyProtocolIdToJson(StudyProtocolId instance) =>
+    <String, dynamic>{
+      'ownerId': instance.ownerId,
+      'name': instance.name,
+    };
+
+ParticipantAttribute _$ParticipantAttributeFromJson(Map<String, dynamic> json) {
+  return ParticipantAttribute(
+    json['inputType'] as String,
+  );
+}
+
+Map<String, dynamic> _$ParticipantAttributeToJson(
+        ParticipantAttribute instance) =>
+    <String, dynamic>{
+      'inputType': instance.inputType,
+    };
+
+ProtocolVersion _$ProtocolVersionFromJson(Map<String, dynamic> json) {
+  return ProtocolVersion(
+    json['tag'] as String,
+  )..date =
+      json['date'] == null ? null : DateTime.parse(json['date'] as String);
+}
+
+Map<String, dynamic> _$ProtocolVersionToJson(ProtocolVersion instance) =>
+    <String, dynamic>{
+      'tag': instance.tag,
+      'date': instance.date?.toIso8601String(),
+    };
+
+Add _$AddFromJson(Map<String, dynamic> json) {
+  return Add(
+    json['protocol'] == null
+        ? null
+        : StudyProtocol.fromJson(json['protocol'] as Map<String, dynamic>),
+    json['versionTag'] as String,
+  )..$type = json[r'$type'] as String;
+}
+
+Map<String, dynamic> _$AddToJson(Add instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(r'$type', instance.$type);
+  val['protocol'] = instance.protocol;
+  val['versionTag'] = instance.versionTag;
+  return val;
+}
+
+AddVersion _$AddVersionFromJson(Map<String, dynamic> json) {
+  return AddVersion(
+    json['protocol'] == null
+        ? null
+        : StudyProtocol.fromJson(json['protocol'] as Map<String, dynamic>),
+    json['versionTag'] as String,
+  )..$type = json[r'$type'] as String;
+}
+
+Map<String, dynamic> _$AddVersionToJson(AddVersion instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(r'$type', instance.$type);
+  val['protocol'] = instance.protocol;
+  val['versionTag'] = instance.versionTag;
+  return val;
+}
+
+UpdateParticipantDataConfiguration _$UpdateParticipantDataConfigurationFromJson(
+    Map<String, dynamic> json) {
+  return UpdateParticipantDataConfiguration(
+    json['protocolId'] == null
+        ? null
+        : StudyProtocolId.fromJson(json['protocolId'] as Map<String, dynamic>),
+    json['versionTag'] as String,
+    (json['expectedParticipantData'] as List)
+        ?.map((e) => e == null
+            ? null
+            : ParticipantAttribute.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
+  )..$type = json[r'$type'] as String;
+}
+
+Map<String, dynamic> _$UpdateParticipantDataConfigurationToJson(
+    UpdateParticipantDataConfiguration instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(r'$type', instance.$type);
+  val['protocolId'] = instance.protocolId;
+  val['versionTag'] = instance.versionTag;
+  val['expectedParticipantData'] = instance.expectedParticipantData;
+  return val;
+}
+
+GetBy _$GetByFromJson(Map<String, dynamic> json) {
+  return GetBy(
+    json['protocolId'] == null
+        ? null
+        : StudyProtocolId.fromJson(json['protocolId'] as Map<String, dynamic>),
+    json['versionTag'] as String,
+  )..$type = json[r'$type'] as String;
+}
+
+Map<String, dynamic> _$GetByToJson(GetBy instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(r'$type', instance.$type);
+  val['protocolId'] = instance.protocolId;
+  writeNotNull('versionTag', instance.versionTag);
+  return val;
+}
+
+GetAllFor _$GetAllForFromJson(Map<String, dynamic> json) {
+  return GetAllFor(
+    json['ownerId'] as String,
+  )..$type = json[r'$type'] as String;
+}
+
+Map<String, dynamic> _$GetAllForToJson(GetAllFor instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(r'$type', instance.$type);
+  val['ownerId'] = instance.ownerId;
+  return val;
+}
+
+GetVersionHistoryFor _$GetVersionHistoryForFromJson(Map<String, dynamic> json) {
+  return GetVersionHistoryFor(
+    json['protocolId'] == null
+        ? null
+        : StudyProtocolId.fromJson(json['protocolId'] as Map<String, dynamic>),
+  )..$type = json[r'$type'] as String;
+}
+
+Map<String, dynamic> _$GetVersionHistoryForToJson(
+    GetVersionHistoryFor instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(r'$type', instance.$type);
+  val['protocolId'] = instance.protocolId;
+  return val;
+}
+
+CreateCustomProtocol _$CreateCustomProtocolFromJson(Map<String, dynamic> json) {
+  return CreateCustomProtocol(
+    json['ownerId'] as String,
+    json['name'] as String,
+    json['description'] as String,
+    json['customProtocol'] as String,
+  )..$type = json[r'$type'] as String;
+}
+
+Map<String, dynamic> _$CreateCustomProtocolToJson(
+    CreateCustomProtocol instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(r'$type', instance.$type);
+  val['ownerId'] = instance.ownerId;
+  val['name'] = instance.name;
+  val['description'] = instance.description;
+  val['customProtocol'] = instance.customProtocol;
   return val;
 }

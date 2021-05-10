@@ -22,17 +22,21 @@ import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
-import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
+part 'carp_base_service.dart';
 part 'carp_service.dart';
 part 'deployment_service.dart';
+part 'participation_service.dart';
+part 'protocol_service.dart';
 part 'carp_app.dart';
 part 'carp_tasks.dart';
 part 'consent_document.dart';
+part 'carp_references.dart';
 part 'datapoint_reference.dart';
 part 'deployment_reference.dart';
 part 'participation_reference.dart';
+part 'collection_reference.dart';
 part 'document_reference.dart';
 part 'file_reference.dart';
 part 'http_retry.dart';

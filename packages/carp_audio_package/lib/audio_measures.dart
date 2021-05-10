@@ -23,7 +23,8 @@ class NoiseMeasure extends PeriodicMeasure {
     Duration frequency,
     Duration duration,
     this.samplingRate = DEFAULT_SAMPLING_RATE,
-  }) : super(
+  })
+      : super(
           type: type,
           name: name,
           description: description,

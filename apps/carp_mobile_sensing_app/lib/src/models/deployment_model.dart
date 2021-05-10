@@ -30,6 +30,6 @@ class StudyDeploymentModel {
 
   StudyDeploymentModel(this.deployment)
       : assert(deployment != null,
-            'A StudyModel must be initialized with a real Study.'),
+            'A StudyDeploymentModel must be initialized with a non-null CAMSMasterDeviceDeployment.'),
         super();
 }

@@ -6,62 +6,61 @@
  */
 part of runtime;
 
-/// The [DataManager] interface is used to upload [DataPoint] objects to any
-/// data manager that implements this interface.
-abstract class DataManager {
-  /// The type of this data manager as enumerated in [DataEndPointType].
-  String get type;
+// /// The [DataManager] interface is used to upload [DataPoint] objects to any
+// /// data manager that implements this interface.
+// abstract class DataManager {
+//   /// The ID of the study deployment that this manager is handling.
+//   String get studyDeploymentId;
 
-  /// Initialize the data manager by specifying the running [DataEndPoint]
-  /// and the stream of [Datum] events to handle.
-  Future initialize(
-    CAMSMasterDeviceDeployment deployment,
-    Stream<DataPoint> data,
-  );
+//   /// The type of this data manager as enumerated in [DataEndPointType].
+//   String get type;
 
-  /// Close the data manager (e.g. closing connections).
-  Future close();
+//   /// Initialize the data manager by specifying the study deployment id, the
+//   /// [DataEndPoint], and the stream of [DataPoint] events to handle.
+//   Future initialize(
+//     String studyDeploymentId,
+//     DataEndPoint dataEndPoint,
+//     Stream<DataPoint> data,
+//   );
 
-  /// Stream of data manager events.
-  Stream<DataManagerEvent> get events;
+//   /// Close the data manager (e.g. closing connections).
+//   Future close();
 
-  /// On each data event from the data stream, the [onDataPoint] handler is called.
-  void onDataPoint(DataPoint dataPoint);
+//   /// Stream of data manager events.
+//   Stream<DataManagerEvent> get events;
 
-  /// When the data stream closes, the [onDone] handler is called.
-  void onDone();
+//   /// On each data event from the data stream, the [onDataPoint] handler is called.
+//   void onDataPoint(DataPoint dataPoint);
 
-  /// When an error event is send on the stream, the [onError] handler is called.
-  void onError(error);
-}
+//   /// When the data stream closes, the [onDone] handler is called.
+//   void onDone();
+
+//   /// When an error event is send on the stream, the [onError] handler is called.
+//   void onError(error);
+// }
 
 /// An abstract [DataManager] implementation useful for extension.
 ///
-/// Takes data from a [Stream] and uploads these. Also supports JSON encoding.
+/// Takes data from a [Stream<DataPoint>] and uploads these. Also supports JSON encoding.
 abstract class AbstractDataManager implements DataManager {
-  // CAMSStudyProtocol study;
-  DataEndPoint get dataEndPoint => _deployment.dataEndPoint;
-  CAMSMasterDeviceDeployment _deployment;
-  CAMSMasterDeviceDeployment get deployment => _deployment;
+  String _studyDeploymentId;
+  String get studyDeploymentId => _studyDeploymentId;
+  DataEndPoint _dataEndPoint;
+  DataEndPoint get dataEndPoint => _dataEndPoint;
 
   StreamController<DataManagerEvent> controller = StreamController.broadcast();
   Stream<DataManagerEvent> get events => controller.stream;
   void addEvent(DataManagerEvent event) => controller.add(event);
 
   Future initialize(
-    CAMSMasterDeviceDeployment deployment,
+    String studyDeploymentId,
+    DataEndPoint dataEndPoint,
     Stream<DataPoint> data,
   ) async {
-    // this.dataEndPoint = dataE\ndPoint;
-    _deployment = deployment;
+    this._dataEndPoint = dataEndPoint;
+    this._studyDeploymentId = studyDeploymentId;
     data.listen(
-      (dataPoint) {
-        // set the header data for study and user id
-        dataPoint.carpHeader.studyId = deployment.studyId;
-        dataPoint.carpHeader.userId = deployment.userId;
-        // forward to sub-class
-        onDataPoint(dataPoint);
-      },
+      (dataPoint) => onDataPoint(dataPoint),
       onError: onError,
       onDone: onDone,
     );
@@ -75,8 +74,8 @@ abstract class AbstractDataManager implements DataManager {
   void onDone();
   void onError(error);
 
-  /// JSON encode an object.
-  String jsonEncode(Object object) =>
+  /// Encode [object] to a JSON string.
+  String toJsonString(Object object) =>
       const JsonEncoder.withIndent(' ').convert(object);
 }
 
@@ -96,9 +95,7 @@ class DataManagerRegistry {
   final Map<String, DataManager> _registry = {};
 
   /// Register a [DataManager] with a specific type.
-  void register(DataManager manager) {
-    _registry[manager.type] = manager;
-  }
+  void register(DataManager manager) => _registry[manager.type] = manager;
 
   /// Lookup an instance of a [DataManager] based on the [DataEndPointType].
   DataManager lookup(String type) {
@@ -106,22 +103,22 @@ class DataManagerRegistry {
   }
 }
 
-/// An event for a data manager.
-class DataManagerEvent {
-  /// The event type, see [DataManagerEventTypes].
-  String type;
+// /// An event for a data manager.
+// class DataManagerEvent {
+//   /// The event type, see [DataManagerEventTypes].
+//   String type;
 
-  /// Create a [DataManagerEvent].
-  DataManagerEvent(this.type);
+//   /// Create a [DataManagerEvent].
+//   DataManagerEvent(this.type);
 
-  String toString() => 'DataManagerEvent - type: $type';
-}
+//   String toString() => 'DataManagerEvent - type: $type';
+// }
 
-/// An enumeration of data manager event types
-class DataManagerEventTypes {
-  /// DATA MANAGER INITIALIZED event
-  static const String INITIALIZED = 'initialized';
+// /// An enumeration of data manager event types
+// class DataManagerEventTypes {
+//   /// DATA MANAGER INITIALIZED event
+//   static const String INITIALIZED = 'initialized';
 
-  /// DATA MANAGER CLOSED event
-  static const String CLOSED = 'closed';
-}
+//   /// DATA MANAGER CLOSED event
+//   static const String CLOSED = 'closed';
+// }

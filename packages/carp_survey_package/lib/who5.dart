@@ -12,45 +12,45 @@ RPOrderedTask who5Task = RPOrderedTask("who5TaskID", [
 ]);
 
 List<RPChoice> _who5Choices = [
-  RPChoice.withParams("All of the time", 5),
-  RPChoice.withParams("Most of the time", 4),
-  RPChoice.withParams("More than half of the time", 3),
-  RPChoice.withParams("Less than half of the time", 2),
-  RPChoice.withParams("Some of the time", 1),
-  RPChoice.withParams("At no time", 0),
+  RPChoice(text: "All of the time", value: 5),
+  RPChoice(text: "Most of the time", value: 4),
+  RPChoice(text: "More than half of the time", value: 3),
+  RPChoice(text: "Less than half of the time", value: 2),
+  RPChoice(text: "Some of the time", value: 1),
+  RPChoice(text: "At no time", value: 0),
 ];
 
-RPChoiceAnswerFormat _choiceAnswerFormat = RPChoiceAnswerFormat.withParams(
-    ChoiceAnswerStyle.SingleChoice, _who5Choices);
+RPChoiceAnswerFormat _choiceAnswerFormat = RPChoiceAnswerFormat(
+    answerStyle: RPChoiceAnswerStyle.SingleChoice, choices: _who5Choices);
 
-RPQuestionStep _who5Question1 = RPQuestionStep.withAnswerFormat(
+RPQuestionStep _who5Question1 = RPQuestionStep(
   "who5_question1",
-  "I have felt cheerful and in good spirits",
-  _choiceAnswerFormat,
+  title: "I have felt cheerful and in good spirits",
+  answerFormat: _choiceAnswerFormat,
 );
 
-RPQuestionStep _who5Question2 = RPQuestionStep.withAnswerFormat(
+RPQuestionStep _who5Question2 = RPQuestionStep(
   "who5_question2",
-  "I have felt calm and relaxed",
-  _choiceAnswerFormat,
+  title: "I have felt calm and relaxed",
+  answerFormat: _choiceAnswerFormat,
 );
 
-RPQuestionStep _who5Question3 = RPQuestionStep.withAnswerFormat(
+RPQuestionStep _who5Question3 = RPQuestionStep(
   "who5_question3",
-  "I have felt active and vigorous",
-  _choiceAnswerFormat,
+  title: "I have felt active and vigorous",
+  answerFormat: _choiceAnswerFormat,
 );
 
-RPQuestionStep _who5Question4 = RPQuestionStep.withAnswerFormat(
+RPQuestionStep _who5Question4 = RPQuestionStep(
   "who5_question4",
-  "I woke up feeling fresh and rested",
-  _choiceAnswerFormat,
+  title: "I woke up feeling fresh and rested",
+  answerFormat: _choiceAnswerFormat,
 );
 
-RPQuestionStep _who5Question5 = RPQuestionStep.withAnswerFormat(
+RPQuestionStep _who5Question5 = RPQuestionStep(
   "who5_question5",
-  "My daily life has been filled with things that interest me",
-  _choiceAnswerFormat,
+  title: "My daily life has been filled with things that interest me",
+  answerFormat: _choiceAnswerFormat,
 );
 
 RPCompletionStep _completionStep = RPCompletionStep("completionID")

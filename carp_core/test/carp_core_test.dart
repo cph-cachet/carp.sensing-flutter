@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:test/test.dart';
-import 'package:carp_core/carp_core.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:carp_core/carp_common/carp_core_common.dart';
+import 'package:carp_core/carp_protocols/carp_core_protocols.dart';
+import 'package:carp_core/carp_data/carp_core_data.dart';
 
 part 'carp_core_test.g.dart';
 
@@ -10,8 +12,7 @@ void main() {
   StudyProtocol protocol;
 
   setUp(() {
-    protocol = StudyProtocol(
-        owner: ProtocolOwner(id: 'xyz@dtu.dk'), name: 'Track patient movement');
+    protocol = StudyProtocol(ownerId: 'xyz@dtu.dk');
 
     // Define which devices are used for data collection.
     Smartphone phone = Smartphone(roleName: 'masterphone');
@@ -36,22 +37,41 @@ void main() {
     ConcurrentTask task = ConcurrentTask(name: "Start measures")
       ..addMeasures(measures);
     protocol.addTriggeredTask(Trigger(), task, phone);
+    protocol.addTriggeredTask(ManualTrigger(), task, phone);
   });
+
   test('StudyProtocol -> JSON', () async {
     print(protocol);
     print(toJsonString(protocol));
-    expect(protocol.owner.id, 'xyz@dtu.dk');
+    expect(protocol.ownerId, 'xyz@dtu.dk');
+    expect(protocol.triggers.length, 2);
+    expect(protocol.triggers.keys.first, "0");
+    expect(protocol.tasks.length, 1);
+    expect(protocol.triggeredTasks.length, 2);
   });
 
   test('JSON -> StudyProtocol', () async {
     // Read the study protocol from json file
-    String plainJson = File('test/json/study_1.json').readAsStringSync();
+    String plainJson = File('test/json/study_protocol.json').readAsStringSync();
 
     StudyProtocol protocol =
         StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
 
-    expect(protocol.owner.id, 'xyz@dtu.dk');
+    expect(protocol.ownerId, 'xyz@dtu.dk');
     expect(protocol.masterDevices.first.roleName, 'masterphone');
+    print(toJsonString(protocol));
+  });
+
+  test('JSON -> Custom StudyProtocol', () async {
+    // Read the study protocol from json file
+    String plainJson =
+        File('test/json/custom_study_protocol.json').readAsStringSync();
+
+    StudyProtocol protocol =
+        StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
+
+    expect(protocol.ownerId, '979b408d-784e-4b1b-bb1e-ff9204e072f3');
+    expect(protocol.masterDevices.first.roleName, 'Custom device');
     print(toJsonString(protocol));
   });
 

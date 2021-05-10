@@ -16,7 +16,7 @@ class TextMessageLogDatum extends Datum {
   List<TextMessage> textMessageLog;
 
   TextMessageLogDatum({this.textMessageLog}) : super() {
-    textMessageLog ??= List<TextMessage>();
+    textMessageLog ??= [];
   }
 
   factory TextMessageLogDatum.fromJson(Map<String, dynamic> json) =>
@@ -151,7 +151,7 @@ class PhoneLogDatum extends Datum {
   DataFormat get format =>
       DataFormat.fromString(CommunicationSamplingPackage.PHONE_LOG);
 
-  List<PhoneCall> phoneLog = new List<PhoneCall>();
+  List<PhoneCall> phoneLog = [];
 
   PhoneLogDatum() : super();
 
@@ -247,7 +247,7 @@ class CalendarDatum extends Datum {
   DataFormat get format =>
       DataFormat.fromString(CommunicationSamplingPackage.CALENDAR);
 
-  List<CalendarEvent> calendarEvents = new List<CalendarEvent>();
+  List<CalendarEvent> calendarEvents = [];
 
   CalendarDatum() : super();
 

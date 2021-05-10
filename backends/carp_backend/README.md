@@ -35,7 +35,7 @@ To get a study, you basically go through the following steps:
  1. Create and configure a `CarpApp` that points to the correct CARP web service.
  2. Authenticate to the CARP web service
  3. Get the list of study invitations for the authenticated user.
- 4. Get a specific study via a `CARPStudyProtocolManager`
+ 4. Get a specific study via a `CARPStudyProtocolManager` or deploy it directly using the `CustomProtocolDeploymentService`.
 
 The following code illustrates how this is done:
 
@@ -73,6 +73,35 @@ The following code illustrates how this is done:
   print('study: $study');
   ````
 
+If you just want to deploy and run the study deployment directly, another approach is to use the `CustomProtocolDeploymentService` directly:
+
+```dart
+
+  // get the status of the deployment
+  StudyDeploymentStatus status = await CustomProtocolDeploymentService()
+      .getStudyDeploymentStatus(studyDeploymentId);
+
+  // create and configure a client manager for this phone
+  SmartPhoneClientManager client = SmartPhoneClientManager(
+    deploymentService: CustomProtocolDeploymentService(),
+    deviceRegistry: DeviceController(),
+  );
+  await client.configure();
+
+  String deviceRolename = status.masterDeviceStatus.device.roleName;
+
+  // add and deploy this deployment using its rolename
+  StudyDeploymentController controller =
+      await client.addStudy(studyDeploymentId, deviceRolename);
+
+  // configure the controller with the default privacy schema
+  await controller.configure();
+  // controller.resume();
+
+  // listening on the data stream and print them as json to the debug console
+  controller.data.listen((data) => print(toJsonString(data)));
+
+```
 
 ## Uploading of data to CARP
 
@@ -141,16 +170,13 @@ And a `CarpDataEndPoint` that batch uploads data points in a json file (which is
   );
 `````
 
-### 3. Assign the CARP Data Endpoint to your Study
+### 3. Assign the CARP Data Endpoint to your Study Controller
 
-To use the CARP Data Endpoint in you study, assign it to the protocol. 
+To use the CARP Data Endpoint in you study controller, configure it with this end point before resuming sampling.
 
 `````dart
-  CAMSStudyProtocol protocol = CAMSStudyProtocol(
-    studyId: '123',
-    name: 'Test study #1234',
-  );
-  protocol.dataEndPoint = cdep;
+  // configure the controller with this data endpoint
+  await controller.configure(dataEndPoint: cdep);
 ````` 
 
 ## Features and bugs

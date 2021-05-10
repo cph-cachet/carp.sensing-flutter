@@ -4,7 +4,6 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:flutter/material.dart';
 
@@ -36,7 +35,7 @@ class Console extends State<ConsolePage> {
   void initState() {
     super.initState();
     sensing = Sensing();
-    settings.init().then((future) {
+    Settings().init().then((future) {
       sensing.init().then((future) {
         log("Setting up study protocol: ${sensing.protocol}");
       });
@@ -114,7 +113,7 @@ class Sensing {
 
   /// Initialize sensing.
   Future init() async {
-    settings.debugLevel = DebugLevel.DEBUG;
+    Settings().debugLevel = DebugLevel.DEBUG;
 
     // get the protocol from the local protocol manager (defined below)
     protocol = await LocalStudyProtocolManager().getStudyProtocol('ignored');
@@ -132,7 +131,7 @@ class Sensing {
 
     controller = await client.addStudy(studyDeploymentId, deviceRolename);
 
-    // configure the controller and resume sampling
+    // configure the controller
     await controller.configure(
       privacySchemaName: PrivacySchema.DEFAULT,
       transformer: ((datum) => datum),

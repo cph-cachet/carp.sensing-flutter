@@ -1,7 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
-import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 import 'package:test/test.dart';
@@ -23,8 +21,7 @@ void main() {
       ..protocolDescription = StudyProtocolDescription(
           title: 'Test Study',
           purpose: 'For testing purposes',
-          description: 'Testing')
-      ..dataEndPoint = FileDataEndPoint(bufferSize: 500);
+          description: 'Testing');
 
     // Define which devices are used for data collection.
     phone = Smartphone();
@@ -74,21 +71,29 @@ void main() {
     print(protocol);
     print(toJsonString(protocol));
     expect(protocol.ownerId, 'AB');
+    expect(protocol.owner.id, 'AB');
+    expect(protocol.masterDevices.length, 1);
+    expect(protocol.connectedDevices.length, 1);
+    expect(protocol.triggers.length, 3);
+    expect(protocol.triggers.keys.first, "0");
+    expect(protocol.tasks.length, 3);
+    expect(protocol.triggeredTasks.length, 3);
   });
 
-  test('StudyProtocol -> JSON -> StudyProtocol :: deep assert', () async {
+  test('CAMSStudyProtocol -> JSON -> CAMSStudyProtocol :: deep assert',
+      () async {
     print('#1 : $protocol');
     final studyJson = toJsonString(protocol);
 
-    StudyProtocol protocolFromJson =
-        StudyProtocol.fromJson(json.decode(studyJson) as Map<String, dynamic>);
+    CAMSStudyProtocol protocolFromJson = CAMSStudyProtocol
+        .fromJson(json.decode(studyJson) as Map<String, dynamic>);
     expect(toJsonString(protocolFromJson), equals(studyJson));
     print('#2 : $protocolFromJson');
   });
 
   test('JSON File -> StudyProtocol', () async {
     // Read the study protocol from json file
-    String plainJson = File('test/json/study_1.json').readAsStringSync();
+    String plainJson = File('test/json/study_protocol.json').readAsStringSync();
 
     CAMSStudyProtocol protocol = CAMSStudyProtocol
         .fromJson(json.decode(plainJson) as Map<String, dynamic>);
@@ -214,14 +219,14 @@ void main() {
 
     print(studyJson);
 
-    StudyProtocol protocol_2 =
-        StudyProtocol.fromJson(json.decode(studyJson) as Map<String, dynamic>);
-    expect(protocol_2.owner.id, protocol.ownerId);
+    CAMSStudyProtocol protocol_2 = CAMSStudyProtocol
+        .fromJson(json.decode(studyJson) as Map<String, dynamic>);
+    expect(protocol_2.ownerId, protocol.ownerId);
 
     print('#1 : $protocol');
 
-    StudyProtocol protocolFromJson =
-        StudyProtocol.fromJson(json.decode(studyJson) as Map<String, dynamic>);
+    CAMSStudyProtocol protocolFromJson = CAMSStudyProtocol
+        .fromJson(json.decode(studyJson) as Map<String, dynamic>);
     expect(toJsonString(protocolFromJson), equals(studyJson));
     print('#2 : $protocolFromJson');
   });
@@ -277,6 +282,7 @@ void main() {
     print(toJsonString(status_2));
     expect(status_2.studyDeploymentId, status_1.studyDeploymentId);
     expect(status_1.devicesStatus[1].device.roleName, 'esense');
+    // now we expect the esense device to be registred
     expect(status_1.devicesStatus[1].status,
         DeviceDeploymentStatusTypes.Registered);
 
@@ -286,6 +292,7 @@ void main() {
     print(toJsonString(deployment));
     expect(deployment.studyDeploymentId, status_1.studyDeploymentId);
     expect(deployment.tasks.length, protocol.tasks.length);
+    expect(deployment.triggers.length, protocol.triggers.length);
     expect(deployment.triggeredTasks.length, protocol.triggeredTasks.length);
 
     StudyDeploymentStatus status_3 = await SmartphoneDeploymentService()

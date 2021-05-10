@@ -48,6 +48,8 @@ dependency_overrides:
     path: ../../backends/carp_backend/
   carp_webservices:
     path: ../../backends/carp_webservices/
+  research_package:
+    path: ../../../../research.package/
 
 
 dev_dependencies:

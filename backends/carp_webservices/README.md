@@ -6,7 +6,7 @@ A Flutter plugin to access the [CARP Web Service API](https://cachet.postman.co/
 
 For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/README.md).
 
-*Note*: This plugin is still under development, and some APIs might not be available yet. 
+> **Note**: This plugin is still under development, and some APIs might not be available yet. 
 [Feedback](https://github.com/cph-cachet/carp.sensing-flutter/issues) and 
 [Pull Requests](https://github.com/cph-cachet/carp.sensing-flutter/pulls) are most welcome!
 
@@ -36,6 +36,8 @@ The [`CarpService`](https://pub.dartlang.org/documentation/carp_webservices/late
 
   app = CarpApp(
     name: 'any_display_friendly_name_is_fine',
+    studyId: 'the_study_id',
+    studyDeploymentId: 'the_study_deployment_id',
     uri: Uri.parse(uri),
     oauth: OAuthEndPoint(
       clientID: 'the_client_id',
@@ -47,7 +49,11 @@ The [`CarpService`](https://pub.dartlang.org/documentation/carp_webservices/late
   CarpService().configure(app);
 ```` 
 
-The singleton can then be accessed via `CarpService()`.
+> Note that you need a valid `clientID` and `clientSecret` from a CARP Web Service to use it.
+
+> Also note that you need the `studyId` and  `studyDeploymentId` for your study in the CARP Web Service. These can be obtained from an invitation (see below). But if you want to use the CARP Service endpoints directly, you have to specify these IDs in the CarpApp configuration. 
+
+The singleton can now be accessed via `CarpService()`.
 
 ### Authentication
 
@@ -269,12 +275,24 @@ The CARP web service have methods for:
  * getting a deployment reference, which then can be used to query status, register devices, and get the deployment specification.
 
 ````dart
+  // This example uses the
+  //  * CarpDeploymentService
+  //  * CarpParticipationService
+  // 
+  // To use these, we first must configure them and authenticate.
+  // However, the [configureFrom] method is a convinient way to do this based
+  // on an existing service, which has been configured.
+
+  CarpParticipationService().configureFrom(CarpService());
+  CarpDeploymentService().configureFrom(CarpService());
+
   // get invitations for this account (user)
   List<ActiveParticipationInvitation> invitations =
-      await CarpService().invitations();
+      await CarpParticipationService().getActiveParticipationInvitations();
 
   // get a deployment reference for this master device
-  DeploymentReference deploymentReference = CarpService().deployment();
+  DeploymentReference deploymentReference =
+      CarpDeploymentService().deployment('the_study_deployment_id');
 
   // get the status of this deployment
   StudyDeploymentStatus status = await deploymentReference.getStatus();
@@ -287,6 +305,7 @@ The CARP web service have methods for:
 
   // mark the deployment as a success
   status = await deploymentReference.success();
+
 ````
 
 There is also support for shwing a modal dialog for the user to select amongst several invitations. 

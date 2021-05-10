@@ -686,10 +686,10 @@ class RandomRecurrentTrigger extends CAMSTrigger {
   /// should take place (e.g., between 08:00 and 20:00).
   RandomRecurrentTrigger({
     String triggerId,
-    @required this.minNumberOfTriggers,
-    @required this.maxNumberOfTriggers,
-    @required this.startTime,
-    @required this.endTime,
+    this.minNumberOfTriggers = 0,
+    this.maxNumberOfTriggers = 1,
+    this.startTime,
+    this.endTime,
     this.duration = const Duration(seconds: 2),
   })
       : super(triggerId: triggerId);

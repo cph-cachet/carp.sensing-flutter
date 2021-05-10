@@ -7,7 +7,7 @@
 
 part of carp_backend;
 
-/// Stores CARP json data points in the CARP backend.
+/// Stores CAMS data points in the CARP backend.
 ///
 /// Every time a CARP json data object is created, it is uploaded to CARP.
 /// Hence, this interface only works when the device is online.
@@ -28,19 +28,22 @@ class CarpDataManager extends AbstractDataManager {
   String get type => DataEndPointTypes.CARP;
 
   Future initialize(
-    CAMSMasterDeviceDeployment deployment,
+    String studyDeploymentId,
+    DataEndPoint dataEndPoint,
     Stream<DataPoint> data,
   ) async {
-    super.initialize(deployment, data);
-    assert(deployment.dataEndPoint is CarpDataEndPoint);
-    carpEndPoint = deployment.dataEndPoint as CarpDataEndPoint;
+    super.initialize(studyDeploymentId, dataEndPoint, data);
+    assert(dataEndPoint is CarpDataEndPoint);
+    carpEndPoint = dataEndPoint as CarpDataEndPoint;
 
     if ((carpEndPoint.uploadMethod == CarpUploadMethod.FILE) ||
         (carpEndPoint.uploadMethod == CarpUploadMethod.BATCH_DATA_POINT)) {
       // make sure that files are not zipped if using batch upload
-      assert(carpEndPoint.uploadMethod == CarpUploadMethod.BATCH_DATA_POINT
-          ? carpEndPoint.zip == false
-          : true);
+      assert(
+          carpEndPoint.uploadMethod == CarpUploadMethod.BATCH_DATA_POINT
+              ? carpEndPoint.zip == false
+              : true,
+          'Files uploaded to CARP must not be zipped.');
 
       // Create a [FileDataManager] and wrap it.
       fileDataManager = new FileDataManager();
@@ -57,7 +60,7 @@ class CarpDataManager extends AbstractDataManager {
               _uploadDatumFileToCarp((event as FileDataManagerEvent).path));
 
       // initialize the file data manager
-      fileDataManager.initialize(deployment, data);
+      fileDataManager.initialize(studyDeploymentId, dataEndPoint, data);
     }
 
     await user; // This will trigger authentication to the CARP server
@@ -67,7 +70,7 @@ class CarpDataManager extends AbstractDataManager {
   Future<CarpApp> get app async {
     if (_app == null) {
       _app = new CarpApp(
-          studyId: deployment.studyId,
+          studyDeploymentId: studyDeploymentId,
           name: carpEndPoint.name,
           uri: Uri.parse(carpEndPoint.uri),
           oauth: OAuthEndPoint(
@@ -77,9 +80,13 @@ class CarpDataManager extends AbstractDataManager {
     return _app;
   }
 
-  /// The current signed in user. If the user is not already signed in,
-  /// this method will authenticate the user based on the username and
-  /// password specified in [carpEndPoint].
+  /// The currently signed in user.
+  ///
+  /// If a user is already autheticated to the [CarpService], then this account is
+  /// used for uploading the data to CARP.
+  ///
+  /// If the user is not authenticated, this method will try to authenticate the user
+  /// based on the username and password specified in [carpEndPoint].
   Future<CarpUser> get user async {
     // check if the CARP webservice has already been configured and the user is logged in.
     if (!CarpService().isConfigured) CarpService().configure(await app);
@@ -94,23 +101,17 @@ class CarpDataManager extends AbstractDataManager {
 
   void onDataPoint(DataPoint dataPoint) => uploadData(dataPoint);
 
-  void onError(Object error) => uploadData(DataPoint(
-      DataPointHeader(
-          studyId: deployment.studyId,
-          userId: deployment.userId,
-          dataFormat: DataFormat.fromString(CAMSDataType.ERROR)),
-      ErrorDatum(error.toString())));
+  void onError(Object error) =>
+      uploadData(DataPoint.fromData(ErrorDatum(error.toString()))
+        ..carpHeader.dataFormat = DataFormat.fromString(CAMSDataType.ERROR));
 
   void onDone() => close();
 
   /// Handle upload of data depending on the specified [CarpUploadMethod].
   Future<bool> uploadData(DataPoint dataPoint) async {
-    info(
-        'Uploading data point to CARP - format: ${dataPoint.carpHeader.dataFormat}');
-
     // Check if CARP authentication is ready before writing...
     if (!_initialized) {
-      warning("Waiting for CARP authentication -- delaying for 10 sec...");
+      warning("Waiting for CARP to be initialized -- delaying for 10 sec...");
       return Future.delayed(
           const Duration(seconds: 10), () => uploadData(dataPoint));
     }
@@ -126,17 +127,20 @@ class CarpDataManager extends AbstractDataManager {
       // then upload the datum as specified in the upload method.
       switch (carpEndPoint.uploadMethod) {
         case CarpUploadMethod.DATA_POINT:
+          info(
+              'Uploading data point to CARP - ${dataPoint.carpHeader.dataFormat}');
           return (await CarpService()
                   .getDataPointReference()
                   .postDataPoint(dataPoint) !=
               null);
         case CarpUploadMethod.BATCH_DATA_POINT:
         case CarpUploadMethod.FILE:
-          // In both cases, forward to [FileDataManager], which collects data in a file before upload.
-          // TODO - when forwarding to the file, it is the wrong data type format being written
-          // See issue #162
+          // In both cases, forward to [FileDataManager], which collects data
+          // in a file before upload.
           return fileDataManager.write(dataPoint);
         case CarpUploadMethod.DOCUMENT:
+          info(
+              'Uploading data point document to CARP - ${dataPoint.carpHeader.dataFormat}');
           return (await CarpService()
                   .collection('/${carpEndPoint.collection}')
                   .document()
@@ -179,17 +183,19 @@ class CarpDataManager extends AbstractDataManager {
 
         addEvent(CarpDataManagerEvent(CarpDataManagerEventTypes.file_uploaded,
             file.path, id, uploadTask.reference.fileEndpointUri));
-        info("File upload to CARP finished - remote id : $id ");
+        info("File upload to CARP finished - remote id: '$id' ");
         break;
       case CarpUploadMethod.DATA_POINT:
       case CarpUploadMethod.DOCUMENT:
-        // do nothing -- no file to upload since data point has already been uploaded (see uploadData method)
+        // do nothing -- no file to upload since data point has already been
+        // uploaded (see uploadData method)
         break;
     }
 
     if (carpEndPoint.deleteWhenUploaded) {
       // delete the local file once uploaded
       file.delete();
+      info("Locale file deleted - path: '${file.path}'.");
       addEvent(FileDataManagerEvent(
           FileDataManagerEventTypes.FILE_DELETED, file.path));
     }
@@ -205,9 +211,7 @@ class CarpDataManager extends AbstractDataManager {
     } else {
       final String deviceID = DeviceInfo().deviceID.toString();
       datum.metadata['device_id'] = deviceID;
-      datum.metadata['study_deployment_id'] = deployment.studyDeploymentId;
-      datum.metadata['study_id'] = deployment.studyId;
-      datum.metadata['user_id'] = deployment.userId;
+      datum.metadata['study_deployment_id'] = studyDeploymentId;
 
       // start upload
       final FileUploadTask uploadTask =

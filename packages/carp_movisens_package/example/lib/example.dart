@@ -1,4 +1,3 @@
-import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_movisens_package/movisens.dart';
 import 'package:movisens_flutter/movisens_flutter.dart';
@@ -18,11 +17,6 @@ void main() async {
       id: 'AB',
       name: 'Alex Boyon',
       email: 'alex@uni.dk',
-    )
-    ..dataEndPoint = FileDataEndPoint(
-      bufferSize: 500 * 1000,
-      zip: true,
-      encrypt: false,
     );
 
   // define which devices are used for data collection - both phone and MoviSens
@@ -54,24 +48,21 @@ void main() async {
 
   // deploy this protocol using the on-phone deployment service
   StudyDeploymentStatus status =
-      await CAMSDeploymentService().createStudyDeployment(protocol);
+      await SmartphoneDeploymentService().createStudyDeployment(protocol);
 
-  // at this time we can register an eSensee device which are connected to this phone (master device)
-  CAMSDeploymentService().registerDevice(
-    status.studyDeploymentId,
-    MovisensDevice.DEFAULT_ROLENAME,
-    DeviceRegistration('some device id'),
-  );
+  String studyDeploymentId = status.studyDeploymentId;
+  String deviceRolename = status.masterDeviceStatus.device.roleName;
 
-  // now ready to get the device deployment configuration for this phone
-  CAMSMasterDeviceDeployment deployment = await CAMSDeploymentService()
-      .getDeviceDeployment(status.studyDeploymentId);
+  // create and configure a client manager for this phone
+  SmartPhoneClientManager client = SmartPhoneClientManager();
+  await client.configure();
 
-  // Create a study deployment controller that can manage this deployment
-  StudyDeploymentController controller = StudyDeploymentController(deployment);
+  // create a study runtime to control this deployment
+  StudyDeploymentController controller =
+      await client.addStudy(studyDeploymentId, deviceRolename);
 
-  // initialize the controller and resume sampling
-  await controller.initialize();
+  // configure the controller and resume sampling
+  await controller.configure();
   controller.resume();
 
   // listening and print all data events from the study

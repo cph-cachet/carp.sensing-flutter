@@ -1,5 +1,4 @@
 import 'package:carp_survey_package/survey.dart';
-import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 /// This is a very simple example of how this sampling package is used with
@@ -17,11 +16,6 @@ void main() async {
       id: 'AB',
       name: 'Alex Boyon',
       email: 'alex@uni.dk',
-    )
-    ..dataEndPoint = FileDataEndPoint(
-      bufferSize: 500 * 1000,
-      zip: true,
-      encrypt: false,
     );
 
   // define which devices are used for data collection
@@ -41,22 +35,4 @@ void main() async {
           surveyTask: who5Task,
         )),
       phone);
-
-  // deploy this protocol using the on-phone deployment service
-  StudyDeploymentStatus status =
-      await CAMSDeploymentService().createStudyDeployment(protocol);
-
-  // now ready to get the device deployment configuration for this phone
-  CAMSMasterDeviceDeployment deployment = await CAMSDeploymentService()
-      .getDeviceDeployment(status.studyDeploymentId);
-
-  // Create a study deployment controller that can manage this deployment
-  StudyDeploymentController controller = StudyDeploymentController(deployment);
-
-  // initialize the controller and resume sampling
-  await controller.initialize();
-  controller.resume();
-
-  // listening and print all data events from the study
-  controller.data.forEach(print);
 }

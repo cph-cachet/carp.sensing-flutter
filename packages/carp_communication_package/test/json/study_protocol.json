@@ -1,6 +1,6 @@
 {
-  "$type": "dk.cachet.carp.protocols.domain.CAMSStudyProtocol",
   "name": "Context package test",
+  "creationDate": "2021-05-10 11:28:21.991507Z",
   "masterDevices": [
    {
     "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
@@ -9,18 +9,13 @@
     "samplingConfiguration": {}
    }
   ],
-  "connectedDevices": [
-   {
-    "$type": "dk.cachet.carp.protocols.domain.devices.DeviceDescriptor",
-    "isMasterDevice": false,
-    "samplingConfiguration": {}
-   }
-  ],
-  "triggers": [
-   {
+  "connectedDevices": [],
+  "connections": [],
+  "triggers": {
+   "0": {
     "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
    }
-  ],
+  },
   "tasks": [
    {
     "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
@@ -114,12 +109,39 @@
       "duration": 1000000
      },
      {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.RPTaskMeasure",
-      "type": "dk.cachet.carp.survey",
-      "name": "WHO-5",
-      "description": "The WHO well-being survey",
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.MarkedMeasure",
+      "type": "dk.cachet.carp.phone_log",
+      "name": "Phone Log",
+      "description": "Collects the log on in- and out-going calls from the phone",
+      "enabled": true,
+      "configuration": {},
+      "history": 86400000000
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
+      "type": "dk.cachet.carp.text_message_log",
+      "name": "Text Messages Log",
+      "description": "Collects the log on in- and out-going text messages (SMS) from the phone",
       "enabled": true,
       "configuration": {}
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
+      "type": "dk.cachet.carp.text_message",
+      "name": "Text Messages",
+      "description": "Collects the event when a text messages (SMS) is sent or received",
+      "enabled": true,
+      "configuration": {}
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CalendarMeasure",
+      "type": "dk.cachet.carp.calendar",
+      "name": "Calendar Events",
+      "description": "Collects the list of calendar events on the calenders on the phone",
+      "enabled": true,
+      "configuration": {},
+      "past": 86400000000,
+      "future": 86400000000
      }
     ]
    }
@@ -128,14 +150,15 @@
    {
     "triggerId": 0,
     "taskName": "Task #5",
-    "destinationDeviceRoleName": "masterphone"
+    "targetDeviceRoleName": "masterphone"
    }
   ],
+  "expectedParticipantData": [],
   "owner": {
-   "$type": "dk.cachet.carp.protocols.domain.ProtocolOwner",
+   "$type": "ProtocolOwner",
    "id": "AB",
    "name": "Alex Boyon",
    "email": "alex@uni.dk"
   },
-  "dataFormat": "dk.cachet.carp"
+  "ownerId": "AB"
  }

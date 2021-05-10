@@ -16,14 +16,14 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
-import 'package:carp_core/carp_core.dart';
 import 'package:research_package/model.dart';
-import 'package:path_provider/path_provider.dart';
 
 part 'carp_data_manager.dart';
 part 'carp_study_manager.dart';
-part 'informed_consent_manager.dart';
+part 'carp_resource_manager.dart';
+part 'carp_localization.dart';
 part 'carp_backend.g.dart';
+part 'carp_deployment_service.dart';
 
 /// Specify a CARP Web Service endpoint.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
@@ -84,7 +84,7 @@ class CarpDataEndPoint extends FileDataEndPoint {
       this.collection,
       this.deleteWhenUploaded = true,
       bufferSize = 500 * 1000, // default buffer size = 500 MB
-      zip = true, // zip file pr. default
+      zip = true, // zip files before upload pr. default
       encrypt = false, // don't encrypt pr. default
       publicKey})
       : super(
@@ -94,7 +94,7 @@ class CarpDataEndPoint extends FileDataEndPoint {
             encrypt: encrypt,
             publicKey: publicKey) {
     assert(uploadMethod != null);
-    // the CARP server cannot handle zipped files (yet)
+    // the CARP server cannot handle zipped or encrypted files (yet)
     if (this.uploadMethod == CarpUploadMethod.BATCH_DATA_POINT) {
       this.zip = false;
       this.encrypt = false;
@@ -123,4 +123,33 @@ enum CarpUploadMethod {
 
   /// Upload each data point as a json document in the [collection] folder
   DOCUMENT,
+}
+
+enum CarpBackendEvents {
+  /// The CarpBackend is successfully initialized.
+  Initialized,
+
+  /// The status of the deployment has successfully been downloaded from the CARP server.
+  DeploymentStatusRetrieved,
+
+  /// The study protocol has successfully been downloaded from the CARP server.
+  ProtocolRetrieved,
+
+  /// The deployment has successfully been downloaded from the CARP server.
+  DeploymentRetrieved,
+
+  /// The deployment has been marked as successfully at the CARP server.
+  DeploymentSuccessful,
+
+  /// An error occured in the communication with the CARP server.
+  Error,
+}
+
+/// Exception for CARP backend communication.
+class CARPBackendException implements Exception {
+  String message;
+
+  CARPBackendException([this.message]);
+
+  String toString() => "CARPBackendException: ${message ?? ""}";
 }

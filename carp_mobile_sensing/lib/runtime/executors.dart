@@ -94,7 +94,7 @@ class StudyDeploymentExecutor extends Executor {
   Future onResume() async {
     // check the start time for this study on this phone
     // this will save it, the first time the study is executed
-    DateTime studyStartTimestamp = await settings.studyStartTimestamp;
+    DateTime studyStartTimestamp = await Settings().studyStartTimestamp;
     info(
         'Study deployment was started on this phone on ${studyStartTimestamp.toUtc()}');
 
@@ -170,7 +170,7 @@ class TriggeredTaskExecutor extends Executor {
   /// Makes sure to set the trigger id and device role name.
   Stream<DataPoint> get data => _group.stream.map((dataPoint) => dataPoint
     ..carpHeader.triggerId = '${triggeredTask.triggerId}'
-    ..carpHeader.deviceRoleName = triggeredTask.destinationDeviceRoleName);
+    ..carpHeader.deviceRoleName = triggeredTask.targetDeviceRoleName);
 
   /// Returns a list of the running probes in this [TriggeredTaskExecutor].
   /// This is a combination of the running probes in all task executors.

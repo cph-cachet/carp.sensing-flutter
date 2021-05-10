@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
-import 'package:carp_core/carp_core.dart';
 
 void main() async {
   final String username = 'researcher';
@@ -29,6 +28,8 @@ void main() async {
 
   app = CarpApp(
     name: 'any_display_friendly_name_is_fine',
+    studyId: 'the_study_id',
+    studyDeploymentId: 'the_study_deployment_id',
     uri: Uri.parse(uri),
     oauth: OAuthEndPoint(
       clientID: 'the_client_id',
@@ -169,14 +170,25 @@ void main() async {
 
   // ------------------- DEPLOYMENTS --------------------------------
 
+  // This example uses the
+  //  * [CarpDeploymentService]
+  //  * [CarpParticipationService]
+  //
+  // To use these, we first must configure them and authenticate.
+  // However, the [configureFrom] method is a convinient way to do this based
+  // on an existing service, which has been configured.
+
+  CarpParticipationService().configureFrom(CarpService());
+  CarpDeploymentService().configureFrom(CarpService());
+
   // get invitations for this account (user)
   List<ActiveParticipationInvitation> invitations =
-      await CarpService().invitations();
+      await CarpParticipationService().getActiveParticipationInvitations();
   invitations.forEach(print);
 
   // get a deployment reference for this master device
   DeploymentReference deploymentReference =
-      CarpService().deployment('the_study_deployment_id');
+      CarpDeploymentService().deployment('the_study_deployment_id');
 
   // get the status of this deployment
   StudyDeploymentStatus status = await deploymentReference.getStatus();

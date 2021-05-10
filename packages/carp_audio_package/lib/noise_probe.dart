@@ -16,7 +16,7 @@ part of audio;
 /// frequency, in a given sampling window as a [NoiseDatum].
 class NoiseProbe extends BufferingPeriodicStreamProbe {
   NoiseMeter _noiseMeter;
-  List<NoiseReading> _noiseReadings = new List<NoiseReading>();
+  List<NoiseReading> _noiseReadings = [];
 
   Stream get bufferingStream => _noiseMeter.noiseStream;
 
@@ -44,8 +44,8 @@ class NoiseProbe extends BufferingPeriodicStreamProbe {
 
   Future<Datum> getDatum() async {
     if (_noiseReadings.length > 0) {
-      List<num> _meanList = List();
-      List<num> _maxList = List();
+      List<num> _meanList = [];
+      List<num> _maxList = [];
 
       _noiseReadings.forEach((reading) {
         _meanList.add(reading.meanDecibel);

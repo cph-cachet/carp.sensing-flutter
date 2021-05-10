@@ -30,16 +30,19 @@ class MasterDeviceDeployment {
   /// All triggers originating from this device and connected devices, stored
   /// per assigned id unique within the study protocol.
   Map<String, Trigger> triggers;
-  //   Map<String, Map<String, dynamic>> triggers;
 
   /// The specification of tasks triggered and the devices they are sent to.
   List<TriggeredTask> triggeredTasks;
-  // List<Map<String, dynamic>> triggeredTasks;
 
   /// The time when this device deployment was last updated.
   /// This corresponds to the most recent device registration as part of this
   /// device deployment.
   DateTime lastUpdateDate;
+
+  // TODO - this is not part of carp_core Kotlin - make sure that no conflict arise.
+  //
+  /// Specifies where and how to upload the data collected from this deployment.
+  DataEndPoint dataEndPoint;
 
   MasterDeviceDeployment({
     this.deviceDescriptor,
@@ -49,10 +52,12 @@ class MasterDeviceDeployment {
     this.tasks,
     this.triggers,
     this.triggeredTasks,
+    this.dataEndPoint,
   }) {
     this.lastUpdateDate = DateTime.now();
   }
 
+  // internal map, mapping task name to the task
   Map<String, TaskDescriptor> _taskMap;
 
   /// Get the task based on its task name in this deployment.
@@ -60,6 +65,7 @@ class MasterDeviceDeployment {
     if (_taskMap == null) {
       _taskMap = {};
       tasks.forEach((task) => _taskMap[task.name] = task);
+      print(_taskMap);
     }
     return _taskMap[name];
   }

@@ -29,7 +29,8 @@ class ESenseMeasure extends CAMSMeasure {
     enabled = true,
     this.deviceName,
     this.samplingRate = 10,
-  }) : super(
+  })
+      : super(
             type: type, name: name, description: description, enabled: enabled);
 
   Function get fromJsonFunction => _$ESenseMeasureFromJson;

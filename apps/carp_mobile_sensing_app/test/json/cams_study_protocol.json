@@ -1,6 +1,6 @@
 {
-    "$type": "dk.cachet.carp.protocols.domain.CAMSStudyProtocol",
     "name": "#23-Coverage",
+    "creationDate": "2021-05-02 20:29:27.217203Z",
     "masterDevices": [
      {
       "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
@@ -17,24 +17,38 @@
       "samplingConfiguration": {}
      }
     ],
-    "triggers": [
-     {
+    "connections": [],
+    "triggers": {
+     "0": {
       "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
      },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.triggers.PeriodicTrigger",
-      "period": 60000000,
-      "duration": 1000000
+     "1": {
+      "$type": "dk.cachet.carp.protocols.domain.triggers.RandomRecurrentTrigger",
+      "startTime": {
+       "$type": "Time",
+       "hour": 23,
+       "minute": 56,
+       "second": 0
+      },
+      "endTime": {
+       "$type": "Time",
+       "hour": 24,
+       "minute": 0,
+       "second": 0
+      },
+      "minNumberOfTriggers": 2,
+      "maxNumberOfTriggers": 8,
+      "duration": 2000000
      },
-     {
+     "2": {
       "$type": "dk.cachet.carp.protocols.domain.triggers.PeriodicTrigger",
       "period": 300000000,
       "duration": 1000000
      },
-     {
+     "3": {
       "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
      }
-    ],
+    },
     "tasks": [
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
@@ -167,35 +181,37 @@
      {
       "triggerId": 0,
       "taskName": "Task #5",
-      "destinationDeviceRoleName": "masterphone"
+      "targetDeviceRoleName": "masterphone"
      },
      {
       "triggerId": 1,
       "taskName": "Task #6",
-      "destinationDeviceRoleName": "masterphone"
+      "targetDeviceRoleName": "masterphone"
      },
      {
       "triggerId": 2,
       "taskName": "Task #7",
-      "destinationDeviceRoleName": "masterphone"
+      "targetDeviceRoleName": "masterphone"
      },
      {
       "triggerId": 3,
       "taskName": "Task #8",
-      "destinationDeviceRoleName": "esense"
+      "targetDeviceRoleName": "esense"
      }
     ],
+    "expectedParticipantData": [],
     "protocolDescription": {
      "$type": "StudyProtocolDescription",
      "title": "Sensing Coverage Study",
      "description": "This is a study for testing the coverage of sampling."
     },
     "owner": {
-     "$type": "dk.cachet.carp.protocols.domain.ProtocolOwner",
+     "$type": "ProtocolOwner",
      "id": "AB",
      "name": "Alex Boyon",
      "email": "alex@uni.dk"
     },
+    "ownerId": "AB",
     "dataEndPoint": {
      "$type": "FileDataEndPoint",
      "type": "FILE",

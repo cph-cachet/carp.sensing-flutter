@@ -27,9 +27,8 @@ this package only works together with `carp_mobile_sensing`.
 dependencies:
   flutter:
     sdk: flutter
-  carp_core: ^0.20.0
-  carp_mobile_sensing: ^0.20.0
-  carp_survey_package: ^0.20.0
+  carp_mobile_sensing: ^0.21.0
+  carp_survey_package: ^0.21.0
   ...
 `````
 
@@ -40,7 +39,6 @@ To use this package, import it into your app together with the
 [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package:
 
 `````dart
-import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_survey_package/survey.dart';
 `````

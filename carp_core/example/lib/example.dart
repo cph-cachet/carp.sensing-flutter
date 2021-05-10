@@ -1,4 +1,7 @@
-import 'package:carp_core/carp_core.dart';
+import 'package:carp_core/carp_common/carp_core_common.dart';
+import 'package:carp_core/carp_protocols/carp_core_protocols.dart';
+import 'package:carp_core/carp_deployment/carp_core_deployment.dart';
+import 'package:carp_core/carp_client/carp_core_client.dart';
 
 // These examples tries to mimic the example from the carp_core Kotlin
 // example at https://github.com/cph-cachet/carp.core-kotlin#example
@@ -14,9 +17,10 @@ import 'package:carp_core/carp_core.dart';
 /// Example of how to use the **protocol** sub-system domain models
 void carpCoreProtocolExample() async {
   // Create a new study protocol.
-  ProtocolOwner owner = ProtocolOwner();
-  StudyProtocol protocol =
-      StudyProtocol(owner: owner, name: "Track patient movement");
+  StudyProtocol protocol = StudyProtocol(
+    ownerId: 'owner@dtu.dk',
+    name: 'Track patient movement',
+  );
 
   // Define which devices are used for data collection.
   Smartphone phone = Smartphone(roleName: 'phone');
@@ -39,7 +43,7 @@ void carpCoreProtocolExample() async {
   print(json);
 }
 
-/// Example of how to use the protocol sub-system domain models
+/// Example of how to use the **deployment** sub-system domain models
 void carpCoreDeploymentExample() async {
   DeploymentService deploymentService;
   StudyProtocol trackPatientStudy;
@@ -67,8 +71,7 @@ void carpCoreDeploymentExample() async {
     DateTime deploymentDate =
         deploymentInformation.lastUpdateDate; // To verify correct deployment.
     await deploymentService.deploymentSuccessfulFor(
-        studyDeploymentId, patientPhone.roleName,
-        deviceDeploymentLastUpdateDate: deploymentDate);
+        studyDeploymentId, patientPhone.roleName, deploymentDate);
   }
 
   // Now that all devices have been registered and deployed, the deployment is ready.
@@ -81,7 +84,7 @@ void carpCoreDeploymentExample() async {
 void carpCoreClientExample() async {
   ParticipationService participationService;
   DeploymentService deploymentService;
-  DeviceDataCollectorFactory dataCollectorFactory;
+  DeviceRegistry dataCollectorFactory;
 
   // Retrieve invitation to participate in the study using a specific device.
   ActiveParticipationInvitation invitation = (await participationService
@@ -93,7 +96,7 @@ void carpCoreClientExample() async {
   // Create a study runtime for the study.
   var client = ClientManager(
       deploymentService: deploymentService,
-      deviceCollectorFactory: dataCollectorFactory);
+      deviceRegistry: dataCollectorFactory);
   client.configure(
     // Device-specific registration options can be accessed from here.
     // Depending on the device type, different options are available.

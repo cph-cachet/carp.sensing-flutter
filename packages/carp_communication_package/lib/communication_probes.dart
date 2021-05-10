@@ -18,8 +18,7 @@ class PhoneLogProbe extends DatumProbe {
         : DateTime.now().subtract(m.history).millisecondsSinceEpoch;
     int now = DateTime.now().millisecondsSinceEpoch;
     Iterable<CallLogEntry> entries =
-        await CallLog.query(dateFrom: from, dateTo: now) ??
-            List<CallLogEntry>();
+        await CallLog.query(dateFrom: from, dateTo: now) ?? [];
     return PhoneLogDatum()
       ..phoneLog =
           entries.map((call) => PhoneCall.fromCallLogEntry(call)).toList();

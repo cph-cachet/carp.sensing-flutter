@@ -19,10 +19,10 @@ class ClientManager {
   /// this client, can be managed and retrieved.
   DeploymentService deploymentService;
 
-  /// Determines which [DeviceDataCollector] to use to collect data locally on
-  /// this master device and this factory is used to create [ConnectedDeviceDataCollector]
-  /// instances for connected devices.
-  DeviceDataCollectorFactory deviceCollectorFactory;
+  /// The registry of connected devices used to collect data locally on
+  /// this master device. Also works as a factory which is used to create
+  /// [DeviceDataCollector] instances for connected devices.
+  DeviceRegistry deviceRegistry;
 
   // private val dataListener: DataListener = DataListener( dataCollectorFactory )
 
@@ -30,10 +30,19 @@ class ClientManager {
   /// which is necessary to start adding [StudyRuntime]s.
   bool get isConfigured => registration != null;
 
-  ClientManager({this.deploymentService, this.deviceCollectorFactory});
+  /// Create a new [ClientManager] by specifying:
+  ///  * [deploymentService] - where to get the [StudyProtocolDeployment]
+  ///  * [deviceRegistry] that handles devices connected to this client
+  ///  * [dataManager] that handles the collected data (e.g., storing or uploading)
+  @mustCallSuper
+  ClientManager({
+    this.deploymentService,
+    this.deviceRegistry,
+  });
 
   /// Configure the [DeviceRegistration] used to register this client device
   /// in study deployments managed by the [deploymentService].
+  @mustCallSuper
   Future<DeviceRegistration> configure({String deviceId}) async =>
       registration = DeviceRegistration(deviceId);
 
@@ -51,6 +60,7 @@ class ClientManager {
   ///
   /// Returns the [StudyRuntime] through which data collection for the newly
   /// added study can be managed.
+  @mustCallSuper
   Future<StudyRuntime> addStudy(
     String studyDeploymentId,
     String deviceRoleName,
@@ -60,26 +70,12 @@ class ClientManager {
         !repository
             .containsKey(StudyRuntimeId(studyDeploymentId, deviceRoleName)),
         'A study with the same study deployment ID and device role name has already been added.');
-
-    // Create the study runtime.
-    // val deviceRegistration = repository.getDeviceRegistration()!!
-
-    StudyRuntime runtime = StudyRuntime();
-
-    await runtime.initialize(
-      deploymentService,
-      deviceCollectorFactory,
-      studyDeploymentId,
-      deviceRoleName,
-      registration,
-    );
-
-    repository[StudyRuntimeId(studyDeploymentId, deviceRoleName)] = runtime;
-    return runtime;
+    return StudyRuntime();
   }
 
   /// Verifies whether the device is ready for deployment of the study runtime identified by [studyRuntimeId],
   /// and in case it is, deploys. In case already deployed, nothing happens.
+  @mustCallSuper
   Future<StudyRuntimeStatus> tryDeployment(
       StudyRuntimeId studyRuntimeId) async {
     StudyRuntime runtime = repository[studyRuntimeId];
@@ -92,10 +88,11 @@ class ClientManager {
   }
 
   /// Permanently stop collecting data for the study runtime identified by [studyRuntimeId].
+  @mustCallSuper
   void stopStudy(StudyRuntimeId studyRuntimeId) async =>
       repository[studyRuntimeId].stop();
 
-  /// Get the [StudyRuntime] with the unique [studyRuntimeid].
+  /// Get the [StudyRuntime] with the unique [studyRuntimeId].
   StudyRuntime getStudyRuntime(StudyRuntimeId studyRuntimeId) =>
       repository[studyRuntimeId];
 

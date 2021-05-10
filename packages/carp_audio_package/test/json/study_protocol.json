@@ -1,6 +1,6 @@
 {
-  "$type": "dk.cachet.carp.protocols.domain.CAMSStudyProtocol",
   "name": "Context package test",
+  "creationDate": "2021-05-07 15:53:02.770393Z",
   "masterDevices": [
    {
     "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
@@ -9,22 +9,13 @@
     "samplingConfiguration": {}
    }
   ],
-  "connectedDevices": [
-   {
-    "$type": "dk.cachet.carp.protocols.domain.devices.MovisensDevice",
-    "isMasterDevice": false,
-    "roleName": "movisens",
-    "samplingConfiguration": {}
-   }
-  ],
-  "triggers": [
-   {
-    "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
-   },
-   {
+  "connectedDevices": [],
+  "connections": [],
+  "triggers": {
+   "0": {
     "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
    }
-  ],
+  },
   "tasks": [
    {
     "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
@@ -116,27 +107,25 @@
       "configuration": {},
       "frequency": 60000000,
       "duration": 1000000
-     }
-    ]
-   },
-   {
-    "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
-    "name": "Task #6",
-    "measures": [
+     },
      {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.MovisensMeasure",
-      "type": "dk.cachet.carp.movisens",
-      "name": "Movisens ECG device",
-      "description": "Collects heart rythm data from the Movisens EcgMove4 sensor",
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
+      "type": "dk.cachet.carp.audio",
+      "name": "Audio Recording",
+      "description": "Collects an audio recording from the phone's microphone",
       "enabled": true,
+      "configuration": {}
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.NoiseMeasure",
+      "type": "dk.cachet.carp.noise",
+      "name": "Ambient Noise",
+      "description": "Collects noise in the background from the phone's microphone",
+      "enabled": false,
       "configuration": {},
-      "address": "88:6B:0F:CD:E7:F2",
-      "deviceName": "Sensor 02655",
-      "weight": 75,
-      "height": 175,
-      "age": 25,
-      "gender": "male",
-      "sensorLocation": "chest"
+      "frequency": 300000000,
+      "duration": 10000000,
+      "samplingRate": 500
      }
     ]
    }
@@ -145,19 +134,15 @@
    {
     "triggerId": 0,
     "taskName": "Task #5",
-    "destinationDeviceRoleName": "masterphone"
-   },
-   {
-    "triggerId": 1,
-    "taskName": "Task #6",
-    "destinationDeviceRoleName": "movisens"
+    "targetDeviceRoleName": "masterphone"
    }
   ],
+  "expectedParticipantData": [],
   "owner": {
-   "$type": "dk.cachet.carp.protocols.domain.ProtocolOwner",
-   "id": "jakba",
-   "name": "Jakob E. Bardram",
-   "email": "jakba@dtu.dk"
+   "$type": "ProtocolOwner",
+   "id": "AB",
+   "name": "Alex Boyon",
+   "email": "alex@uni.dk"
   },
-  "dataFormat": "dk.cachet.carp"
+  "ownerId": "AB"
  }

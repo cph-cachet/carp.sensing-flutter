@@ -58,10 +58,7 @@ class FileUploadTask extends CarpServiceTask {
     super._start();
     final String url = "${reference.fileEndpointUri}";
 
-    print("url: $url");
-    print("name: $name");
-
-    Map<String, String> headers = await reference.headers;
+    Map<String, String> headers = reference.headers;
 
     var request = new http.MultipartRequest("POST", Uri.parse(url));
     request.headers['Authorization'] = headers['Authorization'];
@@ -81,8 +78,8 @@ class FileUploadTask extends CarpServiceTask {
 
     httpr.send(request).then((http.StreamedResponse response) {
       response.stream.toStringStream().first.then((body) {
-        print("response:\n$response");
-        print("body:\n$body");
+        // print("response:\n$response");
+        // print("body:\n$body");
         final int httpStatusCode = response.statusCode;
         final Map<String, dynamic> map = json.decode(body);
 
@@ -142,7 +139,7 @@ class FileDownloadTask extends CarpServiceTask {
   Future<int> _start() async {
     super._start();
     final String url = '${reference.fileEndpointUri}/${reference.id}/download';
-    Map<String, String> headers = await reference.headers;
+    Map<String, String> headers = reference.headers;
     headers['Content-Type'] = 'application/x-www-form-urlencoded';
 
     httpr.get(Uri.encodeFull(url), headers: headers).then((response) {

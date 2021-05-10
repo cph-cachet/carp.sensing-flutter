@@ -8,12 +8,12 @@ library carp_core_common;
 import 'dart:convert';
 import 'package:carp_core/carp_protocols/carp_core_protocols.dart';
 import 'package:carp_core/carp_deployment/carp_core_deployment.dart';
+import 'package:flutter/material.dart';
 
 export 'carp_core_common.dart';
 
 part 'serialization.dart';
-
-// part 'carp_core_common.g.dart';
+part 'service_request.dart';
 
 // auto generate json code (.g files) with:
 //   flutter pub run build_runner build --delete-conflicting-outputs

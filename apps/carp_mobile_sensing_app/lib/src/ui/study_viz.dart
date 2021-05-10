@@ -222,14 +222,16 @@ class _MeasureLine extends StatelessWidget {
         ? Icon(ProbeDescription.probeTypeIcon[measure.type].icon, size: 25)
         : Icon(ProbeDescription.probeTypeIcon[DataType.UNKNOWN].icon, size: 25);
 
-    final List<Widget> columnChildren = List<Widget>();
-    columnChildren.add((measure is CAMSMeasure)
-        ? Text((measure as CAMSMeasure).name)
-        : Text(measure.runtimeType.toString()));
+    final String name = ((measure as CAMSMeasure).name != null)
+        ? (measure as CAMSMeasure).name
+        : measure.runtimeType.toString();
+
+    final List<Widget> columnChildren = [];
+    columnChildren.add(Text(name));
     columnChildren
         .add(Text(measure.toString(), style: themeData.textTheme.caption));
 
-    final List<Widget> rowChildren = List<Widget>();
+    final List<Widget> rowChildren = [];
     if (icon != null) {
       rowChildren.add(SizedBox(
           width: 72.0,

@@ -1,3 +1,20 @@
+## 0.21.4
+* small bug fix in json serialization
+
+## 0.21.3
+* added support for `ProtocolService` sub-system including request classes for using this.
+* added support for `DataEndPoint` and `DataManager` handling as part of `MasterDeviceDeployment`.
+* now using a `SerializationException` to raise issues in de/serialization of objects to/from json.
+* fixed a bug in the `StudyDeployment.getDeviceDeploymentFor()` method.
+
+
+## 0.21.2
+* removal of the overall `carp_core` library - now only using the sub-system libraries. This make the API documentation much more readable.
+* update and improval of API documentation
+
+## 0.21.1
+* small improvement to the `client` sub-system domain classes
+
 ## 0.21.0
 * implementation of the `client` sub-system domain classes
 

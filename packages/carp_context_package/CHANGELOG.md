@@ -1,5 +1,6 @@
-## 0.21.0
-* update to `carp_mobile_sensing` v. 0.21.0
+## 0.21.1
+* update to `carp_mobile_sensing: ^0.21.0` 
+* update to `mobility_features: ^2.0.6` 
 
 ## 0.20.4
 * update to `carp_mobile_sensing` v. 0.20.4

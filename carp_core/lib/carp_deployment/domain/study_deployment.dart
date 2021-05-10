@@ -146,25 +146,33 @@ class StudyDeployment {
         connectedDeviceConfigurations[descriptor.roleName] =
             _registeredDevices[descriptor.roleName]);
 
-    // get all tasks which might need to be executed on this or connected devices.
     List<TaskDescriptor> tasks = [];
-    _registeredDevices.keys.forEach((rolename) =>
-        tasks.addAll(protocol.getTasksForDeviceRoleName(rolename)));
+    // get all tasks which need to be executed on this master device
+    tasks.addAll(protocol.getTasksForDeviceRoleName(device.roleName));
+
+    // .. and connected devices
+    // note that connected devices need NOT to be registrered to be included
+    connectedDevices.forEach((descriptor) =>
+        tasks.addAll(protocol.getTasksForDeviceRoleName(descriptor.roleName)));
 
     // Get all trigger information for this and connected devices.
-    // The trigger IDs assigned are reused to identify them within the protocol
-    Map<String, Trigger> usedTriggers = {};
-    List<TriggeredTask> triggeredTasks = [];
-    int index = 0;
-    _protocol.triggers.forEach((trigger) {
-      usedTriggers['$index'] = trigger;
-      Set<TriggeredTask> tt = _protocol.getTriggeredTasks(trigger);
-      tt.forEach((triggeredTask) {
-        triggeredTask.triggerId = index;
-        triggeredTasks.add(triggeredTask);
-      });
-      index++;
-    });
+    // TODO - this implementation just returns all triggers and triggered tasks.
+    //      - but should check which devices are available
+    Map<String, Trigger> usedTriggers = _protocol.triggers;
+    List<TriggeredTask> triggeredTasks = _protocol.triggeredTasks;
+
+    // Map<String, Trigger> usedTriggers = {};
+    // List<TriggeredTask> triggeredTasks = [];
+    // int index = 0;
+    // _protocol.triggers.forEach((trigger) {
+    //   usedTriggers['$index'] = trigger;
+    //   Set<TriggeredTask> tt = _protocol.getTriggeredTasks(trigger);
+    //   tt.forEach((triggeredTask) {
+    //     triggeredTask.triggerId = index;
+    //     triggeredTasks.add(triggeredTask);
+    //   });
+    //   index++;
+    // });
 
     _status.status = StudyDeploymentStatusTypes.DeploymentReady;
 

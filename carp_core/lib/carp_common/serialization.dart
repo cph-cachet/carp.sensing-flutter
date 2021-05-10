@@ -119,6 +119,7 @@ abstract class Serializable {
   String $type;
 
   /// Create an object that can be serialized to JSON.
+  @mustCallSuper
   Serializable() {
     $type = jsonType;
   }
@@ -186,8 +187,7 @@ class FromJsonFactory {
         type: 'dk.cachet.carp.deployment.domain.StudyDeploymentStatus.Stopped');
 
     // PROTOCOL
-    register(StudyProtocol());
-    register(ProtocolOwner());
+    // register(StudyProtocol());
     register(Trigger());
     register(ElapsedTimeTrigger());
     register(ManualTrigger());
@@ -202,6 +202,7 @@ class FromJsonFactory {
     register(SamplingConfiguration());
 
     register(DeviceDescriptor());
+    register(DeviceConnection());
     register(MasterDeviceDescriptor());
     register(CustomProtocolDevice());
     register(Smartphone());
@@ -226,11 +227,32 @@ class FromJsonFactory {
       _registry['${type ?? serializable.jsonType}'] =
           serializable.fromJsonFunction;
 
+  /// Rester all [serializables].
+  ///
+  /// A convinient way to call [register] for multiple types.
+  void registerAll(List<Serializable> serializables) =>
+      serializables.forEach((serializable) => register(serializable));
+
   /// Deserialize [json] based on its type.
-  Serializable fromJson(Map<String, dynamic> json) =>
-      Function.apply(_registry[json[Serializable.CLASS_IDENTIFIER]], [json]);
+  Serializable fromJson(Map<String, dynamic> json) {
+    final String type = json[Serializable.CLASS_IDENTIFIER];
+    if (!_registry.containsKey(type))
+      throw SerializationException(
+          "A 'fromJson' function was not found in the FromJsonFactory for the type '$type'. "
+          "Register a Serializable class using the 'FromJsonFactory().register()' method.");
+    return Function.apply(_registry[type], [json]);
+  }
 }
 
 /// A convient function to convert a Dart object into a JSON string.
 String toJsonString(Object object) =>
     const JsonEncoder.withIndent(' ').convert(object);
+
+/// Throws when serialization to/from json fails.
+class SerializationException implements Exception {
+  final _message;
+  String get message => _message;
+  SerializationException([this._message]);
+  @override
+  String toString() => '$runtimeType - $_message';
+}

@@ -1,5 +1,11 @@
-## 0.20.4
+## 0.21.1
+* upgrade to `carp_mobile_sensing` and `carp_webservices` v. 0.21.4
+
+## 0.21.0
+* upgrade to `carp_mobile_sensing` and `carp_webservices` v. 0.21.x
+* added the `CarptudyProtocolManager` which allow getting `CAMSStudyProtocol`s from CARP
 * support for uploading and downloading informed consent to be shown to the user
+* support for uploading and downloading localization setting for different languages
 
 ## 0.20.3
 * update to `carp_core` v. 0.20.3 (json serialization)

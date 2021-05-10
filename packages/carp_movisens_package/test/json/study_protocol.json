@@ -1,6 +1,6 @@
 {
-  "$type": "dk.cachet.carp.protocols.domain.CAMSStudyProtocol",
   "name": "Context package test",
+  "creationDate": "2021-05-10 11:54:41.612Z",
   "masterDevices": [
    {
     "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
@@ -9,12 +9,23 @@
     "samplingConfiguration": {}
    }
   ],
-  "connectedDevices": [],
-  "triggers": [
+  "connectedDevices": [
    {
-    "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
+    "$type": "dk.cachet.carp.protocols.domain.devices.MovisensDevice",
+    "isMasterDevice": false,
+    "roleName": "movisens",
+    "samplingConfiguration": {}
    }
   ],
+  "connections": [],
+  "triggers": {
+   "0": {
+    "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
+   },
+   "1": {
+    "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
+   }
+  },
   "tasks": [
    {
     "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
@@ -106,41 +117,27 @@
       "configuration": {},
       "frequency": 60000000,
       "duration": 1000000
-     },
+     }
+    ]
+   },
+   {
+    "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
+    "name": "Task #6",
+    "measures": [
      {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.MarkedMeasure",
-      "type": "dk.cachet.carp.phone_log",
-      "name": "Phone Log",
-      "description": "Collects the log on in- and out-going calls from the phone",
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.MovisensMeasure",
+      "type": "dk.cachet.carp.movisens",
+      "name": "Movisens ECG device",
+      "description": "Collects heart rythm data from the Movisens EcgMove4 sensor",
       "enabled": true,
       "configuration": {},
-      "history": 86400000000
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
-      "type": "dk.cachet.carp.text_message_log",
-      "name": "Text Messages Log",
-      "description": "Collects the log on in- and out-going text messages (SMS) from the phone",
-      "enabled": true,
-      "configuration": {}
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
-      "type": "dk.cachet.carp.text_message",
-      "name": "Text Messages",
-      "description": "Collects the event when a text messages (SMS) is sent or received",
-      "enabled": true,
-      "configuration": {}
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CalendarMeasure",
-      "type": "dk.cachet.carp.calendar",
-      "name": "Calendar Events",
-      "description": "Collects the list of calendar events on the calenders on the phone",
-      "enabled": true,
-      "configuration": {},
-      "past": 86400000000,
-      "future": 86400000000
+      "address": "88:6B:0F:CD:E7:F2",
+      "deviceName": "Sensor 02655",
+      "weight": 75,
+      "height": 175,
+      "age": 25,
+      "gender": "male",
+      "sensorLocation": "chest"
      }
     ]
    }
@@ -149,14 +146,20 @@
    {
     "triggerId": 0,
     "taskName": "Task #5",
-    "destinationDeviceRoleName": "masterphone"
+    "targetDeviceRoleName": "masterphone"
+   },
+   {
+    "triggerId": 1,
+    "taskName": "Task #6",
+    "targetDeviceRoleName": "movisens"
    }
   ],
+  "expectedParticipantData": [],
   "owner": {
-   "$type": "dk.cachet.carp.protocols.domain.ProtocolOwner",
-   "id": "AB",
-   "name": "Alex Boyon",
-   "email": "alex@uni.dk"
+   "$type": "ProtocolOwner",
+   "id": "jakba",
+   "name": "Jakob E. Bardram",
+   "email": "jakba@dtu.dk"
   },
-  "dataFormat": "dk.cachet.carp"
+  "ownerId": "jakba"
  }

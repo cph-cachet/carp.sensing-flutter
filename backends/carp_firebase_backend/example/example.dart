@@ -22,10 +22,10 @@ void main() {
           zip: true,
           encrypt: false);
 
-  CAMSStudyProtocol study_1 = CAMSStudyProtocol()
+  MasterDeviceDeployment deployment = MasterDeviceDeployment()
     ..dataEndPoint = storageEndPoint;
 
-  print(study_1);
+  print(deployment);
 
   // Using Google Sign-In as authentication
   final FirebaseEndPoint firebaseEndPoint_2 = new FirebaseEndPoint(
@@ -42,8 +42,7 @@ void main() {
       new FirebaseDatabaseDataEndPoint(firebaseEndPoint_2,
           collection: 'carp_data');
 
-  CAMSStudyProtocol study_2 = CAMSStudyProtocol()
-    ..dataEndPoint = databaseEndPoint;
+  deployment..dataEndPoint = databaseEndPoint;
 
-  print(study_2);
+  print(deployment);
 }

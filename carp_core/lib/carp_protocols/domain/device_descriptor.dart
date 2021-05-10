@@ -77,7 +77,7 @@ class CustomProtocolDevice extends MasterDeviceDescriptor {
   /// The default rolename for a custom protocol device.
   static const String DEFAULT_ROLENAME = 'Custom device';
 
-  /// Create a new Smartphone device descriptor.
+  /// Create a new [CustomProtocolDevice] device descriptor.
   /// If [roleName] is not specified, then the  [DEFAULT_ROLENAME] is used.
   CustomProtocolDevice({
     String roleName = DEFAULT_ROLENAME,

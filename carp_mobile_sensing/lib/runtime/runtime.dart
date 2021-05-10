@@ -15,7 +15,6 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
-import 'package:carp_core/carp_core.dart';
 
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
@@ -50,16 +49,16 @@ class SensingException implements Exception {
 }
 
 /// A simple method for printing warning messages to the console.
-void info(String message) => (settings.debugLevel >= DebugLevel.INFO)
+void info(String message) => (Settings().debugLevel >= DebugLevel.INFO)
     ? print('CAMS INFO - $message')
     : 0;
 
 /// A simple method for printing warning messages to the console.
-void warning(String message) => (settings.debugLevel >= DebugLevel.WARNING)
+void warning(String message) => (Settings().debugLevel >= DebugLevel.WARNING)
     ? print('CAMS WARNING - $message')
     : 0;
 
 /// A simple method for printing debug messages to the console.
-void debug(String message) => (settings.debugLevel >= DebugLevel.DEBUG)
+void debug(String message) => (Settings().debugLevel >= DebugLevel.DEBUG)
     ? print('CAMS DEBUG - $message')
     : 0;

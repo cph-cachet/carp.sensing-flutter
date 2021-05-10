@@ -29,11 +29,12 @@ class FileDataManager extends AbstractDataManager {
   int _flushingSink = 0;
 
   Future initialize(
-    CAMSMasterDeviceDeployment deployment,
+    String studyDeploymentId,
+    DataEndPoint dataEndPoint,
     Stream<DataPoint> data,
   ) async {
-    await super.initialize(deployment, data);
-    assert(deployment.dataEndPoint is FileDataEndPoint);
+    assert(dataEndPoint is FileDataEndPoint);
+    await super.initialize(studyDeploymentId, dataEndPoint, data);
 
     _fileDataEndPoint = dataEndPoint as FileDataEndPoint;
 
@@ -54,12 +55,9 @@ class FileDataManager extends AbstractDataManager {
 
   void onDataPoint(DataPoint dataPoint) => write(dataPoint);
 
-  void onError(Object error) => write(DataPoint(
-      DataPointHeader(
-          studyId: deployment.studyId,
-          userId: deployment.userId,
-          dataFormat: DataFormat.fromString(CAMSDataType.ERROR)),
-      ErrorDatum(error.toString())));
+  void onError(Object error) =>
+      write(DataPoint.fromData(ErrorDatum(error.toString()))
+        ..carpHeader.dataFormat = DataFormat.fromString(CAMSDataType.ERROR));
 
   void onDone() => close();
 
@@ -70,7 +68,7 @@ class FileDataManager extends AbstractDataManager {
       final localApplicationDir = await getApplicationDocumentsDirectory();
       // create a sub-directory for this study named as the study ID
       final directory = await Directory(
-              '${localApplicationDir.path}/$CARP_FILE_PATH/${deployment.studyDeploymentId}')
+              '${localApplicationDir.path}/$CARP_FILE_PATH/$studyDeploymentId')
           .create(recursive: true);
       _path = directory.path;
     }

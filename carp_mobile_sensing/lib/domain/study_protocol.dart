@@ -38,43 +38,36 @@ class CAMSStudyProtocol extends StudyProtocol {
   ProtocolOwner owner;
 
   /// The unique id of the owner.
-  String get ownerId => owner?.id;
+  @override
+  String get ownerId => (owner != null) ? owner.id : super.ownerId;
 
   /// Specify where and how to upload this study data.
-  DataEndPoint dataEndPoint;
-
-  /// The preferred format of the data to be uploaded according to
-  /// [DataFormatType]. Default using the [NameSpace.CARP].
-  String dataFormat;
+  // DataEndPoint dataEndPoint;
 
   /// The [masterDevice] which is responsible for aggregating and synchronizing
   /// incoming data. Typically this phone.
   MasterDeviceDescriptor get masterDevice => masterDevices.first;
 
   /// Create a new [StudyProtocol].
-  ///
-  /// If no [dataFormat] is specified, the CARP namespace is used.
   CAMSStudyProtocol({
     this.studyId,
     String name,
+    String description,
     this.owner,
     this.protocolDescription,
-    this.dataEndPoint,
-    this.dataFormat = NameSpace.CARP,
   })
-      : super(owner: owner, name: name) {
+      : super(ownerId: owner?.id, name: name, description: description) {
     // TODO - move this elsewhere.... can't assumed that the programmer
     // create a protocol - s/he might download it e.g. from CARP.
-    registerFromJsonFunctions();
+    _registerFromJsonFunctions();
     // studyId ??= Uuid().v1();
   }
 
-  Function get fromJsonFunction => _$CAMSStudyProtocolFromJson;
   factory CAMSStudyProtocol.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      _$CAMSStudyProtocolFromJson(json);
   Map<String, dynamic> toJson() => _$CAMSStudyProtocolToJson(this);
 
-  String toString() => '$runtimeType - $name [$ownerId]';
+  String toString() => '${super.toString()}, studyId: $studyId';
 }
 
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
@@ -97,5 +90,5 @@ class StudyProtocolDescription extends Serializable {
   Map<String, dynamic> toJson() => _$StudyProtocolDescriptionToJson(this);
 
   String toString() =>
-      '$runtimeType - title: $title, description: $description';
+      '$runtimeType -  title: $title, description: $description. purpose: $purpose';
 }

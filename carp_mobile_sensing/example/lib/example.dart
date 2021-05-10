@@ -8,24 +8,18 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 /// This is an example of how to set up a study by using the `common`
 /// sampling schema. Used in the README file.
 void example_1() async {
-  // Create a study protocol using a local file to store data
+  // Create a study protocol
   CAMSStudyProtocol protocol = CAMSStudyProtocol()
     ..name = 'Track patient movement'
     ..owner = ProtocolOwner(
       id: 'AB',
       name: 'Alex Boyon',
       email: 'alex@uni.dk',
-    )
-    ..dataEndPoint = FileDataEndPoint(
-      bufferSize: 500 * 1000,
-      zip: true,
-      encrypt: false,
     )
     ..protocolDescription = StudyProtocolDescription(
         title: 'Test Study',
@@ -84,11 +78,6 @@ void example_2() async {
       id: 'AB',
       name: 'Alex Boyon',
       email: 'alex@uni.dk',
-    )
-    ..dataEndPoint = FileDataEndPoint(
-      bufferSize: 500 * 1000,
-      zip: true,
-      encrypt: false,
     );
 
   // define which devices are used for data collection
@@ -132,8 +121,25 @@ void example_2() async {
   StudyDeploymentController controller =
       await client.addStudy(studyDeploymentId, deviceRolename);
 
-  // configure the controller and resume sampling
-  await controller.configure();
+  // you can change the deployment locally, before starting the
+  // execution of it - e.g. setting another data endpoint.
+  controller.deployment.dataEndPoint = FileDataEndPoint(
+    bufferSize: 500 * 1000,
+    zip: true,
+    encrypt: false,
+  );
+
+  // configure the controller with a data endpoint that saves data as
+  // file of size 500 KB, which are zipped (this is the same as above)
+  await controller.configure(
+    dataEndPoint: FileDataEndPoint(
+      bufferSize: 500 * 1000,
+      zip: true,
+      encrypt: false,
+    ),
+  );
+
+  // resume sampling
   controller.resume();
 
   // listening to the stream of all data events from the controller
@@ -221,12 +227,12 @@ void example_3() async {
     String deviceRoleName = deviceStatus.device.roleName;
 
     // create and register the device in the CAMS DeviceRegistry
-    await DeviceController().createDeviceDataCollector(type);
+    await DeviceController().createDevice(type);
 
     // if the device manager is created succesfully on the phone
-    if (DeviceController().hasDeviceDataCollector(type)) {
+    if (DeviceController().hasDevice(type)) {
       // ask the device manager for a unique id of the device
-      String deviceId = DeviceController().getDeviceDataCollector(type).id;
+      String deviceId = DeviceController().getDevice(type).id;
       DeviceRegistration registration = DeviceRegistration(deviceId);
       // (all of the above can actually be handled directly by the CAMSDeploymentService.registerDevice() method)
 
@@ -449,8 +455,9 @@ void carp_core_client_example() async {
 
   // create a client manager for this phone
   SmartPhoneClientManager client = SmartPhoneClientManager(
-      deploymentService: deploymentService,
-      deviceController: DeviceController());
+    deploymentService: deploymentService,
+    deviceRegistry: DeviceController(),
+  );
 
   // which is equivalent to
   client = SmartPhoneClientManager();

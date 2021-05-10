@@ -10,17 +10,24 @@ part of runtime;
 class SmartPhoneClientManager extends ClientManager {
   SmartPhoneClientManager({
     DeploymentService deploymentService,
-    DeviceDataCollectorFactory deviceController,
-  }) {
-    // if not specified, use default services
-    this.deploymentService ??= SmartphoneDeploymentService();
-    this.deviceCollectorFactory ??= DeviceController();
-  }
+    DeviceController deviceRegistry,
+  }) : super(
+          // if not specified, use default services
+          deploymentService: deploymentService ?? SmartphoneDeploymentService(),
+          deviceRegistry: deviceRegistry ?? DeviceController(),
+        );
+
+  @override
+  DeviceController get deviceRegistry => super.deviceRegistry;
 
   @override
   Future<DeviceRegistration> configure({String deviceId}) async {
     await DeviceInfo().init();
     deviceId ??= DeviceInfo().deviceID;
+    info('Configuring $runtimeType:');
+    info('  deployment service : $deploymentService');
+    info('     device registry : $deviceRegistry');
+    info('           device ID : $deviceId');
     return super.configure(deviceId: deviceId);
   }
 
@@ -29,11 +36,9 @@ class SmartPhoneClientManager extends ClientManager {
     String studyDeploymentId,
     String deviceRoleName,
   ) async {
-    assert(isConfigured, 'The client manager has not been configured yet.');
-    assert(
-        !repository
-            .containsKey(StudyRuntimeId(studyDeploymentId, deviceRoleName)),
-        'A study with the same study deployment ID and device role name has already been added.');
+    info(
+        'Adding study to $runtimeType - studyDeploymentId: $studyDeploymentId, deviceRoleName: $deviceRoleName');
+    super.addStudy(studyDeploymentId, deviceRoleName);
 
     // Create the study runtime.
     // val deviceRegistration = repository.getDeviceRegistration()!!
@@ -42,7 +47,7 @@ class SmartPhoneClientManager extends ClientManager {
 
     await controller.initialize(
       deploymentService,
-      deviceCollectorFactory,
+      deviceRegistry,
       studyDeploymentId,
       deviceRoleName,
       registration,

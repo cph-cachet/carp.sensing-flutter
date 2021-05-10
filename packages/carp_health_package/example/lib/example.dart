@@ -1,4 +1,3 @@
-import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_health_package/health_package.dart';
 import 'package:health/health.dart';
@@ -18,11 +17,6 @@ void main() async {
       id: 'AB',
       name: 'Alex Boyon',
       email: 'alex@uni.dk',
-    )
-    ..dataEndPoint = FileDataEndPoint(
-      bufferSize: 500 * 1000,
-      zip: true,
-      encrypt: false,
     );
 
   // define which devices are used for data collection
@@ -72,17 +66,21 @@ void main() async {
 
   // deploy this protocol using the on-phone deployment service
   StudyDeploymentStatus status =
-      await CAMSDeploymentService().createStudyDeployment(protocol);
+      await SmartphoneDeploymentService().createStudyDeployment(protocol);
 
-  // now ready to get the device deployment configuration for this phone
-  CAMSMasterDeviceDeployment deployment = await CAMSDeploymentService()
-      .getDeviceDeployment(status.studyDeploymentId);
+  String studyDeploymentId = status.studyDeploymentId;
+  String deviceRolename = status.masterDeviceStatus.device.roleName;
 
-  // Create a study deployment controller that can manage this deployment
-  StudyDeploymentController controller = StudyDeploymentController(deployment);
+  // create and configure a client manager for this phone
+  SmartPhoneClientManager client = SmartPhoneClientManager();
+  await client.configure();
 
-  // initialize the controller and resume sampling
-  await controller.initialize();
+  // create a study runtime to control this deployment
+  StudyDeploymentController controller =
+      await client.addStudy(studyDeploymentId, deviceRolename);
+
+  // configure the controller and resume sampling
+  await controller.configure();
   controller.resume();
 
   // listening and print all data events from the study

@@ -1,14 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:test/test.dart';
-import 'package:carp_core/carp_core.dart';
+import 'package:carp_core/carp_deployment/carp_core_deployment.dart';
+import 'package:carp_core/carp_common/carp_core_common.dart';
 
 void main() {
   setUp(() {});
-
-  test('DeploymentServiceRequest -> JSON', () async {
-    print(toJsonString(DeploymentServiceRequest('1234')));
-  });
 
   test('GetActiveParticipationInvitations -> JSON', () async {
     print(toJsonString(GetActiveParticipationInvitations('jakba@dtu.dk')));

@@ -52,7 +52,7 @@ class BluetoothDatum extends Datum {
   DataFormat get format =>
       DataFormat.fromString(ConnectivitySamplingPackage.BLUETOOTH);
 
-  List<BluetoothDevice> scanResult = new List<BluetoothDevice>();
+  List<BluetoothDevice> scanResult = [];
 
   BluetoothDatum() : super();
   factory BluetoothDatum.fromScanResult(

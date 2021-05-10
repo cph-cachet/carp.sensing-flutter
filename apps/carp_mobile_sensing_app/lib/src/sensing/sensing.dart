@@ -7,32 +7,43 @@
 
 part of mobile_sensing_app;
 
-/// This class implements the sensing layer incl. setting up a [StudyProtocol]
-/// with [Task]s and [Measure]s.
+/// This class implements the sensing layer.
+///
+/// Call [initialize] to setup a deployment, either locally or using a CARP
+/// deployment. Once initialized, the runtime [controller] can be used to
+/// control the study execution (e.g., resume, pause, stop).
 class Sensing {
   static final Sensing _instance = Sensing._();
-  CAMSMasterDeviceDeployment _deployment;
   StudyDeploymentStatus _status;
-  StudyProtocol _protocol;
   StudyDeploymentController _controller;
-  StudyProtocolManager manager;
 
-  CAMSMasterDeviceDeployment get deployment => _deployment;
+  DeploymentService deploymentService;
+  SmartPhoneClientManager client;
+
+  /// The deployment running on this phone.
+  CAMSMasterDeviceDeployment get deployment => _controller?.deployment;
 
   /// Get the latest status of the study deployment.
   StudyDeploymentStatus get status => _status;
-  StudyProtocol get protocol => _protocol;
+
+  /// The role name of this device in the deployed study
+  String get deviceRolename => _status?.masterDeviceStatus?.device?.roleName;
+
+  /// The study deployment id of the deployment running on this phone.
+  String get studyDeploymentId => _status?.studyDeploymentId;
+
+  /// The study runtime controller for this deployment
   StudyDeploymentController get controller => _controller;
 
   /// the list of running - i.e. used - probes in this study.
   List<Probe> get runningProbes =>
-      (_controller != null) ? _controller.executor.probes : List();
+      (_controller != null) ? _controller.executor.probes : [];
 
-  /// the list of connected devices.
+  /// The list of connected devices.
   List<DeviceManager> get runningDevices =>
-      DeviceController().devices.values.toList();
+      client?.deviceRegistry?.devices?.values?.toList();
 
-  /// Get the singleton sensing instance
+  /// The singleton sensing instance
   factory Sensing() => _instance;
 
   Sensing._() {
@@ -43,46 +54,74 @@ class Sensing {
     //SamplingPackageRegistry().register(CommunicationSamplingPackage());
     //SamplingPackageRegistry().register(AppsSamplingPackage());
     SamplingPackageRegistry().register(ESenseSamplingPackage());
-
-    manager = LocalStudyProtocolManager();
-
-    // used for downloading the study protocol from the CARP server
-    // TODO - obtain deployment id from an invitaiton
-    // manager = CARPStudyProtocolManager();
   }
 
-  /// Initialize and setup sensing.
+  /// Initialize and set up sensing.
   Future<void> initialize() async {
-    // get the protocol from the study protocol manager based on the
-    // study deployment id
-    _protocol = await manager.getStudyProtocol(testStudyDeploymentId);
+    info('Initializing $runtimeType - mode: ${bloc.deploymentMode}');
 
-    // deploy this protocol using the on-phone deployment service
-    // reuse the study deployment id, so we have the same id on the phone deployment
-    _status = await CAMSDeploymentService().createStudyDeployment(
-      _protocol,
-      testStudyDeploymentId,
+    // set up the devices available on this phone
+    DeviceController().registerAllAvailableDevices();
+
+    switch (bloc.deploymentMode) {
+      case DeploymentMode.LOCAL:
+        // use the local, phone-based deployment service
+        deploymentService = SmartphoneDeploymentService();
+
+        // get the protocol from the local study protocol manager
+        // note that the study id is not used
+        StudyProtocol protocol =
+            await LocalStudyProtocolManager().getStudyProtocol('');
+
+        // deploy this protocol using the on-phone deployment service
+        _status = await SmartphoneDeploymentService().createStudyDeployment(
+          protocol,
+        );
+
+        break;
+      case DeploymentMode.CARP:
+        // use the CARP deployment service that knows how to download a
+        // custom protocol
+        deploymentService = CustomProtocolDeploymentService();
+
+        // authenticate the user
+        // this would normally trigger a dialogue, but for demo/testing we're using
+        // the username/password in the 'credentials.dart' file
+        if (!CarpService().authenticated)
+          await CarpService()
+              .authenticate(username: username, password: password);
+
+        // get the study deployment id
+        // this would normally be done by getting the invitations for this user,
+        // but for demo/testing we're using the deployment id in the 'credentials.dart' file
+        _status = await CustomProtocolDeploymentService()
+            .getStudyDeploymentStatus(testStudyDeploymentId);
+
+        // now register the CARP data manager for uploading data back to CARP
+        DataManagerRegistry().register(CarpDataManager());
+
+        break;
+    }
+
+    // create and configure a client manager for this phone
+    client = SmartPhoneClientManager(
+      deploymentService: deploymentService,
+      deviceRegistry: DeviceController(),
     );
+    await client.configure();
 
-    // initialize the local device controller with the deployment status,
-    // which contains the list of needed devices
-    await DeviceController().initialize(_status, CAMSDeploymentService());
+    // add and deploy this deployment
+    _controller = await client.addStudy(studyDeploymentId, deviceRolename);
 
-    // now we're ready to get the device deployment configuration for this phone
-    _deployment = await CAMSDeploymentService()
-        .getDeviceDeployment(status.studyDeploymentId);
-
-    // create a study deployment controller that can manage this deployment
-    _controller = StudyDeploymentController(
-      deployment,
-      debugLevel: DebugLevel.DEBUG,
+    // configure the controller with the default privacy schema
+    await _controller.configure(
       privacySchemaName: PrivacySchema.DEFAULT,
     );
-
-    // initialize the controller
-    await _controller.initialize();
+    // controller.resume();
 
     // listening on the data stream and print them as json to the debug console
     _controller.data.listen((data) => print(toJsonString(data)));
+
+    info('$runtimeType initialized');
   }
 }

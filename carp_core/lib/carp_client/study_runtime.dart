@@ -19,7 +19,7 @@ class StudyRuntime {
   MasterDeviceDeployment deployment;
 
   /// The device factory to handle the devices used in this study deployment.
-  DeviceDataCollectorFactory deviceFactory;
+  DeviceRegistry deviceRegistry;
 
   /// The deployment service to use to retrieve and manage the study deployment
   /// with [studyDeploymentId]. This deployment service should have the deployment
@@ -72,33 +72,31 @@ class StudyRuntime {
 
   StudyRuntime();
 
-  /// Instantiate a [StudyRuntime] by registering the client device in the [deploymentService].
+  /// Instantiate a [StudyRuntime] by registering the client device in a [DeploymentService].
   /// In case the device is immediately ready for deployment, also deploy.
+  ///
+  ///  * [deploymentService] - the deployment service to use to retrieve and manage
+  ///    the study deployment with [studyDeploymentId].
+  ///  * [deviceRegistry] - the device factory to handle the devices used in this study deployment.
+  ///  * [studyDeploymentId] - the ID of the deployed study for which to collect data.
+  ///  * [deviceRoleName] – the role which the client device this runtime is intended
+  ///    for plays inthe deployment identified by [studyDeploymentId].
+  ///  * [deviceRegistration] - the device configuration for the device this study
+  ///    runtime runs on, identified by [deviceRoleName] in the study deployment
+  ///    with [studyDeploymentId].
+  ///
   Future initialize(
-    /// The deployment service to use to retrieve and manage the study deployment
-    /// with [studyDeploymentId].
-    /// This deployment service should have the deployment with [studyDeploymentId] available.
     DeploymentService deploymentService,
-
-    /// The device factory to handle the devices used in this study deployment.
-    DeviceDataCollectorFactory deviceFactory,
-
-    /// The ID of the deployed study for which to collect data.
+    DeviceRegistry deviceRegistry,
     String studyDeploymentId,
-
-    /// The role which the client device this runtime is intended for plays in
-    /// the deployment identified by [studyDeploymentId].
     String deviceRoleName,
-
-    /// The device configuration for the device this study runtime runs on,
-    /// identified by [deviceRoleName] in the study deployment with [studyDeploymentId].
     DeviceRegistration deviceRegistration,
   ) async {
     assert(deploymentService != null,
         'Deployment Service must be specified (null)');
 
     this.deploymentService = deploymentService;
-    this.deviceFactory = deviceFactory;
+    this.deviceRegistry = deviceRegistry;
 
     this._id = StudyRuntimeId(studyDeploymentId, deviceRoleName);
     this._status = StudyRuntimeStatus.DeploymentReceived;
@@ -137,19 +135,18 @@ class StudyRuntime {
   }
 
   /// Tries to register a connected device which are available
-  /// in this device's [deviceFactory] as well as in the [deploymentService].
+  /// in this device's [deviceRegistry] as well as in the [deploymentService].
   Future tryRegisterConnectedDevice(DeviceDescriptor device) async {
     String deviceType = device.type;
     String deviceRoleName = device.roleName;
 
     // if this phone supports the device, register it locally
-    if (deviceFactory.supportsDeviceDataCollector(deviceType))
-      await deviceFactory.createDeviceDataCollector(deviceType);
+    if (deviceRegistry.supportsDevice(deviceType))
+      await deviceRegistry.createDevice(deviceType);
 
     // if successful, register at the deployment service
-    if (deviceFactory.hasDeviceDataCollector(deviceType)) {
-      DeviceDataCollector deviceManager =
-          deviceFactory.getDeviceDataCollector(deviceType);
+    if (deviceRegistry.hasDevice(deviceType)) {
+      DeviceDataCollector deviceManager = deviceRegistry.getDevice(deviceType);
       // ask the device manager for a unique id of the device
       DeviceRegistration registration = DeviceRegistration(deviceManager.id);
       deviceManager.deviceRegistration = registration;
@@ -159,7 +156,7 @@ class StudyRuntime {
   }
 
   /// Tries to register all connected devices which are available
-  /// in this device's [deviceFactory] as well as in the [deploymentService].
+  /// in this device's [deviceRegistry] as well as in the [deploymentService].
   ///
   /// The [deploymentStatus] lists the devices needed to be deployed on this device.
   ///
