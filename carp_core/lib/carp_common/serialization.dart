@@ -132,7 +132,7 @@ abstract class Serializable {
 
   /// Return the [$type] to be used for JSON serialization of this class.
   /// Default is [runtimeType]. Only specify this if you need another type.
-  String get jsonType => this.runtimeType.toString();
+  String get jsonType => runtimeType.toString();
 }
 
 /// A factory that holds [fromJson] functions to be used in JSON
@@ -236,10 +236,11 @@ class FromJsonFactory {
   /// Deserialize [json] based on its type.
   Serializable fromJson(Map<String, dynamic> json) {
     final String type = json[Serializable.CLASS_IDENTIFIER];
-    if (!_registry.containsKey(type))
+    if (!_registry.containsKey(type)) {
       throw SerializationException(
           "A 'fromJson' function was not found in the FromJsonFactory for the type '$type'. "
           "Register a Serializable class using the 'FromJsonFactory().register()' method.");
+    }
     return Function.apply(_registry[type], [json]);
   }
 }

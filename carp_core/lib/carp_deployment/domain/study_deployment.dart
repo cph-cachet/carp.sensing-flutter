@@ -91,10 +91,12 @@ class StudyDeployment {
         DeviceDeploymentStatus(device: device);
 
     deviceStatus.status = DeviceDeploymentStatusTypes.Unregistered;
-    if (_registeredDevices.containsKey(device.roleName))
+    if (_registeredDevices.containsKey(device.roleName)) {
       deviceStatus.status = DeviceDeploymentStatusTypes.Registered;
-    if (_deployedDevices.contains(device.roleName))
+    }
+    if (_deployedDevices.contains(device.roleName)) {
       deviceStatus.status = DeviceDeploymentStatusTypes.Deployed;
+    }
 
     return deviceStatus;
   }
@@ -111,8 +113,9 @@ class StudyDeployment {
     _registeredDeviceDescriptors[device.roleName] = device;
     _registeredDevices[device.roleName] = registration;
 
-    if (_deviceRegistrationHistory[device] == null)
+    if (_deviceRegistrationHistory[device] == null) {
       _deviceRegistrationHistory[device] = [];
+    }
     _deviceRegistrationHistory[device].add(registration);
   }
 

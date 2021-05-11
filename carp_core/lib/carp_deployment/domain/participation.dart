@@ -17,7 +17,7 @@ class ParticipantData {
 
   ParticipantData({this.studyDeploymentId, this.data}) : super();
 
-  operator [](String key) => data[key];
+  dynamic operator [](String key) => data[key];
   operator []=(String key, dynamic value) => data[key] = value;
 
   factory ParticipantData.fromJson(Map<String, dynamic> json) =>

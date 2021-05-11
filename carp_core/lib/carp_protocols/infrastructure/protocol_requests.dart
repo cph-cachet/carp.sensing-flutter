@@ -8,7 +8,7 @@ part of carp_core_protocols;
 
 /// Serializable application service requests to [ProtocolService].
 abstract class ProtocolServiceRequest extends ServiceRequest {
-  String _infrastructurePackageNamespace =
+  final String _infrastructurePackageNamespace =
       'dk.cachet.carp.protocols.infrastructure';
   ProtocolServiceRequest() : super();
   String get jsonType =>

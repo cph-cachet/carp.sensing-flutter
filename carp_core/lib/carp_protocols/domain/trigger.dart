@@ -15,7 +15,7 @@ part of carp_core_protocols;
 /// the specific behavior / timing of a trigger.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class Trigger extends Serializable {
-  String _triggerNamespace = 'dk.cachet.carp.protocols.domain.triggers';
+  final String _triggerNamespace = 'dk.cachet.carp.protocols.domain.triggers';
 
   /// The device role name from which the trigger originates.
   String sourceDeviceRoleName;
@@ -152,9 +152,9 @@ class RecurrenceRule {
   /// 'UNTIL' should be reassigned to a calculated end date time, formatted using
   /// the RFC 5545 specifications: https://tools.ietf.org/html/rfc5545#section-3.3.5
   String toString() {
-    String rule = "RRULE:FREQ=$frequency";
-    rule += (interval != 1) ? ";INTERVAL=$interval" : "";
-    rule += (end.type != EndType.NEVER) ? rule += ";$end" : "";
+    String rule = 'RRULE:FREQ=$frequency';
+    rule += (interval != 1) ? ';INTERVAL=$interval' : '';
+    rule += (end.type != EndType.NEVER) ? rule += ';$end' : '';
 
     return rule;
   }

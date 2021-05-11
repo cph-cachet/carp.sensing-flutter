@@ -8,17 +8,19 @@ import 'package:test/test.dart';
 
 import '../lib/cams_study_generator.dart' as cams_study_generator;
 
-String _encode(Object object) => const JsonEncoder.withIndent(' ').convert(object);
+String _encode(Object object) =>
+    const JsonEncoder.withIndent(' ').convert(object);
 
 void main() {
   Study study;
 
   setUp(() async {
-    SamplingPackageRegistry.instance.register(AudioSamplingPackage());
-    SamplingPackageRegistry.instance.register(CommunicationSamplingPackage());
-    SamplingPackageRegistry.instance.register(ContextSamplingPackage());
+    SamplingPackageRegistry().register(AudioSamplingPackage());
+    SamplingPackageRegistry().register(CommunicationSamplingPackage());
+    SamplingPackageRegistry().register(ContextSamplingPackage());
 
-    study = await cams_study_generator.settings.manager.getStudy(cams_study_generator.settings.studyId);
+    study = await cams_study_generator.settings.manager
+        .getStudy(cams_study_generator.settings.studyId);
 
     // study = Study('1234', 'bardram', name: 'bardram study', deploymentId: '#1');
     // //study.dataEndPoint = DataEndPoint(DataEndPointType.PRINT);

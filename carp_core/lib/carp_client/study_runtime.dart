@@ -9,10 +9,10 @@ part of carp_core_client;
 
 /// Manage data collection for a particular study on a client device.
 class StudyRuntime {
-  List<DeviceDescriptor> _remainingDevicesToRegister = [];
+  final List<DeviceDescriptor> _remainingDevicesToRegister = [];
   StudyRuntimeId _id;
   StudyRuntimeStatus _status = StudyRuntimeStatus.NotReadyForDeployment;
-  StreamController<StudyRuntimeStatus> _statusEventsController =
+  final StreamController<StudyRuntimeStatus> _statusEventsController =
       StreamController();
 
   /// The [MasterDeviceDeployment] for this study runtime.
@@ -98,16 +98,16 @@ class StudyRuntime {
     this.deploymentService = deploymentService;
     this.deviceRegistry = deviceRegistry;
 
-    this._id = StudyRuntimeId(studyDeploymentId, deviceRoleName);
-    this._status = StudyRuntimeStatus.DeploymentReceived;
+    _id = StudyRuntimeId(studyDeploymentId, deviceRoleName);
+    _status = StudyRuntimeStatus.DeploymentReceived;
 
     // Register the master device this study runs on for the given study deployment.
-    this.deploymentStatus = await deploymentService.registerDevice(
+    deploymentStatus = await deploymentService.registerDevice(
         studyDeploymentId, deviceRoleName, deviceRegistration);
 
     // Initialize runtime.
     this.studyDeploymentId = studyDeploymentId;
-    this.device = deploymentStatus.masterDeviceStatus.device;
+    device = deploymentStatus.masterDeviceStatus.device;
 
     // After registration, deployment information might immediately be available
     // for this client device.
@@ -117,19 +117,20 @@ class StudyRuntime {
   /// Verifies whether the master device is ready for deployment and in case
   /// it is, deploys. In case already deployed, nothing happens.
   Future<StudyRuntimeStatus> tryDeployment() async {
-    this.deploymentStatus =
+    deploymentStatus =
         await deploymentService.getStudyDeploymentStatus(studyDeploymentId);
 
     // get the deployment
-    this.deployment = await deploymentService.getDeviceDeploymentFor(
+    deployment = await deploymentService.getDeviceDeploymentFor(
         studyDeploymentId, device.roleName);
     _status = StudyRuntimeStatus.RegisteringDevices;
 
     // TODO - set _remainingDevicesToRegister
 
     // if this is the only device to register, then we're done
-    if (deploymentStatus.devicesStatus.length == 1)
+    if (deploymentStatus.devicesStatus.length == 1) {
       _status = StudyRuntimeStatus.Deployed;
+    }
 
     return status;
   }
@@ -141,8 +142,9 @@ class StudyRuntime {
     String deviceRoleName = device.roleName;
 
     // if this phone supports the device, register it locally
-    if (deviceRegistry.supportsDevice(deviceType))
+    if (deviceRegistry.supportsDevice(deviceType)) {
       await deviceRegistry.createDevice(deviceType);
+    }
 
     // if successful, register at the deployment service
     if (deviceRegistry.hasDevice(deviceType)) {
