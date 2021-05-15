@@ -54,7 +54,7 @@ class MasterDeviceDeployment {
     this.triggeredTasks,
     this.dataEndPoint,
   }) {
-    this.lastUpdateDate = DateTime.now();
+    lastUpdateDate = DateTime.now();
   }
 
   // internal map, mapping task name to the task

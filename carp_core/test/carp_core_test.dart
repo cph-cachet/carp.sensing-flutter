@@ -34,7 +34,7 @@ void main() {
       ),
     ];
 
-    ConcurrentTask task = ConcurrentTask(name: "Start measures")
+    ConcurrentTask task = ConcurrentTask(name: 'Start measures')
       ..addMeasures(measures);
     protocol.addTriggeredTask(Trigger(), task, phone);
     protocol.addTriggeredTask(ManualTrigger(), task, phone);
@@ -45,7 +45,7 @@ void main() {
     print(toJsonString(protocol));
     expect(protocol.ownerId, 'xyz@dtu.dk');
     expect(protocol.triggers.length, 2);
-    expect(protocol.triggers.keys.first, "0");
+    expect(protocol.triggers.keys.first, '0');
     expect(protocol.tasks.length, 1);
     expect(protocol.triggeredTasks.length, 2);
   });
@@ -92,7 +92,7 @@ void main() {
     A a = A();
     B b = B();
     a.index = 1;
-    b..str = 'abc';
+    b.str = 'abc';
 
     print(toJsonString(a));
     print(toJsonString(b));

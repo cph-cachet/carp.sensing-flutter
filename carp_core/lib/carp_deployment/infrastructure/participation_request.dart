@@ -17,7 +17,7 @@ part of carp_core_deployment;
 /// All participant requests to the CARP Service is defined in
 /// [carp.core-kotlin](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/carp.deployment.core/src/commonMain/kotlin/dk/cachet/carp/deployment/infrastructure/ParticipationServiceRequest.kt)
 abstract class ParticipationServiceRequest extends DeploymentServiceRequest {
-  String _serviceRequestPackageNamespace =
+  final String _serviceRequestPackageNamespace =
       'dk.cachet.carp.deployment.infrastructure.ParticipationServiceRequest';
   ParticipationServiceRequest([String studyDeploymentId])
       : super(studyDeploymentId);

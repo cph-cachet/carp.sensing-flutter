@@ -31,8 +31,8 @@ class TaskDescriptor extends Serializable {
   void removeMeasure(Measure measure) => measures.remove(measure);
 
   TaskDescriptor({this.name, this.measures}) : super() {
-    this.name = name ?? 'Task #${_counter++}';
-    this.measures ??= [];
+    name = name ?? 'Task #${_counter++}';
+    measures ??= [];
   }
 
   Function get fromJsonFunction => _$TaskDescriptorFromJson;

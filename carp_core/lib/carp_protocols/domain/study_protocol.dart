@@ -65,7 +65,7 @@ class StudyProtocol {
     this.name,
     this.description,
   }) : super() {
-    this.creationDate = DateTime.now().toUtc();
+    creationDate = DateTime.now().toUtc();
   }
 
   /// Add a [masterDevice] which is responsible for aggregating and synchronizing
@@ -80,10 +80,11 @@ class StudyProtocol {
 
   /// Add the [trigger] to this protocol.
   void addTrigger(Trigger trigger) {
-    if (triggers.values.contains(trigger))
-      return; // only store a trigger once
-    else
+    if (triggers.values.contains(trigger)) {
+      return;
+    } else {
       triggers['${triggers.length}'] = trigger;
+    }
   }
 
   /// Returns the index of the [trigger] in the [triggers].
@@ -121,9 +122,10 @@ class StudyProtocol {
     // create and add triggered task
     int triggerId = indexOfTrigger(trigger);
 
-    if (triggerId >= 0)
+    if (triggerId >= 0) {
       triggeredTasks.add(TriggeredTask(
           triggerId: triggerId, task: task, targetDevice: targetDevice));
+    }
   }
 
   /// Add a set of [tasks] to be sent to a [targetDevice] once a [trigger] within this
@@ -168,8 +170,9 @@ class StudyProtocol {
   void removeTask(TaskDescriptor task) {
     // Remove task from triggered tasks
     triggeredTasks.forEach((triggeredTask) {
-      if (triggeredTask.taskName == task.name)
+      if (triggeredTask.taskName == task.name) {
         triggeredTasks.remove(triggeredTask);
+      }
     });
 
     // Remove task itself.
@@ -187,8 +190,9 @@ class StudyProtocol {
     final Set<TaskDescriptor> deviceTasks = {};
 
     triggeredTasks.forEach((triggeredTask) {
-      if (triggeredTask.targetDeviceRoleName == device.roleName)
+      if (triggeredTask.targetDeviceRoleName == device.roleName) {
         deviceTasks.add(_taskMap[triggeredTask.taskName]);
+      }
     });
 
     return deviceTasks;
@@ -202,8 +206,9 @@ class StudyProtocol {
     final Set<TaskDescriptor> deviceTasks = {};
 
     triggeredTasks.forEach((triggeredTask) {
-      if (triggeredTask.targetDeviceRoleName == deviceRoleName)
+      if (triggeredTask.targetDeviceRoleName == deviceRoleName) {
         deviceTasks.add(_taskMap[triggeredTask.taskName]);
+      }
     });
     return deviceTasks;
   }

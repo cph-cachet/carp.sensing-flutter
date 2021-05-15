@@ -17,7 +17,7 @@ part of carp_core_deployment;
 /// All deployment requests to the CARP Service is defined in
 /// [carp.core-kotlin](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/carp.deployment.core/src/commonMain/kotlin/dk/cachet/carp/deployment/infrastructure/DeploymentServiceRequest.kt)
 abstract class DeploymentServiceRequest extends ServiceRequest {
-  String _infrastructurePackageNamespace =
+  final String _infrastructurePackageNamespace =
       'dk.cachet.carp.deployment.infrastructure';
   DeploymentServiceRequest([this.studyDeploymentId]) : super();
 
@@ -135,8 +135,7 @@ class DeploymentSuccessful extends GetDeviceDeploymentFor {
     String studyDeploymentId,
     String masterDeviceRoleName,
     DateTime deviceDeploymentLastUpdateDate,
-  )
-      : super(studyDeploymentId, masterDeviceRoleName) {
+  ) : super(studyDeploymentId, masterDeviceRoleName) {
     this.deviceDeploymentLastUpdateDate =
         deviceDeploymentLastUpdateDate?.toUtc() ?? DateTime.now().toUtc();
   }
