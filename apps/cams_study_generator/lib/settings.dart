@@ -7,10 +7,7 @@ class Settings {
   final String uri = "https://cans.cachet.dk:443";
   final String studyId = "2";
 
-  final GeneratorStudyManager manager = GeneratorStudyManager();
-
-  Study _study;
-  Study get study => _study;
+  // final GeneratorStudyManager manager = GeneratorStudyManager();
 }
 
 final settings = Settings();
