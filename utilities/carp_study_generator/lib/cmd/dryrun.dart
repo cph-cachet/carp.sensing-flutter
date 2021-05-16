@@ -11,14 +11,18 @@ part of carp_study_generator;
 ///
 class DryRunCommand extends AbstractCommand {
   StudyProtocolCommand protocolCommand = StudyProtocolCommand();
+  ConsentCommand consentCommand = ConsentCommand();
+  LocalizationCommand localizationCommand = LocalizationCommand();
 
   @override
   Future<void> execute() async {
+    int issues = 0;
     print('\n#1 - AUTHENTICATION');
     try {
       await authenticate();
     } catch (error) {
       print('ERROR - $error');
+      issues++;
     }
 
     print('\n#2 - PROTOCOL');
@@ -26,11 +30,35 @@ class DryRunCommand extends AbstractCommand {
       protocolCommand.protocolJson;
     } catch (error) {
       print('ERROR - $error');
+      issues++;
     }
     try {
       protocolCommand.protocol;
     } catch (error) {
       print('ERROR - $error');
+      issues++;
     }
+
+    print('\n#3 - INFORMED CONSENT');
+    try {
+      consentCommand.consentJson;
+      consentCommand.informedConsent;
+    } catch (error) {
+      print('ERROR - $error');
+      issues++;
+    }
+
+    print('\n#4 - LOCALIZATION');
+    try {
+      locales.forEach((element) async {
+        String locale = element.toString();
+        json.decode(localizationCommand.getLocaleJson(locale));
+      });
+    } catch (error) {
+      print('ERROR - $error');
+      issues++;
+    }
+
+    print('• ${(issues == 0) ? 'No' : issues.toString()} issues found!');
   }
 }

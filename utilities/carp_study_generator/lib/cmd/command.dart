@@ -8,7 +8,7 @@ abstract class Command {
 
 /// An abstract class for all CARP Commands.
 abstract class AbstractCommand implements Command {
-  var _yaml;
+  static var _yaml;
 
   String get uri => _yaml['server']['uri'].toString();
   String get clientId => _yaml['server']['client_id'].toString();
@@ -25,8 +25,10 @@ abstract class AbstractCommand implements Command {
 
   @mustCallSuper
   AbstractCommand() {
-    _yaml = loadYaml(File('carp/carp.yaml').readAsStringSync());
-    print(json.encode(_yaml));
+    if (_yaml == null) {
+      _yaml = loadYaml(File('carp/carp.yaml').readAsStringSync());
+      // print(json.encode(_yaml));
+    }
   }
 
   CarpApp get app => new CarpApp(
