@@ -26,7 +26,8 @@ class ConsentCommand extends AbstractCommand {
   @override
   Future<void> execute() async {
     await authenticate();
-
+    consentJson;
+    informedConsent;
     print('Uploading informed consent to CARP');
     await CarpResourceManager().setInformedConsent(informedConsent);
     print('Upload successful!');

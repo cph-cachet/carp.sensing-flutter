@@ -1,3 +1,2 @@
-## [0.0.1] - TODO: Add release date.
-
-* TODO: Describe initial release.
+## 0.21.0
+* Initial release that coresponds to CAMS v. 0.21.x

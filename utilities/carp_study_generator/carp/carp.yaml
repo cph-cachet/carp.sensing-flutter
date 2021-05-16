@@ -1,5 +1,4 @@
 # Configuration file for CARP Study Generator Utility
-#
 # Contains authentication details for the server, hence
 #
 #         DO NOT CHECK INTO GIT REPOSITORY
@@ -9,8 +8,8 @@ server:
   uri: https://cans.cachet.dk:443
   client_id: carp
   client_secret: carp
-  username: abc@dtu.dk
-  password: 1234
+  username: user@dtu.dk
+  password: pw
 
 protocol:
   filename: carp/protocol/protocol.json
