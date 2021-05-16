@@ -1,14 +1,12 @@
 part of carp_study_generator;
 
-class CreateCommand implements Command {
-  static final String helpText = "HELP!";
+/// A [Command] that creates the necessary files for configuration of a CAMS
+/// study:
+///  * `protocol/protocol.dart`
+///  * `consent/consent.dart`
+///  * `lang/en.json`
+///  * `lang/da.json`
+class CreateCommand extends AbstractCommand {
   @override
-  void execute() {
-    print(helpText);
-  }
-
-  @override
-  void help() {
-    // TODO: implement help
-  }
+  Future<void> execute() async {}
 }

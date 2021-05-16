@@ -20,9 +20,9 @@ The available commands are:
 
 ```
   help           Prints this help message.
-  create         Create the configuration files for a CAMS study.
-  protocol       Create a study protocol based on the file 'protocol.dart' and uploads it to the CARP server.
-  consent        Create an informed consent based on the file 'consent.dart' and uploads it to the CARP server.
+  dryrun         Makes a dryrun testing access to the CARP server, and the protocol, consent, and localizations.
+  protocol       Create a study protocol based on the file 'protocol.json' and uploads it to the CARP server.
+  consent        Create an informed consent based on the file 'consent.json' and uploads it to the CARP server.
   localization   Create localization support based on the files '<locale>.json' and upload them to the CARP server.
 ````
 
@@ -32,8 +32,8 @@ All files used for creating and uploading configurations to CARP is stored in th
 
 | File      | Folder |   Description |
 |-----------|--------|---------------|
-| `StudyProtocol.dart` | `protocol` | The dart file containing the definition of your `StudyProtocol`. | 
-| `Consent.dart` | `consent` | The dart file containing the definition of your `RPOrderedTask` with the informed consent to show to the user. | 
+| `protocol.json` | `protocol` | The dart file containing the json definition of your `StudyProtocol`. | 
+| `consent.json` | `consent` | The dart file containing the json definition of your `RPOrderedTask` with the informed consent to show to the user. | 
 | `<language>.json` | `lang` | The json language file for each language supported. | 
 
 Please ignore the test scripts in the `carp` folder (these are used to execute the commands).
