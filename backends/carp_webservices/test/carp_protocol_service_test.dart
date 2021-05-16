@@ -66,7 +66,7 @@ void main() {
     );
 
     test(
-      '- add custom protocol',
+      '- add custom',
       () async {
         // StudyProtocol protocol =
         //     await CANSProtocolService().createCustomProtocol(

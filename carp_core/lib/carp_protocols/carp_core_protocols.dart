@@ -4,7 +4,7 @@
 /// it merely describes why, when, and what data should be collected.
 ///
 ///
-/// Contain the the core CARP domain classes like [StudyDeployment], [TaskDescriptor],
+/// Contain the the core CARP domain classes like [StudyProtocol], [TaskDescriptor],
 /// and [Measure].
 ///
 /// See the [`carp.protocols`](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-protocols.md)
