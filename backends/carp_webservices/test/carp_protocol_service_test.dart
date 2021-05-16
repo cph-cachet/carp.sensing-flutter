@@ -18,6 +18,8 @@ void main() {
   /// Setup CARP and authenticate.
   /// Runs once before all tests.
   setUpAll(() async {
+    Settings().debugLevel = DebugLevel.DEBUG;
+
     app = new CarpApp(
       // studyId: testStudyId,
       studyDeploymentId: testDeploymentId,
@@ -55,10 +57,17 @@ void main() {
       () async {
         StudyProtocol protocol = StudyProtocol(
             ownerId: ownerId,
-            name: '$name-1.0',
+            name: '$name-1.1',
             description: 'Generated from carp_webservices unit test.')
           ..addMasterDevice(Smartphone(roleName: 'smartphone'));
 
+        await CANSProtocolService().add(protocol, '1.1');
+      },
+    );
+
+    test(
+      '- add custom protocol',
+      () async {
         // StudyProtocol protocol =
         //     await CANSProtocolService().createCustomProtocol(
         //   ownerId,
@@ -67,7 +76,20 @@ void main() {
         //   '{"version":1}',
         // );
 
-        await CANSProtocolService().add(protocol, '1.1');
+        var customDevice = CustomProtocolDevice(roleName: 'Custom device');
+
+        StudyProtocol protocol = StudyProtocol(
+            ownerId: ownerId,
+            name: '$name-1.1',
+            description: 'Generated from carp_webservices unit test.');
+        protocol.addMasterDevice(customDevice);
+        protocol.addTriggeredTask(
+            ElapsedTimeTrigger(elapsedTime: Duration(seconds: 0)),
+            CustomProtocolTask(
+                name: 'Custom device task', studyProtocol: '{"version":"1.0"}'),
+            customDevice);
+
+        await CANSProtocolService().add(protocol);
       },
     );
 
@@ -104,7 +126,7 @@ void main() {
       '- getAllFor',
       () async {
         List<StudyProtocol> protocols =
-            await CANSProtocolService().getAllFor(accountId);
+            await CANSProtocolService().getAllFor(ownerId);
         print(protocols);
       },
     );

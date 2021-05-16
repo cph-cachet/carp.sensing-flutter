@@ -1,6 +1,6 @@
 {
     "ownerId": "xyz@dtu.dk",
-    "creationDate": "2021-05-10T14:06:25.652663Z",
+    "creationDate": "2021-05-16T22:07:05.712276Z",
     "masterDevices": [
      {
       "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
@@ -20,10 +20,12 @@
     "connections": [],
     "triggers": {
      "0": {
-      "$type": "dk.cachet.carp.protocols.domain.triggers.Trigger"
+      "$type": "dk.cachet.carp.protocols.domain.triggers.Trigger",
+      "sourceDeviceRoleName": "masterphone"
      },
      "1": {
-      "$type": "dk.cachet.carp.protocols.domain.triggers.ManualTrigger"
+      "$type": "dk.cachet.carp.protocols.domain.triggers.ManualTrigger",
+      "sourceDeviceRoleName": "masterphone"
      }
     },
     "tasks": [

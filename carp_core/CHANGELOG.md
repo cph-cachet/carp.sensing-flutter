@@ -1,5 +1,6 @@
-## 0.21.4
+## 0.21.4+1
 * small bug fix in json serialization
+* new constructor to `Trigger` classes
 
 ## 0.21.3
 * added support for `ProtocolService` sub-system including request classes for using this.

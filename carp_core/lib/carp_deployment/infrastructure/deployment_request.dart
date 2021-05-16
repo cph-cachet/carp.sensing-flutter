@@ -135,7 +135,8 @@ class DeploymentSuccessful extends GetDeviceDeploymentFor {
     String studyDeploymentId,
     String masterDeviceRoleName,
     DateTime deviceDeploymentLastUpdateDate,
-  ) : super(studyDeploymentId, masterDeviceRoleName) {
+  )
+      : super(studyDeploymentId, masterDeviceRoleName) {
     this.deviceDeploymentLastUpdateDate =
         deviceDeploymentLastUpdateDate?.toUtc() ?? DateTime.now().toUtc();
   }

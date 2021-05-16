@@ -36,8 +36,16 @@ void main() {
 
     ConcurrentTask task = ConcurrentTask(name: 'Start measures')
       ..addMeasures(measures);
-    protocol.addTriggeredTask(Trigger(), task, phone);
-    protocol.addTriggeredTask(ManualTrigger(), task, phone);
+    protocol.addTriggeredTask(
+      Trigger(sourceDeviceRoleName: phone.roleName),
+      task,
+      phone,
+    );
+    protocol.addTriggeredTask(
+      ManualTrigger(sourceDeviceRoleName: phone.roleName),
+      task,
+      phone,
+    );
   });
 
   test('StudyProtocol -> JSON', () async {

@@ -19,12 +19,6 @@ class CAMSTrigger extends Trigger {
   /// Is used when storing data to know what triggered the data collection.
   String triggerId;
 
-  // /// The list of [TaskDescriptor]s in this [CAMSTrigger].
-  // List<TaskDescriptor> tasks = [];
-
-  // /// Add a [TaskDescriptor] to this [CAMSTrigger]
-  // void addTask(TaskDescriptor task) => tasks.add(task);
-
   CAMSTrigger({this.triggerId}) : super();
 
   Function get fromJsonFunction => _$CAMSTriggerFromJson;
@@ -110,8 +104,7 @@ class PeriodicTrigger extends CAMSTrigger {
     String triggerId,
     @required this.period,
     this.duration = const Duration(seconds: 1),
-  })
-      : super(triggerId: triggerId);
+  }) : super(triggerId: triggerId);
 
   Function get fromJsonFunction => _$PeriodicTriggerFromJson;
   factory PeriodicTrigger.fromJson(Map<String, dynamic> json) =>
@@ -134,8 +127,7 @@ class DateTimeTrigger extends CAMSTrigger {
     String triggerId,
     @required this.schedule,
     this.duration,
-  })
-      : super(triggerId: triggerId);
+  }) : super(triggerId: triggerId);
 
   Function get fromJsonFunction => _$DateTimeTriggerFromJson;
   factory DateTimeTrigger.fromJson(Map<String, dynamic> json) =>
@@ -321,20 +313,20 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
   bool remember = false;
 
   /// Creates a [RecurrentScheduledTrigger].
-  RecurrentScheduledTrigger(
-      {String triggerId,
-      @required this.type,
-      @required this.time,
-      this.end,
-      this.separationCount = 0,
-      this.maxNumberOfSampling,
-      this.dayOfWeek,
-      this.weekOfMonth,
-      this.dayOfMonth,
-      //this.monthOfYear,
-      this.remember = false,
-      Duration duration = const Duration(seconds: 10)})
-      : super(
+  RecurrentScheduledTrigger({
+    String triggerId,
+    @required this.type,
+    @required this.time,
+    this.end,
+    this.separationCount = 0,
+    this.maxNumberOfSampling,
+    this.dayOfWeek,
+    this.weekOfMonth,
+    this.dayOfMonth,
+    //this.monthOfYear,
+    this.remember = false,
+    Duration duration = const Duration(seconds: 10),
+  }) : super(
             triggerId: triggerId,
             period: const Duration(seconds: 1),
             duration: duration) {
@@ -514,8 +506,7 @@ class CronScheduledTrigger extends CAMSTrigger {
     String triggerId,
     this.cronExpression,
     this.duration = const Duration(seconds: 1),
-  })
-      : super(triggerId: triggerId);
+  }) : super(triggerId: triggerId);
 
   static String _cronToString(
           int minute, int hour, int day, int month, int weekday) =>
@@ -549,8 +540,7 @@ class SamplingEventTrigger extends CAMSTrigger {
     @required this.measureType,
     this.resumeCondition,
     this.pauseCondition,
-  })
-      : super(triggerId: triggerId);
+  }) : super(triggerId: triggerId);
 
   /// The data type of the event to look for.
   ///
@@ -629,8 +619,7 @@ class ConditionalSamplingEventTrigger extends CAMSTrigger {
     @required this.measureType,
     this.resumeCondition,
     this.pauseCondition,
-  })
-      : super(triggerId: triggerId);
+  }) : super(triggerId: triggerId);
 
   /// The data type of the event to look for.
   String measureType;
@@ -691,8 +680,7 @@ class RandomRecurrentTrigger extends CAMSTrigger {
     this.startTime,
     this.endTime,
     this.duration = const Duration(seconds: 2),
-  })
-      : super(triggerId: triggerId);
+  }) : super(triggerId: triggerId);
 
   Function get fromJsonFunction => _$RandomRecurrentTriggerFromJson;
   factory RandomRecurrentTrigger.fromJson(Map<String, dynamic> json) =>

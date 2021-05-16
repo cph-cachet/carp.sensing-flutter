@@ -30,6 +30,7 @@ class TaskDescriptor extends Serializable {
   /// Remove a [Measure] from this task.
   void removeMeasure(Measure measure) => measures.remove(measure);
 
+  @mustCallSuper
   TaskDescriptor({this.name, this.measures}) : super() {
     name = name ?? 'Task #${_counter++}';
     measures ??= [];

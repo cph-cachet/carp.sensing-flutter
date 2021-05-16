@@ -26,7 +26,12 @@ class Trigger extends Serializable {
   /// to be evaluated by a task scheduler running on a master device.
   bool requiresMasterDevice;
 
-  Trigger() : super();
+  @mustCallSuper
+  Trigger({
+    this.sourceDeviceRoleName,
+    this.requiresMasterDevice = true,
+  })
+      : super();
 
   Function get fromJsonFunction => _$TriggerFromJson;
   factory Trigger.fromJson(Map<String, dynamic> json) =>
@@ -45,7 +50,15 @@ class Trigger extends Serializable {
 class ElapsedTimeTrigger extends Trigger {
   Duration elapsedTime;
 
-  ElapsedTimeTrigger({this.elapsedTime}) : super();
+  ElapsedTimeTrigger({
+    String sourceDeviceRoleName,
+    bool requiresMasterDevice,
+    this.elapsedTime,
+  })
+      : super(
+          sourceDeviceRoleName: sourceDeviceRoleName,
+          requiresMasterDevice: requiresMasterDevice,
+        );
 
   Function get fromJsonFunction => _$ElapsedTimeTriggerFromJson;
   factory ElapsedTimeTrigger.fromJson(Map<String, dynamic> json) =>
@@ -64,7 +77,16 @@ class ManualTrigger extends Trigger {
   /// this trigger.
   String description;
 
-  ManualTrigger({this.label, this.description}) : super();
+  ManualTrigger({
+    String sourceDeviceRoleName,
+    bool requiresMasterDevice,
+    this.label,
+    this.description,
+  })
+      : super(
+          sourceDeviceRoleName: sourceDeviceRoleName,
+          requiresMasterDevice: requiresMasterDevice,
+        );
 
   Function get fromJsonFunction => _$ManualTriggerFromJson;
   factory ManualTrigger.fromJson(Map<String, dynamic> json) =>
@@ -85,7 +107,16 @@ class ScheduledTrigger extends Trigger {
   TimeOfDay time;
   RecurrenceRule recurrenceRule;
 
-  ScheduledTrigger({this.time, this.recurrenceRule}) : super();
+  ScheduledTrigger({
+    String sourceDeviceRoleName,
+    bool requiresMasterDevice,
+    this.time,
+    this.recurrenceRule,
+  })
+      : super(
+          sourceDeviceRoleName: sourceDeviceRoleName,
+          requiresMasterDevice: requiresMasterDevice,
+        );
 
   Function get fromJsonFunction => _$ScheduledTriggerFromJson;
   factory ScheduledTrigger.fromJson(Map<String, dynamic> json) =>
