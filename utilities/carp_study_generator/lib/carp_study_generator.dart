@@ -16,6 +16,13 @@ import 'package:carp_webservices/carp_services/carp_services.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:research_package/model.dart';
 import 'package:carp_backend/carp_backend.dart';
+import 'package:carp_apps_package/apps.dart';
+import 'package:carp_communication_package/communication.dart';
+import 'package:carp_context_package/context.dart';
+import 'package:carp_audio_package/audio.dart';
+import 'package:carp_esense_package/esense.dart';
+import 'package:carp_survey_package/survey.dart';
+import 'package:carp_health_package/health_package.dart';
 
 part 'cmd/command.dart';
 part 'cmd/help.dart';

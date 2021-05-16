@@ -27,8 +27,16 @@ abstract class AbstractCommand implements Command {
   AbstractCommand() {
     if (_yaml == null) {
       _yaml = loadYaml(File('carp/carp.yaml').readAsStringSync());
-      // print(json.encode(_yaml));
     }
+    // register the sampling packages
+    // this is used to be able to deserialize the json protocol
+    SamplingPackageRegistry().register(AppsSamplingPackage());
+    SamplingPackageRegistry().register(CommunicationSamplingPackage());
+    SamplingPackageRegistry().register(ContextSamplingPackage());
+    SamplingPackageRegistry().register(AudioSamplingPackage());
+    SamplingPackageRegistry().register(ESenseSamplingPackage());
+    SamplingPackageRegistry().register(SurveySamplingPackage());
+    SamplingPackageRegistry().register(HealthSamplingPackage());
   }
 
   CarpApp get app => new CarpApp(

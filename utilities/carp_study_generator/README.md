@@ -32,8 +32,8 @@ All files used for creating and uploading configurations to CARP is stored in th
 
 | File      | Folder |   Description |
 |-----------|--------|---------------|
-| `protocol.json` | `protocol` | The dart file containing the json definition of your `StudyProtocol`. | 
-| `consent.json` | `consent` | The dart file containing the json definition of your `RPOrderedTask` with the informed consent to show to the user. | 
+| `protocol.json` | `protocols` | The dart file containing the json definition of your `StudyProtocol`. | 
+| `consent.json` | `consents` | The dart file containing the json definition of your `RPOrderedTask` with the informed consent to show to the user. | 
 | `<language>.json` | `lang` | The json language file for each language supported. | 
 
 Please ignore the test scripts in the `carp` folder (these are used to execute the commands).

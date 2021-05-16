@@ -9,13 +9,13 @@ server:
   client_id: carp
   client_secret: carp
   username: user@dtu.dk
-  password: pw_2
+  password: pw
 
 protocol:
-  filename: carp/protocol/protocol.json
+  filename: carp/protocols/protocol.json
 
 consent:
-  filename: carp/consent/consent.json
+  filename: carp/consents/consent.json
 
 localization:
   locales:
