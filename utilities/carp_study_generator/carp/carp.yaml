@@ -10,7 +10,7 @@ server:
   client_id: carp
   client_secret: carp
   username: abc@dtu.dk
-  password: 1234
+  password: 123
 
 protocol:
   filename: carp/protocol/protocol.json
