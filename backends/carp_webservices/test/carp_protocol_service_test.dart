@@ -80,16 +80,18 @@ void main() {
 
         StudyProtocol protocol = StudyProtocol(
             ownerId: ownerId,
-            name: '$name-1.1',
+            name: '$name',
             description: 'Generated from carp_webservices unit test.');
         protocol.addMasterDevice(customDevice);
         protocol.addTriggeredTask(
-            ElapsedTimeTrigger(elapsedTime: Duration(seconds: 0)),
+            ElapsedTimeTrigger(
+                sourceDeviceRoleName: customDevice.roleName,
+                elapsedTime: Duration(seconds: 0)),
             CustomProtocolTask(
                 name: 'Custom device task', studyProtocol: '{"version":"1.0"}'),
             customDevice);
 
-        await CANSProtocolService().add(protocol);
+        await CANSProtocolService().add(protocol, '1.3');
       },
     );
 
