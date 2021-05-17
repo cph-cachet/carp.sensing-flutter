@@ -8,5 +8,5 @@ part of carp_study_generator;
 ///  * `lang/da.json`
 class CreateCommand extends AbstractCommand {
   @override
-  Future<void> execute() async {}
+  Future execute() async {}
 }

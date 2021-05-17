@@ -3,7 +3,7 @@ part of carp_study_generator;
 /// The interface for all CARP Commands.
 abstract class Command {
   /// Execute this command.
-  Future<void> execute();
+  Future execute();
 }
 
 /// An abstract class for all CARP Commands.

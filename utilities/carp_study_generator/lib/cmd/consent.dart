@@ -17,14 +17,14 @@ class ConsentCommand extends AbstractCommand {
   RPOrderedTask get informedConsent {
     if (_consent == null) {
       print('Checking that this is a valid RP Ordered Task');
-      _consent = RPOrderedTask.fromJson(
-          json.decode(consentJson) as Map<String, dynamic>);
+      _consent = RPOrderedTask
+          .fromJson(json.decode(consentJson) as Map<String, dynamic>);
     }
     return _consent;
   }
 
   @override
-  Future<void> execute() async {
+  Future execute() async {
     await authenticate();
     consentJson;
     informedConsent;

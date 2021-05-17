@@ -7,7 +7,7 @@ class LocalizationCommand extends AbstractCommand {
   }
 
   @override
-  Future<void> execute() async {
+  Future execute() async {
     await authenticate();
 
     locales.forEach((element) async {

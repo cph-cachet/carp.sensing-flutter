@@ -16,5 +16,5 @@ class HelpCommand extends AbstractCommand {
   HelpCommand() : super();
 
   @override
-  Future<void> execute() async => print(helpText);
+  Future execute() async => print(helpText);
 }

@@ -4,6 +4,6 @@ import 'package:carp_study_generator/carp_study_generator.dart';
 void main() {
   test('help', () async {});
   test('help', () async => HelpCommand().execute());
-  test('consent', () async => print('consent...'));
-  test('protocol', () async => print('protocol...'));
+  test('consent', () async => ConsentCommand().execute());
+  test('protocol', () async => StudyProtocolCommand().execute());
 }

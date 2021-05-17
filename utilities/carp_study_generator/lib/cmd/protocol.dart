@@ -15,14 +15,14 @@ class StudyProtocolCommand extends AbstractCommand {
   CAMSStudyProtocol get protocol {
     if (_protocol == null) {
       print('Checking that this is a valid CAMS Study Protocol');
-      _protocol = CAMSStudyProtocol.fromJson(
-          json.decode(protocolJson) as Map<String, dynamic>);
+      _protocol = CAMSStudyProtocol
+          .fromJson(json.decode(protocolJson) as Map<String, dynamic>);
     }
     return _protocol;
   }
 
   @override
-  Future<void> execute() async {
+  Future execute() async {
     await authenticate();
 
     // This doesn't work -- see issue #44 (https://github.com/cph-cachet/carp.webservices-docker/issues/44)
@@ -36,6 +36,7 @@ class StudyProtocolCommand extends AbstractCommand {
     //   protocolJson,
     // );
 
+    // therefore, we create a custom protocol "by hand"
     var customDevice = CustomProtocolDevice(roleName: 'Custom device');
 
     StudyProtocol customProtocol = StudyProtocol(

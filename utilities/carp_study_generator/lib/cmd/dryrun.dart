@@ -15,7 +15,7 @@ class DryRunCommand extends AbstractCommand {
   LocalizationCommand localizationCommand = LocalizationCommand();
 
   @override
-  Future<void> execute() async {
+  Future execute() async {
     int issues = 0;
     try {
       CarpService().configure(app);
@@ -36,8 +36,8 @@ class DryRunCommand extends AbstractCommand {
       issues++;
     }
     try {
-      CAMSStudyProtocol protocol = CAMSStudyProtocol.fromJson(
-          json.decode(protocolJson) as Map<String, dynamic>);
+      CAMSStudyProtocol protocol = CAMSStudyProtocol
+          .fromJson(json.decode(protocolJson) as Map<String, dynamic>);
       print('\x1B[32m[✓]\x1B[0m Protocol parse - name: ${protocol.name}');
     } catch (error) {
       print(
