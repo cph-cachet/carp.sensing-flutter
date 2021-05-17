@@ -41,12 +41,14 @@ abstract class AbstractCommand implements Command {
     SamplingPackageRegistry().register(HealthSamplingPackage());
   }
 
+  /// The configuration of the CARP server app.
   CarpApp get app => new CarpApp(
         name: "CARP server at '$uri'",
         uri: Uri.parse(uri),
         oauth: OAuthEndPoint(clientID: clientId, clientSecret: clientSecret),
       );
 
+  /// Authenticate at the CARP server.
   Future authenticate() async {
     CarpService().configure(app);
     print('Authenticating to the CARP Server...');

@@ -23,6 +23,19 @@ class StudyProtocolCommand extends AbstractCommand {
 
   @override
   Future<void> execute() async {
+    await authenticate();
+
+    // This doesn't work -- see issue #44 (https://github.com/cph-cachet/carp.webservices-docker/issues/44)
+    //
+    // print('Getting custom protocol template from CARP Server');
+    // StudyProtocol customProtocol =
+    //     await CANSProtocolService().createCustomProtocol(
+    //   ownerId,
+    //   protocol.name,
+    //   protocol.description,
+    //   protocolJson,
+    // );
+
     var customDevice = CustomProtocolDevice(roleName: 'Custom device');
 
     StudyProtocol customProtocol = StudyProtocol(
@@ -37,19 +50,6 @@ class StudyProtocolCommand extends AbstractCommand {
         CustomProtocolTask(
             name: 'Custom device task', studyProtocol: protocolJson),
         customDevice);
-
-    await authenticate();
-
-    // This doesn't work -- see issue #44 (https://github.com/cph-cachet/carp.webservices-docker/issues/44)
-    //
-    // print('Getting custom protocol template from CARP Server');
-    // StudyProtocol customProtocol =
-    //     await CANSProtocolService().createCustomProtocol(
-    //   ownerId,
-    //   protocol.name,
-    //   protocol.description,
-    //   protocolJson,
-    // );
 
     print("Uploading custom protocol, name: '${protocol.name}'");
     await CANSProtocolService().add(customProtocol);

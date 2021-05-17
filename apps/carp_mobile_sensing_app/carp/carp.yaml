@@ -12,8 +12,8 @@ server:
   uri: https://cans.cachet.dk:443
   client_id: carp
   client_secret: carp
-  username: user@dtu.dk
-  password: pw
+  username: xxx
+  password: xxx
 
 protocol:
   filename: carp/protocols/protocol.json

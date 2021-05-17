@@ -1,6 +1,7 @@
 {
-    "name": "#23-Coverage",
-    "creationDate": "2021-05-02 20:29:27.217203Z",
+    "name": "CAMS App Protocol - 1.0",
+    "description": "A generic CAMS study protcol for the CAMS Demo App.",
+    "creationDate": "2021-05-17T19:38:49.359570Z",
     "masterDevices": [
      {
       "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
@@ -20,19 +21,23 @@
     "connections": [],
     "triggers": {
      "0": {
-      "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
+      "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger",
+      "sourceDeviceRoleName": "masterphone",
+      "requiresMasterDevice": true
      },
      "1": {
       "$type": "dk.cachet.carp.protocols.domain.triggers.RandomRecurrentTrigger",
+      "sourceDeviceRoleName": "masterphone",
+      "requiresMasterDevice": true,
       "startTime": {
        "$type": "Time",
-       "hour": 23,
-       "minute": 56,
+       "hour": 8,
+       "minute": 0,
        "second": 0
       },
       "endTime": {
        "$type": "Time",
-       "hour": 24,
+       "hour": 20,
        "minute": 0,
        "second": 0
       },
@@ -42,11 +47,22 @@
      },
      "2": {
       "$type": "dk.cachet.carp.protocols.domain.triggers.PeriodicTrigger",
-      "period": 300000000,
+      "sourceDeviceRoleName": "masterphone",
+      "requiresMasterDevice": true,
+      "period": 60000000,
       "duration": 1000000
      },
      "3": {
-      "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
+      "$type": "dk.cachet.carp.protocols.domain.triggers.PeriodicTrigger",
+      "sourceDeviceRoleName": "masterphone",
+      "requiresMasterDevice": true,
+      "period": 300000000,
+      "duration": 1000000
+     },
+     "4": {
+      "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger",
+      "sourceDeviceRoleName": "masterphone",
+      "requiresMasterDevice": true
      }
     },
     "tasks": [
@@ -54,6 +70,14 @@
       "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
       "name": "Task #5",
       "measures": [
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
+        "type": "dk.cachet.carp.device",
+        "name": "Basic Device Info",
+        "description": "Collects basic information about the phone.",
+        "enabled": true,
+        "configuration": {}
+       },
        {
         "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
         "type": "dk.cachet.carp.light",
@@ -65,13 +89,12 @@
         "duration": 1000000
        },
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
-        "type": "dk.cachet.carp.memory",
-        "name": "Memory Usage",
-        "description": "Collects information about use of memory.",
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
+        "type": "dk.cachet.carp.screen",
+        "name": "Screen Activity (lock/on/off)",
+        "description": "Collects information about lock/unlock event of the phone's screen.",
         "enabled": true,
-        "configuration": {},
-        "frequency": 60000000
+        "configuration": {}
        },
        {
         "$type": "dk.cachet.carp.protocols.domain.tasks.measures.NoiseMeasure",
@@ -93,6 +116,15 @@
         "configuration": {}
        },
        {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.LocationMeasure",
+        "type": "dk.cachet.carp.geolocation",
+        "enabled": true,
+        "configuration": {},
+        "frequency": 3000000,
+        "accuracy": "best",
+        "distance": 0.0
+       },
+       {
         "$type": "dk.cachet.carp.protocols.domain.tasks.measures.MobilityMeasure",
         "type": "dk.cachet.carp.mobility",
         "name": "Mobility Features",
@@ -111,13 +143,20 @@
       "name": "Task #6",
       "measures": [
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
-        "type": "dk.cachet.carp.device",
-        "name": "Basic Device Info",
-        "description": "Collects basic information about the phone.",
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
+        "type": "dk.cachet.carp.memory",
+        "name": "Memory Usage",
+        "description": "Collects information about use of memory.",
         "enabled": true,
-        "configuration": {}
-       },
+        "configuration": {},
+        "frequency": 60000000
+       }
+      ]
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
+      "name": "Task #7",
+      "measures": [
        {
         "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
         "type": "dk.cachet.carp.location",
@@ -130,7 +169,7 @@
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
-      "name": "Task #7",
+      "name": "Task #8",
       "measures": [
        {
         "$type": "dk.cachet.carp.protocols.domain.tasks.measures.WeatherMeasure",
@@ -152,7 +191,7 @@
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
-      "name": "Task #8",
+      "name": "Task #9",
       "measures": [
        {
         "$type": "dk.cachet.carp.protocols.domain.tasks.measures.ESenseMeasure",
@@ -196,6 +235,11 @@
      {
       "triggerId": 3,
       "taskName": "Task #8",
+      "targetDeviceRoleName": "masterphone"
+     },
+     {
+      "triggerId": 4,
+      "taskName": "Task #9",
       "targetDeviceRoleName": "esense"
      }
     ],
@@ -203,7 +247,7 @@
     "protocolDescription": {
      "$type": "StudyProtocolDescription",
      "title": "Sensing Coverage Study",
-     "description": "This is a study for testing the coverage of sampling."
+     "description": "This is a study for testing the coverage of sampling. Includes sensing from the eSense devices."
     },
     "owner": {
      "$type": "ProtocolOwner",
@@ -211,13 +255,5 @@
      "name": "Alex Boyon",
      "email": "alex@uni.dk"
     },
-    "ownerId": "AB",
-    "dataEndPoint": {
-     "$type": "FileDataEndPoint",
-     "type": "FILE",
-     "bufferSize": 50000,
-     "zip": true,
-     "encrypt": false
-    },
-    "dataFormat": "dk.cachet.carp"
+    "ownerId": "AB"
    }

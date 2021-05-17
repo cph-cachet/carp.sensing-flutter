@@ -25,8 +25,8 @@ class DryRunCommand extends AbstractCommand {
       print('\x1B[31m[!]\x1B[0m Authenticating - $error');
       issues++;
     }
-    String protocolJson;
 
+    String protocolJson;
     try {
       protocolJson = File(protocolFilename).readAsStringSync();
       print('\x1B[32m[✓]\x1B[0m Protocol load - filename: $protocolFilename');
@@ -36,10 +36,9 @@ class DryRunCommand extends AbstractCommand {
       issues++;
     }
     try {
-      CAMSStudyProtocol.fromJson(
+      CAMSStudyProtocol protocol = CAMSStudyProtocol.fromJson(
           json.decode(protocolJson) as Map<String, dynamic>);
-      print(
-          '\x1B[32m[✓]\x1B[0m Protocol parse - name: ${protocolCommand.protocol.name}');
+      print('\x1B[32m[✓]\x1B[0m Protocol parse - name: ${protocol.name}');
     } catch (error) {
       print(
           '\x1B[31m[!]\x1B[0m Protocol parse - ${error.toString().substring(0, error.toString().indexOf('\n'))}');
