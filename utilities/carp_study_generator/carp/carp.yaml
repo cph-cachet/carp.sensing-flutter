@@ -4,9 +4,6 @@
 #         DO NOT CHECK INTO GIT REPOSITORY
 #
 
-name: 
-description:
-
 # configuration of the CARP server and the user who runs this study
 server:
   uri: https://cans.cachet.dk:443
@@ -23,7 +20,7 @@ consent:
 
 localization:
   # list the locales supported 
-  # for each local, a json file in the 'lang' folder must be added
+  # for each locale, a json file in the 'lang' folder must be added
   locales:
     - en
     - da

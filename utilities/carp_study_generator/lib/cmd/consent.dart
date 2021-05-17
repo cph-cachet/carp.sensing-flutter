@@ -6,6 +6,8 @@ class ConsentCommand extends AbstractCommand {
   String _consentJson;
   RPOrderedTask _consent;
 
+  ConsentCommand() : super();
+
   String get consentJson {
     if (_consentJson == null) {
       print('Reading the informed consent from file: $consentFilename');

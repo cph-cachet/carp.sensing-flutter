@@ -10,8 +10,6 @@ abstract class Command {
 abstract class AbstractCommand implements Command {
   static var _yaml;
 
-  String get name => _yaml['name'].toString();
-  String get description => _yaml['description'].toString();
   String get uri => _yaml['server']['uri'].toString();
   String get clientId => _yaml['server']['client_id'].toString();
   String get clientSecret => _yaml['server']['client_secret'].toString();
@@ -27,6 +25,10 @@ abstract class AbstractCommand implements Command {
 
   @mustCallSuper
   AbstractCommand() {
+    // create two dummy objects to register json deserialization functions
+    RPTask('ignored');
+    CAMSStudyProtocol();
+
     if (_yaml == null) {
       _yaml = loadYaml(File('carp/carp.yaml').readAsStringSync());
     }

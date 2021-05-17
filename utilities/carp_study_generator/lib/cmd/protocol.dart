@@ -4,6 +4,8 @@ class StudyProtocolCommand extends AbstractCommand {
   String _protocolJson;
   CAMSStudyProtocol _protocol;
 
+  StudyProtocolCommand() : super();
+
   String get protocolJson {
     if (_protocolJson == null) {
       print('Reading the study protocol from file: $protocolFilename');

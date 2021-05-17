@@ -7,6 +7,7 @@ part of carp_study_generator;
 ///  * `lang/en.json`
 ///  * `lang/da.json`
 class CreateCommand extends AbstractCommand {
+  CreateCommand() : super();
   @override
   Future execute() async {}
 }

@@ -10,9 +10,7 @@ part of carp_study_generator;
 ///  * Can the language locales be loaded and parsed without errors
 ///
 class DryRunCommand extends AbstractCommand {
-  StudyProtocolCommand protocolCommand = StudyProtocolCommand();
-  ConsentCommand consentCommand = ConsentCommand();
-  LocalizationCommand localizationCommand = LocalizationCommand();
+  DryRunCommand() : super();
 
   @override
   Future execute() async {
@@ -40,8 +38,10 @@ class DryRunCommand extends AbstractCommand {
           .fromJson(json.decode(protocolJson) as Map<String, dynamic>);
       print('\x1B[32m[✓]\x1B[0m Protocol parse - name: ${protocol.name}');
     } catch (error) {
-      print(
-          '\x1B[31m[!]\x1B[0m Protocol parse - ${error.toString().substring(0, error.toString().indexOf('\n'))}');
+      int index = error.toString().indexOf('\n');
+      String errorString =
+          (index > 0) ? error.toString().substring(0, index) : error.toString();
+      print('\x1B[31m[!]\x1B[0m Protocol parse - $errorString');
       issues++;
     }
 
@@ -57,8 +57,10 @@ class DryRunCommand extends AbstractCommand {
       RPOrderedTask.fromJson(json.decode(consentJson) as Map<String, dynamic>);
       print('\x1B[32m[✓]\x1B[0m Consent parse');
     } catch (error) {
-      print(
-          '\x1B[31m[!]\x1B[0m Consent parse - ${error.toString().substring(0, error.toString().indexOf('\n'))}');
+      int index = error.toString().indexOf('\n');
+      String errorString =
+          (index > 0) ? error.toString().substring(0, index) : error.toString();
+      print('\x1B[31m[!]\x1B[0m Consent parse - $errorString');
       issues++;
     }
 

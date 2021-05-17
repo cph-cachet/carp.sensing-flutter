@@ -56,7 +56,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   test: ^1.14.3
-  carp_study_generator:
+  carp_study_generator: 
     path: ../../utilities/carp_study_generator/
 
 # For information on the generic Dart part of this file, see the
