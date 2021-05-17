@@ -1,4 +1,4 @@
-## 0.21.4+1
+## 0.21.4+2
 * small bug fix in json serialization
 * new constructor to `Trigger` classes
 

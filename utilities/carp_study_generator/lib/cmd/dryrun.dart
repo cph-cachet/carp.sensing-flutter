@@ -17,48 +17,65 @@ class DryRunCommand extends AbstractCommand {
   @override
   Future<void> execute() async {
     int issues = 0;
-    print('\n#1 - AUTHENTICATION');
     try {
-      await authenticate();
+      CarpService().configure(app);
+      await CarpService().authenticate(username: username, password: password);
+      print('\x1B[32m[✓]\x1B[0m Authenticating - username: $username');
     } catch (error) {
-      print('ERROR - $error');
+      print('\x1B[31m[!]\x1B[0m Authenticating - $error');
+      issues++;
+    }
+    String protocolJson;
+
+    try {
+      protocolJson = File(protocolFilename).readAsStringSync();
+      print('\x1B[32m[✓]\x1B[0m Protocol load - filename: $protocolFilename');
+    } catch (error) {
+      print('\x1B[31m[!]\x1B[0m Protocol load - $error');
+      print(' - $error');
+      issues++;
+    }
+    try {
+      CAMSStudyProtocol.fromJson(
+          json.decode(protocolJson) as Map<String, dynamic>);
+      print(
+          '\x1B[32m[✓]\x1B[0m Protocol parse - name: ${protocolCommand.protocol.name}');
+    } catch (error) {
+      print(
+          '\x1B[31m[!]\x1B[0m Protocol parse - ${error.toString().substring(0, error.toString().indexOf('\n'))}');
       issues++;
     }
 
-    print('\n#2 - PROTOCOL');
+    String consentJson;
     try {
-      protocolCommand.protocolJson;
+      consentJson = File(consentFilename).readAsStringSync();
+      print('\x1B[32m[✓]\x1B[0m Consent load - filename: $consentFilename');
     } catch (error) {
-      print('ERROR - $error');
+      print('\x1B[31m[!]\x1B[0m Consent load - $error');
       issues++;
     }
     try {
-      protocolCommand.protocol;
+      RPOrderedTask.fromJson(json.decode(consentJson) as Map<String, dynamic>);
+      print('\x1B[32m[✓]\x1B[0m Consent parse');
     } catch (error) {
-      print('ERROR - $error');
-      issues++;
-    }
-
-    print('\n#3 - INFORMED CONSENT');
-    try {
-      consentCommand.consentJson;
-      consentCommand.informedConsent;
-    } catch (error) {
-      print('ERROR - $error');
+      print(
+          '\x1B[31m[!]\x1B[0m Consent parse - ${error.toString().substring(0, error.toString().indexOf('\n'))}');
       issues++;
     }
 
-    print('\n#4 - LOCALIZATION');
     try {
-      locales.forEach((element) async {
+      locales.forEach((element) {
         String locale = element.toString();
-        json.decode(localizationCommand.getLocaleJson(locale));
+        String localeJson = File('carp/lang/$locale.json').readAsStringSync();
+        json.decode(localeJson);
+        print('\x1B[32m[✓]\x1B[0m Locale - $element');
       });
     } catch (error) {
-      print('ERROR - $error');
+      print('\x1B[31m[!]\x1B[0m Locale - $error');
       issues++;
     }
 
-    print('• ${(issues == 0) ? 'No' : issues.toString()} issues found!');
+    print(
+        '${(issues == 0) ? '\x1B[32m • \x1B[0m No' : '\x1B[31m • \x1B[0m $issues'} issues found!');
   }
 }
