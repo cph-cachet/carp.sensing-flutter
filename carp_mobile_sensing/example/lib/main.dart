@@ -170,7 +170,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
   Future<StudyProtocol> getStudyProtocol(String studyId) async {
     CAMSStudyProtocol protocol = CAMSStudyProtocol()
       ..name = 'Track patient movement'
-      ..owner = ProtocolOwner(
+      ..responsible = StudyProtocolReponsible(
         id: 'AB',
         name: 'Alex Boyon',
         email: 'alex@uni.dk',

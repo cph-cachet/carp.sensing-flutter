@@ -27,7 +27,7 @@ import 'package:carp_health_package/health_package.dart';
 part 'cmd/command.dart';
 part 'cmd/help.dart';
 part 'cmd/create.dart';
-part 'cmd/protocol.dart';
+part 'cmd/update.dart';
 part 'cmd/consent.dart';
 part 'cmd/localization.dart';
 part 'cmd/dryrun.dart';

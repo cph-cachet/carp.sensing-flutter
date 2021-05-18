@@ -16,9 +16,10 @@ abstract class AbstractCommand implements Command {
   String get username => _yaml['server']['username'].toString();
   String get password => _yaml['server']['password'].toString();
 
-  String get protocolFilename => _yaml['protocol']['filename'].toString();
-  String get consentFilename => _yaml['consent']['filename'].toString();
+  String get protocolPath => _yaml['protocol']['path'].toString();
+  String get consentPath => _yaml['consent']['path'].toString();
 
+  String get localizationPath => _yaml['localization']['path'].toString();
   List<dynamic> get locales => _yaml['localization']['locales'];
 
   String get ownerId => CarpService().currentUser.accountId;
@@ -30,7 +31,7 @@ abstract class AbstractCommand implements Command {
     CAMSStudyProtocol();
 
     if (_yaml == null) {
-      _yaml = loadYaml(File('carp/carp.yaml').readAsStringSync());
+      _yaml = loadYaml(File('carp/carpspec.yaml').readAsStringSync());
     }
     // register the sampling packages
     // this is used to be able to deserialize the json protocol

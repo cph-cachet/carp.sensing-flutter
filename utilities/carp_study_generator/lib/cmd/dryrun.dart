@@ -18,65 +18,69 @@ class DryRunCommand extends AbstractCommand {
     try {
       CarpService().configure(app);
       await CarpService().authenticate(username: username, password: password);
-      print('\x1B[32m[✓]\x1B[0m Authenticating - username: $username');
+      print('\x1B[32m[✓]\x1B[0m CARP Server \t username: $username');
     } catch (error) {
-      print('\x1B[31m[!]\x1B[0m Authenticating - $error');
+      print('\x1B[31m[!]\x1B[0m CARP Server \t ${errorToString(error)}');
       issues++;
     }
 
     String protocolJson;
     try {
-      protocolJson = File(protocolFilename).readAsStringSync();
-      print('\x1B[32m[✓]\x1B[0m Protocol load - filename: $protocolFilename');
+      protocolJson = File(protocolPath).readAsStringSync();
+      print('\x1B[32m[✓]\x1B[0m Protocol path \t $protocolPath');
     } catch (error) {
-      print('\x1B[31m[!]\x1B[0m Protocol load - $error');
+      print('\x1B[31m[!]\x1B[0m Protocol path \t ${errorToString(error)}');
       print(' - $error');
       issues++;
     }
     try {
-      CAMSStudyProtocol protocol = CAMSStudyProtocol
-          .fromJson(json.decode(protocolJson) as Map<String, dynamic>);
-      print('\x1B[32m[✓]\x1B[0m Protocol parse - name: ${protocol.name}');
+      CAMSStudyProtocol protocol = CAMSStudyProtocol.fromJson(
+          json.decode(protocolJson) as Map<String, dynamic>);
+      print('\x1B[32m[✓]\x1B[0m Protocol parse \t name: ${protocol.name}');
     } catch (error) {
-      int index = error.toString().indexOf('\n');
-      String errorString =
-          (index > 0) ? error.toString().substring(0, index) : error.toString();
-      print('\x1B[31m[!]\x1B[0m Protocol parse - $errorString');
+      print('\x1B[31m[!]\x1B[0m Protocol parse \t ${errorToString(error)}');
       issues++;
     }
 
     String consentJson;
     try {
-      consentJson = File(consentFilename).readAsStringSync();
-      print('\x1B[32m[✓]\x1B[0m Consent load - filename: $consentFilename');
+      consentJson = File(consentPath).readAsStringSync();
+      print('\x1B[32m[✓]\x1B[0m Consent path \t $consentPath');
     } catch (error) {
-      print('\x1B[31m[!]\x1B[0m Consent load - $error');
+      print('\x1B[31m[!]\x1B[0m Consent path \t ${errorToString(error)}');
       issues++;
     }
     try {
       RPOrderedTask.fromJson(json.decode(consentJson) as Map<String, dynamic>);
       print('\x1B[32m[✓]\x1B[0m Consent parse');
     } catch (error) {
-      int index = error.toString().indexOf('\n');
-      String errorString =
-          (index > 0) ? error.toString().substring(0, index) : error.toString();
-      print('\x1B[31m[!]\x1B[0m Consent parse - $errorString');
+      print('\x1B[31m[!]\x1B[0m Consent parse \t ${errorToString(error)}');
       issues++;
     }
 
+    String locale, path;
     try {
       locales.forEach((element) {
-        String locale = element.toString();
-        String localeJson = File('carp/lang/$locale.json').readAsStringSync();
+        locale = element.toString();
+        path = '$localizationPath$locale.json';
+        String localeJson = File(path).readAsStringSync();
         json.decode(localeJson);
-        print('\x1B[32m[✓]\x1B[0m Locale - $element');
+        print('\x1B[32m[✓]\x1B[0m Locale - $locale \t $path');
       });
     } catch (error) {
-      print('\x1B[31m[!]\x1B[0m Locale - $error');
+      print('\x1B[31m[!]\x1B[0m Locale - $locale \t ${errorToString(error)}');
       issues++;
     }
 
     print(
         '${(issues == 0) ? '\x1B[32m • \x1B[0m No' : '\x1B[31m • \x1B[0m $issues'} issues found!');
+  }
+
+  /// Transform a multiline error message to one line only.
+  String errorToString(dynamic error) {
+    int index = error.toString().indexOf('\n');
+    return (index > 0)
+        ? error.toString().substring(0, index)
+        : error.toString();
   }
 }

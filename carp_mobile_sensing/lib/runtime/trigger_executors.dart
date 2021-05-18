@@ -228,7 +228,7 @@ class RecurrentScheduledTriggerExecutor extends PeriodicTriggerExecutor {
         if (_myTrigger.remember) {
           // replace the entry of the first occurrence to the next occurrence date
           DateTime nextOccurrence = DateTime.now().add(period);
-          Settings().preferences.setString(
+          await Settings().preferences.setString(
               _myTrigger.triggerId, nextOccurrence.toUtc().toString());
           debug('saving nextOccurrence: $nextOccurrence');
         }
@@ -328,7 +328,7 @@ class ConditionalSamplingEventTriggerExecutor extends TriggerExecutor {
 /// Executes a [RandomRecurrentTrigger] triggering N times per day within a
 /// defined period of time.
 class RandomRecurrentTriggerExecutor extends TriggerExecutor {
-  cron.Cron _cron = cron.Cron();
+  final cron.Cron _cron = cron.Cron();
   cron.ScheduledTask _scheduledTask;
   List<Timer> _timers = [];
 
@@ -398,7 +398,9 @@ class RandomRecurrentTriggerExecutor extends TriggerExecutor {
 
   Future onPause() async {
     // cancel all the timer that might have been started
-    for (var timer in _timers) timer.cancel();
+    for (var timer in _timers) {
+      timer.cancel();
+    }
     // cancel the daily cronn job
     await _scheduledTask.cancel();
     await super.onPause();

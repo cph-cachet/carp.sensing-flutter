@@ -7,10 +7,10 @@
 
 part of domain;
 
-/// A person that created a [StudyProtocol].
+/// A person who is responsible for a [CAMSStudyProtocol].
 /// Typically the Principal Investigator (PI) who is reposnibile for the study.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class ProtocolOwner extends Serializable {
+class StudyProtocolReponsible extends Serializable {
   String id;
   String name;
   String title;
@@ -18,7 +18,7 @@ class ProtocolOwner extends Serializable {
   String address;
   String affiliation;
 
-  ProtocolOwner({
+  StudyProtocolReponsible({
     this.id,
     this.name,
     this.title,
@@ -27,10 +27,10 @@ class ProtocolOwner extends Serializable {
     this.address,
   });
 
-  Function get fromJsonFunction => _$ProtocolOwnerFromJson;
-  factory ProtocolOwner.fromJson(Map<String, dynamic> json) =>
+  Function get fromJsonFunction => _$StudyProtocolReponsibleFromJson;
+  factory StudyProtocolReponsible.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json);
-  Map<String, dynamic> toJson() => _$ProtocolOwnerToJson(this);
+  Map<String, dynamic> toJson() => _$StudyProtocolReponsibleToJson(this);
 
   String toString() => '$runtimeType - $name, $title <$email>';
 }

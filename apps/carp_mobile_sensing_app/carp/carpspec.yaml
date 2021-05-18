@@ -4,26 +4,24 @@
 #         DO NOT CHECK INTO GIT REPOSITORY
 #
 
-name: 
-description:
-
 # configuration of the CARP server and the user who runs this study
 server:
   uri: https://cans.cachet.dk:443
   client_id: carp
   client_secret: carp
-  username: xxx
-  password: xxx
+  username: jakba@dtu.dk
+  password: Benjamin
 
 protocol:
-  filename: carp/protocols/protocol.json
+  path: carp/protocols/protocol.json
 
 consent:
-  filename: carp/consents/consent.json
+  path: carp/consents/consent.json
 
 localization:
+  path: carp/lang/
   # list the locales supported 
-  # for each local, a json file in the 'lang' folder must be added
+  # for each locale, a json file in the 'lang' folder must be added
   locales:
     - en
     - da

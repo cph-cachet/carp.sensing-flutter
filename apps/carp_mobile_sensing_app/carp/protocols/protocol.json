@@ -1,6 +1,6 @@
 {
-    "name": "CAMS App Protocol - 1.0",
-    "description": "A generic CAMS study protcol for the CAMS Demo App.",
+    "name": "CAMS App Test Protocol",
+    "description": "A generic CAMS study protcol for the CAMS Demo App - v2.1.",
     "creationDate": "2021-05-17T19:38:49.359570Z",
     "masterDevices": [
      {

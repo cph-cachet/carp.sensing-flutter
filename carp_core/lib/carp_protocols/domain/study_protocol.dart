@@ -27,8 +27,7 @@ class StudyProtocol {
     return _taskMapProperty;
   }
 
-  /// The owner id of this study.
-  /// This property mainly used when the protocol is de-serialized from json.
+  /// The owner id of this study protocol.
   String ownerId;
 
   /// A unique descriptive name for the protocol assigned by the [ProtocolOwner].
@@ -64,8 +63,7 @@ class StudyProtocol {
     this.ownerId,
     this.name,
     this.description,
-  })
-      : super() {
+  }) : super() {
     creationDate = DateTime.now().toUtc();
   }
 

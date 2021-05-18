@@ -9,7 +9,7 @@ void _registerFromJsonFunctions() {
 
   // Protocol classes
   // FromJsonFactory().register(CAMSStudyProtocol());
-  FromJsonFactory().register(ProtocolOwner());
+  FromJsonFactory().register(StudyProtocolReponsible());
   FromJsonFactory().register(DataEndPoint());
   FromJsonFactory().register(FileDataEndPoint());
   FromJsonFactory().register(StudyProtocolDescription());

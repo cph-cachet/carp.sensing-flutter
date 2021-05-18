@@ -10,8 +10,8 @@ class ConsentCommand extends AbstractCommand {
 
   String get consentJson {
     if (_consentJson == null) {
-      print('Reading the informed consent from file: $consentFilename');
-      _consentJson = File(protocolFilename).readAsStringSync();
+      print('Reading the informed consent from file: $consentPath');
+      _consentJson = File(protocolPath).readAsStringSync();
     }
     return _consentJson;
   }
@@ -19,8 +19,8 @@ class ConsentCommand extends AbstractCommand {
   RPOrderedTask get informedConsent {
     if (_consent == null) {
       print('Checking that this is a valid RP Ordered Task');
-      _consent = RPOrderedTask
-          .fromJson(json.decode(consentJson) as Map<String, dynamic>);
+      _consent = RPOrderedTask.fromJson(
+          json.decode(consentJson) as Map<String, dynamic>);
     }
     return _consent;
   }

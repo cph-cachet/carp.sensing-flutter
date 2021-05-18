@@ -1,0 +1,20 @@
+{
+    "ownerId": "979b408d-784e-4b1b-bb1e-ff9204e072f3",
+    "name": "test_protocol",
+    "description": "Generated from carp_webservices unit test.",
+    "creationDate": "2021-05-18T12:20:00.618269Z",
+    "masterDevices": [
+     {
+      "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
+      "isMasterDevice": true,
+      "roleName": "smartphone",
+      "samplingConfiguration": {}
+     }
+    ],
+    "connectedDevices": [],
+    "connections": [],
+    "triggers": {},
+    "tasks": [],
+    "triggeredTasks": [],
+    "expectedParticipantData": []
+   }

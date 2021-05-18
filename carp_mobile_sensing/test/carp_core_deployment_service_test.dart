@@ -9,7 +9,8 @@ void main() {
 
   setUp(() {
     protocol = CAMSStudyProtocol(
-        owner: ProtocolOwner(id: 'xyz@dtu.dk'), name: 'Track patient movement');
+        responsible: StudyProtocolReponsible(id: 'xyz@dtu.dk'),
+        name: 'Track patient movement');
 
     // Define which devices are used for data collection.
     Smartphone phone = Smartphone(roleName: 'masterphone');
@@ -31,7 +32,7 @@ void main() {
       ),
     ];
 
-    ConcurrentTask task = ConcurrentTask(name: "Start measures")
+    ConcurrentTask task = ConcurrentTask(name: 'Start measures')
       ..addMeasures(measures);
     protocol.addTriggeredTask(Trigger(), task, phone);
   });

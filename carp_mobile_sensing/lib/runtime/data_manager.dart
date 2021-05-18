@@ -57,8 +57,8 @@ abstract class AbstractDataManager implements DataManager {
     DataEndPoint dataEndPoint,
     Stream<DataPoint> data,
   ) async {
-    this._dataEndPoint = dataEndPoint;
-    this._studyDeploymentId = studyDeploymentId;
+    _dataEndPoint = dataEndPoint;
+    _studyDeploymentId = studyDeploymentId;
     data.listen(
       (dataPoint) => onDataPoint(dataPoint),
       onError: onError,

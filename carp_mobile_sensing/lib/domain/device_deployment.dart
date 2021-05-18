@@ -13,7 +13,7 @@ part of domain;
 class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
   String _studyId;
   String _studyDeploymentId;
-  ProtocolOwner _owner;
+  StudyProtocolReponsible _owner;
 
   /// The unique id of this study. Used in the [DataPointHeader] header.
   String get studyId => _studyId;
@@ -43,7 +43,7 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
   StudyProtocolDescription protocolDescription;
 
   /// The owner of this study.
-  ProtocolOwner get owner => _owner;
+  StudyProtocolReponsible get owner => _owner;
 
   SamplingSchemaType samplingStrategy;
 
@@ -52,7 +52,7 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
     String studyDeploymentId,
     this.name,
     this.protocolDescription,
-    ProtocolOwner owner,
+    StudyProtocolReponsible owner,
     DataEndPoint dataEndPoint,
     MasterDeviceDescriptor deviceDescriptor,
     DeviceRegistration configuration,
@@ -74,9 +74,9 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
         ) {
     _registerFromJsonFunctions();
 
-    this._studyId = studyId;
-    this._studyDeploymentId = studyDeploymentId;
-    this._owner = owner;
+    _studyId = studyId;
+    _studyDeploymentId = studyDeploymentId;
+    _owner = owner;
   }
 
   CAMSMasterDeviceDeployment.fromMasterDeviceDeployment({
@@ -84,7 +84,7 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
     String studyDeploymentId,
     this.name,
     this.protocolDescription,
-    ProtocolOwner owner,
+    StudyProtocolReponsible owner,
     DataEndPoint dataEndPoint,
     MasterDeviceDeployment masterDeviceDeployment,
   })
@@ -101,9 +101,9 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
         ) {
     _registerFromJsonFunctions();
 
-    this._studyId = studyId;
-    this._studyDeploymentId = studyDeploymentId;
-    this._owner = owner;
+    _studyId = studyId;
+    _studyDeploymentId = studyDeploymentId;
+    _owner = owner;
   }
 
   /// Create a [CAMSMasterDeviceDeployment] based on a [CAMSStudyProtocol].
@@ -127,11 +127,11 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
         ) {
     _registerFromJsonFunctions();
 
-    this._studyId = protocol.studyId;
-    this._studyDeploymentId = studyDeploymentId;
-    this._owner = protocol.owner;
-    this.protocolDescription = protocol.protocolDescription;
-    this.name = protocol.name;
+    _studyId = protocol.studyId;
+    _studyDeploymentId = studyDeploymentId;
+    _owner = protocol.responsible;
+    protocolDescription = protocol.protocolDescription;
+    name = protocol.name;
   }
 
   /// Get the list of all [Mesure]s in this study protocol.

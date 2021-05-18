@@ -1,3 +1,7 @@
+## 0.21.2
+* command for updating a protocol added
+* `carp.yaml` renamed to `carpspec.yaml` 
+
 ## 0.21.1+1
 * more robust error messages in `dryrun`
 * bug fixed in json initialization

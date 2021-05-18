@@ -24,8 +24,9 @@ class DeviceController implements DeviceRegistry {
 
   @override
   bool supportsDevice(String type) {
-    for (var package in SamplingPackageRegistry().packages)
+    for (var package in SamplingPackageRegistry().packages) {
       if (package.deviceType == type) return true;
+    }
 
     return false;
   }
@@ -45,13 +46,15 @@ class DeviceController implements DeviceRegistry {
 
     // look for a device manager of this type in the sampling packages
     DeviceManager manager;
-    for (var package in SamplingPackageRegistry().packages)
+    for (var package in SamplingPackageRegistry().packages) {
       if (package.deviceType == deviceType) manager = package.deviceManager;
+    }
 
-    if (manager == null)
+    if (manager == null) {
       warning('No device manager found for device: $deviceType');
-    else
+    } else {
       registerDevice(deviceType, manager);
+    }
 
     return manager;
   }
@@ -60,8 +63,9 @@ class DeviceController implements DeviceRegistry {
   /// available in each [SamplingPackage] that has been registred in the
   /// [SamplingPackageRegistry].
   void registerAllAvailableDevices() {
-    for (var package in SamplingPackageRegistry().packages)
+    for (var package in SamplingPackageRegistry().packages) {
       registerDevice(package.deviceType, package.deviceManager);
+    }
   }
 
   @override
@@ -85,7 +89,7 @@ class DeviceController implements DeviceRegistry {
 abstract class DeviceManager extends DeviceDataCollector {
   final StreamController<DeviceStatus> _eventController =
       StreamController.broadcast();
-  Set<String> _supportedDataTypes = {};
+  final Set<String> _supportedDataTypes = {};
 
   DeviceManager([DeviceRegistration deviceRegistration])
       : super(deviceRegistration);
@@ -141,8 +145,9 @@ class SmartphoneDeviceManager extends DeviceManager {
 
     // find the supported datatypes
     for (var package in SamplingPackageRegistry().packages) {
-      if (package is SmartphoneSamplingPackage)
+      if (package is SmartphoneSamplingPackage) {
         _supportedDataTypes.addAll(package.dataTypes);
+      }
     }
   }
 

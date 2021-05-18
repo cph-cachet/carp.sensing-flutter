@@ -5,7 +5,7 @@ class LocalizationCommand extends AbstractCommand {
 
   String getLocaleJson(String locale) {
     print("Reading the locale for: '$locale'");
-    return File('carp/lang/$locale.json').readAsStringSync();
+    return File('$localizationPath$locale.json').readAsStringSync();
   }
 
   @override

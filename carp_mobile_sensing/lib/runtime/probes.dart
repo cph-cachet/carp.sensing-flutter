@@ -185,7 +185,7 @@ abstract class AbstractProbe extends Probe implements MeasureListener {
 
   void initialize(Measure measure) {
     assert(measure != null, 'Probe cannot be initialized with a null measure.');
-    this._measure = measure;
+    _measure = measure;
     if (measure is CAMSMeasure) measure.addMeasureListener(this);
     return _stateMachine.initialize(measure);
   }
