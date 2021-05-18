@@ -21,9 +21,6 @@ class SimpleInvitationsDialog {
             .toList(),
       );
 
-  String shortDeploymentStudyId(String studyDeploymentId) => studyDeploymentId
-      .substring(studyDeploymentId.length - 5, studyDeploymentId.length);
-
   String shortStudyDescription(String studyDescription) =>
       (studyDescription.length < 80)
           ? studyDescription
@@ -41,8 +38,7 @@ class SimpleInvitationsDialog {
               Icons.mail,
               color: Color.fromRGBO(234, 91, 12, 1.0),
             ),
-            title: Text('${invitation.invitation.name} '
-                '[...${shortDeploymentStudyId(invitation.studyDeploymentId)}]'),
+            title: Text(invitation.invitation.name),
             subtitle: (invitation.invitation.description.isEmpty)
                 ? Text('No description provided...')
                 : Text(

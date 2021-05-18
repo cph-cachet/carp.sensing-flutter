@@ -90,6 +90,7 @@ class CarpResourceManager implements ResourceManager {
     RPOrderedTask('', []); // to initialize json serialization for RP classes
   }
 
+  @override
   Future initialize() async {}
 
   // --------------------------------------------------------------------------
