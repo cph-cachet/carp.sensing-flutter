@@ -316,8 +316,7 @@ class _CreatedState extends _AbstractProbeState implements _ProbeStateMachine {
       probe.onInitialize(measure);
       probe._setState(_InitializedState(probe));
     } catch (error) {
-      warning(
-          'Error initializing ${probe.runtimeType}: $error Probe is now in an undefined state.');
+      warning('Error initializing ${probe.runtimeType}: $error');
       probe._setState(_UndefinedState(probe));
     }
   }

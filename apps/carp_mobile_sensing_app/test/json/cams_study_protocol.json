@@ -1,7 +1,7 @@
 {
-    "name": "CAMS App Protocol - 1.0",
+    "name": "CAMS App Protocol",
     "description": "A generic CAMS study protcol for the CAMS Demo App.",
-    "creationDate": "2021-05-18T13:54:29.558989Z",
+    "creationDate": "2021-05-18T17:43:57.342598Z",
     "masterDevices": [
      {
       "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",

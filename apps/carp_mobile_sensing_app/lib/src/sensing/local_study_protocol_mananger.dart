@@ -18,7 +18,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
   Future<StudyProtocol> getStudyProtocol(String studyId) async {
     CAMSStudyProtocol protocol = CAMSStudyProtocol(
         studyId: studyId,
-        name: 'CAMS App Protocol - 1.0',
+        name: 'CAMS App Protocol',
         description: 'A generic CAMS study protcol for the CAMS Demo App.',
         responsible: StudyProtocolReponsible(
           id: 'AB',
