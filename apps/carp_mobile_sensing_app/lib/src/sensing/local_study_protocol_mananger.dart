@@ -15,20 +15,21 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
   Future initialize() async {}
 
   /// Create a new CAMS study protocol.
-  Future<StudyProtocol> getStudyProtocol(String ignored) async {
-    CAMSStudyProtocol protocol = CAMSStudyProtocol()
-      ..name = 'CAMS App Protocol - 1.0'
-      ..description = 'A generic CAMS study protcol for the CAMS Demo App.'
-      ..owner = ProtocolOwner(
-        id: 'AB',
-        name: 'Alex Boyon',
-        email: 'alex@uni.dk',
-      )
-      ..protocolDescription = StudyProtocolDescription(
-        title: 'Sensing Coverage Study',
-        description: 'This is a study for testing the coverage of sampling. '
-            'Includes sensing from the eSense devices.',
-      );
+  Future<StudyProtocol> getStudyProtocol(String studyId) async {
+    CAMSStudyProtocol protocol = CAMSStudyProtocol(
+        studyId: studyId,
+        name: 'CAMS App Protocol - 1.0',
+        description: 'A generic CAMS study protcol for the CAMS Demo App.',
+        responsible: StudyProtocolReponsible(
+          id: 'AB',
+          name: 'Alex Boyon',
+          email: 'alex@uni.dk',
+        ),
+        protocolDescription: StudyProtocolDescription(
+          title: 'Sensing Coverage Study',
+          description: 'This is a study for testing the coverage of sampling. '
+              'Includes sensing from the eSense devices.',
+        ));
 
     // Define which devices are used for data collection.
     Smartphone phone = Smartphone();

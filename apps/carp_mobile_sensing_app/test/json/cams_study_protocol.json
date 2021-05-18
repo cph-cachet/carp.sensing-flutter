@@ -1,7 +1,7 @@
 {
     "name": "CAMS App Protocol - 1.0",
     "description": "A generic CAMS study protcol for the CAMS Demo App.",
-    "creationDate": "2021-05-17T19:38:49.359570Z",
+    "creationDate": "2021-05-18T13:54:29.558989Z",
     "masterDevices": [
      {
       "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
@@ -244,16 +244,16 @@
      }
     ],
     "expectedParticipantData": [],
+    "studyId": "1234",
     "protocolDescription": {
      "$type": "StudyProtocolDescription",
      "title": "Sensing Coverage Study",
      "description": "This is a study for testing the coverage of sampling. Includes sensing from the eSense devices."
     },
-    "owner": {
-     "$type": "ProtocolOwner",
+    "responsible": {
+     "$type": "StudyProtocolReponsible",
      "id": "AB",
      "name": "Alex Boyon",
      "email": "alex@uni.dk"
-    },
-    "ownerId": "AB"
+    }
    }
