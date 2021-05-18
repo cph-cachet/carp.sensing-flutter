@@ -1,3 +1,7 @@
+## 0.21.5
+* upgrade to `carp_mobile_sensing` v. 0.21.5
+* small updates to unit tests
+
 ## 0.21.4
 * upgrade to `carp_mobile_sensing` v. 0.21.4
 
