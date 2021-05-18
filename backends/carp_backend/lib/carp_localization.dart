@@ -19,13 +19,10 @@ class CarpLocalizations {
       warning('Could not load localizations for locale: $locale');
   }
 
-  /// Translate the [text] based on this [locale].
-  /// This method will be called from every widget which needs a localized text
-  String translate(String text) {
-    if (_localizedStrings[text] == null)
-      warning("Translation of '$text' not found");
-    return _localizedStrings[text];
-  }
+  /// Get the translation for [key] to this [locale].
+  /// If [key] is not translated, [key] is returned.
+  String translate(String key) =>
+      (_localizedStrings.containsKey(key)) ? _localizedStrings[key] : key;
 
   // Static member to have a simple access to the delegate from the MaterialApp
   static const LocalizationsDelegate<CarpLocalizations> delegate =
