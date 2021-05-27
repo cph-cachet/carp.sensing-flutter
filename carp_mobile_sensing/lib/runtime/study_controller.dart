@@ -107,18 +107,19 @@ class StudyDeploymentController extends StudyRuntime {
     _executor = StudyDeploymentExecutor(deployment);
 
     // initialize optional parameters
-    this._samplingSchema =
-        samplingSchema ?? SamplingSchema.normal(powerAware: true);
-    this._dataEndPoint = dataEndPoint ?? masterDeployment.dataEndPoint;
-    this._privacySchemaName = privacySchemaName ?? NameSpace.CARP;
-    this._transformer = transformer ?? ((datum) => datum);
+    _samplingSchema = samplingSchema ?? SamplingSchema.normal(powerAware: true);
+    _dataEndPoint = dataEndPoint ?? masterDeployment.dataEndPoint;
+    _privacySchemaName = privacySchemaName ?? NameSpace.CARP;
+    _transformer = transformer ?? ((datum) => datum);
 
-    if (_dataEndPoint != null)
+    if (_dataEndPoint != null) {
       _dataManager = DataManagerRegistry().lookup(_dataEndPoint.type);
+    }
 
-    if (_dataManager == null)
+    if (_dataManager == null) {
       warning(
           "No data manager for the specified data endpoint found: '$_dataEndPoint'.");
+    }
 
     // if no user is specified for this study, look up the local user id
     masterDeployment.userId ??= await Settings().userId;
@@ -136,7 +137,7 @@ class StudyDeploymentController extends StudyRuntime {
           .checkPermissionStatus(permission);
       if (status != PermissionStatus.granted) {
         warning(
-            "Permissions not granted for $permission -  permission is $status");
+            'Permissions not granted for $permission -  permission is $status');
       }
     });
 
@@ -146,10 +147,10 @@ class StudyDeploymentController extends StudyRuntime {
     info(' deployment id : ${masterDeployment.studyDeploymentId}');
     info('    study name : ${masterDeployment.name}');
     info('          user : ${masterDeployment.userId}');
-    info(' data endpoint : ${this._dataEndPoint}');
+    info(' data endpoint : $_dataEndPoint');
     info('      platform : ${DeviceInfo().platform.toString()}');
     info('     device ID : ${DeviceInfo().deviceID.toString()}');
-    info('  data manager : ${_dataManager}');
+    info('  data manager : $_dataManager');
     info('       devices : ${DeviceController().devicesToString()}');
 
     if (samplingSchema != null) {

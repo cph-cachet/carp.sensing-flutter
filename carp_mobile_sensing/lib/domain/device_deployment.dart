@@ -13,7 +13,7 @@ part of domain;
 class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
   String _studyId;
   String _studyDeploymentId;
-  ProtocolOwner _owner;
+  StudyProtocolReponsible _responsible;
 
   /// The unique id of this study. Used in the [DataPointHeader] header.
   String get studyId => _studyId;
@@ -43,7 +43,7 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
   StudyProtocolDescription protocolDescription;
 
   /// The owner of this study.
-  ProtocolOwner get owner => _owner;
+  StudyProtocolReponsible get responsible => _responsible;
 
   SamplingSchemaType samplingStrategy;
 
@@ -52,7 +52,7 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
     String studyDeploymentId,
     this.name,
     this.protocolDescription,
-    ProtocolOwner owner,
+    StudyProtocolReponsible owner,
     DataEndPoint dataEndPoint,
     MasterDeviceDescriptor deviceDescriptor,
     DeviceRegistration configuration,
@@ -61,8 +61,7 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
     List<TaskDescriptor> tasks,
     Map<String, Trigger> triggers,
     List<TriggeredTask> triggeredTasks,
-  })
-      : super(
+  }) : super(
           deviceDescriptor: deviceDescriptor,
           configuration: configuration,
           connectedDevices: connectedDevices,
@@ -74,9 +73,9 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
         ) {
     _registerFromJsonFunctions();
 
-    this._studyId = studyId;
-    this._studyDeploymentId = studyDeploymentId;
-    this._owner = owner;
+    _studyId = studyId;
+    _studyDeploymentId = studyDeploymentId;
+    _responsible = owner;
   }
 
   CAMSMasterDeviceDeployment.fromMasterDeviceDeployment({
@@ -84,11 +83,10 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
     String studyDeploymentId,
     this.name,
     this.protocolDescription,
-    ProtocolOwner owner,
+    StudyProtocolReponsible owner,
     DataEndPoint dataEndPoint,
     MasterDeviceDeployment masterDeviceDeployment,
-  })
-      : super(
+  }) : super(
           deviceDescriptor: masterDeviceDeployment.deviceDescriptor,
           configuration: masterDeviceDeployment.configuration,
           connectedDevices: masterDeviceDeployment.connectedDevices,
@@ -101,9 +99,9 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
         ) {
     _registerFromJsonFunctions();
 
-    this._studyId = studyId;
-    this._studyDeploymentId = studyDeploymentId;
-    this._owner = owner;
+    _studyId = studyId;
+    _studyDeploymentId = studyDeploymentId;
+    _responsible = owner;
   }
 
   /// Create a [CAMSMasterDeviceDeployment] based on a [CAMSStudyProtocol].
@@ -114,8 +112,7 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
     String masterDeviceRoleName,
     DataEndPoint dataEndPoint,
     CAMSStudyProtocol protocol,
-  })
-      : super(
+  }) : super(
           deviceDescriptor: Smartphone(roleName: masterDeviceRoleName),
           configuration: DeviceRegistration(),
           connectedDevices: protocol.connectedDevices,
@@ -127,11 +124,11 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
         ) {
     _registerFromJsonFunctions();
 
-    this._studyId = protocol.studyId;
-    this._studyDeploymentId = studyDeploymentId;
-    this._owner = protocol.owner;
-    this.protocolDescription = protocol.protocolDescription;
-    this.name = protocol.name;
+    _studyId = protocol.studyId;
+    _studyDeploymentId = studyDeploymentId;
+    _responsible = protocol.responsible;
+    protocolDescription = protocol.protocolDescription;
+    name = protocol.name;
   }
 
   /// Get the list of all [Mesure]s in this study protocol.
@@ -156,5 +153,5 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
 
   String toString() => '${super.toString()} - studyId: $studyId, '
       'studyDeploymentId: $studyDeploymentId, '
-      'name: $name, owner: $owner}';
+      'name: $name, owner: $responsible}';
 }

@@ -11,7 +11,8 @@ class SmartPhoneClientManager extends ClientManager {
   SmartPhoneClientManager({
     DeploymentService deploymentService,
     DeviceController deviceRegistry,
-  }) : super(
+  })
+      : super(
           // if not specified, use default services
           deploymentService: deploymentService ?? SmartphoneDeploymentService(),
           deviceRegistry: deviceRegistry ?? DeviceController(),
@@ -38,7 +39,7 @@ class SmartPhoneClientManager extends ClientManager {
   ) async {
     info(
         'Adding study to $runtimeType - studyDeploymentId: $studyDeploymentId, deviceRoleName: $deviceRoleName');
-    super.addStudy(studyDeploymentId, deviceRoleName);
+    await super.addStudy(studyDeploymentId, deviceRoleName);
 
     // Create the study runtime.
     // val deviceRegistration = repository.getDeviceRegistration()!!

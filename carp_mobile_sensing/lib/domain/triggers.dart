@@ -19,12 +19,6 @@ class CAMSTrigger extends Trigger {
   /// Is used when storing data to know what triggered the data collection.
   String triggerId;
 
-  // /// The list of [TaskDescriptor]s in this [CAMSTrigger].
-  // List<TaskDescriptor> tasks = [];
-
-  // /// Add a [TaskDescriptor] to this [CAMSTrigger]
-  // void addTask(TaskDescriptor task) => tasks.add(task);
-
   CAMSTrigger({this.triggerId}) : super();
 
   Function get fromJsonFunction => _$CAMSTriggerFromJson;
@@ -321,19 +315,20 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
   bool remember = false;
 
   /// Creates a [RecurrentScheduledTrigger].
-  RecurrentScheduledTrigger(
-      {String triggerId,
-      @required this.type,
-      @required this.time,
-      this.end,
-      this.separationCount = 0,
-      this.maxNumberOfSampling,
-      this.dayOfWeek,
-      this.weekOfMonth,
-      this.dayOfMonth,
-      //this.monthOfYear,
-      this.remember = false,
-      Duration duration = const Duration(seconds: 10)})
+  RecurrentScheduledTrigger({
+    String triggerId,
+    @required this.type,
+    @required this.time,
+    this.end,
+    this.separationCount = 0,
+    this.maxNumberOfSampling,
+    this.dayOfWeek,
+    this.weekOfMonth,
+    this.dayOfMonth,
+    //this.monthOfYear,
+    this.remember = false,
+    Duration duration = const Duration(seconds: 10),
+  })
       : super(
             triggerId: triggerId,
             period: const Duration(seconds: 1),
@@ -595,7 +590,7 @@ class ConditionalEvent extends Serializable {
   Map<String, dynamic> condition;
   ConditionalEvent(this.condition) : super();
 
-  operator [](String index) => condition[index];
+  dynamic operator [](String index) => condition[index];
 
   Function get fromJsonFunction => _$ConditionalEventFromJson;
   factory ConditionalEvent.fromJson(Map<String, dynamic> json) =>

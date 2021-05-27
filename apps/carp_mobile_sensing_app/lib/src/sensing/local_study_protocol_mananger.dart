@@ -15,19 +15,21 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
   Future initialize() async {}
 
   /// Create a new CAMS study protocol.
-  Future<StudyProtocol> getStudyProtocol(String ignored) async {
-    CAMSStudyProtocol protocol = CAMSStudyProtocol()
-      ..name = '#24-Local CAMS app protocol'
-      ..owner = ProtocolOwner(
-        id: 'AB',
-        name: 'Alex Boyon',
-        email: 'alex@uni.dk',
-      )
-      ..protocolDescription = StudyProtocolDescription(
-        title: 'Sensing Coverage Study',
-        description: 'This is a study for testing the coverage of sampling. '
-            'This is the version of the protocol generated locally on the phone.',
-      );
+  Future<StudyProtocol> getStudyProtocol(String studyId) async {
+    CAMSStudyProtocol protocol = CAMSStudyProtocol(
+        studyId: studyId,
+        name: 'CAMS App Protocol',
+        description: 'A generic CAMS study protcol for the CAMS Demo App.',
+        responsible: StudyProtocolReponsible(
+          id: 'AB',
+          name: 'Alex Boyon',
+          email: 'alex@uni.dk',
+        ),
+        protocolDescription: StudyProtocolDescription(
+          title: 'Sensing Coverage Study',
+          description: 'This is a study for testing the coverage of sampling. '
+              'Includes sensing from the eSense devices.',
+        ));
 
     // Define which devices are used for data collection.
     Smartphone phone = Smartphone();
@@ -42,12 +44,14 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         AutomaticTask()
           ..measures = SamplingPackageRegistry().debug().getMeasureList(
             types: [
+              DeviceSamplingPackage.DEVICE,
               SensorSamplingPackage.LIGHT, // 10 s
               // ConnectivitySamplingPackage.CONNECTIVITY,
               // ConnectivitySamplingPackage.WIFI, // 60 s
-              DeviceSamplingPackage.MEMORY, // 60 s
+              DeviceSamplingPackage.SCREEN, // 60 s
               AudioSamplingPackage.NOISE, // 60 s
               ContextSamplingPackage.ACTIVITY, // ~3 s
+              ContextSamplingPackage.GEOLOCATION, // ~3 s
               ContextSamplingPackage.MOBILITY, // ~3 s
             ],
           ),
@@ -55,30 +59,28 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
     protocol.addTriggeredTask(
         RandomRecurrentTrigger(
-          startTime: Time(hour: 23, minute: 56),
-          endTime: Time(hour: 24, minute: 0),
+          startTime: Time(hour: 08, minute: 0),
+          endTime: Time(hour: 20, minute: 0),
           minNumberOfTriggers: 2,
           maxNumberOfTriggers: 8,
         ),
         AutomaticTask()
           ..measures = SamplingPackageRegistry().debug().getMeasureList(
             types: [
-              DeviceSamplingPackage.DEVICE,
-              ContextSamplingPackage.LOCATION,
+              DeviceSamplingPackage.MEMORY, // 60 s
             ],
           ),
         phone);
 
-    // protocol.addTriggeredTask(
-    //     PeriodicTrigger(period: Duration(minutes: 1)),
-    //     AutomaticTask()
-    //       ..measures = SamplingPackageRegistry().debug().getMeasureList(
-    //         types: [
-    //           DeviceSamplingPackage.DEVICE,
-    //           ContextSamplingPackage.LOCATION,
-    //         ],
-    //       ),
-    //     phone);
+    protocol.addTriggeredTask(
+        PeriodicTrigger(period: Duration(minutes: 1)),
+        AutomaticTask()
+          ..measures = SamplingPackageRegistry().debug().getMeasureList(
+            types: [
+              ContextSamplingPackage.LOCATION,
+            ],
+          ),
+        phone);
 
     protocol.addTriggeredTask(
         PeriodicTrigger(period: Duration(minutes: 5)), // 5 min

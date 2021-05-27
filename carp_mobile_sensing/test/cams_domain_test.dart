@@ -13,7 +13,7 @@ void main() {
     // Create a new study protocol.
     protocol = CAMSStudyProtocol()
       ..name = 'Track patient movement'
-      ..owner = ProtocolOwner(
+      ..responsible = StudyProtocolReponsible(
         id: 'AB',
         name: 'Alex Boyon',
         email: 'alex@uni.dk',
@@ -41,7 +41,7 @@ void main() {
       ),
     ];
 
-    ConcurrentTask task = ConcurrentTask(name: "Start measures")
+    ConcurrentTask task = ConcurrentTask(name: 'Start measures')
       ..addMeasures(measures);
     protocol.addTriggeredTask(Trigger(), task, phone);
 
@@ -71,11 +71,11 @@ void main() {
     print(protocol);
     print(toJsonString(protocol));
     expect(protocol.ownerId, 'AB');
-    expect(protocol.owner.id, 'AB');
+    expect(protocol.responsible.id, 'AB');
     expect(protocol.masterDevices.length, 1);
     expect(protocol.connectedDevices.length, 1);
     expect(protocol.triggers.length, 3);
-    expect(protocol.triggers.keys.first, "0");
+    expect(protocol.triggers.keys.first, '0');
     expect(protocol.tasks.length, 3);
     expect(protocol.triggeredTasks.length, 3);
   });

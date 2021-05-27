@@ -14,10 +14,12 @@ void main() {
   CarpApp app;
   CarpUser user;
   String ownerId, name;
+  StudyProtocol protocol, custom;
 
-  /// Setup CARP and authenticate.
   /// Runs once before all tests.
   setUpAll(() async {
+    Settings().debugLevel = DebugLevel.DEBUG;
+
     app = new CarpApp(
       // studyId: testStudyId,
       studyDeploymentId: testDeploymentId,
@@ -33,9 +35,32 @@ void main() {
       password: password,
     );
 
+    CANSProtocolService().configureFrom(CarpService());
     ownerId = CarpService().currentUser.accountId;
     name = 'test_protocol';
-    CANSProtocolService().configureFrom(CarpService());
+
+    // a very simple protocol
+    protocol = StudyProtocol(
+        ownerId: ownerId,
+        name: name,
+        description: 'Generated from carp_webservices unit test.')
+      ..addMasterDevice(Smartphone(roleName: 'smartphone'));
+
+    // a custom protocol
+    var customDevice = CustomProtocolDevice(roleName: 'Custom device');
+    custom = StudyProtocol(
+        ownerId: ownerId,
+        name: 'custom_test_protocol',
+        description:
+            'Custom protocol generated from carp_webservices unit test.');
+    custom.addMasterDevice(customDevice);
+    custom.addTriggeredTask(
+        ElapsedTimeTrigger(
+            sourceDeviceRoleName: customDevice.roleName,
+            elapsedTime: Duration(seconds: 0)),
+        CustomProtocolTask(
+            name: 'Custom device task', studyProtocol: '{"version":"1.0"}'),
+        customDevice);
   });
 
   /// Runs once after all tests.
@@ -53,12 +78,14 @@ void main() {
     test(
       '- add',
       () async {
-        StudyProtocol protocol = StudyProtocol(
-            ownerId: ownerId,
-            name: '$name-1.0',
-            description: 'Generated from carp_webservices unit test.')
-          ..addMasterDevice(Smartphone(roleName: 'smartphone'));
+        print(toJsonString(protocol));
+        await CANSProtocolService().add(protocol);
+      },
+    );
 
+    test(
+      '- add custom',
+      () async {
         // StudyProtocol protocol =
         //     await CANSProtocolService().createCustomProtocol(
         //   ownerId,
@@ -67,22 +94,14 @@ void main() {
         //   '{"version":1}',
         // );
 
-        await CANSProtocolService().add(protocol, '1.1');
+        await CANSProtocolService().add(custom, '1.3');
       },
     );
 
     test(
       '- addVersion',
       () async {
-        StudyProtocol protocol =
-            await CANSProtocolService().createCustomProtocol(
-          ownerId,
-          name,
-          'Made from Dart unit test.',
-          '{"version":2}',
-        );
-
-        await CANSProtocolService().addVersion(protocol);
+        await CANSProtocolService().addVersion(custom);
       },
     );
 
@@ -104,7 +123,7 @@ void main() {
       '- getAllFor',
       () async {
         List<StudyProtocol> protocols =
-            await CANSProtocolService().getAllFor(accountId);
+            await CANSProtocolService().getAllFor(ownerId);
         print(protocols);
       },
     );

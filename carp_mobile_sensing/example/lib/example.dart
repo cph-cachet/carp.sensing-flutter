@@ -16,7 +16,7 @@ void example_1() async {
   // Create a study protocol
   CAMSStudyProtocol protocol = CAMSStudyProtocol()
     ..name = 'Track patient movement'
-    ..owner = ProtocolOwner(
+    ..responsible = StudyProtocolReponsible(
       id: 'AB',
       name: 'Alex Boyon',
       email: 'alex@uni.dk',
@@ -74,7 +74,7 @@ void example_2() async {
   // Create a study using a local file to store data
   CAMSStudyProtocol protocol = CAMSStudyProtocol()
     ..name = 'Track patient movement'
-    ..owner = ProtocolOwner(
+    ..responsible = StudyProtocolReponsible(
       id: 'AB',
       name: 'Alex Boyon',
       email: 'alex@uni.dk',

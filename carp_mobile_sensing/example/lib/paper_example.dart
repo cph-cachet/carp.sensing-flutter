@@ -5,7 +5,7 @@ void sensing() async {
   // create a new CAMS study protocol with an owner
   CAMSStudyProtocol protocol = CAMSStudyProtocol()
     ..name = 'Track patient movement'
-    ..owner = ProtocolOwner(
+    ..responsible = StudyProtocolReponsible(
       id: 'AB',
       name: 'Alex Boyon',
       email: 'alex@uni.dk',

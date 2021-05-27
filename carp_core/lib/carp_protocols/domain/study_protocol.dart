@@ -27,8 +27,7 @@ class StudyProtocol {
     return _taskMapProperty;
   }
 
-  /// The owner id of this study.
-  /// This property mainly used when the protocol is de-serialized from json.
+  /// The owner id of this study protocol.
   String ownerId;
 
   /// A unique descriptive name for the protocol assigned by the [ProtocolOwner].
@@ -73,6 +72,10 @@ class StudyProtocol {
   void addMasterDevice(MasterDeviceDescriptor masterDevice) =>
       masterDevices.add(masterDevice);
 
+  /// Does this protocol have a master device with role name [rolename]?
+  bool hasMasterDevice(String rolename) =>
+      masterDevices.indexWhere((device) => device.roleName == rolename) != -1;
+
   /// Add a [device] which is connected to this [masterDevice].
   /// Its role name should be unique in the protocol.
   void addConnectedDevice(DeviceDescriptor device) =>
@@ -80,11 +83,15 @@ class StudyProtocol {
 
   /// Add the [trigger] to this protocol.
   void addTrigger(Trigger trigger) {
-    if (triggers.values.contains(trigger)) {
-      return;
-    } else {
-      triggers['${triggers.length}'] = trigger;
-    }
+    // early out if already added
+    if (triggers.values.contains(trigger)) return;
+
+    assert(
+        hasMasterDevice(trigger.sourceDeviceRoleName),
+        'The passed trigger cannot be initiated by its specified source device '
+        'since it is not a master device which is part of this protocol.');
+
+    triggers['${triggers.length}'] = trigger;
   }
 
   /// Returns the index of the [trigger] in the [triggers].
@@ -97,10 +104,6 @@ class StudyProtocol {
       if (trigger == value) index = int.parse(key);
     });
     return index;
-    // for (int index = 0; index < triggers.length; index++)
-    //   if (triggers.containsKey('$index')) return index;
-
-    // return -1;
   }
 
   /// Add a [task] to be sent to a [targetDevice] once a [trigger] within this

@@ -35,14 +35,7 @@ class CAMSStudyProtocol extends StudyProtocol {
   StudyProtocolDescription protocolDescription;
 
   /// The owner of this study.
-  ProtocolOwner owner;
-
-  /// The unique id of the owner.
-  @override
-  String get ownerId => (owner != null) ? owner.id : super.ownerId;
-
-  /// Specify where and how to upload this study data.
-  // DataEndPoint dataEndPoint;
+  StudyProtocolReponsible responsible;
 
   /// The [masterDevice] which is responsible for aggregating and synchronizing
   /// incoming data. Typically this phone.
@@ -50,17 +43,30 @@ class CAMSStudyProtocol extends StudyProtocol {
 
   /// Create a new [StudyProtocol].
   CAMSStudyProtocol({
-    this.studyId,
+    String ownerId,
     String name,
     String description,
-    this.owner,
+    this.studyId,
+    this.responsible,
     this.protocolDescription,
   })
-      : super(ownerId: owner?.id, name: name, description: description) {
+      : super(ownerId: ownerId, name: name, description: description) {
     // TODO - move this elsewhere.... can't assumed that the programmer
     // create a protocol - s/he might download it e.g. from CARP.
     _registerFromJsonFunctions();
     // studyId ??= Uuid().v1();
+  }
+
+  @override
+  void addTriggeredTask(
+    Trigger trigger,
+    TaskDescriptor task,
+    DeviceDescriptor targetDevice,
+  ) {
+    /// CAMS-specfic trigger will always be triggered by this phone / master device
+    trigger.sourceDeviceRoleName = masterDevice.roleName;
+    trigger.requiresMasterDevice = true;
+    super.addTriggeredTask(trigger, task, targetDevice);
   }
 
   factory CAMSStudyProtocol.fromJson(Map<String, dynamic> json) =>

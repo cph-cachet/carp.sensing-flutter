@@ -1,3 +1,6 @@
+## 0.21.5
+* rename of `ProtocolOwner` to `StudyProtocolReponsible` (in order not to confuse it with `ownerId` in `StudyProtocol`)
+
 ## 0.21.4
 * small bug fixes
 * upgrade to carp_code `0.21.4`

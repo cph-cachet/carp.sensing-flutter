@@ -13,7 +13,7 @@ class SmartphoneDeploymentService implements DeploymentService {
   // key = studyDeploymentId
   final Map<String, StudyDeployment> _repository = {};
 
-  static SmartphoneDeploymentService _instance =
+  static final SmartphoneDeploymentService _instance =
       SmartphoneDeploymentService._();
   SmartphoneDeploymentService._();
 
@@ -120,8 +120,8 @@ class SmartphoneDeploymentService implements DeploymentService {
         studyId: protocol?.studyId ?? studyDeploymentId,
         studyDeploymentId: studyDeploymentId,
         name: protocol?.name,
-        protocolDescription: protocol?.protocolDescription ?? null,
-        owner: protocol?.owner ?? null,
+        protocolDescription: protocol?.protocolDescription,
+        owner: protocol?.responsible,
         dataEndPoint: dataEndPoint,
         masterDeviceDeployment: deviceDeployment,
       );

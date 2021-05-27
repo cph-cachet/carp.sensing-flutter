@@ -1,6 +1,6 @@
 name: carp_mobile_sensing_app
 description: The CARP Mobile Sensing App
-version: 0.20.0
+version: 0.21.0
 author:  CACHET Team <cph.cachet@gmail.com>
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app
 
@@ -55,6 +55,9 @@ dependency_overrides:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  test: ^1.14.3
+  carp_study_generator: 
+    path: ../../utilities/carp_study_generator/
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

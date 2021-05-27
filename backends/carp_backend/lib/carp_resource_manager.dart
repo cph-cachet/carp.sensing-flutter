@@ -7,7 +7,7 @@
 
 part of carp_backend;
 
-/// Handles different types of CAMS-specific resources at the CARP service.
+/// Handles different types of CAMS-specific resources.
 ///
 /// This includes:
 ///
@@ -15,28 +15,18 @@ part of carp_backend;
 ///    definitions at the CARP backend.
 ///  * Retrive and store langunage localization mappings.
 ///
-class CarpResourceManager {
-  static final CarpResourceManager _instance = CarpResourceManager._();
-  factory CarpResourceManager() => _instance;
-
-  CarpResourceManager._() {
-    RPOrderedTask('', []); // to initialize json serialization for RP classes
-  }
-
+abstract class ResourceManager {
   Future initialize() async {}
 
   // --------------------------------------------------------------------------
   // INFORMED CONSENT
   // --------------------------------------------------------------------------
 
-  /// The path for the informed consent document at the CARP server
-  static const String INFORMED_CONSENT_PATH = 'resources/informed_consent';
-
   /// The latest downloaded informed consent document.
   ///
   /// `null` if no consent has been downloaded yet. Use the [getInformedConsent] t
   /// method to get the informed consent document from CARP.
-  RPOrderedTask informedConsent;
+  RPOrderedTask get informedConsent;
 
   /// Get the informed consent to be shown for this study.
   ///
@@ -46,8 +36,74 @@ class CarpResourceManager {
   /// description on how to create an informed consent in the research package
   /// domain model.
   ///
-  /// If there is no informed consent json file on the CARP server, `null` is
-  /// returned.
+  /// If there is no informed consent, `null` is returned.
+  Future<RPOrderedTask> getInformedConsent();
+
+  /// Set the informed consent to be used for this study.
+  Future<bool> setInformedConsent(RPOrderedTask informedConsent);
+
+  /// Delete the informed consent for this study.
+  ///
+  /// Returns `true` if delete is successful, `false` otherwise.
+  Future<bool> deleteInformedConsent();
+
+  // --------------------------------------------------------------------------
+  // LOCALIZATION
+  // --------------------------------------------------------------------------
+
+  /// Get localization mapping as json for the specified [locale].
+  ///
+  /// Locale json is named according to the [locale] languageCode.
+  /// For example, the Danish translation is named `da`
+  ///
+  /// If there is no language resouce, `null` is returned.
+  Future<Map<String, String>> getLocalizations(Locale locale);
+
+  /// Set localization mapping for the specified [locale].
+  ///
+  /// Locale json is named according to the [locale] languageCode.
+  /// For example, the Danish translation is named `da`
+  ///
+  /// Returns `true` if successful, `false` otherwise.
+  Future<bool> setLocalizations(
+      Locale locale, Map<String, dynamic> localizations);
+
+  /// Delete the localization for the [locale].
+  ///
+  /// Returns `true` if successful, `false` otherwise.
+  Future<bool> deleteLocalizations(Locale locale);
+}
+
+/// Handles different types of CAMS-specific resources at the CARP service.
+///
+/// This includes:
+///
+///  * Retrieve and store informed consent definitions as [RPOrderedTask] json
+///    definitions at the CARP backend.
+///  * Retrive and store langunage localization mappings.
+///
+class CarpResourceManager implements ResourceManager {
+  static final CarpResourceManager _instance = CarpResourceManager._();
+  factory CarpResourceManager() => _instance;
+
+  CarpResourceManager._() {
+    RPOrderedTask('', []); // to initialize json serialization for RP classes
+  }
+
+  @override
+  Future initialize() async {}
+
+  // --------------------------------------------------------------------------
+  // INFORMED CONSENT
+  // --------------------------------------------------------------------------
+
+  /// The path for the informed consent document at the CARP server
+  static const String INFORMED_CONSENT_PATH = 'resources/informed_consent';
+
+  @override
+  RPOrderedTask informedConsent;
+
+  @override
   Future<RPOrderedTask> getInformedConsent() async {
     assert(CarpService().isConfigured,
         "CARP Service has not been configured - call 'CarpService().configure()' first.");
@@ -68,12 +124,7 @@ class CarpResourceManager {
     return informedConsent;
   }
 
-  /// Set the informed consent to be used for this study.
-  ///
-  /// This method will upload the informed consent as a file to CARP using the
-  /// [INFORMED_CONSENT_FILE_NAME] file name.
-  ///
-  /// Returns `true` if upload is successful, `false` otherwise.
+  @override
   Future<bool> setInformedConsent(RPOrderedTask informedConsent) async {
     assert(CarpService().isConfigured,
         "CARP Service has not been configured - call 'CarpService().configure()' first.");
@@ -91,9 +142,7 @@ class CarpResourceManager {
     return (document != null);
   }
 
-  /// Delete the informed consent for this study.
-  ///
-  /// Returns `true` if delete is successful, `false` otherwise.
+  @override
   Future<bool> deleteInformedConsent() async {
     assert(CarpService().isConfigured,
         "CARP Service has not been configured - call 'CarpService().configure()' first.");
@@ -120,13 +169,7 @@ class CarpResourceManager {
   String getLocalizationsPath(Locale locale) =>
       '$LOCALIZATION_CONSENT_PATH${locale.languageCode}';
 
-  /// Get localization mapping as json for the specified [locale].
-  ///
-  /// Locale json is named according to the [locale] languageCode.
-  /// For example, the Danish translation is named `da`
-  ///
-  /// If there is no language resouce on the CARP server, `null` is
-  /// returned.
+  @override
   Future<Map<String, String>> getLocalizations(Locale locale) async {
     assert(CarpService().isConfigured,
         "CARP Service has not been configured - call 'CarpService().configure()' first.");
@@ -144,12 +187,7 @@ class CarpResourceManager {
     return null;
   }
 
-  /// Set localization mapping for the specified [locale].
-  ///
-  /// Locale json is named according to the [locale] languageCode.
-  /// For example, the Danish translation is named `da`
-  ///
-  /// Returns `true` if upload is successful, `false` otherwise.
+  @override
   Future<bool> setLocalizations(
       Locale locale, Map<String, dynamic> localizations) async {
     assert(CarpService().isConfigured,
@@ -167,9 +205,7 @@ class CarpResourceManager {
     return (document != null);
   }
 
-  /// Delete the localization for the [locale].
-  ///
-  /// Returns `true` if delete is successful, `false` otherwise.
+  @override
   Future<bool> deleteLocalizations(Locale locale) async {
     assert(CarpService().isConfigured,
         "CARP Service has not been configured - call 'CarpService().configure()' first.");

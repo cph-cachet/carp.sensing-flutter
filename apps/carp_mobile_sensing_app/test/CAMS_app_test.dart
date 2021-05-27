@@ -44,7 +44,7 @@ void main() {
     test('CAMSStudyProtocol -> JSON', () async {
       print(protocol);
       print(toJsonString(protocol));
-      expect(protocol.ownerId, 'AB');
+      expect(protocol.studyId, '1234');
     });
 
     test('StudyProtocol -> JSON -> StudyProtocol :: deep assert', () async {
@@ -65,7 +65,7 @@ void main() {
       CAMSStudyProtocol protocol = CAMSStudyProtocol.fromJson(
           json.decode(plainJson) as Map<String, dynamic>);
 
-      expect(protocol.ownerId, 'AB');
+      expect(protocol.studyId, '1234');
       expect(protocol.masterDevices.first.roleName, phone.roleName);
       expect(protocol.connectedDevices.first.roleName, eSense.roleName);
       print(toJsonString(protocol));

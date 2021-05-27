@@ -8,12 +8,14 @@ part of domain;
 
 CAMSStudyProtocol _$CAMSStudyProtocolFromJson(Map<String, dynamic> json) {
   return CAMSStudyProtocol(
-    studyId: json['studyId'] as String,
+    ownerId: json['ownerId'] as String,
     name: json['name'] as String,
     description: json['description'] as String,
-    owner: json['owner'] == null
+    studyId: json['studyId'] as String,
+    responsible: json['responsible'] == null
         ? null
-        : ProtocolOwner.fromJson(json['owner'] as Map<String, dynamic>),
+        : StudyProtocolReponsible.fromJson(
+            json['responsible'] as Map<String, dynamic>),
     protocolDescription: json['protocolDescription'] == null
         ? null
         : StudyProtocolDescription.fromJson(
@@ -53,8 +55,7 @@ CAMSStudyProtocol _$CAMSStudyProtocolFromJson(Map<String, dynamic> json) {
         ?.toList()
     ..expectedParticipantData = (json['expectedParticipantData'] as List)
         ?.map((e) => e as Map<String, dynamic>)
-        ?.toList()
-    ..ownerId = json['ownerId'] as String;
+        ?.toList();
 }
 
 Map<String, dynamic> _$CAMSStudyProtocolToJson(CAMSStudyProtocol instance) {
@@ -66,6 +67,7 @@ Map<String, dynamic> _$CAMSStudyProtocolToJson(CAMSStudyProtocol instance) {
     }
   }
 
+  writeNotNull('ownerId', instance.ownerId);
   writeNotNull('name', instance.name);
   writeNotNull('description', instance.description);
   writeNotNull('creationDate', instance.creationDate?.toIso8601String());
@@ -78,8 +80,7 @@ Map<String, dynamic> _$CAMSStudyProtocolToJson(CAMSStudyProtocol instance) {
   writeNotNull('expectedParticipantData', instance.expectedParticipantData);
   writeNotNull('studyId', instance.studyId);
   writeNotNull('protocolDescription', instance.protocolDescription);
-  writeNotNull('owner', instance.owner);
-  writeNotNull('ownerId', instance.ownerId);
+  writeNotNull('responsible', instance.responsible);
   return val;
 }
 
@@ -109,8 +110,9 @@ Map<String, dynamic> _$StudyProtocolDescriptionToJson(
   return val;
 }
 
-ProtocolOwner _$ProtocolOwnerFromJson(Map<String, dynamic> json) {
-  return ProtocolOwner(
+StudyProtocolReponsible _$StudyProtocolReponsibleFromJson(
+    Map<String, dynamic> json) {
+  return StudyProtocolReponsible(
     id: json['id'] as String,
     name: json['name'] as String,
     title: json['title'] as String,
@@ -120,7 +122,8 @@ ProtocolOwner _$ProtocolOwnerFromJson(Map<String, dynamic> json) {
   )..$type = json[r'$type'] as String;
 }
 
-Map<String, dynamic> _$ProtocolOwnerToJson(ProtocolOwner instance) {
+Map<String, dynamic> _$StudyProtocolReponsibleToJson(
+    StudyProtocolReponsible instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -329,9 +332,6 @@ CAMSMasterDeviceDeployment _$CAMSMasterDeviceDeploymentFromJson(
         ? null
         : StudyProtocolDescription.fromJson(
             json['protocolDescription'] as Map<String, dynamic>),
-    owner: json['owner'] == null
-        ? null
-        : ProtocolOwner.fromJson(json['owner'] as Map<String, dynamic>),
     dataEndPoint: json['dataEndPoint'] == null
         ? null
         : DataEndPoint.fromJson(json['dataEndPoint'] as Map<String, dynamic>),
@@ -404,7 +404,6 @@ Map<String, dynamic> _$CAMSMasterDeviceDeploymentToJson(
   writeNotNull('userId', instance.userId);
   writeNotNull('name', instance.name);
   writeNotNull('protocolDescription', instance.protocolDescription);
-  writeNotNull('owner', instance.owner);
   writeNotNull('samplingStrategy',
       _$SamplingSchemaTypeEnumMap[instance.samplingStrategy]);
   return val;
