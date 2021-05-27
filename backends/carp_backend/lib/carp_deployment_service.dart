@@ -105,7 +105,8 @@ class CustomProtocolDeploymentService implements DeploymentService {
       _eventController.add(CarpBackendEvents.ProtocolRetrieved);
 
       // configure a data endpoint which can send data back to CARP
-      // note that files must not be zipped.
+      // note that files must not be zipped
+      // files are deleted locally once uploaded
       DataEndPoint dataEndPoint = CarpDataEndPoint(
         uploadMethod: CarpUploadMethod.BATCH_DATA_POINT,
         name: CarpService().app.name,
@@ -121,6 +122,10 @@ class CustomProtocolDeploymentService implements DeploymentService {
         dataEndPoint: dataEndPoint,
         protocol: protocol,
       );
+
+      // register a CARP data manager which can upload data back to CARP
+      DataManagerRegistry().register(CarpDataManager());
+
       _eventController.add(CarpBackendEvents.DeploymentRetrieved);
     }
     return deployment;

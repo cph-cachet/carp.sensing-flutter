@@ -79,7 +79,8 @@ class Sensing {
         );
 
         break;
-      case DeploymentMode.CARP:
+      case DeploymentMode.CARP_PRODUCTION:
+      case DeploymentMode.CARP_STAGGING:
         // use the CARP deployment service that knows how to download a
         // custom protocol
         deploymentService = CustomProtocolDeploymentService();
@@ -113,9 +114,10 @@ class Sensing {
     // add and deploy this deployment
     _controller = await client.addStudy(studyDeploymentId, deviceRolename);
 
-    // configure the controller with the default privacy schema
+    // configure the controller but change the upload to also keep the json files locally
     await _controller.configure(
-      privacySchemaName: PrivacySchema.DEFAULT,
+      dataEndPoint: (controller.deployment.dataEndPoint as CarpDataEndPoint)
+        ..deleteWhenUploaded = false,
     );
     // controller.resume();
 
