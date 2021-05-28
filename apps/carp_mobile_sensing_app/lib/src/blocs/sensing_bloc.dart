@@ -31,6 +31,8 @@ class SensingBLoC {
   Future initialize([DeploymentMode deploymentMode]) async {
     this.deploymentMode = deploymentMode ?? DeploymentMode.LOCAL;
     await Settings().init();
+    Settings().debugLevel = DebugLevel.DEBUG;
+
     info('$runtimeType initialized');
   }
 

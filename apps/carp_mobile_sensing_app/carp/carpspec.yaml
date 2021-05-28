@@ -6,7 +6,7 @@
 
 # configuration of the CARP server and the user who runs this study
 server:
-  uri: https://cans.cachet.dk:443
+  uri: https://cans.cachet.dk:443/stage
   client_id: carp
   client_secret: carp
   username: jakba@dtu.dk

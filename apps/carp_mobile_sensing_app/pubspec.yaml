@@ -17,47 +17,48 @@ dependencies:
     sdk: flutter
   flutter_launcher_icons: ^0.8.0
   
-  #carp_core: ^0.20.0      # the core CARP domain model
-  #carp_mobile_sensing: ^0.20.0
+  carp_core: ^0.21.0      # the core CARP domain model
+  carp_mobile_sensing: ^0.21.0
   #carp_connectivity_package: ^0.11.0
-  #carp_context_package: ^0.11.0
-  #carp_audio_package: ^0.11.0
+  carp_context_package: ^0.21.0
+  carp_audio_package: ^0.21.0
   #carp_communication_package: ^0.11.0
   #carp_apps_package: ^0.11.0
   #carp_survey_package: ^0.11.0
-  #carp_esense_package: ^0.11.0
-  #carp_backend: ^0.11.0
+  carp_esense_package: ^0.21.0
+  carp_backend: ^0.21.0
   #carp_health_package: ^1.2.0
   #carp_firebase_backend: ^0.11.0
 
 # Overriding carp libraries to use the local copy
 dependency_overrides:
-  carp_core:
-    path: ../../carp_core/
-  carp_mobile_sensing:
-    path: ../../carp_mobile_sensing/
-  carp_context_package:
-    path: ../../packages/carp_context_package/
+#  carp_core:
+#    path: ../../carp_core/
+#  carp_mobile_sensing:
+#    path: ../../carp_mobile_sensing/
+#  carp_context_package:
+#    path: ../../packages/carp_context_package/
 #  carp_connectivity_package:
 #    path: ../../packages/carp_connectivity_package/
-  carp_audio_package:
-    path: ../../packages/carp_audio_package/
-  carp_esense_package:
-    path: ../../packages/carp_esense_package/
-  carp_backend:
-    path: ../../backends/carp_backend/
-  carp_webservices:
-    path: ../../backends/carp_webservices/
-  research_package:
-    path: ../../../../research.package/
+#  carp_audio_package:
+#    path: ../../packages/carp_audio_package/
+#  carp_esense_package:
+#    path: ../../packages/carp_esense_package/
+#  carp_backend:
+#    path: ../../backends/carp_backend/
+#  carp_webservices:
+#    path: ../../backends/carp_webservices/
+#  research_package:
+#    path: ../../../../research.package/
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   test: ^1.14.3
-  carp_study_generator: 
-    path: ../../utilities/carp_study_generator/
+  carp_study_generator: ^0.21.0
+#  carp_study_generator: 
+#    path: ../../utilities/carp_study_generator/
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

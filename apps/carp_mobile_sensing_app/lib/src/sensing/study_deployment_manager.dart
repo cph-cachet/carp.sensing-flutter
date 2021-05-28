@@ -11,53 +11,9 @@ enum DeploymentMode {
   /// Use a local study protocol & deployment and store data locally in a file.
   LOCAL,
 
-  /// Get the study deployment from CARP and store data back to CARP
-  CARP,
-}
+  /// Use the CARP production server to get the study deployment and store data.
+  CARP_PRODUCTION,
 
-class DeploymentManagerFactory {
-  static final DeploymentManagerFactory _instance =
-      DeploymentManagerFactory._();
-  DeploymentManagerFactory._();
-  factory DeploymentManagerFactory() => _instance;
-
-  DeploymentManager getDeploymentManager(DeploymentMode mode) {
-    switch (mode) {
-      case DeploymentMode.LOCAL:
-        return LocalDeploymentManager();
-      case DeploymentMode.CARP:
-        return CarpDeploymentManager();
-      default:
-        return LocalDeploymentManager();
-    }
-  }
-}
-
-abstract class DeploymentManager {
-  DeploymentMode _deploymentMode;
-  DeploymentMode get deploymentMode => _deploymentMode;
-
-  @mustCallSuper
-  DeploymentManager(this._deploymentMode);
-  Future deploy();
-}
-
-class LocalDeploymentManager extends DeploymentManager {
-  LocalDeploymentManager() : super(DeploymentMode.LOCAL);
-
-  @override
-  Future deploy() {
-    // TODO: implement deploy
-    throw UnimplementedError();
-  }
-}
-
-class CarpDeploymentManager extends DeploymentManager {
-  CarpDeploymentManager() : super(DeploymentMode.CARP);
-
-  @override
-  Future deploy() {
-    // TODO: implement deploy
-    throw UnimplementedError();
-  }
+  /// Use the CARP staging server to get the study deployment and store data.
+  CARP_STAGING,
 }

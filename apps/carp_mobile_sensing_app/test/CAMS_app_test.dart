@@ -94,7 +94,6 @@ void main() {
     setUp(() async {
       app = new CarpApp(
         name: "Test",
-        studyId: testStudyId,
         uri: Uri.parse(uri),
         oauth: OAuthEndPoint(clientID: clientID, clientSecret: clientSecret),
       );
@@ -106,12 +105,14 @@ void main() {
         username: username,
         password: password,
       );
+
+      CarpParticipationService().configureFrom(CarpService());
     });
 
     test('- authentication', () async {
       print('CarpService : ${CarpService().app}');
       print(" - signed in as: $user");
-      expect(user.accountId, accountId);
+      // expect(user.accountId, accountId);
     });
 
     test('- get study protocol', () async {
@@ -120,5 +121,16 @@ void main() {
       print('study: $study');
       print(_encode(study));
     }, skip: false);
+
+    test(
+      '- get invitations for $username',
+      () async {
+        List<ActiveParticipationInvitation> invitations =
+            await CarpParticipationService()
+                .getActiveParticipationInvitations();
+        invitations.forEach((invitation) => print(invitation));
+      },
+      skip: false,
+    );
   });
 }
