@@ -14,6 +14,6 @@ enum DeploymentMode {
   /// Use the CARP production server to get the study deployment and store data.
   CARP_PRODUCTION,
 
-  /// Use the CARP stagging server to get the study deployment and store data.
-  CARP_STAGGING,
+  /// Use the CARP staging server to get the study deployment and store data.
+  CARP_STAGING,
 }

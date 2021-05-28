@@ -20,7 +20,7 @@ void main() {
     // Create a new study protocol.
     protocol = CAMSStudyProtocol()
       ..name = 'Context package test'
-      ..owner = ProtocolOwner(
+      ..responsible = StudyProtocolReponsible(
         id: 'AB',
         name: 'Alex Boyon',
         email: 'alex@uni.dk',

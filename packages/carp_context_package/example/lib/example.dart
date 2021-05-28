@@ -15,17 +15,7 @@ void main() async {
 
   // Create a study protocol using a local file to store data
   CAMSStudyProtocol protocol = CAMSStudyProtocol()
-    ..name = 'Track patient movement'
-    ..owner = ProtocolOwner(
-      id: 'AB',
-      name: 'Alex Boyon',
-      email: 'alex@uni.dk',
-    )
-    ..dataEndPoint = FileDataEndPoint(
-      bufferSize: 500 * 1000,
-      zip: true,
-      encrypt: false,
-    );
+    ..name = 'Context Sensing Example';
 
   // define which devices are used for data collection
   // in this case, its only this smartphone

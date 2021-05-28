@@ -80,7 +80,7 @@ class Sensing {
 
         break;
       case DeploymentMode.CARP_PRODUCTION:
-      case DeploymentMode.CARP_STAGGING:
+      case DeploymentMode.CARP_STAGING:
         // use the CARP deployment service that knows how to download a
         // custom protocol
         deploymentService = CustomProtocolDeploymentService();
