@@ -1,4 +1,4 @@
-## 0.21.2+1
+## 0.21.2+2
 * setting `ownerId` for the custom protocol also
 * command for updating a protocol added
 * `carp.yaml` renamed to `carpspec.yaml` 
