@@ -1,7 +1,7 @@
 {
     "name": "Sensing Coverage Study",
     "description": "This is a study for testing the coverage of sampling.",
-    "creationDate": "2021-05-27T16:57:53.296813Z",
+    "creationDate": "2021-06-01T15:26:18.134909Z",
     "masterDevices": [
      {
       "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
