@@ -11,7 +11,7 @@ class ConsentCommand extends AbstractCommand {
   String get consentJson {
     if (_consentJson == null) {
       print('Reading the informed consent from file: $consentPath');
-      _consentJson = File(protocolPath).readAsStringSync();
+      _consentJson = File(consentPath).readAsStringSync();
     }
     return _consentJson;
   }
