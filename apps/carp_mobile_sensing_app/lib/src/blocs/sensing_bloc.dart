@@ -1,6 +1,10 @@
 part of mobile_sensing_app;
 
 class SensingBLoC {
+  /// The id of the currently running study deployment.
+  /// Typical set based on an invitation.
+  String studyDeploymentId;
+
   CAMSMasterDeviceDeployment get deployment => Sensing().deployment;
   StudyDeploymentModel _model;
 

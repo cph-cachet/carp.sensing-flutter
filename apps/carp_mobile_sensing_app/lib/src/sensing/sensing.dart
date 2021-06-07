@@ -88,15 +88,15 @@ class Sensing {
         // authenticate the user
         // this would normally trigger a dialogue, but for demo/testing we're using
         // the username/password in the 'credentials.dart' file
-        if (!CarpService().authenticated)
-          await CarpService()
-              .authenticate(username: username, password: password);
+        // if (!CarpService().authenticated)
+        //   await CarpService()
+        //       .authenticate(username: username, password: password);
 
         // get the study deployment id
         // this would normally be done by getting the invitations for this user,
         // but for demo/testing we're using the deployment id in the 'credentials.dart' file
         _status = await CustomProtocolDeploymentService()
-            .getStudyDeploymentStatus(testStudyDeploymentId);
+            .getStudyDeploymentStatus(bloc.studyDeploymentId);
 
         // now register the CARP data manager for uploading data back to CARP
         DataManagerRegistry().register(CarpDataManager());

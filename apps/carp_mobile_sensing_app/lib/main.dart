@@ -15,7 +15,6 @@ import 'package:carp_audio_package/audio.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
 import 'package:carp_backend/carp_backend.dart';
-import 'src/sensing/credentials.dart';
 
 part 'src/app.dart';
 part 'src/sensing/sensing.dart';

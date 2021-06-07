@@ -10,6 +10,10 @@ class CarpBackend {
 
   CarpApp _app;
 
+  /// The signed in user
+  CarpUser get user => CarpService().currentUser;
+  String get username => CarpService().currentUser.username;
+
   static CarpBackend _instance = CarpBackend._();
   CarpBackend._() : super();
 
@@ -34,8 +38,28 @@ class CarpBackend {
 
     // configure and authenticate
     CarpService().configure(app);
-    await CarpService().authenticate(username: username, password: password);
+    // await CarpService().authenticate(username: username, password: password);
 
     info('$runtimeType initialized');
+  }
+
+  /// Authenticate the user using the username / password dialogue.
+  Future<void> authenticate(BuildContext context) async {
+    info('Authenticating user...');
+    await CarpService().authenticateWithDialog(context);
+    info('User authenticated - user: $user');
+
+    // configure the participation service in order to get the invitations
+    CarpParticipationService().configureFrom(CarpService());
+  }
+
+  /// Get the study invitation.
+  Future<void> getStudyInvitation(BuildContext context) async {
+    ActiveParticipationInvitation _invitation =
+        await CarpParticipationService().getStudyInvitation(context);
+    debug('CARP Study Invitation: $_invitation');
+
+    bloc.studyDeploymentId = _invitation?.studyDeploymentId;
+    info('Deployment ID: ${bloc.studyDeploymentId}');
   }
 }
