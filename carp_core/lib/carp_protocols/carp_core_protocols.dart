@@ -11,7 +11,6 @@
 /// definition in Kotlin.
 library carp_core_protocols;
 
-import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 

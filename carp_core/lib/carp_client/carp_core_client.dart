@@ -22,7 +22,6 @@ import 'package:meta/meta.dart';
 import 'package:carp_core/carp_protocols/carp_core_protocols.dart';
 import 'package:carp_core/carp_deployment/carp_core_deployment.dart';
 import 'package:carp_core/carp_data/carp_core_data.dart';
-import 'package:flutter/material.dart';
 
 export 'carp_core_client.dart';
 

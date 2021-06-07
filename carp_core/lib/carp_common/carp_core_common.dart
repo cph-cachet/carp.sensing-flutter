@@ -8,7 +8,7 @@ library carp_core_common;
 import 'dart:convert';
 import 'package:carp_core/carp_protocols/carp_core_protocols.dart';
 import 'package:carp_core/carp_deployment/carp_core_deployment.dart';
-import 'package:flutter/material.dart';
+import 'package:meta/meta.dart';
 
 export 'carp_core_common.dart';
 
