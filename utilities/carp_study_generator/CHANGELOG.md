@@ -1,3 +1,6 @@
+## 0.21.3
+* [PR #192](https://github.com/cph-cachet/carp.sensing-flutter/pull/192)
+
 ## 0.21.2+2
 * setting `ownerId` for the custom protocol also
 * command for updating a protocol added
