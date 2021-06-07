@@ -12,8 +12,8 @@
 /// definition in Kotlin.
 library carp_core_deployment;
 
-import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:meta/meta.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:carp_core/carp_common/carp_core_common.dart';
