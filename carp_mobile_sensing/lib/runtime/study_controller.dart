@@ -69,7 +69,7 @@ class StudyDeploymentController extends StudyRuntime {
 
   /// Configure this [StudyDeploymentController].
   /// Must be called only once, and before [resume] is called.
-  /// This will also request permissions for all [SamplingPackage]s' permissions.
+  /// This will/can also request permissions for all [SamplingPackage]s' permissions.
   ///
   /// A number of optional parameters can be specified:
   ///

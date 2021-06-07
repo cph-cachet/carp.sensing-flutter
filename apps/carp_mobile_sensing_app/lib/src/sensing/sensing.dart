@@ -114,11 +114,16 @@ class Sensing {
     // add and deploy this deployment
     _controller = await client.addStudy(studyDeploymentId, deviceRolename);
 
-    // configure the controller but change the upload to also keep the json files locally
-    await _controller.configure(
-      dataEndPoint: (controller.deployment.dataEndPoint as CarpDataEndPoint)
-        ..deleteWhenUploaded = false,
-    );
+    // configure the controller
+    if (bloc.deploymentMode == DeploymentMode.LOCAL) {
+      await _controller.configure();
+    } else {
+      // change the upload to also keep the json files locally
+      await _controller.configure(
+        dataEndPoint: (controller.deployment.dataEndPoint as CarpDataEndPoint)
+          ..deleteWhenUploaded = false,
+      );
+    }
     // controller.resume();
 
     // listening on the data stream and print them as json to the debug console

@@ -79,11 +79,12 @@ class FileDataManager extends AbstractDataManager {
   ///
   ///   `carp/data/<studyDeploymentId>/carp-data-yyyy-mm-dd-hh-mm-ss-ms.json.zip`
   ///
+  /// where the date is in UTC format / zulu time.
   Future<String> get filename async {
     if (_filename == null) {
       final path = await studyPath;
-      final created = DateTime
-          .now()
+      final created = DateTime.now()
+          .toUtc()
           .toString()
           .replaceAll(RegExp(r':'), '-')
           .replaceAll(RegExp(r' '), '-')

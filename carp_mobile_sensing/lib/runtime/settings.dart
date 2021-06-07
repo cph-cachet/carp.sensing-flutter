@@ -64,10 +64,10 @@ class Settings {
     version = _packageInfo.version;
     buildNumber = _packageInfo.buildNumber;
 
-    debug('Shared Preferences');
+    debug('Shared Preferences:');
     _preferences
         .getKeys()
-        .forEach((key) => debug('[$key] = ${_preferences.get(key)}'));
+        .forEach((key) => debug('[$key] : ${_preferences.get(key)}'));
     info('$runtimeType initialized');
   }
 

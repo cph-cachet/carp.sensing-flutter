@@ -31,11 +31,12 @@ class LocationProbe extends DatumProbe {
     locationManager.start(askForPermission: false);
   }
 
-  // Future<Datum> getDatum() async =>
-  //     locationManager.getCurrentLocation().then((dto) => LocationDatum.fromLocationDto(dto));
-  // using the Geolocator package - seems more stable over long-term sampling.
-  Future<Datum> getDatum() async => Geolocator
-      .getCurrentPosition()
+  // Future<Datum> getDatum() async => locationManager
+  //     .getCurrentLocation()
+  //     .then((dto) => LocationDatum.fromLocationDto(dto));
+
+  // using the Geolocator package - seems more stable over long-term sampling
+  Future<Datum> getDatum() async => Geolocator.getCurrentPosition()
       .then((position) => LocationDatum.fromPosition(position));
 }
 

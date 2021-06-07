@@ -90,6 +90,7 @@ class AppTaskController {
   ///
   /// [AppTaskController] is designed to work as a singleton.
   factory AppTaskController() => _instance;
+
   AppTaskController._() {
     registerUserTaskFactory(SensingUserTaskFactory());
 
