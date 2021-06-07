@@ -15,6 +15,7 @@ part of carp_backend;
 class CarpStudyProtocolManager implements StudyProtocolManager {
   Future initialize() async {
     CAMSStudyProtocol(); // to initialize json serialization for CAMS classes
+    RPTask(''); // to initialize json serialization for RP classes
   }
 
   /// Get a [CAMSStudyProtocol] from the CARP backend.

@@ -227,7 +227,7 @@ class FromJsonFactory {
       _registry['${type ?? serializable.jsonType}'] =
           serializable.fromJsonFunction;
 
-  /// Rester all [serializables].
+  /// Register all [serializables].
   ///
   /// A convinient way to call [register] for multiple types.
   void registerAll(List<Serializable> serializables) =>

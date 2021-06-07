@@ -1,6 +1,16 @@
 part of mobile_sensing_app;
 
 class App extends StatelessWidget {
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      // debugShowCheckedModeBanner: false,
+      theme: ThemeData.dark(),
+      home: LoadingPage(),
+    );
+  }
+}
+
+class LoadingPage extends StatelessWidget {
   /// This methods is used to set up the entire app, including:
   ///  * initialize the bloc
   ///  * authenticate the user
@@ -13,32 +23,32 @@ class App extends StatelessWidget {
     //  * LOCAL
     //  * CARP_STAGGING
     //  * CARP_PRODUCTION
-    await bloc.initialize(DeploymentMode.LOCAL);
+    await bloc.initialize(DeploymentMode.CARP_STAGING);
 
     // only initialize the CARP backend bloc, if needed
     if (bloc.deploymentMode != DeploymentMode.LOCAL) {
       await CarpBackend().initialize();
+      await CarpBackend().authenticate(context);
+      await CarpBackend().getStudyInvitation(context);
     }
     await Sensing().initialize();
 
     return true;
   }
 
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData.dark(),
-      home: FutureBuilder(
-        future: init(context),
-        builder: (context, snapshot) => (!snapshot.hasData)
-            ? Scaffold(
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                body: Center(
-                    child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [CircularProgressIndicator()],
-                )))
-            : CarpMobileSensingApp(key: key),
-      ),
+    return FutureBuilder(
+      future: init(context),
+      builder: (context, snapshot) => (!snapshot.hasData)
+          ? Scaffold(
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              body: Center(
+                  child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [CircularProgressIndicator()],
+              )))
+          : CarpMobileSensingApp(key: key),
     );
   }
 }
