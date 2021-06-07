@@ -369,31 +369,56 @@ class RandomRecurrentTriggerExecutor extends TriggerExecutor {
     return _samplingTimes;
   }
 
+  String get todayString {
+    DateTime now = DateTime.now();
+    return '${now.year}-${now.month}-${now.day}';
+  }
+
+  String get tag => 'rrte.$todayString';
+
   Future onResume() async {
+    // sampling might be resumed after [startTime] or the app wasn't running at [startTime]
+    // therefore, first check if the random timers have been scheduled for today
+    if (Time.now().isAfter(startTime)) {
+      bool hasBeenScheduledForToday = Settings().preferences.containsKey(tag);
+      if (!hasBeenScheduledForToday) {
+        debug(
+            '$runtimeType - timers has not been scheduled for today ($todayString) - scheduling now');
+        _scheduleTimers();
+      }
+    }
+
     // set up a cron job that generates the random triggers once pr day at [startTime]
     final String cronJob = '${startTime.minute} ${startTime.hour} * * *';
     debug('$runtimeType - creating cron job : $cronJob');
 
     _scheduledTask = _cron.schedule(cron.Schedule.parse(cronJob), () async {
       debug('$runtimeType - resuming cron job : ${DateTime.now().toString()}');
-
-      // empty the list of timers.
-      _timers = [];
-
-      // get a random number of trigger time for today, and for each set up a
-      // timer that triggers the super.onResum() method.
-      samplingTimes.forEach((time) {
-        // find the delay - note, that none of the delays can be negative,
-        // since we are at [startTime]
-        Duration delay = time.difference(startTime);
-        Timer timer = Timer(delay, () async {
-          await super.onResume();
-          // now set up a timer that waits until the sampling duration ends
-          Timer(duration, () => super.onPause());
-        });
-        _timers.add(timer);
-      });
+      _scheduleTimers();
     });
+  }
+
+  void _scheduleTimers() {
+    // empty the list of timers.
+    _timers = [];
+
+    // get a random number of trigger time for today, and for each set up a
+    // timer that triggers the super.onResum() method.
+    samplingTimes.forEach((time) {
+      // find the delay - note, that none of the delays can be negative,
+      // since we are at [startTime] or after
+      Duration delay = time.difference(startTime);
+      debug('$runtimeType - setting up timer for : $time, delay: $delay');
+      Timer timer = Timer(delay, () async {
+        await super.onResume();
+        // now set up a timer that waits until the sampling duration ends
+        Timer(duration, () => super.onPause());
+      });
+      _timers.add(timer);
+    });
+
+    // mark this day as scheduled
+    Settings().preferences.setBool(tag, true);
   }
 
   Future onPause() async {

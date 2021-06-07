@@ -69,7 +69,7 @@ class _StudyVizState extends State<StudyVisualization> {
 
   List<Widget> _buildStudyPanel(
       BuildContext context, StudyDeploymentModel studyDeploymentModel) {
-    List<Widget> children = List<Widget>();
+    List<Widget> children = [];
 
     children.add(AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.dark,
@@ -90,7 +90,7 @@ class _StudyVizState extends State<StudyVisualization> {
       decoration: BoxDecoration(
           border: Border(bottom: BorderSide(color: themeData.dividerColor))),
       child: DefaultTextStyle(
-        style: Theme.of(context).textTheme.subhead,
+        style: Theme.of(context).textTheme.subtitle1,
         child: SafeArea(
           top: false,
           bottom: false,
@@ -146,7 +146,7 @@ class _StudyVizState extends State<StudyVisualization> {
   }
 
   void _showSettings() {
-    Scaffold.of(context).showSnackBar(const SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Settings not implemented yet...', softWrap: true)));
   }
 }
@@ -209,9 +209,7 @@ class _TaskPanel extends StatelessWidget {
 }
 
 class _MeasureLine extends StatelessWidget {
-  _MeasureLine({Key key, this.measure})
-      : assert(measure != null),
-        super(key: key);
+  _MeasureLine({Key key, this.measure}) : super(key: key);
 
   final Measure measure;
 

@@ -18,7 +18,7 @@ dependencies:
   carp_core: ^0.21.4      # the core CARP domain model
 
   # utility plugins
-  system_info: ^0.1.0
+  system_info: ^1.0.0
   uuid: ^2.0.0
   async: ^2.4.0
   device_info: '>=0.4.2 <2.0.0'
@@ -39,7 +39,7 @@ dependencies:
 
   # the CACHET plugins
   pedometer: ^2.1.0       # Get the step count from local OS
-  light: ^1.0.1           # Light sensor over platform channel
+  light: ^2.0.0           # Light sensor over platform channel
   device_apps: ^1.0.8     # Device installed apps over platform channel
   screen_state: ^1.0.0    # Screen LOCK/ON/OFF
 
@@ -52,8 +52,6 @@ dependency_overrides:
 
 dev_dependencies:
   pedantic: ^1.9.0        # For pedantic Dart linter
-  flutter_test:
-    sdk: flutter
   build_runner: ^1.10.0   # For building json serialization
   json_serializable: ^3.0.0
   test:
