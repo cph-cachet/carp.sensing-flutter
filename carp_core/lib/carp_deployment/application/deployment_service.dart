@@ -15,7 +15,7 @@ abstract class DeploymentService {
   /// If not specified, an UUID v1 id is generated.
   Future<StudyDeploymentStatus> createStudyDeployment(
     StudyProtocol protocol, [
-    String studyDeploymentId,
+    String? studyDeploymentId,
   ]);
 
   /// Remove study deployments with the given [studyDeploymentIds].
@@ -26,7 +26,7 @@ abstract class DeploymentService {
 
   /// Get the status for a study deployment with the given [studyDeploymentId].
   Future<StudyDeploymentStatus> getStudyDeploymentStatus(
-      String studyDeploymentId);
+      String? studyDeploymentId);
 
   /// Get the statuses for a set of deployments with the specified [studyDeploymentIds].
   Future<List<StudyDeploymentStatus>> getStudyDeploymentStatusList(
@@ -36,8 +36,8 @@ abstract class DeploymentService {
   /// deployment with [studyDeploymentId].
   ///
   /// [registration] is a matching configuration for the device with [deviceRoleName].
-  Future<StudyDeploymentStatus> registerDevice(String studyDeploymentId,
-      String deviceRoleName, DeviceRegistration registration);
+  Future<StudyDeploymentStatus> registerDevice(String? studyDeploymentId,
+      String? deviceRoleName, DeviceRegistration registration);
 
   /// Unregister the device with the specified [deviceRoleName] for the study
   /// deployment with [studyDeploymentId].
@@ -47,7 +47,7 @@ abstract class DeploymentService {
   /// Get the deployment configuration for the master device with
   /// [masterDeviceRoleName] in the study deployment with [studyDeploymentId].
   Future<MasterDeviceDeployment> getDeviceDeploymentFor(
-      String studyDeploymentId, String masterDeviceRoleName);
+      String? studyDeploymentId, String? masterDeviceRoleName);
 
   /// Indicate to stakeholders in the study deployment with [studyDeploymentId]
   /// that the device with [masterDeviceRoleName] was deployed successfully,
@@ -72,5 +72,5 @@ abstract class DeploymentService {
   /// Stop the study deployment with the specified [studyDeploymentId].
   /// No further changes to this deployment will be allowed and no more data
   /// will be collected.
-  Future<StudyDeploymentStatus> stop(String studyDeploymentId);
+  Future<StudyDeploymentStatus> stop(String? studyDeploymentId);
 }

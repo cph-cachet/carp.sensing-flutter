@@ -15,21 +15,21 @@ class TriggeredTask {
 
   /// The id of the [Trigger] which describes the condition which when met
   /// sends the task with [taskName] to the device with [destinationDeviceRoleName].
-  int triggerId;
+  int? triggerId;
 
   /// The name of the task to send to [destinationDeviceRoleName] when the
   /// trigger condition is met.
-  String taskName;
+  String? taskName;
 
   /// The role name of the device to which to send the task with [taskName]
   /// when the [trigger] condition is met.
-  String targetDeviceRoleName;
+  String? targetDeviceRoleName;
 
   @JsonKey(ignore: true)
-  TaskDescriptor task;
+  TaskDescriptor? task;
 
   @JsonKey(ignore: true)
-  DeviceDescriptor targetDevice;
+  DeviceDescriptor? targetDevice;
 
   TriggeredTask({this.triggerId, this.task, this.targetDevice}) : super() {
     triggerId ??= _counter++;

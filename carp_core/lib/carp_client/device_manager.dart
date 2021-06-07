@@ -11,13 +11,13 @@ part of carp_core_client;
 
 /// Collects [Data] for a single device.
 abstract class DeviceDataCollector {
-  String _type;
+  String? _type;
 
   /// The type of this device
-  String get type => _type;
+  String? get type => _type;
 
   /// The registration for this device.
-  DeviceRegistration deviceRegistration;
+  DeviceRegistration? deviceRegistration;
 
   /// The set of data types defining which data can be collected on this device.
   Set<String> get supportedDataTypes;

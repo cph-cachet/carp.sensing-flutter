@@ -18,24 +18,23 @@ class Trigger extends Serializable {
   final String _triggerNamespace = 'dk.cachet.carp.protocols.domain.triggers';
 
   /// The device role name from which the trigger originates.
-  String sourceDeviceRoleName;
+  String? sourceDeviceRoleName;
 
   /// Determines whether the trigger needs to be evaluated on a master
   /// device ([MasterDeviceDescriptor]).
   /// For example, this is the case when the trigger is time bound and needs
   /// to be evaluated by a task scheduler running on a master device.
-  bool requiresMasterDevice;
+  bool? requiresMasterDevice;
 
   @mustCallSuper
   Trigger({
     this.sourceDeviceRoleName,
     this.requiresMasterDevice = true,
-  })
-      : super();
+  }) : super();
 
   Function get fromJsonFunction => _$TriggerFromJson;
   factory Trigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as Trigger;
   Map<String, dynamic> toJson() => _$TriggerToJson(this);
   String get jsonType => '$_triggerNamespace.$runtimeType';
 }
@@ -48,21 +47,20 @@ class Trigger extends Serializable {
 /// bound and therefore requires a task scheduler.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ElapsedTimeTrigger extends Trigger {
-  Duration elapsedTime;
+  Duration? elapsedTime;
 
   ElapsedTimeTrigger({
-    String sourceDeviceRoleName,
-    bool requiresMasterDevice,
+    String? sourceDeviceRoleName,
+    bool? requiresMasterDevice,
     this.elapsedTime,
-  })
-      : super(
+  }) : super(
           sourceDeviceRoleName: sourceDeviceRoleName,
           requiresMasterDevice: requiresMasterDevice,
         );
 
   Function get fromJsonFunction => _$ElapsedTimeTriggerFromJson;
   factory ElapsedTimeTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as ElapsedTimeTrigger;
   Map<String, dynamic> toJson() => _$ElapsedTimeTriggerToJson(this);
 }
 
@@ -71,26 +69,25 @@ class ElapsedTimeTrigger extends Trigger {
 class ManualTrigger extends Trigger {
   /// A short label to describe the action performed once the user chooses
   /// to initiate this trigger.
-  String label;
+  String? label;
 
   /// An optional description elaborating on what happens when initiating
   /// this trigger.
-  String description;
+  String? description;
 
   ManualTrigger({
-    String sourceDeviceRoleName,
-    bool requiresMasterDevice,
+    String? sourceDeviceRoleName,
+    bool? requiresMasterDevice,
     this.label,
     this.description,
-  })
-      : super(
+  }) : super(
           sourceDeviceRoleName: sourceDeviceRoleName,
           requiresMasterDevice: requiresMasterDevice,
         );
 
   Function get fromJsonFunction => _$ManualTriggerFromJson;
   factory ManualTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as ManualTrigger;
   Map<String, dynamic> toJson() => _$ManualTriggerToJson(this);
 }
 
@@ -104,23 +101,22 @@ class ManualTrigger extends Trigger {
 /// and therefore requires a task scheduler.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ScheduledTrigger extends Trigger {
-  TimeOfDay time;
-  RecurrenceRule recurrenceRule;
+  TimeOfDay? time;
+  RecurrenceRule? recurrenceRule;
 
   ScheduledTrigger({
-    String sourceDeviceRoleName,
-    bool requiresMasterDevice,
+    String? sourceDeviceRoleName,
+    bool? requiresMasterDevice,
     this.time,
     this.recurrenceRule,
-  })
-      : super(
+  }) : super(
           sourceDeviceRoleName: sourceDeviceRoleName,
           requiresMasterDevice: requiresMasterDevice,
         );
 
   Function get fromJsonFunction => _$ScheduledTriggerFromJson;
   factory ScheduledTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as ScheduledTrigger;
   Map<String, dynamic> toJson() => _$ScheduledTriggerToJson(this);
 }
 
@@ -131,9 +127,9 @@ class ScheduledTrigger extends Trigger {
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class TimeOfDay {
   /// 24 hour format.
-  int hour;
-  int minute;
-  int second;
+  int? hour;
+  int? minute;
+  int? second;
 
   TimeOfDay({this.hour = 0, this.minute = 0, this.second = 0}) : super();
 
@@ -146,7 +142,7 @@ class TimeOfDay {
   /// Output as ISO 8601 extended time format with seconds accuracy, omitting
   /// the 24th hour and 60th leap second. E.g., "09:30:00".
   String toString() =>
-      '${_twoDigits(hour)}:${_twoDigits(minute)}:${_twoDigits(second)}';
+      '${_twoDigits(hour!)}:${_twoDigits(minute!)}:${_twoDigits(second!)}';
 }
 
 /// Represents the iCalendar RFC 5545 standard recurrence rule to specify
@@ -157,16 +153,16 @@ class TimeOfDay {
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class RecurrenceRule {
   /// Specifies the type of interval at which to repeat events, or multiples thereof.
-  Frequency frequency;
+  Frequency? frequency;
 
   /// The interval at which [frequency] repeats.
   /// The default is 1. For example, with [Frequency.DAILY], a value
   /// of "8" means every eight days.
-  int interval = 1;
+  int? interval = 1;
 
   /// Specifies when, if ever, to stop repeating events.
   /// Default recurrence is forever.
-  End end = End.never();
+  End? end = End.never();
 
   RecurrenceRule(this.frequency, {this.interval = 1, this.end}) : super();
 
@@ -185,7 +181,7 @@ class RecurrenceRule {
   String toString() {
     String rule = 'RRULE:FREQ=$frequency';
     rule += (interval != 1) ? ';INTERVAL=$interval' : '';
-    rule += (end.type != EndType.NEVER) ? rule += ';$end' : '';
+    rule += (end!.type != EndType.NEVER) ? rule += ';$end' : '';
 
     return rule;
   }
@@ -202,9 +198,9 @@ enum EndType { UNTIL, COUNT, NEVER }
 
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class End {
-  final EndType type;
-  final Duration elapsedTime;
-  final int count;
+  final EndType? type;
+  final Duration? elapsedTime;
+  final int? count;
 
   End(this.type, {this.elapsedTime, this.count}) : super();
 

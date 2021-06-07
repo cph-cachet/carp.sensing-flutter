@@ -9,8 +9,8 @@ part of carp_core_protocols;
 /// Uniquely identifies a study protocol by the [ownerId] and it's [name].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class StudyProtocolId {
-  String ownerId;
-  String name;
+  String? ownerId;
+  String? name;
   StudyProtocolId(this.ownerId, this.name);
 
   @override
@@ -22,7 +22,7 @@ class StudyProtocolId {
           name == other.name;
 
   @override
-  int get hashCode => (ownerId + name).hashCode;
+  int get hashCode => (ownerId! + name!).hashCode;
 
   factory StudyProtocolId.fromJson(Map<String, dynamic> json) =>
       _$StudyProtocolIdFromJson(json);
@@ -35,7 +35,7 @@ class StudyProtocolId {
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class ParticipantAttribute {
   /// Uniquely identifies the type of data represented by this participant attribute.
-  String inputType;
+  String? inputType;
 
   ParticipantAttribute(this.inputType);
 
@@ -49,8 +49,8 @@ class ParticipantAttribute {
 /// [date] is the date when this version of the protocol was created.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class ProtocolVersion {
-  String tag;
-  DateTime date;
+  String? tag;
+  DateTime? date;
 
   ProtocolVersion(this.tag) {
     date = DateTime.now();

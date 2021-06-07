@@ -13,7 +13,7 @@ part of carp_core_data;
 class Data {
   /// The [DataFormat] of this [Data].
   @JsonKey(ignore: true)
-  DataFormat format;
+  DataFormat? format;
 
   Data();
 

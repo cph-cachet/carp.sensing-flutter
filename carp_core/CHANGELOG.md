@@ -1,3 +1,6 @@
+## 0.30.0
+* upgrade to null-safety
+
 ## 0.21.4+3
 * small bug fix in json serialization
 * new constructor to `Trigger` classes

@@ -11,14 +11,14 @@ part of carp_core_deployment;
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class Participation {
   /// The CARP study deployment ID.
-  String studyDeploymentId;
+  String? studyDeploymentId;
 
   /// Unique id for this participation.
-  String id;
+  String? id;
 
   /// True when the device is already registered in the study deployment; false otherwise.
   /// In case a device is registered, it needs to be unregistered first before a new device can be registered.
-  bool isRegistered;
+  bool? isRegistered;
 
   Participation() : super();
 
@@ -34,10 +34,10 @@ class Participation {
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class StudyInvitation {
   /// A descriptive name for the study to be shown to participants.
-  String name;
+  String? name;
 
   /// A description of the study clarifying to participants what it is about.
-  String description;
+  String? description;
 
   /// Application-specific data to be shared with clients when they are invited
   /// to a study.
@@ -45,7 +45,7 @@ class StudyInvitation {
   /// This can be used by infrastructures or concrete applications which require
   /// exchanging additional data between the study and client subsystems,
   /// outside of scope or not yet supported by CARP core.
-  String applicationData;
+  String? applicationData;
 
   StudyInvitation() : super();
 
@@ -64,15 +64,15 @@ class StudyInvitation {
 /// need to unregister the existing device first.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ActiveParticipationInvitation {
-  Participation participation;
-  StudyInvitation invitation;
-  List<DeviceInvitation> devices;
+  Participation? participation;
+  StudyInvitation? invitation;
+  List<DeviceInvitation>? devices;
 
   /// The CARP study ID.
-  String get studyId => invitation?.applicationData;
+  String? get studyId => invitation?.applicationData;
 
   /// The CARP study deployment ID.
-  String get studyDeploymentId => participation?.studyDeploymentId;
+  String? get studyDeploymentId => participation?.studyDeploymentId;
 
   ActiveParticipationInvitation() : super();
 
@@ -81,5 +81,5 @@ class ActiveParticipationInvitation {
   Map<String, dynamic> toJson() => _$ActiveParticipationInvitationToJson(this);
 
   String toString() =>
-      '$runtimeType - participation: $participation, invitation: $invitation, devices size: ${devices.length}';
+      '$runtimeType - participation: $participation, invitation: $invitation, devices size: ${devices!.length}';
 }

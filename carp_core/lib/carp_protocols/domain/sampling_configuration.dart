@@ -12,7 +12,7 @@ class SamplingConfiguration extends Serializable {
   SamplingConfiguration() : super();
   Function get fromJsonFunction => _$SamplingConfigurationFromJson;
   factory SamplingConfiguration.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as SamplingConfiguration;
   Map<String, dynamic> toJson() => _$SamplingConfigurationToJson(this);
   String get jsonType =>
       'dk.cachet.carp.protocols.domain.sampling.SamplingConfiguration';
@@ -22,10 +22,10 @@ class SamplingConfiguration extends Serializable {
 ///defaults, and constraints.
 abstract class DataTypeSamplingScheme {
   /// The [String] this sampling scheme relates to.
-  String type;
+  String? type;
 
   /// The default configuration of a [Measure] for the [type].
-  Measure defaultMeasure;
+  Measure? defaultMeasure;
 }
 
 /// A helper class to construct iterable objects which hold [DataTypeSamplingScheme]
@@ -40,5 +40,5 @@ abstract class DataTypeSamplingSchemeList {
   ///
   /// This method is a convenient way to get a list of pre-configured
   /// measures of the correct type with default settings.
-  List<Measure> getMeasureList({List<String> types});
+  List<Measure> getMeasureList({List<String>? types});
 }

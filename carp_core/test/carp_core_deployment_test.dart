@@ -29,9 +29,11 @@ void main() {
     String plainJson = File('test/json/active_participation_invitation.json')
         .readAsStringSync();
 
-    ActiveParticipationInvitation invitation = ActiveParticipationInvitation
-        .fromJson(json.decode(plainJson) as Map<String, dynamic>);
-    expect(invitation.participation.id, '3cf97adf-4cdf-4211-b344-67946934b657');
+    ActiveParticipationInvitation invitation =
+        ActiveParticipationInvitation.fromJson(
+            json.decode(plainJson) as Map<String, dynamic>);
+    expect(
+        invitation.participation!.id, '3cf97adf-4cdf-4211-b344-67946934b657');
     print(toJsonString(invitation));
   });
   test('JSON -> ActiveParticipationInvitation CANS', () async {
@@ -39,9 +41,10 @@ void main() {
         File('test/json/active_participation_invitation_cans.json')
             .readAsStringSync();
 
-    ActiveParticipationInvitation invitation = ActiveParticipationInvitation
-        .fromJson(json.decode(plainJson) as Map<String, dynamic>);
-    expect(invitation.invitation.applicationData,
+    ActiveParticipationInvitation invitation =
+        ActiveParticipationInvitation.fromJson(
+            json.decode(plainJson) as Map<String, dynamic>);
+    expect(invitation.invitation!.applicationData,
         '294a5748-d8fa-4617-b475-99c6980032c8');
     print(toJsonString(invitation));
   });
@@ -49,8 +52,8 @@ void main() {
     String plainJson =
         File('test/json/master_device_deployment.json').readAsStringSync();
 
-    MasterDeviceDeployment deployment = MasterDeviceDeployment
-        .fromJson(json.decode(plainJson) as Map<String, dynamic>);
+    MasterDeviceDeployment deployment = MasterDeviceDeployment.fromJson(
+        json.decode(plainJson) as Map<String, dynamic>);
     expect(deployment.deviceDescriptor.roleName, 'phone');
     print(toJsonString(deployment));
   });
@@ -58,17 +61,17 @@ void main() {
     String plainJson =
         File('test/json/participant_data.json').readAsStringSync();
 
-    ParticipantData data = ParticipantData
-        .fromJson(json.decode(plainJson) as Map<String, dynamic>);
-    expect(data.data['dk.cachet.carp.input.sex'], 'Male');
+    ParticipantData data = ParticipantData.fromJson(
+        json.decode(plainJson) as Map<String, dynamic>);
+    expect(data.data!['dk.cachet.carp.input.sex'], 'Male');
     print(toJsonString(data));
   });
   test('JSON -> StudyDeploymentStatus', () async {
     String plainJson =
         File('test/json/study_deployment_status.json').readAsStringSync();
 
-    StudyDeploymentStatus status = StudyDeploymentStatus
-        .fromJson(json.decode(plainJson) as Map<String, dynamic>);
+    StudyDeploymentStatus status = StudyDeploymentStatus.fromJson(
+        json.decode(plainJson) as Map<String, dynamic>);
     expect(status.studyDeploymentId, 'b1575ac0-1289-4eeb-9048-a3681ad93ff8');
     expect(status.status, StudyDeploymentStatusTypes.Invited);
     print(toJsonString(status));
@@ -78,8 +81,8 @@ void main() {
     String plainJson =
         File('test/json/study_deployment_status_cans.json').readAsStringSync();
 
-    StudyDeploymentStatus status = StudyDeploymentStatus
-        .fromJson(json.decode(plainJson) as Map<String, dynamic>);
+    StudyDeploymentStatus status = StudyDeploymentStatus.fromJson(
+        json.decode(plainJson) as Map<String, dynamic>);
     print(toJsonString(status));
 
     expect(status.studyDeploymentId, 'ae8076a3-7170-4bcf-b66c-64639a7a9eee');
@@ -96,8 +99,8 @@ void main() {
     String plainJson = File('test/json/study_deployment_status_successful.json')
         .readAsStringSync();
 
-    StudyDeploymentStatus status = StudyDeploymentStatus
-        .fromJson(json.decode(plainJson) as Map<String, dynamic>);
+    StudyDeploymentStatus status = StudyDeploymentStatus.fromJson(
+        json.decode(plainJson) as Map<String, dynamic>);
     expect(status.studyDeploymentId, 'd396c31b-dabc-4fc7-b5fd-97031fc1de4c');
     expect(status.status, StudyDeploymentStatusTypes.DeploymentReady);
     print(toJsonString(status));

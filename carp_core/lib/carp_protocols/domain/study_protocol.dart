@@ -18,13 +18,13 @@ class StudyProtocol {
   static const String PROTOCOL_NAMESPACE = 'dk.cachet.carp.protocols.domain';
 
   // maps a task's name and the task
-  Map<String, TaskDescriptor> _taskMapProperty;
+  Map<String, TaskDescriptor>? _taskMapProperty;
   Map<String, TaskDescriptor> get _taskMap {
     if (_taskMapProperty == null) {
       _taskMapProperty = {};
-      tasks.forEach((task) => _taskMapProperty[task.name] = task);
+      tasks.forEach((task) => _taskMapProperty![task.name] = task);
     }
-    return _taskMapProperty;
+    return _taskMapProperty!;
   }
 
   /// The owner id of this study protocol.
@@ -34,10 +34,10 @@ class StudyProtocol {
   String name;
 
   /// A longer description of this study.
-  String description;
+  String? description;
 
   /// The timestamp of the creation of this protocol in Zulu time.
-  DateTime creationDate;
+  late DateTime creationDate;
 
   /// The master devices involved in this protocol.
   List<MasterDeviceDescriptor> masterDevices = [];
@@ -56,12 +56,12 @@ class StudyProtocol {
   /// The tasks (and the devices they are triggered to) for the specified [trigger].
   List<TriggeredTask> triggeredTasks = [];
 
-  List<Map<String, dynamic>> expectedParticipantData = [];
+  List<Map<String, dynamic>>? expectedParticipantData = [];
 
   /// Create a new [StudyProtocol].
   StudyProtocol({
-    this.ownerId,
-    this.name,
+    required this.ownerId,
+    required this.name,
     this.description,
   }) : super() {
     creationDate = DateTime.now().toUtc();
@@ -73,7 +73,7 @@ class StudyProtocol {
       masterDevices.add(masterDevice);
 
   /// Does this protocol have a master device with role name [rolename]?
-  bool hasMasterDevice(String rolename) =>
+  bool hasMasterDevice(String? rolename) =>
       masterDevices.indexWhere((device) => device.roleName == rolename) != -1;
 
   /// Add a [device] which is connected to this [masterDevice].
@@ -180,17 +180,17 @@ class StudyProtocol {
 
     // Remove task itself.
     tasks.remove(task);
-    _taskMap?.remove(task.name);
+    _taskMap.remove(task.name);
   }
 
   /// Gets all the tasks triggered for the specified [device].
   /// The [device] must be part of either [masterDevices]
   /// or [connectedDevices].
-  Set<TaskDescriptor> getTasksForDevice(DeviceDescriptor device) {
+  Set<TaskDescriptor?> getTasksForDevice(DeviceDescriptor device) {
     assert(connectedDevices.contains(device) || masterDevices.contains(device),
         'The passed device is not part of this study protocol.');
 
-    final Set<TaskDescriptor> deviceTasks = {};
+    final Set<TaskDescriptor?> deviceTasks = {};
 
     triggeredTasks.forEach((triggeredTask) {
       if (triggeredTask.targetDeviceRoleName == device.roleName) {
@@ -205,12 +205,14 @@ class StudyProtocol {
   ///
   /// Returns an empty set if the device is not part of [masterDevices]
   /// or [connectedDevices].
-  Set<TaskDescriptor> getTasksForDeviceRoleName(String deviceRoleName) {
+  Set<TaskDescriptor> getTasksForDeviceRoleName(String? deviceRoleName) {
     final Set<TaskDescriptor> deviceTasks = {};
 
     triggeredTasks.forEach((triggeredTask) {
       if (triggeredTask.targetDeviceRoleName == deviceRoleName) {
-        deviceTasks.add(_taskMap[triggeredTask.taskName]);
+        if (_taskMap.containsKey(triggeredTask.taskName)) {
+          deviceTasks.add(_taskMap[triggeredTask.taskName]!);
+        }
       }
     });
     return deviceTasks;

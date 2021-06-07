@@ -12,10 +12,10 @@ DataPoint _$DataPointFromJson(Map<String, dynamic> json) {
         ? null
         : DataPointHeader.fromJson(json['carp_header'] as Map<String, dynamic>),
   )
-    ..id = json['id'] as int
-    ..createdByUserId = json['created_by_user_id'] as int
-    ..studyId = json['study_id'] as String
-    ..carpBody = json['carp_body'] as Map<String, dynamic>;
+    ..id = json['id'] as int?
+    ..createdByUserId = json['created_by_user_id'] as int?
+    ..studyId = json['study_id'] as String?
+    ..carpBody = json['carp_body'] as Map<String, dynamic>?;
 }
 
 Map<String, dynamic> _$DataPointToJson(DataPoint instance) {
@@ -37,13 +37,13 @@ Map<String, dynamic> _$DataPointToJson(DataPoint instance) {
 
 DataPointHeader _$DataPointHeaderFromJson(Map<String, dynamic> json) {
   return DataPointHeader(
-    studyId: json['study_id'] as String,
-    userId: json['user_id'] as String,
+    studyId: json['study_id'] as String?,
+    userId: json['user_id'] as String?,
     dataFormat: json['data_format'] == null
         ? null
         : DataFormat.fromJson(json['data_format'] as Map<String, dynamic>),
-    deviceRoleName: json['device_role_name'] as String,
-    triggerId: json['trigger_id'] as String,
+    deviceRoleName: json['device_role_name'] as String?,
+    triggerId: json['trigger_id'] as String?,
     startTime: json['start_time'] == null
         ? null
         : DateTime.parse(json['start_time'] as String),
@@ -77,8 +77,8 @@ Map<String, dynamic> _$DataPointHeaderToJson(DataPointHeader instance) {
 
 DataFormat _$DataFormatFromJson(Map<String, dynamic> json) {
   return DataFormat(
-    json['namespace'] as String,
-    json['name'] as String,
+    json['namespace'] as String?,
+    json['name'] as String?,
   );
 }
 
@@ -98,8 +98,8 @@ Map<String, dynamic> _$DataFormatToJson(DataFormat instance) {
 
 DataType _$DataTypeFromJson(Map<String, dynamic> json) {
   return DataType(
-    json['namespace'] as String,
-    json['name'] as String,
+    json['namespace'] as String?,
+    json['name'] as String?,
   );
 }
 

@@ -10,38 +10,38 @@ part of carp_core_client;
 /// Manage data collection for a particular study on a client device.
 class StudyRuntime {
   final List<DeviceDescriptor> _remainingDevicesToRegister = [];
-  StudyRuntimeId _id;
+  StudyRuntimeId? _id;
   StudyRuntimeStatus _status = StudyRuntimeStatus.NotReadyForDeployment;
   final StreamController<StudyRuntimeStatus> _statusEventsController =
       StreamController();
 
   /// The [MasterDeviceDeployment] for this study runtime.
-  MasterDeviceDeployment deployment;
+  MasterDeviceDeployment? deployment;
 
   /// The device factory to handle the devices used in this study deployment.
-  DeviceRegistry deviceRegistry;
+  late DeviceRegistry deviceRegistry;
 
   /// The deployment service to use to retrieve and manage the study deployment
   /// with [studyDeploymentId]. This deployment service should have the deployment
   /// with [studyDeploymentId] available.
-  DeploymentService deploymentService;
+  DeploymentService? deploymentService;
 
   /// The ID of the deployed study for which to collect data.
-  String studyDeploymentId;
+  String? studyDeploymentId;
 
   /// The latest known deployment status.
-  StudyDeploymentStatus deploymentStatus;
+  late StudyDeploymentStatus deploymentStatus;
 
   /// The description of the device this runtime is intended for within the
   /// deployment identified by [studyDeploymentId].
-  MasterDeviceDescriptor device;
+  MasterDeviceDescriptor? device;
 
   /// The device role name.
-  String get deviceRoleName => device.roleName;
+  String? get deviceRoleName => device!.roleName;
 
   /// Composite ID for this study runtime, comprised of the [studyDeploymentId]
   /// and [device] role name.
-  StudyRuntimeId get id => _id;
+  StudyRuntimeId? get id => _id;
 
   /// The stream of [StudyRuntimeStatus] events for this controller.
   Stream<StudyRuntimeStatus> get statusEvents => _statusEventsController.stream;
@@ -92,9 +92,6 @@ class StudyRuntime {
     String deviceRoleName,
     DeviceRegistration deviceRegistration,
   ) async {
-    assert(deploymentService != null,
-        'Deployment Service must be specified (null)');
-
     this.deploymentService = deploymentService;
     this.deviceRegistry = deviceRegistry;
 
@@ -107,7 +104,8 @@ class StudyRuntime {
 
     // Initialize runtime.
     this.studyDeploymentId = studyDeploymentId;
-    device = deploymentStatus.masterDeviceStatus.device;
+    device =
+        deploymentStatus.masterDeviceStatus!.device as MasterDeviceDescriptor?;
 
     // After registration, deployment information might immediately be available
     // for this client device.
@@ -118,11 +116,11 @@ class StudyRuntime {
   /// it is, deploys. In case already deployed, nothing happens.
   Future<StudyRuntimeStatus> tryDeployment() async {
     deploymentStatus =
-        await deploymentService.getStudyDeploymentStatus(studyDeploymentId);
+        await deploymentService!.getStudyDeploymentStatus(studyDeploymentId);
 
     // get the deployment
-    deployment = await deploymentService.getDeviceDeploymentFor(
-        studyDeploymentId, device.roleName);
+    deployment = await deploymentService!
+        .getDeviceDeploymentFor(studyDeploymentId, device!.roleName);
     _status = StudyRuntimeStatus.RegisteringDevices;
 
     // TODO - set _remainingDevicesToRegister
@@ -139,7 +137,7 @@ class StudyRuntime {
   /// in this device's [deviceRegistry] as well as in the [deploymentService].
   Future tryRegisterConnectedDevice(DeviceDescriptor device) async {
     String deviceType = device.type;
-    String deviceRoleName = device.roleName;
+    String? deviceRoleName = device.roleName;
 
     // if this phone supports the device, register it locally
     if (deviceRegistry.supportsDevice(deviceType)) {
@@ -152,8 +150,8 @@ class StudyRuntime {
       // ask the device manager for a unique id of the device
       DeviceRegistration registration = DeviceRegistration(deviceManager.id);
       deviceManager.deviceRegistration = registration;
-      deploymentStatus = await deploymentService?.registerDevice(
-          studyDeploymentId, deviceRoleName, registration);
+      deploymentStatus = (await deploymentService?.registerDevice(
+          studyDeploymentId, deviceRoleName, registration))!;
     }
   }
 
@@ -186,7 +184,7 @@ class StudyRuntime {
     if (status == StudyRuntimeStatus.Stopped) return;
 
     // Stop study deployment.
-    deploymentService.stop(studyDeploymentId);
+    deploymentService!.stop(studyDeploymentId);
     _status = StudyRuntimeStatus.Stopped;
   }
 }

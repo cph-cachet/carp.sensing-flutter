@@ -13,14 +13,14 @@ abstract class ProtocolService {
   ///
   /// [versionTag] is an optional label used to identify this first version of
   /// the [protocol]. Timestamp of initial creation by default.
-  Future add(StudyProtocol protocol, [String versionTag]);
+  Future add(StudyProtocol protocol, [String? versionTag]);
 
   /// Add a new version for the specified study [protocol], of which a previous
   /// version with the same owner and name is already stored.
   ///
   /// [versionTag] is an optional unique label used to identify this specific
   /// version of the [protocol]. The current date/time by default.
-  Future addVersion(StudyProtocol protocol, [String versionTag]);
+  Future addVersion(StudyProtocol protocol, [String? versionTag]);
 
   /// Replace the expected participant data for the study protocol with the
   /// specified [protocolId] and [versionTag] with [expectedParticipantData].
@@ -36,7 +36,7 @@ abstract class ProtocolService {
   ///
   /// [versionTag] is the tag of the specific version of the protocol to return.
   /// The latest version is returned when not specified.
-  Future<StudyProtocol> getBy(StudyProtocolId protocolId, [String versionTag]);
+  Future<StudyProtocol> getBy(StudyProtocolId protocolId, [String? versionTag]);
 
   /// Find all [StudyProtocol]'s owned by the owner with [ownerId].
   ///
