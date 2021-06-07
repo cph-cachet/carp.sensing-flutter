@@ -1,6 +1,6 @@
 name: carp_study_generator
 description: Utilities for generating CARP Mobile Sensing studies
-version: 0.21.2+2
+version: 0.21.3
 homepage: https://github.com/cph-cachet/carp.sensing-flutter
 author:  CACHET Team <cph.cachet@gmail.com>
 
@@ -30,8 +30,5 @@ dependencies:
   meta: ^1.1.8
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  #test: ^1.14.3
   test: 
 
