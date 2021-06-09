@@ -1,4 +1,4 @@
-/// A library for collecting information from the device hardware:
+/// A library containing a sampling package for collecting information from the device hardware:
 ///  - device info
 ///  - battery
 ///  - screen
@@ -8,6 +8,7 @@ library device;
 import 'dart:async';
 import 'dart:io' show Platform;
 
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 import 'package:battery/battery.dart';

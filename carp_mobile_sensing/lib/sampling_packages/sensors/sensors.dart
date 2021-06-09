@@ -1,4 +1,5 @@
-/// Contain classes for collecting data from the basic device sensors:
+/// Alibrary containing a sampling package for collecting data from the basic
+/// device sensors:
 /// - accelerometer
 /// - gyroscope
 /// - light
@@ -13,6 +14,7 @@ import 'package:pedometer/pedometer.dart';
 import 'package:stats/stats.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 part 'sensor_probes.dart';

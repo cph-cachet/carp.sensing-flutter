@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 import 'package:test/test.dart';
@@ -85,8 +86,8 @@ void main() {
     print('#1 : $protocol');
     final studyJson = toJsonString(protocol);
 
-    CAMSStudyProtocol protocolFromJson = CAMSStudyProtocol
-        .fromJson(json.decode(studyJson) as Map<String, dynamic>);
+    CAMSStudyProtocol protocolFromJson = CAMSStudyProtocol.fromJson(
+        json.decode(studyJson) as Map<String, dynamic>);
     expect(toJsonString(protocolFromJson), equals(studyJson));
     print('#2 : $protocolFromJson');
   });
@@ -95,8 +96,8 @@ void main() {
     // Read the study protocol from json file
     String plainJson = File('test/json/study_protocol.json').readAsStringSync();
 
-    CAMSStudyProtocol protocol = CAMSStudyProtocol
-        .fromJson(json.decode(plainJson) as Map<String, dynamic>);
+    CAMSStudyProtocol protocol = CAMSStudyProtocol.fromJson(
+        json.decode(plainJson) as Map<String, dynamic>);
 
     expect(protocol.ownerId, 'AB');
     expect(protocol.masterDevices.first.roleName,
@@ -219,14 +220,14 @@ void main() {
 
     print(studyJson);
 
-    CAMSStudyProtocol protocol_2 = CAMSStudyProtocol
-        .fromJson(json.decode(studyJson) as Map<String, dynamic>);
+    CAMSStudyProtocol protocol_2 = CAMSStudyProtocol.fromJson(
+        json.decode(studyJson) as Map<String, dynamic>);
     expect(protocol_2.ownerId, protocol.ownerId);
 
     print('#1 : $protocol');
 
-    CAMSStudyProtocol protocolFromJson = CAMSStudyProtocol
-        .fromJson(json.decode(studyJson) as Map<String, dynamic>);
+    CAMSStudyProtocol protocolFromJson = CAMSStudyProtocol.fromJson(
+        json.decode(studyJson) as Map<String, dynamic>);
     expect(toJsonString(protocolFromJson), equals(studyJson));
     print('#2 : $protocolFromJson');
   });

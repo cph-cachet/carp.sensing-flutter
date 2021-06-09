@@ -38,10 +38,10 @@ class StudyDeployment {
   DateTime get creationDate => _creationDate;
   StudyProtocol get protocol => _protocol;
 
-  /// The set of devices which are currently registered for this study deployment.
-  // Map<DeviceDescriptor, DeviceRegistration> get registeredDevices =>
-  //     _registeredDevices.map(
-  //         (key, value) => MapEntry(_registeredDeviceDescriptors[key], value));
+  // The set of devices which are currently registered for this study deployment.
+  Map<DeviceDescriptor, DeviceRegistration> get registeredDevices =>
+      _registeredDevices.map(
+          (key, value) => MapEntry(_registeredDeviceDescriptors[key]!, value));
 
   /// Per device, a list of all device registrations (included old registrations)
   /// in the order they were registered.
