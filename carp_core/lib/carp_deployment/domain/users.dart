@@ -69,10 +69,10 @@ class ActiveParticipationInvitation {
   List<DeviceInvitation>? devices;
 
   /// The CARP study ID.
-  String? get studyId => invitation?.applicationData;
+  String? get studyId => invitation.applicationData;
 
   /// The CARP study deployment ID.
-  String? get studyDeploymentId => participation?.studyDeploymentId;
+  String? get studyDeploymentId => participation.studyDeploymentId;
 
   ActiveParticipationInvitation(this.participation, this.invitation) : super();
 

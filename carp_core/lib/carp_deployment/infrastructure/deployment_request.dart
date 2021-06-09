@@ -42,7 +42,7 @@ class CreateStudyDeployment extends DeploymentServiceRequest {
       FromJsonFactory().fromJson(json) as CreateStudyDeployment;
   Map<String, dynamic> toJson() => _$CreateStudyDeploymentToJson(this);
 
-  String toString() => '$runtimeType - protocol: ${protocol!.name}}';
+  String toString() => '$runtimeType - protocol: ${protocol.name}}';
 }
 
 /// A request for getting the status of a study deployment.
