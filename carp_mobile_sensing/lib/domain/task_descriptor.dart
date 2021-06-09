@@ -11,10 +11,10 @@ part of domain;
 /// Runs without any interaction with the user or UI of the app.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class AutomaticTask extends TaskDescriptor {
-  AutomaticTask({String name}) : super(name: name);
+  AutomaticTask({String? name}) : super(name: name);
 
   Function get fromJsonFunction => _$AutomaticTaskFromJson;
   factory AutomaticTask.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as AutomaticTask;
   Map<String, dynamic> toJson() => _$AutomaticTaskToJson(this);
 }

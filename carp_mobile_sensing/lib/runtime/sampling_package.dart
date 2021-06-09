@@ -44,7 +44,7 @@ class SamplingPackageRegistry {
   ///
   /// Takes its settings from the [SamplingSchema.common()] schema, but
   /// enables all measures.
-  SamplingSchema maximum({String namespace}) => common()
+  SamplingSchema maximum({String? namespace}) => common()
     ..type = SamplingSchemaType.maximum
     ..name = 'Default ALL sampling'
     ..powerAware = true
@@ -194,7 +194,7 @@ abstract class SamplingPackage {
   List<Permission> get permissions;
 
   /// Creates a new [Probe] of the specified [type].
-  Probe create(String type);
+  Probe? create(String type);
 
   /// What device type is this package using?
   ///

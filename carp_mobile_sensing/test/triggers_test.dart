@@ -33,13 +33,13 @@ void main() {
           type: RecurrentType.daily, time: Time(hour: 13, minute: 30));
       //print(toJsonString(t));
       print('${t.firstOccurrence} - ${t.period}');
-      expect(t.period.inHours, 24);
+      expect(t.period!.inHours, 24);
 
       // collect every day at 22:30
       t = RecurrentScheduledTrigger(
           type: RecurrentType.daily, time: Time(hour: 22, minute: 30));
       print('${t.firstOccurrence} - ${t.period}');
-      expect(t.period.inHours, 24);
+      expect(t.period!.inHours, 24);
 
       // collect every other day at 13:30
       t = RecurrentScheduledTrigger(
@@ -47,7 +47,7 @@ void main() {
           separationCount: 1,
           time: Time(hour: 13, minute: 30));
       print('${t.firstOccurrence} - ${t.period}');
-      expect(t.period.inDays, 2);
+      expect(t.period!.inDays, 2);
 
       // collect every wednesday at 12:23
       t = RecurrentScheduledTrigger(
@@ -55,7 +55,7 @@ void main() {
           dayOfWeek: DateTime.wednesday,
           time: Time(hour: 12, minute: 23));
       print('${t.firstOccurrence} - ${t.period}');
-      expect(t.period.inDays, 7);
+      expect(t.period!.inDays, 7);
 
       // collect every thursday at 14:23
       t = RecurrentScheduledTrigger(
@@ -63,7 +63,7 @@ void main() {
           dayOfWeek: DateTime.thursday,
           time: Time(hour: 14, minute: 23));
       print('${t.firstOccurrence} - ${t.period}');
-      expect(t.period.inDays, 7);
+      expect(t.period!.inDays, 7);
 
       // collect every 2nd thursday at 14:00
       t = RecurrentScheduledTrigger(
@@ -72,8 +72,8 @@ void main() {
           separationCount: 1,
           time: Time(hour: 14, minute: 00));
       print(
-          'weekly, Thursday at 14:00 :: first : ${t.firstOccurrence} - period : ${t.period.inDays}');
-      expect(t.period.inDays, 2 * 7);
+          'weekly, Thursday at 14:00 :: first : ${t.firstOccurrence} - period : ${t.period!.inDays}');
+      expect(t.period!.inDays, 2 * 7);
 
       // the monthly trigger from iPDM-GO app
       t = RecurrentScheduledTrigger(
@@ -84,8 +84,8 @@ void main() {
         remember: true,
       );
       print(
-          'monthly, 1st day of month at 18:00 :: first : ${t.firstOccurrence} - period : ${t.period.inDays}');
-      expect(t.period.inDays, 1 * 30);
+          'monthly, 1st day of month at 18:00 :: first : ${t.firstOccurrence} - period : ${t.period!.inDays}');
+      expect(t.period!.inDays, 1 * 30);
 
       // collect quarterly on the 11th day of the first month
       // in each quarter at 21:30
@@ -96,8 +96,8 @@ void main() {
         time: Time(hour: 21, minute: 30),
       );
       print(
-          'quarterly, 11th day of month at 21:30 :: first : ${t.firstOccurrence} - period : ${t.period.inDays}');
-      expect(t.period.inDays, 3 * 30);
+          'quarterly, 11th day of month at 21:30 :: first : ${t.firstOccurrence} - period : ${t.period!.inDays}');
+      expect(t.period!.inDays, 3 * 30);
 
       // collect monthly in the second week on a monday at 14:30
       t = RecurrentScheduledTrigger(
@@ -107,9 +107,9 @@ void main() {
         time: Time(hour: 14, minute: 30),
       );
       print(
-          'monthly, 2nd week of month on Tuesday at 14:30 :: first : ${t.firstOccurrence} - period : ${t.period.inDays}');
+          'monthly, 2nd week of month on Tuesday at 14:30 :: first : ${t.firstOccurrence} - period : ${t.period!.inDays}');
       expect(t.firstOccurrence.weekday, DateTime.tuesday);
-      expect(t.period.inDays, 30);
+      expect(t.period!.inDays, 30);
 
       // collect quarterly as above,
       // but remember this trigger across app shutdown
@@ -122,8 +122,8 @@ void main() {
         remember: true,
       );
       print(
-          'quarterly, 11th day of month at 21:30 :: first : ${t.firstOccurrence} - period : ${t.period.inDays}');
-      expect(t.period.inDays, 3 * 30);
+          'quarterly, 11th day of month at 21:30 :: first : ${t.firstOccurrence} - period : ${t.period!.inDays}');
+      expect(t.period!.inDays, 3 * 30);
     });
 
     test(' - RecurrentScheduledTrigger - assert failures', () {

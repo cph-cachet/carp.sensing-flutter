@@ -14,16 +14,16 @@ part of domain;
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ConnectableDeviceDescriptor extends DeviceDescriptor {
   /// The unique device type. For example `esense`.
-  String deviceType;
+  String? deviceType;
 
   /// A printer-fiendly name of this device.
-  String name;
+  String? name;
 
   ConnectableDeviceDescriptor({
     this.deviceType,
     this.name,
-    String roleName,
-    List<String> supportedDataTypes,
+    required String roleName,
+    List<String>? supportedDataTypes,
   })
       : super(
           roleName: roleName,
@@ -33,11 +33,11 @@ class ConnectableDeviceDescriptor extends DeviceDescriptor {
 
   /// The list of measures that this device is collecting as part of a
   /// [StudyProtocol].
-  List<String> collectingMeasureTypes = [];
+  List<String>? collectingMeasureTypes = [];
 
   Function get fromJsonFunction => _$ConnectableDeviceDescriptorFromJson;
   factory ConnectableDeviceDescriptor.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as ConnectableDeviceDescriptor;
   Map<String, dynamic> toJson() => _$ConnectableDeviceDescriptorToJson(this);
 
   String toString() =>

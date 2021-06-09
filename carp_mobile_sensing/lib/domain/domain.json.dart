@@ -19,7 +19,6 @@ void _registerFromJsonFunctions() {
   FromJsonFactory().register(AppTask(type: 'ignored'));
 
   // Trigger classes
-  FromJsonFactory().register(CAMSTrigger());
   FromJsonFactory().register(ImmediateTrigger());
   FromJsonFactory().register(DelayedTrigger());
   FromJsonFactory().register(PeriodicTrigger(period: Duration()));
@@ -39,11 +38,10 @@ void _registerFromJsonFunctions() {
   FromJsonFactory().register(MarkedMeasure(type: 'ignored'));
 }
 
-// class DomainJsonFactory {
-//   static final DomainJsonFactory _instance = DomainJsonFactory._();
+class DomainJsonFactory {
+  DomainJsonFactory() {
+    _registerFromJsonFunctions();
+  }
+}
 
-//   factory DomainJsonFactory() => _instance;
-//   DomainJsonFactory._() {
-//     registerFromJsonFunctions();
-//   }
-// }
+var tmp = DomainJsonFactory();

@@ -5,6 +5,7 @@
  * found in the LICENSE file.
  */
 
+import 'package:collection/collection.dart' show IterableExtension;
 part of runtime;
 
 /// A local (in-memory) implementation of a [DeploymentService] useful in
@@ -27,9 +28,9 @@ class SmartphoneDeploymentService implements DeploymentService {
   /// [studyDeploymentId] specify the study deployment id.
   /// If not specified, an UUID v1 id is generated.
   @override
-  Future<StudyDeploymentStatus> createStudyDeployment(
+  Future<StudyDeploymentStatus?> createStudyDeployment(
     StudyProtocol protocol, [
-    String studyDeploymentId,
+    String? studyDeploymentId,
   ]) async {
     StudyDeployment deployment = StudyDeployment(protocol, studyDeploymentId);
     _repository[deployment.studyDeploymentId] = deployment;
@@ -38,7 +39,7 @@ class SmartphoneDeploymentService implements DeploymentService {
     deployment.registerDevice(thisPhone, DeviceRegistration());
 
     // set the deployment status to "invited" as the initial status.
-    deployment.status.status = StudyDeploymentStatusTypes.Invited;
+    deployment.status!.status = StudyDeploymentStatusTypes.Invited;
 
     return deployment.status;
   }
@@ -57,19 +58,18 @@ class SmartphoneDeploymentService implements DeploymentService {
   }
 
   @override
-  Future<StudyDeploymentStatus> getStudyDeploymentStatus(
+  Future<StudyDeploymentStatus?> getStudyDeploymentStatus(
           String studyDeploymentId) async =>
       _repository[studyDeploymentId]?.status;
 
   @override
-  Future<StudyDeploymentStatus> registerDevice(String studyDeploymentId,
+  Future<StudyDeploymentStatus?> registerDevice(String studyDeploymentId,
       String deviceRoleName, DeviceRegistration registration) async {
-    StudyDeployment deployment = _repository[studyDeploymentId];
+    StudyDeployment deployment = _repository[studyDeploymentId]!;
 
     // check if already registered
-    DeviceDescriptor device = deployment.registeredDevices.keys.firstWhere(
-        (descriptor) => descriptor.roleName == deviceRoleName,
-        orElse: () => null);
+    DeviceDescriptor? device = deployment.registeredDevices.keys.firstWhereOrNull(
+        (descriptor) => descriptor.roleName == deviceRoleName);
 
     if (device == null) {
       // If not already registered, register device
@@ -80,9 +80,9 @@ class SmartphoneDeploymentService implements DeploymentService {
   }
 
   @override
-  Future<StudyDeploymentStatus> unregisterDevice(
+  Future<StudyDeploymentStatus?> unregisterDevice(
       String studyDeploymentId, String deviceRoleName) async {
-    StudyDeployment deployment = _repository[studyDeploymentId];
+    StudyDeployment deployment = _repository[studyDeploymentId]!;
     DeviceDescriptor device = deployment.registeredDevices.keys
         .firstWhere((descriptor) => descriptor.roleName == deviceRoleName);
 
@@ -96,15 +96,15 @@ class SmartphoneDeploymentService implements DeploymentService {
     String studyDeploymentId,
     String masterDeviceRoleName,
   ) async {
-    StudyDeployment deployment = _repository[studyDeploymentId];
+    StudyDeployment deployment = _repository[studyDeploymentId]!;
     DeviceDescriptor device = deployment.registeredDevices.keys.firstWhere(
         (descriptor) => descriptor.roleName == masterDeviceRoleName);
 
-    assert(device.isMasterDevice,
+    assert(device.isMasterDevice!,
         "The specified '$masterDeviceRoleName' device is not registered as a master device");
 
     MasterDeviceDeployment deviceDeployment =
-        deployment.getDeviceDeploymentFor(device);
+        deployment.getDeviceDeploymentFor(device as MasterDeviceDescriptor);
 
     if (deployment.protocol is CAMSStudyProtocol) {
       CAMSStudyProtocol protocol = deployment.protocol as CAMSStudyProtocol;
@@ -137,22 +137,21 @@ class SmartphoneDeploymentService implements DeploymentService {
   /// the data locally on the phone as zipped files.
   Future<CAMSMasterDeviceDeployment> getDeviceDeployment(
           String studyDeploymentId) async =>
-      await getDeviceDeploymentFor(studyDeploymentId, thisPhone.roleName);
+      await (getDeviceDeploymentFor(studyDeploymentId, thisPhone.roleName) as FutureOr<CAMSMasterDeviceDeployment>);
 
   @override
-  Future<StudyDeploymentStatus> deploymentSuccessfulFor(
+  Future<StudyDeploymentStatus?> deploymentSuccessfulFor(
     String studyDeploymentId,
     String masterDeviceRoleName,
-    DateTime deviceDeploymentLastUpdateDate,
+    DateTime? deviceDeploymentLastUpdateDate,
   ) async {
     deviceDeploymentLastUpdateDate ??= DateTime.now();
 
-    StudyDeployment deployment = _repository[studyDeploymentId];
-    DeviceDescriptor device = deployment.registeredDevices.keys.firstWhere(
-        (descriptor) => descriptor.roleName == masterDeviceRoleName,
-        orElse: () => null);
+    StudyDeployment deployment = _repository[studyDeploymentId]!;
+    DeviceDescriptor device = deployment.registeredDevices.keys.firstWhereOrNull(
+        (descriptor) => descriptor.roleName == masterDeviceRoleName)!;
 
-    assert(device != null && device.isMasterDevice,
+    assert(device != null && device.isMasterDevice!,
         "The specified device with rolename '$masterDeviceRoleName' is not a master device.");
 
     deployment.deviceDeployed(
@@ -164,9 +163,9 @@ class SmartphoneDeploymentService implements DeploymentService {
   /// Mark the study deployment with [studyDeploymentId] as deployed successfully
   /// to this master device (phone), i.e., that the study deployment was loaded
   /// on the device and that the necessary runtime is available to run it.
-  Future<StudyDeploymentStatus> deploymentSuccessful(
+  Future<StudyDeploymentStatus?> deploymentSuccessful(
     String studyDeploymentId, {
-    DateTime deviceDeploymentLastUpdateDate,
+    DateTime? deviceDeploymentLastUpdateDate,
   }) async =>
       deploymentSuccessfulFor(
         studyDeploymentId,
@@ -176,8 +175,8 @@ class SmartphoneDeploymentService implements DeploymentService {
 
   /// Stop the study deployment with [studyDeploymentId].
   @override
-  Future<StudyDeploymentStatus> stop(String studyDeploymentId) async {
-    StudyDeployment deployment = _repository[studyDeploymentId];
+  Future<StudyDeploymentStatus?> stop(String studyDeploymentId) async {
+    StudyDeployment deployment = _repository[studyDeploymentId]!;
     deployment.stop();
     return deployment.status;
   }

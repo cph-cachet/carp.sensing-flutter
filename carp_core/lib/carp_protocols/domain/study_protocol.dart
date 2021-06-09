@@ -12,7 +12,6 @@ part of carp_core_protocols;
 /// the optional devices ([DeviceDescriptor]) connected to them, and
 /// the [Trigger]s which lead to data collection on said devices.
 ///
-/// This is part of the [carp.protocols](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-protocols.md) domain model.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class StudyProtocol {
   static const String PROTOCOL_NAMESPACE = 'dk.cachet.carp.protocols.domain';
@@ -30,7 +29,7 @@ class StudyProtocol {
   /// The owner id of this study protocol.
   String ownerId;
 
-  /// A unique descriptive name for the protocol assigned by the [ProtocolOwner].
+  /// A unique descriptive name for the protocol.
   String name;
 
   /// A longer description of this study.
@@ -75,6 +74,11 @@ class StudyProtocol {
   /// Does this protocol have a master device with role name [rolename]?
   bool hasMasterDevice(String? rolename) =>
       masterDevices.indexWhere((device) => device.roleName == rolename) != -1;
+
+  /// The first of all the [masterDevices]. This is a convinient method used when
+  /// there is only one master device, which is most of the cases in Flutter where
+  /// the master device is typically the phone.
+  MasterDeviceDescriptor get masterDevice => masterDevices.first;
 
   /// Add a [device] which is connected to this [masterDevice].
   /// Its role name should be unique in the protocol.

@@ -12,8 +12,8 @@ part of device;
 class BatteryProbe extends StreamProbe {
   Stream<Datum> get stream {
     Battery battery = Battery();
-    StreamController<Datum> controller;
-    StreamSubscription<BatteryState> subscription;
+    late StreamController<Datum> controller;
+    late StreamSubscription<BatteryState> subscription;
 
     void onData(state) async {
       try {
@@ -65,7 +65,7 @@ class ScreenProbe extends StreamProbe {
   }
 
   Stream<Datum> get stream => Screen()
-      .screenStateStream
+      .screenStateStream!
       .map((event) => ScreenDatum.fromScreenStateEvent(event));
 }
 

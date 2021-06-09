@@ -6,7 +6,7 @@
  */
 part of domain;
 
-String _encode(Object object) =>
+String _encode(Object? object) =>
     const JsonEncoder.withIndent(' ').convert(object);
 
 /// Specify how sampling should be done. Used to make default configuration of
@@ -44,13 +44,13 @@ class SamplingSchema extends DataTypeSamplingSchemeList {
   final Map<String, Measure> _measures = {};
 
   /// The sampling schema type according to [SamplingSchemaType].
-  SamplingSchemaType type;
+  SamplingSchemaType? type;
 
   /// A printer-friendly name of this [SamplingSchema].
-  String name;
+  String? name;
 
   /// A description of this [SamplingSchema].
-  String description;
+  String? description;
 
   /// A map of default [Measure]s for different [String]s for this sampling
   /// schema.
@@ -58,7 +58,7 @@ class SamplingSchema extends DataTypeSamplingSchemeList {
 
   /// Is this sampling schema power-aware, i.e. adapting its sampling strategy
   /// to the battery power status. See [PowerAwarenessState].
-  bool powerAware = false;
+  bool? powerAware = false;
 
   SamplingSchema({this.type, this.name, this.powerAware = false}) : super();
 
@@ -97,14 +97,14 @@ class SamplingSchema extends DataTypeSamplingSchemeList {
   ///
   /// would return a list with a [Measure] for bluetooth, connectivity, etc.,
   /// each with default configurations from the [SamplingSchema.common()] schema.
-  List<Measure> getMeasureList({List<String> types}) {
+  List<Measure> getMeasureList({List<String>? types}) {
     List<Measure> _list = [];
 
     // since we're using json serialization below, make sure that the json
     // functions have been registred
     _registerFromJsonFunctions();
 
-    types.forEach((type) {
+    types!.forEach((type) {
       if (measures.containsKey(type)) {
         // using json encoding/decoding to clone the measure object
         final _json = _encode(measures[type]);
@@ -122,7 +122,7 @@ class SamplingSchema extends DataTypeSamplingSchemeList {
   /// This schema is used in the power-aware adaptation of sampling. See [PowerAwarenessState].
   /// [SamplingSchema.normal] is an empty schema and therefore don't change anything when
   /// used to adapt a [StudyProtocol] and its [Measure]s in the [adapt] method.
-  factory SamplingSchema.normal({String namespace, bool powerAware}) =>
+  factory SamplingSchema.normal({String? namespace, bool? powerAware}) =>
       SamplingSchema(
           type: SamplingSchemaType.normal,
           name: 'Default sampling',
@@ -142,7 +142,7 @@ class SamplingSchema extends DataTypeSamplingSchemeList {
           if (restore) measure.restore();
           if (measures.containsKey(measure.dataType)) {
             // if an adapted measure exists in this schema, adapt to it
-            measure.adapt(measures[measure.dataType]);
+            measure.adapt(measures[measure.dataType as String]!);
           }
           // notify listeners that the measure has changed due to restoration
           // and/or adaptation

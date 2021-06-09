@@ -191,9 +191,9 @@ class FromJsonFactory {
 
     // PROTOCOL
     // register(StudyProtocol());
-    register(Trigger(sourceDeviceRoleName: 'ignored'));
-    register(ElapsedTimeTrigger(sourceDeviceRoleName: 'ignored'));
-    register(ManualTrigger(sourceDeviceRoleName: 'ignored'));
+    register(Trigger());
+    register(ElapsedTimeTrigger());
+    register(ManualTrigger());
     register(ScheduledTrigger(
         recurrenceRule: RecurrenceRule(Frequency.DAILY),
         sourceDeviceRoleName: 'ignored',

@@ -8,9 +8,7 @@ part of carp_core_data;
 
 DataPoint _$DataPointFromJson(Map<String, dynamic> json) {
   return DataPoint(
-    json['carp_header'] == null
-        ? null
-        : DataPointHeader.fromJson(json['carp_header'] as Map<String, dynamic>),
+    DataPointHeader.fromJson(json['carp_header'] as Map<String, dynamic>),
   )
     ..id = json['id'] as int?
     ..createdByUserId = json['created_by_user_id'] as int?
@@ -30,7 +28,7 @@ Map<String, dynamic> _$DataPointToJson(DataPoint instance) {
   writeNotNull('id', instance.id);
   writeNotNull('created_by_user_id', instance.createdByUserId);
   writeNotNull('study_id', instance.studyId);
-  writeNotNull('carp_header', instance.carpHeader);
+  val['carp_header'] = instance.carpHeader;
   writeNotNull('carp_body', instance.carpBody);
   return val;
 }

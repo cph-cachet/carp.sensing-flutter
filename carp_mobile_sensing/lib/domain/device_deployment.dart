@@ -11,12 +11,7 @@ part of domain;
 /// device participates in running a study.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
-  String _studyId;
-  String _studyDeploymentId;
-  StudyProtocolReponsible _responsible;
-
-  /// The unique id of this study. Used in the [DataPointHeader] header.
-  String get studyId => _studyId;
+  late String _studyDeploymentId;
 
   /// The unique id of this study deployment.
   String get studyDeploymentId => _studyDeploymentId;
@@ -32,35 +27,28 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
   ///
   /// See [DataPoint]. This user id is stored in the
   /// [DataPointHeader] as the [userId].
-  String userId;
-
-  /// A technical printer-friendly name for this study.
-  /// This name is not localized.
-  String name;
+  String? userId;
 
   /// The textual [StudyProtocolDescription] containing the title, description
-  /// and purpose of this study protocol organized according to language locales.
-  StudyProtocolDescription protocolDescription;
+  /// and purpose of this study protocol.
+  StudyProtocolDescription? protocolDescription;
 
-  /// The owner of this study.
-  StudyProtocolReponsible get responsible => _responsible;
+  /// The PI responsible for this study.
+  StudyProtocolReponsible? get responsible => protocolDescription?.responsible;
 
-  SamplingSchemaType samplingStrategy;
+  SamplingSchemaType? samplingStrategy;
 
-  CAMSMasterDeviceDeployment({
-    String studyId,
-    String studyDeploymentId,
-    this.name,
+  CAMSMasterDeviceDeployment._({
+    required String studyDeploymentId,
     this.protocolDescription,
-    StudyProtocolReponsible owner,
-    DataEndPoint dataEndPoint,
-    MasterDeviceDescriptor deviceDescriptor,
-    DeviceRegistration configuration,
-    List<DeviceDescriptor> connectedDevices,
-    Map<String, DeviceRegistration> connectedDeviceConfigurations,
-    List<TaskDescriptor> tasks,
-    Map<String, Trigger> triggers,
-    List<TriggeredTask> triggeredTasks,
+    required MasterDeviceDescriptor deviceDescriptor,
+    required DeviceRegistration configuration,
+    List<DeviceDescriptor> connectedDevices = const [],
+    Map<String, DeviceRegistration?> connectedDeviceConfigurations = const {},
+    List<TaskDescriptor> tasks = const [],
+    Map<String, Trigger> triggers = const {},
+    List<TriggeredTask> triggeredTasks = const [],
+    DataEndPoint? dataEndPoint,
   }) : super(
           deviceDescriptor: deviceDescriptor,
           configuration: configuration,
@@ -72,21 +60,16 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
           dataEndPoint: dataEndPoint,
         ) {
     _registerFromJsonFunctions();
-
-    _studyId = studyId;
     _studyDeploymentId = studyDeploymentId;
-    _responsible = owner;
   }
 
   CAMSMasterDeviceDeployment.fromMasterDeviceDeployment({
-    String studyId,
-    String studyDeploymentId,
-    this.name,
-    this.protocolDescription,
-    StudyProtocolReponsible owner,
-    DataEndPoint dataEndPoint,
-    MasterDeviceDeployment masterDeviceDeployment,
-  }) : super(
+    required String studyDeploymentId,
+    StudyProtocolDescription? protocolDescription,
+    required MasterDeviceDeployment masterDeviceDeployment,
+  }) : this._(
+          studyDeploymentId: studyDeploymentId,
+          protocolDescription: protocolDescription,
           deviceDescriptor: masterDeviceDeployment.deviceDescriptor,
           configuration: masterDeviceDeployment.configuration,
           connectedDevices: masterDeviceDeployment.connectedDevices,
@@ -95,24 +78,21 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
           tasks: masterDeviceDeployment.tasks,
           triggers: masterDeviceDeployment.triggers,
           triggeredTasks: masterDeviceDeployment.triggeredTasks,
-          dataEndPoint: dataEndPoint,
-        ) {
-    _registerFromJsonFunctions();
-
-    _studyId = studyId;
-    _studyDeploymentId = studyDeploymentId;
-    _responsible = owner;
-  }
+          dataEndPoint: masterDeviceDeployment.dataEndPoint,
+        );
 
   /// Create a [CAMSMasterDeviceDeployment] based on a [CAMSStudyProtocol].
   /// This method basically makes a 1:1 mapping between a protocol and
   /// a deployment.
-  CAMSMasterDeviceDeployment.fromCAMSStudyProtocol({
-    String studyDeploymentId,
-    String masterDeviceRoleName,
-    DataEndPoint dataEndPoint,
-    CAMSStudyProtocol protocol,
-  }) : super(
+  CAMSMasterDeviceDeployment.fromStudyProtocol({
+    required String studyDeploymentId,
+    StudyProtocolDescription? protocolDescription,
+    required String masterDeviceRoleName,
+    DataEndPoint? dataEndPoint,
+    required StudyProtocol protocol,
+  }) : this._(
+          studyDeploymentId: studyDeploymentId,
+          protocolDescription: protocolDescription,
           deviceDescriptor: Smartphone(roleName: masterDeviceRoleName),
           configuration: DeviceRegistration(),
           connectedDevices: protocol.connectedDevices,
@@ -121,28 +101,17 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
           triggers: protocol.triggers,
           triggeredTasks: protocol.triggeredTasks,
           dataEndPoint: dataEndPoint,
-        ) {
-    _registerFromJsonFunctions();
+        );
 
-    _studyId = protocol.studyId;
-    _studyDeploymentId = studyDeploymentId;
-    _responsible = protocol.responsible;
-    protocolDescription = protocol.protocolDescription;
-    name = protocol.name;
-  }
-
-  /// Get the list of all [Mesure]s in this study protocol.
+  /// Get the list of all mesures in this study deployment.
   List<Measure> get measures {
-    List<Measure> _measures = [];
+    final List<Measure> _measures = [];
     tasks.forEach((task) => _measures.addAll(task.measures));
-
     return _measures;
   }
 
-  /// Adapt the sampling [Measure]s of this [StudyProtocol] to the specified
-  /// [SamplingSchema].
+  /// Adapt the sampling measures of this deployment to the specified [schema].
   void adapt(SamplingSchema schema, {bool restore = true}) {
-    assert(schema != null);
     samplingStrategy = schema.type;
     schema.adapt(this, restore: restore);
   }
@@ -151,7 +120,7 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
       _$CAMSMasterDeviceDeploymentFromJson(json);
   Map<String, dynamic> toJson() => _$CAMSMasterDeviceDeploymentToJson(this);
 
-  String toString() => '${super.toString()} - studyId: $studyId, '
-      'studyDeploymentId: $studyDeploymentId, '
-      'name: $name, owner: $responsible}';
+  String toString() => '$runtimeType - studyDeploymentId: $studyDeploymentId, '
+      'device: ${deviceDescriptor.roleName}, '
+      'title: ${protocolDescription?.title}, responsible: ${responsible?.name}';
 }

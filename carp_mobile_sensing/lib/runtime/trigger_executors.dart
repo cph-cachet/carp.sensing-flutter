@@ -10,30 +10,31 @@ part of runtime;
 /// Returns the relevant [TriggerExecutor] based on the type of [trigger].
 TriggerExecutor getTriggerExecutor(Trigger trigger) {
   switch (trigger.runtimeType) {
-    // actually, the base Trigger and CAMSTrigger classes is not supposed to be used
+    // actually, the base Trigger class is not supposed to be used
     // but if used, treat them as an ImmediateTrigger
     case Trigger:
-    case CAMSTrigger:
     case ImmediateTrigger:
       return ImmediateTriggerExecutor(trigger);
     case DelayedTrigger:
-      return DelayedTriggerExecutor(trigger);
+      return DelayedTriggerExecutor(trigger as DelayedTrigger);
     case PeriodicTrigger:
-      return PeriodicTriggerExecutor(trigger);
+      return PeriodicTriggerExecutor(trigger as PeriodicTrigger);
     case DateTimeTrigger:
-      return DateTimeTriggerExecutor(trigger);
+      return DateTimeTriggerExecutor(trigger as DateTimeTrigger);
     case RecurrentScheduledTrigger:
-      return RecurrentScheduledTriggerExecutor(trigger);
+      return RecurrentScheduledTriggerExecutor(
+          trigger as RecurrentScheduledTrigger);
     case CronScheduledTrigger:
-      return CronScheduledTriggerExecutor(trigger);
+      return CronScheduledTriggerExecutor(trigger as CronScheduledTrigger);
     case SamplingEventTrigger:
-      return SamplingEventTriggerExecutor(trigger);
+      return SamplingEventTriggerExecutor(trigger as SamplingEventTrigger);
     case ConditionalSamplingEventTrigger:
-      return ConditionalSamplingEventTriggerExecutor(trigger);
+      return ConditionalSamplingEventTriggerExecutor(
+          trigger as ConditionalSamplingEventTrigger);
     case RandomRecurrentTrigger:
-      return RandomRecurrentTriggerExecutor(trigger);
+      return RandomRecurrentTriggerExecutor(trigger as RandomRecurrentTrigger);
     case ManualTrigger:
-      return PassiveTriggerExecutor(trigger);
+      return PassiveTriggerExecutor(trigger as PassiveTrigger);
     default:
       return ImmediateTriggerExecutor(trigger);
   }
@@ -48,7 +49,7 @@ TriggerExecutor getTriggerExecutor(Trigger trigger) {
 /// This is an abstract class. For each specific type of [Trigger],
 /// a corresponding implementation of this class exists.
 abstract class TriggerExecutor extends Executor {
-  CAMSTrigger trigger;
+  Trigger trigger;
   TriggerExecutor(this.trigger);
 
   /// Returns a list of the running probes in this [TriggerExecutor].
@@ -68,7 +69,7 @@ abstract class TriggerExecutor extends Executor {
 
 /// Executes a [ImmediateTrigger], i.e. starts sampling immediately.
 class ImmediateTriggerExecutor extends TriggerExecutor {
-  ImmediateTriggerExecutor(CAMSTrigger trigger) : super(trigger);
+  ImmediateTriggerExecutor(Trigger trigger) : super(trigger);
 }
 
 /// Executes a [PassiveTrigger].
@@ -88,7 +89,7 @@ class PassiveTriggerExecutor extends TriggerExecutor {
   Future onPause() async {}
 
   // Forward to the embedded trigger executor
-  Future onRestart({Measure measure}) async =>
+  Future onRestart({Measure? measure}) async =>
       (trigger as PassiveTrigger).executor.restart();
   Future onStop() async => (trigger as PassiveTrigger).executor.stop();
 
@@ -101,26 +102,24 @@ class DelayedTriggerExecutor extends TriggerExecutor {
   DelayedTriggerExecutor(DelayedTrigger trigger) : super(trigger);
 
   Future onResume() async {
-    Timer((trigger as DelayedTrigger).delay, () {
+    Timer((trigger as DelayedTrigger).delay!, () {
       // after a delay, resume this trigger and its tasks
       super.onResume();
     });
   }
 }
 
-/// Executes a [PeriodicTrigger], i.e. resumes sampling on a regular basis for a given period of time.
+/// Executes a [PeriodicTrigger], i.e. resumes sampling on a regular basis for
+/// a given period of time.
 ///
-/// It is required that both the [period] and the [duration] of the [PeriodicTrigger] is specified
-/// to make sure that this executor is properly resumed and paused again.
+/// It is required that both the [period] and the [duration] of the
+/// [PeriodicTrigger] is specified to make sure that this executor is properly
+/// resumed and paused again.
 class PeriodicTriggerExecutor extends TriggerExecutor {
-  Duration period, duration;
-  Timer timer;
+  late Duration period, duration;
+  late Timer timer;
 
   PeriodicTriggerExecutor(PeriodicTrigger trigger) : super(trigger) {
-    assert(trigger.period != null,
-        'The period in a PeriodicTrigger must be specified.');
-    assert(trigger.duration != null,
-        'The duration in a PeriodicTrigger must be specified.');
     period = trigger.period;
     duration = trigger.duration;
   }
@@ -151,26 +150,25 @@ class PeriodicTriggerExecutor extends TriggerExecutor {
 /// Executes a [DateTimeTrigger] on the specified [DateTimeTrigger.schedule]
 /// date and time.
 class DateTimeTriggerExecutor extends TriggerExecutor {
-  Duration delay, duration;
-  Timer timer;
+  late Duration delay;
+  Duration? duration;
+  late Timer timer;
 
   DateTimeTriggerExecutor(DateTimeTrigger trigger) : super(trigger) {
-    assert(trigger.schedule != null,
-        'The schedule of a ScheduledTrigger must be specified.');
     assert(trigger.schedule.isAfter(DateTime.now()),
         'The schedule of the ScheduledTrigger cannot be in the past.');
-    delay = trigger.schedule.difference(DateTime.now());
+    delay = trigger.schedule!.difference(DateTime.now());
     duration = trigger.duration;
   }
 
   Future onResume() async {
-    timer = Timer(delay, () {
+    timer = Timer(delay!, () {
       // after the waiting time (delay) is over, resume this trigger
       super.onResume();
       if (duration != null) {
         // create a timer that stop the sampling after the specified duration.
         // if the duration is null, the sampling never stops, i.e. runs forever.
-        Timer(duration, () {
+        Timer(duration!, () {
           stop();
         });
       }
@@ -185,7 +183,7 @@ class DateTimeTriggerExecutor extends TriggerExecutor {
 
 /// Executes a [RecurrentScheduledTrigger].
 class RecurrentScheduledTriggerExecutor extends PeriodicTriggerExecutor {
-  RecurrentScheduledTrigger _myTrigger;
+  late RecurrentScheduledTrigger _myTrigger;
 
   RecurrentScheduledTriggerExecutor(RecurrentScheduledTrigger trigger)
       : super(trigger) {
@@ -195,26 +193,26 @@ class RecurrentScheduledTriggerExecutor extends PeriodicTriggerExecutor {
   Future onResume() async {
     // check if there is a remembered trigger date
     if (_myTrigger.remember) {
-      String _savedFirstOccurrence =
-          Settings().preferences.get(_myTrigger.triggerId);
+      String? _savedFirstOccurrence =
+          Settings().preferences!.getString(_myTrigger.triggerId!);
       debug('savedFirstOccurrence : $_savedFirstOccurrence');
 
       if (_savedFirstOccurrence != null) {
-        DateTime savedDate = DateTime.tryParse(_savedFirstOccurrence);
+        DateTime savedDate = DateTime.tryParse(_savedFirstOccurrence)!;
         if (savedDate.isBefore(DateTime.now())) {
           debug(
               'There is a saved timestamp in the past - resuming this trigger now: ${DateTime.now().toString()}.');
           executors.forEach((executor) => executor.resume());
           // create a timer that pause the sampling after the specified duration.
-          Timer(duration, () {
+          Timer(duration!, () {
             executors.forEach((executor) => executor.pause());
           });
         }
       }
 
       // save the day of the first occurrence for later use
-      await Settings().preferences.setString(
-          _myTrigger.triggerId, _myTrigger.firstOccurrence.toUtc().toString());
+      await Settings().preferences!.setString(
+          _myTrigger.triggerId!, _myTrigger.firstOccurrence.toUtc().toString());
       debug(
           'saving firstOccurrence : ${_myTrigger.firstOccurrence.toUtc().toString()}');
     }
@@ -222,14 +220,14 @@ class RecurrentScheduledTriggerExecutor extends PeriodicTriggerExecutor {
     // below is 'normal' (i.e., non-remember) behavior
     Duration _delay = _myTrigger.firstOccurrence.difference(DateTime.now());
     debug('delay: $_delay');
-    if (_myTrigger.end == null || _myTrigger.end.isAfter(DateTime.now())) {
+    if (_myTrigger.end == null || _myTrigger.end!.isAfter(DateTime.now())) {
       Timer(_delay, () async {
         debug('delay finished, now resuming...');
-        if (_myTrigger.remember) {
+        if (_myTrigger.remember!) {
           // replace the entry of the first occurrence to the next occurrence date
-          DateTime nextOccurrence = DateTime.now().add(period);
-          await Settings().preferences.setString(
-              _myTrigger.triggerId, nextOccurrence.toUtc().toString());
+          DateTime nextOccurrence = DateTime.now().add(period!);
+          await Settings().preferences!.setString(
+              _myTrigger.triggerId!, nextOccurrence.toUtc().toString());
           debug('saving nextOccurrence: $nextOccurrence');
         }
         await super.onResume();
@@ -240,12 +238,12 @@ class RecurrentScheduledTriggerExecutor extends PeriodicTriggerExecutor {
 
 /// Executes a [CronScheduledTrigger] based on the specified cron job.
 class CronScheduledTriggerExecutor extends TriggerExecutor {
-  cron.Cron _cron;
-  cron.Schedule _schedule;
-  cron.ScheduledTask _scheduledTask;
+  late cron.Cron _cron;
+  late cron.Schedule _schedule;
+  late cron.ScheduledTask _scheduledTask;
 
   CronScheduledTriggerExecutor(CronScheduledTrigger trigger) : super(trigger) {
-    _schedule = cron.Schedule.parse(trigger.cronExpression);
+    _schedule = cron.Schedule.parse(trigger.cronExpression!);
     _cron = cron.Cron();
   }
 
@@ -255,7 +253,7 @@ class CronScheduledTriggerExecutor extends TriggerExecutor {
     _scheduledTask = _cron.schedule(_schedule, () async {
       debug('resuming cron job : ${DateTime.now().toString()}');
       await super.onResume();
-      Timer((trigger as CronScheduledTrigger).duration, () => super.onPause());
+      Timer((trigger as CronScheduledTrigger).duration!, () => super.onPause());
     });
   }
 
@@ -270,7 +268,7 @@ class CronScheduledTriggerExecutor extends TriggerExecutor {
 class SamplingEventTriggerExecutor extends TriggerExecutor {
   SamplingEventTriggerExecutor(SamplingEventTrigger trigger) : super(trigger);
 
-  StreamSubscription<DataPoint> _subscription;
+  late StreamSubscription<DataPoint> _subscription;
 
   Future onResume() async {
     SamplingEventTrigger eventTrigger = trigger as SamplingEventTrigger;
@@ -302,7 +300,7 @@ class ConditionalSamplingEventTriggerExecutor extends TriggerExecutor {
       ConditionalSamplingEventTrigger trigger)
       : super(trigger);
 
-  StreamSubscription<DataPoint> _subscription;
+  late StreamSubscription<DataPoint> _subscription;
 
   Future onResume() async {
     ConditionalSamplingEventTrigger eventTrigger =
@@ -313,9 +311,9 @@ class ConditionalSamplingEventTriggerExecutor extends TriggerExecutor {
         .eventsByType(eventTrigger?.measureType.toString())
         .listen((dataPoint) {
       if (eventTrigger?.resumeCondition != null &&
-          eventTrigger?.resumeCondition(dataPoint)) super.onResume();
+          eventTrigger?.resumeCondition!(dataPoint)) super.onResume();
       if (eventTrigger?.pauseCondition != null &&
-          eventTrigger?.pauseCondition(dataPoint)) super.onPause();
+          eventTrigger?.pauseCondition!(dataPoint)) super.onPause();
     });
   }
 
@@ -329,38 +327,38 @@ class ConditionalSamplingEventTriggerExecutor extends TriggerExecutor {
 /// defined period of time.
 class RandomRecurrentTriggerExecutor extends TriggerExecutor {
   final cron.Cron _cron = cron.Cron();
-  cron.ScheduledTask _scheduledTask;
+  late cron.ScheduledTask _scheduledTask;
   List<Timer> _timers = [];
 
   RandomRecurrentTriggerExecutor(RandomRecurrentTrigger trigger)
       : super(trigger);
 
-  Time get startTime => (trigger as RandomRecurrentTrigger).startTime;
-  Time get endTime => (trigger as RandomRecurrentTrigger).endTime;
-  int get minNumberOfTriggers =>
+  Time? get startTime => (trigger as RandomRecurrentTrigger).startTime;
+  Time? get endTime => (trigger as RandomRecurrentTrigger).endTime;
+  int? get minNumberOfTriggers =>
       (trigger as RandomRecurrentTrigger).minNumberOfTriggers;
-  int get maxNumberOfTriggers =>
+  int? get maxNumberOfTriggers =>
       (trigger as RandomRecurrentTrigger).maxNumberOfTriggers;
-  Duration get duration => (trigger as RandomRecurrentTrigger).duration;
+  Duration? get duration => (trigger as RandomRecurrentTrigger).duration;
 
   /// Get a random number of samples for the day
   int get numberOfSampling =>
-      Random().nextInt(maxNumberOfTriggers) + minNumberOfTriggers;
+      Random().nextInt(maxNumberOfTriggers!) + minNumberOfTriggers!;
 
   /// Generate N random times between startTime and endTime
   List<Time> get samplingTimes {
     List<Time> _samplingTimes = [];
     for (int i = 0; i <= numberOfSampling; i++) {
-      int randomHour =
-          Random().nextInt(endTime.hour - startTime.hour) + startTime.hour;
+      int randomHour = Random().nextInt(endTime!.hour! - startTime!.hour!) +
+          startTime!.hour!;
       int randomMinutes = Random().nextInt(60);
       Time randomTime = Time(hour: randomHour, minute: randomMinutes);
 
       // check edge-cases
-      randomTime = (randomTime.isAfter(endTime))
+      randomTime = (randomTime.isAfter(endTime!))
           ? Time(hour: randomHour - 1, minute: randomMinutes)
           : randomTime;
-      randomTime = (randomTime.isBefore(startTime))
+      randomTime = (randomTime.isBefore(startTime!))
           ? Time(hour: randomHour + 1, minute: randomMinutes)
           : randomTime;
 
@@ -379,8 +377,8 @@ class RandomRecurrentTriggerExecutor extends TriggerExecutor {
   Future onResume() async {
     // sampling might be resumed after [startTime] or the app wasn't running at [startTime]
     // therefore, first check if the random timers have been scheduled for today
-    if (Time.now().isAfter(startTime)) {
-      bool hasBeenScheduledForToday = Settings().preferences.containsKey(tag);
+    if (Time.now().isAfter(startTime!)) {
+      bool hasBeenScheduledForToday = Settings().preferences!.containsKey(tag);
       if (!hasBeenScheduledForToday) {
         debug(
             '$runtimeType - timers has not been scheduled for today ($todayString) - scheduling now');
@@ -389,7 +387,7 @@ class RandomRecurrentTriggerExecutor extends TriggerExecutor {
     }
 
     // set up a cron job that generates the random triggers once pr day at [startTime]
-    final String cronJob = '${startTime.minute} ${startTime.hour} * * *';
+    final String cronJob = '${startTime!.minute} ${startTime!.hour} * * *';
     debug('$runtimeType - creating cron job : $cronJob');
 
     _scheduledTask = _cron.schedule(cron.Schedule.parse(cronJob), () async {
@@ -407,18 +405,18 @@ class RandomRecurrentTriggerExecutor extends TriggerExecutor {
     samplingTimes.forEach((time) {
       // find the delay - note, that none of the delays can be negative,
       // since we are at [startTime] or after
-      Duration delay = time.difference(startTime);
+      Duration delay = time.difference(startTime!);
       debug('$runtimeType - setting up timer for : $time, delay: $delay');
       Timer timer = Timer(delay, () async {
         await super.onResume();
         // now set up a timer that waits until the sampling duration ends
-        Timer(duration, () => super.onPause());
+        Timer(duration!, () => super.onPause());
       });
       _timers.add(timer);
     });
 
     // mark this day as scheduled
-    Settings().preferences.setBool(tag, true);
+    Settings().preferences!.setBool(tag, true);
   }
 
   Future onPause() async {

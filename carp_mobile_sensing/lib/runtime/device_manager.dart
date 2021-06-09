@@ -32,20 +32,20 @@ class DeviceController implements DeviceRegistry {
   }
 
   @override
-  DeviceManager getDevice(String deviceType) => _devices[deviceType];
+  DeviceManager getDevice(String deviceType) => _devices[deviceType]!;
 
   @override
   bool hasDevice(String deviceType) => _devices.containsKey(deviceType);
 
   @override
-  Future<DeviceManager> createDevice(String deviceType) async {
+  Future<DeviceManager?> createDevice(String deviceType) async {
     // early out if already registrered
     if (_devices.containsKey(deviceType)) return _devices[deviceType];
 
     info('Creating device manager for device type: $deviceType');
 
     // look for a device manager of this type in the sampling packages
-    DeviceManager manager;
+    DeviceManager? manager;
     for (var package in SamplingPackageRegistry().packages) {
       if (package.deviceType == deviceType) manager = package.deviceManager;
     }
@@ -70,7 +70,7 @@ class DeviceController implements DeviceRegistry {
 
   @override
   void registerDevice(String deviceType, DeviceDataCollector manager) {
-    _devices[deviceType] = manager;
+    _devices[deviceType] = manager as DeviceManager;
     manager.initialize(deviceType);
   }
 
@@ -91,7 +91,7 @@ abstract class DeviceManager extends DeviceDataCollector {
       StreamController.broadcast();
   final Set<String> _supportedDataTypes = {};
 
-  DeviceManager([DeviceRegistration deviceRegistration])
+  DeviceManager([DeviceRegistration? deviceRegistration])
       : super(deviceRegistration);
 
   @override
@@ -112,7 +112,7 @@ abstract class DeviceManager extends DeviceDataCollector {
   }
 
   /// The runtime battery level of this device.
-  int get batteryLevel;
+  int? get batteryLevel;
 
   @override
   void initialize(String type) {
@@ -121,15 +121,15 @@ abstract class DeviceManager extends DeviceDataCollector {
   }
 
   /// Ask this [DeviceManager] to connect to the device.
-  Future connect();
+  Future? connect();
 
   /// Ask this [DeviceManager] to disconnect from the device.
-  Future disconnect();
+  Future? disconnect();
 }
 
 /// A device manager for this smartphone.
 class SmartphoneDeviceManager extends DeviceManager {
-  String get id => DeviceInfo().deviceID;
+  String get id => DeviceInfo().deviceID!;
 
   void initialize(String type) {
     super.initialize(type);
@@ -151,12 +151,12 @@ class SmartphoneDeviceManager extends DeviceManager {
     }
   }
 
-  int _batteryLevel = 0;
-  int get batteryLevel => _batteryLevel;
+  int? _batteryLevel = 0;
+  int? get batteryLevel => _batteryLevel;
 
   bool canConnect() => true; // can always connect to the phone
-  Future connect() => null; // always connected to the phone
-  Future disconnect() => null; // cannot disconnect from the phone
+  Future? connect() => null; // always connected to the phone
+  Future? disconnect() => null; // cannot disconnect from the phone
 }
 
 abstract class BTLEDeviceManager extends DeviceManager {

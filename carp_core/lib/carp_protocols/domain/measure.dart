@@ -62,17 +62,3 @@ class PhoneSensorMeasure extends Measure {
 
   String toString() => '${super.toString()}, duration: $duration';
 }
-
-// /// Time as specified in carp.core as a value in 'microseconds'.
-// @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-// class CarpTime {
-//   CarpTime() : super();
-
-//   int microseconds;
-
-//   factory CarpTime.fromJson(Map<String, dynamic> json) =>
-//       _$CarpTimeFromJson(json);
-//   Map<String, dynamic> toJson() => _$CarpTimeToJson(this);
-
-//   String toString() => '$runtimeType - microseconds: $microseconds';
-// }

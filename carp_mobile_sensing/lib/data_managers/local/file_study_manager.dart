@@ -18,7 +18,7 @@ class FileStudyProtocolManager implements StudyProtocolManager {
   /// The path to use on the device for storing CARP study files.
   static const String CARP_STUDY_FILE_PATH = 'carp/study';
 
-  String _path;
+  String? _path;
 
   /// Initializing the the local FileDeploymentService
   Future initialize() async {
@@ -31,9 +31,9 @@ class FileStudyProtocolManager implements StudyProtocolManager {
   }
 
   @override
-  Future<StudyProtocol> getStudyProtocol(String studyId) async {
+  Future<StudyProtocol?> getStudyProtocol(String studyId) async {
     info("Loading study '$studyId'.");
-    StudyProtocol study;
+    StudyProtocol? study;
 
     try {
       String jsonString = File(filename(studyId)).readAsStringSync();
@@ -62,7 +62,7 @@ class FileStudyProtocolManager implements StudyProtocolManager {
   }
 
   ///Returns the local study path on the device where studies are stored.
-  Future<String> get path async {
+  Future<String?> get path async {
     if (_path == null) {
       // get local working directory
       final localApplicationDir = await getApplicationDocumentsDirectory();

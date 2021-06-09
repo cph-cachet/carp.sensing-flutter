@@ -23,10 +23,10 @@ class ProbeRegistry {
   /// Get the singleton [ProbeRegistry].
   factory ProbeRegistry() => _instance;
 
-  final Map<String, Set<Probe>> _probes = {};
+  final Map<String, Set<Probe?>> _probes = {};
 
   /// All running probes mapped according to their [CAMSDataType].
-  Map<String, Set<Probe>> get probes => _probes;
+  Map<String, Set<Probe?>> get probes => _probes;
 
   final StreamGroup<DataPoint> _group = StreamGroup.broadcast();
 
@@ -34,25 +34,25 @@ class ProbeRegistry {
   Stream<DataPoint> get events => _group.stream;
 
   /// A stream of all events from probes of a specific [type].
-  Stream<DataPoint> eventsByType(String type) => _group.stream
-      .where((dataPoint) => dataPoint.carpHeader.dataFormat.toString() == type);
+  Stream<DataPoint> eventsByType(String? type) => _group.stream
+      .where((dataPoint) => dataPoint.carpHeader!.dataFormat.toString() == type);
 
   /// If you create a probe manually, i.e. outside of the [ProbeRegistry]
   /// you can register it here.
-  void register(String type, Probe probe) {
+  void register(String type, Probe? probe) {
     _probes[type] ??= {};
-    _probes[type].add(probe);
+    _probes[type]!.add(probe);
   }
 
   /// Lookup a set of [Probe]s based on its [CAMSDataType].
-  Set<Probe> lookup(String type) => _probes[type] ?? create(type);
+  Set<Probe>? lookup(String type) => _probes[type] as Set<Probe>? ?? create(type) as Set<Probe>?;
 
   /// Create an instance of a probe based on the measure.
   ///
   /// This methods search the [SamplingPackageRegistry] for a [SamplingPackage]
   /// which has a probe of the specified [type].
-  Probe create(String type) {
-    Probe _probe;
+  Probe? create(String type) {
+    Probe? _probe;
 
     SamplingPackageRegistry().packages.forEach((package) {
       if (package.dataTypes.contains(type)) {
@@ -62,7 +62,7 @@ class ProbeRegistry {
 
     if (_probe != null) {
       register(type, _probe);
-      _group.add(_probe.data);
+      _group.add(_probe!.data);
     }
     return _probe;
   }

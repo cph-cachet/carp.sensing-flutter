@@ -12,8 +12,8 @@ part of sensors;
 class LightProbe extends BufferingPeriodicStreamProbe {
   List<num> luxValues = [];
 
-  Stream<dynamic> _bufferingStream;
-  Stream<dynamic> get bufferingStream => _bufferingStream;
+  Stream<dynamic>? _bufferingStream;
+  Stream<dynamic>? get bufferingStream => _bufferingStream;
 
   void onInitialize(Measure measure) {
     // check if Light is available (only available on Android)
@@ -21,7 +21,7 @@ class LightProbe extends BufferingPeriodicStreamProbe {
     super.onInitialize(measure);
   }
 
-  Future<Datum> getDatum() async {
+  Future<Datum?> getDatum() async {
     if (luxValues.isNotEmpty) {
       Stats stats = Stats.fromData(luxValues);
       return LightDatum(

@@ -63,7 +63,7 @@ class DataPoint {
   String? studyId;
 
   /// The data point header.
-  DataPointHeader? carpHeader;
+  DataPointHeader carpHeader;
 
   /// The CARP data point body. Can be any payload modelled as a [Data].
   @JsonKey(ignore: true)
@@ -86,7 +86,7 @@ class DataPoint {
   set carpBody(Map<String, dynamic>? data) => _carpBody = data;
 
   /// Create a new [DataPoint].
-  DataPoint([this.carpHeader, this.data]);
+  DataPoint(this.carpHeader, [this.data]);
 
   /// Create a [DataPoint] from a [Data] object.
   factory DataPoint.fromData(Data data) => DataPoint(

@@ -62,7 +62,7 @@ void main() {
         SmartphoneDeploymentService().thisPhone.roleName);
 
     StudyDeploymentStatus status =
-        await SmartphoneDeploymentService().createStudyDeployment(protocol);
+        await (SmartphoneDeploymentService().createStudyDeployment(protocol) as FutureOr<StudyDeploymentStatus>);
     print(toJsonString(status));
   });
 
@@ -74,7 +74,7 @@ void main() {
         json.decode(plainJson) as Map<String, dynamic>);
 
     StudyDeploymentStatus status =
-        await SmartphoneDeploymentService().createStudyDeployment(protocol);
+        await (SmartphoneDeploymentService().createStudyDeployment(protocol) as FutureOr<StudyDeploymentStatus>);
     CAMSMasterDeviceDeployment deployment = await SmartphoneDeploymentService()
         .getDeviceDeployment(status.studyDeploymentId);
 

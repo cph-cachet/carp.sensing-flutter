@@ -59,31 +59,31 @@ class FileDataEndPoint extends DataEndPoint {
   /// minimize zip operations. If data are collected at low rates, a lower
   /// value will be best to minimize the likelihood of data loss when the app
   /// is killed or crashes. Default size is 500 KB.
-  int bufferSize = 500 * 1000;
+  int? bufferSize = 500 * 1000;
 
   /// Is data to be compressed (zipped) before storing in a file.
   /// True as default.
   ///
   /// If zipped, the JSON file will be reduced to 1/5 of its size.
   /// For example, the 500 KB buffer typically is reduced to ~100 KB.
-  bool zip = true;
+  bool? zip = true;
 
   /// Is data to be encrypted before storing. False as default.
   ///
   /// Support only one-way encryption using a public key.
-  bool encrypt = false;
+  bool? encrypt = false;
 
   /// If [encrypt] is true, this should hold the public key in a RSA KPI
   /// encryption of data.
-  String publicKey;
+  String? publicKey;
 
   /// Creates a [FileDataEndPoint].
   ///
   /// [type] is defined in [DataEndPointTypes]. Is typically of type
   /// [DataEndPointType.FILE] but specialized file types can be specified.
   FileDataEndPoint({
-    String type,
-    String dataFormat,
+    String? type,
+    required String dataFormat,
     this.bufferSize,
     this.zip = true,
     this.encrypt = false,
@@ -98,11 +98,11 @@ class FileDataEndPoint extends DataEndPoint {
 
   /// Create a [FileDataEndPoint] from a JSON map.
   factory FileDataEndPoint.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as FileDataEndPoint;
 
   /// Serialize this [FileDataEndPoint] as a JSON map.
   Map<String, dynamic> toJson() => _$FileDataEndPointToJson(this);
 
-  String toString() => 'FILE - buffer ${(bufferSize / 1000).round()} KB'
-      '${zip ? ', zipped' : ''}${encrypt ? ', encrypted' : ''}';
+  String toString() => 'FILE - buffer ${(bufferSize! / 1000).round()} KB'
+      '${zip! ? ', zipped' : ''}${encrypt! ? ', encrypted' : ''}';
 }

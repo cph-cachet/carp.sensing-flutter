@@ -1,4 +1,8 @@
-## 0.21.5
+## 0.30.0
+* upgrade to null-safety
+* `CAMSStudyProtocol` is no longer used by replaced by the `carp_core` `StudyProtocol`
+
+## 0.21.5 
 * rename of `ProtocolOwner` to `StudyProtocolReponsible` (in order not to confuse it with `ownerId` in `StudyProtocol`)
 
 ## 0.21.4

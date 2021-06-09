@@ -13,7 +13,7 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
         SCREEN,
       ];
 
-  Probe create(String type) {
+  Probe? create(String type) {
     switch (type) {
       case DEVICE:
         return DeviceProbe();
@@ -64,7 +64,7 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
     SamplingSchema light = common
       ..type = SamplingSchemaType.light
       ..name = 'Light sensor sampling';
-    (light.measures[DataType.fromString(MEMORY)] as CAMSMeasure).enabled =
+    (light.measures[DataType.fromString(MEMORY) as String] as CAMSMeasure).enabled =
         false;
     return light;
   }

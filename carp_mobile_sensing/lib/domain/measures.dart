@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2018-2021 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -11,43 +11,41 @@ part of domain;
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class CAMSMeasure extends Measure {
   /// A printer-friendly name for this measure.
-  String name;
+  String? name;
 
   /// A longer description of this measure.
-  String description;
+  String? description;
 
   /// The study deployment id that this measure is part of.
   /// Set on runtime.
   @JsonKey(ignore: true)
-  String studyDeploymentId;
+  String? studyDeploymentId;
 
   /// Whether the measure is enabled - i.e. collecting data - when the
   /// study is running. A measure is enabled as default.
-  bool enabled = true;
+  bool enabled;
 
   /// A key-value map holding any application-specific configuration.
-  Map<String, String> configuration = {};
+  Map<String, String>? configuration = {};
 
   bool _storedEnabled = true;
   final List<MeasureListener> _listeners = [];
 
   CAMSMeasure({
-    @required String type,
+    required String type,
     this.name,
     this.description,
     this.enabled = true,
-  })
-      : super(type: type) {
-    enabled = enabled ?? true;
+  }) : super(type: type) {
     _storedEnabled = enabled;
   }
 
   /// Add a key-value pair as configuration for this measure.
   void setConfiguration(String key, String configuration) =>
-      this.configuration[key] = configuration;
+      this.configuration![key] = configuration;
 
   /// Get value from the configuration for this measure.
-  String getConfiguration(String key) => configuration[key];
+  String? getConfiguration(String key) => configuration![key];
 
   /// Add a [MeasureListener] to this [Measure].
   void addMeasureListener(MeasureListener listener) => _listeners.add(listener);
@@ -56,18 +54,13 @@ class CAMSMeasure extends Measure {
   void removeMeasureListener(MeasureListener listener) =>
       _listeners.remove(listener);
 
-  /// Adapt this [Measure] to a new value specified in [measure].
+  /// Adapt this measure to a new value specified in [measure].
   void adapt(Measure measure) {
-    assert(
-        measure != null,
-        "Don't adapt a measure to a null measure. If you want to disable a "
-        'measure, set the enabled property to false.');
     _storedEnabled = enabled;
-    enabled = (measure is CAMSMeasure) ? measure.enabled ?? true : true;
+    if (measure is CAMSMeasure) enabled = measure.enabled;
   }
 
-  // TODO - support a stack-based approach to adapt/restore.
-  /// Restore this [Measure] to its original value before [adapt] was called.
+  /// Restore this measure to its original value before [adapt] was called.
   ///
   /// Note that the adapt/restore mechanism only supports **one** cycle, i.e
   /// multiple adaptation followed by multiple restoration is not supported.
@@ -81,7 +74,7 @@ class CAMSMeasure extends Measure {
 
   Function get fromJsonFunction => _$CAMSMeasureFromJson;
   factory CAMSMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as CAMSMeasure;
   Map<String, dynamic> toJson() => _$CAMSMeasureToJson(this);
 
   String toString() => '$runtimeType - type: $type, enabled: $enabled';
@@ -96,22 +89,21 @@ class CAMSMeasure extends Measure {
 class PeriodicMeasure extends CAMSMeasure {
   /// Sampling frequency (i.e., delay between sampling).
   Duration frequency;
-  Duration _storedFrequency;
+  late Duration _storedFrequency;
 
   /// The sampling duration.
   Duration duration;
-  Duration _storedDuration;
+  late Duration _storedDuration;
 
   /// Create a [PeriodicMeasure].
   PeriodicMeasure({
-    @required String type,
-    String name,
-    String description,
-    bool enabled,
-    this.frequency,
-    this.duration,
-  })
-      : super(
+    required String type,
+    String? name,
+    String? description,
+    bool enabled = true,
+    required this.frequency,
+    this.duration = const Duration(seconds: 2),
+  }) : super(
             type: type,
             name: name,
             description: description,
@@ -122,7 +114,7 @@ class PeriodicMeasure extends CAMSMeasure {
 
   Function get fromJsonFunction => _$PeriodicMeasureFromJson;
   factory PeriodicMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as PeriodicMeasure;
   Map<String, dynamic> toJson() => _$PeriodicMeasureToJson(this);
 
   void adapt(Measure measure) {
@@ -160,24 +152,23 @@ class PeriodicMeasure extends CAMSMeasure {
 class MarkedMeasure extends CAMSMeasure {
   /// The date and time of the last time this measure was collected.
   @JsonKey(ignore: true)
-  DateTime lastTime;
+  DateTime? lastTime;
 
   /// The tag to be used to uniquely identify this measure.
   /// Default is the [type] but can be overwritten in sub-classes.
   String tag() => type.toString();
 
   /// If there is no persistent mark, how long time back in history should
-  /// this measure be collected?
+  /// this measure be collected? Default is one day back.
   Duration history;
 
   MarkedMeasure({
-    @required String type,
-    String name,
-    String description,
-    bool enabled,
+    required String type,
+    String? name,
+    String? description,
+    bool enabled = true,
     this.history = const Duration(days: 1),
-  })
-      : super(
+  }) : super(
           type: type,
           name: name,
           description: description,
@@ -187,7 +178,7 @@ class MarkedMeasure extends CAMSMeasure {
   Function get fromJsonFunction => _$MarkedMeasureFromJson;
   Map<String, dynamic> toJson() => _$MarkedMeasureToJson(this);
   factory MarkedMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as MarkedMeasure;
 
   String toString() =>
       '${super.toString()}, mark: $lastTime, history: $history';

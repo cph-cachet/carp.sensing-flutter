@@ -6,8 +6,8 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:test/test.dart';
 
 void main() {
-  CAMSStudyProtocol protocol;
-  Smartphone phone;
+  late CAMSStudyProtocol protocol;
+  late Smartphone phone;
   DeviceDescriptor eSense;
 
   setUp(() {
@@ -72,7 +72,7 @@ void main() {
     print(protocol);
     print(toJsonString(protocol));
     expect(protocol.ownerId, 'AB');
-    expect(protocol.responsible.id, 'AB');
+    expect(protocol.responsible!.id, 'AB');
     expect(protocol.masterDevices.length, 1);
     expect(protocol.connectedDevices.length, 1);
     expect(protocol.triggers.length, 3);
@@ -234,22 +234,22 @@ void main() {
 
   test('Register Device', () async {
     StudyDeploymentStatus status_1 =
-        await SmartphoneDeploymentService().createStudyDeployment(protocol);
+        await (SmartphoneDeploymentService().createStudyDeployment(protocol) as FutureOr<StudyDeploymentStatus>);
     print(status_1);
     assert(status_1.studyDeploymentId != null);
     assert(status_1.status == StudyDeploymentStatusTypes.Invited);
 
-    StudyDeploymentStatus status_2 = await SmartphoneDeploymentService()
+    StudyDeploymentStatus status_2 = await (SmartphoneDeploymentService()
         .registerDevice(
-            status_1.studyDeploymentId, 'esense', DeviceRegistration());
+            status_1.studyDeploymentId, 'esense', DeviceRegistration()) as FutureOr<StudyDeploymentStatus>);
     print(status_2);
     assert(status_2.studyDeploymentId == status_1.studyDeploymentId);
     assert(status_2.status == StudyDeploymentStatusTypes.DeployingDevices);
     assert(status_2 == status_1);
 
-    StudyDeploymentStatus status_3 = await SmartphoneDeploymentService()
+    StudyDeploymentStatus status_3 = await (SmartphoneDeploymentService()
         .registerDevice(
-            status_1.studyDeploymentId, 'nonsense', DeviceRegistration());
+            status_1.studyDeploymentId, 'nonsense', DeviceRegistration()) as FutureOr<StudyDeploymentStatus>);
     assert(status_3.status == StudyDeploymentStatusTypes.DeployingDevices);
     assert(status_3.studyDeploymentId == status_1.studyDeploymentId);
     print(status_3);
@@ -257,7 +257,7 @@ void main() {
 
   test('Study Deployment', () async {
     StudyDeploymentStatus status_1 =
-        await SmartphoneDeploymentService().createStudyDeployment(protocol);
+        await (SmartphoneDeploymentService().createStudyDeployment(protocol) as FutureOr<StudyDeploymentStatus>);
 
     print(status_1);
     print(toJsonString(status_1));
@@ -275,9 +275,9 @@ void main() {
     expect(status_1.devicesStatus[1].status,
         DeviceDeploymentStatusTypes.Unregistered);
 
-    StudyDeploymentStatus status_2 = await SmartphoneDeploymentService()
+    StudyDeploymentStatus status_2 = await (SmartphoneDeploymentService()
         .registerDevice(
-            status_1.studyDeploymentId, 'esense', DeviceRegistration());
+            status_1.studyDeploymentId, 'esense', DeviceRegistration()) as FutureOr<StudyDeploymentStatus>);
 
     print(status_2);
     print(toJsonString(status_2));
@@ -296,8 +296,8 @@ void main() {
     expect(deployment.triggers.length, protocol.triggers.length);
     expect(deployment.triggeredTasks.length, protocol.triggeredTasks.length);
 
-    StudyDeploymentStatus status_3 = await SmartphoneDeploymentService()
-        .deploymentSuccessful(status_1.studyDeploymentId);
+    StudyDeploymentStatus status_3 = await (SmartphoneDeploymentService()
+        .deploymentSuccessful(status_1.studyDeploymentId) as FutureOr<StudyDeploymentStatus>);
     expect(status_3.status, StudyDeploymentStatusTypes.DeploymentReady);
     expect(status_3.studyDeploymentId, status_1.studyDeploymentId);
     print(status_3);

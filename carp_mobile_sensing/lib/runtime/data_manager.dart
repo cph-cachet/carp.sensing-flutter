@@ -6,47 +6,14 @@
  */
 part of runtime;
 
-// /// The [DataManager] interface is used to upload [DataPoint] objects to any
-// /// data manager that implements this interface.
-// abstract class DataManager {
-//   /// The ID of the study deployment that this manager is handling.
-//   String get studyDeploymentId;
-
-//   /// The type of this data manager as enumerated in [DataEndPointType].
-//   String get type;
-
-//   /// Initialize the data manager by specifying the study deployment id, the
-//   /// [DataEndPoint], and the stream of [DataPoint] events to handle.
-//   Future initialize(
-//     String studyDeploymentId,
-//     DataEndPoint dataEndPoint,
-//     Stream<DataPoint> data,
-//   );
-
-//   /// Close the data manager (e.g. closing connections).
-//   Future close();
-
-//   /// Stream of data manager events.
-//   Stream<DataManagerEvent> get events;
-
-//   /// On each data event from the data stream, the [onDataPoint] handler is called.
-//   void onDataPoint(DataPoint dataPoint);
-
-//   /// When the data stream closes, the [onDone] handler is called.
-//   void onDone();
-
-//   /// When an error event is send on the stream, the [onError] handler is called.
-//   void onError(error);
-// }
-
 /// An abstract [DataManager] implementation useful for extension.
 ///
 /// Takes data from a [Stream<DataPoint>] and uploads these. Also supports JSON encoding.
 abstract class AbstractDataManager implements DataManager {
-  String _studyDeploymentId;
+  late String _studyDeploymentId;
   String get studyDeploymentId => _studyDeploymentId;
-  DataEndPoint _dataEndPoint;
-  DataEndPoint get dataEndPoint => _dataEndPoint;
+  DataEndPoint? _dataEndPoint;
+  DataEndPoint? get dataEndPoint => _dataEndPoint;
 
   StreamController<DataManagerEvent> controller = StreamController.broadcast();
   Stream<DataManagerEvent> get events => controller.stream;
@@ -98,7 +65,7 @@ class DataManagerRegistry {
   void register(DataManager manager) => _registry[manager.type] = manager;
 
   /// Lookup an instance of a [DataManager] based on the [DataEndPointType].
-  DataManager lookup(String type) {
+  DataManager? lookup(String type) {
     return _registry[type];
   }
 }

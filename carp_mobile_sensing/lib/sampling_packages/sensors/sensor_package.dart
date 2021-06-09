@@ -18,7 +18,7 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
         LIGHT,
       ];
 
-  Probe create(String type) {
+  Probe? create(String type) {
     switch (type) {
       case ACCELEROMETER:
         return AccelerometerProbe();
@@ -97,7 +97,7 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
     SamplingSchema light = common
       ..type = SamplingSchemaType.light
       ..name = 'Light sensor sampling';
-    (light.measures[DataType.fromString(LIGHT)] as CAMSMeasure).enabled = false;
+    (light.measures[DataType.fromString(LIGHT) as String] as CAMSMeasure).enabled = false;
     return light;
   }
 
@@ -105,7 +105,7 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
     SamplingSchema minimum = common
       ..type = SamplingSchemaType.light
       ..name = 'Light sensor sampling';
-    (minimum.measures[DataType.fromString(PEDOMETER)] as CAMSMeasure).enabled =
+    (minimum.measures[DataType.fromString(PEDOMETER) as String] as CAMSMeasure).enabled =
         false;
     return minimum;
   }

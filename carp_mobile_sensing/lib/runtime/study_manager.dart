@@ -16,7 +16,7 @@ abstract class StudyProtocolManager {
   Future initialize();
 
   /// Get a [StudyProtocol] based on its ID.
-  Future<StudyProtocol> getStudyProtocol(String studyId);
+  Future<StudyProtocol?> getStudyProtocol(String studyId);
 
   /// Save a [StudyProtocol] with the ID [studyId].
   /// Returns `true` if successful, `false` otherwise.

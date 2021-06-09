@@ -14,10 +14,10 @@ class Datum extends Data {
   DataFormat get format => DataFormat.fromString(CAMSDataType.NONE);
 
   /// An identifier for this [Datum], unique across all data generated.
-  String id;
+  String? id;
 
   /// The UTC timestamp when this data was generated on the device.
-  DateTime timestamp;
+  DateTime? timestamp;
 
   /// Create a datum.
   ///
@@ -30,7 +30,7 @@ class Datum extends Data {
     id = (!multiDatum) ? Uuid().v1() : null;
   }
 
-  bool equivalentTo(ConditionalEvent event) => false;
+  bool equivalentTo(ConditionalEvent? event) => false;
 
   /// Create a [Datum] from a JSON map.
   factory Datum.fromJson(Map<String, dynamic> json) => _$DatumFromJson(json);
@@ -49,7 +49,7 @@ class StringDatum extends Datum {
   DataFormat get format => DataFormat.fromString(CAMSDataType.STRING);
 
   /// The string data for this Datum.
-  String str;
+  String? str;
 
   /// Create a [StringDatum] based on a simple string data item.
   StringDatum([this.str]) : super();
@@ -69,7 +69,7 @@ class MapDatum extends Datum {
   DataFormat get format => DataFormat.fromString(CAMSDataType.MAP);
 
   /// The data map.
-  Map<String, String> map;
+  Map<String, String>? map;
 
   /// Create a [MapDatum] from a map of string => string.
   MapDatum([this.map]) : super();
@@ -88,7 +88,7 @@ class ErrorDatum extends Datum {
   DataFormat get format => DataFormat.fromString(CAMSDataType.ERROR);
 
   /// The original error message returned from the probe, if available.
-  String message;
+  String? message;
 
   /// Create a [ErrorDatum] from an error message.
   ErrorDatum([this.message]) : super();
@@ -111,17 +111,17 @@ class FileDatum extends Datum {
   /// This is used by e.g. a data manager to get and manage the file on
   /// the phone.
   @JsonKey(ignore: true)
-  String path;
+  String? path;
 
   /// The name to the attached file.
-  String filename;
+  String? filename;
 
   /// Should this file be uploaded together with the [Datum] description.
   /// Default is [true].
-  bool upload = true;
+  bool? upload = true;
 
   /// Metadata for this file as a map of string key-value pairs.
-  Map<String, String> metadata = <String, String>{};
+  Map<String, String>? metadata = <String, String>{};
 
   /// Create a new [FileDatum] based the file path and whether it is
   /// to be uploaded or not.
@@ -140,17 +140,17 @@ class FileDatum extends Datum {
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MultiDatum extends Datum {
   /// The list of [Datum]s, i.e. the data.
-  List<Datum> data = [];
+  List<Datum>? data = [];
 
   /// Add a [Datum] to the list.
-  void addDatum(Datum datum) => data.add(datum);
+  void addDatum(Datum datum) => data!.add(datum);
 
   /// Create an empty [MultiDatum].
   MultiDatum() : super();
 
   @JsonKey(ignore: true)
-  DataFormat get format => (data.isNotEmpty)
-      ? data.first.format
+  DataFormat get format => (data!.isNotEmpty)
+      ? data!.first.format
       : DataFormat.fromString(CAMSDataType.UNKNOWN);
 
   /// Create a [MultiDatum] from a JSON map.
@@ -160,7 +160,7 @@ class MultiDatum extends Datum {
   /// Serialize this object to JSON.
   Map<String, dynamic> toJson() => _$MultiDatumToJson(this);
 
-  String toString() => '${super.toString()}, size: ${data.length}';
+  String toString() => '${super.toString()}, size: ${data!.length}';
 }
 
 /// Enumeration of data types used in [DataType] and [DataFormat].

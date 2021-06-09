@@ -10,15 +10,16 @@ part of carp_core_protocols;
 /// [TaskDescriptor]s at certain points in time when the condition applies.
 /// The condition can either be time-bound, based on data streams,
 /// initiated by a user of the platform, or a combination of these.
-///
-/// The [Trigger] class is abstract. Use sub-classes of [CAMSTrigger] implements
-/// the specific behavior / timing of a trigger.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class Trigger extends Serializable {
   final String _triggerNamespace = 'dk.cachet.carp.protocols.domain.triggers';
 
   /// The device role name from which the trigger originates.
-  String sourceDeviceRoleName;
+  String? sourceDeviceRoleName;
+
+  // /// A unique id of this trigger.
+  // /// Stored as the [DataPointHeader.triggerId].
+  // String? triggerId;
 
   /// Determines whether the trigger needs to be evaluated on a master
   /// device ([MasterDeviceDescriptor]).
@@ -28,7 +29,7 @@ class Trigger extends Serializable {
 
   @mustCallSuper
   Trigger({
-    required this.sourceDeviceRoleName,
+    this.sourceDeviceRoleName,
     this.requiresMasterDevice,
   }) : super();
 
@@ -50,7 +51,7 @@ class ElapsedTimeTrigger extends Trigger {
   Duration? elapsedTime;
 
   ElapsedTimeTrigger({
-    required String sourceDeviceRoleName,
+    String? sourceDeviceRoleName,
     bool? requiresMasterDevice = false,
     this.elapsedTime,
   }) : super(
@@ -76,7 +77,7 @@ class ManualTrigger extends Trigger {
   String? description;
 
   ManualTrigger({
-    required String sourceDeviceRoleName,
+    String? sourceDeviceRoleName,
     bool? requiresMasterDevice = false,
     this.label,
     this.description,
@@ -105,7 +106,7 @@ class ScheduledTrigger extends Trigger {
   RecurrenceRule recurrenceRule;
 
   ScheduledTrigger({
-    required String sourceDeviceRoleName,
+    String? sourceDeviceRoleName,
     bool? requiresMasterDevice = false,
     required this.time,
     required this.recurrenceRule,
