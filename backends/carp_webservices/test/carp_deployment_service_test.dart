@@ -141,10 +141,10 @@ void main() {
       expect(status.masterDeviceStatus.device, isNotNull);
       print(status.masterDeviceStatus.device);
       MasterDeviceDeployment deployment = await reference.get();
-      print(deployment);
+      print(toJsonString(deployment));
       deployment.tasks.forEach((task) {
         print(task);
-        task?.measures?.forEach(print);
+        // task?.measures?.forEach(print);
       });
       expect(deployment.configuration.deviceId, isNotNull);
     }, skip: false);

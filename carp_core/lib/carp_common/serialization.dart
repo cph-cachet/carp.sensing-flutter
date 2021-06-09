@@ -191,14 +191,17 @@ class FromJsonFactory {
 
     // PROTOCOL
     // register(StudyProtocol());
-    register(Trigger());
-    register(ElapsedTimeTrigger());
-    register(ManualTrigger());
-    register(ScheduledTrigger());
+    register(Trigger(sourceDeviceRoleName: 'ignored'));
+    register(ElapsedTimeTrigger(sourceDeviceRoleName: 'ignored'));
+    register(ManualTrigger(sourceDeviceRoleName: 'ignored'));
+    register(ScheduledTrigger(
+        recurrenceRule: RecurrenceRule(Frequency.DAILY),
+        sourceDeviceRoleName: 'ignored',
+        time: TimeOfDay()));
 
     register(TaskDescriptor());
     register(ConcurrentTask());
-    register(CustomProtocolTask());
+    register(CustomProtocolTask(studyProtocol: 'ignored'));
     register(Measure(type: 'ignored'));
     register(DataTypeMeasure(type: 'ignored'));
     register(PhoneSensorMeasure(type: 'ignored'));

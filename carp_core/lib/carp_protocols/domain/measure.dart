@@ -13,13 +13,14 @@ part of carp_core_protocols;
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class Measure extends Serializable {
   /// The type of measure to do.
-  String? type;
+  String type;
 
   /// The type of measure to do as a [DataType].
   @JsonKey(ignore: true)
-  DataType get dataType => DataType.fromString(type!);
+  DataType get dataType => DataType.fromString(type);
 
   Measure({required this.type}) : super();
+
   Function get fromJsonFunction => _$MeasureFromJson;
   factory Measure.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as Measure;
@@ -36,7 +37,7 @@ class Measure extends Serializable {
 /// See [DataTypeMeasure.kt](https://github.com/cph-cachet/carp.core-kotlin/blob/master/carp.protocols.core/src/commonMain/kotlin/dk/cachet/carp/protocols/domain/tasks/measures/DataTypeMeasure.kt).
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class DataTypeMeasure extends Measure {
-  DataTypeMeasure({required String? type}) : super(type: type);
+  DataTypeMeasure({required String type}) : super(type: type);
 
   Function get fromJsonFunction => _$DataTypeMeasureFromJson;
   factory DataTypeMeasure.fromJson(Map<String, dynamic> json) =>
@@ -50,8 +51,7 @@ class DataTypeMeasure extends Measure {
 /// See [PhoneSensorMeasure.kt](https://github.com/cph-cachet/carp.core-kotlin/blob/master/carp.protocols.core/src/commonMain/kotlin/dk/cachet/carp/protocols/domain/tasks/measures/PhoneSensorMeasure.kt).
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class PhoneSensorMeasure extends Measure {
-  PhoneSensorMeasure({required String? type, this.duration})
-      : super(type: type);
+  PhoneSensorMeasure({required String type, this.duration}) : super(type: type);
 
   int? duration;
 

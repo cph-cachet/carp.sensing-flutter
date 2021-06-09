@@ -11,15 +11,13 @@ part of carp_core_protocols;
 /// to a specific device.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class TriggeredTask {
-  static int _counter = 0;
-
   /// The id of the [Trigger] which describes the condition which when met
   /// sends the task with [taskName] to the device with [destinationDeviceRoleName].
-  int? triggerId;
+  int triggerId;
 
   /// The name of the task to send to [destinationDeviceRoleName] when the
   /// trigger condition is met.
-  String? taskName;
+  late String taskName;
 
   /// The role name of the device to which to send the task with [taskName]
   /// when the [trigger] condition is met.
@@ -31,10 +29,13 @@ class TriggeredTask {
   @JsonKey(ignore: true)
   DeviceDescriptor? targetDevice;
 
-  TriggeredTask({this.triggerId, this.task, this.targetDevice}) : super() {
-    triggerId ??= _counter++;
-    taskName = task?.name;
-    targetDeviceRoleName = targetDevice?.roleName;
+  TriggeredTask(
+    this.triggerId, [
+    this.task,
+    this.targetDevice,
+  ]) : super() {
+    if (task != null) taskName = task!.name;
+    if (targetDevice != null) targetDeviceRoleName = targetDevice!.roleName;
   }
 
   factory TriggeredTask.fromJson(Map<String, dynamic> json) =>

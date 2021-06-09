@@ -68,12 +68,14 @@ class ConcurrentTask extends TaskDescriptor {
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class CustomProtocolTask extends TaskDescriptor {
   /// A definition on how to run a study on a master device, serialized as a string.
-  String? studyProtocol;
+  String studyProtocol;
 
   // The measures list is empty, since measures are defined in [studyProtocol]
   // in a different format.
-  CustomProtocolTask({String? name, this.studyProtocol})
-      : super(name: name, measures: []);
+  CustomProtocolTask({
+    String? name,
+    required this.studyProtocol,
+  }) : super(name: name, measures: []);
 
   Function get fromJsonFunction => _$CustomProtocolTaskFromJson;
   factory CustomProtocolTask.fromJson(Map<String, dynamic> json) =>

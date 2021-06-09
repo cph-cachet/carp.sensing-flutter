@@ -169,13 +169,15 @@ Map<String, dynamic> _$StudyDeploymentStatusToJson(
 
 ParticipantData _$ParticipantDataFromJson(Map<String, dynamic> json) {
   return ParticipantData(
-    studyDeploymentId: json['studyDeploymentId'] as String?,
+    studyDeploymentId: json['studyDeploymentId'] as String,
     data: json['data'] as Map<String, dynamic>?,
   );
 }
 
 Map<String, dynamic> _$ParticipantDataToJson(ParticipantData instance) {
-  final val = <String, dynamic>{};
+  final val = <String, dynamic>{
+    'studyDeploymentId': instance.studyDeploymentId,
+  };
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -183,14 +185,13 @@ Map<String, dynamic> _$ParticipantDataToJson(ParticipantData instance) {
     }
   }
 
-  writeNotNull('studyDeploymentId', instance.studyDeploymentId);
   writeNotNull('data', instance.data);
   return val;
 }
 
 EmailAccountIdentity _$EmailAccountIdentityFromJson(Map<String, dynamic> json) {
   return EmailAccountIdentity(
-    json['emailAddress'] as String?,
+    json['emailAddress'] as String,
   )..$type = json[r'$type'] as String?;
 }
 
@@ -205,19 +206,22 @@ Map<String, dynamic> _$EmailAccountIdentityToJson(
   }
 
   writeNotNull(r'$type', instance.$type);
-  writeNotNull('emailAddress', instance.emailAddress);
+  val['emailAddress'] = instance.emailAddress;
   return val;
 }
 
 Participation _$ParticipationFromJson(Map<String, dynamic> json) {
-  return Participation()
-    ..studyDeploymentId = json['studyDeploymentId'] as String?
-    ..id = json['id'] as String?
-    ..isRegistered = json['isRegistered'] as bool?;
+  return Participation(
+    json['studyDeploymentId'] as String,
+    json['id'] as String,
+  )..isRegistered = json['isRegistered'] as bool?;
 }
 
 Map<String, dynamic> _$ParticipationToJson(Participation instance) {
-  final val = <String, dynamic>{};
+  final val = <String, dynamic>{
+    'studyDeploymentId': instance.studyDeploymentId,
+    'id': instance.id,
+  };
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -225,21 +229,22 @@ Map<String, dynamic> _$ParticipationToJson(Participation instance) {
     }
   }
 
-  writeNotNull('studyDeploymentId', instance.studyDeploymentId);
-  writeNotNull('id', instance.id);
   writeNotNull('isRegistered', instance.isRegistered);
   return val;
 }
 
 StudyInvitation _$StudyInvitationFromJson(Map<String, dynamic> json) {
-  return StudyInvitation()
-    ..name = json['name'] as String?
-    ..description = json['description'] as String?
-    ..applicationData = json['applicationData'] as String?;
+  return StudyInvitation(
+    json['name'] as String,
+    json['description'] as String,
+  )..applicationData = json['applicationData'] as String?;
 }
 
 Map<String, dynamic> _$StudyInvitationToJson(StudyInvitation instance) {
-  final val = <String, dynamic>{};
+  final val = <String, dynamic>{
+    'name': instance.name,
+    'description': instance.description,
+  };
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -247,29 +252,26 @@ Map<String, dynamic> _$StudyInvitationToJson(StudyInvitation instance) {
     }
   }
 
-  writeNotNull('name', instance.name);
-  writeNotNull('description', instance.description);
   writeNotNull('applicationData', instance.applicationData);
   return val;
 }
 
 ActiveParticipationInvitation _$ActiveParticipationInvitationFromJson(
     Map<String, dynamic> json) {
-  return ActiveParticipationInvitation()
-    ..participation = json['participation'] == null
-        ? null
-        : Participation.fromJson(json['participation'] as Map<String, dynamic>)
-    ..invitation = json['invitation'] == null
-        ? null
-        : StudyInvitation.fromJson(json['invitation'] as Map<String, dynamic>)
-    ..devices = (json['devices'] as List<dynamic>?)
-        ?.map((e) => DeviceInvitation.fromJson(e as Map<String, dynamic>))
-        .toList();
+  return ActiveParticipationInvitation(
+    Participation.fromJson(json['participation'] as Map<String, dynamic>),
+    StudyInvitation.fromJson(json['invitation'] as Map<String, dynamic>),
+  )..devices = (json['devices'] as List<dynamic>?)
+      ?.map((e) => DeviceInvitation.fromJson(e as Map<String, dynamic>))
+      .toList();
 }
 
 Map<String, dynamic> _$ActiveParticipationInvitationToJson(
     ActiveParticipationInvitation instance) {
-  final val = <String, dynamic>{};
+  final val = <String, dynamic>{
+    'participation': instance.participation,
+    'invitation': instance.invitation,
+  };
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -277,16 +279,14 @@ Map<String, dynamic> _$ActiveParticipationInvitationToJson(
     }
   }
 
-  writeNotNull('participation', instance.participation);
-  writeNotNull('invitation', instance.invitation);
   writeNotNull('devices', instance.devices);
   return val;
 }
 
 DataEndPoint _$DataEndPointFromJson(Map<String, dynamic> json) {
   return DataEndPoint(
-    type: json['type'] as String?,
-    dataFormat: json['dataFormat'] as String?,
+    type: json['type'] as String,
+    dataFormat: json['dataFormat'] as String,
   )..$type = json[r'$type'] as String?;
 }
 
@@ -300,17 +300,15 @@ Map<String, dynamic> _$DataEndPointToJson(DataEndPoint instance) {
   }
 
   writeNotNull(r'$type', instance.$type);
-  writeNotNull('type', instance.type);
-  writeNotNull('dataFormat', instance.dataFormat);
+  val['type'] = instance.type;
+  val['dataFormat'] = instance.dataFormat;
   return val;
 }
 
 CreateStudyDeployment _$CreateStudyDeploymentFromJson(
     Map<String, dynamic> json) {
   return CreateStudyDeployment(
-    json['protocol'] == null
-        ? null
-        : StudyProtocol.fromJson(json['protocol'] as Map<String, dynamic>),
+    StudyProtocol.fromJson(json['protocol'] as Map<String, dynamic>),
   )
     ..$type = json[r'$type'] as String?
     ..studyDeploymentId = json['studyDeploymentId'] as String?;
@@ -335,7 +333,7 @@ Map<String, dynamic> _$CreateStudyDeploymentToJson(
 GetStudyDeploymentStatus _$GetStudyDeploymentStatusFromJson(
     Map<String, dynamic> json) {
   return GetStudyDeploymentStatus(
-    json['studyDeploymentId'] as String?,
+    json['studyDeploymentId'] as String,
   )..$type = json[r'$type'] as String?;
 }
 
@@ -357,8 +355,8 @@ Map<String, dynamic> _$GetStudyDeploymentStatusToJson(
 GetStudyDeploymentStatusList _$GetStudyDeploymentStatusListFromJson(
     Map<String, dynamic> json) {
   return GetStudyDeploymentStatusList(
-    (json['studyDeploymentIds'] as List<dynamic>?)
-        ?.map((e) => e as String)
+    (json['studyDeploymentIds'] as List<dynamic>)
+        .map((e) => e as String)
         .toList(),
   )
     ..$type = json[r'$type'] as String?
@@ -383,12 +381,9 @@ Map<String, dynamic> _$GetStudyDeploymentStatusListToJson(
 
 RegisterDevice _$RegisterDeviceFromJson(Map<String, dynamic> json) {
   return RegisterDevice(
-    json['studyDeploymentId'] as String?,
-    json['deviceRoleName'] as String?,
-    json['registration'] == null
-        ? null
-        : DeviceRegistration.fromJson(
-            json['registration'] as Map<String, dynamic>),
+    json['studyDeploymentId'] as String,
+    json['deviceRoleName'] as String,
+    DeviceRegistration.fromJson(json['registration'] as Map<String, dynamic>),
   )..$type = json[r'$type'] as String?;
 }
 
@@ -410,8 +405,8 @@ Map<String, dynamic> _$RegisterDeviceToJson(RegisterDevice instance) {
 
 UnregisterDevice _$UnregisterDeviceFromJson(Map<String, dynamic> json) {
   return UnregisterDevice(
-    json['studyDeploymentId'] as String?,
-    json['deviceRoleName'] as String?,
+    json['studyDeploymentId'] as String,
+    json['deviceRoleName'] as String,
   )..$type = json[r'$type'] as String?;
 }
 
@@ -433,8 +428,8 @@ Map<String, dynamic> _$UnregisterDeviceToJson(UnregisterDevice instance) {
 GetDeviceDeploymentFor _$GetDeviceDeploymentForFromJson(
     Map<String, dynamic> json) {
   return GetDeviceDeploymentFor(
-    json['studyDeploymentId'] as String?,
-    json['masterDeviceRoleName'] as String?,
+    json['studyDeploymentId'] as String,
+    json['masterDeviceRoleName'] as String,
   )..$type = json[r'$type'] as String?;
 }
 
@@ -456,11 +451,9 @@ Map<String, dynamic> _$GetDeviceDeploymentForToJson(
 
 DeploymentSuccessful _$DeploymentSuccessfulFromJson(Map<String, dynamic> json) {
   return DeploymentSuccessful(
-    json['studyDeploymentId'] as String?,
-    json['masterDeviceRoleName'] as String?,
-    json['deviceDeploymentLastUpdateDate'] == null
-        ? null
-        : DateTime.parse(json['deviceDeploymentLastUpdateDate'] as String),
+    json['studyDeploymentId'] as String,
+    json['masterDeviceRoleName'] as String,
+    DateTime.parse(json['deviceDeploymentLastUpdateDate'] as String),
   )..$type = json[r'$type'] as String?;
 }
 
@@ -485,7 +478,7 @@ Map<String, dynamic> _$DeploymentSuccessfulToJson(
 GetActiveParticipationInvitations _$GetActiveParticipationInvitationsFromJson(
     Map<String, dynamic> json) {
   return GetActiveParticipationInvitations(
-    json['accountId'] as String?,
+    json['accountId'] as String,
   )..$type = json[r'$type'] as String?;
 }
 
@@ -506,7 +499,7 @@ Map<String, dynamic> _$GetActiveParticipationInvitationsToJson(
 
 GetParticipantData _$GetParticipantDataFromJson(Map<String, dynamic> json) {
   return GetParticipantData(
-    json['studyDeploymentId'] as String?,
+    json['studyDeploymentId'] as String,
   )..$type = json[r'$type'] as String?;
 }
 
@@ -527,8 +520,8 @@ Map<String, dynamic> _$GetParticipantDataToJson(GetParticipantData instance) {
 GetParticipantDataList _$GetParticipantDataListFromJson(
     Map<String, dynamic> json) {
   return GetParticipantDataList(
-    (json['studyDeploymentIds'] as List<dynamic>?)
-        ?.map((e) => e as String)
+    (json['studyDeploymentIds'] as List<dynamic>)
+        .map((e) => e as String)
         .toList(),
   )
     ..$type = json[r'$type'] as String?
@@ -553,11 +546,9 @@ Map<String, dynamic> _$GetParticipantDataListToJson(
 
 SetParticipantData _$SetParticipantDataFromJson(Map<String, dynamic> json) {
   return SetParticipantData(
-    json['studyDeploymentId'] as String?,
-    json['inputDataType'] as String?,
-    json['data'] == null
-        ? null
-        : ParticipantData.fromJson(json['data'] as Map<String, dynamic>),
+    json['studyDeploymentId'] as String,
+    json['inputDataType'] as String,
+    ParticipantData.fromJson(json['data'] as Map<String, dynamic>),
   )..$type = json[r'$type'] as String?;
 }
 

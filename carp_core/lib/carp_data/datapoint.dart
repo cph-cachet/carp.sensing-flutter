@@ -131,17 +131,17 @@ class DataPointHeader {
   DateTime? startTime;
 
   /// The UTC end timestamp for this data point.
-  /// If this data point does not cover a period, [endTime] will be null.
+  /// If this data point does not cover a period, [endTime] will be `null`.
   DateTime? endTime;
 
   /// The data format. See [DataFormat] and [NameSpace].
-  DataFormat? dataFormat;
+  DataFormat dataFormat;
 
   /// Create a new [DataPointHeader].
   DataPointHeader({
     this.studyId,
     this.userId,
-    this.dataFormat,
+    this.dataFormat = DataFormat.UNKNOWN,
     this.deviceRoleName,
     this.triggerId,
     this.startTime,
@@ -150,7 +150,6 @@ class DataPointHeader {
     // make sure that timestamps are in UTC
     if (startTime != null) startTime!.toUtc();
     if (endTime != null) endTime!.toUtc();
-    dataFormat ??= DataFormat.UNKNOWN;
   }
 
   /// Create a [DataPointHeader] from a JSON map.
@@ -177,13 +176,13 @@ class DataFormat {
   /// interpret [name].
   /// To prevent conflicts, a reverse domain namespace is suggested:
   /// e.g., "org.openmhealth" or "dk.cachet.carp".
-  final String? namespace;
+  final String namespace;
 
   /// The name of this data format. See [String].
   ///
   /// Uniquely identifies something within the [namespace].
   /// The name may not contain any periods. Periods are reserved for namespaces.
-  final String? name;
+  final String name;
 
   /// Create a [DataFormat].
   const DataFormat(this.namespace, this.name) : super();

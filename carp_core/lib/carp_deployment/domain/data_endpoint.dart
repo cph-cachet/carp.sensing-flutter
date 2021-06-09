@@ -11,19 +11,20 @@ part of carp_core_deployment;
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class DataEndPoint extends Serializable {
   /// The type of endpoint as enumerated in [DataEndPointTypes].
-  String? type;
+  String type;
 
   /// The preferred format of the data to be uploaded according to
   /// [NameSpace]. Default using the [NameSpace.CARP].
-  String? dataFormat;
+  String dataFormat;
 
   /// Creates a [DataEndPoint].
   /// [type] is defined in [DataEndPointTypes].
   /// [dataFormat] is defined in [NameSpace]. Default is [NameSpace.CARP].
   @mustCallSuper
-  DataEndPoint({this.type, this.dataFormat = NameSpace.CARP}) : super() {
-    dataFormat ??= NameSpace.CARP;
-  }
+  DataEndPoint({
+    required this.type,
+    this.dataFormat = NameSpace.CARP,
+  }) : super();
 
   Function get fromJsonFunction => _$DataEndPointFromJson;
   factory DataEndPoint.fromJson(Map<String, dynamic> json) =>

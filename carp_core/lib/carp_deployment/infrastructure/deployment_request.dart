@@ -33,7 +33,7 @@ abstract class DeploymentServiceRequest extends ServiceRequest {
 /// A request for creating a deployment based on the [protocol].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class CreateStudyDeployment extends DeploymentServiceRequest {
-  StudyProtocol? protocol;
+  StudyProtocol protocol;
 
   CreateStudyDeployment(this.protocol) : super();
 
@@ -48,8 +48,7 @@ class CreateStudyDeployment extends DeploymentServiceRequest {
 /// A request for getting the status of a study deployment.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class GetStudyDeploymentStatus extends DeploymentServiceRequest {
-  GetStudyDeploymentStatus(String? studyDeploymentId)
-      : super(studyDeploymentId);
+  GetStudyDeploymentStatus(String studyDeploymentId) : super(studyDeploymentId);
 
   Function get fromJsonFunction => _$GetStudyDeploymentStatusFromJson;
   factory GetStudyDeploymentStatus.fromJson(Map<String, dynamic> json) =>
@@ -60,7 +59,7 @@ class GetStudyDeploymentStatus extends DeploymentServiceRequest {
 /// A request for getting the status of a list of study deployment.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class GetStudyDeploymentStatusList extends DeploymentServiceRequest {
-  List<String>? studyDeploymentIds;
+  List<String> studyDeploymentIds;
 
   GetStudyDeploymentStatusList(this.studyDeploymentIds) : super();
 
@@ -74,14 +73,14 @@ class GetStudyDeploymentStatusList extends DeploymentServiceRequest {
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class RegisterDevice extends DeploymentServiceRequest {
   RegisterDevice(
-      String? studyDeploymentId, this.deviceRoleName, this.registration)
+      String studyDeploymentId, this.deviceRoleName, this.registration)
       : super(studyDeploymentId);
 
   /// The role name of this device.
-  String? deviceRoleName;
+  String deviceRoleName;
 
   /// The registration.
-  DeviceRegistration? registration;
+  DeviceRegistration registration;
 
   Function get fromJsonFunction => _$RegisterDeviceFromJson;
   factory RegisterDevice.fromJson(Map<String, dynamic> json) =>
@@ -94,11 +93,11 @@ class RegisterDevice extends DeploymentServiceRequest {
 /// A request for unregistering this device.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class UnregisterDevice extends DeploymentServiceRequest {
-  UnregisterDevice(String? studyDeploymentId, this.deviceRoleName)
+  UnregisterDevice(String studyDeploymentId, this.deviceRoleName)
       : super(studyDeploymentId);
 
   /// The role name of this device.
-  String? deviceRoleName;
+  String deviceRoleName;
 
   Function get fromJsonFunction => _$UnregisterDeviceFromJson;
   factory UnregisterDevice.fromJson(Map<String, dynamic> json) =>
@@ -111,11 +110,11 @@ class UnregisterDevice extends DeploymentServiceRequest {
 /// A request for getting the deployment for this master device.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class GetDeviceDeploymentFor extends DeploymentServiceRequest {
-  GetDeviceDeploymentFor(String? studyDeploymentId, this.masterDeviceRoleName)
+  GetDeviceDeploymentFor(String studyDeploymentId, this.masterDeviceRoleName)
       : super(studyDeploymentId);
 
   /// The role name of this master device.
-  String? masterDeviceRoleName;
+  String masterDeviceRoleName;
 
   Function get fromJsonFunction => _$GetDeviceDeploymentForFromJson;
   factory GetDeviceDeploymentFor.fromJson(Map<String, dynamic> json) =>
@@ -133,13 +132,10 @@ class DeploymentSuccessful extends GetDeviceDeploymentFor {
   DateTime? deviceDeploymentLastUpdateDate;
 
   DeploymentSuccessful(
-    String? studyDeploymentId,
-    String? masterDeviceRoleName,
-    DateTime? deviceDeploymentLastUpdateDate,
-  ) : super(studyDeploymentId, masterDeviceRoleName) {
-    this.deviceDeploymentLastUpdateDate =
-        deviceDeploymentLastUpdateDate?.toUtc() ?? DateTime.now().toUtc();
-  }
+    String studyDeploymentId,
+    String masterDeviceRoleName,
+    DateTime deviceDeploymentLastUpdateDate,
+  ) : super(studyDeploymentId, masterDeviceRoleName);
 
   Function get fromJsonFunction => _$DeploymentSuccessfulFromJson;
   factory DeploymentSuccessful.fromJson(Map<String, dynamic> json) =>

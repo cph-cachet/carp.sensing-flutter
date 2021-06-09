@@ -12,10 +12,10 @@ part of carp_core_deployment;
 /// Data which is not set equals null.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ParticipantData {
-  String? studyDeploymentId;
+  String studyDeploymentId;
   Map<String, dynamic>? data;
 
-  ParticipantData({this.studyDeploymentId, this.data}) : super();
+  ParticipantData({required this.studyDeploymentId, this.data}) : super();
 
   dynamic operator [](String key) => data![key];
   operator []=(String key, dynamic value) => data![key] = value;
@@ -35,8 +35,8 @@ abstract class AccountIdentity extends Serializable {
 /// Identifies an [AccountIdentity] using an email adress.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class EmailAccountIdentity extends AccountIdentity {
-  String? emailAddress;
-  EmailAccountIdentity([this.emailAddress]);
+  String emailAddress;
+  EmailAccountIdentity(this.emailAddress);
 
   Function get fromJsonFunction => _$EmailAccountIdentityFromJson;
   factory EmailAccountIdentity.fromJson(Map<String, dynamic> json) =>

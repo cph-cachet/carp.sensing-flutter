@@ -22,10 +22,12 @@ class SamplingConfiguration extends Serializable {
 ///defaults, and constraints.
 abstract class DataTypeSamplingScheme {
   /// The [String] this sampling scheme relates to.
-  String? type;
+  String type;
 
   /// The default configuration of a [Measure] for the [type].
-  Measure? defaultMeasure;
+  Measure defaultMeasure;
+
+  DataTypeSamplingScheme(this.type, this.defaultMeasure) : super();
 }
 
 /// A helper class to construct iterable objects which hold [DataTypeSamplingScheme]

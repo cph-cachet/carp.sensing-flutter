@@ -115,12 +115,15 @@ class StudyRuntime {
   /// Verifies whether the master device is ready for deployment and in case
   /// it is, deploys. In case already deployed, nothing happens.
   Future<StudyRuntimeStatus> tryDeployment() async {
+    assert(studyDeploymentId != null,
+        "Cannot deploy without a valid study deployment. Call 'initialize()' first.");
+
     deploymentStatus =
-        await deploymentService!.getStudyDeploymentStatus(studyDeploymentId);
+        await deploymentService!.getStudyDeploymentStatus(studyDeploymentId!);
 
     // get the deployment
     deployment = await deploymentService!
-        .getDeviceDeploymentFor(studyDeploymentId, device!.roleName);
+        .getDeviceDeploymentFor(studyDeploymentId!, device!.roleName);
     _status = StudyRuntimeStatus.RegisteringDevices;
 
     // TODO - set _remainingDevicesToRegister
@@ -136,6 +139,9 @@ class StudyRuntime {
   /// Tries to register a connected device which are available
   /// in this device's [deviceRegistry] as well as in the [deploymentService].
   Future tryRegisterConnectedDevice(DeviceDescriptor device) async {
+    assert(studyDeploymentId != null,
+        "Cannot register a device without a valid study deployment. Call 'initialize()' first.");
+
     String deviceType = device.type;
     String? deviceRoleName = device.roleName;
 
@@ -151,7 +157,7 @@ class StudyRuntime {
       DeviceRegistration registration = DeviceRegistration(deviceManager.id);
       deviceManager.deviceRegistration = registration;
       deploymentStatus = (await deploymentService?.registerDevice(
-          studyDeploymentId, deviceRoleName, registration))!;
+          studyDeploymentId!, deviceRoleName, registration))!;
     }
   }
 
@@ -184,7 +190,7 @@ class StudyRuntime {
     if (status == StudyRuntimeStatus.Stopped) return;
 
     // Stop study deployment.
-    deploymentService!.stop(studyDeploymentId);
+    deploymentService!.stop(studyDeploymentId!);
     _status = StudyRuntimeStatus.Stopped;
   }
 }

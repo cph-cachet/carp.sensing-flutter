@@ -11,16 +11,16 @@ part of carp_core_deployment;
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class Participation {
   /// The CARP study deployment ID.
-  String? studyDeploymentId;
+  String studyDeploymentId;
 
   /// Unique id for this participation.
-  String? id;
+  String id;
 
   /// True when the device is already registered in the study deployment; false otherwise.
   /// In case a device is registered, it needs to be unregistered first before a new device can be registered.
   bool? isRegistered;
 
-  Participation() : super();
+  Participation(this.studyDeploymentId, this.id) : super();
 
   factory Participation.fromJson(Map<String, dynamic> json) =>
       _$ParticipationFromJson(json);
@@ -34,10 +34,10 @@ class Participation {
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class StudyInvitation {
   /// A descriptive name for the study to be shown to participants.
-  String? name;
+  String name;
 
   /// A description of the study clarifying to participants what it is about.
-  String? description;
+  String description;
 
   /// Application-specific data to be shared with clients when they are invited
   /// to a study.
@@ -47,7 +47,7 @@ class StudyInvitation {
   /// outside of scope or not yet supported by CARP core.
   String? applicationData;
 
-  StudyInvitation() : super();
+  StudyInvitation(this.name, this.description) : super();
 
   factory StudyInvitation.fromJson(Map<String, dynamic> json) =>
       _$StudyInvitationFromJson(json);
@@ -64,8 +64,8 @@ class StudyInvitation {
 /// need to unregister the existing device first.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ActiveParticipationInvitation {
-  Participation? participation;
-  StudyInvitation? invitation;
+  Participation participation;
+  StudyInvitation invitation;
   List<DeviceInvitation>? devices;
 
   /// The CARP study ID.
@@ -74,7 +74,7 @@ class ActiveParticipationInvitation {
   /// The CARP study deployment ID.
   String? get studyDeploymentId => participation?.studyDeploymentId;
 
-  ActiveParticipationInvitation() : super();
+  ActiveParticipationInvitation(this.participation, this.invitation) : super();
 
   factory ActiveParticipationInvitation.fromJson(Map<String, dynamic> json) =>
       _$ActiveParticipationInvitationFromJson(json);

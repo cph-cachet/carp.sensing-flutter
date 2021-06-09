@@ -126,8 +126,7 @@ class StudyProtocol {
     int triggerId = indexOfTrigger(trigger);
 
     if (triggerId >= 0) {
-      triggeredTasks.add(TriggeredTask(
-          triggerId: triggerId, task: task, targetDevice: targetDevice));
+      triggeredTasks.add(TriggeredTask(triggerId, task, targetDevice));
     }
   }
 

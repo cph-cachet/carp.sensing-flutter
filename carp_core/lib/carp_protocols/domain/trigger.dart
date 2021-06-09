@@ -18,7 +18,7 @@ class Trigger extends Serializable {
   final String _triggerNamespace = 'dk.cachet.carp.protocols.domain.triggers';
 
   /// The device role name from which the trigger originates.
-  String? sourceDeviceRoleName;
+  String sourceDeviceRoleName;
 
   /// Determines whether the trigger needs to be evaluated on a master
   /// device ([MasterDeviceDescriptor]).
@@ -28,8 +28,8 @@ class Trigger extends Serializable {
 
   @mustCallSuper
   Trigger({
-    this.sourceDeviceRoleName,
-    this.requiresMasterDevice = true,
+    required this.sourceDeviceRoleName,
+    this.requiresMasterDevice,
   }) : super();
 
   Function get fromJsonFunction => _$TriggerFromJson;
@@ -50,8 +50,8 @@ class ElapsedTimeTrigger extends Trigger {
   Duration? elapsedTime;
 
   ElapsedTimeTrigger({
-    String? sourceDeviceRoleName,
-    bool? requiresMasterDevice,
+    required String sourceDeviceRoleName,
+    bool? requiresMasterDevice = false,
     this.elapsedTime,
   }) : super(
           sourceDeviceRoleName: sourceDeviceRoleName,
@@ -76,8 +76,8 @@ class ManualTrigger extends Trigger {
   String? description;
 
   ManualTrigger({
-    String? sourceDeviceRoleName,
-    bool? requiresMasterDevice,
+    required String sourceDeviceRoleName,
+    bool? requiresMasterDevice = false,
     this.label,
     this.description,
   }) : super(
@@ -101,14 +101,14 @@ class ManualTrigger extends Trigger {
 /// and therefore requires a task scheduler.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ScheduledTrigger extends Trigger {
-  TimeOfDay? time;
-  RecurrenceRule? recurrenceRule;
+  TimeOfDay time;
+  RecurrenceRule recurrenceRule;
 
   ScheduledTrigger({
-    String? sourceDeviceRoleName,
-    bool? requiresMasterDevice,
-    this.time,
-    this.recurrenceRule,
+    required String sourceDeviceRoleName,
+    bool? requiresMasterDevice = false,
+    required this.time,
+    required this.recurrenceRule,
   }) : super(
           sourceDeviceRoleName: sourceDeviceRoleName,
           requiresMasterDevice: requiresMasterDevice,
@@ -127,9 +127,9 @@ class ScheduledTrigger extends Trigger {
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class TimeOfDay {
   /// 24 hour format.
-  int? hour;
-  int? minute;
-  int? second;
+  int hour;
+  int minute;
+  int second;
 
   TimeOfDay({this.hour = 0, this.minute = 0, this.second = 0}) : super();
 
@@ -142,7 +142,7 @@ class TimeOfDay {
   /// Output as ISO 8601 extended time format with seconds accuracy, omitting
   /// the 24th hour and 60th leap second. E.g., "09:30:00".
   String toString() =>
-      '${_twoDigits(hour!)}:${_twoDigits(minute!)}:${_twoDigits(second!)}';
+      '${_twoDigits(hour)}:${_twoDigits(minute)}:${_twoDigits(second)}';
 }
 
 /// Represents the iCalendar RFC 5545 standard recurrence rule to specify
@@ -153,12 +153,12 @@ class TimeOfDay {
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class RecurrenceRule {
   /// Specifies the type of interval at which to repeat events, or multiples thereof.
-  Frequency? frequency;
+  Frequency frequency;
 
   /// The interval at which [frequency] repeats.
   /// The default is 1. For example, with [Frequency.DAILY], a value
   /// of "8" means every eight days.
-  int? interval = 1;
+  int interval = 1;
 
   /// Specifies when, if ever, to stop repeating events.
   /// Default recurrence is forever.
@@ -198,7 +198,7 @@ enum EndType { UNTIL, COUNT, NEVER }
 
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class End {
-  final EndType? type;
+  final EndType type;
   final Duration? elapsedTime;
   final int? count;
 

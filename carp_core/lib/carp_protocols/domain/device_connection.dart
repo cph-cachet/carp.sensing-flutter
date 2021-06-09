@@ -13,6 +13,7 @@ class DeviceConnection extends Serializable {
   String? connectedToRoleName;
 
   DeviceConnection([this.roleName, this.connectedToRoleName]) : super();
+
   Function get fromJsonFunction => _$DeviceConnectionFromJson;
   factory DeviceConnection.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as DeviceConnection;
