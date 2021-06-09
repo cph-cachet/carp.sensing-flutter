@@ -32,8 +32,7 @@ void main() {
     ActiveParticipationInvitation invitation =
         ActiveParticipationInvitation.fromJson(
             json.decode(plainJson) as Map<String, dynamic>);
-    expect(
-        invitation.participation!.id, '3cf97adf-4cdf-4211-b344-67946934b657');
+    expect(invitation.participation.id, '3cf97adf-4cdf-4211-b344-67946934b657');
     print(toJsonString(invitation));
   });
   test('JSON -> ActiveParticipationInvitation CANS', () async {
@@ -44,7 +43,7 @@ void main() {
     ActiveParticipationInvitation invitation =
         ActiveParticipationInvitation.fromJson(
             json.decode(plainJson) as Map<String, dynamic>);
-    expect(invitation.invitation!.applicationData,
+    expect(invitation.invitation.applicationData,
         '294a5748-d8fa-4617-b475-99c6980032c8');
     print(toJsonString(invitation));
   });
