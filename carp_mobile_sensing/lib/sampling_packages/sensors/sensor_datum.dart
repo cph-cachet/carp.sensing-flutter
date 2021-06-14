@@ -21,8 +21,9 @@ class AccelerometerDatum extends Datum {
   /// Acceleration force along the z axis (including gravity) measured in m/s^2.
   double? z;
 
-  AccelerometerDatum({required bool multiDatum, this.x, this.y, this.z})
+  AccelerometerDatum({bool multiDatum = false, this.x, this.y, this.z})
       : super(multiDatum: multiDatum);
+
   factory AccelerometerDatum.fromAccelerometerEvent(AccelerometerEvent event,
           {bool multiDatum = false}) =>
       AccelerometerDatum(multiDatum: multiDatum)
@@ -52,8 +53,9 @@ class GyroscopeDatum extends Datum {
   /// Rate of rotation around the z axis measured in rad/s.
   double? z;
 
-  GyroscopeDatum({required bool multiDatum, this.x, this.y, this.z})
+  GyroscopeDatum({bool multiDatum = false, this.x, this.y, this.z})
       : super(multiDatum: multiDatum);
+
   factory GyroscopeDatum.fromGyroscopeEvent(GyroscopeEvent event,
           {bool multiDatum = false}) =>
       GyroscopeDatum(multiDatum: multiDatum)
@@ -103,7 +105,8 @@ class PedometerDatum extends Datum {
   PedometerDatum([this.stepCount]) : super();
 
   /// Returns `true` if the [stepCount] is equal.
-  bool equivalentTo(ConditionalEvent? event) => stepCount == event!['stepCount'];
+  bool equivalentTo(ConditionalEvent? event) =>
+      stepCount == event!['stepCount'];
 
   factory PedometerDatum.fromJson(Map<String, dynamic> json) =>
       _$PedometerDatumFromJson(json);

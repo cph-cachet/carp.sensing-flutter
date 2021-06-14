@@ -15,17 +15,10 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 /// sampling schema. Used in the README file.
 void example_1() async {
   // Create a study protocol
-  CAMSStudyProtocol protocol = CAMSStudyProtocol()
-    ..name = 'Track patient movement'
-    ..responsible = StudyProtocolReponsible(
-      id: 'AB',
-      name: 'Alex Boyon',
-      email: 'alex@uni.dk',
-    )
-    ..protocolDescription = StudyProtocolDescription(
-        title: 'Test Study',
-        purpose: 'For testing purposes',
-        description: 'Testing');
+  StudyProtocol protocol = StudyProtocol(
+    ownerId: 'AB',
+    name: 'Track patient movement',
+  );
 
   // define which devices are used for data collection
   // in this case, its only this smartphone
@@ -72,14 +65,12 @@ void example_1() async {
 
 /// This is a more elaborate example used in the README.md file.
 void example_2() async {
-  // Create a study using a local file to store data
-  CAMSStudyProtocol protocol = CAMSStudyProtocol()
-    ..name = 'Track patient movement'
-    ..responsible = StudyProtocolReponsible(
-      id: 'AB',
-      name: 'Alex Boyon',
-      email: 'alex@uni.dk',
-    );
+  // Create a study protocol
+  StudyProtocol protocol = StudyProtocol(
+    ownerId: 'user@dtu.dk',
+    name: 'Tracking',
+    description: 'Tracking patient movment',
+  );
 
   // define which devices are used for data collection
   // in this case, its only this smartphone
@@ -253,20 +244,25 @@ void example_3() async {
 /// An example of how to use the [SamplingSchema] model.
 void samplingSchemaExample() async {
   // creating a sampling schema focused on activity and outdoor context (weather)
-  SamplingSchema activitySchema =
-      SamplingSchema(name: 'Connectivity Sampling Schema', powerAware: true)
-        ..measures.addEntries([
-          MapEntry(
-              SensorSamplingPackage.PEDOMETER,
-              PeriodicMeasure(
-                  type: SensorSamplingPackage.PEDOMETER,
-                  enabled: true,
-                  frequency: const Duration(minutes: 1))),
-          MapEntry(DeviceSamplingPackage.SCREEN,
-              Measure(type: DeviceSamplingPackage.SCREEN)),
-        ]);
+  SamplingSchema activitySchema = SamplingSchema(
+      type: SamplingSchemaType.normal,
+      name: 'Connectivity Sampling Schema',
+      powerAware: true)
+    ..measures.addEntries([
+      MapEntry(
+          SensorSamplingPackage.PEDOMETER,
+          PeriodicMeasure(
+              type: SensorSamplingPackage.PEDOMETER,
+              enabled: true,
+              frequency: const Duration(minutes: 1))),
+      MapEntry(DeviceSamplingPackage.SCREEN,
+          Measure(type: DeviceSamplingPackage.SCREEN)),
+    ]);
 
-  CAMSStudyProtocol protocol = CAMSStudyProtocol();
+  StudyProtocol protocol = StudyProtocol(
+    ownerId: 'AB',
+    name: 'Track patient movement',
+  );
   Smartphone phone = Smartphone(roleName: 'phone');
   protocol.addMasterDevice(phone);
 
@@ -389,7 +385,10 @@ void study_controller_example() async {
 void app_task_example() async {
   Smartphone phone = Smartphone(roleName: 'phone');
 
-  StudyProtocol protocol = StudyProtocol()
+  StudyProtocol protocol = StudyProtocol(
+    ownerId: 'user@dtu.dk',
+    name: 'Tracking',
+  )
     ..addTriggeredTask(
         ImmediateTrigger(), // collect device info as an app task
         AppTask(

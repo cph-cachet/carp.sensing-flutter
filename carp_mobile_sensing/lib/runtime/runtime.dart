@@ -32,8 +32,6 @@ part 'executors.dart';
 part 'trigger_executors.dart';
 part 'task_executors.dart';
 part 'app_task_executor.dart';
-part 'permission_handler.dart';
-part 'probe_controller.dart';
 part 'probe_registry.dart';
 part 'probes.dart';
 part 'sampling_package.dart';

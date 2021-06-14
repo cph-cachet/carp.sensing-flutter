@@ -48,7 +48,8 @@ abstract class DeviceRegistry {
   Map<String, DeviceDataCollector> get devices;
 
   /// Returns the [DeviceDataCollector] of the given [deviceType].
-  DeviceDataCollector getDevice(String deviceType);
+  /// Returns `null` if no device is found.
+  DeviceDataCollector? getDevice(String deviceType);
 
   /// Returns true if this factory supports a device of the given [deviceType].
   /// Note that even though a certain type of device is supported, its device
@@ -62,7 +63,8 @@ abstract class DeviceRegistry {
   void registerDevice(String deviceType, DeviceDataCollector collector);
 
   /// Create and register a [DeviceDataCollector] based on a [deviceType].
-  Future<DeviceDataCollector> createDevice(String deviceType);
+  /// Returns `null` if a device cannot be created.
+  Future<DeviceDataCollector?> createDevice(String deviceType);
 
   // Remove the device of [deviceType] from this registry.
   void unregisterDevice(String deviceType);

@@ -17,10 +17,6 @@ class SamplingPackageRegistry {
   List<Permission> get permissions => _permissions;
 
   SamplingPackageRegistry._() {
-    // HACK - creating a serializable object (such as a [CAMSStudyProtocol]) ensures that
-    // JSON deserialization in [Serializable] is initialized
-    CAMSStudyProtocol();
-
     // add the basic permissions needed
     _permissions.add(Permission.storage);
 
@@ -32,10 +28,9 @@ class SamplingPackageRegistry {
   /// Register a sampling package.
   void register(SamplingPackage package) {
     _packages.add(package);
-    package.permissions.forEach((permission) =>
-        (!_permissions.contains(permission))
-            ? _permissions.add(permission)
-            : null);
+    package.permissions.forEach((permission) {
+      if (!_permissions.contains(permission)) _permissions.add(permission);
+    });
     CAMSDataType.add(package.dataTypes);
     package.onRegister();
   }
@@ -50,7 +45,7 @@ class SamplingPackageRegistry {
     ..powerAware = true
     ..measures
         .values
-        .forEach((measure) => (measure as CAMSMeasure)?.enabled = true);
+        .forEach((measure) => (measure as CAMSMeasure).enabled = true);
 
   /// A default `common` sampling schema.
   ///
@@ -60,10 +55,11 @@ class SamplingPackageRegistry {
   ///
   /// These default settings are described in this [table](https://github.com/cph-cachet/carp.sensing-flutter/wiki/Schemas#samplingschemacommon).
   SamplingSchema common() {
-    SamplingSchema schema = SamplingSchema()
-      ..type = SamplingSchemaType.common
-      ..name = 'Common (default) sampling'
-      ..powerAware = true;
+    SamplingSchema schema = SamplingSchema(
+      type: SamplingSchemaType.common,
+      name: 'Common (default) sampling',
+      powerAware: true,
+    );
 
     // join sampling schemas from each registered sampling package.
     packages.forEach((package) => schema.addSamplingSchema(package.common));
@@ -77,9 +73,10 @@ class SamplingPackageRegistry {
   /// [SamplingSchema.normal] is an empty schema and therefore don't change anything when
   /// used to adapt a [StudyProtocol] and its [Measure]s in the [adapt] method.
   SamplingSchema normal({bool powerAware = true}) => SamplingSchema(
-      type: SamplingSchemaType.normal,
-      name: 'Default sampling',
-      powerAware: powerAware);
+        type: SamplingSchemaType.normal,
+        name: 'Default sampling',
+        powerAware: powerAware,
+      );
 
   /// A default light sampling schema.
   ///
@@ -90,10 +87,11 @@ class SamplingPackageRegistry {
   ///
   /// See this [table](https://github.com/cph-cachet/carp.sensing-flutter/wiki/Schemas#samplingschemalight) for an overview.
   SamplingSchema light() {
-    SamplingSchema schema = SamplingSchema()
-      ..type = SamplingSchemaType.light
-      ..name = 'Light sampling'
-      ..powerAware = true;
+    SamplingSchema schema = SamplingSchema(
+      type: SamplingSchemaType.light,
+      name: 'Light sampling',
+      powerAware: true,
+    );
 
     // join sampling schemas from each registered sampling package.
     packages.forEach((package) => schema.addSamplingSchema(package.light));
@@ -106,10 +104,11 @@ class SamplingPackageRegistry {
   /// This schema is used in the power-aware adaptation of sampling.
   /// See [PowerAwarenessState].
   SamplingSchema minimum() {
-    SamplingSchema schema = SamplingSchema()
-      ..type = SamplingSchemaType.minimum
-      ..name = 'Minimum sampling'
-      ..powerAware = true;
+    SamplingSchema schema = SamplingSchema(
+      type: SamplingSchemaType.minimum,
+      name: 'Minimum sampling',
+      powerAware: true,
+    );
 
     packages.forEach((package) => schema.addSamplingSchema(package.minimum));
 
@@ -139,10 +138,11 @@ class SamplingPackageRegistry {
   /// Collects and combines the [SamplingPackage.debug] [SamplingSchema]s
   /// for each package.
   SamplingSchema debug() {
-    SamplingSchema schema = SamplingSchema()
-      ..type = SamplingSchemaType.debug
-      ..name = 'Debugging sampling'
-      ..powerAware = false;
+    SamplingSchema schema = SamplingSchema(
+      type: SamplingSchemaType.debug,
+      name: 'Debugging sampling',
+      powerAware: false,
+    );
 
     packages.forEach((package) => schema.addSamplingSchema(package.debug));
 
@@ -194,6 +194,7 @@ abstract class SamplingPackage {
   List<Permission> get permissions;
 
   /// Creates a new [Probe] of the specified [type].
+  /// Returns `null` if a probe cannot be created for this [type].
   Probe? create(String type);
 
   /// What device type is this package using?

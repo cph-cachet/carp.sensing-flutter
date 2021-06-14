@@ -5,12 +5,13 @@ import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 void main() {
-  CAMSStudyProtocol protocol;
+  StudyProtocol protocol;
 
   setUp(() {
-    protocol = CAMSStudyProtocol(
-        responsible: StudyProtocolReponsible(id: 'xyz@dtu.dk'),
-        name: 'Track patient movement');
+    protocol = StudyProtocol(
+      ownerId: 'xyz@dtu.dk',
+      name: 'Track patient movement',
+    );
 
     // Define which devices are used for data collection.
     Smartphone phone = Smartphone(roleName: 'masterphone');
@@ -41,8 +42,8 @@ void main() {
     // Read the study protocol from json file
     String plainJson = File('test/json/study_protocol.json').readAsStringSync();
 
-    CAMSStudyProtocol protocol = CAMSStudyProtocol.fromJson(
-        json.decode(plainJson) as Map<String, dynamic>);
+    StudyProtocol protocol =
+        StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
 
     expect(protocol.ownerId, 'AB');
     expect(protocol.masterDevices.first.roleName,
@@ -54,15 +55,15 @@ void main() {
     // Read the study protocol from json file
     String plainJson = File('test/json/study_protocol.json').readAsStringSync();
 
-    CAMSStudyProtocol protocol = CAMSStudyProtocol.fromJson(
-        json.decode(plainJson) as Map<String, dynamic>);
+    StudyProtocol protocol =
+        StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
 
     expect(protocol.ownerId, 'AB');
     expect(protocol.masterDevices.first.roleName,
         SmartphoneDeploymentService().thisPhone.roleName);
 
     StudyDeploymentStatus status =
-        await (SmartphoneDeploymentService().createStudyDeployment(protocol) as FutureOr<StudyDeploymentStatus>);
+        await SmartphoneDeploymentService().createStudyDeployment(protocol);
     print(toJsonString(status));
   });
 
@@ -70,11 +71,11 @@ void main() {
     // Read the study protocol from json file
     String plainJson = File('test/json/study_protocol.json').readAsStringSync();
 
-    CAMSStudyProtocol protocol = CAMSStudyProtocol.fromJson(
-        json.decode(plainJson) as Map<String, dynamic>);
+    StudyProtocol protocol =
+        StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
 
     StudyDeploymentStatus status =
-        await (SmartphoneDeploymentService().createStudyDeployment(protocol) as FutureOr<StudyDeploymentStatus>);
+        await SmartphoneDeploymentService().createStudyDeployment(protocol);
     CAMSMasterDeviceDeployment deployment = await SmartphoneDeploymentService()
         .getDeviceDeployment(status.studyDeploymentId);
 

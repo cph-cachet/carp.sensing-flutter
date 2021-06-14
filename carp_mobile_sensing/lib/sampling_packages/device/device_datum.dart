@@ -64,14 +64,14 @@ class DeviceDatum extends Datum {
   String toString() =>
       super.toString() +
       ', platform: $platform'
-      ', deviceId: $deviceId'
-      ', hardware: $hardware'
-      ', name: $deviceName'
-      ', manufacturer: $deviceManufacturer'
-      ', model: $deviceModel'
-      ', OS: $operatingSystem'
-      ', SDK: $sdk'
-      ', release: $release';
+          ', deviceId: $deviceId'
+          ', hardware: $hardware'
+          ', name: $deviceName'
+          ', manufacturer: $deviceManufacturer'
+          ', model: $deviceModel'
+          ', OS: $operatingSystem'
+          ', SDK: $sdk'
+          ', release: $release';
 }
 
 /// A [Datum] that holds battery level collected from the phone.

@@ -33,7 +33,7 @@ class DeviceDescriptor extends Serializable {
   String roleName;
 
   /// The set of data types which can be collected on this device.
-  List<String>? supportedDataTypes = [];
+  List<String>? supportedDataTypes;
 
   /// Sampling configurations for data types available on this device which
   /// override the default configuration.

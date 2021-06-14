@@ -18,9 +18,7 @@ class Settings {
 
   factory Settings() => _instance;
 
-  Settings._() {
-    // registerFromJsonFunctions();
-  }
+  Settings._();
 
   SharedPreferences? _preferences;
   PackageInfo? _packageInfo;
@@ -83,6 +81,8 @@ class Settings {
   /// on the phone in-between sessions, and will therefore be the same for
   /// the same app on the same phone.
   Future<String?> get userId async {
+    assert(_preferences != null,
+        "Setting is not initialized. Call 'Setting().init()'' first.");
     if (_userId == null) {
       _userId = preferences!.get(_userIdKey) as String?;
       if (_userId == null) {
@@ -100,6 +100,8 @@ class Settings {
   /// The timestamp (in UTC) when the current study was started on this phone.
   /// This timestamp is save on the phone the first time a study is started.
   Future<DateTime?> get studyStartTimestamp async {
+    assert(_preferences != null,
+        "Setting is not initialized. Call 'Setting().init()'' first.");
     if (_studyStartTimestamp == null) {
       String? str = preferences!.get(_studyStartTimestampKey) as String?;
       _studyStartTimestamp = (str != null) ? DateTime.parse(str) : null;

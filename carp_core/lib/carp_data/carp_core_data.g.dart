@@ -87,24 +87,15 @@ Map<String, dynamic> _$DataFormatToJson(DataFormat instance) =>
 
 DataType _$DataTypeFromJson(Map<String, dynamic> json) {
   return DataType(
-    json['namespace'] as String?,
-    json['name'] as String?,
+    json['namespace'] as String,
+    json['name'] as String,
   );
 }
 
-Map<String, dynamic> _$DataTypeToJson(DataType instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('namespace', instance.namespace);
-  writeNotNull('name', instance.name);
-  return val;
-}
+Map<String, dynamic> _$DataTypeToJson(DataType instance) => <String, dynamic>{
+      'namespace': instance.namespace,
+      'name': instance.name,
+    };
 
 Data _$DataFromJson(Map<String, dynamic> json) {
   return Data();

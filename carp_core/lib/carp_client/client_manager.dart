@@ -17,12 +17,12 @@ class ClientManager {
 
   /// The application service through which study deployments, to be run on
   /// this client, can be managed and retrieved.
-  DeploymentService? deploymentService;
+  DeploymentService deploymentService;
 
   /// The registry of connected devices used to collect data locally on
   /// this master device. Also works as a factory which is used to create
   /// [DeviceDataCollector] instances for connected devices.
-  DeviceRegistry? deviceRegistry;
+  DeviceRegistry deviceRegistry;
 
   // private val dataListener: DataListener = DataListener( dataCollectorFactory )
 
@@ -36,8 +36,8 @@ class ClientManager {
   ///  * [dataManager] that handles the collected data (e.g., storing or uploading)
   @mustCallSuper
   ClientManager({
-    this.deploymentService,
-    this.deviceRegistry,
+    required this.deploymentService,
+    required this.deviceRegistry,
   });
 
   /// Configure the [DeviceRegistration] used to register this client device

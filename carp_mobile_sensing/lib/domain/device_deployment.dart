@@ -38,7 +38,7 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
 
   SamplingSchemaType? samplingStrategy;
 
-  CAMSMasterDeviceDeployment._({
+  CAMSMasterDeviceDeployment({
     required String studyDeploymentId,
     this.protocolDescription,
     required MasterDeviceDescriptor deviceDescriptor,
@@ -67,7 +67,7 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
     required String studyDeploymentId,
     StudyProtocolDescription? protocolDescription,
     required MasterDeviceDeployment masterDeviceDeployment,
-  }) : this._(
+  }) : this(
           studyDeploymentId: studyDeploymentId,
           protocolDescription: protocolDescription,
           deviceDescriptor: masterDeviceDeployment.deviceDescriptor,
@@ -90,7 +90,7 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
     required String masterDeviceRoleName,
     DataEndPoint? dataEndPoint,
     required StudyProtocol protocol,
-  }) : this._(
+  }) : this(
           studyDeploymentId: studyDeploymentId,
           protocolDescription: protocolDescription,
           deviceDescriptor: Smartphone(roleName: masterDeviceRoleName),

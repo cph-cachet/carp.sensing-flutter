@@ -7,7 +7,7 @@
 part of domain;
 
 /// Signature of a data transformer.
-typedef DatumTransformer = Datum? Function(Datum?);
+typedef DatumTransformer = Datum Function(Datum);
 
 /// A no-operation transformer.
 Datum noop(Datum datum) => datum;
@@ -42,7 +42,7 @@ class TransformerSchemaRegistry {
   }
 
   /// Lookup a transformer schema based on its namespace.
-  DatumTransformerSchema? lookup(String? namespace) => _schemas[namespace!];
+  DatumTransformerSchema? lookup(String namespace) => _schemas[namespace];
 }
 
 /// An interface for Datum that is created from a transformer.
@@ -74,7 +74,7 @@ abstract class DatumTransformerSchema {
       transformers[type] = transformer;
 
   /// Transform the [datum] according to the transformer for its data type.
-  Datum? transform(Datum datum) {
+  Datum transform(Datum datum) {
     Function? transformer = transformers[datum.format.toString()];
     return (transformer != null) ? transformer(datum) : datum;
   }

@@ -72,7 +72,7 @@ class StudyProtocol {
       masterDevices.add(masterDevice);
 
   /// Does this protocol have a master device with role name [rolename]?
-  bool hasMasterDevice(String? rolename) =>
+  bool hasMasterDevice(String rolename) =>
       masterDevices.indexWhere((device) => device.roleName == rolename) != -1;
 
   /// The first of all the [masterDevices]. This is a convinient method used when
@@ -90,10 +90,17 @@ class StudyProtocol {
     // early out if already added
     if (triggers.values.contains(trigger)) return;
 
-    assert(
-        hasMasterDevice(trigger.sourceDeviceRoleName),
-        'The passed trigger cannot be initiated by its specified source device '
-        'since it is not a master device which is part of this protocol.');
+    print('>> $trigger');
+    print('>> ${trigger.requiresMasterDevice}');
+    print('>> ${trigger.sourceDeviceRoleName}');
+    print('>> ${hasMasterDevice(trigger.sourceDeviceRoleName!)}');
+
+    if (trigger.requiresMasterDevice!) {
+      assert(
+          hasMasterDevice(trigger.sourceDeviceRoleName!),
+          'The passed trigger cannot be initiated by its specified source device '
+          'since it is not a master device which is part of this protocol.');
+    }
 
     triggers['${triggers.length}'] = trigger;
   }

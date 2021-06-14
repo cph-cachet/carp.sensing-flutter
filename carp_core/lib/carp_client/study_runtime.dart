@@ -152,7 +152,7 @@ class StudyRuntime {
 
     // if successful, register at the deployment service
     if (deviceRegistry.hasDevice(deviceType)) {
-      DeviceDataCollector deviceManager = deviceRegistry.getDevice(deviceType);
+      DeviceDataCollector deviceManager = deviceRegistry.getDevice(deviceType)!;
       // ask the device manager for a unique id of the device
       DeviceRegistration registration = DeviceRegistration(deviceManager.id);
       deviceManager.deviceRegistration = registration;

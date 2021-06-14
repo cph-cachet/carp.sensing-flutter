@@ -1,7 +1,7 @@
 {
     "ownerId": "xyz@dtu.dk",
     "name": "Test Study Protocol",
-    "creationDate": "2021-06-09T11:15:48.796587Z",
+    "creationDate": "2021-06-13T20:04:03.435903Z",
     "masterDevices": [
      {
       "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
@@ -24,7 +24,8 @@
     "triggers": {
      "0": {
       "$type": "dk.cachet.carp.protocols.domain.triggers.Trigger",
-      "sourceDeviceRoleName": "masterphone"
+      "sourceDeviceRoleName": "masterphone",
+      "requiresMasterDevice": false
      },
      "1": {
       "$type": "dk.cachet.carp.protocols.domain.triggers.ManualTrigger",

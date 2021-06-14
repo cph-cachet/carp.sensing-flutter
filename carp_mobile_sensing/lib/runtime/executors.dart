@@ -52,30 +52,28 @@ abstract class Executor extends AbstractProbe {
 class StudyDeploymentExecutor extends Executor {
   final StreamController<DataPoint> _manualDataPointController =
       StreamController.broadcast();
-  CAMSMasterDeviceDeployment? get deployment => _deployment;
-  CAMSMasterDeviceDeployment? _deployment;
+  CAMSMasterDeviceDeployment get deployment => _deployment;
+  late CAMSMasterDeviceDeployment _deployment;
 
   StudyDeploymentExecutor(CAMSMasterDeviceDeployment deployment) : super() {
-    assert(deployment != null,
-        'Cannot initiate a StudyDeploymentExecutor without a MasterDeviceDeployment.');
     _deployment = deployment;
     _group.add(_manualDataPointController.stream);
 
-    _deployment!.triggeredTasks.forEach((triggeredTask) {
+    _deployment.triggeredTasks.forEach((triggeredTask) {
       // get the trigger based on the trigger id
-      Trigger trigger = _deployment!.triggers['${triggeredTask.triggerId}']!;
+      Trigger trigger = _deployment.triggers['${triggeredTask.triggerId}']!;
       // get the task based on the task name
       // and the set the study deployment id (some probes need this)
-      TaskDescriptor task = _deployment!.getTaskByName(triggeredTask.taskName)!;
-      for (var measure in task?.measures) {
+      TaskDescriptor task = _deployment.getTaskByName(triggeredTask.taskName)!;
+      for (var measure in task.measures) {
         if (measure is CAMSMeasure) {
-          measure.studyDeploymentId = _deployment!.studyDeploymentId;
+          measure.studyDeploymentId = _deployment.studyDeploymentId;
         }
       }
 
       TriggeredTaskExecutor executor = TriggeredTaskExecutor(
         triggeredTask,
-        trigger as CAMSTrigger,
+        trigger,
         task,
       );
 
@@ -89,8 +87,8 @@ class StudyDeploymentExecutor extends Executor {
   ///
   /// Makes sure to set the user and study id from the deployment configuration.
   Stream<DataPoint> get data => _group.stream.map((dataPoint) => dataPoint
-    ..carpHeader!.studyId = deployment!.studyId
-    ..carpHeader!.userId = deployment!.userId);
+    ..carpHeader.studyId = deployment.studyDeploymentId
+    ..carpHeader.userId = deployment.userId);
 
   Future onResume() async {
     // check the start time for this study on this phone
@@ -131,27 +129,21 @@ class StudyDeploymentExecutor extends Executor {
 /// This is an abstract class. For each specific type of [Trigger],
 /// a corresponding implementation of a [TriggeredTaskExecutor] exists.
 class TriggeredTaskExecutor extends Executor {
-  CAMSTrigger? _trigger;
-  TaskDescriptor? _task;
-  TriggeredTask? _triggeredTask;
+  late Trigger _trigger;
+  late TaskDescriptor _task;
+  late TriggeredTask _triggeredTask;
 
-  CAMSTrigger? get trigger => _trigger;
-  TaskDescriptor? get task => _task;
-  TriggeredTask? get triggeredTask => _triggeredTask;
+  Trigger get trigger => _trigger;
+  TaskDescriptor get task => _task;
+  TriggeredTask get triggeredTask => _triggeredTask;
 
   TriggeredTaskExecutor(
     TriggeredTask triggeredTask,
-    CAMSTrigger trigger,
+    Trigger trigger,
     TaskDescriptor task,
   ) : super() {
-    assert(triggeredTask != null,
-        'Cannot initiate a TriggeredTaskExecutor without a Triggered Task.');
     _triggeredTask = triggeredTask;
-    assert(trigger != null,
-        'Cannot initiate a TriggeredTaskExecutor without a Trigger.');
     _trigger = trigger;
-    assert(task != null,
-        'Cannot initiate a TriggeredTaskExecutor without a Task.');
     _task = task;
 
     // get the trigger executor and add it to this stream
@@ -170,8 +162,8 @@ class TriggeredTaskExecutor extends Executor {
   ///
   /// Makes sure to set the trigger id and device role name.
   Stream<DataPoint> get data => _group.stream.map((dataPoint) => dataPoint
-    ..carpHeader!.triggerId = '${triggeredTask!.triggerId}'
-    ..carpHeader!.deviceRoleName = triggeredTask!.targetDeviceRoleName);
+    ..carpHeader.triggerId = '${triggeredTask.triggerId}'
+    ..carpHeader.deviceRoleName = triggeredTask.targetDeviceRoleName);
 
   /// Returns a list of the running probes in this [TriggeredTaskExecutor].
   /// This is a combination of the running probes in all task executors.
@@ -179,7 +171,7 @@ class TriggeredTaskExecutor extends Executor {
     List<Probe> _probes = [];
     executors.forEach((executor) {
       if (executor is TriggerExecutor) {
-        executor.probes!.forEach((probe) {
+        executor.probes.forEach((probe) {
           _probes.add(probe);
         });
       }

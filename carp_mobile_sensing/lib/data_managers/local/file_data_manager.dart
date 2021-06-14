@@ -38,9 +38,11 @@ class FileDataManager extends AbstractDataManager {
 
     _fileDataEndPoint = dataEndPoint as FileDataEndPoint;
 
-    if (_fileDataEndPoint.encrypt!) {
-      assert(_fileDataEndPoint.publicKey != null);
-      assert(_fileDataEndPoint.publicKey!.isNotEmpty);
+    if (_fileDataEndPoint.encrypt) {
+      assert(_fileDataEndPoint.publicKey != null,
+          'A public key is required if files are to be encrypted.');
+      assert(_fileDataEndPoint.publicKey!.isNotEmpty,
+          'A non-empty public key is required if files are to be encrypted.');
     }
 
     // Initializing the the local study directory and file
@@ -57,12 +59,12 @@ class FileDataManager extends AbstractDataManager {
 
   void onError(Object? error) =>
       write(DataPoint.fromData(ErrorDatum(error.toString()))
-        ..carpHeader!.dataFormat = DataFormat.fromString(CAMSDataType.ERROR));
+        ..carpHeader.dataFormat = DataFormat.fromString(CAMSDataType.ERROR));
 
   void onDone() => close();
 
   ///Returns the local study path on the device where files can be written.
-  Future<String?> get studyPath async {
+  Future<String> get studyPath async {
     if (_path == null) {
       // get local working directory
       final localApplicationDir = await getApplicationDocumentsDirectory();
@@ -72,7 +74,7 @@ class FileDataManager extends AbstractDataManager {
           .create(recursive: true);
       _path = directory.path;
     }
-    return _path;
+    return _path!;
   }
 
   /// Current path and filename according to this format:
@@ -80,7 +82,7 @@ class FileDataManager extends AbstractDataManager {
   ///   `carp/data/<studyDeploymentId>/carp-data-yyyy-mm-dd-hh-mm-ss-ms.json.zip`
   ///
   /// where the date is in UTC format / zulu time.
-  Future<String?> get filename async {
+  Future<String> get filename async {
     if (_filename == null) {
       final path = await studyPath;
       final created = DateTime.now()
@@ -92,31 +94,31 @@ class FileDataManager extends AbstractDataManager {
 
       _filename = '$path/carp-data-$created.json';
     }
-    return _filename;
+    return _filename!;
   }
 
   /// The current file being written to.
-  Future<File?> get file async {
+  Future<File> get file async {
     if (_file == null) {
-      final path = await (filename as FutureOr<String>);
+      final path = await filename;
       _file = File(path);
       info("Creating file '$path'");
       addEvent(
           FileDataManagerEvent(FileDataManagerEventTypes.FILE_CREATED, path));
     }
-    return _file;
+    return _file!;
   }
 
   /// The currently used [IOSink].
-  Future<IOSink?> get sink async {
+  Future<IOSink> get sink async {
     if (_sink == null) {
       // open the file's sink for writing in append mode
-      _sink = (await file)!.openWrite(mode: FileMode.append);
+      _sink = (await file).openWrite(mode: FileMode.append);
       // since this file will contain a list of json objects, write a '['
       _sink!.write('[\n');
       _initialized = true;
     }
-    return _sink;
+    return _sink!;
   }
 
   /// Writes a JSON encoded [Datum] to the file
@@ -129,22 +131,22 @@ class FileDataManager extends AbstractDataManager {
 
     final json = jsonEncode(dataPoint);
 
-    await sink.then((_s) {
+    await sink.then((_s) async {
       try {
-        _s!.write(json);
+        _s.write(json);
         _s.write('\n,\n'); // write a ',' to separate json objects in the list
         debug(
-            'Writing data point to file - type: ${dataPoint.carpHeader!.dataFormat}');
+            'Writing data point to file - type: ${dataPoint.carpHeader.dataFormat}');
 
-        file.then((_f) {
-          _f!.length().then((len) {
-            if (len > _fileDataEndPoint.bufferSize!) {
+        await file.then((_f) async {
+          await _f.length().then((len) {
+            if (len > _fileDataEndPoint.bufferSize) {
               flush(_f, _s);
             }
           });
         });
       } catch (err) {
-        debug(err);
+        warning('Error writing to file - $err');
         _initialized = false;
         return write(dataPoint);
       }
@@ -179,7 +181,7 @@ class FileDataManager extends AbstractDataManager {
 
     // once finished closing the file, then zip and encrypt it
     flushSink.close().then((value) {
-      if (_fileDataEndPoint.zip!) {
+      if (_fileDataEndPoint.zip) {
         // create a new zip file and add the JSON file to this zip file
         final encoder = ZipFileEncoder();
         final jsonFile = File(_jsonFilePath);
@@ -193,7 +195,7 @@ class FileDataManager extends AbstractDataManager {
       }
 
       // encrypt the zip file
-      if (_fileDataEndPoint.encrypt!) {
+      if (_fileDataEndPoint.encrypt) {
         //TODO : implement encryption
         // if the encrypted file gets another name, remember to
         // update _jsonFilePath

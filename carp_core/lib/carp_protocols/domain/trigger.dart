@@ -17,10 +17,6 @@ class Trigger extends Serializable {
   /// The device role name from which the trigger originates.
   String? sourceDeviceRoleName;
 
-  // /// A unique id of this trigger.
-  // /// Stored as the [DataPointHeader.triggerId].
-  // String? triggerId;
-
   /// Determines whether the trigger needs to be evaluated on a master
   /// device ([MasterDeviceDescriptor]).
   /// For example, this is the case when the trigger is time bound and needs
@@ -30,7 +26,7 @@ class Trigger extends Serializable {
   @mustCallSuper
   Trigger({
     this.sourceDeviceRoleName,
-    this.requiresMasterDevice,
+    this.requiresMasterDevice = false,
   }) : super();
 
   Function get fromJsonFunction => _$TriggerFromJson;

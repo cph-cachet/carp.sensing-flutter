@@ -172,9 +172,8 @@ class Time extends Serializable {
 /// A trigger that resume/pause sampling based on a recurrent scheduled date and time.
 /// Stops / pause after the specified [duration].
 ///
-/// Supports daily, weekly and monthly recurrences.
-/// Yearly recurrence is not supported, since
-/// data sampling is not intended to run on such long time scales.
+/// Supports daily, weekly and monthly recurrences. Yearly recurrence is not
+/// supported, since data sampling is not intended to run on such long time scales.
 ///
 /// Here are a couple of examples:
 ///
@@ -274,12 +273,6 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
   /// say the 25th. Possible numbers are 1..31 counting from the start of a month.
   int? dayOfMonth;
 
-//  /// If yearly recurrence, specify the month of the year.
-//  ///
-//  /// In combination with [dayOfWeek] and [weekOfMonth],  this value specify the month of year.
-//  /// Follows the [DateTime] standards, i.e. possible values are 1..12 counting from the start of a year.
-//  int monthOfYear;
-
   /// Should this recurrent scheduled trigger be remembered across app restart?
   ///
   /// This is useful for long schedules (e.g. daily, weekly, or monthly).
@@ -292,6 +285,9 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
   /// See [Issue #80](https://github.com/cph-cachet/carp.sensing-flutter/issues/80).
   bool remember = false;
 
+  /// The unique id of this trigger. Only used if [remember] is `true`.
+  String? triggerId;
+
   /// Creates a [RecurrentScheduledTrigger].
   RecurrentScheduledTrigger({
     required this.type,
@@ -302,8 +298,8 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
     this.dayOfWeek,
     this.weekOfMonth,
     this.dayOfMonth,
-    //this.monthOfYear,
     this.remember = false,
+    this.triggerId,
     Duration duration = const Duration(seconds: 10),
   }) : super(period: const Duration(seconds: 1), duration: duration) {
     assert(separationCount >= 0, 'Separation count must be zero or positive.');
@@ -318,10 +314,10 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
       assert(weekOfMonth == null || (weekOfMonth! >= 1 && weekOfMonth! <= 4),
           'weekOfMonth must be in the range [1-4]');
     }
-    // if (remember) {
-    //   assert(triggerId != null,
-    //       'A unique trigger ID should be specified when remembering scheduled triggers.');
-    // }
+    if (remember) {
+      assert(triggerId != null,
+          'A unique trigger ID should be specified when remembering scheduled triggers.');
+    }
   }
 
   /// The next day in a monthly occurrence from the given [fromDate].
@@ -414,7 +410,7 @@ class CronScheduledTrigger extends Trigger {
 
   /// The duration (until stopped) of the the sampling.
   /// If null, the sampling is never stopped (i.e., runs forever).
-  Duration? duration;
+  late Duration duration;
 
   /// Create a cron scheduled trigger based on specifying:
   ///   * [minute] - The minute to trigger. `int` [0-59] or `null` (= match all).
@@ -422,14 +418,14 @@ class CronScheduledTrigger extends Trigger {
   ///   * [day] - The day of the month to trigger. `int` [1-31] or `null` (= match all).
   ///   * [month] - The month to trigger. `int` [1-12] or `null` (= match all).
   ///   * [weekday] - The week day to trigger. `int` [0-6] or `null` (= match all).
-  ///   * [duration] - The duration (until stopped) of the the sampling. If null, the sampling is never stopped (i.e., runs forever).
+  ///   * [duration] - The duration (until stopped) of the the sampling.
   factory CronScheduledTrigger({
     int? minute,
     int? hour,
     int? day,
     int? month,
     int? weekday,
-    Duration? duration,
+    Duration duration = const Duration(seconds: 1),
   }) {
     assert(minute == null || (minute >= 0 && minute <= 59),
         'minute must be in the range of [0-59] or null (=match all).');
@@ -449,7 +445,7 @@ class CronScheduledTrigger extends Trigger {
   /// Create a trigger based on a cron-formatted string expression.
   ///
   ///   * [cronExpression] - The cron expression as a `String`.
-  ///   * [duration] - The duration (until stopped) of the the sampling. If null, the sampling is never stopped (i.e., runs forever).
+  ///   * [duration] - The duration (until stopped) of the the sampling.
   ///
   /// Cron format used is:
   ///
@@ -461,11 +457,9 @@ class CronScheduledTrigger extends Trigger {
   factory CronScheduledTrigger.parse({
     required String cronExpression,
     Duration duration = const Duration(seconds: 1),
-  }) {
-    assert(cronExpression != null, 'Cannot use null to specify a cron job.');
-    return CronScheduledTrigger._(
-        cronExpression: cronExpression, duration: duration);
-  }
+  }) =>
+      CronScheduledTrigger._(
+          cronExpression: cronExpression, duration: duration);
 
   CronScheduledTrigger._({
     required this.cronExpression,
@@ -547,7 +541,7 @@ class ConditionalEvent extends Serializable {
   Map<String, dynamic> condition;
   ConditionalEvent(this.condition) : super();
 
-  dynamic operator [](String index) => condition![index];
+  dynamic operator [](String index) => condition[index];
 
   Function get fromJsonFunction => _$ConditionalEventFromJson;
   factory ConditionalEvent.fromJson(Map<String, dynamic> json) =>
@@ -581,12 +575,12 @@ class ConditionalSamplingEventTrigger extends Trigger {
   /// The [ConditionalEventEvaluator] function evaluating if the event
   /// condition is meet for resuming this trigger
   @JsonKey(ignore: true)
-  ConditionalEventEvaluator resumeCondition;
+  ConditionalEventEvaluator? resumeCondition;
 
   /// The [ConditionalEventEvaluator] function evaluating if the event
   /// condition is meet for pausing this trigger.
   ///
-  /// If [pauseCondition] is not specified (null), sampling is never paused
+  /// If [pauseCondition] is not specified (`null`), sampling is never paused
   /// and hence runs forever (unless paused manually).
   @JsonKey(ignore: true)
   ConditionalEventEvaluator? pauseCondition;
@@ -594,7 +588,7 @@ class ConditionalSamplingEventTrigger extends Trigger {
   /// Create a [ConditionalSamplingEventTrigger].
   ConditionalSamplingEventTrigger({
     required this.measureType,
-    required this.resumeCondition,
+    this.resumeCondition,
     this.pauseCondition,
   }) : super();
 

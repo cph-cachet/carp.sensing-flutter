@@ -71,7 +71,7 @@ class StudyDeployment {
   }
 
   /// Get the status of this [StudyDeployment].
-  StudyDeploymentStatus? get status {
+  StudyDeploymentStatus get status {
     // set the status of each device - both master and connected devices
     _status.devicesStatus = [];
     protocol.masterDevices.forEach((deviceDescriptor) =>

@@ -26,7 +26,7 @@ class CAMSMeasure extends Measure {
   bool enabled;
 
   /// A key-value map holding any application-specific configuration.
-  Map<String, String>? configuration = {};
+  Map<String, String> configuration = {};
 
   bool _storedEnabled = true;
   final List<MeasureListener> _listeners = [];
@@ -42,10 +42,10 @@ class CAMSMeasure extends Measure {
 
   /// Add a key-value pair as configuration for this measure.
   void setConfiguration(String key, String configuration) =>
-      this.configuration![key] = configuration;
+      this.configuration[key] = configuration;
 
   /// Get value from the configuration for this measure.
-  String? getConfiguration(String key) => configuration![key];
+  String? getConfiguration(String key) => configuration[key];
 
   /// Add a [MeasureListener] to this [Measure].
   void addMeasureListener(MeasureListener listener) => _listeners.add(listener);

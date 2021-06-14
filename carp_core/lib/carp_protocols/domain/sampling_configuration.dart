@@ -42,5 +42,5 @@ abstract class DataTypeSamplingSchemeList {
   ///
   /// This method is a convenient way to get a list of pre-configured
   /// measures of the correct type with default settings.
-  List<Measure> getMeasureList({List<String>? types});
+  List<Measure> getMeasureList({required List<String> types});
 }

@@ -8,11 +8,11 @@ part of sensors;
 
 AccelerometerDatum _$AccelerometerDatumFromJson(Map<String, dynamic> json) {
   return AccelerometerDatum(
-    x: (json['x'] as num)?.toDouble(),
-    y: (json['y'] as num)?.toDouble(),
-    z: (json['z'] as num)?.toDouble(),
+    x: (json['x'] as num?)?.toDouble(),
+    y: (json['y'] as num?)?.toDouble(),
+    z: (json['z'] as num?)?.toDouble(),
   )
-    ..id = json['id'] as String
+    ..id = json['id'] as String?
     ..timestamp = json['timestamp'] == null
         ? null
         : DateTime.parse(json['timestamp'] as String);
@@ -37,11 +37,11 @@ Map<String, dynamic> _$AccelerometerDatumToJson(AccelerometerDatum instance) {
 
 GyroscopeDatum _$GyroscopeDatumFromJson(Map<String, dynamic> json) {
   return GyroscopeDatum(
-    x: (json['x'] as num)?.toDouble(),
-    y: (json['y'] as num)?.toDouble(),
-    z: (json['z'] as num)?.toDouble(),
+    x: (json['x'] as num?)?.toDouble(),
+    y: (json['y'] as num?)?.toDouble(),
+    z: (json['z'] as num?)?.toDouble(),
   )
-    ..id = json['id'] as String
+    ..id = json['id'] as String?
     ..timestamp = json['timestamp'] == null
         ? null
         : DateTime.parse(json['timestamp'] as String);
@@ -66,12 +66,12 @@ Map<String, dynamic> _$GyroscopeDatumToJson(GyroscopeDatum instance) {
 
 LightDatum _$LightDatumFromJson(Map<String, dynamic> json) {
   return LightDatum(
-    meanLux: json['mean_lux'] as num,
-    stdLux: json['std_lux'] as num,
-    minLux: json['min_lux'] as num,
-    maxLux: json['max_lux'] as num,
+    meanLux: json['mean_lux'] as num?,
+    stdLux: json['std_lux'] as num?,
+    minLux: json['min_lux'] as num?,
+    maxLux: json['max_lux'] as num?,
   )
-    ..id = json['id'] as String
+    ..id = json['id'] as String?
     ..timestamp = json['timestamp'] == null
         ? null
         : DateTime.parse(json['timestamp'] as String);
@@ -97,9 +97,9 @@ Map<String, dynamic> _$LightDatumToJson(LightDatum instance) {
 
 PedometerDatum _$PedometerDatumFromJson(Map<String, dynamic> json) {
   return PedometerDatum(
-    json['step_count'] as int,
+    json['step_count'] as int?,
   )
-    ..id = json['id'] as String
+    ..id = json['id'] as String?
     ..timestamp = json['timestamp'] == null
         ? null
         : DateTime.parse(json['timestamp'] as String);

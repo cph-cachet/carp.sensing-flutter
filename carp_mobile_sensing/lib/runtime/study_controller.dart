@@ -13,7 +13,7 @@ class StudyDeploymentController extends StudyRuntime {
   DataEndPoint? _dataEndPoint;
   StudyDeploymentExecutor? _executor;
   late SamplingSchema _samplingSchema;
-  String? _privacySchemaName;
+  String _privacySchemaName = NameSpace.CARP;
   late DatumTransformer _transformer;
 
   /// The master device deployment running in this controller.
@@ -48,7 +48,7 @@ class StudyDeploymentController extends StudyRuntime {
         .lookup(masterDeployment!.dataEndPoint!.dataFormat)!
         .transform(TransformerSchemaRegistry()
             .lookup(_privacySchemaName)!
-            .transform(dataPoint.data as Datum)!)));
+            .transform(dataPoint.data as Datum))));
 
   PowerAwarenessState powerAwarenessState = NormalSamplingState.instance;
 
@@ -57,7 +57,7 @@ class StudyDeploymentController extends StudyRuntime {
   int get samplingSize => _samplingSize;
 
   /// Create a new [StudyDeploymentController] to control the runtime behavior
-  /// of this study [deployment].
+  /// of a study deployment.
   StudyDeploymentController() : super() {
     // initialize settings
     Settings().init();
@@ -69,7 +69,8 @@ class StudyDeploymentController extends StudyRuntime {
 
   /// Configure this [StudyDeploymentController].
   /// Must be called only once, and before [resume] is called.
-  /// This will/can also request permissions for all [SamplingPackage]s' permissions.
+  ///
+  /// Can request permissions for all [SamplingPackage]s' permissions.
   ///
   /// A number of optional parameters can be specified:
   ///
@@ -94,7 +95,7 @@ class StudyDeploymentController extends StudyRuntime {
   Future configure({
     SamplingSchema? samplingSchema,
     DataEndPoint? dataEndPoint,
-    String? privacySchemaName,
+    String privacySchemaName = NameSpace.CARP,
     DatumTransformer? transformer,
     bool askForPermissions = true,
   }) async {
@@ -104,12 +105,13 @@ class StudyDeploymentController extends StudyRuntime {
         'A CAMS study controller can only work with a CAMS Master Device Deployment');
     info('Configuring $runtimeType');
 
-    _executor = StudyDeploymentExecutor(deployment as CAMSMasterDeviceDeployment);
+    _executor =
+        StudyDeploymentExecutor(deployment as CAMSMasterDeviceDeployment);
 
     // initialize optional parameters
     _samplingSchema = samplingSchema ?? SamplingSchema.normal(powerAware: true);
     _dataEndPoint = dataEndPoint ?? masterDeployment!.dataEndPoint;
-    _privacySchemaName = privacySchemaName ?? NameSpace.CARP;
+    _privacySchemaName = privacySchemaName;
     _transformer = transformer ?? ((datum) => datum);
 
     if (_dataEndPoint != null) {
@@ -143,9 +145,7 @@ class StudyDeploymentController extends StudyRuntime {
 
     info(
         'CARP Mobile Sensing (CAMS) - Initializing Study Deployment Controller:');
-    info('      study id : ${masterDeployment!.studyId}');
     info(' deployment id : ${masterDeployment!.studyDeploymentId}');
-    info('    study name : ${masterDeployment!.name}');
     info('          user : ${masterDeployment!.userId}');
     info(' data endpoint : $_dataEndPoint');
     info('      platform : ${DeviceInfo().platform.toString()}');
@@ -162,7 +162,7 @@ class StudyDeploymentController extends StudyRuntime {
 
     // initialize the data manager, device registry, and study executor
     await _dataManager?.initialize(
-      masterDeployment!.studyDeploymentId!,
+      masterDeployment!.studyDeploymentId,
       masterDeployment!.dataEndPoint!,
       data,
     );
@@ -178,7 +178,7 @@ class StudyDeploymentController extends StudyRuntime {
 
   /// Enable power-aware sensing in this study. See [PowerAwarenessState].
   Future enablePowerAwareness() async {
-    if (_samplingSchema.powerAware!) {
+    if (_samplingSchema.powerAware) {
       info('Enabling power awareness ...');
       _battery.data.listen((dataPoint) {
         BatteryDatum batteryState = (dataPoint.data as BatteryDatum);

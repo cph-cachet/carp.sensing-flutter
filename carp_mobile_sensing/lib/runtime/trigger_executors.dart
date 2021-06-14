@@ -102,7 +102,7 @@ class DelayedTriggerExecutor extends TriggerExecutor {
   DelayedTriggerExecutor(DelayedTrigger trigger) : super(trigger);
 
   Future onResume() async {
-    Timer((trigger as DelayedTrigger).delay!, () {
+    Timer((trigger as DelayedTrigger).delay, () {
       // after a delay, resume this trigger and its tasks
       super.onResume();
     });
@@ -157,12 +157,12 @@ class DateTimeTriggerExecutor extends TriggerExecutor {
   DateTimeTriggerExecutor(DateTimeTrigger trigger) : super(trigger) {
     assert(trigger.schedule.isAfter(DateTime.now()),
         'The schedule of the ScheduledTrigger cannot be in the past.');
-    delay = trigger.schedule!.difference(DateTime.now());
+    delay = trigger.schedule.difference(DateTime.now());
     duration = trigger.duration;
   }
 
   Future onResume() async {
-    timer = Timer(delay!, () {
+    timer = Timer(delay, () {
       // after the waiting time (delay) is over, resume this trigger
       super.onResume();
       if (duration != null) {
@@ -204,7 +204,7 @@ class RecurrentScheduledTriggerExecutor extends PeriodicTriggerExecutor {
               'There is a saved timestamp in the past - resuming this trigger now: ${DateTime.now().toString()}.');
           executors.forEach((executor) => executor.resume());
           // create a timer that pause the sampling after the specified duration.
-          Timer(duration!, () {
+          Timer(duration, () {
             executors.forEach((executor) => executor.pause());
           });
         }
@@ -223,9 +223,9 @@ class RecurrentScheduledTriggerExecutor extends PeriodicTriggerExecutor {
     if (_myTrigger.end == null || _myTrigger.end!.isAfter(DateTime.now())) {
       Timer(_delay, () async {
         debug('delay finished, now resuming...');
-        if (_myTrigger.remember!) {
+        if (_myTrigger.remember) {
           // replace the entry of the first occurrence to the next occurrence date
-          DateTime nextOccurrence = DateTime.now().add(period!);
+          DateTime nextOccurrence = DateTime.now().add(period);
           await Settings().preferences!.setString(
               _myTrigger.triggerId!, nextOccurrence.toUtc().toString());
           debug('saving nextOccurrence: $nextOccurrence');
@@ -243,7 +243,7 @@ class CronScheduledTriggerExecutor extends TriggerExecutor {
   late cron.ScheduledTask _scheduledTask;
 
   CronScheduledTriggerExecutor(CronScheduledTrigger trigger) : super(trigger) {
-    _schedule = cron.Schedule.parse(trigger.cronExpression!);
+    _schedule = cron.Schedule.parse(trigger.cronExpression);
     _cron = cron.Cron();
   }
 
@@ -253,7 +253,7 @@ class CronScheduledTriggerExecutor extends TriggerExecutor {
     _scheduledTask = _cron.schedule(_schedule, () async {
       debug('resuming cron job : ${DateTime.now().toString()}');
       await super.onResume();
-      Timer((trigger as CronScheduledTrigger).duration!, () => super.onPause());
+      Timer((trigger as CronScheduledTrigger).duration, () => super.onPause());
     });
   }
 
@@ -274,14 +274,14 @@ class SamplingEventTriggerExecutor extends TriggerExecutor {
     SamplingEventTrigger eventTrigger = trigger as SamplingEventTrigger;
     // start listen for events of the specified type
     _subscription = ProbeRegistry()
-        .eventsByType(eventTrigger?.measureType?.toString())
+        .eventsByType(eventTrigger.measureType)
         .listen((dataPoint) {
-      if ((eventTrigger?.resumeCondition == null) ||
+      if ((eventTrigger.resumeCondition == null) ||
           (dataPoint.carpBody as Datum)
-              .equivalentTo(eventTrigger?.resumeCondition)) super.onResume();
-      if (eventTrigger?.pauseCondition != null &&
+              .equivalentTo(eventTrigger.resumeCondition)) super.onResume();
+      if (eventTrigger.pauseCondition != null &&
           (dataPoint.carpBody as Datum)
-              .equivalentTo(eventTrigger?.pauseCondition)) super.onPause();
+              .equivalentTo(eventTrigger.pauseCondition)) super.onPause();
     });
   }
 
@@ -308,12 +308,12 @@ class ConditionalSamplingEventTriggerExecutor extends TriggerExecutor {
 
     // listen for event of the specified type
     _subscription = ProbeRegistry()
-        .eventsByType(eventTrigger?.measureType.toString())
+        .eventsByType(eventTrigger.measureType.toString())
         .listen((dataPoint) {
-      if (eventTrigger?.resumeCondition != null &&
-          eventTrigger?.resumeCondition!(dataPoint)) super.onResume();
-      if (eventTrigger?.pauseCondition != null &&
-          eventTrigger?.pauseCondition!(dataPoint)) super.onPause();
+      if (eventTrigger.resumeCondition != null &&
+          eventTrigger.resumeCondition!(dataPoint)) super.onResume();
+      if (eventTrigger.pauseCondition != null &&
+          eventTrigger.pauseCondition!(dataPoint)) super.onPause();
     });
   }
 
@@ -349,8 +349,8 @@ class RandomRecurrentTriggerExecutor extends TriggerExecutor {
   List<Time> get samplingTimes {
     List<Time> _samplingTimes = [];
     for (int i = 0; i <= numberOfSampling; i++) {
-      int randomHour = Random().nextInt(endTime!.hour! - startTime!.hour!) +
-          startTime!.hour!;
+      int randomHour =
+          Random().nextInt(endTime!.hour - startTime!.hour) + startTime!.hour;
       int randomMinutes = Random().nextInt(60);
       Time randomTime = Time(hour: randomHour, minute: randomMinutes);
 

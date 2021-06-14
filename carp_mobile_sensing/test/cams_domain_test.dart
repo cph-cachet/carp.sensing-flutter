@@ -6,23 +6,16 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:test/test.dart';
 
 void main() {
-  late CAMSStudyProtocol protocol;
+  late StudyProtocol protocol;
   late Smartphone phone;
   DeviceDescriptor eSense;
 
   setUp(() {
     // Create a new study protocol.
-    protocol = CAMSStudyProtocol()
-      ..name = 'Track patient movement'
-      ..responsible = StudyProtocolReponsible(
-        id: 'AB',
-        name: 'Alex Boyon',
-        email: 'alex@uni.dk',
-      )
-      ..protocolDescription = StudyProtocolDescription(
-          title: 'Test Study',
-          purpose: 'For testing purposes',
-          description: 'Testing');
+    protocol = StudyProtocol(
+        ownerId: 'user@dtu.dk',
+        name: 'patient_tracking',
+        description: 'Track patient movement');
 
     // Define which devices are used for data collection.
     phone = Smartphone();
@@ -68,11 +61,10 @@ void main() {
         eSense);
   });
 
-  test('CAMSStudyProtocol -> JSON', () async {
+  test('StudyProtocol -> JSON', () async {
     print(protocol);
     print(toJsonString(protocol));
-    expect(protocol.ownerId, 'AB');
-    expect(protocol.responsible!.id, 'AB');
+    expect(protocol.ownerId, 'user@dtu.dk');
     expect(protocol.masterDevices.length, 1);
     expect(protocol.connectedDevices.length, 1);
     expect(protocol.triggers.length, 3);
@@ -86,8 +78,8 @@ void main() {
     print('#1 : $protocol');
     final studyJson = toJsonString(protocol);
 
-    CAMSStudyProtocol protocolFromJson = CAMSStudyProtocol.fromJson(
-        json.decode(studyJson) as Map<String, dynamic>);
+    StudyProtocol protocolFromJson =
+        StudyProtocol.fromJson(json.decode(studyJson) as Map<String, dynamic>);
     expect(toJsonString(protocolFromJson), equals(studyJson));
     print('#2 : $protocolFromJson');
   });
@@ -96,8 +88,8 @@ void main() {
     // Read the study protocol from json file
     String plainJson = File('test/json/study_protocol.json').readAsStringSync();
 
-    CAMSStudyProtocol protocol = CAMSStudyProtocol.fromJson(
-        json.decode(plainJson) as Map<String, dynamic>);
+    StudyProtocol protocol =
+        StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
 
     expect(protocol.ownerId, 'AB');
     expect(protocol.masterDevices.first.roleName,
@@ -220,36 +212,35 @@ void main() {
 
     print(studyJson);
 
-    CAMSStudyProtocol protocol_2 = CAMSStudyProtocol.fromJson(
-        json.decode(studyJson) as Map<String, dynamic>);
+    StudyProtocol protocol_2 =
+        StudyProtocol.fromJson(json.decode(studyJson) as Map<String, dynamic>);
     expect(protocol_2.ownerId, protocol.ownerId);
 
     print('#1 : $protocol');
 
-    CAMSStudyProtocol protocolFromJson = CAMSStudyProtocol.fromJson(
-        json.decode(studyJson) as Map<String, dynamic>);
+    StudyProtocol protocolFromJson =
+        StudyProtocol.fromJson(json.decode(studyJson) as Map<String, dynamic>);
     expect(toJsonString(protocolFromJson), equals(studyJson));
     print('#2 : $protocolFromJson');
   });
 
   test('Register Device', () async {
     StudyDeploymentStatus status_1 =
-        await (SmartphoneDeploymentService().createStudyDeployment(protocol) as FutureOr<StudyDeploymentStatus>);
+        await (SmartphoneDeploymentService().createStudyDeployment(protocol));
     print(status_1);
-    assert(status_1.studyDeploymentId != null);
     assert(status_1.status == StudyDeploymentStatusTypes.Invited);
 
     StudyDeploymentStatus status_2 = await (SmartphoneDeploymentService()
         .registerDevice(
-            status_1.studyDeploymentId, 'esense', DeviceRegistration()) as FutureOr<StudyDeploymentStatus>);
+            status_1.studyDeploymentId, 'esense', DeviceRegistration()));
     print(status_2);
     assert(status_2.studyDeploymentId == status_1.studyDeploymentId);
     assert(status_2.status == StudyDeploymentStatusTypes.DeployingDevices);
     assert(status_2 == status_1);
 
-    StudyDeploymentStatus status_3 = await (SmartphoneDeploymentService()
+    StudyDeploymentStatus status_3 = await SmartphoneDeploymentService()
         .registerDevice(
-            status_1.studyDeploymentId, 'nonsense', DeviceRegistration()) as FutureOr<StudyDeploymentStatus>);
+            status_1.studyDeploymentId, 'nonsense', DeviceRegistration());
     assert(status_3.status == StudyDeploymentStatusTypes.DeployingDevices);
     assert(status_3.studyDeploymentId == status_1.studyDeploymentId);
     print(status_3);
@@ -257,11 +248,10 @@ void main() {
 
   test('Study Deployment', () async {
     StudyDeploymentStatus status_1 =
-        await (SmartphoneDeploymentService().createStudyDeployment(protocol) as FutureOr<StudyDeploymentStatus>);
+        await SmartphoneDeploymentService().createStudyDeployment(protocol);
 
     print(status_1);
     print(toJsonString(status_1));
-    assert(status_1.studyDeploymentId != null);
     // we expect the phone and esense devices
     expect(status_1.devicesStatus.length, 2);
     expect(status_1.status, StudyDeploymentStatusTypes.Invited);
@@ -275,9 +265,9 @@ void main() {
     expect(status_1.devicesStatus[1].status,
         DeviceDeploymentStatusTypes.Unregistered);
 
-    StudyDeploymentStatus status_2 = await (SmartphoneDeploymentService()
+    StudyDeploymentStatus status_2 = await SmartphoneDeploymentService()
         .registerDevice(
-            status_1.studyDeploymentId, 'esense', DeviceRegistration()) as FutureOr<StudyDeploymentStatus>);
+            status_1.studyDeploymentId, 'esense', DeviceRegistration());
 
     print(status_2);
     print(toJsonString(status_2));
@@ -296,8 +286,8 @@ void main() {
     expect(deployment.triggers.length, protocol.triggers.length);
     expect(deployment.triggeredTasks.length, protocol.triggeredTasks.length);
 
-    StudyDeploymentStatus status_3 = await (SmartphoneDeploymentService()
-        .deploymentSuccessful(status_1.studyDeploymentId) as FutureOr<StudyDeploymentStatus>);
+    StudyDeploymentStatus status_3 = await SmartphoneDeploymentService()
+        .deploymentSuccessful(status_1.studyDeploymentId);
     expect(status_3.status, StudyDeploymentStatusTypes.DeploymentReady);
     expect(status_3.studyDeploymentId, status_1.studyDeploymentId);
     print(status_3);

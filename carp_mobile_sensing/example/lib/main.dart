@@ -169,13 +169,10 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
   /// Create a new CAMS study protocol.
   Future<StudyProtocol> getStudyProtocol(String studyId) async {
-    CAMSStudyProtocol protocol = CAMSStudyProtocol()
-      ..name = 'Track patient movement'
-      ..responsible = StudyProtocolReponsible(
-        id: 'AB',
-        name: 'Alex Boyon',
-        email: 'alex@uni.dk',
-      );
+    StudyProtocol protocol = StudyProtocol(
+      ownerId: 'AB',
+      name: 'Track patient movement',
+    );
 
     // Define which devices are used for data collection.
     Smartphone phone = Smartphone();

@@ -24,8 +24,6 @@ class FileStudyProtocolManager implements StudyProtocolManager {
   Future initialize() async {
     final _studyPath = await path;
 
-    CAMSStudyProtocol(); // to initialize json serialization for CAMS classes
-
     info('Initializing FileDeploymentService...');
     info('Study file path : $_studyPath');
   }
@@ -37,8 +35,8 @@ class FileStudyProtocolManager implements StudyProtocolManager {
 
     try {
       String jsonString = File(filename(studyId)).readAsStringSync();
-      study = StudyProtocol
-          .fromJson(json.decode(jsonString) as Map<String, dynamic>);
+      study = StudyProtocol.fromJson(
+          json.decode(jsonString) as Map<String, dynamic>);
     } catch (exception) {
       warning("Failed to load study '$studyId' - $exception");
     }
@@ -62,7 +60,7 @@ class FileStudyProtocolManager implements StudyProtocolManager {
   }
 
   ///Returns the local study path on the device where studies are stored.
-  Future<String?> get path async {
+  Future<String> get path async {
     if (_path == null) {
       // get local working directory
       final localApplicationDir = await getApplicationDocumentsDirectory();
@@ -72,7 +70,7 @@ class FileStudyProtocolManager implements StudyProtocolManager {
               .create(recursive: true);
       _path = directory.path;
     }
-    return _path;
+    return _path!;
   }
 
   /// Current path and filename according to this format:

@@ -18,8 +18,8 @@ class SmartPhoneClientManager extends ClientManager {
         );
 
   @override
-  DeviceController? get deviceRegistry =>
-      super.deviceRegistry as DeviceController?;
+  DeviceController get deviceRegistry =>
+      super.deviceRegistry as DeviceController;
 
   @override
   Future<DeviceRegistration> configure({String? deviceId}) async {
@@ -47,8 +47,8 @@ class SmartPhoneClientManager extends ClientManager {
     StudyDeploymentController controller = StudyDeploymentController();
 
     await controller.initialize(
-      deploymentService!,
-      deviceRegistry!,
+      deploymentService,
+      deviceRegistry,
       studyDeploymentId,
       deviceRoleName,
       registration!,

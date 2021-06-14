@@ -25,24 +25,20 @@ part of runtime;
 /// and such factories can be registered in the [AppTaskController]
 /// using the `registerUserTaskFactory` method.
 class AppTaskExecutor extends TaskExecutor {
-  AppTaskExecutor(AppTask task) : super(task) {
-    assert(task is AppTask,
-        'AppTaskExecutor should be initialized with an AppTask.');
-    appTask = task;
+  /// The [AppTask] to be executed.
+  AppTask appTask;
+  late TaskExecutor _taskExecutor;
 
+  AppTaskExecutor(this.appTask) : super(appTask) {
     // create an embedded executor that later can be used to execute this task
-    _taskExecutor = TaskExecutor(task);
+    _taskExecutor = TaskExecutor(appTask);
 
     // add the events from the embedded executor to the overall stream of events
-    _group.add(_taskExecutor!.data);
+    _group.add(_taskExecutor.data);
   }
 
-  /// The [AppTask] to be executed.
-  AppTask? appTask;
-  TaskExecutor? _taskExecutor;
-
   void onInitialize(Measure measure) {
-    _taskExecutor!.initialize(measure);
+    _taskExecutor.initialize(measure);
   }
 
   Future onResume() async {
@@ -55,7 +51,7 @@ class AppTaskExecutor extends TaskExecutor {
   }
 
   Future onStop() async {
-    _taskExecutor!.stop();
+    _taskExecutor.stop();
     await super.onStop();
   }
 }
@@ -64,7 +60,7 @@ class AppTaskExecutor extends TaskExecutor {
 /// [AppTask].
 abstract class UserTaskFactory {
   /// The list of supported [AppTask] types.
-  List<String>? types;
+  List<String> types = [];
 
   /// Create a [UserTask] that wraps [executor].
   UserTask create(AppTaskExecutor executor);
@@ -97,7 +93,9 @@ class AppTaskController {
     // set up a timer which cleans up in the queue once an hour
     Timer.periodic(const Duration(hours: 1), (timer) {
       userTaskQueue.forEach((task) {
-        if (task.expiresIn!.isNegative) dequeue(task.id);
+        if (task.expiresIn != null && task.expiresIn!.isNegative) {
+          dequeue(task.id);
+        }
       });
     });
   }
@@ -107,7 +105,7 @@ class AppTaskController {
   /// Reguster a [UserTaskFactory] which can create [UserTask]s
   /// for the specified [AppTask] types.
   void registerUserTaskFactory(UserTaskFactory factory) {
-    factory.types!.forEach((type) {
+    factory.types.forEach((type) {
       _userTaskFactories[type] = factory;
     });
   }
@@ -115,7 +113,7 @@ class AppTaskController {
   /// Put [executor] on the [userTaskQueue] for later access by the app.
   void enqueue(AppTaskExecutor executor) {
     UserTask userTask =
-        _userTaskFactories[executor.appTask!.type!]!.create(executor);
+        _userTaskFactories[executor.appTask.type]!.create(executor);
     userTask.state = UserTaskState.enqueued;
     userTask.enqueued = DateTime.now();
     _userTaskMap[userTask.id] = userTask;
@@ -141,21 +139,20 @@ abstract class UserTask {
   final AppTaskExecutor _executor;
   UserTaskState _state = UserTaskState.initialized;
   String get id => _id;
-  String? get type => _executor?.appTask?.type;
-  String? get title => _executor?.appTask?.title;
-  String? get description => _executor?.appTask?.description;
-  String? get instructions => _executor?.appTask?.instructions;
+  String get type => _executor.appTask.type;
+  String get title => _executor.appTask.title;
+  String get description => _executor.appTask.description;
+  String get instructions => _executor.appTask.instructions;
 
   /// The time this task was added to the queue (enqueued).
   late DateTime enqueued;
 
   /// Returns a [Duration] until this task expires and is removed from the queue.
-  ///
   /// The returned [Duration] will be negative if [this] has expired.
   /// Returns `null` if this task never expires.
-  Duration? get expiresIn => (_executor.appTask!.expire == null)
-      ? null
-      : enqueued.add(_executor.appTask!.expire!).difference(DateTime.now());
+  Duration? get expiresIn => (_executor.appTask.expire != null)
+      ? enqueued.add(_executor.appTask.expire!).difference(DateTime.now())
+      : null;
 
   /// The state of this task.
   UserTaskState get state => _state;
@@ -175,11 +172,11 @@ abstract class UserTask {
   Stream<UserTaskState> get stateEvents => _stateController.stream;
 
   /// The [AppTask] from which this user task originates from.
-  AppTask? get task => _executor?.appTask;
+  AppTask get task => _executor.appTask;
 
   /// The [TaskExecutor] that is to be executed once the user
   /// want to start this task.
-  TaskExecutor? get executor => _executor._taskExecutor;
+  TaskExecutor get executor => _executor._taskExecutor;
 
   UserTask(this._executor);
 
@@ -242,13 +239,13 @@ enum UserTaskState {
 ///  * [OneTimeSensingUserTask]
 ///  * [SensingUserTask]
 class SensingUserTaskFactory implements UserTaskFactory {
-  List<String>? types = [
+  List<String> types = [
     SensingUserTask.SENSING_TYPE,
     SensingUserTask.ONE_TIME_SENSING_TYPE,
   ];
 
   UserTask create(AppTaskExecutor executor) =>
-      (executor.appTask!.type == SensingUserTask.ONE_TIME_SENSING_TYPE)
+      (executor.appTask.type == SensingUserTask.ONE_TIME_SENSING_TYPE)
           ? OneTimeSensingUserTask(executor)
           : SensingUserTask(executor);
 }
@@ -271,13 +268,13 @@ class SensingUserTask extends UserTask {
   /// Resumes sensing.
   void onStart(BuildContext context) {
     super.onStart(context);
-    executor?.resume();
+    executor.resume();
   }
 
   /// Pauses sensing.
   void onDone(BuildContext context, {dequeue = false}) {
     super.onDone(context, dequeue: dequeue);
-    executor?.pause();
+    executor.pause();
   }
 }
 

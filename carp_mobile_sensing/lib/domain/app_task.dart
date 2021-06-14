@@ -16,20 +16,22 @@ class AppTask extends TaskDescriptor {
   String type;
 
   /// A title for this task. Can be used in the app.
-  String? title;
+  String title;
 
   /// A short description (one line) of this task. Can be used in the app.
-  String? description;
+  String description;
 
   /// A longer instruction text explaining how a user should perform this task.
-  String? instructions;
+  String instructions;
 
   /// How many minutes will it take for the user to perform this task?
   /// Typically shown to the user before engaging into this task.
+  /// If `null` the task has no completion time.
   int? minutesToComplete;
 
   /// The duration of this app task, i.e. when it expire and is removed
   /// from the [AppTaskController]'s queue.
+  /// If `null` the task never expire.
   Duration? expire;
 
   /// Should a notification be send to the user on the phone?
@@ -38,9 +40,9 @@ class AppTask extends TaskDescriptor {
   AppTask({
     String? name,
     required this.type,
-    this.title,
-    this.description,
-    this.instructions,
+    this.title = '',
+    this.description = '',
+    this.instructions = '',
     this.minutesToComplete,
     this.expire,
     this.notification = false,

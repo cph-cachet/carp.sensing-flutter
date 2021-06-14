@@ -32,7 +32,7 @@ class DeviceController implements DeviceRegistry {
   }
 
   @override
-  DeviceManager getDevice(String deviceType) => _devices[deviceType]!;
+  DeviceManager? getDevice(String deviceType) => _devices[deviceType];
 
   @override
   bool hasDevice(String deviceType) => _devices.containsKey(deviceType);
@@ -40,7 +40,7 @@ class DeviceController implements DeviceRegistry {
   @override
   Future<DeviceManager?> createDevice(String deviceType) async {
     // early out if already registrered
-    if (_devices.containsKey(deviceType)) return _devices[deviceType];
+    if (_devices.containsKey(deviceType)) return _devices[deviceType]!;
 
     info('Creating device manager for device type: $deviceType');
 

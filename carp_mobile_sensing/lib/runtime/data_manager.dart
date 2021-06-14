@@ -69,23 +69,3 @@ class DataManagerRegistry {
     return _registry[type];
   }
 }
-
-// /// An event for a data manager.
-// class DataManagerEvent {
-//   /// The event type, see [DataManagerEventTypes].
-//   String type;
-
-//   /// Create a [DataManagerEvent].
-//   DataManagerEvent(this.type);
-
-//   String toString() => 'DataManagerEvent - type: $type';
-// }
-
-// /// An enumeration of data manager event types
-// class DataManagerEventTypes {
-//   /// DATA MANAGER INITIALIZED event
-//   static const String INITIALIZED = 'initialized';
-
-//   /// DATA MANAGER CLOSED event
-//   static const String CLOSED = 'closed';
-// }

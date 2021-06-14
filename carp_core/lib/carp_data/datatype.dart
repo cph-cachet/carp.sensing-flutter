@@ -23,13 +23,13 @@ class DataType {
   /// interpret [name].
   /// To prevent conflicts, a reverse domain namespace is suggested:
   /// e.g., "org.openmhealth" or "dk.cachet.carp".
-  final String? namespace;
+  final String namespace;
 
   /// The name of this data format.
   ///
   /// Uniquely identifies something within the [namespace].
   /// The name may not contain any periods. Periods are reserved for namespaces.
-  final String? name;
+  final String name;
 
   /// Create a [DataType].
   const DataType(this.namespace, this.name) : super();
