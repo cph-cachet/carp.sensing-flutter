@@ -533,8 +533,8 @@ ScheduledTrigger _$ScheduledTriggerFromJson(Map<String, dynamic> json) {
         : TimeOfDay.fromJson(json['time'] as Map<String, dynamic>),
     recurrenceRule: json['recurrenceRule'] == null
         ? null
-        : RecurrenceRule
-            .fromJson(json['recurrenceRule'] as Map<String, dynamic>),
+        : RecurrenceRule.fromJson(
+            json['recurrenceRule'] as Map<String, dynamic>),
   )..$type = json[r'$type'] as String;
 }
 
