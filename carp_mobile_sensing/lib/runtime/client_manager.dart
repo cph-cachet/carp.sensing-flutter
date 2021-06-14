@@ -11,8 +11,7 @@ class SmartPhoneClientManager extends ClientManager {
   SmartPhoneClientManager({
     DeploymentService deploymentService,
     DeviceController deviceRegistry,
-  })
-      : super(
+  }) : super(
           // if not specified, use default services
           deploymentService: deploymentService ?? SmartphoneDeploymentService(),
           deviceRegistry: deviceRegistry ?? DeviceController(),

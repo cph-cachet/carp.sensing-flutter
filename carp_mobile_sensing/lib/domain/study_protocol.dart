@@ -49,8 +49,7 @@ class CAMSStudyProtocol extends StudyProtocol {
     this.studyId,
     this.responsible,
     this.protocolDescription,
-  })
-      : super(ownerId: ownerId, name: name, description: description) {
+  }) : super(ownerId: ownerId, name: name, description: description) {
     // TODO - move this elsewhere.... can't assumed that the programmer
     // create a protocol - s/he might download it e.g. from CARP.
     _registerFromJsonFunctions();

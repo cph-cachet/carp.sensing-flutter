@@ -143,8 +143,7 @@ class TriggeredTaskExecutor extends Executor {
     TriggeredTask triggeredTask,
     CAMSTrigger trigger,
     TaskDescriptor task,
-  )
-      : super() {
+  ) : super() {
     assert(triggeredTask != null,
         'Cannot initiate a TriggeredTaskExecutor without a Triggered Task.');
     _triggeredTask = triggeredTask;

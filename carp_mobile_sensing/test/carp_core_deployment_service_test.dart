@@ -41,8 +41,8 @@ void main() {
     // Read the study protocol from json file
     String plainJson = File('test/json/study_protocol.json').readAsStringSync();
 
-    CAMSStudyProtocol protocol = CAMSStudyProtocol
-        .fromJson(json.decode(plainJson) as Map<String, dynamic>);
+    CAMSStudyProtocol protocol = CAMSStudyProtocol.fromJson(
+        json.decode(plainJson) as Map<String, dynamic>);
 
     expect(protocol.ownerId, 'AB');
     expect(protocol.masterDevices.first.roleName,
@@ -54,8 +54,8 @@ void main() {
     // Read the study protocol from json file
     String plainJson = File('test/json/study_protocol.json').readAsStringSync();
 
-    CAMSStudyProtocol protocol = CAMSStudyProtocol
-        .fromJson(json.decode(plainJson) as Map<String, dynamic>);
+    CAMSStudyProtocol protocol = CAMSStudyProtocol.fromJson(
+        json.decode(plainJson) as Map<String, dynamic>);
 
     expect(protocol.ownerId, 'AB');
     expect(protocol.masterDevices.first.roleName,
@@ -70,8 +70,8 @@ void main() {
     // Read the study protocol from json file
     String plainJson = File('test/json/study_protocol.json').readAsStringSync();
 
-    CAMSStudyProtocol protocol = CAMSStudyProtocol
-        .fromJson(json.decode(plainJson) as Map<String, dynamic>);
+    CAMSStudyProtocol protocol = CAMSStudyProtocol.fromJson(
+        json.decode(plainJson) as Map<String, dynamic>);
 
     StudyDeploymentStatus status =
         await SmartphoneDeploymentService().createStudyDeployment(protocol);
