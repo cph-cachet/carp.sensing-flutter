@@ -1,4 +1,7 @@
 ## 0.21.5
+* bug fix of [#199](https://github.com/cph-cachet/carp.sensing-flutter/issues/199)
+
+## 0.21.5
 * rename of `ProtocolOwner` to `StudyProtocolReponsible` (in order not to confuse it with `ownerId` in `StudyProtocol`)
 
 ## 0.21.4

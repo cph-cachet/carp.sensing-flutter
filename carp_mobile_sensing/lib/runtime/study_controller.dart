@@ -10,7 +10,7 @@ part of runtime;
 class StudyDeploymentController extends StudyRuntime {
   int _samplingSize = 0;
   DataManager _dataManager;
-  DataEndPoint _dataEndPoint;
+  // DataEndPoint _dataEndPoint;
   StudyDeploymentExecutor _executor;
   SamplingSchema _samplingSchema;
   String _privacySchemaName;
@@ -24,7 +24,7 @@ class StudyDeploymentController extends StudyRuntime {
   StudyDeploymentExecutor get executor => _executor;
 
   /// The configuration of the data endpoint, i.e. how data is saved or uploaded.
-  DataEndPoint get dataEndPoint => _dataEndPoint;
+  DataEndPoint get dataEndPoint => masterDeployment.dataEndPoint;
 
   /// The data manager responsible for handling the data collected by this controller.
   DataManager get dataManager => _dataManager;
@@ -108,17 +108,19 @@ class StudyDeploymentController extends StudyRuntime {
 
     // initialize optional parameters
     _samplingSchema = samplingSchema ?? SamplingSchema.normal(powerAware: true);
-    _dataEndPoint = dataEndPoint ?? masterDeployment.dataEndPoint;
+    masterDeployment.dataEndPoint =
+        dataEndPoint ?? masterDeployment.dataEndPoint;
     _privacySchemaName = privacySchemaName ?? NameSpace.CARP;
     _transformer = transformer ?? ((datum) => datum);
 
-    if (_dataEndPoint != null) {
-      _dataManager = DataManagerRegistry().lookup(_dataEndPoint.type);
+    if (masterDeployment.dataEndPoint != null) {
+      _dataManager =
+          DataManagerRegistry().lookup(masterDeployment.dataEndPoint.type);
     }
 
     if (_dataManager == null) {
       warning(
-          "No data manager for the specified data endpoint found: '$_dataEndPoint'.");
+          "No data manager for the specified data endpoint found: '${masterDeployment.dataEndPoint}'.");
     }
 
     // if no user is specified for this study, look up the local user id
@@ -147,7 +149,7 @@ class StudyDeploymentController extends StudyRuntime {
     info(' deployment id : ${masterDeployment.studyDeploymentId}');
     info('    study name : ${masterDeployment.name}');
     info('          user : ${masterDeployment.userId}');
-    info(' data endpoint : $_dataEndPoint');
+    info(' data endpoint : ${masterDeployment.dataEndPoint}');
     info('      platform : ${DeviceInfo().platform.toString()}');
     info('     device ID : ${DeviceInfo().deviceID.toString()}');
     info('  data manager : $_dataManager');
