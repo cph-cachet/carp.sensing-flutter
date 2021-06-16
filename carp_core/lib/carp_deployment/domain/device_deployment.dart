@@ -65,7 +65,6 @@ class MasterDeviceDeployment {
     if (_taskMap == null) {
       _taskMap = {};
       tasks.forEach((task) => _taskMap![task.name] = task);
-      print(_taskMap);
     }
     return _taskMap![name];
   }

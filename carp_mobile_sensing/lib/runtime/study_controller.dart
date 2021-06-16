@@ -144,7 +144,7 @@ class StudyDeploymentController extends StudyRuntime {
     });
 
     info(
-        'CARP Mobile Sensing (CAMS) - Initializing Study Deployment Controller:');
+        'CARP Mobile Sensing (CAMS) - Initializing Study Deployment Controller');
     info(' deployment id : ${masterDeployment!.studyDeploymentId}');
     info('          user : ${masterDeployment!.userId}');
     info(' data endpoint : $_dataEndPoint');

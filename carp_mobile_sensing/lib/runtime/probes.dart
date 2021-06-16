@@ -438,8 +438,9 @@ abstract class DatumProbe extends AbstractProbe {
 
   /// Subclasses should implement this method to collect a [Datum].
   ///
-  /// Must not return `null`. If an error occurs, return an [ErrorDatum].
-  Future<Datum> getDatum();
+  /// Can return `null` if no data is available.
+  /// Can return an [ErrorDatum] if an error occurs.
+  Future<Datum?> getDatum();
 }
 
 /// A periodic probe is triggered at regular intervals, specified by its [frequency]
@@ -471,19 +472,12 @@ abstract class PeriodicDatumProbe extends DatumProbe {
     // create a recurrent timer that gets the data point every [frequency].
     timer = Timer.periodic(frequency!, (Timer t) async {
       try {
-        Datum datum = await getDatum();
-        controller.add(datum);
+        Datum? datum = await getDatum();
+        if (datum != null) controller.add(datum);
       } catch (error) {
         controller.addError(error);
       }
     });
-
-    // timer = Timer.periodic(frequency!, (Timer t) async {
-    //   await getDatum().then((datum) {
-    //     controller.add(datum);
-    //   }).catchError(
-    //       (error, stacktrace) => controller.addError(error, stacktrace));
-    // });
   }
 
   Future onPause() async {
@@ -630,16 +624,11 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
         onSamplingEnd();
         // collect the datum
         try {
-          Datum datum = await getDatum();
-          controller.add(datum);
+          Datum? datum = await getDatum();
+          if (datum != null) controller.add(datum);
         } catch (error) {
           controller.addError(error);
         }
-
-        // getDatum().then((dataPoint) {
-        //   controller.add(dataPoint);
-        // }).catchError(
-        //     (error, stacktrace) => controller.addError(error, stacktrace));
       });
     });
   }
@@ -648,16 +637,11 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
     if (timer != null) timer!.cancel();
     // check if there are some buffered data that needs to be collected before pausing
     try {
-      Datum datum = await getDatum();
-      controller.add(datum);
+      Datum? datum = await getDatum();
+      if (datum != null) controller.add(datum);
     } catch (error) {
       controller.addError(error);
     }
-
-    // await getDatum().then((dataPoint) {
-    //   controller.add(dataPoint);
-    // }).catchError(
-    //     (error, stacktrace) => controller.addError(error, stacktrace));
   }
 
   Future onStop() async {
@@ -675,8 +659,9 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
   /// This method will be called every time data has been buffered for a
   /// [duration] and should return the final [Datum] for the buffered data.
   ///
-  /// Must not return `null`. If an error occurs, return an [ErrorDatum].
-  Future<Datum> getDatum();
+  /// Can return `null` if no data is available.
+  /// Can return an [ErrorDatum] if an error occurs.
+  Future<Datum?> getDatum();
 }
 
 /// An abstract probe which can be used to sample data from a buffering stream,
@@ -699,29 +684,23 @@ abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
   Stream<Datum> get stream => Stream.empty();
 
   void onInitialize(Measure measure) {
-    assert(bufferingStream != null, 'Buffering event stream must not be null');
     super.onInitialize(measure);
   }
 
   Future onResume() async {
     timer = Timer.periodic(frequency!, (Timer t) {
       onSamplingStart();
-      subscription = bufferingStream?.listen(onSamplingData,
+      subscription = bufferingStream.listen(onSamplingData,
           onError: onError, onDone: onDone);
       Timer(duration!, () async {
         await subscription?.cancel();
         onSamplingEnd();
         try {
-          Datum datum = await getDatum();
-          controller.add(datum);
+          Datum? datum = await getDatum();
+          if (datum != null) controller.add(datum);
         } catch (error) {
           controller.addError(error);
         }
-
-        // await getDatum().then((datum) {
-        //   controller.add(datum);
-        // }).catchError(
-        //     (error, stacktrace) => controller.addError(error, stacktrace));
       });
     });
   }
@@ -730,22 +709,17 @@ abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
     await super.onPause();
     onSamplingEnd();
     try {
-      Datum datum = await getDatum();
-      controller.add(datum);
+      Datum? datum = await getDatum();
+      if (datum != null) controller.add(datum);
     } catch (error) {
       controller.addError(error);
     }
-
-    // await getDatum().then((datum) {
-    //   controller.add(datum);
-    // }).catchError(
-    //     (error, stacktrace) => controller.addError(error, stacktrace));
   }
 
   // Sub-classes should implement the following handler methods.
 
   /// The stream of events to be buffered. Must be specified by sub-classes.
-  Stream<dynamic>? get bufferingStream;
+  Stream<dynamic> get bufferingStream;
 
   /// Handler called when sampling period starts.
   void onSamplingStart();
@@ -760,8 +734,9 @@ abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
   /// This method will be called every time data has been buffered for a [duration]
   /// and should return the final [Datum] for the buffered data.
   ///
-  /// Must not return `null`. If an error occurs, return an [ErrorDatum].
-  Future<Datum> getDatum();
+  /// Can return `null` if no data is available.
+  /// Can return an [ErrorDatum] if an error occurs.
+  Future<Datum?> getDatum();
 }
 
 /// An abstract probe which can be used to buffer data from a stream and collect data
@@ -782,16 +757,11 @@ abstract class BufferingStreamProbe extends BufferingPeriodicStreamProbe {
     timer = Timer.periodic(frequency!, (Timer t) async {
       onSamplingStart();
       try {
-        Datum datum = await getDatum();
-        controller.add(datum);
+        Datum? datum = await getDatum();
+        if (datum != null) controller.add(datum);
       } catch (error) {
         controller.addError(error);
       }
-
-      //   getDatum().then((datum) {
-      //     controller.add(datum);
-      //   }).catchError(
-      //       (error, stacktrace) => controller.addError(error, stacktrace));
     });
   }
 

@@ -45,6 +45,7 @@ part 'client_manager.dart';
 class SensingException implements Exception {
   dynamic message;
   SensingException([this.message]);
+  String toString() => "$runtimeType - $message";
 }
 
 /// A simple method for printing warning messages to the console.

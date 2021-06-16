@@ -39,7 +39,7 @@ dependencies:
 
   # the CACHET plugins
   pedometer: ^3.0.0       # Get the step count from local OS
-  light: ^2.0.0           # Light sensor over platform channel
+  light: ^2.1.0           # Light sensor over platform channel
   device_apps: ^2.1.1     # Device installed apps over platform channel
   screen_state: ^2.0.0    # Screen LOCK/ON/OFF
 
