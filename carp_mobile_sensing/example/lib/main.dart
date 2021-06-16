@@ -38,7 +38,7 @@ class Console extends State<ConsolePage> {
     sensing = Sensing();
     Settings().init().then((future) {
       sensing.init().then((future) {
-        log("Setting up study protocol: ${sensing.protocol}");
+        log('Setting up study protocol: ${sensing.protocol}');
       });
     });
   }

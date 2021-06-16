@@ -129,7 +129,7 @@ class StudyDeployment {
   MasterDeviceDeployment getDeviceDeploymentFor(MasterDeviceDescriptor device) {
     // Verify whether the specified device is part of the protocol of this
     // deployment and has been registrered.
-    assert(_protocol.masterDevices.contains(device),
+    assert(_protocol.hasMasterDevice(device.roleName),
         "The specified master device with rolename '${device.roleName}' is not part of the protocol of this deployment.");
     assert(_registeredDevices.containsKey(device.roleName),
         "The specified master device with rolename '${device.roleName}' has not been registrered to this deployment.");

@@ -13,21 +13,30 @@ part of carp_core_protocols;
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class Trigger extends Serializable {
   final String _triggerNamespace = 'dk.cachet.carp.protocols.domain.triggers';
+  bool? _requiresMasterDevice;
+  String? _sourceDeviceRoleName;
 
   /// The device role name from which the trigger originates.
-  String? sourceDeviceRoleName;
+  String get sourceDeviceRoleName =>
+      (_sourceDeviceRoleName != null) ? _sourceDeviceRoleName! : '';
+  set sourceDeviceRoleName(String? name) => _sourceDeviceRoleName = name;
 
   /// Determines whether the trigger needs to be evaluated on a master
   /// device ([MasterDeviceDescriptor]).
   /// For example, this is the case when the trigger is time bound and needs
   /// to be evaluated by a task scheduler running on a master device.
-  bool? requiresMasterDevice;
+  bool get requiresMasterDevice =>
+      (_requiresMasterDevice != null) ? _requiresMasterDevice! : false;
+
+  set requiresMasterDevice(bool? value) => _requiresMasterDevice = value;
 
   @mustCallSuper
   Trigger({
-    this.sourceDeviceRoleName,
-    this.requiresMasterDevice = false,
-  }) : super();
+    String? sourceDeviceRoleName,
+    bool? requiresMasterDevice = false,
+  }) : super() {
+    _requiresMasterDevice = requiresMasterDevice;
+  }
 
   Function get fromJsonFunction => _$TriggerFromJson;
   factory Trigger.fromJson(Map<String, dynamic> json) =>

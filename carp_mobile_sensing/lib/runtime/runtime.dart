@@ -19,7 +19,7 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
-import 'package:package_info/package_info.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:permission_handler_platform_interface/permission_handler_platform_interface.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -49,15 +49,15 @@ class SensingException implements Exception {
 
 /// A simple method for printing warning messages to the console.
 void info(String message) => (Settings().debugLevel >= DebugLevel.INFO)
-    ? print('CAMS INFO - $message')
+    ? print('[CAMS INFO] $message')
     : 0;
 
 /// A simple method for printing warning messages to the console.
 void warning(String message) => (Settings().debugLevel >= DebugLevel.WARNING)
-    ? print('CAMS WARNING - $message')
+    ? print('[CAMS WARNING]  $message')
     : 0;
 
 /// A simple method for printing debug messages to the console.
 void debug(String message) => (Settings().debugLevel >= DebugLevel.DEBUG)
-    ? print('CAMS DEBUG - $message')
+    ? print('[CAMS DEBUG] $message')
     : 0;

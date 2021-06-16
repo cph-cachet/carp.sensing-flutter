@@ -90,14 +90,9 @@ class StudyProtocol {
     // early out if already added
     if (triggers.values.contains(trigger)) return;
 
-    print('>> $trigger');
-    print('>> ${trigger.requiresMasterDevice}');
-    print('>> ${trigger.sourceDeviceRoleName}');
-    print('>> ${hasMasterDevice(trigger.sourceDeviceRoleName!)}');
-
-    if (trigger.requiresMasterDevice!) {
+    if (trigger.requiresMasterDevice) {
       assert(
-          hasMasterDevice(trigger.sourceDeviceRoleName!),
+          hasMasterDevice(trigger.sourceDeviceRoleName),
           'The passed trigger cannot be initiated by its specified source device '
           'since it is not a master device which is part of this protocol.');
     }

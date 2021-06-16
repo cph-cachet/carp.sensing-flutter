@@ -94,7 +94,7 @@ class SmartphoneDeploymentService implements DeploymentService {
   }
 
   @override
-  Future<MasterDeviceDeployment> getDeviceDeploymentFor(
+  Future<CAMSMasterDeviceDeployment> getDeviceDeploymentFor(
     String studyDeploymentId,
     String masterDeviceRoleName,
   ) async {
@@ -128,8 +128,7 @@ class SmartphoneDeploymentService implements DeploymentService {
   /// the data locally on the phone as zipped files.
   Future<CAMSMasterDeviceDeployment> getDeviceDeployment(
           String studyDeploymentId) async =>
-      await (getDeviceDeploymentFor(studyDeploymentId, thisPhone.roleName)
-          as FutureOr<CAMSMasterDeviceDeployment>);
+      await getDeviceDeploymentFor(studyDeploymentId, thisPhone.roleName);
 
   @override
   Future<StudyDeploymentStatus> deploymentSuccessfulFor(

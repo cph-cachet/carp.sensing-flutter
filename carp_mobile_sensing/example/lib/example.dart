@@ -8,7 +8,10 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:carp_core/carp_core.dart';
+import 'package:carp_core/carp_protocols/carp_core_protocols.dart';
+import 'package:carp_core/carp_deployment/carp_core_deployment.dart';
+import 'package:carp_core/carp_data/carp_core_data.dart';
+import 'package:carp_core/carp_client/carp_core_client.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 /// This is an example of how to set up a study by using the `common`
@@ -393,16 +396,16 @@ void app_task_example() async {
         ImmediateTrigger(), // collect device info as an app task
         AppTask(
           type: SensingUserTask.ONE_TIME_SENSING_TYPE,
-          title: "Device",
-          description: "Collect device info",
+          title: 'Device',
+          description: 'Collect device info',
         )..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
         phone)
     ..addTriggeredTask(
         ImmediateTrigger(), // start collecting screen events as an app task
         AppTask(
           type: SensingUserTask.SENSING_TYPE,
-          title: "Screen",
-          description: "Collect screen events",
+          title: 'Screen',
+          description: 'Collect screen events',
         )..addMeasure(Measure(type: DeviceSamplingPackage.SCREEN)),
         phone);
 

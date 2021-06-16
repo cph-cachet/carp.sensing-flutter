@@ -7,7 +7,7 @@
 library sensors;
 
 import 'dart:async';
-import 'package:sensors/sensors.dart';
+import 'package:sensors_plus/sensors_plus.dart';
 import 'package:light/light.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:pedometer/pedometer.dart';
