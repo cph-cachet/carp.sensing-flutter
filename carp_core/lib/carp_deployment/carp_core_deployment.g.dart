@@ -11,12 +11,12 @@ MasterDeviceDeployment _$MasterDeviceDeploymentFromJson(
   return MasterDeviceDeployment(
     deviceDescriptor: json['deviceDescriptor'] == null
         ? null
-        : MasterDeviceDescriptor
-            .fromJson(json['deviceDescriptor'] as Map<String, dynamic>),
+        : MasterDeviceDescriptor.fromJson(
+            json['deviceDescriptor'] as Map<String, dynamic>),
     configuration: json['configuration'] == null
         ? null
-        : DeviceRegistration
-            .fromJson(json['configuration'] as Map<String, dynamic>),
+        : DeviceRegistration.fromJson(
+            json['configuration'] as Map<String, dynamic>),
     connectedDevices: (json['connectedDevices'] as List)
         ?.map((e) => e == null
             ? null
@@ -334,16 +334,13 @@ CreateStudyDeployment _$CreateStudyDeploymentFromJson(
     json['protocol'] == null
         ? null
         : StudyProtocol.fromJson(json['protocol'] as Map<String, dynamic>),
-  )
-    ..$type = json[r'$type'] as String
-    ..studyDeploymentId = json['studyDeploymentId'] as String;
+  )..$type = json[r'$type'] as String;
 }
 
 Map<String, dynamic> _$CreateStudyDeploymentToJson(
         CreateStudyDeployment instance) =>
     <String, dynamic>{
       r'$type': instance.$type,
-      'studyDeploymentId': instance.studyDeploymentId,
       'protocol': instance.protocol,
     };
 
@@ -384,8 +381,8 @@ RegisterDevice _$RegisterDeviceFromJson(Map<String, dynamic> json) {
     json['deviceRoleName'] as String,
     json['registration'] == null
         ? null
-        : DeviceRegistration
-            .fromJson(json['registration'] as Map<String, dynamic>),
+        : DeviceRegistration.fromJson(
+            json['registration'] as Map<String, dynamic>),
   )..$type = json[r'$type'] as String;
 }
 
