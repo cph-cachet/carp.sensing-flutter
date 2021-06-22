@@ -19,8 +19,7 @@ class DeviceDescriptor extends Serializable {
     this.roleName,
     this.isMasterDevice = false,
     this.supportedDataTypes,
-  })
-      : super();
+  }) : super();
 
   /// The device type identifier
   @JsonKey(ignore: true)
@@ -57,8 +56,7 @@ class MasterDeviceDescriptor extends DeviceDescriptor {
   MasterDeviceDescriptor({
     String roleName,
     List<String> supportedDataTypes,
-  })
-      : super(
+  }) : super(
           roleName: roleName,
           isMasterDevice: true,
           supportedDataTypes: supportedDataTypes,
@@ -82,8 +80,7 @@ class CustomProtocolDevice extends MasterDeviceDescriptor {
   CustomProtocolDevice({
     String roleName = DEFAULT_ROLENAME,
     List<String> supportedDataTypes,
-  })
-      : super(
+  }) : super(
           roleName: roleName,
           supportedDataTypes: supportedDataTypes,
         );
@@ -110,8 +107,7 @@ class Smartphone extends MasterDeviceDescriptor {
   Smartphone({
     String roleName = DEFAULT_ROLENAME,
     List<String> supportedDataTypes,
-  })
-      : super(
+  }) : super(
           roleName: roleName,
           supportedDataTypes: supportedDataTypes,
         );
@@ -128,8 +124,7 @@ class AltBeacon extends DeviceDescriptor {
   AltBeacon({
     String roleName,
     List<String> supportedDataTypes,
-  })
-      : super(
+  }) : super(
           roleName: roleName,
           isMasterDevice: false,
           supportedDataTypes: supportedDataTypes,

@@ -30,8 +30,7 @@ class Trigger extends Serializable {
   Trigger({
     this.sourceDeviceRoleName,
     this.requiresMasterDevice = true,
-  })
-      : super();
+  }) : super();
 
   Function get fromJsonFunction => _$TriggerFromJson;
   factory Trigger.fromJson(Map<String, dynamic> json) =>
@@ -54,8 +53,7 @@ class ElapsedTimeTrigger extends Trigger {
     String sourceDeviceRoleName,
     bool requiresMasterDevice,
     this.elapsedTime,
-  })
-      : super(
+  }) : super(
           sourceDeviceRoleName: sourceDeviceRoleName,
           requiresMasterDevice: requiresMasterDevice,
         );
@@ -82,8 +80,7 @@ class ManualTrigger extends Trigger {
     bool requiresMasterDevice,
     this.label,
     this.description,
-  })
-      : super(
+  }) : super(
           sourceDeviceRoleName: sourceDeviceRoleName,
           requiresMasterDevice: requiresMasterDevice,
         );
@@ -112,8 +109,7 @@ class ScheduledTrigger extends Trigger {
     bool requiresMasterDevice,
     this.time,
     this.recurrenceRule,
-  })
-      : super(
+  }) : super(
           sourceDeviceRoleName: sourceDeviceRoleName,
           requiresMasterDevice: requiresMasterDevice,
         );

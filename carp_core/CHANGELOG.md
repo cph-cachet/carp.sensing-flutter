@@ -1,3 +1,6 @@
+## 0.21.5
+* Removed unnecesary JSON object from `CreateStudyDeployment` request ([PR#200](https://github.com/cph-cachet/carp.sensing-flutter/pull/200)).
+
 ## 0.21.4+3
 * small bug fix in json serialization
 * new constructor to `Trigger` classes
