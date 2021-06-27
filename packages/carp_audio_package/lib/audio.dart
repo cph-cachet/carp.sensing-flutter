@@ -7,14 +7,17 @@ library audio;
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
-import 'package:record_mp3/record_mp3.dart';
+//import 'package:record_mp3/record_mp3.dart';
+import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:noise_meter/noise_meter.dart';
 import 'package:stats/stats.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import 'package:carp_core/carp_common/carp_core_common.dart';
+import 'package:carp_core/carp_protocols/carp_core_protocols.dart';
+import 'package:carp_core/carp_data/carp_core_data.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 part 'audio_probe.dart';
@@ -23,3 +26,6 @@ part 'audio_datum.dart';
 part 'audio_measures.dart';
 part 'audio_package.dart';
 part 'audio.g.dart';
+
+// auto generate json code (.g files) with:
+//   flutter pub run build_runner build --delete-conflicting-outputs

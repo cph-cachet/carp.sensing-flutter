@@ -25,7 +25,7 @@ class AudioSamplingPackage extends SmartphoneSamplingPackage {
         NOISE,
       ];
 
-  Probe create(String type) {
+  Probe? create(String type) {
     switch (type) {
       case AUDIO:
         return AudioProbe();
@@ -37,15 +37,19 @@ class AudioSamplingPackage extends SmartphoneSamplingPackage {
   }
 
   void onRegister() {
-    FromJsonFactory().register(NoiseMeasure(type: null));
+    FromJsonFactory().register(NoiseMeasure(
+      type: NOISE,
+      frequency: Duration(minutes: 5),
+      duration: Duration(seconds: 10),
+    ));
   }
 
   List<Permission> get permissions => [Permission.microphone];
 
-  SamplingSchema get common => SamplingSchema()
-    ..type = SamplingSchemaType.common
-    ..name = 'Common (default) context sampling schema'
-    ..powerAware = true
+  SamplingSchema get common => SamplingSchema(
+      type: SamplingSchemaType.common,
+      name: 'Common (default) context sampling schema',
+      powerAware: true)
     ..measures.addEntries([
       MapEntry(
           AUDIO,

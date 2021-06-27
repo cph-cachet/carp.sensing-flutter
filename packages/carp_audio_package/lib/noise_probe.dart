@@ -15,34 +15,41 @@ part of audio;
 /// Does not record sound. Instead reports the audio level with a specified
 /// frequency, in a given sampling window as a [NoiseDatum].
 class NoiseProbe extends BufferingPeriodicStreamProbe {
-  NoiseMeter _noiseMeter;
+  NoiseMeter? _noiseMeter;
   List<NoiseReading> _noiseReadings = [];
 
-  Stream get bufferingStream => _noiseMeter.noiseStream;
+  Stream get bufferingStream => _noiseMeter!.noiseStream;
 
+  @override
   void onInitialize(Measure measure) {
     assert(measure is NoiseMeasure);
     _noiseMeter = NoiseMeter(onStop);
     super.onInitialize(measure);
   }
 
+  @override
   Future onRestart() async {
     super.onRestart();
     _noiseMeter = NoiseMeter(onStop);
   }
 
+  @override
   Future onStop() async {
     super.onStop();
     _noiseMeter = null;
   }
 
-  void onSamplingEnd() {}
+  @override
+  void onSamplingEnd() {} // Do nothing
 
+  @override
   void onSamplingStart() {} // Do nothing
 
+  @override
   void onSamplingData(dynamic noiseReading) => _noiseReadings.add(noiseReading);
 
-  Future<Datum> getDatum() async {
+  @override
+  Future<Datum?> getDatum() async {
     if (_noiseReadings.length > 0) {
       List<num> _meanList = [];
       List<num> _maxList = [];
@@ -67,7 +74,8 @@ class NoiseProbe extends BufferingPeriodicStreamProbe {
             stdDecibel: std.toDouble(),
             minDecibel: min.toDouble(),
             maxDecibel: max.toDouble());
+    } else {
+      return null;
     }
-    return null;
   }
 }

@@ -1,3 +1,6 @@
+## 0.30.0
+* upgrade to null-safety
+
 ## 0.21.2
 * upgrade of `activity_recognition_flutter` to version `4.0.2`
 
