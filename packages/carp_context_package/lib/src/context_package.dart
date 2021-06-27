@@ -33,7 +33,7 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
         MOBILITY,
       ];
 
-  Probe create(String type) {
+  Probe? create(String type) {
     switch (type) {
       case LOCATION:
         return LocationProbe();
@@ -55,20 +55,19 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
   }
 
   void onRegister() {
-    FromJsonFactory().register(LocationMeasure(type: null));
-    FromJsonFactory().register(WeatherMeasure(type: null));
-    FromJsonFactory().register(GeofenceMeasure(type: null));
-    FromJsonFactory().register(AirQualityMeasure(type: null));
-    FromJsonFactory().register(GeoPosition(0, 0));
-    FromJsonFactory().register(MobilityMeasure(type: null));
+    // first register all measure to be de/serializable
+    dataTypes.forEach(
+        (measure) => FromJsonFactory().register(common.measures[measure]!));
+    // also register the GeoPosition class used in the GeofenceMeasure
+    FromJsonFactory().register(GeoPosition(1.1, 1.1));
 
     // registering the transformers from CARP to OMH for geolocation and physical activity.
     // we assume that there is an OMH schema registered already...
     TransformerSchemaRegistry()
-        .lookup(NameSpace.OMH)
+        .lookup(NameSpace.OMH)!
         .add(LOCATION, OMHGeopositionDatum.transformer);
     TransformerSchemaRegistry()
-        .lookup(NameSpace.OMH)
+        .lookup(NameSpace.OMH)!
         .add(ACTIVITY, OMHPhysicalActivityDatum.transformer);
   }
 
@@ -78,10 +77,10 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
         Permission.activityRecognition
       ];
 
-  SamplingSchema get common => SamplingSchema()
-    ..type = SamplingSchemaType.common
-    ..name = 'Common (default) context sampling schema'
-    ..powerAware = true
+  SamplingSchema get common => SamplingSchema(
+      type: SamplingSchemaType.common,
+      name: 'Common (default) context sampling schema',
+      powerAware: true)
     ..measures.addEntries([
       MapEntry(
         LOCATION,
@@ -140,6 +139,7 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
               enabled: true,
               center: GeoPosition(55.7943601, 12.4461956),
               radius: 500,
+              dwell: Duration(minutes: 30),
               name: 'Geofence',
               description:
                   "Collects geofence events when then phone enters, leaves, or dwell in a geographic area",

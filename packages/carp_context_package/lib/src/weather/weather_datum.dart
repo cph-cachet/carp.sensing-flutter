@@ -13,8 +13,8 @@ class WeatherDatum extends Datum {
   DataFormat get format =>
       DataFormat.fromString(ContextSamplingPackage.WEATHER);
 
-  String country, areaName, weatherMain, weatherDescription;
-  DateTime date, sunrise, sunset;
+  String? country, areaName, weatherMain, weatherDescription;
+  DateTime? date, sunrise, sunset;
   var latitude,
       longitude,
       pressure,

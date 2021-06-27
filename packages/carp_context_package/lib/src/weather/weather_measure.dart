@@ -17,18 +17,17 @@ class WeatherMeasure extends CAMSMeasure {
 //  double latitude, longitude;
 
   WeatherMeasure({
-    @required String type,
-    String name,
-    String description,
-    bool enabled,
-    this.apiKey,
-  })
-      : super(
+    required String type,
+    String? name,
+    String? description,
+    bool enabled = true,
+    required this.apiKey,
+  }) : super(
             type: type, name: name, description: description, enabled: enabled);
 
   Function get fromJsonFunction => _$WeatherMeasureFromJson;
   factory WeatherMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as WeatherMeasure;
   Map<String, dynamic> toJson() => _$WeatherMeasureToJson(this);
 
   String toString() => super.toString() + ', API key: $apiKey';

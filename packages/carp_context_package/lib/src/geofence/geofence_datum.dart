@@ -13,7 +13,7 @@ class GeofenceDatum extends Datum {
   DataFormat get format =>
       DataFormat.fromString(ContextSamplingPackage.GEOFENCE);
 
-  GeofenceDatum({this.type, this.name}) : super();
+  GeofenceDatum({required this.type, this.name}) : super();
 
   factory GeofenceDatum.fromJson(Map<String, dynamic> json) =>
       _$GeofenceDatumFromJson(json);
@@ -21,10 +21,9 @@ class GeofenceDatum extends Datum {
   Map<String, dynamic> toJson() => _$GeofenceDatumToJson(this);
 
   /// The name of this geofence.
-  String name;
+  String? name;
 
-  /// Type of geofence event.
-  /// Holds information about a geofence event:
+  /// Type of geofence event:
   ///  - ENTER
   ///  - EXIT
   ///  - DWELL

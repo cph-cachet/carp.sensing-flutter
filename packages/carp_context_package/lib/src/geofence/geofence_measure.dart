@@ -25,10 +25,7 @@ class GeoPosition extends Serializable {
   /// Longitude in GPS coordinates.
   final double longitude;
 
-  GeoPosition(this.latitude, this.longitude) {
-    assert(latitude != null);
-    assert(longitude != null);
-  }
+  GeoPosition(this.latitude, this.longitude);
 
   GeoPosition.fromLocationDto(LocationDto location)
       : latitude = location.latitude,
@@ -58,7 +55,7 @@ class GeoPosition extends Serializable {
 
   Function get fromJsonFunction => _$GeoPositionFromJson;
   factory GeoPosition.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as GeoPosition;
   Map<String, dynamic> toJson() => _$GeoPositionToJson(this);
 
   String toString() => 'GeoPosition (latitude:$latitude, longitude:$longitude)';
@@ -88,23 +85,23 @@ class GeofenceMeasure extends CAMSMeasure {
   Duration dwell;
 
   /// A label for this geofence.
-  String label;
+  String? label;
 
   /// Specify a geofence measure
   GeofenceMeasure({
-    @required String type,
-    String name,
-    String description,
-    bool enabled,
-    this.center,
-    this.radius,
+    required String type,
+    String? name,
+    String? description,
+    bool enabled = true,
+    required this.center,
+    required this.radius,
+    required this.dwell,
     this.label,
-  })
-      : super(
+  }) : super(
             type: type, name: name, description: description, enabled: enabled);
 
   Function get fromJsonFunction => _$GeofenceMeasureFromJson;
   factory GeofenceMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as GeofenceMeasure;
   Map<String, dynamic> toJson() => _$GeofenceMeasureToJson(this);
 }

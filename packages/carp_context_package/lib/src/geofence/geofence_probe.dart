@@ -5,21 +5,22 @@ part of context;
 /// If you need multiple geofences, add a [GeofenceMeasure] for each to your [Study]
 /// for example using the [Trigger] model.
 class GeofenceProbe extends StreamProbe {
-  Geofence fence;
+  late Geofence fence;
   StreamController<GeofenceDatum> geoFenceStreamController =
       StreamController.broadcast();
 
   void onInitialize(Measure measure) {
     assert(measure is GeofenceMeasure);
     super.onInitialize(measure);
-    fence = Geofence.fromMeasure(measure);
+    fence = Geofence.fromMeasure(measure as GeofenceMeasure);
     // listen in on the location service
-    locationManager.dtoStream
+    LocationManager()
+        .locationStream
         .map((location) => GeoPosition.fromLocationDto(location))
         .listen((location) {
       // when a location event is fired, check if the new location creates a new [GeofenceDatum] event.
       // if so -- add it to the main stream.
-      GeofenceDatum datum = fence.moved(location);
+      GeofenceDatum? datum = fence.moved(location);
       if (datum != null) geoFenceStreamController.add(datum);
     });
   }
@@ -54,21 +55,33 @@ class Geofence {
   Duration dwell;
 
   /// The name of this geofence.
-  String name;
+  String? name;
 
   /// Specify a geofence.
-  Geofence({this.center, this.radius, this.dwell, this.name}) : super();
+  Geofence({
+    required this.center,
+    required this.radius,
+    required this.dwell,
+    this.name,
+  }) : super();
 
-  // Create a [Geofence] based on a [GeofenceMeasure].
-  Geofence.fromMeasure(GeofenceMeasure measure) {
-    this.center = measure.center;
-    this.radius = measure.radius;
-    this.dwell = measure.dwell;
-    this.name = measure.name;
-  }
+  /// Create a [Geofence] based on a [GeofenceMeasure].
+  // Geofence.fromMeasure(GeofenceMeasure measure) {
+  //   this.center = measure.center;
+  //   this.radius = measure.radius;
+  //   this.dwell = measure.dwell;
+  //   this.name = measure.name;
+  // }
 
-  GeofenceDatum moved(GeoPosition location) {
-    GeofenceDatum datum;
+  factory Geofence.fromMeasure(GeofenceMeasure measure) => Geofence(
+        center: measure.center,
+        radius: measure.radius,
+        dwell: measure.dwell,
+        name: measure.name,
+      );
+
+  GeofenceDatum? moved(GeoPosition location) {
+    GeofenceDatum? datum;
     if (center.distanceTo(location) < radius) {
       // we're inside the geofence
       switch (state) {
@@ -81,7 +94,7 @@ class Geofence {
           break;
         case GeofenceState.inside:
           // if we were already inside, check if dwelling takes place
-          if (dwell != null && lastEvent.add(dwell).isBefore(DateTime.now())) {
+          if (lastEvent.add(dwell).isBefore(DateTime.now())) {
             // we have been dwelling in this geofence
             state = GeofenceState.inside;
             lastEvent = DateTime.now();

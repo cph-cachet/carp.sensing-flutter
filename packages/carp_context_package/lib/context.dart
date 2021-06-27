@@ -3,12 +3,12 @@
 ///  * activity
 ///  * weather
 ///  * air quality
+///  * mobility features
 library context;
 
 import 'dart:async';
 import 'dart:math' as math;
 import 'package:carp_background_location/carp_background_location.dart';
-import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:activity_recognition_flutter/activity_recognition_flutter.dart';
 import 'package:weather/weather.dart';
@@ -18,6 +18,9 @@ import 'package:air_quality/air_quality.dart';
 import 'package:mobility_features/mobility_features.dart';
 import 'package:geolocator/geolocator.dart';
 
+import 'package:carp_core/carp_common/carp_core_common.dart';
+import 'package:carp_core/carp_protocols/carp_core_protocols.dart';
+import 'package:carp_core/carp_data/carp_core_data.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 part 'src/activity/activity_datum.dart';
