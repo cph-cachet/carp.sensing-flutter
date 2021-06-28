@@ -14,7 +14,7 @@ void main() async {
   // register this sampling package before using its measures
   SamplingPackageRegistry().register(ContextSamplingPackage());
 
-  // Create a study protocol using a local file to store data
+  // Create a study protocol
   StudyProtocol protocol = StudyProtocol(
     ownerId: 'owner@dtu.dk',
     name: 'Context Sensing Example',
