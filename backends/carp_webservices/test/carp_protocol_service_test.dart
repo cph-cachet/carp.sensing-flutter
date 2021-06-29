@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
@@ -12,9 +13,9 @@ String _encode(Object object) =>
 
 void main() {
   CarpApp app;
-  CarpUser user;
-  String ownerId, name;
-  StudyProtocol protocol, custom;
+  CarpUser? user;
+  String? ownerId, name;
+  StudyProtocol? protocol, custom;
 
   /// Runs once before all tests.
   setUpAll(() async {
@@ -36,25 +37,25 @@ void main() {
     );
 
     CANSProtocolService().configureFrom(CarpService());
-    ownerId = CarpService().currentUser.accountId;
+    ownerId = CarpService().currentUser!.accountId;
     name = 'test_protocol';
 
     // a very simple protocol
     protocol = StudyProtocol(
-        ownerId: ownerId,
-        name: name,
+        ownerId: ownerId!,
+        name: name!,
         description: 'Generated from carp_webservices unit test.')
       ..addMasterDevice(Smartphone(roleName: 'smartphone'));
 
     // a custom protocol
     var customDevice = CustomProtocolDevice(roleName: 'Custom device');
     custom = StudyProtocol(
-        ownerId: ownerId,
+        ownerId: ownerId!,
         name: 'custom_test_protocol',
         description:
             'Custom protocol generated from carp_webservices unit test.');
-    custom.addMasterDevice(customDevice);
-    custom.addTriggeredTask(
+    custom!.addMasterDevice(customDevice);
+    custom!.addTriggeredTask(
         ElapsedTimeTrigger(
             sourceDeviceRoleName: customDevice.roleName,
             elapsedTime: Duration(seconds: 0)),
@@ -78,7 +79,7 @@ void main() {
     test(
       '- add',
       () async {
-        print(toJsonString(protocol));
+        print(toJsonString(protocol!));
         await CANSProtocolService().add(protocol);
       },
     );
@@ -114,7 +115,7 @@ void main() {
       '- getBy',
       () async {
         StudyProtocol protocol =
-            await CANSProtocolService().getBy(StudyProtocolId(ownerId, name));
+            await CANSProtocolService().getBy(StudyProtocolId(ownerId!, name!));
         print(protocol);
       },
     );
@@ -132,7 +133,7 @@ void main() {
       '- getVersionHistoryFor',
       () async {
         List<ProtocolVersion> versions = await CANSProtocolService()
-            .getVersionHistoryFor(StudyProtocolId(ownerId, name));
+            .getVersionHistoryFor(StudyProtocolId(ownerId!, name!));
         print(versions);
       },
     );

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
@@ -9,16 +10,17 @@ import 'package:test/test.dart';
 
 import 'credentials.dart';
 
-String _encode(Object object) =>
+String _encode(Object? object) =>
     const JsonEncoder.withIndent(' ').convert(object);
 
 void main() {
   final String userId = "user@dtu.dk";
+  final String studyId = "test_1234";
   final String collectionName = 'test_patients';
   final String newCollectionName = 'new_patients_3';
 
   CarpApp app;
-  CAMSStudyProtocol protocol;
+  StudyProtocol protocol;
   Smartphone phone;
 
   LightDatum datum1 = LightDatum(
@@ -33,22 +35,19 @@ void main() {
     '12345jE',
   );
 
-  DocumentSnapshot document;
-  int documentId;
-  int consentDocumentId;
+  DocumentSnapshot? document;
+  int? documentId;
+  int? consentDocumentId;
   Random random = Random();
 
   /// Setup CARP and authenticate.
   /// Runs once before all tests.
   setUpAll(() async {
     // Create a new study protocol.
-    protocol = CAMSStudyProtocol(studyId: '#1')
-      ..name = 'Context package test'
-      ..responsible = StudyProtocolReponsible(
-        id: 'AB',
-        name: 'Alex Boyon',
-        email: 'alex@uni.dk',
-      );
+    protocol = StudyProtocol(
+      ownerId: 'owner@dtu.dk',
+      name: 'CARP Webb Services Test',
+    );
 
     // Define which devices are used for data collection.
     phone = Smartphone();
@@ -79,10 +78,10 @@ void main() {
       print('CarpService : ${CarpService().app}');
     });
     test('- authentication w. username and password', () async {
-      CarpUser user = await CarpService().authenticate(
+      CarpUser user = await (CarpService().authenticate(
         username: username,
         password: password,
-      );
+      ) as FutureOr<CarpUser>);
 
       assert(user != null);
       assert(user.token != null);
@@ -94,7 +93,7 @@ void main() {
     });
 
     test('- get user profile', () async {
-      CarpUser newUser = await CarpService().getCurrentUserProfile();
+      CarpUser newUser = await (CarpService().getCurrentUserProfile() as FutureOr<CarpUser>);
 
       assert(newUser != null);
 
@@ -119,10 +118,10 @@ void main() {
 
     test('- refresh token', () async {
       print('expiring token...');
-      CarpService().currentUser.token.expire();
+      CarpService().currentUser!.token!.expire();
 
-      await CarpService().currentUser.getOAuthToken(refresh: true);
-      CarpUser user = CarpService().currentUser;
+      await CarpService().currentUser!.getOAuthToken(refresh: true);
+      CarpUser user = CarpService().currentUser!;
 
       assert(user.token != null);
       print("signed in : $user");
@@ -130,13 +129,13 @@ void main() {
     });
 
     test('- authentication with saved token', () async {
-      CarpUser user = await CarpService().authenticate(
+      CarpUser user = await (CarpService().authenticate(
         username: username,
         password: password,
-      );
+      ) as FutureOr<CarpUser>);
 
-      CarpUser newUser = await CarpService()
-          .authenticateWithToken(username: user.username, token: user.token);
+      CarpUser newUser = await (CarpService()
+          .authenticateWithToken(username: user.username!, token: user.token!) as FutureOr<CarpUser>);
 
       assert(newUser != null);
       assert(newUser.isAuthenticated);
@@ -147,17 +146,17 @@ void main() {
     });
 
     test('- authentication with saved JSON token', () async {
-      CarpUser user = await CarpService().authenticate(
+      CarpUser user = await (CarpService().authenticate(
         username: username,
         password: password,
-      );
+      ) as FutureOr<CarpUser>);
 
       //saving token as json
-      Map<String, dynamic> tokenAsJson = user.token.toJson();
+      Map<String, dynamic> tokenAsJson = user.token!.toJson();
       print(_encode(tokenAsJson));
 
-      CarpUser newUser = await CarpService().authenticateWithToken(
-          username: username, token: OAuthToken.fromJson(tokenAsJson));
+      CarpUser newUser = await (CarpService().authenticateWithToken(
+          username: username, token: OAuthToken.fromJson(tokenAsJson)) as FutureOr<CarpUser>);
 
       assert(newUser != null);
       assert(newUser.isAuthenticated);
@@ -168,20 +167,20 @@ void main() {
     });
 
     test('- change password', () async {
-      CarpUser user1 = await CarpService().authenticate(
+      CarpUser user1 = await (CarpService().authenticate(
         username: username,
         password: password,
-      );
+      ) as FutureOr<CarpUser>);
 
       // saving password
       String oldPassword = password;
       String newPassword = 'new_$password';
 
       // changing password to the new one
-      CarpUser user2 = await CarpService().changePassword(
+      CarpUser user2 = await (CarpService().changePassword(
         currentPassword: password,
         newPassword: newPassword,
-      );
+      ) as FutureOr<CarpUser>);
 
       assert(user2 != null);
       assert(user2.isAuthenticated);
@@ -189,10 +188,10 @@ void main() {
       print("Password has been changed to '$newPassword'\n - user : $user2");
 
       // check if we can authenticate with the new password
-      CarpUser user3 = await CarpService().authenticate(
+      CarpUser user3 = await (CarpService().authenticate(
         username: username,
         password: newPassword,
-      );
+      ) as FutureOr<CarpUser>);
 
       assert(user3 != null);
       assert(user3.isAuthenticated);
@@ -200,7 +199,7 @@ void main() {
       print("signed in using the '$newPassword' password\n - user: $user3");
 
       // changing the password back to the old one
-      CarpUser user4 = await CarpService().changePassword(
+      CarpUser? user4 = await CarpService().changePassword(
         currentPassword: newPassword,
         newPassword: oldPassword,
       );
@@ -242,13 +241,13 @@ void main() {
       test('- post', () async {
         final DataPoint data = DataPoint.fromData(datum1);
         // studyId & userId is required for upload
-        data.carpHeader.studyId = protocol.studyId;
+        data.carpHeader.studyId = studyId;
         data.carpHeader.userId = userId;
 
         print(_encode(data.toJson()));
 
         int dataPointId =
-            await CarpService().getDataPointReference().postDataPoint(data);
+            await (CarpService().getDataPointReference().postDataPoint(data) as FutureOr<int>);
 
         assert(dataPointId > 0);
         print("data_point_id : $dataPointId");
@@ -257,7 +256,7 @@ void main() {
       test('- post w/o trigger id & device role name', () async {
         final DataPoint data = DataPoint.fromData(datum1);
         // studyId & userId is required for upload
-        data.carpHeader.studyId = protocol.studyId;
+        data.carpHeader.studyId = studyId;
         data.carpHeader.userId = userId;
 
         // triggerId, deviceRoleName, startTime & endTime are not required
@@ -269,7 +268,7 @@ void main() {
         print(_encode(data.toJson()));
 
         int dataPointId =
-            await CarpService().getDataPointReference().postDataPoint(data);
+            await (CarpService().getDataPointReference().postDataPoint(data) as FutureOr<int>);
 
         assert(dataPointId > 0);
         print("data_point_id : $dataPointId");
@@ -325,13 +324,13 @@ void main() {
       test('- get by id', () async {
         final DataPoint dataPost = DataPoint.fromData(datum1);
         // studyId & userId is required for upload
-        dataPost.carpHeader.studyId = protocol.studyId;
+        dataPost.carpHeader.studyId = studyId;
         dataPost.carpHeader.userId = userId;
 
         print(_encode(dataPost.toJson()));
 
         int dataPointId =
-            await CarpService().getDataPointReference().postDataPoint(dataPost);
+            await (CarpService().getDataPointReference().postDataPoint(dataPost) as FutureOr<int>);
 
         assert(dataPointId > 0);
 
@@ -363,12 +362,12 @@ void main() {
         await CarpService()
             .getDataPointReference()
             .postDataPoint(DataPoint.fromData(datum1)
-              ..carpHeader.studyId = protocol.studyId
+              ..carpHeader.studyId = studyId
               ..carpHeader.userId = userId);
         await CarpService()
             .getDataPointReference()
             .postDataPoint(DataPoint.fromData(datum2)
-              ..carpHeader.studyId = protocol.studyId
+              ..carpHeader.studyId = studyId
               ..carpHeader.userId = userId);
 
         // String query =
@@ -392,10 +391,10 @@ void main() {
       });
 
       test('- delete', () async {
-        int dataPointId = await CarpService()
+        int? dataPointId = await CarpService()
             .getDataPointReference()
             .postDataPoint(DataPoint.fromData(datum1)
-              ..carpHeader.studyId = protocol.studyId
+              ..carpHeader.studyId = studyId
               ..carpHeader.userId = userId);
         print("DELETE data_point_id : $dataPointId");
         await CarpService()
@@ -443,10 +442,10 @@ void main() {
           .setData({'email': userId, 'role': 'Administrator'});
 
       print(document);
-      print(_encode(document.data));
+      print(_encode(document!.data));
 
-      assert(document.id > 0);
-      documentId = document.id;
+      assert(document!.id! > 0);
+      documentId = document!.id;
 
       // create another document
       await CarpService()
@@ -459,43 +458,43 @@ void main() {
       assert(document != null);
       print(document);
 
-      DocumentSnapshot original = await CarpService()
+      DocumentSnapshot original = await (CarpService()
           .collection(collectionName)
-          .document(document.name)
-          .get();
+          .document(document!.name)
+          .get() as FutureOr<DocumentSnapshot>);
       print(_encode(original.data));
 
       // updating the role to super user
       DocumentSnapshot updated = await CarpService()
           .collection(collectionName)
-          .document(document.name)
+          .document(document!.name)
           .updateData({'email': userId, 'role': 'Super User'});
 
       print('----------- updated -------------');
       print(updated);
       print(_encode(updated.data));
-      print(updated.data["role"]);
-      assert(updated.id > 0);
-      assert(updated.data["role"] == 'Super User');
+      print(updated.data!["role"]);
+      assert(updated.id! > 0);
+      assert(updated.data!["role"] == 'Super User');
     });
 
     test(' - get document by id', () async {
       assert(document != null);
       DocumentSnapshot newDocument =
-          await CarpService().documentById(documentId).get();
+          await (CarpService().documentById(documentId!).get() as FutureOr<DocumentSnapshot>);
 
       print((newDocument));
-      assert(newDocument.id == document.id);
+      assert(newDocument.id == document!.id);
       assert(newDocument.id == documentId);
     });
 
     test(' - get document by path', () async {
-      DocumentSnapshot newDocument = await CarpService()
+      DocumentSnapshot newDocument = await (CarpService()
           .collection(collectionName)
-          .document(document.name)
-          .get();
+          .document(document!.name)
+          .get() as FutureOr<DocumentSnapshot>);
       print((newDocument));
-      assert(newDocument.id == document.id);
+      assert(newDocument.id == document!.id);
     });
 
 //     test(' - rename document', () async {
@@ -567,30 +566,30 @@ void main() {
           .setData({'what': 'breakfast', 'time': 'morning'});
 
       print(newDocument);
-      assert(newDocument.id > 0);
+      assert(newDocument.id! > 0);
       assert(newDocument.path == '$collectionName/$userId/activities/cooking');
     });
 
     test(' - get nested document', () async {
       assert(document != null);
-      DocumentSnapshot newDocument = await CarpService()
+      DocumentSnapshot newDocument = await (CarpService()
           .collection(collectionName)
           .document(userId)
           .collection('activities')
           .document('cooking')
-          .get();
+          .get() as FutureOr<DocumentSnapshot>);
 
       print(newDocument);
       print(newDocument.snapshot);
       print(newDocument.createdAt);
       print(newDocument.data);
       print(newDocument['what']);
-      assert(newDocument.id > 0);
+      assert(newDocument.id! > 0);
     });
 
     test('- expire token and the upload document', () async {
       print('expiring token...');
-      CarpService().currentUser.token.expire();
+      CarpService().currentUser!.token!.expire();
 
       print('trying to upload a document w/o a name...');
       DocumentSnapshot d = await CarpService()
@@ -598,7 +597,7 @@ void main() {
           .document()
           .setData({'email': username, 'name': 'Administrator'});
 
-      assert(d.id > 0);
+      assert(d.id! > 0);
       print(d);
     });
 
@@ -616,7 +615,7 @@ void main() {
 
     test(" - list collections in the 'user@dtu.dk' document", () async {
       DocumentSnapshot newDocument =
-          await CarpService().collection(collectionName).document(userId).get();
+          await (CarpService().collection(collectionName).document(userId).get() as FutureOr<DocumentSnapshot>);
       newDocument.collections.forEach((ref) => print(ref));
     });
 
@@ -651,7 +650,7 @@ void main() {
     test(' - get collection from path', () async {
       CollectionReference collection =
           await CarpService().collection(collectionName).get();
-      assert(collection.id > 0);
+      assert(collection.id! > 0);
       print(collection);
     });
 
@@ -659,7 +658,7 @@ void main() {
       assert(document != null);
       await CarpService()
           .collection(collectionName)
-          .document(document.name)
+          .document(document!.name)
           .delete();
     });
 
@@ -685,7 +684,7 @@ void main() {
         collection = await CarpService().collection(newCollectionName).get();
       } catch (error) {
         print(error);
-        expect((error as CarpServiceException).httpStatus.httpResponseCode,
+        expect((error as CarpServiceException).httpStatus!.httpResponseCode,
             HttpStatus.notFound);
       }
     });
@@ -695,7 +694,7 @@ void main() {
     test(" - get 'patients' collection from path", () async {
       CollectionReference collection =
           await CarpService().collection('patients').get();
-      assert(collection.id > 0);
+      assert(collection.id! > 0);
       print(collection);
     });
 
@@ -721,7 +720,7 @@ void main() {
   }, skip: true);
 
   group("Files", () {
-    int id = -1;
+    int? id = -1;
 
     test('- upload', () async {
       final File myFile = File("test/img.jpg");
@@ -737,7 +736,7 @@ void main() {
       assert(uploadTask != null);
 
       CarpFileResponse response = await uploadTask.onComplete;
-      assert(response.id > 0);
+      assert(response.id! > 0);
       id = response.id;
 
       print('response.storageName : ${response.storageName}');
@@ -759,7 +758,7 @@ void main() {
       } catch (error) {
         print(error);
         assert(error is CarpServiceException);
-        expect((error as CarpServiceException).httpStatus.httpResponseCode,
+        expect((error as CarpServiceException).httpStatus!.httpResponseCode,
             HttpStatus.notFound);
       }
     });
@@ -792,7 +791,7 @@ void main() {
 
     test('- get by name', () async {
       final FileStorageReference reference =
-          await CarpService().getFileStorageReferenceByName('img.jpg');
+          await (CarpService().getFileStorageReferenceByName('img.jpg') as FutureOr<FileStorageReference>);
       final CarpFileResponse result = await reference.get();
 
       assert(result.originalName == 'img.jpg');

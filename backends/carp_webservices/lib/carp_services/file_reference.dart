@@ -18,16 +18,16 @@ class FileStorageReference extends CarpReference {
   /// -1 if unknown or referencing a file not uploaded yet.
   int id = -1;
 
-  FileStorageReference._(CarpService service, [this.id]) : super._(service);
+  FileStorageReference._(CarpService service, [this.id = -1])
+      : super._(service);
 
   /// The URL for the file end point for this [FileStorageReference].
   String get fileEndpointUri =>
-      "${service.app.uri.toString()}/api/studies/${service.app.studyId}/files";
+      "${service.app!.uri.toString()}/api/studies/${service.app!.studyId}/files";
 
   /// Asynchronously uploads a file to the currently specified
   /// [FileStorageReference], with optional [metadata].
-  FileUploadTask upload(File file, [Map<String, String> metadata]) {
-    assert(file != null);
+  FileUploadTask upload(File file, [Map<String, String>? metadata]) {
     assert(file.existsSync());
     final FileUploadTask task = FileUploadTask._(this, file, metadata);
     task._start();
@@ -37,7 +37,6 @@ class FileStorageReference extends CarpReference {
   /// Asynchronously downloads the object at this [FileStorageReference]
   /// to a specified local file.
   FileDownloadTask download(File file) {
-    assert(file != null);
     assert(id > 0);
     final FileDownloadTask task = FileDownloadTask._(this, file);
     task._start();
@@ -108,9 +107,8 @@ class FileMetadata {
     this.contentEncoding,
     this.contentLanguage,
     this.contentType,
-    Map<String, String> customMetadata,
-  })
-      : carpServiceName = null,
+    Map<String, String>? customMetadata,
+  })  : carpServiceName = null,
         path = null,
         name = null,
         sizeBytes = null,
@@ -138,42 +136,42 @@ class FileMetadata {
   //           : Map.unmodifiable(map['customMetadata'].cast<String, String>());
 
   /// The owning CARP Web Service name the [FileStorageReference].
-  final String carpServiceName;
+  final String? carpServiceName;
 
   /// The path of the [FileStorageReference] object.
-  final String path;
+  final String? path;
 
   /// A simple name of the [FileStorageReference] object.
-  final String name;
+  final String? name;
 
   /// The stored Size in bytes of the [FileStorageReference] object.
-  final int sizeBytes;
+  final int? sizeBytes;
 
   /// The time the [FileStorageReference] was created in milliseconds since the epoch.
-  final int creationTimeMillis;
+  final int? creationTimeMillis;
 
   /// The time the [FileStorageReference] was last updated in milliseconds since the epoch.
-  final int updatedTimeMillis;
+  final int? updatedTimeMillis;
 
   /// The MD5Hash of the [FileStorageReference] object.
-  final String md5Hash;
+  final String? md5Hash;
 
   /// The Cache Control setting of the [FileStorageReference].
-  final String cacheControl;
+  final String? cacheControl;
 
   /// The content disposition of the [FileStorageReference].
-  final String contentDisposition;
+  final String? contentDisposition;
 
   /// The content encoding for the [FileStorageReference].
-  final String contentEncoding;
+  final String? contentEncoding;
 
   /// The content language for the StorageReference, specified as a 2-letter
   /// lowercase language code defined by ISO 639-1.
-  final String contentLanguage;
+  final String? contentLanguage;
 
   /// The content type (MIME type) of the [FileStorageReference].
-  final String contentType;
+  final String? contentType;
 
   /// An unmodifiable map with custom metadata for the [FileStorageReference].
-  final Map<String, String> customMetadata;
+  final Map<String, String>? customMetadata;
 }

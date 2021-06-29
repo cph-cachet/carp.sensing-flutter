@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
@@ -12,14 +13,11 @@ void main() async {
   StudyProtocol protocol;
   Smartphone phone;
 
-  // Create a new study protocol.
-  protocol = CAMSStudyProtocol()
-    ..name = 'Context package test'
-    ..responsible = StudyProtocolReponsible(
-      id: 'AB',
-      name: 'Alex Boyon',
-      email: 'alex@uni.dk',
-    );
+  // Create a study protocol
+  protocol = StudyProtocol(
+    ownerId: 'owner@dtu.dk',
+    name: 'Context Sensing Example',
+  );
 
   // Define which devices are used for data collection.
   phone = Smartphone();

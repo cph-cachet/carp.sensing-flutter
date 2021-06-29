@@ -15,7 +15,7 @@ class PushIdGenerator {
 
   static final Random _random = Random();
 
-  static int _lastPushTime;
+  static int _lastPushTime = 0;
 
   static final List<int> _lastRandChars = List.filled(12, 0);
 

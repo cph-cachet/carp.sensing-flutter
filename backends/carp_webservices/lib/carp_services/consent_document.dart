@@ -14,31 +14,31 @@ part of carp_services;
 class ConsentDocument {
   ConsentDocument._(this._snapshot);
 
-  final Map<String, dynamic> _snapshot;
+  final Map<String, dynamic>? _snapshot;
 
   /// The full data snapshot
-  Map<String, dynamic> get snapshot => _snapshot;
+  Map<String, dynamic>? get snapshot => _snapshot;
 
   /// The ID of the snapshot's document
-  int get id => _snapshot['id'];
+  int? get id => _snapshot!['id'];
 
   /// The id of the study of this document
-  String get studyId => _snapshot['study_id'];
+  String? get studyId => _snapshot!['study_id'];
 
   /// The id of the user who created this document
-  int get createdByUserId => _snapshot['created_by_user_id'];
+  int? get createdByUserId => _snapshot!['created_by_user_id'];
 
   /// The timestamp of creation of this document
-  DateTime get createdAt => DateTime.parse(_snapshot['created_at']);
+  DateTime get createdAt => DateTime.parse(_snapshot!['created_at']);
 
   /// The timestamp of latest update of this document
-  DateTime get updatedAt => DateTime.parse(_snapshot['updated_at']);
+  DateTime get updatedAt => DateTime.parse(_snapshot!['updated_at']);
 
   /// The actual consent document
-  Map<String, dynamic> get document => _snapshot['data'];
+  Map<String, dynamic>? get document => _snapshot!['data'];
 
   /// Reads individual data values from the snapshot
-  dynamic operator [](String key) => document[key];
+  dynamic operator [](String key) => document![key];
 
   /// Returns `true` if the document exists.
   bool get exists => document != null;

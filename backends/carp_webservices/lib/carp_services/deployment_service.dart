@@ -23,8 +23,8 @@ class CarpDeploymentService extends CarpBaseService
   /// Gets a [DeploymentReference] for a [studyDeploymentId].
   /// If the [studyDeploymentId] is not provided, the study deployment id
   /// specified in the [CarpApp] is used.
-  DeploymentReference deployment([String studyDeploymentId]) =>
-      DeploymentReference._(this, studyDeploymentId);
+  DeploymentReference deployment([String? studyDeploymentId]) =>
+      DeploymentReference._(this, studyDeploymentId ?? app!.studyDeploymentId!);
 
   /// Create a new deployment in CANS based on a [StudyProtocol].
   /// The [studyDeploymentId] is ignored, since CANS generated its own
@@ -32,12 +32,10 @@ class CarpDeploymentService extends CarpBaseService
   @override
   Future<StudyDeploymentStatus> createStudyDeployment(
     StudyProtocol protocol, [
-    String studyDeploymentId,
+    String? studyDeploymentId,
   ]) async {
-    assert(protocol != null, 'Cannot deploy a null study protocol.');
-
-    return StudyDeploymentStatus
-        .fromJson(await _rpc(CreateStudyDeployment(protocol)));
+    return StudyDeploymentStatus.fromJson(
+        await _rpc(CreateStudyDeployment(protocol)));
   }
 
   @override
@@ -49,8 +47,8 @@ class CarpDeploymentService extends CarpBaseService
   @override
   Future<StudyDeploymentStatus> getStudyDeploymentStatus(
           String studyDeploymentId) async =>
-      StudyDeploymentStatus
-          .fromJson(await _rpc(GetStudyDeploymentStatus(studyDeploymentId)));
+      StudyDeploymentStatus.fromJson(
+          await _rpc(GetStudyDeploymentStatus(studyDeploymentId)));
 
   @override
   Future<List<StudyDeploymentStatus>> getStudyDeploymentStatusList(
@@ -63,10 +61,11 @@ class CarpDeploymentService extends CarpBaseService
 
     // we expect a list of 'items'
     List<dynamic> items = json.decode(responseJson['items']);
-    List<StudyDeploymentStatus> statuss = [];
-    items.forEach((item) => statuss.add(StudyDeploymentStatus.fromJson(item)));
+    List<StudyDeploymentStatus> statusList = [];
+    items.forEach(
+        (item) => statusList.add(StudyDeploymentStatus.fromJson(item)));
 
-    return statuss;
+    return statusList;
   }
 
   @override

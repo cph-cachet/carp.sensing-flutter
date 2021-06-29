@@ -52,7 +52,7 @@ class OAuthToken {
   /// If access token has expired, the refresh token should be used
   /// in order to acquire a new access token.
   DateTime get accessTokenExpiryDate {
-    Duration durationLeft = new Duration(seconds: expiresIn);
+    Duration durationLeft = new Duration(seconds: expiresIn!);
     DateTime expiryDate = issuedDate.add(durationLeft);
     return expiryDate;
   }
@@ -84,9 +84,12 @@ class OAuthEndPoint {
   String clientSecret;
 
   /// Path of the authentication endpoint.
-  ///
   /// Default is `/oauth/token`
-  String path = "/oauth/token";
+  String path;
 
-  OAuthEndPoint({this.clientID, this.clientSecret, this.path = "/oauth/token"});
+  OAuthEndPoint({
+    required this.clientID,
+    required this.clientSecret,
+    this.path = "/oauth/token",
+  });
 }

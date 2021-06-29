@@ -18,10 +18,10 @@ class CarpApp {
   final OAuthEndPoint oauth;
 
   /// The CARP study id for this app.
-  String studyId;
+  String? studyId;
 
   /// The CARP study deployment id of this app.
-  String studyDeploymentId;
+  String? studyDeploymentId;
 
   // /// The CARP study for this app.
   // Study study;
@@ -34,18 +34,12 @@ class CarpApp {
   /// A [studyDeploymentId] and a [study] may be specified, if known at the
   /// creation time.
   CarpApp({
-    @required this.name,
-    @required this.uri,
-    @required this.oauth,
+    required this.name,
+    required this.uri,
+    required this.oauth,
     this.studyDeploymentId,
     this.studyId,
-  }) {
-    assert(name != null);
-    assert(uri != null);
-    assert(oauth != null);
-    assert(oauth.clientID != null);
-    assert(oauth.clientSecret != null);
-  }
+  });
 
   int get hashCode => name.hashCode;
 

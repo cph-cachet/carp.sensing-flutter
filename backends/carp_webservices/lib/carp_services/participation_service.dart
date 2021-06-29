@@ -24,7 +24,7 @@ class CarpParticipationService extends CarpBaseService
   /// Gets a [ParticipationReference] for a [studyDeploymentId].
   /// If the [studyDeploymentId] is not provided, the study deployment id
   /// specified in the [CarpApp] is used.
-  ParticipationReference participation([String studyDeploymentId]) =>
+  ParticipationReference participation([String? studyDeploymentId]) =>
       ParticipationReference._(this, studyDeploymentId);
 
   @override
@@ -46,11 +46,11 @@ class CarpParticipationService extends CarpBaseService
   /// authenticated [CarpUser] is used.  @override
   @override
   Future<List<ActiveParticipationInvitation>> getActiveParticipationInvitations(
-      [String accountId]) async {
-    accountId ??= currentUser.accountId;
+      [String? accountId]) async {
+    accountId ??= currentUser!.accountId;
 
     Map<String, dynamic> responseJson =
-        await _rpc(GetActiveParticipationInvitations(accountId));
+        await (_rpc(GetActiveParticipationInvitations(accountId!)) as FutureOr<Map<String, dynamic>>);
 
     // we expect a list of 'items' which maps to the invitations
     List<dynamic> items = responseJson['items'];
@@ -69,7 +69,7 @@ class CarpParticipationService extends CarpBaseService
   /// If not, the study id of the first invitation is returned.
   ///
   /// Throws a [CarpServiceException] if not successful.
-  Future<ActiveParticipationInvitation> getStudyInvitation(
+  Future<ActiveParticipationInvitation?> getStudyInvitation(
     BuildContext context, {
     bool showInvitations = true,
   }) async {
@@ -86,7 +86,7 @@ class CarpParticipationService extends CarpBaseService
     List<ActiveParticipationInvitation> invitations =
         await getActiveParticipationInvitations();
 
-    ActiveParticipationInvitation _invitation;
+    ActiveParticipationInvitation? _invitation;
 
     if (invitations.isEmpty) return null;
 
@@ -100,8 +100,8 @@ class CarpParticipationService extends CarpBaseService
     }
 
     // make sure that the correct study and deployment ids are saved in the app
-    CarpService().app.studyId = _invitation?.studyId;
-    CarpService().app.studyDeploymentId = _invitation?.studyDeploymentId;
+    CarpService().app!.studyId = _invitation?.studyId;
+    CarpService().app!.studyDeploymentId = _invitation?.studyDeploymentId;
 
     return _invitation;
   }
@@ -117,7 +117,7 @@ class CarpParticipationService extends CarpBaseService
     if (studyDeploymentIds.isEmpty) return [];
 
     Map<String, dynamic> responseJson =
-        await _rpc(GetParticipantDataList(studyDeploymentIds));
+        await (_rpc(GetParticipantDataList(studyDeploymentIds)) as FutureOr<Map<String, dynamic>>);
 
     // we expect a list of 'items'
     List<dynamic> items = responseJson['items'];

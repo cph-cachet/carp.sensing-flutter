@@ -41,7 +41,7 @@ class FileUploadTask extends CarpServiceTask {
   String get name => file.path.split('/').last;
 
   /// Metadata for the file.
-  Map<String, String> metadata;
+  Map<String, String>? metadata;
 
   FileUploadTask._(FileStorageReference reference, this.file, [metadata])
       : super._(reference) {
@@ -61,13 +61,13 @@ class FileUploadTask extends CarpServiceTask {
     Map<String, String> headers = reference.headers;
 
     var request = new http.MultipartRequest("POST", Uri.parse(url));
-    request.headers['Authorization'] = headers['Authorization'];
+    request.headers['Authorization'] = headers['Authorization']!;
     request.headers['Content-Type'] = 'multipart/form-data';
     request.headers['cache-control'] = 'no-cache';
 
     // add file-specific metadata
-    metadata['filename'] = name;
-    metadata['size'] = (await file.length()).toString();
+    metadata!['filename'] = name;
+    metadata!['size'] = (await file.length()).toString();
     request.fields['metadata'] = json.encode(metadata);
 
     request.files.add(new http.MultipartFile.fromBytes(
@@ -190,14 +190,14 @@ class CarpFileResponse {
         studyId = map['study_id'];
 
   final Map<dynamic, dynamic> map;
-  final int id;
-  final String storageName;
-  final String originalName;
-  final Map<String, dynamic> metadata;
-  final int createdByUserId;
+  final int? id;
+  final String? storageName;
+  final String? originalName;
+  final Map<String, dynamic>? metadata;
+  final int? createdByUserId;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final String studyId;
+  final String? studyId;
 
   String toString() => json.encode(map);
 }

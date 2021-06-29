@@ -14,18 +14,17 @@ part of carp_services;
 ///  * [ParticipationService]
 ///
 abstract class CarpBaseService {
-  CarpApp _app;
-  CarpUser _currentUser;
+  CarpApp? _app;
+  CarpUser? _currentUser;
 
   /// The CARP app associated with the CARP Web Service.
-  CarpApp get app => _app;
+  CarpApp? get app => _app;
 
   /// Has this service been configured?
   bool get isConfigured => (_app != null);
 
   /// Configure the this instance of a Carp Service.
-  void configure(CarpApp app) async {
-    assert(app != null);
+  void configure(CarpApp app) {
     this._app = app;
   }
 
@@ -38,7 +37,7 @@ abstract class CarpBaseService {
 
   /// Gets the current user.
   /// Returns `null` if no user is authenticated.
-  CarpUser get currentUser => _currentUser;
+  CarpUser? get currentUser => _currentUser;
 
   /// The endpoint name for this service at CARP.
   String get rpcEndpointName;
@@ -47,18 +46,19 @@ abstract class CarpBaseService {
   ///
   /// Typically on the form:
   /// `{{PROTOCOL}}://{{SERVER_HOST}}:{{SERVER_PORT}}/api/...`
-  String get rpcEndpointUri => "${app.uri.toString()}/api/$rpcEndpointName";
+  String get rpcEndpointUri => "${app!.uri.toString()}/api/$rpcEndpointName";
 
   /// The headers for any authenticated HTTP REST call to a [CarpBaseService].
   Map<String, String> get headers {
-    if (CarpService().currentUser.token == null)
+    if (CarpService().currentUser!.token == null)
       throw new CarpServiceException(
           message:
               "OAuth token is null. Call 'CarpService().authenticate()' first.");
 
     return {
       "Content-Type": "application/json",
-      "Authorization": "bearer ${CarpService().currentUser.token.accessToken}",
+      "Authorization":
+          "bearer ${CarpService().currentUser!.token!.accessToken}",
       "cache-control": "no-cache"
     };
   }
@@ -82,8 +82,10 @@ abstract class CarpBaseService {
   ///   ]
   /// }
   /// ```
-  Future<Map<String, dynamic>> _rpc(ServiceRequest request,
-      [String endpointName]) async {
+  Future<Map<String, dynamic>> _rpc(
+    ServiceRequest request, [
+    String? endpointName,
+  ]) async {
     final String body = _encode(request.toJson());
     endpointName ??= rpcEndpointName;
 
