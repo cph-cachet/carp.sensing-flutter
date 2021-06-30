@@ -75,7 +75,6 @@ void main() {
 
         ParticipantData data = await participation.getParticipantData();
         print(_encode(data));
-        assert(data != null);
       },
       skip: false,
     );
@@ -112,7 +111,7 @@ void main() {
   group("Deployment - using DeploymentReference", () {
     test('- get deployment status', () async {
       StudyDeploymentStatus status =
-          await (CarpDeploymentService().deployment().getStatus() as FutureOr<StudyDeploymentStatus>);
+          await CarpDeploymentService().deployment().getStatus();
       print(_encode(status.toJson()));
       print(status);
       print(status.masterDeviceStatus!.device);
@@ -123,12 +122,12 @@ void main() {
     test('- register device', () async {
       DeploymentReference reference =
           CarpDeploymentService().deployment(testDeploymentId);
-      StudyDeploymentStatus status = await (reference.getStatus() as FutureOr<StudyDeploymentStatus>);
+      StudyDeploymentStatus status = await reference.getStatus();
       print(status);
       expect(status.masterDeviceStatus!.device, isNotNull);
       print(status.masterDeviceStatus!.device);
-      status = await (reference.registerDevice(
-          deviceRoleName: status.masterDeviceStatus!.device.roleName) as FutureOr<StudyDeploymentStatus>);
+      status = await reference.registerDevice(
+          deviceRoleName: status.masterDeviceStatus!.device.roleName);
       print(status);
       expect(status.studyDeploymentId, testDeploymentId);
     }, skip: false);
@@ -136,11 +135,11 @@ void main() {
     test('- get master device deployment', () async {
       DeploymentReference reference =
           CarpDeploymentService().deployment(testDeploymentId);
-      StudyDeploymentStatus status = await (reference.getStatus() as FutureOr<StudyDeploymentStatus>);
+      StudyDeploymentStatus status = await reference.getStatus();
       print(status);
       expect(status.masterDeviceStatus!.device, isNotNull);
       print(status.masterDeviceStatus!.device);
-      MasterDeviceDeployment deployment = await (reference.get() as FutureOr<MasterDeviceDeployment>);
+      MasterDeviceDeployment deployment = await reference.get();
       print(toJsonString(deployment));
       deployment.tasks.forEach((task) {
         print(task);
@@ -152,9 +151,9 @@ void main() {
     test('- deployment success', () async {
       DeploymentReference reference =
           CarpDeploymentService().deployment(testDeploymentId);
-      StudyDeploymentStatus status_1 = await (reference.getStatus() as FutureOr<StudyDeploymentStatus>);
+      StudyDeploymentStatus status_1 = await reference.getStatus();
       MasterDeviceDeployment? deployment = await reference.get();
-      StudyDeploymentStatus status_2 = await (reference.success() as FutureOr<StudyDeploymentStatus>);
+      StudyDeploymentStatus status_2 = await reference.success();
       print(deployment);
       print(status_2);
       expect(status_1.studyDeploymentId, status_2.studyDeploymentId);
@@ -164,12 +163,12 @@ void main() {
     test('- unregister device', () async {
       DeploymentReference reference =
           CarpDeploymentService().deployment(testDeploymentId);
-      StudyDeploymentStatus status = await (reference.getStatus() as FutureOr<StudyDeploymentStatus>);
+      StudyDeploymentStatus status = await reference.getStatus();
       print(status);
       expect(status.masterDeviceStatus!.device, isNotNull);
       print(status.masterDeviceStatus!.device);
-      status = await (reference.unRegisterDevice(
-          deviceRoleName: status.masterDeviceStatus!.device.roleName) as FutureOr<StudyDeploymentStatus>);
+      status = await reference.unRegisterDevice(
+          deviceRoleName: status.masterDeviceStatus!.device.roleName);
       print(status);
       expect(status.studyDeploymentId, testDeploymentId);
     }, skip: false);
@@ -212,7 +211,7 @@ void main() {
       print(deployment);
       deployment.tasks.forEach((task) {
         print(task);
-        task?.measures?.forEach(print);
+        task.measures.forEach(print);
       });
       expect(deployment.configuration.deviceId, isNotNull);
     }, skip: false);
@@ -244,12 +243,12 @@ void main() {
     test('- unregister device', () async {
       DeploymentReference reference =
           CarpDeploymentService().deployment(testDeploymentId);
-      StudyDeploymentStatus status = await (reference.getStatus() as FutureOr<StudyDeploymentStatus>);
+      StudyDeploymentStatus status = await reference.getStatus();
       print(status);
       expect(status.masterDeviceStatus!.device, isNotNull);
       print(status.masterDeviceStatus!.device);
-      status = await (reference.unRegisterDevice(
-          deviceRoleName: status.masterDeviceStatus!.device.roleName) as FutureOr<StudyDeploymentStatus>);
+      status = await reference.unRegisterDevice(
+          deviceRoleName: status.masterDeviceStatus!.device.roleName);
       print(status);
       expect(status.studyDeploymentId, testDeploymentId);
     }, skip: false);

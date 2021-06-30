@@ -24,11 +24,11 @@ class CANSProtocolService extends CarpBaseService
 
   @override
   Future add(StudyProtocol? protocol, [String? versionTag]) async =>
-      StudyProtocol.fromJson(await (_rpc(Add(protocol, versionTag)) as FutureOr<Map<String, dynamic>>));
+      StudyProtocol.fromJson(await _rpc(Add(protocol, versionTag)));
 
   @override
   Future addVersion(StudyProtocol? protocol, [String? versionTag]) async =>
-      StudyProtocol.fromJson(await (_rpc(AddVersion(protocol, versionTag)) as FutureOr<Map<String, dynamic>>));
+      StudyProtocol.fromJson(await _rpc(AddVersion(protocol, versionTag)));
 
   /// Find all [StudyProtocol]'s owned by the owner with [ownerId].
   /// In the CARP web service, the [ownerId] is the logged in user's [accountId].
@@ -37,7 +37,7 @@ class CANSProtocolService extends CarpBaseService
   /// or an empty list when none are found.
   @override
   Future<List<StudyProtocol>> getAllFor(String? ownerId) async {
-    Map<String, dynamic> response = await (_rpc(GetAllFor(ownerId)) as FutureOr<Map<String, dynamic>>);
+    Map<String, dynamic> response = await _rpc(GetAllFor(ownerId));
     List<dynamic> items = response['items'];
     return items.map((item) => StudyProtocol.fromJson(item)).toList();
   }
@@ -45,13 +45,13 @@ class CANSProtocolService extends CarpBaseService
   @override
   Future<StudyProtocol> getBy(StudyProtocolId protocolId,
           [String? versionTag]) async =>
-      StudyProtocol.fromJson(await (_rpc(GetBy(protocolId, versionTag)) as FutureOr<Map<String, dynamic>>));
+      StudyProtocol.fromJson(await _rpc(GetBy(protocolId, versionTag)));
 
   @override
   Future<List<ProtocolVersion>> getVersionHistoryFor(
       StudyProtocolId protocolId) async {
     Map<String, dynamic> responseJson =
-        await (_rpc(GetVersionHistoryFor(protocolId)) as FutureOr<Map<String, dynamic>>);
+        await (_rpc(GetVersionHistoryFor(protocolId)));
     List<dynamic> items = responseJson['items'];
     return items.map((item) => ProtocolVersion.fromJson(item)).toList();
   }
@@ -61,16 +61,16 @@ class CANSProtocolService extends CarpBaseService
           StudyProtocolId protocolId,
           String versionTag,
           List<ParticipantAttribute> expectedParticipantData) async =>
-      StudyProtocol.fromJson(await (_rpc(UpdateParticipantDataConfiguration(
+      StudyProtocol.fromJson(await _rpc(UpdateParticipantDataConfiguration(
         protocolId,
         versionTag,
         expectedParticipantData,
-      )) as FutureOr<Map<String, dynamic>>));
+      )));
 
   @override
   Future<StudyProtocol> createCustomProtocol(String? ownerId, String? name,
           String description, String customProtocol) async =>
-      StudyProtocol.fromJson(await (_rpc(
+      StudyProtocol.fromJson(await _rpc(
           CreateCustomProtocol(ownerId, name, description, customProtocol),
-          'protocol-factory-service') as FutureOr<Map<String, dynamic>>));
+          'protocol-factory-service'));
 }

@@ -27,10 +27,12 @@ class DeploymentReference extends RPCCarpReference {
   MasterDeviceDeployment? _deployment;
   StudyDeploymentStatus? _status;
 
-  /// The deployment status for this master device, once fetched from the server.
+  /// The latest deployment status for this master device fetched from the server.
+  /// Returns `null` if status is not yet fetched.
   StudyDeploymentStatus? get status => _status;
 
   /// The deployment for this master device, once fetched from the server.
+  /// Returns `null` if the deployment is not yet fetched.
   MasterDeviceDeployment? get deployment => _deployment;
 
   /// The URL for the deployment endpoint.
@@ -62,7 +64,7 @@ class DeploymentReference extends RPCCarpReference {
   ///
   /// Returns the updated study deployment status if the registration is successful.
   /// Throws a [CarpServiceException] if not.
-  Future<StudyDeploymentStatus?> registerDevice({
+  Future<StudyDeploymentStatus> registerDevice({
     required String deviceRoleName,
     String? deviceId,
   }) async {
@@ -76,7 +78,7 @@ class DeploymentReference extends RPCCarpReference {
         studyDeploymentId,
         deviceRoleName,
         DeviceRegistration(registeredDeviceId))));
-    return _status;
+    return _status!;
   }
 
   /// Register this device as the master device for this deployment at the CARP server.
@@ -84,8 +86,7 @@ class DeploymentReference extends RPCCarpReference {
   ///
   /// Returns the updated study deployment status if the registration is successful.
   /// Throws a [CarpServiceException] if not.
-  Future<StudyDeploymentStatus?> registerMasterDevice(
-      {String? deviceId}) async {
+  Future<StudyDeploymentStatus> registerMasterDevice({String? deviceId}) async {
     assert(
         status != null,
         'The status of a deployment must be know before a master device can be registered. '

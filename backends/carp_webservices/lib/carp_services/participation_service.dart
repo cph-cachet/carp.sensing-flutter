@@ -50,7 +50,7 @@ class CarpParticipationService extends CarpBaseService
     accountId ??= currentUser!.accountId;
 
     Map<String, dynamic> responseJson =
-        await (_rpc(GetActiveParticipationInvitations(accountId!)) as FutureOr<Map<String, dynamic>>);
+        await _rpc(GetActiveParticipationInvitations(accountId!));
 
     // we expect a list of 'items' which maps to the invitations
     List<dynamic> items = responseJson['items'];
@@ -117,7 +117,7 @@ class CarpParticipationService extends CarpBaseService
     if (studyDeploymentIds.isEmpty) return [];
 
     Map<String, dynamic> responseJson =
-        await (_rpc(GetParticipantDataList(studyDeploymentIds)) as FutureOr<Map<String, dynamic>>);
+        await _rpc(GetParticipantDataList(studyDeploymentIds));
 
     // we expect a list of 'items'
     List<dynamic> items = responseJson['items'];

@@ -8,7 +8,7 @@ part of carp_services;
 
 /// Represents a CARP web service app endpoint.
 class CarpApp {
-  /// The name of this app.
+  /// The name of this app. The name has to be unique.
   final String name;
 
   /// URI of the CARP web service
@@ -22,9 +22,6 @@ class CarpApp {
 
   /// The CARP study deployment id of this app.
   String? studyDeploymentId;
-
-  // /// The CARP study for this app.
-  // Study study;
 
   /// Create a [CarpApp] which know how to access a CARP backend.
   ///

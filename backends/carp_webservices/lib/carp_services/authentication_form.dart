@@ -7,12 +7,13 @@
 part of carp_services;
 
 class CARPEmailValidator extends TextFieldValidator {
-  /// regex pattern to validate email inputs.
+  // regex pattern to validate email inputs.
   final Pattern _emailPattern =
       r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
 
   CARPEmailValidator({required String errorText}) : super(errorText);
 
+  @override
   bool isValid(String? value) => hasMatch(_emailPattern as String, value!);
 }
 
@@ -140,7 +141,8 @@ class _InputState extends State<_InputWidget> {
 
   Future _validateAndSubmit() async {
     bool success = true;
-    Scaffold.of(context).showSnackBar(_getSnackBar());
+
+    ScaffoldMessenger.of(context).showSnackBar(_getSnackBar());
 
     try {
       await CarpService()
@@ -153,7 +155,7 @@ class _InputState extends State<_InputWidget> {
     if (success) {
       Navigator.pop(context);
     } else {
-      Scaffold.of(context).showSnackBar(_getSnackBar(failure: true));
+      ScaffoldMessenger.of(context).showSnackBar(_getSnackBar(failure: true));
     }
   }
 
@@ -189,7 +191,7 @@ class _ResetPasswordState extends State<_ResetPasswordWidget> {
 
   Future _sendResetPasswordEmail() async {
     bool success = true;
-    Scaffold.of(context).showSnackBar(_resettingSnackBar);
+    ScaffoldMessenger.of(context).showSnackBar(_resettingSnackBar);
 
     try {
       // TODO - implement call to sendForgottenPasswordEmail() once tested.
@@ -201,8 +203,7 @@ class _ResetPasswordState extends State<_ResetPasswordWidget> {
       success = false;
     }
 
-    Scaffold
-        .of(context)
+    ScaffoldMessenger.of(context)
         .showSnackBar(success ? _successfulSnackBar : _failureSnackBar);
   }
 

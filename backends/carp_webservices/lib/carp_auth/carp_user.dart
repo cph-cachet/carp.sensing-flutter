@@ -103,10 +103,10 @@ class CarpUser {
   /// Manually refreshes the data of the current user (e.g., [fullName],
   /// [telephone], etc.) from the CARP web service.
   Future reload() async {
-    if (CarpService() == null)
+    if (!CarpService().isConfigured)
       throw new CarpServiceException(
           message:
-              "CARP Service not initialized. Call 'CarpService.configure()' first.");
+              "CARP Service not configured. Call 'CarpService.configure()' first.");
 
     CarpService().getCurrentUserProfile();
   }

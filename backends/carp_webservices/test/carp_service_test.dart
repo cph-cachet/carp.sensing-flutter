@@ -37,8 +37,6 @@ void main() {
 
   DocumentSnapshot? document;
   int? documentId;
-  int? consentDocumentId;
-  Random random = Random();
 
   /// Setup CARP and authenticate.
   /// Runs once before all tests.
@@ -78,12 +76,11 @@ void main() {
       print('CarpService : ${CarpService().app}');
     });
     test('- authentication w. username and password', () async {
-      CarpUser user = await (CarpService().authenticate(
+      CarpUser user = await CarpService().authenticate(
         username: username,
         password: password,
-      ) as FutureOr<CarpUser>);
+      );
 
-      assert(user != null);
       assert(user.token != null);
       assert(user.isAuthenticated);
 
@@ -93,28 +90,11 @@ void main() {
     });
 
     test('- get user profile', () async {
-      CarpUser newUser = await (CarpService().getCurrentUserProfile() as FutureOr<CarpUser>);
-
-      assert(newUser != null);
+      CarpUser newUser = await CarpService().getCurrentUserProfile();
 
       print("signed in : $newUser");
       print("   name   : ${newUser.firstName} ${newUser.lastName}");
     });
-
-    // This test fails -- we do not have access to create users with the authenticated user.
-    test('- create user', () async {
-      int id = random.nextInt(1000);
-      CarpUser newUser = await CarpService().createUser(
-          username: 'user_$id@dtu.dk',
-          password: 'underbar',
-          firstName: 'CACHET User #$id');
-
-      // we expect this call to fail, since we're not authenticated as admin
-      assert(newUser == null);
-
-      print("create  : $newUser");
-      print("   name : ${newUser.firstName} ${newUser.lastName}");
-    }, skip: true);
 
     test('- refresh token', () async {
       print('expiring token...');
@@ -129,15 +109,14 @@ void main() {
     });
 
     test('- authentication with saved token', () async {
-      CarpUser user = await (CarpService().authenticate(
+      CarpUser user = await CarpService().authenticate(
         username: username,
         password: password,
-      ) as FutureOr<CarpUser>);
+      );
 
-      CarpUser newUser = await (CarpService()
-          .authenticateWithToken(username: user.username!, token: user.token!) as FutureOr<CarpUser>);
+      CarpUser newUser = await CarpService()
+          .authenticateWithToken(username: user.username!, token: user.token!);
 
-      assert(newUser != null);
       assert(newUser.isAuthenticated);
       assert(newUser.username == user.username);
 
@@ -146,19 +125,18 @@ void main() {
     });
 
     test('- authentication with saved JSON token', () async {
-      CarpUser user = await (CarpService().authenticate(
+      CarpUser user = await CarpService().authenticate(
         username: username,
         password: password,
-      ) as FutureOr<CarpUser>);
+      );
 
       //saving token as json
       Map<String, dynamic> tokenAsJson = user.token!.toJson();
       print(_encode(tokenAsJson));
 
-      CarpUser newUser = await (CarpService().authenticateWithToken(
-          username: username, token: OAuthToken.fromJson(tokenAsJson)) as FutureOr<CarpUser>);
+      CarpUser newUser = await CarpService().authenticateWithToken(
+          username: username, token: OAuthToken.fromJson(tokenAsJson));
 
-      assert(newUser != null);
       assert(newUser.isAuthenticated);
       assert(newUser.username == user.username);
 
@@ -167,33 +145,31 @@ void main() {
     });
 
     test('- change password', () async {
-      CarpUser user1 = await (CarpService().authenticate(
+      CarpUser user1 = await CarpService().authenticate(
         username: username,
         password: password,
-      ) as FutureOr<CarpUser>);
+      );
 
       // saving password
       String oldPassword = password;
       String newPassword = 'new_$password';
 
       // changing password to the new one
-      CarpUser user2 = await (CarpService().changePassword(
+      CarpUser user2 = await CarpService().changePassword(
         currentPassword: password,
         newPassword: newPassword,
-      ) as FutureOr<CarpUser>);
+      );
 
-      assert(user2 != null);
       assert(user2.isAuthenticated);
       assert(user2.username == user1.username);
       print("Password has been changed to '$newPassword'\n - user : $user2");
 
       // check if we can authenticate with the new password
-      CarpUser user3 = await (CarpService().authenticate(
+      CarpUser user3 = await CarpService().authenticate(
         username: username,
         password: newPassword,
-      ) as FutureOr<CarpUser>);
+      );
 
-      assert(user3 != null);
       assert(user3.isAuthenticated);
       assert(user3.username == user1.username);
       print("signed in using the '$newPassword' password\n - user: $user3");
@@ -208,27 +184,30 @@ void main() {
     });
   });
 
+  int? consentDocumentId;
+
   group('Informed Consent', () {
     test('- create', () async {
       ConsentDocument uploaded = await CarpService().createConsentDocument(
           {"text": "The original terms text.", "signature": "Image Blob"});
 
-      assert(uploaded != null);
       print(uploaded);
-      print('createdAt : ${uploaded.createdAt}');
+      print('document id : ${uploaded.id}');
+      print('createdAt   : ${uploaded.createdAt}');
       print('createdByUserId : ${uploaded.createdByUserId}');
-      print('document : ${uploaded.document}');
+      print('document    : ${uploaded.document}');
 
       consentDocumentId = uploaded.id;
     });
 
     test('- get', () async {
       ConsentDocument downloaded =
-          await CarpService().getConsentDocument(consentDocumentId);
+          await CarpService().getConsentDocument(consentDocumentId!);
 
-      assert(downloaded != null);
       assert(downloaded.id == consentDocumentId);
+
       print(downloaded);
+      print('document id : ${downloaded.id}');
       print('createdAt : ${downloaded.createdAt}');
       print('createdByUserId : ${downloaded.createdByUserId}');
       print('document : ${downloaded.document}');
@@ -247,7 +226,7 @@ void main() {
         print(_encode(data.toJson()));
 
         int dataPointId =
-            await (CarpService().getDataPointReference().postDataPoint(data) as FutureOr<int>);
+            await CarpService().getDataPointReference().postDataPoint(data);
 
         assert(dataPointId > 0);
         print("data_point_id : $dataPointId");
@@ -268,7 +247,7 @@ void main() {
         print(_encode(data.toJson()));
 
         int dataPointId =
-            await (CarpService().getDataPointReference().postDataPoint(data) as FutureOr<int>);
+            await CarpService().getDataPointReference().postDataPoint(data);
 
         assert(dataPointId > 0);
         print("data_point_id : $dataPointId");
@@ -317,7 +296,7 @@ void main() {
           print(' ${datapoint.id}');
           await CarpService()
               .getDataPointReference()
-              .deleteDataPoint(datapoint.id);
+              .deleteDataPoint(datapoint.id!);
         });
       });
 
@@ -330,7 +309,7 @@ void main() {
         print(_encode(dataPost.toJson()));
 
         int dataPointId =
-            await (CarpService().getDataPointReference().postDataPoint(dataPost) as FutureOr<int>);
+            await CarpService().getDataPointReference().postDataPoint(dataPost);
 
         assert(dataPointId > 0);
 
@@ -340,9 +319,6 @@ void main() {
 
         print(_encode(dataGet.toJson()));
         assert(dataGet.id == dataPointId);
-        // the following fails, since the order of attributes are not the same...
-        // expect(toJsonString(dataPost.carpBody),
-        //     equals(toJsonString(dataGet.carpBody)));
       });
 
       test(
@@ -414,7 +390,7 @@ void main() {
             print(' ${datapoint.id}');
             await CarpService()
                 .getDataPointReference()
-                .deleteDataPoint(datapoint.id);
+                .deleteDataPoint(datapoint.id!);
           });
 
           // wait for the delete requests to finish
@@ -444,7 +420,7 @@ void main() {
       print(document);
       print(_encode(document!.data));
 
-      assert(document!.id! > 0);
+      assert(document!.id > 0);
       documentId = document!.id;
 
       // create another document
@@ -458,11 +434,11 @@ void main() {
       assert(document != null);
       print(document);
 
-      DocumentSnapshot original = await (CarpService()
+      DocumentSnapshot? original = await CarpService()
           .collection(collectionName)
           .document(document!.name)
-          .get() as FutureOr<DocumentSnapshot>);
-      print(_encode(original.data));
+          .get();
+      print(_encode(original?.data));
 
       // updating the role to super user
       DocumentSnapshot updated = await CarpService()
@@ -473,28 +449,28 @@ void main() {
       print('----------- updated -------------');
       print(updated);
       print(_encode(updated.data));
-      print(updated.data!["role"]);
-      assert(updated.id! > 0);
-      assert(updated.data!["role"] == 'Super User');
+      print(updated.data["role"]);
+      assert(updated.id > 0);
+      assert(updated.data["role"] == 'Super User');
     });
 
     test(' - get document by id', () async {
       assert(document != null);
-      DocumentSnapshot newDocument =
-          await (CarpService().documentById(documentId!).get() as FutureOr<DocumentSnapshot>);
+      DocumentSnapshot? newDocument =
+          await CarpService().documentById(documentId!).get();
 
       print((newDocument));
-      assert(newDocument.id == document!.id);
-      assert(newDocument.id == documentId);
+      assert(newDocument?.id == document!.id);
+      assert(newDocument?.id == documentId);
     });
 
     test(' - get document by path', () async {
-      DocumentSnapshot newDocument = await (CarpService()
+      DocumentSnapshot? newDocument = await CarpService()
           .collection(collectionName)
           .document(document!.name)
-          .get() as FutureOr<DocumentSnapshot>);
+          .get();
       print((newDocument));
-      assert(newDocument.id == document!.id);
+      assert(newDocument?.id == document!.id);
     });
 
 //     test(' - rename document', () async {
@@ -566,25 +542,26 @@ void main() {
           .setData({'what': 'breakfast', 'time': 'morning'});
 
       print(newDocument);
-      assert(newDocument.id! > 0);
+      assert(newDocument.id > 0);
       assert(newDocument.path == '$collectionName/$userId/activities/cooking');
     });
 
     test(' - get nested document', () async {
       assert(document != null);
-      DocumentSnapshot newDocument = await (CarpService()
+      DocumentSnapshot? newDocument = await CarpService()
           .collection(collectionName)
           .document(userId)
           .collection('activities')
           .document('cooking')
-          .get() as FutureOr<DocumentSnapshot>);
+          .get();
+
+      assert(newDocument!.id > 0);
 
       print(newDocument);
-      print(newDocument.snapshot);
-      print(newDocument.createdAt);
-      print(newDocument.data);
-      print(newDocument['what']);
-      assert(newDocument.id! > 0);
+      print(newDocument?.snapshot);
+      print(newDocument?.createdAt);
+      print(newDocument?.data);
+      print(newDocument?['what']);
     });
 
     test('- expire token and the upload document', () async {
@@ -597,7 +574,7 @@ void main() {
           .document()
           .setData({'email': username, 'name': 'Administrator'});
 
-      assert(d.id! > 0);
+      assert(d.id > 0);
       print(d);
     });
 
@@ -614,9 +591,9 @@ void main() {
     });
 
     test(" - list collections in the 'user@dtu.dk' document", () async {
-      DocumentSnapshot newDocument =
-          await (CarpService().collection(collectionName).document(userId).get() as FutureOr<DocumentSnapshot>);
-      newDocument.collections.forEach((ref) => print(ref));
+      DocumentSnapshot? newDocument =
+          await CarpService().collection(collectionName).document(userId).get();
+      newDocument?.collections.forEach((ref) => print(ref));
     });
 
     test(" - list all nested documents in '$collectionName' collection",
@@ -720,7 +697,7 @@ void main() {
   }, skip: true);
 
   group("Files", () {
-    int? id = -1;
+    int id = -1;
 
     test('- upload', () async {
       final File myFile = File("test/img.jpg");
@@ -733,10 +710,8 @@ void main() {
         'activity': 'test'
       });
 
-      assert(uploadTask != null);
-
       CarpFileResponse response = await uploadTask.onComplete;
-      assert(response.id! > 0);
+      assert(response.id > 0);
       id = response.id;
 
       print('response.storageName : ${response.storageName}');
@@ -769,8 +744,6 @@ void main() {
       final FileDownloadTask downloadTask =
           CarpService().getFileStorageReference(id).download(myFile);
 
-      assert(downloadTask != null);
-
       int response = await downloadTask.onComplete;
       assert(response == 200);
       print('status code : $response');
@@ -790,9 +763,11 @@ void main() {
     });
 
     test('- get by name', () async {
-      final FileStorageReference reference =
-          await (CarpService().getFileStorageReferenceByName('img.jpg') as FutureOr<FileStorageReference>);
-      final CarpFileResponse result = await reference.get();
+      final FileStorageReference? reference =
+          await CarpService().getFileStorageReferenceByName('img.jpg');
+
+      assert(reference != null);
+      final CarpFileResponse result = await reference!.get();
 
       assert(result.originalName == 'img.jpg');
       print('result : $result');

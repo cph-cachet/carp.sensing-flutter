@@ -53,8 +53,8 @@ class CarpDeploymentService extends CarpBaseService
   @override
   Future<List<StudyDeploymentStatus>> getStudyDeploymentStatusList(
       List<String> studyDeploymentIds) async {
-    assert(studyDeploymentIds != null,
-        'List of studyDeploymentIds cannot be null.');
+    assert(studyDeploymentIds.length > 0,
+        'List of studyDeploymentIds cannot be empty.');
 
     Map<String, dynamic> responseJson =
         await _rpc(GetStudyDeploymentStatusList(studyDeploymentIds));

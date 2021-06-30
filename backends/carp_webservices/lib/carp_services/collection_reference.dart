@@ -145,7 +145,7 @@ class CollectionReference extends CarpReference {
     Map<String, dynamic>? responseJson = json.decode(response.body);
 
     if (httpStatusCode == HttpStatus.ok) {
-      int start = _path!.length - _path!.split('/').last.length;
+      int start = _path!.length - _path.split('/').last.length;
       _path = _path.replaceRange(start, _path.length,
           newName); // renaming path, i.e. the last part of the path
       return;

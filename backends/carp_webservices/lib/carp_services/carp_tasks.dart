@@ -41,11 +41,11 @@ class FileUploadTask extends CarpServiceTask {
   String get name => file.path.split('/').last;
 
   /// Metadata for the file.
-  Map<String, String>? metadata;
+  late Map<String, String> metadata;
 
   FileUploadTask._(FileStorageReference reference, this.file, [metadata])
       : super._(reference) {
-    this.metadata = (metadata == null) ? new Map<String, String>() : metadata;
+    this.metadata = (metadata == null) ? {} : metadata;
   }
 
   /// Returns the [CarpFileResponse] when completed
@@ -54,7 +54,6 @@ class FileUploadTask extends CarpServiceTask {
 
   /// Start the the upload task.
   Future<CarpFileResponse> _start() async {
-    assert(file != null);
     super._start();
     final String url = "${reference.fileEndpointUri}";
 
@@ -66,8 +65,8 @@ class FileUploadTask extends CarpServiceTask {
     request.headers['cache-control'] = 'no-cache';
 
     // add file-specific metadata
-    metadata!['filename'] = name;
-    metadata!['size'] = (await file.length()).toString();
+    metadata['filename'] = name;
+    metadata['size'] = (await file.length()).toString();
     request.fields['metadata'] = json.encode(metadata);
 
     request.files.add(new http.MultipartFile.fromBytes(
@@ -87,12 +86,11 @@ class FileUploadTask extends CarpServiceTask {
         reference.id = map["id"];
 
         switch (httpStatusCode) {
-          // CARP web service returns "201 Created" when a file is uploaded / created on the server.
+          // CARP web service returns "201 Created" when a file is created on the server.
           case 200:
           case 201:
             {
               _state = TaskStateType.success;
-              // _completer.complete(CarpFileResponse._(reference, map));
               _completer.complete(CarpFileResponse._(map));
               break;
             }
@@ -183,21 +181,21 @@ class CarpFileResponse {
       : id = map['id'],
         storageName = map['storage_name'],
         originalName = map['original_name'],
-        metadata = map['metadata'] != null ? map['metadata'] : null,
+        metadata = map['metadata'] != null ? map['metadata'] : {},
         createdByUserId = map['created_by_user_id'],
         createdAt = DateTime.parse(map['created_at']),
         updatedAt = DateTime.parse(map['updated_at']),
         studyId = map['study_id'];
 
   final Map<dynamic, dynamic> map;
-  final int? id;
-  final String? storageName;
-  final String? originalName;
-  final Map<String, dynamic>? metadata;
-  final int? createdByUserId;
+  final int id;
+  final String storageName;
+  final String originalName;
+  final Map<String, dynamic> metadata;
+  final int createdByUserId;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final String? studyId;
+  final String studyId;
 
   String toString() => json.encode(map);
 }

@@ -18,6 +18,8 @@ abstract class CarpBaseService {
   CarpUser? _currentUser;
 
   /// The CARP app associated with the CARP Web Service.
+  /// Returns `null` if this service has not yet been congfigured via the
+  /// [configure] method.
   CarpApp? get app => _app;
 
   /// Has this service been configured?
