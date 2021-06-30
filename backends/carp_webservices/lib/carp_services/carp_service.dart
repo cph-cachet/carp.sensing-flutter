@@ -94,7 +94,7 @@ class CarpService extends CarpBaseService {
     Map<String, dynamic> responseJson = json.decode(response.body);
 
     if (httpStatusCode == HttpStatus.ok) {
-      _currentUser!.authenticated(OAuthToken.fromMap(responseJson!));
+      _currentUser!.authenticated(OAuthToken.fromMap(responseJson));
       await getCurrentUserProfile();
       _authEventController.add(AuthEvent.authenticated);
       return _currentUser!;

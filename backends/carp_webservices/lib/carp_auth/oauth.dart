@@ -52,7 +52,7 @@ class OAuthToken {
   /// If access token has expired, the refresh token should be used
   /// in order to acquire a new access token.
   DateTime get accessTokenExpiryDate {
-    Duration durationLeft = new Duration(seconds: expiresIn!);
+    Duration durationLeft = new Duration(seconds: expiresIn);
     DateTime expiryDate = issuedDate.add(durationLeft);
     return expiryDate;
   }
