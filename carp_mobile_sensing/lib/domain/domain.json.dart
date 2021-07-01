@@ -31,7 +31,7 @@ void _registerFromJsonFunctions() {
   FromJsonFactory().register(ConditionalSamplingEventTrigger(
       measureType: 'ignored', resumeCondition: (DataPoint dataPoint) => true));
   FromJsonFactory().register(
-      RandomRecurrentTrigger(endTime: Time.now(), startTime: Time.now()));
+      RandomRecurrentTrigger(startTime: Time(hour: 1), endTime: Time(hour: 2)));
 
   // Measure classes
   FromJsonFactory().register(CAMSMeasure(type: 'ignored'));

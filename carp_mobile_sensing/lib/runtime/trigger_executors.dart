@@ -333,38 +333,41 @@ class RandomRecurrentTriggerExecutor extends TriggerExecutor {
   RandomRecurrentTriggerExecutor(RandomRecurrentTrigger trigger)
       : super(trigger);
 
-  Time? get startTime => (trigger as RandomRecurrentTrigger).startTime;
-  Time? get endTime => (trigger as RandomRecurrentTrigger).endTime;
-  int? get minNumberOfTriggers =>
+  Time get startTime => (trigger as RandomRecurrentTrigger).startTime;
+  Time get endTime => (trigger as RandomRecurrentTrigger).endTime;
+  int get minNumberOfTriggers =>
       (trigger as RandomRecurrentTrigger).minNumberOfTriggers;
-  int? get maxNumberOfTriggers =>
+  int get maxNumberOfTriggers =>
       (trigger as RandomRecurrentTrigger).maxNumberOfTriggers;
-  Duration? get duration => (trigger as RandomRecurrentTrigger).duration;
+  Duration get duration => (trigger as RandomRecurrentTrigger).duration;
 
   /// Get a random number of samples for the day
   int get numberOfSampling =>
-      Random().nextInt(maxNumberOfTriggers!) + minNumberOfTriggers!;
+      Random().nextInt(maxNumberOfTriggers) + minNumberOfTriggers;
 
-  /// Generate N random times between startTime and endTime
+  /// Get N random times between startTime and endTime
   List<Time> get samplingTimes {
     List<Time> _samplingTimes = [];
     for (int i = 0; i <= numberOfSampling; i++) {
-      int randomHour =
-          Random().nextInt(endTime!.hour - startTime!.hour) + startTime!.hour;
-      int randomMinutes = Random().nextInt(60);
-      Time randomTime = Time(hour: randomHour, minute: randomMinutes);
-
-      // check edge-cases
-      randomTime = (randomTime.isAfter(endTime!))
-          ? Time(hour: randomHour - 1, minute: randomMinutes)
-          : randomTime;
-      randomTime = (randomTime.isBefore(startTime!))
-          ? Time(hour: randomHour + 1, minute: randomMinutes)
-          : randomTime;
-
       _samplingTimes.add(randomTime);
     }
+    debug('Random sampling times: $_samplingTimes');
     return _samplingTimes;
+  }
+
+  /// Get a random time between startTime and endTime
+  Time get randomTime {
+    Time randomTime = Time();
+    do {
+      int randomHour = startTime.hour +
+          ((endTime.hour - startTime.hour == 0)
+              ? 0
+              : Random().nextInt(endTime.hour - startTime.hour));
+      int randomMinutes = Random().nextInt(60);
+      randomTime = Time(hour: randomHour, minute: randomMinutes);
+    } while (!(randomTime.isAfter(startTime) && randomTime.isBefore(endTime)));
+
+    return randomTime;
   }
 
   String get todayString {
@@ -377,7 +380,7 @@ class RandomRecurrentTriggerExecutor extends TriggerExecutor {
   Future onResume() async {
     // sampling might be resumed after [startTime] or the app wasn't running at [startTime]
     // therefore, first check if the random timers have been scheduled for today
-    if (Time.now().isAfter(startTime!)) {
+    if (Time.now().isAfter(startTime)) {
       bool hasBeenScheduledForToday = Settings().preferences!.containsKey(tag);
       if (!hasBeenScheduledForToday) {
         debug(
@@ -387,7 +390,7 @@ class RandomRecurrentTriggerExecutor extends TriggerExecutor {
     }
 
     // set up a cron job that generates the random triggers once pr day at [startTime]
-    final String cronJob = '${startTime!.minute} ${startTime!.hour} * * *';
+    final String cronJob = '${startTime.minute} ${startTime.hour} * * *';
     debug('$runtimeType - creating cron job : $cronJob');
 
     _scheduledTask = _cron.schedule(cron.Schedule.parse(cronJob), () async {
@@ -405,12 +408,12 @@ class RandomRecurrentTriggerExecutor extends TriggerExecutor {
     samplingTimes.forEach((time) {
       // find the delay - note, that none of the delays can be negative,
       // since we are at [startTime] or after
-      Duration delay = time.difference(startTime!);
+      Duration delay = time.difference(startTime);
       debug('$runtimeType - setting up timer for : $time, delay: $delay');
       Timer timer = Timer(delay, () async {
         await super.onResume();
         // now set up a timer that waits until the sampling duration ends
-        Timer(duration!, () => super.onPause());
+        Timer(duration, () => super.onPause());
       });
       _timers.add(timer);
     });

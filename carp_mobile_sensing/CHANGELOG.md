@@ -1,6 +1,7 @@
 ## 0.30.0
 * upgrade to null-safety
-* `CAMSStudyProtocol` is no longer used by replaced by the `carp_core` `StudyProtocol`
+* `CAMSStudyProtocol` is no longer used and is replaced by the `carp_core` `StudyProtocol`
+* fix of bug in `RandomRecurrentTriggerExecutor` (Issue [#202](https://github.com/cph-cachet/carp.sensing-flutter/issues/202))
 
 ## 0.21.5 
 * rename of `ProtocolOwner` to `StudyProtocolReponsible` (in order not to confuse it with `ownerId` in `StudyProtocol`)

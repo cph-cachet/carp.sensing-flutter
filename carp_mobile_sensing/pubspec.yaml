@@ -15,7 +15,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  #carp_core: ^0.30.0      # the core CARP domain model
+  carp_core: ^0.30.0      # the core CARP domain model
 
   # utility plugins
   system_info: ^1.0.0
@@ -46,15 +46,15 @@ dependencies:
 # Overriding carp core libraries to use the local copy
 # Remove this before release of package
 dependency_overrides:
-  carp_core:
-    path: ../carp_core/
+#  carp_core:
+#    path: ../carp_core/
 
 
 dev_dependencies:
   pedantic: ^1.11.0        # For pedantic Dart linter
-  build_runner: ^2.0.4   # For building json serialization
+  build_runner: ^2.0.4    # For building json serialization
   json_serializable: ^4.1.3
-  test: ^1.17.5
+  test: 
 
 # The following section is specific to Flutter.
 flutter:

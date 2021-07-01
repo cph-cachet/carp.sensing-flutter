@@ -166,13 +166,21 @@ void main() {
         // endTime: Time(hour: 20, minute: 0),
         startTime: Time(hour: 8, minute: 56),
         endTime: Time(hour: 20, minute: 10),
+        // startTime: Time(hour: 8, minute: 0),
+        // endTime: Time(hour: 8, minute: 30),
         minNumberOfTriggers: 2,
         maxNumberOfTriggers: 8,
       );
       print(toJsonString(t));
 
       RandomRecurrentTriggerExecutor ex = RandomRecurrentTriggerExecutor(t);
-      print(ex.samplingTimes);
+      List<Time> times = ex.samplingTimes;
+      print(times);
+      times.forEach((time) {
+        print(time);
+        assert(time.isAfter(t.startTime));
+        assert(time.isBefore(t.endTime));
+      });
     });
 
     /// Test template.

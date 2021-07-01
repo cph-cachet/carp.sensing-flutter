@@ -142,22 +142,22 @@ class Time extends Serializable {
   ///
   /// The comparison is independent of whether the time is in UTC or in
   /// the local time zone.
-  bool isBefore(Time other) => DateTime(2021, 1, hour, minute, second)
-      .isBefore(DateTime(2021, 1, other.hour, other.minute, other.second));
+  bool isBefore(Time other) => DateTime(2021, 1, 1, hour, minute, second)
+      .isBefore(DateTime(2021, 1, 1, other.hour, other.minute, other.second));
 
   /// Returns true if [this] occurs after [other].
   ///
   /// The comparison is independent of whether the time is in UTC or in
   /// the local time zone.
-  bool isAfter(Time other) => DateTime(2021, 1, hour, minute, second)
-      .isAfter(DateTime(2021, 1, other.hour, other.minute, other.second));
+  bool isAfter(Time other) => DateTime(2021, 1, 1, hour, minute, second)
+      .isAfter(DateTime(2021, 1, 1, other.hour, other.minute, other.second));
 
   /// Returns a [Duration] with the difference when subtracting [other] from
   /// [this].
   ///
   ///  The returned [Duration] will be negative if [other] occurs after [this].
-  Duration difference(Time other) => DateTime(2021, 1, hour, minute, second)
-      .difference(DateTime(2021, 1, other.hour, other.minute, other.second));
+  Duration difference(Time other) => DateTime(2021, 1, 1, hour, minute, second)
+      .difference(DateTime(2021, 1, 1, other.hour, other.minute, other.second));
 
   Function get fromJsonFunction => _$TimeFromJson;
   factory Time.fromJson(Map<String, dynamic> json) =>
@@ -634,7 +634,10 @@ class RandomRecurrentTrigger extends Trigger {
     required this.startTime,
     required this.endTime,
     this.duration = const Duration(seconds: 2),
-  }) : super();
+  }) : super() {
+    assert(startTime.isBefore(endTime),
+        'startTime must be before endTime with a 24 hour period.');
+  }
 
   Function get fromJsonFunction => _$RandomRecurrentTriggerFromJson;
   factory RandomRecurrentTrigger.fromJson(Map<String, dynamic> json) =>

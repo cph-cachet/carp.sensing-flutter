@@ -182,32 +182,48 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
       ..addMasterDevice(phone)
       ..addConnectedDevice(eSense);
 
-    // add default measures from the SensorSamplingPackage
-    protocol.addTriggeredTask(
-        ImmediateTrigger(),
-        AutomaticTask()
-          ..measures = SamplingPackageRegistry().debug().getMeasureList(
-            types: [
-              // SensorSamplingPackage.ACCELEROMETER,
-              // SensorSamplingPackage.GYROSCOPE,
-              SensorSamplingPackage.PERIODIC_ACCELEROMETER,
-              SensorSamplingPackage.PERIODIC_GYROSCOPE,
-              SensorSamplingPackage.PEDOMETER,
-              SensorSamplingPackage.LIGHT,
-            ],
-          ),
-        phone);
+    // // add default measures from the SensorSamplingPackage
+    // protocol.addTriggeredTask(
+    //     ImmediateTrigger(),
+    //     AutomaticTask()
+    //       ..measures = SamplingPackageRegistry().debug().getMeasureList(
+    //         types: [
+    //           // SensorSamplingPackage.ACCELEROMETER,
+    //           // SensorSamplingPackage.GYROSCOPE,
+    //           SensorSamplingPackage.PERIODIC_ACCELEROMETER,
+    //           SensorSamplingPackage.PERIODIC_GYROSCOPE,
+    //           SensorSamplingPackage.PEDOMETER,
+    //           SensorSamplingPackage.LIGHT,
+    //         ],
+    //       ),
+    //     phone);
 
-    // add default measures from the DeviceSamplingPackage
+    // // add default measures from the DeviceSamplingPackage
+    // protocol.addTriggeredTask(
+    //     ImmediateTrigger(),
+    //     AutomaticTask()
+    //       ..measures = SamplingPackageRegistry().debug().getMeasureList(
+    //         types: [
+    //           DeviceSamplingPackage.MEMORY,
+    //           DeviceSamplingPackage.DEVICE,
+    //           DeviceSamplingPackage.BATTERY,
+    //           DeviceSamplingPackage.SCREEN,
+    //         ],
+    //       ),
+    //     phone);
+
+    // add a random trigger to collect device info at random times
     protocol.addTriggeredTask(
-        ImmediateTrigger(),
+        RandomRecurrentTrigger(
+          startTime: Time(hour: 22, minute: 00),
+          endTime: Time(hour: 22, minute: 30),
+          minNumberOfTriggers: 2,
+          maxNumberOfTriggers: 8,
+        ),
         AutomaticTask()
           ..measures = SamplingPackageRegistry().debug().getMeasureList(
             types: [
-              DeviceSamplingPackage.MEMORY,
               DeviceSamplingPackage.DEVICE,
-              DeviceSamplingPackage.BATTERY,
-              DeviceSamplingPackage.SCREEN,
             ],
           ),
         phone);

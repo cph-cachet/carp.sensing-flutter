@@ -17,7 +17,7 @@ class ConnectivityDatum extends Datum {
   /// - WiFi: Device connected via Wi-Fi
   /// - Mobile: Device connected to cellular network
   /// - None: Device not connected to any network
-  String connectivityStatus;
+  String connectivityStatus = "unknown";
 
   ConnectivityDatum() : super();
 
@@ -65,12 +65,7 @@ class BluetoothDatum extends Datum {
       _$BluetoothDatumFromJson(json);
   Map<String, dynamic> toJson() => _$BluetoothDatumToJson(this);
 
-  String toString() {
-    String str = super.toString() + 'scanResult: [';
-    scanResult.forEach((device) => str += '$device, ');
-    str += ']';
-    return str;
-  }
+  String toString() => super.toString() + 'scanResult: $scanResult';
 }
 
 /// Bluetooth device data.
@@ -96,21 +91,31 @@ class BluetoothDevice {
   bool connectable;
 
   /// The power level of the device in percentage.
-  int txPowerLevel;
+  int? txPowerLevel;
 
   /// The RSSI signal strength to the device.
   int rssi;
 
-  BluetoothDevice() : super();
+  BluetoothDevice({
+    required this.advertisementName,
+    required this.bluetoothDeviceId,
+    required this.bluetoothDeviceName,
+    required this.bluetoothDeviceType,
+    required this.connectable,
+    required this.rssi,
+    this.txPowerLevel,
+  }) : super();
 
-  factory BluetoothDevice.fromScanResult(ScanResult result) => BluetoothDevice()
-    ..bluetoothDeviceId = result.device.id.id
-    ..bluetoothDeviceName = result.device.name
-    ..connectable = result.advertisementData.connectable
-    ..txPowerLevel = result.advertisementData.txPowerLevel
-    ..advertisementName = result.advertisementData.localName
-    ..rssi = result.rssi
-    ..bluetoothDeviceType = getBluetoothDeviceType(result.device.type);
+  factory BluetoothDevice.fromScanResult(ScanResult result) => BluetoothDevice(
+      bluetoothDeviceId: result.device.id.id,
+      bluetoothDeviceName: result.device.name,
+      connectable: result.advertisementData.connectable,
+      txPowerLevel: result.advertisementData.txPowerLevel,
+      advertisementName: result.advertisementData.localName,
+      rssi: result.rssi,
+      bluetoothDeviceType: getBluetoothDeviceType(
+        result.device.type,
+      ));
 
   static String getBluetoothDeviceType(BluetoothDeviceType type) {
     switch (type) {
@@ -132,11 +137,11 @@ class BluetoothDevice {
   String toString() =>
       '${this.runtimeType} - ' +
       ', advertisementName: $advertisementName'
-      ', id: $bluetoothDeviceId'
-      ', name: $bluetoothDeviceName'
-      ', type: $bluetoothDeviceType'
-      ', connectable: $connectable'
-      ', rssi: $rssi';
+          ', id: $bluetoothDeviceId'
+          ', name: $bluetoothDeviceName'
+          ', type: $bluetoothDeviceType'
+          ', connectable: $connectable'
+          ', rssi: $rssi';
 }
 
 /// A [Datum] that holds wifi connectivity status in terms of connected SSID
@@ -149,16 +154,24 @@ class WifiDatum extends Datum {
       DataFormat.fromString(ConnectivitySamplingPackage.WIFI);
 
   /// The wifi service set ID (SSID) of the connected network
-  String ssid;
+  String? ssid;
 
   /// The basic service set identifier (BSSID) of the connected network
-  String bssid;
+  String? bssid;
 
-  WifiDatum() : super();
+  /// The internet protocol (IP) address of the connected network
+  String? ip;
+
+  WifiDatum({
+    this.ssid,
+    this.bssid,
+    this.ip,
+  }) : super();
 
   factory WifiDatum.fromJson(Map<String, dynamic> json) =>
       _$WifiDatumFromJson(json);
   Map<String, dynamic> toJson() => _$WifiDatumToJson(this);
 
-  String toString() => super.toString() + ', SSID: $ssid, BSSID: $bssid';
+  String toString() =>
+      super.toString() + ', SSID: $ssid, BSSID: $bssid, IP: $ip';
 }
