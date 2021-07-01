@@ -34,7 +34,7 @@ class AuthenticationDialog {
                     validator: MultiValidator([
                       RequiredValidator(errorText: "* Required"),
                       CARPEmailValidator(errorText: "Enter valid email."),
-                    ]) as String? Function(String?)?,
+                    ]),
                     decoration: InputDecoration(
                       icon: Icon(Icons.account_circle),
                       labelText: 'Username',
@@ -47,7 +47,7 @@ class AuthenticationDialog {
                       RequiredValidator(errorText: "* Required"),
                       MinLengthValidator(8,
                           errorText: "At least 8 characters."),
-                    ]) as String? Function(String?)?,
+                    ]),
                     obscureText: true,
                     decoration: InputDecoration(
                       icon: Icon(Icons.lock),
