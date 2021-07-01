@@ -69,16 +69,16 @@ class CollectionReference extends CarpReference {
         await httpr.get(Uri.encodeFull(collectionUri), headers: restHeaders);
     int httpStatusCode = response.statusCode;
 
-    Map<String, dynamic>? responseJson = json.decode(response.body);
+    Map<String, dynamic> responseJson = json.decode(response.body);
     if (httpStatusCode == HttpStatus.ok)
       return this
-        .._id = responseJson!['id']
-        .._path = responseJson["name"];
+        .._id = responseJson['id']
+        .._path = responseJson['name'];
 
     // All other cases are treated as an error.
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: responseJson!["message"],
+      message: responseJson['message'],
     );
   }
 
@@ -96,8 +96,8 @@ class CollectionReference extends CarpReference {
       List<dynamic> documentsJson = responseJson['documents'];
       List<DocumentSnapshot> documents = [];
       for (var documentJson in documentsJson) {
-        String? key = documentJson["name"];
-        documents.add(DocumentSnapshot._("$path/$key", documentJson));
+        String key = documentJson['name'];
+        documents.add(DocumentSnapshot._('$path/$key', documentJson));
       }
 
       return documents;
@@ -106,7 +106,7 @@ class CollectionReference extends CarpReference {
     // All other cases are treated as an error.
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: responseJson["message"],
+      message: responseJson['message'],
     );
   }
 
@@ -117,9 +117,9 @@ class CollectionReference extends CarpReference {
     String documentPath;
     if (name == null) {
       final String key = PushIdGenerator.generatePushChildName();
-      documentPath = "$path/$key";
+      documentPath = '$path/$key';
     } else {
-      documentPath = "$path/$name";
+      documentPath = '$path/$name';
     }
 
     return DocumentReference._path(service as CarpService, documentPath);
@@ -128,9 +128,11 @@ class CollectionReference extends CarpReference {
   /// Add a data document to this collection and returns a [DocumentReference] to this document.
   ///
   /// If no [name] is provided, an auto-generated name is used.
-  /// If no (data] is provided now, this can be set later using the [DocumentReference.setData()] method.
-  Future<DocumentReference> add(
-      [String? name, Map<String, dynamic>? data]) async {
+  /// If no [data] is provided, this can be set later using the [DocumentReference.setData()] method.
+  Future<DocumentReference> add([
+    String? name,
+    Map<String, dynamic>? data,
+  ]) async {
     final DocumentReference newDocument = document(name);
     if (data != null) await newDocument.setData(data);
     return newDocument;
@@ -142,7 +144,7 @@ class CollectionReference extends CarpReference {
     http.Response response = await httpr.put(Uri.encodeFull(collectionUriByID),
         headers: headers, body: '{"name":"$newName"}');
     int httpStatusCode = response.statusCode;
-    Map<String, dynamic>? responseJson = json.decode(response.body);
+    Map<String, dynamic> responseJson = json.decode(response.body);
 
     if (httpStatusCode == HttpStatus.ok) {
       int start = _path.length - _path.split('/').last.length;
@@ -153,7 +155,7 @@ class CollectionReference extends CarpReference {
     // All other cases are treated as an error.
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: responseJson!["message"],
+      message: responseJson['message'],
     );
   }
 
@@ -170,10 +172,10 @@ class CollectionReference extends CarpReference {
       final Map<String, dynamic> responseJson = json.decode(response.body);
       throw CarpServiceException(
         httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-        message: responseJson["message"],
+        message: responseJson['message'],
       );
     }
   }
 
-  String toString() => 'CollectionReference - id: $id, path: $path';
+  String toString() => "CollectionReference - id: '$id', path: '$path'";
 }

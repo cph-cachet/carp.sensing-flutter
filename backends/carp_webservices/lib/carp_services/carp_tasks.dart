@@ -182,20 +182,22 @@ class CarpFileResponse {
         storageName = map['storage_name'],
         originalName = map['original_name'],
         metadata = map['metadata'] != null ? map['metadata'] : {},
-        createdByUserId = map['created_by_user_id'],
+        studyId = map['study_id'],
+        createdBy = map['created_by'],
         createdAt = DateTime.parse(map['created_at']),
-        updatedAt = DateTime.parse(map['updated_at']),
-        studyId = map['study_id'];
+        updatedBy = map['updated_by'],
+        updatedAt = DateTime.parse(map['updated_at']);
 
   final Map<dynamic, dynamic> map;
   final int id;
   final String storageName;
   final String originalName;
   final Map<String, dynamic> metadata;
-  final int createdByUserId;
-  final DateTime createdAt;
-  final DateTime updatedAt;
   final String studyId;
+  final String createdBy;
+  final DateTime createdAt;
+  final String updatedBy;
+  final DateTime updatedAt;
 
   String toString() => json.encode(map);
 }

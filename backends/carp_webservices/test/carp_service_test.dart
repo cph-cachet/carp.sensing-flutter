@@ -366,7 +366,7 @@ void main() {
       });
 
       test('- delete', () async {
-        int? dataPointId = await CarpService()
+        int dataPointId = await CarpService()
             .getDataPointReference()
             .postDataPoint(DataPoint.fromData(datum1)
               ..carpHeader.studyId = studyId
