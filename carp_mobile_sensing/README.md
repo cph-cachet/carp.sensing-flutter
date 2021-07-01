@@ -109,26 +109,24 @@ In CAMS, a sensing protocol is configured in a [`CAMSStudyProtocol`](https://pub
 Below is a simple example of how to set up a protocol that sense step counts (`pedometer`), ambient light (`light`), screen activity (`screen`), and power consumption (`battery`). 
 
 ```dart
-// Import package
+// import package
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 void example() async {
-  // create a protocol using a local file to store data
-  CAMSStudyProtocol protocol = CAMSStudyProtocol()
-    ..name = 'Track patient movement'
-    ..owner = StudyProtocolReponsible(
-      id: 'AB',
-      name: 'Alex Boyon',
-      email: 'alex@uni.dk',
-    );
+  // create a study protocol
+  StudyProtocol protocol = StudyProtocol(
+    ownerId: 'user@dtu.dk',
+    name: 'Tracking',
+    description: 'Tracking patient movment',
+  );
 
   // define which devices are used for data collection
   // in this case, its only this smartphone
   Smartphone phone = Smartphone();
   protocol.addMasterDevice(phone);
 
-  // Add an automatic task that immediately starts collecting
+  // add an automatic task that immediately starts collecting
   // step counts, ambient light, screen activity, and battery level
   protocol.addTriggeredTask(
       ImmediateTrigger(),
@@ -315,7 +313,7 @@ The execution of sensing can be controlled on runtime in a number of ways. For e
   // once the sampling has to stop, e.g. in a Flutter dispose() methods, call stop.
   // note that once a sampling has stopped, it cannot be restarted.
   controller.stop();
-  subscription.cancel();
+  await subscription.cancel();
 
   ...
 ```

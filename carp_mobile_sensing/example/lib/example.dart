@@ -111,7 +111,7 @@ void example_2() async {
 
   // create and configure a client manager for this phone
   SmartPhoneClientManager client = SmartPhoneClientManager();
-  client.configure();
+  await client.configure();
 
   StudyDeploymentController controller =
       await client.addStudy(studyDeploymentId, deviceRolename);
@@ -193,7 +193,7 @@ void example_2() async {
   // once the sampling has to stop, e.g. in a Flutter dispose() methods, call stop.
   // note that once a sampling has stopped, it cannot be restarted.
   controller.stop();
-  subscription.cancel();
+  await subscription.cancel();
 }
 
 /// Example of device management.
@@ -232,7 +232,7 @@ void example_3() async {
       // (all of the above can actually be handled directly by the CAMSDeploymentService.registerDevice() method)
 
       // register the device in the deployment service
-      SmartphoneDeploymentService()
+      await SmartphoneDeploymentService()
           .registerDevice(studyDeploymentId, deviceRoleName, registration);
     }
   });
@@ -465,7 +465,7 @@ void carp_core_client_example() async {
   // which is equivalent to
   client = SmartPhoneClientManager();
 
-  client.configure();
+  await client.configure();
 
   StudyDeploymentController controller =
       await client.addStudy(studyDeploymentId, deviceToUse);
@@ -473,7 +473,7 @@ void carp_core_client_example() async {
   if (controller.status == StudyRuntimeStatus.RegisteringDevices) {
     var connectedDevice = controller.remainingDevicesToRegister.first;
     var connectedRegistration = DeviceRegistration();
-    deploymentService.registerDevice(
+    await deploymentService.registerDevice(
         studyDeploymentId, connectedDevice.roleName, connectedRegistration);
   }
 

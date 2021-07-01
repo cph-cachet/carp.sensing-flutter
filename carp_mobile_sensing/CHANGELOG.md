@@ -1,6 +1,6 @@
 ## 0.30.0
-* upgrade to null-safety
-* `CAMSStudyProtocol` is no longer used and is replaced by the `carp_core` `StudyProtocol`
+* upgrade to null-safety, `carp_core` v. 0.30.0
+* `CAMSStudyProtocol` is no longer used and is replaced by `StudyProtocol` in `carp_core`
 * fix of bug in `RandomRecurrentTriggerExecutor` (Issue [#202](https://github.com/cph-cachet/carp.sensing-flutter/issues/202))
 
 ## 0.21.5 
