@@ -25,8 +25,8 @@ class OMHGeopositionDatum extends Datum implements TransformedDatum {
 
   Map<String, dynamic> toJson() => geoposition.toJson();
 
-  static DatumTransformer get transformer =>
-      ((datum) => OMHGeopositionDatum.fromLocationDatum(datum as LocationDatum));
+  static DatumTransformer get transformer => ((datum) =>
+      OMHGeopositionDatum.fromLocationDatum(datum as LocationDatum));
 }
 
 /// A [TransformedDatum] that holds an OMH [PhysicalActivity](https://pub.dartlang.org/documentation/openmhealth_schemas/latest/domain_omh_activity/PhysicalActivity-class.html)
@@ -49,6 +49,6 @@ class OMHPhysicalActivityDatum extends Datum implements TransformedDatum {
 
   Map<String, dynamic> toJson() => activity.toJson();
 
-  static DatumTransformer get transformer =>
-      ((datum) => OMHPhysicalActivityDatum.fromActivityDatum(datum as ActivityDatum));
+  static DatumTransformer get transformer => ((datum) =>
+      OMHPhysicalActivityDatum.fromActivityDatum(datum as ActivityDatum));
 }

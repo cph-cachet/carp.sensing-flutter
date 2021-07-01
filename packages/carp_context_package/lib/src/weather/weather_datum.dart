@@ -40,8 +40,8 @@ class WeatherDatum extends Datum {
   String toString() =>
       super.toString() +
       ',place: $areaName ($country), '
-      'date: $date, '
-      'weather: $weatherMain, $weatherDescription, '
-      'temp: $temperature, temp (min): $tempMin, temp (max): $tempMax, '
-      'sunrise: $sunrise, sunset: $sunset';
+          'date: $date, '
+          'weather: $weatherMain, $weatherDescription, '
+          'temp: $temperature, temp (min): $tempMin, temp (max): $tempMax, '
+          'sunrise: $sunrise, sunset: $sunset';
 }

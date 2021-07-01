@@ -38,7 +38,6 @@ class GeoPosition extends Serializable {
   /// See http://www.movable-type.co.uk/scripts/latlong.html for details on how to
   /// calculate distance, bearing and more between latitude/longitude points.
   double distanceTo(GeoPosition destination) {
-    assert(destination != null);
     final sDLat =
         math.sin((degToRad(destination.latitude) - degToRad(latitude)) / 2);
     final sDLng =

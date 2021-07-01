@@ -85,11 +85,11 @@ class LocationDatum extends Datum {
   String toString() =>
       super.toString() +
       'latitude: $latitude, '
-      'longitude: $longitude, '
-      'accuracy; $accuracy, '
-      'altitude: $altitude, '
-      'speed: $speed, '
-      'speed_accuracy: $speedAccuracy, '
-      'heading: $heading, '
-      'time: $time';
+          'longitude: $longitude, '
+          'accuracy; $accuracy, '
+          'altitude: $altitude, '
+          'speed: $speed, '
+          'speed_accuracy: $speedAccuracy, '
+          'heading: $heading, '
+          'time: $time';
 }
