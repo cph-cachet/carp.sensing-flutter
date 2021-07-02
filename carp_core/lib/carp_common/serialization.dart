@@ -36,7 +36,8 @@ part of carp_core_common;
 ///   A() : super();
 ///
 ///   Function get fromJsonFunction => _$AFromJson;
-///   factory A.fromJson(Map<String, dynamic> json) => FromJsonFactory().fromJson(json);
+///   factory A.fromJson(Map<String, dynamic> json) =>
+///       FromJsonFactory().fromJson(json) as A;
 ///   Map<String, dynamic> toJson() => _$AToJson(this);
 /// }
 ///
@@ -47,7 +48,8 @@ part of carp_core_common;
 ///   B() : super();
 ///
 ///   Function get fromJsonFunction => _$BFromJson;
-///   factory B.fromJson(Map<String, dynamic> json) => FromJsonFactory().fromJson(json);
+///   factory B.fromJson(Map<String, dynamic> json) =>
+///       FromJsonFactory().fromJson(json) as B;
 ///   Map<String, dynamic> toJson() => _$BToJson(this);
 /// }
 /// ````
