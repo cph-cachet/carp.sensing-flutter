@@ -15,17 +15,22 @@ To use the study generator, do the following in you app:
 The `carpspec.yaml` can be configured using the following properties for:
 
  * the CARP Server 
+ * the study ID
  * protocol
  * informed consent
  * localization
 
 ```yaml
 server:
-  uri: https://cans.cachet.dk:443
+  uri: https://cans.cachet.dk
   client_id: carp
   client_secret: carp
   username: user@dtu.dk
   password: pw
+
+study:
+  study_id: 01cf04a7-d154-40f0-9a75-ab759cf74eb3
+  study_deployment_id: ae8076a3-7170-4bcf-b66c-64639a7a9eee
 
 protocol:
   path: carp/protocols/protocol.json
@@ -78,6 +83,7 @@ The available commands are:
 Before uploading a any json files to CARP, run the `dryrun` command first. It will check and output a list like the following:
 
 ```bash
+[✓] CARP App             CarpApp - name: CARP server at 'https://cans.cachet.dk/', uri: https://cans.cachet.dk/, studyDeploymentId: null, studyId: 7be8da9b-7e8f-46c6-a070-d3fa186914a2
 [!] CARP Server          CarpServiceException: 401 Unauthorized -  The requested email account: user@dtu.dk cannot be found. 
 [✓] Protocol path        carp/protocols/protocol.json
 [✓] Protocol parse       name: test_protocol

@@ -1,3 +1,6 @@
+## 0.21.4
+* fix of error with `study_id` not being set
+
 ## 0.21.3
 * [PR #192](https://github.com/cph-cachet/carp.sensing-flutter/pull/192)
 

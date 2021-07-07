@@ -3,6 +3,7 @@ part of carp_study_generator;
 /// A [Command] that makes a dry run of the configuration of a CAMS study.
 /// It checks the following:
 ///
+///  * Is there a valid CARP app specification
 ///  * Is the specified CARP Server accessible
 ///  * Is authentication possible with the specified credentials
 ///  * Can the study protocol be loaded and parsed without errors
@@ -15,8 +16,16 @@ class DryRunCommand extends AbstractCommand {
   @override
   Future execute() async {
     int issues = 0;
+
     try {
       CarpService().configure(app);
+      print('\x1B[32m[✓]\x1B[0m CARP App \t\t $app');
+    } catch (error) {
+      print('\x1B[31m[!]\x1B[0m CARP App \t\t ${errorToString(error)}');
+      issues++;
+    }
+
+    try {
       await CarpService().authenticate(username: username, password: password);
       print('\x1B[32m[✓]\x1B[0m CARP Server \t username: $username');
     } catch (error) {
@@ -51,8 +60,10 @@ class DryRunCommand extends AbstractCommand {
       issues++;
     }
     try {
-      RPOrderedTask.fromJson(json.decode(consentJson) as Map<String, dynamic>);
-      print('\x1B[32m[✓]\x1B[0m Consent parse');
+      RPOrderedTask consent = RPOrderedTask.fromJson(
+          json.decode(consentJson) as Map<String, dynamic>);
+      print(
+          '\x1B[32m[✓]\x1B[0m Consent parse \t identifier: ${consent.identifier}');
     } catch (error) {
       print('\x1B[31m[!]\x1B[0m Consent parse \t ${errorToString(error)}');
       issues++;
