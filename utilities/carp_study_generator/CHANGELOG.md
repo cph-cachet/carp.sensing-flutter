@@ -1,3 +1,6 @@
+## 0.21.5
+* improvement to `localization` command
+
 ## 0.21.4
 * fix of error with `study_id` not being set
 
