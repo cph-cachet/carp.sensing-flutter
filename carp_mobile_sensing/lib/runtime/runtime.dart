@@ -49,16 +49,19 @@ class SensingException implements Exception {
 }
 
 /// A simple method for printing warning messages to the console.
-void info(String message) => (Settings().debugLevel >= DebugLevel.INFO)
-    ? print('[CAMS INFO] $message')
-    : 0;
+void info(String message) =>
+    (Settings().debugLevel.index >= DebugLevel.INFO.index)
+        ? print('[CAMS INFO] $message')
+        : 0;
 
 /// A simple method for printing warning messages to the console.
-void warning(String message) => (Settings().debugLevel >= DebugLevel.WARNING)
-    ? print('[CAMS WARNING]  $message')
-    : 0;
+void warning(String message) =>
+    (Settings().debugLevel.index >= DebugLevel.WARNING.index)
+        ? print('[CAMS WARNING]  $message')
+        : 0;
 
 /// A simple method for printing debug messages to the console.
-void debug(String message) => (Settings().debugLevel >= DebugLevel.DEBUG)
-    ? print('[CAMS DEBUG] $message')
-    : 0;
+void debug(String message) =>
+    (Settings().debugLevel.index >= DebugLevel.DEBUG.index)
+        ? print('[CAMS DEBUG] $message')
+        : 0;

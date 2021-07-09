@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2018-2021 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -14,11 +14,11 @@ class PhoneLogProbe extends DatumProbe {
   Future<Datum> getDatum() async {
     MarkedMeasure m = (measure as MarkedMeasure);
     int from = (m.lastTime != null)
-        ? m.lastTime.millisecondsSinceEpoch
+        ? m.lastTime!.millisecondsSinceEpoch
         : DateTime.now().subtract(m.history).millisecondsSinceEpoch;
     int now = DateTime.now().millisecondsSinceEpoch;
     Iterable<CallLogEntry> entries =
-        await CallLog.query(dateFrom: from, dateTo: now) ?? [];
+        await CallLog.query(dateFrom: from, dateTo: now);
     return PhoneLogDatum()
       ..phoneLog =
           entries.map((call) => PhoneCall.fromCallLogEntry(call)).toList();
@@ -30,21 +30,48 @@ class PhoneLogProbe extends DatumProbe {
 ///
 /// Only works on Android
 class TextMessageLogProbe extends DatumProbe {
-  SmsQuery query;
+  SmsColumn? col;
+  static const List<SmsColumn> ALL_SMS_COLUMNS = [
+    SmsColumn.ADDRESS,
+    SmsColumn.BODY,
+    SmsColumn.DATE,
+    SmsColumn.DATE_SENT,
+    SmsColumn.ID,
+    SmsColumn.READ,
+    SmsColumn.SEEN,
+    SmsColumn.STATUS,
+    SmsColumn.SUBJECT,
+    SmsColumn.SUBSCRIPTION_ID,
+    SmsColumn.TYPE,
+  ];
 
   void onInitialize(Measure measure) {
     super.onInitialize(measure);
-    // check if SMS is available (only available on Android)
-    query = SmsQuery();
-    query.querySms(start: 1, count: 2);
+    if (!Platform.isAndroid)
+      throw SensingException('TextMessageLogProbe only available on Android.');
   }
 
   Future<Datum> getDatum() async {
-    List<SmsMessage> _messages = await query.getAllSms;
+    List<SmsMessage> allSms = (await Telephony.instance.getInboxSms(
+      columns: ALL_SMS_COLUMNS,
+    ))
+      ..addAll(await Telephony.instance.getSentSms(
+        columns: ALL_SMS_COLUMNS,
+      ));
     return TextMessageLogDatum()
       ..textMessageLog =
-          _messages.map((sms) => TextMessage.fromSmsMessage(sms)).toList();
+          allSms.map((sms) => TextMessage.fromSmsMessage(sms)).toList();
   }
+}
+
+// A private stream controller to be used in the call-back from the SMS probe.
+StreamController<Datum> _textMessageProbeController = StreamController();
+
+/// The static call-back method for handling in-coming SMS messages when
+/// the app is in the background.
+backgrounMessageHandler(SmsMessage message) async {
+  _textMessageProbeController.add(
+      TextMessageDatum.fromTextMessage(TextMessage.fromSmsMessage(message)));
 }
 
 /// The [TextMessageProbe] listens to SMS messages and collects a
@@ -52,23 +79,47 @@ class TextMessageLogProbe extends DatumProbe {
 ///
 /// Only works on Android
 class TextMessageProbe extends StreamProbe {
+  @override
+  Stream<Datum> get stream => _textMessageProbeController.stream;
+
+  @override
   void onInitialize(Measure measure) {
     super.onInitialize(measure);
     if (!Platform.isAndroid)
       throw SensingException('TextMessageProbe only available on Android.');
-  }
 
-  Stream<Datum> get stream => SmsReceiver().onSmsReceived.map((event) =>
-      TextMessageDatum.fromTextMessage(TextMessage.fromSmsMessage(event)));
+    Telephony.instance.listenIncomingSms(
+      onNewMessage: (SmsMessage message) {
+        _textMessageProbeController.add(TextMessageDatum.fromTextMessage(
+            TextMessage.fromSmsMessage(message)));
+      },
+      onBackgroundMessage: backgrounMessageHandler,
+    );
+  }
 }
+
+// /// The [TextMessageProbe] listens to SMS messages and collects a
+// /// [TextMessageDatum] every time a new SMS message is received.
+// ///
+// /// Only works on Android
+// class TextMessageProbe extends StreamProbe {
+//   void onInitialize(Measure measure) {
+//     super.onInitialize(measure);
+//     if (!Platform.isAndroid)
+//       throw SensingException('TextMessageProbe only available on Android.');
+//   }
+
+//   Stream<Datum> get stream => SmsReceiver().onSmsReceived.map((event) =>
+//       TextMessageDatum.fromTextMessage(TextMessage.fromSmsMessage(event)));
+// }
 
 /// A probe collecting calendar entries from the calendar on the phone.
 ///
 /// See [CalendarMeasure] for how to configure this probe's measure.
 class CalendarProbe extends DatumProbe {
   DeviceCalendarPlugin _deviceCalendar = DeviceCalendarPlugin();
-  List<Calendar> _calendars;
-  Iterator<Calendar> _calendarIterator;
+  List<Calendar>? _calendars;
+  late Iterator<Calendar> _calendarIterator;
   List<CalendarEvent> _events = [];
 
   void onInitialize(Measure measure) {
@@ -80,15 +131,15 @@ class CalendarProbe extends DatumProbe {
   Future<bool> _retrieveCalendars() async {
     // try to get permission to access calendar
     var permissionsGranted = await _deviceCalendar.hasPermissions();
-    if (permissionsGranted.isSuccess && !permissionsGranted.data) {
+    if (permissionsGranted.isSuccess && !permissionsGranted.data!) {
       permissionsGranted = await _deviceCalendar.requestPermissions();
-      if (!permissionsGranted.isSuccess || !permissionsGranted.data) {
+      if (!permissionsGranted.isSuccess || !permissionsGranted.data!) {
         return false;
       }
     }
 
     final calendarsResult = await _deviceCalendar.retrieveCalendars();
-    _calendars = calendarsResult?.data;
+    _calendars = calendarsResult.data;
     return true;
   }
 
@@ -101,7 +152,7 @@ class CalendarProbe extends DatumProbe {
     var _calendarEventsResult = await _deviceCalendar.retrieveEvents(
         calendar.id,
         RetrieveEventsParams(startDate: startDate, endDate: endDate));
-    List<Event> _calendarEvents = _calendarEventsResult?.data;
+    List<Event>? _calendarEvents = _calendarEventsResult.data;
     if (_calendarEvents != null) {
       _calendarEvents
           .forEach((event) => _events.add(CalendarEvent.fromEvent(event)));
@@ -122,7 +173,7 @@ class CalendarProbe extends DatumProbe {
 
     if (_calendars != null) {
       _events = [];
-      _calendarIterator = _calendars.iterator;
+      _calendarIterator = _calendars!.iterator;
 
       if (_calendarIterator.moveNext())
         await _retrieveEvents(_calendarIterator.current);

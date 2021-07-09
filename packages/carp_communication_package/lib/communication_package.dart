@@ -29,7 +29,7 @@ class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
         CALENDAR,
       ];
 
-  Probe create(String type) {
+  Probe? create(String type) {
     switch (type) {
       case PHONE_LOG:
         return PhoneLogProbe();
@@ -50,63 +50,63 @@ class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
     FromJsonFactory().register(CalendarMeasure(type: 'ignored'));
 
     TransformerSchemaRegistry()
-        .lookup(PrivacySchema.DEFAULT)
+        .lookup(PrivacySchema.DEFAULT)!
         .add(TEXT_MESSAGE, textMessageDatumAnoymizer);
     TransformerSchemaRegistry()
-        .lookup(PrivacySchema.DEFAULT)
+        .lookup(PrivacySchema.DEFAULT)!
         .add(TEXT_MESSAGE_LOG, textMessageLogAnoymizer);
     TransformerSchemaRegistry()
-        .lookup(PrivacySchema.DEFAULT)
+        .lookup(PrivacySchema.DEFAULT)!
         .add(PHONE_LOG, phoneLogAnoymizer);
     TransformerSchemaRegistry()
-        .lookup(PrivacySchema.DEFAULT)
+        .lookup(PrivacySchema.DEFAULT)!
         .add(CALENDAR, calendarAnoymizer);
   }
 
   List<Permission> get permissions =>
       [Permission.phone, Permission.sms, Permission.calendar];
 
-  SamplingSchema get common => SamplingSchema()
-    ..type = SamplingSchemaType.common
-    ..name = 'Common (default) communication sampling schema'
-    ..powerAware = true
-    ..measures.addEntries([
-      MapEntry(
-          PHONE_LOG,
-          MarkedMeasure(
-            type: PHONE_LOG,
-            name: 'Phone Log',
-            description:
-                "Collects the log on in- and out-going calls from the phone",
-            history: Duration(days: 1),
-          )),
-      MapEntry(
-          TEXT_MESSAGE_LOG,
-          CAMSMeasure(
-            type: TEXT_MESSAGE_LOG,
-            name: 'Text Messages Log',
-            description:
-                "Collects the log on in- and out-going text messages (SMS) from the phone",
-          )),
-      MapEntry(
-          TEXT_MESSAGE,
-          CAMSMeasure(
-            type: TEXT_MESSAGE,
-            name: 'Text Messages',
-            description:
-                "Collects the event when a text messages (SMS) is sent or received",
-          )),
-      MapEntry(
-          CALENDAR,
-          CalendarMeasure(
-            type: CALENDAR,
-            name: 'Calendar Events',
-            description:
-                "Collects the list of calendar events on the calenders on the phone",
-            past: Duration(days: 1),
-            future: Duration(days: 1),
-          )),
-    ]);
+  SamplingSchema get common => SamplingSchema(
+        type: SamplingSchemaType.common,
+        name: 'Common (default) communication sampling schema',
+        powerAware: true,
+      )..measures.addEntries([
+          MapEntry(
+              PHONE_LOG,
+              MarkedMeasure(
+                type: PHONE_LOG,
+                name: 'Phone Log',
+                description:
+                    "Collects the log on in- and out-going calls from the phone",
+                history: Duration(days: 1),
+              )),
+          MapEntry(
+              TEXT_MESSAGE_LOG,
+              CAMSMeasure(
+                type: TEXT_MESSAGE_LOG,
+                name: 'Text Messages Log',
+                description:
+                    "Collects the log on in- and out-going text messages (SMS) from the phone",
+              )),
+          MapEntry(
+              TEXT_MESSAGE,
+              CAMSMeasure(
+                type: TEXT_MESSAGE,
+                name: 'Text Messages',
+                description:
+                    "Collects the event when a text messages (SMS) is sent or received",
+              )),
+          MapEntry(
+              CALENDAR,
+              CalendarMeasure(
+                type: CALENDAR,
+                name: 'Calendar Events',
+                description:
+                    "Collects the list of calendar events on the calenders on the phone",
+                past: Duration(days: 1),
+                future: Duration(days: 1),
+              )),
+        ]);
 
   SamplingSchema get light {
     SamplingSchema light = common

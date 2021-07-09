@@ -1,3 +1,6 @@
+## 0.30.1
+* `DebugLevel` is now an enum
+
 ## 0.30.0
 * upgrade to null-safety, `carp_core` v. 0.30.0
 * `CAMSStudyProtocol` is no longer used and is replaced by `StudyProtocol` in `carp_core`

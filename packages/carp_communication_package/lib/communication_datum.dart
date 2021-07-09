@@ -13,11 +13,9 @@ class TextMessageLogDatum extends Datum {
   DataFormat get format =>
       DataFormat.fromString(CommunicationSamplingPackage.TEXT_MESSAGE_LOG);
 
-  List<TextMessage> textMessageLog;
+  List<TextMessage> textMessageLog = [];
 
-  TextMessageLogDatum({this.textMessageLog}) : super() {
-    textMessageLog ??= [];
-  }
+  TextMessageLogDatum() : super();
 
   factory TextMessageLogDatum.fromJson(Map<String, dynamic> json) =>
       _$TextMessageLogDatumFromJson(json);
@@ -34,9 +32,10 @@ class TextMessageDatum extends Datum {
   DataFormat get format =>
       DataFormat.fromString(CommunicationSamplingPackage.TEXT_MESSAGE);
 
-  TextMessage textMessage;
+  TextMessage? textMessage;
 
   TextMessageDatum() : super();
+
   factory TextMessageDatum.fromTextMessage(TextMessage msg) =>
       TextMessageDatum()..textMessage = msg;
 
@@ -50,89 +49,58 @@ class TextMessageDatum extends Datum {
 /// Holds a text messages (SMS).
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class TextMessage {
-  int id;
+  int? id;
 
   /// The receiver address of this message
-  String address;
+  String? address;
 
   /// The text body of this message.
-  String body;
+  String? body;
 
   /// The size in bytes of the body of the message.
-  int size;
-  bool isRead;
+  int? size;
+
+  /// Has the message been read?
+  bool? read;
 
   /// The date this message was created.
-  DateTime date;
+  DateTime? date;
 
   /// The date this message was sent.
-  DateTime dateSent;
+  DateTime? dateSent;
 
-  /// The kind of message:
-  ///  - draft
-  ///  - received
-  ///  - sent
-  String kind;
+  /// The type of message:
+  SmsType? type;
 
   /// The state of the message:
-  ///  - delivered
-  ///  - fail
-  ///  - none
-  ///  - sending
-  ///  - sent
-  String state;
+  SmsStatus? status;
 
   TextMessage(
       {this.id,
       this.address,
       this.body,
-      this.isRead,
+      this.size,
+      this.read,
       this.date,
       this.dateSent,
-      this.kind,
-      this.state})
+      this.type,
+      this.status})
       : super();
 
   factory TextMessage.fromSmsMessage(SmsMessage sms) {
     TextMessage msg = new TextMessage(
-        id: sms.id,
-        address: sms.address,
-        body: sms.body,
-        isRead: sms.isRead,
-        date: sms.date,
-        dateSent: sms.dateSent);
+      id: sms.id,
+      address: sms.address,
+      body: sms.body,
+      size: (sms.body != null) ? sms.body!.length : null,
+      read: sms.read,
+      date: DateTime.fromMicrosecondsSinceEpoch(sms.date!),
+      dateSent: DateTime.fromMicrosecondsSinceEpoch(sms.dateSent!),
+      type: sms.type,
+      status: sms.status,
+    );
 
-    if (sms.body != null) msg.size = sms.body.length;
-
-    switch (sms.kind) {
-      case SmsMessageKind.Sent:
-        msg.kind = 'sent';
-        break;
-      case SmsMessageKind.Received:
-        msg.kind = 'received';
-        break;
-      case SmsMessageKind.Draft:
-        msg.kind = 'draft';
-        break;
-    }
-
-    switch (sms.state) {
-      case SmsMessageState.Delivered:
-        msg.state = 'delivered';
-        break;
-      case SmsMessageState.Fail:
-        msg.state = 'fail';
-        break;
-      case SmsMessageState.None:
-        msg.state = 'none';
-        break;
-      case SmsMessageState.Sending:
-        msg.state = 'sending';
-        break;
-      case SmsMessageState.Sent:
-        msg.state = 'sent';
-        break;
-    }
+    if (sms.body != null) msg.size = sms.body!.length;
 
     return msg;
   }
@@ -142,7 +110,7 @@ class TextMessage {
   Map<String, dynamic> toJson() => _$TextMessageToJson(this);
 
   String toString() =>
-      "Text Message - id: $id, address: $address, is_read: $isRead, date: $date, date_send: $dateSent, kind: $kind, state: $state\n$body";
+      "Text Message - id: $id, address: $address, read: $read, date: $date, date_send: $dateSent, type: $type, status: $status\n$body";
 }
 
 /// Holds a phone log, i.e. a list of phone calls made on the device.
@@ -166,7 +134,7 @@ class PhoneLogDatum extends Datum {
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class PhoneCall {
   /// Date & Time of the call.
-  DateTime timestamp;
+  DateTime? timestamp;
 
   /// Type of call:
   ///  - answered
@@ -176,19 +144,19 @@ class PhoneCall {
   ///  - outgoing
   ///  - rejected
   ///  - voice_mail
-  String callType;
+  String? callType;
 
   /// Duration of call in ms.
-  int duration;
+  int? duration;
 
   /// The formatted version of the phone number (if available).
-  String formattedNumber;
+  String? formattedNumber;
 
   /// The phone number
-  String number;
+  String? number;
 
   /// The name of the caller (if available).
-  String name;
+  String? name;
 
   PhoneCall(
       [this.timestamp,
@@ -199,7 +167,7 @@ class PhoneCall {
       this.name]);
 
   factory PhoneCall.fromCallLogEntry(CallLogEntry call) {
-    DateTime timestamp = DateTime.fromMicrosecondsSinceEpoch(call.timestamp);
+    DateTime timestamp = DateTime.fromMicrosecondsSinceEpoch(call.timestamp!);
     String type = "unknown";
 
     switch (call.callType) {
@@ -262,31 +230,31 @@ class CalendarDatum extends Datum {
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class CalendarEvent {
   /// The unique identifier for this event
-  String eventId;
+  String? eventId;
 
   /// The identifier of the calendar that this event is associated with
-  String calendarId;
+  String? calendarId;
 
   /// The title of this event
-  String title;
+  String? title;
 
   /// The description for this event
-  String description;
+  String? description;
 
   /// Indicates when the event starts
-  DateTime start;
+  DateTime? start;
 
   /// Indicates when the event ends
-  DateTime end;
+  DateTime? end;
 
   /// Indicates if this is an all-day event
-  bool allDay;
+  bool? allDay;
 
   /// The location of this event
-  String location;
+  String? location;
 
   /// A list of attendees' name for this event
-  List<String> attendees;
+  List<String?>? attendees;
 
   CalendarEvent(
       [this.eventId,
@@ -305,11 +273,11 @@ class CalendarEvent {
         event.calendarId,
         event.title,
         event.description,
-        event.start.toUtc(),
-        event.end.toUtc(),
+        event.start!.toUtc(),
+        event.end!.toUtc(),
         event.allDay,
         event.location,
-        event.attendees.map((attendees) => attendees.name).toList());
+        event.attendees!.map((attendees) => attendees!.name).toList());
   }
 
   factory CalendarEvent.fromJson(Map<String, dynamic> json) =>
@@ -317,5 +285,5 @@ class CalendarEvent {
   Map<String, dynamic> toJson() => _$CalendarEventToJson(this);
 
   String toString() =>
-      "Calendar Event - eventId: $eventId, calendarId: $calendarId, title: $title, description: $description, start: $start, end: $end, all day: $allDay, location: $location, no. attendees: ${attendees.length}";
+      "Calendar Event - eventId: $eventId, calendarId: $calendarId, title: $title, description: $description, start: $start, end: $end, all day: $allDay, location: $location, no. attendees: ${attendees!.length}";
 }

@@ -18,14 +18,13 @@ class CalendarMeasure extends CAMSMeasure {
   Duration future;
 
   CalendarMeasure({
-    @required String type,
-    String name,
-    String description,
-    enabled,
+    required String type,
+    String? name,
+    String? description,
+    enabled = true,
     this.past = const Duration(days: DEFAULT_NUMBER_OF_DAYS),
     this.future = const Duration(days: DEFAULT_NUMBER_OF_DAYS),
-  })
-      : super(
+  }) : super(
           type: type,
           enabled: enabled,
           name: name,
@@ -34,6 +33,6 @@ class CalendarMeasure extends CAMSMeasure {
 
   Function get fromJsonFunction => _$CalendarMeasureFromJson;
   factory CalendarMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as CalendarMeasure;
   Map<String, dynamic> toJson() => _$CalendarMeasureToJson(this);
 }

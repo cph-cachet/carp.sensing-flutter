@@ -27,7 +27,7 @@ class Settings {
   ///
   /// See [DebugLevel] for valid debug level settings.
   /// Can be changed on runtime.
-  int debugLevel = DebugLevel.WARNING;
+  DebugLevel debugLevel = DebugLevel.WARNING;
 
   /// The app name.
   /// `CFBundleDisplayName` on iOS, `application/label` on Android.
@@ -45,15 +45,17 @@ class Settings {
   /// `CFBundleVersion` on iOS, `versionCode` on Android.
   String? buildNumber;
 
-  /// Wraps NSUserDefaults (on iOS) and SharedPreferences (on Android), providing
-  /// a persistent store for simple data.
+  /// A simple persistent store for simple data. Note that data is saved in
+  /// plain format and should hence **not** be used for sensitive data.
+  ///
+  /// Wraps NSUserDefaults (on iOS) and SharedPreferences (on Android).
   SharedPreferences? get preferences => _preferences;
 
   /// Package information
   PackageInfo? get packageInfo => _packageInfo;
 
   /// Initialize settings. Call before start using it.
-  Future init() async {
+  Future<void> init() async {
     _preferences ??= await SharedPreferences.getInstance();
     _packageInfo ??= await PackageInfo.fromPlatform();
 
@@ -115,9 +117,4 @@ class Settings {
   }
 }
 
-class DebugLevel {
-  static const int NONE = 0;
-  static const int INFO = 1;
-  static const int WARNING = 2;
-  static const int DEBUG = 3;
-}
+enum DebugLevel { NONE, INFO, WARNING, DEBUG }

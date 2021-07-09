@@ -12,9 +12,9 @@ part of communication;
 ///  - body
 TextMessage textMessageAnoymizer(TextMessage msg) {
   if (msg.address != null)
-    msg.address = sha1.convert(utf8.encode(msg.address)).toString();
+    msg.address = sha1.convert(utf8.encode(msg.address!)).toString();
   if (msg.body != null)
-    msg.body = sha1.convert(utf8.encode(msg.body)).toString();
+    msg.body = sha1.convert(utf8.encode(msg.body!)).toString();
 
   return msg;
 }
@@ -24,7 +24,7 @@ TextMessage textMessageAnoymizer(TextMessage msg) {
 Datum textMessageDatumAnoymizer(Datum datum) {
   assert(datum is TextMessageDatum);
   TextMessageDatum msg = datum as TextMessageDatum;
-  return msg..textMessage = textMessageAnoymizer(msg.textMessage);
+  return msg..textMessage = textMessageAnoymizer(msg.textMessage!);
 }
 
 /// A [TextMessageLogDatum] anonymizer function. Anonymizes each [TextMessageDatum]
@@ -52,11 +52,11 @@ Datum phoneLogAnoymizer(Datum datum) {
 PhoneCall phoneCallAnoymizer(PhoneCall call) {
   if (call.formattedNumber != null)
     call.formattedNumber =
-        sha1.convert(utf8.encode(call.formattedNumber)).toString();
+        sha1.convert(utf8.encode(call.formattedNumber!)).toString();
   if (call.number != null)
-    call.number = sha1.convert(utf8.encode(call.number)).toString();
+    call.number = sha1.convert(utf8.encode(call.number!)).toString();
   if (call.name != null)
-    call.name = sha1.convert(utf8.encode(call.name)).toString();
+    call.name = sha1.convert(utf8.encode(call.name!)).toString();
 
   return call;
 }
@@ -76,12 +76,13 @@ Datum calendarAnoymizer(Datum datum) {
 ///  - names of all attendees
 CalendarEvent calendarEventAnoymizer(CalendarEvent event) {
   if (event.title != null)
-    event.title = sha1.convert(utf8.encode(event.title)).toString();
+    event.title = sha1.convert(utf8.encode(event.title!)).toString();
   if (event.description != null)
-    event.description = sha1.convert(utf8.encode(event.description)).toString();
+    event.description =
+        sha1.convert(utf8.encode(event.description!)).toString();
   if (event.attendees != null)
-    event.attendees = event.attendees
-        .map((name) => sha1.convert(utf8.encode(name)).toString())
+    event.attendees = event.attendees!
+        .map((name) => sha1.convert(utf8.encode(name!)).toString())
         .toList();
 
   return event;
