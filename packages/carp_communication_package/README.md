@@ -12,7 +12,8 @@ This packages supports sampling of the following [`Measure`](https://pub.dartlan
 * `dk.cachet.carp.text-message`
 * `dk.cachet.carp.calendar`
 
-See the [wiki]() for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types) and [sampling schemas](https://github.com/cph-cachet/carp.sensing-flutter/wiki/D.-Sampling-Schemas).
+See the [wiki]() for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types) and [sampling schemas](https://github.com/cph-cachet/carp.sensing-flutter/wiki/D.-Sampling-Schemas). Note that collection of phone and text message data is only supported on Android.
+
 There is privacy protection of text messages and phone numbers in the default [Privacy Schema](https://github.com/cph-cachet/carp.sensing-flutter/wiki/3.-Using-CARP-Mobile-Sensing#privacy-schema).
 
 For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/README.md).
@@ -44,16 +45,32 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
     package="<your_package_name>"
     xmlns:tools="http://schemas.android.com/tools">
 
-   ...
+    ...
    
-   <!-- The following permissions are used for CARP Mobile Sensing -->
-   <uses-permission android:name="android.permission.CALL_PHONE"/>
-   <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-   <uses-permission android:name="android.permission.READ_PHONE_NUMBERS"/>
-   <uses-permission android:name="android.permission.READ_SMS"/>
-   <uses-permission android:name="android.permission.READ_CALENDAR"/>
-    <!-- Even though we only want to READ the calendar, for some unknown reason we also need to add the WRITE permission. -->
-   <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
+    <!-- The following permissions are used for CARP Mobile Sensing -->
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_NUMBERS"/>
+    <uses-permission android:name="android.permission.READ_SMS"/>
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <uses-permission android:name="android.permission.READ_CALENDAR"/>
+    <!-- Even though we only want to READ the calendar, for some unknown 
+         reason we also need to add the WRITE permission. -->
+    <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
+
+
+    <application>
+	  	...
+		  ...
+      <!-- Registration of broadcast reciever to listen to SMS messages when the app is in the background -->
+	    <receiver android:name="com.shounakmulay.telephony.sms.IncomingSmsReceiver"
+		      android:permission="android.permission.BROADCAST_SMS" android:exported="true">
+		      <intent-filter>
+			      <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+		      </intent-filter>
+	    </receiver>
+
+	  </application>
 
 </manifest>
 ````

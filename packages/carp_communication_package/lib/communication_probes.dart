@@ -98,21 +98,6 @@ class TextMessageProbe extends StreamProbe {
   }
 }
 
-// /// The [TextMessageProbe] listens to SMS messages and collects a
-// /// [TextMessageDatum] every time a new SMS message is received.
-// ///
-// /// Only works on Android
-// class TextMessageProbe extends StreamProbe {
-//   void onInitialize(Measure measure) {
-//     super.onInitialize(measure);
-//     if (!Platform.isAndroid)
-//       throw SensingException('TextMessageProbe only available on Android.');
-//   }
-
-//   Stream<Datum> get stream => SmsReceiver().onSmsReceived.map((event) =>
-//       TextMessageDatum.fromTextMessage(TextMessage.fromSmsMessage(event)));
-// }
-
 /// A probe collecting calendar entries from the calendar on the phone.
 ///
 /// See [CalendarMeasure] for how to configure this probe's measure.
