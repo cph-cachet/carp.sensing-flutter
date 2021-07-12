@@ -13,10 +13,14 @@ library runtime;
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
+import 'dart:io';
+
+import 'package:json_annotation/json_annotation.dart';
 
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
+import 'package:path_provider/path_provider.dart';
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -32,6 +36,7 @@ part 'executors.dart';
 part 'trigger_executors.dart';
 part 'task_executors.dart';
 part 'app_task_executor.dart';
+part 'app_task_controller.dart';
 part 'probe_registry.dart';
 part 'probes.dart';
 part 'sampling_package.dart';
@@ -40,6 +45,7 @@ part 'study_controller.dart';
 part 'study_manager.dart';
 part 'deployment_service.dart';
 part 'client_manager.dart';
+part 'runtime.g.dart';
 
 /// Generic sensing exception.
 class SensingException implements Exception {

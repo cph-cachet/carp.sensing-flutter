@@ -21,7 +21,7 @@ part of runtime;
 /// by calling the `onStart()`, `onHold()`, and `onDone()` methods,
 /// respectively.
 ///
-/// Special-purpose [UserTask] can be created by an [UserTaskFactory]
+/// Special-purpose [UserTask]s can be created by an [UserTaskFactory]
 /// and such factories can be registered in the [AppTaskController]
 /// using the `registerUserTaskFactory` method.
 class AppTaskExecutor extends TaskExecutor {
@@ -64,71 +64,6 @@ abstract class UserTaskFactory {
 
   /// Create a [UserTask] that wraps [executor].
   UserTask create(AppTaskExecutor executor);
-}
-
-/// A controller of [UserTask]s which accessible in the [userTaskQueue].
-class AppTaskController {
-  static final AppTaskController _instance = AppTaskController._();
-  final StreamController<UserTask> _controller = StreamController.broadcast();
-
-  final Map<String, UserTask> _userTaskMap = {};
-
-  /// The queue of [UserTask]s that the app/user need to attend to.
-  List<UserTask> get userTaskQueue => _userTaskMap.values.toList();
-
-  /// A stream of [UserTask]s as they are generated.
-  ///
-  /// This stream is usefull in a [StreamBuilder] to listen on
-  /// changes to the [userTaskQueue].
-  Stream<UserTask> get userTaskEvents => _controller.stream;
-
-  /// Constructs a singleton instance of [AppTaskController].
-  ///
-  /// [AppTaskController] is designed to work as a singleton.
-  factory AppTaskController() => _instance;
-
-  AppTaskController._() {
-    registerUserTaskFactory(SensingUserTaskFactory());
-
-    // set up a timer which cleans up in the queue once an hour
-    Timer.periodic(const Duration(hours: 1), (timer) {
-      userTaskQueue.forEach((task) {
-        if (task.expiresIn != null && task.expiresIn!.isNegative) {
-          dequeue(task.id);
-        }
-      });
-    });
-  }
-
-  final Map<String, UserTaskFactory> _userTaskFactories = {};
-
-  /// Reguster a [UserTaskFactory] which can create [UserTask]s
-  /// for the specified [AppTask] types.
-  void registerUserTaskFactory(UserTaskFactory factory) {
-    factory.types.forEach((type) {
-      _userTaskFactories[type] = factory;
-    });
-  }
-
-  /// Put [executor] on the [userTaskQueue] for later access by the app.
-  void enqueue(AppTaskExecutor executor) {
-    UserTask userTask =
-        _userTaskFactories[executor.appTask.type]!.create(executor);
-    userTask.state = UserTaskState.enqueued;
-    userTask.enqueued = DateTime.now();
-    _userTaskMap[userTask.id] = userTask;
-    _controller.add(userTask);
-    info('Enqueued $userTask');
-  }
-
-  /// Remove an [UserTask] from the [userTaskQueue].
-  void dequeue(String id) {
-    UserTask userTask = _userTaskMap[id]!;
-    userTask.state = UserTaskState.dequeued;
-    _userTaskMap.remove(id);
-    _controller.add(userTask);
-    info('Dequeued $userTask');
-  }
 }
 
 /// A task that the user of the app needs to attend to.
@@ -180,7 +115,7 @@ abstract class UserTask {
 
   UserTask(this._executor);
 
-  /// Callback from app when this task is to be started.
+  /// Callback from the app when this task is to be started.
   void onStart(BuildContext context) {
     state = UserTaskState.started;
   }
@@ -188,7 +123,7 @@ abstract class UserTask {
   /// Callback from app if this task is canceled.
   ///
   /// If [dequeue] is `true` the task is removed from the queue.
-  /// Othervise, it it kept on the queue ready for later use.
+  /// Othervise, it it kept on the queue for later use.
   void onCancel(BuildContext context, {dequeue = false}) {
     state = UserTaskState.canceled;
     (dequeue)
@@ -201,11 +136,10 @@ abstract class UserTask {
   /// If [dequeue] is `true` the task is removed from the queue.
   void onDone(BuildContext context, {dequeue = false}) {
     state = UserTaskState.done;
-    if (dequeue) {
-      AppTaskController().dequeue(id);
-    }
+    if (dequeue) AppTaskController().dequeue(id);
   }
 
+  @override
   String toString() =>
       '$runtimeType - id: $id, type: $type, title: $title, state: $state';
 }
@@ -231,23 +165,8 @@ enum UserTaskState {
   done,
 
   /// An undefined state and cannot be used.
-  /// Task Should be ignored.
+  /// Task should be ignored.
   undefined,
-}
-
-/// A [UserTaskFactory] that can create non-UI sensing tasks:
-///  * [OneTimeSensingUserTask]
-///  * [SensingUserTask]
-class SensingUserTaskFactory implements UserTaskFactory {
-  List<String> types = [
-    SensingUserTask.SENSING_TYPE,
-    SensingUserTask.ONE_TIME_SENSING_TYPE,
-  ];
-
-  UserTask create(AppTaskExecutor executor) =>
-      (executor.appTask.type == SensingUserTask.ONE_TIME_SENSING_TYPE)
-          ? OneTimeSensingUserTask(executor)
-          : SensingUserTask(executor);
 }
 
 /// A non-UI sensing taks that collects sensor data.
@@ -265,13 +184,13 @@ class SensingUserTask extends UserTask {
 
   SensingUserTask(AppTaskExecutor executor) : super(executor);
 
-  /// Resumes sensing.
+  @override
   void onStart(BuildContext context) {
     super.onStart(context);
     executor.resume();
   }
 
-  /// Pauses sensing.
+  @override
   void onDone(BuildContext context, {dequeue = false}) {
     super.onDone(context, dequeue: dequeue);
     executor.pause();
@@ -287,9 +206,10 @@ class OneTimeSensingUserTask extends SensingUserTask {
   OneTimeSensingUserTask(AppTaskExecutor executor) : super(executor);
 
   /// Resume sensing for 10 seconds.
+  /// After 10 seconds, the executor is paused automatically
+  @override
   void onStart(BuildContext context) {
     super.onStart(context);
-    // after 10 seconds, pause the executor automatically
     Timer(Duration(seconds: 10), () => super.onDone(context));
   }
 }

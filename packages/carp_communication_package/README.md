@@ -42,40 +42,40 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
 
 ````xml
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="<your_package_name>"
-    xmlns:tools="http://schemas.android.com/tools">
+  package="<your_package_name>"
+  xmlns:tools="http://schemas.android.com/tools">
 
-    ...
+  ...
    
-    <!-- The following permissions are used for CARP Mobile Sensing -->
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.READ_PHONE_NUMBERS"/>
-    <uses-permission android:name="android.permission.READ_SMS"/>
-    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
-    <uses-permission android:name="android.permission.READ_CALENDAR"/>
-    <!-- Even though we only want to READ the calendar, for some unknown 
-         reason we also need to add the WRITE permission. -->
-    <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
+  <!-- The following permissions are used for CARP Mobile Sensing -->
+  <uses-permission android:name="android.permission.CALL_PHONE"/>
+  <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+  <uses-permission android:name="android.permission.READ_PHONE_NUMBERS"/>
+  <uses-permission android:name="android.permission.READ_SMS"/>
+  <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+  <uses-permission android:name="android.permission.READ_CALENDAR"/>
+  <!-- Even though we only want to READ the calendar, for some unknown 
+       reason we also need to add the WRITE permission. -->
+  <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
 
 
-    <application>
-	  	...
-		  ...
-      <!-- Registration of broadcast reciever to listen to SMS messages when the app is in the background -->
-	    <receiver android:name="com.shounakmulay.telephony.sms.IncomingSmsReceiver"
-		      android:permission="android.permission.BROADCAST_SMS" android:exported="true">
-		      <intent-filter>
-			      <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
-		      </intent-filter>
-	    </receiver>
+  <application>
+	  ...
+	  ...
+    <!-- Registration of broadcast reciever to listen to SMS messages 
+         when the app is in the background -->
+	  <receiver android:name="com.shounakmulay.telephony.sms.IncomingSmsReceiver"
+		   android:permission="android.permission.BROADCAST_SMS" android:exported="true">
+		  <intent-filter>
+        <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+      </intent-filter>
+    </receiver>
 
-	  </application>
-
+   </application>
 </manifest>
 ````
 
-> **NOTE:** Version 0.5.0 is migrated to AndroidX. This should not result in any functional changes, but it requires any Android apps using this plugin to also 
+> **NOTE:** Version ^0.5.0 is migrated to AndroidX. This should not result in any functional changes, but it requires any Android apps using this plugin to also 
 [migrate](https://developer.android.com/jetpack/androidx/migrate) if they're using the original support library. 
 See Flutter [AndroidX compatibility](https://flutter.dev/docs/development/packages-and-plugins/androidx-compatibility)
 
