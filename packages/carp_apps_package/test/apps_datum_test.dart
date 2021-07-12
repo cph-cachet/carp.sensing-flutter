@@ -9,8 +9,9 @@ String _encode(Object object) =>
 
 void main() {
   setUp(() {
-    // Need to create some serialization object in order to intialize serialization.
-    CAMSStudyProtocol();
+    // make sure that the json functions are loaded
+    DomainJsonFactory();
+    AppsSamplingPackage().onRegister();
   });
 
   group('Apps Datum Tests', () {
@@ -26,7 +27,7 @@ void main() {
     });
 
     test(' - apps usage', () {
-      AppUsageDatum d2 = AppUsageDatum()
+      AppUsageDatum d2 = AppUsageDatum(DateTime.now(), DateTime.now())
         ..usage = {
           'carp_mobile_sensing_test_app': 1405,
           'systemui': 4,

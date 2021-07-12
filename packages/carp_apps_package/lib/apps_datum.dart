@@ -12,7 +12,7 @@ class AppsDatum extends Datum {
   DataFormat get format => DataFormat.fromString(AppsSamplingPackage.APPS);
 
   /// List of names on installed apps.
-  List<String> installedApps;
+  List<String> installedApps = [];
 
   AppsDatum() : super();
 
@@ -30,9 +30,9 @@ class AppUsageDatum extends Datum {
   DateTime start, end;
 
   /// A map of names of apps and their usage in seconds.
-  Map<String, int> usage;
+  Map<String, int> usage = {};
 
-  AppUsageDatum() : super();
+  AppUsageDatum(this.start, this.end) : super();
 
   factory AppUsageDatum.fromJson(Map<String, dynamic> json) =>
       _$AppUsageDatumFromJson(json);

@@ -26,9 +26,9 @@ this package only works together with `carp_mobile_sensing`.
 dependencies:
   flutter:
     sdk: flutter
-  carp_core: ^0.20.0
-  carp_mobile_sensing: ^0.20.0
-  carp_apps_package: ^0.20.0
+  carp_core: ^latest
+  carp_mobile_sensing: ^latest
+  carp_apps_package: ^latest
   ...
 `````
 
@@ -42,9 +42,22 @@ Edit your app's `manifest.xml` file such that it contains the following:
     xmlns:tools="http://schemas.android.com/tools">
 
    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" tools:ignore="ProtectedPermissions"/>
+   <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
    ...
 </manifest>
 ````
+
+Starting with Android 11, Android applications targeting API level 30, wanting to list "external" applications have to declare a new "normal" permission in their `AndroidManifest.xml` file called [`QUERY_ALL_PACKAGES`](https://developer.android.com/reference/kotlin/android/Manifest.permission#query_all_packages). 
+
+Starting from [May 5 2021](https://support.google.com/googleplay/android-developer/answer/10158779), Google will mark a breaking change on how applications requesting [`QUERY_ALL_PACKAGES`](https://developer.android.com/reference/kotlin/android/Manifest.permission#query_all_packages) are accepted in the Google Play. [Quoting from the doc](https://support.google.com/googleplay/android-developer/answer/10158779):
+
+
+> Permitted use involves apps that must discover any and all installed apps on the device, for awareness or interoperability purposes may have eligibility for the permission. Permitted use includes; device search, antivirus apps, file managers, and browsers.
+> 
+> Apps granted access to this permission must comply with the User Data policies, including the Prominent Disclosure and Consent requirements, and may not extend its use to undisclosed or invalid purposes.
+
+More info here: https://support.google.com/googleplay/android-developer/answer/10158779
+
 
 ### iOS Integration
 Not supported.

@@ -8,13 +8,12 @@ part of carp_apps_package;
 
 /// A probe collecting a list of installed applications on this device.
 ///
-/// Note that this probe only works on Android. On iOS, an empty list is
-/// returned.
+/// Note that this probe only works on Android.
+/// On iOS, an exception is thrown and the probe is stopped.
 class AppsProbe extends DatumProbe {
   AppsProbe() : super();
 
-  Stream<Datum> get stream => null;
-
+  @override
   void onInitialize(Measure measure) {
     super.onInitialize(measure);
 
@@ -24,6 +23,7 @@ class AppsProbe extends DatumProbe {
           "Error initializing AppsProbe -- only available on Android.");
   }
 
+  @override
   Future<Datum> getDatum() async {
     List<Application> apps = await DeviceApps.getInstalledApplications();
     return AppsDatum()..installedApps = _getAppNames(apps);
@@ -41,13 +41,14 @@ class AppsProbe extends DatumProbe {
 /// A probe collecting app usage information on apps that are installed on
 /// the device.
 ///
-/// Note that this probe only works on Android. On iOS, an exception is thrown
-/// and the probe is stopped.
+/// Note that this probe only works on Android.
+/// On iOS, an exception is thrown and the probe is stopped.
 class AppUsageProbe extends DatumProbe {
-  MarkedMeasure markedMeasure;
+  late MarkedMeasure markedMeasure;
 
   AppUsageProbe() : super();
 
+  @override
   void onInitialize(Measure measure) {
     super.onInitialize(measure);
     assert(measure is MarkedMeasure,
@@ -60,6 +61,7 @@ class AppUsageProbe extends DatumProbe {
           "Error initializing AppUsageProbe -- only available on Android.");
   }
 
+  @override
   Future<Datum> getDatum() async {
     // get the last mark - if null, go back as specified in history
     DateTime start = markedMeasure.lastTime ??
@@ -71,16 +73,13 @@ class AppUsageProbe extends DatumProbe {
     List<AppUsageInfo> infos = await AppUsage.getAppUsage(start, end);
 
     Map<String, int> usage = {};
-    infos.forEach((e) {
-      usage[e.appName] = e.usage.inSeconds;
-    });
+    for (AppUsageInfo inf in infos) {
+      usage[inf.appName] = inf.usage.inSeconds;
+    }
 
     // save the time this was collected - issue #150
     markedMeasure.lastTime = DateTime.now();
 
-    return AppUsageDatum()
-      ..start = start.toUtc()
-      ..end = end.toUtc()
-      ..usage = usage;
+    return AppUsageDatum(start.toUtc(), end.toUtc())..usage = usage;
   }
 }
