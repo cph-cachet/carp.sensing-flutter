@@ -9,10 +9,6 @@ part of runtime;
 
 /// A controller of [UserTask]s which is accessible in the [userTaskQueue].
 class AppTaskController {
-  /// The path to use on the device for storing the AppTask queue.
-  static const String CARP_QUEUE_FILE_PATH = 'carp/queue';
-  String? _path;
-
   static final AppTaskController _instance = AppTaskController._();
   final StreamController<UserTask> _controller = StreamController.broadcast();
 
@@ -35,11 +31,13 @@ class AppTaskController {
   AppTaskController._() {
     registerUserTaskFactory(SensingUserTaskFactory());
 
-    // first retore the queue from persistent storage
-    restoreQueue();
+    if (Settings().saveAppTaskQueue) {
+      // first start retoring the queue from persistent storage
+      restoreQueue();
 
-    // listen to events and save the queue every time it is modified
-    userTaskEvents.listen((_) async => await saveQueue());
+      // listen to events and save the queue every time it is modified
+      userTaskEvents.listen((_) async => await saveQueue());
+    }
 
     // set up a timer which cleans up in the queue once an hour
     Timer.periodic(const Duration(hours: 1), (timer) {
@@ -96,27 +94,13 @@ class AppTaskController {
     }
   }
 
-  /// The local study path on the device where tasks are stored.
-  Future<String> get path async {
-    if (_path == null) {
-      // get local working directory
-      final localApplicationDir = await getApplicationDocumentsDirectory();
-      // create a sub-directory for storing studies
-      final directory =
-          await Directory('${localApplicationDir.path}/$CARP_QUEUE_FILE_PATH')
-              .create(recursive: true);
-      _path = directory.path;
-    }
-    return _path!;
-  }
-
   /// Current path and filename according to this format:
   ///
   ///   `carp/queue/task_queue.json`
   ///
-  String get filename => '$_path/task_queue.json';
+  String get filename => '${Settings().queuePath}/task_queue.json';
 
-  /// Internal function for saving the queue persistenly to a file.
+  /// Save the queue persistenly to a file.
   Future<bool> saveQueue() async {
     bool success = true;
     info('Saving task queue.');
@@ -131,9 +115,9 @@ class AppTaskController {
     return success;
   }
 
-  /// Internal function for restoring the queue from a file.
+  /// Restore the queue from a file.
   Future<void> restoreQueue() async {
-    info('Loading task queue.');
+    info('Restoring task queue.');
     UserTaskSnapshotList? queue;
 
     try {

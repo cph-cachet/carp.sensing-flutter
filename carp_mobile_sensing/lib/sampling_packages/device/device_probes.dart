@@ -10,7 +10,7 @@ part of device;
 /// The [BatteryProbe] listens to the hardware battery and collect a [BatteryDatum]
 /// every time the battery state changes. For example, battery level or charging mode.
 class BatteryProbe extends StreamProbe {
-  Stream<Datum> get stream {
+  Stream<Datum>? get stream {
     Battery battery = Battery();
     late StreamController<Datum> controller;
     late StreamSubscription<BatteryState> subscription;
@@ -31,9 +31,11 @@ class BatteryProbe extends StreamProbe {
         onResume: () => subscription.resume(),
         onCancel: () => subscription.cancel());
 
-    subscription = battery.onBatteryStateChanged.listen(onData,
-        onError: (error) => controller.addError(error),
-        onDone: () => controller.close());
+    subscription = battery.onBatteryStateChanged.listen(
+      onData,
+      onError: (error) => controller.addError(error),
+      onDone: () => controller.close(),
+    );
 
     return controller.stream;
   }
@@ -57,6 +59,8 @@ class BatteryProbe extends StreamProbe {
 ///  - SCREEN UNLOCK
 /// which are stored as a [ScreenDatum].
 class ScreenProbe extends StreamProbe {
+  Screen screen = Screen();
+
   void onInitialize(Measure measure) {
     super.onInitialize(measure);
     if (!Platform.isAndroid) {
@@ -64,9 +68,10 @@ class ScreenProbe extends StreamProbe {
     }
   }
 
-  Stream<Datum> get stream => Screen()
-      .screenStateStream!
-      .map((event) => ScreenDatum.fromScreenStateEvent(event));
+  Stream<Datum>? get stream => (screen.screenStateStream != null)
+      ? screen.screenStateStream!
+          .map((event) => ScreenDatum.fromScreenStateEvent(event))
+      : null;
 }
 
 /// A probe that collects free virtual memory on a regular basis

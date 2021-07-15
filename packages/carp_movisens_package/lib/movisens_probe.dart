@@ -32,12 +32,7 @@ class MovisensProbe extends StreamProbe {
     movisens = new Movisens(userData!);
   }
 
-  Stream<MovisensDatum> get stream {
-    if (movisens == null)
-      throw SensingException(
-          'The Movisens Plugin in $runtimeType has not been initialized.');
-
-    return movisens!.movisensStream
-        .map((event) => MovisensDatum.fromMap(event));
-  }
+  Stream<MovisensDatum>? get stream => (movisens?.movisensStream != null)
+      ? movisens!.movisensStream.map((event) => MovisensDatum.fromMap(event))
+      : null;
 }

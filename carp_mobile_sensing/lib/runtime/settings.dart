@@ -6,6 +6,7 @@ part of runtime;
 ///
 /// Supports:
 ///  * setting debug level - see [debugLevel]
+///  * setting whether to save [AppTask]s across app re-start - see [saveAppTaskQueue]
 ///  * getting shared preferences - see [preferences]
 ///  * getting app info - see [packageInfo]
 ///  * generating a unique and annonymous user id - see [userId]
@@ -14,20 +15,36 @@ part of runtime;
 class Settings {
   static const String USER_ID_KEY = 'user_id';
   static const String STUDY_START_KEY = 'study_start';
+
+  /// The path to use on the device for storing CARP data files.
+  static const String CARP_DATA_FILE_PATH = 'carp/data';
+
+  /// The path to use on the device for storing the AppTask queue.
+  static const String CARP_QUEUE_FILE_PATH = 'carp/queue';
+
+  /// The path to use on the device for storing CARP study files.
+  static const String CARP_STUDY_FILE_PATH = 'carp/study';
+
   static final Settings _instance = Settings._();
-
   factory Settings() => _instance;
-
   Settings._();
 
   SharedPreferences? _preferences;
   PackageInfo? _packageInfo;
+  String? _localApplicationDir;
+  String? _dataPath;
+  String? _queuePath;
+  String? _studyPath;
 
   /// The global debug level setting.
   ///
   /// See [DebugLevel] for valid debug level settings.
   /// Can be changed on runtime.
   DebugLevel debugLevel = DebugLevel.WARNING;
+
+  /// Save the queue of [AppTask]s in the [AppTaskController] across
+  /// app re-start?
+  bool saveAppTaskQueue = true;
 
   /// The app name.
   /// `CFBundleDisplayName` on iOS, `application/label` on Android.
@@ -54,10 +71,17 @@ class Settings {
   /// Package information
   PackageInfo? get packageInfo => _packageInfo;
 
+  String? get localApplicationDir => _localApplicationDir;
+  String? get dataPath => _dataPath;
+  String? get queuePath => _queuePath;
+  String? get studyPath => _studyPath;
+
   /// Initialize settings. Call before start using it.
   Future<void> init() async {
     _preferences ??= await SharedPreferences.getInstance();
     _packageInfo ??= await PackageInfo.fromPlatform();
+
+    await initFilesystem();
 
     appName = _packageInfo!.appName;
     packageName = _packageInfo!.packageName;
@@ -114,6 +138,31 @@ class Settings {
       }
     }
     return _studyStartTimestamp;
+  }
+
+  Future<void> initFilesystem() async {
+    if (_localApplicationDir == null) {
+      final directory = await getApplicationDocumentsDirectory();
+      _localApplicationDir = directory.path;
+    }
+    if (_dataPath == null) {
+      final directory =
+          await Directory('$_localApplicationDir/$CARP_DATA_FILE_PATH')
+              .create(recursive: true);
+      _dataPath = directory.path;
+    }
+    if (_queuePath == null) {
+      final directory =
+          await Directory('$_localApplicationDir/$CARP_QUEUE_FILE_PATH')
+              .create(recursive: true);
+      _queuePath = directory.path;
+    }
+    if (_studyPath == null) {
+      final directory =
+          await Directory('$_localApplicationDir/$CARP_STUDY_FILE_PATH')
+              .create(recursive: true);
+      _studyPath = directory.path;
+    }
   }
 }
 

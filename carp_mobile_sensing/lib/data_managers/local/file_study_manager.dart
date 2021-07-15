@@ -15,17 +15,10 @@ part of managers;
 ///   `carp/study/study-<study_id>.json`
 ///
 class FileStudyProtocolManager implements StudyProtocolManager {
-  /// The path to use on the device for storing CARP study files.
-  static const String CARP_STUDY_FILE_PATH = 'carp/study';
-
-  String? _path;
-
   /// Initializing the the local FileDeploymentService
   Future initialize() async {
-    final _studyPath = await path;
-
     info('Initializing FileDeploymentService...');
-    info('Study file path : $_studyPath');
+    info('Study file path : ${Settings().studyPath}');
   }
 
   @override
@@ -59,23 +52,10 @@ class FileStudyProtocolManager implements StudyProtocolManager {
     return success;
   }
 
-  ///Returns the local study path on the device where studies are stored.
-  Future<String> get path async {
-    if (_path == null) {
-      // get local working directory
-      final localApplicationDir = await getApplicationDocumentsDirectory();
-      // create a sub-directory for storing studies
-      final directory =
-          await Directory('${localApplicationDir.path}/$CARP_STUDY_FILE_PATH')
-              .create(recursive: true);
-      _path = directory.path;
-    }
-    return _path!;
-  }
-
   /// Current path and filename according to this format:
   ///
   ///   `carp/study/study-<study_id>.json`
   ///
-  String filename(String studyId) => '$_path/study-$studyId.json';
+  String filename(String studyId) =>
+      '${Settings().studyPath}/study-$studyId.json';
 }

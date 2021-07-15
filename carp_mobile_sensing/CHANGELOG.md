@@ -1,5 +1,6 @@
 ## 0.30.1
 * `DebugLevel` is now an enum
+* support for persistenly storing `AppTask`s on the `AppTaskController` queue across app re-start
 
 ## 0.30.0
 * upgrade to null-safety, `carp_core` v. 0.30.0
@@ -11,7 +12,7 @@
 
 ## 0.21.4
 * small bug fixes
-* upgrade to carp_code `0.21.4`
+* upgrade to `carp_core 0.21.4`
 
 ## 0.21.3
 * **NOTE** - `DataEndPoint` is no longer specified as part of a `StudyProtocol`. 

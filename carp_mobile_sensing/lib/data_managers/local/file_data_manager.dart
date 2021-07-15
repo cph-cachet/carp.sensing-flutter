@@ -15,13 +15,9 @@ part of managers;
 ///   `carp/data/<study_deployment_id>/carp-data-yyyy-mm-dd-hh-mm-ss-ms.json.zip`
 ///
 class FileDataManager extends AbstractDataManager {
-  /// The path to use on the device for storing CARP data files.
-  static const String CARP_FILE_PATH = 'carp/data';
-
   String get type => DataEndPointTypes.FILE;
 
   late FileDataEndPoint _fileDataEndPoint;
-  String? _path;
   String? _filename;
   File? _file;
   IOSink? _sink;
@@ -38,6 +34,11 @@ class FileDataManager extends AbstractDataManager {
 
     _fileDataEndPoint = dataEndPoint as FileDataEndPoint;
 
+    assert(
+        Settings().dataPath != null,
+        'The file path for storing data is null - '
+        "call 'await Settings().init()' before using this $runtimeType.");
+
     if (_fileDataEndPoint.encrypt) {
       assert(_fileDataEndPoint.publicKey != null,
           'A public key is required if files are to be encrypted.');
@@ -46,13 +47,12 @@ class FileDataManager extends AbstractDataManager {
     }
 
     // Initializing the the local study directory and file
-    final _studyPath = await studyPath;
     await file;
     await sink;
 
     info('Initializing FileDataManager...');
-    info('Study file path : $_studyPath');
-    info('Buffer size : ${_fileDataEndPoint.bufferSize.toString()} bytes');
+    info('Data file path : ${Settings().dataPath}');
+    info('Buffer size    : ${_fileDataEndPoint.bufferSize.toString()} bytes');
   }
 
   void onDataPoint(DataPoint dataPoint) => write(dataPoint);
@@ -63,20 +63,6 @@ class FileDataManager extends AbstractDataManager {
 
   void onDone() => close();
 
-  ///Returns the local study path on the device where files can be written.
-  Future<String> get studyPath async {
-    if (_path == null) {
-      // get local working directory
-      final localApplicationDir = await getApplicationDocumentsDirectory();
-      // create a sub-directory for this study named as the study ID
-      final directory = await Directory(
-              '${localApplicationDir.path}/$CARP_FILE_PATH/$studyDeploymentId')
-          .create(recursive: true);
-      _path = directory.path;
-    }
-    return _path!;
-  }
-
   /// Current path and filename according to this format:
   ///
   ///   `carp/data/<studyDeploymentId>/carp-data-yyyy-mm-dd-hh-mm-ss-ms.json.zip`
@@ -84,7 +70,6 @@ class FileDataManager extends AbstractDataManager {
   /// where the date is in UTC format / zulu time.
   Future<String> get filename async {
     if (_filename == null) {
-      final path = await studyPath;
       final created = DateTime.now()
           .toUtc()
           .toString()
@@ -92,7 +77,7 @@ class FileDataManager extends AbstractDataManager {
           .replaceAll(RegExp(r' '), '-')
           .replaceAll(RegExp(r'\.'), '-');
 
-      _filename = '$path/carp-data-$created.json';
+      _filename = '${Settings().dataPath}/carp-data-$created.json';
     }
     return _filename!;
   }

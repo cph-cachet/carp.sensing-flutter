@@ -491,12 +491,12 @@ abstract class PeriodicDatumProbe extends DatumProbe {
   }
 }
 
-/// An abstract class used to create a probe that listen to events from a
-/// [stream] of [Datum] objects.
+/// An abstract class used to create a probe that listen continously to events
+/// from the [stream] of [Datum] objects.
 ///
 /// Sub-classes must implement the
 ///
-///     Stream<Datum> get stream => ...
+///     Stream<Datum>? get stream => ...
 ///
 /// method in order to provide the stream to collect data from.
 /// See [BatteryProbe] for an example.
@@ -506,19 +506,24 @@ abstract class StreamProbe extends AbstractProbe {
   Stream<DataPoint> get data =>
       controller.stream.map((datum) => DataPoint.fromData(datum));
 
-  /// The stream for this [StreamProbe]. Must be implemented by sub-classes.
-  Stream<Datum> get stream;
+  /// The stream of [Datum] objects for this [StreamProbe].
+  /// Must be implemented by sub-classes.
+  /// Can return `null` if no stream of data is available.
+  Stream<Datum>? get stream;
 
   // Do nothing here. Can be overwritten in subclasses.
   void onInitialize(Measure measure) {}
-
-  Future onRestart() async {
-    //await onResume();
-  }
+  Future onRestart() async {}
 
   Future onResume() async {
-    marking();
-    subscription = stream.listen(onData, onError: onError, onDone: onDone);
+    if (stream == null) {
+      warning(
+          "Trying to resume the stream probe '$runtimeType' which does not provide a Datum stream."
+          'Have you initialized this probe correctly?');
+    } else {
+      marking();
+      subscription = stream!.listen(onData, onError: onError, onDone: onDone);
+    }
   }
 
   Future onPause() async {
@@ -545,9 +550,13 @@ abstract class StreamProbe extends AbstractProbe {
 ///
 /// Just like in [StreamProbe], sub-classes must implement the
 ///
-///     Stream<DataPoint> get stream => ...
+///     Stream<DataPoint>? get stream => ...
 ///
 /// method in order to provide the stream to collect data from.
+///
+/// Note that this probe will finish its collection period even if it is paused.
+/// Hence, data can still be generated from this probe, even if paused.
+/// Pausing will pause the creation of new collection periods.
 abstract class PeriodicStreamProbe extends StreamProbe {
   Timer? timer;
   Duration? frequency, duration;
@@ -566,15 +575,20 @@ abstract class PeriodicStreamProbe extends StreamProbe {
   }
 
   Future onResume() async {
-    marking();
+    if (stream == null) {
+      warning(
+          "Trying to resume the stream probe '$runtimeType' which does not provide a Datum stream."
+          'Have you initialized this probe correctly?');
+    } else {
+      marking();
 
-    if (subscription != null) {
-      // create a recurrent timer that resume sampling.
+      // create a recurrent timer that resume sampling
       timer = Timer.periodic(frequency!, (timer) {
-        subscription = stream.listen(onData, onError: onError, onDone: onDone);
+        final StreamSubscription newSubscription =
+            stream!.listen(onData, onError: onError, onDone: onDone);
         // create a timer that pause the sampling after the specified duration.
         Timer(duration!, () async {
-          await subscription!.cancel();
+          await newSubscription.cancel();
         });
       });
     }
@@ -665,8 +679,8 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
 }
 
 /// An abstract probe which can be used to sample data from a buffering stream,
-/// every [frequency] for a period of [duration]. These events are buffered,
-/// and once collected for the [duration], are collected from the [getDataPoint]
+/// every [frequency] for a period of [duration]. These events are buffered
+/// for the specified [duration], and then collected from the [getDatum]
 /// method and send to the main [data] stream.
 ///
 /// Sub-classes must implement the
@@ -753,9 +767,9 @@ abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
 /// When the sampling window ends, the [getDatum] method is called.
 abstract class BufferingStreamProbe extends BufferingPeriodicStreamProbe {
   Future onResume() async {
-    subscription!.resume();
+    subscription = bufferingStream.listen(onSamplingData,
+        onError: onError, onDone: onDone);
     timer = Timer.periodic(frequency!, (Timer t) async {
-      onSamplingStart();
       try {
         Datum? datum = await getDatum();
         if (datum != null) controller.add(datum);
@@ -763,6 +777,11 @@ abstract class BufferingStreamProbe extends BufferingPeriodicStreamProbe {
         controller.addError(error);
       }
     });
+  }
+
+  Future onPause() async {
+    await super.onPause();
+    await subscription?.cancel();
   }
 
   void onSamplingEnd() {}

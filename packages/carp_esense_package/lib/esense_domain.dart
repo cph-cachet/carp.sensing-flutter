@@ -23,19 +23,18 @@ class ESenseMeasure extends CAMSMeasure {
   /// Create an eSense messure confgiration.
   /// [type] and [deviceName] are required.
   ESenseMeasure({
-    String type,
-    String name,
-    String description,
+    required String type,
+    String? name,
+    String? description,
     enabled = true,
-    this.deviceName,
+    required this.deviceName,
     this.samplingRate = 10,
-  })
-      : super(
+  }) : super(
             type: type, name: name, description: description, enabled: enabled);
 
   Function get fromJsonFunction => _$ESenseMeasureFromJson;
   factory ESenseMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as ESenseMeasure;
   Map<String, dynamic> toJson() => _$ESenseMeasureToJson(this);
 
   String toString() => super.toString() + ', deviceName: $deviceName';
@@ -43,10 +42,10 @@ class ESenseMeasure extends CAMSMeasure {
 
 /// Abstract eSense datum class.
 abstract class ESenseDatum extends Datum {
-  /// The name of eSense device.
+  /// The name of eSense device that generated this datum.
   String deviceName;
-
-  ESenseDatum([this.deviceName]) : super();
+  ESenseDatum(this.deviceName) : super();
+  String toString() => super.toString() + ', device name: $deviceName';
 }
 
 /// Holds information about an eSense button pressed event.
@@ -55,9 +54,11 @@ class ESenseButtonDatum extends ESenseDatum {
   DataFormat get format =>
       DataFormat.fromString(ESenseSamplingPackage.ESENSE_BUTTON);
 
-  ESenseButtonDatum({String deviceName, this.pressed}) : super(deviceName);
+  ESenseButtonDatum({required String deviceName, required this.pressed})
+      : super(deviceName);
 
-  factory ESenseButtonDatum.fromButtonEventChanged(ButtonEventChanged event) =>
+  factory ESenseButtonDatum.fromButtonEventChanged(
+          String deviceName, ButtonEventChanged event) =>
       ESenseButtonDatum(deviceName: '', pressed: event.pressed);
 
   factory ESenseButtonDatum.fromJson(Map<String, dynamic> json) =>
@@ -80,20 +81,19 @@ class ESenseSensorDatum extends ESenseDatum {
   DataFormat get format =>
       DataFormat.fromString(ESenseSamplingPackage.ESENSE_SENSOR);
 
-  /// Sequential number of sensor packet
-  ///
+  /// Sequential number of sensor packets.
   /// The eSense device don't have a clock, so this index reflect the order of reading.
-  int packetIndex;
+  int? packetIndex;
 
   /// 3-elements array with X, Y and Z axis for accelerometer
-  List<int> accel;
+  List<int>? accel;
 
   /// 3-elements array with X, Y and Z axis for gyroscope
-  List<int> gyro;
+  List<int>? gyro;
 
   ESenseSensorDatum(
-      {String deviceName,
-      DateTime timestamp,
+      {required String deviceName,
+      DateTime? timestamp,
       this.packetIndex,
       this.accel,
       this.gyro})
@@ -102,7 +102,7 @@ class ESenseSensorDatum extends ESenseDatum {
   }
 
   factory ESenseSensorDatum.fromSensorEvent(
-          {String deviceName, SensorEvent event}) =>
+          {required String deviceName, required SensorEvent event}) =>
       ESenseSensorDatum(
           deviceName: deviceName,
           timestamp: event.timestamp,
@@ -117,5 +117,5 @@ class ESenseSensorDatum extends ESenseDatum {
 
   String toString() =>
       super.toString() +
-      ', packetIndex: $packetIndex, accl: [${accel[0]},${accel[1]},${accel[2]}], gyro: [${gyro[0]},${gyro[1]},${gyro[2]}]';
+      ', packetIndex: $packetIndex, accl: [${accel![0]},${accel![1]},${accel![2]}], gyro: [${gyro![0]},${gyro![1]},${gyro![2]}]';
 }
