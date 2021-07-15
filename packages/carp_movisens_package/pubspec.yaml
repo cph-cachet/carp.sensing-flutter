@@ -1,26 +1,27 @@
 name: carp_movisens_package
 description: CARP Movisens sampling package. Samples movement, activity, HRV, MET-level, and ECG for the Movisens Move4 and EcgMove4 devices
-version: 0.21.0
+version: 0.30.0
 author:  CACHET Team <cph.cachet@gmail.com>
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/packages/carp_movisens_package
 
 environment:
-  sdk: ">=2.3.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
-  json_annotation: ^3.0.0
-  carp_mobile_sensing: ^0.21.0
-  movisens_flutter: ^0.1.5
-  convert: ^2.1.1
-  openmhealth_schemas: ^0.1.4
-  permission_handler: ^5.0.0
+  json_annotation: ^4.0.1
+  carp_core: ^0.30.0
+  carp_mobile_sensing: ^0.30.0
+  movisens_flutter: ^0.2.0
+  convert: ^3.0.1
+  openmhealth_schemas: ^0.2.1+1
+  permission_handler: ^8.1.2
 
 
 # Overriding carp libraries to use the local copy
 # Remove this before release of package
-#dependency_overrides:
+dependency_overrides:
 #  carp_core:
 #    path: ../../carp_core/
 #  carp_mobile_sensing:
@@ -32,11 +33,9 @@ dependencies:
 
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  build_runner: ^1.10.0
-  json_serializable: ^3.0.0
-  test:
+  build_runner: ^2.0.6
+  json_serializable: ^4.1.4
+  test: 
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec

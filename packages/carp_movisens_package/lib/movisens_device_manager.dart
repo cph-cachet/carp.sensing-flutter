@@ -19,9 +19,8 @@ class MovisensDevice extends DeviceDescriptor {
 
   MovisensDevice({
     String roleName = DEFAULT_ROLENAME,
-    List<String> supportedDataTypes,
-  })
-      : super(
+    List<String>? supportedDataTypes,
+  }) : super(
           roleName: roleName,
           isMasterDevice: false,
           supportedDataTypes: supportedDataTypes,
@@ -29,18 +28,18 @@ class MovisensDevice extends DeviceDescriptor {
 
   Function get fromJsonFunction => _$MovisensDeviceFromJson;
   factory MovisensDevice.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as MovisensDevice;
   Map<String, dynamic> toJson() => _$MovisensDeviceToJson(this);
 }
 
 class MovisensDeviceManager extends DeviceManager {
   // the last known voltage level of the Movisens device
   int _batteryLevel = 100;
-  String _connectionStatus;
+  String? _connectionStatus;
   // StreamSubscription<Map<String, dynamic>> _eventSubscription;
 
   String get id => userData?.sensorName ?? 'movisens-123';
-  String get connectionStatus => _connectionStatus;
+  String? get connectionStatus => _connectionStatus;
 
   Future initialize(String type) async {
     super.initialize(type);
@@ -49,7 +48,7 @@ class MovisensDeviceManager extends DeviceManager {
     assert(movisens != null, 'The Movisens probe has not been initialized.');
 
     // listen for Movisens events
-    movisens.movisensStream.listen((event) {
+    movisens!.movisensStream.listen((event) {
       info('$runtimeType :: Movisens event : $event');
 
       if (event.containsKey("BatteryLevel"))

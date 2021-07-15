@@ -18,9 +18,7 @@ import 'package:air_quality/air_quality.dart';
 import 'package:mobility_features/mobility_features.dart';
 import 'package:geolocator/geolocator.dart';
 
-import 'package:carp_core/carp_common/carp_core_common.dart';
-import 'package:carp_core/carp_protocols/carp_core_protocols.dart';
-import 'package:carp_core/carp_data/carp_core_data.dart';
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 part 'src/activity/activity_datum.dart';

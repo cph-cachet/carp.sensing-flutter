@@ -12,7 +12,7 @@ class MovisensDatum extends Datum {
   DataFormat get format =>
       DataFormat.fromString(MovisensSamplingPackage.MOVISENS);
 
-  String movisensTimestamp;
+  String? movisensTimestamp;
 
   MovisensDatum() : super();
 
@@ -29,8 +29,8 @@ class MovisensDatum extends Datum {
     if (map.containsKey("StepCount"))
       return MovisensStepCountDatum.fromMap(map["StepCount"]);
     if (map.containsKey("MovementAcceleration"))
-      return MovisensMovementAccelerationDatum
-          .fromMap(map["MovementAcceleration"]);
+      return MovisensMovementAccelerationDatum.fromMap(
+          map["MovementAcceleration"]);
     if (map.containsKey("TapMarker"))
       return MovisensTapMarkerDatum.fromMap(map["TapMarker"]);
     if (map.containsKey("BatteryLevel"))
@@ -58,10 +58,15 @@ String _movisensTimestampToUTC(String timestamp) {
 ///   * vigorous
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MovisensMETLevelDatum extends MovisensDatum {
-  MovisensMETLevelDatum() : super();
-
   DataFormat get format =>
       DataFormat.fromString(MovisensSamplingPackage.MET_LEVEL);
+
+  String? sedentary;
+  String? light;
+  String? moderate;
+  String? vigorous;
+
+  MovisensMETLevelDatum() : super();
 
   factory MovisensMETLevelDatum.fromMap(String value) {
     MovisensMETLevelDatum metLevelDatum = MovisensMETLevelDatum();
@@ -76,25 +81,20 @@ class MovisensMETLevelDatum extends MovisensDatum {
     return metLevelDatum;
   }
 
-  String sedentary;
-  String light;
-  String moderate;
-  String vigorous;
-
   factory MovisensMETLevelDatum.fromJson(Map<String, dynamic> json) =>
       _$MovisensMETLevelDatumFromJson(json);
   Map<String, dynamic> toJson() => _$MovisensMETLevelDatumToJson(this);
 }
 
-/// Representing a map of the Movisens device.
+/// Movisens movement (accelerometer) reading.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MovisensMovementAccelerationDatum extends MovisensDatum {
-  String movementAcceleration;
-
-  MovisensMovementAccelerationDatum() : super();
-
   DataFormat get format =>
       DataFormat.fromString(MovisensSamplingPackage.MOVEMENT_ACCELERATION);
+
+  String? movementAcceleration;
+
+  MovisensMovementAccelerationDatum() : super();
 
   factory MovisensMovementAccelerationDatum.fromMap(String value) {
     MovisensMovementAccelerationDatum movementAccelerationDatum =
@@ -118,12 +118,12 @@ class MovisensMovementAccelerationDatum extends MovisensDatum {
 /// Representing a tap marker event from a user tap on the Movisens device.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MovisensTapMarkerDatum extends MovisensDatum {
-  String tapMarker;
-
-  MovisensTapMarkerDatum() : super();
-
   DataFormat get format =>
       DataFormat.fromString(MovisensSamplingPackage.TAP_MARKER);
+
+  String? tapMarker;
+
+  MovisensTapMarkerDatum() : super();
 
   factory MovisensTapMarkerDatum.fromMap(String value) {
     MovisensTapMarkerDatum tapMakerDatum = MovisensTapMarkerDatum();
@@ -142,9 +142,10 @@ class MovisensTapMarkerDatum extends MovisensDatum {
 /// The battery level of the Movisens device.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MovisensBatteryLevelDatum extends MovisensDatum {
-  String batteryLevel;
   DataFormat get format =>
       DataFormat.fromString(MovisensSamplingPackage.BATTERY_LEVEL);
+
+  String? batteryLevel;
 
   MovisensBatteryLevelDatum() : super();
 
@@ -166,9 +167,10 @@ class MovisensBatteryLevelDatum extends MovisensDatum {
 /// The body position of the person wearing the device.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MovisensBodyPositionDatum extends MovisensDatum {
-  String bodyPosition;
   DataFormat get format =>
       DataFormat.fromString(MovisensSamplingPackage.BODY_POSITION);
+
+  String? bodyPosition;
 
   MovisensBodyPositionDatum() : super();
 
@@ -189,8 +191,9 @@ class MovisensBodyPositionDatum extends MovisensDatum {
 
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MovisensMETDatum extends MovisensDatum {
-  String met;
   DataFormat get format => DataFormat.fromString(MovisensSamplingPackage.MET);
+
+  String? met;
 
   MovisensMETDatum() : super();
 
@@ -211,10 +214,10 @@ class MovisensMETDatum extends MovisensDatum {
 /// Heart Rate (HR) in beats pr. minute (BPM).
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MovisensHRDatum extends MovisensDatum {
-  /// Heart Rate (HR) in beats pr. minute (BPM).
-  String hr;
-
   DataFormat get format => DataFormat.fromString(MovisensSamplingPackage.HR);
+
+  /// Heart Rate (HR) in beats pr. minute (BPM).
+  String? hr;
 
   MovisensHRDatum() : super();
 
@@ -235,9 +238,9 @@ class MovisensHRDatum extends MovisensDatum {
 /// Heart rate variability (HRV).
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MovisensHRVDatum extends MovisensDatum {
-  String hrv;
-
   DataFormat get format => DataFormat.fromString(MovisensSamplingPackage.HRV);
+
+  String? hrv;
 
   MovisensHRVDatum() : super();
 
@@ -257,10 +260,10 @@ class MovisensHRVDatum extends MovisensDatum {
 
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MovisensIsHrvValidDatum extends MovisensDatum {
-  String isHrvValid;
-
   DataFormat get format =>
       DataFormat.fromString(MovisensSamplingPackage.IS_HRV_VALID);
+
+  String? isHrvValid;
 
   MovisensIsHrvValidDatum() : super();
 
@@ -279,12 +282,13 @@ class MovisensIsHrvValidDatum extends MovisensDatum {
   Map<String, dynamic> toJson() => _$MovisensIsHrvValidDatumToJson(this);
 }
 
+/// Step counts as measured by the Movisens device.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MovisensStepCountDatum extends MovisensDatum {
-  String stepCount;
-
   DataFormat get format =>
       DataFormat.fromString(MovisensSamplingPackage.STEP_COUNT);
+
+  String? stepCount;
 
   MovisensStepCountDatum() : super();
 
@@ -302,12 +306,13 @@ class MovisensStepCountDatum extends MovisensDatum {
   Map<String, dynamic> toJson() => _$MovisensStepCountDatumToJson(this);
 }
 
+/// Connectivity status of the Movisens device.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MovisensConnectionStatusDatum extends MovisensDatum {
-  String connectionStatus;
-
   DataFormat get format =>
       DataFormat.fromString(MovisensSamplingPackage.CONNECTION_STATUS);
+
+  String? connectionStatus;
 
   MovisensConnectionStatusDatum() : super();
 
