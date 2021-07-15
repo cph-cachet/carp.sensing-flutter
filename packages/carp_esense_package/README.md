@@ -139,4 +139,4 @@ Before executing a study with an eSense measure, register this package in the
 SamplingPackageRegistry().register(ESenseSamplingPackage());
 `````
 
-> Note that the eSense device must be paired with the phone via BTLE **before** CAMS can connect to it.
+> **NOTE** that the eSense device must be paired with the phone via BTLE **before** CAMS can connect to it.
