@@ -9,19 +9,15 @@ part of health_package;
 HealthMeasure _$HealthMeasureFromJson(Map<String, dynamic> json) {
   return HealthMeasure(
     type: json['type'] as String,
-    name: json['name'] as String,
-    description: json['description'] as String,
+    name: json['name'] as String?,
+    description: json['description'] as String?,
     enabled: json['enabled'] as bool,
-    history: json['history'] == null
-        ? null
-        : Duration(microseconds: json['history'] as int),
+    history: Duration(microseconds: json['history'] as int),
     healthDataType:
-        _$enumDecodeNullable(_$HealthDataTypeEnumMap, json['healthDataType']),
+        _$enumDecode(_$HealthDataTypeEnumMap, json['healthDataType']),
   )
-    ..$type = json[r'$type'] as String
-    ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
-      (k, e) => MapEntry(k, e as String),
-    );
+    ..$type = json[r'$type'] as String?
+    ..configuration = Map<String, String>.from(json['configuration'] as Map);
 }
 
 Map<String, dynamic> _$HealthMeasureToJson(HealthMeasure instance) {
@@ -34,47 +30,40 @@ Map<String, dynamic> _$HealthMeasureToJson(HealthMeasure instance) {
   }
 
   writeNotNull(r'$type', instance.$type);
-  writeNotNull('type', instance.type);
+  val['type'] = instance.type;
   writeNotNull('name', instance.name);
   writeNotNull('description', instance.description);
-  writeNotNull('enabled', instance.enabled);
-  writeNotNull('configuration', instance.configuration);
-  writeNotNull('history', instance.history?.inMicroseconds);
-  writeNotNull(
-      'healthDataType', _$HealthDataTypeEnumMap[instance.healthDataType]);
+  val['enabled'] = instance.enabled;
+  val['configuration'] = instance.configuration;
+  val['history'] = instance.history.inMicroseconds;
+  val['healthDataType'] = _$HealthDataTypeEnumMap[instance.healthDataType];
   return val;
 }
 
-T _$enumDecode<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
+K _$enumDecode<K, V>(
+  Map<K, V> enumValues,
+  Object? source, {
+  K? unknownValue,
 }) {
   if (source == null) {
-    throw ArgumentError('A value must be provided. Supported values: '
-        '${enumValues.values.join(', ')}');
+    throw ArgumentError(
+      'A value must be provided. Supported values: '
+      '${enumValues.values.join(', ')}',
+    );
   }
 
-  final value = enumValues.entries
-      .singleWhere((e) => e.value == source, orElse: () => null)
-      ?.key;
-
-  if (value == null && unknownValue == null) {
-    throw ArgumentError('`$source` is not one of the supported values: '
-        '${enumValues.values.join(', ')}');
-  }
-  return value ?? unknownValue;
-}
-
-T _$enumDecodeNullable<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
-}) {
-  if (source == null) {
-    return null;
-  }
-  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
+  return enumValues.entries.singleWhere(
+    (e) => e.value == source,
+    orElse: () {
+      if (unknownValue == null) {
+        throw ArgumentError(
+          '`$source` is not one of the supported values: '
+          '${enumValues.values.join(', ')}',
+        );
+      }
+      return MapEntry(unknownValue, enumValues.values.first);
+    },
+  ).key;
 }
 
 const _$HealthDataTypeEnumMap = {
@@ -115,15 +104,13 @@ HealthDatum _$HealthDatumFromJson(Map<String, dynamic> json) {
     json['value'] as num,
     json['unit'] as String,
     json['data_type'] as String,
-    json['date_from'] == null
-        ? null
-        : DateTime.parse(json['date_from'] as String),
-    json['date_to'] == null ? null : DateTime.parse(json['date_to'] as String),
+    DateTime.parse(json['date_from'] as String),
+    DateTime.parse(json['date_to'] as String),
     json['platform'] as String,
     json['device_id'] as String,
     json['uuid'] as String,
   )
-    ..id = json['id'] as String
+    ..id = json['id'] as String?
     ..timestamp = json['timestamp'] == null
         ? null
         : DateTime.parse(json['timestamp'] as String);
@@ -140,13 +127,13 @@ Map<String, dynamic> _$HealthDatumToJson(HealthDatum instance) {
 
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
-  writeNotNull('value', instance.value);
-  writeNotNull('unit', instance.unit);
-  writeNotNull('date_from', instance.dateFrom?.toIso8601String());
-  writeNotNull('date_to', instance.dateTo?.toIso8601String());
-  writeNotNull('data_type', instance.dataType);
-  writeNotNull('platform', instance.platform);
-  writeNotNull('device_id', instance.deviceId);
-  writeNotNull('uuid', instance.uuid);
+  val['value'] = instance.value;
+  val['unit'] = instance.unit;
+  val['date_from'] = instance.dateFrom.toIso8601String();
+  val['date_to'] = instance.dateTo.toIso8601String();
+  val['data_type'] = instance.dataType;
+  val['platform'] = instance.platform;
+  val['device_id'] = instance.deviceId;
+  val['uuid'] = instance.uuid;
   return val;
 }
