@@ -1,12 +1,12 @@
 name: carp_firebase_backend_example
 description: Examples of how to use the plugin to upload data to Google Firebase.
-version: 0.0.2
+version: 0.30.0
 author:  CACHET Team <cph.cachet@gmail.com>
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_firebase_backend
 publish_to: none
 
 environment:
-  sdk: ">=2.3.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   flutter:
@@ -19,10 +19,8 @@ dependencies:
     path: ../
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  build_runner:       # used to build JSON serialization .g files
-  json_serializable: ^3.0.0
+#  flutter_test:
+#    sdk: flutter
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
