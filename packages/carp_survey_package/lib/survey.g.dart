@@ -9,17 +9,13 @@ part of survey;
 RPTaskMeasure _$RPTaskMeasureFromJson(Map<String, dynamic> json) {
   return RPTaskMeasure(
     type: json['type'] as String,
-    name: json['name'] as String,
-    description: json['description'] as String,
+    name: json['name'] as String?,
+    description: json['description'] as String?,
     enabled: json['enabled'] as bool,
-    surveyTask: json['surveyTask'] == null
-        ? null
-        : RPTask.fromJson(json['surveyTask'] as Map<String, dynamic>),
+    surveyTask: RPTask.fromJson(json['surveyTask'] as Map<String, dynamic>),
   )
-    ..$type = json[r'$type'] as String
-    ..configuration = (json['configuration'] as Map<String, dynamic>)?.map(
-      (k, e) => MapEntry(k, e as String),
-    );
+    ..$type = json[r'$type'] as String?
+    ..configuration = Map<String, String>.from(json['configuration'] as Map);
 }
 
 Map<String, dynamic> _$RPTaskMeasureToJson(RPTaskMeasure instance) {
@@ -32,12 +28,12 @@ Map<String, dynamic> _$RPTaskMeasureToJson(RPTaskMeasure instance) {
   }
 
   writeNotNull(r'$type', instance.$type);
-  writeNotNull('type', instance.type);
+  val['type'] = instance.type;
   writeNotNull('name', instance.name);
   writeNotNull('description', instance.description);
-  writeNotNull('enabled', instance.enabled);
-  writeNotNull('configuration', instance.configuration);
-  writeNotNull('surveyTask', instance.surveyTask);
+  val['enabled'] = instance.enabled;
+  val['configuration'] = instance.configuration;
+  val['surveyTask'] = instance.surveyTask;
   return val;
 }
 
@@ -47,7 +43,7 @@ RPTaskResultDatum _$RPTaskResultDatumFromJson(Map<String, dynamic> json) {
         ? null
         : RPTaskResult.fromJson(json['survey_result'] as Map<String, dynamic>),
   )
-    ..id = json['id'] as String
+    ..id = json['id'] as String?
     ..timestamp = json['timestamp'] == null
         ? null
         : DateTime.parse(json['timestamp'] as String);
