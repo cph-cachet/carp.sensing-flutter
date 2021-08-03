@@ -1,5 +1,6 @@
 ## 0.30.1
 * update to `carp_mobile_sensing: ^0.30.1`
+* fix of filename in audio probe
 * fix of unit tests
 
 ## 0.30.0

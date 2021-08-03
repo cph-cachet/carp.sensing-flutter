@@ -73,12 +73,13 @@ class AudioProbe extends DatumProbe {
           'Trying to start audio recording, but recording is already running. '
           'Make sure to pause this audio probe before resuming it.');
     } else {
-      _soundFileName = await filePath;
       _startRecordingTime = DateTime.now();
       _datum = AudioDatum(
-        filename: _soundFileName!.split("/").last,
+        filename: 'ignored for now',
         startRecordingTime: _startRecordingTime!,
       );
+      _soundFileName = await filePath;
+      _datum!.filename = _soundFileName!.split("/").last;
       _isRecording = true;
 
       // start the recording

@@ -18,6 +18,7 @@ class FileDataManager extends AbstractDataManager {
   String get type => DataEndPointTypes.FILE;
 
   late FileDataEndPoint _fileDataEndPoint;
+  String? _path;
   String? _filename;
   File? _file;
   IOSink? _sink;
@@ -47,11 +48,12 @@ class FileDataManager extends AbstractDataManager {
     }
 
     // Initializing the the local study directory and file
+    await path;
     await file;
     await sink;
 
     info('Initializing FileDataManager...');
-    info('Data file path : ${Settings().dataPath}');
+    info('Data file path : $_path');
     info('Buffer size    : ${_fileDataEndPoint.bufferSize.toString()} bytes');
   }
 
@@ -63,7 +65,18 @@ class FileDataManager extends AbstractDataManager {
 
   void onDone() => close();
 
-  /// Current path and filename according to this format:
+  /// The full path where data files are stored on the device.
+  Future<String> get path async {
+    if (_path == null) {
+      final directory =
+          await Directory('${Settings().dataPath}/$studyDeploymentId')
+              .create(recursive: true);
+      _path = directory.path;
+    }
+    return _path!;
+  }
+
+  /// Full filename including path according to this format:
   ///
   ///   `carp/data/<studyDeploymentId>/carp-data-yyyy-mm-dd-hh-mm-ss-ms.json.zip`
   ///
@@ -77,7 +90,8 @@ class FileDataManager extends AbstractDataManager {
           .replaceAll(RegExp(r' '), '-')
           .replaceAll(RegExp(r'\.'), '-');
 
-      _filename = '${Settings().dataPath}/carp-data-$created.json';
+      await path;
+      _filename = '$_path/carp-data-$created.json';
     }
     return _filename!;
   }
@@ -85,11 +99,11 @@ class FileDataManager extends AbstractDataManager {
   /// The current file being written to.
   Future<File> get file async {
     if (_file == null) {
-      final path = await filename;
-      _file = File(path);
-      info("Creating file '$path'");
-      addEvent(
-          FileDataManagerEvent(FileDataManagerEventTypes.FILE_CREATED, path));
+      final _filename = await filename;
+      _file = File(_filename);
+      info("Creating file '$_filename'");
+      addEvent(FileDataManagerEvent(
+          FileDataManagerEventTypes.FILE_CREATED, _filename));
     }
     return _file!;
   }

@@ -9,7 +9,9 @@ part of audio;
 AudioDatum _$AudioDatumFromJson(Map<String, dynamic> json) {
   return AudioDatum(
     filename: json['filename'] as String,
-    startRecordingTime: DateTime.parse(json['start_recording_time'] as String),
+    startRecordingTime: json['start_recording_time'] == null
+        ? null
+        : DateTime.parse(json['start_recording_time'] as String),
     endRecordingTime: json['end_recording_time'] == null
         ? null
         : DateTime.parse(json['end_recording_time'] as String),
@@ -38,7 +40,8 @@ Map<String, dynamic> _$AudioDatumToJson(AudioDatum instance) {
   val['filename'] = instance.filename;
   val['upload'] = instance.upload;
   writeNotNull('metadata', instance.metadata);
-  val['start_recording_time'] = instance.startRecordingTime.toIso8601String();
+  writeNotNull(
+      'start_recording_time', instance.startRecordingTime?.toIso8601String());
   writeNotNull(
       'end_recording_time', instance.endRecordingTime?.toIso8601String());
   return val;

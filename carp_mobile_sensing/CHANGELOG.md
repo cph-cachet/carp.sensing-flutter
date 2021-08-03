@@ -1,5 +1,6 @@
 ## 0.30.2
 * small updates to `Settings`
+* fixed a bug in path to json files in `FileDataManager`
 
 ## 0.30.1
 * `DebugLevel` is now an enum

@@ -108,6 +108,6 @@ class AudioSamplingPackage extends SmartphoneSamplingPackage {
           "Collects noise in the background from the phone's microphone",
       enabled: true,
       frequency: Duration(minutes: 1),
-      duration: Duration(seconds: 5),
+      duration: Duration(seconds: 10),
     );
 }

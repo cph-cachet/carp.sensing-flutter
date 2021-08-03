@@ -14,14 +14,14 @@ class AudioDatum extends FileDatum {
   DataFormat get format => DataFormat.fromString(AudioSamplingPackage.AUDIO);
 
   /// The timestamp for start of recording.
-  DateTime startRecordingTime;
+  DateTime? startRecordingTime;
 
   /// The timestamp for end of recording.
   DateTime? endRecordingTime;
 
   AudioDatum({
     required String filename,
-    required this.startRecordingTime,
+    this.startRecordingTime,
     this.endRecordingTime,
   }) : super(filename: filename);
 
