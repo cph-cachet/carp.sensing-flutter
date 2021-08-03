@@ -120,7 +120,7 @@ class AudioProbe extends DatumProbe {
       final localApplicationDir = await getApplicationDocumentsDirectory();
       // create a sub-directory for sound files
       final directory = await Directory(
-              '${localApplicationDir.path}/${FileDataManager.CARP_FILE_PATH}$studyDeploymentPath/$AUDIO_FILES_PATH')
+              '${localApplicationDir.path}/${Settings.CARP_DATA_FILE_PATH}$studyDeploymentPath/$AUDIO_FILES_PATH')
           .create(recursive: true);
 
       _path = directory.path;

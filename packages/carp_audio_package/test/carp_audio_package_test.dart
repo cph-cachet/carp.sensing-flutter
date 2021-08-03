@@ -13,6 +13,9 @@ void main() {
   Smartphone phone;
 
   setUp(() {
+    // make sure that the json functions are loaded
+    DomainJsonFactory();
+
     // register the context sampling package
     SamplingPackageRegistry().register(AudioSamplingPackage());
 
@@ -39,7 +42,7 @@ void main() {
   test('CAMSStudyProtocol -> JSON', () async {
     print(protocol);
     print(toJsonString(protocol));
-    expect(protocol.ownerId, 'AB');
+    expect(protocol.ownerId, 'alex@uni.dk');
   });
 
   test('StudyProtocol -> JSON -> StudyProtocol :: deep assert', () async {
@@ -58,7 +61,7 @@ void main() {
     StudyProtocol protocol =
         StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
 
-    expect(protocol.ownerId, 'AB');
+    expect(protocol.ownerId, 'alex@uni.dk');
     expect(protocol.masterDevices.first.roleName, Smartphone.DEFAULT_ROLENAME);
     print(toJsonString(protocol));
   });

@@ -7,7 +7,7 @@ class DevicesModel {
 
 class DeviceModel {
   DeviceManager deviceManager;
-  String get type => deviceManager.type;
+  String? get type => deviceManager.type;
   DeviceStatus get status => deviceManager.status;
   Stream<DeviceStatus> get deviceEvents => deviceManager.statusEvents;
 
@@ -15,29 +15,25 @@ class DeviceModel {
   String get id => deviceManager.id;
 
   /// A printer-friendly name for this device.
-  String get name => deviceTypeName[type];
+  String? get name => deviceTypeName[type!];
 
   /// A printer-friendly description of this device.
   //String get description => deviceTypeDescription[type];
-  String get description => (id == null)
-      ? 'Device name will appear when the device is connected'
-      : '${deviceTypeDescription[type]} - $statusString\n$batteryLevel% battery remaining.';
+  String get description =>
+      '${deviceTypeDescription[type!]} - $statusString\n$batteryLevel% battery remaining.';
 
   String get statusString => status.toString().split('.').last;
 
   /// The battery level of this device.
-  int get batteryLevel => deviceManager.batteryLevel;
+  int? get batteryLevel => deviceManager.batteryLevel;
 
   /// The icon for this type of device.
-  Icon get icon => deviceTypeIcon[type];
+  Icon? get icon => deviceTypeIcon[type!];
 
   /// The icon for the runtime state of this device.
-  Icon get stateIcon => deviceStateIcon[status];
+  Icon? get stateIcon => deviceStateIcon[status];
 
-  DeviceModel(this.deviceManager)
-      : assert(deviceManager != null,
-            'A DeviceModel must be initialized with a real Device.'),
-        super();
+  DeviceModel(this.deviceManager) : super();
 
   static Map<String, String> get deviceTypeName => {
         Smartphone.DEVICE_TYPE: 'Phone',

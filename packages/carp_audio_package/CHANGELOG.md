@@ -1,3 +1,7 @@
+## 0.30.1
+* update to `carp_mobile_sensing: ^0.30.1`
+* fix of unit tests
+
 ## 0.30.0
 * upgrade to null-safety
 * using `flutter_sound: ^8.1.4` for audio recording

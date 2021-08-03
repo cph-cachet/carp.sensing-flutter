@@ -1,3 +1,6 @@
+## 0.30.2
+* small updates to `Settings`
+
 ## 0.30.1
 * `DebugLevel` is now an enum
 * support for persistenly storing `AppTask`s on the `AppTaskController` queue across app re-start

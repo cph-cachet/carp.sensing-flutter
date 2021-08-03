@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
 
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 // import 'package:carp_connectivity_package/connectivity.dart';
 import 'package:carp_esense_package/esense.dart';
@@ -14,7 +15,8 @@ import 'package:carp_audio_package/audio.dart';
 
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
-import 'package:carp_backend/carp_backend.dart';
+// TODO - move back when carp_backend is in null-safe version
+// import 'package:carp_backend/carp_backend.dart';
 
 part 'src/app.dart';
 part 'src/sensing/sensing.dart';

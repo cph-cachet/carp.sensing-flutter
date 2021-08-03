@@ -93,8 +93,7 @@ class StudyDeploymentExecutor extends Executor {
   Future onResume() async {
     // check the start time for this study on this phone
     // this will save it, the first time the study is executed
-    DateTime studyStartTimestamp =
-        await (Settings().studyStartTimestamp as FutureOr<DateTime>);
+    DateTime studyStartTimestamp = await Settings().studyStartTimestamp;
     info(
         'Study deployment was started on this phone on ${studyStartTimestamp.toUtc()}');
 

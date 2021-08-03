@@ -1,12 +1,14 @@
 {
-    "name": "CAMS App Protocol",
-    "description": "A generic CAMS study protcol for the CAMS Demo App.",
-    "creationDate": "2021-05-18T17:43:57.342598Z",
+    "ownerId": "alex@uni.dk",
+    "name": "Sensing Coverage Study",
+    "description": "This is a study for testing the coverage of sampling.",
+    "creationDate": "2021-08-03T13:32:44.785978Z",
     "masterDevices": [
      {
       "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
       "isMasterDevice": true,
       "roleName": "masterphone",
+      "supportedDataTypes": [],
       "samplingConfiguration": {}
      }
     ],
@@ -22,17 +24,17 @@
     "triggers": {
      "0": {
       "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger",
-      "sourceDeviceRoleName": "masterphone",
-      "requiresMasterDevice": true
+      "sourceDeviceRoleName": "",
+      "requiresMasterDevice": false
      },
      "1": {
       "$type": "dk.cachet.carp.protocols.domain.triggers.RandomRecurrentTrigger",
-      "sourceDeviceRoleName": "masterphone",
-      "requiresMasterDevice": true,
+      "sourceDeviceRoleName": "",
+      "requiresMasterDevice": false,
       "startTime": {
        "$type": "Time",
-       "hour": 8,
-       "minute": 0,
+       "hour": 18,
+       "minute": 10,
        "second": 0
       },
       "endTime": {
@@ -41,43 +43,30 @@
        "minute": 0,
        "second": 0
       },
-      "minNumberOfTriggers": 2,
+      "minNumberOfTriggers": 3,
       "maxNumberOfTriggers": 8,
       "duration": 2000000
      },
      "2": {
       "$type": "dk.cachet.carp.protocols.domain.triggers.PeriodicTrigger",
-      "sourceDeviceRoleName": "masterphone",
-      "requiresMasterDevice": true,
+      "sourceDeviceRoleName": "",
+      "requiresMasterDevice": false,
       "period": 60000000,
       "duration": 1000000
      },
      "3": {
       "$type": "dk.cachet.carp.protocols.domain.triggers.PeriodicTrigger",
-      "sourceDeviceRoleName": "masterphone",
-      "requiresMasterDevice": true,
-      "period": 300000000,
+      "sourceDeviceRoleName": "",
+      "requiresMasterDevice": false,
+      "period": 120000000,
       "duration": 1000000
-     },
-     "4": {
-      "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger",
-      "sourceDeviceRoleName": "masterphone",
-      "requiresMasterDevice": true
      }
     },
     "tasks": [
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
-      "name": "Task #5",
+      "name": "Task #3",
       "measures": [
-       {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
-        "type": "dk.cachet.carp.device",
-        "name": "Basic Device Info",
-        "description": "Collects basic information about the phone.",
-        "enabled": true,
-        "configuration": {}
-       },
        {
         "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
         "type": "dk.cachet.carp.light",
@@ -87,14 +76,6 @@
         "configuration": {},
         "frequency": 60000000,
         "duration": 1000000
-       },
-       {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
-        "type": "dk.cachet.carp.screen",
-        "name": "Screen Activity (lock/on/off)",
-        "description": "Collects information about lock/unlock event of the phone's screen.",
-        "enabled": true,
-        "configuration": {}
        },
        {
         "$type": "dk.cachet.carp.protocols.domain.tasks.measures.NoiseMeasure",
@@ -108,33 +89,30 @@
         "samplingRate": 500
        },
        {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
+        "type": "dk.cachet.carp.memory",
+        "name": "Memory Usage",
+        "description": "Collects information about use of memory.",
+        "enabled": true,
+        "configuration": {},
+        "frequency": 60000000,
+        "duration": 2000000
+       },
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
+        "type": "dk.cachet.carp.screen",
+        "name": "Screen Activity (lock/on/off)",
+        "description": "Collects information about lock/unlock event of the phone's screen.",
+        "enabled": true,
+        "configuration": {}
+       },
+       {
         "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
         "type": "dk.cachet.carp.activity",
         "name": "Activity Recognition",
         "description": "Collects activity type from the phone's activity recognition module",
         "enabled": true,
         "configuration": {}
-       },
-       {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.LocationMeasure",
-        "type": "dk.cachet.carp.geolocation",
-        "enabled": true,
-        "configuration": {},
-        "frequency": 3000000,
-        "accuracy": "best",
-        "distance": 0.0
-       },
-       {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.MobilityMeasure",
-        "type": "dk.cachet.carp.mobility",
-        "name": "Mobility Features",
-        "description": "Extracts mobility features based on location tracking",
-        "enabled": true,
-        "configuration": {},
-        "usePriorContexts": true,
-        "stopRadius": 25.0,
-        "placeRadius": 50.0,
-        "stopDuration": 180000000
        }
       ]
      },
@@ -143,13 +121,12 @@
       "name": "Task #6",
       "measures": [
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
-        "type": "dk.cachet.carp.memory",
-        "name": "Memory Usage",
-        "description": "Collects information about use of memory.",
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
+        "type": "dk.cachet.carp.device",
+        "name": "Basic Device Info",
+        "description": "Collects basic information about the phone.",
         "enabled": true,
-        "configuration": {},
-        "frequency": 60000000
+        "configuration": {}
        }
       ]
      },
@@ -188,38 +165,12 @@
         "apiKey": "9e538456b2b85c92647d8b65090e29f957638c77"
        }
       ]
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
-      "name": "Task #9",
-      "measures": [
-       {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.ESenseMeasure",
-        "type": "dk.cachet.carp.esense.button",
-        "name": "eSense - Button",
-        "description": "Collects button event from the eSense device",
-        "enabled": true,
-        "configuration": {},
-        "deviceName": "eSense-0332",
-        "samplingRate": 10
-       },
-       {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.ESenseMeasure",
-        "type": "dk.cachet.carp.esense.sensor",
-        "name": "eSense - Sensor",
-        "description": "Collects movement data from the eSense inertial measurement unit (IMU) sensor",
-        "enabled": true,
-        "configuration": {},
-        "deviceName": "eSense-0332",
-        "samplingRate": 5
-       }
-      ]
      }
     ],
     "triggeredTasks": [
      {
       "triggerId": 0,
-      "taskName": "Task #5",
+      "taskName": "Task #3",
       "targetDeviceRoleName": "masterphone"
      },
      {
@@ -236,24 +187,7 @@
       "triggerId": 3,
       "taskName": "Task #8",
       "targetDeviceRoleName": "masterphone"
-     },
-     {
-      "triggerId": 4,
-      "taskName": "Task #9",
-      "targetDeviceRoleName": "esense"
      }
     ],
-    "expectedParticipantData": [],
-    "studyId": "1234",
-    "protocolDescription": {
-     "$type": "StudyProtocolDescription",
-     "title": "Sensing Coverage Study",
-     "description": "This is a study for testing the coverage of sampling. Includes sensing from the eSense devices."
-    },
-    "responsible": {
-     "$type": "StudyProtocolReponsible",
-     "id": "AB",
-     "name": "Alex Boyon",
-     "email": "alex@uni.dk"
-    }
+    "expectedParticipantData": []
    }

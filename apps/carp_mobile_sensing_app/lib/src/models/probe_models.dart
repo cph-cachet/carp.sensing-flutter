@@ -8,7 +8,7 @@ class ProbesModel {
 class ProbeModel {
   Probe probe;
   String get type => probe.type;
-  Measure get measure => probe.measure;
+  Measure? get measure => probe.measure;
   ProbeState get state => probe.state;
   Stream<ProbeState> get stateEvents => probe.stateEvents;
 
@@ -17,19 +17,16 @@ class ProbeModel {
 
   ///A printer-friendly description of this probe.
   String get description => ((probe.measure as CAMSMeasure).description != null)
-      ? (probe.measure as CAMSMeasure).description
-      : ProbeDescription.probeTypeDescription[type];
+      ? (probe.measure as CAMSMeasure).description!
+      : ProbeDescription.probeTypeDescription[type]!;
 
   /// The icon for this type of probe.
-  Icon get icon => ProbeDescription.probeTypeIcon[type];
+  Icon? get icon => ProbeDescription.probeTypeIcon[type];
 
   /// The icon for the runtime state of this probe.
-  Icon get stateIcon => ProbeDescription.probeStateIcon[state];
+  Icon? get stateIcon => ProbeDescription.probeStateIcon[state];
 
-  ProbeModel(this.probe)
-      : assert(probe != null,
-            'A ProbeModel must be initialized with a real Probe.'),
-        super();
+  ProbeModel(this.probe) : super();
 }
 
 probeStateLabel(ProbeState state) {

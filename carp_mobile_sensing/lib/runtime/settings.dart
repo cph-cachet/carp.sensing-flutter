@@ -106,7 +106,7 @@ class Settings {
   /// This id is generated the first time this method is called and then stored
   /// on the phone in-between sessions, and will therefore be the same for
   /// the same app on the same phone.
-  Future<String?> get userId async {
+  Future<String> get userId async {
     assert(_preferences != null,
         "Setting is not initialized. Call 'Setting().init()'' first.");
     if (_userId == null) {
@@ -116,7 +116,7 @@ class Settings {
         await preferences!.setString(_userIdKey, _userId!);
       }
     }
-    return _userId;
+    return _userId!;
   }
 
   DateTime? _studyStartTimestamp;
@@ -125,7 +125,7 @@ class Settings {
 
   /// The timestamp (in UTC) when the current study was started on this phone.
   /// This timestamp is save on the phone the first time a study is started.
-  Future<DateTime?> get studyStartTimestamp async {
+  Future<DateTime> get studyStartTimestamp async {
     assert(_preferences != null,
         "Setting is not initialized. Call 'Setting().init()'' first.");
     if (_studyStartTimestamp == null) {
@@ -137,7 +137,7 @@ class Settings {
             _studyStartTimestampKey, _studyStartTimestamp.toString());
       }
     }
-    return _studyStartTimestamp;
+    return _studyStartTimestamp!;
   }
 
   Future<void> initFilesystem() async {
