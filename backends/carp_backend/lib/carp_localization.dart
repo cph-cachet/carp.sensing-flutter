@@ -7,11 +7,11 @@ class CarpLocalizations {
 
   CarpLocalizations(this.locale);
 
-  static CarpLocalizations of(BuildContext context) {
+  static CarpLocalizations? of(BuildContext context) {
     return Localizations.of<CarpLocalizations>(context, CarpLocalizations);
   }
 
-  Map<String, String> _localizedStrings;
+  Map<String, String>? _localizedStrings;
 
   Future load() async {
     _localizedStrings = await CarpResourceManager().getLocalizations(locale);
@@ -21,8 +21,8 @@ class CarpLocalizations {
 
   /// Get the translation for [key] to this [locale].
   /// If [key] is not translated, [key] is returned.
-  String translate(String key) =>
-      (_localizedStrings.containsKey(key)) ? _localizedStrings[key] : key;
+  String? translate(String key) =>
+      (_localizedStrings!.containsKey(key)) ? _localizedStrings![key] : key;
 
   // Static member to have a simple access to the delegate from the MaterialApp
   static const LocalizationsDelegate<CarpLocalizations> delegate =

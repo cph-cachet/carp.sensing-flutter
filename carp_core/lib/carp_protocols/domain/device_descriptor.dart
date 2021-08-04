@@ -18,7 +18,7 @@ class DeviceDescriptor extends Serializable {
   DeviceDescriptor({
     required this.roleName,
     this.isMasterDevice = false,
-    this.supportedDataTypes = const [],
+    this.supportedDataTypes,
   }) : super();
 
   /// The device type identifier
@@ -55,7 +55,7 @@ class DeviceDescriptor extends Serializable {
 class MasterDeviceDescriptor extends DeviceDescriptor {
   MasterDeviceDescriptor({
     required String roleName,
-    List<String> supportedDataTypes = const [],
+    List<String>? supportedDataTypes,
   }) : super(
           roleName: roleName,
           isMasterDevice: true,
@@ -79,7 +79,7 @@ class CustomProtocolDevice extends MasterDeviceDescriptor {
   /// If [roleName] is not specified, then the  [DEFAULT_ROLENAME] is used.
   CustomProtocolDevice({
     String roleName = DEFAULT_ROLENAME,
-    List<String> supportedDataTypes = const [],
+    List<String>? supportedDataTypes,
   }) : super(
           roleName: roleName,
           supportedDataTypes: supportedDataTypes,
@@ -106,7 +106,7 @@ class Smartphone extends MasterDeviceDescriptor {
   /// If [roleName] is not specified, then the [DEFAULT_ROLENAME] is used.
   Smartphone({
     String roleName = DEFAULT_ROLENAME,
-    List<String> supportedDataTypes = const [],
+    List<String>? supportedDataTypes,
   }) : super(
           roleName: roleName,
           supportedDataTypes: supportedDataTypes,
@@ -123,7 +123,7 @@ class Smartphone extends MasterDeviceDescriptor {
 class AltBeacon extends DeviceDescriptor {
   AltBeacon({
     String roleName = 'AltBeacon',
-    List<String> supportedDataTypes = const [],
+    List<String>? supportedDataTypes,
   }) : super(
           roleName: roleName,
           isMasterDevice: false,

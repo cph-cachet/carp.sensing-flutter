@@ -1,3 +1,6 @@
+## 0.30.1
+* fix of json serialization bugs
+
 ## 0.30.0
 * upgrade to null-safety
 

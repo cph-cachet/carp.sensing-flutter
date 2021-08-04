@@ -24,9 +24,9 @@ abstract class ResourceManager {
 
   /// The latest downloaded informed consent document.
   ///
-  /// `null` if no consent has been downloaded yet. Use the [getInformedConsent] t
+  /// `null` if no consent has been downloaded yet. Use the [getInformedConsent]
   /// method to get the informed consent document from CARP.
-  RPOrderedTask get informedConsent;
+  RPOrderedTask? get informedConsent;
 
   /// Get the informed consent to be shown for this study.
   ///
@@ -37,7 +37,7 @@ abstract class ResourceManager {
   /// domain model.
   ///
   /// If there is no informed consent, `null` is returned.
-  Future<RPOrderedTask> getInformedConsent();
+  Future<RPOrderedTask?> getInformedConsent();
 
   /// Set the informed consent to be used for this study.
   Future<bool> setInformedConsent(RPOrderedTask informedConsent);
@@ -57,7 +57,7 @@ abstract class ResourceManager {
   /// For example, the Danish translation is named `da`
   ///
   /// If there is no language resouce, `null` is returned.
-  Future<Map<String, String>> getLocalizations(Locale locale);
+  Future<Map<String, String>?> getLocalizations(Locale locale);
 
   /// Set localization mapping for the specified [locale].
   ///
@@ -87,7 +87,8 @@ class CarpResourceManager implements ResourceManager {
   factory CarpResourceManager() => _instance;
 
   CarpResourceManager._() {
-    RPOrderedTask('', []); // to initialize json serialization for RP classes
+    // to initialize json serialization for RP classes
+    RPOrderedTask(identifier: '', steps: []);
   }
 
   @override
@@ -101,10 +102,10 @@ class CarpResourceManager implements ResourceManager {
   static const String INFORMED_CONSENT_PATH = 'resources/informed_consent';
 
   @override
-  RPOrderedTask informedConsent;
+  RPOrderedTask? informedConsent;
 
   @override
-  Future<RPOrderedTask> getInformedConsent() async {
+  Future<RPOrderedTask?> getInformedConsent() async {
     assert(CarpService().isConfigured,
         "CARP Service has not been configured - call 'CarpService().configure()' first.");
     assert(CarpService().currentUser != null,
@@ -113,8 +114,9 @@ class CarpResourceManager implements ResourceManager {
     info(
         'Getting informed consent document from path : $INFORMED_CONSENT_PATH');
 
-    RPOrderedTask('', []); // to initialize json serialization for RP classes
-    DocumentSnapshot document =
+    // initialize json serialization for RP classes
+    RPOrderedTask(identifier: '', steps: []);
+    DocumentSnapshot? document =
         await CarpService().document(INFORMED_CONSENT_PATH).get();
     info('Informed consent downloaded : $document');
 
@@ -136,10 +138,9 @@ class CarpResourceManager implements ResourceManager {
     this.informedConsent = informedConsent;
     DocumentReference reference = CarpService().document(INFORMED_CONSENT_PATH);
     await reference.get();
-    DocumentSnapshot document =
-        await reference.setData(informedConsent.toJson());
+    await reference.setData(informedConsent.toJson());
 
-    return (document != null);
+    return true;
   }
 
   @override
@@ -152,7 +153,7 @@ class CarpResourceManager implements ResourceManager {
 
     DocumentReference reference = CarpService().document(INFORMED_CONSENT_PATH);
     await reference.delete();
-    DocumentSnapshot document =
+    DocumentSnapshot? document =
         await CarpService().document(INFORMED_CONSENT_PATH).get();
 
     return (document == null);
@@ -170,21 +171,20 @@ class CarpResourceManager implements ResourceManager {
       '$LOCALIZATION_CONSENT_PATH${locale.languageCode}';
 
   @override
-  Future<Map<String, String>> getLocalizations(Locale locale) async {
+  Future<Map<String, String>?> getLocalizations(Locale locale) async {
     assert(CarpService().isConfigured,
         "CARP Service has not been configured - call 'CarpService().configure()' first.");
     assert(CarpService().currentUser != null,
         "No user is authenticated - call 'CarpService().authenticate()' first.");
 
     info('Getting language locale from path : ${getLocalizationsPath(locale)}');
-    DocumentSnapshot document =
+    DocumentSnapshot? document =
         await CarpService().document(getLocalizationsPath(locale)).get();
 
     if (document != null)
-      return document.data
-          ?.map((key, value) => MapEntry(key, value.toString()));
-
-    return null;
+      return document.data.map((key, value) => MapEntry(key, value.toString()));
+    else
+      return null;
   }
 
   @override
@@ -200,9 +200,9 @@ class CarpResourceManager implements ResourceManager {
     DocumentReference reference =
         CarpService().document(getLocalizationsPath(locale));
     await reference.get(); //check if this already exists
-    DocumentSnapshot document = await reference.setData(localizations);
+    await reference.setData(localizations);
 
-    return (document != null);
+    return true;
   }
 
   @override
@@ -217,7 +217,7 @@ class CarpResourceManager implements ResourceManager {
     DocumentReference reference =
         CarpService().document(getLocalizationsPath(locale));
     await reference.delete();
-    DocumentSnapshot document =
+    DocumentSnapshot? document =
         await CarpService().document(getLocalizationsPath(locale)).get();
 
     return (document == null);

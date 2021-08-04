@@ -20,7 +20,8 @@ abstract class DeploymentService {
 
   /// Remove study deployments with the given [studyDeploymentIds].
   ///
-  /// Returns the IDs of study deployments which were removed.
+  /// Returns the IDs of study deployments which were removed (empty set
+  /// if none were removed).
   /// IDs for which no study deployment exists are ignored.
   Future<Set<String>> removeStudyDeployments(Set<String> studyDeploymentIds);
 
