@@ -1,3 +1,7 @@
+## 0.30.0
+* upgrade to null-safety
+* more robust error messages in `dryrun`
+
 ## 0.21.3
 * [PR #192](https://github.com/cph-cachet/carp.sensing-flutter/pull/192)
 

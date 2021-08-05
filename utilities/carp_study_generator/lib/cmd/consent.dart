@@ -3,8 +3,8 @@ part of carp_study_generator;
 /// A [Command] that take the informed consent specified in the file
 /// `consent/InformedConsent.dart` and uploads it to the CARP server.
 class ConsentCommand extends AbstractCommand {
-  String _consentJson;
-  RPOrderedTask _consent;
+  String? _consentJson;
+  RPOrderedTask? _consent;
 
   ConsentCommand() : super();
 
@@ -13,7 +13,7 @@ class ConsentCommand extends AbstractCommand {
       print('Reading the informed consent from file: $consentPath');
       _consentJson = File(consentPath).readAsStringSync();
     }
-    return _consentJson;
+    return _consentJson!;
   }
 
   RPOrderedTask get informedConsent {
@@ -22,7 +22,7 @@ class ConsentCommand extends AbstractCommand {
       _consent = RPOrderedTask.fromJson(
           json.decode(consentJson) as Map<String, dynamic>);
     }
-    return _consent;
+    return _consent!;
   }
 
   @override

@@ -24,41 +24,58 @@ class DryRunCommand extends AbstractCommand {
       issues++;
     }
 
-    String protocolJson;
+    String? protocolJson;
     try {
       protocolJson = File(protocolPath).readAsStringSync();
       print('\x1B[32m[✓]\x1B[0m Protocol path \t $protocolPath');
     } catch (error) {
-      print('\x1B[31m[!]\x1B[0m Protocol path \t ${errorToString(error)}');
-      print(' - $error');
-      issues++;
-    }
-    try {
-      CAMSStudyProtocol protocol = CAMSStudyProtocol.fromJson(
-          json.decode(protocolJson) as Map<String, dynamic>);
-      print('\x1B[32m[✓]\x1B[0m Protocol parse \t name: ${protocol.name}');
-    } catch (error) {
-      print('\x1B[31m[!]\x1B[0m Protocol parse \t ${errorToString(error)}');
+      print(
+          '\x1B[31m[!]\x1B[0m Protocol path \t Could not read protocol path from carpspec.yaml - has this been specified?');
+      //print('$error');
       issues++;
     }
 
-    String consentJson;
+    if (protocolJson != null) {
+      try {
+        StudyProtocol protocol = StudyProtocol.fromJson(
+            json.decode(protocolJson) as Map<String, dynamic>);
+        print('\x1B[32m[✓]\x1B[0m Protocol parse \t name: ${protocol.name}');
+      } catch (error) {
+        print(
+            '\x1B[31m[!]\x1B[0m Protocol parse \t Error parsing protocol json - ${errorToString(error)}');
+        issues++;
+      }
+    } else {
+      print('\x1B[31m[!]\x1B[0m Protocol parse \t No protocol to parse');
+      issues++;
+    }
+
+    String? consentJson;
     try {
       consentJson = File(consentPath).readAsStringSync();
       print('\x1B[32m[✓]\x1B[0m Consent path \t $consentPath');
     } catch (error) {
-      print('\x1B[31m[!]\x1B[0m Consent path \t ${errorToString(error)}');
-      issues++;
-    }
-    try {
-      RPOrderedTask.fromJson(json.decode(consentJson) as Map<String, dynamic>);
-      print('\x1B[32m[✓]\x1B[0m Consent parse');
-    } catch (error) {
-      print('\x1B[31m[!]\x1B[0m Consent parse \t ${errorToString(error)}');
+      print(
+          '\x1B[31m[!]\x1B[0m Consent path \t Could not read consent path from carpspec.yaml - has this been specified?');
       issues++;
     }
 
-    String locale, path;
+    if (consentJson != null) {
+      try {
+        RPOrderedTask.fromJson(
+            json.decode(consentJson) as Map<String, dynamic>);
+        print('\x1B[32m[✓]\x1B[0m Consent parse');
+      } catch (error) {
+        print(
+            '\x1B[31m[!]\x1B[0m Consent parse \t Error parsing consent json - ${errorToString(error)}');
+        issues++;
+      }
+    } else {
+      print('\x1B[31m[!]\x1B[0m Consent parse \t No consent to parse');
+      issues++;
+    }
+
+    String locale = '', path = '';
     try {
       locales.forEach((element) {
         locale = element.toString();
