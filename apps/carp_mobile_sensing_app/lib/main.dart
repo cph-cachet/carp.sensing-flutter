@@ -15,8 +15,7 @@ import 'package:carp_audio_package/audio.dart';
 
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
-// TODO - move back when carp_backend is in null-safe version
-// import 'package:carp_backend/carp_backend.dart';
+import 'package:carp_backend/carp_backend.dart';
 
 part 'src/app.dart';
 part 'src/sensing/sensing.dart';

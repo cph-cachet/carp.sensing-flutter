@@ -8,8 +8,7 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_esense_package/esense.dart';
 import 'package:carp_context_package/context.dart';
 import 'package:carp_audio_package/audio.dart';
-// TODO - move back when carp_backend is in null-safe version
-// import 'package:carp_backend/carp_backend.dart';
+import 'package:carp_backend/carp_backend.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
 
@@ -87,10 +86,8 @@ void main() {
     });
   });
 
-  // TODO - move back when carp_backend is in null-safe version
-  /*
   CarpApp app;
-  CarpUser user;
+  late CarpUser user;
   CarpStudyProtocolManager manager = CarpStudyProtocolManager();
 
   group("CARP Study Protocol Manager", () {
@@ -119,8 +116,7 @@ void main() {
     });
 
     test('- get study protocol', () async {
-      CAMSStudyProtocol study =
-          await manager.getStudyProtocol(testDeploymentId);
+      StudyProtocol study = await manager.getStudyProtocol(testDeploymentId);
       print('study: $study');
       print(_encode(study));
     }, skip: false);
@@ -136,5 +132,4 @@ void main() {
       skip: false,
     );
   });
-  */
 }

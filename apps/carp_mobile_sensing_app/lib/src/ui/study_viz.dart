@@ -230,14 +230,13 @@ class _MeasureLine extends StatelessWidget {
         .add(Text(measure.toString(), style: themeData.textTheme.caption));
 
     final List<Widget> rowChildren = [];
-    if (icon != null) {
-      rowChildren.add(SizedBox(
-          width: 72.0,
-          child: IconButton(
-            icon: icon,
-            onPressed: null,
-          )));
-    }
+    rowChildren.add(SizedBox(
+        width: 72.0,
+        child: IconButton(
+          icon: icon,
+          onPressed: null,
+        )));
+
     rowChildren.addAll([
       Expanded(
           child: Column(

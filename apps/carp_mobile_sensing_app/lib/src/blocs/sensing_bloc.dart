@@ -2,7 +2,7 @@ part of mobile_sensing_app;
 
 class SensingBLoC {
   /// The id of the currently running study deployment. Typical set based on an invitation.
-  /// `null` if no deployment have been created.
+  /// `null` if no deployment have been specified.
   String? studyDeploymentId;
 
   CAMSMasterDeviceDeployment? get deployment => Sensing().deployment;
