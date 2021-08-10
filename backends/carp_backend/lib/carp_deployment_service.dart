@@ -8,7 +8,7 @@
 part of carp_backend;
 
 /// A local (in-memory) [DeploymentService] that works with the [CarpStudyProtocolManager]
-/// to handle a [MasterDeviceDeployment] based on a [CAMSStudyProtocol], which is
+/// to handle a [MasterDeviceDeployment] based on a [StudyProtocol], which is
 /// store as a custom protocol on the CARP server.
 ///
 /// This deployment service basically reads a [CAMSStudyProtocol] as a custom

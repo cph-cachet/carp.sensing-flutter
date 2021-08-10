@@ -8,16 +8,13 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:carp_core/carp_protocols/carp_core_protocols.dart';
-import 'package:carp_core/carp_deployment/carp_core_deployment.dart';
-import 'package:carp_core/carp_data/carp_core_data.dart';
-import 'package:carp_core/carp_client/carp_core_client.dart';
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 /// This is an example of how to set up a study by using the `common`
 /// sampling schema. Used in the README file.
 void example_1() async {
-  // Create a study protocol
+  // create a study protocol
   StudyProtocol protocol = StudyProtocol(
     ownerId: 'AB',
     name: 'Track patient movement',

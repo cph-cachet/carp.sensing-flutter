@@ -205,7 +205,9 @@ class StudyDeploymentController extends StudyRuntime {
   void disablePowerAwareness() => _battery.stop();
 
   /// Resume this controller, i.e. resume data collection according to the
-  /// specified [deployment] and [_samplingSchema].
+  /// parameters specified in [configure].
+  ///
+  /// [configure] must be called before resuming sampling.
   void resume() {
     info('Resuming data sampling ...');
     super.resume();
