@@ -16,8 +16,6 @@ abstract class _ESenseProbe extends StreamProbe {
     assert(measure is ESenseMeasure);
     super.onInitialize(measure);
     deviceName = (measure as ESenseMeasure).deviceName;
-    assert(deviceName != null,
-        'Must specify a non-null device name for the eSense device.');
     samplingRate = measure.samplingRate;
 
     // if you want to get the connection events when connecting,
@@ -31,7 +29,6 @@ abstract class _ESenseProbe extends StreamProbe {
           // this is a hack! - don't know why, but the sensorEvents stream
           // needs a kick in the ass to get started...
           ESenseManager().sensorEvents.listen(null);
-          // ESenseManager().eSenseEvents.listen(null);
           // if the device (re)connects, then restart the sampling
           this.restart();
           break;

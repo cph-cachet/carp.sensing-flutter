@@ -369,7 +369,7 @@ void recurrentScheduledTriggerExample() {
 void study_controller_example() async {
   // create and configure a client manager for this phone
   SmartPhoneClientManager client = SmartPhoneClientManager();
-  client.configure();
+  await client.configure();
 
   StudyDeploymentController controller =
       await client.addStudy('1234', 'master_phone');

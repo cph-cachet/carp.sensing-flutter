@@ -1,3 +1,6 @@
+## 0.30.1
+* upgrade to `esense_flutter: ^0.4.2`
+
 ## 0.30.0
 * upgrade to null-safety
 * update to `carp_mobile_sensing` v. 0.30.1

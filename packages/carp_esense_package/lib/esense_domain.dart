@@ -30,7 +30,11 @@ class ESenseMeasure extends CAMSMeasure {
     required this.deviceName,
     this.samplingRate = 10,
   }) : super(
-            type: type, name: name, description: description, enabled: enabled);
+          type: type,
+          name: name,
+          description: description,
+          enabled: enabled,
+        );
 
   Function get fromJsonFunction => _$ESenseMeasureFromJson;
   factory ESenseMeasure.fromJson(Map<String, dynamic> json) =>
