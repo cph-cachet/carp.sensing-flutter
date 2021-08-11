@@ -28,13 +28,12 @@ class HTTPRetry {
             print('${e.runtimeType} - Retrying to SEND ${request.url}'),
       );
 
-  /// Sends an HTTP GET request with the given headers to the given URL, which can
-  /// be a [Uri] or a [String].
-  Future<http.Response> get(url, {Map<String, String> headers}) async =>
+  /// Sends an HTTP GET request with the given [headers] to the given [url].
+  Future<http.Response> get(String url, {Map<String, String>? headers}) async =>
       await retry(
         () => http
             .get(
-              Uri.encodeFull(url),
+              Uri.parse(Uri.encodeFull(url)),
               headers: headers,
             )
             .timeout(Duration(seconds: 5)),
@@ -44,15 +43,18 @@ class HTTPRetry {
         onRetry: (e) => print('${e.runtimeType} - Retrying to GET $url'),
       );
 
-  /// Sends an HTTP POST request with the given headers and body to the given URL,
-  /// which can be a [Uri] or a [String].
-  Future<http.Response> post(url,
-      {Map<String, String> headers, body, Encoding encoding}) async {
+  /// Sends an HTTP POST request with the given [headers] and [body] to the given [url].
+  Future<http.Response> post(
+    String url, {
+    Map<String, String>? headers,
+    body,
+    Encoding? encoding,
+  }) async {
     // calling the http POST method using the retry approach
     final http.Response response = await retry(
       () => http
           .post(
-            Uri.encodeFull(url),
+            Uri.parse(Uri.encodeFull(url)),
             headers: headers,
             body: body,
             encoding: encoding,
@@ -66,15 +68,18 @@ class HTTPRetry {
     return response;
   }
 
-  /// Sends an HTTP PUT request with the given headers and body to the given URL,
-  /// which can be a [Uri] or a [String].
-  Future<http.Response> put(url,
-      {Map<String, String> headers, body, Encoding encoding}) async {
+  /// Sends an HTTP PUT request with the given [headers] and [body] to the given [url].
+  Future<http.Response> put(
+    String url, {
+    Map<String, String>? headers,
+    body,
+    Encoding? encoding,
+  }) async {
     // calling the http PUT method using the retry approach
     final http.Response response = await retry(
       () => http
           .put(
-            Uri.encodeFull(url),
+            Uri.parse(Uri.encodeFull(url)),
             headers: headers,
             body: body,
             encoding: encoding,
@@ -88,14 +93,16 @@ class HTTPRetry {
     return response;
   }
 
-  /// Sends an HTTP DELETE request with the given headers to the given URL, which
-  /// can be a [Uri] or a [String].
-  Future<http.Response> delete(url, {Map<String, String> headers}) async {
+  /// Sends an HTTP DELETE request with the given [headers] to the given [url].
+  Future<http.Response> delete(
+    String url, {
+    Map<String, String>? headers,
+  }) async {
     // calling the http DELETE method using the retry approach
     final http.Response response = await retry(
       () => http
           .delete(
-            Uri.encodeFull(url),
+            Uri.parse(Uri.encodeFull(url)),
             headers: headers,
           )
           .timeout(Duration(seconds: 5)),

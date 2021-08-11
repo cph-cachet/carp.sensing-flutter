@@ -11,7 +11,7 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
         WIFI,
       ];
 
-  Probe create(String type) {
+  Probe? create(String type) {
     switch (type) {
       case CONNECTIVITY:
         return ConnectivityProbe();
@@ -27,50 +27,51 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
   void onRegister() {
     // registering default privacy functions
     TransformerSchemaRegistry()
-        .lookup(PrivacySchema.DEFAULT)
+        .lookup(PrivacySchema.DEFAULT)!
         .add(BLUETOOTH, blueetothNameAnoymizer);
     TransformerSchemaRegistry()
-        .lookup(PrivacySchema.DEFAULT)
+        .lookup(PrivacySchema.DEFAULT)!
         .add(WIFI, wifiNameAnoymizer);
   }
 
   // Bluetooth scan requires access to location - for some strange reason...
   List<Permission> get permissions => [Permission.location];
 
-  SamplingSchema get common => SamplingSchema()
-    ..type = SamplingSchemaType.common
-    ..name = 'Common (default) connectivity sampling schema'
-    ..powerAware = true
-    ..measures.addEntries([
-      MapEntry(
-          CONNECTIVITY,
-          CAMSMeasure(
-            type: CONNECTIVITY,
-            name: 'Connectivity (wifi/3G/...)',
-            description: "Collects the phone's connectivity status",
-            enabled: true,
-          )),
-      MapEntry(
-          BLUETOOTH,
-          PeriodicMeasure(
-            type: BLUETOOTH,
-            name: 'Nearby Devices',
-            description: "Collects nearby devices using Bluetooth LE",
-            enabled: true,
-            frequency: Duration(minutes: 10),
-            duration: Duration(seconds: 5),
-          )),
-      MapEntry(
-          WIFI,
-          PeriodicMeasure(
-            type: WIFI,
-            name: 'Wifi network names',
-            description: "Collects the SSID and BSSID of nearby wifi network",
-            enabled: true,
-            frequency: Duration(minutes: 10),
-            duration: Duration(seconds: 5),
-          )),
-    ]);
+  SamplingSchema get common => SamplingSchema(
+        type: SamplingSchemaType.common,
+        name: 'Common (default) connectivity sampling schema',
+        powerAware: true,
+      )..measures.addEntries([
+          MapEntry(
+              CONNECTIVITY,
+              CAMSMeasure(
+                type: CONNECTIVITY,
+                name: 'Connectivity (wifi/3G/...)',
+                description: "Collects the phone's connectivity status",
+                enabled: true,
+              )),
+          MapEntry(
+              BLUETOOTH,
+              PeriodicMeasure(
+                type: BLUETOOTH,
+                name: 'Nearby Devices',
+                description: "Collects nearby devices using Bluetooth LE",
+                enabled: true,
+                frequency: Duration(minutes: 10),
+                duration: Duration(seconds: 5),
+              )),
+          MapEntry(
+              WIFI,
+              PeriodicMeasure(
+                type: WIFI,
+                name: 'Wifi network names',
+                description:
+                    "Collects the SSID and BSSID of nearby wifi network",
+                enabled: true,
+                frequency: Duration(minutes: 10),
+                duration: Duration(seconds: 5),
+              )),
+        ]);
 
   SamplingSchema get light {
     SamplingSchema light = common
@@ -91,32 +92,32 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
 
   SamplingSchema get normal => common..type = SamplingSchemaType.normal;
 
-  SamplingSchema get debug => SamplingSchema()
-    ..type = SamplingSchemaType.debug
-    ..name = 'Debug connectivity sampling'
-    ..powerAware = true
-    ..measures.addEntries([
-      MapEntry(
-          CONNECTIVITY,
-          CAMSMeasure(
-            type: CONNECTIVITY,
-            enabled: true,
-          )),
-      MapEntry(
-          BLUETOOTH,
-          PeriodicMeasure(
-            type: BLUETOOTH,
-            enabled: true,
-            frequency: Duration(minutes: 1),
-            duration: Duration(seconds: 2),
-          )),
-      MapEntry(
-          WIFI,
-          PeriodicMeasure(
-            type: WIFI,
-            enabled: true,
-            frequency: Duration(minutes: 1),
-            duration: Duration(seconds: 5),
-          )),
-    ]);
+  SamplingSchema get debug => SamplingSchema(
+        type: SamplingSchemaType.debug,
+        name: 'Debug connectivity sampling',
+        powerAware: true,
+      )..measures.addEntries([
+          MapEntry(
+              CONNECTIVITY,
+              CAMSMeasure(
+                type: CONNECTIVITY,
+                enabled: true,
+              )),
+          MapEntry(
+              BLUETOOTH,
+              PeriodicMeasure(
+                type: BLUETOOTH,
+                enabled: true,
+                frequency: Duration(minutes: 1),
+                duration: Duration(seconds: 2),
+              )),
+          MapEntry(
+              WIFI,
+              PeriodicMeasure(
+                type: WIFI,
+                enabled: true,
+                frequency: Duration(minutes: 1),
+                duration: Duration(seconds: 5),
+              )),
+        ]);
 }

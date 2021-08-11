@@ -1,4 +1,4 @@
-import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_firebase_backend/carp_firebase_backend.dart';
 
 void main() {
@@ -22,8 +22,10 @@ void main() {
           zip: true,
           encrypt: false);
 
-  MasterDeviceDeployment deployment = MasterDeviceDeployment()
-    ..dataEndPoint = storageEndPoint;
+  MasterDeviceDeployment deployment = MasterDeviceDeployment(
+    deviceDescriptor: Smartphone(),
+    configuration: DeviceRegistration(),
+  )..dataEndPoint = storageEndPoint;
 
   print(deployment);
 

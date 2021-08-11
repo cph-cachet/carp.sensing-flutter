@@ -1,3 +1,9 @@
+## 0.30.1
+* fix of json serialization bugs
+
+## 0.30.0
+* upgrade to null-safety
+
 ## 0.21.5
 * Removed unnecesary JSON object from `CreateStudyDeployment` request ([PR#200](https://github.com/cph-cachet/carp.sensing-flutter/pull/200)).
 
@@ -35,4 +41,3 @@
 
 ## 0.20.0
 * 1st extraction of core library from the CAMS package
-

@@ -23,7 +23,7 @@ class LoadingPage extends StatelessWidget {
     //  * LOCAL
     //  * CARP_STAGGING
     //  * CARP_PRODUCTION
-    await bloc.initialize(DeploymentMode.CARP_STAGING);
+    await bloc.initialize(DeploymentMode.LOCAL);
 
     // only initialize the CARP backend bloc, if needed
     if (bloc.deploymentMode != DeploymentMode.LOCAL) {
@@ -54,7 +54,7 @@ class LoadingPage extends StatelessWidget {
 }
 
 class CarpMobileSensingApp extends StatefulWidget {
-  CarpMobileSensingApp({Key key}) : super(key: key);
+  CarpMobileSensingApp({Key? key}) : super(key: key);
   CarpMobileSensingAppState createState() => CarpMobileSensingAppState();
 }
 

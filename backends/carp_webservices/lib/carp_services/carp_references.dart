@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2020 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2018-2021 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -11,9 +11,7 @@ part of carp_services;
 abstract class CarpReference {
   CarpBaseService service;
 
-  CarpReference._(this.service) {
-    assert(service != null, 'A valid CARP service must be provided.');
-  }
+  CarpReference._(this.service);
 
   Map<String, String> get headers => service.headers;
 }

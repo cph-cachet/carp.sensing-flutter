@@ -1,27 +1,12 @@
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:test/test.dart';
 
 void main() {
   setUp(() {
     // This is a hack. Need to create some serialization object in order to intialize searialization.
-    StudyProtocol();
+    tmp = DomainJsonFactory();
   });
-
-//  /// Test if we can load a raw JSON from a file and convert it into a [Study] object with all its [Task]s and [Measure]s.
-//  /// Note that this test, tests if a [Study] object can be create 'from scratch', i.e. without having been created before.
-//  test('Raw JSON string -> Study object', () async {
-//    String plainStudyJson = File('test/study_1234.json').readAsStringSync();
-//
-//    Study plainStudy = Study.fromJson(json.decode(plainStudyJson) as Map<String, dynamic>);
-//    expect(plainStudy.id, '1234');
-//
-//    print(toJsonString(plainStudy));
-//  });
-//
-//  /// Test template.
-//  test('...', () {
-//    // test template
-//  });
 
   group('Trigger Tests', () {
     test(' - RecurrentScheduledTrigger - success', () {
@@ -163,11 +148,10 @@ void main() {
       print(t);
       print(toJsonString(t));
 
-      t = CronScheduledTrigger(triggerId: 'id', minute: 0, hour: 12);
+      t = CronScheduledTrigger(minute: 0, hour: 12);
       print(t);
 
       t = CronScheduledTrigger(
-          triggerId: 'id',
           minute: 10,
           hour: 12,
           day: 5,
@@ -182,13 +166,21 @@ void main() {
         // endTime: Time(hour: 20, minute: 0),
         startTime: Time(hour: 8, minute: 56),
         endTime: Time(hour: 20, minute: 10),
+        // startTime: Time(hour: 8, minute: 0),
+        // endTime: Time(hour: 8, minute: 30),
         minNumberOfTriggers: 2,
         maxNumberOfTriggers: 8,
       );
       print(toJsonString(t));
 
       RandomRecurrentTriggerExecutor ex = RandomRecurrentTriggerExecutor(t);
-      print(ex.samplingTimes);
+      List<Time> times = ex.samplingTimes;
+      print(times);
+      times.forEach((time) {
+        print(time);
+        assert(time.isAfter(t.startTime));
+        assert(time.isBefore(t.endTime));
+      });
     });
 
     /// Test template.

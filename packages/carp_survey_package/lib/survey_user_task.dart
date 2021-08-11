@@ -17,8 +17,8 @@ class SurveyUserTask extends UserTask {
   static const String DEMOGRAPHIC_SURVEY_TYPE = 'demographic';
   static const String WHO5_SURVEY_TYPE = 'who5';
 
-  BuildContext _context;
-  SurveyProbe _surveyProbe;
+  late BuildContext _context;
+  late SurveyProbe _surveyProbe;
 
   SurveyUserTask(AppTaskExecutor ex) : super(ex) {
     // looking for the survey probe (i.e. a [SurveyProbe]) in this executor
@@ -39,7 +39,7 @@ class SurveyUserTask extends UserTask {
     _surveyProbe.onSurveyCancel = _onSurveyCancel;
 
     super.onStart(context);
-    executor?.resume();
+    executor.resume();
   }
 
   void _onSurveyTriggered(SurveyPage surveyPage) {
@@ -50,12 +50,12 @@ class SurveyUserTask extends UserTask {
   }
 
   void _onSurveySubmit(RPTaskResult result) {
-    executor?.pause();
+    executor.pause();
     super.onDone(_context);
   }
 
-  void _onSurveyCancel([RPTaskResult result]) {
-    executor?.pause();
+  void _onSurveyCancel([RPTaskResult? result]) {
+    executor.pause();
     super.onCancel(_context);
   }
 }

@@ -10,11 +10,11 @@ part of carp_services;
 class AuthenticationDialog {
   var _usernameKey = GlobalKey<FormFieldState>();
   var _passwordKey = GlobalKey<FormFieldState>();
-  String get _username => _usernameKey.currentState?.value?.trim();
-  String get _password => _passwordKey.currentState?.value?.trim();
+  String? get _username => _usernameKey.currentState?.value?.trim();
+  String? get _password => _passwordKey.currentState?.value?.trim();
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
-  Alert build(context, {String username}) => Alert(
+  Alert build(context, {String? username}) => Alert(
           context: context,
           title: "Sign in with CARP",
           image: Padding(
@@ -76,7 +76,7 @@ class AuthenticationDialog {
               onPressed: () async {
                 try {
                   await CarpService()
-                      .authenticate(username: _username, password: _password);
+                      .authenticate(username: _username!, password: _password!);
                   Navigator.pop(context);
                 } catch (exception) {
                   warning('Exception in authentication dialog - $exception');

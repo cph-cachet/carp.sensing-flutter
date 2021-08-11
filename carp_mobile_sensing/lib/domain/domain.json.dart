@@ -10,8 +10,8 @@ void _registerFromJsonFunctions() {
   // Protocol classes
   // FromJsonFactory().register(CAMSStudyProtocol());
   FromJsonFactory().register(StudyProtocolReponsible());
-  FromJsonFactory().register(DataEndPoint());
-  FromJsonFactory().register(FileDataEndPoint());
+  FromJsonFactory().register(DataEndPoint(type: ''));
+  FromJsonFactory().register(FileDataEndPoint(dataFormat: ''));
   FromJsonFactory().register(StudyProtocolDescription());
 
   // Task classes
@@ -19,7 +19,6 @@ void _registerFromJsonFunctions() {
   FromJsonFactory().register(AppTask(type: 'ignored'));
 
   // Trigger classes
-  FromJsonFactory().register(CAMSTrigger());
   FromJsonFactory().register(ImmediateTrigger());
   FromJsonFactory().register(DelayedTrigger());
   FromJsonFactory().register(PeriodicTrigger(period: Duration()));
@@ -29,21 +28,22 @@ void _registerFromJsonFunctions() {
       RecurrentScheduledTrigger(type: RecurrentType.daily, time: Time()));
   FromJsonFactory().register(SamplingEventTrigger(measureType: 'ignored'));
   FromJsonFactory().register(ConditionalEvent({}));
-  FromJsonFactory()
-      .register(ConditionalSamplingEventTrigger(measureType: 'ignored'));
-  FromJsonFactory().register(RandomRecurrentTrigger());
+  FromJsonFactory().register(ConditionalSamplingEventTrigger(
+      measureType: 'ignored', resumeCondition: (DataPoint dataPoint) => true));
+  FromJsonFactory().register(
+      RandomRecurrentTrigger(startTime: Time(hour: 1), endTime: Time(hour: 2)));
 
   // Measure classes
   FromJsonFactory().register(CAMSMeasure(type: 'ignored'));
-  FromJsonFactory().register(PeriodicMeasure(type: 'ignored'));
+  FromJsonFactory().register(
+      PeriodicMeasure(type: 'ignored', frequency: Duration(seconds: 1)));
   FromJsonFactory().register(MarkedMeasure(type: 'ignored'));
 }
 
-// class DomainJsonFactory {
-//   static final DomainJsonFactory _instance = DomainJsonFactory._();
+class DomainJsonFactory {
+  DomainJsonFactory() {
+    _registerFromJsonFunctions();
+  }
+}
 
-//   factory DomainJsonFactory() => _instance;
-//   DomainJsonFactory._() {
-//     registerFromJsonFunctions();
-//   }
-// }
+var tmp = DomainJsonFactory();

@@ -96,39 +96,37 @@ Below is a small primer in the use of CAMS.
 
 Following [`carp_core`](https://pub.dev/documentation/carp_core/latest/), a CAMS study can be configured, deployed, executed, and used in different steps:
 
-1. Define a [`StudyProtcol`](https://pub.dev/documentation/carp_core/latest/carp_core/StudyProtocol-class.html).
-2. Deploy this protocol to a [`DeploymentService`](https://pub.dev/documentation/carp_core/latest/carp_core/DeploymentService-class.html).
-3. Get a study deployment for the phone and start executing this study deployment using a [`SmartPhoneClientManager`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/SmartPhoneClientManager-class.html).
-4. Use the generated data locally in the app or specify how and where to store or upload it using a [`DataEndPoint](https://pub.dev/documentation/carp_core_deployment/latest/domain/DataEndPoint-class.html).
+1. Define a [`StudyProtcol`](https://pub.dev/documentation/carp_core/latest/carp_core_protocols/StudyProtocol-class.html).
+2. Deploy this protocol to a [`DeploymentService`](https://pub.dev/documentation/carp_core/latest/carp_core_deployment/DeploymentService-class.html).
+3. Get a study deployment for the phone and start executing this study deployment using a [`SmartPhoneClientManager`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SmartPhoneClientManager-class.html).
+4. Use the generated data locally in the app or specify how and where to store or upload it using a [`DataEndPoint`](https://pub.dev/documentation/carp_core/latest/carp_core_deployment/DataEndPoint-class.html).
 
 Note that as a mobile sensing framework running on a phone, CAMS could be limited to support 3-4. However, to support the 'full cycle', CAMS also supports 1-2. This allows for local creation, deployment, and execution of study protocols (which in many [applications](https://carp.cachet.dk/#applications) have shown to be useful).
 
 ### Defining a `StudyProtcol`
 
-In CAMS, a sensing protocol is configured in a [`CAMSStudyProtocol`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/CAMSStudyProtocol-class.html). 
+In CAMS, a sensing protocol is configured in a [`StudyProtocol`](https://pub.dev/documentation/carp_core/latest/carp_core_protocols/StudyProtocol-class.html). 
 Below is a simple example of how to set up a protocol that sense step counts (`pedometer`), ambient light (`light`), screen activity (`screen`), and power consumption (`battery`). 
 
 ```dart
-// Import package
+// import package
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 void example() async {
-  // create a protocol using a local file to store data
-  CAMSStudyProtocol protocol = CAMSStudyProtocol()
-    ..name = 'Track patient movement'
-    ..owner = StudyProtocolReponsible(
-      id: 'AB',
-      name: 'Alex Boyon',
-      email: 'alex@uni.dk',
-    );
+  // create a study protocol
+  StudyProtocol protocol = StudyProtocol(
+    ownerId: 'user@dtu.dk',
+    name: 'Tracking',
+    description: 'Tracking patient movment',
+  );
 
   // define which devices are used for data collection
   // in this case, its only this smartphone
   Smartphone phone = Smartphone();
   protocol.addMasterDevice(phone);
 
-  // Add an automatic task that immediately starts collecting
+  // add an automatic task that immediately starts collecting
   // step counts, ambient light, screen activity, and battery level
   protocol.addTriggeredTask(
       ImmediateTrigger(),
@@ -159,24 +157,24 @@ Sampling can be configured in a very sophisticated ways, by specifying different
 
 A device deployment specifies how a study protocol is executed on a specific device - in this case a smartphone - including how to store or upload the sampled data.
 
-A `StudyProtocol` can be deployed to a `DeploymentService` which handles the deployment of protocols for different devices. CAMS comes with a simple deployment service (the `SmartphoneDeploymentService`) which runs locally on the phone. This can be used to deploy a protocol and get back a [`MasterDeviceDeployment`](https://pub.dev/documentation/carp_core/latest/carp_core/MasterDeviceDeployment-class.html), which can be executed on the phone.
+A `StudyProtocol` can be deployed to a `DeploymentService` which handles the deployment of protocols for different devices. CAMS comes with a simple deployment service (the `SmartphoneDeploymentService`) which runs locally on the phone. This can be used to deploy a protocol and get back a [`MasterDeviceDeployment`](https://pub.dev/documentation/carp_core/latest/carp_core_deployment/MasterDeviceDeployment-class.html), which can be executed on the phone.
 Per default, the local device deployment service configures the deployment to store sampled data in a file, using a `FileDataEndPoint`. 
 
 ```dart
-  ...
+...
 
-  // deploy this protocol using the on-phone deployment service
-  StudyDeploymentStatus status =
-      await SmartphoneDeploymentService().createStudyDeployment(protocol);
+// deploy this protocol using the on-phone deployment service
+StudyDeploymentStatus status =
+  await SmartphoneDeploymentService().createStudyDeployment(protocol);
 
-  ...
+...
 
-  // you can get the device deployment configuration for this phone....
-  // ... but this is rarely needed - see below
-  CAMSMasterDeviceDeployment deployment = await SmartphoneDeploymentService()
-      .getDeviceDeployment(status.studyDeploymentId);
+// you can get the device deployment configuration for this phone....
+// ... but this is rarely needed - see below
+CAMSMasterDeviceDeployment deployment = await SmartphoneDeploymentService()
+  .getDeviceDeployment(status.studyDeploymentId);
 
-  ...
+...
 ```
 
 
@@ -187,26 +185,26 @@ This client manager is able to create a [`StudyDeploymentController`](https://pu
 
 
 ```dart
-  ...
+...
 
-  String studyDeploymentId = ... // any id obtained e.g. from an invitation
-  String deviceRolename = ... // the rolename of this phone in the protocol;
+String studyDeploymentId = ... // any id obtained e.g. from an invitation
+String deviceRolename = ... // the rolename of this phone in the protocol;
 
-  // create and configure a client manager for this phone
-  SmartPhoneClientManager client = SmartPhoneClientManager();
-  await client.configure();
+// create and configure a client manager for this phone
+SmartPhoneClientManager client = SmartPhoneClientManager();
+await client.configure();
 
-  // create a study runtime controller to execute and control this deployment
-  StudyDeploymentController controller = await client.addStudy(studyDeploymentId, deviceRolename);
+// create a study runtime controller to execute and control this deployment
+StudyDeploymentController controller = await client.addStudy(studyDeploymentId,deviceRolename);
 
-  // configure the controller and resume sampling
-  await controller.configure();
-  controller.resume();
+// configure the controller and resume sampling
+await controller.configure();
+controller.resume();
 
-  // listening and print all data collected by the controller
-  controller.data.forEach(print);
+// listening and print all data collected by the controller
+controller.data.forEach(print);
 
-  ...
+...
 ```
 
 A `SmartPhoneClientManager` per default uses the local `SmartphoneDeploymentService` which per default saves data in json to zipped files (see more on [data backends on the wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki/C.-Data-Backends)). 
@@ -215,26 +213,26 @@ If you want to use another data backend, this can be configured in two ways:
 (ii) as part of the configuration - like this:
 
 ```dart
-  ...
+...
 
-  // you can change the deployment locally, before starting the
-  // execution of it - e.g. setting another data endpoint.
-  controller.deployment.dataEndPoint = FileDataEndPoint(
+// you can change the deployment locally, before starting the
+// execution of it - e.g. setting another data endpoint.
+controller.deployment.dataEndPoint = FileDataEndPoint(
+  bufferSize: 500 * 1000,
+  zip: true,
+  encrypt: false,
+);
+
+// or you can configure the controller with a data endpoint 
+// this has the same effect as above
+await controller.configure(
+  dataEndPoint: FileDataEndPoint(
     bufferSize: 500 * 1000,
     zip: true,
     encrypt: false,
-  );
-
-  // or you can configure the controller with a data endpoint 
-  // this has the same effect as above
-  await controller.configure(
-    dataEndPoint: FileDataEndPoint(
-      bufferSize: 500 * 1000,
-      zip: true,
-      encrypt: false,
-    ),
-  );
-  ...
+  ),
+);
+...
 ```
 
 Note that the data endpoint has to be set **before** sampling is resumed.
@@ -246,41 +244,41 @@ You can write your own `DataEndPoint` definitions and coresponding `DataManager`
 The generated data can be accessed and used in the app. Access to data is done by listening on the `data` streams from the study deployment controller or some of its underlying executors or probes. Below are a few examples on how to listen on data streams.
 
 ```dart
-  ...
+...
 
-  // listening to the stream of all data events from the controller
-  controller.data.listen((dataPoint) => print(dataPoint));
+// listening to the stream of all data events from the controller
+controller.data.listen((dataPoint) => print(dataPoint));
 
-  // listen only on CARP events
-  controller.data
-      .where((dataPoint) => dataPoint.data.format.namespace == NameSpace.CARP)
-      .listen((event) => print(event));
+// listen only on CARP events
+controller.data
+  .where((dataPoint) => dataPoint.data.format.namespace == NameSpace.CARP)
+  .listen((event) => print(event));
 
-  // listen on LIGHT events only
-  controller.data
-      .where((dataPoint) =>
-          dataPoint.data.format.toString() == SensorSamplingPackage.LIGHT)
-      .listen((event) => print(event));
+// listen on LIGHT events only
+controller.data
+  .where((dataPoint) =>
+      dataPoint.data.format.toString() == SensorSamplingPackage.LIGHT)
+  .listen((event) => print(event));
 
-  // listening on the data generated from all probes 
-  // this is equivalent to the statement above
-  ProbeRegistry()
-      .eventsByType(SensorSamplingPackage.LIGHT)
-      .listen((dataPoint) => print(dataPoint));
+// listening on the data generated from all probes 
+// this is equivalent to the statement above
+ProbeRegistry()
+  .eventsByType(SensorSamplingPackage.LIGHT)
+  .listen((dataPoint) => print(dataPoint));
 
-  // map events to JSON and then print
-  controller.data
-      .map((dataPoint) => dataPoint.toJson())
-      .listen((event) => print(event));
+// map events to JSON and then print
+controller.data
+  .map((dataPoint) => dataPoint.toJson())
+  .listen((event) => print(event));
 
-  // subscribe to the stream of data
-  StreamSubscription<DataPoint> subscription =
-      controller.data.listen((DataPoint dataPoint) {
+// subscribe to the stream of data
+StreamSubscription<DataPoint> subscription =
+  controller.data.listen((DataPoint dataPoint) {
     // do something w. the datum, e.g. print the json
     print(JsonEncoder.withIndent(' ').convert(dataPoint));
   });
 
-  ...
+...
 ```
 
 ### Controlling the sampling of data
@@ -289,35 +287,35 @@ The execution of sensing can be controlled on runtime in a number of ways. For e
 
 
 ```dart
-  ...
+...
 
-  // sampling can be paused and resumed
-  controller.pause();
-  controller.resume();
+// sampling can be paused and resumed
+controller.pause();
+controller.resume();
 
-  // pause specific probe(s)
-  ProbeRegistry()
-      .lookup(SensorSamplingPackage.ACCELEROMETER)
-      .forEach((probe) => probe.pause());
+// pause specific probe(s)
+ProbeRegistry()
+  .lookup(SensorSamplingPackage.ACCELEROMETER)
+  .forEach((probe) => probe.pause());
 
-  // adapt measures on the go - calling hasChanged() force a restart of
-  // the probe, which will load the new measure
-  lightMeasure
-    ..frequency = const Duration(seconds: 12)
-    ..duration = const Duration(milliseconds: 500)
-    ..hasChanged();
+// adapt measures on the go - calling hasChanged() force a restart of
+// the probe, which will load the new measure
+lightMeasure
+  ..frequency = const Duration(seconds: 12)
+  ..duration = const Duration(milliseconds: 500)
+  ..hasChanged();
 
-  // disabling a measure will pause the probe
-  lightMeasure
-    ..enabled = false
-    ..hasChanged();
+// disabling a measure will pause the probe
+lightMeasure
+  ..enabled = false
+  ..hasChanged();
 
-  // once the sampling has to stop, e.g. in a Flutter dispose() methods, call stop.
-  // note that once a sampling has stopped, it cannot be restarted.
-  controller.stop();
-  subscription.cancel();
+// once the sampling has to stop, e.g. in a Flutter dispose() methods, call stop.
+// note that once a sampling has stopped, it cannot be restarted.
+controller.stop();
+await subscription.cancel();
 
-  ...
+...
 ```
 
 ## Features and bugs

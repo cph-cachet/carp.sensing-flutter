@@ -13,8 +13,8 @@ class WeatherDatum extends Datum {
   DataFormat get format =>
       DataFormat.fromString(ContextSamplingPackage.WEATHER);
 
-  String country, areaName, weatherMain, weatherDescription;
-  DateTime date, sunrise, sunset;
+  String? country, areaName, weatherMain, weatherDescription;
+  DateTime? date, sunrise, sunset;
   var latitude,
       longitude,
       pressure,
@@ -40,8 +40,8 @@ class WeatherDatum extends Datum {
   String toString() =>
       super.toString() +
       ',place: $areaName ($country), '
-      'date: $date, '
-      'weather: $weatherMain, $weatherDescription, '
-      'temp: $temperature, temp (min): $tempMin, temp (max): $tempMax, '
-      'sunrise: $sunrise, sunset: $sunset';
+          'date: $date, '
+          'weather: $weatherMain, $weatherDescription, '
+          'temp: $temperature, temp (min): $tempMin, temp (max): $tempMax, '
+          'sunrise: $sunrise, sunset: $sunset';
 }

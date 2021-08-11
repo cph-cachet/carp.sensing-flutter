@@ -19,9 +19,8 @@ class ESenseDevice extends DeviceDescriptor {
 
   ESenseDevice({
     String roleName = DEFAULT_ROLENAME,
-    List<String> supportedDataTypes,
-  })
-      : super(
+    List<String>? supportedDataTypes,
+  }) : super(
           roleName: roleName,
           isMasterDevice: false,
           supportedDataTypes: supportedDataTypes,
@@ -29,7 +28,7 @@ class ESenseDevice extends DeviceDescriptor {
 
   Function get fromJsonFunction => _$ESenseDeviceFromJson;
   factory ESenseDevice.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as ESenseDevice;
   Map<String, dynamic> toJson() => _$ESenseDeviceToJson(this);
 }
 
@@ -37,7 +36,7 @@ class ESenseDeviceManager extends DeviceManager {
   // the last known voltage level of the eSense device
   double _voltageLevel = 4;
 
-  String get id => ESenseManager().eSenseDeviceName;
+  String get id => ESenseManager().eSenseDeviceName!;
 
   void initialize(String type) {
     super.initialize(type);
@@ -56,7 +55,7 @@ class ESenseDeviceManager extends DeviceManager {
               .where((event) => event is BatteryRead)
               .listen((event) {
             debug('$runtimeType :: eSense event : $event');
-            _voltageLevel = (event as BatteryRead).voltage;
+            _voltageLevel = (event as BatteryRead).voltage ?? 4;
           });
 
           // set up a timer that asks for the voltage level

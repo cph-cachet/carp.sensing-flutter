@@ -6,15 +6,15 @@ library domain;
 
 import 'dart:io';
 import 'dart:convert';
-import 'package:device_info/device_info.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:meta/meta.dart';
 import 'package:uuid/uuid.dart';
 
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
-part 'study_protocol.dart';
-part 'protocol_responsible.dart';
+// part 'study_protocol.dart';
+part 'study_protocol_description.dart';
 part 'data_endpoint.dart';
 part 'sampling_schema.dart';
 part 'measures.dart';

@@ -8,12 +8,13 @@ part of carp_apps_package;
 
 AppsDatum _$AppsDatumFromJson(Map<String, dynamic> json) {
   return AppsDatum()
-    ..id = json['id'] as String
+    ..id = json['id'] as String?
     ..timestamp = json['timestamp'] == null
         ? null
         : DateTime.parse(json['timestamp'] as String)
-    ..installedApps =
-        (json['installed_apps'] as List)?.map((e) => e as String)?.toList();
+    ..installedApps = (json['installed_apps'] as List<dynamic>)
+        .map((e) => e as String)
+        .toList();
 }
 
 Map<String, dynamic> _$AppsDatumToJson(AppsDatum instance) {
@@ -27,22 +28,20 @@ Map<String, dynamic> _$AppsDatumToJson(AppsDatum instance) {
 
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
-  writeNotNull('installed_apps', instance.installedApps);
+  val['installed_apps'] = instance.installedApps;
   return val;
 }
 
 AppUsageDatum _$AppUsageDatumFromJson(Map<String, dynamic> json) {
-  return AppUsageDatum()
-    ..id = json['id'] as String
+  return AppUsageDatum(
+    DateTime.parse(json['start'] as String),
+    DateTime.parse(json['end'] as String),
+  )
+    ..id = json['id'] as String?
     ..timestamp = json['timestamp'] == null
         ? null
         : DateTime.parse(json['timestamp'] as String)
-    ..start =
-        json['start'] == null ? null : DateTime.parse(json['start'] as String)
-    ..end = json['end'] == null ? null : DateTime.parse(json['end'] as String)
-    ..usage = (json['usage'] as Map<String, dynamic>)?.map(
-      (k, e) => MapEntry(k, e as int),
-    );
+    ..usage = Map<String, int>.from(json['usage'] as Map);
 }
 
 Map<String, dynamic> _$AppUsageDatumToJson(AppUsageDatum instance) {
@@ -56,8 +55,8 @@ Map<String, dynamic> _$AppUsageDatumToJson(AppUsageDatum instance) {
 
   writeNotNull('id', instance.id);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
-  writeNotNull('start', instance.start?.toIso8601String());
-  writeNotNull('end', instance.end?.toIso8601String());
-  writeNotNull('usage', instance.usage);
+  val['start'] = instance.start.toIso8601String();
+  val['end'] = instance.end.toIso8601String();
+  val['usage'] = instance.usage;
   return val;
 }

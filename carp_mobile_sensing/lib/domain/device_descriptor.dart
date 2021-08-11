@@ -17,13 +17,13 @@ class ConnectableDeviceDescriptor extends DeviceDescriptor {
   String deviceType;
 
   /// A printer-fiendly name of this device.
-  String name;
+  String? name;
 
   ConnectableDeviceDescriptor({
-    this.deviceType,
+    required this.deviceType,
+    required String roleName,
+    List<String> supportedDataTypes = const [],
     this.name,
-    String roleName,
-    List<String> supportedDataTypes,
   }) : super(
           roleName: roleName,
           isMasterDevice: false,
@@ -36,7 +36,7 @@ class ConnectableDeviceDescriptor extends DeviceDescriptor {
 
   Function get fromJsonFunction => _$ConnectableDeviceDescriptorFromJson;
   factory ConnectableDeviceDescriptor.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as ConnectableDeviceDescriptor;
   Map<String, dynamic> toJson() => _$ConnectableDeviceDescriptorToJson(this);
 
   String toString() =>

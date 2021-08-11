@@ -14,57 +14,56 @@ class CarpUser {
   String username;
 
   /// Unique CARP ID
-  int id;
+  int? id;
 
   /// The CARP account id.
-  String accountId;
+  String? accountId;
 
   /// Is this user activated in any studies?
-  bool isActivated;
+  bool? isActivated;
 
   /// The user's email
-  String email;
+  String? email;
 
   /// User's first name
-  String firstName;
+  String? firstName;
 
   /// User's last name
-  String lastName;
+  String? lastName;
 
   /// Mobile phone number
-  String phone;
+  String? phone;
 
   /// Department of the the user (e.g. CACHET)
-  String department;
+  String? department;
 
   /// Organization of the the user (e.g. DTU)
-  String organization;
+  String? organization;
 
   /// Timestamp for agreeing to the informed consent
-  DateTime termsAgreed;
+  DateTime? termsAgreed;
 
   /// Timestamp for the creation of this user.
-  DateTime created;
+  DateTime? created;
 
   /// The list of roles that this user has in CARP.
   List<String> role = [];
 
   /// The OAuth 2.0 [OAuthToken] for this user, once authenticated to CARP
-  OAuthToken token;
+  OAuthToken? token;
 
   CarpUser({
-    @required this.username,
+    required this.username,
     this.id,
     this.accountId,
     this.firstName,
     this.lastName,
+    this.isActivated = true,
     this.phone,
     this.email,
     this.department,
     this.organization,
-  }) {
-    accountId ??= Uuid().v4();
-  }
+  });
 
   /// Set or update the authenticated [OAuthToken] token for this user.
   void authenticated(OAuthToken token) => this.token = token;
@@ -73,12 +72,12 @@ class CarpUser {
   bool get isAuthenticated => (token != null);
 
   /// Returns true if the user's email is verified.
-  bool get isEmailVerified => ((username != null) && (token != null));
+  bool get isEmailVerified => (token != null);
 
-  /// Obtains the OAuth token for the current user, forcing a [refresh] i
-  /// f desired.
-  Future<OAuthToken> getOAuthToken({bool refresh = false}) async {
-    if (CarpService() == null)
+  /// Obtains the OAuth token for the current user, forcing a [refresh]
+  /// if desired.
+  Future<OAuthToken?> getOAuthToken({bool refresh = false}) async {
+    if (!CarpService().isConfigured)
       throw new CarpServiceException(
           message:
               "CARP Service not initialized. Call 'CarpService.configure()' first.");
@@ -88,7 +87,7 @@ class CarpUser {
               "OAuth token is null. Call 'CarpService.authenticate()' first.");
 
     // check if we need to refresh the token.
-    if (token.hasExpired || refresh) {
+    if (token!.hasExpired || refresh) {
       this.token = await CarpService().refresh();
     }
 
@@ -104,10 +103,10 @@ class CarpUser {
   /// Manually refreshes the data of the current user (e.g., [fullName],
   /// [telephone], etc.) from the CARP web service.
   Future reload() async {
-    if (CarpService() == null)
+    if (!CarpService().isConfigured)
       throw new CarpServiceException(
           message:
-              "CARP Service not initialized. Call 'CarpService.configure()' first.");
+              "CARP Service not configured. Call 'CarpService.configure()' first.");
 
     CarpService().getCurrentUserProfile();
   }

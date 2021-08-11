@@ -1,11 +1,13 @@
 {
-  "name": "Context package test",
-  "creationDate": "2021-05-07 15:53:02.770393Z",
+  "ownerId": "alex@uni.dk",
+  "name": "Audio package test",
+  "creationDate": "2021-08-03T13:19:31.624424Z",
   "masterDevices": [
    {
     "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
     "isMasterDevice": true,
     "roleName": "masterphone",
+    "supportedDataTypes": [],
     "samplingConfiguration": {}
    }
   ],
@@ -13,13 +15,15 @@
   "connections": [],
   "triggers": {
    "0": {
-    "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
+    "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger",
+    "sourceDeviceRoleName": "",
+    "requiresMasterDevice": false
    }
   },
   "tasks": [
    {
     "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
-    "name": "Task #5",
+    "name": "Task #3",
     "measures": [
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
@@ -36,7 +40,8 @@
       "description": "Collects information about use of memory.",
       "enabled": true,
       "configuration": {},
-      "frequency": 60000000
+      "frequency": 60000000,
+      "duration": 2000000
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
@@ -133,16 +138,9 @@
   "triggeredTasks": [
    {
     "triggerId": 0,
-    "taskName": "Task #5",
+    "taskName": "Task #3",
     "targetDeviceRoleName": "masterphone"
    }
   ],
-  "expectedParticipantData": [],
-  "owner": {
-   "$type": "ProtocolOwner",
-   "id": "AB",
-   "name": "Alex Boyon",
-   "email": "alex@uni.dk"
-  },
-  "ownerId": "AB"
+  "expectedParticipantData": []
  }

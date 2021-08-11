@@ -27,13 +27,12 @@ class RPTaskMeasure extends CAMSMeasure {
   RPTask surveyTask;
 
   RPTaskMeasure({
-    @required String type,
-    String name,
-    String description,
-    bool enabled,
-    this.surveyTask,
-  })
-      : super(
+    required String type,
+    String? name,
+    String? description,
+    bool enabled = true,
+    required this.surveyTask,
+  }) : super(
           type: type,
           name: name,
           description: description,
@@ -42,7 +41,7 @@ class RPTaskMeasure extends CAMSMeasure {
 
   Function get fromJsonFunction => _$RPTaskMeasureFromJson;
   factory RPTaskMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as RPTaskMeasure;
   Map<String, dynamic> toJson() => _$RPTaskMeasureToJson(this);
 }
 
@@ -51,7 +50,7 @@ class RPTaskMeasure extends CAMSMeasure {
 class RPTaskResultDatum extends Datum {
   DataFormat get format => DataFormat.fromString(SurveySamplingPackage.SURVEY);
 
-  RPTaskResult surveyResult;
+  RPTaskResult? surveyResult;
 
   RPTaskResultDatum([this.surveyResult]);
 

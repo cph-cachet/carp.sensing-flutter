@@ -14,15 +14,15 @@ class Datum extends Data {
   DataFormat get format => DataFormat.fromString(CAMSDataType.NONE);
 
   /// An identifier for this [Datum], unique across all data generated.
-  String id;
+  String? id;
 
   /// The UTC timestamp when this data was generated on the device.
-  DateTime timestamp;
+  DateTime? timestamp;
 
   /// Create a datum.
   ///
   /// If [multiDatum] is true, then multiple [Datum] objects are stored in a
-  /// list with the same header.
+  /// list with the same [id] and header.
   Datum({bool multiDatum = false}) : super() {
     // add a timestamp to each datum if part of a list of many
     timestamp = (multiDatum) ? DateTime.now().toUtc() : null;
@@ -30,7 +30,7 @@ class Datum extends Data {
     id = (!multiDatum) ? Uuid().v1() : null;
   }
 
-  bool equivalentTo(ConditionalEvent event) => false;
+  bool equivalentTo(ConditionalEvent? event) => false;
 
   /// Create a [Datum] from a JSON map.
   factory Datum.fromJson(Map<String, dynamic> json) => _$DatumFromJson(json);
@@ -52,7 +52,7 @@ class StringDatum extends Datum {
   String str;
 
   /// Create a [StringDatum] based on a simple string data item.
-  StringDatum([this.str]) : super();
+  StringDatum(this.str) : super();
 
   /// Create a [StringDatum] from a JSON map.
   factory StringDatum.fromJson(Map<String, dynamic> json) =>
@@ -72,7 +72,7 @@ class MapDatum extends Datum {
   Map<String, String> map;
 
   /// Create a [MapDatum] from a map of string => string.
-  MapDatum([this.map]) : super();
+  MapDatum(this.map) : super();
 
   /// Create a [MapDatum] from a JSON map.
   factory MapDatum.fromJson(Map<String, dynamic> json) =>
@@ -91,7 +91,7 @@ class ErrorDatum extends Datum {
   String message;
 
   /// Create a [ErrorDatum] from an error message.
-  ErrorDatum([this.message]) : super();
+  ErrorDatum(this.message) : super();
 
   /// Create a [ErrorDatum] from a JSON map.
   factory ErrorDatum.fromJson(Map<String, dynamic> json) =>
@@ -111,7 +111,7 @@ class FileDatum extends Datum {
   /// This is used by e.g. a data manager to get and manage the file on
   /// the phone.
   @JsonKey(ignore: true)
-  String path;
+  String? path;
 
   /// The name to the attached file.
   String filename;
@@ -121,11 +121,11 @@ class FileDatum extends Datum {
   bool upload = true;
 
   /// Metadata for this file as a map of string key-value pairs.
-  Map<String, String> metadata = <String, String>{};
+  Map<String, String>? metadata = <String, String>{};
 
   /// Create a new [FileDatum] based the file path and whether it is
   /// to be uploaded or not.
-  FileDatum({this.filename, this.upload = true}) : super();
+  FileDatum({required this.filename, this.upload = true}) : super();
 
   /// Create a [FileDatum] from a JSON map.
   factory FileDatum.fromJson(Map<String, dynamic> json) =>

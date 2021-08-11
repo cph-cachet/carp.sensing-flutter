@@ -11,13 +11,13 @@ part of carp_core_client;
 
 /// Collects [Data] for a single device.
 abstract class DeviceDataCollector {
-  String _type;
+  String? _type;
 
   /// The type of this device
-  String get type => _type;
+  String? get type => _type;
 
   /// The registration for this device.
-  DeviceRegistration deviceRegistration;
+  DeviceRegistration? deviceRegistration;
 
   /// The set of data types defining which data can be collected on this device.
   Set<String> get supportedDataTypes;
@@ -48,7 +48,8 @@ abstract class DeviceRegistry {
   Map<String, DeviceDataCollector> get devices;
 
   /// Returns the [DeviceDataCollector] of the given [deviceType].
-  DeviceDataCollector getDevice(String deviceType);
+  /// Returns `null` if no device is found.
+  DeviceDataCollector? getDevice(String deviceType);
 
   /// Returns true if this factory supports a device of the given [deviceType].
   /// Note that even though a certain type of device is supported, its device
@@ -62,7 +63,8 @@ abstract class DeviceRegistry {
   void registerDevice(String deviceType, DeviceDataCollector collector);
 
   /// Create and register a [DeviceDataCollector] based on a [deviceType].
-  Future<DeviceDataCollector> createDevice(String deviceType);
+  /// Returns `null` if a device cannot be created.
+  Future<DeviceDataCollector?> createDevice(String deviceType);
 
   // Remove the device of [deviceType] from this registry.
   void unregisterDevice(String deviceType);

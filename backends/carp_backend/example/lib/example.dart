@@ -1,6 +1,7 @@
 import 'package:carp_backend/carp_backend.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:research_package/model.dart';
 
@@ -37,7 +38,7 @@ void main() async {
       await CarpParticipationService().getActiveParticipationInvitations();
 
   // use the first (i.e. latest) invitation
-  String studyDeploymentId = invitations[0].studyDeploymentId;
+  String studyDeploymentId = invitations[0].studyDeploymentId!;
 
   // -----------------------------------------------
   // EXAMPLE OF GETTING A STUDY PROTOCOL FROM CARP
@@ -66,7 +67,7 @@ void main() async {
   );
   await client.configure();
 
-  String deviceRolename = status?.masterDeviceStatus?.device?.roleName;
+  String deviceRolename = status.masterDeviceStatus!.device.roleName;
 
   // add and deploy this deployment using its rolename
   StudyDeploymentController controller =
@@ -132,7 +133,7 @@ void main() async {
   MasterDeviceDeployment deployment =
       await CarpDeploymentService().getDeviceDeploymentFor(
     status.studyDeploymentId,
-    status.masterDeviceStatus.device.roleName,
+    status.masterDeviceStatus!.device.roleName,
   );
 
   /// change a master device deployment to use another data endpoint before
@@ -151,19 +152,21 @@ void main() async {
   icManager.initialize();
 
   // get the informed consent as a RP ordered task
-  RPOrderedTask informedConsent = await icManager.getInformedConsent();
+  RPOrderedTask? informedConsent = await icManager.getInformedConsent();
 
   print(informedConsent);
 
   // upload another informed consent to CARP
-  RPOrderedTask anotherInformedConsent = RPOrderedTask('12', [
+  RPOrderedTask anotherInformedConsent =
+      RPOrderedTask(identifier: '12', steps: [
     RPInstructionStep(
-      "1",
+      identifier: "1",
       title: "Welcome!",
     )..text = "Welcome to this study! ",
-    RPCompletionStep("2")
-      ..title = "Thank You!"
-      ..text = "We saved your consent document.",
+    RPCompletionStep(
+        identifier: "2",
+        title: "Thank You!",
+        text: "We saved your consent document."),
   ]);
   await icManager.setInformedConsent(anotherInformedConsent);
 }

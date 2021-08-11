@@ -8,23 +8,17 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 /// This is an example of how to set up a study by using the `common`
 /// sampling schema. Used in the README file.
 void example_1() async {
-  // Create a study protocol
-  CAMSStudyProtocol protocol = CAMSStudyProtocol()
-    ..name = 'Track patient movement'
-    ..responsible = StudyProtocolReponsible(
-      id: 'AB',
-      name: 'Alex Boyon',
-      email: 'alex@uni.dk',
-    )
-    ..protocolDescription = StudyProtocolDescription(
-        title: 'Test Study',
-        purpose: 'For testing purposes',
-        description: 'Testing');
+  // create a study protocol
+  StudyProtocol protocol = StudyProtocol(
+    ownerId: 'AB',
+    name: 'Track patient movement',
+  );
 
   // define which devices are used for data collection
   // in this case, its only this smartphone
@@ -71,14 +65,12 @@ void example_1() async {
 
 /// This is a more elaborate example used in the README.md file.
 void example_2() async {
-  // Create a study using a local file to store data
-  CAMSStudyProtocol protocol = CAMSStudyProtocol()
-    ..name = 'Track patient movement'
-    ..responsible = StudyProtocolReponsible(
-      id: 'AB',
-      name: 'Alex Boyon',
-      email: 'alex@uni.dk',
-    );
+  // Create a study protocol
+  StudyProtocol protocol = StudyProtocol(
+    ownerId: 'user@dtu.dk',
+    name: 'Tracking',
+    description: 'Tracking patient movment',
+  );
 
   // define which devices are used for data collection
   // in this case, its only this smartphone
@@ -116,7 +108,7 @@ void example_2() async {
 
   // create and configure a client manager for this phone
   SmartPhoneClientManager client = SmartPhoneClientManager();
-  client.configure();
+  await client.configure();
 
   StudyDeploymentController controller =
       await client.addStudy(studyDeploymentId, deviceRolename);
@@ -198,7 +190,7 @@ void example_2() async {
   // once the sampling has to stop, e.g. in a Flutter dispose() methods, call stop.
   // note that once a sampling has stopped, it cannot be restarted.
   controller.stop();
-  subscription.cancel();
+  await subscription.cancel();
 }
 
 /// Example of device management.
@@ -237,7 +229,7 @@ void example_3() async {
       // (all of the above can actually be handled directly by the CAMSDeploymentService.registerDevice() method)
 
       // register the device in the deployment service
-      SmartphoneDeploymentService()
+      await SmartphoneDeploymentService()
           .registerDevice(studyDeploymentId, deviceRoleName, registration);
     }
   });
@@ -252,20 +244,25 @@ void example_3() async {
 /// An example of how to use the [SamplingSchema] model.
 void samplingSchemaExample() async {
   // creating a sampling schema focused on activity and outdoor context (weather)
-  SamplingSchema activitySchema =
-      SamplingSchema(name: 'Connectivity Sampling Schema', powerAware: true)
-        ..measures.addEntries([
-          MapEntry(
-              SensorSamplingPackage.PEDOMETER,
-              PeriodicMeasure(
-                  type: SensorSamplingPackage.PEDOMETER,
-                  enabled: true,
-                  frequency: const Duration(minutes: 1))),
-          MapEntry(DeviceSamplingPackage.SCREEN,
-              Measure(type: DeviceSamplingPackage.SCREEN)),
-        ]);
+  SamplingSchema activitySchema = SamplingSchema(
+      type: SamplingSchemaType.normal,
+      name: 'Connectivity Sampling Schema',
+      powerAware: true)
+    ..measures.addEntries([
+      MapEntry(
+          SensorSamplingPackage.PEDOMETER,
+          PeriodicMeasure(
+              type: SensorSamplingPackage.PEDOMETER,
+              enabled: true,
+              frequency: const Duration(minutes: 1))),
+      MapEntry(DeviceSamplingPackage.SCREEN,
+          Measure(type: DeviceSamplingPackage.SCREEN)),
+    ]);
 
-  CAMSStudyProtocol protocol = CAMSStudyProtocol();
+  StudyProtocol protocol = StudyProtocol(
+    ownerId: 'AB',
+    name: 'Track patient movement',
+  );
   Smartphone phone = Smartphone(roleName: 'phone');
   protocol.addMasterDevice(phone);
 
@@ -372,7 +369,7 @@ void recurrentScheduledTriggerExample() {
 void study_controller_example() async {
   // create and configure a client manager for this phone
   SmartPhoneClientManager client = SmartPhoneClientManager();
-  client.configure();
+  await client.configure();
 
   StudyDeploymentController controller =
       await client.addStudy('1234', 'master_phone');
@@ -388,21 +385,24 @@ void study_controller_example() async {
 void app_task_example() async {
   Smartphone phone = Smartphone(roleName: 'phone');
 
-  StudyProtocol protocol = StudyProtocol()
+  StudyProtocol protocol = StudyProtocol(
+    ownerId: 'user@dtu.dk',
+    name: 'Tracking',
+  )
     ..addTriggeredTask(
         ImmediateTrigger(), // collect device info as an app task
         AppTask(
           type: SensingUserTask.ONE_TIME_SENSING_TYPE,
-          title: "Device",
-          description: "Collect device info",
+          title: 'Device',
+          description: 'Collect device info',
         )..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
         phone)
     ..addTriggeredTask(
         ImmediateTrigger(), // start collecting screen events as an app task
         AppTask(
           type: SensingUserTask.SENSING_TYPE,
-          title: "Screen",
-          description: "Collect screen events",
+          title: 'Screen',
+          description: 'Collect screen events',
         )..addMeasure(Measure(type: DeviceSamplingPackage.SCREEN)),
         phone);
 
@@ -462,7 +462,7 @@ void carp_core_client_example() async {
   // which is equivalent to
   client = SmartPhoneClientManager();
 
-  client.configure();
+  await client.configure();
 
   StudyDeploymentController controller =
       await client.addStudy(studyDeploymentId, deviceToUse);
@@ -470,7 +470,7 @@ void carp_core_client_example() async {
   if (controller.status == StudyRuntimeStatus.RegisteringDevices) {
     var connectedDevice = controller.remainingDevicesToRegister.first;
     var connectedRegistration = DeviceRegistration();
-    deploymentService.registerDevice(
+    await deploymentService.registerDevice(
         studyDeploymentId, connectedDevice.roleName, connectedRegistration);
   }
 

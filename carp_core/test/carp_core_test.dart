@@ -2,17 +2,18 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:test/test.dart';
-import 'package:carp_core/carp_common/carp_core_common.dart';
-import 'package:carp_core/carp_protocols/carp_core_protocols.dart';
-import 'package:carp_core/carp_data/carp_core_data.dart';
+import 'package:carp_core/carp_core.dart';
 
 part 'carp_core_test.g.dart';
 
 void main() {
-  StudyProtocol protocol;
+  late StudyProtocol protocol;
 
   setUp(() {
-    protocol = StudyProtocol(ownerId: 'xyz@dtu.dk');
+    protocol = StudyProtocol(
+      ownerId: 'xyz@dtu.dk',
+      name: 'Test Study Protocol',
+    );
 
     // Define which devices are used for data collection.
     Smartphone phone = Smartphone(roleName: 'masterphone');
@@ -110,25 +111,25 @@ void main() {
 /// An example class.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class A extends Serializable {
-  int index;
+  int? index;
 
   A() : super();
 
   Function get fromJsonFunction => _$AFromJson;
   factory A.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as A;
   Map<String, dynamic> toJson() => _$AToJson(this);
 }
 
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class B extends A {
-  String str;
+  String? str;
 
   B() : super();
 
   Function get fromJsonFunction => _$BFromJson;
   factory B.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as B;
   Map<String, dynamic> toJson() => _$BToJson(this);
   String get jsonType => 'dk.cachet.$runtimeType';
 }

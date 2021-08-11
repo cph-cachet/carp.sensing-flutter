@@ -50,11 +50,11 @@ class SimpleInvitationsDialog {
 /// A modal dialog shown a list of [ActiveParticipationInvitation] for the
 /// user to select one from.
 class InvitationsDialog {
-  ActiveParticipationInvitation _selectedInvitation;
+  ActiveParticipationInvitation? _selectedInvitation;
 
   /// The selected invitation.
   /// Returns `null` if no selection is made.
-  ActiveParticipationInvitation get invitation => _selectedInvitation;
+  ActiveParticipationInvitation? get invitation => _selectedInvitation;
 
   Alert build(context, List<ActiveParticipationInvitation> invitations) {
     return Alert(
@@ -86,7 +86,7 @@ class InvitationsDialog {
           color: Color.fromRGBO(234, 91, 12, 1.0),
         ),
         title: Text('${invitation.invitation.name} '
-            '[...${shortDeploymentStudyId(invitation.studyDeploymentId)}]'),
+            '[...${shortDeploymentStudyId(invitation.studyDeploymentId!)}]'),
         subtitle: (invitation.invitation.description.isEmpty)
             ? Text('No description provided...')
             : Text(shortStudyDescription(invitation.invitation.description)),

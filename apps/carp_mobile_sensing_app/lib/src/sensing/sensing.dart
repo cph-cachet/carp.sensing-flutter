@@ -14,34 +14,35 @@ part of mobile_sensing_app;
 /// control the study execution (e.g., resume, pause, stop).
 class Sensing {
   static final Sensing _instance = Sensing._();
-  StudyDeploymentStatus _status;
-  StudyDeploymentController _controller;
+  StudyDeploymentStatus? _status;
+  StudyDeploymentController? _controller;
 
-  DeploymentService deploymentService;
-  SmartPhoneClientManager client;
+  DeploymentService? deploymentService;
+  SmartPhoneClientManager? client;
 
   /// The deployment running on this phone.
-  CAMSMasterDeviceDeployment get deployment => _controller?.deployment;
+  CAMSMasterDeviceDeployment? get deployment =>
+      _controller?.deployment as CAMSMasterDeviceDeployment?;
 
   /// Get the latest status of the study deployment.
-  StudyDeploymentStatus get status => _status;
+  StudyDeploymentStatus? get status => _status;
 
   /// The role name of this device in the deployed study
-  String get deviceRolename => _status?.masterDeviceStatus?.device?.roleName;
+  String? get deviceRolename => _status?.masterDeviceStatus?.device.roleName;
 
   /// The study deployment id of the deployment running on this phone.
-  String get studyDeploymentId => _status?.studyDeploymentId;
+  String? get studyDeploymentId => _status?.studyDeploymentId;
 
   /// The study runtime controller for this deployment
-  StudyDeploymentController get controller => _controller;
+  StudyDeploymentController? get controller => _controller;
 
   /// the list of running - i.e. used - probes in this study.
   List<Probe> get runningProbes =>
-      (_controller != null) ? _controller.executor.probes : [];
+      (_controller != null) ? _controller!.executor!.probes : [];
 
   /// The list of connected devices.
-  List<DeviceManager> get runningDevices =>
-      client?.deviceRegistry?.devices?.values?.toList();
+  List<DeviceManager>? get runningDevices =>
+      (client != null) ? client!.deviceRegistry.devices.values.toList() : [];
 
   /// The singleton sensing instance
   factory Sensing() => _instance;
@@ -81,6 +82,7 @@ class Sensing {
         break;
       case DeploymentMode.CARP_PRODUCTION:
       case DeploymentMode.CARP_STAGING:
+
         // use the CARP deployment service that knows how to download a
         // custom protocol
         deploymentService = CustomProtocolDeploymentService();
@@ -92,15 +94,17 @@ class Sensing {
         //   await CarpService()
         //       .authenticate(username: username, password: password);
 
-        // get the study deployment id
-        // this would normally be done by getting the invitations for this user,
-        // but for demo/testing we're using the deployment id in the 'credentials.dart' file
-        _status = await CustomProtocolDeploymentService()
-            .getStudyDeploymentStatus(bloc.studyDeploymentId);
+        // get the study deployment status based on the studyDeploymentId
+        if (bloc.studyDeploymentId != null) {
+          _status = await CustomProtocolDeploymentService()
+              .getStudyDeploymentStatus(bloc.studyDeploymentId!);
+        } else {
+          warning(
+              '$runtimeType - no study deployment ID has been specified....?');
+        }
 
-        // now register the CARP data manager for uploading data back to CARP
+        // register the CARP data manager for uploading data back to CARP
         DataManagerRegistry().register(CarpDataManager());
-
         break;
     }
 
@@ -109,25 +113,26 @@ class Sensing {
       deploymentService: deploymentService,
       deviceRegistry: DeviceController(),
     );
-    await client.configure();
+    await client!.configure();
 
     // add and deploy this deployment
-    _controller = await client.addStudy(studyDeploymentId, deviceRolename);
+    _controller = await client!.addStudy(studyDeploymentId!, deviceRolename!);
 
     // configure the controller
     if (bloc.deploymentMode == DeploymentMode.LOCAL) {
-      await _controller.configure();
+      await _controller!.configure();
     } else {
       // change the upload to also keep the json files locally
-      await _controller.configure(
-        dataEndPoint: (controller.deployment.dataEndPoint as CarpDataEndPoint)
-          ..deleteWhenUploaded = false,
+      await _controller!.configure(
+        dataEndPoint:
+            (_controller!.deployment!.dataEndPoint as CarpDataEndPoint)
+              ..deleteWhenUploaded = false,
       );
     }
     // controller.resume();
 
     // listening on the data stream and print them as json to the debug console
-    _controller.data.listen((data) => print(toJsonString(data)));
+    _controller!.data.listen((data) => print(toJsonString(data)));
 
     info('$runtimeType initialized');
   }

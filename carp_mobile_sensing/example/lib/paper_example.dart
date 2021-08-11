@@ -1,15 +1,14 @@
 import 'dart:convert';
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 void sensing() async {
   // create a new CAMS study protocol with an owner
-  CAMSStudyProtocol protocol = CAMSStudyProtocol()
-    ..name = 'Track patient movement'
-    ..responsible = StudyProtocolReponsible(
-      id: 'AB',
-      name: 'Alex Boyon',
-      email: 'alex@uni.dk',
-    );
+  StudyProtocol protocol = StudyProtocol(
+    ownerId: 'AB',
+    name: 'patient_tracking',
+    description: 'Track patient movement',
+  );
 
   // define which devices are used for data collection
   // in this case, its only this smartphone

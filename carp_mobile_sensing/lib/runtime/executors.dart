@@ -29,7 +29,7 @@ abstract class Executor extends AbstractProbe {
     executors.forEach((executor) => executor.resume());
   }
 
-  Future onRestart({Measure measure}) async {
+  Future onRestart({Measure? measure}) async {
     executors.forEach((executor) => executor.restart());
   }
 
@@ -47,28 +47,25 @@ abstract class Executor extends AbstractProbe {
 /// For each triggered task in this deployment, it starts a [TriggeredTaskExecutor].
 ///
 /// Note that the [StudyDeploymentExecutor] in itself is a [Probe] and hence work
-/// as a 'super probe'.
-/// This - amongst other things - imply that you can listen to data point
-/// [data] from a study executor.
+/// as a 'super probe'. This - amongst other things - imply that you can listen
+/// to data point from the [data] stream.
 class StudyDeploymentExecutor extends Executor {
   final StreamController<DataPoint> _manualDataPointController =
       StreamController.broadcast();
   CAMSMasterDeviceDeployment get deployment => _deployment;
-  CAMSMasterDeviceDeployment _deployment;
+  late CAMSMasterDeviceDeployment _deployment;
 
   StudyDeploymentExecutor(CAMSMasterDeviceDeployment deployment) : super() {
-    assert(deployment != null,
-        'Cannot initiate a StudyDeploymentExecutor without a MasterDeviceDeployment.');
     _deployment = deployment;
     _group.add(_manualDataPointController.stream);
 
     _deployment.triggeredTasks.forEach((triggeredTask) {
       // get the trigger based on the trigger id
-      Trigger trigger = _deployment.triggers['${triggeredTask.triggerId}'];
+      Trigger trigger = _deployment.triggers['${triggeredTask.triggerId}']!;
       // get the task based on the task name
       // and the set the study deployment id (some probes need this)
-      TaskDescriptor task = _deployment.getTaskByName(triggeredTask.taskName);
-      for (var measure in task?.measures) {
+      TaskDescriptor task = _deployment.getTaskByName(triggeredTask.taskName)!;
+      for (var measure in task.measures) {
         if (measure is CAMSMeasure) {
           measure.studyDeploymentId = _deployment.studyDeploymentId;
         }
@@ -90,7 +87,7 @@ class StudyDeploymentExecutor extends Executor {
   ///
   /// Makes sure to set the user and study id from the deployment configuration.
   Stream<DataPoint> get data => _group.stream.map((dataPoint) => dataPoint
-    ..carpHeader.studyId = deployment.studyId
+    ..carpHeader.studyId = deployment.studyDeploymentId
     ..carpHeader.userId = deployment.userId);
 
   Future onResume() async {
@@ -108,7 +105,7 @@ class StudyDeploymentExecutor extends Executor {
       _manualDataPointController.add(dataPoint);
 
   /// Add a error to the stream of events.
-  void addError(Object error, [StackTrace stacktrace]) =>
+  void addError(Object error, [StackTrace? stacktrace]) =>
       _manualDataPointController.addError(error, stacktrace);
 
   /// Returns a list of the running probes in this study executor.
@@ -131,27 +128,21 @@ class StudyDeploymentExecutor extends Executor {
 /// This is an abstract class. For each specific type of [Trigger],
 /// a corresponding implementation of a [TriggeredTaskExecutor] exists.
 class TriggeredTaskExecutor extends Executor {
-  CAMSTrigger _trigger;
-  TaskDescriptor _task;
-  TriggeredTask _triggeredTask;
+  late Trigger _trigger;
+  late TaskDescriptor _task;
+  late TriggeredTask _triggeredTask;
 
-  CAMSTrigger get trigger => _trigger;
+  Trigger get trigger => _trigger;
   TaskDescriptor get task => _task;
   TriggeredTask get triggeredTask => _triggeredTask;
 
   TriggeredTaskExecutor(
     TriggeredTask triggeredTask,
-    CAMSTrigger trigger,
+    Trigger trigger,
     TaskDescriptor task,
   ) : super() {
-    assert(triggeredTask != null,
-        'Cannot initiate a TriggeredTaskExecutor without a Triggered Task.');
     _triggeredTask = triggeredTask;
-    assert(trigger != null,
-        'Cannot initiate a TriggeredTaskExecutor without a Trigger.');
     _trigger = trigger;
-    assert(task != null,
-        'Cannot initiate a TriggeredTaskExecutor without a Task.');
     _task = task;
 
     // get the trigger executor and add it to this stream

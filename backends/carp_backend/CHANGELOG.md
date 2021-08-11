@@ -1,3 +1,6 @@
+## 0.30.0
+* upgrade to null-safety
+
 ## 0.21.2+1
 * upgrade to `carp_mobile_sensing` and `carp_webservices` v. 0.21.4
 * small fix of missing initialization of RP json serialization

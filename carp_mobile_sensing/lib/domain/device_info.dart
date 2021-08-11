@@ -18,15 +18,15 @@ class DeviceInfo {
   factory DeviceInfo() => _instance;
   DeviceInfo._();
 
-  String platform;
-  String hardware;
-  String deviceID;
-  String deviceName;
-  String deviceManufacturer;
-  String deviceModel;
-  String operatingSystem;
-  String sdk;
-  String release;
+  String? platform;
+  String? hardware;
+  String? deviceID;
+  String? deviceName;
+  String? deviceManufacturer;
+  String? deviceModel;
+  String? operatingSystem;
+  String? sdk;
+  String? release;
 
   /// The device info for this device.
   Map<String, dynamic> deviceData = {};

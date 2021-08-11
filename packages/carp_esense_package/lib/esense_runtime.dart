@@ -9,16 +9,14 @@ part of esense;
 
 abstract class _ESenseProbe extends StreamProbe {
   bool connected = false;
-  String deviceName;
+  String? deviceName;
   int samplingRate = 10;
 
   void onInitialize(Measure measure) {
     assert(measure is ESenseMeasure);
     super.onInitialize(measure);
-    deviceName = (measure as ESenseMeasure)?.deviceName;
-    assert(deviceName != null,
-        'Must specify a non-null device name for the eSense device.');
-    samplingRate ??= (measure as ESenseMeasure)?.samplingRate;
+    deviceName = (measure as ESenseMeasure).deviceName;
+    samplingRate = measure.samplingRate;
 
     // if you want to get the connection events when connecting,
     // set up the listener BEFORE connecting...
@@ -31,7 +29,6 @@ abstract class _ESenseProbe extends StreamProbe {
           // this is a hack! - don't know why, but the sensorEvents stream
           // needs a kick in the ass to get started...
           ESenseManager().sensorEvents.listen(null);
-          // ESenseManager().eSenseEvents.listen(null);
           // if the device (re)connects, then restart the sampling
           this.restart();
           break;
@@ -44,19 +41,19 @@ abstract class _ESenseProbe extends StreamProbe {
     });
 
     ESenseManager().setSamplingRate(samplingRate);
-    ESenseManager().connect(deviceName);
+    ESenseManager().connect(deviceName!);
   }
 }
 
 /// Collects eSense button pressed events. It generates an [ESenseButtonDatum]
 /// every time the button is pressed or released.
 class ESenseButtonProbe extends _ESenseProbe {
-  Stream<Datum> get stream => (ESenseManager().connected)
+  Stream<Datum>? get stream => (ESenseManager().connected)
       ? ESenseManager()
           .eSenseEvents
           .where((event) => event.runtimeType == ButtonEventChanged)
           .map((event) => ESenseButtonDatum(
-              deviceName: deviceName,
+              deviceName: deviceName!,
               pressed: (event as ButtonEventChanged).pressed))
           .asBroadcastStream()
       : null;
@@ -65,11 +62,11 @@ class ESenseButtonProbe extends _ESenseProbe {
 /// Collects eSense sensor events.
 /// It generates an [ESenseSensorDatum] for each sensor event.
 class ESenseSensorProbe extends _ESenseProbe {
-  Stream<Datum> get stream => (ESenseManager().connected)
+  Stream<Datum>? get stream => (ESenseManager().connected)
       ? ESenseManager()
           .sensorEvents
           .map((event) => ESenseSensorDatum.fromSensorEvent(
-              deviceName: deviceName, event: event))
+              deviceName: deviceName!, event: event))
           .asBroadcastStream()
       : null;
 }

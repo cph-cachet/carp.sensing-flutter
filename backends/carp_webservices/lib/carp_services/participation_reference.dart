@@ -14,11 +14,11 @@ part of carp_services;
 ///   - [getParticipantData()] - get participation data from this deployment.
 ///   - [setParticipantData()] - set participation data in this deployment
 class ParticipationReference extends RPCCarpReference {
-  String _studyDeploymentId;
+  String? _studyDeploymentId;
 
   /// The CARP study deployment ID.
-  String get studyDeploymentId =>
-      _studyDeploymentId ?? service.app.studyDeploymentId;
+  String? get studyDeploymentId =>
+      _studyDeploymentId ?? service.app!.studyDeploymentId;
 
   ParticipationReference._(
       CarpParticipationService service, this._studyDeploymentId)
@@ -29,14 +29,14 @@ class ParticipationReference extends RPCCarpReference {
   /// {{PROTOCOL}}://{{SERVER_HOST}}:{{SERVER_PORT}}/api/participation-service
   @override
   String get rpcEndpointUri =>
-      "${service.app.uri.toString()}/api/participation-service";
+      "${service.app!.uri.toString()}/api/participation-service";
 
   /// Get currently set data for all expected participant data in this study
   /// deployment with [studyDeploymentId].
   /// Data which is not set equals null.
   Future<ParticipantData> getParticipantData() async {
-    ParticipantData data = ParticipantData
-        .fromJson(await _rpc(GetParticipantData(studyDeploymentId)));
+    ParticipantData data = ParticipantData.fromJson(
+        await _rpc(GetParticipantData(studyDeploymentId!)));
     return data;
   }
 
@@ -44,8 +44,8 @@ class ParticipationReference extends RPCCarpReference {
   /// Returns all data for the specified study deployment, including the newly set data.
   Future<ParticipantData> setParticipantData(
       String inputDataType, ParticipantData data) async {
-    ParticipantData newData = ParticipantData.fromJson(
-        await _rpc(SetParticipantData(studyDeploymentId, inputDataType, data)));
+    ParticipantData newData = ParticipantData.fromJson(await _rpc(
+        SetParticipantData(studyDeploymentId!, inputDataType, data)));
     return newData;
   }
 }

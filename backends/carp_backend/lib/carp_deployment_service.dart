@@ -8,7 +8,7 @@
 part of carp_backend;
 
 /// A local (in-memory) [DeploymentService] that works with the [CarpStudyProtocolManager]
-/// to handle a [MasterDeviceDeployment] based on a [CAMSStudyProtocol], which is
+/// to handle a [MasterDeviceDeployment] based on a [StudyProtocol], which is
 /// store as a custom protocol on the CARP server.
 ///
 /// This deployment service basically reads a [CAMSStudyProtocol] as a custom
@@ -49,7 +49,7 @@ class CustomProtocolDeploymentService implements DeploymentService {
   factory CustomProtocolDeploymentService() => _instance;
 
   CarpStudyProtocolManager manager = CarpStudyProtocolManager();
-  CAMSStudyProtocol protocol;
+  late StudyProtocol protocol;
 
   /// The stream of [CarpBackendEvents] reflecting the state of this service.
   Stream get carpBackendEvents => _eventController.stream;
@@ -60,10 +60,10 @@ class CustomProtocolDeploymentService implements DeploymentService {
   /// Is this service configured and authenticated to CARP?
   bool isConfigured() {
     if (!CarpService().isConfigured)
-      throw CARPBackendException(
+      throw CarpBackendException(
           "CARP Service has not been configured - call 'CarpService().configure()' first.");
     if (!CarpService().authenticated)
-      throw CARPBackendException(
+      throw CarpBackendException(
           "No user is authenticated - call 'CarpService().authenticate()' first.");
 
     if (!CarpDeploymentService().isConfigured) {
@@ -74,22 +74,30 @@ class CustomProtocolDeploymentService implements DeploymentService {
   }
 
   @override
-  Future<StudyDeploymentStatus> createStudyDeployment(StudyProtocol protocol,
-      [String studyDeploymentId]) {
-    throw CARPBackendException(
-        'Study protocols cannot be created using this CustomProtocolDeploymentService.');
+  Future<StudyDeploymentStatus> createStudyDeployment(
+    StudyProtocol protocol, [
+    String? studyDeploymentId,
+  ]) {
+    throw CarpBackendException(
+        'Study protocols cannot be created using this $runtimeType.');
   }
 
   @override
   Future<StudyDeploymentStatus> getStudyDeploymentStatus(
-      String studyDeploymentId) async {
-    StudyDeploymentStatus status;
+    String studyDeploymentId,
+  ) async {
+    StudyDeploymentStatus? status;
     if (isConfigured()) {
       status = await CarpDeploymentService()
           .getStudyDeploymentStatus(studyDeploymentId);
       _eventController.add(CarpBackendEvents.DeploymentStatusRetrieved);
     }
-    return status;
+
+    if (status != null)
+      return status;
+    else
+      throw CarpBackendException(
+          'Could not get deployment status in $runtimeType');
   }
 
   @override
@@ -97,7 +105,7 @@ class CustomProtocolDeploymentService implements DeploymentService {
     String studyDeploymentId,
     String masterDeviceRoleName,
   ) async {
-    CAMSMasterDeviceDeployment deployment;
+    CAMSMasterDeviceDeployment? deployment;
 
     if (isConfigured()) {
       // get the protocol from the study protocol manager
@@ -107,16 +115,15 @@ class CustomProtocolDeploymentService implements DeploymentService {
       // configure a data endpoint which can send data back to CARP
       // note that files must not be zipped
       // files are deleted locally once uploaded
-      DataEndPoint dataEndPoint = CarpDataEndPoint(
+      DataEndPoint dataEndPoint = CarpDataEndPoint.fromCarpApp(
         uploadMethod: CarpUploadMethod.BATCH_DATA_POINT,
-        name: CarpService().app.name,
-        uri: CarpService().app.uri.toString(),
+        app: CarpService().app!,
         bufferSize: 50 * 1000,
         zip: false,
         deleteWhenUploaded: true,
       );
 
-      deployment = CAMSMasterDeviceDeployment.fromCAMSStudyProtocol(
+      deployment = CAMSMasterDeviceDeployment.fromStudyProtocol(
         studyDeploymentId: studyDeploymentId,
         masterDeviceRoleName: masterDeviceRoleName,
         dataEndPoint: dataEndPoint,
@@ -128,7 +135,11 @@ class CustomProtocolDeploymentService implements DeploymentService {
 
       _eventController.add(CarpBackendEvents.DeploymentRetrieved);
     }
-    return deployment;
+
+    if (deployment != null)
+      return deployment;
+    else
+      throw CarpBackendException('Could not get deployment in $runtimeType');
   }
 
   @override
@@ -137,7 +148,7 @@ class CustomProtocolDeploymentService implements DeploymentService {
     String deviceRoleName,
     DeviceRegistration registration,
   ) async {
-    StudyDeploymentStatus status;
+    StudyDeploymentStatus? status;
     if (isConfigured()) {
       try {
         status = await CarpDeploymentService()
@@ -151,19 +162,22 @@ class CustomProtocolDeploymentService implements DeploymentService {
         rethrow;
       }
     }
-    return status;
+    if (status != null)
+      return status;
+    else
+      throw CarpBackendException('Could not register device in $runtimeType');
   }
 
   @override
   Future<List<StudyDeploymentStatus>> getStudyDeploymentStatusList(
       List<String> studyDeploymentIds) {
-    throw CARPBackendException(
+    throw CarpBackendException(
         'getStudyDeploymentStatusList() is not supported using this CustomProtocolDeploymentService.');
   }
 
   @override
   Future<Set<String>> removeStudyDeployments(Set<String> studyDeploymentIds) {
-    throw CARPBackendException('removeStudyDeployments() is not supported.');
+    throw CarpBackendException('removeStudyDeployments() is not supported.');
   }
 
   @override
@@ -171,19 +185,19 @@ class CustomProtocolDeploymentService implements DeploymentService {
       String studyDeploymentId,
       String masterDeviceRoleName,
       DateTime deviceDeploymentLastUpdateDate) {
-    throw CARPBackendException(
+    throw CarpBackendException(
         'deploymentSuccessfulFor() is not supported. This happens automatically.');
   }
 
   @override
   Future<StudyDeploymentStatus> stop(String studyDeploymentId) {
-    throw CARPBackendException('stop() is not supported.');
+    throw CarpBackendException('stop() is not supported.');
   }
 
   @override
   Future<StudyDeploymentStatus> unregisterDevice(
       String studyDeploymentId, String deviceRoleName) {
-    throw CARPBackendException('unregisterDevice() is not supported.');
+    throw CarpBackendException('unregisterDevice() is not supported.');
   }
 
   @override

@@ -13,7 +13,7 @@ class ClientManager {
   Map<StudyRuntimeId, StudyRuntime> repository = {};
 
   /// The registration of this client device.
-  DeviceRegistration registration;
+  DeviceRegistration? registration;
 
   /// The application service through which study deployments, to be run on
   /// this client, can be managed and retrieved.
@@ -36,19 +36,20 @@ class ClientManager {
   ///  * [dataManager] that handles the collected data (e.g., storing or uploading)
   @mustCallSuper
   ClientManager({
-    this.deploymentService,
-    this.deviceRegistry,
+    required this.deploymentService,
+    required this.deviceRegistry,
   });
 
   /// Configure the [DeviceRegistration] used to register this client device
   /// in study deployments managed by the [deploymentService].
   @mustCallSuper
-  Future<DeviceRegistration> configure({String deviceId}) async =>
+  Future<DeviceRegistration> configure({String? deviceId}) async =>
       registration = DeviceRegistration(deviceId);
 
   /// Get the status for the studies which run on this client device.
   List<StudyRuntimeStatus> getStudiesStatus() =>
-      repository.values.map((study) => study.status);
+      repository.values.map((study) => study.status)
+          as List<StudyRuntimeStatus>;
 
   /// Add a study which needs to be executed on this client.
   /// This involves registering this device for the specified study deployment.
@@ -78,7 +79,7 @@ class ClientManager {
   @mustCallSuper
   Future<StudyRuntimeStatus> tryDeployment(
       StudyRuntimeId studyRuntimeId) async {
-    StudyRuntime runtime = repository[studyRuntimeId];
+    StudyRuntime runtime = repository[studyRuntimeId]!;
 
     // Early out in case this runtime has already received and validated deployment information.
     var status = runtime.status;
@@ -90,10 +91,10 @@ class ClientManager {
   /// Permanently stop collecting data for the study runtime identified by [studyRuntimeId].
   @mustCallSuper
   void stopStudy(StudyRuntimeId studyRuntimeId) async =>
-      repository[studyRuntimeId].stop();
+      repository[studyRuntimeId]!.stop();
 
   /// Get the [StudyRuntime] with the unique [studyRuntimeId].
-  StudyRuntime getStudyRuntime(StudyRuntimeId studyRuntimeId) =>
+  StudyRuntime? getStudyRuntime(StudyRuntimeId studyRuntimeId) =>
       repository[studyRuntimeId];
 
   // /// Once a connected device has been registered, this returns a manager

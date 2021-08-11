@@ -42,7 +42,7 @@ part of carp_core_data;
 class DataPoint {
   /// A unique, server-side generated ID for this data point.
   /// `null` if this data point is not yet stored.
-  int id;
+  int? id;
 
   /// The unique id of the user who created / uploaded this data point.
   /// `null` if this data point is not yet stored.
@@ -56,20 +56,20 @@ class DataPoint {
   /// By being able to separate who uploads a data point and who the data point
   /// belongs to, allows for one user to upload data on behalf of another user.
   /// For example, a parent on behalf of a child.
-  int createdByUserId;
+  int? createdByUserId;
 
   /// The unique study deployment id that this data point belongs to / is uploaded
   /// as part of. Set by the server. `null` if this data point is not yet stored.
-  String studyId;
+  String? studyId;
 
   /// The data point header.
   DataPointHeader carpHeader;
 
   /// The CARP data point body. Can be any payload modelled as a [Data].
   @JsonKey(ignore: true)
-  Data data;
+  Data? data;
 
-  Map<String, dynamic> _carpBody;
+  Map<String, dynamic>? _carpBody;
 
   /// The CARP data point body. Can be any JSON payload.
   ///
@@ -80,13 +80,13 @@ class DataPoint {
   ///
   /// Note that we do *not* support type/schema checking in this data pay load.
   /// CARP allow for any json formatted data to be uploaded and stored.
-  Map<String, dynamic> get carpBody =>
-      (data != null) ? data.toJson() : _carpBody;
+  Map<String, dynamic>? get carpBody =>
+      (data != null) ? data!.toJson() : _carpBody;
 
-  set carpBody(Map<String, dynamic> data) => _carpBody = data;
+  set carpBody(Map<String, dynamic>? data) => _carpBody = data;
 
   /// Create a new [DataPoint].
-  DataPoint([this.carpHeader, this.data]);
+  DataPoint(this.carpHeader, [this.data]);
 
   /// Create a [DataPoint] from a [Data] object.
   factory DataPoint.fromData(Data data) => DataPoint(
@@ -112,27 +112,27 @@ class DataPointHeader {
   /// This is the [studyId] from the [CAMSStudyProtocol], if specified.
   /// If not specified in the [CAMSStudyProtocol], it is the study deployment
   /// id of the [StudyDeployment] from which this data point was generated.
-  String studyId;
+  String? studyId;
 
   /// The role of the device that collected this data point.
-  String deviceRoleName;
+  String? deviceRoleName;
 
   /// The id of the [Trigger] in the study deployment that generated this data point.
-  String triggerId;
+  String? triggerId;
 
   /// The ID of the user (if known).
-  String userId;
+  String? userId;
 
   /// The UTC time stamp of when this data point was uploaded to the server.
   /// Set by the server.
-  DateTime uploadTime;
+  DateTime? uploadTime;
 
   /// The UTC start timestamp for this data point.
-  DateTime startTime;
+  DateTime? startTime;
 
   /// The UTC end timestamp for this data point.
-  /// If this data point does not cover a period, [endTime] will be null.
-  DateTime endTime;
+  /// If this data point does not cover a period, [endTime] will be `null`.
+  DateTime? endTime;
 
   /// The data format. See [DataFormat] and [NameSpace].
   DataFormat dataFormat;
@@ -141,16 +141,15 @@ class DataPointHeader {
   DataPointHeader({
     this.studyId,
     this.userId,
-    this.dataFormat,
+    this.dataFormat = DataFormat.UNKNOWN,
     this.deviceRoleName,
     this.triggerId,
     this.startTime,
     this.endTime,
   }) {
     // make sure that timestamps are in UTC
-    if (startTime != null) startTime.toUtc();
-    if (endTime != null) endTime.toUtc();
-    dataFormat ??= DataFormat.UNKNOWN;
+    if (startTime != null) startTime!.toUtc();
+    if (endTime != null) endTime!.toUtc();
   }
 
   /// Create a [DataPointHeader] from a JSON map.

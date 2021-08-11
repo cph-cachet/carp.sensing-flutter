@@ -45,7 +45,7 @@ class DataType {
   String toString() => '$namespace.$name';
 
   bool operator ==(other) {
-    if (other is! String) return false;
+    if (other is! DataType) return false;
     return (other.namespace == namespace && other.name == name);
   }
 

@@ -16,7 +16,7 @@ class TaskDescriptor extends Serializable {
   static int _counter = 0;
 
   /// The name of this task. Unique for this [StudyProtocol].
-  String name;
+  late String name;
 
   /// A list of [Measure]s to be done as part of this task.
   List<Measure> measures = [];
@@ -31,14 +31,17 @@ class TaskDescriptor extends Serializable {
   void removeMeasure(Measure measure) => measures.remove(measure);
 
   @mustCallSuper
-  TaskDescriptor({this.name, this.measures}) : super() {
-    name = name ?? 'Task #${_counter++}';
-    measures ??= [];
+  TaskDescriptor({
+    String? name,
+    List<Measure>? measures,
+  }) : super() {
+    this.name = name ?? 'Task #${_counter++}';
+    this.measures = measures ?? [];
   }
 
   Function get fromJsonFunction => _$TaskDescriptorFromJson;
   factory TaskDescriptor.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as TaskDescriptor;
   Map<String, dynamic> toJson() => _$TaskDescriptorToJson(this);
   String get jsonType => 'dk.cachet.carp.protocols.domain.tasks.$runtimeType';
 
@@ -51,12 +54,12 @@ class TaskDescriptor extends Serializable {
 /// containing measures have completed.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ConcurrentTask extends TaskDescriptor {
-  ConcurrentTask({String name, List<Measure> measures})
+  ConcurrentTask({String? name, List<Measure>? measures})
       : super(name: name, measures: measures);
 
   Function get fromJsonFunction => _$ConcurrentTaskFromJson;
   factory ConcurrentTask.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as ConcurrentTask;
   Map<String, dynamic> toJson() => _$ConcurrentTaskToJson(this);
 }
 
@@ -69,12 +72,14 @@ class CustomProtocolTask extends TaskDescriptor {
 
   // The measures list is empty, since measures are defined in [studyProtocol]
   // in a different format.
-  CustomProtocolTask({String name, this.studyProtocol})
-      : super(name: name, measures: []);
+  CustomProtocolTask({
+    String? name,
+    required this.studyProtocol,
+  }) : super(name: name, measures: []);
 
   Function get fromJsonFunction => _$CustomProtocolTaskFromJson;
   factory CustomProtocolTask.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as CustomProtocolTask;
   Map<String, dynamic> toJson() => _$CustomProtocolTaskToJson(this);
 
   String toString() => '${super.toString()}, studyProtocol: $studyProtocol';

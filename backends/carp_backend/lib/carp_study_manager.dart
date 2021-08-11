@@ -14,18 +14,19 @@ part of carp_backend;
 /// custom task hold the raw json desription of a [CAMSStudyProtocol].
 class CarpStudyProtocolManager implements StudyProtocolManager {
   Future initialize() async {
-    CAMSStudyProtocol(); // to initialize json serialization for CAMS classes
-    RPTask(''); // to initialize json serialization for RP classes
+    // initialize json serialization for CAMS and RP classes
+    StudyProtocol(ownerId: '', name: '');
+    RPTask(identifier: '');
   }
 
-  /// Get a [CAMSStudyProtocol] from the CARP backend.
+  /// Get a [StudyProtocol] from the CARP backend.
   ///
   /// Note that in the CARP backend, a CAMS study is empbedded as a
   /// [CustomProtocolTask] and deployed as part of a so-called
   /// [Participation] for a user, with a specific [studyDeploymentId].
   ///
   /// Throws a [CarpServiceException] if not successful.
-  Future<CAMSStudyProtocol> getStudyProtocol(String studyDeploymentId) async {
+  Future<StudyProtocol> getStudyProtocol(String studyDeploymentId) async {
     assert(CarpService().isConfigured,
         "CARP Service has not been configured - call 'CarpService().configure()' first.");
     assert(CarpService().currentUser != null,
@@ -43,20 +44,20 @@ class CarpStudyProtocolManager implements StudyProtocolManager {
     StudyDeploymentStatus deploymentStatus = await reference.getStatus();
     info('Deployment status: $deploymentStatus');
 
-    if (deploymentStatus?.masterDeviceStatus?.device != null) {
+    if (deploymentStatus.masterDeviceStatus?.device != null) {
       // register the remaining devices needed for deployment
       if (deploymentStatus.masterDeviceStatus
               ?.remainingDevicesToRegisterToObtainDeployment !=
           null) {
-        for (String deviceRolename in deploymentStatus
-            .masterDeviceStatus.remainingDevicesToRegisterToObtainDeployment) {
+        for (String deviceRolename in deploymentStatus.masterDeviceStatus!
+            .remainingDevicesToRegisterToObtainDeployment!) {
           info("Registring device: '$deviceRolename'");
           try {
             deploymentStatus =
                 await reference.registerDevice(deviceRoleName: deviceRolename);
           } catch (error) {
             // we only print a warning - often an exception here arise when the device is already registrered
-            warning("Error registring device '$deviceRolename' - $error");
+            warning("Error registring device '$deviceRolename'.\n$error");
           }
         }
       }
@@ -69,28 +70,25 @@ class CarpStudyProtocolManager implements StudyProtocolManager {
         // asume that this deployment only contains one custom task
         TaskDescriptor task = deployment.tasks[0];
         if (task is CustomProtocolTask) {
-          // we expect to get a ptotocol of type[CAMSStudyProtocol]
-          // TODO - why does carp.core in Kotlin not support polymorphism in StudyProtocol?
-          CAMSStudyProtocol protocol = CAMSStudyProtocol.fromJson(
+          // we expect to get a ptotocol of type [StudyProtocol]
+          StudyProtocol protocol = StudyProtocol.fromJson(
               json.decode(task.studyProtocol) as Map<String, dynamic>);
 
-          // set the protocol's study id - in the following order:
-          //  1. the study id from the server specified in an invitation as
-          //     stored in the CarpService().app
-          //  2. the study id provided in the downloaded (custom) protocol
-          //  3. the study deployment id
-          // if (protocol is CAMSStudyProtocol)
-          protocol.studyId = (CarpService().app.studyId ?? protocol.studyId) ??
-              studyDeploymentId;
-
           // mark this deployment as successful
-          await reference.success();
+          try {
+            await reference.success();
+          } catch (error) {
+            // we only print a warning
+            // see issue #50 - there is a bug in CARP
+            warning(
+                "Error marking deployment '$studyDeploymentId' as successful.\n$error");
+          }
           info("Study protocol '$studyDeploymentId' successfully downloaded.");
           return protocol;
         } else {
           await reference.unRegisterDevice(
               deviceRoleName:
-                  deploymentStatus.masterDeviceStatus.device.roleName);
+                  deploymentStatus.masterDeviceStatus!.device.roleName);
           throw CarpServiceException(
               message:
                   'The deployment does not contain a CustomProtocolTask - task: $task');
@@ -98,7 +96,7 @@ class CarpStudyProtocolManager implements StudyProtocolManager {
       } else {
         await reference.unRegisterDevice(
             deviceRoleName:
-                deploymentStatus.masterDeviceStatus.device.roleName);
+                deploymentStatus.masterDeviceStatus!.device.roleName);
         throw CarpServiceException(
             message:
                 'The deployment does not contain any tasks - deployment: $deployment');

@@ -1,34 +1,38 @@
 name: carp_study_generator
 description: Utilities for generating CARP Mobile Sensing studies
-version: 0.21.5
+version: 0.30.0
 homepage: https://github.com/cph-cachet/carp.sensing-flutter
 author:  CACHET Team <cph.cachet@gmail.com>
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
   flutter: ">=1.17.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  carp_mobile_sensing: ^0.21.0
-  carp_webservices: ^0.21.4
-  carp_backend: ^0.21.0
+  carp_core: ^0.30.1
+  carp_mobile_sensing: ^0.30.2
+  carp_webservices: ^0.30.0
+  carp_backend: ^0.30.0
 
-  carp_apps_package: ^0.21.0
-  #carp_connectivity_package: ^0.21.0
-  carp_communication_package: ^0.21.0
-  carp_context_package: ^0.21.0
-  carp_audio_package: ^0.21.0
-  carp_esense_package: ^0.21.0
-  carp_survey_package: ^0.21.0
-  carp_health_package: ^1.6.0
+  carp_apps_package: ^0.30.0
 
-  research_package: ^0.5.3      # the informed consent domain model
+  # cannot load connectivity package, due to package conflict btw. research_package and flutter_blue
+  # using different version of rxdart....
+  #carp_connectivity_package: ^0.30.0
 
-  yaml: ^2.2.0
-  meta: ^1.1.8
+  carp_communication_package: ^0.30.0
+  carp_context_package: ^0.30.0
+  carp_audio_package: ^0.30.1
+  carp_esense_package: ^0.30.0
+  carp_survey_package: ^0.30.0
+  carp_health_package: ^2.0.0
+
+  research_package: ^0.6.0      # the informed consent domain model
+
+  yaml: ^3.1.0
+  meta: ^1.3.0
 
 dev_dependencies:
-  test: 
-
+  test: ^1.17.10

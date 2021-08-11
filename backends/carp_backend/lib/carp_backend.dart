@@ -11,8 +11,8 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
@@ -49,7 +49,7 @@ class CarpDataEndPoint extends FileDataEndPoint {
   String clientSecret;
 
   /// Email used as username in password authentication.
-  String email;
+  String? email;
 
   /// Password used in password authentication.
   ///
@@ -59,11 +59,11 @@ class CarpDataEndPoint extends FileDataEndPoint {
   /// If the study configuration is downloaded via a [CarpStudyManager], then
   /// the password may be `null` or empty, in which case the user's credential
   /// for downloading the study is used.
-  String password;
+  String? password;
 
   /// When uploading to the CARP using the [CarpUploadMethod.DOCUMENT] method,
   /// [collection] hold the name of the collection to store json objects.
-  String collection = DEFAULT_COLLECTION;
+  String? collection = DEFAULT_COLLECTION;
 
   /// When uploading to CARP using file in the [CarpUploadMethod.BATCH_DATA_POINT]
   /// or [CarpUploadMethod.FILE] methods, specifies if the local file on the phone
@@ -74,26 +74,25 @@ class CarpDataEndPoint extends FileDataEndPoint {
   ///
   /// [uploadMethod] specified the upload method as enumerated in [CarpUploadMethod].
   CarpDataEndPoint(
-      {@required this.uploadMethod,
-      this.name,
-      this.uri,
-      this.clientId,
-      this.clientSecret,
+      {required this.uploadMethod,
+      required this.name,
+      required this.uri,
+      required this.clientId,
+      required this.clientSecret,
       this.email,
       this.password,
       this.collection,
       this.deleteWhenUploaded = true,
-      bufferSize = 500 * 1000, // default buffer size = 500 MB
-      zip = true, // zip files before upload pr. default
-      encrypt = false, // don't encrypt pr. default
-      publicKey})
+      int bufferSize = 500 * 1000, // default buffer size = 500 MB
+      bool zip = true, // zip files before upload pr. default
+      bool encrypt = false, // don't encrypt pr. default
+      String? publicKey})
       : super(
             type: DataEndPointTypes.CARP,
             bufferSize: bufferSize,
             zip: zip,
             encrypt: encrypt,
             publicKey: publicKey) {
-    assert(uploadMethod != null);
     // the CARP server cannot handle zipped or encrypted files (yet)
     if (this.uploadMethod == CarpUploadMethod.BATCH_DATA_POINT) {
       this.zip = false;
@@ -101,13 +100,34 @@ class CarpDataEndPoint extends FileDataEndPoint {
     }
   }
 
+  /// Creates a [CarpDataEndPoint] based on a [CarpApp] [app].
+  CarpDataEndPoint.fromCarpApp(
+      {required CarpUploadMethod uploadMethod,
+      required CarpApp app,
+      String? collection,
+      bool deleteWhenUploaded = true,
+      int bufferSize = 500 * 1000,
+      bool zip = true,
+      bool encrypt = false,
+      String? publicKey})
+      : this(
+          uploadMethod: uploadMethod,
+          name: app.name,
+          uri: app.uri.toString(),
+          clientId: app.oauth.clientID,
+          clientSecret: app.oauth.clientSecret,
+          bufferSize: bufferSize,
+          zip: zip,
+          deleteWhenUploaded: deleteWhenUploaded,
+        );
+
   Function get fromJsonFunction => _$CarpDataEndPointFromJson;
 
   factory CarpDataEndPoint.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as CarpDataEndPoint;
   Map<String, dynamic> toJson() => _$CarpDataEndPointToJson(this);
 
-  String toString() => 'CARP - $name [$uri]';
+  String toString() => '$runtimeType - $name [$uri]';
 }
 
 /// A enumeration of upload methods to CARP
@@ -146,10 +166,11 @@ enum CarpBackendEvents {
 }
 
 /// Exception for CARP backend communication.
-class CARPBackendException implements Exception {
-  String message;
-
-  CARPBackendException([this.message]);
-
-  String toString() => "CARPBackendException: ${message ?? ""}";
+class CarpBackendException implements Exception {
+  String? message;
+  CarpBackendException([this.message]);
+  String toString() => "$runtimeType - ${message ?? ""}";
 }
+
+String _encode(Object? object) =>
+    const JsonEncoder.withIndent(' ').convert(object);

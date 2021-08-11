@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:test/test.dart';
 
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 // import 'package:carp_connectivity_package/connectivity.dart';
 import 'package:carp_esense_package/esense.dart';
@@ -19,9 +20,9 @@ String _encode(Object object) =>
 
 void main() {
   // creating an empty protocol to initialize json serialization
-  CAMSStudyProtocol protocol = CAMSStudyProtocol();
-  Smartphone phone;
-  ESenseDevice eSense;
+  StudyProtocol? protocol;
+  late Smartphone phone;
+  late ESenseDevice eSense;
 
   setUp(() async {
     // register the eSense sampling package since we're using eSense measures
@@ -43,15 +44,15 @@ void main() {
 
     test('CAMSStudyProtocol -> JSON', () async {
       print(protocol);
-      print(toJsonString(protocol));
-      expect(protocol.studyId, '1234');
+      print(toJsonString(protocol!));
+      expect(protocol!.ownerId, 'alex@uni.dk');
     });
 
     test('StudyProtocol -> JSON -> StudyProtocol :: deep assert', () async {
       print('#1 : $protocol');
-      final studyJson = toJsonString(protocol);
+      final studyJson = toJsonString(protocol!);
 
-      CAMSStudyProtocol protocolFromJson = CAMSStudyProtocol.fromJson(
+      StudyProtocol protocolFromJson = StudyProtocol.fromJson(
           json.decode(studyJson) as Map<String, dynamic>);
       expect(toJsonString(protocolFromJson), equals(studyJson));
       print('#2 : $protocolFromJson');
@@ -62,10 +63,10 @@ void main() {
       String plainJson =
           File('test/json/cams_study_protocol.json').readAsStringSync();
 
-      CAMSStudyProtocol protocol = CAMSStudyProtocol.fromJson(
+      StudyProtocol protocol = StudyProtocol.fromJson(
           json.decode(plainJson) as Map<String, dynamic>);
 
-      expect(protocol.studyId, '1234');
+      expect(protocol.ownerId, 'alex@uni.dk');
       expect(protocol.masterDevices.first.roleName, phone.roleName);
       expect(protocol.connectedDevices.first.roleName, eSense.roleName);
       print(toJsonString(protocol));
@@ -74,9 +75,8 @@ void main() {
 
   group("Data points", () {
     test(' -> JSON', () async {
-      ESenseButtonDatum datum = ESenseButtonDatum()
-        ..pressed = true
-        ..deviceName = 'eSense-123';
+      ESenseButtonDatum datum =
+          ESenseButtonDatum(pressed: true, deviceName: 'eSense-123');
 
       final DataPoint data = DataPoint.fromData(datum);
       expect(data.carpHeader.dataFormat.namespace,
@@ -87,7 +87,7 @@ void main() {
   });
 
   CarpApp app;
-  CarpUser user;
+  late CarpUser user;
   CarpStudyProtocolManager manager = CarpStudyProtocolManager();
 
   group("CARP Study Protocol Manager", () {
@@ -107,6 +107,9 @@ void main() {
       );
 
       CarpParticipationService().configureFrom(CarpService());
+
+      // make sure that the json functions are loaded
+      DomainJsonFactory();
     });
 
     test('- authentication', () async {
@@ -116,8 +119,7 @@ void main() {
     });
 
     test('- get study protocol', () async {
-      CAMSStudyProtocol study =
-          await manager.getStudyProtocol(testDeploymentId);
+      StudyProtocol study = await manager.getStudyProtocol(testDeploymentId);
       print('study: $study');
       print(_encode(study));
     }, skip: false);

@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:test/test.dart';
-import 'package:carp_core/carp_deployment/carp_core_deployment.dart';
-import 'package:carp_core/carp_common/carp_core_common.dart';
+import 'package:carp_core/carp_core.dart';
 
 void main() {
   setUp(() {});
@@ -62,7 +61,7 @@ void main() {
 
     ParticipantData data = ParticipantData.fromJson(
         json.decode(plainJson) as Map<String, dynamic>);
-    expect(data.data['dk.cachet.carp.input.sex'], 'Male');
+    expect(data.data!['dk.cachet.carp.input.sex'], 'Male');
     print(toJsonString(data));
   });
   test('JSON -> StudyDeploymentStatus', () async {

@@ -2,30 +2,27 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:test/test.dart';
 
-import 'package:carp_esense_package/esense.dart';
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+import 'package:carp_esense_package/esense.dart';
 
 String _encode(Object object) =>
     const JsonEncoder.withIndent(' ').convert(object);
 
 void main() {
-  CAMSStudyProtocol protocol;
-  Smartphone phone;
-  ESenseDevice eSense;
+  late StudyProtocol protocol;
+  late Smartphone phone;
+  late ESenseDevice eSense;
 
   setUp(() {
     // register the eSense sampling package
     SamplingPackageRegistry().register(ESenseSamplingPackage());
 
     // Create a new study protocol.
-    protocol = CAMSStudyProtocol()
-      ..name = 'Context package test'
-      ..owner = ProtocolOwner(
-        id: 'AB',
-        name: 'Alex Boyon',
-        email: 'alex@uni.dk',
-      );
-
+    protocol = StudyProtocol(
+      ownerId: 'alex@uni.dk',
+      name: 'Context package test',
+    );
     // Define which devices are used for data collection.
     phone = Smartphone(roleName: 'SM-A320FL');
     eSense = ESenseDevice(roleName: 'esense');
@@ -59,15 +56,15 @@ void main() {
   test('CAMSStudyProtocol -> JSON', () async {
     print(protocol);
     print(toJsonString(protocol));
-    expect(protocol.ownerId, 'AB');
+    expect(protocol.ownerId, 'alex@uni.dk');
   });
 
   test('StudyProtocol -> JSON -> StudyProtocol :: deep assert', () async {
     print('#1 : $protocol');
     final studyJson = toJsonString(protocol);
 
-    CAMSStudyProtocol protocolFromJson = CAMSStudyProtocol
-        .fromJson(json.decode(studyJson) as Map<String, dynamic>);
+    StudyProtocol protocolFromJson =
+        StudyProtocol.fromJson(json.decode(studyJson) as Map<String, dynamic>);
     expect(toJsonString(protocolFromJson), equals(studyJson));
     print('#2 : $protocolFromJson');
   });
@@ -76,19 +73,18 @@ void main() {
     // Read the study protocol from json file
     String plainJson = File('test/json/study_protocol.json').readAsStringSync();
 
-    CAMSStudyProtocol protocol = CAMSStudyProtocol
-        .fromJson(json.decode(plainJson) as Map<String, dynamic>);
+    StudyProtocol protocol =
+        StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
 
-    expect(protocol.ownerId, 'AB');
+    expect(protocol.ownerId, 'alex@uni.dk');
     expect(protocol.masterDevices.first.roleName, phone.roleName);
     expect(protocol.connectedDevices.first.roleName, eSense.roleName);
     print(toJsonString(protocol));
   });
 
   test('Data point -> JSON', () async {
-    ESenseButtonDatum datum = ESenseButtonDatum()
-      ..pressed = true
-      ..deviceName = 'eSense-123';
+    ESenseButtonDatum datum =
+        ESenseButtonDatum(pressed: true, deviceName: 'eSense-123');
 
     final DataPoint data = DataPoint.fromData(datum);
     expect(data.carpHeader.dataFormat.namespace,

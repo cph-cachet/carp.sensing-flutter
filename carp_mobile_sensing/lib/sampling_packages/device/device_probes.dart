@@ -10,10 +10,10 @@ part of device;
 /// The [BatteryProbe] listens to the hardware battery and collect a [BatteryDatum]
 /// every time the battery state changes. For example, battery level or charging mode.
 class BatteryProbe extends StreamProbe {
-  Stream<Datum> get stream {
+  Stream<Datum>? get stream {
     Battery battery = Battery();
-    StreamController<Datum> controller;
-    StreamSubscription<BatteryState> subscription;
+    late StreamController<Datum> controller;
+    late StreamSubscription<BatteryState> subscription;
 
     void onData(state) async {
       try {
@@ -31,9 +31,11 @@ class BatteryProbe extends StreamProbe {
         onResume: () => subscription.resume(),
         onCancel: () => subscription.cancel());
 
-    subscription = battery.onBatteryStateChanged.listen(onData,
-        onError: (error) => controller.addError(error),
-        onDone: () => controller.close());
+    subscription = battery.onBatteryStateChanged.listen(
+      onData,
+      onError: (error) => controller.addError(error),
+      onDone: () => controller.close(),
+    );
 
     return controller.stream;
   }
@@ -57,6 +59,8 @@ class BatteryProbe extends StreamProbe {
 ///  - SCREEN UNLOCK
 /// which are stored as a [ScreenDatum].
 class ScreenProbe extends StreamProbe {
+  Screen screen = Screen();
+
   void onInitialize(Measure measure) {
     super.onInitialize(measure);
     if (!Platform.isAndroid) {
@@ -64,9 +68,10 @@ class ScreenProbe extends StreamProbe {
     }
   }
 
-  Stream<Datum> get stream => Screen()
-      .screenStateStream
-      .map((event) => ScreenDatum.fromScreenStateEvent(event));
+  Stream<Datum>? get stream => (screen.screenStateStream != null)
+      ? screen.screenStateStream!
+          .map((event) => ScreenDatum.fromScreenStateEvent(event))
+      : null;
 }
 
 /// A probe that collects free virtual memory on a regular basis
@@ -78,14 +83,14 @@ class MemoryProbe extends PeriodicDatumProbe {
     SysInfo.getFreePhysicalMemory();
   }
 
-  Future<Datum> getDatum() async => FreeMemoryDatum()
+  Future<Datum?> getDatum() async => FreeMemoryDatum()
     ..freePhysicalMemory = SysInfo.getFreePhysicalMemory()
     ..freeVirtualMemory = SysInfo.getFreeVirtualMemory();
 }
 
 /// A probe that collects the device info about this device.
 class DeviceProbe extends DatumProbe {
-  Future<Datum> getDatum() async =>
+  Future<Datum?> getDatum() async =>
       DeviceDatum(DeviceInfo().platform, DeviceInfo().deviceID,
           deviceName: DeviceInfo().deviceName,
           deviceModel: DeviceInfo().deviceModel,

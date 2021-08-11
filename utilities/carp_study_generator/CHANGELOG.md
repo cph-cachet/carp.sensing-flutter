@@ -1,3 +1,7 @@
+## 0.30.0
+* upgrade to null-safety
+* more robust error messages in `dryrun`
+
 ## 0.21.5
 * improvement to `localization` command
 
@@ -10,7 +14,7 @@
 ## 0.21.2+2
 * setting `ownerId` for the custom protocol also
 * command for updating a protocol added
-* `carp.yaml` renamed to `carpspec.yaml` 
+* `carp.yaml` renamed to `carpspec.yaml`
 
 ## 0.21.1+1
 * more robust error messages in `dryrun`

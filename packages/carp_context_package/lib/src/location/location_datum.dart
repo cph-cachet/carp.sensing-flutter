@@ -54,7 +54,7 @@ class LocationDatum extends Datum {
   Map<String, dynamic> toJson() => _$LocationDatumToJson(this);
 
   /// The time when this location was collected.
-  DateTime time;
+  DateTime? time;
 
   /// Latitude in GPS coordinates.
   var latitude;
@@ -85,11 +85,11 @@ class LocationDatum extends Datum {
   String toString() =>
       super.toString() +
       'latitude: $latitude, '
-      'longitude: $longitude, '
-      'accuracy; $accuracy, '
-      'altitude: $altitude, '
-      'speed: $speed, '
-      'speed_accuracy: $speedAccuracy, '
-      'heading: $heading, '
-      'time: $time';
+          'longitude: $longitude, '
+          'accuracy; $accuracy, '
+          'altitude: $altitude, '
+          'speed: $speed, '
+          'speed_accuracy: $speedAccuracy, '
+          'heading: $heading, '
+          'time: $time';
 }

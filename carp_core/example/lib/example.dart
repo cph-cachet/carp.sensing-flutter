@@ -36,7 +36,11 @@ void carpCoreProtocolExample() async {
     name: "Start measures",
     measures: measures,
   );
-  protocol.addTriggeredTask(Trigger(), startMeasures, phone);
+  protocol.addTriggeredTask(
+    Trigger(sourceDeviceRoleName: phone.roleName),
+    startMeasures,
+    phone,
+  );
 
   // JSON output of the study protocol, compatible with the rest of the CARP infrastructure.
   String json = toJsonString(protocol.toJson());
@@ -84,7 +88,7 @@ void carpCoreDeploymentExample() async {
 void carpCoreClientExample() async {
   ParticipationService participationService;
   DeploymentService deploymentService;
-  DeviceRegistry dataCollectorFactory;
+  DeviceRegistry deviceRegistry;
 
   // Retrieve invitation to participate in the study using a specific device.
   ActiveParticipationInvitation invitation = (await participationService
@@ -95,8 +99,7 @@ void carpCoreClientExample() async {
 
   // Create a study runtime for the study.
   var client = ClientManager(
-      deploymentService: deploymentService,
-      deviceRegistry: dataCollectorFactory);
+      deploymentService: deploymentService, deviceRegistry: deviceRegistry);
   client.configure(
     // Device-specific registration options can be accessed from here.
     // Depending on the device type, different options are available.

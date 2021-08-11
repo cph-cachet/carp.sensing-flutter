@@ -10,31 +10,28 @@ part of carp_core_protocols;
 /// [TaskDescriptor]s at certain points in time when the condition applies.
 /// The condition can either be time-bound, based on data streams,
 /// initiated by a user of the platform, or a combination of these.
-///
-/// The [Trigger] class is abstract. Use sub-classes of [CAMSTrigger] implements
-/// the specific behavior / timing of a trigger.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class Trigger extends Serializable {
   final String _triggerNamespace = 'dk.cachet.carp.protocols.domain.triggers';
 
   /// The device role name from which the trigger originates.
-  String sourceDeviceRoleName;
+  String? sourceDeviceRoleName;
 
   /// Determines whether the trigger needs to be evaluated on a master
   /// device ([MasterDeviceDescriptor]).
   /// For example, this is the case when the trigger is time bound and needs
   /// to be evaluated by a task scheduler running on a master device.
-  bool requiresMasterDevice;
+  bool? requiresMasterDevice;
 
   @mustCallSuper
   Trigger({
     this.sourceDeviceRoleName,
-    this.requiresMasterDevice = true,
+    this.requiresMasterDevice,
   }) : super();
 
   Function get fromJsonFunction => _$TriggerFromJson;
   factory Trigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as Trigger;
   Map<String, dynamic> toJson() => _$TriggerToJson(this);
   String get jsonType => '$_triggerNamespace.$runtimeType';
 }
@@ -47,11 +44,11 @@ class Trigger extends Serializable {
 /// bound and therefore requires a task scheduler.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ElapsedTimeTrigger extends Trigger {
-  Duration elapsedTime;
+  Duration? elapsedTime;
 
   ElapsedTimeTrigger({
-    String sourceDeviceRoleName,
-    bool requiresMasterDevice,
+    String? sourceDeviceRoleName,
+    bool? requiresMasterDevice = false,
     this.elapsedTime,
   }) : super(
           sourceDeviceRoleName: sourceDeviceRoleName,
@@ -60,7 +57,7 @@ class ElapsedTimeTrigger extends Trigger {
 
   Function get fromJsonFunction => _$ElapsedTimeTriggerFromJson;
   factory ElapsedTimeTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as ElapsedTimeTrigger;
   Map<String, dynamic> toJson() => _$ElapsedTimeTriggerToJson(this);
 }
 
@@ -69,15 +66,15 @@ class ElapsedTimeTrigger extends Trigger {
 class ManualTrigger extends Trigger {
   /// A short label to describe the action performed once the user chooses
   /// to initiate this trigger.
-  String label;
+  String? label;
 
   /// An optional description elaborating on what happens when initiating
   /// this trigger.
-  String description;
+  String? description;
 
   ManualTrigger({
-    String sourceDeviceRoleName,
-    bool requiresMasterDevice,
+    String? sourceDeviceRoleName,
+    bool? requiresMasterDevice = false,
     this.label,
     this.description,
   }) : super(
@@ -87,7 +84,7 @@ class ManualTrigger extends Trigger {
 
   Function get fromJsonFunction => _$ManualTriggerFromJson;
   factory ManualTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as ManualTrigger;
   Map<String, dynamic> toJson() => _$ManualTriggerToJson(this);
 }
 
@@ -105,10 +102,10 @@ class ScheduledTrigger extends Trigger {
   RecurrenceRule recurrenceRule;
 
   ScheduledTrigger({
-    String sourceDeviceRoleName,
-    bool requiresMasterDevice,
-    this.time,
-    this.recurrenceRule,
+    String? sourceDeviceRoleName,
+    bool? requiresMasterDevice = false,
+    required this.time,
+    required this.recurrenceRule,
   }) : super(
           sourceDeviceRoleName: sourceDeviceRoleName,
           requiresMasterDevice: requiresMasterDevice,
@@ -116,7 +113,7 @@ class ScheduledTrigger extends Trigger {
 
   Function get fromJsonFunction => _$ScheduledTriggerFromJson;
   factory ScheduledTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as ScheduledTrigger;
   Map<String, dynamic> toJson() => _$ScheduledTriggerToJson(this);
 }
 
@@ -162,7 +159,7 @@ class RecurrenceRule {
 
   /// Specifies when, if ever, to stop repeating events.
   /// Default recurrence is forever.
-  End end = End.never();
+  End? end = End.never();
 
   RecurrenceRule(this.frequency, {this.interval = 1, this.end}) : super();
 
@@ -181,7 +178,7 @@ class RecurrenceRule {
   String toString() {
     String rule = 'RRULE:FREQ=$frequency';
     rule += (interval != 1) ? ';INTERVAL=$interval' : '';
-    rule += (end.type != EndType.NEVER) ? rule += ';$end' : '';
+    rule += (end!.type != EndType.NEVER) ? rule += ';$end' : '';
 
     return rule;
   }
@@ -199,8 +196,8 @@ enum EndType { UNTIL, COUNT, NEVER }
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class End {
   final EndType type;
-  final Duration elapsedTime;
-  final int count;
+  final Duration? elapsedTime;
+  final int? count;
 
   End(this.type, {this.elapsedTime, this.count}) : super();
 

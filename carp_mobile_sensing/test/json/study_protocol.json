@@ -1,11 +1,14 @@
 {
-    "name": "Track patient movement",
-    "creationDate": "2021-05-06 21:08:54.092147Z",
+    "ownerId": "user@dtu.dk",
+    "name": "patient_tracking",
+    "description": "Track patient movement",
+    "creationDate": "2021-06-16T18:45:37.544426Z",
     "masterDevices": [
      {
       "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
       "isMasterDevice": true,
       "roleName": "masterphone",
+      "supportedDataTypes": [],
       "samplingConfiguration": {}
      }
     ],
@@ -14,19 +17,26 @@
       "$type": "dk.cachet.carp.protocols.domain.devices.DeviceDescriptor",
       "isMasterDevice": false,
       "roleName": "esense",
+      "supportedDataTypes": [],
       "samplingConfiguration": {}
      }
     ],
     "connections": [],
     "triggers": {
      "0": {
-      "$type": "dk.cachet.carp.protocols.domain.triggers.Trigger"
+      "$type": "dk.cachet.carp.protocols.domain.triggers.Trigger",
+      "sourceDeviceRoleName": "",
+      "requiresMasterDevice": false
      },
      "1": {
-      "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
+      "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger",
+      "sourceDeviceRoleName": "",
+      "requiresMasterDevice": false
      },
      "2": {
-      "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
+      "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger",
+      "sourceDeviceRoleName": "",
+      "requiresMasterDevice": false
      }
     },
     "tasks": [
@@ -51,7 +61,7 @@
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
-      "name": "Task #5",
+      "name": "Task #0",
       "measures": [
        {
         "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
@@ -68,7 +78,8 @@
         "description": "Collects information about use of memory.",
         "enabled": true,
         "configuration": {},
-        "frequency": 60000000
+        "frequency": 60000000,
+        "duration": 2000000
        },
        {
         "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
@@ -144,7 +155,7 @@
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
-      "name": "Task #6",
+      "name": "Task #1",
       "measures": [
        {
         "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
@@ -163,7 +174,8 @@
         "description": "Collects information about use of memory.",
         "enabled": true,
         "configuration": {},
-        "frequency": 60000000
+        "frequency": 60000000,
+        "duration": 2000000
        }
       ]
      }
@@ -176,27 +188,14 @@
      },
      {
       "triggerId": 1,
-      "taskName": "Task #5",
+      "taskName": "Task #0",
       "targetDeviceRoleName": "masterphone"
      },
      {
       "triggerId": 2,
-      "taskName": "Task #6",
+      "taskName": "Task #1",
       "targetDeviceRoleName": "esense"
      }
     ],
-    "expectedParticipantData": [],
-    "protocolDescription": {
-     "$type": "StudyProtocolDescription",
-     "title": "Test Study",
-     "description": "Testing",
-     "purpose": "For testing purposes"
-    },
-    "owner": {
-     "$type": "ProtocolOwner",
-     "id": "AB",
-     "name": "Alex Boyon",
-     "email": "alex@uni.dk"
-    },
-    "ownerId": "AB"
+    "expectedParticipantData": []
    }
