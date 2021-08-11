@@ -107,6 +107,9 @@ void main() {
       );
 
       CarpParticipationService().configureFrom(CarpService());
+
+      // make sure that the json functions are loaded
+      DomainJsonFactory();
     });
 
     test('- authentication', () async {
