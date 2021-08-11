@@ -53,7 +53,6 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <!-- The following permissions are used in the Context Package -->
-    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
@@ -61,12 +60,24 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
+    <!-- For Android 9 (API 28 and earlier), use: -->
+    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
+    <!-- for Android 10 (API 29 and later), use: -->
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+
 
    <application
       ...
-        <!-- service for using the Android activity recognition API -->
-        <service android:name="dk.cachet.activity_recognition_flutter.activity.ActivityRecognizedService" />
-        
+
+        <!-- services for using the Android activity recognition API -->
+        <service android:name="dk.cachet.activity_recognition_flutter.activity.ActivityRecognizedService" />        
+        <receiver android:name="dk.cachet.activity_recognition_flutter.ActivityRecognizedBroadcastReceiver"/>
+        <service
+          android:name="dk.cachet.activity_recognition_flutter.ActivityRecognizedService"
+          android:permission="android.permission.BIND_JOB_SERVICE"
+          android:exported="true"/>
+        <service android:name="dk.cachet.activity_recognition_flutter.ForegroundService" />
+
         <!-- Services for background location handling -->
         <receiver
                 android:name="rekab.app.background_locator.LocatorBroadcastReceiver"
@@ -89,6 +100,7 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
                 android:permission="android.permission.FOREGROUND_SERVICE"
                 android:exported="true"
         />
+
         <meta-data
                 android:name="flutterEmbedding"
                 android:value="2" />
@@ -97,7 +109,7 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
 </manifest>
 ````
 
-> **NOTE:** For Android 10 (API 29 and later) use the following permission instead:
+> **NOTE:** For Android 10 (API 29 and later) use the following permission:
 >
 > `<uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />`
 >
