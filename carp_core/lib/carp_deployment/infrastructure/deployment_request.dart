@@ -36,7 +36,7 @@ class CreateStudyDeployment extends DeploymentServiceRequest {
   StudyProtocol protocol;
 
   @JsonKey(ignore: true)
-  String studyDeploymentId;
+  String? studyDeploymentId;
 
   CreateStudyDeployment(this.protocol) : super();
 

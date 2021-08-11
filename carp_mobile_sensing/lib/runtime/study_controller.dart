@@ -120,7 +120,7 @@ class StudyDeploymentController extends StudyRuntime {
 
     if (_dataManager == null) {
       warning(
-          "No data manager for the specified data endpoint found: '${masterDeployment.dataEndPoint}'.");
+          "No data manager for the specified data endpoint found: '${masterDeployment?.dataEndPoint}'.");
     }
 
     // if no user is specified for this study, look up the local user id
