@@ -18,9 +18,9 @@ dependencies:
 
   carp_apps_package: ^0.30.0
 
-  # cannot load connectivity package, due to package conflict btw. research_package and flutter_blue 
+  # cannot load connectivity package, due to package conflict btw. research_package and flutter_blue
   # using different version of rxdart....
-  #carp_connectivity_package: ^0.30.0 
+  #carp_connectivity_package: ^0.30.0
 
   carp_communication_package: ^0.30.0
   carp_context_package: ^0.30.0
@@ -35,5 +35,4 @@ dependencies:
   meta: ^1.3.0
 
 dev_dependencies:
-  test: ^1.17.10 
-
+  test: ^1.17.10

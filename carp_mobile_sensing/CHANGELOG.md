@@ -11,7 +11,10 @@
 * `CAMSStudyProtocol` is no longer used and is replaced by `StudyProtocol` in `carp_core`
 * fix of bug in `RandomRecurrentTriggerExecutor` (Issue [#202](https://github.com/cph-cachet/carp.sensing-flutter/issues/202))
 
-## 0.21.5 
+## 0.21.6
+* bug fix of [#199](https://github.com/cph-cachet/carp.sensing-flutter/issues/199)
+
+## 0.21.5
 * rename of `ProtocolOwner` to `StudyProtocolReponsible` (in order not to confuse it with `ownerId` in `StudyProtocol`)
 
 ## 0.21.4
@@ -19,14 +22,14 @@
 * upgrade to `carp_core 0.21.4`
 
 ## 0.21.3
-* **NOTE** - `DataEndPoint` is no longer specified as part of a `StudyProtocol`. 
-    * Specifying where and how to store or upload data is really not part of specifying a study protocol, but rather a deployment issues. Therefore, the `DataEndPoint` is now part of a `MasterDeviceDeployment`. 
+* **NOTE** - `DataEndPoint` is no longer specified as part of a `StudyProtocol`.
+    * Specifying where and how to store or upload data is really not part of specifying a study protocol, but rather a deployment issues. Therefore, the `DataEndPoint` is now part of a `MasterDeviceDeployment`.
     * The `SmartphoneDeploymentService` will use the `FileDataEndpoint` per default if not specified in the deployment. Hence, data is saved as files on the phone.
     * The `StudyDeploymentController.configure()` method now takes an optional `DataEndPoint` parameter to specify the data endpoint, if it should be different to what is specified in the deployment.
     * The `StudyDeploymentController.configure()` method also takes a `askForPermissions` parameter - if `false`, then CAMS will not ask for permissions, but hands this over to the app, which can show appropiate information to the user.
 * settings are now a singleton accessed using `Settings()` (similar to other singletons in the framework)
 * better support for handling json functions
- 
+
 ## 0.21.2
 * update to `carp_core` v. 0.21.2
 
@@ -48,8 +51,8 @@
 ## 0.20.3
 * update to `carp_core` v. 0.20.3 (json serialization)
 
-## 0.20.0 
-* **BREAKING**: Now using the [`carp_core`](https://pub.dev/packages/carp_core) domain models in order to align with the overall [domain-driven design of CARP](https://carp.cachet.dk/core/). 
+## 0.20.0
+* **BREAKING**: Now using the [`carp_core`](https://pub.dev/packages/carp_core) domain models in order to align with the overall [domain-driven design of CARP](https://carp.cachet.dk/core/).
 * This has an impact on the **naming** used in the API. The most important changes are:
     * `Study` is now called `StudyProtocol` and a CAMS-specific protocol called `CAMSStudyProtocol` is available
     * `PrincipalInvestigator` is now called `ProtocolOwner`
@@ -63,7 +66,7 @@
 * Similarly, measures now also supports localization. For each `CAMSMeasure` there is the option to specify its `MeasureDescription` for each locale.  
 * All json serialization of a protocol now use `camelCase` instead of `snake_case` to be consistent with `carp_core` in Kotlin.
    * Note, however, that `DataPoint` objects are still serialized as `snake_case` json.
-* All the `events` streams are now called `data` and streams `DataPoint` data objects (instead of just the `Datum` data objects). 
+* All the `events` streams are now called `data` and streams `DataPoint` data objects (instead of just the `Datum` data objects).
 * The `DataPoint` comply to version 1.2 definition (Issue [#162](https://github.com/cph-cachet/carp.sensing-flutter/issues/162))
 
 ## 0.12.3
@@ -98,7 +101,7 @@
   the following measures has changed
     * `periodic_accelerometer` and `periodic_gyroscope` has been added
     * the "old" `accelerometer` and `gyroscope` measures are made to run continously
-    * This implies that they need to be started and stopped using a `Trigger` instead. 
+    * This implies that they need to be started and stopped using a `Trigger` instead.
     * This, however, open up for triggering the collection of accelerometer data as part of an `AppTask`. For example, sampling accelerometer data while a Parkinson's patient fill in a survey.
 
 ## 0.10.0
@@ -113,7 +116,7 @@
 
 ## 0.9.5
 * feature: added the `validNextState()` method to the `Probe` class, which checks if a probe can be move to a next state.
-* fix : issue [#112](https://github.com/cph-cachet/carp.sensing-flutter/issues/112) 
+* fix : issue [#112](https://github.com/cph-cachet/carp.sensing-flutter/issues/112)
    * this means that the `initialize()` method is no longer a `Future` (and hence cannot be awaited)
 
 ## 0.9.4+1
@@ -169,9 +172,9 @@
 * added the `MarkedMeasure` class for creating measures that collect all measures since last time data was collected.
 Useful for collecting things like log entries and health data.
 * added the `settings` global variable providing access to:
-   * [`SharedPreferences`](https://pub.dev/documentation/shared_preferences/latest/shared_preferences/SharedPreferences-class.html) 
-   * [`PackageInfo`](https://pub.dev/documentation/package_info/latest/package_info/PackageInfo-class.html), and 
-   * a method for getting a unique, persistent user id 
+   * [`SharedPreferences`](https://pub.dev/documentation/shared_preferences/latest/shared_preferences/SharedPreferences-class.html)
+   * [`PackageInfo`](https://pub.dev/documentation/package_info/latest/package_info/PackageInfo-class.html), and
+   * a method for getting a unique, persistent user id
 
 ## 0.7.2
 * added support for better logging using the `DebugLevel` settings
@@ -185,10 +188,10 @@ Useful for collecting things like log entries and health data.
 * **BREAKING**: this release break some parts of the previous API.
 * Extended Task model -- introduction of a `AutomaticTask` and `AppTask`.
 * Added support for "manually" adding data points (`Datum`) and errors to the data stream (`events`). This is part of the `StudyExecutor` API.
-* The `start()` method on all executors (probes, and study, trigger & task executors) has been removed. 
+* The `start()` method on all executors (probes, and study, trigger & task executors) has been removed.
 Now an executor is 'started' by resuming it (calling `resume()`).
 * Fixed a bug in `BufferingPeriodicStreamProbe`.
-* Added the `FileDatum` data type which can hold a reference to a file. 
+* Added the `FileDatum` data type which can hold a reference to a file.
 For example, an audio file (see the `carp_audio_package`).
 
 ## 0.6.5
@@ -198,7 +201,7 @@ For example, an audio file (see the `carp_audio_package`).
 * Support 1.0.0 version of stable dependencies. ([dart_lsc](https://github.com/amirh/dart_lsc))
 
 ## 0.6.3
-* moved the `connectivity` sampling package to an external [`carp_connectivity_package`](https://pub.dev/packages/carp_connectivity_package) 
+* moved the `connectivity` sampling package to an external [`carp_connectivity_package`](https://pub.dev/packages/carp_connectivity_package)
   due to [issue#46](https://github.com/cph-cachet/carp.sensing-flutter/issues/46).
 
 ## 0.6.2
@@ -228,14 +231,14 @@ For example, an audio file (see the `carp_audio_package`).
    * The `BluetoothDatum` now lists all devices found in a scan.
    * The pedometer now works as a simple step stream which sense and report each step taken.
    * `datastore` library have been renamed to `data_managers`.    
-   
+
 ## 0.5.1
 * Update of readme file.
 
 ## 0.5.0
-* **BREAKING** This version has been migrated from the deprecated Android Support Library to *AndroidX*. 
-This should not result in any functional changes, but it requires any Android app using this plugin to also 
-[migrate](https://developer.android.com/jetpack/androidx/migrate) if they're using the original support library. 
+* **BREAKING** This version has been migrated from the deprecated Android Support Library to *AndroidX*.
+This should not result in any functional changes, but it requires any Android app using this plugin to also
+[migrate](https://developer.android.com/jetpack/androidx/migrate) if they're using the original support library.
    * See Flutter [AndroidX compatibility](https://flutter.dev/docs/development/packages-and-plugins/androidx-compatibility)
 * Fixed error in `PedometerProbe`
 
@@ -263,7 +266,7 @@ This should not result in any functional changes, but it requires any Android ap
 ## 0.3.3
 * update to new versions of [CACHET Flutter Plugins](https://github.com/cph-cachet/flutter-plugins)
 * rename of `probes` folder to `packages`
-* upgrade and test on Flutter v. 1.3.4 Dart v. 2.2.1 
+* upgrade and test on Flutter v. 1.3.4 Dart v. 2.2.1
 
 ## 0.3.2
 * support for dividing probes into separate sampling packages
@@ -294,11 +297,11 @@ This should not result in any functional changes, but it requires any Android ap
 ## 0.2.6
 * fixed small bug in `weater` probe.
 
-## 0.2.5 
+## 0.2.5
 * small bug fixes in connectivity datum model (to work w. `carp_firebase_backend).
-* `weather` probe added. 
+* `weather` probe added.
 
-## 0.2.4 
+## 0.2.4
 * error in `light` probe fixed.
 * `noise` probe added.
 * using the `carp_core` domain model
@@ -306,31 +309,30 @@ This should not result in any functional changes, but it requires any Android ap
 ## 0.2.3
 * fixed error in `readme` file.
 
-## 0.2.2 
+## 0.2.2
 * `phone_log` probe added
 * `audio` probe added
 * `activity` probe added
 * improvement to `readme` file on `manifest.xml` and `Info.plist`.
 
 
-## 0.2.1 
+## 0.2.1
 * re-organization of github location and outline
 * improvements to `FileDataManager` to avoid race conditions
 * improved API documentation
 
 
-## 0.2.0 
-* refactor of organization of classes into libraries 
+## 0.2.0
+* refactor of organization of classes into libraries
 * complete API documentation
 
-## 0.1.1 
+## 0.1.1
 * small improvements incl. documentation
 
-## 0.1.0 
+## 0.1.0
 * removal of all remote backend code to separate packages
 
-## 0.0.1 
-* Initial version by Jakob E. Bardram 
-* Transferring the old implementation to this carp.sensing-flutter framework 
+## 0.0.1
+* Initial version by Jakob E. Bardram
+* Transferring the old implementation to this carp.sensing-flutter framework
 * General refactor and clean-up
-

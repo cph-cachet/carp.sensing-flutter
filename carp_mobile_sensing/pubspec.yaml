@@ -54,8 +54,7 @@ dev_dependencies:
   pedantic: ^1.11.0        # For pedantic Dart linter
   build_runner: ^2.0.4    # For building json serialization
   json_serializable: ^4.1.3
-  test: 
+  test:
 
 # The following section is specific to Flutter.
 flutter:
-

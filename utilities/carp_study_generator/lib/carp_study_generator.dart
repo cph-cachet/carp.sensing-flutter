@@ -1,9 +1,5 @@
 library carp_study_generator;
 
-// import 'package:carp_apps_package/apps.dart';
-// import 'package:carp_audio_package/audio.dart';
-// import 'package:carp_communication_package/communication.dart';
-// import 'package:carp_context_package/context.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';

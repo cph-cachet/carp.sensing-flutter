@@ -30,7 +30,7 @@ class ConsentCommand extends AbstractCommand {
     await authenticate();
     consentJson;
     informedConsent;
-    print('Uploading informed consent to CARP');
+    print('Uploading informed consent to CARP\n study_id: ${app.studyId}');
     await CarpResourceManager().setInformedConsent(informedConsent);
     print('Upload successful!');
   }

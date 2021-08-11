@@ -35,6 +35,9 @@ abstract class DeploymentServiceRequest extends ServiceRequest {
 class CreateStudyDeployment extends DeploymentServiceRequest {
   StudyProtocol protocol;
 
+  @JsonKey(ignore: true)
+  String studyDeploymentId;
+
   CreateStudyDeployment(this.protocol) : super();
 
   Function get fromJsonFunction => _$CreateStudyDeploymentFromJson;
