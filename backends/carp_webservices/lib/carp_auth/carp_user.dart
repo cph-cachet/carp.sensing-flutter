@@ -49,7 +49,8 @@ class CarpUser {
   /// The list of roles that this user has in CARP.
   List<String> role = [];
 
-  /// The OAuth 2.0 [OAuthToken] for this user, once authenticated to CARP
+  /// The OAuth 2.0 [OAuthToken] for this user, once authenticated to CARP.
+  /// Is `null` if user is not authenticated.
   OAuthToken? token;
 
   CarpUser({
@@ -88,21 +89,20 @@ class CarpUser {
 
     // check if we need to refresh the token.
     if (token!.hasExpired || refresh) {
-      this.token = await CarpService().refresh();
+      token = await CarpService().refresh();
     }
 
     return token;
   }
 
   /// Sign out the current user.
-  Future signOut() async {
-    //TODO - implement sign out on the CARP Web Service
+  Future<void> signOut() async {
     token = null;
   }
 
-  /// Manually refreshes the data of the current user (e.g., [fullName],
+  /// Reload the data of the current user (e.g., [fullName],
   /// [telephone], etc.) from the CARP web service.
-  Future reload() async {
+  Future<void> reload() async {
     if (!CarpService().isConfigured)
       throw new CarpServiceException(
           message:
@@ -110,11 +110,6 @@ class CarpUser {
 
     CarpService().getCurrentUserProfile();
   }
-
-  /// Deletes the user record from the CARP web service.
-  ///
-  /// TODO - not implemented, since there is currently no CARP endpoint for users.
-  Future delete() async {}
 
   factory CarpUser.fromJson(Map<String, dynamic> json) =>
       _$CarpUserFromJson(json);

@@ -103,6 +103,9 @@ class CarpService extends CarpBaseService {
     // All other cases are treated as a failed attempt and throws an error
     _authEventController.add(AuthEvent.failed);
     _currentUser = null;
+
+    // auth error response from CARP is on the form
+    //      {error: invalid_grant, error_description: Bad credentials}
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
       message: responseJson["error_description"],
@@ -112,19 +115,20 @@ class CarpService extends CarpBaseService {
   /// Authenticate to this CARP web service using username and a previously
   /// stored [OAuthToken] access token.
   ///
-  /// This method can be used to re-authenticate  a user if the token (and username)
+  /// This method can be used to re-authenticate a user if the token (and username)
   /// is known locally on the phone.
   /// Useful for keeping the token locally on the phone between starting/stopping
   /// the app.
   ///
-  /// Return the signed in user.
+  /// Return the signed in user (with an [OAuthToken] access token), if successful.
+  /// Throws a [CarpServiceException] if not successful.
   Future<CarpUser> authenticateWithToken({
     required String username,
     required OAuthToken token,
   }) async {
     _currentUser = CarpUser(username: username)..authenticated(token);
 
-    // Refresh the token - it might have expired since it was saved.
+    // refresh the token - it might have expired since it was saved.
     await refresh();
 
     await getCurrentUserProfile();
@@ -188,6 +192,10 @@ class CarpService extends CarpBaseService {
       throw new CarpServiceException(
           message:
               "CARP Service not initialized. Call 'CarpService().configure()' first.");
+    if (_currentUser == null)
+      throw new CarpServiceException(
+          message:
+              "No user is authenticated. Call 'CarpService().autheticate()' first.");
 
     // --data "refresh_token=my-refresh-token&grant_type=refresh_token"
     final loginBody = {
@@ -202,10 +210,10 @@ class CarpService extends CarpBaseService {
     );
 
     int httpStatusCode = response.statusCode;
-    Map<String, dynamic>? responseJson = json.decode(response.body);
+    Map<String, dynamic> responseJson = json.decode(response.body);
 
     if (httpStatusCode == HttpStatus.ok) {
-      OAuthToken refreshedToken = OAuthToken.fromMap(responseJson!);
+      OAuthToken refreshedToken = OAuthToken.fromMap(responseJson);
       _currentUser!.authenticated(refreshedToken);
       _authEventController.add(AuthEvent.refreshed);
       return refreshedToken;
@@ -214,10 +222,9 @@ class CarpService extends CarpBaseService {
     // All other cases are treated as a failed attempt and throws an error
     _authEventController.add(AuthEvent.failed);
     _currentUser = null;
-
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: responseJson!["error_description"],
+      message: responseJson["error_description"],
     );
   }
 
@@ -227,8 +234,8 @@ class CarpService extends CarpBaseService {
 
   /// Triggers the CARP backend to send a password-reset email to the given
   /// email address, which must correspond to an existing user of the current [app].
-  /// Return the email, returned from CARP if successful.
   ///
+  /// Returns the email address returned from CARP, if successful.
   /// Throws a [CarpServiceException] if not successful.
   Future<String> sendForgottenPasswordEmail({
     required String email,

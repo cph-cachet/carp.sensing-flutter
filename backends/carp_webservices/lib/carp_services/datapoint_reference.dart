@@ -29,15 +29,15 @@ class DataPointReference extends CarpReference {
         headers: headers, body: json.encode(data));
 
     int httpStatusCode = response.statusCode;
-    Map<String, dynamic>? responseJson = json.decode(response.body);
+    Map<String, dynamic> responseJson = json.decode(response.body);
 
     if ((httpStatusCode == HttpStatus.ok) ||
-        (httpStatusCode == HttpStatus.created)) return responseJson!["id"];
+        (httpStatusCode == HttpStatus.created)) return responseJson["id"];
 
     // All other cases are treated as an error.
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: responseJson!["message"],
+      message: responseJson["message"],
     );
   }
 
@@ -91,15 +91,15 @@ class DataPointReference extends CarpReference {
         await httpr.get(Uri.encodeFull(url), headers: headers);
 
     int httpStatusCode = response.statusCode;
-    Map<String, dynamic>? responseJson = json.decode(response.body);
+    Map<String, dynamic> responseJson = json.decode(response.body);
 
     if (httpStatusCode == HttpStatus.ok)
-      return DataPoint.fromJson(responseJson!);
+      return DataPoint.fromJson(responseJson);
 
     // All other cases are treated as an error.
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: responseJson!["message"],
+      message: responseJson["message"],
     );
   }
 
