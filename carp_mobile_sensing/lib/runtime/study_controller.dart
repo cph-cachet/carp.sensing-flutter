@@ -56,6 +56,32 @@ class StudyDeploymentController extends StudyRuntime {
   /// that has been collected.
   int get samplingSize => _samplingSize;
 
+  DateTime? _studyDeploymentStartTime;
+  String get _studyDeploymentStartTimesKey =>
+      '$studyDeploymentId.$Settings.STUDY_START_KEY'.toLowerCase();
+
+  /// The timestamp (in UTC) when the current study deployment
+  /// (the [masterDeployment]) was started on this phone.
+  /// This timestamp is save on the phone the first time a study is deployed
+  /// and persistently saved across app restarts.
+  Future<DateTime> get studyDeploymentStartTime async {
+    assert(Settings().preferences != null,
+        "Setting is not initialized. Call 'Setting().init()' first.");
+    if (_studyDeploymentStartTime == null) {
+      String? str =
+          Settings().preferences!.get(_studyDeploymentStartTimesKey) as String?;
+      _studyDeploymentStartTime = (str != null) ? DateTime.parse(str) : null;
+      if (_studyDeploymentStartTime == null) {
+        _studyDeploymentStartTime = DateTime.now().toUtc();
+        await Settings().preferences!.setString(_studyDeploymentStartTimesKey,
+            _studyDeploymentStartTime.toString());
+        info(
+            '$runtimeType - Study deployment start time set to $_studyDeploymentStartTime');
+      }
+    }
+    return _studyDeploymentStartTime!;
+  }
+
   /// Create a new [StudyDeploymentController] to control the runtime behavior
   /// of a study deployment.
   StudyDeploymentController() : super() {
@@ -92,7 +118,7 @@ class StudyDeploymentController extends StudyRuntime {
   ///      packages at once. Default to `true`. If you want the app to handle
   ///      permissions, set this to `false`.
   ///
-  Future configure({
+  Future<void> configure({
     SamplingSchema? samplingSchema,
     DataEndPoint? dataEndPoint,
     String privacySchemaName = NameSpace.CARP,
@@ -104,6 +130,11 @@ class StudyDeploymentController extends StudyRuntime {
     assert(deployment is CAMSMasterDeviceDeployment,
         'A CAMS study controller can only work with a CAMS Master Device Deployment');
     info('Configuring $runtimeType');
+
+    // save the study deployment id in settings
+    // this is actually a little hack since we should be able to run
+    // several studies in the same app....
+    Settings().studyDeploymentId = studyDeploymentId;
 
     _executor =
         StudyDeploymentExecutor(deployment as CAMSMasterDeviceDeployment);
@@ -143,9 +174,14 @@ class StudyDeploymentController extends StudyRuntime {
       }
     });
 
+    // check the start time for this study on this phone
+    // this will save it, the first time the study is executed
+    DateTime studyStartTimestamp = await studyDeploymentStartTime;
+
     info(
         'CARP Mobile Sensing (CAMS) - Initializing Study Deployment Controller');
     info(' deployment id : ${masterDeployment!.studyDeploymentId}');
+    info('    start time : $studyStartTimestamp');
     info('          user : ${masterDeployment!.userId}');
     info(' data endpoint : $_dataEndPoint');
     info('      platform : ${DeviceInfo().platform.toString()}');
