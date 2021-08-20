@@ -7,10 +7,10 @@
 
 part of domain;
 
-/// Contains the entire description and configuration for how a CAMS master
-/// device participates in running a study.
+/// Contains the entire description and configuration for how a smartphone master
+/// device participates in deployment of a study.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
+class SmartphoneDeployment extends MasterDeviceDeployment {
   late String _studyDeploymentId;
 
   /// The unique id of this study deployment.
@@ -38,7 +38,7 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
 
   SamplingSchemaType? samplingStrategy;
 
-  CAMSMasterDeviceDeployment({
+  SmartphoneDeployment({
     required String studyDeploymentId,
     this.protocolDescription,
     required MasterDeviceDescriptor deviceDescriptor,
@@ -63,7 +63,7 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
     _studyDeploymentId = studyDeploymentId;
   }
 
-  CAMSMasterDeviceDeployment.fromMasterDeviceDeployment({
+  SmartphoneDeployment.fromMasterDeviceDeployment({
     required String studyDeploymentId,
     StudyProtocolDescription? protocolDescription,
     required MasterDeviceDeployment masterDeviceDeployment,
@@ -81,10 +81,10 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
           dataEndPoint: masterDeviceDeployment.dataEndPoint,
         );
 
-  /// Create a [CAMSMasterDeviceDeployment] based on a [CAMSStudyProtocol].
+  /// Create a [SmartphoneDeployment] based on a [CAMSStudyProtocol].
   /// This method basically makes a 1:1 mapping between a protocol and
   /// a deployment.
-  CAMSMasterDeviceDeployment.fromStudyProtocol({
+  SmartphoneDeployment.fromStudyProtocol({
     required String studyDeploymentId,
     StudyProtocolDescription? protocolDescription,
     required String masterDeviceRoleName,
@@ -116,9 +116,9 @@ class CAMSMasterDeviceDeployment extends MasterDeviceDeployment {
     schema.adapt(this, restore: restore);
   }
 
-  factory CAMSMasterDeviceDeployment.fromJson(Map<String, dynamic> json) =>
-      _$CAMSMasterDeviceDeploymentFromJson(json);
-  Map<String, dynamic> toJson() => _$CAMSMasterDeviceDeploymentToJson(this);
+  factory SmartphoneDeployment.fromJson(Map<String, dynamic> json) =>
+      _$SmartphoneDeploymentFromJson(json);
+  Map<String, dynamic> toJson() => _$SmartphoneDeploymentToJson(this);
 
   String toString() => '$runtimeType - studyDeploymentId: $studyDeploymentId, '
       'device: ${deviceDescriptor.roleName}, '

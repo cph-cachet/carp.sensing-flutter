@@ -94,7 +94,7 @@ class SmartphoneDeploymentService implements DeploymentService {
   }
 
   @override
-  Future<CAMSMasterDeviceDeployment> getDeviceDeploymentFor(
+  Future<SmartphoneDeployment> getDeviceDeploymentFor(
     String studyDeploymentId,
     String masterDeviceRoleName,
   ) async {
@@ -115,7 +115,7 @@ class SmartphoneDeploymentService implements DeploymentService {
       encrypt: false,
     );
 
-    return CAMSMasterDeviceDeployment.fromMasterDeviceDeployment(
+    return SmartphoneDeployment.fromMasterDeviceDeployment(
       studyDeploymentId: studyDeploymentId,
       masterDeviceDeployment: deviceDeployment,
     );
@@ -126,7 +126,7 @@ class SmartphoneDeploymentService implements DeploymentService {
   ///
   /// The default data endpoint is set to a [FileDataEndPoint], i.e. storing
   /// the data locally on the phone as zipped files.
-  Future<CAMSMasterDeviceDeployment> getDeviceDeployment(
+  Future<SmartphoneDeployment> getDeviceDeployment(
           String studyDeploymentId) async =>
       await getDeviceDeploymentFor(studyDeploymentId, thisPhone.roleName);
 

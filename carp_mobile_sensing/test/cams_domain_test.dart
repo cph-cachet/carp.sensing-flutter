@@ -277,7 +277,7 @@ void main() {
     expect(status_1.devicesStatus[1].status,
         DeviceDeploymentStatusTypes.Registered);
 
-    CAMSMasterDeviceDeployment deployment = await SmartphoneDeploymentService()
+    SmartphoneDeployment deployment = await SmartphoneDeploymentService()
         .getDeviceDeployment(status_1.studyDeploymentId);
     print(deployment);
     print(toJsonString(deployment));

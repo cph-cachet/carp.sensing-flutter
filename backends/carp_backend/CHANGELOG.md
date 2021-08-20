@@ -1,4 +1,7 @@
 ## 0.30.0
+* upgrade to `carp_mobile_sensing` v. 0.30.3
+
+## 0.30.0
 * upgrade to null-safety
 
 ## 0.21.2+1

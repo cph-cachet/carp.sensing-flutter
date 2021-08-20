@@ -33,7 +33,7 @@ class StudyProtocolDescription extends Serializable {
       '$runtimeType -  title: $title, description: $description. purpose: $purpose';
 }
 
-/// A person who is responsible for a [CAMSStudyProtocol].
+/// A person who is responsible for a [StudyProtocol].
 /// Typically the Principal Investigator (PI) who is reposnibile for the study.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class StudyProtocolReponsible extends Serializable {

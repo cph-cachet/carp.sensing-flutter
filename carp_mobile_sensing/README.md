@@ -171,7 +171,7 @@ StudyDeploymentStatus status =
 
 // you can get the device deployment configuration for this phone....
 // ... but this is rarely needed - see below
-CAMSMasterDeviceDeployment deployment = await SmartphoneDeploymentService()
+SmartphoneDeployment deployment = await SmartphoneDeploymentService()
   .getDeviceDeployment(status.studyDeploymentId);
 
 ...

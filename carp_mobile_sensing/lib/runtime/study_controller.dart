@@ -6,7 +6,7 @@
  */
 part of runtime;
 
-/// A [StudyDeploymentController] controls the execution of a [CAMSMasterDeviceDeployment].
+/// A [StudyDeploymentController] controls the execution of a [SmartphoneDeployment].
 class StudyDeploymentController extends StudyRuntime {
   int _samplingSize = 0;
   DataManager? _dataManager;
@@ -17,8 +17,8 @@ class StudyDeploymentController extends StudyRuntime {
   late DatumTransformer _transformer;
 
   /// The master device deployment running in this controller.
-  CAMSMasterDeviceDeployment? get masterDeployment =>
-      deployment as CAMSMasterDeviceDeployment?;
+  SmartphoneDeployment? get masterDeployment =>
+      deployment as SmartphoneDeployment?;
 
   /// The executor executing this [masterDeployment].
   StudyDeploymentExecutor? get executor => _executor;
@@ -127,7 +127,7 @@ class StudyDeploymentController extends StudyRuntime {
   }) async {
     assert(deployment != null,
         'Cannot configure a Study Controller without a deployment.');
-    assert(deployment is CAMSMasterDeviceDeployment,
+    assert(deployment is SmartphoneDeployment,
         'A CAMS study controller can only work with a CAMS Master Device Deployment');
     info('Configuring $runtimeType');
 
@@ -136,8 +136,7 @@ class StudyDeploymentController extends StudyRuntime {
     // several studies in the same app....
     Settings().studyDeploymentId = studyDeploymentId;
 
-    _executor =
-        StudyDeploymentExecutor(deployment as CAMSMasterDeviceDeployment);
+    _executor = StudyDeploymentExecutor(deployment as SmartphoneDeployment);
 
     // initialize optional parameters
     _samplingSchema = samplingSchema ?? SamplingSchema.normal(powerAware: true);

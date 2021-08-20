@@ -105,7 +105,7 @@ class CustomProtocolDeploymentService implements DeploymentService {
     String studyDeploymentId,
     String masterDeviceRoleName,
   ) async {
-    CAMSMasterDeviceDeployment? deployment;
+    SmartphoneDeployment? deployment;
 
     if (isConfigured()) {
       // get the protocol from the study protocol manager
@@ -123,7 +123,7 @@ class CustomProtocolDeploymentService implements DeploymentService {
         deleteWhenUploaded: true,
       );
 
-      deployment = CAMSMasterDeviceDeployment.fromStudyProtocol(
+      deployment = SmartphoneDeployment.fromStudyProtocol(
         studyDeploymentId: studyDeploymentId,
         masterDeviceRoleName: masterDeviceRoleName,
         dataEndPoint: dataEndPoint,

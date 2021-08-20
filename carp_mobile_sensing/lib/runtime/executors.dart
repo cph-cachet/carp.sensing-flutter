@@ -52,10 +52,10 @@ abstract class Executor extends AbstractProbe {
 class StudyDeploymentExecutor extends Executor {
   final StreamController<DataPoint> _manualDataPointController =
       StreamController.broadcast();
-  CAMSMasterDeviceDeployment get deployment => _deployment;
-  late CAMSMasterDeviceDeployment _deployment;
+  SmartphoneDeployment get deployment => _deployment;
+  late SmartphoneDeployment _deployment;
 
-  StudyDeploymentExecutor(CAMSMasterDeviceDeployment deployment) : super() {
+  StudyDeploymentExecutor(SmartphoneDeployment deployment) : super() {
     _deployment = deployment;
     _group.add(_manualDataPointController.stream);
 

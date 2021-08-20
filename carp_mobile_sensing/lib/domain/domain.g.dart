@@ -236,9 +236,8 @@ Map<String, dynamic> _$ConnectableDeviceDescriptorToJson(
   return val;
 }
 
-CAMSMasterDeviceDeployment _$CAMSMasterDeviceDeploymentFromJson(
-    Map<String, dynamic> json) {
-  return CAMSMasterDeviceDeployment(
+SmartphoneDeployment _$SmartphoneDeploymentFromJson(Map<String, dynamic> json) {
+  return SmartphoneDeployment(
     studyDeploymentId: json['studyDeploymentId'] as String,
     protocolDescription: json['protocolDescription'] == null
         ? null
@@ -278,8 +277,8 @@ CAMSMasterDeviceDeployment _$CAMSMasterDeviceDeploymentFromJson(
         _$SamplingSchemaTypeEnumMap, json['samplingStrategy']);
 }
 
-Map<String, dynamic> _$CAMSMasterDeviceDeploymentToJson(
-    CAMSMasterDeviceDeployment instance) {
+Map<String, dynamic> _$SmartphoneDeploymentToJson(
+    SmartphoneDeployment instance) {
   final val = <String, dynamic>{
     'deviceDescriptor': instance.deviceDescriptor,
     'configuration': instance.configuration,
