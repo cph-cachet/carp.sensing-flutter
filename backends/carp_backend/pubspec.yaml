@@ -12,7 +12,7 @@ dependencies:
   meta: ^1.3.0
   json_annotation: ^4.0.1
   carp_core: ^0.30.1
-  #carp_mobile_sensing: ^0.30.2
+  carp_mobile_sensing: ^0.30.3
   carp_webservices: ^0.30.0
   research_package: ^0.6.0      # the informed consent domain model
 
@@ -22,8 +22,8 @@ dependencies:
 dependency_overrides:
 #  carp_core:
 #    path: ../../carp_core/
-  carp_mobile_sensing:
-    path: ../../carp_mobile_sensing/
+#  carp_mobile_sensing:
+#    path: ../../carp_mobile_sensing/
 #  carp_webservices:
 #    path: ../carp_webservices/
 #  research_package:
