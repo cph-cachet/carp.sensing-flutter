@@ -111,14 +111,19 @@ class AppTaskController {
   }
 
   /// Expire an [UserTask] on the [userTaskQueue].
+  /// Note that an expired task remains on the queue.
+  /// If you want to remove a taks from the queue, use the [dequeue] method.
   void expire(String id) {
     UserTask? userTask = _userTaskMap[id];
     if (userTask == null) {
       warning("Could not expire AppTask - id is not valid: '$id'");
     } else {
-      userTask.state = UserTaskState.expired;
-      _controller.add(userTask);
-      info('Expired $userTask');
+      // only expire tasks which are not already done
+      if (userTask.state != UserTaskState.done) {
+        userTask.state = UserTaskState.expired;
+        _controller.add(userTask);
+        info('Expired $userTask');
+      }
     }
   }
 

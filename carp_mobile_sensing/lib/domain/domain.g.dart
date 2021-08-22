@@ -6,22 +6,19 @@ part of domain;
 // JsonSerializableGenerator
 // **************************************************************************
 
-StudyProtocolDescription _$StudyProtocolDescriptionFromJson(
-    Map<String, dynamic> json) {
-  return StudyProtocolDescription(
-    title: json['title'] as String?,
-    description: json['description'] as String?,
-    purpose: json['purpose'] as String?,
+StudyDescription _$StudyDescriptionFromJson(Map<String, dynamic> json) {
+  return StudyDescription(
+    title: json['title'] as String,
+    description: json['description'] as String,
+    purpose: json['purpose'] as String,
   )
     ..$type = json[r'$type'] as String?
     ..responsible = json['responsible'] == null
         ? null
-        : StudyProtocolReponsible.fromJson(
-            json['responsible'] as Map<String, dynamic>);
+        : StudyReponsible.fromJson(json['responsible'] as Map<String, dynamic>);
 }
 
-Map<String, dynamic> _$StudyProtocolDescriptionToJson(
-    StudyProtocolDescription instance) {
+Map<String, dynamic> _$StudyDescriptionToJson(StudyDescription instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -31,27 +28,25 @@ Map<String, dynamic> _$StudyProtocolDescriptionToJson(
   }
 
   writeNotNull(r'$type', instance.$type);
-  writeNotNull('title', instance.title);
-  writeNotNull('description', instance.description);
-  writeNotNull('purpose', instance.purpose);
+  val['title'] = instance.title;
+  val['description'] = instance.description;
+  val['purpose'] = instance.purpose;
   writeNotNull('responsible', instance.responsible);
   return val;
 }
 
-StudyProtocolReponsible _$StudyProtocolReponsibleFromJson(
-    Map<String, dynamic> json) {
-  return StudyProtocolReponsible(
-    id: json['id'] as String?,
-    name: json['name'] as String?,
-    title: json['title'] as String?,
-    email: json['email'] as String?,
-    affiliation: json['affiliation'] as String?,
-    address: json['address'] as String?,
+StudyReponsible _$StudyReponsibleFromJson(Map<String, dynamic> json) {
+  return StudyReponsible(
+    id: json['id'] as String,
+    name: json['name'] as String,
+    title: json['title'] as String,
+    email: json['email'] as String,
+    affiliation: json['affiliation'] as String,
+    address: json['address'] as String,
   )..$type = json[r'$type'] as String?;
 }
 
-Map<String, dynamic> _$StudyProtocolReponsibleToJson(
-    StudyProtocolReponsible instance) {
+Map<String, dynamic> _$StudyReponsibleToJson(StudyReponsible instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -61,12 +56,12 @@ Map<String, dynamic> _$StudyProtocolReponsibleToJson(
   }
 
   writeNotNull(r'$type', instance.$type);
-  writeNotNull('id', instance.id);
-  writeNotNull('name', instance.name);
-  writeNotNull('title', instance.title);
-  writeNotNull('email', instance.email);
-  writeNotNull('address', instance.address);
-  writeNotNull('affiliation', instance.affiliation);
+  val['id'] = instance.id;
+  val['name'] = instance.name;
+  val['title'] = instance.title;
+  val['email'] = instance.email;
+  val['address'] = instance.address;
+  val['affiliation'] = instance.affiliation;
   return val;
 }
 
@@ -241,7 +236,7 @@ SmartphoneDeployment _$SmartphoneDeploymentFromJson(Map<String, dynamic> json) {
     studyDeploymentId: json['studyDeploymentId'] as String,
     protocolDescription: json['protocolDescription'] == null
         ? null
-        : StudyProtocolDescription.fromJson(
+        : StudyDescription.fromJson(
             json['protocolDescription'] as Map<String, dynamic>),
     deviceDescriptor: MasterDeviceDescriptor.fromJson(
         json['deviceDescriptor'] as Map<String, dynamic>),

@@ -6,6 +6,7 @@ void main() {
 
   test('help', () async {});
   test('help', () async => HelpCommand().execute());
+  test('description', () async => StudyDescriptionCommand().execute());
   test('consent', () async => ConsentCommand().execute());
   test('protocol', () async => CreateStudyProtocolCommand().execute());
 }

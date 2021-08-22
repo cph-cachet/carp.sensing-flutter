@@ -29,12 +29,12 @@ class SmartphoneDeployment extends MasterDeviceDeployment {
   /// [DataPointHeader] as the [userId].
   String? userId;
 
-  /// The textual [StudyProtocolDescription] containing the title, description
-  /// and purpose of this study protocol.
-  StudyProtocolDescription? protocolDescription;
+  /// The [StudyDescription] containing the title, description,
+  /// purpose, and the responsible researcher for this study.
+  StudyDescription? protocolDescription;
 
   /// The PI responsible for this study.
-  StudyProtocolReponsible? get responsible => protocolDescription?.responsible;
+  StudyReponsible? get responsible => protocolDescription?.responsible;
 
   SamplingSchemaType? samplingStrategy;
 
@@ -65,7 +65,7 @@ class SmartphoneDeployment extends MasterDeviceDeployment {
 
   SmartphoneDeployment.fromMasterDeviceDeployment({
     required String studyDeploymentId,
-    StudyProtocolDescription? protocolDescription,
+    StudyDescription? protocolDescription,
     required MasterDeviceDeployment masterDeviceDeployment,
   }) : this(
           studyDeploymentId: studyDeploymentId,
@@ -86,7 +86,7 @@ class SmartphoneDeployment extends MasterDeviceDeployment {
   /// a deployment.
   SmartphoneDeployment.fromStudyProtocol({
     required String studyDeploymentId,
-    StudyProtocolDescription? protocolDescription,
+    StudyDescription? protocolDescription,
     required String masterDeviceRoleName,
     DataEndPoint? dataEndPoint,
     required StudyProtocol protocol,

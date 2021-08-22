@@ -17,13 +17,17 @@ study:
   study_id: 01cf04a7-d154-40f0-9a75-ab759cf74eb3
   study_deployment_id: ae8076a3-7170-4bcf-b66c-64639a7a9eee
 
+# the location of the study description to be uploaded
+description:
+  path: carp/resources/description.json
+
 # the location of the protocol to be uploaded
 protocol:
-  path: carp/protocols/protocol.json
+  path: carp/resources/protocol.json
 
 # the location of the informed consent to be uploaded
 consent:
-  path: carp/consents/consent.json
+  path: carp/resources/consent.json
 
 localization:
   # the location of the localization files to be uploaded

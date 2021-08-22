@@ -1,6 +1,8 @@
-## 0.30.0
+## 0.30.3
 * upgrade to null-safety
 * more robust error messages in `dryrun`
+* upgrade to `carp_backend` v 0.30.3
+* support for setting study descriptions
 
 ## 0.21.5
 * improvement to `localization` command

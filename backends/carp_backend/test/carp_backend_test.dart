@@ -40,6 +40,8 @@ void main() {
   /// Setup CARP and authenticate.
   /// Runs once before all tests.
   setUpAll(() async {
+    Settings().saveAppTaskQueue = false;
+
     StudyProtocol(ownerId: 'user@dtu.dk', name: 'ignored'); // ...
 
     app = new CarpApp(
@@ -184,6 +186,42 @@ void main() {
       });
       expect(deployment.configuration.deviceId, isNotNull);
     }, skip: false);
+  });
+
+  group("Study Description", () {
+    test('- get', () async {
+      StudyDescription? description =
+          await CarpResourceManager().getStudyDescription();
+      print(_encode(description));
+    });
+
+    test('- set', () async {
+      StudyDescription description = StudyDescription(
+          title: '1234',
+          description: 'This is a super cool study',
+          purpose: 'For testing only',
+          responsible: StudyReponsible(
+            id: 'me',
+            title: 'Dr.',
+            address: '',
+            affiliation: 'DTU',
+            email: 'user@dtu.dk',
+            name: 'Ole Pedersen',
+          ));
+
+      bool success =
+          await CarpResourceManager().setStudyDescription(description);
+      print('updated: $success');
+      StudyDescription? downloaded =
+          await CarpResourceManager().getStudyDescription();
+
+      print(_encode(downloaded));
+    });
+
+    test('- delete', () async {
+      bool success = await CarpResourceManager().deleteStudyDescription();
+      print('deleted: $success');
+    });
   });
 
   group("Informed Consent", () {

@@ -24,7 +24,7 @@ class LocalizationCommand extends AbstractCommand {
         print('Upload successful - # elements: ${upLocalizations.length}');
 
         print("Downloading localization for locale: '$locale' from CARP.");
-        Map<String, dynamic> downLocalizations =
+        Map<String, String>? downLocalizations =
             await CarpResourceManager().getLocalizations(Locale(locale));
 
         (downLocalizations != null)
