@@ -21,19 +21,19 @@ abstract class Executor extends AbstractProbe {
     executors.forEach((executor) => executor.initialize(measure));
   }
 
-  Future onPause() async {
+  Future<void> onPause() async {
     executors.forEach((executor) => executor.pause());
   }
 
-  Future onResume() async {
+  Future<void> onResume() async {
     executors.forEach((executor) => executor.resume());
   }
 
-  Future onRestart({Measure? measure}) async {
+  Future<void> onRestart({Measure? measure}) async {
     executors.forEach((executor) => executor.restart());
   }
 
-  Future onStop() async {
+  Future<void> onStop() async {
     executors.forEach((executor) => executor.stop());
     executors = [];
   }
@@ -52,10 +52,10 @@ abstract class Executor extends AbstractProbe {
 class StudyDeploymentExecutor extends Executor {
   final StreamController<DataPoint> _manualDataPointController =
       StreamController.broadcast();
-  CAMSMasterDeviceDeployment get deployment => _deployment;
-  late CAMSMasterDeviceDeployment _deployment;
+  SmartphoneDeployment get deployment => _deployment;
+  late SmartphoneDeployment _deployment;
 
-  StudyDeploymentExecutor(CAMSMasterDeviceDeployment deployment) : super() {
+  StudyDeploymentExecutor(SmartphoneDeployment deployment) : super() {
     _deployment = deployment;
     _group.add(_manualDataPointController.stream);
 
@@ -89,16 +89,6 @@ class StudyDeploymentExecutor extends Executor {
   Stream<DataPoint> get data => _group.stream.map((dataPoint) => dataPoint
     ..carpHeader.studyId = deployment.studyDeploymentId
     ..carpHeader.userId = deployment.userId);
-
-  Future onResume() async {
-    // check the start time for this study on this phone
-    // this will save it, the first time the study is executed
-    DateTime studyStartTimestamp = await Settings().studyStartTimestamp;
-    info(
-        'Study deployment was started on this phone on ${studyStartTimestamp.toUtc()}');
-
-    await super.onResume();
-  }
 
   /// Add a [DataPoint] object to the stream of events.
   void addDataPoint(DataPoint dataPoint) =>

@@ -164,6 +164,9 @@ enum UserTaskState {
   /// Done by the user.
   done,
 
+  /// Expired.
+  expired,
+
   /// An undefined state and cannot be used.
   /// Task should be ignored.
   undefined,

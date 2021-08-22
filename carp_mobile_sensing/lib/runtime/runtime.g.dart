@@ -86,5 +86,6 @@ const _$UserTaskStateEnumMap = {
   UserTaskState.started: 'started',
   UserTaskState.canceled: 'canceled',
   UserTaskState.done: 'done',
+  UserTaskState.expired: 'expired',
   UserTaskState.undefined: 'undefined',
 };

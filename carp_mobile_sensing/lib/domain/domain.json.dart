@@ -9,10 +9,21 @@ void _registerFromJsonFunctions() {
 
   // Protocol classes
   // FromJsonFactory().register(CAMSStudyProtocol());
-  FromJsonFactory().register(StudyProtocolReponsible());
+  FromJsonFactory().register(StudyReponsible(
+    id: '',
+    title: '',
+    address: '',
+    affiliation: '',
+    email: '',
+    name: '',
+  ));
   FromJsonFactory().register(DataEndPoint(type: ''));
   FromJsonFactory().register(FileDataEndPoint(dataFormat: ''));
-  FromJsonFactory().register(StudyProtocolDescription());
+  FromJsonFactory().register(StudyDescription(
+    title: '',
+    description: '',
+    purpose: '',
+  ));
 
   // Task classes
   FromJsonFactory().register(AutomaticTask());

@@ -16,8 +16,9 @@ The `carpspec.yaml` can be configured using the following properties for:
 
  * the CARP Server 
  * the study ID
- * protocol
- * informed consent
+ * the study description
+ * a protocol
+ * the informed consent
  * localization
 
 ```yaml
@@ -28,15 +29,22 @@ server:
   username: user@dtu.dk
   password: pw
 
+# basic study ids
 study:
   study_id: 01cf04a7-d154-40f0-9a75-ab759cf74eb3
   study_deployment_id: ae8076a3-7170-4bcf-b66c-64639a7a9eee
 
-protocol:
-  path: carp/protocols/protocol.json
+# the location of the study description to be uploaded
+description:
+  path: carp/resources/description.json
 
+# the location of the protocol to be uploaded
+protocol:
+  path: carp/resources/protocol.json
+
+# the location of the informed consent to be uploaded
 consent:
-  path: carp/consents/consent.json
+  path: carp/resources/consent.json
 
 localization:
   path: carp/lang/
@@ -53,11 +61,12 @@ Note that the `carpspec.yaml` file contains username and password in clear text 
 
 All files used for creating and uploading configurations to CARP is stored in the `carp` folder in the root of your (app) project file. The name of the json files to upload is specified in the `carpspec.yaml` file. The default file structure is:
 
-| Folder      |   Description |
-|-------------|---------------|
-| `protocols` | The file(s) containing the json definition of your `StudyProtocol`. |  
-| `consents`  | The file(s) containing the json definition of your `RPOrderedTask` with the informed consent to show to the user. | 
-| `lang`      | The json language file for each language supported of the form `<language>.json`. | 
+| File          |   Description |
+|---------------|---------------|
+| `description` | JSON definition of your `StudyDescription`. |  
+| `protocol`    | JSON definition of your `StudyProtocol`. |  
+| `consent`     | JSON definition of your `RPOrderedTask` with the informed consent to show to the user. | 
+| `lang`        | The JSON language file for each language supported of the form `<language>.json`. | 
 
 Please ignore the test scripts in the `carp` folder (these are used to execute the commands).
 
@@ -76,6 +85,7 @@ The available commands are:
   dryrun         Makes a dryrun testing access to the CARP server, and the protocol, consent, and localizations.
   create         Create a study protocol based on a json file and uploads it to the CARP server.
   update         Update an existing study protocol based on a json file and uploads it to the CARP server as a new version.
+  description    Create astudy description based on a json file and uploads it to the CARP server.
   consent        Create an informed consent based on a json file and uploads it to the CARP server.
   localization   Create localization support based on the files '<locale>.json' and upload them to the CARP server.
 ``` 

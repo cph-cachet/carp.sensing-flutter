@@ -11,14 +11,20 @@ part of carp_backend;
 /// to handle a [MasterDeviceDeployment] based on a [StudyProtocol], which is
 /// store as a custom protocol on the CARP server.
 ///
-/// This deployment service basically reads a [CAMSStudyProtocol] as a custom
-/// protocol from the CARP web server, and translate this into a [MasterDeviceDeployment]
-/// which can be used on this phone. It also adds a [CarpDataEndPoint] to the
-/// device deployment, which makes sure that data is stored back on the CARP server.
+/// This deployment service basically reads a [StudyProtocol] as a custom protocol
+/// from the CARP web server, and translate this into a [SmartphoneDeployment]
+/// which can be used on this phone.
+///
+/// It also gets the [StudyDescription] for the study and adds this to the device
+/// deployment.
+///
+/// It adds a [CarpDataEndPoint] to the device deployment, which makes sure
+/// that data is stored back on the CARP server.
 ///
 /// Its main responsibility is to:
 ///  - retrieve the custom protocol from the CARP server
-///  - transform it into a study deployment
+///  - retrieve the study description from the CARP server
+///  - transform it into a smartphone study deployment
 ///  - add a [CarpDataEndPoint] to the deployment
 ///
 /// The [CarpDataEndPoint] is the following:
@@ -105,12 +111,16 @@ class CustomProtocolDeploymentService implements DeploymentService {
     String studyDeploymentId,
     String masterDeviceRoleName,
   ) async {
-    CAMSMasterDeviceDeployment? deployment;
+    SmartphoneDeployment? deployment;
 
     if (isConfigured()) {
       // get the protocol from the study protocol manager
       protocol = await manager.getStudyProtocol(studyDeploymentId);
       _eventController.add(CarpBackendEvents.ProtocolRetrieved);
+
+      // get the study description from CARP
+      StudyDescription? description =
+          await CarpResourceManager().getStudyDescription();
 
       // configure a data endpoint which can send data back to CARP
       // note that files must not be zipped
@@ -123,8 +133,13 @@ class CustomProtocolDeploymentService implements DeploymentService {
         deleteWhenUploaded: true,
       );
 
-      deployment = CAMSMasterDeviceDeployment.fromStudyProtocol(
+      // create the smartphone deployment with the
+      // - protocol
+      // - description
+      // - data endpoint
+      deployment = SmartphoneDeployment.fromStudyProtocol(
         studyDeploymentId: studyDeploymentId,
+        protocolDescription: description,
         masterDeviceRoleName: masterDeviceRoleName,
         dataEndPoint: dataEndPoint,
         protocol: protocol,

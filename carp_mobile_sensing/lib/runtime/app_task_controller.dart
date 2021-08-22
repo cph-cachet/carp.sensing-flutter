@@ -23,7 +23,23 @@ class AppTaskController {
   /// changes to the [userTaskQueue].
   Stream<UserTask> get userTaskEvents => _controller.stream;
 
-  /// Constructs a singleton instance of [AppTaskController].
+  /// The total number of tasks.
+  int get taskTotal => userTaskQueue.length;
+
+  /// The number of tasks completed so far.
+  int get taskCompleted =>
+      userTaskQueue.where((task) => task.state == UserTaskState.done).length;
+
+  /// The number of tasks expired so far.
+  int get taskExpired =>
+      userTaskQueue.where((task) => task.state == UserTaskState.expired).length;
+
+  /// The number of tasks pending so far.
+  int get taskPending => userTaskQueue
+      .where((task) => task.state == UserTaskState.enqueued)
+      .length;
+
+  /// Get the singleton instance of [AppTaskController].
   ///
   /// The [AppTaskController] is designed to work as a singleton.
   factory AppTaskController() => _instance;
@@ -43,7 +59,7 @@ class AppTaskController {
     Timer.periodic(const Duration(hours: 1), (timer) {
       userTaskQueue.forEach((task) {
         if (task.expiresIn != null && task.expiresIn!.isNegative) {
-          dequeue(task.id);
+          expire(task.id);
         }
       });
     });
@@ -81,7 +97,7 @@ class AppTaskController {
     }
   }
 
-  /// Remove an [UserTask] from the [userTaskQueue].
+  /// De-queue (remove) an [UserTask] from the [userTaskQueue].
   void dequeue(String id) {
     UserTask? userTask = _userTaskMap[id];
     if (userTask == null) {
@@ -94,16 +110,34 @@ class AppTaskController {
     }
   }
 
-  /// Current path and filename according to this format:
+  /// Expire an [UserTask] on the [userTaskQueue].
+  /// Note that an expired task remains on the queue.
+  /// If you want to remove a taks from the queue, use the [dequeue] method.
+  void expire(String id) {
+    UserTask? userTask = _userTaskMap[id];
+    if (userTask == null) {
+      warning("Could not expire AppTask - id is not valid: '$id'");
+    } else {
+      // only expire tasks which are not already done
+      if (userTask.state != UserTaskState.done) {
+        userTask.state = UserTaskState.expired;
+        _controller.add(userTask);
+        info('Expired $userTask');
+      }
+    }
+  }
+
+  /// Current path and filename of the task queue according to this format:
   ///
-  ///   `carp/queue/task_queue.json`
+  ///   `carp/study/tasks-<study_deployment_id>.json`
   ///
-  String get filename => '${Settings().queuePath}/task_queue.json';
+  String get filename =>
+      '${Settings().queuePath}/tasks_${Settings().studyDeploymentId}.json';
 
   /// Save the queue persistenly to a file.
   Future<bool> saveQueue() async {
     bool success = true;
-    info('Saving task queue.');
+    info("Saving task queue from file '$filename'.");
     try {
       final json =
           jsonEncode(UserTaskSnapshotList.fromUserTasks(userTaskQueue));
@@ -117,7 +151,7 @@ class AppTaskController {
 
   /// Restore the queue from a file.
   Future<void> restoreQueue() async {
-    info('Restoring task queue.');
+    info("Restoring task queue from file '$filename'.");
     UserTaskSnapshotList? queue;
 
     try {

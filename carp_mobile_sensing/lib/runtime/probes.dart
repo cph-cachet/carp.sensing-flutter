@@ -207,19 +207,19 @@ abstract class AbstractProbe extends Probe implements MeasureListener {
 
   /// Callback for resuming probe
   @protected
-  Future onResume();
+  Future<void> onResume();
 
   /// Callback for pausing probe
   @protected
-  Future onPause();
+  Future<void> onPause();
 
   /// Callback for restarting probe
   @protected
-  Future onRestart();
+  Future<void> onRestart();
 
   /// Callback for stopping probe
   @protected
-  Future onStop();
+  Future<void> onStop();
 
   /// Callback when this probe's [measure] has changed.
   void hasChanged(Measure measure) => restart();

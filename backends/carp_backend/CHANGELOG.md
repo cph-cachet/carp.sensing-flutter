@@ -1,3 +1,7 @@
+## 0.30.3
+* upgrade to `carp_mobile_sensing` v. 0.30.3
+* support for set/get/delete `StudyDescription` in the `ResourceManager` 
+
 ## 0.30.0
 * upgrade to null-safety
 

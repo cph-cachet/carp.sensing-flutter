@@ -10,7 +10,6 @@ part of runtime;
 ///  * getting shared preferences - see [preferences]
 ///  * getting app info - see [packageInfo]
 ///  * generating a unique and annonymous user id - see [userId]
-///  * keeping track of study start time - see [studyStartTimestamp]
 ///
 class Settings {
   static const String USER_ID_KEY = 'user_id';
@@ -35,6 +34,10 @@ class Settings {
   String? _dataPath;
   String? _queuePath;
   String? _studyPath;
+
+  /// The study deployment id for the running study.
+  /// `null` until the study has been deployed on this phone.
+  String? studyDeploymentId;
 
   /// The global debug level setting.
   ///
@@ -117,27 +120,6 @@ class Settings {
       }
     }
     return _userId!;
-  }
-
-  DateTime? _studyStartTimestamp;
-  String get _studyStartTimestampKey =>
-      '$appName.$STUDY_START_KEY'.toLowerCase();
-
-  /// The timestamp (in UTC) when the current study was started on this phone.
-  /// This timestamp is save on the phone the first time a study is started.
-  Future<DateTime> get studyStartTimestamp async {
-    assert(_preferences != null,
-        "Setting is not initialized. Call 'Setting().init()'' first.");
-    if (_studyStartTimestamp == null) {
-      String? str = preferences!.get(_studyStartTimestampKey) as String?;
-      _studyStartTimestamp = (str != null) ? DateTime.parse(str) : null;
-      if (_studyStartTimestamp == null) {
-        _studyStartTimestamp = DateTime.now().toUtc();
-        await preferences!.setString(
-            _studyStartTimestampKey, _studyStartTimestamp.toString());
-      }
-    }
-    return _studyStartTimestamp!;
   }
 
   Future<void> initFilesystem() async {

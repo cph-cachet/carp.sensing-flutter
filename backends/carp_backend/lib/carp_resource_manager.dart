@@ -11,12 +11,36 @@ part of carp_backend;
 ///
 /// This includes:
 ///
+///  * Retrive and store [StudyDescription]s.
 ///  * Retrieve and store informed consent definitions as [RPOrderedTask] json
 ///    definitions at the CARP backend.
 ///  * Retrive and store langunage localization mappings.
 ///
 abstract class ResourceManager {
   Future initialize() async {}
+
+  // --------------------------------------------------------------------------
+  // STUDY DESCRIPTION
+  // --------------------------------------------------------------------------
+
+  /// The latest downloaded study description.
+  ///
+  /// `null` if no consent has been downloaded yet. Use the [getInformedConsent]
+  /// method to get the informed consent document from CARP.
+  StudyDescription? get studyDescription;
+
+  /// Get the description for this study.
+  ///
+  /// If there is no description, `null` is returned.
+  Future<StudyDescription?> getStudyDescription();
+
+  /// Set the informed consent to be used for this study.
+  Future<bool> setStudyDescription(StudyDescription description);
+
+  /// Delete the informed consent for this study.
+  ///
+  /// Returns `true` if delete is successful, `false` otherwise.
+  Future<bool> deleteStudyDescription();
 
   // --------------------------------------------------------------------------
   // INFORMED CONSENT
@@ -93,6 +117,70 @@ class CarpResourceManager implements ResourceManager {
 
   @override
   Future initialize() async {}
+
+  // --------------------------------------------------------------------------
+  // STUDY DESCRIPTION
+  // --------------------------------------------------------------------------
+
+  /// The path for the informed consent document at the CARP server
+  static const String STUDY_DESCRIPTION_PATH = 'resources/description';
+
+  @override
+  StudyDescription? studyDescription;
+
+  @override
+  Future<StudyDescription?> getStudyDescription() async {
+    assert(CarpService().isConfigured,
+        "CARP Service has not been configured - call 'CarpService().configure()' first.");
+    assert(CarpService().currentUser != null,
+        "No user is authenticated - call 'CarpService().authenticate()' first.");
+
+    info('Getting study description from path : $STUDY_DESCRIPTION_PATH');
+
+    DocumentSnapshot? document =
+        await CarpService().document(STUDY_DESCRIPTION_PATH).get();
+    info('Informed consent downloaded : $document');
+
+    if (document != null) {
+      studyDescription = StudyDescription.fromJson(document.data);
+    }
+    return studyDescription;
+  }
+
+  @override
+  Future<bool> setStudyDescription(StudyDescription description) async {
+    assert(CarpService().isConfigured,
+        "CARP Service has not been configured - call 'CarpService().configure()' first.");
+    assert(CarpService().currentUser != null,
+        "No user is authenticated - call 'CarpService().authenticate()' first.");
+
+    info('Uploading study description to path : $STUDY_DESCRIPTION_PATH');
+
+    this.studyDescription = description;
+    DocumentReference reference =
+        CarpService().document(STUDY_DESCRIPTION_PATH);
+    await reference.get();
+    await reference.setData(description.toJson());
+
+    return true;
+  }
+
+  @override
+  Future<bool> deleteStudyDescription() async {
+    assert(CarpService().isConfigured,
+        "CARP Service has not been configured - call 'CarpService().configure()' first.");
+    assert(CarpService().currentUser != null,
+        "No user is authenticated - call 'CarpService().authenticate()' first.");
+    info('Deleting study description from path : $STUDY_DESCRIPTION_PATH');
+
+    DocumentReference reference =
+        CarpService().document(STUDY_DESCRIPTION_PATH);
+    await reference.delete();
+    DocumentSnapshot? document =
+        await CarpService().document(STUDY_DESCRIPTION_PATH).get();
+
+    return (document == null);
+  }
 
   // --------------------------------------------------------------------------
   // INFORMED CONSENT

@@ -226,7 +226,7 @@ void example_3() async {
       // ask the device manager for a unique id of the device
       String deviceId = DeviceController().getDevice(type).id;
       DeviceRegistration registration = DeviceRegistration(deviceId);
-      // (all of the above can actually be handled directly by the CAMSDeploymentService.registerDevice() method)
+      // (all of the above can actually be handled directly by the SmartphoneDeploymentService.registerDevice() method)
 
       // register the device in the deployment service
       await SmartphoneDeploymentService()
@@ -235,7 +235,7 @@ void example_3() async {
   });
 
   // now get the study deployment for this master device and its registered devices
-  CAMSMasterDeviceDeployment deployment = await SmartphoneDeploymentService()
+  SmartphoneDeployment deployment = await SmartphoneDeploymentService()
       .getDeviceDeployment(studyDeploymentId);
 
   print(deployment);

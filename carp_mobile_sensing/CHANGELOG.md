@@ -1,6 +1,9 @@
-## 0.30.2
+## 0.30.3
 * small updates to `Settings`
 * fixed a bug in path to json files in `FileDataManager`
+* improvement to saving task list across app re-start
+* `CAMSMasterDeviceDeployment` renamed to `SmartphoneDeployment` (to allign with the other naming using `Smartphone`)
+* `StudyProtocolDescription` and `StudyProtocolReponsible` renamed to `StudyDescription` and `StudyReponsible`
 
 ## 0.30.1
 * `DebugLevel` is now an enum
