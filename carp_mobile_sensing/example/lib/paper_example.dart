@@ -39,7 +39,7 @@ void sensing() async {
       await SmartphoneDeploymentService().createStudyDeployment(protocol);
 
   String studyDeploymentId = status.studyDeploymentId;
-  String deviceRolename = status.masterDeviceStatus.device.roleName;
+  String deviceRolename = status.masterDeviceStatus!.device.roleName;
 
   // create and configure a client manager for this phone
   SmartPhoneClientManager client = SmartPhoneClientManager();
