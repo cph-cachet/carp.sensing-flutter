@@ -45,7 +45,7 @@ void example_1() async {
       await SmartphoneDeploymentService().createStudyDeployment(protocol);
 
   String studyDeploymentId = status.studyDeploymentId;
-  String deviceRolename = status.masterDeviceStatus.device.roleName;
+  String deviceRolename = status.masterDeviceStatus!.device.roleName;
 
   // create and configure a client manager for this phone
   SmartPhoneClientManager client = SmartPhoneClientManager();
@@ -104,7 +104,7 @@ void example_2() async {
       await SmartphoneDeploymentService().createStudyDeployment(protocol);
 
   String studyDeploymentId = status.studyDeploymentId;
-  String deviceRolename = status.masterDeviceStatus.device.roleName;
+  String deviceRolename = status.masterDeviceStatus!.device.roleName;
 
   // create and configure a client manager for this phone
   SmartPhoneClientManager client = SmartPhoneClientManager();
@@ -115,7 +115,7 @@ void example_2() async {
 
   // you can change the deployment locally, before starting the
   // execution of it - e.g. setting another data endpoint.
-  controller.deployment.dataEndPoint = FileDataEndPoint(
+  controller.deployment!.dataEndPoint = FileDataEndPoint(
     bufferSize: 500 * 1000,
     zip: true,
     encrypt: false,
@@ -139,13 +139,13 @@ void example_2() async {
 
   // listen only on CARP events
   controller.data
-      .where((dataPoint) => dataPoint.data.format.namespace == NameSpace.CARP)
+      .where((dataPoint) => dataPoint.data!.format.namespace == NameSpace.CARP)
       .listen((event) => print(event));
 
   // listen on LIGHT events only
   controller.data
       .where((dataPoint) =>
-          dataPoint.data.format.toString() == SensorSamplingPackage.LIGHT)
+          dataPoint.data!.format.toString() == SensorSamplingPackage.LIGHT)
       .listen((event) => print(event));
 
   // map events to JSON and then print
@@ -224,7 +224,7 @@ void example_3() async {
     // if the device manager is created succesfully on the phone
     if (DeviceController().hasDevice(type)) {
       // ask the device manager for a unique id of the device
-      String deviceId = DeviceController().getDevice(type).id;
+      String deviceId = DeviceController().getDevice(type)!.id;
       DeviceRegistration registration = DeviceRegistration(deviceId);
       // (all of the above can actually be handled directly by the SmartphoneDeploymentService.registerDevice() method)
 
@@ -294,7 +294,7 @@ void samplingSchemaExample() async {
   protocol.addTriggeredTask(
       ImmediateTrigger(),
       AutomaticTask(name: 'Sensing Task')
-        ..measures = activitySchema.measures.values,
+        ..measures = activitySchema.measures.values.toList(),
       phone);
 
   // adding the measures to two separate tasks, while also adding a new light measure to the 2nd task
@@ -449,9 +449,9 @@ void app_task_controller_example() async {
 void carp_core_client_example() async {
   var deploymentService = SmartphoneDeploymentService();
 
-  ActiveParticipationInvitation invitation; // get the invitation somehow
-  String studyDeploymentId = invitation.studyDeploymentId;
-  String deviceToUse = invitation.devices.first.deviceRoleName;
+  ActiveParticipationInvitation? invitation; // get the invitation somehow
+  String? studyDeploymentId = invitation?.studyDeploymentId;
+  String? deviceToUse = invitation?.devices?.first.deviceRoleName;
 
   // create a client manager for this phone
   SmartPhoneClientManager client = SmartPhoneClientManager(
@@ -465,7 +465,7 @@ void carp_core_client_example() async {
   await client.configure();
 
   StudyDeploymentController controller =
-      await client.addStudy(studyDeploymentId, deviceToUse);
+      await client.addStudy(studyDeploymentId!, deviceToUse!);
 
   if (controller.status == StudyRuntimeStatus.RegisteringDevices) {
     var connectedDevice = controller.remainingDevicesToRegister.first;

@@ -10,13 +10,12 @@ part of runtime;
 /// Returns the relevant [TriggerExecutor] based on the type of [trigger].
 TriggerExecutor getTriggerExecutor(Trigger trigger) {
   switch (trigger.runtimeType) {
-    // actually, the base Trigger class is not supposed to be used
-    // but if used, treat them as an ImmediateTrigger
-    case Trigger:
     case ImmediateTrigger:
       return ImmediateTriggerExecutor(trigger);
     case DelayedTrigger:
       return DelayedTriggerExecutor(trigger as DelayedTrigger);
+    case ElapsedTimeTrigger:
+      return ElapsedTimeTriggerExecutor(trigger as ElapsedTimeTrigger);
     case PeriodicTrigger:
       return PeriodicTriggerExecutor(trigger as PeriodicTrigger);
     case DateTimeTrigger:
@@ -33,9 +32,11 @@ TriggerExecutor getTriggerExecutor(Trigger trigger) {
           trigger as ConditionalSamplingEventTrigger);
     case RandomRecurrentTrigger:
       return RandomRecurrentTriggerExecutor(trigger as RandomRecurrentTrigger);
-    case ManualTrigger:
+    case PassiveTrigger:
       return PassiveTriggerExecutor(trigger as PassiveTrigger);
     default:
+      warning(
+          "Unknown trigger used - cannot find a TriggerExecutor for the trigger of type '${trigger.runtimeType}'. Using an 'ImmediateTriggerExecutor' instead.");
       return ImmediateTriggerExecutor(trigger);
   }
 }
@@ -83,8 +84,8 @@ class PassiveTriggerExecutor extends TriggerExecutor {
   void onInitialize(Measure measure) =>
       (trigger as PassiveTrigger).executor.initialize(measure);
 
-  // A no-op methods since a ManualTrigger can only be resumed/paused
-  // using the resume/pause methods on the ManualTrigger.
+  // A no-op methods since a PassiveTrigger can only be resumed/paused
+  // using the resume/pause methods on the PassiveTrigger.
   Future onResume() async {}
   Future onPause() async {}
 
@@ -106,6 +107,24 @@ class DelayedTriggerExecutor extends TriggerExecutor {
       // after a delay, resume this trigger and its tasks
       super.onResume();
     });
+  }
+}
+
+/// Executes a [ElapsedTimeTrigger], i.e. resumes sampling after the specified
+/// elapsed time period.
+///
+/// This executor is equivalent to the [DelayedTriggerExecutor].
+class ElapsedTimeTriggerExecutor extends TriggerExecutor {
+  ElapsedTimeTriggerExecutor(ElapsedTimeTrigger trigger) : super(trigger);
+
+  Future onResume() async {
+    Duration? duration = (trigger as ElapsedTimeTrigger).elapsedTime;
+    if (duration != null) {
+      Timer(duration, () {
+        // after a delay, resume this trigger and its tasks
+        super.onResume();
+      });
+    }
   }
 }
 

@@ -26,20 +26,20 @@ class PassiveTrigger extends Trigger {
   PassiveTrigger() : super();
 
   @JsonKey(ignore: true)
-  late dynamic executor;
+  late TriggerExecutor executor;
 
   /// Called when data sampling in this trigger is to be resumed.
   ///
   /// Starting a trigger implies that all tasks in this trigger is started,
   /// which again implies that all [Measure]s in these tasks are started.
   /// Therefore, all measures to be started should be 'bundled' into this trigger.
-  void resume() => executor?.resume();
+  void resume() => executor.resume();
 
   /// Called when data sampling in this trigger is to paused.
   ///
   /// Stopping a trigger implies that all tasks in this trigger is paused,
   /// which again implies that all [Measure]s in these tasks are paused.
-  void pause() => executor?.pause();
+  void pause() => executor.pause();
 
   Function get fromJsonFunction => _$PassiveTriggerFromJson;
   factory PassiveTrigger.fromJson(Map<String, dynamic> json) =>
@@ -49,7 +49,9 @@ class PassiveTrigger extends Trigger {
 
 /// A trigger that delays sampling for [delay] and then starts sampling.
 /// Never stops sampling once started.
-/// The delay is measured from the start of the overall [StudyProtocol].
+///
+/// The delay is measured from the start of sensing, i.e. typically when
+/// resume() is called on a [StudyDeploymentController].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class DelayedTrigger extends Trigger {
   /// Delay before this trigger is executed.

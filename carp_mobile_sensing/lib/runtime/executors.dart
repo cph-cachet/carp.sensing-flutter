@@ -114,9 +114,6 @@ class StudyDeploymentExecutor extends Executor {
 }
 
 /// Responsible for handling the execution of a [TriggeredTask].
-///
-/// This is an abstract class. For each specific type of [Trigger],
-/// a corresponding implementation of a [TriggeredTaskExecutor] exists.
 class TriggeredTaskExecutor extends Executor {
   late Trigger _trigger;
   late TaskDescriptor _task;

@@ -287,16 +287,13 @@ CreateStudyDeployment _$CreateStudyDeploymentFromJson(
     Map<String, dynamic> json) {
   return CreateStudyDeployment(
     StudyProtocol.fromJson(json['protocol'] as Map<String, dynamic>),
-  )
-    ..$type = json[r'$type'] as String?
-    ..studyDeploymentId = json['studyDeploymentId'] as String?;
+  )..$type = json[r'$type'] as String?;
 }
 
 Map<String, dynamic> _$CreateStudyDeploymentToJson(
         CreateStudyDeployment instance) =>
     <String, dynamic>{
       r'$type': instance.$type,
-      'studyDeploymentId': instance.studyDeploymentId,
       'protocol': instance.protocol,
     };
 

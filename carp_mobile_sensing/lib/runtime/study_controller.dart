@@ -32,15 +32,18 @@ class StudyDeploymentController extends StudyRuntime {
   /// The privacy schema used to encrypt data before upload.
   String? get privacySchemaName => _privacySchemaName;
 
+  /// The datum transformed used to transform data before upload.
+  DatumTransformer get transformer => _transformer;
+
   /// The permissions granted to this study from the OS.
   Map<Permission, PermissionStatus>? permissions;
 
   /// The stream of all sampled data points.
   ///
   /// Data points in the [data] stream are transformed in the following order:
-  ///   1. privacy schema as specified in the [_privacySchemaName]
+  ///   1. privacy schema as specified in the [privacySchemaName]
   ///   2. preferred data format as specified by [dataFormat] in the [deployment]
-  ///   3. any custom [_transformer] provided
+  ///   3. any custom [transformer] provided
   ///
   /// This is a broadcast stream and supports multiple subscribers.
   Stream<DataPoint> get data => _executor!.data.map((dataPoint) => dataPoint
@@ -52,13 +55,13 @@ class StudyDeploymentController extends StudyRuntime {
 
   PowerAwarenessState powerAwarenessState = NormalSamplingState.instance;
 
-  /// The sampling size of this [deployment] in terms of number of [Datum] object
-  /// that has been collected.
+  /// The sampling size of this [deployment] in terms of number of [DataPoint]
+  /// objects that has been collected.
   int get samplingSize => _samplingSize;
 
   DateTime? _studyDeploymentStartTime;
   String get _studyDeploymentStartTimesKey =>
-      '$studyDeploymentId.$Settings.STUDY_START_KEY'.toLowerCase();
+      '$studyDeploymentId.${Settings.STUDY_START_KEY}'.toLowerCase();
 
   /// The timestamp (in UTC) when the current study deployment
   /// (the [masterDeployment]) was started on this phone.

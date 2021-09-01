@@ -17,14 +17,14 @@ class SmartphoneDeploymentService implements DeploymentService {
       SmartphoneDeploymentService._();
   SmartphoneDeploymentService._();
 
-  /// Get the singlton [SmartphoneDeploymentService].
+  /// Get the singleton [SmartphoneDeploymentService].
   factory SmartphoneDeploymentService() => _instance;
 
   /// The device description for this phone.
   Smartphone thisPhone = Smartphone();
 
   /// Create a new [StudyDeployment] based on a [StudyProtocol].
-  /// [studyDeploymentId] specify the study deployment id.
+  /// [studyDeploymentId] specifies the study deployment id.
   /// If not specified, an UUID v1 id is generated.
   @override
   Future<StudyDeploymentStatus> createStudyDeployment(

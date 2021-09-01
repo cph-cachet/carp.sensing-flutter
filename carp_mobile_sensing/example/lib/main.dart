@@ -24,27 +24,27 @@ class CARPMobileSensingApp extends StatelessWidget {
 
 class ConsolePage extends StatefulWidget {
   final String title;
-  ConsolePage({Key key, this.title}) : super(key: key);
+  ConsolePage({Key? key, required this.title}) : super(key: key);
   Console createState() => Console();
 }
 
 /// A simple UI with a console that logs/prints the sensed data in a json format.
 class Console extends State<ConsolePage> {
   String _log = '';
-  Sensing sensing;
+  Sensing? sensing;
 
   void initState() {
     super.initState();
     sensing = Sensing();
     Settings().init().then((future) {
-      sensing.init().then((future) {
-        log('Setting up study protocol: ${sensing.protocol}');
+      sensing!.init().then((future) {
+        log('Setting up study protocol: ${sensing!.protocol}');
       });
     });
   }
 
   void dispose() {
-    sensing.stop();
+    sensing!.stop();
     super.dispose();
   }
 
@@ -55,9 +55,9 @@ class Console extends State<ConsolePage> {
       ),
       body: SingleChildScrollView(
         child: StreamBuilder(
-          stream: sensing.controller?.data,
+          stream: sensing?.controller?.data,
           builder: (context, AsyncSnapshot<DataPoint> snapshot) {
-            if (snapshot.hasData) _log += '${toJsonString(snapshot.data)}\n';
+            if (snapshot.hasData) _log += '${toJsonString(snapshot.data!)}\n';
             return Text(_log);
           },
         ),
@@ -65,7 +65,7 @@ class Console extends State<ConsolePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: restart,
         tooltip: 'Restart study & probes',
-        child: sensing.isRunning ? Icon(Icons.pause) : Icon(Icons.play_arrow),
+        child: sensing!.isRunning ? Icon(Icons.pause) : Icon(Icons.play_arrow),
       ),
     );
   }
@@ -84,11 +84,11 @@ class Console extends State<ConsolePage> {
 
   void restart() {
     setState(() {
-      if (sensing.isRunning) {
-        sensing.pause();
+      if (sensing!.isRunning) {
+        sensing!.pause();
         log('\nSensing paused ...');
       } else {
-        sensing.resume();
+        sensing!.resume();
         log('\nSensing resumed ...');
       }
     });
@@ -108,9 +108,9 @@ class Console extends State<ConsolePage> {
 /// This example is useful for creating a Business Logical Object (BLOC) in a
 /// Flutter app. See e.g. the CARP Mobile Sensing App.
 class Sensing {
-  StudyProtocol protocol;
-  StudyDeploymentStatus _status;
-  StudyDeploymentController controller;
+  StudyProtocol? protocol;
+  StudyDeploymentStatus? _status;
+  StudyDeploymentController? controller;
 
   /// Initialize sensing.
   Future init() async {
@@ -121,10 +121,10 @@ class Sensing {
 
     // deploy this protocol using the on-phone deployment service
     _status =
-        await SmartphoneDeploymentService().createStudyDeployment(protocol);
+        await SmartphoneDeploymentService().createStudyDeployment(protocol!);
 
-    String studyDeploymentId = _status.studyDeploymentId;
-    String deviceRolename = _status.masterDeviceStatus.device.roleName;
+    String studyDeploymentId = _status!.studyDeploymentId;
+    String deviceRolename = _status!.masterDeviceStatus!.device.roleName;
 
     // create and configure a client manager for this phone
     SmartPhoneClientManager client = SmartPhoneClientManager();
@@ -133,31 +133,31 @@ class Sensing {
     controller = await client.addStudy(studyDeploymentId, deviceRolename);
 
     // configure the controller
-    await controller.configure(
+    await controller!.configure(
       privacySchemaName: PrivacySchema.DEFAULT,
       transformer: ((datum) => datum),
     );
     // controller.resume();
 
     // listening on the data stream and print them as json to the debug console
-    controller.data.listen((data) => print(toJsonString(data)));
+    controller!.data.listen((data) => print(toJsonString(data)));
   }
 
   /// Get the status of the study deployment.
-  StudyDeploymentStatus get status => _status;
+  StudyDeploymentStatus? get status => _status;
 
   /// Is sensing running, i.e. has the study executor been resumed?
   bool get isRunning =>
-      (controller != null) && controller.executor.state == ProbeState.resumed;
+      (controller != null) && controller!.executor!.state == ProbeState.resumed;
 
   /// Resume sensing
-  void resume() async => controller.resume();
+  void resume() async => controller!.resume();
 
   /// Pause sensing
-  void pause() async => controller.pause();
+  void pause() async => controller!.pause();
 
   /// Stop sensing.
-  void stop() async => controller.stop();
+  void stop() async => controller!.stop();
 }
 
 /// This is a simple local [StudyProtocolManager].
