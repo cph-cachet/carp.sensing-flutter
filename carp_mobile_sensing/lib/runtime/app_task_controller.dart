@@ -137,7 +137,7 @@ class AppTaskController {
   /// Save the queue persistenly to a file.
   Future<bool> saveQueue() async {
     bool success = true;
-    info("Saving task queue from file '$filename'.");
+    info("Saving task queue to file '$filename'.");
     try {
       final json =
           jsonEncode(UserTaskSnapshotList.fromUserTasks(userTaskQueue));

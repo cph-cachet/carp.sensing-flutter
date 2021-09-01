@@ -29,6 +29,7 @@ class SmartPhoneClientManager extends ClientManager {
     info('  deployment service : $deploymentService');
     info('     device registry : $deviceRegistry');
     info('           device ID : $deviceId');
+
     return super.configure(deviceId: deviceId);
   }
 
