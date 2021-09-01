@@ -1,3 +1,9 @@
+## 0.30.0
+* upgrade to null-safety
+* upgrade to [`network_info_plus`](https://pub.dev/packages/network_info_plus)
+* upgrade to [`connectivity_plus`](https://pub.dev/packages/connectivity_plus)
+* fix of [#177](https://github.com/cph-cachet/carp.sensing-flutter/issues/177)
+
 ## 0.21.0
 * update to `carp_mobile_sensing` v. 0.21.x
 

@@ -22,10 +22,10 @@ class MasterDeviceDeployment {
 
   /// Preregistration of connected devices, including configuration such as
   /// connection properties, stored per role name.
-  Map<String, DeviceRegistration> connectedDeviceConfigurations;
+  Map<String, DeviceRegistration?> connectedDeviceConfigurations;
 
   /// All tasks which should be able to be executed on this or connected devices.
-  List<TaskDescriptor> tasks;
+  late List<TaskDescriptor> tasks = [];
 
   /// All triggers originating from this device and connected devices, stored
   /// per assigned id unique within the study protocol.
@@ -37,37 +37,36 @@ class MasterDeviceDeployment {
   /// The time when this device deployment was last updated.
   /// This corresponds to the most recent device registration as part of this
   /// device deployment.
-  DateTime lastUpdateDate;
+  late DateTime lastUpdateDate;
 
   // TODO - this is not part of carp_core Kotlin - make sure that no conflict arise.
   //
   /// Specifies where and how to upload the data collected from this deployment.
-  DataEndPoint dataEndPoint;
+  DataEndPoint? dataEndPoint;
 
   MasterDeviceDeployment({
-    this.deviceDescriptor,
-    this.configuration,
-    this.connectedDevices,
-    this.connectedDeviceConfigurations,
-    this.tasks,
-    this.triggers,
-    this.triggeredTasks,
+    required this.deviceDescriptor,
+    required this.configuration,
+    this.connectedDevices = const [],
+    this.connectedDeviceConfigurations = const {},
+    this.tasks = const [],
+    this.triggers = const {},
+    this.triggeredTasks = const [],
     this.dataEndPoint,
   }) {
     lastUpdateDate = DateTime.now();
   }
 
   // internal map, mapping task name to the task
-  Map<String, TaskDescriptor> _taskMap;
+  Map<String, TaskDescriptor>? _taskMap;
 
   /// Get the task based on its task name in this deployment.
-  TaskDescriptor getTaskByName(String name) {
+  TaskDescriptor? getTaskByName(String name) {
     if (_taskMap == null) {
       _taskMap = {};
-      tasks.forEach((task) => _taskMap[task.name] = task);
-      print(_taskMap);
+      tasks.forEach((task) => _taskMap![task.name] = task);
     }
-    return _taskMap[name];
+    return _taskMap![name];
   }
 
   factory MasterDeviceDeployment.fromJson(Map<String, dynamic> json) =>
@@ -82,27 +81,31 @@ class MasterDeviceDeployment {
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class DeviceRegistration extends Serializable {
   /// The registration time in zulu time.
-  DateTime registrationCreationDate;
+  late DateTime registrationCreationDate;
 
   /// An ID for the device, used to disambiguate between devices of the same type,
   /// as provided by the device itself.
   /// It is up to specific types of devices to guarantee uniqueness across all
   /// devices of the same type.
-  String deviceId;
+  late String deviceId;
 
   /// Create a new [DeviceRegistration]
   ///  * [deviceId] - a unique id for this device.
   ///    If not specified, a unique id will be generated.
   ///  * [registrationCreationDate] - the timestamp in zulu when this registration was created.
   ///    If not specified, the time of creation will be used.
-  DeviceRegistration([this.deviceId, this.registrationCreationDate]) : super() {
-    registrationCreationDate ??= DateTime.now().toUtc();
-    deviceId ??= Uuid().v1();
+  DeviceRegistration([
+    String? deviceId,
+    DateTime? registrationCreationDate,
+  ]) : super() {
+    this.registrationCreationDate =
+        registrationCreationDate ?? DateTime.now().toUtc();
+    this.deviceId = deviceId ?? Uuid().v1();
   }
 
   Function get fromJsonFunction => _$DeviceRegistrationFromJson;
   factory DeviceRegistration.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as DeviceRegistration;
   Map<String, dynamic> toJson() => _$DeviceRegistrationToJson(this);
   String get jsonType =>
       'dk.cachet.carp.protocols.domain.devices.DefaultDeviceRegistration';
@@ -116,23 +119,23 @@ class DeviceRegistration extends Serializable {
 /// See [DeviceDeploymentStatus.kt](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/carp.deployment.core/src/commonMain/kotlin/dk/cachet/carp/deployment/domain/DeviceDeploymentStatus.kt).
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class DeviceDeploymentStatus extends Serializable {
-  DeviceDeploymentStatusTypes _status =
-      DeviceDeploymentStatusTypes.Unregistered;
+  DeviceDeploymentStatusTypes? _status;
 
   /// The description of the device.
   DeviceDescriptor device;
 
-  /// Determines whether the device requires a device deployment by retrieving [MasterDeviceDeployment].
-  /// Not all master devices necessarily need deployment; chained master devices do not.
+  /// Determines whether the device requires a device deployment by
+  /// retrieving [MasterDeviceDeployment]. Not all master devices necessarily
+  /// need deployment; chained master devices do not.
   bool requiresDeployment = false;
 
   /// The role names of devices which need to be registered before the deployment
   /// information for this device can be obtained.
-  List<String> remainingDevicesToRegisterToObtainDeployment = [];
+  List<String>? remainingDevicesToRegisterToObtainDeployment = [];
 
   /// The role names of devices which need to be registered before this device
   /// can be declared as successfully deployed.
-  List<String> remainingDevicesToRegisterBeforeDeployment = [];
+  List<String>? remainingDevicesToRegisterBeforeDeployment = [];
 
   /// Get the status of this device deployment:
   /// * Unregistered
@@ -142,11 +145,11 @@ class DeviceDeploymentStatus extends Serializable {
   @JsonKey(ignore: true)
   DeviceDeploymentStatusTypes get status {
     // if this object has been created locally, then we know the status
-    if (_status != null) return _status;
+    if (_status != null) return _status!;
 
     // if this object was create from json deserialization,
     // the $type reflects the status
-    switch ($type.split('.').last) {
+    switch ($type!.split('.').last) {
       case 'Unregistered':
         return DeviceDeploymentStatusTypes.Unregistered;
       case 'Registered':
@@ -163,11 +166,13 @@ class DeviceDeploymentStatus extends Serializable {
   /// Set the status of this device deployment.
   set status(DeviceDeploymentStatusTypes status) => _status = status;
 
-  DeviceDeploymentStatus({this.device}) : super();
+  DeviceDeploymentStatus({required this.device}) : super() {
+    _status = DeviceDeploymentStatusTypes.Unregistered;
+  }
 
   Function get fromJsonFunction => _$DeviceDeploymentStatusFromJson;
   factory DeviceDeploymentStatus.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as DeviceDeploymentStatus;
   Map<String, dynamic> toJson() => _$DeviceDeploymentStatusToJson(this);
   String get jsonType => 'dk.cachet.carp.deployment.domain.$runtimeType';
 
@@ -198,13 +203,13 @@ class DeviceInvitation {
   DeviceInvitation() : super();
 
   /// The role name of the device in this invitation.
-  String deviceRoleName;
+  late String deviceRoleName;
 
   /// True when the device is already registered in the study deployment,
   /// false otherwise.
   /// In case a device is registered, it needs to be unregistered first
   /// before a new device can be registered.
-  bool isRegistered;
+  late bool isRegistered;
 
   factory DeviceInvitation.fromJson(Map<String, dynamic> json) =>
       _$DeviceInvitationFromJson(json);

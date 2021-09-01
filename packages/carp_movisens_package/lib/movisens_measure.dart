@@ -10,31 +10,31 @@ part of movisens;
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class MovisensMeasure extends CAMSMeasure {
   /// The MAC address of the sensor.
-  String address;
+  String? address;
 
   /// The user-friendly name of the sensor.
-  String deviceName;
+  String? deviceName;
 
   /// Weight of the person wearing the Movisens device in kg.
-  int weight;
+  int? weight;
 
   /// Height of the person wearing the Movisens device in cm.
-  int height;
+  int? height;
 
   /// Age of the person wearing the Movisens device in years.
-  int age;
+  int? age;
 
   /// Gender of the person wearing the Movisens device, male or female.
-  Gender gender;
+  Gender? gender;
 
   /// Sensor placement on body
-  SensorLocation sensorLocation;
+  SensorLocation? sensorLocation;
 
   MovisensMeasure({
-    String type,
-    String name,
-    String description,
-    bool enabled,
+    required String type,
+    String? name,
+    String? description,
+    bool enabled = true,
     this.address,
     this.sensorLocation,
     this.gender,
@@ -42,12 +42,11 @@ class MovisensMeasure extends CAMSMeasure {
     this.height,
     this.weight,
     this.age,
-  })
-      : super(
+  }) : super(
             type: type, name: name, description: description, enabled: enabled);
 
   Function get fromJsonFunction => _$MovisensMeasureFromJson;
   factory MovisensMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as MovisensMeasure;
   Map<String, dynamic> toJson() => _$MovisensMeasureToJson(this);
 }

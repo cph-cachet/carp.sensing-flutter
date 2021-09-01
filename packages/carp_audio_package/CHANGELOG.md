@@ -1,3 +1,12 @@
+## 0.30.1
+* update to `carp_mobile_sensing: ^0.30.1`
+* fix of filename in audio probe
+* fix of unit tests
+
+## 0.30.0
+* upgrade to null-safety
+* using `flutter_sound: ^8.1.4` for audio recording
+
 ## 0.21.0
 * update to `carp_mobile_sensing: ^0.21.0`
 

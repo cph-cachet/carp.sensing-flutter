@@ -8,7 +8,7 @@ part of carp_services;
 
 /// Represents a CARP web service app endpoint.
 class CarpApp {
-  /// The name of this app.
+  /// The name of this app. The name has to be unique.
   final String name;
 
   /// URI of the CARP web service
@@ -18,13 +18,10 @@ class CarpApp {
   final OAuthEndPoint oauth;
 
   /// The CARP study id for this app.
-  String studyId;
+  String? studyId;
 
   /// The CARP study deployment id of this app.
-  String studyDeploymentId;
-
-  // /// The CARP study for this app.
-  // Study study;
+  String? studyDeploymentId;
 
   /// Create a [CarpApp] which know how to access a CARP backend.
   ///
@@ -34,18 +31,12 @@ class CarpApp {
   /// A [studyDeploymentId] and a [study] may be specified, if known at the
   /// creation time.
   CarpApp({
-    @required this.name,
-    @required this.uri,
-    @required this.oauth,
+    required this.name,
+    required this.uri,
+    required this.oauth,
     this.studyDeploymentId,
     this.studyId,
-  }) {
-    assert(name != null);
-    assert(uri != null);
-    assert(oauth != null);
-    assert(oauth.clientID != null);
-    assert(oauth.clientSecret != null);
-  }
+  });
 
   int get hashCode => name.hashCode;
 

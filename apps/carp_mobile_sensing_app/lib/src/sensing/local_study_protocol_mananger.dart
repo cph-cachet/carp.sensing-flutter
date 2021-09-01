@@ -15,20 +15,12 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
   Future initialize() async {}
 
   /// Create a new CAMS study protocol.
-  Future<CAMSStudyProtocol> getStudyProtocol(String studyId) async {
-    CAMSStudyProtocol protocol = CAMSStudyProtocol(
-        studyId: studyId,
-        name: 'Sensing Coverage Study',
-        description: 'This is a study for testing the coverage of sampling.',
-        responsible: StudyProtocolReponsible(
-          id: 'AB',
-          name: 'Alex Boyon',
-          email: 'alex@uni.dk',
-        ),
-        protocolDescription: StudyProtocolDescription(
-            title: 'Sensing Coverage Study',
-            description:
-                'This is a study for testing the coverage of sampling. '));
+  Future<StudyProtocol> getStudyProtocol(String studyId) async {
+    StudyProtocol protocol = StudyProtocol(
+      ownerId: 'alex@uni.dk',
+      name: 'Sensing Coverage Study',
+      description: 'This is a study for testing the coverage of sampling.',
+    );
 
     // Define which devices are used for data collection.
     Smartphone phone = Smartphone();
@@ -59,7 +51,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // a random trigger - 2-8 times during time period of 8-20
     protocol.addTriggeredTask(
         RandomRecurrentTrigger(
-          startTime: Time(hour: 18, minute: 10),
+          startTime: Time(hour: 8),
           endTime: Time(hour: 20),
           minNumberOfTriggers: 3,
           maxNumberOfTriggers: 8,
@@ -73,7 +65,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         phone);
 
     protocol.addTriggeredTask(
-        PeriodicTrigger(period: Duration(minutes: 1)), // 60 s
+        PeriodicTrigger(period: Duration(minutes: 1)),
         AutomaticTask()
           ..measures = SamplingPackageRegistry().debug().getMeasureList(
             types: [
@@ -83,7 +75,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         phone);
 
     protocol.addTriggeredTask(
-        PeriodicTrigger(period: Duration(minutes: 2)), // 5 min
+        PeriodicTrigger(period: Duration(minutes: 2)),
         AutomaticTask()
           ..measures = SamplingPackageRegistry().debug().getMeasureList(
             types: [
@@ -93,16 +85,29 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           ),
         phone);
 
-    // protocol.addTriggeredTask(
-    //     ImmediateTrigger(),
-    //     AutomaticTask()
-    //       ..measures = SamplingPackageRegistry().debug().getMeasureList(
-    //         types: [
-    //           ESenseSamplingPackage.ESENSE_BUTTON,
-    //           ESenseSamplingPackage.ESENSE_SENSOR,
-    //         ],
-    //       ),
-    //     eSense);
+    protocol.addTriggeredTask(
+        PeriodicTrigger(
+          period: Duration(minutes: 2),
+          duration: Duration(seconds: 30),
+        ),
+        AutomaticTask()
+          ..measures = SamplingPackageRegistry().debug().getMeasureList(
+            types: [
+              AudioSamplingPackage.AUDIO,
+            ],
+          ),
+        phone);
+
+    protocol.addTriggeredTask(
+        ImmediateTrigger(),
+        AutomaticTask()
+          ..measures = SamplingPackageRegistry().debug().getMeasureList(
+            types: [
+              ESenseSamplingPackage.ESENSE_BUTTON,
+              ESenseSamplingPackage.ESENSE_SENSOR,
+            ],
+          ),
+        eSense);
 
     return protocol;
   }

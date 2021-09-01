@@ -1,11 +1,11 @@
 name: carp_connectivity_package_example
 description: Examples of how to use the carp_movisens_package.
-version: 0.0.2
+version: 0.0.3
 author:  CACHET Team <cph.cachet@gmail.com>
 publish_to: none
 
 environment:
-  sdk: ">=2.3.0-dev <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   flutter:
@@ -18,8 +18,8 @@ dependencies:
     path: ../
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
+#  flutter_test:
+#    sdk: flutter
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec

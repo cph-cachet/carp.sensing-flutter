@@ -36,7 +36,8 @@ part of carp_core_common;
 ///   A() : super();
 ///
 ///   Function get fromJsonFunction => _$AFromJson;
-///   factory A.fromJson(Map<String, dynamic> json) => FromJsonFactory().fromJson(json);
+///   factory A.fromJson(Map<String, dynamic> json) =>
+///       FromJsonFactory().fromJson(json) as A;
 ///   Map<String, dynamic> toJson() => _$AToJson(this);
 /// }
 ///
@@ -47,7 +48,8 @@ part of carp_core_common;
 ///   B() : super();
 ///
 ///   Function get fromJsonFunction => _$BFromJson;
-///   factory B.fromJson(Map<String, dynamic> json) => FromJsonFactory().fromJson(json);
+///   factory B.fromJson(Map<String, dynamic> json) =>
+///       FromJsonFactory().fromJson(json) as B;
 ///   Map<String, dynamic> toJson() => _$BToJson(this);
 /// }
 /// ````
@@ -116,7 +118,7 @@ abstract class Serializable {
 
   /// The runtime class name (type) of this object.
   /// Used for deserialization from JSON objects.
-  String $type;
+  String? $type;
 
   /// Create an object that can be serialized to JSON.
   @mustCallSuper
@@ -150,40 +152,43 @@ class FromJsonFactory {
   // TODO: This could be auto-generated using a builder....
   FromJsonFactory._() {
     // DEPLOYMENT
+
+    final DeviceDescriptor device = DeviceDescriptor(roleName: '');
+
     register(DeviceRegistration());
     register(DeviceRegistration(),
         type:
             'dk.cachet.carp.protocols.domain.devices.DefaultDeviceRegistration');
 
-    register(DeviceDeploymentStatus());
+    register(DeviceDeploymentStatus(device: device));
     register(
-      DeviceDeploymentStatus(),
+      DeviceDeploymentStatus(device: device),
       type:
           'dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.Unregistered',
     );
     register(
-      DeviceDeploymentStatus(),
+      DeviceDeploymentStatus(device: device),
       type:
           'dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.Registered',
     );
     register(
-      DeviceDeploymentStatus(),
+      DeviceDeploymentStatus(device: device),
       type: 'dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.Deployed',
     );
-    register(DeviceDeploymentStatus(),
+    register(DeviceDeploymentStatus(device: device),
         type:
             'dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.NeedsRedeployment');
 
-    register(StudyDeploymentStatus());
-    register(StudyDeploymentStatus(),
+    register(StudyDeploymentStatus(studyDeploymentId: ''));
+    register(StudyDeploymentStatus(studyDeploymentId: ''),
         type: 'dk.cachet.carp.deployment.domain.StudyDeploymentStatus.Invited');
-    register(StudyDeploymentStatus(),
+    register(StudyDeploymentStatus(studyDeploymentId: ''),
         type:
             'dk.cachet.carp.deployment.domain.StudyDeploymentStatus.DeployingDevices');
-    register(StudyDeploymentStatus(),
+    register(StudyDeploymentStatus(studyDeploymentId: ''),
         type:
             'dk.cachet.carp.deployment.domain.StudyDeploymentStatus.DeploymentReady');
-    register(StudyDeploymentStatus(),
+    register(StudyDeploymentStatus(studyDeploymentId: ''),
         type: 'dk.cachet.carp.deployment.domain.StudyDeploymentStatus.Stopped');
 
     // PROTOCOL
@@ -191,26 +196,29 @@ class FromJsonFactory {
     register(Trigger());
     register(ElapsedTimeTrigger());
     register(ManualTrigger());
-    register(ScheduledTrigger());
+    register(ScheduledTrigger(
+        recurrenceRule: RecurrenceRule(Frequency.DAILY),
+        sourceDeviceRoleName: 'ignored',
+        time: TimeOfDay()));
 
     register(TaskDescriptor());
     register(ConcurrentTask());
-    register(CustomProtocolTask());
+    register(CustomProtocolTask(studyProtocol: 'ignored'));
     register(Measure(type: 'ignored'));
     register(DataTypeMeasure(type: 'ignored'));
     register(PhoneSensorMeasure(type: 'ignored'));
     register(SamplingConfiguration());
 
-    register(DeviceDescriptor());
+    register(DeviceDescriptor(roleName: ''));
     register(DeviceConnection());
-    register(MasterDeviceDescriptor());
+    register(MasterDeviceDescriptor(roleName: ''));
     register(CustomProtocolDevice());
     register(Smartphone());
     register(AltBeacon());
-    register(DeviceDescriptor(),
+    register(DeviceDescriptor(roleName: ''),
         type:
             'dk.cachet.carp.protocols.infrastructure.test.StubMasterDeviceDescriptor');
-    register(DeviceDescriptor(),
+    register(DeviceDescriptor(roleName: ''),
         type:
             'dk.cachet.carp.protocols.infrastructure.test.StubDeviceDescriptor');
   }
@@ -223,7 +231,7 @@ class FromJsonFactory {
   ///
   /// A type needs to be registered **before** a class can be deserialized from
   /// JSON to a Flutter class.
-  void register(Serializable serializable, {String type}) =>
+  void register(Serializable serializable, {String? type}) =>
       _registry['${type ?? serializable.jsonType}'] =
           serializable.fromJsonFunction;
 
@@ -234,14 +242,14 @@ class FromJsonFactory {
       serializables.forEach((serializable) => register(serializable));
 
   /// Deserialize [json] based on its type.
-  Serializable fromJson(Map<String, dynamic> json) {
-    final String type = json[Serializable.CLASS_IDENTIFIER];
+  Serializable? fromJson(Map<String, dynamic> json) {
+    final String? type = json[Serializable.CLASS_IDENTIFIER];
     if (!_registry.containsKey(type)) {
       throw SerializationException(
           "A 'fromJson' function was not found in the FromJsonFactory for the type '$type'. "
           "Register a Serializable class using the 'FromJsonFactory().register()' method.");
     }
-    return Function.apply(_registry[type], [json]);
+    return Function.apply(_registry[type!]!, [json]);
   }
 }
 
@@ -253,7 +261,7 @@ String toJsonString(Object object) =>
 class SerializationException implements Exception {
   final _message;
   String get message => _message;
-  SerializationException([this._message]);
+  SerializationException([this._message = '']);
   @override
-  String toString() => '$runtimeType - $_message';
+  String toString() => '$runtimeType - $message';
 }

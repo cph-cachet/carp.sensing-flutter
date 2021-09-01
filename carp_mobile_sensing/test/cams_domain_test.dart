@@ -1,34 +1,28 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 import 'package:test/test.dart';
 
 void main() {
-  CAMSStudyProtocol protocol;
-  Smartphone phone;
+  late StudyProtocol masterProtocol;
+  late Smartphone masterPhone;
   DeviceDescriptor eSense;
 
   setUp(() {
     // Create a new study protocol.
-    protocol = CAMSStudyProtocol()
-      ..name = 'Track patient movement'
-      ..responsible = StudyProtocolReponsible(
-        id: 'AB',
-        name: 'Alex Boyon',
-        email: 'alex@uni.dk',
-      )
-      ..protocolDescription = StudyProtocolDescription(
-          title: 'Test Study',
-          purpose: 'For testing purposes',
-          description: 'Testing');
+    masterProtocol = StudyProtocol(
+        ownerId: 'user@dtu.dk',
+        name: 'patient_tracking',
+        description: 'Track patient movement');
 
     // Define which devices are used for data collection.
-    phone = Smartphone();
+    masterPhone = Smartphone();
     eSense = DeviceDescriptor(roleName: 'esense');
 
-    protocol
-      ..addMasterDevice(phone)
+    masterProtocol
+      ..addMasterDevice(masterPhone)
       ..addConnectedDevice(eSense);
 
     // Define what needs to be measured, on which device, when.
@@ -43,19 +37,19 @@ void main() {
 
     ConcurrentTask task = ConcurrentTask(name: 'Start measures')
       ..addMeasures(measures);
-    protocol.addTriggeredTask(Trigger(), task, phone);
+    masterProtocol.addTriggeredTask(Trigger(), task, masterPhone);
 
     // adding all measure from the common schema to one one trigger and one task
-    protocol.addTriggeredTask(
+    masterProtocol.addTriggeredTask(
       ImmediateTrigger(), // a simple trigger that starts immediately
       AutomaticTask()
         ..measures =
             SamplingPackageRegistry().common().measures.values.toList(),
-      phone, // a task with all measures
+      masterPhone, // a task with all measures
     );
 
     // adding two measures to another device
-    protocol.addTriggeredTask(
+    masterProtocol.addTriggeredTask(
         ImmediateTrigger(),
         AutomaticTask()
           ..measures = SamplingPackageRegistry().debug().getMeasureList(
@@ -67,26 +61,25 @@ void main() {
         eSense);
   });
 
-  test('CAMSStudyProtocol -> JSON', () async {
-    print(protocol);
-    print(toJsonString(protocol));
-    expect(protocol.ownerId, 'AB');
-    expect(protocol.responsible.id, 'AB');
-    expect(protocol.masterDevices.length, 1);
-    expect(protocol.connectedDevices.length, 1);
-    expect(protocol.triggers.length, 3);
-    expect(protocol.triggers.keys.first, '0');
-    expect(protocol.tasks.length, 3);
-    expect(protocol.triggeredTasks.length, 3);
+  test('StudyProtocol -> JSON', () async {
+    print(masterProtocol);
+    print(toJsonString(masterProtocol));
+    expect(masterProtocol.ownerId, 'user@dtu.dk');
+    expect(masterProtocol.masterDevices.length, 1);
+    expect(masterProtocol.connectedDevices.length, 1);
+    expect(masterProtocol.triggers.length, 3);
+    expect(masterProtocol.triggers.keys.first, '0');
+    expect(masterProtocol.tasks.length, 3);
+    expect(masterProtocol.triggeredTasks.length, 3);
   });
 
   test('CAMSStudyProtocol -> JSON -> CAMSStudyProtocol :: deep assert',
       () async {
-    print('#1 : $protocol');
-    final studyJson = toJsonString(protocol);
+    print('#1 : $masterProtocol');
+    final studyJson = toJsonString(masterProtocol);
 
-    CAMSStudyProtocol protocolFromJson = CAMSStudyProtocol
-        .fromJson(json.decode(studyJson) as Map<String, dynamic>);
+    StudyProtocol protocolFromJson =
+        StudyProtocol.fromJson(json.decode(studyJson) as Map<String, dynamic>);
     expect(toJsonString(protocolFromJson), equals(studyJson));
     print('#2 : $protocolFromJson');
   });
@@ -95,17 +88,17 @@ void main() {
     // Read the study protocol from json file
     String plainJson = File('test/json/study_protocol.json').readAsStringSync();
 
-    CAMSStudyProtocol protocol = CAMSStudyProtocol
-        .fromJson(json.decode(plainJson) as Map<String, dynamic>);
+    StudyProtocol protocol =
+        StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
 
-    expect(protocol.ownerId, 'AB');
+    expect(protocol.ownerId, masterProtocol.ownerId);
     expect(protocol.masterDevices.first.roleName,
         SmartphoneDeploymentService().thisPhone.roleName);
     print(toJsonString(protocol));
   });
 
   test('Triggers -> JSON -> Triggers', () async {
-    protocol.addTriggeredTask(
+    masterProtocol.addTriggeredTask(
         DelayedTrigger(delay: Duration(seconds: 10)),
         AutomaticTask()
           ..measures = SamplingPackageRegistry().common().getMeasureList(
@@ -113,9 +106,9 @@ void main() {
                 SensorSamplingPackage.PEDOMETER,
                 DeviceSamplingPackage.SCREEN
               ]),
-        phone);
+        masterPhone);
 
-    protocol.addTriggeredTask(
+    masterProtocol.addTriggeredTask(
         PeriodicTrigger(
             period: const Duration(minutes: 1)), // collect every min.
         AutomaticTask()
@@ -124,7 +117,7 @@ void main() {
                 SensorSamplingPackage.LIGHT,
                 DeviceSamplingPackage.DEVICE
               ]),
-        phone);
+        masterPhone);
 
     RecurrentScheduledTrigger t1, t2, t3, t4;
 
@@ -132,13 +125,13 @@ void main() {
     t1 = RecurrentScheduledTrigger(
         type: RecurrentType.daily, time: Time(hour: 21, minute: 30));
     print('$t1');
-    protocol.addTriggeredTask(
+    masterProtocol.addTriggeredTask(
         t1,
         AutomaticTask()
           ..measures = SamplingPackageRegistry()
               .common()
               .getMeasureList(types: [DeviceSamplingPackage.MEMORY]),
-        phone);
+        masterPhone);
 
     // collect every other day at 13:30.
     t2 = RecurrentScheduledTrigger(
@@ -146,7 +139,7 @@ void main() {
         time: Time(hour: 13, minute: 30),
         separationCount: 1);
     print('$t2');
-    protocol.addTriggeredTask(
+    masterProtocol.addTriggeredTask(
         t2,
         AutomaticTask()
           ..measures = SamplingPackageRegistry().common().getMeasureList(
@@ -154,7 +147,7 @@ void main() {
                 SensorSamplingPackage.LIGHT,
                 DeviceSamplingPackage.MEMORY
               ]),
-        phone);
+        masterPhone);
 
     // collect every wednesday at 12:23.
     t3 = RecurrentScheduledTrigger(
@@ -162,7 +155,7 @@ void main() {
         time: Time(hour: 12, minute: 23),
         dayOfWeek: DateTime.wednesday);
     print('$t3');
-    protocol.addTriggeredTask(
+    masterProtocol.addTriggeredTask(
         t3,
         AutomaticTask()
           ..measures = SamplingPackageRegistry().common().getMeasureList(
@@ -170,7 +163,7 @@ void main() {
                 SensorSamplingPackage.LIGHT,
                 DeviceSamplingPackage.BATTERY
               ]),
-        phone);
+        masterPhone);
 
     // collect every 2nd monday at 12:23.
     t4 = RecurrentScheduledTrigger(
@@ -179,14 +172,14 @@ void main() {
         dayOfWeek: DateTime.monday,
         separationCount: 1);
     print('$t4');
-    protocol.addTriggeredTask(
+    masterProtocol.addTriggeredTask(
         t4,
         AutomaticTask()
           ..measures = DeviceSamplingPackage().common.getMeasureList(types: [
             DeviceSamplingPackage.SCREEN,
             DeviceSamplingPackage.MEMORY
           ]),
-        phone);
+        masterPhone);
 
     ConditionalEvent({
       'name': 'DTU',
@@ -194,7 +187,7 @@ void main() {
     });
 
     // when battery level is 10% then sample light
-    protocol.addTriggeredTask(
+    masterProtocol.addTriggeredTask(
         SamplingEventTrigger(
             measureType: DeviceSamplingPackage.BATTERY,
             resumeCondition: ConditionalEvent({'batteryLevel': 10})),
@@ -202,9 +195,9 @@ void main() {
           ..measures = SensorSamplingPackage()
               .common
               .getMeasureList(types: [SensorSamplingPackage.LIGHT]),
-        phone);
+        masterPhone);
 
-    protocol.addTriggeredTask(
+    masterProtocol.addTriggeredTask(
         ConditionalSamplingEventTrigger(
             measureType: DeviceSamplingPackage.BATTERY,
             resumeCondition: (dataPoint) =>
@@ -213,34 +206,33 @@ void main() {
           ..measures = SensorSamplingPackage()
               .common
               .getMeasureList(types: [SensorSamplingPackage.LIGHT]),
-        phone);
+        masterPhone);
 
-    final studyJson = toJsonString(protocol);
+    final studyJson = toJsonString(masterProtocol);
 
     print(studyJson);
 
-    CAMSStudyProtocol protocol_2 = CAMSStudyProtocol
-        .fromJson(json.decode(studyJson) as Map<String, dynamic>);
-    expect(protocol_2.ownerId, protocol.ownerId);
+    StudyProtocol protocol_2 =
+        StudyProtocol.fromJson(json.decode(studyJson) as Map<String, dynamic>);
+    expect(protocol_2.ownerId, masterProtocol.ownerId);
 
-    print('#1 : $protocol');
+    print('#1 : $masterProtocol');
 
-    CAMSStudyProtocol protocolFromJson = CAMSStudyProtocol
-        .fromJson(json.decode(studyJson) as Map<String, dynamic>);
+    StudyProtocol protocolFromJson =
+        StudyProtocol.fromJson(json.decode(studyJson) as Map<String, dynamic>);
     expect(toJsonString(protocolFromJson), equals(studyJson));
     print('#2 : $protocolFromJson');
   });
 
   test('Register Device', () async {
-    StudyDeploymentStatus status_1 =
-        await SmartphoneDeploymentService().createStudyDeployment(protocol);
+    StudyDeploymentStatus status_1 = await (SmartphoneDeploymentService()
+        .createStudyDeployment(masterProtocol));
     print(status_1);
-    assert(status_1.studyDeploymentId != null);
     assert(status_1.status == StudyDeploymentStatusTypes.Invited);
 
-    StudyDeploymentStatus status_2 = await SmartphoneDeploymentService()
+    StudyDeploymentStatus status_2 = await (SmartphoneDeploymentService()
         .registerDevice(
-            status_1.studyDeploymentId, 'esense', DeviceRegistration());
+            status_1.studyDeploymentId, 'esense', DeviceRegistration()));
     print(status_2);
     assert(status_2.studyDeploymentId == status_1.studyDeploymentId);
     assert(status_2.status == StudyDeploymentStatusTypes.DeployingDevices);
@@ -255,12 +247,11 @@ void main() {
   });
 
   test('Study Deployment', () async {
-    StudyDeploymentStatus status_1 =
-        await SmartphoneDeploymentService().createStudyDeployment(protocol);
+    StudyDeploymentStatus status_1 = await SmartphoneDeploymentService()
+        .createStudyDeployment(masterProtocol);
 
     print(status_1);
     print(toJsonString(status_1));
-    assert(status_1.studyDeploymentId != null);
     // we expect the phone and esense devices
     expect(status_1.devicesStatus.length, 2);
     expect(status_1.status, StudyDeploymentStatusTypes.Invited);
@@ -286,14 +277,15 @@ void main() {
     expect(status_1.devicesStatus[1].status,
         DeviceDeploymentStatusTypes.Registered);
 
-    CAMSMasterDeviceDeployment deployment = await SmartphoneDeploymentService()
+    SmartphoneDeployment deployment = await SmartphoneDeploymentService()
         .getDeviceDeployment(status_1.studyDeploymentId);
     print(deployment);
     print(toJsonString(deployment));
     expect(deployment.studyDeploymentId, status_1.studyDeploymentId);
-    expect(deployment.tasks.length, protocol.tasks.length);
-    expect(deployment.triggers.length, protocol.triggers.length);
-    expect(deployment.triggeredTasks.length, protocol.triggeredTasks.length);
+    expect(deployment.tasks.length, masterProtocol.tasks.length);
+    expect(deployment.triggers.length, masterProtocol.triggers.length);
+    expect(
+        deployment.triggeredTasks.length, masterProtocol.triggeredTasks.length);
 
     StudyDeploymentStatus status_3 = await SmartphoneDeploymentService()
         .deploymentSuccessful(status_1.studyDeploymentId);

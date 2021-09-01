@@ -14,13 +14,16 @@ class AudioDatum extends FileDatum {
   DataFormat get format => DataFormat.fromString(AudioSamplingPackage.AUDIO);
 
   /// The timestamp for start of recording.
-  DateTime startRecordingTime;
+  DateTime? startRecordingTime;
 
   /// The timestamp for end of recording.
-  DateTime endRecordingTime;
+  DateTime? endRecordingTime;
 
-  AudioDatum({String filename, this.startRecordingTime, this.endRecordingTime})
-      : super(filename: filename);
+  AudioDatum({
+    required String filename,
+    this.startRecordingTime,
+    this.endRecordingTime,
+  }) : super(filename: filename);
 
   factory AudioDatum.fromJson(Map<String, dynamic> json) =>
       _$AudioDatumFromJson(json);
@@ -50,9 +53,12 @@ class NoiseDatum extends Datum {
   /// Maximum decibel of sampling window.
   double maxDecibel;
 
-  NoiseDatum(
-      {this.meanDecibel, this.stdDecibel, this.minDecibel, this.maxDecibel})
-      : super();
+  NoiseDatum({
+    required this.meanDecibel,
+    required this.stdDecibel,
+    required this.minDecibel,
+    required this.maxDecibel,
+  }) : super();
 
   factory NoiseDatum.fromJson(Map<String, dynamic> json) =>
       _$NoiseDatumFromJson(json);

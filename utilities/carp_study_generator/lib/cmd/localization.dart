@@ -12,14 +12,28 @@ class LocalizationCommand extends AbstractCommand {
   Future execute() async {
     await authenticate();
 
-    locales.forEach((element) async {
+    for (var element in locales) {
       String locale = element.toString();
-      Map<String, dynamic> localizations = json.decode(getLocaleJson(locale));
+      Map<String, dynamic> upLocalizations = json.decode(getLocaleJson(locale));
 
       print("Uploading localization for locale: '$locale' to CARP.");
-      await CarpResourceManager()
-          .setLocalizations(Locale(locale), localizations);
-      print('Upload successful!');
-    });
+      bool success = await CarpResourceManager()
+          .setLocalizations(Locale(locale), upLocalizations);
+
+      if (success) {
+        print('Upload successful - # elements: ${upLocalizations.length}');
+
+        print("Downloading localization for locale: '$locale' from CARP.");
+        Map<String, String>? downLocalizations =
+            await CarpResourceManager().getLocalizations(Locale(locale));
+
+        (downLocalizations != null)
+            ? print(
+                'Download successful - # elements: ${downLocalizations.length}')
+            : print('Download returned null - something went wrong.');
+      } else {
+        print('Upload not successful - something went wrong.');
+      }
+    }
   }
 }

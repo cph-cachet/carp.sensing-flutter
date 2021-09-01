@@ -2,25 +2,26 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:test/test.dart';
 
-import 'package:carp_communication_package/communication.dart';
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+import 'package:carp_communication_package/communication.dart';
 
 void main() {
-  CAMSStudyProtocol protocol;
+  late StudyProtocol protocol;
   Smartphone phone;
 
   setUp(() {
+    // make sure that the json functions are loaded
+    DomainJsonFactory();
+
     // register the context sampling package
     SamplingPackageRegistry().register(CommunicationSamplingPackage());
 
     // Create a new study protocol.
-    protocol = CAMSStudyProtocol()
-      ..name = 'Context package test'
-      ..owner = ProtocolOwner(
-        id: 'AB',
-        name: 'Alex Boyon',
-        email: 'alex@uni.dk',
-      );
+    protocol = StudyProtocol(
+      ownerId: 'alex@uni.dk',
+      name: 'Context package test',
+    );
 
     // Define which devices are used for data collection.
     phone = Smartphone();
@@ -39,15 +40,15 @@ void main() {
   test('CAMSStudyProtocol -> JSON', () async {
     print(protocol);
     print(toJsonString(protocol));
-    expect(protocol.ownerId, 'AB');
+    expect(protocol.ownerId, 'alex@uni.dk');
   });
 
   test('StudyProtocol -> JSON -> StudyProtocol :: deep assert', () async {
     print('#1 : $protocol');
     final studyJson = toJsonString(protocol);
 
-    CAMSStudyProtocol protocolFromJson = CAMSStudyProtocol
-        .fromJson(json.decode(studyJson) as Map<String, dynamic>);
+    StudyProtocol protocolFromJson =
+        StudyProtocol.fromJson(json.decode(studyJson) as Map<String, dynamic>);
     expect(toJsonString(protocolFromJson), equals(studyJson));
     print('#2 : $protocolFromJson');
   });
@@ -55,10 +56,10 @@ void main() {
     // Read the study protocol from json file
     String plainJson = File('test/json/study_protocol.json').readAsStringSync();
 
-    CAMSStudyProtocol protocol = CAMSStudyProtocol
-        .fromJson(json.decode(plainJson) as Map<String, dynamic>);
+    StudyProtocol protocol =
+        StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
 
-    expect(protocol.ownerId, 'AB');
+    expect(protocol.ownerId, 'alex@uni.dk');
     expect(protocol.masterDevices.first.roleName, Smartphone.DEFAULT_ROLENAME);
     print(toJsonString(protocol));
   });
@@ -71,10 +72,10 @@ void main() {
     print(toJsonString(msg));
 
     TextMessageDatum pMsg = TransformerSchemaRegistry()
-        .lookup(PrivacySchema.DEFAULT)
-        .transform(msg);
-    expect(pMsg.textMessage.address, isNot('25550446'));
-    expect(pMsg.textMessage.body, isNot('Hej Jakob'));
+        .lookup(PrivacySchema.DEFAULT)!
+        .transform(msg) as TextMessageDatum;
+    expect(pMsg.textMessage!.address, isNot('25550446'));
+    expect(pMsg.textMessage!.body, isNot('Hej Jakob'));
     print(pMsg);
   });
 
@@ -90,8 +91,8 @@ void main() {
     log.textMessageLog.forEach(print);
 
     TextMessageLogDatum pLog = TransformerSchemaRegistry()
-        .lookup(PrivacySchema.DEFAULT)
-        .transform(log);
+        .lookup(PrivacySchema.DEFAULT)!
+        .transform(log) as TextMessageLogDatum;
     //expect(p_msg.textMessage.address, isNot('25550446'));
     //expect(p_msg.textMessage.body, isNot('Hej Jakob'));
     pLog.textMessageLog.forEach(print);
@@ -109,10 +110,8 @@ void main() {
     log.phoneLog.forEach(print);
 
     PhoneLogDatum pLog = TransformerSchemaRegistry()
-        .lookup(PrivacySchema.DEFAULT)
-        .transform(log);
-    //expect(p_msg.textMessage.address, isNot('25550446'));
-    //expect(p_msg.textMessage.body, isNot('Hej Jakob'));
+        .lookup(PrivacySchema.DEFAULT)!
+        .transform(log) as PhoneLogDatum;
     pLog.phoneLog.forEach(print);
   });
 
@@ -124,8 +123,8 @@ void main() {
     print(toJsonString(cal));
 
     CalendarDatum pCal = TransformerSchemaRegistry()
-        .lookup(PrivacySchema.DEFAULT)
-        .transform(cal);
+        .lookup(PrivacySchema.DEFAULT)!
+        .transform(cal) as CalendarDatum;
     print(toJsonString(pCal));
   });
 }

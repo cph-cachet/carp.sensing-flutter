@@ -1,11 +1,13 @@
 {
     "ownerId": "xyz@dtu.dk",
-    "creationDate": "2021-05-16T22:07:05.712276Z",
+    "name": "Test Study Protocol",
+    "creationDate": "2021-06-13T20:04:03.435903Z",
     "masterDevices": [
      {
       "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
       "isMasterDevice": true,
       "roleName": "masterphone",
+      "supportedDataTypes": [],
       "samplingConfiguration": {}
      }
     ],
@@ -14,6 +16,7 @@
       "$type": "dk.cachet.carp.protocols.domain.devices.DeviceDescriptor",
       "isMasterDevice": false,
       "roleName": "eSense",
+      "supportedDataTypes": [],
       "samplingConfiguration": {}
      }
     ],
@@ -21,11 +24,13 @@
     "triggers": {
      "0": {
       "$type": "dk.cachet.carp.protocols.domain.triggers.Trigger",
-      "sourceDeviceRoleName": "masterphone"
+      "sourceDeviceRoleName": "masterphone",
+      "requiresMasterDevice": false
      },
      "1": {
       "$type": "dk.cachet.carp.protocols.domain.triggers.ManualTrigger",
-      "sourceDeviceRoleName": "masterphone"
+      "sourceDeviceRoleName": "masterphone",
+      "requiresMasterDevice": false
      }
     },
     "tasks": [

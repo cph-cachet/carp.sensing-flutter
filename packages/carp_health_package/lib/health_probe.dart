@@ -4,7 +4,7 @@ class HealthProbe extends StreamProbe {
   StreamController<HealthDatum> _ctrl = StreamController.broadcast();
 
   Stream<HealthDatum> get stream => _ctrl.stream;
-  HealthMeasure healthMeasure;
+  late HealthMeasure healthMeasure;
 
   HealthProbe() : super();
 
@@ -26,7 +26,7 @@ class HealthProbe extends StreamProbe {
     DateTime start = healthMeasure.lastTime ??
         DateTime.now().subtract(healthMeasure.history);
     DateTime end = DateTime.now();
-    HealthDataType healthDataType = healthMeasure.healthDataType;
+    HealthDataType? healthDataType = healthMeasure.healthDataType;
     List<HealthDataPoint> data = [];
 
     debug(

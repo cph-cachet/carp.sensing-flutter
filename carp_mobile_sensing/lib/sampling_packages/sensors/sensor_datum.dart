@@ -13,16 +13,17 @@ class AccelerometerDatum extends Datum {
       DataFormat.fromString(SensorSamplingPackage.ACCELEROMETER);
 
   /// Acceleration force along the x axis (including gravity) measured in m/s^2.
-  double x;
+  double? x;
 
   /// Acceleration force along the y axis (including gravity) measured in m/s^2.
-  double y;
+  double? y;
 
   /// Acceleration force along the z axis (including gravity) measured in m/s^2.
-  double z;
+  double? z;
 
-  AccelerometerDatum({bool multiDatum, this.x, this.y, this.z})
+  AccelerometerDatum({bool multiDatum = false, this.x, this.y, this.z})
       : super(multiDatum: multiDatum);
+
   factory AccelerometerDatum.fromAccelerometerEvent(AccelerometerEvent event,
           {bool multiDatum = false}) =>
       AccelerometerDatum(multiDatum: multiDatum)
@@ -44,16 +45,17 @@ class GyroscopeDatum extends Datum {
       DataFormat.fromString(SensorSamplingPackage.GYROSCOPE);
 
   /// Rate of rotation around the x axis measured in rad/s.
-  double x;
+  double? x;
 
   /// Rate of rotation around the y axis measured in rad/s.
-  double y;
+  double? y;
 
   /// Rate of rotation around the z axis measured in rad/s.
-  double z;
+  double? z;
 
-  GyroscopeDatum({bool multiDatum, this.x, this.y, this.z})
+  GyroscopeDatum({bool multiDatum = false, this.x, this.y, this.z})
       : super(multiDatum: multiDatum);
+
   factory GyroscopeDatum.fromGyroscopeEvent(GyroscopeEvent event,
           {bool multiDatum = false}) =>
       GyroscopeDatum(multiDatum: multiDatum)
@@ -74,10 +76,10 @@ class LightDatum extends Datum {
   DataFormat get format => DataFormat.fromString(SensorSamplingPackage.LIGHT);
 
   /// Intensity in Lux
-  num meanLux;
-  num stdLux;
-  num minLux;
-  num maxLux;
+  num? meanLux;
+  num? stdLux;
+  num? minLux;
+  num? maxLux;
 
   LightDatum({this.meanLux, this.stdLux, this.minLux, this.maxLux})
       : super(multiDatum: false);
@@ -98,12 +100,13 @@ class PedometerDatum extends Datum {
       DataFormat.fromString(SensorSamplingPackage.PEDOMETER);
 
   /// The amount of steps.
-  int stepCount;
+  int? stepCount;
 
   PedometerDatum([this.stepCount]) : super();
 
   /// Returns `true` if the [stepCount] is equal.
-  bool equivalentTo(ConditionalEvent event) => stepCount == event['stepCount'];
+  bool equivalentTo(ConditionalEvent? event) =>
+      stepCount == event!['stepCount'];
 
   factory PedometerDatum.fromJson(Map<String, dynamic> json) =>
       _$PedometerDatumFromJson(json);

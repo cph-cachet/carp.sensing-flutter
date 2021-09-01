@@ -7,17 +7,18 @@
 part of carp_services;
 
 class CARPEmailValidator extends TextFieldValidator {
-  /// regex pattern to validate email inputs.
+  // regex pattern to validate email inputs.
   final Pattern _emailPattern =
       r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
 
-  CARPEmailValidator({@required String errorText}) : super(errorText);
+  CARPEmailValidator({required String errorText}) : super(errorText);
 
-  bool isValid(String value) => hasMatch(_emailPattern, value);
+  @override
+  bool isValid(String? value) => hasMatch(_emailPattern as String, value!);
 }
 
 class CarpAuthenticationForm extends StatefulWidget {
-  final String username;
+  final String? username;
   CarpAuthenticationForm({this.username});
   _CarpAuthenticationFormState createState() => _CarpAuthenticationFormState();
 }
@@ -56,7 +57,7 @@ class _CarpAuthenticationFormState extends State<CarpAuthenticationForm> {
 }
 
 class _InputWidget extends StatefulWidget {
-  final String username;
+  final String? username;
   _InputWidget({this.username});
   _InputState createState() => _InputState();
 }
@@ -65,8 +66,8 @@ class _InputState extends State<_InputWidget> {
   final int delay = 3;
   var _usernameKey = GlobalKey<FormFieldState>();
   var _passwordKey = GlobalKey<FormFieldState>();
-  String get _username => _usernameKey.currentState?.value?.trim();
-  String get _password => _passwordKey.currentState?.value?.trim();
+  String? get _username => _usernameKey.currentState?.value?.trim();
+  String? get _password => _passwordKey.currentState?.value?.trim();
 
   Widget build(BuildContext context) {
     return Column(children: [_emailInput, _passwordInput, _signinButton]);
@@ -91,7 +92,7 @@ class _InputState extends State<_InputWidget> {
         validator: MultiValidator([
           RequiredValidator(errorText: "* Required"),
           CARPEmailValidator(errorText: "Enter valid email."),
-        ]),
+        ]) as String? Function(String?)?,
       ),
     );
   }
@@ -115,7 +116,7 @@ class _InputState extends State<_InputWidget> {
           RequiredValidator(errorText: "* Required"),
           MinLengthValidator(8,
               errorText: "Password should be at least 8 characters"),
-        ]),
+        ]) as String? Function(String?)?,
       ),
     );
   }
@@ -140,11 +141,12 @@ class _InputState extends State<_InputWidget> {
 
   Future _validateAndSubmit() async {
     bool success = true;
-    Scaffold.of(context).showSnackBar(_getSnackBar());
+
+    ScaffoldMessenger.of(context).showSnackBar(_getSnackBar());
 
     try {
       await CarpService()
-          .authenticate(username: _username, password: _password);
+          .authenticate(username: _username!, password: _password!);
     } catch (exception) {
       warning('Exception in authentication via form - $exception');
       success = false;
@@ -153,7 +155,7 @@ class _InputState extends State<_InputWidget> {
     if (success) {
       Navigator.pop(context);
     } else {
-      Scaffold.of(context).showSnackBar(_getSnackBar(failure: true));
+      ScaffoldMessenger.of(context).showSnackBar(_getSnackBar(failure: true));
     }
   }
 
@@ -189,7 +191,7 @@ class _ResetPasswordState extends State<_ResetPasswordWidget> {
 
   Future _sendResetPasswordEmail() async {
     bool success = true;
-    Scaffold.of(context).showSnackBar(_resettingSnackBar);
+    ScaffoldMessenger.of(context).showSnackBar(_resettingSnackBar);
 
     try {
       // TODO - implement call to sendForgottenPasswordEmail() once tested.
@@ -201,8 +203,7 @@ class _ResetPasswordState extends State<_ResetPasswordWidget> {
       success = false;
     }
 
-    Scaffold
-        .of(context)
+    ScaffoldMessenger.of(context)
         .showSnackBar(success ? _successfulSnackBar : _failureSnackBar);
   }
 

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
@@ -9,16 +9,17 @@ import 'package:test/test.dart';
 
 import 'credentials.dart';
 
-String _encode(Object object) =>
+String _encode(Object? object) =>
     const JsonEncoder.withIndent(' ').convert(object);
 
 void main() {
   final String userId = "user@dtu.dk";
+  final String studyId = "test_1234";
   final String collectionName = 'test_patients';
   final String newCollectionName = 'new_patients_3';
 
   CarpApp app;
-  CAMSStudyProtocol protocol;
+  StudyProtocol protocol;
   Smartphone phone;
 
   LightDatum datum1 = LightDatum(
@@ -33,22 +34,17 @@ void main() {
     '12345jE',
   );
 
-  DocumentSnapshot document;
-  int documentId;
-  int consentDocumentId;
-  Random random = Random();
+  DocumentSnapshot? document;
+  int? documentId;
 
   /// Setup CARP and authenticate.
   /// Runs once before all tests.
   setUpAll(() async {
     // Create a new study protocol.
-    protocol = CAMSStudyProtocol(studyId: '#1')
-      ..name = 'Context package test'
-      ..responsible = StudyProtocolReponsible(
-        id: 'AB',
-        name: 'Alex Boyon',
-        email: 'alex@uni.dk',
-      );
+    protocol = StudyProtocol(
+      ownerId: 'owner@dtu.dk',
+      name: 'CARP Webb Services Test',
+    );
 
     // Define which devices are used for data collection.
     phone = Smartphone();
@@ -78,13 +74,13 @@ void main() {
     test('- service', () async {
       print('CarpService : ${CarpService().app}');
     });
+
     test('- authentication w. username and password', () async {
       CarpUser user = await CarpService().authenticate(
         username: username,
         password: password,
       );
 
-      assert(user != null);
       assert(user.token != null);
       assert(user.isAuthenticated);
 
@@ -96,33 +92,16 @@ void main() {
     test('- get user profile', () async {
       CarpUser newUser = await CarpService().getCurrentUserProfile();
 
-      assert(newUser != null);
-
       print("signed in : $newUser");
       print("   name   : ${newUser.firstName} ${newUser.lastName}");
     });
 
-    // This test fails -- we do not have access to create users with the authenticated user.
-    test('- create user', () async {
-      int id = random.nextInt(1000);
-      CarpUser newUser = await CarpService().createUser(
-          username: 'user_$id@dtu.dk',
-          password: 'underbar',
-          firstName: 'CACHET User #$id');
-
-      // we expect this call to fail, since we're not authenticated as admin
-      assert(newUser == null);
-
-      print("create  : $newUser");
-      print("   name : ${newUser.firstName} ${newUser.lastName}");
-    }, skip: true);
-
     test('- refresh token', () async {
       print('expiring token...');
-      CarpService().currentUser.token.expire();
+      CarpService().currentUser!.token!.expire();
 
-      await CarpService().currentUser.getOAuthToken(refresh: true);
-      CarpUser user = CarpService().currentUser;
+      await CarpService().currentUser!.getOAuthToken(refresh: true);
+      CarpUser user = CarpService().currentUser!;
 
       assert(user.token != null);
       print("signed in : $user");
@@ -136,9 +115,8 @@ void main() {
       );
 
       CarpUser newUser = await CarpService()
-          .authenticateWithToken(username: user.username, token: user.token);
+          .authenticateWithToken(username: user.username, token: user.token!);
 
-      assert(newUser != null);
       assert(newUser.isAuthenticated);
       assert(newUser.username == user.username);
 
@@ -153,13 +131,12 @@ void main() {
       );
 
       //saving token as json
-      Map<String, dynamic> tokenAsJson = user.token.toJson();
+      Map<String, dynamic> tokenAsJson = user.token!.toJson();
       print(_encode(tokenAsJson));
 
       CarpUser newUser = await CarpService().authenticateWithToken(
           username: username, token: OAuthToken.fromJson(tokenAsJson));
 
-      assert(newUser != null);
       assert(newUser.isAuthenticated);
       assert(newUser.username == user.username);
 
@@ -183,7 +160,6 @@ void main() {
         newPassword: newPassword,
       );
 
-      assert(user2 != null);
       assert(user2.isAuthenticated);
       assert(user2.username == user1.username);
       print("Password has been changed to '$newPassword'\n - user : $user2");
@@ -194,13 +170,12 @@ void main() {
         password: newPassword,
       );
 
-      assert(user3 != null);
       assert(user3.isAuthenticated);
       assert(user3.username == user1.username);
       print("signed in using the '$newPassword' password\n - user: $user3");
 
       // changing the password back to the old one
-      CarpUser user4 = await CarpService().changePassword(
+      CarpUser? user4 = await CarpService().changePassword(
         currentPassword: newPassword,
         newPassword: oldPassword,
       );
@@ -209,27 +184,30 @@ void main() {
     });
   });
 
+  int? consentDocumentId;
+
   group('Informed Consent', () {
     test('- create', () async {
       ConsentDocument uploaded = await CarpService().createConsentDocument(
           {"text": "The original terms text.", "signature": "Image Blob"});
 
-      assert(uploaded != null);
       print(uploaded);
-      print('createdAt : ${uploaded.createdAt}');
+      print('document id : ${uploaded.id}');
+      print('createdAt   : ${uploaded.createdAt}');
       print('createdByUserId : ${uploaded.createdByUserId}');
-      print('document : ${uploaded.document}');
+      print('document    : ${uploaded.document}');
 
       consentDocumentId = uploaded.id;
     });
 
     test('- get', () async {
       ConsentDocument downloaded =
-          await CarpService().getConsentDocument(consentDocumentId);
+          await CarpService().getConsentDocument(consentDocumentId!);
 
-      assert(downloaded != null);
       assert(downloaded.id == consentDocumentId);
+
       print(downloaded);
+      print('document id : ${downloaded.id}');
       print('createdAt : ${downloaded.createdAt}');
       print('createdByUserId : ${downloaded.createdByUserId}');
       print('document : ${downloaded.document}');
@@ -242,7 +220,7 @@ void main() {
       test('- post', () async {
         final DataPoint data = DataPoint.fromData(datum1);
         // studyId & userId is required for upload
-        data.carpHeader.studyId = protocol.studyId;
+        data.carpHeader.studyId = studyId;
         data.carpHeader.userId = userId;
 
         print(_encode(data.toJson()));
@@ -257,7 +235,7 @@ void main() {
       test('- post w/o trigger id & device role name', () async {
         final DataPoint data = DataPoint.fromData(datum1);
         // studyId & userId is required for upload
-        data.carpHeader.studyId = protocol.studyId;
+        data.carpHeader.studyId = studyId;
         data.carpHeader.userId = userId;
 
         // triggerId, deviceRoleName, startTime & endTime are not required
@@ -318,14 +296,14 @@ void main() {
           print(' ${datapoint.id}');
           await CarpService()
               .getDataPointReference()
-              .deleteDataPoint(datapoint.id);
+              .deleteDataPoint(datapoint.id!);
         });
       });
 
       test('- get by id', () async {
         final DataPoint dataPost = DataPoint.fromData(datum1);
         // studyId & userId is required for upload
-        dataPost.carpHeader.studyId = protocol.studyId;
+        dataPost.carpHeader.studyId = studyId;
         dataPost.carpHeader.userId = userId;
 
         print(_encode(dataPost.toJson()));
@@ -341,9 +319,6 @@ void main() {
 
         print(_encode(dataGet.toJson()));
         assert(dataGet.id == dataPointId);
-        // the following fails, since the order of attributes are not the same...
-        // expect(toJsonString(dataPost.carpBody),
-        //     equals(toJsonString(dataGet.carpBody)));
       });
 
       test(
@@ -363,12 +338,12 @@ void main() {
         await CarpService()
             .getDataPointReference()
             .postDataPoint(DataPoint.fromData(datum1)
-              ..carpHeader.studyId = protocol.studyId
+              ..carpHeader.studyId = studyId
               ..carpHeader.userId = userId);
         await CarpService()
             .getDataPointReference()
             .postDataPoint(DataPoint.fromData(datum2)
-              ..carpHeader.studyId = protocol.studyId
+              ..carpHeader.studyId = studyId
               ..carpHeader.userId = userId);
 
         // String query =
@@ -395,7 +370,7 @@ void main() {
         int dataPointId = await CarpService()
             .getDataPointReference()
             .postDataPoint(DataPoint.fromData(datum1)
-              ..carpHeader.studyId = protocol.studyId
+              ..carpHeader.studyId = studyId
               ..carpHeader.userId = userId);
         print("DELETE data_point_id : $dataPointId");
         await CarpService()
@@ -415,7 +390,7 @@ void main() {
             print(' ${datapoint.id}');
             await CarpService()
                 .getDataPointReference()
-                .deleteDataPoint(datapoint.id);
+                .deleteDataPoint(datapoint.id!);
           });
 
           // wait for the delete requests to finish
@@ -443,10 +418,10 @@ void main() {
           .setData({'email': userId, 'role': 'Administrator'});
 
       print(document);
-      print(_encode(document.data));
+      print(_encode(document!.data));
 
-      assert(document.id > 0);
-      documentId = document.id;
+      assert(document!.id > 0);
+      documentId = document!.id;
 
       // create another document
       await CarpService()
@@ -459,16 +434,16 @@ void main() {
       assert(document != null);
       print(document);
 
-      DocumentSnapshot original = await CarpService()
+      DocumentSnapshot? original = await CarpService()
           .collection(collectionName)
-          .document(document.name)
+          .document(document!.name)
           .get();
-      print(_encode(original.data));
+      print(_encode(original?.data));
 
       // updating the role to super user
       DocumentSnapshot updated = await CarpService()
           .collection(collectionName)
-          .document(document.name)
+          .document(document!.name)
           .updateData({'email': userId, 'role': 'Super User'});
 
       print('----------- updated -------------');
@@ -481,21 +456,21 @@ void main() {
 
     test(' - get document by id', () async {
       assert(document != null);
-      DocumentSnapshot newDocument =
-          await CarpService().documentById(documentId).get();
+      DocumentSnapshot? newDocument =
+          await CarpService().documentById(documentId!).get();
 
       print((newDocument));
-      assert(newDocument.id == document.id);
-      assert(newDocument.id == documentId);
+      assert(newDocument?.id == document!.id);
+      assert(newDocument?.id == documentId);
     });
 
     test(' - get document by path', () async {
-      DocumentSnapshot newDocument = await CarpService()
+      DocumentSnapshot? newDocument = await CarpService()
           .collection(collectionName)
-          .document(document.name)
+          .document(document!.name)
           .get();
       print((newDocument));
-      assert(newDocument.id == document.id);
+      assert(newDocument?.id == document!.id);
     });
 
 //     test(' - rename document', () async {
@@ -573,24 +548,25 @@ void main() {
 
     test(' - get nested document', () async {
       assert(document != null);
-      DocumentSnapshot newDocument = await CarpService()
+      DocumentSnapshot? newDocument = await CarpService()
           .collection(collectionName)
           .document(userId)
           .collection('activities')
           .document('cooking')
           .get();
 
+      assert(newDocument!.id > 0);
+
       print(newDocument);
-      print(newDocument.snapshot);
-      print(newDocument.createdAt);
-      print(newDocument.data);
-      print(newDocument['what']);
-      assert(newDocument.id > 0);
+      print(newDocument?.snapshot);
+      print(newDocument?.createdAt);
+      print(newDocument?.data);
+      print(newDocument?['what']);
     });
 
     test('- expire token and the upload document', () async {
       print('expiring token...');
-      CarpService().currentUser.token.expire();
+      CarpService().currentUser!.token!.expire();
 
       print('trying to upload a document w/o a name...');
       DocumentSnapshot d = await CarpService()
@@ -615,9 +591,9 @@ void main() {
     });
 
     test(" - list collections in the 'user@dtu.dk' document", () async {
-      DocumentSnapshot newDocument =
+      DocumentSnapshot? newDocument =
           await CarpService().collection(collectionName).document(userId).get();
-      newDocument.collections.forEach((ref) => print(ref));
+      newDocument?.collections.forEach((ref) => print(ref));
     });
 
     test(" - list all nested documents in '$collectionName' collection",
@@ -651,7 +627,7 @@ void main() {
     test(' - get collection from path', () async {
       CollectionReference collection =
           await CarpService().collection(collectionName).get();
-      assert(collection.id > 0);
+      assert(collection.id! > 0);
       print(collection);
     });
 
@@ -659,7 +635,7 @@ void main() {
       assert(document != null);
       await CarpService()
           .collection(collectionName)
-          .document(document.name)
+          .document(document!.name)
           .delete();
     });
 
@@ -685,7 +661,7 @@ void main() {
         collection = await CarpService().collection(newCollectionName).get();
       } catch (error) {
         print(error);
-        expect((error as CarpServiceException).httpStatus.httpResponseCode,
+        expect((error as CarpServiceException).httpStatus!.httpResponseCode,
             HttpStatus.notFound);
       }
     });
@@ -695,7 +671,7 @@ void main() {
     test(" - get 'patients' collection from path", () async {
       CollectionReference collection =
           await CarpService().collection('patients').get();
-      assert(collection.id > 0);
+      assert(collection.id! > 0);
       print(collection);
     });
 
@@ -734,8 +710,6 @@ void main() {
         'activity': 'test'
       });
 
-      assert(uploadTask != null);
-
       CarpFileResponse response = await uploadTask.onComplete;
       assert(response.id > 0);
       id = response.id;
@@ -759,7 +733,7 @@ void main() {
       } catch (error) {
         print(error);
         assert(error is CarpServiceException);
-        expect((error as CarpServiceException).httpStatus.httpResponseCode,
+        expect((error as CarpServiceException).httpStatus!.httpResponseCode,
             HttpStatus.notFound);
       }
     });
@@ -769,8 +743,6 @@ void main() {
 
       final FileDownloadTask downloadTask =
           CarpService().getFileStorageReference(id).download(myFile);
-
-      assert(downloadTask != null);
 
       int response = await downloadTask.onComplete;
       assert(response == 200);
@@ -791,9 +763,11 @@ void main() {
     });
 
     test('- get by name', () async {
-      final FileStorageReference reference =
+      final FileStorageReference? reference =
           await CarpService().getFileStorageReferenceByName('img.jpg');
-      final CarpFileResponse result = await reference.get();
+
+      assert(reference != null);
+      final CarpFileResponse result = await reference!.get();
 
       assert(result.originalName == 'img.jpg');
       print('result : $result');

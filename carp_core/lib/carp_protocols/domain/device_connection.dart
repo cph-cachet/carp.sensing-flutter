@@ -9,13 +9,14 @@ part of carp_core_protocols;
 
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class DeviceConnection extends Serializable {
-  String roleName;
-  String connectedToRoleName;
+  String? roleName;
+  String? connectedToRoleName;
 
   DeviceConnection([this.roleName, this.connectedToRoleName]) : super();
+
   Function get fromJsonFunction => _$DeviceConnectionFromJson;
   factory DeviceConnection.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as DeviceConnection;
   Map<String, dynamic> toJson() => _$DeviceConnectionToJson(this);
   String get jsonType =>
       'dk.cachet.carp.protocols.application.StudyProtocolSnapshot.$runtimeType';

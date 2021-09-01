@@ -29,32 +29,41 @@ class AudioProbe extends DatumProbe {
   /// The name of the folder used for storing audio files.
   static const String AUDIO_FILES_PATH = 'audio';
 
-  String _path;
+  String? _path;
   bool _isRecording = false;
-  DateTime _startRecordingTime, _endRecordingTime;
-  AudioDatum _datum;
+  DateTime? _startRecordingTime, _endRecordingTime;
+  AudioDatum? _datum;
+  var recorder = FlutterSoundRecorder();
+  String? _soundFileName;
 
-  String soundFileName;
+  bool get isRecording => _isRecording;
 
+  @override
   Future onResume() async {
-    soundFileName = await _startAudioRecording();
-    debug('Audio recording resumed - sound file : $soundFileName');
+    await _startAudioRecording();
+    debug('Audio recording resumed - sound file : $_soundFileName');
   }
 
+  @override
   Future onPause() async {
     // when pausing the audio sampling, stop recording and collect the datum
     if (_isRecording) {
-      await _stopAudioRecording();
-      getDatum().then((Datum data) {
+      try {
+        await _stopAudioRecording();
+        Datum? data = await getDatum();
         if (data != null) controller.add(data);
-      }).catchError(
-          (error, stacktrace) => controller.addError(error, stacktrace));
+        debug('Audio recording paused - sound file : $_soundFileName');
+      } catch (error) {
+        controller.addError(error);
+      }
     }
   }
 
+  @override
   Future onStop() async {
     if (_isRecording) await onPause();
-    RecordMp3.instance.stop();
+    await recorder.stopRecorder();
+    // RecordMp3.instance.stop();
     super.onStop();
   }
 
@@ -64,30 +73,41 @@ class AudioProbe extends DatumProbe {
           'Trying to start audio recording, but recording is already running. '
           'Make sure to pause this audio probe before resuming it.');
     } else {
-      _datum = AudioDatum();
-      soundFileName = await filePath;
       _startRecordingTime = DateTime.now();
-      _datum
-        ..path = soundFileName
-        ..filename = soundFileName.split("/").last
-        ..startRecordingTime = _startRecordingTime;
+      _datum = AudioDatum(
+        filename: 'ignored for now',
+        startRecordingTime: _startRecordingTime!,
+      );
+      _soundFileName = await filePath;
+      _datum!.filename = _soundFileName!.split("/").last;
       _isRecording = true;
-      RecordMp3.instance.start(
-          soundFileName,
-          (error) => controller.addError(
-              'Error starting audio recording in $runtimeType -  $error'));
+
+      // start the recording
+      recorder.openAudioSession();
+      await recorder.startRecorder(
+        toFile: _soundFileName,
+        codec: Codec.aacMP4,
+      );
+      // RecordMp3.instance.start(
+      //     soundFileName,
+      //     (error) => controller.addError(
+      //         'Error starting audio recording in $runtimeType -  $error'));
     }
-    return soundFileName;
+    return _soundFileName!;
   }
 
   Future _stopAudioRecording() async {
     _endRecordingTime = DateTime.now();
     _isRecording = false;
-    RecordMp3.instance.stop();
+    // stop the recording
+    await recorder.stopRecorder();
+    recorder.closeAudioSession();
+    // RecordMp3.instance.stop();
   }
 
-  Future<Datum> getDatum() async =>
-      _datum..endRecordingTime = _endRecordingTime;
+  @override
+  Future<Datum?> getDatum() async =>
+      _datum?..endRecordingTime = _endRecordingTime;
 
   String get studyDeploymentPath => (measure is CAMSMeasure)
       ? '/${(measure as CAMSMeasure).studyDeploymentId}'
@@ -101,17 +121,17 @@ class AudioProbe extends DatumProbe {
       final localApplicationDir = await getApplicationDocumentsDirectory();
       // create a sub-directory for sound files
       final directory = await Directory(
-              '${localApplicationDir.path}/${FileDataManager.CARP_FILE_PATH}$studyDeploymentPath/$AUDIO_FILES_PATH')
+              '${localApplicationDir.path}/${Settings.CARP_DATA_FILE_PATH}$studyDeploymentPath/$AUDIO_FILES_PATH')
           .create(recursive: true);
 
       _path = directory.path;
     }
-    return _path;
+    return _path!;
   }
 
   /// Returns the  filename of the sound file.
   /// The file is named by the unique id (uuid) of the [AudioDatum]
-  String get filename => '${_datum.id}.mp3';
+  String get filename => '${_datum!.id}.mp4';
 
   /// Returns the full file path to the sound file.
   Future<String> get filePath async {

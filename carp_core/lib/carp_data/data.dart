@@ -15,7 +15,7 @@ class Data {
   @JsonKey(ignore: true)
   DataFormat format;
 
-  Data();
+  Data([this.format = DataFormat.UNKNOWN]);
 
   /// Create a Dart object from a JSON map.
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);

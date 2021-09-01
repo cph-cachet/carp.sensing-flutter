@@ -1,3 +1,7 @@
+## 0.30.0
+* upgrade to null-safety and `carp_mobile_sensing` v. 0.30.0
+* adjustment of `CarpFileResponse` to reflect new JSON format from server.
+
 ## 0.21.5
 * upgrade to `carp_mobile_sensing` v. 0.21.5
 * small updates to unit tests

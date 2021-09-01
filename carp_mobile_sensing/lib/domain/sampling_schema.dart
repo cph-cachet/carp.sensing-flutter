@@ -6,7 +6,7 @@
  */
 part of domain;
 
-String _encode(Object object) =>
+String _encode(Object? object) =>
     const JsonEncoder.withIndent(' ').convert(object);
 
 /// Specify how sampling should be done. Used to make default configuration of
@@ -47,20 +47,24 @@ class SamplingSchema extends DataTypeSamplingSchemeList {
   SamplingSchemaType type;
 
   /// A printer-friendly name of this [SamplingSchema].
-  String name;
+  String? name;
 
   /// A description of this [SamplingSchema].
-  String description;
+  String? description;
 
-  /// A map of default [Measure]s for different [String]s for this sampling
+  /// A map of default [Measure]s for different measure types for this sampling
   /// schema.
   Map<String, Measure> get measures => _measures;
 
   /// Is this sampling schema power-aware, i.e. adapting its sampling strategy
   /// to the battery power status. See [PowerAwarenessState].
-  bool powerAware = false;
+  bool powerAware;
 
-  SamplingSchema({this.type, this.name, this.powerAware = false}) : super();
+  SamplingSchema({
+    required this.type,
+    this.name,
+    this.powerAware = false,
+  }) : super();
 
   /// Add a default measure to this schema.
   void addMeasure(Measure measure) => _measures[measure.type] = measure;
@@ -75,9 +79,8 @@ class SamplingSchema extends DataTypeSamplingSchemeList {
   /// Adds all measures from [schema] to this sampling schema.
   ///
   /// If a measure in [schema] is already in this schema, its value is overwritten.
-  void addSamplingSchema(SamplingSchema schema) {
-    if (schema != null) measures.addAll(schema.measures);
-  }
+  void addSamplingSchema(SamplingSchema schema) =>
+      measures.addAll(schema.measures);
 
   /// Returns a list of [Measure]s from this [SamplingSchema] for
   /// a list of [String]s as specified in [types].
@@ -97,7 +100,7 @@ class SamplingSchema extends DataTypeSamplingSchemeList {
   ///
   /// would return a list with a [Measure] for bluetooth, connectivity, etc.,
   /// each with default configurations from the [SamplingSchema.common()] schema.
-  List<Measure> getMeasureList({List<String> types}) {
+  List<Measure> getMeasureList({required List<String> types}) {
     List<Measure> _list = [];
 
     // since we're using json serialization below, make sure that the json
@@ -122,11 +125,10 @@ class SamplingSchema extends DataTypeSamplingSchemeList {
   /// This schema is used in the power-aware adaptation of sampling. See [PowerAwarenessState].
   /// [SamplingSchema.normal] is an empty schema and therefore don't change anything when
   /// used to adapt a [StudyProtocol] and its [Measure]s in the [adapt] method.
-  factory SamplingSchema.normal({String namespace, bool powerAware}) =>
-      SamplingSchema(
-          type: SamplingSchemaType.normal,
-          name: 'Default sampling',
-          powerAware: powerAware);
+  factory SamplingSchema.normal({bool powerAware = false}) => SamplingSchema(
+      type: SamplingSchemaType.normal,
+      name: 'Default sampling',
+      powerAware: powerAware);
 
   /// Adapts all [Measure]s in a [MasterDeviceDeployment] to this [SamplingSchema].
   ///
@@ -140,9 +142,9 @@ class SamplingSchema extends DataTypeSamplingSchemeList {
         if (measure is CAMSMeasure) {
           // first restore each measure in the study+tasks to its previous value
           if (restore) measure.restore();
-          if (measures.containsKey(measure.dataType)) {
+          if (measures.containsKey(measure.type)) {
             // if an adapted measure exists in this schema, adapt to it
-            measure.adapt(measures[measure.dataType]);
+            measure.adapt(measures[measure.type]!);
           }
           // notify listeners that the measure has changed due to restoration
           // and/or adaptation

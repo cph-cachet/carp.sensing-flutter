@@ -15,23 +15,36 @@ To use the study generator, do the following in you app:
 The `carpspec.yaml` can be configured using the following properties for:
 
  * the CARP Server 
- * protocol
- * informed consent
+ * the study ID
+ * the study description
+ * a protocol
+ * the informed consent
  * localization
 
 ```yaml
 server:
-  uri: https://cans.cachet.dk:443
+  uri: https://cans.cachet.dk
   client_id: carp
   client_secret: carp
   username: user@dtu.dk
   password: pw
 
-protocol:
-  path: carp/protocols/protocol.json
+# basic study ids
+study:
+  study_id: 01cf04a7-d154-40f0-9a75-ab759cf74eb3
+  study_deployment_id: ae8076a3-7170-4bcf-b66c-64639a7a9eee
 
+# the location of the study description to be uploaded
+description:
+  path: carp/resources/description.json
+
+# the location of the protocol to be uploaded
+protocol:
+  path: carp/resources/protocol.json
+
+# the location of the informed consent to be uploaded
 consent:
-  path: carp/consents/consent.json
+  path: carp/resources/consent.json
 
 localization:
   path: carp/lang/
@@ -48,11 +61,12 @@ Note that the `carpspec.yaml` file contains username and password in clear text 
 
 All files used for creating and uploading configurations to CARP is stored in the `carp` folder in the root of your (app) project file. The name of the json files to upload is specified in the `carpspec.yaml` file. The default file structure is:
 
-| Folder      |   Description |
-|-------------|---------------|
-| `protocols` | The file(s) containing the json definition of your `StudyProtocol`. |  
-| `consents`  | The file(s) containing the json definition of your `RPOrderedTask` with the informed consent to show to the user. | 
-| `lang`      | The json language file for each language supported of the form `<language>.json`. | 
+| File          |   Description |
+|---------------|---------------|
+| `description` | JSON definition of your `StudyDescription`. |  
+| `protocol`    | JSON definition of your `StudyProtocol`. |  
+| `consent`     | JSON definition of your `RPOrderedTask` with the informed consent to show to the user. | 
+| `lang`        | The JSON language file for each language supported of the form `<language>.json`. | 
 
 Please ignore the test scripts in the `carp` folder (these are used to execute the commands).
 
@@ -71,6 +85,7 @@ The available commands are:
   dryrun         Makes a dryrun testing access to the CARP server, and the protocol, consent, and localizations.
   create         Create a study protocol based on a json file and uploads it to the CARP server.
   update         Update an existing study protocol based on a json file and uploads it to the CARP server as a new version.
+  description    Create astudy description based on a json file and uploads it to the CARP server.
   consent        Create an informed consent based on a json file and uploads it to the CARP server.
   localization   Create localization support based on the files '<locale>.json' and upload them to the CARP server.
 ``` 
@@ -78,6 +93,7 @@ The available commands are:
 Before uploading a any json files to CARP, run the `dryrun` command first. It will check and output a list like the following:
 
 ```bash
+[✓] CARP App             CarpApp - name: CARP server at 'https://cans.cachet.dk/', uri: https://cans.cachet.dk/, studyDeploymentId: null, studyId: 7be8da9b-7e8f-46c6-a070-d3fa186914a2
 [!] CARP Server          CarpServiceException: 401 Unauthorized -  The requested email account: user@dtu.dk cannot be found. 
 [✓] Protocol path        carp/protocols/protocol.json
 [✓] Protocol parse       name: test_protocol

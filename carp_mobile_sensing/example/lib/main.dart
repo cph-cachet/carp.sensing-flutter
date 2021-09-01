@@ -4,6 +4,7 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:flutter/material.dart';
 
@@ -37,7 +38,7 @@ class Console extends State<ConsolePage> {
     sensing = Sensing();
     Settings().init().then((future) {
       sensing.init().then((future) {
-        log("Setting up study protocol: ${sensing.protocol}");
+        log('Setting up study protocol: ${sensing.protocol}');
       });
     });
   }
@@ -168,13 +169,10 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
   /// Create a new CAMS study protocol.
   Future<StudyProtocol> getStudyProtocol(String studyId) async {
-    CAMSStudyProtocol protocol = CAMSStudyProtocol()
-      ..name = 'Track patient movement'
-      ..responsible = StudyProtocolReponsible(
-        id: 'AB',
-        name: 'Alex Boyon',
-        email: 'alex@uni.dk',
-      );
+    StudyProtocol protocol = StudyProtocol(
+      ownerId: 'AB',
+      name: 'Track patient movement',
+    );
 
     // Define which devices are used for data collection.
     Smartphone phone = Smartphone();
@@ -210,6 +208,22 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
               DeviceSamplingPackage.DEVICE,
               DeviceSamplingPackage.BATTERY,
               DeviceSamplingPackage.SCREEN,
+            ],
+          ),
+        phone);
+
+    // add a random trigger to collect device info at random times
+    protocol.addTriggeredTask(
+        RandomRecurrentTrigger(
+          startTime: Time(hour: 22, minute: 00),
+          endTime: Time(hour: 22, minute: 30),
+          minNumberOfTriggers: 2,
+          maxNumberOfTriggers: 8,
+        ),
+        AutomaticTask()
+          ..measures = SamplingPackageRegistry().debug().getMeasureList(
+            types: [
+              DeviceSamplingPackage.DEVICE,
             ],
           ),
         phone);

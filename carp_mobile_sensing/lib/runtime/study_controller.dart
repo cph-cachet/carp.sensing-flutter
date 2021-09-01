@@ -6,34 +6,34 @@
  */
 part of runtime;
 
-/// A [StudyDeploymentController] controls the execution of a [CAMSMasterDeviceDeployment].
+/// A [StudyDeploymentController] controls the execution of a [SmartphoneDeployment].
 class StudyDeploymentController extends StudyRuntime {
   int _samplingSize = 0;
-  DataManager _dataManager;
-  DataEndPoint _dataEndPoint;
-  StudyDeploymentExecutor _executor;
-  SamplingSchema _samplingSchema;
-  String _privacySchemaName;
-  DatumTransformer _transformer;
+  DataManager? _dataManager;
+  DataEndPoint? _dataEndPoint;
+  StudyDeploymentExecutor? _executor;
+  late SamplingSchema _samplingSchema;
+  String _privacySchemaName = NameSpace.CARP;
+  late DatumTransformer _transformer;
 
   /// The master device deployment running in this controller.
-  CAMSMasterDeviceDeployment get masterDeployment =>
-      deployment as CAMSMasterDeviceDeployment;
+  SmartphoneDeployment? get masterDeployment =>
+      deployment as SmartphoneDeployment?;
 
   /// The executor executing this [masterDeployment].
-  StudyDeploymentExecutor get executor => _executor;
+  StudyDeploymentExecutor? get executor => _executor;
 
   /// The configuration of the data endpoint, i.e. how data is saved or uploaded.
-  DataEndPoint get dataEndPoint => _dataEndPoint;
+  DataEndPoint? get dataEndPoint => _dataEndPoint;
 
   /// The data manager responsible for handling the data collected by this controller.
-  DataManager get dataManager => _dataManager;
+  DataManager? get dataManager => _dataManager;
 
   /// The privacy schema used to encrypt data before upload.
-  String get privacySchemaName => _privacySchemaName;
+  String? get privacySchemaName => _privacySchemaName;
 
   /// The permissions granted to this study from the OS.
-  Map<Permission, PermissionStatus> permissions;
+  Map<Permission, PermissionStatus>? permissions;
 
   /// The stream of all sampled data points.
   ///
@@ -43,12 +43,12 @@ class StudyDeploymentController extends StudyRuntime {
   ///   3. any custom [_transformer] provided
   ///
   /// This is a broadcast stream and supports multiple subscribers.
-  Stream<DataPoint> get data => _executor.data.map((dataPoint) => dataPoint
+  Stream<DataPoint> get data => _executor!.data.map((dataPoint) => dataPoint
     ..data = _transformer(TransformerSchemaRegistry()
-        .lookup(masterDeployment.dataEndPoint.dataFormat)
+        .lookup(masterDeployment!.dataEndPoint!.dataFormat)!
         .transform(TransformerSchemaRegistry()
-            .lookup(_privacySchemaName)
-            .transform(dataPoint.data))));
+            .lookup(_privacySchemaName)!
+            .transform(dataPoint.data as Datum))));
 
   PowerAwarenessState powerAwarenessState = NormalSamplingState.instance;
 
@@ -56,8 +56,34 @@ class StudyDeploymentController extends StudyRuntime {
   /// that has been collected.
   int get samplingSize => _samplingSize;
 
+  DateTime? _studyDeploymentStartTime;
+  String get _studyDeploymentStartTimesKey =>
+      '$studyDeploymentId.$Settings.STUDY_START_KEY'.toLowerCase();
+
+  /// The timestamp (in UTC) when the current study deployment
+  /// (the [masterDeployment]) was started on this phone.
+  /// This timestamp is save on the phone the first time a study is deployed
+  /// and persistently saved across app restarts.
+  Future<DateTime> get studyDeploymentStartTime async {
+    assert(Settings().preferences != null,
+        "Setting is not initialized. Call 'Setting().init()' first.");
+    if (_studyDeploymentStartTime == null) {
+      String? str =
+          Settings().preferences!.get(_studyDeploymentStartTimesKey) as String?;
+      _studyDeploymentStartTime = (str != null) ? DateTime.parse(str) : null;
+      if (_studyDeploymentStartTime == null) {
+        _studyDeploymentStartTime = DateTime.now().toUtc();
+        await Settings().preferences!.setString(_studyDeploymentStartTimesKey,
+            _studyDeploymentStartTime.toString());
+        info(
+            '$runtimeType - Study deployment start time set to $_studyDeploymentStartTime');
+      }
+    }
+    return _studyDeploymentStartTime!;
+  }
+
   /// Create a new [StudyDeploymentController] to control the runtime behavior
-  /// of this study [deployment].
+  /// of a study deployment.
   StudyDeploymentController() : super() {
     // initialize settings
     Settings().init();
@@ -69,7 +95,8 @@ class StudyDeploymentController extends StudyRuntime {
 
   /// Configure this [StudyDeploymentController].
   /// Must be called only once, and before [resume] is called.
-  /// This will/can also request permissions for all [SamplingPackage]s' permissions.
+  ///
+  /// Can request permissions for all [SamplingPackage]s' permissions.
   ///
   /// A number of optional parameters can be specified:
   ///
@@ -91,38 +118,43 @@ class StudyDeploymentController extends StudyRuntime {
   ///      packages at once. Default to `true`. If you want the app to handle
   ///      permissions, set this to `false`.
   ///
-  Future configure({
-    SamplingSchema samplingSchema,
-    DataEndPoint dataEndPoint,
-    String privacySchemaName,
-    DatumTransformer transformer,
+  Future<void> configure({
+    SamplingSchema? samplingSchema,
+    DataEndPoint? dataEndPoint,
+    String privacySchemaName = NameSpace.CARP,
+    DatumTransformer? transformer,
     bool askForPermissions = true,
   }) async {
     assert(deployment != null,
         'Cannot configure a Study Controller without a deployment.');
-    assert(deployment is CAMSMasterDeviceDeployment,
+    assert(deployment is SmartphoneDeployment,
         'A CAMS study controller can only work with a CAMS Master Device Deployment');
     info('Configuring $runtimeType');
 
-    _executor = StudyDeploymentExecutor(deployment);
+    // save the study deployment id in settings
+    // this is actually a little hack since we should be able to run
+    // several studies in the same app....
+    Settings().studyDeploymentId = studyDeploymentId;
+
+    _executor = StudyDeploymentExecutor(deployment as SmartphoneDeployment);
 
     // initialize optional parameters
     _samplingSchema = samplingSchema ?? SamplingSchema.normal(powerAware: true);
-    _dataEndPoint = dataEndPoint ?? masterDeployment.dataEndPoint;
-    _privacySchemaName = privacySchemaName ?? NameSpace.CARP;
+    _dataEndPoint = dataEndPoint ?? masterDeployment!.dataEndPoint;
+    _privacySchemaName = privacySchemaName;
     _transformer = transformer ?? ((datum) => datum);
 
     if (_dataEndPoint != null) {
-      _dataManager = DataManagerRegistry().lookup(_dataEndPoint.type);
+      _dataManager = DataManagerRegistry().lookup(_dataEndPoint!.type);
     }
 
     if (_dataManager == null) {
       warning(
-          "No data manager for the specified data endpoint found: '$_dataEndPoint'.");
+          "No data manager for the specified data endpoint found: '${masterDeployment?.dataEndPoint}'.");
     }
 
     // if no user is specified for this study, look up the local user id
-    masterDeployment.userId ??= await Settings().userId;
+    masterDeployment!.userId ??= await Settings().userId;
 
     // setting up permissions
     if (askForPermissions) {
@@ -141,12 +173,15 @@ class StudyDeploymentController extends StudyRuntime {
       }
     });
 
+    // check the start time for this study on this phone
+    // this will save it, the first time the study is executed
+    DateTime studyStartTimestamp = await studyDeploymentStartTime;
+
     info(
-        'CARP Mobile Sensing (CAMS) - Initializing Study Deployment Controller:');
-    info('      study id : ${masterDeployment.studyId}');
-    info(' deployment id : ${masterDeployment.studyDeploymentId}');
-    info('    study name : ${masterDeployment.name}');
-    info('          user : ${masterDeployment.userId}');
+        'CARP Mobile Sensing (CAMS) - Initializing Study Deployment Controller');
+    info(' deployment id : ${masterDeployment!.studyDeploymentId}');
+    info('    start time : $studyStartTimestamp');
+    info('          user : ${masterDeployment!.userId}');
     info(' data endpoint : $_dataEndPoint');
     info('      platform : ${DeviceInfo().platform.toString()}');
     info('     device ID : ${DeviceInfo().deviceID.toString()}');
@@ -156,18 +191,18 @@ class StudyDeploymentController extends StudyRuntime {
     if (samplingSchema != null) {
       // doing two adaptation is a bit of a hack; used to ensure that
       // restoration values are set to the specified sampling schema
-      masterDeployment.adapt(samplingSchema, restore: false);
-      masterDeployment.adapt(samplingSchema, restore: false);
+      masterDeployment!.adapt(samplingSchema, restore: false);
+      masterDeployment!.adapt(samplingSchema, restore: false);
     }
 
     // initialize the data manager, device registry, and study executor
     await _dataManager?.initialize(
-      masterDeployment.studyDeploymentId,
-      masterDeployment.dataEndPoint,
+      masterDeployment!.studyDeploymentId,
+      masterDeployment!.dataEndPoint!,
       data,
     );
     // await DeviceRegistry().initialize(deployment, data);
-    _executor.initialize(Measure(type: CAMSDataType.EXECUTOR));
+    _executor!.initialize(Measure(type: CAMSDataType.EXECUTOR));
     await enablePowerAwareness();
     data.listen((dataPoint) => _samplingSize++);
 
@@ -190,7 +225,7 @@ class StudyDeploymentController extends StudyRuntime {
             powerAwarenessState = newState;
             info(
                 'PowerAware: Going to $powerAwarenessState, level ${batteryState.batteryLevel}%');
-            masterDeployment.adapt(powerAwarenessState.schema);
+            masterDeployment!.adapt(powerAwarenessState.schema);
           }
         }
       });
@@ -205,11 +240,13 @@ class StudyDeploymentController extends StudyRuntime {
   void disablePowerAwareness() => _battery.stop();
 
   /// Resume this controller, i.e. resume data collection according to the
-  /// specified [deployment] and [_samplingSchema].
+  /// parameters specified in [configure].
+  ///
+  /// [configure] must be called before resuming sampling.
   void resume() {
     info('Resuming data sampling ...');
     super.resume();
-    _executor.resume();
+    _executor!.resume();
   }
 
   /// Pause this controller, which will pause data collection and close the
@@ -217,7 +254,7 @@ class StudyDeploymentController extends StudyRuntime {
   void pause() {
     info('Pausing data sampling ...');
     super.pause();
-    _executor.pause();
+    _executor!.pause();
     _dataManager?.close();
   }
 
@@ -229,7 +266,7 @@ class StudyDeploymentController extends StudyRuntime {
     info('Stopping data sampling ...');
     disablePowerAwareness();
     _dataManager?.close();
-    _executor.stop();
+    _executor!.stop();
     super.stop();
   }
 }
@@ -256,17 +293,17 @@ abstract class PowerAwarenessState {
   static const int MINIMUM_SAMPLING_LEVEL = 30;
   static const int NO_SAMPLING_LEVEL = 10;
 
-  static PowerAwarenessState instance;
+  static PowerAwarenessState? instance;
 
-  PowerAwarenessState adapt(int level);
+  PowerAwarenessState adapt(int? level);
   SamplingSchema get schema;
 }
 
 class NoSamplingState implements PowerAwarenessState {
   static NoSamplingState instance = NoSamplingState();
 
-  PowerAwarenessState adapt(int level) {
-    if (level > PowerAwarenessState.NO_SAMPLING_LEVEL) {
+  PowerAwarenessState adapt(int? level) {
+    if (level! > PowerAwarenessState.NO_SAMPLING_LEVEL) {
       return MinimumSamplingState.instance;
     } else {
       return NoSamplingState.instance;
@@ -281,8 +318,8 @@ class NoSamplingState implements PowerAwarenessState {
 class MinimumSamplingState implements PowerAwarenessState {
   static MinimumSamplingState instance = MinimumSamplingState();
 
-  PowerAwarenessState adapt(int level) {
-    if (level < PowerAwarenessState.NO_SAMPLING_LEVEL) {
+  PowerAwarenessState adapt(int? level) {
+    if (level! < PowerAwarenessState.NO_SAMPLING_LEVEL) {
       return NoSamplingState.instance;
     } else if (level > PowerAwarenessState.MINIMUM_SAMPLING_LEVEL) {
       return LightSamplingState.instance;
@@ -299,8 +336,8 @@ class MinimumSamplingState implements PowerAwarenessState {
 class LightSamplingState implements PowerAwarenessState {
   static LightSamplingState instance = LightSamplingState();
 
-  PowerAwarenessState adapt(int level) {
-    if (level < PowerAwarenessState.MINIMUM_SAMPLING_LEVEL) {
+  PowerAwarenessState adapt(int? level) {
+    if (level! < PowerAwarenessState.MINIMUM_SAMPLING_LEVEL) {
       return MinimumSamplingState.instance;
     } else if (level > PowerAwarenessState.LIGHT_SAMPLING_LEVEL) {
       return NormalSamplingState.instance;
@@ -317,8 +354,8 @@ class LightSamplingState implements PowerAwarenessState {
 class NormalSamplingState implements PowerAwarenessState {
   static NormalSamplingState instance = NormalSamplingState();
 
-  PowerAwarenessState adapt(int level) {
-    if (level < PowerAwarenessState.LIGHT_SAMPLING_LEVEL) {
+  PowerAwarenessState adapt(int? level) {
+    if (level! < PowerAwarenessState.LIGHT_SAMPLING_LEVEL) {
       return LightSamplingState.instance;
     } else {
       return NormalSamplingState.instance;

@@ -13,12 +13,12 @@ part of carp_core_deployment;
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ParticipantData {
   String studyDeploymentId;
-  Map<String, dynamic> data;
+  Map<String, dynamic>? data;
 
-  ParticipantData({this.studyDeploymentId, this.data}) : super();
+  ParticipantData({required this.studyDeploymentId, this.data}) : super();
 
-  dynamic operator [](String key) => data[key];
-  operator []=(String key, dynamic value) => data[key] = value;
+  dynamic operator [](String key) => data![key];
+  operator []=(String key, dynamic value) => data![key] = value;
 
   factory ParticipantData.fromJson(Map<String, dynamic> json) =>
       _$ParticipantDataFromJson(json);
@@ -36,11 +36,11 @@ abstract class AccountIdentity extends Serializable {
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class EmailAccountIdentity extends AccountIdentity {
   String emailAddress;
-  EmailAccountIdentity([this.emailAddress]);
+  EmailAccountIdentity(this.emailAddress);
 
   Function get fromJsonFunction => _$EmailAccountIdentityFromJson;
   factory EmailAccountIdentity.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as EmailAccountIdentity;
   Map<String, dynamic> toJson() => _$EmailAccountIdentityToJson(this);
 
   String toString() => '$runtimeType - emailAddress: $emailAddress';

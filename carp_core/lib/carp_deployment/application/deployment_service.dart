@@ -15,12 +15,13 @@ abstract class DeploymentService {
   /// If not specified, an UUID v1 id is generated.
   Future<StudyDeploymentStatus> createStudyDeployment(
     StudyProtocol protocol, [
-    String studyDeploymentId,
+    String? studyDeploymentId,
   ]);
 
   /// Remove study deployments with the given [studyDeploymentIds].
   ///
-  /// Returns the IDs of study deployments which were removed.
+  /// Returns the IDs of study deployments which were removed (empty set
+  /// if none were removed).
   /// IDs for which no study deployment exists are ignored.
   Future<Set<String>> removeStudyDeployments(Set<String> studyDeploymentIds);
 
@@ -36,18 +37,25 @@ abstract class DeploymentService {
   /// deployment with [studyDeploymentId].
   ///
   /// [registration] is a matching configuration for the device with [deviceRoleName].
-  Future<StudyDeploymentStatus> registerDevice(String studyDeploymentId,
-      String deviceRoleName, DeviceRegistration registration);
+  Future<StudyDeploymentStatus> registerDevice(
+    String studyDeploymentId,
+    String deviceRoleName,
+    DeviceRegistration registration,
+  );
 
   /// Unregister the device with the specified [deviceRoleName] for the study
   /// deployment with [studyDeploymentId].
   Future<StudyDeploymentStatus> unregisterDevice(
-      String studyDeploymentId, String deviceRoleName);
+    String studyDeploymentId,
+    String deviceRoleName,
+  );
 
   /// Get the deployment configuration for the master device with
   /// [masterDeviceRoleName] in the study deployment with [studyDeploymentId].
   Future<MasterDeviceDeployment> getDeviceDeploymentFor(
-      String studyDeploymentId, String masterDeviceRoleName);
+    String studyDeploymentId,
+    String masterDeviceRoleName,
+  );
 
   /// Indicate to stakeholders in the study deployment with [studyDeploymentId]
   /// that the device with [masterDeviceRoleName] was deployed successfully,

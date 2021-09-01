@@ -19,32 +19,32 @@ class DeviceDatum extends Datum {
   ///The platform type from which this Datum was collected.
   /// * `Android`
   /// * `IOS`
-  String platform;
+  String? platform;
 
   /// An identifier that is unique to the particular device which this [Datum] was collected.
   /// Note that this ID will change if the user performs a factory reset on their device.
-  String deviceId;
+  String? deviceId;
 
   /// The hardware type from which this [Datum] was collected (e.g. 'iPhone7,1' for iPhone 6 Plus).
-  String hardware;
+  String? hardware;
 
   /// Device name as specified by the OS.
-  String deviceName;
+  String? deviceName;
 
   /// Device manufacturer as specified by the OS.
-  String deviceManufacturer;
+  String? deviceManufacturer;
 
   /// Device model as specified by the OS.
-  String deviceModel;
+  String? deviceModel;
 
   /// Device OS as specified by the OS.
-  String operatingSystem;
+  String? operatingSystem;
 
   /// The SDK version.
-  String sdk;
+  String? sdk;
 
   /// The OS release.
-  String release;
+  String? release;
 
   DeviceDatum(this.platform, this.deviceId,
       {this.deviceName,
@@ -55,7 +55,7 @@ class DeviceDatum extends Datum {
       : super();
 
   /// Returns `true` if the [deviceId] is equal.
-  bool equivalentTo(ConditionalEvent event) => deviceId == event['deviceId'];
+  bool equivalentTo(ConditionalEvent? event) => deviceId == event!['deviceId'];
 
   factory DeviceDatum.fromJson(Map<String, dynamic> json) =>
       _$DeviceDatumFromJson(json);
@@ -64,14 +64,14 @@ class DeviceDatum extends Datum {
   String toString() =>
       super.toString() +
       ', platform: $platform'
-      ', deviceId: $deviceId'
-      ', hardware: $hardware'
-      ', name: $deviceName'
-      ', manufacturer: $deviceManufacturer'
-      ', model: $deviceModel'
-      ', OS: $operatingSystem'
-      ', SDK: $sdk'
-      ', release: $release';
+          ', deviceId: $deviceId'
+          ', hardware: $hardware'
+          ', name: $deviceName'
+          ', manufacturer: $deviceManufacturer'
+          ', model: $deviceModel'
+          ', OS: $operatingSystem'
+          ', SDK: $sdk'
+          ', release: $release';
 }
 
 /// A [Datum] that holds battery level collected from the phone.
@@ -85,14 +85,14 @@ class BatteryDatum extends Datum {
   static const String STATE_UNKNOWN = 'unknown';
 
   /// The battery level in percent.
-  int batteryLevel;
+  int? batteryLevel;
 
   /// The charging status of the battery:
   ///  - full
   ///  - charging
   ///  - discharging
   ///  - unknown
-  String batteryStatus;
+  String? batteryStatus;
 
   BatteryDatum() : super();
 
@@ -115,8 +115,8 @@ class BatteryDatum extends Datum {
   }
 
   /// Returns `true` if the [batteryLevel] is equal.
-  bool equivalentTo(ConditionalEvent event) =>
-      batteryLevel == event['batteryLevel'];
+  bool equivalentTo(ConditionalEvent? event) =>
+      batteryLevel == event!['batteryLevel'];
 
   factory BatteryDatum.fromJson(Map<String, dynamic> json) =>
       _$BatteryDatumFromJson(json);
@@ -132,10 +132,10 @@ class FreeMemoryDatum extends Datum {
   DataFormat get format => DataFormat.fromString(DeviceSamplingPackage.MEMORY);
 
   /// Amount of free physical memory in bytes.
-  int freePhysicalMemory;
+  int? freePhysicalMemory;
 
   /// Amount of free virtual memory in bytes.
-  int freeVirtualMemory;
+  int? freeVirtualMemory;
 
   FreeMemoryDatum() : super();
 
@@ -159,7 +159,7 @@ class ScreenDatum extends Datum {
   /// - SCREEN_OFF
   /// - SCREEN_ON
   /// - SCREEN_UNLOCKED
-  String screenEvent;
+  String? screenEvent;
 
   ScreenDatum() : super();
 
@@ -181,8 +181,8 @@ class ScreenDatum extends Datum {
   }
 
   /// Returns `true` if the [screenEvent] is equal.
-  bool equivalentTo(ConditionalEvent event) =>
-      screenEvent == event['screenEvent'];
+  bool equivalentTo(ConditionalEvent? event) =>
+      screenEvent == event!['screenEvent'];
 
   factory ScreenDatum.fromJson(Map<String, dynamic> json) =>
       _$ScreenDatumFromJson(json);

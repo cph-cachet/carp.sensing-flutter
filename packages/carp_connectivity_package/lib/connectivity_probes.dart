@@ -26,14 +26,18 @@ class ConnectivityProbe extends StreamProbe {
 ///
 ///  * [connectivity](https://pub.dev/packages/connectivity)
 ///  * [CNCopyCurrentNetworkInfo](https://developer.apple.com/documentation/systemconfiguration/1614126-cncopycurrentnetworkinfo)
+///
+/// Please note that it this probes does not work on emulators (returns null).
+///
+/// From Android 8.0 onwards the GPS must be ON (high accuracy) in order to be
+/// able to obtain the BSSID.
 class WifiProbe extends PeriodicDatumProbe {
   Future<Datum> getDatum() async {
-    String ssid = await WifiInfo().getWifiName();
-    String bssid = await WifiInfo().getWifiBSSID();
+    String? ssid = await NetworkInfo().getWifiName();
+    String? bssid = await NetworkInfo().getWifiBSSID();
+    String? ip = await NetworkInfo().getWifiIP();
 
-    return WifiDatum()
-      ..ssid = ssid
-      ..bssid = bssid;
+    return WifiDatum(ssid: ssid, bssid: bssid, ip: ip);
   }
 }
 

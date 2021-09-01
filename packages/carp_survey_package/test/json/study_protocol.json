@@ -1,25 +1,23 @@
 {
+  "ownerId": "alex@uni.dk",
   "name": "Context package test",
-  "creationDate": "2021-05-03 12:08:31.380304Z",
+  "creationDate": "2021-08-03T21:27:08.588940Z",
   "masterDevices": [
    {
     "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
     "isMasterDevice": true,
     "roleName": "masterphone",
+    "supportedDataTypes": [],
     "samplingConfiguration": {}
    }
   ],
-  "connectedDevices": [
-   {
-    "$type": "dk.cachet.carp.protocols.domain.devices.DeviceDescriptor",
-    "isMasterDevice": false,
-    "samplingConfiguration": {}
-   }
-  ],
+  "connectedDevices": [],
   "connections": [],
   "triggers": {
    "0": {
-    "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
+    "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger",
+    "sourceDeviceRoleName": "",
+    "requiresMasterDevice": false
    }
   },
   "tasks": [
@@ -42,7 +40,8 @@
       "description": "Collects information about use of memory.",
       "enabled": true,
       "configuration": {},
-      "frequency": 60000000
+      "frequency": 60000000,
+      "duration": 2000000
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
@@ -123,12 +122,12 @@
       "configuration": {},
       "surveyTask": {
        "$type": "RPOrderedTask",
-       "identifier": "who5TaskID",
+       "identifier": "who5_task",
        "close_after_finished": true,
        "steps": [
         {
          "$type": "RPQuestionStep",
-         "identifier": "who5_question1",
+         "identifier": "who5_question_1",
          "title": "I have felt cheerful and in good spirits",
          "optional": false,
          "answer_format": {
@@ -177,7 +176,7 @@
         },
         {
          "$type": "RPQuestionStep",
-         "identifier": "who5_question2",
+         "identifier": "who5_question_2",
          "title": "I have felt calm and relaxed",
          "optional": false,
          "answer_format": {
@@ -226,7 +225,7 @@
         },
         {
          "$type": "RPQuestionStep",
-         "identifier": "who5_question3",
+         "identifier": "who5_question_3",
          "title": "I have felt active and vigorous",
          "optional": false,
          "answer_format": {
@@ -275,7 +274,7 @@
         },
         {
          "$type": "RPQuestionStep",
-         "identifier": "who5_question4",
+         "identifier": "who5_question_4",
          "title": "I woke up feeling fresh and rested",
          "optional": false,
          "answer_format": {
@@ -324,7 +323,7 @@
         },
         {
          "$type": "RPQuestionStep",
-         "identifier": "who5_question5",
+         "identifier": "who5_question_5",
          "title": "My daily life has been filled with things that interest me",
          "optional": false,
          "answer_format": {
@@ -373,9 +372,10 @@
         },
         {
          "$type": "RPCompletionStep",
-         "identifier": "completionID",
+         "identifier": "completion_step",
          "title": "Finished",
-         "text": "Thank you for filling out the survey!"
+         "text": "Thank you for filling out the survey!",
+         "optional": false
         }
        ]
       }
@@ -390,13 +390,5 @@
     "targetDeviceRoleName": "masterphone"
    }
   ],
-  "expectedParticipantData": [],
-  "owner": {
-   "$type": "ProtocolOwner",
-   "id": "AB",
-   "name": "Alex Boyon",
-   "email": "alex@uni.dk"
-  },
-  "ownerId": "AB",
-  "dataFormat": "dk.cachet.carp"
+  "expectedParticipantData": []
  }

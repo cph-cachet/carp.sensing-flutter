@@ -12,18 +12,6 @@ part of domain;
 /// See [AppTaskExecutor] on how this work on runtime.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class AppTask extends TaskDescriptor {
-  AppTask({
-    String name,
-    @required this.type,
-    this.title,
-    this.description,
-    this.instructions,
-    this.minutesToComplete,
-    this.expire,
-    this.notification = false,
-  })
-      : super(name: name);
-
   /// Type of task. For example a `survey`.
   String type;
 
@@ -38,18 +26,30 @@ class AppTask extends TaskDescriptor {
 
   /// How many minutes will it take for the user to perform this task?
   /// Typically shown to the user before engaging into this task.
-  int minutesToComplete;
+  /// If `null` the task has no completion time.
+  int? minutesToComplete;
 
   /// The duration of this app task, i.e. when it expire and is removed
   /// from the [AppTaskController]'s queue.
-  Duration expire;
+  /// If `null` the task never expire.
+  Duration? expire;
 
-  // TODO - implement notifications on the local device
   /// Should a notification be send to the user on the phone?
-  bool notification = false;
+  bool notification;
+
+  AppTask({
+    String? name,
+    required this.type,
+    this.title = '',
+    this.description = '',
+    this.instructions = '',
+    this.minutesToComplete,
+    this.expire,
+    this.notification = false,
+  }) : super(name: name);
 
   Function get fromJsonFunction => _$AppTaskFromJson;
   factory AppTask.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as AppTask;
   Map<String, dynamic> toJson() => _$AppTaskToJson(this);
 }

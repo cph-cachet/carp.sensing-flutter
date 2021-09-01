@@ -1,3 +1,4 @@
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_esense_package/esense.dart';
 
@@ -13,14 +14,11 @@ void main() async {
   // register this sampling package before using its measures
   SamplingPackageRegistry().register(ESenseSamplingPackage());
 
-  // Create a study protocol using a local file to store data
-  CAMSStudyProtocol protocol = CAMSStudyProtocol()
-    ..name = 'Track patient movement'
-    ..owner = ProtocolOwner(
-      id: 'AB',
-      name: 'Alex Boyon',
-      email: 'alex@uni.dk',
-    );
+  // Create a study protocol
+  StudyProtocol protocol = StudyProtocol(
+    ownerId: 'owner@dtu.dk',
+    name: 'Context Sensing Example',
+  );
 
   // define which devices are used for data collection - both phone and eSense
   Smartphone phone = Smartphone(roleName: 'The main phone');

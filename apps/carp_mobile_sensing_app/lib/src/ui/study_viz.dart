@@ -1,7 +1,7 @@
 part of mobile_sensing_app;
 
 class StudyVisualization extends StatefulWidget {
-  const StudyVisualization({Key key}) : super(key: key);
+  const StudyVisualization({Key? key}) : super(key: key);
   static const String routeName = '/study';
 
   _StudyVizState createState() => _StudyVizState(bloc.studyDeploymentModel);
@@ -44,7 +44,7 @@ class _StudyVizState extends State<StudyVisualization> {
               ),
             ],
             flexibleSpace: FlexibleSpaceBar(
-              title: Text(studyDeploymentModel.name),
+              title: Text(studyDeploymentModel.title),
               background: Stack(
                 fit: StackFit.expand,
                 children: <Widget>[
@@ -90,7 +90,7 @@ class _StudyVizState extends State<StudyVisualization> {
       decoration: BoxDecoration(
           border: Border(bottom: BorderSide(color: themeData.dividerColor))),
       child: DefaultTextStyle(
-        style: Theme.of(context).textTheme.subtitle1,
+        style: Theme.of(context).textTheme.subtitle1!,
         child: SafeArea(
           top: false,
           bottom: false,
@@ -109,8 +109,6 @@ class _StudyVizState extends State<StudyVisualization> {
                     _StudyControllerLine(studyDeploymentModel.title,
                         heading: 'Title'),
                     _StudyControllerLine(studyDeploymentModel.description),
-                    _StudyControllerLine(studyDeploymentModel.studyId,
-                        heading: 'Study ID'),
                     _StudyControllerLine(studyDeploymentModel.studyDeploymentId,
                         heading: 'Deployment ID'),
                     _StudyControllerLine(studyDeploymentModel.userID,
@@ -123,7 +121,7 @@ class _StudyVizState extends State<StudyVisualization> {
                         builder: (context, AsyncSnapshot<ProbeState> snapshot) {
                           if (snapshot.hasData)
                             return _StudyControllerLine(
-                                probeStateLabel(snapshot.data),
+                                probeStateLabel(snapshot.data!),
                                 heading: 'State');
                           else
                             return _StudyControllerLine(
@@ -152,7 +150,7 @@ class _StudyVizState extends State<StudyVisualization> {
 }
 
 class _StudyControllerLine extends StatelessWidget {
-  final String line, heading;
+  final String? line, heading;
 
   _StudyControllerLine(this.line, {this.heading}) : super();
 
@@ -162,7 +160,7 @@ class _StudyControllerLine extends StatelessWidget {
         child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 4.0),
             child: (heading == null)
-                ? Text(line, textAlign: TextAlign.left, softWrap: true)
+                ? Text(line!, textAlign: TextAlign.left, softWrap: true)
                 : Text.rich(
                     TextSpan(
                       children: <TextSpan>[
@@ -177,29 +175,30 @@ class _StudyControllerLine extends StatelessWidget {
 }
 
 class _TaskPanel extends StatelessWidget {
-  _TaskPanel({Key key, this.task}) : super(key: key);
+  _TaskPanel({Key? key, this.task}) : super(key: key);
 
-  final TaskDescriptor task;
+  final TaskDescriptor? task;
 
   @override
   Widget build(BuildContext context) {
     final ThemeData themeData = Theme.of(context);
-    final List<Widget> children =
-        task.measures.map((measure) => _MeasureLine(measure: measure)).toList();
+    final List<Widget> children = task!.measures
+        .map((measure) => _MeasureLine(measure: measure))
+        .toList();
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16.0),
       decoration: BoxDecoration(
           border: Border(bottom: BorderSide(color: themeData.dividerColor))),
       child: DefaultTextStyle(
-          style: Theme.of(context).textTheme.subtitle1,
+          style: Theme.of(context).textTheme.subtitle1!,
           child: SafeArea(
               top: false,
               bottom: false,
               child: Column(children: <Widget>[
                 Row(children: <Widget>[
                   Icon(Icons.description, size: 40, color: CACHET.ORANGE),
-                  Text('  ${task.name}', style: themeData.textTheme.headline6),
+                  Text('  ${task!.name}', style: themeData.textTheme.headline6),
                 ]),
                 Column(children: children)
                 //Expanded(child: Column(children: children))
@@ -209,19 +208,20 @@ class _TaskPanel extends StatelessWidget {
 }
 
 class _MeasureLine extends StatelessWidget {
-  _MeasureLine({Key key, this.measure}) : super(key: key);
+  _MeasureLine({Key? key, this.measure}) : super(key: key);
 
-  final Measure measure;
+  final Measure? measure;
 
   @override
   Widget build(BuildContext context) {
     final ThemeData themeData = Theme.of(context);
-    final Icon icon = (ProbeDescription.probeTypeIcon[measure.type] != null)
-        ? Icon(ProbeDescription.probeTypeIcon[measure.type].icon, size: 25)
-        : Icon(ProbeDescription.probeTypeIcon[DataType.UNKNOWN].icon, size: 25);
+    final Icon icon = (ProbeDescription.probeTypeIcon[measure!.type] != null)
+        ? Icon(ProbeDescription.probeTypeIcon[measure!.type]!.icon, size: 25)
+        : Icon(ProbeDescription.probeTypeIcon[DataType.UNKNOWN as String]!.icon,
+            size: 25);
 
     final String name = ((measure as CAMSMeasure).name != null)
-        ? (measure as CAMSMeasure).name
+        ? (measure as CAMSMeasure).name!
         : measure.runtimeType.toString();
 
     final List<Widget> columnChildren = [];
@@ -230,14 +230,13 @@ class _MeasureLine extends StatelessWidget {
         .add(Text(measure.toString(), style: themeData.textTheme.caption));
 
     final List<Widget> rowChildren = [];
-    if (icon != null) {
-      rowChildren.add(SizedBox(
-          width: 72.0,
-          child: IconButton(
-            icon: icon,
-            onPressed: null,
-          )));
-    }
+    rowChildren.add(SizedBox(
+        width: 72.0,
+        child: IconButton(
+          icon: icon,
+          onPressed: null,
+        )));
+
     rowChildren.addAll([
       Expanded(
           child: Column(

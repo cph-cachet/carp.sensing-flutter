@@ -11,7 +11,7 @@ part of context;
 /// API. It generates an [ActivityDatum] every time an activity is detected,
 /// which is not `ActivityType.UNKNOWN`.
 class ActivityProbe extends StreamProbe {
-  Stream<Datum> _stream;
+  Stream<Datum>? _stream;
   // Since this probe runs alongside location, which runs a foreground service
   // this probe does not need to run one.
   Stream<Datum> get stream => _stream ??= ActivityRecognition.instance

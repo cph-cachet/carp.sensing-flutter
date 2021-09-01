@@ -1,3 +1,7 @@
+## 0.30.0+1
+* upgrade to null-safety
+* update of documentation on `manifest.xml` configuration
+
 ## 0.21.2
 * upgrade of `activity_recognition_flutter` to version `4.0.2`
 

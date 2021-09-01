@@ -26,16 +26,16 @@ class MovisensSamplingPackage implements SamplingPackage {
       "$MOVISENS_NAMESPACE.connection_status";
 
   void onRegister() {
-    FromJsonFactory().register(MovisensMeasure());
+    FromJsonFactory().register(MovisensMeasure(type: MOVISENS));
     FromJsonFactory().register(MovisensDevice());
 
     // registering the transformers from CARP to OMH for heart rate and step count.
     // we assume that there is an OMH schema registered already...
-    TransformerSchemaRegistry().lookup(NameSpace.OMH).add(
+    TransformerSchemaRegistry().lookup(NameSpace.OMH)!.add(
           HR,
           OMHHeartRateDatum.transformer,
         );
-    TransformerSchemaRegistry().lookup(NameSpace.OMH).add(
+    TransformerSchemaRegistry().lookup(NameSpace.OMH)!.add(
           STEP_COUNT,
           OMHStepCountDatum.transformer,
         );
@@ -47,7 +47,7 @@ class MovisensSamplingPackage implements SamplingPackage {
   List<Permission> get permissions => []; // no special permissions needed
 
   /// Create a [MovisensProbe].
-  Probe create(String type) =>
+  Probe? create(String type) =>
       (type == MOVISENS_NAMESPACE) ? MovisensProbe() : null;
 
   List<String> get dataTypes => [MOVISENS_NAMESPACE];
@@ -57,33 +57,33 @@ class MovisensSamplingPackage implements SamplingPackage {
   /// '88:6B:0F:CD:E7:F2' located on the person's chest.
   ///
   /// This is a device (and person) used for debugging at CACHET.
-  SamplingSchema get debug => SamplingSchema()
-    ..type = SamplingSchemaType.common
-    ..name = 'Common (default) app sampling schema'
-    ..powerAware = false
-    ..measures.addEntries([
-      MapEntry(
-          MOVISENS_NAMESPACE,
-          MovisensMeasure(
-            // Test data for a male 25 year old user.
-            type: MOVISENS_NAMESPACE,
-            name: 'Movisens ECG device',
-            description:
-                "Collects heart rythm data from the Movisens EcgMove4 sensor",
-            address: '88:6B:0F:CD:E7:F2',
-            sensorLocation: SensorLocation.chest,
-            gender: Gender.male,
-            deviceName: 'Sensor 02655',
-            height: 175,
-            weight: 75,
-            age: 25,
-          )),
-    ]);
+  SamplingSchema get debug => SamplingSchema(
+        type: SamplingSchemaType.common,
+        name: 'Common (default) app sampling schema',
+        powerAware: false,
+      )..measures.addEntries([
+          MapEntry(
+              MOVISENS_NAMESPACE,
+              MovisensMeasure(
+                type: MOVISENS_NAMESPACE,
+                name: 'Movisens ECG device',
+                description:
+                    "Collects heart rythm data from the Movisens EcgMove4 sensor",
+                address: '88:6B:0F:CD:E7:F2',
+                sensorLocation: SensorLocation.chest,
+                gender: Gender.male,
+                deviceName: 'Sensor 02655',
+                height: 175,
+                weight: 75,
+                age: 25,
+              )),
+        ]);
 
-  // All other sampling schemas return null since we cannot provide default
+  // All other sampling schemas return an empty schema since we cannot provide default
   // schemas for Movisens devices. They are custom to the person wearing it.
-  SamplingSchema get light => null;
-  SamplingSchema get minimum => null;
-  SamplingSchema get normal => null;
-  SamplingSchema get common => null;
+  SamplingSchema get light => SamplingSchema(type: SamplingSchemaType.light);
+  SamplingSchema get minimum =>
+      SamplingSchema(type: SamplingSchemaType.minimum);
+  SamplingSchema get normal => SamplingSchema(type: SamplingSchemaType.normal);
+  SamplingSchema get common => SamplingSchema(type: SamplingSchemaType.common);
 }

@@ -23,7 +23,7 @@ part of carp_services;
 /// is a reference to the geoposition document `pos_1` in the collection `geopositions` in the document `running`
 /// in the collection `activities`.
 class CollectionReference extends CarpReference {
-  int _id;
+  int _id = -1;
   String _path;
 
   /// Creates a [CollectionReference] based on the path to the
@@ -33,14 +33,14 @@ class CollectionReference extends CarpReference {
   /// For example; `activities/running/geopositions`
   CollectionReference._(CarpBaseService service, this._path)
       : super._(service) {
-    assert(_path != null);
     assert(!(_path.startsWith('/')) || _path.length == 0);
   }
 
   /// ID of the referenced collection.
   ///
-  /// If [id] is -1, then this collection has been deleted and is no longer available on the server.
-  int get id => _id;
+  /// If [id] is -1, then this collection is not available on the server.
+  /// It might now have been created yet, or has been deleted.
+  int? get id => _id;
 
   /// The name of the referenced collection.
   String get name => path.split('/').last;
@@ -50,14 +50,14 @@ class CollectionReference extends CarpReference {
 
   /// The full CARP web service path to this collection.
   String get carpPath =>
-      '/api/studies/${service.app.studyId}/collections/$path';
+      '/api/studies/${service.app!.studyId}/collections/$path';
 
   /// The full URI for the collection endpoint for this [CollectionReference].
-  String get collectionUri => "${service.app.uri.toString()}$carpPath";
+  String get collectionUri => "${service.app!.uri.toString()}$carpPath";
 
   /// The full URI for the collection endpoint for this [CollectionReference] by its unique [id].
   String get collectionUriByID =>
-      '${service.app.uri.toString()}/api/studies/${service.app.studyId}/collections/id/$id';
+      '${service.app!.uri.toString()}/api/studies/${service.app!.studyId}/collections/id/$id';
 
   /// Reads the collection referenced by this [CollectionReference] from the server.
   ///
@@ -73,12 +73,12 @@ class CollectionReference extends CarpReference {
     if (httpStatusCode == HttpStatus.ok)
       return this
         .._id = responseJson['id']
-        .._path = responseJson["name"];
+        .._path = responseJson['name'];
 
     // All other cases are treated as an error.
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: responseJson["message"],
+      message: responseJson['message'],
     );
   }
 
@@ -96,8 +96,8 @@ class CollectionReference extends CarpReference {
       List<dynamic> documentsJson = responseJson['documents'];
       List<DocumentSnapshot> documents = [];
       for (var documentJson in documentsJson) {
-        String key = documentJson["name"];
-        documents.add(DocumentSnapshot._("$path/$key", documentJson));
+        String key = documentJson['name'];
+        documents.add(DocumentSnapshot._('$path/$key', documentJson));
       }
 
       return documents;
@@ -106,31 +106,33 @@ class CollectionReference extends CarpReference {
     // All other cases are treated as an error.
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: responseJson["message"],
+      message: responseJson['message'],
     );
   }
 
   /// Returns a [DocumentReference] with the provided name in this collection.
   ///
   /// If no [name] is provided, an auto-generated name is used.
-  DocumentReference document([String name]) {
+  DocumentReference document([String? name]) {
     String documentPath;
     if (name == null) {
       final String key = PushIdGenerator.generatePushChildName();
-      documentPath = "$path/$key";
+      documentPath = '$path/$key';
     } else {
-      documentPath = "$path/$name";
+      documentPath = '$path/$name';
     }
 
-    return DocumentReference._path(service, documentPath);
+    return DocumentReference._path(service as CarpService, documentPath);
   }
 
   /// Add a data document to this collection and returns a [DocumentReference] to this document.
   ///
   /// If no [name] is provided, an auto-generated name is used.
-  /// If no (data] is provided now, this can be set later using the [DocumentReference.setData()] method.
-  Future<DocumentReference> add(
-      [String name, Map<String, dynamic> data]) async {
+  /// If no [data] is provided, this can be set later using the [DocumentReference.setData()] method.
+  Future<DocumentReference> add([
+    String? name,
+    Map<String, dynamic>? data,
+  ]) async {
     final DocumentReference newDocument = document(name);
     if (data != null) await newDocument.setData(data);
     return newDocument;
@@ -138,8 +140,6 @@ class CollectionReference extends CarpReference {
 
   /// Rename this collection.
   Future rename(String newName) async {
-    assert(newName != null);
-
     // PUT the new name of this collection to the CARP web service
     http.Response response = await httpr.put(Uri.encodeFull(collectionUriByID),
         headers: headers, body: '{"name":"$newName"}');
@@ -155,7 +155,7 @@ class CollectionReference extends CarpReference {
     // All other cases are treated as an error.
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: responseJson["message"],
+      message: responseJson['message'],
     );
   }
 
@@ -172,10 +172,10 @@ class CollectionReference extends CarpReference {
       final Map<String, dynamic> responseJson = json.decode(response.body);
       throw CarpServiceException(
         httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-        message: responseJson["message"],
+        message: responseJson['message'],
       );
     }
   }
 
-  String toString() => 'CollectionReference - id: $id, path: $path';
+  String toString() => "CollectionReference - id: '$id', path: '$path'";
 }

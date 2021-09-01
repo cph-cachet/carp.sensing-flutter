@@ -12,9 +12,9 @@ FirebaseEndPoint _$FirebaseEndPointFromJson(Map<String, dynamic> json) {
     uri: json['uri'] as String,
     firebaseAuthenticationMethod:
         json['firebase_authentication_method'] as String,
-    email: json['email'] as String,
-    password: json['password'] as String,
-    token: json['token'] as String,
+    email: json['email'] as String?,
+    password: json['password'] as String?,
+    token: json['token'] as String?,
     projectID: json['project_i_d'] as String,
     webAPIKey: json['web_a_p_i_key'] as String,
     androidGoogleAppID: json['android_google_app_i_d'] as String,
@@ -24,7 +24,11 @@ FirebaseEndPoint _$FirebaseEndPointFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$FirebaseEndPointToJson(FirebaseEndPoint instance) {
-  final val = <String, dynamic>{};
+  final val = <String, dynamic>{
+    'name': instance.name,
+    'uri': instance.uri,
+    'firebase_authentication_method': instance.firebaseAuthenticationMethod,
+  };
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -32,32 +36,27 @@ Map<String, dynamic> _$FirebaseEndPointToJson(FirebaseEndPoint instance) {
     }
   }
 
-  writeNotNull('name', instance.name);
-  writeNotNull('uri', instance.uri);
-  writeNotNull(
-      'firebase_authentication_method', instance.firebaseAuthenticationMethod);
   writeNotNull('email', instance.email);
   writeNotNull('password', instance.password);
   writeNotNull('token', instance.token);
-  writeNotNull('project_i_d', instance.projectID);
-  writeNotNull('web_a_p_i_key', instance.webAPIKey);
-  writeNotNull('android_google_app_i_d', instance.androidGoogleAppID);
-  writeNotNull('i_o_s_google_app_i_d', instance.iOSGoogleAppID);
-  writeNotNull('gcm_sender_i_d', instance.gcmSenderID);
+  val['project_i_d'] = instance.projectID;
+  val['web_a_p_i_key'] = instance.webAPIKey;
+  val['android_google_app_i_d'] = instance.androidGoogleAppID;
+  val['i_o_s_google_app_i_d'] = instance.iOSGoogleAppID;
+  val['gcm_sender_i_d'] = instance.gcmSenderID;
   return val;
 }
 
 FirebaseDatabaseDataEndPoint _$FirebaseDatabaseDataEndPointFromJson(
     Map<String, dynamic> json) {
   return FirebaseDatabaseDataEndPoint(
-    json['firebase_end_point'] == null
-        ? null
-        : FirebaseEndPoint
-            .fromJson(json['firebase_end_point'] as Map<String, dynamic>),
+    FirebaseEndPoint.fromJson(
+        json['firebase_end_point'] as Map<String, dynamic>),
     collection: json['collection'] as String,
   )
-    ..$type = json[r'$type'] as String
-    ..type = json['type'] as String;
+    ..$type = json[r'$type'] as String?
+    ..type = json['type'] as String
+    ..dataFormat = json['data_format'] as String;
 }
 
 Map<String, dynamic> _$FirebaseDatabaseDataEndPointToJson(
@@ -71,27 +70,27 @@ Map<String, dynamic> _$FirebaseDatabaseDataEndPointToJson(
   }
 
   writeNotNull(r'$type', instance.$type);
-  writeNotNull('firebase_end_point', instance.firebaseEndPoint);
-  writeNotNull('type', instance.type);
-  writeNotNull('collection', instance.collection);
+  val['type'] = instance.type;
+  val['data_format'] = instance.dataFormat;
+  val['firebase_end_point'] = instance.firebaseEndPoint;
+  val['collection'] = instance.collection;
   return val;
 }
 
 FirebaseStorageDataEndPoint _$FirebaseStorageDataEndPointFromJson(
     Map<String, dynamic> json) {
   return FirebaseStorageDataEndPoint(
-    json['firebase_end_point'] == null
-        ? null
-        : FirebaseEndPoint
-            .fromJson(json['firebase_end_point'] as Map<String, dynamic>),
+    FirebaseEndPoint.fromJson(
+        json['firebase_end_point'] as Map<String, dynamic>),
     path: json['path'] as String,
     bufferSize: json['buffer_size'],
     zip: json['zip'],
     encrypt: json['encrypt'],
     publicKey: json['public_key'],
   )
-    ..$type = json[r'$type'] as String
-    ..type = json['type'] as String;
+    ..$type = json[r'$type'] as String?
+    ..type = json['type'] as String
+    ..dataFormat = json['data_format'] as String;
 }
 
 Map<String, dynamic> _$FirebaseStorageDataEndPointToJson(
@@ -105,12 +104,13 @@ Map<String, dynamic> _$FirebaseStorageDataEndPointToJson(
   }
 
   writeNotNull(r'$type', instance.$type);
-  writeNotNull('firebase_end_point', instance.firebaseEndPoint);
-  writeNotNull('type', instance.type);
-  writeNotNull('buffer_size', instance.bufferSize);
-  writeNotNull('zip', instance.zip);
-  writeNotNull('encrypt', instance.encrypt);
+  val['type'] = instance.type;
+  val['data_format'] = instance.dataFormat;
+  val['buffer_size'] = instance.bufferSize;
+  val['zip'] = instance.zip;
+  val['encrypt'] = instance.encrypt;
   writeNotNull('public_key', instance.publicKey);
-  writeNotNull('path', instance.path);
+  val['firebase_end_point'] = instance.firebaseEndPoint;
+  val['path'] = instance.path;
   return val;
 }

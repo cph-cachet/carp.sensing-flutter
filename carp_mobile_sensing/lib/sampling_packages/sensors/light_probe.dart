@@ -12,33 +12,34 @@ part of sensors;
 class LightProbe extends BufferingPeriodicStreamProbe {
   List<num> luxValues = [];
 
-  Stream<dynamic> _bufferingStream;
+  late Stream<dynamic> _bufferingStream;
   Stream<dynamic> get bufferingStream => _bufferingStream;
 
+  @override
   void onInitialize(Measure measure) {
     // check if Light is available (only available on Android)
     _bufferingStream = Light().lightSensorStream;
     super.onInitialize(measure);
   }
 
-  Future<Datum> getDatum() async {
-    if (luxValues.isNotEmpty) {
-      Stats stats = Stats.fromData(luxValues);
-      return LightDatum(
-          meanLux: stats.average,
-          stdLux: stats.standardDeviation,
-          minLux: stats.min,
-          maxLux: stats.max);
-    } else {
-      return null;
-    }
+  @override
+  Future<Datum?> getDatum() async {
+    if (luxValues.isEmpty) return null;
+
+    Stats stats = Stats.fromData(luxValues);
+    return LightDatum(
+        meanLux: stats.average,
+        stdLux: stats.standardDeviation,
+        minLux: stats.min,
+        maxLux: stats.max);
   }
 
-  void onSamplingStart() {
-    luxValues.clear();
-  }
+  @override
+  void onSamplingStart() => luxValues.clear();
 
+  @override
   void onSamplingEnd() {}
 
+  @override
   void onSamplingData(luxValue) => luxValues.add(luxValue);
 }

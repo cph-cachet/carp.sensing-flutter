@@ -7,8 +7,7 @@
 
 part of context;
 
-/// The [LocationManager] runs as a background service.
-LocationManager locationManager = LocationManager.instance;
+// The [LocationManager] runs as a background service.
 
 /// Get the last known position.
 /// If not known, tries to get it from the [Geolocator].
@@ -17,18 +16,16 @@ Future<Position> getLastKnownPosition() async =>
     await Geolocator.getCurrentPosition();
 
 /// Collects location information from the underlying OS's location API.
-/// Is a [DatumProbe] that collects a [LocationDatum] once when used.
-///
-/// Note that in order for location tracking to work with this probe, the
-/// phone must be online on the internet, since online Google APIs are used.
+/// Is a [DatumProbe] that collects a [LocationDatum] once when
+/// the [getDatum] method is called.
 class LocationProbe extends DatumProbe {
   void onInitialize(Measure measure) {
     super.onInitialize(measure);
 
     // start the background location manager
-    locationManager.notificationTitle = 'CARP Location Probe';
-    locationManager.notificationMsg = 'CARP location tracking';
-    locationManager.start(askForPermission: false);
+    LocationManager().notificationTitle = 'CARP Location Probe';
+    LocationManager().notificationMsg = 'CARP location tracking';
+    LocationManager().start(askForPermission: false);
   }
 
   // Future<Datum> getDatum() async => locationManager
@@ -51,16 +48,15 @@ class GeoLocationProbe extends StreamProbe {
     assert(measure is LocationMeasure);
     super.onInitialize(measure);
 
-    locationManager.distanceFilter = (measure as LocationMeasure).distance;
-    locationManager.interval = (measure as LocationMeasure).frequency.inSeconds;
-    locationManager.notificationTitle =
-        (measure as LocationMeasure).notificationTitle;
-    locationManager.notificationMsg =
-        (measure as LocationMeasure).notificationMsg;
+    LocationManager().distanceFilter = (measure as LocationMeasure).distance;
+    LocationManager().interval = measure.frequency.inSeconds;
+    LocationManager().notificationTitle = measure.notificationTitle;
+    LocationManager().notificationMsg = measure.notificationMsg;
 
-    locationManager.start(askForPermission: false);
+    LocationManager().start(askForPermission: false);
   }
 
-  Stream<LocationDatum> get stream => locationManager.dtoStream
+  Stream<LocationDatum> get stream => LocationManager()
+      .locationStream
       .map((dto) => LocationDatum.fromLocationDto(dto));
 }

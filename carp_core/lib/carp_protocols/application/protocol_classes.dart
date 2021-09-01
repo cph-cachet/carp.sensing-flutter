@@ -50,7 +50,7 @@ class ParticipantAttribute {
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class ProtocolVersion {
   String tag;
-  DateTime date;
+  late DateTime date;
 
   ProtocolVersion(this.tag) {
     date = DateTime.now();

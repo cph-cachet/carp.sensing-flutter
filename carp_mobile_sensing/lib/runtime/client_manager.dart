@@ -9,20 +9,20 @@ part of runtime;
 
 class SmartPhoneClientManager extends ClientManager {
   SmartPhoneClientManager({
-    DeploymentService deploymentService,
-    DeviceController deviceRegistry,
-  })
-      : super(
+    DeploymentService? deploymentService,
+    DeviceController? deviceRegistry,
+  }) : super(
           // if not specified, use default services
           deploymentService: deploymentService ?? SmartphoneDeploymentService(),
           deviceRegistry: deviceRegistry ?? DeviceController(),
         );
 
   @override
-  DeviceController get deviceRegistry => super.deviceRegistry;
+  DeviceController get deviceRegistry =>
+      super.deviceRegistry as DeviceController;
 
   @override
-  Future<DeviceRegistration> configure({String deviceId}) async {
+  Future<DeviceRegistration> configure({String? deviceId}) async {
     await DeviceInfo().init();
     deviceId ??= DeviceInfo().deviceID;
     info('Configuring $runtimeType:');
@@ -51,7 +51,7 @@ class SmartPhoneClientManager extends ClientManager {
       deviceRegistry,
       studyDeploymentId,
       deviceRoleName,
-      registration,
+      registration!,
     );
 
     repository[StudyRuntimeId(studyDeploymentId, deviceRoleName)] = controller;

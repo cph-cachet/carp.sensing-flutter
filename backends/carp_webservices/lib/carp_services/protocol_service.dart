@@ -23,11 +23,11 @@ class CANSProtocolService extends CarpBaseService
   String get rpcEndpointName => "protocol-service";
 
   @override
-  Future add(StudyProtocol protocol, [String versionTag]) async =>
+  Future add(StudyProtocol? protocol, [String? versionTag]) async =>
       StudyProtocol.fromJson(await _rpc(Add(protocol, versionTag)));
 
   @override
-  Future addVersion(StudyProtocol protocol, [String versionTag]) async =>
+  Future addVersion(StudyProtocol? protocol, [String? versionTag]) async =>
       StudyProtocol.fromJson(await _rpc(AddVersion(protocol, versionTag)));
 
   /// Find all [StudyProtocol]'s owned by the owner with [ownerId].
@@ -36,7 +36,7 @@ class CANSProtocolService extends CarpBaseService
   /// Returns the last version of each [StudyProtocol] owned by the requested owner,
   /// or an empty list when none are found.
   @override
-  Future<List<StudyProtocol>> getAllFor(String ownerId) async {
+  Future<List<StudyProtocol>> getAllFor(String? ownerId) async {
     Map<String, dynamic> response = await _rpc(GetAllFor(ownerId));
     List<dynamic> items = response['items'];
     return items.map((item) => StudyProtocol.fromJson(item)).toList();
@@ -44,14 +44,14 @@ class CANSProtocolService extends CarpBaseService
 
   @override
   Future<StudyProtocol> getBy(StudyProtocolId protocolId,
-          [String versionTag]) async =>
+          [String? versionTag]) async =>
       StudyProtocol.fromJson(await _rpc(GetBy(protocolId, versionTag)));
 
   @override
   Future<List<ProtocolVersion>> getVersionHistoryFor(
       StudyProtocolId protocolId) async {
     Map<String, dynamic> responseJson =
-        await _rpc(GetVersionHistoryFor(protocolId));
+        await (_rpc(GetVersionHistoryFor(protocolId)));
     List<dynamic> items = responseJson['items'];
     return items.map((item) => ProtocolVersion.fromJson(item)).toList();
   }
@@ -68,7 +68,7 @@ class CANSProtocolService extends CarpBaseService
       )));
 
   @override
-  Future<StudyProtocol> createCustomProtocol(String ownerId, String name,
+  Future<StudyProtocol> createCustomProtocol(String? ownerId, String? name,
           String description, String customProtocol) async =>
       StudyProtocol.fromJson(await _rpc(
           CreateCustomProtocol(ownerId, name, description, customProtocol),

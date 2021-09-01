@@ -8,8 +8,8 @@ part of 'carp_core_test.dart';
 
 A _$AFromJson(Map<String, dynamic> json) {
   return A()
-    ..$type = json[r'$type'] as String
-    ..index = json['index'] as int;
+    ..$type = json[r'$type'] as String?
+    ..index = json['index'] as int?;
 }
 
 Map<String, dynamic> _$AToJson(A instance) {
@@ -29,9 +29,9 @@ Map<String, dynamic> _$AToJson(A instance) {
 
 B _$BFromJson(Map<String, dynamic> json) {
   return B()
-    ..$type = json[r'$type'] as String
-    ..index = json['index'] as int
-    ..str = json['str'] as String;
+    ..$type = json[r'$type'] as String?
+    ..index = json['index'] as int?
+    ..str = json['str'] as String?;
 }
 
 Map<String, dynamic> _$BToJson(B instance) {

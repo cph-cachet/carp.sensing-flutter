@@ -7,7 +7,8 @@
 
 part of runtime;
 
-// TODO : change probes to use Dart Isolates in order to support dynamic class loading (and isolation).
+// TODO : change probes to use Dart Isolates in order to support dynamic class
+// loading (and isolation).
 // Right now registration of probes has to be done manually.
 // Later this will be implemented using Dart Isolates.
 // HOWEVER, Dart isolates do not support calling a platform channel method from
@@ -25,7 +26,7 @@ class ProbeRegistry {
 
   final Map<String, Set<Probe>> _probes = {};
 
-  /// All running probes mapped according to their [CAMSDataType].
+  /// All running probes mapped according to their data type.
   Map<String, Set<Probe>> get probes => _probes;
 
   final StreamGroup<DataPoint> _group = StreamGroup.broadcast();
@@ -41,18 +42,21 @@ class ProbeRegistry {
   /// you can register it here.
   void register(String type, Probe probe) {
     _probes[type] ??= {};
-    _probes[type].add(probe);
+    _probes[type]!.add(probe);
   }
 
-  /// Lookup a set of [Probe]s based on its [CAMSDataType].
-  Set<Probe> lookup(String type) => _probes[type] ?? create(type);
+  /// Lookup a set of [Probe]s based on its data type.
+  /// Maybe an empty list.
+  Set<Probe> lookup(String type) => _probes[type] ?? {};
 
-  /// Create an instance of a probe based on the measure.
+  /// Create an instance of a probe based on its data type.
   ///
   /// This methods search the [SamplingPackageRegistry] for a [SamplingPackage]
   /// which has a probe of the specified [type].
-  Probe create(String type) {
-    Probe _probe;
+  ///
+  /// Returns `null` if no probe is found for the specified [type].
+  Probe? create(String type) {
+    Probe? _probe;
 
     SamplingPackageRegistry().packages.forEach((package) {
       if (package.dataTypes.contains(type)) {
@@ -61,8 +65,8 @@ class ProbeRegistry {
     });
 
     if (_probe != null) {
-      register(type, _probe);
-      _group.add(_probe.data);
+      register(type, _probe!);
+      _group.add(_probe!.data);
     }
     return _probe;
   }

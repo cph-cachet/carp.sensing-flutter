@@ -1,3 +1,4 @@
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_context_package/context.dart';
 
@@ -13,9 +14,11 @@ void main() async {
   // register this sampling package before using its measures
   SamplingPackageRegistry().register(ContextSamplingPackage());
 
-  // Create a study protocol using a local file to store data
-  CAMSStudyProtocol protocol = CAMSStudyProtocol()
-    ..name = 'Context Sensing Example';
+  // Create a study protocol
+  StudyProtocol protocol = StudyProtocol(
+    ownerId: 'owner@dtu.dk',
+    name: 'Context Sensing Example',
+  );
 
   // define which devices are used for data collection
   // in this case, its only this smartphone

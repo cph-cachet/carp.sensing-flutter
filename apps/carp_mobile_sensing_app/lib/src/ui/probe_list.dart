@@ -1,7 +1,7 @@
 part of mobile_sensing_app;
 
 class ProbesList extends StatefulWidget {
-  const ProbesList({Key key}) : super(key: key);
+  const ProbesList({Key? key}) : super(key: key);
   static const String routeName = '/probelist';
   _ProbeListState createState() => _ProbeListState();
 }
@@ -65,7 +65,7 @@ class _ProbeListState extends State<ProbesList> {
   }
 
   void _showSettings() {
-    Scaffold.of(context).showSnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Settings not implemented yet...')));
   }
 }

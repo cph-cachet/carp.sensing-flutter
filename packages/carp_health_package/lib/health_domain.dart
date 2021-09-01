@@ -48,14 +48,13 @@ class HealthMeasure extends MarkedMeasure {
   HealthDataType healthDataType;
 
   HealthMeasure({
-    String type,
-    String name,
-    String description,
-    bool enabled,
+    required String type,
+    String? name,
+    String? description,
+    bool enabled = true,
     Duration history = const Duration(days: 1),
-    this.healthDataType,
-  })
-      : super(
+    required this.healthDataType,
+  }) : super(
           type: type,
           name: name,
           description: description,
@@ -65,7 +64,7 @@ class HealthMeasure extends MarkedMeasure {
 
   Function get fromJsonFunction => _$HealthMeasureFromJson;
   factory HealthMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as HealthMeasure;
   Map<String, dynamic> toJson() => _$HealthMeasureToJson(this);
 
   String tag() => '$type.$healthDataType';
@@ -78,8 +77,8 @@ class HealthMeasure extends MarkedMeasure {
 class HealthDatum extends Datum {
   /// The format of this health datum is `carp.health.<healthdatatype>`,
   /// where `<healthdatatype>` is the lowercase of the [HealthDataType](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html) collected.
-  DataFormat get format => DataFormat
-      .fromString('${HealthSamplingPackage.HEALTH}.${dataType.toLowerCase()}');
+  DataFormat get format => DataFormat.fromString(
+      '${HealthSamplingPackage.HEALTH}.${dataType.toLowerCase()}');
 
   /// The value of the health data.
   num value;
@@ -103,20 +102,29 @@ class HealthDatum extends Datum {
   /// The platform from which this health data point came from (ANDROID, IOS).
   String platform;
 
-  /// The device id of the phone
+  /// The device id of the phone.
   String deviceId;
 
-  /// The UUID of the data point s.t. points can be unique
+  /// The unique UUID of the data point.
   String uuid;
 
   HealthDatum(this.value, this.unit, this.dataType, this.dateFrom, this.dateTo,
       this.platform, this.deviceId, this.uuid)
       : super();
 
-  factory HealthDatum.fromHealthDataPoint(HealthDataPoint h) {
-    String _uuid = Uuid().v5(Uuid.NAMESPACE_URL, h.toJson().toString());
-    return HealthDatum(h.value, h.unitString, h.typeString, h.dateFrom,
-        h.dateTo, enumToString(h.platform), h.deviceId, _uuid);
+  factory HealthDatum.fromHealthDataPoint(HealthDataPoint healthDataPoint) {
+    String _uuid =
+        Uuid().v5(Uuid.NAMESPACE_URL, healthDataPoint.toJson().toString());
+    return HealthDatum(
+      healthDataPoint.value,
+      healthDataPoint.unitString,
+      healthDataPoint.typeString,
+      healthDataPoint.dateFrom,
+      healthDataPoint.dateTo,
+      enumToString(healthDataPoint.platform),
+      healthDataPoint.deviceId,
+      _uuid,
+    );
   }
 
   factory HealthDatum.fromJson(Map<String, dynamic> json) =>
@@ -127,9 +135,9 @@ class HealthDatum extends Datum {
   String toString() =>
       super.toString() +
       ', dataType: $dataType, '
-      'platform: $platform, '
-      'value: $value, '
-      'unit: $unit, '
-      'dateFrom: $dateFrom, '
-      'dateTo: $dateTo';
+          'platform: $platform, '
+          'value: $value, '
+          'unit: $unit, '
+          'dateFrom: $dateFrom, '
+          'dateTo: $dateTo';
 }

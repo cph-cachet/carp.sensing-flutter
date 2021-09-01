@@ -17,8 +17,8 @@ abstract class ProtocolServiceRequest extends ServiceRequest {
 
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class Add extends ProtocolServiceRequest {
-  final StudyProtocol protocol;
-  String versionTag;
+  final StudyProtocol? protocol;
+  String? versionTag;
 
   /// Create a new add request.
   /// If [versionTag] is `null` the version tag is current timestamp.
@@ -28,26 +28,26 @@ class Add extends ProtocolServiceRequest {
 
   Function get fromJsonFunction => _$AddFromJson;
   factory Add.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as Add;
   Map<String, dynamic> toJson() => _$AddToJson(this);
 }
 
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class AddVersion extends Add {
-  AddVersion(StudyProtocol protocol, String versionTag)
+  AddVersion(StudyProtocol? protocol, String? versionTag)
       : super(protocol, versionTag);
 
   Function get fromJsonFunction => _$AddVersionFromJson;
   factory AddVersion.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as AddVersion;
   Map<String, dynamic> toJson() => _$AddVersionToJson(this);
 }
 
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class UpdateParticipantDataConfiguration extends ProtocolServiceRequest {
-  final StudyProtocolId protocolId;
-  final String versionTag;
-  final List<ParticipantAttribute> expectedParticipantData;
+  final StudyProtocolId? protocolId;
+  final String? versionTag;
+  final List<ParticipantAttribute>? expectedParticipantData;
 
   UpdateParticipantDataConfiguration(
       this.protocolId, this.versionTag, this.expectedParticipantData)
@@ -56,56 +56,56 @@ class UpdateParticipantDataConfiguration extends ProtocolServiceRequest {
   Function get fromJsonFunction => _$UpdateParticipantDataConfigurationFromJson;
   factory UpdateParticipantDataConfiguration.fromJson(
           Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as UpdateParticipantDataConfiguration;
   Map<String, dynamic> toJson() =>
       _$UpdateParticipantDataConfigurationToJson(this);
 }
 
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class GetBy extends ProtocolServiceRequest {
-  final StudyProtocolId protocolId;
+  final StudyProtocolId? protocolId;
 
   @JsonKey(includeIfNull: false)
-  final String versionTag;
+  final String? versionTag;
 
   GetBy(this.protocolId, this.versionTag) : super();
 
   Function get fromJsonFunction => _$GetByFromJson;
   factory GetBy.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as GetBy;
   Map<String, dynamic> toJson() => _$GetByToJson(this);
 }
 
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class GetAllFor extends ProtocolServiceRequest {
-  final String ownerId;
+  final String? ownerId;
 
   GetAllFor(this.ownerId) : super();
 
   Function get fromJsonFunction => _$GetAllForFromJson;
   factory GetAllFor.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as GetAllFor;
   Map<String, dynamic> toJson() => _$GetAllForToJson(this);
 }
 
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class GetVersionHistoryFor extends ProtocolServiceRequest {
-  final StudyProtocolId protocolId;
+  final StudyProtocolId? protocolId;
 
   GetVersionHistoryFor(this.protocolId) : super();
 
   Function get fromJsonFunction => _$GetVersionHistoryForFromJson;
   factory GetVersionHistoryFor.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as GetVersionHistoryFor;
   Map<String, dynamic> toJson() => _$GetVersionHistoryForToJson(this);
 }
 
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class CreateCustomProtocol extends ProtocolServiceRequest {
-  final String ownerId;
-  final String name;
-  final String description;
-  final String customProtocol;
+  final String? ownerId;
+  final String? name;
+  final String? description;
+  final String? customProtocol;
 
   CreateCustomProtocol(
       this.ownerId, this.name, this.description, this.customProtocol)
@@ -116,6 +116,6 @@ class CreateCustomProtocol extends ProtocolServiceRequest {
 
   Function get fromJsonFunction => _$CreateCustomProtocolFromJson;
   factory CreateCustomProtocol.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as CreateCustomProtocol;
   Map<String, dynamic> toJson() => _$CreateCustomProtocolToJson(this);
 }

@@ -1,26 +1,35 @@
 {
-  "$type": "dk.cachet.carp.protocols.domain.CAMSStudyProtocol",
+  "ownerId": "alex@uni.dk",
   "name": "Context package test",
+  "creationDate": "2021-07-22T07:49:32.294426Z",
   "masterDevices": [
    {
     "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
     "isMasterDevice": true,
     "roleName": "masterphone",
+    "supportedDataTypes": [],
     "samplingConfiguration": {}
    }
   ],
   "connectedDevices": [],
-  "triggers": [
-   {
-    "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
+  "connections": [],
+  "triggers": {
+   "0": {
+    "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger",
+    "sourceDeviceRoleName": "",
+    "requiresMasterDevice": false
    },
-   {
+   "1": {
     "$type": "dk.cachet.carp.protocols.domain.triggers.PeriodicTrigger",
+    "sourceDeviceRoleName": "",
+    "requiresMasterDevice": false,
     "period": 3600000000,
     "duration": 1000000
    },
-   {
+   "2": {
     "$type": "dk.cachet.carp.protocols.domain.triggers.RecurrentScheduledTrigger",
+    "sourceDeviceRoleName": "",
+    "requiresMasterDevice": false,
     "duration": 10000000,
     "type": "daily",
     "time": {
@@ -33,11 +42,11 @@
     "remember": false,
     "period": 86400000000
    }
-  ],
+  },
   "tasks": [
    {
     "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
-    "name": "Task #5",
+    "name": "Task #3",
     "measures": [
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
@@ -54,7 +63,8 @@
       "description": "Collects information about use of memory.",
       "enabled": true,
       "configuration": {},
-      "frequency": 60000000
+      "frequency": 60000000,
+      "duration": 2000000
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
@@ -140,7 +150,7 @@
    },
    {
     "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
-    "name": "Task #6",
+    "name": "Task #4",
     "measures": [
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.HealthMeasure",
@@ -188,7 +198,7 @@
    },
    {
     "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
-    "name": "Task #7",
+    "name": "Task #5",
     "measures": [
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.HealthMeasure",
@@ -204,25 +214,19 @@
   "triggeredTasks": [
    {
     "triggerId": 0,
-    "taskName": "Task #5",
-    "destinationDeviceRoleName": "masterphone"
+    "taskName": "Task #3",
+    "targetDeviceRoleName": "masterphone"
    },
    {
     "triggerId": 1,
-    "taskName": "Task #6",
-    "destinationDeviceRoleName": "masterphone"
+    "taskName": "Task #4",
+    "targetDeviceRoleName": "masterphone"
    },
    {
     "triggerId": 2,
-    "taskName": "Task #7",
-    "destinationDeviceRoleName": "masterphone"
+    "taskName": "Task #5",
+    "targetDeviceRoleName": "masterphone"
    }
   ],
-  "owner": {
-   "$type": "dk.cachet.carp.protocols.domain.ProtocolOwner",
-   "id": "AB",
-   "name": "Alex Boyon",
-   "email": "alex@uni.dk"
-  },
-  "dataFormat": "dk.cachet.carp"
+  "expectedParticipantData": []
  }

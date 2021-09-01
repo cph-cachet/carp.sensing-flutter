@@ -12,7 +12,7 @@ part of sensors;
 abstract class BufferingSensorProbe extends BufferingPeriodicStreamProbe {
   MultiDatum datum = MultiDatum();
 
-  Future<Datum> getDatum() async => datum;
+  Future<Datum?> getDatum() async => datum;
 
   void onSamplingStart() {
     datum = MultiDatum();

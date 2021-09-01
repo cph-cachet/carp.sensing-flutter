@@ -16,19 +16,16 @@ part of carp_services;
 /// A [DocumentReference] can also be used to create a [CollectionReference]
 /// to a sub-collection.
 class DocumentReference extends CarpReference {
-  int _id;
-  String _path;
+  int? _id;
+  String _path = '';
 
-  DocumentReference._id(CarpService service, this._id) : super._(service) {
-    assert(_id != null);
-  }
+  DocumentReference._id(CarpService service, this._id) : super._(service);
 
-  DocumentReference._path(CarpService service, this._path) : super._(service) {
-    assert(_path != null);
-  }
+  DocumentReference._path(CarpService service, this._path) : super._(service);
 
   /// The unique id of this document.
-  int get id => _id;
+  /// Returns `null` if the id is unknown.
+  int? get id => _id;
 
   /// The name of this document.
   String get name => _path.split('/').last;
@@ -41,11 +38,11 @@ class DocumentReference extends CarpReference {
   /// If the id of this document is known, use the `documents` CARP endpoint,
   /// otherwise use the `collections` endpoint.
   String get carpPath => (_id != null)
-      ? "/api/studies/${service.app.studyId}/documents/$id"
-      : "/api/studies/${service.app.studyId}/collections/$path";
+      ? "/api/studies/${service.app!.studyId}/documents/$id"
+      : "/api/studies/${service.app!.studyId}/collections/$path";
 
   /// The full URI for the document endpoint for this document.
-  String get documentUri => "${service.app.uri.toString()}$carpPath";
+  String get documentUri => "${service.app!.uri.toString()}$carpPath";
 
   /// Writes to the document referred to by this [DocumentReference].
   ///
@@ -81,7 +78,9 @@ class DocumentReference extends CarpReference {
   /// If no document exists yet, the update will fail.
   Future<DocumentSnapshot> updateData(Map<String, dynamic> data) async {
     // if we don't have the document ID, get it first.
-    if (id == null) _id = (await this.get()).id;
+    if (id == null) _id = (await this.get())?.id;
+    if (_id == null) // early out if this document does not exist
+      throw CarpServiceException(message: 'No valid document id found.');
 
     Map<String, dynamic> payload = {'data': data};
     http.Response response = await httpr.put(Uri.encodeFull(documentUri),
@@ -102,13 +101,14 @@ class DocumentReference extends CarpReference {
   /// Renames the document referred to by this [DocumentReference].
   @Deprecated('Documents cannot be renamed in CANS.')
   Future<DocumentSnapshot> rename(String name) async {
-    assert(name != null, 'Document path names cannot be null.');
     assert(name.length > 0, 'Document path names cannot be empty.');
     assert(RegExp(r'^[a-zA-Z0-9_-]+$').hasMatch(name),
         'Document name can only contain alphanumeric, hyphen (-), and underscore (_) characters.');
 
     // if we don't have the document ID, get it first.
-    if (id == null) _id = (await this.get()).id;
+    if (id == null) _id = (await this.get())?.id;
+    if (_id == null) // early out if this document does not exist
+      throw CarpServiceException(message: 'No valid document id found.');
 
     Map<String, dynamic> payload = {'name': name};
     http.Response response = await httpr.put(Uri.encodeFull(documentUri),
@@ -128,8 +128,8 @@ class DocumentReference extends CarpReference {
 
   /// Reads the document referenced by this [DocumentReference].
   ///
-  /// If no document exists, the read will return null.
-  Future<DocumentSnapshot> get() async {
+  /// If no document exists, the read will return `null`.
+  Future<DocumentSnapshot?> get() async {
     http.Response response =
         await httpr.get(Uri.encodeFull(documentUri), headers: headers);
 
@@ -150,8 +150,8 @@ class DocumentReference extends CarpReference {
     if (id == null) _id = (await this.get())?.id;
     if (_id == null) return; // early out if this document does not exist
 
-    http.Response response =
-        await http.delete(Uri.encodeFull(documentUri), headers: headers);
+    http.Response response = await http
+        .delete(Uri.parse(Uri.encodeFull(documentUri)), headers: headers);
 
     int httpStatusCode = response.statusCode;
     if (httpStatusCode == HttpStatus.ok)
@@ -237,10 +237,10 @@ class DocumentSnapshot {
   /// The timestamp of latest update of this document
   DateTime get updatedAt => DateTime.parse(_snapshot['updated_at']);
 
-  List<String> get collections {
-    List<String> collections = [];
+  List<String?> get collections {
+    List<String?> collections = [];
     for (var item in _snapshot['collections']) {
-      String key = item["name"];
+      String? key = item["name"];
       collections.add(key);
     }
     return collections;
@@ -253,8 +253,8 @@ class DocumentSnapshot {
   dynamic operator [](String key) => data[key];
 
   /// Returns `true` if the document exists.
-  bool get exists => data != null;
+  // bool get exists => data != null;
 
   String toString() =>
-      "${this.runtimeType} - id: $id, name: $name, path: $path, size: ${data?.length}";
+      "${this.runtimeType} - id: $id, name: $name, path: $path, size: ${data.length}";
 }

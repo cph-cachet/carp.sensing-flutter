@@ -18,9 +18,9 @@ class Participation {
 
   /// True when the device is already registered in the study deployment; false otherwise.
   /// In case a device is registered, it needs to be unregistered first before a new device can be registered.
-  bool isRegistered;
+  bool? isRegistered;
 
-  Participation() : super();
+  Participation(this.studyDeploymentId, this.id) : super();
 
   factory Participation.fromJson(Map<String, dynamic> json) =>
       _$ParticipationFromJson(json);
@@ -45,9 +45,9 @@ class StudyInvitation {
   /// This can be used by infrastructures or concrete applications which require
   /// exchanging additional data between the study and client subsystems,
   /// outside of scope or not yet supported by CARP core.
-  String applicationData;
+  String? applicationData;
 
-  StudyInvitation() : super();
+  StudyInvitation(this.name, this.description) : super();
 
   factory StudyInvitation.fromJson(Map<String, dynamic> json) =>
       _$StudyInvitationFromJson(json);
@@ -66,20 +66,20 @@ class StudyInvitation {
 class ActiveParticipationInvitation {
   Participation participation;
   StudyInvitation invitation;
-  List<DeviceInvitation> devices;
+  List<DeviceInvitation>? devices;
 
   /// The CARP study ID.
-  String get studyId => invitation?.applicationData;
+  String? get studyId => invitation.applicationData;
 
   /// The CARP study deployment ID.
-  String get studyDeploymentId => participation?.studyDeploymentId;
+  String? get studyDeploymentId => participation.studyDeploymentId;
 
-  ActiveParticipationInvitation() : super();
+  ActiveParticipationInvitation(this.participation, this.invitation) : super();
 
   factory ActiveParticipationInvitation.fromJson(Map<String, dynamic> json) =>
       _$ActiveParticipationInvitationFromJson(json);
   Map<String, dynamic> toJson() => _$ActiveParticipationInvitationToJson(this);
 
   String toString() =>
-      '$runtimeType - participation: $participation, invitation: $invitation, devices size: ${devices.length}';
+      '$runtimeType - participation: $participation, invitation: $invitation, devices size: ${devices!.length}';
 }

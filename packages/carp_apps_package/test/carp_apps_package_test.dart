@@ -2,25 +2,25 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:carp_apps_package/apps.dart';
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:test/test.dart';
 
 void main() {
-  CAMSStudyProtocol protocol;
+  late StudyProtocol protocol;
   Smartphone phone;
 
   setUp(() {
+    // make sure that the json functions are loaded
+    DomainJsonFactory();
     // register the context sampling package
     SamplingPackageRegistry().register(AppsSamplingPackage());
 
     // Create a new study protocol.
-    protocol = CAMSStudyProtocol()
-      ..name = 'Context package test'
-      ..owner = ProtocolOwner(
-        id: 'jakba',
-        name: 'Jakob E. Bardram',
-        email: 'jakba@dtu.dk',
-      );
+    protocol = StudyProtocol(
+      ownerId: 'alex@uni.dk',
+      name: 'Context package test',
+    );
 
     // Define which devices are used for data collection.
     phone = Smartphone();
@@ -39,15 +39,15 @@ void main() {
   test('CAMSStudyProtocol -> JSON', () async {
     print(protocol);
     print(toJsonString(protocol));
-    expect(protocol.ownerId, 'jakba');
+    expect(protocol.ownerId, 'alex@uni.dk');
   });
 
   test('StudyProtocol -> JSON -> StudyProtocol :: deep assert', () async {
     print('#1 : $protocol');
     final studyJson = toJsonString(protocol);
 
-    CAMSStudyProtocol protocolFromJson = CAMSStudyProtocol
-        .fromJson(json.decode(studyJson) as Map<String, dynamic>);
+    StudyProtocol protocolFromJson =
+        StudyProtocol.fromJson(json.decode(studyJson) as Map<String, dynamic>);
     expect(toJsonString(protocolFromJson), equals(studyJson));
     print('#2 : $protocolFromJson');
   });
@@ -56,10 +56,10 @@ void main() {
     // Read the study protocol from json file
     String plainJson = File('test/json/study_1.json').readAsStringSync();
 
-    CAMSStudyProtocol protocol = CAMSStudyProtocol
-        .fromJson(json.decode(plainJson) as Map<String, dynamic>);
+    StudyProtocol protocol =
+        StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
 
-    expect(protocol.ownerId, 'jakba');
+    expect(protocol.ownerId, 'alex@uni.dk');
     expect(protocol.masterDevices.first.roleName, Smartphone.DEFAULT_ROLENAME);
     print(toJsonString(protocol));
   });

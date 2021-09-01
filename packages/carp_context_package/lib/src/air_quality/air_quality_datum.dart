@@ -18,7 +18,14 @@ class AirQualityDatum extends Datum {
   var latitude, longitude;
   AirQualityLevel airQualityLevel;
 
-  AirQualityDatum() : super();
+  AirQualityDatum(
+    this.airQualityIndex,
+    this.source,
+    this.place,
+    this.latitude,
+    this.longitude,
+    this.airQualityLevel,
+  ) : super();
 
   AirQualityDatum.fromAirQualityData(AirQualityData airQualityData)
       : latitude = airQualityData.latitude,
@@ -37,7 +44,7 @@ class AirQualityDatum extends Datum {
   String toString() =>
       super.toString() +
       ', place: $place (latitude:$latitude, longitude:$longitude), '
-      'souce: $source, '
-      'airQualityIndex: $airQualityIndex, '
-      'airQualityLevel: $airQualityLevel';
+          'souce: $source, '
+          'airQualityIndex: $airQualityIndex, '
+          'airQualityLevel: $airQualityLevel';
 }

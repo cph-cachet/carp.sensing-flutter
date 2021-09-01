@@ -40,9 +40,9 @@ this package only works together with `carp_mobile_sensing`.
 dependencies:
   flutter:
     sdk: flutter
-  carp_core: ^0.20.0
-  carp_mobile_sensing: ^0.20.0
-  carp_movisens_package: ^0.20.0
+  carp_core: ^latest
+  carp_mobile_sensing: ^latest
+  carp_movisens_package: ^latest
   ...
 `````
 
@@ -168,52 +168,40 @@ Before creating a study and running it, register this package in the
 Once the package is registered, a `MovisensMeasure` can be added to a study protocol like this.
 
 ````dart
-  // register this sampling package before using its measures
-  SamplingPackageRegistry().register(MovisensSamplingPackage());
+// register this sampling package before using its measures
+SamplingPackageRegistry().register(MovisensSamplingPackage());
 
-  // create a study protocol using a local file to store data
-  CAMSStudyProtocol protocol = CAMSStudyProtocol()
-    ..name = 'Track patient movement'
-    ..owner = ProtocolOwner(
-      id: 'AB',
-      name: 'Alex Boyon',
-      email: 'alex@uni.dk',
-    )
-    ..dataEndPoint = FileDataEndPoint(
-      bufferSize: 500 * 1000,
-      zip: true,
-      encrypt: false,
-    );
+// Create a study protocol
+StudyProtocol protocol = StudyProtocol(
+  ownerId: 'owner@dtu.dk',
+  name: 'Context Sensing Example',
+);
 
-  // define which devices are used for data collection - both phone and Movisens
-  Smartphone phone = Smartphone();
-  DeviceDescriptor movisens = DeviceDescriptor();
+// define which devices are used for data collection - both phone and MoviSens
+Smartphone phone = Smartphone();
+DeviceDescriptor movisens = DeviceDescriptor(roleName: 'main_ecg');
 
-  protocol
-    ..addMasterDevice(phone)
-    ..addConnectedDevice(movisens);
+protocol
+  ..addMasterDevice(phone)
+  ..addConnectedDevice(movisens);
 
-  // adding a movisens measure
-  protocol.addTriggeredTask(
-      ImmediateTrigger(), // a simple trigger that starts immediately
-      AutomaticTask(name: 'Movisens Task')
-        ..addMeasure(MovisensMeasure(
-            type: MovisensSamplingPackage.MOVISENS,
-            measureDescription: {
-              'en': MeasureDescription(
-                name: 'Movisens ECG device',
-                description:
-                    "Collects heart rythm data from the Movisens EcgMove4 sensor",
-              )
-            },
-            enabled: true,
-            address: '06-00-00-00-00-00',
-            deviceName: "ECG-223",
-            height: 178,
-            weight: 77,
-            age: 32,
-            gender: Gender.male,
-            sensorLocation: SensorLocation.chest)),
-      movisens);
+// adding a movisens measure
+protocol.addTriggeredTask(
+  ImmediateTrigger(), // a simple trigger that starts immediately
+  AutomaticTask(name: 'Movisens Task')
+    ..addMeasure(MovisensMeasure(
+        type: MovisensSamplingPackage.MOVISENS,
+        name: 'Movisens ECG device',
+        description:
+           "Collects heart rythm data from the Movisens EcgMove4 sensor",
+        enabled: true,
+        address: '06-00-00-00-00-00',
+        deviceName: "ECG-223",
+        height: 178,
+        weight: 77,
+        age: 32,
+        gender: Gender.male,
+        sensorLocation: SensorLocation.chest)),
+    movisens);
 ````
 

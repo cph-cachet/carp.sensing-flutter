@@ -65,9 +65,11 @@ From iOS >= 13 there is no longer access to wifi information.
 See here form the [Flutter](https://pub.dev/packages/wifi_info_flutter) description 
 and here for the [iOS](https://developer.apple.com/documentation/systemconfiguration/1614126-cncopycurrentnetworkinfo) description.
 
-To enable bluetooth tracking, add this permission in the `Info.plist` file located in `ios/Runner`:
+To enable bluetooth tracking, add these permissions in the `Info.plist` file located in `ios/Runner`:
 
 ````xml
+<key>NSBluetoothAlwaysUsageDescription</key>
+<string>Bluetooth needed</string>
 <key>UIBackgroundModes</key>
   <array>
   <string>bluetooth-central</string>

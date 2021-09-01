@@ -9,8 +9,6 @@
 library carp_auth;
 
 import 'dart:async';
-import 'package:uuid/uuid.dart';
-import 'package:flutter/foundation.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
 import 'package:json_annotation/json_annotation.dart';
 

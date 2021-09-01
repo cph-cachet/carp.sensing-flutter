@@ -16,7 +16,7 @@ class DataPointReference extends CarpReference {
 
   /// The URL for the data end point for this [DataPointReference].
   String get dataEndpointUri =>
-      "${service.app.uri.toString()}/api/deployments/${service.app.studyDeploymentId}/data-points";
+      "${service.app!.uri.toString()}/api/deployments/${service.app!.studyDeploymentId}/data-points";
 
   /// Upload a [CARPDataPoint] to the CARP backend using HTTP POST.
   ///
@@ -49,18 +49,19 @@ class DataPointReference extends CarpReference {
   ///
   /// Returns when successful. Throws an [CarpServiceException] if not.
   Future batchPostDataPoint(File file) async {
-    assert(file != null);
     final String url = "$dataEndpointUri/batch";
 
     var request = http.MultipartRequest("POST", Uri.parse(url));
-    request.headers['Authorization'] = headers['Authorization'];
+    request.headers['Authorization'] = headers['Authorization']!;
     request.headers['Content-Type'] = 'multipart/form-data';
     request.headers['cache-control'] = 'no-cache';
 
     request.files.add(http.MultipartFile.fromBytes(
-        'file', file != null ? file.readAsBytesSync() : [],
-        filename: file != null ? file.path : '',
-        contentType: MediaType('application', 'json')));
+      'file',
+      file.readAsBytesSync(),
+      filename: file.path,
+      contentType: MediaType('application', 'json'),
+    ));
 
     // sending the request using the retry approach
     httpr.send(request).then((response) async {
@@ -187,7 +188,6 @@ class DataPointReference extends CarpReference {
   /// ````
   ///
   Future<List<DataPoint>> queryDataPoint(String query) async {
-    assert(query != null, 'A query string must be specified.');
     String url =
         (query.length == 0) ? dataEndpointUri : "$dataEndpointUri?query=$query";
 
@@ -214,7 +214,9 @@ class DataPointReference extends CarpReference {
     );
   }
 
-  /// Delete a [CARPDataPoint] from the CARP backend using HTTP DELETE
+  /// Delete a data point with the given [id].
+  /// Returns on success.
+  /// Throws an exception if data point is not found or otherwise unsuccessful.
   Future deleteDataPoint(int id) async {
     String url = "$dataEndpointUri/$id";
 

@@ -22,7 +22,7 @@ abstract class DeploymentServiceRequest extends ServiceRequest {
   DeploymentServiceRequest([this.studyDeploymentId]) : super();
 
   /// The CARP study deployment ID.
-  String studyDeploymentId;
+  String? studyDeploymentId;
 
   String get jsonType =>
       '$_infrastructurePackageNamespace.DeploymentServiceRequest.$runtimeType';
@@ -35,11 +35,14 @@ abstract class DeploymentServiceRequest extends ServiceRequest {
 class CreateStudyDeployment extends DeploymentServiceRequest {
   StudyProtocol protocol;
 
+  @JsonKey(ignore: true)
+  String? studyDeploymentId;
+
   CreateStudyDeployment(this.protocol) : super();
 
   Function get fromJsonFunction => _$CreateStudyDeploymentFromJson;
   factory CreateStudyDeployment.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as CreateStudyDeployment;
   Map<String, dynamic> toJson() => _$CreateStudyDeploymentToJson(this);
 
   String toString() => '$runtimeType - protocol: ${protocol.name}}';
@@ -52,7 +55,7 @@ class GetStudyDeploymentStatus extends DeploymentServiceRequest {
 
   Function get fromJsonFunction => _$GetStudyDeploymentStatusFromJson;
   factory GetStudyDeploymentStatus.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as GetStudyDeploymentStatus;
   Map<String, dynamic> toJson() => _$GetStudyDeploymentStatusToJson(this);
 }
 
@@ -65,7 +68,7 @@ class GetStudyDeploymentStatusList extends DeploymentServiceRequest {
 
   Function get fromJsonFunction => _$GetStudyDeploymentStatusListFromJson;
   factory GetStudyDeploymentStatusList.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as GetStudyDeploymentStatusList;
   Map<String, dynamic> toJson() => _$GetStudyDeploymentStatusListToJson(this);
 }
 
@@ -84,7 +87,7 @@ class RegisterDevice extends DeploymentServiceRequest {
 
   Function get fromJsonFunction => _$RegisterDeviceFromJson;
   factory RegisterDevice.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as RegisterDevice;
   Map<String, dynamic> toJson() => _$RegisterDeviceToJson(this);
 
   String toString() => '${super.toString()}, deviceRoleName: $deviceRoleName';
@@ -101,7 +104,7 @@ class UnregisterDevice extends DeploymentServiceRequest {
 
   Function get fromJsonFunction => _$UnregisterDeviceFromJson;
   factory UnregisterDevice.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as UnregisterDevice;
   Map<String, dynamic> toJson() => _$UnregisterDeviceToJson(this);
 
   String toString() => '${super.toString()}, deviceRoleName: $deviceRoleName';
@@ -118,7 +121,7 @@ class GetDeviceDeploymentFor extends DeploymentServiceRequest {
 
   Function get fromJsonFunction => _$GetDeviceDeploymentForFromJson;
   factory GetDeviceDeploymentFor.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as GetDeviceDeploymentFor;
   Map<String, dynamic> toJson() => _$GetDeviceDeploymentForToJson(this);
 
   String toString() =>
@@ -129,21 +132,17 @@ class GetDeviceDeploymentFor extends DeploymentServiceRequest {
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class DeploymentSuccessful extends GetDeviceDeploymentFor {
   /// Timestamp when this was last updated in UTC
-  DateTime deviceDeploymentLastUpdateDate;
+  DateTime? deviceDeploymentLastUpdateDate;
 
   DeploymentSuccessful(
     String studyDeploymentId,
     String masterDeviceRoleName,
     DateTime deviceDeploymentLastUpdateDate,
-  )
-      : super(studyDeploymentId, masterDeviceRoleName) {
-    this.deviceDeploymentLastUpdateDate =
-        deviceDeploymentLastUpdateDate?.toUtc() ?? DateTime.now().toUtc();
-  }
+  ) : super(studyDeploymentId, masterDeviceRoleName);
 
   Function get fromJsonFunction => _$DeploymentSuccessfulFromJson;
   factory DeploymentSuccessful.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as DeploymentSuccessful;
   Map<String, dynamic> toJson() => _$DeploymentSuccessfulToJson(this);
 
   String toString() =>

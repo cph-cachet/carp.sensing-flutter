@@ -9,7 +9,7 @@ class AppsSamplingPackage extends SmartphoneSamplingPackage {
         APP_USAGE,
       ];
 
-  Probe create(String type) {
+  Probe? create(String type) {
     switch (type) {
       case APPS:
         return AppsProbe();
@@ -24,47 +24,48 @@ class AppsSamplingPackage extends SmartphoneSamplingPackage {
 
   void onRegister() {} // does nothing for this device sampling package
 
-  SamplingSchema get common => SamplingSchema()
-    ..type = SamplingSchemaType.common
-    ..name = 'Common (default) app sampling schema'
-    ..powerAware = true
-    ..measures.addEntries([
-      MapEntry(
-          APPS,
-          CAMSMeasure(
-            type: APPS,
-            name: 'Installed Apps',
-            description: "Collects an list of the apps installed on this phone",
-          )),
-      MapEntry(
-          APP_USAGE,
-          MarkedMeasure(
-            type: APP_USAGE,
-            name: 'Apps Usage',
-            description: "Collects an log of the use of apps on the phone",
-            enabled: true,
-          )),
-    ]);
+  SamplingSchema get common => SamplingSchema(
+        type: SamplingSchemaType.common,
+        name: 'Common (default) app sampling schema',
+        powerAware: true,
+      )..measures.addEntries([
+          MapEntry(
+              APPS,
+              CAMSMeasure(
+                type: APPS,
+                name: 'Installed Apps',
+                description:
+                    "Collects an list of the apps installed on this phone",
+              )),
+          MapEntry(
+              APP_USAGE,
+              MarkedMeasure(
+                type: APP_USAGE,
+                name: 'Apps Usage',
+                description: "Collects an log of the use of apps on the phone",
+                enabled: true,
+              )),
+        ]);
 
   SamplingSchema get light => common;
   SamplingSchema get minimum => common;
   SamplingSchema get normal => common;
 
-  SamplingSchema get debug => SamplingSchema()
-    ..type = SamplingSchemaType.debug
-    ..name = 'Debugging app sampling schema'
-    ..powerAware = true
-    ..measures.addEntries([
-      MapEntry(
-          APPS,
-          CAMSMeasure(
-            type: APPS,
-          )),
-      MapEntry(
-          APP_USAGE,
-          MarkedMeasure(
-            type: APP_USAGE,
-            enabled: true,
-          )),
-    ]);
+  SamplingSchema get debug => SamplingSchema(
+        type: SamplingSchemaType.debug,
+        name: 'Debugging app sampling schema',
+        powerAware: true,
+      )..measures.addEntries([
+          MapEntry(
+              APPS,
+              CAMSMeasure(
+                type: APPS,
+              )),
+          MapEntry(
+              APP_USAGE,
+              MarkedMeasure(
+                type: APP_USAGE,
+                enabled: true,
+              )),
+        ]);
 }

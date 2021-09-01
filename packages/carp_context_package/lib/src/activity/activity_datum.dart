@@ -13,19 +13,18 @@ class ActivityDatum extends Datum {
   DataFormat get format =>
       DataFormat.fromString(ContextSamplingPackage.ACTIVITY);
 
-  ActivityDatum() : super();
+  ActivityDatum(this.type, this.confidence) : super();
 
   ActivityDatum.fromMap(Map<dynamic, dynamic> map)
       : confidence = map['confidence'],
         type = map['type'],
         super();
 
-  factory ActivityDatum.fromActivity(ActivityEvent activityEvent) {
-    ActivityDatum activityDatum = ActivityDatum();
-    activityDatum.confidence = activityEvent.confidence;
-    activityDatum.type = activityEvent.type;
-    return activityDatum;
-  }
+  factory ActivityDatum.fromActivity(ActivityEvent activityEvent) =>
+      ActivityDatum(
+        activityEvent.type,
+        activityEvent.confidence,
+      );
 
   factory ActivityDatum.fromJson(Map<String, dynamic> json) =>
       _$ActivityDatumFromJson(json);

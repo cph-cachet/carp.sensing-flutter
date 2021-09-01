@@ -15,8 +15,9 @@ part of carp_core_deployment;
 /// enabling a connection between them, tracking device connection issues, and
 /// assessing data quality.
 class StudyDeployment {
-  String _studyDeploymentId;
-  DateTime _creationDate;
+  late String _studyDeploymentId;
+  late DateTime _creationDate;
+  late StudyDeploymentStatus _status;
   final StudyProtocol _protocol;
 
   // the list of all registred devices, mapped to their rolename
@@ -30,18 +31,17 @@ class StudyDeployment {
   // the list of deployed devices, organized by role name
   final Set<String> _deployedDevices = {};
   final Set<DeviceDescriptor> _invalidatedDeployedDevices = {};
-  DateTime _startTime;
+  DateTime? _startTime;
   bool _isStopped = false;
-  StudyDeploymentStatus _status;
 
   String get studyDeploymentId => _studyDeploymentId;
   DateTime get creationDate => _creationDate;
   StudyProtocol get protocol => _protocol;
 
-  /// The set of devices which are currently registered for this study deployment.
+  // The set of devices which are currently registered for this study deployment.
   Map<DeviceDescriptor, DeviceRegistration> get registeredDevices =>
       _registeredDevices.map(
-          (key, value) => MapEntry(_registeredDeviceDescriptors[key], value));
+          (key, value) => MapEntry(_registeredDeviceDescriptors[key]!, value));
 
   /// Per device, a list of all device registrations (included old registrations)
   /// in the order they were registered.
@@ -49,13 +49,13 @@ class StudyDeployment {
       get deviceRegistrationHistory => _deviceRegistrationHistory;
 
   /// The set of devices (role names) which have been deployed correctly.
-  Set<String> get deployedDevices => _deployedDevices;
+  Set<String?> get deployedDevices => _deployedDevices;
   Set<DeviceDescriptor> get invalidatedDeployedDevices =>
       _invalidatedDeployedDevices;
 
   ///The time when the study deployment was ready for the first
   ///time (all devices deployed); null otherwise.
-  DateTime get startTime => _startTime;
+  DateTime? get startTime => _startTime;
 
   /// Determines whether the study deployment has been stopped and no
   /// further modifications are allowed.
@@ -64,9 +64,7 @@ class StudyDeployment {
   /// Create a new [StudyDeployment] based on a [StudyProtocol].
   /// [studyDeploymentId] specify the study deployment id.
   /// If not specified, an UUID v1 id is generated.
-  StudyDeployment(this._protocol, [String studyDeploymentId]) {
-    assert(_protocol != null,
-        'Cannot create a StudyDeployment without a protocol.');
+  StudyDeployment(this._protocol, [String? studyDeploymentId]) {
     _studyDeploymentId = studyDeploymentId ?? Uuid().v1();
     _creationDate = DateTime.now();
     _status = StudyDeploymentStatus(studyDeploymentId: _studyDeploymentId);
@@ -116,7 +114,7 @@ class StudyDeployment {
     if (_deviceRegistrationHistory[device] == null) {
       _deviceRegistrationHistory[device] = [];
     }
-    _deviceRegistrationHistory[device].add(registration);
+    _deviceRegistrationHistory[device]!.add(registration);
   }
 
   /// Remove the current device registration for the [device] in this deployment.
@@ -129,12 +127,16 @@ class StudyDeployment {
   /// Get the deployment configuration for the specified master [device] in
   /// this study deployment.
   MasterDeviceDeployment getDeviceDeploymentFor(MasterDeviceDescriptor device) {
-    // Verify whether the specified device is part of the protocol of this deployment.
-    // assert(_protocol.masterDevices.contains(device),
-    //     "The specified master device is not part of the protocol of this deployment.");
+    // Verify whether the specified device is part of the protocol of this
+    // deployment and has been registrered.
+    assert(_protocol.hasMasterDevice(device.roleName),
+        "The specified master device with rolename '${device.roleName}' is not part of the protocol of this deployment.");
+    assert(_registeredDevices.containsKey(device.roleName),
+        "The specified master device with rolename '${device.roleName}' has not been registrered to this deployment.");
 
     // TODO - Verify whether the specified device is ready to be deployed.
-    DeviceRegistration configuration = _registeredDevices[device.roleName];
+
+    DeviceRegistration configuration = _registeredDevices[device.roleName]!;
 
     // mark all registrered devices as deployed
     _deployedDevices.addAll(_registeredDevices.keys);
@@ -144,7 +146,7 @@ class StudyDeployment {
     List<DeviceDescriptor> connectedDevices = _protocol.connectedDevices;
 
     // create a map of device registration for the connected devices
-    Map<String, DeviceRegistration> connectedDeviceConfigurations = {};
+    Map<String, DeviceRegistration?> connectedDeviceConfigurations = {};
     connectedDevices.forEach((descriptor) =>
         connectedDeviceConfigurations[descriptor.roleName] =
             _registeredDevices[descriptor.roleName]);
@@ -161,21 +163,8 @@ class StudyDeployment {
     // Get all trigger information for this and connected devices.
     // TODO - this implementation just returns all triggers and triggered tasks.
     //      - but should check which devices are available
-    Map<String, Trigger> usedTriggers = _protocol.triggers;
-    List<TriggeredTask> triggeredTasks = _protocol.triggeredTasks;
-
-    // Map<String, Trigger> usedTriggers = {};
-    // List<TriggeredTask> triggeredTasks = [];
-    // int index = 0;
-    // _protocol.triggers.forEach((trigger) {
-    //   usedTriggers['$index'] = trigger;
-    //   Set<TriggeredTask> tt = _protocol.getTriggeredTasks(trigger);
-    //   tt.forEach((triggeredTask) {
-    //     triggeredTask.triggerId = index;
-    //     triggeredTasks.add(triggeredTask);
-    //   });
-    //   index++;
-    // });
+    Map<String, Trigger>? usedTriggers = _protocol.triggers;
+    List<TriggeredTask>? triggeredTasks = _protocol.triggeredTasks;
 
     _status.status = StudyDeploymentStatusTypes.DeploymentReady;
 
@@ -225,7 +214,8 @@ enum StudyDeploymentStatusTypes {
   Stopped,
 }
 
-/// A [StudyDeploymentStatus] represents the status of a deployment as returned from the CARP web service.
+/// A [StudyDeploymentStatus] represents the status of a deployment as returned
+/// from the CARP web service.
 ///
 /// See [StudyDeploymentStatus.kt](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/carp.deployment.core/src/commonMain/kotlin/dk/cachet/carp/deployment/domain/StudyDeploymentStatus.kt).
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
@@ -246,24 +236,32 @@ class StudyDeploymentStatus extends Serializable {
 
   /// The time when the study deployment was ready for the first
   /// time (all devices deployed); null otherwise.
-  DateTime startTime;
+  DateTime? startTime;
 
   /// The [DeviceDeploymentStatus] for the master device of this deployment,
   /// which is typically this phone.
   ///
   /// Returns `null` if there is no master device in the list of [devicesStatus].
-  DeviceDeploymentStatus get masterDeviceStatus =>
-      devicesStatus?.firstWhere((element) => element.device?.isMasterDevice);
+  DeviceDeploymentStatus? get masterDeviceStatus {
+    for (DeviceDeploymentStatus status in devicesStatus) {
+      if (status.device.isMasterDevice!) return status;
+      return null;
+    }
+  }
 
-  StudyDeploymentStatus({this.studyDeploymentId, this.devicesStatus}) : super();
+  StudyDeploymentStatus({
+    required this.studyDeploymentId,
+    this.devicesStatus = const [],
+  }) : super();
 
   Function get fromJsonFunction => _$StudyDeploymentStatusFromJson;
 
   factory StudyDeploymentStatus.fromJson(Map<String, dynamic> json) {
-    StudyDeploymentStatus status = FromJsonFactory().fromJson(json);
+    StudyDeploymentStatus status =
+        FromJsonFactory().fromJson(json) as StudyDeploymentStatus;
     // when this object was create from json deserialization,
     // the last part of the $type reflects the status
-    switch (status.$type.split('.').last) {
+    switch (status.$type!.split('.').last) {
       case 'Invited':
         status.status = StudyDeploymentStatusTypes.Invited;
         break;

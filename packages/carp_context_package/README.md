@@ -16,6 +16,8 @@ This packages supports sampling of the following [`Measure`](https://pub.dev/doc
 
 See the [wiki]() for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types) and [sampling schemas](https://github.com/cph-cachet/carp.sensing-flutter/wiki/D.-Sampling-Schemas).
 
+See the [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app) for an example of how to build a mobile sensing app in Flutter.
+
 For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter).
 
 If you're interested in writing you own sampling packages for CARP, see the description on
@@ -30,8 +32,8 @@ this package only works together with [`carp_mobile_sensing`](https://pub.dev/pa
 dependencies:
   flutter:
     sdk: flutter
-  carp_mobile_sensing: ^0.21.0
-  carp_context_package: ^0.21.0
+  carp_mobile_sensing: ^latest
+  carp_context_package: ^latest
   ...
 `````
 
@@ -51,7 +53,6 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <!-- The following permissions are used in the Context Package -->
-    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
@@ -59,12 +60,24 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
+    <!-- For Android 9 (API 28 and earlier), use: -->
+    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
+    <!-- for Android 10 (API 29 and later), use: -->
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+
 
    <application
       ...
-        <!-- service for using the Android activity recognition API -->
-        <service android:name="dk.cachet.activity_recognition_flutter.activity.ActivityRecognizedService" />
-        
+
+        <!-- services for using the Android activity recognition API -->
+        <service android:name="dk.cachet.activity_recognition_flutter.activity.ActivityRecognizedService" />        
+        <receiver android:name="dk.cachet.activity_recognition_flutter.ActivityRecognizedBroadcastReceiver"/>
+        <service
+          android:name="dk.cachet.activity_recognition_flutter.ActivityRecognizedService"
+          android:permission="android.permission.BIND_JOB_SERVICE"
+          android:exported="true"/>
+        <service android:name="dk.cachet.activity_recognition_flutter.ForegroundService" />
+
         <!-- Services for background location handling -->
         <receiver
                 android:name="rekab.app.background_locator.LocatorBroadcastReceiver"
@@ -87,6 +100,7 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
                 android:permission="android.permission.FOREGROUND_SERVICE"
                 android:exported="true"
         />
+
         <meta-data
                 android:name="flutterEmbedding"
                 android:value="2" />
@@ -95,7 +109,7 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
 </manifest>
 ````
 
-> **NOTE:** For Android 10 (API 29 and later) use the following permission instead:
+> **NOTE:** For Android 10 (API 29 and later) use the following permission:
 >
 > `<uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />`
 >

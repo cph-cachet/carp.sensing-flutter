@@ -1,3 +1,4 @@
+import 'package:carp_core/carp_protocols/carp_core_protocols.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_audio_package/audio.dart';
 
@@ -9,14 +10,11 @@ void main() async {
   // register this sampling package before using its measures
   SamplingPackageRegistry().register(AudioSamplingPackage());
 
-  // Create a study protocol using a local file to store data
-  CAMSStudyProtocol protocol = CAMSStudyProtocol()
-    ..name = 'Track patient movement'
-    ..owner = ProtocolOwner(
-      id: 'AB',
-      name: 'Alex Boyon',
-      email: 'alex@uni.dk',
-    );
+  // Create a study protocol
+  StudyProtocol protocol = StudyProtocol(
+    ownerId: 'owner@dtu.dk',
+    name: 'Context Sensing Example',
+  );
 
   // define which devices are used for data collection
   // in this case, its only this smartphone

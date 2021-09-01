@@ -6,35 +6,14 @@
  */
 part of domain;
 
-/// A [CAMSTrigger] is a specification of any condition which starts and stops [TaskDescriptor]s at
-/// certain points in time when the condition applies. The condition can either
-/// be time-bound, based on data streams, initiated by a user of the platform,
-/// or a combination of these.
-///
-/// The [CAMSTrigger] class is abstract. Use sub-classes of [CAMSTrigger] implements
-/// the specific behavior / timing of a trigger.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class CAMSTrigger extends Trigger {
-  /// A unique id of this trigger.
-  /// Is used when storing data to know what triggered the data collection.
-  String triggerId;
-
-  CAMSTrigger({this.triggerId}) : super();
-
-  Function get fromJsonFunction => _$CAMSTriggerFromJson;
-  factory CAMSTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
-  Map<String, dynamic> toJson() => _$CAMSTriggerToJson(this);
-}
-
 /// A trigger that starts sampling immediately and never stops.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class ImmediateTrigger extends CAMSTrigger {
-  ImmediateTrigger({String triggerId}) : super(triggerId: triggerId);
+class ImmediateTrigger extends Trigger {
+  ImmediateTrigger() : super();
 
   Function get fromJsonFunction => _$ImmediateTriggerFromJson;
   factory ImmediateTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as ImmediateTrigger;
   Map<String, dynamic> toJson() => _$ImmediateTriggerToJson(this);
 }
 
@@ -43,11 +22,11 @@ class ImmediateTrigger extends CAMSTrigger {
 ///
 /// Note that sampling continues until it is explicitly paused.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class PassiveTrigger extends CAMSTrigger {
-  PassiveTrigger({String triggerId}) : super(triggerId: triggerId);
+class PassiveTrigger extends Trigger {
+  PassiveTrigger() : super();
 
   @JsonKey(ignore: true)
-  dynamic executor;
+  late dynamic executor;
 
   /// Called when data sampling in this trigger is to be resumed.
   ///
@@ -64,25 +43,23 @@ class PassiveTrigger extends CAMSTrigger {
 
   Function get fromJsonFunction => _$PassiveTriggerFromJson;
   factory PassiveTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as PassiveTrigger;
   Map<String, dynamic> toJson() => _$PassiveTriggerToJson(this);
 }
 
 /// A trigger that delays sampling for [delay] and then starts sampling.
 /// Never stops sampling once started.
-///
 /// The delay is measured from the start of the overall [StudyProtocol].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class DelayedTrigger extends CAMSTrigger {
+class DelayedTrigger extends Trigger {
   /// Delay before this trigger is executed.
   Duration delay;
 
-  DelayedTrigger({String triggerId, this.delay = const Duration(seconds: 1)})
-      : super(triggerId: triggerId);
+  DelayedTrigger({this.delay = const Duration(seconds: 1)}) : super();
 
   Function get fromJsonFunction => _$DelayedTriggerFromJson;
   factory DelayedTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as DelayedTrigger;
   Map<String, dynamic> toJson() => _$DelayedTriggerToJson(this);
 }
 
@@ -93,7 +70,7 @@ class DelayedTrigger extends CAMSTrigger {
 ///
 /// Weekly and montly recurrent triggers can be specified using the [RecurrentScheduledTrigger].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class PeriodicTrigger extends CAMSTrigger {
+class PeriodicTrigger extends Trigger {
   /// The period (reciprocal of frequency) of sampling.
   Duration period;
 
@@ -101,39 +78,35 @@ class PeriodicTrigger extends CAMSTrigger {
   Duration duration;
 
   PeriodicTrigger({
-    String triggerId,
-    @required this.period,
+    required this.period,
     this.duration = const Duration(seconds: 1),
-  })
-      : super(triggerId: triggerId);
+  }) : super();
 
   Function get fromJsonFunction => _$PeriodicTriggerFromJson;
   factory PeriodicTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as PeriodicTrigger;
   Map<String, dynamic> toJson() => _$PeriodicTriggerToJson(this);
 }
 
 /// A trigger that starts sampling based on a [schedule] of a date and time,
 /// and runs for a specific [duration].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class DateTimeTrigger extends CAMSTrigger {
+class DateTimeTrigger extends Trigger {
   /// The scheduled date and time for resuming sampling.
   DateTime schedule;
 
   /// The duration (until stopped) of the the sampling.
-  /// If null, the sampling is never stopped (i.e., runs forever).
-  Duration duration;
+  /// If `null`, the sampling is never stopped (i.e., runs forever).
+  Duration? duration;
 
   DateTimeTrigger({
-    String triggerId,
-    @required this.schedule,
+    required this.schedule,
     this.duration,
-  })
-      : super(triggerId: triggerId);
+  }) : super();
 
   Function get fromJsonFunction => _$DateTimeTriggerFromJson;
   factory DateTimeTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as DateTimeTrigger;
   Map<String, dynamic> toJson() => _$DateTimeTriggerToJson(this);
 }
 
@@ -158,7 +131,7 @@ class Time extends Serializable {
   int minute;
   int second;
 
-  Time({this.hour = 0, this.minute = 0, this.second = 0});
+  Time({this.hour = 0, this.minute = 0, this.second = 0}) : super();
 
   factory Time.now() {
     DateTime now = DateTime.now();
@@ -169,26 +142,26 @@ class Time extends Serializable {
   ///
   /// The comparison is independent of whether the time is in UTC or in
   /// the local time zone.
-  bool isBefore(Time other) => DateTime(2021, 1, hour, minute, second)
-      .isBefore(DateTime(2021, 1, other.hour, other.minute, other.second));
+  bool isBefore(Time other) => DateTime(2021, 1, 1, hour, minute, second)
+      .isBefore(DateTime(2021, 1, 1, other.hour, other.minute, other.second));
 
   /// Returns true if [this] occurs after [other].
   ///
   /// The comparison is independent of whether the time is in UTC or in
   /// the local time zone.
-  bool isAfter(Time other) => DateTime(2021, 1, hour, minute, second)
-      .isAfter(DateTime(2021, 1, other.hour, other.minute, other.second));
+  bool isAfter(Time other) => DateTime(2021, 1, 1, hour, minute, second)
+      .isAfter(DateTime(2021, 1, 1, other.hour, other.minute, other.second));
 
   /// Returns a [Duration] with the difference when subtracting [other] from
   /// [this].
   ///
   ///  The returned [Duration] will be negative if [other] occurs after [this].
-  Duration difference(Time other) => DateTime(2021, 1, hour, minute, second)
-      .difference(DateTime(2021, 1, other.hour, other.minute, other.second));
+  Duration difference(Time other) => DateTime(2021, 1, 1, hour, minute, second)
+      .difference(DateTime(2021, 1, 1, other.hour, other.minute, other.second));
 
   Function get fromJsonFunction => _$TimeFromJson;
   factory Time.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as Time;
   Map<String, dynamic> toJson() => _$TimeToJson(this);
 
   static String _twoDigits(int n) => (n >= 10) ? '$n' : '0$n';
@@ -199,9 +172,8 @@ class Time extends Serializable {
 /// A trigger that resume/pause sampling based on a recurrent scheduled date and time.
 /// Stops / pause after the specified [duration].
 ///
-/// Supports daily, weekly and monthly recurrences.
-/// Yearly recurrence is not supported, since
-/// data sampling is not intended to run on such long time scales.
+/// Supports daily, weekly and monthly recurrences. Yearly recurrence is not
+/// supported, since data sampling is not intended to run on such long time scales.
 ///
 /// Here are a couple of examples:
 ///
@@ -239,14 +211,16 @@ class Time extends Serializable {
 ///       );
 /// ```
 ///
-/// would create the quarterly schedule above. But if the app shuts down before this schedule, and
-/// restarted after, the trigger would still trigger (immediately).
-/// Note that the [triggerId] must be specified when remembering triggers (it is used as the key).
+/// would create the quarterly schedule above. But if the app shuts down before
+/// this schedule, and restarted after, the trigger would still trigger (immediately).
+/// Note that the [triggerId] must be specified when remembering triggers (it
+/// is used as the key).
 ///
 /// Thanks to Shantanu Kher for inspiration in his blog post on
 /// [Again and Again! Managing Recurring Events In a Data Model](https://www.vertabelo.com/blog/technical-articles/again-and-again-managing-recurring-events-in-a-data-model).
 /// We are, however, not using yearly recurrence.
-/// Moreover, monthly recurrences make little sense in mobile sensing, even though it is supported.
+/// Moreover, monthly recurrences make little sense in mobile sensing, even
+/// though it is supported.
 ///
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class RecurrentScheduledTrigger extends PeriodicTrigger {
@@ -260,7 +234,7 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
   Time time;
 
   /// End time and date. If [null], this trigger keeps sampling forever.
-  DateTime end;
+  DateTime? end;
 
   /// Separation between recurrences.
   ///
@@ -272,35 +246,32 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
 
   /// Maximum number of samplings.
   ///
-  /// There are times when we do not know the exact end time and date for recurrent sampling.
-  /// But we might know how many occurrences (samplings) are needed to complete it.
-  int maxNumberOfSampling;
+  /// There are times when we do not know the exact end time and date for
+  /// recurrent sampling. But we might know how many occurrences (samplings)
+  /// are needed to complete it.
+  int? maxNumberOfSampling;
 
   /// If weekly recurrence, specify which day of week.
   ///
-  /// Stores which day of the week this sampling will take place according to [DateTime] standards,
-  /// i.e. having Monday as the first day of the week and Sunday as the last.
-  int dayOfWeek;
+  /// Stores which day of the week this sampling will take place according to [
+  /// DateTime] standards, i.e. having Monday as the first day of the week and
+  /// Sunday as the last.
+  int? dayOfWeek;
 
   /// If monthly recurrence, specify the week in the month.
   ///
-  /// [weekOfMonth] is used for samplings that are scheduled for a certain week of the month – i.e.
-  /// the first, second, etc.
-  /// Possible values are 1,2,3,4. The first week is the week of the first Monday of a month.
-  /// For example, the first week of September 2020 is the week starting on Monday 2020-09-07.
-  int weekOfMonth;
+  /// [weekOfMonth] is used for samplings that are scheduled for a certain
+  /// week of the month – i.e., the first, second, etc.
+  /// Possible values are 1,2,3,4. The first week is the week of the first
+  /// Monday of a month. For example, the first week of September 2020 is the
+  /// week starting on Monday 2020-09-07.
+  int? weekOfMonth;
 
   /// If monthly recurrence, specify the day of the month.
   ///
-  /// Used in cases when an event is scheduled on a particular day of the month, say the 25th.
-  /// Possible numbers are 1..31 counting from the start of a month.
-  int dayOfMonth;
-
-//  /// If yearly recurrence, specify the month of the year.
-//  ///
-//  /// In combination with [dayOfWeek] and [weekOfMonth],  this value specify the month of year.
-//  /// Follows the [DateTime] standards, i.e. possible values are 1..12 counting from the start of a year.
-//  int monthOfYear;
+  /// Used in cases when an event is scheduled on a particular day of the month,
+  /// say the 25th. Possible numbers are 1..31 counting from the start of a month.
+  int? dayOfMonth;
 
   /// Should this recurrent scheduled trigger be remembered across app restart?
   ///
@@ -314,26 +285,23 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
   /// See [Issue #80](https://github.com/cph-cachet/carp.sensing-flutter/issues/80).
   bool remember = false;
 
+  /// The unique id of this trigger. Only used if [remember] is `true`.
+  String? triggerId;
+
   /// Creates a [RecurrentScheduledTrigger].
   RecurrentScheduledTrigger({
-    String triggerId,
-    @required this.type,
-    @required this.time,
+    required this.type,
+    required this.time,
     this.end,
     this.separationCount = 0,
     this.maxNumberOfSampling,
     this.dayOfWeek,
     this.weekOfMonth,
     this.dayOfMonth,
-    //this.monthOfYear,
     this.remember = false,
+    this.triggerId,
     Duration duration = const Duration(seconds: 10),
-  })
-      : super(
-            triggerId: triggerId,
-            period: const Duration(seconds: 1),
-            duration: duration) {
-    assert(duration != null, 'duration must be specified.');
+  }) : super(period: const Duration(seconds: 1), duration: duration) {
     assert(separationCount >= 0, 'Separation count must be zero or positive.');
     if (type == RecurrentType.weekly) {
       assert(dayOfWeek != null,
@@ -341,12 +309,11 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
     } else if (type == RecurrentType.monthly) {
       assert(weekOfMonth != null || dayOfMonth != null,
           'Specify monthly recurrence using either dayOfMonth or weekOfMonth');
-      assert(dayOfMonth == null || (dayOfMonth >= 1 && dayOfMonth <= 31),
+      assert(dayOfMonth == null || (dayOfMonth! >= 1 && dayOfMonth! <= 31),
           'dayOfMonth must be in the range [1-31]');
-      assert(weekOfMonth == null || (weekOfMonth >= 1 && weekOfMonth <= 4),
+      assert(weekOfMonth == null || (weekOfMonth! >= 1 && weekOfMonth! <= 4),
           'weekOfMonth must be in the range [1-4]');
     }
-    time ??= Time.now();
     if (remember) {
       assert(triggerId != null,
           'A unique trigger ID should be specified when remembering scheduled triggers.');
@@ -356,11 +323,11 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
   /// The next day in a monthly occurrence from the given [fromDate].
   DateTime nextMonthlyDay(DateTime fromDate) => fromDate
       .subtract(Duration(days: fromDate.weekday - 1))
-      .add(Duration(days: 7 * weekOfMonth + dayOfWeek - 1));
+      .add(Duration(days: 7 * weekOfMonth! + dayOfWeek! - 1));
 
   /// The date and time of the first occurrence of this trigger.
   DateTime get firstOccurrence {
-    DateTime firstDay;
+    late DateTime firstDay;
     DateTime now = DateTime.now();
     DateTime start = DateTime(
         now.year, now.month, now.day, time.hour, time.minute, time.second);
@@ -371,7 +338,7 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
             (start.isAfter(now)) ? start : start.add(Duration(hours: 24));
         break;
       case RecurrentType.weekly:
-        int days = dayOfWeek - now.weekday;
+        int days = dayOfWeek! - now.weekday;
         days = (days < 0) ? days + daysPerWeek : days;
         firstDay = start.add(Duration(days: days));
         // check if this is the same day, but a time slot earlier this day
@@ -383,7 +350,7 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
         if (dayOfMonth != null) {
           // we have a trigger of the following type: collect quarterly on the 11th day of the first month in each quarter at 21:30
           //   RecurrentScheduledTrigger(type: RecurrentType.monthly, dayOfMonth: 11, separationCount: 2, time: Time(hour: 21, minute: 30));
-          int days = dayOfMonth - now.day;
+          int days = dayOfMonth! - now.day;
           int month = (days > 0)
               ? now.month + separationCount
               : now.month + separationCount + 1;
@@ -392,7 +359,7 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
             year = now.year + 1;
             month = month - DateTime.monthsPerYear;
           }
-          firstDay = DateTime(year, month, dayOfMonth);
+          firstDay = DateTime(year, month, dayOfMonth!);
         } else {
           // we have a trigger of the following type: collect monthly in the second week on a monday at 14:30
           //   RecurrentScheduledTrigger(type: RecurrentType.monthly, weekOfMonth: 2, dayOfWeek: DateTime.monday, time: Time(hour: 14, minute: 30));
@@ -421,14 +388,12 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
         // the period in monthly recurring triggers is not fixed, but depends on the specific month(s)
         // but the current implementation of the [RecurrentScheduledTriggerExecutor] expects a fixed period
         return Duration(days: (separationCount + 1) * daysPerMonth);
-      default:
-        return null;
     }
   }
 
   Function get fromJsonFunction => _$RecurrentScheduledTriggerFromJson;
   factory RecurrentScheduledTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as RecurrentScheduledTrigger;
   Map<String, dynamic> toJson() => _$RecurrentScheduledTriggerToJson(this);
 
   String toString() =>
@@ -439,30 +404,28 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
 ///
 /// Bases on the [`cron`](https://pub.dev/packages/cron) package.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class CronScheduledTrigger extends CAMSTrigger {
+class CronScheduledTrigger extends Trigger {
   /// The cron job expression.
   String cronExpression;
 
   /// The duration (until stopped) of the the sampling.
   /// If null, the sampling is never stopped (i.e., runs forever).
-  Duration duration;
+  late Duration duration;
 
   /// Create a cron scheduled trigger based on specifying:
-  ///   * [triggerId] - a unique id for this trigger. Required if this trigger is to be remembered.
   ///   * [minute] - The minute to trigger. `int` [0-59] or `null` (= match all).
   ///   * [hour] - The hour to trigger. `int` [0-23] or `null` (= match all).
   ///   * [day] - The day of the month to trigger. `int` [1-31] or `null` (= match all).
   ///   * [month] - The month to trigger. `int` [1-12] or `null` (= match all).
   ///   * [weekday] - The week day to trigger. `int` [0-6] or `null` (= match all).
-  ///   * [duration] - The duration (until stopped) of the the sampling. If null, the sampling is never stopped (i.e., runs forever).
+  ///   * [duration] - The duration (until stopped) of the the sampling.
   factory CronScheduledTrigger({
-    String triggerId,
-    int minute,
-    int hour,
-    int day,
-    int month,
-    int weekday,
-    Duration duration,
+    int? minute,
+    int? hour,
+    int? day,
+    int? month,
+    int? weekday,
+    Duration duration = const Duration(seconds: 1),
   }) {
     assert(minute == null || (minute >= 0 && minute <= 59),
         'minute must be in the range of [0-59] or null (=match all).');
@@ -475,16 +438,14 @@ class CronScheduledTrigger extends CAMSTrigger {
     assert(weekday == null || (weekday >= 0 && weekday <= 6),
         'weekday must be in the range of [0-6] or null (=match all).');
     return CronScheduledTrigger._(
-        triggerId: triggerId,
         cronExpression: _cronToString(minute, hour, day, month, weekday),
         duration: duration);
   }
 
   /// Create a trigger based on a cron-formatted string expression.
   ///
-  ///   * [triggerId] - a unique id for this trigger. Required if this trigger is to be remembered.
   ///   * [cronExpression] - The cron expression as a `String`.
-  ///   * [duration] - The duration (until stopped) of the the sampling. If null, the sampling is never stopped (i.e., runs forever).
+  ///   * [duration] - The duration (until stopped) of the the sampling.
   ///
   /// Cron format used is:
   ///
@@ -494,36 +455,28 @@ class CronScheduledTrigger extends CAMSTrigger {
   ///
   /// See e.g. [crontab guru](https://crontab.guru/) for help in formatting cron jobs.
   factory CronScheduledTrigger.parse({
-    String triggerId,
-    @required String cronExpression,
+    required String cronExpression,
     Duration duration = const Duration(seconds: 1),
-  }) {
-    assert(cronExpression != null, 'Cannot use null to specify a cron job.');
-    return CronScheduledTrigger._(
-        triggerId: triggerId,
-        cronExpression: cronExpression,
-        duration: duration);
-  }
+  }) =>
+      CronScheduledTrigger._(
+          cronExpression: cronExpression, duration: duration);
 
   CronScheduledTrigger._({
-    String triggerId,
-    this.cronExpression,
+    required this.cronExpression,
     this.duration = const Duration(seconds: 1),
-  })
-      : super(triggerId: triggerId);
+  }) : super();
 
   static String _cronToString(
-          int minute, int hour, int day, int month, int weekday) =>
+          int? minute, int? hour, int? day, int? month, int? weekday) =>
       '${_cf(minute)} ${_cf(hour)} ${_cf(day)} ${_cf(month)} ${_cf(weekday)}';
-  static String _cf(int exp) => (exp == null) ? '*' : exp.toString();
+  static String _cf(int? exp) => (exp == null) ? '*' : exp.toString();
 
   Function get fromJsonFunction => _$CronScheduledTriggerFromJson;
   factory CronScheduledTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as CronScheduledTrigger;
   Map<String, dynamic> toJson() => _$CronScheduledTriggerToJson(this);
 
-  String toString() =>
-      "$runtimeType - triggerId: $triggerId, cron expression: '$cronExpression'";
+  String toString() => "$runtimeType - cron expression: '$cronExpression'";
 }
 
 /// A trigger that resume and pause sampling when some (other) sampling event
@@ -538,15 +491,7 @@ class CronScheduledTrigger extends CAMSTrigger {
 ///   });
 /// ```
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class SamplingEventTrigger extends CAMSTrigger {
-  SamplingEventTrigger({
-    String triggerId,
-    @required this.measureType,
-    this.resumeCondition,
-    this.pauseCondition,
-  })
-      : super(triggerId: triggerId);
-
+class SamplingEventTrigger extends Trigger {
   /// The data type of the event to look for.
   ///
   /// If [resumeCondition] is null, sampling will be triggered for all events
@@ -564,18 +509,24 @@ class SamplingEventTrigger extends CAMSTrigger {
   ///
   /// If [resumeCondition] is null, sampling will be triggered / resumed on
   /// every sampling event that matches the specified [measureType].
-  ConditionalEvent resumeCondition;
+  ConditionalEvent? resumeCondition;
 
   /// The [ConditionalEvent] specifying a specific sampling value to compare
   /// with for pausing this trigger.
   ///
   /// If [pauseCondition] is null, sampling is never paused and hence runs
   /// forever (unless paused manually).
-  ConditionalEvent pauseCondition;
+  ConditionalEvent? pauseCondition;
+
+  SamplingEventTrigger({
+    required this.measureType,
+    this.resumeCondition,
+    this.pauseCondition,
+  }) : super();
 
   Function get fromJsonFunction => _$SamplingEventTriggerFromJson;
   factory SamplingEventTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as SamplingEventTrigger;
   Map<String, dynamic> toJson() => _$SamplingEventTriggerToJson(this);
 }
 
@@ -594,7 +545,7 @@ class ConditionalEvent extends Serializable {
 
   Function get fromJsonFunction => _$ConditionalEventFromJson;
   factory ConditionalEvent.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as ConditionalEvent;
   Map<String, dynamic> toJson() => _$ConditionalEventToJson(this);
 }
 
@@ -617,35 +568,33 @@ typedef ConditionalEventEvaluator = bool Function(DataPoint dataPoint);
 /// If you need to de/serialize an event trigger, use the [SamplingEventTrigger]
 /// instead.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class ConditionalSamplingEventTrigger extends CAMSTrigger {
-  /// Create a [ConditionalSamplingEventTrigger].
-  ConditionalSamplingEventTrigger({
-    String triggerId,
-    @required this.measureType,
-    this.resumeCondition,
-    this.pauseCondition,
-  })
-      : super(triggerId: triggerId);
-
+class ConditionalSamplingEventTrigger extends Trigger {
   /// The data type of the event to look for.
   String measureType;
 
   /// The [ConditionalEventEvaluator] function evaluating if the event
   /// condition is meet for resuming this trigger
   @JsonKey(ignore: true)
-  ConditionalEventEvaluator resumeCondition;
+  ConditionalEventEvaluator? resumeCondition;
 
   /// The [ConditionalEventEvaluator] function evaluating if the event
   /// condition is meet for pausing this trigger.
   ///
-  /// If [pauseCondition] is not specified (null), sampling is never paused
+  /// If [pauseCondition] is not specified (`null`), sampling is never paused
   /// and hence runs forever (unless paused manually).
   @JsonKey(ignore: true)
-  ConditionalEventEvaluator pauseCondition;
+  ConditionalEventEvaluator? pauseCondition;
+
+  /// Create a [ConditionalSamplingEventTrigger].
+  ConditionalSamplingEventTrigger({
+    required this.measureType,
+    this.resumeCondition,
+    this.pauseCondition,
+  }) : super();
 
   Function get fromJsonFunction => _$ConditionalSamplingEventTriggerFromJson;
   factory ConditionalSamplingEventTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as ConditionalSamplingEventTrigger;
   Map<String, dynamic> toJson() =>
       _$ConditionalSamplingEventTriggerToJson(this);
 }
@@ -657,7 +606,7 @@ class ConditionalSamplingEventTrigger extends CAMSTrigger {
 /// numbers specified.
 /// The time period is defined by a [startTime] and an [endTime].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class RandomRecurrentTrigger extends CAMSTrigger {
+class RandomRecurrentTrigger extends Trigger {
   /// Start time of the day where the trigger can happen.
   Time startTime;
 
@@ -680,17 +629,18 @@ class RandomRecurrentTrigger extends CAMSTrigger {
   /// [startTime] and [endTime] specified the period within a day the sampling
   /// should take place (e.g., between 08:00 and 20:00).
   RandomRecurrentTrigger({
-    String triggerId,
     this.minNumberOfTriggers = 0,
     this.maxNumberOfTriggers = 1,
-    this.startTime,
-    this.endTime,
+    required this.startTime,
+    required this.endTime,
     this.duration = const Duration(seconds: 2),
-  })
-      : super(triggerId: triggerId);
+  }) : super() {
+    assert(startTime.isBefore(endTime),
+        'startTime must be before endTime with a 24 hour period.');
+  }
 
   Function get fromJsonFunction => _$RandomRecurrentTriggerFromJson;
   factory RandomRecurrentTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json);
+      FromJsonFactory().fromJson(json) as RandomRecurrentTrigger;
   Map<String, dynamic> toJson() => _$RandomRecurrentTriggerToJson(this);
 }

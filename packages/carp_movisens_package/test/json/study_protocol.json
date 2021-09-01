@@ -1,11 +1,13 @@
 {
+  "ownerId": "alex@uni.dk",
   "name": "Context package test",
-  "creationDate": "2021-05-10 11:54:41.612Z",
+  "creationDate": "2021-07-15T08:51:39.760668Z",
   "masterDevices": [
    {
     "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
     "isMasterDevice": true,
     "roleName": "masterphone",
+    "supportedDataTypes": [],
     "samplingConfiguration": {}
    }
   ],
@@ -20,16 +22,20 @@
   "connections": [],
   "triggers": {
    "0": {
-    "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
+    "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger",
+    "sourceDeviceRoleName": "",
+    "requiresMasterDevice": false
    },
    "1": {
-    "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
+    "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger",
+    "sourceDeviceRoleName": "",
+    "requiresMasterDevice": false
    }
   },
   "tasks": [
    {
     "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
-    "name": "Task #5",
+    "name": "Task #3",
     "measures": [
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
@@ -46,7 +52,8 @@
       "description": "Collects information about use of memory.",
       "enabled": true,
       "configuration": {},
-      "frequency": 60000000
+      "frequency": 60000000,
+      "duration": 2000000
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
@@ -122,7 +129,7 @@
    },
    {
     "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
-    "name": "Task #6",
+    "name": "Task #4",
     "measures": [
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.MovisensMeasure",
@@ -145,21 +152,14 @@
   "triggeredTasks": [
    {
     "triggerId": 0,
-    "taskName": "Task #5",
+    "taskName": "Task #3",
     "targetDeviceRoleName": "masterphone"
    },
    {
     "triggerId": 1,
-    "taskName": "Task #6",
+    "taskName": "Task #4",
     "targetDeviceRoleName": "movisens"
    }
   ],
-  "expectedParticipantData": [],
-  "owner": {
-   "$type": "ProtocolOwner",
-   "id": "jakba",
-   "name": "Jakob E. Bardram",
-   "email": "jakba@dtu.dk"
-  },
-  "ownerId": "jakba"
+  "expectedParticipantData": []
  }

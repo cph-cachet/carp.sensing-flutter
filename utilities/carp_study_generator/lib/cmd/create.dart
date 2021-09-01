@@ -1,8 +1,8 @@
 part of carp_study_generator;
 
 class CreateStudyProtocolCommand extends AbstractCommand {
-  String _protocolJson;
-  CAMSStudyProtocol _protocol;
+  String? _protocolJson;
+  StudyProtocol? _protocol;
 
   CreateStudyProtocolCommand() : super();
 
@@ -11,16 +11,16 @@ class CreateStudyProtocolCommand extends AbstractCommand {
       print('Reading the study protocol from file: $protocolPath');
       _protocolJson = File(protocolPath).readAsStringSync();
     }
-    return _protocolJson;
+    return _protocolJson!;
   }
 
-  CAMSStudyProtocol get protocol {
+  StudyProtocol get protocol {
     if (_protocol == null) {
       print('Checking that this is a valid CAMS Study Protocol');
-      _protocol = CAMSStudyProtocol.fromJson(
+      _protocol = StudyProtocol.fromJson(
           json.decode(protocolJson) as Map<String, dynamic>);
     }
-    return _protocol;
+    return _protocol!;
   }
 
   StudyProtocol get customProtocol {
@@ -39,11 +39,11 @@ class CreateStudyProtocolCommand extends AbstractCommand {
     var customDevice = CustomProtocolDevice(roleName: 'Custom device');
 
     StudyProtocol customProtocol = StudyProtocol(
-        ownerId: ownerId,
+        ownerId: ownerId!,
         name: protocol.name,
         description: protocol.description);
     // make sure that the custom protocol also have the right owner id
-    protocol.ownerId = ownerId;
+    protocol.ownerId = ownerId!;
     customProtocol.addMasterDevice(customDevice);
     customProtocol.addTriggeredTask(
         ElapsedTimeTrigger(

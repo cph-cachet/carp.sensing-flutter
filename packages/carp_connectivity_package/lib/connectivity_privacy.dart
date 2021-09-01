@@ -24,6 +24,6 @@ Datum wifiNameAnoymizer(Datum datum) {
   WifiDatum wd = datum as WifiDatum;
   return wd
     ..ssid = (wd.ssid != null)
-        ? sha1.convert(utf8.encode(wd.ssid)).toString()
+        ? sha1.convert(utf8.encode(wd.ssid!)).toString()
         : wd.ssid;
 }

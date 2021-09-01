@@ -30,9 +30,9 @@ this package only works together with `carp_mobile_sensing`.
 dependencies:
   flutter:
     sdk: flutter
-  carp_core: ^0.20.0
-  carp_mobile_sensing: ^0.20.0
-  carp_esense_package: ^0.20.0
+  carp_core: ^latest
+  carp_mobile_sensing: ^latest
+  carp_esense_package: ^latest
   ...
 `````
 
@@ -96,42 +96,40 @@ import 'package:carp_esense_package/esense.dart';
 `ESenseMeasure`s can be added to a study protocol like this.
 
 ```dart
-  CAMSStudyProtocol protocol = CAMSStudyProtocol()
-    ..name = 'Track patient movement'
-    ..owner = ProtocolOwner(
-      id: 'AB',
-      name: 'Alex Boyon',
-      email: 'alex@uni.dk',
-    );
+// Create a study protocol
+StudyProtocol protocol = StudyProtocol(
+  ownerId: 'owner@dtu.dk',
+  name: 'Context Sensing Example',
+);
 
-  // define which devices are used for data collection - both phone and eSense
-  Smartphone phone = Smartphone(roleName: 'The main phone');
-  DeviceDescriptor eSense = ESenseDevice(roleName: 'The left eSense earplug');
+// define which devices are used for data collection - both phone and eSense
+Smartphone phone = Smartphone(roleName: 'The main phone');
+DeviceDescriptor eSense = ESenseDevice(roleName: 'The left eSense earplug');
 
-  protocol
-    ..addMasterDevice(phone)
-    ..addConnectedDevice(eSense);
+protocol
+  ..addMasterDevice(phone)
+  ..addConnectedDevice(eSense);
 
-  // Add an automatic task that immediately starts collecting eSense button and
-  // sensor events from the eSense device.
-  protocol.addTriggeredTask(
-      ImmediateTrigger(),
-      AutomaticTask()
-        ..addMeasures([
-          ESenseMeasure(
-              type: ESenseSamplingPackage.ESENSE_BUTTON,
-              name: 'eSense - Button',
-              description: "Collects button event from the eSense device",
-              deviceName: 'eSense-0332'),
-          ESenseMeasure(
-              type: ESenseSamplingPackage.ESENSE_SENSOR,
-              name: 'eSense - Sensor',
-              description:
-                  "Collects movement data from the eSense inertial measurement unit (IMU) sensor",
-              deviceName: 'eSense-0332',
-              samplingRate: 5),
-        ]),
-      eSense);
+// Add an automatic task that immediately starts collecting eSense button and
+// sensor events from the eSense device.
+protocol.addTriggeredTask(
+  ImmediateTrigger(),
+  AutomaticTask()
+    ..addMeasures([
+      ESenseMeasure(
+        type: ESenseSamplingPackage.ESENSE_BUTTON,
+        name: 'eSense - Button',
+        description: "Collects button event from the eSense device",
+        deviceName: 'eSense-0332'),
+      ESenseMeasure(
+        type: ESenseSamplingPackage.ESENSE_SENSOR,
+        name: 'eSense - Sensor',
+        description:
+            "Collects movement data from the eSense inertial measurement unit (IMU) sensor",
+        deviceName: 'eSense-0332',
+        samplingRate: 5),
+    ]),
+  eSense);
 ````
 
 Before executing a study with an eSense measure, register this package in the 
@@ -141,4 +139,4 @@ Before executing a study with an eSense measure, register this package in the
 SamplingPackageRegistry().register(ESenseSamplingPackage());
 `````
 
-> Note that the eSense device must be paired with the phone via BTLE **before** CAMS can connect to it.
+> **NOTE** that the eSense device must be paired with the phone via BTLE **before** CAMS can connect to it.
