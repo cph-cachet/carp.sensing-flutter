@@ -15,7 +15,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  carp_core: ^0.30.1      # the core CARP domain model
+  #carp_core: ^0.30.1      # the core CARP domain model
 
   # utility plugins
   system_info: ^1.0.0
@@ -46,8 +46,8 @@ dependencies:
 # Overriding carp core libraries to use the local copy
 # Remove this before release of package
 dependency_overrides:
-#  carp_core:
-#    path: ../carp_core/
+  carp_core:
+    path: ../carp_core/
 
 
 dev_dependencies:

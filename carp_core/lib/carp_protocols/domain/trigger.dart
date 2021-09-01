@@ -48,7 +48,7 @@ class ElapsedTimeTrigger extends Trigger {
 
   ElapsedTimeTrigger({
     String? sourceDeviceRoleName,
-    bool? requiresMasterDevice = false,
+    bool? requiresMasterDevice = true,
     this.elapsedTime,
   }) : super(
           sourceDeviceRoleName: sourceDeviceRoleName,

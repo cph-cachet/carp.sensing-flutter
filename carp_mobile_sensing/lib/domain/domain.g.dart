@@ -11,11 +11,10 @@ StudyDescription _$StudyDescriptionFromJson(Map<String, dynamic> json) {
     title: json['title'] as String,
     description: json['description'] as String,
     purpose: json['purpose'] as String,
-  )
-    ..$type = json[r'$type'] as String?
-    ..responsible = json['responsible'] == null
+    responsible: json['responsible'] == null
         ? null
-        : StudyReponsible.fromJson(json['responsible'] as Map<String, dynamic>);
+        : StudyReponsible.fromJson(json['responsible'] as Map<String, dynamic>),
+  )..$type = json[r'$type'] as String?;
 }
 
 Map<String, dynamic> _$StudyDescriptionToJson(StudyDescription instance) {
