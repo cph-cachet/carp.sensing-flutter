@@ -11,6 +11,10 @@ part of runtime;
 class AppTaskController {
   static final AppTaskController _instance = AppTaskController._();
   final StreamController<UserTask> _controller = StreamController.broadcast();
+  String? _studyDeploymentId;
+
+  /// The study deployment id for the running study.
+  String? get studyDeploymentId => _studyDeploymentId;
 
   final Map<String, UserTask> _userTaskMap = {};
 
@@ -46,10 +50,15 @@ class AppTaskController {
 
   AppTaskController._() {
     registerUserTaskFactory(SensingUserTaskFactory());
+  }
 
-    if (Settings().saveAppTaskQueue) {
-      // first start retoring the queue from persistent storage
-      restoreQueue();
+  /// Initialize and set up the app controller.
+  /// Caches app tasks based on the [studyDeploymentId], if needed.
+  Future<void> initialize(String? studyDeploymentId) async {
+    _studyDeploymentId = studyDeploymentId;
+    if (studyDeploymentId != null && Settings().saveAppTaskQueue) {
+      // retore the queue from persistent storage
+      await restoreQueue();
 
       // listen to events and save the queue every time it is modified
       userTaskEvents.listen((_) async => await saveQueue());
@@ -110,6 +119,21 @@ class AppTaskController {
     }
   }
 
+  /// Mark an [UserTask] on the [userTaskQueue] as done.
+  /// Note that a done task remains on the queue.
+  /// If you want to remove a taks from the queue, use the [dequeue] method.
+  void done(String id) {
+    UserTask? userTask = _userTaskMap[id];
+    if (userTask == null) {
+      warning("Could not find AppTask - id is not valid: '$id'");
+    } else {
+      // only expire tasks which are not already done
+      userTask.state = UserTaskState.done;
+      _controller.add(userTask);
+      info('Marked $userTask as done');
+    }
+  }
+
   /// Expire an [UserTask] on the [userTaskQueue].
   /// Note that an expired task remains on the queue.
   /// If you want to remove a taks from the queue, use the [dequeue] method.
@@ -132,7 +156,7 @@ class AppTaskController {
   ///   `carp/study/tasks-<study_deployment_id>.json`
   ///
   String get filename =>
-      '${Settings().queuePath}/tasks_${Settings().studyDeploymentId}.json';
+      '${Settings().queuePath}/tasks_$studyDeploymentId.json';
 
   /// Save the queue persistenly to a file.
   Future<bool> saveQueue() async {

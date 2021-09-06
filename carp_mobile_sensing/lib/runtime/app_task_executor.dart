@@ -136,6 +136,7 @@ abstract class UserTask {
   /// If [dequeue] is `true` the task is removed from the queue.
   void onDone(BuildContext context, {dequeue = false}) {
     state = UserTaskState.done;
+    AppTaskController().done(id);
     if (dequeue) AppTaskController().dequeue(id);
   }
 

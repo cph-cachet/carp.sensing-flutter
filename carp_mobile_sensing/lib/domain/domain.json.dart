@@ -49,6 +49,11 @@ void _registerFromJsonFunctions() {
   FromJsonFactory().register(
       PeriodicMeasure(type: 'ignored', frequency: Duration(seconds: 1)));
   FromJsonFactory().register(MarkedMeasure(type: 'ignored'));
+
+  // AppTaskController classes
+  FromJsonFactory().register(UserTaskSnapshotList());
+  FromJsonFactory().register(UserTaskSnapshot(
+      AppTask(type: 'ignored'), UserTaskState.canceled, DateTime.now()));
 }
 
 class DomainJsonFactory {

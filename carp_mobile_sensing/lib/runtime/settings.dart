@@ -35,10 +35,6 @@ class Settings {
   String? _queuePath;
   String? _studyPath;
 
-  /// The study deployment id for the running study.
-  /// `null` until the study has been deployed on this phone.
-  String? studyDeploymentId;
-
   /// The global debug level setting.
   ///
   /// See [DebugLevel] for valid debug level settings.
