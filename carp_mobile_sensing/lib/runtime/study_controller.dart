@@ -137,7 +137,7 @@ class StudyDeploymentController extends StudyRuntime {
     // save the study deployment id in settings
     // this is actually a little hack since we should be able to run
     // several studies in the same app....
-    Settings().studyDeploymentId = studyDeploymentId;
+    await AppTaskController().initialize(studyDeploymentId);
 
     _executor = StudyDeploymentExecutor(deployment as SmartphoneDeployment);
 
