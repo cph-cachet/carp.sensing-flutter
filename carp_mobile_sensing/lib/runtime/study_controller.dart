@@ -60,30 +60,33 @@ class StudyDeploymentController extends StudyRuntime {
   int get samplingSize => _samplingSize;
 
   DateTime? _studyDeploymentStartTime;
-  String get _studyDeploymentStartTimesKey =>
-      '$studyDeploymentId.${Settings.STUDY_START_KEY}'.toLowerCase();
+  DateTime? get studyDeploymentStartTime => _studyDeploymentStartTime;
 
-  /// The timestamp (in UTC) when the current study deployment
-  /// (the [masterDeployment]) was started on this phone.
-  /// This timestamp is save on the phone the first time a study is deployed
-  /// and persistently saved across app restarts.
-  Future<DateTime> get studyDeploymentStartTime async {
-    assert(Settings().preferences != null,
-        "Setting is not initialized. Call 'Setting().init()' first.");
-    if (_studyDeploymentStartTime == null) {
-      String? str =
-          Settings().preferences!.get(_studyDeploymentStartTimesKey) as String?;
-      _studyDeploymentStartTime = (str != null) ? DateTime.parse(str) : null;
-      if (_studyDeploymentStartTime == null) {
-        _studyDeploymentStartTime = DateTime.now().toUtc();
-        await Settings().preferences!.setString(_studyDeploymentStartTimesKey,
-            _studyDeploymentStartTime.toString());
-        info(
-            '$runtimeType - Study deployment start time set to $_studyDeploymentStartTime');
-      }
-    }
-    return _studyDeploymentStartTime!;
-  }
+  // DateTime? _studyDeploymentStartTime;
+  // String get _studyDeploymentStartTimesKey =>
+  //     '$studyDeploymentId.${Settings.STUDY_START_KEY}'.toLowerCase();
+
+  // /// The timestamp (in UTC) when the current study deployment
+  // /// (the [masterDeployment]) was started on this phone.
+  // /// This timestamp is save on the phone the first time a study is deployed
+  // /// and persistently saved across app restarts.
+  // Future<DateTime> get studyDeploymentStartTime async {
+  //   assert(Settings().preferences != null,
+  //       "Setting is not initialized. Call 'Setting().init()' first.");
+  //   if (_studyDeploymentStartTime == null) {
+  //     String? str =
+  //         Settings().preferences!.get(_studyDeploymentStartTimesKey) as String?;
+  //     _studyDeploymentStartTime = (str != null) ? DateTime.parse(str) : null;
+  //     if (_studyDeploymentStartTime == null) {
+  //       _studyDeploymentStartTime = DateTime.now().toUtc();
+  //       await Settings().preferences!.setString(_studyDeploymentStartTimesKey,
+  //           _studyDeploymentStartTime.toString());
+  //       info(
+  //           '$runtimeType - Study deployment start time set to $_studyDeploymentStartTime');
+  //     }
+  //   }
+  //   return _studyDeploymentStartTime!;
+  // }
 
   /// Create a new [StudyDeploymentController] to control the runtime behavior
   /// of a study deployment.
@@ -129,15 +132,18 @@ class StudyDeploymentController extends StudyRuntime {
     bool askForPermissions = true,
   }) async {
     assert(deployment != null,
-        'Cannot configure a Study Controller without a deployment.');
+        'Cannot configure a StudyDeploymentController without a deployment.');
     assert(deployment is SmartphoneDeployment,
-        'A CAMS study controller can only work with a CAMS Master Device Deployment');
+        'A StudyDeploymentController can only work with a SmartphoneDeployment master device deployment');
     info('Configuring $runtimeType');
 
     // save the study deployment id in settings
     // this is actually a little hack since we should be able to run
     // several studies in the same app....
-    await AppTaskController().initialize(studyDeploymentId);
+    Settings().studyDeploymentId = studyDeploymentId;
+
+    // initialize the app task controller singleton
+    await AppTaskController().initialize();
 
     _executor = StudyDeploymentExecutor(deployment as SmartphoneDeployment);
 
@@ -176,14 +182,18 @@ class StudyDeploymentController extends StudyRuntime {
       }
     });
 
-    // check the start time for this study on this phone
-    // this will save it, the first time the study is executed
-    DateTime studyStartTimestamp = await studyDeploymentStartTime;
+    // check the start time for this deployment on this phone
+    // and save it, the first time the deployment is done
+    _studyDeploymentStartTime = await Settings().studyDeploymentStartTime;
+    if (_studyDeploymentStartTime == null) {
+      await Settings().markStudyDeploymentAsStarted();
+      _studyDeploymentStartTime = await Settings().studyDeploymentStartTime;
+    }
 
     info(
         'CARP Mobile Sensing (CAMS) - Initializing Study Deployment Controller');
     info(' deployment id : ${masterDeployment!.studyDeploymentId}');
-    info('    start time : $studyStartTimestamp');
+    info('    start time : $studyDeploymentStartTime');
     info('          user : ${masterDeployment!.userId}');
     info(' data endpoint : $_dataEndPoint');
     info('      platform : ${DeviceInfo().platform.toString()}');

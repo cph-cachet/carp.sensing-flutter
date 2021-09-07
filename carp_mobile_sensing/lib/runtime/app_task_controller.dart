@@ -11,10 +11,9 @@ part of runtime;
 class AppTaskController {
   static final AppTaskController _instance = AppTaskController._();
   final StreamController<UserTask> _controller = StreamController.broadcast();
-  String? _studyDeploymentId;
 
   /// The study deployment id for the running study.
-  String? get studyDeploymentId => _studyDeploymentId;
+  String? get studyDeploymentId => Settings().studyDeploymentId;
 
   final Map<String, UserTask> _userTaskMap = {};
 
@@ -54,8 +53,7 @@ class AppTaskController {
 
   /// Initialize and set up the app controller.
   /// Caches app tasks based on the [studyDeploymentId], if needed.
-  Future<void> initialize(String? studyDeploymentId) async {
-    _studyDeploymentId = studyDeploymentId;
+  Future<void> initialize() async {
     if (studyDeploymentId != null && Settings().saveAppTaskQueue) {
       // retore the queue from persistent storage
       await restoreQueue();

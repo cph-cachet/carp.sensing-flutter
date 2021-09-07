@@ -14,6 +14,9 @@ TriggerExecutor getTriggerExecutor(Trigger trigger) {
       return ImmediateTriggerExecutor(trigger);
     case DelayedTrigger:
       return DelayedTriggerExecutor(trigger as DelayedTrigger);
+    case DeploymentDelayedTrigger:
+      return DeploymentDelayedTriggerExecutor(
+          trigger as DeploymentDelayedTrigger);
     case ElapsedTimeTrigger:
       return ElapsedTimeTriggerExecutor(trigger as ElapsedTimeTrigger);
     case PeriodicTrigger:
@@ -107,6 +110,33 @@ class DelayedTriggerExecutor extends TriggerExecutor {
       // after a delay, resume this trigger and its tasks
       super.onResume();
     });
+  }
+}
+
+/// Executes a [DeploymentDelayedTrigger], i.e. resumes sampling after the
+/// specified delay after deployment start on this phone.
+///
+/// Once started, this trigger executor can be paused / resumed as any
+/// other [Executor].
+class DeploymentDelayedTriggerExecutor extends TriggerExecutor {
+  DeploymentDelayedTriggerExecutor(DeploymentDelayedTrigger trigger)
+      : super(trigger);
+
+  Future onResume() async {
+    DateTime? start = await Settings().studyDeploymentStartTime;
+
+    if (start == null) {
+      warning(
+          '$runtimeType - this deployment does not have a start time. Cannot execute this trigger.');
+    } else {
+      int delay = (trigger as DeploymentDelayedTrigger).delay.inMilliseconds -
+          (DateTime.now().millisecondsSinceEpoch -
+              start.millisecondsSinceEpoch);
+
+      Timer(Duration(milliseconds: delay), () {
+        super.onResume();
+      });
+    }
   }
 }
 

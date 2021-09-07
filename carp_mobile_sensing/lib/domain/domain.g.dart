@@ -456,6 +456,33 @@ Map<String, dynamic> _$DelayedTriggerToJson(DelayedTrigger instance) {
   return val;
 }
 
+DeploymentDelayedTrigger _$DeploymentDelayedTriggerFromJson(
+    Map<String, dynamic> json) {
+  return DeploymentDelayedTrigger(
+    delay: Duration(microseconds: json['delay'] as int),
+  )
+    ..$type = json[r'$type'] as String?
+    ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String?
+    ..requiresMasterDevice = json['requiresMasterDevice'] as bool?;
+}
+
+Map<String, dynamic> _$DeploymentDelayedTriggerToJson(
+    DeploymentDelayedTrigger instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(r'$type', instance.$type);
+  writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
+  writeNotNull('requiresMasterDevice', instance.requiresMasterDevice);
+  val['delay'] = instance.delay.inMicroseconds;
+  return val;
+}
+
 PeriodicTrigger _$PeriodicTriggerFromJson(Map<String, dynamic> json) {
   return PeriodicTrigger(
     period: Duration(microseconds: json['period'] as int),

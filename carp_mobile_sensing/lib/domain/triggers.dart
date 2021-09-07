@@ -50,19 +50,39 @@ class PassiveTrigger extends Trigger {
 /// A trigger that delays sampling for [delay] and then starts sampling.
 /// Never stops sampling once started.
 ///
-/// The delay is measured from the start of sensing, i.e. typically when
+/// The delay is measured from the **start of sensing**, i.e. typically when
 /// resume() is called on a [StudyDeploymentController].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class DelayedTrigger extends Trigger {
   /// Delay before this trigger is executed.
   Duration delay;
 
-  DelayedTrigger({this.delay = const Duration(seconds: 1)}) : super();
+  DelayedTrigger({required this.delay}) : super();
 
   Function get fromJsonFunction => _$DelayedTriggerFromJson;
   factory DelayedTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as DelayedTrigger;
   Map<String, dynamic> toJson() => _$DelayedTriggerToJson(this);
+}
+
+/// A trigger that delays sampling for [delay] and then starts sampling.
+/// Never stops sampling once started.
+///
+/// In contrast to the [DelayedTrigger], the delay is measured from the **start
+/// of deployment**, i.e. when a protocol is deployed on the phone for the first
+/// time. And since deployment information is saved across app restart, this delay
+/// is also consistent across app restart.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class DeploymentDelayedTrigger extends Trigger {
+  /// Delay before this trigger is executed.
+  Duration delay;
+
+  DeploymentDelayedTrigger({required this.delay}) : super();
+
+  Function get fromJsonFunction => _$DeploymentDelayedTriggerFromJson;
+  factory DeploymentDelayedTrigger.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as DeploymentDelayedTrigger;
+  Map<String, dynamic> toJson() => _$DeploymentDelayedTriggerToJson(this);
 }
 
 /// A trigger that resume/pause sampling every [period] for a specific [duration].
