@@ -34,9 +34,11 @@ abstract class AbstractCommand implements Command {
     // make sure not to mess with CAMS
     Settings().saveAppTaskQueue = false;
 
-    // create two dummy objects to register json deserialization functions
+    // make sure that the json functions are loaded
+    DomainJsonFactory();
+
+    // create two dummy RPTask to register json deserialization functions for RP
     RPTask(identifier: 'ignored');
-    StudyProtocol(ownerId: 'ignored', name: 'ignored');
 
     if (_yaml == null) {
       _yaml = loadYaml(File('carp/carpspec.yaml').readAsStringSync());
