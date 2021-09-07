@@ -133,9 +133,12 @@ class DeploymentDelayedTriggerExecutor extends TriggerExecutor {
           (DateTime.now().millisecondsSinceEpoch -
               start.millisecondsSinceEpoch);
 
-      Timer(Duration(milliseconds: delay), () {
-        super.onResume();
-      });
+      if (delay > 0) {
+        Timer(Duration(milliseconds: delay), () => super.onResume());
+      } else {
+        warning(
+            '$runtimeType - delay is negative, i.e. the trigger time is in the past and should have happend already.');
+      }
     }
   }
 }
@@ -149,12 +152,7 @@ class ElapsedTimeTriggerExecutor extends TriggerExecutor {
 
   Future onResume() async {
     Duration? duration = (trigger as ElapsedTimeTrigger).elapsedTime;
-    if (duration != null) {
-      Timer(duration, () {
-        // after a delay, resume this trigger and its tasks
-        super.onResume();
-      });
-    }
+    if (duration != null) Timer(duration, () => super.onResume());
   }
 }
 
