@@ -129,8 +129,6 @@ class AppTaskController {
     iOS: const notifications.IOSNotificationDetails(),
   );
 
-  int _counter = 0;
-
   /// Put [executor] on the [userTaskQueue] for later access by the app.
   ///
   /// Returns the [UserTask] added to the [userTaskQueue].
@@ -153,12 +151,13 @@ class AppTaskController {
       // create notification
       if (userTask.notification) {
         notifications.FlutterLocalNotificationsPlugin().show(
-          _counter++,
+          userTask.hashCode,
           userTask.title,
           userTask.description,
           _platformChannelSpecifics,
           payload: userTask.id,
         );
+        info('Notification send for $userTask');
       }
 
       return userTask;
@@ -175,6 +174,13 @@ class AppTaskController {
       _userTaskMap.remove(id);
       _controller.add(userTask);
       info('Dequeued $userTask');
+
+      // cancel notification
+      if (userTask.notification) {
+        notifications.FlutterLocalNotificationsPlugin()
+            .cancel(userTask.hashCode);
+        info('Notification cancled for $userTask');
+      }
     }
   }
 
