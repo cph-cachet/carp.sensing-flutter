@@ -78,6 +78,7 @@ abstract class UserTask {
   String get title => _executor.appTask.title;
   String get description => _executor.appTask.description;
   String get instructions => _executor.appTask.instructions;
+  bool get notification => _executor.appTask.notification;
 
   /// The time this task was added to the queue (enqueued).
   late DateTime enqueued;
@@ -123,7 +124,7 @@ abstract class UserTask {
   /// Callback from app if this task is canceled.
   ///
   /// If [dequeue] is `true` the task is removed from the queue.
-  /// Othervise, it it kept on the queue for later use.
+  /// Othervise, it it kept on the queue for later.
   void onCancel(BuildContext context, {dequeue = false}) {
     state = UserTaskState.canceled;
     (dequeue)

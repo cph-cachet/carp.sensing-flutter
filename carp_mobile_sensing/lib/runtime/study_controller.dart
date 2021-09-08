@@ -190,8 +190,8 @@ class StudyDeploymentController extends StudyRuntime {
       _studyDeploymentStartTime = await Settings().studyDeploymentStartTime;
     }
 
-    info(
-        'CARP Mobile Sensing (CAMS) - Initializing Study Deployment Controller');
+    info('CARP Mobile Sensing (CAMS) - Study Deployment Controller');
+    info('========================================================');
     info(' deployment id : ${masterDeployment!.studyDeploymentId}');
     info('    start time : $studyDeploymentStartTime');
     info('          user : ${masterDeployment!.userId}');
@@ -200,6 +200,7 @@ class StudyDeploymentController extends StudyRuntime {
     info('     device ID : ${DeviceInfo().deviceID.toString()}');
     info('  data manager : $_dataManager');
     info('       devices : ${DeviceController().devicesToString()}');
+    info('========================================================');
 
     if (samplingSchema != null) {
       // doing two adaptation is a bit of a hack; used to ensure that

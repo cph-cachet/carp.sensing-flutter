@@ -52,8 +52,15 @@ class AppTaskController {
   }
 
   /// Initialize and set up the app controller.
-  /// Caches app tasks based on the [studyDeploymentId], if needed.
-  Future<void> initialize() async {
+  ///
+  /// Caches app tasks based on the [studyDeploymentId], if
+  /// [Settings().saveAppTaskQueue] is `true`.
+  ///
+  /// An optional [SelectedUserTaskNotificationCallback] callback can be specified
+  /// to be called when the notification is selected by the user.
+  Future<void> initialize({
+    SelectedUserTaskNotificationCallback? selectedUserTaskNotificationCallback,
+  }) async {
     if (studyDeploymentId != null && Settings().saveAppTaskQueue) {
       // retore the queue from persistent storage
       await restoreQueue();
@@ -70,6 +77,30 @@ class AppTaskController {
         }
       });
     });
+
+    // initialize the local notification sub-system
+    // on iOS, remember to edit the AppDelegate.swift file
+    // see https://pub.dev/packages/flutter_local_notifications#general-setup
+    await notifications.FlutterLocalNotificationsPlugin().initialize(
+      notifications.InitializationSettings(
+        android: const notifications.AndroidInitializationSettings('app_icon'),
+        iOS: const notifications.IOSInitializationSettings(),
+      ),
+      onSelectNotification: (selectedUserTaskNotificationCallback != null)
+          ? (String? payload) async {
+              if (payload != null) {
+                UserTask? task = getUserTask(payload);
+                info('User Task notification selected - $task');
+                if (task != null) {
+                  await selectedUserTaskNotificationCallback(task);
+                }
+              } else {
+                warning(
+                    'Error in callback from notification - payload: $payload');
+              }
+            }
+          : null,
+    );
   }
 
   final Map<String, UserTaskFactory> _userTaskFactories = {};
@@ -81,6 +112,24 @@ class AppTaskController {
       _userTaskFactories[type] = factory;
     });
   }
+
+  /// Get an [UserTask] from the [userTaskQueue] based on its [id].
+  /// Returns `null` if no task is found on the queue.
+  UserTask? getUserTask(String id) => _userTaskMap[id];
+
+  // the id, name, and description are mandatory, but don't seems to used for anything?
+  final notifications.NotificationDetails _platformChannelSpecifics =
+      notifications.NotificationDetails(
+    android: const notifications.AndroidNotificationDetails(
+      'id',
+      'name',
+      'description',
+      importance: notifications.Importance.max,
+    ),
+    iOS: const notifications.IOSNotificationDetails(),
+  );
+
+  int _counter = 0;
 
   /// Put [executor] on the [userTaskQueue] for later access by the app.
   ///
@@ -100,6 +149,18 @@ class AppTaskController {
       _userTaskMap[userTask.id] = userTask;
       _controller.add(userTask);
       info('Enqueued $userTask');
+
+      // create notification
+      if (userTask.notification) {
+        notifications.FlutterLocalNotificationsPlugin().show(
+          _counter++,
+          userTask.title,
+          userTask.description,
+          _platformChannelSpecifics,
+          payload: userTask.id,
+        );
+      }
+
       return userTask;
     }
   }
@@ -196,6 +257,11 @@ class AppTaskController {
     }
   }
 }
+
+/// Callback passed to [initialize] that is called when the user
+/// taps on an app task notification.
+typedef SelectedUserTaskNotificationCallback = Future<dynamic> Function(
+    UserTask? selectedUserTask);
 
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class UserTaskSnapshotList extends Serializable {
