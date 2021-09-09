@@ -14,7 +14,7 @@ part of runtime;
 class Settings {
   static const String USER_ID_KEY = 'user_id';
   static const String STUDY_START_KEY = 'study_start';
-  static const String STUDY_DEPLOYMENT_ID_KEY = "study_deployment_id";
+  static const String STUDY_DEPLOYMENT_ID_KEY = 'study_deployment_id';
 
   /// The path to use on the device for storing CARP data files.
   static const String CARP_DATA_FILE_PATH = 'carp/data';
