@@ -47,6 +47,7 @@ part 'study_controller.dart';
 part 'study_manager.dart';
 part 'deployment_service.dart';
 part 'client_manager.dart';
+part 'notification_controller.dart';
 part 'runtime.g.dart';
 
 /// Generic sensing exception.

@@ -147,7 +147,7 @@ class Settings {
       String? str = preferences!.get(_studyDeploymentStartTimesKey) as String?;
       _studyDeploymentStartTime = (str != null) ? DateTime.parse(str) : null;
     }
-    return _studyDeploymentStartTime!;
+    return _studyDeploymentStartTime;
   }
 
   /// Mark the study deployment as started.
