@@ -6,11 +6,6 @@
  */
 part of runtime;
 
-/// Callback passed to [initialize] that is called when the user
-/// taps on an app task notification.
-typedef SelectedUserTaskNotificationCallback = Future<dynamic> Function(
-    UserTask? selectedUserTask);
-
 /// A controller of user notifcation based on [UserTask]s.
 /// Works closely with the [AppTaskController].
 ///
@@ -29,12 +24,7 @@ class NotificationController {
   factory NotificationController() => _instance;
 
   /// Initialize and set up the notification controller.
-  ///
-  /// An optional [SelectedUserTaskNotificationCallback] callback can be specified
-  /// to be called when the notification is selected by the user.
-  Future<void> initialize({
-    SelectedUserTaskNotificationCallback? selectedUserTaskNotificationCallback,
-  }) async {
+  Future<void> initialize() async {
     await notifications.FlutterLocalNotificationsPlugin().initialize(
       notifications.InitializationSettings(
         android: const notifications.AndroidInitializationSettings('app_icon'),
@@ -43,19 +33,17 @@ class NotificationController {
       onSelectNotification: (String? payload) async {
         debug('selectedUserTaskNotificationCallback - payload: $payload');
 
-        if (selectedUserTaskNotificationCallback != null) {
-          if (payload != null) {
-            UserTask? task = AppTaskController().getUserTask(payload);
-            info('User Task notification selected - $task');
-            if (task != null) {
-              await selectedUserTaskNotificationCallback(task);
-            } else {
-              warning('Error in callback from notification - no task found.');
-            }
+        if (payload != null) {
+          UserTask? task = AppTaskController().getUserTask(payload);
+          info('User Task notification selected - $task');
+          if (task != null) {
+            task.onNotification();
           } else {
-            warning(
-                "Error in callback from notification - payload is '$payload'");
+            warning('Error in callback from notification - no task found.');
           }
+        } else {
+          warning(
+              "Error in callback from notification - payload is '$payload'");
         }
       },
     );

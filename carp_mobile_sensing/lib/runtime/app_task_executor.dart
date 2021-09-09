@@ -141,6 +141,12 @@ abstract class UserTask {
     if (dequeue) AppTaskController().dequeue(id);
   }
 
+  /// Callback from the OS when this task is clicked
+  /// by the user in the notification system.
+  ///
+  /// Default implementation is no-op, but can be extended in sub-classes.
+  void onNotification() {}
+
   @override
   String toString() =>
       '$runtimeType - id: $id, type: $type, title: $title, state: $state';

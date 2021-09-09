@@ -55,12 +55,7 @@ class AppTaskController {
   ///
   /// Caches app tasks based on the [studyDeploymentId], if
   /// [Settings().saveAppTaskQueue] is `true`.
-  ///
-  /// An optional [SelectedUserTaskNotificationCallback] callback can be specified
-  /// to be called when the notification is selected by the user.
-  Future<void> initialize({
-    SelectedUserTaskNotificationCallback? selectedUserTaskNotificationCallback,
-  }) async {
+  Future<void> initialize() async {
     if (studyDeploymentId != null && Settings().saveAppTaskQueue) {
       // retore the queue from persistent storage
       await restoreQueue();
@@ -78,9 +73,7 @@ class AppTaskController {
       });
     });
 
-    await NotificationController().initialize(
-        selectedUserTaskNotificationCallback:
-            selectedUserTaskNotificationCallback);
+    await NotificationController().initialize();
   }
 
   final Map<String, UserTaskFactory> _userTaskFactories = {};
