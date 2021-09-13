@@ -3,6 +3,7 @@ part of carp_study_generator;
 class CreateStudyProtocolCommand extends AbstractCommand {
   String? _protocolJson;
   StudyProtocol? _protocol;
+  StudyProtocol? _customProtocol;
 
   CreateStudyProtocolCommand() : super();
 
@@ -24,36 +25,44 @@ class CreateStudyProtocolCommand extends AbstractCommand {
   }
 
   StudyProtocol get customProtocol {
-    // This doesn't work -- see issue #44 (https://github.com/cph-cachet/carp.webservices-docker/issues/44)
-    //
-    // print('Getting custom protocol template from CARP Server');
-    // StudyProtocol customProtocol =
-    //     await CANSProtocolService().createCustomProtocol(
-    //   ownerId,
-    //   protocol.name,
-    //   protocol.description,
-    //   protocolJson,
-    // );
+    if (_customProtocol == null) {
+      // This doesn't work -- see issue #44 (https://github.com/cph-cachet/carp.webservices-docker/issues/44)
+      //
+      // print('Getting custom protocol template from CARP Server');
+      // StudyProtocol customProtocol =
+      //     await CANSProtocolService().createCustomProtocol(
+      //   ownerId,
+      //   protocol.name,
+      //   protocol.description,
+      //   protocolJson,
+      // );
 
-    // therefore, we create a custom protocol "by hand"
-    var customDevice = CustomProtocolDevice(roleName: 'Custom device');
+      // therefore, we create a custom protocol "by hand"
+      var customDevice = CustomProtocolDevice(roleName: 'Custom device');
 
-    StudyProtocol customProtocol = StudyProtocol(
-        ownerId: ownerId!,
-        name: protocol.name,
-        description: protocol.description);
-    // make sure that the custom protocol also have the right owner id
-    protocol.ownerId = ownerId!;
-    customProtocol.addMasterDevice(customDevice);
-    customProtocol.addTriggeredTask(
-        ElapsedTimeTrigger(
-            sourceDeviceRoleName: customDevice.roleName,
-            elapsedTime: Duration(seconds: 0)),
-        CustomProtocolTask(
-            name: 'Custom device task', studyProtocol: toJsonString(protocol)),
-        customDevice);
+      _customProtocol = StudyProtocol(
+          ownerId: ownerId,
+          name: protocol.name,
+          description: protocol.description);
 
-    return customProtocol;
+      // make sure that the custom protocol also have the right owner id
+      protocol.ownerId = ownerId;
+      _customProtocol!.addMasterDevice(customDevice);
+      _customProtocol!.addTriggeredTask(
+          ElapsedTimeTrigger(
+              sourceDeviceRoleName: customDevice.roleName,
+              elapsedTime: Duration(seconds: 0)),
+          CustomProtocolTask(
+              name: 'Custom device task',
+              studyProtocol: toJsonString(protocol)),
+          customDevice);
+
+      // print(protocol.ownerId);
+      // print(toJsonString(_customProtocol));
+    }
+    // print(_customProtocol);
+
+    return _customProtocol!;
   }
 
   @override

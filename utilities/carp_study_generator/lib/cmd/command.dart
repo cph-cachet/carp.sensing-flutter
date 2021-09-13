@@ -18,7 +18,7 @@ abstract class AbstractCommand implements Command {
   String get password => _yaml['server']['password'].toString();
 
   String? get studyId => _yaml['study']['study_id'];
-  String get studyDeploymentId => _yaml['study']['study_deployment_id'];
+  String? get studyDeploymentId => _yaml['study']['study_deployment_id'];
 
   String get protocolPath => _yaml['protocol']['path'].toString();
   String get consentPath => _yaml['consent']['path'].toString();
@@ -27,7 +27,7 @@ abstract class AbstractCommand implements Command {
   String get localizationPath => _yaml['localization']['path'].toString();
   List<dynamic> get locales => _yaml['localization']['locales'];
 
-  String? get ownerId => CarpService().currentUser?.accountId;
+  String get ownerId => CarpService().currentUser?.accountId ?? 'unknown';
 
   @mustCallSuper
   AbstractCommand() {

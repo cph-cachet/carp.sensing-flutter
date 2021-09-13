@@ -21,6 +21,7 @@ class Trigger extends Serializable {
   /// device ([MasterDeviceDescriptor]).
   /// For example, this is the case when the trigger is time bound and needs
   /// to be evaluated by a task scheduler running on a master device.
+  @JsonKey(ignore: true)
   bool? requiresMasterDevice;
 
   @mustCallSuper
