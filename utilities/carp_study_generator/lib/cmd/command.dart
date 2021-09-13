@@ -18,7 +18,7 @@ abstract class AbstractCommand implements Command {
   String get password => _yaml['server']['password'].toString();
 
   String? get studyId => _yaml['study']['study_id'];
-  String get studyDeploymentId => _yaml['study']['study_deployment_id'];
+  String? get studyDeploymentId => _yaml['study']['study_deployment_id'];
 
   String get protocolPath => _yaml['protocol']['path'].toString();
   String get consentPath => _yaml['consent']['path'].toString();
@@ -27,16 +27,18 @@ abstract class AbstractCommand implements Command {
   String get localizationPath => _yaml['localization']['path'].toString();
   List<dynamic> get locales => _yaml['localization']['locales'];
 
-  String? get ownerId => CarpService().currentUser?.accountId;
+  String get ownerId => CarpService().currentUser?.accountId ?? 'unknown';
 
   @mustCallSuper
   AbstractCommand() {
     // make sure not to mess with CAMS
     Settings().saveAppTaskQueue = false;
 
-    // create two dummy objects to register json deserialization functions
+    // make sure that the json functions are loaded
+    DomainJsonFactory();
+
+    // create two dummy RPTask to register json deserialization functions for RP
     RPTask(identifier: 'ignored');
-    StudyProtocol(ownerId: 'ignored', name: 'ignored');
 
     if (_yaml == null) {
       _yaml = loadYaml(File('carp/carpspec.yaml').readAsStringSync());

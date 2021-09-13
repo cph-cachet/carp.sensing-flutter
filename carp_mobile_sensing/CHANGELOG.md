@@ -1,3 +1,8 @@
+## 0.30.4
+* added support for the `DeploymentDelayedTrigger`
+* Settings now have support for storing deployment information across app restart
+* added local notifications to an `AppTask`
+
 ## 0.30.3+2
 * small updates to `Settings`
 * fixed a bug in path to json files in `FileDataManager`

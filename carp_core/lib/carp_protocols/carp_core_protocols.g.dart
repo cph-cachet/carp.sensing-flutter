@@ -415,7 +415,6 @@ Map<String, dynamic> _$TriggeredTaskToJson(TriggeredTask instance) {
 Trigger _$TriggerFromJson(Map<String, dynamic> json) {
   return Trigger(
     sourceDeviceRoleName: json['sourceDeviceRoleName'] as String?,
-    requiresMasterDevice: json['requiresMasterDevice'] as bool?,
   )..$type = json[r'$type'] as String?;
 }
 
@@ -430,14 +429,12 @@ Map<String, dynamic> _$TriggerToJson(Trigger instance) {
 
   writeNotNull(r'$type', instance.$type);
   writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
-  writeNotNull('requiresMasterDevice', instance.requiresMasterDevice);
   return val;
 }
 
 ElapsedTimeTrigger _$ElapsedTimeTriggerFromJson(Map<String, dynamic> json) {
   return ElapsedTimeTrigger(
     sourceDeviceRoleName: json['sourceDeviceRoleName'] as String?,
-    requiresMasterDevice: json['requiresMasterDevice'] as bool?,
     elapsedTime: json['elapsedTime'] == null
         ? null
         : Duration(microseconds: json['elapsedTime'] as int),
@@ -455,7 +452,6 @@ Map<String, dynamic> _$ElapsedTimeTriggerToJson(ElapsedTimeTrigger instance) {
 
   writeNotNull(r'$type', instance.$type);
   writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
-  writeNotNull('requiresMasterDevice', instance.requiresMasterDevice);
   writeNotNull('elapsedTime', instance.elapsedTime?.inMicroseconds);
   return val;
 }
@@ -463,7 +459,6 @@ Map<String, dynamic> _$ElapsedTimeTriggerToJson(ElapsedTimeTrigger instance) {
 ManualTrigger _$ManualTriggerFromJson(Map<String, dynamic> json) {
   return ManualTrigger(
     sourceDeviceRoleName: json['sourceDeviceRoleName'] as String?,
-    requiresMasterDevice: json['requiresMasterDevice'] as bool?,
     label: json['label'] as String?,
     description: json['description'] as String?,
   )..$type = json[r'$type'] as String?;
@@ -480,7 +475,6 @@ Map<String, dynamic> _$ManualTriggerToJson(ManualTrigger instance) {
 
   writeNotNull(r'$type', instance.$type);
   writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
-  writeNotNull('requiresMasterDevice', instance.requiresMasterDevice);
   writeNotNull('label', instance.label);
   writeNotNull('description', instance.description);
   return val;
@@ -489,7 +483,6 @@ Map<String, dynamic> _$ManualTriggerToJson(ManualTrigger instance) {
 ScheduledTrigger _$ScheduledTriggerFromJson(Map<String, dynamic> json) {
   return ScheduledTrigger(
     sourceDeviceRoleName: json['sourceDeviceRoleName'] as String?,
-    requiresMasterDevice: json['requiresMasterDevice'] as bool?,
     time: TimeOfDay.fromJson(json['time'] as Map<String, dynamic>),
     recurrenceRule:
         RecurrenceRule.fromJson(json['recurrenceRule'] as Map<String, dynamic>),
@@ -507,7 +500,6 @@ Map<String, dynamic> _$ScheduledTriggerToJson(ScheduledTrigger instance) {
 
   writeNotNull(r'$type', instance.$type);
   writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
-  writeNotNull('requiresMasterDevice', instance.requiresMasterDevice);
   val['time'] = instance.time;
   val['recurrenceRule'] = instance.recurrenceRule;
   return val;

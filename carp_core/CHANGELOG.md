@@ -1,5 +1,5 @@
-## 0.30.1+1
-* fix of json serialization bugs
+## 0.30.1+2
+* fix of json serialization bugs (x2)
 * update of API docs
 
 ## 0.30.0

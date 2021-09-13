@@ -11,10 +11,9 @@ part of runtime;
 class AppTaskController {
   static final AppTaskController _instance = AppTaskController._();
   final StreamController<UserTask> _controller = StreamController.broadcast();
-  String? _studyDeploymentId;
 
   /// The study deployment id for the running study.
-  String? get studyDeploymentId => _studyDeploymentId;
+  String? get studyDeploymentId => Settings().studyDeploymentId;
 
   final Map<String, UserTask> _userTaskMap = {};
 
@@ -53,9 +52,10 @@ class AppTaskController {
   }
 
   /// Initialize and set up the app controller.
-  /// Caches app tasks based on the [studyDeploymentId], if needed.
-  Future<void> initialize(String? studyDeploymentId) async {
-    _studyDeploymentId = studyDeploymentId;
+  ///
+  /// Caches app tasks based on the [studyDeploymentId], if
+  /// [Settings().saveAppTaskQueue] is `true`.
+  Future<void> initialize() async {
     if (studyDeploymentId != null && Settings().saveAppTaskQueue) {
       // retore the queue from persistent storage
       await restoreQueue();
@@ -72,6 +72,8 @@ class AppTaskController {
         }
       });
     });
+
+    await NotificationController().initialize();
   }
 
   final Map<String, UserTaskFactory> _userTaskFactories = {};
@@ -83,6 +85,10 @@ class AppTaskController {
       _userTaskFactories[type] = factory;
     });
   }
+
+  /// Get an [UserTask] from the [userTaskQueue] based on its [id].
+  /// Returns `null` if no task is found on the queue.
+  UserTask? getUserTask(String id) => _userTaskMap[id];
 
   /// Put [executor] on the [userTaskQueue] for later access by the app.
   ///
@@ -102,6 +108,9 @@ class AppTaskController {
       _userTaskMap[userTask.id] = userTask;
       _controller.add(userTask);
       info('Enqueued $userTask');
+
+      NotificationController().sendNotification(userTask);
+
       return userTask;
     }
   }
@@ -116,6 +125,8 @@ class AppTaskController {
       _userTaskMap.remove(id);
       _controller.add(userTask);
       info('Dequeued $userTask');
+
+      NotificationController().cancelNotification(userTask);
     }
   }
 
@@ -131,6 +142,8 @@ class AppTaskController {
       userTask.state = UserTaskState.done;
       _controller.add(userTask);
       info('Marked $userTask as done');
+
+      NotificationController().cancelNotification(userTask);
     }
   }
 
@@ -142,12 +155,13 @@ class AppTaskController {
     if (userTask == null) {
       warning("Could not expire AppTask - id is not valid: '$id'");
     } else {
-      // only expire tasks which are not already done
+      // only expire tasks which are not already done or expired
       if (userTask.state != UserTaskState.done) {
         userTask.state = UserTaskState.expired;
         _controller.add(userTask);
         info('Expired $userTask');
       }
+      NotificationController().cancelNotification(userTask);
     }
   }
 

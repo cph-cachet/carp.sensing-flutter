@@ -14,6 +14,9 @@ TriggerExecutor getTriggerExecutor(Trigger trigger) {
       return ImmediateTriggerExecutor(trigger);
     case DelayedTrigger:
       return DelayedTriggerExecutor(trigger as DelayedTrigger);
+    case DeploymentDelayedTrigger:
+      return DeploymentDelayedTriggerExecutor(
+          trigger as DeploymentDelayedTrigger);
     case ElapsedTimeTrigger:
       return ElapsedTimeTriggerExecutor(trigger as ElapsedTimeTrigger);
     case PeriodicTrigger:
@@ -110,6 +113,36 @@ class DelayedTriggerExecutor extends TriggerExecutor {
   }
 }
 
+/// Executes a [DeploymentDelayedTrigger], i.e. resumes sampling after the
+/// specified delay after deployment start on this phone.
+///
+/// Once started, this trigger executor can be paused / resumed as any
+/// other [Executor].
+class DeploymentDelayedTriggerExecutor extends TriggerExecutor {
+  DeploymentDelayedTriggerExecutor(DeploymentDelayedTrigger trigger)
+      : super(trigger);
+
+  Future onResume() async {
+    DateTime? start = await Settings().studyDeploymentStartTime;
+
+    if (start == null) {
+      warning(
+          '$runtimeType - this deployment does not have a start time. Cannot execute this trigger.');
+    } else {
+      int delay = (trigger as DeploymentDelayedTrigger).delay.inMilliseconds -
+          (DateTime.now().millisecondsSinceEpoch -
+              start.millisecondsSinceEpoch);
+
+      if (delay > 0) {
+        Timer(Duration(milliseconds: delay), () => super.onResume());
+      } else {
+        warning(
+            '$runtimeType - delay is negative, i.e. the trigger time is in the past and should have happend already.');
+      }
+    }
+  }
+}
+
 /// Executes a [ElapsedTimeTrigger], i.e. resumes sampling after the specified
 /// elapsed time period.
 ///
@@ -119,12 +152,7 @@ class ElapsedTimeTriggerExecutor extends TriggerExecutor {
 
   Future onResume() async {
     Duration? duration = (trigger as ElapsedTimeTrigger).elapsedTime;
-    if (duration != null) {
-      Timer(duration, () {
-        // after a delay, resume this trigger and its tasks
-        super.onResume();
-      });
-    }
+    if (duration != null) Timer(duration, () => super.onResume());
   }
 }
 

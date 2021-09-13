@@ -27,6 +27,8 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:permission_handler_platform_interface/permission_handler_platform_interface.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart'
+    as notifications;
 import 'package:uuid/uuid.dart';
 import 'package:cron/cron.dart' as cron;
 
@@ -45,6 +47,7 @@ part 'study_controller.dart';
 part 'study_manager.dart';
 part 'deployment_service.dart';
 part 'client_manager.dart';
+part 'notification_controller.dart';
 part 'runtime.g.dart';
 
 /// Generic sensing exception.
