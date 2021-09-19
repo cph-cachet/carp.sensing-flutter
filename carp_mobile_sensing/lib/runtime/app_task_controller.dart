@@ -165,21 +165,27 @@ class AppTaskController {
     }
   }
 
-  /// Current path and filename of the task queue according to this format:
-  ///
-  ///   `carp/study/tasks-<study_deployment_id>.json`
-  ///
-  String get filename =>
-      '${Settings().queuePath}/tasks_$studyDeploymentId.json';
+  String? _filename;
+
+  /// Current path and filename of the task queue.
+  Future<String?> get filename async {
+    if (_filename == null) {
+      String? path = await Settings().deploymentBasePath;
+      _filename = '$path/tasks.json';
+    }
+    return _filename;
+  }
 
   /// Save the queue persistenly to a file.
+  /// Returns `true` if successful.
   Future<bool> saveQueue() async {
     bool success = true;
-    info("Saving task queue to file '$filename'.");
     try {
+      String name = (await filename)!;
+      info("Saving task queue to file '$name'.");
       final json =
           jsonEncode(UserTaskSnapshotList.fromUserTasks(userTaskQueue));
-      File(filename).writeAsStringSync(json);
+      File(name).writeAsStringSync(json);
     } catch (exception) {
       success = false;
       warning('Failed to save task queue - $exception');
@@ -188,12 +194,15 @@ class AppTaskController {
   }
 
   /// Restore the queue from a file.
-  Future<void> restoreQueue() async {
-    info("Restoring task queue from file '$filename'.");
+  /// Returns `true` if successful.
+  Future<bool> restoreQueue() async {
+    bool success = true;
     UserTaskSnapshotList? queue;
 
     try {
-      String jsonString = File(filename).readAsStringSync();
+      String name = (await filename)!;
+      info("Restoring task queue from file '$name'.");
+      String jsonString = File(name).readAsStringSync();
       queue = UserTaskSnapshotList.fromJson(
           json.decode(jsonString) as Map<String, dynamic>);
 
@@ -208,8 +217,10 @@ class AppTaskController {
         }
       });
     } catch (exception) {
+      success = false;
       warning('Failed to load task queue - $exception');
     }
+    return success;
   }
 }
 

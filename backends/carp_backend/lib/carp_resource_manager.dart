@@ -102,6 +102,7 @@ abstract class ResourceManager {
 ///
 /// This includes:
 ///
+///  * Retrive and store [StudyDescription]s.
 ///  * Retrieve and store informed consent definitions as [RPOrderedTask] json
 ///    definitions at the CARP backend.
 ///  * Retrive and store langunage localization mappings.
@@ -111,6 +112,9 @@ class CarpResourceManager implements ResourceManager {
   factory CarpResourceManager() => _instance;
 
   CarpResourceManager._() {
+    // make sure that the json functions are loaded
+    DomainJsonFactory();
+
     // to initialize json serialization for RP classes
     RPOrderedTask(identifier: '', steps: []);
   }

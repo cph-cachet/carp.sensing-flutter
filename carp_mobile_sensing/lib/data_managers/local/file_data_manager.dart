@@ -7,13 +7,22 @@
 
 part of managers;
 
-/// Stores [Datum] json objects on the device's local storage media.
+/// Stores [DataPoint] json objects on the device's local storage media.
 /// Supports compression (zip) and encryption.
 ///
 /// The path and filename format is
 ///
-///   `carp/data/<study_deployment_id>/carp-data-yyyy-mm-dd-hh-mm-ss-ms.json.zip`
+///   `~/carp/deployments/<study_deployment_id>/carp-data-yyyy-mm-dd-hh-mm-ss-ms.json.zip`
 ///
+/// where `~` is the folder where an application can place files that are private
+/// to the application.
+///
+/// On iOS, this is the `NSDocumentsDirectory` and the files can be accessed via
+/// the MacOS Finder.
+///
+/// On Android, Flutter files are stored in the `AppData` directory, which is
+/// located in the `data/data/<package_name>/app_flutter` folder.
+/// Files can be accessed via AndroidStudio.
 class FileDataManager extends AbstractDataManager {
   String get type => DataEndPointTypes.FILE;
 
@@ -25,6 +34,7 @@ class FileDataManager extends AbstractDataManager {
   bool _initialized = false;
   int _flushingSink = 0;
 
+  @override
   Future initialize(
     String studyDeploymentId,
     DataEndPoint dataEndPoint,
@@ -34,11 +44,13 @@ class FileDataManager extends AbstractDataManager {
     await super.initialize(studyDeploymentId, dataEndPoint, data);
 
     _fileDataEndPoint = dataEndPoint as FileDataEndPoint;
+    await Settings().deploymentBasePath;
 
     assert(
-        Settings().dataPath != null,
-        'The file path for storing data is null - '
-        "call 'await Settings().init()' before using this $runtimeType.");
+        studyDeploymentId == Settings().studyDeploymentId,
+        'The study deployment id do not match wth the id provided in Settings - '
+        'this study deployment id = $studyDeploymentId - '
+        'Settings().studyDeploymentId = ${Settings().studyDeploymentId}');
 
     if (_fileDataEndPoint.encrypt) {
       assert(_fileDataEndPoint.publicKey != null,
@@ -57,28 +69,31 @@ class FileDataManager extends AbstractDataManager {
     info('Buffer size    : ${_fileDataEndPoint.bufferSize.toString()} bytes');
   }
 
+  @override
   void onDataPoint(DataPoint dataPoint) => write(dataPoint);
 
+  @override
   void onError(Object? error) =>
       write(DataPoint.fromData(ErrorDatum(error.toString()))
         ..carpHeader.dataFormat = DataFormat.fromString(CAMSDataType.ERROR));
 
+  @override
   void onDone() => close();
 
   /// The full path where data files are stored on the device.
   Future<String> get path async {
     if (_path == null) {
-      final directory =
-          await Directory('${Settings().dataPath}/$studyDeploymentId')
-              .create(recursive: true);
+      final directory = await Directory(
+              '${Settings().deploymentBasePath}/${Settings.CARP_DATA_FILE_PATH}')
+          .create(recursive: true);
       _path = directory.path;
     }
     return _path!;
   }
 
-  /// Full filename including path according to this format:
+  /// Full path and filename according to this format:
   ///
-  ///   `carp/data/<studyDeploymentId>/carp-data-yyyy-mm-dd-hh-mm-ss-ms.json.zip`
+  ///   `carp/data/<study_deployment_id>/carp-data-yyyy-mm-dd-hh-mm-ss-ms.json.zip`
   ///
   /// where the date is in UTC format / zulu time.
   Future<String> get filename async {
@@ -207,6 +222,7 @@ class FileDataManager extends AbstractDataManager {
     });
   }
 
+  @override
   Future close() async {
     _initialized = false;
     await file.then((_f) {
@@ -216,8 +232,6 @@ class FileDataManager extends AbstractDataManager {
     });
     await super.close();
   }
-
-  String toString() => 'FileDataManager';
 }
 
 /// A status event for this file data manager.

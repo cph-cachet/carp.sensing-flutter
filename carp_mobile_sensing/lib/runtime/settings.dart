@@ -16,14 +16,10 @@ class Settings {
   static const String STUDY_START_KEY = 'study_start';
   static const String STUDY_DEPLOYMENT_ID_KEY = 'study_deployment_id';
 
-  /// The path to use on the device for storing CARP data files.
-  static const String CARP_DATA_FILE_PATH = 'carp/data';
-
-  /// The path to use on the device for storing the AppTask queue.
-  static const String CARP_QUEUE_FILE_PATH = 'carp/queue';
-
-  /// The path to use on the device for storing CARP study files.
-  static const String CARP_STUDY_FILE_PATH = 'carp/study';
+  static const String CARP_DATA_FILE_PATH = 'data';
+  static const String CARP_RESOURCE_FILE_PATH = 'resources';
+  // static const String CARP_QUEUE_FILE_PATH = 'queue';
+  // static const String CARP_DEPLOYMENT_FILE_PATH = 'deployment';
 
   static final Settings _instance = Settings._();
   factory Settings() => _instance;
@@ -31,10 +27,11 @@ class Settings {
 
   SharedPreferences? _preferences;
   PackageInfo? _packageInfo;
-  String? _localApplicationDir;
-  String? _dataPath;
-  String? _queuePath;
-  String? _studyPath;
+  String? _localApplicationPath;
+  String? _deploymentBasePath;
+  // String? _dataPath;
+  // String? _queuePath;
+  // String? _deploymentPath;
 
   /// The global debug level setting.
   ///
@@ -71,12 +68,39 @@ class Settings {
   /// Package information
   PackageInfo? get packageInfo => _packageInfo;
 
-  String? get localApplicationDir => _localApplicationDir;
-  String? get dataPath => _dataPath;
-  String? get queuePath => _queuePath;
-  String? get studyPath => _studyPath;
+  /// Path to a directory where the application may place data that is
+  /// user-generated.
+  String? get localApplicationPath => _localApplicationPath;
 
-  /// Initialize settings. Call before start using it.
+  /// The base path for storing all CARP related files on the form
+  ///
+  ///  `<localApplicationPath>/carp/deployments/<study_deployment_id>`
+  ///
+  Future<String?> get deploymentBasePath async {
+    assert(
+      studyDeploymentId != null,
+      'Cannot create file path for deployment - studyDeploymentId is null',
+    );
+    if (_deploymentBasePath == null) {
+      final directory = await Directory(
+              '$_localApplicationPath/carp/deployments/$studyDeploymentId')
+          .create(recursive: true);
+      _deploymentBasePath = directory.path;
+    }
+
+    return _deploymentBasePath;
+  }
+
+  // /// The path to use on the device for storing CARP data files.
+  // String? get dataPath => _dataPath;
+
+  // /// The path to use on the device for storing the AppTask queue.
+  // String? get queuePath => _queuePath;
+
+  // /// The path to use on the device for storing CARP study files.
+  // String? get deploymentPath => _deploymentPath;
+
+  /// Initialize settings. Must be called before using any settings.
   Future<void> init() async {
     _preferences ??= await SharedPreferences.getInstance();
     _packageInfo ??= await PackageInfo.fromPlatform();
@@ -111,8 +135,8 @@ class Settings {
   set studyDeploymentId(String? id) {
     assert(
         id != null,
-        "Cannot set the study deployment id to null in Settings. "
-        "Use the 'eraseStudyDeployment' method to erase study deployment information.");
+        'Cannot set the study deployment id to null in Settings. '
+        "Use the 'eraseStudyDeployment()' method to erase study deployment information.");
     _studyDeploymentId = id;
     preferences!.setString(_studyDeploymentIdKey, id!);
   }
@@ -184,28 +208,28 @@ class Settings {
   }
 
   Future<void> initFilesystem() async {
-    if (_localApplicationDir == null) {
+    if (_localApplicationPath == null) {
       final directory = await getApplicationDocumentsDirectory();
-      _localApplicationDir = directory.path;
+      _localApplicationPath = directory.path;
     }
-    if (_dataPath == null) {
-      final directory =
-          await Directory('$_localApplicationDir/$CARP_DATA_FILE_PATH')
-              .create(recursive: true);
-      _dataPath = directory.path;
-    }
-    if (_queuePath == null) {
-      final directory =
-          await Directory('$_localApplicationDir/$CARP_QUEUE_FILE_PATH')
-              .create(recursive: true);
-      _queuePath = directory.path;
-    }
-    if (_studyPath == null) {
-      final directory =
-          await Directory('$_localApplicationDir/$CARP_STUDY_FILE_PATH')
-              .create(recursive: true);
-      _studyPath = directory.path;
-    }
+    // if (_dataPath == null) {
+    //   final directory =
+    //       await Directory('$_localApplicationPath/$CARP_DATA_FILE_PATH')
+    //           .create(recursive: true);
+    //   _dataPath = directory.path;
+    // }
+    // if (_queuePath == null) {
+    //   final directory =
+    //       await Directory('$_localApplicationPath/$CARP_QUEUE_FILE_PATH')
+    //           .create(recursive: true);
+    //   _queuePath = directory.path;
+    // }
+    // if (_deploymentPath == null) {
+    //   final directory =
+    //       await Directory('$_localApplicationPath/$CARP_DEPLOYMENT_FILE_PATH')
+    //           .create(recursive: true);
+    //   _deploymentPath = directory.path;
+    // }
   }
 }
 

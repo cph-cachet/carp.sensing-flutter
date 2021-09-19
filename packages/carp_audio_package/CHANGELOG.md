@@ -1,3 +1,7 @@
+## 0.30.5
+* update to `carp_mobile_sensing: ^0.30.5`
+* refactor of file structure 
+
 ## 0.30.1
 * update to `carp_mobile_sensing: ^0.30.1`
 * fix of filename in audio probe

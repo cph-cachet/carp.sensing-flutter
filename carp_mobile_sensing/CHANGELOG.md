@@ -1,6 +1,11 @@
+## 0.30.5
+* all deployment information is now stored in a folder named `<local_application_path>/carp/deployments/<study_deployment_id>`where `local_application_path` is the folder where an application can place files that are private to the application.
+   * On iOS, this is the `NSDocumentsDirectory` and this can be accessed like accessing files on iOS via the Finder.
+   * On Android, Flutter files are stored in the `AppData` directory, which is located in the `data/data/<package_name>/app_flutter` folder. Files can be accessed via AndroidStudio.
+
 ## 0.30.4
 * added support for the `DeploymentDelayedTrigger`
-* Settings now have support for storing deployment information across app restart
+* `Settings` now have support for storing deployment information across app restart
 * added local notifications to an `AppTask`
 
 ## 0.30.3+2
