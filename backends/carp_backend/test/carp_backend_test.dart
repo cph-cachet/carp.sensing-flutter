@@ -191,7 +191,7 @@ void main() {
   group("Study Description", () {
     test('- get', () async {
       StudyDescription? description =
-          await CarpResourceManager().getStudyDescription();
+          await CarpResourceManager().getStudyDescription(refresh: true);
       print(_encode(description));
     });
 
@@ -213,7 +213,7 @@ void main() {
           await CarpResourceManager().setStudyDescription(description);
       print('updated: $success');
       StudyDescription? downloaded =
-          await CarpResourceManager().getStudyDescription();
+          await CarpResourceManager().getStudyDescription(refresh: true);
 
       print(_encode(downloaded));
     });
@@ -227,9 +227,8 @@ void main() {
   group("Informed Consent", () {
     test('- get', () async {
       RPOrderedTask? informedConsent =
-          await CarpResourceManager().getInformedConsent();
+          await CarpResourceManager().getInformedConsent(refresh: true);
 
-      // print("Informed Consent: $informedConsent");
       print(_encode(informedConsent));
     });
 
@@ -251,9 +250,8 @@ void main() {
           .setInformedConsent(anotherInformedConsent);
       print('updated: $success');
       RPOrderedTask? informedConsent =
-          await CarpResourceManager().getInformedConsent();
+          await CarpResourceManager().getInformedConsent(refresh: true);
 
-      // print("Informed Consent: $informedConsent");
       print(_encode(informedConsent));
     });
 

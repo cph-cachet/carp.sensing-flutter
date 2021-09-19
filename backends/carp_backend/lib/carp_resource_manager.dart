@@ -30,9 +30,10 @@ abstract class ResourceManager {
   StudyDescription? get studyDescription;
 
   /// Get the description for this study.
+  /// Returns the locally cached copy if available, unless [refresh] is `true`.
   ///
   /// If there is no description, `null` is returned.
-  Future<StudyDescription?> getStudyDescription();
+  Future<StudyDescription?> getStudyDescription({bool refresh});
 
   /// Set the informed consent to be used for this study.
   Future<bool> setStudyDescription(StudyDescription description);
@@ -53,6 +54,7 @@ abstract class ResourceManager {
   RPOrderedTask? get informedConsent;
 
   /// Get the informed consent to be shown for this study.
+  /// Returns the locally cached copy if available, unless [refresh] is `true`.
   ///
   /// This method return a [RPOrderedTask] which is an ordered list of [RPStep]
   /// which are shown to the user as the informed consent flow.
@@ -61,7 +63,7 @@ abstract class ResourceManager {
   /// domain model.
   ///
   /// If there is no informed consent, `null` is returned.
-  Future<RPOrderedTask?> getInformedConsent();
+  Future<RPOrderedTask?> getInformedConsent({bool refresh});
 
   /// Set the informed consent to be used for this study.
   Future<bool> setInformedConsent(RPOrderedTask informedConsent);
@@ -76,12 +78,13 @@ abstract class ResourceManager {
   // --------------------------------------------------------------------------
 
   /// Get localization mapping as json for the specified [locale].
+  /// Returns the locally cached copy if available, unless [refresh] is `true`.
   ///
   /// Locale json is named according to the [locale] languageCode.
   /// For example, the Danish translation is named `da`
   ///
   /// If there is no language resouce, `null` is returned.
-  Future<Map<String, String>?> getLocalizations(Locale locale);
+  Future<Map<String, String>?> getLocalizations(Locale locale, {bool refresh});
 
   /// Set localization mapping for the specified [locale].
   ///
@@ -107,7 +110,15 @@ abstract class ResourceManager {
 ///    definitions at the CARP backend.
 ///  * Retrive and store langunage localization mappings.
 ///
+/// Supports local caching of these resources locally on the phone.
 class CarpResourceManager implements ResourceManager {
+  /// The base path for resources - both on the CARP server and locally on the phone
+  static const String RESOURCE_PATH = 'resources';
+
+  /// The path for the language documents at the CARP server.
+  /// Each language locale has its own document
+  static const String LOCALIZATION_CONSENT_PATH = 'localizations';
+
   static final CarpResourceManager _instance = CarpResourceManager._();
   factory CarpResourceManager() => _instance;
 
@@ -119,6 +130,101 @@ class CarpResourceManager implements ResourceManager {
     RPOrderedTask(identifier: '', steps: []);
   }
 
+  // --------------------------------------------------------------------------
+
+  final Map<Type, String> _resourcePaths = {
+    StudyDescription: 'study_description',
+    RPOrderedTask: 'informed_consent',
+  };
+
+  void _assertCarpService() {
+    assert(CarpService().isConfigured,
+        "CARP Service has not been configured - call 'CarpService().configure()' first.");
+    assert(CarpService().currentUser != null,
+        "No user is authenticated - call 'CarpService().authenticate()' first.");
+  }
+
+  String _getResourcePath(Type resource) =>
+      '$RESOURCE_PATH/${_resourcePaths[resource]}';
+
+  Future<String> _cacheFilename(Type resource) async =>
+      '${await Settings().deploymentBasePath}/${_getResourcePath(resource)}.json';
+
+  Future<Map<String, dynamic>?> _getResource(
+    Type resource, {
+    bool refresh = false,
+  }) async {
+    info("Getting resource of type '$resource', refresh: $refresh.");
+
+    Map<String, dynamic>? result;
+
+    // first try to get local cache
+    if (!refresh) {
+      try {
+        String jsonString =
+            File(await _cacheFilename(resource)).readAsStringSync();
+        result = json.decode(jsonString) as Map<String, dynamic>;
+      } catch (exception) {
+        warning("Failed to read cache of type '$resource' - $exception");
+      }
+    }
+
+    // if no local cache (or refresh is true)
+    if (result == null) {
+      _assertCarpService();
+
+      DocumentSnapshot? document =
+          await CarpService().document(_getResourcePath(resource)).get();
+      info('Resource downloaded : $document');
+
+      result = (document != null) ? document.data : null;
+
+      if (result != null) {
+        info("Saving '$resource' to local cache.");
+        try {
+          final json = jsonEncode(result);
+          File(await _cacheFilename(resource)).writeAsStringSync(json);
+        } catch (exception) {
+          warning("Failed to save local cache for '$resource' - $exception");
+        }
+      }
+    }
+
+    return result;
+  }
+
+  Future<bool> _setResource(Serializable resource) async {
+    _assertCarpService();
+    info("Uploading resource: $resource");
+
+    DocumentReference reference =
+        CarpService().document(_getResourcePath(resource.runtimeType));
+    await reference.get();
+    await reference.setData(resource.toJson());
+
+    return true;
+  }
+
+  Future<bool> _deleteResource(Type resource) async {
+    _assertCarpService();
+    info("Deleting resource of type '$resource'.");
+
+    DocumentReference reference =
+        CarpService().document(_getResourcePath(resource));
+    await reference.delete();
+    DocumentSnapshot? document =
+        await CarpService().document(_getResourcePath(resource)).get();
+
+    // also trying to delete local cached version
+    try {
+      File(await _cacheFilename(resource)).deleteSync();
+    } catch (exception) {
+      warning("Failed to delete local cache for '$resource' - $exception");
+    }
+
+    return (document == null);
+  }
+
   @override
   Future initialize() async {}
 
@@ -126,171 +232,126 @@ class CarpResourceManager implements ResourceManager {
   // STUDY DESCRIPTION
   // --------------------------------------------------------------------------
 
-  /// The path for the informed consent document at the CARP server
-  static const String STUDY_DESCRIPTION_PATH = 'resources/description';
-
   @override
   StudyDescription? studyDescription;
 
   @override
-  Future<StudyDescription?> getStudyDescription() async {
-    assert(CarpService().isConfigured,
-        "CARP Service has not been configured - call 'CarpService().configure()' first.");
-    assert(CarpService().currentUser != null,
-        "No user is authenticated - call 'CarpService().authenticate()' first.");
+  Future<StudyDescription?> getStudyDescription({bool refresh = false}) async {
+    Map<String, dynamic>? json =
+        await _getResource(StudyDescription, refresh: refresh);
 
-    info('Getting study description from path : $STUDY_DESCRIPTION_PATH');
-
-    DocumentSnapshot? document =
-        await CarpService().document(STUDY_DESCRIPTION_PATH).get();
-    info('Informed consent downloaded : $document');
-
-    if (document != null) {
-      studyDescription = StudyDescription.fromJson(document.data);
-    }
-    return studyDescription;
+    return studyDescription =
+        (json != null) ? StudyDescription.fromJson(json) : null;
   }
 
   @override
   Future<bool> setStudyDescription(StudyDescription description) async {
-    assert(CarpService().isConfigured,
-        "CARP Service has not been configured - call 'CarpService().configure()' first.");
-    assert(CarpService().currentUser != null,
-        "No user is authenticated - call 'CarpService().authenticate()' first.");
-
-    info('Uploading study description to path : $STUDY_DESCRIPTION_PATH');
-
     this.studyDescription = description;
-    DocumentReference reference =
-        CarpService().document(STUDY_DESCRIPTION_PATH);
-    await reference.get();
-    await reference.setData(description.toJson());
-
-    return true;
+    return await _setResource(description);
   }
 
   @override
-  Future<bool> deleteStudyDescription() async {
-    assert(CarpService().isConfigured,
-        "CARP Service has not been configured - call 'CarpService().configure()' first.");
-    assert(CarpService().currentUser != null,
-        "No user is authenticated - call 'CarpService().authenticate()' first.");
-    info('Deleting study description from path : $STUDY_DESCRIPTION_PATH');
-
-    DocumentReference reference =
-        CarpService().document(STUDY_DESCRIPTION_PATH);
-    await reference.delete();
-    DocumentSnapshot? document =
-        await CarpService().document(STUDY_DESCRIPTION_PATH).get();
-
-    return (document == null);
-  }
+  Future<bool> deleteStudyDescription() async =>
+      await _deleteResource(StudyDescription);
 
   // --------------------------------------------------------------------------
   // INFORMED CONSENT
   // --------------------------------------------------------------------------
 
-  /// The path for the informed consent document at the CARP server
-  static const String INFORMED_CONSENT_PATH = 'resources/informed_consent';
-
   @override
   RPOrderedTask? informedConsent;
 
   @override
-  Future<RPOrderedTask?> getInformedConsent() async {
-    assert(CarpService().isConfigured,
-        "CARP Service has not been configured - call 'CarpService().configure()' first.");
-    assert(CarpService().currentUser != null,
-        "No user is authenticated - call 'CarpService().authenticate()' first.");
-
-    info(
-        'Getting informed consent document from path : $INFORMED_CONSENT_PATH');
-
+  Future<RPOrderedTask?> getInformedConsent({bool refresh = false}) async {
     // initialize json serialization for RP classes
     RPOrderedTask(identifier: '', steps: []);
-    DocumentSnapshot? document =
-        await CarpService().document(INFORMED_CONSENT_PATH).get();
-    info('Informed consent downloaded : $document');
+    Map<String, dynamic>? json =
+        await _getResource(RPOrderedTask, refresh: refresh);
 
-    if (document != null) {
-      informedConsent = RPOrderedTask.fromJson(document.data);
-    }
-    return informedConsent;
+    return informedConsent =
+        (json != null) ? RPOrderedTask.fromJson(json) : null;
   }
 
   @override
   Future<bool> setInformedConsent(RPOrderedTask informedConsent) async {
-    assert(CarpService().isConfigured,
-        "CARP Service has not been configured - call 'CarpService().configure()' first.");
-    assert(CarpService().currentUser != null,
-        "No user is authenticated - call 'CarpService().authenticate()' first.");
-    info(
-        'Uploading informed consent document to path : $INFORMED_CONSENT_PATH');
-
     this.informedConsent = informedConsent;
-    DocumentReference reference = CarpService().document(INFORMED_CONSENT_PATH);
-    await reference.get();
-    await reference.setData(informedConsent.toJson());
-
-    return true;
+    return await _setResource(informedConsent);
   }
 
   @override
-  Future<bool> deleteInformedConsent() async {
-    assert(CarpService().isConfigured,
-        "CARP Service has not been configured - call 'CarpService().configure()' first.");
-    assert(CarpService().currentUser != null,
-        "No user is authenticated - call 'CarpService().authenticate()' first.");
-    info('Deleting informed consent document at path : $INFORMED_CONSENT_PATH');
-
-    DocumentReference reference = CarpService().document(INFORMED_CONSENT_PATH);
-    await reference.delete();
-    DocumentSnapshot? document =
-        await CarpService().document(INFORMED_CONSENT_PATH).get();
-
-    return (document == null);
-  }
+  Future<bool> deleteInformedConsent() async =>
+      await _deleteResource(RPOrderedTask);
 
   // --------------------------------------------------------------------------
   // LOCALIZATION
   // --------------------------------------------------------------------------
 
-  /// The path for the language documents at the CARP server.
-  /// Each language locale has its own document
-  static const String LOCALIZATION_CONSENT_PATH = 'localizations/';
+  String _getLocalizationsPath(Locale locale) =>
+      '$LOCALIZATION_CONSENT_PATH/${locale.languageCode}';
 
-  String getLocalizationsPath(Locale locale) =>
-      '$LOCALIZATION_CONSENT_PATH${locale.languageCode}';
+  Future<String> _cacheLocalizationFilename(Locale locale) async =>
+      '${await Settings().deploymentBasePath}/${_getLocalizationsPath(locale)}.json';
 
   @override
-  Future<Map<String, String>?> getLocalizations(Locale locale) async {
-    assert(CarpService().isConfigured,
-        "CARP Service has not been configured - call 'CarpService().configure()' first.");
-    assert(CarpService().currentUser != null,
-        "No user is authenticated - call 'CarpService().authenticate()' first.");
+  Future<Map<String, String>?> getLocalizations(
+    Locale locale, {
+    bool refresh = false,
+  }) async {
+    _assertCarpService();
+    info(
+        'Getting language locale from path : ${_getLocalizationsPath(locale)}');
 
-    info('Getting language locale from path : ${getLocalizationsPath(locale)}');
-    DocumentSnapshot? document =
-        await CarpService().document(getLocalizationsPath(locale)).get();
+    Map<String, dynamic>? result;
 
-    if (document != null)
-      return document.data.map((key, value) => MapEntry(key, value.toString()));
-    else
-      return null;
+    // first try to get local cache
+    if (!refresh) {
+      try {
+        String jsonString =
+            File(await _cacheLocalizationFilename(locale)).readAsStringSync();
+        result = json.decode(jsonString) as Map<String, dynamic>;
+      } catch (exception) {
+        warning(
+            "Failed to read localization from cache of type '$locale' - $exception");
+      }
+    }
+
+    // if no local cache (or refresh is true)
+    if (result == null) {
+      _assertCarpService();
+
+      DocumentSnapshot? document =
+          await CarpService().document(_getLocalizationsPath(locale)).get();
+
+      info('Localization downloaded : $document');
+
+      result = (document != null) ? document.data : null;
+
+      if (result != null) {
+        info("Saving localiztion for '$locale' to local cache.");
+        try {
+          final json = jsonEncode(result);
+          File(await _cacheLocalizationFilename(locale))
+              .writeAsStringSync(json);
+        } catch (exception) {
+          warning("Failed to save local cache for '$locale' - $exception");
+        }
+      }
+    }
+
+    return (result != null)
+        ? result.map((key, value) => MapEntry(key, value.toString()))
+        : null;
   }
 
   @override
   Future<bool> setLocalizations(
       Locale locale, Map<String, dynamic> localizations) async {
-    assert(CarpService().isConfigured,
-        "CARP Service has not been configured - call 'CarpService().configure()' first.");
-    assert(CarpService().currentUser != null,
-        "No user is authenticated - call 'CarpService().authenticate()' first.");
-
-    info('Setting language locale from path : ${getLocalizationsPath(locale)}');
+    _assertCarpService();
+    info(
+        'Setting language locale from path : ${_getLocalizationsPath(locale)}');
 
     DocumentReference reference =
-        CarpService().document(getLocalizationsPath(locale));
+        CarpService().document(_getLocalizationsPath(locale));
     await reference.get(); //check if this already exists
     await reference.setData(localizations);
 
@@ -299,18 +360,23 @@ class CarpResourceManager implements ResourceManager {
 
   @override
   Future<bool> deleteLocalizations(Locale locale) async {
-    assert(CarpService().isConfigured,
-        "CARP Service has not been configured - call 'CarpService().configure()' first.");
-    assert(CarpService().currentUser != null,
-        "No user is authenticated - call 'CarpService().authenticate()' first.");
+    _assertCarpService();
     info(
-        'Deleting language locale from path : ${getLocalizationsPath(locale)}');
+        'Deleting language locale from path : ${_getLocalizationsPath(locale)}');
 
     DocumentReference reference =
-        CarpService().document(getLocalizationsPath(locale));
+        CarpService().document(_getLocalizationsPath(locale));
     await reference.delete();
     DocumentSnapshot? document =
-        await CarpService().document(getLocalizationsPath(locale)).get();
+        await CarpService().document(_getLocalizationsPath(locale)).get();
+
+    // also trying to delete local cached version
+    try {
+      File(await _cacheLocalizationFilename(locale)).deleteSync();
+    } catch (exception) {
+      warning(
+          "Failed to delete local cache of localization for '$locale' - $exception");
+    }
 
     return (document == null);
   }

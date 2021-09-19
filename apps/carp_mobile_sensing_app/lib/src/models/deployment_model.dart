@@ -1,7 +1,7 @@
 part of mobile_sensing_app;
 
 class StudyDeploymentModel {
-  CAMSMasterDeviceDeployment deployment;
+  SmartphoneDeployment deployment;
 
   String get title => deployment.protocolDescription?.title ?? '';
   String get description =>

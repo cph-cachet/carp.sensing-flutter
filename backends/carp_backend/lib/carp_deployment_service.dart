@@ -7,7 +7,7 @@
 
 part of carp_backend;
 
-/// A local (in-memory) [DeploymentService] that works with the [CarpStudyProtocolManager]
+/// A [DeploymentService] that works with the [CarpStudyProtocolManager]
 /// to handle a [MasterDeviceDeployment] based on a [StudyProtocol], which is
 /// store as a custom protocol on the CARP server.
 ///
@@ -43,6 +43,10 @@ part of carp_backend;
 /// which is deleted once uploaded.
 /// If another data enpoint is needed, this can be changed in the deployment
 /// before it is deployed and started on the local phone.
+///
+/// This deployment service also allow for local caching of a [SmartphoneDeployment]
+/// once it has been downloaded and created. This is configured using the [useCache]
+/// attribute.
 class CustomProtocolDeploymentService implements DeploymentService {
   static final CustomProtocolDeploymentService _instance =
       CustomProtocolDeploymentService._();
@@ -52,10 +56,15 @@ class CustomProtocolDeploymentService implements DeploymentService {
   CustomProtocolDeploymentService._() {
     manager.initialize();
   }
+
   factory CustomProtocolDeploymentService() => _instance;
 
   CarpStudyProtocolManager manager = CarpStudyProtocolManager();
   late StudyProtocol protocol;
+
+  /// Should the [getDeviceDeploymentFor] method cache the downloaded
+  /// [MasterDeviceDeployment] locally?
+  bool useCache = true;
 
   /// The stream of [CarpBackendEvents] reflecting the state of this service.
   Stream get carpBackendEvents => _eventController.stream;
@@ -106,6 +115,9 @@ class CustomProtocolDeploymentService implements DeploymentService {
           'Could not get deployment status in $runtimeType');
   }
 
+  Future<String> get _cacheFilename async =>
+      '${await Settings().deploymentBasePath}/deployment.json';
+
   @override
   Future<MasterDeviceDeployment> getDeviceDeploymentFor(
     String studyDeploymentId,
@@ -113,48 +125,76 @@ class CustomProtocolDeploymentService implements DeploymentService {
   ) async {
     SmartphoneDeployment? deployment;
 
-    if (isConfigured()) {
-      // get the protocol from the study protocol manager
-      protocol = await manager.getStudyProtocol(studyDeploymentId);
-      _eventController.add(CarpBackendEvents.ProtocolRetrieved);
-
-      // get the study description from CARP
-      StudyDescription? description =
-          await CarpResourceManager().getStudyDescription();
-
-      // configure a data endpoint which can send data back to CARP
-      // note that files must not be zipped
-      // files are deleted locally once uploaded
-      DataEndPoint dataEndPoint = CarpDataEndPoint.fromCarpApp(
-        uploadMethod: CarpUploadMethod.BATCH_DATA_POINT,
-        app: CarpService().app!,
-        bufferSize: 50 * 1000,
-        zip: false,
-        deleteWhenUploaded: true,
-      );
-
-      // create the smartphone deployment with the
-      // - protocol
-      // - description
-      // - data endpoint
-      deployment = SmartphoneDeployment.fromStudyProtocol(
-        studyDeploymentId: studyDeploymentId,
-        protocolDescription: description,
-        masterDeviceRoleName: masterDeviceRoleName,
-        dataEndPoint: dataEndPoint,
-        protocol: protocol,
-      );
-
-      // register a CARP data manager which can upload data back to CARP
-      DataManagerRegistry().register(CarpDataManager());
-
-      _eventController.add(CarpBackendEvents.DeploymentRetrieved);
+    // first try to get local cache
+    if (useCache) {
+      try {
+        String jsonString = File(await _cacheFilename).readAsStringSync();
+        deployment = SmartphoneDeployment.fromJson(
+            json.decode(jsonString) as Map<String, dynamic>);
+      } catch (exception) {
+        warning(
+            "Failed to read cache of study deployment - id: '$studyDeploymentId' - $exception");
+      }
     }
 
-    if (deployment != null)
+    if (deployment == null) {
+      if (isConfigured()) {
+        // get the protocol from the study protocol manager
+        protocol = await manager.getStudyProtocol(studyDeploymentId);
+        _eventController.add(CarpBackendEvents.ProtocolRetrieved);
+
+        // get the study description from CARP
+        StudyDescription? description =
+            await CarpResourceManager().getStudyDescription();
+
+        // configure a data endpoint which can send data back to CARP
+        // note that files must not be zipped
+        // files are deleted locally once uploaded
+        DataEndPoint dataEndPoint = CarpDataEndPoint.fromCarpApp(
+          uploadMethod: CarpUploadMethod.BATCH_DATA_POINT,
+          app: CarpService().app!,
+          bufferSize: 50 * 1000,
+          zip: false,
+          deleteWhenUploaded: true,
+        );
+
+        // create the smartphone deployment with the
+        // - protocol
+        // - description
+        // - data endpoint
+        deployment = SmartphoneDeployment.fromStudyProtocol(
+          studyDeploymentId: studyDeploymentId,
+          protocolDescription: description,
+          masterDeviceRoleName: masterDeviceRoleName,
+          dataEndPoint: dataEndPoint,
+          protocol: protocol,
+        );
+
+        _eventController.add(CarpBackendEvents.DeploymentRetrieved);
+      }
+    }
+
+    // register a CARP data manager which can upload data back to CARP
+    DataManagerRegistry().register(CarpDataManager());
+
+    if (deployment != null) {
+      // saving to the local cache
+      if (useCache) {
+        info("Saving study deployment to local cache - id: $studyDeploymentId");
+        try {
+          final json = jsonEncode(deployment);
+          File(await _cacheFilename).writeAsStringSync(json);
+        } catch (exception) {
+          warning(
+              "Failed to save local cache for study deployment - id: '$studyDeploymentId' - $exception");
+        }
+      }
+
+      // in all cases, return the deployment
       return deployment;
-    else
-      throw CarpBackendException('Could not get deployment in $runtimeType');
+    } else
+      throw CarpBackendException(
+          "Could not get deployment in $runtimeType - id: '$studyDeploymentId'");
   }
 
   @override
@@ -180,7 +220,8 @@ class CustomProtocolDeploymentService implements DeploymentService {
     if (status != null)
       return status;
     else
-      throw CarpBackendException('Could not register device in $runtimeType');
+      throw CarpBackendException(
+          "Could not register device in $runtimeType - id: '$studyDeploymentId'");
   }
 
   @override

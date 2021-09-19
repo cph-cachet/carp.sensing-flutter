@@ -18,8 +18,8 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
   Future<StudyProtocol> getStudyProtocol(String studyId) async {
     StudyProtocol protocol = StudyProtocol(
       ownerId: 'alex@uni.dk',
-      name: 'Sensing Coverage Study',
-      description: 'This is a study for testing the coverage of sampling.',
+      name: 'CAMS App - Sensing Coverage Study',
+      description: 'This is a protocol for testing the coverage of sampling.',
     );
 
     // Define which devices are used for data collection.

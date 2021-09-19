@@ -21,8 +21,8 @@ class Sensing {
   SmartPhoneClientManager? client;
 
   /// The deployment running on this phone.
-  CAMSMasterDeviceDeployment? get deployment =>
-      _controller?.deployment as CAMSMasterDeviceDeployment?;
+  SmartphoneDeployment? get deployment =>
+      _controller?.deployment as SmartphoneDeployment?;
 
   /// Get the latest status of the study deployment.
   StudyDeploymentStatus? get status => _status;

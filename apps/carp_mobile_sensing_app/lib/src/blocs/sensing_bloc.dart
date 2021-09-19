@@ -1,11 +1,12 @@
 part of mobile_sensing_app;
 
 class SensingBLoC {
-  /// The id of the currently running study deployment. Typical set based on an invitation.
+  /// The id of the currently running study deployment.
+  /// Typical set based on an invitation.
   /// `null` if no deployment have been specified.
   String? studyDeploymentId;
 
-  CAMSMasterDeviceDeployment? get deployment => Sensing().deployment;
+  SmartphoneDeployment? get deployment => Sensing().deployment;
   StudyDeploymentModel? _model;
 
   /// What kind of deployment are we running - local or CARP?

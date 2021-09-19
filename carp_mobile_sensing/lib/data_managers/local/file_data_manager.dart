@@ -12,7 +12,7 @@ part of managers;
 ///
 /// The path and filename format is
 ///
-///   `~/carp/deployments/<study_deployment_id>/carp-data-yyyy-mm-dd-hh-mm-ss-ms.json.zip`
+///   `~/carp/deployments/<study_deployment_id>/data/carp-data-yyyy-mm-dd-hh-mm-ss-ms.json.zip`
 ///
 /// where `~` is the folder where an application can place files that are private
 /// to the application.
@@ -93,7 +93,7 @@ class FileDataManager extends AbstractDataManager {
 
   /// Full path and filename according to this format:
   ///
-  ///   `carp/data/<study_deployment_id>/carp-data-yyyy-mm-dd-hh-mm-ss-ms.json.zip`
+  ///   `~/carp/deployments/<study_deployment_id>/data/carp-data-yyyy-mm-dd-hh-mm-ss-ms.json.zip`
   ///
   /// where the date is in UTC format / zulu time.
   Future<String> get filename async {

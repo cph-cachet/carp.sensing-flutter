@@ -1,3 +1,6 @@
+## 0.30.1
+* fix of bug in `DocumentReference.updateData()` method.
+
 ## 0.30.0
 * upgrade to null-safety and `carp_mobile_sensing` v. 0.30.0
 * adjustment of `CarpFileResponse` to reflect new JSON format from server.

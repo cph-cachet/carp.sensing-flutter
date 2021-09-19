@@ -7,17 +7,28 @@
 
 # configuration of the CARP server and the user who runs this study
 server:
-  uri: https://cans.cachet.dk:443/stage
-  client_id: carp
-  client_secret: carp
-  username: xxx
+  uri: https://cans.cachet.dk/stage
+  client_id: carp_id
+  client_secret: carp_secret
+  username: user@dtu.dk
   password: xxx
 
-protocol:
-  path: carp/protocols/protocol.json
+# configuration of the study ID - used for upload of informed consent and translations
+study:
+  study_id: 01cf04a7-d154-40f0-9a75-ab759cf74eb3
+  study_deployment_id: ae8076a3-7170-4bcf-b66c-64639a7a9eee
 
+# the location of the study description to be uploaded
+description:
+  path: carp/resources/description.json
+
+# the location of the protocol to be uploaded
+protocol:
+  path: carp/resources/protocol.json
+
+# the location of the informed consent to be uploaded
 consent:
-  path: carp/consents/consent.json
+  path: carp/resources/consent.json
 
 localization:
   path: carp/lang/
