@@ -27,11 +27,12 @@ class Settings {
 
   SharedPreferences? _preferences;
   PackageInfo? _packageInfo;
+  String? _appName;
+  String? _packageName;
+  String? _version;
+  String? _buildNumber;
   String? _localApplicationPath;
   String? _deploymentBasePath;
-  // String? _dataPath;
-  // String? _queuePath;
-  // String? _deploymentPath;
 
   /// The global debug level setting.
   ///
@@ -45,19 +46,19 @@ class Settings {
 
   /// The app name.
   /// `CFBundleDisplayName` on iOS, `application/label` on Android.
-  String? appName;
+  String? get appName => _appName;
 
   /// The package name.
   /// `bundleIdentifier` on iOS, `getPackageName` on Android.
-  String? packageName;
+  String? get packageName => _packageName;
 
   /// The package version.
   /// `CFBundleShortVersionString` on iOS, `versionName` on Android.
-  String? version;
+  String? get version => _version;
 
   /// The build number.
   /// `CFBundleVersion` on iOS, `versionCode` on Android.
-  String? buildNumber;
+  String? get buildNumber => _buildNumber;
 
   /// A simple persistent store for simple data. Note that data is saved in
   /// plain format and should hence **not** be used for sensitive data.
@@ -70,7 +71,13 @@ class Settings {
 
   /// Path to a directory where the application may place data that is
   /// user-generated.
-  String? get localApplicationPath => _localApplicationPath;
+  Future<String> get localApplicationPath async {
+    if (_localApplicationPath == null) {
+      final directory = await getApplicationDocumentsDirectory();
+      _localApplicationPath = directory.path;
+    }
+    return _localApplicationPath!;
+  }
 
   /// The base path for storing all CARP related files on the form
   ///
@@ -83,7 +90,7 @@ class Settings {
     );
     if (_deploymentBasePath == null) {
       final directory = await Directory(
-              '$_localApplicationPath/carp/deployments/$studyDeploymentId')
+              '${await localApplicationPath}/carp/deployments/$studyDeploymentId')
           .create(recursive: true);
       _deploymentBasePath = directory.path;
     }
@@ -91,26 +98,17 @@ class Settings {
     return _deploymentBasePath;
   }
 
-  // /// The path to use on the device for storing CARP data files.
-  // String? get dataPath => _dataPath;
-
-  // /// The path to use on the device for storing the AppTask queue.
-  // String? get queuePath => _queuePath;
-
-  // /// The path to use on the device for storing CARP study files.
-  // String? get deploymentPath => _deploymentPath;
-
   /// Initialize settings. Must be called before using any settings.
   Future<void> init() async {
     _preferences ??= await SharedPreferences.getInstance();
     _packageInfo ??= await PackageInfo.fromPlatform();
 
-    await initFilesystem();
+    _appName = _packageInfo!.appName;
+    _packageName = _packageInfo!.packageName;
+    _version = _packageInfo!.version;
+    _buildNumber = _packageInfo!.buildNumber;
 
-    appName = _packageInfo!.appName;
-    packageName = _packageInfo!.packageName;
-    version = _packageInfo!.version;
-    buildNumber = _packageInfo!.buildNumber;
+    await localApplicationPath;
 
     debug('Shared Preferences:');
     _preferences!
@@ -131,7 +129,7 @@ class Settings {
       (_studyDeploymentId ??= preferences!.getString(_studyDeploymentIdKey));
 
   /// Set the study deployment id for the currently running deployment.
-  /// This deployment id will be cached locally on the phone.
+  /// This study deployment id will be cached locally on the phone.
   set studyDeploymentId(String? id) {
     assert(
         id != null,
@@ -206,31 +204,7 @@ class Settings {
     }
     return _userId!;
   }
-
-  Future<void> initFilesystem() async {
-    if (_localApplicationPath == null) {
-      final directory = await getApplicationDocumentsDirectory();
-      _localApplicationPath = directory.path;
-    }
-    // if (_dataPath == null) {
-    //   final directory =
-    //       await Directory('$_localApplicationPath/$CARP_DATA_FILE_PATH')
-    //           .create(recursive: true);
-    //   _dataPath = directory.path;
-    // }
-    // if (_queuePath == null) {
-    //   final directory =
-    //       await Directory('$_localApplicationPath/$CARP_QUEUE_FILE_PATH')
-    //           .create(recursive: true);
-    //   _queuePath = directory.path;
-    // }
-    // if (_deploymentPath == null) {
-    //   final directory =
-    //       await Directory('$_localApplicationPath/$CARP_DEPLOYMENT_FILE_PATH')
-    //           .create(recursive: true);
-    //   _deploymentPath = directory.path;
-    // }
-  }
 }
 
+/// Debugging levels.
 enum DebugLevel { NONE, INFO, WARNING, DEBUG }

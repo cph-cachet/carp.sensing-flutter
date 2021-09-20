@@ -1,8 +1,8 @@
 part of mobile_sensing_app;
 
 class CarpBackend {
-  static const String PROD_URI = "https://cans.cachet.dk:443";
-  static const String STAGING_URI = "https://cans.cachet.dk:443/stage";
+  static const String PROD_URI = "https://cans.cachet.dk";
+  static const String STAGING_URI = "https://cans.cachet.dk/stage";
   // static const String TEST_URI = "https://cans.cachet.dk:443/test"; // The testing server
   // static const String DEV_URI = "https://cans.cachet.dk:443/dev"; // The development server
   static const String CLIENT_ID = "carp";

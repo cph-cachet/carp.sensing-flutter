@@ -54,6 +54,9 @@ class CustomProtocolDeploymentService implements DeploymentService {
       StreamController.broadcast();
 
   CustomProtocolDeploymentService._() {
+    // make sure that the json functions are loaded
+    DomainJsonFactory();
+
     manager.initialize();
   }
 

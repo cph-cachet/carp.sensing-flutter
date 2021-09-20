@@ -84,7 +84,7 @@ class FileDataManager extends AbstractDataManager {
   Future<String> get path async {
     if (_path == null) {
       final directory = await Directory(
-              '${Settings().deploymentBasePath}/${Settings.CARP_DATA_FILE_PATH}')
+              '${await Settings().deploymentBasePath}/${Settings.CARP_DATA_FILE_PATH}')
           .create(recursive: true);
       _path = directory.path;
     }
