@@ -62,16 +62,20 @@ class CarpParticipationService extends CarpBaseService
   /// Get a study invitation from CARP by allowing the user to select from
   /// multiple invitations (if more than one is available).
   ///
-  /// Returns `null` if the user has no invitations.
+  /// Returns the selected invitation. Returns `null` if the user has no invitation(s)
+  /// or if the user closes the dialog (if [allowClose] is true).
   ///
   /// If the user is invited to more than one study and [showInvitations] is `true`,
   /// a user-interface dialog for selecting amongs the invitations is shown.
   /// If not, the study id of the first invitation is returned.
   ///
+  /// [allowClose] specifies whether the user can close the window.
+  ///
   /// Throws a [CarpServiceException] if not successful.
   Future<ActiveParticipationInvitation?> getStudyInvitation(
     BuildContext context, {
     bool showInvitations = true,
+    bool allowClose = false,
   }) async {
     if (!this.isConfigured)
       throw CarpServiceException(
@@ -95,8 +99,10 @@ class CarpParticipationService extends CarpBaseService
     } else {
       _invitation = await showDialog<ActiveParticipationInvitation>(
           context: context,
+          barrierDismissible: allowClose,
           builder: (BuildContext context) =>
-              SimpleInvitationsDialog().build(context, invitations));
+              ActiveParticipationInvitationDialog()
+                  .build(context, invitations));
     }
 
     // make sure that the correct study and deployment ids are saved in the app
