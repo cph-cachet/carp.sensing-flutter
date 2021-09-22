@@ -34,6 +34,11 @@ class CarpService extends CarpBaseService {
   // AUTHENTICATION
   // --------------------------------------------------------------------------
 
+  static const RESET_PASSWORD_URL = 'https://cans.cachet.dk/forgotten';
+
+  /// Can the "Reset Password" URL be launched?
+  bool canLaunchResetPasswordUrl = false;
+
   String get _authHeaderBase64 => base64.encode(
       utf8.encode("${_app!.oauth.clientID}:${_app!.oauth.clientSecret}"));
 
@@ -187,13 +192,16 @@ class CarpService extends CarpBaseService {
           message:
               "CARP Service not initialized. Call 'CarpService().configure()' first.");
 
-    // await AuthenticationDialog().build(context, username: username).show();
+    canLaunchResetPasswordUrl = await canLaunch(RESET_PASSWORD_URL);
 
     CarpUser? user = await showDialog<CarpUser>(
         context: context,
         barrierDismissible: allowClose,
-        builder: (BuildContext context) =>
-            AuthenticationDialog().build(context, username: username));
+        builder: (BuildContext context) => AuthenticationDialog().build(
+              context,
+              username: username,
+              canLaunchResetPasswordUrl: canLaunchResetPasswordUrl,
+            ));
 
     return user;
   }

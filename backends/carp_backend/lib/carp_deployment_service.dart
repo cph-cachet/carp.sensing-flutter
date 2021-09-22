@@ -134,6 +134,8 @@ class CustomProtocolDeploymentService implements DeploymentService {
         String jsonString = File(await _cacheFilename).readAsStringSync();
         deployment = SmartphoneDeployment.fromJson(
             json.decode(jsonString) as Map<String, dynamic>);
+        info(
+            "Study deployment was read from local cache - id: $studyDeploymentId");
       } catch (exception) {
         warning(
             "Failed to read cache of study deployment - id: '$studyDeploymentId' - $exception");
@@ -172,6 +174,8 @@ class CustomProtocolDeploymentService implements DeploymentService {
           dataEndPoint: dataEndPoint,
           protocol: protocol,
         );
+
+        info("Study deployment was read from CARP - id: $studyDeploymentId");
 
         _eventController.add(CarpBackendEvents.DeploymentRetrieved);
       }

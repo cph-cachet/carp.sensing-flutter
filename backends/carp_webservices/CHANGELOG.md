@@ -1,6 +1,7 @@
 ## 0.30.1
 * fix of bug in `DocumentReference.updateData()` method.
 * Dialog windows for authentication and selection of study invitation can now be made "modal" (i.e., not closable by the user).
+* support for "Reset Password" in the authentication dialog.
 
 ## 0.30.0
 * upgrade to null-safety and `carp_mobile_sensing` v. 0.30.0

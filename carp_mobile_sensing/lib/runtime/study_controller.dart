@@ -194,7 +194,7 @@ class StudyDeploymentController extends StudyRuntime {
     info('========================================================');
     info(' deployment id : ${masterDeployment!.studyDeploymentId}');
     info('    start time : $studyDeploymentStartTime');
-    info('          user : ${masterDeployment!.userId}');
+    info('       user id : ${masterDeployment!.userId}');
     info(' data endpoint : $_dataEndPoint');
     info('      platform : ${DeviceInfo().platform.toString()}');
     info('     device ID : ${DeviceInfo().deviceID.toString()}');

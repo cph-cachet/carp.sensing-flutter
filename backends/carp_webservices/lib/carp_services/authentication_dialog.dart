@@ -17,6 +17,7 @@ class AuthenticationDialog {
   Dialog build(
     context, {
     String? username,
+    bool canLaunchResetPasswordUrl = false,
   }) =>
       Dialog(child: Builder(
           // Create an inner BuildContext so that the onPressed methods
@@ -27,21 +28,22 @@ class AuthenticationDialog {
           child: ListView(
             shrinkWrap: true,
             children: <Widget>[
-              getHeader(),
-              getForm(username: username),
-              getLoginButton(context),
+              _getHeader(),
+              _getForm(username: username),
+              _getLoginButton(context),
+              if (canLaunchResetPasswordUrl) _getResetPasswordButton(context),
             ],
           ),
         );
       }));
 
-  Widget getHeader() => Padding(
+  Widget _getHeader() => Padding(
         padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
         child: Image.asset('asset/images/cachet_logo_new.png',
             package: 'carp_webservices'),
       );
 
-  Form getForm({String? username}) => Form(
+  Form _getForm({String? username}) => Form(
       key: _formkey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Column(
@@ -90,23 +92,33 @@ class AuthenticationDialog {
         ],
       ));
 
-  OutlinedButton getLoginButton(BuildContext context) => OutlinedButton(
+  OutlinedButton _getLoginButton(BuildContext context) => OutlinedButton(
         onPressed: () async {
           try {
             CarpUser user = await CarpService()
                 .authenticate(username: _username!, password: _password!);
             Navigator.pop(context, user);
           } catch (exception) {
-            warning('Exception in authentication dialog - $exception');
+            warning('Exception in authentication - $exception');
           }
         },
-        style: ElevatedButton.styleFrom(
-          textStyle: const TextStyle(color: Colors.white, fontSize: 20),
-          primary: Colors.blue[900],
-        ),
+        style: ElevatedButton.styleFrom(primary: Colors.blue[900]),
         child: Text(
           "LOGIN",
           style: const TextStyle(color: Colors.white, fontSize: 20),
         ),
+      );
+
+  OutlinedButton _getResetPasswordButton(BuildContext context) =>
+      OutlinedButton(
+        onPressed: () async {
+          try {
+            info("Reset password at url: '${CarpService.RESET_PASSWORD_URL}'");
+            await launch(CarpService.RESET_PASSWORD_URL);
+          } catch (exception) {
+            warning('Exception in launching Reset Password URL - $exception');
+          }
+        },
+        child: Text("Reset Password"),
       );
 }
