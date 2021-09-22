@@ -28,8 +28,12 @@ class LoadingPage extends StatelessWidget {
     // only initialize the CARP backend bloc, if needed
     if (bloc.deploymentMode != DeploymentMode.LOCAL) {
       await CarpBackend().initialize();
-      await CarpBackend().authenticate(context);
-      await CarpBackend().getStudyInvitation(context);
+      await CarpBackend().authenticate(context, username: 'jakob@bardram.net');
+
+      // check if there is a local deploymed id
+      // if not, get a deployment id based on an invitation
+      if (bloc.studyDeploymentId == null)
+        await CarpBackend().getStudyInvitation(context);
     }
     await Sensing().initialize();
 

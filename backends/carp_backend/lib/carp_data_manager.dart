@@ -163,7 +163,7 @@ class CarpDataManager extends AbstractDataManager {
   // This method upload a file of [Datum] data to CAPP.
   // TODO - implement support for offline store-and-wait for later upload when online.
   Future _uploadDatumFileToCarp(String path) async {
-    info("File upload to CARP started - path : '$path'");
+    info("Datum json file upload to CARP started - path : '$path'");
     final File file = File(path);
 
     final String deviceID = DeviceInfo().deviceID.toString();
@@ -191,7 +191,7 @@ class CarpDataManager extends AbstractDataManager {
 
         addEvent(CarpDataManagerEvent(CarpDataManagerEventTypes.file_uploaded,
             file.path, id, uploadTask.reference.fileEndpointUri));
-        info("File upload to CARP finished - remote id: '$id' ");
+        info("Datum json file upload to CARP finished - remote id: '$id' ");
         break;
       case CarpUploadMethod.DATA_POINT:
       case CarpUploadMethod.DOCUMENT:
@@ -203,7 +203,7 @@ class CarpDataManager extends AbstractDataManager {
     if (carpEndPoint.deleteWhenUploaded) {
       // delete the local file once uploaded
       file.delete();
-      info("Locale file deleted - path: '${file.path}'.");
+      info("Locale Datum json file deleted - path: '${file.path}'.");
       addEvent(FileDataManagerEvent(
           FileDataManagerEventTypes.FILE_DELETED, file.path));
     }
@@ -211,6 +211,11 @@ class CarpDataManager extends AbstractDataManager {
 
   // This method upload a file attachment to CARP, i.e. one that is referenced in a [FileDatum].
   Future _uploadFileToCarp(FileDatum datum) async {
+    assert(
+      datum.path != null,
+      'No path to local FileDatum specified when trying to upload file.',
+    );
+
     info("File attachment upload to CARP started - path : '${datum.path}'");
     final File file = File(datum.path!);
 

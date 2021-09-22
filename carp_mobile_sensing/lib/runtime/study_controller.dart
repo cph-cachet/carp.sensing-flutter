@@ -210,11 +210,9 @@ class StudyDeploymentController extends StudyRuntime {
 
     status = StudyRuntimeStatus.Configured;
 
-    info(
-        '=============================================================================');
+    info('=========================================================');
     info('CARP Mobile Sensing (CAMS) - Study Deployment Controller');
-    info(
-        '=============================================================================');
+    info('=========================================================');
     info(' deployment id : ${masterDeployment!.studyDeploymentId}');
     info('    start time : $studyDeploymentStartTime');
     info('       user id : ${masterDeployment!.userId}');
@@ -224,8 +222,7 @@ class StudyDeploymentController extends StudyRuntime {
     info(' data endpoint : $_dataEndPoint');
     info('       devices : ${DeviceController().devicesToString()}');
     info('        status : ${status.toString().split('.').last}');
-    info(
-        '=============================================================================');
+    info('=========================================================');
   }
 
   final BatteryProbe _battery = BatteryProbe();
