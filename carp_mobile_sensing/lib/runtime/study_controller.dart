@@ -190,18 +190,6 @@ class StudyDeploymentController extends StudyRuntime {
       _studyDeploymentStartTime = await Settings().studyDeploymentStartTime;
     }
 
-    info('CARP Mobile Sensing (CAMS) - Study Deployment Controller');
-    info('========================================================');
-    info(' deployment id : ${masterDeployment!.studyDeploymentId}');
-    info('    start time : $studyDeploymentStartTime');
-    info('       user id : ${masterDeployment!.userId}');
-    info(' data endpoint : $_dataEndPoint');
-    info('      platform : ${DeviceInfo().platform.toString()}');
-    info('     device ID : ${DeviceInfo().deviceID.toString()}');
-    info('  data manager : $_dataManager');
-    info('       devices : ${DeviceController().devicesToString()}');
-    info('========================================================');
-
     if (samplingSchema != null) {
       // doing two adaptation is a bit of a hack; used to ensure that
       // restoration values are set to the specified sampling schema
@@ -221,6 +209,23 @@ class StudyDeploymentController extends StudyRuntime {
     data.listen((dataPoint) => _samplingSize++);
 
     status = StudyRuntimeStatus.Configured;
+
+    info(
+        '=============================================================================');
+    info('CARP Mobile Sensing (CAMS) - Study Deployment Controller');
+    info(
+        '=============================================================================');
+    info(' deployment id : ${masterDeployment!.studyDeploymentId}');
+    info('    start time : $studyDeploymentStartTime');
+    info('       user id : ${masterDeployment!.userId}');
+    info('      platform : ${DeviceInfo().platform.toString()}');
+    info('     device ID : ${DeviceInfo().deviceID.toString()}');
+    info('  data manager : $_dataManager');
+    info(' data endpoint : $_dataEndPoint');
+    info('       devices : ${DeviceController().devicesToString()}');
+    info('        status : ${status.toString().split('.').last}');
+    info(
+        '=============================================================================');
   }
 
   final BatteryProbe _battery = BatteryProbe();

@@ -117,7 +117,7 @@ class CarpResourceManager implements ResourceManager {
 
   /// The path for the language documents at the CARP server.
   /// Each language locale has its own document
-  static const String LOCALIZATION_CONSENT_PATH = 'localizations';
+  static const String LOCALIZATION_PATH = 'localizations';
 
   static final CarpResourceManager _instance = CarpResourceManager._();
   factory CarpResourceManager() => _instance;
@@ -132,7 +132,9 @@ class CarpResourceManager implements ResourceManager {
 
   // --------------------------------------------------------------------------
 
-  final Map<Type, String> _resourcePaths = {
+  String? _cacheResourcePath;
+
+  final Map<Type, String> _resourceNames = {
     StudyDescription: 'study_description',
     RPOrderedTask: 'informed_consent',
   };
@@ -144,11 +146,20 @@ class CarpResourceManager implements ResourceManager {
         "No user is authenticated - call 'CarpService().authenticate()' first.");
   }
 
+  /// The path for the [resource] at the CARP server
   String _getResourcePath(Type resource) =>
-      '$RESOURCE_PATH/${_resourcePaths[resource]}';
+      '$RESOURCE_PATH/${_resourceNames[resource]}';
 
-  Future<String> _cacheFilename(Type resource) async =>
-      '${await Settings().deploymentBasePath}/${_getResourcePath(resource)}.json';
+  /// The full path and filename of the local cache of the [resource]
+  Future<String> _cacheFilename(Type resource) async {
+    if (_cacheResourcePath == null) {
+      final directory = await Directory(
+              '${await Settings().deploymentBasePath}/$RESOURCE_PATH')
+          .create(recursive: true);
+      _cacheResourcePath = directory.path;
+    }
+    return '$_cacheResourcePath/${_resourceNames[resource]}.json';
+  }
 
   Future<Map<String, dynamic>?> _getResource(
     Type resource, {
@@ -286,11 +297,22 @@ class CarpResourceManager implements ResourceManager {
   // LOCALIZATION
   // --------------------------------------------------------------------------
 
-  String _getLocalizationsPath(Locale locale) =>
-      '$LOCALIZATION_CONSENT_PATH/${locale.languageCode}';
+  String? _cacheLocalizationPath;
 
-  Future<String> _cacheLocalizationFilename(Locale locale) async =>
-      '${await Settings().deploymentBasePath}/${_getLocalizationsPath(locale)}.json';
+  /// The path for the [locale] at the CARP server
+  String _getLocalizationsPath(Locale locale) =>
+      '$LOCALIZATION_PATH/${locale.languageCode}';
+
+  /// The full path and filename of the local cache of the [locale]
+  Future<String> _cacheLocalizationFilename(Locale locale) async {
+    if (_cacheLocalizationPath == null) {
+      final directory = await Directory(
+              '${await Settings().deploymentBasePath}/$LOCALIZATION_PATH')
+          .create(recursive: true);
+      _cacheLocalizationPath = directory.path;
+    }
+    return '$_cacheLocalizationPath/${locale.languageCode}.json';
+  }
 
   @override
   Future<Map<String, String>?> getLocalizations(
