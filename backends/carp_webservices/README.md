@@ -17,7 +17,7 @@ test, staging, and production servers.
 
 1. Add `carp_services` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/).
 
-In order to show the "Reset Password" button in the login dialog, which will launch the "Reset Password" web page on CARP, add the following parameters on iOS and Android.
+In order to show the "Reset Password" button in the login dialog, which will launch the "Reset Password" web page on CARP, add the following parameters on iOS and Android. Note that the "Reset Password" button will not be shown, if the app cannot launch the URL pointing to the web page.
 
 ### iOS
 
