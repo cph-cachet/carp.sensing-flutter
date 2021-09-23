@@ -50,6 +50,7 @@ class AuthenticationDialog {
         children: <Widget>[
           TextFormField(
             key: _usernameKey,
+            autocorrect: false,
             initialValue: username,
             maxLines: 1,
             keyboardType: TextInputType.emailAddress,
