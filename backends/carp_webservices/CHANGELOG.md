@@ -2,7 +2,7 @@
 * fix of bug in `DocumentReference.updateData()` method.
 * Dialog windows for authentication and selection of study invitation can now be made "modal" (i.e., not closable by the user).
 * support for "Reset Password" in the authentication dialog.
-* fix of bug in `add` and `addVersion` endpoints in `CANSProtocolService``
+* fix of bug in `add` and `addVersion` endpoints in `CANSProtocolService`
 * fix of [issue #213](https://github.com/cph-cachet/carp.sensing-flutter/issues/213)
 
 ## 0.30.0
