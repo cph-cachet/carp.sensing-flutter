@@ -73,7 +73,7 @@ To use this package, import it into your app together with the
 `````dart
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
-import 'package:carp_audio_package/context.dart';
+import 'package:carp_audio_package/audio.dart';
 `````
 
 Before creating a study and running it, register this package in the 
