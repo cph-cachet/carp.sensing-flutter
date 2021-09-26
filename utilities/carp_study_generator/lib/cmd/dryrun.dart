@@ -97,9 +97,11 @@ class DryRunCommand extends AbstractCommand {
 
     if (consentJson != null) {
       try {
-        RPOrderedTask.fromJson(
+        RPOrderedTask consent = RPOrderedTask.fromJson(
             json.decode(consentJson) as Map<String, dynamic>);
-        print('\x1B[32m[✓]\x1B[0m Consent parse');
+
+        print(
+            '\x1B[32m[✓]\x1B[0m Consent \t\t identifier: ${consent.identifier}');
       } catch (error) {
         print(
             '\x1B[31m[!]\x1B[0m Consent parse \t Error parsing consent json - ${errorToString(error)}');

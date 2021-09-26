@@ -11,10 +11,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  carp_core: ^0.30.1
-  carp_mobile_sensing: ^0.30.3
-  carp_webservices: ^0.30.0
-  carp_backend: ^0.30.3
+  # carp_core: ^0.30.1
+  # carp_mobile_sensing: ^0.30.3
+  # carp_webservices: ^0.30.0
+  # carp_backend: ^0.30.3
 
   carp_apps_package: ^0.30.0
 
@@ -37,14 +37,14 @@ dependencies:
 # Overriding carp libraries to use the local copy
 # Remove this before release of package
 dependency_overrides:
-#   carp_core:
-#     path: ../../carp_core/
-# #  carp_mobile_sensing:
-#    path: ../../carp_mobile_sensing/
-#  carp_webservices:
-#    path: ../carp_webservices/
-#  carp_backend:
-#    path: ../../backends/carp_backend/
+  carp_core:
+    path: ../../carp_core/
+  carp_mobile_sensing:
+    path: ../../carp_mobile_sensing/
+  carp_webservices:
+    path: ../../backends/carp_webservices/
+  carp_backend:
+    path: ../../backends/carp_backend/
 
 
 dev_dependencies:

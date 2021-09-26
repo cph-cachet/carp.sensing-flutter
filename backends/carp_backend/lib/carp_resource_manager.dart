@@ -30,10 +30,9 @@ abstract class ResourceManager {
   StudyDescription? get studyDescription;
 
   /// Get the description for this study.
-  /// Returns the locally cached copy if available, unless [refresh] is `true`.
   ///
   /// If there is no description, `null` is returned.
-  Future<StudyDescription?> getStudyDescription({bool refresh});
+  Future<StudyDescription?> getStudyDescription();
 
   /// Set the informed consent to be used for this study.
   Future<bool> setStudyDescription(StudyDescription description);
@@ -54,7 +53,6 @@ abstract class ResourceManager {
   RPOrderedTask? get informedConsent;
 
   /// Get the informed consent to be shown for this study.
-  /// Returns the locally cached copy if available, unless [refresh] is `true`.
   ///
   /// This method return a [RPOrderedTask] which is an ordered list of [RPStep]
   /// which are shown to the user as the informed consent flow.
@@ -63,7 +61,7 @@ abstract class ResourceManager {
   /// domain model.
   ///
   /// If there is no informed consent, `null` is returned.
-  Future<RPOrderedTask?> getInformedConsent({bool refresh});
+  Future<RPOrderedTask?> getInformedConsent();
 
   /// Set the informed consent to be used for this study.
   Future<bool> setInformedConsent(RPOrderedTask informedConsent);
@@ -78,13 +76,12 @@ abstract class ResourceManager {
   // --------------------------------------------------------------------------
 
   /// Get localization mapping as json for the specified [locale].
-  /// Returns the locally cached copy if available, unless [refresh] is `true`.
   ///
   /// Locale json is named according to the [locale] languageCode.
   /// For example, the Danish translation is named `da`
   ///
   /// If there is no language resouce, `null` is returned.
-  Future<Map<String, String>?> getLocalizations(Locale locale, {bool refresh});
+  Future<Map<String, String>?> getLocalizations(Locale locale);
 
   /// Set localization mapping for the specified [locale].
   ///
@@ -318,18 +315,16 @@ class CarpResourceManager implements ResourceManager {
   Future<Map<String, String>?> getLocalizations(
     Locale locale, {
     bool refresh = false,
+    bool cache = true,
   }) async {
-    _assertCarpService();
-    info(
-        'Getting language locale from path : ${_getLocalizationsPath(locale)}');
-
     Map<String, dynamic>? result;
 
     // first try to get local cache
     if (!refresh) {
       try {
-        String jsonString =
-            File(await _cacheLocalizationFilename(locale)).readAsStringSync();
+        String filename = await _cacheLocalizationFilename(locale);
+        info('Getting language locale from cache : $filename');
+        String jsonString = File(filename).readAsStringSync();
         result = json.decode(jsonString) as Map<String, dynamic>;
       } catch (exception) {
         warning(
@@ -341,14 +336,18 @@ class CarpResourceManager implements ResourceManager {
     if (result == null) {
       _assertCarpService();
 
+      info('Getting language locale from server. '
+          'study_id: ${CarpService().app?.studyId}, '
+          'path: ${_getLocalizationsPath(locale)}');
       DocumentSnapshot? document =
           await CarpService().document(_getLocalizationsPath(locale)).get();
 
       info('Localization downloaded : $document');
 
-      result = (document != null) ? document.data : null;
+      // result = (document != null) ? document.data : null;
+      result = document?.data;
 
-      if (result != null) {
+      if (cache && result != null) {
         info("Saving localiztion for '$locale' to local cache.");
         try {
           final json = jsonEncode(result);

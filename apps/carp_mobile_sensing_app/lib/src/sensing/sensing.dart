@@ -78,7 +78,7 @@ class Sensing {
           bloc.studyDeploymentId,
         );
 
-        // make sure to save the correct deployment id for later use
+        // save the correct deployment id on the phone for later use
         bloc.studyDeploymentId = _status!.studyDeploymentId;
 
         break;

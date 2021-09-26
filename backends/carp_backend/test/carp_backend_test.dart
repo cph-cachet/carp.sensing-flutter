@@ -262,11 +262,15 @@ void main() {
   });
 
   group("Localizations", () {
-    Locale locale = Locale('da');
+    Locale locale = Locale('en');
 
     test('- get', () async {
       Map<String, String>? localizations =
-          await CarpResourceManager().getLocalizations(locale);
+          await CarpResourceManager().getLocalizations(
+        locale,
+        refresh: true,
+        cache: false,
+      );
 
       print(_encode(localizations));
     });

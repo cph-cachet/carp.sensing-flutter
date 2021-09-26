@@ -25,7 +25,11 @@ class LocalizationCommand extends AbstractCommand {
 
         print("Downloading localization for locale: '$locale' from CARP.");
         Map<String, String>? downLocalizations =
-            await CarpResourceManager().getLocalizations(Locale(locale));
+            await CarpResourceManager().getLocalizations(
+          Locale(locale),
+          refresh: true,
+          cache: false,
+        );
 
         (downLocalizations != null)
             ? print(
