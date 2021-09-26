@@ -431,9 +431,16 @@ void main() {
     });
 
     test(' - update document', () async {
+      // first create a document
+      document = await CarpService()
+          .collection(collectionName)
+          .document(userId)
+          .setData({'email': userId, 'role': 'Administrator'});
+
       assert(document != null);
       print(document);
 
+      // now get it back from the server
       DocumentSnapshot? original = await CarpService()
           .collection(collectionName)
           .document(document!.name)

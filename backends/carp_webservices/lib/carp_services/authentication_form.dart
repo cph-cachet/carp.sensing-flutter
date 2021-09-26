@@ -178,7 +178,7 @@ class _ResetPasswordState extends State<_ResetPasswordWidget> {
   final int delay = 3;
 
   Widget build(BuildContext context) {
-    return new FlatButton(
+    return new TextButton(
       child: Text('Forgot passord?',
           style: TextStyle(
             //color: ThemeData.light().buttonColor,
@@ -240,7 +240,7 @@ class _ResetPasswordState extends State<_ResetPasswordWidget> {
 
 class _CancelButtonWidget extends StatelessWidget {
   Widget build(BuildContext context) {
-    return new FlatButton(
+    return new TextButton(
       child: Text('Cancel',
           style: TextStyle(
             fontSize: 18.0,

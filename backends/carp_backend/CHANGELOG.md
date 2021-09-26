@@ -1,3 +1,7 @@
+## 0.30.5
+* upgrade to `carp_mobile_sensing` v. 0.30.5
+* upgrade to `carp_webservices` v. 0.30.1
+
 ## 0.30.3
 * upgrade to `carp_mobile_sensing` v. 0.30.3
 * support for set/get/delete `StudyDescription` in the `ResourceManager` 

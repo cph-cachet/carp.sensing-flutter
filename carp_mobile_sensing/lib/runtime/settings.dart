@@ -16,14 +16,10 @@ class Settings {
   static const String STUDY_START_KEY = 'study_start';
   static const String STUDY_DEPLOYMENT_ID_KEY = 'study_deployment_id';
 
-  /// The path to use on the device for storing CARP data files.
-  static const String CARP_DATA_FILE_PATH = 'carp/data';
-
-  /// The path to use on the device for storing the AppTask queue.
-  static const String CARP_QUEUE_FILE_PATH = 'carp/queue';
-
-  /// The path to use on the device for storing CARP study files.
-  static const String CARP_STUDY_FILE_PATH = 'carp/study';
+  static const String CARP_DATA_FILE_PATH = 'data';
+  static const String CARP_RESOURCE_FILE_PATH = 'resources';
+  // static const String CARP_QUEUE_FILE_PATH = 'queue';
+  // static const String CARP_DEPLOYMENT_FILE_PATH = 'deployment';
 
   static final Settings _instance = Settings._();
   factory Settings() => _instance;
@@ -31,10 +27,12 @@ class Settings {
 
   SharedPreferences? _preferences;
   PackageInfo? _packageInfo;
-  String? _localApplicationDir;
-  String? _dataPath;
-  String? _queuePath;
-  String? _studyPath;
+  String? _appName;
+  String? _packageName;
+  String? _version;
+  String? _buildNumber;
+  String? _localApplicationPath;
+  String? _deploymentBasePath;
 
   /// The global debug level setting.
   ///
@@ -48,19 +46,19 @@ class Settings {
 
   /// The app name.
   /// `CFBundleDisplayName` on iOS, `application/label` on Android.
-  String? appName;
+  String? get appName => _appName;
 
   /// The package name.
   /// `bundleIdentifier` on iOS, `getPackageName` on Android.
-  String? packageName;
+  String? get packageName => _packageName;
 
   /// The package version.
   /// `CFBundleShortVersionString` on iOS, `versionName` on Android.
-  String? version;
+  String? get version => _version;
 
   /// The build number.
   /// `CFBundleVersion` on iOS, `versionCode` on Android.
-  String? buildNumber;
+  String? get buildNumber => _buildNumber;
 
   /// A simple persistent store for simple data. Note that data is saved in
   /// plain format and should hence **not** be used for sensitive data.
@@ -71,22 +69,46 @@ class Settings {
   /// Package information
   PackageInfo? get packageInfo => _packageInfo;
 
-  String? get localApplicationDir => _localApplicationDir;
-  String? get dataPath => _dataPath;
-  String? get queuePath => _queuePath;
-  String? get studyPath => _studyPath;
+  /// Path to a directory where the application may place data that is
+  /// user-generated.
+  Future<String> get localApplicationPath async {
+    if (_localApplicationPath == null) {
+      final directory = await getApplicationDocumentsDirectory();
+      _localApplicationPath = directory.path;
+    }
+    return _localApplicationPath!;
+  }
 
-  /// Initialize settings. Call before start using it.
+  /// The base path for storing all CARP related files on the form
+  ///
+  ///  `<localApplicationPath>/carp/deployments/<study_deployment_id>`
+  ///
+  Future<String?> get deploymentBasePath async {
+    assert(
+      studyDeploymentId != null,
+      'Cannot create file path for deployment - studyDeploymentId is null',
+    );
+    if (_deploymentBasePath == null) {
+      final directory = await Directory(
+              '${await localApplicationPath}/carp/deployments/$studyDeploymentId')
+          .create(recursive: true);
+      _deploymentBasePath = directory.path;
+    }
+
+    return _deploymentBasePath;
+  }
+
+  /// Initialize settings. Must be called before using any settings.
   Future<void> init() async {
     _preferences ??= await SharedPreferences.getInstance();
     _packageInfo ??= await PackageInfo.fromPlatform();
 
-    await initFilesystem();
+    _appName = _packageInfo!.appName;
+    _packageName = _packageInfo!.packageName;
+    _version = _packageInfo!.version;
+    _buildNumber = _packageInfo!.buildNumber;
 
-    appName = _packageInfo!.appName;
-    packageName = _packageInfo!.packageName;
-    version = _packageInfo!.version;
-    buildNumber = _packageInfo!.buildNumber;
+    await localApplicationPath;
 
     debug('Shared Preferences:');
     _preferences!
@@ -107,12 +129,12 @@ class Settings {
       (_studyDeploymentId ??= preferences!.getString(_studyDeploymentIdKey));
 
   /// Set the study deployment id for the currently running deployment.
-  /// This deployment id will be cached locally on the phone.
+  /// This study deployment id will be cached locally on the phone.
   set studyDeploymentId(String? id) {
     assert(
         id != null,
-        "Cannot set the study deployment id to null in Settings. "
-        "Use the 'eraseStudyDeployment' method to erase study deployment information.");
+        'Cannot set the study deployment id to null in Settings. '
+        "Use the 'eraseStudyDeployment()' method to erase study deployment information.");
     _studyDeploymentId = id;
     preferences!.setString(_studyDeploymentIdKey, id!);
   }
@@ -182,31 +204,7 @@ class Settings {
     }
     return _userId!;
   }
-
-  Future<void> initFilesystem() async {
-    if (_localApplicationDir == null) {
-      final directory = await getApplicationDocumentsDirectory();
-      _localApplicationDir = directory.path;
-    }
-    if (_dataPath == null) {
-      final directory =
-          await Directory('$_localApplicationDir/$CARP_DATA_FILE_PATH')
-              .create(recursive: true);
-      _dataPath = directory.path;
-    }
-    if (_queuePath == null) {
-      final directory =
-          await Directory('$_localApplicationDir/$CARP_QUEUE_FILE_PATH')
-              .create(recursive: true);
-      _queuePath = directory.path;
-    }
-    if (_studyPath == null) {
-      final directory =
-          await Directory('$_localApplicationDir/$CARP_STUDY_FILE_PATH')
-              .create(recursive: true);
-      _studyPath = directory.path;
-    }
-  }
 }
 
+/// Debugging levels.
 enum DebugLevel { NONE, INFO, WARNING, DEBUG }

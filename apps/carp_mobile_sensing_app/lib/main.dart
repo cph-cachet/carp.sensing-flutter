@@ -34,6 +34,12 @@ part 'src/ui/data_viz.dart';
 part 'src/ui/study_viz.dart';
 part 'src/ui/cachet.dart';
 
-void main() {
+void main() async {
+  // makes sure to have an instance of the WidgetsBinding, which is required
+  // to use platform channels to call the native code
+  // see also >> https://stackoverflow.com/questions/63873338/what-does-widgetsflutterbinding-ensureinitialized-do/63873689
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await bloc.initialize();
   runApp(App());
 }

@@ -46,7 +46,7 @@ class StudyRuntime {
   /// The stream of [StudyRuntimeStatus] events for this controller.
   Stream<StudyRuntimeStatus> get statusEvents => _statusEventsController.stream;
 
-  /// Get the status of this [StudyRuntime].
+  /// The status of this [StudyRuntime].
   StudyRuntimeStatus get status => _status;
 
   /// Set the state of this controller.
@@ -133,7 +133,7 @@ class StudyRuntime {
       _status = StudyRuntimeStatus.Deployed;
     }
 
-    return status;
+    return _status;
   }
 
   /// Tries to register a connected device which are available

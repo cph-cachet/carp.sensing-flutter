@@ -1,11 +1,13 @@
 part of mobile_sensing_app;
 
 class SensingBLoC {
-  /// The id of the currently running study deployment. Typical set based on an invitation.
+  /// The id of the currently running study deployment.
+  /// Typical set based on an invitation.
   /// `null` if no deployment have been specified.
-  String? studyDeploymentId;
+  String? get studyDeploymentId => Settings().studyDeploymentId;
+  set studyDeploymentId(String? id) => Settings().studyDeploymentId = id;
 
-  CAMSMasterDeviceDeployment? get deployment => Sensing().deployment;
+  SmartphoneDeployment? get deployment => Sensing().deployment;
   StudyDeploymentModel? _model;
 
   /// What kind of deployment are we running - local or CARP?
@@ -32,10 +34,12 @@ class SensingBLoC {
     Sensing().client?.deviceRegistry.devices[device.type!]!.connect();
   }
 
-  Future initialize(
-      [DeploymentMode deploymentMode = DeploymentMode.LOCAL]) async {
+  Future initialize([
+    DeploymentMode deploymentMode = DeploymentMode.LOCAL,
+  ]) async {
     await Settings().init();
     Settings().debugLevel = DebugLevel.DEBUG;
+    this.deploymentMode = deploymentMode;
 
     info('$runtimeType initialized');
   }

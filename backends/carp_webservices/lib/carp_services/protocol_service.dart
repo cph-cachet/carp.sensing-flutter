@@ -24,11 +24,11 @@ class CANSProtocolService extends CarpBaseService
 
   @override
   Future add(StudyProtocol? protocol, [String? versionTag]) async =>
-      StudyProtocol.fromJson(await _rpc(Add(protocol, versionTag)));
+      await _rpc(Add(protocol, versionTag));
 
   @override
   Future addVersion(StudyProtocol? protocol, [String? versionTag]) async =>
-      StudyProtocol.fromJson(await _rpc(AddVersion(protocol, versionTag)));
+      await _rpc(AddVersion(protocol, versionTag));
 
   /// Find all [StudyProtocol]'s owned by the owner with [ownerId].
   /// In the CARP web service, the [ownerId] is the logged in user's [accountId].

@@ -79,6 +79,7 @@ class AudioProbe extends DatumProbe {
         startRecordingTime: _startRecordingTime!,
       );
       _soundFileName = await filePath;
+      _datum!.path = _soundFileName;
       _datum!.filename = _soundFileName!.split("/").last;
       _isRecording = true;
 
@@ -117,11 +118,9 @@ class AudioProbe extends DatumProbe {
   /// Creates the directory, if not existing.
   Future<String> get path async {
     if (_path == null) {
-      // get local working directory
-      final localApplicationDir = await getApplicationDocumentsDirectory();
       // create a sub-directory for sound files
       final directory = await Directory(
-              '${localApplicationDir.path}/${Settings.CARP_DATA_FILE_PATH}$studyDeploymentPath/$AUDIO_FILES_PATH')
+              '${await Settings().deploymentBasePath}/${Settings.CARP_DATA_FILE_PATH}/$AUDIO_FILES_PATH')
           .create(recursive: true);
 
       _path = directory.path;

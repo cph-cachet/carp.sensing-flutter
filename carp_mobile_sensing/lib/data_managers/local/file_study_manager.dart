@@ -12,13 +12,13 @@ part of managers;
 ///
 /// The path and filename format is
 ///
-///   `carp/study/study-<study_id>.json`
+///   `~/carp/study/study-<study_id>.json`
 ///
 class FileStudyProtocolManager implements StudyProtocolManager {
   /// Initializing the the local FileDeploymentService
   Future initialize() async {
     info('Initializing FileDeploymentService...');
-    info('Study file path : ${Settings().studyPath}');
+    info('Study file path : ${Settings().localApplicationPath}/protocols');
   }
 
   @override
@@ -54,8 +54,8 @@ class FileStudyProtocolManager implements StudyProtocolManager {
 
   /// Current path and filename according to this format:
   ///
-  ///   `carp/study/study-<study_id>.json`
+  ///   `carp/protocols/protocol-<study_id>.json`
   ///
   String filename(String studyId) =>
-      '${Settings().studyPath}/study-$studyId.json';
+      '${Settings().localApplicationPath}/protocols/protocol-$studyId.json';
 }

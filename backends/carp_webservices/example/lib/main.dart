@@ -47,7 +47,7 @@ class _HomePageState extends State<HomePage> {
             child: TextButton.icon(
               onPressed: () => bloc.authenticate(
                 context,
-                username: 'jakob@bardram.net',
+                username: 'user@dtu.dk',
               ),
               icon: Icon(Icons.login),
               label: Text(
@@ -108,6 +108,7 @@ class AppBLoC {
       await CarpService().authenticateWithDialog(
         context,
         username: username,
+        allowClose: true,
       );
 
   Future<ActiveParticipationInvitation> getStudyInvitation(

@@ -8,7 +8,8 @@ part of runtime;
 
 /// An abstract [DataManager] implementation useful for extension.
 ///
-/// Takes data from a [Stream<DataPoint>] and uploads these. Also supports JSON encoding.
+/// Takes data from a [Stream<DataPoint>] and uploads these.
+/// Also supports JSON encoding via the [toJsonString] method.
 abstract class AbstractDataManager implements DataManager {
   late String _studyDeploymentId;
   String get studyDeploymentId => _studyDeploymentId;
@@ -19,6 +20,7 @@ abstract class AbstractDataManager implements DataManager {
   Stream<DataManagerEvent> get events => controller.stream;
   void addEvent(DataManagerEvent event) => controller.add(event);
 
+  @override
   Future initialize(
     String studyDeploymentId,
     DataEndPoint dataEndPoint,
@@ -34,16 +36,24 @@ abstract class AbstractDataManager implements DataManager {
     addEvent(DataManagerEvent(DataManagerEventTypes.INITIALIZED));
   }
 
+  @override
   Future close() async =>
       addEvent(DataManagerEvent(DataManagerEventTypes.CLOSED));
 
+  @override
   void onDataPoint(DataPoint dataPoint);
+
+  @override
   void onDone();
+
+  @override
   void onError(error);
 
   /// Encode [object] to a JSON string.
   String toJsonString(Object object) =>
       const JsonEncoder.withIndent(' ').convert(object);
+
+  String toString() => runtimeType.toString();
 }
 
 /// A registry of [DataManager]s.

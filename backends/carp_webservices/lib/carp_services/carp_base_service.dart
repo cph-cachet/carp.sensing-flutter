@@ -110,7 +110,7 @@ abstract class CarpBaseService {
 
     // All other cases are treated as an error.
     throw CarpServiceException(
-      httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
+      httpStatus: HTTPStatus(httpStatusCode),
       message: responseJson["message"],
     );
   }

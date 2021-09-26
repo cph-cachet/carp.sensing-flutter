@@ -34,6 +34,11 @@ class CarpService extends CarpBaseService {
   // AUTHENTICATION
   // --------------------------------------------------------------------------
 
+  static const RESET_PASSWORD_URL = 'https://cans.cachet.dk/forgotten';
+
+  /// Can the "Reset Password" URL be launched?
+  bool canLaunchResetPasswordUrl = false;
+
   String get _authHeaderBase64 => base64.encode(
       utf8.encode("${_app!.oauth.clientID}:${_app!.oauth.clientSecret}"));
 
@@ -166,6 +171,8 @@ class CarpService extends CarpBaseService {
   /// Authenticate to this CARP service by showing a modal dialog form for the
   /// user to enter his/her username and password.
   ///
+  /// Returns the authenticated user if successful, `null` othervise.
+  ///
   /// The [context] is required in order to show the login page in the right context.
   /// If the [username] is provide, this is shown as default in the form.
   ///
@@ -173,16 +180,30 @@ class CarpService extends CarpBaseService {
   /// throws a [CarpServiceException] if authentication is not successful.
   /// Instead the dialog is kept open until authentication is successful, or
   /// closed manually by the user.
-  Future authenticateWithDialog(
+  ///
+  /// [allowClose] specifies whether the user can close the window.
+  Future<CarpUser?> authenticateWithDialog(
     BuildContext context, {
     String? username,
+    bool allowClose = false,
   }) async {
     if (_app == null)
       throw CarpServiceException(
           message:
               "CARP Service not initialized. Call 'CarpService().configure()' first.");
 
-    await AuthenticationDialog().build(context, username: username).show();
+    canLaunchResetPasswordUrl = await canLaunch(RESET_PASSWORD_URL);
+
+    CarpUser? user = await showDialog<CarpUser>(
+        context: context,
+        barrierDismissible: allowClose,
+        builder: (BuildContext context) => AuthenticationDialog().build(
+              context,
+              username: username,
+              canLaunchResetPasswordUrl: canLaunchResetPasswordUrl,
+            ));
+
+    return user;
   }
 
   /// Get a new access token for the current user based on the

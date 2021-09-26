@@ -56,11 +56,7 @@ class CreateStudyProtocolCommand extends AbstractCommand {
               name: 'Custom device task',
               studyProtocol: toJsonString(protocol)),
           customDevice);
-
-      // print(protocol.ownerId);
-      // print(toJsonString(_customProtocol));
     }
-    // print(_customProtocol);
 
     return _customProtocol!;
   }
@@ -69,7 +65,7 @@ class CreateStudyProtocolCommand extends AbstractCommand {
   Future execute() async {
     await authenticate();
 
-    print("Uploading custom protocol, name: '${protocol.name}'");
+    print("Uploading custom protocol: $customProtocol");
     await CANSProtocolService().add(customProtocol);
     print('Upload successful!');
   }

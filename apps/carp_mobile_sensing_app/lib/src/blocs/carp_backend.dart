@@ -1,8 +1,8 @@
 part of mobile_sensing_app;
 
 class CarpBackend {
-  static const String PROD_URI = "https://cans.cachet.dk:443";
-  static const String STAGING_URI = "https://cans.cachet.dk:443/stage";
+  static const String PROD_URI = "https://cans.cachet.dk";
+  static const String STAGING_URI = "https://cans.cachet.dk/stage";
   // static const String TEST_URI = "https://cans.cachet.dk:443/test"; // The testing server
   // static const String DEV_URI = "https://cans.cachet.dk:443/dev"; // The development server
   static const String CLIENT_ID = "carp";
@@ -44,9 +44,9 @@ class CarpBackend {
   }
 
   /// Authenticate the user using the username / password dialogue.
-  Future<void> authenticate(BuildContext context) async {
+  Future<void> authenticate(BuildContext context, {String? username}) async {
     info('Authenticating user...');
-    await CarpService().authenticateWithDialog(context);
+    await CarpService().authenticateWithDialog(context, username: username);
     info('User authenticated - user: $user');
 
     // configure the participation service in order to get the invitations

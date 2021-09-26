@@ -135,4 +135,35 @@ void main() {
       skip: false,
     );
   });
+
+  group("Resource Generator Scripts", () {
+    setUp(() async {});
+
+    /// Generates and prints the local study protocol as json
+    test('protocol -> JSON', () async {
+      StudyProtocol? protocol =
+          await LocalStudyProtocolManager().getStudyProtocol('1234');
+      print(toJsonString(protocol));
+    });
+
+    /// Generates and prints the local study description as json
+    test('study description -> JSON', () async {
+      StudyDescription? description = StudyDescription(
+          title: 'CAMS App - Sensing Coverage Study',
+          description: 'Coverage testing of a wide range of measures.',
+          purpose: 'To test the CAMS Demo App',
+          responsible: StudyReponsible(
+            id: 'jakba@dtu.dk',
+            title: 'Professor',
+            address: 'Ørsteds Plads, DK-2800 Kgs. Lyngby',
+            affiliation: 'Technical University of Denmark',
+            email: 'jakba@dtu.dk',
+            name: 'Jakob E. Bardram',
+          ));
+      print(toJsonString(description));
+    });
+
+    /// Generates and prints the local informed consent as json
+    test('informed consent -> JSON', () async {});
+  });
 }

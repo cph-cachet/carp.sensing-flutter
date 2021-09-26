@@ -21,17 +21,14 @@ class Sensing {
   SmartPhoneClientManager? client;
 
   /// The deployment running on this phone.
-  CAMSMasterDeviceDeployment? get deployment =>
-      _controller?.deployment as CAMSMasterDeviceDeployment?;
+  SmartphoneDeployment? get deployment =>
+      _controller?.deployment as SmartphoneDeployment?;
 
   /// Get the latest status of the study deployment.
   StudyDeploymentStatus? get status => _status;
 
   /// The role name of this device in the deployed study
   String? get deviceRolename => _status?.masterDeviceStatus?.device.roleName;
-
-  /// The study deployment id of the deployment running on this phone.
-  String? get studyDeploymentId => _status?.studyDeploymentId;
 
   /// The study runtime controller for this deployment
   StudyDeploymentController? get controller => _controller;
@@ -75,9 +72,14 @@ class Sensing {
             await LocalStudyProtocolManager().getStudyProtocol('');
 
         // deploy this protocol using the on-phone deployment service
+        // reuse the study deployment id, if this is stored on the phone
         _status = await SmartphoneDeploymentService().createStudyDeployment(
           protocol,
+          bloc.studyDeploymentId,
         );
+
+        // save the correct deployment id on the phone for later use
+        bloc.studyDeploymentId = _status!.studyDeploymentId;
 
         break;
       case DeploymentMode.CARP_PRODUCTION:
@@ -86,13 +88,6 @@ class Sensing {
         // use the CARP deployment service that knows how to download a
         // custom protocol
         deploymentService = CustomProtocolDeploymentService();
-
-        // authenticate the user
-        // this would normally trigger a dialogue, but for demo/testing we're using
-        // the username/password in the 'credentials.dart' file
-        // if (!CarpService().authenticated)
-        //   await CarpService()
-        //       .authenticate(username: username, password: password);
 
         // get the study deployment status based on the studyDeploymentId
         if (bloc.studyDeploymentId != null) {
@@ -104,6 +99,7 @@ class Sensing {
         }
 
         // register the CARP data manager for uploading data back to CARP
+        // TODO - check if we can remove this - seems to be done in the CustomProtocolDeploymentService
         DataManagerRegistry().register(CarpDataManager());
         break;
     }
@@ -113,10 +109,12 @@ class Sensing {
       deploymentService: deploymentService,
       deviceRegistry: DeviceController(),
     );
+
     await client!.configure();
 
     // add and deploy this deployment
-    _controller = await client!.addStudy(studyDeploymentId!, deviceRolename!);
+    _controller =
+        await client!.addStudy(bloc.studyDeploymentId!, deviceRolename!);
 
     // configure the controller
     if (bloc.deploymentMode == DeploymentMode.LOCAL) {

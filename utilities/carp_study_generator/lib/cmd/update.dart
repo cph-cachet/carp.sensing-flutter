@@ -7,7 +7,10 @@ class UpdateStudyProtocolCommand extends CreateStudyProtocolCommand {
   Future execute() async {
     await authenticate();
 
-    print("Updating custom protocol, name: '${protocol.name}'");
+    print("Updating custom protocol: $customProtocol");
+
+    // print(toJsonString(customProtocol));
+
     await CANSProtocolService().addVersion(customProtocol);
     print('Update successful!');
   }

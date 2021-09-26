@@ -82,7 +82,8 @@ class DocumentReference extends CarpReference {
     if (_id == null) // early out if this document does not exist
       throw CarpServiceException(message: 'No valid document id found.');
 
-    Map<String, dynamic> payload = {'data': data};
+    Map<String, dynamic> payload = {'name': name, 'data': data};
+
     http.Response response = await httpr.put(Uri.encodeFull(documentUri),
         headers: headers, body: json.encode(payload));
 
