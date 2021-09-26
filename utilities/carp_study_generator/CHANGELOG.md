@@ -1,3 +1,9 @@
+## 0.30.5
+* upgrade to `carp_mobile_sensing` v. 0.30.5
+* upgrade to `carp_webservices` v. 0.30.1
+* upgrade to `carp_backend` v. 0.30.5
+* fix of misc bugs in json serialization
+
 ## 0.30.3+2
 * upgrade to null-safety
 * more robust error messages in `dryrun`
