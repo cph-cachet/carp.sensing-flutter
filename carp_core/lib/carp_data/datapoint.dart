@@ -7,6 +7,8 @@
 
 part of carp_core_data;
 
+// CARP DEFINITION AS ACCEPTED BY THE SERVER
+//
 // VERSION 1.2 -- EXAMPLE
 //
 // {
@@ -14,10 +16,10 @@ part of carp_core_data;
 //  "created_by_user_id": 1,                        # set by the server, not used in upload
 //  "study_id": "c9d341ae",                         # set by the server, not used in upload
 //  "carp_header": {
-//   "study_id": "01cf04a7",                        # required
+//   "study_id": "01cf04a7",                        # required - should be the study_deployment_id
 //   "device_role_name": "phone",                   # optional
 //   "trigger_id": "1",                             # optional
-//   "user_id": "user@dtu.dk",                      # required
+//   "user_id": "1e828ea0-78f7-11eb-a4c1",          # required - however, try to avoid usernames like 'user@dtu.dk'
 //   "upload_time": "2021-02-27T12:27:14.933672Z",  # set by the server, not used in upload
 //   "start_time": "2021-02-27T12:27:12.902614Z",   # optional
 //   "end_time": "2021-02-27T12:27:14.933672Z",     # optional

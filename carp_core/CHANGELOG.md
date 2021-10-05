@@ -1,3 +1,6 @@
+## 0.31.0
+* simplifications in the protocol/deployment sub-systems for local (on-phone) deployments
+
 ## 0.30.1+2
 * fix of json serialization bugs (x2)
 * update of API docs

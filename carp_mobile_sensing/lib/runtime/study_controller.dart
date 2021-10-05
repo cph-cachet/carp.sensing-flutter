@@ -6,8 +6,8 @@
  */
 part of runtime;
 
-/// A [StudyDeploymentController] controls the execution of a [SmartphoneDeployment].
-class StudyDeploymentController extends StudyRuntime {
+/// A [SmartphoneDeploymentController] controls the execution of a [SmartphoneDeployment].
+class SmartphoneDeploymentController extends StudyRuntime {
   int _samplingSize = 0;
   DataManager? _dataManager;
   DataEndPoint? _dataEndPoint;
@@ -48,7 +48,7 @@ class StudyDeploymentController extends StudyRuntime {
   /// This is a broadcast stream and supports multiple subscribers.
   Stream<DataPoint> get data => _executor!.data.map((dataPoint) => dataPoint
     ..data = _transformer(TransformerSchemaRegistry()
-        .lookup(masterDeployment!.dataEndPoint!.dataFormat)!
+        .lookup(masterDeployment?.dataEndPoint?.dataFormat ?? NameSpace.CARP)!
         .transform(TransformerSchemaRegistry()
             .lookup(_privacySchemaName)!
             .transform(dataPoint.data as Datum))));
@@ -62,35 +62,9 @@ class StudyDeploymentController extends StudyRuntime {
   DateTime? _studyDeploymentStartTime;
   DateTime? get studyDeploymentStartTime => _studyDeploymentStartTime;
 
-  // DateTime? _studyDeploymentStartTime;
-  // String get _studyDeploymentStartTimesKey =>
-  //     '$studyDeploymentId.${Settings.STUDY_START_KEY}'.toLowerCase();
-
-  // /// The timestamp (in UTC) when the current study deployment
-  // /// (the [masterDeployment]) was started on this phone.
-  // /// This timestamp is save on the phone the first time a study is deployed
-  // /// and persistently saved across app restarts.
-  // Future<DateTime> get studyDeploymentStartTime async {
-  //   assert(Settings().preferences != null,
-  //       "Setting is not initialized. Call 'Setting().init()' first.");
-  //   if (_studyDeploymentStartTime == null) {
-  //     String? str =
-  //         Settings().preferences!.get(_studyDeploymentStartTimesKey) as String?;
-  //     _studyDeploymentStartTime = (str != null) ? DateTime.parse(str) : null;
-  //     if (_studyDeploymentStartTime == null) {
-  //       _studyDeploymentStartTime = DateTime.now().toUtc();
-  //       await Settings().preferences!.setString(_studyDeploymentStartTimesKey,
-  //           _studyDeploymentStartTime.toString());
-  //       info(
-  //           '$runtimeType - Study deployment start time set to $_studyDeploymentStartTime');
-  //     }
-  //   }
-  //   return _studyDeploymentStartTime!;
-  // }
-
-  /// Create a new [StudyDeploymentController] to control the runtime behavior
+  /// Create a new [SmartphoneDeploymentController] to control the runtime behavior
   /// of a study deployment.
-  StudyDeploymentController() : super() {
+  SmartphoneDeploymentController() : super() {
     // initialize settings
     Settings().init();
 
@@ -99,7 +73,7 @@ class StudyDeploymentController extends StudyRuntime {
     DataManagerRegistry().register(FileDataManager());
   }
 
-  /// Configure this [StudyDeploymentController].
+  /// Configure this [SmartphoneDeploymentController].
   /// Must be called only once, and before [resume] is called.
   ///
   /// Can request permissions for all [SamplingPackage]s' permissions.
@@ -123,6 +97,8 @@ class StudyDeploymentController extends StudyRuntime {
   ///    * [askForPermissions] - automatically ask for permissions for all sampling
   ///      packages at once. Default to `true`. If you want the app to handle
   ///      permissions, set this to `false`.
+  ///    * [enableNotifications] - should notification be enabled and send to the user
+  ///      when an app task is triggered?
   ///
   Future<void> configure({
     SamplingSchema? samplingSchema,
@@ -130,6 +106,7 @@ class StudyDeploymentController extends StudyRuntime {
     String privacySchemaName = NameSpace.CARP,
     DatumTransformer? transformer,
     bool askForPermissions = true,
+    bool enableNotifications = true,
   }) async {
     assert(deployment != null,
         'Cannot configure a StudyDeploymentController without a deployment.');
@@ -143,7 +120,8 @@ class StudyDeploymentController extends StudyRuntime {
     Settings().studyDeploymentId = studyDeploymentId;
 
     // initialize the app task controller singleton
-    await AppTaskController().initialize();
+    await AppTaskController()
+        .initialize(enableNotifications: enableNotifications);
 
     _executor = StudyDeploymentExecutor(deployment as SmartphoneDeployment);
 
@@ -166,21 +144,7 @@ class StudyDeploymentController extends StudyRuntime {
     masterDeployment!.userId ??= await Settings().userId;
 
     // setting up permissions
-    if (askForPermissions) {
-      info('Asking for permission for all measure types.');
-      permissions = await PermissionHandlerPlatform.instance
-          .requestPermissions(SamplingPackageRegistry().permissions);
-    }
-
-    // check if needed permission are set
-    SamplingPackageRegistry().permissions.forEach((permission) async {
-      PermissionStatus status = await PermissionHandlerPlatform.instance
-          .checkPermissionStatus(permission);
-      if (status != PermissionStatus.granted) {
-        warning(
-            'Permissions not granted for $permission -  permission is $status');
-      }
-    });
+    if (askForPermissions) await askForAllPermissions();
 
     // check the start time for this deployment on this phone
     // and save it, the first time the deployment is done
@@ -210,19 +174,19 @@ class StudyDeploymentController extends StudyRuntime {
 
     status = StudyRuntimeStatus.Configured;
 
-    info('=========================================================');
-    info('CARP Mobile Sensing (CAMS) - Study Deployment Controller');
-    info('=========================================================');
-    info(' deployment id : ${masterDeployment!.studyDeploymentId}');
-    info('    start time : $studyDeploymentStartTime');
-    info('       user id : ${masterDeployment!.userId}');
-    info('      platform : ${DeviceInfo().platform.toString()}');
-    info('     device ID : ${DeviceInfo().deviceID.toString()}');
-    info('  data manager : $_dataManager');
-    info(' data endpoint : $_dataEndPoint');
-    info('       devices : ${DeviceController().devicesToString()}');
-    info('        status : ${status.toString().split('.').last}');
-    info('=========================================================');
+    print('===========================================================');
+    print('  CARP Mobile Sensing (CAMS) - $runtimeType');
+    print('===========================================================');
+    print(' deployment id : ${masterDeployment!.studyDeploymentId}');
+    print('    start time : $studyDeploymentStartTime');
+    print('       user id : ${masterDeployment!.userId}');
+    print('      platform : ${DeviceInfo().platform.toString()}');
+    print('     device ID : ${DeviceInfo().deviceID.toString()}');
+    print('  data manager : $_dataManager');
+    print(' data endpoint : $_dataEndPoint');
+    print('       devices : ${DeviceController().devicesToString()}');
+    print('        status : ${status.toString().split('.').last}');
+    print('===========================================================');
   }
 
   final BatteryProbe _battery = BatteryProbe();
@@ -250,6 +214,25 @@ class StudyDeploymentController extends StudyRuntime {
               .toString()));
       _battery.resume();
     }
+  }
+
+  /// Asking for all permissions needed for the included sampling packages.
+  ///
+  /// Should be called before sensing is started, if not already done as part of
+  /// [configure].
+  Future<void> askForAllPermissions() async {
+    info('Asking for permission for all measure types.');
+    permissions = await PermissionHandlerPlatform.instance
+        .requestPermissions(SamplingPackageRegistry().permissions);
+
+    SamplingPackageRegistry().permissions.forEach((permission) async {
+      PermissionStatus status = await PermissionHandlerPlatform.instance
+          .checkPermissionStatus(permission);
+      if (status != PermissionStatus.granted) {
+        warning(
+            'Permissions not granted for $permission -  permission is $status');
+      }
+    });
   }
 
   /// Disable power-aware sensing.
@@ -286,16 +269,6 @@ class StudyDeploymentController extends StudyRuntime {
     super.stop();
   }
 }
-
-// /// Enumerates the stat a [StudyDeploymentController] can be in.
-// enum StudyDeploymentControllerState {
-//   unknown,
-//   created,
-//   initialized,
-//   resumed,
-//   paused,
-//   stopped,
-// }
 
 /// This default power-awareness schema operates with four power states:
 ///

@@ -33,34 +33,21 @@ MasterDeviceDeployment _$MasterDeviceDeploymentFromJson(
     triggeredTasks: (json['triggeredTasks'] as List<dynamic>)
         .map((e) => TriggeredTask.fromJson(e as Map<String, dynamic>))
         .toList(),
-    dataEndPoint: json['dataEndPoint'] == null
-        ? null
-        : DataEndPoint.fromJson(json['dataEndPoint'] as Map<String, dynamic>),
   )..lastUpdateDate = DateTime.parse(json['lastUpdateDate'] as String);
 }
 
 Map<String, dynamic> _$MasterDeviceDeploymentToJson(
-    MasterDeviceDeployment instance) {
-  final val = <String, dynamic>{
-    'deviceDescriptor': instance.deviceDescriptor,
-    'configuration': instance.configuration,
-    'connectedDevices': instance.connectedDevices,
-    'connectedDeviceConfigurations': instance.connectedDeviceConfigurations,
-    'tasks': instance.tasks,
-    'triggers': instance.triggers,
-    'triggeredTasks': instance.triggeredTasks,
-    'lastUpdateDate': instance.lastUpdateDate.toIso8601String(),
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('dataEndPoint', instance.dataEndPoint);
-  return val;
-}
+        MasterDeviceDeployment instance) =>
+    <String, dynamic>{
+      'deviceDescriptor': instance.deviceDescriptor,
+      'configuration': instance.configuration,
+      'connectedDevices': instance.connectedDevices,
+      'connectedDeviceConfigurations': instance.connectedDeviceConfigurations,
+      'tasks': instance.tasks,
+      'triggers': instance.triggers,
+      'triggeredTasks': instance.triggeredTasks,
+      'lastUpdateDate': instance.lastUpdateDate.toIso8601String(),
+    };
 
 DeviceRegistration _$DeviceRegistrationFromJson(Map<String, dynamic> json) {
   return DeviceRegistration(

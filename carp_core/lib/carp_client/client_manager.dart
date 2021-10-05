@@ -43,7 +43,7 @@ class ClientManager {
   /// Configure the [DeviceRegistration] used to register this client device
   /// in study deployments managed by the [deploymentService].
   @mustCallSuper
-  Future<DeviceRegistration> configure({String? deviceId}) async =>
+  Future<DeviceRegistration> configure({required String? deviceId}) async =>
       registration = DeviceRegistration(deviceId);
 
   /// Get the status for the studies which run on this client device.

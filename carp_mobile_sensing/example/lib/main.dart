@@ -102,7 +102,7 @@ class Console extends State<ConsolePage> {
 ///  * register devices
 ///  * get the deployment configuration
 ///  * mark the deployment successful
-///  * create and initialize a [StudyDeploymentController]
+///  * create and initialize a [SmartphoneDeploymentController]
 ///  * start/pause/resume/stop sensing via this study controller
 ///
 /// This example is useful for creating a Business Logical Object (BLOC) in a
@@ -110,7 +110,7 @@ class Console extends State<ConsolePage> {
 class Sensing {
   StudyProtocol? protocol;
   StudyDeploymentStatus? _status;
-  StudyDeploymentController? controller;
+  SmartphoneDeploymentController? controller;
 
   /// Initialize sensing.
   Future init() async {
@@ -133,10 +133,12 @@ class Sensing {
     controller = await client.addStudy(studyDeploymentId, deviceRolename);
 
     // configure the controller
+    // notifications are disabled, since we're not using app tasks in this simple app
+    // see https://github.com/cph-cachet/carp.sensing-flutter/wiki/3.1-The-AppTask-Model#notifications
     await controller!.configure(
-      privacySchemaName: PrivacySchema.DEFAULT,
-      transformer: ((datum) => datum),
+      enableNotifications: false,
     );
+
     // controller.resume();
 
     // listening on the data stream and print them as json to the debug console
@@ -174,7 +176,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
       name: 'Track patient movement',
     );
 
-    // Define which devices are used for data collection.
+    // define which devices are used for data collection.
     Smartphone phone = Smartphone();
     DeviceDescriptor eSense = DeviceDescriptor(roleName: 'esense');
 

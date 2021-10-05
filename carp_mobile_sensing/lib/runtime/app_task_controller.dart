@@ -12,6 +12,9 @@ class AppTaskController {
   static final AppTaskController _instance = AppTaskController._();
   final StreamController<UserTask> _controller = StreamController.broadcast();
 
+  /// Should this controller send notifications to the user.
+  bool notificationsEnabled = true;
+
   /// The study deployment id for the running study.
   String? get studyDeploymentId => Settings().studyDeploymentId;
 
@@ -55,7 +58,7 @@ class AppTaskController {
   ///
   /// Caches app tasks based on the [studyDeploymentId], if
   /// [Settings().saveAppTaskQueue] is `true`.
-  Future<void> initialize() async {
+  Future<void> initialize({bool enableNotifications = true}) async {
     if (studyDeploymentId != null && Settings().saveAppTaskQueue) {
       // retore the queue from persistent storage
       await restoreQueue();
@@ -73,7 +76,8 @@ class AppTaskController {
       });
     });
 
-    await NotificationController().initialize();
+    notificationsEnabled = enableNotifications;
+    if (notificationsEnabled) await NotificationController().initialize();
   }
 
   final Map<String, UserTaskFactory> _userTaskFactories = {};
@@ -109,7 +113,9 @@ class AppTaskController {
       _controller.add(userTask);
       info('Enqueued $userTask');
 
-      NotificationController().sendNotification(userTask);
+      if (notificationsEnabled) {
+        NotificationController().sendNotification(userTask);
+      }
 
       return userTask;
     }
@@ -126,7 +132,9 @@ class AppTaskController {
       _controller.add(userTask);
       info('Dequeued $userTask');
 
-      NotificationController().cancelNotification(userTask);
+      if (notificationsEnabled) {
+        NotificationController().cancelNotification(userTask);
+      }
     }
   }
 

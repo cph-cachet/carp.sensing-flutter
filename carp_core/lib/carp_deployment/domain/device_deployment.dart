@@ -39,11 +39,6 @@ class MasterDeviceDeployment {
   /// device deployment.
   late DateTime lastUpdateDate;
 
-  // TODO - this is not part of carp_core Kotlin - make sure that no conflict arise.
-  //
-  /// Specifies where and how to upload the data collected from this deployment.
-  DataEndPoint? dataEndPoint;
-
   MasterDeviceDeployment({
     required this.deviceDescriptor,
     required this.configuration,
@@ -52,7 +47,7 @@ class MasterDeviceDeployment {
     this.tasks = const [],
     this.triggers = const {},
     this.triggeredTasks = const [],
-    this.dataEndPoint,
+    // this.dataEndPoint,
   }) {
     lastUpdateDate = DateTime.now();
   }

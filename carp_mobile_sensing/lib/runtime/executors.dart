@@ -85,7 +85,8 @@ class StudyDeploymentExecutor extends Executor {
   /// Get the aggregated stream of [DataPoint] data sampled by all executors
   /// and probes in this study deployment.
   ///
-  /// Makes sure to set the user and study id from the deployment configuration.
+  /// Ensures that the `userId` and `studyId` is correctly set in the
+  /// [DataPointHeader] based on the [deployment] configuration.
   Stream<DataPoint> get data => _group.stream.map((dataPoint) => dataPoint
     ..carpHeader.studyId = deployment.studyDeploymentId
     ..carpHeader.userId = deployment.userId);

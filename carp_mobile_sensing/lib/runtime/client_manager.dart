@@ -25,16 +25,19 @@ class SmartPhoneClientManager extends ClientManager {
   Future<DeviceRegistration> configure({String? deviceId}) async {
     await DeviceInfo().init();
     deviceId ??= DeviceInfo().deviceID;
-    info('Configuring $runtimeType:');
-    info('  deployment service : $deploymentService');
-    info('     device registry : $deviceRegistry');
-    info('           device ID : $deviceId');
+    print('===========================================================');
+    print('  CARP Mobile Sensing (CAMS) - $runtimeType');
+    print('===========================================================');
+    print('  deployment service : $deploymentService');
+    print('     device registry : $deviceRegistry');
+    print('           device ID : $deviceId');
+    print('===========================================================');
 
     return super.configure(deviceId: deviceId);
   }
 
   @override
-  Future<StudyDeploymentController> addStudy(
+  Future<SmartphoneDeploymentController> addStudy(
     String studyDeploymentId,
     String deviceRoleName,
   ) async {
@@ -45,7 +48,8 @@ class SmartPhoneClientManager extends ClientManager {
     // Create the study runtime.
     // val deviceRegistration = repository.getDeviceRegistration()!!
 
-    StudyDeploymentController controller = StudyDeploymentController();
+    SmartphoneDeploymentController controller =
+        SmartphoneDeploymentController();
 
     await controller.initialize(
       deploymentService,
