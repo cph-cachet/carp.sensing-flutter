@@ -7,7 +7,7 @@
 
 part of carp_core_client;
 
-/// Manage data collection for a particular study on a client device.
+/// Manage data collection for a particular study deployment on a client device.
 class StudyRuntime {
   final List<DeviceDescriptor> _remainingDevicesToRegister = [];
   StudyRuntimeId? _id;
@@ -115,7 +115,7 @@ class StudyRuntime {
   /// Verifies whether the master device is ready for deployment and in case
   /// it is, deploys. In case already deployed, nothing happens.
   Future<StudyRuntimeStatus> tryDeployment() async {
-    assert(studyDeploymentId != null,
+    assert(studyDeploymentId != null && device != null,
         "Cannot deploy without a valid study deployment. Call 'initialize()' first.");
 
     deploymentStatus =

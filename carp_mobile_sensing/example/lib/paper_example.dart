@@ -45,7 +45,7 @@ void sensing() async {
   SmartPhoneClientManager client = SmartPhoneClientManager();
   client.configure();
 
-  StudyDeploymentController controller =
+  SmartphoneDeploymentController controller =
       await client.addStudy(studyDeploymentId, deviceRolename);
 
   // configure the controller and resume sampling

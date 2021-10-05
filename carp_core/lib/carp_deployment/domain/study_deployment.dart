@@ -11,14 +11,13 @@ part of carp_core_deployment;
 /// related to devices when 'running' a study.
 ///
 /// I.e., a [StudyDeployment] is responsible for registering the physical
-/// devices described in the [StudyProtocol],
-/// enabling a connection between them, tracking device connection issues, and
-/// assessing data quality.
+/// devices described in the [StudyProtocol], enabling a connection between them,
+/// tracking device connection issues, and assessing data quality.
 class StudyDeployment {
   late String _studyDeploymentId;
   late DateTime _creationDate;
   late StudyDeploymentStatus _status;
-  final StudyProtocol _protocol;
+  late StudyProtocol _protocol;
 
   // the list of all registred devices, mapped to their rolename
   final Map<String, DeviceRegistration> _registeredDevices = {};
@@ -38,7 +37,7 @@ class StudyDeployment {
   DateTime get creationDate => _creationDate;
   StudyProtocol get protocol => _protocol;
 
-  // The set of devices which are currently registered for this study deployment.
+  /// The set of devices which are currently registered for this study deployment.
   Map<DeviceDescriptor, DeviceRegistration> get registeredDevices =>
       _registeredDevices.map(
           (key, value) => MapEntry(_registeredDeviceDescriptors[key]!, value));
@@ -53,8 +52,8 @@ class StudyDeployment {
   Set<DeviceDescriptor> get invalidatedDeployedDevices =>
       _invalidatedDeployedDevices;
 
-  ///The time when the study deployment was ready for the first
-  ///time (all devices deployed); null otherwise.
+  /// The time when the study deployment was ready for the first
+  /// time (all devices deployed); null otherwise.
   DateTime? get startTime => _startTime;
 
   /// Determines whether the study deployment has been stopped and no
@@ -64,8 +63,9 @@ class StudyDeployment {
   /// Create a new [StudyDeployment] based on a [StudyProtocol].
   /// [studyDeploymentId] specify the study deployment id.
   /// If not specified, an UUID v1 id is generated.
-  StudyDeployment(this._protocol, [String? studyDeploymentId]) {
+  StudyDeployment(StudyProtocol protocol, [String? studyDeploymentId]) {
     _studyDeploymentId = studyDeploymentId ?? Uuid().v1();
+    _protocol = protocol;
     _creationDate = DateTime.now();
     _status = StudyDeploymentStatus(studyDeploymentId: _studyDeploymentId);
   }

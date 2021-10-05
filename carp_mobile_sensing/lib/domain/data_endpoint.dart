@@ -43,13 +43,16 @@ class FileDataEndPoint extends DataEndPoint {
   /// [type] is defined in [DataEndPointTypes]. Is typically of type
   /// [DataEndPointType.FILE] but specialized file types can be specified.
   FileDataEndPoint({
-    String? type,
+    String type = DataEndPointTypes.FILE,
     String dataFormat = NameSpace.CARP,
     this.bufferSize = 500 * 1000,
     this.zip = true,
     this.encrypt = false,
     this.publicKey,
-  }) : super(type: type ?? DataEndPointTypes.FILE, dataFormat: dataFormat);
+  }) : super(
+          type: type,
+          dataFormat: dataFormat,
+        );
 
   /// The function which can transform this [FileDataEndPoint] into JSON.
   ///

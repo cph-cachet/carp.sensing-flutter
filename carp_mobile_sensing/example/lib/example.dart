@@ -52,7 +52,7 @@ void example_1() async {
   await client.configure();
 
   // create a study runtime to control this deployment
-  StudyDeploymentController controller =
+  SmartphoneDeploymentController controller =
       await client.addStudy(studyDeploymentId, deviceRolename);
 
   // configure the controller and resume sampling
@@ -110,7 +110,7 @@ void example_2() async {
   SmartPhoneClientManager client = SmartPhoneClientManager();
   await client.configure();
 
-  StudyDeploymentController controller =
+  SmartphoneDeploymentController controller =
       await client.addStudy(studyDeploymentId, deviceRolename);
 
   // you can change the deployment locally, before starting the
@@ -364,14 +364,14 @@ void recurrentScheduledTriggerExample() {
       time: Time(hour: 21, minute: 30));
 }
 
-/// An example of how to configure a [StudyDeploymentController] with the
+/// An example of how to configure a [SmartphoneDeploymentController] with the
 /// default privacy schema.
 void study_controller_example() async {
   // create and configure a client manager for this phone
   SmartPhoneClientManager client = SmartPhoneClientManager();
   await client.configure();
 
-  StudyDeploymentController controller =
+  SmartphoneDeploymentController controller =
       await client.addStudy('1234', 'master_phone');
 
   // configure the controller with the default privacy schema and resume sampling
@@ -464,7 +464,7 @@ void carp_core_client_example() async {
 
   await client.configure();
 
-  StudyDeploymentController controller =
+  SmartphoneDeploymentController controller =
       await client.addStudy(studyDeploymentId!, deviceToUse!);
 
   if (controller.status == StudyRuntimeStatus.RegisteringDevices) {

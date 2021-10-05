@@ -25,8 +25,7 @@ class SmartphoneDeployment extends MasterDeviceDeployment {
   /// point from who the data point belongs to, allows for one user to collect
   /// data on behalf of another user. For example, a parent on behalf of a child.
   ///
-  /// See [DataPoint]. This user id is stored in the
-  /// [DataPointHeader] as the [userId].
+  /// This user id is stored in the [DataPointHeader] as the [userId].
   String? userId;
 
   /// The [StudyDescription] containing the title, description,
@@ -36,10 +35,22 @@ class SmartphoneDeployment extends MasterDeviceDeployment {
   /// The PI responsible for this study.
   StudyReponsible? get responsible => protocolDescription?.responsible;
 
+  /// The sampling strategy used in this deployment based on the standard
+  /// [SamplingSchemaType] types.
   SamplingSchemaType? samplingStrategy;
 
+  /// Specifies where and how to stored or upload the data collected from this
+  /// deployment. If `null`, the sensed data is not stored, but may still be
+  /// used in the app somehow.
+  DataEndPoint? dataEndPoint;
+
+  /// Create a new [SmartphoneDeployment].
+  ///
+  /// [studyDeploymentId] is a unique id for this deployment. If not specified,
+  /// a unique id will be generated.
+  ///
   SmartphoneDeployment({
-    required String studyDeploymentId,
+    String? studyDeploymentId,
     this.protocolDescription,
     required MasterDeviceDescriptor deviceDescriptor,
     required DeviceRegistration configuration,
@@ -48,7 +59,7 @@ class SmartphoneDeployment extends MasterDeviceDeployment {
     List<TaskDescriptor> tasks = const [],
     Map<String, Trigger> triggers = const {},
     List<TriggeredTask> triggeredTasks = const [],
-    DataEndPoint? dataEndPoint,
+    this.dataEndPoint,
   }) : super(
           deviceDescriptor: deviceDescriptor,
           configuration: configuration,
@@ -57,15 +68,16 @@ class SmartphoneDeployment extends MasterDeviceDeployment {
           tasks: tasks,
           triggers: triggers,
           triggeredTasks: triggeredTasks,
-          dataEndPoint: dataEndPoint,
+          // dataEndPoint: dataEndPoint,
         ) {
     _registerFromJsonFunctions();
-    _studyDeploymentId = studyDeploymentId;
+    _studyDeploymentId = studyDeploymentId ?? Uuid().v1();
   }
 
   SmartphoneDeployment.fromMasterDeviceDeployment({
-    required String studyDeploymentId,
+    String? studyDeploymentId,
     StudyDescription? protocolDescription,
+    DataEndPoint? dataEndPoint,
     required MasterDeviceDeployment masterDeviceDeployment,
   }) : this(
           studyDeploymentId: studyDeploymentId,
@@ -78,14 +90,14 @@ class SmartphoneDeployment extends MasterDeviceDeployment {
           tasks: masterDeviceDeployment.tasks,
           triggers: masterDeviceDeployment.triggers,
           triggeredTasks: masterDeviceDeployment.triggeredTasks,
-          dataEndPoint: masterDeviceDeployment.dataEndPoint,
+          dataEndPoint: dataEndPoint,
         );
 
-  /// Create a [SmartphoneDeployment] based on a [CAMSStudyProtocol].
+  /// Create a [SmartphoneDeployment] based on a [StudyProtocol].
   /// This method basically makes a 1:1 mapping between a protocol and
   /// a deployment.
   SmartphoneDeployment.fromStudyProtocol({
-    required String studyDeploymentId,
+    String? studyDeploymentId,
     StudyDescription? protocolDescription,
     required String masterDeviceRoleName,
     DataEndPoint? dataEndPoint,

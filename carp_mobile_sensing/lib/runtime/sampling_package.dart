@@ -201,7 +201,7 @@ abstract class SamplingPackage {
   ///
   /// This device type is matched with the [DeviceDescriptor.roleName] when a
   /// [MasterDeviceDeployment] is deployed on the phone and executed by a
-  /// [StudyDeploymentController].
+  /// [SmartphoneDeploymentController].
   ///
   /// Default value is a smartphone. Override this if another type is supported.
   ///

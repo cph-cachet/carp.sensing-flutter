@@ -51,7 +51,7 @@ class PassiveTrigger extends Trigger {
 /// Never stops sampling once started.
 ///
 /// The delay is measured from the **start of sensing**, i.e. typically when
-/// resume() is called on a [StudyDeploymentController].
+/// resume() is called on a [SmartphoneDeploymentController].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class DelayedTrigger extends Trigger {
   /// Delay before this trigger is executed.

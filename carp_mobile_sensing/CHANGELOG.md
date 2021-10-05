@@ -1,3 +1,7 @@
+## 0.30.6
+* separate method for asking permissions in `SmartphoneDeploymentController`
+* bug fix of [#215](https://github.com/cph-cachet/carp.sensing-flutter/issues/215) - notifications can now be enabled/disabled in the `configure` method of the `SmartphoneDeploymentController`.
+
 ## 0.30.5
 * all deployment information is now stored in a folder named `<local_application_path>/carp/deployments/<study_deployment_id>` where `local_application_path` is the folder where an application can place files that are private to the application.
    * On iOS, this is the `NSDocumentsDirectory` and this can be accessed like accessing files on iOS via the Finder.

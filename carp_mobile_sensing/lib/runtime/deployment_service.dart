@@ -108,13 +108,6 @@ class SmartphoneDeploymentService implements DeploymentService {
     MasterDeviceDeployment deviceDeployment =
         deployment.getDeviceDeploymentFor(device as MasterDeviceDescriptor);
 
-    // this local deployment service use a file dataendpoint per default
-    deviceDeployment.dataEndPoint = FileDataEndPoint(
-      bufferSize: 500 * 1000,
-      zip: true,
-      encrypt: false,
-    );
-
     return SmartphoneDeployment.fromMasterDeviceDeployment(
       studyDeploymentId: studyDeploymentId,
       masterDeviceDeployment: deviceDeployment,

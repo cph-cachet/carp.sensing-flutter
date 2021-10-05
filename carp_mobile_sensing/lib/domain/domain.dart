@@ -20,11 +20,10 @@ part 'sampling_schema.dart';
 part 'measures.dart';
 part 'device_descriptor.dart';
 part 'device_deployment.dart';
-part 'app_task.dart';
+part 'tasks.dart';
 part 'triggers.dart';
 part 'datum.dart';
 part 'device_info.dart';
-part 'task_descriptor.dart';
 part 'transformers.dart';
 
 part 'domain.g.dart';
