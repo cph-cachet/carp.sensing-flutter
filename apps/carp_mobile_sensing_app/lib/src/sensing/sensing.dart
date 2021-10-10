@@ -15,7 +15,7 @@ part of mobile_sensing_app;
 class Sensing {
   static final Sensing _instance = Sensing._();
   StudyDeploymentStatus? _status;
-  StudyDeploymentController? _controller;
+  SmartphoneDeploymentController? _controller;
 
   DeploymentService? deploymentService;
   SmartPhoneClientManager? client;
@@ -31,7 +31,7 @@ class Sensing {
   String? get deviceRolename => _status?.masterDeviceStatus?.device.roleName;
 
   /// The study runtime controller for this deployment
-  StudyDeploymentController? get controller => _controller;
+  SmartphoneDeploymentController? get controller => _controller;
 
   /// the list of running - i.e. used - probes in this study.
   List<Probe> get runningProbes =>
@@ -122,9 +122,9 @@ class Sensing {
     } else {
       // change the upload to also keep the json files locally
       await _controller!.configure(
-        dataEndPoint:
-            (_controller!.deployment!.dataEndPoint as CarpDataEndPoint)
-              ..deleteWhenUploaded = false,
+        dataEndPoint: ((_controller!.deployment! as SmartphoneDeployment)
+            .dataEndPoint as CarpDataEndPoint)
+          ..deleteWhenUploaded = false,
       );
     }
     // controller.resume();

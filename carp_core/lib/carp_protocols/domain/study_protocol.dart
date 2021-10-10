@@ -32,7 +32,7 @@ class StudyProtocol {
   /// A unique descriptive name for the protocol.
   String name;
 
-  /// A longer description of this study.
+  /// An optional description for the study protocol.
   String? description;
 
   /// The timestamp of the creation of this protocol in Zulu time.

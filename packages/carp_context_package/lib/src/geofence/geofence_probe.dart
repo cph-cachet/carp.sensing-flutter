@@ -13,21 +13,28 @@ class GeofenceProbe extends StreamProbe {
     assert(measure is GeofenceMeasure);
     super.onInitialize(measure);
     fence = Geofence.fromMeasure(measure as GeofenceMeasure);
+  }
+
+  /// Set up option for geofence location tracking - accuracy
+  /// is set to `low` and distance filter is 10 meters.
+  double get distanceFilter => 10;
+
+  @override
+  Future<void> onResume() async {
+    await LocationManager().configure(measure as LocationMeasure);
     // listen in on the location service
     LocationManager()
-        .locationStream
-        .map((location) => GeoPosition.fromLocationDto(location))
+        .onLocationChanged
+        .map((location) => GeoPosition.fromLocation(location))
         .listen((location) {
       // when a location event is fired, check if the new location creates a new [GeofenceDatum] event.
       // if so -- add it to the main stream.
       GeofenceDatum? datum = fence.moved(location);
       if (datum != null) geoFenceStreamController.add(datum);
     });
-  }
 
-  /// Set up option for geofence location tracking - accuracy
-  /// is set to `low` and distance filter is 10 meters.
-  double get distanceFilter => 10;
+    super.onResume();
+  }
 
   Stream<GeofenceDatum> get stream => geoFenceStreamController.stream;
 }

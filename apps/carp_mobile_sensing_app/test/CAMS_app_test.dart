@@ -6,7 +6,7 @@ import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 // import 'package:carp_connectivity_package/connectivity.dart';
 import 'package:carp_esense_package/esense.dart';
-import 'package:carp_context_package/context.dart';
+// import 'package:carp_context_package/context.dart';
 import 'package:carp_audio_package/audio.dart';
 import 'package:carp_backend/carp_backend.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
@@ -25,9 +25,9 @@ void main() {
   late ESenseDevice eSense;
 
   setUp(() async {
-    // register the eSense sampling package since we're using eSense measures
+    // register the different sampling package since we're using measures from them
     // SamplingPackageRegistry().register(ConnectivitySamplingPackage());
-    SamplingPackageRegistry().register(ContextSamplingPackage());
+    // SamplingPackageRegistry().register(ContextSamplingPackage());
     SamplingPackageRegistry().register(AudioSamplingPackage());
     SamplingPackageRegistry().register(ESenseSamplingPackage());
 

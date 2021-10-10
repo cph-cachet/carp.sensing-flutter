@@ -1,8 +1,8 @@
 {
     "ownerId": "alex@uni.dk",
-    "name": "Sensing Coverage Study",
-    "description": "This is a study for testing the coverage of sampling.",
-    "creationDate": "2021-09-19T22:29:13.717665Z",
+    "name": "CAMS App - Sensing Coverage Study",
+    "description": "This is a protocol for testing the coverage of sampling.",
+    "creationDate": "2021-10-09T12:33:40.441053Z",
     "masterDevices": [
      {
       "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
@@ -134,12 +134,16 @@
       "name": "Task #8",
       "measures": [
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.LocationMeasure",
         "type": "dk.cachet.carp.location",
         "name": "Location",
         "description": "Collects location from the phone's GPS sensor",
         "enabled": true,
-        "configuration": {}
+        "configuration": {},
+        "frequency": 30000000,
+        "duration": 1000000,
+        "accuracy": "best",
+        "distance": 0.0
        }
       ]
      },

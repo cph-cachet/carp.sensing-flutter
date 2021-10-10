@@ -58,7 +58,7 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
     // first register all measure to be de/serializable
     dataTypes.forEach(
         (measure) => FromJsonFactory().register(common.measures[measure]!));
-    // also register the GeoPosition class used in the GeofenceMeasure
+    // register the GeoPosition class used in the GeofenceMeasure
     FromJsonFactory().register(GeoPosition(1.1, 1.1));
 
     // registering the transformers from CARP to OMH for geolocation and physical activity.
@@ -84,11 +84,10 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
     ..measures.addEntries([
       MapEntry(
         LOCATION,
-        CAMSMeasure(
+        LocationMeasure(
           type: LOCATION,
           name: 'Location',
           description: "Collects location from the phone's GPS sensor",
-          enabled: true,
         ),
       ),
       MapEntry(
@@ -97,7 +96,6 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
             type: GEOLOCATION,
             name: 'Geo-location',
             description: "Collects location from the phone's GPS sensor",
-            enabled: true,
             frequency: Duration(seconds: 30),
             accuracy: GeolocationAccuracy.low,
             distance: 3,
@@ -109,7 +107,6 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
           name: 'Activity Recognition',
           description:
               "Collects activity type from the phone's activity recognition module",
-          enabled: true,
         ),
       ),
       MapEntry(
@@ -119,7 +116,6 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
               name: 'Weather',
               description:
                   "Collects local weather from the WeatherAPI web service",
-              enabled: true,
               // TODO - remove this
               apiKey: '12b6e28582eb9298577c734a31ba9f4f')),
       MapEntry(
@@ -129,14 +125,12 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
               name: 'Air Quality',
               description:
                   "Collects local air quality from the OpenWeatherMap (OWM) web service",
-              enabled: true,
               // TODO - remove this
               apiKey: '9e538456b2b85c92647d8b65090e29f957638c77')),
       MapEntry(
           GEOFENCE,
           GeofenceMeasure(
               type: GEOFENCE,
-              enabled: true,
               center: GeoPosition(55.7943601, 12.4461956),
               radius: 500,
               dwell: Duration(minutes: 30),
@@ -151,7 +145,6 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
               name: 'Mobility Features',
               description:
                   "Extracts mobility features based on location tracking",
-              enabled: true,
               placeRadius: 50,
               stopRadius: 25,
               usePriorContexts: true,
@@ -185,7 +178,7 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
       type: GEOLOCATION,
       enabled: true,
       frequency: Duration(seconds: 3),
-      accuracy: GeolocationAccuracy.best,
+      accuracy: GeolocationAccuracy.navigation,
       distance: 0,
     )
     ..measures[WEATHER] = WeatherMeasure(

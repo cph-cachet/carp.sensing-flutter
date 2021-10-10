@@ -27,9 +27,14 @@ class GeoPosition extends Serializable {
 
   GeoPosition(this.latitude, this.longitude);
 
-  GeoPosition.fromLocationDto(LocationDto location)
-      : latitude = location.latitude,
-        longitude = location.longitude,
+  // GeoPosition.fromLocationDto(LocationDto location)
+  //     : latitude = location.latitude,
+  //       longitude = location.longitude,
+  //       super();
+
+  GeoPosition.fromLocation(location.LocationData location)
+      : latitude = location.latitude!,
+        longitude = location.longitude!,
         super();
 
   /// Returns the approximate distance in meters between this location and the given location.
@@ -73,7 +78,7 @@ class GeoPosition extends Serializable {
 ///  - name
 /// of the geofence.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class GeofenceMeasure extends CAMSMeasure {
+class GeofenceMeasure extends CAMSMeasure with LocationConfiguration {
   /// The center of the geofence as a GPS location.
   GeoPosition center;
 
@@ -92,12 +97,28 @@ class GeofenceMeasure extends CAMSMeasure {
     String? name,
     String? description,
     bool enabled = true,
+    GeolocationAccuracy accuracy = GeolocationAccuracy.balanced,
+    double distance = 0,
+    int interval = 1000,
+    String? notificationTitle,
+    String? notificationMessage,
+    String? notificationDescription,
     required this.center,
     required this.radius,
     required this.dwell,
     this.label,
   }) : super(
-            type: type, name: name, description: description, enabled: enabled);
+            type: type,
+            name: name,
+            description: description,
+            enabled: enabled) {
+    this.accuracy = accuracy;
+    this.distance = distance;
+    this.interval = interval;
+    this.notificationTitle = notificationTitle;
+    this.notificationMessage = notificationMessage;
+    this.notificationDescription = notificationDescription;
+  }
 
   Function get fromJsonFunction => _$GeofenceMeasureFromJson;
   factory GeofenceMeasure.fromJson(Map<String, dynamic> json) =>

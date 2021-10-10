@@ -7,9 +7,7 @@ library audio;
 import 'dart:async';
 import 'dart:io';
 
-//import 'package:record_mp3/record_mp3.dart';
 import 'package:flutter_sound/flutter_sound.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:noise_meter/noise_meter.dart';
 import 'package:stats/stats.dart';

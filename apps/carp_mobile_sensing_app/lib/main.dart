@@ -36,10 +36,15 @@ part 'src/ui/cachet.dart';
 
 void main() async {
   // makes sure to have an instance of the WidgetsBinding, which is required
-  // to use platform channels to call the native code
+  // to use platform channels to call native code
   // see also >> https://stackoverflow.com/questions/63873338/what-does-widgetsflutterbinding-ensureinitialized-do/63873689
   WidgetsFlutterBinding.ensureInitialized();
 
-  await bloc.initialize();
+  // initialize the bloc, setting the deployment mode:
+  //  * LOCAL
+  //  * CARP_STAGGING
+  //  * CARP_PRODUCTION
+  await bloc.initialize(DeploymentMode.LOCAL);
+
   runApp(App());
 }

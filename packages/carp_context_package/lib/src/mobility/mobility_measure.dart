@@ -2,7 +2,7 @@ part of context;
 
 /// Specify the configuration on how to measure mobility features
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class MobilityMeasure extends CAMSMeasure {
+class MobilityMeasure extends CAMSMeasure with LocationConfiguration {
   /// Should prior computed context be used?
   bool usePriorContexts;
 
@@ -20,12 +20,28 @@ class MobilityMeasure extends CAMSMeasure {
     String? name,
     String? description,
     bool enabled = true,
+    GeolocationAccuracy accuracy = GeolocationAccuracy.balanced,
+    double distance = 0,
+    int interval = 1000,
+    String? notificationTitle,
+    String? notificationMessage,
+    String? notificationDescription,
     this.usePriorContexts = true,
     this.stopRadius = 25,
     this.placeRadius = 50,
     this.stopDuration = const Duration(minutes: 3),
   }) : super(
-            type: type, name: name, description: description, enabled: enabled);
+            type: type,
+            name: name,
+            description: description,
+            enabled: enabled) {
+    this.accuracy = accuracy;
+    this.distance = distance;
+    this.interval = interval;
+    this.notificationTitle = notificationTitle;
+    this.notificationMessage = notificationMessage;
+    this.notificationDescription = notificationDescription;
+  }
 
   Function get fromJsonFunction => _$MobilityMeasureFromJson;
 

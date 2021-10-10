@@ -120,8 +120,10 @@ LocationMeasure _$LocationMeasureFromJson(Map<String, dynamic> json) {
     duration: Duration(microseconds: json['duration'] as int),
     accuracy: _$enumDecode(_$GeolocationAccuracyEnumMap, json['accuracy']),
     distance: (json['distance'] as num).toDouble(),
-    notificationTitle: json['notificationTitle'] as String,
-    notificationMsg: json['notificationMsg'] as String,
+    interval: json['interval'] as int,
+    notificationTitle: json['notificationTitle'] as String?,
+    notificationMessage: json['notificationMessage'] as String?,
+    notificationDescription: json['notificationDescription'] as String?,
   )
     ..$type = json[r'$type'] as String?
     ..configuration = Map<String, String>.from(json['configuration'] as Map);
@@ -142,22 +144,24 @@ Map<String, dynamic> _$LocationMeasureToJson(LocationMeasure instance) {
   writeNotNull('description', instance.description);
   val['enabled'] = instance.enabled;
   val['configuration'] = instance.configuration;
-  val['frequency'] = instance.frequency.inMicroseconds;
-  val['duration'] = instance.duration.inMicroseconds;
   val['accuracy'] = _$GeolocationAccuracyEnumMap[instance.accuracy];
   val['distance'] = instance.distance;
-  val['notificationTitle'] = instance.notificationTitle;
-  val['notificationMsg'] = instance.notificationMsg;
+  val['interval'] = instance.interval;
+  writeNotNull('notificationTitle', instance.notificationTitle);
+  writeNotNull('notificationMessage', instance.notificationMessage);
+  writeNotNull('notificationDescription', instance.notificationDescription);
+  val['frequency'] = instance.frequency.inMicroseconds;
+  val['duration'] = instance.duration.inMicroseconds;
   return val;
 }
 
 const _$GeolocationAccuracyEnumMap = {
-  GeolocationAccuracy.lowest: 'lowest',
+  GeolocationAccuracy.powerSave: 'powerSave',
   GeolocationAccuracy.low: 'low',
-  GeolocationAccuracy.medium: 'medium',
+  GeolocationAccuracy.balanced: 'balanced',
   GeolocationAccuracy.high: 'high',
-  GeolocationAccuracy.best: 'best',
-  GeolocationAccuracy.bestForNavigation: 'bestForNavigation',
+  GeolocationAccuracy.navigation: 'navigation',
+  GeolocationAccuracy.reduced: 'reduced',
 };
 
 WeatherDatum _$WeatherDatumFromJson(Map<String, dynamic> json) {
@@ -287,6 +291,12 @@ GeofenceMeasure _$GeofenceMeasureFromJson(Map<String, dynamic> json) {
     name: json['name'] as String?,
     description: json['description'] as String?,
     enabled: json['enabled'] as bool,
+    accuracy: _$enumDecode(_$GeolocationAccuracyEnumMap, json['accuracy']),
+    distance: (json['distance'] as num).toDouble(),
+    interval: json['interval'] as int,
+    notificationTitle: json['notificationTitle'] as String?,
+    notificationMessage: json['notificationMessage'] as String?,
+    notificationDescription: json['notificationDescription'] as String?,
     center: GeoPosition.fromJson(json['center'] as Map<String, dynamic>),
     radius: (json['radius'] as num).toDouble(),
     dwell: Duration(microseconds: json['dwell'] as int),
@@ -311,6 +321,12 @@ Map<String, dynamic> _$GeofenceMeasureToJson(GeofenceMeasure instance) {
   writeNotNull('description', instance.description);
   val['enabled'] = instance.enabled;
   val['configuration'] = instance.configuration;
+  val['accuracy'] = _$GeolocationAccuracyEnumMap[instance.accuracy];
+  val['distance'] = instance.distance;
+  val['interval'] = instance.interval;
+  writeNotNull('notificationTitle', instance.notificationTitle);
+  writeNotNull('notificationMessage', instance.notificationMessage);
+  writeNotNull('notificationDescription', instance.notificationDescription);
   val['center'] = instance.center;
   val['radius'] = instance.radius;
   val['dwell'] = instance.dwell.inMicroseconds;
@@ -470,6 +486,12 @@ MobilityMeasure _$MobilityMeasureFromJson(Map<String, dynamic> json) {
     name: json['name'] as String?,
     description: json['description'] as String?,
     enabled: json['enabled'] as bool,
+    accuracy: _$enumDecode(_$GeolocationAccuracyEnumMap, json['accuracy']),
+    distance: (json['distance'] as num).toDouble(),
+    interval: json['interval'] as int,
+    notificationTitle: json['notificationTitle'] as String?,
+    notificationMessage: json['notificationMessage'] as String?,
+    notificationDescription: json['notificationDescription'] as String?,
     usePriorContexts: json['usePriorContexts'] as bool,
     stopRadius: (json['stopRadius'] as num).toDouble(),
     placeRadius: (json['placeRadius'] as num).toDouble(),
@@ -494,6 +516,12 @@ Map<String, dynamic> _$MobilityMeasureToJson(MobilityMeasure instance) {
   writeNotNull('description', instance.description);
   val['enabled'] = instance.enabled;
   val['configuration'] = instance.configuration;
+  val['accuracy'] = _$GeolocationAccuracyEnumMap[instance.accuracy];
+  val['distance'] = instance.distance;
+  val['interval'] = instance.interval;
+  writeNotNull('notificationTitle', instance.notificationTitle);
+  writeNotNull('notificationMessage', instance.notificationMessage);
+  writeNotNull('notificationDescription', instance.notificationDescription);
   val['usePriorContexts'] = instance.usePriorContexts;
   val['stopRadius'] = instance.stopRadius;
   val['placeRadius'] = instance.placeRadius;

@@ -10,14 +10,19 @@ class WeatherProbe extends DatumProbe {
     _wf = WeatherFactory(wm.apiKey);
   }
 
+  Future<void> onResume() async {
+    await LocationManager().configure();
+    super.onResume();
+  }
+
   /// Returns the [WeatherDatum] for this location.
   Future<Datum> getDatum() async {
     try {
-      Position loc = await getLastKnownPosition();
+      var loc = await LocationManager().getLastKnownLocation();
 
       Weather w = await _wf.currentWeatherByLocation(
-        loc.latitude,
-        loc.longitude,
+        loc.latitude!,
+        loc.longitude!,
       );
 
       return WeatherDatum()
