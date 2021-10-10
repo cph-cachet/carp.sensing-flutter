@@ -19,7 +19,7 @@ To use this plugin, add [`carp_mobile_sensing`](https://pub.dev/packages/carp_mo
 dependencies:
   flutter:
     sdk: flutter
-  carp_mobile_sensing: ^0.21.0
+  carp_mobile_sensing: ^latest
 `````
 
 ### Android Integration

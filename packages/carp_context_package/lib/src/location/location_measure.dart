@@ -7,60 +7,42 @@
 
 part of context;
 
-enum GeolocationAccuracy {
-  lowest,
-  low,
-  medium,
-  high,
-  best,
-  bestForNavigation,
-}
-
 /// Specify the configuration on how to collect location data.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class LocationMeasure extends PeriodicMeasure {
-  /// Defines the desired accuracy that should be used to determine the location
-  /// data.
-  /// The default value for this field is [GeolocationAccuracy.best].
-  GeolocationAccuracy accuracy;
-
-  /// The minimum distance (measured in meters) a device must move horizontally
-  /// before an update event is generated.
-  /// Specify 0 when you want to be notified of all movements.
-  /// The default is 0.
-  double distance;
-
-  /// The title of the notification to be shown to the user when
-  /// location tracking takes place in the background.
-  String notificationTitle;
-
-  /// The message in the notification to be shown to the user when
-  /// location tracking takes place in the background.
-  String notificationMsg;
-
+class LocationMeasure extends PeriodicMeasure with LocationConfiguration {
   LocationMeasure({
     required String type,
     String? name,
     String? description,
     bool enabled = true,
-    required Duration frequency,
+    Duration frequency = const Duration(seconds: 30),
     Duration duration = const Duration(seconds: 1),
-    this.accuracy = GeolocationAccuracy.best,
-    this.distance = 0,
-    this.notificationTitle = 'CARP Location Probe',
-    this.notificationMsg = 'CARP location tracking',
+    GeolocationAccuracy accuracy = GeolocationAccuracy.balanced,
+    double distance = 0,
+    int interval = 1000,
+    String? notificationTitle,
+    String? notificationMessage,
+    String? notificationDescription,
   }) : super(
             type: type,
             name: name,
             description: description,
             enabled: enabled,
             frequency: frequency,
-            duration: duration);
+            duration: duration) {
+    this.accuracy = accuracy;
+    this.distance = distance;
+    this.interval = interval;
+    this.notificationTitle = notificationTitle;
+    this.notificationMessage = notificationMessage;
+    this.notificationDescription = notificationDescription;
+  }
 
   Function get fromJsonFunction => _$LocationMeasureFromJson;
   factory LocationMeasure.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as LocationMeasure;
   Map<String, dynamic> toJson() => _$LocationMeasureToJson(this);
 
-  String toString() => super.toString() + ', accuracy: $accuracy';
+  String toString() =>
+      super.toString() + ', accuracy: $accuracy, distance: $distance';
 }

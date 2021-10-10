@@ -23,14 +23,14 @@ class NoiseProbe extends BufferingPeriodicStreamProbe {
   @override
   void onInitialize(Measure measure) {
     assert(measure is NoiseMeasure);
-    _noiseMeter = NoiseMeter(onStop);
+    _noiseMeter = NoiseMeter();
     super.onInitialize(measure);
   }
 
   @override
   Future onRestart() async {
     super.onRestart();
-    _noiseMeter = NoiseMeter(onStop);
+    _noiseMeter = NoiseMeter();
   }
 
   @override

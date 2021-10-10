@@ -7,34 +7,24 @@
 
 part of context;
 
-// The [LocationManager] runs as a background service.
-
-/// Get the last known position.
-/// If not known, tries to get it from the [Geolocator].
-Future<Position> getLastKnownPosition() async =>
-    await Geolocator.getLastKnownPosition() ??
-    await Geolocator.getCurrentPosition();
-
 /// Collects location information from the underlying OS's location API.
 /// Is a [DatumProbe] that collects a [LocationDatum] once when
 /// the [getDatum] method is called.
+/// Takes a [LocationMeasure] as configuration.
 class LocationProbe extends DatumProbe {
   void onInitialize(Measure measure) {
+    assert(measure is LocationMeasure);
     super.onInitialize(measure);
-
-    // start the background location manager
-    LocationManager().notificationTitle = 'CARP Location Probe';
-    LocationManager().notificationMsg = 'CARP location tracking';
-    LocationManager().start(askForPermission: false);
   }
 
-  // Future<Datum> getDatum() async => locationManager
-  //     .getCurrentLocation()
-  //     .then((dto) => LocationDatum.fromLocationDto(dto));
+  Future<void> onResume() async {
+    await LocationManager().configure(measure as LocationConfiguration);
+    super.onResume();
+  }
 
-  // using the Geolocator package - seems more stable over long-term sampling
-  Future<Datum> getDatum() async => Geolocator.getCurrentPosition()
-      .then((position) => LocationDatum.fromPosition(position));
+  Future<Datum> getDatum() async => LocationManager()
+      .getLocation()
+      .then((location) => LocationDatum.fromLocation(location));
 }
 
 /// Collects geolocation information from the underlying OS's location API.
@@ -47,16 +37,14 @@ class GeoLocationProbe extends StreamProbe {
   void onInitialize(Measure measure) {
     assert(measure is LocationMeasure);
     super.onInitialize(measure);
+  }
 
-    LocationManager().distanceFilter = (measure as LocationMeasure).distance;
-    LocationManager().interval = measure.frequency.inSeconds;
-    LocationManager().notificationTitle = measure.notificationTitle;
-    LocationManager().notificationMsg = measure.notificationMsg;
-
-    LocationManager().start(askForPermission: false);
+  Future<void> onResume() async {
+    await LocationManager().configure(measure as LocationMeasure);
+    super.onResume();
   }
 
   Stream<LocationDatum> get stream => LocationManager()
-      .locationStream
-      .map((dto) => LocationDatum.fromLocationDto(dto));
+      .onLocationChanged
+      .map((location) => LocationDatum.fromLocation(location));
 }

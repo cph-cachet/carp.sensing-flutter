@@ -42,8 +42,8 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
               DeviceSamplingPackage.MEMORY, // 60 s
               DeviceSamplingPackage.SCREEN, // event-based
               ContextSamplingPackage.ACTIVITY, // event-based
-              // ContextSamplingPackage.GEOLOCATION, // event-based
-              //ContextSamplingPackage.MOBILITY, // event-based
+              ContextSamplingPackage.GEOLOCATION, // event-based
+              ContextSamplingPackage.MOBILITY, // event-based
             ],
           ),
         phone);

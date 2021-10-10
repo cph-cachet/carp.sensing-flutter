@@ -180,7 +180,6 @@ To use this package, import it into your app together with the
 [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package:
 
 `````dart
-import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_context_package/context.dart';
 `````

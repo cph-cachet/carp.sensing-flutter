@@ -5,7 +5,7 @@
 [![github stars](https://img.shields.io/github/stars/cph-cachet/carp.sensing-flutter.svg?style=flat&logo=github&colorB=deeppink&label=stars)](https://github.com/cph-cachet/carp.sensing-flutter)
 [![MIT License](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
 
-This library contains the [CARP core](https://github.com/cph-cachet/carp.core-kotlin) model as implemented in Dart/Flutter. It contains the domain model for the CARP Mobile Sensing (CAMS) framework and all of its supporting libraries, packages, etc.
+This library contains the [CARP core](https://github.com/cph-cachet/carp.core-kotlin) model as implemented in Dart. It contains the domain model for the [carp_mobile_sensing](https://pub.dev/packages/carp_mobile_sensing) framework and all of its supporting libraries, packages, etc.
 
 This package does nothing on its own. 
 

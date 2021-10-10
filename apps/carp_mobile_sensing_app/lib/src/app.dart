@@ -19,12 +19,6 @@ class LoadingPage extends StatelessWidget {
   ///  * initialize sensing
   ///  * start sensing
   Future<bool> init(BuildContext context) async {
-    // initialize the bloc, setting the deployment mode:
-    //  * LOCAL
-    //  * CARP_STAGGING
-    //  * CARP_PRODUCTION
-    await bloc.initialize(DeploymentMode.CARP_STAGING);
-
     // only initialize the CARP backend bloc, if needed
     if (bloc.deploymentMode != DeploymentMode.LOCAL) {
       await CarpBackend().initialize();

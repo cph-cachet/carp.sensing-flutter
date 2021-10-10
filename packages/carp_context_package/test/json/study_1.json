@@ -1,13 +1,12 @@
 {
   "ownerId": "alex@uni.dk",
   "name": "Context package test",
-  "creationDate": "2021-06-27T20:03:56.353932Z",
+  "creationDate": "2021-10-10T18:22:22.596346Z",
   "masterDevices": [
    {
     "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
     "isMasterDevice": true,
     "roleName": "masterphone",
-    "supportedDataTypes": [],
     "samplingConfiguration": {}
    }
   ],
@@ -15,15 +14,13 @@
   "connections": [],
   "triggers": {
    "0": {
-    "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger",
-    "sourceDeviceRoleName": "",
-    "requiresMasterDevice": false
+    "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
    }
   },
   "tasks": [
    {
     "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
-    "name": "Task #3",
+    "name": "Task #6",
     "measures": [
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
@@ -114,12 +111,17 @@
       "duration": 1000000
      },
      {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.LocationMeasure",
       "type": "dk.cachet.carp.location",
       "name": "Location",
       "description": "Collects location from the phone's GPS sensor",
       "enabled": true,
-      "configuration": {}
+      "configuration": {},
+      "accuracy": "balanced",
+      "distance": 0.0,
+      "interval": 1000,
+      "frequency": 30000000,
+      "duration": 1000000
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.LocationMeasure",
@@ -128,12 +130,11 @@
       "description": "Collects location from the phone's GPS sensor",
       "enabled": true,
       "configuration": {},
-      "frequency": 30000000,
-      "duration": 1000000,
       "accuracy": "low",
       "distance": 3.0,
-      "notificationTitle": "CARP Location Probe",
-      "notificationMsg": "CARP location tracking"
+      "interval": 1000,
+      "frequency": 30000000,
+      "duration": 1000000
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
@@ -168,6 +169,9 @@
       "description": "Collects geofence events when then phone enters, leaves, or dwell in a geographic area",
       "enabled": true,
       "configuration": {},
+      "accuracy": "balanced",
+      "distance": 0.0,
+      "interval": 1000,
       "center": {
        "$type": "GeoPosition",
        "latitude": 55.7943601,
@@ -184,6 +188,9 @@
       "description": "Extracts mobility features based on location tracking",
       "enabled": true,
       "configuration": {},
+      "accuracy": "balanced",
+      "distance": 0.0,
+      "interval": 1000,
       "usePriorContexts": true,
       "stopRadius": 25.0,
       "placeRadius": 50.0,
@@ -195,7 +202,7 @@
   "triggeredTasks": [
    {
     "triggerId": 0,
-    "taskName": "Task #3",
+    "taskName": "Task #6",
     "targetDeviceRoleName": "masterphone"
    }
   ],

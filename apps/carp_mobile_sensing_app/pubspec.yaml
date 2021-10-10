@@ -1,7 +1,6 @@
 name: carp_mobile_sensing_app
 description: The CARP Mobile Sensing App
-version: 0.30.5
-author:  CACHET Team <cph.cachet@gmail.com>
+version: 0.30.6
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -16,9 +15,9 @@ dependencies:
   flutter_launcher_icons: ^0.9.1
   
   #carp_core: ^0.30.0      # the core CARP domain model
-  #carp_mobile_sensing: ^0.30.1
+  #carp_mobile_sensing: ^0.30.6
   #carp_connectivity_package: ^0.30.0  # conflict w. RP - different versions of rxdart
-  #carp_context_package: ^0.30.0
+  #carp_context_package: ^0.30.1
   #carp_audio_package: ^0.30.0
   #carp_communication_package: ^0.30.0
   #carp_apps_package: ^0.30.0
@@ -57,7 +56,8 @@ dev_dependencies:
 #  flutter_test:
 #    sdk: flutter
   test: ^1.17.10 
-  carp_study_generator: ^0.30.0
+  # DON'T include the carp_study_generator when compiling the app for runtime
+  # carp_study_generator: ^0.30.0
 #  carp_study_generator: 
 #    path: ../../utilities/carp_study_generator/
 

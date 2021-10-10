@@ -2,6 +2,7 @@ part of context;
 
 /// Collects mobility features using the [MobilityFactory] API.
 class MobilityProbe extends StreamProbe {
+  @override
   void onInitialize(Measure measure) {
     super.onInitialize(measure);
     MobilityMeasure m = measure as MobilityMeasure;
@@ -10,17 +11,32 @@ class MobilityProbe extends StreamProbe {
     MobilityFeatures().stopRadius = m.stopRadius;
     MobilityFeatures().placeRadius = m.placeRadius;
     MobilityFeatures().stopDuration = m.stopDuration;
+  }
+
+  @override
+  Future<void> onResume() async {
+    await LocationManager().configure(measure as LocationConfiguration);
 
     // start the location data stream from the LocationManager
-    Stream<LocationSample> stream = LocationManager().locationStream.map((e) =>
-        LocationSample(GeoLocation(e.latitude, e.longitude), DateTime.now()));
+    Stream<LocationSample> stream = LocationManager().onLocationChanged.map(
+        (loc) => LocationSample(
+            GeoLocation(loc.latitude!, loc.longitude!), DateTime.now()));
 
     // feed the location data stream to the MobilityFeatures singleton
     // which in turn produce [MobilityContext]s
-    MobilityFeatures().startListening(stream);
+    await MobilityFeatures().startListening(stream);
+
+    super.onResume();
+  }
+
+  @override
+  Future<void> onPause() async {
+    await MobilityFeatures().stopListening();
+    super.onPause();
   }
 
   /// The stream of mobility features as they are generated.
+  @override
   Stream<Datum> get stream => MobilityFeatures()
       .contextStream
       .map((context) => MobilityDatum.fromMobilityContext(context));
