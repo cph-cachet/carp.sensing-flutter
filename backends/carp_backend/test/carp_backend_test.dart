@@ -150,7 +150,8 @@ void main() {
 
   group("Study Protocol Manager", () {
     test('- get study protocol', () async {
-      StudyProtocol study = await manager.getStudyProtocol(testDeploymentId);
+      SmartphoneStudyProtocol study =
+          await manager.getStudyProtocol(testDeploymentId);
       print('study: $study');
       print(_encode(study));
     }, skip: false);
@@ -186,42 +187,6 @@ void main() {
       });
       expect(deployment.configuration.deviceId, isNotNull);
     }, skip: false);
-  });
-
-  group("Study Description", () {
-    test('- get', () async {
-      StudyDescription? description =
-          await CarpResourceManager().getStudyDescription(refresh: true);
-      print(_encode(description));
-    });
-
-    test('- set', () async {
-      StudyDescription description = StudyDescription(
-          title: '1234',
-          description: 'This is a super cool study',
-          purpose: 'For testing only',
-          responsible: StudyReponsible(
-            id: 'me',
-            title: 'Dr.',
-            address: '',
-            affiliation: 'DTU',
-            email: 'user@dtu.dk',
-            name: 'Ole Pedersen',
-          ));
-
-      bool success =
-          await CarpResourceManager().setStudyDescription(description);
-      print('updated: $success');
-      StudyDescription? downloaded =
-          await CarpResourceManager().getStudyDescription(refresh: true);
-
-      print(_encode(downloaded));
-    });
-
-    test('- delete', () async {
-      bool success = await CarpResourceManager().deleteStudyDescription();
-      print('deleted: $success');
-    });
   });
 
   group("Informed Consent", () {

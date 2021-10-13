@@ -19,6 +19,12 @@ class StudyDescription extends Serializable {
   /// this study and its purpose.
   String purpose;
 
+  /// The URL pointing to a web page description of this study.
+  String? studyDescriptionUrl;
+
+  /// The URL pointing to a web page with the privacy policy of this study.
+  String? privacyPolicyUrl;
+
   /// The primary investigator (PI) responsible of this study.
   StudyReponsible? responsible;
 
@@ -26,6 +32,8 @@ class StudyDescription extends Serializable {
     required this.title,
     required this.description,
     required this.purpose,
+    this.studyDescriptionUrl,
+    this.privacyPolicyUrl,
     this.responsible,
   });
 

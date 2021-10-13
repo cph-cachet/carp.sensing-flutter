@@ -22,13 +22,13 @@ class FileStudyProtocolManager implements StudyProtocolManager {
   }
 
   @override
-  Future<StudyProtocol?> getStudyProtocol(String studyId) async {
+  Future<SmartphoneStudyProtocol?> getStudyProtocol(String studyId) async {
     info("Loading study '$studyId'.");
-    StudyProtocol? study;
+    SmartphoneStudyProtocol? study;
 
     try {
       String jsonString = File(filename(studyId)).readAsStringSync();
-      study = StudyProtocol.fromJson(
+      study = SmartphoneStudyProtocol.fromJson(
           json.decode(jsonString) as Map<String, dynamic>);
     } catch (exception) {
       warning("Failed to load study '$studyId' - $exception");
@@ -39,16 +39,20 @@ class FileStudyProtocolManager implements StudyProtocolManager {
 
   /// Save a study on the local file system.
   /// Returns `true` if successful.
-  Future<bool> saveStudyProtocol(String studyId, StudyProtocol study) async {
+  Future<bool> saveStudyProtocol(
+    String studyId,
+    SmartphoneStudyProtocol study,
+  ) async {
     bool success = true;
-    info("Saving study '$studyId'.");
+    info("Saving study protocol - id: '$studyId'.");
     try {
       final json = jsonEncode(study);
       File(filename(studyId)).writeAsStringSync(json);
     } catch (exception) {
       success = false;
-      warning("Failed to save study '$studyId' - $exception");
+      warning("Failed to save study protocol '$studyId' - $exception");
     }
+
     return success;
   }
 

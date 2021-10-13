@@ -1,3 +1,8 @@
+## 0.31.0
+* upgrade to `carp_mobile_sensing` v. 0.31.0
+* remove support for handling study description in `ResourceManager` since this is now part of a `SmartphoneStudyProtocol` and handled there.
+
+
 ## 0.30.5
 * upgrade to `carp_mobile_sensing` v. 0.30.5
 * upgrade to `carp_webservices` v. 0.30.1
@@ -15,7 +20,7 @@
 
 ## 0.21.0
 * upgrade to `carp_mobile_sensing` and `carp_webservices` v. 0.21.x
-* added the `CarptudyProtocolManager` which allow getting `CAMSStudyProtocol`s from CARP
+* added the `CarpStudyProtocolManager` which allow getting `CAMSStudyProtocol`s from CARP
 * support for uploading and downloading informed consent to be shown to the user
 * support for uploading and downloading localization setting for different languages
 

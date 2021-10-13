@@ -7,26 +7,27 @@
 
 part of carp_backend;
 
-/// Retrieve and store [StudyProtocol] json definitions at the CARP backend.
+/// Retrieve and store [SmartphoneStudyProtocol] json definitions at the CARP backend.
 ///
-/// In the CARP web service, a CAMS study protocol is modelled as a custom
+/// In the CARP web service, a study protocol is modelled as a custom
 /// protcol, which has only one taks, namely a [CustomProtocolTask]. This
-/// custom task hold the raw json desription of a [CAMSStudyProtocol].
+/// custom task hold the raw json desription of a [SmartphoneStudyProtocol].
 class CarpStudyProtocolManager implements StudyProtocolManager {
   Future initialize() async {
     // initialize json serialization for CAMS and RP classes
-    StudyProtocol(ownerId: '', name: '');
+    DomainJsonFactory();
     RPTask(identifier: '');
   }
 
-  /// Get a [StudyProtocol] from the CARP backend.
+  /// Get a [SmartphoneStudyProtocol] from the CARP backend.
   ///
-  /// Note that in the CARP backend, a CAMS study is empbedded as a
+  /// Note that in the CARP backend, a study protocol is empbedded as a
   /// [CustomProtocolTask] and deployed as part of a so-called
   /// [Participation] for a user, with a specific [studyDeploymentId].
   ///
   /// Throws a [CarpServiceException] if not successful.
-  Future<StudyProtocol> getStudyProtocol(String studyDeploymentId) async {
+  Future<SmartphoneStudyProtocol> getStudyProtocol(
+      String studyDeploymentId) async {
     assert(CarpService().isConfigured,
         "CARP Service has not been configured - call 'CarpService().configure()' first.");
     assert(CarpService().currentUser != null,
@@ -70,8 +71,8 @@ class CarpStudyProtocolManager implements StudyProtocolManager {
         // asume that this deployment only contains one custom task
         TaskDescriptor task = deployment.tasks[0];
         if (task is CustomProtocolTask) {
-          // we expect to get a ptotocol of type [StudyProtocol]
-          StudyProtocol protocol = StudyProtocol.fromJson(
+          // we expect to get a ptotocol of type [SmartphoneStudyProtocol]
+          SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol.fromJson(
               json.decode(task.studyProtocol) as Map<String, dynamic>);
 
           // mark this deployment as successful
@@ -118,7 +119,10 @@ class CarpStudyProtocolManager implements StudyProtocolManager {
   /// [Participation] for a user, with a specific [studyDeploymentId].
   ///
   /// Throws a [CarpServiceException] if not successful.
-  Future<bool> saveStudyProtocol(String studyId, StudyProtocol protocol) async {
+  Future<bool> saveStudyProtocol(
+    String studyId,
+    SmartphoneStudyProtocol protocol,
+  ) async {
     throw CarpServiceException(
         message:
             'There is no support for saving studies in the CARP web service from the client (yet).');

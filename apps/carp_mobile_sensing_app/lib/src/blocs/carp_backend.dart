@@ -16,7 +16,6 @@ class CarpBackend {
 
   static CarpBackend _instance = CarpBackend._();
   CarpBackend._() : super();
-
   factory CarpBackend() => _instance;
 
   String get uri => (bloc.deploymentMode == DeploymentMode.CARP_PRODUCTION)
@@ -39,6 +38,9 @@ class CarpBackend {
     // configure and authenticate
     CarpService().configure(app!);
     // await CarpService().authenticate(username: username, password: password);
+
+    // register CARP as a data backend where data can be uploaded
+    DataManagerRegistry().register(CarpDataManager());
 
     info('$runtimeType initialized');
   }

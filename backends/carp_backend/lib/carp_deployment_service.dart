@@ -8,41 +8,12 @@
 part of carp_backend;
 
 /// A [DeploymentService] that works with the [CarpStudyProtocolManager]
-/// to handle a [MasterDeviceDeployment] based on a [StudyProtocol], which is
-/// store as a custom protocol on the CARP server.
+/// to handle a [MasterDeviceDeployment] based on a [SmartphoneStudyProtocol],
+/// which is stored as a custom protocol on the CARP server.
 ///
-/// This deployment service basically reads a [StudyProtocol] as a custom protocol
-/// from the CARP web server, and translate this into a [SmartphoneDeployment]
-/// which can be used on this phone.
-///
-/// It also gets the [StudyDescription] for the study and adds this to the device
-/// deployment.
-///
-/// It adds a [CarpDataEndPoint] to the device deployment, which makes sure
-/// that data is stored back on the CARP server.
-///
-/// Its main responsibility is to:
-///  - retrieve the custom protocol from the CARP server
-///  - retrieve the study description from the CARP server
-///  - transform it into a smartphone study deployment
-///  - add a [CarpDataEndPoint] to the deployment
-///
-/// The [CarpDataEndPoint] is the following:
-///
-/// ´´´dart
-///    CarpDataEndPoint(
-///       uploadMethod: CarpUploadMethod.BATCH_DATA_POINT,
-///       name: CarpService().app.name,
-///       uri: CarpService().app.uri.toString(),
-///       bufferSize: 500 * 1000,
-///       deleteWhenUploaded: true,
-///    );
-/// ````
-///
-/// Hence, data is uploaded in batches using a local file (500 KB) as a buffer,
-/// which is deleted once uploaded.
-/// If another data enpoint is needed, this can be changed in the deployment
-/// before it is deployed and started on the local phone.
+/// This deployment service basically reads a [SmartphoneStudyProtocol] as a
+/// custom protocol from the CARP web server, and translate this into a
+/// [SmartphoneDeployment], which can be used on this phone.
 ///
 /// This deployment service also allow for local caching of a [SmartphoneDeployment]
 /// once it has been downloaded and created. This is configured using the [useCache]
@@ -54,16 +25,13 @@ class CustomProtocolDeploymentService implements DeploymentService {
       StreamController.broadcast();
 
   CustomProtocolDeploymentService._() {
-    // make sure that the json functions are loaded
-    DomainJsonFactory();
-
     manager.initialize();
   }
 
   factory CustomProtocolDeploymentService() => _instance;
 
   CarpStudyProtocolManager manager = CarpStudyProtocolManager();
-  late StudyProtocol protocol;
+  late SmartphoneStudyProtocol protocol;
 
   /// Should the [getDeviceDeploymentFor] method cache the downloaded
   /// [MasterDeviceDeployment] locally?
@@ -148,30 +116,10 @@ class CustomProtocolDeploymentService implements DeploymentService {
         protocol = await manager.getStudyProtocol(studyDeploymentId);
         _eventController.add(CarpBackendEvents.ProtocolRetrieved);
 
-        // get the study description from CARP
-        StudyDescription? description =
-            await CarpResourceManager().getStudyDescription();
-
-        // configure a data endpoint which can send data back to CARP
-        // note that files must not be zipped
-        // files are deleted locally once uploaded
-        DataEndPoint dataEndPoint = CarpDataEndPoint.fromCarpApp(
-          uploadMethod: CarpUploadMethod.BATCH_DATA_POINT,
-          app: CarpService().app!,
-          bufferSize: 50 * 1000,
-          zip: false,
-          deleteWhenUploaded: true,
-        );
-
-        // create the smartphone deployment with the
-        // - protocol
-        // - description
-        // - data endpoint
-        deployment = SmartphoneDeployment.fromStudyProtocol(
+        // create the smartphone deployment
+        deployment = SmartphoneDeployment.fromSmartphoneStudyProtocol(
           studyDeploymentId: studyDeploymentId,
-          protocolDescription: description,
           masterDeviceRoleName: masterDeviceRoleName,
-          dataEndPoint: dataEndPoint,
           protocol: protocol,
         );
 

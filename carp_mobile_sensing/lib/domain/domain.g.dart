@@ -6,11 +6,119 @@ part of domain;
 // JsonSerializableGenerator
 // **************************************************************************
 
+SmartphoneStudyProtocol _$SmartphoneStudyProtocolFromJson(
+    Map<String, dynamic> json) {
+  return SmartphoneStudyProtocol(
+    ownerId: json['ownerId'] as String,
+    name: json['name'] as String,
+    protocolDescription: json['protocolDescription'] == null
+        ? null
+        : StudyDescription.fromJson(
+            json['protocolDescription'] as Map<String, dynamic>),
+    samplingStrategy:
+        _$enumDecode(_$SamplingSchemaTypeEnumMap, json['samplingStrategy']),
+  )
+    ..description = json['description'] as String?
+    ..creationDate = DateTime.parse(json['creationDate'] as String)
+    ..masterDevices = (json['masterDevices'] as List<dynamic>)
+        .map((e) => MasterDeviceDescriptor.fromJson(e as Map<String, dynamic>))
+        .toList()
+    ..connectedDevices = (json['connectedDevices'] as List<dynamic>)
+        .map((e) => DeviceDescriptor.fromJson(e as Map<String, dynamic>))
+        .toList()
+    ..connections = (json['connections'] as List<dynamic>)
+        .map((e) => DeviceConnection.fromJson(e as Map<String, dynamic>))
+        .toList()
+    ..triggers = (json['triggers'] as Map<String, dynamic>).map(
+      (k, e) => MapEntry(k, Trigger.fromJson(e as Map<String, dynamic>)),
+    )
+    ..tasks = (json['tasks'] as List<dynamic>)
+        .map((e) => TaskDescriptor.fromJson(e as Map<String, dynamic>))
+        .toSet()
+    ..triggeredTasks = (json['triggeredTasks'] as List<dynamic>)
+        .map((e) => TriggeredTask.fromJson(e as Map<String, dynamic>))
+        .toList()
+    ..expectedParticipantData =
+        (json['expectedParticipantData'] as List<dynamic>?)
+            ?.map((e) => e as Map<String, dynamic>)
+            .toList()
+    ..dataEndPoint = json['dataEndPoint'] == null
+        ? null
+        : DataEndPoint.fromJson(json['dataEndPoint'] as Map<String, dynamic>);
+}
+
+Map<String, dynamic> _$SmartphoneStudyProtocolToJson(
+    SmartphoneStudyProtocol instance) {
+  final val = <String, dynamic>{
+    'ownerId': instance.ownerId,
+    'name': instance.name,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('description', instance.description);
+  val['creationDate'] = instance.creationDate.toIso8601String();
+  val['masterDevices'] = instance.masterDevices;
+  val['connectedDevices'] = instance.connectedDevices;
+  val['connections'] = instance.connections;
+  val['triggers'] = instance.triggers;
+  val['tasks'] = instance.tasks.toList();
+  val['triggeredTasks'] = instance.triggeredTasks;
+  writeNotNull('expectedParticipantData', instance.expectedParticipantData);
+  writeNotNull('protocolDescription', instance.protocolDescription);
+  val['samplingStrategy'] =
+      _$SamplingSchemaTypeEnumMap[instance.samplingStrategy];
+  writeNotNull('dataEndPoint', instance.dataEndPoint);
+  return val;
+}
+
+K _$enumDecode<K, V>(
+  Map<K, V> enumValues,
+  Object? source, {
+  K? unknownValue,
+}) {
+  if (source == null) {
+    throw ArgumentError(
+      'A value must be provided. Supported values: '
+      '${enumValues.values.join(', ')}',
+    );
+  }
+
+  return enumValues.entries.singleWhere(
+    (e) => e.value == source,
+    orElse: () {
+      if (unknownValue == null) {
+        throw ArgumentError(
+          '`$source` is not one of the supported values: '
+          '${enumValues.values.join(', ')}',
+        );
+      }
+      return MapEntry(unknownValue, enumValues.values.first);
+    },
+  ).key;
+}
+
+const _$SamplingSchemaTypeEnumMap = {
+  SamplingSchemaType.maximum: 'maximum',
+  SamplingSchemaType.common: 'common',
+  SamplingSchemaType.normal: 'normal',
+  SamplingSchemaType.light: 'light',
+  SamplingSchemaType.minimum: 'minimum',
+  SamplingSchemaType.none: 'none',
+  SamplingSchemaType.debug: 'debug',
+};
+
 StudyDescription _$StudyDescriptionFromJson(Map<String, dynamic> json) {
   return StudyDescription(
     title: json['title'] as String,
     description: json['description'] as String,
     purpose: json['purpose'] as String,
+    studyDescriptionUrl: json['studyDescriptionUrl'] as String?,
+    privacyPolicyUrl: json['privacyPolicyUrl'] as String?,
     responsible: json['responsible'] == null
         ? null
         : StudyReponsible.fromJson(json['responsible'] as Map<String, dynamic>),
@@ -30,6 +138,8 @@ Map<String, dynamic> _$StudyDescriptionToJson(StudyDescription instance) {
   val['title'] = instance.title;
   val['description'] = instance.description;
   val['purpose'] = instance.purpose;
+  writeNotNull('studyDescriptionUrl', instance.studyDescriptionUrl);
+  writeNotNull('privacyPolicyUrl', instance.privacyPolicyUrl);
   writeNotNull('responsible', instance.responsible);
   return val;
 }
@@ -233,10 +343,6 @@ Map<String, dynamic> _$ConnectableDeviceDescriptorToJson(
 SmartphoneDeployment _$SmartphoneDeploymentFromJson(Map<String, dynamic> json) {
   return SmartphoneDeployment(
     studyDeploymentId: json['studyDeploymentId'] as String?,
-    protocolDescription: json['protocolDescription'] == null
-        ? null
-        : StudyDescription.fromJson(
-            json['protocolDescription'] as Map<String, dynamic>),
     deviceDescriptor: MasterDeviceDescriptor.fromJson(
         json['deviceDescriptor'] as Map<String, dynamic>),
     configuration: DeviceRegistration.fromJson(
@@ -261,14 +367,18 @@ SmartphoneDeployment _$SmartphoneDeploymentFromJson(Map<String, dynamic> json) {
     triggeredTasks: (json['triggeredTasks'] as List<dynamic>)
         .map((e) => TriggeredTask.fromJson(e as Map<String, dynamic>))
         .toList(),
+    protocolDescription: json['protocolDescription'] == null
+        ? null
+        : StudyDescription.fromJson(
+            json['protocolDescription'] as Map<String, dynamic>),
+    samplingStrategy: _$enumDecodeNullable(
+        _$SamplingSchemaTypeEnumMap, json['samplingStrategy']),
     dataEndPoint: json['dataEndPoint'] == null
         ? null
         : DataEndPoint.fromJson(json['dataEndPoint'] as Map<String, dynamic>),
   )
     ..lastUpdateDate = DateTime.parse(json['lastUpdateDate'] as String)
-    ..userId = json['userId'] as String?
-    ..samplingStrategy = _$enumDecodeNullable(
-        _$SamplingSchemaTypeEnumMap, json['samplingStrategy']);
+    ..userId = json['userId'] as String?;
 }
 
 Map<String, dynamic> _$SmartphoneDeploymentToJson(
@@ -299,32 +409,6 @@ Map<String, dynamic> _$SmartphoneDeploymentToJson(
   return val;
 }
 
-K _$enumDecode<K, V>(
-  Map<K, V> enumValues,
-  Object? source, {
-  K? unknownValue,
-}) {
-  if (source == null) {
-    throw ArgumentError(
-      'A value must be provided. Supported values: '
-      '${enumValues.values.join(', ')}',
-    );
-  }
-
-  return enumValues.entries.singleWhere(
-    (e) => e.value == source,
-    orElse: () {
-      if (unknownValue == null) {
-        throw ArgumentError(
-          '`$source` is not one of the supported values: '
-          '${enumValues.values.join(', ')}',
-        );
-      }
-      return MapEntry(unknownValue, enumValues.values.first);
-    },
-  ).key;
-}
-
 K? _$enumDecodeNullable<K, V>(
   Map<K, V> enumValues,
   dynamic source, {
@@ -335,16 +419,6 @@ K? _$enumDecodeNullable<K, V>(
   }
   return _$enumDecode<K, V>(enumValues, source, unknownValue: unknownValue);
 }
-
-const _$SamplingSchemaTypeEnumMap = {
-  SamplingSchemaType.maximum: 'maximum',
-  SamplingSchemaType.common: 'common',
-  SamplingSchemaType.normal: 'normal',
-  SamplingSchemaType.light: 'light',
-  SamplingSchemaType.minimum: 'minimum',
-  SamplingSchemaType.none: 'none',
-  SamplingSchemaType.debug: 'debug',
-};
 
 AutomaticTask _$AutomaticTaskFromJson(Map<String, dynamic> json) {
   return AutomaticTask(

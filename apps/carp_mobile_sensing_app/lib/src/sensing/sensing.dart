@@ -98,11 +98,13 @@ class Sensing {
               '$runtimeType - no study deployment ID has been specified....?');
         }
 
-        // register the CARP data manager for uploading data back to CARP
-        // TODO - check if we can remove this - seems to be done in the CustomProtocolDeploymentService
-        DataManagerRegistry().register(CarpDataManager());
         break;
     }
+
+    // register the CARP data manager for uploading data back to CARP
+    // this is needed in both LOCAL and CARP deployments, since a local study
+    // protocol may still upload to CARP
+    DataManagerRegistry().register(CarpDataManager());
 
     // create and configure a client manager for this phone
     client = SmartPhoneClientManager(
@@ -117,16 +119,8 @@ class Sensing {
         await client!.addStudy(bloc.studyDeploymentId!, deviceRolename!);
 
     // configure the controller
-    if (bloc.deploymentMode == DeploymentMode.LOCAL) {
-      await _controller!.configure();
-    } else {
-      // change the upload to also keep the json files locally
-      await _controller!.configure(
-        dataEndPoint: ((_controller!.deployment! as SmartphoneDeployment)
-            .dataEndPoint as CarpDataEndPoint)
-          ..deleteWhenUploaded = false,
-      );
-    }
+    await _controller!.configure();
+
     // controller.resume();
 
     // listening on the data stream and print them as json to the debug console

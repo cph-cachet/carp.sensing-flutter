@@ -31,6 +31,9 @@ class SmartphoneDeploymentService implements DeploymentService {
     StudyProtocol protocol, [
     String? studyDeploymentId,
   ]) async {
+    assert(protocol is SmartphoneStudyProtocol,
+        "$runtimeType only supports the deployment of protocols of type 'SmartphoneStudyProtocol'");
+
     StudyDeployment deployment = StudyDeployment(protocol, studyDeploymentId);
     _repository[deployment.studyDeploymentId] = deployment;
 
@@ -111,6 +114,7 @@ class SmartphoneDeploymentService implements DeploymentService {
     return SmartphoneDeployment.fromMasterDeviceDeployment(
       studyDeploymentId: studyDeploymentId,
       masterDeviceDeployment: deviceDeployment,
+      protocol: deployment.protocol as SmartphoneStudyProtocol,
     );
   }
 

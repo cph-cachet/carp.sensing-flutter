@@ -70,7 +70,7 @@ void main() async {
   String deviceRolename = status.masterDeviceStatus!.device.roleName;
 
   // add and deploy this deployment using its rolename
-  StudyDeploymentController controller =
+  SmartphoneDeploymentController controller =
       await client.addStudy(studyDeploymentId, deviceRolename);
 
   // configure the controller with the default privacy schema

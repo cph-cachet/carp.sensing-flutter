@@ -23,11 +23,9 @@ class CarpDataManager extends AbstractDataManager {
   CarpDataManager() : super() {
     // register for de-serialization
     FromJsonFactory().register(CarpDataEndPoint(
+      uploadMethod: CarpUploadMethod.FILE,
       name: '',
       uri: '',
-      clientId: '',
-      clientSecret: '',
-      uploadMethod: CarpUploadMethod.FILE,
     ));
   }
 
@@ -68,41 +66,40 @@ class CarpDataManager extends AbstractDataManager {
       // initialize the file data manager
       fileDataManager.initialize(studyDeploymentId, dataEndPoint, data);
     }
-
+    _initialized = true;
     await user; // This will trigger authentication to the CARP server
-  }
-
-  /// The current [CarpApp] as configured in a [CarpDataEndPoint].
-  Future<CarpApp?> get app async {
-    if (_app == null) {
-      _app = new CarpApp(
-          studyDeploymentId: studyDeploymentId,
-          name: carpEndPoint.name,
-          uri: Uri.parse(carpEndPoint.uri),
-          oauth: OAuthEndPoint(
-              clientID: carpEndPoint.clientId,
-              clientSecret: carpEndPoint.clientSecret));
-    }
-    return _app;
   }
 
   /// The currently signed in user.
   ///
-  /// If a user is already autheticated to the [CarpService], then this account is
-  /// used for uploading the data to CARP.
+  /// If a user is already autheticated to the [CarpService], then this account
+  /// is used for uploading the data to CARP.
   ///
-  /// If the user is not authenticated, this method will try to authenticate the user
-  /// based on the username and password specified in [carpEndPoint].
+  /// If the user is not authenticated, this method will try to authenticate
+  /// the user based on the configuration (uri, client_id, client_secret) and
+  /// credentials (username and password) specified in [carpEndPoint].
   Future<CarpUser?> get user async {
     // check if the CARP webservice has already been configured and the user is logged in.
-    if (!CarpService().isConfigured)
-      CarpService().configure(await (app as FutureOr<CarpApp>));
     if (!CarpService().authenticated) {
+      info('$runtimeType - No user is authenticated. '
+          'Trying to authenticate based on configuration and credentials specified in the carpEndPoint.');
+      if (!CarpService().isConfigured) {
+        CarpService().configure(CarpApp(
+          studyDeploymentId: studyDeploymentId,
+          name: carpEndPoint.name,
+          uri: Uri.parse(carpEndPoint.uri.toString()),
+          oauth: OAuthEndPoint(
+              clientID: carpEndPoint.clientId.toString(),
+              clientSecret: carpEndPoint.clientSecret.toString()),
+        ));
+      }
       await CarpService().authenticate(
-          username: carpEndPoint.email!, password: carpEndPoint.password!);
+        username: carpEndPoint.email.toString(),
+        password: carpEndPoint.password.toString(),
+      );
       info("CarpDataManager - signed in user: ${CarpService().currentUser}");
     }
-    _initialized = true;
+
     return CarpService().currentUser;
   }
 

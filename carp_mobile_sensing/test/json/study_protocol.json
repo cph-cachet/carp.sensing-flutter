@@ -1,14 +1,12 @@
 {
     "ownerId": "user@dtu.dk",
     "name": "patient_tracking",
-    "description": "Track patient movement",
-    "creationDate": "2021-06-16T18:45:37.544426Z",
+    "creationDate": "2021-10-12T19:32:18.333450Z",
     "masterDevices": [
      {
       "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
       "isMasterDevice": true,
       "roleName": "masterphone",
-      "supportedDataTypes": [],
       "samplingConfiguration": {}
      }
     ],
@@ -17,26 +15,19 @@
       "$type": "dk.cachet.carp.protocols.domain.devices.DeviceDescriptor",
       "isMasterDevice": false,
       "roleName": "esense",
-      "supportedDataTypes": [],
       "samplingConfiguration": {}
      }
     ],
     "connections": [],
     "triggers": {
      "0": {
-      "$type": "dk.cachet.carp.protocols.domain.triggers.Trigger",
-      "sourceDeviceRoleName": "",
-      "requiresMasterDevice": false
+      "$type": "dk.cachet.carp.protocols.domain.triggers.Trigger"
      },
      "1": {
-      "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger",
-      "sourceDeviceRoleName": "",
-      "requiresMasterDevice": false
+      "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
      },
      "2": {
-      "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger",
-      "sourceDeviceRoleName": "",
-      "requiresMasterDevice": false
+      "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
      }
     },
     "tasks": [
@@ -197,5 +188,6 @@
       "targetDeviceRoleName": "esense"
      }
     ],
-    "expectedParticipantData": []
+    "expectedParticipantData": [],
+    "samplingStrategy": "normal"
    }

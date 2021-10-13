@@ -1,51 +1,51 @@
-// /*
-//  * Copyright 2021 Copenhagen Center for Health Technology (CACHET) at the
-//  * Technical University of Denmark (DTU).
-//  * Use of this source code is governed by a MIT-style license that can be
-//  * found in the LICENSE file.
-//  */
+/*
+ * Copyright 2021 Copenhagen Center for Health Technology (CACHET) at the
+ * Technical University of Denmark (DTU).
+ * Use of this source code is governed by a MIT-style license that can be
+ * found in the LICENSE file.
+ */
 
-// part of domain;
+part of domain;
 
-// /// A description of how a study is to be executed as part of CAMS.
-// ///
-// /// A [CAMSStudyProtocol] defining the master device ([MasterDeviceDescriptor])
-// /// responsible for aggregating data (typically this phone), the optional
-// /// devices ([DeviceDescriptor]) connected to the master device,
-// /// and the [Trigger]'s which lead to data collection on said devices.
-// ///
-// /// A study may be fetched via a [DeploymentService] that knows how to fetch a
-// /// study protocol for this device.
-// ///
-// /// A study is controlled and executed by a [StudyController].
-// /// Data from the study is uploaded to the specified [DataEndPoint] in the
-// /// specified [dataFormat].
-// @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-// class CAMSStudyProtocol extends StudyProtocol {
-//   /// A unique id for this study protcol.  If specified, this id is used as
-//   /// the [studyId] in the [DataPointHeader].
-//   ///
-//   /// This [studyId] should **NOT** be confused with the study deployment id,
-//   /// which is typically generated when this protocol is deployed using a
-//   /// [DeploymentService].
-//   String? studyId;
+/// A description of how a study is to be executed on a smartphone.
+///
+/// A [SmartphoneStudyProtocol] defining the master device ([MasterDeviceDescriptor])
+/// responsible for aggregating data (typically this phone), the optional
+/// devices ([DeviceDescriptor]) connected to the master device,
+/// and the [Trigger]'s which lead to data collection on said devices.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class SmartphoneStudyProtocol extends StudyProtocol {
+  /// The description of this study protocol containing the title, description,
+  /// purpose, and the responsible researcher for this study.
+  StudyDescription? protocolDescription;
 
-//   /// The textual [StudyProtocolDescription] containing the title, description
-//   /// and purpose of this study protocol.
-//   StudyProtocolDescription? protocolDescription;
+  /// The PI responsible for this protocol.
+  StudyReponsible? get responsible => protocolDescription?.responsible;
 
-//   /// Create a new [StudyProtocol].
-//   CAMSStudyProtocol({
-//     required String ownerId,
-//     required String name,
-//     String? description,
-//     this.studyId,
-//     this.protocolDescription,
-//   }) : super(ownerId: ownerId, name: name, description: description);
+  /// The sampling strategy used in this study based on the standard
+  /// [SamplingSchemaType] types.
+  SamplingSchemaType samplingStrategy;
 
-//   factory CAMSStudyProtocol.fromJson(Map<String, dynamic> json) =>
-//       _$CAMSStudyProtocolFromJson(json);
-//   Map<String, dynamic> toJson() => _$CAMSStudyProtocolToJson(this);
+  /// Specifies where and how to stored or upload the data collected from this
+  /// deployment. If `null`, the sensed data is not stored, but may still be
+  /// used in the app.
+  DataEndPoint? dataEndPoint;
 
-//   String toString() => '${super.toString()}, studyId: $studyId';
-// }
+  /// Create a new [SmartphoneStudyProtocol].
+  SmartphoneStudyProtocol({
+    required String ownerId,
+    required String name,
+    this.protocolDescription,
+    this.samplingStrategy = SamplingSchemaType.normal,
+  }) : super(
+          ownerId: ownerId,
+          name: name,
+          description: protocolDescription?.description,
+        );
+
+  factory SmartphoneStudyProtocol.fromJson(Map<String, dynamic> json) =>
+      _$SmartphoneStudyProtocolFromJson(json);
+  Map<String, dynamic> toJson() => _$SmartphoneStudyProtocolToJson(this);
+
+  String toString() => '${super.toString()}, description: $protocolDescription';
+}

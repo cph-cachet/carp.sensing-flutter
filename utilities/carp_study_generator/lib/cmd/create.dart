@@ -2,7 +2,7 @@ part of carp_study_generator;
 
 class CreateStudyProtocolCommand extends AbstractCommand {
   String? _protocolJson;
-  StudyProtocol? _protocol;
+  SmartphoneStudyProtocol? _protocol;
   StudyProtocol? _customProtocol;
 
   CreateStudyProtocolCommand() : super();
@@ -15,10 +15,10 @@ class CreateStudyProtocolCommand extends AbstractCommand {
     return _protocolJson!;
   }
 
-  StudyProtocol get protocol {
+  SmartphoneStudyProtocol get protocol {
     if (_protocol == null) {
-      print('Checking that this is a valid CAMS Study Protocol');
-      _protocol = StudyProtocol.fromJson(
+      print('Checking that this is a valid Smartphone Study Protocol');
+      _protocol = SmartphoneStudyProtocol.fromJson(
           json.decode(protocolJson) as Map<String, dynamic>);
     }
     return _protocol!;
@@ -45,7 +45,7 @@ class CreateStudyProtocolCommand extends AbstractCommand {
           name: protocol.name,
           description: protocol.description);
 
-      // make sure that the custom protocol also have the right owner id
+      // make sure that the smartphone protocol also have the right owner id
       protocol.ownerId = ownerId;
       _customProtocol!.addMasterDevice(customDevice);
       _customProtocol!.addTriggeredTask(

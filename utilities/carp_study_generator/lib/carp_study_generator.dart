@@ -27,6 +27,5 @@ part 'cmd/help.dart';
 part 'cmd/create.dart';
 part 'cmd/update.dart';
 part 'cmd/consent.dart';
-part 'cmd/description.dart';
 part 'cmd/localization.dart';
 part 'cmd/dryrun.dart';

@@ -92,8 +92,8 @@ class SmartphoneDeploymentController extends StudyRuntime {
   ///      Use [PrivacySchema.DEFAULT] for the default, built-in schema.
   ///      If  not specified, no privacy schema is used and data is saved as sensed.
   ///    * [transformer] - a generic [DatumTransformer] function which transform
-  ///      each collected [Datum].
-  ///      If not specified, a 1:1 mapping is done, i.e. no transformation.
+  ///      each collected [Datum]. If not specified, a 1:1 mapping is done,
+  ///      i.e. no transformation.
   ///    * [askForPermissions] - automatically ask for permissions for all sampling
   ///      packages at once. Default to `true`. If you want the app to handle
   ///      permissions, set this to `false`.

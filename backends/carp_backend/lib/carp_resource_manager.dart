@@ -11,36 +11,12 @@ part of carp_backend;
 ///
 /// This includes:
 ///
-///  * Retrive and store [StudyDescription]s.
 ///  * Retrieve and store informed consent definitions as [RPOrderedTask] json
 ///    definitions at the CARP backend.
 ///  * Retrive and store langunage localization mappings.
 ///
 abstract class ResourceManager {
   Future initialize() async {}
-
-  // --------------------------------------------------------------------------
-  // STUDY DESCRIPTION
-  // --------------------------------------------------------------------------
-
-  /// The latest downloaded study description.
-  ///
-  /// `null` if no consent has been downloaded yet. Use the [getInformedConsent]
-  /// method to get the informed consent document from CARP.
-  StudyDescription? get studyDescription;
-
-  /// Get the description for this study.
-  ///
-  /// If there is no description, `null` is returned.
-  Future<StudyDescription?> getStudyDescription();
-
-  /// Set the informed consent to be used for this study.
-  Future<bool> setStudyDescription(StudyDescription description);
-
-  /// Delete the informed consent for this study.
-  ///
-  /// Returns `true` if delete is successful, `false` otherwise.
-  Future<bool> deleteStudyDescription();
 
   // --------------------------------------------------------------------------
   // INFORMED CONSENT
@@ -132,7 +108,6 @@ class CarpResourceManager implements ResourceManager {
   String? _cacheResourcePath;
 
   final Map<Type, String> _resourceNames = {
-    StudyDescription: 'study_description',
     RPOrderedTask: 'informed_consent',
   };
 
@@ -235,32 +210,6 @@ class CarpResourceManager implements ResourceManager {
 
   @override
   Future initialize() async {}
-
-  // --------------------------------------------------------------------------
-  // STUDY DESCRIPTION
-  // --------------------------------------------------------------------------
-
-  @override
-  StudyDescription? studyDescription;
-
-  @override
-  Future<StudyDescription?> getStudyDescription({bool refresh = false}) async {
-    Map<String, dynamic>? json =
-        await _getResource(StudyDescription, refresh: refresh);
-
-    return studyDescription =
-        (json != null) ? StudyDescription.fromJson(json) : null;
-  }
-
-  @override
-  Future<bool> setStudyDescription(StudyDescription description) async {
-    this.studyDescription = description;
-    return await _setResource(description);
-  }
-
-  @override
-  Future<bool> deleteStudyDescription() async =>
-      await _deleteResource(StudyDescription);
 
   // --------------------------------------------------------------------------
   // INFORMED CONSENT
