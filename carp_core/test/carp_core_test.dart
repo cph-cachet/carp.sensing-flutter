@@ -13,6 +13,7 @@ void main() {
     protocol = StudyProtocol(
       ownerId: 'xyz@dtu.dk',
       name: 'Test Study Protocol',
+      description: 'For testing purposes.',
     );
 
     // Define which devices are used for data collection.

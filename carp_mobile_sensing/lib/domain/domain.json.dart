@@ -9,7 +9,7 @@ void _registerFromJsonFunctions() {
 
   // Protocol classes
   // FromJsonFactory().register(SmartphoneStudyProtocol(name: '', ownerId: ''));
-  FromJsonFactory().register(StudyReponsible(
+  FromJsonFactory().register(StudyResponsible(
     id: '',
     title: '',
     address: '',

@@ -63,7 +63,7 @@ class CarpDataEndPoint extends FileDataEndPoint {
 
   /// When uploading to the CARP using the [CarpUploadMethod.DOCUMENT] method,
   /// [collection] hold the name of the collection to store json objects.
-  String? collection = DEFAULT_COLLECTION;
+  String collection;
 
   /// When uploading to CARP using file in the [CarpUploadMethod.BATCH_DATA_POINT]
   /// or [CarpUploadMethod.FILE] methods, specifies if the local file on the phone
@@ -81,11 +81,11 @@ class CarpDataEndPoint extends FileDataEndPoint {
     this.clientSecret,
     this.email,
     this.password,
-    this.collection,
+    this.collection = DEFAULT_COLLECTION,
     this.deleteWhenUploaded = true,
-    int bufferSize = 500 * 1000, // default buffer size = 500 MB
-    bool zip = true, // zip files before upload pr. default
-    bool encrypt = false, // don't encrypt pr. default
+    int bufferSize = 500 * 1000,
+    bool zip = true,
+    bool encrypt = false,
     String? publicKey,
   }) : super(
             type: DataEndPointTypes.CARP,
@@ -101,16 +101,17 @@ class CarpDataEndPoint extends FileDataEndPoint {
   }
 
   /// Creates a [CarpDataEndPoint] based on a [CarpApp] [app].
-  CarpDataEndPoint.fromCarpApp(
-      {required CarpUploadMethod uploadMethod,
-      required CarpApp app,
-      String? collection,
-      bool deleteWhenUploaded = true,
-      int bufferSize = 500 * 1000,
-      bool zip = true,
-      bool encrypt = false,
-      String? publicKey})
-      : this(
+  CarpDataEndPoint.fromCarpApp({
+    required CarpUploadMethod uploadMethod,
+    required String name,
+    String? collection,
+    bool deleteWhenUploaded = true,
+    int bufferSize = 500 * 1000,
+    bool zip = true,
+    bool encrypt = false,
+    String? publicKey,
+    required CarpApp app,
+  }) : this(
           uploadMethod: uploadMethod,
           name: app.name,
           uri: app.uri.toString(),
@@ -128,7 +129,7 @@ class CarpDataEndPoint extends FileDataEndPoint {
   Map<String, dynamic> toJson() => _$CarpDataEndPointToJson(this);
 
   String toString() =>
-      '$runtimeType - $name, method: ${uploadMethod.toString().split('.').last}';
+      '$runtimeType [$name] - method: ${uploadMethod.toString().split('.').last}';
 }
 
 /// A enumeration of upload methods to CARP

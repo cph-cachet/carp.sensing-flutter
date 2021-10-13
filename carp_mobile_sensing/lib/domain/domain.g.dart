@@ -17,8 +17,10 @@ SmartphoneStudyProtocol _$SmartphoneStudyProtocolFromJson(
             json['protocolDescription'] as Map<String, dynamic>),
     samplingStrategy:
         _$enumDecode(_$SamplingSchemaTypeEnumMap, json['samplingStrategy']),
+    dataEndPoint: json['dataEndPoint'] == null
+        ? null
+        : DataEndPoint.fromJson(json['dataEndPoint'] as Map<String, dynamic>),
   )
-    ..description = json['description'] as String?
     ..creationDate = DateTime.parse(json['creationDate'] as String)
     ..masterDevices = (json['masterDevices'] as List<dynamic>)
         .map((e) => MasterDeviceDescriptor.fromJson(e as Map<String, dynamic>))
@@ -42,9 +44,7 @@ SmartphoneStudyProtocol _$SmartphoneStudyProtocolFromJson(
         (json['expectedParticipantData'] as List<dynamic>?)
             ?.map((e) => e as Map<String, dynamic>)
             .toList()
-    ..dataEndPoint = json['dataEndPoint'] == null
-        ? null
-        : DataEndPoint.fromJson(json['dataEndPoint'] as Map<String, dynamic>);
+    ..description = json['description'] as String;
 }
 
 Map<String, dynamic> _$SmartphoneStudyProtocolToJson(
@@ -52,6 +52,13 @@ Map<String, dynamic> _$SmartphoneStudyProtocolToJson(
   final val = <String, dynamic>{
     'ownerId': instance.ownerId,
     'name': instance.name,
+    'creationDate': instance.creationDate.toIso8601String(),
+    'masterDevices': instance.masterDevices,
+    'connectedDevices': instance.connectedDevices,
+    'connections': instance.connections,
+    'triggers': instance.triggers,
+    'tasks': instance.tasks.toList(),
+    'triggeredTasks': instance.triggeredTasks,
   };
 
   void writeNotNull(String key, dynamic value) {
@@ -60,16 +67,9 @@ Map<String, dynamic> _$SmartphoneStudyProtocolToJson(
     }
   }
 
-  writeNotNull('description', instance.description);
-  val['creationDate'] = instance.creationDate.toIso8601String();
-  val['masterDevices'] = instance.masterDevices;
-  val['connectedDevices'] = instance.connectedDevices;
-  val['connections'] = instance.connections;
-  val['triggers'] = instance.triggers;
-  val['tasks'] = instance.tasks.toList();
-  val['triggeredTasks'] = instance.triggeredTasks;
   writeNotNull('expectedParticipantData', instance.expectedParticipantData);
   writeNotNull('protocolDescription', instance.protocolDescription);
+  val['description'] = instance.description;
   val['samplingStrategy'] =
       _$SamplingSchemaTypeEnumMap[instance.samplingStrategy];
   writeNotNull('dataEndPoint', instance.dataEndPoint);
@@ -121,7 +121,8 @@ StudyDescription _$StudyDescriptionFromJson(Map<String, dynamic> json) {
     privacyPolicyUrl: json['privacyPolicyUrl'] as String?,
     responsible: json['responsible'] == null
         ? null
-        : StudyReponsible.fromJson(json['responsible'] as Map<String, dynamic>),
+        : StudyResponsible.fromJson(
+            json['responsible'] as Map<String, dynamic>),
   )..$type = json[r'$type'] as String?;
 }
 
@@ -144,8 +145,8 @@ Map<String, dynamic> _$StudyDescriptionToJson(StudyDescription instance) {
   return val;
 }
 
-StudyReponsible _$StudyReponsibleFromJson(Map<String, dynamic> json) {
-  return StudyReponsible(
+StudyResponsible _$StudyResponsibleFromJson(Map<String, dynamic> json) {
+  return StudyResponsible(
     id: json['id'] as String,
     name: json['name'] as String,
     title: json['title'] as String,
@@ -155,7 +156,7 @@ StudyReponsible _$StudyReponsibleFromJson(Map<String, dynamic> json) {
   )..$type = json[r'$type'] as String?;
 }
 
-Map<String, dynamic> _$StudyReponsibleToJson(StudyReponsible instance) {
+Map<String, dynamic> _$StudyResponsibleToJson(StudyResponsible instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {

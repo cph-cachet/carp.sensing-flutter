@@ -33,7 +33,7 @@ class SmartphoneDeployment extends MasterDeviceDeployment {
   StudyDescription? protocolDescription;
 
   /// The PI responsible for this study.
-  StudyReponsible? get responsible => protocolDescription?.responsible;
+  StudyResponsible? get responsible => protocolDescription?.responsible;
 
   /// The sampling strategy used in this deployment based on the standard
   /// [SamplingSchemaType] types.

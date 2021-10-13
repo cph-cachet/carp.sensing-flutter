@@ -15,7 +15,7 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 /// sampling schema. Used in the README file.
 void example_1() async {
   // create a study protocol
-  StudyProtocol protocol = StudyProtocol(
+  SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
     ownerId: 'AB',
     name: 'Track patient movement',
   );
@@ -66,10 +66,27 @@ void example_1() async {
 /// This is a more elaborate example used in the README.md file.
 void example_2() async {
   // Create a study protocol
-  StudyProtocol protocol = StudyProtocol(
-    ownerId: 'user@dtu.dk',
+  SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
+    ownerId: 'abc@dtu.dk',
     name: 'Tracking',
-    description: 'Tracking patient movment',
+    protocolDescription: StudyDescription(
+        title: 'CAMS App - Sensing Coverage Study',
+        description:
+            'The default study testing coverage of most measures. Used in the coverage tests.',
+        purpose: 'To test sensing coverage',
+        responsible: StudyResponsible(
+          id: 'abc',
+          title: 'professor',
+          address: 'Ørsteds Plads',
+          affiliation: 'Technical University of Denmark',
+          email: 'abc@dtu.dk',
+          name: 'Alex B. Christensen',
+        )),
+    dataEndPoint: FileDataEndPoint(
+      bufferSize: 500 * 1000,
+      zip: true,
+      encrypt: false,
+    ),
   );
 
   // define which devices are used for data collection
@@ -113,23 +130,8 @@ void example_2() async {
   SmartphoneDeploymentController controller =
       await client.addStudy(studyDeploymentId, deviceRolename);
 
-  // you can change the deployment locally, before starting the
-  // execution of it - e.g. setting another data endpoint.
-  controller.deployment!.dataEndPoint = FileDataEndPoint(
-    bufferSize: 500 * 1000,
-    zip: true,
-    encrypt: false,
-  );
-
-  // configure the controller with a data endpoint that saves data as
-  // file of size 500 KB, which are zipped (this is the same as above)
-  await controller.configure(
-    dataEndPoint: FileDataEndPoint(
-      bufferSize: 500 * 1000,
-      zip: true,
-      encrypt: false,
-    ),
-  );
+  // configure the controller - note that it takes several configuration parameters
+  await controller.configure();
 
   // resume sampling
   controller.resume();

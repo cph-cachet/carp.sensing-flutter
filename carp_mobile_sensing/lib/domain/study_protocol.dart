@@ -19,8 +19,10 @@ class SmartphoneStudyProtocol extends StudyProtocol {
   /// purpose, and the responsible researcher for this study.
   StudyDescription? protocolDescription;
 
+  String get description => protocolDescription?.description ?? '';
+
   /// The PI responsible for this protocol.
-  StudyReponsible? get responsible => protocolDescription?.responsible;
+  StudyResponsible? get responsible => protocolDescription?.responsible;
 
   /// The sampling strategy used in this study based on the standard
   /// [SamplingSchemaType] types.
@@ -37,10 +39,11 @@ class SmartphoneStudyProtocol extends StudyProtocol {
     required String name,
     this.protocolDescription,
     this.samplingStrategy = SamplingSchemaType.normal,
+    this.dataEndPoint,
   }) : super(
           ownerId: ownerId,
           name: name,
-          description: protocolDescription?.description,
+          description: protocolDescription?.description ?? '',
         );
 
   factory SmartphoneStudyProtocol.fromJson(Map<String, dynamic> json) =>

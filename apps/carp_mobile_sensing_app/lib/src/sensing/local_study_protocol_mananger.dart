@@ -12,13 +12,14 @@ part of mobile_sensing_app;
 /// This class shows how to configure a [SmartphoneStudyProtocol] with [Tigger]s,
 /// [TaskDescriptor]s and [Measure]s.
 class LocalStudyProtocolManager implements StudyProtocolManager {
+  @override
   Future initialize() async {}
 
-  /// Create a new CAMS study protocol.
+  @override
   Future<SmartphoneStudyProtocol> getStudyProtocol(String studyId) async {
     SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
-      ownerId: 'alex@uni.dk',
-      name: 'CAMS App Study #1',
+      ownerId: 'abc@dtu.dk',
+      name: 'CAMS App Study No. 2',
     );
 
     protocol.protocolDescription = StudyDescription(
@@ -26,16 +27,16 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         description:
             'The default study testing coverage of most measures. Used in the coverage tests.',
         purpose: 'To test sensing coverage',
-        responsible: StudyReponsible(
-          id: 'jakba',
+        responsible: StudyResponsible(
+          id: 'abc',
           title: 'professor',
           address: 'Ørsteds Plads',
           affiliation: 'Technical University of Denmark',
-          email: 'jakba@dtu.dk',
-          name: 'Jakob E. Bardram',
+          email: 'abc@dtu.dk',
+          name: 'Alex B. Christensen',
         ));
 
-    // add CARP as the data endpoint - w/o authentication info - we expect to be authenticated
+    // add CARP as the data endpoint w/o authentication info - we expect to be authenticated
     protocol.dataEndPoint = CarpDataEndPoint(
       uploadMethod: CarpUploadMethod.DATA_POINT,
       name: 'CARP Server',

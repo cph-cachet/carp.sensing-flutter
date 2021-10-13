@@ -6,7 +6,7 @@ import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 // import 'package:carp_connectivity_package/connectivity.dart';
 import 'package:carp_esense_package/esense.dart';
-// import 'package:carp_context_package/context.dart';
+import 'package:carp_context_package/context.dart';
 import 'package:carp_audio_package/audio.dart';
 import 'package:carp_backend/carp_backend.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
@@ -27,9 +27,12 @@ void main() {
   setUp(() async {
     // register the different sampling package since we're using measures from them
     // SamplingPackageRegistry().register(ConnectivitySamplingPackage());
-    // SamplingPackageRegistry().register(ContextSamplingPackage());
+    SamplingPackageRegistry().register(ContextSamplingPackage());
     SamplingPackageRegistry().register(AudioSamplingPackage());
     SamplingPackageRegistry().register(ESenseSamplingPackage());
+
+    // create a data manager in order to register the json functions
+    CarpDataManager();
 
     // Define which devices are used for data collection.
     phone = Smartphone();
@@ -45,15 +48,16 @@ void main() {
     test('CAMSStudyProtocol -> JSON', () async {
       print(protocol);
       print(toJsonString(protocol!));
-      expect(protocol!.ownerId, 'alex@uni.dk');
+      expect(protocol?.ownerId, 'abc@dtu.dk');
     });
 
     test('StudyProtocol -> JSON -> StudyProtocol :: deep assert', () async {
       print('#1 : $protocol');
       final studyJson = toJsonString(protocol!);
 
-      StudyProtocol protocolFromJson = StudyProtocol.fromJson(
-          json.decode(studyJson) as Map<String, dynamic>);
+      SmartphoneStudyProtocol protocolFromJson =
+          SmartphoneStudyProtocol.fromJson(
+              json.decode(studyJson) as Map<String, dynamic>);
       expect(toJsonString(protocolFromJson), equals(studyJson));
       print('#2 : $protocolFromJson');
     });
@@ -66,7 +70,7 @@ void main() {
       StudyProtocol protocol = StudyProtocol.fromJson(
           json.decode(plainJson) as Map<String, dynamic>);
 
-      expect(protocol.ownerId, 'alex@uni.dk');
+      expect(protocol.ownerId, 'abc@dtu.dk');
       expect(protocol.masterDevices.first.roleName, phone.roleName);
       expect(protocol.connectedDevices.first.roleName, eSense.roleName);
       print(toJsonString(protocol));
@@ -119,7 +123,8 @@ void main() {
     });
 
     test('- get study protocol', () async {
-      StudyProtocol study = await manager.getStudyProtocol(testDeploymentId);
+      SmartphoneStudyProtocol study =
+          await manager.getStudyProtocol(testDeploymentId);
       print('study: $study');
       print(_encode(study));
     }, skip: false);
@@ -144,23 +149,6 @@ void main() {
       StudyProtocol? protocol =
           await LocalStudyProtocolManager().getStudyProtocol('1234');
       print(toJsonString(protocol));
-    });
-
-    /// Generates and prints the local study description as json
-    test('study description -> JSON', () async {
-      StudyDescription? description = StudyDescription(
-          title: 'CAMS App - Sensing Coverage Study',
-          description: 'Coverage testing of a wide range of measures.',
-          purpose: 'To test the CAMS Demo App',
-          responsible: StudyReponsible(
-            id: 'jakba@dtu.dk',
-            title: 'Professor',
-            address: 'Ørsteds Plads, DK-2800 Kgs. Lyngby',
-            affiliation: 'Technical University of Denmark',
-            email: 'jakba@dtu.dk',
-            name: 'Jakob E. Bardram',
-          ));
-      print(toJsonString(description));
     });
 
     /// Generates and prints the local informed consent as json
