@@ -1,3 +1,7 @@
+## 0.31.0
+* update to `carp_mobile_sensing` v. 0.31.x
+* upgrade to `device_calendar: ^4.0.1-dev.13167` 
+
 ## 0.30.0
 * upgrade to null-safety
 

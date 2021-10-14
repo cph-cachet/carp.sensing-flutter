@@ -26,6 +26,7 @@ void main() {
     protocol = StudyProtocol(
       ownerId: 'alex@uni.dk',
       name: 'Context package test',
+      description: '',
     );
 
     // Define which devices are used for data collection.

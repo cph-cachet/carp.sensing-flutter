@@ -14,8 +14,8 @@ void main() {
     // Read the study protocol from json file
     String plainJson = File('test/json/study_protocol.json').readAsStringSync();
 
-    StudyProtocol protocol =
-        StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
+    SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol.fromJson(
+        json.decode(plainJson) as Map<String, dynamic>);
 
     expect(protocol.ownerId, 'user@dtu.dk');
     expect(protocol.masterDevices.first.roleName,
@@ -27,8 +27,8 @@ void main() {
     // Read the study protocol from json file
     String plainJson = File('test/json/study_protocol.json').readAsStringSync();
 
-    StudyProtocol protocol =
-        StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
+    SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol.fromJson(
+        json.decode(plainJson) as Map<String, dynamic>);
 
     expect(protocol.ownerId, 'user@dtu.dk');
     expect(protocol.masterDevices.first.roleName,
@@ -43,8 +43,8 @@ void main() {
     // Read the study protocol from json file
     String plainJson = File('test/json/study_protocol.json').readAsStringSync();
 
-    StudyProtocol protocol =
-        StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
+    SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol.fromJson(
+        json.decode(plainJson) as Map<String, dynamic>);
 
     StudyDeploymentStatus status =
         await SmartphoneDeploymentService().createStudyDeployment(protocol);

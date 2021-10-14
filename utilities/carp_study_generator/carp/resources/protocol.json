@@ -1,2087 +1,301 @@
 {
-    "ownerId": "1234",
-    "name": "Wrist Angel: Patient (TEST)",
-    "description": "Protocol testing for patients",
-    "creationDate": "2021-08-23T11:22:54.325256Z",
+    "ownerId": "abc@dtu.dk",
+    "name": "CAMS App Study No. 2",
+    "creationDate": "2021-10-14T18:46:51.462509Z",
     "masterDevices": [
-        {
-            "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
-            "isMasterDevice": true,
-            "roleName": "masterphone",
-            "samplingConfiguration": {}
-        }
+     {
+      "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
+      "isMasterDevice": true,
+      "roleName": "masterphone",
+      "samplingConfiguration": {}
+     }
     ],
-    "connectedDevices": [],
+    "connectedDevices": [
+     {
+      "$type": "dk.cachet.carp.protocols.domain.devices.ESenseDevice",
+      "isMasterDevice": false,
+      "roleName": "esense",
+      "samplingConfiguration": {}
+     }
+    ],
     "connections": [],
     "triggers": {
-        "0": {
-            "$type": "dk.cachet.carp.protocols.domain.triggers.ScheduledTrigger",
-            "requiresMasterDevice": false,
-            "time": {
-                "hour": 8,
-                "minute": 0,
-                "second": 0
-            },
-            "recurrenceRule": {
-                "frequency": "WEEKLY",
-                "interval": 1
-            }
-        },
-        "1": {
-            "$type": "dk.cachet.carp.protocols.domain.triggers.ScheduledTrigger",
-            "requiresMasterDevice": false,
-            "time": {
-                "hour": 7,
-                "minute": 0,
-                "second": 0
-            },
-            "recurrenceRule": {
-                "frequency": "DAILY",
-                "interval": 1
-            }
-        },
-        "2": {
-            "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
-        },
-        "3": {
-            "$type": "dk.cachet.carp.protocols.domain.triggers.ScheduledTrigger",
-            "requiresMasterDevice": false,
-            "time": {
-                "hour": 8,
-                "minute": 0,
-                "second": 0
-            },
-            "recurrenceRule": {
-                "frequency": "WEEKLY",
-                "interval": 1
-            }
-        },
-        "4": {
-            "$type": "dk.cachet.carp.protocols.domain.triggers.ScheduledTrigger",
-            "requiresMasterDevice": false,
-            "time": {
-                "hour": 8,
-                "minute": 0,
-                "second": 0
-            },
-            "recurrenceRule": {
-                "frequency": "WEEKLY",
-                "interval": 1
-            }
-        },
-        "5": {
-            "$type": "dk.cachet.carp.protocols.domain.triggers.ScheduledTrigger",
-            "requiresMasterDevice": false,
-            "time": {
-                "hour": 7,
-                "minute": 0,
-                "second": 0
-            },
-            "recurrenceRule": {
-                "frequency": "DAILY",
-                "interval": 1
-            }
-        },
-        "6": {
-            "$type": "dk.cachet.carp.protocols.domain.triggers.ScheduledTrigger",
-            "requiresMasterDevice": false,
-            "time": {
-                "hour": 8,
-                "minute": 0,
-                "second": 0
-            },
-            "recurrenceRule": {
-                "frequency": "WEEKLY",
-                "interval": 1
-            }
-        }
+     "0": {
+      "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
+     },
+     "1": {
+      "$type": "dk.cachet.carp.protocols.domain.triggers.RandomRecurrentTrigger",
+      "startTime": {
+       "$type": "Time",
+       "hour": 8,
+       "minute": 0,
+       "second": 0
+      },
+      "endTime": {
+       "$type": "Time",
+       "hour": 20,
+       "minute": 0,
+       "second": 0
+      },
+      "minNumberOfTriggers": 3,
+      "maxNumberOfTriggers": 8,
+      "duration": 2000000
+     },
+     "2": {
+      "$type": "dk.cachet.carp.protocols.domain.triggers.PeriodicTrigger",
+      "period": 60000000,
+      "duration": 1000000
+     },
+     "3": {
+      "$type": "dk.cachet.carp.protocols.domain.triggers.PeriodicTrigger",
+      "period": 120000000,
+      "duration": 1000000
+     },
+     "4": {
+      "$type": "dk.cachet.carp.protocols.domain.triggers.PeriodicTrigger",
+      "period": 120000000,
+      "duration": 30000000
+     },
+     "5": {
+      "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
+     }
     },
     "tasks": [
-        {
-            "$type": "dk.cachet.carp.protocols.domain.tasks.AppTask",
-            "name": "Task #3",
-            "measures": [
-                {
-                    "$type": "dk.cachet.carp.protocols.domain.tasks.measures.RPTaskMeasure",
-                    "type": "dk.cachet.carp.survey",
-                    "name": "Wristband with biosensor",
-                    "enabled": true,
-                    "configuration": {},
-                    "surveyTask": {
-                        "$type": "RPOrderedTask",
-                        "identifier": "PATIENT_Brugerundersøgelse_biosensor_barn_v1_29-10-2020",
-                        "close_after_finished": true,
-                        "steps": [
-                            {
-                                "$type": "RPInstructionStep",
-                                "identifier": "instruction",
-                                "title": "Wristband with biosensor",
-                                "text": "We would like to know what it was like for you to wear the wristband.\n\nPlease read each statement and chose the option that best describes how you feel.",
-                                "optional": false,
-                                "image_path": "assets/icons/wristwatch.png"
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question1",
-                                "title": "I like how the wristband looks.",
-                                "optional": false,
-                                "answer_format": {
-                                    "$type": "RPChoiceAnswerFormat",
-                                    "question_type": "SingleChoice",
-                                    "choices": [
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Strongly disagree",
-                                            "value": 0,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Slightly disagree",
-                                            "value": 1,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Agree",
-                                            "value": 2,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Strongly agree",
-                                            "value": 3,
-                                            "is_free_text": false
-                                        }
-                                    ],
-                                    "answer_style": "SingleChoice"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question2",
-                                "title": "The wristband looks too big.",
-                                "optional": false,
-                                "answer_format": {
-                                    "$type": "RPChoiceAnswerFormat",
-                                    "question_type": "SingleChoice",
-                                    "choices": [
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Strongly disagree",
-                                            "value": 0,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Slightly disagree",
-                                            "value": 1,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Agree",
-                                            "value": 2,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Strongly agree",
-                                            "value": 3,
-                                            "is_free_text": false
-                                        }
-                                    ],
-                                    "answer_style": "SingleChoice"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question3",
-                                "title": "I was embarrassed to wear the wristband.",
-                                "optional": false,
-                                "answer_format": {
-                                    "$type": "RPChoiceAnswerFormat",
-                                    "question_type": "SingleChoice",
-                                    "choices": [
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Strongly disagree",
-                                            "value": 0,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Slightly disagree",
-                                            "value": 1,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Agree",
-                                            "value": 2,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Strongly agree",
-                                            "value": 3,
-                                            "is_free_text": false
-                                        }
-                                    ],
-                                    "answer_style": "SingleChoice"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question4",
-                                "title": "The wristband looks cool.",
-                                "optional": false,
-                                "answer_format": {
-                                    "$type": "RPChoiceAnswerFormat",
-                                    "question_type": "SingleChoice",
-                                    "choices": [
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Strongly disagree",
-                                            "value": 0,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Slightly disagree",
-                                            "value": 1,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Agree",
-                                            "value": 2,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Strongly agree",
-                                            "value": 3,
-                                            "is_free_text": false
-                                        }
-                                    ],
-                                    "answer_style": "SingleChoice"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question5",
-                                "title": "The wristband attracted too much attention.",
-                                "optional": false,
-                                "answer_format": {
-                                    "$type": "RPChoiceAnswerFormat",
-                                    "question_type": "SingleChoice",
-                                    "choices": [
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Strongly disagree",
-                                            "value": 0,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Slightly disagree",
-                                            "value": 1,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Agree",
-                                            "value": 2,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Strongly agree",
-                                            "value": 3,
-                                            "is_free_text": false
-                                        }
-                                    ],
-                                    "answer_style": "SingleChoice"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question6",
-                                "title": "The wristband was comfortable.",
-                                "optional": false,
-                                "answer_format": {
-                                    "$type": "RPChoiceAnswerFormat",
-                                    "question_type": "SingleChoice",
-                                    "choices": [
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Strongly disagree",
-                                            "value": 0,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Slightly disagree",
-                                            "value": 1,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Agree",
-                                            "value": 2,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Strongly agree",
-                                            "value": 3,
-                                            "is_free_text": false
-                                        }
-                                    ],
-                                    "answer_style": "SingleChoice"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question7",
-                                "title": "The wristband fit well around my wrist.",
-                                "optional": false,
-                                "answer_format": {
-                                    "$type": "RPChoiceAnswerFormat",
-                                    "question_type": "SingleChoice",
-                                    "choices": [
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Strongly disagree",
-                                            "value": 0,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Slightly disagree",
-                                            "value": 1,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Agree",
-                                            "value": 2,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Strongly agree",
-                                            "value": 3,
-                                            "is_free_text": false
-                                        }
-                                    ],
-                                    "answer_style": "SingleChoice"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question8",
-                                "title": "The wristband was easy to use.",
-                                "optional": false,
-                                "answer_format": {
-                                    "$type": "RPChoiceAnswerFormat",
-                                    "question_type": "SingleChoice",
-                                    "choices": [
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Strongly disagree",
-                                            "value": 0,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Slightly disagree",
-                                            "value": 1,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Agree",
-                                            "value": 2,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Strongly agree",
-                                            "value": 3,
-                                            "is_free_text": false
-                                        }
-                                    ],
-                                    "answer_style": "SingleChoice"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question9",
-                                "title": "The wristband was easy to charge.",
-                                "optional": false,
-                                "answer_format": {
-                                    "$type": "RPChoiceAnswerFormat",
-                                    "question_type": "SingleChoice",
-                                    "choices": [
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Strongly disagree",
-                                            "value": 0,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Slightly disagree",
-                                            "value": 1,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Agree",
-                                            "value": 2,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Strongly agree",
-                                            "value": 3,
-                                            "is_free_text": false
-                                        }
-                                    ],
-                                    "answer_style": "SingleChoice"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question10",
-                                "title": "I often forgot to wear the wristband.",
-                                "optional": false,
-                                "answer_format": {
-                                    "$type": "RPChoiceAnswerFormat",
-                                    "question_type": "SingleChoice",
-                                    "choices": [
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Strongly disagree",
-                                            "value": 0,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Slightly disagree",
-                                            "value": 1,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Agree",
-                                            "value": 2,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Strongly agree",
-                                            "value": 3,
-                                            "is_free_text": false
-                                        }
-                                    ],
-                                    "answer_style": "SingleChoice"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question11",
-                                "title": "I wanted to wear the wristband.",
-                                "optional": false,
-                                "answer_format": {
-                                    "$type": "RPChoiceAnswerFormat",
-                                    "question_type": "SingleChoice",
-                                    "choices": [
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Strongly disagree",
-                                            "value": 0,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Slightly disagree",
-                                            "value": 1,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Agree",
-                                            "value": 2,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Strongly agree",
-                                            "value": 3,
-                                            "is_free_text": false
-                                        }
-                                    ],
-                                    "answer_style": "SingleChoice"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question12",
-                                "title": "It was irritating to push the button on the wristband.",
-                                "optional": false,
-                                "answer_format": {
-                                    "$type": "RPChoiceAnswerFormat",
-                                    "question_type": "SingleChoice",
-                                    "choices": [
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Strongly disagree",
-                                            "value": 0,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Slightly disagree",
-                                            "value": 1,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Agree",
-                                            "value": 2,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Strongly agree",
-                                            "value": 3,
-                                            "is_free_text": false
-                                        }
-                                    ],
-                                    "answer_style": "SingleChoice"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question13",
-                                "title": "I remembered to push the button on the wristband every time OCD was bothering me.",
-                                "optional": false,
-                                "answer_format": {
-                                    "$type": "RPChoiceAnswerFormat",
-                                    "question_type": "SingleChoice",
-                                    "choices": [
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Strongly disagree",
-                                            "value": 0,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Slightly disagree",
-                                            "value": 1,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Agree",
-                                            "value": 2,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Strongly agree",
-                                            "value": 3,
-                                            "is_free_text": false
-                                        }
-                                    ],
-                                    "answer_style": "SingleChoice"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question14",
-                                "title": "Is there anything else you would like to tell us about your experience wearing the wristband?",
-                                "optional": true,
-                                "answer_format": {
-                                    "$type": "RPTextAnswerFormat",
-                                    "question_type": "Text"
-                                }
-                            },
-                            {
-                                "$type": "RPCompletionStep",
-                                "identifier": "completion",
-                                "title": "You are done!",
-                                "text": "Thank you for telling us what you think about the wristband. Your answers will help us make the wristband better",
-                                "optional": false
-                            }
-                        ]
-                    }
-                }
-            ],
-            "type": "survey",
-            "title": "Wristband with biosensor",
-            "description": "We would like to know what it was like for you to wear the wristband.",
-            "instructions": "",
-            "minutes_to_complete": 5,
-            "expire": 604800000000,
-            "notification": false
-        },
-        {
-            "$type": "dk.cachet.carp.protocols.domain.tasks.AppTask",
-            "name": "Task #4",
-            "measures": [
-                {
-                    "$type": "dk.cachet.carp.protocols.domain.tasks.measures.RPTaskMeasure",
-                    "type": "dk.cachet.carp.survey",
-                    "name": "Fight back against OCD",
-                    "enabled": true,
-                    "configuration": {},
-                    "surveyTask": {
-                        "$type": "RPOrderedTask",
-                        "identifier": "Exposure_SUDS_v2_2021.04.22",
-                        "close_after_finished": true,
-                        "steps": [
-                            {
-                                "$type": "RPInstructionStep",
-                                "identifier": "instruction1",
-                                "title": "Exposure and response prevention",
-                                "text": "This survey is designed to help you practice fighting OCD. To take back control from OCD, you must do the opposite of what OCD wants you to do. For example, you may touch some food left over on your plate or say some “dangerous” words. Or, if the OCD tells you to touch things a certain number of times, don't do it. Going against OCD can be scary or upsetting. But, to take control back from OCD, you can’t run away from the discomfort or fear - you must tough it out.\n\nDuring the exercise, notice what happens to the feeling of discomfort for up to 15 minutes.\n\nWhile you practice going against OCD, your parents or your therapist can help you use this form.",
-                                "optional": false,
-                                "image_path": "assets/icons/survey.png"
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question1",
-                                "title": "What do you think is going to happen to your feelings of discomfort, fear or disgust when you practice doing the opposite of what OCD wants you to do? ",
-                                "optional": false,
-                                "answer_format": {
-                                    "$type": "RPChoiceAnswerFormat",
-                                    "question_type": "SingleChoice",
-                                    "choices": [
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "My discomfort/fear/disgust will grow and grow until I can't take it any more",
-                                            "value": 0,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "My discomfort/fear/disgust will not change",
-                                            "value": 1,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "I will feel less discomfort/fear/disgust over time",
-                                            "value": 2,
-                                            "is_free_text": false
-                                        }
-                                    ],
-                                    "answer_style": "SingleChoice"
-                                }
-                            },
-                            {
-                                "$type": "RPInstructionStep",
-                                "identifier": "instruction2",
-                                "title": " ",
-                                "text": "Many children and adolescents think that their fear or discomfort will get worse and worse when they practice going against OCD, but that is not what happens.\n\nFor many children and adolescents, the fear/discomfort goes up and down during the exercise. For some people, the fear/discomfort becomes less during the exercise. Others find that their fear/discomfort does not really change during the exercise, but then they learn that fear and discomfort are not dangerous. With lots of practice, you should really notice that you feel less fear, disgust or discomfort.",
-                                "optional": false
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question2",
-                                "title": "Before you start practicing going against OCD, prepare for the exercise by answering some questions.\n\nYou're going to do something difficult and that should be rewarded. How will you reward yourself after the exercise of fighting OCD?",
-                                "optional": false,
-                                "answer_format": {
-                                    "$type": "RPChoiceAnswerFormat",
-                                    "question_type": "SingleChoice",
-                                    "choices": [
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Read an exciting book",
-                                            "value": 0,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Eat something delicious",
-                                            "value": 1,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Watch an episode of your favorite series",
-                                            "value": 2,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Do something fun with friends/ family (make a plan)",
-                                            "value": 3,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Play a game",
-                                            "value": 4,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Play a computer/videogame",
-                                            "value": 5,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "I will do something not listed here",
-                                            "value": 6,
-                                            "is_free_text": false
-                                        }
-                                    ],
-                                    "answer_style": "SingleChoice"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question3",
-                                "title": "In the exercise, I will work on an obsession.\n\n(Obsessions are unwanted thoughts or images that keep popping into your head and that you can't stop thinking about, even though you want to be rid of them.)",
-                                "optional": false,
-                                "answer_format": {
-                                    "$type": "RPChoiceAnswerFormat",
-                                    "question_type": "SingleChoice",
-                                    "choices": [
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "No",
-                                            "value": 0,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Yes",
-                                            "value": 1,
-                                            "is_free_text": false
-                                        }
-                                    ],
-                                    "answer_style": "SingleChoice"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question4",
-                                "title": "The obsession I want to work on now is about:",
-                                "optional": true,
-                                "answer_format": {
-                                    "$type": "RPChoiceAnswerFormat",
-                                    "question_type": "MultipleChoice",
-                                    "choices": [
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Fear/ disgust of pollution, infection, dirt, bacteria, diseases",
-                                            "value": 0,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Fear of harming myself or others (physically or emotionally)",
-                                            "value": 1,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Disturbing thoughts/ images about sex, pregnancy or sexuality",
-                                            "value": 2,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Need to collect things or fear of losing something",
-                                            "value": 3,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Magical/superstitious thoughts or actions (e.g. lucky numbers or words; stepping on a crack can break someone’s back)",
-                                            "value": 4,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Worry about having a disease or that a body part or your appearance looks wrong)",
-                                            "value": 5,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Fear of offending God or Satan or worry about what is right and wrong",
-                                            "value": 6,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Symmetry and order (e.g. that things must lie in a certain way, or things must be in order)",
-                                            "value": 7,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Needing to do something until it feels right or not wrong",
-                                            "value": 8,
-                                            "is_free_text": false
-                                        }
-                                    ],
-                                    "answer_style": "MultipleChoice"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question5",
-                                "title": "You can describe the obsession you want to work on here, if you would like to describe it detail or if you could not find an obsession in the list.",
-                                "optional": true,
-                                "answer_format": {
-                                    "$type": "RPTextAnswerFormat",
-                                    "question_type": "Text"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question6",
-                                "title": "I want to work with a compulsion.\n\n\n(Compulsions are things that OCD wants you to do. If you try to resist doing these things or try not to do what OCD tells you to, you may feel afraid, worried, frustrated, angry or upset.)",
-                                "optional": false,
-                                "answer_format": {
-                                    "$type": "RPChoiceAnswerFormat",
-                                    "question_type": "SingleChoice",
-                                    "choices": [
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "No",
-                                            "value": 0,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Yes",
-                                            "value": 1,
-                                            "is_free_text": false
-                                        }
-                                    ],
-                                    "answer_style": "SingleChoice"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question7",
-                                "title": "The compulsion I will work on is about:",
-                                "optional": true,
-                                "answer_format": {
-                                    "$type": "RPChoiceAnswerFormat",
-                                    "question_type": "MultipleChoice",
-                                    "choices": [
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Washing or cleaning",
-                                            "value": 0,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Checking (like if you have remembered to lock the door)",
-                                            "value": 1,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Repeating actions (like turning the lights on and off several times)",
-                                            "value": 2,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Counting things",
-                                            "value": 3,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Fixing things or trying to get things in a certain place or symmetrical",
-                                            "value": 4,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Collecting things or difficulty throwing things away",
-                                            "value": 5,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Magical/superstitious behavior (like doing or saying things a certain number of times to prevent something bad from happening)",
-                                            "value": 6,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Involving your parents in a ritual or asking for reassurance",
-                                            "value": 7,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Doing something until it feels right",
-                                            "value": 8,
-                                            "is_free_text": false
-                                        }
-                                    ],
-                                    "answer_style": "MultipleChoice"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question8",
-                                "title": "You can describe the compulsion you want to work on here, if you would like to describe it detail or if you could not find a compulsion in the list.",
-                                "optional": true,
-                                "answer_format": {
-                                    "$type": "RPTextAnswerFormat",
-                                    "question_type": "Text"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question9",
-                                "title": "Describe how you will practice going against OCD. How do you want to work on the obsession and/or compulsion (for example touching the toilet seat or making your desk messy):",
-                                "optional": true,
-                                "answer_format": {
-                                    "$type": "RPTextAnswerFormat",
-                                    "question_type": "Text"
-                                }
-                            },
-                            {
-                                "$type": "RPInstructionStep",
-                                "identifier": "instruction",
-                                "title": " ",
-                                "text": "On the next pages, you will be asked to note how much fear or discomfort you experience while you go against OCD.\n\nStart by noting how uncomfortable it is for you to think about doing the exercise you just described on a scale of 0 to 10. 0 means that you are completely calm or not at all afraid. 10 means that you are so scared or upset you can’t stand it.",
-                                "optional": false,
-                                "image_path": "assets/images/timer_task.png"
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question10",
-                                "title": "How much discomfort do you feel after 1 minute?",
-                                "optional": true,
-                                "answer_format": {
-                                    "$type": "RPSliderAnswerFormat",
-                                    "min_value": 0.0,
-                                    "max_value": 10.0,
-                                    "divisions": 10,
-                                    "prefix": "",
-                                    "suffix": "",
-                                    "question_type": "Scale"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question11",
-                                "title": "How much discomfort do you feel after 3 minutes?",
-                                "optional": true,
-                                "answer_format": {
-                                    "$type": "RPSliderAnswerFormat",
-                                    "min_value": 0.0,
-                                    "max_value": 10.0,
-                                    "divisions": 10,
-                                    "prefix": "",
-                                    "suffix": "",
-                                    "question_type": "Scale"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question12",
-                                "title": "How much discomfort do you feel after 5 minutes?",
-                                "optional": true,
-                                "answer_format": {
-                                    "$type": "RPSliderAnswerFormat",
-                                    "min_value": 0.0,
-                                    "max_value": 10.0,
-                                    "divisions": 10,
-                                    "prefix": "",
-                                    "suffix": "",
-                                    "question_type": "Scale"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question13",
-                                "title": "How much discomfort do you feel after 7 minutes?",
-                                "optional": true,
-                                "answer_format": {
-                                    "$type": "RPSliderAnswerFormat",
-                                    "min_value": 0.0,
-                                    "max_value": 10.0,
-                                    "divisions": 10,
-                                    "prefix": "",
-                                    "suffix": "",
-                                    "question_type": "Scale"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question14",
-                                "title": "How much discomfort do you feel after 10 minutes?",
-                                "optional": true,
-                                "answer_format": {
-                                    "$type": "RPSliderAnswerFormat",
-                                    "min_value": 0.0,
-                                    "max_value": 10.0,
-                                    "divisions": 10,
-                                    "prefix": "",
-                                    "suffix": "",
-                                    "question_type": "Scale"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question15",
-                                "title": "How much discomfort do you feel after 15 minutes?",
-                                "optional": true,
-                                "answer_format": {
-                                    "$type": "RPSliderAnswerFormat",
-                                    "min_value": 0.0,
-                                    "max_value": 10.0,
-                                    "divisions": 10,
-                                    "prefix": "",
-                                    "suffix": "",
-                                    "question_type": "Scale"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question16",
-                                "title": "Well done! You stayed with some difficult feelings!\n\nWhat happened to those difficult feelings when you practiced doing the opposite of what OCD wants?",
-                                "optional": false,
-                                "answer_format": {
-                                    "$type": "RPChoiceAnswerFormat",
-                                    "question_type": "SingleChoice",
-                                    "choices": [
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "My discomfort grew until I couldn’t stand it anymore",
-                                            "value": 0,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "My discomfort went up and down",
-                                            "value": 1,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "My discomfort did not really change",
-                                            "value": 2,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "I felt less discomfort with time",
-                                            "value": 3,
-                                            "is_free_text": false
-                                        }
-                                    ],
-                                    "answer_style": "SingleChoice"
-                                }
-                            },
-                            {
-                                "$type": "RPCompletionStep",
-                                "identifier": "completion",
-                                "title": "You are done with the exercise!",
-                                "text": "Remember to give yourself that reward",
-                                "optional": false
-                            }
-                        ]
-                    }
-                }
-            ],
-            "type": "survey",
-            "title": "Fight back against OCD",
-            "description": "Describe the obsession and/or the compulsion you are working on",
-            "instructions": "",
-            "minutes_to_complete": 10,
-            "expire": 86400000000,
-            "notification": false
-        },
-        {
-            "$type": "dk.cachet.carp.protocols.domain.tasks.AppTask",
-            "name": "Task #5",
-            "measures": [
-                {
-                    "$type": "dk.cachet.carp.protocols.domain.tasks.measures.RPTaskMeasure",
-                    "type": "dk.cachet.carp.survey",
-                    "name": "How are you feeling right now?",
-                    "enabled": true,
-                    "configuration": {},
-                    "surveyTask": {
-                        "$type": "RPOrderedTask",
-                        "identifier": "Ecological Momentary Assessment Child",
-                        "close_after_finished": true,
-                        "steps": [
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question1",
-                                "title": "Are you alone?",
-                                "optional": false,
-                                "answer_format": {
-                                    "$type": "RPChoiceAnswerFormat",
-                                    "question_type": "MultipleChoice",
-                                    "choices": [
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "I am alone",
-                                            "value": 0,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "I am with my mother/father who is also participating in the study",
-                                            "value": 1,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "I am  with my other parent who is not participating in the study",
-                                            "value": 2,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "I am with my sister(s) and/ or brother(s)",
-                                            "value": 3,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "I am with my friends",
-                                            "value": 4,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "I am with others we have not mentioned",
-                                            "value": 5,
-                                            "is_free_text": false
-                                        }
-                                    ],
-                                    "answer_style": "MultipleChoice"
-                                }
-                            },
-                            {
-                                "$type": "RPInstructionStep",
-                                "identifier": "instruction",
-                                "title": "We would like to know your current mood",
-                                "text": "Below are a list of different feelings and emotions.\n\nPlease read each feeling and choose the option that best matches how much you feel each feeling right now.",
-                                "optional": false,
-                                "image_path": "assets/icons/survey.png"
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question2",
-                                "title": "Miserable",
-                                "optional": false,
-                                "answer_format": {
-                                    "$type": "RPChoiceAnswerFormat",
-                                    "question_type": "SingleChoice",
-                                    "choices": [
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Very slightly or not at all",
-                                            "value": 1,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "A little",
-                                            "value": 2,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Moderately",
-                                            "value": 3,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Quite a bit",
-                                            "value": 4,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Extremely",
-                                            "value": 5,
-                                            "is_free_text": false
-                                        }
-                                    ],
-                                    "answer_style": "SingleChoice"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question3",
-                                "title": "Mad",
-                                "optional": false,
-                                "answer_format": {
-                                    "$type": "RPChoiceAnswerFormat",
-                                    "question_type": "SingleChoice",
-                                    "choices": [
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Very slightly or not at all",
-                                            "value": 1,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "A little",
-                                            "value": 2,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Moderately",
-                                            "value": 3,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Quite a bit",
-                                            "value": 4,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Extremely",
-                                            "value": 5,
-                                            "is_free_text": false
-                                        }
-                                    ],
-                                    "answer_style": "SingleChoice"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question4",
-                                "title": "Lively",
-                                "optional": false,
-                                "answer_format": {
-                                    "$type": "RPChoiceAnswerFormat",
-                                    "question_type": "SingleChoice",
-                                    "choices": [
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Very slightly or not at all",
-                                            "value": 1,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "A little",
-                                            "value": 2,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Moderately",
-                                            "value": 3,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Quite a bit",
-                                            "value": 4,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Extremely",
-                                            "value": 5,
-                                            "is_free_text": false
-                                        }
-                                    ],
-                                    "answer_style": "SingleChoice"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question5",
-                                "title": "Sad",
-                                "optional": false,
-                                "answer_format": {
-                                    "$type": "RPChoiceAnswerFormat",
-                                    "question_type": "SingleChoice",
-                                    "choices": [
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Very slightly or not at all",
-                                            "value": 1,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "A little",
-                                            "value": 2,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Moderately",
-                                            "value": 3,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Quite a bit",
-                                            "value": 4,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Extremely",
-                                            "value": 5,
-                                            "is_free_text": false
-                                        }
-                                    ],
-                                    "answer_style": "SingleChoice"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question6",
-                                "title": "Joyful",
-                                "optional": false,
-                                "answer_format": {
-                                    "$type": "RPChoiceAnswerFormat",
-                                    "question_type": "SingleChoice",
-                                    "choices": [
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Very slightly or not at all",
-                                            "value": 1,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "A little",
-                                            "value": 2,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Moderately",
-                                            "value": 3,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Quite a bit",
-                                            "value": 4,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Extremely",
-                                            "value": 5,
-                                            "is_free_text": false
-                                        }
-                                    ],
-                                    "answer_style": "SingleChoice"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question7",
-                                "title": "Scared",
-                                "optional": false,
-                                "answer_format": {
-                                    "$type": "RPChoiceAnswerFormat",
-                                    "question_type": "SingleChoice",
-                                    "choices": [
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Very slightly or not at all",
-                                            "value": 1,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "A little",
-                                            "value": 2,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Moderately",
-                                            "value": 3,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Quite a bit",
-                                            "value": 4,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Extremely",
-                                            "value": 5,
-                                            "is_free_text": false
-                                        }
-                                    ],
-                                    "answer_style": "SingleChoice"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question8",
-                                "title": "Cheerful",
-                                "optional": false,
-                                "answer_format": {
-                                    "$type": "RPChoiceAnswerFormat",
-                                    "question_type": "SingleChoice",
-                                    "choices": [
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Very slightly or not at all",
-                                            "value": 1,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "A little",
-                                            "value": 2,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Moderately",
-                                            "value": 3,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Quite a bit",
-                                            "value": 4,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Extremely",
-                                            "value": 5,
-                                            "is_free_text": false
-                                        }
-                                    ],
-                                    "answer_style": "SingleChoice"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question9",
-                                "title": "Happy",
-                                "optional": false,
-                                "answer_format": {
-                                    "$type": "RPChoiceAnswerFormat",
-                                    "question_type": "SingleChoice",
-                                    "choices": [
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Very slightly or not at all",
-                                            "value": 1,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "A little",
-                                            "value": 2,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Moderately",
-                                            "value": 3,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Quite a bit",
-                                            "value": 4,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Extremely",
-                                            "value": 5,
-                                            "is_free_text": false
-                                        }
-                                    ],
-                                    "answer_style": "SingleChoice"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question10",
-                                "title": "Afraid",
-                                "optional": false,
-                                "answer_format": {
-                                    "$type": "RPChoiceAnswerFormat",
-                                    "question_type": "SingleChoice",
-                                    "choices": [
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Very slightly or not at all",
-                                            "value": 1,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "A little",
-                                            "value": 2,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Moderately",
-                                            "value": 3,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Quite a bit",
-                                            "value": 4,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Extremely",
-                                            "value": 5,
-                                            "is_free_text": false
-                                        }
-                                    ],
-                                    "answer_style": "SingleChoice"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question11",
-                                "title": "Proud",
-                                "optional": false,
-                                "answer_format": {
-                                    "$type": "RPChoiceAnswerFormat",
-                                    "question_type": "SingleChoice",
-                                    "choices": [
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Very slightly or not at all",
-                                            "value": 1,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "A little",
-                                            "value": 2,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Moderately",
-                                            "value": 3,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Quite a bit",
-                                            "value": 4,
-                                            "is_free_text": false
-                                        },
-                                        {
-                                            "$type": "RPChoice",
-                                            "text": "Extremely",
-                                            "value": 5,
-                                            "is_free_text": false
-                                        }
-                                    ],
-                                    "answer_style": "SingleChoice"
-                                }
-                            },
-                            {
-                                "$type": "RPCompletionStep",
-                                "identifier": "completion",
-                                "title": "Thank you for telling us how you feel",
-                                "text": "By answering this survey you are helping us connect how you feel to your bodily signals",
-                                "optional": false
-                            }
-                        ]
-                    }
-                }
-            ],
-            "type": "survey",
-            "title": "How are you feeling right now?",
-            "description": "We would like to know your current mood",
-            "instructions": "",
-            "minutes_to_complete": 10,
-            "expire": 86400000000,
-            "notification": false
-        },
-        {
-            "$type": "dk.cachet.carp.protocols.domain.tasks.AppTask",
-            "name": "Task #6",
-            "measures": [
-                {
-                    "$type": "dk.cachet.carp.protocols.domain.tasks.measures.RPTaskMeasure",
-                    "type": "dk.cachet.carp.survey",
-                    "name": "Symptom Hierarchy: Obsessions",
-                    "enabled": true,
-                    "configuration": {},
-                    "surveyTask": {
-                        "$type": "RPOrderedTask",
-                        "identifier": "Symptom Hierarchy: Obsessions",
-                        "close_after_finished": true,
-                        "steps": [
-                            {
-                                "$type": "RPInstructionStep",
-                                "identifier": "instruction",
-                                "title": "Obsessions",
-                                "text": "Symptom Hierarchy: Obsessions\n\n\nObsessions are unwanted thoughts or images that keep popping into your head and that you can't stop thinking about, even though you want to be rid of them.\n\nOn the next pages, you will see obsessions that many people with OCD have. Tell us how upset or scared each obsession has been for you over the past week by choosing the number that best matches how you feel. 0 means that you have not had the obsession or that it is not at all unpleasant and 10 means that the obsession is so upsetting you can’t stand it.",
-                                "optional": false
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question1",
-                                "title": "Fear/ disgust of pollution, infection, dirt, bacteria, diseases",
-                                "optional": true,
-                                "answer_format": {
-                                    "$type": "RPSliderAnswerFormat",
-                                    "min_value": 0.0,
-                                    "max_value": 10.0,
-                                    "divisions": 10,
-                                    "prefix": "",
-                                    "suffix": "",
-                                    "question_type": "Scale"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question2",
-                                "title": "Fear of harming yourself or others (body or feelings)",
-                                "optional": true,
-                                "answer_format": {
-                                    "$type": "RPSliderAnswerFormat",
-                                    "min_value": 0.0,
-                                    "max_value": 10.0,
-                                    "divisions": 10,
-                                    "prefix": "",
-                                    "suffix": "",
-                                    "question_type": "Scale"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question3",
-                                "title": "Disturbing thoughts/ images about sex, pregnancy or sexuality",
-                                "optional": true,
-                                "answer_format": {
-                                    "$type": "RPSliderAnswerFormat",
-                                    "min_value": 0.0,
-                                    "max_value": 10.0,
-                                    "divisions": 10,
-                                    "prefix": "",
-                                    "suffix": "",
-                                    "question_type": "Scale"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question4",
-                                "title": "Need to collect things or fear of losing something",
-                                "optional": true,
-                                "answer_format": {
-                                    "$type": "RPSliderAnswerFormat",
-                                    "min_value": 0.0,
-                                    "max_value": 10.0,
-                                    "divisions": 10,
-                                    "prefix": "",
-                                    "suffix": "",
-                                    "question_type": "Scale"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question5",
-                                "title": "Magical/superstitious thoughts or actions (e.g. lucky numbers or words; stepping on a crack can break someone’s back)",
-                                "optional": true,
-                                "answer_format": {
-                                    "$type": "RPSliderAnswerFormat",
-                                    "min_value": 0.0,
-                                    "max_value": 10.0,
-                                    "divisions": 10,
-                                    "prefix": "",
-                                    "suffix": "",
-                                    "question_type": "Scale"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question6",
-                                "title": "Worry about having a disease or that a body part or your appearance looks wrong",
-                                "optional": true,
-                                "answer_format": {
-                                    "$type": "RPSliderAnswerFormat",
-                                    "min_value": 0.0,
-                                    "max_value": 10.0,
-                                    "divisions": 10,
-                                    "prefix": "",
-                                    "suffix": "",
-                                    "question_type": "Scale"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question7",
-                                "title": "Fear of offending God or Satan or worry about what is right and wrong",
-                                "optional": true,
-                                "answer_format": {
-                                    "$type": "RPSliderAnswerFormat",
-                                    "min_value": 0.0,
-                                    "max_value": 10.0,
-                                    "divisions": 10,
-                                    "prefix": "",
-                                    "suffix": "",
-                                    "question_type": "Scale"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question8",
-                                "title": "Symmetry and order (e.g. that things must lie in a certain way, or things must be in order)",
-                                "optional": true,
-                                "answer_format": {
-                                    "$type": "RPSliderAnswerFormat",
-                                    "min_value": 0.0,
-                                    "max_value": 10.0,
-                                    "divisions": 10,
-                                    "prefix": "",
-                                    "suffix": "",
-                                    "question_type": "Scale"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question9",
-                                "title": "Needing to do something until it feels right or not wrong",
-                                "optional": true,
-                                "answer_format": {
-                                    "$type": "RPSliderAnswerFormat",
-                                    "min_value": 0.0,
-                                    "max_value": 10.0,
-                                    "divisions": 10,
-                                    "prefix": "",
-                                    "suffix": "",
-                                    "question_type": "Scale"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question10",
-                                "title": "Here you can describe other obsessions that have not been mentioned",
-                                "optional": true,
-                                "answer_format": {
-                                    "$type": "RPTextAnswerFormat",
-                                    "question_type": "Text"
-                                }
-                            },
-                            {
-                                "$type": "RPCompletionStep",
-                                "identifier": "completion",
-                                "title": "Hurray!",
-                                "text": "You are finished recording your obsessions for this week. By keeping track of your obsessions and compulsions, you're taking back control, so OCD doesn't control you.",
-                                "optional": false
-                            }
-                        ]
-                    }
-                }
-            ],
-            "type": "survey",
-            "title": "Symptom Hierarchy: Obsessions",
-            "description": "This form is designed to help you keep track of how your obsessions change from week to week.",
-            "instructions": "",
-            "minutes_to_complete": 5,
-            "expire": 604800000000,
-            "notification": false
-        },
-        {
-            "$type": "dk.cachet.carp.protocols.domain.tasks.AppTask",
-            "name": "Task #7",
-            "measures": [
-                {
-                    "$type": "dk.cachet.carp.protocols.domain.tasks.measures.RPTaskMeasure",
-                    "type": "dk.cachet.carp.survey",
-                    "name": "Symptom Hierarchy: Compulsions",
-                    "enabled": true,
-                    "configuration": {},
-                    "surveyTask": {
-                        "$type": "RPOrderedTask",
-                        "identifier": "Symptom Hierarchy: Compulsions",
-                        "close_after_finished": true,
-                        "steps": [
-                            {
-                                "$type": "RPInstructionStep",
-                                "identifier": "instruction",
-                                "title": "Compulsions",
-                                "text": "Symptom hierarchy: Compulsions\n\n\nCompulsions are things that OCD wants you to do. If you try to resist doing these things or try not to do what OCD tells to, you may feel afraid, worried, frustrated, angry or upset.\n\nOn the next pages there will be some compulsions that many people with OCD have. Tell us how upset each compulsion (or trying to resist the compulsion) has been for you over the past week by choosing the number that best matches how you feel. 0 means that you do not have that compulsion or that does not bother you and 10 means that the compulsion upsets you so much that you can’t stand it.",
-                                "optional": false
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question1",
-                                "title": "Washing or cleaning",
-                                "optional": true,
-                                "answer_format": {
-                                    "$type": "RPSliderAnswerFormat",
-                                    "min_value": 0.0,
-                                    "max_value": 10.0,
-                                    "divisions": 10,
-                                    "prefix": "",
-                                    "suffix": "",
-                                    "question_type": "Scale"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question2",
-                                "title": "Checking (like if you have remembered to lock the door)",
-                                "optional": true,
-                                "answer_format": {
-                                    "$type": "RPSliderAnswerFormat",
-                                    "min_value": 0.0,
-                                    "max_value": 10.0,
-                                    "divisions": 10,
-                                    "prefix": "",
-                                    "suffix": "",
-                                    "question_type": "Scale"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question3",
-                                "title": "Repeating actions (like turning the lights on and off several times)",
-                                "optional": true,
-                                "answer_format": {
-                                    "$type": "RPSliderAnswerFormat",
-                                    "min_value": 0.0,
-                                    "max_value": 10.0,
-                                    "divisions": 10,
-                                    "prefix": "",
-                                    "suffix": "",
-                                    "question_type": "Scale"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question4",
-                                "title": "Counting things",
-                                "optional": true,
-                                "answer_format": {
-                                    "$type": "RPSliderAnswerFormat",
-                                    "min_value": 0.0,
-                                    "max_value": 10.0,
-                                    "divisions": 10,
-                                    "prefix": "",
-                                    "suffix": "",
-                                    "question_type": "Scale"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question5",
-                                "title": "Fixing things or try to get things the same or symmetrical",
-                                "optional": true,
-                                "answer_format": {
-                                    "$type": "RPSliderAnswerFormat",
-                                    "min_value": 0.0,
-                                    "max_value": 10.0,
-                                    "divisions": 10,
-                                    "prefix": "",
-                                    "suffix": "",
-                                    "question_type": "Scale"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question6",
-                                "title": "Collecting things or difficulty throwing things away",
-                                "optional": true,
-                                "answer_format": {
-                                    "$type": "RPSliderAnswerFormat",
-                                    "min_value": 0.0,
-                                    "max_value": 10.0,
-                                    "divisions": 10,
-                                    "prefix": "",
-                                    "suffix": "",
-                                    "question_type": "Scale"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question7",
-                                "title": "Magical/superstitious behavior (e.g. doing or saying things a certain number of times to prevent something terrible from happening)",
-                                "optional": true,
-                                "answer_format": {
-                                    "$type": "RPSliderAnswerFormat",
-                                    "min_value": 0.0,
-                                    "max_value": 10.0,
-                                    "divisions": 10,
-                                    "prefix": "",
-                                    "suffix": "",
-                                    "question_type": "Scale"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question8",
-                                "title": "Involving others (like your parents) in a ritual or asking for reassurance",
-                                "optional": true,
-                                "answer_format": {
-                                    "$type": "RPSliderAnswerFormat",
-                                    "min_value": 0.0,
-                                    "max_value": 10.0,
-                                    "divisions": 10,
-                                    "prefix": "",
-                                    "suffix": "",
-                                    "question_type": "Scale"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question9",
-                                "title": "Needing to do something until it feels right",
-                                "optional": true,
-                                "answer_format": {
-                                    "$type": "RPSliderAnswerFormat",
-                                    "min_value": 0.0,
-                                    "max_value": 10.0,
-                                    "divisions": 10,
-                                    "prefix": "",
-                                    "suffix": "",
-                                    "question_type": "Scale"
-                                }
-                            },
-                            {
-                                "$type": "RPQuestionStep",
-                                "identifier": "question10",
-                                "title": "Here you can describe other compulsions that have not been mentioned",
-                                "optional": true,
-                                "answer_format": {
-                                    "$type": "RPTextAnswerFormat",
-                                    "question_type": "Text"
-                                }
-                            },
-                            {
-                                "$type": "RPCompletionStep",
-                                "identifier": "completion",
-                                "title": "Hurray!",
-                                "text": "You are finished recording your compulsions for this week. By keeping track of your obsessions and compulsions, you're taking back control, so OCD doesn't control you.",
-                                "optional": false
-                            }
-                        ]
-                    }
-                }
-            ],
-            "type": "survey",
-            "title": "Symptom Hierarchy: Compulsions",
-            "description": "This form is designed to help you keep track of how your compulsions change from week to week.",
-            "instructions": "",
-            "minutes_to_complete": 5,
-            "expire": 604800000000,
-            "notification": false
-        },
-        {
-            "$type": "dk.cachet.carp.protocols.domain.tasks.AppTask",
-            "name": "Task #8",
-            "measures": [
-                {
-                    "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
-                    "type": "dk.cachet.carp.audio",
-                    "name": "Exposure exercise",
-                    "enabled": true,
-                    "configuration": {}
-                }
-            ],
-            "type": "audio",
-            "title": "Exposure exercise",
-            "description": "Describe the exposure exercise you are working on",
-            "instructions": "Describe the exposure exercise: how will you work on the obsession or compulsion?",
-            "minutes_to_complete": 5,
-            "notification": false
-        },
-        {
-            "$type": "dk.cachet.carp.protocols.domain.tasks.AppTask",
-            "name": "Task #9",
-            "measures": [
-                {
-                    "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
-                    "type": "dk.cachet.carp.audio",
-                    "name": "User Experience with the Wristband",
-                    "enabled": true,
-                    "configuration": {}
-                }
-            ],
-            "type": "audio",
-            "title": "User Experience with the Wristband",
-            "description": "Record yourself talking about how the wristband makes you feel",
-            "instructions": "Tell us about your experience wearing the wristband",
-            "minutes_to_complete": 5,
-            "notification": false
-        }
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
+      "name": "Task #3",
+      "measures": [
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
+        "type": "dk.cachet.carp.light",
+        "name": "Ambient Light",
+        "description": "Collects ambient light from the light sensor on the phone.",
+        "enabled": true,
+        "configuration": {},
+        "frequency": 60000000,
+        "duration": 1000000
+       },
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.NoiseMeasure",
+        "type": "dk.cachet.carp.noise",
+        "name": "Ambient Noise",
+        "description": "Collects noise in the background from the phone's microphone",
+        "enabled": true,
+        "configuration": {},
+        "frequency": 60000000,
+        "duration": 10000000,
+        "samplingRate": 500
+       },
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
+        "type": "dk.cachet.carp.memory",
+        "name": "Memory Usage",
+        "description": "Collects information about use of memory.",
+        "enabled": true,
+        "configuration": {},
+        "frequency": 60000000,
+        "duration": 2000000
+       },
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
+        "type": "dk.cachet.carp.screen",
+        "name": "Screen Activity (lock/on/off)",
+        "description": "Collects information about lock/unlock event of the phone's screen.",
+        "enabled": true,
+        "configuration": {}
+       },
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
+        "type": "dk.cachet.carp.activity",
+        "name": "Activity Recognition",
+        "description": "Collects activity type from the phone's activity recognition module",
+        "enabled": true,
+        "configuration": {}
+       },
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.LocationMeasure",
+        "type": "dk.cachet.carp.geolocation",
+        "name": "Geo-location",
+        "description": "Continously collection of location from the phone's GPS sensor",
+        "enabled": true,
+        "configuration": {},
+        "accuracy": "navigation",
+        "distance": 0.0,
+        "interval": 10000000
+       },
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.MobilityMeasure",
+        "type": "dk.cachet.carp.mobility",
+        "name": "Mobility Features",
+        "description": "Extracts mobility features based on location tracking",
+        "enabled": true,
+        "configuration": {},
+        "accuracy": "balanced",
+        "distance": 5.0,
+        "interval": 180000000,
+        "usePriorContexts": true,
+        "stopRadius": 25.0,
+        "placeRadius": 50.0,
+        "stopDuration": 180000000
+       }
+      ]
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
+      "name": "Task #7",
+      "measures": [
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
+        "type": "dk.cachet.carp.device",
+        "name": "Basic Device Info",
+        "description": "Collects basic information about the phone.",
+        "enabled": true,
+        "configuration": {}
+       }
+      ]
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
+      "name": "Task #8",
+      "measures": [
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.LocationMeasure",
+        "type": "dk.cachet.carp.location",
+        "name": "Location",
+        "description": "Ont-time collection of location from the phone's GPS sensor",
+        "enabled": true,
+        "configuration": {},
+        "accuracy": "balanced",
+        "distance": 0.0,
+        "interval": 10000000
+       }
+      ]
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
+      "name": "Task #9",
+      "measures": [
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.WeatherMeasure",
+        "type": "dk.cachet.carp.weather",
+        "name": "Weather",
+        "description": "Collects local weather from the WeatherAPI web service",
+        "enabled": true,
+        "configuration": {},
+        "apiKey": "12b6e28582eb9298577c734a31ba9f4f"
+       },
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.AirQualityMeasure",
+        "type": "dk.cachet.carp.air_quality",
+        "name": "Air Quality",
+        "description": "Collects local air quality from the OpenWeatherMap (OWM) web service",
+        "enabled": true,
+        "configuration": {},
+        "apiKey": "9e538456b2b85c92647d8b65090e29f957638c77"
+       }
+      ]
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
+      "name": "Task #10",
+      "measures": [
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
+        "type": "dk.cachet.carp.audio",
+        "name": "Audio Recording",
+        "description": "Collects an audio recording from the phone's microphone",
+        "enabled": true,
+        "configuration": {}
+       }
+      ]
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
+      "name": "Task #11",
+      "measures": [
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.ESenseMeasure",
+        "type": "dk.cachet.carp.esense.button",
+        "name": "eSense - Button",
+        "description": "Collects button event from the eSense device",
+        "enabled": true,
+        "configuration": {},
+        "deviceName": "eSense-0332",
+        "samplingRate": 10
+       },
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.ESenseMeasure",
+        "type": "dk.cachet.carp.esense.sensor",
+        "name": "eSense - Sensor",
+        "description": "Collects movement data from the eSense inertial measurement unit (IMU) sensor",
+        "enabled": true,
+        "configuration": {},
+        "deviceName": "eSense-0332",
+        "samplingRate": 5
+       }
+      ]
+     }
     ],
     "triggeredTasks": [
-        {
-            "triggerId": 0,
-            "taskName": "Task #3",
-            "targetDeviceRoleName": "masterphone"
-        },
-        {
-            "triggerId": 1,
-            "taskName": "Task #4",
-            "targetDeviceRoleName": "masterphone"
-        },
-        {
-            "triggerId": 2,
-            "taskName": "Task #5",
-            "targetDeviceRoleName": "masterphone"
-        },
-        {
-            "triggerId": 3,
-            "taskName": "Task #6",
-            "targetDeviceRoleName": "masterphone"
-        },
-        {
-            "triggerId": 4,
-            "taskName": "Task #7",
-            "targetDeviceRoleName": "masterphone"
-        },
-        {
-            "triggerId": 5,
-            "taskName": "Task #8",
-            "targetDeviceRoleName": "masterphone"
-        },
-        {
-            "triggerId": 6,
-            "taskName": "Task #9",
-            "targetDeviceRoleName": "masterphone"
-        }
+     {
+      "triggerId": 0,
+      "taskName": "Task #3",
+      "targetDeviceRoleName": "masterphone"
+     },
+     {
+      "triggerId": 1,
+      "taskName": "Task #7",
+      "targetDeviceRoleName": "masterphone"
+     },
+     {
+      "triggerId": 2,
+      "taskName": "Task #8",
+      "targetDeviceRoleName": "masterphone"
+     },
+     {
+      "triggerId": 3,
+      "taskName": "Task #9",
+      "targetDeviceRoleName": "masterphone"
+     },
+     {
+      "triggerId": 4,
+      "taskName": "Task #10",
+      "targetDeviceRoleName": "masterphone"
+     },
+     {
+      "triggerId": 5,
+      "taskName": "Task #11",
+      "targetDeviceRoleName": "esense"
+     }
     ],
-    "expectedParticipantData": []
-}
+    "expectedParticipantData": [],
+    "protocolDescription": {
+     "$type": "StudyDescription",
+     "title": "CAMS App - Sensing Coverage Study",
+     "description": "The default study testing coverage of most measures. Used in the coverage tests.",
+     "purpose": "To test sensing coverage",
+     "responsible": {
+      "$type": "StudyResponsible",
+      "id": "abc",
+      "name": "Alex B. Christensen",
+      "title": "professor",
+      "email": "abc@dtu.dk",
+      "address": "Ørsteds Plads",
+      "affiliation": "Technical University of Denmark"
+     }
+    },
+    "description": "The default study testing coverage of most measures. Used in the coverage tests.",
+    "samplingStrategy": "normal",
+    "dataEndPoint": {
+     "$type": "CarpDataEndPoint",
+     "type": "CARP",
+     "dataFormat": "dk.cachet.carp",
+     "bufferSize": 500000,
+     "zip": true,
+     "encrypt": false,
+     "uploadMethod": "DATA_POINT",
+     "name": "CARP Server",
+     "collection": "carp_sensing",
+     "deleteWhenUploaded": true
+    }
+   }

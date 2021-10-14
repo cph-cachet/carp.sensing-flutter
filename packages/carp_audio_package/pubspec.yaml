@@ -1,6 +1,6 @@
 name: carp_audio_package
 description: CARP Audio Sampling Package. Samples audio recording and noise.
-version: 0.30.6
+version: 0.31.0
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/packages/carp_audio_package
 
 environment:
@@ -11,8 +11,8 @@ dependencies:
   flutter:
     sdk: flutter
     
-  carp_core: ^0.30.0
-  carp_mobile_sensing: ^0.30.5
+  carp_core: ^0.31.0
+  carp_mobile_sensing: ^0.31.0
   json_annotation: ^4.0.1
   permission_handler: '>=8.1.0 <8.2.0'
   flutter_sound: ^8.1.4   # audio probe

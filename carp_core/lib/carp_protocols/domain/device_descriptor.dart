@@ -15,12 +15,6 @@ part of carp_core_protocols;
 class DeviceDescriptor extends Serializable {
   static const DEVICE_NAMESPACE = 'dk.cachet.carp.protocols.domain.devices';
 
-  DeviceDescriptor({
-    required this.roleName,
-    this.isMasterDevice = false,
-    this.supportedDataTypes,
-  }) : super();
-
   /// The device type identifier
   @JsonKey(ignore: true)
   String get type => jsonType;
@@ -38,6 +32,12 @@ class DeviceDescriptor extends Serializable {
   /// Sampling configurations for data types available on this device which
   /// override the default configuration.
   Map<String, SamplingConfiguration> samplingConfiguration = {};
+
+  DeviceDescriptor({
+    required this.roleName,
+    this.isMasterDevice = false,
+    this.supportedDataTypes,
+  }) : super();
 
   String toString() =>
       '$runtimeType - roleName: $roleName, isMasterDevice: $isMasterDevice';

@@ -1,3 +1,10 @@
+## 0.31.0
+* A CAMS-specific `StudyProtocol` named `SmartphoneStudyProtocol` has been reintroduced (c.f., v. 0.30.0). It turned out that there are several things which needs to be configured as part of a study protocol, which the generic `StudyProtocol` from carp_core doesn't support. The new `SmartphoneStudyProtocol` supports specifying:
+   * The `StudyDescription` describing the study including the researcher responsible for the study.
+   * The `DataEndPoint` specifying where and how to upload data.
+* The `SmartphoneDeploymentService` is updated to handle the new `SmartphoneStudyProtocol`.
+* `StudyDescription` now also supports specifying the URL of a study description and the privacy policy.
+
 ## 0.30.6
 * separate method for asking permissions in `SmartphoneDeploymentController`
 * bug fix of [#215](https://github.com/cph-cachet/carp.sensing-flutter/issues/215) - notifications can now be enabled/disabled in the `configure` method of the `SmartphoneDeploymentController`.

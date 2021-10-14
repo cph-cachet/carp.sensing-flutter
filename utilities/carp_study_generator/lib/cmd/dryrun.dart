@@ -33,32 +33,6 @@ class DryRunCommand extends AbstractCommand {
       issues++;
     }
 
-    String? descriptionJson;
-    try {
-      descriptionJson = File(descriptionPath).readAsStringSync();
-      print('\x1B[32m[✓]\x1B[0m Description path \t $descriptionPath');
-    } catch (error) {
-      print(
-          '\x1B[31m[!]\x1B[0m Description path \t Could not read study description path from carpspec.yaml - has this been specified?');
-      issues++;
-    }
-
-    if (descriptionJson != null) {
-      try {
-        StudyDescription description = StudyDescription.fromJson(
-            json.decode(descriptionJson) as Map<String, dynamic>);
-        print(
-            '\x1B[32m[✓]\x1B[0m Description parse \t title: ${description.title}');
-      } catch (error) {
-        print(
-            '\x1B[31m[!]\x1B[0m Description parse \t Error parsing description json - ${errorToString(error)}');
-        issues++;
-      }
-    } else {
-      print('\x1B[31m[!]\x1B[0m Description parse \t No description to parse');
-      issues++;
-    }
-
     String? protocolJson;
     try {
       protocolJson = File(protocolPath).readAsStringSync();

@@ -8,9 +8,6 @@ class UpdateStudyProtocolCommand extends CreateStudyProtocolCommand {
     await authenticate();
 
     print("Updating custom protocol: $customProtocol");
-
-    // print(toJsonString(customProtocol));
-
     await CANSProtocolService().addVersion(customProtocol);
     print('Update successful!');
   }

@@ -19,13 +19,21 @@ class StudyDescription extends Serializable {
   /// this study and its purpose.
   String purpose;
 
+  /// The URL pointing to a web page description of this study.
+  String? studyDescriptionUrl;
+
+  /// The URL pointing to a web page with the privacy policy of this study.
+  String? privacyPolicyUrl;
+
   /// The primary investigator (PI) responsible of this study.
-  StudyReponsible? responsible;
+  StudyResponsible? responsible;
 
   StudyDescription({
     required this.title,
     required this.description,
     required this.purpose,
+    this.studyDescriptionUrl,
+    this.privacyPolicyUrl,
     this.responsible,
   });
 
@@ -41,7 +49,7 @@ class StudyDescription extends Serializable {
 /// A person who is responsible for a [StudyProtocol].
 /// Typically the Principal Investigator (PI) who is reposnibile for the study.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class StudyReponsible extends Serializable {
+class StudyResponsible extends Serializable {
   String id;
   String name;
   String title;
@@ -49,7 +57,7 @@ class StudyReponsible extends Serializable {
   String address;
   String affiliation;
 
-  StudyReponsible({
+  StudyResponsible({
     required this.id,
     required this.name,
     required this.title,
@@ -58,10 +66,10 @@ class StudyReponsible extends Serializable {
     required this.address,
   });
 
-  Function get fromJsonFunction => _$StudyReponsibleFromJson;
-  factory StudyReponsible.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as StudyReponsible;
-  Map<String, dynamic> toJson() => _$StudyReponsibleToJson(this);
+  Function get fromJsonFunction => _$StudyResponsibleFromJson;
+  factory StudyResponsible.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as StudyResponsible;
+  Map<String, dynamic> toJson() => _$StudyResponsibleToJson(this);
 
   String toString() => '$runtimeType - $name, $title <$email>';
 }

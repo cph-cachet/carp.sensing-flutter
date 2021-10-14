@@ -262,7 +262,7 @@ StudyProtocol _$StudyProtocolFromJson(Map<String, dynamic> json) {
   return StudyProtocol(
     ownerId: json['ownerId'] as String,
     name: json['name'] as String,
-    description: json['description'] as String?,
+    description: json['description'] as String,
   )
     ..creationDate = DateTime.parse(json['creationDate'] as String)
     ..masterDevices = (json['masterDevices'] as List<dynamic>)
@@ -293,6 +293,14 @@ Map<String, dynamic> _$StudyProtocolToJson(StudyProtocol instance) {
   final val = <String, dynamic>{
     'ownerId': instance.ownerId,
     'name': instance.name,
+    'description': instance.description,
+    'creationDate': instance.creationDate.toIso8601String(),
+    'masterDevices': instance.masterDevices,
+    'connectedDevices': instance.connectedDevices,
+    'connections': instance.connections,
+    'triggers': instance.triggers,
+    'tasks': instance.tasks.toList(),
+    'triggeredTasks': instance.triggeredTasks,
   };
 
   void writeNotNull(String key, dynamic value) {
@@ -301,14 +309,6 @@ Map<String, dynamic> _$StudyProtocolToJson(StudyProtocol instance) {
     }
   }
 
-  writeNotNull('description', instance.description);
-  val['creationDate'] = instance.creationDate.toIso8601String();
-  val['masterDevices'] = instance.masterDevices;
-  val['connectedDevices'] = instance.connectedDevices;
-  val['connections'] = instance.connections;
-  val['triggers'] = instance.triggers;
-  val['tasks'] = instance.tasks.toList();
-  val['triggeredTasks'] = instance.triggeredTasks;
   writeNotNull('expectedParticipantData', instance.expectedParticipantData);
   return val;
 }

@@ -1,13 +1,13 @@
 {
   "ownerId": "alex@uni.dk",
   "name": "Context package test",
-  "creationDate": "2021-07-22T07:49:32.294426Z",
+  "description": "",
+  "creationDate": "2021-10-14T21:40:06.174875Z",
   "masterDevices": [
    {
     "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
     "isMasterDevice": true,
     "roleName": "masterphone",
-    "supportedDataTypes": [],
     "samplingConfiguration": {}
    }
   ],
@@ -15,21 +15,15 @@
   "connections": [],
   "triggers": {
    "0": {
-    "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger",
-    "sourceDeviceRoleName": "",
-    "requiresMasterDevice": false
+    "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
    },
    "1": {
     "$type": "dk.cachet.carp.protocols.domain.triggers.PeriodicTrigger",
-    "sourceDeviceRoleName": "",
-    "requiresMasterDevice": false,
     "period": 3600000000,
     "duration": 1000000
    },
    "2": {
     "$type": "dk.cachet.carp.protocols.domain.triggers.RecurrentScheduledTrigger",
-    "sourceDeviceRoleName": "",
-    "requiresMasterDevice": false,
     "duration": 10000000,
     "type": "daily",
     "time": {
@@ -46,7 +40,7 @@
   "tasks": [
    {
     "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
-    "name": "Task #3",
+    "name": "Task #6",
     "measures": [
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
@@ -150,7 +144,7 @@
    },
    {
     "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
-    "name": "Task #4",
+    "name": "Task #7",
     "measures": [
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.HealthMeasure",
@@ -198,7 +192,7 @@
    },
    {
     "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
-    "name": "Task #5",
+    "name": "Task #8",
     "measures": [
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.HealthMeasure",
@@ -214,17 +208,17 @@
   "triggeredTasks": [
    {
     "triggerId": 0,
-    "taskName": "Task #3",
+    "taskName": "Task #6",
     "targetDeviceRoleName": "masterphone"
    },
    {
     "triggerId": 1,
-    "taskName": "Task #4",
+    "taskName": "Task #7",
     "targetDeviceRoleName": "masterphone"
    },
    {
     "triggerId": 2,
-    "taskName": "Task #5",
+    "taskName": "Task #8",
     "targetDeviceRoleName": "masterphone"
    }
   ],

@@ -1,3 +1,6 @@
+## 0.31.0
+* `description` in `StudyProtocol` is now non-nullable (required when uploading a protocol to CARP)
+
 ## 0.30.1+3
 * fix of json serialization bugs (x2)
 * update of API docs

@@ -32,8 +32,8 @@ class StudyProtocol {
   /// A unique descriptive name for the protocol.
   String name;
 
-  /// An optional description for the study protocol.
-  String? description;
+  /// The description for the study protocol.
+  String description;
 
   /// The timestamp of the creation of this protocol in Zulu time.
   late DateTime creationDate;
@@ -61,7 +61,7 @@ class StudyProtocol {
   StudyProtocol({
     required this.ownerId,
     required this.name,
-    this.description,
+    this.description = '',
   }) : super() {
     creationDate = DateTime.now().toUtc();
   }

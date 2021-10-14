@@ -34,8 +34,8 @@ abstract class LocationConfiguration {
   /// Specify 0 when you want to be notified of all movements.
   double distance = 0;
 
-  /// The interval between location updates in miliseconds.
-  int interval = 10000;
+  /// The interval between location updates.
+  Duration interval = const Duration(seconds: 10);
 
   /// The title of the notification to be shown to the user when
   /// location tracking takes place in the background.
@@ -137,7 +137,7 @@ class LocationManager {
             configuration?.accuracy.index ??
                 GeolocationAccuracy.balanced.index],
         distanceFilter: configuration?.distance,
-        interval: configuration?.interval,
+        interval: configuration?.interval.inMilliseconds,
       );
 
       await locationManager.changeNotificationOptions(

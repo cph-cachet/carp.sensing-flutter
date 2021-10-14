@@ -1,13 +1,13 @@
 {
   "ownerId": "alex@uni.dk",
   "name": "Context package test",
-  "creationDate": "2021-07-09T16:37:02.672407Z",
+  "description": "",
+  "creationDate": "2021-10-14T21:45:37.203087Z",
   "masterDevices": [
    {
     "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
     "isMasterDevice": true,
     "roleName": "masterphone",
-    "supportedDataTypes": [],
     "samplingConfiguration": {}
    }
   ],
@@ -15,15 +15,13 @@
   "connections": [],
   "triggers": {
    "0": {
-    "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger",
-    "sourceDeviceRoleName": "",
-    "requiresMasterDevice": false
+    "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
    }
   },
   "tasks": [
    {
     "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
-    "name": "Task #3",
+    "name": "Task #6",
     "measures": [
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
@@ -154,7 +152,7 @@
   "triggeredTasks": [
    {
     "triggerId": 0,
-    "taskName": "Task #3",
+    "taskName": "Task #6",
     "targetDeviceRoleName": "masterphone"
    }
   ],

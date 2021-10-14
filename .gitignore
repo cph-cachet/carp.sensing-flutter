@@ -198,3 +198,7 @@ carp_mobile_sensing/example/.flutter-plugins-dependencies
 carp_mobile_sensing/example/.flutter-plugins-dependencies
 *.sh
 carp_mobile_sensing/example/.flutter-plugins-dependencies
+apps/carp_mobile_sensing_app/lib/credentials.dart
+carp_mobile_sensing/example/.flutter-plugins-dependencies
+packages/carp_communication_package/example/.flutter-plugins-dependencies
+carp_mobile_sensing/example/.flutter-plugins-dependencies

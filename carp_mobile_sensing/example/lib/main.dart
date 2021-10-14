@@ -170,8 +170,8 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
   Future initialize() async {}
 
   /// Create a new CAMS study protocol.
-  Future<StudyProtocol> getStudyProtocol(String studyId) async {
-    StudyProtocol protocol = StudyProtocol(
+  Future<SmartphoneStudyProtocol> getStudyProtocol(String studyId) async {
+    SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
       ownerId: 'AB',
       name: 'Track patient movement',
     );

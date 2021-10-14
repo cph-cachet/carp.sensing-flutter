@@ -6,19 +6,22 @@
  */
 part of runtime;
 
-/// An interface defining a manger of a [StudyProtocol].
+/// An interface defining a manger of [SmartphoneStudyProtocol]s.
 ///
-/// Is mainly used to get and save a [StudyProtocol].
+/// Is mainly used to get and save [SmartphoneStudyProtocol]s.
 /// See [FileStudyProtocolManager] for an example.
 abstract class StudyProtocolManager {
   /// Initialize the study manager.
   Future initialize();
 
-  /// Get a [StudyProtocol] based on its ID.
+  /// Get a [SmartphoneStudyProtocol] based on its ID.
   /// Returns `null` if no protocol with [studyId] exists.
-  Future<StudyProtocol?> getStudyProtocol(String studyId);
+  Future<SmartphoneStudyProtocol?> getStudyProtocol(String studyId);
 
-  /// Save a [StudyProtocol] with the ID [studyId].
+  /// Save a [SmartphoneStudyProtocol] with the ID [studyId].
   /// Returns `true` if successful, `false` otherwise.
-  Future<bool> saveStudyProtocol(String studyId, StudyProtocol protocol);
+  Future<bool> saveStudyProtocol(
+    String studyId,
+    SmartphoneStudyProtocol protocol,
+  );
 }

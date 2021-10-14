@@ -1,7 +1,6 @@
 name: carp_survey_package_example
 description: Examples of how to use the carp_survey_package.
-version: 0.6.0
-author:  CACHET Team <cph.cachet@gmail.com>
+version: 0.31.0
 publish_to: none
 
 environment:

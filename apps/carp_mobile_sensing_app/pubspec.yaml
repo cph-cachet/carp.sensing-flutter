@@ -58,8 +58,8 @@ dev_dependencies:
   test: ^1.17.10 
   # DON'T include the carp_study_generator when compiling the app for runtime
   # carp_study_generator: ^0.30.0
-#  carp_study_generator: 
-#    path: ../../utilities/carp_study_generator/
+  carp_study_generator: 
+    path: ../../utilities/carp_study_generator/
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

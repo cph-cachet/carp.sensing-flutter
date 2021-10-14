@@ -1,8 +1,7 @@
 {
-    "ownerId": "alex@uni.dk",
-    "name": "CAMS App - Sensing Coverage Study",
-    "description": "This is a protocol for testing the coverage of sampling.",
-    "creationDate": "2021-10-09T12:33:40.441053Z",
+    "ownerId": "abc@dtu.dk",
+    "name": "CAMS App Study No. 2",
+    "creationDate": "2021-10-14T18:46:51.462509Z",
     "masterDevices": [
      {
       "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
@@ -112,6 +111,32 @@
         "description": "Collects activity type from the phone's activity recognition module",
         "enabled": true,
         "configuration": {}
+       },
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.LocationMeasure",
+        "type": "dk.cachet.carp.geolocation",
+        "name": "Geo-location",
+        "description": "Continously collection of location from the phone's GPS sensor",
+        "enabled": true,
+        "configuration": {},
+        "accuracy": "navigation",
+        "distance": 0.0,
+        "interval": 10000000
+       },
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.MobilityMeasure",
+        "type": "dk.cachet.carp.mobility",
+        "name": "Mobility Features",
+        "description": "Extracts mobility features based on location tracking",
+        "enabled": true,
+        "configuration": {},
+        "accuracy": "balanced",
+        "distance": 5.0,
+        "interval": 180000000,
+        "usePriorContexts": true,
+        "stopRadius": 25.0,
+        "placeRadius": 50.0,
+        "stopDuration": 180000000
        }
       ]
      },
@@ -137,13 +162,12 @@
         "$type": "dk.cachet.carp.protocols.domain.tasks.measures.LocationMeasure",
         "type": "dk.cachet.carp.location",
         "name": "Location",
-        "description": "Collects location from the phone's GPS sensor",
+        "description": "Ont-time collection of location from the phone's GPS sensor",
         "enabled": true,
         "configuration": {},
-        "frequency": 30000000,
-        "duration": 1000000,
-        "accuracy": "best",
-        "distance": 0.0
+        "accuracy": "balanced",
+        "distance": 0.0,
+        "interval": 10000000
        }
       ]
      },
@@ -154,6 +178,8 @@
        {
         "$type": "dk.cachet.carp.protocols.domain.tasks.measures.WeatherMeasure",
         "type": "dk.cachet.carp.weather",
+        "name": "Weather",
+        "description": "Collects local weather from the WeatherAPI web service",
         "enabled": true,
         "configuration": {},
         "apiKey": "12b6e28582eb9298577c734a31ba9f4f"
@@ -242,5 +268,34 @@
       "targetDeviceRoleName": "esense"
      }
     ],
-    "expectedParticipantData": []
+    "expectedParticipantData": [],
+    "protocolDescription": {
+     "$type": "StudyDescription",
+     "title": "CAMS App - Sensing Coverage Study",
+     "description": "The default study testing coverage of most measures. Used in the coverage tests.",
+     "purpose": "To test sensing coverage",
+     "responsible": {
+      "$type": "StudyResponsible",
+      "id": "abc",
+      "name": "Alex B. Christensen",
+      "title": "professor",
+      "email": "abc@dtu.dk",
+      "address": "Ørsteds Plads",
+      "affiliation": "Technical University of Denmark"
+     }
+    },
+    "description": "The default study testing coverage of most measures. Used in the coverage tests.",
+    "samplingStrategy": "normal",
+    "dataEndPoint": {
+     "$type": "CarpDataEndPoint",
+     "type": "CARP",
+     "dataFormat": "dk.cachet.carp",
+     "bufferSize": 500000,
+     "zip": true,
+     "encrypt": false,
+     "uploadMethod": "DATA_POINT",
+     "name": "CARP Server",
+     "collection": "carp_sensing",
+     "deleteWhenUploaded": true
+    }
    }

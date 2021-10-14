@@ -12,10 +12,10 @@ void main() {
 
   setUp(() {
     // Create a new study protocol.
-    masterProtocol = StudyProtocol(
-        ownerId: 'user@dtu.dk',
-        name: 'patient_tracking',
-        description: 'Track patient movement');
+    masterProtocol = SmartphoneStudyProtocol(
+      ownerId: 'user@dtu.dk',
+      name: 'patient_tracking',
+    );
 
     // Define which devices are used for data collection.
     masterPhone = Smartphone();
@@ -61,7 +61,7 @@ void main() {
         eSense);
   });
 
-  test('StudyProtocol -> JSON', () async {
+  test('SmartphoneStudyProtocol -> JSON', () async {
     print(masterProtocol);
     print(toJsonString(masterProtocol));
     expect(masterProtocol.ownerId, 'user@dtu.dk');
@@ -73,23 +73,24 @@ void main() {
     expect(masterProtocol.triggeredTasks.length, 3);
   });
 
-  test('CAMSStudyProtocol -> JSON -> CAMSStudyProtocol :: deep assert',
+  test(
+      'SmartphoneStudyProtocol -> JSON -> SmartphoneStudyProtocol :: deep assert',
       () async {
     print('#1 : $masterProtocol');
     final studyJson = toJsonString(masterProtocol);
 
-    StudyProtocol protocolFromJson =
-        StudyProtocol.fromJson(json.decode(studyJson) as Map<String, dynamic>);
+    SmartphoneStudyProtocol protocolFromJson = SmartphoneStudyProtocol.fromJson(
+        json.decode(studyJson) as Map<String, dynamic>);
     expect(toJsonString(protocolFromJson), equals(studyJson));
     print('#2 : $protocolFromJson');
   });
 
-  test('JSON File -> StudyProtocol', () async {
+  test('JSON File -> SmartphoneStudyProtocol', () async {
     // Read the study protocol from json file
     String plainJson = File('test/json/study_protocol.json').readAsStringSync();
 
-    StudyProtocol protocol =
-        StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
+    SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol.fromJson(
+        json.decode(plainJson) as Map<String, dynamic>);
 
     expect(protocol.ownerId, masterProtocol.ownerId);
     expect(protocol.masterDevices.first.roleName,
@@ -212,14 +213,14 @@ void main() {
 
     print(studyJson);
 
-    StudyProtocol protocol_2 =
-        StudyProtocol.fromJson(json.decode(studyJson) as Map<String, dynamic>);
+    SmartphoneStudyProtocol protocol_2 = SmartphoneStudyProtocol.fromJson(
+        json.decode(studyJson) as Map<String, dynamic>);
     expect(protocol_2.ownerId, masterProtocol.ownerId);
 
     print('#1 : $masterProtocol');
 
-    StudyProtocol protocolFromJson =
-        StudyProtocol.fromJson(json.decode(studyJson) as Map<String, dynamic>);
+    SmartphoneStudyProtocol protocolFromJson = SmartphoneStudyProtocol.fromJson(
+        json.decode(studyJson) as Map<String, dynamic>);
     expect(toJsonString(protocolFromJson), equals(studyJson));
     print('#2 : $protocolFromJson');
   });

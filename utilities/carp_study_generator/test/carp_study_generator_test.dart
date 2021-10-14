@@ -35,7 +35,6 @@ void main() {
   group("commands", () {
     test('help', () async => HelpCommand().execute());
     test('dryrun', () async => DryRunCommand().execute());
-    test('description', () async => StudyDescriptionCommand().execute());
     test('consent', () async => ConsentCommand().execute());
     test('protocol', () async => CreateStudyProtocolCommand().execute());
   });
@@ -45,13 +44,6 @@ void main() {
       String consentPath = 'carp/resources/consent.json';
       String consentJson = File(consentPath).readAsStringSync();
       RPOrderedTask.fromJson(json.decode(consentJson) as Map<String, dynamic>);
-    });
-
-    test('description', () async {
-      String descriptionPath = 'carp/resources/description.json';
-      String descriptionJson = File(descriptionPath).readAsStringSync();
-      StudyDescription.fromJson(
-          json.decode(descriptionJson) as Map<String, dynamic>);
     });
 
     test('protocol', () async {

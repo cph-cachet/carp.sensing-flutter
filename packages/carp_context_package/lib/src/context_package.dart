@@ -87,7 +87,8 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
         LocationMeasure(
           type: LOCATION,
           name: 'Location',
-          description: "Collects location from the phone's GPS sensor",
+          description:
+              "Ont-time collection of location from the phone's GPS sensor",
         ),
       ),
       MapEntry(
@@ -95,10 +96,11 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
           LocationMeasure(
             type: GEOLOCATION,
             name: 'Geo-location',
-            description: "Collects location from the phone's GPS sensor",
-            frequency: Duration(seconds: 30),
+            description:
+                "Continously collection of location from the phone's GPS sensor",
             accuracy: GeolocationAccuracy.low,
-            distance: 3,
+            interval: const Duration(minutes: 5),
+            distance: 10,
           )),
       MapEntry(
         ACTIVITY,
@@ -164,25 +166,22 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
       ..type = SamplingSchemaType.minimum
       ..name = 'Minimum context sampling';
     (minimum.measures[ACTIVITY] as CAMSMeasure).enabled = false;
-    (minimum.measures[GEOFENCE] as LocationMeasure).enabled = false;
+    (minimum.measures[GEOFENCE] as GeofenceMeasure).enabled = false;
     return minimum;
   }
 
   SamplingSchema get normal => common;
 
-  SamplingSchema get debug => common
-    ..type = SamplingSchemaType.debug
-    ..name = 'Debugging context sampling schema'
-    ..powerAware = false
-    ..measures[GEOLOCATION] = LocationMeasure(
-      type: GEOLOCATION,
-      enabled: true,
-      frequency: Duration(seconds: 3),
-      accuracy: GeolocationAccuracy.navigation,
-      distance: 0,
-    )
-    ..measures[WEATHER] = WeatherMeasure(
-      type: WEATHER,
-      apiKey: '12b6e28582eb9298577c734a31ba9f4f',
-    );
+  SamplingSchema get debug {
+    SamplingSchema debug = common
+      ..type = SamplingSchemaType.debug
+      ..name = 'Debugging context sampling schema'
+      ..powerAware = false;
+    (debug.measures[GEOLOCATION] as LocationMeasure)
+      ..interval = const Duration(seconds: 10)
+      ..distance = 0
+      ..accuracy = GeolocationAccuracy.navigation;
+
+    return debug;
+  }
 }

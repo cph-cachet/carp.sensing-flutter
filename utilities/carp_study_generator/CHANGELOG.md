@@ -1,3 +1,7 @@
+## 0.31.0
+* upgrade to `carp_mobile_sensing` v. 0.31.0
+* removal of `description` command, since the study description is now part of the protocol.
+
 ## 0.30.5
 * upgrade to `carp_mobile_sensing` v. 0.30.5
 * upgrade to `carp_webservices` v. 0.30.1

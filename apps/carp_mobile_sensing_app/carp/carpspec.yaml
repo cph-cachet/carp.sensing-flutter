@@ -8,10 +8,10 @@
 # configuration of the CARP server and the user who runs this study
 server:
   uri: https://cans.cachet.dk/stage
-  client_id: carp_id
-  client_secret: carp_secret
-  username: user@dtu.dk
-  password: xxx
+  client_id: carp
+  client_secret: carp
+  username: jakba@dtu.dk
+  password: Benjamin
 
 # configuration of the study ID - used for upload of informed consent and translations
 study:

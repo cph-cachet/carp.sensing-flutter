@@ -43,7 +43,7 @@ void sensing() async {
 
   // create and configure a client manager for this phone
   SmartPhoneClientManager client = SmartPhoneClientManager();
-  client.configure();
+  await client.configure();
 
   SmartphoneDeploymentController controller =
       await client.addStudy(studyDeploymentId, deviceRolename);
@@ -51,7 +51,6 @@ void sensing() async {
   // configure the controller and resume sampling
   await controller.configure(
     privacySchemaName: PrivacySchema.DEFAULT,
-    transformer: ((datum) => datum),
   );
   controller.resume();
 

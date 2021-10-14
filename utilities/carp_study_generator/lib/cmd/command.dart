@@ -31,13 +31,14 @@ abstract class AbstractCommand implements Command {
 
   @mustCallSuper
   AbstractCommand() {
+    // Settings().debugLevel = DebugLevel.DEBUG;
+
     // make sure not to mess with CAMS
     Settings().saveAppTaskQueue = false;
 
     // make sure that the json functions are loaded
     DomainJsonFactory();
-
-    // create two dummy RPTask to register json deserialization functions for RP
+    CarpDataManager();
     RPTask(identifier: 'ignored');
 
     if (_yaml == null) {

@@ -33,7 +33,7 @@ class SmartphoneDeployment extends MasterDeviceDeployment {
   StudyDescription? protocolDescription;
 
   /// The PI responsible for this study.
-  StudyReponsible? get responsible => protocolDescription?.responsible;
+  StudyResponsible? get responsible => protocolDescription?.responsible;
 
   /// The sampling strategy used in this deployment based on the standard
   /// [SamplingSchemaType] types.
@@ -51,7 +51,6 @@ class SmartphoneDeployment extends MasterDeviceDeployment {
   ///
   SmartphoneDeployment({
     String? studyDeploymentId,
-    this.protocolDescription,
     required MasterDeviceDescriptor deviceDescriptor,
     required DeviceRegistration configuration,
     List<DeviceDescriptor> connectedDevices = const [],
@@ -59,6 +58,8 @@ class SmartphoneDeployment extends MasterDeviceDeployment {
     List<TaskDescriptor> tasks = const [],
     Map<String, Trigger> triggers = const {},
     List<TriggeredTask> triggeredTasks = const [],
+    this.protocolDescription,
+    this.samplingStrategy,
     this.dataEndPoint,
   }) : super(
           deviceDescriptor: deviceDescriptor,
@@ -68,20 +69,19 @@ class SmartphoneDeployment extends MasterDeviceDeployment {
           tasks: tasks,
           triggers: triggers,
           triggeredTasks: triggeredTasks,
-          // dataEndPoint: dataEndPoint,
         ) {
     _registerFromJsonFunctions();
     _studyDeploymentId = studyDeploymentId ?? Uuid().v1();
   }
 
+  /// Create a [SmartphoneDeployment] that combines a [MasterDeviceDeployment] and
+  /// a [SmartphoneStudyProtocol].
   SmartphoneDeployment.fromMasterDeviceDeployment({
     String? studyDeploymentId,
-    StudyDescription? protocolDescription,
-    DataEndPoint? dataEndPoint,
     required MasterDeviceDeployment masterDeviceDeployment,
+    required SmartphoneStudyProtocol protocol,
   }) : this(
           studyDeploymentId: studyDeploymentId,
-          protocolDescription: protocolDescription,
           deviceDescriptor: masterDeviceDeployment.deviceDescriptor,
           configuration: masterDeviceDeployment.configuration,
           connectedDevices: masterDeviceDeployment.connectedDevices,
@@ -90,21 +90,20 @@ class SmartphoneDeployment extends MasterDeviceDeployment {
           tasks: masterDeviceDeployment.tasks,
           triggers: masterDeviceDeployment.triggers,
           triggeredTasks: masterDeviceDeployment.triggeredTasks,
-          dataEndPoint: dataEndPoint,
+          protocolDescription: protocol.protocolDescription,
+          samplingStrategy: protocol.samplingStrategy,
+          dataEndPoint: protocol.dataEndPoint,
         );
 
-  /// Create a [SmartphoneDeployment] based on a [StudyProtocol].
+  /// Create a [SmartphoneDeployment] based on a [SmartphoneStudyProtocol].
   /// This method basically makes a 1:1 mapping between a protocol and
   /// a deployment.
-  SmartphoneDeployment.fromStudyProtocol({
+  SmartphoneDeployment.fromSmartphoneStudyProtocol({
     String? studyDeploymentId,
-    StudyDescription? protocolDescription,
     required String masterDeviceRoleName,
-    DataEndPoint? dataEndPoint,
-    required StudyProtocol protocol,
+    required SmartphoneStudyProtocol protocol,
   }) : this(
           studyDeploymentId: studyDeploymentId,
-          protocolDescription: protocolDescription,
           deviceDescriptor: Smartphone(roleName: masterDeviceRoleName),
           configuration: DeviceRegistration(),
           connectedDevices: protocol.connectedDevices,
@@ -112,7 +111,9 @@ class SmartphoneDeployment extends MasterDeviceDeployment {
           tasks: protocol.tasks.toList(),
           triggers: protocol.triggers,
           triggeredTasks: protocol.triggeredTasks,
-          dataEndPoint: dataEndPoint,
+          protocolDescription: protocol.protocolDescription,
+          samplingStrategy: protocol.samplingStrategy,
+          dataEndPoint: protocol.dataEndPoint,
         );
 
   /// Get the list of all mesures in this study deployment.
