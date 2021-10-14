@@ -46,13 +46,6 @@ void main() {
       RPOrderedTask.fromJson(json.decode(consentJson) as Map<String, dynamic>);
     });
 
-    test('description', () async {
-      String descriptionPath = 'carp/resources/description.json';
-      String descriptionJson = File(descriptionPath).readAsStringSync();
-      StudyDescription.fromJson(
-          json.decode(descriptionJson) as Map<String, dynamic>);
-    });
-
     test('protocol', () async {
       String protocolPath = 'carp/resources/protocol.json';
       String protocolJson = File(protocolPath).readAsStringSync();
