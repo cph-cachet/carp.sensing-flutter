@@ -1,3 +1,6 @@
+## 0.31.0
+* update to `carp_mobile_sensing` v. 0.31.0
+
 ## 0.30.6
 * fix of `onError` bug in `noise_meter` 3.0.3.
 
