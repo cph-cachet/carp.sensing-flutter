@@ -1,7 +1,7 @@
 {
     "ownerId": "abc@dtu.dk",
     "name": "CAMS App Study No. 2",
-    "creationDate": "2021-10-13T20:26:20.480037Z",
+    "creationDate": "2021-10-14T18:46:51.462509Z",
     "masterDevices": [
      {
       "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
@@ -115,13 +115,13 @@
        {
         "$type": "dk.cachet.carp.protocols.domain.tasks.measures.LocationMeasure",
         "type": "dk.cachet.carp.geolocation",
+        "name": "Geo-location",
+        "description": "Continously collection of location from the phone's GPS sensor",
         "enabled": true,
         "configuration": {},
         "accuracy": "navigation",
         "distance": 0.0,
-        "interval": 1000,
-        "frequency": 3000000,
-        "duration": 1000000
+        "interval": 10000000
        },
        {
         "$type": "dk.cachet.carp.protocols.domain.tasks.measures.MobilityMeasure",
@@ -131,8 +131,8 @@
         "enabled": true,
         "configuration": {},
         "accuracy": "balanced",
-        "distance": 0.0,
-        "interval": 1000,
+        "distance": 5.0,
+        "interval": 180000000,
         "usePriorContexts": true,
         "stopRadius": 25.0,
         "placeRadius": 50.0,
@@ -162,14 +162,12 @@
         "$type": "dk.cachet.carp.protocols.domain.tasks.measures.LocationMeasure",
         "type": "dk.cachet.carp.location",
         "name": "Location",
-        "description": "Collects location from the phone's GPS sensor",
+        "description": "Ont-time collection of location from the phone's GPS sensor",
         "enabled": true,
         "configuration": {},
         "accuracy": "balanced",
         "distance": 0.0,
-        "interval": 1000,
-        "frequency": 30000000,
-        "duration": 1000000
+        "interval": 10000000
        }
       ]
      },
@@ -180,6 +178,8 @@
        {
         "$type": "dk.cachet.carp.protocols.domain.tasks.measures.WeatherMeasure",
         "type": "dk.cachet.carp.weather",
+        "name": "Weather",
+        "description": "Collects local weather from the WeatherAPI web service",
         "enabled": true,
         "configuration": {},
         "apiKey": "12b6e28582eb9298577c734a31ba9f4f"
@@ -275,7 +275,7 @@
      "description": "The default study testing coverage of most measures. Used in the coverage tests.",
      "purpose": "To test sensing coverage",
      "responsible": {
-      "$type": "StudyReponsible",
+      "$type": "StudyResponsible",
       "id": "abc",
       "name": "Alex B. Christensen",
       "title": "professor",

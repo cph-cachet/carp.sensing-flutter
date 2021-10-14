@@ -1,7 +1,6 @@
 name: carp_webservices_example
 description: An small example of how to usee the CARP web service package.
 version: 0.0.1
-author:  CACHET Team <cph.cachet@gmail.com>
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_core
 publish_to: none
 
@@ -11,10 +10,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-#  carp_core:
-#    path: ../../../carp_core
-#  carp_mobile_sensing:
-#    path: ../../../carp_mobile_sensing
+  carp_core:
+    path: ../../../carp_core
+  carp_mobile_sensing:
+    path: ../../../carp_mobile_sensing
   carp_webservices:
     path: ../
 

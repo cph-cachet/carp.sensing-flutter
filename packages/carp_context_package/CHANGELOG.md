@@ -1,3 +1,7 @@
+## 0.31.0
+* update to `carp_mobile_sensing` v. 0.31.0
+* docs: issue [#218](https://github.com/cph-cachet/carp.sensing-flutter/issues/218)
+
 ## 0.30.1
 * upgrade to use `location` instead of `carp_background_location`
 * removal of request for local permissions - this has to take place in the app, due to Google's new privacy restrictions.

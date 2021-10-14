@@ -115,10 +115,14 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 void example() async {
   // create a study protocol
-  StudyProtocol protocol = StudyProtocol(
-    ownerId: 'user@dtu.dk',
-    name: 'Tracking',
-    description: 'Tracking patient movment',
+  SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
+    ownerId: 'AB',
+    name: 'Track patient movement',
+    dataEndPoint: FileDataEndPoint(
+      bufferSize: 500 * 1000,
+      zip: true,
+      encrypt: false,
+    ),
   );
 
   // define which devices are used for data collection
@@ -126,7 +130,7 @@ void example() async {
   Smartphone phone = Smartphone();
   protocol.addMasterDevice(phone);
 
-  // add an automatic task that immediately starts collecting
+  // Add an automatic task that immediately starts collecting
   // step counts, ambient light, screen activity, and battery level
   protocol.addTriggeredTask(
       ImmediateTrigger(),
@@ -135,10 +139,6 @@ void example() async {
           types: [
             SensorSamplingPackage.PEDOMETER,
             SensorSamplingPackage.LIGHT,
-          ],
-        ))
-        ..addMeasures(DeviceSamplingPackage().common.getMeasureList(
-          types: [
             DeviceSamplingPackage.SCREEN,
             DeviceSamplingPackage.BATTERY,
           ],
@@ -147,18 +147,18 @@ void example() async {
 }
 ```
 
-The above example make use of the pre-defined [`SamplingSchema`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/SamplingSchema-class.html) 
-named `common`. This sampling schema contains a set of default settings for how to sample the different measures. 
+The above example defines a simple [`SmartphoneStudyProtocol`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/SmartphoneStudyProtocol-class.html) which will store data in a file locally on the phone using a [`FileDataEndPoint`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/FileDataEndPoint-class.html). Sampling is configured by using the pre-defined [`SamplingSchema`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/SamplingSchema-class.html) 
+named `common`. This sampling schema contains a set of default settings for how to sample the different measures. These measures are triggered immediately when sensing is started (see below), and runs automatically in the background using an [`AutomaticTask`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/AutomaticTask-class.html).
 
 Sampling can be configured in a very sophisticated ways, by specifying different types of triggers, tasks, and measures - see the  CAMS [domain model](https://github.com/cph-cachet/carp.sensing-flutter/wiki/2.-Domain-Model) for an overview.
+
+You can write your own `DataEndPoint` definitions and coresponding `DataManager`s for uploading data to your own data endpoint. See the wiki on how to [add a new data manager](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.-Extending-CARP-Mobile-Sensing#adding-a-new-data-manager).
 
 
 ### Using a `DeploymentService`
 
-A device deployment specifies how a study protocol is executed on a specific device - in this case a smartphone - including how to store or upload the sampled data.
-
+A device deployment specifies how a study protocol is executed on a specific device - in this case a smartphone.
 A `StudyProtocol` can be deployed to a `DeploymentService` which handles the deployment of protocols for different devices. CAMS comes with a simple deployment service (the `SmartphoneDeploymentService`) which runs locally on the phone. This can be used to deploy a protocol and get back a [`MasterDeviceDeployment`](https://pub.dev/documentation/carp_core/latest/carp_core_deployment/MasterDeviceDeployment-class.html), which can be executed on the phone.
-Per default, the local device deployment service configures the deployment to store sampled data in a file, using a `FileDataEndPoint`. 
 
 ```dart
 ...
@@ -183,7 +183,6 @@ SmartphoneDeployment deployment = await SmartphoneDeploymentService()
 A study deployment for a phone (master device) is handled by a [`SmartPhoneClientManager`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SmartPhoneClientManager-class.html).
 This client manager is able to create a [`StudyDeploymentController`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/StudyDeploymentController-class.html) which controls the execution of a study deployment.
 
-
 ```dart
 ...
 
@@ -195,7 +194,7 @@ SmartPhoneClientManager client = SmartPhoneClientManager();
 await client.configure();
 
 // create a study runtime controller to execute and control this deployment
-StudyDeploymentController controller = await client.addStudy(studyDeploymentId,deviceRolename);
+StudyDeploymentController controller = await client.addStudy(studyDeploymentId, deviceRolename);
 
 // configure the controller and resume sampling
 await controller.configure();
@@ -206,38 +205,6 @@ controller.data.forEach(print);
 
 ...
 ```
-
-A `SmartPhoneClientManager` per default uses the local `SmartphoneDeploymentService` which per default saves data in json to zipped files (see more on [data backends on the wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki/C.-Data-Backends)). 
-If you want to use another data backend, this can be configured in two ways: 
-(i) either as part of the deployment or
-(ii) as part of the configuration - like this:
-
-```dart
-...
-
-// you can change the deployment locally, before starting the
-// execution of it - e.g. setting another data endpoint.
-controller.deployment.dataEndPoint = FileDataEndPoint(
-  bufferSize: 500 * 1000,
-  zip: true,
-  encrypt: false,
-);
-
-// or you can configure the controller with a data endpoint 
-// this has the same effect as above
-await controller.configure(
-  dataEndPoint: FileDataEndPoint(
-    bufferSize: 500 * 1000,
-    zip: true,
-    encrypt: false,
-  ),
-);
-...
-```
-
-Note that the data endpoint has to be set **before** sampling is resumed.
-
-You can write your own `DataEndPoint` definitions and coresponding `DataManager`s for uploading data to your own data endpoint. See the wiki on how to [add a new data manager](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.-Extending-CARP-Mobile-Sensing#adding-a-new-data-manager).
 
 ### Using the generated data
 

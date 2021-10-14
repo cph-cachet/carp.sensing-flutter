@@ -99,7 +99,7 @@ class GeofenceMeasure extends CAMSMeasure with LocationConfiguration {
     bool enabled = true,
     GeolocationAccuracy accuracy = GeolocationAccuracy.balanced,
     double distance = 0,
-    int interval = 1000,
+    Duration interval = const Duration(minutes: 5),
     String? notificationTitle,
     String? notificationMessage,
     String? notificationDescription,

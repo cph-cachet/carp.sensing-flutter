@@ -125,7 +125,6 @@ See Flutter [AndroidX compatibility](https://flutter.dev/docs/development/packag
 
 Add this permission in the `Info.plist` file located in `ios/Runner`:
 
-
 ```xml
 <key>NSLocationWhenInUseUsageDescription</key>
 <string>Uses the location API to record location.</string>
@@ -137,40 +136,12 @@ Add this permission in the `Info.plist` file located in `ios/Runner`:
 <string>Detects activity.</string>
 <key>UIBackgroundModes</key>
   <array>
-  <string>fetch</string>
-  <string>location</string>
-</array>
+    <string>fetch</string>
+    <string>location</string>
+  </array>
 ```
 
-Next, overwrite your `AppDelegate.swift` in the XCode project with:
-
-```swift
-import UIKit
-import Flutter
-
-import background_locator
-
-func registerPlugins(registry: FlutterPluginRegistry) -> () {
-    if (!registry.hasPlugin("BackgroundLocatorPlugin")) {
-        GeneratedPluginRegistrant.register(with: registry)
-    }
-}
-
-
-@UIApplicationMain
-@objc class AppDelegate: FlutterAppDelegate {
-  override func application(
-    _ application: UIApplication,
-    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
-  ) -> Bool {
-    GeneratedPluginRegistrant.register(with: self)
-    BackgroundLocatorPlugin.setPluginRegistrantCallback(registerPlugins)
-    return super.application(application, didFinishLaunchingWithOptions: launchOptions)
-  }
-}
-```
-
-Finally, in app settings enable `Background Modes` and check `Location Updates`.
+In app settings enable `Background Modes` and check `Location Updates`.
 
 ![iOS Setup](https://raw.githubusercontent.com/wiki/rekab-app/background_locator/images/background_location_update.png)
 

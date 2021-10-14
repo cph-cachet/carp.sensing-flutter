@@ -15,6 +15,10 @@ part of carp_backend;
 /// custom protocol from the CARP web server, and translate this into a
 /// [SmartphoneDeployment], which can be used on this phone.
 ///
+/// The [SmartphoneDeployment.userId] will be set to the [CarpUser.accountId]
+/// of the user logged in and downloading the protocol. This id will be used
+/// as the [DataPointHeader.userId] when uploading data back to CARP.
+///
 /// This deployment service also allow for local caching of a [SmartphoneDeployment]
 /// once it has been downloaded and created. This is configured using the [useCache]
 /// attribute.
@@ -122,6 +126,9 @@ class CustomProtocolDeploymentService implements DeploymentService {
           masterDeviceRoleName: masterDeviceRoleName,
           protocol: protocol,
         );
+
+        // set the user id of the deployment to the account id of the logged in user
+        deployment.userId ??= CarpService().currentUser?.accountId;
 
         info("Study deployment was read from CARP - id: $studyDeploymentId");
 

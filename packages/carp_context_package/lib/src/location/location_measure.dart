@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2018-21 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -9,27 +9,28 @@ part of context;
 
 /// Specify the configuration on how to collect location data.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class LocationMeasure extends PeriodicMeasure with LocationConfiguration {
+class LocationMeasure extends CAMSMeasure with LocationConfiguration {
+  /// Create a location measure configuration.
+  ///
+  /// This configuration combines the [CAMSMeasure] and [LocationConfiguration].
+  /// See these classes for the specific atrributes.
   LocationMeasure({
     required String type,
     String? name,
     String? description,
     bool enabled = true,
-    Duration frequency = const Duration(seconds: 30),
-    Duration duration = const Duration(seconds: 1),
     GeolocationAccuracy accuracy = GeolocationAccuracy.balanced,
     double distance = 0,
-    int interval = 1000,
+    Duration interval = const Duration(seconds: 10),
     String? notificationTitle,
     String? notificationMessage,
     String? notificationDescription,
   }) : super(
-            type: type,
-            name: name,
-            description: description,
-            enabled: enabled,
-            frequency: frequency,
-            duration: duration) {
+          type: type,
+          name: name,
+          description: description,
+          enabled: enabled,
+        ) {
     this.accuracy = accuracy;
     this.distance = distance;
     this.interval = interval;

@@ -18,6 +18,11 @@ void example_1() async {
   SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
     ownerId: 'AB',
     name: 'Track patient movement',
+    dataEndPoint: FileDataEndPoint(
+      bufferSize: 500 * 1000,
+      zip: true,
+      encrypt: false,
+    ),
   );
 
   // define which devices are used for data collection
