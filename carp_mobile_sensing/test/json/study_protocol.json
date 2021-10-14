@@ -1,7 +1,7 @@
 {
     "ownerId": "user@dtu.dk",
     "name": "patient_tracking",
-    "creationDate": "2021-10-12T19:32:18.333450Z",
+    "creationDate": "2021-10-14T20:39:44.470858Z",
     "masterDevices": [
      {
       "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
@@ -189,5 +189,6 @@
      }
     ],
     "expectedParticipantData": [],
+    "description": "",
     "samplingStrategy": "normal"
    }
