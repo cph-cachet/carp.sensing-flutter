@@ -2,7 +2,7 @@
   "ownerId": "alex@uni.dk",
   "name": "Context package test",
   "description": "",
-  "creationDate": "2021-10-14T20:30:47.396644Z",
+  "creationDate": "2021-10-14T21:45:37.203087Z",
   "masterDevices": [
    {
     "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",

@@ -1,13 +1,13 @@
 {
     "ownerId": "alex@uni.dk",
     "name": "Context package test",
-    "creationDate": "2021-07-15T16:13:12.157557Z",
+    "description": "",
+    "creationDate": "2021-10-14T21:55:34.702944Z",
     "masterDevices": [
      {
       "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
       "isMasterDevice": true,
       "roleName": "SM-A320FL",
-      "supportedDataTypes": [],
       "samplingConfiguration": {}
      }
     ],
@@ -22,14 +22,10 @@
     "connections": [],
     "triggers": {
      "0": {
-      "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger",
-      "sourceDeviceRoleName": "",
-      "requiresMasterDevice": false
+      "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
      },
      "1": {
-      "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger",
-      "sourceDeviceRoleName": "",
-      "requiresMasterDevice": false
+      "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
      }
     },
     "tasks": [
