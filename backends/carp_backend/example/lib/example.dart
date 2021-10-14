@@ -97,6 +97,15 @@ void main() async {
       email: 'username@cachet.dk',
       password: 'password');
 
+  // create a study protocol with a specific data endpoint
+  SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
+    ownerId: 'AB',
+    name: 'Track patient movement',
+    dataEndPoint: cdep,
+  );
+
+  // other types of data endpoints
+
   // using the file method would also take information on file size whether to zip it
   CarpDataEndPoint cdep_2 = CarpDataEndPoint(
       uploadMethod: CarpUploadMethod.FILE,
@@ -124,24 +133,6 @@ void main() async {
     deleteWhenUploaded: true,
   );
   print('$cdep_3');
-
-  StudyDeploymentStatus status_2 =
-      await CarpDeploymentService().getStudyDeploymentStatus(studyDeploymentId);
-  print(status_2);
-
-  // get the master device deployment
-  MasterDeviceDeployment deployment =
-      await CarpDeploymentService().getDeviceDeploymentFor(
-    status.studyDeploymentId,
-    status.masterDeviceStatus!.device.roleName,
-  );
-
-  /// change a master device deployment to use another data endpoint before
-  /// it is being executed
-  deployment.dataEndPoint = cdep;
-
-  // ... or configure the controller with this data endpoint
-  await controller.configure(dataEndPoint: cdep);
 
   // --------------------------------------------------
   // EXAMPLE OF GETTING AN INFORMED CONSENT FROM CARP

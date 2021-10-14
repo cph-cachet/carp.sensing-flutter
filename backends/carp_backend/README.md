@@ -112,7 +112,6 @@ Upload of sensing data to the CARP web service can be done in four different way
 * as a CARP object in a collection
 * as a file to the CARP file store
 
-
 Using the library takes three steps.
 
 ### 1. Register the Data Manager
@@ -170,13 +169,17 @@ And a `CarpDataEndPoint` that batch uploads data points in a json file (which is
   );
 `````
 
-### 3. Assign the CARP Data Endpoint to your Study Controller
+### 3. Assign the CARP Data Endpoint to your Study Protocol
 
-To use the CARP Data Endpoint in you study controller, configure it with this end point before resuming sampling.
+You can now use a CARP Data Endpoint to the study protocol.
 
 `````dart
-  // configure the controller with this data endpoint
-  await controller.configure(dataEndPoint: cdep);
+  // create a study protocol with a specific data endpoint
+  SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
+    ownerId: 'AB',
+    name: 'Track patient movement',
+    dataEndPoint: cdep,
+  );
 ````` 
 
 ## Features and bugs
