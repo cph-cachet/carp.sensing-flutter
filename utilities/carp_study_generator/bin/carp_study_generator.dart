@@ -3,4 +3,5 @@
 Future<void> main(List<String> args) async {
   print('Hello World!');
   print('arg: ${args[0]}');
+  // HelpCommand().execute();
 }
