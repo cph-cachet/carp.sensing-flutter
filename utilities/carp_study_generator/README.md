@@ -16,10 +16,9 @@ The `carpspec.yaml` can be configured using the following properties for:
 
  * the CARP Server 
  * the study ID
- * the study description
- * a protocol
+ * the protocol
  * the informed consent
- * localization
+ * language localizations
 
 ```yaml
 server:
@@ -33,10 +32,6 @@ server:
 study:
   study_id: 01cf04a7-d154-40f0-9a75-ab759cf74eb3
   study_deployment_id: ae8076a3-7170-4bcf-b66c-64639a7a9eee
-
-# the location of the study description to be uploaded
-description:
-  path: carp/resources/description.json
 
 # the location of the protocol to be uploaded
 protocol:
@@ -59,14 +54,13 @@ Note that the `carpspec.yaml` file contains username and password in clear text 
 
 ## File Structure
 
-All files used for creating and uploading configurations to CARP is stored in the `carp` folder in the root of your (app) project file. The name of the json files to upload is specified in the `carpspec.yaml` file. The default file structure is:
+All files used for creating and uploading configurations to CARP is stored in the `carp` folder in the root of your (app) project file. The name of the json files to upload is specified in the `carpspec.yaml` file (see above). The default file structure is:
 
-| File          |   Description |
-|---------------|---------------|
-| `description` | JSON definition of your `StudyDescription`. |  
-| `protocol`    | JSON definition of your `StudyProtocol`. |  
-| `consent`     | JSON definition of your `RPOrderedTask` with the informed consent to show to the user. | 
-| `lang`        | The JSON language file for each language supported of the form `<language>.json`. | 
+| File                      |   Description |
+|---------------------------|---------------|
+| `resources/protocol.json` | JSON definition of your [`SmartphoneStudyProtocol`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/SmartphoneStudyProtocol-class.html). |  
+| `resources/consent.json`  | JSON definition of your [`RPOrderedTask`](https://pub.dev/documentation/research_package/latest/research_package_model/RPOrderedTask-class.html) with the informed consent to show to the user. | 
+| `lang/<language>.json`    | The JSON language file for each language supported of the form `<language>.json`. | 
 
 Please ignore the test scripts in the `carp` folder (these are used to execute the commands).
 
@@ -85,7 +79,6 @@ The available commands are:
   dryrun         Makes a dryrun testing access to the CARP server, and the protocol, consent, and localizations.
   create         Create a study protocol based on a json file and uploads it to the CARP server.
   update         Update an existing study protocol based on a json file and uploads it to the CARP server as a new version.
-  description    Create astudy description based on a json file and uploads it to the CARP server.
   consent        Create an informed consent based on a json file and uploads it to the CARP server.
   localization   Create localization support based on the files '<locale>.json' and upload them to the CARP server.
 ``` 
