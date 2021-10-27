@@ -36,11 +36,12 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           name: 'Alex B. Christensen',
         ));
 
-    // add CARP as the data endpoint w/o authentication info - we expect to be authenticated
-    protocol.dataEndPoint = CarpDataEndPoint(
-      uploadMethod: CarpUploadMethod.DATA_POINT,
-      name: 'CARP Server',
-    );
+    protocol.dataEndPoint = (bloc.deploymentMode == DeploymentMode.LOCAL)
+        ? FileDataEndPoint()
+        : CarpDataEndPoint(
+            uploadMethod: CarpUploadMethod.DATA_POINT,
+            name: 'CARP Server',
+          );
 
     // Define which devices are used for data collection.
     Smartphone phone = Smartphone();
@@ -68,14 +69,8 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           ),
         phone);
 
-    // a random trigger - 2-8 times during time period of 8-20
     protocol.addTriggeredTask(
-        RandomRecurrentTrigger(
-          startTime: Time(hour: 8),
-          endTime: Time(hour: 20),
-          minNumberOfTriggers: 3,
-          maxNumberOfTriggers: 8,
-        ),
+        ImmediateTrigger(),
         AutomaticTask()
           ..measures = SamplingPackageRegistry().debug().getMeasureList(
             types: [
@@ -83,6 +78,22 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
             ],
           ),
         phone);
+
+    // // a random trigger - 2-8 times during time period of 8-20
+    // protocol.addTriggeredTask(
+    //     RandomRecurrentTrigger(
+    //       startTime: Time(hour: 8),
+    //       endTime: Time(hour: 20),
+    //       minNumberOfTriggers: 3,
+    //       maxNumberOfTriggers: 8,
+    //     ),
+    //     AutomaticTask()
+    //       ..measures = SamplingPackageRegistry().debug().getMeasureList(
+    //         types: [
+    //           DeviceSamplingPackage.DEVICE,
+    //         ],
+    //       ),
+    //     phone);
 
     protocol.addTriggeredTask(
         PeriodicTrigger(period: Duration(minutes: 1)),
@@ -130,6 +141,19 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         eSense);
 
     return protocol;
+  }
+
+  DataEndPoint getDataEndPoint() {
+    switch (bloc.deploymentMode) {
+      case DeploymentMode.LOCAL:
+        return FileDataEndPoint();
+      case DeploymentMode.CARP_PRODUCTION:
+      case DeploymentMode.CARP_STAGING:
+        return CarpDataEndPoint(
+          uploadMethod: CarpUploadMethod.DATA_POINT,
+          name: 'CARP Server',
+        );
+    }
   }
 
   Future<bool> saveStudyProtocol(String studyId, StudyProtocol protocol) async {

@@ -10,16 +10,19 @@ part of carp_core_client;
 /// The [DataManager] interface is used to upload [DataPoint] objects to any
 /// data manager that implements this interface.
 abstract class DataManager {
+  /// The deployment using this data manager
+  MasterDeviceDeployment get deployment;
+
   /// The ID of the study deployment that this manager is handling.
   String get studyDeploymentId;
 
   /// The type of this data manager as enumerated in [DataEndPointType].
   String get type;
 
-  /// Initialize the data manager by specifying the study deployment id, the
-  /// [DataEndPoint], and the stream of [DataPoint] events to handle.
+  /// Initialize the data manager by specifying the study [deployment], the
+  /// [dataEndPoint], and the stream of [data] events to handle.
   Future initialize(
-    String studyDeploymentId,
+    MasterDeviceDeployment deployment,
     DataEndPoint dataEndPoint,
     Stream<DataPoint> data,
   );

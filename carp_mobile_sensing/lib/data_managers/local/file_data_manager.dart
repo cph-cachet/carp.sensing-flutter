@@ -36,12 +36,12 @@ class FileDataManager extends AbstractDataManager {
 
   @override
   Future initialize(
-    String studyDeploymentId,
+    MasterDeviceDeployment deployment,
     DataEndPoint dataEndPoint,
     Stream<DataPoint> data,
   ) async {
     assert(dataEndPoint is FileDataEndPoint);
-    await super.initialize(studyDeploymentId, dataEndPoint, data);
+    await super.initialize(deployment, dataEndPoint, data);
 
     _fileDataEndPoint = dataEndPoint as FileDataEndPoint;
     await Settings().deploymentBasePath;
@@ -75,7 +75,9 @@ class FileDataManager extends AbstractDataManager {
   @override
   void onError(Object? error) =>
       write(DataPoint.fromData(ErrorDatum(error.toString()))
-        ..carpHeader.dataFormat = DataFormat.fromString(CAMSDataType.ERROR));
+        ..carpHeader.dataFormat = DataFormat.fromString(CAMSDataType.ERROR)
+        ..carpHeader.studyId = deployment.studyDeploymentId
+        ..carpHeader.userId = deployment.userId);
 
   @override
   void onDone() => close();

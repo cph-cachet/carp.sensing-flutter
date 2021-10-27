@@ -32,11 +32,11 @@ class CarpDataManager extends AbstractDataManager {
   String get type => DataEndPointTypes.CARP;
 
   Future initialize(
-    String studyDeploymentId,
+    MasterDeviceDeployment deployment,
     DataEndPoint dataEndPoint,
     Stream<DataPoint> data,
   ) async {
-    super.initialize(studyDeploymentId, dataEndPoint, data);
+    super.initialize(deployment, dataEndPoint, data);
     assert(dataEndPoint is CarpDataEndPoint);
     carpEndPoint = dataEndPoint as CarpDataEndPoint;
 
@@ -64,7 +64,7 @@ class CarpDataManager extends AbstractDataManager {
               _uploadDatumFileToCarp((event as FileDataManagerEvent).path));
 
       // initialize the file data manager
-      fileDataManager.initialize(studyDeploymentId, dataEndPoint, data);
+      fileDataManager.initialize(deployment, dataEndPoint, data);
     }
     _initialized = true;
     await user; // This will trigger authentication to the CARP server
