@@ -58,6 +58,10 @@ class AppTaskController {
   ///
   /// Caches app tasks based on the [studyDeploymentId], if
   /// [Settings().saveAppTaskQueue] is `true`.
+  ///
+  /// If [enableNotifications] is true, a notification will be added to
+  /// the phone's notification system when a task is enqued via the
+  /// [enqueue] method.
   Future<void> initialize({bool enableNotifications = true}) async {
     if (studyDeploymentId != null && Settings().saveAppTaskQueue) {
       // retore the queue from persistent storage
@@ -97,6 +101,8 @@ class AppTaskController {
   /// Put [executor] on the [userTaskQueue] for later access by the app.
   ///
   /// Returns the [UserTask] added to the [userTaskQueue].
+  /// Notify the user if [notificationsEnabled] is true.
+  ///
   /// Returns `null` if not successful.
   UserTask? enqueue(AppTaskExecutor executor) {
     if (_userTaskFactories[executor.appTask.type] == null) {

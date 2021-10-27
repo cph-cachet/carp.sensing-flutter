@@ -1,3 +1,6 @@
+## 0.31.1
+* small update to `DataManager` interface to fix issue [#221](https://github.com/cph-cachet/carp.sensing-flutter/issues/221).
+
 ## 0.31.0
 * `description` in `StudyProtocol` is now non-nullable (required when uploading a protocol to CARP)
 

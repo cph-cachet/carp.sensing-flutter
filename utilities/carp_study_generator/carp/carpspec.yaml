@@ -18,10 +18,6 @@ study:
   study_id: 01cf04a7-d154-40f0-9a75-ab759cf74eb3
   study_deployment_id: ae8076a3-7170-4bcf-b66c-64639a7a9eee
 
-# the location of the study description to be uploaded
-description:
-  path: carp/resources/description.json
-
 # the location of the protocol to be uploaded
 protocol:
   path: carp/resources/protocol.json

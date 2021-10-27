@@ -11,8 +11,9 @@ part of runtime;
 /// Takes data from a [Stream<DataPoint>] and uploads these.
 /// Also supports JSON encoding via the [toJsonString] method.
 abstract class AbstractDataManager implements DataManager {
-  late String _studyDeploymentId;
-  String get studyDeploymentId => _studyDeploymentId;
+  late SmartphoneDeployment _deployment;
+  SmartphoneDeployment get deployment => _deployment;
+  String get studyDeploymentId => deployment.studyDeploymentId;
   DataEndPoint? _dataEndPoint;
   DataEndPoint? get dataEndPoint => _dataEndPoint;
 
@@ -22,12 +23,14 @@ abstract class AbstractDataManager implements DataManager {
 
   @override
   Future initialize(
-    String studyDeploymentId,
+    MasterDeviceDeployment deployment,
     DataEndPoint dataEndPoint,
     Stream<DataPoint> data,
   ) async {
+    assert(deployment is SmartphoneDeployment,
+        'Deployment must be a SmartphoneDeployment');
+    _deployment = deployment as SmartphoneDeployment;
     _dataEndPoint = dataEndPoint;
-    _studyDeploymentId = studyDeploymentId;
     data.listen(
       (dataPoint) => onDataPoint(dataPoint),
       onError: onError,
@@ -39,15 +42,6 @@ abstract class AbstractDataManager implements DataManager {
   @override
   Future close() async =>
       addEvent(DataManagerEvent(DataManagerEventTypes.CLOSED));
-
-  @override
-  void onDataPoint(DataPoint dataPoint);
-
-  @override
-  void onDone();
-
-  @override
-  void onError(error);
 
   /// Encode [object] to a JSON string.
   String toJsonString(Object object) =>

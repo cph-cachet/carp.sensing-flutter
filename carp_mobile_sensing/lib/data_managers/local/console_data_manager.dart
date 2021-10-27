@@ -13,20 +13,19 @@ class ConsoleDataManager extends AbstractDataManager {
   String get type => DataEndPointTypes.PRINT;
 
   Future initialize(
-    String studyDeploymentId,
+    MasterDeviceDeployment deployment,
     DataEndPoint dataEndPoint,
     Stream<DataPoint> data,
   ) async {
-    await super.initialize(studyDeploymentId, dataEndPoint, data);
+    await super.initialize(deployment, dataEndPoint, data);
     assert(dataEndPoint is DataEndPoint);
   }
 
-  void onDataPoint(DataPoint dataPoint) => print('>> ${jsonEncode(dataPoint)}');
+  void onDataPoint(DataPoint dataPoint) => print(jsonEncode(dataPoint));
 
   void onDone() {}
 
-  void onError(error) =>
-      print('>> ${jsonEncode(ErrorDatum(error.toString()))}');
+  void onError(error) => print('ERROR >> $error');
 
   String toString() => 'JSON Print Data Manager';
 }
