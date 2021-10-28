@@ -107,7 +107,9 @@ class CarpDataManager extends AbstractDataManager {
 
   void onError(Object? error) =>
       uploadData(DataPoint.fromData(ErrorDatum(error.toString()))
-        ..carpHeader.dataFormat = DataFormat.fromString(CAMSDataType.ERROR));
+        ..carpHeader.dataFormat = DataFormat.fromString(CAMSDataType.ERROR)
+        ..carpHeader.studyId = deployment.studyDeploymentId
+        ..carpHeader.userId = deployment.userId);
 
   void onDone() => close();
 
