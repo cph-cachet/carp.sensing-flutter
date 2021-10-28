@@ -1,3 +1,6 @@
+## 0.31.1+1
+* bug fix of [#221](https://github.com/cph-cachet/carp.sensing-flutter/issues/221).
+
 ## 0.31.0
 * upgrade to `carp_mobile_sensing` v. 0.31.0
 * remove support for handling study description in `ResourceManager` since this is now part of a `SmartphoneStudyProtocol` and handled there.

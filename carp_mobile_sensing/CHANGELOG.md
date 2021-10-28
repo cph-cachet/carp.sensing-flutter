@@ -1,7 +1,6 @@
 ## 0.31.1
 * bug fix of [#221](https://github.com/cph-cachet/carp.sensing-flutter/issues/221).
 
-
 ## 0.31.0
 * A CAMS-specific `StudyProtocol` named `SmartphoneStudyProtocol` has been reintroduced (c.f., v. 0.30.0). It turned out that there are several things which needs to be configured as part of a study protocol, which the generic `StudyProtocol` from carp_core doesn't support. The new `SmartphoneStudyProtocol` supports specifying:
    * The `StudyDescription` describing the study including the researcher responsible for the study.
