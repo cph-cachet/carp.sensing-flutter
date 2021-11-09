@@ -105,7 +105,6 @@ class CarpDeploymentService extends CarpBaseService
       )));
 
   @override
-  Future<StudyDeploymentStatus> stop(String studyDeploymentId) =>
-      StudyDeploymentStatus.fromJson(
-          await _rpc(Stop(studyDeploymentId)));
+  Future<StudyDeploymentStatus> stop(String studyDeploymentId) async =>
+      StudyDeploymentStatus.fromJson(await _rpc(Stop(studyDeploymentId)));
 }

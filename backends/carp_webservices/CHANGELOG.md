@@ -1,3 +1,6 @@
+## 0.31.1
+* support for stopping (permanently) a study deployment.
+
 ## 0.31.0
 * upgrade to `carp_mobile_sensing` v. 0.31.0
 
