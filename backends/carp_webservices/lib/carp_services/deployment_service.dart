@@ -106,7 +106,6 @@ class CarpDeploymentService extends CarpBaseService
 
   @override
   Future<StudyDeploymentStatus> stop(String studyDeploymentId) =>
-      throw CarpServiceException(
-          message:
-              'Stopping study deployments is not supported from the client side.');
+      StudyDeploymentStatus.fromJson(
+          await _rpc(Stop(studyDeploymentId)));
 }

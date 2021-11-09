@@ -148,3 +148,14 @@ class DeploymentSuccessful extends GetDeviceDeploymentFor {
   String toString() =>
       '${super.toString()}, masterDeviceRoleName: $masterDeviceRoleName';
 }
+
+/// A request for permanently stopping a study deployment.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+class Stop extends DeploymentServiceRequest {
+  Stop(String studyDeploymentId) : super(studyDeploymentId);
+
+  Function get fromJsonFunction => _$StopFromJson;
+  factory Stop.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as Stop;
+  Map<String, dynamic> toJson() => _$StopToJson(this);
+}

@@ -1,3 +1,6 @@
+## 0.31.2
+* support for stopping (permanently) a study deployment.
+
 ## 0.31.1
 * small update to `DataManager` interface to fix issue [#221](https://github.com/cph-cachet/carp.sensing-flutter/issues/221).
 

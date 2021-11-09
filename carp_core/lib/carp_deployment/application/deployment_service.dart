@@ -77,7 +77,7 @@ abstract class DeploymentService {
     DateTime deviceDeploymentLastUpdateDate,
   );
 
-  /// Stop the study deployment with the specified [studyDeploymentId].
+  /// Permanently stop the study deployment with the specified [studyDeploymentId].
   /// No further changes to this deployment will be allowed and no more data
   /// will be collected.
   Future<StudyDeploymentStatus> stop(String studyDeploymentId);
