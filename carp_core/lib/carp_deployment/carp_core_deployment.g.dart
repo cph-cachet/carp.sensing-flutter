@@ -381,6 +381,17 @@ Map<String, dynamic> _$DeploymentSuccessfulToJson(
           instance.deviceDeploymentLastUpdateDate?.toIso8601String(),
     };
 
+Stop _$StopFromJson(Map<String, dynamic> json) {
+  return Stop(
+    json['studyDeploymentId'] as String,
+  )..$type = json[r'$type'] as String?;
+}
+
+Map<String, dynamic> _$StopToJson(Stop instance) => <String, dynamic>{
+      r'$type': instance.$type,
+      'studyDeploymentId': instance.studyDeploymentId,
+    };
+
 GetActiveParticipationInvitations _$GetActiveParticipationInvitationsFromJson(
     Map<String, dynamic> json) {
   return GetActiveParticipationInvitations(

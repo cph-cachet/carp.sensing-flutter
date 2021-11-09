@@ -172,7 +172,7 @@ class CustomProtocolDeploymentService implements DeploymentService {
             .registerDevice(studyDeploymentId, deviceRoleName, registration);
       } on CarpServiceException catch (cse) {
         // a CarpServiceException is typically because the device is already registred
-        warning(cse.toString());
+        warning('$runtimeType - $cse');
         status = await getStudyDeploymentStatus(studyDeploymentId);
       } catch (error) {
         // other errors can be rethrown
@@ -208,8 +208,25 @@ class CustomProtocolDeploymentService implements DeploymentService {
   }
 
   @override
-  Future<StudyDeploymentStatus> stop(String studyDeploymentId) {
-    throw CarpBackendException('stop() is not supported.');
+  Future<StudyDeploymentStatus> stop(String studyDeploymentId) async {
+    StudyDeploymentStatus? status;
+    if (isConfigured()) {
+      try {
+        status = await CarpDeploymentService().stop(studyDeploymentId);
+      } on CarpServiceException catch (cse) {
+        // a CarpServiceException is typically because the deployment is already stopped
+        warning('$runtimeType - $cse');
+        status = await getStudyDeploymentStatus(studyDeploymentId);
+      } catch (error) {
+        // other errors can be rethrown
+        rethrow;
+      }
+    }
+    if (status != null)
+      return status;
+    else
+      throw CarpBackendException(
+          "Could not stop study deployment in $runtimeType - id: '$studyDeploymentId'");
   }
 
   @override
