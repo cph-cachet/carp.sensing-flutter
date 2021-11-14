@@ -621,6 +621,52 @@ class ConditionalSamplingEventTrigger extends Trigger {
       _$ConditionalSamplingEventTriggerToJson(this);
 }
 
+/// Evaluates if a [ConditionalPeriodicTrigger] should resume or pause.
+/// Returns [true] if resume or pause should happen, [false] otherwise.
+typedef ConditionalEvaluator = bool Function();
+
+/// A trigger that checks if application-specific resume and pause conditions
+/// are meet.
+///
+/// Note that the [resumeCondition] and [pauseCondition] are
+/// [ConditionalEvaluator] function which cannot be serialized to/from JSON.
+/// In contrast to other [Trigger]s, this trigger cannot be de/serialized
+/// from/to JSON.
+/// This implies that it can not be retrieved as part of a [StudyProtocol] from a
+/// [DeploymentService] since it relies on specifying a Dart-specific function as
+/// the [ConditionalEvaluator] methods. Hence, this trigger is mostly
+/// useful when creating a [StudyProtocol] directly in the app using Dart code.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class ConditionalPeriodicTrigger extends Trigger {
+  /// The period of when to check the [resumeCondition] and [pauseCondition].
+  Duration period;
+
+  /// The [ConditionalEventEvaluator] function evaluating if the event
+  /// condition is meet for resuming this trigger
+  @JsonKey(ignore: true)
+  ConditionalEvaluator? resumeCondition;
+
+  /// The [ConditionalEventEvaluator] function evaluating if the event
+  /// condition is meet for pausing this trigger.
+  ///
+  /// If [pauseCondition] is not specified (`null`), sampling is never paused
+  /// and hence runs forever (unless paused manually).
+  @JsonKey(ignore: true)
+  ConditionalEvaluator? pauseCondition;
+
+  /// Create a [ConditionalSamplingEventTrigger].
+  ConditionalPeriodicTrigger({
+    required this.period,
+    this.resumeCondition,
+    this.pauseCondition,
+  }) : super();
+
+  Function get fromJsonFunction => _$ConditionalPeriodicTriggerFromJson;
+  factory ConditionalPeriodicTrigger.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as ConditionalPeriodicTrigger;
+  Map<String, dynamic> toJson() => _$ConditionalPeriodicTriggerToJson(this);
+}
+
 /// A trigger that triggers a random number of times within a defined
 /// period of time in a day.
 ///

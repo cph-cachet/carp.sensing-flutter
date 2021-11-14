@@ -183,6 +183,19 @@ void main() {
       });
     });
 
+    test(' - ConditionalPeriodicTrigger', () {
+      ConditionalPeriodicTrigger t = ConditionalPeriodicTrigger(
+        period: Duration(minutes: 1),
+        resumeCondition: () {
+          return ('jakob'.length == 5);
+        },
+      );
+      print(toJsonString(t));
+
+      ConditionalPeriodicTriggerExecutor ex =
+          ConditionalPeriodicTriggerExecutor(t);
+    });
+
     /// Test template.
     test('...', () {
       // test template

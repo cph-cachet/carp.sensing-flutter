@@ -809,6 +809,31 @@ Map<String, dynamic> _$ConditionalSamplingEventTriggerToJson(
   return val;
 }
 
+ConditionalPeriodicTrigger _$ConditionalPeriodicTriggerFromJson(
+    Map<String, dynamic> json) {
+  return ConditionalPeriodicTrigger(
+    period: Duration(microseconds: json['period'] as int),
+  )
+    ..$type = json[r'$type'] as String?
+    ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String?;
+}
+
+Map<String, dynamic> _$ConditionalPeriodicTriggerToJson(
+    ConditionalPeriodicTrigger instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(r'$type', instance.$type);
+  writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
+  val['period'] = instance.period.inMicroseconds;
+  return val;
+}
+
 RandomRecurrentTrigger _$RandomRecurrentTriggerFromJson(
     Map<String, dynamic> json) {
   return RandomRecurrentTrigger(

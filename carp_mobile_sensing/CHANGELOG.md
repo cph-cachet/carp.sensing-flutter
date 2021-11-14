@@ -1,3 +1,6 @@
+## 0.31.2
+* support for a `ConditionalPeriodicTrigger` which preiodically checks resume/pause conditions (originates from [#230](https://github.com/cph-cachet/carp.sensing-flutter/issues/230)).
+
 ## 0.31.1
 * bug fix of [#221](https://github.com/cph-cachet/carp.sensing-flutter/issues/221).
 

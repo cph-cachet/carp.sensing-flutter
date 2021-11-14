@@ -33,6 +33,9 @@ TriggerExecutor getTriggerExecutor(Trigger trigger) {
     case ConditionalSamplingEventTrigger:
       return ConditionalSamplingEventTriggerExecutor(
           trigger as ConditionalSamplingEventTrigger);
+    case ConditionalPeriodicTrigger:
+      return ConditionalPeriodicTriggerExecutor(
+          trigger as ConditionalPeriodicTrigger);
     case RandomRecurrentTrigger:
       return RandomRecurrentTriggerExecutor(trigger as RandomRecurrentTrigger);
     case PassiveTrigger:
@@ -230,18 +233,17 @@ class DateTimeTriggerExecutor extends TriggerExecutor {
 
 /// Executes a [RecurrentScheduledTrigger].
 class RecurrentScheduledTriggerExecutor extends PeriodicTriggerExecutor {
-  late RecurrentScheduledTrigger _myTrigger;
+  RecurrentScheduledTrigger get _scheduledTrigger =>
+      trigger as RecurrentScheduledTrigger;
 
   RecurrentScheduledTriggerExecutor(RecurrentScheduledTrigger trigger)
-      : super(trigger) {
-    _myTrigger = trigger;
-  }
+      : super(trigger);
 
   Future onResume() async {
     // check if there is a remembered trigger date
-    if (_myTrigger.remember) {
+    if (_scheduledTrigger.remember) {
       String? _savedFirstOccurrence =
-          Settings().preferences!.getString(_myTrigger.triggerId!);
+          Settings().preferences!.getString(_scheduledTrigger.triggerId!);
       debug('savedFirstOccurrence : $_savedFirstOccurrence');
 
       if (_savedFirstOccurrence != null) {
@@ -258,23 +260,25 @@ class RecurrentScheduledTriggerExecutor extends PeriodicTriggerExecutor {
       }
 
       // save the day of the first occurrence for later use
-      await Settings().preferences!.setString(
-          _myTrigger.triggerId!, _myTrigger.firstOccurrence.toUtc().toString());
+      await Settings().preferences!.setString(_scheduledTrigger.triggerId!,
+          _scheduledTrigger.firstOccurrence.toUtc().toString());
       debug(
-          'saving firstOccurrence : ${_myTrigger.firstOccurrence.toUtc().toString()}');
+          'saving firstOccurrence : ${_scheduledTrigger.firstOccurrence.toUtc().toString()}');
     }
 
     // below is 'normal' (i.e., non-remember) behavior
-    Duration _delay = _myTrigger.firstOccurrence.difference(DateTime.now());
+    Duration _delay =
+        _scheduledTrigger.firstOccurrence.difference(DateTime.now());
     debug('delay: $_delay');
-    if (_myTrigger.end == null || _myTrigger.end!.isAfter(DateTime.now())) {
+    if (_scheduledTrigger.end == null ||
+        _scheduledTrigger.end!.isAfter(DateTime.now())) {
       Timer(_delay, () async {
         debug('delay finished, now resuming...');
-        if (_myTrigger.remember) {
+        if (_scheduledTrigger.remember) {
           // replace the entry of the first occurrence to the next occurrence date
           DateTime nextOccurrence = DateTime.now().add(period);
           await Settings().preferences!.setString(
-              _myTrigger.triggerId!, nextOccurrence.toUtc().toString());
+              _scheduledTrigger.triggerId!, nextOccurrence.toUtc().toString());
           debug('saving nextOccurrence: $nextOccurrence');
         }
         await super.onResume();
@@ -313,9 +317,9 @@ class CronScheduledTriggerExecutor extends TriggerExecutor {
 /// Executes a [SamplingEventTrigger] based on the specified
 /// [SamplingEventTrigger.measureType] and [SamplingEventTrigger.resumeCondition].
 class SamplingEventTriggerExecutor extends TriggerExecutor {
-  SamplingEventTriggerExecutor(SamplingEventTrigger trigger) : super(trigger);
-
   late StreamSubscription<DataPoint> _subscription;
+
+  SamplingEventTriggerExecutor(SamplingEventTrigger trigger) : super(trigger);
 
   Future onResume() async {
     SamplingEventTrigger eventTrigger = trigger as SamplingEventTrigger;
@@ -343,29 +347,59 @@ class SamplingEventTriggerExecutor extends TriggerExecutor {
 /// [ConditionalSamplingEventTrigger.resumeCondition] and
 /// [ConditionalSamplingEventTrigger.pauseCondition].
 class ConditionalSamplingEventTriggerExecutor extends TriggerExecutor {
+  StreamSubscription<DataPoint>? _subscription;
+  ConditionalSamplingEventTrigger get _eventTrigger =>
+      trigger as ConditionalSamplingEventTrigger;
+
   ConditionalSamplingEventTriggerExecutor(
       ConditionalSamplingEventTrigger trigger)
       : super(trigger);
 
-  late StreamSubscription<DataPoint> _subscription;
-
   Future onResume() async {
-    ConditionalSamplingEventTrigger eventTrigger =
-        trigger as ConditionalSamplingEventTrigger;
-
-    // listen for event of the specified type
+    // listen for event of the specified type and resume/pause as needed
     _subscription = ProbeRegistry()
-        .eventsByType(eventTrigger.measureType.toString())
+        .eventsByType(_eventTrigger.measureType)
         .listen((dataPoint) {
-      if (eventTrigger.resumeCondition != null &&
-          eventTrigger.resumeCondition!(dataPoint)) super.onResume();
-      if (eventTrigger.pauseCondition != null &&
-          eventTrigger.pauseCondition!(dataPoint)) super.onPause();
+      if (_eventTrigger.resumeCondition != null &&
+          _eventTrigger.resumeCondition!(dataPoint)) super.onResume();
+      if (_eventTrigger.pauseCondition != null &&
+          _eventTrigger.pauseCondition!(dataPoint)) super.onPause();
     });
   }
 
   Future onPause() async {
-    await _subscription.cancel();
+    await _subscription?.cancel();
+    await super.onPause();
+  }
+}
+
+/// Executes a [ConditionalPeriodicTrigger] based on the specified
+/// [ConditionalPeriodicTrigger.period] and their
+/// [ConditionalPeriodicTrigger.resumeCondition] and
+/// [ConditionalPeriodicTrigger.pauseCondition].
+class ConditionalPeriodicTriggerExecutor extends TriggerExecutor {
+  Timer? _timer;
+  late Duration _period;
+  ConditionalPeriodicTrigger get _eventTrigger =>
+      trigger as ConditionalPeriodicTrigger;
+
+  ConditionalPeriodicTriggerExecutor(ConditionalPeriodicTrigger trigger)
+      : super(trigger) {
+    _period = trigger.period;
+  }
+
+  Future onResume() async {
+    // create a recurrent timer that checks the conditions periodically
+    _timer = Timer.periodic(_period, (_) {
+      if (_eventTrigger.resumeCondition != null &&
+          _eventTrigger.resumeCondition!()) super.onResume();
+      if (_eventTrigger.pauseCondition != null &&
+          _eventTrigger.pauseCondition!()) super.onPause();
+    });
+  }
+
+  Future onPause() async {
+    _timer?.cancel();
     await super.onPause();
   }
 }
