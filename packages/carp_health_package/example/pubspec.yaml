@@ -1,11 +1,11 @@
 name: carp_health_package_example
 description: Examples of how to use the carp_health_package.
 version: 0.0.1
-author:  CACHET Team <cph.cachet@gmail.com>
 publish_to: none
 
 environment:
-  sdk: ">=2.1.0-dev <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
+  flutter: ">=2.2.0"
 
 dependencies:
   flutter:

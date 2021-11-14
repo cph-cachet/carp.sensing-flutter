@@ -335,40 +335,53 @@ void samplingSchemaExample() async {
 void recurrentScheduledTriggerExample() {
   // collect every day at 13:30
   RecurrentScheduledTrigger(
-      type: RecurrentType.daily, time: Time(hour: 13, minute: 30));
+    type: RecurrentType.daily,
+    time: Time(hour: 13, minute: 30),
+    duration: Duration(seconds: 1),
+  );
 
   // collect every other day at 13:30
   RecurrentScheduledTrigger(
-      type: RecurrentType.daily,
-      separationCount: 1,
-      time: Time(hour: 13, minute: 30));
+    type: RecurrentType.daily,
+    separationCount: 1,
+    time: Time(hour: 13, minute: 30),
+    duration: Duration(seconds: 1),
+  );
 
   // collect every wednesday at 12:23
   RecurrentScheduledTrigger(
-      type: RecurrentType.weekly,
-      dayOfWeek: DateTime.wednesday,
-      time: Time(hour: 12, minute: 23));
+    type: RecurrentType.weekly,
+    dayOfWeek: DateTime.wednesday,
+    time: Time(hour: 12, minute: 23),
+    duration: Duration(seconds: 1),
+  );
 
   // collect every 2nd monday at 12:23
   RecurrentScheduledTrigger(
-      type: RecurrentType.weekly,
-      dayOfWeek: DateTime.monday,
-      separationCount: 1,
-      time: Time(hour: 12, minute: 23));
+    type: RecurrentType.weekly,
+    dayOfWeek: DateTime.monday,
+    separationCount: 1,
+    time: Time(hour: 12, minute: 23),
+    duration: Duration(seconds: 1),
+  );
 
   // collect monthly in the second week on a monday at 14:30
   RecurrentScheduledTrigger(
-      type: RecurrentType.monthly,
-      weekOfMonth: 2,
-      dayOfWeek: DateTime.monday,
-      time: Time(hour: 14, minute: 30));
+    type: RecurrentType.monthly,
+    weekOfMonth: 2,
+    dayOfWeek: DateTime.monday,
+    time: Time(hour: 14, minute: 30),
+    duration: Duration(seconds: 1),
+  );
 
   // collect quarterly on the 11th day of the first month in each quarter at 21:30
   RecurrentScheduledTrigger(
-      type: RecurrentType.monthly,
-      dayOfMonth: 11,
-      separationCount: 2,
-      time: Time(hour: 21, minute: 30));
+    type: RecurrentType.monthly,
+    dayOfMonth: 11,
+    separationCount: 2,
+    time: Time(hour: 21, minute: 30),
+    duration: Duration(seconds: 1),
+  );
 }
 
 /// An example of how to configure a [SmartphoneDeploymentController] with the

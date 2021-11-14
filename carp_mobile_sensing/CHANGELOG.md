@@ -1,3 +1,9 @@
+## 0.31.4
+* support for a `ConditionalPeriodicTrigger` which preiodically checks resume/pause conditions (originates from [#230](https://github.com/cph-cachet/carp.sensing-flutter/issues/230)).
+* upgrade of `pubspec` libaries (`flutter_local_notifications`, `cron`, and `json`).
+* re-generation of json serialization 
+* still cannot upgrade `permission_handler` since 8.2.0 gives a graddle compile error?????
+
 ## 0.31.1
 * bug fix of [#221](https://github.com/cph-cachet/carp.sensing-flutter/issues/221).
 

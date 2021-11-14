@@ -6,16 +6,15 @@ part of communication;
 // JsonSerializableGenerator
 // **************************************************************************
 
-TextMessageLogDatum _$TextMessageLogDatumFromJson(Map<String, dynamic> json) {
-  return TextMessageLogDatum()
-    ..id = json['id'] as String?
-    ..timestamp = json['timestamp'] == null
-        ? null
-        : DateTime.parse(json['timestamp'] as String)
-    ..textMessageLog = (json['text_message_log'] as List<dynamic>)
-        .map((e) => TextMessage.fromJson(e as Map<String, dynamic>))
-        .toList();
-}
+TextMessageLogDatum _$TextMessageLogDatumFromJson(Map<String, dynamic> json) =>
+    TextMessageLogDatum()
+      ..id = json['id'] as String?
+      ..timestamp = json['timestamp'] == null
+          ? null
+          : DateTime.parse(json['timestamp'] as String)
+      ..textMessageLog = (json['text_message_log'] as List<dynamic>)
+          .map((e) => TextMessage.fromJson(e as Map<String, dynamic>))
+          .toList();
 
 Map<String, dynamic> _$TextMessageLogDatumToJson(TextMessageLogDatum instance) {
   final val = <String, dynamic>{};
@@ -32,16 +31,15 @@ Map<String, dynamic> _$TextMessageLogDatumToJson(TextMessageLogDatum instance) {
   return val;
 }
 
-TextMessageDatum _$TextMessageDatumFromJson(Map<String, dynamic> json) {
-  return TextMessageDatum()
-    ..id = json['id'] as String?
-    ..timestamp = json['timestamp'] == null
-        ? null
-        : DateTime.parse(json['timestamp'] as String)
-    ..textMessage = json['text_message'] == null
-        ? null
-        : TextMessage.fromJson(json['text_message'] as Map<String, dynamic>);
-}
+TextMessageDatum _$TextMessageDatumFromJson(Map<String, dynamic> json) =>
+    TextMessageDatum()
+      ..id = json['id'] as String?
+      ..timestamp = json['timestamp'] == null
+          ? null
+          : DateTime.parse(json['timestamp'] as String)
+      ..textMessage = json['text_message'] == null
+          ? null
+          : TextMessage.fromJson(json['text_message'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$TextMessageDatumToJson(TextMessageDatum instance) {
   final val = <String, dynamic>{};
@@ -58,21 +56,20 @@ Map<String, dynamic> _$TextMessageDatumToJson(TextMessageDatum instance) {
   return val;
 }
 
-TextMessage _$TextMessageFromJson(Map<String, dynamic> json) {
-  return TextMessage(
-    id: json['id'] as int?,
-    address: json['address'] as String?,
-    body: json['body'] as String?,
-    size: json['size'] as int?,
-    read: json['read'] as bool?,
-    date: json['date'] == null ? null : DateTime.parse(json['date'] as String),
-    dateSent: json['date_sent'] == null
-        ? null
-        : DateTime.parse(json['date_sent'] as String),
-    type: _$enumDecodeNullable(_$SmsTypeEnumMap, json['type']),
-    status: _$enumDecodeNullable(_$SmsStatusEnumMap, json['status']),
-  );
-}
+TextMessage _$TextMessageFromJson(Map<String, dynamic> json) => TextMessage(
+      id: json['id'] as int?,
+      address: json['address'] as String?,
+      body: json['body'] as String?,
+      size: json['size'] as int?,
+      read: json['read'] as bool?,
+      date:
+          json['date'] == null ? null : DateTime.parse(json['date'] as String),
+      dateSent: json['date_sent'] == null
+          ? null
+          : DateTime.parse(json['date_sent'] as String),
+      type: $enumDecodeNullable(_$SmsTypeEnumMap, json['type']),
+      status: $enumDecodeNullable(_$SmsStatusEnumMap, json['status']),
+    );
 
 Map<String, dynamic> _$TextMessageToJson(TextMessage instance) {
   final val = <String, dynamic>{};
@@ -95,43 +92,6 @@ Map<String, dynamic> _$TextMessageToJson(TextMessage instance) {
   return val;
 }
 
-K _$enumDecode<K, V>(
-  Map<K, V> enumValues,
-  Object? source, {
-  K? unknownValue,
-}) {
-  if (source == null) {
-    throw ArgumentError(
-      'A value must be provided. Supported values: '
-      '${enumValues.values.join(', ')}',
-    );
-  }
-
-  return enumValues.entries.singleWhere(
-    (e) => e.value == source,
-    orElse: () {
-      if (unknownValue == null) {
-        throw ArgumentError(
-          '`$source` is not one of the supported values: '
-          '${enumValues.values.join(', ')}',
-        );
-      }
-      return MapEntry(unknownValue, enumValues.values.first);
-    },
-  ).key;
-}
-
-K? _$enumDecodeNullable<K, V>(
-  Map<K, V> enumValues,
-  dynamic source, {
-  K? unknownValue,
-}) {
-  if (source == null) {
-    return null;
-  }
-  return _$enumDecode<K, V>(enumValues, source, unknownValue: unknownValue);
-}
-
 const _$SmsTypeEnumMap = {
   SmsType.MESSAGE_TYPE_ALL: 'MESSAGE_TYPE_ALL',
   SmsType.MESSAGE_TYPE_INBOX: 'MESSAGE_TYPE_INBOX',
@@ -149,16 +109,15 @@ const _$SmsStatusEnumMap = {
   SmsStatus.STATUS_PENDING: 'STATUS_PENDING',
 };
 
-PhoneLogDatum _$PhoneLogDatumFromJson(Map<String, dynamic> json) {
-  return PhoneLogDatum()
-    ..id = json['id'] as String?
-    ..timestamp = json['timestamp'] == null
-        ? null
-        : DateTime.parse(json['timestamp'] as String)
-    ..phoneLog = (json['phone_log'] as List<dynamic>)
-        .map((e) => PhoneCall.fromJson(e as Map<String, dynamic>))
-        .toList();
-}
+PhoneLogDatum _$PhoneLogDatumFromJson(Map<String, dynamic> json) =>
+    PhoneLogDatum()
+      ..id = json['id'] as String?
+      ..timestamp = json['timestamp'] == null
+          ? null
+          : DateTime.parse(json['timestamp'] as String)
+      ..phoneLog = (json['phone_log'] as List<dynamic>)
+          .map((e) => PhoneCall.fromJson(e as Map<String, dynamic>))
+          .toList();
 
 Map<String, dynamic> _$PhoneLogDatumToJson(PhoneLogDatum instance) {
   final val = <String, dynamic>{};
@@ -175,18 +134,16 @@ Map<String, dynamic> _$PhoneLogDatumToJson(PhoneLogDatum instance) {
   return val;
 }
 
-PhoneCall _$PhoneCallFromJson(Map<String, dynamic> json) {
-  return PhoneCall(
-    json['timestamp'] == null
-        ? null
-        : DateTime.parse(json['timestamp'] as String),
-    json['call_type'] as String?,
-    json['duration'] as int?,
-    json['formatted_number'] as String?,
-    json['number'] as String?,
-    json['name'] as String?,
-  );
-}
+PhoneCall _$PhoneCallFromJson(Map<String, dynamic> json) => PhoneCall(
+      json['timestamp'] == null
+          ? null
+          : DateTime.parse(json['timestamp'] as String),
+      json['call_type'] as String?,
+      json['duration'] as int?,
+      json['formatted_number'] as String?,
+      json['number'] as String?,
+      json['name'] as String?,
+    );
 
 Map<String, dynamic> _$PhoneCallToJson(PhoneCall instance) {
   final val = <String, dynamic>{};
@@ -206,16 +163,15 @@ Map<String, dynamic> _$PhoneCallToJson(PhoneCall instance) {
   return val;
 }
 
-CalendarDatum _$CalendarDatumFromJson(Map<String, dynamic> json) {
-  return CalendarDatum()
-    ..id = json['id'] as String?
-    ..timestamp = json['timestamp'] == null
-        ? null
-        : DateTime.parse(json['timestamp'] as String)
-    ..calendarEvents = (json['calendar_events'] as List<dynamic>)
-        .map((e) => CalendarEvent.fromJson(e as Map<String, dynamic>))
-        .toList();
-}
+CalendarDatum _$CalendarDatumFromJson(Map<String, dynamic> json) =>
+    CalendarDatum()
+      ..id = json['id'] as String?
+      ..timestamp = json['timestamp'] == null
+          ? null
+          : DateTime.parse(json['timestamp'] as String)
+      ..calendarEvents = (json['calendar_events'] as List<dynamic>)
+          .map((e) => CalendarEvent.fromJson(e as Map<String, dynamic>))
+          .toList();
 
 Map<String, dynamic> _$CalendarDatumToJson(CalendarDatum instance) {
   final val = <String, dynamic>{};
@@ -232,19 +188,18 @@ Map<String, dynamic> _$CalendarDatumToJson(CalendarDatum instance) {
   return val;
 }
 
-CalendarEvent _$CalendarEventFromJson(Map<String, dynamic> json) {
-  return CalendarEvent(
-    json['event_id'] as String?,
-    json['calendar_id'] as String?,
-    json['title'] as String?,
-    json['description'] as String?,
-    json['start'] == null ? null : DateTime.parse(json['start'] as String),
-    json['end'] == null ? null : DateTime.parse(json['end'] as String),
-    json['all_day'] as bool?,
-    json['location'] as String?,
-    (json['attendees'] as List<dynamic>?)?.map((e) => e as String?).toList(),
-  );
-}
+CalendarEvent _$CalendarEventFromJson(Map<String, dynamic> json) =>
+    CalendarEvent(
+      json['event_id'] as String?,
+      json['calendar_id'] as String?,
+      json['title'] as String?,
+      json['description'] as String?,
+      json['start'] == null ? null : DateTime.parse(json['start'] as String),
+      json['end'] == null ? null : DateTime.parse(json['end'] as String),
+      json['all_day'] as bool?,
+      json['location'] as String?,
+      (json['attendees'] as List<dynamic>?)?.map((e) => e as String?).toList(),
+    );
 
 Map<String, dynamic> _$CalendarEventToJson(CalendarEvent instance) {
   final val = <String, dynamic>{};
@@ -267,18 +222,21 @@ Map<String, dynamic> _$CalendarEventToJson(CalendarEvent instance) {
   return val;
 }
 
-CalendarMeasure _$CalendarMeasureFromJson(Map<String, dynamic> json) {
-  return CalendarMeasure(
-    type: json['type'] as String,
-    name: json['name'] as String?,
-    description: json['description'] as String?,
-    enabled: json['enabled'],
-    past: Duration(microseconds: json['past'] as int),
-    future: Duration(microseconds: json['future'] as int),
-  )
-    ..$type = json[r'$type'] as String?
-    ..configuration = Map<String, String>.from(json['configuration'] as Map);
-}
+CalendarMeasure _$CalendarMeasureFromJson(Map<String, dynamic> json) =>
+    CalendarMeasure(
+      type: json['type'] as String,
+      name: json['name'] as String?,
+      description: json['description'] as String?,
+      enabled: json['enabled'] ?? true,
+      past: json['past'] == null
+          ? null
+          : Duration(microseconds: json['past'] as int),
+      future: json['future'] == null
+          ? null
+          : Duration(microseconds: json['future'] as int),
+    )
+      ..$type = json[r'$type'] as String?
+      ..configuration = Map<String, String>.from(json['configuration'] as Map);
 
 Map<String, dynamic> _$CalendarMeasureToJson(CalendarMeasure instance) {
   final val = <String, dynamic>{};

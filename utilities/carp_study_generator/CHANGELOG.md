@@ -1,3 +1,6 @@
+## 0.31.1
+* small update to dependencies in pubspec
+
 ## 0.31.0+1
 * upgrade to `carp_mobile_sensing` v. 0.31.0
 * removal of `description` command, since the study description is now part of the protocol.

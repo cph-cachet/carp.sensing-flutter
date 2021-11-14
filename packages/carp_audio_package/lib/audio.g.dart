@@ -6,25 +6,23 @@ part of audio;
 // JsonSerializableGenerator
 // **************************************************************************
 
-AudioDatum _$AudioDatumFromJson(Map<String, dynamic> json) {
-  return AudioDatum(
-    filename: json['filename'] as String,
-    startRecordingTime: json['start_recording_time'] == null
-        ? null
-        : DateTime.parse(json['start_recording_time'] as String),
-    endRecordingTime: json['end_recording_time'] == null
-        ? null
-        : DateTime.parse(json['end_recording_time'] as String),
-  )
-    ..id = json['id'] as String?
-    ..timestamp = json['timestamp'] == null
-        ? null
-        : DateTime.parse(json['timestamp'] as String)
-    ..upload = json['upload'] as bool
-    ..metadata = (json['metadata'] as Map<String, dynamic>?)?.map(
-      (k, e) => MapEntry(k, e as String),
-    );
-}
+AudioDatum _$AudioDatumFromJson(Map<String, dynamic> json) => AudioDatum(
+      filename: json['filename'] as String,
+      startRecordingTime: json['start_recording_time'] == null
+          ? null
+          : DateTime.parse(json['start_recording_time'] as String),
+      endRecordingTime: json['end_recording_time'] == null
+          ? null
+          : DateTime.parse(json['end_recording_time'] as String),
+    )
+      ..id = json['id'] as String?
+      ..timestamp = json['timestamp'] == null
+          ? null
+          : DateTime.parse(json['timestamp'] as String)
+      ..upload = json['upload'] as bool
+      ..metadata = (json['metadata'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, e as String),
+      );
 
 Map<String, dynamic> _$AudioDatumToJson(AudioDatum instance) {
   final val = <String, dynamic>{};
@@ -47,18 +45,16 @@ Map<String, dynamic> _$AudioDatumToJson(AudioDatum instance) {
   return val;
 }
 
-NoiseDatum _$NoiseDatumFromJson(Map<String, dynamic> json) {
-  return NoiseDatum(
-    meanDecibel: (json['mean_decibel'] as num).toDouble(),
-    stdDecibel: (json['std_decibel'] as num).toDouble(),
-    minDecibel: (json['min_decibel'] as num).toDouble(),
-    maxDecibel: (json['max_decibel'] as num).toDouble(),
-  )
-    ..id = json['id'] as String?
-    ..timestamp = json['timestamp'] == null
-        ? null
-        : DateTime.parse(json['timestamp'] as String);
-}
+NoiseDatum _$NoiseDatumFromJson(Map<String, dynamic> json) => NoiseDatum(
+      meanDecibel: (json['mean_decibel'] as num).toDouble(),
+      stdDecibel: (json['std_decibel'] as num).toDouble(),
+      minDecibel: (json['min_decibel'] as num).toDouble(),
+      maxDecibel: (json['max_decibel'] as num).toDouble(),
+    )
+      ..id = json['id'] as String?
+      ..timestamp = json['timestamp'] == null
+          ? null
+          : DateTime.parse(json['timestamp'] as String);
 
 Map<String, dynamic> _$NoiseDatumToJson(NoiseDatum instance) {
   final val = <String, dynamic>{};
@@ -78,19 +74,17 @@ Map<String, dynamic> _$NoiseDatumToJson(NoiseDatum instance) {
   return val;
 }
 
-NoiseMeasure _$NoiseMeasureFromJson(Map<String, dynamic> json) {
-  return NoiseMeasure(
-    type: json['type'] as String,
-    name: json['name'] as String?,
-    description: json['description'] as String?,
-    enabled: json['enabled'] as bool,
-    frequency: Duration(microseconds: json['frequency'] as int),
-    duration: Duration(microseconds: json['duration'] as int),
-    samplingRate: json['samplingRate'] as int,
-  )
-    ..$type = json[r'$type'] as String?
-    ..configuration = Map<String, String>.from(json['configuration'] as Map);
-}
+NoiseMeasure _$NoiseMeasureFromJson(Map<String, dynamic> json) => NoiseMeasure(
+      type: json['type'] as String,
+      name: json['name'] as String?,
+      description: json['description'] as String?,
+      enabled: json['enabled'] as bool? ?? true,
+      frequency: Duration(microseconds: json['frequency'] as int),
+      duration: Duration(microseconds: json['duration'] as int),
+      samplingRate: json['samplingRate'] as int?,
+    )
+      ..$type = json[r'$type'] as String?
+      ..configuration = Map<String, String>.from(json['configuration'] as Map);
 
 Map<String, dynamic> _$NoiseMeasureToJson(NoiseMeasure instance) {
   final val = <String, dynamic>{};

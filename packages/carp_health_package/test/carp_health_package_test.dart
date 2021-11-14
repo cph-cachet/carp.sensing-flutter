@@ -42,7 +42,10 @@ void main() {
 
     protocol.addTriggeredTask(
         // collect every hour
-        PeriodicTrigger(period: Duration(minutes: 60)),
+        PeriodicTrigger(
+          period: Duration(minutes: 60),
+          duration: Duration(seconds: 10),
+        ),
         AutomaticTask()
           ..measures.add(HealthMeasure(
             type: HealthSamplingPackage.HEALTH,
@@ -72,7 +75,12 @@ void main() {
     protocol.addTriggeredTask(
         // collect every day at 23:00
         RecurrentScheduledTrigger(
-            type: RecurrentType.daily, time: Time(hour: 23, minute: 00)),
+            type: RecurrentType.daily,
+            time: Time(
+              hour: 23,
+              minute: 00,
+            ),
+            duration: Duration(seconds: 10)),
         AutomaticTask()
           ..measures.add(HealthMeasure(
             type: HealthSamplingPackage.HEALTH,

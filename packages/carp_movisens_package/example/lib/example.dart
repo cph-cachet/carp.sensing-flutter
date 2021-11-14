@@ -43,26 +43,4 @@ void main() async {
             gender: Gender.male,
             sensorLocation: SensorLocation.chest)),
       movisens);
-
-  // deploy this protocol using the on-phone deployment service
-  StudyDeploymentStatus status =
-      await SmartphoneDeploymentService().createStudyDeployment(protocol);
-
-  String studyDeploymentId = status.studyDeploymentId;
-  String deviceRolename = status.masterDeviceStatus!.device.roleName;
-
-  // create and configure a client manager for this phone
-  SmartPhoneClientManager client = SmartPhoneClientManager();
-  await client.configure();
-
-  // create a study runtime to control this deployment
-  StudyDeploymentController controller =
-      await client.addStudy(studyDeploymentId, deviceRolename);
-
-  // configure the controller and resume sampling
-  await controller.configure();
-  controller.resume();
-
-  // listening and print all data events from the study
-  controller.data.forEach(print);
 }

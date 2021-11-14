@@ -13,7 +13,7 @@ part of audio;
 class NoiseMeasure extends PeriodicMeasure {
   static const int DEFAULT_SAMPLING_RATE = 500;
 
-  int samplingRate;
+  late int samplingRate;
 
   NoiseMeasure({
     required String type,
@@ -22,7 +22,7 @@ class NoiseMeasure extends PeriodicMeasure {
     bool enabled = true,
     required Duration frequency,
     required Duration duration,
-    this.samplingRate = DEFAULT_SAMPLING_RATE,
+    int? samplingRate,
   }) : super(
           type: type,
           name: name,
@@ -30,7 +30,9 @@ class NoiseMeasure extends PeriodicMeasure {
           enabled: enabled,
           frequency: frequency,
           duration: duration,
-        );
+        ) {
+    this.samplingRate = samplingRate ?? DEFAULT_SAMPLING_RATE;
+  }
 
   Function get fromJsonFunction => _$NoiseMeasureFromJson;
   factory NoiseMeasure.fromJson(Map<String, dynamic> json) =>

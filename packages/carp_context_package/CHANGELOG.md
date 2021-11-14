@@ -1,3 +1,7 @@
+## 0.31.2
+* small update to dependencies in pubspec
+* re-generation of json serialization 
+
 ## 0.31.0
 * update to `carp_mobile_sensing` v. 0.31.0
 * docs: issue [#218](https://github.com/cph-cachet/carp.sensing-flutter/issues/218)

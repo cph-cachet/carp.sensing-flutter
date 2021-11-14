@@ -1,6 +1,6 @@
 name: carp_study_generator
 description: Utilities for generating CARP Mobile Sensing studies
-version: 0.31.0+1
+version: 0.31.1
 homepage: https://github.com/cph-cachet/carp.sensing-flutter
 
 environment:
@@ -22,8 +22,8 @@ dependencies:
   carp_esense_package: ^0.31.0
   carp_survey_package: ^0.31.0
   carp_health_package: ^2.1.0
-  # cannot load connectivity package, due to package conflict btw. research_package and flutter_blue
-  # using different version of rxdart....
+  # cannot load connectivity package, due to package conflict btw. research_package 
+  # and flutter_blue using different version of rxdart....
   #carp_connectivity_package: ^0.30.0
 
   research_package: ^0.6.4      # the informed consent domain model
@@ -42,10 +42,12 @@ dependency_overrides:
   #   path: ../../backends/carp_webservices/
   # carp_backend:
   #   path: ../../backends/carp_backend/
+  # device_calendar:
+  #   git: https://github.com/builttoroam/device_calendar.git
 
 
 dev_dependencies:
-  test: ^1.17.10
+  test: any
 
 # The following section is specific to Flutter.
 flutter:

@@ -52,7 +52,7 @@ class HealthMeasure extends MarkedMeasure {
     String? name,
     String? description,
     bool enabled = true,
-    Duration history = const Duration(days: 1),
+    Duration? history,
     required this.healthDataType,
   }) : super(
           type: type,

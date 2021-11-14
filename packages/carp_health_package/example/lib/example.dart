@@ -24,7 +24,10 @@ void main() async {
 
   protocol.addTriggeredTask(
       // collect every hour
-      PeriodicTrigger(period: Duration(minutes: 60)),
+      PeriodicTrigger(
+        period: Duration(minutes: 60),
+        duration: Duration(minutes: 10),
+      ),
       AutomaticTask()
         ..measures.add(HealthMeasure(
           type: HealthSamplingPackage.HEALTH,

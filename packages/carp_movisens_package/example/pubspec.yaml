@@ -1,7 +1,6 @@
 name: carp_connectivity_package_example
 description: Examples of how to use the carp_movisens_package.
 version: 0.0.3
-author:  CACHET Team <cph.cachet@gmail.com>
 publish_to: none
 
 environment:

@@ -33,17 +33,24 @@ void _registerFromJsonFunctions() {
   FromJsonFactory().register(ImmediateTrigger());
   FromJsonFactory().register(DelayedTrigger(delay: Duration()));
   FromJsonFactory().register(DeploymentDelayedTrigger(delay: Duration()));
-  FromJsonFactory().register(PeriodicTrigger(period: Duration()));
+  FromJsonFactory().register(PeriodicTrigger(
+    period: Duration(),
+    duration: Duration(),
+  ));
   FromJsonFactory().register(DateTimeTrigger(schedule: DateTime.now()));
   FromJsonFactory().register(Time());
-  FromJsonFactory().register(
-      RecurrentScheduledTrigger(type: RecurrentType.daily, time: Time()));
+  FromJsonFactory().register(RecurrentScheduledTrigger(
+    type: RecurrentType.daily,
+    time: Time(),
+  ));
   FromJsonFactory().register(SamplingEventTrigger(measureType: 'ignored'));
   FromJsonFactory().register(ConditionalEvent({}));
   FromJsonFactory().register(ConditionalSamplingEventTrigger(
       measureType: 'ignored', resumeCondition: (DataPoint dataPoint) => true));
-  FromJsonFactory().register(
-      RandomRecurrentTrigger(startTime: Time(hour: 1), endTime: Time(hour: 2)));
+  FromJsonFactory().register(RandomRecurrentTrigger(
+    startTime: Time(hour: 1),
+    endTime: Time(hour: 2),
+  ));
 
   // Measure classes
   FromJsonFactory().register(CAMSMeasure(type: 'ignored'));

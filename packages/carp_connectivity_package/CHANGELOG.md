@@ -1,3 +1,6 @@
+## 0.31.0
+* update to `carp_mobile_sensing` v. 0.31.4
+
 ## 0.30.0
 * upgrade to null-safety
 * upgrade to [`network_info_plus`](https://pub.dev/packages/network_info_plus)

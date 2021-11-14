@@ -18,10 +18,10 @@ class ESenseDevice extends DeviceDescriptor {
   static const String DEFAULT_ROLENAME = 'esense';
 
   ESenseDevice({
-    String roleName = DEFAULT_ROLENAME,
+    String? roleName,
     List<String>? supportedDataTypes,
   }) : super(
-          roleName: roleName,
+          roleName: roleName ?? DEFAULT_ROLENAME,
           isMasterDevice: false,
           supportedDataTypes: supportedDataTypes,
         );

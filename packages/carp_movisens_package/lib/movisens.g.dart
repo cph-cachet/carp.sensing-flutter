@@ -6,24 +6,23 @@ part of movisens;
 // JsonSerializableGenerator
 // **************************************************************************
 
-MovisensMeasure _$MovisensMeasureFromJson(Map<String, dynamic> json) {
-  return MovisensMeasure(
-    type: json['type'] as String,
-    name: json['name'] as String?,
-    description: json['description'] as String?,
-    enabled: json['enabled'] as bool,
-    address: json['address'] as String?,
-    sensorLocation:
-        _$enumDecodeNullable(_$SensorLocationEnumMap, json['sensorLocation']),
-    gender: _$enumDecodeNullable(_$GenderEnumMap, json['gender']),
-    deviceName: json['deviceName'] as String?,
-    height: json['height'] as int?,
-    weight: json['weight'] as int?,
-    age: json['age'] as int?,
-  )
-    ..$type = json[r'$type'] as String?
-    ..configuration = Map<String, String>.from(json['configuration'] as Map);
-}
+MovisensMeasure _$MovisensMeasureFromJson(Map<String, dynamic> json) =>
+    MovisensMeasure(
+      type: json['type'] as String,
+      name: json['name'] as String?,
+      description: json['description'] as String?,
+      enabled: json['enabled'] as bool? ?? true,
+      address: json['address'] as String?,
+      sensorLocation:
+          $enumDecodeNullable(_$SensorLocationEnumMap, json['sensorLocation']),
+      gender: $enumDecodeNullable(_$GenderEnumMap, json['gender']),
+      deviceName: json['deviceName'] as String?,
+      height: json['height'] as int?,
+      weight: json['weight'] as int?,
+      age: json['age'] as int?,
+    )
+      ..$type = json[r'$type'] as String?
+      ..configuration = Map<String, String>.from(json['configuration'] as Map);
 
 Map<String, dynamic> _$MovisensMeasureToJson(MovisensMeasure instance) {
   final val = <String, dynamic>{};
@@ -51,43 +50,6 @@ Map<String, dynamic> _$MovisensMeasureToJson(MovisensMeasure instance) {
   return val;
 }
 
-K _$enumDecode<K, V>(
-  Map<K, V> enumValues,
-  Object? source, {
-  K? unknownValue,
-}) {
-  if (source == null) {
-    throw ArgumentError(
-      'A value must be provided. Supported values: '
-      '${enumValues.values.join(', ')}',
-    );
-  }
-
-  return enumValues.entries.singleWhere(
-    (e) => e.value == source,
-    orElse: () {
-      if (unknownValue == null) {
-        throw ArgumentError(
-          '`$source` is not one of the supported values: '
-          '${enumValues.values.join(', ')}',
-        );
-      }
-      return MapEntry(unknownValue, enumValues.values.first);
-    },
-  ).key;
-}
-
-K? _$enumDecodeNullable<K, V>(
-  Map<K, V> enumValues,
-  dynamic source, {
-  K? unknownValue,
-}) {
-  if (source == null) {
-    return null;
-  }
-  return _$enumDecode<K, V>(enumValues, source, unknownValue: unknownValue);
-}
-
 const _$SensorLocationEnumMap = {
   SensorLocation.left_ankle: 'left_ankle',
   SensorLocation.left_hip: 'left_hip',
@@ -107,14 +69,13 @@ const _$GenderEnumMap = {
   Gender.female: 'female',
 };
 
-MovisensDatum _$MovisensDatumFromJson(Map<String, dynamic> json) {
-  return MovisensDatum()
-    ..id = json['id'] as String?
-    ..timestamp = json['timestamp'] == null
-        ? null
-        : DateTime.parse(json['timestamp'] as String)
-    ..movisensTimestamp = json['movisens_timestamp'] as String?;
-}
+MovisensDatum _$MovisensDatumFromJson(Map<String, dynamic> json) =>
+    MovisensDatum()
+      ..id = json['id'] as String?
+      ..timestamp = json['timestamp'] == null
+          ? null
+          : DateTime.parse(json['timestamp'] as String)
+      ..movisensTimestamp = json['movisens_timestamp'] as String?;
 
 Map<String, dynamic> _$MovisensDatumToJson(MovisensDatum instance) {
   final val = <String, dynamic>{};
@@ -132,19 +93,18 @@ Map<String, dynamic> _$MovisensDatumToJson(MovisensDatum instance) {
 }
 
 MovisensMETLevelDatum _$MovisensMETLevelDatumFromJson(
-    Map<String, dynamic> json) {
-  return MovisensMETLevelDatum()
-    ..id = json['id'] as String?
-    ..timestamp = json['timestamp'] == null
-        ? null
-        : DateTime.parse(json['timestamp'] as String)
-    ..movisensTimestamp = json['movisens_timestamp'] as String?
-    ..format = DataFormat.fromJson(json['format'] as Map<String, dynamic>)
-    ..sedentary = json['sedentary'] as String?
-    ..light = json['light'] as String?
-    ..moderate = json['moderate'] as String?
-    ..vigorous = json['vigorous'] as String?;
-}
+        Map<String, dynamic> json) =>
+    MovisensMETLevelDatum()
+      ..id = json['id'] as String?
+      ..timestamp = json['timestamp'] == null
+          ? null
+          : DateTime.parse(json['timestamp'] as String)
+      ..movisensTimestamp = json['movisens_timestamp'] as String?
+      ..format = DataFormat.fromJson(json['format'] as Map<String, dynamic>)
+      ..sedentary = json['sedentary'] as String?
+      ..light = json['light'] as String?
+      ..moderate = json['moderate'] as String?
+      ..vigorous = json['vigorous'] as String?;
 
 Map<String, dynamic> _$MovisensMETLevelDatumToJson(
     MovisensMETLevelDatum instance) {
@@ -168,16 +128,15 @@ Map<String, dynamic> _$MovisensMETLevelDatumToJson(
 }
 
 MovisensMovementAccelerationDatum _$MovisensMovementAccelerationDatumFromJson(
-    Map<String, dynamic> json) {
-  return MovisensMovementAccelerationDatum()
-    ..id = json['id'] as String?
-    ..timestamp = json['timestamp'] == null
-        ? null
-        : DateTime.parse(json['timestamp'] as String)
-    ..movisensTimestamp = json['movisens_timestamp'] as String?
-    ..format = DataFormat.fromJson(json['format'] as Map<String, dynamic>)
-    ..movementAcceleration = json['movement_acceleration'] as String?;
-}
+        Map<String, dynamic> json) =>
+    MovisensMovementAccelerationDatum()
+      ..id = json['id'] as String?
+      ..timestamp = json['timestamp'] == null
+          ? null
+          : DateTime.parse(json['timestamp'] as String)
+      ..movisensTimestamp = json['movisens_timestamp'] as String?
+      ..format = DataFormat.fromJson(json['format'] as Map<String, dynamic>)
+      ..movementAcceleration = json['movement_acceleration'] as String?;
 
 Map<String, dynamic> _$MovisensMovementAccelerationDatumToJson(
     MovisensMovementAccelerationDatum instance) {
@@ -198,16 +157,15 @@ Map<String, dynamic> _$MovisensMovementAccelerationDatumToJson(
 }
 
 MovisensTapMarkerDatum _$MovisensTapMarkerDatumFromJson(
-    Map<String, dynamic> json) {
-  return MovisensTapMarkerDatum()
-    ..id = json['id'] as String?
-    ..timestamp = json['timestamp'] == null
-        ? null
-        : DateTime.parse(json['timestamp'] as String)
-    ..movisensTimestamp = json['movisens_timestamp'] as String?
-    ..format = DataFormat.fromJson(json['format'] as Map<String, dynamic>)
-    ..tapMarker = json['tap_marker'] as String?;
-}
+        Map<String, dynamic> json) =>
+    MovisensTapMarkerDatum()
+      ..id = json['id'] as String?
+      ..timestamp = json['timestamp'] == null
+          ? null
+          : DateTime.parse(json['timestamp'] as String)
+      ..movisensTimestamp = json['movisens_timestamp'] as String?
+      ..format = DataFormat.fromJson(json['format'] as Map<String, dynamic>)
+      ..tapMarker = json['tap_marker'] as String?;
 
 Map<String, dynamic> _$MovisensTapMarkerDatumToJson(
     MovisensTapMarkerDatum instance) {
@@ -228,16 +186,15 @@ Map<String, dynamic> _$MovisensTapMarkerDatumToJson(
 }
 
 MovisensBatteryLevelDatum _$MovisensBatteryLevelDatumFromJson(
-    Map<String, dynamic> json) {
-  return MovisensBatteryLevelDatum()
-    ..id = json['id'] as String?
-    ..timestamp = json['timestamp'] == null
-        ? null
-        : DateTime.parse(json['timestamp'] as String)
-    ..movisensTimestamp = json['movisens_timestamp'] as String?
-    ..format = DataFormat.fromJson(json['format'] as Map<String, dynamic>)
-    ..batteryLevel = json['battery_level'] as String?;
-}
+        Map<String, dynamic> json) =>
+    MovisensBatteryLevelDatum()
+      ..id = json['id'] as String?
+      ..timestamp = json['timestamp'] == null
+          ? null
+          : DateTime.parse(json['timestamp'] as String)
+      ..movisensTimestamp = json['movisens_timestamp'] as String?
+      ..format = DataFormat.fromJson(json['format'] as Map<String, dynamic>)
+      ..batteryLevel = json['battery_level'] as String?;
 
 Map<String, dynamic> _$MovisensBatteryLevelDatumToJson(
     MovisensBatteryLevelDatum instance) {
@@ -258,16 +215,15 @@ Map<String, dynamic> _$MovisensBatteryLevelDatumToJson(
 }
 
 MovisensBodyPositionDatum _$MovisensBodyPositionDatumFromJson(
-    Map<String, dynamic> json) {
-  return MovisensBodyPositionDatum()
-    ..id = json['id'] as String?
-    ..timestamp = json['timestamp'] == null
-        ? null
-        : DateTime.parse(json['timestamp'] as String)
-    ..movisensTimestamp = json['movisens_timestamp'] as String?
-    ..format = DataFormat.fromJson(json['format'] as Map<String, dynamic>)
-    ..bodyPosition = json['body_position'] as String?;
-}
+        Map<String, dynamic> json) =>
+    MovisensBodyPositionDatum()
+      ..id = json['id'] as String?
+      ..timestamp = json['timestamp'] == null
+          ? null
+          : DateTime.parse(json['timestamp'] as String)
+      ..movisensTimestamp = json['movisens_timestamp'] as String?
+      ..format = DataFormat.fromJson(json['format'] as Map<String, dynamic>)
+      ..bodyPosition = json['body_position'] as String?;
 
 Map<String, dynamic> _$MovisensBodyPositionDatumToJson(
     MovisensBodyPositionDatum instance) {
@@ -287,16 +243,15 @@ Map<String, dynamic> _$MovisensBodyPositionDatumToJson(
   return val;
 }
 
-MovisensMETDatum _$MovisensMETDatumFromJson(Map<String, dynamic> json) {
-  return MovisensMETDatum()
-    ..id = json['id'] as String?
-    ..timestamp = json['timestamp'] == null
-        ? null
-        : DateTime.parse(json['timestamp'] as String)
-    ..movisensTimestamp = json['movisens_timestamp'] as String?
-    ..format = DataFormat.fromJson(json['format'] as Map<String, dynamic>)
-    ..met = json['met'] as String?;
-}
+MovisensMETDatum _$MovisensMETDatumFromJson(Map<String, dynamic> json) =>
+    MovisensMETDatum()
+      ..id = json['id'] as String?
+      ..timestamp = json['timestamp'] == null
+          ? null
+          : DateTime.parse(json['timestamp'] as String)
+      ..movisensTimestamp = json['movisens_timestamp'] as String?
+      ..format = DataFormat.fromJson(json['format'] as Map<String, dynamic>)
+      ..met = json['met'] as String?;
 
 Map<String, dynamic> _$MovisensMETDatumToJson(MovisensMETDatum instance) {
   final val = <String, dynamic>{};
@@ -315,16 +270,15 @@ Map<String, dynamic> _$MovisensMETDatumToJson(MovisensMETDatum instance) {
   return val;
 }
 
-MovisensHRDatum _$MovisensHRDatumFromJson(Map<String, dynamic> json) {
-  return MovisensHRDatum()
-    ..id = json['id'] as String?
-    ..timestamp = json['timestamp'] == null
-        ? null
-        : DateTime.parse(json['timestamp'] as String)
-    ..movisensTimestamp = json['movisens_timestamp'] as String?
-    ..format = DataFormat.fromJson(json['format'] as Map<String, dynamic>)
-    ..hr = json['hr'] as String?;
-}
+MovisensHRDatum _$MovisensHRDatumFromJson(Map<String, dynamic> json) =>
+    MovisensHRDatum()
+      ..id = json['id'] as String?
+      ..timestamp = json['timestamp'] == null
+          ? null
+          : DateTime.parse(json['timestamp'] as String)
+      ..movisensTimestamp = json['movisens_timestamp'] as String?
+      ..format = DataFormat.fromJson(json['format'] as Map<String, dynamic>)
+      ..hr = json['hr'] as String?;
 
 Map<String, dynamic> _$MovisensHRDatumToJson(MovisensHRDatum instance) {
   final val = <String, dynamic>{};
@@ -343,16 +297,15 @@ Map<String, dynamic> _$MovisensHRDatumToJson(MovisensHRDatum instance) {
   return val;
 }
 
-MovisensHRVDatum _$MovisensHRVDatumFromJson(Map<String, dynamic> json) {
-  return MovisensHRVDatum()
-    ..id = json['id'] as String?
-    ..timestamp = json['timestamp'] == null
-        ? null
-        : DateTime.parse(json['timestamp'] as String)
-    ..movisensTimestamp = json['movisens_timestamp'] as String?
-    ..format = DataFormat.fromJson(json['format'] as Map<String, dynamic>)
-    ..hrv = json['hrv'] as String?;
-}
+MovisensHRVDatum _$MovisensHRVDatumFromJson(Map<String, dynamic> json) =>
+    MovisensHRVDatum()
+      ..id = json['id'] as String?
+      ..timestamp = json['timestamp'] == null
+          ? null
+          : DateTime.parse(json['timestamp'] as String)
+      ..movisensTimestamp = json['movisens_timestamp'] as String?
+      ..format = DataFormat.fromJson(json['format'] as Map<String, dynamic>)
+      ..hrv = json['hrv'] as String?;
 
 Map<String, dynamic> _$MovisensHRVDatumToJson(MovisensHRVDatum instance) {
   final val = <String, dynamic>{};
@@ -372,16 +325,15 @@ Map<String, dynamic> _$MovisensHRVDatumToJson(MovisensHRVDatum instance) {
 }
 
 MovisensIsHrvValidDatum _$MovisensIsHrvValidDatumFromJson(
-    Map<String, dynamic> json) {
-  return MovisensIsHrvValidDatum()
-    ..id = json['id'] as String?
-    ..timestamp = json['timestamp'] == null
-        ? null
-        : DateTime.parse(json['timestamp'] as String)
-    ..movisensTimestamp = json['movisens_timestamp'] as String?
-    ..format = DataFormat.fromJson(json['format'] as Map<String, dynamic>)
-    ..isHrvValid = json['is_hrv_valid'] as String?;
-}
+        Map<String, dynamic> json) =>
+    MovisensIsHrvValidDatum()
+      ..id = json['id'] as String?
+      ..timestamp = json['timestamp'] == null
+          ? null
+          : DateTime.parse(json['timestamp'] as String)
+      ..movisensTimestamp = json['movisens_timestamp'] as String?
+      ..format = DataFormat.fromJson(json['format'] as Map<String, dynamic>)
+      ..isHrvValid = json['is_hrv_valid'] as String?;
 
 Map<String, dynamic> _$MovisensIsHrvValidDatumToJson(
     MovisensIsHrvValidDatum instance) {
@@ -402,16 +354,15 @@ Map<String, dynamic> _$MovisensIsHrvValidDatumToJson(
 }
 
 MovisensStepCountDatum _$MovisensStepCountDatumFromJson(
-    Map<String, dynamic> json) {
-  return MovisensStepCountDatum()
-    ..id = json['id'] as String?
-    ..timestamp = json['timestamp'] == null
-        ? null
-        : DateTime.parse(json['timestamp'] as String)
-    ..movisensTimestamp = json['movisens_timestamp'] as String?
-    ..format = DataFormat.fromJson(json['format'] as Map<String, dynamic>)
-    ..stepCount = json['step_count'] as String?;
-}
+        Map<String, dynamic> json) =>
+    MovisensStepCountDatum()
+      ..id = json['id'] as String?
+      ..timestamp = json['timestamp'] == null
+          ? null
+          : DateTime.parse(json['timestamp'] as String)
+      ..movisensTimestamp = json['movisens_timestamp'] as String?
+      ..format = DataFormat.fromJson(json['format'] as Map<String, dynamic>)
+      ..stepCount = json['step_count'] as String?;
 
 Map<String, dynamic> _$MovisensStepCountDatumToJson(
     MovisensStepCountDatum instance) {
@@ -432,16 +383,15 @@ Map<String, dynamic> _$MovisensStepCountDatumToJson(
 }
 
 MovisensConnectionStatusDatum _$MovisensConnectionStatusDatumFromJson(
-    Map<String, dynamic> json) {
-  return MovisensConnectionStatusDatum()
-    ..id = json['id'] as String?
-    ..timestamp = json['timestamp'] == null
-        ? null
-        : DateTime.parse(json['timestamp'] as String)
-    ..movisensTimestamp = json['movisens_timestamp'] as String?
-    ..format = DataFormat.fromJson(json['format'] as Map<String, dynamic>)
-    ..connectionStatus = json['connection_status'] as String?;
-}
+        Map<String, dynamic> json) =>
+    MovisensConnectionStatusDatum()
+      ..id = json['id'] as String?
+      ..timestamp = json['timestamp'] == null
+          ? null
+          : DateTime.parse(json['timestamp'] as String)
+      ..movisensTimestamp = json['movisens_timestamp'] as String?
+      ..format = DataFormat.fromJson(json['format'] as Map<String, dynamic>)
+      ..connectionStatus = json['connection_status'] as String?;
 
 Map<String, dynamic> _$MovisensConnectionStatusDatumToJson(
     MovisensConnectionStatusDatum instance) {
@@ -461,21 +411,20 @@ Map<String, dynamic> _$MovisensConnectionStatusDatumToJson(
   return val;
 }
 
-MovisensDevice _$MovisensDeviceFromJson(Map<String, dynamic> json) {
-  return MovisensDevice(
-    roleName: json['roleName'] as String,
-    supportedDataTypes: (json['supportedDataTypes'] as List<dynamic>?)
-        ?.map((e) => e as String)
-        .toList(),
-  )
-    ..$type = json[r'$type'] as String?
-    ..isMasterDevice = json['isMasterDevice'] as bool?
-    ..samplingConfiguration =
-        (json['samplingConfiguration'] as Map<String, dynamic>).map(
-      (k, e) => MapEntry(
-          k, SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
-    );
-}
+MovisensDevice _$MovisensDeviceFromJson(Map<String, dynamic> json) =>
+    MovisensDevice(
+      roleName: json['roleName'] as String?,
+      supportedDataTypes: (json['supportedDataTypes'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+    )
+      ..$type = json[r'$type'] as String?
+      ..isMasterDevice = json['isMasterDevice'] as bool?
+      ..samplingConfiguration =
+          (json['samplingConfiguration'] as Map<String, dynamic>).map(
+        (k, e) => MapEntry(
+            k, SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
+      );
 
 Map<String, dynamic> _$MovisensDeviceToJson(MovisensDevice instance) {
   final val = <String, dynamic>{};

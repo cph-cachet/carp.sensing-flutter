@@ -214,13 +214,30 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           ),
         phone);
 
-    // add a random trigger to collect device info at random times
+    // // add a random trigger to collect device info at random times
+    // protocol.addTriggeredTask(
+    //     RandomRecurrentTrigger(
+    //       startTime: Time(hour: 22, minute: 00),
+    //       endTime: Time(hour: 22, minute: 30),
+    //       minNumberOfTriggers: 2,
+    //       maxNumberOfTriggers: 8,
+    //     ),
+    //     AutomaticTask()
+    //       ..measures = SamplingPackageRegistry().debug().getMeasureList(
+    //         types: [
+    //           DeviceSamplingPackage.DEVICE,
+    //         ],
+    //       ),
+    //     phone);
+
+    // add a ConditionalPeriodicTrigger to chech periodically
     protocol.addTriggeredTask(
-        RandomRecurrentTrigger(
-          startTime: Time(hour: 22, minute: 00),
-          endTime: Time(hour: 22, minute: 30),
-          minNumberOfTriggers: 2,
-          maxNumberOfTriggers: 8,
+        ConditionalPeriodicTrigger(
+          period: Duration(seconds: 10),
+          resumeCondition: () {
+            return ('jakob'.length == 5);
+          },
+          pauseCondition: () => true,
         ),
         AutomaticTask()
           ..measures = SamplingPackageRegistry().debug().getMeasureList(

@@ -101,7 +101,7 @@ class PeriodicTrigger extends Trigger {
 
   PeriodicTrigger({
     required this.period,
-    this.duration = const Duration(seconds: 1),
+    required this.duration,
   }) : super();
 
   Function get fromJsonFunction => _$PeriodicTriggerFromJson;
@@ -191,8 +191,10 @@ class Time extends Serializable {
       '${_twoDigits(hour)}:${_twoDigits(minute)}:${_twoDigits(second)}';
 }
 
-/// A trigger that resume/pause sampling based on a recurrent scheduled date and time.
-/// Stops / pause after the specified [duration].
+/// A trigger that resume sampling based on a recurrent scheduled date and time.
+/// Pause after the specified [duration]. If [duration] is not specified it
+/// defaults to 1 second. Useful for triggering one-time samplings, like collecting
+/// location of triggering a survey.
 ///
 /// Supports daily, weekly and monthly recurrences. Yearly recurrence is not
 /// supported, since data sampling is not intended to run on such long time scales.
@@ -322,8 +324,11 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
     this.dayOfMonth,
     this.remember = false,
     this.triggerId,
-    Duration duration = const Duration(seconds: 10),
-  }) : super(period: const Duration(seconds: 1), duration: duration) {
+    Duration? duration,
+  }) : super(
+          period: const Duration(seconds: 1),
+          duration: duration ?? const Duration(seconds: 1),
+        ) {
     assert(separationCount >= 0, 'Separation count must be zero or positive.');
     if (type == RecurrentType.weekly) {
       assert(dayOfWeek != null,
@@ -422,7 +427,7 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
       'RecurrentScheduledTrigger - type: $type, time: $time, separationCount: $separationCount, dayOfWeek: $dayOfWeek, firstOccurrence: $firstOccurrence, period; $period';
 }
 
-/// A trigger that resume and pause sampling based on a cron job specification.
+/// A trigger that resume sampling based on a cron job specification.
 ///
 /// Bases on the [`cron`](https://pub.dev/packages/cron) package.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
@@ -431,7 +436,7 @@ class CronScheduledTrigger extends Trigger {
   String cronExpression;
 
   /// The duration (until stopped) of the the sampling.
-  /// If null, the sampling is never stopped (i.e., runs forever).
+  /// Defaults to 1 second, mostly useful for one-time sampling.
   late Duration duration;
 
   /// Create a cron scheduled trigger based on specifying:
@@ -447,7 +452,7 @@ class CronScheduledTrigger extends Trigger {
     int? day,
     int? month,
     int? weekday,
-    Duration duration = const Duration(seconds: 1),
+    Duration? duration,
   }) {
     assert(minute == null || (minute >= 0 && minute <= 59),
         'minute must be in the range of [0-59] or null (=match all).');
@@ -460,8 +465,9 @@ class CronScheduledTrigger extends Trigger {
     assert(weekday == null || (weekday >= 0 && weekday <= 6),
         'weekday must be in the range of [0-6] or null (=match all).');
     return CronScheduledTrigger._(
-        cronExpression: _cronToString(minute, hour, day, month, weekday),
-        duration: duration);
+      cronExpression: _cronToString(minute, hour, day, month, weekday),
+      duration: duration ?? const Duration(seconds: 1),
+    );
   }
 
   /// Create a trigger based on a cron-formatted string expression.
@@ -478,10 +484,12 @@ class CronScheduledTrigger extends Trigger {
   /// See e.g. [crontab guru](https://crontab.guru/) for help in formatting cron jobs.
   factory CronScheduledTrigger.parse({
     required String cronExpression,
-    Duration duration = const Duration(seconds: 1),
+    Duration? duration,
   }) =>
       CronScheduledTrigger._(
-          cronExpression: cronExpression, duration: duration);
+        cronExpression: cronExpression,
+        duration: duration ?? const Duration(seconds: 1),
+      );
 
   CronScheduledTrigger._({
     required this.cronExpression,
@@ -621,6 +629,52 @@ class ConditionalSamplingEventTrigger extends Trigger {
       _$ConditionalSamplingEventTriggerToJson(this);
 }
 
+/// Evaluates if a [ConditionalPeriodicTrigger] should resume or pause.
+/// Returns [true] if resume or pause should happen, [false] otherwise.
+typedef ConditionalEvaluator = bool Function();
+
+/// A trigger that checks if application-specific resume and pause conditions
+/// are meet.
+///
+/// Note that the [resumeCondition] and [pauseCondition] are
+/// [ConditionalEvaluator] function which cannot be serialized to/from JSON.
+/// In contrast to other [Trigger]s, this trigger cannot be de/serialized
+/// from/to JSON.
+/// This implies that it can not be retrieved as part of a [StudyProtocol] from a
+/// [DeploymentService] since it relies on specifying a Dart-specific function as
+/// the [ConditionalEvaluator] methods. Hence, this trigger is mostly
+/// useful when creating a [StudyProtocol] directly in the app using Dart code.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class ConditionalPeriodicTrigger extends Trigger {
+  /// The period of when to check the [resumeCondition] and [pauseCondition].
+  Duration period;
+
+  /// The [ConditionalEventEvaluator] function evaluating if the event
+  /// condition is meet for resuming this trigger
+  @JsonKey(ignore: true)
+  ConditionalEvaluator? resumeCondition;
+
+  /// The [ConditionalEventEvaluator] function evaluating if the event
+  /// condition is meet for pausing this trigger.
+  ///
+  /// If [pauseCondition] is not specified (`null`), sampling is never paused
+  /// and hence runs forever (unless paused manually).
+  @JsonKey(ignore: true)
+  ConditionalEvaluator? pauseCondition;
+
+  /// Create a [ConditionalSamplingEventTrigger].
+  ConditionalPeriodicTrigger({
+    required this.period,
+    this.resumeCondition,
+    this.pauseCondition,
+  }) : super();
+
+  Function get fromJsonFunction => _$ConditionalPeriodicTriggerFromJson;
+  factory ConditionalPeriodicTrigger.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as ConditionalPeriodicTrigger;
+  Map<String, dynamic> toJson() => _$ConditionalPeriodicTriggerToJson(this);
+}
+
 /// A trigger that triggers a random number of times within a defined
 /// period of time in a day.
 ///
@@ -642,7 +696,7 @@ class RandomRecurrentTrigger extends Trigger {
   int maxNumberOfTriggers;
 
   /// The duration (until paused) of the the sampling.
-  Duration duration;
+  late Duration duration;
 
   /// Create a [RandomRecurrentTrigger].
   ///
@@ -655,10 +709,11 @@ class RandomRecurrentTrigger extends Trigger {
     this.maxNumberOfTriggers = 1,
     required this.startTime,
     required this.endTime,
-    this.duration = const Duration(seconds: 2),
+    Duration? duration,
   }) : super() {
     assert(startTime.isBefore(endTime),
         'startTime must be before endTime with a 24 hour period.');
+    this.duration = duration ?? const Duration(seconds: 1);
   }
 
   Function get fromJsonFunction => _$RandomRecurrentTriggerFromJson;
