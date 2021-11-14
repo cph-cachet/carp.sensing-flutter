@@ -55,7 +55,6 @@ class NotificationController {
     android: const notifications.AndroidNotificationDetails(
       'id',
       'name',
-      'description',
       importance: notifications.Importance.max,
     ),
     iOS: const notifications.IOSNotificationDetails(),

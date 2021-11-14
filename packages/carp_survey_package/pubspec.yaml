@@ -14,7 +14,7 @@ dependencies:
   carp_mobile_sensing: ^0.31.0
   openmhealth_schemas: ^0.2.1
   research_package: ^0.6.6
-  permission_handler: '>=8.1.0 <8.2.0'
+  # permission_handler: '>=8.1.0 <8.2.0'
   json_annotation: ^4.0.1
 
 # Overriding carp libraries to use the local copy

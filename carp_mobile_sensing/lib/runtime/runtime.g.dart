@@ -6,13 +6,13 @@ part of runtime;
 // JsonSerializableGenerator
 // **************************************************************************
 
-UserTaskSnapshotList _$UserTaskSnapshotListFromJson(Map<String, dynamic> json) {
-  return UserTaskSnapshotList()
-    ..$type = json[r'$type'] as String?
-    ..snapshot = (json['snapshot'] as List<dynamic>)
-        .map((e) => UserTaskSnapshot.fromJson(e as Map<String, dynamic>))
-        .toList();
-}
+UserTaskSnapshotList _$UserTaskSnapshotListFromJson(
+        Map<String, dynamic> json) =>
+    UserTaskSnapshotList()
+      ..$type = json[r'$type'] as String?
+      ..snapshot = (json['snapshot'] as List<dynamic>)
+          .map((e) => UserTaskSnapshot.fromJson(e as Map<String, dynamic>))
+          .toList();
 
 Map<String, dynamic> _$UserTaskSnapshotListToJson(
     UserTaskSnapshotList instance) {
@@ -29,13 +29,12 @@ Map<String, dynamic> _$UserTaskSnapshotListToJson(
   return val;
 }
 
-UserTaskSnapshot _$UserTaskSnapshotFromJson(Map<String, dynamic> json) {
-  return UserTaskSnapshot(
-    AppTask.fromJson(json['task'] as Map<String, dynamic>),
-    _$enumDecode(_$UserTaskStateEnumMap, json['state']),
-    DateTime.parse(json['enqueued'] as String),
-  )..$type = json[r'$type'] as String?;
-}
+UserTaskSnapshot _$UserTaskSnapshotFromJson(Map<String, dynamic> json) =>
+    UserTaskSnapshot(
+      AppTask.fromJson(json['task'] as Map<String, dynamic>),
+      $enumDecode(_$UserTaskStateEnumMap, json['state']),
+      DateTime.parse(json['enqueued'] as String),
+    )..$type = json[r'$type'] as String?;
 
 Map<String, dynamic> _$UserTaskSnapshotToJson(UserTaskSnapshot instance) {
   final val = <String, dynamic>{};
@@ -51,32 +50,6 @@ Map<String, dynamic> _$UserTaskSnapshotToJson(UserTaskSnapshot instance) {
   val['state'] = _$UserTaskStateEnumMap[instance.state];
   val['enqueued'] = instance.enqueued.toIso8601String();
   return val;
-}
-
-K _$enumDecode<K, V>(
-  Map<K, V> enumValues,
-  Object? source, {
-  K? unknownValue,
-}) {
-  if (source == null) {
-    throw ArgumentError(
-      'A value must be provided. Supported values: '
-      '${enumValues.values.join(', ')}',
-    );
-  }
-
-  return enumValues.entries.singleWhere(
-    (e) => e.value == source,
-    orElse: () {
-      if (unknownValue == null) {
-        throw ArgumentError(
-          '`$source` is not one of the supported values: '
-          '${enumValues.values.join(', ')}',
-        );
-      }
-      return MapEntry(unknownValue, enumValues.values.first);
-    },
-  ).key;
 }
 
 const _$UserTaskStateEnumMap = {
