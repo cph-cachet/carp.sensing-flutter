@@ -13,7 +13,7 @@ class MobilityMeasure extends CAMSMeasure with LocationConfiguration {
   double placeRadius;
 
   /// The duration of a stop (minimum).
-  Duration stopDuration;
+  Duration stopDuration = const Duration(minutes: 3);
 
   MobilityMeasure({
     required String type,
@@ -22,14 +22,14 @@ class MobilityMeasure extends CAMSMeasure with LocationConfiguration {
     bool enabled = true,
     GeolocationAccuracy accuracy = GeolocationAccuracy.balanced,
     double distance = 5,
-    Duration interval = const Duration(minutes: 3),
+    Duration? interval,
     String? notificationTitle,
     String? notificationMessage,
     String? notificationDescription,
     this.usePriorContexts = true,
     this.stopRadius = 25,
     this.placeRadius = 50,
-    this.stopDuration = const Duration(minutes: 3),
+    Duration? stopDuration,
   }) : super(
             type: type,
             name: name,
@@ -37,10 +37,11 @@ class MobilityMeasure extends CAMSMeasure with LocationConfiguration {
             enabled: enabled) {
     this.accuracy = accuracy;
     this.distance = distance;
-    this.interval = interval;
+    this.interval = interval ?? const Duration(minutes: 3);
     this.notificationTitle = notificationTitle;
     this.notificationMessage = notificationMessage;
     this.notificationDescription = notificationDescription;
+    this.stopDuration = stopDuration ?? const Duration(minutes: 3);
   }
 
   Function get fromJsonFunction => _$MobilityMeasureFromJson;

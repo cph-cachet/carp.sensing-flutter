@@ -6,19 +6,20 @@ part of health_package;
 // JsonSerializableGenerator
 // **************************************************************************
 
-HealthMeasure _$HealthMeasureFromJson(Map<String, dynamic> json) {
-  return HealthMeasure(
-    type: json['type'] as String,
-    name: json['name'] as String?,
-    description: json['description'] as String?,
-    enabled: json['enabled'] as bool,
-    history: Duration(microseconds: json['history'] as int),
-    healthDataType:
-        _$enumDecode(_$HealthDataTypeEnumMap, json['healthDataType']),
-  )
-    ..$type = json[r'$type'] as String?
-    ..configuration = Map<String, String>.from(json['configuration'] as Map);
-}
+HealthMeasure _$HealthMeasureFromJson(Map<String, dynamic> json) =>
+    HealthMeasure(
+      type: json['type'] as String,
+      name: json['name'] as String?,
+      description: json['description'] as String?,
+      enabled: json['enabled'] as bool? ?? true,
+      history: json['history'] == null
+          ? null
+          : Duration(microseconds: json['history'] as int),
+      healthDataType:
+          $enumDecode(_$HealthDataTypeEnumMap, json['healthDataType']),
+    )
+      ..$type = json[r'$type'] as String?
+      ..configuration = Map<String, String>.from(json['configuration'] as Map);
 
 Map<String, dynamic> _$HealthMeasureToJson(HealthMeasure instance) {
   final val = <String, dynamic>{};
@@ -38,32 +39,6 @@ Map<String, dynamic> _$HealthMeasureToJson(HealthMeasure instance) {
   val['history'] = instance.history.inMicroseconds;
   val['healthDataType'] = _$HealthDataTypeEnumMap[instance.healthDataType];
   return val;
-}
-
-K _$enumDecode<K, V>(
-  Map<K, V> enumValues,
-  Object? source, {
-  K? unknownValue,
-}) {
-  if (source == null) {
-    throw ArgumentError(
-      'A value must be provided. Supported values: '
-      '${enumValues.values.join(', ')}',
-    );
-  }
-
-  return enumValues.entries.singleWhere(
-    (e) => e.value == source,
-    orElse: () {
-      if (unknownValue == null) {
-        throw ArgumentError(
-          '`$source` is not one of the supported values: '
-          '${enumValues.values.join(', ')}',
-        );
-      }
-      return MapEntry(unknownValue, enumValues.values.first);
-    },
-  ).key;
 }
 
 const _$HealthDataTypeEnumMap = {
@@ -93,28 +68,28 @@ const _$HealthDataTypeEnumMap = {
   HealthDataType.SLEEP_IN_BED: 'SLEEP_IN_BED',
   HealthDataType.SLEEP_ASLEEP: 'SLEEP_ASLEEP',
   HealthDataType.SLEEP_AWAKE: 'SLEEP_AWAKE',
+  HealthDataType.EXERCISE_TIME: 'EXERCISE_TIME',
+  HealthDataType.WORKOUT: 'WORKOUT',
   HealthDataType.HIGH_HEART_RATE_EVENT: 'HIGH_HEART_RATE_EVENT',
   HealthDataType.LOW_HEART_RATE_EVENT: 'LOW_HEART_RATE_EVENT',
   HealthDataType.IRREGULAR_HEART_RATE_EVENT: 'IRREGULAR_HEART_RATE_EVENT',
   HealthDataType.ELECTRODERMAL_ACTIVITY: 'ELECTRODERMAL_ACTIVITY',
 };
 
-HealthDatum _$HealthDatumFromJson(Map<String, dynamic> json) {
-  return HealthDatum(
-    json['value'] as num,
-    json['unit'] as String,
-    json['data_type'] as String,
-    DateTime.parse(json['date_from'] as String),
-    DateTime.parse(json['date_to'] as String),
-    json['platform'] as String,
-    json['device_id'] as String,
-    json['uuid'] as String,
-  )
-    ..id = json['id'] as String?
-    ..timestamp = json['timestamp'] == null
-        ? null
-        : DateTime.parse(json['timestamp'] as String);
-}
+HealthDatum _$HealthDatumFromJson(Map<String, dynamic> json) => HealthDatum(
+      json['value'] as num,
+      json['unit'] as String,
+      json['data_type'] as String,
+      DateTime.parse(json['date_from'] as String),
+      DateTime.parse(json['date_to'] as String),
+      json['platform'] as String,
+      json['device_id'] as String,
+      json['uuid'] as String,
+    )
+      ..id = json['id'] as String?
+      ..timestamp = json['timestamp'] == null
+          ? null
+          : DateTime.parse(json['timestamp'] as String);
 
 Map<String, dynamic> _$HealthDatumToJson(HealthDatum instance) {
   final val = <String, dynamic>{};

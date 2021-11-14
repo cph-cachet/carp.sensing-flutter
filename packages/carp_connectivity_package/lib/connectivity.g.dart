@@ -6,14 +6,13 @@ part of connectivity;
 // JsonSerializableGenerator
 // **************************************************************************
 
-ConnectivityDatum _$ConnectivityDatumFromJson(Map<String, dynamic> json) {
-  return ConnectivityDatum()
-    ..id = json['id'] as String?
-    ..timestamp = json['timestamp'] == null
-        ? null
-        : DateTime.parse(json['timestamp'] as String)
-    ..connectivityStatus = json['connectivity_status'] as String;
-}
+ConnectivityDatum _$ConnectivityDatumFromJson(Map<String, dynamic> json) =>
+    ConnectivityDatum()
+      ..id = json['id'] as String?
+      ..timestamp = json['timestamp'] == null
+          ? null
+          : DateTime.parse(json['timestamp'] as String)
+      ..connectivityStatus = json['connectivity_status'] as String;
 
 Map<String, dynamic> _$ConnectivityDatumToJson(ConnectivityDatum instance) {
   final val = <String, dynamic>{};
@@ -30,16 +29,15 @@ Map<String, dynamic> _$ConnectivityDatumToJson(ConnectivityDatum instance) {
   return val;
 }
 
-BluetoothDatum _$BluetoothDatumFromJson(Map<String, dynamic> json) {
-  return BluetoothDatum()
-    ..id = json['id'] as String?
-    ..timestamp = json['timestamp'] == null
-        ? null
-        : DateTime.parse(json['timestamp'] as String)
-    ..scanResult = (json['scan_result'] as List<dynamic>)
-        .map((e) => BluetoothDevice.fromJson(e as Map<String, dynamic>))
-        .toList();
-}
+BluetoothDatum _$BluetoothDatumFromJson(Map<String, dynamic> json) =>
+    BluetoothDatum()
+      ..id = json['id'] as String?
+      ..timestamp = json['timestamp'] == null
+          ? null
+          : DateTime.parse(json['timestamp'] as String)
+      ..scanResult = (json['scan_result'] as List<dynamic>)
+          .map((e) => BluetoothDevice.fromJson(e as Map<String, dynamic>))
+          .toList();
 
 Map<String, dynamic> _$BluetoothDatumToJson(BluetoothDatum instance) {
   final val = <String, dynamic>{};
@@ -56,17 +54,16 @@ Map<String, dynamic> _$BluetoothDatumToJson(BluetoothDatum instance) {
   return val;
 }
 
-BluetoothDevice _$BluetoothDeviceFromJson(Map<String, dynamic> json) {
-  return BluetoothDevice(
-    advertisementName: json['advertisement_name'] as String,
-    bluetoothDeviceId: json['bluetooth_device_id'] as String,
-    bluetoothDeviceName: json['bluetooth_device_name'] as String,
-    bluetoothDeviceType: json['bluetooth_device_type'] as String,
-    connectable: json['connectable'] as bool,
-    rssi: json['rssi'] as int,
-    txPowerLevel: json['tx_power_level'] as int?,
-  );
-}
+BluetoothDevice _$BluetoothDeviceFromJson(Map<String, dynamic> json) =>
+    BluetoothDevice(
+      advertisementName: json['advertisement_name'] as String,
+      bluetoothDeviceId: json['bluetooth_device_id'] as String,
+      bluetoothDeviceName: json['bluetooth_device_name'] as String,
+      bluetoothDeviceType: json['bluetooth_device_type'] as String,
+      connectable: json['connectable'] as bool,
+      rssi: json['rssi'] as int,
+      txPowerLevel: json['tx_power_level'] as int?,
+    );
 
 Map<String, dynamic> _$BluetoothDeviceToJson(BluetoothDevice instance) {
   final val = <String, dynamic>{
@@ -88,17 +85,15 @@ Map<String, dynamic> _$BluetoothDeviceToJson(BluetoothDevice instance) {
   return val;
 }
 
-WifiDatum _$WifiDatumFromJson(Map<String, dynamic> json) {
-  return WifiDatum(
-    ssid: json['ssid'] as String?,
-    bssid: json['bssid'] as String?,
-    ip: json['ip'] as String?,
-  )
-    ..id = json['id'] as String?
-    ..timestamp = json['timestamp'] == null
-        ? null
-        : DateTime.parse(json['timestamp'] as String);
-}
+WifiDatum _$WifiDatumFromJson(Map<String, dynamic> json) => WifiDatum(
+      ssid: json['ssid'] as String?,
+      bssid: json['bssid'] as String?,
+      ip: json['ip'] as String?,
+    )
+      ..id = json['id'] as String?
+      ..timestamp = json['timestamp'] == null
+          ? null
+          : DateTime.parse(json['timestamp'] as String);
 
 Map<String, dynamic> _$WifiDatumToJson(WifiDatum instance) {
   final val = <String, dynamic>{};

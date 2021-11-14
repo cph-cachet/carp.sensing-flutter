@@ -12,24 +12,27 @@ class CalendarMeasure extends CAMSMeasure {
   static const int DEFAULT_NUMBER_OF_DAYS = 1;
 
   /// The time duration back in time to collect calendar events.
-  Duration past;
+  late Duration past;
 
   /// The time duration ahead in time to collect calendar events.
-  Duration future;
+  late Duration future;
 
   CalendarMeasure({
     required String type,
     String? name,
     String? description,
     enabled = true,
-    this.past = const Duration(days: DEFAULT_NUMBER_OF_DAYS),
-    this.future = const Duration(days: DEFAULT_NUMBER_OF_DAYS),
+    Duration? past,
+    Duration? future,
   }) : super(
           type: type,
           enabled: enabled,
           name: name,
           description: description,
-        );
+        ) {
+    this.past = past ?? const Duration(days: DEFAULT_NUMBER_OF_DAYS);
+    this.future = future ?? const Duration(days: DEFAULT_NUMBER_OF_DAYS);
+  }
 
   Function get fromJsonFunction => _$CalendarMeasureFromJson;
   factory CalendarMeasure.fromJson(Map<String, dynamic> json) =>

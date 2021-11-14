@@ -1,7 +1,7 @@
 # For information on the generic Dart part of this file, see https://dart.dev/tools/pub/pubspec
 name: carp_survey_package
 description: CARP survey sampling package. Samples survey data from the Flutter Research Package.
-version: 0.31.1
+version: 0.31.2
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/packages/carp_survey_package
 
 environment:
@@ -10,9 +10,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  carp_core: ^0.31.0
   carp_mobile_sensing: ^0.31.0
   openmhealth_schemas: ^0.2.1
   research_package: ^0.6.6
+  json_annotation: ^4.3.0
+  permission_handler: '>=8.1.0 <8.2.0'
+
 
 # Overriding carp libraries to use the local copy
 # Remove this before release of package
@@ -26,9 +30,11 @@ dependency_overrides:
 #  openmhealth_schemas:
 #    path: ../../../openmhealth_schemas/
 
-
 dev_dependencies:
-  test: 
+  pedantic: any        # For pedantic Dart linter
+  build_runner: any
+  json_serializable: any
+  test: any
 
 # The following section is specific to Flutter.
 flutter:

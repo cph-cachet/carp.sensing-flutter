@@ -35,7 +35,7 @@ abstract class LocationConfiguration {
   double distance = 0;
 
   /// The interval between location updates.
-  Duration interval = const Duration(seconds: 10);
+  Duration interval = const Duration(minutes: 1);
 
   /// The title of the notification to be shown to the user when
   /// location tracking takes place in the background.

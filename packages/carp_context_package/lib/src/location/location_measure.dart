@@ -21,7 +21,7 @@ class LocationMeasure extends CAMSMeasure with LocationConfiguration {
     bool enabled = true,
     GeolocationAccuracy accuracy = GeolocationAccuracy.balanced,
     double distance = 0,
-    Duration interval = const Duration(seconds: 10),
+    Duration? interval,
     String? notificationTitle,
     String? notificationMessage,
     String? notificationDescription,
@@ -33,7 +33,7 @@ class LocationMeasure extends CAMSMeasure with LocationConfiguration {
         ) {
     this.accuracy = accuracy;
     this.distance = distance;
-    this.interval = interval;
+    this.interval = interval ?? const Duration(minutes: 1);
     this.notificationTitle = notificationTitle;
     this.notificationMessage = notificationMessage;
     this.notificationDescription = notificationDescription;

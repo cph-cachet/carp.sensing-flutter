@@ -78,10 +78,10 @@ class CustomProtocolDevice extends MasterDeviceDescriptor {
   /// Create a new [CustomProtocolDevice] device descriptor.
   /// If [roleName] is not specified, then the  [DEFAULT_ROLENAME] is used.
   CustomProtocolDevice({
-    String roleName = DEFAULT_ROLENAME,
+    String? roleName,
     List<String>? supportedDataTypes,
   }) : super(
-          roleName: roleName,
+          roleName: roleName ?? DEFAULT_ROLENAME,
           supportedDataTypes: supportedDataTypes,
         );
 
@@ -105,10 +105,10 @@ class Smartphone extends MasterDeviceDescriptor {
   /// Create a new Smartphone device descriptor.
   /// If [roleName] is not specified, then the [DEFAULT_ROLENAME] is used.
   Smartphone({
-    String roleName = DEFAULT_ROLENAME,
+    String? roleName,
     List<String>? supportedDataTypes,
   }) : super(
-          roleName: roleName,
+          roleName: roleName ?? DEFAULT_ROLENAME,
           supportedDataTypes: supportedDataTypes,
         );
 

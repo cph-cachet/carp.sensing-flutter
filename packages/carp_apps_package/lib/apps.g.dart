@@ -6,16 +6,14 @@ part of carp_apps_package;
 // JsonSerializableGenerator
 // **************************************************************************
 
-AppsDatum _$AppsDatumFromJson(Map<String, dynamic> json) {
-  return AppsDatum()
-    ..id = json['id'] as String?
-    ..timestamp = json['timestamp'] == null
-        ? null
-        : DateTime.parse(json['timestamp'] as String)
-    ..installedApps = (json['installed_apps'] as List<dynamic>)
-        .map((e) => e as String)
-        .toList();
-}
+AppsDatum _$AppsDatumFromJson(Map<String, dynamic> json) => AppsDatum()
+  ..id = json['id'] as String?
+  ..timestamp = json['timestamp'] == null
+      ? null
+      : DateTime.parse(json['timestamp'] as String)
+  ..installedApps = (json['installed_apps'] as List<dynamic>)
+      .map((e) => e as String)
+      .toList();
 
 Map<String, dynamic> _$AppsDatumToJson(AppsDatum instance) {
   final val = <String, dynamic>{};
@@ -32,17 +30,16 @@ Map<String, dynamic> _$AppsDatumToJson(AppsDatum instance) {
   return val;
 }
 
-AppUsageDatum _$AppUsageDatumFromJson(Map<String, dynamic> json) {
-  return AppUsageDatum(
-    DateTime.parse(json['start'] as String),
-    DateTime.parse(json['end'] as String),
-  )
-    ..id = json['id'] as String?
-    ..timestamp = json['timestamp'] == null
-        ? null
-        : DateTime.parse(json['timestamp'] as String)
-    ..usage = Map<String, int>.from(json['usage'] as Map);
-}
+AppUsageDatum _$AppUsageDatumFromJson(Map<String, dynamic> json) =>
+    AppUsageDatum(
+      DateTime.parse(json['start'] as String),
+      DateTime.parse(json['end'] as String),
+    )
+      ..id = json['id'] as String?
+      ..timestamp = json['timestamp'] == null
+          ? null
+          : DateTime.parse(json['timestamp'] as String)
+      ..usage = Map<String, int>.from(json['usage'] as Map);
 
 Map<String, dynamic> _$AppUsageDatumToJson(AppUsageDatum instance) {
   final val = <String, dynamic>{};

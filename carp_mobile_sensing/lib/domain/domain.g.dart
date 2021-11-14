@@ -211,8 +211,9 @@ PeriodicMeasure _$PeriodicMeasureFromJson(Map<String, dynamic> json) =>
       description: json['description'] as String?,
       enabled: json['enabled'] as bool? ?? true,
       frequency: Duration(microseconds: json['frequency'] as int),
-      duration: Duration(microseconds: json['duration'] as int) ??
-          const Duration(seconds: 2),
+      duration: json['duration'] == null
+          ? null
+          : Duration(microseconds: json['duration'] as int),
     )
       ..$type = json[r'$type'] as String?
       ..configuration = Map<String, String>.from(json['configuration'] as Map);
@@ -243,8 +244,9 @@ MarkedMeasure _$MarkedMeasureFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String?,
       description: json['description'] as String?,
       enabled: json['enabled'] as bool? ?? true,
-      history: Duration(microseconds: json['history'] as int) ??
-          const Duration(days: 1),
+      history: json['history'] == null
+          ? null
+          : Duration(microseconds: json['history'] as int),
     )
       ..$type = json[r'$type'] as String?
       ..configuration = Map<String, String>.from(json['configuration'] as Map);
@@ -537,8 +539,7 @@ Map<String, dynamic> _$DeploymentDelayedTriggerToJson(
 PeriodicTrigger _$PeriodicTriggerFromJson(Map<String, dynamic> json) =>
     PeriodicTrigger(
       period: Duration(microseconds: json['period'] as int),
-      duration: Duration(microseconds: json['duration'] as int) ??
-          const Duration(seconds: 1),
+      duration: Duration(microseconds: json['duration'] as int),
     )
       ..$type = json[r'$type'] as String?
       ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String?;
@@ -620,8 +621,9 @@ RecurrentScheduledTrigger _$RecurrentScheduledTriggerFromJson(
       dayOfMonth: json['dayOfMonth'] as int?,
       remember: json['remember'] as bool? ?? false,
       triggerId: json['triggerId'] as String?,
-      duration: Duration(microseconds: json['duration'] as int) ??
-          const Duration(seconds: 10),
+      duration: json['duration'] == null
+          ? null
+          : Duration(microseconds: json['duration'] as int),
     )
       ..$type = json[r'$type'] as String?
       ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String?
@@ -663,8 +665,9 @@ const _$RecurrentTypeEnumMap = {
 CronScheduledTrigger _$CronScheduledTriggerFromJson(
         Map<String, dynamic> json) =>
     CronScheduledTrigger(
-      duration: Duration(microseconds: json['duration'] as int) ??
-          const Duration(seconds: 1),
+      duration: json['duration'] == null
+          ? null
+          : Duration(microseconds: json['duration'] as int),
     )
       ..$type = json[r'$type'] as String?
       ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String?
@@ -795,8 +798,9 @@ RandomRecurrentTrigger _$RandomRecurrentTriggerFromJson(
       maxNumberOfTriggers: json['maxNumberOfTriggers'] as int? ?? 1,
       startTime: Time.fromJson(json['startTime'] as Map<String, dynamic>),
       endTime: Time.fromJson(json['endTime'] as Map<String, dynamic>),
-      duration: Duration(microseconds: json['duration'] as int) ??
-          const Duration(seconds: 2),
+      duration: json['duration'] == null
+          ? null
+          : Duration(microseconds: json['duration'] as int),
     )
       ..$type = json[r'$type'] as String?
       ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String?;

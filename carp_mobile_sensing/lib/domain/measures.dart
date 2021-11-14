@@ -80,7 +80,7 @@ class CAMSMeasure extends Measure {
   String toString() => '$runtimeType - type: $type, enabled: $enabled';
 }
 
-/// A [PeriodicMeasure] specify how to collect data on a regular basis.
+/// A measure specifying how to collect data on a regular basis.
 ///
 /// Data collection will be started as specified by the [frequency] for a time
 /// interval specified as the [duration]. Useful for listening in on a
@@ -91,8 +91,8 @@ class PeriodicMeasure extends CAMSMeasure {
   Duration frequency;
   late Duration _storedFrequency;
 
-  /// The sampling duration.
-  Duration duration;
+  /// The sampling duration. Default is 1 second, if not specified.
+  late Duration duration;
   late Duration _storedDuration;
 
   /// Create a [PeriodicMeasure].
@@ -102,14 +102,15 @@ class PeriodicMeasure extends CAMSMeasure {
     String? description,
     bool enabled = true,
     required this.frequency,
-    this.duration = const Duration(seconds: 2),
+    Duration? duration,
   }) : super(
             type: type,
             name: name,
             description: description,
             enabled: enabled) {
     _storedFrequency = frequency;
-    _storedDuration = duration;
+    this.duration = duration ?? const Duration(seconds: 1);
+    _storedDuration = this.duration;
   }
 
   Function get fromJsonFunction => _$PeriodicMeasureFromJson;
@@ -160,20 +161,22 @@ class MarkedMeasure extends CAMSMeasure {
 
   /// If there is no persistent mark, how long time back in history should
   /// this measure be collected? Default is one day back.
-  Duration history;
+  late Duration history;
 
   MarkedMeasure({
     required String type,
     String? name,
     String? description,
     bool enabled = true,
-    this.history = const Duration(days: 1),
+    Duration? history,
   }) : super(
           type: type,
           name: name,
           description: description,
           enabled: enabled,
-        );
+        ) {
+    this.history = history ?? const Duration(days: 1);
+  }
 
   Function get fromJsonFunction => _$MarkedMeasureFromJson;
   Map<String, dynamic> toJson() => _$MarkedMeasureToJson(this);

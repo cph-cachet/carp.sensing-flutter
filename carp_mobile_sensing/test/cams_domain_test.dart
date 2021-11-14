@@ -111,7 +111,9 @@ void main() {
 
     masterProtocol.addTriggeredTask(
         PeriodicTrigger(
-            period: const Duration(minutes: 1)), // collect every min.
+          period: const Duration(minutes: 1),
+          duration: Duration(seconds: 1),
+        ), // collect every min.
         AutomaticTask()
           ..measures = SamplingPackageRegistry().common().getMeasureList(
               types: [
@@ -124,7 +126,10 @@ void main() {
 
     // collect every day at 13:30.
     t1 = RecurrentScheduledTrigger(
-        type: RecurrentType.daily, time: Time(hour: 21, minute: 30));
+      type: RecurrentType.daily,
+      time: Time(hour: 21, minute: 30),
+      duration: Duration(seconds: 1),
+    );
     print('$t1');
     masterProtocol.addTriggeredTask(
         t1,
@@ -136,9 +141,11 @@ void main() {
 
     // collect every other day at 13:30.
     t2 = RecurrentScheduledTrigger(
-        type: RecurrentType.daily,
-        time: Time(hour: 13, minute: 30),
-        separationCount: 1);
+      type: RecurrentType.daily,
+      time: Time(hour: 13, minute: 30),
+      separationCount: 1,
+      duration: Duration(seconds: 1),
+    );
     print('$t2');
     masterProtocol.addTriggeredTask(
         t2,
@@ -152,9 +159,11 @@ void main() {
 
     // collect every wednesday at 12:23.
     t3 = RecurrentScheduledTrigger(
-        type: RecurrentType.weekly,
-        time: Time(hour: 12, minute: 23),
-        dayOfWeek: DateTime.wednesday);
+      type: RecurrentType.weekly,
+      time: Time(hour: 12, minute: 23),
+      dayOfWeek: DateTime.wednesday,
+      duration: Duration(seconds: 1),
+    );
     print('$t3');
     masterProtocol.addTriggeredTask(
         t3,
@@ -168,10 +177,12 @@ void main() {
 
     // collect every 2nd monday at 12:23.
     t4 = RecurrentScheduledTrigger(
-        type: RecurrentType.weekly,
-        time: Time(hour: 12, minute: 23),
-        dayOfWeek: DateTime.monday,
-        separationCount: 1);
+      type: RecurrentType.weekly,
+      time: Time(hour: 12, minute: 23),
+      dayOfWeek: DateTime.monday,
+      separationCount: 1,
+      duration: Duration(seconds: 1),
+    );
     print('$t4');
     masterProtocol.addTriggeredTask(
         t4,
