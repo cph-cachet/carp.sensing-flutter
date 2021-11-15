@@ -1,5 +1,13 @@
+## 0.32.0
+* upgrade to `permission_handler: ^8.3.0`
+* **NOTE**
+   * see the [permission_handler](https://pub.dev/packages/permission_handler) README on how to set up your app - for example:
+   * on Android, in `build.graddle` set `compileSdkVersion 31`
+   * on iOS, add permission to your `Info.plist` file and update the `Podfile`
+
 ## 0.31.4
 * support for a `ConditionalPeriodicTrigger` which preiodically checks resume/pause conditions (originates from [#230](https://github.com/cph-cachet/carp.sensing-flutter/issues/230)).
+* `PeriodicTrigger` now required a sampling `duration`.
 * upgrade of `pubspec` libaries (`flutter_local_notifications`, `cron`, and `json`).
 * re-generation of json serialization 
 * still cannot upgrade `permission_handler` since 8.2.0 gives a graddle compile error?????

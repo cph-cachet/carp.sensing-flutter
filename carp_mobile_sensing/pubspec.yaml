@@ -1,6 +1,6 @@
 name: carp_mobile_sensing
 description: Mobile Sensing Framework for Flutter. A software framework for collecting sensor data from the phone and attached wearable devices via probes. Can be extended.
-version: 0.31.4
+version: 0.32.0
 homepage: https://github.com/cph-cachet/carp.sensing-flutter
 
 # For information on the generic Dart part of this file, see the
@@ -22,7 +22,7 @@ dependencies:
   async: ^2.7.0
   path_provider: ^2.0.2
   archive: ^3.1.2
-  permission_handler: '>=8.1.0 <8.2.0'  # version 8.2.0 gives a graddle compile error?????
+  permission_handler: ^8.3.0  
   permission_handler_platform_interface: ^3.7.0
   shared_preferences: ^2.0.6
   package_info_plus: ^1.0.0
@@ -54,3 +54,13 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
+
+
+
+# Useful pubspec commands:
+#
+# dart pub outdated --no-dev-dependencies --up-to-date --no-dependency-overrides
+# flutter pub run build_runner build --delete-conflicting-outputs
+# flutter pub cache repair
+# ./gradlew clean
+# 

@@ -1,3 +1,6 @@
+## 2.2.0
+* update to `carp_mobile_sensing` v. 0.32.0
+
 ## 2.1.2
 * small update to dependencies in pubspec
 

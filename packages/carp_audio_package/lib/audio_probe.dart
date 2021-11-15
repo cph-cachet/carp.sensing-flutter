@@ -40,8 +40,13 @@ class AudioProbe extends DatumProbe {
 
   @override
   Future onResume() async {
-    await _startAudioRecording();
-    debug('Audio recording resumed - sound file : $_soundFileName');
+    try {
+      await _startAudioRecording();
+      debug('Audio recording resumed - sound file : $_soundFileName');
+    } catch (error) {
+      warning('An error occured trying to start audio recording - $error');
+      controller.addError(error);
+    }
   }
 
   @override
@@ -54,20 +59,20 @@ class AudioProbe extends DatumProbe {
         if (data != null) controller.add(data);
         debug('Audio recording paused - sound file : $_soundFileName');
       } catch (error) {
+        warning('An error occured trying to stop audio recording - $error');
         controller.addError(error);
       }
     }
   }
 
   @override
-  Future onStop() async {
+  Future<void> onStop() async {
     if (_isRecording) await onPause();
     await recorder.stopRecorder();
-    // RecordMp3.instance.stop();
     super.onStop();
   }
 
-  Future<String> _startAudioRecording() async {
+  Future<void> _startAudioRecording() async {
     if (_isRecording) {
       warning(
           'Trying to start audio recording, but recording is already running. '
@@ -89,21 +94,16 @@ class AudioProbe extends DatumProbe {
         toFile: _soundFileName,
         codec: Codec.aacMP4,
       );
-      // RecordMp3.instance.start(
-      //     soundFileName,
-      //     (error) => controller.addError(
-      //         'Error starting audio recording in $runtimeType -  $error'));
     }
-    return _soundFileName!;
   }
 
   Future _stopAudioRecording() async {
     _endRecordingTime = DateTime.now();
     _isRecording = false;
+
     // stop the recording
     await recorder.stopRecorder();
     recorder.closeAudioSession();
-    // RecordMp3.instance.stop();
   }
 
   @override
