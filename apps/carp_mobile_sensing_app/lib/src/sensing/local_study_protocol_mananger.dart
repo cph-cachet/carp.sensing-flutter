@@ -96,7 +96,10 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //     phone);
 
     protocol.addTriggeredTask(
-        PeriodicTrigger(period: Duration(minutes: 1)),
+        PeriodicTrigger(
+          period: Duration(minutes: 1),
+          duration: const Duration(seconds: 2),
+        ),
         AutomaticTask()
           ..measures = SamplingPackageRegistry().debug().getMeasureList(
             types: [
@@ -106,7 +109,10 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         phone);
 
     protocol.addTriggeredTask(
-        PeriodicTrigger(period: Duration(minutes: 2)),
+        PeriodicTrigger(
+          period: Duration(minutes: 2),
+          duration: const Duration(seconds: 2),
+        ),
         AutomaticTask()
           ..measures = SamplingPackageRegistry().debug().getMeasureList(
             types: [

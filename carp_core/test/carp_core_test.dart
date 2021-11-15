@@ -95,6 +95,7 @@ void main() {
     );
 
     print(dataPoint);
+    print(jsonEncode(dataPoint));
     print(toJsonString(dataPoint));
     assert(dataPoint.carpBody != null);
   });
