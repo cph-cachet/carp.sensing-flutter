@@ -63,7 +63,7 @@ class CarpDataEndPoint extends FileDataEndPoint {
 
   /// When uploading to the CARP using the [CarpUploadMethod.DOCUMENT] method,
   /// [collection] hold the name of the collection to store json objects.
-  String collection;
+  late String collection;
 
   /// When uploading to CARP using file in the [CarpUploadMethod.BATCH_DATA_POINT]
   /// or [CarpUploadMethod.FILE] methods, specifies if the local file on the phone
@@ -81,7 +81,7 @@ class CarpDataEndPoint extends FileDataEndPoint {
     this.clientSecret,
     this.email,
     this.password,
-    this.collection = DEFAULT_COLLECTION,
+    String? collection,
     this.deleteWhenUploaded = true,
     int bufferSize = 500 * 1000,
     bool zip = true,
@@ -93,6 +93,7 @@ class CarpDataEndPoint extends FileDataEndPoint {
             zip: zip,
             encrypt: encrypt,
             publicKey: publicKey) {
+    this.collection = collection ?? DEFAULT_COLLECTION;
     // the CARP server cannot handle zipped or encrypted files (yet)
     if (this.uploadMethod == CarpUploadMethod.BATCH_DATA_POINT) {
       this.zip = false;

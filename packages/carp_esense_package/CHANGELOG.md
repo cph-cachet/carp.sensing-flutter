@@ -1,3 +1,6 @@
+## 0.32.0
+* update to `carp_mobile_sensing` v. 0.32.0
+
 ## 0.31.1
 * small update to dependencies in pubspec
 * re-generation of json serialization 

@@ -6,15 +6,13 @@ part of carp_auth;
 // JsonSerializableGenerator
 // **************************************************************************
 
-OAuthToken _$OAuthTokenFromJson(Map<String, dynamic> json) {
-  return OAuthToken(
-    json['access_token'] as String,
-    json['refresh_token'] as String,
-    json['token_type'] as String,
-    json['expires_in'] as int,
-    json['scope'] as String,
-  );
-}
+OAuthToken _$OAuthTokenFromJson(Map<String, dynamic> json) => OAuthToken(
+      json['access_token'] as String,
+      json['refresh_token'] as String,
+      json['token_type'] as String,
+      json['expires_in'] as int,
+      json['scope'] as String,
+    );
 
 Map<String, dynamic> _$OAuthTokenToJson(OAuthToken instance) =>
     <String, dynamic>{
@@ -25,30 +23,28 @@ Map<String, dynamic> _$OAuthTokenToJson(OAuthToken instance) =>
       'expires_in': instance.expiresIn,
     };
 
-CarpUser _$CarpUserFromJson(Map<String, dynamic> json) {
-  return CarpUser(
-    username: json['username'] as String,
-    id: json['id'] as int?,
-    accountId: json['account_id'] as String?,
-    firstName: json['first_name'] as String?,
-    lastName: json['last_name'] as String?,
-    isActivated: json['is_activated'] as bool?,
-    phone: json['phone'] as String?,
-    email: json['email'] as String?,
-    department: json['department'] as String?,
-    organization: json['organization'] as String?,
-  )
-    ..termsAgreed = json['terms_agreed'] == null
-        ? null
-        : DateTime.parse(json['terms_agreed'] as String)
-    ..created = json['created'] == null
-        ? null
-        : DateTime.parse(json['created'] as String)
-    ..role = (json['role'] as List<dynamic>).map((e) => e as String).toList()
-    ..token = json['token'] == null
-        ? null
-        : OAuthToken.fromJson(json['token'] as Map<String, dynamic>);
-}
+CarpUser _$CarpUserFromJson(Map<String, dynamic> json) => CarpUser(
+      username: json['username'] as String,
+      id: json['id'] as int?,
+      accountId: json['account_id'] as String?,
+      firstName: json['first_name'] as String?,
+      lastName: json['last_name'] as String?,
+      isActivated: json['is_activated'] as bool? ?? true,
+      phone: json['phone'] as String?,
+      email: json['email'] as String?,
+      department: json['department'] as String?,
+      organization: json['organization'] as String?,
+    )
+      ..termsAgreed = json['terms_agreed'] == null
+          ? null
+          : DateTime.parse(json['terms_agreed'] as String)
+      ..created = json['created'] == null
+          ? null
+          : DateTime.parse(json['created'] as String)
+      ..role = (json['role'] as List<dynamic>).map((e) => e as String).toList()
+      ..token = json['token'] == null
+          ? null
+          : OAuthToken.fromJson(json['token'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$CarpUserToJson(CarpUser instance) {
   final val = <String, dynamic>{

@@ -6,26 +6,26 @@ part of carp_backend;
 // JsonSerializableGenerator
 // **************************************************************************
 
-CarpDataEndPoint _$CarpDataEndPointFromJson(Map<String, dynamic> json) {
-  return CarpDataEndPoint(
-    uploadMethod: _$enumDecode(_$CarpUploadMethodEnumMap, json['uploadMethod']),
-    name: json['name'] as String,
-    uri: json['uri'] as String?,
-    clientId: json['clientId'] as String?,
-    clientSecret: json['clientSecret'] as String?,
-    email: json['email'] as String?,
-    password: json['password'] as String?,
-    collection: json['collection'] as String,
-    deleteWhenUploaded: json['deleteWhenUploaded'] as bool,
-    bufferSize: json['bufferSize'] as int,
-    zip: json['zip'] as bool,
-    encrypt: json['encrypt'] as bool,
-    publicKey: json['publicKey'] as String?,
-  )
-    ..$type = json[r'$type'] as String?
-    ..type = json['type'] as String
-    ..dataFormat = json['dataFormat'] as String;
-}
+CarpDataEndPoint _$CarpDataEndPointFromJson(Map<String, dynamic> json) =>
+    CarpDataEndPoint(
+      uploadMethod:
+          $enumDecode(_$CarpUploadMethodEnumMap, json['uploadMethod']),
+      name: json['name'] as String,
+      uri: json['uri'] as String?,
+      clientId: json['clientId'] as String?,
+      clientSecret: json['clientSecret'] as String?,
+      email: json['email'] as String?,
+      password: json['password'] as String?,
+      collection: json['collection'] as String?,
+      deleteWhenUploaded: json['deleteWhenUploaded'] as bool? ?? true,
+      bufferSize: json['bufferSize'] as int? ?? 500 * 1000,
+      zip: json['zip'] as bool? ?? true,
+      encrypt: json['encrypt'] as bool? ?? false,
+      publicKey: json['publicKey'] as String?,
+    )
+      ..$type = json[r'$type'] as String?
+      ..type = json['type'] as String
+      ..dataFormat = json['dataFormat'] as String;
 
 Map<String, dynamic> _$CarpDataEndPointToJson(CarpDataEndPoint instance) {
   final val = <String, dynamic>{};
@@ -53,32 +53,6 @@ Map<String, dynamic> _$CarpDataEndPointToJson(CarpDataEndPoint instance) {
   val['collection'] = instance.collection;
   val['deleteWhenUploaded'] = instance.deleteWhenUploaded;
   return val;
-}
-
-K _$enumDecode<K, V>(
-  Map<K, V> enumValues,
-  Object? source, {
-  K? unknownValue,
-}) {
-  if (source == null) {
-    throw ArgumentError(
-      'A value must be provided. Supported values: '
-      '${enumValues.values.join(', ')}',
-    );
-  }
-
-  return enumValues.entries.singleWhere(
-    (e) => e.value == source,
-    orElse: () {
-      if (unknownValue == null) {
-        throw ArgumentError(
-          '`$source` is not one of the supported values: '
-          '${enumValues.values.join(', ')}',
-        );
-      }
-      return MapEntry(unknownValue, enumValues.values.first);
-    },
-  ).key;
 }
 
 const _$CarpUploadMethodEnumMap = {
