@@ -99,12 +99,15 @@ class AppTaskController {
   UserTask? getUserTask(String id) => _userTaskMap[id];
 
   /// Put [executor] on the [userTaskQueue] for later access by the app.
+  /// Notify the user if [sendNotification] and [notificationsEnabled] is true.
   ///
   /// Returns the [UserTask] added to the [userTaskQueue].
-  /// Notify the user if [notificationsEnabled] is true.
   ///
   /// Returns `null` if not successful.
-  UserTask? enqueue(AppTaskExecutor executor) {
+  UserTask? enqueue(
+    AppTaskExecutor executor, {
+    bool sendNotification = true,
+  }) {
     if (_userTaskFactories[executor.appTask.type] == null) {
       warning(
           'Could not enqueue AppTask. Could not find a factory for creating '
@@ -119,7 +122,7 @@ class AppTaskController {
       _controller.add(userTask);
       info('Enqueued $userTask');
 
-      if (notificationsEnabled) {
+      if (notificationsEnabled && sendNotification) {
         NotificationController().sendNotification(userTask);
       }
 
@@ -207,8 +210,7 @@ class AppTaskController {
     return success;
   }
 
-  /// Restore the queue from a file.
-  /// Returns `true` if successful.
+  /// Restore the queue from a file. Returns `true` if successful.
   Future<bool> restoreQueue() async {
     bool success = true;
     UserTaskSnapshotList? queue;
@@ -224,7 +226,8 @@ class AppTaskController {
       queue.snapshot.forEach((snapshot) {
         AppTaskExecutor executor = AppTaskExecutor(snapshot.task);
         executor.initialize(Measure(type: CAMSDataType.EXECUTOR));
-        UserTask? userTask = enqueue(executor);
+        // enqueue the task (again), but avoid notifications
+        UserTask? userTask = enqueue(executor, sendNotification: false);
         if (userTask != null) {
           userTask.enqueued = snapshot.enqueued;
           userTask.state = snapshot.state;

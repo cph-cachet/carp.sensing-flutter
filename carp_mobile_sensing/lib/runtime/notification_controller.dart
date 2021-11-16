@@ -49,7 +49,7 @@ class NotificationController {
     );
   }
 
-  // the id, name, and description are mandatory, but don't seems to used for anything?
+  // the id and name are mandatory, but don't seems to used for anything?
   final notifications.NotificationDetails _platformChannelSpecifics =
       notifications.NotificationDetails(
     android: const notifications.AndroidNotificationDetails(
