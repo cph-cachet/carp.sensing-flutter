@@ -141,33 +141,6 @@ class CarpService extends CarpBaseService {
     return _currentUser!;
   }
 
-  // /// Authenticate to this CARP service by showing a form for the user to enter
-  // /// his/her username and password.
-  // /// Also allow the user to reset the password.
-  // ///
-  // /// The [context] is required in order to show the login page in the right context.
-  // /// If the [username] is provide, this is shown as default in the form.
-  // ///
-  // /// In contrast to the other authentication methods, this method does **not**
-  // /// throws a [CarpServiceException] if authentication is not successful.
-  // /// Instead it shown a message to the user (in a snackbar).
-  // Future authenticateWithForm(
-  //   BuildContext context, {
-  //   String username,
-  // }) async {
-  //   if (_app == null)
-  //     throw CarpServiceException(
-  //         message:
-  //             "CARP Service not initialized. Call 'CarpService().configure()' first.");
-
-  //   Navigator.push(
-  //       context,
-  //       MaterialPageRoute(
-  //           builder: (_) => CarpAuthenticationForm(
-  //                 username: username,
-  //               )));
-  // }
-
   /// Authenticate to this CARP service by showing a modal dialog form for the
   /// user to enter his/her username and password.
   ///
