@@ -1,3 +1,6 @@
+## 0.32.1
+* notifications are no longer (re-)send when the app task queue is restored across app restart.
+
 ## 0.32.0
 * upgrade to `permission_handler: ^8.3.0`
 * **NOTE**
