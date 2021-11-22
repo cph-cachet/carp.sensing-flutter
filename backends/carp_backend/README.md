@@ -182,6 +182,17 @@ You can now use a CARP Data Endpoint to the study protocol.
   );
 ````` 
 
+## Authentication to CARP
+
+Authentication to CARP only needs to be done once. Hence, if you app is already authenticated to CARP (for example, because the study protocol has been downloaded from CARP), there is **NO** need for specifying the client id/secret and username/password in the `CarpDataEndPoint`. Hence, in this case, you would specify a data enpoint like this:
+
+`````dart
+  CarpDataEndPoint cdep = CarpDataEndPoint(CarpUploadMethod.DATA_POINT,
+      name: 'CARP Staging Server',
+      uri: 'http://staging.carp.cachet.dk:8080',
+    );
+`````
+
 ## Features and bugs
 
 Please file feature requests and bug reports at the [issue tracker][tracker].
