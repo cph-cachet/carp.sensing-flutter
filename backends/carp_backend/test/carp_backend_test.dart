@@ -262,6 +262,43 @@ void main() {
     });
   });
 
+  group("Messages", () {
+    Message message = Message(
+      type: MessageType.article,
+      title: 'The importance of healthy eating',
+      subTitle: '',
+      message: 'A healthy diet is essential for good health and nutrition. '
+          'It protects you against many chronic noncommunicable diseases, such as heart disease, diabetes and cancer. '
+          'Eating a variety of foods and consuming less salt, sugars and saturated and industrially-produced trans-fats, are essential for healthy diet.\n\n'
+          'A healthy diet comprises a combination of different foods. These include:\n\n'
+          ' - Staples like cereals (wheat, barley, rye, maize or rice) or starchy tubers or roots (potato, yam, taro or cassava).\n'
+          ' - Legumes (lentils and beans).\n'
+          ' - Fruit and vegetables.\n'
+          ' - Foods from animal sources (meat, fish, eggs and milk).\n\n'
+          'Here is some useful information, based on WHO recommendations, to follow a healthy diet, and the benefits of doing so.',
+      url: 'https://www.who.int/initiatives/behealthy/healthy-diet',
+    );
+
+    test('- set', () async {
+      await CarpResourceManager().setMessage(message);
+      print('Message uploaded: $message');
+
+      List<Message> messages = await CarpResourceManager().getMessages();
+      expect(messages.length, 1);
+      print(_encode(messages));
+    });
+
+    test('- get', () async {
+      List<Message> messages = await CarpResourceManager().getMessages();
+      print(_encode(messages));
+    });
+
+    test('- delete', () async {
+      await CarpResourceManager().deleteMessage(message.id);
+      print('deleted...');
+    });
+  });
+
   group("Documents & Collections", () {
     test('- get by id', () async {
       DocumentSnapshot? doc = await CarpService().documentById(167).get();

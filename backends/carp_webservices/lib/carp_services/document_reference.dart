@@ -67,6 +67,7 @@ class DocumentReference extends CarpReference {
       throw CarpServiceException(
         httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
         message: responseJson["message"],
+        path: responseJson["path"],
       );
     } else {
       return updateData(data);
@@ -96,6 +97,7 @@ class DocumentReference extends CarpReference {
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
       message: responseJson["message"],
+      path: responseJson["path"],
     );
   }
 
@@ -124,6 +126,7 @@ class DocumentReference extends CarpReference {
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
       message: responseJson["message"],
+      path: responseJson["path"],
     );
   }
 
@@ -162,6 +165,7 @@ class DocumentReference extends CarpReference {
       throw CarpServiceException(
         httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
         message: responseJson["message"],
+        path: responseJson["path"],
       );
     }
   }
