@@ -10,7 +10,8 @@ part of carp_backend;
 /// Implementation of [InformedConsentManager], [LocalizationManager], and
 /// [MessageManager] in the CARP service.
 ///
-/// Supports local caching of these resources locally on the phone.
+/// Also supports local caching of these resources locally on the phone
+/// (except for messages, which is assumed to be handled by the app).
 class CarpResourceManager
     implements InformedConsentManager, LocalizationManager, MessageManager {
   /// The base path for resources - both on the CARP server and locally on the phone
@@ -288,10 +289,9 @@ class CarpResourceManager
 
   int? _messagesCollectionId;
 
-  /// The path for the [locale] at the CARP server
+  /// The query for use for getting the message from the CARP server
   String _getMessagesQuery(DateTime start, DateTime end) =>
-      'query=collection_id=$_messagesCollectionId';
-  // 'query=collection_id=$_messagesCollectionId;updated_at>${start.toUtc()};updated_at<${end.toUtc()}';
+      'query=collection_id=$_messagesCollectionId;updated_at>${start.toUtc()};updated_at<${end.toUtc()}';
 
   @override
   Future<Message?> getMessage(String messageId) async {

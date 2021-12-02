@@ -32,13 +32,6 @@ void main() {
     SamplingPackageRegistry().register(HealthSamplingPackage());
   });
 
-  group("commands", () {
-    test('help', () async => HelpCommand().execute());
-    test('dryrun', () async => DryRunCommand().execute());
-    test('consent', () async => ConsentCommand().execute());
-    test('protocol', () async => CreateStudyProtocolCommand().execute());
-  });
-
   group("parsing resources", () {
     test('consent', () async {
       String consentPath = 'carp/resources/consent.json';

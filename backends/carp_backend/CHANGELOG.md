@@ -1,3 +1,6 @@
+## 0.32.1
+* support for messages in CARP
+
 ## 0.32.0+1
 * update to `carp_mobile_sensing` v. 0.32.0
 * update to README file

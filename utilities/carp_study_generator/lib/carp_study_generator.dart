@@ -30,3 +30,4 @@ part 'cmd/update.dart';
 part 'cmd/consent.dart';
 part 'cmd/localization.dart';
 part 'cmd/dryrun.dart';
+part 'cmd/messages.dart';

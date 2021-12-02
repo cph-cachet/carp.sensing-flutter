@@ -86,6 +86,8 @@ abstract class MessageManager {
   });
 
   /// Set a message.
+  ///
+  /// Messages are stored on CARP using the [Message.id] as the document name.
   Future<void> setMessage(Message message);
 
   /// Delete a message.
