@@ -69,6 +69,11 @@ abstract class MessageManager {
   /// Initialize the [MessageManager].
   Future<void> initialize() async {}
 
+  /// Get a message based on its id.
+  ///
+  /// Returns null if no message is found.
+  Future<Message?> getMessage(String messageId);
+
   /// Get a list of messages in a given time period from [start] to [end]
   /// with a maximum of [count] messages.
   ///
@@ -85,4 +90,7 @@ abstract class MessageManager {
 
   /// Delete a message.
   Future<void> deleteMessage(String messageId);
+
+  /// Deletes all messages.
+  Future<void> deleteAllMessages();
 }

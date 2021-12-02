@@ -294,6 +294,14 @@ class CarpResourceManager
   // 'query=collection_id=$_messagesCollectionId;updated_at>${start.toUtc()};updated_at<${end.toUtc()}';
 
   @override
+  Future<Message?> getMessage(String messageId) async {
+    _assertCarpService();
+    DocumentSnapshot? message =
+        await CarpService().document('$MESSAGES_PATH/$messageId').get();
+    return (message != null) ? Message.fromJson(message.data) : null;
+  }
+
+  @override
   Future<List<Message>> getMessages({
     DateTime? start,
     DateTime? end,
@@ -313,10 +321,11 @@ class CarpResourceManager
     info('Getting messages from CARP server. '
         'study_id: ${CarpService().app?.studyId}, '
         'query: ${_getMessagesQuery(start, end)}');
-    List<DocumentSnapshot> messages =
-        await CarpService().documentsByQuery(_getMessagesQuery(start, end));
+    // TODO - The query interface does not work - change back when issue is fixed in the CARP backend
     // List<DocumentSnapshot> messages =
-    //     await CarpService().collection(MESSAGES_PATH).documents;
+    //     await CarpService().documentsByQuery(_getMessagesQuery(start, end));
+    List<DocumentSnapshot> messages =
+        await CarpService().collection(MESSAGES_PATH).documents;
     info('Messages downloaded - # : ${messages.length}');
 
     return messages
@@ -338,5 +347,18 @@ class CarpResourceManager
   Future<void> deleteMessage(String messageId) async {
     _assertCarpService();
     await CarpService().collection(MESSAGES_PATH).document(messageId).delete();
+  }
+
+  @override
+  Future<void> deleteAllMessages() async {
+    _assertCarpService();
+    List<DocumentSnapshot> documents =
+        await CarpService().collection(MESSAGES_PATH).documents;
+    for (var document in documents) {
+      await CarpService()
+          .collection(MESSAGES_PATH)
+          .document(document.name)
+          .delete();
+    }
   }
 }

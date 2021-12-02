@@ -63,6 +63,7 @@ const _$CarpUploadMethodEnumMap = {
 };
 
 Message _$MessageFromJson(Map<String, dynamic> json) => Message(
+      id: json['id'] as String?,
       type: $enumDecodeNullable(_$MessageTypeEnumMap, json['type']) ??
           MessageType.announcement,
       title: json['title'] as String?,
@@ -74,6 +75,7 @@ Message _$MessageFromJson(Map<String, dynamic> json) => Message(
 
 Map<String, dynamic> _$MessageToJson(Message instance) {
   final val = <String, dynamic>{
+    'id': instance.id,
     'type': _$MessageTypeEnumMap[instance.type],
     'timestamp': instance.timestamp.toIso8601String(),
   };
