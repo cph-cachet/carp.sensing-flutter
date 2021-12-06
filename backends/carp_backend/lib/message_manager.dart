@@ -31,7 +31,15 @@ class Message {
   /// A URL to redirect the user to for an online item.
   String? url;
 
-  /// The pathname for an image in a local image asset library.
+  /// The pathname for an image.
+  ///
+  /// This image path can have two forms:
+  ///
+  /// * URL - if the image path starts with http(s)://... the image is loaded
+  ///         from the internet using the `Image.network()` constructor.
+  /// * Asset - othervise, it is assumed that this is the path to a local image
+  ///           asset and the image is loaded from the asset bundle using the
+  ///           `Image.asset()` constructor.
   String? imagePath;
 
   /// Create a new message.
