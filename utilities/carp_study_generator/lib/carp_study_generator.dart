@@ -31,3 +31,4 @@ part 'cmd/consent.dart';
 part 'cmd/localization.dart';
 part 'cmd/dryrun.dart';
 part 'cmd/messages.dart';
+part 'cmd/delete_all_messages.dart';
