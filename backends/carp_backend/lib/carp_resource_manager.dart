@@ -7,86 +7,18 @@
 
 part of carp_backend;
 
-/// Handles different types of CAMS-specific resources.
+/// Implementation of [InformedConsentManager], [LocalizationManager], and
+/// [MessageManager] in the CARP service.
 ///
-/// This includes:
-///
-///  * Retrieve and store informed consent definitions as [RPOrderedTask] json
-///    definitions at the CARP backend.
-///  * Retrive and store langunage localization mappings.
-///
-abstract class ResourceManager {
-  Future initialize() async {}
-
-  // --------------------------------------------------------------------------
-  // INFORMED CONSENT
-  // --------------------------------------------------------------------------
-
-  /// The latest downloaded informed consent document.
-  ///
-  /// `null` if no consent has been downloaded yet. Use the [getInformedConsent]
-  /// method to get the informed consent document from CARP.
-  RPOrderedTask? get informedConsent;
-
-  /// Get the informed consent to be shown for this study.
-  ///
-  /// This method return a [RPOrderedTask] which is an ordered list of [RPStep]
-  /// which are shown to the user as the informed consent flow.
-  /// See [research_package](https://pub.dev/packages/research_package) for a
-  /// description on how to create an informed consent in the research package
-  /// domain model.
-  ///
-  /// If there is no informed consent, `null` is returned.
-  Future<RPOrderedTask?> getInformedConsent();
-
-  /// Set the informed consent to be used for this study.
-  Future<bool> setInformedConsent(RPOrderedTask informedConsent);
-
-  /// Delete the informed consent for this study.
-  ///
-  /// Returns `true` if delete is successful, `false` otherwise.
-  Future<bool> deleteInformedConsent();
-
-  // --------------------------------------------------------------------------
-  // LOCALIZATION
-  // --------------------------------------------------------------------------
-
-  /// Get localization mapping as json for the specified [locale].
-  ///
-  /// Locale json is named according to the [locale] languageCode.
-  /// For example, the Danish translation is named `da`
-  ///
-  /// If there is no language resouce, `null` is returned.
-  Future<Map<String, String>?> getLocalizations(Locale locale);
-
-  /// Set localization mapping for the specified [locale].
-  ///
-  /// Locale json is named according to the [locale] languageCode.
-  /// For example, the Danish translation is named `da`
-  ///
-  /// Returns `true` if successful, `false` otherwise.
-  Future<bool> setLocalizations(
-      Locale locale, Map<String, dynamic> localizations);
-
-  /// Delete the localization for the [locale].
-  ///
-  /// Returns `true` if successful, `false` otherwise.
-  Future<bool> deleteLocalizations(Locale locale);
-}
-
-/// Handles different types of CAMS-specific resources at the CARP service.
-///
-/// This includes:
-///
-///  * Retrive and store [StudyDescription]s.
-///  * Retrieve and store informed consent definitions as [RPOrderedTask] json
-///    definitions at the CARP backend.
-///  * Retrive and store langunage localization mappings.
-///
-/// Supports local caching of these resources locally on the phone.
-class CarpResourceManager implements ResourceManager {
+/// Also supports local caching of these resources locally on the phone
+/// (except for messages, which is assumed to be handled by the app).
+class CarpResourceManager
+    implements InformedConsentManager, LocalizationManager, MessageManager {
   /// The base path for resources - both on the CARP server and locally on the phone
   static const String RESOURCE_PATH = 'resources';
+
+  /// The base path for messages - both on the CARP server and locally on the phone
+  static const String MESSAGES_PATH = 'messages';
 
   /// The path for the language documents at the CARP server.
   /// Each language locale has its own document
@@ -207,6 +139,10 @@ class CarpResourceManager implements ResourceManager {
 
     return (document == null);
   }
+
+  // --------------------------------------------------------------------------
+  // INITIALIZATION
+  // --------------------------------------------------------------------------
 
   @override
   Future initialize() async {}
@@ -349,5 +285,85 @@ class CarpResourceManager implements ResourceManager {
     }
 
     return (document == null);
+  }
+
+  // --------------------------------------------------------------------------
+  // MESSAGES
+  // --------------------------------------------------------------------------
+
+  int? _messagesCollectionId;
+
+  /// The query for use for getting the message from the CARP server
+  String _getMessagesQuery(DateTime start, DateTime end) =>
+      'query=collection_id=$_messagesCollectionId;updated_at>${start.toUtc()};updated_at<${end.toUtc()}';
+
+  @override
+  Future<Message?> getMessage(String messageId) async {
+    _assertCarpService();
+    DocumentSnapshot? message =
+        await CarpService().document('$MESSAGES_PATH/$messageId').get();
+    return (message != null) ? Message.fromJson(message.data) : null;
+  }
+
+  @override
+  Future<List<Message>> getMessages({
+    DateTime? start,
+    DateTime? end,
+    int? count = 20,
+  }) async {
+    _assertCarpService();
+    start ??=
+        DateTime.fromMillisecondsSinceEpoch(0); // this is a looooooong time ago
+    end ??= DateTime.now();
+
+    // first get the collection ID for the messages, if not know already
+    if (_messagesCollectionId == null) {
+      _messagesCollectionId =
+          (await CarpService().collection(MESSAGES_PATH).get()).id;
+    }
+
+    info('Getting messages from CARP server. '
+        'study_id: ${CarpService().app?.studyId}, '
+        'query: ${_getMessagesQuery(start, end)}');
+    // TODO - The query interface does not work - change back when issue is fixed in the CARP backend
+    // https://github.com/cph-cachet/carp.webservices-docker/issues/52
+    // List<DocumentSnapshot> messages =
+    //     await CarpService().documentsByQuery(_getMessagesQuery(start, end));
+    List<DocumentSnapshot> messages =
+        await CarpService().collection(MESSAGES_PATH).documents;
+    info('Messages downloaded - # : ${messages.length}');
+
+    return messages
+        .map((message) => Message.fromJson(message.data))
+        .toList()
+        .sublist(0, (count! < messages.length) ? count : messages.length);
+  }
+
+  @override
+  Future<void> setMessage(Message message) async {
+    _assertCarpService();
+    await CarpService()
+        .collection(MESSAGES_PATH)
+        .document(message.id)
+        .setData(message.toJson());
+  }
+
+  @override
+  Future<void> deleteMessage(String messageId) async {
+    _assertCarpService();
+    await CarpService().collection(MESSAGES_PATH).document(messageId).delete();
+  }
+
+  @override
+  Future<void> deleteAllMessages() async {
+    _assertCarpService();
+    List<DocumentSnapshot> documents =
+        await CarpService().collection(MESSAGES_PATH).documents;
+    for (var document in documents) {
+      await CarpService()
+          .collection(MESSAGES_PATH)
+          .document(document.name)
+          .delete();
+    }
   }
 }

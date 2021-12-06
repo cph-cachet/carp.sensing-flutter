@@ -100,6 +100,20 @@ class DryRunCommand extends AbstractCommand {
       issues++;
     }
 
+    String id = '';
+    try {
+      messageIds.forEach((element) {
+        id = element.toString();
+        path = '$messagesPath$id.json';
+        String localeJson = File(path).readAsStringSync();
+        json.decode(localeJson);
+        print('\x1B[32m[✓]\x1B[0m Message - $id \t $path');
+      });
+    } catch (error) {
+      print('\x1B[31m[!]\x1B[0m Message - $id \t ${errorToString(error)}');
+      issues++;
+    }
+
     print(
         '${(issues == 0) ? '\x1B[32m • \x1B[0m No' : '\x1B[31m • \x1B[0m $issues'} issues found!');
   }

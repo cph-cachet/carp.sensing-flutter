@@ -1,3 +1,6 @@
+## 0.32.1
+* support for uploading messages to CARP
+
 ## 0.32.0
 * update to `carp_mobile_sensing` v. 0.32.0
 

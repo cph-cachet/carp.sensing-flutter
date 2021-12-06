@@ -1,6 +1,6 @@
 name: carp_backend_example
 description: An example of how to usee the carp_backend package to upload data to CARP.
-version: 0.32.0
+version: 0.32.1
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_core
 publish_to: none
 

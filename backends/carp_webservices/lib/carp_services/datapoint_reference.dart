@@ -38,6 +38,7 @@ class DataPointReference extends CarpReference {
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
       message: responseJson["message"],
+      path: responseJson["path"],
     );
   }
 
@@ -77,6 +78,7 @@ class DataPointReference extends CarpReference {
         throw CarpServiceException(
           httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
           message: responseJson["message"],
+          path: responseJson["path"],
         );
       });
     });
@@ -100,6 +102,7 @@ class DataPointReference extends CarpReference {
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
       message: responseJson["message"],
+      path: responseJson["path"],
     );
   }
 
@@ -211,6 +214,7 @@ class DataPointReference extends CarpReference {
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
       message: responseJson["message"],
+      path: responseJson["path"],
     );
   }
 
@@ -231,6 +235,7 @@ class DataPointReference extends CarpReference {
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
       message: responseJson["message"],
+      path: responseJson["path"],
     );
   }
 }

@@ -54,6 +54,7 @@ void main() {
     app = new CarpApp(
       name: "Test",
       studyId: testStudyId,
+      studyDeploymentId: testDeploymentId,
       uri: Uri.parse(uri),
       oauth: OAuthEndPoint(clientID: clientID, clientSecret: clientSecret),
     );
@@ -519,7 +520,7 @@ void main() {
 //     }, skip: true);
 
     test(' - get documents by query', () async {
-      assert(document != null);
+      // assert(document != null);
       String query = 'name==$userId';
       List<DocumentSnapshot> documents =
           await CarpService().documentsByQuery(query);
@@ -527,7 +528,7 @@ void main() {
       print('Found ${documents.length} document(s)');
       documents.forEach((document) => print(' - $document'));
 
-      assert(documents.length != 0);
+      expect(documents.length, greaterThan(0));
     });
 
     test(' - get all documents', () async {
@@ -535,7 +536,7 @@ void main() {
 
       print('Found ${documents.length} document(s)');
       documents.forEach((document) => print(' - $document'));
-      // assert(documents.length != 0);
+      expect(documents.length, greaterThan(0));
     });
 
     test(' - add document in nested collections', () async {
@@ -549,8 +550,9 @@ void main() {
           .setData({'what': 'breakfast', 'time': 'morning'});
 
       print(newDocument);
-      assert(newDocument.id > 0);
-      assert(newDocument.path == '$collectionName/$userId/activities/cooking');
+      expect(newDocument.id, greaterThan(0));
+      expect(newDocument.path,
+          equals('$collectionName/$userId/activities/cooking'));
     });
 
     test(' - get nested document', () async {
@@ -727,10 +729,24 @@ void main() {
     });
 
     test('- get', () async {
+      final File myFile = File("test/img.jpg");
+
+      final FileUploadTask uploadTask = CarpService()
+          .getFileStorageReference()
+          .upload(myFile, {
+        'content-type': 'image/jpg',
+        'content-language': 'en',
+        'activity': 'test'
+      });
+
+      CarpFileResponse response = await uploadTask.onComplete;
+      assert(response.id > 0);
+      id = response.id;
+
       final CarpFileResponse result =
           await CarpService().getFileStorageReference(id).get();
-
-      assert(result.id == id);
+      print(result);
+      expect(result.id, id);
       print('result : $result');
     });
 

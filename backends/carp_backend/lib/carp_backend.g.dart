@@ -61,3 +61,41 @@ const _$CarpUploadMethodEnumMap = {
   CarpUploadMethod.FILE: 'FILE',
   CarpUploadMethod.DOCUMENT: 'DOCUMENT',
 };
+
+Message _$MessageFromJson(Map<String, dynamic> json) => Message(
+      id: json['id'] as String?,
+      type: $enumDecodeNullable(_$MessageTypeEnumMap, json['type']) ??
+          MessageType.announcement,
+      title: json['title'] as String?,
+      subTitle: json['subTitle'] as String?,
+      message: json['message'] as String?,
+      url: json['url'] as String?,
+      imagePath: json['imagePath'] as String?,
+    )..timestamp = DateTime.parse(json['timestamp'] as String);
+
+Map<String, dynamic> _$MessageToJson(Message instance) {
+  final val = <String, dynamic>{
+    'id': instance.id,
+    'type': _$MessageTypeEnumMap[instance.type],
+    'timestamp': instance.timestamp.toIso8601String(),
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('title', instance.title);
+  writeNotNull('subTitle', instance.subTitle);
+  writeNotNull('message', instance.message);
+  writeNotNull('url', instance.url);
+  writeNotNull('imagePath', instance.imagePath);
+  return val;
+}
+
+const _$MessageTypeEnumMap = {
+  MessageType.announcement: 'announcement',
+  MessageType.article: 'article',
+  MessageType.news: 'news',
+};

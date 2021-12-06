@@ -348,6 +348,7 @@ class CarpService extends CarpBaseService {
     throw CarpServiceException(
       httpStatus: HTTPStatus(response.statusCode, response.reasonPhrase),
       message: responseJson["message"],
+      path: responseJson["path"],
     );
   }
 
@@ -373,6 +374,7 @@ class CarpService extends CarpBaseService {
   /// Returns the created [ConsentDocument] if the document is uploaded correctly.
   Future<ConsentDocument> createConsentDocument(
       Map<String, dynamic> document) async {
+    print('$consentDocumentEndpointUri');
     // POST the document to the CARP web service
     http.Response response = await http.post(
         Uri.parse(Uri.encodeFull(consentDocumentEndpointUri)),
@@ -390,6 +392,7 @@ class CarpService extends CarpBaseService {
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
       message: responseJson["message"],
+      path: responseJson["path"],
     );
   }
 
@@ -411,6 +414,7 @@ class CarpService extends CarpBaseService {
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
       message: errorResponseJson["message"],
+      path: responseJson["path"],
     );
   }
 
@@ -464,11 +468,12 @@ class CarpService extends CarpBaseService {
     http.Response response =
         await httpr.get(Uri.encodeFull(url), headers: headers);
     int httpStatusCode = response.statusCode;
-    List<dynamic> list = json.decode(response.body);
+    print(response.body);
 
     switch (httpStatusCode) {
       case 200:
         {
+          List<dynamic> list = json.decode(response.body);
           List<CarpFileResponse> fileList = [];
           list.forEach((element) {
             fileList.add(CarpFileResponse._(element));
@@ -482,6 +487,7 @@ class CarpService extends CarpBaseService {
           throw CarpServiceException(
             httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
             message: responseJson["message"],
+            path: responseJson["path"],
           );
         }
     }
@@ -526,6 +532,7 @@ class CarpService extends CarpBaseService {
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
       message: responseJson["message"],
+      path: responseJson["path"],
     );
   }
 
@@ -554,6 +561,7 @@ class CarpService extends CarpBaseService {
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
       message: responseJson["message"],
+      path: responseJson["path"],
     );
   }
 

@@ -23,7 +23,7 @@ part of carp_services;
 /// is a reference to the geoposition document `pos_1` in the collection `geopositions` in the document `running`
 /// in the collection `activities`.
 class CollectionReference extends CarpReference {
-  int _id = -1;
+  int? _id;
   String _path;
 
   /// Creates a [CollectionReference] based on the path to the
@@ -38,8 +38,8 @@ class CollectionReference extends CarpReference {
 
   /// ID of the referenced collection.
   ///
-  /// If [id] is -1, then this collection is not available on the server.
-  /// It might now have been created yet, or has been deleted.
+  /// Returns null if this collection is not available on the server.
+  /// It might not have been created yet, or has been deleted.
   int? get id => _id;
 
   /// The name of the referenced collection.
@@ -79,6 +79,7 @@ class CollectionReference extends CarpReference {
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
       message: responseJson['message'],
+      path: responseJson["path"],
     );
   }
 
@@ -107,6 +108,7 @@ class CollectionReference extends CarpReference {
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
       message: responseJson['message'],
+      path: responseJson["path"],
     );
   }
 
@@ -156,6 +158,7 @@ class CollectionReference extends CarpReference {
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
       message: responseJson['message'],
+      path: responseJson["path"],
     );
   }
 
@@ -173,6 +176,7 @@ class CollectionReference extends CarpReference {
       throw CarpServiceException(
         httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
         message: responseJson['message'],
+        path: responseJson["path"],
       );
     }
   }

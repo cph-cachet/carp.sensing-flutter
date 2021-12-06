@@ -112,6 +112,7 @@ abstract class CarpBaseService {
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode),
       message: responseJson["message"],
+      path: responseJson["path"],
     );
   }
 }

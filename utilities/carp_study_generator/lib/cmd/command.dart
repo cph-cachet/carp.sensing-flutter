@@ -18,11 +18,13 @@ abstract class AbstractCommand implements Command {
   String get password => _yaml['server']['password'].toString();
 
   String? get studyId => _yaml['study']['study_id'];
-  String? get studyDeploymentId => _yaml['study']['study_deployment_id'];
+  // String? get studyDeploymentId => _yaml['study']['study_deployment_id'];
 
   String get protocolPath => _yaml['protocol']['path'].toString();
   String get consentPath => _yaml['consent']['path'].toString();
-  String get descriptionPath => _yaml['description']['path'].toString();
+
+  String get messagesPath => _yaml['message']['path'].toString();
+  List<dynamic> get messageIds => _yaml['message']['messages'];
 
   String get localizationPath => _yaml['localization']['path'].toString();
   List<dynamic> get locales => _yaml['localization']['locales'];
@@ -74,7 +76,7 @@ abstract class AbstractCommand implements Command {
         uri: Uri.parse(uri!),
         oauth: OAuthEndPoint(clientID: clientId, clientSecret: clientSecret),
         studyId: studyId,
-        studyDeploymentId: studyDeploymentId,
+        // studyDeploymentId: studyDeploymentId,
       );
     }
     return _app!;

@@ -102,7 +102,10 @@ class FileUploadTask extends CarpServiceTask {
                   HTTPStatus(httpStatusCode, response.reasonPhrase);
               _completer.completeError(status);
               throw CarpServiceException(
-                  httpStatus: status, message: map["message"]);
+                httpStatus: status,
+                message: map["message"],
+                path: map["path"],
+              );
             }
         }
       });
@@ -160,7 +163,10 @@ class FileDownloadTask extends CarpServiceTask {
                 HTTPStatus(httpStatusCode, response.reasonPhrase);
             _completer.completeError(httpStatusCode);
             throw CarpServiceException(
-                httpStatus: status, message: map["message"]);
+              httpStatus: status,
+              message: map["message"],
+              path: map["path"],
+            );
           }
       }
     });

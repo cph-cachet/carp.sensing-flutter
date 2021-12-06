@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2021 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -12,6 +12,7 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:uuid/uuid.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
@@ -20,10 +21,13 @@ import 'package:research_package/model.dart';
 
 part 'carp_data_manager.dart';
 part 'carp_study_manager.dart';
+part 'localization_manager.dart';
+part 'informed_consent_manager.dart';
 part 'carp_resource_manager.dart';
 part 'carp_localization.dart';
 part 'carp_backend.g.dart';
 part 'carp_deployment_service.dart';
+part 'message_manager.dart';
 
 /// Specify a CARP Service endpoint for uploading data.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
