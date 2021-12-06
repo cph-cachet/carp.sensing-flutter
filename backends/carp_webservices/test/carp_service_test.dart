@@ -520,7 +520,7 @@ void main() {
 //     }, skip: true);
 
     test(' - get documents by query', () async {
-      assert(document != null);
+      // assert(document != null);
       String query = 'name==$userId';
       List<DocumentSnapshot> documents =
           await CarpService().documentsByQuery(query);
@@ -528,7 +528,7 @@ void main() {
       print('Found ${documents.length} document(s)');
       documents.forEach((document) => print(' - $document'));
 
-      assert(documents.length != 0);
+      expect(documents.length, greaterThan(0));
     });
 
     test(' - get all documents', () async {
@@ -536,7 +536,7 @@ void main() {
 
       print('Found ${documents.length} document(s)');
       documents.forEach((document) => print(' - $document'));
-      // assert(documents.length != 0);
+      expect(documents.length, greaterThan(0));
     });
 
     test(' - add document in nested collections', () async {
@@ -550,8 +550,9 @@ void main() {
           .setData({'what': 'breakfast', 'time': 'morning'});
 
       print(newDocument);
-      assert(newDocument.id > 0);
-      assert(newDocument.path == '$collectionName/$userId/activities/cooking');
+      expect(newDocument.id, greaterThan(0));
+      expect(newDocument.path,
+          equals('$collectionName/$userId/activities/cooking'));
     });
 
     test(' - get nested document', () async {

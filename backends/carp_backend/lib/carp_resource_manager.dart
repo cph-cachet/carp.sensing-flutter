@@ -322,6 +322,7 @@ class CarpResourceManager
         'study_id: ${CarpService().app?.studyId}, '
         'query: ${_getMessagesQuery(start, end)}');
     // TODO - The query interface does not work - change back when issue is fixed in the CARP backend
+    // https://github.com/cph-cachet/carp.webservices-docker/issues/52
     // List<DocumentSnapshot> messages =
     //     await CarpService().documentsByQuery(_getMessagesQuery(start, end));
     List<DocumentSnapshot> messages =

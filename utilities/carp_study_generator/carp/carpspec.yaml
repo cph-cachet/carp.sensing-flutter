@@ -8,10 +8,10 @@
 server:
   #uri: https://cans.cachet.dk/
   uri: https://cans.cachet.dk/dev
-  client_id: carp_id
-  client_secret: carp_secret
-  username: xxxx
-  password: xxxx
+  client_id: carp
+  client_secret: carp
+  username: jakba@dtu.dk
+  password: Benjamin
 
 # configuration of the study ID - used for upload of informed consent and translations
 study:
