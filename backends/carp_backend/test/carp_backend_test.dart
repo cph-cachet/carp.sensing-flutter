@@ -305,7 +305,7 @@ void main() {
       expect(message_2!.id, message_1.id);
     });
 
-    test('- get list', () async {
+    test('- get all', () async {
       List<Message> messages = await CarpResourceManager().getMessages();
       print(_encode(messages));
     });

@@ -87,6 +87,9 @@ abstract class MessageManager {
   ///
   /// If [start] is null, all messages back in time is included.
   /// If [end] is null, all messages up to now is included.
+  ///
+  /// Note that the list is **not** sorted in any way.
+  /// Sorting - e.g., by date - must be handled by the app if needed.
   Future<List<Message>> getMessages({
     DateTime? start,
     DateTime? end,
@@ -98,7 +101,7 @@ abstract class MessageManager {
   /// Messages are stored on CARP using the [Message.id] as the document name.
   Future<void> setMessage(Message message);
 
-  /// Delete a message.
+  /// Delete a message based on its id (i.e., document name on CARP).
   Future<void> deleteMessage(String messageId);
 
   /// Deletes all messages.

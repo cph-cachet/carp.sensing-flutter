@@ -14,7 +14,7 @@ dependencies:
 
   carp_core: ^0.31.1
   carp_mobile_sensing: ^0.32.0
-  # carp_webservices: ^0.32.0
+  carp_webservices: ^0.32.1
   research_package: ^0.6.6      # the informed consent domain model
 
 
@@ -25,8 +25,8 @@ dependency_overrides:
   #   path: ../../carp_core/
   # carp_mobile_sensing:
   #   path: ../../carp_mobile_sensing/
-  carp_webservices:
-    path: ../carp_webservices/
+  # carp_webservices:
+  #   path: ../carp_webservices/
 #  research_package:
 #    path: ../../../../research.package/
   # the following sampling packages are only used for unit testing

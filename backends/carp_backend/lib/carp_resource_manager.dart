@@ -140,6 +140,10 @@ class CarpResourceManager
     return (document == null);
   }
 
+  // --------------------------------------------------------------------------
+  // INITIALIZATION
+  // --------------------------------------------------------------------------
+
   @override
   Future initialize() async {}
 
