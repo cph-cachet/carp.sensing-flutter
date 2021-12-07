@@ -1,3 +1,6 @@
+## 0.32.2
+* small improvement to login dialog - issue [#236](https://github.com/cph-cachet/carp.sensing-flutter/issues/236)
+
 ## 0.32.1
 * small update to `HTTPStatus`
 * improvment to unit tests
