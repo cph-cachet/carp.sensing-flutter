@@ -84,7 +84,7 @@ class _HomePageState extends State<HomePage> {
 }
 
 class AppBLoC {
-  final String uri = "https://cans.cachet.dk:443"; // CANS PROD
+  final String uri = "https://cans.cachet.dk/stage";
   ActiveParticipationInvitation _invitation;
   String get studyId => _invitation?.studyId;
   String get studyDeploymentId => _invitation?.studyDeploymentId;

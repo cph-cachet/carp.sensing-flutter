@@ -17,7 +17,6 @@ class AuthenticationDialog {
   Dialog build(
     context, {
     String? username,
-    bool canLaunchResetPasswordUrl = false,
   }) =>
       Dialog(child: Builder(
           // Create an inner BuildContext so that the onPressed methods
@@ -31,7 +30,7 @@ class AuthenticationDialog {
               _getHeader(),
               _getForm(username: username),
               _getLoginButton(context),
-              if (canLaunchResetPasswordUrl) _getResetPasswordButton(context),
+              _getResetPasswordButton(context),
             ],
           ),
         );
@@ -114,8 +113,8 @@ class AuthenticationDialog {
       OutlinedButton(
         onPressed: () async {
           try {
-            info("Reset password at url: '${CarpService.RESET_PASSWORD_URL}'");
-            await launch(CarpService.RESET_PASSWORD_URL);
+            info("Reset password at url: '${CarpService().resetPasswordUrl}'");
+            await launch(CarpService().resetPasswordUrl);
           } catch (exception) {
             warning('Exception in launching Reset Password URL - $exception');
           }

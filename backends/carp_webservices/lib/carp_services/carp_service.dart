@@ -34,17 +34,33 @@ class CarpService extends CarpBaseService {
   // AUTHENTICATION
   // --------------------------------------------------------------------------
 
-  static const RESET_PASSWORD_URL = 'https://cans.cachet.dk/forgotten';
-
-  /// Can the "Reset Password" URL be launched?
-  bool canLaunchResetPasswordUrl = false;
-
   String get _authHeaderBase64 => base64.encode(
       utf8.encode("${_app!.oauth.clientID}:${_app!.oauth.clientSecret}"));
 
   /// The URI for the authenticated endpoint for this [CarpService].
-  String get authEndpointUri =>
-      "${_app!.uri.toString()}${_app!.oauth.path.toString()}";
+  ///
+  /// The fomat is `https://cans.cachet.dk/forgotten` for the production host
+  /// and `https://cans.cachet.dk/portal/stage/forgotten` for the stage, test,
+  /// and dev hosts.
+  String get authEndpointUri => "${_app!.uri}${_app!.oauth.path}";
+
+  /// The URL for the reset password page for this [CarpService].
+  String get resetPasswordUrl {
+    String url = "${_app!.uri}";
+    String host = '';
+    if (url.contains('dev')) host = 'dev';
+    if (url.contains('test')) host = 'test';
+    if (url.contains('stage')) host = 'stage';
+    if (host.isNotEmpty) {
+      String rawUri = url.substring(0, url.indexOf(host));
+      url = rawUri + 'portal/$host';
+    }
+    url += '/forgotten';
+
+    print('url = $url');
+
+    return url;
+  }
 
   /// The HTTP header for the authentication requests.
   Map<String, String> get _authenticationHeader => {
@@ -165,15 +181,12 @@ class CarpService extends CarpBaseService {
           message:
               "CARP Service not initialized. Call 'CarpService().configure()' first.");
 
-    canLaunchResetPasswordUrl = await canLaunch(RESET_PASSWORD_URL);
-
     CarpUser? user = await showDialog<CarpUser>(
         context: context,
         barrierDismissible: allowClose,
         builder: (BuildContext context) => AuthenticationDialog().build(
               context,
               username: username,
-              canLaunchResetPasswordUrl: canLaunchResetPasswordUrl,
             ));
 
     return user;
