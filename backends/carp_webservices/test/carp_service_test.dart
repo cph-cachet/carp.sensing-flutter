@@ -13,10 +13,10 @@ String _encode(Object? object) =>
     const JsonEncoder.withIndent(' ').convert(object);
 
 void main() {
-  final String userId = "user@dtu.dk";
+  final String userId = "jakob@bardram.net";
   final String studyId = "test_1234";
   final String collectionName = 'test_patients';
-  final String newCollectionName = 'new_patients_3';
+  final String newCollectionName = 'new_patients';
 
   CarpApp app;
   StudyProtocol protocol;
@@ -410,19 +410,25 @@ void main() {
   );
 
   group("Documents & Collections", () {
-    test(' - add document', () async {
-      // is providing userId as the document name
+    setUp(() async {
+      // first create a document - providing userId as the document name
       // if the collection don't exist, it is created (according to David).
       document = await CarpService()
           .collection(collectionName)
           .document(userId)
           .setData({'email': userId, 'role': 'Administrator'});
 
+      expect(document, isNotNull);
+
+      // save the id for later use
+      documentId = document!.id;
+    });
+
+    test(' - add document', () async {
       print(document);
       print(_encode(document!.data));
 
-      assert(document!.id > 0);
-      documentId = document!.id;
+      expect(document!.id, greaterThan(0));
 
       // create another document
       await CarpService()
@@ -432,12 +438,6 @@ void main() {
     });
 
     test(' - update document', () async {
-      // first create a document
-      document = await CarpService()
-          .collection(collectionName)
-          .document(userId)
-          .setData({'email': userId, 'role': 'Administrator'});
-
       assert(document != null);
       print(document);
 
@@ -458,8 +458,8 @@ void main() {
       print(updated);
       print(_encode(updated.data));
       print(updated.data["role"]);
-      assert(updated.id > 0);
-      assert(updated.data["role"] == 'Super User');
+      expect(updated.id, greaterThan(0));
+      expect(updated.data["role"], 'Super User');
     });
 
     test(' - get document by id', () async {
@@ -468,8 +468,8 @@ void main() {
           await CarpService().documentById(documentId!).get();
 
       print((newDocument));
-      assert(newDocument?.id == document!.id);
-      assert(newDocument?.id == documentId);
+      expect(newDocument?.id, document!.id);
+      expect(newDocument?.id, documentId);
     });
 
     test(' - get document by path', () async {
@@ -477,8 +477,19 @@ void main() {
           .collection(collectionName)
           .document(document!.name)
           .get();
+
       print((newDocument));
-      assert(newDocument?.id == document!.id);
+      expect(newDocument?.id, document!.id);
+    });
+
+    test(' - get non-existing document', () async {
+      DocumentSnapshot? newDocument = await CarpService()
+          .collection(collectionName)
+          .document('not_available')
+          .get();
+
+      print((newDocument));
+      expect(newDocument, isNull);
     });
 
 //     test(' - rename document', () async {
@@ -520,12 +531,12 @@ void main() {
 //     }, skip: true);
 
     test(' - get documents by query', () async {
-      // assert(document != null);
+      assert(document != null);
       String query = 'name==$userId';
       List<DocumentSnapshot> documents =
           await CarpService().documentsByQuery(query);
 
-      print('Found ${documents.length} document(s)');
+      print("Found ${documents.length} document(s) for user '$userId'");
       documents.forEach((document) => print(' - $document'));
 
       expect(documents.length, greaterThan(0));
@@ -564,13 +575,13 @@ void main() {
           .document('cooking')
           .get();
 
-      assert(newDocument!.id > 0);
+      expect(newDocument!.id, greaterThan(0));
 
       print(newDocument);
-      print(newDocument?.snapshot);
-      print(newDocument?.createdAt);
-      print(newDocument?.data);
-      print(newDocument?['what']);
+      print(newDocument.snapshot);
+      print(newDocument.createdAt);
+      print(newDocument.data);
+      print(newDocument['what']);
     });
 
     test('- expire token and the upload document', () async {
@@ -583,30 +594,30 @@ void main() {
           .document()
           .setData({'email': username, 'name': 'Administrator'});
 
-      assert(d.id > 0);
+      expect(d.id, greaterThan(0));
       print(d);
     });
 
-    test(" - get the '$collectionName' collection", () async {
+    test(" - get a collection from path name", () async {
       CollectionReference collection =
           await CarpService().collection(collectionName).get();
       print(collection);
     });
 
-    test(" - list documents in '$collectionName' collection", () async {
+    test(" - list documents in a collection", () async {
       List<DocumentSnapshot> documents =
           await CarpService().collection(collectionName).documents;
       documents.forEach((doc) => print(doc));
+      expect(documents.length, greaterThan(0));
     });
 
-    test(" - list collections in the 'user@dtu.dk' document", () async {
+    test(" - list collections in a document", () async {
       DocumentSnapshot? newDocument =
           await CarpService().collection(collectionName).document(userId).get();
       newDocument?.collections.forEach((ref) => print(ref));
     });
 
-    test(" - list all nested documents in '$collectionName' collection",
-        () async {
+    test(" - list all nested documents in a collection", () async {
       List<DocumentSnapshot> documents =
           await CarpService().collection(collectionName).documents;
       documents.forEach((doc) {
@@ -636,7 +647,7 @@ void main() {
     test(' - get collection from path', () async {
       CollectionReference collection =
           await CarpService().collection(collectionName).get();
-      assert(collection.id! > 0);
+      expect(collection.id!, greaterThan(0));
       print(collection);
     });
 
@@ -680,7 +691,7 @@ void main() {
     test(" - get 'patients' collection from path", () async {
       CollectionReference collection =
           await CarpService().collection('patients').get();
-      assert(collection.id! > 0);
+      expect(collection.id!, greaterThan(0));
       print(collection);
     });
 
@@ -720,7 +731,7 @@ void main() {
       });
 
       CarpFileResponse response = await uploadTask.onComplete;
-      assert(response.id > 0);
+      expect(response.id, greaterThan(0));
       id = response.id;
 
       print('response.storageName : ${response.storageName}');
@@ -740,7 +751,7 @@ void main() {
       });
 
       CarpFileResponse response = await uploadTask.onComplete;
-      assert(response.id > 0);
+      expect(response.id, greaterThan(0));
       id = response.id;
 
       final CarpFileResponse result =
@@ -755,7 +766,7 @@ void main() {
         await CarpService().getFileStorageReference(876872).get();
       } catch (error) {
         print(error);
-        assert(error is CarpServiceException);
+        expect(error, isA<CarpServiceException>());
         expect((error as CarpServiceException).httpStatus!.httpResponseCode,
             HttpStatus.notFound);
       }
@@ -768,7 +779,7 @@ void main() {
           CarpService().getFileStorageReference(id).download(myFile);
 
       int response = await downloadTask.onComplete;
-      assert(response == 200);
+      expect(response, 200);
       print('status code : $response');
     });
 
@@ -792,7 +803,7 @@ void main() {
       assert(reference != null);
       final CarpFileResponse result = await reference!.get();
 
-      assert(result.originalName == 'img.jpg');
+      expect(result.originalName, 'img.jpg');
       print('result : $result');
     });
 
@@ -800,7 +811,7 @@ void main() {
       final int result =
           await CarpService().getFileStorageReference(id).delete();
 
-      assert(result > 0);
+      expect(result, greaterThan(0));
       print('result : $result');
     });
   }, skip: false);

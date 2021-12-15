@@ -1,4 +1,4 @@
-## 0.32.1
+## 0.32.2
 * support for messages in CARP
 
 ## 0.32.0+1

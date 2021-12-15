@@ -52,6 +52,7 @@ class FileStorageReference extends CarpReference {
         await httpr.get(Uri.encodeFull(url), headers: headers);
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> map = json.decode(response.body);
+
     print(response.body);
 
     switch (httpStatusCode) {

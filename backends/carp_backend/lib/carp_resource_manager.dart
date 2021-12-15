@@ -295,7 +295,8 @@ class CarpResourceManager
 
   /// The query for use for getting the message from the CARP server
   String _getMessagesQuery(DateTime start, DateTime end) =>
-      'query=collection_id=$_messagesCollectionId;updated_at>${start.toUtc()};updated_at<${end.toUtc()}';
+      // 'query=collection_id==$_messagesCollectionId;updated_at>${start.toUtc()};updated_at<${end.toUtc()}';
+      'collection_id==$_messagesCollectionId';
 
   @override
   Future<Message?> getMessage(String messageId) async {
@@ -316,21 +317,21 @@ class CarpResourceManager
         DateTime.fromMillisecondsSinceEpoch(0); // this is a looooooong time ago
     end ??= DateTime.now();
 
-    // first get the collection ID for the messages, if not know already
-    if (_messagesCollectionId == null) {
-      _messagesCollectionId =
-          (await CarpService().collection(MESSAGES_PATH).get()).id;
-    }
-
-    info('Getting messages from CARP server. '
-        'study_id: ${CarpService().app?.studyId}, '
-        'query: ${_getMessagesQuery(start, end)}');
-    // TODO - The query interface does not work - change back when issue is fixed in the CARP backend
-    // https://github.com/cph-cachet/carp.webservices-docker/issues/52
+    // TODO - The query interface does not work - change back when issue is fixed
+    // // first get the collection ID for the messages, if not know already
+    // if (_messagesCollectionId == null) {
+    //   _messagesCollectionId =
+    //       (await CarpService().collection(MESSAGES_PATH).get()).id;
+    // }
+    // info('Getting messages from CARP server. '
+    //     'study_id: ${CarpService().app?.studyId}, '
+    //     'query: ${_getMessagesQuery(start, end)}');
     // List<DocumentSnapshot> messages =
     //     await CarpService().documentsByQuery(_getMessagesQuery(start, end));
+
     List<DocumentSnapshot> messages =
         await CarpService().collection(MESSAGES_PATH).documents;
+
     info('Messages downloaded - # : ${messages.length}');
 
     return messages

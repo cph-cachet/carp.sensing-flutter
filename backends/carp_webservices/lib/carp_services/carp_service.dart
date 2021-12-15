@@ -423,10 +423,9 @@ class CarpService extends CarpBaseService {
     if (httpStatusCode == HttpStatus.ok) return ConsentDocument._(responseJson);
 
     // All other cases are treated as an error.
-    Map<String, dynamic> errorResponseJson = json.decode(response.body);
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: errorResponseJson["message"],
+      message: responseJson["message"],
       path: responseJson["path"],
     );
   }
@@ -481,6 +480,7 @@ class CarpService extends CarpBaseService {
     http.Response response =
         await httpr.get(Uri.encodeFull(url), headers: headers);
     int httpStatusCode = response.statusCode;
+
     print(response.body);
 
     switch (httpStatusCode) {
@@ -522,6 +522,9 @@ class CarpService extends CarpBaseService {
       "${_app!.uri.toString()}/api/studies/${_app!.studyId}/documents";
 
   /// Get a list documents from a query.
+  ///
+  /// The [query] string uses the RSQL query language for RESTful APIs.
+  /// See the [RSQL Documentation](https://developer.here.com/documentation/data-client-library/dev_guide/client/rsql.html).
   Future<List<DocumentSnapshot>> documentsByQuery(String query) async {
     // GET the list of documents in this collection from the CARP web service
     http.Response response = await httpr.get(

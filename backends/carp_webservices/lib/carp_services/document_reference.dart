@@ -114,8 +114,11 @@ class DocumentReference extends CarpReference {
       throw CarpServiceException(message: 'No valid document id found.');
 
     Map<String, dynamic> payload = {'name': name};
-    http.Response response = await httpr.put(Uri.encodeFull(documentUri),
-        headers: headers, body: json.encode(payload));
+    http.Response response = await httpr.put(
+      Uri.encodeFull(documentUri),
+      headers: headers,
+      body: json.encode(payload),
+    );
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
@@ -138,9 +141,9 @@ class DocumentReference extends CarpReference {
         await httpr.get(Uri.encodeFull(documentUri), headers: headers);
 
     int httpStatusCode = response.statusCode;
-    Map<String, dynamic> jsonResponse = json.decode(response.body);
 
     if (httpStatusCode == HttpStatus.ok) {
+      Map<String, dynamic> jsonResponse = json.decode(response.body);
       _id = jsonResponse['id'];
       return DocumentSnapshot._(path, jsonResponse);
     } else {
