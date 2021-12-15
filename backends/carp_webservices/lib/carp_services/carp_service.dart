@@ -423,10 +423,9 @@ class CarpService extends CarpBaseService {
     if (httpStatusCode == HttpStatus.ok) return ConsentDocument._(responseJson);
 
     // All other cases are treated as an error.
-    Map<String, dynamic> errorResponseJson = json.decode(response.body);
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: errorResponseJson["message"],
+      message: responseJson["message"],
       path: responseJson["path"],
     );
   }
@@ -481,6 +480,7 @@ class CarpService extends CarpBaseService {
     http.Response response =
         await httpr.get(Uri.encodeFull(url), headers: headers);
     int httpStatusCode = response.statusCode;
+
     print(response.body);
 
     switch (httpStatusCode) {
