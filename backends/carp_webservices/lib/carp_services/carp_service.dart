@@ -522,6 +522,9 @@ class CarpService extends CarpBaseService {
       "${_app!.uri.toString()}/api/studies/${_app!.studyId}/documents";
 
   /// Get a list documents from a query.
+  ///
+  /// The [query] string uses the RSQL query language for RESTful APIs.
+  /// See the [RSQL Documentation](https://developer.here.com/documentation/data-client-library/dev_guide/client/rsql.html).
   Future<List<DocumentSnapshot>> documentsByQuery(String query) async {
     // GET the list of documents in this collection from the CARP web service
     http.Response response = await httpr.get(
