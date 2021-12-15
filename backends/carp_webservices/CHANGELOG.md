@@ -1,4 +1,4 @@
-## 0.32.2
+## 0.32.3
 * fix: issue [#239](https://github.com/cph-cachet/carp.sensing-flutter/issues/239 )
 * improvement to unit tests
 
