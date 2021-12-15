@@ -7,11 +7,12 @@
 
 part of audio;
 
-/// An [AudioDatum] that holds the path to audio file on the local device,
+/// A datum that holds the path to audio file on the local device,
 /// as well as the timestamps of when the recording was started and stopped
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class AudioDatum extends FileDatum {
-  DataFormat get format => DataFormat.fromString(AudioSamplingPackage.AUDIO);
+  DataFormat get format =>
+      DataFormat.fromString(AudioVideoSamplingPackage.AUDIO);
 
   /// The timestamp for start of recording.
   DateTime? startRecordingTime;
@@ -37,7 +38,8 @@ class AudioDatum extends FileDatum {
 /// A [NoiseDatum] that holds the noise level in decibel of a noise sampling.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class NoiseDatum extends Datum {
-  DataFormat get format => DataFormat.fromString(AudioSamplingPackage.NOISE);
+  DataFormat get format =>
+      DataFormat.fromString(AudioVideoSamplingPackage.NOISE);
 
   // The sound intensity [dB] measurement statistics for a given sampling window.
 
@@ -68,4 +70,34 @@ class NoiseDatum extends Datum {
   String toString() =>
       super.toString() +
       ', mean: $meanDecibel, std: $stdDecibel, min: $minDecibel, max: $maxDecibel';
+}
+
+enum VideoType { video, image }
+
+/// A datum that holds the path to a video or image file on the local device,
+/// as well as the timestamps of when the recording was started and stopped.
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+class VideoDatum extends AudioDatum {
+  DataFormat get format =>
+      DataFormat.fromString(AudioVideoSamplingPackage.VIDEO);
+
+  VideoType videoType;
+
+  VideoDatum({
+    required String filename,
+    required this.videoType,
+    DateTime? startRecordingTime,
+    DateTime? endRecordingTime,
+  }) : super(
+          filename: filename,
+          startRecordingTime: startRecordingTime,
+          endRecordingTime: endRecordingTime,
+        );
+
+  factory VideoDatum.fromJson(Map<String, dynamic> json) =>
+      _$VideoDatumFromJson(json);
+
+  Map<String, dynamic> toJson() => _$VideoDatumToJson(this);
+
+  String toString() => super.toString() + ', videoType: $videoType';
 }

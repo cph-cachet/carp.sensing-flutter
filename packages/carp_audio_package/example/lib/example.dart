@@ -8,7 +8,7 @@ import 'package:carp_audio_package/audio.dart';
 /// See the documentation on how to use CAMS: https://github.com/cph-cachet/carp.sensing-flutter/wiki
 void main() async {
   // register this sampling package before using its measures
-  SamplingPackageRegistry().register(AudioSamplingPackage());
+  SamplingPackageRegistry().register(AudioVideoSamplingPackage());
 
   // Create a study protocol
   StudyProtocol protocol = StudyProtocol(
@@ -27,8 +27,8 @@ void main() async {
       AutomaticTask()
         ..addMeasures(SensorSamplingPackage().common.getMeasureList(
           types: [
-            AudioSamplingPackage.AUDIO,
-            AudioSamplingPackage.NOISE,
+            AudioVideoSamplingPackage.AUDIO,
+            AudioVideoSamplingPackage.NOISE,
           ],
         )),
       phone);

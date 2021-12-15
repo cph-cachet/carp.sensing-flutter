@@ -1,3 +1,7 @@
+## 0.32.1
+* the package now also supports video recordings
+* the package is therefore renamed to `AudioVideoSamplingPackage` (instead of `AudioSamplingPackage`)
+
 ## 0.32.0
 * update to `carp_mobile_sensing` v. 0.32.0
 * improved exception handling in audio probe
