@@ -1,3 +1,9 @@
+## 0.32.1
+* the package now also supports video recordings
+   * added a `VideoDatum`
+   * added a `VideoProbe` which does nothing (video/images comes from the app, not background sensing)
+* the package is renamed to `AudioVideoSamplingPackage` (instead of `AudioSamplingPackage`)
+
 ## 0.32.0
 * update to `carp_mobile_sensing` v. 0.32.0
 * improved exception handling in audio probe

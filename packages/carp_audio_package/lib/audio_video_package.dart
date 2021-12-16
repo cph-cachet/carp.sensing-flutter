@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2021 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -9,19 +9,21 @@ part of audio;
 
 // TODO -- audio recording and noise is conflicting... can't run at the same time...
 
-/// This is the base class for this audio sampling package.
+/// A sampling package for capturing audio (incl. noise) and video (incl. images).
 ///
 /// To use this package, register it in the [carp_mobile_sensing] package using
 ///
 /// ```
-///   SamplingPackageRegistry.register(AudioSamplingPackage());
+///   SamplingPackageRegistry.register(AudioVideoSamplingPackage());
 /// ```
-class AudioSamplingPackage extends SmartphoneSamplingPackage {
+class AudioVideoSamplingPackage extends SmartphoneSamplingPackage {
   static const String AUDIO = "dk.cachet.carp.audio";
+  static const String VIDEO = "dk.cachet.carp.video";
   static const String NOISE = "dk.cachet.carp.noise";
 
   List<String> get dataTypes => [
         AUDIO,
+        VIDEO,
         NOISE,
       ];
 
@@ -29,6 +31,8 @@ class AudioSamplingPackage extends SmartphoneSamplingPackage {
     switch (type) {
       case AUDIO:
         return AudioProbe();
+      case VIDEO:
+        return VideoProbe();
       case NOISE:
         return NoiseProbe();
       default:
@@ -44,7 +48,8 @@ class AudioSamplingPackage extends SmartphoneSamplingPackage {
     ));
   }
 
-  List<Permission> get permissions => [Permission.microphone];
+  List<Permission> get permissions =>
+      [Permission.microphone, Permission.camera];
 
   SamplingSchema get common => SamplingSchema(
       type: SamplingSchemaType.common,
@@ -58,6 +63,15 @@ class AudioSamplingPackage extends SmartphoneSamplingPackage {
             name: 'Audio Recording',
             description:
                 "Collects an audio recording from the phone's microphone",
+            enabled: true,
+          )),
+      MapEntry(
+          VIDEO,
+          CAMSMeasure(
+            type: VIDEO,
+            name: 'Video or Image Recording',
+            description:
+                "Collects a video recording or an image from the phone's camera",
             enabled: true,
           )),
       MapEntry(

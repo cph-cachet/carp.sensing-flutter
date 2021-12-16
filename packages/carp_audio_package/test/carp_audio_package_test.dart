@@ -15,7 +15,7 @@ void main() {
     DomainJsonFactory();
 
     // register the context sampling package
-    SamplingPackageRegistry().register(AudioSamplingPackage());
+    SamplingPackageRegistry().register(AudioVideoSamplingPackage());
 
     // Create a new study protocol.
     protocol = StudyProtocol(

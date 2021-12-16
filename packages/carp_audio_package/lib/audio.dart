@@ -17,10 +17,11 @@ import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 part 'audio_probe.dart';
+part 'video_probe.dart';
 part 'noise_probe.dart';
-part 'audio_datum.dart';
-part 'audio_measures.dart';
-part 'audio_package.dart';
+part 'datums.dart';
+part 'noise_measure.dart';
+part 'audio_video_package.dart';
 part 'audio.g.dart';
 
 // auto generate json code (.g files) with:
