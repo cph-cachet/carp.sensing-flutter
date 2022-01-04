@@ -1,6 +1,6 @@
 part of context;
 
-/// Collects local weather information using the [WeatherStation] API.
+/// Collects local weather information using the [WeatherFactory] API.
 class WeatherProbe extends DatumProbe {
   late WeatherFactory _wf;
 

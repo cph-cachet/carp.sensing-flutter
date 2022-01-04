@@ -23,7 +23,7 @@ enum GeolocationAccuracy {
   reduced,
 }
 
-/// A mixin class for all [Measure] definition using location.
+/// A mixin class for all [Measure] definitions using location.
 abstract class LocationConfiguration {
   /// Defines the desired accuracy that should be used to determine the location
   /// data. Default value is [GeolocationAccuracy.balanced].
@@ -98,7 +98,14 @@ class LocationManager {
   Future<location.PermissionStatus> hasPermission() async =>
       await locationManager.hasPermission();
 
-  /// Configures the [LocationManager], incl. sensing a notification to the
+  /// Request permissions to access location?
+  ///
+  /// If the result is [PermissionStatus.deniedForever], no dialog will be
+  /// shown on [requestPermission].
+  Future<location.PermissionStatus> requestPermission() async =>
+      await locationManager.requestPermission();
+
+  /// Configures the [LocationManager], incl. sending a notification to the
   /// Android notification system.
   ///
   /// Configuration is done based on the [LocationConfiguration]. If not provided,
@@ -128,6 +135,7 @@ class LocationManager {
           "$runtimeType - Permission to collect location data 'Always' in the background has not been granted. "
           "Make sure to grant this BEFORE sensing is resumed. "
           "The context sampling package does not handle permissions. This should be handled on the application level.");
+      _configuring = false;
       return;
     }
 

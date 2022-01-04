@@ -43,8 +43,6 @@ class ActivityDatum extends Datum {
   /// * WALKING - The device is on a user who is walking.
   /// * RUNNING - The device is on a user who is running.
   /// * STILL - The device is still (not moving).
-  /// * TILTING - The device angle relative to gravity changed significantly.
-  /// * UNKNOWN - Unable to detect the current activity.
   ///
   /// The types above are adopted from the Android activity recognition API.
   /// On iOS the following mapping takes place:
@@ -54,7 +52,11 @@ class ActivityDatum extends Datum {
   /// * running => RUNNING
   /// * automotive => IN_VEHICLE
   /// * cycling => ON_BICYCLE
-  /// * unknown => UNKNOWN
+  ///
+  /// Note that the [ActivityProbe] discard some AR events, which include:
+  ///  * [ActivityType.UNKNOWN]
+  ///  * [ActivityType.TILTING]
+  ///  * Activities with a low confidence level (<50%)
   ActivityType type;
 
   /// Activity [type] as a string.

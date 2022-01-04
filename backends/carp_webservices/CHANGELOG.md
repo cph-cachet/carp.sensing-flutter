@@ -1,3 +1,6 @@
+## 0.32.4
+* added support for counting data points
+
 ## 0.32.3
 * fix: issue [#239](https://github.com/cph-cachet/carp.sensing-flutter/issues/239 )
 * improvement to unit tests

@@ -26,7 +26,7 @@ part 'src/location_manager.dart';
 part 'src/activity/activity_datum.dart';
 part 'src/activity/activity_probe.dart';
 part 'src/location/location_datum.dart';
-part 'src/location/location_probe.dart';
+part 'src/location/location_probes.dart';
 part 'src/location/location_measure.dart';
 part 'src/weather/weather_datum.dart';
 part 'src/weather/weather_measure.dart';

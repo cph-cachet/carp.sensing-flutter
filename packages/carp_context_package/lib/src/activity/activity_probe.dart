@@ -8,15 +8,37 @@
 part of context;
 
 /// Collects activity information from the underlying OS's activity recognition
-/// API. It generates an [ActivityDatum] every time an activity is detected,
-/// which is not `ActivityType.UNKNOWN`.
+/// API. It generates an [ActivityDatum] every time an activity is detected.
+///
+/// Since the AR on both Android and iOS generates a lot of 'useless' events, the
+/// following AR event are removed:
+///  * [ActivityType.UNKNOWN]
+///  * [ActivityType.TILTING]
+///  * Activities with a low confidence level (<50%)
 class ActivityProbe extends StreamProbe {
   Stream<Datum>? _stream;
-  // Since this probe runs alongside location, which runs a foreground service
-  // this probe does not need to run one.
+
+  @override
+  Future onResume() async {
+    // check permission to access the AR on Android
+    final status = await Permission.activityRecognition.status;
+    if (!status.isGranted) {
+      warning(
+          '$runtimeType - permission not granted to use to activity recognition: $status - trying to request it');
+      await Permission.activityRecognition.request();
+    }
+
+    super.onResume();
+  }
+
+  @override
   Stream<Datum> get stream => _stream ??= ActivityRecognition.instance
-      .startStream(runForegroundService: false)
-      // .where((event) => event.type != ActivityType.UNKNOWN)
+      .activityStream(runForegroundService: false)
+      .where((event) => event.type != ActivityType.UNKNOWN)
+      .where((event) => event.type != ActivityType.TILTING)
+      .where((event) => event.confidence > 50)
       .map((activity) => ActivityDatum.fromActivity(activity))
       .asBroadcastStream();
+  // since this probe runs alongside location, which runs a foreground service
+  // this probe does not need to run as a foreground serive
 }

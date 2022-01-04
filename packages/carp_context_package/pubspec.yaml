@@ -18,7 +18,7 @@ dependencies:
   permission_handler: ^8.3.0  
   weather: ^2.0.1
   air_quality: ^2.0.0
-  activity_recognition_flutter: ^4.0.3
+  activity_recognition_flutter: ^4.1.0
   openmhealth_schemas: ^0.2.1
   mobility_features: ^3.0.0
   location: ^4.3.0  # also handles location in the background
