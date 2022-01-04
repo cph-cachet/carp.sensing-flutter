@@ -6,7 +6,7 @@ class WeatherProbe extends DatumProbe {
 
   void onInitialize(Measure measure) {
     super.onInitialize(measure);
-    WeatherMeasure wm = measure as WeatherMeasure;
+    final WeatherMeasure wm = measure as WeatherMeasure;
     _wf = WeatherFactory(wm.apiKey);
   }
 
@@ -18,36 +18,36 @@ class WeatherProbe extends DatumProbe {
   /// Returns the [WeatherDatum] for this location.
   Future<Datum> getDatum() async {
     try {
-      var loc = await LocationManager().getLastKnownLocation();
-
-      Weather w = await _wf.currentWeatherByLocation(
+      final loc = await LocationManager().getLastKnownLocation();
+      final Weather weather = await _wf.currentWeatherByLocation(
         loc.latitude!,
         loc.longitude!,
       );
 
       return WeatherDatum()
-        ..country = w.country
-        ..areaName = w.areaName
-        ..weatherMain = w.weatherMain
-        ..weatherDescription = w.weatherDescription
-        ..date = w.date
-        ..sunrise = w.sunrise
-        ..sunset = w.sunset
-        ..latitude = w.latitude
-        ..longitude = w.longitude
-        ..pressure = w.pressure
-        ..windSpeed = w.windSpeed
-        ..windDegree = w.windDegree
-        ..humidity = w.humidity
-        ..cloudiness = w.cloudiness
-        ..rainLastHour = w.rainLastHour
-        ..rainLast3Hours = w.rainLast3Hours
-        ..snowLastHour = w.snowLastHour
-        ..snowLast3Hours = w.snowLast3Hours
-        ..temperature = w.temperature!.celsius
-        ..tempMin = w.tempMin!.celsius
-        ..tempMax = w.tempMax!.celsius;
+        ..country = weather.country
+        ..areaName = weather.areaName
+        ..weatherMain = weather.weatherMain
+        ..weatherDescription = weather.weatherDescription
+        ..date = weather.date
+        ..sunrise = weather.sunrise
+        ..sunset = weather.sunset
+        ..latitude = weather.latitude
+        ..longitude = weather.longitude
+        ..pressure = weather.pressure
+        ..windSpeed = weather.windSpeed
+        ..windDegree = weather.windDegree
+        ..humidity = weather.humidity
+        ..cloudiness = weather.cloudiness
+        ..rainLastHour = weather.rainLastHour
+        ..rainLast3Hours = weather.rainLast3Hours
+        ..snowLastHour = weather.snowLastHour
+        ..snowLast3Hours = weather.snowLast3Hours
+        ..temperature = weather.temperature!.celsius
+        ..tempMin = weather.tempMin!.celsius
+        ..tempMax = weather.tempMax!.celsius;
     } catch (err) {
+      warning('$runtimeType - Error getting weather - $err');
       return ErrorDatum('WeatherProbe Exception: $err');
     }
   }
