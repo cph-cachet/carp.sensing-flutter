@@ -76,4 +76,19 @@ void main() {
     print(toJsonString(dataPoint));
     assert(dataPoint.carpBody != null);
   });
+
+  test('Video Data Point', () async {
+    VideoDatum datum = VideoDatum(
+      filename: "filename.mp3",
+      videoType: VideoType.video,
+      startRecordingTime: DateTime.now().subtract(Duration(days: 1)),
+      endRecordingTime: DateTime.now(),
+    );
+
+    DataPoint dataPoint = DataPoint.fromData(datum);
+
+    print(dataPoint);
+    print(toJsonString(dataPoint));
+    assert(dataPoint.carpBody != null);
+  });
 }
