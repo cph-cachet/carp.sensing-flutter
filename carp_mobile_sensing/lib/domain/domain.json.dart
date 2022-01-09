@@ -31,6 +31,7 @@ void _registerFromJsonFunctions() {
 
   // Trigger classes
   FromJsonFactory().register(ImmediateTrigger());
+  FromJsonFactory().register(OneTimeTrigger(''));
   FromJsonFactory().register(DelayedTrigger(delay: Duration()));
   FromJsonFactory().register(DeploymentDelayedTrigger(delay: Duration()));
   FromJsonFactory().register(PeriodicTrigger(

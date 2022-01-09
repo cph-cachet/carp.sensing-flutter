@@ -31,14 +31,22 @@ class ActivityProbe extends StreamProbe {
     super.onResume();
   }
 
+  // @override
+  // Stream<Datum> get stream => _stream ??= ActivityRecognition.instance
+  //     // since this probe runs alongside location, which runs a foreground service
+  //     // this probe does not need to run as a foreground serive
+  //     .activityStream(runForegroundService: false)
+  //     // .where((event) => event.type != ActivityType.UNKNOWN)
+  //     // .where((event) => event.type != ActivityType.TILTING)
+  //     // .where((event) => event.confidence > 50)
+  //     .map((activity) => ActivityDatum.fromActivityEvent(activity))
+  //     .asBroadcastStream();
+
   @override
-  Stream<Datum> get stream => _stream ??= ActivityRecognition.instance
-      .activityStream(runForegroundService: false)
-      .where((event) => event.type != ActivityType.UNKNOWN)
-      .where((event) => event.type != ActivityType.TILTING)
-      .where((event) => event.confidence > 50)
-      .map((activity) => ActivityDatum.fromActivity(activity))
-      .asBroadcastStream();
-  // since this probe runs alongside location, which runs a foreground service
-  // this probe does not need to run as a foreground serive
+  Stream<Datum> get stream =>
+      _stream ??= ar.FlutterActivityRecognition.instance.activityStream
+          .where((event) => event.type != ar.ActivityType.UNKNOWN)
+          .where((event) => event.confidence != ar.ActivityConfidence.LOW)
+          .map((activity) => ActivityDatum.fromActivity(activity))
+          .asBroadcastStream();
 }

@@ -471,6 +471,28 @@ Map<String, dynamic> _$ImmediateTriggerToJson(ImmediateTrigger instance) {
   return val;
 }
 
+OneTimeTrigger _$OneTimeTriggerFromJson(Map<String, dynamic> json) =>
+    OneTimeTrigger(
+      json['triggerId'] as String,
+    )
+      ..$type = json[r'$type'] as String?
+      ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String?;
+
+Map<String, dynamic> _$OneTimeTriggerToJson(OneTimeTrigger instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(r'$type', instance.$type);
+  writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
+  val['triggerId'] = instance.triggerId;
+  return val;
+}
+
 PassiveTrigger _$PassiveTriggerFromJson(Map<String, dynamic> json) =>
     PassiveTrigger()
       ..$type = json[r'$type'] as String?

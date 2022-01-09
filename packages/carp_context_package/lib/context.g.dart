@@ -411,7 +411,8 @@ Map<String, dynamic> _$AirQualityMeasureToJson(AirQualityMeasure instance) {
 MobilityDatum _$MobilityDatumFromJson(Map<String, dynamic> json) =>
     MobilityDatum()
       ..id = json['id'] as String?
-      ..date = DateTime.parse(json['date'] as String)
+      ..date =
+          json['date'] == null ? null : DateTime.parse(json['date'] as String)
       ..timestamp = json['timestamp'] == null
           ? null
           : DateTime.parse(json['timestamp'] as String)
@@ -432,7 +433,7 @@ Map<String, dynamic> _$MobilityDatumToJson(MobilityDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  val['date'] = instance.date.toIso8601String();
+  writeNotNull('date', instance.date?.toIso8601String());
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
   writeNotNull('number_of_places', instance.numberOfPlaces);
   writeNotNull('location_variance', instance.locationVariance);

@@ -1,3 +1,6 @@
+## 0.32.2
+* added `OneTimeTrigger` as a new trigger type.
+
 ## 0.32.1
 * notifications are no longer (re-)send when the app task queue is restored across app restart.
 

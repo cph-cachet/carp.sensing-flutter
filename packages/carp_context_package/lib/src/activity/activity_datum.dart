@@ -10,6 +10,21 @@ part of context;
 /// Holds activity information.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ActivityDatum extends Datum {
+  static Map<ar.ActivityType, ActivityType> _activityTypeMap = {
+    ar.ActivityType.IN_VEHICLE: ActivityType.IN_VEHICLE,
+    ar.ActivityType.ON_BICYCLE: ActivityType.ON_BICYCLE,
+    ar.ActivityType.RUNNING: ActivityType.RUNNING,
+    ar.ActivityType.STILL: ActivityType.STILL,
+    ar.ActivityType.UNKNOWN: ActivityType.UNKNOWN,
+    ar.ActivityType.WALKING: ActivityType.WALKING,
+  };
+
+  static Map<ar.ActivityConfidence, int> _confidenceLevelMap = {
+    ar.ActivityConfidence.HIGH: 100,
+    ar.ActivityConfidence.MEDIUM: 70,
+    ar.ActivityConfidence.LOW: 40,
+  };
+
   DataFormat get format =>
       DataFormat.fromString(ContextSamplingPackage.ACTIVITY);
 
@@ -20,10 +35,15 @@ class ActivityDatum extends Datum {
         type = map['type'],
         super();
 
-  factory ActivityDatum.fromActivity(ActivityEvent activityEvent) =>
+  factory ActivityDatum.fromActivityEvent(ActivityEvent activityEvent) =>
       ActivityDatum(
         activityEvent.type,
         activityEvent.confidence,
+      );
+
+  factory ActivityDatum.fromActivity(ar.Activity activity) => ActivityDatum(
+        _activityTypeMap[activity.type] ?? ActivityType.UNKNOWN,
+        _confidenceLevelMap[activity.confidence] ?? 0,
       );
 
   factory ActivityDatum.fromJson(Map<String, dynamic> json) =>

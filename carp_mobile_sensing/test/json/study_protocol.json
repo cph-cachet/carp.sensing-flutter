@@ -1,7 +1,7 @@
 {
     "ownerId": "user@dtu.dk",
     "name": "patient_tracking",
-    "creationDate": "2021-10-14T20:39:44.470858Z",
+    "creationDate": "2022-01-09T16:49:40.224672Z",
     "masterDevices": [
      {
       "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
@@ -27,6 +27,10 @@
       "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
      },
      "2": {
+      "$type": "dk.cachet.carp.protocols.domain.triggers.OneTimeTrigger",
+      "triggerId": "device"
+     },
+     "3": {
       "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
      }
     },
@@ -70,7 +74,7 @@
         "enabled": true,
         "configuration": {},
         "frequency": 60000000,
-        "duration": 2000000
+        "duration": 1000000
        },
        {
         "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
@@ -149,6 +153,20 @@
       "name": "Task #1",
       "measures": [
        {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
+        "type": "dk.cachet.carp.device",
+        "name": "Basic Device Info",
+        "description": "Collects basic information about the phone.",
+        "enabled": true,
+        "configuration": {}
+       }
+      ]
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
+      "name": "Task #8",
+      "measures": [
+       {
         "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
         "type": "dk.cachet.carp.light",
         "name": "Ambient Light",
@@ -166,7 +184,7 @@
         "enabled": true,
         "configuration": {},
         "frequency": 60000000,
-        "duration": 2000000
+        "duration": 1000000
        }
       ]
      }
@@ -185,6 +203,11 @@
      {
       "triggerId": 2,
       "taskName": "Task #1",
+      "targetDeviceRoleName": "masterphone"
+     },
+     {
+      "triggerId": 3,
+      "taskName": "Task #8",
       "targetDeviceRoleName": "esense"
      }
     ],

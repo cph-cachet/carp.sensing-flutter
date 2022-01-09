@@ -1,3 +1,7 @@
+## 0.32.1
+* improvement to activity and mobility sensing
+* using 
+
 ## 0.32.0
 * update to `carp_mobile_sensing` v. 0.32.0
 

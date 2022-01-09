@@ -12,6 +12,8 @@ TriggerExecutor getTriggerExecutor(Trigger trigger) {
   switch (trigger.runtimeType) {
     case ImmediateTrigger:
       return ImmediateTriggerExecutor(trigger);
+    case OneTimeTrigger:
+      return OneTimeTriggerExecutor(trigger);
     case DelayedTrigger:
       return DelayedTriggerExecutor(trigger as DelayedTrigger);
     case DeploymentDelayedTrigger:
@@ -77,6 +79,32 @@ abstract class TriggerExecutor extends Executor {
 /// Executes a [ImmediateTrigger], i.e. starts sampling immediately.
 class ImmediateTriggerExecutor extends TriggerExecutor {
   ImmediateTriggerExecutor(Trigger trigger) : super(trigger);
+}
+
+/// Executes a [OneTimeTrigger], i.e. a trigger that only runs once.
+class OneTimeTriggerExecutor extends TriggerExecutor {
+  OneTimeTrigger get _onetimeTrigger => trigger as OneTimeTrigger;
+
+  OneTimeTriggerExecutor(Trigger trigger) : super(trigger);
+
+  Future onResume() async {
+    // check if this trigger has already occured
+    String? _savedOccurence =
+        Settings().preferences!.getString(_onetimeTrigger.triggerId);
+    debug('$runtimeType - saved occurrence : $_savedOccurence');
+
+    // if not - save and resume trigger
+    if (_savedOccurence == null) {
+      final now = DateTime.now().toUtc().toString();
+      await Settings().preferences!.setString(_onetimeTrigger.triggerId, now);
+      debug('$runtimeType - saving occurrence : $now');
+
+      await super.onResume();
+    } else {
+      info(
+          "$runtimeType - one time trigger with id '${_onetimeTrigger.triggerId}' already occured at: $_savedOccurence. Will not trigger now.");
+    }
+  }
 }
 
 /// Executes a [PassiveTrigger].
