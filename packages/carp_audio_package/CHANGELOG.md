@@ -1,5 +1,6 @@
-## 0.32.2
+## 0.32.2+1
 * added check for permission to access microphone, if not granted.
+* update of README
 
 ## 0.32.1
 * the package now also supports video recordings

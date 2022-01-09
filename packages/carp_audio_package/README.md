@@ -4,11 +4,12 @@
 [![github stars](https://img.shields.io/github/stars/cph-cachet/carp.sensing-flutter.svg?style=flat&logo=github&colorB=deeppink&label=stars)](https://github.com/cph-cachet/carp.sensing-flutter)
 [![MIT License](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
 
-This library contains a sampling package for audio sampling to work with 
+This library contains a sampling package for audio and video sampling to work with 
 the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package.
 This packages supports sampling of the following [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core/Measure-class.html) types:
 
 * `dk.cachet.carp.audio`
+* `dk.cachet.carp.video`
 * `dk.cachet.carp.noise`
 
 See the [wiki]() for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types)
@@ -80,5 +81,5 @@ Before creating a study and running it, register this package in the
 [SamplingPackageRegistry](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/runtime/SamplingPackageRegistry.html).
 
 `````dart
-  SamplingPackageRegistry().register(AudioSamplingPackage());
+  SamplingPackageRegistry().register(AudioVideoSamplingPackage());
 `````
