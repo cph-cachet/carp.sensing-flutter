@@ -19,9 +19,9 @@ dependencies:
   weather: ^2.0.1
   air_quality: ^2.0.0
   activity_recognition_flutter: ^4.2.0
-  flutter_activity_recognition: ^1.2.1
+  # flutter_activity_recognition: ^1.2.1
   openmhealth_schemas: ^0.2.1
-  # mobility_features: ^3.0.0
+  mobility_features: ^3.1.0
   location: ^4.3.0  # also handles location in the background
 
 # Overriding carp libraries to use the local copy
@@ -33,8 +33,8 @@ dependency_overrides:
   #   path: ../../carp_mobile_sensing/
   # openmhealth_schemas:
   #   path: ../../../openmhealth_schemas/
-  mobility_features:
-    path: ../../../../flutter-plugins/packages/mobility_features/
+  # mobility_features:
+  #   path: ../../../../flutter-plugins/packages/mobility_features/
 
 dev_dependencies:
 #  flutter_test:

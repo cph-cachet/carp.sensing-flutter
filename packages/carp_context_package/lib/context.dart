@@ -19,8 +19,8 @@ import 'package:mobility_features/mobility_features.dart';
 // import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart' as location;
 
-import 'package:flutter_activity_recognition/flutter_activity_recognition.dart'
-    as ar;
+// import 'package:flutter_activity_recognition/flutter_activity_recognition.dart'
+//     as ar;
 
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
