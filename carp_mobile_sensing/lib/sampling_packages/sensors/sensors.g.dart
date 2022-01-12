@@ -13,9 +13,7 @@ AccelerometerDatum _$AccelerometerDatumFromJson(Map<String, dynamic> json) =>
       z: (json['z'] as num?)?.toDouble(),
     )
       ..id = json['id'] as String?
-      ..timestamp = json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String);
+      ..timestamp = DateTime.parse(json['timestamp'] as String);
 
 Map<String, dynamic> _$AccelerometerDatumToJson(AccelerometerDatum instance) {
   final val = <String, dynamic>{};
@@ -27,7 +25,7 @@ Map<String, dynamic> _$AccelerometerDatumToJson(AccelerometerDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   writeNotNull('x', instance.x);
   writeNotNull('y', instance.y);
   writeNotNull('z', instance.z);
@@ -41,14 +39,12 @@ GyroscopeDatum _$GyroscopeDatumFromJson(Map<String, dynamic> json) =>
       z: (json['z'] as num?)?.toDouble(),
     )
       ..id = json['id'] as String?
-      ..timestamp = json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String);
+      ..timestamp = DateTime.parse(json['timestamp'] as String);
 
 Map<String, dynamic> _$GyroscopeDatumToJson(GyroscopeDatum instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'timestamp': instance.timestamp?.toIso8601String(),
+      'timestamp': instance.timestamp.toIso8601String(),
       'x': instance.x,
       'y': instance.y,
       'z': instance.z,
@@ -61,9 +57,7 @@ LightDatum _$LightDatumFromJson(Map<String, dynamic> json) => LightDatum(
       maxLux: json['max_lux'] as num?,
     )
       ..id = json['id'] as String?
-      ..timestamp = json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String);
+      ..timestamp = DateTime.parse(json['timestamp'] as String);
 
 Map<String, dynamic> _$LightDatumToJson(LightDatum instance) {
   final val = <String, dynamic>{};
@@ -75,7 +69,7 @@ Map<String, dynamic> _$LightDatumToJson(LightDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   writeNotNull('mean_lux', instance.meanLux);
   writeNotNull('std_lux', instance.stdLux);
   writeNotNull('min_lux', instance.minLux);
@@ -88,9 +82,7 @@ PedometerDatum _$PedometerDatumFromJson(Map<String, dynamic> json) =>
       json['step_count'] as int?,
     )
       ..id = json['id'] as String?
-      ..timestamp = json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String);
+      ..timestamp = DateTime.parse(json['timestamp'] as String);
 
 Map<String, dynamic> _$PedometerDatumToJson(PedometerDatum instance) {
   final val = <String, dynamic>{};
@@ -102,7 +94,7 @@ Map<String, dynamic> _$PedometerDatumToJson(PedometerDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   writeNotNull('step_count', instance.stepCount);
   return val;
 }

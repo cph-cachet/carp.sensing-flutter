@@ -72,6 +72,11 @@ void main() {
         eSense);
   });
 
+  test('DataPoints -> JSON', () async {
+    final device = DataPoint.fromData(DeviceDatum('iOS', '1234abcd'));
+    print(toJsonString(device));
+  });
+
   test('SmartphoneStudyProtocol -> JSON', () async {
     print(masterProtocol);
     print(toJsonString(masterProtocol));

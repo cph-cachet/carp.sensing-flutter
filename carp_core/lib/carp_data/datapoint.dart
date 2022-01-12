@@ -24,7 +24,7 @@ part of carp_core_data;
 //   "start_time": "2021-02-27T12:27:12.902614Z",   # optional
 //   "end_time": "2021-02-27T12:27:14.933672Z",     # optional
 //   "data_format": {                               # required
-//    "namespace": "carp",
+//    "namespace": "dk.cachet.carp",
 //    "name": "light"
 //   }
 //  },
