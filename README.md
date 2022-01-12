@@ -17,8 +17,8 @@ These are the available CARP Mobile Sensing Flutter components in this repositor
 | [carp_core](./carp_core) | [![pub package](https://img.shields.io/pub/v/carp_core.svg)](https://pub.dartlang.org/packages/carp_core) | The CARP core domain model|
 
 
-| Component | Description | pub.dev |
-|-----------|-------------|-----|
+| Component | Description | pub.dev pub.dev |
+|-----------|-------------|-----------------|
 | **Core** | **Basic components** |  |
 | [carp_core](./carp_core) | The CARP core domain model | [![pub package](https://img.shields.io/pub/v/carp_core.svg)](https://pub.dartlang.org/packages/carp_core) |
 | [carp_mobile_sensing](./carp_mobile_sensing) | The main CARP Mobile Sensing Framework | [![pub package](https://img.shields.io/pub/v/carp_mobile_sensing.svg)](https://pub.dartlang.org/packages/carp_mobile_sensing) |
