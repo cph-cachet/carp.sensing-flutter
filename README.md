@@ -12,11 +12,6 @@ These plugins are also available on [pub](https://pub.dev/publishers/cachet.dk/p
 ## Software Components
 These are the available CARP Mobile Sensing Flutter components in this repository.
 
-| Component  | Pub | Description |
-|------------|-----|:-----------:|
-| [carp_core](./carp_core) | [![pub package](https://img.shields.io/pub/v/carp_core.svg)](https://pub.dartlang.org/packages/carp_core) | The CARP core domain model|
-
-
 | Component | Description | http://pub.dev/ |
 |-----------|-------------|-----------------|
 | **Core** | **Basic components** |  |
