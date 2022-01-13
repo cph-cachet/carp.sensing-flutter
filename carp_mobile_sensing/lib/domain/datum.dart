@@ -14,18 +14,18 @@ class Datum extends Data {
   DataFormat get format => DataFormat.fromString(CAMSDataType.NONE);
 
   /// An identifier for this [Datum], unique across all data generated.
+  /// If this datum is part of a [MultiDatum], then this id is null.
   String? id;
 
   /// The UTC timestamp when this data was generated on the device.
-  DateTime? timestamp;
+  late DateTime timestamp;
 
   /// Create a datum.
   ///
   /// If [multiDatum] is true, then multiple [Datum] objects are stored in a
   /// list with the same [id] and header.
   Datum({bool multiDatum = false}) : super() {
-    // add a timestamp to each datum if part of a list of many
-    timestamp = (multiDatum) ? DateTime.now().toUtc() : null;
+    timestamp = DateTime.now().toUtc();
     // only add an id to single datums - not to each multi-datum
     id = (!multiDatum) ? Uuid().v1() : null;
   }

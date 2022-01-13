@@ -207,9 +207,19 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           ..measures = SamplingPackageRegistry().debug().getMeasureList(
             types: [
               DeviceSamplingPackage.MEMORY,
-              DeviceSamplingPackage.DEVICE,
               DeviceSamplingPackage.BATTERY,
               DeviceSamplingPackage.SCREEN,
+            ],
+          ),
+        phone);
+
+    // collect device info only once
+    protocol.addTriggeredTask(
+        OneTimeTrigger('device'),
+        AutomaticTask()
+          ..measures = SamplingPackageRegistry().debug().getMeasureList(
+            types: [
+              DeviceSamplingPackage.DEVICE,
             ],
           ),
         phone);

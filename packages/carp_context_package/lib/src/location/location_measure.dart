@@ -44,6 +44,5 @@ class LocationMeasure extends CAMSMeasure with LocationConfiguration {
       FromJsonFactory().fromJson(json) as LocationMeasure;
   Map<String, dynamic> toJson() => _$LocationMeasureToJson(this);
 
-  String toString() =>
-      super.toString() + ', accuracy: $accuracy, distance: $distance';
+  String toString() => super.toString();
 }

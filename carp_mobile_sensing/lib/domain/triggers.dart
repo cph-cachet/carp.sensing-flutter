@@ -17,6 +17,26 @@ class ImmediateTrigger extends Trigger {
   Map<String, dynamic> toJson() => _$ImmediateTriggerToJson(this);
 }
 
+/// A trigger that triggers once during a deployment.
+///
+/// In contrast to [ImmediateTrigger], which triggers every time the app is (re)started,
+/// this [OneTimeTrigger] only triggers *once* during the life-time of an app.
+/// Useful for triggering e.g., a demographic survey or collecting device
+/// information.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class OneTimeTrigger extends Trigger {
+  /// The unique id of this trigger.
+  /// Used to identify specific instances of one time triggeres.
+  String triggerId;
+
+  OneTimeTrigger(this.triggerId) : super();
+
+  Function get fromJsonFunction => _$OneTimeTriggerFromJson;
+  factory OneTimeTrigger.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as OneTimeTrigger;
+  Map<String, dynamic> toJson() => _$OneTimeTriggerToJson(this);
+}
+
 /// A trigger that waits to be started until the [resume] method is called.
 /// Is paused by calling the [pause] method.
 ///
@@ -69,7 +89,7 @@ class DelayedTrigger extends Trigger {
 /// Never stops sampling once started.
 ///
 /// In contrast to the [DelayedTrigger], the delay is measured from the **start
-/// of deployment**, i.e. when a protocol is deployed on the phone for the first
+/// of the deployment**, i.e. when a protocol is deployed on the phone for the first
 /// time. And since deployment information is saved across app restart, this delay
 /// is also consistent across app restart.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
@@ -90,7 +110,8 @@ class DeploymentDelayedTrigger extends Trigger {
 /// It is important to specify **both** the [period] and the [duration] in order
 /// to specify the timing of resuming and pausing sampling.
 ///
-/// Weekly and montly recurrent triggers can be specified using the [RecurrentScheduledTrigger].
+/// Daily, weekly and montly recurrent triggers can be specified using the
+/// [RecurrentScheduledTrigger].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class PeriodicTrigger extends Trigger {
   /// The period (reciprocal of frequency) of sampling.

@@ -471,6 +471,28 @@ Map<String, dynamic> _$ImmediateTriggerToJson(ImmediateTrigger instance) {
   return val;
 }
 
+OneTimeTrigger _$OneTimeTriggerFromJson(Map<String, dynamic> json) =>
+    OneTimeTrigger(
+      json['triggerId'] as String,
+    )
+      ..$type = json[r'$type'] as String?
+      ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String?;
+
+Map<String, dynamic> _$OneTimeTriggerToJson(OneTimeTrigger instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(r'$type', instance.$type);
+  writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
+  val['triggerId'] = instance.triggerId;
+  return val;
+}
+
 PassiveTrigger _$PassiveTriggerFromJson(Map<String, dynamic> json) =>
     PassiveTrigger()
       ..$type = json[r'$type'] as String?
@@ -827,9 +849,7 @@ Map<String, dynamic> _$RandomRecurrentTriggerToJson(
 
 Datum _$DatumFromJson(Map<String, dynamic> json) => Datum()
   ..id = json['id'] as String?
-  ..timestamp = json['timestamp'] == null
-      ? null
-      : DateTime.parse(json['timestamp'] as String);
+  ..timestamp = DateTime.parse(json['timestamp'] as String);
 
 Map<String, dynamic> _$DatumToJson(Datum instance) {
   final val = <String, dynamic>{};
@@ -841,7 +861,7 @@ Map<String, dynamic> _$DatumToJson(Datum instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   return val;
 }
 
@@ -849,9 +869,7 @@ StringDatum _$StringDatumFromJson(Map<String, dynamic> json) => StringDatum(
       json['str'] as String,
     )
       ..id = json['id'] as String?
-      ..timestamp = json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String);
+      ..timestamp = DateTime.parse(json['timestamp'] as String);
 
 Map<String, dynamic> _$StringDatumToJson(StringDatum instance) {
   final val = <String, dynamic>{};
@@ -863,7 +881,7 @@ Map<String, dynamic> _$StringDatumToJson(StringDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   val['str'] = instance.str;
   return val;
 }
@@ -872,9 +890,7 @@ MapDatum _$MapDatumFromJson(Map<String, dynamic> json) => MapDatum(
       Map<String, String>.from(json['map'] as Map),
     )
       ..id = json['id'] as String?
-      ..timestamp = json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String);
+      ..timestamp = DateTime.parse(json['timestamp'] as String);
 
 Map<String, dynamic> _$MapDatumToJson(MapDatum instance) {
   final val = <String, dynamic>{};
@@ -886,7 +902,7 @@ Map<String, dynamic> _$MapDatumToJson(MapDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   val['map'] = instance.map;
   return val;
 }
@@ -895,9 +911,7 @@ ErrorDatum _$ErrorDatumFromJson(Map<String, dynamic> json) => ErrorDatum(
       json['message'] as String,
     )
       ..id = json['id'] as String?
-      ..timestamp = json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String);
+      ..timestamp = DateTime.parse(json['timestamp'] as String);
 
 Map<String, dynamic> _$ErrorDatumToJson(ErrorDatum instance) {
   final val = <String, dynamic>{};
@@ -909,7 +923,7 @@ Map<String, dynamic> _$ErrorDatumToJson(ErrorDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   val['message'] = instance.message;
   return val;
 }
@@ -919,9 +933,7 @@ FileDatum _$FileDatumFromJson(Map<String, dynamic> json) => FileDatum(
       upload: json['upload'] as bool? ?? true,
     )
       ..id = json['id'] as String?
-      ..timestamp = json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String)
+      ..timestamp = DateTime.parse(json['timestamp'] as String)
       ..metadata = (json['metadata'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(k, e as String),
       );
@@ -936,7 +948,7 @@ Map<String, dynamic> _$FileDatumToJson(FileDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   val['filename'] = instance.filename;
   val['upload'] = instance.upload;
   writeNotNull('metadata', instance.metadata);
@@ -945,9 +957,7 @@ Map<String, dynamic> _$FileDatumToJson(FileDatum instance) {
 
 MultiDatum _$MultiDatumFromJson(Map<String, dynamic> json) => MultiDatum()
   ..id = json['id'] as String?
-  ..timestamp = json['timestamp'] == null
-      ? null
-      : DateTime.parse(json['timestamp'] as String)
+  ..timestamp = DateTime.parse(json['timestamp'] as String)
   ..data = (json['data'] as List<dynamic>)
       .map((e) => Datum.fromJson(e as Map<String, dynamic>))
       .toList();
@@ -962,7 +972,7 @@ Map<String, dynamic> _$MultiDatumToJson(MultiDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   val['data'] = instance.data;
   return val;
 }

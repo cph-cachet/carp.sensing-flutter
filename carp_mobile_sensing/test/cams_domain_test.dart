@@ -48,6 +48,17 @@ void main() {
       masterPhone, // a task with all measures
     );
 
+    // collect device info only once
+    masterProtocol.addTriggeredTask(
+        OneTimeTrigger('device'),
+        AutomaticTask()
+          ..measures = SamplingPackageRegistry().debug().getMeasureList(
+            types: [
+              DeviceSamplingPackage.DEVICE,
+            ],
+          ),
+        masterPhone);
+
     // adding two measures to another device
     masterProtocol.addTriggeredTask(
         ImmediateTrigger(),
@@ -61,16 +72,21 @@ void main() {
         eSense);
   });
 
+  test('DataPoints -> JSON', () async {
+    final device = DataPoint.fromData(DeviceDatum('iOS', '1234abcd'));
+    print(toJsonString(device));
+  });
+
   test('SmartphoneStudyProtocol -> JSON', () async {
     print(masterProtocol);
     print(toJsonString(masterProtocol));
     expect(masterProtocol.ownerId, 'user@dtu.dk');
     expect(masterProtocol.masterDevices.length, 1);
     expect(masterProtocol.connectedDevices.length, 1);
-    expect(masterProtocol.triggers.length, 3);
+    expect(masterProtocol.triggers.length, 4);
     expect(masterProtocol.triggers.keys.first, '0');
-    expect(masterProtocol.tasks.length, 3);
-    expect(masterProtocol.triggeredTasks.length, 3);
+    expect(masterProtocol.tasks.length, 4);
+    expect(masterProtocol.triggeredTasks.length, 4);
   });
 
   test(

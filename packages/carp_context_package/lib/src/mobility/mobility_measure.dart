@@ -13,7 +13,7 @@ class MobilityMeasure extends CAMSMeasure with LocationConfiguration {
   double placeRadius;
 
   /// The duration of a stop (minimum).
-  Duration stopDuration = const Duration(minutes: 3);
+  Duration stopDuration = const Duration(seconds: 30);
 
   MobilityMeasure({
     required String type,
@@ -41,7 +41,7 @@ class MobilityMeasure extends CAMSMeasure with LocationConfiguration {
     this.notificationTitle = notificationTitle;
     this.notificationMessage = notificationMessage;
     this.notificationDescription = notificationDescription;
-    this.stopDuration = stopDuration ?? const Duration(minutes: 3);
+    this.stopDuration = stopDuration ?? const Duration(seconds: 30);
   }
 
   Function get fromJsonFunction => _$MobilityMeasureFromJson;

@@ -218,6 +218,31 @@ class DataPointReference extends CarpReference {
     );
   }
 
+  /// The count of datapoints for this deployment.
+  ///
+  /// A [query] using [REST SQL (RSQL)](https://github.com/jirutka/rsql-parser)
+  /// can be provided.
+  Future<int> count([String query = '']) async {
+    String url = (query.length == 0)
+        ? "$dataEndpointUri/count"
+        : "$dataEndpointUri/count?query=$query";
+
+    http.Response response = await httpr.get(url, headers: headers);
+    int httpStatusCode = response.statusCode;
+
+    if (httpStatusCode == HttpStatus.ok) {
+      print('count response = ${response.body}');
+      return int.tryParse(response.body) ?? 0;
+    }
+    // All other cases are treated as an error.
+    Map<String, dynamic> responseJson = json.decode(response.body);
+    throw CarpServiceException(
+      httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
+      message: responseJson["message"],
+      path: responseJson["path"],
+    );
+  }
+
   /// Delete a data point with the given [id].
   /// Returns on success.
   /// Throws an exception if data point is not found or otherwise unsuccessful.

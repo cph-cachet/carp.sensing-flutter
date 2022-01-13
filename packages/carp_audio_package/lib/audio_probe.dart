@@ -77,7 +77,14 @@ class AudioProbe extends DatumProbe {
           'Trying to start audio recording, but recording is already running. '
           'Make sure to pause this audio probe before resuming it.');
     } else {
-      _startRecordingTime = DateTime.now();
+      // check permission to access the microphone
+      final status = await Permission.microphone.status;
+      if (!status.isGranted) {
+        warning(
+            '$runtimeType - permission not granted to use to micophone: $status - trying to request it');
+        await Permission.microphone.request();
+      }
+      _startRecordingTime = DateTime.now().toUtc();
       _datum = AudioDatum(
         filename: 'ignored for now',
         startRecordingTime: _startRecordingTime!,
@@ -97,7 +104,7 @@ class AudioProbe extends DatumProbe {
   }
 
   Future _stopAudioRecording() async {
-    _endRecordingTime = DateTime.now();
+    _endRecordingTime = DateTime.now().toUtc();
     _isRecording = false;
 
     // stop the recording

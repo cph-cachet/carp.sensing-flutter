@@ -221,7 +221,7 @@ void main() {
       test('- post', () async {
         final DataPoint data = DataPoint.fromData(datum1);
         // studyId & userId is required for upload
-        data.carpHeader.studyId = studyId;
+        data.carpHeader.studyId = testStudyId;
         data.carpHeader.userId = userId;
 
         print(_encode(data.toJson()));
@@ -236,7 +236,7 @@ void main() {
       test('- post w/o trigger id & device role name', () async {
         final DataPoint data = DataPoint.fromData(datum1);
         // studyId & userId is required for upload
-        data.carpHeader.studyId = studyId;
+        data.carpHeader.studyId = testStudyId;
         data.carpHeader.userId = userId;
 
         // triggerId, deviceRoleName, startTime & endTime are not required
@@ -283,6 +283,15 @@ void main() {
         // data.forEach((datapoint) => print(_encode((datapoint.toJson()))));
 
         assert(data.length >= 0);
+      });
+
+      test('- count data points based on query', () async {
+        String query = 'carp_header.data_format.namespace==test';
+        print("query : $query");
+        int count = await CarpService().getDataPointReference().count(query);
+
+        print('N=$count');
+        expect(count, greaterThanOrEqualTo(0));
       });
 
       test('- delete test data points', () async {

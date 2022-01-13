@@ -16,9 +16,7 @@ AudioDatum _$AudioDatumFromJson(Map<String, dynamic> json) => AudioDatum(
           : DateTime.parse(json['end_recording_time'] as String),
     )
       ..id = json['id'] as String?
-      ..timestamp = json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String)
+      ..timestamp = DateTime.parse(json['timestamp'] as String)
       ..upload = json['upload'] as bool
       ..metadata = (json['metadata'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(k, e as String),
@@ -34,7 +32,7 @@ Map<String, dynamic> _$AudioDatumToJson(AudioDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   val['filename'] = instance.filename;
   val['upload'] = instance.upload;
   writeNotNull('metadata', instance.metadata);
@@ -52,9 +50,7 @@ NoiseDatum _$NoiseDatumFromJson(Map<String, dynamic> json) => NoiseDatum(
       maxDecibel: (json['max_decibel'] as num).toDouble(),
     )
       ..id = json['id'] as String?
-      ..timestamp = json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String);
+      ..timestamp = DateTime.parse(json['timestamp'] as String);
 
 Map<String, dynamic> _$NoiseDatumToJson(NoiseDatum instance) {
   final val = <String, dynamic>{};
@@ -66,7 +62,7 @@ Map<String, dynamic> _$NoiseDatumToJson(NoiseDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   val['mean_decibel'] = instance.meanDecibel;
   val['std_decibel'] = instance.stdDecibel;
   val['min_decibel'] = instance.minDecibel;
@@ -85,9 +81,7 @@ VideoDatum _$VideoDatumFromJson(Map<String, dynamic> json) => VideoDatum(
           : DateTime.parse(json['end_recording_time'] as String),
     )
       ..id = json['id'] as String?
-      ..timestamp = json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String)
+      ..timestamp = DateTime.parse(json['timestamp'] as String)
       ..upload = json['upload'] as bool
       ..metadata = (json['metadata'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(k, e as String),
@@ -104,7 +98,7 @@ Map<String, dynamic> _$VideoDatumToJson(VideoDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   val['filename'] = instance.filename;
   val['upload'] = instance.upload;
   writeNotNull('metadata', instance.metadata);

@@ -7,10 +7,7 @@ class MobilityDatum extends Datum {
       DataFormat.fromString(ContextSamplingPackage.MOBILITY);
 
   /// The day of this mobility features.
-  late DateTime date;
-
-  /// The timestamp at which the features were computed.
-  DateTime? timestamp;
+  DateTime? date;
 
   /// Number of places visited on [date].
   int? numberOfPlaces;
@@ -18,30 +15,32 @@ class MobilityDatum extends Datum {
   /// Location Variance on [date].
   double? locationVariance;
 
-  /// Location entropy
+  /// Location entropy on [date].
   ///  * High entropy: Time is spent evenly among all places
   ///  * Low  entropy: Time is mainly spent at a few of the places
   double? entropy;
 
-  /// Normalized entropy. A scalar between 0 and 1
+  /// Normalized entropy on [date]. A scalar between 0 and 1
   double? normalizedEntropy;
 
-  /// Home Stay today. A scalar between 0 and 1, i.e. from 0% to 100%
+  /// Home Stay on [date]. A scalar between 0 and 1.
   double? homeStay;
 
-  /// Distance travelled today, in meters.
+  /// Distance travelled on [date], in meters.
   double? distanceTravelled;
 
   MobilityDatum() : super();
 
   factory MobilityDatum.fromMobilityContext(MobilityContext context) =>
       MobilityDatum()
+        ..date = context.date
+        ..timestamp = context.timestamp
         ..numberOfPlaces = context.numberOfSignificantPlaces
-        ..homeStay = context.homeStay
-        ..distanceTravelled = context.distanceTravelled
+        ..locationVariance = context.locationVariance
         ..entropy = context.entropy
         ..normalizedEntropy = context.normalizedEntropy
-        ..locationVariance = context.locationVariance;
+        ..homeStay = context.homeStay
+        ..distanceTravelled = context.distanceTravelled;
 
   factory MobilityDatum.fromJson(Map<String, dynamic> json) =>
       _$MobilityDatumFromJson(json);

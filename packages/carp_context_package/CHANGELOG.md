@@ -1,3 +1,8 @@
+## 0.32.1
+* improvement to activity and mobility sensing
+* using the `flutter_activity_recognition` plugin for AR
+* upgrade to `mobility_features: ^3.1.0`
+
 ## 0.32.0
 * update to `carp_mobile_sensing` v. 0.32.0
 

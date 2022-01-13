@@ -12,9 +12,7 @@ ActivityDatum _$ActivityDatumFromJson(Map<String, dynamic> json) =>
       json['confidence'] as int,
     )
       ..id = json['id'] as String?
-      ..timestamp = json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String);
+      ..timestamp = DateTime.parse(json['timestamp'] as String);
 
 Map<String, dynamic> _$ActivityDatumToJson(ActivityDatum instance) {
   final val = <String, dynamic>{};
@@ -26,7 +24,7 @@ Map<String, dynamic> _$ActivityDatumToJson(ActivityDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   val['confidence'] = instance.confidence;
   val['type'] = _$ActivityTypeEnumMap[instance.type];
   return val;
@@ -35,21 +33,16 @@ Map<String, dynamic> _$ActivityDatumToJson(ActivityDatum instance) {
 const _$ActivityTypeEnumMap = {
   ActivityType.IN_VEHICLE: 'IN_VEHICLE',
   ActivityType.ON_BICYCLE: 'ON_BICYCLE',
-  ActivityType.ON_FOOT: 'ON_FOOT',
   ActivityType.RUNNING: 'RUNNING',
   ActivityType.STILL: 'STILL',
-  ActivityType.TILTING: 'TILTING',
-  ActivityType.UNKNOWN: 'UNKNOWN',
   ActivityType.WALKING: 'WALKING',
-  ActivityType.INVALID: 'INVALID',
+  ActivityType.UNKNOWN: 'UNKNOWN',
 };
 
 LocationDatum _$LocationDatumFromJson(Map<String, dynamic> json) =>
     LocationDatum()
       ..id = json['id'] as String?
-      ..timestamp = json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String)
+      ..timestamp = DateTime.parse(json['timestamp'] as String)
       ..time =
           json['time'] == null ? null : DateTime.parse(json['time'] as String)
       ..latitude = json['latitude']
@@ -70,7 +63,7 @@ Map<String, dynamic> _$LocationDatumToJson(LocationDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   writeNotNull('time', instance.time?.toIso8601String());
   writeNotNull('latitude', instance.latitude);
   writeNotNull('longitude', instance.longitude);
@@ -137,9 +130,7 @@ const _$GeolocationAccuracyEnumMap = {
 
 WeatherDatum _$WeatherDatumFromJson(Map<String, dynamic> json) => WeatherDatum()
   ..id = json['id'] as String?
-  ..timestamp = json['timestamp'] == null
-      ? null
-      : DateTime.parse(json['timestamp'] as String)
+  ..timestamp = DateTime.parse(json['timestamp'] as String)
   ..country = json['country'] as String?
   ..areaName = json['area_name'] as String?
   ..weatherMain = json['weather_main'] as String?
@@ -174,7 +165,7 @@ Map<String, dynamic> _$WeatherDatumToJson(WeatherDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   writeNotNull('country', instance.country);
   writeNotNull('area_name', instance.areaName);
   writeNotNull('weather_main', instance.weatherMain);
@@ -307,9 +298,7 @@ GeofenceDatum _$GeofenceDatumFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String?,
     )
       ..id = json['id'] as String?
-      ..timestamp = json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String);
+      ..timestamp = DateTime.parse(json['timestamp'] as String);
 
 Map<String, dynamic> _$GeofenceDatumToJson(GeofenceDatum instance) {
   final val = <String, dynamic>{};
@@ -321,7 +310,7 @@ Map<String, dynamic> _$GeofenceDatumToJson(GeofenceDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   writeNotNull('name', instance.name);
   val['type'] = _$GeofenceTypeEnumMap[instance.type];
   return val;
@@ -343,9 +332,7 @@ AirQualityDatum _$AirQualityDatumFromJson(Map<String, dynamic> json) =>
       $enumDecode(_$AirQualityLevelEnumMap, json['air_quality_level']),
     )
       ..id = json['id'] as String?
-      ..timestamp = json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String);
+      ..timestamp = DateTime.parse(json['timestamp'] as String);
 
 Map<String, dynamic> _$AirQualityDatumToJson(AirQualityDatum instance) {
   final val = <String, dynamic>{};
@@ -357,7 +344,7 @@ Map<String, dynamic> _$AirQualityDatumToJson(AirQualityDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   val['air_quality_index'] = instance.airQualityIndex;
   val['source'] = instance.source;
   val['place'] = instance.place;
@@ -411,10 +398,9 @@ Map<String, dynamic> _$AirQualityMeasureToJson(AirQualityMeasure instance) {
 MobilityDatum _$MobilityDatumFromJson(Map<String, dynamic> json) =>
     MobilityDatum()
       ..id = json['id'] as String?
-      ..date = DateTime.parse(json['date'] as String)
-      ..timestamp = json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String)
+      ..timestamp = DateTime.parse(json['timestamp'] as String)
+      ..date =
+          json['date'] == null ? null : DateTime.parse(json['date'] as String)
       ..numberOfPlaces = json['number_of_places'] as int?
       ..locationVariance = (json['location_variance'] as num?)?.toDouble()
       ..entropy = (json['entropy'] as num?)?.toDouble()
@@ -432,8 +418,8 @@ Map<String, dynamic> _$MobilityDatumToJson(MobilityDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  val['date'] = instance.date.toIso8601String();
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
+  writeNotNull('date', instance.date?.toIso8601String());
   writeNotNull('number_of_places', instance.numberOfPlaces);
   writeNotNull('location_variance', instance.locationVariance);
   writeNotNull('entropy', instance.entropy);

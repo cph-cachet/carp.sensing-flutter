@@ -148,9 +148,9 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
               description:
                   "Extracts mobility features based on location tracking",
               placeRadius: 50,
-              stopRadius: 25,
+              stopRadius: 5,
               usePriorContexts: true,
-              stopDuration: Duration(minutes: 3))),
+              stopDuration: Duration(seconds: 30))),
     ]);
 
   SamplingSchema get light {

@@ -23,7 +23,7 @@ enum GeolocationAccuracy {
   reduced,
 }
 
-/// A mixin class for all [Measure] definition using location.
+/// A mixin class for all [Measure] definitions using location.
 abstract class LocationConfiguration {
   /// Defines the desired accuracy that should be used to determine the location
   /// data. Default value is [GeolocationAccuracy.balanced].
@@ -73,6 +73,7 @@ abstract class LocationConfiguration {
 class LocationManager {
   final location.Location locationManager = location.Location();
   static final LocationManager _instance = LocationManager._();
+  location.LocationData? _lastKnownLocation;
 
   /// Get the singleton [LocationManager] instance
   factory LocationManager() => _instance;
@@ -98,13 +99,20 @@ class LocationManager {
   Future<location.PermissionStatus> hasPermission() async =>
       await locationManager.hasPermission();
 
-  /// Configures the [LocationManager], incl. sensing a notification to the
+  /// Request permissions to access location?
+  ///
+  /// If the result is [PermissionStatus.deniedForever], no dialog will be
+  /// shown on [requestPermission].
+  Future<location.PermissionStatus> requestPermission() async =>
+      await locationManager.requestPermission();
+
+  /// Configures the [LocationManager], incl. sending a notification to the
   /// Android notification system.
   ///
   /// Configuration is done based on the [LocationConfiguration]. If not provided,
   /// as set of default configurations are used.
   Future<void> configure([LocationConfiguration? configuration]) async {
-    // fast out if already enabled or is in the process of configuring (this is a singleton class)
+    // fast out if already enabled or is in the process of configuring
     if (enabled) return;
     if (_configuring) return;
 
@@ -128,6 +136,7 @@ class LocationManager {
           "$runtimeType - Permission to collect location data 'Always' in the background has not been granted. "
           "Make sure to grant this BEFORE sensing is resumed. "
           "The context sampling package does not handle permissions. This should be handled on the application level.");
+      _configuring = false;
       return;
     }
 
@@ -146,7 +155,7 @@ class LocationManager {
             'The location service is running in the background',
         description: configuration?.notificationDescription ??
             'Background location is on to keep the app up-to-date with your location. '
-                'This is required for main features to work properly when the app is not running.',
+                'This is required for main features to work properly when the app is not in use.',
         onTapBringToFront: false,
       );
     } catch (error) {
@@ -169,11 +178,11 @@ class LocationManager {
   /// Gets the current location of the phone.
   /// Throws an error if the app has no permission to access location.
   Future<location.LocationData> getLocation() async =>
-      await locationManager.getLocation();
+      _lastKnownLocation = await locationManager.getLocation();
 
   /// Get the last known location.
   Future<location.LocationData> getLastKnownLocation() async =>
-      await locationManager.getLocation();
+      _lastKnownLocation ?? await locationManager.getLocation();
 
   /// Returns a stream of [LocationData] objects.
   /// Throws an error if the app has no permission to access location.

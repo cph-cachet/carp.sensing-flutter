@@ -7,7 +7,8 @@
 
 part of context;
 
-/// A [Datum] that holds air quality information collected through the [World's Air Quality Index (WAQI)](https://waqi.info) API.
+/// A [Datum] that holds air quality information collected via the
+/// [World's Air Quality Index (WAQI)](https://waqi.info) API.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class AirQualityDatum extends Datum {
   DataFormat get format =>

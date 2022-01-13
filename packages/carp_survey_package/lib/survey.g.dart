@@ -44,9 +44,7 @@ RPTaskResultDatum _$RPTaskResultDatumFromJson(Map<String, dynamic> json) =>
               json['survey_result'] as Map<String, dynamic>),
     )
       ..id = json['id'] as String?
-      ..timestamp = json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String);
+      ..timestamp = DateTime.parse(json['timestamp'] as String);
 
 Map<String, dynamic> _$RPTaskResultDatumToJson(RPTaskResultDatum instance) {
   final val = <String, dynamic>{};
@@ -58,7 +56,7 @@ Map<String, dynamic> _$RPTaskResultDatumToJson(RPTaskResultDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   writeNotNull('survey_result', instance.surveyResult);
   return val;
 }
