@@ -1,3 +1,6 @@
+## 0.32.3
+* upgrade to `research_package: ^0.7.0`
+
 ## 0.32.2
 * support for messages in CARP
 

@@ -14,6 +14,7 @@ class Datum extends Data {
   DataFormat get format => DataFormat.fromString(CAMSDataType.NONE);
 
   /// An identifier for this [Datum], unique across all data generated.
+  /// If this datum is part of a [MultiDatum], then this id is null.
   String? id;
 
   /// The UTC timestamp when this data was generated on the device.

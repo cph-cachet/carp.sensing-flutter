@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
  
-  carp_core: ^0.31.0
+  carp_core: ^0.31.3
   carp_mobile_sensing: ^0.32.0
  
   json_annotation: ^4.3.0

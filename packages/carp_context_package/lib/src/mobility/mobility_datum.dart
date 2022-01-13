@@ -9,9 +9,6 @@ class MobilityDatum extends Datum {
   /// The day of this mobility features.
   DateTime? date;
 
-  /// The timestamp at which the features were computed.
-  DateTime? timestamp;
-
   /// Number of places visited on [date].
   int? numberOfPlaces;
 

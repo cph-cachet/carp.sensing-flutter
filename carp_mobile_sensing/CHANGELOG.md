@@ -1,6 +1,6 @@
 ## 0.32.3
 * added `OneTimeTrigger` as a new trigger type.
-* `timestamp` is now enforced on all `Datum` objects.
+* `timestamp` is now enforced (not null) on all `Datum` objects.
 
 ## 0.32.1
 * notifications are no longer (re-)send when the app task queue is restored across app restart.
