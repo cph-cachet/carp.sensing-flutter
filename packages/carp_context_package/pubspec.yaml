@@ -14,12 +14,12 @@ dependencies:
   carp_core: ^0.31.3
   carp_mobile_sensing: ^0.32.0
  
-  json_annotation: ^4.3.0
+  json_annotation: 4.3.0 # ^4.3.0
   permission_handler: ^8.3.0  
   weather: ^2.0.1
   air_quality: ^2.0.0
-  activity_recognition_flutter: ^4.2.0
-  # flutter_activity_recognition: ^1.2.1
+  # activity_recognition_flutter: ^4.2.0
+  flutter_activity_recognition: ^1.2.1
   openmhealth_schemas: ^0.2.1
   mobility_features: ^3.1.0
   location: ^4.3.0  # also handles location in the background

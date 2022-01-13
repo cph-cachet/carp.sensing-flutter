@@ -19,11 +19,11 @@ class ActivityDatum extends Datum {
   //   ar.ActivityType.WALKING: ActivityType.WALKING,
   // };
 
-  // static Map<ar.ActivityConfidence, int> _confidenceLevelMap = {
-  //   ar.ActivityConfidence.HIGH: 100,
-  //   ar.ActivityConfidence.MEDIUM: 70,
-  //   ar.ActivityConfidence.LOW: 40,
-  // };
+  static Map<ActivityConfidence, int> _confidenceLevelMap = {
+    ActivityConfidence.HIGH: 100,
+    ActivityConfidence.MEDIUM: 70,
+    ActivityConfidence.LOW: 40,
+  };
 
   DataFormat get format =>
       DataFormat.fromString(ContextSamplingPackage.ACTIVITY);
@@ -35,16 +35,16 @@ class ActivityDatum extends Datum {
         type = map['type'],
         super();
 
-  factory ActivityDatum.fromActivityEvent(ActivityEvent activityEvent) =>
-      ActivityDatum(
-        activityEvent.type,
-        activityEvent.confidence,
-      );
-
-  // factory ActivityDatum.fromActivity(ar.Activity activity) => ActivityDatum(
-  //       _activityTypeMap[activity.type] ?? ActivityType.UNKNOWN,
-  //       _confidenceLevelMap[activity.confidence] ?? 0,
+  // factory ActivityDatum.fromActivityEvent(ActivityEvent activityEvent) =>
+  //     ActivityDatum(
+  //       activityEvent.type,
+  //       activityEvent.confidence,
   //     );
+
+  factory ActivityDatum.fromActivity(Activity activity) => ActivityDatum(
+        activity.type,
+        _confidenceLevelMap[activity.confidence] ?? 0,
+      );
 
   factory ActivityDatum.fromJson(Map<String, dynamic> json) =>
       _$ActivityDatumFromJson(json);

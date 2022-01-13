@@ -1,6 +1,9 @@
-## 0.31.1
+## 0.32.1
 * small update to dependencies in pubspec
 * update to `research_package: ^0.7.0`
+
+## 0.32.0
+* update to `carp_mobile_sensing` v. 0.32.0
 
 ## 0.31.0
 * update to `carp_mobile_sensing` v. 0.31.0

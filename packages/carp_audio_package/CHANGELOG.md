@@ -1,3 +1,6 @@
+## 0.32.3
+*  upgrade to `carp_mobile_sensing: ^0.32.3`
+
 ## 0.32.2+1
 * added check for permission to access microphone, if not granted.
 * update of README
