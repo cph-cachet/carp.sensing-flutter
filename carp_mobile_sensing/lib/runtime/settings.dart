@@ -15,6 +15,7 @@ class Settings {
   static const String USER_ID_KEY = 'user_id';
   static const String STUDY_START_KEY = 'study_start';
   static const String STUDY_DEPLOYMENT_ID_KEY = 'study_deployment_id';
+  static const String ONE_TIME_TRIGGER_KEY = 'one_time_trigger';
 
   static const String CARP_DATA_FILE_PATH = 'data';
   static const String CARP_RESOURCE_FILE_PATH = 'resources';
@@ -149,7 +150,7 @@ class Settings {
 
   DateTime? _studyDeploymentStartTime;
   String get _studyDeploymentStartTimesKey =>
-      '$studyDeploymentId.${Settings.STUDY_START_KEY}'.toLowerCase();
+      '$studyDeploymentId.$STUDY_START_KEY'.toLowerCase();
 
   /// The timestamp (in UTC) when the current study deployment was started on
   /// this phone.
