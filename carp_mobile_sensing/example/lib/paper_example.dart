@@ -64,5 +64,7 @@ void sensing() async {
   });
 
   // listening on events of a specific type
-  ProbeRegistry().eventsByType(DeviceSamplingPackage.SCREEN).forEach(print);
+  await ProbeRegistry()
+      .eventsByType(DeviceSamplingPackage.SCREEN)
+      .forEach(print);
 }
