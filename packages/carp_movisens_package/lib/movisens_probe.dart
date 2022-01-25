@@ -29,7 +29,7 @@ class MovisensProbe extends StreamProbe {
       m.address!,
       m.deviceName!,
     );
-    movisens = new Movisens(userData!);
+    movisens = Movisens(userData!);
   }
 
   Stream<MovisensDatum>? get stream => (movisens?.movisensStream != null)

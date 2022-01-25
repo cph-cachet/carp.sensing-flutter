@@ -487,6 +487,8 @@ void carp_core_client_example() async {
   SmartphoneDeploymentController controller =
       await client.addStudy(studyDeploymentId!, deviceToUse!);
 
+  controller.masterDeployment?.connectedDevices.first.type;
+
   if (controller.status == StudyRuntimeStatus.RegisteringDevices) {
     var connectedDevice = controller.remainingDevicesToRegister.first;
     var connectedRegistration = DeviceRegistration();

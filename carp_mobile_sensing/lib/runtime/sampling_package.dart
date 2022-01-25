@@ -32,7 +32,27 @@ class SamplingPackageRegistry {
       if (!_permissions.contains(permission)) _permissions.add(permission);
     });
     CAMSDataType.add(package.dataTypes);
+
+    // register the package's device in the device registry
+    DeviceController()
+        .registerDevice(package.deviceType, package.deviceManager);
+
     package.onRegister();
+  }
+
+  /// Lookup the [SamplingPackage]s that support the [type] of data.
+  ///
+  /// Typically, only one package supports a specific type. Howerver, if
+  /// more than one package does, all packages are returned.
+  /// Maybe also be an empty list.
+  Set<SamplingPackage> lookup(String type) {
+    final Set<SamplingPackage> _packages = {};
+
+    packages.forEach((package) {
+      if (package.dataTypes.contains(type)) _packages.add(package);
+    });
+
+    return _packages;
   }
 
   /// A schema that does maximum sampling.
@@ -209,10 +229,7 @@ abstract class SamplingPackage {
   /// type of device.
   String get deviceType;
 
-  /// Get a [DeviceManager] for the type of device in this package.
-  ///
-  /// Default manager is a smartphone.
-  /// Override this if another type of manager  is supported.
+  /// Get the [DeviceManager] for the device used by this package.
   DeviceManager get deviceManager;
 
   /// Callback method when this package is being registered.
@@ -221,6 +238,7 @@ abstract class SamplingPackage {
 
 /// An abstract class for all sampling packages that run on the phone itself.
 abstract class SmartphoneSamplingPackage implements SamplingPackage {
+  final SmartphoneDeviceManager _deviceManager = SmartphoneDeviceManager();
   String get deviceType => Smartphone.DEVICE_TYPE;
-  DeviceManager get deviceManager => SmartphoneDeviceManager();
+  DeviceManager get deviceManager => _deviceManager;
 }

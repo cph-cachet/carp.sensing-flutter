@@ -44,9 +44,7 @@ ESenseButtonDatum _$ESenseButtonDatumFromJson(Map<String, dynamic> json) =>
       pressed: json['pressed'] as bool,
     )
       ..id = json['id'] as String?
-      ..timestamp = json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String);
+      ..timestamp = DateTime.parse(json['timestamp'] as String);
 
 Map<String, dynamic> _$ESenseButtonDatumToJson(ESenseButtonDatum instance) {
   final val = <String, dynamic>{};
@@ -58,7 +56,7 @@ Map<String, dynamic> _$ESenseButtonDatumToJson(ESenseButtonDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   val['device_name'] = instance.deviceName;
   val['pressed'] = instance.pressed;
   return val;
@@ -85,7 +83,7 @@ Map<String, dynamic> _$ESenseSensorDatumToJson(ESenseSensorDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   val['device_name'] = instance.deviceName;
   writeNotNull('packet_index', instance.packetIndex);
   writeNotNull('accel', instance.accel);

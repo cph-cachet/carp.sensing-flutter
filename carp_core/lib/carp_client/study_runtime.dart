@@ -19,7 +19,7 @@ class StudyRuntime {
   MasterDeviceDeployment? deployment;
 
   /// The device factory to handle the devices used in this study deployment.
-  late DeviceRegistry deviceRegistry;
+  late DeviceDataCollectorFactory deviceRegistry;
 
   /// The deployment service to use to retrieve and manage the study deployment
   /// with [studyDeploymentId]. This deployment service should have the deployment
@@ -87,7 +87,7 @@ class StudyRuntime {
   ///
   Future initialize(
     DeploymentService deploymentService,
-    DeviceRegistry deviceRegistry,
+    DeviceDataCollectorFactory deviceRegistry,
     String studyDeploymentId,
     String deviceRoleName,
     DeviceRegistration deviceRegistration,

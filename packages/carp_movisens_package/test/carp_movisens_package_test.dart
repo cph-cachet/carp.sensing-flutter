@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:movisens_flutter/movisens_flutter.dart';
 import 'package:carp_movisens_package/movisens.dart';
 import 'package:test/test.dart';
 
@@ -18,15 +19,23 @@ void main() {
     // register the context sampling package
     SamplingPackageRegistry().register(MovisensSamplingPackage());
 
-    // Create a new study protocol.
+    // create a new study protocol
     protocol = StudyProtocol(
       ownerId: 'alex@uni.dk',
       name: 'Context package test',
     );
 
-    // Define which devices are used for data collection.
+    // define the Movisens device used for data collection
     phone = Smartphone();
-    MovisensDevice movisens = MovisensDevice();
+    MovisensDeviceDescriptor movisens = MovisensDeviceDescriptor(
+      address: '88:6B:0F:CD:E7:F2',
+      sensorLocation: SensorLocation.chest,
+      gender: Gender.male,
+      sensorName: 'Sensor 02655',
+      height: 175,
+      weight: 75,
+      age: 25,
+    );
 
     protocol
       ..addMasterDevice(phone)
@@ -79,7 +88,7 @@ void main() {
     expect(protocol.ownerId, 'alex@uni.dk');
     expect(protocol.masterDevices.first.roleName, Smartphone.DEFAULT_ROLENAME);
     expect(protocol.connectedDevices.first.roleName,
-        MovisensDevice.DEFAULT_ROLENAME);
+        MovisensDeviceDescriptor.DEFAULT_ROLENAME);
 
     print(toJsonString(protocol));
   });

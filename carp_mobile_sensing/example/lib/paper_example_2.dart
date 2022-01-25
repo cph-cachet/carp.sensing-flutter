@@ -109,9 +109,13 @@ void sensing() async {
       await client.addStudy(studyDeploymentId, deviceRolename);
 
   // configure the controller and resume sampling
-  // await controller.configure(
-  //   privacySchemaName: PrivacySchema.DEFAULT,
-  // );
+  await controller.configure(
+    dataEndPoint: FileDataEndPoint(
+      bufferSize: 50 * 1000,
+      dataFormat: NameSpace.OMH,
+    ),
+    privacySchemaName: PrivacySchema.DEFAULT,
+  );
   await controller.configure();
   controller.resume();
 

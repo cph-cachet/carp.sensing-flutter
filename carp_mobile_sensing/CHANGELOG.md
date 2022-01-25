@@ -1,3 +1,7 @@
+## 0.33.0
+* upgrade to `carp_core` v. 0.33.0 
+* support of new device model, incl. configuration of devices with device descriptors
+
 ## 0.32.3
 * added `OneTimeTrigger` as a new trigger type.
 * `timestamp` is now enforced (not null) on all `Datum` objects.

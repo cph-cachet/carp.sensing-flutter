@@ -72,9 +72,7 @@ const _$GenderEnumMap = {
 MovisensDatum _$MovisensDatumFromJson(Map<String, dynamic> json) =>
     MovisensDatum()
       ..id = json['id'] as String?
-      ..timestamp = json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String)
+      ..timestamp = DateTime.parse(json['timestamp'] as String)
       ..movisensTimestamp = json['movisens_timestamp'] as String?;
 
 Map<String, dynamic> _$MovisensDatumToJson(MovisensDatum instance) {
@@ -87,7 +85,7 @@ Map<String, dynamic> _$MovisensDatumToJson(MovisensDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   writeNotNull('movisens_timestamp', instance.movisensTimestamp);
   return val;
 }
@@ -96,9 +94,7 @@ MovisensMETLevelDatum _$MovisensMETLevelDatumFromJson(
         Map<String, dynamic> json) =>
     MovisensMETLevelDatum()
       ..id = json['id'] as String?
-      ..timestamp = json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String)
+      ..timestamp = DateTime.parse(json['timestamp'] as String)
       ..movisensTimestamp = json['movisens_timestamp'] as String?
       ..format = DataFormat.fromJson(json['format'] as Map<String, dynamic>)
       ..sedentary = json['sedentary'] as String?
@@ -117,7 +113,7 @@ Map<String, dynamic> _$MovisensMETLevelDatumToJson(
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   writeNotNull('movisens_timestamp', instance.movisensTimestamp);
   val['format'] = instance.format;
   writeNotNull('sedentary', instance.sedentary);
@@ -131,9 +127,7 @@ MovisensMovementAccelerationDatum _$MovisensMovementAccelerationDatumFromJson(
         Map<String, dynamic> json) =>
     MovisensMovementAccelerationDatum()
       ..id = json['id'] as String?
-      ..timestamp = json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String)
+      ..timestamp = DateTime.parse(json['timestamp'] as String)
       ..movisensTimestamp = json['movisens_timestamp'] as String?
       ..format = DataFormat.fromJson(json['format'] as Map<String, dynamic>)
       ..movementAcceleration = json['movement_acceleration'] as String?;
@@ -149,7 +143,7 @@ Map<String, dynamic> _$MovisensMovementAccelerationDatumToJson(
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   writeNotNull('movisens_timestamp', instance.movisensTimestamp);
   val['format'] = instance.format;
   writeNotNull('movement_acceleration', instance.movementAcceleration);
@@ -160,9 +154,7 @@ MovisensTapMarkerDatum _$MovisensTapMarkerDatumFromJson(
         Map<String, dynamic> json) =>
     MovisensTapMarkerDatum()
       ..id = json['id'] as String?
-      ..timestamp = json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String)
+      ..timestamp = DateTime.parse(json['timestamp'] as String)
       ..movisensTimestamp = json['movisens_timestamp'] as String?
       ..format = DataFormat.fromJson(json['format'] as Map<String, dynamic>)
       ..tapMarker = json['tap_marker'] as String?;
@@ -178,7 +170,7 @@ Map<String, dynamic> _$MovisensTapMarkerDatumToJson(
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   writeNotNull('movisens_timestamp', instance.movisensTimestamp);
   val['format'] = instance.format;
   writeNotNull('tap_marker', instance.tapMarker);
@@ -189,9 +181,7 @@ MovisensBatteryLevelDatum _$MovisensBatteryLevelDatumFromJson(
         Map<String, dynamic> json) =>
     MovisensBatteryLevelDatum()
       ..id = json['id'] as String?
-      ..timestamp = json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String)
+      ..timestamp = DateTime.parse(json['timestamp'] as String)
       ..movisensTimestamp = json['movisens_timestamp'] as String?
       ..format = DataFormat.fromJson(json['format'] as Map<String, dynamic>)
       ..batteryLevel = json['battery_level'] as String?;
@@ -207,7 +197,7 @@ Map<String, dynamic> _$MovisensBatteryLevelDatumToJson(
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   writeNotNull('movisens_timestamp', instance.movisensTimestamp);
   val['format'] = instance.format;
   writeNotNull('battery_level', instance.batteryLevel);
@@ -218,9 +208,7 @@ MovisensBodyPositionDatum _$MovisensBodyPositionDatumFromJson(
         Map<String, dynamic> json) =>
     MovisensBodyPositionDatum()
       ..id = json['id'] as String?
-      ..timestamp = json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String)
+      ..timestamp = DateTime.parse(json['timestamp'] as String)
       ..movisensTimestamp = json['movisens_timestamp'] as String?
       ..format = DataFormat.fromJson(json['format'] as Map<String, dynamic>)
       ..bodyPosition = json['body_position'] as String?;
@@ -236,7 +224,7 @@ Map<String, dynamic> _$MovisensBodyPositionDatumToJson(
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   writeNotNull('movisens_timestamp', instance.movisensTimestamp);
   val['format'] = instance.format;
   writeNotNull('body_position', instance.bodyPosition);
@@ -246,9 +234,7 @@ Map<String, dynamic> _$MovisensBodyPositionDatumToJson(
 MovisensMETDatum _$MovisensMETDatumFromJson(Map<String, dynamic> json) =>
     MovisensMETDatum()
       ..id = json['id'] as String?
-      ..timestamp = json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String)
+      ..timestamp = DateTime.parse(json['timestamp'] as String)
       ..movisensTimestamp = json['movisens_timestamp'] as String?
       ..format = DataFormat.fromJson(json['format'] as Map<String, dynamic>)
       ..met = json['met'] as String?;
@@ -263,7 +249,7 @@ Map<String, dynamic> _$MovisensMETDatumToJson(MovisensMETDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   writeNotNull('movisens_timestamp', instance.movisensTimestamp);
   val['format'] = instance.format;
   writeNotNull('met', instance.met);
@@ -273,9 +259,7 @@ Map<String, dynamic> _$MovisensMETDatumToJson(MovisensMETDatum instance) {
 MovisensHRDatum _$MovisensHRDatumFromJson(Map<String, dynamic> json) =>
     MovisensHRDatum()
       ..id = json['id'] as String?
-      ..timestamp = json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String)
+      ..timestamp = DateTime.parse(json['timestamp'] as String)
       ..movisensTimestamp = json['movisens_timestamp'] as String?
       ..format = DataFormat.fromJson(json['format'] as Map<String, dynamic>)
       ..hr = json['hr'] as String?;
@@ -290,7 +274,7 @@ Map<String, dynamic> _$MovisensHRDatumToJson(MovisensHRDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   writeNotNull('movisens_timestamp', instance.movisensTimestamp);
   val['format'] = instance.format;
   writeNotNull('hr', instance.hr);
@@ -300,9 +284,7 @@ Map<String, dynamic> _$MovisensHRDatumToJson(MovisensHRDatum instance) {
 MovisensHRVDatum _$MovisensHRVDatumFromJson(Map<String, dynamic> json) =>
     MovisensHRVDatum()
       ..id = json['id'] as String?
-      ..timestamp = json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String)
+      ..timestamp = DateTime.parse(json['timestamp'] as String)
       ..movisensTimestamp = json['movisens_timestamp'] as String?
       ..format = DataFormat.fromJson(json['format'] as Map<String, dynamic>)
       ..hrv = json['hrv'] as String?;
@@ -317,7 +299,7 @@ Map<String, dynamic> _$MovisensHRVDatumToJson(MovisensHRVDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   writeNotNull('movisens_timestamp', instance.movisensTimestamp);
   val['format'] = instance.format;
   writeNotNull('hrv', instance.hrv);
@@ -328,9 +310,7 @@ MovisensIsHrvValidDatum _$MovisensIsHrvValidDatumFromJson(
         Map<String, dynamic> json) =>
     MovisensIsHrvValidDatum()
       ..id = json['id'] as String?
-      ..timestamp = json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String)
+      ..timestamp = DateTime.parse(json['timestamp'] as String)
       ..movisensTimestamp = json['movisens_timestamp'] as String?
       ..format = DataFormat.fromJson(json['format'] as Map<String, dynamic>)
       ..isHrvValid = json['is_hrv_valid'] as String?;
@@ -346,7 +326,7 @@ Map<String, dynamic> _$MovisensIsHrvValidDatumToJson(
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   writeNotNull('movisens_timestamp', instance.movisensTimestamp);
   val['format'] = instance.format;
   writeNotNull('is_hrv_valid', instance.isHrvValid);
@@ -357,9 +337,7 @@ MovisensStepCountDatum _$MovisensStepCountDatumFromJson(
         Map<String, dynamic> json) =>
     MovisensStepCountDatum()
       ..id = json['id'] as String?
-      ..timestamp = json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String)
+      ..timestamp = DateTime.parse(json['timestamp'] as String)
       ..movisensTimestamp = json['movisens_timestamp'] as String?
       ..format = DataFormat.fromJson(json['format'] as Map<String, dynamic>)
       ..stepCount = json['step_count'] as String?;
@@ -375,7 +353,7 @@ Map<String, dynamic> _$MovisensStepCountDatumToJson(
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   writeNotNull('movisens_timestamp', instance.movisensTimestamp);
   val['format'] = instance.format;
   writeNotNull('step_count', instance.stepCount);
@@ -386,9 +364,7 @@ MovisensConnectionStatusDatum _$MovisensConnectionStatusDatumFromJson(
         Map<String, dynamic> json) =>
     MovisensConnectionStatusDatum()
       ..id = json['id'] as String?
-      ..timestamp = json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String)
+      ..timestamp = DateTime.parse(json['timestamp'] as String)
       ..movisensTimestamp = json['movisens_timestamp'] as String?
       ..format = DataFormat.fromJson(json['format'] as Map<String, dynamic>)
       ..connectionStatus = json['connection_status'] as String?;
@@ -404,29 +380,41 @@ Map<String, dynamic> _$MovisensConnectionStatusDatumToJson(
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   writeNotNull('movisens_timestamp', instance.movisensTimestamp);
   val['format'] = instance.format;
   writeNotNull('connection_status', instance.connectionStatus);
   return val;
 }
 
-MovisensDevice _$MovisensDeviceFromJson(Map<String, dynamic> json) =>
-    MovisensDevice(
+MovisensDeviceDescriptor _$MovisensDeviceDescriptorFromJson(
+        Map<String, dynamic> json) =>
+    MovisensDeviceDescriptor(
       roleName: json['roleName'] as String?,
-      supportedDataTypes: (json['supportedDataTypes'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
+      address: json['address'] as String,
+      sensorName: json['sensorName'] as String,
+      sensorLocation: $enumDecodeNullable(
+              _$SensorLocationEnumMap, json['sensorLocation']) ??
+          SensorLocation.chest,
+      gender:
+          $enumDecodeNullable(_$GenderEnumMap, json['gender']) ?? Gender.male,
+      height: json['height'] as int? ?? 178,
+      weight: json['weight'] as int? ?? 78,
+      age: json['age'] as int? ?? 25,
     )
       ..$type = json[r'$type'] as String?
       ..isMasterDevice = json['isMasterDevice'] as bool?
+      ..supportedDataTypes = (json['supportedDataTypes'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList()
       ..samplingConfiguration =
           (json['samplingConfiguration'] as Map<String, dynamic>).map(
         (k, e) => MapEntry(
             k, SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
       );
 
-Map<String, dynamic> _$MovisensDeviceToJson(MovisensDevice instance) {
+Map<String, dynamic> _$MovisensDeviceDescriptorToJson(
+    MovisensDeviceDescriptor instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -440,5 +428,12 @@ Map<String, dynamic> _$MovisensDeviceToJson(MovisensDevice instance) {
   val['roleName'] = instance.roleName;
   writeNotNull('supportedDataTypes', instance.supportedDataTypes);
   val['samplingConfiguration'] = instance.samplingConfiguration;
+  val['address'] = instance.address;
+  val['sensorName'] = instance.sensorName;
+  val['weight'] = instance.weight;
+  val['height'] = instance.height;
+  val['age'] = instance.age;
+  val['gender'] = _$GenderEnumMap[instance.gender];
+  val['sensorLocation'] = _$SensorLocationEnumMap[instance.sensorLocation];
   return val;
 }

@@ -22,7 +22,7 @@ class ClientManager {
   /// The registry of connected devices used to collect data locally on
   /// this master device. Also works as a factory which is used to create
   /// [DeviceDataCollector] instances for connected devices.
-  DeviceRegistry deviceRegistry;
+  DeviceDataCollectorFactory deviceRegistry;
 
   // private val dataListener: DataListener = DataListener( dataCollectorFactory )
 

@@ -102,7 +102,7 @@ class ESenseSensorDatum extends ESenseDatum {
       this.accel,
       this.gyro})
       : super(deviceName) {
-    this.timestamp ??= timestamp;
+    if (timestamp != null) this.timestamp = timestamp;
   }
 
   factory ESenseSensorDatum.fromSensorEvent(

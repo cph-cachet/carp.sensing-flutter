@@ -42,7 +42,11 @@ class ESenseSamplingPackage implements SamplingPackage {
         Permission.location,
         Permission.microphone,
       ];
+
+  @override
   String get deviceType => ESenseDevice.DEVICE_TYPE;
+
+  @override
   DeviceManager get deviceManager => ESenseDeviceManager();
 
   // Since the configuration of the eSense devices require the device name

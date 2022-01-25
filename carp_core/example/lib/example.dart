@@ -88,7 +88,7 @@ void carpCoreDeploymentExample() async {
 void carpCoreClientExample() async {
   ParticipationService participationService;
   DeploymentService deploymentService;
-  DeviceRegistry deviceRegistry;
+  DeviceDataCollectorFactory deviceRegistry;
 
   // Retrieve invitation to participate in the study using a specific device.
   ActiveParticipationInvitation invitation = (await participationService

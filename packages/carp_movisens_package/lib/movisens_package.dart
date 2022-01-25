@@ -27,7 +27,8 @@ class MovisensSamplingPackage implements SamplingPackage {
 
   void onRegister() {
     FromJsonFactory().register(MovisensMeasure(type: MOVISENS));
-    FromJsonFactory().register(MovisensDevice());
+    FromJsonFactory()
+        .register(MovisensDeviceDescriptor(address: '', sensorName: ''));
 
     // registering the transformers from CARP to OMH for heart rate and step count.
     // we assume that there is an OMH schema registered already...
@@ -41,7 +42,7 @@ class MovisensSamplingPackage implements SamplingPackage {
         );
   }
 
-  String get deviceType => MovisensDevice.DEVICE_TYPE;
+  String get deviceType => MovisensDeviceDescriptor.DEVICE_TYPE;
   DeviceManager get deviceManager => MovisensDeviceManager();
 
   List<Permission> get permissions => []; // no special permissions needed
