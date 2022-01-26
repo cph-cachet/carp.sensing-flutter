@@ -37,7 +37,7 @@ class StudyRuntime {
   MasterDeviceDescriptor? device;
 
   /// The device role name.
-  String? get deviceRoleName => device!.roleName;
+  String? get deviceRoleName => device?.roleName;
 
   /// Composite ID for this study runtime, comprised of the [studyDeploymentId]
   /// and [device] role name.
@@ -100,16 +100,19 @@ class StudyRuntime {
 
     // Register the master device this study runs on for the given study deployment.
     deploymentStatus = await deploymentService.registerDevice(
-        studyDeploymentId, deviceRoleName, deviceRegistration);
+      studyDeploymentId,
+      deviceRoleName,
+      deviceRegistration,
+    );
 
     // Initialize runtime.
     this.studyDeploymentId = studyDeploymentId;
     device =
         deploymentStatus.masterDeviceStatus!.device as MasterDeviceDescriptor?;
 
-    // After registration, deployment information might immediately be available
-    // for this client device.
-    await tryDeployment();
+    // // After registration, deployment information might immediately be available
+    // // for this client device.
+    // await tryDeployment();
   }
 
   /// Verifies whether the master device is ready for deployment and in case

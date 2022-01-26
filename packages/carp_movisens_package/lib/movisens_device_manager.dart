@@ -8,6 +8,10 @@
 part of movisens;
 
 /// A [DeviceDescriptor] for a Movisens device used in a [StudyProtocol].
+///
+/// This device descriptor defined the basic configuration of the Movisens
+/// device, including the BTLE MAC [address], the [sensorName], the [sensorLocation] and the
+/// [weight], [height], [age], [gender] of the user using the device.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class MovisensDeviceDescriptor extends DeviceDescriptor {
   /// The type of a Movisens device.
@@ -23,6 +27,9 @@ class MovisensDeviceDescriptor extends DeviceDescriptor {
   /// The user-friendly name of the sensor.
   String sensorName;
 
+  /// Sensor placement on body
+  SensorLocation sensorLocation;
+
   /// Weight of the person wearing the Movisens device in kg.
   int weight;
 
@@ -34,9 +41,6 @@ class MovisensDeviceDescriptor extends DeviceDescriptor {
 
   /// Gender of the person wearing the Movisens device, male or female.
   Gender gender;
-
-  /// Sensor placement on body
-  SensorLocation sensorLocation;
 
   MovisensDeviceDescriptor({
     String? roleName,

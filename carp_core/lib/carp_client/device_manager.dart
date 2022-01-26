@@ -60,4 +60,10 @@ abstract class DeviceDataCollectorFactory {
 
   // Remove the device of [deviceType] from this registry.
   void unregisterDevice(String deviceType);
+
+  /// Initialize all devices in a [masterDeviceDeployment].
+  void initializeDevices(MasterDeviceDeployment masterDeviceDeployment);
+
+  /// Initialize the is the device [descriptor].
+  void initializeDevice(DeviceDescriptor descriptor);
 }

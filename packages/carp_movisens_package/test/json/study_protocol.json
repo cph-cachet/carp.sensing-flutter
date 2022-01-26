@@ -2,7 +2,7 @@
   "ownerId": "alex@uni.dk",
   "name": "Context package test",
   "description": "",
-  "creationDate": "2022-01-25T11:45:51.839193Z",
+  "creationDate": "2022-01-25T20:52:12.801169Z",
   "masterDevices": [
    {
     "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
@@ -22,11 +22,11 @@
     "samplingConfiguration": {},
     "address": "88:6B:0F:CD:E7:F2",
     "sensorName": "Sensor 02655",
+    "sensorLocation": "chest",
     "weight": 75,
     "height": 175,
     "age": 25,
-    "gender": "male",
-    "sensorLocation": "chest"
+    "gender": "male"
    }
   ],
   "connections": [],
@@ -138,19 +138,12 @@
     "name": "Task #7",
     "measures": [
      {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.MovisensMeasure",
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
       "type": "dk.cachet.carp.movisens",
       "name": "Movisens ECG device",
       "description": "Collects heart rythm data from the Movisens EcgMove4 sensor",
       "enabled": true,
-      "configuration": {},
-      "address": "88:6B:0F:CD:E7:F2",
-      "deviceName": "Sensor 02655",
-      "weight": 75,
-      "height": 175,
-      "age": 25,
-      "gender": "male",
-      "sensorLocation": "chest"
+      "configuration": {}
      }
     ]
    }

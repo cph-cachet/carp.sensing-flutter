@@ -82,16 +82,15 @@ class ClientManager {
     StudyRuntime runtime = repository[studyRuntimeId]!;
 
     // Early out in case this runtime has already received and validated deployment information.
-    var status = runtime.status;
-    if (status == StudyRuntimeStatus.Deployed) return status;
+    if (runtime.status == StudyRuntimeStatus.Deployed) return runtime.status;
 
-    return runtime.tryDeployment();
+    return await runtime.tryDeployment();
   }
 
   /// Permanently stop collecting data for the study runtime identified by [studyRuntimeId].
   @mustCallSuper
   void stopStudy(StudyRuntimeId studyRuntimeId) async =>
-      repository[studyRuntimeId]!.stop();
+      repository[studyRuntimeId]?.stop();
 
   /// Get the [StudyRuntime] with the unique [studyRuntimeId].
   StudyRuntime? getStudyRuntime(StudyRuntimeId studyRuntimeId) =>

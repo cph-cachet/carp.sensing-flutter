@@ -14,12 +14,21 @@ void main() async {
   // Create a study protocol
   StudyProtocol protocol = StudyProtocol(
     ownerId: 'owner@dtu.dk',
-    name: 'Context Sensing Example',
+    name: 'Movisens Example',
   );
 
-  // define which devices are used for data collection - both phone and MoviSens
+  // define which devices are used for data collection - both phone and Movisens
   Smartphone phone = Smartphone();
-  DeviceDescriptor movisens = DeviceDescriptor(roleName: 'main_ecg');
+  MovisensDeviceDescriptor movisens = MovisensDeviceDescriptor(
+    roleName: 'movisens-ecg',
+    address: '88:6B:0F:CD:E7:F2',
+    sensorLocation: SensorLocation.chest,
+    gender: Gender.male,
+    sensorName: 'Sensor 02655',
+    height: 175,
+    weight: 75,
+    age: 25,
+  );
 
   protocol
     ..addMasterDevice(phone)
@@ -27,20 +36,8 @@ void main() async {
 
   // adding a movisens measure
   protocol.addTriggeredTask(
-      ImmediateTrigger(), // a simple trigger that starts immediately
+      ImmediateTrigger(),
       AutomaticTask(name: 'Movisens Task')
-        ..addMeasure(MovisensMeasure(
-            type: MovisensSamplingPackage.MOVISENS,
-            name: 'Movisens ECG device',
-            description:
-                "Collects heart rythm data from the Movisens EcgMove4 sensor",
-            enabled: true,
-            address: '06-00-00-00-00-00',
-            deviceName: "ECG-223",
-            height: 178,
-            weight: 77,
-            age: 32,
-            gender: Gender.male,
-            sensorLocation: SensorLocation.chest)),
+        ..addMeasure(Measure(type: MovisensSamplingPackage.MOVISENS)),
       movisens);
 }

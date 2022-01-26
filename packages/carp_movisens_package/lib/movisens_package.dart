@@ -26,7 +26,6 @@ class MovisensSamplingPackage implements SamplingPackage {
       "$MOVISENS_NAMESPACE.connection_status";
 
   void onRegister() {
-    FromJsonFactory().register(MovisensMeasure(type: MOVISENS));
     FromJsonFactory()
         .register(MovisensDeviceDescriptor(address: '', sensorName: ''));
 
@@ -65,18 +64,11 @@ class MovisensSamplingPackage implements SamplingPackage {
       )..measures.addEntries([
           MapEntry(
               MOVISENS_NAMESPACE,
-              MovisensMeasure(
+              CAMSMeasure(
                 type: MOVISENS_NAMESPACE,
                 name: 'Movisens ECG device',
                 description:
                     "Collects heart rythm data from the Movisens EcgMove4 sensor",
-                address: '88:6B:0F:CD:E7:F2',
-                sensorLocation: SensorLocation.chest,
-                gender: Gender.male,
-                deviceName: 'Sensor 02655',
-                height: 175,
-                weight: 75,
-                age: 25,
               )),
         ]);
 

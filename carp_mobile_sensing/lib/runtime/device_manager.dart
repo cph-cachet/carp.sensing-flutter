@@ -76,6 +76,15 @@ class DeviceController implements DeviceDataCollectorFactory {
   @override
   void unregisterDevice(String deviceType) => _devices.remove(deviceType);
 
+  @override
+  void initializeDevices(MasterDeviceDeployment masterDeviceDeployment) =>
+      masterDeviceDeployment.connectedDevices
+          .forEach((descriptor) => initializeDevice(descriptor));
+
+  @override
+  void initializeDevice(DeviceDescriptor descriptor) =>
+      _devices[descriptor.type]?.initialize(descriptor);
+
   String devicesToString() =>
       _devices.keys.map((key) => key.split('.').last).toString();
 

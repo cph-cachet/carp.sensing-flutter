@@ -99,7 +99,7 @@ class StudyDeploymentExecutor extends Executor {
   void addError(Object error, [StackTrace? stacktrace]) =>
       _manualDataPointController.addError(error, stacktrace);
 
-  /// Returns a list of the running probes in this study executor.
+  /// Returns a list of the running probes in this study deployment executor.
   /// This is a combination of the running probes in all trigger executors.
   List<Probe> get probes {
     List<Probe> _probes = [];

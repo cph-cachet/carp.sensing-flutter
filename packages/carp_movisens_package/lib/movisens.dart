@@ -27,7 +27,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
-part 'movisens_measure.dart';
 part 'movisens_datum.dart';
 part 'movisens_probe.dart';
 part 'movisens_package.dart';

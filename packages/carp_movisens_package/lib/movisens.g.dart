@@ -6,69 +6,6 @@ part of movisens;
 // JsonSerializableGenerator
 // **************************************************************************
 
-MovisensMeasure _$MovisensMeasureFromJson(Map<String, dynamic> json) =>
-    MovisensMeasure(
-      type: json['type'] as String,
-      name: json['name'] as String?,
-      description: json['description'] as String?,
-      enabled: json['enabled'] as bool? ?? true,
-      address: json['address'] as String?,
-      sensorLocation:
-          $enumDecodeNullable(_$SensorLocationEnumMap, json['sensorLocation']),
-      gender: $enumDecodeNullable(_$GenderEnumMap, json['gender']),
-      deviceName: json['deviceName'] as String?,
-      height: json['height'] as int?,
-      weight: json['weight'] as int?,
-      age: json['age'] as int?,
-    )
-      ..$type = json[r'$type'] as String?
-      ..configuration = Map<String, String>.from(json['configuration'] as Map);
-
-Map<String, dynamic> _$MovisensMeasureToJson(MovisensMeasure instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull(r'$type', instance.$type);
-  val['type'] = instance.type;
-  writeNotNull('name', instance.name);
-  writeNotNull('description', instance.description);
-  val['enabled'] = instance.enabled;
-  val['configuration'] = instance.configuration;
-  writeNotNull('address', instance.address);
-  writeNotNull('deviceName', instance.deviceName);
-  writeNotNull('weight', instance.weight);
-  writeNotNull('height', instance.height);
-  writeNotNull('age', instance.age);
-  writeNotNull('gender', _$GenderEnumMap[instance.gender]);
-  writeNotNull(
-      'sensorLocation', _$SensorLocationEnumMap[instance.sensorLocation]);
-  return val;
-}
-
-const _$SensorLocationEnumMap = {
-  SensorLocation.left_ankle: 'left_ankle',
-  SensorLocation.left_hip: 'left_hip',
-  SensorLocation.left_thigh: 'left_thigh',
-  SensorLocation.left_upper_arm: 'left_upper_arm',
-  SensorLocation.left_wrist: 'left_wrist',
-  SensorLocation.right_ankle: 'right_ankle',
-  SensorLocation.right_hip: 'right_hip',
-  SensorLocation.right_thigh: 'right_thigh',
-  SensorLocation.right_upper_arm: 'right_upper_arm',
-  SensorLocation.right_wrist: 'right_wrist',
-  SensorLocation.chest: 'chest',
-};
-
-const _$GenderEnumMap = {
-  Gender.male: 'male',
-  Gender.female: 'female',
-};
-
 MovisensDatum _$MovisensDatumFromJson(Map<String, dynamic> json) =>
     MovisensDatum()
       ..id = json['id'] as String?
@@ -430,10 +367,29 @@ Map<String, dynamic> _$MovisensDeviceDescriptorToJson(
   val['samplingConfiguration'] = instance.samplingConfiguration;
   val['address'] = instance.address;
   val['sensorName'] = instance.sensorName;
+  val['sensorLocation'] = _$SensorLocationEnumMap[instance.sensorLocation];
   val['weight'] = instance.weight;
   val['height'] = instance.height;
   val['age'] = instance.age;
   val['gender'] = _$GenderEnumMap[instance.gender];
-  val['sensorLocation'] = _$SensorLocationEnumMap[instance.sensorLocation];
   return val;
 }
+
+const _$SensorLocationEnumMap = {
+  SensorLocation.left_ankle: 'left_ankle',
+  SensorLocation.left_hip: 'left_hip',
+  SensorLocation.left_thigh: 'left_thigh',
+  SensorLocation.left_upper_arm: 'left_upper_arm',
+  SensorLocation.left_wrist: 'left_wrist',
+  SensorLocation.right_ankle: 'right_ankle',
+  SensorLocation.right_hip: 'right_hip',
+  SensorLocation.right_thigh: 'right_thigh',
+  SensorLocation.right_upper_arm: 'right_upper_arm',
+  SensorLocation.right_wrist: 'right_wrist',
+  SensorLocation.chest: 'chest',
+};
+
+const _$GenderEnumMap = {
+  Gender.male: 'male',
+  Gender.female: 'female',
+};

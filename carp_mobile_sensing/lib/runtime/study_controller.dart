@@ -119,6 +119,9 @@ class SmartphoneDeploymentController extends StudyRuntime {
     // several studies in the same app....
     Settings().studyDeploymentId = studyDeploymentId;
 
+    // initialize all connected devices from the master deployment
+    deviceRegistry.initializeDevices(deployment!);
+
     // initialize the app task controller singleton
     await AppTaskController()
         .initialize(enableNotifications: enableNotifications);
@@ -167,7 +170,7 @@ class SmartphoneDeploymentController extends StudyRuntime {
       masterDeployment!.dataEndPoint!,
       data,
     );
-    // await DeviceRegistry().initialize(deployment, data);
+
     _executor!.initialize(Measure(type: CAMSDataType.EXECUTOR));
     await enablePowerAwareness();
     data.listen((dataPoint) => _samplingSize++);
@@ -243,6 +246,11 @@ class SmartphoneDeploymentController extends StudyRuntime {
   ///
   /// [configure] must be called before resuming sampling.
   void resume() {
+    assert(
+        _executor != null,
+        '$runtimeType - Cannot resume this controller, since the the runtime is not initialized. '
+        'Call the configure method first.');
+
     info('Resuming data sampling ...');
     super.resume();
     _executor!.resume();

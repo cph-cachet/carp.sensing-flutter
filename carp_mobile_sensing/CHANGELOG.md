@@ -1,6 +1,9 @@
 ## 0.33.0
 * upgrade to `carp_core` v. 0.33.0 
 * support of new device model, incl. configuration of devices with device descriptors
+* **BREAKING** - the `SmartphoneDeploymentController` no longer automatically deploys the study when calling `addStudy()`. 
+   - make sure to call the `tryDeployment()` method when you want the deployment to happen.
+
 
 ## 0.32.3
 * added `OneTimeTrigger` as a new trigger type.

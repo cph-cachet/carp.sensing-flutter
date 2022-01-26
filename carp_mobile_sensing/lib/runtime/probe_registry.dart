@@ -70,7 +70,7 @@ class ProbeRegistry {
     }
 
     if (_probe != null) {
-      register(type, _probe!);
+      register(type, _probe);
       _group.add(_probe.data);
     }
 
