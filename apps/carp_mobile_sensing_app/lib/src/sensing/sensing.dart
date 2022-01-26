@@ -48,7 +48,7 @@ class Sensing {
     // create and register external sampling packages
     // SamplingPackageRegistry().register(ConnectivitySamplingPackage());
     SamplingPackageRegistry().register(ContextSamplingPackage());
-    SamplingPackageRegistry().register(AudioSamplingPackage());
+    SamplingPackageRegistry().register(AudioVideoSamplingPackage());
     //SamplingPackageRegistry().register(CommunicationSamplingPackage());
     //SamplingPackageRegistry().register(AppsSamplingPackage());
     SamplingPackageRegistry().register(ESenseSamplingPackage());
@@ -57,9 +57,6 @@ class Sensing {
   /// Initialize and set up sensing.
   Future<void> initialize() async {
     info('Initializing $runtimeType - mode: ${bloc.deploymentMode}');
-
-    // set up the devices available on this phone
-    DeviceController().registerAllAvailableDevices();
 
     switch (bloc.deploymentMode) {
       case DeploymentMode.LOCAL:

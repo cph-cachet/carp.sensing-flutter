@@ -166,7 +166,9 @@ abstract class AbstractProbe extends Probe implements MeasureListener {
   bool get enabled =>
       (measure is CAMSMeasure) ? (measure as CAMSMeasure).enabled : true;
   String get type => measure?.type ?? 'unknown';
-  String get name => (measure as CAMSMeasure).name ?? runtimeType.toString();
+  String get name => (measure is CAMSMeasure)
+      ? (measure as CAMSMeasure).name ?? runtimeType.toString()
+      : runtimeType.toString();
 
   ProbeState get state => _stateMachine.state;
   bool validNextState(ProbeState nextState) =>

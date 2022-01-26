@@ -22,8 +22,9 @@ class ProbeDescription {
         //     'Collecting names of connected wifi networks (SSID and BSSID)',
         // ConnectivitySamplingPackage.CONNECTIVITY:
         //     'Collecting information on connectivity status and mode.',
-        AudioSamplingPackage.AUDIO: 'Records ambient sound on a regular basis.',
-        AudioSamplingPackage.NOISE:
+        AudioVideoSamplingPackage.AUDIO:
+            'Records ambient sound on a regular basis.',
+        AudioVideoSamplingPackage.NOISE:
             'Measures noise level in decibel on a regular basis.',
         //AppsSamplingPackage.APPS: 'Collecting a list of installed apps.',
         //AppsSamplingPackage.APP_USAGE: 'Collects app usage statistics.',
@@ -71,9 +72,9 @@ class ProbeDescription {
         //     Icon(Icons.wifi, size: 50, color: CACHET.LIGHT_PURPLE),
         // ConnectivitySamplingPackage.CONNECTIVITY:
         //     Icon(Icons.cast_connected, size: 50, color: CACHET.GREEN),
-        AudioSamplingPackage.AUDIO:
+        AudioVideoSamplingPackage.AUDIO:
             Icon(Icons.mic, size: 50, color: CACHET.ORANGE),
-        AudioSamplingPackage.NOISE:
+        AudioVideoSamplingPackage.NOISE:
             Icon(Icons.hearing, size: 50, color: CACHET.YELLOW),
         //AppsSamplingPackage.APPS: Icon(Icons.apps, size: 50, color: CACHET.LIGHT_GREEN),
         //AppsSamplingPackage.APP_USAGE: Icon(Icons.get_app, size: 50, color: CACHET.LIGHT_GREEN),

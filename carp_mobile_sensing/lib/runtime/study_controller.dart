@@ -187,7 +187,6 @@ class SmartphoneDeploymentController extends StudyRuntime {
     print('     device ID : ${DeviceInfo().deviceID.toString()}');
     print('  data manager : $_dataManager');
     print(' data endpoint : $_dataEndPoint');
-    print('       devices : ${DeviceController().devicesToString()}');
     print('        status : ${status.toString().split('.').last}');
     print('===========================================================');
   }

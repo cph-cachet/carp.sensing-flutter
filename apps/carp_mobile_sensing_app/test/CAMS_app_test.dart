@@ -28,7 +28,7 @@ void main() {
     // register the different sampling package since we're using measures from them
     // SamplingPackageRegistry().register(ConnectivitySamplingPackage());
     SamplingPackageRegistry().register(ContextSamplingPackage());
-    SamplingPackageRegistry().register(AudioSamplingPackage());
+    SamplingPackageRegistry().register(AudioVideoSamplingPackage());
     SamplingPackageRegistry().register(ESenseSamplingPackage());
 
     // create a data manager in order to register the json functions

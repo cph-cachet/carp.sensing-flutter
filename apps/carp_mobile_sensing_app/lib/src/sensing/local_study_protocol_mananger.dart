@@ -59,7 +59,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
               SensorSamplingPackage.LIGHT, // 60 s
               // ConnectivitySamplingPackage.CONNECTIVITY,
               // ConnectivitySamplingPackage.WIFI, // 60 s
-              AudioSamplingPackage.NOISE, // 60 s
+              AudioVideoSamplingPackage.NOISE, // 60 s
               DeviceSamplingPackage.MEMORY, // 60 s
               DeviceSamplingPackage.SCREEN, // event-based
               ContextSamplingPackage.ACTIVITY, // event-based
@@ -130,7 +130,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         AutomaticTask()
           ..measures = SamplingPackageRegistry().debug().getMeasureList(
             types: [
-              AudioSamplingPackage.AUDIO,
+              AudioVideoSamplingPackage.AUDIO,
             ],
           ),
         phone);
