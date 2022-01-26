@@ -7,7 +7,7 @@
 
 part of carp_core_client;
 
-/// Manage data collection for a particular study deployment on a client device.
+/// Manage data collection for a specific master device [deployment] on a client device.
 class StudyRuntime {
   final List<DeviceDescriptor> _remainingDevicesToRegister = [];
   StudyRuntimeId? _id;
@@ -16,17 +16,20 @@ class StudyRuntime {
       StreamController();
 
   /// The [MasterDeviceDeployment] for this study runtime.
+  ///
+  /// Is null if the deployment is not ready.
+  /// Use the [tryDeployment] method to retrieve the [deployment] from
+  /// the [deploymentService].
   MasterDeviceDeployment? deployment;
 
-  /// The device factory to handle the devices used in this study deployment.
+  /// The device factory / registry that handles the devices used in this runtime.
   late DeviceDataCollectorFactory deviceRegistry;
 
-  /// The deployment service to use to retrieve and manage the study deployment
-  /// with [studyDeploymentId]. This deployment service should have the deployment
-  /// with [studyDeploymentId] available.
+  /// The deployment service to use to retrieve and manage the study deployment.
+  /// Use the [initialize] method to initialize this service.
   DeploymentService? deploymentService;
 
-  /// The ID of the deployed study for which to collect data.
+  /// The ID of the study [deploymnet].
   String? studyDeploymentId;
 
   /// The latest known deployment status.
@@ -116,10 +119,19 @@ class StudyRuntime {
   }
 
   /// Verifies whether the master device is ready for deployment and in case
-  /// it is, deploys. In case already deployed, nothing happens.
+  /// it is, deploys.
+  /// Deployment entails trying to retrieve the [deployment] based on the
+  /// [studyDeploymentId].
+  ///
+  /// In case already deployed, nothing happens.
   Future<StudyRuntimeStatus> tryDeployment() async {
-    assert(studyDeploymentId != null && device != null,
-        "Cannot deploy without a valid study deployment. Call 'initialize()' first.");
+    assert(
+        studyDeploymentId != null && device != null,
+        "Cannot deploy without a valid study deployment id and device role name. "
+        "Call 'initialize()' first.");
+
+    // early out if already deployed.
+    if (status.index >= StudyRuntimeStatus.Deployed.index) return status;
 
     deploymentStatus =
         await deploymentService!.getStudyDeploymentStatus(studyDeploymentId!);
@@ -127,14 +139,27 @@ class StudyRuntime {
     // get the deployment
     deployment = await deploymentService!
         .getDeviceDeploymentFor(studyDeploymentId!, device!.roleName);
-    _status = StudyRuntimeStatus.RegisteringDevices;
+    _status = StudyRuntimeStatus.DeploymentReceived;
 
     // TODO - set _remainingDevicesToRegister
 
-    // if this is the only device to register, then we're done
-    if (deploymentStatus.devicesStatus.length == 1) {
-      _status = StudyRuntimeStatus.Deployed;
+    // mark this deployment as successful
+    try {
+      await deploymentService!.deploymentSuccessfulFor(
+        studyDeploymentId!,
+        device!.roleName,
+        deployment!.lastUpdateDate,
+      );
+    } catch (error) {
+      // we only print a warning
+      // see issue #50 - there is a bug in CARP
+      print(
+          "$runtimeType - Error marking deployment '$studyDeploymentId' as successful.\n$error");
     }
+    print(
+        "$runtimeType - Study deployment '$studyDeploymentId' successfully deployed.");
+
+    _status = StudyRuntimeStatus.Deployed;
 
     return _status;
   }

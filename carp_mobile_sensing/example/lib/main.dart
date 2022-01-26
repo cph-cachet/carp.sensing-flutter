@@ -130,7 +130,9 @@ class Sensing {
     SmartPhoneClientManager client = SmartPhoneClientManager();
     await client.configure();
 
+    // add and deploy this study deployment
     controller = await client.addStudy(studyDeploymentId, deviceRolename);
+    await controller?.tryDeployment();
 
     // configure the controller
     // notifications are disabled, since we're not using app tasks in this simple app
@@ -141,24 +143,24 @@ class Sensing {
 
     // controller.resume();
 
-    // listening on the data stream and print them as json to the debug console
+    // listening on the data stream and print them as json
     controller!.data.listen((data) => print(toJsonString(data)));
   }
 
-  /// Get the status of the study deployment.
+  /// get the status of the study deployment.
   StudyDeploymentStatus? get status => _status;
 
-  /// Is sensing running, i.e. has the study executor been resumed?
+  /// is sensing running, i.e. has the study executor been resumed?
   bool get isRunning =>
       (controller != null) && controller!.executor!.state == ProbeState.resumed;
 
-  /// Resume sensing
+  /// resume sensing
   void resume() async => controller!.resume();
 
-  /// Pause sensing
+  /// pause sensing
   void pause() async => controller!.pause();
 
-  /// Stop sensing.
+  /// stop sensing.
   void stop() async => controller!.stop();
 }
 

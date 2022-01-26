@@ -23,21 +23,21 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  # carp_core:
-  #   path: ../../carp_core
-  # carp_mobile_sensing:
-  #   path: ../../carp_mobile_sensing/
+  carp_core:
+    path: ../../carp_core
+  carp_mobile_sensing:
+    path: ../../carp_mobile_sensing/
   
-  carp_mobile_sensing: ^0.32.3
-  carp_context_package: ^0.32.1
+  # carp_mobile_sensing: ^0.32.3
+  # carp_context_package: ^0.32.1
   # carp_survey_package: ^0.32.1
   # carp_audio_package: ^0.32.2
   # carp_backend: ^0.32.3
 
-  carp_movisens_package: ^0.32.0
-  carp_health_package: ^2.2.0
+  # carp_movisens_package: ^0.32.0
+  # carp_health_package: ^2.2.0
   
-  research_package: ^0.7.0
+  # research_package: ^0.7.0
 
 
 

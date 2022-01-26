@@ -74,8 +74,9 @@ class ClientManager {
     return StudyRuntime();
   }
 
-  /// Verifies whether the device is ready for deployment of the study runtime identified by [studyRuntimeId],
-  /// and in case it is, deploys. In case already deployed, nothing happens.
+  /// Verifies whether the device is ready for deployment of the study runtime
+  /// identified by [studyRuntimeId], and in case it is, deploys.
+  /// In case already deployed, nothing happens.
   @mustCallSuper
   Future<StudyRuntimeStatus> tryDeployment(
       StudyRuntimeId studyRuntimeId) async {

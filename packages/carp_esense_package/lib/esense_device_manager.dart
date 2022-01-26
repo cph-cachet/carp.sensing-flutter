@@ -38,9 +38,8 @@ class ESenseDeviceManager extends DeviceManager {
 
   String get id => ESenseManager().eSenseDeviceName!;
 
-  void initialize(String type) {
-    super.initialize(type);
-
+  @override
+  void onInitialize(DeviceDescriptor descriptor) {
     // listen for connection events
     ESenseManager().connectionEvents.listen((event) {
       debug('$runtimeType :: eSense event : $event');
@@ -100,9 +99,15 @@ class ESenseDeviceManager extends DeviceManager {
   /// which gives; `B = 1.19V - 3.91`.
   ///
   /// See e.g. https://en.wikipedia.org/wiki/State_of_charge#Voltage_method
+  @override
   int get batteryLevel => ((1.19 * _voltageLevel - 3.91) * 100).toInt();
 
+  @override
   bool canConnect() => status == DeviceStatus.paired;
-  Future connect() async => await ESenseManager().connect(id);
-  Future disconnect() async => await ESenseManager().disconnect();
+
+  @override
+  Future<bool> onConnect() async => await ESenseManager().connect(id);
+
+  @override
+  Future<bool> onDisconnect() async => await ESenseManager().disconnect();
 }
