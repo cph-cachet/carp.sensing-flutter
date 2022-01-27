@@ -68,10 +68,10 @@ class DataType {
 /// and uploading [Data].
 ///
 /// Currently know namespaces include:
-/// * `dk.cachet.carp`  : CACHET Research Platform (CARP)
-/// *            `omh`  : Open mHealth
+/// * `dk.cachet.carp`   : CACHET Research Platform (CARP)
+/// * `org.openmhealth`  : Open mHealth
 class NameSpace {
   static const String UNKNOWN = 'unknown';
-  static const String OMH = 'omh';
+  static const String OMH = 'org.openmhealth';
   static const String CARP = 'dk.cachet.carp';
 }

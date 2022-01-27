@@ -13,6 +13,10 @@ class SensingBLoC {
   /// What kind of deployment are we running - local or CARP?
   DeploymentMode deploymentMode = DeploymentMode.LOCAL;
 
+  /// The preferred format of the data to be uploaded according to
+  /// [NameSpace]. Default using the [NameSpace.CARP].
+  String dataFormat = NameSpace.CARP;
+
   /// Is sensing running, i.e. has the study executor been resumed?
   bool get isRunning =>
       (Sensing().controller != null) &&
@@ -34,12 +38,14 @@ class SensingBLoC {
     Sensing().client?.deviceRegistry.devices[device.type!]!.connect();
   }
 
-  Future initialize([
+  Future initialize({
     DeploymentMode deploymentMode = DeploymentMode.LOCAL,
-  ]) async {
+    String dataFormat = NameSpace.CARP,
+  }) async {
     await Settings().init();
     Settings().debugLevel = DebugLevel.DEBUG;
     this.deploymentMode = deploymentMode;
+    this.dataFormat = dataFormat;
 
     info('$runtimeType initialized');
   }

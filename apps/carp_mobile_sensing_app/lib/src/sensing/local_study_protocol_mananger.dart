@@ -43,6 +43,9 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
             name: 'CARP Server',
           );
 
+    // set the format of the data to upload - e.g. Open mHealth
+    protocol.dataEndPoint!.dataFormat = bloc.dataFormat;
+
     // Define which devices are used for data collection.
     Smartphone phone = Smartphone();
     ESenseDevice eSense = ESenseDevice();

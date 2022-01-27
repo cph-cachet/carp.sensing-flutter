@@ -44,7 +44,10 @@ void main() async {
   //  * LOCAL
   //  * CARP_STAGGING
   //  * CARP_PRODUCTION
-  await bloc.initialize(DeploymentMode.LOCAL);
+  await bloc.initialize(
+    deploymentMode: DeploymentMode.LOCAL,
+    dataFormat: NameSpace.OMH,
+  );
 
   runApp(App());
 }
