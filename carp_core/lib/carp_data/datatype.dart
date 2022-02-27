@@ -69,9 +69,11 @@ class DataType {
 ///
 /// Currently know namespaces include:
 /// * `dk.cachet.carp`   : CACHET Research Platform (CARP)
-/// * `org.openmhealth`  : Open mHealth
+/// * `org.openmhealth`  : Open mHealth (OMH)
+/// * `org.hl7.fhir`     : Health Level 7 Fast Healthcare Interoperability Resources (HL7 FHIR)
 class NameSpace {
   static const String UNKNOWN = 'unknown';
-  static const String OMH = 'org.openmhealth';
   static const String CARP = 'dk.cachet.carp';
+  static const String OMH = 'org.openmhealth';
+  static const String FHIR = 'org.hl7.fhir';
 }

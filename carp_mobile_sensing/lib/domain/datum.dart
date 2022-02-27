@@ -11,7 +11,7 @@ part of domain;
 class Datum extends Data {
   /// The [DataFormat] of this type of [Datum].
   @JsonKey(ignore: true)
-  DataFormat get format => DataFormat.fromString(CAMSDataType.NONE);
+  DataFormat get format => DataFormat.fromString(CAMSDataType.DATUM);
 
   /// An identifier for this [Datum], unique across all data generated.
   /// If this datum is part of a [MultiDatum], then this id is null.
@@ -166,7 +166,7 @@ class MultiDatum extends Datum {
 /// Enumeration of data types used in [DataType] and [DataFormat].
 class CAMSDataType {
   static const String UNKNOWN = 'dk.cachet.carp.unknown';
-  static const String NONE = 'dk.cachet.carp.none';
+  static const String DATUM = 'dk.cachet.carp.datum';
   static const String STRING = 'dk.cachet.carp.string';
   static const String MAP = 'dk.cachet.carp.map';
   static const String ERROR = 'dk.cachet.carp.error';

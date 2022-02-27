@@ -130,12 +130,13 @@ void example() async {
   Smartphone phone = Smartphone();
   protocol.addMasterDevice(phone);
 
-  // Add an automatic task that immediately starts collecting
-  // step counts, ambient light, screen activity, and battery level
+  // Add an automatic task that immediately starts collecting step counts,
+  // ambient light, screen activity, and battery level - using the
+  // SamplingPackageRegistry 'common' factory method
   protocol.addTriggeredTask(
       ImmediateTrigger(),
       AutomaticTask()
-        ..addMeasures(SensorSamplingPackage().common.getMeasureList(
+        ..addMeasures(SamplingPackageRegistry().common.getMeasureList(
           types: [
             SensorSamplingPackage.PEDOMETER,
             SensorSamplingPackage.LIGHT,
@@ -144,7 +145,6 @@ void example() async {
           ],
         )),
       phone);
-}
 ```
 
 The above example defines a simple [`SmartphoneStudyProtocol`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/SmartphoneStudyProtocol-class.html) which will store data in a file locally on the phone using a [`FileDataEndPoint`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/FileDataEndPoint-class.html). Sampling is configured by using the pre-defined [`SamplingSchema`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/SamplingSchema-class.html) 
@@ -195,6 +195,9 @@ await client.configure();
 
 // create a study runtime controller to execute and control this deployment
 StudyDeploymentController controller = await client.addStudy(studyDeploymentId, deviceRolename);
+
+// deploy the study on this phone (controller)
+await controller.tryDeployment();
 
 // configure the controller and resume sampling
 await controller.configure();

@@ -10,8 +10,8 @@ part of movisens;
 /// A [DeviceDescriptor] for a Movisens device used in a [StudyProtocol].
 ///
 /// This device descriptor defined the basic configuration of the Movisens
-/// device, including the BTLE MAC [address], the [sensorName], the [sensorLocation] and the
-/// [weight], [height], [age], [gender] of the user using the device.
+/// device, including the BTLE MAC [address], the [sensorName], the [sensorLocation]
+/// and the [weight], [height], [age], [gender] of the user using the device.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class MovisensDeviceDescriptor extends DeviceDescriptor {
   /// The type of a Movisens device.
@@ -42,6 +42,10 @@ class MovisensDeviceDescriptor extends DeviceDescriptor {
   /// Gender of the person wearing the Movisens device, male or female.
   Gender gender;
 
+  /// Create a new [MovisensDeviceDescriptor].
+  ///
+  /// Default user setting is a 25 year old male, height 178 cm high, weight
+  /// 78 kg with the sensor place on the chest.
   MovisensDeviceDescriptor({
     String? roleName,
     required this.address,
@@ -54,7 +58,7 @@ class MovisensDeviceDescriptor extends DeviceDescriptor {
   }) : super(
           roleName: roleName ?? DEFAULT_ROLENAME,
           isMasterDevice: false,
-          supportedDataTypes: [MovisensSamplingPackage.MOVISENS_NAMESPACE],
+          supportedDataTypes: [MovisensSamplingPackage.MOVISENS],
         );
 
   Function get fromJsonFunction => _$MovisensDeviceDescriptorFromJson;
@@ -63,6 +67,7 @@ class MovisensDeviceDescriptor extends DeviceDescriptor {
   Map<String, dynamic> toJson() => _$MovisensDeviceDescriptorToJson(this);
 }
 
+/// A Movisens [DeviceManager].
 class MovisensDeviceManager extends BTLEDeviceManager {
   // the last known voltage level of the Movisens device
   int _batteryLevel = 100;

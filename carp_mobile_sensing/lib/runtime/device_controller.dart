@@ -14,7 +14,7 @@ class DeviceController implements DeviceDataCollectorFactory {
 
   /// Get the singleton [DeviceController].
   factory DeviceController() => _instance;
-  DeviceController._() {}
+  DeviceController._();
 
   @override
   Map<String, DeviceManager> get devices => _devices;
@@ -74,9 +74,13 @@ class DeviceController implements DeviceDataCollectorFactory {
   void unregisterDevice(String deviceType) => _devices.remove(deviceType);
 
   @override
-  void initializeDevices(MasterDeviceDeployment masterDeviceDeployment) =>
-      masterDeviceDeployment.connectedDevices
-          .forEach((descriptor) => initializeDevice(descriptor));
+  void initializeDevices(MasterDeviceDeployment masterDeviceDeployment) {
+    // first initialize the master device (i.e. this phone)
+    initializeDevice(masterDeviceDeployment.deviceDescriptor);
+    // and then initialize all the connected devices (if any)
+    masterDeviceDeployment.connectedDevices
+        .forEach((descriptor) => initializeDevice(descriptor));
+  }
 
   @override
   void initializeDevice(DeviceDescriptor descriptor) {
@@ -84,7 +88,7 @@ class DeviceController implements DeviceDataCollectorFactory {
       _devices[descriptor.type]?.initialize(descriptor);
     } else {
       warning(
-          "A connected device of type '${descriptor.type}' is not available on this device.");
+          "A device of type '${descriptor.type}' is not available on this device.");
     }
   }
 

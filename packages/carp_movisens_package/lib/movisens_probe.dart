@@ -6,14 +6,6 @@
  */
 part of movisens;
 
-// /// The [Movisens] device handler.
-// /// Only available after the [MovisensProbe] has been initialized.
-// Movisens? movisens;
-
-// /// User data as specified in the [MovisensMeasure].
-// /// Only available after the [MovisensProbe] has been initialized.
-// UserData? userData;
-
 /// A probe collecting data from the Movisens device using a [StreamProbe].
 class MovisensProbe extends StreamProbe {
   MovisensDeviceManager get deviceManager =>
@@ -22,6 +14,9 @@ class MovisensProbe extends StreamProbe {
   Stream<MovisensDatum>? get stream =>
       (deviceManager.movisens?.movisensStream != null)
           ? deviceManager.movisens!.movisensStream
-              .map((event) => MovisensDatum.fromMap(event))
+              .map((event) => MovisensDatum.fromMap(
+                    event,
+                    deviceManager.deviceDescriptor.sensorName,
+                  ))
           : null;
 }

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -7,6 +8,7 @@ import 'package:test/test.dart';
 
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+import 'package:openmhealth_schemas/openmhealth_schemas.dart' as omh;
 
 void main() {
   late StudyProtocol protocol;
@@ -94,24 +96,32 @@ void main() {
   });
 
   test('Movisens HR -> OMH HeartRate', () {
-    MovisensHRDatum hr = MovisensHRDatum()..hr = '78';
+    MovisensHRDatum hr = MovisensHRDatum()
+      ..hr = '78'
+      ..movisensDeviceName = 'unit_test_device_name';
 
     DataPoint dp_1 = DataPoint.fromData(hr);
     expect(dp_1.carpHeader.dataFormat.namespace,
         MovisensSamplingPackage.MOVISENS_NAMESPACE);
     print(toJsonString(dp_1));
 
-    OMHHeartRateDatum omhSteps = TransformerSchemaRegistry()
+    OMHHeartRateDataPoint omhHR = TransformerSchemaRegistry()
         .lookup(NameSpace.OMH)!
-        .transform(hr) as OMHHeartRateDatum;
-    DataPoint dp_2 = DataPoint.fromData(omhSteps);
-    expect(dp_2.carpHeader.dataFormat.namespace, NameSpace.OMH);
-    expect(omhSteps.hr.heartRate.value, double.tryParse(hr.hr!));
+        .transform(hr) as OMHHeartRateDataPoint;
+    DataPoint dp_2 = DataPoint.fromData(omhHR);
     print(toJsonString(dp_2));
+
+    expect(dp_2.carpHeader.dataFormat.namespace, NameSpace.OMH);
+    expect(omhHR.datapoint.body, isA<omh.HeartRate>());
+    var hr_2 = omhHR.datapoint.body as omh.HeartRate;
+    expect(hr_2.heartRate.value, double.tryParse(hr.hr!));
   });
 
   test('Movisens Step Count -> OMH StepCount', () {
-    MovisensStepCountDatum steps = MovisensStepCountDatum()..stepCount = '56';
+    MovisensStepCountDatum steps = MovisensStepCountDatum()
+      ..stepCount = '56'
+      ..movisensDeviceName = 'unit_test_device_name';
+
     steps..movisensTimestamp = DateTime.now().toUtc().toString();
 
     DataPoint dp_1 = DataPoint.fromData(steps);
@@ -119,12 +129,54 @@ void main() {
         MovisensSamplingPackage.MOVISENS_NAMESPACE);
     print(toJsonString(dp_1));
 
-    OMHStepCountDatum omhSteps = TransformerSchemaRegistry()
+    OMHStepCountDataPoint omhSteps = TransformerSchemaRegistry()
         .lookup(NameSpace.OMH)!
-        .transform(steps) as OMHStepCountDatum;
+        .transform(steps) as OMHStepCountDataPoint;
     DataPoint dp_2 = DataPoint.fromData(omhSteps);
-    expect(dp_2.carpHeader.dataFormat.namespace, NameSpace.OMH);
-    expect(omhSteps.stepCount.stepCount, int.tryParse(steps.stepCount!));
     print(toJsonString(dp_2));
+
+    expect(dp_2.carpHeader.dataFormat.namespace, NameSpace.OMH);
+    expect(omhSteps.datapoint.body, isA<omh.StepCount>());
+    var steps_2 = omhSteps.datapoint.body as omh.StepCount;
+    expect(steps_2.stepCount, int.tryParse(steps.stepCount!));
+  });
+
+  test('Movisens HR -> FHIR Heart Rate Observation', () {
+    MovisensHRDatum hr = MovisensHRDatum()
+      ..hr = '118'
+      ..movisensDeviceName = 'unit_test_device_name';
+
+    DataPoint dp_1 = DataPoint.fromData(hr);
+    expect(dp_1.carpHeader.dataFormat.namespace,
+        MovisensSamplingPackage.MOVISENS_NAMESPACE);
+    print(toJsonString(dp_1));
+
+    FHIRHeartRateObservation fhirHR = TransformerSchemaRegistry()
+        .lookup(NameSpace.FHIR)!
+        .transform(hr) as FHIRHeartRateObservation;
+    DataPoint dp_2 = DataPoint.fromData(fhirHR);
+    print(toJsonString(dp_2));
+
+    expect(dp_2.carpHeader.dataFormat.namespace, NameSpace.FHIR);
+    expect(fhirHR.fhirJson["resourceType"], "Observation");
+    expect(fhirHR.fhirJson["valueQuantity"]["value"], double.tryParse(hr.hr!));
+  });
+
+  test('Movisens HR -> OMH HR Data Point Example', () {
+    var data = MovisensHRDatum()..hr = '118';
+
+    var transformedData =
+        TransformerSchemaRegistry().lookup(NameSpace.OMH)!.transform(data);
+
+    Stream<Datum> dataStream = StreamController<Datum>().stream;
+
+    Stream<Datum> transformedDataStream = dataStream.map((data) => data =
+        TransformerSchemaRegistry().lookup(NameSpace.OMH)!.transform(data));
+
+    Stream<Datum> transformedPrivateDataStream = dataStream.map((data) => data =
+        TransformerSchemaRegistry().lookup(NameSpace.OMH)!.transform(
+            TransformerSchemaRegistry()
+                .lookup("privacySchemaName")!
+                .transform(data)));
   });
 }

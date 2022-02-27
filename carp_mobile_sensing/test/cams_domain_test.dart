@@ -43,8 +43,7 @@ void main() {
     masterProtocol.addTriggeredTask(
       ImmediateTrigger(), // a simple trigger that starts immediately
       AutomaticTask()
-        ..measures =
-            SamplingPackageRegistry().common().measures.values.toList(),
+        ..measures = SamplingPackageRegistry().common.measures.values.toList(),
       masterPhone, // a task with all measures
     );
 
@@ -52,7 +51,7 @@ void main() {
     masterProtocol.addTriggeredTask(
         OneTimeTrigger('device'),
         AutomaticTask()
-          ..measures = SamplingPackageRegistry().debug().getMeasureList(
+          ..measures = SamplingPackageRegistry().debug.getMeasureList(
             types: [
               DeviceSamplingPackage.DEVICE,
             ],
@@ -63,7 +62,7 @@ void main() {
     masterProtocol.addTriggeredTask(
         ImmediateTrigger(),
         AutomaticTask()
-          ..measures = SamplingPackageRegistry().debug().getMeasureList(
+          ..measures = SamplingPackageRegistry().debug.getMeasureList(
             types: [
               SensorSamplingPackage.LIGHT, // 10 s
               DeviceSamplingPackage.MEMORY, // 60 s
@@ -118,11 +117,10 @@ void main() {
     masterProtocol.addTriggeredTask(
         DelayedTrigger(delay: Duration(seconds: 10)),
         AutomaticTask()
-          ..measures = SamplingPackageRegistry().common().getMeasureList(
-              types: [
-                SensorSamplingPackage.PEDOMETER,
-                DeviceSamplingPackage.SCREEN
-              ]),
+          ..measures = SamplingPackageRegistry().common.getMeasureList(types: [
+            SensorSamplingPackage.PEDOMETER,
+            DeviceSamplingPackage.SCREEN
+          ]),
         masterPhone);
 
     masterProtocol.addTriggeredTask(
@@ -131,11 +129,10 @@ void main() {
           duration: Duration(seconds: 1),
         ), // collect every min.
         AutomaticTask()
-          ..measures = SamplingPackageRegistry().common().getMeasureList(
-              types: [
-                SensorSamplingPackage.LIGHT,
-                DeviceSamplingPackage.DEVICE
-              ]),
+          ..measures = SamplingPackageRegistry().common.getMeasureList(types: [
+            SensorSamplingPackage.LIGHT,
+            DeviceSamplingPackage.DEVICE
+          ]),
         masterPhone);
 
     RecurrentScheduledTrigger t1, t2, t3, t4;
@@ -151,7 +148,7 @@ void main() {
         t1,
         AutomaticTask()
           ..measures = SamplingPackageRegistry()
-              .common()
+              .common
               .getMeasureList(types: [DeviceSamplingPackage.MEMORY]),
         masterPhone);
 
@@ -166,11 +163,10 @@ void main() {
     masterProtocol.addTriggeredTask(
         t2,
         AutomaticTask()
-          ..measures = SamplingPackageRegistry().common().getMeasureList(
-              types: [
-                SensorSamplingPackage.LIGHT,
-                DeviceSamplingPackage.MEMORY
-              ]),
+          ..measures = SamplingPackageRegistry().common.getMeasureList(types: [
+            SensorSamplingPackage.LIGHT,
+            DeviceSamplingPackage.MEMORY
+          ]),
         masterPhone);
 
     // collect every wednesday at 12:23.
@@ -184,11 +180,10 @@ void main() {
     masterProtocol.addTriggeredTask(
         t3,
         AutomaticTask()
-          ..measures = SamplingPackageRegistry().common().getMeasureList(
-              types: [
-                SensorSamplingPackage.LIGHT,
-                DeviceSamplingPackage.BATTERY
-              ]),
+          ..measures = SamplingPackageRegistry().common.getMeasureList(types: [
+            SensorSamplingPackage.LIGHT,
+            DeviceSamplingPackage.BATTERY
+          ]),
         masterPhone);
 
     // collect every 2nd monday at 12:23.

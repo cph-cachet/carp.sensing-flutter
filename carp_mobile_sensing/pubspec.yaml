@@ -22,8 +22,8 @@ dependencies:
   async: ^2.7.0
   path_provider: ^2.0.2
   archive: ^3.1.2
-  permission_handler: ^8.3.0  
-  permission_handler_platform_interface: ^3.7.0
+  permission_handler: ^9.2.0  
+  # permission_handler_platform_interface: ^3.7.0
   shared_preferences: ^2.0.6
   package_info_plus: ^1.0.0
   flutter_local_notifications: ^9.1.1 # for sending notification on AppTask

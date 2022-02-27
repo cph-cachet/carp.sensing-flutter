@@ -79,7 +79,7 @@ void sensing() async {
   protocol.addTriggeredTask(
       ImmediateTrigger(),
       AutomaticTask()
-        ..measures = SamplingPackageRegistry().common().getMeasureList(
+        ..measures = SamplingPackageRegistry().common.getMeasureList(
           types: [
             SensorSamplingPackage.ACCELEROMETER,
             SensorSamplingPackage.GYROSCOPE,

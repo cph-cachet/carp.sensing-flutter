@@ -120,16 +120,12 @@ class SmartphoneDeviceManager extends DeviceManager {
 
   @override
   void onInitialize(DeviceDescriptor descriptor) {
-    super.initialize(descriptor);
-
     // listen to the battery
     BatteryProbe()
       ..data.listen((dataPoint) =>
           _batteryLevel = (dataPoint.data as BatteryDatum).batteryLevel)
       ..initialize(Measure(type: DeviceSamplingPackage.BATTERY))
       ..resume();
-
-    status = DeviceStatus.connected;
 
     // find the supported datatypes
     for (var package in SamplingPackageRegistry().packages) {

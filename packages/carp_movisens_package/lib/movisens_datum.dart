@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2021 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2019-2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -9,46 +9,61 @@ part of movisens;
 /// An abstract Datum for all Movisens data points.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MovisensDatum extends Datum {
+  @JsonKey(ignore: true)
+  @override
   DataFormat get format =>
       DataFormat.fromString(MovisensSamplingPackage.MOVISENS);
 
+  /// The timestamp from the Movisens device.
   String? movisensTimestamp;
+
+  /// The device name of the Movisens device that collected this datum.
+  String? movisensDeviceName;
 
   MovisensDatum() : super();
 
-  factory MovisensDatum.fromMap(Map<String, dynamic> map) {
+  factory MovisensDatum.fromMap(
+    Map<String, dynamic> map, [
+    String? deviceName,
+  ]) {
+    MovisensDatum datum = MovisensDatum();
+
     if (map.containsKey("MetLevel"))
-      return MovisensMETLevelDatum.fromMap(map["MetLevel"]);
-    if (map.containsKey("Met")) return MovisensMETDatum.fromMap(map["Met"]);
-    if (map.containsKey("HR")) return MovisensHRDatum.fromMap(map["HR"]);
-    if (map.containsKey("HRV")) return MovisensHRVDatum.fromMap(map["HRV"]);
+      datum = MovisensMETLevelDatum.fromMap(map["MetLevel"]);
+    if (map.containsKey("Met")) datum = MovisensMETDatum.fromMap(map["Met"]);
+    if (map.containsKey("HR")) datum = MovisensHRDatum.fromMap(map["HR"]);
+    if (map.containsKey("HRV")) datum = MovisensHRVDatum.fromMap(map["HRV"]);
     if (map.containsKey("IsHrvValid"))
-      return MovisensIsHrvValidDatum.fromMap(map["IsHrvValid"]);
+      datum = MovisensIsHrvValidDatum.fromMap(map["IsHrvValid"]);
     if (map.containsKey("BodyPosition"))
-      return MovisensBodyPositionDatum.fromMap(map["BodyPosition"]);
+      datum = MovisensBodyPositionDatum.fromMap(map["BodyPosition"]);
     if (map.containsKey("StepCount"))
-      return MovisensStepCountDatum.fromMap(map["StepCount"]);
+      datum = MovisensStepCountDatum.fromMap(map["StepCount"]);
     if (map.containsKey("MovementAcceleration"))
-      return MovisensMovementAccelerationDatum.fromMap(
+      datum = MovisensMovementAccelerationDatum.fromMap(
           map["MovementAcceleration"]);
     if (map.containsKey("TapMarker"))
-      return MovisensTapMarkerDatum.fromMap(map["TapMarker"]);
+      datum = MovisensTapMarkerDatum.fromMap(map["TapMarker"]);
     if (map.containsKey("BatteryLevel"))
-      return MovisensBatteryLevelDatum.fromMap(map["BatteryLevel"]);
+      datum = MovisensBatteryLevelDatum.fromMap(map["BatteryLevel"]);
     if (map.containsKey("ConnectionStatus"))
-      return MovisensConnectionStatusDatum.fromMap(map["ConnectionStatus"]);
+      datum = MovisensConnectionStatusDatum.fromMap(map["ConnectionStatus"]);
 
-    return MovisensDatum();
+    datum.movisensTimestamp = _movisensTimestampToUTC(map['timestamp']);
+    datum.movisensDeviceName = deviceName;
+
+    return datum;
   }
+
+  /// Make a Movisens timestamp into UTC format
+  static String _movisensTimestampToUTC(String timestamp) {
+    List splittedTimestamp = timestamp.split(" ");
+    return splittedTimestamp[0] + "T" + splittedTimestamp[1] + ".000Z";
+  }
+
   factory MovisensDatum.fromJson(Map<String, dynamic> json) =>
       _$MovisensDatumFromJson(json);
   Map<String, dynamic> toJson() => _$MovisensDatumToJson(this);
-}
-
-/// Make a Movisens timestamp into UTC format
-String _movisensTimestampToUTC(String timestamp) {
-  List splittedTimestamp = timestamp.split(" ");
-  return splittedTimestamp[0] + "T" + splittedTimestamp[1] + ".000Z";
 }
 
 /// Movisens Metabolic (MET) level. MET levels are:
@@ -72,7 +87,6 @@ class MovisensMETLevelDatum extends MovisensDatum {
     MovisensMETLevelDatum metLevelDatum = MovisensMETLevelDatum();
     Map<dynamic, dynamic> map = jsonDecode(value);
 
-    metLevelDatum.movisensTimestamp = _movisensTimestampToUTC(map['timestamp']);
     metLevelDatum.sedentary = map['sedentary'];
     metLevelDatum.light = map['light'];
     metLevelDatum.moderate = map['moderate'];
@@ -100,8 +114,6 @@ class MovisensMovementAccelerationDatum extends MovisensDatum {
     MovisensMovementAccelerationDatum movementAccelerationDatum =
         MovisensMovementAccelerationDatum();
     Map<dynamic, dynamic> map = jsonDecode(value);
-    movementAccelerationDatum.movisensTimestamp =
-        _movisensTimestampToUTC(map['timestamp']);
     movementAccelerationDatum.movementAcceleration =
         map['movement_acceleration'];
 
@@ -128,7 +140,6 @@ class MovisensTapMarkerDatum extends MovisensDatum {
   factory MovisensTapMarkerDatum.fromMap(String value) {
     MovisensTapMarkerDatum tapMakerDatum = MovisensTapMarkerDatum();
     Map<dynamic, dynamic> map = jsonDecode(value);
-    tapMakerDatum.movisensTimestamp = _movisensTimestampToUTC(map['timestamp']);
     tapMakerDatum.tapMarker = map['tap_marker'];
 
     return tapMakerDatum;
@@ -152,8 +163,6 @@ class MovisensBatteryLevelDatum extends MovisensDatum {
   factory MovisensBatteryLevelDatum.fromMap(String value) {
     MovisensBatteryLevelDatum batteryLevelDatum = MovisensBatteryLevelDatum();
     Map<dynamic, dynamic> map = jsonDecode(value);
-    batteryLevelDatum.movisensTimestamp =
-        _movisensTimestampToUTC(map['timestamp']);
     batteryLevelDatum.batteryLevel = map['battery_level'];
 
     return batteryLevelDatum;
@@ -177,8 +186,6 @@ class MovisensBodyPositionDatum extends MovisensDatum {
   factory MovisensBodyPositionDatum.fromMap(String value) {
     MovisensBodyPositionDatum bodyPositionDatum = MovisensBodyPositionDatum();
     Map<dynamic, dynamic> map = jsonDecode(value);
-    bodyPositionDatum.movisensTimestamp =
-        _movisensTimestampToUTC(map['timestamp']);
     bodyPositionDatum.bodyPosition = map['body_position'];
 
     return bodyPositionDatum;
@@ -200,7 +207,6 @@ class MovisensMETDatum extends MovisensDatum {
   factory MovisensMETDatum.fromMap(String value) {
     MovisensMETDatum metDatum = MovisensMETDatum();
     Map<dynamic, dynamic> map = jsonDecode(value);
-    metDatum.movisensTimestamp = _movisensTimestampToUTC(map['timestamp']);
     metDatum.met = map['met'];
 
     return metDatum;
@@ -224,7 +230,6 @@ class MovisensHRDatum extends MovisensDatum {
   factory MovisensHRDatum.fromMap(String value) {
     MovisensHRDatum hrDatum = MovisensHRDatum();
     Map<dynamic, dynamic> map = jsonDecode(value);
-    hrDatum.movisensTimestamp = _movisensTimestampToUTC(map['timestamp']);
     hrDatum.hr = map['hr'];
 
     return hrDatum;
@@ -247,7 +252,6 @@ class MovisensHRVDatum extends MovisensDatum {
   factory MovisensHRVDatum.fromMap(String value) {
     MovisensHRVDatum hrvDatum = MovisensHRVDatum();
     Map<dynamic, dynamic> map = jsonDecode(value);
-    hrvDatum.movisensTimestamp = _movisensTimestampToUTC(map['timestamp']);
     hrvDatum.hrv = map['hrv'];
 
     return hrvDatum;
@@ -270,8 +274,6 @@ class MovisensIsHrvValidDatum extends MovisensDatum {
   factory MovisensIsHrvValidDatum.fromMap(String value) {
     MovisensIsHrvValidDatum isHrvValidDatum = MovisensIsHrvValidDatum();
     Map<dynamic, dynamic> map = jsonDecode(value);
-    isHrvValidDatum.movisensTimestamp =
-        _movisensTimestampToUTC(map['timestamp']);
     isHrvValidDatum.isHrvValid = map['is_hrv_valid'];
 
     return isHrvValidDatum;
@@ -295,8 +297,6 @@ class MovisensStepCountDatum extends MovisensDatum {
   factory MovisensStepCountDatum.fromMap(String value) {
     MovisensStepCountDatum stepCountDatum = MovisensStepCountDatum();
     Map<dynamic, dynamic> map = jsonDecode(value);
-    stepCountDatum.movisensTimestamp =
-        _movisensTimestampToUTC(map['timestamp']);
     stepCountDatum.stepCount = map['step_count'];
 
     return stepCountDatum;
@@ -320,8 +320,6 @@ class MovisensConnectionStatusDatum extends MovisensDatum {
     MovisensConnectionStatusDatum connectionStatusDatum =
         MovisensConnectionStatusDatum();
     Map<dynamic, dynamic> map = jsonDecode(value);
-    connectionStatusDatum.movisensTimestamp =
-        _movisensTimestampToUTC(map['timestamp']);
     connectionStatusDatum.connectionStatus = map['connection_status'];
 
     return connectionStatusDatum;

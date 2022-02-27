@@ -25,20 +25,9 @@ void main() async {
   Smartphone phone = Smartphone();
   protocol.addMasterDevice(phone);
 
-  // Add an automatic task that immediately starts collecting weather and air_quality.
-  protocol.addTriggeredTask(
-      ImmediateTrigger(),
-      AutomaticTask()
-        ..addMeasures(SensorSamplingPackage().common.getMeasureList(
-          types: [
-            ContextSamplingPackage.WEATHER,
-            ContextSamplingPackage.AIR_QUALITY,
-          ],
-        )),
-      phone);
-
   // Add an automatic task that starts collecting location, geolocation,
   // activity, and a geofence after 5 minutes.
+  // Is using the 'common' measure definitions in the package.
   protocol.addTriggeredTask(
       DelayedTrigger(delay: Duration(minutes: 5)),
       AutomaticTask()
@@ -50,5 +39,27 @@ void main() async {
             ContextSamplingPackage.GEOFENCE,
           ],
         )),
+      phone);
+
+  // Add an automatic task that collects weather and air_quality every 30 miutes.
+  // Not that API keys for the weather and air_quality measure must be specified.
+  protocol.addTriggeredTask(
+      PeriodicTrigger(
+        period: Duration(minutes: 30),
+        duration: Duration(seconds: 10),
+      ),
+      AutomaticTask()
+        ..addMeasure(WeatherMeasure(
+            type: ContextSamplingPackage.WEATHER,
+            name: 'Weather',
+            description:
+                "Collects local weather from the WeatherAPI web service",
+            apiKey: 'Open_Weather_API_key_goes_here'))
+        ..addMeasure(AirQualityMeasure(
+            type: ContextSamplingPackage.AIR_QUALITY,
+            name: 'Air Quality',
+            description:
+                "Collects local air quality from the Air Quality Index (AQI) web service",
+            apiKey: 'AQI_API_key_goes_here')),
       phone);
 }

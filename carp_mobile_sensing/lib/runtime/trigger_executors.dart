@@ -104,7 +104,7 @@ class OneTimeTriggerExecutor extends TriggerExecutor {
     } else {
       info(
           "$runtimeType - one time trigger with id '$_oneTimeTriggerKey' already occured at: $_savedOccurence. "
-          "Will not trigger now.");
+          'Will not trigger now.');
     }
   }
 }

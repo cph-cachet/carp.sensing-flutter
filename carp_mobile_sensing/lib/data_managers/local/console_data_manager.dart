@@ -12,15 +12,6 @@ part of managers;
 class ConsoleDataManager extends AbstractDataManager {
   String get type => DataEndPointTypes.PRINT;
 
-  Future initialize(
-    MasterDeviceDeployment deployment,
-    DataEndPoint dataEndPoint,
-    Stream<DataPoint> data,
-  ) async {
-    await super.initialize(deployment, dataEndPoint, data);
-    assert(dataEndPoint is DataEndPoint);
-  }
-
   void onDataPoint(DataPoint dataPoint) => print(jsonEncode(dataPoint));
 
   void onDone() {}

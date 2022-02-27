@@ -16,6 +16,10 @@ class SmartphoneDeploymentController extends StudyRuntime {
   String _privacySchemaName = NameSpace.CARP;
   late DatumTransformer _transformer;
 
+  @override
+  DeviceController get deviceRegistry =>
+      super.deviceRegistry as DeviceController;
+
   /// The master device deployment running in this controller.
   SmartphoneDeployment? get masterDeployment =>
       deployment as SmartphoneDeployment?;
@@ -30,7 +34,7 @@ class SmartphoneDeploymentController extends StudyRuntime {
   DataManager? get dataManager => _dataManager;
 
   /// The privacy schema used to encrypt data before upload.
-  String? get privacySchemaName => _privacySchemaName;
+  String get privacySchemaName => _privacySchemaName;
 
   /// The datum transformed used to transform data before upload.
   DatumTransformer get transformer => _transformer;
@@ -42,16 +46,20 @@ class SmartphoneDeploymentController extends StudyRuntime {
   ///
   /// Data points in the [data] stream are transformed in the following order:
   ///   1. privacy schema as specified in the [privacySchemaName]
-  ///   2. preferred data format as specified by [dataFormat] in the [deployment]
+  ///   2. preferred data format as specified by [dataFormat] in the [SmartphoneDeployment.dataEndPoint]
   ///   3. any custom [transformer] provided
   ///
   /// This is a broadcast stream and supports multiple subscribers.
-  Stream<DataPoint> get data => _executor!.data.map((dataPoint) => dataPoint
-    ..data = _transformer(TransformerSchemaRegistry()
-        .lookup(masterDeployment?.dataEndPoint?.dataFormat ?? NameSpace.CARP)!
-        .transform(TransformerSchemaRegistry()
-            .lookup(_privacySchemaName)!
-            .transform(dataPoint.data as Datum))));
+  Stream<DataPoint> get data => _executor!.data
+      .map((dataPoint) => dataPoint
+        ..data = _transformer(TransformerSchemaRegistry()
+            .lookup(
+                masterDeployment?.dataEndPoint?.dataFormat ?? NameSpace.CARP)!
+            .transform(TransformerSchemaRegistry()
+                .lookup(privacySchemaName)!
+                .transform(dataPoint.data as Datum))))
+      .map((dataPoint) =>
+          dataPoint..carpHeader.dataFormat = dataPoint.data!.format);
 
   PowerAwarenessState powerAwarenessState = NormalSamplingState.instance;
 
@@ -65,7 +73,6 @@ class SmartphoneDeploymentController extends StudyRuntime {
   /// Create a new [SmartphoneDeploymentController] to control the runtime behavior
   /// of a study deployment.
   SmartphoneDeploymentController() : super() {
-    // initialize settings
     Settings().init();
 
     // create and register the two built-in data managers
@@ -119,8 +126,10 @@ class SmartphoneDeploymentController extends StudyRuntime {
     // several studies in the same app....
     Settings().studyDeploymentId = studyDeploymentId;
 
-    // initialize all connected devices from the master deployment
+    // initialize all devices from the master deployment, incl. the master device
     deviceRegistry.initializeDevices(deployment!);
+    // and connect imediately to the master device (this phone)
+    await deviceRegistry.getDevice(Smartphone.DEVICE_TYPE)!.connect();
 
     // initialize the app task controller singleton
     await AppTaskController()
@@ -306,7 +315,7 @@ class NoSamplingState implements PowerAwarenessState {
     }
   }
 
-  SamplingSchema get schema => SamplingPackageRegistry().none();
+  SamplingSchema get schema => SamplingPackageRegistry().none;
 
   String toString() => 'Disabled Sampling Mode';
 }
@@ -324,7 +333,7 @@ class MinimumSamplingState implements PowerAwarenessState {
     }
   }
 
-  SamplingSchema get schema => SamplingPackageRegistry().minimum();
+  SamplingSchema get schema => SamplingPackageRegistry().minimum;
 
   String toString() => 'Minimun Sampling Mode';
 }
@@ -342,7 +351,7 @@ class LightSamplingState implements PowerAwarenessState {
     }
   }
 
-  SamplingSchema get schema => SamplingPackageRegistry().light();
+  SamplingSchema get schema => SamplingPackageRegistry().light;
 
   String toString() => 'Light Sampling Mode';
 }

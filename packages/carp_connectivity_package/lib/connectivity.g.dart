@@ -9,9 +9,7 @@ part of connectivity;
 ConnectivityDatum _$ConnectivityDatumFromJson(Map<String, dynamic> json) =>
     ConnectivityDatum()
       ..id = json['id'] as String?
-      ..timestamp = json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String)
+      ..timestamp = DateTime.parse(json['timestamp'] as String)
       ..connectivityStatus = json['connectivity_status'] as String;
 
 Map<String, dynamic> _$ConnectivityDatumToJson(ConnectivityDatum instance) {
@@ -24,7 +22,7 @@ Map<String, dynamic> _$ConnectivityDatumToJson(ConnectivityDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   val['connectivity_status'] = instance.connectivityStatus;
   return val;
 }
@@ -32,9 +30,7 @@ Map<String, dynamic> _$ConnectivityDatumToJson(ConnectivityDatum instance) {
 BluetoothDatum _$BluetoothDatumFromJson(Map<String, dynamic> json) =>
     BluetoothDatum()
       ..id = json['id'] as String?
-      ..timestamp = json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String)
+      ..timestamp = DateTime.parse(json['timestamp'] as String)
       ..scanResult = (json['scan_result'] as List<dynamic>)
           .map((e) => BluetoothDevice.fromJson(e as Map<String, dynamic>))
           .toList();
@@ -49,7 +45,7 @@ Map<String, dynamic> _$BluetoothDatumToJson(BluetoothDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   val['scan_result'] = instance.scanResult;
   return val;
 }
@@ -91,9 +87,7 @@ WifiDatum _$WifiDatumFromJson(Map<String, dynamic> json) => WifiDatum(
       ip: json['ip'] as String?,
     )
       ..id = json['id'] as String?
-      ..timestamp = json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String);
+      ..timestamp = DateTime.parse(json['timestamp'] as String);
 
 Map<String, dynamic> _$WifiDatumToJson(WifiDatum instance) {
   final val = <String, dynamic>{};
@@ -105,7 +99,7 @@ Map<String, dynamic> _$WifiDatumToJson(WifiDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   writeNotNull('ssid', instance.ssid);
   writeNotNull('bssid', instance.bssid);
   writeNotNull('ip', instance.ip);

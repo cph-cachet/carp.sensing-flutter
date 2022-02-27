@@ -46,18 +46,18 @@ class WifiProbe extends PeriodicDatumProbe {
 /// Uses a [PeriodicMeasure] for configuration the [frequency] and [duration]
 /// of the scan.
 class BluetoothProbe extends PeriodicDatumProbe {
-  /// Default timeout for bluetooth scan - 2 secs
-  static const DEFAULT_TIMEOUT = 2 * 1000;
+  /// Default timeout for bluetooth scan - 4 secs
+  static const DEFAULT_TIMEOUT = 4 * 1000;
 
   Future<Datum> getDatum() async {
     Datum datum;
     try {
-      List<ScanResult> results = await FlutterBlue.instance.startScan(
+      List<ScanResult> results = await FlutterBluePlus.instance.startScan(
           scanMode: ScanMode.lowLatency,
           timeout: duration ?? Duration(milliseconds: DEFAULT_TIMEOUT));
       datum = BluetoothDatum.fromScanResult(results);
     } catch (error) {
-      await FlutterBlue.instance.stopScan();
+      await FlutterBluePlus.instance.stopScan();
       datum = ErrorDatum('Error scanning for bluetooth - $error');
     }
 

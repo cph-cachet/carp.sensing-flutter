@@ -58,7 +58,7 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
                 description: "Collects nearby devices using Bluetooth LE",
                 enabled: true,
                 frequency: Duration(minutes: 10),
-                duration: Duration(seconds: 5),
+                duration: Duration(seconds: 6),
               )),
           MapEntry(
               WIFI,
@@ -109,7 +109,7 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
                 type: BLUETOOTH,
                 enabled: true,
                 frequency: Duration(minutes: 1),
-                duration: Duration(seconds: 2),
+                duration: Duration(seconds: 6),
               )),
           MapEntry(
               WIFI,

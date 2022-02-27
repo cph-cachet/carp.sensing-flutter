@@ -190,7 +190,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     protocol.addTriggeredTask(
         ImmediateTrigger(),
         AutomaticTask()
-          ..measures = SamplingPackageRegistry().debug().getMeasureList(
+          ..measures = SamplingPackageRegistry().debug.getMeasureList(
             types: [
               // SensorSamplingPackage.ACCELEROMETER,
               // SensorSamplingPackage.GYROSCOPE,
@@ -206,7 +206,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     protocol.addTriggeredTask(
         ImmediateTrigger(),
         AutomaticTask()
-          ..measures = SamplingPackageRegistry().debug().getMeasureList(
+          ..measures = SamplingPackageRegistry().debug.getMeasureList(
             types: [
               DeviceSamplingPackage.MEMORY,
               DeviceSamplingPackage.BATTERY,
@@ -219,7 +219,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     protocol.addTriggeredTask(
         OneTimeTrigger('device'),
         AutomaticTask()
-          ..measures = SamplingPackageRegistry().debug().getMeasureList(
+          ..measures = SamplingPackageRegistry().debug.getMeasureList(
             types: [
               DeviceSamplingPackage.DEVICE,
             ],
@@ -235,7 +235,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //       maxNumberOfTriggers: 8,
     //     ),
     //     AutomaticTask()
-    //       ..measures = SamplingPackageRegistry().debug().getMeasureList(
+    //       ..measures = SamplingPackageRegistry().debug.getMeasureList(
     //         types: [
     //           DeviceSamplingPackage.DEVICE,
     //         ],
@@ -252,7 +252,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           pauseCondition: () => true,
         ),
         AutomaticTask()
-          ..measures = SamplingPackageRegistry().debug().getMeasureList(
+          ..measures = SamplingPackageRegistry().debug.getMeasureList(
             types: [
               DeviceSamplingPackage.DEVICE,
             ],

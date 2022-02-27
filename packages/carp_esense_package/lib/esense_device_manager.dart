@@ -32,6 +32,7 @@ class ESenseDevice extends DeviceDescriptor {
   Map<String, dynamic> toJson() => _$ESenseDeviceToJson(this);
 }
 
+/// A [DeviceManager] for the eSense device.
 class ESenseDeviceManager extends DeviceManager {
   // the last known voltage level of the eSense device
   double _voltageLevel = 4;

@@ -57,27 +57,21 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     protocol.addTriggeredTask(
         ImmediateTrigger(),
         AutomaticTask()
-          ..measures = SamplingPackageRegistry().debug().getMeasureList(
+          ..measures = SamplingPackageRegistry().debug.getMeasureList(
             types: [
+              DeviceSamplingPackage.DEVICE,
+              DeviceSamplingPackage.BATTERY,
+              SensorSamplingPackage.PEDOMETER, // 60 s
               SensorSamplingPackage.LIGHT, // 60 s
-              // ConnectivitySamplingPackage.CONNECTIVITY,
-              // ConnectivitySamplingPackage.WIFI, // 60 s
+              ConnectivitySamplingPackage.CONNECTIVITY,
+              ConnectivitySamplingPackage.WIFI, // 60 s
+              ConnectivitySamplingPackage.BLUETOOTH, // 60 s
               AudioVideoSamplingPackage.NOISE, // 60 s
               DeviceSamplingPackage.MEMORY, // 60 s
               DeviceSamplingPackage.SCREEN, // event-based
               ContextSamplingPackage.ACTIVITY, // event-based
               ContextSamplingPackage.GEOLOCATION, // event-based
-              ContextSamplingPackage.MOBILITY, // event-based
-            ],
-          ),
-        phone);
-
-    protocol.addTriggeredTask(
-        ImmediateTrigger(),
-        AutomaticTask()
-          ..measures = SamplingPackageRegistry().debug().getMeasureList(
-            types: [
-              DeviceSamplingPackage.DEVICE,
+              // ContextSamplingPackage.MOBILITY, // event-based
             ],
           ),
         phone);
@@ -98,50 +92,56 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //       ),
     //     phone);
 
-    protocol.addTriggeredTask(
-        PeriodicTrigger(
-          period: Duration(minutes: 1),
-          duration: const Duration(seconds: 2),
-        ),
-        AutomaticTask()
-          ..measures = SamplingPackageRegistry().debug().getMeasureList(
-            types: [
-              ContextSamplingPackage.LOCATION,
-            ],
-          ),
-        phone);
+    // protocol.addTriggeredTask(
+    //     PeriodicTrigger(
+    //       period: const Duration(minutes: 1),
+    //       duration: const Duration(seconds: 2),
+    //     ),
+    //     AutomaticTask()
+    //       ..measures = SamplingPackageRegistry().debug().getMeasureList(
+    //         types: [
+    //           ContextSamplingPackage.LOCATION,
+    //         ],
+    //       ),
+    //     phone);
 
     protocol.addTriggeredTask(
         PeriodicTrigger(
-          period: Duration(minutes: 2),
+          period: const Duration(minutes: 30),
           duration: const Duration(seconds: 2),
         ),
         AutomaticTask()
-          ..measures = SamplingPackageRegistry().debug().getMeasureList(
-            types: [
-              ContextSamplingPackage.WEATHER,
-              ContextSamplingPackage.AIR_QUALITY,
-            ],
-          ),
+          ..addMeasure(WeatherMeasure(
+              type: ContextSamplingPackage.WEATHER,
+              name: 'Weather',
+              description:
+                  "Collects local weather from the WeatherAPI web service",
+              apiKey: '12b6e28582eb9298577c734a31ba9f4f'))
+          ..addMeasure(AirQualityMeasure(
+              type: ContextSamplingPackage.AIR_QUALITY,
+              name: 'Air Quality',
+              description:
+                  "Collects local air quality from the Air Quality Index (AQI) web service",
+              apiKey: '9e538456b2b85c92647d8b65090e29f957638c77')),
         phone);
 
-    protocol.addTriggeredTask(
-        PeriodicTrigger(
-          period: Duration(minutes: 2),
-          duration: Duration(seconds: 30),
-        ),
-        AutomaticTask()
-          ..measures = SamplingPackageRegistry().debug().getMeasureList(
-            types: [
-              AudioVideoSamplingPackage.AUDIO,
-            ],
-          ),
-        phone);
+    // protocol.addTriggeredTask(
+    //     PeriodicTrigger(
+    //       period: Duration(minutes: 2),
+    //       duration: Duration(seconds: 30),
+    //     ),
+    //     AutomaticTask()
+    //       ..measures = SamplingPackageRegistry().debug().getMeasureList(
+    //         types: [
+    //           AudioVideoSamplingPackage.AUDIO,
+    //         ],
+    //       ),
+    //     phone);
 
     protocol.addTriggeredTask(
         ImmediateTrigger(),
         AutomaticTask()
-          ..measures = SamplingPackageRegistry().debug().getMeasureList(
+          ..measures = SamplingPackageRegistry().debug.getMeasureList(
             types: [
               ESenseSamplingPackage.ESENSE_BUTTON,
               ESenseSamplingPackage.ESENSE_SENSOR,

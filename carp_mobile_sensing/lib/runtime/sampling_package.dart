@@ -57,12 +57,13 @@ class SamplingPackageRegistry {
 
   /// A schema that does maximum sampling.
   ///
-  /// Takes its settings from the [SamplingSchema.common()] schema, but
+  /// Takes its settings from the [common] schema, but
   /// enables all measures.
-  SamplingSchema maximum({String? namespace}) => common()
+  /// Also turns off power awareness.
+  SamplingSchema get maximum => common
     ..type = SamplingSchemaType.maximum
     ..name = 'Default ALL sampling'
-    ..powerAware = true
+    ..powerAware = false
     ..measures
         .values
         .forEach((measure) => (measure as CAMSMeasure).enabled = true);
@@ -74,7 +75,7 @@ class SamplingPackageRegistry {
   /// at least once pr. day. This scheme is power-aware.
   ///
   /// These default settings are described in this [table](https://github.com/cph-cachet/carp.sensing-flutter/wiki/Schemas#samplingschemacommon).
-  SamplingSchema common() {
+  SamplingSchema get common {
     SamplingSchema schema = SamplingSchema(
       type: SamplingSchemaType.common,
       name: 'Common (default) sampling',
@@ -92,11 +93,16 @@ class SamplingPackageRegistry {
   /// This schema is used in the power-aware adaptation of sampling. See [PowerAwarenessState].
   /// [SamplingSchema.normal] is an empty schema and therefore don't change anything when
   /// used to adapt a [StudyProtocol] and its [Measure]s in the [adapt] method.
-  SamplingSchema normal({bool powerAware = true}) => SamplingSchema(
+  SamplingSchema get normal => SamplingSchema(
         type: SamplingSchemaType.normal,
         name: 'Default sampling',
-        powerAware: powerAware,
       );
+
+  // SamplingSchema normal({bool powerAware = true}) => SamplingSchema(
+  //       type: SamplingSchemaType.normal,
+  //       name: 'Default sampling',
+  //       powerAware: powerAware,
+  //     );
 
   /// A default light sampling schema.
   ///
@@ -106,7 +112,7 @@ class SamplingPackageRegistry {
   /// at least once pr. day. This scheme is power-aware.
   ///
   /// See this [table](https://github.com/cph-cachet/carp.sensing-flutter/wiki/Schemas#samplingschemalight) for an overview.
-  SamplingSchema light() {
+  SamplingSchema get light {
     SamplingSchema schema = SamplingSchema(
       type: SamplingSchemaType.light,
       name: 'Light sampling',
@@ -123,7 +129,7 @@ class SamplingPackageRegistry {
   ///
   /// This schema is used in the power-aware adaptation of sampling.
   /// See [PowerAwarenessState].
-  SamplingSchema minimum() {
+  SamplingSchema get minimum {
     SamplingSchema schema = SamplingSchema(
       type: SamplingSchemaType.minimum,
       name: 'Minimum sampling',
@@ -142,7 +148,7 @@ class SamplingPackageRegistry {
   /// This schema pauses all sampling by disabling all probes.
   /// Sampling will be restored to the minimum level, once the device is
   /// recharged above the [PowerAwarenessState.MINIMUM_SAMPLING_LEVEL] level.
-  SamplingSchema none() {
+  SamplingSchema get none {
     SamplingSchema schema = SamplingSchema(
       type: SamplingSchemaType.none,
       name: 'No sampling',
@@ -157,7 +163,7 @@ class SamplingPackageRegistry {
   /// A sampling schema for debugging purposes.
   /// Collects and combines the [SamplingPackage.debug] [SamplingSchema]s
   /// for each package.
-  SamplingSchema debug() {
+  SamplingSchema get debug {
     SamplingSchema schema = SamplingSchema(
       type: SamplingSchemaType.debug,
       name: 'Debugging sampling',

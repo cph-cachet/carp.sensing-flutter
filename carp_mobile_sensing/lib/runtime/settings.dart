@@ -120,14 +120,11 @@ class Settings {
 
   String? _studyDeploymentId;
 
-  String get _studyDeploymentIdKey =>
-      '$appName.$STUDY_DEPLOYMENT_ID_KEY'.toLowerCase();
-
   /// Returns the study deployment id for the currently running deployment.
   /// Returns the deployment id cached locally on the phone (if available).
   /// Returns `null` if no study is deployed (yet).
   String? get studyDeploymentId =>
-      (_studyDeploymentId ??= preferences!.getString(_studyDeploymentIdKey));
+      (_studyDeploymentId ??= preferences!.getString(STUDY_DEPLOYMENT_ID_KEY));
 
   /// Set the study deployment id for the currently running deployment.
   /// This study deployment id will be cached locally on the phone.
@@ -137,14 +134,14 @@ class Settings {
         'Cannot set the study deployment id to null in Settings. '
         "Use the 'eraseStudyDeployment()' method to erase study deployment information.");
     _studyDeploymentId = id;
-    preferences!.setString(_studyDeploymentIdKey, id!);
+    preferences!.setString(STUDY_DEPLOYMENT_ID_KEY, id!);
   }
 
   /// Erase all study deployment information cached locally on this phone.
   Future<void> eraseStudyDeployment() async {
     _studyDeploymentId = null;
     _studyDeploymentStartTime = null;
-    await preferences!.remove(_studyDeploymentIdKey);
+    await preferences!.remove(STUDY_DEPLOYMENT_ID_KEY);
     await preferences!.remove(_studyDeploymentStartTimesKey);
   }
 
@@ -183,7 +180,6 @@ class Settings {
   }
 
   String? _userId;
-  String get _userIdKey => '$appName.$USER_ID_KEY'.toLowerCase();
 
   /// Generate a user id that is;
   ///  * unique
@@ -195,12 +191,12 @@ class Settings {
   /// the same app on the same phone.
   Future<String> get userId async {
     assert(_preferences != null,
-        "Setting is not initialized. Call 'Setting().init()'' first.");
+        "Setting is not initialized. Call 'Setting().init()' first.");
     if (_userId == null) {
-      _userId = preferences!.get(_userIdKey) as String?;
+      _userId = preferences!.get(USER_ID_KEY) as String?;
       if (_userId == null) {
         _userId = Uuid().v4();
-        await preferences!.setString(_userIdKey, _userId!);
+        await preferences!.setString(USER_ID_KEY, _userId!);
       }
     }
     return _userId!;
