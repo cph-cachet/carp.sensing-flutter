@@ -50,8 +50,7 @@ See Flutter [AndroidX compatibility](https://flutter.dev/docs/development/packag
 
 ### iOS Integration
 
-The pedometer (step count) probe uses `NSMotion` on iOS and the `NSMotionUsageDescription` needs to be specified 
-in the app's `Info.plist` file located in `ios/Runner`:
+The pedometer (step count) probe uses `NSMotion` on iOS and the `NSMotionUsageDescription` needs to be specified in the app's `Info.plist` file located in `ios/Runner`:
 
 ```xml
   <key>NSMotionUsageDescription</key>

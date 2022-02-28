@@ -49,6 +49,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // Define which devices are used for data collection.
     Smartphone phone = Smartphone();
     ESenseDevice eSense = ESenseDevice();
+    // MovisensDevice movisens = MovisensDevice();
 
     protocol
       ..addMasterDevice(phone)
@@ -148,6 +149,41 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
             ],
           ),
         eSense);
+
+    // // add a measure for ECG monitoring using the Movisens device
+    // protocol.addTriggeredTask(
+    //   ImmediateTrigger(),
+    //   AutomaticTask()
+    //     ..addMeasure(MovisensMeasure(
+    //       type: MovisensSamplingPackage.MOVISENS_NAMESPACE,
+    //       name: 'Movisens ECG device',
+    //       address: '88:6B:0F:CD:E7:F2',
+    //       sensorLocation: SensorLocation.chest,
+    //       gender: Gender.male,
+    //       deviceName: 'Sensor 02655',
+    //       height: 175,
+    //       weight: 75,
+    //       age: 25,
+    //     )),
+    //   movisens,
+    // );
+
+    // // add measures to collect data from Apple Health / Google Fit
+    // protocol.addTriggeredTask(
+    //     PeriodicTrigger(
+    //       period: Duration(minutes: 60),
+    //       duration: Duration(minutes: 10),
+    //     ),
+    //     AutomaticTask()
+    //       ..addMeasures([
+    //         HealthMeasure(
+    //             type: HealthSamplingPackage.HEALTH,
+    //             healthDataType: HealthDataType.BLOOD_GLUCOSE),
+    //         HealthMeasure(
+    //             type: HealthSamplingPackage.HEALTH,
+    //             healthDataType: HealthDataType.STEPS)
+    //       ]),
+    //     phone);
 
     return protocol;
   }
