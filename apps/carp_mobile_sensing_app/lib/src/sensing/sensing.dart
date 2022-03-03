@@ -48,7 +48,7 @@ class Sensing {
     // create and register external sampling packages
     SamplingPackageRegistry().register(ConnectivitySamplingPackage());
     SamplingPackageRegistry().register(ContextSamplingPackage());
-    SamplingPackageRegistry().register(AudioVideoSamplingPackage());
+    SamplingPackageRegistry().register(MediaSamplingPackage());
     //SamplingPackageRegistry().register(CommunicationSamplingPackage());
     //SamplingPackageRegistry().register(AppsSamplingPackage());
     SamplingPackageRegistry().register(ESenseSamplingPackage());

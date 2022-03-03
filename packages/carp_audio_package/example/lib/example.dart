@@ -1,6 +1,6 @@
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
-import 'package:carp_audio_package/audio.dart';
+import 'package:carp_audio_package/media.dart';
 
 /// This is a very simple example of how this sampling package is used with
 /// CARP Mobile Sensing (CAMS).
@@ -8,7 +8,7 @@ import 'package:carp_audio_package/audio.dart';
 /// See the documentation on how to use CAMS: https://github.com/cph-cachet/carp.sensing-flutter/wiki
 void main() async {
   // register this sampling package before using its measures
-  SamplingPackageRegistry().register(AudioVideoSamplingPackage());
+  SamplingPackageRegistry().register(MediaSamplingPackage());
 
   // Create a study protocol
   StudyProtocol protocol = StudyProtocol(
@@ -27,8 +27,8 @@ void main() async {
       AutomaticTask()
         ..addMeasures(SensorSamplingPackage().common.getMeasureList(
           types: [
-            AudioVideoSamplingPackage.AUDIO,
-            AudioVideoSamplingPackage.NOISE,
+            MediaSamplingPackage.AUDIO,
+            MediaSamplingPackage.NOISE,
           ],
         )),
       phone);

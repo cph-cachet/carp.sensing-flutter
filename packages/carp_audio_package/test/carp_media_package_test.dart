@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
-import 'package:carp_audio_package/audio.dart';
+import 'package:carp_audio_package/media.dart';
 
 void main() {
   late StudyProtocol protocol;
@@ -15,7 +15,7 @@ void main() {
     DomainJsonFactory();
 
     // register the context sampling package
-    SamplingPackageRegistry().register(AudioVideoSamplingPackage());
+    SamplingPackageRegistry().register(MediaSamplingPackage());
 
     // Create a new study protocol.
     protocol = StudyProtocol(
@@ -31,8 +31,7 @@ void main() {
     protocol.addTriggeredTask(
       ImmediateTrigger(), // a simple trigger that starts immediately
       AutomaticTask()
-        ..measures =
-            SamplingPackageRegistry().common().measures.values.toList(),
+        ..measures = SamplingPackageRegistry().common.measures.values.toList(),
       phone, // a task with all measures
     );
   });
@@ -64,7 +63,8 @@ void main() {
     print(toJsonString(protocol));
   });
   test('Audio Data Point', () async {
-    AudioDatum datum = AudioDatum(
+    MediaDatum datum = MediaDatum(
+      mediaType: MediaType.audio,
       filename: "filename.mp3",
       startRecordingTime: DateTime.now().subtract(Duration(days: 1)),
       endRecordingTime: DateTime.now(),
@@ -78,9 +78,9 @@ void main() {
   });
 
   test('Video Data Point', () async {
-    VideoDatum datum = VideoDatum(
+    MediaDatum datum = MediaDatum(
+      mediaType: MediaType.video,
       filename: "filename.mp3",
-      videoType: VideoType.video,
       startRecordingTime: DateTime.now().subtract(Duration(days: 1)),
       endRecordingTime: DateTime.now(),
     );

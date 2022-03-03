@@ -1,13 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of audio;
+part of media;
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-AudioDatum _$AudioDatumFromJson(Map<String, dynamic> json) => AudioDatum(
+MediaDatum _$MediaDatumFromJson(Map<String, dynamic> json) => MediaDatum(
       filename: json['filename'] as String,
+      mediaType: $enumDecode(_$MediaTypeEnumMap, json['media_type']),
       startRecordingTime: json['start_recording_time'] == null
           ? null
           : DateTime.parse(json['start_recording_time'] as String),
@@ -22,7 +23,7 @@ AudioDatum _$AudioDatumFromJson(Map<String, dynamic> json) => AudioDatum(
         (k, e) => MapEntry(k, e as String),
       );
 
-Map<String, dynamic> _$AudioDatumToJson(AudioDatum instance) {
+Map<String, dynamic> _$MediaDatumToJson(MediaDatum instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -36,12 +37,19 @@ Map<String, dynamic> _$AudioDatumToJson(AudioDatum instance) {
   val['filename'] = instance.filename;
   val['upload'] = instance.upload;
   writeNotNull('metadata', instance.metadata);
+  val['media_type'] = _$MediaTypeEnumMap[instance.mediaType];
   writeNotNull(
       'start_recording_time', instance.startRecordingTime?.toIso8601String());
   writeNotNull(
       'end_recording_time', instance.endRecordingTime?.toIso8601String());
   return val;
 }
+
+const _$MediaTypeEnumMap = {
+  MediaType.audio: 'audio',
+  MediaType.video: 'video',
+  MediaType.image: 'image',
+};
 
 NoiseDatum _$NoiseDatumFromJson(Map<String, dynamic> json) => NoiseDatum(
       meanDecibel: (json['mean_decibel'] as num).toDouble(),
@@ -69,52 +77,6 @@ Map<String, dynamic> _$NoiseDatumToJson(NoiseDatum instance) {
   val['max_decibel'] = instance.maxDecibel;
   return val;
 }
-
-VideoDatum _$VideoDatumFromJson(Map<String, dynamic> json) => VideoDatum(
-      filename: json['filename'] as String,
-      videoType: $enumDecode(_$VideoTypeEnumMap, json['video_type']),
-      startRecordingTime: json['start_recording_time'] == null
-          ? null
-          : DateTime.parse(json['start_recording_time'] as String),
-      endRecordingTime: json['end_recording_time'] == null
-          ? null
-          : DateTime.parse(json['end_recording_time'] as String),
-    )
-      ..id = json['id'] as String?
-      ..timestamp = DateTime.parse(json['timestamp'] as String)
-      ..upload = json['upload'] as bool
-      ..metadata = (json['metadata'] as Map<String, dynamic>?)?.map(
-        (k, e) => MapEntry(k, e as String),
-      )
-      ..format = DataFormat.fromJson(json['format'] as Map<String, dynamic>);
-
-Map<String, dynamic> _$VideoDatumToJson(VideoDatum instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('id', instance.id);
-  val['timestamp'] = instance.timestamp.toIso8601String();
-  val['filename'] = instance.filename;
-  val['upload'] = instance.upload;
-  writeNotNull('metadata', instance.metadata);
-  writeNotNull(
-      'start_recording_time', instance.startRecordingTime?.toIso8601String());
-  writeNotNull(
-      'end_recording_time', instance.endRecordingTime?.toIso8601String());
-  val['format'] = instance.format;
-  val['video_type'] = _$VideoTypeEnumMap[instance.videoType];
-  return val;
-}
-
-const _$VideoTypeEnumMap = {
-  VideoType.video: 'video',
-  VideoType.image: 'image',
-};
 
 NoiseMeasure _$NoiseMeasureFromJson(Map<String, dynamic> json) => NoiseMeasure(
       type: json['type'] as String,

@@ -1,16 +1,18 @@
-# CARP Audio Sampling Package
+# CARP Media Sampling Package
 
 [![pub package](https://img.shields.io/pub/v/carp_audio_package.svg)](https://pub.dartlang.org/packages/carp_audio_package)
 [![github stars](https://img.shields.io/github/stars/cph-cachet/carp.sensing-flutter.svg?style=flat&logo=github&colorB=deeppink&label=stars)](https://github.com/cph-cachet/carp.sensing-flutter)
 [![MIT License](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
 
-This library contains a sampling package for audio and video sampling to work with 
-the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package.
+This library contains a sampling package for media (audio, video, image, noise) sampling to work with the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package.
 This packages supports sampling of the following [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core/Measure-class.html) types:
 
 * `dk.cachet.carp.audio`
-* `dk.cachet.carp.video`
 * `dk.cachet.carp.noise`
+* `dk.cachet.carp.video`
+* `dk.cachet.carp.image`
+
+The name of the Flutter pub.dev package is "audio" for historical reasons - however, it is now a "media" package and the CAMS package name is `MediaSamplingPackage`.
 
 See the [wiki]() for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types)
 and [sampling schemas](https://github.com/cph-cachet/carp.sensing-flutter/wiki/D.-Sampling-Schemas).
@@ -74,12 +76,12 @@ To use this package, import it into your app together with the
 `````dart
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
-import 'package:carp_audio_package/audio.dart';
+import 'package:carp_audio_package/media.dart';
 `````
 
 Before creating a study and running it, register this package in the 
 [SamplingPackageRegistry](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/runtime/SamplingPackageRegistry.html).
 
 `````dart
-  SamplingPackageRegistry().register(AudioVideoSamplingPackage());
+  SamplingPackageRegistry().register(MediaSamplingPackage());
 `````

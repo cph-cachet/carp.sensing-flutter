@@ -17,12 +17,16 @@ void main() async {
   // Create a study protocol
   StudyProtocol protocol = StudyProtocol(
     ownerId: 'owner@dtu.dk',
-    name: 'Context Sensing Example',
+    name: 'eSense Sensing Example',
   );
 
   // define which devices are used for data collection - both phone and eSense
   Smartphone phone = Smartphone(roleName: 'The main phone');
-  DeviceDescriptor eSense = ESenseDevice(roleName: 'The left eSense earplug');
+  DeviceDescriptor eSense = ESenseDevice(
+    roleName: 'eSense earplug',
+    deviceName: 'eSense-0223',
+    samplingRate: 10,
+  );
 
   protocol
     ..addMasterDevice(phone)
@@ -49,18 +53,17 @@ void main() async {
       ImmediateTrigger(),
       AutomaticTask()
         ..addMeasures([
-          ESenseMeasure(
-              type: ESenseSamplingPackage.ESENSE_BUTTON,
-              name: 'eSense - Button',
-              description: "Collects button event from the eSense device",
-              deviceName: 'eSense-0332'),
-          ESenseMeasure(
-              type: ESenseSamplingPackage.ESENSE_SENSOR,
-              name: 'eSense - Sensor',
-              description:
-                  "Collects movement data from the eSense inertial measurement unit (IMU) sensor",
-              deviceName: 'eSense-0332',
-              samplingRate: 5),
+          CAMSMeasure(
+            type: ESenseSamplingPackage.ESENSE_BUTTON,
+            name: 'eSense - Button',
+            description: "Collects button event from the eSense device",
+          ),
+          CAMSMeasure(
+            type: ESenseSamplingPackage.ESENSE_SENSOR,
+            name: 'eSense - Sensor',
+            description:
+                "Collects movement data from the eSense inertial measurement unit (IMU) sensor",
+          ),
         ]),
       eSense);
 }

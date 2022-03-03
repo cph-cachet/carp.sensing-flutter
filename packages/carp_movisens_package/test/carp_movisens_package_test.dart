@@ -29,7 +29,7 @@ void main() {
 
     // define the Movisens device used for data collection
     phone = Smartphone();
-    MovisensDeviceDescriptor movisens = MovisensDeviceDescriptor(
+    MovisensDevice movisens = MovisensDevice(
       address: '88:6B:0F:CD:E7:F2',
       sensorLocation: SensorLocation.chest,
       gender: Gender.male,
@@ -47,8 +47,7 @@ void main() {
     protocol.addTriggeredTask(
       ImmediateTrigger(), // a simple trigger that starts immediately
       AutomaticTask()
-        ..measures =
-            SamplingPackageRegistry().common().measures.values.toList(),
+        ..measures = SamplingPackageRegistry().common.measures.values.toList(),
       phone, // a task with all measures
     );
 
@@ -90,7 +89,7 @@ void main() {
     expect(protocol.ownerId, 'alex@uni.dk');
     expect(protocol.masterDevices.first.roleName, Smartphone.DEFAULT_ROLENAME);
     expect(protocol.connectedDevices.first.roleName,
-        MovisensDeviceDescriptor.DEFAULT_ROLENAME);
+        MovisensDevice.DEFAULT_ROLENAME);
 
     print(toJsonString(protocol));
   });

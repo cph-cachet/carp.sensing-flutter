@@ -33,8 +33,6 @@ class ESenseSamplingPackage implements SamplingPackage {
   }
 
   void onRegister() {
-    FromJsonFactory()
-        .register(ESenseMeasure(type: ESENSE_BUTTON, deviceName: 'ignored'));
     FromJsonFactory().register(ESenseDevice());
   }
 
@@ -77,21 +75,18 @@ class ESenseSamplingPackage implements SamplingPackage {
       )..measures.addEntries([
           MapEntry(
               ESENSE_BUTTON,
-              ESenseMeasure(
-                  type: ESENSE_BUTTON,
-                  name: 'eSense - Button',
-                  description: "Collects button event from the eSense device",
-                  enabled: true,
-                  deviceName: 'eSense-0332')),
+              CAMSMeasure(
+                type: ESENSE_BUTTON,
+                name: 'eSense - Button',
+                description: "Collects button event from the eSense device",
+              )),
           MapEntry(
               ESENSE_SENSOR,
-              ESenseMeasure(
-                  type: ESENSE_SENSOR,
-                  name: 'eSense - Sensor',
-                  description:
-                      "Collects movement data from the eSense inertial measurement unit (IMU) sensor",
-                  enabled: true,
-                  deviceName: 'eSense-0332',
-                  samplingRate: 5)),
+              CAMSMeasure(
+                type: ESENSE_SENSOR,
+                name: 'eSense - Sensor',
+                description:
+                    "Collects movement data from the eSense inertial measurement unit (IMU) sensor",
+              )),
         ]);
 }

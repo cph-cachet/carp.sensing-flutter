@@ -35,8 +35,11 @@ abstract class DeviceManager extends DeviceDataCollector {
   /// The runtime status of this device.
   DeviceStatus get status => _status;
 
-  /// Has this device manager been initialized
+  /// Has this device manager been initialized?
   bool get isInitialized => status.index >= DeviceStatus.initialized.index;
+
+  /// Has this device manager been connected?
+  bool get isConnected => status.index >= DeviceStatus.connected.index;
 
   /// Change the runtime status of this device.
   set status(DeviceStatus newStatus) {
@@ -47,7 +50,7 @@ abstract class DeviceManager extends DeviceDataCollector {
   /// The runtime battery level of this device.
   int? get batteryLevel;
 
-  /// Initialize the device data collector by specifying its device [descriptor].
+  /// Initialize the device manager by specifying its device [descriptor].
   void initialize(DeviceDescriptor descriptor) {
     info('Initializing device manager, type: $type, descriptor.: $descriptor');
     deviceDescriptor = descriptor;

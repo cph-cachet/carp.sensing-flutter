@@ -2,7 +2,7 @@
   "ownerId": "alex@uni.dk",
   "name": "Context package test",
   "description": "",
-  "creationDate": "2022-01-25T20:52:12.801169Z",
+  "creationDate": "2022-03-03T21:07:21.735258Z",
   "masterDevices": [
    {
     "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
@@ -13,7 +13,7 @@
   ],
   "connectedDevices": [
    {
-    "$type": "dk.cachet.carp.protocols.domain.devices.MovisensDeviceDescriptor",
+    "$type": "dk.cachet.carp.protocols.domain.devices.MovisensDevice",
     "isMasterDevice": false,
     "roleName": "movisens",
     "supportedDataTypes": [
@@ -130,6 +130,14 @@
       "configuration": {},
       "frequency": 60000000,
       "duration": 1000000
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
+      "type": "dk.cachet.carp.movisens",
+      "name": "Movisens ECG device",
+      "description": "Collects heart rythm data from the Movisens EcgMove4 sensor",
+      "enabled": true,
+      "configuration": {}
      }
     ]
    },

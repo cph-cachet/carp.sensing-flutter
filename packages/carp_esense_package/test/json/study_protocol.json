@@ -2,7 +2,7 @@
     "ownerId": "alex@uni.dk",
     "name": "Context package test",
     "description": "",
-    "creationDate": "2021-10-14T21:55:34.702944Z",
+    "creationDate": "2022-03-03T21:06:14.414521Z",
     "masterDevices": [
      {
       "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
@@ -15,8 +15,10 @@
      {
       "$type": "dk.cachet.carp.protocols.domain.devices.ESenseDevice",
       "isMasterDevice": false,
-      "roleName": "esense",
-      "samplingConfiguration": {}
+      "roleName": "eSense earplug",
+      "samplingConfiguration": {},
+      "deviceName": "eSense-0223",
+      "samplingRate": 10
      }
     ],
     "connections": [],
@@ -49,7 +51,7 @@
         "enabled": true,
         "configuration": {},
         "frequency": 60000000,
-        "duration": 2000000
+        "duration": 1000000
        },
        {
         "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
@@ -128,24 +130,20 @@
       "name": "Task #4",
       "measures": [
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.ESenseMeasure",
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
         "type": "dk.cachet.carp.esense.button",
         "name": "eSense - Button",
         "description": "Collects button event from the eSense device",
         "enabled": true,
-        "configuration": {},
-        "deviceName": "eSense-0332",
-        "samplingRate": 10
+        "configuration": {}
        },
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.ESenseMeasure",
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
         "type": "dk.cachet.carp.esense.sensor",
         "name": "eSense - Sensor",
         "description": "Collects movement data from the eSense inertial measurement unit (IMU) sensor",
         "enabled": true,
-        "configuration": {},
-        "deviceName": "eSense-0332",
-        "samplingRate": 5
+        "configuration": {}
        }
       ]
      }
@@ -159,7 +157,7 @@
      {
       "triggerId": 1,
       "taskName": "Task #4",
-      "targetDeviceRoleName": "esense"
+      "targetDeviceRoleName": "eSense earplug"
      }
     ],
     "expectedParticipantData": []

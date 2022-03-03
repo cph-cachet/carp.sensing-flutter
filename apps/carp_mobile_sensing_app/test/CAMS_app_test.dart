@@ -7,7 +7,7 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 // import 'package:carp_connectivity_package/connectivity.dart';
 import 'package:carp_esense_package/esense.dart';
 import 'package:carp_context_package/context.dart';
-import 'package:carp_audio_package/audio.dart';
+import 'package:carp_audio_package/media.dart';
 import 'package:carp_backend/carp_backend.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
@@ -28,7 +28,7 @@ void main() {
     // register the different sampling package since we're using measures from them
     // SamplingPackageRegistry().register(ConnectivitySamplingPackage());
     SamplingPackageRegistry().register(ContextSamplingPackage());
-    SamplingPackageRegistry().register(AudioVideoSamplingPackage());
+    SamplingPackageRegistry().register(MediaSamplingPackage());
     SamplingPackageRegistry().register(ESenseSamplingPackage());
 
     // create a data manager in order to register the json functions

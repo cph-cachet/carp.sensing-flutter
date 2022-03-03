@@ -47,8 +47,12 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     protocol.dataEndPoint!.dataFormat = bloc.dataFormat;
 
     // Define which devices are used for data collection.
-    Smartphone phone = Smartphone();
-    ESenseDevice eSense = ESenseDevice();
+    Smartphone phone = Smartphone(roleName: 'SM-A320FL');
+    ESenseDevice eSense = ESenseDevice(
+      roleName: 'eSense earplug',
+      deviceName: 'eSense-0223',
+      samplingRate: 10,
+    );
     // MovisensDevice movisens = MovisensDevice();
 
     protocol
@@ -67,7 +71,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
               ConnectivitySamplingPackage.CONNECTIVITY,
               ConnectivitySamplingPackage.WIFI, // 60 s
               ConnectivitySamplingPackage.BLUETOOTH, // 60 s
-              AudioVideoSamplingPackage.NOISE, // 60 s
+              MediaSamplingPackage.NOISE, // 60 s
               DeviceSamplingPackage.MEMORY, // 60 s
               DeviceSamplingPackage.SCREEN, // event-based
               ContextSamplingPackage.ACTIVITY, // event-based

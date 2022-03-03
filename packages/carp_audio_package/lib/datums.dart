@@ -5,31 +5,37 @@
  * found in the LICENSE file.
  */
 
-part of audio;
+part of media;
 
-/// A datum that holds the path to audio file on the local device,
+/// Type of media.
+enum MediaType { audio, video, image }
+
+/// A datum that holds the path to media file on the local device,
 /// as well as the timestamps of when the recording was started and stopped
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class AudioDatum extends FileDatum {
-  DataFormat get format =>
-      DataFormat.fromString(AudioVideoSamplingPackage.AUDIO);
+class MediaDatum extends FileDatum {
+  DataFormat get format => DataFormat.fromString(MediaSamplingPackage.AUDIO);
 
-  /// The timestamp for start of recording.
+  /// The type of media.
+  MediaType mediaType;
+
+  /// The timestamp for start of recording, if available.
   DateTime? startRecordingTime;
 
-  /// The timestamp for end of recording.
+  /// The timestamp for end of recording, if available.
   DateTime? endRecordingTime;
 
-  AudioDatum({
+  MediaDatum({
     required String filename,
+    required this.mediaType,
     this.startRecordingTime,
     this.endRecordingTime,
   }) : super(filename: filename);
 
-  factory AudioDatum.fromJson(Map<String, dynamic> json) =>
-      _$AudioDatumFromJson(json);
+  factory MediaDatum.fromJson(Map<String, dynamic> json) =>
+      _$MediaDatumFromJson(json);
 
-  Map<String, dynamic> toJson() => _$AudioDatumToJson(this);
+  Map<String, dynamic> toJson() => _$MediaDatumToJson(this);
 
   String toString() =>
       super.toString() + ', start: $startRecordingTime, end: $endRecordingTime';
@@ -38,8 +44,7 @@ class AudioDatum extends FileDatum {
 /// A [NoiseDatum] that holds the noise level in decibel of a noise sampling.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class NoiseDatum extends Datum {
-  DataFormat get format =>
-      DataFormat.fromString(AudioVideoSamplingPackage.NOISE);
+  DataFormat get format => DataFormat.fromString(MediaSamplingPackage.NOISE);
 
   // The sound intensity [dB] measurement statistics for a given sampling window.
 
@@ -70,34 +75,4 @@ class NoiseDatum extends Datum {
   String toString() =>
       super.toString() +
       ', mean: $meanDecibel, std: $stdDecibel, min: $minDecibel, max: $maxDecibel';
-}
-
-enum VideoType { video, image }
-
-/// A datum that holds the path to a video or image file on the local device,
-/// as well as the timestamps of when the recording was started and stopped.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class VideoDatum extends AudioDatum {
-  DataFormat get format =>
-      DataFormat.fromString(AudioVideoSamplingPackage.VIDEO);
-
-  VideoType videoType;
-
-  VideoDatum({
-    required String filename,
-    required this.videoType,
-    DateTime? startRecordingTime,
-    DateTime? endRecordingTime,
-  }) : super(
-          filename: filename,
-          startRecordingTime: startRecordingTime,
-          endRecordingTime: endRecordingTime,
-        );
-
-  factory VideoDatum.fromJson(Map<String, dynamic> json) =>
-      _$VideoDatumFromJson(json);
-
-  Map<String, dynamic> toJson() => _$VideoDatumToJson(this);
-
-  String toString() => super.toString() + ', videoType: $videoType';
 }

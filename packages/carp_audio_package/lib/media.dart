@@ -2,7 +2,7 @@
 /// Support the following measures:
 ///  * audio recording
 ///  * noise sampling
-library audio;
+library media;
 
 import 'dart:async';
 import 'dart:io';
@@ -21,8 +21,8 @@ part 'video_probe.dart';
 part 'noise_probe.dart';
 part 'datums.dart';
 part 'noise_measure.dart';
-part 'audio_video_package.dart';
-part 'audio.g.dart';
+part 'media_package.dart';
+part 'media.g.dart';
 
 // auto generate json code (.g files) with:
 //   flutter pub run build_runner build --delete-conflicting-outputs

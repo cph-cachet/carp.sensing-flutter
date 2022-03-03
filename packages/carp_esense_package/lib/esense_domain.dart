@@ -7,43 +7,6 @@
 
 part of esense;
 
-/// Specify the configuration on how to collect eSense data.
-/// Needs an [deviceName] for the eSense device to connect to.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class ESenseMeasure extends CAMSMeasure {
-  /// The name of the eSense device.
-  /// Used for connecting to the eSense hardware device over BTLE.
-  String deviceName;
-
-  /// The sampling rate in Hz of getting sensor data from the device.
-  ///
-  /// Default sampling rate is 10 Hz.
-  int samplingRate = 10;
-
-  /// Create an eSense messure confgiration.
-  /// [type] and [deviceName] are required.
-  ESenseMeasure({
-    required String type,
-    String? name,
-    String? description,
-    enabled = true,
-    required this.deviceName,
-    this.samplingRate = 10,
-  }) : super(
-          type: type,
-          name: name,
-          description: description,
-          enabled: enabled,
-        );
-
-  Function get fromJsonFunction => _$ESenseMeasureFromJson;
-  factory ESenseMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as ESenseMeasure;
-  Map<String, dynamic> toJson() => _$ESenseMeasureToJson(this);
-
-  String toString() => super.toString() + ', deviceName: $deviceName';
-}
-
 /// Abstract eSense datum class.
 abstract class ESenseDatum extends Datum {
   /// The name of eSense device that generated this datum.

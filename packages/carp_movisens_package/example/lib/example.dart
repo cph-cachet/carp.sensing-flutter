@@ -19,7 +19,7 @@ void main() async {
 
   // define which devices are used for data collection - both phone and Movisens
   Smartphone phone = Smartphone();
-  MovisensDeviceDescriptor movisens = MovisensDeviceDescriptor(
+  MovisensDevice movisens = MovisensDevice(
     roleName: 'movisens-ecg',
     address: '88:6B:0F:CD:E7:F2',
     sensorLocation: SensorLocation.chest,

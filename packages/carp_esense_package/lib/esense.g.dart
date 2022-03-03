@@ -6,38 +6,6 @@ part of esense;
 // JsonSerializableGenerator
 // **************************************************************************
 
-ESenseMeasure _$ESenseMeasureFromJson(Map<String, dynamic> json) =>
-    ESenseMeasure(
-      type: json['type'] as String,
-      name: json['name'] as String?,
-      description: json['description'] as String?,
-      enabled: json['enabled'] ?? true,
-      deviceName: json['deviceName'] as String,
-      samplingRate: json['samplingRate'] as int? ?? 10,
-    )
-      ..$type = json[r'$type'] as String?
-      ..configuration = Map<String, String>.from(json['configuration'] as Map);
-
-Map<String, dynamic> _$ESenseMeasureToJson(ESenseMeasure instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull(r'$type', instance.$type);
-  val['type'] = instance.type;
-  writeNotNull('name', instance.name);
-  writeNotNull('description', instance.description);
-  val['enabled'] = instance.enabled;
-  val['configuration'] = instance.configuration;
-  val['deviceName'] = instance.deviceName;
-  val['samplingRate'] = instance.samplingRate;
-  return val;
-}
-
 ESenseButtonDatum _$ESenseButtonDatumFromJson(Map<String, dynamic> json) =>
     ESenseButtonDatum(
       deviceName: json['device_name'] as String,
@@ -93,6 +61,8 @@ Map<String, dynamic> _$ESenseSensorDatumToJson(ESenseSensorDatum instance) {
 
 ESenseDevice _$ESenseDeviceFromJson(Map<String, dynamic> json) => ESenseDevice(
       roleName: json['roleName'] as String?,
+      deviceName: json['deviceName'] as String?,
+      samplingRate: json['samplingRate'] as int?,
       supportedDataTypes: (json['supportedDataTypes'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
@@ -119,5 +89,7 @@ Map<String, dynamic> _$ESenseDeviceToJson(ESenseDevice instance) {
   val['roleName'] = instance.roleName;
   writeNotNull('supportedDataTypes', instance.supportedDataTypes);
   val['samplingConfiguration'] = instance.samplingConfiguration;
+  writeNotNull('deviceName', instance.deviceName);
+  writeNotNull('samplingRate', instance.samplingRate);
   return val;
 }

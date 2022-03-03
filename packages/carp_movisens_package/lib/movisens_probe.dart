@@ -8,6 +8,7 @@ part of movisens;
 
 /// A probe collecting data from the Movisens device using a [StreamProbe].
 class MovisensProbe extends StreamProbe {
+  @override
   MovisensDeviceManager get deviceManager =>
       super.deviceManager as MovisensDeviceManager;
 

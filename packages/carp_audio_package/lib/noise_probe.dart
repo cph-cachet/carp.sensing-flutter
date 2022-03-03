@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of audio;
+part of media;
 
 /// A listening probe collecting noise sampling from the microphone.
 ///

@@ -4,10 +4,10 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of audio;
+part of media;
 
 /// A probe recording audio from the microphone. It starts recording on [resume()]
-/// and stops recording on [pause()], post its [AudioDatum] to the [events] stream.
+/// and stops recording on [pause()], post its [MediaDatum] to the [events] stream.
 /// Use a [AudioMeasure] to configure this probe.
 ///
 /// This probe can be used in a [PeriodicTrigger], which allows for periodic
@@ -20,7 +20,7 @@ part of audio;
 /// Also note that this probe records raw sound directly from the microphone
 /// and hence records everything - including human speech - in its proximity.
 ///
-/// The Audio probe generates an [AudioDatum] that holds the meta-data for each
+/// The Audio probe generates an [MediaDatum] that holds the meta-data for each
 /// recording along with the actual recording in an audio file.
 /// How to upload this data to a data backend is up to the implementation of the
 /// [DataManager], which is used in the [Study].
@@ -31,7 +31,7 @@ class AudioProbe extends DatumProbe {
   String? _path;
   bool _isRecording = false;
   DateTime? _startRecordingTime, _endRecordingTime;
-  AudioDatum? _datum;
+  MediaDatum? _datum;
   var recorder = FlutterSoundRecorder();
   String? _soundFileName;
 
@@ -85,7 +85,8 @@ class AudioProbe extends DatumProbe {
         await Permission.microphone.request();
       }
       _startRecordingTime = DateTime.now().toUtc();
-      _datum = AudioDatum(
+      _datum = MediaDatum(
+        mediaType: MediaType.audio,
         filename: 'ignored for now',
         startRecordingTime: _startRecordingTime!,
       );
@@ -95,7 +96,7 @@ class AudioProbe extends DatumProbe {
       _isRecording = true;
 
       // start the recording
-      recorder.openAudioSession();
+      recorder.openRecorder();
       await recorder.startRecorder(
         toFile: _soundFileName,
         codec: Codec.aacMP4,
@@ -109,7 +110,7 @@ class AudioProbe extends DatumProbe {
 
     // stop the recording
     await recorder.stopRecorder();
-    recorder.closeAudioSession();
+    recorder.closeRecorder();
   }
 
   @override
@@ -135,7 +136,7 @@ class AudioProbe extends DatumProbe {
   }
 
   /// Returns the  filename of the sound file.
-  /// The file is named by the unique id (uuid) of the [AudioDatum]
+  /// The file is named by the unique id (uuid) of the [MediaDatum]
   String get filename => '${_datum!.id}.mp4';
 
   /// Returns the full file path to the sound file.

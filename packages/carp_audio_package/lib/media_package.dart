@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of audio;
+part of media;
 
 // TODO -- audio recording and noise is conflicting... can't run at the same time...
 
@@ -16,14 +16,16 @@ part of audio;
 /// ```
 ///   SamplingPackageRegistry.register(AudioVideoSamplingPackage());
 /// ```
-class AudioVideoSamplingPackage extends SmartphoneSamplingPackage {
+class MediaSamplingPackage extends SmartphoneSamplingPackage {
   static const String AUDIO = "dk.cachet.carp.audio";
   static const String VIDEO = "dk.cachet.carp.video";
+  static const String IMAGE = "dk.cachet.carp.image";
   static const String NOISE = "dk.cachet.carp.noise";
 
   List<String> get dataTypes => [
         AUDIO,
         VIDEO,
+        IMAGE,
         NOISE,
       ];
 
@@ -32,6 +34,8 @@ class AudioVideoSamplingPackage extends SmartphoneSamplingPackage {
       case AUDIO:
         return AudioProbe();
       case VIDEO:
+        return VideoProbe();
+      case IMAGE:
         return VideoProbe();
       case NOISE:
         return NoiseProbe();
@@ -69,9 +73,16 @@ class AudioVideoSamplingPackage extends SmartphoneSamplingPackage {
           VIDEO,
           CAMSMeasure(
             type: VIDEO,
-            name: 'Video or Image Recording',
-            description:
-                "Collects a video recording or an image from the phone's camera",
+            name: 'Video Recording',
+            description: "Collects a video recording from the phone's camera",
+            enabled: true,
+          )),
+      MapEntry(
+          IMAGE,
+          CAMSMeasure(
+            type: IMAGE,
+            name: 'Image Capture',
+            description: "Collects an image from the phone's camera",
             enabled: true,
           )),
       MapEntry(

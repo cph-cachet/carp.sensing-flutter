@@ -33,8 +33,7 @@ class MovisensSamplingPackage implements SamplingPackage {
 
   @override
   void onRegister() {
-    FromJsonFactory()
-        .register(MovisensDeviceDescriptor(address: '', sensorName: ''));
+    FromJsonFactory().register(MovisensDevice(address: '', sensorName: ''));
 
     // registering the transformers from CARP to OMH and FHIR for heart rate and step count.
     // we assume that there are OMH and FHIR schemas created and registrered already...
@@ -53,7 +52,7 @@ class MovisensSamplingPackage implements SamplingPackage {
   }
 
   @override
-  String get deviceType => MovisensDeviceDescriptor.DEVICE_TYPE;
+  String get deviceType => MovisensDevice.DEVICE_TYPE;
 
   @override
   DeviceManager get deviceManager => MovisensDeviceManager();
