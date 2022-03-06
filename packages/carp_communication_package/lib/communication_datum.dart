@@ -87,23 +87,18 @@ class TextMessage {
       this.status})
       : super();
 
-  factory TextMessage.fromSmsMessage(SmsMessage sms) {
-    TextMessage msg = new TextMessage(
-      id: sms.id,
-      address: sms.address,
-      body: sms.body,
-      size: (sms.body != null) ? sms.body!.length : null,
-      read: sms.read,
-      date: DateTime.fromMicrosecondsSinceEpoch(sms.date!),
-      dateSent: DateTime.fromMicrosecondsSinceEpoch(sms.dateSent!),
-      type: sms.type,
-      status: sms.status,
-    );
-
-    if (sms.body != null) msg.size = sms.body!.length;
-
-    return msg;
-  }
+  factory TextMessage.fromSmsMessage(SmsMessage sms) => TextMessage(
+        id: sms.id,
+        address: sms.address,
+        body: sms.body,
+        size: (sms.body != null) ? sms.body!.length : null,
+        read: sms.read,
+        date: DateTime.fromMicrosecondsSinceEpoch(sms.date!, isUtc: true),
+        dateSent:
+            DateTime.fromMicrosecondsSinceEpoch(sms.dateSent!, isUtc: true),
+        type: sms.type,
+        status: sms.status,
+      );
 
   factory TextMessage.fromJson(Map<String, dynamic> json) =>
       _$TextMessageFromJson(json);

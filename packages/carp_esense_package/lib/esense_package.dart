@@ -19,6 +19,9 @@ class ESenseSamplingPackage implements SamplingPackage {
   static const String ESENSE_BUTTON = "$ESENSE_NAMESPACE.button";
   static const String ESENSE_SENSOR = "$ESENSE_NAMESPACE.sensor";
 
+  // a singleton eSense device manager
+  DeviceManager _deviceManager = ESenseDeviceManager();
+
   List<String> get dataTypes => [ESENSE_BUTTON, ESENSE_SENSOR];
 
   Probe? create(String type) {
@@ -45,7 +48,7 @@ class ESenseSamplingPackage implements SamplingPackage {
   String get deviceType => ESenseDevice.DEVICE_TYPE;
 
   @override
-  DeviceManager get deviceManager => ESenseDeviceManager();
+  DeviceManager get deviceManager => _deviceManager;
 
   // Since the configuration of the eSense devices require the device name
   // it is not possible to offer any 'common' device configuration.
@@ -67,6 +70,7 @@ class ESenseSamplingPackage implements SamplingPackage {
   // As recommended;:
   //   "it would be better to use the right earbud to record only sound samples
   //    and the left earbud to record only IMU data."
+  //
   // Hence, connect the right earbud (eSense-0917) to the phone.
   SamplingSchema get debug => SamplingSchema(
         type: SamplingSchemaType.debug,

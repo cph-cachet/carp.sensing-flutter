@@ -31,6 +31,8 @@ class MovisensSamplingPackage implements SamplingPackage {
   static const String CONNECTION_STATUS =
       "$MOVISENS_NAMESPACE.connection_status";
 
+  DeviceManager _deviceManager = MovisensDeviceManager();
+
   @override
   void onRegister() {
     FromJsonFactory().register(MovisensDevice(address: '', sensorName: ''));
@@ -55,7 +57,7 @@ class MovisensSamplingPackage implements SamplingPackage {
   String get deviceType => MovisensDevice.DEVICE_TYPE;
 
   @override
-  DeviceManager get deviceManager => MovisensDeviceManager();
+  DeviceManager get deviceManager => _deviceManager;
 
   @override
   List<Permission> get permissions => []; // no special permissions needed

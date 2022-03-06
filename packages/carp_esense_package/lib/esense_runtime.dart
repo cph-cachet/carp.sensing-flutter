@@ -16,14 +16,24 @@ abstract class _ESenseProbe extends StreamProbe {
 /// Collects eSense button pressed events. It generates an [ESenseButtonDatum]
 /// every time the button is pressed or released.
 class ESenseButtonProbe extends _ESenseProbe {
-  Stream<Datum>? get stream => (deviceManager.isConnected)
-      ? deviceManager.manager!.eSenseEvents
-          .where((event) => event.runtimeType == ButtonEventChanged)
-          .map((event) => ESenseButtonDatum(
-              deviceName: deviceManager.manager!.deviceName,
-              pressed: (event as ButtonEventChanged).pressed))
-          .asBroadcastStream()
-      : null;
+  Stream<Datum>? get stream {
+    debug(
+        '$runtimeType - deviceManager.isConnected = ${deviceManager.isConnected}');
+    debug('$deviceManager');
+    debug('${deviceManager.status}');
+
+    Stream<Datum>? str = (deviceManager.isConnected)
+        ? deviceManager.manager!.eSenseEvents
+            .where((event) => event.runtimeType == ButtonEventChanged)
+            .map((event) => ESenseButtonDatum(
+                deviceName: deviceManager.manager!.deviceName,
+                pressed: (event as ButtonEventChanged).pressed))
+            .asBroadcastStream()
+        : null;
+
+    debug('stream = $str');
+    return str;
+  }
 }
 
 /// Collects eSense sensor events.

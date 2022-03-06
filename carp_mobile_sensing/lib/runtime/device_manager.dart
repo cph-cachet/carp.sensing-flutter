@@ -39,10 +39,12 @@ abstract class DeviceManager extends DeviceDataCollector {
   bool get isInitialized => status.index >= DeviceStatus.initialized.index;
 
   /// Has this device manager been connected?
-  bool get isConnected => status.index >= DeviceStatus.connected.index;
+  bool get isConnected =>
+      (status == DeviceStatus.connected || status == DeviceStatus.sampling);
 
   /// Change the runtime status of this device.
   set status(DeviceStatus newStatus) {
+    debug('$runtimeType - setting device status: $status');
     _status = newStatus;
     _eventController.add(newStatus);
   }
@@ -76,7 +78,6 @@ abstract class DeviceManager extends DeviceDataCollector {
         '$runtimeType - Trying to connect to device of type: $type and id: $id');
     _success = await onConnect();
     status = (_success) ? DeviceStatus.connected : DeviceStatus.error;
-    info('$runtimeType - Connection status: $status');
 
     return _success;
   }
@@ -102,7 +103,6 @@ abstract class DeviceManager extends DeviceDataCollector {
         '$runtimeType - Trying to disconnect to device of type: $type and id: $id');
     _success = await onDisconnect();
     status = (_success) ? DeviceStatus.disconnected : DeviceStatus.error;
-    info('Connection status: $status');
 
     return _success;
   }

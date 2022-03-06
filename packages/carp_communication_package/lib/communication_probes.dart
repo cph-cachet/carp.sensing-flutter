@@ -61,7 +61,8 @@ class TextMessageLogProbe extends DatumProbe {
 }
 
 // A private stream controller to be used in the call-back from the SMS probe.
-StreamController<Datum> _textMessageProbeController = StreamController();
+StreamController<Datum> _textMessageProbeController =
+    StreamController.broadcast();
 
 /// The top-level call-back method for handling in-coming SMS messages when
 /// the app is in the background.

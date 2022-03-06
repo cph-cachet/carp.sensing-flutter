@@ -61,7 +61,7 @@ enum ProbeState {
 ///     probe.data.forEach(print);
 ///
 abstract class Probe {
-  /// The device manager that this probes uses to collect data.
+  /// The device that this probes uses to collect data.
   late DeviceManager deviceManager;
 
   /// Is this probe enabled, i.e. available for collection of data using the [resume] method.
@@ -157,7 +157,7 @@ abstract class Probe {
 
 /// An abstract implementation of a [Probe] to extend from.
 abstract class AbstractProbe extends Probe implements MeasureListener {
-  late DeviceManager deviceManager;
+  // late DeviceManager deviceManager;
 
   final StreamController<ProbeState> _stateEventController =
       StreamController.broadcast();
@@ -524,7 +524,7 @@ abstract class StreamProbe extends AbstractProbe {
   Future onResume() async {
     if (stream == null) {
       warning(
-          "Trying to resume the stream probe '$runtimeType' which does not provide a Datum stream."
+          "Trying to resume the stream probe '$runtimeType' which does not provide a Datum stream. "
           'Have you initialized this probe correctly?');
     } else {
       marking();
@@ -583,7 +583,7 @@ abstract class PeriodicStreamProbe extends StreamProbe {
   Future onResume() async {
     if (stream == null) {
       warning(
-          "Trying to resume the stream probe '$runtimeType' which does not provide a Datum stream."
+          "Trying to resume the stream probe '$runtimeType' which does not provide a Datum stream. "
           'Have you initialized this probe correctly?');
     } else {
       marking();
