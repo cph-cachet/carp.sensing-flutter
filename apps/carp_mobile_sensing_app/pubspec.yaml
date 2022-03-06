@@ -41,6 +41,8 @@ dependency_overrides:
     path: ../../packages/carp_context_package/
   carp_connectivity_package:
     path: ../../packages/carp_connectivity_package/
+  carp_communication_package:
+    path: ../../packages/carp_communication_package/
   carp_audio_package:
     path: ../../packages/carp_audio_package/
   carp_esense_package:

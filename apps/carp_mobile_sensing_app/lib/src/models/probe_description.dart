@@ -27,10 +27,13 @@ class ProbeDescription {
             'Measures noise level in decibel on a regular basis.',
         //AppsSamplingPackage.APPS: 'Collecting a list of installed apps.',
         //AppsSamplingPackage.APP_USAGE: 'Collects app usage statistics.',
-        //CommunicationSamplingPackage.TEXT_MESSAGE_LOG: 'Collects the SMS message log.',
-        //CommunicationSamplingPackage.TEXT_MESSAGE: 'Collecting in/out-going SMS text messages.',
-        //CommunicationSamplingPackage.PHONE_LOG: 'Collects the phone call log.',
-        //CommunicationSamplingPackage.CALENDAR: 'Collects entries from phone calendars.',
+        CommunicationSamplingPackage.TEXT_MESSAGE_LOG:
+            'Collects the SMS message log.',
+        CommunicationSamplingPackage.TEXT_MESSAGE:
+            'Collecting in/out-going SMS text messages.',
+        CommunicationSamplingPackage.PHONE_LOG: 'Collects the phone call log.',
+        CommunicationSamplingPackage.CALENDAR:
+            'Collects entries from phone calendars.',
         DeviceSamplingPackage.SCREEN:
             'Collecting screen events (on/off/unlock).',
         ContextSamplingPackage.LOCATION: 'Collecting location information.',
@@ -77,10 +80,14 @@ class ProbeDescription {
             Icon(Icons.hearing, size: 50, color: CACHET.YELLOW),
         //AppsSamplingPackage.APPS: Icon(Icons.apps, size: 50, color: CACHET.LIGHT_GREEN),
         //AppsSamplingPackage.APP_USAGE: Icon(Icons.get_app, size: 50, color: CACHET.LIGHT_GREEN),
-        //CommunicationSamplingPackage.TEXT_MESSAGE_LOG: Icon(Icons.textsms, size: 50, color: CACHET.LIGHT_PURPLE),
-        //CommunicationSamplingPackage.TEXT_MESSAGE: Icon(Icons.text_fields, size: 50, color: CACHET.LIGHT_PURPLE),
-        //CommunicationSamplingPackage.PHONE_LOG: Icon(Icons.phone_in_talk, size: 50, color: CACHET.ORANGE),
-        //CommunicationSamplingPackage.CALENDAR: Icon(Icons.event, size: 50, color: CACHET.CYAN),
+        CommunicationSamplingPackage.TEXT_MESSAGE_LOG:
+            Icon(Icons.textsms, size: 50, color: CACHET.LIGHT_PURPLE),
+        CommunicationSamplingPackage.TEXT_MESSAGE:
+            Icon(Icons.text_fields, size: 50, color: CACHET.LIGHT_PURPLE),
+        CommunicationSamplingPackage.PHONE_LOG:
+            Icon(Icons.phone_in_talk, size: 50, color: CACHET.ORANGE),
+        CommunicationSamplingPackage.CALENDAR:
+            Icon(Icons.event, size: 50, color: CACHET.CYAN),
         DeviceSamplingPackage.SCREEN: Icon(Icons.screen_lock_portrait,
             size: 50, color: CACHET.LIGHT_PURPLE),
         ContextSamplingPackage.LOCATION:

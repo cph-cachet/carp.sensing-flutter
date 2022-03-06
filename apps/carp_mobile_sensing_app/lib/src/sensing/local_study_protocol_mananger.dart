@@ -47,9 +47,8 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     protocol.dataEndPoint!.dataFormat = bloc.dataFormat;
 
     // Define which devices are used for data collection.
-    Smartphone phone = Smartphone(roleName: 'SM-A320FL');
+    Smartphone phone = Smartphone();
     ESenseDevice eSense = ESenseDevice(
-      roleName: 'eSense earplug',
       deviceName: 'eSense-0223',
       samplingRate: 10,
     );
@@ -136,12 +135,39 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //       duration: Duration(seconds: 30),
     //     ),
     //     AutomaticTask()
-    //       ..measures = SamplingPackageRegistry().debug().getMeasureList(
+    //       ..measures = SamplingPackageRegistry().debug.getMeasureList(
     //         types: [
-    //           AudioVideoSamplingPackage.AUDIO,
+    //           MediaSamplingPackage.AUDIO,
     //         ],
     //       ),
     //     phone);
+
+    // Add an automatic task that collects SMS messages in/out
+    protocol.addTriggeredTask(
+        ImmediateTrigger(),
+        AutomaticTask()
+          ..addMeasures(SamplingPackageRegistry().common.getMeasureList(
+            types: [
+              CommunicationSamplingPackage.TEXT_MESSAGE,
+            ],
+          )),
+        phone);
+
+    // Add an automatic task that collects the logs for:
+    //  * in/out SMS
+    //  * in/out phone calls
+    //  * calendar entries
+    protocol.addTriggeredTask(
+        ImmediateTrigger(),
+        AutomaticTask()
+          ..addMeasures(SamplingPackageRegistry().common.getMeasureList(
+            types: [
+              CommunicationSamplingPackage.PHONE_LOG,
+              CommunicationSamplingPackage.TEXT_MESSAGE_LOG,
+              CommunicationSamplingPackage.CALENDAR,
+            ],
+          )),
+        phone);
 
     protocol.addTriggeredTask(
         ImmediateTrigger(),

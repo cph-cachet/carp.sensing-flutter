@@ -9,7 +9,7 @@ part of communication;
 
 /// A probe that collects the phone log from this device.
 ///
-/// Only works on Android
+/// Only works on Android.
 class PhoneLogProbe extends DatumProbe {
   Future<Datum> getDatum() async {
     MarkedMeasure m = (measure as MarkedMeasure);
@@ -26,9 +26,9 @@ class PhoneLogProbe extends DatumProbe {
 }
 
 /// A probe that collects a complete list of all text (SMS) messages from
-/// this device.
+/// this device. Combines both send and recieved messages.
 ///
-/// Only works on Android
+/// Only works on Android.
 class TextMessageLogProbe extends DatumProbe {
   SmsColumn? col;
   static const List<SmsColumn> ALL_SMS_COLUMNS = [
@@ -45,16 +45,12 @@ class TextMessageLogProbe extends DatumProbe {
     SmsColumn.TYPE,
   ];
 
-  void onInitialize(Measure measure) {
-    super.onInitialize(measure);
-    if (!Platform.isAndroid)
-      throw SensingException('TextMessageLogProbe only available on Android.');
-  }
-
   Future<Datum> getDatum() async {
-    List<SmsMessage> allSms = (await Telephony.instance.getInboxSms(
-      columns: ALL_SMS_COLUMNS,
-    ))
+    List<SmsMessage> allSms = [];
+    allSms
+      ..addAll(await Telephony.instance.getInboxSms(
+        columns: ALL_SMS_COLUMNS,
+      ))
       ..addAll(await Telephony.instance.getSentSms(
         columns: ALL_SMS_COLUMNS,
       ));
@@ -67,7 +63,7 @@ class TextMessageLogProbe extends DatumProbe {
 // A private stream controller to be used in the call-back from the SMS probe.
 StreamController<Datum> _textMessageProbeController = StreamController();
 
-/// The static call-back method for handling in-coming SMS messages when
+/// The top-level call-back method for handling in-coming SMS messages when
 /// the app is in the background.
 backgrounMessageHandler(SmsMessage message) async {
   _textMessageProbeController.add(
@@ -77,7 +73,7 @@ backgrounMessageHandler(SmsMessage message) async {
 /// The [TextMessageProbe] listens to SMS messages and collects a
 /// [TextMessageDatum] every time a new SMS message is received.
 ///
-/// Only works on Android
+/// Only works on Android.
 class TextMessageProbe extends StreamProbe {
   @override
   Stream<Datum> get stream => _textMessageProbeController.stream;

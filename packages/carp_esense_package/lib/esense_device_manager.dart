@@ -100,7 +100,7 @@ class ESenseDeviceManager extends DeviceManager {
     manager = ESenseManager(id);
     // listen for connection events
     manager?.connectionEvents.listen((event) {
-      debug('$runtimeType :: eSense event : $event');
+      debug('$runtimeType - $event');
 
       switch (event.type) {
         case ConnectionType.connected:
@@ -114,14 +114,13 @@ class ESenseDeviceManager extends DeviceManager {
           manager!.eSenseEvents
               .where((event) => event is BatteryRead)
               .listen((event) {
-            debug('$runtimeType :: eSense event : $event');
             _voltageLevel = (event as BatteryRead).voltage ?? 4;
           });
 
           // set up a timer that asks for the voltage level
           Timer.periodic(const Duration(minutes: 5), (timer) {
             if (status == DeviceStatus.connected) {
-              debug('$runtimeType :: requesting voltage');
+              debug('$runtimeType - requesting voltage...');
               manager?.getBatteryVoltage();
             }
           });
@@ -140,8 +139,8 @@ class ESenseDeviceManager extends DeviceManager {
       }
     });
 
-    debug('$runtimeType - configuring sampling rate...');
-    await manager?.setSamplingRate(deviceDescriptor?.samplingRate ?? 10);
+    // debug('$runtimeType - configuring sampling rate...');
+    // await manager?.setSamplingRate(deviceDescriptor?.samplingRate ?? 10);
     debug('$runtimeType - connecting to eSense device, name: $id');
     return await manager?.connect() ?? false;
   }

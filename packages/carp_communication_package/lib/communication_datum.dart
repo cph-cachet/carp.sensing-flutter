@@ -206,7 +206,7 @@ class PhoneCall {
   Map<String, dynamic> toJson() => _$PhoneCallToJson(this);
 
   String toString() =>
-      "Phone Call - timestamp: $timestamp, call_type: $callType, duration: $duration, number: $number, formatted_number: $formattedNumber, name: $name";
+      "$runtimeType - timestamp: $timestamp, call_type: $callType, duration: $duration, number: $number, formatted_number: $formattedNumber, name: $name";
 }
 
 /// Holds a list of calendar events from the device.
