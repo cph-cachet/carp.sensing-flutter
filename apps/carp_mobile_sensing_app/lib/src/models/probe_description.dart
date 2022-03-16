@@ -25,8 +25,8 @@ class ProbeDescription {
         MediaSamplingPackage.AUDIO: 'Records ambient sound on a regular basis.',
         MediaSamplingPackage.NOISE:
             'Measures noise level in decibel on a regular basis.',
-        //AppsSamplingPackage.APPS: 'Collecting a list of installed apps.',
-        //AppsSamplingPackage.APP_USAGE: 'Collects app usage statistics.',
+        AppsSamplingPackage.APPS: 'Collecting a list of installed apps.',
+        AppsSamplingPackage.APP_USAGE: 'Collects app usage statistics.',
         CommunicationSamplingPackage.TEXT_MESSAGE_LOG:
             'Collects the SMS message log.',
         CommunicationSamplingPackage.TEXT_MESSAGE:
@@ -78,8 +78,10 @@ class ProbeDescription {
             Icon(Icons.mic, size: 50, color: CACHET.ORANGE),
         MediaSamplingPackage.NOISE:
             Icon(Icons.hearing, size: 50, color: CACHET.YELLOW),
-        //AppsSamplingPackage.APPS: Icon(Icons.apps, size: 50, color: CACHET.LIGHT_GREEN),
-        //AppsSamplingPackage.APP_USAGE: Icon(Icons.get_app, size: 50, color: CACHET.LIGHT_GREEN),
+        AppsSamplingPackage.APPS:
+            Icon(Icons.apps, size: 50, color: CACHET.LIGHT_GREEN),
+        AppsSamplingPackage.APP_USAGE:
+            Icon(Icons.get_app, size: 50, color: CACHET.LIGHT_GREEN),
         CommunicationSamplingPackage.TEXT_MESSAGE_LOG:
             Icon(Icons.textsms, size: 50, color: CACHET.LIGHT_PURPLE),
         CommunicationSamplingPackage.TEXT_MESSAGE:

@@ -127,7 +127,7 @@ class StudyRuntime {
   Future<StudyRuntimeStatus> tryDeployment() async {
     assert(
         studyDeploymentId != null && device != null,
-        "Cannot deploy without a valid study deployment id and device role name. "
+        'Cannot deploy without a valid study deployment id and device role name. '
         "Call 'initialize()' first.");
 
     // early out if already deployed.

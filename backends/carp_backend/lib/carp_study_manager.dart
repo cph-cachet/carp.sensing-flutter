@@ -71,7 +71,7 @@ class CarpStudyProtocolManager implements StudyProtocolManager {
         // asume that this deployment only contains one custom task
         TaskDescriptor task = deployment.tasks[0];
         if (task is CustomProtocolTask) {
-          // we expect to get a ptotocol of type [SmartphoneStudyProtocol]
+          // we expect to get a protocol of type [SmartphoneStudyProtocol]
           SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol.fromJson(
               json.decode(task.studyProtocol) as Map<String, dynamic>);
 

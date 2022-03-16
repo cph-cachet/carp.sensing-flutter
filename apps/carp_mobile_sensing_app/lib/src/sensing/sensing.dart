@@ -45,12 +45,14 @@ class Sensing {
   factory Sensing() => _instance;
 
   Sensing._() {
+    DomainJsonFactory();
+
     // create and register external sampling packages
     SamplingPackageRegistry().register(ConnectivitySamplingPackage());
     SamplingPackageRegistry().register(ContextSamplingPackage());
     SamplingPackageRegistry().register(MediaSamplingPackage());
     SamplingPackageRegistry().register(CommunicationSamplingPackage());
-    //SamplingPackageRegistry().register(AppsSamplingPackage());
+    SamplingPackageRegistry().register(AppsSamplingPackage());
     SamplingPackageRegistry().register(ESenseSamplingPackage());
   }
 

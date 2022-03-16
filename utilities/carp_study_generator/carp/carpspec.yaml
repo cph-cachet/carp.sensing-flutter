@@ -6,8 +6,8 @@
 
 # configuration of the CARP server and the user who runs this study
 server:
-  #uri: https://cans.cachet.dk/
-  uri: https://cans.cachet.dk/dev
+  uri: https://cans.cachet.dk/
+  #uri: https://cans.cachet.dk/dev
   client_id: carp_id
   client_secret: carp_secret
   username: xxx
@@ -15,7 +15,7 @@ server:
 
 # configuration of the study ID - used for upload of informed consent and translations
 study:
-  study_id: 33441683-bbec-4c85-95de-b27aec09afce
+  study_id: 16f9700e-98f3-45c3-8a94-12cbd66817c8
 
 # configuration of the protocol to be uploaded
 protocol:
@@ -34,7 +34,6 @@ message:
   messages: 
     - 1
     - 2
-
 
 localization:
   # the location of the localization files to be uploaded

@@ -259,7 +259,7 @@ String toJsonString(Object object) =>
 
 /// Throws when serialization to/from json fails.
 class SerializationException implements Exception {
-  final _message;
+  final String _message;
   String get message => _message;
   SerializationException([this._message = '']);
   @override

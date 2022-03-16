@@ -44,7 +44,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
 
    <application
-        android:label="CAARP Mobile Sensing"
+        android:label="CARP Mobile Sensing"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

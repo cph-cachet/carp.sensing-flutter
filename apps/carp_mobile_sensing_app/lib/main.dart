@@ -11,7 +11,7 @@ import 'package:carp_esense_package/esense.dart';
 import 'package:carp_context_package/context.dart';
 import 'package:carp_audio_package/media.dart';
 import 'package:carp_communication_package/communication.dart';
-//import 'package:carp_apps_package/apps.dart';
+import 'package:carp_apps_package/apps.dart';
 // import 'package:movisens_flutter/movisens_flutter.dart';
 // import 'package:carp_movisens_package/movisens.dart';
 // import 'package:carp_health_package/health_package.dart';
@@ -49,8 +49,7 @@ void main() async {
   //  * CARP_STAGGING
   //  * CARP_PRODUCTION
   await bloc.initialize(
-    deploymentMode: DeploymentMode.LOCAL,
-    dataFormat: NameSpace.OMH,
+    deploymentMode: DeploymentMode.CARP_PRODUCTION,
   );
 
   runApp(App());

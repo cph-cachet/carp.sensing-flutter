@@ -45,6 +45,8 @@ dependency_overrides:
     path: ../../packages/carp_communication_package/
   carp_audio_package:
     path: ../../packages/carp_audio_package/
+  carp_apps_package:
+    path: ../../packages/carp_apps_package/
   carp_esense_package:
     path: ../../packages/carp_esense_package/
   esense_flutter:
@@ -55,9 +57,6 @@ dependency_overrides:
     path: ../../backends/carp_webservices/
 #  research_package:
 #    path: ../../../../research.package/
-  # waiting for the device_calendar to be released in a null-safe version ... :-(
-  # device_calendar:
-  #   git: https://github.com/builttoroam/device_calendar.git
 
 
 dev_dependencies:

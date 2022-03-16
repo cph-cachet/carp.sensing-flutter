@@ -16,11 +16,13 @@ part of carp_backend;
 class CarpDataManager extends AbstractDataManager {
   bool _initialized = false;
   late CarpDataEndPoint carpEndPoint;
-  CarpApp? _app;
-
   late FileDataManager fileDataManager;
 
   CarpDataManager() : super() {
+    // since we're using json serialization, make sure that the json
+    // functions have been registred
+    DomainJsonFactory();
+
     // register for de-serialization
     FromJsonFactory().register(CarpDataEndPoint(
       uploadMethod: CarpUploadMethod.FILE,

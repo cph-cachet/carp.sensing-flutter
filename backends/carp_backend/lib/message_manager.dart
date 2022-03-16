@@ -53,9 +53,10 @@ class Message {
     this.message,
     this.url,
     this.imagePath,
+    DateTime? timestamp,
   }) {
     this.id = id ?? Uuid().v1();
-    timestamp = DateTime.now();
+    this.timestamp = timestamp ?? DateTime.now();
   }
 
   factory Message.fromJson(Map<String, dynamic> json) =>

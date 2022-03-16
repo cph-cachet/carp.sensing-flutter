@@ -51,6 +51,11 @@ const _$HealthDataTypeEnumMap = {
   HealthDataType.BODY_FAT_PERCENTAGE: 'BODY_FAT_PERCENTAGE',
   HealthDataType.BODY_MASS_INDEX: 'BODY_MASS_INDEX',
   HealthDataType.BODY_TEMPERATURE: 'BODY_TEMPERATURE',
+  HealthDataType.DIETARY_CARBS_CONSUMED: 'DIETARY_CARBS_CONSUMED',
+  HealthDataType.DIETARY_ENERGY_CONSUMED: 'DIETARY_ENERGY_CONSUMED',
+  HealthDataType.DIETARY_FATS_CONSUMED: 'DIETARY_FATS_CONSUMED',
+  HealthDataType.DIETARY_PROTEIN_CONSUMED: 'DIETARY_PROTEIN_CONSUMED',
+  HealthDataType.FORCED_EXPIRATORY_VOLUME: 'FORCED_EXPIRATORY_VOLUME',
   HealthDataType.HEART_RATE: 'HEART_RATE',
   HealthDataType.HEART_RATE_VARIABILITY_SDNN: 'HEART_RATE_VARIABILITY_SDNN',
   HealthDataType.HEIGHT: 'HEIGHT',
@@ -70,6 +75,11 @@ const _$HealthDataTypeEnumMap = {
   HealthDataType.SLEEP_AWAKE: 'SLEEP_AWAKE',
   HealthDataType.EXERCISE_TIME: 'EXERCISE_TIME',
   HealthDataType.WORKOUT: 'WORKOUT',
+  HealthDataType.HEADACHE_NOT_PRESENT: 'HEADACHE_NOT_PRESENT',
+  HealthDataType.HEADACHE_MILD: 'HEADACHE_MILD',
+  HealthDataType.HEADACHE_MODERATE: 'HEADACHE_MODERATE',
+  HealthDataType.HEADACHE_SEVERE: 'HEADACHE_SEVERE',
+  HealthDataType.HEADACHE_UNSPECIFIED: 'HEADACHE_UNSPECIFIED',
   HealthDataType.HIGH_HEART_RATE_EVENT: 'HIGH_HEART_RATE_EVENT',
   HealthDataType.LOW_HEART_RATE_EVENT: 'LOW_HEART_RATE_EVENT',
   HealthDataType.IRREGULAR_HEART_RATE_EVENT: 'IRREGULAR_HEART_RATE_EVENT',
@@ -87,9 +97,7 @@ HealthDatum _$HealthDatumFromJson(Map<String, dynamic> json) => HealthDatum(
       json['uuid'] as String,
     )
       ..id = json['id'] as String?
-      ..timestamp = json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String);
+      ..timestamp = DateTime.parse(json['timestamp'] as String);
 
 Map<String, dynamic> _$HealthDatumToJson(HealthDatum instance) {
   final val = <String, dynamic>{};
@@ -101,7 +109,7 @@ Map<String, dynamic> _$HealthDatumToJson(HealthDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   val['value'] = instance.value;
   val['unit'] = instance.unit;
   val['date_from'] = instance.dateFrom.toIso8601String();

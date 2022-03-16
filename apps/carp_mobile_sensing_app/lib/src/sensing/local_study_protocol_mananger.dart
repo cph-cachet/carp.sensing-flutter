@@ -16,10 +16,10 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
   Future initialize() async {}
 
   @override
-  Future<SmartphoneStudyProtocol> getStudyProtocol(String studyId) async {
+  Future<SmartphoneStudyProtocol> getStudyProtocol(String protocolId) async {
     SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
       ownerId: 'abc@dtu.dk',
-      name: 'CAMS App Study No. 2',
+      name: protocolId,
     );
 
     protocol.protocolDescription = StudyDescription(
@@ -74,7 +74,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
               DeviceSamplingPackage.MEMORY, // 60 s
               DeviceSamplingPackage.SCREEN, // event-based
               ContextSamplingPackage.ACTIVITY, // event-based
-              // ContextSamplingPackage.GEOLOCATION, // event-based
+              ContextSamplingPackage.GEOLOCATION, // event-based
               // ContextSamplingPackage.MOBILITY, // event-based
             ],
           ),
@@ -109,25 +109,25 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //       ),
     //     phone);
 
-    // protocol.addTriggeredTask(
-    //     PeriodicTrigger(
-    //       period: const Duration(minutes: 30),
-    //       duration: const Duration(seconds: 2),
-    //     ),
-    //     AutomaticTask()
-    //       ..addMeasure(WeatherMeasure(
-    //           type: ContextSamplingPackage.WEATHER,
-    //           name: 'Weather',
-    //           description:
-    //               "Collects local weather from the WeatherAPI web service",
-    //           apiKey: '12b6e28582eb9298577c734a31ba9f4f'))
-    //       ..addMeasure(AirQualityMeasure(
-    //           type: ContextSamplingPackage.AIR_QUALITY,
-    //           name: 'Air Quality',
-    //           description:
-    //               "Collects local air quality from the Air Quality Index (AQI) web service",
-    //           apiKey: '9e538456b2b85c92647d8b65090e29f957638c77')),
-    //     phone);
+    protocol.addTriggeredTask(
+        PeriodicTrigger(
+          period: const Duration(minutes: 30),
+          duration: const Duration(seconds: 2),
+        ),
+        AutomaticTask()
+          ..addMeasure(WeatherMeasure(
+              type: ContextSamplingPackage.WEATHER,
+              name: 'Weather',
+              description:
+                  "Collects local weather from the WeatherAPI web service",
+              apiKey: '12b6e28582eb9298577c734a31ba9f4f'))
+          ..addMeasure(AirQualityMeasure(
+              type: ContextSamplingPackage.AIR_QUALITY,
+              name: 'Air Quality',
+              description:
+                  "Collects local air quality from the Air Quality Index (AQI) web service",
+              apiKey: '9e538456b2b85c92647d8b65090e29f957638c77')),
+        phone);
 
     // protocol.addTriggeredTask(
     //     PeriodicTrigger(
@@ -169,16 +169,32 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           )),
         phone);
 
-    // protocol.addTriggeredTask(
-    //     ImmediateTrigger(),
-    //     AutomaticTask()
-    //       ..measures = SamplingPackageRegistry().debug.getMeasureList(
-    //         types: [
-    //           ESenseSamplingPackage.ESENSE_BUTTON,
-    //           ESenseSamplingPackage.ESENSE_SENSOR,
-    //         ],
-    //       ),
-    //     eSense);
+    // Add an automatic task that collects the list of installed apps
+    // and a log of app usage activity
+    protocol.addTriggeredTask(
+        PeriodicTrigger(
+          period: const Duration(minutes: 1),
+          duration: const Duration(seconds: 10),
+        ),
+        AutomaticTask()
+          ..addMeasures(SamplingPackageRegistry().common.getMeasureList(
+            types: [
+              AppsSamplingPackage.APPS,
+              AppsSamplingPackage.APP_USAGE,
+            ],
+          )),
+        phone);
+
+    protocol.addTriggeredTask(
+        ImmediateTrigger(),
+        AutomaticTask()
+          ..measures = SamplingPackageRegistry().debug.getMeasureList(
+            types: [
+              ESenseSamplingPackage.ESENSE_BUTTON,
+              ESenseSamplingPackage.ESENSE_SENSOR,
+            ],
+          ),
+        eSense);
 
     // // add a measure for ECG monitoring using the Movisens device
     // protocol.addTriggeredTask(

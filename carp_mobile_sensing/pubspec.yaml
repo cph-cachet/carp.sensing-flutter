@@ -16,18 +16,18 @@ dependencies:
 
   # carp_core: ^0.33.0      # the core CARP domain model
 
-  json_annotation: ^4.3.0
+  json_annotation: ^4.4.0
   system_info: ^1.0.0
   uuid: ^3.0.4
   async: ^2.7.0
-  path_provider: ^2.0.2
+  path_provider: ^2.0.0
   archive: ^3.1.2
   permission_handler: ^9.2.0  
-  shared_preferences: ^2.0.6
+  shared_preferences: ^2.0.0
   package_info_plus: ^1.0.0
-  flutter_local_notifications: ^9.1.1 # for sending notification on AppTask
-  cron: ^0.4.0            # For scheduling / triggering cron jobs
-  stats: ^2.0.0           # For calculating statistics, ex LightProbe
+  flutter_local_notifications: ^9.4.0 # for sending notification on AppTask
+  cron: ^0.4.0                        # For scheduling / triggering cron jobs
+  stats: ^2.0.0                       # For calculating statistics, ex LightProbe
 
   # probe-dependent plugins
   device_info_plus: ^3.0.0
@@ -35,7 +35,7 @@ dependencies:
   battery_plus: ^2.0.0
 
   # the CACHET plugins
-  pedometer: ^3.0.0       # Get the step count from local OS
+  pedometer: ^3.0.0       # Step count from local OS
   light: ^2.1.0           # Light sensor 
   screen_state: ^2.0.0    # Screen LOCK/ON/OFF
 
@@ -53,7 +53,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
-
 
 
 # Useful pubspec commands:

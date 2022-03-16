@@ -6,10 +6,10 @@ This library contains a sampling package for communication sampling to work with
 the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package.
 This packages supports sampling of the following [`Measure`](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/domain/Measure-class.html) types:
 
-* `dk.cachet.carp.phone_log`
-* `dk.cachet.carp.text-message-log`
-* `dk.cachet.carp.text-message`
-* `dk.cachet.carp.calendar`
+* `dk.cachet.carp.phone_log` - the phone log.
+* `dk.cachet.carp.text-message-log` - the text (sms) message log.
+* `dk.cachet.carp.text-message` - incoming text (sms) messages.
+* `dk.cachet.carp.calendar` - all calendar entries.
 
 See the [wiki]() for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types) and [sampling schemas](https://github.com/cph-cachet/carp.sensing-flutter/wiki/D.-Sampling-Schemas). Note that collection of phone and text message data is only supported on Android.
 

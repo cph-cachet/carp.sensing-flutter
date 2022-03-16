@@ -53,7 +53,7 @@ void carpCoreDeploymentExample() async {
   StudyProtocol trackPatientStudy;
   Smartphone patientPhone = trackPatientStudy.masterDevices.first as Smartphone;
 
-// This is called by `StudyService` when deploying a participant group.
+  // This is called by `StudyService` when deploying a participant group.
   StudyDeploymentStatus status =
       await deploymentService.createStudyDeployment(trackPatientStudy);
   String studyDeploymentId = status.studyDeploymentId;

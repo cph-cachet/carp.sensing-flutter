@@ -12,9 +12,9 @@ class AppsSamplingPackage extends SmartphoneSamplingPackage {
   Probe? create(String type) {
     switch (type) {
       case APPS:
-        return AppsProbe();
+        return (Platform.isAndroid) ? AppsProbe() : null;
       case APP_USAGE:
-        return AppUsageProbe();
+        return (Platform.isAndroid) ? AppUsageProbe() : null;
       default:
         return null;
     }
@@ -43,29 +43,11 @@ class AppsSamplingPackage extends SmartphoneSamplingPackage {
                 type: APP_USAGE,
                 name: 'Apps Usage',
                 description: "Collects an log of the use of apps on the phone",
-                enabled: true,
               )),
         ]);
 
   SamplingSchema get light => common;
   SamplingSchema get minimum => common;
   SamplingSchema get normal => common;
-
-  SamplingSchema get debug => SamplingSchema(
-        type: SamplingSchemaType.debug,
-        name: 'Debugging app sampling schema',
-        powerAware: true,
-      )..measures.addEntries([
-          MapEntry(
-              APPS,
-              CAMSMeasure(
-                type: APPS,
-              )),
-          MapEntry(
-              APP_USAGE,
-              MarkedMeasure(
-                type: APP_USAGE,
-                enabled: true,
-              )),
-        ]);
+  SamplingSchema get debug => common;
 }
