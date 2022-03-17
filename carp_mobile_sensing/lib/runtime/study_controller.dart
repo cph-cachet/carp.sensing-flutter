@@ -233,13 +233,10 @@ class SmartphoneDeploymentController extends StudyRuntime {
   /// [configure].
   Future<void> askForAllPermissions() async {
     info('Asking for permission for all measure types.');
-    permissions = await PermissionHandlerPlatform.instance
-        .requestPermissions(SamplingPackageRegistry().permissions);
+    permissions = await SamplingPackageRegistry().permissions.request();
 
     SamplingPackageRegistry().permissions.forEach((permission) async {
-      PermissionStatus status = await PermissionHandlerPlatform.instance
-          .checkPermissionStatus(permission);
-      if (status != PermissionStatus.granted) {
+      if (!await permission.isGranted) {
         warning(
             'Permissions not granted for $permission -  permission is $status');
       }

@@ -45,6 +45,7 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
 
 ````xml
 <uses-permission android:name="android.permission.RECORD_AUDIO" />
+<uses-permission android:name="android.permission.CAMERA"/>
 <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 ````
 
@@ -60,6 +61,8 @@ Add this permission in the `Info.plist` file located in `ios/Runner`:
 ```xml
 <key>NSMicrophoneUsageDescription</key>
 <string>Uses the microphone to record ambient noise in the phone's environment.</string>
+<key>NSCameraUsageDescription</key>
+<string>Uses the camera to ....</string>
 <key>UIBackgroundModes</key>
   <array>
   <string>audio</string>

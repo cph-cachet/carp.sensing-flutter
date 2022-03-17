@@ -71,11 +71,8 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
         .add(ACTIVITY, OMHPhysicalActivityDataPoint.transformer);
   }
 
-  List<Permission> get permissions => [
-        Permission.locationAlways,
-        Permission.sensors,
-        Permission.activityRecognition
-      ];
+  List<Permission> get permissions =>
+      [Permission.locationAlways, Permission.activityRecognition];
 
   SamplingSchema get common => SamplingSchema(
       type: SamplingSchemaType.common,

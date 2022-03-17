@@ -36,7 +36,7 @@ dependencies:
 
 ### Android Integration
 
-Edit your app's `manifest.xml` file such that it contains the following:
+Edit your app's `manifest.xml` file such that it contains the following permission request:
 
 ````xml
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"

@@ -29,6 +29,7 @@
 
     <!-- The following permissions are used in the Audio Package -->
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
 
     <!-- The following permissions are used in the Communication Package -->
     <uses-permission android:name="android.permission.CALL_PHONE"/>

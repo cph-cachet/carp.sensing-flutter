@@ -14,7 +14,7 @@ dependencies:
   # carp_mobile_sensing: ^0.33.0
   app_usage: ^2.0.0
   device_apps: ^2.1.1
-  json_annotation: ^4.3.0
+  json_annotation: ^4.4.0
   permission_handler: ^9.2.0  
   
 # Overriding carp libraries to use the local copy

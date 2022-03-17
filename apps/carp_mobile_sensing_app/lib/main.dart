@@ -49,7 +49,7 @@ void main() async {
   //  * CARP_STAGGING
   //  * CARP_PRODUCTION
   await bloc.initialize(
-    deploymentMode: DeploymentMode.CARP_PRODUCTION,
+    deploymentMode: DeploymentMode.LOCAL,
   );
 
   runApp(App());
