@@ -236,10 +236,8 @@ class SmartphoneDeploymentController extends StudyRuntime {
     permissions = await SamplingPackageRegistry().permissions.request();
 
     SamplingPackageRegistry().permissions.forEach((permission) async {
-      if (!await permission.isGranted) {
-        warning(
-            'Permissions not granted for $permission -  permission is $status');
-      }
+      PermissionStatus status = await permission.status;
+      info('Permissions for $permission : $status');
     });
   }
 
