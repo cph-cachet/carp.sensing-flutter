@@ -17,9 +17,5 @@ dependencies:
   carp_context_package:
     path: ../
 
-dev_dependencies:
-#  flutter_test:
-#    sdk: flutter
-
 flutter:
   uses-material-design: true
