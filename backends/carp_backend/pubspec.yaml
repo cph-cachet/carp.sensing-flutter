@@ -14,7 +14,7 @@ dependencies:
 
   carp_core: ^0.33.0
   carp_mobile_sensing: ^0.33.0
-  carp_webservices: ^0.32.3
+  carp_webservices: ^0.33.0
   research_package: ^0.7.0      # the informed consent domain model
 
 

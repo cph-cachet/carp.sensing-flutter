@@ -1,3 +1,6 @@
+## 0.32.0
+* update to `carp_mobile_sensing` v. 0.33.0
+
 ## 0.32.4
 * added support for counting data points
 
