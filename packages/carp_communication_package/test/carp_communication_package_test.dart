@@ -31,8 +31,7 @@ void main() {
     protocol.addTriggeredTask(
       ImmediateTrigger(), // a simple trigger that starts immediately
       AutomaticTask()
-        ..measures =
-            SamplingPackageRegistry().common().measures.values.toList(),
+        ..measures = SamplingPackageRegistry().common.measures.values.toList(),
       phone, // a task with all measures
     );
   });

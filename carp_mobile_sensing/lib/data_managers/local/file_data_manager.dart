@@ -137,7 +137,7 @@ class FileDataManager extends AbstractDataManager {
     return _sink!;
   }
 
-  /// Writes a JSON encoded [Datum] to the file
+  /// Writes a JSON encoded [dataPoint] to the file.
   Future<bool> write(DataPoint dataPoint) async {
     // Check if the sink is ready for writing...
     if (!_initialized) {

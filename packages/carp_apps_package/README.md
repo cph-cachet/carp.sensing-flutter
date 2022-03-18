@@ -6,8 +6,10 @@ This library contains a sampling package for app-related sampling to work with
 the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) framework.
 This packages supports sampling of the following [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core/Measure-class.html) types:
 
-* `apps`
-* `app_usage`
+* `apps` - a list of installed apps on the phone.
+* `app_usage` - a log of app usage activity.
+
+These measures are only available on Android.
 
 See the [wiki]() for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types)
 and [sampling schemas](https://github.com/cph-cachet/carp.sensing-flutter/wiki/D.-Sampling-Schemas).
@@ -34,7 +36,7 @@ dependencies:
 
 ### Android Integration
 
-Edit your app's `manifest.xml` file such that it contains the following:
+Edit your app's `manifest.xml` file such that it contains the following permission request:
 
 ````xml
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
@@ -60,6 +62,7 @@ More info here: https://support.google.com/googleplay/android-developer/answer/1
 
 
 ### iOS Integration
+
 Not supported.
 
 ## Using it
@@ -70,7 +73,7 @@ To use this package, import it into your app together with the
 `````dart
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
-import 'package:carp_connectivity_package/connectivity.dart';
+import 'package:carp_apps_package/apps.dart';
 `````
 
 Before creating a study and running it, register this package in the 

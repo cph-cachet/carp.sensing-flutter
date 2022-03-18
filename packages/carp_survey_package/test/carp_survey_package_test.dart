@@ -13,6 +13,7 @@ void main() {
   setUp(() {
     // make sure that the json functions are loaded
     DomainJsonFactory();
+
     // register the survey sampling package
     SamplingPackageRegistry().register(SurveySamplingPackage());
 
@@ -24,18 +25,15 @@ void main() {
 
     // Define which devices are used for data collection.
     phone = Smartphone();
-    // DeviceDescriptor eSense = DeviceDescriptor();
 
-    protocol..addMasterDevice(phone);
-    // ..addConnectedDevice(eSense);
+    protocol.addMasterDevice(phone);
 
     // adding all measure from the common schema to one one trigger and one task
     protocol.addTriggeredTask(
-      ImmediateTrigger(), // a simple trigger that starts immediately
+      ImmediateTrigger(),
       AutomaticTask()
-        ..measures =
-            SamplingPackageRegistry().common().measures.values.toList(),
-      phone, // a task with all measures
+        ..measures = SamplingPackageRegistry().common.measures.values.toList(),
+      phone,
     );
   });
 

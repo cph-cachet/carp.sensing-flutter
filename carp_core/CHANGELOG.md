@@ -1,6 +1,9 @@
+## 0.33.0
+* updates to the device model API in the `client` library.
+
 ## 0.31.3+1
-* small update to dependencies in pubspec
-* re-generation of json serialization 
+* small update to dependencies in pubspec.
+* re-generation of json serialization.
 
 ## 0.31.2
 * support for stopping (permanently) a study deployment.

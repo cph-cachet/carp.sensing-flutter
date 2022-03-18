@@ -9,9 +9,7 @@ part of communication;
 TextMessageLogDatum _$TextMessageLogDatumFromJson(Map<String, dynamic> json) =>
     TextMessageLogDatum()
       ..id = json['id'] as String?
-      ..timestamp = json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String)
+      ..timestamp = DateTime.parse(json['timestamp'] as String)
       ..textMessageLog = (json['text_message_log'] as List<dynamic>)
           .map((e) => TextMessage.fromJson(e as Map<String, dynamic>))
           .toList();
@@ -26,7 +24,7 @@ Map<String, dynamic> _$TextMessageLogDatumToJson(TextMessageLogDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   val['text_message_log'] = instance.textMessageLog;
   return val;
 }
@@ -34,9 +32,7 @@ Map<String, dynamic> _$TextMessageLogDatumToJson(TextMessageLogDatum instance) {
 TextMessageDatum _$TextMessageDatumFromJson(Map<String, dynamic> json) =>
     TextMessageDatum()
       ..id = json['id'] as String?
-      ..timestamp = json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String)
+      ..timestamp = DateTime.parse(json['timestamp'] as String)
       ..textMessage = json['text_message'] == null
           ? null
           : TextMessage.fromJson(json['text_message'] as Map<String, dynamic>);
@@ -51,7 +47,7 @@ Map<String, dynamic> _$TextMessageDatumToJson(TextMessageDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   writeNotNull('text_message', instance.textMessage);
   return val;
 }
@@ -112,9 +108,7 @@ const _$SmsStatusEnumMap = {
 PhoneLogDatum _$PhoneLogDatumFromJson(Map<String, dynamic> json) =>
     PhoneLogDatum()
       ..id = json['id'] as String?
-      ..timestamp = json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String)
+      ..timestamp = DateTime.parse(json['timestamp'] as String)
       ..phoneLog = (json['phone_log'] as List<dynamic>)
           .map((e) => PhoneCall.fromJson(e as Map<String, dynamic>))
           .toList();
@@ -129,7 +123,7 @@ Map<String, dynamic> _$PhoneLogDatumToJson(PhoneLogDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   val['phone_log'] = instance.phoneLog;
   return val;
 }
@@ -166,9 +160,7 @@ Map<String, dynamic> _$PhoneCallToJson(PhoneCall instance) {
 CalendarDatum _$CalendarDatumFromJson(Map<String, dynamic> json) =>
     CalendarDatum()
       ..id = json['id'] as String?
-      ..timestamp = json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String)
+      ..timestamp = DateTime.parse(json['timestamp'] as String)
       ..calendarEvents = (json['calendar_events'] as List<dynamic>)
           .map((e) => CalendarEvent.fromJson(e as Map<String, dynamic>))
           .toList();
@@ -183,7 +175,7 @@ Map<String, dynamic> _$CalendarDatumToJson(CalendarDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   val['calendar_events'] = instance.calendarEvents;
   return val;
 }

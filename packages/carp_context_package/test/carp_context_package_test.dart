@@ -7,6 +7,7 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_context_package/context.dart';
 // import 'package:activity_recognition_flutter/activity_recognition_flutter.dart';
 import 'package:flutter_activity_recognition/flutter_activity_recognition.dart';
+import 'package:openmhealth_schemas/openmhealth_schemas.dart' as omh;
 
 String _encode(Object object) =>
     const JsonEncoder.withIndent(' ').convert(object);
@@ -38,8 +39,7 @@ void main() {
     protocol.addTriggeredTask(
       ImmediateTrigger(), // a simple trigger that starts immediately
       AutomaticTask()
-        ..measures =
-            SamplingPackageRegistry().common().measures.values.toList(),
+        ..measures = SamplingPackageRegistry().common.measures.values.toList(),
       phone, // a task with all measures
     );
   });
@@ -100,12 +100,14 @@ void main() {
     expect(dp_1.carpHeader.dataFormat.namespace, NameSpace.CARP);
     print(_encode(dp_1));
 
-    OMHGeopositionDatum geo = TransformerSchemaRegistry()
+    OMHGeopositionDataPoint geo = TransformerSchemaRegistry()
         .lookup(NameSpace.OMH)!
-        .transform(loc) as OMHGeopositionDatum;
+        .transform(loc) as OMHGeopositionDataPoint;
     DataPoint dp_2 = DataPoint.fromData(geo);
     expect(dp_2.carpHeader.dataFormat.namespace, NameSpace.OMH);
-    expect(geo.geoposition.latitude.value, loc.latitude);
+    expect(geo.datapoint.body, isA<omh.Geoposition>());
+    var geopos = geo.datapoint.body as omh.Geoposition;
+    expect(geopos.latitude.value, loc.latitude);
     print(_encode(dp_2));
   });
 
@@ -115,12 +117,13 @@ void main() {
     expect(dp_1.carpHeader.dataFormat.namespace, NameSpace.CARP);
     print(_encode(dp_1));
 
-    OMHPhysicalActivityDatum phy = TransformerSchemaRegistry()
+    OMHPhysicalActivityDataPoint phy = TransformerSchemaRegistry()
         .lookup(NameSpace.OMH)!
-        .transform(act) as OMHPhysicalActivityDatum;
+        .transform(act) as OMHPhysicalActivityDataPoint;
     DataPoint dp_2 = DataPoint.fromData(phy);
     expect(dp_2.carpHeader.dataFormat.namespace, NameSpace.OMH);
-    expect(phy.activity.activityName, act.typeString);
+    var act_2 = phy.datapoint.body as omh.PhysicalActivity;
+    expect(act_2.activityName, act.typeString);
     print(_encode(dp_2));
   });
 

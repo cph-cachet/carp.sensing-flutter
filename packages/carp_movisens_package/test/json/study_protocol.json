@@ -1,13 +1,13 @@
 {
   "ownerId": "alex@uni.dk",
   "name": "Context package test",
-  "creationDate": "2021-07-15T08:51:39.760668Z",
+  "description": "",
+  "creationDate": "2022-03-03T21:07:21.735258Z",
   "masterDevices": [
    {
     "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
     "isMasterDevice": true,
     "roleName": "masterphone",
-    "supportedDataTypes": [],
     "samplingConfiguration": {}
    }
   ],
@@ -16,26 +16,32 @@
     "$type": "dk.cachet.carp.protocols.domain.devices.MovisensDevice",
     "isMasterDevice": false,
     "roleName": "movisens",
-    "samplingConfiguration": {}
+    "supportedDataTypes": [
+     "dk.cachet.carp.movisens"
+    ],
+    "samplingConfiguration": {},
+    "address": "88:6B:0F:CD:E7:F2",
+    "sensorName": "Sensor 02655",
+    "sensorLocation": "chest",
+    "weight": 75,
+    "height": 175,
+    "age": 25,
+    "gender": "male"
    }
   ],
   "connections": [],
   "triggers": {
    "0": {
-    "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger",
-    "sourceDeviceRoleName": "",
-    "requiresMasterDevice": false
+    "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
    },
    "1": {
-    "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger",
-    "sourceDeviceRoleName": "",
-    "requiresMasterDevice": false
+    "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
    }
   },
   "tasks": [
    {
     "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
-    "name": "Task #3",
+    "name": "Task #6",
     "measures": [
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
@@ -53,7 +59,7 @@
       "enabled": true,
       "configuration": {},
       "frequency": 60000000,
-      "duration": 2000000
+      "duration": 1000000
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
@@ -124,27 +130,28 @@
       "configuration": {},
       "frequency": 60000000,
       "duration": 1000000
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
+      "type": "dk.cachet.carp.movisens",
+      "name": "Movisens ECG device",
+      "description": "Collects heart rythm data from the Movisens EcgMove4 sensor",
+      "enabled": true,
+      "configuration": {}
      }
     ]
    },
    {
     "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
-    "name": "Task #4",
+    "name": "Task #7",
     "measures": [
      {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.MovisensMeasure",
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
       "type": "dk.cachet.carp.movisens",
       "name": "Movisens ECG device",
       "description": "Collects heart rythm data from the Movisens EcgMove4 sensor",
       "enabled": true,
-      "configuration": {},
-      "address": "88:6B:0F:CD:E7:F2",
-      "deviceName": "Sensor 02655",
-      "weight": 75,
-      "height": 175,
-      "age": 25,
-      "gender": "male",
-      "sensorLocation": "chest"
+      "configuration": {}
      }
     ]
    }
@@ -152,12 +159,12 @@
   "triggeredTasks": [
    {
     "triggerId": 0,
-    "taskName": "Task #3",
+    "taskName": "Task #6",
     "targetDeviceRoleName": "masterphone"
    },
    {
     "triggerId": 1,
-    "taskName": "Task #4",
+    "taskName": "Task #7",
     "targetDeviceRoleName": "movisens"
    }
   ],

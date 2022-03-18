@@ -15,13 +15,13 @@ part of context;
 ///   SamplingPackageRegistry.register(ContextSamplingPackage());
 /// ```
 class ContextSamplingPackage extends SmartphoneSamplingPackage {
-  static const String LOCATION = "dk.cachet.carp.location";
-  static const String GEOLOCATION = "dk.cachet.carp.geolocation";
-  static const String ACTIVITY = "dk.cachet.carp.activity";
-  static const String WEATHER = "dk.cachet.carp.weather";
-  static const String AIR_QUALITY = "dk.cachet.carp.air_quality";
-  static const String GEOFENCE = "dk.cachet.carp.geofence";
-  static const String MOBILITY = "dk.cachet.carp.mobility";
+  static const String LOCATION = "${NameSpace.CARP}.location";
+  static const String GEOLOCATION = "${NameSpace.CARP}.geolocation";
+  static const String ACTIVITY = "${NameSpace.CARP}.activity";
+  static const String WEATHER = "${NameSpace.CARP}.weather";
+  static const String AIR_QUALITY = "${NameSpace.CARP}.air_quality";
+  static const String GEOFENCE = "${NameSpace.CARP}.geofence";
+  static const String MOBILITY = "${NameSpace.CARP}.mobility";
 
   List<String> get dataTypes => [
         LOCATION,
@@ -65,17 +65,14 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
     // we assume that there is an OMH schema registered already...
     TransformerSchemaRegistry()
         .lookup(NameSpace.OMH)!
-        .add(LOCATION, OMHGeopositionDatum.transformer);
+        .add(LOCATION, OMHGeopositionDataPoint.transformer);
     TransformerSchemaRegistry()
         .lookup(NameSpace.OMH)!
-        .add(ACTIVITY, OMHPhysicalActivityDatum.transformer);
+        .add(ACTIVITY, OMHPhysicalActivityDataPoint.transformer);
   }
 
-  List<Permission> get permissions => [
-        Permission.locationAlways,
-        Permission.sensors,
-        Permission.activityRecognition
-      ];
+  List<Permission> get permissions =>
+      [Permission.locationAlways, Permission.activityRecognition];
 
   SamplingSchema get common => SamplingSchema(
       type: SamplingSchemaType.common,
@@ -118,8 +115,7 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
               name: 'Weather',
               description:
                   "Collects local weather from the WeatherAPI web service",
-              // TODO - remove this
-              apiKey: '12b6e28582eb9298577c734a31ba9f4f')),
+              apiKey: 'Open_Weather_API_key_goes_here')),
       MapEntry(
           AIR_QUALITY,
           AirQualityMeasure(
@@ -127,8 +123,7 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
               name: 'Air Quality',
               description:
                   "Collects local air quality from the OpenWeatherMap (OWM) web service",
-              // TODO - remove this
-              apiKey: '9e538456b2b85c92647d8b65090e29f957638c77')),
+              apiKey: 'AQI_API_key_goes_here')),
       MapEntry(
           GEOFENCE,
           GeofenceMeasure(

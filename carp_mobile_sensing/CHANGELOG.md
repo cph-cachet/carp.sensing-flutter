@@ -1,3 +1,11 @@
+## 0.33.0
+* upgrade to `carp_core` v. 0.33.0 
+* support of new device model, incl. configuration of devices with device descriptors
+* **BREAKING** - the `SmartphoneDeploymentController` no longer automatically deploys the study when calling `addStudy()`. 
+   - make sure to call the `tryDeployment()` method when you want the deployment to happen.
+* the factory method for getting default sampling schemes (common, debug, etc.) are now instance members (rather than functions) on the singleton `SamplingPackageRegistry`.
+* upgrade to `permission_handler: ^9.2.0`
+
 ## 0.32.3
 * added `OneTimeTrigger` as a new trigger type.
 * `timestamp` is now enforced (not null) on all `Datum` objects.

@@ -7,23 +7,23 @@
 
 part of context;
 
-/// Earth radius in km.
-const double earthRadius = 6371000.0;
-
-/// Convert degrees to radians.
-double degToRad(num deg) => deg * (math.pi / 180.0);
-
-/// Convert radians to degrees.
-double radToDeg(num rad) => rad * (180.0 / math.pi);
-
 /// Position coordinated in Degrees (i.e. GPS-style).
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class GeoPosition extends Serializable {
+  /// Earth radius in km.
+  static const double earthRadius = 6371000.0;
+
   /// Latitude in GPS coordinates.
   final double latitude;
 
   /// Longitude in GPS coordinates.
   final double longitude;
+
+  /// Convert degrees to radians.
+  double degToRad(num deg) => deg * (math.pi / 180.0);
+
+  /// Convert radians to degrees.
+  double radToDeg(num rad) => rad * (180.0 / math.pi);
 
   GeoPosition(this.latitude, this.longitude);
 

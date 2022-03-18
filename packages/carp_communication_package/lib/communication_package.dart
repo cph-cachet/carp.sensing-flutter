@@ -16,7 +16,7 @@ part of communication;
 /// ```
 class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
   static const String PHONE_LOG = "dk.cachet.carp.phone_log";
-  static const String TELEPHONY = "dk.cachet.carp.telephony";
+  // static const String TELEPHONY = "dk.cachet.carp.telephony";
   static const String TEXT_MESSAGE_LOG = "dk.cachet.carp.text_message_log";
   static const String TEXT_MESSAGE = "dk.cachet.carp.text_message";
   static const String CALENDAR = "dk.cachet.carp.calendar";
@@ -32,13 +32,13 @@ class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
   Probe? create(String type) {
     switch (type) {
       case PHONE_LOG:
-        return PhoneLogProbe();
+        return (Platform.isAndroid) ? PhoneLogProbe() : null;
       case TEXT_MESSAGE_LOG:
-        return TextMessageLogProbe();
+        return (Platform.isAndroid) ? TextMessageLogProbe() : null;
       case TEXT_MESSAGE:
-        return TextMessageProbe();
-      case TELEPHONY:
-        throw "Not implemented yet";
+        return (Platform.isAndroid) ? TextMessageProbe() : null;
+      // case TELEPHONY:
+      //   throw "Not implemented yet";
       case CALENDAR:
         return CalendarProbe();
       default:
@@ -49,6 +49,7 @@ class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
   void onRegister() {
     FromJsonFactory().register(CalendarMeasure(type: 'ignored'));
 
+    // register the default privacy transformers
     TransformerSchemaRegistry()
         .lookup(PrivacySchema.DEFAULT)!
         .add(TEXT_MESSAGE, textMessageDatumAnoymizer);

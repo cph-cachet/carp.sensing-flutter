@@ -8,9 +8,7 @@ part of carp_apps_package;
 
 AppsDatum _$AppsDatumFromJson(Map<String, dynamic> json) => AppsDatum()
   ..id = json['id'] as String?
-  ..timestamp = json['timestamp'] == null
-      ? null
-      : DateTime.parse(json['timestamp'] as String)
+  ..timestamp = DateTime.parse(json['timestamp'] as String)
   ..installedApps = (json['installed_apps'] as List<dynamic>)
       .map((e) => e as String)
       .toList();
@@ -25,7 +23,7 @@ Map<String, dynamic> _$AppsDatumToJson(AppsDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   val['installed_apps'] = instance.installedApps;
   return val;
 }
@@ -36,9 +34,7 @@ AppUsageDatum _$AppUsageDatumFromJson(Map<String, dynamic> json) =>
       DateTime.parse(json['end'] as String),
     )
       ..id = json['id'] as String?
-      ..timestamp = json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String)
+      ..timestamp = DateTime.parse(json['timestamp'] as String)
       ..usage = Map<String, int>.from(json['usage'] as Map);
 
 Map<String, dynamic> _$AppUsageDatumToJson(AppUsageDatum instance) {
@@ -51,7 +47,7 @@ Map<String, dynamic> _$AppUsageDatumToJson(AppUsageDatum instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
+  val['timestamp'] = instance.timestamp.toIso8601String();
   val['start'] = instance.start.toIso8601String();
   val['end'] = instance.end.toIso8601String();
   val['usage'] = instance.usage;

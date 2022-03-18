@@ -41,14 +41,22 @@ GyroscopeDatum _$GyroscopeDatumFromJson(Map<String, dynamic> json) =>
       ..id = json['id'] as String?
       ..timestamp = DateTime.parse(json['timestamp'] as String);
 
-Map<String, dynamic> _$GyroscopeDatumToJson(GyroscopeDatum instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'timestamp': instance.timestamp.toIso8601String(),
-      'x': instance.x,
-      'y': instance.y,
-      'z': instance.z,
-    };
+Map<String, dynamic> _$GyroscopeDatumToJson(GyroscopeDatum instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', instance.id);
+  val['timestamp'] = instance.timestamp.toIso8601String();
+  writeNotNull('x', instance.x);
+  writeNotNull('y', instance.y);
+  writeNotNull('z', instance.z);
+  return val;
+}
 
 LightDatum _$LightDatumFromJson(Map<String, dynamic> json) => LightDatum(
       meanLux: json['mean_lux'] as num?,

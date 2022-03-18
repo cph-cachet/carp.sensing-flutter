@@ -20,7 +20,7 @@ void sensing() async {
   protocol.addTriggeredTask(
       ImmediateTrigger(),
       AutomaticTask()
-        ..measures = SamplingPackageRegistry().debug().getMeasureList(
+        ..measures = SamplingPackageRegistry().debug.getMeasureList(
           types: [
             //SensorSamplingPackage.ACCELEROMETER,
             //SensorSamplingPackage.GYROSCOPE,
@@ -47,11 +47,10 @@ void sensing() async {
 
   SmartphoneDeploymentController controller =
       await client.addStudy(studyDeploymentId, deviceRolename);
+  await controller.tryDeployment();
 
   // configure the controller and resume sampling
-  await controller.configure(
-    privacySchemaName: PrivacySchema.DEFAULT,
-  );
+  await controller.configure();
   controller.resume();
 
   // listening on the data stream and print them as json to the debug console
@@ -64,5 +63,7 @@ void sensing() async {
   });
 
   // listening on events of a specific type
-  ProbeRegistry().eventsByType(DeviceSamplingPackage.SCREEN).forEach(print);
+  await ProbeRegistry()
+      .eventsByType(DeviceSamplingPackage.SCREEN)
+      .forEach(print);
 }

@@ -12,6 +12,11 @@ typedef DatumTransformer = Datum Function(Datum);
 /// A no-operation transformer.
 Datum noop(Datum datum) => datum;
 
+/// A factory which can create a [DatumTransformer].
+abstract class DatumTransformerFactory {
+  static DatumTransformer? get transformer => null;
+}
+
 /// A registry of [DatumTransformerSchema]s which hold a set of
 /// [DatumTransformer]s.
 class TransformerSchemaRegistry {
@@ -29,9 +34,11 @@ class TransformerSchemaRegistry {
     // register 3 default transformer schemas:
     // 1. a no-operation CARP schema
     // 2. a default OMH schema
-    // 3. a default privacy transformation schemas
+    // 3. a default FHIR schema
+    // 4. a default privacy transformation schemas
     register(CARPTransformerSchema());
     register(OMHTransformerSchema());
+    register(FHIRTransformerSchema());
     register(PrivacySchema());
   }
 
@@ -43,11 +50,6 @@ class TransformerSchemaRegistry {
 
   /// Lookup a transformer schema based on its namespace.
   DatumTransformerSchema? lookup(String namespace) => _schemas[namespace];
-}
-
-/// An interface for Datum that is created from a transformer.
-abstract class TransformedDatum {
-  static DatumTransformer? get transformer => null;
 }
 
 /// An abstract class defining a transformer schema, which hold a set of
@@ -75,7 +77,7 @@ abstract class DatumTransformerSchema {
 
   /// Transform the [datum] according to the transformer for its data type.
   Datum transform(Datum datum) {
-    Function? transformer = transformers[datum.format.toString()];
+    DatumTransformer? transformer = transformers[datum.format.toString()];
     return (transformer != null) ? transformer(datum) : datum;
   }
 }
@@ -89,6 +91,12 @@ class CARPTransformerSchema extends DatumTransformerSchema {
 /// A default [DatumTransformerSchema] for Open mHealth (OMH) transformers
 class OMHTransformerSchema extends DatumTransformerSchema {
   String get namespace => NameSpace.OMH;
+  void onRegister() {}
+}
+
+/// A default [DatumTransformerSchema] for HL7 FHIR transformers
+class FHIRTransformerSchema extends DatumTransformerSchema {
+  String get namespace => NameSpace.FHIR;
   void onRegister() {}
 }
 

@@ -32,17 +32,38 @@ class SamplingPackageRegistry {
       if (!_permissions.contains(permission)) _permissions.add(permission);
     });
     CAMSDataType.add(package.dataTypes);
+
+    // register the package's device in the device registry
+    DeviceController()
+        .registerDevice(package.deviceType, package.deviceManager);
+
     package.onRegister();
+  }
+
+  /// Lookup the [SamplingPackage]s that support the [type] of data.
+  ///
+  /// Typically, only one package supports a specific type. Howerver, if
+  /// more than one package does, all packages are returned.
+  /// Maybe also be an empty list.
+  Set<SamplingPackage> lookup(String type) {
+    final Set<SamplingPackage> _packages = {};
+
+    packages.forEach((package) {
+      if (package.dataTypes.contains(type)) _packages.add(package);
+    });
+
+    return _packages;
   }
 
   /// A schema that does maximum sampling.
   ///
-  /// Takes its settings from the [SamplingSchema.common()] schema, but
+  /// Takes its settings from the [common] schema, but
   /// enables all measures.
-  SamplingSchema maximum({String? namespace}) => common()
+  /// Also turns off power awareness.
+  SamplingSchema get maximum => common
     ..type = SamplingSchemaType.maximum
     ..name = 'Default ALL sampling'
-    ..powerAware = true
+    ..powerAware = false
     ..measures
         .values
         .forEach((measure) => (measure as CAMSMeasure).enabled = true);
@@ -54,7 +75,7 @@ class SamplingPackageRegistry {
   /// at least once pr. day. This scheme is power-aware.
   ///
   /// These default settings are described in this [table](https://github.com/cph-cachet/carp.sensing-flutter/wiki/Schemas#samplingschemacommon).
-  SamplingSchema common() {
+  SamplingSchema get common {
     SamplingSchema schema = SamplingSchema(
       type: SamplingSchemaType.common,
       name: 'Common (default) sampling',
@@ -72,11 +93,16 @@ class SamplingPackageRegistry {
   /// This schema is used in the power-aware adaptation of sampling. See [PowerAwarenessState].
   /// [SamplingSchema.normal] is an empty schema and therefore don't change anything when
   /// used to adapt a [StudyProtocol] and its [Measure]s in the [adapt] method.
-  SamplingSchema normal({bool powerAware = true}) => SamplingSchema(
+  SamplingSchema get normal => SamplingSchema(
         type: SamplingSchemaType.normal,
         name: 'Default sampling',
-        powerAware: powerAware,
       );
+
+  // SamplingSchema normal({bool powerAware = true}) => SamplingSchema(
+  //       type: SamplingSchemaType.normal,
+  //       name: 'Default sampling',
+  //       powerAware: powerAware,
+  //     );
 
   /// A default light sampling schema.
   ///
@@ -86,7 +112,7 @@ class SamplingPackageRegistry {
   /// at least once pr. day. This scheme is power-aware.
   ///
   /// See this [table](https://github.com/cph-cachet/carp.sensing-flutter/wiki/Schemas#samplingschemalight) for an overview.
-  SamplingSchema light() {
+  SamplingSchema get light {
     SamplingSchema schema = SamplingSchema(
       type: SamplingSchemaType.light,
       name: 'Light sampling',
@@ -103,7 +129,7 @@ class SamplingPackageRegistry {
   ///
   /// This schema is used in the power-aware adaptation of sampling.
   /// See [PowerAwarenessState].
-  SamplingSchema minimum() {
+  SamplingSchema get minimum {
     SamplingSchema schema = SamplingSchema(
       type: SamplingSchemaType.minimum,
       name: 'Minimum sampling',
@@ -122,7 +148,7 @@ class SamplingPackageRegistry {
   /// This schema pauses all sampling by disabling all probes.
   /// Sampling will be restored to the minimum level, once the device is
   /// recharged above the [PowerAwarenessState.MINIMUM_SAMPLING_LEVEL] level.
-  SamplingSchema none() {
+  SamplingSchema get none {
     SamplingSchema schema = SamplingSchema(
       type: SamplingSchemaType.none,
       name: 'No sampling',
@@ -137,7 +163,7 @@ class SamplingPackageRegistry {
   /// A sampling schema for debugging purposes.
   /// Collects and combines the [SamplingPackage.debug] [SamplingSchema]s
   /// for each package.
-  SamplingSchema debug() {
+  SamplingSchema get debug {
     SamplingSchema schema = SamplingSchema(
       type: SamplingSchemaType.debug,
       name: 'Debugging sampling',
@@ -209,10 +235,7 @@ abstract class SamplingPackage {
   /// type of device.
   String get deviceType;
 
-  /// Get a [DeviceManager] for the type of device in this package.
-  ///
-  /// Default manager is a smartphone.
-  /// Override this if another type of manager  is supported.
+  /// Get the [DeviceManager] for the device used by this package.
   DeviceManager get deviceManager;
 
   /// Callback method when this package is being registered.
@@ -221,6 +244,7 @@ abstract class SamplingPackage {
 
 /// An abstract class for all sampling packages that run on the phone itself.
 abstract class SmartphoneSamplingPackage implements SamplingPackage {
+  final SmartphoneDeviceManager _deviceManager = SmartphoneDeviceManager();
   String get deviceType => Smartphone.DEVICE_TYPE;
-  DeviceManager get deviceManager => SmartphoneDeviceManager();
+  DeviceManager get deviceManager => _deviceManager;
 }

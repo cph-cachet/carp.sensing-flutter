@@ -14,8 +14,6 @@ class WeatherMeasure extends CAMSMeasure {
   /// API key for the OpenWeatherMap API.
   String apiKey;
 
-//  double latitude, longitude;
-
   WeatherMeasure({
     required String type,
     String? name,

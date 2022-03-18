@@ -28,17 +28,16 @@ this package only works together with `carp_mobile_sensing`.
 dependencies:
   flutter:
     sdk: flutter
-  carp_core: ^0.20.0
-  carp_mobile_sensing: ^0.20.0
-  carp_connectivity_package: ^0.20.0
+  carp_core: ^latest
+  carp_mobile_sensing: ^latest
+  carp_connectivity_package: ^latest
   ...
 `````
 
 ### Android Integration
 
 As explained in the Android [Wi-Fi scanning overview](https://developer.android.com/guide/topics/connectivity/wifi-scan), access to wifi information required different permission to be set. 
-For Android >= 10 (API level 29) it is `ACCESS_FINE_LOCATION`, `ACCESS_COARSE_LOCATION` and 
-`CHANGE_WIFI_STATE`.
+For Android >= 10 (API level 29) it is `ACCESS_FINE_LOCATION`, `ACCESS_COARSE_LOCATION` and `CHANGE_WIFI_STATE`.
 
 Add the following to your app's `manifest.xml` file located in `android/app/src/main`:
 
@@ -53,7 +52,6 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
-
 
 </manifest>
 ````

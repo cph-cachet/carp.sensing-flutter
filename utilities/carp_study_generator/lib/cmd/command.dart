@@ -49,9 +49,9 @@ abstract class AbstractCommand implements Command {
     // register the sampling packages
     // this is used to be able to deserialize the json protocol
     SamplingPackageRegistry().register(AppsSamplingPackage());
-    // SamplingPackageRegistry().register(CommunicationSamplingPackage());
+    SamplingPackageRegistry().register(CommunicationSamplingPackage());
     SamplingPackageRegistry().register(ContextSamplingPackage());
-    SamplingPackageRegistry().register(AudioSamplingPackage());
+    SamplingPackageRegistry().register(MediaSamplingPackage());
     SamplingPackageRegistry().register(ESenseSamplingPackage());
     SamplingPackageRegistry().register(SurveySamplingPackage());
     SamplingPackageRegistry().register(HealthSamplingPackage());

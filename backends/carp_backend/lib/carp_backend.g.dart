@@ -18,14 +18,14 @@ CarpDataEndPoint _$CarpDataEndPointFromJson(Map<String, dynamic> json) =>
       password: json['password'] as String?,
       collection: json['collection'] as String?,
       deleteWhenUploaded: json['deleteWhenUploaded'] as bool? ?? true,
+      dataFormat: json['dataFormat'] as String? ?? NameSpace.CARP,
       bufferSize: json['bufferSize'] as int? ?? 500 * 1000,
       zip: json['zip'] as bool? ?? true,
       encrypt: json['encrypt'] as bool? ?? false,
       publicKey: json['publicKey'] as String?,
     )
       ..$type = json[r'$type'] as String?
-      ..type = json['type'] as String
-      ..dataFormat = json['dataFormat'] as String;
+      ..type = json['type'] as String;
 
 Map<String, dynamic> _$CarpDataEndPointToJson(CarpDataEndPoint instance) {
   final val = <String, dynamic>{};
@@ -71,7 +71,10 @@ Message _$MessageFromJson(Map<String, dynamic> json) => Message(
       message: json['message'] as String?,
       url: json['url'] as String?,
       imagePath: json['imagePath'] as String?,
-    )..timestamp = DateTime.parse(json['timestamp'] as String);
+      timestamp: json['timestamp'] == null
+          ? null
+          : DateTime.parse(json['timestamp'] as String),
+    );
 
 Map<String, dynamic> _$MessageToJson(Message instance) {
   final val = <String, dynamic>{

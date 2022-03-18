@@ -58,16 +58,22 @@ class ProbeRegistry {
   Probe? create(String type) {
     Probe? _probe;
 
-    SamplingPackageRegistry().packages.forEach((package) {
-      if (package.dataTypes.contains(type)) {
-        _probe = package.create(type);
+    final packages = SamplingPackageRegistry().lookup(type);
+
+    if (packages.isNotEmpty) {
+      if (packages.length > 1) {
+        warning(
+            "$runtimeType - Creating probe, but it seems like the data type '$type' is defined in more than one sampling package.");
       }
-    });
+      _probe = packages.first.create(type);
+      _probe?.deviceManager = packages.first.deviceManager;
+    }
 
     if (_probe != null) {
-      register(type, _probe!);
-      _group.add(_probe!.data);
+      register(type, _probe);
+      _group.add(_probe.data);
     }
+
     return _probe;
   }
 }

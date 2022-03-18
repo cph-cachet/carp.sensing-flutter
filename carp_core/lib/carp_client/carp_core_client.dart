@@ -9,7 +9,7 @@
 /// Concrete devices extend on it, e.g., the SmartphoneClient manages data collection on
 /// a smartphone and is implemented in [CARP Mobile Sensing](https://pub.dev/packages/carp_mobile_sensing).
 ///
-/// Contains the core client classes like [ClientManager], [DeviceRegistry],
+/// Contains the core client classes like [ClientManager], [DeviceDataCollectorFactory],
 /// [DeviceDataCollector], and [StudyRuntime].
 ///
 /// See the [`carp.clients`](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-clients.md)

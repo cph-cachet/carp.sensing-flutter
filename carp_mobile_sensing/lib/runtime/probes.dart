@@ -61,10 +61,13 @@ enum ProbeState {
 ///     probe.data.forEach(print);
 ///
 abstract class Probe {
+  /// The device that this probes uses to collect data.
+  late DeviceManager deviceManager;
+
   /// Is this probe enabled, i.e. available for collection of data using the [resume] method.
   bool get enabled;
 
-  /// The type of this probe according to [String].
+  /// The data type this probe is collecting.
   String get type;
 
   /// The runtime state of this probe.
@@ -100,6 +103,7 @@ abstract class Probe {
   ///           },
   ///         );
   ///       }
+  ///
   /// This will update the trailing icon of the probe every time the probe change
   /// state (e.g. from `resumed` to `paused`).
   Stream<ProbeState> get stateEvents;
@@ -153,13 +157,15 @@ abstract class Probe {
 
 /// An abstract implementation of a [Probe] to extend from.
 abstract class AbstractProbe extends Probe implements MeasureListener {
+  // late DeviceManager deviceManager;
+
   final StreamController<ProbeState> _stateEventController =
       StreamController.broadcast();
   Stream<ProbeState> get stateEvents => _stateEventController.stream;
 
   bool get enabled =>
       (measure is CAMSMeasure) ? (measure as CAMSMeasure).enabled : true;
-  String get type => measure!.type;
+  String get type => measure?.type ?? 'unknown';
   String get name => (measure is CAMSMeasure)
       ? (measure as CAMSMeasure).name ?? runtimeType.toString()
       : runtimeType.toString();
@@ -508,7 +514,7 @@ abstract class StreamProbe extends AbstractProbe {
 
   /// The stream of [Datum] objects for this [StreamProbe].
   /// Must be implemented by sub-classes.
-  /// Can return `null` if no stream of data is available.
+  /// Can be `null` if no stream of data is available.
   Stream<Datum>? get stream;
 
   // Do nothing here. Can be overwritten in subclasses.
@@ -518,7 +524,7 @@ abstract class StreamProbe extends AbstractProbe {
   Future onResume() async {
     if (stream == null) {
       warning(
-          "Trying to resume the stream probe '$runtimeType' which does not provide a Datum stream."
+          "Trying to resume the stream probe '$runtimeType' which does not provide a Datum stream. "
           'Have you initialized this probe correctly?');
     } else {
       marking();
@@ -577,7 +583,7 @@ abstract class PeriodicStreamProbe extends StreamProbe {
   Future onResume() async {
     if (stream == null) {
       warning(
-          "Trying to resume the stream probe '$runtimeType' which does not provide a Datum stream."
+          "Trying to resume the stream probe '$runtimeType' which does not provide a Datum stream. "
           'Have you initialized this probe correctly?');
     } else {
       marking();

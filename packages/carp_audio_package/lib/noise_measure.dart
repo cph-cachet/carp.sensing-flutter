@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of audio;
+part of media;
 
 /// Specify how to collect noise data, including setting the
 /// [frequency], [duration], and [samplingRate] for collecting audio.

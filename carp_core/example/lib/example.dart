@@ -53,7 +53,7 @@ void carpCoreDeploymentExample() async {
   StudyProtocol trackPatientStudy;
   Smartphone patientPhone = trackPatientStudy.masterDevices.first as Smartphone;
 
-// This is called by `StudyService` when deploying a participant group.
+  // This is called by `StudyService` when deploying a participant group.
   StudyDeploymentStatus status =
       await deploymentService.createStudyDeployment(trackPatientStudy);
   String studyDeploymentId = status.studyDeploymentId;
@@ -88,7 +88,7 @@ void carpCoreDeploymentExample() async {
 void carpCoreClientExample() async {
   ParticipationService participationService;
   DeploymentService deploymentService;
-  DeviceRegistry deviceRegistry;
+  DeviceDataCollectorFactory deviceRegistry;
 
   // Retrieve invitation to participate in the study using a specific device.
   ActiveParticipationInvitation invitation = (await participationService

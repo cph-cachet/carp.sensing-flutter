@@ -25,7 +25,6 @@ import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:permission_handler_platform_interface/permission_handler_platform_interface.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as notifications;
@@ -34,6 +33,7 @@ import 'package:cron/cron.dart' as cron;
 
 part 'data_manager.dart';
 part 'device_manager.dart';
+part 'device_controller.dart';
 part 'executors.dart';
 part 'trigger_executors.dart';
 part 'task_executors.dart';

@@ -4,12 +4,12 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of audio;
+part of media;
 
 /// A probe that captures a video or image.
 ///
 /// This probes does not in itself capture the video/image. It merely is a placeholder
-/// for being able to add a video measure to a protocol.
+/// for being able to add a video/image measure to a protocol.
 class VideoProbe extends DatumProbe {
   @override
   Future<Datum?> getDatum() async =>

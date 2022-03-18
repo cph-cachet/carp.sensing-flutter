@@ -1,6 +1,6 @@
 name: carp_mobile_sensing_app
 description: The CARP Mobile Sensing App
-version: 0.32.0
+version: 0.33.0
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app
 publish_to: 'none' 
 
@@ -21,11 +21,15 @@ dependencies:
   #carp_communication_package: ^0.30.0
   #carp_apps_package: ^0.30.0
   #carp_survey_package: ^0.30.0
-  #carp_esense_package: ^0.30.2
   #carp_backend: ^0.30.0
   #carp_webservices: ^0.30.0
   #carp_health_package: ^2.0.0
   #carp_firebase_backend: ^0.30.0
+
+  # carp_esense_package: ^0.30.2
+  # carp_movisens_package: ^0.32.0
+
+  research_package: ^0.7.2
 
 # Overriding carp libraries to use the local copy
 dependency_overrides:
@@ -35,10 +39,14 @@ dependency_overrides:
     path: ../../carp_mobile_sensing/
   carp_context_package:
     path: ../../packages/carp_context_package/
-  # carp_connectivity_package:
-  #   path: ../../packages/carp_connectivity_package/
+  carp_connectivity_package:
+    path: ../../packages/carp_connectivity_package/
+  carp_communication_package:
+    path: ../../packages/carp_communication_package/
   carp_audio_package:
     path: ../../packages/carp_audio_package/
+  carp_apps_package:
+    path: ../../packages/carp_apps_package/
   carp_esense_package:
     path: ../../packages/carp_esense_package/
   esense_flutter:
@@ -49,9 +57,6 @@ dependency_overrides:
     path: ../../backends/carp_webservices/
 #  research_package:
 #    path: ../../../../research.package/
-  # waiting for the device_calendar to be released in a null-safe version ... :-(
-  device_calendar:
-    git: https://github.com/builttoroam/device_calendar.git
 
 
 dev_dependencies:

@@ -22,7 +22,7 @@ class ClientManager {
   /// The registry of connected devices used to collect data locally on
   /// this master device. Also works as a factory which is used to create
   /// [DeviceDataCollector] instances for connected devices.
-  DeviceRegistry deviceRegistry;
+  DeviceDataCollectorFactory deviceRegistry;
 
   // private val dataListener: DataListener = DataListener( dataCollectorFactory )
 
@@ -74,24 +74,24 @@ class ClientManager {
     return StudyRuntime();
   }
 
-  /// Verifies whether the device is ready for deployment of the study runtime identified by [studyRuntimeId],
-  /// and in case it is, deploys. In case already deployed, nothing happens.
+  /// Verifies whether the device is ready for deployment of the study runtime
+  /// identified by [studyRuntimeId], and in case it is, deploys.
+  /// In case already deployed, nothing happens.
   @mustCallSuper
   Future<StudyRuntimeStatus> tryDeployment(
       StudyRuntimeId studyRuntimeId) async {
     StudyRuntime runtime = repository[studyRuntimeId]!;
 
     // Early out in case this runtime has already received and validated deployment information.
-    var status = runtime.status;
-    if (status == StudyRuntimeStatus.Deployed) return status;
+    if (runtime.status == StudyRuntimeStatus.Deployed) return runtime.status;
 
-    return runtime.tryDeployment();
+    return await runtime.tryDeployment();
   }
 
   /// Permanently stop collecting data for the study runtime identified by [studyRuntimeId].
   @mustCallSuper
   void stopStudy(StudyRuntimeId studyRuntimeId) async =>
-      repository[studyRuntimeId]!.stop();
+      repository[studyRuntimeId]?.stop();
 
   /// Get the [StudyRuntime] with the unique [studyRuntimeId].
   StudyRuntime? getStudyRuntime(StudyRuntimeId studyRuntimeId) =>

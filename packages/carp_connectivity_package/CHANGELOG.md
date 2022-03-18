@@ -1,3 +1,8 @@
+## 0.33.0
+* update to `carp_mobile_sensing` v. 0.33.0
+* upgrade to [`flutter_blue_plus`](https://pub.dev/packages/flutter_blue_plus)
+* fix of [#245](https://github.com/cph-cachet/carp.sensing-flutter/issues/2455)
+
 ## 0.32.0
 * update to `carp_mobile_sensing` v. 0.32.0
 

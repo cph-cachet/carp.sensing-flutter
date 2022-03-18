@@ -21,15 +21,29 @@ void main() async {
   Smartphone phone = Smartphone();
   protocol.addMasterDevice(phone);
 
-  // Add an automatic task that immediately starts collecting audio and noise.
+  // Add an automatic task that collects SMS messages in/out
   protocol.addTriggeredTask(
       ImmediateTrigger(),
       AutomaticTask()
-        ..addMeasures(SensorSamplingPackage().common.getMeasureList(
+        ..addMeasures(SamplingPackageRegistry().common.getMeasureList(
           types: [
-            CommunicationSamplingPackage.TELEPHONY,
-            CommunicationSamplingPackage.PHONE_LOG,
             CommunicationSamplingPackage.TEXT_MESSAGE,
+          ],
+        )),
+      phone);
+
+  // Add an automatic task that every 3 hour collects the logs for:
+  //  * in/out SMS
+  //  * in/out phone calls
+  //  * calendar entries
+  protocol.addTriggeredTask(
+      PeriodicTrigger(
+          period: const Duration(hours: 3),
+          duration: const Duration(seconds: 10)),
+      AutomaticTask()
+        ..addMeasures(SamplingPackageRegistry().common.getMeasureList(
+          types: [
+            CommunicationSamplingPackage.PHONE_LOG,
             CommunicationSamplingPackage.TEXT_MESSAGE_LOG,
             CommunicationSamplingPackage.CALENDAR,
           ],

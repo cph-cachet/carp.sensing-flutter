@@ -2,7 +2,7 @@ part of mobile_sensing_app;
 
 class DevicesList extends StatefulWidget {
   const DevicesList({Key? key}) : super(key: key);
-  static const String routeName = '/tasklist';
+  static const String routeName = '/deviceslist';
   _DevicesListState createState() => _DevicesListState();
 }
 

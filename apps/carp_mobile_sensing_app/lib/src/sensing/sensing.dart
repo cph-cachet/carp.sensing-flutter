@@ -45,21 +45,20 @@ class Sensing {
   factory Sensing() => _instance;
 
   Sensing._() {
+    DomainJsonFactory();
+
     // create and register external sampling packages
-    // SamplingPackageRegistry().register(ConnectivitySamplingPackage());
+    SamplingPackageRegistry().register(ConnectivitySamplingPackage());
     SamplingPackageRegistry().register(ContextSamplingPackage());
-    SamplingPackageRegistry().register(AudioSamplingPackage());
-    //SamplingPackageRegistry().register(CommunicationSamplingPackage());
-    //SamplingPackageRegistry().register(AppsSamplingPackage());
+    SamplingPackageRegistry().register(MediaSamplingPackage());
+    SamplingPackageRegistry().register(CommunicationSamplingPackage());
+    SamplingPackageRegistry().register(AppsSamplingPackage());
     SamplingPackageRegistry().register(ESenseSamplingPackage());
   }
 
   /// Initialize and set up sensing.
   Future<void> initialize() async {
     info('Initializing $runtimeType - mode: ${bloc.deploymentMode}');
-
-    // set up the devices available on this phone
-    DeviceController().registerAllAvailableDevices();
 
     switch (bloc.deploymentMode) {
       case DeploymentMode.LOCAL:
@@ -114,17 +113,18 @@ class Sensing {
 
     await client!.configure();
 
-    // add and deploy this deployment
+    // add and deploy this study deployment
     _controller =
         await client!.addStudy(bloc.studyDeploymentId!, deviceRolename!);
+    await _controller?.tryDeployment();
 
     // configure the controller
-    await _controller!.configure();
+    await _controller?.configure();
 
     // controller.resume();
 
     // listening on the data stream and print them as json to the debug console
-    _controller!.data.listen((data) => print(toJsonString(data)));
+    _controller?.data.listen((data) => print(toJsonString(data)));
 
     info('$runtimeType initialized');
   }

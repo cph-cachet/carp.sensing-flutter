@@ -5,7 +5,6 @@ bool _fromJsonFunctionsRegistrered = false;
 // Register all the fromJson functions for the domain classes.
 void _registerFromJsonFunctions() {
   if (_fromJsonFunctionsRegistrered) return;
-  _fromJsonFunctionsRegistrered = true;
 
   // Protocol classes
   // FromJsonFactory().register(SmartphoneStudyProtocol(name: '', ownerId: ''));
@@ -63,6 +62,7 @@ void _registerFromJsonFunctions() {
   FromJsonFactory().register(UserTaskSnapshotList());
   FromJsonFactory().register(UserTaskSnapshot(
       AppTask(type: 'ignored'), UserTaskState.canceled, DateTime.now()));
+  _fromJsonFunctionsRegistrered = true;
 }
 
 class DomainJsonFactory {

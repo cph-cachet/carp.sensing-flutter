@@ -37,9 +37,9 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
     }
   }
 
-  void onRegister() {} // does nothing for this sensor package
+  void onRegister() {}
 
-  List<Permission> get permissions => [Permission.sensors];
+  List<Permission> get permissions => [];
 
   SamplingSchema get common => SamplingSchema(
         type: SamplingSchemaType.common,

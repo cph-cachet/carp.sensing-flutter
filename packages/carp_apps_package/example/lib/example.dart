@@ -10,7 +10,7 @@ void main() async {
   // register this sampling package before using its measures
   SamplingPackageRegistry().register(AppsSamplingPackage());
 
-  // Create a study protocol
+  // create a study protocol
   StudyProtocol protocol = StudyProtocol(
     ownerId: 'owner@dtu.dk',
     name: 'Context Sensing Example',
@@ -21,12 +21,12 @@ void main() async {
   Smartphone phone = Smartphone();
   protocol.addMasterDevice(phone);
 
-  // Add an automatic task that immediately starts collecting connectivity,
-  // nearby bluetooth devices, and wifi information.
+  // add an automatic task that collects the list of installed apps
+  // and a log of app usage activity
   protocol.addTriggeredTask(
       ImmediateTrigger(),
       AutomaticTask()
-        ..addMeasures(SensorSamplingPackage().common.getMeasureList(
+        ..addMeasures(SamplingPackageRegistry().common.getMeasureList(
           types: [
             AppsSamplingPackage.APPS,
             AppsSamplingPackage.APP_USAGE,

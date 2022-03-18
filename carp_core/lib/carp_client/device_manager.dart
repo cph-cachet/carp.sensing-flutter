@@ -7,17 +7,16 @@
 
 part of carp_core_client;
 
-// This class is called [DeviceDataCollector] in carp_core - !"#€"#%
-
 /// Collects [Data] for a single device.
 abstract class DeviceDataCollector {
-  String? _type;
-
   /// The type of this device
-  String? get type => _type;
+  String? type;
 
   /// The registration for this device.
   DeviceRegistration? deviceRegistration;
+
+  /// The description for this device.
+  DeviceDescriptor? deviceDescriptor;
 
   /// The set of data types defining which data can be collected on this device.
   Set<String> get supportedDataTypes;
@@ -28,23 +27,16 @@ abstract class DeviceDataCollector {
   /// Determines whether a connection can be made at this point in time to the device.
   bool canConnect();
 
-  DeviceDataCollector([this.deviceRegistration]);
-
-  /// Initialize the device data collector by specifying its [type].
-  ///
-  /// Is often overriden in sub-classes. Note, however, that it must not be
-  /// doing a lot of work on startup.
-  @mustCallSuper
-  void initialize(String type) {
-    _type = type;
-  }
+  DeviceDataCollector([
+    this.type,
+    this.deviceRegistration,
+    this.deviceDescriptor,
+  ]);
 }
 
-// This class is called [DeviceDataCollectorFactory] in carp_core - "#€!"#
-//
 /// Supports creating and holding a registry of [DeviceDataCollector]s for devices.
-abstract class DeviceRegistry {
-  /// The devices available in this [DeviceRegistry] mapped to their device type.
+abstract class DeviceDataCollectorFactory {
+  /// The devices available in this [DeviceDataCollectorFactory] mapped to their device type.
   Map<String, DeviceDataCollector> get devices;
 
   /// Returns the [DeviceDataCollector] of the given [deviceType].
@@ -68,4 +60,10 @@ abstract class DeviceRegistry {
 
   // Remove the device of [deviceType] from this registry.
   void unregisterDevice(String deviceType);
+
+  /// Initialize all devices in a [masterDeviceDeployment].
+  void initializeDevices(MasterDeviceDeployment masterDeviceDeployment);
+
+  /// Initialize the is the device [descriptor].
+  void initializeDevice(DeviceDescriptor descriptor);
 }

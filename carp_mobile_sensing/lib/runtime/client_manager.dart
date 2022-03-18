@@ -25,12 +25,16 @@ class SmartPhoneClientManager extends ClientManager {
   Future<DeviceRegistration> configure({String? deviceId}) async {
     await DeviceInfo().init();
     deviceId ??= DeviceInfo().deviceID;
+
+    deviceRegistry.registerAllAvailableDevices();
+
     print('===========================================================');
     print('  CARP Mobile Sensing (CAMS) - $runtimeType');
     print('===========================================================');
     print('  deployment service : $deploymentService');
     print('     device registry : $deviceRegistry');
     print('           device ID : $deviceId');
+    print('   connected devices : ${deviceRegistry.devicesToString()}}');
     print('===========================================================');
 
     return super.configure(deviceId: deviceId);

@@ -25,7 +25,11 @@ void main() {
     );
     // Define which devices are used for data collection.
     phone = Smartphone(roleName: 'SM-A320FL');
-    eSense = ESenseDevice(roleName: 'esense');
+    eSense = ESenseDevice(
+      roleName: 'eSense earplug',
+      deviceName: 'eSense-0223',
+      samplingRate: 10,
+    );
 
     protocol
       ..addMasterDevice(phone)
@@ -35,8 +39,7 @@ void main() {
     protocol.addTriggeredTask(
       ImmediateTrigger(), // a simple trigger that starts immediately
       AutomaticTask()
-        ..measures =
-            SamplingPackageRegistry().common().measures.values.toList(),
+        ..measures = SamplingPackageRegistry().common.measures.values.toList(),
       phone, // a task with all measures
     );
 

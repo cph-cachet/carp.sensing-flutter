@@ -16,10 +16,10 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
   Future initialize() async {}
 
   @override
-  Future<SmartphoneStudyProtocol> getStudyProtocol(String studyId) async {
+  Future<SmartphoneStudyProtocol> getStudyProtocol(String protocolId) async {
     SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
       ownerId: 'abc@dtu.dk',
-      name: 'CAMS App Study No. 2',
+      name: protocolId,
     );
 
     protocol.protocolDescription = StudyDescription(
@@ -43,9 +43,16 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
             name: 'CARP Server',
           );
 
+    // set the format of the data to upload - e.g. Open mHealth
+    protocol.dataEndPoint!.dataFormat = bloc.dataFormat;
+
     // Define which devices are used for data collection.
     Smartphone phone = Smartphone();
-    ESenseDevice eSense = ESenseDevice();
+    ESenseDevice eSense = ESenseDevice(
+      deviceName: 'eSense-0332',
+      samplingRate: 10,
+    );
+    // MovisensDevice movisens = MovisensDevice();
 
     protocol
       ..addMasterDevice(phone)
@@ -54,27 +61,21 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     protocol.addTriggeredTask(
         ImmediateTrigger(),
         AutomaticTask()
-          ..measures = SamplingPackageRegistry().debug().getMeasureList(
+          ..measures = SamplingPackageRegistry().debug.getMeasureList(
             types: [
+              DeviceSamplingPackage.DEVICE,
+              DeviceSamplingPackage.BATTERY,
+              SensorSamplingPackage.PEDOMETER, // 60 s
               SensorSamplingPackage.LIGHT, // 60 s
-              // ConnectivitySamplingPackage.CONNECTIVITY,
-              // ConnectivitySamplingPackage.WIFI, // 60 s
-              AudioSamplingPackage.NOISE, // 60 s
+              ConnectivitySamplingPackage.CONNECTIVITY,
+              ConnectivitySamplingPackage.WIFI, // 60 s
+              ConnectivitySamplingPackage.BLUETOOTH, // 60 s
+              MediaSamplingPackage.NOISE, // 60 s
               DeviceSamplingPackage.MEMORY, // 60 s
               DeviceSamplingPackage.SCREEN, // event-based
               ContextSamplingPackage.ACTIVITY, // event-based
               ContextSamplingPackage.GEOLOCATION, // event-based
-              ContextSamplingPackage.MOBILITY, // event-based
-            ],
-          ),
-        phone);
-
-    protocol.addTriggeredTask(
-        ImmediateTrigger(),
-        AutomaticTask()
-          ..measures = SamplingPackageRegistry().debug().getMeasureList(
-            types: [
-              DeviceSamplingPackage.DEVICE,
+              // ContextSamplingPackage.MOBILITY, // event-based
             ],
           ),
         phone);
@@ -95,56 +96,140 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //       ),
     //     phone);
 
-    protocol.addTriggeredTask(
-        PeriodicTrigger(
-          period: Duration(minutes: 1),
-          duration: const Duration(seconds: 2),
-        ),
-        AutomaticTask()
-          ..measures = SamplingPackageRegistry().debug().getMeasureList(
-            types: [
-              ContextSamplingPackage.LOCATION,
-            ],
-          ),
-        phone);
+    // protocol.addTriggeredTask(
+    //     PeriodicTrigger(
+    //       period: const Duration(minutes: 1),
+    //       duration: const Duration(seconds: 2),
+    //     ),
+    //     AutomaticTask()
+    //       ..measures = SamplingPackageRegistry().debug().getMeasureList(
+    //         types: [
+    //           ContextSamplingPackage.LOCATION,
+    //         ],
+    //       ),
+    //     phone);
 
     protocol.addTriggeredTask(
         PeriodicTrigger(
-          period: Duration(minutes: 2),
+          period: const Duration(minutes: 30),
           duration: const Duration(seconds: 2),
         ),
         AutomaticTask()
-          ..measures = SamplingPackageRegistry().debug().getMeasureList(
-            types: [
-              ContextSamplingPackage.WEATHER,
-              ContextSamplingPackage.AIR_QUALITY,
-            ],
-          ),
+          ..addMeasure(WeatherMeasure(
+              type: ContextSamplingPackage.WEATHER,
+              name: 'Weather',
+              description:
+                  "Collects local weather from the WeatherAPI web service",
+              apiKey: '12b6e28582eb9298577c734a31ba9f4f'))
+          ..addMeasure(AirQualityMeasure(
+              type: ContextSamplingPackage.AIR_QUALITY,
+              name: 'Air Quality',
+              description:
+                  "Collects local air quality from the Air Quality Index (AQI) web service",
+              apiKey: '9e538456b2b85c92647d8b65090e29f957638c77')),
         phone);
 
+    // protocol.addTriggeredTask(
+    //     PeriodicTrigger(
+    //       period: Duration(minutes: 2),
+    //       duration: Duration(seconds: 30),
+    //     ),
+    //     AutomaticTask()
+    //       ..measures = SamplingPackageRegistry().debug.getMeasureList(
+    //         types: [
+    //           MediaSamplingPackage.AUDIO,
+    //         ],
+    //       ),
+    //     phone);
+
+    // Add an automatic task that collects SMS messages in/out
+    protocol.addTriggeredTask(
+        ImmediateTrigger(),
+        AutomaticTask()
+          ..addMeasures(SamplingPackageRegistry().common.getMeasureList(
+            types: [
+              CommunicationSamplingPackage.TEXT_MESSAGE,
+            ],
+          )),
+        phone);
+
+    // Add an automatic task that collects the logs for:
+    //  * in/out SMS
+    //  * in/out phone calls
+    //  * calendar entries
+    protocol.addTriggeredTask(
+        ImmediateTrigger(),
+        AutomaticTask()
+          ..addMeasures(SamplingPackageRegistry().common.getMeasureList(
+            types: [
+              CommunicationSamplingPackage.PHONE_LOG,
+              CommunicationSamplingPackage.TEXT_MESSAGE_LOG,
+              CommunicationSamplingPackage.CALENDAR,
+            ],
+          )),
+        phone);
+
+    // Add an automatic task that collects the list of installed apps
+    // and a log of app usage activity
     protocol.addTriggeredTask(
         PeriodicTrigger(
-          period: Duration(minutes: 2),
-          duration: Duration(seconds: 30),
+          period: const Duration(minutes: 1),
+          duration: const Duration(seconds: 10),
         ),
         AutomaticTask()
-          ..measures = SamplingPackageRegistry().debug().getMeasureList(
+          ..addMeasures(SamplingPackageRegistry().common.getMeasureList(
             types: [
-              AudioSamplingPackage.AUDIO,
+              AppsSamplingPackage.APPS,
+              AppsSamplingPackage.APP_USAGE,
             ],
-          ),
+          )),
         phone);
 
     protocol.addTriggeredTask(
         ImmediateTrigger(),
         AutomaticTask()
-          ..measures = SamplingPackageRegistry().debug().getMeasureList(
+          ..measures = SamplingPackageRegistry().debug.getMeasureList(
             types: [
               ESenseSamplingPackage.ESENSE_BUTTON,
               ESenseSamplingPackage.ESENSE_SENSOR,
             ],
           ),
         eSense);
+
+    // // add a measure for ECG monitoring using the Movisens device
+    // protocol.addTriggeredTask(
+    //   ImmediateTrigger(),
+    //   AutomaticTask()
+    //     ..addMeasure(MovisensMeasure(
+    //       type: MovisensSamplingPackage.MOVISENS_NAMESPACE,
+    //       name: 'Movisens ECG device',
+    //       address: '88:6B:0F:CD:E7:F2',
+    //       sensorLocation: SensorLocation.chest,
+    //       gender: Gender.male,
+    //       deviceName: 'Sensor 02655',
+    //       height: 175,
+    //       weight: 75,
+    //       age: 25,
+    //     )),
+    //   movisens,
+    // );
+
+    // // add measures to collect data from Apple Health / Google Fit
+    // protocol.addTriggeredTask(
+    //     PeriodicTrigger(
+    //       period: Duration(minutes: 60),
+    //       duration: Duration(minutes: 10),
+    //     ),
+    //     AutomaticTask()
+    //       ..addMeasures([
+    //         HealthMeasure(
+    //             type: HealthSamplingPackage.HEALTH,
+    //             healthDataType: HealthDataType.BLOOD_GLUCOSE),
+    //         HealthMeasure(
+    //             type: HealthSamplingPackage.HEALTH,
+    //             healthDataType: HealthDataType.STEPS)
+    //       ]),
+    //     phone);
 
     return protocol;
   }

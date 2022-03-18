@@ -2,8 +2,7 @@
 
 [![pub package](https://img.shields.io/pub/v/carp_survey_package.svg)](https://pub.dartlang.org/packages/carp_survey_package)
 
-This library contains a sampling package for collecting a survey from the [Research Package](https://www.researchpackage.org) 
-collecting the survey answer as part of  
+This library contains a sampling package for collecting a survey from the [Research Package](https://www.researchpackage.org) collecting the survey answer as part of  
 the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package.
 This packages supports sampling of the following [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core/Measure-class.html) types:
 

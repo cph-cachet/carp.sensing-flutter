@@ -30,12 +30,13 @@ void example_1() async {
   Smartphone phone = Smartphone();
   protocol.addMasterDevice(phone);
 
-  // Add an automatic task that immediately starts collecting
-  // step counts, ambient light, screen activity, and battery level
+  // Add an automatic task that immediately starts collecting step counts,
+  // ambient light, screen activity, and battery level - using the
+  // SamplingPackageRegistry 'common' factory method.
   protocol.addTriggeredTask(
       ImmediateTrigger(),
       AutomaticTask()
-        ..addMeasures(SensorSamplingPackage().common.getMeasureList(
+        ..addMeasures(SamplingPackageRegistry().common.getMeasureList(
           types: [
             SensorSamplingPackage.PEDOMETER,
             SensorSamplingPackage.LIGHT,
@@ -59,6 +60,9 @@ void example_1() async {
   // create a study runtime to control this deployment
   SmartphoneDeploymentController controller =
       await client.addStudy(studyDeploymentId, deviceRolename);
+
+  // deploy the study on this phone (controller)
+  await controller.tryDeployment();
 
   // configure the controller and resume sampling
   await controller.configure();
@@ -332,6 +336,21 @@ void samplingSchemaExample() async {
       phone);
 }
 
+void samplingSchemaExample_2() {
+  StudyProtocol protocol = StudyProtocol(
+    ownerId: 'AB',
+    name: 'Track patient movement',
+  );
+  Smartphone phone = Smartphone(roleName: 'phone');
+  protocol.addMasterDevice(phone);
+
+  protocol.addTriggeredTask(
+      ImmediateTrigger(),
+      AutomaticTask()
+        ..measures = SensorSamplingPackage().common.measures.values.toList(),
+      phone);
+}
+
 void recurrentScheduledTriggerExample() {
   // collect every day at 13:30
   RecurrentScheduledTrigger(
@@ -486,6 +505,8 @@ void carp_core_client_example() async {
 
   SmartphoneDeploymentController controller =
       await client.addStudy(studyDeploymentId!, deviceToUse!);
+
+  controller.masterDeployment?.connectedDevices.first.type;
 
   if (controller.status == StudyRuntimeStatus.RegisteringDevices) {
     var connectedDevice = controller.remainingDevicesToRegister.first;

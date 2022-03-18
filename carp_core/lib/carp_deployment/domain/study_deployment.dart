@@ -245,8 +245,8 @@ class StudyDeploymentStatus extends Serializable {
   DeviceDeploymentStatus? get masterDeviceStatus {
     for (DeviceDeploymentStatus status in devicesStatus) {
       if (status.device.isMasterDevice!) return status;
-      return null;
     }
+    return null;
   }
 
   StudyDeploymentStatus({

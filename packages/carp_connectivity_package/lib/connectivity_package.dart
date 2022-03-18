@@ -5,12 +5,14 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
   static const String BLUETOOTH = "${NameSpace.CARP}.bluetooth";
   static const String WIFI = "${NameSpace.CARP}.wifi";
 
+  @override
   List<String> get dataTypes => [
         CONNECTIVITY,
         BLUETOOTH,
         WIFI,
       ];
 
+  @override
   Probe? create(String type) {
     switch (type) {
       case CONNECTIVITY:
@@ -24,6 +26,7 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
     }
   }
 
+  @override
   void onRegister() {
     // registering default privacy functions
     TransformerSchemaRegistry()
@@ -35,8 +38,13 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
   }
 
   // Bluetooth scan requires access to location - for some strange reason...
-  List<Permission> get permissions => [Permission.location];
+  @override
+  List<Permission> get permissions => [
+        Permission.location,
+        Permission.bluetoothScan,
+      ];
 
+  @override
   SamplingSchema get common => SamplingSchema(
         type: SamplingSchemaType.common,
         name: 'Common (default) connectivity sampling schema',
@@ -58,7 +66,7 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
                 description: "Collects nearby devices using Bluetooth LE",
                 enabled: true,
                 frequency: Duration(minutes: 10),
-                duration: Duration(seconds: 5),
+                duration: Duration(seconds: 6),
               )),
           MapEntry(
               WIFI,
@@ -73,6 +81,7 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
               )),
         ]);
 
+  @override
   SamplingSchema get light {
     SamplingSchema light = common
       ..type = SamplingSchemaType.light
@@ -81,6 +90,7 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
     return light;
   }
 
+  @override
   SamplingSchema get minimum {
     SamplingSchema minimum = light
       ..type = SamplingSchemaType.light
@@ -90,8 +100,10 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
     return minimum;
   }
 
+  @override
   SamplingSchema get normal => common..type = SamplingSchemaType.normal;
 
+  @override
   SamplingSchema get debug => SamplingSchema(
         type: SamplingSchemaType.debug,
         name: 'Debug connectivity sampling',
@@ -109,7 +121,7 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
                 type: BLUETOOTH,
                 enabled: true,
                 frequency: Duration(minutes: 1),
-                duration: Duration(seconds: 2),
+                duration: Duration(seconds: 6),
               )),
           MapEntry(
               WIFI,

@@ -85,24 +85,26 @@ class ImmediateTriggerExecutor extends TriggerExecutor {
 class OneTimeTriggerExecutor extends TriggerExecutor {
   OneTimeTrigger get _onetimeTrigger => trigger as OneTimeTrigger;
 
+  String get _oneTimeTriggerKey =>
+      '${Settings().studyDeploymentId}.${Settings.ONE_TIME_TRIGGER_KEY}.${_onetimeTrigger.triggerId}'
+          .toLowerCase();
+
   OneTimeTriggerExecutor(Trigger trigger) : super(trigger);
 
   Future onResume() async {
     // check if this trigger has already occured
     String? _savedOccurence =
-        Settings().preferences!.getString(_onetimeTrigger.triggerId);
-    debug('$runtimeType - saved occurrence : $_savedOccurence');
+        Settings().preferences!.getString(_oneTimeTriggerKey);
 
     // if not - save and resume trigger
     if (_savedOccurence == null) {
       final now = DateTime.now().toUtc().toString();
-      await Settings().preferences!.setString(_onetimeTrigger.triggerId, now);
-      debug('$runtimeType - saving occurrence : $now');
-
+      await Settings().preferences!.setString(_oneTimeTriggerKey, now);
       await super.onResume();
     } else {
       info(
-          "$runtimeType - one time trigger with id '${_onetimeTrigger.triggerId}' already occured at: $_savedOccurence. Will not trigger now.");
+          "$runtimeType - one time trigger with id '$_oneTimeTriggerKey' already occured at: $_savedOccurence. "
+          'Will not trigger now.');
     }
   }
 }

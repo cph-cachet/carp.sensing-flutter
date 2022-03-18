@@ -6,12 +6,16 @@ import 'dart:async';
 
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
-// import 'package:carp_connectivity_package/connectivity.dart';
+import 'package:carp_connectivity_package/connectivity.dart';
 import 'package:carp_esense_package/esense.dart';
 import 'package:carp_context_package/context.dart';
-import 'package:carp_audio_package/audio.dart';
-//import 'package:carp_communication_package/communication.dart';
-//import 'package:carp_apps_package/apps.dart';
+import 'package:carp_audio_package/media.dart';
+import 'package:carp_communication_package/communication.dart';
+import 'package:carp_apps_package/apps.dart';
+// import 'package:movisens_flutter/movisens_flutter.dart';
+// import 'package:carp_movisens_package/movisens.dart';
+// import 'package:carp_health_package/health_package.dart';
+// import 'package:health/health.dart';
 
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
@@ -44,7 +48,9 @@ void main() async {
   //  * LOCAL
   //  * CARP_STAGGING
   //  * CARP_PRODUCTION
-  await bloc.initialize(DeploymentMode.LOCAL);
+  await bloc.initialize(
+    deploymentMode: DeploymentMode.LOCAL,
+  );
 
   runApp(App());
 }

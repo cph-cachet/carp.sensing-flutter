@@ -65,47 +65,6 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
     <!-- for Android 10 (API 29 and later), use: -->
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
 
-
-   <application
-      ...
-
-        <!-- services for using the Android activity recognition API -->
-        <service android:name="dk.cachet.activity_recognition_flutter.activity.ActivityRecognizedService" />        
-        <receiver android:name="dk.cachet.activity_recognition_flutter.ActivityRecognizedBroadcastReceiver"/>
-        <service
-          android:name="dk.cachet.activity_recognition_flutter.ActivityRecognizedService"
-          android:permission="android.permission.BIND_JOB_SERVICE"
-          android:exported="true"/>
-        <service android:name="dk.cachet.activity_recognition_flutter.ForegroundService" />
-
-        <!-- Services for background location handling -->
-        <receiver
-                android:name="rekab.app.background_locator.LocatorBroadcastReceiver"
-                android:enabled="true"
-                android:exported="true"
-        />
-        <receiver android:name="rekab.app.background_locator.BootBroadcastReceiver"
-                  android:enabled="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-            </intent-filter>
-        </receiver>
-        <service
-                android:name="rekab.app.background_locator.LocatorService"
-                android:permission="android.permission.BIND_JOB_SERVICE"
-                android:exported="true"
-        />
-        <service
-                android:name="rekab.app.background_locator.IsolateHolderService"
-                android:permission="android.permission.FOREGROUND_SERVICE"
-                android:exported="true"
-        />
-
-        <meta-data
-                android:name="flutterEmbedding"
-                android:value="2" />
-
-    </application>
 </manifest>
 ````
 
@@ -123,7 +82,7 @@ See Flutter [AndroidX compatibility](https://flutter.dev/docs/development/packag
 
 ### iOS Integration
 
-Add this permission in the `Info.plist` file located in `ios/Runner`:
+Add the following permissions in the `Info.plist` file located in `ios/Runner` (use your own text for explanation in the `<string>` tags):
 
 ```xml
 <key>NSLocationWhenInUseUsageDescription</key>
@@ -158,6 +117,34 @@ import 'package:carp_context_package/context.dart';
 Before creating a study and running it, register this package in the 
 [SamplingPackageRegistry](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SamplingPackageRegistry-class.html).
 
-`````dart
-SamplingPackageRegistry().register(ContextSamplingPackage());
-`````
+````dart
+  SamplingPackageRegistry().register(ContextSamplingPackage());
+````
+
+The [WeatherMeasure](https://pub.dev/documentation/carp_context_package/latest/context/WeatherMeasure-class.html) and the [AirQualityMeasure](https://pub.dev/documentation/carp_context_package/latest/context/AirQualityMeasure-class.html) require API key from the [Open Weather API](https://openweathermap.org/api) and [Air Quality Open Data Platform](https://aqicn.org/data-platform/token/#/), respectively. Please make sure to obtain such API keys for your app and use these in specifying your measures, like this:
+
+```dart
+  // Add an automatic task that collects weather and air_quality every 30 miutes.
+  // Not that API keys for the weather and air_quality measure must be specified.
+  protocol.addTriggeredTask(
+      PeriodicTrigger(
+        period: Duration(minutes: 30),
+        duration: Duration(seconds: 10),
+      ),
+      AutomaticTask()
+        ..addMeasure(WeatherMeasure(
+            type: ContextSamplingPackage.WEATHER,
+            name: 'Weather',
+            description:
+                "Collects local weather from the WeatherAPI web service",
+            apiKey: 'Open_Weather_API_key_goes_here'))
+        ..addMeasure(AirQualityMeasure(
+            type: ContextSamplingPackage.AIR_QUALITY,
+            name: 'Air Quality',
+            description:
+                "Collects local air quality from the Air Quality Index (AQI) web service",
+            apiKey: 'AQI_API_key_goes_here')),
+      phone);
+```
+
+

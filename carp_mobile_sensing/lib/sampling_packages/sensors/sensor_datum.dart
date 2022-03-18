@@ -39,7 +39,7 @@ class AccelerometerDatum extends Datum {
 }
 
 /// A [Datum] that holds rotation data collected from the native gyroscope on the phone.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: true)
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class GyroscopeDatum extends Datum {
   DataFormat get format =>
       DataFormat.fromString(SensorSamplingPackage.GYROSCOPE);
