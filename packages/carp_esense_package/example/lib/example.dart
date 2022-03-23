@@ -47,6 +47,17 @@ void main() async {
         )),
       phone);
 
+  // Add an automatic task that immediately starts collecting
+  // step counts, ambient light, screen activity, and battery level
+  protocol.addTriggeredTask(
+      ImmediateTrigger(),
+      AutomaticTask()
+        ..addMeasures([
+          Measure(type: ESenseSamplingPackage.ESENSE_BUTTON),
+          Measure(type: ESenseSamplingPackage.ESENSE_SENSOR),
+        ]),
+      eSense);
+
   // Add an automatic task that immediately starts collecting eSense button and
   // sensor events from the eSense device.
   protocol.addTriggeredTask(

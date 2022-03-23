@@ -36,7 +36,8 @@ abstract class DeviceDataCollector {
 
 /// Supports creating and holding a registry of [DeviceDataCollector]s for devices.
 abstract class DeviceDataCollectorFactory {
-  /// The devices available in this [DeviceDataCollectorFactory] mapped to their device type.
+  /// The devices available in this [DeviceDataCollectorFactory] mapped to their
+  /// device type.
   Map<String, DeviceDataCollector> get devices;
 
   /// Returns the [DeviceDataCollector] of the given [deviceType].
@@ -64,6 +65,6 @@ abstract class DeviceDataCollectorFactory {
   /// Initialize all devices in a [masterDeviceDeployment].
   void initializeDevices(MasterDeviceDeployment masterDeviceDeployment);
 
-  /// Initialize the is the device [descriptor].
+  /// Initialize the device specified in the [descriptor].
   void initializeDevice(DeviceDescriptor descriptor);
 }

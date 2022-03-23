@@ -24,16 +24,13 @@ class ClientManager {
   /// [DeviceDataCollector] instances for connected devices.
   DeviceDataCollectorFactory deviceRegistry;
 
-  // private val dataListener: DataListener = DataListener( dataCollectorFactory )
-
   /// Determines whether a [DeviceRegistration] has been configured for this client,
   /// which is necessary to start adding [StudyRuntime]s.
   bool get isConfigured => registration != null;
 
   /// Create a new [ClientManager] by specifying:
-  ///  * [deploymentService] - where to get the [StudyProtocolDeployment]
+  ///  * [deploymentService] - where to get study deployments
   ///  * [deviceRegistry] that handles devices connected to this client
-  ///  * [dataManager] that handles the collected data (e.g., storing or uploading)
   @mustCallSuper
   ClientManager({
     required this.deploymentService,
