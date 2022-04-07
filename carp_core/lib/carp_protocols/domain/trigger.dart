@@ -112,6 +112,9 @@ class ScheduledTrigger extends Trigger {
           requiresMasterDevice: requiresMasterDevice,
         );
 
+  @override
+  String toString() => '$runtimeType - time: $time, rrule: $recurrenceRule';
+
   Function get fromJsonFunction => _$ScheduledTriggerFromJson;
   factory ScheduledTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as ScheduledTrigger;
@@ -139,6 +142,7 @@ class TimeOfDay {
 
   /// Output as ISO 8601 extended time format with seconds accuracy, omitting
   /// the 24th hour and 60th leap second. E.g., "09:30:00".
+  @override
   String toString() =>
       '${_twoDigits(hour)}:${_twoDigits(minute)}:${_twoDigits(second)}';
 }
@@ -160,14 +164,44 @@ class RecurrenceRule {
 
   /// Specifies when, if ever, to stop repeating events.
   /// Default recurrence is forever.
-  End? end = End.never();
+  End end = End.never();
 
-  RecurrenceRule(this.frequency, {this.interval = 1, this.end}) : super();
+  RecurrenceRule(this.frequency, {this.interval = 1, End? end}) : super() {
+    this.end = end ?? End.never();
+  }
 
   /// Initialize a [RecurrenceRule] based on a [rrule] string.
   factory RecurrenceRule.fromString(String rrule) {
-    // TODO: implement RecurrenceRule.fromString
-    throw UnimplementedError();
+    var str = rrule.substring(rrule.indexOf('RRULE:') + 6);
+    var parameters = {};
+    str.split(';').forEach((element) {
+      var par = element.split('=');
+      parameters[par[0]] = par[1];
+    });
+
+    var frequency = Frequency.DAILY;
+    Frequency.values.forEach((element) {
+      if (element.name == parameters['FREQ']) frequency = element;
+    });
+
+    var end = End.never();
+    int interval = 1;
+    parameters.forEach((key, value) {
+      switch (key) {
+        case 'INTERVAL':
+          interval = int.tryParse(value) ?? 1;
+          break;
+        case 'UNTIL':
+          end = End.until(Duration(milliseconds: int.tryParse(value) ?? 1));
+          break;
+        case 'COUNT':
+          end = End.count(int.tryParse(value) ?? 1);
+          break;
+        default:
+      }
+    });
+
+    return RecurrenceRule(frequency, interval: interval, end: end);
   }
 
   /// A valid RFC 5545 string representation of this recurrence rule, except
@@ -177,9 +211,9 @@ class RecurrenceRule {
   /// 'UNTIL' should be reassigned to a calculated end date time, formatted using
   /// the RFC 5545 specifications: https://tools.ietf.org/html/rfc5545#section-3.3.5
   String toString() {
-    String rule = 'RRULE:FREQ=$frequency';
+    String rule = 'RRULE:FREQ=${frequency.name}';
     rule += (interval != 1) ? ';INTERVAL=$interval' : '';
-    rule += (end!.type != EndType.NEVER) ? rule += ';$end' : '';
+    rule += (end.type != EndType.NEVER) ? ';$end' : '';
 
     return rule;
   }
@@ -213,6 +247,18 @@ class End {
 
   /// The recurrence repeats forever.
   factory End.never() => End(EndType.NEVER);
+
+  @override
+  String toString() {
+    switch (type) {
+      case EndType.UNTIL:
+        return 'UNTIL=${elapsedTime!.inMilliseconds}';
+      case EndType.COUNT:
+        return 'COUNT=$count';
+      case EndType.NEVER:
+        return '';
+    }
+  }
 
   factory End.fromJson(Map<String, dynamic> json) => _$EndFromJson(json);
   Map<String, dynamic> toJson() => _$EndToJson(this);

@@ -179,12 +179,9 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     );
 
     // define which devices are used for data collection.
-    Smartphone phone = Smartphone();
-    DeviceDescriptor eSense = DeviceDescriptor(roleName: 'esense');
+    var phone = Smartphone();
 
-    protocol
-      ..addMasterDevice(phone)
-      ..addConnectedDevice(eSense);
+    protocol.addMasterDevice(phone);
 
     // add default measures from the SensorSamplingPackage
     protocol.addTriggeredTask(
@@ -194,8 +191,6 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
             types: [
               // SensorSamplingPackage.ACCELEROMETER,
               // SensorSamplingPackage.GYROSCOPE,
-              SensorSamplingPackage.PERIODIC_ACCELEROMETER,
-              SensorSamplingPackage.PERIODIC_GYROSCOPE,
               SensorSamplingPackage.PEDOMETER,
               SensorSamplingPackage.LIGHT,
             ],

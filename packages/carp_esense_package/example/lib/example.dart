@@ -21,9 +21,8 @@ void main() async {
   );
 
   // define which devices are used for data collection - both phone and eSense
-  Smartphone phone = Smartphone(roleName: 'The main phone');
-  DeviceDescriptor eSense = ESenseDevice(
-    roleName: 'eSense earplug',
+  var phone = Smartphone();
+  var eSense = ESenseDevice(
     deviceName: 'eSense-0223',
     samplingRate: 10,
   );
@@ -47,8 +46,8 @@ void main() async {
         )),
       phone);
 
-  // Add an automatic task that immediately starts collecting
-  // step counts, ambient light, screen activity, and battery level
+  // Add an automatic task that immediately starts collecting eSense button and
+  // sensor events from the eSense device.
   protocol.addTriggeredTask(
       ImmediateTrigger(),
       AutomaticTask()

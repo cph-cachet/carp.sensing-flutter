@@ -1,3 +1,6 @@
+## 0.33.1
+* implementation of `ScheduledTrigger` incl. test
+
 ## 0.33.0
 * updates to the device model API in the `client` library.
 

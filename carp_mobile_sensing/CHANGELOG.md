@@ -1,3 +1,6 @@
+## 0.33.1
+* 
+
 ## 0.33.0
 * upgrade to `carp_core` v. 0.33.0 
 * support of new device model, incl. configuration of devices with device descriptors

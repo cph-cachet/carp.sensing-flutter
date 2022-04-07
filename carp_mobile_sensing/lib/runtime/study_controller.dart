@@ -186,9 +186,9 @@ class SmartphoneDeploymentController extends StudyRuntime {
 
     status = StudyRuntimeStatus.Configured;
 
-    print('===========================================================');
+    print('===============================================================');
     print('  CARP Mobile Sensing (CAMS) - $runtimeType');
-    print('===========================================================');
+    print('===============================================================');
     print(' deployment id : ${masterDeployment!.studyDeploymentId}');
     print('    start time : $studyDeploymentStartTime');
     print('       user id : ${masterDeployment!.userId}');
@@ -197,7 +197,7 @@ class SmartphoneDeploymentController extends StudyRuntime {
     print('  data manager : $_dataManager');
     print(' data endpoint : $_dataEndPoint');
     print('        status : ${status.toString().split('.').last}');
-    print('===========================================================');
+    print('===============================================================');
   }
 
   final BatteryProbe _battery = BatteryProbe();

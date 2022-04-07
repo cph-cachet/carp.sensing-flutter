@@ -213,6 +213,7 @@ class Time extends Serializable {
 }
 
 /// A trigger that resume sampling based on a recurrent scheduled date and time.
+///
 /// Pause after the specified [duration]. If [duration] is not specified it
 /// defaults to 1 second. Useful for triggering one-time samplings, like collecting
 /// location of triggering a survey.
@@ -451,6 +452,7 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
 /// A trigger that resume sampling based on a cron job specification.
 ///
 /// Bases on the [`cron`](https://pub.dev/packages/cron) package.
+/// See [crontab guru](https://crontab.guru) for a useful tool for specifying cron jobs.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class CronScheduledTrigger extends Trigger {
   /// The cron job expression.

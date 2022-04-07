@@ -49,6 +49,4 @@ class SmartphoneStudyProtocol extends StudyProtocol {
   factory SmartphoneStudyProtocol.fromJson(Map<String, dynamic> json) =>
       _$SmartphoneStudyProtocolFromJson(json);
   Map<String, dynamic> toJson() => _$SmartphoneStudyProtocolToJson(this);
-
-  String toString() => '${super.toString()}, description: $protocolDescription';
 }

@@ -247,6 +247,40 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     }
   }
 
+  SamplingSchema getActivitySamplingSchema() {
+    var activitySchema = SamplingSchema(
+        type: SamplingSchemaType.common,
+        name: 'Activity Sampling Schema',
+        powerAware: true)
+      ..measures.addEntries([
+        MapEntry(SensorSamplingPackage.PEDOMETER,
+            Measure(type: SensorSamplingPackage.PEDOMETER)),
+        MapEntry(
+            ContextSamplingPackage.GEOLOCATION,
+            LocationMeasure(
+              type: ContextSamplingPackage.GEOLOCATION,
+              accuracy: GeolocationAccuracy.high,
+              distance: 50,
+            )),
+        MapEntry(
+            MediaSamplingPackage.NOISE,
+            NoiseMeasure(
+              type: MediaSamplingPackage.NOISE,
+              frequency: Duration(minutes: 5),
+              duration: Duration(seconds: 10),
+            )),
+        MapEntry(ContextSamplingPackage.ACTIVITY,
+            Measure(type: ContextSamplingPackage.ACTIVITY)),
+        MapEntry(
+            ContextSamplingPackage.WEATHER,
+            WeatherMeasure(
+                type: ContextSamplingPackage.WEATHER,
+                apiKey: '12kbfWErlk5j923yr5oihfw')),
+      ]);
+
+    return activitySchema;
+  }
+
   Future<bool> saveStudyProtocol(String studyId, StudyProtocol protocol) async {
     throw UnimplementedError();
   }

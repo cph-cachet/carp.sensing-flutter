@@ -26,6 +26,7 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
 
     <!-- The following permissions are used in the Audio Package -->
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
@@ -41,9 +42,11 @@
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
 
     <!-- The following permissions are used in the eSense Packages -->
+    <!-- ... but are already included above
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-
+    -->
+    
    <application
         android:label="CARP Mobile Sensing"
         android:name="${applicationName}"

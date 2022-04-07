@@ -142,7 +142,7 @@ abstract class UserTask {
   }
 
   /// Callback from the OS when this task is clicked
-  /// by the user in the notification system.
+  /// by the user in the OS notification system.
   ///
   /// Default implementation is no-op, but can be extended in sub-classes.
   void onNotification() {}

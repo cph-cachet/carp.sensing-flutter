@@ -151,7 +151,7 @@ named `common`. This sampling schema contains a set of default settings for how 
 
 Sampling can be configured in a very sophisticated ways, by specifying different types of triggers, tasks, and measures - see the  CAMS [domain model](https://github.com/cph-cachet/carp.sensing-flutter/wiki/2.-Domain-Model) for an overview.
 
-You can write your own `DataEndPoint` definitions and coresponding `DataManager`s for uploading data to your own data endpoint. See the wiki on how to [add a new data manager](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.-Extending-CARP-Mobile-Sensing#adding-a-new-data-manager).
+You can write your own `DataEndPoint` definitions and coresponding `DataManager`s for uploading data to your own data endpoint. See the wiki on how to [add a new data manager](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.3-Adding-a-New-Data-Manager).
 
 
 ### Using a `DeploymentService`

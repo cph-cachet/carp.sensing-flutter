@@ -108,6 +108,36 @@ void main() {
     print(toJsonString(a));
     print(toJsonString(b));
   });
+
+  test('ScheduledTrigger', () async {
+    var st = ScheduledTrigger(
+        time: TimeOfDay(hour: 12),
+        recurrenceRule: RecurrenceRule(Frequency.DAILY, interval: 2));
+    expect(st.recurrenceRule.toString(),
+        RecurrenceRule.fromString('RRULE:FREQ=DAILY;INTERVAL=2').toString());
+    print(st);
+
+    st = ScheduledTrigger(
+        time: TimeOfDay(hour: 12),
+        recurrenceRule:
+            RecurrenceRule(Frequency.DAILY, interval: 2, end: End.count(3)));
+    expect(
+        st.recurrenceRule.toString(),
+        RecurrenceRule.fromString('RRULE:FREQ=DAILY;INTERVAL=2;COUNT=3')
+            .toString());
+    print(st);
+
+    st = ScheduledTrigger(
+        time: TimeOfDay(hour: 12),
+        recurrenceRule: RecurrenceRule(Frequency.DAILY,
+            interval: 2, end: End.until(Duration(days: 30))));
+    expect(
+        st.recurrenceRule.toString(),
+        RecurrenceRule.fromString(
+                'RRULE:FREQ=DAILY;INTERVAL=2;UNTIL=2592000000')
+            .toString());
+    print(st);
+  });
 }
 
 /// An example class.

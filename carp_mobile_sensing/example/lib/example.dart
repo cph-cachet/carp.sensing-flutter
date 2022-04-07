@@ -11,6 +11,57 @@ import 'dart:convert';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
+/// This is an example of how to set up a the most minimal study
+/// Used in the intro on the wiki
+Future<void> example_0() async {
+  // create a study protocol
+  SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
+    ownerId: 'AB',
+    name: 'Track patient movement',
+  );
+
+  // define which devices are used for data collection
+  // in this case, its only this smartphone
+  var phone = Smartphone();
+  protocol.addMasterDevice(phone);
+
+  // automatically collect step count, ambient light, screen activity, and
+  // battery level, while delaying the sampling by 10 seconds
+  protocol.addTriggeredTask(
+      DelayedTrigger(delay: Duration(seconds: 10)),
+      AutomaticTask(name: 'Sensor Task')
+        ..addMeasure(Measure(type: SensorSamplingPackage.PEDOMETER))
+        ..addMeasure(Measure(type: SensorSamplingPackage.LIGHT))
+        ..addMeasure(Measure(type: DeviceSamplingPackage.SCREEN))
+        ..addMeasure(Measure(type: DeviceSamplingPackage.BATTERY)),
+      phone);
+
+  // deploy this protocol using the on-phone deployment service
+  StudyDeploymentStatus status =
+      await SmartphoneDeploymentService().createStudyDeployment(protocol);
+
+  String studyDeploymentId = status.studyDeploymentId;
+  String deviceRolename = status.masterDeviceStatus!.device.roleName;
+
+  // create and configure a client manager for this phone
+  SmartPhoneClientManager client = SmartPhoneClientManager();
+  await client.configure();
+
+  // create a study runtime to control this deployment
+  SmartphoneDeploymentController controller =
+      await client.addStudy(studyDeploymentId, deviceRolename);
+
+  // deploy the study on this phone
+  await controller.tryDeployment();
+
+  // configure the controller and resume sampling
+  await controller.configure();
+  controller.resume();
+
+  // listening and print all data events from the study
+  controller.data.forEach(print);
+}
+
 /// This is an example of how to set up a study by using the `common`
 /// sampling schema. Used in the README file.
 void example_1() async {
@@ -304,11 +355,11 @@ void samplingSchemaExample() async {
   // adding all measure from the activity schema to one overall 'sensing' task
   protocol.addTriggeredTask(
       ImmediateTrigger(),
-      AutomaticTask(name: 'Sensing Task')
-        ..measures = activitySchema.measures.values.toList(),
+      AutomaticTask()..measures = activitySchema.measures.values.toList(),
       phone);
 
-  // adding the measures to two separate tasks, while also adding a new light measure to the 2nd task
+  // adding the measures to two separate tasks, while also adding a
+  // new light measure to the 2nd task
   protocol.addTriggeredTask(
       ImmediateTrigger(),
       AutomaticTask(name: 'Activity Sensing Task #1')
@@ -347,8 +398,31 @@ void samplingSchemaExample_2() {
   protocol.addTriggeredTask(
       ImmediateTrigger(),
       AutomaticTask()
-        ..measures = SensorSamplingPackage().common.measures.values.toList(),
+        ..measures = SamplingPackageRegistry().common.measures.values.toList(),
       phone);
+}
+
+void samplingSchemaExample_3() async {
+  String studyDeploymentId = '1234';
+  String deviceRolename = 'masterphone';
+
+  // create and configure a client manager for this phone
+  SmartPhoneClientManager client = SmartPhoneClientManager();
+  await client.configure();
+
+  // create a study runtime to control this deployment
+  SmartphoneDeploymentController controller =
+      await client.addStudy(studyDeploymentId, deviceRolename);
+
+  // deploy the study on this phone (controller)
+  await controller.tryDeployment();
+
+  // configure the controller and resume sampling
+  await controller.configure(
+    samplingSchema: SamplingPackageRegistry().common,
+    privacySchemaName: PrivacySchema.DEFAULT,
+  );
+  controller.resume();
 }
 
 void recurrentScheduledTriggerExample() {
