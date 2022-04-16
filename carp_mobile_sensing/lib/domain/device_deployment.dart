@@ -8,13 +8,17 @@
 part of domain;
 
 /// Contains the entire description and configuration for how a smartphone master
-/// device participates in deployment of a study.
+/// device participates in the deployment of a study on a smartphone.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class SmartphoneDeployment extends MasterDeviceDeployment {
   late String _studyDeploymentId;
 
   /// The unique id of this study deployment.
   String get studyDeploymentId => _studyDeploymentId;
+
+  /// The timestamp (in UTC) when this deployment was deployed on this smartphone.
+  /// Returns `null` if not deployed yet.
+  DateTime? deployed;
 
   /// The unique id of the user that this deployment collects data from.
   ///

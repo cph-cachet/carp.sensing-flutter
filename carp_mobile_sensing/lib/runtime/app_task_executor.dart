@@ -80,6 +80,9 @@ abstract class UserTask {
   String get instructions => _executor.appTask.instructions;
   bool get notification => _executor.appTask.notification;
 
+  /// The time this task should trigger (typically becoming visible to the user).
+  late DateTime triggerTime;
+
   /// The time this task was added to the queue (enqueued).
   late DateTime enqueued;
 
@@ -114,7 +117,11 @@ abstract class UserTask {
   /// want to start this task.
   TaskExecutor get executor => _executor._taskExecutor;
 
-  UserTask(this._executor);
+  /// Create a new [UserTask]. If [triggerTime] is not specified,
+  /// it is set to `now`, i.e. to be triggered when created.
+  UserTask(this._executor, {DateTime? triggerTime}) {
+    this.triggerTime = triggerTime ?? DateTime.now();
+  }
 
   /// Callback from the app when this task is to be started.
   void onStart(BuildContext context) {

@@ -52,21 +52,20 @@ class StudyRuntime {
   /// The status of this [StudyRuntime].
   StudyRuntimeStatus get status => _status;
 
-  /// Set the state of this controller.
+  /// Set the state of this study runtime.
   set status(StudyRuntimeStatus newStatus) {
     _status = newStatus;
     _statusEventsController.add(newStatus);
   }
 
-  /// Determines whether this [StudyRuntime] has been initialized.
+  /// Has this [StudyRuntime] been initialized?
   bool get isInitialized => (deploymentService != null);
 
-  /// Determines whether the device deployment has completed successfully.
-  bool get isStopped => (_status == StudyRuntimeStatus.Stopped);
-
-  /// Determines whether the study has stopped and no more further data is
-  /// being collected.
+  /// Has the device deployment been completed successfully?
   bool get isDeployed => (_status == StudyRuntimeStatus.Deployed);
+
+  /// Has the study and data collection been stopped?
+  bool get isStopped => (_status == StudyRuntimeStatus.Stopped);
 
   /// The list of devices that still remain to be registrered before all devices
   /// in this study runtime is registrered.
@@ -76,7 +75,6 @@ class StudyRuntime {
   StudyRuntime();
 
   /// Instantiate a [StudyRuntime] by registering the client device in a [DeploymentService].
-  /// In case the device is immediately ready for deployment, also deploy.
   ///
   ///  * [deploymentService] - the deployment service to use to retrieve and manage
   ///    the study deployment with [studyDeploymentId].
@@ -88,6 +86,7 @@ class StudyRuntime {
   ///    runtime runs on, identified by [deviceRoleName] in the study deployment
   ///    with [studyDeploymentId].
   ///
+  /// Call [tryDeployment] to subsequently deploy the study.
   Future initialize(
     DeploymentService deploymentService,
     DeviceDataCollectorFactory deviceRegistry,
@@ -112,16 +111,12 @@ class StudyRuntime {
     this.studyDeploymentId = studyDeploymentId;
     device =
         deploymentStatus.masterDeviceStatus!.device as MasterDeviceDescriptor?;
-
-    // // After registration, deployment information might immediately be available
-    // // for this client device.
-    // await tryDeployment();
   }
 
   /// Verifies whether the master device is ready for deployment and in case
-  /// it is, deploys.
-  /// Deployment entails trying to retrieve the [deployment] based on the
-  /// [studyDeploymentId].
+  /// it is, deploy the study previously added.
+  /// Deployment entails trying to retrieve the [deployment] from the [deploymentService],
+  /// based on the [studyDeploymentId].
   ///
   /// In case already deployed, nothing happens.
   Future<StudyRuntimeStatus> tryDeployment() async {

@@ -98,12 +98,12 @@ void carpCoreClientExample() async {
   String deviceToUse = invitation.devices.first.deviceRoleName;
 
   // Create a study runtime for the study.
-  var client = ClientManager(
-      deploymentService: deploymentService, deviceRegistry: deviceRegistry);
+  var client = ClientManager();
+  // Configure the client by specifying the deployment servie, the device controller,
+  // and a unique device id.
   client.configure(
-    // Device-specific registration options can be accessed from here.
-    // Depending on the device type, different options are available.
-    // E.g., for a smartphone, a UUID deviceId is generated. To override this default:
+    deploymentService: deploymentService,
+    deviceController: deviceRegistry,
     deviceId: "xxxxxxxxx",
   );
   StudyRuntime runtime = await client.addStudy(studyDeploymentId, deviceToUse);

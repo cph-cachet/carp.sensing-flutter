@@ -194,7 +194,7 @@ class FromJsonFactory {
     // PROTOCOL
     // register(StudyProtocol());
     register(Trigger());
-    register(ElapsedTimeTrigger());
+    register(ElapsedTimeTrigger(elapsedTime: Duration()));
     register(ManualTrigger());
     register(ScheduledTrigger(
         recurrenceRule: RecurrenceRule(Frequency.DAILY),

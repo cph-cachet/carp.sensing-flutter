@@ -14,7 +14,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  carp_core: ^0.33.0      # the core CARP domain model
+  # carp_core: ^0.33.0      # the core CARP domain model
 
   json_annotation: ^4.4.0
   system_info: ^1.0.0
@@ -28,6 +28,7 @@ dependencies:
   flutter_local_notifications: ^9.4.0 # For sending notification on AppTask
   cron: ^0.4.0                        # For scheduling / triggering cron jobs
   stats: ^2.0.0                       # For calculating statistics, ex LightProbe
+  flutter_native_timezone: ^2.0.0     # For getting local time zone for scheduling notifications
 
   # probe-dependent plugins
   device_info_plus: ^3.0.0
@@ -42,8 +43,8 @@ dependencies:
 # Overriding carp core libraries to use the local copy
 # Remove this before release of package
 dependency_overrides:
-  # carp_core:
-  #   path: ../carp_core/
+  carp_core:
+    path: ../carp_core/
 
 dev_dependencies:
   pedantic: ^1.11.0       # For pedantic Dart linter

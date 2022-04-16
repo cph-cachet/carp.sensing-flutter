@@ -17,31 +17,33 @@ class ClientManager {
 
   /// The application service through which study deployments, to be run on
   /// this client, can be managed and retrieved.
-  DeploymentService deploymentService;
+  DeploymentService? deploymentService;
 
-  /// The registry of connected devices used to collect data locally on
+  /// The controller of connected devices used to collect data locally on
   /// this master device. Also works as a factory which is used to create
   /// [DeviceDataCollector] instances for connected devices.
-  DeviceDataCollectorFactory deviceRegistry;
+  DeviceDataCollectorFactory? deviceController;
 
   /// Determines whether a [DeviceRegistration] has been configured for this client,
   /// which is necessary to start adding [StudyRuntime]s.
   bool get isConfigured => registration != null;
 
-  /// Create a new [ClientManager] by specifying:
-  ///  * [deploymentService] - where to get study deployments
-  ///  * [deviceRegistry] that handles devices connected to this client
-  @mustCallSuper
-  ClientManager({
-    required this.deploymentService,
-    required this.deviceRegistry,
-  });
+  ClientManager();
 
-  /// Configure the [DeviceRegistration] used to register this client device
-  /// in study deployments managed by the [deploymentService].
+  /// Configure this [ClientManager] by specifying:
+  ///  * [deviceId] - register this client device in study deployments
+  ///  * [deploymentService] - where to get study deployments
+  ///  * [deviceController] that handles devices connected to this client
   @mustCallSuper
-  Future<DeviceRegistration> configure({required String? deviceId}) async =>
-      registration = DeviceRegistration(deviceId);
+  Future<DeviceRegistration> configure({
+    required DeploymentService deploymentService,
+    required DeviceDataCollectorFactory deviceController,
+    required String? deviceId,
+  }) async {
+    this.deploymentService = deploymentService;
+    this.deviceController = deviceController;
+    return registration = DeviceRegistration(deviceId);
+  }
 
   /// Get the status for the studies which run on this client device.
   List<StudyRuntimeStatus> getStudiesStatus() =>
@@ -85,14 +87,14 @@ class ClientManager {
     return await runtime.tryDeployment();
   }
 
+  /// Get the [StudyRuntime] with the unique [studyRuntimeId].
+  StudyRuntime? getStudyRuntime(StudyRuntimeId studyRuntimeId) =>
+      repository[studyRuntimeId];
+
   /// Permanently stop collecting data for the study runtime identified by [studyRuntimeId].
   @mustCallSuper
   void stopStudy(StudyRuntimeId studyRuntimeId) async =>
       repository[studyRuntimeId]?.stop();
-
-  /// Get the [StudyRuntime] with the unique [studyRuntimeId].
-  StudyRuntime? getStudyRuntime(StudyRuntimeId studyRuntimeId) =>
-      repository[studyRuntimeId];
 
   // /// Once a connected device has been registered, this returns a manager
   // /// which provides access to the status of the [registeredDevice].

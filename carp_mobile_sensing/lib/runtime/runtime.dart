@@ -31,6 +31,10 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart'
 import 'package:uuid/uuid.dart';
 import 'package:cron/cron.dart' as cron;
 
+import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
+
 part 'data_manager.dart';
 part 'device_manager.dart';
 part 'device_controller.dart';

@@ -20,9 +20,10 @@ class SmartphoneDeploymentController extends StudyRuntime {
   DeviceController get deviceRegistry =>
       super.deviceRegistry as DeviceController;
 
-  /// The master device deployment running in this controller.
-  SmartphoneDeployment? get masterDeployment =>
-      deployment as SmartphoneDeployment?;
+  /// The study deployment running in this controller.
+  @override
+  SmartphoneDeployment? get deployment =>
+      super.deployment as SmartphoneDeployment?;
 
   /// The executor executing this [masterDeployment].
   StudyDeploymentExecutor? get executor => _executor;
@@ -53,8 +54,7 @@ class SmartphoneDeploymentController extends StudyRuntime {
   Stream<DataPoint> get data => _executor!.data
       .map((dataPoint) => dataPoint
         ..data = _transformer(TransformerSchemaRegistry()
-            .lookup(
-                masterDeployment?.dataEndPoint?.dataFormat ?? NameSpace.CARP)!
+            .lookup(deployment?.dataEndPoint?.dataFormat ?? NameSpace.CARP)!
             .transform(TransformerSchemaRegistry()
                 .lookup(privacySchemaName)!
                 .transform(dataPoint.data as Datum))))
@@ -139,7 +139,7 @@ class SmartphoneDeploymentController extends StudyRuntime {
 
     // initialize optional parameters
     _samplingSchema = samplingSchema ?? SamplingSchema.normal(powerAware: true);
-    _dataEndPoint = dataEndPoint ?? masterDeployment!.dataEndPoint;
+    _dataEndPoint = dataEndPoint ?? deployment!.dataEndPoint;
     _privacySchemaName = privacySchemaName;
     _transformer = transformer ?? ((datum) => datum);
 
@@ -149,11 +149,11 @@ class SmartphoneDeploymentController extends StudyRuntime {
 
     if (_dataManager == null) {
       warning(
-          "No data manager for the specified data endpoint found: '${masterDeployment?.dataEndPoint}'.");
+          "No data manager for the specified data endpoint found: '${deployment?.dataEndPoint}'.");
     }
 
     // if no user is specified for this study, look up the local user id
-    masterDeployment!.userId ??= await Settings().userId;
+    deployment!.userId ??= await Settings().userId;
 
     // setting up permissions
     if (askForPermissions) await askForAllPermissions();
@@ -169,14 +169,14 @@ class SmartphoneDeploymentController extends StudyRuntime {
     if (samplingSchema != null) {
       // doing two adaptation is a bit of a hack; used to ensure that
       // restoration values are set to the specified sampling schema
-      masterDeployment!.adapt(samplingSchema, restore: false);
-      masterDeployment!.adapt(samplingSchema, restore: false);
+      deployment!.adapt(samplingSchema, restore: false);
+      deployment!.adapt(samplingSchema, restore: false);
     }
 
     // initialize the data manager, device registry, and study executor
     await _dataManager?.initialize(
-      masterDeployment!,
-      masterDeployment!.dataEndPoint!,
+      deployment!,
+      deployment!.dataEndPoint!,
       data,
     );
 
@@ -189,9 +189,9 @@ class SmartphoneDeploymentController extends StudyRuntime {
     print('===============================================================');
     print('  CARP Mobile Sensing (CAMS) - $runtimeType');
     print('===============================================================');
-    print(' deployment id : ${masterDeployment!.studyDeploymentId}');
+    print(' deployment id : ${deployment!.studyDeploymentId}');
     print('    start time : $studyDeploymentStartTime');
-    print('       user id : ${masterDeployment!.userId}');
+    print('       user id : ${deployment!.userId}');
     print('      platform : ${DeviceInfo().platform.toString()}');
     print('     device ID : ${DeviceInfo().deviceID.toString()}');
     print('  data manager : $_dataManager');
@@ -216,7 +216,7 @@ class SmartphoneDeploymentController extends StudyRuntime {
             powerAwarenessState = newState;
             info(
                 'PowerAware: Going to $powerAwarenessState, level ${batteryState.batteryLevel}%');
-            masterDeployment!.adapt(powerAwarenessState.schema);
+            deployment!.adapt(powerAwarenessState.schema);
           }
         }
       });

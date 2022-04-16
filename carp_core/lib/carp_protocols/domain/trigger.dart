@@ -37,20 +37,19 @@ class Trigger extends Serializable {
   String get jsonType => '$_triggerNamespace.$runtimeType';
 }
 
-/// A trigger which starts a task after a specified amount of time has elapsed
-/// since the start of a study deployment.
-/// The start of a study deployment is determined by the first successful
-/// deployment of all participating devices.
-/// This trigger needs to be evaluated on a master device since it is time
-/// bound and therefore requires a task scheduler.
+/// A trigger which starts a task after [elapsedTime] has elapsed since the start
+/// of a study deployment, i.e. when a protocol is deployed on the phone for
+/// the first time.
+///
+/// Never stops sampling once started.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ElapsedTimeTrigger extends Trigger {
-  Duration? elapsedTime;
+  Duration elapsedTime;
 
   ElapsedTimeTrigger({
     String? sourceDeviceRoleName,
     bool? requiresMasterDevice = true,
-    this.elapsedTime,
+    required this.elapsedTime,
   }) : super(
           sourceDeviceRoleName: sourceDeviceRoleName,
           requiresMasterDevice: requiresMasterDevice,
@@ -262,4 +261,26 @@ class End {
 
   factory End.fromJson(Map<String, dynamic> json) => _$EndFromJson(json);
   Map<String, dynamic> toJson() => _$EndToJson(this);
+}
+
+class ScheduledManualTrigger extends ManualTrigger implements ScheduledTrigger {
+  @override
+  RecurrenceRule recurrenceRule;
+
+  @override
+  TimeOfDay time;
+
+  ScheduledManualTrigger({
+    String? sourceDeviceRoleName,
+    bool? requiresMasterDevice = false,
+    String? label,
+    String? description,
+    required this.recurrenceRule,
+    required this.time,
+  }) : super(
+          sourceDeviceRoleName: sourceDeviceRoleName,
+          requiresMasterDevice: requiresMasterDevice,
+          label: label,
+          description: description,
+        );
 }

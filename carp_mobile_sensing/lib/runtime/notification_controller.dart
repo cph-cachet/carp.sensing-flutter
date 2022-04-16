@@ -25,6 +25,8 @@ class NotificationController {
 
   /// Initialize and set up the notification controller.
   Future<void> initialize() async {
+    tz.initializeTimeZones();
+
     await notifications.FlutterLocalNotificationsPlugin().initialize(
       notifications.InitializationSettings(
         android: const notifications.AndroidInitializationSettings('app_icon'),
@@ -60,7 +62,7 @@ class NotificationController {
     iOS: const notifications.IOSNotificationDetails(),
   );
 
-  /// Send a notification for the [task].
+  /// Send an immediate notification for the [task].
   void sendNotification(UserTask task) {
     if (task.notification) {
       notifications.FlutterLocalNotificationsPlugin().show(
@@ -71,6 +73,27 @@ class NotificationController {
         payload: task.id,
       );
       info('Notification send for $task');
+    }
+  }
+
+  /// Schedule a notification for the [task].
+  void scheduleNotification(UserTask task) {
+    if (task.notification) {
+      var time = tz.TZDateTime.from(
+          task.triggerTime, tz.getLocation(Settings().timezone));
+
+      notifications.FlutterLocalNotificationsPlugin().zonedSchedule(
+        task.hashCode,
+        task.title,
+        task.description,
+        time,
+        _platformChannelSpecifics,
+        androidAllowWhileIdle: true,
+        uiLocalNotificationDateInterpretation:
+            notifications.UILocalNotificationDateInterpretation.absoluteTime,
+        payload: task.id,
+      );
+      info('Notification scheduled for $task at $time');
     }
   }
 

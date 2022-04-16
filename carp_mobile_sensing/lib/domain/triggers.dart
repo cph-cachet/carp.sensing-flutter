@@ -27,9 +27,15 @@ class ImmediateTrigger extends Trigger {
 class OneTimeTrigger extends Trigger {
   /// The unique id of this trigger.
   /// Used to identify specific instances of one time triggeres.
-  String triggerId;
+  // String triggerId;
 
-  OneTimeTrigger(this.triggerId) : super();
+  /// The timestamp of when this trigger was triggered.
+  DateTime? triggerTimestamp;
+
+  /// Has this trigger been triggered?
+  bool get hasBeenTriggered => triggerTimestamp != null;
+
+  OneTimeTrigger() : super();
 
   Function get fromJsonFunction => _$OneTimeTriggerFromJson;
   factory OneTimeTrigger.fromJson(Map<String, dynamic> json) =>
@@ -83,26 +89,6 @@ class DelayedTrigger extends Trigger {
   factory DelayedTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as DelayedTrigger;
   Map<String, dynamic> toJson() => _$DelayedTriggerToJson(this);
-}
-
-/// A trigger that delays sampling for [delay] and then starts sampling.
-/// Never stops sampling once started.
-///
-/// In contrast to the [DelayedTrigger], the delay is measured from the **start
-/// of the deployment**, i.e. when a protocol is deployed on the phone for the first
-/// time. And since deployment information is saved across app restart, this delay
-/// is also consistent across app restart.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class DeploymentDelayedTrigger extends Trigger {
-  /// Delay before this trigger is executed.
-  Duration delay;
-
-  DeploymentDelayedTrigger({required this.delay}) : super();
-
-  Function get fromJsonFunction => _$DeploymentDelayedTriggerFromJson;
-  factory DeploymentDelayedTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as DeploymentDelayedTrigger;
-  Map<String, dynamic> toJson() => _$DeploymentDelayedTriggerToJson(this);
 }
 
 /// A trigger that resume/pause sampling every [period] for a specific [duration].

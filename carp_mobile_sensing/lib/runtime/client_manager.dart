@@ -8,36 +8,48 @@
 part of runtime;
 
 class SmartPhoneClientManager extends ClientManager {
-  SmartPhoneClientManager({
-    DeploymentService? deploymentService,
-    DeviceController? deviceRegistry,
-  }) : super(
-          // if not specified, use default services
-          deploymentService: deploymentService ?? SmartphoneDeploymentService(),
-          deviceRegistry: deviceRegistry ?? DeviceController(),
-        );
+  static final SmartPhoneClientManager _instance = SmartPhoneClientManager._();
+  SmartPhoneClientManager._();
+
+  /// Get the singleton [SmartPhoneClientManager].
+  ///
+  /// In CARP Mobile Sensing the [SmartPhoneClientManager] is a singleton,
+  /// which implies that only one client manager is used in an app.
+  factory SmartPhoneClientManager() => _instance;
 
   @override
-  DeviceController get deviceRegistry =>
-      super.deviceRegistry as DeviceController;
+  DeviceController get deviceController =>
+      super.deviceController as DeviceController;
+
+  NotificationController get notificationController => NotificationController();
 
   @override
-  Future<DeviceRegistration> configure({String? deviceId}) async {
+  Future<DeviceRegistration> configure({
+    required DeploymentService deploymentService,
+    DeviceDataCollectorFactory? deviceController,
+    String? deviceId,
+  }) async {
     await DeviceInfo().init();
+    // set default values, if not specified
     deviceId ??= DeviceInfo().deviceID;
+    this.deviceController = deviceController ?? DeviceController();
 
-    deviceRegistry.registerAllAvailableDevices();
+    this.deviceController.registerAllAvailableDevices();
 
     print('===========================================================');
     print('  CARP Mobile Sensing (CAMS) - $runtimeType');
     print('===========================================================');
     print('  deployment service : $deploymentService');
-    print('     device registry : $deviceRegistry');
+    print('   device controller : $deviceController');
     print('           device ID : $deviceId');
-    print('   connected devices : ${deviceRegistry.devicesToString()}}');
+    print('   connected devices : ${this.deviceController.devicesToString()}}');
     print('===========================================================');
 
-    return super.configure(deviceId: deviceId);
+    return super.configure(
+      deploymentService: deploymentService,
+      deviceController: this.deviceController,
+      deviceId: deviceId,
+    );
   }
 
   @override
@@ -49,15 +61,13 @@ class SmartPhoneClientManager extends ClientManager {
         'Adding study to $runtimeType - studyDeploymentId: $studyDeploymentId, deviceRoleName: $deviceRoleName');
     await super.addStudy(studyDeploymentId, deviceRoleName);
 
-    // Create the study runtime.
-    // val deviceRegistration = repository.getDeviceRegistration()!!
-
+    // create the study runtime
     SmartphoneDeploymentController controller =
         SmartphoneDeploymentController();
 
     await controller.initialize(
-      deploymentService,
-      deviceRegistry,
+      deploymentService!,
+      deviceController,
       studyDeploymentId,
       deviceRoleName,
       registration!,
@@ -66,4 +76,9 @@ class SmartPhoneClientManager extends ClientManager {
     repository[StudyRuntimeId(studyDeploymentId, deviceRoleName)] = controller;
     return controller;
   }
+
+  @override
+  SmartphoneDeploymentController? getStudyRuntime(
+          StudyRuntimeId studyRuntimeId) =>
+      repository[studyRuntimeId] as SmartphoneDeploymentController;
 }

@@ -19,7 +19,7 @@ class CAMSMeasure extends Measure {
   /// The study deployment id that this measure is part of.
   /// Set on runtime.
   @JsonKey(ignore: true)
-  String? studyDeploymentId;
+  // String? studyDeploymentId;
 
   /// Whether the measure is enabled - i.e. collecting data - when the
   /// study is running. A measure is enabled as default.

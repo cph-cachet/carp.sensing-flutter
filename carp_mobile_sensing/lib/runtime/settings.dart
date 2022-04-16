@@ -15,7 +15,6 @@ class Settings {
   static const String USER_ID_KEY = 'user_id';
   static const String STUDY_START_KEY = 'study_start';
   static const String STUDY_DEPLOYMENT_ID_KEY = 'study_deployment_id';
-  static const String ONE_TIME_TRIGGER_KEY = 'one_time_trigger';
 
   static const String CARP_DATA_FILE_PATH = 'data';
   static const String CARP_RESOURCE_FILE_PATH = 'resources';
@@ -34,6 +33,7 @@ class Settings {
   String? _buildNumber;
   String? _localApplicationPath;
   String? _deploymentBasePath;
+  String _timezone = 'CET';
 
   /// The global debug level setting.
   ///
@@ -99,6 +99,9 @@ class Settings {
     return _deploymentBasePath;
   }
 
+  /// The local time zone setting of this app.
+  String get timezone => _timezone;
+
   /// Initialize settings. Must be called before using any settings.
   Future<void> init() async {
     _preferences ??= await SharedPreferences.getInstance();
@@ -115,6 +118,17 @@ class Settings {
     _preferences!
         .getKeys()
         .forEach((key) => debug('[$key] : ${_preferences!.get(key)}'));
+
+    // setting up time zone settings
+    tz.initializeTimeZones();
+    try {
+      _timezone = await FlutterNativeTimezone.getLocalTimezone();
+    } catch (_) {
+      _timezone = tz.local.name;
+      warning(
+          'Could not get the local timezone - setting timezone to $timezone');
+    }
+    info('Time zone set to $timezone');
     info('$runtimeType initialized');
   }
 

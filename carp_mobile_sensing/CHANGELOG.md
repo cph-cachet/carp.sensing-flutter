@@ -1,4 +1,8 @@
-## 0.33.1
+## 0.34.0
+* The main purpose of this release is to make CAMS more stable across app re-restart (since the OSs (Android / iOS) increasingly are killing apps).
+* `MarkedMeasure` is no longer a separate measure type. The state of all measure are now saved across app restart.
+* A `OneTimeTrigger` no longer need an id (this is now handled behind-the-scene).
+* `DeploymentDelayedTrigger` has been depricated. Use `ElapsedTimeTrigger`.
 * 
 
 ## 0.33.0

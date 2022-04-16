@@ -14,8 +14,14 @@ abstract class Executor extends AbstractProbe {
   final StreamGroup<DataPoint> _group = StreamGroup.broadcast();
   List<Probe> executors = [];
   Stream<DataPoint> get data => _group.stream;
+  late SmartphoneDeployment _deployment;
 
-  Executor() : super();
+  /// The deployment that this executor is part of executing.
+  SmartphoneDeployment get deployment => _deployment;
+
+  Executor(SmartphoneDeployment deployment) : super() {
+    _deployment = deployment;
+  }
 
   void onInitialize(Measure measure) {
     executors.forEach((executor) => executor.initialize(measure));
@@ -43,7 +49,7 @@ abstract class Executor extends AbstractProbe {
 // STUDY DEPLOYMENT EXECUTOR
 // ---------------------------------------------------------------------------------------------------------
 
-/// The [StudyDeploymentExecutor] is responsible for executing a [MasterDeviceDeployment].
+/// The [StudyDeploymentExecutor] is responsible for executing a [SmartphoneDeployment].
 /// For each triggered task in this deployment, it starts a [TriggeredTaskExecutor].
 ///
 /// Note that the [StudyDeploymentExecutor] in itself is a [Probe] and hence work
@@ -52,26 +58,24 @@ abstract class Executor extends AbstractProbe {
 class StudyDeploymentExecutor extends Executor {
   final StreamController<DataPoint> _manualDataPointController =
       StreamController.broadcast();
-  SmartphoneDeployment get deployment => _deployment;
-  late SmartphoneDeployment _deployment;
 
-  StudyDeploymentExecutor(SmartphoneDeployment deployment) : super() {
-    _deployment = deployment;
+  StudyDeploymentExecutor(SmartphoneDeployment deployment) : super(deployment) {
     _group.add(_manualDataPointController.stream);
 
-    _deployment.triggeredTasks.forEach((triggeredTask) {
+    super.deployment.triggeredTasks.forEach((triggeredTask) {
       // get the trigger based on the trigger id
       Trigger trigger = _deployment.triggers['${triggeredTask.triggerId}']!;
       // get the task based on the task name
       // and the set the study deployment id (some probes need this)
       TaskDescriptor task = _deployment.getTaskByName(triggeredTask.taskName)!;
-      for (var measure in task.measures) {
-        if (measure is CAMSMeasure) {
-          measure.studyDeploymentId = _deployment.studyDeploymentId;
-        }
-      }
+      // for (var measure in task.measures) {
+      //   if (measure is CAMSMeasure) {
+      //     measure.studyDeploymentId = _deployment.studyDeploymentId;
+      //   }
+      // }
 
       TriggeredTaskExecutor executor = TriggeredTaskExecutor(
+        deployment,
         triggeredTask,
         trigger,
         task,
@@ -125,10 +129,11 @@ class TriggeredTaskExecutor extends Executor {
   TriggeredTask get triggeredTask => _triggeredTask;
 
   TriggeredTaskExecutor(
+    SmartphoneDeployment deployment,
     TriggeredTask triggeredTask,
     Trigger trigger,
     TaskDescriptor task,
-  ) : super() {
+  ) : super(deployment) {
     _triggeredTask = triggeredTask;
     _trigger = trigger;
     _task = task;

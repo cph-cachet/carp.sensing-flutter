@@ -20,8 +20,13 @@ class AppTaskController {
 
   final Map<String, UserTask> _userTaskMap = {};
 
+  /// The etire list of all [UserTask]s.
+  List<UserTask> get userTasks => _userTaskMap.values.toList();
+
   /// The queue of [UserTask]s that the user need to attend to.
-  List<UserTask> get userTaskQueue => _userTaskMap.values.toList();
+  List<UserTask> get userTaskQueue => _userTaskMap.values
+      .where((task) => task.triggerTime.isBefore(DateTime.now()))
+      .toList();
 
   /// A stream of [UserTask]s as they are generated.
   ///
@@ -98,7 +103,8 @@ class AppTaskController {
   /// Returns `null` if no task is found on the queue.
   UserTask? getUserTask(String id) => _userTaskMap[id];
 
-  /// Put [executor] on the [userTaskQueue] for later access by the app.
+  /// Put [executor] on the [userTaskQueue] for access by the app.
+  /// [triggerTime] specifies when the task should trigger, i.e., be available.
   /// Notify the user if [sendNotification] and [notificationsEnabled] is true.
   ///
   /// Returns the [UserTask] added to the [userTaskQueue].
@@ -106,6 +112,7 @@ class AppTaskController {
   /// Returns `null` if not successful.
   UserTask? enqueue(
     AppTaskExecutor executor, {
+    DateTime? triggerTime,
     bool sendNotification = true,
   }) {
     if (_userTaskFactories[executor.appTask.type] == null) {
@@ -118,12 +125,18 @@ class AppTaskController {
           _userTaskFactories[executor.appTask.type]!.create(executor);
       userTask.state = UserTaskState.enqueued;
       userTask.enqueued = DateTime.now();
+      userTask.triggerTime = triggerTime ?? DateTime.now();
       _userTaskMap[userTask.id] = userTask;
       _controller.add(userTask);
       info('Enqueued $userTask');
 
       if (notificationsEnabled && sendNotification) {
-        NotificationController().sendNotification(userTask);
+        // create notification
+        // TODO - iOS has a limit where it will only keep 64 notifications that will fire the soonest...
+        // See the flutter_local_notifications plugin.
+        (triggerTime == null)
+            ? NotificationController().sendNotification(userTask)
+            : NotificationController().scheduleNotification(userTask);
       }
 
       return userTask;
@@ -265,13 +278,18 @@ class UserTaskSnapshot extends Serializable {
   late AppTask task;
   late UserTaskState state;
   late DateTime enqueued;
+  late DateTime triggerTime;
 
-  UserTaskSnapshot(this.task, this.state, this.enqueued) : super();
-  UserTaskSnapshot.fromUserTask(UserTask userTask) {
+  UserTaskSnapshot(this.task, this.state, this.enqueued, this.triggerTime)
+      : super();
+
+  UserTaskSnapshot.fromUserTask(UserTask userTask) : super() {
     task = userTask.task;
     state = userTask.state;
     enqueued = userTask.enqueued;
+    triggerTime = userTask.triggerTime;
   }
+
   Function get fromJsonFunction => _$UserTaskSnapshotFromJson;
   factory UserTaskSnapshot.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as UserTaskSnapshot;
