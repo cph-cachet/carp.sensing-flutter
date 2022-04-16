@@ -184,8 +184,6 @@ class ElapsedTimeTriggerExecutor extends TriggerExecutor {
   }
 
   Future onResume() async {
-    DateTime? start = await Settings().studyDeploymentStartTime;
-
     if (deployment.deployed == null) {
       warning(
           '$runtimeType - this deployment does not have a start time. Cannot execute this trigger.');
