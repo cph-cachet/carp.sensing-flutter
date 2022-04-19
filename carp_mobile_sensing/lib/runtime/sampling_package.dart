@@ -4,6 +4,7 @@ part of runtime;
 class SamplingPackageRegistry {
   final List<SamplingPackage> _packages = [];
   final List<Permission> _permissions = [];
+  SamplingSchema? _combinedSchemas;
 
   static final SamplingPackageRegistry _instance = SamplingPackageRegistry._();
 
@@ -55,125 +56,136 @@ class SamplingPackageRegistry {
     return _packages;
   }
 
-  /// A schema that does maximum sampling.
-  ///
-  /// Takes its settings from the [common] schema, but
-  /// enables all measures.
-  /// Also turns off power awareness.
-  SamplingSchema get maximum => common
-    ..type = SamplingSchemaType.maximum
-    ..name = 'Default ALL sampling'
-    ..powerAware = false
-    ..measures
-        .values
-        .forEach((measure) => (measure as CAMSMeasure).enabled = true);
-
-  /// A default `common` sampling schema.
-  ///
-  /// This schema contains measure configurations based on best-effort
-  /// experience and is intended for sampling on a daily basis with recharging
-  /// at least once pr. day. This scheme is power-aware.
-  ///
-  /// These default settings are described in this [table](https://github.com/cph-cachet/carp.sensing-flutter/wiki/Schemas#samplingschemacommon).
-  SamplingSchema get common {
-    SamplingSchema schema = SamplingSchema(
-      type: SamplingSchemaType.common,
-      name: 'Common (default) sampling',
-      powerAware: true,
-    );
-
-    // join sampling schemas from each registered sampling package.
-    packages.forEach((package) => schema.addSamplingSchema(package.common));
-
-    return schema;
+  /// The default sampling schema for all measure types in all packages.
+  SamplingSchema get samplingSchema {
+    if (_combinedSchemas == null) {
+      _combinedSchemas = SamplingSchema();
+      // join sampling schemas from each registered sampling package.
+      packages.forEach((package) =>
+          _combinedSchemas!.addSamplingSchema(package.samplingSchema));
+    }
+    return _combinedSchemas!;
   }
 
-  /// A sampling schema that does not adapt any [Measure]s.
-  ///
-  /// This schema is used in the power-aware adaptation of sampling. See [PowerAwarenessState].
-  /// [SamplingSchema.normal] is an empty schema and therefore don't change anything when
-  /// used to adapt a [StudyProtocol] and its [Measure]s in the [adapt] method.
-  SamplingSchema get normal => SamplingSchema(
-        type: SamplingSchemaType.normal,
-        name: 'Default sampling',
-      );
+  // /// A schema that does maximum sampling.
+  // ///
+  // /// Takes its settings from the [common] schema, but
+  // /// enables all measures.
+  // /// Also turns off power awareness.
+  // SamplingSchema get maximum => common
+  //   ..type = SamplingSchemaType.maximum
+  //   ..name = 'Default ALL sampling'
+  //   ..powerAware = false
+  //   ..measures
+  //       .values
+  //       .forEach((measure) => (measure as CAMSMeasure).enabled = true);
 
-  // SamplingSchema normal({bool powerAware = true}) => SamplingSchema(
+  // /// A default `common` sampling schema.
+  // ///
+  // /// This schema contains measure configurations based on best-effort
+  // /// experience and is intended for sampling on a daily basis with recharging
+  // /// at least once pr. day. This scheme is power-aware.
+  // ///
+  // /// These default settings are described in this [table](https://github.com/cph-cachet/carp.sensing-flutter/wiki/Schemas#samplingschemacommon).
+  // SamplingSchema get common {
+  //   SamplingSchema schema = SamplingSchema(
+  //     type: SamplingSchemaType.common,
+  //     name: 'Common (default) sampling',
+  //     powerAware: true,
+  //   );
+
+  //   // join sampling schemas from each registered sampling package.
+  //   packages.forEach((package) => schema.addSamplingSchema(package.common));
+
+  //   return schema;
+  // }
+
+  // /// A sampling schema that does not adapt any [Measure]s.
+  // ///
+  // /// This schema is used in the power-aware adaptation of sampling. See [PowerAwarenessState].
+  // /// [SamplingSchema.normal] is an empty schema and therefore don't change anything when
+  // /// used to adapt a [StudyProtocol] and its [Measure]s in the [adapt] method.
+  // SamplingSchema get normal => SamplingSchema(
   //       type: SamplingSchemaType.normal,
   //       name: 'Default sampling',
-  //       powerAware: powerAware,
   //     );
 
-  /// A default light sampling schema.
-  ///
-  /// This schema is used in the power-aware adaptation of sampling.
-  /// See [PowerAwarenessState].
-  /// This schema is intended for sampling on a daily basis with recharging
-  /// at least once pr. day. This scheme is power-aware.
-  ///
-  /// See this [table](https://github.com/cph-cachet/carp.sensing-flutter/wiki/Schemas#samplingschemalight) for an overview.
-  SamplingSchema get light {
-    SamplingSchema schema = SamplingSchema(
-      type: SamplingSchemaType.light,
-      name: 'Light sampling',
-      powerAware: true,
-    );
+  // // SamplingSchema normal({bool powerAware = true}) => SamplingSchema(
+  // //       type: SamplingSchemaType.normal,
+  // //       name: 'Default sampling',
+  // //       powerAware: powerAware,
+  // //     );
 
-    // join sampling schemas from each registered sampling package.
-    packages.forEach((package) => schema.addSamplingSchema(package.light));
+  // /// A default light sampling schema.
+  // ///
+  // /// This schema is used in the power-aware adaptation of sampling.
+  // /// See [PowerAwarenessState].
+  // /// This schema is intended for sampling on a daily basis with recharging
+  // /// at least once pr. day. This scheme is power-aware.
+  // ///
+  // /// See this [table](https://github.com/cph-cachet/carp.sensing-flutter/wiki/Schemas#samplingschemalight) for an overview.
+  // SamplingSchema get light {
+  //   SamplingSchema schema = SamplingSchema(
+  //     type: SamplingSchemaType.light,
+  //     name: 'Light sampling',
+  //     powerAware: true,
+  //   );
 
-    return schema;
-  }
+  //   // join sampling schemas from each registered sampling package.
+  //   packages.forEach((package) => schema.addSamplingSchema(package.light));
 
-  /// A default minimum sampling schema.
-  ///
-  /// This schema is used in the power-aware adaptation of sampling.
-  /// See [PowerAwarenessState].
-  SamplingSchema get minimum {
-    SamplingSchema schema = SamplingSchema(
-      type: SamplingSchemaType.minimum,
-      name: 'Minimum sampling',
-      powerAware: true,
-    );
+  //   return schema;
+  // }
 
-    packages.forEach((package) => schema.addSamplingSchema(package.minimum));
+  // /// A default minimum sampling schema.
+  // ///
+  // /// This schema is used in the power-aware adaptation of sampling.
+  // /// See [PowerAwarenessState].
+  // SamplingSchema get minimum {
+  //   SamplingSchema schema = SamplingSchema(
+  //     type: SamplingSchemaType.minimum,
+  //     name: 'Minimum sampling',
+  //     powerAware: true,
+  //   );
 
-    return schema;
-  }
+  //   packages.forEach((package) => schema.addSamplingSchema(package.minimum));
 
-  /// A non-sampling sampling schema.
-  ///
-  /// This schema is used in the power-aware adaptation of sampling.
-  /// See [PowerAwarenessState].
-  /// This schema pauses all sampling by disabling all probes.
-  /// Sampling will be restored to the minimum level, once the device is
-  /// recharged above the [PowerAwarenessState.MINIMUM_SAMPLING_LEVEL] level.
-  SamplingSchema get none {
-    SamplingSchema schema = SamplingSchema(
-      type: SamplingSchemaType.none,
-      name: 'No sampling',
-      powerAware: true,
-    );
-    CAMSDataType.all.forEach((type) =>
-        schema.measures[type] = CAMSMeasure(type: type, enabled: false));
+  //   return schema;
+  // }
 
-    return schema;
-  }
+  // /// A non-sampling sampling schema.
+  // ///
+  // /// This schema is used in the power-aware adaptation of sampling.
+  // /// See [PowerAwarenessState].
+  // /// This schema pauses all sampling by disabling all probes.
+  // /// Sampling will be restored to the minimum level, once the device is
+  // /// recharged above the [PowerAwarenessState.MINIMUM_SAMPLING_LEVEL] level.
+  // SamplingSchema get none {
+  //   SamplingSchema schema = SamplingSchema(
+  //     type: SamplingSchemaType.none,
+  //     name: 'No sampling',
+  //     powerAware: true,
+  //   );
+  //   CAMSDataType.all.forEach((type) =>
+  //       schema.measures[type] = CAMSMeasure(type: type, enabled: false));
 
-  /// A sampling schema for debugging purposes.
-  /// Collects and combines the [SamplingPackage.debug] [SamplingSchema]s
-  /// for each package.
-  SamplingSchema get debug {
-    SamplingSchema schema = SamplingSchema(
-      type: SamplingSchemaType.debug,
-      name: 'Debugging sampling',
-      powerAware: false,
-    );
+  //   return schema;
+  // }
 
-    packages.forEach((package) => schema.addSamplingSchema(package.debug));
+  // /// A sampling schema for debugging purposes.
+  // /// Collects and combines the [SamplingPackage.debug] [SamplingSchema]s
+  // /// for each package.
+  // SamplingSchema get debug {
+  //   SamplingSchema schema = SamplingSchema(
+  //     type: SamplingSchemaType.debug,
+  //     name: 'Debugging sampling',
+  //     powerAware: false,
+  //   );
 
-    return schema;
-  }
+  //   packages.forEach((package) => schema.addSamplingSchema(package.debug));
+
+  //   return schema;
+  // }
 }
 
 /// Interface for a sampling package.
@@ -190,25 +202,28 @@ abstract class SamplingPackage {
   /// The list of data type this package supports.
   List<String> get dataTypes;
 
-  /// The default (common) sampling schema for all measures in this package.
-  SamplingSchema get common;
+  /// The default sampling schema for all measure types in this package.
+  SamplingSchema get samplingSchema;
 
-  /// The sampling schema for normal sampling, when power-aware sampling
-  /// is enabled. See [PowerAwarenessState].
-  SamplingSchema get normal;
+  // /// The default (common) sampling schema for all measure types in this package.
+  // SamplingSchema get common;
 
-  /// The sampling schema for light sampling, when power-aware sampling is
-  /// enabled. See [PowerAwarenessState].
-  SamplingSchema get light;
+  // /// The sampling schema for normal sampling, when power-aware sampling
+  // /// is enabled. See [PowerAwarenessState].
+  // SamplingSchema get normal;
 
-  /// The sampling schema for minimum sampling, when power-aware sampling is
-  /// enabled. See [PowerAwarenessState].
-  SamplingSchema get minimum;
+  // /// The sampling schema for light sampling, when power-aware sampling is
+  // /// enabled. See [PowerAwarenessState].
+  // SamplingSchema get light;
 
-  /// A debugging sampling schema for all measures in this package.
-  /// Typically provides very detailed and frequent sampling in order to
-  /// debug the probes.
-  SamplingSchema get debug;
+  // /// The sampling schema for minimum sampling, when power-aware sampling is
+  // /// enabled. See [PowerAwarenessState].
+  // SamplingSchema get minimum;
+
+  // /// A debugging sampling schema for all measures in this package.
+  // /// Typically provides very detailed and frequent sampling in order to
+  // /// debug the probes.
+  // SamplingSchema get debug;
 
   /// The list of permissions that this package need.
   ///

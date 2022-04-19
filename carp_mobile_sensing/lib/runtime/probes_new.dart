@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -7,152 +7,39 @@
 
 part of runtime;
 
-//---------------------------------------------------------------------------------------
-//                                        PROBES
-//---------------------------------------------------------------------------------------
-
-/// The state of a [Probe].
-///
-/// The runtime state has the following state machine:
-///
-///    +----------------------------------------------------------------+     +-----------+
-///    |   +---------+    +-------------+    +---------+     +--------+ |  -> | undefined |
-///    |   | created | -> | initialized | -> | resumed | <-> | paused | |     +-----------+
-///    |   +---------+    +-------------+    +---------+     +--------+ |  -> | stopped   |
-///    +----------------------------------------------------------------+     +-----------+
-///
-enum ProbeState {
-  /// Created and ready to be initialized.
-  created,
-
-  /// Initialized and ready to be resumed (i.e., started).
-  initialized,
-
-  /// Resumed and active in data collection.
-  resumed,
-
-  /// Paused and not collecting data.
-  paused,
-
-  /// Stopped and can no longer collect data.
-  stopped,
-
-  /// Undefined state.
-  ///
-  /// Typically the probe becomes undefined if it cannot be initialized
-  /// or if this probe is not supported on the specific phone / OS.
-  undefined
-}
-
-/// A [Probe] is responsible for collecting data.
-///
-/// A probe's [state] can be set using the [initialize], [resume], [pause], and [stop] methods.
-/// A [restart] can be used to restart a probe when its [measure] has changed (e.g. disabling the probe).
-/// A probe can be stopped at any time.
-/// If an error occurs the state of a probe becomes [undefined]. This is, for example, used when an exception
-/// is caught or when a probe is not available (e.g. on iOS).
-///
-/// The [state] property reveals the probe's current runtime state.
-/// The [stateEvents] is a stream of state changes which can be listen to as a broadcast stream.
-///
-/// Probes return sensed data in a [Stream] as [data]. This is the main
-/// usage of a probe. For example, to listens to events and print them;
-///
-///     probe.data.forEach(print);
-///
-abstract class Probe {
+/// A [Probe] is a specialized [Executor] responsible for collecting data from
+/// the device sensors as configured in a [Measure].
+abstract class Probe extends AbstractExecutor<Measure> {
   /// The device that this probes uses to collect data.
   late DeviceManager deviceManager;
 
-  /// Is this probe enabled, i.e. available for collection of data using the [resume] method.
-  bool get enabled;
+  /// Is this probe enabled, i.e. available for collection of data using the
+  /// [resume] method.
+  bool enabled = true;
 
   /// The data type this probe is collecting.
-  String get type;
-
-  /// The runtime state of this probe.
-  ProbeState get state;
-
-  /// The runtime state changes of this probe.
-  ///
-  /// This is useful for listening on state changes as specified in [ProbeState].
-  /// Can e.g. be used in a [StreamBuilder] when showing the UI of a probe.
-  /// The following example is taken from the CARP Mobile Sensing App
-  ///
-  ///       Widget buildProbeListTile(BuildContext context, ProbeModel probe) {
-  ///           return StreamBuilder<ProbeStateType>(
-  ///             stream: probe.stateEvents,
-  ///             initialData: ProbeState.created,
-  ///             builder: (context, AsyncSnapshot<ProbeState> snapshot) {
-  ///               if (snapshot.hasData) {
-  ///                 return ListTile(
-  ///                   isThreeLine: true,
-  ///                   leading: Icon(
-  ///                     probe.icon.icon,
-  ///                     size: 50,
-  ///                     color: probe.icon.color,
-  ///                   ),
-  ///                   title: Text(probe.name),
-  ///                   subtitle: Text(probe.description),
-  ///                   trailing: probe.stateIcon,
-  ///                 );
-  ///               } else if (snapshot.hasError) {
-  ///                 return Text('Error in probe state - ${snapshot.error}');
-  ///              }
-  ///              return Text('Unknown');
-  ///           },
-  ///         );
-  ///       }
-  ///
-  /// This will update the trailing icon of the probe every time the probe change
-  /// state (e.g. from `resumed` to `paused`).
-  Stream<ProbeState> get stateEvents;
-
-  /// Is [ProbeState] a valid next [state] for this probe?
-  ///
-  /// For example:
-  ///   * if the current state of this probe is `initialized` then a valid next state is `resumed`.
-  ///   * if the current state of this probe is `resumed` then a valid next state is `paused`.
-  ///   * if the current state of this probe is `resumed` then `initialized` is **not** a valid next state.
-  bool validNextState(ProbeState nextState);
+  String? get type => measure?.type;
 
   /// The [Measure] that configures this probe.
-  Measure? get measure;
+  Measure? get measure => configuration;
 
   /// A printer-friendly name for this probe.
   String get name;
 
-  /// The stream of [DataPoint] generated from this probe.
-  Stream<DataPoint> get data;
+  Probe(SmartphoneDeployment deployment) : super(deployment);
 
-  /// Initialize the probe before starting it.
+  /// The sampling configuration for this probe.
   ///
-  /// The configuration of the probe is specified in the [measure].
-  /// The study deployment that this probe is part of can be specified
-  /// as the [studyDeploymentId].
-  void initialize(Measure measure);
-
-  /// Resume the probe.
-  void resume();
-
-  /// Pause the probe. The probe is paused until [resume] or [restart] is called.
-  void pause();
-
-  /// Restart the probe.
+  /// Configuration is obtained in the following order:
+  ///  * [measure.overrideSamplingConfiguration]
+  ///  * the [samplingConfiguration] of the device descriptor of the [deployment]
+  ///  * the [configurations] of the sampling packages
   ///
-  /// This forces the probe to reload its configuration from
-  /// its [Measure] and restart sampling accordingly. If a new [measure] is
-  /// to be used, this new measure must be specified in the
-  /// [initialize] method before calling restart.
-  ///
-  /// This methods is used when sampling configuration is adapted, e.g. as
-  /// part of the power-awareness.
-  void restart();
-
-  /// Stop the probe. Once a probe is stopped, it cannot be started again.
-  /// If you need to restart a probe, use the [restart] or [pause] and
-  /// [resume] methods.
-  void stop();
+  /// Returns `null` in case no configuration is found.
+  SamplingConfiguration? get samplingConfiguration =>
+      measure?.overrideSamplingConfiguration ??
+      deployment.deviceDescriptor.samplingConfiguration[measure?.type] ??
+      SamplingPackageRegistry().samplingSchema.configurations[measure?.type];
 }
 
 /// An abstract implementation of a [Probe] to extend from.

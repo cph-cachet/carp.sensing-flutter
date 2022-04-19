@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -40,79 +40,50 @@ String _encode(Object? object) =>
 ///
 /// See the [documentation](https://github.com/cph-cachet/carp.sensing-flutter/wiki/Schemas) for further details.
 ///
-class SamplingSchema extends DataTypeSamplingSchemeList {
-  final Map<String, Measure> _measures = {};
+class SamplingSchema {
+  final Map<String, SamplingConfiguration> _configurations = {};
 
   /// The sampling schema type according to [SamplingSchemaType].
-  SamplingSchemaType type;
+  // SamplingSchemaType type;
 
-  /// A printer-friendly name of this [SamplingSchema].
-  String? name;
+  /// A map of default [SamplingConfiguration]s for different measure types for
+  /// this sampling schema.
+  Map<String, SamplingConfiguration> get configurations => _configurations;
 
-  /// A description of this [SamplingSchema].
-  String? description;
+  // /// Is this sampling schema power-aware, i.e. adapting its sampling strategy
+  // /// to the battery power status. See [PowerAwarenessState].
+  // bool powerAware;
 
-  /// A map of default [Measure]s for different measure types for this sampling
-  /// schema.
-  Map<String, Measure> get measures => _measures;
+  SamplingSchema() : super();
 
-  /// Is this sampling schema power-aware, i.e. adapting its sampling strategy
-  /// to the battery power status. See [PowerAwarenessState].
-  bool powerAware;
+  /// Add a default configuration to this schema.
+  void addConfiguration(String type, SamplingConfiguration configuration) =>
+      _configurations[type] = configuration;
 
-  SamplingSchema({
-    required this.type,
-    this.name,
-    this.powerAware = false,
-  }) : super();
+  /// Remove a configuration from this schema.
+  void removeConfiguration(String type) => _configurations.remove(type);
 
-  /// Add a default measure to this schema.
-  void addMeasure(Measure measure) => _measures[measure.type] = measure;
-
-  /// Remove a measure from this schema.
-  void removeMeasure(Measure measure) => _measures.remove(measure.dataType);
-
-  /// Add a list of default measures to this schema.
-  void addMeasures(List<Measure> measures) =>
-      measures.forEach((measure) => _measures[measure.type] = measure);
-
-  /// Adds all measures from [schema] to this sampling schema.
-  ///
+  /// Adds all configurations from [schema] to this sampling schema.
   /// If a measure in [schema] is already in this schema, its value is overwritten.
   void addSamplingSchema(SamplingSchema schema) =>
-      measures.addAll(schema.measures);
+      configurations.addAll(schema.configurations);
 
-  /// Returns a list of [Measure]s from this [SamplingSchema] for
-  /// a list of [String]s as specified in [types].
-  ///
-  /// This method is a convenient way to get a list of pre-configured
-  /// measures of the correct type with default settings.
-  /// For example using
-  ///
-  ///       SamplingSchema.common().getMeasureList(
-  ///         types: [
-  ///           ConnectivitySamplingPackage.BLUETOOTH,
-  ///           ConnectivitySamplingPackage.CONNECTIVITY,
-  ///           SensorSamplingPackage.ACCELEROMETER,
-  ///           SensorSamplingPackage.GYROSCOPE,
-  ///           AppsSamplingPackage.APPS,
-  ///         ]);
-  ///
-  /// would return a list with a [Measure] for bluetooth, connectivity, etc.,
-  /// each with default configurations from the [SamplingSchema.common()] schema.
-  List<Measure> getMeasureList({required List<String> types}) {
-    List<Measure> _list = [];
+  /// Returns a list of [SamplingConfiguration]s from this [SamplingSchema] for
+  /// a list of [types].
+  List<SamplingConfiguration> getConfigurationList(
+      {required List<String> types}) {
+    List<SamplingConfiguration> _list = [];
 
     // since we're using json serialization below, make sure that the json
     // functions have been registred
     _registerFromJsonFunctions();
 
     types.forEach((type) {
-      if (measures.containsKey(type)) {
+      if (configurations.containsKey(type)) {
         // using json encoding/decoding to clone the measure object
-        final _json = _encode(measures[type]);
-        final Measure _clone =
-            Measure.fromJson(json.decode(_json) as Map<String, dynamic>);
+        final _json = _encode(configurations[type]);
+        final SamplingConfiguration _clone = SamplingConfiguration.fromJson(
+            json.decode(_json) as Map<String, dynamic>);
         _list.add(_clone);
       }
     });
@@ -120,15 +91,15 @@ class SamplingSchema extends DataTypeSamplingSchemeList {
     return _list;
   }
 
-  /// A sampling schema that does not adapt any [Measure]s.
-  ///
-  /// This schema is used in the power-aware adaptation of sampling. See [PowerAwarenessState].
-  /// [SamplingSchema.normal] is an empty schema and therefore don't change anything when
-  /// used to adapt a [StudyProtocol] and its [Measure]s in the [adapt] method.
-  factory SamplingSchema.normal({bool powerAware = false}) => SamplingSchema(
-      type: SamplingSchemaType.normal,
-      name: 'Default sampling',
-      powerAware: powerAware);
+  // /// A sampling schema that does not adapt any [Measure]s.
+  // ///
+  // /// This schema is used in the power-aware adaptation of sampling. See [PowerAwarenessState].
+  // /// [SamplingSchema.normal] is an empty schema and therefore don't change anything when
+  // /// used to adapt a [StudyProtocol] and its [Measure]s in the [adapt] method.
+  // factory SamplingSchema.normal({bool powerAware = false}) => SamplingSchema(
+  //     type: SamplingSchemaType.normal,
+  //     name: 'Default sampling',
+  //     powerAware: powerAware);
 
   /// Adapts all [Measure]s in a [MasterDeviceDeployment] to this [SamplingSchema].
   ///
@@ -155,13 +126,13 @@ class SamplingSchema extends DataTypeSamplingSchemeList {
   }
 }
 
-/// A enumeration of known sampling schemas types.
-enum SamplingSchemaType {
-  maximum,
-  common,
-  normal,
-  light,
-  minimum,
-  none,
-  debug,
-}
+// /// A enumeration of known sampling schemas types.
+// enum SamplingSchemaType {
+//   maximum,
+//   common,
+//   normal,
+//   light,
+//   minimum,
+//   none,
+//   debug,
+// }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -18,29 +18,18 @@ class SamplingConfiguration extends Serializable {
       'dk.cachet.carp.protocols.domain.sampling.SamplingConfiguration';
 }
 
-///Specifies the sampling scheme for a [String], including possible options,
-///defaults, and constraints.
+/// Specifies the sampling scheme for a data [type], including possible options,
+/// defaults, and constraints.
 abstract class DataTypeSamplingScheme {
-  /// The [String] this sampling scheme relates to.
+  /// The data type this sampling scheme relates to.
   String type;
 
-  /// The default configuration of a [Measure] for the [type].
-  Measure defaultMeasure;
+  // TODO - note that this is called "default" in carp-core-kotlin.
+  // But "default" is a reserved word in Dart. May cause serialization problems.....
 
-  DataTypeSamplingScheme(this.type, this.defaultMeasure) : super();
-}
+  /// The default configuration to use when no other configuration is specified.
+  SamplingConfiguration defaultSamplingConfiguration;
 
-/// A helper class to construct iterable objects which hold [DataTypeSamplingScheme]
-/// member definitions.
-/// This is similar to an enum, but removes the need for an intermediate enum
-/// type and generic type parameters are retained per member.
-abstract class DataTypeSamplingSchemeList {
-  /// Returns a list of [Measure]s from this [DataTypeSamplingSchemeList].
-  ///
-  /// If [types] are specified, it returns a list of [Measure]s for the
-  /// specified [types].
-  ///
-  /// This method is a convenient way to get a list of pre-configured
-  /// measures of the correct type with default settings.
-  List<Measure> getMeasureList({required List<String> types});
+  DataTypeSamplingScheme(this.type, this.defaultSamplingConfiguration)
+      : super();
 }

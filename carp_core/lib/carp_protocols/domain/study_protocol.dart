@@ -11,13 +11,15 @@ part of carp_core_protocols;
 /// master device(s) ([MasterDeviceDescriptor]) responsible for aggregating data,
 /// the optional devices ([DeviceDescriptor]) connected to them, and
 /// the [Trigger]s which lead to data collection on said devices.
-///
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class StudyProtocol {
   static const String PROTOCOL_NAMESPACE = 'dk.cachet.carp.protocols.domain';
 
   // maps a task's name and the task
   Map<String, TaskDescriptor>? _taskMapProperty;
+
+  /// Get the map of tasks. Initialize it from the list of [tasks], if not available
+  /// (typically after json de-serialization).
   Map<String, TaskDescriptor> get _taskMap {
     if (_taskMapProperty == null) {
       _taskMapProperty = {};

@@ -68,6 +68,7 @@ class StudyDeploymentExecutor extends Executor {
       // get the task based on the task name
       // and the set the study deployment id (some probes need this)
       TaskDescriptor task = _deployment.getTaskByName(triggeredTask.taskName)!;
+      // TODO - remove later....
       // for (var measure in task.measures) {
       //   if (measure is CAMSMeasure) {
       //     measure.studyDeploymentId = _deployment.studyDeploymentId;
