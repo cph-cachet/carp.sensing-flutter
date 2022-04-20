@@ -9,69 +9,34 @@ part of domain;
 String _encode(Object? object) =>
     const JsonEncoder.withIndent(' ').convert(object);
 
-/// Specify how sampling should be done. Used to make default configuration of
-/// [Measure]s.
-///
-/// A new [SamplingSchema] can be created for specific purposes. For example,
-/// the following schema is made for outdoor activity tracking.
-///
-///     SamplingSchema activitySchema = SamplingSchema(name: 'Outdoor Activity Sampling Schema', powerAware: true)
-///       ..measures.addEntries([
-///         MapEntry(DataType.PEDOMETER,
-///           PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.PEDOMETER), enabled: true, frequency: 60 * 60 * 1000)),
-///         MapEntry(DataType.SCREEN, Measure(MeasureType(NameSpace.CARP, DataType.SCREEN), enabled: true)),
-///         MapEntry(DataType.LOCATION, Measure(MeasureType(NameSpace.CARP, DataType.LOCATION), enabled: true)),
-///         MapEntry(DataType.NOISE,
-///           PeriodicMeasure(MeasureType(NameSpace.CARP, DataType.NOISE),
-///             enabled: true, frequency: 60 * 1000, duration: 2 * 1000)),
-///         MapEntry(DataType.ACTIVITY, Measure(MeasureType(NameSpace.CARP, DataType.ACTIVITY), enabled: true)),
-///         MapEntry(DataType.WEATHER,
-///           WeatherMeasure(MeasureType(NameSpace.CARP, DataType.WEATHER), enabled: true, frequency: 2 * 60 * 60 * 1000))
-///       ]);
-///
-/// There is also a set of factory methods than provide different default
-/// sampling schemas, including:
-///
-/// * [`common`]() - a default, most common configuration of all known measures
-/// * [`maximum`]() - using the `common` default configuration of all probes, but enabling all measures
-/// * [`light`]() - a light configuration, enabling low-frequent sampling but with good coverage
-/// * [`minimum`]() - a minimum set of measures, with a minimum sampling rate
-/// * [`none`]() - no sampling at all (used to pause all sampling)
-///
-/// See the [documentation](https://github.com/cph-cachet/carp.sensing-flutter/wiki/Schemas) for further details.
-///
+/// Specifies a set of [SamplingConfiguration]s for a set of [Measure] types.
 class SamplingSchema {
   final Map<String, SamplingConfiguration> _configurations = {};
 
-  /// The sampling schema type according to [SamplingSchemaType].
-  // SamplingSchemaType type;
-
-  /// A map of default [SamplingConfiguration]s for different measure types for
+  /// A set of default [SamplingConfiguration]s for the measure [types] for
   /// this sampling schema.
   Map<String, SamplingConfiguration> get configurations => _configurations;
 
-  // /// Is this sampling schema power-aware, i.e. adapting its sampling strategy
-  // /// to the battery power status. See [PowerAwarenessState].
-  // bool powerAware;
+  /// The list of measure types supported by this sampling schema.
+  List<String> get types => _configurations.keys.toList();
 
   SamplingSchema() : super();
 
-  /// Add a default configuration to this schema.
+  /// Add a sampling configuration to this schema.
   void addConfiguration(String type, SamplingConfiguration configuration) =>
       _configurations[type] = configuration;
 
-  /// Remove a configuration from this schema.
+  /// Remove a sampling configuration from this schema.
   void removeConfiguration(String type) => _configurations.remove(type);
 
-  /// Adds all configurations from [schema] to this sampling schema.
-  /// If a measure in [schema] is already in this schema, its value is overwritten.
+  /// Adds all sampling configurations from another [schema] to this schema.
+  /// If a configuration in [schema] is already in this schema, its value is overwritten.
   void addSamplingSchema(SamplingSchema schema) =>
       configurations.addAll(schema.configurations);
 
-  /// Returns a list of [SamplingConfiguration]s from this [SamplingSchema] for
+  /// Returns a list of copies of [SamplingConfiguration]s from this schema for
   /// a list of [types].
-  List<SamplingConfiguration> getConfigurationList(
-      {required List<String> types}) {
+  List<SamplingConfiguration> getConfigurations({required List<String> types}) {
     List<SamplingConfiguration> _list = [];
 
     // since we're using json serialization below, make sure that the json

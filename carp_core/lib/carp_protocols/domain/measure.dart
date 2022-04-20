@@ -18,9 +18,7 @@ class Measure extends Serializable {
   DataType get dataType => DataType.fromString(type);
 
   /// Optionally, override the default configuration on how to sample the data
-  /// stream of the matching [type] on the device.
-  /// In case `null` is specified, the default configuration is derived from the
-  /// [DeviceDescriptor].
+  /// of the data [type] on the device.
   SamplingConfiguration? overrideSamplingConfiguration;
 
   Measure({required this.type}) : super();
