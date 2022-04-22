@@ -91,25 +91,36 @@ class DelayedTrigger extends Trigger {
   Map<String, dynamic> toJson() => _$DelayedTriggerToJson(this);
 }
 
-/// A trigger that resume/pause sampling every [period] for a specific [duration].
-///
-/// It is important to specify **both** the [period] and the [duration] in order
-/// to specify the timing of resuming and pausing sampling.
+/// A trigger that resume sampling every [period] and then pauses.
 ///
 /// Daily, weekly and montly recurrent triggers can be specified using the
 /// [RecurrentScheduledTrigger].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class PeriodicTrigger extends Trigger {
+class IntervalTrigger extends Trigger {
   /// The period (reciprocal of frequency) of sampling.
   Duration period;
 
+  IntervalTrigger({required this.period}) : super();
+
+  Function get fromJsonFunction => _$IntervalTriggerFromJson;
+  factory IntervalTrigger.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as IntervalTrigger;
+  Map<String, dynamic> toJson() => _$IntervalTriggerToJson(this);
+}
+
+/// A trigger that resume sampling every [period] for a specific [duration].
+///
+/// It is important to specify **both** the [period] and the [duration] in order
+/// to specify the timing of resuming and pausing sampling.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class PeriodicTrigger extends IntervalTrigger {
   /// The duration (until paused) of the the sampling.
   Duration duration;
 
   PeriodicTrigger({
-    required this.period,
+    required Duration period,
     required this.duration,
-  }) : super();
+  }) : super(period: period);
 
   Function get fromJsonFunction => _$PeriodicTriggerFromJson;
   factory PeriodicTrigger.fromJson(Map<String, dynamic> json) =>

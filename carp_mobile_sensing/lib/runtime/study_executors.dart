@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2021 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2018-2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -7,25 +7,21 @@
 
 part of runtime;
 
-/// An abstract class used to implement executors.
+/// An abstract class used to implement aggregated executors (i.e., executors
+/// with a set of underlying executors).
+///
 /// See [StudyDeploymentExecutor] and [TaskExecutor] for examples.
-abstract class Executor extends AbstractProbe {
+abstract class AggregateExecutor<Config> extends AbstractExecutor<Config> {
   static final DeviceInfo deviceInfo = DeviceInfo();
-  final StreamGroup<DataPoint> _group = StreamGroup.broadcast();
-  List<Probe> executors = [];
-  Stream<DataPoint> get data => _group.stream;
-  late SmartphoneDeployment _deployment;
+  final StreamGroup<DataPoint> group = StreamGroup.broadcast();
+  List<Executor> executors = [];
+  Stream<DataPoint> get data => group.stream;
 
-  /// The deployment that this executor is part of executing.
-  SmartphoneDeployment get deployment => _deployment;
+  AggregateExecutor(SmartphoneDeployment deployment) : super(deployment);
 
-  Executor(SmartphoneDeployment deployment) : super() {
-    _deployment = deployment;
-  }
-
-  void onInitialize(Measure measure) {
-    executors.forEach((executor) => executor.initialize(measure));
-  }
+  // void onInitialize() {
+  //   executors.forEach((executor) => executor.initialize());
+  // }
 
   Future<void> onPause() async {
     executors.forEach((executor) => executor.pause());
@@ -52,28 +48,25 @@ abstract class Executor extends AbstractProbe {
 /// The [StudyDeploymentExecutor] is responsible for executing a [SmartphoneDeployment].
 /// For each triggered task in this deployment, it starts a [TriggeredTaskExecutor].
 ///
-/// Note that the [StudyDeploymentExecutor] in itself is a [Probe] and hence work
-/// as a 'super probe'. This - amongst other things - imply that you can listen
+/// Note that the [StudyDeploymentExecutor] in itself is an [Executor] and hence work
+/// as a 'super executor'. This - amongst other things - imply that you can listen
 /// to data point from the [data] stream.
-class StudyDeploymentExecutor extends Executor {
+class StudyDeploymentExecutor extends AggregateExecutor<SmartphoneDeployment> {
   final StreamController<DataPoint> _manualDataPointController =
       StreamController.broadcast();
 
-  StudyDeploymentExecutor(SmartphoneDeployment deployment) : super(deployment) {
-    _group.add(_manualDataPointController.stream);
+  StudyDeploymentExecutor(SmartphoneDeployment deployment) : super(deployment);
 
-    super.deployment.triggeredTasks.forEach((triggeredTask) {
+  @override
+  void onInitialize() {
+    group.add(_manualDataPointController.stream);
+
+    configuration?.triggeredTasks.forEach((triggeredTask) {
       // get the trigger based on the trigger id
-      Trigger trigger = _deployment.triggers['${triggeredTask.triggerId}']!;
+      Trigger trigger = configuration!.triggers['${triggeredTask.triggerId}']!;
       // get the task based on the task name
-      // and the set the study deployment id (some probes need this)
-      TaskDescriptor task = _deployment.getTaskByName(triggeredTask.taskName)!;
-      // TODO - remove later....
-      // for (var measure in task.measures) {
-      //   if (measure is CAMSMeasure) {
-      //     measure.studyDeploymentId = _deployment.studyDeploymentId;
-      //   }
-      // }
+      TaskDescriptor task =
+          configuration!.getTaskByName(triggeredTask.taskName)!;
 
       TriggeredTaskExecutor executor = TriggeredTaskExecutor(
         deployment,
@@ -82,7 +75,9 @@ class StudyDeploymentExecutor extends Executor {
         task,
       );
 
-      _group.add(executor.data);
+      executor.initialize(triggeredTask);
+
+      group.add(executor.data);
       executors.add(executor);
     });
   }
@@ -92,7 +87,7 @@ class StudyDeploymentExecutor extends Executor {
   ///
   /// Ensures that the `userId` and `studyId` is correctly set in the
   /// [DataPointHeader] based on the [deployment] configuration.
-  Stream<DataPoint> get data => _group.stream.map((dataPoint) => dataPoint
+  Stream<DataPoint> get data => group.stream.map((dataPoint) => dataPoint
     ..carpHeader.studyId = deployment.studyDeploymentId
     ..carpHeader.userId = deployment.userId);
 
@@ -120,7 +115,7 @@ class StudyDeploymentExecutor extends Executor {
 }
 
 /// Responsible for handling the execution of a [TriggeredTask].
-class TriggeredTaskExecutor extends Executor {
+class TriggeredTaskExecutor extends AggregateExecutor<TriggeredTask> {
   late Trigger _trigger;
   late TaskDescriptor _task;
   late TriggeredTask _triggeredTask;
@@ -138,23 +133,28 @@ class TriggeredTaskExecutor extends Executor {
     _triggeredTask = triggeredTask;
     _trigger = trigger;
     _task = task;
+  }
 
+  @override
+  void onInitialize() {
     // get the trigger executor and add it to this stream
     TriggerExecutor triggerExecutor = getTriggerExecutor(trigger);
-    _group.add(triggerExecutor.data);
+    group.add(triggerExecutor.data);
     executors.add(triggerExecutor);
+    triggerExecutor.initialize(trigger);
 
     // get the task executor and add it to the trigger executor stream
     TaskExecutor taskExecutor = getTaskExecutor(task);
-    triggerExecutor._group.add(taskExecutor.data);
+    triggerExecutor.group.add(taskExecutor.data);
     triggerExecutor.executors.add(taskExecutor);
+    taskExecutor.initialize(task);
   }
 
   /// Get the aggregated stream of [DataPoint] data sampled by all executors
   /// and probes in this triggered task executor.
   ///
   /// Makes sure to set the trigger id and device role name.
-  Stream<DataPoint> get data => _group.stream.map((dataPoint) => dataPoint
+  Stream<DataPoint> get data => group.stream.map((dataPoint) => dataPoint
     ..carpHeader.triggerId = '${triggeredTask.triggerId}'
     ..carpHeader.deviceRoleName = triggeredTask.targetDeviceRoleName);
 

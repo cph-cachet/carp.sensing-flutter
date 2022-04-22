@@ -461,12 +461,12 @@ abstract class PeriodicDatumProbe extends DatumProbe {
 
   void onInitialize(Measure measure) {
     assert(measure is PeriodicMeasure);
-    frequency = (measure as PeriodicMeasure).frequency;
+    frequency = (measure as PeriodicMeasure).interval;
     duration = measure.duration;
   }
 
   Future onRestart() async {
-    frequency = (measure as PeriodicMeasure).frequency;
+    frequency = (measure as PeriodicMeasure).interval;
     duration = (measure as PeriodicMeasure).duration;
   }
 
@@ -567,13 +567,13 @@ abstract class PeriodicStreamProbe extends StreamProbe {
 
   void onInitialize(Measure measure) {
     assert(measure is PeriodicMeasure);
-    frequency = (measure as PeriodicMeasure).frequency;
+    frequency = (measure as PeriodicMeasure).interval;
     duration = measure.duration;
     super.onInitialize(measure);
   }
 
   Future onRestart() async {
-    frequency = (measure as PeriodicMeasure).frequency;
+    frequency = (measure as PeriodicMeasure).interval;
     duration = (measure as PeriodicMeasure).duration;
     await super.onRestart();
   }
@@ -624,12 +624,12 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
 
   void onInitialize(Measure measure) {
     assert(measure is PeriodicMeasure);
-    frequency = (measure as PeriodicMeasure).frequency;
+    frequency = (measure as PeriodicMeasure).interval;
     duration = measure.duration;
   }
 
   Future onRestart() async {
-    frequency = (measure as PeriodicMeasure).frequency;
+    frequency = (measure as PeriodicMeasure).interval;
     duration = (measure as PeriodicMeasure).duration;
   }
 

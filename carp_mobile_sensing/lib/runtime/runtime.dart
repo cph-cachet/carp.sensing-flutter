@@ -38,7 +38,7 @@ import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 part 'data_manager.dart';
 part 'device_manager.dart';
 part 'device_controller.dart';
-// part 'executors.dart';
+part 'study_executors.dart';
 part 'executors_new.dart';
 part 'trigger_executors.dart';
 part 'task_executors.dart';

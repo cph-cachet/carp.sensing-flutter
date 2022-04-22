@@ -26,25 +26,22 @@ TaskExecutor getTaskExecutor(TaskDescriptor task) {
 ///
 /// Note that a [TaskExecutor] in itself is a [Probe] and hence work as a 'super probe'.
 /// This - amongst other things - imply that you can listen to datum [data] from a task executor.
-class TaskExecutor extends Executor {
-  TaskDescriptor get task => _task;
-  late TaskDescriptor _task;
+class TaskExecutor extends AggregateExecutor<TaskDescriptor> {
+  TaskDescriptor get task => configuration!;
 
   /// Returns a list of the running probes in this task executor.
-  List<Probe> get probes => executors;
+  List<Executor> get probes => executors;
 
-  TaskExecutor(TaskDescriptor task) : super() {
-    _task = task;
-  }
+  TaskExecutor(SmartphoneDeployment deployment) : super(deployment);
 
-  void onInitialize(Measure ignored) {
+  void onInitialize() {
     for (Measure measure in task.measures) {
       // create a new probe for each measure - this ensures that we can have
       // multiple measures of the same type, each using its own probe instance
       Probe? probe = ProbeRegistry().create(measure.type);
       if (probe != null) {
         executors.add(probe);
-        _group.add(probe.data);
+        group.add(probe.data);
         probe.initialize(measure);
       } else {
         warning(
@@ -57,5 +54,5 @@ class TaskExecutor extends Executor {
 
 /// Executes an [AutomaticTask].
 class AutomaticTaskExecutor extends TaskExecutor {
-  AutomaticTaskExecutor(AutomaticTask task) : super(task);
+  AutomaticTaskExecutor(SmartphoneDeployment deployment) : super(deployment);
 }

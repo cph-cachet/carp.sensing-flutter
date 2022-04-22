@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2018-2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -44,7 +44,8 @@ enum ExecutorState {
   undefined
 }
 
-/// A [Executor] is responsible for executing data collection based on a configuration [C].
+/// A [Executor] is responsible for executing data collection based on a
+/// configuration [TConfig].
 ///
 /// The behavior of an executor is controlled by its life-cycle methods: [initialize],
 /// [resume], [pause], and [stop]. A [restart] can be used to restart an executor
@@ -62,12 +63,12 @@ enum ExecutorState {
 ///
 ///     executor.data.forEach(print);
 ///
-abstract class Executor<C> {
+abstract class Executor<TConfig> {
   /// The deployment that this executor is part of executing.
   SmartphoneDeployment get deployment;
 
   /// The configuration of this executor as set when [initialize]d.
-  C? get configuration;
+  TConfig? get configuration;
 
   /// The runtime state of this executor.
   ExecutorState get state;
@@ -83,11 +84,11 @@ abstract class Executor<C> {
   ///   * if the current state of this Executor is `resumed` then `initialized` is **not** a valid next state.
   bool validNextState(ExecutorState nextState);
 
-  /// The stream of [DataPoint] generated from this Executor.
+  /// The stream of [DataPoint] generated from this executor.
   Stream<DataPoint> get data;
 
   /// Initialize the executor before starting it with a specific [configuration].
-  void initialize(C configuration);
+  void initialize(TConfig configuration);
 
   /// Resume the executor.
   void resume();
@@ -109,17 +110,17 @@ abstract class Executor<C> {
 }
 
 /// An abstract implementation of a [Executor] to extend from.
-abstract class AbstractExecutor<C> implements Executor<C> {
+abstract class AbstractExecutor<TConfig> implements Executor<TConfig> {
   final StreamController<ExecutorState> _stateEventController =
       StreamController.broadcast();
   late _ExecutorStateMachine _stateMachine;
-  C? _configuration;
+  TConfig? _configuration;
 
   @override
   SmartphoneDeployment deployment;
 
   @override
-  C? get configuration => _configuration;
+  TConfig? get configuration => _configuration;
 
   @override
   Stream<ExecutorState> get stateEvents => _stateEventController.stream;
@@ -140,14 +141,22 @@ abstract class AbstractExecutor<C> implements Executor<C> {
     _stateEventController.add(state.state);
   }
 
-  void initialize(C configuration) {
+  @override
+  void initialize(TConfig configuration) {
     _configuration = configuration;
     _stateMachine.initialize();
   }
 
+  @override
   void restart() => _stateMachine.restart();
+
+  @override
   void pause() => _stateMachine.pause();
+
+  @override
   void resume() => _stateMachine.resume();
+
+  @override
   void stop() {
     _stateMachine.stop();
     _stateEventController.close();
@@ -155,26 +164,26 @@ abstract class AbstractExecutor<C> implements Executor<C> {
 
   void error() => _stateMachine.error();
 
-  /// Callback for initialization of executor.
+  /// Callback when this executor is initialized.
   ///
   /// Note that this is a non-async method and should hence be 'light-weight'
   /// and not block execution for a long duration.
   @protected
   void onInitialize();
 
-  /// Callback for resuming this executor
+  /// Callback when this executor is resumed.
   @protected
   Future<void> onResume();
 
-  /// Callback for pausing this executor
+  /// Callback when this executor is paused.
   @protected
   Future<void> onPause();
 
-  /// Callback for restarting this executor
+  /// Callback when this executor is restarted.
   @protected
   Future<void> onRestart();
 
-  /// Callback for stopping this executor
+  /// Callback when this executor is stopped.
   @protected
   Future<void> onStop();
 }

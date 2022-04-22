@@ -34,7 +34,7 @@ class AppTaskExecutor extends TaskExecutor {
     _taskExecutor = TaskExecutor(appTask);
 
     // add the events from the embedded executor to the overall stream of events
-    _group.add(_taskExecutor.data);
+    group.add(_taskExecutor.data);
   }
 
   void onInitialize(Measure measure) {

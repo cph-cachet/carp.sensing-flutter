@@ -70,7 +70,7 @@ class SamplingSchema {
   ///
   /// The following parameters are adapted
   ///   * [enabled] - a measure can be enabled / disabled based on this schema
-  ///   * [frequency] - the sampling frequency can be adjusted based on this schema
+  ///   * [interval] - the sampling frequency can be adjusted based on this schema
   ///   * [duration] - the sampling duration can be adjusted based on this schema
   void adapt(MasterDeviceDeployment deployment, {bool restore = true}) {
     deployment.tasks.forEach((task) {
