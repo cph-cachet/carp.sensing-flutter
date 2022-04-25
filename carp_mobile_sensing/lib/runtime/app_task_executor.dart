@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2020-2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -24,33 +24,33 @@ part of runtime;
 /// Special-purpose [UserTask]s can be created by an [UserTaskFactory]
 /// and such factories can be registered in the [AppTaskController]
 /// using the `registerUserTaskFactory` method.
-class AppTaskExecutor extends TaskExecutor {
+class AppTaskExecutor extends TaskExecutor<AppTask> {
   /// The [AppTask] to be executed.
-  AppTask appTask;
+  late AppTask appTask;
   late TaskExecutor _taskExecutor;
 
-  AppTaskExecutor(this.appTask) : super(appTask) {
+  AppTaskExecutor() : super() {
     // create an embedded executor that later can be used to execute this task
-    _taskExecutor = TaskExecutor(appTask);
+    _taskExecutor = TaskExecutor();
 
     // add the events from the embedded executor to the overall stream of events
     group.add(_taskExecutor.data);
   }
 
-  void onInitialize(Measure measure) {
-    _taskExecutor.initialize(measure);
+  void onInitialize() {
+    _taskExecutor.initialize(configuration!, deployment!);
   }
 
-  Future onResume() async {
+  Future<void> onResume() async {
     // when an app task is resumed it has to be put on the queue
     AppTaskController().enqueue(this);
   }
 
-  Future onPause() async {
+  Future<void> onPause() async {
     // TODO - don't know what to do on pause????
   }
 
-  Future onStop() async {
+  Future<void> onStop() async {
     _taskExecutor.stop();
     await super.onStop();
   }

@@ -29,11 +29,8 @@ void main() {
     // Define what needs to be measured, on which device, when.
     List<Measure> measures = [
       Measure(type: DataType(NameSpace.CARP, 'light').toString()),
-      DataTypeMeasure(type: DataType(NameSpace.CARP, 'gps').toString()),
-      PhoneSensorMeasure(
-        type: DataType(NameSpace.CARP, 'steps').toString(),
-        duration: 10,
-      ),
+      Measure(type: DataType(NameSpace.CARP, 'gps').toString()),
+      Measure(type: DataType(NameSpace.CARP, 'steps').toString()),
     ];
 
     ConcurrentTask task = ConcurrentTask(name: 'Start measures')

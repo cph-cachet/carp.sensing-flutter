@@ -205,8 +205,6 @@ class FromJsonFactory {
     register(ConcurrentTask());
     register(CustomProtocolTask(studyProtocol: 'ignored'));
     register(Measure(type: 'ignored'));
-    register(DataTypeMeasure(type: 'ignored'));
-    register(PhoneSensorMeasure(type: 'ignored'));
     register(SamplingConfiguration());
 
     register(DeviceDescriptor(roleName: ''));

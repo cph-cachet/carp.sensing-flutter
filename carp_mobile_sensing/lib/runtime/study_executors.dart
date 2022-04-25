@@ -17,12 +17,6 @@ abstract class AggregateExecutor<Config> extends AbstractExecutor<Config> {
   List<Executor> executors = [];
   Stream<DataPoint> get data => group.stream;
 
-  AggregateExecutor(SmartphoneDeployment deployment) : super(deployment);
-
-  // void onInitialize() {
-  //   executors.forEach((executor) => executor.initialize());
-  // }
-
   Future<void> onPause() async {
     executors.forEach((executor) => executor.pause());
   }
@@ -55,8 +49,6 @@ class StudyDeploymentExecutor extends AggregateExecutor<SmartphoneDeployment> {
   final StreamController<DataPoint> _manualDataPointController =
       StreamController.broadcast();
 
-  StudyDeploymentExecutor(SmartphoneDeployment deployment) : super(deployment);
-
   @override
   void onInitialize() {
     group.add(_manualDataPointController.stream);
@@ -69,13 +61,12 @@ class StudyDeploymentExecutor extends AggregateExecutor<SmartphoneDeployment> {
           configuration!.getTaskByName(triggeredTask.taskName)!;
 
       TriggeredTaskExecutor executor = TriggeredTaskExecutor(
-        deployment,
         triggeredTask,
         trigger,
         task,
       );
 
-      executor.initialize(triggeredTask);
+      executor.initialize(triggeredTask, deployment!);
 
       group.add(executor.data);
       executors.add(executor);
@@ -88,8 +79,8 @@ class StudyDeploymentExecutor extends AggregateExecutor<SmartphoneDeployment> {
   /// Ensures that the `userId` and `studyId` is correctly set in the
   /// [DataPointHeader] based on the [deployment] configuration.
   Stream<DataPoint> get data => group.stream.map((dataPoint) => dataPoint
-    ..carpHeader.studyId = deployment.studyDeploymentId
-    ..carpHeader.userId = deployment.userId);
+    ..carpHeader.studyId = deployment?.studyDeploymentId
+    ..carpHeader.userId = deployment?.userId);
 
   /// Add a [DataPoint] object to the stream of events.
   void addDataPoint(DataPoint dataPoint) =>
@@ -103,11 +94,10 @@ class StudyDeploymentExecutor extends AggregateExecutor<SmartphoneDeployment> {
   /// This is a combination of the running probes in all trigger executors.
   List<Probe> get probes {
     List<Probe> _probes = [];
+
     executors.forEach((executor) {
       if (executor is TriggeredTaskExecutor) {
-        executor.probes.forEach((probe) {
-          _probes.add(probe);
-        });
+        _probes.addAll(executor.probes);
       }
     });
     return _probes;
@@ -125,11 +115,10 @@ class TriggeredTaskExecutor extends AggregateExecutor<TriggeredTask> {
   TriggeredTask get triggeredTask => _triggeredTask;
 
   TriggeredTaskExecutor(
-    SmartphoneDeployment deployment,
     TriggeredTask triggeredTask,
     Trigger trigger,
     TaskDescriptor task,
-  ) : super(deployment) {
+  ) : super() {
     _triggeredTask = triggeredTask;
     _trigger = trigger;
     _task = task;
@@ -141,13 +130,13 @@ class TriggeredTaskExecutor extends AggregateExecutor<TriggeredTask> {
     TriggerExecutor triggerExecutor = getTriggerExecutor(trigger);
     group.add(triggerExecutor.data);
     executors.add(triggerExecutor);
-    triggerExecutor.initialize(trigger);
+    triggerExecutor.initialize(trigger, deployment!);
 
     // get the task executor and add it to the trigger executor stream
     TaskExecutor taskExecutor = getTaskExecutor(task);
     triggerExecutor.group.add(taskExecutor.data);
     triggerExecutor.executors.add(taskExecutor);
-    taskExecutor.initialize(task);
+    taskExecutor.initialize(task, deployment!);
   }
 
   /// Get the aggregated stream of [DataPoint] data sampled by all executors
@@ -164,9 +153,7 @@ class TriggeredTaskExecutor extends AggregateExecutor<TriggeredTask> {
     List<Probe> _probes = [];
     executors.forEach((executor) {
       if (executor is TriggerExecutor) {
-        executor.probes.forEach((probe) {
-          _probes.add(probe);
-        });
+        _probes.addAll(executor.probes);
       }
     });
     return _probes;

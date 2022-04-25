@@ -12,18 +12,17 @@ class SmartphoneDeploymentController extends StudyRuntime {
   DataManager? _dataManager;
   DataEndPoint? _dataEndPoint;
   StudyDeploymentExecutor? _executor;
-  late SamplingSchema _samplingSchema;
   String _privacySchemaName = NameSpace.CARP;
   late DatumTransformer _transformer;
-
-  @override
-  DeviceController get deviceRegistry =>
-      super.deviceRegistry as DeviceController;
 
   /// The study deployment running in this controller.
   @override
   SmartphoneDeployment? get deployment =>
       super.deployment as SmartphoneDeployment?;
+
+  @override
+  DeviceController get deviceRegistry =>
+      super.deviceRegistry as DeviceController;
 
   /// The executor executing this [masterDeployment].
   StudyDeploymentExecutor? get executor => _executor;
@@ -61,34 +60,121 @@ class SmartphoneDeploymentController extends StudyRuntime {
       .map((dataPoint) =>
           dataPoint..carpHeader.dataFormat = dataPoint.data!.format);
 
-  PowerAwarenessState powerAwarenessState = NormalSamplingState.instance;
+  /// A stream of all [data] of a specific data [type].
+  Stream<DataPoint> dataByType(String type) => data
+      .where((dataPoint) => dataPoint.carpHeader.dataFormat.toString() == type);
+
+  // PowerAwarenessState powerAwarenessState = NormalSamplingState.instance;
 
   /// The sampling size of this [deployment] in terms of number of [DataPoint]
   /// objects that has been collected.
   int get samplingSize => _samplingSize;
 
-  DateTime? _studyDeploymentStartTime;
-  DateTime? get studyDeploymentStartTime => _studyDeploymentStartTime;
+  // DateTime? _studyDeploymentStartTime;
+  // DateTime? get studyDeploymentStartTime => _studyDeploymentStartTime;
 
   /// Create a new [SmartphoneDeploymentController] to control the runtime behavior
   /// of a study deployment.
-  SmartphoneDeploymentController() : super() {
-    Settings().init();
+  SmartphoneDeploymentController(
+      DeploymentService deploymentService, DeviceController deviceRegistry)
+      : super(deploymentService, deviceRegistry);
 
-    // create and register the two built-in data managers
-    DataManagerRegistry().register(ConsoleDataManager());
-    DataManagerRegistry().register(FileDataManager());
+  @override
+  Future<StudyStatus> tryDeployment([bool useCached = true]) async {
+    assert(
+        study != null && device != null,
+        'Cannot deploy without a valid study deployment id and device role name. '
+        "Call 'initialize()' first.");
+
+    // check cache
+    if (useCached) {
+      bool success = await restoreDeployment();
+      if (success) {
+        status = StudyStatus.Deployed;
+        return status;
+      }
+    }
+
+    // if no cache, get the deployment from the deployment service
+    // and save a local cache
+    status = await super.tryDeployment();
+    if (status == StudyStatus.Deployed) deployment!.deployed = DateTime.now();
+    await saveDeployment();
+    return status;
+  }
+
+  String? _filename;
+
+  /// Current path and filename of the deployment file.
+  Future<String?> get filename async {
+    assert(studyDeploymentId != null,
+        'Study Deployment ID is null -- cannot find cached file.');
+    if (_filename == null) {
+      String? path = await Settings().getDeploymentBasePath(studyDeploymentId!);
+      _filename = '$path/deployment.json';
+    }
+    return _filename;
+  }
+
+  /// Save the [deployment] persistenly to a file.
+  /// Returns `true` if successful.
+  Future<bool> saveDeployment() async {
+    bool success = true;
+    try {
+      String name = (await filename)!;
+      info("Saving deployment to file '$name'.");
+      final json = jsonEncode(deployment);
+      File(name).writeAsStringSync(json);
+    } catch (exception) {
+      success = false;
+      warning('Failed to save deployment - $exception');
+    }
+    return success;
+  }
+
+  /// Restore the [deployment] from a file.
+  /// Returns `true` if successful.
+  Future<bool> restoreDeployment() async {
+    bool success = true;
+
+    try {
+      String name = (await filename)!;
+      info("Restoring deployment from file '$name'.");
+      String jsonString = File(name).readAsStringSync();
+      deployment = SmartphoneDeployment.fromJson(
+          json.decode(jsonString) as Map<String, dynamic>);
+    } catch (exception) {
+      success = false;
+      warning('Failed to load deployment - $exception');
+    }
+    return success;
+  }
+
+  /// Erase all study deployment information cached locally on this phone.
+  /// Returns `true` if successful.
+  Future<bool> eraseDeployment() async {
+    bool success = true;
+
+    try {
+      String name = (await filename)!;
+      info("Erasing deployment cache from file '$name'.");
+      await File(name).delete();
+    } catch (exception) {
+      success = false;
+      warning('Failed to delete deployment - $exception');
+    }
+    return success;
   }
 
   /// Configure this [SmartphoneDeploymentController].
-  /// Must be called only once, and before [resume] is called.
+  ///
+  /// Must be called after a deployment is ready using [tryDeployment] and
+  /// before [start] is called.
   ///
   /// Can request permissions for all [SamplingPackage]s' permissions.
   ///
   /// A number of optional parameters can be specified:
   ///
-  ///    * [samplingSchema] - custom [SamplingSchema], i.e. configuration of [Measure]s.
-  ///      If not specified, [SamplingSchema.normal] with power-awareness is used.
   ///    * [dataEndPoint] - A specific [DataEndPoint] specifying where to save or upload data.
   ///      If not specified, the [MasterDeviceDeployment.dataEndPoint] is used.
   ///      If no data endpoint is found, then no data management
@@ -108,7 +194,6 @@ class SmartphoneDeploymentController extends StudyRuntime {
   ///      when an app task is triggered?
   ///
   Future<void> configure({
-    SamplingSchema? samplingSchema,
     DataEndPoint? dataEndPoint,
     String privacySchemaName = NameSpace.CARP,
     DatumTransformer? transformer,
@@ -121,11 +206,6 @@ class SmartphoneDeploymentController extends StudyRuntime {
         'A StudyDeploymentController can only work with a SmartphoneDeployment master device deployment');
     info('Configuring $runtimeType');
 
-    // save the study deployment id in settings
-    // this is actually a little hack since we should be able to run
-    // several studies in the same app....
-    Settings().studyDeploymentId = studyDeploymentId;
-
     // initialize all devices from the master deployment, incl. the master device
     deviceRegistry.initializeDevices(deployment!);
     // and connect imediately to the master device (this phone)
@@ -135,10 +215,9 @@ class SmartphoneDeploymentController extends StudyRuntime {
     await AppTaskController()
         .initialize(enableNotifications: enableNotifications);
 
-    _executor = StudyDeploymentExecutor(deployment as SmartphoneDeployment);
+    _executor = StudyDeploymentExecutor();
 
     // initialize optional parameters
-    _samplingSchema = samplingSchema ?? SamplingSchema.normal(powerAware: true);
     _dataEndPoint = dataEndPoint ?? deployment!.dataEndPoint;
     _privacySchemaName = privacySchemaName;
     _transformer = transformer ?? ((datum) => datum);
@@ -158,21 +237,6 @@ class SmartphoneDeploymentController extends StudyRuntime {
     // setting up permissions
     if (askForPermissions) await askForAllPermissions();
 
-    // check the start time for this deployment on this phone
-    // and save it, the first time the deployment is done
-    _studyDeploymentStartTime = await Settings().studyDeploymentStartTime;
-    if (_studyDeploymentStartTime == null) {
-      await Settings().markStudyDeploymentAsStarted();
-      _studyDeploymentStartTime = await Settings().studyDeploymentStartTime;
-    }
-
-    if (samplingSchema != null) {
-      // doing two adaptation is a bit of a hack; used to ensure that
-      // restoration values are set to the specified sampling schema
-      deployment!.adapt(samplingSchema, restore: false);
-      deployment!.adapt(samplingSchema, restore: false);
-    }
-
     // initialize the data manager, device registry, and study executor
     await _dataManager?.initialize(
       deployment!,
@@ -180,17 +244,17 @@ class SmartphoneDeploymentController extends StudyRuntime {
       data,
     );
 
-    _executor!.initialize(Measure(type: CAMSDataType.EXECUTOR));
-    await enablePowerAwareness();
+    _executor!.initialize(deployment!, deployment!);
+    // await enablePowerAwareness();
     data.listen((dataPoint) => _samplingSize++);
 
-    status = StudyRuntimeStatus.Configured;
+    status = StudyStatus.Deployed;
 
     print('===============================================================');
     print('  CARP Mobile Sensing (CAMS) - $runtimeType');
     print('===============================================================');
     print(' deployment id : ${deployment!.studyDeploymentId}');
-    print('    start time : $studyDeploymentStartTime');
+    print(' deployed time : ${deployment!.deployed}');
     print('       user id : ${deployment!.userId}');
     print('      platform : ${DeviceInfo().platform.toString()}');
     print('     device ID : ${DeviceInfo().deviceID.toString()}');
@@ -200,32 +264,35 @@ class SmartphoneDeploymentController extends StudyRuntime {
     print('===============================================================');
   }
 
-  final BatteryProbe _battery = BatteryProbe();
+  // final BatteryProbe _battery = BatteryProbe();
 
-  /// Enable power-aware sensing in this study. See [PowerAwarenessState].
-  Future enablePowerAwareness() async {
-    if (_samplingSchema.powerAware) {
-      info('Enabling power awareness ...');
-      _battery.data.listen((dataPoint) {
-        BatteryDatum batteryState = (dataPoint.data as BatteryDatum);
-        if (batteryState.batteryStatus == BatteryDatum.STATE_DISCHARGING) {
-          // only apply power-awareness if not charging.
-          PowerAwarenessState newState =
-              powerAwarenessState.adapt(batteryState.batteryLevel);
-          if (newState != powerAwarenessState) {
-            powerAwarenessState = newState;
-            info(
-                'PowerAware: Going to $powerAwarenessState, level ${batteryState.batteryLevel}%');
-            deployment!.adapt(powerAwarenessState.schema);
-          }
-        }
-      });
-      _battery.initialize(Measure(
-          type: DataType(NameSpace.CARP, DeviceSamplingPackage.BATTERY)
-              .toString()));
-      _battery.resume();
-    }
-  }
+  // /// Enable power-aware sensing in this study. See [PowerAwarenessState].
+  // Future<void> enablePowerAwareness() async {
+  //   if (_samplingSchema.powerAware) {
+  //     info('Enabling power awareness ...');
+  //     _battery.data.listen((dataPoint) {
+  //       BatteryDatum batteryState = (dataPoint.data as BatteryDatum);
+  //       if (batteryState.batteryStatus == BatteryDatum.STATE_DISCHARGING) {
+  //         // only apply power-awareness if not charging.
+  //         PowerAwarenessState newState =
+  //             powerAwarenessState.adapt(batteryState.batteryLevel);
+  //         if (newState != powerAwarenessState) {
+  //           powerAwarenessState = newState;
+  //           info(
+  //               'PowerAware: Going to $powerAwarenessState, level ${batteryState.batteryLevel}%');
+  //           deployment!.adapt(powerAwarenessState.schema);
+  //         }
+  //       }
+  //     });
+  //     _battery.initialize(Measure(
+  //         type: DataType(NameSpace.CARP, DeviceSamplingPackage.BATTERY)
+  //             .toString()));
+  //     _battery.resume();
+  //   }
+  // }
+
+  // /// Disable power-aware sensing.
+  // void disablePowerAwareness() => _battery.stop();
 
   /// Asking for all permissions needed for the included sampling packages.
   ///
@@ -241,128 +308,117 @@ class SmartphoneDeploymentController extends StudyRuntime {
     });
   }
 
-  /// Disable power-aware sensing.
-  void disablePowerAwareness() => _battery.stop();
-
-  /// Resume this controller, i.e. resume data collection according to the
+  /// Start this controller, i.e. resume data collection according to the
   /// parameters specified in [configure].
   ///
-  /// [configure] must be called before resuming sampling.
-  void resume() {
+  /// [configure] must be called before starting sampling.
+  @override
+  void start() {
     assert(
         _executor != null,
         '$runtimeType - Cannot resume this controller, since the the runtime is not initialized. '
-        'Call the configure method first.');
+        'Call the configure() method first.');
 
-    info('Resuming data sampling ...');
-    super.resume();
+    info('Starting data sampling ...');
+    super.start();
     _executor!.resume();
-  }
-
-  /// Pause this controller, which will pause data collection and close the
-  /// data manager.
-  void pause() {
-    info('Pausing data sampling ...');
-    super.pause();
-    _executor!.pause();
-    _dataManager?.close();
   }
 
   /// Stop the sampling.
   ///
   /// Once a controller is stopped it **cannot** be (re)started.
-  /// If a controller should be restarted, use the [pause] and [resume] methods.
+  @override
   void stop() {
     info('Stopping data sampling ...');
-    disablePowerAwareness();
+    // disablePowerAwareness();
     _dataManager?.close();
     _executor!.stop();
     super.stop();
   }
 }
 
-/// This default power-awareness schema operates with four power states:
-///
-///
-///       0%   10%        30%        50%                         100%
-///       +-----+----------+----------+----------------------------+
-///        none   minimum     light              normal
-///
-abstract class PowerAwarenessState {
-  static const int LIGHT_SAMPLING_LEVEL = 50;
-  static const int MINIMUM_SAMPLING_LEVEL = 30;
-  static const int NO_SAMPLING_LEVEL = 10;
+// /// This default power-awareness schema operates with four power states:
+// ///
+// ///
+// ///       0%   10%        30%        50%                         100%
+// ///       +-----+----------+----------+----------------------------+
+// ///        none   minimum     light              normal
+// ///
+// abstract class PowerAwarenessState {
+//   static const int LIGHT_SAMPLING_LEVEL = 50;
+//   static const int MINIMUM_SAMPLING_LEVEL = 30;
+//   static const int NO_SAMPLING_LEVEL = 10;
 
-  static PowerAwarenessState? instance;
+//   static PowerAwarenessState? instance;
 
-  PowerAwarenessState adapt(int? level);
-  SamplingSchema get schema;
-}
+//   PowerAwarenessState adapt(int? level);
+//   SamplingSchema get schema;
+// }
 
-class NoSamplingState implements PowerAwarenessState {
-  static NoSamplingState instance = NoSamplingState();
+// class NoSamplingState implements PowerAwarenessState {
+//   static NoSamplingState instance = NoSamplingState();
 
-  PowerAwarenessState adapt(int? level) {
-    if (level! > PowerAwarenessState.NO_SAMPLING_LEVEL) {
-      return MinimumSamplingState.instance;
-    } else {
-      return NoSamplingState.instance;
-    }
-  }
+//   PowerAwarenessState adapt(int? level) {
+//     if (level! > PowerAwarenessState.NO_SAMPLING_LEVEL) {
+//       return MinimumSamplingState.instance;
+//     } else {
+//       return NoSamplingState.instance;
+//     }
+//   }
 
-  SamplingSchema get schema => SamplingPackageRegistry().none;
+//   SamplingSchema get schema => SamplingPackageRegistry().none;
 
-  String toString() => 'Disabled Sampling Mode';
-}
+//   String toString() => 'Disabled Sampling Mode';
+// }
 
-class MinimumSamplingState implements PowerAwarenessState {
-  static MinimumSamplingState instance = MinimumSamplingState();
+// class MinimumSamplingState implements PowerAwarenessState {
+//   static MinimumSamplingState instance = MinimumSamplingState();
 
-  PowerAwarenessState adapt(int? level) {
-    if (level! < PowerAwarenessState.NO_SAMPLING_LEVEL) {
-      return NoSamplingState.instance;
-    } else if (level > PowerAwarenessState.MINIMUM_SAMPLING_LEVEL) {
-      return LightSamplingState.instance;
-    } else {
-      return MinimumSamplingState.instance;
-    }
-  }
+//   PowerAwarenessState adapt(int? level) {
+//     if (level! < PowerAwarenessState.NO_SAMPLING_LEVEL) {
+//       return NoSamplingState.instance;
+//     } else if (level > PowerAwarenessState.MINIMUM_SAMPLING_LEVEL) {
+//       return LightSamplingState.instance;
+//     } else {
+//       return MinimumSamplingState.instance;
+//     }
+//   }
 
-  SamplingSchema get schema => SamplingPackageRegistry().minimum;
+//   SamplingSchema get schema => SamplingPackageRegistry().minimum;
 
-  String toString() => 'Minimun Sampling Mode';
-}
+//   String toString() => 'Minimun Sampling Mode';
+// }
 
-class LightSamplingState implements PowerAwarenessState {
-  static LightSamplingState instance = LightSamplingState();
+// class LightSamplingState implements PowerAwarenessState {
+//   static LightSamplingState instance = LightSamplingState();
 
-  PowerAwarenessState adapt(int? level) {
-    if (level! < PowerAwarenessState.MINIMUM_SAMPLING_LEVEL) {
-      return MinimumSamplingState.instance;
-    } else if (level > PowerAwarenessState.LIGHT_SAMPLING_LEVEL) {
-      return NormalSamplingState.instance;
-    } else {
-      return LightSamplingState.instance;
-    }
-  }
+//   PowerAwarenessState adapt(int? level) {
+//     if (level! < PowerAwarenessState.MINIMUM_SAMPLING_LEVEL) {
+//       return MinimumSamplingState.instance;
+//     } else if (level > PowerAwarenessState.LIGHT_SAMPLING_LEVEL) {
+//       return NormalSamplingState.instance;
+//     } else {
+//       return LightSamplingState.instance;
+//     }
+//   }
 
-  SamplingSchema get schema => SamplingPackageRegistry().light;
+//   SamplingSchema get schema => SamplingPackageRegistry().light;
 
-  String toString() => 'Light Sampling Mode';
-}
+//   String toString() => 'Light Sampling Mode';
+// }
 
-class NormalSamplingState implements PowerAwarenessState {
-  static NormalSamplingState instance = NormalSamplingState();
+// class NormalSamplingState implements PowerAwarenessState {
+//   static NormalSamplingState instance = NormalSamplingState();
 
-  PowerAwarenessState adapt(int? level) {
-    if (level! < PowerAwarenessState.LIGHT_SAMPLING_LEVEL) {
-      return LightSamplingState.instance;
-    } else {
-      return NormalSamplingState.instance;
-    }
-  }
+//   PowerAwarenessState adapt(int? level) {
+//     if (level! < PowerAwarenessState.LIGHT_SAMPLING_LEVEL) {
+//       return LightSamplingState.instance;
+//     } else {
+//       return NormalSamplingState.instance;
+//     }
+//   }
 
-  SamplingSchema get schema => SamplingSchema.normal();
+//   SamplingSchema get schema => SamplingSchema.normal();
 
-  String toString() => 'Normal Sampling Mode';
-}
+//   String toString() => 'Normal Sampling Mode';
+// }

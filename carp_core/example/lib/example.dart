@@ -106,18 +106,23 @@ void carpCoreClientExample() async {
     deviceController: deviceRegistry,
     deviceId: "xxxxxxxxx",
   );
-  StudyRuntime runtime = await client.addStudy(studyDeploymentId, deviceToUse);
+
+  Study study = Study(studyDeploymentId, deviceToUse);
+  StudyStatus status = await client.addStudy(study);
 
   // Register connected devices in case needed.
-  if (runtime.status == StudyRuntimeStatus.RegisteringDevices) {
-    var connectedDevice = runtime.remainingDevicesToRegister.first;
-    var connectedRegistration = DeviceRegistration();
+  if (status == StudyStatus.RegisteringDevices) {
+    var connectedDevice = study.deviceRoleName;
+    var connectedRegistration = client.registration;
     deploymentService.registerDevice(
-        studyDeploymentId, connectedDevice.roleName, connectedRegistration);
+      studyDeploymentId,
+      connectedDevice,
+      connectedRegistration,
+    );
 
-    // Re-try deployment now that devices have been registered.
-    StudyRuntimeStatus status = await client.tryDeployment(runtime.id);
-    var isDeployed = status == StudyRuntimeStatus.Deployed;
+    // Try deployment now that devices have been registered.
+    StudyStatus status = await client.tryDeployment(study);
+    var isDeployed = status == StudyStatus.Deployed;
     assert(isDeployed, true);
   }
 }

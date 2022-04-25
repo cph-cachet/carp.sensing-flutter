@@ -16,10 +16,9 @@ class LightProbe extends BufferingPeriodicStreamProbe {
   Stream<dynamic> get bufferingStream => _bufferingStream;
 
   @override
-  void onInitialize(Measure measure) {
+  void onInitialize() {
     // check if Light is available (only available on Android)
     _bufferingStream = Light().lightSensorStream;
-    super.onInitialize(measure);
   }
 
   @override

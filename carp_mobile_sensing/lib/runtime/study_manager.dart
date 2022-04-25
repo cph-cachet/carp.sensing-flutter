@@ -12,7 +12,7 @@ part of runtime;
 /// See [FileStudyProtocolManager] for an example.
 abstract class StudyProtocolManager {
   /// Initialize the study manager.
-  Future initialize();
+  Future<void> initialize();
 
   /// Get a [SmartphoneStudyProtocol] based on its ID.
   /// Returns `null` if no protocol with [studyId] exists.

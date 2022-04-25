@@ -110,7 +110,9 @@ class Console extends State<ConsolePage> {
 class Sensing {
   StudyProtocol? protocol;
   StudyDeploymentStatus? _status;
+  DeploymentService service = SmartphoneDeploymentService();
   SmartphoneDeploymentController? controller;
+  Study? study;
 
   /// Initialize sensing.
   Future init() async {
@@ -120,28 +122,27 @@ class Sensing {
     protocol = await LocalStudyProtocolManager().getStudyProtocol('ignored');
 
     // deploy this protocol using the on-phone deployment service
-    _status =
-        await SmartphoneDeploymentService().createStudyDeployment(protocol!);
+    _status = await service.createStudyDeployment(protocol!);
 
     String studyDeploymentId = _status!.studyDeploymentId;
     String deviceRolename = _status!.masterDeviceStatus!.device.roleName;
 
     // create and configure a client manager for this phone
     SmartPhoneClientManager client = SmartPhoneClientManager();
-    await client.configure();
+    await client.configure(deploymentService: service);
 
-    // add and deploy this study deployment
-    controller = await client.addStudy(studyDeploymentId, deviceRolename);
-    await controller?.tryDeployment();
+    // add and deploy a study
+    study = Study(studyDeploymentId, deviceRolename);
+    await client.addStudy(study!);
+    await client.tryDeployment(study!);
 
+    controller = client.getStudyRuntime(study!);
     // configure the controller
     // notifications are disabled, since we're not using app tasks in this simple app
     // see https://github.com/cph-cachet/carp.sensing-flutter/wiki/3.1-The-AppTask-Model#notifications
     await controller!.configure(
       enableNotifications: false,
     );
-
-    // controller.resume();
 
     // listening on the data stream and print them as json
     controller!.data.listen((data) => print(toJsonString(data)));

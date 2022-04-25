@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2021-2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -7,9 +7,13 @@
 
 part of runtime;
 
-class SmartPhoneClientManager extends ClientManager {
+class SmartPhoneClientManager extends ClientManager
+    with WidgetsBindingObserver {
   static final SmartPhoneClientManager _instance = SmartPhoneClientManager._();
-  SmartPhoneClientManager._();
+  SmartPhoneClientManager._() {
+    WidgetsFlutterBinding.ensureInitialized();
+    WidgetsBinding.instance?.addObserver(this);
+  }
 
   /// Get the singleton [SmartPhoneClientManager].
   ///
@@ -24,12 +28,27 @@ class SmartPhoneClientManager extends ClientManager {
   NotificationController get notificationController => NotificationController();
 
   @override
+  SmartphoneDeploymentController? lookupStudyRuntime(
+    String studyDeploymentId,
+    String deviceRoleName,
+  ) =>
+      super.lookupStudyRuntime(studyDeploymentId, deviceRoleName)
+          as SmartphoneDeploymentController;
+
+  @override
   Future<DeviceRegistration> configure({
     required DeploymentService deploymentService,
     DeviceDataCollectorFactory? deviceController,
     String? deviceId,
   }) async {
+    // initialize device settings
     await DeviceInfo().init();
+    await Settings().init();
+
+    // create and register the two built-in data managers
+    DataManagerRegistry().register(ConsoleDataManager());
+    DataManagerRegistry().register(FileDataManager());
+
     // set default values, if not specified
     deviceId ??= DeviceInfo().deviceID;
     this.deviceController = deviceController ?? DeviceController();
@@ -53,32 +72,51 @@ class SmartPhoneClientManager extends ClientManager {
   }
 
   @override
-  Future<SmartphoneDeploymentController> addStudy(
+  Future<StudyStatus> addStudy(
     String studyDeploymentId,
     String deviceRoleName,
   ) async {
-    info(
-        'Adding study to $runtimeType - studyDeploymentId: $studyDeploymentId, deviceRoleName: $deviceRoleName');
-    await super.addStudy(studyDeploymentId, deviceRoleName);
-
-    // create the study runtime
-    SmartphoneDeploymentController controller =
-        SmartphoneDeploymentController();
-
-    await controller.initialize(
-      deploymentService!,
-      deviceController,
+    StudyStatus status = await super.addStudy(
       studyDeploymentId,
       deviceRoleName,
+    );
+    Study study = Study(studyDeploymentId, deviceRoleName);
+    info('Adding study to $runtimeType - $study');
+
+    SmartphoneDeploymentController controller =
+        SmartphoneDeploymentController(deploymentService!, deviceController);
+    repository[study] = controller;
+
+    await controller.initialize(
+      study,
       registration!,
     );
 
-    repository[StudyRuntimeId(studyDeploymentId, deviceRoleName)] = controller;
-    return controller;
+    return status;
   }
 
   @override
-  SmartphoneDeploymentController? getStudyRuntime(
-          StudyRuntimeId studyRuntimeId) =>
-      repository[studyRuntimeId] as SmartphoneDeploymentController;
+  SmartphoneDeploymentController? getStudyRuntime(Study study) =>
+      repository[study] as SmartphoneDeploymentController;
+
+  /// Called when the system puts the app in the background or returns
+  /// the app to the foreground.
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print(state);
+    switch (state) {
+      case AppLifecycleState.inactive:
+        print('appLifeCycleState inactive');
+        break;
+      case AppLifecycleState.resumed:
+        print('appLifeCycleState resumed');
+        break;
+      case AppLifecycleState.paused:
+        print('appLifeCycleState paused');
+        break;
+      case AppLifecycleState.detached:
+        print('appLifeCycleState detached');
+        break;
+    }
+  }
 }

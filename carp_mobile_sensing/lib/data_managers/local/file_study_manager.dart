@@ -16,7 +16,7 @@ part of managers;
 ///
 class FileStudyProtocolManager implements StudyProtocolManager {
   /// Initializing the the local FileDeploymentService
-  Future initialize() async {
+  Future<void> initialize() async {
     info('Initializing FileDeploymentService...');
     info('Study file path : ${Settings().localApplicationPath}/protocols');
   }

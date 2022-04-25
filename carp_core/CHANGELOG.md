@@ -1,3 +1,5 @@
+## 0.40.0
+
 ## 0.33.1
 * implementation of `ScheduledTrigger` incl. test
 

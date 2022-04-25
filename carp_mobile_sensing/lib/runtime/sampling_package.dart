@@ -67,6 +67,29 @@ class SamplingPackageRegistry {
     }
     return _combinedSchemas!;
   }
+
+  /// Create an instance of a probe based on its data type.
+  ///
+  /// This methods search this sampling package registry for a [SamplingPackage]
+  /// which has a probe of the specified [type].
+  ///
+  /// Returns `null` if no probe is found for the specified [type].
+  Probe? create(String type) {
+    Probe? probe;
+
+    final packages = lookup(type);
+
+    if (packages.isNotEmpty) {
+      if (packages.length > 1) {
+        warning(
+            "$runtimeType - Creating probe, but it seems like the data type '$type' is defined in more than one sampling package.");
+      }
+      probe = packages.first.create(type);
+      probe?.deviceManager = packages.first.deviceManager;
+    }
+
+    return probe;
+  }
 }
 
 /// Interface for a sampling package.

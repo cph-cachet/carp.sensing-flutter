@@ -22,7 +22,7 @@ abstract class AbstractDataManager implements DataManager {
   void addEvent(DataManagerEvent event) => controller.add(event);
 
   @override
-  Future initialize(
+  Future<void> initialize(
     MasterDeviceDeployment deployment,
     DataEndPoint dataEndPoint,
     Stream<DataPoint> data,
@@ -40,7 +40,7 @@ abstract class AbstractDataManager implements DataManager {
   }
 
   @override
-  Future close() async =>
+  Future<void> close() async =>
       addEvent(DataManagerEvent(DataManagerEventTypes.CLOSED));
 
   /// Encode [object] to a JSON string.

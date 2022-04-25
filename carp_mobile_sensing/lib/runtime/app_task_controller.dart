@@ -15,9 +15,6 @@ class AppTaskController {
   /// Should this controller send notifications to the user.
   bool notificationsEnabled = true;
 
-  /// The study deployment id for the running study.
-  String? get studyDeploymentId => Settings().studyDeploymentId;
-
   final Map<String, UserTask> _userTaskMap = {};
 
   /// The etire list of all [UserTask]s.
@@ -68,7 +65,7 @@ class AppTaskController {
   /// the phone's notification system when a task is enqued via the
   /// [enqueue] method.
   Future<void> initialize({bool enableNotifications = true}) async {
-    if (studyDeploymentId != null && Settings().saveAppTaskQueue) {
+    if (Settings().saveAppTaskQueue) {
       // retore the queue from persistent storage
       await restoreQueue();
 
@@ -200,7 +197,7 @@ class AppTaskController {
   /// Current path and filename of the task queue.
   Future<String?> get filename async {
     if (_filename == null) {
-      String? path = await Settings().deploymentBasePath;
+      String? path = await Settings().carpBasePath;
       _filename = '$path/tasks.json';
     }
     return _filename;
@@ -237,8 +234,8 @@ class AppTaskController {
 
       // now create new AppTaskExecutors, initialize them, and add them to the queue
       queue.snapshot.forEach((snapshot) {
-        AppTaskExecutor executor = AppTaskExecutor(snapshot.task);
-        executor.initialize(Measure(type: CAMSDataType.EXECUTOR));
+        AppTaskExecutor executor = AppTaskExecutor();
+        executor.initialize(snapshot.task);
         // enqueue the task (again), but avoid notifications
         UserTask? userTask = enqueue(executor, sendNotification: false);
         if (userTask != null) {

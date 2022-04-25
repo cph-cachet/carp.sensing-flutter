@@ -24,10 +24,6 @@ class SmartphoneStudyProtocol extends StudyProtocol {
   /// The PI responsible for this protocol.
   StudyResponsible? get responsible => protocolDescription?.responsible;
 
-  /// The sampling strategy used in this study based on the standard
-  /// [SamplingSchemaType] types.
-  SamplingSchemaType samplingStrategy;
-
   /// Specifies where and how to stored or upload the data collected from this
   /// deployment. If `null`, the sensed data is not stored, but may still be
   /// used in the app.
@@ -38,7 +34,6 @@ class SmartphoneStudyProtocol extends StudyProtocol {
     required String ownerId,
     required String name,
     this.protocolDescription,
-    this.samplingStrategy = SamplingSchemaType.normal,
     this.dataEndPoint,
   }) : super(
           ownerId: ownerId,

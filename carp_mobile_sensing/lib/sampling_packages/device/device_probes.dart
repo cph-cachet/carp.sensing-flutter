@@ -61,8 +61,8 @@ class BatteryProbe extends StreamProbe {
 class ScreenProbe extends StreamProbe {
   Screen screen = Screen();
 
-  void onInitialize(Measure measure) {
-    super.onInitialize(measure);
+  void onInitialize() {
+    super.onInitialize();
     if (!Platform.isAndroid) {
       throw SensingException('ScreenProbe only available on Android.');
     }
@@ -76,9 +76,9 @@ class ScreenProbe extends StreamProbe {
 
 /// A probe that collects free virtual memory on a regular basis
 /// as specified in [PeriodicMeasure.frequency].
-class MemoryProbe extends PeriodicDatumProbe {
-  void onInitialize(Measure measure) {
-    super.onInitialize(measure);
+class MemoryProbe extends IntervalDatumProbe {
+  @override
+  void onInitialize() {
     // check if SysInfo is available (seems not to be available on iOS)
     SysInfo.getFreePhysicalMemory();
   }

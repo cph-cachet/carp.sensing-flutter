@@ -22,9 +22,8 @@
             "name": "task",
             "measures": [
                 {
-                    "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PhoneSensorMeasure",
-                    "type": "dk.cachet.carp.geolocation",
-                    "duration": -1000
+                    "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+                    "type": "dk.cachet.carp.geolocation"
                 }
             ]
         }

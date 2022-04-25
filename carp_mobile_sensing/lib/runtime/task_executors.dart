@@ -11,13 +11,13 @@ part of runtime;
 TaskExecutor getTaskExecutor(TaskDescriptor task) {
   switch (task.runtimeType) {
     case TaskDescriptor:
-      return TaskExecutor(task);
+      return TaskExecutor();
     case AutomaticTask:
-      return AutomaticTaskExecutor(task as AutomaticTask);
+      return AutomaticTaskExecutor();
     case AppTask:
-      return AppTaskExecutor(task as AppTask);
+      return AppTaskExecutor();
     default:
-      return TaskExecutor(task);
+      return TaskExecutor();
   }
 }
 
@@ -26,23 +26,22 @@ TaskExecutor getTaskExecutor(TaskDescriptor task) {
 ///
 /// Note that a [TaskExecutor] in itself is a [Probe] and hence work as a 'super probe'.
 /// This - amongst other things - imply that you can listen to datum [data] from a task executor.
-class TaskExecutor extends AggregateExecutor<TaskDescriptor> {
+class TaskExecutor<TConfig> extends AggregateExecutor<TaskDescriptor> {
   TaskDescriptor get task => configuration!;
 
   /// Returns a list of the running probes in this task executor.
-  List<Executor> get probes => executors;
-
-  TaskExecutor(SmartphoneDeployment deployment) : super(deployment);
+  List<Probe> get probes =>
+      executors.map((executor) => executor as Probe).toList();
 
   void onInitialize() {
     for (Measure measure in task.measures) {
       // create a new probe for each measure - this ensures that we can have
       // multiple measures of the same type, each using its own probe instance
-      Probe? probe = ProbeRegistry().create(measure.type);
+      Probe? probe = SamplingPackageRegistry().create(measure.type);
       if (probe != null) {
         executors.add(probe);
         group.add(probe.data);
-        probe.initialize(measure);
+        probe.initialize(measure, deployment!);
       } else {
         warning(
             'A probe for measure type ${measure.type} could not be created. '
@@ -53,6 +52,4 @@ class TaskExecutor extends AggregateExecutor<TaskDescriptor> {
 }
 
 /// Executes an [AutomaticTask].
-class AutomaticTaskExecutor extends TaskExecutor {
-  AutomaticTaskExecutor(SmartphoneDeployment deployment) : super(deployment);
-}
+class AutomaticTaskExecutor extends TaskExecutor<AutomaticTask> {}

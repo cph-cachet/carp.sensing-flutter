@@ -10,7 +10,7 @@ part of carp_core_client;
 /// Allows managing [StudyRuntime]s on a client device.
 class ClientManager {
   /// Repository within which the state of this client is stored.
-  Map<StudyRuntimeId, StudyRuntime> repository = {};
+  Map<Study, StudyRuntime> repository = {};
 
   /// The registration of this client device.
   DeviceRegistration? registration;
@@ -26,7 +26,10 @@ class ClientManager {
 
   /// Determines whether a [DeviceRegistration] has been configured for this client,
   /// which is necessary to start adding [StudyRuntime]s.
-  bool get isConfigured => registration != null;
+  bool get isConfigured =>
+      (deploymentService != null) &&
+      (deviceController != null) &&
+      (registration != null);
 
   ClientManager();
 
@@ -46,9 +49,8 @@ class ClientManager {
   }
 
   /// Get the status for the studies which run on this client device.
-  List<StudyRuntimeStatus> getStudiesStatus() =>
-      repository.values.map((study) => study.status)
-          as List<StudyRuntimeStatus>;
+  List<StudyStatus> getStudyStatusList() =>
+      repository.values.map((study) => study.status) as List<StudyStatus>;
 
   /// Add a study which needs to be executed on this client.
   /// This involves registering this device for the specified study deployment.
@@ -58,42 +60,44 @@ class ClientManager {
   ///  * [deviceRoleName] - The role which the client device this runtime is
   ///    intended for plays as part of the deployment identified by [studyDeploymentId].
   ///
-  /// Returns the [StudyRuntime] through which data collection for the newly
-  /// added study can be managed.
+  /// Returns the [StudyStatus] of the newly added study.
   @mustCallSuper
-  Future<StudyRuntime> addStudy(
-    String studyDeploymentId,
-    String deviceRoleName,
-  ) async {
-    assert(isConfigured, 'The client manager has not been configured yet.');
-    assert(
-        !repository
-            .containsKey(StudyRuntimeId(studyDeploymentId, deviceRoleName)),
+  Future<StudyStatus> addStudy(Study study) async {
+    assert(isConfigured,
+        'The client manager has not been configured yet. Call configure() first.');
+    assert(!repository.containsKey(study),
         'A study with the same study deployment ID and device role name has already been added.');
-    return StudyRuntime();
+    return StudyStatus.DeploymentNotStarted;
   }
 
   /// Verifies whether the device is ready for deployment of the study runtime
-  /// identified by [studyRuntimeId], and in case it is, deploys.
+  /// identified by [study], and in case it is, deploys.
   /// In case already deployed, nothing happens.
   @mustCallSuper
-  Future<StudyRuntimeStatus> tryDeployment(
-      StudyRuntimeId studyRuntimeId) async {
-    StudyRuntime runtime = repository[studyRuntimeId]!;
+  Future<StudyStatus> tryDeployment(Study study) async {
+    StudyRuntime runtime = repository[study]!;
 
     // Early out in case this runtime has already received and validated deployment information.
-    if (runtime.status == StudyRuntimeStatus.Deployed) return runtime.status;
+    if (runtime.status.index >= StudyStatus.Deployed.index) {
+      return runtime.status;
+    }
 
     return await runtime.tryDeployment();
   }
 
-  /// Get the [StudyRuntime] with the unique [studyRuntimeId].
-  StudyRuntime? getStudyRuntime(StudyRuntimeId studyRuntimeId) =>
-      repository[studyRuntimeId];
+  /// Get the [StudyRuntime] for a [study].
+  StudyRuntime? getStudyRuntime(Study study) => repository[study];
+
+  /// Lookup the [StudyRuntime] based on the [studyDeploymentId] and [deviceRoleName].
+  StudyRuntime? lookupStudyRuntime(
+    String studyDeploymentId,
+    String deviceRoleName,
+  ) =>
+      repository[Study(studyDeploymentId, deviceRoleName)];
 
   /// Permanently stop collecting data for the study runtime identified by [studyRuntimeId].
   @mustCallSuper
-  void stopStudy(StudyRuntimeId studyRuntimeId) async =>
+  void stopStudy(Study studyRuntimeId) async =>
       repository[studyRuntimeId]?.stop();
 
   // /// Once a connected device has been registered, this returns a manager

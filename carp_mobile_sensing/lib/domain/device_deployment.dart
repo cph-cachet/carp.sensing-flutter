@@ -39,10 +39,6 @@ class SmartphoneDeployment extends MasterDeviceDeployment {
   /// The PI responsible for this study.
   StudyResponsible? get responsible => protocolDescription?.responsible;
 
-  /// The sampling strategy used in this deployment based on the standard
-  /// [SamplingSchemaType] types.
-  SamplingSchemaType? samplingStrategy;
-
   /// Specifies where and how to stored or upload the data collected from this
   /// deployment. If `null`, the sensed data is not stored, but may still be
   /// used in the app somehow.
@@ -63,7 +59,6 @@ class SmartphoneDeployment extends MasterDeviceDeployment {
     Map<String, Trigger> triggers = const {},
     List<TriggeredTask> triggeredTasks = const [],
     this.protocolDescription,
-    this.samplingStrategy,
     this.dataEndPoint,
   }) : super(
           deviceDescriptor: deviceDescriptor,
@@ -95,7 +90,6 @@ class SmartphoneDeployment extends MasterDeviceDeployment {
           triggers: masterDeviceDeployment.triggers,
           triggeredTasks: masterDeviceDeployment.triggeredTasks,
           protocolDescription: protocol.protocolDescription,
-          samplingStrategy: protocol.samplingStrategy,
           dataEndPoint: protocol.dataEndPoint,
         );
 
@@ -116,7 +110,6 @@ class SmartphoneDeployment extends MasterDeviceDeployment {
           triggers: protocol.triggers,
           triggeredTasks: protocol.triggeredTasks,
           protocolDescription: protocol.protocolDescription,
-          samplingStrategy: protocol.samplingStrategy,
           dataEndPoint: protocol.dataEndPoint,
         );
 
@@ -127,11 +120,11 @@ class SmartphoneDeployment extends MasterDeviceDeployment {
     return _measures;
   }
 
-  /// Adapt the sampling measures of this deployment to the specified [schema].
-  void adapt(SamplingSchema schema, {bool restore = true}) {
-    samplingStrategy = schema.type;
-    schema.adapt(this, restore: restore);
-  }
+  // /// Adapt the sampling measures of this deployment to the specified [schema].
+  // void adapt(SamplingSchema schema, {bool restore = true}) {
+  //   samplingStrategy = schema.type;
+  //   schema.adapt(this, restore: restore);
+  // }
 
   factory SmartphoneDeployment.fromJson(Map<String, dynamic> json) =>
       _$SmartphoneDeploymentFromJson(json);

@@ -35,7 +35,7 @@ class FileDataManager extends AbstractDataManager {
   int _flushingSink = 0;
 
   @override
-  Future initialize(
+  Future<void> initialize(
     MasterDeviceDeployment deployment,
     DataEndPoint dataEndPoint,
     Stream<DataPoint> data,
@@ -44,13 +44,7 @@ class FileDataManager extends AbstractDataManager {
     await super.initialize(deployment, dataEndPoint, data);
 
     _fileDataEndPoint = dataEndPoint as FileDataEndPoint;
-    await Settings().deploymentBasePath;
-
-    assert(
-        studyDeploymentId == Settings().studyDeploymentId,
-        'The study deployment id do not match wth the id provided in Settings - '
-        'this study deployment id = $studyDeploymentId - '
-        'Settings().studyDeploymentId = ${Settings().studyDeploymentId}');
+    await Settings().getDeploymentBasePath(studyDeploymentId);
 
     if (_fileDataEndPoint.encrypt) {
       assert(_fileDataEndPoint.publicKey != null,
@@ -86,7 +80,7 @@ class FileDataManager extends AbstractDataManager {
   Future<String> get path async {
     if (_path == null) {
       final directory = await Directory(
-              '${await Settings().deploymentBasePath}/${Settings.CARP_DATA_FILE_PATH}')
+              '${await Settings().getDeploymentBasePath(studyDeploymentId)}/${Settings.CARP_DATA_FILE_PATH}')
           .create(recursive: true);
       _path = directory.path;
     }
@@ -225,7 +219,7 @@ class FileDataManager extends AbstractDataManager {
   }
 
   @override
-  Future close() async {
+  Future<void> close() async {
     _initialized = false;
     await file.then((_f) {
       sink.then((_s) {

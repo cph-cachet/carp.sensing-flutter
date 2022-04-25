@@ -2,7 +2,7 @@
     "ownerId": "xyz@dtu.dk",
     "name": "Test Study Protocol",
     "description": "For testing purposes.",
-    "creationDate": "2021-10-14T18:35:52.682227Z",
+    "creationDate": "2022-04-25T22:13:28.754142Z",
     "masterDevices": [
      {
       "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
@@ -27,7 +27,7 @@
      },
      "1": {
       "$type": "dk.cachet.carp.protocols.domain.triggers.ManualTrigger",
-      "sourceDeviceRoleName": "masterphone"
+      "source_device_role_name": "masterphone"
      }
     },
     "tasks": [
@@ -40,13 +40,12 @@
         "type": "dk.cachet.carp.light"
        },
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.DataTypeMeasure",
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
         "type": "dk.cachet.carp.gps"
        },
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PhoneSensorMeasure",
-        "type": "dk.cachet.carp.steps",
-        "duration": 10
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.steps"
        }
       ]
      }

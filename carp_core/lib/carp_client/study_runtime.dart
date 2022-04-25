@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2021-2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -10,10 +10,16 @@ part of carp_core_client;
 /// Manage data collection for a specific master device [deployment] on a client device.
 class StudyRuntime {
   final List<DeviceDescriptor> _remainingDevicesToRegister = [];
-  StudyRuntimeId? _id;
-  StudyRuntimeStatus _status = StudyRuntimeStatus.NotReadyForDeployment;
-  final StreamController<StudyRuntimeStatus> _statusEventsController =
+  Study? _study;
+  StudyStatus _status = StudyStatus.DeploymentNotStarted;
+  final StreamController<StudyStatus> _statusEventsController =
       StreamController();
+
+  /// The study for this study runtime.
+  Study? get study => _study;
+
+  /// The study deployment id for the [study] of this controller.
+  String? get studyDeploymentId => study?.studyDeploymentId;
 
   /// The [MasterDeviceDeployment] for this study runtime.
   ///
@@ -22,15 +28,12 @@ class StudyRuntime {
   /// the [deploymentService].
   MasterDeviceDeployment? deployment;
 
-  /// The device factory / registry that handles the devices used in this runtime.
-  late DeviceDataCollectorFactory deviceRegistry;
+  /// The device registry that handles the devices used in this runtime.
+  DeviceDataCollectorFactory deviceRegistry;
 
   /// The deployment service to use to retrieve and manage the study deployment.
   /// Use the [initialize] method to initialize this service.
-  DeploymentService? deploymentService;
-
-  /// The ID of the study [deploymnet].
-  String? studyDeploymentId;
+  DeploymentService deploymentService;
 
   /// The latest known deployment status.
   late StudyDeploymentStatus deploymentStatus;
@@ -42,73 +45,60 @@ class StudyRuntime {
   /// The device role name.
   String? get deviceRoleName => device?.roleName;
 
-  /// Composite ID for this study runtime, comprised of the [studyDeploymentId]
-  /// and [device] role name.
-  StudyRuntimeId? get id => _id;
-
-  /// The stream of [StudyRuntimeStatus] events for this controller.
-  Stream<StudyRuntimeStatus> get statusEvents => _statusEventsController.stream;
+  /// The stream of [StudyStatus] events for this controller.
+  Stream<StudyStatus> get statusEvents => _statusEventsController.stream;
 
   /// The status of this [StudyRuntime].
-  StudyRuntimeStatus get status => _status;
+  StudyStatus get status => _status;
 
   /// Set the state of this study runtime.
-  set status(StudyRuntimeStatus newStatus) {
+  set status(StudyStatus newStatus) {
     _status = newStatus;
     _statusEventsController.add(newStatus);
   }
 
   /// Has this [StudyRuntime] been initialized?
-  bool get isInitialized => (deploymentService != null);
+  bool get isInitialized => (study != null);
 
   /// Has the device deployment been completed successfully?
-  bool get isDeployed => (_status == StudyRuntimeStatus.Deployed);
+  bool get isDeployed => (_status == StudyStatus.Deployed);
 
   /// Has the study and data collection been stopped?
-  bool get isStopped => (_status == StudyRuntimeStatus.Stopped);
+  bool get isStopped => (_status == StudyStatus.Stopped);
 
   /// The list of devices that still remain to be registrered before all devices
   /// in this study runtime is registrered.
   List<DeviceDescriptor> get remainingDevicesToRegister =>
       _remainingDevicesToRegister;
 
-  StudyRuntime();
+  /// Create a new study runtime, specifying the [deploymentService] to use to
+  /// retrieve and manage the study deployment with [studyDeploymentId] and the
+  /// [deviceRegistry] to handle the devices used in this study deployment.
+  StudyRuntime(this.deploymentService, this.deviceRegistry);
 
-  /// Instantiate a [StudyRuntime] by registering the client device in a [DeploymentService].
+  /// Intialize this study runtime by specifying its [study] and [deviceRegistration].
   ///
-  ///  * [deploymentService] - the deployment service to use to retrieve and manage
-  ///    the study deployment with [studyDeploymentId].
-  ///  * [deviceRegistry] - the device factory to handle the devices used in this study deployment.
-  ///  * [studyDeploymentId] - the ID of the deployed study for which to collect data.
-  ///  * [deviceRoleName] – the role which the client device this runtime is intended
-  ///    for plays inthe deployment identified by [studyDeploymentId].
-  ///  * [deviceRegistration] - the device configuration for the device this study
-  ///    runtime runs on, identified by [deviceRoleName] in the study deployment
-  ///    with [studyDeploymentId].
+  /// [deviceRegistration] is the device configuration for the device this study
+  /// runtime runs on, identified by [deviceRoleName] in the study deployment
+  /// with [studyDeploymentId].
   ///
   /// Call [tryDeployment] to subsequently deploy the study.
-  Future initialize(
-    DeploymentService deploymentService,
-    DeviceDataCollectorFactory deviceRegistry,
-    String studyDeploymentId,
-    String deviceRoleName,
+  Future<void> initialize(
+    Study study,
     DeviceRegistration deviceRegistration,
   ) async {
-    this.deploymentService = deploymentService;
-    this.deviceRegistry = deviceRegistry;
-
-    _id = StudyRuntimeId(studyDeploymentId, deviceRoleName);
-    _status = StudyRuntimeStatus.DeploymentReceived;
+    _study = study;
+    _status = StudyStatus.DeploymentReceived;
 
     // Register the master device this study runs on for the given study deployment.
     deploymentStatus = await deploymentService.registerDevice(
-      studyDeploymentId,
-      deviceRoleName,
+      study.studyDeploymentId,
+      study.deviceRoleName,
       deviceRegistration,
     );
 
     // Initialize runtime.
-    this.studyDeploymentId = studyDeploymentId;
+    // this.studyDeploymentId = studyDeploymentId;
     device =
         deploymentStatus.masterDeviceStatus!.device as MasterDeviceDescriptor?;
   }
@@ -119,29 +109,32 @@ class StudyRuntime {
   /// based on the [studyDeploymentId].
   ///
   /// In case already deployed, nothing happens.
-  Future<StudyRuntimeStatus> tryDeployment() async {
+  Future<StudyStatus> tryDeployment() async {
     assert(
-        studyDeploymentId != null && device != null,
+        study != null && device != null,
         'Cannot deploy without a valid study deployment id and device role name. '
         "Call 'initialize()' first.");
 
     // early out if already deployed.
-    if (status.index >= StudyRuntimeStatus.Deployed.index) return status;
+    if (status.index >= StudyStatus.Deployed.index) return status;
 
-    deploymentStatus =
-        await deploymentService!.getStudyDeploymentStatus(studyDeploymentId!);
+    _status = StudyStatus.Deploying;
+    deploymentStatus = await deploymentService
+        .getStudyDeploymentStatus(study!.studyDeploymentId);
 
-    // get the deployment
-    deployment = await deploymentService!
-        .getDeviceDeploymentFor(studyDeploymentId!, device!.roleName);
-    _status = StudyRuntimeStatus.DeploymentReceived;
+    // get the deployment from the deployment service
+    deployment = await deploymentService.getDeviceDeploymentFor(
+      study!.studyDeploymentId,
+      device!.roleName,
+    );
+    _status = StudyStatus.DeploymentReceived;
 
     // TODO - set _remainingDevicesToRegister
 
     // mark this deployment as successful
     try {
-      await deploymentService!.deploymentSuccessfulFor(
-        studyDeploymentId!,
+      await deploymentService.deploymentSuccessfulFor(
+        study!.studyDeploymentId,
         device!.roleName,
         deployment!.lastUpdateDate,
       );
@@ -149,12 +142,12 @@ class StudyRuntime {
       // we only print a warning
       // see issue #50 - there is a bug in CARP
       print(
-          "$runtimeType - Error marking deployment '$studyDeploymentId' as successful.\n$error");
+          "$runtimeType - Error marking deployment '${study!.studyDeploymentId}' as successful.\n$error");
     }
     print(
-        "$runtimeType - Study deployment '$studyDeploymentId' successfully deployed.");
+        "$runtimeType - Study deployment '${study!.studyDeploymentId}' successfully deployed.");
 
-    _status = StudyRuntimeStatus.Deployed;
+    _status = StudyStatus.Deployed;
 
     return _status;
   }
@@ -162,7 +155,7 @@ class StudyRuntime {
   /// Tries to register a connected device which are available
   /// in this device's [deviceRegistry] as well as in the [deploymentService].
   Future tryRegisterConnectedDevice(DeviceDescriptor device) async {
-    assert(studyDeploymentId != null,
+    assert(study != null,
         "Cannot register a device without a valid study deployment. Call 'initialize()' first.");
 
     String deviceType = device.type;
@@ -179,8 +172,11 @@ class StudyRuntime {
       // ask the device manager for a unique id of the device
       DeviceRegistration registration = DeviceRegistration(deviceManager.id);
       deviceManager.deviceRegistration = registration;
-      deploymentStatus = (await deploymentService?.registerDevice(
-          studyDeploymentId!, deviceRoleName, registration))!;
+      deploymentStatus = (await deploymentService.registerDevice(
+        study!.studyDeploymentId,
+        deviceRoleName,
+        registration,
+      ));
     }
   }
 
@@ -197,41 +193,38 @@ class StudyRuntime {
     }
   }
 
-  /// Resume collecting data for this [StudyRuntime].
-  void resume() {
-    _status = StudyRuntimeStatus.Resumed;
-  }
-
-  /// Temporary pause collecting data for this [StudyRuntime].
-  void pause() {
-    _status = StudyRuntimeStatus.Paused;
+  /// Start collecting data for this [StudyRuntime].
+  void start() {
+    _status = StudyStatus.Running;
   }
 
   /// Permanently stop collecting data for this [StudyRuntime].
+  /// Once a runtime is stopped it **cannot** be (re)started.
   void stop() {
     // Early out in case study has already been stopped.
-    if (status == StudyRuntimeStatus.Stopped) return;
+    if (status == StudyStatus.Stopped) return;
 
     // Stop study deployment.
-    deploymentService!.stop(studyDeploymentId!);
-    _status = StudyRuntimeStatus.Stopped;
+    deploymentService.stop(study!.studyDeploymentId);
+    _status = StudyStatus.Stopped;
   }
 }
 
-/// Uniquely identifies a [StudyRuntime] running on a [ClientManager].
-class StudyRuntimeId {
+/// A study deployment, identified by [studyDeploymentId], which a client
+/// device participates in with the role [deviceRoleName].
+class Study {
   /// The ID of the deployed study for which to collect data.
   String studyDeploymentId;
 
   /// The role name of the device in the deployment this study runtime participates in.
   String deviceRoleName;
 
-  StudyRuntimeId(this.studyDeploymentId, this.deviceRoleName);
+  Study(this.studyDeploymentId, this.deviceRoleName);
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is StudyRuntimeId &&
+      other is Study &&
           runtimeType == other.runtimeType &&
           studyDeploymentId == other.studyDeploymentId &&
           deviceRoleName == other.deviceRoleName;
@@ -241,12 +234,20 @@ class StudyRuntimeId {
 }
 
 /// Describes the possible status' of a [StudyRuntime].
-enum StudyRuntimeStatus {
+enum StudyStatus {
+  /// The study deployment process hasn't been started yet.
+  DeploymentNotStarted,
+
+  /// The study deployment process is ongoing, but not yet completed.
+  /// The state of the deployment can be tracked using [deploymentStatus].
+  Deploying,
+
+  /// The study deployment is ready to deliver the deployment information to
+  /// this primary device.
+  AwaitingDeviceDeployment,
+
   /// Deployment information has been received.
   DeploymentReceived,
-
-  /// Deployment cannot succeed yet because other master devices have not been registered yet.
-  NotReadyForDeployment,
 
   /// Deployment can complete after [remainingDevicesToRegister] have been registered.
   RegisteringDevices,
@@ -256,14 +257,8 @@ enum StudyRuntimeStatus {
   /// to execute the study have been loaded.
   Deployed,
 
-  /// The study runtime is configured and ready to execute.
-  Configured,
-
   /// The study is resumed and is sampling data.
-  Resumed,
-
-  /// The study is paused and is not sampling data.
-  Paused,
+  Running,
 
   /// The deployment has been stopped, either by this client or researcher.
   Stopped,

@@ -65,7 +65,7 @@ enum ExecutorState {
 ///
 abstract class Executor<TConfig> {
   /// The deployment that this executor is part of executing.
-  SmartphoneDeployment get deployment;
+  SmartphoneDeployment? get deployment;
 
   /// The configuration of this executor as set when [initialize]d.
   TConfig? get configuration;
@@ -87,8 +87,9 @@ abstract class Executor<TConfig> {
   /// The stream of [DataPoint] generated from this executor.
   Stream<DataPoint> get data;
 
-  /// Initialize the executor before starting it with a specific [configuration].
-  void initialize(TConfig configuration);
+  /// Initialize the executor before starting it with the [deployment] it is part of
+  /// and the specific [configuration].
+  void initialize(TConfig configuration, [SmartphoneDeployment? deployment]);
 
   /// Resume the executor.
   void resume();
@@ -114,10 +115,11 @@ abstract class AbstractExecutor<TConfig> implements Executor<TConfig> {
   final StreamController<ExecutorState> _stateEventController =
       StreamController.broadcast();
   late _ExecutorStateMachine _stateMachine;
+  SmartphoneDeployment? _deployment;
   TConfig? _configuration;
 
   @override
-  SmartphoneDeployment deployment;
+  SmartphoneDeployment? get deployment => _deployment;
 
   @override
   TConfig? get configuration => _configuration;
@@ -128,7 +130,7 @@ abstract class AbstractExecutor<TConfig> implements Executor<TConfig> {
   @override
   ExecutorState get state => _stateMachine.state;
 
-  AbstractExecutor(this.deployment) {
+  AbstractExecutor() {
     _stateMachine = _CreatedState(this);
   }
 
@@ -142,7 +144,8 @@ abstract class AbstractExecutor<TConfig> implements Executor<TConfig> {
   }
 
   @override
-  void initialize(TConfig configuration) {
+  void initialize(TConfig configuration, [SmartphoneDeployment? deployment]) {
+    _deployment = deployment;
     _configuration = configuration;
     _stateMachine.initialize();
   }

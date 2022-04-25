@@ -66,29 +66,29 @@ class SamplingSchema {
   //     name: 'Default sampling',
   //     powerAware: powerAware);
 
-  /// Adapts all [Measure]s in a [MasterDeviceDeployment] to this [SamplingSchema].
-  ///
-  /// The following parameters are adapted
-  ///   * [enabled] - a measure can be enabled / disabled based on this schema
-  ///   * [interval] - the sampling frequency can be adjusted based on this schema
-  ///   * [duration] - the sampling duration can be adjusted based on this schema
-  void adapt(MasterDeviceDeployment deployment, {bool restore = true}) {
-    deployment.tasks.forEach((task) {
-      task.measures.forEach((measure) {
-        if (measure is CAMSMeasure) {
-          // first restore each measure in the study+tasks to its previous value
-          if (restore) measure.restore();
-          if (measures.containsKey(measure.type)) {
-            // if an adapted measure exists in this schema, adapt to it
-            measure.adapt(measures[measure.type]!);
-          }
-          // notify listeners that the measure has changed due to restoration
-          // and/or adaptation
-          measure.hasChanged();
-        }
-      });
-    });
-  }
+  // /// Adapts all [Measure]s in a [MasterDeviceDeployment] to this [SamplingSchema].
+  // ///
+  // /// The following parameters are adapted
+  // ///   * [enabled] - a measure can be enabled / disabled based on this schema
+  // ///   * [interval] - the sampling frequency can be adjusted based on this schema
+  // ///   * [duration] - the sampling duration can be adjusted based on this schema
+  // void adapt(MasterDeviceDeployment deployment, {bool restore = true}) {
+  //   deployment.tasks.forEach((task) {
+  //     task.measures.forEach((measure) {
+  //       if (measure is CAMSMeasure) {
+  //         // first restore each measure in the study+tasks to its previous value
+  //         if (restore) measure.restore();
+  //         if (measures.containsKey(measure.type)) {
+  //           // if an adapted measure exists in this schema, adapt to it
+  //           measure.adapt(measures[measure.type]!);
+  //         }
+  //         // notify listeners that the measure has changed due to restoration
+  //         // and/or adaptation
+  //         measure.hasChanged();
+  //       }
+  //     });
+  //   });
+  // }
 }
 
 // /// A enumeration of known sampling schemas types.
