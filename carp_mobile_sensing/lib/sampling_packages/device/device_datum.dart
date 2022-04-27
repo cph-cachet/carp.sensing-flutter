@@ -94,7 +94,7 @@ class BatteryDatum extends Datum {
   ///  - unknown
   String? batteryStatus;
 
-  BatteryDatum() : super();
+  BatteryDatum([this.batteryLevel, this.batteryStatus]) : super();
 
   BatteryDatum.fromBatteryState(int level, BatteryState state)
       : batteryLevel = level,
@@ -137,7 +137,7 @@ class FreeMemoryDatum extends Datum {
   /// Amount of free virtual memory in bytes.
   int? freeVirtualMemory;
 
-  FreeMemoryDatum() : super();
+  FreeMemoryDatum([this.freePhysicalMemory, this.freeVirtualMemory]) : super();
 
   factory FreeMemoryDatum.fromJson(Map<String, dynamic> json) =>
       _$FreeMemoryDatumFromJson(json);
@@ -151,8 +151,6 @@ class FreeMemoryDatum extends Datum {
 /// Holds a screen event collected from the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ScreenDatum extends Datum {
-  // static const DataFormat CARP_DATA_FORMAT =
-  //     DataFormat(NameSpace.CARP, DeviceSamplingPackage.SCREEN);
   DataFormat get format => DataFormat.fromString(DeviceSamplingPackage.SCREEN);
 
   /// A screen event:
@@ -161,7 +159,7 @@ class ScreenDatum extends Datum {
   /// - SCREEN_UNLOCKED
   String? screenEvent;
 
-  ScreenDatum() : super();
+  ScreenDatum([this.screenEvent]) : super();
 
   factory ScreenDatum.fromScreenStateEvent(ScreenStateEvent event) {
     ScreenDatum sd = ScreenDatum();

@@ -11,6 +11,9 @@ void main() {
   DeviceDescriptor eSense;
 
   setUp(() {
+    // Initialization of serialization
+    tmp = DomainJsonFactory();
+
     // Create a new study protocol.
     masterProtocol = SmartphoneStudyProtocol(
       ownerId: 'user@dtu.dk',
@@ -28,46 +31,38 @@ void main() {
     // Define what needs to be measured, on which device, when.
     List<Measure> measures = [
       Measure(type: DataType(NameSpace.CARP, 'light').toString()),
-      DataTypeMeasure(type: DataType(NameSpace.CARP, 'gps').toString()),
-      PhoneSensorMeasure(
-        type: DataType(NameSpace.CARP, 'steps').toString(),
-        duration: 10,
-      ),
+      Measure(type: DataType(NameSpace.CARP, 'gps').toString()),
+      Measure(type: DataType(NameSpace.CARP, 'steps').toString()),
     ];
 
     ConcurrentTask task = ConcurrentTask(name: 'Start measures')
       ..addMeasures(measures);
     masterProtocol.addTriggeredTask(Trigger(), task, masterPhone);
 
-    // adding all measure from the common schema to one one trigger and one task
+    // adding all measure from the sampling packages to one one trigger and one task
     masterProtocol.addTriggeredTask(
       ImmediateTrigger(), // a simple trigger that starts immediately
       AutomaticTask()
-        ..measures = SamplingPackageRegistry().common.measures.values.toList(),
-      masterPhone, // a task with all measures
+        ..measures = SamplingPackageRegistry()
+            .dataTypes
+            .map((type) => Measure(type: type))
+            .toList(),
+      masterPhone,
     );
 
     // collect device info only once
     masterProtocol.addTriggeredTask(
-        OneTimeTrigger('device'),
+        OneTimeTrigger(),
         AutomaticTask()
-          ..measures = SamplingPackageRegistry().debug.getMeasureList(
-            types: [
-              DeviceSamplingPackage.DEVICE,
-            ],
-          ),
+          ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
         masterPhone);
 
     // adding two measures to another device
     masterProtocol.addTriggeredTask(
         ImmediateTrigger(),
         AutomaticTask()
-          ..measures = SamplingPackageRegistry().debug.getMeasureList(
-            types: [
-              SensorSamplingPackage.LIGHT, // 10 s
-              DeviceSamplingPackage.MEMORY, // 60 s
-            ],
-          ),
+          ..addMeasure(Measure(type: DeviceSamplingPackage.MEMORY))
+          ..addMeasure(Measure(type: SensorSamplingPackage.LIGHT)),
         eSense);
   });
 
@@ -117,10 +112,8 @@ void main() {
     masterProtocol.addTriggeredTask(
         DelayedTrigger(delay: Duration(seconds: 10)),
         AutomaticTask()
-          ..measures = SamplingPackageRegistry().common.getMeasureList(types: [
-            SensorSamplingPackage.PEDOMETER,
-            DeviceSamplingPackage.SCREEN
-          ]),
+          ..addMeasure(Measure(type: SensorSamplingPackage.PEDOMETER))
+          ..addMeasure(Measure(type: DeviceSamplingPackage.SCREEN)),
         masterPhone);
 
     masterProtocol.addTriggeredTask(
@@ -129,10 +122,8 @@ void main() {
           duration: Duration(seconds: 1),
         ), // collect every min.
         AutomaticTask()
-          ..measures = SamplingPackageRegistry().common.getMeasureList(types: [
-            SensorSamplingPackage.LIGHT,
-            DeviceSamplingPackage.DEVICE
-          ]),
+          ..addMeasure(Measure(type: SensorSamplingPackage.LIGHT))
+          ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
         masterPhone);
 
     RecurrentScheduledTrigger t1, t2, t3, t4;
@@ -147,9 +138,7 @@ void main() {
     masterProtocol.addTriggeredTask(
         t1,
         AutomaticTask()
-          ..measures = SamplingPackageRegistry()
-              .common
-              .getMeasureList(types: [DeviceSamplingPackage.MEMORY]),
+          ..addMeasure(Measure(type: DeviceSamplingPackage.MEMORY)),
         masterPhone);
 
     // collect every other day at 13:30.
@@ -163,10 +152,8 @@ void main() {
     masterProtocol.addTriggeredTask(
         t2,
         AutomaticTask()
-          ..measures = SamplingPackageRegistry().common.getMeasureList(types: [
-            SensorSamplingPackage.LIGHT,
-            DeviceSamplingPackage.MEMORY
-          ]),
+          ..addMeasure(Measure(type: SensorSamplingPackage.LIGHT))
+          ..addMeasure(Measure(type: DeviceSamplingPackage.MEMORY)),
         masterPhone);
 
     // collect every wednesday at 12:23.
@@ -180,10 +167,8 @@ void main() {
     masterProtocol.addTriggeredTask(
         t3,
         AutomaticTask()
-          ..measures = SamplingPackageRegistry().common.getMeasureList(types: [
-            SensorSamplingPackage.LIGHT,
-            DeviceSamplingPackage.BATTERY
-          ]),
+          ..addMeasure(Measure(type: SensorSamplingPackage.LIGHT))
+          ..addMeasure(Measure(type: DeviceSamplingPackage.BATTERY)),
         masterPhone);
 
     // collect every 2nd monday at 12:23.
@@ -198,10 +183,8 @@ void main() {
     masterProtocol.addTriggeredTask(
         t4,
         AutomaticTask()
-          ..measures = DeviceSamplingPackage().common.getMeasureList(types: [
-            DeviceSamplingPackage.SCREEN,
-            DeviceSamplingPackage.MEMORY
-          ]),
+          ..addMeasure(Measure(type: SensorSamplingPackage.LIGHT))
+          ..addMeasure(Measure(type: DeviceSamplingPackage.SCREEN)),
         masterPhone);
 
     ConditionalEvent({
@@ -214,10 +197,7 @@ void main() {
         SamplingEventTrigger(
             measureType: DeviceSamplingPackage.BATTERY,
             resumeCondition: ConditionalEvent({'batteryLevel': 10})),
-        AutomaticTask()
-          ..measures = SensorSamplingPackage()
-              .common
-              .getMeasureList(types: [SensorSamplingPackage.LIGHT]),
+        AutomaticTask()..addMeasure(Measure(type: SensorSamplingPackage.LIGHT)),
         masterPhone);
 
     masterProtocol.addTriggeredTask(
@@ -225,10 +205,7 @@ void main() {
             measureType: DeviceSamplingPackage.BATTERY,
             resumeCondition: (dataPoint) =>
                 (dataPoint.carpBody as BatteryDatum).batteryLevel == 10),
-        AutomaticTask()
-          ..measures = SensorSamplingPackage()
-              .common
-              .getMeasureList(types: [SensorSamplingPackage.LIGHT]),
+        AutomaticTask()..addMeasure(Measure(type: SensorSamplingPackage.LIGHT)),
         masterPhone);
 
     final studyJson = toJsonString(masterProtocol);
@@ -245,6 +222,31 @@ void main() {
         json.decode(studyJson) as Map<String, dynamic>);
     expect(toJsonString(protocolFromJson), equals(studyJson));
     print('#2 : $protocolFromJson');
+  });
+
+  test('Sampling configurations', () async {
+    SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
+      ownerId: 'user@dtu.dk',
+      name: 'sampling_configurations',
+    );
+
+    Smartphone phone = Smartphone();
+
+    phone.samplingConfiguration
+      ..addAll(DeviceSamplingPackage().samplingSchema.configurations)
+      ..addAll(SensorSamplingPackage().samplingSchema.configurations);
+
+    protocol.addMasterDevice(phone);
+
+    expect(
+        protocol.masterDevice.samplingConfiguration.keys.contains(
+            DeviceSamplingPackage().samplingSchema.configurations.keys.first),
+        true);
+    expect(
+        protocol.masterDevice.samplingConfiguration.keys.contains(
+            SensorSamplingPackage().samplingSchema.configurations.keys.first),
+        true);
+    print(toJsonString(protocol));
   });
 
   test('Register Device', () async {

@@ -71,7 +71,7 @@ abstract class Probe extends AbstractExecutor<Measure> {
 //---------------------------------------------------------------------------------------
 
 /// This probe collects one piece of [Datum] when resumed, send its to the
-/// [data] stream, and then pause.
+/// [data] stream, and then pauses.
 ///
 /// The [Datum] to be collected should be implemented in the [getDatum] method.
 ///

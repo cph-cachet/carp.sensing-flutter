@@ -95,7 +95,7 @@ class OneTimeTriggerExecutor extends TriggerExecutor<OneTimeTrigger> {
       (configuration!.hasBeenTriggered) ? [] : [from];
 
   @override
-  Future onResume() async {
+  Future<void> onResume() async {
     if (!configuration!.hasBeenTriggered) {
       configuration!.triggerTimestamp = DateTime.now();
       await super.onResume();
@@ -120,15 +120,13 @@ class PassiveTriggerExecutor extends TriggerExecutor<PassiveTrigger> {
 
   // No-op methods since a PassiveTrigger can only be resumed/paused
   // using the resume/pause methods on the PassiveTrigger.
-  Future onResume() async {}
-  Future onPause() async {}
+  Future<void> onResume() async {}
+  Future<void> onPause() async {}
 
   // Forward to the embedded trigger executor
-  Future onRestart({Measure? measure}) async =>
+  Future<void> onRestart({Measure? measure}) async =>
       configuration!.executor.restart();
-  Future onStop() async => configuration!.executor.stop();
-
-  // List<Probe> get probes => trigger.executor.probes;
+  Future<void> onStop() async => configuration!.executor.stop();
 }
 
 /// Executes a [DelayedTrigger], i.e. resumes sampling after the specified delay.
@@ -141,7 +139,7 @@ class DelayedTriggerExecutor extends TriggerExecutor<DelayedTrigger> {
   }
 
   @override
-  Future onResume() async =>
+  Future<void> onResume() async =>
       Timer(configuration!.delay, () => super.onResume());
 }
 
@@ -157,7 +155,7 @@ class ElapsedTimeTriggerExecutor extends TriggerExecutor<ElapsedTimeTrigger> {
     return (dd.isAfter(from) && dd.isBefore(to)) ? [dd] : [];
   }
 
-  Future onResume() async {
+  Future<void> onResume() async {
     if (deployment?.deployed == null) {
       warning(
           '$runtimeType - this deployment does not have a start time. Cannot execute this trigger.');
@@ -181,7 +179,7 @@ abstract class TimerTriggerExecutor<TConfig extends Trigger>
   Timer? timer;
 
   @override
-  Future onPause() async {
+  Future<void> onPause() async {
     timer?.cancel();
     await super.onPause();
   }
@@ -202,7 +200,7 @@ class IntervalTriggerExecutor extends TimerTriggerExecutor<IntervalTrigger> {
     return schedule;
   }
 
-  Future onResume() async {
+  Future<void> onResume() async {
     timer = Timer.periodic(configuration!.period, (t) {
       super.onResume();
       Timer(const Duration(seconds: 3), () => super.onPause());
@@ -230,7 +228,7 @@ class PeriodicTriggerExecutor extends TimerTriggerExecutor<PeriodicTrigger> {
     return schedule;
   }
 
-  Future onResume() async {
+  Future<void> onResume() async {
     // create a recurrent timer that resume periodically
     timer = Timer.periodic(configuration!.period, (t) {
       super.onResume();
@@ -252,7 +250,7 @@ class DateTimeTriggerExecutor extends TimerTriggerExecutor<DateTimeTrigger> {
           : [];
 
   @override
-  Future onResume() async {
+  Future<void> onResume() async {
     if (configuration!.schedule.isAfter(DateTime.now())) {
       warning('The schedule of the ScheduledTrigger cannot be in the past.');
     } else {
@@ -289,7 +287,7 @@ class RecurrentScheduledTriggerExecutor
     return schedule;
   }
 
-  Future onResume() async {
+  Future<void> onResume() async {
     // check if there is a remembered trigger date
     if (configuration!.remember) {
       String? _savedFirstOccurrence =
@@ -346,7 +344,7 @@ class CronScheduledTriggerExecutor
     _cron = cron.Cron();
   }
 
-  Future onResume() async {
+  Future<void> onResume() async {
     debug('creating cron job : $configuration');
     var _schedule = cron.Schedule.parse(configuration!.cronExpression);
     _scheduledTask = _cron.schedule(_schedule, () async {
@@ -356,7 +354,7 @@ class CronScheduledTriggerExecutor
     });
   }
 
-  Future onPause() async {
+  Future<void> onPause() async {
     await _scheduledTask?.cancel();
     await super.onPause();
   }
@@ -368,13 +366,13 @@ class SamplingEventTriggerExecutor
     extends TriggerExecutor<SamplingEventTrigger> {
   late StreamSubscription<DataPoint>? _subscription;
 
-  Future onResume() async {
+  Future<void> onResume() async {
     _subscription = SmartPhoneClientManager()
         .lookupStudyRuntime(deployment!.studyDeploymentId,
             deployment!.deviceDescriptor.roleName)
         ?.dataByType(configuration!.measureType)
         .listen((dataPoint) {
-      if ((configuration!.resumeCondition == null) ||
+      if ((configuration!.resumeCondition != null) &&
           (dataPoint.carpBody as Datum)
               .equivalentTo(configuration!.resumeCondition)) super.onResume();
       if (configuration!.pauseCondition != null &&
@@ -383,7 +381,7 @@ class SamplingEventTriggerExecutor
     });
   }
 
-  Future onPause() async {
+  Future<void> onPause() async {
     await _subscription?.cancel();
     await super.onPause();
   }
@@ -397,7 +395,7 @@ class ConditionalSamplingEventTriggerExecutor
     extends TriggerExecutor<ConditionalSamplingEventTrigger> {
   StreamSubscription<DataPoint>? _subscription;
 
-  Future onResume() async {
+  Future<void> onResume() async {
     // listen for event of the specified type and resume/pause as needed
     _subscription = SmartPhoneClientManager()
         .lookupStudyRuntime(deployment!.studyDeploymentId,
@@ -411,26 +409,34 @@ class ConditionalSamplingEventTriggerExecutor
     });
   }
 
-  Future onPause() async {
+  Future<void> onPause() async {
     await _subscription?.cancel();
     await super.onPause();
   }
 }
 
-/// Executes a [ConditionalPeriodicTrigger] based on the specified
-/// [ConditionalPeriodicTrigger.period] and their
-/// [ConditionalPeriodicTrigger.resumeCondition] and
-/// [ConditionalPeriodicTrigger.pauseCondition].
+/// Executes a [ConditionalPeriodicTrigger].
 class ConditionalPeriodicTriggerExecutor
-    extends TimerTriggerExecutor<ConditionalPeriodicTrigger> {
-  Future onResume() async {
+    extends TriggerExecutor<ConditionalPeriodicTrigger> {
+  Timer? timer;
+
+  @override
+  Future<void> onResume() async {
     // create a recurrent timer that checks the conditions periodically
     timer = Timer.periodic(configuration!.period, (_) {
+      debug(
+          '$runtimeType - checking; resumeCondition: ${configuration!.resumeCondition}, pauseCondition: ${configuration!.pauseCondition}');
       if (configuration!.resumeCondition != null &&
           configuration!.resumeCondition!()) super.onResume();
       if (configuration!.pauseCondition != null &&
           configuration!.pauseCondition!()) super.onPause();
     });
+  }
+
+  @override
+  Future<void> onPause() async {
+    timer?.cancel();
+    await super.onPause();
   }
 }
 

@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 
 void main() {
   setUp(() {
-    // This is a hack. Need to create some serialization object in order to intialize searialization.
+    // Initialization of serialization
     tmp = DomainJsonFactory();
   });
 
@@ -209,7 +209,7 @@ void main() {
       );
       print(toJsonString(t));
 
-      RandomRecurrentTriggerExecutor ex = RandomRecurrentTriggerExecutor(t);
+      RandomRecurrentTriggerExecutor ex = RandomRecurrentTriggerExecutor();
       List<Time> times = ex.samplingTimes;
       print(times);
       times.forEach((time) {
@@ -229,7 +229,7 @@ void main() {
       print(toJsonString(t));
 
       ConditionalPeriodicTriggerExecutor ex =
-          ConditionalPeriodicTriggerExecutor(t);
+          ConditionalPeriodicTriggerExecutor();
     });
 
     /// Test template.

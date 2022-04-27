@@ -43,11 +43,12 @@ Map<String, dynamic> _$DeviceDatumToJson(DeviceDatum instance) {
   return val;
 }
 
-BatteryDatum _$BatteryDatumFromJson(Map<String, dynamic> json) => BatteryDatum()
-  ..id = json['id'] as String?
-  ..timestamp = DateTime.parse(json['timestamp'] as String)
-  ..batteryLevel = json['battery_level'] as int?
-  ..batteryStatus = json['battery_status'] as String?;
+BatteryDatum _$BatteryDatumFromJson(Map<String, dynamic> json) => BatteryDatum(
+      json['battery_level'] as int?,
+      json['battery_status'] as String?,
+    )
+      ..id = json['id'] as String?
+      ..timestamp = DateTime.parse(json['timestamp'] as String);
 
 Map<String, dynamic> _$BatteryDatumToJson(BatteryDatum instance) {
   final val = <String, dynamic>{};
@@ -66,11 +67,12 @@ Map<String, dynamic> _$BatteryDatumToJson(BatteryDatum instance) {
 }
 
 FreeMemoryDatum _$FreeMemoryDatumFromJson(Map<String, dynamic> json) =>
-    FreeMemoryDatum()
+    FreeMemoryDatum(
+      json['free_physical_memory'] as int?,
+      json['free_virtual_memory'] as int?,
+    )
       ..id = json['id'] as String?
-      ..timestamp = DateTime.parse(json['timestamp'] as String)
-      ..freePhysicalMemory = json['free_physical_memory'] as int?
-      ..freeVirtualMemory = json['free_virtual_memory'] as int?;
+      ..timestamp = DateTime.parse(json['timestamp'] as String);
 
 Map<String, dynamic> _$FreeMemoryDatumToJson(FreeMemoryDatum instance) {
   final val = <String, dynamic>{};
@@ -88,10 +90,11 @@ Map<String, dynamic> _$FreeMemoryDatumToJson(FreeMemoryDatum instance) {
   return val;
 }
 
-ScreenDatum _$ScreenDatumFromJson(Map<String, dynamic> json) => ScreenDatum()
-  ..id = json['id'] as String?
-  ..timestamp = DateTime.parse(json['timestamp'] as String)
-  ..screenEvent = json['screen_event'] as String?;
+ScreenDatum _$ScreenDatumFromJson(Map<String, dynamic> json) => ScreenDatum(
+      json['screen_event'] as String?,
+    )
+      ..id = json['id'] as String?
+      ..timestamp = DateTime.parse(json['timestamp'] as String);
 
 Map<String, dynamic> _$ScreenDatumToJson(ScreenDatum instance) {
   final val = <String, dynamic>{};

@@ -37,7 +37,7 @@ class SmartPhoneClientManager extends ClientManager
 
   @override
   Future<DeviceRegistration> configure({
-    required DeploymentService deploymentService,
+    DeploymentService? deploymentService,
     DeviceDataCollectorFactory? deviceController,
     String? deviceId,
   }) async {
@@ -52,6 +52,7 @@ class SmartPhoneClientManager extends ClientManager
     // set default values, if not specified
     deviceId ??= DeviceInfo().deviceID;
     this.deviceController = deviceController ?? DeviceController();
+    this.deploymentService = deploymentService ?? SmartphoneDeploymentService();
 
     this.deviceController.registerAllAvailableDevices();
 
@@ -61,26 +62,19 @@ class SmartPhoneClientManager extends ClientManager
     print('  deployment service : $deploymentService');
     print('   device controller : $deviceController');
     print('           device ID : $deviceId');
-    print('   connected devices : ${this.deviceController.devicesToString()}}');
+    print('   available devices : ${this.deviceController.devicesToString()}');
     print('===========================================================');
 
     return super.configure(
-      deploymentService: deploymentService,
+      deploymentService: this.deploymentService!,
       deviceController: this.deviceController,
       deviceId: deviceId,
     );
   }
 
   @override
-  Future<StudyStatus> addStudy(
-    String studyDeploymentId,
-    String deviceRoleName,
-  ) async {
-    StudyStatus status = await super.addStudy(
-      studyDeploymentId,
-      deviceRoleName,
-    );
-    Study study = Study(studyDeploymentId, deviceRoleName);
+  Future<StudyStatus> addStudy(Study study) async {
+    StudyStatus status = await super.addStudy(study);
     info('Adding study to $runtimeType - $study');
 
     SmartphoneDeploymentController controller =
@@ -99,23 +93,30 @@ class SmartPhoneClientManager extends ClientManager
   SmartphoneDeploymentController? getStudyRuntime(Study study) =>
       repository[study] as SmartphoneDeploymentController;
 
+  /// Called when this client mananger is beint deactivated and potentially
+  /// stopped by the OS
+  @protected
+  @mustCallSuper
+  Future<void> deactivate() async {
+    // make sure to save all studies
+    repository.keys.forEach(
+        (study) async => await getStudyRuntime(study)?.saveDeployment());
+  }
+
   /// Called when the system puts the app in the background or returns
   /// the app to the foreground.
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    print(state);
+    debug('$runtimeType - App lifecycle state changed: $state');
     switch (state) {
       case AppLifecycleState.inactive:
-        print('appLifeCycleState inactive');
+        deactivate();
         break;
       case AppLifecycleState.resumed:
-        print('appLifeCycleState resumed');
         break;
       case AppLifecycleState.paused:
-        print('appLifeCycleState paused');
         break;
       case AppLifecycleState.detached:
-        print('appLifeCycleState detached');
         break;
     }
   }

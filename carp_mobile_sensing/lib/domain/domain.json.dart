@@ -52,10 +52,10 @@ void _registerFromJsonFunctions() {
   ));
 
   // Measure classes
-  FromJsonFactory().register(CAMSMeasure(type: 'ignored'));
-  FromJsonFactory().register(
-      PeriodicMeasure(type: 'ignored', frequency: Duration(seconds: 1)));
-  FromJsonFactory().register(MarkedMeasure(type: 'ignored'));
+  // FromJsonFactory().register(CAMSMeasure(type: 'ignored'));
+  // FromJsonFactory().register(
+  //     PeriodicMeasure(type: 'ignored', frequency: Duration(seconds: 1)));
+  // FromJsonFactory().register(MarkedMeasure(type: 'ignored'));
 
   // AppTaskController classes
   FromJsonFactory().register(UserTaskSnapshotList());

@@ -43,6 +43,7 @@ class Console extends State<ConsolePage> {
     });
   }
 
+  @override
   void dispose() {
     sensing!.stop();
     super.dispose();
@@ -153,13 +154,14 @@ class Sensing {
 
   /// is sensing running, i.e. has the study executor been resumed?
   bool get isRunning =>
-      (controller != null) && controller!.executor!.state == ProbeState.resumed;
+      (controller != null) &&
+      controller!.executor!.state == ExecutorState.resumed;
 
   /// resume sensing
-  void resume() async => controller!.resume();
+  void resume() async => controller?.executor?.resume();
 
   /// pause sensing
-  void pause() async => controller!.pause();
+  void pause() async => controller?.executor?.pause();
 
   /// stop sensing.
   void stop() async => controller!.stop();
@@ -185,75 +187,49 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     protocol.addMasterDevice(phone);
 
     // add default measures from the SensorSamplingPackage
-    protocol.addTriggeredTask(
-        ImmediateTrigger(),
-        AutomaticTask()
-          ..measures = SamplingPackageRegistry().debug.getMeasureList(
-            types: [
-              // SensorSamplingPackage.ACCELEROMETER,
-              // SensorSamplingPackage.GYROSCOPE,
-              SensorSamplingPackage.PEDOMETER,
-              SensorSamplingPackage.LIGHT,
-            ],
-          ),
-        phone);
-
-    // add default measures from the DeviceSamplingPackage
-    protocol.addTriggeredTask(
-        ImmediateTrigger(),
-        AutomaticTask()
-          ..measures = SamplingPackageRegistry().debug.getMeasureList(
-            types: [
-              DeviceSamplingPackage.MEMORY,
-              DeviceSamplingPackage.BATTERY,
-              DeviceSamplingPackage.SCREEN,
-            ],
-          ),
-        phone);
-
-    // collect device info only once
-    protocol.addTriggeredTask(
-        OneTimeTrigger('device'),
-        AutomaticTask()
-          ..measures = SamplingPackageRegistry().debug.getMeasureList(
-            types: [
-              DeviceSamplingPackage.DEVICE,
-            ],
-          ),
-        phone);
-
-    // // add a random trigger to collect device info at random times
     // protocol.addTriggeredTask(
-    //     RandomRecurrentTrigger(
-    //       startTime: Time(hour: 22, minute: 00),
-    //       endTime: Time(hour: 22, minute: 30),
-    //       minNumberOfTriggers: 2,
-    //       maxNumberOfTriggers: 8,
-    //     ),
+    //     ImmediateTrigger(),
     //     AutomaticTask()
-    //       ..measures = SamplingPackageRegistry().debug.getMeasureList(
-    //         types: [
-    //           DeviceSamplingPackage.DEVICE,
-    //         ],
-    //       ),
+    //       // ..addMeasure(Measure(type: SensorSamplingPackage.ACCELEROMETER))
+    //       // ..addMeasure(Measure(type: SensorSamplingPackage.GYROSCOPE))
+    //       ..addMeasure(Measure(type: DeviceSamplingPackage.MEMORY))
+    //       ..addMeasure(Measure(type: DeviceSamplingPackage.BATTERY))
+    //       ..addMeasure(Measure(type: DeviceSamplingPackage.SCREEN))
+    //       ..addMeasure(Measure(type: SensorSamplingPackage.PEDOMETER))
+    //       ..addMeasure(Measure(type: SensorSamplingPackage.LIGHT)),
     //     phone);
 
-    // add a ConditionalPeriodicTrigger to chech periodically
+    // // collect device info only once
+    // protocol.addTriggeredTask(
+    //     OneTimeTrigger(),
+    //     AutomaticTask()
+    //       ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
+    //     phone);
+
+    // add a random trigger to collect device info at random times
     protocol.addTriggeredTask(
-        ConditionalPeriodicTrigger(
-          period: Duration(seconds: 10),
-          resumeCondition: () {
-            return ('jakob'.length == 5);
-          },
-          pauseCondition: () => true,
+        RandomRecurrentTrigger(
+          startTime: Time(hour: 16, minute: 00),
+          endTime: Time(hour: 22, minute: 30),
+          minNumberOfTriggers: 2,
+          maxNumberOfTriggers: 8,
         ),
         AutomaticTask()
-          ..measures = SamplingPackageRegistry().debug.getMeasureList(
-            types: [
-              DeviceSamplingPackage.DEVICE,
-            ],
-          ),
+          ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
         phone);
+
+    // // add a ConditionalPeriodicTrigger to check periodically
+    // protocol.addTriggeredTask(
+    //     ConditionalPeriodicTrigger(
+    //       period: Duration(seconds: 10),
+    //       resumeCondition: () {
+    //         return ('jakob'.length == 5);
+    //       },
+    //       pauseCondition: () => true,
+    //     ),
+    //     AutomaticTask()
+    //       ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
+    //     phone);
 
     return protocol;
   }

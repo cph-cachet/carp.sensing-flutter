@@ -34,6 +34,7 @@ UserTaskSnapshot _$UserTaskSnapshotFromJson(Map<String, dynamic> json) =>
       AppTask.fromJson(json['task'] as Map<String, dynamic>),
       $enumDecode(_$UserTaskStateEnumMap, json['state']),
       DateTime.parse(json['enqueued'] as String),
+      DateTime.parse(json['triggerTime'] as String),
     )..$type = json[r'$type'] as String?;
 
 Map<String, dynamic> _$UserTaskSnapshotToJson(UserTaskSnapshot instance) {
@@ -49,6 +50,7 @@ Map<String, dynamic> _$UserTaskSnapshotToJson(UserTaskSnapshot instance) {
   val['task'] = instance.task;
   val['state'] = _$UserTaskStateEnumMap[instance.state];
   val['enqueued'] = instance.enqueued.toIso8601String();
+  val['triggerTime'] = instance.triggerTime.toIso8601String();
   return val;
 }
 

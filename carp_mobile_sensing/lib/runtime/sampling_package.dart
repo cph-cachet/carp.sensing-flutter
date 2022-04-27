@@ -28,6 +28,7 @@ class SamplingPackageRegistry {
 
   /// Register a sampling package.
   void register(SamplingPackage package) {
+    _combinedSchemas = null;
     _packages.add(package);
     package.permissions.forEach((permission) {
       if (!_permissions.contains(permission)) _permissions.add(permission);
@@ -55,6 +56,13 @@ class SamplingPackageRegistry {
     });
 
     return _packages;
+  }
+
+  /// The combined list of all measure types in all packages.
+  List<String> get dataTypes {
+    List<String> _dataTypes = [];
+    packages.forEach((package) => _dataTypes.addAll(package.dataTypes));
+    return _dataTypes;
   }
 
   /// The combined sampling schema for all measure types in all packages.

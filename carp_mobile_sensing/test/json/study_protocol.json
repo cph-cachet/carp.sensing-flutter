@@ -1,7 +1,7 @@
 {
     "ownerId": "user@dtu.dk",
     "name": "patient_tracking",
-    "creationDate": "2022-01-09T16:49:40.224672Z",
+    "creationDate": "2022-04-27T09:36:04.928088Z",
     "masterDevices": [
      {
       "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
@@ -27,8 +27,7 @@
       "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
      },
      "2": {
-      "$type": "dk.cachet.carp.protocols.domain.triggers.OneTimeTrigger",
-      "triggerId": "device"
+      "$type": "dk.cachet.carp.protocols.domain.triggers.OneTimeTrigger"
      },
      "3": {
       "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
@@ -44,121 +43,68 @@
         "type": "dk.cachet.carp.light"
        },
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.DataTypeMeasure",
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
         "type": "dk.cachet.carp.gps"
        },
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PhoneSensorMeasure",
-        "type": "dk.cachet.carp.steps",
-        "duration": 10
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.steps"
        }
       ]
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
-      "name": "Task #0",
+      "name": "Task #6",
       "measures": [
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
-        "type": "dk.cachet.carp.device",
-        "name": "Basic Device Info",
-        "description": "Collects basic information about the phone.",
-        "enabled": true,
-        "configuration": {}
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.device"
        },
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
-        "type": "dk.cachet.carp.memory",
-        "name": "Memory Usage",
-        "description": "Collects information about use of memory.",
-        "enabled": true,
-        "configuration": {},
-        "frequency": 60000000,
-        "duration": 1000000
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.memory"
        },
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
-        "type": "dk.cachet.carp.battery",
-        "name": "Battery",
-        "description": "Collects information about the battery charging level.",
-        "enabled": true,
-        "configuration": {}
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.battery"
        },
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
-        "type": "dk.cachet.carp.screen",
-        "name": "Screen Activity (lock/on/off)",
-        "description": "Collects information about lock/unlock event of the phone's screen.",
-        "enabled": true,
-        "configuration": {}
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.screen"
        },
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
-        "type": "dk.cachet.carp.accelerometer",
-        "name": "Accelerometer",
-        "description": "Collects movement data based on the onboard phone accelerometer sensor.",
-        "enabled": false,
-        "configuration": {}
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.accelerometer"
        },
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
-        "type": "dk.cachet.carp.gyroscope",
-        "name": "Gyroscope",
-        "description": "Collects movement data based on the onboard phone gyroscope sensor.",
-        "enabled": false,
-        "configuration": {}
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.gyroscope"
        },
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
-        "type": "dk.cachet.carp.periodic_accelerometer",
-        "name": "Accelerometer",
-        "description": "Collects movement data based on the onboard phone accelerometer sensor.",
-        "enabled": false,
-        "configuration": {},
-        "frequency": 5000000,
-        "duration": 1000000
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.periodic_accelerometer"
        },
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
-        "type": "dk.cachet.carp.periodic_gyroscope",
-        "name": "Gyroscope",
-        "description": "Collects movement data based on the onboard phone gyroscope sensor.",
-        "enabled": false,
-        "configuration": {},
-        "frequency": 5000000,
-        "duration": 1000000
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.periodic_gyroscope"
        },
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
-        "type": "dk.cachet.carp.pedometer",
-        "name": "Pedometer (Step Count)",
-        "description": "Collects step events from the onboard phone step sensor.",
-        "enabled": true,
-        "configuration": {}
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.pedometer"
        },
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
-        "type": "dk.cachet.carp.light",
-        "name": "Ambient Light",
-        "description": "Collects ambient light from the light sensor on the phone.",
-        "enabled": true,
-        "configuration": {},
-        "frequency": 60000000,
-        "duration": 1000000
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.light"
        }
       ]
      },
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
-      "name": "Task #1",
+      "name": "Task #7",
       "measures": [
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
-        "type": "dk.cachet.carp.device",
-        "name": "Basic Device Info",
-        "description": "Collects basic information about the phone.",
-        "enabled": true,
-        "configuration": {}
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.device"
        }
       ]
      },
@@ -167,24 +113,12 @@
       "name": "Task #8",
       "measures": [
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
-        "type": "dk.cachet.carp.light",
-        "name": "Ambient Light",
-        "description": "Collects ambient light from the light sensor on the phone.",
-        "enabled": true,
-        "configuration": {},
-        "frequency": 60000000,
-        "duration": 1000000
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.memory"
        },
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
-        "type": "dk.cachet.carp.memory",
-        "name": "Memory Usage",
-        "description": "Collects information about use of memory.",
-        "enabled": true,
-        "configuration": {},
-        "frequency": 60000000,
-        "duration": 1000000
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.light"
        }
       ]
      }
@@ -197,12 +131,12 @@
      },
      {
       "triggerId": 1,
-      "taskName": "Task #0",
+      "taskName": "Task #6",
       "targetDeviceRoleName": "masterphone"
      },
      {
       "triggerId": 2,
-      "taskName": "Task #1",
+      "taskName": "Task #7",
       "targetDeviceRoleName": "masterphone"
      },
      {
@@ -212,6 +146,5 @@
      }
     ],
     "expectedParticipantData": [],
-    "description": "",
-    "samplingStrategy": "normal"
+    "description": ""
    }

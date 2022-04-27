@@ -18,7 +18,7 @@ part 'study_description.dart';
 part 'data_endpoint.dart';
 part 'sampling_schema.dart';
 part 'sampling_configurations.dart';
-part 'measures.dart';
+// part 'measures.dart';
 part 'device_descriptor.dart';
 part 'device_deployment.dart';
 part 'tasks.dart';

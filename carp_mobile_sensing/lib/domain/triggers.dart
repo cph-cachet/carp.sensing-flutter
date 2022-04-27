@@ -25,10 +25,6 @@ class ImmediateTrigger extends Trigger {
 /// information.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class OneTimeTrigger extends Trigger {
-  /// The unique id of this trigger.
-  /// Used to identify specific instances of one time triggeres.
-  // String triggerId;
-
   /// The timestamp of when this trigger was triggered.
   DateTime? triggerTimestamp;
 

@@ -13,6 +13,12 @@ class PersistentSamplingConfiguration extends SamplingConfiguration {
   DateTime? lastTime;
 
   PersistentSamplingConfiguration() : super();
+
+  Map<String, dynamic> toJson() =>
+      _$PersistentSamplingConfigurationToJson(this);
+  Function get fromJsonFunction => _$PersistentSamplingConfigurationFromJson;
+  factory PersistentSamplingConfiguration.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as PersistentSamplingConfiguration;
 }
 
 /// A sampling configuration which allows configuring the time [interval] in
@@ -23,6 +29,11 @@ class IntervalSamplingConfiguration extends PersistentSamplingConfiguration {
   Duration interval;
 
   IntervalSamplingConfiguration({required this.interval}) : super() {}
+
+  Function get fromJsonFunction => _$IntervalSamplingConfigurationFromJson;
+  Map<String, dynamic> toJson() => _$IntervalSamplingConfigurationToJson(this);
+  factory IntervalSamplingConfiguration.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as IntervalSamplingConfiguration;
 }
 
 /// A sampling configuration specifying how to collect data on a regular basis
@@ -40,24 +51,66 @@ class PeriodicSamplingConfiguration extends IntervalSamplingConfiguration {
     required Duration interval,
     required this.duration,
   }) : super(interval: interval);
+
+  Map<String, dynamic> toJson() => _$PeriodicSamplingConfigurationToJson(this);
+  Function get fromJsonFunction => _$PeriodicSamplingConfigurationFromJson;
+  factory PeriodicSamplingConfiguration.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as PeriodicSamplingConfiguration;
 }
 
 /// A sampling configuration which changes based on how much battery the device has left.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class BatteryAwareSamplingConfiguration<TConfig extends SamplingConfiguration>
-    extends SamplingConfiguration {
+class BatteryAwareSamplingConfiguration extends SamplingConfiguration {
   /// The sampling configuration to use when there is plenty of battery left.
-  TConfig normal;
+  SamplingConfiguration normal;
 
   /// The sampling configuration to use when the battery is low.
-  TConfig low;
+  SamplingConfiguration low;
 
   /// The sampling configuration to use when the battery is critically low.
-  TConfig critical;
+  SamplingConfiguration critical;
 
   BatteryAwareSamplingConfiguration({
     required this.normal,
     required this.low,
     required this.critical,
   }) : super();
+
+  Function get fromJsonFunction => _$BatteryAwareSamplingConfigurationFromJson;
+  Map<String, dynamic> toJson() =>
+      _$BatteryAwareSamplingConfigurationToJson(this);
+  factory BatteryAwareSamplingConfiguration.fromJson(
+          Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as BatteryAwareSamplingConfiguration;
 }
+
+// /// A sampling configuration which changes based on how much battery the device has left.
+// @JsonSerializable(
+//     fieldRename: FieldRename.none,
+//     includeIfNull: false,
+//     genericArgumentFactories: true)
+// class BatteryAwareSamplingConfiguration<TConfig extends SamplingConfiguration>
+//     extends SamplingConfiguration {
+//   /// The sampling configuration to use when there is plenty of battery left.
+//   TConfig normal;
+
+//   /// The sampling configuration to use when the battery is low.
+//   TConfig low;
+
+//   /// The sampling configuration to use when the battery is critically low.
+//   TConfig critical;
+
+//   BatteryAwareSamplingConfiguration({
+//     required this.normal,
+//     required this.low,
+//     required this.critical,
+//   }) : super();
+
+//   Function get fromJsonFunction => _$BatteryAwareSamplingConfigurationFromJson;
+//   Map<String, dynamic> toJson() =>
+//       _$BatteryAwareSamplingConfigurationToJson(this, toJson());
+//   factory BatteryAwareSamplingConfiguration.fromJson(
+//           Map<String, dynamic> json) =>
+//       FromJsonFactory().fromJson(json)
+//           as BatteryAwareSamplingConfiguration<TConfig>;
+// }

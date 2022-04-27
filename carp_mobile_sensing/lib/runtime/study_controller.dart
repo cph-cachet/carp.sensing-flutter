@@ -116,7 +116,7 @@ class SmartphoneDeploymentController extends StudyRuntime {
     return _filename;
   }
 
-  /// Save the [deployment] persistenly to a file.
+  /// Save the [deployment] persistenly to a file cache.
   /// Returns `true` if successful.
   Future<bool> saveDeployment() async {
     bool success = true;
@@ -132,7 +132,7 @@ class SmartphoneDeploymentController extends StudyRuntime {
     return success;
   }
 
-  /// Restore the [deployment] from a file.
+  /// Restore the [deployment] from a local file cache.
   /// Returns `true` if successful.
   Future<bool> restoreDeployment() async {
     bool success = true;

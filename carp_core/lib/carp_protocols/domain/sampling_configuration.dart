@@ -26,7 +26,6 @@ abstract class DataTypeSamplingScheme {
 
   // TODO - note that this is called "default" in carp-core-kotlin.
   // But "default" is a reserved word in Dart. May cause serialization problems.....
-
   /// The default configuration to use when no other configuration is specified.
   SamplingConfiguration defaultSamplingConfiguration;
 
