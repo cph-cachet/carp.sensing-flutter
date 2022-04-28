@@ -14,14 +14,14 @@ abstract class StudyProtocolManager {
   /// Initialize the study manager.
   Future<void> initialize();
 
-  /// Get a [SmartphoneStudyProtocol] based on its ID.
-  /// Returns `null` if no protocol with [studyId] exists.
-  Future<SmartphoneStudyProtocol?> getStudyProtocol(String studyId);
+  /// Get a [SmartphoneStudyProtocol] based on its [id].
+  /// Returns `null` if no protocol exists.
+  Future<SmartphoneStudyProtocol?> getStudyProtocol(String id);
 
-  /// Save a [SmartphoneStudyProtocol] with the ID [studyId].
+  /// Save a [SmartphoneStudyProtocol] with the ID [id].
   /// Returns `true` if successful, `false` otherwise.
   Future<bool> saveStudyProtocol(
-    String studyId,
+    String id,
     SmartphoneStudyProtocol protocol,
   );
 }

@@ -201,6 +201,7 @@ class Time extends Serializable {
   Map<String, dynamic> toJson() => _$TimeToJson(this);
 
   static String _twoDigits(int n) => (n >= 10) ? '$n' : '0$n';
+
   String toString() =>
       '${_twoDigits(hour)}:${_twoDigits(minute)}:${_twoDigits(second)}';
 }
@@ -691,8 +692,8 @@ class ConditionalPeriodicTrigger extends Trigger {
   Map<String, dynamic> toJson() => _$ConditionalPeriodicTriggerToJson(this);
 }
 
-/// A trigger that triggers a random number of times within a defined
-/// period of time in a day.
+/// A daily trigger that triggers a random number of times within a defined
+/// period of time of the day.
 ///
 /// The random value is between the [minNumberOfTriggers] and [maxNumberOfTriggers]
 /// numbers specified.
@@ -713,6 +714,9 @@ class RandomRecurrentTrigger extends Trigger {
 
   /// The duration (until paused) of the the sampling.
   late Duration duration;
+
+  /// The timestamp of when this trigger was triggered last.
+  DateTime? lastTriggerTimestamp;
 
   /// Create a [RandomRecurrentTrigger].
   ///

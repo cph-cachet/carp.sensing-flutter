@@ -152,7 +152,6 @@ class FromJsonFactory {
   // TODO: This could be auto-generated using a builder....
   FromJsonFactory._() {
     // DEPLOYMENT
-
     final DeviceDescriptor device = DeviceDescriptor(roleName: '');
 
     register(DeviceRegistration());

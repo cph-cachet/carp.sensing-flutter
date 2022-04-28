@@ -38,7 +38,8 @@ class Console extends State<ConsolePage> {
     sensing = Sensing();
     Settings().init().then((future) {
       sensing!.init().then((future) {
-        log('Setting up study protocol: ${sensing!.protocol}');
+        log('Setting up study : ${sensing!.study}');
+        log('Deployment status : ${sensing!.status}');
       });
     });
   }
@@ -109,61 +110,73 @@ class Console extends State<ConsolePage> {
 /// This example is useful for creating a Business Logical Object (BLOC) in a
 /// Flutter app. See e.g. the CARP Mobile Sensing App.
 class Sensing {
+  // Specify the deployment id for this study.
+  // In a real app, the user would somehow specify this.
+  String studyDeploymentId = '83ec1e70-c647-11ec-8b84-214a8597ae84';
+
   StudyProtocol? protocol;
-  StudyDeploymentStatus? _status;
   DeploymentService service = SmartphoneDeploymentService();
   SmartphoneDeploymentController? controller;
   Study? study;
 
   /// Initialize sensing.
-  Future init() async {
+  Future<void> init() async {
     Settings().debugLevel = DebugLevel.DEBUG;
 
-    // get the protocol from the local protocol manager (defined below)
-    protocol = await LocalStudyProtocolManager().getStudyProtocol('ignored');
+    // Configure the on-phone deployment service with a protocol.
+    protocol =
+        await LocalStudyProtocolManager().getStudyProtocol(studyDeploymentId);
+    StudyDeploymentStatus status =
+        await service.createStudyDeployment(protocol!, studyDeploymentId);
 
-    // deploy this protocol using the on-phone deployment service
-    _status = await service.createStudyDeployment(protocol!);
-
-    String studyDeploymentId = _status!.studyDeploymentId;
-    String deviceRolename = _status!.masterDeviceStatus!.device.roleName;
-
-    // create and configure a client manager for this phone
+    // Create and configure a client manager for this phone.
     SmartPhoneClientManager client = SmartPhoneClientManager();
     await client.configure(deploymentService: service);
 
-    // add and deploy a study
-    study = Study(studyDeploymentId, deviceRolename);
+    // Define the study and add it to the client.
+    study = Study(
+      status.studyDeploymentId,
+      status.masterDeviceStatus!.device.roleName,
+    );
     await client.addStudy(study!);
-    await client.tryDeployment(study!);
 
+    // Get the study controller and try to deploy the study.
+    //
+    // Note that if the study has already been deployed on this phone
+    // it has been cached locally in a file and the local cache will
+    // be used pr. default.
+    // If not deployed before (i.e., cached) the study deployment will be
+    // fetched from the deployment service.
     controller = client.getStudyRuntime(study!);
-    // configure the controller
-    // notifications are disabled, since we're not using app tasks in this simple app
-    // see https://github.com/cph-cachet/carp.sensing-flutter/wiki/3.1-The-AppTask-Model#notifications
+    await controller?.tryDeployment(useCached: false);
+
+    // Configure the controller.
+    //
+    // Notifications are disabled, since we're not using app tasks in this
+    // simple app.
     await controller!.configure(
       enableNotifications: false,
     );
 
-    // listening on the data stream and print them as json
+    // Listening on the data stream and print them as json.
     controller!.data.listen((data) => print(toJsonString(data)));
   }
 
-  /// get the status of the study deployment.
-  StudyDeploymentStatus? get status => _status;
-
-  /// is sensing running, i.e. has the study executor been resumed?
+  /// Is sensing running, i.e. has the study executor been resumed?
   bool get isRunning =>
       (controller != null) &&
       controller!.executor!.state == ExecutorState.resumed;
 
-  /// resume sensing
+  /// Status of sensing.
+  StudyStatus? get status => controller?.status;
+
+  /// Resume sensing
   void resume() async => controller?.executor?.resume();
 
-  /// pause sensing
+  /// Pause sensing
   void pause() async => controller?.executor?.pause();
 
-  /// stop sensing.
+  /// Stop sensing.
   void stop() async => controller!.stop();
 }
 
@@ -175,7 +188,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
   Future initialize() async {}
 
   /// Create a new CAMS study protocol.
-  Future<SmartphoneStudyProtocol> getStudyProtocol(String studyId) async {
+  Future<SmartphoneStudyProtocol> getStudyProtocol(String id) async {
     SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
       ownerId: 'AB',
       name: 'Track patient movement',
@@ -209,7 +222,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // add a random trigger to collect device info at random times
     protocol.addTriggeredTask(
         RandomRecurrentTrigger(
-          startTime: Time(hour: 16, minute: 00),
+          startTime: Time(hour: 07, minute: 45),
           endTime: Time(hour: 22, minute: 30),
           minNumberOfTriggers: 2,
           maxNumberOfTriggers: 8,

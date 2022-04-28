@@ -13,6 +13,7 @@ class SmartPhoneClientManager extends ClientManager
   SmartPhoneClientManager._() {
     WidgetsFlutterBinding.ensureInitialized();
     WidgetsBinding.instance?.addObserver(this);
+    DomainJsonFactory();
   }
 
   /// Get the singleton [SmartPhoneClientManager].
@@ -60,7 +61,7 @@ class SmartPhoneClientManager extends ClientManager
     print('  CARP Mobile Sensing (CAMS) - $runtimeType');
     print('===========================================================');
     print('  deployment service : $deploymentService');
-    print('   device controller : $deviceController');
+    print('   device controller : ${this.deviceController}');
     print('           device ID : $deviceId');
     print('   available devices : ${this.deviceController.devicesToString()}');
     print('===========================================================');
@@ -93,8 +94,19 @@ class SmartPhoneClientManager extends ClientManager
   SmartphoneDeploymentController? getStudyRuntime(Study study) =>
       repository[study] as SmartphoneDeploymentController;
 
-  /// Called when this client mananger is beint deactivated and potentially
+  /// Called when this client mananger is being (re-)activated by the OS
+  ///
+  /// Implementations of this method should start with a call to the inherited
+  /// method, as in `super.activate()`.
+  @protected
+  @mustCallSuper
+  void activate() {}
+
+  /// Called when this client mananger is being deactivated and potentially
   /// stopped by the OS
+  ///
+  /// Implementations of this method should start with a call to the inherited
+  /// method, as in `super.deactivate()`.
   @protected
   @mustCallSuper
   Future<void> deactivate() async {
@@ -110,13 +122,12 @@ class SmartPhoneClientManager extends ClientManager
     debug('$runtimeType - App lifecycle state changed: $state');
     switch (state) {
       case AppLifecycleState.inactive:
+      case AppLifecycleState.paused:
+      case AppLifecycleState.detached:
         deactivate();
         break;
       case AppLifecycleState.resumed:
-        break;
-      case AppLifecycleState.paused:
-        break;
-      case AppLifecycleState.detached:
+        activate();
         break;
     }
   }

@@ -155,6 +155,7 @@ class ElapsedTimeTriggerExecutor extends TriggerExecutor<ElapsedTimeTrigger> {
     return (dd.isAfter(from) && dd.isBefore(to)) ? [dd] : [];
   }
 
+  @override
   Future<void> onResume() async {
     if (deployment?.deployed == null) {
       warning(
@@ -488,13 +489,23 @@ class RandomRecurrentTriggerExecutor
     return '${now.year}-${now.month}-${now.day}';
   }
 
-  String get tag => 'rrte.$todayString';
+  bool get hasBeenScheduledForToday {
+    // fast out if no timestamp is set previously
+    if (configuration?.lastTriggerTimestamp == null) return false;
+
+    var now = DateTime.now();
+    var midnight = DateTime(now.year, now.month, now.day);
+    int sinceLastTime =
+        now.millisecond - configuration!.lastTriggerTimestamp!.millisecond;
+    int sinceMidnight = now.millisecond - midnight.millisecond;
+
+    return (sinceLastTime < sinceMidnight);
+  }
 
   Future onResume() async {
     // sampling might be resumed after [startTime] or the app wasn't running at [startTime]
     // therefore, first check if the random timers have been scheduled for today
     if (Time.now().isAfter(startTime)) {
-      bool hasBeenScheduledForToday = Settings().preferences!.containsKey(tag);
       if (!hasBeenScheduledForToday) {
         debug(
             '$runtimeType - timers has not been scheduled for today ($todayString) - scheduling now');
@@ -517,11 +528,11 @@ class RandomRecurrentTriggerExecutor
     _timers = [];
 
     // get a random number of trigger time for today, and for each set up a
-    // timer that triggers the super.onResum() method.
+    // timer that triggers the super.onResume() method.
     samplingTimes.forEach((time) {
       // find the delay - note, that none of the delays can be negative,
       // since we are at [startTime] or after
-      Duration delay = time.difference(startTime);
+      Duration delay = time.difference(Time.now());
       debug('$runtimeType - setting up timer for : $time, delay: $delay');
       Timer timer = Timer(delay, () async {
         await super.onResume();
@@ -532,15 +543,15 @@ class RandomRecurrentTriggerExecutor
     });
 
     // mark this day as scheduled
-    Settings().preferences!.setBool(tag, true);
+    configuration!.lastTriggerTimestamp = DateTime.now();
   }
 
   Future onPause() async {
-    // cancel all the timer that might have been started
+    // cancel all the timers that might have been started
     for (var timer in _timers) {
       timer.cancel();
     }
-    // cancel the daily cronn job
+    // cancel the daily cron job
     await _scheduledTask.cancel();
     await super.onPause();
   }

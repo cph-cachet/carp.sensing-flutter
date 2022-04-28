@@ -80,7 +80,7 @@ class SmartphoneDeploymentController extends StudyRuntime {
       : super(deploymentService, deviceRegistry);
 
   @override
-  Future<StudyStatus> tryDeployment([bool useCached = true]) async {
+  Future<StudyStatus> tryDeployment({bool useCached = true}) async {
     assert(
         study != null && device != null,
         'Cannot deploy without a valid study deployment id and device role name. '
