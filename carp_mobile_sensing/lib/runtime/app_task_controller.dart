@@ -239,6 +239,7 @@ class AppTaskController {
         // enqueue the task (again), but avoid notifications
         UserTask? userTask = enqueue(executor, sendNotification: false);
         if (userTask != null) {
+          userTask.id = snapshot.id;
           userTask.enqueued = snapshot.enqueued;
           userTask.state = snapshot.state;
         }
@@ -272,15 +273,18 @@ class UserTaskSnapshotList extends Serializable {
 /// persistently across app restart.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class UserTaskSnapshot extends Serializable {
+  late String id;
   late AppTask task;
   late UserTaskState state;
   late DateTime enqueued;
   late DateTime triggerTime;
 
-  UserTaskSnapshot(this.task, this.state, this.enqueued, this.triggerTime)
+  UserTaskSnapshot(
+      this.id, this.task, this.state, this.enqueued, this.triggerTime)
       : super();
 
   UserTaskSnapshot.fromUserTask(UserTask userTask) : super() {
+    id = userTask.id;
     task = userTask.task;
     state = userTask.state;
     enqueued = userTask.enqueued;

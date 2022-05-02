@@ -59,7 +59,7 @@ void _registerFromJsonFunctions() {
 
   // AppTaskController classes
   FromJsonFactory().register(UserTaskSnapshotList());
-  FromJsonFactory().register(UserTaskSnapshot(AppTask(type: 'ignored'),
+  FromJsonFactory().register(UserTaskSnapshot('', AppTask(type: 'ignored'),
       UserTaskState.canceled, DateTime.now(), DateTime.now()));
   _fromJsonFunctionsRegistrered = true;
 }

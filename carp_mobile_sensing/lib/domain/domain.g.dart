@@ -821,7 +821,10 @@ RandomRecurrentTrigger _$RandomRecurrentTriggerFromJson(
           : Duration(microseconds: json['duration'] as int),
     )
       ..$type = json[r'$type'] as String?
-      ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String?;
+      ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String?
+      ..lastTriggerTimestamp = json['lastTriggerTimestamp'] == null
+          ? null
+          : DateTime.parse(json['lastTriggerTimestamp'] as String);
 
 Map<String, dynamic> _$RandomRecurrentTriggerToJson(
     RandomRecurrentTrigger instance) {
@@ -840,6 +843,8 @@ Map<String, dynamic> _$RandomRecurrentTriggerToJson(
   val['minNumberOfTriggers'] = instance.minNumberOfTriggers;
   val['maxNumberOfTriggers'] = instance.maxNumberOfTriggers;
   val['duration'] = instance.duration.inMicroseconds;
+  writeNotNull(
+      'lastTriggerTimestamp', instance.lastTriggerTimestamp?.toIso8601String());
   return val;
 }
 

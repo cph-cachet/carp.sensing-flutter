@@ -28,7 +28,7 @@ class ConsolePage extends StatefulWidget {
   Console createState() => Console();
 }
 
-/// A simple UI with a console that logs/prints the sensed data in a json format.
+/// A simple UI with a console that shows the sensed data in a json format.
 class Console extends State<ConsolePage> {
   String _log = '';
   Sensing? sensing;
@@ -219,17 +219,17 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //       ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
     //     phone);
 
-    // add a random trigger to collect device info at random times
-    protocol.addTriggeredTask(
-        RandomRecurrentTrigger(
-          startTime: Time(hour: 07, minute: 45),
-          endTime: Time(hour: 22, minute: 30),
-          minNumberOfTriggers: 2,
-          maxNumberOfTriggers: 8,
-        ),
-        AutomaticTask()
-          ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
-        phone);
+    // // add a random trigger to collect device info at random times
+    // protocol.addTriggeredTask(
+    //     RandomRecurrentTrigger(
+    //       startTime: Time(hour: 07, minute: 45),
+    //       endTime: Time(hour: 22, minute: 30),
+    //       minNumberOfTriggers: 2,
+    //       maxNumberOfTriggers: 8,
+    //     ),
+    //     AutomaticTask()
+    //       ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
+    //     phone);
 
     // // add a ConditionalPeriodicTrigger to check periodically
     // protocol.addTriggeredTask(
@@ -243,6 +243,17 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //     AutomaticTask()
     //       ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
     //     phone);
+
+    // add an app task
+    protocol.addTriggeredTask(
+        IntervalTrigger(
+          period: const Duration(minutes: 1),
+        ),
+        AppTask(
+          type: SensingUserTask.ONE_TIME_SENSING_TYPE,
+          title: "Device information",
+        )..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
+        phone);
 
     return protocol;
   }

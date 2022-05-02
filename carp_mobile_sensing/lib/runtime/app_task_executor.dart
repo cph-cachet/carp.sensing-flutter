@@ -26,8 +26,9 @@ part of runtime;
 /// using the `registerUserTaskFactory` method.
 class AppTaskExecutor extends TaskExecutor<AppTask> {
   /// The [AppTask] to be executed.
-  late AppTask appTask;
+  // late AppTask appTask;
   late TaskExecutor _taskExecutor;
+  AppTask get appTask => task as AppTask;
 
   AppTaskExecutor() : super() {
     // create an embedded executor that later can be used to execute this task
@@ -47,7 +48,7 @@ class AppTaskExecutor extends TaskExecutor<AppTask> {
   }
 
   Future<void> onPause() async {
-    // TODO - don't know what to do on pause????
+    // TODO - don't know what to do on pause. Remove from queue?
   }
 
   Future<void> onStop() async {
@@ -70,10 +71,10 @@ abstract class UserTaskFactory {
 ///
 /// A [UserTask] is enqueued in the [AppTaskController]'s queue.
 abstract class UserTask {
-  final String _id = Uuid().v4();
   final AppTaskExecutor _executor;
   UserTaskState _state = UserTaskState.initialized;
-  String get id => _id;
+
+  String id = Uuid().v4();
   String get type => _executor.appTask.type;
   String get title => _executor.appTask.title;
   String get description => _executor.appTask.description;
@@ -83,7 +84,7 @@ abstract class UserTask {
   /// The time this task should trigger (typically becoming visible to the user).
   late DateTime triggerTime;
 
-  /// The time this task was added to the queue (enqueued).
+  /// The time this task was added to the queue.
   late DateTime enqueued;
 
   /// Returns a [Duration] until this task expires and is removed from the queue.
@@ -124,6 +125,8 @@ abstract class UserTask {
   }
 
   /// Callback from the app when this task is to be started.
+  @mustCallSuper
+  @protected
   void onStart(BuildContext context) {
     state = UserTaskState.started;
   }
@@ -132,6 +135,8 @@ abstract class UserTask {
   ///
   /// If [dequeue] is `true` the task is removed from the queue.
   /// Othervise, it it kept on the queue for later.
+  @mustCallSuper
+  @protected
   void onCancel(BuildContext context, {dequeue = false}) {
     state = UserTaskState.canceled;
     (dequeue)
@@ -142,6 +147,8 @@ abstract class UserTask {
   /// Callback from app when this task is done.
   ///
   /// If [dequeue] is `true` the task is removed from the queue.
+  @mustCallSuper
+  @protected
   void onDone(BuildContext context, {dequeue = false}) {
     state = UserTaskState.done;
     AppTaskController().done(id);
@@ -152,11 +159,13 @@ abstract class UserTask {
   /// by the user in the OS notification system.
   ///
   /// Default implementation is no-op, but can be extended in sub-classes.
+  @mustCallSuper
+  @protected
   void onNotification() {}
 
   @override
   String toString() =>
-      '$runtimeType - id: $id, type: $type, title: $title, state: $state';
+      '$runtimeType - id: $id, type: $type, title: $title, state: $state, triggerTime: $triggerTime';
 }
 
 /// The states of a [UserTask].

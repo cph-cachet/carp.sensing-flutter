@@ -347,7 +347,10 @@ TriggeredTask _$TriggeredTaskFromJson(Map<String, dynamic> json) =>
       json['triggerId'] as int,
     )
       ..taskName = json['taskName'] as String
-      ..targetDeviceRoleName = json['targetDeviceRoleName'] as String?;
+      ..targetDeviceRoleName = json['targetDeviceRoleName'] as String?
+      ..hasBeenScheduledUntil = json['hasBeenScheduledUntil'] == null
+          ? null
+          : DateTime.parse(json['hasBeenScheduledUntil'] as String);
 
 Map<String, dynamic> _$TriggeredTaskToJson(TriggeredTask instance) {
   final val = <String, dynamic>{
@@ -362,6 +365,8 @@ Map<String, dynamic> _$TriggeredTaskToJson(TriggeredTask instance) {
   }
 
   writeNotNull('targetDeviceRoleName', instance.targetDeviceRoleName);
+  writeNotNull('hasBeenScheduledUntil',
+      instance.hasBeenScheduledUntil?.toIso8601String());
   return val;
 }
 

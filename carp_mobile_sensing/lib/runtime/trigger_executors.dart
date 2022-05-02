@@ -124,8 +124,7 @@ class PassiveTriggerExecutor extends TriggerExecutor<PassiveTrigger> {
   Future<void> onPause() async {}
 
   // Forward to the embedded trigger executor
-  Future<void> onRestart({Measure? measure}) async =>
-      configuration!.executor.restart();
+  Future<void> onRestart() async => configuration!.executor.restart();
   Future<void> onStop() async => configuration!.executor.stop();
 }
 
@@ -485,7 +484,7 @@ class RandomRecurrentTriggerExecutor
   }
 
   String get todayString {
-    DateTime now = DateTime.now();
+    final now = DateTime.now();
     return '${now.year}-${now.month}-${now.day}';
   }
 
@@ -493,11 +492,11 @@ class RandomRecurrentTriggerExecutor
     // fast out if no timestamp is set previously
     if (configuration?.lastTriggerTimestamp == null) return false;
 
-    var now = DateTime.now();
-    var midnight = DateTime(now.year, now.month, now.day);
-    int sinceLastTime =
+    final now = DateTime.now();
+    final midnight = DateTime(now.year, now.month, now.day);
+    final sinceLastTime =
         now.millisecond - configuration!.lastTriggerTimestamp!.millisecond;
-    int sinceMidnight = now.millisecond - midnight.millisecond;
+    final sinceMidnight = now.millisecond - midnight.millisecond;
 
     return (sinceLastTime < sinceMidnight);
   }
@@ -514,7 +513,7 @@ class RandomRecurrentTriggerExecutor
     }
 
     // set up a cron job that generates the random triggers once pr day at [startTime]
-    final String cronJob = '${startTime.minute} ${startTime.hour} * * *';
+    final cronJob = '${startTime.minute} ${startTime.hour} * * *';
     debug('$runtimeType - creating cron job : $cronJob');
 
     _scheduledTask = _cron.schedule(cron.Schedule.parse(cronJob), () async {

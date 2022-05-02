@@ -11,27 +11,24 @@ part of runtime;
 /// with a set of underlying executors).
 ///
 /// See [StudyDeploymentExecutor] and [TaskExecutor] for examples.
-abstract class AggregateExecutor<Config> extends AbstractExecutor<Config> {
+abstract class AggregateExecutor<TConfig> extends AbstractExecutor<TConfig> {
   static final DeviceInfo deviceInfo = DeviceInfo();
   final StreamGroup<DataPoint> group = StreamGroup.broadcast();
-  List<Executor> executors = [];
+  final List<Executor> executors = [];
   Stream<DataPoint> get data => group.stream;
 
-  Future<void> onPause() async {
-    executors.forEach((executor) => executor.pause());
-  }
+  Future<void> onPause() async =>
+      executors.forEach((executor) => executor.pause());
 
-  Future<void> onResume() async {
-    executors.forEach((executor) => executor.resume());
-  }
+  Future<void> onResume() async =>
+      executors.forEach((executor) => executor.resume());
 
-  Future<void> onRestart({Measure? measure}) async {
-    executors.forEach((executor) => executor.restart());
-  }
+  Future<void> onRestart() async =>
+      executors.forEach((executor) => executor.restart());
 
   Future<void> onStop() async {
     executors.forEach((executor) => executor.stop());
-    executors = [];
+    executors.clear();
   }
 }
 
@@ -60,7 +57,7 @@ class StudyDeploymentExecutor extends AggregateExecutor<SmartphoneDeployment> {
       TaskDescriptor task =
           configuration!.getTaskByName(triggeredTask.taskName)!;
 
-      TriggeredTaskExecutor executor = TriggeredTaskExecutor(
+      TriggeredTaskExecutor executor = getTriggeredTaskExecutor(
         triggeredTask,
         trigger,
         task,
@@ -90,8 +87,7 @@ class StudyDeploymentExecutor extends AggregateExecutor<SmartphoneDeployment> {
   void addError(Object error, [StackTrace? stacktrace]) =>
       _manualDataPointController.addError(error, stacktrace);
 
-  /// Returns a list of the running probes in this study deployment executor.
-  /// This is a combination of the running probes in all trigger executors.
+  /// A list of the running probes in this study deployment executor.
   List<Probe> get probes {
     List<Probe> _probes = [];
 
@@ -105,10 +101,16 @@ class StudyDeploymentExecutor extends AggregateExecutor<SmartphoneDeployment> {
 }
 
 /// Responsible for handling the execution of a [TriggeredTask].
+///
+/// This executor runs in real-time and triggers the task using timers. This
+/// entails that tasks are only triggered if the app is actively running, either
+/// in the foreground or in a background process.
 class TriggeredTaskExecutor extends AggregateExecutor<TriggeredTask> {
   late Trigger _trigger;
   late TaskDescriptor _task;
   late TriggeredTask _triggeredTask;
+  TriggerExecutor? triggerExecutor;
+  TaskExecutor? taskExecutor;
 
   Trigger get trigger => _trigger;
   TaskDescriptor get task => _task;
@@ -127,16 +129,16 @@ class TriggeredTaskExecutor extends AggregateExecutor<TriggeredTask> {
   @override
   void onInitialize() {
     // get the trigger executor and add it to this stream
-    TriggerExecutor triggerExecutor = getTriggerExecutor(trigger);
-    group.add(triggerExecutor.data);
-    executors.add(triggerExecutor);
-    triggerExecutor.initialize(trigger, deployment!);
+    triggerExecutor = getTriggerExecutor(trigger);
+    group.add(triggerExecutor!.data);
+    executors.add(triggerExecutor!);
+    triggerExecutor?.initialize(trigger, deployment!);
 
     // get the task executor and add it to the trigger executor stream
-    TaskExecutor taskExecutor = getTaskExecutor(task);
-    triggerExecutor.group.add(taskExecutor.data);
-    triggerExecutor.executors.add(taskExecutor);
-    taskExecutor.initialize(task, deployment!);
+    taskExecutor = getTaskExecutor(task);
+    triggerExecutor?.group.add(taskExecutor!.data);
+    triggerExecutor?.executors.add(taskExecutor!);
+    taskExecutor?.initialize(task, deployment!);
   }
 
   /// Get the aggregated stream of [DataPoint] data sampled by all executors
@@ -148,14 +150,65 @@ class TriggeredTaskExecutor extends AggregateExecutor<TriggeredTask> {
     ..carpHeader.deviceRoleName = triggeredTask.targetDeviceRoleName);
 
   /// Returns a list of the running probes in this [TriggeredTaskExecutor].
-  /// This is a combination of the running probes in all task executors.
-  List<Probe> get probes {
-    List<Probe> _probes = [];
-    executors.forEach((executor) {
-      if (executor is TriggerExecutor) {
-        _probes.addAll(executor.probes);
+  List<Probe> get probes => taskExecutor?.probes ?? [];
+}
+
+/// Responsible for handling the execution of a [TriggeredTask] which contains
+/// an [AppTask].
+///
+/// In contrast to the [TriggeredTaskExecutor], this [TriggeredAppTaskExecutor]
+/// will try to schedule the [AppTask] for a period of time in the
+/// [NotificationController].
+class TriggeredAppTaskExecutor extends TriggeredTaskExecutor {
+  TriggeredAppTaskExecutor(
+    TriggeredTask triggeredTask,
+    Trigger trigger,
+    AppTask task,
+  ) : super(triggeredTask, trigger, task);
+
+  @override
+  AppTaskExecutor get taskExecutor => super.taskExecutor as AppTaskExecutor;
+
+  @override
+  Future<void> onResume() async {
+    debug('hasBeenScheduledUntil : ${triggeredTask.hasBeenScheduledUntil}');
+    final from = triggeredTask.hasBeenScheduledUntil ?? DateTime.now();
+    final to = from.add(Duration(days: 10)); // look 10 days ahead
+    final schedule = triggerExecutor!.getSchedule(from, to);
+    debug('$runtimeType - schedule: $schedule');
+
+    if (schedule.isNotEmpty) {
+      // enqueue the first 6 (max) app tasks in the future
+      var remainingNotifications =
+          NotificationController.PENDING_NOTIFICATION_LIMIT -
+              await NotificationController().pendingNotificationRequestsCont;
+      remainingNotifications = min(remainingNotifications, 6);
+      Iterator it = schedule.iterator;
+      var count = 0;
+      while (it.moveNext() && count < remainingNotifications) {
+        AppTaskController().enqueue(taskExecutor, triggerTime: it.current);
+        triggeredTask.hasBeenScheduledUntil = it.current;
+        count++;
       }
-    });
-    return _probes;
+    }
+  }
+}
+
+/// Returns the relevant [TriggeredTaskExecutor] based on the type of [task].
+TriggeredTaskExecutor getTriggeredTaskExecutor(
+  TriggeredTask triggeredTask,
+  Trigger trigger,
+  TaskDescriptor task,
+) {
+  switch (task.runtimeType) {
+    case TaskDescriptor:
+      return TriggeredTaskExecutor(triggeredTask, trigger, task);
+    case AppTask:
+      return TriggeredAppTaskExecutor(triggeredTask, trigger, task as AppTask);
+    default:
+      warning(
+          "Unknown task used - cannot find a TriggeredTaskExecutor for the triggered task of type '${task.runtimeType}'. "
+          "Using a the default 'TriggeredTaskExecutor'.");
+      return TriggeredTaskExecutor(triggeredTask, trigger, task);
   }
 }

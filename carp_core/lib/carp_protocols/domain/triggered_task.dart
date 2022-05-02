@@ -12,16 +12,20 @@ part of carp_core_protocols;
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class TriggeredTask {
   /// The id of the [Trigger] which describes the condition which when met
-  /// sends the task with [taskName] to the device with [destinationDeviceRoleName].
+  /// sends the task with [taskName] to the device with [targetDeviceRoleName].
   int triggerId;
 
-  /// The name of the task to send to [destinationDeviceRoleName] when the
+  /// The name of the task to send to [targetDeviceRoleName] when the
   /// trigger condition is met.
   late String taskName;
 
   /// The role name of the device to which to send the task with [taskName]
   /// when the [trigger] condition is met.
   String? targetDeviceRoleName;
+
+  /// The time the task have been scheduled until.
+  /// Mainly used when scheduling a series of tasks for this trigger.
+  DateTime? hasBeenScheduledUntil;
 
   @JsonKey(ignore: true)
   TaskDescriptor? task;
