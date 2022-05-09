@@ -7,10 +7,11 @@
 
 part of survey;
 
-/// A class representing how to configure a [RPTask] survey as a sensing [Measure].
+/// Specify the configuration of a [RPTask] survey.
 ///
-/// This measure should be part of an [AppTask] in order for the app to handle
-/// how it wants to show the survey to the user.
+/// This configuration is typically used as the `overrideSamplingConfiguration``
+/// in a [Measure]. Such a measure should be part of an [AppTask] in order for
+/// the app to handle how it wants to show the survey to the user.
 /// Note that only the first [RPTaskMeasure] in an [AppTask] is used.
 /// Hence, an [AppTask] should be used for each survey.
 ///
@@ -18,31 +19,19 @@ part of survey;
 /// For example:
 ///
 ///  * a [PeriodicTrigger] would allow to collect the survey on a regular basis (frequency)
-///  * a [ScheduledTrigger] can be used to trigger the survey at a specific schedule (i.e., day and time)
 ///  * a [RecurrentScheduledTrigger] allow to schedule a recurrent survey, e.g every Monday at 8pm.
 ///
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class RPTaskMeasure extends CAMSMeasure {
+class RPTaskSamplingConfiguration extends PersistentSamplingConfiguration {
   /// The survey to be issued to the user.
   RPTask surveyTask;
 
-  RPTaskMeasure({
-    required String type,
-    String? name,
-    String? description,
-    bool enabled = true,
-    required this.surveyTask,
-  }) : super(
-          type: type,
-          name: name,
-          description: description,
-          enabled: enabled,
-        );
+  RPTaskSamplingConfiguration({required this.surveyTask}) : super();
 
-  Function get fromJsonFunction => _$RPTaskMeasureFromJson;
-  factory RPTaskMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as RPTaskMeasure;
-  Map<String, dynamic> toJson() => _$RPTaskMeasureToJson(this);
+  Function get fromJsonFunction => _$RPTaskSamplingConfigurationFromJson;
+  Map<String, dynamic> toJson() => _$RPTaskSamplingConfigurationToJson(this);
+  factory RPTaskSamplingConfiguration.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as RPTaskSamplingConfiguration;
 }
 
 /// Holds information about the result of a survey.

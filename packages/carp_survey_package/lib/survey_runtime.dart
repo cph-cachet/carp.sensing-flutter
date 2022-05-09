@@ -18,8 +18,7 @@ class SurveySamplingPackage extends SmartphoneSamplingPackage {
       ];
 
   @override
-  List<Permission> get permissions =>
-      []; // Research Package don't need any permission on the phone
+  List<Permission> get permissions => [];
 
   @override
   Probe? create(String type) {
@@ -34,31 +33,13 @@ class SurveySamplingPackage extends SmartphoneSamplingPackage {
   @override
   void onRegister() {
     FromJsonFactory().register(
-        RPTaskMeasure(type: SURVEY, surveyTask: RPTask(identifier: 'ignored')));
+        RPTaskSamplingConfiguration(surveyTask: RPTask(identifier: 'ignored')));
     AppTaskController().registerUserTaskFactory(SurveyUserTaskFactory());
   }
 
-  /// Adding WHO5 as the default survey.
-  SamplingSchema get common => SamplingSchema(
-      type: SamplingSchemaType.common,
-      name: 'Default survey measure - the WHO5 well-being index survey',
-      powerAware: false)
-    ..measures.addEntries([
-      MapEntry(
-          SURVEY,
-          RPTaskMeasure(
-            type: SURVEY,
-            name: 'WHO-5',
-            description: "The WHO well-being survey",
-            enabled: true,
-            surveyTask: who5Task,
-          )),
-    ]);
-
-  SamplingSchema get light => common;
-  SamplingSchema get minimum => common;
-  SamplingSchema get normal => common;
-  SamplingSchema get debug => common;
+  SamplingSchema get samplingSchema => SamplingSchema()
+    ..addConfiguration(
+        SURVEY, RPTaskSamplingConfiguration(surveyTask: who5Task));
 }
 
 /// The probe collecting a survey.
@@ -67,9 +48,9 @@ class SurveySamplingPackage extends SmartphoneSamplingPackage {
 ///
 /// Once the survey is submitted later, then a [RPTaskResultDatum] is added to
 /// the [carp_mobile_sensing] event queue.
-class SurveyProbe extends AbstractProbe {
-  StreamController<DataPoint> controller = StreamController.broadcast();
-  Stream<DataPoint> get data => controller.stream;
+class SurveyProbe extends Probe {
+  // StreamController<DataPoint> controller = StreamController.broadcast();
+  // Stream<DataPoint> get data => controller.stream;
 
   /// The survey to be filled in
   RPTask? surveyTask;
@@ -97,9 +78,16 @@ class SurveyProbe extends AbstractProbe {
     this.onSurveyCancel,
   }) : super();
 
-  void onInitialize(Measure measure) {
-    assert(measure is RPTaskMeasure);
-    surveyTask = (measure as RPTaskMeasure).surveyTask;
+  void onInitialize() {
+    if (configuration?.overrideSamplingConfiguration
+        is RPTaskSamplingConfiguration) {
+      surveyTask = (configuration?.overrideSamplingConfiguration
+              as RPTaskSamplingConfiguration)
+          .surveyTask;
+    } else {
+      warning(
+          '$runtimeType - no valid RPTask provided as survey ($surveyTask). Cannot initialize probe.');
+    }
   }
 
   Future onResume() async {
@@ -121,7 +109,7 @@ class SurveyProbe extends AbstractProbe {
 
   void _onSurveySubmit(RPTaskResult result) {
     // when we have the survey result, add it to the event stream
-    controller.add(DataPoint.fromData(RPTaskResultDatum(result)));
+    addData(RPTaskResultDatum(result));
     if (onSurveySubmit != null) onSurveySubmit!(result);
   }
 }

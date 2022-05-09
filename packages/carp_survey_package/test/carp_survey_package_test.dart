@@ -28,13 +28,25 @@ void main() {
 
     protocol.addMasterDevice(phone);
 
-    // adding all measure from the common schema to one one trigger and one task
+    // adding all available measures to one one trigger and one task
     protocol.addTriggeredTask(
       ImmediateTrigger(),
       AutomaticTask()
-        ..measures = SamplingPackageRegistry().common.measures.values.toList(),
+        ..measures = SamplingPackageRegistry()
+            .dataTypes
+            .map((type) => Measure(type: type))
+            .toList(),
       phone,
     );
+
+    // add a WHO-5 survey to an app task for this protocol
+    protocol.addTriggeredTask(
+        DelayedTrigger(delay: Duration(seconds: 30)),
+        AppTask(type: 'survey', name: 'WHO-5 Survey')
+          ..measures.add(Measure(type: SurveySamplingPackage.SURVEY)
+            ..overrideSamplingConfiguration =
+                RPTaskSamplingConfiguration(surveyTask: who5Task)),
+        phone);
   });
 
   test('CAMSStudyProtocol -> JSON', () async {
@@ -63,8 +75,9 @@ void main() {
     expect(protocol.ownerId, 'alex@uni.dk');
     expect(protocol.masterDevices.first.roleName, Smartphone.DEFAULT_ROLENAME);
     expect(
-        protocol.tasks.first.measures
-            .firstWhere((measure) => measure is RPTaskMeasure)
+        protocol.tasks.last.measures
+            .firstWhere((measure) => measure.overrideSamplingConfiguration
+                is RPTaskSamplingConfiguration)
             .type,
         "dk.cachet.carp.survey");
     print(toJsonString(protocol));

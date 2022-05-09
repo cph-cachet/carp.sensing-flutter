@@ -72,60 +72,6 @@ class GeoPosition extends Serializable {
       longitude == other.longitude;
 }
 
-// /// Specify the configuration of a circular geofence measure, specifying the:
-// ///  - center
-// ///  - radius
-// ///  - name
-// /// of the geofence.
-// @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-// class GeofenceMeasure extends CAMSMeasure with LocationConfiguration {
-//   /// The center of the geofence as a GPS location.
-//   GeoPosition center;
-
-//   /// The radius of the geofence in meters.
-//   double radius;
-
-//   /// The dwell time of this geofence.
-//   Duration dwell;
-
-//   /// A label for this geofence.
-//   String? label;
-
-//   /// Specify a geofence measure
-//   GeofenceMeasure({
-//     required String type,
-//     String? name,
-//     String? description,
-//     bool enabled = true,
-//     GeolocationAccuracy accuracy = GeolocationAccuracy.balanced,
-//     double distance = 0,
-//     Duration? interval,
-//     String? notificationTitle,
-//     String? notificationMessage,
-//     String? notificationDescription,
-//     required this.center,
-//     required this.radius,
-//     required this.dwell,
-//     this.label,
-//   }) : super(
-//             type: type,
-//             name: name,
-//             description: description,
-//             enabled: enabled) {
-//     this.accuracy = accuracy;
-//     this.distance = distance;
-//     this.interval = interval ?? const Duration(minutes: 5);
-//     this.notificationTitle = notificationTitle;
-//     this.notificationMessage = notificationMessage;
-//     this.notificationDescription = notificationDescription;
-//   }
-
-//   Function get fromJsonFunction => _$GeofenceMeasureFromJson;
-//   factory GeofenceMeasure.fromJson(Map<String, dynamic> json) =>
-//       FromJsonFactory().fromJson(json) as GeofenceMeasure;
-//   Map<String, dynamic> toJson() => _$GeofenceMeasureToJson(this);
-// }
-
 /// Specify the configuration of a circular geofence measure, specifying the:
 ///  - center
 ///  - radius

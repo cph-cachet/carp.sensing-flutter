@@ -25,12 +25,8 @@ void main() async {
   protocol.addTriggeredTask(
       DelayedTrigger(delay: Duration(seconds: 30)),
       AppTask(type: 'survey', name: 'WHO-5 Survey')
-        ..measures.add(RPTaskMeasure(
-          type: SurveySamplingPackage.SURVEY,
-          name: 'WHO-5',
-          description: "The WHO well-being survey",
-          enabled: true,
-          surveyTask: who5Task,
-        )),
+        ..measures.add(Measure(type: SurveySamplingPackage.SURVEY)
+          ..overrideSamplingConfiguration =
+              RPTaskSamplingConfiguration(surveyTask: who5Task)),
       phone);
 }

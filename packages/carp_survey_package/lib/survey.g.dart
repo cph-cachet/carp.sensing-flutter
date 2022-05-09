@@ -6,18 +6,18 @@ part of survey;
 // JsonSerializableGenerator
 // **************************************************************************
 
-RPTaskMeasure _$RPTaskMeasureFromJson(Map<String, dynamic> json) =>
-    RPTaskMeasure(
-      type: json['type'] as String,
-      name: json['name'] as String?,
-      description: json['description'] as String?,
-      enabled: json['enabled'] as bool? ?? true,
+RPTaskSamplingConfiguration _$RPTaskSamplingConfigurationFromJson(
+        Map<String, dynamic> json) =>
+    RPTaskSamplingConfiguration(
       surveyTask: RPTask.fromJson(json['surveyTask'] as Map<String, dynamic>),
     )
       ..$type = json[r'$type'] as String?
-      ..configuration = Map<String, String>.from(json['configuration'] as Map);
+      ..lastTime = json['lastTime'] == null
+          ? null
+          : DateTime.parse(json['lastTime'] as String);
 
-Map<String, dynamic> _$RPTaskMeasureToJson(RPTaskMeasure instance) {
+Map<String, dynamic> _$RPTaskSamplingConfigurationToJson(
+    RPTaskSamplingConfiguration instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -27,11 +27,7 @@ Map<String, dynamic> _$RPTaskMeasureToJson(RPTaskMeasure instance) {
   }
 
   writeNotNull(r'$type', instance.$type);
-  val['type'] = instance.type;
-  writeNotNull('name', instance.name);
-  writeNotNull('description', instance.description);
-  val['enabled'] = instance.enabled;
-  val['configuration'] = instance.configuration;
+  writeNotNull('lastTime', instance.lastTime?.toIso8601String());
   val['surveyTask'] = instance.surveyTask;
   return val;
 }
