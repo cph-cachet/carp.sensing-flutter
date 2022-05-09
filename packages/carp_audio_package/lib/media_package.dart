@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2021-2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -44,95 +44,16 @@ class MediaSamplingPackage extends SmartphoneSamplingPackage {
     }
   }
 
-  void onRegister() {
-    FromJsonFactory().register(NoiseMeasure(
-      type: NOISE,
-      frequency: Duration(minutes: 5),
-      duration: Duration(seconds: 10),
-    ));
-  }
+  void onRegister() {}
 
   List<Permission> get permissions =>
       [Permission.microphone, Permission.camera];
 
-  SamplingSchema get common => SamplingSchema(
-      type: SamplingSchemaType.common,
-      name: 'Common (default) context sampling schema',
-      powerAware: true)
-    ..measures.addEntries([
-      MapEntry(
-          AUDIO,
-          CAMSMeasure(
-            type: AUDIO,
-            name: 'Audio Recording',
-            description:
-                "Collects an audio recording from the phone's microphone",
-            enabled: true,
-          )),
-      MapEntry(
-          VIDEO,
-          CAMSMeasure(
-            type: VIDEO,
-            name: 'Video Recording',
-            description: "Collects a video recording from the phone's camera",
-            enabled: true,
-          )),
-      MapEntry(
-          IMAGE,
-          CAMSMeasure(
-            type: IMAGE,
-            name: 'Image Capture',
-            description: "Collects an image from the phone's camera",
-            enabled: true,
-          )),
-      MapEntry(
-          NOISE,
-          NoiseMeasure(
-            type: NOISE,
-            name: 'Ambient Noise',
-            description:
-                "Collects noise in the background from the phone's microphone",
-            enabled: false,
-            frequency: Duration(minutes: 5),
-            duration: Duration(seconds: 10),
-          )),
-    ]);
-
-  SamplingSchema get light {
-    SamplingSchema light = common
-      ..type = SamplingSchemaType.light
-      ..name = 'Light context sampling';
-    (light.measures[AUDIO] as CAMSMeasure).enabled = false;
-    return light;
-  }
-
-  SamplingSchema get minimum {
-    SamplingSchema minimum = light
-      ..type = SamplingSchemaType.minimum
-      ..name = 'Minimum context sampling';
-    (minimum.measures[NOISE] as NoiseMeasure).enabled = false;
-    return minimum;
-  }
-
-  SamplingSchema get normal => common;
-
-  SamplingSchema get debug => common
-    ..type = SamplingSchemaType.debug
-    ..name = 'Debugging audio sampling schema'
-    ..powerAware = false
-    ..measures[AUDIO] = CAMSMeasure(
-      type: AUDIO,
-      name: 'Audio Recording',
-      description: "Collects an audio recording from the phone's microphone",
-      enabled: true,
-    )
-    ..measures[NOISE] = NoiseMeasure(
-      type: NOISE,
-      name: 'Ambient Noise',
-      description:
-          "Collects noise in the background from the phone's microphone",
-      enabled: true,
-      frequency: Duration(minutes: 1),
-      duration: Duration(seconds: 10),
-    );
+  SamplingSchema get samplingSchema => SamplingSchema()
+    ..addConfiguration(
+        NOISE,
+        PeriodicSamplingConfiguration(
+          interval: Duration(minutes: 5),
+          duration: Duration(seconds: 10),
+        ));
 }

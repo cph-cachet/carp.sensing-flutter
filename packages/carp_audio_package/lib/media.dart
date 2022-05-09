@@ -20,7 +20,6 @@ part 'audio_probe.dart';
 part 'video_probe.dart';
 part 'noise_probe.dart';
 part 'datums.dart';
-part 'noise_measure.dart';
 part 'media_package.dart';
 part 'media.g.dart';
 

@@ -9,8 +9,8 @@ part of media;
 
 /// A listening probe collecting noise sampling from the microphone.
 ///
-/// See [NoiseMeasure] on how to configure this probe, including setting the
-/// frequency, duration and sampling rate of the sampling rate.
+/// See [PeriodicSamplingConfiguration] on how to configure this probe,
+/// including setting the frequency and duration of the sampling rate.
 ///
 /// Does not record sound. Instead reports the audio level with a specified
 /// frequency, in a given sampling window as a [NoiseDatum].
@@ -21,10 +21,8 @@ class NoiseProbe extends BufferingPeriodicStreamProbe {
   Stream get bufferingStream => _noiseMeter!.noiseStream;
 
   @override
-  void onInitialize(Measure measure) {
-    assert(measure is NoiseMeasure);
+  void onInitialize() {
     _noiseMeter = NoiseMeter();
-    super.onInitialize(measure);
   }
 
   @override
@@ -74,8 +72,8 @@ class NoiseProbe extends BufferingPeriodicStreamProbe {
             stdDecibel: std.toDouble(),
             minDecibel: min.toDouble(),
             maxDecibel: max.toDouble());
-    } else {
-      return null;
     }
+
+    return null;
   }
 }
