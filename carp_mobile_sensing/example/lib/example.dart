@@ -444,7 +444,7 @@ void recurrentScheduledTriggerExample() {
   // collect every day at 13:30
   RecurrentScheduledTrigger(
     type: RecurrentType.daily,
-    time: Time(hour: 13, minute: 30),
+    time: TimeOfDay(hour: 13, minute: 30),
     duration: Duration(seconds: 1),
   );
 
@@ -452,7 +452,7 @@ void recurrentScheduledTriggerExample() {
   RecurrentScheduledTrigger(
     type: RecurrentType.daily,
     separationCount: 1,
-    time: Time(hour: 13, minute: 30),
+    time: TimeOfDay(hour: 13, minute: 30),
     duration: Duration(seconds: 1),
   );
 
@@ -460,7 +460,7 @@ void recurrentScheduledTriggerExample() {
   RecurrentScheduledTrigger(
     type: RecurrentType.weekly,
     dayOfWeek: DateTime.wednesday,
-    time: Time(hour: 12, minute: 23),
+    time: TimeOfDay(hour: 12, minute: 23),
     duration: Duration(seconds: 1),
   );
 
@@ -469,7 +469,7 @@ void recurrentScheduledTriggerExample() {
     type: RecurrentType.weekly,
     dayOfWeek: DateTime.monday,
     separationCount: 1,
-    time: Time(hour: 12, minute: 23),
+    time: TimeOfDay(hour: 12, minute: 23),
     duration: Duration(seconds: 1),
   );
 
@@ -478,7 +478,7 @@ void recurrentScheduledTriggerExample() {
     type: RecurrentType.monthly,
     weekOfMonth: 2,
     dayOfWeek: DateTime.monday,
-    time: Time(hour: 14, minute: 30),
+    time: TimeOfDay(hour: 14, minute: 30),
     duration: Duration(seconds: 1),
   );
 
@@ -487,7 +487,7 @@ void recurrentScheduledTriggerExample() {
     type: RecurrentType.monthly,
     dayOfMonth: 11,
     separationCount: 2,
-    time: Time(hour: 21, minute: 30),
+    time: TimeOfDay(hour: 21, minute: 30),
     duration: Duration(seconds: 1),
   );
 }

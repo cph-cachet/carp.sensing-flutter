@@ -604,33 +604,11 @@ Map<String, dynamic> _$DateTimeTriggerToJson(DateTimeTrigger instance) {
   return val;
 }
 
-Time _$TimeFromJson(Map<String, dynamic> json) => Time(
-      hour: json['hour'] as int? ?? 0,
-      minute: json['minute'] as int? ?? 0,
-      second: json['second'] as int? ?? 0,
-    )..$type = json[r'$type'] as String?;
-
-Map<String, dynamic> _$TimeToJson(Time instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull(r'$type', instance.$type);
-  val['hour'] = instance.hour;
-  val['minute'] = instance.minute;
-  val['second'] = instance.second;
-  return val;
-}
-
 RecurrentScheduledTrigger _$RecurrentScheduledTriggerFromJson(
         Map<String, dynamic> json) =>
     RecurrentScheduledTrigger(
       type: $enumDecode(_$RecurrentTypeEnumMap, json['type']),
-      time: Time.fromJson(json['time'] as Map<String, dynamic>),
+      time: TimeOfDay.fromJson(json['time'] as Map<String, dynamic>),
       end: json['end'] == null ? null : DateTime.parse(json['end'] as String),
       separationCount: json['separationCount'] as int? ?? 0,
       maxNumberOfSampling: json['maxNumberOfSampling'] as int?,
@@ -814,8 +792,8 @@ RandomRecurrentTrigger _$RandomRecurrentTriggerFromJson(
     RandomRecurrentTrigger(
       minNumberOfTriggers: json['minNumberOfTriggers'] as int? ?? 0,
       maxNumberOfTriggers: json['maxNumberOfTriggers'] as int? ?? 1,
-      startTime: Time.fromJson(json['startTime'] as Map<String, dynamic>),
-      endTime: Time.fromJson(json['endTime'] as Map<String, dynamic>),
+      startTime: TimeOfDay.fromJson(json['startTime'] as Map<String, dynamic>),
+      endTime: TimeOfDay.fromJson(json['endTime'] as Map<String, dynamic>),
       duration: json['duration'] == null
           ? null
           : Duration(microseconds: json['duration'] as int),

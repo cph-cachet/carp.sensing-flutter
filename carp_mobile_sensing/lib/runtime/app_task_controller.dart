@@ -18,6 +18,9 @@ class AppTaskController {
   final Map<String, UserTask> _userTaskMap = {};
 
   /// The etire list of all [UserTask]s.
+  ///
+  /// Note that this list contains all tasks which has already triggered
+  /// and which are planned to trigger in the future.
   List<UserTask> get userTasks => _userTaskMap.values.toList();
 
   /// The queue of [UserTask]s that the user need to attend to.
@@ -75,14 +78,14 @@ class AppTaskController {
 
     // set up a timer which cleans up in the queue once an hour
     Timer.periodic(const Duration(hours: 1), (timer) {
-      userTaskQueue.forEach((task) {
+      userTasks.forEach((task) {
         if (task.expiresIn != null && task.expiresIn!.isNegative) {
           expire(task.id);
         }
       });
     });
 
-    notificationsEnabled = enableNotifications;
+    this.notificationsEnabled = enableNotifications;
     if (notificationsEnabled) await NotificationController().initialize();
   }
 
@@ -96,21 +99,24 @@ class AppTaskController {
     });
   }
 
-  /// Get an [UserTask] from the [userTaskQueue] based on its [id].
-  /// Returns `null` if no task is found on the queue.
+  /// Get an [UserTask] from the [userTasks] based on its [id].
+  /// Returns `null` if no task is found.
   UserTask? getUserTask(String id) => _userTaskMap[id];
 
-  /// Put [executor] on the [userTaskQueue] for access by the app.
+  /// Put [executor] on the [userTasks] for access by the app.
+  ///
   /// [triggerTime] specifies when the task should trigger, i.e., be available.
   /// Notify the user if [sendNotification] and [notificationsEnabled] is true.
+  /// [userTaskEvent] specifies if an app event should be generated.
   ///
-  /// Returns the [UserTask] added to the [userTaskQueue].
+  /// Returns the [UserTask] added to the [userTasks].
   ///
   /// Returns `null` if not successful.
   UserTask? enqueue(
     AppTaskExecutor executor, {
     DateTime? triggerTime,
     bool sendNotification = true,
+    bool userTaskEvent = true,
   }) {
     if (_userTaskFactories[executor.appTask.type] == null) {
       warning(
@@ -124,10 +130,12 @@ class AppTaskController {
       userTask.enqueued = DateTime.now();
       userTask.triggerTime = triggerTime ?? DateTime.now();
       _userTaskMap[userTask.id] = userTask;
-      _controller.add(userTask);
+      if (userTaskEvent) _controller.add(userTask);
       info('Enqueued $userTask');
 
       if (notificationsEnabled && sendNotification) {
+        debug(
+            '$runtimeType - Trying to schedule notification for $userTask at time $triggerTime');
         // create notification
         // TODO - iOS has a limit where it will only keep 64 notifications that will fire the soonest...
         // See the flutter_local_notifications plugin.
@@ -140,7 +148,7 @@ class AppTaskController {
     }
   }
 
-  /// De-queue (remove) an [UserTask] from the [userTaskQueue].
+  /// De-queue (remove) an [UserTask] from the [userTasks].
   void dequeue(String id) {
     UserTask? userTask = _userTaskMap[id];
     if (userTask == null) {
@@ -157,7 +165,7 @@ class AppTaskController {
     }
   }
 
-  /// Mark an [UserTask] on the [userTaskQueue] as done.
+  /// Mark an [UserTask] as done.
   /// Note that a done task remains on the queue.
   /// If you want to remove a taks from the queue, use the [dequeue] method.
   void done(String id) {
@@ -174,7 +182,7 @@ class AppTaskController {
     }
   }
 
-  /// Expire an [UserTask] on the [userTaskQueue].
+  /// Expire an [UserTask].
   /// Note that an expired task remains on the queue.
   /// If you want to remove a taks from the queue, use the [dequeue] method.
   void expire(String id) {
@@ -209,13 +217,12 @@ class AppTaskController {
     bool success = true;
     try {
       String name = (await filename)!;
-      info("Saving task queue to file '$name'.");
-      final json =
-          jsonEncode(UserTaskSnapshotList.fromUserTasks(userTaskQueue));
+      info("$runtimeType - Saving task queue to file '$name'.");
+      final json = jsonEncode(UserTaskSnapshotList.fromUserTasks(userTasks));
       File(name).writeAsStringSync(json);
     } catch (exception) {
       success = false;
-      warning('Failed to save task queue - $exception');
+      warning('$runtimeType - Failed to save task queue - $exception');
     }
     return success;
   }
@@ -227,17 +234,38 @@ class AppTaskController {
 
     try {
       String name = (await filename)!;
-      info("Restoring task queue from file '$name'.");
+      info("$runtimeType - Restoring task queue from file '$name'.");
       String jsonString = File(name).readAsStringSync();
       queue = UserTaskSnapshotList.fromJson(
           json.decode(jsonString) as Map<String, dynamic>);
 
       // now create new AppTaskExecutors, initialize them, and add them to the queue
-      queue.snapshot.forEach((snapshot) {
+      queue.snapshots.forEach((snapshot) {
+        debug('$runtimeType - Restoring snapshot: $snapshot');
         AppTaskExecutor executor = AppTaskExecutor();
-        executor.initialize(snapshot.task);
-        // enqueue the task (again), but avoid notifications
-        UserTask? userTask = enqueue(executor, sendNotification: false);
+
+        // find the deployment
+        if (snapshot.studyDeploymentId == null ||
+            snapshot.deviceRoleName == null)
+          warning(
+              '$runtimeType - Saved task queue does not contain deployment information in snapshot - snapshot: $snapshot');
+        var deployment = SmartPhoneClientManager()
+            .lookupStudyRuntime(
+                snapshot.studyDeploymentId!, snapshot.deviceRoleName!)
+            ?.deployment;
+        if (deployment == null)
+          warning(
+              '$runtimeType - Could not find deployment information based on snapshot: $snapshot');
+
+        executor.initialize(snapshot.task, deployment);
+
+        // enqueue the task (again), but avoid notifications and app events
+        UserTask? userTask = enqueue(
+          executor,
+          triggerTime: snapshot.triggerTime,
+          sendNotification: false,
+          userTaskEvent: false,
+        );
         if (userTask != null) {
           userTask.id = snapshot.id;
           userTask.enqueued = snapshot.enqueued;
@@ -246,7 +274,7 @@ class AppTaskController {
       });
     } catch (exception) {
       success = false;
-      warning('Failed to load task queue - $exception');
+      warning('$runtimeType - Failed to load task queue - $exception');
     }
     return success;
   }
@@ -254,11 +282,11 @@ class AppTaskController {
 
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class UserTaskSnapshotList extends Serializable {
-  List<UserTaskSnapshot> snapshot = [];
+  List<UserTaskSnapshot> snapshots = [];
 
   UserTaskSnapshotList() : super();
-  UserTaskSnapshotList.fromUserTasks(List<UserTask> userTaskQueue) {
-    snapshot = userTaskQueue
+  UserTaskSnapshotList.fromUserTasks(List<UserTask> userTasks) {
+    snapshots = userTasks
         .map((userTask) => UserTaskSnapshot.fromUserTask(userTask))
         .toList();
   }
@@ -278,10 +306,18 @@ class UserTaskSnapshot extends Serializable {
   late UserTaskState state;
   late DateTime enqueued;
   late DateTime triggerTime;
+  String? studyDeploymentId;
+  String? deviceRoleName;
 
   UserTaskSnapshot(
-      this.id, this.task, this.state, this.enqueued, this.triggerTime)
-      : super();
+    this.id,
+    this.task,
+    this.state,
+    this.enqueued,
+    this.triggerTime,
+    this.studyDeploymentId,
+    this.deviceRoleName,
+  ) : super();
 
   UserTaskSnapshot.fromUserTask(UserTask userTask) : super() {
     id = userTask.id;
@@ -289,12 +325,18 @@ class UserTaskSnapshot extends Serializable {
     state = userTask.state;
     enqueued = userTask.enqueued;
     triggerTime = userTask.triggerTime;
+    studyDeploymentId = userTask.executor.deployment?.studyDeploymentId;
+    deviceRoleName = userTask.executor.deployment?.deviceDescriptor.roleName;
   }
 
   Function get fromJsonFunction => _$UserTaskSnapshotFromJson;
   factory UserTaskSnapshot.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as UserTaskSnapshot;
   Map<String, dynamic> toJson() => _$UserTaskSnapshotToJson(this);
+
+  @override
+  String toString() =>
+      '$runtimeType - id:$id, task: $task, state: $state, enqueued: $enqueued, triggerTime: $triggerTime, studyDeploymentId: $studyDeploymentId, deviceRoleName: $deviceRoleName';
 }
 
 /// A [UserTaskFactory] that can create non-UI sensing tasks:

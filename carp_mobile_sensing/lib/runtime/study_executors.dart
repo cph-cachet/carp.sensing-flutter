@@ -17,11 +17,11 @@ abstract class AggregateExecutor<TConfig> extends AbstractExecutor<TConfig> {
   final List<Executor> executors = [];
   Stream<DataPoint> get data => group.stream;
 
-  Future<void> onPause() async =>
-      executors.forEach((executor) => executor.pause());
-
   Future<void> onResume() async =>
       executors.forEach((executor) => executor.resume());
+
+  Future<void> onPause() async =>
+      executors.forEach((executor) => executor.pause());
 
   Future<void> onRestart() async =>
       executors.forEach((executor) => executor.restart());
@@ -156,9 +156,9 @@ class TriggeredTaskExecutor extends AggregateExecutor<TriggeredTask> {
 /// Responsible for handling the execution of a [TriggeredTask] which contains
 /// an [AppTask].
 ///
-/// In contrast to the [TriggeredTaskExecutor], this [TriggeredAppTaskExecutor]
-/// will try to schedule the [AppTask] for a period of time in the
-/// [NotificationController].
+/// In contrast to the [TriggeredTaskExecutor] (which runs in the background),
+/// this [TriggeredAppTaskExecutor] will try to schedule the [AppTask] using
+/// the [AppTaskController]. This means that triggeres also has to be [Scheduleable].
 class TriggeredAppTaskExecutor extends TriggeredTaskExecutor {
   TriggeredAppTaskExecutor(
     TriggeredTask triggeredTask,
@@ -170,45 +170,58 @@ class TriggeredAppTaskExecutor extends TriggeredTaskExecutor {
   AppTaskExecutor get taskExecutor => super.taskExecutor as AppTaskExecutor;
 
   @override
+  ScheduleableTriggerExecutor get triggerExecutor =>
+      super.triggerExecutor as ScheduleableTriggerExecutor;
+
+  @override
   Future<void> onResume() async {
     debug('hasBeenScheduledUntil : ${triggeredTask.hasBeenScheduledUntil}');
     final from = triggeredTask.hasBeenScheduledUntil ?? DateTime.now();
     final to = from.add(Duration(days: 10)); // look 10 days ahead
-    final schedule = triggerExecutor!.getSchedule(from, to);
+    final schedule = triggerExecutor.getSchedule(from, to);
     debug('$runtimeType - schedule: $schedule');
 
     if (schedule.isNotEmpty) {
       // enqueue the first 6 (max) app tasks in the future
       var remainingNotifications =
           NotificationController.PENDING_NOTIFICATION_LIMIT -
-              await NotificationController().pendingNotificationRequestsCont;
+              await NotificationController().pendingNotificationRequestsCount;
       remainingNotifications = min(remainingNotifications, 6);
       Iterator it = schedule.iterator;
       var count = 0;
-      while (it.moveNext() && count < remainingNotifications) {
-        AppTaskController().enqueue(taskExecutor, triggerTime: it.current);
-        triggeredTask.hasBeenScheduledUntil = it.current;
-        count++;
-      }
+      while (it.moveNext() && count++ < remainingNotifications)
+        AppTaskController().enqueue(
+          taskExecutor,
+          triggerTime: it.current,
+        );
+
+      // save timestamp
+      triggeredTask.hasBeenScheduledUntil = it.current;
+      // now pause and resume again when the time has passed
+      this.pause();
+      var duration = it.current.millisecondsSinceEpoch -
+          DateTime.now().millisecondsSinceEpoch;
+      Timer(Duration(milliseconds: duration), () => this.resume());
     }
   }
+
+  @override
+  Future<void> onPause() async {} // do nothing - this executor is never resumed
 }
 
-/// Returns the relevant [TriggeredTaskExecutor] based on the type of [task].
+/// Returns the relevant [TriggeredTaskExecutor] based on the type of [trigger]
+/// and [task].
 TriggeredTaskExecutor getTriggeredTaskExecutor(
   TriggeredTask triggeredTask,
   Trigger trigger,
   TaskDescriptor task,
 ) {
-  switch (task.runtimeType) {
-    case TaskDescriptor:
-      return TriggeredTaskExecutor(triggeredTask, trigger, task);
-    case AppTask:
-      return TriggeredAppTaskExecutor(triggeredTask, trigger, task as AppTask);
-    default:
-      warning(
-          "Unknown task used - cannot find a TriggeredTaskExecutor for the triggered task of type '${task.runtimeType}'. "
-          "Using a the default 'TriggeredTaskExecutor'.");
-      return TriggeredTaskExecutor(triggeredTask, trigger, task);
-  }
+  // a TriggeredAppTaskExecutor need BOTH a Scheduleable trigger and an AppTask
+  // to schedule
+  if (trigger is Scheduleable && task is AppTask)
+    return TriggeredAppTaskExecutor(triggeredTask, trigger, task);
+
+  // all other cases we use the normal background triggering relying on the app
+  // running in the background
+  return TriggeredTaskExecutor(triggeredTask, trigger, task);
 }

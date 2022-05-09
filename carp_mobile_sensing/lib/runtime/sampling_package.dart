@@ -18,9 +18,6 @@ class SamplingPackageRegistry {
   List<Permission> get permissions => _permissions;
 
   SamplingPackageRegistry._() {
-    // add the basic permissions needed
-    _permissions.add(Permission.storage);
-
     // register the built-in packages
     register(DeviceSamplingPackage());
     register(SensorSamplingPackage());

@@ -32,23 +32,23 @@ void _registerFromJsonFunctions() {
   FromJsonFactory().register(ImmediateTrigger());
   FromJsonFactory().register(OneTimeTrigger());
   FromJsonFactory().register(DelayedTrigger(delay: Duration()));
+  FromJsonFactory().register(IntervalTrigger(period: Duration()));
   FromJsonFactory().register(PeriodicTrigger(
     period: Duration(),
     duration: Duration(),
   ));
   FromJsonFactory().register(DateTimeTrigger(schedule: DateTime.now()));
-  FromJsonFactory().register(Time());
   FromJsonFactory().register(RecurrentScheduledTrigger(
     type: RecurrentType.daily,
-    time: Time(),
+    time: TimeOfDay(),
   ));
   FromJsonFactory().register(SamplingEventTrigger(measureType: 'ignored'));
   FromJsonFactory().register(ConditionalEvent({}));
   FromJsonFactory().register(ConditionalSamplingEventTrigger(
       measureType: 'ignored', resumeCondition: (DataPoint dataPoint) => true));
   FromJsonFactory().register(RandomRecurrentTrigger(
-    startTime: Time(hour: 1),
-    endTime: Time(hour: 2),
+    startTime: TimeOfDay(hour: 1),
+    endTime: TimeOfDay(hour: 2),
   ));
 
   // Measure classes
@@ -60,7 +60,7 @@ void _registerFromJsonFunctions() {
   // AppTaskController classes
   FromJsonFactory().register(UserTaskSnapshotList());
   FromJsonFactory().register(UserTaskSnapshot('', AppTask(type: 'ignored'),
-      UserTaskState.canceled, DateTime.now(), DateTime.now()));
+      UserTaskState.canceled, DateTime.now(), DateTime.now(), '', ''));
   _fromJsonFunctionsRegistrered = true;
 }
 

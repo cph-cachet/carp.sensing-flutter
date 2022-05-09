@@ -32,25 +32,29 @@ class AppTaskExecutor extends TaskExecutor<AppTask> {
 
   AppTaskExecutor() : super() {
     // create an embedded executor that later can be used to execute this task
-    _taskExecutor = TaskExecutor();
+    _taskExecutor = AutomaticTaskExecutor();
 
     // add the events from the embedded executor to the overall stream of events
     group.add(_taskExecutor.data);
   }
 
+  @override
   void onInitialize() {
-    _taskExecutor.initialize(configuration!, deployment!);
+    _taskExecutor.initialize(configuration!, deployment);
   }
 
+  @override
   Future<void> onResume() async {
     // when an app task is resumed it has to be put on the queue
     AppTaskController().enqueue(this);
   }
 
+  @override
   Future<void> onPause() async {
     // TODO - don't know what to do on pause. Remove from queue?
   }
 
+  @override
   Future<void> onStop() async {
     _taskExecutor.stop();
     await super.onStop();
@@ -74,7 +78,7 @@ abstract class UserTask {
   final AppTaskExecutor _executor;
   UserTaskState _state = UserTaskState.initialized;
 
-  String id = Uuid().v4();
+  String id = Uuid().v1();
   String get type => _executor.appTask.type;
   String get title => _executor.appTask.title;
   String get description => _executor.appTask.description;

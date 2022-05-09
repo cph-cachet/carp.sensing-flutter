@@ -14,6 +14,14 @@ dependencies:
   carp_mobile_sensing:
     path: ../../carp_mobile_sensing/
 
+# Overriding libraries to use the local/other copy
+# Remove this before release of package
+dependency_overrides:
+  cron_parser: 
+    git: 
+      url: https://github.com/bardram/cron-parser.git
+      ref: timezone-upgrade
+
 dev_dependencies:
 
 flutter:

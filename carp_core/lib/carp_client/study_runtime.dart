@@ -233,7 +233,7 @@ class Study {
   int get hashCode => (studyDeploymentId + deviceRoleName).hashCode;
 
   String toString() =>
-      '$runtimeType - studyDeploymentId: $studyDeploymentId, deviceRoleName:$deviceRoleName';
+      '$runtimeType - studyDeploymentId: $studyDeploymentId, deviceRoleName: $deviceRoleName';
 }
 
 /// Describes the possible status' of a [StudyRuntime].

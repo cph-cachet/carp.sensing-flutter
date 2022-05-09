@@ -37,13 +37,18 @@ class Trigger extends Serializable {
   String get jsonType => '$_triggerNamespace.$runtimeType';
 }
 
+/// An interface marking that a [Trigger] can be scheduled.
+///
+/// Used when scheduling user tasks persistently on a phone.
+abstract class Scheduleable {}
+
 /// A trigger which starts a task after [elapsedTime] has elapsed since the start
 /// of a study deployment, i.e. when a protocol is deployed on the phone for
 /// the first time.
 ///
 /// Never stops sampling once started.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class ElapsedTimeTrigger extends Trigger {
+class ElapsedTimeTrigger extends Trigger implements Scheduleable {
   Duration elapsedTime;
 
   ElapsedTimeTrigger({
@@ -97,7 +102,7 @@ class ManualTrigger extends Trigger {
 /// This trigger needs to be evaluated on a master device since it is time bound
 /// and therefore requires a task scheduler.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class ScheduledTrigger extends Trigger {
+class ScheduledTrigger extends Trigger implements Scheduleable {
   TimeOfDay time;
   RecurrenceRule recurrenceRule;
 
@@ -120,18 +125,62 @@ class ScheduledTrigger extends Trigger {
   Map<String, dynamic> toJson() => _$ScheduledTriggerToJson(this);
 }
 
-/// A time on a day. Used in a [ScheduledTrigger].
+/// A time on a day in 24-hour format. Used in a [ScheduledTrigger].
 ///
-/// Follows the conventions in the [DartTime] class, but only uses the Time
+/// Follows the conventions in the [DateTime] class, but only uses the Time
 /// part in a 24 hour time format.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class TimeOfDay {
-  /// 24 hour format.
-  int hour;
-  int minute;
-  int second;
+  /// The hour in 24 hour format.
+  final int hour;
 
-  TimeOfDay({this.hour = 0, this.minute = 0, this.second = 0}) : super();
+  /// The minute 0-59.
+  final int minute;
+
+  /// The second 0-59.
+  final int second;
+
+  /// Constructs an instance of [TimeOfDay].
+  const TimeOfDay({
+    this.hour = 0,
+    this.minute = 0,
+    this.second = 0,
+  })  : assert(hour >= 0 && hour < 24),
+        assert(minute >= 0 && minute < 60),
+        assert(second >= 0 && second < 60),
+        super();
+
+  /// Creates a [TimeOfDay] based on the given [time].
+  TimeOfDay.fromDateTime(DateTime time)
+      : hour = time.hour,
+        minute = time.minute,
+        second = time.second;
+
+  /// Constructs a [TimeOfDay] instance with current time in the
+  /// local time zone.
+  factory TimeOfDay.now() => TimeOfDay.fromDateTime(DateTime.now());
+
+  /// Returns true if [this] occurs before [other].
+  ///
+  /// The comparison is independent of whether the time is in UTC or in
+  /// the local time zone.
+  bool isBefore(TimeOfDay other) => DateTime(2021, 1, 1, hour, minute, second)
+      .isBefore(DateTime(2021, 1, 1, other.hour, other.minute, other.second));
+
+  /// Returns true if [this] occurs after [other].
+  ///
+  /// The comparison is independent of whether the time is in UTC or in
+  /// the local time zone.
+  bool isAfter(TimeOfDay other) => DateTime(2021, 1, 1, hour, minute, second)
+      .isAfter(DateTime(2021, 1, 1, other.hour, other.minute, other.second));
+
+  /// Returns a [Duration] with the difference when subtracting [other] from
+  /// [this].
+  ///
+  ///  The returned [Duration] will be negative if [other] occurs after [this].
+  Duration difference(TimeOfDay other) =>
+      DateTime(2021, 1, 1, hour, minute, second).difference(
+          DateTime(2021, 1, 1, other.hour, other.minute, other.second));
 
   static String _twoDigits(int n) => (n >= 10) ? '$n' : '0$n';
 
@@ -154,7 +203,7 @@ class TimeOfDay {
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class RecurrenceRule {
   /// Specifies the type of interval at which to repeat events, or multiples thereof.
-  Frequency frequency;
+  final Frequency frequency;
 
   /// The interval at which [frequency] repeats.
   /// The default is 1. For example, with [Frequency.DAILY], a value
@@ -222,11 +271,14 @@ class RecurrenceRule {
   Map<String, dynamic> toJson() => _$RecurrenceRuleToJson(this);
 }
 
-/// Specify repeating events based on an interval of a chosen type or multiples thereof.
+/// Specify repeating events in a [RecurrenceRule] based on an interval of a
+/// chosen type or multiples thereof.
 enum Frequency { SECONDLY, MINUTELY, HOURLY, DAILY, WEEKLY, MONTHLY, YEARLY }
 
+/// Specify how a [RecurrenceRule] may end as specified in [End].
 enum EndType { UNTIL, COUNT, NEVER }
 
+/// Specify how a [RecurrenceRule] ends.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class End {
   final EndType type;
@@ -261,26 +313,4 @@ class End {
 
   factory End.fromJson(Map<String, dynamic> json) => _$EndFromJson(json);
   Map<String, dynamic> toJson() => _$EndToJson(this);
-}
-
-class ScheduledManualTrigger extends ManualTrigger implements ScheduledTrigger {
-  @override
-  RecurrenceRule recurrenceRule;
-
-  @override
-  TimeOfDay time;
-
-  ScheduledManualTrigger({
-    String? sourceDeviceRoleName,
-    bool? requiresMasterDevice = false,
-    String? label,
-    String? description,
-    required this.recurrenceRule,
-    required this.time,
-  }) : super(
-          sourceDeviceRoleName: sourceDeviceRoleName,
-          requiresMasterDevice: requiresMasterDevice,
-          label: label,
-          description: description,
-        );
 }

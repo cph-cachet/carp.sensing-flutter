@@ -34,7 +34,7 @@ class Settings {
   String? _localApplicationPath;
   String? _carpBasePath;
   Map<String, String> _deploymentBasePaths = {};
-  String _timezone = 'CET';
+  String _timezone = 'Europe/Copenhagen';
 
   /// The global debug level setting.
   ///
@@ -221,7 +221,7 @@ class Settings {
     if (_userId == null) {
       _userId = preferences!.get(USER_ID_KEY) as String?;
       if (_userId == null) {
-        _userId = Uuid().v4();
+        _userId = Uuid().v1();
         await preferences!.setString(USER_ID_KEY, _userId!);
       }
     }

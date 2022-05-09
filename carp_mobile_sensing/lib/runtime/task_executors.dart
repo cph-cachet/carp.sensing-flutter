@@ -11,13 +11,12 @@ part of runtime;
 TaskExecutor getTaskExecutor(TaskDescriptor task) {
   switch (task.runtimeType) {
     case TaskDescriptor:
-      return TaskExecutor();
     case AutomaticTask:
       return AutomaticTaskExecutor();
     case AppTask:
       return AppTaskExecutor();
     default:
-      return TaskExecutor();
+      return AutomaticTaskExecutor();
   }
 }
 
@@ -26,13 +25,14 @@ TaskExecutor getTaskExecutor(TaskDescriptor task) {
 ///
 /// Note that a [TaskExecutor] in itself is a [Probe] and hence work as a 'super probe'.
 /// This - amongst other things - imply that you can listen to datum [data] from a task executor.
-class TaskExecutor<TConfig> extends AggregateExecutor<TaskDescriptor> {
+abstract class TaskExecutor<TConfig> extends AggregateExecutor<TaskDescriptor> {
   TaskDescriptor get task => configuration!;
 
   /// Returns a list of the running probes in this task executor.
   List<Probe> get probes =>
       executors.map((executor) => executor as Probe).toList();
 
+  @override
   void onInitialize() {
     for (Measure measure in task.measures) {
       // create a new probe for each measure - this ensures that we can have

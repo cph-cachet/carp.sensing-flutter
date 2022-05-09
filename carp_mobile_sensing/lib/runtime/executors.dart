@@ -87,8 +87,7 @@ abstract class Executor<TConfig> {
   /// The stream of [DataPoint] generated from this executor.
   Stream<DataPoint> get data;
 
-  /// Initialize the executor before starting it with the [deployment] it is part of
-  /// and the specific [configuration].
+  /// Configure and initialize the executor before starting it.
   void initialize(TConfig configuration, [SmartphoneDeployment? deployment]);
 
   /// Resume the executor.
@@ -254,13 +253,13 @@ class _CreatedState extends _AbstractExecutorState
 
   void initialize() {
     info('Initializing ${executor.runtimeType}');
-    try {
-      executor.onInitialize();
-      executor._setState(_InitializedState(executor));
-    } catch (error) {
-      warning('Error initializing ${executor.runtimeType}: $error');
-      executor._setState(_UndefinedState(executor));
-    }
+    // try {
+    executor.onInitialize();
+    executor._setState(_InitializedState(executor));
+    // } catch (error) {
+    //   warning('Error initializing ${executor.runtimeType}: $error');
+    //   executor._setState(_UndefinedState(executor));
+    // }
   }
 
   bool validNextState(ExecutorState nextState) =>

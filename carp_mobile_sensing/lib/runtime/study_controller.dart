@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2021 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2018-2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -299,13 +299,15 @@ class SmartphoneDeploymentController extends StudyRuntime {
   /// Should be called before sensing is started, if not already done as part of
   /// [configure].
   Future<void> askForAllPermissions() async {
-    info('Asking for permission for all measure types.');
-    permissions = await SamplingPackageRegistry().permissions.request();
+    if (SamplingPackageRegistry().permissions.isNotEmpty) {
+      info('Asking for permission for all measure types.');
+      permissions = await SamplingPackageRegistry().permissions.request();
 
-    SamplingPackageRegistry().permissions.forEach((permission) async {
-      PermissionStatus status = await permission.status;
-      info('Permissions for $permission : $status');
-    });
+      SamplingPackageRegistry().permissions.forEach((permission) async {
+        PermissionStatus status = await permission.status;
+        info('Permissions for $permission : $status');
+      });
+    }
   }
 
   /// Start this controller, i.e. resume data collection according to the

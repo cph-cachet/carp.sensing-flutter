@@ -148,14 +148,14 @@ class Sensing {
     // If not deployed before (i.e., cached) the study deployment will be
     // fetched from the deployment service.
     controller = client.getStudyRuntime(study!);
-    await controller?.tryDeployment(useCached: false);
+    await controller?.tryDeployment(useCached: true);
 
     // Configure the controller.
     //
     // Notifications are disabled, since we're not using app tasks in this
     // simple app.
     await controller!.configure(
-      enableNotifications: false,
+      enableNotifications: true,
     );
 
     // Listening on the data stream and print them as json.
@@ -244,14 +244,25 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //       ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
     //     phone);
 
-    // add an app task
+    // // add an app task
+    // protocol.addTriggeredTask(
+    //     IntervalTrigger(
+    //       period: const Duration(minutes: 1),
+    //     ),
+    //     AppTask(
+    //       type: SensingUserTask.ONE_TIME_SENSING_TYPE,
+    //       title: "Interval - Device information",
+    //       notification: true,
+    //     )..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
+    //     phone);
+
+    // add a cron job every day at 12:00
     protocol.addTriggeredTask(
-        IntervalTrigger(
-          period: const Duration(minutes: 1),
-        ),
+        CronScheduledTrigger.parse(cronExpression: '45 11 * * *'),
         AppTask(
           type: SensingUserTask.ONE_TIME_SENSING_TYPE,
-          title: "Device information",
+          title: "Cron - Device information",
+          notification: true,
         )..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
         phone);
 

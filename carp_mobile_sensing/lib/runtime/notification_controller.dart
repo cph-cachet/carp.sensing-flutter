@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2021-2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -26,6 +26,7 @@ class NotificationController {
 
   /// Initialize and set up the notification controller.
   Future<void> initialize() async {
+    debug('$runtimeType initializing....');
     tz.initializeTimeZones();
 
     await notifications.FlutterLocalNotificationsPlugin().initialize(
@@ -50,6 +51,7 @@ class NotificationController {
         }
       },
     );
+    info('$runtimeType initialized.');
   }
 
   // the id and name are mandatory, but don't seems to used for anything?
@@ -77,24 +79,55 @@ class NotificationController {
     }
   }
 
-  /// Schedule a notification for a [task].
+  /// Schedule a notification for a [task] at the [task.triggerTime].
   void scheduleNotification(UserTask task) {
     if (task.notification) {
-      final time = tz.TZDateTime.from(
-          task.triggerTime, tz.getLocation(Settings().timezone));
+      if (task.triggerTime.isAfter(DateTime.now())) {
+        final time = tz.TZDateTime.from(
+            task.triggerTime, tz.getLocation(Settings().timezone));
 
-      notifications.FlutterLocalNotificationsPlugin().zonedSchedule(
-        task.id.hashCode,
-        task.title,
-        task.description,
-        time,
-        _platformChannelSpecifics,
-        androidAllowWhileIdle: true,
-        uiLocalNotificationDateInterpretation:
-            notifications.UILocalNotificationDateInterpretation.absoluteTime,
-        payload: task.id,
-      );
-      info('Notification scheduled for $task at $time');
+        notifications.FlutterLocalNotificationsPlugin().zonedSchedule(
+          task.id.hashCode,
+          task.title,
+          task.description,
+          time,
+          _platformChannelSpecifics,
+          androidAllowWhileIdle: true,
+          uiLocalNotificationDateInterpretation:
+              notifications.UILocalNotificationDateInterpretation.absoluteTime,
+          payload: task.id,
+        );
+        info('$runtimeType - Notification scheduled for $task at $time');
+      }
+    } else {
+      warning('$runtimeType - Can only schedule a notification in the future. '
+          'task trigger time: ${task.triggerTime}.');
+    }
+  }
+
+  /// Schedule a daily notification..
+  void scheduleWeeklyNotification(UserTask task) {
+    if (task.notification) {
+      if (task.triggerTime.isAfter(DateTime.now())) {
+        final time = tz.TZDateTime.from(
+            task.triggerTime, tz.getLocation(Settings().timezone));
+
+        notifications.FlutterLocalNotificationsPlugin().zonedSchedule(
+          task.id.hashCode,
+          task.title,
+          task.description,
+          time,
+          _platformChannelSpecifics,
+          androidAllowWhileIdle: true,
+          uiLocalNotificationDateInterpretation:
+              notifications.UILocalNotificationDateInterpretation.absoluteTime,
+          payload: task.id,
+        );
+        info('$runtimeType - Notification scheduled for $task at $time');
+      }
+    } else {
+      warning('$runtimeType - Can only schedule a notification in the future. '
+          'task trigger time: ${task.triggerTime}.');
     }
   }
 
@@ -102,7 +135,7 @@ class NotificationController {
   ///
   /// Note that on iOS there is a limit of 64 pending nofifications.
   /// See https://pub.dev/packages/flutter_local_notifications#ios-pending-notifications-limit
-  Future<int> get pendingNotificationRequestsCont async =>
+  Future<int> get pendingNotificationRequestsCount async =>
       (await notifications.FlutterLocalNotificationsPlugin()
               .pendingNotificationRequests())
           .length;

@@ -92,7 +92,7 @@ class DelayedTrigger extends Trigger {
 /// Daily, weekly and montly recurrent triggers can be specified using the
 /// [RecurrentScheduledTrigger].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class IntervalTrigger extends Trigger {
+class IntervalTrigger extends Trigger implements Scheduleable {
   /// The period (reciprocal of frequency) of sampling.
   Duration period;
 
@@ -104,7 +104,7 @@ class IntervalTrigger extends Trigger {
   Map<String, dynamic> toJson() => _$IntervalTriggerToJson(this);
 }
 
-/// A trigger that resume sampling every [period] for a specific [duration].
+/// A trigger that resumes sampling every [period] for a specific [duration].
 ///
 /// It is important to specify **both** the [period] and the [duration] in order
 /// to specify the timing of resuming and pausing sampling.
@@ -127,7 +127,7 @@ class PeriodicTrigger extends IntervalTrigger {
 /// A trigger that starts sampling based on a [schedule] of a date and time,
 /// and runs for a specific [duration].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class DateTimeTrigger extends Trigger {
+class DateTimeTrigger extends Trigger implements Scheduleable {
   /// The scheduled date and time for resuming sampling.
   DateTime schedule;
 
@@ -144,66 +144,6 @@ class DateTimeTrigger extends Trigger {
   factory DateTimeTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as DateTimeTrigger;
   Map<String, dynamic> toJson() => _$DateTimeTriggerToJson(this);
-}
-
-/// Type of recurrence for a [RecurrentScheduledTrigger].
-enum RecurrentType {
-  daily,
-  weekly,
-  monthly,
-  //yearly,
-}
-
-/// A time on a day.
-///
-/// Follows the conventions in the [DartTime] class, but only uses the Time
-/// part in a 24 hour time format.
-///
-/// Used in a [RecurrentScheduledTrigger] and [RandomRecurrentTrigger].
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class Time extends Serializable {
-  /// 24 hour format.
-  int hour;
-  int minute;
-  int second;
-
-  Time({this.hour = 0, this.minute = 0, this.second = 0}) : super();
-
-  factory Time.now() {
-    DateTime now = DateTime.now();
-    return Time(hour: now.hour, minute: now.minute, second: now.second);
-  }
-
-  /// Returns true if [this] occurs before [other].
-  ///
-  /// The comparison is independent of whether the time is in UTC or in
-  /// the local time zone.
-  bool isBefore(Time other) => DateTime(2021, 1, 1, hour, minute, second)
-      .isBefore(DateTime(2021, 1, 1, other.hour, other.minute, other.second));
-
-  /// Returns true if [this] occurs after [other].
-  ///
-  /// The comparison is independent of whether the time is in UTC or in
-  /// the local time zone.
-  bool isAfter(Time other) => DateTime(2021, 1, 1, hour, minute, second)
-      .isAfter(DateTime(2021, 1, 1, other.hour, other.minute, other.second));
-
-  /// Returns a [Duration] with the difference when subtracting [other] from
-  /// [this].
-  ///
-  ///  The returned [Duration] will be negative if [other] occurs after [this].
-  Duration difference(Time other) => DateTime(2021, 1, 1, hour, minute, second)
-      .difference(DateTime(2021, 1, 1, other.hour, other.minute, other.second));
-
-  Function get fromJsonFunction => _$TimeFromJson;
-  factory Time.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as Time;
-  Map<String, dynamic> toJson() => _$TimeToJson(this);
-
-  static String _twoDigits(int n) => (n >= 10) ? '$n' : '0$n';
-
-  String toString() =>
-      '${_twoDigits(hour)}:${_twoDigits(minute)}:${_twoDigits(second)}';
 }
 
 /// A trigger that resume sampling based on a recurrent scheduled date and time.
@@ -271,7 +211,7 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
   RecurrentType type;
 
   /// The time of day of this trigger.
-  Time time;
+  TimeOfDay time;
 
   /// End time and date. If [null], this trigger keeps sampling forever.
   DateTime? end;
@@ -443,12 +383,20 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
       'RecurrentScheduledTrigger - type: $type, time: $time, separationCount: $separationCount, dayOfWeek: $dayOfWeek, firstOccurrence: $firstOccurrence, period; $period';
 }
 
+/// Type of recurrence for a [RecurrentScheduledTrigger].
+enum RecurrentType {
+  daily,
+  weekly,
+  monthly,
+  //yearly,
+}
+
 /// A trigger that resume sampling based on a cron job specification.
 ///
 /// Bases on the [`cron`](https://pub.dev/packages/cron) package.
 /// See [crontab guru](https://crontab.guru) for a useful tool for specifying cron jobs.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class CronScheduledTrigger extends Trigger {
+class CronScheduledTrigger extends Trigger implements Scheduleable {
   /// The cron job expression.
   String cronExpression;
 
@@ -699,12 +647,12 @@ class ConditionalPeriodicTrigger extends Trigger {
 /// numbers specified.
 /// The time period is defined by a [startTime] and an [endTime].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class RandomRecurrentTrigger extends Trigger {
+class RandomRecurrentTrigger extends Trigger implements Scheduleable {
   /// Start time of the day where the trigger can happen.
-  Time startTime;
+  TimeOfDay startTime;
 
   /// End time of the day where the trigger can happen.
-  Time endTime;
+  TimeOfDay endTime;
 
   /// Minimum number of trigger per day.
   int minNumberOfTriggers;
