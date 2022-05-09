@@ -5,15 +5,8 @@ part of context;
 /// If you need multiple geofences, add a [GeofenceMeasure] for each to your [Study]
 /// for example using the [Trigger] model.
 class GeofenceProbe extends StreamProbe {
-  late Geofence fence;
   StreamController<GeofenceDatum> geoFenceStreamController =
       StreamController.broadcast();
-
-  void onInitialize(Measure measure) {
-    assert(measure is GeofenceMeasure);
-    super.onInitialize(measure);
-    fence = Geofence.fromMeasure(measure as GeofenceMeasure);
-  }
 
   /// Set up option for geofence location tracking - accuracy
   /// is set to `low` and distance filter is 10 meters.
@@ -21,7 +14,11 @@ class GeofenceProbe extends StreamProbe {
 
   @override
   Future<void> onResume() async {
-    await LocationManager().configure(measure as LocationMeasure);
+    Geofence fence = Geofence.fromGeofenceSamplingConfiguration(
+        samplingConfiguration as GeofenceSamplingConfiguration);
+    await LocationManager()
+        .configure(samplingConfiguration as LocationSamplingConfiguration);
+
     // listen in on the location service
     LocationManager()
         .onLocationChanged
@@ -72,19 +69,12 @@ class Geofence {
     this.name,
   }) : super();
 
-  /// Create a [Geofence] based on a [GeofenceMeasure].
-  // Geofence.fromMeasure(GeofenceMeasure measure) {
-  //   this.center = measure.center;
-  //   this.radius = measure.radius;
-  //   this.dwell = measure.dwell;
-  //   this.name = measure.name;
-  // }
-
-  factory Geofence.fromMeasure(GeofenceMeasure measure) => Geofence(
-        center: measure.center,
-        radius: measure.radius,
-        dwell: measure.dwell,
-        name: measure.name,
+  factory Geofence.fromGeofenceSamplingConfiguration(
+          GeofenceSamplingConfiguration configuration) =>
+      Geofence(
+        center: configuration.center,
+        radius: configuration.radius,
+        dwell: configuration.dwell,
       );
 
   GeofenceDatum? moved(GeoPosition location) {

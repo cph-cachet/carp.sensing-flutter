@@ -46,6 +46,7 @@ void _registerFromJsonFunctions() {
   FromJsonFactory().register(ConditionalEvent({}));
   FromJsonFactory().register(ConditionalSamplingEventTrigger(
       measureType: 'ignored', resumeCondition: (DataPoint dataPoint) => true));
+  FromJsonFactory().register(CronScheduledTrigger());
   FromJsonFactory().register(RandomRecurrentTrigger(
     startTime: TimeOfDay(hour: 1),
     endTime: TimeOfDay(hour: 2),

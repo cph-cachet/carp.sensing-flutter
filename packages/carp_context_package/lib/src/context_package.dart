@@ -55,13 +55,20 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
   }
 
   void onRegister() {
-    // first register all measure to be de/serializable
-    dataTypes.forEach(
-        (measure) => FromJsonFactory().register(common.measures[measure]!));
-    // register the GeoPosition class used in the GeofenceMeasure
+    // first register all configurations to be de/serializable
+    FromJsonFactory().register(AirQualitySamplingConfiguration(apiKey: ''));
+    FromJsonFactory().register(
+      GeofenceSamplingConfiguration(
+          center: GeoPosition(1.1, 1.1), dwell: const Duration(), radius: 1.0),
+    );
+    FromJsonFactory().register(LocationSamplingConfiguration(
+      accuracy: GeolocationAccuracy.balanced,
+      distance: 1.1,
+    ));
+    FromJsonFactory().register(WeatherSamplingConfiguration(apiKey: ''));
     FromJsonFactory().register(GeoPosition(1.1, 1.1));
 
-    // registering the transformers from CARP to OMH for geolocation and physical activity.
+    // registering the transformers from CARP to OMH for geolocation and physical activity
     // we assume that there is an OMH schema registered already...
     TransformerSchemaRegistry()
         .lookup(NameSpace.OMH)!
@@ -74,109 +81,31 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
   List<Permission> get permissions =>
       [Permission.locationAlways, Permission.activityRecognition];
 
-  SamplingSchema get common => SamplingSchema(
-      type: SamplingSchemaType.common,
-      name: 'Common (default) context sampling schema',
-      powerAware: true)
-    ..measures.addEntries([
-      MapEntry(
-        LOCATION,
-        LocationMeasure(
-          type: LOCATION,
-          name: 'Location',
-          description:
-              "Ont-time collection of location from the phone's GPS sensor",
-        ),
-      ),
-      MapEntry(
-          GEOLOCATION,
-          LocationMeasure(
-            type: GEOLOCATION,
-            name: 'Geo-location',
-            description:
-                "Continously collection of location from the phone's GPS sensor",
-            accuracy: GeolocationAccuracy.low,
-            interval: const Duration(minutes: 5),
-            distance: 10,
-          )),
-      MapEntry(
-        ACTIVITY,
-        CAMSMeasure(
-          type: ACTIVITY,
-          name: 'Activity Recognition',
-          description:
-              "Collects activity type from the phone's activity recognition module",
-        ),
-      ),
-      MapEntry(
-          WEATHER,
-          WeatherMeasure(
-              type: WEATHER,
-              name: 'Weather',
-              description:
-                  "Collects local weather from the WeatherAPI web service",
-              apiKey: 'Open_Weather_API_key_goes_here')),
-      MapEntry(
-          AIR_QUALITY,
-          AirQualityMeasure(
-              type: AIR_QUALITY,
-              name: 'Air Quality',
-              description:
-                  "Collects local air quality from the OpenWeatherMap (OWM) web service",
-              apiKey: 'AQI_API_key_goes_here')),
-      MapEntry(
-          GEOFENCE,
-          GeofenceMeasure(
-              type: GEOFENCE,
-              center: GeoPosition(55.7943601, 12.4461956),
-              radius: 500,
-              dwell: Duration(minutes: 30),
-              name: 'Geofence',
-              description:
-                  "Collects geofence events when then phone enters, leaves, or dwell in a geographic area",
-              label: 'Geofence (Virum)')),
-      MapEntry(
-          MOBILITY,
-          MobilityMeasure(
-              type: MOBILITY,
-              name: 'Mobility Features',
-              description:
-                  "Extracts mobility features based on location tracking",
-              placeRadius: 50,
-              stopRadius: 5,
-              usePriorContexts: true,
-              stopDuration: Duration(seconds: 30))),
-    ]);
-
-  SamplingSchema get light {
-    SamplingSchema light = common
-      ..type = SamplingSchemaType.light
-      ..name = 'Light context sampling';
-    (light.measures[WEATHER] as WeatherMeasure).enabled = false;
-    return light;
-  }
-
-  SamplingSchema get minimum {
-    SamplingSchema minimum = light
-      ..type = SamplingSchemaType.minimum
-      ..name = 'Minimum context sampling';
-    (minimum.measures[ACTIVITY] as CAMSMeasure).enabled = false;
-    (minimum.measures[GEOFENCE] as GeofenceMeasure).enabled = false;
-    return minimum;
-  }
-
-  SamplingSchema get normal => common;
-
-  SamplingSchema get debug {
-    SamplingSchema debug = common
-      ..type = SamplingSchemaType.debug
-      ..name = 'Debugging context sampling schema'
-      ..powerAware = false;
-    (debug.measures[GEOLOCATION] as LocationMeasure)
-      ..interval = const Duration(seconds: 10)
-      ..distance = 0
-      ..accuracy = GeolocationAccuracy.navigation;
-
-    return debug;
-  }
+  SamplingSchema get samplingSchema => SamplingSchema()
+        ..addConfiguration(
+            LOCATION,
+            LocationSamplingConfiguration(
+              accuracy: GeolocationAccuracy.low,
+              distance: 5,
+              interval: const Duration(minutes: 5),
+            ))
+        ..addConfiguration(
+            GEOLOCATION,
+            LocationSamplingConfiguration(
+              accuracy: GeolocationAccuracy.low,
+              distance: 10,
+              interval: const Duration(minutes: 5),
+            ))
+        ..addConfiguration(
+            MOBILITY,
+            MobilitySamplingConfiguration(
+                accuracy: GeolocationAccuracy.balanced,
+                distance: 10,
+                interval: const Duration(minutes: 5),
+                placeRadius: 50,
+                stopRadius: 5,
+                usePriorContexts: true,
+                stopDuration: Duration(seconds: 30)))
+      //
+      ;
 }

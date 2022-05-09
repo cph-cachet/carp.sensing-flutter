@@ -4,10 +4,9 @@ part of context;
 class WeatherProbe extends DatumProbe {
   late WeatherFactory _wf;
 
-  void onInitialize(Measure measure) {
-    super.onInitialize(measure);
-    final WeatherMeasure wm = measure as WeatherMeasure;
-    _wf = WeatherFactory(wm.apiKey);
+  void onInitialize() {
+    _wf = WeatherFactory(
+        (samplingConfiguration as WeatherSamplingConfiguration).apiKey);
   }
 
   Future<void> onResume() async {

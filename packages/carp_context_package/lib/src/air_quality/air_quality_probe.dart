@@ -4,9 +4,9 @@ part of context;
 class AirQualityProbe extends DatumProbe {
   late AirQuality _waqi;
 
-  void onInitialize(Measure measure) {
-    super.onInitialize(measure);
-    _waqi = AirQuality((measure as AirQualityMeasure).apiKey);
+  void onInitialize() {
+    _waqi = AirQuality(
+        (samplingConfiguration as AirQualitySamplingConfiguration).apiKey);
   }
 
   Future<void> onResume() async {

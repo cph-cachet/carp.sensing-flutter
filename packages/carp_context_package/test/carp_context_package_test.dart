@@ -39,7 +39,11 @@ void main() {
     protocol.addTriggeredTask(
       ImmediateTrigger(), // a simple trigger that starts immediately
       AutomaticTask()
-        ..measures = SamplingPackageRegistry().common.measures.values.toList(),
+        ..measures = SamplingPackageRegistry()
+            .dataTypes
+            .map((type) => Measure(type: type))
+            .toList(),
+
       phone, // a task with all measures
     );
   });
@@ -134,10 +138,13 @@ void main() {
     GeoPosition compute = GeoPosition(55.783499, 12.518914); // DTU Compute
     GeoPosition lyngby = GeoPosition(55.7704, 12.5038); // Kgs. Lyngby
 
-    GeofenceMeasure m = ContextSamplingPackage()
-        .common
-        .measures[ContextSamplingPackage.GEOFENCE] as GeofenceMeasure;
-    Geofence f = Geofence.fromMeasure(m)
+    GeofenceSamplingConfiguration config = GeofenceSamplingConfiguration(
+      center: home,
+      dwell: const Duration(minutes: 10),
+      radius: 5,
+    );
+
+    Geofence f = Geofence.fromGeofenceSamplingConfiguration(config)
       ..dwell = const Duration(seconds: 2); // dwell timeout 2 secs.
     print(f);
 

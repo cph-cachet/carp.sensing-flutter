@@ -197,7 +197,9 @@ class TriggeredAppTaskExecutor extends TriggeredTaskExecutor {
 
       // save timestamp
       triggeredTask.hasBeenScheduledUntil = it.current;
+
       // now pause and resume again when the time has passed
+      // this in the case where the app keeps running in the background
       this.pause();
       var duration = it.current.millisecondsSinceEpoch -
           DateTime.now().millisecondsSinceEpoch;

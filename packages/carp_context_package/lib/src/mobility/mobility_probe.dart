@@ -3,19 +3,19 @@ part of context;
 /// Collects mobility features using the [MobilityFeatures] API.
 class MobilityProbe extends StreamProbe {
   @override
-  void onInitialize(Measure measure) {
-    super.onInitialize(measure);
-    MobilityMeasure m = measure as MobilityMeasure;
+  void onInitialize() {
+    MobilitySamplingConfiguration conf =
+        samplingConfiguration as MobilitySamplingConfiguration;
 
-    // configuration
-    MobilityFeatures().stopRadius = m.stopRadius;
-    MobilityFeatures().placeRadius = m.placeRadius;
-    MobilityFeatures().stopDuration = m.stopDuration;
+    MobilityFeatures().stopRadius = conf.stopRadius;
+    MobilityFeatures().placeRadius = conf.placeRadius;
+    MobilityFeatures().stopDuration = conf.stopDuration;
   }
 
   @override
   Future<void> onResume() async {
-    await LocationManager().configure(measure as LocationConfiguration);
+    await LocationManager()
+        .configure(samplingConfiguration as LocationSamplingConfiguration);
 
     // start the location data stream from the LocationManager
     Stream<LocationSample> locationStream = LocationManager()
