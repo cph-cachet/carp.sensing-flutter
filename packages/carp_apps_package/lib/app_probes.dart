@@ -14,8 +14,8 @@ class AppsProbe extends DatumProbe {
   AppsProbe() : super();
 
   @override
-  void onInitialize(Measure measure) {
-    super.onInitialize(measure);
+  void onInitialize() {
+    super.onInitialize();
 
     // check if the DeviceApps plugin is available (only available on Android)
     if (!Platform.isAndroid)
@@ -44,17 +44,11 @@ class AppsProbe extends DatumProbe {
 /// Note that this probe only works on Android.
 /// On iOS, an exception is thrown and the probe is stopped.
 class AppUsageProbe extends DatumProbe {
-  late MarkedMeasure markedMeasure;
-
   AppUsageProbe() : super();
 
   @override
-  void onInitialize(Measure measure) {
-    super.onInitialize(measure);
-    assert(measure is MarkedMeasure,
-        'An MarkedMeasure must be provided to use the AppUsageProbe.');
-    markedMeasure = (measure as MarkedMeasure);
-
+  void onInitialize() {
+    super.onInitialize();
     // check if AppUsage is available (only available on Android)
     if (!Platform.isAndroid)
       throw SensingException(
@@ -62,10 +56,15 @@ class AppUsageProbe extends DatumProbe {
   }
 
   @override
+  HistoricSamplingConfiguration get samplingConfiguration =>
+      super.samplingConfiguration as HistoricSamplingConfiguration;
+
+  @override
   Future<Datum> getDatum() async {
     // get the last mark - if null, go back as specified in history
-    DateTime start = markedMeasure.lastTime ??
-        DateTime.now().subtract(markedMeasure.history);
+
+    DateTime start = samplingConfiguration.lastTime ??
+        DateTime.now().subtract(samplingConfiguration.past);
     DateTime end = DateTime.now();
 
     debug(
@@ -76,9 +75,6 @@ class AppUsageProbe extends DatumProbe {
     for (AppUsageInfo inf in infos) {
       usage[inf.appName] = inf.usage.inSeconds;
     }
-
-    // save the time this was collected - issue #150
-    markedMeasure.lastTime = DateTime.now();
 
     return AppUsageDatum(start.toUtc(), end.toUtc())..usage = usage;
   }
