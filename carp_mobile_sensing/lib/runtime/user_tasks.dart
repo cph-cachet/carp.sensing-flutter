@@ -104,12 +104,7 @@ abstract class UserTask {
   @mustCallSuper
   @protected
   void onStart(BuildContext context) {
-    // // get the task executor and add it to the trigger executor stream
-    // taskExecutor = getTaskExecutor(task);
-    // triggerExecutor?.group.add(taskExecutor!.data);
-    // triggerExecutor?.executors.add(taskExecutor!);
-    // taskExecutor?.initialize(task, deployment!);
-
+    executor.initialize(task, _executor.deployment);
     state = UserTaskState.started;
   }
 

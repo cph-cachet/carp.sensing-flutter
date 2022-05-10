@@ -6,6 +6,7 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
   static const String BATTERY = 'dk.cachet.carp.battery';
   static const String SCREEN = 'dk.cachet.carp.screen';
 
+  @override
   List<String> get dataTypes => [
         DEVICE,
         MEMORY,
@@ -13,6 +14,7 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
         SCREEN,
       ];
 
+  @override
   Probe? create(String type) {
     switch (type) {
       case DEVICE:
@@ -28,10 +30,13 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
     }
   }
 
+  @override
   void onRegister() {} // does nothing for this device sampling package
 
+  @override
   List<Permission> get permissions => [];
 
+  @override
   SamplingSchema get samplingSchema => SamplingSchema()
     ..addConfiguration(
         MEMORY,

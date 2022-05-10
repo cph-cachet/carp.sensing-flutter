@@ -31,7 +31,7 @@ class ConnectivityProbe extends StreamProbe {
 ///
 /// From Android 8.0 onwards the GPS must be ON (high accuracy) in order to be
 /// able to obtain the BSSID.
-class WifiProbe extends PeriodicDatumProbe {
+class WifiProbe extends IntervalDatumProbe {
   Future<Datum> getDatum() async {
     String? ssid = await NetworkInfo().getWifiName();
     String? bssid = await NetworkInfo().getWifiBSSID();
@@ -43,9 +43,9 @@ class WifiProbe extends PeriodicDatumProbe {
 
 /// The [BluetoothProbe] scans for nearby and visible Bluetooth devices and
 /// collects a [BluetoothDatum] that lists each device found during the scan.
-/// Uses a [PeriodicMeasure] for configuration the [frequency] and [duration]
+/// Uses a [IntervalSamplingConfiguration] for configuration the [interval]
 /// of the scan.
-class BluetoothProbe extends PeriodicDatumProbe {
+class BluetoothProbe extends IntervalDatumProbe {
   /// Default timeout for bluetooth scan - 4 secs
   static const DEFAULT_TIMEOUT = 4 * 1000;
 
@@ -54,7 +54,7 @@ class BluetoothProbe extends PeriodicDatumProbe {
     try {
       List<ScanResult> results = await FlutterBluePlus.instance.startScan(
           scanMode: ScanMode.lowLatency,
-          timeout: duration ?? Duration(milliseconds: DEFAULT_TIMEOUT));
+          timeout: Duration(milliseconds: DEFAULT_TIMEOUT));
       datum = BluetoothDatum.fromScanResult(results);
     } catch (error) {
       await FlutterBluePlus.instance.stopScan();

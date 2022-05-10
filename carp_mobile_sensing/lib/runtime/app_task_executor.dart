@@ -37,7 +37,7 @@ class AppTaskExecutor<TConfig extends AppTask> extends TaskExecutor<TConfig> {
 
   @override
   void onInitialize() {
-    _taskExecutor.initialize(configuration!, deployment);
+    // _taskExecutor.initialize(configuration!, deployment);
   }
 
   @override

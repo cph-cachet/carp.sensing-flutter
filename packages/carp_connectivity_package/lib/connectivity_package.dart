@@ -45,91 +45,15 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
       ];
 
   @override
-  SamplingSchema get common => SamplingSchema(
-        type: SamplingSchemaType.common,
-        name: 'Common (default) connectivity sampling schema',
-        powerAware: true,
-      )..measures.addEntries([
-          MapEntry(
-              CONNECTIVITY,
-              CAMSMeasure(
-                type: CONNECTIVITY,
-                name: 'Connectivity (wifi/3G/...)',
-                description: "Collects the phone's connectivity status",
-                enabled: true,
-              )),
-          MapEntry(
-              BLUETOOTH,
-              PeriodicMeasure(
-                type: BLUETOOTH,
-                name: 'Nearby Devices',
-                description: "Collects nearby devices using Bluetooth LE",
-                enabled: true,
-                frequency: Duration(minutes: 10),
-                duration: Duration(seconds: 6),
-              )),
-          MapEntry(
-              WIFI,
-              PeriodicMeasure(
-                type: WIFI,
-                name: 'Wifi network names',
-                description:
-                    "Collects the SSID and BSSID of nearby wifi network",
-                enabled: true,
-                frequency: Duration(minutes: 10),
-                duration: Duration(seconds: 5),
-              )),
-        ]);
-
-  @override
-  SamplingSchema get light {
-    SamplingSchema light = common
-      ..type = SamplingSchemaType.light
-      ..name = 'Light context sampling';
-    (light.measures[BLUETOOTH] as PeriodicMeasure).enabled = false;
-    return light;
-  }
-
-  @override
-  SamplingSchema get minimum {
-    SamplingSchema minimum = light
-      ..type = SamplingSchemaType.light
-      ..name = 'Light context sampling';
-    (minimum.measures[CONNECTIVITY] as CAMSMeasure).enabled = false;
-    (minimum.measures[WIFI] as PeriodicMeasure).enabled = false;
-    return minimum;
-  }
-
-  @override
-  SamplingSchema get normal => common..type = SamplingSchemaType.normal;
-
-  @override
-  SamplingSchema get debug => SamplingSchema(
-        type: SamplingSchemaType.debug,
-        name: 'Debug connectivity sampling',
-        powerAware: true,
-      )..measures.addEntries([
-          MapEntry(
-              CONNECTIVITY,
-              CAMSMeasure(
-                type: CONNECTIVITY,
-                enabled: true,
-              )),
-          MapEntry(
-              BLUETOOTH,
-              PeriodicMeasure(
-                type: BLUETOOTH,
-                enabled: true,
-                frequency: Duration(minutes: 1),
-                duration: Duration(seconds: 6),
-              )),
-          MapEntry(
-              WIFI,
-              PeriodicMeasure(
-                type: WIFI,
-                enabled: true,
-                frequency: Duration(minutes: 1),
-                duration: Duration(seconds: 5),
-              )),
-        ]);
+  SamplingSchema get samplingSchema => SamplingSchema()
+    ..addConfiguration(
+        BLUETOOTH,
+        IntervalSamplingConfiguration(
+          interval: const Duration(minutes: 10),
+        ))
+    ..addConfiguration(
+        WIFI,
+        IntervalSamplingConfiguration(
+          interval: const Duration(minutes: 10),
+        ));
 }
