@@ -385,30 +385,6 @@ Map<String, dynamic> _$SmartphoneDeploymentToJson(
   return val;
 }
 
-AutomaticTask _$AutomaticTaskFromJson(Map<String, dynamic> json) =>
-    AutomaticTask(
-      name: json['name'] as String?,
-    )
-      ..$type = json[r'$type'] as String?
-      ..measures = (json['measures'] as List<dynamic>)
-          .map((e) => Measure.fromJson(e as Map<String, dynamic>))
-          .toList();
-
-Map<String, dynamic> _$AutomaticTaskToJson(AutomaticTask instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull(r'$type', instance.$type);
-  val['name'] = instance.name;
-  val['measures'] = instance.measures;
-  return val;
-}
-
 AppTask _$AppTaskFromJson(Map<String, dynamic> json) => AppTask(
       name: json['name'] as String?,
       type: json['type'] as String,

@@ -7,31 +7,46 @@
 
 part of survey;
 
-/// Specify the configuration of a [RPTask] survey.
+/// Specify the configuration of a [RPTask] as a special case of an [AppTask].
+/// This can be a survey, a cognitive test, or other tasks that implements the
+/// [RPTask] from the Research Package.
 ///
-/// This configuration is typically used as the `overrideSamplingConfiguration``
-/// in a [Measure]. Such a measure should be part of an [AppTask] in order for
-/// the app to handle how it wants to show the survey to the user.
-/// Note that only the first [RPTaskMeasure] in an [AppTask] is used.
-/// Hence, an [AppTask] should be used for each survey.
+/// A [RPAppTask] holding a survey can then be triggered in different
+/// ways. For example:
 ///
-/// The app task holding a survey measure can then be triggered in different ways.
-/// For example:
-///
-///  * a [PeriodicTrigger] would allow to collect the survey on a regular basis (frequency)
-///  * a [RecurrentScheduledTrigger] allow to schedule a recurrent survey, e.g every Monday at 8pm.
+///  * a [PeriodicTrigger] would trigger the survey on a regular basis.
+///  * a [RecurrentScheduledTrigger] would schedule a recurrent survey, e.g every Monday at 8pm.
 ///
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class RPTaskSamplingConfiguration extends PersistentSamplingConfiguration {
+class RPAppTask extends AppTask {
   /// The survey to be issued to the user.
-  RPTask surveyTask;
+  RPTask rpTask;
 
-  RPTaskSamplingConfiguration({required this.surveyTask}) : super();
+  RPAppTask({
+    required String type,
+    String? name,
+    String title = '',
+    String description = '',
+    String instructions = '',
+    int? minutesToComplete,
+    Duration? expire,
+    bool notification = false,
+    required this.rpTask,
+  }) : super(
+          type: type,
+          name: name,
+          title: title,
+          description: description,
+          instructions: instructions,
+          minutesToComplete: minutesToComplete,
+          expire: expire,
+          notification: notification,
+        );
 
-  Function get fromJsonFunction => _$RPTaskSamplingConfigurationFromJson;
-  Map<String, dynamic> toJson() => _$RPTaskSamplingConfigurationToJson(this);
-  factory RPTaskSamplingConfiguration.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as RPTaskSamplingConfiguration;
+  Function get fromJsonFunction => _$RPAppTaskFromJson;
+  Map<String, dynamic> toJson() => _$RPAppTaskToJson(this);
+  factory RPAppTask.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as RPAppTask;
 }
 
 /// Holds information about the result of a survey.

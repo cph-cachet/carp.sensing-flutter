@@ -525,7 +525,7 @@ void app_task_example() async {
     ..addTriggeredTask(
         ImmediateTrigger(), // collect device info as an app task
         AppTask(
-          type: SensingUserTask.ONE_TIME_SENSING_TYPE,
+          type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
           title: 'Device',
           description: 'Collect device info',
         )..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
@@ -533,7 +533,7 @@ void app_task_example() async {
     ..addTriggeredTask(
         ImmediateTrigger(), // start collecting screen events as an app task
         AppTask(
-          type: SensingUserTask.SENSING_TYPE,
+          type: BackgroundSensingUserTask.SENSING_TYPE,
           title: 'Screen',
           description: 'Collect screen events',
         )..addMeasure(Measure(type: DeviceSamplingPackage.SCREEN)),

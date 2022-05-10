@@ -21,12 +21,15 @@ void main() async {
   Smartphone phone = Smartphone();
   protocol.addMasterDevice(phone);
 
-  // add a WHO-5 survey to an app task for this protocol
+  // add a WHO-5 survey as an app task
+  // plus collect device and ambient light information when survey is done
   protocol.addTriggeredTask(
       DelayedTrigger(delay: Duration(seconds: 30)),
-      AppTask(type: 'survey', name: 'WHO-5 Survey')
-        ..measures.add(Measure(type: SurveySamplingPackage.SURVEY)
-          ..overrideSamplingConfiguration =
-              RPTaskSamplingConfiguration(surveyTask: who5Task)),
+      RPAppTask(
+          type: SurveyUserTask.WHO5_SURVEY_TYPE,
+          name: 'WHO-5 Survey',
+          rpTask: who5Task)
+        ..measures.add(Measure(type: DeviceSamplingPackage.DEVICE))
+        ..measures.add(Measure(type: SensorSamplingPackage.LIGHT)),
       phone);
 }

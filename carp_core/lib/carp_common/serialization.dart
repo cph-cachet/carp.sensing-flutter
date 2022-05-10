@@ -201,7 +201,7 @@ class FromJsonFactory {
         time: TimeOfDay()));
 
     register(TaskDescriptor());
-    register(ConcurrentTask());
+    register(BackgroundTask());
     register(CustomProtocolTask(studyProtocol: 'ignored'));
     register(Measure(type: 'ignored'));
     register(SamplingConfiguration());

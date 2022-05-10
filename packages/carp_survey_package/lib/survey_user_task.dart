@@ -19,28 +19,26 @@ class SurveyUserTask extends UserTask {
   static const String WHO5_SURVEY_TYPE = 'who5';
 
   late BuildContext _context;
-  late SurveyProbe _surveyProbe;
+  final _controller = StreamController<DataPoint>();
 
-  SurveyUserTask(AppTaskExecutor ex) : super(ex) {
-    // looking for the survey probe (i.e. a [SurveyProbe]) in this executor
-    // we need to add the callback functions to it later
-    for (Probe probe in executor.probes) {
-      if (probe is SurveyProbe) {
-        _surveyProbe = probe;
-        break; // only supports one survey pr. task
-      }
-    }
-  }
+  /// The [RPAppTask] from which this user task originates from.
+  RPAppTask get rpAppTask => task as RPAppTask;
+
+  SurveyUserTask(AppTaskExecutor executor) : super(executor);
 
   void onStart(BuildContext context) {
     // saving the build context for later use
     _context = context;
-    _surveyProbe.onSurveyTriggered = _onSurveyTriggered;
-    _surveyProbe.onSurveySubmit = _onSurveySubmit;
-    _surveyProbe.onSurveyCancel = _onSurveyCancel;
 
     super.onStart(context);
+    executor.group.add(_controller.stream);
     executor.resume();
+
+    _onSurveyTriggered(SurveyPage(
+      task: rpAppTask.rpTask,
+      resultCallback: _onSurveySubmit,
+      onSurveyCancel: _onSurveyCancel,
+    ));
   }
 
   void _onSurveyTriggered(SurveyPage surveyPage) {
@@ -52,11 +50,15 @@ class SurveyUserTask extends UserTask {
 
   void _onSurveySubmit(RPTaskResult result) {
     executor.pause();
+    // when we have the survey result, add it to the data stream
+    _controller.add(DataPoint.fromData(RPTaskResultDatum(result)));
     super.onDone(_context);
   }
 
   void _onSurveyCancel([RPTaskResult? result]) {
     executor.pause();
+    // also saved result even though it was canceled by the user
+    _controller.add(DataPoint.fromData(RPTaskResultDatum(result)));
     super.onCancel(_context);
   }
 }

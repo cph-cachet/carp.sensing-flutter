@@ -11,12 +11,12 @@ part of runtime;
 TaskExecutor getTaskExecutor(TaskDescriptor task) {
   switch (task.runtimeType) {
     case TaskDescriptor:
-    case AutomaticTask:
-      return AutomaticTaskExecutor();
+    case BackgroundTask:
+      return BackgroundTaskExecutor();
     case AppTask:
       return AppTaskExecutor();
     default:
-      return AutomaticTaskExecutor();
+      return BackgroundTaskExecutor();
   }
 }
 
@@ -25,8 +25,9 @@ TaskExecutor getTaskExecutor(TaskDescriptor task) {
 ///
 /// Note that a [TaskExecutor] in itself is a [Probe] and hence work as a 'super probe'.
 /// This - amongst other things - imply that you can listen to datum [data] from a task executor.
-abstract class TaskExecutor<TConfig> extends AggregateExecutor<TaskDescriptor> {
-  TaskDescriptor get task => configuration!;
+abstract class TaskExecutor<TConfig extends TaskDescriptor>
+    extends AggregateExecutor<TConfig> {
+  TConfig get task => configuration!;
 
   /// Returns a list of the running probes in this task executor.
   List<Probe> get probes =>
@@ -51,5 +52,5 @@ abstract class TaskExecutor<TConfig> extends AggregateExecutor<TaskDescriptor> {
   }
 }
 
-/// Executes an [AutomaticTask].
-class AutomaticTaskExecutor extends TaskExecutor<AutomaticTask> {}
+/// Executes an [BackgroundTask].
+class BackgroundTaskExecutor extends TaskExecutor<BackgroundTask> {}

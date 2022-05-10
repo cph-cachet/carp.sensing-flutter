@@ -33,7 +33,7 @@ void main() {
       Measure(type: DataType(NameSpace.CARP, 'steps').toString()),
     ];
 
-    ConcurrentTask task = ConcurrentTask(name: 'Start measures')
+    BackgroundTask task = BackgroundTask(name: 'Start measures')
       ..addMeasures(measures);
     protocol.addTriggeredTask(
       Trigger(sourceDeviceRoleName: phone.roleName),

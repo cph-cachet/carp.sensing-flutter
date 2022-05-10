@@ -293,15 +293,18 @@ Map<String, dynamic> _$TaskDescriptorToJson(TaskDescriptor instance) {
   return val;
 }
 
-ConcurrentTask _$ConcurrentTaskFromJson(Map<String, dynamic> json) =>
-    ConcurrentTask(
+BackgroundTask _$BackgroundTaskFromJson(Map<String, dynamic> json) =>
+    BackgroundTask(
       name: json['name'] as String?,
       measures: (json['measures'] as List<dynamic>?)
           ?.map((e) => Measure.fromJson(e as Map<String, dynamic>))
           .toList(),
+      duration: json['duration'] == null
+          ? null
+          : Duration(microseconds: json['duration'] as int),
     )..$type = json[r'$type'] as String?;
 
-Map<String, dynamic> _$ConcurrentTaskToJson(ConcurrentTask instance) {
+Map<String, dynamic> _$BackgroundTaskToJson(BackgroundTask instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -313,6 +316,7 @@ Map<String, dynamic> _$ConcurrentTaskToJson(ConcurrentTask instance) {
   writeNotNull(r'$type', instance.$type);
   val['name'] = instance.name;
   val['measures'] = instance.measures;
+  writeNotNull('duration', instance.duration?.inMicroseconds);
   return val;
 }
 

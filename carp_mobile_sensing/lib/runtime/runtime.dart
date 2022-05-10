@@ -44,6 +44,7 @@ part 'trigger_executors.dart';
 part 'task_executors.dart';
 part 'app_task_executor.dart';
 part 'app_task_controller.dart';
+part 'user_tasks.dart';
 part 'probes.dart';
 part 'sampling_package.dart';
 part 'settings.dart';

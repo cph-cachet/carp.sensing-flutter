@@ -260,7 +260,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     protocol.addTriggeredTask(
         CronScheduledTrigger.parse(cronExpression: '45 11 * * *'),
         AppTask(
-          type: SensingUserTask.ONE_TIME_SENSING_TYPE,
+          type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
           title: "Cron - Device information",
           notification: true,
         )..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),

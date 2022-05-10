@@ -43,7 +43,7 @@ abstract class Probe extends AbstractExecutor<Measure> {
       deployment?.deviceDescriptor.samplingConfiguration[measure?.type] ??
       SamplingPackageRegistry().samplingSchema.configurations[measure?.type];
 
-  /// Add a data point to the data [stream].
+  /// Add a data point to the [data] stream.
   @protected
   void addData(Datum datum) {
     // timestamp this sampling
@@ -54,7 +54,7 @@ abstract class Probe extends AbstractExecutor<Measure> {
     controller.add(datum);
   }
 
-  /// Add an error to the data [stream].
+  /// Add an error to the [data] stream.
   @protected
   void addError(Object error) => controller.addError(error);
 

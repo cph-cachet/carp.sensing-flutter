@@ -49,18 +49,26 @@ class TaskDescriptor extends Serializable {
       '$runtimeType - name: $name, measures size: ${measures.length}';
 }
 
-/// A [TaskDescriptor] which specifies that all containing measures and/or outputs
-/// should start immediately once triggered and run indefinitely until all
-/// containing measures have completed.
+/// A [TaskDescriptor] which specifies that all containing measures and/or
+/// outputs should immediately start running in the background once triggered.
+/// The task runs for the specified [duration], or until stopped, or until
+/// all measures and/or outputs have completed.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class ConcurrentTask extends TaskDescriptor {
-  ConcurrentTask({String? name, List<Measure>? measures})
-      : super(name: name, measures: measures);
+class BackgroundTask extends TaskDescriptor {
+  /// The optional duration over the course of which the [measures] need to
+  /// be sampled. `null` implies infinite by default.
+  Duration? duration;
 
-  Function get fromJsonFunction => _$ConcurrentTaskFromJson;
-  factory ConcurrentTask.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as ConcurrentTask;
-  Map<String, dynamic> toJson() => _$ConcurrentTaskToJson(this);
+  BackgroundTask({
+    String? name,
+    List<Measure>? measures,
+    this.duration,
+  }) : super(name: name, measures: measures);
+
+  Function get fromJsonFunction => _$BackgroundTaskFromJson;
+  factory BackgroundTask.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as BackgroundTask;
+  Map<String, dynamic> toJson() => _$BackgroundTaskToJson(this);
 }
 
 /// A [TaskDescriptor] which contains a definition on how to run tasks, measures,

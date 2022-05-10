@@ -118,14 +118,14 @@ class AppTaskController {
     bool sendNotification = true,
     bool userTaskEvent = true,
   }) {
-    if (_userTaskFactories[executor.appTask.type] == null) {
+    if (_userTaskFactories[executor.task.type] == null) {
       warning(
           'Could not enqueue AppTask. Could not find a factory for creating '
-          "a UserTask for type '${executor.appTask.type}'");
+          "a UserTask for type '${executor.task.type}'");
       return null;
     } else {
       UserTask userTask =
-          _userTaskFactories[executor.appTask.type]!.create(executor);
+          _userTaskFactories[executor.task.type]!.create(executor);
       userTask.state = UserTaskState.enqueued;
       userTask.enqueued = DateTime.now();
       userTask.triggerTime = triggerTime ?? DateTime.now();
@@ -143,7 +143,6 @@ class AppTaskController {
             ? NotificationController().sendNotification(userTask)
             : NotificationController().scheduleNotification(userTask);
       }
-
       return userTask;
     }
   }
@@ -337,21 +336,4 @@ class UserTaskSnapshot extends Serializable {
   @override
   String toString() =>
       '$runtimeType - id:$id, task: $task, state: $state, enqueued: $enqueued, triggerTime: $triggerTime, studyDeploymentId: $studyDeploymentId, deviceRoleName: $deviceRoleName';
-}
-
-/// A [UserTaskFactory] that can create non-UI sensing tasks:
-///  * [OneTimeSensingUserTask]
-///  * [SensingUserTask]
-class SensingUserTaskFactory implements UserTaskFactory {
-  @override
-  List<String> types = [
-    SensingUserTask.SENSING_TYPE,
-    SensingUserTask.ONE_TIME_SENSING_TYPE,
-  ];
-
-  @override
-  UserTask create(AppTaskExecutor executor) =>
-      (executor.appTask.type == SensingUserTask.ONE_TIME_SENSING_TYPE)
-          ? OneTimeSensingUserTask(executor)
-          : SensingUserTask(executor);
 }

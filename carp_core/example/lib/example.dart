@@ -32,7 +32,7 @@ void carpCoreProtocolExample() async {
     Measure(type: 'dk.cachet.stepcount'),
   ];
 
-  TaskDescriptor startMeasures = ConcurrentTask(
+  TaskDescriptor startMeasures = BackgroundTask(
     name: "Start measures",
     measures: measures,
   );
