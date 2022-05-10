@@ -35,14 +35,14 @@ void main() {
       Measure(type: DataType(NameSpace.CARP, 'steps').toString()),
     ];
 
-    ConcurrentTask task = ConcurrentTask(name: 'Start measures')
+    BackgroundTask task = BackgroundTask(name: 'Start measures')
       ..addMeasures(measures);
     masterProtocol.addTriggeredTask(Trigger(), task, masterPhone);
 
     // adding all measure from the sampling packages to one one trigger and one task
     masterProtocol.addTriggeredTask(
       ImmediateTrigger(), // a simple trigger that starts immediately
-      AutomaticTask()
+      BackgroundTask()
         ..measures = SamplingPackageRegistry()
             .dataTypes
             .map((type) => Measure(type: type))
@@ -53,14 +53,14 @@ void main() {
     // collect device info only once
     masterProtocol.addTriggeredTask(
         OneTimeTrigger(),
-        AutomaticTask()
+        BackgroundTask()
           ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
         masterPhone);
 
     // adding two measures to another device
     masterProtocol.addTriggeredTask(
         ImmediateTrigger(),
-        AutomaticTask()
+        BackgroundTask()
           ..addMeasure(Measure(type: DeviceSamplingPackage.MEMORY))
           ..addMeasure(Measure(type: SensorSamplingPackage.LIGHT)),
         eSense);
@@ -111,7 +111,7 @@ void main() {
   test('Triggers -> JSON -> Triggers', () async {
     masterProtocol.addTriggeredTask(
         DelayedTrigger(delay: Duration(seconds: 10)),
-        AutomaticTask()
+        BackgroundTask()
           ..addMeasure(Measure(type: SensorSamplingPackage.PEDOMETER))
           ..addMeasure(Measure(type: DeviceSamplingPackage.SCREEN)),
         masterPhone);
@@ -121,7 +121,7 @@ void main() {
           period: const Duration(minutes: 1),
           duration: Duration(seconds: 1),
         ), // collect every min.
-        AutomaticTask()
+        BackgroundTask()
           ..addMeasure(Measure(type: SensorSamplingPackage.LIGHT))
           ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
         masterPhone);
@@ -137,7 +137,7 @@ void main() {
     print('$t1');
     masterProtocol.addTriggeredTask(
         t1,
-        AutomaticTask()
+        BackgroundTask()
           ..addMeasure(Measure(type: DeviceSamplingPackage.MEMORY)),
         masterPhone);
 
@@ -151,7 +151,7 @@ void main() {
     print('$t2');
     masterProtocol.addTriggeredTask(
         t2,
-        AutomaticTask()
+        BackgroundTask()
           ..addMeasure(Measure(type: SensorSamplingPackage.LIGHT))
           ..addMeasure(Measure(type: DeviceSamplingPackage.MEMORY)),
         masterPhone);
@@ -166,7 +166,7 @@ void main() {
     print('$t3');
     masterProtocol.addTriggeredTask(
         t3,
-        AutomaticTask()
+        BackgroundTask()
           ..addMeasure(Measure(type: SensorSamplingPackage.LIGHT))
           ..addMeasure(Measure(type: DeviceSamplingPackage.BATTERY)),
         masterPhone);
@@ -182,7 +182,7 @@ void main() {
     print('$t4');
     masterProtocol.addTriggeredTask(
         t4,
-        AutomaticTask()
+        BackgroundTask()
           ..addMeasure(Measure(type: SensorSamplingPackage.LIGHT))
           ..addMeasure(Measure(type: DeviceSamplingPackage.SCREEN)),
         masterPhone);
@@ -197,7 +197,8 @@ void main() {
         SamplingEventTrigger(
             measureType: DeviceSamplingPackage.BATTERY,
             resumeCondition: ConditionalEvent({'batteryLevel': 10})),
-        AutomaticTask()..addMeasure(Measure(type: SensorSamplingPackage.LIGHT)),
+        BackgroundTask()
+          ..addMeasure(Measure(type: SensorSamplingPackage.LIGHT)),
         masterPhone);
 
     masterProtocol.addTriggeredTask(
@@ -205,7 +206,8 @@ void main() {
             measureType: DeviceSamplingPackage.BATTERY,
             resumeCondition: (dataPoint) =>
                 (dataPoint.carpBody as BatteryDatum).batteryLevel == 10),
-        AutomaticTask()..addMeasure(Measure(type: SensorSamplingPackage.LIGHT)),
+        BackgroundTask()
+          ..addMeasure(Measure(type: SensorSamplingPackage.LIGHT)),
         masterPhone);
 
     final studyJson = toJsonString(masterProtocol);

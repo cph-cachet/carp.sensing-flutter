@@ -18,7 +18,7 @@
     "connectedDeviceConfigurations": {},
     "tasks": [
         {
-            "$type": "dk.cachet.carp.protocols.domain.tasks.ConcurrentTask",
+            "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
             "name": "task",
             "measures": [
                 {

@@ -31,7 +31,7 @@ Future<void> example_0() async {
   // battery level, while delaying the sampling by 10 seconds
   protocol.addTriggeredTask(
       DelayedTrigger(delay: Duration(seconds: 10)),
-      AutomaticTask(name: 'Sensor Task')
+      BackgroundTask(name: 'Sensor Task')
         ..addMeasure(Measure(type: SensorSamplingPackage.PEDOMETER))
         ..addMeasure(Measure(type: SensorSamplingPackage.LIGHT))
         ..addMeasure(Measure(type: DeviceSamplingPackage.SCREEN))
@@ -100,7 +100,7 @@ void example_1() async {
   // SamplingPackageRegistry 'common' factory method.
   protocol.addTriggeredTask(
       ImmediateTrigger(),
-      AutomaticTask()
+      BackgroundTask()
         ..addMeasure(Measure(type: SensorSamplingPackage.PEDOMETER))
         ..addMeasure(Measure(type: SensorSamplingPackage.LIGHT))
         ..addMeasure(Measure(type: DeviceSamplingPackage.SCREEN))

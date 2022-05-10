@@ -8,7 +8,8 @@
 part of survey;
 
 /// A [SamplingPackage] that knows how to collect data from user surveys based
-/// on the `research_package` package.
+/// on the [research_package](https://pub.dev/packages/research_package)
+/// package.
 ///
 /// In contrast to other sampling packages, this package does not support any
 /// [dataTypes]. Collection of [RPTask] data from a user is supported by the

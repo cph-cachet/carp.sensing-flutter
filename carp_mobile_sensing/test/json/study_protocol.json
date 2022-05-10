@@ -1,7 +1,7 @@
 {
     "ownerId": "user@dtu.dk",
     "name": "patient_tracking",
-    "creationDate": "2022-04-27T09:36:04.928088Z",
+    "creationDate": "2022-05-10T14:07:51.819763Z",
     "masterDevices": [
      {
       "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
@@ -35,7 +35,7 @@
     },
     "tasks": [
      {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.ConcurrentTask",
+      "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
       "name": "Start measures",
       "measures": [
        {
@@ -53,8 +53,8 @@
       ]
      },
      {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
-      "name": "Task #6",
+      "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
+      "name": "Task #5",
       "measures": [
        {
         "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
@@ -99,8 +99,8 @@
       ]
      },
      {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
-      "name": "Task #7",
+      "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
+      "name": "Task #6",
       "measures": [
        {
         "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
@@ -109,8 +109,8 @@
       ]
      },
      {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
-      "name": "Task #8",
+      "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
+      "name": "Task #7",
       "measures": [
        {
         "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
@@ -131,17 +131,17 @@
      },
      {
       "triggerId": 1,
-      "taskName": "Task #6",
+      "taskName": "Task #5",
       "targetDeviceRoleName": "masterphone"
      },
      {
       "triggerId": 2,
-      "taskName": "Task #7",
+      "taskName": "Task #6",
       "targetDeviceRoleName": "masterphone"
      },
      {
       "triggerId": 3,
-      "taskName": "Task #8",
+      "taskName": "Task #7",
       "targetDeviceRoleName": "esense"
      }
     ],

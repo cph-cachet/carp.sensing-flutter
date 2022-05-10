@@ -2,7 +2,7 @@
     "ownerId": "xyz@dtu.dk",
     "name": "Test Study Protocol",
     "description": "For testing purposes.",
-    "creationDate": "2022-04-25T22:13:28.754142Z",
+    "creationDate": "2022-05-10T14:04:41.754559Z",
     "masterDevices": [
      {
       "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
@@ -32,7 +32,7 @@
     },
     "tasks": [
      {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.ConcurrentTask",
+      "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
       "name": "Start measures",
       "measures": [
        {

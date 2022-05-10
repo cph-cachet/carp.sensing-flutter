@@ -24,7 +24,7 @@ void main() async {
   // Add an automatic task that immediately starts collecting audio and noise.
   protocol.addTriggeredTask(
       ImmediateTrigger(),
-      AutomaticTask()
+      BackgroundTask()
         ..addMeasures(
           [
             Measure(type: MediaSamplingPackage.AUDIO),

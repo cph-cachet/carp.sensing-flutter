@@ -30,7 +30,7 @@ void main() {
     // adding all available measures to one one trigger and one task
     protocol.addTriggeredTask(
       ImmediateTrigger(),
-      AutomaticTask()
+      BackgroundTask()
         ..measures = SamplingPackageRegistry()
             .dataTypes
             .map((type) => Measure(type: type))

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2020-2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -54,6 +54,7 @@ class RPAppTask extends AppTask {
 class RPTaskResultDatum extends Datum {
   DataFormat get format => DataFormat.fromString(SurveySamplingPackage.SURVEY);
 
+  // The survey result.
   RPTaskResult? surveyResult;
 
   RPTaskResultDatum([this.surveyResult]);

@@ -19,7 +19,7 @@ void sensing() async {
   // add selected measures from the sampling packages
   protocol.addTriggeredTask(
       ImmediateTrigger(),
-      AutomaticTask()
+      BackgroundTask()
         // ..addMeasure(Measure(type: SensorSamplingPackage.ACCELEROMETER))
         // ..addMeasure(Measure(type: SensorSamplingPackage.GYROSCOPE))
         ..addMeasure(Measure(type: DeviceSamplingPackage.MEMORY))

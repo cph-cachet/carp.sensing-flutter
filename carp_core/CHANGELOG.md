@@ -1,4 +1,5 @@
 ## 0.40.0
+* `ConcurrentTask` is now called a `BackgroundTask`
 
 ## 0.33.1
 * implementation of `ScheduledTrigger` incl. test
