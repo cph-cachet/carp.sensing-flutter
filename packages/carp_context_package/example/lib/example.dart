@@ -30,15 +30,11 @@ void main() async {
   // Is using the 'common' measure definitions in the package.
   protocol.addTriggeredTask(
       DelayedTrigger(delay: Duration(minutes: 5)),
-      AutomaticTask()
-        ..addMeasures(DeviceSamplingPackage().common.getMeasureList(
-          types: [
-            ContextSamplingPackage.LOCATION,
-            ContextSamplingPackage.GEOLOCATION,
-            ContextSamplingPackage.ACTIVITY,
-            ContextSamplingPackage.GEOFENCE,
-          ],
-        )),
+      BackgroundTask(name: 'Sensor Task')
+        ..addMeasure(Measure(type: ContextSamplingPackage.LOCATION))
+        ..addMeasure(Measure(type: ContextSamplingPackage.GEOLOCATION))
+        ..addMeasure(Measure(type: ContextSamplingPackage.ACTIVITY))
+        ..addMeasure(Measure(type: ContextSamplingPackage.GEOFENCE)),
       phone);
 
   // Add an automatic task that collects weather and air_quality every 30 miutes.
@@ -48,18 +44,12 @@ void main() async {
         period: Duration(minutes: 30),
         duration: Duration(seconds: 10),
       ),
-      AutomaticTask()
-        ..addMeasure(WeatherMeasure(
-            type: ContextSamplingPackage.WEATHER,
-            name: 'Weather',
-            description:
-                "Collects local weather from the WeatherAPI web service",
-            apiKey: 'Open_Weather_API_key_goes_here'))
-        ..addMeasure(AirQualityMeasure(
-            type: ContextSamplingPackage.AIR_QUALITY,
-            name: 'Air Quality',
-            description:
-                "Collects local air quality from the Air Quality Index (AQI) web service",
-            apiKey: 'AQI_API_key_goes_here')),
+      BackgroundTask()
+        ..addMeasure(Measure(type: ContextSamplingPackage.WEATHER)
+          ..overrideSamplingConfiguration =
+              WeatherSamplingConfiguration(apiKey: 'OW_API_key_goes_here'))
+        ..addMeasure(Measure(type: ContextSamplingPackage.AIR_QUALITY)
+          ..overrideSamplingConfiguration = AirQualitySamplingConfiguration(
+              apiKey: 'WAQI_API_key_goes_here')),
       phone);
 }

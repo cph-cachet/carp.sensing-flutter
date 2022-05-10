@@ -2,7 +2,7 @@
   "ownerId": "alex@uni.dk",
   "name": "Context package test",
   "description": "",
-  "creationDate": "2022-05-09T19:51:31.020851Z",
+  "creationDate": "2022-05-10T14:17:43.346095Z",
   "masterDevices": [
    {
     "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
@@ -20,8 +20,8 @@
   },
   "tasks": [
    {
-    "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
-    "name": "Task #6",
+    "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
+    "name": "Task #5",
     "measures": [
      {
       "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
@@ -97,7 +97,7 @@
   "triggeredTasks": [
    {
     "triggerId": 0,
-    "taskName": "Task #6",
+    "taskName": "Task #5",
     "targetDeviceRoleName": "masterphone"
    }
   ],
