@@ -6,22 +6,23 @@ part of health_package;
 // JsonSerializableGenerator
 // **************************************************************************
 
-HealthMeasure _$HealthMeasureFromJson(Map<String, dynamic> json) =>
-    HealthMeasure(
-      type: json['type'] as String,
-      name: json['name'] as String?,
-      description: json['description'] as String?,
-      enabled: json['enabled'] as bool? ?? true,
-      history: json['history'] == null
+HealthSamplingConfiguration _$HealthSamplingConfigurationFromJson(
+        Map<String, dynamic> json) =>
+    HealthSamplingConfiguration(
+      past: json['past'] == null
           ? null
-          : Duration(microseconds: json['history'] as int),
+          : Duration(microseconds: json['past'] as int),
       healthDataType:
           $enumDecode(_$HealthDataTypeEnumMap, json['healthDataType']),
     )
       ..$type = json[r'$type'] as String?
-      ..configuration = Map<String, String>.from(json['configuration'] as Map);
+      ..lastTime = json['lastTime'] == null
+          ? null
+          : DateTime.parse(json['lastTime'] as String)
+      ..future = Duration(microseconds: json['future'] as int);
 
-Map<String, dynamic> _$HealthMeasureToJson(HealthMeasure instance) {
+Map<String, dynamic> _$HealthSamplingConfigurationToJson(
+    HealthSamplingConfiguration instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -31,12 +32,9 @@ Map<String, dynamic> _$HealthMeasureToJson(HealthMeasure instance) {
   }
 
   writeNotNull(r'$type', instance.$type);
-  val['type'] = instance.type;
-  writeNotNull('name', instance.name);
-  writeNotNull('description', instance.description);
-  val['enabled'] = instance.enabled;
-  val['configuration'] = instance.configuration;
-  val['history'] = instance.history.inMicroseconds;
+  writeNotNull('lastTime', instance.lastTime?.toIso8601String());
+  val['past'] = instance.past.inMicroseconds;
+  val['future'] = instance.future.inMicroseconds;
   val['healthDataType'] = _$HealthDataTypeEnumMap[instance.healthDataType];
   return val;
 }

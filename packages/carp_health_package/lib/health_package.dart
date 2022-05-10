@@ -45,8 +45,7 @@ class HealthSamplingPackage extends SmartphoneSamplingPackage {
   Probe? create(String type) => type == HEALTH ? HealthProbe() : null;
 
   void onRegister() {
-    FromJsonFactory().register(HealthMeasure(
-      type: HEALTH,
+    FromJsonFactory().register(HealthSamplingConfiguration(
       healthDataType: HealthDataType.ACTIVE_ENERGY_BURNED,
     ));
   }
@@ -60,26 +59,5 @@ class HealthSamplingPackage extends SmartphoneSamplingPackage {
   Future<bool> requestAuthorization(List<HealthDataType> types) async =>
       _healthFactory.requestAuthorization(types);
 
-  /// The `common` sampling schema for health.
-  /// Mainly returns a sampling schema collecting step counts.
-  SamplingSchema get common => SamplingSchema(
-        type: SamplingSchemaType.common,
-        name: 'Common (default) health sampling schema',
-        powerAware: true,
-      )..measures.addEntries([
-          MapEntry(
-              HEALTH,
-              HealthMeasure(
-                type: HEALTH,
-                name: 'Step Counts',
-                description:
-                    "Collects the step counts from Apple Health / Google Fit",
-                healthDataType: HealthDataType.STEPS,
-              )),
-        ]);
-
-  SamplingSchema get normal => common;
-  SamplingSchema get light => common;
-  SamplingSchema get minimum => common;
-  SamplingSchema get debug => common;
+  SamplingSchema get samplingSchema => SamplingSchema();
 }

@@ -30,7 +30,7 @@ void main() async {
   // Is using the 'common' measure definitions in the package.
   protocol.addTriggeredTask(
       DelayedTrigger(delay: Duration(minutes: 5)),
-      BackgroundTask(name: 'Sensor Task')
+      BackgroundTask()
         ..addMeasure(Measure(type: ContextSamplingPackage.LOCATION))
         ..addMeasure(Measure(type: ContextSamplingPackage.GEOLOCATION))
         ..addMeasure(Measure(type: ContextSamplingPackage.ACTIVITY))

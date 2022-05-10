@@ -37,39 +37,57 @@ const Map<DasesHealthDataType, HealthDataUnit> dasesDataTypeToUnit = {
   DasesHealthDataType.SLEEP: HealthDataUnit.NO_UNIT,
 };
 
+// /// Specify the configuration on how to collect health data.
+// ///
+// /// The [healthDataType] specify which [HealthDataType](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html)
+// /// to collect.
+// @JsonSerializable(
+//     fieldRename: FieldRename.none, includeIfNull: false, explicitToJson: true)
+// class HealthMeasure extends MarkedMeasure {
+//   /// The [HealthDataType](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html) to collect.
+//   HealthDataType healthDataType;
+
+//   HealthMeasure({
+//     required String type,
+//     String? name,
+//     String? description,
+//     bool enabled = true,
+//     Duration? history,
+//     required this.healthDataType,
+//   }) : super(
+//           type: type,
+//           name: name,
+//           description: description,
+//           enabled: enabled,
+//           history: history,
+//         );
+
+//   Function get fromJsonFunction => _$HealthMeasureFromJson;
+//   factory HealthMeasure.fromJson(Map<String, dynamic> json) =>
+//       FromJsonFactory().fromJson(json) as HealthMeasure;
+//   Map<String, dynamic> toJson() => _$HealthMeasureToJson(this);
+
+//   String tag() => '$type.$healthDataType';
+
+//   String toString() => super.toString() + ', healthDataType: $healthDataType';
+// }
+
 /// Specify the configuration on how to collect health data.
 ///
 /// The [healthDataType] specify which [HealthDataType](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html)
 /// to collect.
-@JsonSerializable(
-    fieldRename: FieldRename.none, includeIfNull: false, explicitToJson: true)
-class HealthMeasure extends MarkedMeasure {
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class HealthSamplingConfiguration extends HistoricSamplingConfiguration {
   /// The [HealthDataType](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html) to collect.
   HealthDataType healthDataType;
 
-  HealthMeasure({
-    required String type,
-    String? name,
-    String? description,
-    bool enabled = true,
-    Duration? history,
-    required this.healthDataType,
-  }) : super(
-          type: type,
-          name: name,
-          description: description,
-          enabled: enabled,
-          history: history,
-        );
+  HealthSamplingConfiguration({Duration? past, required this.healthDataType})
+      : super(past: past);
 
-  Function get fromJsonFunction => _$HealthMeasureFromJson;
-  factory HealthMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as HealthMeasure;
-  Map<String, dynamic> toJson() => _$HealthMeasureToJson(this);
-
-  String tag() => '$type.$healthDataType';
-
-  String toString() => super.toString() + ', healthDataType: $healthDataType';
+  Function get fromJsonFunction => _$HealthSamplingConfigurationFromJson;
+  Map<String, dynamic> toJson() => _$HealthSamplingConfigurationToJson(this);
+  factory HealthSamplingConfiguration.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as HealthSamplingConfiguration;
 }
 
 /// A [Datum] that holds a [HealthDataPoint](https://pub.dev/documentation/health/latest/health/HealthDataPoint-class.html) data point information.

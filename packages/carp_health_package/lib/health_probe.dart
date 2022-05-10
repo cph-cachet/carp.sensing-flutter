@@ -4,29 +4,27 @@ class HealthProbe extends StreamProbe {
   StreamController<HealthDatum> _ctrl = StreamController.broadcast();
 
   Stream<HealthDatum> get stream => _ctrl.stream;
-  late HealthMeasure healthMeasure;
+
+  @override
+  HealthSamplingConfiguration get samplingConfiguration =>
+      super.samplingConfiguration as HealthSamplingConfiguration;
 
   HealthProbe() : super();
 
-  void onInitialize(Measure measure) {
-    super.onInitialize(measure);
-    assert(measure is HealthMeasure,
-        'A HealthMeasure must be provided to use the HealthProbe.');
-    healthMeasure = (measure as HealthMeasure);
-
+  void onInitialize() {
     // Request access to the health data type before starting sampling
-    _healthFactory.requestAuthorization([healthMeasure.healthDataType]);
+    _healthFactory.requestAuthorization([samplingConfiguration.healthDataType]);
   }
 
   Future onResume() async {
     super.onResume();
 
-    debug('Collecting health data - Measure : $healthMeasure');
+    debug('Collecting health data - configuration : $samplingConfiguration');
 
-    DateTime start = healthMeasure.lastTime ??
-        DateTime.now().subtract(healthMeasure.history);
+    DateTime start = samplingConfiguration.lastTime ??
+        DateTime.now().subtract(samplingConfiguration.past);
     DateTime end = DateTime.now();
-    HealthDataType? healthDataType = healthMeasure.healthDataType;
+    HealthDataType? healthDataType = samplingConfiguration.healthDataType;
     List<HealthDataPoint> data = [];
 
     debug(

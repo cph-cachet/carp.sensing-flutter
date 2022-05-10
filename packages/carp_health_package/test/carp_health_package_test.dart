@@ -31,60 +31,49 @@ void main() {
 
     protocol..addMasterDevice(phone);
 
-    // adding all measure from the common schema to one one trigger and one task
+    // adding all available measures to one one trigger and one task
     protocol.addTriggeredTask(
-      ImmediateTrigger(), // a simple trigger that starts immediately
-      AutomaticTask()
-        ..measures = SamplingPackageRegistry().common.measures.values.toList(),
-      phone, // a task with all measures
+      ImmediateTrigger(),
+      BackgroundTask()
+        ..measures = SamplingPackageRegistry()
+            .dataTypes
+            .map((type) => Measure(type: type))
+            .toList(),
+      phone,
     );
 
     protocol.addTriggeredTask(
         // collect every hour
-        PeriodicTrigger(
-          period: Duration(minutes: 60),
-          duration: Duration(seconds: 10),
-        ),
-        AutomaticTask()
-          ..measures.add(HealthMeasure(
-            type: HealthSamplingPackage.HEALTH,
-            healthDataType: HealthDataType.BLOOD_GLUCOSE,
-          ))
-          ..measures.add(HealthMeasure(
-            type: HealthSamplingPackage.HEALTH,
-            healthDataType: HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
-          ))
-          ..measures.add(HealthMeasure(
-            type: HealthSamplingPackage.HEALTH,
-            healthDataType: HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
-          ))
-          ..measures.add(HealthMeasure(
-            type: HealthSamplingPackage.HEALTH,
-            healthDataType: HealthDataType.HEART_RATE,
-          ))
-          ..measures.add(HealthMeasure(
-            type: HealthSamplingPackage.HEALTH,
-            healthDataType: HealthDataType.STEPS,
-            name: 'Step Counts',
-            description:
-                "Collects the step counts from Apple Health / Google Fit",
-          )),
+        IntervalTrigger(period: Duration(minutes: 60)),
+        BackgroundTask()
+          ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
+            ..overrideSamplingConfiguration = HealthSamplingConfiguration(
+                healthDataType: HealthDataType.BLOOD_GLUCOSE))
+          ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
+            ..overrideSamplingConfiguration = HealthSamplingConfiguration(
+                healthDataType: HealthDataType.BLOOD_PRESSURE_DIASTOLIC))
+          ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
+            ..overrideSamplingConfiguration = HealthSamplingConfiguration(
+                healthDataType: HealthDataType.BLOOD_PRESSURE_SYSTOLIC))
+          ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
+            ..overrideSamplingConfiguration = HealthSamplingConfiguration(
+                healthDataType: HealthDataType.BLOOD_PRESSURE_DIASTOLIC))
+          ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
+            ..overrideSamplingConfiguration = HealthSamplingConfiguration(
+                healthDataType: HealthDataType.HEART_RATE))
+          ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
+            ..overrideSamplingConfiguration = HealthSamplingConfiguration(
+                healthDataType: HealthDataType.STEPS)),
         phone);
 
     protocol.addTriggeredTask(
         // collect every day at 23:00
         RecurrentScheduledTrigger(
-            type: RecurrentType.daily,
-            time: Time(
-              hour: 23,
-              minute: 00,
-            ),
-            duration: Duration(seconds: 10)),
-        AutomaticTask()
-          ..measures.add(HealthMeasure(
-            type: HealthSamplingPackage.HEALTH,
-            healthDataType: HealthDataType.WEIGHT,
-          )),
+            type: RecurrentType.daily, time: TimeOfDay(hour: 23, minute: 00)),
+        BackgroundTask()
+          ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
+            ..overrideSamplingConfiguration = HealthSamplingConfiguration(
+                healthDataType: HealthDataType.WEIGHT)),
         phone);
   });
 
@@ -116,13 +105,12 @@ void main() {
     print(toJsonString(protocol));
   });
 
-  test(' - measure -> json', () async {
-    HealthMeasure mh = HealthMeasure(
-      type: HealthSamplingPackage.HEALTH,
+  test(' - HealthSamplingConfiguration -> JSON', () async {
+    HealthSamplingConfiguration configuration = HealthSamplingConfiguration(
       healthDataType: HealthDataType.STEPS,
     );
-    print(mh.toJson());
-    print(_encode(mh));
+    print(configuration.toJson());
+    print(_encode(configuration));
   });
 
   group("DASES Data Types", () {
