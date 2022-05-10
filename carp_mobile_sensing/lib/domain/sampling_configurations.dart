@@ -21,6 +21,29 @@ class PersistentSamplingConfiguration extends SamplingConfiguration {
       FromJsonFactory().fromJson(json) as PersistentSamplingConfiguration;
 }
 
+/// A sampling configuration which allows configuring the time back in the [past]
+/// and into the [future] to collect data.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class HistoricSamplingConfiguration extends PersistentSamplingConfiguration {
+  static const int DEFAULT_NUMBER_OF_DAYS = 1;
+
+  /// The time duration back in time to collect data.
+  late Duration past;
+
+  /// The time duration ahead in time to collect data.
+  late Duration future;
+
+  HistoricSamplingConfiguration({Duration? past, Duration? future}) : super() {
+    this.past = past ?? const Duration(days: DEFAULT_NUMBER_OF_DAYS);
+    this.future = future ?? const Duration(days: DEFAULT_NUMBER_OF_DAYS);
+  }
+
+  Function get fromJsonFunction => _$HistoricSamplingConfigurationFromJson;
+  Map<String, dynamic> toJson() => _$HistoricSamplingConfigurationToJson(this);
+  factory HistoricSamplingConfiguration.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as HistoricSamplingConfiguration;
+}
+
 /// A sampling configuration which allows configuring the time [interval] in
 /// between subsequent measurements.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
@@ -28,7 +51,7 @@ class IntervalSamplingConfiguration extends PersistentSamplingConfiguration {
   /// Sampling interval (i.e., delay between sampling).
   Duration interval;
 
-  IntervalSamplingConfiguration({required this.interval}) : super() {}
+  IntervalSamplingConfiguration({required this.interval}) : super();
 
   Function get fromJsonFunction => _$IntervalSamplingConfigurationFromJson;
   Map<String, dynamic> toJson() => _$IntervalSamplingConfigurationToJson(this);

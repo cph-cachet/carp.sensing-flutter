@@ -51,6 +51,21 @@ void _registerFromJsonFunctions() {
     endTime: TimeOfDay(hour: 2),
   ));
 
+  // Sampling Configuration classes
+  FromJsonFactory().register(PersistentSamplingConfiguration());
+  FromJsonFactory().register(HistoricSamplingConfiguration());
+  FromJsonFactory()
+      .register(IntervalSamplingConfiguration(interval: Duration.zero));
+  FromJsonFactory().register(PeriodicSamplingConfiguration(
+    interval: Duration.zero,
+    duration: Duration.zero,
+  ));
+  FromJsonFactory().register(BatteryAwareSamplingConfiguration(
+    normal: PersistentSamplingConfiguration(),
+    low: PersistentSamplingConfiguration(),
+    critical: PersistentSamplingConfiguration(),
+  ));
+
   // Measure classes
   // FromJsonFactory().register(CAMSMeasure(type: 'ignored'));
   // FromJsonFactory().register(

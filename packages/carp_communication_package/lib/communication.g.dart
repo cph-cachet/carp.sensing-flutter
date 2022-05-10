@@ -213,39 +213,3 @@ Map<String, dynamic> _$CalendarEventToJson(CalendarEvent instance) {
   writeNotNull('attendees', instance.attendees);
   return val;
 }
-
-CalendarMeasure _$CalendarMeasureFromJson(Map<String, dynamic> json) =>
-    CalendarMeasure(
-      type: json['type'] as String,
-      name: json['name'] as String?,
-      description: json['description'] as String?,
-      enabled: json['enabled'] ?? true,
-      past: json['past'] == null
-          ? null
-          : Duration(microseconds: json['past'] as int),
-      future: json['future'] == null
-          ? null
-          : Duration(microseconds: json['future'] as int),
-    )
-      ..$type = json[r'$type'] as String?
-      ..configuration = Map<String, String>.from(json['configuration'] as Map);
-
-Map<String, dynamic> _$CalendarMeasureToJson(CalendarMeasure instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull(r'$type', instance.$type);
-  val['type'] = instance.type;
-  writeNotNull('name', instance.name);
-  writeNotNull('description', instance.description);
-  val['enabled'] = instance.enabled;
-  val['configuration'] = instance.configuration;
-  val['past'] = instance.past.inMicroseconds;
-  val['future'] = instance.future.inMicroseconds;
-  return val;
-}

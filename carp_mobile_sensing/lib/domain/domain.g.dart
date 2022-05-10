@@ -185,6 +185,38 @@ Map<String, dynamic> _$PersistentSamplingConfigurationToJson(
   return val;
 }
 
+HistoricSamplingConfiguration _$HistoricSamplingConfigurationFromJson(
+        Map<String, dynamic> json) =>
+    HistoricSamplingConfiguration(
+      past: json['past'] == null
+          ? null
+          : Duration(microseconds: json['past'] as int),
+      future: json['future'] == null
+          ? null
+          : Duration(microseconds: json['future'] as int),
+    )
+      ..$type = json[r'$type'] as String?
+      ..lastTime = json['lastTime'] == null
+          ? null
+          : DateTime.parse(json['lastTime'] as String);
+
+Map<String, dynamic> _$HistoricSamplingConfigurationToJson(
+    HistoricSamplingConfiguration instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(r'$type', instance.$type);
+  writeNotNull('lastTime', instance.lastTime?.toIso8601String());
+  val['past'] = instance.past.inMicroseconds;
+  val['future'] = instance.future.inMicroseconds;
+  return val;
+}
+
 IntervalSamplingConfiguration _$IntervalSamplingConfigurationFromJson(
         Map<String, dynamic> json) =>
     IntervalSamplingConfiguration(

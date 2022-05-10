@@ -19,7 +19,6 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 part 'communication_datum.dart';
 part 'communication_probes.dart';
-part 'communication_measures.dart';
 part 'communication_package.dart';
 part 'communication_privacy.dart';
 part 'communication.g.dart';

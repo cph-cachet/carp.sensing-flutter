@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2021 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2018-2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -12,10 +12,11 @@ part of communication;
 /// Only works on Android.
 class PhoneLogProbe extends DatumProbe {
   Future<Datum> getDatum() async {
-    MarkedMeasure m = (measure as MarkedMeasure);
+    HistoricSamplingConfiguration m =
+        (samplingConfiguration as HistoricSamplingConfiguration);
     int from = (m.lastTime != null)
         ? m.lastTime!.millisecondsSinceEpoch
-        : DateTime.now().subtract(m.history).millisecondsSinceEpoch;
+        : DateTime.now().subtract(m.past).millisecondsSinceEpoch;
     int now = DateTime.now().millisecondsSinceEpoch;
     Iterable<CallLogEntry> entries =
         await CallLog.query(dateFrom: from, dateTo: now);
@@ -80,8 +81,7 @@ class TextMessageProbe extends StreamProbe {
   Stream<Datum> get stream => _textMessageProbeController.stream;
 
   @override
-  void onInitialize(Measure measure) {
-    super.onInitialize(measure);
+  void onInitialize() {
     if (!Platform.isAndroid)
       throw SensingException('TextMessageProbe only available on Android.');
 
@@ -104,9 +104,7 @@ class CalendarProbe extends DatumProbe {
   late Iterator<Calendar> _calendarIterator;
   List<CalendarEvent> _events = [];
 
-  void onInitialize(Measure measure) {
-    assert(measure is CalendarMeasure);
-    super.onInitialize(measure);
+  void onInitialize() {
     _retrieveCalendars();
   }
 
@@ -125,11 +123,14 @@ class CalendarProbe extends DatumProbe {
     return true;
   }
 
+  @override
+  HistoricSamplingConfiguration get samplingConfiguration =>
+      super.samplingConfiguration as HistoricSamplingConfiguration;
+
   // Collects events from the [calendar].
   Future<bool> _retrieveEvents(Calendar calendar) async {
-    final startDate =
-        new DateTime.now().subtract((measure as CalendarMeasure).past);
-    final endDate = new DateTime.now().add((measure as CalendarMeasure).future);
+    final startDate = new DateTime.now().subtract(samplingConfiguration.past);
+    final endDate = new DateTime.now().add(samplingConfiguration.future);
 
     var _calendarEventsResult = await _deviceCalendar.retrieveEvents(
         calendar.id,
