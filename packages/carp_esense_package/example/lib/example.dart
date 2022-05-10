@@ -31,49 +31,23 @@ void main() async {
     ..addMasterDevice(phone)
     ..addConnectedDevice(eSense);
 
-  // Add an automatic task that immediately starts collecting
-  // step counts, ambient light, screen activity, and battery level
+  // Add a background task that immediately starts collecting step counts,
+  //ambient light, screen activity, and battery level from the phone.
   protocol.addTriggeredTask(
       ImmediateTrigger(),
-      AutomaticTask()
-        ..addMeasures(SensorSamplingPackage().common.getMeasureList(
-          types: [
-            SensorSamplingPackage.PEDOMETER,
-            SensorSamplingPackage.LIGHT,
-            DeviceSamplingPackage.SCREEN,
-            DeviceSamplingPackage.BATTERY,
-          ],
-        )),
+      BackgroundTask()
+        ..addMeasure(Measure(type: SensorSamplingPackage.PEDOMETER))
+        ..addMeasure(Measure(type: SensorSamplingPackage.LIGHT))
+        ..addMeasure(Measure(type: DeviceSamplingPackage.SCREEN))
+        ..addMeasure(Measure(type: DeviceSamplingPackage.BATTERY)),
       phone);
 
-  // Add an automatic task that immediately starts collecting eSense button and
+  // Add a background task that immediately starts collecting eSense button and
   // sensor events from the eSense device.
   protocol.addTriggeredTask(
       ImmediateTrigger(),
-      AutomaticTask()
-        ..addMeasures([
-          Measure(type: ESenseSamplingPackage.ESENSE_BUTTON),
-          Measure(type: ESenseSamplingPackage.ESENSE_SENSOR),
-        ]),
-      eSense);
-
-  // Add an automatic task that immediately starts collecting eSense button and
-  // sensor events from the eSense device.
-  protocol.addTriggeredTask(
-      ImmediateTrigger(),
-      AutomaticTask()
-        ..addMeasures([
-          CAMSMeasure(
-            type: ESenseSamplingPackage.ESENSE_BUTTON,
-            name: 'eSense - Button',
-            description: "Collects button event from the eSense device",
-          ),
-          CAMSMeasure(
-            type: ESenseSamplingPackage.ESENSE_SENSOR,
-            name: 'eSense - Sensor',
-            description:
-                "Collects movement data from the eSense inertial measurement unit (IMU) sensor",
-          ),
-        ]),
+      BackgroundTask()
+        ..addMeasure(Measure(type: ESenseSamplingPackage.ESENSE_BUTTON))
+        ..addMeasure(Measure(type: ESenseSamplingPackage.ESENSE_SENSOR)),
       eSense);
 }

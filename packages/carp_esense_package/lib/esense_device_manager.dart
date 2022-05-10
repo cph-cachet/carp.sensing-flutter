@@ -7,6 +7,20 @@
 
 part of esense;
 
+// This is the debug sampling schema used by bardram
+// His eSense devices are
+//
+//        |     name    |     id
+//  ------+-------------+--------------------
+//  right | eSense-0917 |  00:04:79:00:0F:4D
+//  left  | eSense-0332 |  00:04:79:00:0D:04
+//
+// As recommended;:
+//   "it would be better to use the right earbud to record only sound samples
+//    and the left earbud to record only IMU data."
+//
+// Hence, connect the right earbud (eSense-0917) to the phone.
+
 /// A [DeviceDescriptor] for an eSense device used in a [StudyProtocol].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ESenseDevice extends DeviceDescriptor {
@@ -140,8 +154,6 @@ class ESenseDeviceManager extends DeviceManager {
       }
     });
 
-    // debug('$runtimeType - configuring sampling rate...');
-    // await manager?.setSamplingRate(deviceDescriptor?.samplingRate ?? 10);
     debug('$runtimeType - connecting to eSense device, name: $id');
     return await manager?.connect() ?? false;
   }

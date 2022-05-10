@@ -18,6 +18,9 @@ void main() {
     // register the eSense sampling package
     SamplingPackageRegistry().register(ESenseSamplingPackage());
 
+    // make sure that the json functions are loaded
+    DomainJsonFactory();
+
     // Create a new study protocol.
     protocol = StudyProtocol(
       ownerId: 'alex@uni.dk',
@@ -35,24 +38,24 @@ void main() {
       ..addMasterDevice(phone)
       ..addConnectedDevice(eSense);
 
-    // adding all measure from the common schema to one one trigger and one task
+    // adding all available measures to one one trigger and one task
     protocol.addTriggeredTask(
-      ImmediateTrigger(), // a simple trigger that starts immediately
-      AutomaticTask()
-        ..measures = SamplingPackageRegistry().common.measures.values.toList(),
-      phone, // a task with all measures
+      ImmediateTrigger(),
+      BackgroundTask()
+        ..measures = SamplingPackageRegistry()
+            .dataTypes
+            .map((type) => Measure(type: type))
+            .toList(),
+      phone,
     );
 
-    // add an automatic task that immediately starts collecting eSense button and sensor events
+    // Add a background task that immediately starts collecting eSense button and
+    // sensor events from the eSense device.
     protocol.addTriggeredTask(
         ImmediateTrigger(),
-        AutomaticTask()
-          ..addMeasures(ESenseSamplingPackage().debug.getMeasureList(
-            types: [
-              ESenseSamplingPackage.ESENSE_BUTTON,
-              ESenseSamplingPackage.ESENSE_SENSOR,
-            ],
-          )),
+        BackgroundTask()
+          ..addMeasure(Measure(type: ESenseSamplingPackage.ESENSE_BUTTON))
+          ..addMeasure(Measure(type: ESenseSamplingPackage.ESENSE_SENSOR)),
         eSense);
   });
 

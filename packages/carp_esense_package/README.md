@@ -93,43 +93,45 @@ import 'package:carp_esense_package/esense.dart';
 `````
 
 
-`ESenseMeasure`s can be added to a study protocol like this.
+Collection of eSense data can be added to a study protocol like this.
 
 ```dart
-// Create a study protocol
-StudyProtocol protocol = StudyProtocol(
-  ownerId: 'owner@dtu.dk',
-  name: 'Context Sensing Example',
-);
+ // Create a study protocol
+  StudyProtocol protocol = StudyProtocol(
+    ownerId: 'owner@dtu.dk',
+    name: 'eSense Sensing Example',
+  );
 
-// define which devices are used for data collection - both phone and eSense
-Smartphone phone = Smartphone(roleName: 'The main phone');
-DeviceDescriptor eSense = ESenseDevice(roleName: 'The left eSense earplug');
+  // define which devices are used for data collection - both phone and eSense
+  var phone = Smartphone();
+  var eSense = ESenseDevice(
+    deviceName: 'eSense-0223',
+    samplingRate: 10,
+  );
 
-protocol
-  ..addMasterDevice(phone)
-  ..addConnectedDevice(eSense);
+  protocol
+    ..addMasterDevice(phone)
+    ..addConnectedDevice(eSense);
 
-// Add an automatic task that immediately starts collecting eSense button and
-// sensor events from the eSense device.
-protocol.addTriggeredTask(
-  ImmediateTrigger(),
-  AutomaticTask()
-    ..addMeasures([
-      ESenseMeasure(
-        type: ESenseSamplingPackage.ESENSE_BUTTON,
-        name: 'eSense - Button',
-        description: "Collects button event from the eSense device",
-        deviceName: 'eSense-0332'),
-      ESenseMeasure(
-        type: ESenseSamplingPackage.ESENSE_SENSOR,
-        name: 'eSense - Sensor',
-        description:
-            "Collects movement data from the eSense inertial measurement unit (IMU) sensor",
-        deviceName: 'eSense-0332',
-        samplingRate: 5),
-    ]),
-  eSense);
+  // Add a background task that immediately starts collecting step counts,
+  //ambient light, screen activity, and battery level from the phone.
+  protocol.addTriggeredTask(
+      ImmediateTrigger(),
+      BackgroundTask()
+        ..addMeasure(Measure(type: SensorSamplingPackage.PEDOMETER))
+        ..addMeasure(Measure(type: SensorSamplingPackage.LIGHT))
+        ..addMeasure(Measure(type: DeviceSamplingPackage.SCREEN))
+        ..addMeasure(Measure(type: DeviceSamplingPackage.BATTERY)),
+      phone);
+
+  // Add a background task that immediately starts collecting eSense button and
+  // sensor events from the eSense device.
+  protocol.addTriggeredTask(
+      ImmediateTrigger(),
+      BackgroundTask()
+        ..addMeasure(Measure(type: ESenseSamplingPackage.ESENSE_BUTTON))
+        ..addMeasure(Measure(type: ESenseSamplingPackage.ESENSE_SENSOR)),
+      eSense);
 ````
 
 Before executing a study with an eSense measure, register this package in the 
