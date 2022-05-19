@@ -2,20 +2,10 @@
 
 [![pub package](https://img.shields.io/pub/v/carp_survey_package.svg)](https://pub.dartlang.org/packages/carp_survey_package)
 
-This library contains a sampling package for collecting a survey from the [Research Package](https://www.researchpackage.org) collecting the survey answer as part of  
-the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package.
-This packages supports sampling of the following [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core/Measure-class.html) types:
+This library contains a sampling package for collecting user-generated data using the [CARP Research Package](https://carp.cachet.dk/research-package/). This includes [surveys](https://carp.cachet.dk/creating-a-survey/) or cognitive tests via the [CARP Cognition Package](https://carp.cachet.dk/cognition-package/). 
+This package support the creation of a [RPAppTask] which can be added to a CAMS study protocol.
 
-* `dk.cachet.carp.survey`
-
-See the [wiki]() for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types)
-and [sampling schemas](https://github.com/cph-cachet/carp.sensing-flutter/wiki/D.-Sampling-Schemas).
-There is **no** privacy protection of data collected from surveys (as part of the default [Privacy Schema](https://github.com/cph-cachet/carp.sensing-flutter/wiki/3.-Using-CARP-Mobile-Sensing#privacy-schema)).
-
-For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter).
-
-If you're interested in writing you own sampling packages for CARP, see the description on
-how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.-Extending-CARP-Mobile-Sensing) CARP on the wiki.
+Read more on the [Research Package API](https://carp.cachet.dk/research-package-api/) and how to [create a survey](https://carp.cachet.dk/creating-a-survey/) and how to [create a cognitive test](https://carp.cachet.dk/creating-cognitive-tests/) on the CARP website.
 
 ## Installing
 
@@ -30,7 +20,6 @@ dependencies:
   carp_survey_package: ^latest
   ...
 `````
-
 
 ## Using it
 
@@ -49,3 +38,21 @@ Before creating a study and running it, register this package in the
 `````dart
   SamplingPackageRegistry().register(SurveySamplingPackage());
 `````
+
+Once this is in place, a survey can be added as a `RPAppTask` to a CAMS protocol like this:
+
+```dart
+  // add a WHO-5 survey as an app task
+  // plus collect device and ambient light information when survey is done
+  protocol.addTriggeredTask(
+      DelayedTrigger(delay: Duration(seconds: 30)),
+      RPAppTask(
+          type: SurveyUserTask.WHO5_SURVEY_TYPE,
+          name: 'WHO-5 Survey',
+          rpTask: who5Task)
+        ..measures.add(Measure(type: DeviceSamplingPackage.DEVICE))
+        ..measures.add(Measure(type: SensorSamplingPackage.LIGHT)),
+      phone);
+````
+
+See the example for a full example.

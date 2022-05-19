@@ -50,10 +50,7 @@ void main() async {
   // Add a background task that collects weather and air_quality every 30 miutes.
   // Not that API keys for the weather and air_quality measure must be specified.
   protocol.addTriggeredTask(
-      PeriodicTrigger(
-        period: Duration(minutes: 30),
-        duration: Duration(seconds: 10),
-      ),
+      IntervalTrigger(period: Duration(minutes: 30)),
       BackgroundTask()
         ..addMeasure(Measure(type: ContextSamplingPackage.WEATHER)
           ..overrideSamplingConfiguration =

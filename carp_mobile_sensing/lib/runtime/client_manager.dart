@@ -22,9 +22,7 @@ class SmartPhoneClientManager extends ClientManager
   ///
   /// In CARP Mobile Sensing the [SmartPhoneClientManager] is a singleton,
   /// which implies that only one client manager is used in an app.
-  factory SmartPhoneClientManager(
-          [NotificationController? notificationController]) =>
-      _instance;
+  factory SmartPhoneClientManager() => _instance;
 
   @override
   DeviceController get deviceController =>

@@ -48,10 +48,6 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
 
    ...
    
-    <!-- The following permissions are used for CARP Mobile Sensing -->
-    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" tools:ignore="ProtectedPermissions"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-
     <!-- The following permissions are used in the Context Package -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -74,9 +70,6 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
 >
 > See [Privacy changes in Android 10](https://developer.android.com/about/versions/10/privacy/changes#physical-activity-recognition).
 
-> **NOTE:** Version 0.5.0 is migrated to AndroidX. This shouldn't result in any functional changes, but it requires any Android apps using this plugin to also 
-[migrate](https://developer.android.com/jetpack/androidx/migrate) if they're using the original support library. 
-See Flutter [AndroidX compatibility](https://flutter.dev/docs/development/packages-and-plugins/androidx-compatibility)
 
 
 
@@ -124,46 +117,13 @@ Before creating a study and running it, register this package in the
 The [WeatherMeasure](https://pub.dev/documentation/carp_context_package/latest/context/WeatherMeasure-class.html) and the [AirQualityMeasure](https://pub.dev/documentation/carp_context_package/latest/context/AirQualityMeasure-class.html) require API key from the [Open Weather API](https://openweathermap.org/api) and [Air Quality Open Data Platform](https://aqicn.org/data-platform/token/#/), respectively. Please make sure to obtain such API keys for your app and use these in specifying your protocol, like this:
 
 ```dart
-  // Create a study protocol
-  StudyProtocol protocol = StudyProtocol(
-    ownerId: 'owner@dtu.dk',
-    name: 'Context Sensing Example',
-  );
-
-  // define which devices are used for data collection
-  // in this case, its only this smartphone
-  Smartphone phone = Smartphone();
-  protocol.addMasterDevice(phone);
-
-  // Add a background task that starts collecting location, geolocation,
-  // and activity after 5 minutes.
-  protocol.addTriggeredTask(
-      DelayedTrigger(delay: Duration(minutes: 5)),
-      BackgroundTask()
-        ..addMeasure(Measure(type: ContextSamplingPackage.LOCATION))
-        ..addMeasure(Measure(type: ContextSamplingPackage.GEOLOCATION))
-        ..addMeasure(Measure(type: ContextSamplingPackage.ACTIVITY)),
-      phone);
-
-  // Add a background task that collecting geofence events using DTU as the
-  // center for the geofence.
-  protocol.addTriggeredTask(
-      ImmediateTrigger(),
-      BackgroundTask()
-        ..addMeasure(Measure(type: ContextSamplingPackage.GEOFENCE)
-          ..overrideSamplingConfiguration = GeofenceSamplingConfiguration(
-              center: GeoPosition(55.786025, 12.524159),
-              dwell: const Duration(minutes: 15),
-              radius: 10.0)),
-      phone);
+  // Define a study protocol
+  StudyProtocol protocol = ..
 
   // Add a background task that collects weather and air_quality every 30 miutes.
   // Not that API keys for the weather and air_quality measure must be specified.
   protocol.addTriggeredTask(
-      PeriodicTrigger(
-        period: Duration(minutes: 30),
-        duration: Duration(seconds: 10),
-      ),
+      IntervalTrigger(period: Duration(minutes: 30)),
       BackgroundTask()
         ..addMeasure(Measure(type: ContextSamplingPackage.WEATHER)
           ..overrideSamplingConfiguration =
@@ -174,4 +134,5 @@ The [WeatherMeasure](https://pub.dev/documentation/carp_context_package/latest/c
       phone);
 ```
 
+See the example for a full example of how to set up a CAMS study protocol for this context sampling package.
 

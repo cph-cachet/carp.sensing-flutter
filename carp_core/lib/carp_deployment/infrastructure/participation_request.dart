@@ -72,14 +72,28 @@ class GetParticipantDataList extends ParticipationServiceRequest {
 /// A request for adding data for a participant.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class SetParticipantData extends ParticipationServiceRequest {
-  SetParticipantData(String studyDeploymentId, this.inputDataType, this.data)
-      : super(studyDeploymentId);
+  SetParticipantData(
+    String studyDeploymentId,
+    this.inputDataType,
+    this.participantData,
+  ) : super(studyDeploymentId);
 
   /// The input data type.
   String inputDataType;
 
   /// The data to be set.
-  ParticipantData data;
+  @JsonKey(ignore: true)
+  ParticipantData participantData;
+
+  Map<String, dynamic> get data {
+    Map<String, dynamic> data = {};
+    participantData.data?.forEach((key, value) {
+      data['\$type'] = key;
+      data['value'] = value;
+    });
+
+    return data;
+  }
 
   Function get fromJsonFunction => _$SetParticipantDataFromJson;
   factory SetParticipantData.fromJson(Map<String, dynamic> json) =>
