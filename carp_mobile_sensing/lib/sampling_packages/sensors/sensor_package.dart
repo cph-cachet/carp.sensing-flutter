@@ -57,7 +57,7 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
     ..addConfiguration(
         LIGHT,
         PeriodicSamplingConfiguration(
-          interval: const Duration(seconds: 5),
-          duration: const Duration(seconds: 1),
+          interval: const Duration(minutes: 5),
+          duration: const Duration(seconds: 10),
         ));
 }

@@ -38,10 +38,6 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
 
   @override
   SamplingSchema get samplingSchema => SamplingSchema()
-    ..addConfiguration(
-        MEMORY,
-        PeriodicSamplingConfiguration(
-          interval: const Duration(minutes: 1),
-          duration: const Duration(seconds: 1),
-        ));
+    ..addConfiguration(MEMORY,
+        IntervalSamplingConfiguration(interval: const Duration(minutes: 1)));
 }

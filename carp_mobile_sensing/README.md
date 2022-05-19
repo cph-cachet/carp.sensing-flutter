@@ -24,29 +24,12 @@ dependencies:
 
 ### Android Integration
 
+The pedometer (step count) probe needs permission to `ACTIVITY_RECOGNITION`.
 Add the following to your app's `manifest.xml` file located in `android/app/src/main`:
 
 ````xml
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="<your_package_name"
-    xmlns:tools="http://schemas.android.com/tools">
-
-   ...
-   
-    <!-- The following permissions are used for CARP Mobile Sensing -->
-    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" tools:ignore="ProtectedPermissions"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
-</manifest>
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
 ````
-> **NOTE:** Other CAMS sampling packages require additional permissions in the `manifest.xml` file. 
-> See the documentation for each package. 
-
-> **NOTE:** Version 0.5.0 is migrated to AndroidX. It requires any Android apps using this plugin to also 
-[migrate](https://developer.android.com/jetpack/androidx/migrate) if they're using the original support library. 
-See Flutter [AndroidX compatibility](https://flutter.dev/docs/development/packages-and-plugins/androidx-compatibility)
-
 
 ### iOS Integration
 
@@ -56,6 +39,9 @@ The pedometer (step count) probe uses `NSMotion` on iOS and the `NSMotionUsageDe
   <key>NSMotionUsageDescription</key>
   <string>Collecting step count.</string>
 ```
+
+> **NOTE:** Other CAMS sampling packages require additional permissions in the `manifest.xml` or `Info.plist` files. 
+> See the documentation for each package. 
 
 
 ## Documentation

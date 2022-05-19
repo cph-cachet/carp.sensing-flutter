@@ -200,22 +200,22 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     protocol.addMasterDevice(phone);
 
     // add default measures from the SensorSamplingPackage
-    // protocol.addTriggeredTask(
-    //     ImmediateTrigger(),
-    //     AutomaticTask()
-    //       // ..addMeasure(Measure(type: SensorSamplingPackage.ACCELEROMETER))
-    //       // ..addMeasure(Measure(type: SensorSamplingPackage.GYROSCOPE))
-    //       ..addMeasure(Measure(type: DeviceSamplingPackage.MEMORY))
-    //       ..addMeasure(Measure(type: DeviceSamplingPackage.BATTERY))
-    //       ..addMeasure(Measure(type: DeviceSamplingPackage.SCREEN))
-    //       ..addMeasure(Measure(type: SensorSamplingPackage.PEDOMETER))
-    //       ..addMeasure(Measure(type: SensorSamplingPackage.LIGHT)),
-    //     phone);
+    protocol.addTriggeredTask(
+        ImmediateTrigger(),
+        BackgroundTask()
+          // ..addMeasure(Measure(type: SensorSamplingPackage.ACCELEROMETER))
+          // ..addMeasure(Measure(type: SensorSamplingPackage.GYROSCOPE))
+          ..addMeasure(Measure(type: DeviceSamplingPackage.MEMORY))
+          ..addMeasure(Measure(type: DeviceSamplingPackage.BATTERY))
+          ..addMeasure(Measure(type: DeviceSamplingPackage.SCREEN))
+          ..addMeasure(Measure(type: SensorSamplingPackage.PEDOMETER))
+          ..addMeasure(Measure(type: SensorSamplingPackage.LIGHT)),
+        phone);
 
     // // collect device info only once
     // protocol.addTriggeredTask(
     //     OneTimeTrigger(),
-    //     AutomaticTask()
+    //     BackgroundTask()
     //       ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
     //     phone);
 
@@ -227,7 +227,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //       minNumberOfTriggers: 2,
     //       maxNumberOfTriggers: 8,
     //     ),
-    //     AutomaticTask()
+    //     BackgroundTask()
     //       ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
     //     phone);
 
@@ -240,7 +240,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //       },
     //       pauseCondition: () => true,
     //     ),
-    //     AutomaticTask()
+    //     BackgroundTask()
     //       ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
     //     phone);
 
