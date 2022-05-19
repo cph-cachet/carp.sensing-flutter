@@ -121,29 +121,56 @@ Before creating a study and running it, register this package in the
   SamplingPackageRegistry().register(ContextSamplingPackage());
 ````
 
-The [WeatherMeasure](https://pub.dev/documentation/carp_context_package/latest/context/WeatherMeasure-class.html) and the [AirQualityMeasure](https://pub.dev/documentation/carp_context_package/latest/context/AirQualityMeasure-class.html) require API key from the [Open Weather API](https://openweathermap.org/api) and [Air Quality Open Data Platform](https://aqicn.org/data-platform/token/#/), respectively. Please make sure to obtain such API keys for your app and use these in specifying your measures, like this:
+The [WeatherMeasure](https://pub.dev/documentation/carp_context_package/latest/context/WeatherMeasure-class.html) and the [AirQualityMeasure](https://pub.dev/documentation/carp_context_package/latest/context/AirQualityMeasure-class.html) require API key from the [Open Weather API](https://openweathermap.org/api) and [Air Quality Open Data Platform](https://aqicn.org/data-platform/token/#/), respectively. Please make sure to obtain such API keys for your app and use these in specifying your protocol, like this:
 
 ```dart
-  // Add an automatic task that collects weather and air_quality every 30 miutes.
+  // Create a study protocol
+  StudyProtocol protocol = StudyProtocol(
+    ownerId: 'owner@dtu.dk',
+    name: 'Context Sensing Example',
+  );
+
+  // define which devices are used for data collection
+  // in this case, its only this smartphone
+  Smartphone phone = Smartphone();
+  protocol.addMasterDevice(phone);
+
+  // Add a background task that starts collecting location, geolocation,
+  // and activity after 5 minutes.
+  protocol.addTriggeredTask(
+      DelayedTrigger(delay: Duration(minutes: 5)),
+      BackgroundTask()
+        ..addMeasure(Measure(type: ContextSamplingPackage.LOCATION))
+        ..addMeasure(Measure(type: ContextSamplingPackage.GEOLOCATION))
+        ..addMeasure(Measure(type: ContextSamplingPackage.ACTIVITY)),
+      phone);
+
+  // Add a background task that collecting geofence events using DTU as the
+  // center for the geofence.
+  protocol.addTriggeredTask(
+      ImmediateTrigger(),
+      BackgroundTask()
+        ..addMeasure(Measure(type: ContextSamplingPackage.GEOFENCE)
+          ..overrideSamplingConfiguration = GeofenceSamplingConfiguration(
+              center: GeoPosition(55.786025, 12.524159),
+              dwell: const Duration(minutes: 15),
+              radius: 10.0)),
+      phone);
+
+  // Add a background task that collects weather and air_quality every 30 miutes.
   // Not that API keys for the weather and air_quality measure must be specified.
   protocol.addTriggeredTask(
       PeriodicTrigger(
         period: Duration(minutes: 30),
         duration: Duration(seconds: 10),
       ),
-      AutomaticTask()
-        ..addMeasure(WeatherMeasure(
-            type: ContextSamplingPackage.WEATHER,
-            name: 'Weather',
-            description:
-                "Collects local weather from the WeatherAPI web service",
-            apiKey: 'Open_Weather_API_key_goes_here'))
-        ..addMeasure(AirQualityMeasure(
-            type: ContextSamplingPackage.AIR_QUALITY,
-            name: 'Air Quality',
-            description:
-                "Collects local air quality from the Air Quality Index (AQI) web service",
-            apiKey: 'AQI_API_key_goes_here')),
+      BackgroundTask()
+        ..addMeasure(Measure(type: ContextSamplingPackage.WEATHER)
+          ..overrideSamplingConfiguration =
+              WeatherSamplingConfiguration(apiKey: 'OW_API_key_goes_here'))
+        ..addMeasure(Measure(type: ContextSamplingPackage.AIR_QUALITY)
+          ..overrideSamplingConfiguration = AirQualitySamplingConfiguration(
+              apiKey: 'WAQI_API_key_goes_here')),
       phone);
 ```
 

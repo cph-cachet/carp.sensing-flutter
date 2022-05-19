@@ -43,7 +43,7 @@ class AppTaskExecutor<TConfig extends AppTask> extends TaskExecutor<TConfig> {
   @override
   Future<void> onResume() async {
     // when an app task is resumed simply put it on the queue
-    AppTaskController().enqueue(this);
+    await AppTaskController().enqueue(this);
   }
 
   @override

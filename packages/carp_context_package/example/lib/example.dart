@@ -25,19 +25,29 @@ void main() async {
   Smartphone phone = Smartphone();
   protocol.addMasterDevice(phone);
 
-  // Add an automatic task that starts collecting location, geolocation,
-  // activity, and a geofence after 5 minutes.
-  // Is using the 'common' measure definitions in the package.
+  // Add a background task that starts collecting location, geolocation,
+  // and activity after 5 minutes.
   protocol.addTriggeredTask(
       DelayedTrigger(delay: Duration(minutes: 5)),
       BackgroundTask()
         ..addMeasure(Measure(type: ContextSamplingPackage.LOCATION))
         ..addMeasure(Measure(type: ContextSamplingPackage.GEOLOCATION))
-        ..addMeasure(Measure(type: ContextSamplingPackage.ACTIVITY))
-        ..addMeasure(Measure(type: ContextSamplingPackage.GEOFENCE)),
+        ..addMeasure(Measure(type: ContextSamplingPackage.ACTIVITY)),
       phone);
 
-  // Add an automatic task that collects weather and air_quality every 30 miutes.
+  // Add a background task that collecting geofence events using DTU as the
+  // center for the geofence.
+  protocol.addTriggeredTask(
+      ImmediateTrigger(),
+      BackgroundTask()
+        ..addMeasure(Measure(type: ContextSamplingPackage.GEOFENCE)
+          ..overrideSamplingConfiguration = GeofenceSamplingConfiguration(
+              center: GeoPosition(55.786025, 12.524159),
+              dwell: const Duration(minutes: 15),
+              radius: 10.0)),
+      phone);
+
+  // Add a background task that collects weather and air_quality every 30 miutes.
   // Not that API keys for the weather and air_quality measure must be specified.
   protocol.addTriggeredTask(
       PeriodicTrigger(

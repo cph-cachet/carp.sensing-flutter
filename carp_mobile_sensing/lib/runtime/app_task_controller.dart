@@ -86,7 +86,8 @@ class AppTaskController {
     });
 
     this.notificationsEnabled = enableNotifications;
-    if (notificationsEnabled) await NotificationController().initialize();
+    if (notificationsEnabled)
+      await SmartPhoneClientManager().notificationController?.initialize();
   }
 
   final Map<String, UserTaskFactory> _userTaskFactories = {};
@@ -112,12 +113,12 @@ class AppTaskController {
   /// Returns the [UserTask] added to the [userTasks].
   ///
   /// Returns `null` if not successful.
-  UserTask? enqueue(
+  Future<UserTask?> enqueue(
     AppTaskExecutor executor, {
     DateTime? triggerTime,
     bool sendNotification = true,
     bool userTaskEvent = true,
-  }) {
+  }) async {
     if (_userTaskFactories[executor.task.type] == null) {
       warning(
           'Could not enqueue AppTask. Could not find a factory for creating '
@@ -140,8 +141,12 @@ class AppTaskController {
         // TODO - iOS has a limit where it will only keep 64 notifications that will fire the soonest...
         // See the flutter_local_notifications plugin.
         (triggerTime == null)
-            ? NotificationController().sendNotification(userTask)
-            : NotificationController().scheduleNotification(userTask);
+            ? await SmartPhoneClientManager()
+                .notificationController
+                ?.sendNotification(userTask)
+            : await SmartPhoneClientManager()
+                .notificationController
+                ?.scheduleNotification(userTask);
       }
       return userTask;
     }
@@ -159,7 +164,9 @@ class AppTaskController {
       info('Dequeued $userTask');
 
       if (notificationsEnabled) {
-        NotificationController().cancelNotification(userTask);
+        SmartPhoneClientManager()
+            .notificationController
+            ?.cancelNotification(userTask);
       }
     }
   }
@@ -177,7 +184,9 @@ class AppTaskController {
       _controller.add(userTask);
       info('Marked $userTask as done');
 
-      NotificationController().cancelNotification(userTask);
+      SmartPhoneClientManager()
+          .notificationController
+          ?.cancelNotification(userTask);
     }
   }
 
@@ -195,7 +204,9 @@ class AppTaskController {
         _controller.add(userTask);
         info('Expired $userTask');
       }
-      NotificationController().cancelNotification(userTask);
+      SmartPhoneClientManager()
+          .notificationController
+          ?.cancelNotification(userTask);
     }
   }
 
@@ -239,7 +250,7 @@ class AppTaskController {
           json.decode(jsonString) as Map<String, dynamic>);
 
       // now create new AppTaskExecutors, initialize them, and add them to the queue
-      queue.snapshots.forEach((snapshot) {
+      queue.snapshots.forEach((snapshot) async {
         debug('$runtimeType - Restoring snapshot: $snapshot');
         AppTaskExecutor executor = AppTaskExecutor();
 
@@ -259,7 +270,7 @@ class AppTaskController {
         executor.initialize(snapshot.task, deployment);
 
         // enqueue the task (again), but avoid notifications and app events
-        UserTask? userTask = enqueue(
+        UserTask? userTask = await enqueue(
           executor,
           triggerTime: snapshot.triggerTime,
           sendNotification: false,

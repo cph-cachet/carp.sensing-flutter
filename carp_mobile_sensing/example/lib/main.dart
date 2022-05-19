@@ -6,7 +6,7 @@
  */
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide TimeOfDay;
 
 void main() => runApp(CARPMobileSensingApp());
 
@@ -244,24 +244,59 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //       ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
     //     phone);
 
-    // // add an app task
-    // protocol.addTriggeredTask(
-    //     IntervalTrigger(
-    //       period: const Duration(minutes: 1),
-    //     ),
-    //     AppTask(
-    //       type: SensingUserTask.ONE_TIME_SENSING_TYPE,
-    //       title: "Interval - Device information",
-    //       notification: true,
-    //     )..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
-    //     phone);
+    // add a task 10 minutes after deployment
+    protocol.addTriggeredTask(
+        ElapsedTimeTrigger(
+          elapsedTime: const Duration(minutes: 10),
+        ),
+        AppTask(
+          type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
+          title: "Elapsed Time - 10 minutes",
+          notification: true,
+        )..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
+        phone);
 
-    // add a cron job every day at 12:00
+    // add an app task at exact date & time
+    protocol.addTriggeredTask(
+        DateTimeTrigger(schedule: DateTime(2022, 5, 15, 21, 00)),
+        AppTask(
+          type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
+          title: "DateTime - 15/5 2022 at 21:00",
+          notification: true,
+        )..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
+        phone);
+
+    // add an app task every hour
+    protocol.addTriggeredTask(
+        IntervalTrigger(period: const Duration(hours: 1)),
+        AppTask(
+          type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
+          title: "Interval - Every hour",
+          notification: true,
+        )..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
+        phone);
+
+    // add a cron job every day at 11:45
     protocol.addTriggeredTask(
         CronScheduledTrigger.parse(cronExpression: '45 11 * * *'),
         AppTask(
           type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
-          title: "Cron - Device information",
+          title: "Cron - every day at 11:45",
+          notification: true,
+        )..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
+        phone);
+
+    // add a random app task
+    protocol.addTriggeredTask(
+        RandomRecurrentTrigger(
+          startTime: TimeOfDay(hour: 8),
+          endTime: TimeOfDay(hour: 20),
+          minNumberOfTriggers: 2,
+          maxNumberOfTriggers: 8,
+        ),
+        AppTask(
+          type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
+          title: "Random - 2-8 times at 08:00-20:00",
           notification: true,
         )..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
         phone);

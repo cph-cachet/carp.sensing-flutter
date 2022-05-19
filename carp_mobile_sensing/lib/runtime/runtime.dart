@@ -52,8 +52,9 @@ part 'study_controller.dart';
 part 'study_manager.dart';
 part 'deployment_service.dart';
 part 'client_manager.dart';
-part 'notification_controller.dart';
-part 'cron_parser.dart';
+part 'notification/notification_controller.dart';
+part 'notification/local_notification_controller.dart';
+part 'util/cron_parser.dart';
 part 'runtime.g.dart';
 
 /// Generic sensing exception.

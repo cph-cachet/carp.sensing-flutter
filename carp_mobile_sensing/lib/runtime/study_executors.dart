@@ -185,23 +185,29 @@ class TriggeredAppTaskExecutor extends TriggeredTaskExecutor {
       // enqueue the first 6 (max) app tasks in the future
       var remainingNotifications =
           NotificationController.PENDING_NOTIFICATION_LIMIT -
-              await NotificationController().pendingNotificationRequestsCount;
+              (await SmartPhoneClientManager()
+                      .notificationController
+                      ?.pendingNotificationRequestsCount ??
+                  0);
       remainingNotifications = min(remainingNotifications, 6);
       Iterator it = schedule.iterator;
       var count = 0;
-      while (it.moveNext() && count++ < remainingNotifications)
-        AppTaskController().enqueue(
+      var current;
+      while (it.moveNext() && count++ < remainingNotifications) {
+        current = it.current;
+        await AppTaskController().enqueue(
           taskExecutor,
-          triggerTime: it.current,
+          triggerTime: current,
         );
+      }
 
       // save timestamp
-      triggeredTask.hasBeenScheduledUntil = it.current;
+      triggeredTask.hasBeenScheduledUntil = current;
 
       // now pause and resume again when the time has passed
       // this in the case where the app keeps running in the background
       this.pause();
-      var duration = it.current.millisecondsSinceEpoch -
+      var duration = current.millisecondsSinceEpoch -
           DateTime.now().millisecondsSinceEpoch;
       Timer(Duration(milliseconds: duration), () => this.resume());
     }

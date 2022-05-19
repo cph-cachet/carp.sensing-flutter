@@ -10,6 +10,8 @@ part of runtime;
 class SmartPhoneClientManager extends ClientManager
     with WidgetsBindingObserver {
   static final SmartPhoneClientManager _instance = SmartPhoneClientManager._();
+  NotificationController? _notificationController;
+
   SmartPhoneClientManager._() {
     WidgetsFlutterBinding.ensureInitialized();
     WidgetsBinding.instance?.addObserver(this);
@@ -20,13 +22,16 @@ class SmartPhoneClientManager extends ClientManager
   ///
   /// In CARP Mobile Sensing the [SmartPhoneClientManager] is a singleton,
   /// which implies that only one client manager is used in an app.
-  factory SmartPhoneClientManager() => _instance;
+  factory SmartPhoneClientManager(
+          [NotificationController? notificationController]) =>
+      _instance;
 
   @override
   DeviceController get deviceController =>
       super.deviceController as DeviceController;
 
-  NotificationController get notificationController => NotificationController();
+  /// The [NotificationController] responsible for sending notification on [AppTask]s.
+  NotificationController? get notificationController => _notificationController;
 
   @override
   SmartphoneDeploymentController? lookupStudyRuntime(
@@ -38,6 +43,7 @@ class SmartPhoneClientManager extends ClientManager
 
   @override
   Future<DeviceRegistration> configure({
+    NotificationController? notificationController,
     DeploymentService? deploymentService,
     DeviceDataCollectorFactory? deviceController,
     String? deviceId,
@@ -52,8 +58,10 @@ class SmartPhoneClientManager extends ClientManager
 
     // set default values, if not specified
     deviceId ??= DeviceInfo().deviceID;
-    this.deviceController = deviceController ?? DeviceController();
+    this._notificationController =
+        notificationController ?? FlutterLocalNotificationController();
     this.deploymentService = deploymentService ?? SmartphoneDeploymentService();
+    this.deviceController = deviceController ?? DeviceController();
 
     this.deviceController.registerAllAvailableDevices();
 
