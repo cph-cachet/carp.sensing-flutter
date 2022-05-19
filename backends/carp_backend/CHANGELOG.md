@@ -1,3 +1,7 @@
+## 0.40.0
+* update to `carp_mobile_sensing` v. 0.40.0
+* deployment are no longer caches locally in the `CustomProtocolDeploymentService`. This is now handled directly by CAMS v. 0.40.0
+
 ## 0.33.0
 * upgrade to `carp_mobile_sensing` v. 0.33.0
 

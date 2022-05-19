@@ -18,10 +18,6 @@ part of carp_backend;
 /// The [SmartphoneDeployment.userId] will be set to the [CarpUser.accountId]
 /// of the user logged in and downloading the protocol. This id will be used
 /// as the [DataPointHeader.userId] when uploading data back to CARP.
-///
-/// This deployment service also allow for local caching of a [SmartphoneDeployment]
-/// once it has been downloaded and created. This is configured using the [useCache]
-/// attribute.
 class CustomProtocolDeploymentService implements DeploymentService {
   static final CustomProtocolDeploymentService _instance =
       CustomProtocolDeploymentService._();
@@ -37,9 +33,9 @@ class CustomProtocolDeploymentService implements DeploymentService {
   CarpStudyProtocolManager manager = CarpStudyProtocolManager();
   late SmartphoneStudyProtocol protocol;
 
-  /// Should the [getDeviceDeploymentFor] method cache the downloaded
-  /// [MasterDeviceDeployment] locally?
-  bool useCache = true;
+  // /// Should the [getDeviceDeploymentFor] method cache the downloaded
+  // /// [MasterDeviceDeployment] locally?
+  // bool useCache = true;
 
   /// The stream of [CarpBackendEvents] reflecting the state of this service.
   Stream get carpBackendEvents => _eventController.stream;
@@ -90,8 +86,8 @@ class CustomProtocolDeploymentService implements DeploymentService {
           'Could not get deployment status in $runtimeType');
   }
 
-  Future<String> get _cacheFilename async =>
-      '${await Settings().deploymentBasePath}/deployment.json';
+  // Future<String> get _cacheFilename async =>
+  //     '${await Settings().deploymentBasePath}/deployment.json';
 
   @override
   Future<MasterDeviceDeployment> getDeviceDeploymentFor(
@@ -100,57 +96,57 @@ class CustomProtocolDeploymentService implements DeploymentService {
   ) async {
     SmartphoneDeployment? deployment;
 
-    // first try to get local cache
-    if (useCache) {
-      try {
-        String jsonString = File(await _cacheFilename).readAsStringSync();
-        deployment = SmartphoneDeployment.fromJson(
-            json.decode(jsonString) as Map<String, dynamic>);
-        info(
-            "Study deployment was read from local cache - id: $studyDeploymentId");
-      } catch (exception) {
-        warning(
-            "Failed to read cache of study deployment - id: '$studyDeploymentId' - $exception");
-      }
+    // // first try to get local cache
+    // if (useCache) {
+    //   try {
+    //     String jsonString = File(await _cacheFilename).readAsStringSync();
+    //     deployment = SmartphoneDeployment.fromJson(
+    //         json.decode(jsonString) as Map<String, dynamic>);
+    //     info(
+    //         "Study deployment was read from local cache - id: $studyDeploymentId");
+    //   } catch (exception) {
+    //     warning(
+    //         "Failed to read cache of study deployment - id: '$studyDeploymentId' - $exception");
+    //   }
+    // }
+
+    // if (deployment == null) {
+    if (isConfigured()) {
+      // get the protocol from the study protocol manager
+      protocol = await manager.getStudyProtocol(studyDeploymentId);
+      _eventController.add(CarpBackendEvents.ProtocolRetrieved);
+
+      // create the smartphone deployment
+      deployment = SmartphoneDeployment.fromSmartphoneStudyProtocol(
+        studyDeploymentId: studyDeploymentId,
+        masterDeviceRoleName: masterDeviceRoleName,
+        protocol: protocol,
+      );
+
+      // set the user id of the deployment to the account id of the logged in user
+      deployment.userId ??= CarpService().currentUser?.accountId;
+
+      info("Study deployment was read from CARP - id: $studyDeploymentId");
+
+      _eventController.add(CarpBackendEvents.DeploymentRetrieved);
     }
-
-    if (deployment == null) {
-      if (isConfigured()) {
-        // get the protocol from the study protocol manager
-        protocol = await manager.getStudyProtocol(studyDeploymentId);
-        _eventController.add(CarpBackendEvents.ProtocolRetrieved);
-
-        // create the smartphone deployment
-        deployment = SmartphoneDeployment.fromSmartphoneStudyProtocol(
-          studyDeploymentId: studyDeploymentId,
-          masterDeviceRoleName: masterDeviceRoleName,
-          protocol: protocol,
-        );
-
-        // set the user id of the deployment to the account id of the logged in user
-        deployment.userId ??= CarpService().currentUser?.accountId;
-
-        info("Study deployment was read from CARP - id: $studyDeploymentId");
-
-        _eventController.add(CarpBackendEvents.DeploymentRetrieved);
-      }
-    }
+    // }
 
     // register a CARP data manager which can upload data back to CARP
     DataManagerRegistry().register(CarpDataManager());
 
     if (deployment != null) {
-      // saving to the local cache
-      if (useCache) {
-        info("Saving study deployment to local cache - id: $studyDeploymentId");
-        try {
-          final json = jsonEncode(deployment);
-          File(await _cacheFilename).writeAsStringSync(json);
-        } catch (exception) {
-          warning(
-              "Failed to save local cache for study deployment - id: '$studyDeploymentId' - $exception");
-        }
-      }
+      //   // saving to the local cache
+      //   if (useCache) {
+      //     info("Saving study deployment to local cache - id: $studyDeploymentId");
+      //     try {
+      //       final json = jsonEncode(deployment);
+      //       File(await _cacheFilename).writeAsStringSync(json);
+      //     } catch (exception) {
+      //       warning(
+      //           "Failed to save local cache for study deployment - id: '$studyDeploymentId' - $exception");
+      //     }
+      //   }
 
       // in all cases, return the deployment
       return deployment;

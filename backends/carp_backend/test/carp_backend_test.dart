@@ -41,6 +41,7 @@ void main() {
   /// Runs once before all tests.
   setUpAll(() async {
     Settings().saveAppTaskQueue = false;
+    Settings().debugLevel = DebugLevel.DEBUG;
 
     StudyProtocol(ownerId: 'user@dtu.dk', name: 'ignored'); // ...
 
@@ -53,6 +54,9 @@ void main() {
 
     CarpService().configure(app);
     await manager.initialize();
+
+    // create a carp data manager in order to initialize jsoon serialization
+    CarpDataManager();
 
     user = await CarpService().authenticate(
       username: username,
@@ -72,7 +76,7 @@ void main() {
     test('- authentication', () async {
       print('CarpService : ${CarpService().app}');
       print(" - signed in as: $user");
-      expect(user.accountId, accountId);
+      expect(user.accountId?.length, isPositive);
     });
 
     test('- get invitations for this account (user)', () async {

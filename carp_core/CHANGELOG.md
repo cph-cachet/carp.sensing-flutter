@@ -1,5 +1,6 @@
 ## 0.40.0
 * `ConcurrentTask` is now called a `BackgroundTask`
+* fix of error in `SetParticipantData` request
 
 ## 0.33.1
 * implementation of `ScheduledTrigger` incl. test

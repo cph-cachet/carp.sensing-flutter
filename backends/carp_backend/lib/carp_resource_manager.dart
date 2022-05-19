@@ -57,9 +57,9 @@ class CarpResourceManager
   /// The full path and filename of the local cache of the [resource]
   Future<String> _cacheFilename(Type resource) async {
     if (_cacheResourcePath == null) {
-      final directory = await Directory(
-              '${await Settings().deploymentBasePath}/$RESOURCE_PATH')
-          .create(recursive: true);
+      final directory =
+          await Directory('${await Settings().carpBasePath}/$RESOURCE_PATH')
+              .create(recursive: true);
       _cacheResourcePath = directory.path;
     }
     return '$_cacheResourcePath/${_resourceNames[resource]}.json';
@@ -189,7 +189,7 @@ class CarpResourceManager
   Future<String> _cacheLocalizationFilename(Locale locale) async {
     if (_cacheLocalizationPath == null) {
       final directory = await Directory(
-              '${await Settings().deploymentBasePath}/$LOCALIZATION_PATH')
+              '${await Settings().carpBasePath}}/$LOCALIZATION_PATH')
           .create(recursive: true);
       _cacheLocalizationPath = directory.path;
     }

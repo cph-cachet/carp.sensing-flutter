@@ -10,6 +10,7 @@
 
 * Additional refactoring include:
   - `DeploymentDelayedTrigger` has been removed. Use `ElapsedTimeTrigger`.
+  - `AutomaticTask` is replaced by the `BackgroundTask` from carp_core.
 
 
 ## 0.33.0

@@ -129,12 +129,12 @@ void example() async {
   Smartphone phone = Smartphone();
   protocol.addMasterDevice(phone);
 
-  // Add an automatic task that immediately starts collecting step counts,
+  // Add a background task that immediately starts collecting step counts,
   // ambient light, screen activity, and battery level - using the
   // SamplingPackageRegistry 'common' factory method
   protocol.addTriggeredTask(
       ImmediateTrigger(),
-      AutomaticTask()
+      BackgroundTask()
         ..addMeasures(SamplingPackageRegistry().common.getMeasureList(
           types: [
             SensorSamplingPackage.PEDOMETER,

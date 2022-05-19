@@ -49,8 +49,8 @@ void main() async {
   await manager.initialize();
 
   // get the study from CARP
-  StudyProtocol study = await manager.getStudyProtocol('protocol_id');
-  print(study);
+  StudyProtocol protocol = await manager.getStudyProtocol('protocol_id');
+  print(protocol);
 
   // -----------------------------------------------
   // EXAMPLE OF GETTING A STUDY DEPLOYMENT FROM CARP
@@ -61,24 +61,34 @@ void main() async {
       .getStudyDeploymentStatus(studyDeploymentId);
 
   // create and configure a client manager for this phone
-  SmartPhoneClientManager client = SmartPhoneClientManager(
+  SmartPhoneClientManager client = SmartPhoneClientManager();
+  await client.configure(
     deploymentService: CustomProtocolDeploymentService(),
-    deviceRegistry: DeviceController(),
+    deviceController: DeviceController(),
   );
-  await client.configure();
 
-  String deviceRolename = status.masterDeviceStatus!.device.roleName;
+  // Define the study and add it to the client.
+  final study = Study(
+    status.studyDeploymentId,
+    status.masterDeviceStatus!.device.roleName,
+  );
+  await client.addStudy(study);
 
-  // add and deploy this deployment using its rolename
-  SmartphoneDeploymentController controller =
-      await client.addStudy(studyDeploymentId, deviceRolename);
+  // Get the study controller and try to deploy the study.
+  //
+  // Note that if the study has already been deployed on this phone
+  // it has been cached locally in a file and the local cache will
+  // be used pr. default.
+  // If not deployed before (i.e., cached) the study deployment will be
+  // fetched from the deployment service.
+  SmartphoneDeploymentController? controller = client.getStudyRuntime(study);
+  await controller?.tryDeployment(useCached: true);
 
   // configure the controller with the default privacy schema
-  await controller.configure();
-  // controller.resume();
+  await controller?.configure();
 
   // listening on the data stream and print them as json to the debug console
-  controller.data.listen((data) => print(toJsonString(data)));
+  controller?.data.listen((data) => print(toJsonString(data)));
 
   // -----------------------------------------------
   // DIFFERENT WAYS TO UPLOAD DATA TO CARP
@@ -98,7 +108,7 @@ void main() async {
       password: 'password');
 
   // create a study protocol with a specific data endpoint
-  SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
+  SmartphoneStudyProtocol carpProtocol = SmartphoneStudyProtocol(
     ownerId: 'AB',
     name: 'Track patient movement',
     dataEndPoint: cdep,
