@@ -96,8 +96,7 @@ void example_1() async {
   protocol.addMasterDevice(phone);
 
   // Add a background task that immediately starts collecting step counts,
-  // ambient light, screen activity, and battery level - using the
-  // SamplingPackageRegistry 'common' factory method.
+  // ambient light, screen activity, and battery level.
   protocol.addTriggeredTask(
       ImmediateTrigger(),
       BackgroundTask()
@@ -138,137 +137,137 @@ void example_1() async {
   controller?.data.forEach(print);
 }
 
-// /// This is a more elaborate example used in the README.md file.
-// void example_2() async {
-//   // Create a study protocol
-//   SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
-//     ownerId: 'abc@dtu.dk',
-//     name: 'Tracking',
-//     protocolDescription: StudyDescription(
-//         title: 'CAMS App - Sensing Coverage Study',
-//         description:
-//             'The default study testing coverage of most measures. Used in the coverage tests.',
-//         purpose: 'To test sensing coverage',
-//         responsible: StudyResponsible(
-//           id: 'abc',
-//           title: 'professor',
-//           address: 'Ørsteds Plads',
-//           affiliation: 'Technical University of Denmark',
-//           email: 'abc@dtu.dk',
-//           name: 'Alex B. Christensen',
-//         )),
-//     dataEndPoint: FileDataEndPoint(
-//       bufferSize: 500 * 1000,
-//       zip: true,
-//       encrypt: false,
-//     ),
-//   );
+/// This is a more elaborate example used in the README.md file.
+void example_2() async {
+  // Create a study protocol
+  SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
+    ownerId: 'abc@dtu.dk',
+    name: 'Tracking',
+    protocolDescription: StudyDescription(
+        title: 'CAMS App - Sensing Coverage Study',
+        description:
+            'The default study testing coverage of most measures. Used in the coverage tests.',
+        purpose: 'To test sensing coverage',
+        responsible: StudyResponsible(
+          id: 'abc',
+          title: 'professor',
+          address: 'Ørsteds Plads',
+          affiliation: 'Technical University of Denmark',
+          email: 'abc@dtu.dk',
+          name: 'Alex B. Christensen',
+        )),
+    dataEndPoint: FileDataEndPoint(
+      bufferSize: 500 * 1000,
+      zip: true,
+      encrypt: false,
+    ),
+  );
 
-//   // define which devices are used for data collection
-//   // in this case, its only this smartphone
-//   Smartphone phone = Smartphone();
-//   protocol.addMasterDevice(phone);
+  // define which devices are used for data collection
+  // in this case, its only this smartphone
+  Smartphone phone = Smartphone();
+  protocol.addMasterDevice(phone);
 
-//   // automatically collect accelerometer and gyroscope data
-//   // but delay the sampling by 10 seconds
-//   protocol.addTriggeredTask(
-//       DelayedTrigger(delay: Duration(seconds: 10)),
-//       AutomaticTask(name: 'Sensor Task')
-//         ..addMeasure(Measure(type: SensorSamplingPackage.ACCELEROMETER))
-//         ..addMeasure(Measure(type: SensorSamplingPackage.GYROSCOPE)),
-//       phone);
+  // automatically collect accelerometer and gyroscope data
+  // but delay the sampling by 10 seconds
+  protocol.addTriggeredTask(
+      DelayedTrigger(delay: Duration(seconds: 10)),
+      BackgroundTask(name: 'Sensor Task')
+        ..addMeasure(Measure(type: SensorSamplingPackage.ACCELEROMETER))
+        ..addMeasure(Measure(type: SensorSamplingPackage.GYROSCOPE)),
+      phone);
 
-//   // create a light measure variable to be used later
-//   PeriodicMeasure lightMeasure = PeriodicMeasure(
-//     type: SensorSamplingPackage.LIGHT,
-//     frequency: const Duration(seconds: 11),
-//     duration: const Duration(milliseconds: 100),
-//   );
-//   // add it to the study to start immediately
-//   protocol.addTriggeredTask(
-//     ImmediateTrigger(),
-//     AutomaticTask(name: 'Light')..addMeasure(lightMeasure),
-//     phone,
-//   );
+  // create a light measure variable to be used later
+  PeriodicMeasure lightMeasure = PeriodicMeasure(
+    type: SensorSamplingPackage.LIGHT,
+    frequency: const Duration(seconds: 11),
+    duration: const Duration(milliseconds: 100),
+  );
+  // add it to the study to start immediately
+  protocol.addTriggeredTask(
+    ImmediateTrigger(),
+    BackgroundTask(name: 'Light')..addMeasure(lightMeasure),
+    phone,
+  );
 
-//   // deploy this protocol using the on-phone deployment service
-//   StudyDeploymentStatus status =
-//       await SmartphoneDeploymentService().createStudyDeployment(protocol);
+  // use the on-phone deployment service
+  DeploymentService deploymentService = SmartphoneDeploymentService();
 
-//   String studyDeploymentId = status.studyDeploymentId;
-//   String deviceRolename = status.masterDeviceStatus!.device.roleName;
+  // create a study deployment using the protocol
+  StudyDeploymentStatus status =
+      await deploymentService.createStudyDeployment(protocol);
 
-//   // create and configure a client manager for this phone
-//   SmartPhoneClientManager client = SmartPhoneClientManager();
-//   await client.configure();
+  // create and configure a client manager for this phone
+  SmartPhoneClientManager client = SmartPhoneClientManager();
+  await client.configure(deploymentService: deploymentService);
 
-//   SmartphoneDeploymentController controller =
-//       await client.addStudy(studyDeploymentId, deviceRolename);
+  Study study = Study(
+    status.studyDeploymentId,
+    status.masterDeviceStatus!.device.roleName,
+  );
 
-//   // configure the controller - note that it takes several configuration parameters
-//   await controller.configure();
+  // create a study runtime to control this deployment
+  await client.addStudy(study);
+  SmartphoneDeploymentController? controller = client.getStudyRuntime(study);
 
-//   // resume sampling
-//   controller.resume();
+  // deploy the study on this phone (controller)
+  await controller?.tryDeployment();
 
-//   // listening to the stream of all data events from the controller
-//   controller.data.listen((dataPoint) => print(dataPoint));
+  // resume sampling
+  controller?.start();
 
-//   // listen only on CARP events
-//   controller.data
-//       .where((dataPoint) => dataPoint.data!.format.namespace == NameSpace.CARP)
-//       .listen((event) => print(event));
+  // listening to the stream of all data events from the controller
+  controller?.data.listen((dataPoint) => print(dataPoint));
 
-//   // listen on LIGHT events only
-//   controller.data
-//       .where((dataPoint) =>
-//           dataPoint.data!.format.toString() == SensorSamplingPackage.LIGHT)
-//       .listen((event) => print(event));
+  // listen only on CARP events
+  controller?.data
+      .where((dataPoint) => dataPoint.data!.format.namespace == NameSpace.CARP)
+      .listen((event) => print(event));
 
-//   // map events to JSON and then print
-//   controller.data
-//       .map((dataPoint) => dataPoint.toJson())
-//       .listen((event) => print(event));
+  // listen on LIGHT events only
+  controller?.data
+      .where((dataPoint) =>
+          dataPoint.data!.format.toString() == SensorSamplingPackage.LIGHT)
+      .listen((event) => print(event));
 
-//   // listening on a specific event type
-//   // this is equivalent to the statement above
-//   ProbeRegistry()
-//       .eventsByType(SensorSamplingPackage.LIGHT)
-//       .listen((dataPoint) => print(dataPoint));
+  // map events to JSON and then print
+  controller?.data
+      .map((dataPoint) => dataPoint.toJson())
+      .listen((event) => print(event));
 
-//   // subscribe to the stream of data
-//   StreamSubscription<DataPoint> subscription =
-//       controller.data.listen((DataPoint dataPoint) {
-//     // do something w. the datum, e.g. print the json
-//     print(JsonEncoder.withIndent(' ').convert(dataPoint));
-//   });
+  // subscribe to the stream of data
+  StreamSubscription<DataPoint> subscription =
+      controller!.data.listen((DataPoint dataPoint) {
+    // do something w. the datum, e.g. print the json
+    print(JsonEncoder.withIndent(' ').convert(dataPoint));
+  });
 
-//   // sampling can be paused and resumed
-//   controller.pause();
-//   controller.resume();
+  // sampling can be paused and resumed
+  controller.executor?.pause();
+  controller.executor?.resume();
 
-//   // pause specific probe(s)
-//   ProbeRegistry()
-//       .lookup(SensorSamplingPackage.ACCELEROMETER)
-//       .forEach((probe) => probe.pause());
+  // pause specific probe(s)
+  ProbeRegistry()
+      .lookup(SensorSamplingPackage.ACCELEROMETER)
+      .forEach((probe) => probe.pause());
 
-//   // adapt measures on the go - calling hasChanged() force a restart of
-//   // the probe, which will load the new measure
-//   lightMeasure
-//     ..frequency = const Duration(seconds: 12)
-//     ..duration = const Duration(milliseconds: 500)
-//     ..hasChanged();
+  // adapt measures on the go - calling hasChanged() force a restart of
+  // the probe, which will load the new measure
+  lightMeasure
+    ..frequency = const Duration(seconds: 12)
+    ..duration = const Duration(milliseconds: 500)
+    ..hasChanged();
 
-//   // disabling a measure will pause the probe
-//   lightMeasure
-//     ..enabled = false
-//     ..hasChanged();
+  // disabling a measure will pause the probe
+  lightMeasure
+    ..enabled = false
+    ..hasChanged();
 
-//   // once the sampling has to stop, e.g. in a Flutter dispose() methods, call stop.
-//   // note that once a sampling has stopped, it cannot be restarted.
-//   controller.stop();
-//   await subscription.cancel();
-// }
+  // once the sampling has to stop, e.g. in a Flutter dispose() methods, call stop.
+  // note that once a sampling has stopped, it cannot be restarted.
+  controller.stop();
+  await subscription.cancel();
+}
 
 /// Example of device management.
 ///
