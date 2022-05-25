@@ -7,8 +7,7 @@
 
 part of runtime;
 
-class SmartPhoneClientManager extends ClientManager
-    with WidgetsBindingObserver {
+class SmartPhoneClientManager extends ClientManager with WidgetsBindingObserver {
   static final SmartPhoneClientManager _instance = SmartPhoneClientManager._();
   NotificationController? _notificationController;
 
@@ -25,8 +24,7 @@ class SmartPhoneClientManager extends ClientManager
   factory SmartPhoneClientManager() => _instance;
 
   @override
-  DeviceController get deviceController =>
-      super.deviceController as DeviceController;
+  DeviceController get deviceController => super.deviceController as DeviceController;
 
   /// The [NotificationController] responsible for sending notification on [AppTask]s.
   NotificationController? get notificationController => _notificationController;
@@ -36,8 +34,7 @@ class SmartPhoneClientManager extends ClientManager
     String studyDeploymentId,
     String deviceRoleName,
   ) =>
-      super.lookupStudyRuntime(studyDeploymentId, deviceRoleName)
-          as SmartphoneDeploymentController;
+      super.lookupStudyRuntime(studyDeploymentId, deviceRoleName) as SmartphoneDeploymentController;
 
   @override
   Future<DeviceRegistration> configure({
@@ -56,8 +53,9 @@ class SmartPhoneClientManager extends ClientManager
 
     // set default values, if not specified
     deviceId ??= DeviceInfo().deviceID;
-    this._notificationController =
-        notificationController ?? FlutterLocalNotificationController();
+    // this._notificationController =
+    //     notificationController ?? FlutterLocalNotificationController();
+    this._notificationController = notificationController ?? AwesomeNotificationController();
     this.deploymentService = deploymentService ?? SmartphoneDeploymentService();
     this.deviceController = deviceController ?? DeviceController();
 
@@ -117,8 +115,7 @@ class SmartPhoneClientManager extends ClientManager
   @mustCallSuper
   Future<void> deactivate() async {
     // make sure to save all studies
-    repository.keys.forEach(
-        (study) async => await getStudyRuntime(study)?.saveDeployment());
+    repository.keys.forEach((study) async => await getStudyRuntime(study)?.saveDeployment());
   }
 
   /// Called when the system puts the app in the background or returns

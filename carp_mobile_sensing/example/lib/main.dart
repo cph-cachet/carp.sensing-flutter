@@ -124,10 +124,8 @@ class Sensing {
     Settings().debugLevel = DebugLevel.DEBUG;
 
     // Configure the on-phone deployment service with a protocol.
-    protocol =
-        await LocalStudyProtocolManager().getStudyProtocol(studyDeploymentId);
-    StudyDeploymentStatus status =
-        await service.createStudyDeployment(protocol!, studyDeploymentId);
+    protocol = await LocalStudyProtocolManager().getStudyProtocol(studyDeploymentId);
+    StudyDeploymentStatus status = await service.createStudyDeployment(protocol!, studyDeploymentId);
 
     // Create and configure a client manager for this phone.
     SmartPhoneClientManager client = SmartPhoneClientManager();
@@ -163,9 +161,7 @@ class Sensing {
   }
 
   /// Is sensing running, i.e. has the study executor been resumed?
-  bool get isRunning =>
-      (controller != null) &&
-      controller!.executor!.state == ExecutorState.resumed;
+  bool get isRunning => (controller != null) && controller!.executor!.state == ExecutorState.resumed;
 
   /// Status of sensing.
   StudyStatus? get status => controller?.status;
@@ -205,7 +201,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         BackgroundTask()
           // ..addMeasure(Measure(type: SensorSamplingPackage.ACCELEROMETER))
           // ..addMeasure(Measure(type: SensorSamplingPackage.GYROSCOPE))
-          ..addMeasure(Measure(type: DeviceSamplingPackage.MEMORY))
+          //..addMeasure(Measure(type: DeviceSamplingPackage.MEMORY))
           ..addMeasure(Measure(type: DeviceSamplingPackage.BATTERY))
           ..addMeasure(Measure(type: DeviceSamplingPackage.SCREEN))
           ..addMeasure(Measure(type: SensorSamplingPackage.PEDOMETER))
