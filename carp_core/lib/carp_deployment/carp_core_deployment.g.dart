@@ -153,23 +153,14 @@ Map<String, dynamic> _$StudyDeploymentStatusToJson(
 ParticipantData _$ParticipantDataFromJson(Map<String, dynamic> json) =>
     ParticipantData(
       studyDeploymentId: json['studyDeploymentId'] as String,
-      data: json['data'] as Map<String, dynamic>?,
+      data: json['data'] as Map<String, dynamic>,
     );
 
-Map<String, dynamic> _$ParticipantDataToJson(ParticipantData instance) {
-  final val = <String, dynamic>{
-    'studyDeploymentId': instance.studyDeploymentId,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('data', instance.data);
-  return val;
-}
+Map<String, dynamic> _$ParticipantDataToJson(ParticipantData instance) =>
+    <String, dynamic>{
+      'studyDeploymentId': instance.studyDeploymentId,
+      'data': instance.data,
+    };
 
 EmailAccountIdentity _$EmailAccountIdentityFromJson(
         Map<String, dynamic> json) =>
@@ -442,8 +433,9 @@ SetParticipantData _$SetParticipantDataFromJson(Map<String, dynamic> json) =>
     SetParticipantData(
       json['studyDeploymentId'] as String,
       json['inputDataType'] as String,
-      ParticipantData.fromJson(json['data'] as Map<String, dynamic>),
-    )..$type = json[r'$type'] as String?;
+    )
+      ..$type = json[r'$type'] as String?
+      ..data = json['data'] as Map<String, dynamic>;
 
 Map<String, dynamic> _$SetParticipantDataToJson(SetParticipantData instance) =>
     <String, dynamic>{

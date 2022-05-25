@@ -56,7 +56,7 @@ void main() {
     }, skip: false);
   });
 
-  group("Participation - deployment id: $testDeploymentId", () {
+  group("Participation", () {
     test(
       '- get invitations for this account (user)',
       () async {

@@ -52,7 +52,7 @@ class HealthSamplingPackage extends SmartphoneSamplingPackage {
 
   List<Permission> get permissions => [];
 
-  /// Request access to GoogleFit/Apple HealthKit.
+  /// Request access to Google Fit or Apple HealthKit.
   /// This method can be used from the app to request access at a 'convinient'
   /// time and will typically be done before sampling is started for
   /// all [types] that are needed.

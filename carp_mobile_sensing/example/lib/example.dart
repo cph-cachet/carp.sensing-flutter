@@ -177,12 +177,14 @@ void example_2() async {
         ..addMeasure(Measure(type: SensorSamplingPackage.GYROSCOPE)),
       phone);
 
-  // create a light measure variable to be used later
-  PeriodicMeasure lightMeasure = PeriodicMeasure(
+  // specify details of a light measure
+  Measure lightMeasure = Measure(
     type: SensorSamplingPackage.LIGHT,
-    frequency: const Duration(seconds: 11),
-    duration: const Duration(milliseconds: 100),
-  );
+  )..overrideSamplingConfiguration = PeriodicSamplingConfiguration(
+      interval: const Duration(minutes: 10),
+      duration: const Duration(seconds: 20),
+    );
+
   // add it to the study to start immediately
   protocol.addTriggeredTask(
     ImmediateTrigger(),
@@ -247,21 +249,29 @@ void example_2() async {
   controller.executor?.resume();
 
   // pause specific probe(s)
-  ProbeRegistry()
-      .lookup(SensorSamplingPackage.ACCELEROMETER)
+  controller.executor
+      ?.lookupProbe(SensorSamplingPackage.ACCELEROMETER)
       .forEach((probe) => probe.pause());
 
-  // adapt measures on the go - calling hasChanged() force a restart of
-  // the probe, which will load the new measure
+  // adapt a measures
+  // note that this will only work if the protocol is created locally on the
+  // phone (as in this example above)
+  // if downloaded and deserialized from json, then we need to locate the
+  // measeure in the deployment
   lightMeasure
-    ..frequency = const Duration(seconds: 12)
-    ..duration = const Duration(milliseconds: 500)
-    ..hasChanged();
+    ..overrideSamplingConfiguration = PeriodicSamplingConfiguration(
+      interval: const Duration(minutes: 5),
+      duration: const Duration(seconds: 10),
+    );
 
-  // disabling a measure will pause the probe
-  lightMeasure
-    ..enabled = false
-    ..hasChanged();
+  // restart the light probe(s)
+  controller.executor
+      ?.lookupProbe(SensorSamplingPackage.LIGHT)
+      .forEach((probe) => probe.restart());
+
+// alternatively mark the deplyment as changed - calling hasChanged()
+// this will force a restart of the entire sampling
+  controller.deployment?.hasChanged();
 
   // once the sampling has to stop, e.g. in a Flutter dispose() methods, call stop.
   // note that once a sampling has stopped, it cannot be restarted.

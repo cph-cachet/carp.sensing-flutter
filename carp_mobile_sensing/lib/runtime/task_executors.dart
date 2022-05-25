@@ -52,5 +52,13 @@ abstract class TaskExecutor<TConfig extends TaskDescriptor>
   }
 }
 
-/// Executes an [BackgroundTask].
-class BackgroundTaskExecutor extends TaskExecutor<BackgroundTask> {}
+/// Executes a [BackgroundTask].
+class BackgroundTaskExecutor extends TaskExecutor<BackgroundTask> {
+  @override
+  Future<void> onResume() async {
+    await super.onResume();
+    if (configuration?.duration != null) {
+      Timer(configuration!.duration!, () => super.pause());
+    }
+  }
+}

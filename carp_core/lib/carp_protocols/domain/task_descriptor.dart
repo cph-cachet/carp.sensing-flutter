@@ -49,7 +49,7 @@ class TaskDescriptor extends Serializable {
       '$runtimeType - name: $name, measures size: ${measures.length}';
 }
 
-/// A [TaskDescriptor] which specifies that all containing measures and/or
+/// A task which specifies that all containing measures and/or
 /// outputs should immediately start running in the background once triggered.
 /// The task runs for the specified [duration], or until stopped, or until
 /// all measures and/or outputs have completed.
@@ -71,7 +71,7 @@ class BackgroundTask extends TaskDescriptor {
   Map<String, dynamic> toJson() => _$BackgroundTaskToJson(this);
 }
 
-/// A [TaskDescriptor] which contains a definition on how to run tasks, measures,
+/// A task which contains a definition on how to run tasks, measures,
 /// and triggers which differs from the CARP domain model.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class CustomProtocolTask extends TaskDescriptor {

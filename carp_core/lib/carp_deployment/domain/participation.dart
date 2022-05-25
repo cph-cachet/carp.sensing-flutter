@@ -7,18 +7,20 @@
 
 part of carp_core_deployment;
 
-/// Set [data] for all expected participant data in the study deployment
+/// Expected participant [data] for all participants in a study deployment
 /// with [studyDeploymentId].
-/// Data which is not set equals null.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ParticipantData {
   String studyDeploymentId;
-  Map<String, dynamic>? data;
+  Map<String, dynamic> data;
 
-  ParticipantData({required this.studyDeploymentId, this.data}) : super();
+  ParticipantData({
+    required this.studyDeploymentId,
+    required this.data,
+  }) : super();
 
-  dynamic operator [](String key) => data![key];
-  operator []=(String key, dynamic value) => data![key] = value;
+  dynamic operator [](String key) => data[key];
+  operator []=(String key, dynamic value) => data[key] = value;
 
   factory ParticipantData.fromJson(Map<String, dynamic> json) =>
       _$ParticipantDataFromJson(json);
