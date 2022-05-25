@@ -12,6 +12,7 @@ part of domain;
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class SmartphoneDeployment extends MasterDeviceDeployment {
   late String _studyDeploymentId;
+  final List<SmartphoneDeploymentListener> _listeners = [];
 
   /// The unique id of this study deployment.
   String get studyDeploymentId => _studyDeploymentId;
@@ -120,6 +121,20 @@ class SmartphoneDeployment extends MasterDeviceDeployment {
     return _measures;
   }
 
+  /// Add a [MeasureListener] to this [Measure].
+  void addMeasureListener(SmartphoneDeploymentListener listener) =>
+      _listeners.add(listener);
+
+  /// Remove a [MeasureListener] to this [Measure].
+  void removeMeasureListener(SmartphoneDeploymentListener listener) =>
+      _listeners.remove(listener);
+
+  /// Call this method when this deployment has changed.
+  Future hasChanged([dynamic message]) async {
+    lastUpdateDate = DateTime.now();
+    _listeners.forEach((listener) => listener.hasChanged(message));
+  }
+
   // /// Adapt the sampling measures of this deployment to the specified [schema].
   // void adapt(SamplingSchema schema, {bool restore = true}) {
   //   samplingStrategy = schema.type;
@@ -133,4 +148,10 @@ class SmartphoneDeployment extends MasterDeviceDeployment {
   String toString() => '$runtimeType - studyDeploymentId: $studyDeploymentId, '
       'device: ${deviceDescriptor.roleName}, '
       'title: ${protocolDescription?.title}, responsible: ${responsible?.name}';
+}
+
+/// A Listener that can listen on changes to a [SmartphoneDeployment].
+abstract class SmartphoneDeploymentListener {
+  /// Called when this [SmartphoneDeploymentListener] has changed.
+  void hasChanged([dynamic message]);
 }

@@ -74,20 +74,27 @@ class GetParticipantDataList extends ParticipationServiceRequest {
 class SetParticipantData extends ParticipationServiceRequest {
   SetParticipantData(
     String studyDeploymentId,
-    this.inputDataType,
+    this.inputDataType, [
     this.participantData,
-  ) : super(studyDeploymentId);
+  ]) : super(studyDeploymentId);
 
   /// The input data type.
   String inputDataType;
 
   /// The data to be set.
   @JsonKey(ignore: true)
-  ParticipantData participantData;
+  ParticipantData? participantData;
+
+  set data(Map<String, dynamic> data) {
+    participantData = ParticipantData(
+      studyDeploymentId: studyDeploymentId!,
+      data: data,
+    );
+  }
 
   Map<String, dynamic> get data {
     Map<String, dynamic> data = {};
-    participantData.data?.forEach((key, value) {
+    participantData?.data?.forEach((key, value) {
       data['\$type'] = key;
       data['value'] = value;
     });

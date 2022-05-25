@@ -98,6 +98,13 @@ class StudyDeploymentExecutor extends AggregateExecutor<SmartphoneDeployment> {
     });
     return _probes;
   }
+
+  /// Lookup all probes of type [type]. Returns an empty list if none are found.
+  List<Probe> lookupProbe(String type) {
+    List<Probe> _probes = probes;
+    _probes.retainWhere((probe) => probe.type == type);
+    return _probes;
+  }
 }
 
 /// Responsible for handling the execution of a [TriggeredTask].

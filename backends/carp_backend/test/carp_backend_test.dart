@@ -83,7 +83,7 @@ void main() {
       List<ActiveParticipationInvitation> invitations =
           await CarpParticipationService().getActiveParticipationInvitations();
       invitations.forEach((invitation) => print(invitation));
-      //assert(invitations.length > 0);
+      expect(invitations.length, isNonNegative);
     }, skip: false);
 
     test('- get deployment status', () async {

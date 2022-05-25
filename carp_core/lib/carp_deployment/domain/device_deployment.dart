@@ -35,8 +35,6 @@ class MasterDeviceDeployment {
   List<TriggeredTask> triggeredTasks;
 
   /// The time when this device deployment was last updated.
-  /// This corresponds to the most recent device registration as part of this
-  /// device deployment.
   late DateTime lastUpdateDate;
 
   MasterDeviceDeployment({
