@@ -13,7 +13,6 @@ part of context;
 /// Since the AR on both Android and iOS generates a lot of 'useless' events, the
 /// following AR event are removed:
 ///  * [ActivityType.UNKNOWN]
-///  * [ActivityType.TILTING]
 ///  * Activities with a low confidence level (<50%)
 class ActivityProbe extends StreamProbe {
   Stream<Datum>? _stream;

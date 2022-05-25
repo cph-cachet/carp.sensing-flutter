@@ -20,22 +20,41 @@ void main() async {
     name: 'Context Sensing Example',
   );
 
-  // define which devices are used for data collection
-  // in this case, its only this smartphone
+  // Define the smartphone as the master device.
   Smartphone phone = Smartphone();
   protocol.addMasterDevice(phone);
 
-  // Add a background task that starts collecting location, geolocation,
-  // and activity after 5 minutes.
+  // Add a background task that collects activity data from the phone
   protocol.addTriggeredTask(
-      DelayedTrigger(delay: Duration(minutes: 5)),
+      ImmediateTrigger(),
       BackgroundTask()
-        ..addMeasure(Measure(type: ContextSamplingPackage.LOCATION))
-        ..addMeasure(Measure(type: ContextSamplingPackage.GEOLOCATION))
         ..addMeasure(Measure(type: ContextSamplingPackage.ACTIVITY)),
       phone);
 
-  // Add a background task that collecting geofence events using DTU as the
+  // Define the online location service and add it as a 'device'
+  LocationService locationService = LocationService(
+      accuracy: GeolocationAccuracy.low,
+      distance: 10,
+      interval: const Duration(minutes: 5));
+  protocol.addConnectedDevice(locationService);
+
+  // Add a background task that collects location on a regular basis
+  protocol.addTriggeredTask(
+      IntervalTrigger(period: Duration(minutes: 5)),
+      BackgroundTask()
+        ..addMeasure(Measure(type: ContextSamplingPackage.LOCATION)),
+      locationService);
+
+  // Add a background task that continously collects geolocation and mobility
+  // patterns. Delays sampling by 5 minutes.
+  protocol.addTriggeredTask(
+      DelayedTrigger(delay: Duration(minutes: 5)),
+      BackgroundTask()
+        ..addMeasure(Measure(type: ContextSamplingPackage.GEOLOCATION))
+        ..addMeasure(Measure(type: ContextSamplingPackage.MOBILITY)),
+      locationService);
+
+  // Add a background task that collects geofence events using DTU as the
   // center for the geofence.
   protocol.addTriggeredTask(
       ImmediateTrigger(),
@@ -45,18 +64,29 @@ void main() async {
               center: GeoPosition(55.786025, 12.524159),
               dwell: const Duration(minutes: 15),
               radius: 10.0)),
-      phone);
+      locationService);
 
-  // Add a background task that collects weather and air_quality every 30 miutes.
-  // Not that API keys for the weather and air_quality measure must be specified.
+  // Define the online weather service and add it as a 'device'
+  WeatherService weatherService =
+      WeatherService(apiKey: 'OW_API_key_goes_here');
+  protocol.addConnectedDevice(weatherService);
+
+  // Add a background task that collects weather every 30 miutes.
   protocol.addTriggeredTask(
       IntervalTrigger(period: Duration(minutes: 30)),
       BackgroundTask()
-        ..addMeasure(Measure(type: ContextSamplingPackage.WEATHER)
-          ..overrideSamplingConfiguration =
-              WeatherSamplingConfiguration(apiKey: 'OW_API_key_goes_here'))
-        ..addMeasure(Measure(type: ContextSamplingPackage.AIR_QUALITY)
-          ..overrideSamplingConfiguration = AirQualitySamplingConfiguration(
-              apiKey: 'WAQI_API_key_goes_here')),
-      phone);
+        ..addMeasure(Measure(type: ContextSamplingPackage.WEATHER)),
+      weatherService);
+
+  // Define the online air quality service and add it as a 'device'
+  AirQualityService airQualityService =
+      AirQualityService(apiKey: 'WAQI_API_key_goes_here');
+  protocol.addConnectedDevice(airQualityService);
+
+  // Add a background task that air quality every 30 miutes.
+  protocol.addTriggeredTask(
+      IntervalTrigger(period: Duration(minutes: 30)),
+      BackgroundTask()
+        ..addMeasure(Measure(type: ContextSamplingPackage.AIR_QUALITY)),
+      airQualityService);
 }

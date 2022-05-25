@@ -2,29 +2,28 @@ part of context;
 
 /// Collects local air quality information using the [AirQuality] plugin.
 class AirQualityProbe extends DatumProbe {
-  late AirQuality _waqi;
+  @override
+  AirQualityServiceManager get deviceManager =>
+      super.deviceManager as AirQualityServiceManager;
 
-  void onInitialize() {
-    _waqi = AirQuality(
-        (samplingConfiguration as AirQualitySamplingConfiguration).apiKey);
-  }
-
-  Future<void> onResume() async {
-    await LocationManager().configure();
-    super.onResume();
-  }
+  @override
+  void onInitialize() =>
+      LocationManager().configure().then((_) => super.onResume());
 
   /// Returns the [AirQualityDatum] based on the location of the phone.
   Future<Datum> getDatum() async {
-    try {
-      final loc = await LocationManager().getLastKnownLocation();
-      final airQuality =
-          await _waqi.feedFromGeoLocation(loc.latitude!, loc.longitude!);
+    if (deviceManager.service != null) {
+      try {
+        final loc = await LocationManager().getLastKnownLocation();
+        final airQuality = await deviceManager.service!
+            .feedFromGeoLocation(loc.latitude!, loc.longitude!);
 
-      return AirQualityDatum.fromAirQualityData(airQuality);
-    } catch (err) {
-      warning('$runtimeType - Error getting air quality - $err');
-      return ErrorDatum('AirQuality Probe Exception: $err');
+        return AirQualityDatum.fromAirQualityData(airQuality);
+      } catch (err) {
+        warning('$runtimeType - Error getting air quality - $err');
+        return ErrorDatum('$runtimeType Exception: $err');
+      }
     }
+    return ErrorDatum('$runtimeType - no service available.');
   }
 }

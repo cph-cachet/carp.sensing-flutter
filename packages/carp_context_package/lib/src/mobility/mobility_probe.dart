@@ -14,9 +14,6 @@ class MobilityProbe extends StreamProbe {
 
   @override
   Future<void> onResume() async {
-    await LocationManager()
-        .configure(samplingConfiguration as LocationSamplingConfiguration);
-
     // start the location data stream from the LocationManager
     Stream<LocationSample> locationStream = LocationManager()
         .onLocationChanged

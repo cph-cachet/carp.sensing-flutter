@@ -6,8 +6,8 @@
  */
 part of runtime;
 
-/// A [DeviceController] handles runtime managenent of all devices connected to
-/// this phone, including the phone itself.
+/// A [DeviceController] handles runtime managenent of all devices and services
+/// connected to this phone, including the phone itself.
 class DeviceController implements DeviceDataCollectorFactory {
   static final DeviceController _instance = DeviceController._();
   final Map<String, DeviceManager> _devices = {};

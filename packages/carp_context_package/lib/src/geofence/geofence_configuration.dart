@@ -78,7 +78,7 @@ class GeoPosition extends Serializable {
 ///  - name
 /// of the geofence.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class GeofenceSamplingConfiguration extends LocationSamplingConfiguration {
+class GeofenceSamplingConfiguration extends PersistentSamplingConfiguration {
   /// The center of the geofence as a GPS location.
   GeoPosition center;
 
@@ -92,24 +92,11 @@ class GeofenceSamplingConfiguration extends LocationSamplingConfiguration {
   String? label;
 
   GeofenceSamplingConfiguration({
-    GeolocationAccuracy accuracy = GeolocationAccuracy.balanced,
-    double distance = 5,
-    Duration interval = const Duration(minutes: 3),
-    String? notificationTitle,
-    String? notificationMessage,
-    String? notificationDescription,
     required this.center,
     required this.radius,
     required this.dwell,
     this.label,
-  }) : super(
-          accuracy: accuracy,
-          distance: distance,
-          interval: interval,
-          notificationTitle: notificationTitle,
-          notificationMessage: notificationMessage,
-          notificationDescription: notificationDescription,
-        );
+  }) : super();
 
   Function get fromJsonFunction => _$GeofenceSamplingConfigurationFromJson;
   Map<String, dynamic> toJson() => _$GeofenceSamplingConfigurationToJson(this);

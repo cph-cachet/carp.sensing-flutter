@@ -56,16 +56,12 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
 
   void onRegister() {
     // first register all configurations to be de/serializable
-    FromJsonFactory().register(AirQualitySamplingConfiguration(apiKey: ''));
+    FromJsonFactory().register(AirQualityService(apiKey: ''));
     FromJsonFactory().register(
       GeofenceSamplingConfiguration(
           center: GeoPosition(1.1, 1.1), dwell: const Duration(), radius: 1.0),
     );
-    FromJsonFactory().register(LocationSamplingConfiguration(
-      accuracy: GeolocationAccuracy.balanced,
-      distance: 1.1,
-    ));
-    FromJsonFactory().register(WeatherSamplingConfiguration(apiKey: ''));
+    FromJsonFactory().register(WeatherService(apiKey: ''));
     FromJsonFactory().register(GeoPosition(1.1, 1.1));
 
     // registering the transformers from CARP to OMH for geolocation and physical activity
@@ -82,30 +78,11 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
       [Permission.locationAlways, Permission.activityRecognition];
 
   SamplingSchema get samplingSchema => SamplingSchema()
-        ..addConfiguration(
-            LOCATION,
-            LocationSamplingConfiguration(
-              accuracy: GeolocationAccuracy.low,
-              distance: 5,
-              interval: const Duration(minutes: 5),
-            ))
-        ..addConfiguration(
-            GEOLOCATION,
-            LocationSamplingConfiguration(
-              accuracy: GeolocationAccuracy.low,
-              distance: 10,
-              interval: const Duration(minutes: 5),
-            ))
-        ..addConfiguration(
-            MOBILITY,
-            MobilitySamplingConfiguration(
-                accuracy: GeolocationAccuracy.balanced,
-                distance: 10,
-                interval: const Duration(minutes: 5),
-                placeRadius: 50,
-                stopRadius: 5,
-                usePriorContexts: true,
-                stopDuration: Duration(seconds: 30)))
-      //
-      ;
+    ..addConfiguration(
+        MOBILITY,
+        MobilitySamplingConfiguration(
+            placeRadius: 50,
+            stopRadius: 5,
+            usePriorContexts: true,
+            stopDuration: Duration(seconds: 30)));
 }

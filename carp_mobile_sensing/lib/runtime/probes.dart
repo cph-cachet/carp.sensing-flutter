@@ -59,10 +59,20 @@ abstract class Probe extends AbstractExecutor<Measure> {
   void addError(Object error) => controller.addError(error);
 
   // default no-op implementation of callback methods
+
+  @override
   void onInitialize() {}
+
+  @override
   Future<void> onResume() async {}
+
+  @override
   Future<void> onPause() async {}
+
+  @override
   Future<void> onRestart() async {}
+
+  @override
   Future<void> onStop() async {}
 }
 
@@ -77,6 +87,7 @@ abstract class Probe extends AbstractExecutor<Measure> {
 ///
 /// See [DeviceProbe] for an example.
 abstract class DatumProbe extends Probe {
+  @override
   Future<void> onResume() async {
     Datum? datum;
     try {

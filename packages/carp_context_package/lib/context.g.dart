@@ -75,53 +75,6 @@ Map<String, dynamic> _$LocationDatumToJson(LocationDatum instance) {
   return val;
 }
 
-LocationSamplingConfiguration _$LocationSamplingConfigurationFromJson(
-        Map<String, dynamic> json) =>
-    LocationSamplingConfiguration(
-      accuracy:
-          $enumDecodeNullable(_$GeolocationAccuracyEnumMap, json['accuracy']) ??
-              GeolocationAccuracy.balanced,
-      distance: (json['distance'] as num?)?.toDouble() ?? 0,
-      interval: Duration(microseconds: json['interval'] as int),
-      notificationTitle: json['notificationTitle'] as String?,
-      notificationMessage: json['notificationMessage'] as String?,
-      notificationDescription: json['notificationDescription'] as String?,
-    )
-      ..$type = json[r'$type'] as String?
-      ..lastTime = json['lastTime'] == null
-          ? null
-          : DateTime.parse(json['lastTime'] as String);
-
-Map<String, dynamic> _$LocationSamplingConfigurationToJson(
-    LocationSamplingConfiguration instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull(r'$type', instance.$type);
-  writeNotNull('lastTime', instance.lastTime?.toIso8601String());
-  val['accuracy'] = _$GeolocationAccuracyEnumMap[instance.accuracy];
-  val['distance'] = instance.distance;
-  val['interval'] = instance.interval.inMicroseconds;
-  writeNotNull('notificationTitle', instance.notificationTitle);
-  writeNotNull('notificationMessage', instance.notificationMessage);
-  writeNotNull('notificationDescription', instance.notificationDescription);
-  return val;
-}
-
-const _$GeolocationAccuracyEnumMap = {
-  GeolocationAccuracy.powerSave: 'powerSave',
-  GeolocationAccuracy.low: 'low',
-  GeolocationAccuracy.balanced: 'balanced',
-  GeolocationAccuracy.high: 'high',
-  GeolocationAccuracy.navigation: 'navigation',
-  GeolocationAccuracy.reduced: 'reduced',
-};
-
 WeatherDatum _$WeatherDatumFromJson(Map<String, dynamic> json) => WeatherDatum()
   ..id = json['id'] as String?
   ..timestamp = DateTime.parse(json['timestamp'] as String)
@@ -184,18 +137,23 @@ Map<String, dynamic> _$WeatherDatumToJson(WeatherDatum instance) {
   return val;
 }
 
-WeatherSamplingConfiguration _$WeatherSamplingConfigurationFromJson(
-        Map<String, dynamic> json) =>
-    WeatherSamplingConfiguration(
+WeatherService _$WeatherServiceFromJson(Map<String, dynamic> json) =>
+    WeatherService(
+      roleName: json['roleName'] as String?,
+      supportedDataTypes: (json['supportedDataTypes'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
       apiKey: json['apiKey'] as String,
     )
       ..$type = json[r'$type'] as String?
-      ..lastTime = json['lastTime'] == null
-          ? null
-          : DateTime.parse(json['lastTime'] as String);
+      ..isMasterDevice = json['isMasterDevice'] as bool?
+      ..samplingConfiguration =
+          (json['samplingConfiguration'] as Map<String, dynamic>).map(
+        (k, e) => MapEntry(
+            k, SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
+      );
 
-Map<String, dynamic> _$WeatherSamplingConfigurationToJson(
-    WeatherSamplingConfiguration instance) {
+Map<String, dynamic> _$WeatherServiceToJson(WeatherService instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -205,7 +163,10 @@ Map<String, dynamic> _$WeatherSamplingConfigurationToJson(
   }
 
   writeNotNull(r'$type', instance.$type);
-  writeNotNull('lastTime', instance.lastTime?.toIso8601String());
+  writeNotNull('isMasterDevice', instance.isMasterDevice);
+  val['roleName'] = instance.roleName;
+  writeNotNull('supportedDataTypes', instance.supportedDataTypes);
+  val['samplingConfiguration'] = instance.samplingConfiguration;
   val['apiKey'] = instance.apiKey;
   return val;
 }
@@ -233,14 +194,6 @@ Map<String, dynamic> _$GeoPositionToJson(GeoPosition instance) {
 GeofenceSamplingConfiguration _$GeofenceSamplingConfigurationFromJson(
         Map<String, dynamic> json) =>
     GeofenceSamplingConfiguration(
-      accuracy:
-          $enumDecodeNullable(_$GeolocationAccuracyEnumMap, json['accuracy']) ??
-              GeolocationAccuracy.balanced,
-      distance: (json['distance'] as num?)?.toDouble() ?? 5,
-      interval: Duration(microseconds: json['interval'] as int),
-      notificationTitle: json['notificationTitle'] as String?,
-      notificationMessage: json['notificationMessage'] as String?,
-      notificationDescription: json['notificationDescription'] as String?,
       center: GeoPosition.fromJson(json['center'] as Map<String, dynamic>),
       radius: (json['radius'] as num).toDouble(),
       dwell: Duration(microseconds: json['dwell'] as int),
@@ -263,12 +216,6 @@ Map<String, dynamic> _$GeofenceSamplingConfigurationToJson(
 
   writeNotNull(r'$type', instance.$type);
   writeNotNull('lastTime', instance.lastTime?.toIso8601String());
-  val['accuracy'] = _$GeolocationAccuracyEnumMap[instance.accuracy];
-  val['distance'] = instance.distance;
-  val['interval'] = instance.interval.inMicroseconds;
-  writeNotNull('notificationTitle', instance.notificationTitle);
-  writeNotNull('notificationMessage', instance.notificationMessage);
-  writeNotNull('notificationDescription', instance.notificationDescription);
   val['center'] = instance.center;
   val['radius'] = instance.radius;
   val['dwell'] = instance.dwell.inMicroseconds;
@@ -349,18 +296,23 @@ const _$AirQualityLevelEnumMap = {
   AirQualityLevel.HAZARDOUS: 'HAZARDOUS',
 };
 
-AirQualitySamplingConfiguration _$AirQualitySamplingConfigurationFromJson(
-        Map<String, dynamic> json) =>
-    AirQualitySamplingConfiguration(
+AirQualityService _$AirQualityServiceFromJson(Map<String, dynamic> json) =>
+    AirQualityService(
+      roleName: json['roleName'] as String?,
+      supportedDataTypes: (json['supportedDataTypes'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
       apiKey: json['apiKey'] as String,
     )
       ..$type = json[r'$type'] as String?
-      ..lastTime = json['lastTime'] == null
-          ? null
-          : DateTime.parse(json['lastTime'] as String);
+      ..isMasterDevice = json['isMasterDevice'] as bool?
+      ..samplingConfiguration =
+          (json['samplingConfiguration'] as Map<String, dynamic>).map(
+        (k, e) => MapEntry(
+            k, SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
+      );
 
-Map<String, dynamic> _$AirQualitySamplingConfigurationToJson(
-    AirQualitySamplingConfiguration instance) {
+Map<String, dynamic> _$AirQualityServiceToJson(AirQualityService instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -370,7 +322,10 @@ Map<String, dynamic> _$AirQualitySamplingConfigurationToJson(
   }
 
   writeNotNull(r'$type', instance.$type);
-  writeNotNull('lastTime', instance.lastTime?.toIso8601String());
+  writeNotNull('isMasterDevice', instance.isMasterDevice);
+  val['roleName'] = instance.roleName;
+  writeNotNull('supportedDataTypes', instance.supportedDataTypes);
+  val['samplingConfiguration'] = instance.samplingConfiguration;
   val['apiKey'] = instance.apiKey;
   return val;
 }
@@ -412,18 +367,12 @@ Map<String, dynamic> _$MobilityDatumToJson(MobilityDatum instance) {
 MobilitySamplingConfiguration _$MobilitySamplingConfigurationFromJson(
         Map<String, dynamic> json) =>
     MobilitySamplingConfiguration(
-      accuracy:
-          $enumDecodeNullable(_$GeolocationAccuracyEnumMap, json['accuracy']) ??
-              GeolocationAccuracy.balanced,
-      distance: (json['distance'] as num?)?.toDouble() ?? 5,
-      interval: Duration(microseconds: json['interval'] as int),
-      notificationTitle: json['notificationTitle'] as String?,
-      notificationMessage: json['notificationMessage'] as String?,
-      notificationDescription: json['notificationDescription'] as String?,
       usePriorContexts: json['usePriorContexts'] as bool? ?? true,
       stopRadius: (json['stopRadius'] as num?)?.toDouble() ?? 25,
       placeRadius: (json['placeRadius'] as num?)?.toDouble() ?? 50,
-      stopDuration: Duration(microseconds: json['stopDuration'] as int),
+      stopDuration: json['stopDuration'] == null
+          ? null
+          : Duration(microseconds: json['stopDuration'] as int),
     )
       ..$type = json[r'$type'] as String?
       ..lastTime = json['lastTime'] == null
@@ -442,15 +391,66 @@ Map<String, dynamic> _$MobilitySamplingConfigurationToJson(
 
   writeNotNull(r'$type', instance.$type);
   writeNotNull('lastTime', instance.lastTime?.toIso8601String());
-  val['accuracy'] = _$GeolocationAccuracyEnumMap[instance.accuracy];
-  val['distance'] = instance.distance;
-  val['interval'] = instance.interval.inMicroseconds;
-  writeNotNull('notificationTitle', instance.notificationTitle);
-  writeNotNull('notificationMessage', instance.notificationMessage);
-  writeNotNull('notificationDescription', instance.notificationDescription);
   val['usePriorContexts'] = instance.usePriorContexts;
   val['stopRadius'] = instance.stopRadius;
   val['placeRadius'] = instance.placeRadius;
   val['stopDuration'] = instance.stopDuration.inMicroseconds;
   return val;
 }
+
+LocationService _$LocationServiceFromJson(Map<String, dynamic> json) =>
+    LocationService(
+      roleName: json['roleName'] as String?,
+      supportedDataTypes: (json['supportedDataTypes'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      accuracy:
+          $enumDecodeNullable(_$GeolocationAccuracyEnumMap, json['accuracy']) ??
+              GeolocationAccuracy.balanced,
+      distance: (json['distance'] as num?)?.toDouble() ?? 0,
+      interval: json['interval'] == null
+          ? null
+          : Duration(microseconds: json['interval'] as int),
+      notificationTitle: json['notificationTitle'] as String?,
+      notificationMessage: json['notificationMessage'] as String?,
+      notificationDescription: json['notificationDescription'] as String?,
+    )
+      ..$type = json[r'$type'] as String?
+      ..isMasterDevice = json['isMasterDevice'] as bool?
+      ..samplingConfiguration =
+          (json['samplingConfiguration'] as Map<String, dynamic>).map(
+        (k, e) => MapEntry(
+            k, SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
+      );
+
+Map<String, dynamic> _$LocationServiceToJson(LocationService instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(r'$type', instance.$type);
+  writeNotNull('isMasterDevice', instance.isMasterDevice);
+  val['roleName'] = instance.roleName;
+  writeNotNull('supportedDataTypes', instance.supportedDataTypes);
+  val['samplingConfiguration'] = instance.samplingConfiguration;
+  val['accuracy'] = _$GeolocationAccuracyEnumMap[instance.accuracy];
+  val['distance'] = instance.distance;
+  val['interval'] = instance.interval.inMicroseconds;
+  writeNotNull('notificationTitle', instance.notificationTitle);
+  writeNotNull('notificationMessage', instance.notificationMessage);
+  writeNotNull('notificationDescription', instance.notificationDescription);
+  return val;
+}
+
+const _$GeolocationAccuracyEnumMap = {
+  GeolocationAccuracy.powerSave: 'powerSave',
+  GeolocationAccuracy.low: 'low',
+  GeolocationAccuracy.balanced: 'balanced',
+  GeolocationAccuracy.high: 'high',
+  GeolocationAccuracy.navigation: 'navigation',
+  GeolocationAccuracy.reduced: 'reduced',
+};

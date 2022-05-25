@@ -56,9 +56,9 @@ class LocationManager {
   /// Configures the [LocationManager], incl. sending a notification to the
   /// Android notification system.
   ///
-  /// Configuration is done based on the [LocationConfiguration]. If not provided,
+  /// Configuration is done based on the [LocationService]. If not provided,
   /// as set of default configurations are used.
-  Future<void> configure([LocationSamplingConfiguration? configuration]) async {
+  Future<void> configure([LocationService? configuration]) async {
     // fast out if already enabled or is in the process of configuring
     if (enabled) return;
     if (_configuring) return;

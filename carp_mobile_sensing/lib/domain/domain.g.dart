@@ -298,16 +298,12 @@ Map<String, dynamic> _$BatteryAwareSamplingConfigurationToJson(
   return val;
 }
 
-ConnectableDeviceDescriptor _$ConnectableDeviceDescriptorFromJson(
-        Map<String, dynamic> json) =>
-    ConnectableDeviceDescriptor(
-      deviceType: json['deviceType'] as String,
+OnlineService _$OnlineServiceFromJson(Map<String, dynamic> json) =>
+    OnlineService(
       roleName: json['roleName'] as String,
       supportedDataTypes: (json['supportedDataTypes'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
-      name: json['name'] as String?,
+          ?.map((e) => e as String)
+          .toList(),
     )
       ..$type = json[r'$type'] as String?
       ..isMasterDevice = json['isMasterDevice'] as bool?
@@ -315,14 +311,9 @@ ConnectableDeviceDescriptor _$ConnectableDeviceDescriptorFromJson(
           (json['samplingConfiguration'] as Map<String, dynamic>).map(
         (k, e) => MapEntry(
             k, SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
-      )
-      ..collectingMeasureTypes =
-          (json['collectingMeasureTypes'] as List<dynamic>)
-              .map((e) => e as String)
-              .toList();
+      );
 
-Map<String, dynamic> _$ConnectableDeviceDescriptorToJson(
-    ConnectableDeviceDescriptor instance) {
+Map<String, dynamic> _$OnlineServiceToJson(OnlineService instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -336,9 +327,6 @@ Map<String, dynamic> _$ConnectableDeviceDescriptorToJson(
   val['roleName'] = instance.roleName;
   writeNotNull('supportedDataTypes', instance.supportedDataTypes);
   val['samplingConfiguration'] = instance.samplingConfiguration;
-  val['deviceType'] = instance.deviceType;
-  writeNotNull('name', instance.name);
-  val['collectingMeasureTypes'] = instance.collectingMeasureTypes;
   return val;
 }
 

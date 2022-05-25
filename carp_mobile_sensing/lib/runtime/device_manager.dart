@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2021-2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -8,7 +8,7 @@ part of runtime;
 
 // TODO - should be/extend an [Executor] and handle the triggered task associated with this device.... and its probes....
 
-/// A [DeviceManager] handles a device on runtime.
+/// A [DeviceManager] handles a hardware device or online service on runtime.
 abstract class DeviceManager extends DeviceDataCollector {
   final StreamController<DeviceStatus> _eventController =
       StreamController.broadcast();
@@ -35,13 +35,6 @@ abstract class DeviceManager extends DeviceDataCollector {
   /// The runtime status of this device.
   DeviceStatus get status => _status;
 
-  /// Has this device manager been initialized?
-  bool get isInitialized => status.index >= DeviceStatus.initialized.index;
-
-  /// Has this device manager been connected?
-  bool get isConnected =>
-      (status == DeviceStatus.connected || status == DeviceStatus.sampling);
-
   /// Change the runtime status of this device.
   set status(DeviceStatus newStatus) {
     debug('$runtimeType - setting device status: $status');
@@ -49,8 +42,11 @@ abstract class DeviceManager extends DeviceDataCollector {
     _eventController.add(newStatus);
   }
 
-  /// The runtime battery level of this device.
-  int? get batteryLevel;
+  /// Has this device manager been initialized?
+  bool get isInitialized => status.index >= DeviceStatus.initialized.index;
+
+  /// Has this device manager been connected?
+  bool get isConnected => status == DeviceStatus.connected;
 
   /// Initialize the device manager by specifying its device [descriptor].
   void initialize(DeviceDescriptor descriptor) {
@@ -114,8 +110,17 @@ abstract class DeviceManager extends DeviceDataCollector {
   Future<bool> onDisconnect();
 }
 
+/// A [DeviceManager] for an online service.
+abstract class OnlineServiceManager extends DeviceManager {}
+
+/// A [DeviceManager] for a hardware device.
+abstract class HardwareDeviceManager extends DeviceManager {
+  /// The runtime battery level of this device.
+  int? get batteryLevel;
+}
+
 /// A device manager for a smartphone.
-class SmartphoneDeviceManager extends DeviceManager {
+class SmartphoneDeviceManager extends HardwareDeviceManager {
   int? _batteryLevel = 0;
 
   @override
@@ -151,13 +156,13 @@ class SmartphoneDeviceManager extends DeviceManager {
   Future<bool> onDisconnect() async => true; // always connected to the phone
 }
 
-abstract class BTLEDeviceManager extends DeviceManager {
+abstract class BTLEDeviceManager extends HardwareDeviceManager {
   /// The Bluetooth address of this BTLE device in the form
   /// `00:04:79:00:0F:4D`.
   String get btleAddress;
 }
 
-/// Different status for a device.
+/// Different status for a [DeviceManager].
 enum DeviceStatus {
   /// The state of the device is unknown.
   unknown,
@@ -169,14 +174,11 @@ enum DeviceStatus {
   initialized,
 
   /// The device is paired with this phone.
-  /// Mainly used for [BTLEDeviceManager].
+  /// Mainly used for a [BTLEDeviceManager].
   paired,
 
-  /// The device is connected.
+  /// The device is connected and ready to be used.
   connected,
-
-  /// The device is sampling measures.
-  sampling,
 
   /// The device is disconnected.
   disconnected,

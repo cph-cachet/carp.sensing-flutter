@@ -13,15 +13,16 @@ class GeofenceProbe extends StreamProbe {
   double get distanceFilter => 10;
 
   @override
+  LocationServiceManager get deviceManager =>
+      super.deviceManager as LocationServiceManager;
+
+  @override
   Future<void> onResume() async {
     Geofence fence = Geofence.fromGeofenceSamplingConfiguration(
         samplingConfiguration as GeofenceSamplingConfiguration);
-    await LocationManager()
-        .configure(samplingConfiguration as LocationSamplingConfiguration);
 
     // listen in on the location service
-    LocationManager()
-        .onLocationChanged
+    deviceManager.manager.onLocationChanged
         .map((location) => GeoPosition.fromLocation(location))
         .listen((location) {
       // when a location event is fired, check if the new location creates a new [GeofenceDatum] event.

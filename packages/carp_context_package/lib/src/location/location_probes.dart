@@ -8,33 +8,26 @@
 part of context;
 
 /// Collects location information from the underlying OS's location API.
-/// Is a [DatumProbe] that collects a [LocationDatum].
-/// Takes a [LocationMeasure] as configuration.
+/// Is a [DatumProbe] that collects one [LocationDatum] at a time.
 class LocationProbe extends DatumProbe {
-  Future<void> onResume() async {
-    await LocationManager()
-        .configure(samplingConfiguration as LocationSamplingConfiguration);
-    super.onResume();
-  }
+  @override
+  LocationServiceManager get deviceManager =>
+      super.deviceManager as LocationServiceManager;
 
-  Future<Datum> getDatum() async => LocationManager()
+  @override
+  Future<Datum> getDatum() async => deviceManager.manager
       .getLocation()
       .then((location) => LocationDatum.fromLocation(location));
 }
 
 /// Collects geolocation information from the underlying OS's location API.
 /// Is a [StreamProbe] that generates a [LocationDatum] every time location is changed.
-///
-/// Note that in order for location tracking to work with this probe, the
-/// phone must be online on the internet, since Google APIs are used.
 class GeoLocationProbe extends StreamProbe {
-  Future<void> onResume() async {
-    await LocationManager()
-        .configure(samplingConfiguration as LocationSamplingConfiguration);
-    super.onResume();
-  }
+  @override
+  LocationServiceManager get deviceManager =>
+      super.deviceManager as LocationServiceManager;
 
-  Stream<LocationDatum> get stream => LocationManager()
-      .onLocationChanged
+  @override
+  Stream<LocationDatum> get stream => deviceManager.manager.onLocationChanged
       .map((location) => LocationDatum.fromLocation(location));
 }
