@@ -110,6 +110,7 @@ abstract class DeviceManager extends DeviceDataCollector {
   Future<bool> onDisconnect();
 }
 
+// TODO - how to ensure an online service is connected?
 /// A [DeviceManager] for an online service.
 abstract class OnlineServiceManager extends DeviceManager {}
 
