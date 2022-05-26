@@ -9,15 +9,17 @@ part of runtime;
 // TODO - should be/extend an [Executor] and handle the triggered task associated with this device.... and its probes....
 
 /// A [DeviceManager] handles a hardware device or online service on runtime.
-abstract class DeviceManager extends DeviceDataCollector {
+abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
+        TDeviceDescriptor extends DeviceDescriptor>
+    extends DeviceDataCollector<TDeviceRegistration, TDeviceDescriptor> {
   final StreamController<DeviceStatus> _eventController =
       StreamController.broadcast();
   final Set<String> _supportedDataTypes = {};
 
   DeviceManager([
     String? type,
-    DeviceRegistration? deviceRegistration,
-    DeviceDescriptor? deviceDescriptor,
+    TDeviceRegistration? deviceRegistration,
+    TDeviceDescriptor? deviceDescriptor,
   ]) : super(
           type,
           deviceRegistration,
@@ -49,7 +51,7 @@ abstract class DeviceManager extends DeviceDataCollector {
   bool get isConnected => status == DeviceStatus.connected;
 
   /// Initialize the device manager by specifying its device [descriptor].
-  void initialize(DeviceDescriptor descriptor) {
+  void initialize(TDeviceDescriptor descriptor) {
     info('Initializing device manager, type: $type, descriptor.: $descriptor');
     deviceDescriptor = descriptor;
     onInitialize(descriptor);
@@ -60,7 +62,7 @@ abstract class DeviceManager extends DeviceDataCollector {
   ///
   /// Is often overriden in sub-classes. Note, however, that it must not be
   /// doing a lot of work on startup.
-  void onInitialize(DeviceDescriptor descriptor);
+  void onInitialize(TDeviceDescriptor descriptor);
 
   /// Ask this [DeviceManager] to connect to the device.
   ///
@@ -111,17 +113,25 @@ abstract class DeviceManager extends DeviceDataCollector {
 }
 
 // TODO - how to ensure an online service is connected?
+
 /// A [DeviceManager] for an online service.
-abstract class OnlineServiceManager extends DeviceManager {}
+abstract class OnlineServiceManager<
+        TDeviceRegistration extends DeviceRegistration,
+        TDeviceDescriptor extends OnlineService>
+    extends DeviceManager<TDeviceRegistration, TDeviceDescriptor> {}
 
 /// A [DeviceManager] for a hardware device.
-abstract class HardwareDeviceManager extends DeviceManager {
+abstract class HardwareDeviceManager<
+        TDeviceRegistration extends DeviceRegistration,
+        TDeviceDescriptor extends DeviceDescriptor>
+    extends DeviceManager<TDeviceRegistration, TDeviceDescriptor> {
   /// The runtime battery level of this device.
   int? get batteryLevel;
 }
 
 /// A device manager for a smartphone.
-class SmartphoneDeviceManager extends HardwareDeviceManager {
+class SmartphoneDeviceManager
+    extends HardwareDeviceManager<DeviceRegistration, Smartphone> {
   int? _batteryLevel = 0;
 
   @override
@@ -157,7 +167,9 @@ class SmartphoneDeviceManager extends HardwareDeviceManager {
   Future<bool> onDisconnect() async => true; // always connected to the phone
 }
 
-abstract class BTLEDeviceManager extends HardwareDeviceManager {
+abstract class BTLEDeviceManager<TDeviceRegistration extends DeviceRegistration,
+        TDeviceDescriptor extends DeviceDescriptor>
+    extends HardwareDeviceManager<TDeviceRegistration, TDeviceDescriptor> {
   /// The Bluetooth address of this BTLE device in the form
   /// `00:04:79:00:0F:4D`.
   String get btleAddress;

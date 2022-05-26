@@ -61,7 +61,9 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
       GeofenceSamplingConfiguration(
           center: GeoPosition(1.1, 1.1), dwell: const Duration(), radius: 1.0),
     );
+    FromJsonFactory().register(LocationService());
     FromJsonFactory().register(WeatherService(apiKey: ''));
+    FromJsonFactory().register(AirQualityService(apiKey: ''));
     FromJsonFactory().register(GeoPosition(1.1, 1.1));
 
     // registering the transformers from CARP to OMH for geolocation and physical activity

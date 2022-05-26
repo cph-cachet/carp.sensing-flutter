@@ -36,23 +36,17 @@ class AirQualityService extends OnlineService {
 }
 
 /// A [DeviceManager] for the [AirQualityService].
-class AirQualityServiceManager extends OnlineServiceManager {
+class AirQualityServiceManager
+    extends OnlineServiceManager<DeviceRegistration, AirQualityService> {
   /// A handle to the [AirQuality] plugin.
   AirQuality? service;
-
-  @override
-  AirQualityService? get deviceDescriptor =>
-      super.deviceDescriptor as AirQualityService;
 
   @override
   String get id =>
       deviceDescriptor?.roleName ?? AirQualityService.DEFAULT_ROLENAME;
 
   @override
-  void onInitialize(DeviceDescriptor descriptor) {
-    assert(descriptor is AirQualityService,
-        '$runtimeType initialized with a wrong device descriptor of type ${descriptor.runtimeType}');
-  }
+  void onInitialize(AirQualityService service) {}
 
   @override
   bool canConnect() => true;

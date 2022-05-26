@@ -66,24 +66,18 @@ class LocationService extends OnlineService {
   Map<String, dynamic> toJson() => _$LocationServiceToJson(this);
 }
 
-/// A [DeviceManager] for the eSense device.
-class LocationServiceManager extends OnlineServiceManager {
+/// A [DeviceManager] for the location service.
+class LocationServiceManager
+    extends OnlineServiceManager<DeviceRegistration, LocationService> {
   /// A handle to the [LocationManager].
   LocationManager manager = LocationManager();
-
-  @override
-  LocationService? get deviceDescriptor =>
-      super.deviceDescriptor as LocationService;
 
   @override
   String get id =>
       deviceDescriptor?.roleName ?? LocationService.DEFAULT_ROLENAME;
 
   @override
-  void onInitialize(DeviceDescriptor descriptor) {
-    assert(descriptor is LocationService,
-        '$runtimeType initialized with a wrong device descriptor of type ${descriptor.runtimeType}');
-  }
+  void onInitialize(LocationService service) {}
 
   @override
   bool canConnect() => true;

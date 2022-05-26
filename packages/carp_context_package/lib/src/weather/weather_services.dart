@@ -36,23 +36,17 @@ class WeatherService extends OnlineService {
 }
 
 /// A [DeviceManager] for the [WeatherService].
-class WeatherServiceManager extends OnlineServiceManager {
+class WeatherServiceManager
+    extends OnlineServiceManager<DeviceRegistration, WeatherService> {
   /// A handle to the [WeatherFactory] plugin.
   WeatherFactory? service;
-
-  @override
-  WeatherService? get deviceDescriptor =>
-      super.deviceDescriptor as WeatherService;
 
   @override
   String get id =>
       deviceDescriptor?.roleName ?? WeatherService.DEFAULT_ROLENAME;
 
   @override
-  void onInitialize(DeviceDescriptor descriptor) {
-    assert(descriptor is WeatherService,
-        '$runtimeType initialized with a wrong device descriptor of type ${descriptor.runtimeType}');
-  }
+  void onInitialize(WeatherService service) {}
 
   @override
   bool canConnect() => true;

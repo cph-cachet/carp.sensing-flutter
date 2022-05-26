@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2021-2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -8,15 +8,15 @@
 part of carp_core_client;
 
 /// Collects [Data] for a single device.
-abstract class DeviceDataCollector {
+abstract class DeviceDataCollector<TDeviceRegistration, TDeviceDescriptor> {
   /// The type of this device
   String? type;
 
   /// The registration for this device.
-  DeviceRegistration? deviceRegistration;
+  TDeviceRegistration? deviceRegistration;
 
   /// The description for this device.
-  DeviceDescriptor? deviceDescriptor;
+  TDeviceDescriptor? deviceDescriptor;
 
   /// The set of data types defining which data can be collected on this device.
   Set<String> get supportedDataTypes;
