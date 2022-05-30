@@ -1,6 +1,6 @@
 name: carp_study_generator
 description: Utilities for generating CARP Mobile Sensing studies
-version: 0.33.0
+version: 0.40.0
 homepage: https://github.com/cph-cachet/carp.sensing-flutter
 
 environment:
@@ -10,22 +10,22 @@ dependencies:
   flutter:
     sdk: flutter
 
-  carp_core: ^0.33.0
-  carp_mobile_sensing: ^0.33.0
+  # carp_core: ^0.40.0
+  # carp_mobile_sensing: ^0.40.0
 
-  carp_webservices: ^0.33.0
-  carp_backend: ^0.33.0
+  # carp_webservices: ^0.40.0
+  # carp_backend: ^0.40.0
 
-  carp_apps_package: ^0.33.0
-  carp_context_package: ^0.33.0
-  carp_audio_package: ^0.33.0
-  carp_esense_package: ^0.33.0
-  carp_survey_package: ^0.33.0
-  carp_health_package: ^2.3.0
-  carp_communication_package: ^0.33.0
-  carp_connectivity_package: ^0.33.0
+  # carp_apps_package: ^0.40.0
+  # carp_context_package: ^0.40.0
+  # carp_audio_package: ^0.40.0
+  # carp_esense_package: ^0.40.0
+  # carp_survey_package: ^0.40.0
+  # carp_health_package: ^2.4.0
+  # carp_communication_package: ^0.40.0
+  # carp_connectivity_package: ^0.40.0
 
-  research_package: ^0.7.3      # the informed consent domain model
+  # research_package: ^0.7.3      # the informed consent domain model
 
   yaml: ^3.1.0
   meta: ^1.3.0
@@ -33,32 +33,32 @@ dependencies:
 # Overriding carp libraries to use the local copy
 # Remove this before release of package
 dependency_overrides:
-  # carp_core:
-  #   path: ../../carp_core/
-  # carp_mobile_sensing:
-  #   path: ../../carp_mobile_sensing/
-  # carp_webservices:
-  #   path: ../../backends/carp_webservices/
-  # carp_backend:
-  #   path: ../../backends/carp_backend/
-  # carp_apps_package:
-  #   path: ../../packages/carp_apps_package/
-  # carp_connectivity_package:
-  #   path: ../../packages/carp_connectivity_package/
-  # carp_communication_package:
-  #   path: ../../packages/carp_communication_package/
-  # carp_context_package:
-  #   path: ../../packages/carp_context_package/
-  # carp_audio_package:
-  #   path: ../../packages/carp_audio_package/
-  # carp_esense_package:
-  #   path: ../../packages/carp_esense_package/
-  # carp_survey_package:
-  #   path: ../../packages/carp_survey_package/
-  # carp_health_package:
-  #   path: ../../packages/carp_health_package/
-  # research_package: 
-  #   path: ../../../../research.package
+  carp_core:
+    path: ../../carp_core/
+  carp_mobile_sensing:
+    path: ../../carp_mobile_sensing/
+  carp_webservices:
+    path: ../../backends/carp_webservices/
+  carp_backend:
+    path: ../../backends/carp_backend/
+  carp_apps_package:
+    path: ../../packages/carp_apps_package/
+  carp_connectivity_package:
+    path: ../../packages/carp_connectivity_package/
+  carp_communication_package:
+    path: ../../packages/carp_communication_package/
+  carp_context_package:
+    path: ../../packages/carp_context_package/
+  carp_audio_package:
+    path: ../../packages/carp_audio_package/
+  carp_esense_package:
+    path: ../../packages/carp_esense_package/
+  carp_survey_package:
+    path: ../../packages/carp_survey_package/
+  carp_health_package:
+    path: ../../packages/carp_health_package/
+  research_package: 
+    path: ../../../../research.package
   
 
 dev_dependencies:
