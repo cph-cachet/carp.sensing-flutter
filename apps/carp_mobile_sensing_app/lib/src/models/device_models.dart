@@ -25,7 +25,9 @@ class DeviceModel {
   String get statusString => status.toString().split('.').last;
 
   /// The battery level of this device.
-  int? get batteryLevel => deviceManager.batteryLevel;
+  int? get batteryLevel => deviceManager is HardwareDeviceManager
+      ? (deviceManager as HardwareDeviceManager).batteryLevel
+      : 100;
 
   /// The icon for this type of device.
   Icon? get icon => deviceTypeIcon[type!];
@@ -38,11 +40,17 @@ class DeviceModel {
   static Map<String, String> get deviceTypeName => {
         Smartphone.DEVICE_TYPE: 'Phone',
         ESenseDevice.DEVICE_TYPE: 'eSense',
+        LocationService.DEVICE_TYPE: 'Location',
+        AirQualityService.DEVICE_TYPE: 'Air Quality',
+        WeatherService.DEVICE_TYPE: 'Weather',
       };
 
   static Map<String, String> get deviceTypeDescription => {
         Smartphone.DEVICE_TYPE: 'This phone',
         ESenseDevice.DEVICE_TYPE: 'eSense ear plug',
+        LocationService.DEVICE_TYPE: 'Location Service',
+        AirQualityService.DEVICE_TYPE: 'World Air Quality Service',
+        WeatherService.DEVICE_TYPE: 'Open Weather Service',
       };
 
   static Map<String, Icon> get deviceTypeIcon => {
@@ -50,6 +58,12 @@ class DeviceModel {
             Icon(Icons.phone_android, size: 50, color: CACHET.GREY_4),
         ESenseDevice.DEVICE_TYPE:
             Icon(Icons.headset, size: 50, color: CACHET.CACHET_BLUE),
+        LocationService.DEVICE_TYPE:
+            Icon(Icons.location_on, size: 50, color: CACHET.CYAN),
+        AirQualityService.DEVICE_TYPE:
+            Icon(Icons.location_on, size: 50, color: CACHET.CYAN),
+        WeatherService.DEVICE_TYPE:
+            Icon(Icons.cloud, size: 50, color: CACHET.DARK_BLUE),
       };
 
   static Map<DeviceStatus, Icon> get deviceStateIcon => {
@@ -57,7 +71,6 @@ class DeviceModel {
         DeviceStatus.error: Icon(Icons.error_outline, color: CACHET.RED),
         DeviceStatus.disconnected: Icon(Icons.close, color: CACHET.YELLOW),
         DeviceStatus.connected: Icon(Icons.check, color: CACHET.GREEN),
-        DeviceStatus.sampling: Icon(Icons.save_alt, color: CACHET.ORANGE),
         DeviceStatus.paired:
             Icon(Icons.bluetooth_connected, color: CACHET.DARK_BLUE),
       };

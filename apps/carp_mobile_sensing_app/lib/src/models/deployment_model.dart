@@ -14,11 +14,11 @@ class StudyDeploymentModel {
   String get dataEndpoint => deployment.dataEndPoint.toString();
 
   /// Events on the state of the study executor
-  Stream<ProbeState> get studyExecutorStateEvents =>
+  Stream<ExecutorState> get studyExecutorStateEvents =>
       Sensing().controller!.executor!.stateEvents;
 
   /// Current state of the study executor (e.g., resumed, paused, ...)
-  ProbeState get studyState => Sensing().controller!.executor!.state;
+  ExecutorState get studyState => Sensing().controller!.executor!.state;
 
   /// Get all sesing events (i.e. all [Datum] objects being collected).
   Stream<DataPoint> get data => Sensing().controller!.data;

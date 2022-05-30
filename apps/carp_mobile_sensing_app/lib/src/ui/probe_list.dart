@@ -43,10 +43,10 @@ class _ProbeListState extends State<ProbesList> {
   }
 
   Widget _buildProbeListTile(BuildContext context, ProbeModel probe) {
-    return StreamBuilder<ProbeState>(
+    return StreamBuilder<ExecutorState>(
       stream: probe.stateEvents,
-      initialData: ProbeState.created,
-      builder: (context, AsyncSnapshot<ProbeState> snapshot) {
+      initialData: ExecutorState.created,
+      builder: (context, AsyncSnapshot<ExecutorState> snapshot) {
         if (snapshot.hasData) {
           return ListTile(
             isThreeLine: true,

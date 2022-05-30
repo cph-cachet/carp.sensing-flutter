@@ -33,9 +33,9 @@ void main() async {
 
   // Define the online location service and add it as a 'device'
   LocationService locationService = LocationService(
-      accuracy: GeolocationAccuracy.low,
+      accuracy: GeolocationAccuracy.high,
       distance: 10,
-      interval: const Duration(minutes: 5));
+      interval: const Duration(minutes: 1));
   protocol.addConnectedDevice(locationService);
 
   // Add a background task that collects location on a regular basis

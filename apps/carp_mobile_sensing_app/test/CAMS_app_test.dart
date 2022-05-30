@@ -25,6 +25,7 @@ void main() {
   StudyProtocol? protocol;
   late Smartphone phone;
   late ESenseDevice eSense;
+  late LocationService loc;
 
   setUp(() async {
     // register the different sampling package since we're using measures from them
@@ -41,6 +42,7 @@ void main() {
     // Define which devices are used for data collection.
     phone = Smartphone();
     eSense = ESenseDevice();
+    loc = LocationService();
   });
 
   group("Local Study Protocol Manager", () {
@@ -81,7 +83,8 @@ void main() {
 
       expect(protocol.ownerId, 'abc@dtu.dk');
       expect(protocol.masterDevices.first.roleName, phone.roleName);
-      expect(protocol.connectedDevices.first.roleName, eSense.roleName);
+      expect(protocol.connectedDevices.first.roleName, loc.roleName);
+      expect(protocol.connectedDevices.last.roleName, eSense.roleName);
       print(toJsonString(protocol));
     });
   });
@@ -139,7 +142,7 @@ void main() {
     }, skip: false);
 
     test(
-      '- get invitations for $username',
+      '- get invitations',
       () async {
         List<ActiveParticipationInvitation> invitations =
             await CarpParticipationService()

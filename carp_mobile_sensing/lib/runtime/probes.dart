@@ -33,9 +33,9 @@ abstract class Probe extends AbstractExecutor<Measure> {
   /// The sampling configuration for this probe.
   ///
   /// Configuration is obtained in the following order:
-  ///  * as [measure.overrideSamplingConfiguration]
-  ///  * from the [samplingConfiguration] of the device descriptor of the [deployment]
-  ///  * from the [configurations] of the sampling packages
+  ///  * as [Measure.overrideSamplingConfiguration]
+  ///  * from the [DeviceDescriptor.samplingConfiguration] of the [deployment]
+  ///  * from the [SamplingSchema.configurations] of the sampling packages
   ///
   /// Returns `null` in case no configuration is found.
   SamplingConfiguration? get samplingConfiguration =>

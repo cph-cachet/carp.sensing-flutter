@@ -45,9 +45,8 @@ class HealthSamplingPackage extends SmartphoneSamplingPackage {
   Probe? create(String type) => type == HEALTH ? HealthProbe() : null;
 
   void onRegister() {
-    FromJsonFactory().register(HealthSamplingConfiguration(
-      healthDataType: HealthDataType.ACTIVE_ENERGY_BURNED,
-    ));
+    FromJsonFactory()
+        .register(HealthSamplingConfiguration(healthDataTypes: []));
   }
 
   List<Permission> get permissions => [];

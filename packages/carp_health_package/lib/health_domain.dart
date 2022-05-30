@@ -43,10 +43,10 @@ const Map<DasesHealthDataType, HealthDataUnit> dasesDataTypeToUnit = {
 /// to collect.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class HealthSamplingConfiguration extends HistoricSamplingConfiguration {
-  /// The [HealthDataType](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html) to collect.
-  HealthDataType healthDataType;
+  /// The list of [HealthDataType](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html) to collect.
+  List<HealthDataType> healthDataTypes;
 
-  HealthSamplingConfiguration({Duration? past, required this.healthDataType})
+  HealthSamplingConfiguration({Duration? past, required this.healthDataTypes})
       : super(past: past);
 
   Function get fromJsonFunction => _$HealthSamplingConfigurationFromJson;

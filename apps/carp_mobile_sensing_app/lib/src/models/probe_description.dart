@@ -1,54 +1,128 @@
 part of mobile_sensing_app;
 
+class ProbeDescriptor {
+  String name, description;
+  ProbeDescriptor(this.name, this.description);
+}
+
 class ProbeDescription {
-  static Map<String, String> get probeTypeDescription => {
-        DataType.UNKNOWN.toString(): 'Unknown Probe',
-        DeviceSamplingPackage.MEMORY:
-            'Collecting free physical and virtual memory.',
-        DeviceSamplingPackage.DEVICE: 'Basic Device (Phone) Information.',
-        DeviceSamplingPackage.BATTERY:
-            'Collecting battery level and charging status.',
-        SensorSamplingPackage.PEDOMETER:
-            'Collecting step counts on a regular basis.',
-        SensorSamplingPackage.ACCELEROMETER:
-            "Collecting sensor data from the phone's onboard accelerometer.",
-        SensorSamplingPackage.GYROSCOPE:
-            "Collecting sensor data from the phone's onboard gyroscope.",
-        SensorSamplingPackage.LIGHT:
-            'Measures ambient light in lux on a regular basis.',
-        ConnectivitySamplingPackage.BLUETOOTH:
-            'Collecting nearby bluetooth devices on a regular basis.',
-        ConnectivitySamplingPackage.WIFI:
-            'Collecting names of connected wifi networks (SSID and BSSID)',
-        ConnectivitySamplingPackage.CONNECTIVITY:
-            'Collecting information on connectivity status and mode.',
-        MediaSamplingPackage.AUDIO: 'Records ambient sound on a regular basis.',
-        MediaSamplingPackage.NOISE:
-            'Measures noise level in decibel on a regular basis.',
-        AppsSamplingPackage.APPS: 'Collecting a list of installed apps.',
-        AppsSamplingPackage.APP_USAGE: 'Collects app usage statistics.',
-        CommunicationSamplingPackage.TEXT_MESSAGE_LOG:
-            'Collects the SMS message log.',
-        CommunicationSamplingPackage.TEXT_MESSAGE:
-            'Collecting in/out-going SMS text messages.',
-        CommunicationSamplingPackage.PHONE_LOG: 'Collects the phone call log.',
-        CommunicationSamplingPackage.CALENDAR:
-            'Collects entries from phone calendars.',
-        DeviceSamplingPackage.SCREEN:
-            'Collecting screen events (on/off/unlock).',
-        ContextSamplingPackage.LOCATION: 'Collecting location information.',
-        ContextSamplingPackage.GEOLOCATION:
-            "Listening to changes in the phone's geo-location.",
-        ContextSamplingPackage.ACTIVITY:
-            'Recognize physical activity, e.g. sitting, walking, biking.',
-        ContextSamplingPackage.WEATHER: 'Collects local weather.',
-        ContextSamplingPackage.AIR_QUALITY: 'Collects local air quality.',
-        ContextSamplingPackage.GEOFENCE:
-            'Track movement in/out of this geofence.',
-        ContextSamplingPackage.MOBILITY:
-            'Mobility features calculated from location data.',
-        ESenseSamplingPackage.ESENSE_BUTTON: 'eSense button events.',
-        ESenseSamplingPackage.ESENSE_SENSOR: 'eSense IMU sensor events.',
+  static Map<String, ProbeDescriptor> get descriptors => {
+        DataType.UNKNOWN.toString(): ProbeDescriptor(
+          'Unknown',
+          'Unknown Probe',
+        ),
+        DeviceSamplingPackage.MEMORY: ProbeDescriptor(
+          'Memory',
+          'Collecting free physical and virtual memory.',
+        ),
+        DeviceSamplingPackage.DEVICE: ProbeDescriptor(
+          'Device',
+          'Basic Device (Phone) Information.',
+        ),
+        DeviceSamplingPackage.BATTERY: ProbeDescriptor(
+          'Battery',
+          'Collecting battery level and charging status.',
+        ),
+        SensorSamplingPackage.PEDOMETER: ProbeDescriptor(
+          'Pedometer',
+          'Collecting step counts on a regular basis.',
+        ),
+        SensorSamplingPackage.ACCELEROMETER: ProbeDescriptor(
+          'Accelerometer',
+          "Collecting sensor data from the phone's onboard accelerometer.",
+        ),
+        SensorSamplingPackage.GYROSCOPE: ProbeDescriptor(
+          'Gyroscope',
+          "Collecting sensor data from the phone's onboard gyroscope.",
+        ),
+        SensorSamplingPackage.LIGHT: ProbeDescriptor(
+          'Light',
+          'Measures ambient light in lux on a regular basis.',
+        ),
+        ConnectivitySamplingPackage.BLUETOOTH: ProbeDescriptor(
+          'Bluetooth',
+          'Collecting nearby bluetooth devices on a regular basis.',
+        ),
+        ConnectivitySamplingPackage.WIFI: ProbeDescriptor(
+          'Wifi',
+          'Collecting names of connected wifi networks (SSID and BSSID)',
+        ),
+        ConnectivitySamplingPackage.CONNECTIVITY: ProbeDescriptor(
+          'Connectivity',
+          'Collecting information on connectivity status and mode.',
+        ),
+        MediaSamplingPackage.AUDIO: ProbeDescriptor(
+          'Audio',
+          'Records ambient sound on a regular basis.',
+        ),
+        MediaSamplingPackage.NOISE: ProbeDescriptor(
+          'Noise',
+          'Measures noise level in decibel on a regular basis.',
+        ),
+        AppsSamplingPackage.APPS: ProbeDescriptor(
+          'Apps',
+          'Collecting a list of installed apps.',
+        ),
+        AppsSamplingPackage.APP_USAGE: ProbeDescriptor(
+          'App Usage',
+          'Collects app usage statistics.',
+        ),
+        CommunicationSamplingPackage.TEXT_MESSAGE_LOG: ProbeDescriptor(
+          'Text Messages',
+          'Collects the SMS message log.',
+        ),
+        CommunicationSamplingPackage.TEXT_MESSAGE: ProbeDescriptor(
+          'Text Message',
+          'Collecting in/out-going SMS text messages.',
+        ),
+        CommunicationSamplingPackage.PHONE_LOG: ProbeDescriptor(
+          'Phone Log',
+          'Collects the phone call log.',
+        ),
+        CommunicationSamplingPackage.CALENDAR: ProbeDescriptor(
+          'Calendar',
+          'Collects entries from phone calendars.',
+        ),
+        DeviceSamplingPackage.SCREEN: ProbeDescriptor(
+          'Screen',
+          'Collecting screen events (on/off/unlock).',
+        ),
+        ContextSamplingPackage.LOCATION: ProbeDescriptor(
+          'Location',
+          'Collecting location information.',
+        ),
+        ContextSamplingPackage.GEOLOCATION: ProbeDescriptor(
+          'Geolocation',
+          "Listening to changes in the phone's geo-location.",
+        ),
+        ContextSamplingPackage.ACTIVITY: ProbeDescriptor(
+          'Activity',
+          'Recognize physical activity, e.g. sitting, walking, biking.',
+        ),
+        ContextSamplingPackage.WEATHER: ProbeDescriptor(
+          'Weather',
+          'Collects local weather.',
+        ),
+        ContextSamplingPackage.AIR_QUALITY: ProbeDescriptor(
+          'Air Quality',
+          'Collects local air quality.',
+        ),
+        ContextSamplingPackage.GEOFENCE: ProbeDescriptor(
+          'Geofence',
+          'Track movement in/out of this geofence.',
+        ),
+        ContextSamplingPackage.MOBILITY: ProbeDescriptor(
+          'Mobility',
+          'Mobility features calculated from location data.',
+        ),
+        ESenseSamplingPackage.ESENSE_BUTTON: ProbeDescriptor(
+          'eSense Button',
+          'eSense button events.',
+        ),
+        ESenseSamplingPackage.ESENSE_SENSOR: ProbeDescriptor(
+          'eSense Movement',
+          'eSense IMU sensor events.',
+        ),
       };
 
   static Map<String, Icon> get probeTypeIcon => {
@@ -112,14 +186,24 @@ class ProbeDescription {
             Icon(Icons.headset, size: 50, color: CACHET.DARK_BLUE),
       };
 
-  static Map<ProbeState, Icon> get probeStateIcon => {
-        ProbeState.created: Icon(Icons.child_care, color: CACHET.GREY_4),
-        ProbeState.initialized: Icon(Icons.check, color: CACHET.LIGHT_PURPLE),
-        ProbeState.resumed:
+  static Map<ExecutorState, String> get probeStateLabel => {
+        ExecutorState.created: "Created",
+        ExecutorState.initialized: "Initialized",
+        ExecutorState.resumed: "Resumed",
+        ExecutorState.paused: "Paused",
+        ExecutorState.stopped: "Stopped",
+        ExecutorState.undefined: "Undefined",
+      };
+
+  static Map<ExecutorState, Icon> get probeStateIcon => {
+        ExecutorState.created: Icon(Icons.child_care, color: CACHET.GREY_4),
+        ExecutorState.initialized:
+            Icon(Icons.check, color: CACHET.LIGHT_PURPLE),
+        ExecutorState.resumed:
             Icon(Icons.radio_button_checked, color: CACHET.GREEN),
-        ProbeState.paused:
+        ExecutorState.paused:
             Icon(Icons.radio_button_unchecked, color: CACHET.GREEN),
-        ProbeState.stopped: Icon(Icons.close, color: CACHET.GREY_2),
-        ProbeState.undefined: Icon(Icons.error_outline, color: CACHET.RED),
+        ExecutorState.stopped: Icon(Icons.close, color: CACHET.GREY_2),
+        ExecutorState.undefined: Icon(Icons.error_outline, color: CACHET.RED),
       };
 }

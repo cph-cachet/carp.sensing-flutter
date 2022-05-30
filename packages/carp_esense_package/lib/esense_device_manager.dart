@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2021-2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -57,7 +57,8 @@ class ESenseDevice extends DeviceDescriptor {
 }
 
 /// A [DeviceManager] for the eSense device.
-class ESenseDeviceManager extends DeviceManager {
+class ESenseDeviceManager
+    extends HardwareDeviceManager<DeviceRegistration, ESenseDevice> {
   // the last known voltage level of the eSense device
   double _voltageLevel = 4;
 
@@ -65,20 +66,15 @@ class ESenseDeviceManager extends DeviceManager {
   ESenseManager? manager;
 
   @override
-  ESenseDevice? get deviceDescriptor => super.deviceDescriptor as ESenseDevice;
-
-  @override
   String get id => deviceDescriptor?.deviceName ?? 'eSense-????';
 
   @override
   void onInitialize(DeviceDescriptor descriptor) {
-    assert(descriptor is ESenseDevice,
-        '$runtimeType initialized with a wrong device descriptor of type ${descriptor.runtimeType}');
-    assert(
-        deviceDescriptor?.deviceName != null &&
-            deviceDescriptor!.deviceName!.isNotEmpty,
-        'Cannot initialize an $runtimeType with a null or empty device name. '
-        "Please specify a valid device name, typically on the form 'eSense-1234'");
+    if (deviceDescriptor?.deviceName == null ||
+        deviceDescriptor!.deviceName!.isEmpty)
+      warning(
+          'Cannot initialize an $runtimeType with a null or empty device name. '
+          "Please specify a valid device name, typically on the form 'eSense-1234'");
   }
 
   /// A estimate of the battery level of the eSense device.

@@ -44,6 +44,13 @@ class LocationService extends OnlineService {
   /// Only used on Android.
   String? notificationDescription;
 
+  /// Create and configure a [LocationService].
+  ///
+  /// Default configuration is:
+  ///  * roleName = "location_service"
+  ///  * accuracy = balanced
+  ///  * distance = 0
+  ///  * interval = 1 minute
   LocationService({
     String? roleName,
     List<String>? supportedDataTypes,

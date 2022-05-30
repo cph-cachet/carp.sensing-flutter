@@ -1,6 +1,6 @@
 name: carp_mobile_sensing_app
 description: The CARP Mobile Sensing App
-version: 0.33.0
+version: 0.40.0
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app
 publish_to: 'none' 
 
@@ -29,7 +29,7 @@ dependencies:
   # carp_esense_package: ^0.30.2
   # carp_movisens_package: ^0.32.0
 
-  research_package: ^0.7.2
+  # research_package: ^0.7.2
 
 # Overriding carp libraries to use the local copy
 dependency_overrides:
@@ -55,8 +55,8 @@ dependency_overrides:
     path: ../../backends/carp_backend/
   carp_webservices:
     path: ../../backends/carp_webservices/
-#  research_package:
-#    path: ../../../../research.package/
+  research_package:
+    path: ../../../../research.package/
 
 
 dev_dependencies:

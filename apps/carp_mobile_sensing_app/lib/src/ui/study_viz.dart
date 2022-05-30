@@ -115,17 +115,20 @@ class _StudyVizState extends State<StudyVisualization> {
                         heading: 'User'),
                     _StudyControllerLine(studyDeploymentModel.dataEndpoint,
                         heading: 'Data Endpoint'),
-                    StreamBuilder<ProbeState>(
+                    StreamBuilder<ExecutorState>(
                         stream: studyDeploymentModel.studyExecutorStateEvents,
-                        initialData: ProbeState.created,
-                        builder: (context, AsyncSnapshot<ProbeState> snapshot) {
+                        initialData: ExecutorState.created,
+                        builder:
+                            (context, AsyncSnapshot<ExecutorState> snapshot) {
                           if (snapshot.hasData)
                             return _StudyControllerLine(
-                                probeStateLabel(snapshot.data!),
+                                ProbeDescription
+                                    .probeStateLabel[snapshot.data!],
                                 heading: 'State');
                           else
                             return _StudyControllerLine(
-                                probeStateLabel(ProbeState.initialized),
+                                ProbeDescription
+                                    .probeStateLabel[ExecutorState.initialized],
                                 heading: 'State');
                         }),
                     StreamBuilder<DataPoint>(
@@ -220,9 +223,8 @@ class _MeasureLine extends StatelessWidget {
         : Icon(ProbeDescription.probeTypeIcon[DataType.UNKNOWN as String]!.icon,
             size: 25);
 
-    final String name = ((measure as CAMSMeasure).name != null)
-        ? (measure as CAMSMeasure).name!
-        : measure.runtimeType.toString();
+    final String name = ProbeDescription.descriptors[measure?.type]?.name ??
+        measure.runtimeType.toString();
 
     final List<Widget> columnChildren = [];
     columnChildren.add(Text(name));

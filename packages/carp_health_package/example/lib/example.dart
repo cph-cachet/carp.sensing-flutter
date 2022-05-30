@@ -22,37 +22,29 @@ void main() async {
   Smartphone phone = Smartphone();
   protocol.addMasterDevice(phone);
 
+  // collect a set of health data every hour
   protocol.addTriggeredTask(
-      // collect every hour
       IntervalTrigger(period: Duration(minutes: 60)),
       BackgroundTask()
         ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
-          ..overrideSamplingConfiguration = HealthSamplingConfiguration(
-              healthDataType: HealthDataType.BLOOD_GLUCOSE))
-        ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
-          ..overrideSamplingConfiguration = HealthSamplingConfiguration(
-              healthDataType: HealthDataType.BLOOD_PRESSURE_DIASTOLIC))
-        ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
-          ..overrideSamplingConfiguration = HealthSamplingConfiguration(
-              healthDataType: HealthDataType.BLOOD_PRESSURE_SYSTOLIC))
-        ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
-          ..overrideSamplingConfiguration = HealthSamplingConfiguration(
-              healthDataType: HealthDataType.BLOOD_PRESSURE_DIASTOLIC))
-        ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
-          ..overrideSamplingConfiguration = HealthSamplingConfiguration(
-              healthDataType: HealthDataType.HEART_RATE))
-        ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
-          ..overrideSamplingConfiguration = HealthSamplingConfiguration(
-              healthDataType: HealthDataType.STEPS)),
+          ..overrideSamplingConfiguration =
+              HealthSamplingConfiguration(healthDataTypes: [
+            HealthDataType.BLOOD_GLUCOSE,
+            HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
+            HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
+            HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
+            HealthDataType.HEART_RATE,
+            HealthDataType.STEPS,
+          ])),
       phone);
 
+  // collect weight every day at 23:00
   protocol.addTriggeredTask(
-      // collect every day at 23:00
       RecurrentScheduledTrigger(
           type: RecurrentType.daily, time: TimeOfDay(hour: 23, minute: 00)),
       BackgroundTask()
         ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
           ..overrideSamplingConfiguration = HealthSamplingConfiguration(
-              healthDataType: HealthDataType.WEIGHT)),
+              healthDataTypes: [HealthDataType.WEIGHT])),
       phone);
 }

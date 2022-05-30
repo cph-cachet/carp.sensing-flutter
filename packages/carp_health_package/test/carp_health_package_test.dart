@@ -47,23 +47,15 @@ void main() {
         IntervalTrigger(period: Duration(minutes: 60)),
         BackgroundTask()
           ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
-            ..overrideSamplingConfiguration = HealthSamplingConfiguration(
-                healthDataType: HealthDataType.BLOOD_GLUCOSE))
-          ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
-            ..overrideSamplingConfiguration = HealthSamplingConfiguration(
-                healthDataType: HealthDataType.BLOOD_PRESSURE_DIASTOLIC))
-          ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
-            ..overrideSamplingConfiguration = HealthSamplingConfiguration(
-                healthDataType: HealthDataType.BLOOD_PRESSURE_SYSTOLIC))
-          ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
-            ..overrideSamplingConfiguration = HealthSamplingConfiguration(
-                healthDataType: HealthDataType.BLOOD_PRESSURE_DIASTOLIC))
-          ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
-            ..overrideSamplingConfiguration = HealthSamplingConfiguration(
-                healthDataType: HealthDataType.HEART_RATE))
-          ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
-            ..overrideSamplingConfiguration = HealthSamplingConfiguration(
-                healthDataType: HealthDataType.STEPS)),
+            ..overrideSamplingConfiguration =
+                HealthSamplingConfiguration(healthDataTypes: [
+              HealthDataType.BLOOD_GLUCOSE,
+              HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
+              HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
+              HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
+              HealthDataType.HEART_RATE,
+              HealthDataType.STEPS,
+            ])),
         phone);
 
     protocol.addTriggeredTask(
@@ -73,7 +65,7 @@ void main() {
         BackgroundTask()
           ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
             ..overrideSamplingConfiguration = HealthSamplingConfiguration(
-                healthDataType: HealthDataType.WEIGHT)),
+                healthDataTypes: [HealthDataType.WEIGHT])),
         phone);
   });
 
@@ -107,7 +99,10 @@ void main() {
 
   test(' - HealthSamplingConfiguration -> JSON', () async {
     HealthSamplingConfiguration configuration = HealthSamplingConfiguration(
-      healthDataType: HealthDataType.STEPS,
+      healthDataTypes: [
+        HealthDataType.STEPS,
+        HealthDataType.ACTIVE_ENERGY_BURNED,
+      ],
     );
     print(configuration.toJson());
     print(_encode(configuration));

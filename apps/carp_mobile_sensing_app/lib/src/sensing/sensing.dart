@@ -19,10 +19,10 @@ class Sensing {
 
   DeploymentService? deploymentService;
   SmartPhoneClientManager? client;
+  Study? study;
 
   /// The deployment running on this phone.
-  SmartphoneDeployment? get deployment =>
-      _controller?.deployment as SmartphoneDeployment?;
+  // SmartphoneDeployment? get deployment => _controller?.deployment;
 
   /// Get the latest status of the study deployment.
   StudyDeploymentStatus? get status => _status;
@@ -39,7 +39,7 @@ class Sensing {
 
   /// The list of connected devices.
   List<DeviceManager>? get runningDevices =>
-      (client != null) ? client!.deviceRegistry.devices.values.toList() : [];
+      (client != null) ? client!.deviceController.devices.values.toList() : [];
 
   /// The singleton sensing instance
   factory Sensing() => _instance;
@@ -47,7 +47,7 @@ class Sensing {
   Sensing._() {
     DomainJsonFactory();
 
-    // create and register external sampling packages
+    // Create and register external sampling packages
     SamplingPackageRegistry().register(ConnectivitySamplingPackage());
     SamplingPackageRegistry().register(ContextSamplingPackage());
     SamplingPackageRegistry().register(MediaSamplingPackage());
@@ -100,30 +100,42 @@ class Sensing {
         break;
     }
 
-    // register the CARP data manager for uploading data back to CARP
-    // this is needed in both LOCAL and CARP deployments, since a local study
+    // Register the CARP data manager for uploading data back to CARP.
+    // This is needed in both LOCAL and CARP deployments, since a local study
     // protocol may still upload to CARP
     DataManagerRegistry().register(CarpDataManager());
 
-    // create and configure a client manager for this phone
-    client = SmartPhoneClientManager(
+    // Create and configure a client manager for this phone
+    client = SmartPhoneClientManager();
+    await client?.configure(
       deploymentService: deploymentService,
-      deviceRegistry: DeviceController(),
+      deviceController: DeviceController(),
     );
 
-    await client!.configure();
+    // Define the study and add it to the client.
+    study = Study(
+      bloc.studyDeploymentId!,
+      deviceRolename!,
+    );
+    await client?.addStudy(study!);
 
-    // add and deploy this study deployment
-    _controller =
-        await client!.addStudy(bloc.studyDeploymentId!, deviceRolename!);
-    await _controller?.tryDeployment();
+    // Get the study controller and try to deploy the study.
+    //
+    // Note that if the study has already been deployed on this phone
+    // it has been cached locally in a file and the local cache will
+    // be used pr. default.
+    // If not deployed before (i.e., cached) the study deployment will be
+    // fetched from the deployment service.
+    _controller = client?.getStudyRuntime(study!);
+    await controller?.tryDeployment(useCached: true);
 
-    // configure the controller
-    await _controller?.configure();
+    // Configure the controller
+    await controller?.configure();
 
-    // controller.resume();
+    // Start samplling
+    controller?.start();
 
-    // listening on the data stream and print them as json to the debug console
+    // Listening on the data stream and print them as json to the debug console
     _controller?.data.listen((data) => print(toJsonString(data)));
 
     info('$runtimeType initialized');

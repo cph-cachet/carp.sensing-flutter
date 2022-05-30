@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2019-2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -46,154 +46,155 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // set the format of the data to upload - e.g. Open mHealth
     protocol.dataEndPoint!.dataFormat = bloc.dataFormat;
 
-    // Define which devices are used for data collection.
+    // define the master device
     Smartphone phone = Smartphone();
+    protocol.addMasterDevice(phone);
+
+    // build-in measure from sensor and device sampling packages
+    protocol.addTriggeredTask(
+        ImmediateTrigger(),
+        BackgroundTask()
+          ..addMeasures([
+            Measure(type: SensorSamplingPackage.PEDOMETER),
+            Measure(type: SensorSamplingPackage.LIGHT),
+            Measure(type: DeviceSamplingPackage.SCREEN),
+            Measure(type: DeviceSamplingPackage.MEMORY),
+            Measure(type: DeviceSamplingPackage.BATTERY),
+          ]),
+        phone);
+
+    // a random trigger - 3-8 times during time period of 8-20
+    protocol.addTriggeredTask(
+        RandomRecurrentTrigger(
+          startTime: TimeOfDay(hour: 8),
+          endTime: TimeOfDay(hour: 20),
+          minNumberOfTriggers: 3,
+          maxNumberOfTriggers: 8,
+        ),
+        BackgroundTask()
+          ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
+        phone);
+
+    // activity measure using the phone
+    protocol.addTriggeredTask(
+        ImmediateTrigger(),
+        BackgroundTask()
+          ..addMeasure(Measure(type: ContextSamplingPackage.ACTIVITY)),
+        phone);
+
+    // Define the online location service and add it as a 'device'
+    LocationService locationService = LocationService();
+    protocol.addConnectedDevice(locationService);
+
+    // Add a background task that collects location on a regular basis
+    protocol.addTriggeredTask(
+        IntervalTrigger(period: Duration(minutes: 1)),
+        BackgroundTask()
+          ..addMeasure(Measure(type: ContextSamplingPackage.LOCATION)),
+        locationService);
+
+    // Add a background task that continously collects geolocation and mobility
+    protocol.addTriggeredTask(
+        ImmediateTrigger(),
+        BackgroundTask()
+          ..addMeasure(Measure(type: ContextSamplingPackage.GEOLOCATION))
+          ..addMeasure(Measure(type: ContextSamplingPackage.MOBILITY)),
+        locationService);
+
+    // Define the online weather service and add it as a 'device'
+    WeatherService weatherService =
+        WeatherService(apiKey: '12b6e28582eb9298577c734a31ba9f4f');
+    protocol.addConnectedDevice(weatherService);
+
+    // Add a background task that collects weather every 30 miutes.
+    protocol.addTriggeredTask(
+        IntervalTrigger(period: Duration(minutes: 30)),
+        BackgroundTask()
+          ..addMeasure(Measure(type: ContextSamplingPackage.WEATHER)),
+        weatherService);
+
+    // Define the online air quality service and add it as a 'device'
+    AirQualityService airQualityService =
+        AirQualityService(apiKey: '9e538456b2b85c92647d8b65090e29f957638c77');
+    protocol.addConnectedDevice(airQualityService);
+
+    // Add a background task that air quality every 30 miutes.
+    protocol.addTriggeredTask(
+        IntervalTrigger(period: Duration(minutes: 30)),
+        BackgroundTask()
+          ..addMeasure(Measure(type: ContextSamplingPackage.AIR_QUALITY)),
+        airQualityService);
+
+    protocol.addTriggeredTask(
+        ImmediateTrigger(),
+        BackgroundTask()..addMeasure(Measure(type: MediaSamplingPackage.NOISE)),
+        phone);
+
+    protocol.addTriggeredTask(
+        ImmediateTrigger(),
+        BackgroundTask()
+          ..addMeasures([
+            Measure(type: ConnectivitySamplingPackage.CONNECTIVITY),
+            Measure(type: ConnectivitySamplingPackage.WIFI),
+            Measure(type: ConnectivitySamplingPackage.BLUETOOTH),
+          ]),
+        phone);
+
+    // // Add an automatic task that collects SMS messages in/out
+    // protocol.addTriggeredTask(
+    //     ImmediateTrigger(),
+    //     AutomaticTask()
+    //       ..addMeasures(SamplingPackageRegistry().common.getMeasureList(
+    //         types: [
+    //           CommunicationSamplingPackage.TEXT_MESSAGE,
+    //         ],
+    //       )),
+    //     phone);
+
+    // // Add an automatic task that collects the logs for:
+    // //  * in/out SMS
+    // //  * in/out phone calls
+    // //  * calendar entries
+    // protocol.addTriggeredTask(
+    //     ImmediateTrigger(),
+    //     AutomaticTask()
+    //       ..addMeasures(SamplingPackageRegistry().common.getMeasureList(
+    //         types: [
+    //           CommunicationSamplingPackage.PHONE_LOG,
+    //           CommunicationSamplingPackage.TEXT_MESSAGE_LOG,
+    //           CommunicationSamplingPackage.CALENDAR,
+    //         ],
+    //       )),
+    //     phone);
+
+    // // Add an automatic task that collects the list of installed apps
+    // // and a log of app usage activity
+    // protocol.addTriggeredTask(
+    //     PeriodicTrigger(
+    //       period: const Duration(minutes: 1),
+    //       duration: const Duration(seconds: 10),
+    //     ),
+    //     AutomaticTask()
+    //       ..addMeasures(SamplingPackageRegistry().common.getMeasureList(
+    //         types: [
+    //           AppsSamplingPackage.APPS,
+    //           AppsSamplingPackage.APP_USAGE,
+    //         ],
+    //       )),
+    //     phone);
+
+    // define the sSense device and add its measures
     ESenseDevice eSense = ESenseDevice(
       deviceName: 'eSense-0332',
       samplingRate: 10,
     );
-    // MovisensDevice movisens = MovisensDevice();
-
-    protocol
-      ..addMasterDevice(phone)
-      ..addConnectedDevice(eSense);
+    protocol.addConnectedDevice(eSense);
 
     protocol.addTriggeredTask(
         ImmediateTrigger(),
-        AutomaticTask()
-          ..measures = SamplingPackageRegistry().debug.getMeasureList(
-            types: [
-              DeviceSamplingPackage.DEVICE,
-              DeviceSamplingPackage.BATTERY,
-              SensorSamplingPackage.PEDOMETER, // 60 s
-              SensorSamplingPackage.LIGHT, // 60 s
-              ConnectivitySamplingPackage.CONNECTIVITY,
-              ConnectivitySamplingPackage.WIFI, // 60 s
-              ConnectivitySamplingPackage.BLUETOOTH, // 60 s
-              MediaSamplingPackage.NOISE, // 60 s
-              DeviceSamplingPackage.MEMORY, // 60 s
-              DeviceSamplingPackage.SCREEN, // event-based
-              ContextSamplingPackage.ACTIVITY, // event-based
-              ContextSamplingPackage.GEOLOCATION, // event-based
-              // ContextSamplingPackage.MOBILITY, // event-based
-            ],
-          ),
-        phone);
-
-    // // a random trigger - 2-8 times during time period of 8-20
-    // protocol.addTriggeredTask(
-    //     RandomRecurrentTrigger(
-    //       startTime: Time(hour: 8),
-    //       endTime: Time(hour: 20),
-    //       minNumberOfTriggers: 3,
-    //       maxNumberOfTriggers: 8,
-    //     ),
-    //     AutomaticTask()
-    //       ..measures = SamplingPackageRegistry().debug().getMeasureList(
-    //         types: [
-    //           DeviceSamplingPackage.DEVICE,
-    //         ],
-    //       ),
-    //     phone);
-
-    // protocol.addTriggeredTask(
-    //     PeriodicTrigger(
-    //       period: const Duration(minutes: 1),
-    //       duration: const Duration(seconds: 2),
-    //     ),
-    //     AutomaticTask()
-    //       ..measures = SamplingPackageRegistry().debug().getMeasureList(
-    //         types: [
-    //           ContextSamplingPackage.LOCATION,
-    //         ],
-    //       ),
-    //     phone);
-
-    protocol.addTriggeredTask(
-        PeriodicTrigger(
-          period: const Duration(minutes: 30),
-          duration: const Duration(seconds: 2),
-        ),
-        AutomaticTask()
-          ..addMeasure(WeatherMeasure(
-              type: ContextSamplingPackage.WEATHER,
-              name: 'Weather',
-              description:
-                  "Collects local weather from the WeatherAPI web service",
-              apiKey: '12b6e28582eb9298577c734a31ba9f4f'))
-          ..addMeasure(AirQualityMeasure(
-              type: ContextSamplingPackage.AIR_QUALITY,
-              name: 'Air Quality',
-              description:
-                  "Collects local air quality from the Air Quality Index (AQI) web service",
-              apiKey: '9e538456b2b85c92647d8b65090e29f957638c77')),
-        phone);
-
-    // protocol.addTriggeredTask(
-    //     PeriodicTrigger(
-    //       period: Duration(minutes: 2),
-    //       duration: Duration(seconds: 30),
-    //     ),
-    //     AutomaticTask()
-    //       ..measures = SamplingPackageRegistry().debug.getMeasureList(
-    //         types: [
-    //           MediaSamplingPackage.AUDIO,
-    //         ],
-    //       ),
-    //     phone);
-
-    // Add an automatic task that collects SMS messages in/out
-    protocol.addTriggeredTask(
-        ImmediateTrigger(),
-        AutomaticTask()
-          ..addMeasures(SamplingPackageRegistry().common.getMeasureList(
-            types: [
-              CommunicationSamplingPackage.TEXT_MESSAGE,
-            ],
-          )),
-        phone);
-
-    // Add an automatic task that collects the logs for:
-    //  * in/out SMS
-    //  * in/out phone calls
-    //  * calendar entries
-    protocol.addTriggeredTask(
-        ImmediateTrigger(),
-        AutomaticTask()
-          ..addMeasures(SamplingPackageRegistry().common.getMeasureList(
-            types: [
-              CommunicationSamplingPackage.PHONE_LOG,
-              CommunicationSamplingPackage.TEXT_MESSAGE_LOG,
-              CommunicationSamplingPackage.CALENDAR,
-            ],
-          )),
-        phone);
-
-    // Add an automatic task that collects the list of installed apps
-    // and a log of app usage activity
-    protocol.addTriggeredTask(
-        PeriodicTrigger(
-          period: const Duration(minutes: 1),
-          duration: const Duration(seconds: 10),
-        ),
-        AutomaticTask()
-          ..addMeasures(SamplingPackageRegistry().common.getMeasureList(
-            types: [
-              AppsSamplingPackage.APPS,
-              AppsSamplingPackage.APP_USAGE,
-            ],
-          )),
-        phone);
-
-    protocol.addTriggeredTask(
-        ImmediateTrigger(),
-        AutomaticTask()
-          ..measures = SamplingPackageRegistry().debug.getMeasureList(
-            types: [
-              ESenseSamplingPackage.ESENSE_BUTTON,
-              ESenseSamplingPackage.ESENSE_SENSOR,
-            ],
-          ),
+        BackgroundTask()
+          ..addMeasure(Measure(type: ESenseSamplingPackage.ESENSE_BUTTON))
+          ..addMeasure(Measure(type: ESenseSamplingPackage.ESENSE_SENSOR)),
         eSense);
 
     // // add a measure for ECG monitoring using the Movisens device
@@ -247,39 +248,39 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     }
   }
 
-  SamplingSchema getActivitySamplingSchema() {
-    var activitySchema = SamplingSchema(
-        type: SamplingSchemaType.common,
-        name: 'Activity Sampling Schema',
-        powerAware: true)
-      ..measures.addEntries([
-        MapEntry(SensorSamplingPackage.PEDOMETER,
-            Measure(type: SensorSamplingPackage.PEDOMETER)),
-        MapEntry(
-            ContextSamplingPackage.GEOLOCATION,
-            LocationMeasure(
-              type: ContextSamplingPackage.GEOLOCATION,
-              accuracy: GeolocationAccuracy.high,
-              distance: 50,
-            )),
-        MapEntry(
-            MediaSamplingPackage.NOISE,
-            NoiseMeasure(
-              type: MediaSamplingPackage.NOISE,
-              frequency: Duration(minutes: 5),
-              duration: Duration(seconds: 10),
-            )),
-        MapEntry(ContextSamplingPackage.ACTIVITY,
-            Measure(type: ContextSamplingPackage.ACTIVITY)),
-        MapEntry(
-            ContextSamplingPackage.WEATHER,
-            WeatherMeasure(
-                type: ContextSamplingPackage.WEATHER,
-                apiKey: '12kbfWErlk5j923yr5oihfw')),
-      ]);
+  // SamplingSchema getActivitySamplingSchema() {
+  //   var activitySchema = SamplingSchema(
+  //       type: SamplingSchemaType.common,
+  //       name: 'Activity Sampling Schema',
+  //       powerAware: true)
+  //     ..measures.addEntries([
+  //       MapEntry(SensorSamplingPackage.PEDOMETER,
+  //           Measure(type: SensorSamplingPackage.PEDOMETER)),
+  //       MapEntry(
+  //           ContextSamplingPackage.GEOLOCATION,
+  //           LocationMeasure(
+  //             type: ContextSamplingPackage.GEOLOCATION,
+  //             accuracy: GeolocationAccuracy.high,
+  //             distance: 50,
+  //           )),
+  //       MapEntry(
+  //           MediaSamplingPackage.NOISE,
+  //           NoiseMeasure(
+  //             type: MediaSamplingPackage.NOISE,
+  //             frequency: Duration(minutes: 5),
+  //             duration: Duration(seconds: 10),
+  //           )),
+  //       MapEntry(ContextSamplingPackage.ACTIVITY,
+  //           Measure(type: ContextSamplingPackage.ACTIVITY)),
+  //       MapEntry(
+  //           ContextSamplingPackage.WEATHER,
+  //           WeatherMeasure(
+  //               type: ContextSamplingPackage.WEATHER,
+  //               apiKey: '12kbfWErlk5j923yr5oihfw')),
+  //     ]);
 
-    return activitySchema;
-  }
+  //   return activitySchema;
+  // }
 
   Future<bool> saveStudyProtocol(String studyId, StudyProtocol protocol) async {
     throw UnimplementedError();

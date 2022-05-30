@@ -84,7 +84,9 @@ class MemoryProbe extends IntervalDatumProbe {
   }
 
   Future<Datum?> getDatum() async => FreeMemoryDatum(
-      SysInfo.getFreePhysicalMemory(), SysInfo.getFreeVirtualMemory());
+        SysInfo.getFreePhysicalMemory(),
+        SysInfo.getFreeVirtualMemory(),
+      );
 }
 
 /// A probe that collects the device info about this device.
