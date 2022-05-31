@@ -8,7 +8,7 @@ class AirQualityProbe extends DatumProbe {
 
   @override
   void onInitialize() =>
-      LocationManager().configure().then((_) => super.onResume());
+      LocationManager().configure().then((_) => super.onInitialize());
 
   /// Returns the [AirQualityDatum] based on the location of the phone.
   Future<Datum> getDatum() async {

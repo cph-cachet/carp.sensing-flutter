@@ -13,7 +13,7 @@ The architecture of the app is illustrated below. It follows the [BLoC architect
 which is recommended by the [Flutter Team](https://www.youtube.com/watch?v=PLHln7wHgPE).
 
 
-![Data Visualization page](documentation/architecture.png)
+![Bloc Architecture](documentation/architecture.png)
 
 The basic architecture holds a singleton `Sensing` class responsible for handling sensing via the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package. 
 All data is handled by a singleton `BloC` which is the only way the UI models can access and modify
@@ -29,50 +29,95 @@ Since the BLoC is the controller of the entire app, let's start with this class.
 
 ````dart
 class SensingBLoC {
-  final String username = "user";
-  final String password = "...";
-  final String userId = "user@cachet.dk";
-  final String uri = "https://cans.cachet.dk:443";
-  final String testStudyId = "2";
+  static const String STUDY_DEPLOYMENT_ID_KEY = 'study_deployment_id';
 
-  final Sensing sensing = Sensing();
-  final StudyManager manager = LocalStudyManager();
+  String? _studyDeploymentId;
 
-  Study _study;
-  Study get study => _study;
+  /// Returns the study deployment id for the currently running deployment.
+  /// Returns the deployment id cached locally on the phone (if available).
+  /// Returns `null` if no study is deployed (yet).
+  String? get studyDeploymentId => (_studyDeploymentId ??=
+      Settings().preferences?.getString(STUDY_DEPLOYMENT_ID_KEY));
 
-  /// Is sensing running, i.e. has the study executor been resumed?
-  bool get isRunning => (sensing.controller != null) && sensing.controller.executor.state == ProbeState.resumed;
-
-  /// Get the study for this app.
-  StudyModel get studyModel => study != null ? StudyModel(study) : null;
-
-  /// Get a list of running probes
-  Iterable<ProbeModel> get runningProbes => sensing.runningProbes.map((probe) => ProbeModel(probe));
-
-  /// Get the data model for this study.
-  DataModel get data => null;
-
-  void init() async {
-    _study ??= await manager.getStudy(testStudyId);
-    await sensing.init();
+  /// Set the study deployment id for the currently running deployment.
+  /// This study deployment id will be cached locally on the phone.
+  set studyDeploymentId(String? id) {
+    assert(
+        id != null,
+        'Cannot set the study deployment id to null in Settings. '
+        "Use the 'eraseStudyDeployment()' method to erase study deployment information.");
+    _studyDeploymentId = id;
+    Settings().preferences?.setString(STUDY_DEPLOYMENT_ID_KEY, id!);
   }
 
-  void resume() async => sensing.controller.resume();
-  void pause() => sensing.controller.pause();
-  void stop() async => sensing.stop();
-  void dispose() async => sensing.stop();
+  /// Erase all study deployment information cached locally on this phone.
+  Future<void> eraseStudyDeployment() async {
+    _studyDeploymentId = null;
+    await Settings().preferences!.remove(STUDY_DEPLOYMENT_ID_KEY);
+  }
+
+  SmartphoneDeployment? get deployment => Sensing().controller?.deployment;
+  StudyDeploymentModel? _model;
+
+  /// What kind of deployment are we running - local or CARP?
+  DeploymentMode deploymentMode = DeploymentMode.LOCAL;
+
+  /// The preferred format of the data to be uploaded according to
+  /// [NameSpace]. Default using the [NameSpace.CARP].
+  String dataFormat = NameSpace.CARP;
+
+  /// Is sensing running, i.e. has the study executor been resumed?
+  bool get isRunning =>
+      (Sensing().controller != null) &&
+      Sensing().controller!.executor!.state == ExecutorState.resumed;
+
+  /// Get the study for this app.
+  StudyDeploymentModel get studyDeploymentModel =>
+      _model ??= StudyDeploymentModel(deployment!);
+
+  /// Get a list of running probes
+  Iterable<ProbeModel> get runningProbes =>
+      Sensing().runningProbes.map((probe) => ProbeModel(probe));
+
+  /// Get a list of running devices
+  Iterable<DeviceModel> get runningDevices =>
+      Sensing().runningDevices!.map((device) => DeviceModel(device));
+
+  void connectToDevice(DeviceModel device) {
+    Sensing().client?.deviceController.devices[device.type!]!.connect();
+  }
+
+  Future initialize({
+    DeploymentMode deploymentMode = DeploymentMode.LOCAL,
+    String dataFormat = NameSpace.CARP,
+  }) async {
+    await Settings().init();
+    Settings().debugLevel = DebugLevel.DEBUG;
+    this.deploymentMode = deploymentMode;
+    this.dataFormat = dataFormat;
+
+    info('$runtimeType initialized');
+  }
+
+  void resume() async => Sensing().controller?.executor?.resume();
+  void pause() => Sensing().controller?.executor?.pause();
+  void stop() async => Sensing().controller?.stop();
+  void dispose() async => Sensing().controller?.stop();
 }
 
 final bloc = SensingBLoC();
 ````
 
-The BLoC basically plays two roles; it accesses data by returning model objects (such as `StudyModel`)
-and it exposes business logic like the sensing life cycle events (`init`, `start`, `stop`, etc.).
+The BLoC basically plays two roles; it accesses data by returning model objects (such as `ProbeModel`)
+and it exposes business logic like the sensing life cycle events (`initialize`, `resume`, `pause`, etc.).
 Note that the singleton `bloc` variable is instantiated, which makes the BLoC accessible in the entire app.
 
-We will not discuss the [`Sensing`](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/carp_mobile_sensing_app/lib/src/sensing/sensing.dart) 
-class here. It basically implements a [`Study`](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/core/Study-class.html) and sets up the sensing according to the
+Set up and configuration of sensing is done in the [`Sensing`](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/apps/carp_mobile_sensing_app/lib/src/sensing/sensing.dart) class. 
+Depending on the "deploymenet mode" (local or using CARP), sensing is initialized using the [`LocalStudyProtocolManager`](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/apps/carp_mobile_sensing_app/lib/src/sensing/local_study_protocol_mananger.dart) or the [`CustomProtocolDeploymentService`](https://pub.dev/documentation/carp_backend/latest/carp_backend/CustomProtocolDeploymentService-class.html), respectivly. 
+
+
+
+implements a [`Study`](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/core/Study-class.html) and sets up the sensing according to the
 [documentation](https://github.com/cph-cachet/carp.sensing-flutter/wiki) of the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package.
 
  ## UI Models

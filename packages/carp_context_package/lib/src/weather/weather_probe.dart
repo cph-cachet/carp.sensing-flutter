@@ -8,14 +8,10 @@ class WeatherProbe extends DatumProbe {
 
   @override
   void onInitialize() =>
-      LocationManager().configure().then((_) => super.onResume());
-
-  Future<void> onResume() async {
-    await LocationManager().configure();
-    super.onResume();
-  }
+      LocationManager().configure().then((_) => super.onInitialize());
 
   /// Returns the [WeatherDatum] for this location.
+  @override
   Future<Datum> getDatum() async {
     if (deviceManager.service != null) {
       try {
@@ -48,9 +44,9 @@ class WeatherProbe extends DatumProbe {
           ..temperature = weather.temperature!.celsius
           ..tempMin = weather.tempMin!.celsius
           ..tempMax = weather.tempMax!.celsius;
-      } catch (err) {
-        warning('$runtimeType - Error getting weather - $err');
-        return ErrorDatum('$runtimeType Exception: $err');
+      } catch (error) {
+        warning('$runtimeType - Error getting weather - $error');
+        return ErrorDatum('$runtimeType Exception: $error');
       }
     }
     return ErrorDatum('$runtimeType - no service available.');

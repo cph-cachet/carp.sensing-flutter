@@ -136,7 +136,7 @@ class Sensing {
     controller?.start();
 
     // Listening on the data stream and print them as json to the debug console
-    _controller?.data.listen((data) => print(toJsonString(data)));
+    controller?.data.listen((data) => print(toJsonString(data)));
 
     info('$runtimeType initialized');
   }

@@ -59,9 +59,9 @@ class DeviceModel {
         ESenseDevice.DEVICE_TYPE:
             Icon(Icons.headset, size: 50, color: CACHET.CACHET_BLUE),
         LocationService.DEVICE_TYPE:
-            Icon(Icons.location_on, size: 50, color: CACHET.CYAN),
+            Icon(Icons.location_on, size: 50, color: CACHET.GREEN),
         AirQualityService.DEVICE_TYPE:
-            Icon(Icons.location_on, size: 50, color: CACHET.CYAN),
+            Icon(Icons.air, size: 50, color: CACHET.LIGHT_GREEN),
         WeatherService.DEVICE_TYPE:
             Icon(Icons.cloud, size: 50, color: CACHET.DARK_BLUE),
       };
