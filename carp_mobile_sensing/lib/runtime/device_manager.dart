@@ -39,7 +39,7 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
 
   /// Change the runtime status of this device.
   set status(DeviceStatus newStatus) {
-    debug('$runtimeType - setting device status: $status');
+    debug('$runtimeType - setting device status: $newStatus');
     _status = newStatus;
     _eventController.add(newStatus);
   }

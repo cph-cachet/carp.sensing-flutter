@@ -1,10 +1,5 @@
 part of mobile_sensing_app;
 
-class DevicesModel {
-  List<DeviceModel> _devices = [];
-  List<DeviceModel> get devices => _devices;
-}
-
 class DeviceModel {
   DeviceManager deviceManager;
   String? get type => deviceManager.type;

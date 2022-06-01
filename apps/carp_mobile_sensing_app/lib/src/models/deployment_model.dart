@@ -10,7 +10,6 @@ class StudyDeploymentModel {
   Image get image => Image.asset('assets/study.png');
   String get studyDeploymentId => deployment.studyDeploymentId;
   String get userID => deployment.userId ?? '';
-  // String get samplingStrategy => 'NORMAL';
   String get dataEndpoint => deployment.dataEndPoint.toString();
 
   /// Events on the state of the study executor

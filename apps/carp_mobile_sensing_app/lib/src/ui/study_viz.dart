@@ -1,20 +1,21 @@
 part of mobile_sensing_app;
 
-class StudyVisualization extends StatefulWidget {
-  const StudyVisualization({Key? key}) : super(key: key);
+class StudyDeploymentPage extends StatefulWidget {
+  const StudyDeploymentPage({Key? key}) : super(key: key);
   static const String routeName = '/study';
 
-  _StudyVizState createState() => _StudyVizState(bloc.studyDeploymentModel);
+  _StudyDeploymentPageState createState() =>
+      _StudyDeploymentPageState(bloc.studyDeploymentModel);
 }
 
-class _StudyVizState extends State<StudyVisualization> {
+class _StudyDeploymentPageState extends State<StudyDeploymentPage> {
   static final GlobalKey<ScaffoldState> _scaffoldKey =
       GlobalKey<ScaffoldState>();
   final double _appBarHeight = 256.0;
 
   final StudyDeploymentModel studyDeploymentModel;
 
-  _StudyVizState(this.studyDeploymentModel) : super();
+  _StudyDeploymentPageState(this.studyDeploymentModel) : super();
 
   Widget build(BuildContext context) =>
       _buildStudyVisualization(context, bloc.studyDeploymentModel);

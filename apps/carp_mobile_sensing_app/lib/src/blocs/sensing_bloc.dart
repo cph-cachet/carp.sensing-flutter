@@ -29,7 +29,6 @@ class SensingBLoC {
   }
 
   SmartphoneDeployment? get deployment => Sensing().controller?.deployment;
-  StudyDeploymentModel? _model;
 
   /// What kind of deployment are we running - local or CARP?
   DeploymentMode deploymentMode = DeploymentMode.LOCAL;
@@ -38,12 +37,9 @@ class SensingBLoC {
   /// [NameSpace]. Default using the [NameSpace.CARP].
   String dataFormat = NameSpace.CARP;
 
-  /// Is sensing running, i.e. has the study executor been resumed?
-  bool get isRunning =>
-      (Sensing().controller != null) &&
-      Sensing().controller!.executor!.state == ExecutorState.resumed;
+  StudyDeploymentModel? _model;
 
-  /// Get the study for this app.
+  /// Get the study deployment model for this app.
   StudyDeploymentModel get studyDeploymentModel =>
       _model ??= StudyDeploymentModel(deployment!);
 
@@ -55,10 +51,7 @@ class SensingBLoC {
   Iterable<DeviceModel> get runningDevices =>
       Sensing().runningDevices!.map((device) => DeviceModel(device));
 
-  void connectToDevice(DeviceModel device) {
-    Sensing().client?.deviceController.devices[device.type!]!.connect();
-  }
-
+  /// Initialize the BLoC.
   Future initialize({
     DeploymentMode deploymentMode = DeploymentMode.LOCAL,
     String dataFormat = NameSpace.CARP,
@@ -71,10 +64,31 @@ class SensingBLoC {
     info('$runtimeType initialized');
   }
 
+  /// Connect to a [device] which is part of the [deployment].
+  void connectToDevice(DeviceModel device) =>
+      Sensing().client?.deviceController.devices[device.type!]!.connect();
+
   void resume() async => Sensing().controller?.executor?.resume();
   void pause() => Sensing().controller?.executor?.pause();
   void stop() async => Sensing().controller?.stop();
   void dispose() async => Sensing().controller?.stop();
+
+  /// Is sensing running, i.e. has the study executor been resumed?
+  bool get isRunning =>
+      (Sensing().controller != null) &&
+      Sensing().controller!.executor!.state == ExecutorState.resumed;
 }
 
 final bloc = SensingBLoC();
+
+/// How to deploy a study.
+enum DeploymentMode {
+  /// Use a local study protocol & deployment and store data locally in a file.
+  LOCAL,
+
+  /// Use the CARP production server to get the study deployment and store data.
+  CARP_PRODUCTION,
+
+  /// Use the CARP staging server to get the study deployment and store data.
+  CARP_STAGING,
+}

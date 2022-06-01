@@ -23,18 +23,15 @@ import 'package:carp_backend/carp_backend.dart';
 
 part 'src/app.dart';
 part 'src/sensing/sensing.dart';
-part 'src/sensing/study_deployment_manager.dart';
-part 'src/models/probe_models.dart';
-part 'src/models/device_models.dart';
+part 'src/models/probe_model.dart';
+part 'src/models/device_model.dart';
 part 'src/models/probe_description.dart';
 part 'src/models/deployment_model.dart';
-part 'src/models/data_models.dart';
 part 'src/blocs/sensing_bloc.dart';
 part 'src/blocs/carp_backend.dart';
 part 'src/sensing/local_study_protocol_mananger.dart';
 part 'src/ui/probe_list.dart';
 part 'src/ui/device_list.dart';
-part 'src/ui/data_viz.dart';
 part 'src/ui/study_viz.dart';
 part 'src/ui/cachet.dart';
 

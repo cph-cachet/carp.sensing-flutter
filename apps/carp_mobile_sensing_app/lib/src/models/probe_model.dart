@@ -1,10 +1,5 @@
 part of mobile_sensing_app;
 
-class ProbesModel {
-  List<ProbeModel> _probes = [];
-  List<ProbeModel> get probes => _probes;
-}
-
 class ProbeModel {
   Probe probe;
   String? get type => probe.type;

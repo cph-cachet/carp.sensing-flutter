@@ -92,8 +92,8 @@ class LocationManager {
         accuracy: location.LocationAccuracy.values[
             configuration?.accuracy.index ??
                 GeolocationAccuracy.balanced.index],
-        distanceFilter: configuration?.distance,
-        interval: configuration?.interval.inMilliseconds,
+        distanceFilter: configuration?.distance ?? 0,
+        interval: configuration?.interval.inMilliseconds ?? 1000,
       );
 
       await locationManager.changeNotificationOptions(
