@@ -141,7 +141,7 @@ class TriggeredTaskExecutor extends AggregateExecutor<TriggeredTask> {
     executors.add(triggerExecutor!);
     triggerExecutor?.initialize(trigger, deployment!);
 
-    // get the task executor and add it to the trigger executor stream
+    // get the task executor and add it to the trigger executor's stream
     taskExecutor = getTaskExecutor(task);
     triggerExecutor?.group.add(taskExecutor!.data);
     triggerExecutor?.executors.add(taskExecutor!);

@@ -86,7 +86,7 @@ abstract class UserTask {
 
   /// The [TaskExecutor] that is to be executed once the user
   /// want to start this task.
-  TaskExecutor get executor => _executor._taskExecutor;
+  TaskExecutor get executor => _executor.taskExecutor;
 
   /// Create a new [UserTask]. If [triggerTime] is not specified,
   /// it is set to `now`, i.e. to be triggered when created.

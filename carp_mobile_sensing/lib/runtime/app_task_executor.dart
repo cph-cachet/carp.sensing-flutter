@@ -25,19 +25,18 @@ part of runtime;
 /// and such factories can be registered in the [AppTaskController]
 /// using the `registerUserTaskFactory` method.
 class AppTaskExecutor<TConfig extends AppTask> extends TaskExecutor<TConfig> {
-  late TaskExecutor _taskExecutor;
+  /// The task executor which can be used to execute this user task once
+  /// activated.
+  TaskExecutor taskExecutor = BackgroundTaskExecutor();
 
   AppTaskExecutor() : super() {
-    // create an embedded executor that later can be used to execute this task
-    _taskExecutor = BackgroundTaskExecutor();
-
     // add the events from the embedded executor to the overall stream of events
-    group.add(_taskExecutor.data);
+    group.add(taskExecutor.data);
   }
 
   @override
   void onInitialize() {
-    // _taskExecutor.initialize(configuration!, deployment);
+    // taskExecutor.initialize(configuration!, deployment);
   }
 
   @override
@@ -53,7 +52,7 @@ class AppTaskExecutor<TConfig extends AppTask> extends TaskExecutor<TConfig> {
 
   @override
   Future<void> onStop() async {
-    _taskExecutor.stop();
+    taskExecutor.stop();
     await super.onStop();
   }
 }
