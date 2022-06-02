@@ -24,8 +24,9 @@ abstract class DeviceDataCollector<TDeviceRegistration, TDeviceDescriptor> {
   /// Get a unique id for this device.
   String get id;
 
-  /// Determines whether a connection can be made at this point in time to the device.
-  bool canConnect();
+  /// Determines whether a connection can be made at this point in time to
+  /// the device.
+  Future<bool> canConnect();
 
   DeviceDataCollector([
     this.type,

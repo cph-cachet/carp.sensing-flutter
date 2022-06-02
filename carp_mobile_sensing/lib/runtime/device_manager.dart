@@ -112,20 +112,22 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
   Future<bool> onDisconnect();
 }
 
-// TODO - how to ensure an online service is connected?
-
 /// A [DeviceManager] for an online service.
 abstract class OnlineServiceManager<
         TDeviceRegistration extends DeviceRegistration,
         TDeviceDescriptor extends OnlineService>
-    extends DeviceManager<TDeviceRegistration, TDeviceDescriptor> {}
+    extends DeviceManager<TDeviceRegistration, TDeviceDescriptor> {
+  @override
+  Future<bool> canConnect() async =>
+      true; // can always connect to an online service.
+}
 
 /// A [DeviceManager] for a hardware device.
 abstract class HardwareDeviceManager<
         TDeviceRegistration extends DeviceRegistration,
         TDeviceDescriptor extends DeviceDescriptor>
     extends DeviceManager<TDeviceRegistration, TDeviceDescriptor> {
-  /// The runtime battery level of this device.
+  /// The runtime battery level of this hardware device.
   int? get batteryLevel;
 }
 
@@ -158,13 +160,13 @@ class SmartphoneDeviceManager
   int? get batteryLevel => _batteryLevel;
 
   @override
-  bool canConnect() => true; // can always connect to the phone
+  Future<bool> canConnect() async => true; // can always connect to the phone
 
   @override
-  Future<bool> onConnect() async => true; // always connected to the phone
+  Future<bool> onConnect() async => true;
 
   @override
-  Future<bool> onDisconnect() async => true; // always connected to the phone
+  Future<bool> onDisconnect() async => true;
 }
 
 abstract class BTLEDeviceManager<TDeviceRegistration extends DeviceRegistration,

@@ -208,8 +208,8 @@ class SmartphoneDeploymentController extends StudyRuntime {
 
     // initialize all devices from the master deployment, incl. the master device
     deviceRegistry.initializeDevices(deployment!);
-    // and connect imediately to the master device (this phone)
-    await deviceRegistry.getDevice(Smartphone.DEVICE_TYPE)!.connect();
+    // and connect imediately to all connectable devices, incl. this phone
+    await deviceRegistry.connectAllConnectableDevices();
 
     // initialize the app task controller singleton
     await AppTaskController()

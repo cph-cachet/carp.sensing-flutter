@@ -13,12 +13,9 @@ part of runtime;
 ///
 class Settings {
   static const String USER_ID_KEY = 'user_id';
-  // static const String STUDY_START_KEY = 'study_start';
-  // static const String STUDY_DEPLOYMENT_ID_KEY = 'study_deployment_id';
 
   static const String CARP_DATA_FILE_PATH = 'data';
   static const String CARP_RESOURCE_FILE_PATH = 'resources';
-  // static const String CARP_QUEUE_FILE_PATH = 'queue';
   static const String CARP_DEPLOYMENT_FILE_PATH = 'deployments';
 
   static final Settings _instance = Settings._();
@@ -143,67 +140,6 @@ class Settings {
     info('Time zone set to $timezone');
     info('$runtimeType initialized');
   }
-
-  // String? _studyDeploymentId;
-
-  // /// Returns the study deployment id for the currently running deployment.
-  // /// Returns the deployment id cached locally on the phone (if available).
-  // /// Returns `null` if no study is deployed (yet).
-  // String? get studyDeploymentId =>
-  //     (_studyDeploymentId ??= preferences!.getString(STUDY_DEPLOYMENT_ID_KEY));
-
-  // /// Set the study deployment id for the currently running deployment.
-  // /// This study deployment id will be cached locally on the phone.
-  // set studyDeploymentId(String? id) {
-  //   assert(
-  //       id != null,
-  //       'Cannot set the study deployment id to null in Settings. '
-  //       "Use the 'eraseStudyDeployment()' method to erase study deployment information.");
-  //   _studyDeploymentId = id;
-  //   preferences!.setString(STUDY_DEPLOYMENT_ID_KEY, id!);
-  // }
-
-  // /// Erase all study deployment information cached locally on this phone.
-  // Future<void> eraseStudyDeployment() async {
-  //   _studyDeploymentId = null;
-  //   _studyDeploymentStartTime = null;
-  //   await preferences!.remove(STUDY_DEPLOYMENT_ID_KEY);
-  //   await preferences!.remove(_studyDeploymentStartTimesKey);
-  // }
-
-  // DateTime? _studyDeploymentStartTime;
-  // String get _studyDeploymentStartTimesKey =>
-  //     '$studyDeploymentId.$STUDY_START_KEY'.toLowerCase();
-
-  // /// The timestamp (in UTC) when the current study deployment was started on
-  // /// this phone.
-  // ///
-  // /// By using the [markStudyDeploymentAsStarted] method, this timestamp is save
-  // /// on the phone the first time a study is deployed and persistently saved
-  // /// across app restarts.
-  // ///
-  // /// Returns `null` if no timestamp is found. In this case, consider calling
-  // /// [markStudyDeploymentAsStarted].
-  // Future<DateTime?> get studyDeploymentStartTime async {
-  //   assert(preferences != null,
-  //       "Setting is not initialized. Call 'Setting().init()' first.");
-  //   assert(studyDeploymentId != null,
-  //       "Study deployment id is not set. Assign the 'studyDeploymentId' first.");
-  //   if (_studyDeploymentStartTime == null) {
-  //     String? str = preferences!.getString(_studyDeploymentStartTimesKey);
-  //     _studyDeploymentStartTime = (str != null) ? DateTime.parse(str) : null;
-  //   }
-  //   return _studyDeploymentStartTime;
-  // }
-
-  // /// Mark the study deployment as started.
-  // Future<void> markStudyDeploymentAsStarted() async {
-  //   _studyDeploymentStartTime = DateTime.now().toUtc();
-  //   await preferences!.setString(
-  //       _studyDeploymentStartTimesKey, _studyDeploymentStartTime.toString());
-  //   info(
-  //       '$runtimeType - Study deployment start time set to $_studyDeploymentStartTime');
-  // }
 
   String? _userId;
 

@@ -100,7 +100,7 @@ class ESenseDeviceManager
   int get batteryLevel => ((1.19 * _voltageLevel - 3.91) * 100).toInt();
 
   @override
-  bool canConnect() => status == DeviceStatus.paired;
+  Future<bool> canConnect() async => status == DeviceStatus.paired;
 
   @override
   Future<bool> onConnect() async {
@@ -129,7 +129,7 @@ class ESenseDeviceManager
           });
 
           // set up a timer that asks for the voltage level
-          Timer.periodic(const Duration(minutes: 1), (_) {
+          Timer.periodic(const Duration(minutes: 2), (_) {
             if (status == DeviceStatus.connected) {
               debug('$runtimeType - requesting voltage...');
               manager?.getBatteryVoltage();

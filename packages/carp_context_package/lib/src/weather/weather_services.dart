@@ -49,9 +49,6 @@ class WeatherServiceManager
   void onInitialize(WeatherService service) {}
 
   @override
-  bool canConnect() => true;
-
-  @override
   Future<bool> onConnect() async => (deviceDescriptor?.apiKey != null)
       ? (service = WeatherFactory(deviceDescriptor!.apiKey)) != null
       : false;

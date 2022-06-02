@@ -92,6 +92,17 @@ class DeviceController implements DeviceDataCollectorFactory {
     }
   }
 
+  /// A convinient method for connecting all connectable devices available
+  /// in each [SamplingPackage] that has been registred in the
+  /// [SamplingPackageRegistry].
+  Future<void> connectAllConnectableDevices() async {
+    for (var package in SamplingPackageRegistry().packages) {
+      if (await package.deviceManager.canConnect()) {
+        await getDevice(package.deviceType)?.connect();
+      }
+    }
+  }
+
   /// A string representation of all [devices].
   String devicesToString() =>
       _devices.keys.map((key) => key.split('.').last).toString();

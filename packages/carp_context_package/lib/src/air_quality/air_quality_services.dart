@@ -49,9 +49,6 @@ class AirQualityServiceManager
   void onInitialize(AirQualityService service) {}
 
   @override
-  bool canConnect() => true;
-
-  @override
   Future<bool> onConnect() async => (deviceDescriptor?.apiKey != null)
       ? (service = AirQuality(deviceDescriptor!.apiKey)) != null
       : false;

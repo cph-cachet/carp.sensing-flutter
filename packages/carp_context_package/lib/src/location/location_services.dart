@@ -87,7 +87,8 @@ class LocationServiceManager
   void onInitialize(LocationService service) {}
 
   @override
-  bool canConnect() => true;
+  bool canConnect() =>
+      true; // asume we alway can connect to the location service locally on the phone
 
   @override
   Future<bool> onConnect() async {

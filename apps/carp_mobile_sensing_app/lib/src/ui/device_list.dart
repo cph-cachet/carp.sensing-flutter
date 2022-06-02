@@ -21,7 +21,6 @@ class _DevicesListState extends State<DevicesList> {
       body: StreamBuilder<UserTask>(
         stream: AppTaskController().userTaskEvents,
         builder: (context, AsyncSnapshot<UserTask> snapshot) {
-          print('>> $snapshot');
           return Scrollbar(
             child: ListView.builder(
               itemCount: devices.length,
