@@ -13,7 +13,7 @@ The architecture of the app is illustrated below. It follows the [BLoC architect
 which is recommended by the [Flutter Team](https://www.youtube.com/watch?v=PLHln7wHgPE).
 
 
-![Bloc Architecture](documentation/architecture_2.png)
+![Bloc Architecture](documentation/architecture_3.png)
 
 The basic architecture holds a singleton `Sensing` class responsible for handling sensing via the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package. 
 All business logic is handled by a singleton `BloC` which is the only way the UI models can access and modify data or initiate life cycle events (like pausing and resuming sensing).
