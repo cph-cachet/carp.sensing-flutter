@@ -5,8 +5,8 @@ The app sets up a `Study` that uses a set of `Device`s and starts a set of `Prob
 (from left to right) the Study Visualization page, the Probe List page, and the Device List page.
 
 
-![Study Visualization page](documentation/study_viz_3.jpg) _ 
-![Probe List page](documentation/probe_list_3.jpg) _ 
+![Study Visualization page](documentation/study_viz_3.jpg) __ 
+![Probe List page](documentation/probe_list_3.jpg) __ 
 ![Device List page](documentation/device_list_3.jpg) 
 
 
