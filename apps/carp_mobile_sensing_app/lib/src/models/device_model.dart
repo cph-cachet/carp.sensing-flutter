@@ -13,9 +13,12 @@ class DeviceModel {
   String? get name => deviceTypeName[type!];
 
   /// A printer-friendly description of this device.
-  //String get description => deviceTypeDescription[type];
   String get description =>
-      '${deviceTypeDescription[type!]} - $statusString\n$batteryLevel% battery remaining.';
+      deviceTypeDescription[type!] ??
+      '' +
+          ((deviceManager is HardwareDeviceManager)
+              ? ' - $statusString\n$batteryLevel% battery remaining.'
+              : '');
 
   String get statusString => status.toString().split('.').last;
 

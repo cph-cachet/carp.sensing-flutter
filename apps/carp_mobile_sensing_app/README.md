@@ -4,9 +4,9 @@ The CARP Mobile Sensing App provides an example on how to use the [`carp_mobile_
 The app sets up a `Study` that uses a set of `Device`s and starts a set of `Probe`s. The UI of the app is shown below, showing
 (from left to right) the Study Visualization page, the Probe List page, and the Device List page.
 
-![Study Visualization page](documentation/study_viz_2.jpeg) 
-![Probe List page](documentation/probe_list_2.jpeg) 
-![Device List page](documentation/device_list_2.jpeg) 
+![Study Visualization page](documentation/study_viz_2.jpg) 
+![Probe List page](documentation/probe_list_2.jpg) 
+![Device List page](documentation/device_list_2.jpg) 
 
 
 The architecture of the app is illustrated below. It follows the [BLoC architecture](https://medium.com/flutterpub/architecting-your-flutter-project-bd04e144a8f1),
@@ -27,33 +27,11 @@ Since the BLoC is the controller of the entire app, let's start with this class.
 
 ````dart
 class SensingBLoC {
-  static const String STUDY_DEPLOYMENT_ID_KEY = 'study_deployment_id';
 
-  String? _studyDeploymentId;
+  /// The study deployment id for the currently running deployment.
+  String? studyDeploymentId;
 
-  /// Returns the study deployment id for the currently running deployment.
-  /// Returns the deployment id cached locally on the phone (if available).
-  /// Returns `null` if no study is deployed (yet).
-  String? get studyDeploymentId => (_studyDeploymentId ??=
-      Settings().preferences?.getString(STUDY_DEPLOYMENT_ID_KEY));
-
-  /// Set the study deployment id for the currently running deployment.
-  /// This study deployment id will be cached locally on the phone.
-  set studyDeploymentId(String? id) {
-    assert(
-        id != null,
-        'Cannot set the study deployment id to null in Settings. '
-        "Use the 'eraseStudyDeployment()' method to erase study deployment information.");
-    _studyDeploymentId = id;
-    Settings().preferences?.setString(STUDY_DEPLOYMENT_ID_KEY, id!);
-  }
-
-  /// Erase all study deployment information cached locally on this phone.
-  Future<void> eraseStudyDeployment() async {
-    _studyDeploymentId = null;
-    await Settings().preferences!.remove(STUDY_DEPLOYMENT_ID_KEY);
-  }
-
+  /// The [SmartphoneDeployment] deployed on this phone.
   SmartphoneDeployment? get deployment => Sensing().controller?.deployment;
 
   /// What kind of deployment are we running - local or CARP?
@@ -97,7 +75,6 @@ class SensingBLoC {
   void resume() async => Sensing().controller?.executor?.resume();
   void pause() => Sensing().controller?.executor?.pause();
   void stop() async => Sensing().controller?.stop();
-  void dispose() async => Sensing().controller?.stop();
 
   /// Is sensing running, i.e. has the study executor been resumed?
   bool get isRunning =>

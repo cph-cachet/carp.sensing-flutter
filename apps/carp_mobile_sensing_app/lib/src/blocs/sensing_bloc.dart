@@ -5,7 +5,7 @@ class SensingBLoC {
 
   String? _studyDeploymentId;
 
-  /// Returns the study deployment id for the currently running deployment.
+  /// The study deployment id for the currently running deployment.
   /// Returns the deployment id cached locally on the phone (if available).
   /// Returns `null` if no study is deployed (yet).
   String? get studyDeploymentId => (_studyDeploymentId ??=
@@ -28,6 +28,7 @@ class SensingBLoC {
     await Settings().preferences!.remove(STUDY_DEPLOYMENT_ID_KEY);
   }
 
+  /// The [SmartphoneDeployment] deployed on this phone.
   SmartphoneDeployment? get deployment => Sensing().controller?.deployment;
 
   /// What kind of deployment are we running - local or CARP?
@@ -71,7 +72,6 @@ class SensingBLoC {
   void resume() async => Sensing().controller?.executor?.resume();
   void pause() => Sensing().controller?.executor?.pause();
   void stop() async => Sensing().controller?.stop();
-  void dispose() async => Sensing().controller?.stop();
 
   /// Is sensing running, i.e. has the study executor been resumed?
   bool get isRunning =>

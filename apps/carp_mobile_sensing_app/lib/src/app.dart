@@ -66,12 +66,8 @@ class CarpMobileSensingAppState extends State<CarpMobileSensingApp> {
     DevicesList(),
   ];
 
-  void initState() {
-    super.initState();
-  }
-
   void dispose() {
-    bloc.dispose();
+    bloc.stop();
     super.dispose();
   }
 
@@ -99,12 +95,6 @@ class CarpMobileSensingAppState extends State<CarpMobileSensingApp> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-    });
-  }
-
-  void stop() {
-    setState(() {
-      if (bloc.isRunning) bloc.stop();
     });
   }
 
