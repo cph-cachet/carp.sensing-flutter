@@ -4,9 +4,9 @@ The CARP Mobile Sensing App provides an example on how to use the [`carp_mobile_
 The app sets up a `Study` that uses a set of `Device`s and starts a set of `Probe`s. The UI of the app is shown below, showing
 (from left to right) the Study Visualization page, the Probe List page, and the Device List page.
 
-![Study Visualization page](documentation/study_viz_2.jpg) 
-![Probe List page](documentation/probe_list_2.jpg) 
-![Device List page](documentation/device_list_2.jpg) 
+![Study Visualization page](documentation/study_viz_3.jpg) 
+![Probe List page](documentation/probe_list_3.jpg) 
+![Device List page](documentation/device_list_3.jpg) 
 
 
 The architecture of the app is illustrated below. It follows the [BLoC architecture](https://medium.com/flutterpub/architecting-your-flutter-project-bd04e144a8f1),
