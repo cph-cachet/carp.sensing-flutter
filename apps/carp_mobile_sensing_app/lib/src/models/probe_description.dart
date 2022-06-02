@@ -175,7 +175,7 @@ class ProbeDescription {
         ContextSamplingPackage.WEATHER:
             Icon(Icons.cloud, size: 50, color: CACHET.LIGHT_BLUE_2),
         ContextSamplingPackage.AIR_QUALITY:
-            Icon(Icons.warning, size: 50, color: CACHET.GREY_3),
+            Icon(Icons.air, size: 50, color: CACHET.GREY_3),
         ContextSamplingPackage.GEOFENCE:
             Icon(Icons.location_on, size: 50, color: CACHET.CYAN),
         ContextSamplingPackage.MOBILITY:

@@ -38,8 +38,14 @@ class WeatherService extends OnlineService {
 /// A [DeviceManager] for the [WeatherService].
 class WeatherServiceManager
     extends OnlineServiceManager<DeviceRegistration, WeatherService> {
+  WeatherFactory? _service;
+
   /// A handle to the [WeatherFactory] plugin.
-  WeatherFactory? service;
+  WeatherFactory? get service => (_service != null)
+      ? _service
+      : (deviceDescriptor?.apiKey != null)
+          ? _service = WeatherFactory(deviceDescriptor!.apiKey)
+          : null;
 
   @override
   String get id =>
@@ -49,9 +55,20 @@ class WeatherServiceManager
   void onInitialize(WeatherService service) {}
 
   @override
-  Future<bool> onConnect() async => (deviceDescriptor?.apiKey != null)
-      ? (service = WeatherFactory(deviceDescriptor!.apiKey)) != null
-      : false;
+  Future<bool> canConnect() async {
+    print('$runtimeType >> canConnect()');
+    try {
+      var data = await service?.currentWeatherByLocation(
+          40.63047005003576, -74.12938368359374);
+      print('$runtimeType >> $data');
+      return (data != null);
+    } catch (_) {
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> onConnect() async => (service != null);
 
   @override
   Future<bool> onDisconnect() async => true;

@@ -167,7 +167,7 @@ class WeatherSamplingPackage extends SmartphoneSamplingPackage {
 
   @override
   List<String> get dataTypes => [
-        ContextSamplingPackage.AIR_QUALITY,
+        ContextSamplingPackage.WEATHER,
       ];
 
   @override

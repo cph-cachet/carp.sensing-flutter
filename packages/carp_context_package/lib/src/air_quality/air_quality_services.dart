@@ -38,8 +38,14 @@ class AirQualityService extends OnlineService {
 /// A [DeviceManager] for the [AirQualityService].
 class AirQualityServiceManager
     extends OnlineServiceManager<DeviceRegistration, AirQualityService> {
+  AirQuality? _service;
+
   /// A handle to the [AirQuality] plugin.
-  AirQuality? service;
+  AirQuality? get service => (_service != null)
+      ? _service
+      : (deviceDescriptor?.apiKey != null)
+          ? _service = AirQuality(deviceDescriptor!.apiKey)
+          : null;
 
   @override
   String get id =>
@@ -49,9 +55,20 @@ class AirQualityServiceManager
   void onInitialize(AirQualityService service) {}
 
   @override
-  Future<bool> onConnect() async => (deviceDescriptor?.apiKey != null)
-      ? (service = AirQuality(deviceDescriptor!.apiKey)) != null
-      : false;
+  Future<bool> canConnect() async {
+    print('$runtimeType >> canConnect()');
+    try {
+      var data = await service?.feedFromGeoLocation(
+          40.63047005003576, -74.12938368359374);
+      print('$runtimeType >> $data');
+      return (data != null);
+    } catch (_) {
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> onConnect() async => (service != null);
 
   @override
   Future<bool> onDisconnect() async => true;
