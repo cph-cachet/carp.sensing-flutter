@@ -56,11 +56,9 @@ class WeatherServiceManager
 
   @override
   Future<bool> canConnect() async {
-    print('$runtimeType >> canConnect()');
     try {
       var data = await service?.currentWeatherByLocation(
           40.63047005003576, -74.12938368359374);
-      print('$runtimeType >> $data');
       return (data != null);
     } catch (_) {
       return false;

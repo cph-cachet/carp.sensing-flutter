@@ -51,6 +51,8 @@ class StudyDeploymentExecutor extends AggregateExecutor<SmartphoneDeployment> {
     group.add(_manualDataPointController.stream);
 
     configuration?.triggeredTasks.forEach((triggeredTask) {
+      debug('$runtimeType - has a trigger task $triggeredTask');
+
       // get the trigger based on the trigger id
       Trigger trigger = configuration!.triggers['${triggeredTask.triggerId}']!;
       // get the task based on the task name
@@ -62,6 +64,8 @@ class StudyDeploymentExecutor extends AggregateExecutor<SmartphoneDeployment> {
         trigger,
         task,
       );
+
+      debug('$runtimeType - created $executor');
 
       executor.initialize(triggeredTask, deployment!);
 
@@ -143,6 +147,7 @@ class TriggeredTaskExecutor extends AggregateExecutor<TriggeredTask> {
 
     // get the task executor and add it to the trigger executor's stream
     taskExecutor = getTaskExecutor(task);
+    debug('$runtimeType - taskExecutor: $taskExecutor');
     triggerExecutor?.group.add(taskExecutor!.data);
     triggerExecutor?.executors.add(taskExecutor!);
     taskExecutor?.initialize(task, deployment!);

@@ -9,22 +9,26 @@ part of runtime;
 
 /// Returns the relevant [TaskExecutor] based on the type of [task].
 TaskExecutor getTaskExecutor(TaskDescriptor task) {
-  switch (task.runtimeType) {
-    case TaskDescriptor:
-    case BackgroundTask:
-      return BackgroundTaskExecutor();
-    case AppTask:
-      return AppTaskExecutor();
-    default:
-      return BackgroundTaskExecutor();
-  }
+  if (task is AppTask) return AppTaskExecutor();
+  return BackgroundTaskExecutor();
+
+  // switch (task.runtimeType) {
+  //   case TaskDescriptor:
+  //   case BackgroundTask:
+  //     return BackgroundTaskExecutor();
+  //   case AppTask:
+  //     return AppTaskExecutor();
+  //   default:
+  //     return BackgroundTaskExecutor();
+  // }
 }
 
-/// The [TaskExecutor] is responsible for executing a [TaskDescriptor] in the [StudyProtocol].
+/// The [TaskExecutor] is responsible for executing a [TaskDescriptor].
 /// For each task it looks up appropriate [Probe]s to collect data.
 ///
-/// Note that a [TaskExecutor] in itself is a [Probe] and hence work as a 'super probe'.
-/// This - amongst other things - imply that you can listen to datum [data] from a task executor.
+/// Note that a [TaskExecutor] in itself is a [Executor] and hence work as a
+/// 'super probe'. This - amongst other things - imply that you can listen
+/// to [Executor.data] from a task executor.
 abstract class TaskExecutor<TConfig extends TaskDescriptor>
     extends AggregateExecutor<TConfig> {
   TConfig get task => configuration!;
