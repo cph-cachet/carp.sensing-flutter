@@ -49,6 +49,7 @@ class WeatherProbe extends DatumProbe {
         return ErrorDatum('$runtimeType Exception: $error');
       }
     }
+    warning('$runtimeType - no service available. Did you remember to add the WeatherService to the study protocol?');
     return ErrorDatum('$runtimeType - no service available.');
   }
 }

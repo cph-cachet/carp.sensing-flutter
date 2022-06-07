@@ -27,16 +27,16 @@ part of runtime;
 class AppTaskExecutor<TConfig extends AppTask> extends TaskExecutor<TConfig> {
   /// The task executor which can be used to execute this user task once
   /// activated.
-  TaskExecutor taskExecutor = BackgroundTaskExecutor();
+  BackgroundTaskExecutor backgroundTaskExecutor = BackgroundTaskExecutor();
 
   AppTaskExecutor() : super() {
     // add the events from the embedded executor to the overall stream of events
-    group.add(taskExecutor.data);
+    group.add(backgroundTaskExecutor.data);
   }
 
   @override
   void onInitialize() {
-    // taskExecutor.initialize(configuration!, deployment);
+    // backgroundTaskExecutor.initialize(configuration!, deployment);
   }
 
   @override
@@ -52,7 +52,7 @@ class AppTaskExecutor<TConfig extends AppTask> extends TaskExecutor<TConfig> {
 
   @override
   Future<void> onStop() async {
-    taskExecutor.stop();
+    backgroundTaskExecutor.stop();
     await super.onStop();
   }
 }

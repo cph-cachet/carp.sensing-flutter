@@ -37,6 +37,10 @@ class AppTask extends TaskDescriptor {
   /// Should a notification be send to the user on the phone?
   bool notification;
 
+  /// The list of background [measures] as a [BackgroundTask].
+  BackgroundTask get backgroundTask =>
+      BackgroundTask(name: name, measures: measures);
+
   AppTask({
     String? name,
     required this.type,

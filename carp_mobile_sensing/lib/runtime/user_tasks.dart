@@ -86,7 +86,7 @@ abstract class UserTask {
 
   /// The [TaskExecutor] that is to be executed once the user
   /// want to start this task.
-  TaskExecutor get executor => _executor.taskExecutor;
+  TaskExecutor get executor => _executor.backgroundTaskExecutor;
 
   /// Create a new [UserTask]. If [triggerTime] is not specified,
   /// it is set to `now`, i.e. to be triggered when created.
@@ -104,7 +104,8 @@ abstract class UserTask {
   @mustCallSuper
   @protected
   void onStart(BuildContext context) {
-    executor.initialize(task, _executor.deployment);
+    // initialize the background measure
+    executor.initialize(task.backgroundTask, _executor.deployment);
     state = UserTaskState.started;
   }
 

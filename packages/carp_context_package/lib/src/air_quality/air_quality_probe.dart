@@ -24,6 +24,7 @@ class AirQualityProbe extends DatumProbe {
         return ErrorDatum('$runtimeType Exception: $err');
       }
     }
+    warning('$runtimeType - no service available. Did you remember to add the AirQualityService to the study protocol?');
     return ErrorDatum('$runtimeType - no service available.');
   }
 }
