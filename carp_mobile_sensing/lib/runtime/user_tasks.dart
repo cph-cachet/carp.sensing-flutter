@@ -88,13 +88,6 @@ abstract class UserTask {
   /// want to start this task.
   TaskExecutor get executor => _executor.backgroundTaskExecutor;
 
-  /// Create a new [UserTask]. If [triggerTime] is not specified,
-  /// it is set to `now`, i.e. to be triggered when created.
-  // UserTask(AppTaskExecutor executor, {DateTime? triggerTime}) {
-  //   this._executor = executor;
-  //   this.triggerTime = triggerTime ?? DateTime.now();
-  // }
-
   /// Create a new [UserTask] based on [executor].
   UserTask(AppTaskExecutor executor) {
     this._executor = executor;
@@ -102,9 +95,8 @@ abstract class UserTask {
 
   /// Callback from the app when this task is to be started.
   @mustCallSuper
-  @protected
   void onStart(BuildContext context) {
-    // initialize the background measure
+    // initialize the background measure(s) as a background task
     executor.initialize(task.backgroundTask, _executor.deployment);
     state = UserTaskState.started;
   }
@@ -114,7 +106,6 @@ abstract class UserTask {
   /// If [dequeue] is `true` the task is removed from the queue.
   /// Othervise, it it kept on the queue for later.
   @mustCallSuper
-  @protected
   void onCancel(BuildContext context, {dequeue = false}) {
     state = UserTaskState.canceled;
     (dequeue)
@@ -126,7 +117,6 @@ abstract class UserTask {
   ///
   /// If [dequeue] is `true` the task is removed from the queue.
   @mustCallSuper
-  @protected
   void onDone(BuildContext context, {dequeue = false}) {
     state = UserTaskState.done;
     AppTaskController().done(id);
