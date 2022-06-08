@@ -253,13 +253,13 @@ class _CreatedState extends _AbstractExecutorState
 
   void initialize() {
     info('Initializing ${executor.runtimeType}');
-    // try {
-    executor.onInitialize();
-    executor._setState(_InitializedState(executor));
-    // } catch (error) {
-    //   warning('Error initializing ${executor.runtimeType}: $error');
-    //   executor._setState(_UndefinedState(executor));
-    // }
+    try {
+      executor.onInitialize();
+      executor._setState(_InitializedState(executor));
+    } catch (error) {
+      warning('Error initializing ${executor.runtimeType}: $error');
+      executor._setState(_UndefinedState(executor));
+    }
   }
 
   bool validNextState(ExecutorState nextState) =>

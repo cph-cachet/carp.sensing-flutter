@@ -24,7 +24,7 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
       case BATTERY:
         return BatteryProbe();
       case SCREEN:
-        return ScreenProbe();
+        return (Platform.isAndroid) ? ScreenProbe() : null;
       default:
         return null;
     }

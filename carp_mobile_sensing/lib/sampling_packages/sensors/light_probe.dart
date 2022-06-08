@@ -7,8 +7,11 @@
 
 part of sensors;
 
-/// The [LightProbe] listens to the phone's light sensor typically located near the front camera.
+/// The [LightProbe] listens to the phone's light sensor typically located
+/// near the front camera.
 /// Every value is in the SI unit Lux and is stored in a [LightDatum] object.
+///
+/// This probe is only available on Android.
 class LightProbe extends BufferingPeriodicStreamProbe {
   List<num> luxValues = [];
 
@@ -17,7 +20,6 @@ class LightProbe extends BufferingPeriodicStreamProbe {
 
   @override
   void onInitialize() {
-    // check if Light is available (only available on Android)
     _bufferingStream = Light().lightSensorStream;
   }
 

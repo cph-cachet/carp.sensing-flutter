@@ -1,4 +1,4 @@
-/// Alibrary containing a sampling package for collecting data from the basic
+/// A library containing a sampling package for collecting data from the basic
 /// device sensors:
 /// - accelerometer
 /// - gyroscope
@@ -7,6 +7,8 @@
 library sensors;
 
 import 'dart:async';
+import 'dart:io' show Platform;
+
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:light/light.dart';
 import 'package:json_annotation/json_annotation.dart';

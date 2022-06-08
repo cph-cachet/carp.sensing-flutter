@@ -31,7 +31,7 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
       case PEDOMETER:
         return PedometerProbe();
       case LIGHT:
-        return LightProbe();
+        return (Platform.isAndroid) ? LightProbe() : null;
       default:
         return null;
     }
