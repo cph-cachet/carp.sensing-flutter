@@ -144,7 +144,6 @@ class FileDataManager extends AbstractDataManager {
     await sink.then((_s) async {
       try {
         _s.write(json);
-        _s.write('\n,\n'); // write a ',' to separate json objects in the list
         debug(
             'Writing data point to file - type: ${dataPoint.carpHeader.dataFormat}');
 
@@ -152,6 +151,8 @@ class FileDataManager extends AbstractDataManager {
           await _f.length().then((len) {
             if (len > _fileDataEndPoint.bufferSize) {
               flush(_f, _s);
+            } else {
+              _s.write('\n,\n'); // write a ',' to separate json objects
             }
           });
         });
@@ -166,8 +167,8 @@ class FileDataManager extends AbstractDataManager {
   }
 
   /// Flushes data to the file, compress, encrypt, and close it.
-  void flush(File? flushFile, IOSink? flushSink) {
-    // if we're already flushing this file/sink, then do nothing.
+  void flush(File flushFile, IOSink flushSink) {
+    // fast exit if we're already flushing this file/sink
     if (flushSink.hashCode == _flushingSink) return;
 
     _flushingSink = flushSink.hashCode;
@@ -180,14 +181,13 @@ class FileDataManager extends AbstractDataManager {
     _file = null;
     // Start creating a new sink (and file) to be used in parallel
     // to flushing this file.
-    sink.then((value) {});
+    sink.then((_) {});
 
-    final _jsonFilePath = flushFile!.path;
+    final _jsonFilePath = flushFile.path;
     var _finalFilePath = _jsonFilePath;
 
     info("Written JSON to file '$_jsonFilePath'. Closing it.");
-    // write the closing json ']'
-    flushSink!.write('{}]\n');
+    flushSink.write('\n]\n');
 
     // once finished closing the file, then zip and encrypt it
     flushSink.close().then((value) {

@@ -16,7 +16,6 @@ void main() {
       t = RecurrentScheduledTrigger(
         type: RecurrentType.daily,
         time: TimeOfDay(hour: 13, minute: 30),
-        duration: Duration(seconds: 1),
       );
       //print(toJsonString(t));
       print('${t.firstOccurrence} - ${t.period}');
@@ -75,11 +74,9 @@ void main() {
 
       // the monthly trigger from iPDM-GO app
       t = RecurrentScheduledTrigger(
-        triggerId: 'Blood glucose events trigger',
         type: RecurrentType.monthly,
         dayOfMonth: 1,
         time: TimeOfDay(hour: 18),
-        remember: true,
         duration: Duration(seconds: 1),
       );
       print(
@@ -113,14 +110,11 @@ void main() {
       expect(t.period.inDays, 30);
 
       // collect quarterly as above,
-      // but remember this trigger across app shutdown
       t = RecurrentScheduledTrigger(
-        triggerId: '1234wef',
         type: RecurrentType.monthly,
         dayOfMonth: 11,
         separationCount: 2,
         time: TimeOfDay(hour: 21, minute: 30),
-        remember: true,
         duration: Duration(seconds: 1),
       );
       print(

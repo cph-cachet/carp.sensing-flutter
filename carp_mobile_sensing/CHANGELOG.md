@@ -10,6 +10,7 @@
 
 * Additional refactoring include:
   - `DeploymentDelayedTrigger` has been removed. Use `ElapsedTimeTrigger`.
+  - `RecurrentScheduledTrigger` no longer supports the `remember` feature. Persistent sampling for app tasks is now supported by the persistent sampling configuration across app re-start as described above.
   - `AutomaticTask` is replaced by the `BackgroundTask` from carp_core.
 
 

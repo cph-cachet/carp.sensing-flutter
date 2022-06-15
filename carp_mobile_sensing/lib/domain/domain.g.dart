@@ -611,8 +611,6 @@ RecurrentScheduledTrigger _$RecurrentScheduledTriggerFromJson(
       dayOfWeek: json['dayOfWeek'] as int?,
       weekOfMonth: json['weekOfMonth'] as int?,
       dayOfMonth: json['dayOfMonth'] as int?,
-      remember: json['remember'] as bool? ?? false,
-      triggerId: json['triggerId'] as String?,
       duration: json['duration'] == null
           ? null
           : Duration(microseconds: json['duration'] as int),
@@ -642,8 +640,6 @@ Map<String, dynamic> _$RecurrentScheduledTriggerToJson(
   writeNotNull('dayOfWeek', instance.dayOfWeek);
   writeNotNull('weekOfMonth', instance.weekOfMonth);
   writeNotNull('dayOfMonth', instance.dayOfMonth);
-  val['remember'] = instance.remember;
-  writeNotNull('triggerId', instance.triggerId);
   val['period'] = instance.period.inMicroseconds;
   return val;
 }

@@ -149,8 +149,8 @@ class DateTimeTrigger extends Trigger implements Scheduleable {
 /// A trigger that resume sampling based on a recurrent scheduled date and time.
 ///
 /// Pause after the specified [duration]. If [duration] is not specified it
-/// defaults to 1 second. Useful for triggering one-time samplings, like collecting
-/// location of triggering a survey.
+/// defaults to 2 second. Useful for triggering one-time samplings, like collecting
+/// location or triggering a survey.
 ///
 /// Supports daily, weekly and monthly recurrences. Yearly recurrence is not
 /// supported, since data sampling is not intended to run on such long time scales.
@@ -159,49 +159,27 @@ class DateTimeTrigger extends Trigger implements Scheduleable {
 ///
 /// ```
 ///  // collect every day at 13:30
-///  RecurrentScheduledTrigger(type: RecurrentType.daily, time: Time(hour: 13, minute: 30));
+///  RecurrentScheduledTrigger(type: RecurrentType.daily, time: TimeOfDay(hour: 13, minute: 30));
 ///
 ///  // collect every other day at 13:30
-///  RecurrentScheduledTrigger(type: RecurrentType.daily, separationCount: 1, time: Time(hour: 13, minute: 30));
+///  RecurrentScheduledTrigger(type: RecurrentType.daily, separationCount: 1, time: TimeOfDay(hour: 13, minute: 30));
 ///
 ///  // collect every wednesday at 12:23
-///  RecurrentScheduledTrigger(type: RecurrentType.weekly, dayOfWeek: DateTime.wednesday, time: Time(hour: 12, minute: 23));
+///  RecurrentScheduledTrigger(type: RecurrentType.weekly, dayOfWeek: DateTime.wednesday, time: TimeOfDay(hour: 12, minute: 23));
 ///
 ///  // collect every 2nd monday at 12:23
-///  RecurrentScheduledTrigger(type: RecurrentType.weekly, dayOfWeek: DateTime.monday, separationCount: 1, time: Time(hour: 12, minute: 23));
+///  RecurrentScheduledTrigger(type: RecurrentType.weekly, dayOfWeek: DateTime.monday, separationCount: 1, time: TimeOfDay(hour: 12, minute: 23));
 ///
 ///  // collect monthly in the second week on a monday at 14:30
-///  RecurrentScheduledTrigger(type: RecurrentType.monthly, weekOfMonth: 2, dayOfWeek: DateTime.monday, time: Time(hour: 14, minute: 30));
+///  RecurrentScheduledTrigger(type: RecurrentType.monthly, weekOfMonth: 2, dayOfWeek: DateTime.monday, time: TimeOfDay(hour: 14, minute: 30));
 ///
 ///  // collect quarterly on the 11th day of the first month in each quarter at 21:30
-///  RecurrentScheduledTrigger(type: RecurrentType.monthly, dayOfMonth: 11, separationCount: 2, time: Time(hour: 21, minute: 30));
+///  RecurrentScheduledTrigger(type: RecurrentType.monthly, dayOfMonth: 11, separationCount: 2, time: TimeOfDay(hour: 21, minute: 30));
 /// ```
-///
-/// Recurrent scheduled triggers can be saved across app shutdown by setting [remember] to true.
-/// For example;
-///
-/// ```
-///       RecurrentScheduledTrigger(
-///         triggerId: '1234wef',
-///         type: RecurrentType.monthly,
-///         dayOfMonth: 11,
-///         separationCount: 2,
-///         time: Time(hour: 21, minute: 30),
-///         remember: true,
-///       );
-/// ```
-///
-/// would create the quarterly schedule above. But if the app shuts down before
-/// this schedule, and restarted after, the trigger would still trigger (immediately).
-/// Note that the [triggerId] must be specified when remembering triggers (it
-/// is used as the key).
 ///
 /// Thanks to Shantanu Kher for inspiration in his blog post on
 /// [Again and Again! Managing Recurring Events In a Data Model](https://www.vertabelo.com/blog/technical-articles/again-and-again-managing-recurring-events-in-a-data-model).
 /// We are, however, not using yearly recurrence.
-/// Moreover, monthly recurrences make little sense in mobile sensing, even
-/// though it is supported.
-///
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class RecurrentScheduledTrigger extends PeriodicTrigger {
   static const int daysPerWeek = 7;
@@ -253,21 +231,6 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
   /// say the 25th. Possible numbers are 1..31 counting from the start of a month.
   int? dayOfMonth;
 
-  /// Should this recurrent scheduled trigger be remembered across app restart?
-  ///
-  /// This is useful for long schedules (e.g. daily, weekly, or monthly).
-  /// If, for example, a monthly trigger is specified, the app can be closed
-  /// at the time of the triggering. If not remembered, then the next trigger
-  /// would not happen until next month.
-  ///
-  /// It is important to specify a unique [triggerId] since this is used as key.
-  ///
-  /// See [Issue #80](https://github.com/cph-cachet/carp.sensing-flutter/issues/80).
-  bool remember = false;
-
-  /// The unique id of this trigger. Only used if [remember] is `true`.
-  String? triggerId;
-
   /// Creates a [RecurrentScheduledTrigger].
   RecurrentScheduledTrigger({
     required this.type,
@@ -278,12 +241,10 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
     this.dayOfWeek,
     this.weekOfMonth,
     this.dayOfMonth,
-    this.remember = false,
-    this.triggerId,
     Duration? duration,
   }) : super(
           period: const Duration(seconds: 1),
-          duration: duration ?? const Duration(seconds: 1),
+          duration: duration ?? const Duration(seconds: 2),
         ) {
     assert(separationCount >= 0, 'Separation count must be zero or positive.');
     if (type == RecurrentType.weekly) {
@@ -296,10 +257,6 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
           'dayOfMonth must be in the range [1-31]');
       assert(weekOfMonth == null || (weekOfMonth! >= 1 && weekOfMonth! <= 4),
           'weekOfMonth must be in the range [1-4]');
-    }
-    if (remember) {
-      assert(triggerId != null,
-          'A unique trigger ID should be specified when remembering scheduled triggers.');
     }
   }
 

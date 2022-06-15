@@ -117,16 +117,21 @@ class PassiveTriggerExecutor extends TriggerExecutor<PassiveTrigger> {
   }
 
   // Forward to the embedded trigger executor
+  @override
   void onInitialize() =>
       configuration!.executor.initialize(configuration as Trigger, deployment!);
 
   // No-op methods since a PassiveTrigger can only be resumed/paused
   // using the resume/pause methods on the PassiveTrigger.
+  @override
   Future<void> onResume() async {}
+  @override
   Future<void> onPause() async {}
 
   // Forward to the embedded trigger executor
+  @override
   Future<void> onRestart() async => configuration!.executor.restart();
+  @override
   Future<void> onStop() async => configuration!.executor.stop();
 }
 
@@ -197,6 +202,7 @@ class IntervalTriggerExecutor extends TimerTriggerExecutor<IntervalTrigger> {
     return schedule;
   }
 
+  @override
   Future<void> onResume() async {
     timer = Timer.periodic(configuration!.period, (t) {
       super.onResume();
@@ -225,6 +231,7 @@ class PeriodicTriggerExecutor extends TimerTriggerExecutor<PeriodicTrigger> {
     return schedule;
   }
 
+  @override
   Future<void> onResume() async {
     // create a recurrent timer that resume periodically
     timer = Timer.periodic(configuration!.period, (t) {
@@ -249,7 +256,7 @@ class DateTimeTriggerExecutor extends TimerTriggerExecutor<DateTimeTrigger> {
   @override
   Future<void> onResume() async {
     if (configuration!.schedule.isAfter(DateTime.now())) {
-      warning('The schedule of the ScheduledTrigger cannot be in the past.');
+      warning('The schedule of the DateTimeTrigger cannot be in the past.');
     } else {
       var delay = configuration!.schedule.difference(DateTime.now());
       var duration = configuration?.duration;
@@ -284,47 +291,12 @@ class RecurrentScheduledTriggerExecutor
     return schedule;
   }
 
+  @override
   Future<void> onResume() async {
-    // check if there is a remembered trigger date
-    if (configuration!.remember) {
-      String? _savedFirstOccurrence =
-          Settings().preferences!.getString(configuration!.triggerId!);
-      debug('savedFirstOccurrence : $_savedFirstOccurrence');
-
-      if (_savedFirstOccurrence != null) {
-        DateTime savedDate = DateTime.tryParse(_savedFirstOccurrence)!;
-        if (savedDate.isBefore(DateTime.now())) {
-          debug(
-              'There is a saved timestamp in the past - resuming this trigger now: ${DateTime.now().toString()}.');
-          executors.forEach((executor) => executor.resume());
-          // create a timer that pause the sampling after the specified duration.
-          Timer(configuration!.duration, () {
-            executors.forEach((executor) => executor.pause());
-          });
-        }
-      }
-
-      // save the day of the first occurrence for later use
-      await Settings().preferences!.setString(configuration!.triggerId!,
-          configuration!.firstOccurrence.toUtc().toString());
-      debug(
-          'saving firstOccurrence : ${configuration!.firstOccurrence.toUtc().toString()}');
-    }
-
-    // below is 'normal' (i.e., non-remember) behavior
     Duration _delay = configuration!.firstOccurrence.difference(DateTime.now());
-    debug('delay: $_delay');
     if (configuration!.end == null ||
         configuration!.end!.isAfter(DateTime.now())) {
       Timer(_delay, () async {
-        debug('delay finished, now resuming...');
-        if (configuration!.remember) {
-          // replace the entry of the first occurrence to the next occurrence date
-          DateTime nextOccurrence = DateTime.now().add(configuration!.period);
-          await Settings().preferences!.setString(
-              configuration!.triggerId!, nextOccurrence.toUtc().toString());
-          debug('saving nextOccurrence: $nextOccurrence');
-        }
         await super.onResume();
       });
     }
@@ -354,6 +326,7 @@ class CronScheduledTriggerExecutor
     return schedule;
   }
 
+  @override
   Future<void> onResume() async {
     debug('creating cron job : $configuration');
     var _schedule = cron.Schedule.parse(configuration!.cronExpression);
@@ -364,6 +337,7 @@ class CronScheduledTriggerExecutor
     });
   }
 
+  @override
   Future<void> onPause() async {
     await _scheduledTask?.cancel();
     await super.onPause();
@@ -376,6 +350,7 @@ class SamplingEventTriggerExecutor
     extends TriggerExecutor<SamplingEventTrigger> {
   late StreamSubscription<DataPoint>? _subscription;
 
+  @override
   Future<void> onResume() async {
     _subscription = SmartPhoneClientManager()
         .lookupStudyRuntime(deployment!.studyDeploymentId,
@@ -391,6 +366,7 @@ class SamplingEventTriggerExecutor
     });
   }
 
+  @override
   Future<void> onPause() async {
     await _subscription?.cancel();
     await super.onPause();
@@ -405,6 +381,7 @@ class ConditionalSamplingEventTriggerExecutor
     extends TriggerExecutor<ConditionalSamplingEventTrigger> {
   StreamSubscription<DataPoint>? _subscription;
 
+  @override
   Future<void> onResume() async {
     // listen for event of the specified type and resume/pause as needed
     _subscription = SmartPhoneClientManager()
@@ -419,6 +396,7 @@ class ConditionalSamplingEventTriggerExecutor
     });
   }
 
+  @override
   Future<void> onPause() async {
     await _subscription?.cancel();
     await super.onPause();

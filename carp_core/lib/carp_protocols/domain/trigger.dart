@@ -103,7 +103,11 @@ class ManualTrigger extends Trigger {
 /// and therefore requires a task scheduler.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ScheduledTrigger extends Trigger implements Scheduleable {
+  /// The time of the day to trigger.
   TimeOfDay time;
+
+  /// Reccurrence rule according to the
+  /// [iCalendar RFC 5545 standard](https://tools.ietf.org/html/rfc5545#section-3.3.10).
   RecurrenceRule recurrenceRule;
 
   ScheduledTrigger({
