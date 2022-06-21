@@ -12,11 +12,12 @@ part of managers;
 class ConsoleDataManager extends AbstractDataManager {
   String get type => DataEndPointTypes.PRINT;
 
-  void onDataPoint(DataPoint dataPoint) => print(jsonEncode(dataPoint));
+  Future<void> onDataPoint(DataPoint dataPoint) async =>
+      print(jsonEncode(dataPoint));
 
-  void onDone() {}
+  Future<void> onDone() async {}
 
-  void onError(error) => print('ERROR >> $error');
+  Future<void> onError(error) async => print('ERROR >> $error');
 
   String toString() => 'JSON Print Data Manager';
 }

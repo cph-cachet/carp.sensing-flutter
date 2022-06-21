@@ -15,7 +15,7 @@ import 'package:battery_plus/battery_plus.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:screen_state/screen_state.dart';
-import 'package:system_info/system_info.dart';
+import 'package:system_info2/system_info2.dart';
 
 part 'device.g.dart';
 part 'device_datum.dart';

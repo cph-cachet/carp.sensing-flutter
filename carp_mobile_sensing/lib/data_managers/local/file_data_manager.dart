@@ -64,17 +64,17 @@ class FileDataManager extends AbstractDataManager {
   }
 
   @override
-  void onDataPoint(DataPoint dataPoint) => write(dataPoint);
+  Future<void> onDataPoint(DataPoint dataPoint) async => await write(dataPoint);
 
   @override
-  void onError(Object? error) =>
-      write(DataPoint.fromData(ErrorDatum(error.toString()))
+  Future<void> onError(Object? error) async =>
+      await write(DataPoint.fromData(ErrorDatum(error.toString()))
         ..carpHeader.dataFormat = DataFormat.fromString(CAMSDataType.ERROR)
         ..carpHeader.studyId = deployment.studyDeploymentId
         ..carpHeader.userId = deployment.userId);
 
   @override
-  void onDone() => close();
+  Future<void> onDone() async => await close();
 
   /// The full path where data files are stored on the device.
   Future<String> get path async {

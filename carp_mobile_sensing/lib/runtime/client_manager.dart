@@ -50,9 +50,10 @@ class SmartPhoneClientManager extends ClientManager
     await DeviceInfo().init();
     await Settings().init();
 
-    // create and register the two built-in data managers
+    // create and register the built-in data managers
     DataManagerRegistry().register(ConsoleDataManager());
     DataManagerRegistry().register(FileDataManager());
+    DataManagerRegistry().register(SQLiteDataManager());
 
     // set default values, if not specified
     deviceId ??= DeviceInfo().deviceID;

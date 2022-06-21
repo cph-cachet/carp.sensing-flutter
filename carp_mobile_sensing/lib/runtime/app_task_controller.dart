@@ -255,14 +255,16 @@ class AppTaskController {
         AppTaskExecutor executor = AppTaskExecutor();
 
         // find the deployment
-        if (snapshot.studyDeploymentId == null ||
-            snapshot.deviceRoleName == null)
-          warning(
-              '$runtimeType - Saved task queue does not contain deployment information in snapshot - snapshot: $snapshot');
-        var deployment = SmartPhoneClientManager()
-            .lookupStudyRuntime(
-                snapshot.studyDeploymentId!, snapshot.deviceRoleName!)
-            ?.deployment;
+        var deployment;
+        if (snapshot.studyDeploymentId != null &&
+            snapshot.deviceRoleName != null) {
+          deployment = SmartPhoneClientManager()
+              .lookupStudyRuntime(
+                snapshot.studyDeploymentId!,
+                snapshot.deviceRoleName!,
+              )
+              ?.deployment;
+        }
         if (deployment == null)
           warning(
               '$runtimeType - Could not find deployment information based on snapshot: $snapshot');
@@ -335,8 +337,9 @@ class UserTaskSnapshot extends Serializable {
     state = userTask.state;
     enqueued = userTask.enqueued;
     triggerTime = userTask.triggerTime;
-    studyDeploymentId = userTask.executor.deployment?.studyDeploymentId;
-    deviceRoleName = userTask.executor.deployment?.deviceDescriptor.roleName;
+    studyDeploymentId = userTask.appTaskExecutor.deployment?.studyDeploymentId;
+    deviceRoleName =
+        userTask.appTaskExecutor.deployment?.deviceDescriptor.roleName;
   }
 
   Function get fromJsonFunction => _$UserTaskSnapshotFromJson;

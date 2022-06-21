@@ -1,12 +1,16 @@
-## 0.40.0
+## 0.40.0 - BREAKING CHANGES
 * One purpose of this release is to make CAMS more stable across app re-restart (since the OSs (Android / iOS) increasingly are killing apps). This has lead to the following changes:
   - `MarkedMeasure` is no longer a separate measure type. The state of all measure are now saved across app restart.
-- A `OneTimeTrigger` no longer needs an id (this is now handled behind-the-scene).
+  - A `OneTimeTrigger` no longer needs an id (this is now handled behind-the-scene).
+  - All `AppTask` are now scheduled persistently using the notification system. When an app task is due, a notification is made on the phone, and when the user taps this notification, the app is (re)started. 
 
-* Another purpose is was to change the configuration of the measures in the study protocol to resemble the newly released version 1.0.0 of the `carp_core` model. This entails:
+* Another purpose is to change the configuration of the measures in the study protocol to resemble the newly released version 1.0.0 of the `carp_core` model. This entails:
   - `Measure` no longer contains sampling configurations but only specifies the `type` of data to collect (e.g., `dk.cachet.carp.memory`)
   - instead sampling configuration is now done in the `SamplingConfiguration` and `SamplingScheme` classes (which can be part of a `StudyProtocol`). 
   - default sampling configuration are now part of a `SamplingSchema` provided by the `SamplingPackage`. For example, periodic sampling in e.g. the `MemoryProbe` is configured using a `PeriodicSamplingConfiguration` in the `DeviceSamplingPackage`.
+
+* Added support for storing data in a SQLite database using a `SQLiteDataEndPoint` data endpoint. 
+* Upgrade to Android `compileSdkVersion` 33. Make sure to update the `android/app/build.gradle` file and set the `compileSdkVersion` to 33.
 
 * Additional refactoring include:
   - `DeploymentDelayedTrigger` has been removed. Use `ElapsedTimeTrigger`.

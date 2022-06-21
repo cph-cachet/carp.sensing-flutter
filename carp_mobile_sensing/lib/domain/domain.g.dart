@@ -162,6 +162,27 @@ Map<String, dynamic> _$FileDataEndPointToJson(FileDataEndPoint instance) {
   return val;
 }
 
+SQLiteDataEndPoint _$SQLiteDataEndPointFromJson(Map<String, dynamic> json) =>
+    SQLiteDataEndPoint(
+      type: json['type'] as String? ?? DataEndPointTypes.SQLITE,
+      dataFormat: json['dataFormat'] as String? ?? NameSpace.CARP,
+    )..$type = json[r'$type'] as String?;
+
+Map<String, dynamic> _$SQLiteDataEndPointToJson(SQLiteDataEndPoint instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(r'$type', instance.$type);
+  val['type'] = instance.type;
+  val['dataFormat'] = instance.dataFormat;
+  return val;
+}
+
 PersistentSamplingConfiguration _$PersistentSamplingConfigurationFromJson(
         Map<String, dynamic> json) =>
     PersistentSamplingConfiguration()

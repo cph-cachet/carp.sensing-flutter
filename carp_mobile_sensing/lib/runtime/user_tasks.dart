@@ -88,6 +88,9 @@ abstract class UserTask {
   /// want to start this task.
   TaskExecutor get executor => _executor.backgroundTaskExecutor;
 
+  /// The [AppTaskExecutor] of this user task.
+  AppTaskExecutor get appTaskExecutor => _executor;
+
   /// Create a new [UserTask] based on [executor].
   UserTask(AppTaskExecutor executor) {
     this._executor = executor;

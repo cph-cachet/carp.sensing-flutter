@@ -15,12 +15,13 @@ dependencies:
   # carp_core: ^0.40.0      # the core CARP domain model
 
   json_annotation: ^4.4.0
-  system_info: ^1.0.0
+  system_info2: ^2.0.0
   uuid: ^3.0.4
   async: ^2.7.0
   path_provider: ^2.0.0
+  sqflite: ^2.0.0                     # For local storage in SQLite DB
   archive: ^3.1.2
-  permission_handler: ^9.2.0  
+  permission_handler: ^10.0.0  
   shared_preferences: ^2.0.0
   package_info_plus: ^1.0.0
   flutter_local_notifications: ^9.4.0 # For sending notification on AppTask
@@ -31,7 +32,7 @@ dependencies:
   flutter_native_timezone: ^2.0.0     # For getting local time zone for scheduling notifications
 
   # probe-dependent plugins
-  device_info_plus: ^3.0.0
+  device_info_plus: ^4.0.0
   sensors_plus: ^1.2.1
   battery_plus: ^2.0.0
 
