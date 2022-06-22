@@ -289,7 +289,7 @@ Map<String, dynamic> _$CreateStudyDeploymentToJson(
 GetStudyDeploymentStatus _$GetStudyDeploymentStatusFromJson(
         Map<String, dynamic> json) =>
     GetStudyDeploymentStatus(
-      json['studyDeploymentId'] as String,
+      json['studyDeploymentId'] as String?,
     )..$type = json[r'$type'] as String?;
 
 Map<String, dynamic> _$GetStudyDeploymentStatusToJson(
@@ -319,7 +319,7 @@ Map<String, dynamic> _$GetStudyDeploymentStatusListToJson(
 
 RegisterDevice _$RegisterDeviceFromJson(Map<String, dynamic> json) =>
     RegisterDevice(
-      json['studyDeploymentId'] as String,
+      json['studyDeploymentId'] as String?,
       json['deviceRoleName'] as String,
       DeviceRegistration.fromJson(json['registration'] as Map<String, dynamic>),
     )..$type = json[r'$type'] as String?;
@@ -348,7 +348,7 @@ Map<String, dynamic> _$UnregisterDeviceToJson(UnregisterDevice instance) =>
 GetDeviceDeploymentFor _$GetDeviceDeploymentForFromJson(
         Map<String, dynamic> json) =>
     GetDeviceDeploymentFor(
-      json['studyDeploymentId'] as String,
+      json['studyDeploymentId'] as String?,
       json['masterDeviceRoleName'] as String,
     )..$type = json[r'$type'] as String?;
 
@@ -379,7 +379,7 @@ Map<String, dynamic> _$DeploymentSuccessfulToJson(
     };
 
 Stop _$StopFromJson(Map<String, dynamic> json) => Stop(
-      json['studyDeploymentId'] as String,
+      json['studyDeploymentId'] as String?,
     )..$type = json[r'$type'] as String?;
 
 Map<String, dynamic> _$StopToJson(Stop instance) => <String, dynamic>{
@@ -402,7 +402,7 @@ Map<String, dynamic> _$GetActiveParticipationInvitationsToJson(
 
 GetParticipantData _$GetParticipantDataFromJson(Map<String, dynamic> json) =>
     GetParticipantData(
-      json['studyDeploymentId'] as String,
+      json['studyDeploymentId'] as String?,
     )..$type = json[r'$type'] as String?;
 
 Map<String, dynamic> _$GetParticipantDataToJson(GetParticipantData instance) =>
@@ -431,7 +431,7 @@ Map<String, dynamic> _$GetParticipantDataListToJson(
 
 SetParticipantData _$SetParticipantDataFromJson(Map<String, dynamic> json) =>
     SetParticipantData(
-      json['studyDeploymentId'] as String,
+      json['studyDeploymentId'] as String?,
       json['inputDataType'] as String,
     )
       ..$type = json[r'$type'] as String?

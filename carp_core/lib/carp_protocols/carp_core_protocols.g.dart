@@ -75,7 +75,8 @@ Map<String, dynamic> _$MasterDeviceDescriptorToJson(
 CustomProtocolDevice _$CustomProtocolDeviceFromJson(
         Map<String, dynamic> json) =>
     CustomProtocolDevice(
-      roleName: json['roleName'] as String?,
+      roleName:
+          json['roleName'] as String? ?? CustomProtocolDevice.DEFAULT_ROLENAME,
       supportedDataTypes: (json['supportedDataTypes'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),

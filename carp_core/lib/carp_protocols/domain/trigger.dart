@@ -52,13 +52,10 @@ class ElapsedTimeTrigger extends Trigger implements Scheduleable {
   Duration elapsedTime;
 
   ElapsedTimeTrigger({
-    String? sourceDeviceRoleName,
-    bool? requiresMasterDevice = true,
+    super.sourceDeviceRoleName,
+    super.requiresMasterDevice = true,
     required this.elapsedTime,
-  }) : super(
-          sourceDeviceRoleName: sourceDeviceRoleName,
-          requiresMasterDevice: requiresMasterDevice,
-        );
+  });
 
   Function get fromJsonFunction => _$ElapsedTimeTriggerFromJson;
   factory ElapsedTimeTrigger.fromJson(Map<String, dynamic> json) =>
@@ -78,14 +75,11 @@ class ManualTrigger extends Trigger {
   String? description;
 
   ManualTrigger({
-    String? sourceDeviceRoleName,
-    bool? requiresMasterDevice = false,
+    super.sourceDeviceRoleName,
+    super.requiresMasterDevice = false,
     this.label,
     this.description,
-  }) : super(
-          sourceDeviceRoleName: sourceDeviceRoleName,
-          requiresMasterDevice: requiresMasterDevice,
-        );
+  });
 
   Function get fromJsonFunction => _$ManualTriggerFromJson;
   factory ManualTrigger.fromJson(Map<String, dynamic> json) =>
@@ -111,14 +105,11 @@ class ScheduledTrigger extends Trigger implements Scheduleable {
   RecurrenceRule recurrenceRule;
 
   ScheduledTrigger({
-    String? sourceDeviceRoleName,
-    bool? requiresMasterDevice = false,
+    super.sourceDeviceRoleName,
+    super.requiresMasterDevice = false,
     required this.time,
     required this.recurrenceRule,
-  }) : super(
-          sourceDeviceRoleName: sourceDeviceRoleName,
-          requiresMasterDevice: requiresMasterDevice,
-        );
+  });
 
   @override
   String toString() => '$runtimeType - time: $time, rrule: $recurrenceRule';

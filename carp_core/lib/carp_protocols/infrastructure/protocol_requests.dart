@@ -34,8 +34,7 @@ class Add extends ProtocolServiceRequest {
 
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class AddVersion extends Add {
-  AddVersion(StudyProtocol? protocol, String? versionTag)
-      : super(protocol, versionTag);
+  AddVersion(super.protocol, super.versionTag);
 
   Function get fromJsonFunction => _$AddVersionFromJson;
   factory AddVersion.fromJson(Map<String, dynamic> json) =>
@@ -50,8 +49,10 @@ class UpdateParticipantDataConfiguration extends ProtocolServiceRequest {
   final List<ParticipantAttribute>? expectedParticipantData;
 
   UpdateParticipantDataConfiguration(
-      this.protocolId, this.versionTag, this.expectedParticipantData)
-      : super();
+    this.protocolId,
+    this.versionTag,
+    this.expectedParticipantData,
+  ) : super();
 
   Function get fromJsonFunction => _$UpdateParticipantDataConfigurationFromJson;
   factory UpdateParticipantDataConfiguration.fromJson(
@@ -108,8 +109,11 @@ class CreateCustomProtocol extends ProtocolServiceRequest {
   final String? customProtocol;
 
   CreateCustomProtocol(
-      this.ownerId, this.name, this.description, this.customProtocol)
-      : super();
+    this.ownerId,
+    this.name,
+    this.description,
+    this.customProtocol,
+  ) : super();
 
   String get jsonType =>
       '$_infrastructurePackageNamespace.ProtocolFactoryServiceRequest.$runtimeType';

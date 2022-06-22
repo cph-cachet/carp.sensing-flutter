@@ -60,10 +60,10 @@ class BackgroundTask extends TaskDescriptor {
   Duration? duration;
 
   BackgroundTask({
-    String? name,
-    List<Measure>? measures,
+    super.name,
+    super.measures,
     this.duration,
-  }) : super(name: name, measures: measures);
+  });
 
   Function get fromJsonFunction => _$BackgroundTaskFromJson;
   factory BackgroundTask.fromJson(Map<String, dynamic> json) =>

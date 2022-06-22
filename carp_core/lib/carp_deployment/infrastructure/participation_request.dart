@@ -19,8 +19,7 @@ part of carp_core_deployment;
 abstract class ParticipationServiceRequest extends DeploymentServiceRequest {
   final String _serviceRequestPackageNamespace =
       'dk.cachet.carp.deployment.infrastructure.ParticipationServiceRequest';
-  ParticipationServiceRequest([String? studyDeploymentId])
-      : super(studyDeploymentId);
+  ParticipationServiceRequest([super.studyDeploymentId]);
   String get jsonType => '$_serviceRequestPackageNamespace.$runtimeType';
 }
 
@@ -48,7 +47,7 @@ class GetActiveParticipationInvitations extends ParticipationServiceRequest {
 /// A request for getting the status of a study deployment.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class GetParticipantData extends ParticipationServiceRequest {
-  GetParticipantData(String studyDeploymentId) : super(studyDeploymentId);
+  GetParticipantData(super.studyDeploymentId);
 
   Function get fromJsonFunction => _$GetParticipantDataFromJson;
   factory GetParticipantData.fromJson(Map<String, dynamic> json) =>
@@ -73,10 +72,10 @@ class GetParticipantDataList extends ParticipationServiceRequest {
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class SetParticipantData extends ParticipationServiceRequest {
   SetParticipantData(
-    String studyDeploymentId,
+    super.studyDeploymentId,
     this.inputDataType, [
     this.participantData,
-  ]) : super(studyDeploymentId);
+  ]);
 
   /// The input data type.
   String inputDataType;

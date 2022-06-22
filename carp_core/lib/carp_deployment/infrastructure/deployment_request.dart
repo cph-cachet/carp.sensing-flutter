@@ -51,7 +51,7 @@ class CreateStudyDeployment extends DeploymentServiceRequest {
 /// A request for getting the status of a study deployment.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class GetStudyDeploymentStatus extends DeploymentServiceRequest {
-  GetStudyDeploymentStatus(String studyDeploymentId) : super(studyDeploymentId);
+  GetStudyDeploymentStatus(super.studyDeploymentId);
 
   Function get fromJsonFunction => _$GetStudyDeploymentStatusFromJson;
   factory GetStudyDeploymentStatus.fromJson(Map<String, dynamic> json) =>
@@ -76,8 +76,7 @@ class GetStudyDeploymentStatusList extends DeploymentServiceRequest {
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class RegisterDevice extends DeploymentServiceRequest {
   RegisterDevice(
-      String studyDeploymentId, this.deviceRoleName, this.registration)
-      : super(studyDeploymentId);
+      super.studyDeploymentId, this.deviceRoleName, this.registration);
 
   /// The role name of this device.
   String deviceRoleName;
@@ -113,8 +112,7 @@ class UnregisterDevice extends DeploymentServiceRequest {
 /// A request for getting the deployment for this master device.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class GetDeviceDeploymentFor extends DeploymentServiceRequest {
-  GetDeviceDeploymentFor(String studyDeploymentId, this.masterDeviceRoleName)
-      : super(studyDeploymentId);
+  GetDeviceDeploymentFor(super.studyDeploymentId, this.masterDeviceRoleName);
 
   /// The role name of this master device.
   String masterDeviceRoleName;
@@ -152,7 +150,7 @@ class DeploymentSuccessful extends GetDeviceDeploymentFor {
 /// A request for permanently stopping a study deployment.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class Stop extends DeploymentServiceRequest {
-  Stop(String studyDeploymentId) : super(studyDeploymentId);
+  Stop(super.studyDeploymentId);
 
   Function get fromJsonFunction => _$StopFromJson;
   factory Stop.fromJson(Map<String, dynamic> json) =>
