@@ -31,13 +31,11 @@ class SmartphoneStudyProtocol extends StudyProtocol {
 
   /// Create a new [SmartphoneStudyProtocol].
   SmartphoneStudyProtocol({
-    required String ownerId,
-    required String name,
+    required super.ownerId,
+    required super.name,
     this.protocolDescription,
     this.dataEndPoint,
   }) : super(
-          ownerId: ownerId,
-          name: name,
           description: protocolDescription?.description ?? '',
         );
 

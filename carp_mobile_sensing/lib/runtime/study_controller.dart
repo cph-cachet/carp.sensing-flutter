@@ -75,9 +75,7 @@ class SmartphoneDeploymentController extends StudyRuntime {
 
   /// Create a new [SmartphoneDeploymentController] to control the runtime behavior
   /// of a study deployment.
-  SmartphoneDeploymentController(
-      DeploymentService deploymentService, DeviceController deviceRegistry)
-      : super(deploymentService, deviceRegistry);
+  SmartphoneDeploymentController(super.deploymentService, super.deviceRegistry);
 
   @override
   Future<StudyStatus> tryDeployment({bool useCached = true}) async {

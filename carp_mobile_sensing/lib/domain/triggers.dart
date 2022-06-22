@@ -114,9 +114,9 @@ class PeriodicTrigger extends IntervalTrigger {
   Duration duration;
 
   PeriodicTrigger({
-    required Duration period,
+    required super.period,
     required this.duration,
-  }) : super(period: period);
+  });
 
   Function get fromJsonFunction => _$PeriodicTriggerFromJson;
   factory PeriodicTrigger.fromJson(Map<String, dynamic> json) =>

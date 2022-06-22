@@ -43,16 +43,13 @@ class FileDataEndPoint extends DataEndPoint {
   /// [type] is defined in [DataEndPointTypes]. Is typically of type
   /// [DataEndPointType.FILE] but specialized file types can be specified.
   FileDataEndPoint({
-    String type = DataEndPointTypes.FILE,
-    String dataFormat = NameSpace.CARP,
+    super.type = DataEndPointTypes.FILE,
+    super.dataFormat = NameSpace.CARP,
     this.bufferSize = 500 * 1000,
     this.zip = true,
     this.encrypt = false,
     this.publicKey,
-  }) : super(
-          type: type,
-          dataFormat: dataFormat,
-        );
+  });
 
   @override
   Function get fromJsonFunction => _$FileDataEndPointFromJson;
@@ -78,12 +75,9 @@ class SQLiteDataEndPoint extends DataEndPoint {
   /// [type] is defined in [DataEndPointTypes]. Is typically of type
   /// [DataEndPointType.SQLITE] but specialized file types can be specified.
   SQLiteDataEndPoint({
-    String type = DataEndPointTypes.SQLITE,
-    String dataFormat = NameSpace.CARP,
-  }) : super(
-          type: type,
-          dataFormat: dataFormat,
-        );
+    super.type = DataEndPointTypes.SQLITE,
+    super.dataFormat = NameSpace.CARP,
+  });
 
   @override
   Function get fromJsonFunction => _$SQLiteDataEndPointFromJson;

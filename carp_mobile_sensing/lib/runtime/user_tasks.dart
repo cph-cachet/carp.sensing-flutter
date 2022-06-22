@@ -180,7 +180,7 @@ class BackgroundSensingUserTask extends UserTask {
   /// See [OneTimeBackgroundSensingUserTask].
   static const String ONE_TIME_SENSING_TYPE = 'one_time_sensing';
 
-  BackgroundSensingUserTask(AppTaskExecutor executor) : super(executor);
+  BackgroundSensingUserTask(super.executor);
 
   @override
   void onStart(BuildContext context) {
@@ -201,7 +201,7 @@ class BackgroundSensingUserTask extends UserTask {
 /// It resumes sensing when the [onStart] methods is called and then
 /// automatically pauses after 10 seconds.
 class OneTimeBackgroundSensingUserTask extends BackgroundSensingUserTask {
-  OneTimeBackgroundSensingUserTask(AppTaskExecutor executor) : super(executor);
+  OneTimeBackgroundSensingUserTask(super.executor);
 
   /// Resume sensing for 10 seconds, whereafter it is paused automatically.
   @override

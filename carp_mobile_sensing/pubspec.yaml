@@ -5,8 +5,8 @@ homepage: https://github.com/cph-cachet/carp.sensing-flutter
 publish_to: none        # remove on release
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
-  flutter: ">=2.2.0"
+  sdk: '>=2.17.0 <3.0.0'
+  flutter: ">=3.0.0"
 
 dependencies:
   flutter:
@@ -14,7 +14,7 @@ dependencies:
 
   # carp_core: ^0.40.0      # the core CARP domain model
 
-  json_annotation: ^4.4.0
+  json_annotation: ^4.5.0
   system_info2: ^2.0.0
   uuid: ^3.0.4
   async: ^2.7.0

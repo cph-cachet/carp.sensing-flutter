@@ -52,24 +52,16 @@ class SmartphoneDeployment extends MasterDeviceDeployment {
   ///
   SmartphoneDeployment({
     String? studyDeploymentId,
-    required MasterDeviceDescriptor deviceDescriptor,
-    required DeviceRegistration configuration,
-    List<DeviceDescriptor> connectedDevices = const [],
-    Map<String, DeviceRegistration?> connectedDeviceConfigurations = const {},
-    List<TaskDescriptor> tasks = const [],
-    Map<String, Trigger> triggers = const {},
-    List<TriggeredTask> triggeredTasks = const [],
+    required super.deviceDescriptor,
+    required super.configuration,
+    super.connectedDevices = const [],
+    super.connectedDeviceConfigurations = const {},
+    super.tasks = const [],
+    super.triggers = const {},
+    super.triggeredTasks = const [],
     this.protocolDescription,
     this.dataEndPoint,
-  }) : super(
-          deviceDescriptor: deviceDescriptor,
-          configuration: configuration,
-          connectedDevices: connectedDevices,
-          connectedDeviceConfigurations: connectedDeviceConfigurations,
-          tasks: tasks,
-          triggers: triggers,
-          triggeredTasks: triggeredTasks,
-        ) {
+  }) {
     _registerFromJsonFunctions();
     _studyDeploymentId = studyDeploymentId ?? Uuid().v1();
   }

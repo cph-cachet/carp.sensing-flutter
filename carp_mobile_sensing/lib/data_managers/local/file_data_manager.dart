@@ -237,7 +237,7 @@ class FileDataManagerEvent extends DataManagerEvent {
   String path;
 
   /// Create a new [FileDataManagerEvent].
-  FileDataManagerEvent(String type, this.path) : super(type);
+  FileDataManagerEvent(super.type, this.path);
 
   String toString() => 'FileDataManagerEvent - type: $type, path: $path';
 }

@@ -17,14 +17,10 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
   final Set<String> _supportedDataTypes = {};
 
   DeviceManager([
-    String? type,
-    TDeviceRegistration? deviceRegistration,
-    TDeviceDescriptor? deviceDescriptor,
-  ]) : super(
-          type,
-          deviceRegistration,
-          deviceDescriptor,
-        );
+    super.type,
+    super.deviceRegistration,
+    super.deviceDescriptor,
+  ]);
 
   @override
   Set<String> get supportedDataTypes => _supportedDataTypes;

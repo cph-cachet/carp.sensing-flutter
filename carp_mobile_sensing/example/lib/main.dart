@@ -24,7 +24,7 @@ class CARPMobileSensingApp extends StatelessWidget {
 
 class ConsolePage extends StatefulWidget {
   final String title;
-  ConsolePage({Key? key, required this.title}) : super(key: key);
+  ConsolePage({super.key, required this.title}) ;
   Console createState() => Console();
 }
 

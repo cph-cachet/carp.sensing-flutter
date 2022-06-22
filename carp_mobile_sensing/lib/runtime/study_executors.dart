@@ -173,10 +173,10 @@ class TriggeredTaskExecutor extends AggregateExecutor<TriggeredTask> {
 /// the [AppTaskController]. This means that triggeres also has to be [Scheduleable].
 class TriggeredAppTaskExecutor extends TriggeredTaskExecutor {
   TriggeredAppTaskExecutor(
-    TriggeredTask triggeredTask,
-    Trigger trigger,
-    AppTask task,
-  ) : super(triggeredTask, trigger, task);
+    super.triggeredTask,
+    super.trigger,
+    super.task,
+  );
 
   @override
   AppTaskExecutor get taskExecutor => super.taskExecutor as AppTaskExecutor;

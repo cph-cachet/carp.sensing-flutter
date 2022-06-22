@@ -71,9 +71,9 @@ class PeriodicSamplingConfiguration extends IntervalSamplingConfiguration {
   late Duration duration;
 
   PeriodicSamplingConfiguration({
-    required Duration interval,
+    required super.interval,
     required this.duration,
-  }) : super(interval: interval);
+  });
 
   Map<String, dynamic> toJson() => _$PeriodicSamplingConfigurationToJson(this);
   Function get fromJsonFunction => _$PeriodicSamplingConfigurationFromJson;

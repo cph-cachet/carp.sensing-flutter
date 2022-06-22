@@ -42,7 +42,7 @@ class AppTask extends TaskDescriptor {
       BackgroundTask(name: name, measures: measures);
 
   AppTask({
-    String? name,
+    super.name,
     required this.type,
     this.title = '',
     this.description = '',
@@ -50,7 +50,7 @@ class AppTask extends TaskDescriptor {
     this.minutesToComplete,
     this.expire,
     this.notification = false,
-  }) : super(name: name);
+  });
 
   Function get fromJsonFunction => _$AppTaskFromJson;
   factory AppTask.fromJson(Map<String, dynamic> json) =>
