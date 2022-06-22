@@ -11,6 +11,7 @@
 
 * Added support for storing data in a SQLite database using a `SQLiteDataEndPoint` data endpoint. 
 * Upgrade to Android `compileSdkVersion` 33. Make sure to update the `android/app/build.gradle` file and set the `compileSdkVersion` to 33.
+* Upgraded to Dart 2.17 and Flutter 3.0
 
 * Additional refactoring include:
   - `DeploymentDelayedTrigger` has been removed. Use `ElapsedTimeTrigger`.

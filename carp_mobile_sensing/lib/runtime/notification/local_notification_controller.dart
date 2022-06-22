@@ -100,7 +100,7 @@ class FlutterLocalNotificationController implements NotificationController {
               notifications.UILocalNotificationDateInterpretation.absoluteTime,
           payload: task.id,
         );
-        info('$runtimeType - Notification scheduled for $task at $time');
+        debug('$runtimeType - Notification scheduled for $task at $time');
       }
     } else {
       warning('$runtimeType - Can only schedule a notification in the future. '

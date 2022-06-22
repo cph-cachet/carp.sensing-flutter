@@ -51,8 +51,6 @@ class StudyDeploymentExecutor extends AggregateExecutor<SmartphoneDeployment> {
     group.add(_manualDataPointController.stream);
 
     configuration?.triggeredTasks.forEach((triggeredTask) {
-      debug('$runtimeType - has a trigger task $triggeredTask');
-
       // get the trigger based on the trigger id
       Trigger trigger = configuration!.triggers['${triggeredTask.triggerId}']!;
       // get the task based on the task name
@@ -163,6 +161,9 @@ class TriggeredTaskExecutor extends AggregateExecutor<TriggeredTask> {
 
   /// Returns a list of the running probes in this [TriggeredTaskExecutor].
   List<Probe> get probes => taskExecutor?.probes ?? [];
+
+  @override
+  String toString() => '$runtimeType - triggeredTask: $triggeredTask';
 }
 
 /// Responsible for handling the execution of a [TriggeredTask] which contains
@@ -187,11 +188,9 @@ class TriggeredAppTaskExecutor extends TriggeredTaskExecutor {
 
   @override
   Future<void> onResume() async {
-    debug('hasBeenScheduledUntil : ${triggeredTask.hasBeenScheduledUntil}');
     final from = triggeredTask.hasBeenScheduledUntil ?? DateTime.now();
     final to = from.add(Duration(days: 10)); // look 10 days ahead
-    final schedule = triggerExecutor.getSchedule(from, to);
-    debug('$runtimeType - schedule: $schedule');
+    final schedule = triggerExecutor.getSchedule(from, to, 10);
 
     if (schedule.isNotEmpty) {
       // enqueue the first 6 (max) app tasks in the future

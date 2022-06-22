@@ -17,7 +17,8 @@ void _registerFromJsonFunctions() {
     name: '',
   ));
   FromJsonFactory().register(DataEndPoint(type: ''));
-  FromJsonFactory().register(FileDataEndPoint(dataFormat: ''));
+  FromJsonFactory().register(FileDataEndPoint());
+  FromJsonFactory().register(SQLiteDataEndPoint());
   FromJsonFactory().register(StudyDescription(
     title: '',
     description: '',

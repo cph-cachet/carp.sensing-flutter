@@ -188,6 +188,9 @@ abstract class AbstractExecutor<TConfig> implements Executor<TConfig> {
   /// Callback when this executor is stopped.
   @protected
   Future<void> onStop();
+
+  @override
+  String toString() => '$runtimeType - configuration: $configuration';
 }
 
 //---------------------------------------------------------------------------------------

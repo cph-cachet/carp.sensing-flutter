@@ -132,11 +132,9 @@ class AppTaskController {
       userTask.triggerTime = triggerTime ?? DateTime.now();
       _userTaskMap[userTask.id] = userTask;
       if (userTaskEvent) _controller.add(userTask);
-      info('Enqueued $userTask');
+      debug('$runtimeType - Enqueued $userTask');
 
       if (notificationsEnabled && sendNotification) {
-        debug(
-            '$runtimeType - Trying to schedule notification for $userTask at time $triggerTime');
         // create notification
         // TODO - iOS has a limit where it will only keep 64 notifications that will fire the soonest...
         // See the flutter_local_notifications plugin.
@@ -227,7 +225,7 @@ class AppTaskController {
     bool success = true;
     try {
       String name = (await filename)!;
-      info("$runtimeType - Saving task queue to file '$name'.");
+      debug("$runtimeType - Saving task queue to file '$name'.");
       final json = jsonEncode(UserTaskSnapshotList.fromUserTasks(userTasks));
       File(name).writeAsStringSync(json);
     } catch (exception) {

@@ -4,7 +4,8 @@ part of runtime;
 /// Flutter plugin.
 
 class AwesomeNotificationController implements NotificationController {
-  static final AwesomeNotificationController _instance = AwesomeNotificationController._();
+  static final AwesomeNotificationController _instance =
+      AwesomeNotificationController._();
   AwesomeNotificationController._() : super();
 
   /// The singleton [NotificationController].
@@ -51,7 +52,8 @@ class AwesomeNotificationController implements NotificationController {
   Future<void> scheduleNotification(UserTask task) async {
     if (task.notification) {
       if (task.triggerTime.isAfter(DateTime.now())) {
-        final time = tz.TZDateTime.from(task.triggerTime, tz.getLocation(Settings().timezone));
+        final time = tz.TZDateTime.from(
+            task.triggerTime, tz.getLocation(Settings().timezone));
 
         await AwesomeNotifications().createNotification(
             content: NotificationContent(
@@ -60,8 +62,9 @@ class AwesomeNotificationController implements NotificationController {
                 title: task.title,
                 body: task.description,
                 notificationLayout: NotificationLayout.Default),
-            schedule: NotificationCalendar.fromDate(date: task.triggerTime, allowWhileIdle: true));
-        info('$runtimeType - Notification scheduled for $task at $time');
+            schedule: NotificationCalendar.fromDate(
+                date: task.triggerTime, allowWhileIdle: true));
+        debug('$runtimeType - Notification scheduled for $task at $time');
       }
     } else {
       warning('$runtimeType - Can only schedule a notification in the future. '

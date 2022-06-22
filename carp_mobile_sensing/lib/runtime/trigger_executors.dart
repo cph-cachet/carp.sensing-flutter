@@ -87,7 +87,7 @@ abstract class ScheduleableTriggerExecutor<TConfig extends Trigger>
   /// given period. This is mainly used for persistently scheduling
   /// a list of [AppTask]s from triggers that implement the [Scheduleable]
   /// interface.
-  List<DateTime> getSchedule(DateTime from, DateTime to);
+  List<DateTime> getSchedule(DateTime from, DateTime to, [int max]);
 }
 
 /// Executes a [ImmediateTrigger], i.e. starts sampling immediately.
@@ -151,7 +151,7 @@ class DelayedTriggerExecutor extends TriggerExecutor<DelayedTrigger> {
 class ElapsedTimeTriggerExecutor
     extends ScheduleableTriggerExecutor<ElapsedTimeTrigger> {
   @override
-  List<DateTime> getSchedule(DateTime from, DateTime to) {
+  List<DateTime> getSchedule(DateTime from, DateTime to, [int? max]) {
     final dd = DateTime.now().add(configuration!.elapsedTime);
     return (dd.isAfter(from) && dd.isBefore(to)) ? [dd] : [];
   }
@@ -190,13 +190,15 @@ abstract class TimerTriggerExecutor<TConfig extends Trigger>
 /// Executes a [IntervalTrigger], i.e. resumes sampling on a regular basis.
 class IntervalTriggerExecutor extends TimerTriggerExecutor<IntervalTrigger> {
   @override
-  List<DateTime> getSchedule(DateTime from, DateTime to) {
+  List<DateTime> getSchedule(DateTime from, DateTime to, [int max = 100]) {
     final List<DateTime> schedule = [];
     DateTime timestamp = from;
+    int count = 0;
 
-    while (timestamp.isBefore(to)) {
+    while (timestamp.isBefore(to) && count < max) {
       schedule.add(timestamp);
       timestamp = timestamp.add(configuration!.period);
+      count++;
     }
 
     return schedule;
@@ -219,13 +221,15 @@ class IntervalTriggerExecutor extends TimerTriggerExecutor<IntervalTrigger> {
 /// resumed and paused again.
 class PeriodicTriggerExecutor extends TimerTriggerExecutor<PeriodicTrigger> {
   @override
-  List<DateTime> getSchedule(DateTime from, DateTime to) {
+  List<DateTime> getSchedule(DateTime from, DateTime to, [int max = 100]) {
     final List<DateTime> schedule = [];
     DateTime timestamp = from;
+    int count = 0;
 
-    while (timestamp.isBefore(to)) {
+    while (timestamp.isBefore(to) && count < max) {
       schedule.add(timestamp);
       timestamp = timestamp.add(configuration!.period);
+      count++;
     }
 
     return schedule;
@@ -247,7 +251,7 @@ class PeriodicTriggerExecutor extends TimerTriggerExecutor<PeriodicTrigger> {
 /// Executes a [DateTimeTrigger] on the specified date and time.
 class DateTimeTriggerExecutor extends TimerTriggerExecutor<DateTimeTrigger> {
   @override
-  List<DateTime> getSchedule(DateTime from, DateTime to) =>
+  List<DateTime> getSchedule(DateTime from, DateTime to, [int? max]) =>
       (configuration!.schedule.isAfter(from) &&
               configuration!.schedule.isBefore(to))
           ? [configuration!.schedule]
@@ -279,13 +283,15 @@ class DateTimeTriggerExecutor extends TimerTriggerExecutor<DateTimeTrigger> {
 class RecurrentScheduledTriggerExecutor
     extends TimerTriggerExecutor<RecurrentScheduledTrigger> {
   @override
-  List<DateTime> getSchedule(DateTime from, DateTime to) {
+  List<DateTime> getSchedule(DateTime from, DateTime to, [int max = 100]) {
     List<DateTime> schedule = [];
     DateTime timestamp = configuration!.firstOccurrence;
+    int count = 0;
 
-    while (timestamp.isBefore(to)) {
+    while (timestamp.isBefore(to) && count < max) {
       if (timestamp.isAfter(from)) schedule.add(timestamp);
       timestamp = timestamp.add(configuration!.period);
+      count++;
     }
 
     return schedule;
@@ -314,14 +320,17 @@ class CronScheduledTriggerExecutor
   }
 
   @override
-  List<DateTime> getSchedule(DateTime from, DateTime to) {
+  List<DateTime> getSchedule(DateTime from, DateTime to, [int max = 100]) {
     var cronIterator = Cron().parse(
         configuration!.cronExpression,
         Settings().timezone,
         tz.TZDateTime.from(from, tz.getLocation(Settings().timezone)));
     final List<DateTime> schedule = [];
-    while (cronIterator.next().isBefore(to)) {
+    int count = 0;
+
+    while (cronIterator.next().isBefore(to) && count < max) {
       schedule.add(cronIterator.current());
+      count++;
     }
     return schedule;
   }
@@ -490,15 +499,16 @@ class RandomRecurrentTriggerExecutor
   }
 
   @override
-  List<DateTime> getSchedule(DateTime from, DateTime to) {
+  List<DateTime> getSchedule(DateTime from, DateTime to, [int max = 100]) {
     assert(to.isAfter(from));
     final List<DateTime> schedule = [];
 
     final startDay = DateTime(from.year, from.month, from.day);
     final toDay = DateTime(to.year, to.month, to.day);
     var day = startDay;
+    var count = 0;
 
-    while (day.isBefore(toDay)) {
+    while (day.isBefore(toDay) && count < max) {
       samplingTimes.forEach((time) {
         final date = DateTime(
             day.year, day.month, day.day, time.hour, time.minute, time.second);
@@ -506,6 +516,7 @@ class RandomRecurrentTriggerExecutor
       });
 
       day = day.add(const Duration(days: 1));
+      count++;
     }
     return schedule;
   }
