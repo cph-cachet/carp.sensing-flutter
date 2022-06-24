@@ -43,6 +43,8 @@ class SensingUserTaskFactory implements UserTaskFactory {
 abstract class UserTask {
   late AppTaskExecutor _executor;
   UserTaskState _state = UserTaskState.initialized;
+  final StreamController<UserTaskState> _stateController =
+      StreamController.broadcast();
 
   /// The [AppTask] from which this user task originates from.
   AppTask get task => _executor.task;
@@ -69,14 +71,14 @@ abstract class UserTask {
 
   /// The state of this task.
   UserTaskState get state => _state;
-
   set state(UserTaskState state) {
     _state = state;
     _stateController.add(state);
   }
 
-  final StreamController<UserTaskState> _stateController =
-      StreamController.broadcast();
+  /// Has a notification been created via a [NotificationController] in the
+  /// phone's notification system?
+  bool hasNotificationBeenCreated = false;
 
   /// A stream of state changes of this user task.
   ///

@@ -12,7 +12,7 @@ class AppTaskController {
   static final AppTaskController _instance = AppTaskController._();
   final StreamController<UserTask> _controller = StreamController.broadcast();
 
-  /// Should this controller send notifications to the user.
+  /// Should this App Task Controller send notifications to the user.
   bool notificationsEnabled = true;
 
   final Map<String, UserTask> _userTaskMap = {};
@@ -108,6 +108,7 @@ class AppTaskController {
   ///
   /// [triggerTime] specifies when the task should trigger, i.e., be available.
   /// Notify the user if [sendNotification] and [notificationsEnabled] is true.
+  /// If [triggerTime] is null, a notification is send imediately.
   /// [userTaskEvent] specifies if an app event should be generated.
   ///
   /// Returns the [UserTask] added to the [userTasks].
@@ -316,6 +317,7 @@ class UserTaskSnapshot extends Serializable {
   late UserTaskState state;
   late DateTime enqueued;
   late DateTime triggerTime;
+  late bool hasNotificationBeenCreated;
   String? studyDeploymentId;
   String? deviceRoleName;
 
@@ -325,6 +327,7 @@ class UserTaskSnapshot extends Serializable {
     this.state,
     this.enqueued,
     this.triggerTime,
+    this.hasNotificationBeenCreated,
     this.studyDeploymentId,
     this.deviceRoleName,
   ) : super();
@@ -335,6 +338,7 @@ class UserTaskSnapshot extends Serializable {
     state = userTask.state;
     enqueued = userTask.enqueued;
     triggerTime = userTask.triggerTime;
+    hasNotificationBeenCreated = userTask.hasNotificationBeenCreated;
     studyDeploymentId = userTask.appTaskExecutor.deployment?.studyDeploymentId;
     deviceRoleName =
         userTask.appTaskExecutor.deployment?.deviceDescriptor.roleName;

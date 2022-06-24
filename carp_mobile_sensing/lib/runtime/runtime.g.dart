@@ -36,6 +36,7 @@ UserTaskSnapshot _$UserTaskSnapshotFromJson(Map<String, dynamic> json) =>
       $enumDecode(_$UserTaskStateEnumMap, json['state']),
       DateTime.parse(json['enqueued'] as String),
       DateTime.parse(json['triggerTime'] as String),
+      json['hasNotificationBeenCreated'] as bool,
       json['studyDeploymentId'] as String?,
       json['deviceRoleName'] as String?,
     )..$type = json[r'$type'] as String?;
@@ -55,6 +56,7 @@ Map<String, dynamic> _$UserTaskSnapshotToJson(UserTaskSnapshot instance) {
   val['state'] = _$UserTaskStateEnumMap[instance.state];
   val['enqueued'] = instance.enqueued.toIso8601String();
   val['triggerTime'] = instance.triggerTime.toIso8601String();
+  val['hasNotificationBeenCreated'] = instance.hasNotificationBeenCreated;
   writeNotNull('studyDeploymentId', instance.studyDeploymentId);
   writeNotNull('deviceRoleName', instance.deviceRoleName);
   return val;

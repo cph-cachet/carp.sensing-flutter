@@ -82,26 +82,28 @@ class FlutterLocalNotificationController implements NotificationController {
     }
   }
 
-  /// Schedule a notification for a [task] at the [task.triggerTime].
+  /// Schedule a notification for a [task] at the [UserTask.triggerTime].
   Future<void> scheduleNotification(UserTask task) async {
-    if (task.notification) {
-      if (task.triggerTime.isAfter(DateTime.now())) {
-        final time = tz.TZDateTime.from(
-            task.triggerTime, tz.getLocation(Settings().timezone));
+    // early out if not to be scheduled
+    if (!task.notification) return;
 
-        await notifications.FlutterLocalNotificationsPlugin().zonedSchedule(
-          task.id.hashCode,
-          task.title,
-          task.description,
-          time,
-          _platformChannelSpecifics,
-          androidAllowWhileIdle: true,
-          uiLocalNotificationDateInterpretation:
-              notifications.UILocalNotificationDateInterpretation.absoluteTime,
-          payload: task.id,
-        );
-        debug('$runtimeType - Notification scheduled for $task at $time');
-      }
+    if (task.triggerTime.isAfter(DateTime.now())) {
+      final time = tz.TZDateTime.from(
+          task.triggerTime, tz.getLocation(Settings().timezone));
+
+      await notifications.FlutterLocalNotificationsPlugin().zonedSchedule(
+        task.id.hashCode,
+        task.title,
+        task.description,
+        time,
+        _platformChannelSpecifics,
+        androidAllowWhileIdle: true,
+        uiLocalNotificationDateInterpretation:
+            notifications.UILocalNotificationDateInterpretation.absoluteTime,
+        payload: task.id,
+      );
+      task.hasNotificationBeenCreated = true;
+      debug('$runtimeType - Notification scheduled for $task at $time');
     } else {
       warning('$runtimeType - Can only schedule a notification in the future. '
           'task trigger time: ${task.triggerTime}.');

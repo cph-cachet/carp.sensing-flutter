@@ -47,25 +47,35 @@ class AwesomeNotificationController implements NotificationController {
   Future<int> get pendingNotificationRequestsCount async =>
       (await AwesomeNotifications().listScheduledNotifications()).length;
 
-  /// Schedule a notification for a [task] at the [task.triggerTime].
+  /// Schedule a notification for a [task] at the [UserTask.triggerTime].
   @override
   Future<void> scheduleNotification(UserTask task) async {
-    if (task.notification) {
-      if (task.triggerTime.isAfter(DateTime.now())) {
-        final time = tz.TZDateTime.from(
-            task.triggerTime, tz.getLocation(Settings().timezone));
+    // early out if not to be scheduled
+    if (!task.notification) return;
 
-        await AwesomeNotifications().createNotification(
-            content: NotificationContent(
-                id: task.id.hashCode,
-                channelKey: 'scheduled_channel',
-                title: task.title,
-                body: task.description,
-                notificationLayout: NotificationLayout.Default),
-            schedule: NotificationCalendar.fromDate(
-                date: task.triggerTime, allowWhileIdle: true));
-        debug('$runtimeType - Notification scheduled for $task at $time');
-      }
+    // early out if has already been scheduled
+    // this is relevant for AwecomeNotification since it makes notifications
+    // persistent across app re-start
+    if (task.hasNotificationBeenCreated) {
+      debug('$runtimeType - task has already been scheduled - task: $task');
+      return;
+    }
+
+    if (task.triggerTime.isAfter(DateTime.now())) {
+      final time = tz.TZDateTime.from(
+          task.triggerTime, tz.getLocation(Settings().timezone));
+
+      await AwesomeNotifications().createNotification(
+          content: NotificationContent(
+              id: task.id.hashCode,
+              channelKey: 'scheduled_channel',
+              title: task.title,
+              body: task.description,
+              notificationLayout: NotificationLayout.Default),
+          schedule: NotificationCalendar.fromDate(
+              date: task.triggerTime, allowWhileIdle: true));
+      task.hasNotificationBeenCreated = true;
+      debug('$runtimeType - Notification scheduled for $task at $time');
     } else {
       warning('$runtimeType - Can only schedule a notification in the future. '
           'task trigger time: ${task.triggerTime}.');
