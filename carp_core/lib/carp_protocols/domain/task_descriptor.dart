@@ -81,9 +81,9 @@ class CustomProtocolTask extends TaskDescriptor {
   // The measures list is empty, since measures are defined in [studyProtocol]
   // in a different format.
   CustomProtocolTask({
-    String? name,
+    super.name,
     required this.studyProtocol,
-  }) : super(name: name, measures: []);
+  }) : super(measures: []);
 
   Function get fromJsonFunction => _$CustomProtocolTaskFromJson;
   factory CustomProtocolTask.fromJson(Map<String, dynamic> json) =>

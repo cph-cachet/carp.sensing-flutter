@@ -46,8 +46,7 @@ class HealthSamplingConfiguration extends HistoricSamplingConfiguration {
   /// The list of [HealthDataType](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html) to collect.
   List<HealthDataType> healthDataTypes;
 
-  HealthSamplingConfiguration({Duration? past, required this.healthDataTypes})
-      : super(past: past);
+  HealthSamplingConfiguration({super.past, required this.healthDataTypes});
 
   Function get fromJsonFunction => _$HealthSamplingConfigurationFromJson;
   Map<String, dynamic> toJson() => _$HealthSamplingConfigurationToJson(this);

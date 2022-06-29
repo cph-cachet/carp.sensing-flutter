@@ -334,7 +334,7 @@ Map<String, dynamic> _$RegisterDeviceToJson(RegisterDevice instance) =>
 
 UnregisterDevice _$UnregisterDeviceFromJson(Map<String, dynamic> json) =>
     UnregisterDevice(
-      json['studyDeploymentId'] as String,
+      json['studyDeploymentId'] as String?,
       json['deviceRoleName'] as String,
     )..$type = json[r'$type'] as String?;
 

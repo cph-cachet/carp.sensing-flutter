@@ -60,7 +60,7 @@ Map<String, dynamic> _$ESenseSensorDatumToJson(ESenseSensorDatum instance) {
 }
 
 ESenseDevice _$ESenseDeviceFromJson(Map<String, dynamic> json) => ESenseDevice(
-      roleName: json['roleName'] as String?,
+      roleName: json['roleName'] as String? ?? ESenseDevice.DEFAULT_ROLENAME,
       deviceName: json['deviceName'] as String?,
       samplingRate: json['samplingRate'] as int?,
       supportedDataTypes: (json['supportedDataTypes'] as List<dynamic>?)

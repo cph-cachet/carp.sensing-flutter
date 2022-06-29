@@ -264,8 +264,7 @@ class CarpDataManagerEvent extends DataManagerEvent {
   /// The URI of the file on the CARP server.
   String fileEndpointUri;
 
-  CarpDataManagerEvent(String type, this.path, this.id, this.fileEndpointUri)
-      : super(type);
+  CarpDataManagerEvent(super.type, this.path, this.id, this.fileEndpointUri);
 
   String toString() =>
       'CarpDataManagerEvent - type: $type, path: $path, id: $id, fileEndpointUri: $fileEndpointUri';

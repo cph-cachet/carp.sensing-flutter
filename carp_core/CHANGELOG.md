@@ -1,7 +1,7 @@
 ## 0.40.0
 * `ConcurrentTask` is now called a `BackgroundTask`
 * fix of error in `SetParticipantData` request
-* Upgraded to Dart 2.17 and Flutter 3.0
+* Upgraded to Dart 2.17
 
 ## 0.33.1
 * implementation of `ScheduledTrigger` incl. test

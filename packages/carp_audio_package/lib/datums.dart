@@ -26,11 +26,11 @@ class MediaDatum extends FileDatum {
   DateTime? endRecordingTime;
 
   MediaDatum({
-    required String filename,
+    required super.filename,
     required this.mediaType,
     this.startRecordingTime,
     this.endRecordingTime,
-  }) : super(filename: filename);
+  });
 
   factory MediaDatum.fromJson(Map<String, dynamic> json) =>
       _$MediaDatumFromJson(json);

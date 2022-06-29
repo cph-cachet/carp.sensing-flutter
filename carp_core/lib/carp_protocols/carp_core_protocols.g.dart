@@ -108,7 +108,7 @@ Map<String, dynamic> _$CustomProtocolDeviceToJson(
 }
 
 Smartphone _$SmartphoneFromJson(Map<String, dynamic> json) => Smartphone(
-      roleName: json['roleName'] as String?,
+      roleName: json['roleName'] as String? ?? Smartphone.DEFAULT_ROLENAME,
       supportedDataTypes: (json['supportedDataTypes'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),

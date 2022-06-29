@@ -24,7 +24,7 @@ class SurveyUserTask extends UserTask {
   /// The [RPAppTask] from which this user task originates from.
   RPAppTask get rpAppTask => task as RPAppTask;
 
-  SurveyUserTask(AppTaskExecutor executor) : super(executor);
+  SurveyUserTask(super.executor);
 
   void onStart(BuildContext context) {
     // saving the build context for later use

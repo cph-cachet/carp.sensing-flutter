@@ -23,25 +23,16 @@ class RPAppTask extends AppTask {
   RPTask rpTask;
 
   RPAppTask({
-    required String type,
-    String? name,
-    String title = '',
-    String description = '',
-    String instructions = '',
-    int? minutesToComplete,
-    Duration? expire,
-    bool notification = false,
+    super.type,
+    super.name,
+    super.title ,
+    super.description,
+    super.instructions ,
+    super.minutesToComplete,
+    super.expire,
+    super.notification ,
     required this.rpTask,
-  }) : super(
-          type: type,
-          name: name,
-          title: title,
-          description: description,
-          instructions: instructions,
-          minutesToComplete: minutesToComplete,
-          expire: expire,
-          notification: notification,
-        );
+  });
 
   Function get fromJsonFunction => _$RPAppTaskFromJson;
   Map<String, dynamic> toJson() => _$RPAppTaskToJson(this);

@@ -7,7 +7,6 @@ void _registerFromJsonFunctions() {
   if (_fromJsonFunctionsRegistrered) return;
 
   // Protocol classes
-  // FromJsonFactory().register(SmartphoneStudyProtocol(name: '', ownerId: ''));
   FromJsonFactory().register(StudyResponsible(
     id: '',
     title: '',
@@ -67,16 +66,18 @@ void _registerFromJsonFunctions() {
     critical: PersistentSamplingConfiguration(),
   ));
 
-  // Measure classes
-  // FromJsonFactory().register(CAMSMeasure(type: 'ignored'));
-  // FromJsonFactory().register(
-  //     PeriodicMeasure(type: 'ignored', frequency: Duration(seconds: 1)));
-  // FromJsonFactory().register(MarkedMeasure(type: 'ignored'));
-
   // AppTaskController classes
   FromJsonFactory().register(UserTaskSnapshotList());
-  FromJsonFactory().register(UserTaskSnapshot('', AppTask(type: 'ignored'),
-      UserTaskState.canceled, DateTime.now(), DateTime.now(), '', ''));
+  FromJsonFactory().register(UserTaskSnapshot(
+    '',
+    AppTask(type: 'ignored'),
+    UserTaskState.canceled,
+    DateTime.now(),
+    DateTime.now(),
+    true,
+    '',
+    '',
+  ));
   _fromJsonFunctionsRegistrered = true;
 }
 

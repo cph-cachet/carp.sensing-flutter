@@ -17,10 +17,10 @@ part of media;
 ///   SamplingPackageRegistry.register(AudioVideoSamplingPackage());
 /// ```
 class MediaSamplingPackage extends SmartphoneSamplingPackage {
-  static const String AUDIO = "dk.cachet.carp.audio";
-  static const String VIDEO = "dk.cachet.carp.video";
-  static const String IMAGE = "dk.cachet.carp.image";
-  static const String NOISE = "dk.cachet.carp.noise";
+  static const String AUDIO = "${NameSpace.CARP}.audio";
+  static const String VIDEO = "${NameSpace.CARP}.video";
+  static const String IMAGE = "${NameSpace.CARP}.image";
+  static const String NOISE = "${NameSpace.CARP}.noise";
 
   List<String> get dataTypes => [
         AUDIO,

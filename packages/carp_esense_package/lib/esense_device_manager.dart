@@ -40,14 +40,12 @@ class ESenseDevice extends DeviceDescriptor {
   int? samplingRate;
 
   ESenseDevice({
-    String? roleName,
+    super.roleName = ESenseDevice.DEFAULT_ROLENAME,
     this.deviceName,
     this.samplingRate,
-    List<String>? supportedDataTypes,
+    super.supportedDataTypes,
   }) : super(
-          roleName: roleName ?? DEFAULT_ROLENAME,
           isMasterDevice: false,
-          supportedDataTypes: supportedDataTypes,
         );
 
   Function get fromJsonFunction => _$ESenseDeviceFromJson;

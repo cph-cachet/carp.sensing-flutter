@@ -98,12 +98,9 @@ class Smartphone extends MasterDeviceDescriptor {
   /// Create a new Smartphone device descriptor.
   /// If [roleName] is not specified, then the [DEFAULT_ROLENAME] is used.
   Smartphone({
-    String? roleName,
-    List<String>? supportedDataTypes,
-  }) : super(
-          roleName: roleName ?? DEFAULT_ROLENAME,
-          supportedDataTypes: supportedDataTypes,
-        );
+    super.roleName = Smartphone.DEFAULT_ROLENAME,
+    super.supportedDataTypes,
+  });
 
   Function get fromJsonFunction => _$SmartphoneFromJson;
   factory Smartphone.fromJson(Map<String, dynamic> json) =>

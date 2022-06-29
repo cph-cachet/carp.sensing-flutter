@@ -87,18 +87,14 @@ class CarpDataEndPoint extends FileDataEndPoint {
     this.password,
     String? collection,
     this.deleteWhenUploaded = true,
-    String dataFormat = NameSpace.CARP,
-    int bufferSize = 500 * 1000,
-    bool zip = true,
-    bool encrypt = false,
-    String? publicKey,
+    super.dataFormat ,
+    super.bufferSize,
+    super.zip,
+    super.encrypt,
+    super.publicKey,
   }) : super(
             type: DataEndPointTypes.CARP,
-            dataFormat: dataFormat,
-            bufferSize: bufferSize,
-            zip: zip,
-            encrypt: encrypt,
-            publicKey: publicKey) {
+           ) {
     this.collection = collection ?? DEFAULT_COLLECTION;
     // the CARP server cannot handle zipped or encrypted files (yet)
     if (this.uploadMethod == CarpUploadMethod.BATCH_DATA_POINT) {

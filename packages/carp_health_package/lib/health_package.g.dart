@@ -43,6 +43,7 @@ Map<String, dynamic> _$HealthSamplingConfigurationToJson(
 
 const _$HealthDataTypeEnumMap = {
   HealthDataType.ACTIVE_ENERGY_BURNED: 'ACTIVE_ENERGY_BURNED',
+  HealthDataType.AUDIOGRAM: 'AUDIOGRAM',
   HealthDataType.BASAL_ENERGY_BURNED: 'BASAL_ENERGY_BURNED',
   HealthDataType.BLOOD_GLUCOSE: 'BLOOD_GLUCOSE',
   HealthDataType.BLOOD_OXYGEN: 'BLOOD_OXYGEN',

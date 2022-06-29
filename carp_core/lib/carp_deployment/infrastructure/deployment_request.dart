@@ -95,8 +95,7 @@ class RegisterDevice extends DeploymentServiceRequest {
 /// A request for unregistering this device.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class UnregisterDevice extends DeploymentServiceRequest {
-  UnregisterDevice(String studyDeploymentId, this.deviceRoleName)
-      : super(studyDeploymentId);
+  UnregisterDevice(super.studyDeploymentId, this.deviceRoleName);
 
   /// The role name of this device.
   String deviceRoleName;
