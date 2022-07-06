@@ -116,7 +116,7 @@ class MovisensDeviceManager extends BTLEDeviceManager {
   String get btleAddress => deviceDescriptor.address;
 
   @override
-  bool canConnect() => userData != null;
+  Future<bool> canConnect() async => userData != null;
 
   @override
   Future<bool> onConnect() async {

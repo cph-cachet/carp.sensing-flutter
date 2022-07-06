@@ -1,18 +1,19 @@
 name: carp_movisens_package_example
 description: Examples of how to use the CANS Movisens Package.
-version: 0.33.0
+version: 0.40.0
 publish_to: none
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=2.17.0 <3.0.0'
+  flutter: ">=3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  # carp_core:
-  #   path: ../../../carp_core
-  # carp_mobile_sensing:
-  #   path: ../../../carp_mobile_sensing
+  carp_core:
+    path: ../../../carp_core
+  carp_mobile_sensing:
+    path: ../../../carp_mobile_sensing
   carp_movisens_package:
     path: ../
 

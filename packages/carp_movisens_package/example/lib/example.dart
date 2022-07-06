@@ -37,7 +37,7 @@ void main() async {
   // adding a movisens measure
   protocol.addTriggeredTask(
       ImmediateTrigger(),
-      AutomaticTask(name: 'Movisens Task')
+      BackgroundTask(name: 'Movisens Task')
         ..addMeasure(Measure(type: MovisensSamplingPackage.MOVISENS)),
       movisens);
 }

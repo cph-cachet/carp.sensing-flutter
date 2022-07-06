@@ -69,22 +69,6 @@ class MovisensSamplingPackage implements SamplingPackage {
   @override
   List<String> get dataTypes => [MOVISENS];
 
-  SamplingSchema get common => SamplingSchema(
-        type: SamplingSchemaType.common,
-        powerAware: false,
-      )..measures.addEntries([
-          MapEntry(
-              MOVISENS_NAMESPACE,
-              CAMSMeasure(
-                type: MOVISENS_NAMESPACE,
-                name: 'Movisens ECG device',
-                description:
-                    "Collects heart rythm data from the Movisens EcgMove4 sensor",
-              )),
-        ]);
-
-  SamplingSchema get light => common..type = SamplingSchemaType.light;
-  SamplingSchema get minimum => common..type = SamplingSchemaType.minimum;
-  SamplingSchema get normal => common..type = SamplingSchemaType.normal;
-  SamplingSchema get debug => common..type = SamplingSchemaType.debug;
+  @override
+  SamplingSchema get samplingSchema => SamplingSchema();
 }
