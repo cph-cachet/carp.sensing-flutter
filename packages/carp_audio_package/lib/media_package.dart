@@ -17,6 +17,7 @@ part of media;
 ///   SamplingPackageRegistry.register(AudioVideoSamplingPackage());
 /// ```
 class MediaSamplingPackage extends SmartphoneSamplingPackage {
+  static const String MEDIA = "${NameSpace.CARP}.media";
   static const String AUDIO = "${NameSpace.CARP}.audio";
   static const String VIDEO = "${NameSpace.CARP}.video";
   static const String IMAGE = "${NameSpace.CARP}.image";

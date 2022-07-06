@@ -28,9 +28,9 @@ enum DasesHealthDataType {
 
 /// Map a [DasesHealthDataType] to a [HealthDataUnit].
 const Map<DasesHealthDataType, HealthDataUnit> dasesDataTypeToUnit = {
-  DasesHealthDataType.CALORIES_INTAKE: HealthDataUnit.CALORIES,
+  DasesHealthDataType.CALORIES_INTAKE: HealthDataUnit.KILOCALORIE,
   DasesHealthDataType.ALCOHOL: HealthDataUnit.COUNT,
-  DasesHealthDataType.BLOOD_ALCOHOL_CONTENT: HealthDataUnit.PERCENTAGE,
+  DasesHealthDataType.BLOOD_ALCOHOL_CONTENT: HealthDataUnit.PERCENT,
   DasesHealthDataType.SMOKED_CIGARETTES: HealthDataUnit.COUNT,
   DasesHealthDataType.SMOKED_OTHER: HealthDataUnit.COUNT,
   DasesHealthDataType.EXERCISE: HealthDataUnit.NO_UNIT,
@@ -54,6 +54,9 @@ class HealthSamplingConfiguration extends HistoricSamplingConfiguration {
       FromJsonFactory().fromJson(json) as HealthSamplingConfiguration;
 }
 
+/// A no-op function for deserializing a HealthValue - never used.
+HealthValue _healthValueFromJson(json) => NumericHealthValue(-1);
+
 /// A [Datum] that holds a [HealthDataPoint](https://pub.dev/documentation/health/latest/health/HealthDataPoint-class.html) data point information.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class HealthDatum extends Datum {
@@ -63,7 +66,8 @@ class HealthDatum extends Datum {
       '${HealthSamplingPackage.HEALTH}.${dataType.toLowerCase()}');
 
   /// The value of the health data.
-  num value;
+  @JsonKey(fromJson: _healthValueFromJson)
+  HealthValue value;
 
   /// Unit of health data.
   ///

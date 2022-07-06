@@ -108,7 +108,7 @@ void main() {
     print(_encode(configuration));
   });
 
-  group("DASES Data Types", () {
+  group("Data Types", () {
     test(' - CALORIES_INTAKE', () {
       DateTime to = DateTime.now();
       DateTime from = to.subtract(Duration(milliseconds: 10000));
@@ -120,8 +120,16 @@ void main() {
       String deviceId = '1234';
       String uuid = "4321";
 
-      HealthDatum hd =
-          HealthDatum(value, unit, type, from, to, platform, deviceId, uuid);
+      HealthDatum hd = HealthDatum(
+        NumericHealthValue(value),
+        unit,
+        type,
+        from,
+        to,
+        platform,
+        deviceId,
+        uuid,
+      );
 
       DataPoint dp_1 = DataPoint.fromData(hd);
       expect(dp_1.carpHeader.dataFormat.namespace,
@@ -134,7 +142,7 @@ void main() {
       DateTime to = DateTime.now();
       DateTime from = to.subtract(Duration(milliseconds: 10000));
       HealthDatum hd = HealthDatum(
-          6,
+          NumericHealthValue(6),
           enumToString(dasesDataTypeToUnit[DasesHealthDataType.ALCOHOL]),
           enumToString(DasesHealthDataType.ALCOHOL),
           from,
@@ -154,7 +162,7 @@ void main() {
       DateTime to = DateTime.now();
       DateTime from = to.subtract(Duration(hours: 8));
       HealthDatum hd = HealthDatum(
-          6,
+          NumericHealthValue(6),
           enumToString(dasesDataTypeToUnit[DasesHealthDataType.SLEEP]),
           enumToString(DasesHealthDataType.SLEEP),
           from,
@@ -175,7 +183,7 @@ void main() {
       DateTime from = to.subtract(Duration(hours: 8));
 
       HealthDatum smoking = HealthDatum(
-          12,
+          NumericHealthValue(12),
           enumToString(
               dasesDataTypeToUnit[DasesHealthDataType.SMOKED_CIGARETTES]),
           enumToString(DasesHealthDataType.SMOKED_CIGARETTES),
@@ -191,6 +199,53 @@ void main() {
       expect(dp_1.carpHeader.dataFormat.namespace,
           HealthSamplingPackage.HEALTH_NAMESPACE);
       expect(dp_1.carpHeader.dataFormat.name, "smoked_cigarettes");
+      print(_encode(dp_1));
+    });
+
+    test(' - AUDIOGRAM', () {
+      DateTime to = DateTime.now();
+      DateTime from = to.subtract(Duration(hours: 8));
+
+      HealthDatum audiogram = HealthDatum(
+          AudiogramHealthValue([12, 32], [1, 2, 3, 4], [1, 4, 7]),
+          enumToString(HealthDataUnit.NO_UNIT),
+          enumToString(HealthDataType.AUDIOGRAM),
+          from,
+          to,
+          (Platform.isAndroid)
+              ? enumToString(PlatformType.ANDROID)
+              : enumToString(PlatformType.IOS),
+          '1234',
+          '4321');
+
+      DataPoint dp_1 = DataPoint.fromData(audiogram);
+      expect(dp_1.carpHeader.dataFormat.namespace,
+          HealthSamplingPackage.HEALTH_NAMESPACE);
+      expect(dp_1.carpHeader.dataFormat.name, "audiogram");
+      print(_encode(dp_1));
+    });
+
+    test(' - WORKOUT', () {
+      DateTime to = DateTime.now();
+      DateTime from = to.subtract(Duration(hours: 8));
+
+      HealthDatum workout = HealthDatum(
+          WorkoutHealthValue(HealthWorkoutActivityType.AEROBICS, 8,
+              HealthDataUnit.KILOCALORIE, 1000, HealthDataUnit.METER),
+          enumToString(HealthDataUnit.NO_UNIT),
+          enumToString(HealthDataType.WORKOUT),
+          from,
+          to,
+          (Platform.isAndroid)
+              ? enumToString(PlatformType.ANDROID)
+              : enumToString(PlatformType.IOS),
+          '1234',
+          '4321');
+
+      DataPoint dp_1 = DataPoint.fromData(workout);
+      expect(dp_1.carpHeader.dataFormat.namespace,
+          HealthSamplingPackage.HEALTH_NAMESPACE);
+      expect(dp_1.carpHeader.dataFormat.name, "workout");
       print(_encode(dp_1));
     });
   });

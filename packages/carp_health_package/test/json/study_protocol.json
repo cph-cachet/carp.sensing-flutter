@@ -2,7 +2,7 @@
   "ownerId": "alex@uni.dk",
   "name": "Context package test",
   "description": "",
-  "creationDate": "2022-05-10T20:02:19.487454Z",
+  "creationDate": "2022-07-06T13:06:13.860922Z",
   "masterDevices": [
    {
     "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
@@ -23,7 +23,7 @@
    },
    "2": {
     "$type": "dk.cachet.carp.protocols.domain.triggers.RecurrentScheduledTrigger",
-    "duration": 1000000,
+    "duration": 2000000,
     "type": "daily",
     "time": {
      "hour": 23,
@@ -31,7 +31,6 @@
      "second": 0
     },
     "separationCount": 0,
-    "remember": false,
     "period": 86400000000
    }
   },
@@ -97,57 +96,14 @@
        "$type": "dk.cachet.carp.protocols.domain.sampling.SamplingConfiguration",
        "past": 86400000000,
        "future": 86400000000,
-       "healthDataType": "BLOOD_GLUCOSE"
-      }
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.health",
-      "overrideSamplingConfiguration": {
-       "$type": "dk.cachet.carp.protocols.domain.sampling.SamplingConfiguration",
-       "past": 86400000000,
-       "future": 86400000000,
-       "healthDataType": "BLOOD_PRESSURE_DIASTOLIC"
-      }
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.health",
-      "overrideSamplingConfiguration": {
-       "$type": "dk.cachet.carp.protocols.domain.sampling.SamplingConfiguration",
-       "past": 86400000000,
-       "future": 86400000000,
-       "healthDataType": "BLOOD_PRESSURE_SYSTOLIC"
-      }
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.health",
-      "overrideSamplingConfiguration": {
-       "$type": "dk.cachet.carp.protocols.domain.sampling.SamplingConfiguration",
-       "past": 86400000000,
-       "future": 86400000000,
-       "healthDataType": "BLOOD_PRESSURE_DIASTOLIC"
-      }
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.health",
-      "overrideSamplingConfiguration": {
-       "$type": "dk.cachet.carp.protocols.domain.sampling.SamplingConfiguration",
-       "past": 86400000000,
-       "future": 86400000000,
-       "healthDataType": "HEART_RATE"
-      }
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.health",
-      "overrideSamplingConfiguration": {
-       "$type": "dk.cachet.carp.protocols.domain.sampling.SamplingConfiguration",
-       "past": 86400000000,
-       "future": 86400000000,
-       "healthDataType": "STEPS"
+       "healthDataTypes": [
+        "BLOOD_GLUCOSE",
+        "BLOOD_PRESSURE_DIASTOLIC",
+        "BLOOD_PRESSURE_SYSTOLIC",
+        "BLOOD_PRESSURE_DIASTOLIC",
+        "HEART_RATE",
+        "STEPS"
+       ]
       }
      }
     ]
@@ -163,7 +119,9 @@
        "$type": "dk.cachet.carp.protocols.domain.sampling.SamplingConfiguration",
        "past": 86400000000,
        "future": 86400000000,
-       "healthDataType": "WEIGHT"
+       "healthDataTypes": [
+        "WEIGHT"
+       ]
       }
      }
     ]
