@@ -23,14 +23,14 @@ class RPAppTask extends AppTask {
   RPTask rpTask;
 
   RPAppTask({
-    super.type,
+    required super.type,
     super.name,
-    super.title ,
+    super.title,
     super.description,
-    super.instructions ,
+    super.instructions,
     super.minutesToComplete,
     super.expire,
-    super.notification ,
+    super.notification,
     required this.rpTask,
   });
 

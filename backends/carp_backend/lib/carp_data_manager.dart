@@ -105,15 +105,15 @@ class CarpDataManager extends AbstractDataManager {
     return CarpService().currentUser;
   }
 
-  void onDataPoint(DataPoint dataPoint) => uploadData(dataPoint);
+  Future<void> onDataPoint(DataPoint dataPoint) => uploadData(dataPoint);
 
-  void onError(Object? error) =>
+  Future<void> onError(Object? error) =>
       uploadData(DataPoint.fromData(ErrorDatum(error.toString()))
         ..carpHeader.dataFormat = DataFormat.fromString(CAMSDataType.ERROR)
         ..carpHeader.studyId = deployment.studyDeploymentId
         ..carpHeader.userId = deployment.userId);
 
-  void onDone() => close();
+  Future<void> onDone() => close();
 
   /// Handle upload of data depending on the specified [CarpUploadMethod].
   Future<bool> uploadData(DataPoint dataPoint) async {
