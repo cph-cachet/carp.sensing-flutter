@@ -19,6 +19,10 @@ class DeviceController implements DeviceDataCollectorFactory {
   @override
   Map<String, DeviceManager> get devices => _devices;
 
+  /// Get the list of connected devices defined in the study deployment.
+  List<DeviceManager> get connectedDevices =>
+      _devices.values.where((manager) => manager.isInitialized).toList();
+
   @override
   bool supportsDevice(String type) {
     for (var package in SamplingPackageRegistry().packages) {
@@ -97,8 +101,11 @@ class DeviceController implements DeviceDataCollectorFactory {
   /// [SamplingPackageRegistry].
   Future<void> connectAllConnectableDevices() async {
     for (var package in SamplingPackageRegistry().packages) {
-      if (await package.deviceManager.canConnect()) {
-        await getDevice(package.deviceType)?.connect();
+      if (getDevice(package.deviceType) != null &&
+          getDevice(package.deviceType)!.isInitialized) {
+        if (await package.deviceManager.canConnect()) {
+          await getDevice(package.deviceType)?.connect();
+        }
       }
     }
   }

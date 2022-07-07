@@ -14,6 +14,7 @@ enum MediaType { audio, video, image }
 /// as well as the timestamps of when the recording was started and stopped
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MediaDatum extends FileDatum {
+  @JsonKey(ignore: true)
   DataFormat get format => DataFormat.fromString(MediaSamplingPackage.MEDIA);
 
   /// The type of media.
