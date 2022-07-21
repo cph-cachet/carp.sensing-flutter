@@ -96,15 +96,6 @@ void main() {
     print(toJsonString(dataPoint));
     assert(dataPoint.carpBody != null);
   });
-  test('A & B -> JSON', () async {
-    A a = A();
-    B b = B();
-    a.index = 1;
-    b.str = 'abc';
-
-    print(toJsonString(a));
-    print(toJsonString(b));
-  });
 
   test('ScheduledTrigger', () async {
     var st = ScheduledTrigger(
@@ -135,6 +126,18 @@ void main() {
             .toString());
     print(st);
   });
+
+  test('A & B -> JSON', () async {
+    A a = A();
+    B b = B();
+    a.index = 1;
+
+    b.index = 2;
+    b.str = 'abc';
+
+    print(toJsonString(a));
+    print(toJsonString(b));
+  });
 }
 
 /// An example class.
@@ -156,9 +159,10 @@ class B extends A {
 
   B() : super();
 
+  String get jsonType => 'dk.cachet.$runtimeType';
+
   Function get fromJsonFunction => _$BFromJson;
   factory B.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as B;
   Map<String, dynamic> toJson() => _$BToJson(this);
-  String get jsonType => 'dk.cachet.$runtimeType';
 }
