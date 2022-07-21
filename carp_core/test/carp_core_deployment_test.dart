@@ -61,7 +61,7 @@ void main() {
 
     ParticipantData data = ParticipantData.fromJson(
         json.decode(plainJson) as Map<String, dynamic>);
-    expect(data.data!['dk.cachet.carp.input.sex'], 'Male');
+    expect(data.data['dk.cachet.carp.input.sex'], 'Male');
     print(toJsonString(data));
   });
   test('JSON -> StudyDeploymentStatus', () async {

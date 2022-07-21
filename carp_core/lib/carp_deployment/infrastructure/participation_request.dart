@@ -93,7 +93,7 @@ class SetParticipantData extends ParticipationServiceRequest {
 
   Map<String, dynamic> get data {
     Map<String, dynamic> data = {};
-    participantData?.data?.forEach((key, value) {
+    participantData?.data.forEach((key, value) {
       data['\$type'] = key;
       data['value'] = value;
     });

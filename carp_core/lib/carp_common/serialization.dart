@@ -29,7 +29,7 @@ part of carp_core_common;
 /// Below is a simple example of two classes `A` and `B` where B extends A.
 ///
 /// ```dart
-/// @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+/// @JsonSerializable()
 /// class A extends Serializable {
 ///   int index;
 ///
@@ -41,7 +41,7 @@ part of carp_core_common;
 ///   Map<String, dynamic> toJson() => _$AToJson(this);
 /// }
 ///
-/// @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+/// @JsonSerializable()
 /// class B extends A {
 ///   String str;
 ///
@@ -67,7 +67,6 @@ part of carp_core_common;
 ///
 /// For this purpose it is helpful to have an empty constructor, but any constructur
 /// will work, since only the `fromJsonFunction` function is used.
-/// Hence, a private constructure like `A._()` is also fine.
 ///
 /// Polymorphic serialization is handled by setting the `$type` property in the
 /// [Serializable] class. Per default, an object's `runtimeType` is used as the
@@ -81,6 +80,7 @@ part of carp_core_common;
 ///  }
 ///  {
 ///   "$type": "B",
+///   "index": 2
 ///   "str": "abc"
 ///  }
 /// ```
@@ -94,7 +94,7 @@ part of carp_core_common;
 /// using the following:
 ///
 /// ```dart
-/// @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+/// @JsonSerializable()
 /// class B extends A {
 ///
 ///   <<as above>>
@@ -108,6 +108,7 @@ part of carp_core_common;
 /// ```json
 ///  {
 ///   "$type": "dk.cachet.B",
+///   "index": 2
 ///   "str": "abc"
 ///  }
 /// ```
@@ -145,12 +146,45 @@ class FromJsonFactory {
 
   final Map<String, Function> _registry = {};
 
-  // When initializing this factory, register all CAMS classes which should
-  // support deserialization from JSON.
-  //
+  FromJsonFactory._() {
+    _registerFromJsonFunctions();
+  }
+
+  /// Register a [Serializable] class which can be deserialized from JSON.
+  ///
+  /// If [type] is specified, then this is used as the type indentifier as
+  /// specified in [CLASS_IDENTIFIER].
+  /// Othervise the [Serializable] class [jsonType] is used.
+  ///
+  /// A type needs to be registered **before** a class can be deserialized from
+  /// JSON to a Flutter class.
+  void register(Serializable serializable, {String? type}) =>
+      _registry['${type ?? serializable.jsonType}'] =
+          serializable.fromJsonFunction;
+
+  /// Register all [serializables].
+  ///
+  /// A convinient way to call [register] for multiple types.
+  void registerAll(List<Serializable> serializables) =>
+      serializables.forEach((serializable) => register(serializable));
+
+  /// Deserialize [json] based on its type.
+  Serializable? fromJson(Map<String, dynamic> json) {
+    final String? type = json[Serializable.CLASS_IDENTIFIER];
+    if (!_registry.containsKey(type)) {
+      throw SerializationException(
+          "A 'fromJson' function was not found in the FromJsonFactory for the type '$type'. "
+          "Register a Serializable class using the 'FromJsonFactory().register()' method.");
+    }
+    return Function.apply(_registry[type!]!, [json]);
+  }
+
   // TODO: Remember to add any new classes here.
   // TODO: This could be auto-generated using a builder....
-  FromJsonFactory._() {
+  //
+  /// Register all the fromJson functions for all CAMS classes which should
+  /// support deserialization from JSON.
+  void _registerFromJsonFunctions() {
     // DEPLOYMENT
     final DeviceDescriptor device = DeviceDescriptor(roleName: '');
 
@@ -218,35 +252,6 @@ class FromJsonFactory {
     register(DeviceDescriptor(roleName: ''),
         type:
             'dk.cachet.carp.protocols.infrastructure.test.StubDeviceDescriptor');
-  }
-
-  /// Register a [Serializable] class which can be deserialized from JSON.
-  ///
-  /// If [type] is specified, then this is used as the type indentifier as
-  /// specified in [CLASS_IDENTIFIER].
-  /// Othervise the [Serializable] class [jsonType] is used.
-  ///
-  /// A type needs to be registered **before** a class can be deserialized from
-  /// JSON to a Flutter class.
-  void register(Serializable serializable, {String? type}) =>
-      _registry['${type ?? serializable.jsonType}'] =
-          serializable.fromJsonFunction;
-
-  /// Register all [serializables].
-  ///
-  /// A convinient way to call [register] for multiple types.
-  void registerAll(List<Serializable> serializables) =>
-      serializables.forEach((serializable) => register(serializable));
-
-  /// Deserialize [json] based on its type.
-  Serializable? fromJson(Map<String, dynamic> json) {
-    final String? type = json[Serializable.CLASS_IDENTIFIER];
-    if (!_registry.containsKey(type)) {
-      throw SerializationException(
-          "A 'fromJson' function was not found in the FromJsonFactory for the type '$type'. "
-          "Register a Serializable class using the 'FromJsonFactory().register()' method.");
-    }
-    return Function.apply(_registry[type!]!, [json]);
   }
 }
 
