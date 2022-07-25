@@ -76,10 +76,13 @@ Future<void> example_0() async {
   controller?.data.forEach(print);
 }
 
-/// This is an example of how to set up a study by using the `common`
-/// sampling schema. Used in the README file.
+/// This is an example of how to set up a study.
+/// This protocol uses the default sampling configuration and stores
+/// collected data in buffered files.
+///
+/// Used in the README file.
 void example_1() async {
-  // create a study protocol
+  // Create a study protocol storing data in files.
   SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
     ownerId: 'AB',
     name: 'Track patient movement',
@@ -90,8 +93,8 @@ void example_1() async {
     ),
   );
 
-  // define which devices are used for data collection
-  // in this case, its only this smartphone
+  // Define which devices are used for data collection.
+  // In this case, its only this smartphone.
   Smartphone phone = Smartphone();
   protocol.addMasterDevice(phone);
 
@@ -106,34 +109,35 @@ void example_1() async {
         ..addMeasure(Measure(type: DeviceSamplingPackage.BATTERY)),
       phone);
 
-  // use the on-phone deployment service
+  // Use the on-phone deployment service.
   DeploymentService deploymentService = SmartphoneDeploymentService();
 
-  // create a study deployment using the protocol
+  // Create a study deployment using the protocol.
   StudyDeploymentStatus status =
       await deploymentService.createStudyDeployment(protocol);
 
-  // create and configure a client manager for this phone
+  // Create and configure a client manager for this phone.
   SmartPhoneClientManager client = SmartPhoneClientManager();
   await client.configure(deploymentService: deploymentService);
 
+  // Create a study object based on the deployment id and the rolename
   Study study = Study(
     status.studyDeploymentId,
     status.masterDeviceStatus!.device.roleName,
   );
 
-  // create a study runtime to control this deployment
+  // Add the study to the client manager and get a study runtime to control this deployment
   await client.addStudy(study);
   SmartphoneDeploymentController? controller = client.getStudyRuntime(study);
 
-  // deploy the study on this phone (controller)
+  // Deploy the study on this phone.
   await controller?.tryDeployment();
 
-  // configure the controller and start sampling
+  // Configure the controller and start sampling.
   await controller?.configure();
   controller?.start();
 
-  // listening and print all data events from the study
+  // Print all data events from the study
   controller?.data.forEach(print);
 }
 
@@ -244,37 +248,38 @@ void example_2() async {
     print(JsonEncoder.withIndent(' ').convert(dataPoint));
   });
 
-  // sampling can be paused and resumed
+  // Sampling can be paused and resumed
   controller.executor?.pause();
   controller.executor?.resume();
 
-  // pause specific probe(s)
+  // Pause specific probe(s)
   controller.executor
       ?.lookupProbe(SensorSamplingPackage.ACCELEROMETER)
       .forEach((probe) => probe.pause());
 
-  // adapt a measures
-  // note that this will only work if the protocol is created locally on the
+  // Adapt a measures.
+  //
+  // Note that this will only work if the protocol is created locally on the
   // phone (as in this example above)
-  // if downloaded and deserialized from json, then we need to locate the
-  // measeure in the deployment
+  // If downloaded and deserialized from json, then we need to locate the
+  // measures in the deployment
   lightMeasure
     ..overrideSamplingConfiguration = PeriodicSamplingConfiguration(
       interval: const Duration(minutes: 5),
       duration: const Duration(seconds: 10),
     );
 
-  // restart the light probe(s)
+  // Restart the light probe(s)
   controller.executor
       ?.lookupProbe(SensorSamplingPackage.LIGHT)
       .forEach((probe) => probe.restart());
 
-// alternatively mark the deplyment as changed - calling hasChanged()
-// this will force a restart of the entire sampling
+  // Alternatively mark the deplyment as changed - calling hasChanged()
+  // this will force a restart of the entire sampling
   controller.deployment?.hasChanged();
 
-  // once the sampling has to stop, e.g. in a Flutter dispose() methods, call stop.
-  // note that once a sampling has stopped, it cannot be restarted.
+  // Once the sampling has to stop, e.g. in a Flutter dispose() methods, call stop.
+  // Note that once a sampling has stopped, it cannot be restarted.
   controller.stop();
   await subscription.cancel();
 }

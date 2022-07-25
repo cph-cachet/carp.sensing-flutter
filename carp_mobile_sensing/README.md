@@ -71,7 +71,7 @@ Please use this as a reference in any scientific papers using CAMS.
 
 ## Examples of configuring and using CAMS
 
-There is a **very simple** [example app](https://pub.dev/packages/carp_mobile_sensing/example) app which shows how a study can be created with different tasks and measures.
+There is a **very simple** [example app](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/carp_mobile_sensing/example/lib/main.dart) app which shows how a study can be created with different tasks and measures.
 This app just prints the sensing data to a console screen on the phone. 
 There is also a range of different [examples](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/carp_mobile_sensing/example/lib/example.dart) on how to create a study to take inspiration from.
 
@@ -99,7 +99,7 @@ import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 void example() async {
-  // create a study protocol
+  // create a study protocol storing data in files
   SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
     ownerId: 'AB',
     name: 'Track patient movement',
@@ -110,8 +110,8 @@ void example() async {
     ),
   );
 
-  // define which devices are used for data collection
-  // in this case, its only this smartphone
+  // Define which devices are used for data collection.
+  // In this case, its only this smartphone.
   Smartphone phone = Smartphone();
   protocol.addMasterDevice(phone);
 
@@ -130,7 +130,8 @@ void example() async {
 The above example defines a simple [`SmartphoneStudyProtocol`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/SmartphoneStudyProtocol-class.html) which will store data in a file locally on the phone using a [`FileDataEndPoint`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/FileDataEndPoint-class.html). 
 Sampling is configured by adding a [`TriggeredTask`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/TriggeredTask-class.html) to the protocol using an [`ImmediateTrigger`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/ImmediateTrigger-class.html) which triggers a [`BackgroundTask`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/BackgroundTask-class.html) containing four different [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core_protocols/Measure-class.html).
 
-Sampling can be configured in a very sophisticated ways, by specifying different types of triggers, tasks, and measures - see the  CAMS [domain model](https://github.com/cph-cachet/carp.sensing-flutter/wiki/2.-Domain-Model) for an overview.
+Sampling can be configured in a very sophisticated ways, by specifying different types of devices, triggers, tasks, measures and sampling configurations. 
+See the CAMS [wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki/) for an overview.
 
 You can write your own `DataEndPoint` definitions and coresponding `DataManager`s for uploading data to your own data endpoint. See the wiki on how to [add a new data manager](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.3-Adding-a-New-Data-Manager).
 
@@ -143,20 +144,19 @@ A `StudyProtocol` can be deployed to a `DeploymentService` which handles the dep
 ```dart
 ...
 
-// use the on-phone deployment service
+// Use the on-phone deployment service.
 DeploymentService deploymentService = SmartphoneDeploymentService();
 
-// create a study deployment using the protocol
+// Create a study deployment using the protocol
 StudyDeploymentStatus status =
     await deploymentService.createStudyDeployment(protocol);
-
 ```
 
 
 ### Running a `SmartphoneDeploymentController`
 
 A study deployment for a phone (master device) is handled by a [`SmartPhoneClientManager`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SmartPhoneClientManager-class.html).
-This client manager is able to create a [`SmartphoneDeploymentController`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SmartphoneDeploymentController-class.html) which controls the execution of a study deployment.
+This client manager controls the execution of a study deployment using a [`SmartphoneDeploymentController`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SmartphoneDeploymentController-class.html).
 
 ```dart
 ...
@@ -164,20 +164,21 @@ This client manager is able to create a [`SmartphoneDeploymentController`](https
 String studyDeploymentId = ... // any id obtained e.g. from an invitation
 String deviceRolename = ... // the rolename of this phone in the protocol;
 
-// create and configure a client manager for this phone
+// Create and configure a client manager for this phone
 SmartPhoneClientManager client = SmartPhoneClientManager();
 await client.configure(deploymentService: deploymentService);
 
+// Create a study object based on the deployment id and the rolename
 Study study = Study(studyDeploymentId, deviceRoleName);
 
-// create a study runtime to control this deployment
+// Add the study to the client manager and get a study runtime to control this deployment.
 await client.addStudy(study);
 SmartphoneDeploymentController? controller = client.getStudyRuntime(study);
 
-// deploy the study on this phone (controller)
+// Deploy the study on this phone.
 await controller?.tryDeployment();
 
-// configure the controller and start sampling
+// Configure the controller and start sampling.
 await controller?.configure();
 controller?.start();
 ```
@@ -224,33 +225,40 @@ The execution of sensing can be controlled on runtime in a number of ways. For e
 ```dart
 ...
 
-// sampling can be paused and resumed
+// Sampling can be paused and resumed
 controller.pause();
 controller.resume();
 
-// pause specific probe(s)
+// Pause specific probe(s)
 ProbeRegistry()
   .lookup(SensorSamplingPackage.ACCELEROMETER)
   .forEach((probe) => probe.pause());
 
-// adapt measures on the go - calling hasChanged() force a restart of
-// the probe, which will load the new measure
+// Adapt a measures.
+//
+// Note that this will only work if the protocol is created locally on the
+// phone (as in this example above)
+// If downloaded and deserialized from json, then we need to locate the
+// measures in the deployment
 lightMeasure
-  ..frequency = const Duration(seconds: 12)
-  ..duration = const Duration(milliseconds: 500)
-  ..hasChanged();
+  ..overrideSamplingConfiguration = PeriodicSamplingConfiguration(
+    interval: const Duration(minutes: 5),
+    duration: const Duration(seconds: 10),
+  );
 
-// disabling a measure will pause the probe
-lightMeasure
-  ..enabled = false
-  ..hasChanged();
+// Restart the light probe(s)
+controller.executor
+    ?.lookupProbe(SensorSamplingPackage.LIGHT)
+    .forEach((probe) => probe.restart());
 
-// once the sampling has to stop, e.g. in a Flutter dispose() methods, call stop.
-// note that once a sampling has stopped, it cannot be restarted.
+// Alternatively mark the deplyment as changed - calling hasChanged()
+// this will force a restart of the entire sampling
+controller.deployment?.hasChanged();
+
+// Once the sampling has to stop, e.g. in a Flutter dispose() methods, call stop.
+// Note that once a sampling has stopped, it cannot be restarted.
 controller.stop();
 await subscription.cancel();
-
-...
 ```
 
 ## Features and bugs

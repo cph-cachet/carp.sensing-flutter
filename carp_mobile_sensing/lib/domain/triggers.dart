@@ -450,8 +450,7 @@ class SamplingEventTrigger extends Trigger {
   /// of this type.
   String measureType;
 
-  /// The [ConditionalEvent] specifying a specific sampling value to compare
-  /// with for resuming this trigger.
+  /// The specific sampling value to compare with for resuming this trigger.
   ///
   /// When comparing, the [Datum.equivalentTo] method. is used. Hence, the
   /// sampled datum must be "equivalent" to this resumeCondition in order to
@@ -508,13 +507,13 @@ typedef ConditionalEventEvaluator = bool Function(DataPoint dataPoint);
 /// A trigger that resume and pause sampling when some (other) sampling event
 /// occurs and a application-specific condition is meet.
 ///
-/// Note that the [resumeCondition] and [pauseCondition] are an
-/// [ConditionalEventEvaluator] function which cannot be serialized to/from JSON.
-/// In contrast to other [Trigger]s, this trigger cannot be de/serialized
-/// from/to JSON.
-/// This implies that it can not be retrieved as part of a [StudyProtocol] from a
-/// [DeploymentService] since it relies on specifying a Dart-specific function as
-/// the [ConditionalEventEvaluator] methods. Hence, this trigger is mostly
+/// Note that the [resumeCondition] and [pauseCondition] are
+/// [ConditionalEvaluator] functions which cannot be serialized to/from JSON.
+/// Thus, even though this trigger can be de/serialized from/to JSON, its
+/// [resumeCondition] and [pauseCondition] cannot.
+/// This implies that these functions cannot be retrieved as part of a [StudyProtocol]
+/// from a [DeploymentService] since it relies on specifying a Dart-specific function as
+/// the [ConditionalEvaluator] methods. Hence, this trigger is mostly
 /// useful when creating a [StudyProtocol] directly in the app using Dart code.
 ///
 /// If you need to de/serialize an event trigger, use the [SamplingEventTrigger]
@@ -555,15 +554,15 @@ class ConditionalSamplingEventTrigger extends Trigger {
 /// Returns [true] if resume or pause should happen, [false] otherwise.
 typedef ConditionalEvaluator = bool Function();
 
-/// A trigger that checks if application-specific resume and pause conditions
-/// are meet.
+/// A trigger that periodically checks if application-specific resume and pause
+/// conditions are meet.
 ///
 /// Note that the [resumeCondition] and [pauseCondition] are
-/// [ConditionalEvaluator] function which cannot be serialized to/from JSON.
-/// In contrast to other [Trigger]s, this trigger cannot be de/serialized
-/// from/to JSON.
-/// This implies that it can not be retrieved as part of a [StudyProtocol] from a
-/// [DeploymentService] since it relies on specifying a Dart-specific function as
+/// [ConditionalEvaluator] functions which cannot be serialized to/from JSON.
+/// Thus, even though this trigger can be de/serialized from/to JSON, its
+/// [resumeCondition] and [pauseCondition] cannot.
+/// This implies that these functions cannot be retrieved as part of a [StudyProtocol]
+/// from a [DeploymentService] since it relies on specifying a Dart-specific function as
 /// the [ConditionalEvaluator] methods. Hence, this trigger is mostly
 /// useful when creating a [StudyProtocol] directly in the app using Dart code.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)

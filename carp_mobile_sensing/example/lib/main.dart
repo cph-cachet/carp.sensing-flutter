@@ -36,8 +36,8 @@ class Console extends State<ConsolePage> {
   void initState() {
     super.initState();
     sensing = Sensing();
-    Settings().init().then((future) {
-      sensing!.init().then((future) {
+    Settings().init().then((_) {
+      sensing!.init().then((_) {
         log('Setting up study : ${sensing!.study}');
         log('Deployment status : ${sensing!.status}');
       });
@@ -213,37 +213,38 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           ]),
         phone);
 
-    // // collect device info only once
-    // protocol.addTriggeredTask(
-    //     OneTimeTrigger(),
-    //     BackgroundTask()
-    //       ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
-    //     phone);
+    // collect device info only once
+    protocol.addTriggeredTask(
+        OneTimeTrigger(),
+        BackgroundTask()
+          ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
+        phone);
 
-    // // add a random trigger to collect device info at random times
-    // protocol.addTriggeredTask(
-    //     RandomRecurrentTrigger(
-    //       startTime: Time(hour: 07, minute: 45),
-    //       endTime: Time(hour: 22, minute: 30),
-    //       minNumberOfTriggers: 2,
-    //       maxNumberOfTriggers: 8,
-    //     ),
-    //     BackgroundTask()
-    //       ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
-    //     phone);
+    // add a random trigger to collect device info at random times
+    protocol.addTriggeredTask(
+        RandomRecurrentTrigger(
+          startTime: TimeOfDay(hour: 07, minute: 45),
+          endTime: TimeOfDay(hour: 22, minute: 30),
+          minNumberOfTriggers: 2,
+          maxNumberOfTriggers: 8,
+        ),
+        BackgroundTask()
+          ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
+        phone);
 
-    // // add a ConditionalPeriodicTrigger to check periodically
-    // protocol.addTriggeredTask(
-    //     ConditionalPeriodicTrigger(
-    //       period: Duration(seconds: 10),
-    //       resumeCondition: () {
-    //         return ('jakob'.length == 5);
-    //       },
-    //       pauseCondition: () => true,
-    //     ),
-    //     BackgroundTask()
-    //       ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
-    //     phone);
+    // add a ConditionalPeriodicTrigger to check periodically
+    protocol.addTriggeredTask(
+        ConditionalPeriodicTrigger(
+          period: Duration(seconds: 10),
+          resumeCondition: () {
+            //
+            return ('jakob'.length == 5);
+          },
+          pauseCondition: () => true,
+        ),
+        BackgroundTask()
+          ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
+        phone);
 
     // add a task 10 minutes after deployment
     protocol.addTriggeredTask(
