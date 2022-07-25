@@ -454,6 +454,7 @@ void example_3() async {
 //   controller.resume();
 // }
 
+/// Examples of different [RecurrentScheduledTrigger] configurations.
 void recurrentScheduledTriggerExample() {
   // collect every day at 13:30
   RecurrentScheduledTrigger(
@@ -536,16 +537,18 @@ void app_task_example() async {
     ownerId: 'user@dtu.dk',
     name: 'Tracking',
   )
+    // collect device info as an app task
     ..addTriggeredTask(
-        ImmediateTrigger(), // collect device info as an app task
+        ImmediateTrigger(),
         AppTask(
           type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
           title: 'Device',
           description: 'Collect device info',
         )..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
         phone)
+    // start collecting screen events as an app task
     ..addTriggeredTask(
-        ImmediateTrigger(), // start collecting screen events as an app task
+        ImmediateTrigger(),
         AppTask(
           type: BackgroundSensingUserTask.SENSING_TYPE,
           title: 'Screen',
@@ -556,13 +559,15 @@ void app_task_example() async {
   print(protocol);
 }
 
+/// An example of how to listen to different [UserTask] event in the
+/// [AppTaskController].
 void app_task_controller_example() async {
   AppTaskController ctrl = AppTaskController();
 
-  ctrl.userTaskEvents.listen((event) {
-    AppTask _task = (event.executor.task as AppTask);
+  ctrl.userTaskEvents.listen((userTask) {
+    AppTask _task = (userTask.executor.task as AppTask);
     print('Task: ${_task.title}');
-    switch (event.state) {
+    switch (userTask.state) {
       case UserTaskState.initialized:
         //
         break;
@@ -573,13 +578,13 @@ void app_task_controller_example() async {
         //
         break;
       case UserTaskState.started:
-        event.executor.resume();
+        userTask.executor.resume();
         break;
       case UserTaskState.canceled:
         //
         break;
       case UserTaskState.done:
-        event.executor.pause();
+        userTask.executor.pause();
         break;
       default:
         //
