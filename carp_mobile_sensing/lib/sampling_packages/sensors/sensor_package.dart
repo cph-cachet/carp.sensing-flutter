@@ -1,35 +1,41 @@
 part of sensors;
 
 class SensorSamplingPackage extends SmartphoneSamplingPackage {
-  /// Measure type for collection of accelorometer data (x,y,z).
+  /// Measure type for continous collection of accelorometer data (x,y,z).
   ///
   /// Event-based measure.
+  /// No sampling configuration needed.
   static const String ACCELEROMETER = 'dk.cachet.carp.accelerometer';
 
-  /// Measure type for collection of
+  /// Measure type for continous collection of gyroscope data (x,y,z).
   ///
   /// Event-based measure.
+  /// No sampling configuration needed.
   static const String GYROSCOPE = 'dk.cachet.carp.gyroscope';
 
-  /// Measure type for collection of
+  /// Measure type for periodic collection of accelorometer data (x,y,z).
   ///
-  /// Event-based measure.
+  /// Periodic measure.
+  /// Use [PeriodicSamplingConfiguration] for configuration.
   static const String PERIODIC_ACCELEROMETER =
       'dk.cachet.carp.periodic_accelerometer';
 
-  /// Measure type for collection of
+  /// Measure type for periodic collection of gyroscope data (x,y,z).
   ///
-  /// Event-based measure.
+  /// Periodic measure.
+  /// Use [PeriodicSamplingConfiguration] for configuration.
   static const String PERIODIC_GYROSCOPE = 'dk.cachet.carp.periodic_gyroscope';
 
-  /// Measure type for collection of
+  /// Measure type for collection of step count from the phones pedometer sensor.
   ///
   /// Event-based measure.
+  /// No sampling configuration needed.
   static const String PEDOMETER = 'dk.cachet.carp.pedometer';
 
-  /// Measure type for collection of
+  /// Measure type for collection of ambient light from the phones light sensor.
   ///
-  /// Event-based measure.
+  /// Periodic measure.
+  /// Use [PeriodicSamplingConfiguration] for configuration.
   static const String LIGHT = 'dk.cachet.carp.light';
 
   @override

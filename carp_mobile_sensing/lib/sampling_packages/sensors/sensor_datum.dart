@@ -37,7 +37,7 @@ class AccelerometerDatum extends Datum {
   Map<String, dynamic> toJson() => _$AccelerometerDatumToJson(this);
 
   @override
-  String toString() => '${super}, x: $x, y: $y, z: $z';
+  String toString() => '${super.toString()}, x: $x, y: $y, z: $z';
 }
 
 /// A [Datum] that holds rotation data collected from the native gyroscope on the phone.
@@ -71,7 +71,7 @@ class GyroscopeDatum extends Datum {
   Map<String, dynamic> toJson() => _$GyroscopeDatumToJson(this);
 
   @override
-  String toString() => '${super}, x: $x, y: $y, z: $z';
+  String toString() => '${super.toString()}, x: $x, y: $y, z: $z';
 }
 
 /// A [Datum] that holds light intensity in Lux from the light sensor on the phone.
@@ -96,7 +96,7 @@ class LightDatum extends Datum {
 
   @override
   String toString() =>
-      '${super}, avgLux: $meanLux, stdLux: $stdLux, minLux: $minLux, maxLux: $maxLux';
+      '${super.toString()}, avgLux: $meanLux, stdLux: $stdLux, minLux: $minLux, maxLux: $maxLux';
 }
 
 /// Holds the step count.
@@ -122,5 +122,5 @@ class PedometerDatum extends Datum {
   Map<String, dynamic> toJson() => _$PedometerDatumToJson(this);
 
   @override
-  String toString() => '${super}, steps: $stepCount';
+  String toString() => '${super.toString()}, steps: $stepCount';
 }

@@ -43,6 +43,7 @@ void _registerFromJsonFunctions() {
   ));
   FromJsonFactory().register(SamplingEventTrigger(measureType: 'ignored'));
   FromJsonFactory().register(ConditionalEvent({}));
+  FromJsonFactory().register(ConditionalPeriodicTrigger(period: Duration()));
   FromJsonFactory().register(ConditionalSamplingEventTrigger(
       measureType: 'ignored', resumeCondition: (DataPoint dataPoint) => true));
   FromJsonFactory().register(CronScheduledTrigger());

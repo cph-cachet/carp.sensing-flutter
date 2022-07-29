@@ -37,8 +37,8 @@ class AccelerometerProbe extends StreamProbe {
 /// A probe that collects accelerometer events and buffers them and return
 /// a [MultiDatum] with all the buffered [AccelerometerDatum]s.
 ///
-/// See [PeriodicMeasure] on how to configure this probe, including setting the
-/// [interval] and [duration] of the sampling rate.
+/// See [PeriodicSamplingConfiguration] on how to configure this probe, including
+/// setting the [interval] and [duration] of the sampling rate.
 class BufferingAccelerometerProbe extends BufferingSensorProbe {
   @override
   Stream<dynamic> get bufferingStream => accelerometerEvents;
@@ -63,11 +63,10 @@ class GyroscopeProbe extends StreamProbe {
 }
 
 /// A probe that collects gyroscope events and buffers them and return
-/// a [MultiDatum] with
-/// all the buffered [GyroscopeDatum]s.
+/// a [MultiDatum] with all the buffered [GyroscopeDatum]s.
 ///
-/// See [PeriodicMeasure] on how to configure this probe, including setting the
-/// [interval] and [duration] of the sampling rate.
+/// See [PeriodicSamplingConfiguration] on how to configure this probe, including
+/// setting the [interval] and [duration] of the sampling rate.
 class BufferingGyroscopeProbe extends BufferingSensorProbe {
   @override
   Stream<dynamic> get bufferingStream => gyroscopeEvents;

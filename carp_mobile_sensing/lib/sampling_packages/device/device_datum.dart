@@ -66,7 +66,7 @@ class DeviceDatum extends Datum {
 
   @override
   String toString() =>
-      '${super}, platform: $platform, deviceId: $deviceId, hardware: $hardware, name: $deviceName, manufacturer: $deviceManufacturer, model: $deviceModel, OS: $operatingSystem, SDK: $sdk, release: $release';
+      '${super.toString()}, platform: $platform, deviceId: $deviceId, hardware: $hardware, name: $deviceName, manufacturer: $deviceManufacturer, model: $deviceModel, OS: $operatingSystem, SDK: $sdk, release: $release';
 }
 
 /// A [Datum] that holds battery level collected from the phone.
@@ -122,7 +122,7 @@ class BatteryDatum extends Datum {
 
   @override
   String toString() =>
-      '${super}, level: $batteryLevel%, status: $batteryStatus';
+      '${super.toString()}, level: $batteryLevel%, status: $batteryStatus';
 }
 
 /// Holds information about free memory on the phone.
@@ -146,7 +146,7 @@ class FreeMemoryDatum extends Datum {
 
   @override
   String toString() =>
-      '${super}, physical: $freePhysicalMemory, virtual: $freeVirtualMemory';
+      '${super.toString()}, physical: $freePhysicalMemory, virtual: $freeVirtualMemory';
 }
 
 /// Holds a screen event collected from the phone.
@@ -191,5 +191,5 @@ class ScreenDatum extends Datum {
   Map<String, dynamic> toJson() => _$ScreenDatumToJson(this);
 
   @override
-  String toString() => '${super}, screenEvent: $screenEvent';
+  String toString() => '${super.toString()}, screenEvent: $screenEvent';
 }

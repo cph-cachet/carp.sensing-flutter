@@ -11,16 +11,6 @@ part of runtime;
 TaskExecutor getTaskExecutor(TaskDescriptor task) {
   if (task is AppTask) return AppTaskExecutor();
   return BackgroundTaskExecutor();
-
-  // switch (task.runtimeType) {
-  //   case TaskDescriptor:
-  //   case BackgroundTask:
-  //     return BackgroundTaskExecutor();
-  //   case AppTask:
-  //     return AppTaskExecutor();
-  //   default:
-  //     return BackgroundTaskExecutor();
-  // }
 }
 
 /// The [TaskExecutor] is responsible for executing a [TaskDescriptor].

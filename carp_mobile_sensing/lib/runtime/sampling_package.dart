@@ -46,13 +46,13 @@ class SamplingPackageRegistry {
   /// more than one package does, all packages are returned.
   /// Can be an empty list.
   Set<SamplingPackage> lookup(String type) {
-    final Set<SamplingPackage> packages = {};
+    final Set<SamplingPackage> supportedPackages = {};
 
     for (var package in packages) {
-      if (package.dataTypes.contains(type)) packages.add(package);
+      if (package.dataTypes.contains(type)) supportedPackages.add(package);
     }
 
-    return packages;
+    return supportedPackages;
   }
 
   /// The combined list of all measure types in all packages.
