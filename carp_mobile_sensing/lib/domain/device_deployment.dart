@@ -108,9 +108,11 @@ class SmartphoneDeployment extends MasterDeviceDeployment {
 
   /// Get the list of all mesures in this study deployment.
   List<Measure> get measures {
-    final List<Measure> _measures = [];
-    tasks.forEach((task) => _measures.addAll(task.measures));
-    return _measures;
+    final List<Measure> measures = [];
+    for (var task in tasks) {
+      measures.addAll(task.measures);
+    }
+    return measures;
   }
 
   /// Add a [MeasureListener] to this [Measure].
@@ -122,9 +124,11 @@ class SmartphoneDeployment extends MasterDeviceDeployment {
       _listeners.remove(listener);
 
   /// Call this method when this deployment has changed.
-  Future hasChanged([dynamic message]) async {
+  Future<void> hasChanged([dynamic message]) async {
     lastUpdateDate = DateTime.now();
-    _listeners.forEach((listener) => listener.hasChanged(message));
+    for (var listener in _listeners) {
+      listener.hasChanged(message);
+    }
   }
 
   // /// Adapt the sampling measures of this deployment to the specified [schema].
@@ -135,8 +139,10 @@ class SmartphoneDeployment extends MasterDeviceDeployment {
 
   factory SmartphoneDeployment.fromJson(Map<String, dynamic> json) =>
       _$SmartphoneDeploymentFromJson(json);
+  @override
   Map<String, dynamic> toJson() => _$SmartphoneDeploymentToJson(this);
 
+  @override
   String toString() => '$runtimeType - studyDeploymentId: $studyDeploymentId, '
       'device: ${deviceDescriptor.roleName}, '
       'title: ${protocolDescription?.title}, responsible: ${responsible?.name}';

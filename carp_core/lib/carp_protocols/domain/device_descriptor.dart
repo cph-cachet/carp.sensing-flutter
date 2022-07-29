@@ -39,13 +39,17 @@ class DeviceDescriptor extends Serializable {
     this.supportedDataTypes,
   }) : super();
 
+  @override
   String toString() =>
       '$runtimeType - roleName: $roleName, isMasterDevice: $isMasterDevice';
 
+  @override
   Function get fromJsonFunction => _$DeviceDescriptorFromJson;
   factory DeviceDescriptor.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as DeviceDescriptor;
+  @override
   Map<String, dynamic> toJson() => _$DeviceDescriptorToJson(this);
+  @override
   String get jsonType => '$DEVICE_NAMESPACE.$runtimeType';
 }
 
@@ -58,9 +62,11 @@ class MasterDeviceDescriptor extends DeviceDescriptor {
     super.supportedDataTypes,
   }) : super(isMasterDevice: true);
 
+  @override
   Function get fromJsonFunction => _$MasterDeviceDescriptorFromJson;
   factory MasterDeviceDescriptor.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as MasterDeviceDescriptor;
+  @override
   Map<String, dynamic> toJson() => _$MasterDeviceDescriptorToJson(this);
 }
 
@@ -78,9 +84,11 @@ class CustomProtocolDevice extends MasterDeviceDescriptor {
     super.supportedDataTypes,
   });
 
+  @override
   Function get fromJsonFunction => _$CustomProtocolDeviceFromJson;
   factory CustomProtocolDevice.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as CustomProtocolDevice;
+  @override
   Map<String, dynamic> toJson() => _$CustomProtocolDeviceToJson(this);
 }
 
@@ -102,9 +110,11 @@ class Smartphone extends MasterDeviceDescriptor {
     super.supportedDataTypes,
   });
 
+  @override
   Function get fromJsonFunction => _$SmartphoneFromJson;
   factory Smartphone.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as Smartphone;
+  @override
   Map<String, dynamic> toJson() => _$SmartphoneToJson(this);
 }
 
@@ -116,8 +126,10 @@ class AltBeacon extends DeviceDescriptor {
     super.supportedDataTypes,
   }) : super(isMasterDevice: false);
 
+  @override
   Function get fromJsonFunction => _$AltBeaconFromJson;
   factory AltBeacon.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as AltBeacon;
+  @override
   Map<String, dynamic> toJson() => _$AltBeaconToJson(this);
 }

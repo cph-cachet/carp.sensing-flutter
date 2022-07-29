@@ -154,7 +154,7 @@ class StudyRuntime {
 
   /// Tries to register a connected device which are available
   /// in this device's [deviceRegistry] as well as in the [deploymentService].
-  Future tryRegisterConnectedDevice(DeviceDescriptor device) async {
+  Future<void> tryRegisterConnectedDevice(DeviceDescriptor device) async {
     assert(study != null,
         "Cannot register a device without a valid study deployment. Call 'initialize()' first.");
 
@@ -187,7 +187,7 @@ class StudyRuntime {
   ///
   /// This is a convinient method for synchronizing the devices neeeded for a
   /// deployment and the available devices on this phone.
-  Future tryRegisterConnectedDevices() async {
+  Future<void> tryRegisterConnectedDevices() async {
     for (var deviceStatus in deploymentStatus.devicesStatus) {
       await tryRegisterConnectedDevice(deviceStatus.device);
     }
@@ -232,6 +232,7 @@ class Study {
   @override
   int get hashCode => (studyDeploymentId + deviceRoleName).hashCode;
 
+  @override
   String toString() =>
       '$runtimeType - studyDeploymentId: $studyDeploymentId, deviceRoleName: $deviceRoleName';
 }

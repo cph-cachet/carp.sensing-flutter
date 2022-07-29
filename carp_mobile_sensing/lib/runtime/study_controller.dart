@@ -301,10 +301,10 @@ class SmartphoneDeploymentController extends StudyRuntime {
       info('Asking for permission for all measure types.');
       permissions = await SamplingPackageRegistry().permissions.request();
 
-      SamplingPackageRegistry().permissions.forEach((permission) async {
+      for (var permission in SamplingPackageRegistry().permissions) {
         PermissionStatus status = await permission.status;
         info('Permissions for $permission : $status');
-      });
+      }
     }
   }
 

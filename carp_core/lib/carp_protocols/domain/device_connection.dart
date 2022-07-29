@@ -14,10 +14,13 @@ class DeviceConnection extends Serializable {
 
   DeviceConnection([this.roleName, this.connectedToRoleName]) : super();
 
+  @override
   Function get fromJsonFunction => _$DeviceConnectionFromJson;
   factory DeviceConnection.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as DeviceConnection;
+  @override
   Map<String, dynamic> toJson() => _$DeviceConnectionToJson(this);
+  @override
   String get jsonType =>
       'dk.cachet.carp.protocols.application.StudyProtocolSnapshot.$runtimeType';
 }

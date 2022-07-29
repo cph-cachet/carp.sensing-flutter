@@ -19,8 +19,12 @@ class OnlineService extends DeviceDescriptor {
           supportedDataTypes: supportedDataTypes,
         );
 
+  @override
   Function get fromJsonFunction => _$OnlineServiceFromJson;
+
   factory OnlineService.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as OnlineService;
+
+  @override
   Map<String, dynamic> toJson() => _$OnlineServiceToJson(this);
 }

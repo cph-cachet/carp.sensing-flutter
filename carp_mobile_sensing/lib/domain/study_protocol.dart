@@ -19,6 +19,7 @@ class SmartphoneStudyProtocol extends StudyProtocol {
   /// purpose, and the responsible researcher for this study.
   StudyDescription? protocolDescription;
 
+  @override
   String get description => protocolDescription?.description ?? '';
 
   /// The PI responsible for this protocol.
@@ -41,5 +42,6 @@ class SmartphoneStudyProtocol extends StudyProtocol {
 
   factory SmartphoneStudyProtocol.fromJson(Map<String, dynamic> json) =>
       _$SmartphoneStudyProtocolFromJson(json);
+  @override
   Map<String, dynamic> toJson() => _$SmartphoneStudyProtocolToJson(this);
 }

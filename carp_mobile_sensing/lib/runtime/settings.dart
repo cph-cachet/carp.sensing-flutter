@@ -30,7 +30,7 @@ class Settings {
   String? _buildNumber;
   String? _localApplicationPath;
   String? _carpBasePath;
-  Map<String, String> _deploymentBasePaths = {};
+  final Map<String, String> _deploymentBasePaths = {};
   String _timezone = 'Europe/Copenhagen';
 
   /// The global debug level setting.

@@ -61,9 +61,13 @@ class A extends Serializable {
 
   A() : super();
 
+  @override
   Function get fromJsonFunction => _$AFromJson;
+
   factory A.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as A;
+
+  @override
   Map<String, dynamic> toJson() => _$AToJson(this);
 }
 
@@ -73,10 +77,13 @@ class B extends A {
 
   B() : super();
 
+  @override
   String get jsonType => 'dk.cachet.$runtimeType';
 
+  @override
   Function get fromJsonFunction => _$BFromJson;
   factory B.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as B;
+  @override
   Map<String, dynamic> toJson() => _$BToJson(this);
 }

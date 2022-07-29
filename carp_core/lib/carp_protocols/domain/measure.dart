@@ -23,12 +23,16 @@ class Measure extends Serializable {
 
   Measure({required this.type}) : super();
 
+  @override
   Function get fromJsonFunction => _$MeasureFromJson;
   factory Measure.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as Measure;
+  @override
   Map<String, dynamic> toJson() => _$MeasureToJson(this);
+  @override
   String get jsonType =>
       'dk.cachet.carp.protocols.domain.tasks.measures.$runtimeType';
 
+  @override
   String toString() => '$runtimeType - type: $type';
 }

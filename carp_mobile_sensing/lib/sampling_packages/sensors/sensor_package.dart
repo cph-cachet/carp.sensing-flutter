@@ -1,14 +1,38 @@
 part of sensors;
 
 class SensorSamplingPackage extends SmartphoneSamplingPackage {
+  /// Measure type for collection of accelorometer data (x,y,z).
+  ///
+  /// Event-based measure.
   static const String ACCELEROMETER = 'dk.cachet.carp.accelerometer';
+
+  /// Measure type for collection of
+  ///
+  /// Event-based measure.
   static const String GYROSCOPE = 'dk.cachet.carp.gyroscope';
+
+  /// Measure type for collection of
+  ///
+  /// Event-based measure.
   static const String PERIODIC_ACCELEROMETER =
       'dk.cachet.carp.periodic_accelerometer';
+
+  /// Measure type for collection of
+  ///
+  /// Event-based measure.
   static const String PERIODIC_GYROSCOPE = 'dk.cachet.carp.periodic_gyroscope';
+
+  /// Measure type for collection of
+  ///
+  /// Event-based measure.
   static const String PEDOMETER = 'dk.cachet.carp.pedometer';
+
+  /// Measure type for collection of
+  ///
+  /// Event-based measure.
   static const String LIGHT = 'dk.cachet.carp.light';
 
+  @override
   List<String> get dataTypes => [
         ACCELEROMETER,
         GYROSCOPE,
@@ -18,6 +42,7 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
         LIGHT,
       ];
 
+  @override
   Probe? create(String type) {
     switch (type) {
       case ACCELEROMETER:
@@ -37,10 +62,13 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
     }
   }
 
+  @override
   void onRegister() {}
 
+  @override
   List<Permission> get permissions => [];
 
+  @override
   SamplingSchema get samplingSchema => SamplingSchema()
     ..addConfiguration(
         PERIODIC_ACCELEROMETER,

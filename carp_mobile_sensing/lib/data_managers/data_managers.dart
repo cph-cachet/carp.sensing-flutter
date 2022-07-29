@@ -24,4 +24,4 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 part 'local/console_data_manager.dart';
 part 'local/file_data_manager.dart';
 part 'local/file_study_manager.dart';
-part 'local/sqlite_dat_manager.dart';
+part 'local/sqlite_data_manager.dart';

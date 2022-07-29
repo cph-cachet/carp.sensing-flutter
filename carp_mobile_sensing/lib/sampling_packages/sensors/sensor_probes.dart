@@ -12,12 +12,15 @@ part of sensors;
 abstract class BufferingSensorProbe extends BufferingPeriodicStreamProbe {
   MultiDatum datum = MultiDatum();
 
+  @override
   Future<Datum?> getDatum() async => datum;
 
+  @override
   void onSamplingStart() {
     datum = MultiDatum();
   }
 
+  @override
   void onSamplingEnd() {}
 }
 
@@ -26,6 +29,7 @@ abstract class BufferingSensorProbe extends BufferingPeriodicStreamProbe {
 /// Note that this probe generates a lot of data and should be used
 /// with caution.
 class AccelerometerProbe extends StreamProbe {
+  @override
   Stream<Datum> get stream => accelerometerEvents
       .map((event) => AccelerometerDatum.fromAccelerometerEvent(event));
 }
@@ -36,9 +40,16 @@ class AccelerometerProbe extends StreamProbe {
 /// See [PeriodicMeasure] on how to configure this probe, including setting the
 /// [interval] and [duration] of the sampling rate.
 class BufferingAccelerometerProbe extends BufferingSensorProbe {
+  @override
   Stream<dynamic> get bufferingStream => accelerometerEvents;
-  void onSamplingData(event) => datum.addDatum(
-      AccelerometerDatum.fromAccelerometerEvent(event, multiDatum: true));
+
+  @override
+  void onSamplingData(event) {
+    if (event is AccelerometerEvent) {
+      datum.addDatum(
+          AccelerometerDatum.fromAccelerometerEvent(event, multiDatum: true));
+    }
+  }
 }
 
 /// A  probe collecting raw data from the gyroscope.
@@ -46,6 +57,7 @@ class BufferingAccelerometerProbe extends BufferingSensorProbe {
 /// Note that this probe generates a lot of data and should be used
 /// with caution.
 class GyroscopeProbe extends StreamProbe {
+  @override
   Stream<Datum> get stream =>
       gyroscopeEvents.map((event) => GyroscopeDatum.fromGyroscopeEvent(event));
 }
@@ -57,7 +69,14 @@ class GyroscopeProbe extends StreamProbe {
 /// See [PeriodicMeasure] on how to configure this probe, including setting the
 /// [interval] and [duration] of the sampling rate.
 class BufferingGyroscopeProbe extends BufferingSensorProbe {
+  @override
   Stream<dynamic> get bufferingStream => gyroscopeEvents;
-  void onSamplingData(dynamic event) => datum
-      .addDatum(GyroscopeDatum.fromGyroscopeEvent(event, multiDatum: true));
+
+  @override
+  void onSamplingData(dynamic event) {
+    if (event is GyroscopeEvent) {
+      datum
+          .addDatum(GyroscopeDatum.fromGyroscopeEvent(event, multiDatum: true));
+    }
+  }
 }

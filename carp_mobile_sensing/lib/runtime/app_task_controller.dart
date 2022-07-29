@@ -78,16 +78,17 @@ class AppTaskController {
 
     // set up a timer which cleans up in the queue once an hour
     Timer.periodic(const Duration(hours: 1), (timer) {
-      userTasks.forEach((task) {
+      for (var task in userTasks) {
         if (task.expiresIn != null && task.expiresIn!.isNegative) {
           expire(task.id);
         }
-      });
+      }
     });
 
-    this.notificationsEnabled = enableNotifications;
-    if (notificationsEnabled)
+    notificationsEnabled = enableNotifications;
+    if (notificationsEnabled) {
       await SmartPhoneClientManager().notificationController?.initialize();
+    }
   }
 
   final Map<String, UserTaskFactory> _userTaskFactories = {};
@@ -95,9 +96,9 @@ class AppTaskController {
   /// Register a [UserTaskFactory] which can create [UserTask]s
   /// for the specified [AppTask] types.
   void registerUserTaskFactory(UserTaskFactory factory) {
-    factory.types.forEach((type) {
+    for (var type in factory.types) {
       _userTaskFactories[type] = factory;
-    });
+    }
   }
 
   /// Get an [UserTask] from the [userTasks] based on its [id].
@@ -249,12 +250,12 @@ class AppTaskController {
           json.decode(jsonString) as Map<String, dynamic>);
 
       // now create new AppTaskExecutors, initialize them, and add them to the queue
-      queue.snapshots.forEach((snapshot) async {
+      for (var snapshot in queue.snapshots) {
         debug('$runtimeType - Restoring snapshot: $snapshot');
         AppTaskExecutor executor = AppTaskExecutor();
 
         // find the deployment
-        var deployment;
+        SmartphoneDeployment? deployment;
         if (snapshot.studyDeploymentId != null &&
             snapshot.deviceRoleName != null) {
           deployment = SmartPhoneClientManager()
@@ -264,9 +265,10 @@ class AppTaskController {
               )
               ?.deployment;
         }
-        if (deployment == null)
+        if (deployment == null) {
           warning(
               '$runtimeType - Could not find deployment information based on snapshot: $snapshot');
+        }
 
         executor.initialize(snapshot.task, deployment);
 
@@ -282,7 +284,7 @@ class AppTaskController {
           userTask.enqueued = snapshot.enqueued;
           userTask.state = snapshot.state;
         }
-      });
+      }
     } catch (exception) {
       success = false;
       warning('$runtimeType - Failed to load task queue - $exception');
@@ -302,9 +304,13 @@ class UserTaskSnapshotList extends Serializable {
         .toList();
   }
 
+  @override
   Function get fromJsonFunction => _$UserTaskSnapshotListFromJson;
+
   factory UserTaskSnapshotList.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as UserTaskSnapshotList;
+
+  @override
   Map<String, dynamic> toJson() => _$UserTaskSnapshotListToJson(this);
 }
 
@@ -344,9 +350,13 @@ class UserTaskSnapshot extends Serializable {
         userTask.appTaskExecutor.deployment?.deviceDescriptor.roleName;
   }
 
+  @override
   Function get fromJsonFunction => _$UserTaskSnapshotFromJson;
+
   factory UserTaskSnapshot.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as UserTaskSnapshot;
+
+  @override
   Map<String, dynamic> toJson() => _$UserTaskSnapshotToJson(this);
 
   @override

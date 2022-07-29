@@ -15,19 +15,36 @@ abstract class AggregateExecutor<TConfig> extends AbstractExecutor<TConfig> {
   static final DeviceInfo deviceInfo = DeviceInfo();
   final StreamGroup<DataPoint> group = StreamGroup.broadcast();
   final List<Executor> executors = [];
+
+  @override
   Stream<DataPoint> get data => group.stream;
 
-  Future<void> onResume() async =>
-      executors.forEach((executor) => executor.resume());
+  @override
+  Future<void> onResume() async {
+    for (var executor in executors) {
+      executor.resume();
+    }
+  }
 
-  Future<void> onPause() async =>
-      executors.forEach((executor) => executor.pause());
+  @override
+  Future<void> onPause() async {
+    for (var executor in executors) {
+      executor.pause();
+    }
+  }
 
-  Future<void> onRestart() async =>
-      executors.forEach((executor) => executor.restart());
+  @override
+  Future<void> onRestart() async {
+    for (var executor in executors) {
+      executor.restart();
+    }
+  }
 
+  @override
   Future<void> onStop() async {
-    executors.forEach((executor) => executor.stop());
+    for (var executor in executors) {
+      executor.stop();
+    }
     executors.clear();
   }
 }
@@ -48,9 +65,15 @@ class StudyDeploymentExecutor extends AggregateExecutor<SmartphoneDeployment> {
 
   @override
   void onInitialize() {
+    if (configuration == null) {
+      warning(
+          'Trying to initialize StudyDeploymentExecutor but the deployment configuration is null. Cannot initialize study deployment.');
+      return;
+    }
+
     group.add(_manualDataPointController.stream);
 
-    configuration?.triggeredTasks.forEach((triggeredTask) {
+    for (var triggeredTask in configuration!.triggeredTasks) {
       // get the trigger based on the trigger id
       Trigger trigger = configuration!.triggers['${triggeredTask.triggerId}']!;
       // get the task based on the task name
@@ -69,7 +92,7 @@ class StudyDeploymentExecutor extends AggregateExecutor<SmartphoneDeployment> {
 
       group.add(executor.data);
       executors.add(executor);
-    });
+    }
   }
 
   /// Get the aggregated stream of [DataPoint] data sampled by all executors
@@ -77,6 +100,7 @@ class StudyDeploymentExecutor extends AggregateExecutor<SmartphoneDeployment> {
   ///
   /// Ensures that the `userId` and `studyId` is correctly set in the
   /// [DataPointHeader] based on the [deployment] configuration.
+  @override
   Stream<DataPoint> get data => group.stream.map((dataPoint) => dataPoint
     ..carpHeader.studyId = deployment?.studyDeploymentId
     ..carpHeader.userId = deployment?.userId);
@@ -91,21 +115,21 @@ class StudyDeploymentExecutor extends AggregateExecutor<SmartphoneDeployment> {
 
   /// A list of the running probes in this study deployment executor.
   List<Probe> get probes {
-    List<Probe> _probes = [];
+    List<Probe> probes = [];
 
-    executors.forEach((executor) {
+    for (var executor in executors) {
       if (executor is TriggeredTaskExecutor) {
-        _probes.addAll(executor.probes);
+        probes.addAll(executor.probes);
       }
-    });
-    return _probes;
+    }
+    return probes;
   }
 
   /// Lookup all probes of type [type]. Returns an empty list if none are found.
   List<Probe> lookupProbe(String type) {
-    List<Probe> _probes = probes;
-    _probes.retainWhere((probe) => probe.type == type);
-    return _probes;
+    List<Probe> retrainedProbes = probes;
+    retrainedProbes.retainWhere((probe) => probe.type == type);
+    return retrainedProbes;
   }
 }
 
@@ -155,6 +179,7 @@ class TriggeredTaskExecutor extends AggregateExecutor<TriggeredTask> {
   /// and probes in this triggered task executor.
   ///
   /// Makes sure to set the trigger id and device role name.
+  @override
   Stream<DataPoint> get data => group.stream.map((dataPoint) => dataPoint
     ..carpHeader.triggerId = '${triggeredTask.triggerId}'
     ..carpHeader.deviceRoleName = triggeredTask.targetDeviceRoleName);
@@ -201,9 +226,9 @@ class TriggeredAppTaskExecutor extends TriggeredTaskExecutor {
                       ?.pendingNotificationRequestsCount ??
                   0);
       remainingNotifications = min(remainingNotifications, 6);
-      Iterator it = schedule.iterator;
+      Iterator<DateTime> it = schedule.iterator;
       var count = 0;
-      var current;
+      DateTime current = DateTime.now();
       while (it.moveNext() && count++ < remainingNotifications) {
         current = it.current;
         await AppTaskController().enqueue(
@@ -217,10 +242,10 @@ class TriggeredAppTaskExecutor extends TriggeredTaskExecutor {
 
       // now pause and resume again when the time has passed
       // this in the case where the app keeps running in the background
-      this.pause();
+      pause();
       var duration = current.millisecondsSinceEpoch -
           DateTime.now().millisecondsSinceEpoch;
-      Timer(Duration(milliseconds: duration), () => this.resume());
+      Timer(Duration(milliseconds: duration), () => resume());
     }
   }
 
@@ -237,8 +262,9 @@ TriggeredTaskExecutor getTriggeredTaskExecutor(
 ) {
   // a TriggeredAppTaskExecutor need BOTH a Scheduleable trigger and an AppTask
   // to schedule
-  if (trigger is Scheduleable && task is AppTask)
+  if (trigger is Scheduleable && task is AppTask) {
     return TriggeredAppTaskExecutor(triggeredTask, trigger, task);
+  }
 
   // all other cases we use the normal background triggering relying on the app
   // running in the background

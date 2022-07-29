@@ -16,6 +16,7 @@ part of managers;
 ///
 class FileStudyProtocolManager implements StudyProtocolManager {
   /// Initializing the the local FileDeploymentService
+  @override
   Future<void> initialize() async {
     info('Initializing FileDeploymentService...');
     info('Study file path : ${Settings().localApplicationPath}/protocols');
@@ -39,6 +40,7 @@ class FileStudyProtocolManager implements StudyProtocolManager {
 
   /// Save a study on the local file system.
   /// Returns `true` if successful.
+  @override
   Future<bool> saveStudyProtocol(
     String studyId,
     SmartphoneStudyProtocol study,

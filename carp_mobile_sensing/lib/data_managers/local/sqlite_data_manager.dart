@@ -28,7 +28,7 @@ part of managers;
 /// not corrupted when an app is forced to close and to keep the size of db files
 /// down.
 class SQLiteDataManager extends AbstractDataManager {
-  static final String TABLENAME = 'data_points';
+  static const String TABLENAME = 'data_points';
 
   String? _databasePath;
   Database? database;
@@ -36,6 +36,7 @@ class SQLiteDataManager extends AbstractDataManager {
   @override
   String get type => DataEndPointTypes.SQLITE;
 
+  @override
   Future<void> initialize(
     MasterDeviceDeployment deployment,
     DataEndPoint dataEndPoint,
@@ -67,7 +68,7 @@ class SQLiteDataManager extends AbstractDataManager {
   Future<String> get databasePath async {
     if (_databasePath == null) {
       // get the location of the SQLite DB
-      String _path = await getDatabasesPath();
+      String path = await getDatabasesPath();
       final created = DateTime.now()
           .toUtc()
           .toString()
@@ -75,7 +76,7 @@ class SQLiteDataManager extends AbstractDataManager {
           .replaceAll(RegExp(r' '), '-')
           .replaceAll(RegExp(r'\.'), '-');
 
-      _databasePath = '$_path/carp-data-$created.db';
+      _databasePath = '$path/carp-data-$created.db';
     }
 
     return _databasePath!;
@@ -83,13 +84,13 @@ class SQLiteDataManager extends AbstractDataManager {
 
   @override
   Future<void> onDataPoint(DataPoint dataPoint) async {
-    int created_at = DateTime.now().millisecondsSinceEpoch;
-    String created_by = dataPoint.carpHeader.userId.toString();
-    String carp_header = jsonEncode(dataPoint.carpHeader);
-    String carp_body = jsonEncode(dataPoint.carpBody);
-    String deployment_id = deployment.studyDeploymentId;
+    int createdAt = DateTime.now().millisecondsSinceEpoch;
+    String createdBy = dataPoint.carpHeader.userId.toString();
+    String carpHeader = jsonEncode(dataPoint.carpHeader);
+    String carpBody = jsonEncode(dataPoint.carpBody);
+    String deploymentId = deployment.studyDeploymentId;
     String sql =
-        "INSERT INTO $TABLENAME(created_at, created_by, deployment_id, carp_header, carp_body) VALUES('$created_at', '$created_by', '$deployment_id', '$carp_header', '$carp_body')";
+        "INSERT INTO $TABLENAME(created_at, created_by, deployment_id, carp_header, carp_body) VALUES('$createdAt', '$createdBy', '$deploymentId', '$carpHeader', '$carpBody')";
 
     int? id = await database?.rawInsert(sql);
     debug(

@@ -143,10 +143,10 @@ void main() {
 
       List<DateTime> schedule = ex.getSchedule(from, to);
       print(schedule);
-      schedule.forEach((time) {
+      for (var time in schedule) {
         assert(time.isAfter(from));
         assert(time.isBefore(to));
-      });
+      }
     });
 
     test(' - RecurrentScheduledTrigger - scheduling II', () {
@@ -169,10 +169,10 @@ void main() {
 
       List<DateTime> schedule = ex.getSchedule(from, to);
       print(schedule);
-      schedule.forEach((time) {
+      for (var time in schedule) {
         assert(time.isAfter(from));
         assert(time.isBefore(to));
-      });
+      }
     });
 
     test(' - RecurrentScheduledTrigger - assert failures', () {
@@ -238,10 +238,10 @@ void main() {
 
       List<DateTime> schedule = ex.getSchedule(from, to);
       print(schedule);
-      schedule.forEach((time) {
+      for (var time in schedule) {
         assert(time.isAfter(from));
         assert(time.isBefore(to));
-      });
+      }
 
       // t = CronScheduledTrigger(
       //   minute: 10,
@@ -272,19 +272,19 @@ void main() {
       ex.initialize(t);
       List<TimeOfDay> times = ex.samplingTimes;
       print(times);
-      times.forEach((time) {
+      for (var time in times) {
         assert(time.isAfter(t.startTime));
         assert(time.isBefore(t.endTime));
-      });
+      }
 
       final from = DateTime.now();
       final to = from.add(const Duration(days: 5));
       List<DateTime> schedule = ex.getSchedule(from, to);
       print(schedule);
-      schedule.forEach((time) {
+      for (var time in schedule) {
         assert(time.isAfter(from));
         assert(time.isBefore(to));
-      });
+      }
     });
 
     test(' - ConditionalPeriodicTrigger', () {
@@ -298,6 +298,7 @@ void main() {
 
       ConditionalPeriodicTriggerExecutor ex =
           ConditionalPeriodicTriggerExecutor();
+      print(ex);
     });
 
     /// Test template.

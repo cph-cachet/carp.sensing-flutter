@@ -185,7 +185,7 @@ class Sensing {
 /// This class shows how to configure a [StudyProtocol] with [Tigger]s,
 /// [TaskDescriptor]s and [Measure]s.
 class LocalStudyProtocolManager implements StudyProtocolManager {
-  Future initialize() async {}
+  Future<void> initialize() async {}
 
   /// Create a new CAMS study protocol.
   Future<SmartphoneStudyProtocol> getStudyProtocol(String id) async {

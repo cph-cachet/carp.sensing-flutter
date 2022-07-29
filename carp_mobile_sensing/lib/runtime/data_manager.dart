@@ -12,12 +12,18 @@ part of runtime;
 /// Also supports JSON encoding via the [toJsonString] method.
 abstract class AbstractDataManager implements DataManager {
   late SmartphoneDeployment _deployment;
-  SmartphoneDeployment get deployment => _deployment;
-  String get studyDeploymentId => deployment.studyDeploymentId;
   DataEndPoint? _dataEndPoint;
   DataEndPoint? get dataEndPoint => _dataEndPoint;
 
   StreamController<DataManagerEvent> controller = StreamController.broadcast();
+
+  @override
+  SmartphoneDeployment get deployment => _deployment;
+
+  @override
+  String get studyDeploymentId => deployment.studyDeploymentId;
+
+  @override
   Stream<DataManagerEvent> get events => controller.stream;
 
   /// Add [event] to the [events] stream.
@@ -52,6 +58,7 @@ abstract class AbstractDataManager implements DataManager {
   String toJsonString(Object object) =>
       const JsonEncoder.withIndent(' ').convert(object);
 
+  @override
   String toString() => runtimeType.toString();
 }
 

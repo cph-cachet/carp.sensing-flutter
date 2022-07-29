@@ -39,12 +39,16 @@ class TaskDescriptor extends Serializable {
     this.measures = measures ?? [];
   }
 
+  @override
   Function get fromJsonFunction => _$TaskDescriptorFromJson;
   factory TaskDescriptor.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as TaskDescriptor;
+  @override
   Map<String, dynamic> toJson() => _$TaskDescriptorToJson(this);
+  @override
   String get jsonType => 'dk.cachet.carp.protocols.domain.tasks.$runtimeType';
 
+  @override
   String toString() =>
       '$runtimeType - name: $name, measures size: ${measures.length}';
 }
@@ -65,9 +69,11 @@ class BackgroundTask extends TaskDescriptor {
     this.duration,
   });
 
+  @override
   Function get fromJsonFunction => _$BackgroundTaskFromJson;
   factory BackgroundTask.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as BackgroundTask;
+  @override
   Map<String, dynamic> toJson() => _$BackgroundTaskToJson(this);
 }
 
@@ -85,10 +91,13 @@ class CustomProtocolTask extends TaskDescriptor {
     required this.studyProtocol,
   }) : super(measures: []);
 
+  @override
   Function get fromJsonFunction => _$CustomProtocolTaskFromJson;
   factory CustomProtocolTask.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as CustomProtocolTask;
+  @override
   Map<String, dynamic> toJson() => _$CustomProtocolTaskToJson(this);
 
+  @override
   String toString() => '${super.toString()}, studyProtocol: $studyProtocol';
 }

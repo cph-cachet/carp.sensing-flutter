@@ -37,23 +37,24 @@ class SamplingSchema {
   /// Returns a list of copies of [SamplingConfiguration]s from this schema for
   /// a list of [types].
   List<SamplingConfiguration> getConfigurations({required List<String> types}) {
-    List<SamplingConfiguration> _list = [];
+    List<SamplingConfiguration> configurationList = [];
 
     // since we're using json serialization below, make sure that the json
     // functions have been registred
     _registerFromJsonFunctions();
 
-    types.forEach((type) {
+    for (var type in types) {
       if (configurations.containsKey(type)) {
         // using json encoding/decoding to clone the measure object
-        final _json = _encode(configurations[type]);
-        final SamplingConfiguration _clone = SamplingConfiguration.fromJson(
-            json.decode(_json) as Map<String, dynamic>);
-        _list.add(_clone);
+        final configurationAsJson = _encode(configurations[type]);
+        final SamplingConfiguration configurationClone =
+            SamplingConfiguration.fromJson(
+                json.decode(configurationAsJson) as Map<String, dynamic>);
+        configurationList.add(configurationClone);
       }
-    });
+    }
 
-    return _list;
+    return configurationList;
   }
 
   // /// A sampling schema that does not adapt any [Measure]s.

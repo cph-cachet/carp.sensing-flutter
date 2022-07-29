@@ -96,7 +96,7 @@ abstract class DatumProbe extends Probe {
       addError(error);
     }
     if (datum != null) addData(datum);
-    this.pause();
+    pause();
   }
 
   /// Subclasses should implement this method to collect a [Datum].
@@ -118,6 +118,7 @@ abstract class IntervalDatumProbe extends DatumProbe {
   IntervalSamplingConfiguration? get samplingConfiguration =>
       super.samplingConfiguration as IntervalSamplingConfiguration;
 
+  @override
   Future<void> onResume() async {
     Duration? interval = samplingConfiguration?.interval;
     if (interval != null) {
@@ -137,10 +138,12 @@ abstract class IntervalDatumProbe extends DatumProbe {
     }
   }
 
+  @override
   Future<void> onPause() async {
     timer?.cancel();
   }
 
+  @override
   Future<void> onStop() async {
     timer?.cancel();
     await controller.close();
@@ -198,7 +201,7 @@ abstract class StreamProbe extends Probe {
 
   // just forwarding to the controller
   void onData(Datum datum) => addData(datum);
-  void onError(error) => addError(error);
+  void onError(Object error) => addError(error);
   void onDone() => controller.close();
 }
 
@@ -223,6 +226,7 @@ abstract class PeriodicStreamProbe extends StreamProbe {
   PeriodicSamplingConfiguration? get samplingConfiguration =>
       super.samplingConfiguration as PeriodicSamplingConfiguration;
 
+  @override
   Future<void> onResume() async {
     if (stream == null) {
       warning(
@@ -234,7 +238,7 @@ abstract class PeriodicStreamProbe extends StreamProbe {
       if (interval != null && duration != null) {
         // create a recurrent timer that resume sampling
         timer = Timer.periodic(interval, (timer) {
-          final StreamSubscription newSubscription =
+          final StreamSubscription<Datum> newSubscription =
               stream!.listen(onData, onError: onError, onDone: onDone);
           // create a timer that pause the sampling after the specified duration.
           Timer(duration, () async {
@@ -249,11 +253,13 @@ abstract class PeriodicStreamProbe extends StreamProbe {
     }
   }
 
+  @override
   Future<void> onPause() async {
     timer?.cancel();
     await super.onPause();
   }
 
+  @override
   Future<void> onStop() async {
     timer?.cancel();
     await super.onStop();
@@ -276,6 +282,7 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
   PeriodicSamplingConfiguration? get samplingConfiguration =>
       super.samplingConfiguration as PeriodicSamplingConfiguration;
 
+  @override
   Future<void> onResume() async {
     Duration? interval = samplingConfiguration?.interval;
     Duration? duration = samplingConfiguration?.duration;
@@ -302,6 +309,7 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
     }
   }
 
+  @override
   Future<void> onPause() async {
     if (timer != null) timer!.cancel();
     // check if there are some buffered data that needs to be collected before pausing
@@ -313,6 +321,7 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
     }
   }
 
+  @override
   Future<void> onStop() async {
     timer?.cancel();
     await controller.close();
@@ -330,6 +339,7 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
   ///
   /// Can return `null` if no data is available.
   /// Can return an [ErrorDatum] if an error occurs.
+  @override
   Future<Datum?> getDatum();
 }
 
@@ -350,8 +360,10 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
 /// See [LightProbe] for an example.
 abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
   // we don't use the stream in the super class so we give it an empty non-null stream
+  @override
   Stream<Datum> get stream => Stream.empty();
 
+  @override
   Future<void> onResume() async {
     Duration? interval = samplingConfiguration?.interval;
     Duration? duration = samplingConfiguration?.duration;
@@ -378,6 +390,7 @@ abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
     }
   }
 
+  @override
   Future<void> onPause() async {
     await super.onPause();
     onSamplingEnd();
@@ -431,6 +444,7 @@ abstract class BufferingIntervalStreamProbe extends StreamProbe {
   IntervalSamplingConfiguration? get samplingConfiguration =>
       super.samplingConfiguration as IntervalSamplingConfiguration;
 
+  @override
   Future<void> onResume() async {
     Duration? interval = samplingConfiguration?.interval;
     if (interval != null) {
@@ -454,11 +468,13 @@ abstract class BufferingIntervalStreamProbe extends StreamProbe {
     }
   }
 
+  @override
   Future<void> onPause() async {
     await super.onPause();
     await subscription?.cancel();
   }
 
+  @override
   Future<void> onStop() async {
     timer?.cancel();
     await subscription?.cancel();

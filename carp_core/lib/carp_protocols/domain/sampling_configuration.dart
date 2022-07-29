@@ -10,10 +10,16 @@ part of carp_core_protocols;
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class SamplingConfiguration extends Serializable {
   SamplingConfiguration() : super();
+
+  @override
   Function get fromJsonFunction => _$SamplingConfigurationFromJson;
   factory SamplingConfiguration.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as SamplingConfiguration;
+
+  @override
   Map<String, dynamic> toJson() => _$SamplingConfigurationToJson(this);
+
+  @override
   String get jsonType =>
       'dk.cachet.carp.protocols.domain.sampling.SamplingConfiguration';
 }

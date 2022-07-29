@@ -23,6 +23,7 @@ class FlutterLocalNotificationController implements NotificationController {
   factory FlutterLocalNotificationController() => _instance;
 
   /// Initialize and set up the notification controller.
+  @override
   Future<void> initialize() async {
     debug('$runtimeType initializing....');
     tz.initializeTimeZones();
@@ -51,9 +52,11 @@ class FlutterLocalNotificationController implements NotificationController {
     );
     info('$runtimeType initialized.');
     debug('PENDING NOTIFICATIONS:');
-    (await notifications.FlutterLocalNotificationsPlugin()
-            .pendingNotificationRequests())
-        .forEach((notification) => debug('${notification.title}'));
+    for (var notification
+        in (await notifications.FlutterLocalNotificationsPlugin()
+            .pendingNotificationRequests())) {
+      debug('${notification.title}');
+    }
   }
 
   final notifications.NotificationDetails _platformChannelSpecifics =
@@ -69,6 +72,7 @@ class FlutterLocalNotificationController implements NotificationController {
   );
 
   /// Send an immediate notification for a [task].
+  @override
   Future<void> sendNotification(UserTask task) async {
     if (task.notification) {
       await notifications.FlutterLocalNotificationsPlugin().show(
@@ -83,6 +87,7 @@ class FlutterLocalNotificationController implements NotificationController {
   }
 
   /// Schedule a notification for a [task] at the [UserTask.triggerTime].
+  @override
   Future<void> scheduleNotification(UserTask task) async {
     // early out if not to be scheduled
     if (!task.notification) return;
@@ -114,12 +119,14 @@ class FlutterLocalNotificationController implements NotificationController {
   ///
   /// Note that on iOS there is a limit of 64 pending nofifications.
   /// See https://pub.dev/packages/flutter_local_notifications#ios-pending-notifications-limit
+  @override
   Future<int> get pendingNotificationRequestsCount async =>
       (await notifications.FlutterLocalNotificationsPlugin()
               .pendingNotificationRequests())
           .length;
 
   /// Cancel (i.e., remove) the notification for the [task].
+  @override
   void cancelNotification(UserTask task) {
     if (task.notification) {
       notifications.FlutterLocalNotificationsPlugin().cancel(task.id.hashCode);

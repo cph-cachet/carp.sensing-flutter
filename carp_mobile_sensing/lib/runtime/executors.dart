@@ -216,19 +216,27 @@ abstract class _ExecutorStateMachine {
 }
 
 abstract class _AbstractExecutorState implements _ExecutorStateMachine {
+  @override
   ExecutorState state;
+
   AbstractExecutor executor;
   _AbstractExecutorState(this.executor, this.state);
 
   // Default behavior is to print a warning.
   // If a state supports this method, this behavior is overwritten in
   // the state implementation classes below.
+
+  @override
   void initialize() => _printWarning('initialize');
+  @override
   void restart() => _printWarning('restart');
+  @override
   void resume() => _printWarning('resume');
+  @override
   void pause() => _printWarning('pause');
 
   // Default stop behavior. A Executor can be stopped in all states.
+  @override
   void stop() {
     info('Stopping ${executor.runtimeType}');
     executor._setState(_StoppedState(executor));
@@ -236,12 +244,14 @@ abstract class _AbstractExecutorState implements _ExecutorStateMachine {
   }
 
   // Default error behavior. A Executor can become undefined in all states.
+  @override
   void error() {
     warning('Error in ${executor.runtimeType}.');
     executor._setState(_UndefinedState(executor));
   }
 
   // Default implementation of next state. Can always be stopped.
+  @override
   bool validNextState(ExecutorState nextState) =>
       (nextState == ExecutorState.stopped);
 
@@ -254,6 +264,7 @@ class _CreatedState extends _AbstractExecutorState
   _CreatedState(Executor executor)
       : super(executor as AbstractExecutor, ExecutorState.created);
 
+  @override
   void initialize() {
     info('Initializing ${executor.runtimeType}');
     try {
@@ -265,9 +276,11 @@ class _CreatedState extends _AbstractExecutorState
     }
   }
 
+  @override
   bool validNextState(ExecutorState nextState) =>
       (nextState == ExecutorState.initialized);
 
+  @override
   String toString() => 'created';
 }
 
@@ -276,15 +289,18 @@ class _InitializedState extends _AbstractExecutorState
   _InitializedState(Executor executor)
       : super(executor as AbstractExecutor, ExecutorState.initialized);
 
+  @override
   void resume() {
     info('Resuming ${executor.runtimeType}');
     executor.onResume();
     executor._setState(_ResumedState(executor));
   }
 
+  @override
   bool validNextState(ExecutorState nextState) =>
       (nextState == ExecutorState.resumed);
 
+  @override
   String toString() => 'initialized';
 }
 
@@ -293,6 +309,7 @@ class _ResumedState extends _AbstractExecutorState
   _ResumedState(Executor executor)
       : super(executor as AbstractExecutor, ExecutorState.resumed);
 
+  @override
   void restart() {
     info('Restarting ${executor.runtimeType}');
     executor.pause(); // first pause executor, setting it in a paused state
@@ -300,15 +317,18 @@ class _ResumedState extends _AbstractExecutorState
     executor.resume();
   }
 
+  @override
   void pause() {
     info('Pausing ${executor.runtimeType}');
     executor.onPause();
     executor._setState(_PausedState(executor));
   }
 
+  @override
   bool validNextState(ExecutorState nextState) =>
       (nextState == ExecutorState.paused);
 
+  @override
   String toString() => 'resumed';
 }
 
@@ -317,21 +337,25 @@ class _PausedState extends _AbstractExecutorState
   _PausedState(Executor executor)
       : super(executor as AbstractExecutor, ExecutorState.paused);
 
+  @override
   void restart() {
     info('Restarting ${executor.runtimeType}');
     executor.onRestart();
     executor.resume();
   }
 
+  @override
   void resume() {
     info('Resuming ${executor.runtimeType}');
     executor.onResume();
     executor._setState(_ResumedState(executor));
   }
 
+  @override
   bool validNextState(ExecutorState nextState) =>
       (nextState == ExecutorState.resumed);
 
+  @override
   String toString() => 'paused';
 }
 
@@ -339,6 +363,7 @@ class _StoppedState extends _AbstractExecutorState
     implements _ExecutorStateMachine {
   _StoppedState(Executor executor)
       : super(executor as AbstractExecutor, ExecutorState.stopped);
+  @override
   String toString() => 'stopped';
 }
 
@@ -346,5 +371,6 @@ class _UndefinedState extends _AbstractExecutorState
     implements _ExecutorStateMachine {
   _UndefinedState(Executor executor)
       : super(executor as AbstractExecutor, ExecutorState.undefined);
+  @override
   String toString() => 'undefined';
 }

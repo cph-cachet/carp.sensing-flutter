@@ -18,8 +18,6 @@ TriggerExecutor getTriggerExecutor(Trigger trigger) {
       return DelayedTriggerExecutor();
     case ElapsedTimeTrigger:
       return ElapsedTimeTriggerExecutor();
-    case ElapsedTimeTrigger:
-      return ElapsedTimeTriggerExecutor();
     case IntervalTrigger:
       return IntervalTriggerExecutor();
     case PeriodicTrigger:
@@ -71,13 +69,13 @@ abstract class TriggerExecutor<TConfig extends Trigger>
   /// Returns a list of the running probes in this [TriggerExecutor].
   /// This is a combination of the running probes in all task executors.
   List<Probe> get probes {
-    List<Probe> _probes = [];
-    executors.forEach((executor) {
+    List<Probe> probes = [];
+    for (var executor in executors) {
       if (executor is TaskExecutor) {
-        _probes.addAll(executor.probes);
+        probes.addAll(executor.probes);
       }
-    });
-    return _probes;
+    }
+    return probes;
   }
 }
 
@@ -299,10 +297,10 @@ class RecurrentScheduledTriggerExecutor
 
   @override
   Future<void> onResume() async {
-    Duration _delay = configuration!.firstOccurrence.difference(DateTime.now());
+    Duration delay = configuration!.firstOccurrence.difference(DateTime.now());
     if (configuration!.end == null ||
         configuration!.end!.isAfter(DateTime.now())) {
-      Timer(_delay, () async {
+      Timer(delay, () async {
         await super.onResume();
       });
     }
@@ -338,8 +336,8 @@ class CronScheduledTriggerExecutor
   @override
   Future<void> onResume() async {
     debug('creating cron job : $configuration');
-    var _schedule = cron.Schedule.parse(configuration!.cronExpression);
-    _scheduledTask = _cron.schedule(_schedule, () async {
+    var schedule = cron.Schedule.parse(configuration!.cronExpression);
+    _scheduledTask = _cron.schedule(schedule, () async {
       debug('resuming cron job : ${DateTime.now().toString()}');
       await super.onResume();
       Timer(configuration!.duration, () => super.onPause());
@@ -457,12 +455,12 @@ class RandomRecurrentTriggerExecutor
 
   /// Get N random times between startTime and endTime
   List<TimeOfDay> get samplingTimes {
-    List<TimeOfDay> _samplingTimes = [];
+    List<TimeOfDay> samplingTimes = [];
     for (int i = 0; i <= numberOfSampling; i++) {
-      _samplingTimes.add(randomTime);
+      samplingTimes.add(randomTime);
     }
-    debug('Random sampling times: $_samplingTimes');
-    return _samplingTimes;
+    debug('Random sampling times: $samplingTimes');
+    return samplingTimes;
   }
 
   /// Get a random time between startTime and endTime
@@ -509,11 +507,11 @@ class RandomRecurrentTriggerExecutor
     var count = 0;
 
     while (day.isBefore(toDay) && count < max) {
-      samplingTimes.forEach((time) {
+      for (var time in samplingTimes) {
         final date = DateTime(
             day.year, day.month, day.day, time.hour, time.minute, time.second);
         if (date.isAfter(from) && date.isBefore(to)) schedule.add(date);
-      });
+      }
 
       day = day.add(const Duration(days: 1));
       count++;
@@ -549,7 +547,7 @@ class RandomRecurrentTriggerExecutor
 
     // get a random number of trigger time for today, and for each set up a
     // timer that triggers the super.onResume() method.
-    samplingTimes.forEach((time) {
+    for (var time in samplingTimes) {
       // find the delay - note, that none of the delays can be negative,
       // since we are at [startTime] or after
       Duration delay = time.difference(TimeOfDay.now());
@@ -560,7 +558,7 @@ class RandomRecurrentTriggerExecutor
         Timer(duration, () => super.onPause());
       });
       _timers.add(timer);
-    });
+    }
 
     // mark this day as scheduled
     configuration!.lastTriggerTimestamp = DateTime.now();

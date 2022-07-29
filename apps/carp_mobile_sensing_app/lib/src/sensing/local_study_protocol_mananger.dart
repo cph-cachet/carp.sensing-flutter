@@ -37,7 +37,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         ));
 
     protocol.dataEndPoint = (bloc.deploymentMode == DeploymentMode.LOCAL)
-        ? FileDataEndPoint()
+        ? SQLiteDataEndPoint()
         : CarpDataEndPoint(
             uploadMethod: CarpUploadMethod.DATA_POINT,
             name: 'CARP Server',
@@ -88,7 +88,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
     // Add a background task that collects location on a regular basis
     protocol.addTriggeredTask(
-        IntervalTrigger(period: Duration(minutes: 1)),
+        IntervalTrigger(period: Duration(minutes: 5)),
         BackgroundTask()
           ..addMeasure(Measure(type: ContextSamplingPackage.LOCATION)),
         locationService);
@@ -238,7 +238,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
   DataEndPoint getDataEndPoint() {
     switch (bloc.deploymentMode) {
       case DeploymentMode.LOCAL:
-        return FileDataEndPoint();
+        return SQLiteDataEndPoint();
       case DeploymentMode.CARP_PRODUCTION:
       case DeploymentMode.CARP_STAGING:
         return CarpDataEndPoint(
@@ -247,40 +247,6 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         );
     }
   }
-
-  // SamplingSchema getActivitySamplingSchema() {
-  //   var activitySchema = SamplingSchema(
-  //       type: SamplingSchemaType.common,
-  //       name: 'Activity Sampling Schema',
-  //       powerAware: true)
-  //     ..measures.addEntries([
-  //       MapEntry(SensorSamplingPackage.PEDOMETER,
-  //           Measure(type: SensorSamplingPackage.PEDOMETER)),
-  //       MapEntry(
-  //           ContextSamplingPackage.GEOLOCATION,
-  //           LocationMeasure(
-  //             type: ContextSamplingPackage.GEOLOCATION,
-  //             accuracy: GeolocationAccuracy.high,
-  //             distance: 50,
-  //           )),
-  //       MapEntry(
-  //           MediaSamplingPackage.NOISE,
-  //           NoiseMeasure(
-  //             type: MediaSamplingPackage.NOISE,
-  //             frequency: Duration(minutes: 5),
-  //             duration: Duration(seconds: 10),
-  //           )),
-  //       MapEntry(ContextSamplingPackage.ACTIVITY,
-  //           Measure(type: ContextSamplingPackage.ACTIVITY)),
-  //       MapEntry(
-  //           ContextSamplingPackage.WEATHER,
-  //           WeatherMeasure(
-  //               type: ContextSamplingPackage.WEATHER,
-  //               apiKey: '12kbfWErlk5j923yr5oihfw')),
-  //     ]);
-
-  //   return activitySchema;
-  // }
 
   Future<bool> saveStudyProtocol(String studyId, StudyProtocol protocol) async {
     throw UnimplementedError();

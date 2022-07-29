@@ -46,6 +46,7 @@ class TriggeredTask {
       _$TriggeredTaskFromJson(json);
   Map<String, dynamic> toJson() => _$TriggeredTaskToJson(this);
 
+  @override
   String toString() =>
       '$runtimeType - triggerId: $triggerId, task: $taskName, targetDeviceRoleName: $targetDeviceRoleName';
 }

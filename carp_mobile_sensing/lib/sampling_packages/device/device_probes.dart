@@ -12,33 +12,33 @@ part of device;
 class BatteryProbe extends StreamProbe {
   @override
   Stream<Datum>? get stream {
-    Battery _battery = Battery();
-    late StreamController<Datum> _controller;
-    late StreamSubscription<BatteryState> _subscription;
+    Battery battery = Battery();
+    late StreamController<Datum> controller;
+    late StreamSubscription<BatteryState> subscription;
 
-    void _onData(state) async {
+    void _onData(BatteryState state) async {
       try {
-        int level = await _battery.batteryLevel;
+        int level = await battery.batteryLevel;
         Datum datum = BatteryDatum.fromBatteryState(level, state);
-        _controller.add(datum);
+        controller.add(datum);
       } catch (error) {
-        _controller.addError(error);
+        controller.addError(error);
       }
     }
 
-    _controller = StreamController<Datum>(
-        onListen: () => _subscription.resume(),
-        onPause: () => _subscription.pause(),
-        onResume: () => _subscription.resume(),
-        onCancel: () => _subscription.cancel());
+    controller = StreamController<Datum>(
+        onListen: () => subscription.resume(),
+        onPause: () => subscription.pause(),
+        onResume: () => subscription.resume(),
+        onCancel: () => subscription.cancel());
 
-    _subscription = _battery.onBatteryStateChanged.listen(
+    subscription = battery.onBatteryStateChanged.listen(
       _onData,
-      onError: (error) => _controller.addError(error),
-      onDone: () => _controller.close(),
+      onError: (Object error) => controller.addError(error),
+      onDone: () => controller.close(),
     );
 
-    return _controller.stream;
+    return controller.stream;
   }
 }
 

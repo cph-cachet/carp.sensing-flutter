@@ -64,16 +64,16 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
   ///
   /// Returns true if successful, false if not.
   Future<bool> connect() async {
-    bool _success = false;
+    bool success = false;
     assert(isInitialized,
         '$runtimeType has not been initialized - cannot connect to it.');
 
     info(
         '$runtimeType - Trying to connect to device of type: $type and id: $id');
-    _success = await onConnect();
-    status = (_success) ? DeviceStatus.connected : DeviceStatus.error;
+    success = await onConnect();
+    status = (success) ? DeviceStatus.connected : DeviceStatus.error;
 
-    return _success;
+    return success;
   }
 
   /// Callback on [connect].
@@ -86,7 +86,7 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
   ///
   /// Returns true if successful, false if not.
   Future<bool> disconnect() async {
-    bool _success = false;
+    bool success = false;
     if (status != DeviceStatus.connected) {
       warning(
           '$runtimeType is not connected, so nothing to disconnect from....');
@@ -95,10 +95,10 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
 
     info(
         '$runtimeType - Trying to disconnect to device of type: $type and id: $id');
-    _success = await onDisconnect();
-    status = (_success) ? DeviceStatus.disconnected : DeviceStatus.error;
+    success = await onDisconnect();
+    status = (success) ? DeviceStatus.disconnected : DeviceStatus.error;
 
-    return _success;
+    return success;
   }
 
   /// Callback on [disconnect].

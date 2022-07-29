@@ -24,9 +24,11 @@ abstract class DeploymentServiceRequest extends ServiceRequest {
   /// The CARP study deployment ID.
   String? studyDeploymentId;
 
+  @override
   String get jsonType =>
       '$_infrastructurePackageNamespace.DeploymentServiceRequest.$runtimeType';
 
+  @override
   String toString() => '$runtimeType - studyDeploymentId: $studyDeploymentId';
 }
 
@@ -35,16 +37,21 @@ abstract class DeploymentServiceRequest extends ServiceRequest {
 class CreateStudyDeployment extends DeploymentServiceRequest {
   StudyProtocol protocol;
 
+  @override
   @JsonKey(ignore: true)
+  // ignore: overridden_fields
   String? studyDeploymentId;
 
   CreateStudyDeployment(this.protocol) : super();
 
+  @override
   Function get fromJsonFunction => _$CreateStudyDeploymentFromJson;
   factory CreateStudyDeployment.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as CreateStudyDeployment;
+  @override
   Map<String, dynamic> toJson() => _$CreateStudyDeploymentToJson(this);
 
+  @override
   String toString() => '$runtimeType - protocol: ${protocol.name}}';
 }
 
@@ -53,9 +60,11 @@ class CreateStudyDeployment extends DeploymentServiceRequest {
 class GetStudyDeploymentStatus extends DeploymentServiceRequest {
   GetStudyDeploymentStatus(super.studyDeploymentId);
 
+  @override
   Function get fromJsonFunction => _$GetStudyDeploymentStatusFromJson;
   factory GetStudyDeploymentStatus.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as GetStudyDeploymentStatus;
+  @override
   Map<String, dynamic> toJson() => _$GetStudyDeploymentStatusToJson(this);
 }
 
@@ -66,9 +75,11 @@ class GetStudyDeploymentStatusList extends DeploymentServiceRequest {
 
   GetStudyDeploymentStatusList(this.studyDeploymentIds) : super();
 
+  @override
   Function get fromJsonFunction => _$GetStudyDeploymentStatusListFromJson;
   factory GetStudyDeploymentStatusList.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as GetStudyDeploymentStatusList;
+  @override
   Map<String, dynamic> toJson() => _$GetStudyDeploymentStatusListToJson(this);
 }
 
@@ -84,11 +95,14 @@ class RegisterDevice extends DeploymentServiceRequest {
   /// The registration.
   DeviceRegistration registration;
 
+  @override
   Function get fromJsonFunction => _$RegisterDeviceFromJson;
   factory RegisterDevice.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as RegisterDevice;
+  @override
   Map<String, dynamic> toJson() => _$RegisterDeviceToJson(this);
 
+  @override
   String toString() => '${super.toString()}, deviceRoleName: $deviceRoleName';
 }
 
@@ -100,11 +114,14 @@ class UnregisterDevice extends DeploymentServiceRequest {
   /// The role name of this device.
   String deviceRoleName;
 
+  @override
   Function get fromJsonFunction => _$UnregisterDeviceFromJson;
   factory UnregisterDevice.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as UnregisterDevice;
+  @override
   Map<String, dynamic> toJson() => _$UnregisterDeviceToJson(this);
 
+  @override
   String toString() => '${super.toString()}, deviceRoleName: $deviceRoleName';
 }
 
@@ -116,11 +133,14 @@ class GetDeviceDeploymentFor extends DeploymentServiceRequest {
   /// The role name of this master device.
   String masterDeviceRoleName;
 
+  @override
   Function get fromJsonFunction => _$GetDeviceDeploymentForFromJson;
   factory GetDeviceDeploymentFor.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as GetDeviceDeploymentFor;
+  @override
   Map<String, dynamic> toJson() => _$GetDeviceDeploymentForToJson(this);
 
+  @override
   String toString() =>
       '${super.toString()}, masterDeviceRoleName: $masterDeviceRoleName';
 }
@@ -137,11 +157,14 @@ class DeploymentSuccessful extends GetDeviceDeploymentFor {
     DateTime deviceDeploymentLastUpdateDate,
   ) : super(studyDeploymentId, masterDeviceRoleName);
 
+  @override
   Function get fromJsonFunction => _$DeploymentSuccessfulFromJson;
   factory DeploymentSuccessful.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as DeploymentSuccessful;
+  @override
   Map<String, dynamic> toJson() => _$DeploymentSuccessfulToJson(this);
 
+  @override
   String toString() =>
       '${super.toString()}, masterDeviceRoleName: $masterDeviceRoleName';
 }
@@ -151,8 +174,10 @@ class DeploymentSuccessful extends GetDeviceDeploymentFor {
 class Stop extends DeploymentServiceRequest {
   Stop(super.studyDeploymentId);
 
+  @override
   Function get fromJsonFunction => _$StopFromJson;
   factory Stop.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as Stop;
+  @override
   Map<String, dynamic> toJson() => _$StopToJson(this);
 }

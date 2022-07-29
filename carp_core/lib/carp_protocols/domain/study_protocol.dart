@@ -23,7 +23,9 @@ class StudyProtocol {
   Map<String, TaskDescriptor> get _taskMap {
     if (_taskMapProperty == null) {
       _taskMapProperty = {};
-      tasks.forEach((task) => _taskMapProperty![task.name] = task);
+      for (var task in tasks) {
+        _taskMapProperty![task.name] = task;
+      }
     }
     return _taskMapProperty!;
   }
@@ -151,8 +153,11 @@ class StudyProtocol {
     Trigger trigger,
     List<TaskDescriptor> tasks,
     DeviceDescriptor targetDevice,
-  ) =>
-      tasks.forEach((task) => addTriggeredTask(trigger, task, targetDevice));
+  ) {
+    for (TaskDescriptor task in tasks) {
+      addTriggeredTask(trigger, task, targetDevice);
+    }
+  }
 
   /// Gets all the tasks (and the devices they are triggered to) for the
   /// specified [trigger].
@@ -163,11 +168,11 @@ class StudyProtocol {
 
     Set<TriggeredTask> tt = {};
     // search the list of triggered tasks
-    triggeredTasks.forEach((triggeredTask) {
+    for (var triggeredTask in triggeredTasks) {
       if (triggeredTask.triggerId == triggerId) {
         tt.add(triggeredTask);
       }
-    });
+    }
 
     return tt;
   }
@@ -182,11 +187,11 @@ class StudyProtocol {
   /// including removing it from any [Trigger]'s which initiate it.
   void removeTask(TaskDescriptor task) {
     // Remove task from triggered tasks
-    triggeredTasks.forEach((triggeredTask) {
+    for (var triggeredTask in triggeredTasks) {
       if (triggeredTask.taskName == task.name) {
         triggeredTasks.remove(triggeredTask);
       }
-    });
+    }
 
     // Remove task itself.
     tasks.remove(task);
@@ -202,11 +207,11 @@ class StudyProtocol {
 
     final Set<TaskDescriptor?> deviceTasks = {};
 
-    triggeredTasks.forEach((triggeredTask) {
+    for (var triggeredTask in triggeredTasks) {
       if (triggeredTask.targetDeviceRoleName == device.roleName) {
         deviceTasks.add(_taskMap[triggeredTask.taskName]);
       }
-    });
+    }
 
     return deviceTasks;
   }
@@ -218,13 +223,13 @@ class StudyProtocol {
   Set<TaskDescriptor> getTasksForDeviceRoleName(String? deviceRoleName) {
     final Set<TaskDescriptor> deviceTasks = {};
 
-    triggeredTasks.forEach((triggeredTask) {
+    for (var triggeredTask in triggeredTasks) {
       if (triggeredTask.targetDeviceRoleName == deviceRoleName) {
         if (_taskMap.containsKey(triggeredTask.taskName)) {
           deviceTasks.add(_taskMap[triggeredTask.taskName]!);
         }
       }
-    });
+    }
     return deviceTasks;
   }
 
@@ -232,5 +237,6 @@ class StudyProtocol {
   factory StudyProtocol.fromJson(Map<String, dynamic> json) =>
       _$StudyProtocolFromJson(json);
 
+  @override
   String toString() => '$runtimeType - name: $name, ownerId: $ownerId';
 }

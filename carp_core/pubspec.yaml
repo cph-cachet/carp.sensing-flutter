@@ -12,10 +12,10 @@ dependencies:
   uuid: ^3.0.4
   
 dev_dependencies:
-  pedantic: any      # For pedantic Dart linter
   build_runner: any   # For building json serialization
   json_serializable: any
   test: any
+  lints: any
  
 # auto generate json code (.g files) with:
 #   flutter pub run build_runner build --delete-conflicting-outputs

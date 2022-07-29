@@ -59,7 +59,7 @@ class SmartPhoneClientManager extends ClientManager
     deviceId ??= DeviceInfo().deviceID;
     // this._notificationController =
     //     notificationController ?? FlutterLocalNotificationController();
-    this._notificationController =
+    _notificationController =
         notificationController ?? AwesomeNotificationController();
     this.deploymentService = deploymentService ?? SmartphoneDeploymentService();
     this.deviceController = deviceController ?? DeviceController();
@@ -120,8 +120,9 @@ class SmartPhoneClientManager extends ClientManager
   @mustCallSuper
   Future<void> deactivate() async {
     // make sure to save all studies
-    repository.keys.forEach(
-        (study) async => await getStudyRuntime(study)?.saveDeployment());
+    for (var study in repository.keys) {
+      await getStudyRuntime(study)?.saveDeployment();
+    }
   }
 
   /// Called when the system puts the app in the background or returns

@@ -95,7 +95,7 @@ abstract class UserTask {
 
   /// Create a new [UserTask] based on [executor].
   UserTask(AppTaskExecutor executor) {
-    this._executor = executor;
+    _executor = executor;
   }
 
   /// Callback from the app when this task is to be started.
@@ -111,7 +111,7 @@ abstract class UserTask {
   /// If [dequeue] is `true` the task is removed from the queue.
   /// Othervise, it it kept on the queue for later.
   @mustCallSuper
-  void onCancel(BuildContext context, {dequeue = false}) {
+  void onCancel(BuildContext context, {bool dequeue = false}) {
     state = UserTaskState.canceled;
     (dequeue)
         ? AppTaskController().dequeue(id)
@@ -122,7 +122,7 @@ abstract class UserTask {
   ///
   /// If [dequeue] is `true` the task is removed from the queue.
   @mustCallSuper
-  void onDone(BuildContext context, {dequeue = false}) {
+  void onDone(BuildContext context, {bool dequeue = false}) {
     state = UserTaskState.done;
     AppTaskController().done(id);
     if (dequeue) AppTaskController().dequeue(id);

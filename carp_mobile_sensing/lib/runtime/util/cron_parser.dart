@@ -80,7 +80,7 @@ class _Cron implements Cron {
     assert(cronString.isNotEmpty);
     assert(_cronRegex.hasMatch(cronString));
     var location = tz.getLocation(locationName);
-    if (startTime == null) startTime = tz.TZDateTime.now(location);
+    startTime ??= tz.TZDateTime.now(location);
     startTime = tz.TZDateTime.from(startTime, location);
     return _CronIterator(_parse(cronString), startTime);
   }
@@ -166,7 +166,7 @@ List<int>? _parseConstraint(dynamic constraint) {
 }
 
 class _CronIterator implements CronIterator<tz.TZDateTime> {
-  _Schedule _schedule;
+  final _Schedule _schedule;
   tz.TZDateTime _currentDate;
   bool _nextCalled = false;
   bool _previousCalled = false;
@@ -174,7 +174,7 @@ class _CronIterator implements CronIterator<tz.TZDateTime> {
   _CronIterator(this._schedule, this._currentDate) {
     _currentDate = tz.TZDateTime.fromMillisecondsSinceEpoch(
         _currentDate.location,
-        this._currentDate.millisecondsSinceEpoch ~/ 60000 * 60000);
+        _currentDate.millisecondsSinceEpoch ~/ 60000 * 60000);
   }
 
   @override

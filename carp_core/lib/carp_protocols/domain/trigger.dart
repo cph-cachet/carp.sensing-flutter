@@ -30,10 +30,13 @@ class Trigger extends Serializable {
     this.requiresMasterDevice,
   }) : super();
 
+  @override
   Function get fromJsonFunction => _$TriggerFromJson;
   factory Trigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as Trigger;
+  @override
   Map<String, dynamic> toJson() => _$TriggerToJson(this);
+  @override
   String get jsonType => '$_triggerNamespace.$runtimeType';
 }
 
@@ -57,9 +60,11 @@ class ElapsedTimeTrigger extends Trigger implements Scheduleable {
     required this.elapsedTime,
   });
 
+  @override
   Function get fromJsonFunction => _$ElapsedTimeTriggerFromJson;
   factory ElapsedTimeTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as ElapsedTimeTrigger;
+  @override
   Map<String, dynamic> toJson() => _$ElapsedTimeTriggerToJson(this);
 }
 
@@ -81,9 +86,11 @@ class ManualTrigger extends Trigger {
     this.description,
   });
 
+  @override
   Function get fromJsonFunction => _$ManualTriggerFromJson;
   factory ManualTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as ManualTrigger;
+  @override
   Map<String, dynamic> toJson() => _$ManualTriggerToJson(this);
 }
 
@@ -114,9 +121,11 @@ class ScheduledTrigger extends Trigger implements Scheduleable {
   @override
   String toString() => '$runtimeType - time: $time, rrule: $recurrenceRule';
 
+  @override
   Function get fromJsonFunction => _$ScheduledTriggerFromJson;
   factory ScheduledTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as ScheduledTrigger;
+  @override
   Map<String, dynamic> toJson() => _$ScheduledTriggerToJson(this);
 }
 
@@ -216,16 +225,16 @@ class RecurrenceRule {
   /// Initialize a [RecurrenceRule] based on a [rrule] string.
   factory RecurrenceRule.fromString(String rrule) {
     var str = rrule.substring(rrule.indexOf('RRULE:') + 6);
-    var parameters = {};
+    var parameters = <String, String>{};
     str.split(';').forEach((element) {
       var par = element.split('=');
       parameters[par[0]] = par[1];
     });
 
     var frequency = Frequency.DAILY;
-    Frequency.values.forEach((element) {
+    for (var element in Frequency.values) {
       if (element.name == parameters['FREQ']) frequency = element;
-    });
+    }
 
     var end = End.never();
     int interval = 1;
@@ -253,6 +262,7 @@ class RecurrenceRule {
   /// which need to be added to a desired start date.
   /// 'UNTIL' should be reassigned to a calculated end date time, formatted using
   /// the RFC 5545 specifications: https://tools.ietf.org/html/rfc5545#section-3.3.5
+  @override
   String toString() {
     String rule = 'RRULE:FREQ=${frequency.name}';
     rule += (interval != 1) ? ';INTERVAL=$interval' : '';

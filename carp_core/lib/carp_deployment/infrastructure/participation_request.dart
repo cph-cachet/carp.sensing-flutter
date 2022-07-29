@@ -20,6 +20,8 @@ abstract class ParticipationServiceRequest extends DeploymentServiceRequest {
   final String _serviceRequestPackageNamespace =
       'dk.cachet.carp.deployment.infrastructure.ParticipationServiceRequest';
   ParticipationServiceRequest([super.studyDeploymentId]);
+
+  @override
   String get jsonType => '$_serviceRequestPackageNamespace.$runtimeType';
 }
 
@@ -28,19 +30,24 @@ abstract class ParticipationServiceRequest extends DeploymentServiceRequest {
 class GetActiveParticipationInvitations extends ParticipationServiceRequest {
   GetActiveParticipationInvitations(this.accountId) : super();
 
+  @override
   @JsonKey(ignore: true)
+  // ignore: overridden_fields
   String? studyDeploymentId;
 
   /// The CARP account (user) ID.
   String accountId;
 
+  @override
   Function get fromJsonFunction => _$GetActiveParticipationInvitationsFromJson;
   factory GetActiveParticipationInvitations.fromJson(
           Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as GetActiveParticipationInvitations;
+  @override
   Map<String, dynamic> toJson() =>
       _$GetActiveParticipationInvitationsToJson(this);
 
+  @override
   String toString() => '$runtimeType - accountId: $accountId';
 }
 
@@ -49,9 +56,11 @@ class GetActiveParticipationInvitations extends ParticipationServiceRequest {
 class GetParticipantData extends ParticipationServiceRequest {
   GetParticipantData(super.studyDeploymentId);
 
+  @override
   Function get fromJsonFunction => _$GetParticipantDataFromJson;
   factory GetParticipantData.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as GetParticipantData;
+  @override
   Map<String, dynamic> toJson() => _$GetParticipantDataToJson(this);
 }
 
@@ -62,9 +71,11 @@ class GetParticipantDataList extends ParticipationServiceRequest {
   List<String> studyDeploymentIds;
   GetParticipantDataList(this.studyDeploymentIds) : super();
 
+  @override
   Function get fromJsonFunction => _$GetParticipantDataListFromJson;
   factory GetParticipantDataList.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as GetParticipantDataList;
+  @override
   Map<String, dynamic> toJson() => _$GetParticipantDataListToJson(this);
 }
 
@@ -101,10 +112,13 @@ class SetParticipantData extends ParticipationServiceRequest {
     return data;
   }
 
+  @override
   Function get fromJsonFunction => _$SetParticipantDataFromJson;
   factory SetParticipantData.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as SetParticipantData;
+  @override
   Map<String, dynamic> toJson() => _$SetParticipantDataToJson(this);
 
+  @override
   String toString() => '${super.toString()}, inputDataType: $inputDataType';
 }

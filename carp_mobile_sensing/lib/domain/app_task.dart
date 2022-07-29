@@ -52,8 +52,12 @@ class AppTask extends TaskDescriptor {
     this.notification = false,
   });
 
+  @override
   Function get fromJsonFunction => _$AppTaskFromJson;
+
   factory AppTask.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as AppTask;
+
+  @override
   Map<String, dynamic> toJson() => _$AppTaskToJson(this);
 }

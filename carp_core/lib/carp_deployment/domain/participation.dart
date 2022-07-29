@@ -20,17 +20,19 @@ class ParticipantData {
   }) : super();
 
   dynamic operator [](String key) => data[key];
-  operator []=(String key, dynamic value) => data[key] = value;
+  void operator []=(String key, dynamic value) => data[key] = value;
 
   factory ParticipantData.fromJson(Map<String, dynamic> json) =>
       _$ParticipantDataFromJson(json);
   Map<String, dynamic> toJson() => _$ParticipantDataToJson(this);
 
+  @override
   String toString() => '$runtimeType - studyDeploymentId: $studyDeploymentId';
 }
 
 /// Identifies an [Account].
 abstract class AccountIdentity extends Serializable {
+  @override
   String get jsonType => 'dk.cachet.carp.common.users.$runtimeType';
 }
 
@@ -40,10 +42,13 @@ class EmailAccountIdentity extends AccountIdentity {
   String emailAddress;
   EmailAccountIdentity(this.emailAddress);
 
+  @override
   Function get fromJsonFunction => _$EmailAccountIdentityFromJson;
   factory EmailAccountIdentity.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as EmailAccountIdentity;
+  @override
   Map<String, dynamic> toJson() => _$EmailAccountIdentityToJson(this);
 
+  @override
   String toString() => '$runtimeType - emailAddress: $emailAddress';
 }

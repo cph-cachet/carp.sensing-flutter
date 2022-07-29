@@ -14,8 +14,10 @@ class PersistentSamplingConfiguration extends SamplingConfiguration {
 
   PersistentSamplingConfiguration() : super();
 
+  @override
   Map<String, dynamic> toJson() =>
       _$PersistentSamplingConfigurationToJson(this);
+  @override
   Function get fromJsonFunction => _$PersistentSamplingConfigurationFromJson;
   factory PersistentSamplingConfiguration.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as PersistentSamplingConfiguration;
@@ -38,7 +40,9 @@ class HistoricSamplingConfiguration extends PersistentSamplingConfiguration {
     this.future = future ?? const Duration(days: DEFAULT_NUMBER_OF_DAYS);
   }
 
+  @override
   Function get fromJsonFunction => _$HistoricSamplingConfigurationFromJson;
+  @override
   Map<String, dynamic> toJson() => _$HistoricSamplingConfigurationToJson(this);
   factory HistoricSamplingConfiguration.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as HistoricSamplingConfiguration;
@@ -53,7 +57,9 @@ class IntervalSamplingConfiguration extends PersistentSamplingConfiguration {
 
   IntervalSamplingConfiguration({required this.interval}) : super();
 
+  @override
   Function get fromJsonFunction => _$IntervalSamplingConfigurationFromJson;
+  @override
   Map<String, dynamic> toJson() => _$IntervalSamplingConfigurationToJson(this);
   factory IntervalSamplingConfiguration.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as IntervalSamplingConfiguration;
@@ -75,7 +81,9 @@ class PeriodicSamplingConfiguration extends IntervalSamplingConfiguration {
     required this.duration,
   });
 
+  @override
   Map<String, dynamic> toJson() => _$PeriodicSamplingConfigurationToJson(this);
+  @override
   Function get fromJsonFunction => _$PeriodicSamplingConfigurationFromJson;
   factory PeriodicSamplingConfiguration.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as PeriodicSamplingConfiguration;
@@ -99,7 +107,9 @@ class BatteryAwareSamplingConfiguration extends SamplingConfiguration {
     required this.critical,
   }) : super();
 
+  @override
   Function get fromJsonFunction => _$BatteryAwareSamplingConfigurationFromJson;
+  @override
   Map<String, dynamic> toJson() =>
       _$BatteryAwareSamplingConfigurationToJson(this);
   factory BatteryAwareSamplingConfiguration.fromJson(

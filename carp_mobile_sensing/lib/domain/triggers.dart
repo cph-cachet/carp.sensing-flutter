@@ -11,9 +11,11 @@ part of domain;
 class ImmediateTrigger extends Trigger {
   ImmediateTrigger() : super();
 
+  @override
   Function get fromJsonFunction => _$ImmediateTriggerFromJson;
   factory ImmediateTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as ImmediateTrigger;
+  @override
   Map<String, dynamic> toJson() => _$ImmediateTriggerToJson(this);
 }
 
@@ -33,9 +35,11 @@ class OneTimeTrigger extends Trigger {
 
   OneTimeTrigger() : super();
 
+  @override
   Function get fromJsonFunction => _$OneTimeTriggerFromJson;
   factory OneTimeTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as OneTimeTrigger;
+  @override
   Map<String, dynamic> toJson() => _$OneTimeTriggerToJson(this);
 }
 
@@ -63,9 +67,11 @@ class PassiveTrigger extends Trigger {
   /// which again implies that all [Measure]s in these tasks are paused.
   void pause() => executor.pause();
 
+  @override
   Function get fromJsonFunction => _$PassiveTriggerFromJson;
   factory PassiveTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as PassiveTrigger;
+  @override
   Map<String, dynamic> toJson() => _$PassiveTriggerToJson(this);
 }
 
@@ -81,9 +87,11 @@ class DelayedTrigger extends Trigger {
 
   DelayedTrigger({required this.delay}) : super();
 
+  @override
   Function get fromJsonFunction => _$DelayedTriggerFromJson;
   factory DelayedTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as DelayedTrigger;
+  @override
   Map<String, dynamic> toJson() => _$DelayedTriggerToJson(this);
 }
 
@@ -98,9 +106,11 @@ class IntervalTrigger extends Trigger implements Scheduleable {
 
   IntervalTrigger({required this.period}) : super();
 
+  @override
   Function get fromJsonFunction => _$IntervalTriggerFromJson;
   factory IntervalTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as IntervalTrigger;
+  @override
   Map<String, dynamic> toJson() => _$IntervalTriggerToJson(this);
 }
 
@@ -118,9 +128,11 @@ class PeriodicTrigger extends IntervalTrigger {
     required this.duration,
   });
 
+  @override
   Function get fromJsonFunction => _$PeriodicTriggerFromJson;
   factory PeriodicTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as PeriodicTrigger;
+  @override
   Map<String, dynamic> toJson() => _$PeriodicTriggerToJson(this);
 }
 
@@ -140,9 +152,11 @@ class DateTimeTrigger extends Trigger implements Scheduleable {
     this.duration,
   }) : super();
 
+  @override
   Function get fromJsonFunction => _$DateTimeTriggerFromJson;
   factory DateTimeTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as DateTimeTrigger;
+  @override
   Map<String, dynamic> toJson() => _$DateTimeTriggerToJson(this);
 }
 
@@ -317,6 +331,7 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
   }
 
   /// The period between the recurring samplings.
+  @override
   Duration get period {
     switch (type) {
       case RecurrentType.daily:
@@ -331,11 +346,14 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
     }
   }
 
+  @override
   Function get fromJsonFunction => _$RecurrentScheduledTriggerFromJson;
   factory RecurrentScheduledTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as RecurrentScheduledTrigger;
+  @override
   Map<String, dynamic> toJson() => _$RecurrentScheduledTriggerToJson(this);
 
+  @override
   String toString() =>
       'RecurrentScheduledTrigger - type: $type, time: $time, separationCount: $separationCount, dayOfWeek: $dayOfWeek, firstOccurrence: $firstOccurrence, period; $period';
 }
@@ -423,11 +441,14 @@ class CronScheduledTrigger extends Trigger implements Scheduleable {
       '${_cf(minute)} ${_cf(hour)} ${_cf(day)} ${_cf(month)} ${_cf(weekday)}';
   static String _cf(int? exp) => (exp == null) ? '*' : exp.toString();
 
+  @override
   Function get fromJsonFunction => _$CronScheduledTriggerFromJson;
   factory CronScheduledTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as CronScheduledTrigger;
+  @override
   Map<String, dynamic> toJson() => _$CronScheduledTriggerToJson(this);
 
+  @override
   String toString() => "$runtimeType - cron expression: '$cronExpression'";
 }
 
@@ -475,9 +496,11 @@ class SamplingEventTrigger extends Trigger {
     this.pauseCondition,
   }) : super();
 
+  @override
   Function get fromJsonFunction => _$SamplingEventTriggerFromJson;
   factory SamplingEventTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as SamplingEventTrigger;
+  @override
   Map<String, dynamic> toJson() => _$SamplingEventTriggerToJson(this);
 }
 
@@ -494,9 +517,11 @@ class ConditionalEvent extends Serializable {
 
   dynamic operator [](String index) => condition[index];
 
+  @override
   Function get fromJsonFunction => _$ConditionalEventFromJson;
   factory ConditionalEvent.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as ConditionalEvent;
+  @override
   Map<String, dynamic> toJson() => _$ConditionalEventToJson(this);
 }
 
@@ -543,9 +568,11 @@ class ConditionalSamplingEventTrigger extends Trigger {
     this.pauseCondition,
   }) : super();
 
+  @override
   Function get fromJsonFunction => _$ConditionalSamplingEventTriggerFromJson;
   factory ConditionalSamplingEventTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as ConditionalSamplingEventTrigger;
+  @override
   Map<String, dynamic> toJson() =>
       _$ConditionalSamplingEventTriggerToJson(this);
 }
@@ -590,9 +617,11 @@ class ConditionalPeriodicTrigger extends Trigger {
     this.pauseCondition,
   }) : super();
 
+  @override
   Function get fromJsonFunction => _$ConditionalPeriodicTriggerFromJson;
   factory ConditionalPeriodicTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as ConditionalPeriodicTrigger;
+  @override
   Map<String, dynamic> toJson() => _$ConditionalPeriodicTriggerToJson(this);
 }
 
@@ -640,8 +669,10 @@ class RandomRecurrentTrigger extends Trigger implements Scheduleable {
     this.duration = duration ?? const Duration(seconds: 1);
   }
 
+  @override
   Function get fromJsonFunction => _$RandomRecurrentTriggerFromJson;
   factory RandomRecurrentTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as RandomRecurrentTrigger;
+  @override
   Map<String, dynamic> toJson() => _$RandomRecurrentTriggerToJson(this);
 }

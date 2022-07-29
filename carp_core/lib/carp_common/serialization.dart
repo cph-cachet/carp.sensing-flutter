@@ -159,24 +159,33 @@ class FromJsonFactory {
   /// A type needs to be registered **before** a class can be deserialized from
   /// JSON to a Flutter class.
   void register(Serializable serializable, {String? type}) =>
-      _registry['${type ?? serializable.jsonType}'] =
-          serializable.fromJsonFunction;
+      _registry[type ?? serializable.jsonType] = serializable.fromJsonFunction;
 
   /// Register all [serializables].
   ///
   /// A convinient way to call [register] for multiple types.
-  void registerAll(List<Serializable> serializables) =>
-      serializables.forEach((serializable) => register(serializable));
+  void registerAll(List<Serializable> serializables) {
+    for (var serializable in serializables) {
+      register(serializable);
+    }
+  }
 
   /// Deserialize [json] based on its type.
   Serializable? fromJson(Map<String, dynamic> json) {
-    final String? type = json[Serializable.CLASS_IDENTIFIER];
+    final type = json[Serializable.CLASS_IDENTIFIER];
     if (!_registry.containsKey(type)) {
       throw SerializationException(
           "A 'fromJson' function was not found in the FromJsonFactory for the type '$type'. "
           "Register a Serializable class using the 'FromJsonFactory().register()' method.");
     }
-    return Function.apply(_registry[type!]!, [json]);
+    var fromJson = Function.apply(_registry[type!]!, [json]);
+    if (fromJson is Serializable) {
+      return fromJson;
+    } else {
+      throw SerializationException(
+          "The 'fromJson' function registered for the type '$type' does not return a Serializable class. "
+          "Make sure that the fromJson function returns a class that inherits from the Serializable class.");
+    }
   }
 
   // TODO: Remember to add any new classes here.

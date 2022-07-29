@@ -40,7 +40,7 @@ abstract class DataManager {
   Future<void> onDone();
 
   /// When an error event is send on the stream, the [onError] handler is called.
-  Future<void> onError(error);
+  Future<void> onError(Object error);
 }
 
 /// An event for a data manager.
@@ -51,6 +51,7 @@ class DataManagerEvent {
   /// Create a [DataManagerEvent].
   DataManagerEvent(this.type);
 
+  @override
   String toString() => 'DataManagerEvent - type: $type';
 }
 

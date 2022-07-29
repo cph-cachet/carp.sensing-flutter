@@ -16,6 +16,8 @@ class LightProbe extends BufferingPeriodicStreamProbe {
   List<num> luxValues = [];
 
   late Stream<dynamic> _bufferingStream;
+
+  @override
   Stream<dynamic> get bufferingStream => _bufferingStream;
 
   @override
@@ -42,5 +44,7 @@ class LightProbe extends BufferingPeriodicStreamProbe {
   void onSamplingEnd() {}
 
   @override
-  void onSamplingData(luxValue) => luxValues.add(luxValue);
+  void onSamplingData(event) {
+    if (event is num) luxValues.add(event);
+  }
 }

@@ -1,24 +1,17 @@
-# Defines a default set of lint rules enforced for
-# projects at Google. For details and rationale,
-# see https://github.com/dart-lang/pedantic#enabled-lints.
-include: package:pedantic/analysis_options.yaml
+# Additional information about this file can be found at
+# https://dart.dev/guides/language/analysis-options
 
-# For lint rules and documentation, see http://dart-lang.github.io/linter/lints.
-linter:
-  rules:
-    avoid_shadowing_type_parameters: true
-    await_only_futures: true
-    camel_case_types: true
-    omit_local_variable_types: false
-    #constant_identifier_names: false
-    #avoid_classes_with_only_static_members: false
-    annotate_overrides: false
+include: package:lints/recommended.yaml
 
 analyzer:
-  exclude:
-    #- lib/carp_data/*.g.dart
-    #- lib/carp_core_deployment/*.g.dart
-    #- lib/carp_core_protocols/*.g.dart
-    #- test/*.dart
-    #- example/**
+  exclude: [build/**]
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: false    
 
+linter:
+  rules:
+    cancel_subscriptions: true
+    constant_identifier_names: false
+    depend_on_referenced_packages: false

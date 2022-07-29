@@ -27,9 +27,9 @@ class SamplingPackageRegistry {
   void register(SamplingPackage package) {
     _combinedSchemas = null;
     _packages.add(package);
-    package.permissions.forEach((permission) {
+    for (var permission in package.permissions) {
       if (!_permissions.contains(permission)) _permissions.add(permission);
-    });
+    }
     CAMSDataType.add(package.dataTypes);
 
     // register the package's device in the device registry
@@ -46,20 +46,22 @@ class SamplingPackageRegistry {
   /// more than one package does, all packages are returned.
   /// Can be an empty list.
   Set<SamplingPackage> lookup(String type) {
-    final Set<SamplingPackage> _packages = {};
+    final Set<SamplingPackage> packages = {};
 
-    packages.forEach((package) {
-      if (package.dataTypes.contains(type)) _packages.add(package);
-    });
+    for (var package in packages) {
+      if (package.dataTypes.contains(type)) packages.add(package);
+    }
 
-    return _packages;
+    return packages;
   }
 
   /// The combined list of all measure types in all packages.
   List<String> get dataTypes {
-    List<String> _dataTypes = [];
-    packages.forEach((package) => _dataTypes.addAll(package.dataTypes));
-    return _dataTypes;
+    List<String> dataTypes = [];
+    for (var package in packages) {
+      dataTypes.addAll(package.dataTypes);
+    }
+    return dataTypes;
   }
 
   /// The combined sampling schema for all measure types in all packages.
@@ -67,8 +69,9 @@ class SamplingPackageRegistry {
     if (_combinedSchemas == null) {
       _combinedSchemas = SamplingSchema();
       // join sampling schemas from each registered sampling package.
-      packages.forEach((package) =>
-          _combinedSchemas!.addSamplingSchema(package.samplingSchema));
+      for (var package in packages) {
+        _combinedSchemas!.addSamplingSchema(package.samplingSchema);
+      }
     }
     return _combinedSchemas!;
   }
@@ -149,6 +152,9 @@ abstract class SamplingPackage {
 /// An abstract class for all sampling packages that run on the phone itself.
 abstract class SmartphoneSamplingPackage implements SamplingPackage {
   final SmartphoneDeviceManager _deviceManager = SmartphoneDeviceManager();
+  @override
   String get deviceType => Smartphone.DEVICE_TYPE;
+
+  @override
   DeviceManager get deviceManager => _deviceManager;
 }

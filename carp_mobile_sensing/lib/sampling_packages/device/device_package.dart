@@ -1,9 +1,25 @@
 part of device;
 
 class DeviceSamplingPackage extends SmartphoneSamplingPackage {
+  /// Measure type for collection of basic device information like device name,
+  /// model, manufacturer, operating system, and hardware profile.
+  ///
+  /// One-time measure.
   static const String DEVICE = 'dk.cachet.carp.device';
+
+  /// Measure type for collection of free physical and virtual memory.
+  ///
+  /// Event-based measure.
   static const String MEMORY = 'dk.cachet.carp.memory';
+
+  /// Measure type for collection of battery level and charging status.
+  ///
+  /// Event-based measure.
   static const String BATTERY = 'dk.cachet.carp.battery';
+
+  /// Measure type for collection of screen events (on/off/unlocked).
+  ///
+  /// Event-based measure.
   static const String SCREEN = 'dk.cachet.carp.screen';
 
   @override
