@@ -10,36 +10,17 @@ part of context;
 /// Holds activity information.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ActivityDatum extends Datum {
-  // static Map<ar.ActivityType, ActivityType> _activityTypeMap = {
-  //   ar.ActivityType.IN_VEHICLE: ActivityType.IN_VEHICLE,
-  //   ar.ActivityType.ON_BICYCLE: ActivityType.ON_BICYCLE,
-  //   ar.ActivityType.RUNNING: ActivityType.RUNNING,
-  //   ar.ActivityType.STILL: ActivityType.STILL,
-  //   ar.ActivityType.UNKNOWN: ActivityType.UNKNOWN,
-  //   ar.ActivityType.WALKING: ActivityType.WALKING,
-  // };
-
-  static Map<ActivityConfidence, int> _confidenceLevelMap = {
+  static final Map<ActivityConfidence, int> _confidenceLevelMap = {
     ActivityConfidence.HIGH: 100,
     ActivityConfidence.MEDIUM: 70,
     ActivityConfidence.LOW: 40,
   };
 
+  @override
   DataFormat get format =>
       DataFormat.fromString(ContextSamplingPackage.ACTIVITY);
 
   ActivityDatum(this.type, this.confidence) : super();
-
-  ActivityDatum.fromMap(Map<dynamic, dynamic> map)
-      : confidence = map['confidence'],
-        type = map['type'],
-        super();
-
-  // factory ActivityDatum.fromActivityEvent(ActivityEvent activityEvent) =>
-  //     ActivityDatum(
-  //       activityEvent.type,
-  //       activityEvent.confidence,
-  //     );
 
   factory ActivityDatum.fromActivity(Activity activity) => ActivityDatum(
         activity.type,
@@ -49,6 +30,7 @@ class ActivityDatum extends Datum {
   factory ActivityDatum.fromJson(Map<String, dynamic> json) =>
       _$ActivityDatumFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$ActivityDatumToJson(this);
 
   /// Confidence in activity recognition.
@@ -82,6 +64,7 @@ class ActivityDatum extends Datum {
   /// Activity [type] as a string.
   String get typeString => type.toString().split(".").last;
 
+  @override
   String toString() =>
-      super.toString() + ', type: $typeString, confidence: $confidence';
+      '${super.toString()}, type: $typeString, confidence: $confidence';
 }

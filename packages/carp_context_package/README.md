@@ -1,10 +1,7 @@
 # CARP Context Sampling Package
 
-[![pub package](https://img.shields.io/pub/v/carp_context_package.svg)](https://pub.dartlang.org/packages/carp_context_package)
-
-This library contains a sampling package for connectivity sampling to work with 
-the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package.
-This packages supports sampling of the following [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core/Measure-class.html) types:
+This library contains a sampling package for collection of contextual data to work with the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) framework.
+This packages supports sampling of the following [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core_protocols/Measure-class.html) types:
 
 * `dk.cachet.carp.activity`
 * `dk.cachet.carp.location`
@@ -14,7 +11,7 @@ This packages supports sampling of the following [`Measure`](https://pub.dev/doc
 * `dk.cachet.carp.weather`
 * `dk.cachet.carp.air_quality`
 
-See the [wiki]() for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types) and [sampling schemas](https://github.com/cph-cachet/carp.sensing-flutter/wiki/D.-Sampling-Schemas).
+See the [wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki) for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types) and [sampling schemas](https://github.com/cph-cachet/carp.sensing-flutter/wiki/D.-Sampling-Schemas).
 
 See the [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app) for an example of how to build a mobile sensing app in Flutter.
 
@@ -105,14 +102,13 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_context_package/context.dart';
 `````
 
-Before creating a study and running it, register this package in the 
-[SamplingPackageRegistry](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SamplingPackageRegistry-class.html).
+Before creating a study and running it, register this package in the [SamplingPackageRegistry](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SamplingPackageRegistry-class.html).
 
 ````dart
   SamplingPackageRegistry().register(ContextSamplingPackage());
 ````
 
-In order to use the context measures to a study protocol, this context package uses different "services" to collect data. 
+In order to use the context measures to a study protocol, this context package uses different "services" to collect data.
 
 The `dk.cachet.carp.activity` measure uses the phone itself and can be added like this:
 
@@ -160,7 +156,7 @@ uses the `LocationService` service as a 'connected device' to collect data and c
       locationService);
 ```
 
-> Note that you would often need to balance the configuration of the `LocationService` with the measure you are collecting. For example, if only using the `mobility` measure, a lower `accuracy`, `distance`, and sampling `interval` could be used. 
+> Note that you would often need to balance the configuration of the `LocationService` with the measure you are collecting. For example, if only using the `mobility` measure, a lower `accuracy`, `distance`, and sampling `interval` could be used.
 
 The `dk.cachet.carp.weather` and `dk.cachet.carp.air_quality` measures uses the online [Open Weather API](https://openweathermap.org/api) and [Air Quality Open Data Platform](https://aqicn.org/data-platform/token/#/), respectively.
 In order to use these service, you need to obtain an API key from each of them.
@@ -192,5 +188,4 @@ Once you have this, these services can be configured and added to a protocol lik
       airQualityService);
 ```
 
-See the example for a full example of how to set up a CAMS study protocol for this context sampling package.
-
+See the `example.dart` file for a full example of how to set up a CAMS study protocol for this context sampling package.

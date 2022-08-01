@@ -18,7 +18,7 @@ class ActivityProbe extends StreamProbe {
   Stream<Datum>? _stream;
 
   @override
-  Future onResume() async {
+  Future<void> onResume() async {
     // check permission to access the AR on Android
     final status = await Permission.activityRecognition.status;
     if (!status.isGranted) {

@@ -29,9 +29,11 @@ class AirQualityService extends OnlineService {
           supportedDataTypes: supportedDataTypes,
         );
 
+  @override
   Function get fromJsonFunction => _$AirQualityServiceFromJson;
   factory AirQualityService.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as AirQualityService;
+  @override
   Map<String, dynamic> toJson() => _$AirQualityServiceToJson(this);
 }
 
@@ -52,6 +54,7 @@ class AirQualityServiceManager
       deviceDescriptor?.roleName ?? AirQualityService.DEFAULT_ROLENAME;
 
   @override
+  // ignore: avoid_renaming_method_parameters
   void onInitialize(AirQualityService service) {}
 
   @override

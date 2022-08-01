@@ -10,6 +10,7 @@ part of context;
 /// Holds location information using the GPS format.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class LocationDatum extends Datum {
+  @override
   DataFormat get format =>
       DataFormat.fromString(ContextSamplingPackage.LOCATION);
 
@@ -53,45 +54,39 @@ class LocationDatum extends Datum {
   factory LocationDatum.fromJson(Map<String, dynamic> json) =>
       _$LocationDatumFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$LocationDatumToJson(this);
 
   /// The time when this location was collected.
   DateTime? time;
 
   /// Latitude in GPS coordinates.
-  var latitude;
+  double? latitude;
 
   /// Longitude in GPS coordinates.
-  var longitude;
+  double? longitude;
 
   /// Altitude in GPS coordinates.
-  var altitude;
+  double? altitude;
 
   /// Accuracy in absolute measures.
-  var accuracy;
+  double? accuracy;
 
   /// Estimated movement speed.
-  var speed;
+  double? speed;
 
   /// Accuracy in speed estimation.
   ///
   /// Will always be 0 on iOS
-  var speedAccuracy;
+  double? speedAccuracy;
 
   /// Heading in degrees
-  var heading;
+  double? heading;
 
   /// The 2D GPS coordinates [latitude, longitude].
-  get gpsCoordinates => [latitude, longitude];
+  // get gpsCoordinates => [latitude, longitude];
 
+  @override
   String toString() =>
-      super.toString() +
-      'latitude: $latitude, '
-          'longitude: $longitude, '
-          'accuracy; $accuracy, '
-          'altitude: $altitude, '
-          'speed: $speed, '
-          'speed_accuracy: $speedAccuracy, '
-          'heading: $heading, '
-          'time: $time';
+      '${super.toString()}, latitude: $latitude, longitude: $longitude, accuracy; $accuracy, altitude: $altitude, speed: $speed, speed_accuracy: $speedAccuracy, heading: $heading, time: $time';
 }

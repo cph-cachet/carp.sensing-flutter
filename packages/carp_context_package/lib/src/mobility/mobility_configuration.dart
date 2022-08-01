@@ -24,8 +24,12 @@ class MobilitySamplingConfiguration extends PersistentSamplingConfiguration {
     this.stopDuration = stopDuration ?? const Duration(seconds: 30);
   }
 
+  @override
   Function get fromJsonFunction => _$MobilitySamplingConfigurationFromJson;
+
+  @override
   Map<String, dynamic> toJson() => _$MobilitySamplingConfigurationToJson(this);
+
   factory MobilitySamplingConfiguration.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as MobilitySamplingConfiguration;
 }

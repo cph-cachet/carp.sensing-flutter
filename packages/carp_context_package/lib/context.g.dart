@@ -26,7 +26,7 @@ Map<String, dynamic> _$ActivityDatumToJson(ActivityDatum instance) {
   writeNotNull('id', instance.id);
   val['timestamp'] = instance.timestamp.toIso8601String();
   val['confidence'] = instance.confidence;
-  val['type'] = _$ActivityTypeEnumMap[instance.type];
+  val['type'] = _$ActivityTypeEnumMap[instance.type]!;
   return val;
 }
 
@@ -45,13 +45,13 @@ LocationDatum _$LocationDatumFromJson(Map<String, dynamic> json) =>
       ..timestamp = DateTime.parse(json['timestamp'] as String)
       ..time =
           json['time'] == null ? null : DateTime.parse(json['time'] as String)
-      ..latitude = json['latitude']
-      ..longitude = json['longitude']
-      ..altitude = json['altitude']
-      ..accuracy = json['accuracy']
-      ..speed = json['speed']
-      ..speedAccuracy = json['speed_accuracy']
-      ..heading = json['heading'];
+      ..latitude = (json['latitude'] as num?)?.toDouble()
+      ..longitude = (json['longitude'] as num?)?.toDouble()
+      ..altitude = (json['altitude'] as num?)?.toDouble()
+      ..accuracy = (json['accuracy'] as num?)?.toDouble()
+      ..speed = (json['speed'] as num?)?.toDouble()
+      ..speedAccuracy = (json['speed_accuracy'] as num?)?.toDouble()
+      ..heading = (json['heading'] as num?)?.toDouble();
 
 Map<String, dynamic> _$LocationDatumToJson(LocationDatum instance) {
   final val = <String, dynamic>{};
@@ -87,20 +87,20 @@ WeatherDatum _$WeatherDatumFromJson(Map<String, dynamic> json) => WeatherDatum()
       json['sunrise'] == null ? null : DateTime.parse(json['sunrise'] as String)
   ..sunset =
       json['sunset'] == null ? null : DateTime.parse(json['sunset'] as String)
-  ..latitude = json['latitude']
-  ..longitude = json['longitude']
-  ..pressure = json['pressure']
-  ..windSpeed = json['wind_speed']
-  ..windDegree = json['wind_degree']
-  ..humidity = json['humidity']
-  ..cloudiness = json['cloudiness']
-  ..rainLastHour = json['rain_last_hour']
-  ..rainLast3Hours = json['rain_last3_hours']
-  ..snowLastHour = json['snow_last_hour']
-  ..snowLast3Hours = json['snow_last3_hours']
-  ..temperature = json['temperature']
-  ..tempMin = json['temp_min']
-  ..tempMax = json['temp_max'];
+  ..latitude = (json['latitude'] as num?)?.toDouble()
+  ..longitude = (json['longitude'] as num?)?.toDouble()
+  ..pressure = (json['pressure'] as num?)?.toDouble()
+  ..windSpeed = (json['wind_speed'] as num?)?.toDouble()
+  ..windDegree = (json['wind_degree'] as num?)?.toDouble()
+  ..humidity = (json['humidity'] as num?)?.toDouble()
+  ..cloudiness = (json['cloudiness'] as num?)?.toDouble()
+  ..rainLastHour = (json['rain_last_hour'] as num?)?.toDouble()
+  ..rainLast3Hours = (json['rain_last3_hours'] as num?)?.toDouble()
+  ..snowLastHour = (json['snow_last_hour'] as num?)?.toDouble()
+  ..snowLast3Hours = (json['snow_last3_hours'] as num?)?.toDouble()
+  ..temperature = (json['temperature'] as num?)?.toDouble()
+  ..tempMin = (json['temp_min'] as num?)?.toDouble()
+  ..tempMax = (json['temp_max'] as num?)?.toDouble();
 
 Map<String, dynamic> _$WeatherDatumToJson(WeatherDatum instance) {
   final val = <String, dynamic>{};
@@ -243,7 +243,7 @@ Map<String, dynamic> _$GeofenceDatumToJson(GeofenceDatum instance) {
   writeNotNull('id', instance.id);
   val['timestamp'] = instance.timestamp.toIso8601String();
   writeNotNull('name', instance.name);
-  val['type'] = _$GeofenceTypeEnumMap[instance.type];
+  val['type'] = _$GeofenceTypeEnumMap[instance.type]!;
   return val;
 }
 
@@ -258,8 +258,8 @@ AirQualityDatum _$AirQualityDatumFromJson(Map<String, dynamic> json) =>
       json['air_quality_index'] as int,
       json['source'] as String,
       json['place'] as String,
-      json['latitude'],
-      json['longitude'],
+      (json['latitude'] as num).toDouble(),
+      (json['longitude'] as num).toDouble(),
       $enumDecode(_$AirQualityLevelEnumMap, json['air_quality_level']),
     )
       ..id = json['id'] as String?
@@ -279,9 +279,10 @@ Map<String, dynamic> _$AirQualityDatumToJson(AirQualityDatum instance) {
   val['air_quality_index'] = instance.airQualityIndex;
   val['source'] = instance.source;
   val['place'] = instance.place;
-  writeNotNull('latitude', instance.latitude);
-  writeNotNull('longitude', instance.longitude);
-  val['air_quality_level'] = _$AirQualityLevelEnumMap[instance.airQualityLevel];
+  val['latitude'] = instance.latitude;
+  val['longitude'] = instance.longitude;
+  val['air_quality_level'] =
+      _$AirQualityLevelEnumMap[instance.airQualityLevel]!;
   return val;
 }
 
@@ -437,7 +438,7 @@ Map<String, dynamic> _$LocationServiceToJson(LocationService instance) {
   val['roleName'] = instance.roleName;
   writeNotNull('supportedDataTypes', instance.supportedDataTypes);
   val['samplingConfiguration'] = instance.samplingConfiguration;
-  val['accuracy'] = _$GeolocationAccuracyEnumMap[instance.accuracy];
+  val['accuracy'] = _$GeolocationAccuracyEnumMap[instance.accuracy]!;
   val['distance'] = instance.distance;
   val['interval'] = instance.interval.inMicroseconds;
   writeNotNull('notificationTitle', instance.notificationTitle);

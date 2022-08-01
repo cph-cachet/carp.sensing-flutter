@@ -14,7 +14,6 @@ String _encode(Object object) =>
 
 void main() {
   late StudyProtocol protocol;
-  Smartphone phone;
 
   setUp(() {
     // make sure that the json functions are loaded
@@ -167,7 +166,7 @@ void main() {
     expect(dp_1.carpHeader.dataFormat.namespace, NameSpace.CARP);
     print(_encode(dp_1));
 
-    loc.altitude = 'encrypted value';
+    // loc.altitude = 'encrypted value';
     print(_encode(dp_1));
   });
 

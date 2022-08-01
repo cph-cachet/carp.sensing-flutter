@@ -34,6 +34,7 @@ class GeofenceProbe extends StreamProbe {
     super.onResume();
   }
 
+  @override
   Stream<GeofenceDatum> get stream => geoFenceStreamController.stream;
 }
 
@@ -113,6 +114,7 @@ class Geofence {
     return datum;
   }
 
+  @override
   String toString() =>
       'Geofence - center: $center, radius: $radius, dwell: $dwell, name: $name, state: $state';
 }

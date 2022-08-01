@@ -6,6 +6,7 @@ class OMHContextDataPointDatum extends Datum {
   static const DataFormat DATA_FORMAT =
       DataFormat(NameSpace.OMH, omh.SchemaSupport.DATA_POINT);
 
+  @override
   DataFormat get format => DATA_FORMAT;
 
   omh.DataPoint datapoint;
@@ -19,6 +20,7 @@ class OMHContextDataPointDatum extends Datum {
 
   OMHContextDataPointDatum(this.datapoint);
 
+  @override
   Map<String, dynamic> toJson() => datapoint.toJson();
 }
 

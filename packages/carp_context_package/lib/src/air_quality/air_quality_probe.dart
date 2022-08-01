@@ -11,6 +11,7 @@ class AirQualityProbe extends DatumProbe {
       LocationManager().configure().then((_) => super.onInitialize());
 
   /// Returns the [AirQualityDatum] based on the location of the phone.
+  // ignore: annotate_overrides
   Future<Datum> getDatum() async {
     if (deviceManager.service != null) {
       try {
@@ -24,7 +25,8 @@ class AirQualityProbe extends DatumProbe {
         return ErrorDatum('$runtimeType Exception: $err');
       }
     }
-    warning('$runtimeType - no service available. Did you remember to add the AirQualityService to the study protocol?');
+    warning(
+        '$runtimeType - no service available. Did you remember to add the AirQualityService to the study protocol?');
     return ErrorDatum('$runtimeType - no service available.');
   }
 }

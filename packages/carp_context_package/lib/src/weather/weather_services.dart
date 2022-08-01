@@ -29,9 +29,11 @@ class WeatherService extends OnlineService {
           supportedDataTypes: supportedDataTypes,
         );
 
+  @override
   Function get fromJsonFunction => _$WeatherServiceFromJson;
   factory WeatherService.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as WeatherService;
+  @override
   Map<String, dynamic> toJson() => _$WeatherServiceToJson(this);
 }
 
@@ -52,6 +54,7 @@ class WeatherServiceManager
       deviceDescriptor?.roleName ?? WeatherService.DEFAULT_ROLENAME;
 
   @override
+  // ignore: avoid_renaming_method_parameters
   void onInitialize(WeatherService service) {}
 
   @override

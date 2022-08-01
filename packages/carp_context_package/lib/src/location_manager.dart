@@ -112,14 +112,13 @@ class LocationManager {
 
     _enabled = true;
 
-    bool _backgroundMode = false;
+    bool backgroundMode = false;
     try {
-      _backgroundMode = await locationManager.enableBackgroundMode();
+      backgroundMode = await locationManager.enableBackgroundMode();
     } catch (error) {
       warning('$runtimeType - Could not enable background mode - $error');
     }
-    info(
-        '$runtimeType - configured, background mode enabled: $_backgroundMode');
+    info('$runtimeType - configured, background mode enabled: $backgroundMode');
   }
 
   /// Gets the current location of the phone.

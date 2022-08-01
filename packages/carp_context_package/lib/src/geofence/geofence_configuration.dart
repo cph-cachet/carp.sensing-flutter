@@ -57,15 +57,20 @@ class GeoPosition extends Serializable {
     return earthRadius * c;
   }
 
+  @override
   Function get fromJsonFunction => _$GeoPositionFromJson;
   factory GeoPosition.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as GeoPosition;
+  @override
   Map<String, dynamic> toJson() => _$GeoPositionToJson(this);
 
+  @override
   String toString() => 'GeoPosition (latitude:$latitude, longitude:$longitude)';
 
+  @override
   int get hashCode => latitude.hashCode + longitude.hashCode;
 
+  @override
   bool operator ==(Object other) =>
       other is GeoPosition &&
       latitude == other.latitude &&
@@ -98,7 +103,9 @@ class GeofenceSamplingConfiguration extends PersistentSamplingConfiguration {
     this.label,
   }) : super();
 
+  @override
   Function get fromJsonFunction => _$GeofenceSamplingConfigurationFromJson;
+  @override
   Map<String, dynamic> toJson() => _$GeofenceSamplingConfigurationToJson(this);
   factory GeofenceSamplingConfiguration.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as GeofenceSamplingConfiguration;

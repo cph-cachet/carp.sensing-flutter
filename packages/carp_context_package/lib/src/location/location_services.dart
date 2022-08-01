@@ -67,9 +67,11 @@ class LocationService extends OnlineService {
     this.interval = interval ?? const Duration(minutes: 1);
   }
 
+  @override
   Function get fromJsonFunction => _$LocationServiceFromJson;
   factory LocationService.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as LocationService;
+  @override
   Map<String, dynamic> toJson() => _$LocationServiceToJson(this);
 }
 
@@ -84,6 +86,7 @@ class LocationServiceManager
       deviceDescriptor?.roleName ?? LocationService.DEFAULT_ROLENAME;
 
   @override
+  // ignore: avoid_renaming_method_parameters
   void onInitialize(LocationService service) {}
 
   @override
