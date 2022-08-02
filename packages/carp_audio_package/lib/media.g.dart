@@ -37,7 +37,7 @@ Map<String, dynamic> _$MediaDatumToJson(MediaDatum instance) {
   val['filename'] = instance.filename;
   val['upload'] = instance.upload;
   writeNotNull('metadata', instance.metadata);
-  val['media_type'] = _$MediaTypeEnumMap[instance.mediaType];
+  val['media_type'] = _$MediaTypeEnumMap[instance.mediaType]!;
   writeNotNull(
       'start_recording_time', instance.startRecordingTime?.toIso8601String());
   writeNotNull(

@@ -16,9 +16,10 @@ part of media;
 /// frequency, in a given sampling window as a [NoiseDatum].
 class NoiseProbe extends BufferingPeriodicStreamProbe {
   NoiseMeter? _noiseMeter;
-  List<NoiseReading> _noiseReadings = [];
+  final List<NoiseReading> _noiseReadings = [];
 
-  Stream get bufferingStream => _noiseMeter!.noiseStream;
+  @override
+  Stream<NoiseReading> get bufferingStream => _noiseMeter!.noiseStream;
 
   @override
   void onInitialize() {
@@ -26,13 +27,13 @@ class NoiseProbe extends BufferingPeriodicStreamProbe {
   }
 
   @override
-  Future onRestart() async {
+  Future<void> onRestart() async {
     super.onRestart();
     _noiseMeter = NoiseMeter();
   }
 
   @override
-  Future onStop() async {
+  Future<void> onStop() async {
     super.onStop();
     _noiseMeter = null;
   }
@@ -44,21 +45,23 @@ class NoiseProbe extends BufferingPeriodicStreamProbe {
   void onSamplingStart() {} // Do nothing
 
   @override
-  void onSamplingData(dynamic noiseReading) => _noiseReadings.add(noiseReading);
+  void onSamplingData(dynamic event) {
+    if (event is NoiseReading) _noiseReadings.add(event);
+  }
 
   @override
   Future<Datum?> getDatum() async {
-    if (_noiseReadings.length > 0) {
-      List<num> _meanList = [];
-      List<num> _maxList = [];
+    if (_noiseReadings.isNotEmpty) {
+      List<num> meanList = [];
+      List<num> maxList = [];
 
-      _noiseReadings.forEach((reading) {
-        _meanList.add(reading.meanDecibel);
-        _maxList.add(reading.maxDecibel);
-      });
+      for (var reading in _noiseReadings) {
+        meanList.add(reading.meanDecibel);
+        maxList.add(reading.maxDecibel);
+      }
 
-      Stats meanStats = Stats.fromData(_meanList);
-      Stats maxStats = Stats.fromData(_maxList);
+      Stats meanStats = Stats.fromData(meanList);
+      Stats maxStats = Stats.fromData(maxList);
       // get statistics from the list of mean db's
       num mean = meanStats.average;
       num std = meanStats.standardDeviation;
@@ -66,12 +69,13 @@ class NoiseProbe extends BufferingPeriodicStreamProbe {
       // get the max db from the list of max db's
       num max = maxStats.max;
 
-      if (mean.isFinite && std.isFinite && min.isFinite && max.isFinite)
+      if (mean.isFinite && std.isFinite && min.isFinite && max.isFinite) {
         return NoiseDatum(
             meanDecibel: mean.toDouble(),
             stdDecibel: std.toDouble(),
             minDecibel: min.toDouble(),
             maxDecibel: max.toDouble());
+      }
     }
 
     return null;

@@ -18,7 +18,7 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
   /// Measure type for continous collection of activity as recognized by the phone's
   /// activity recognition sub-system.
   ///  * Event-based measure.
-  /// * Uses the [Smartphone] master device for data collection.
+  ///  * Uses the [Smartphone] master device for data collection.
   ///  * No sampling configuration needed.
   static const String ACTIVITY = "${NameSpace.CARP}.activity";
 

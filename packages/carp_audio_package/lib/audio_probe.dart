@@ -37,7 +37,7 @@ class AudioProbe extends DatumProbe {
   bool get isRecording => _isRecording;
 
   @override
-  Future onResume() async {
+  Future<void> onResume() async {
     try {
       await _startAudioRecording();
       debug('Audio recording resumed - sound file : $_soundFileName');
@@ -48,7 +48,7 @@ class AudioProbe extends DatumProbe {
   }
 
   @override
-  Future onPause() async {
+  Future<void> onPause() async {
     // when pausing the audio sampling, stop recording and collect the datum
     if (_isRecording) {
       try {
@@ -103,7 +103,7 @@ class AudioProbe extends DatumProbe {
     }
   }
 
-  Future _stopAudioRecording() async {
+  Future<void> _stopAudioRecording() async {
     _endRecordingTime = DateTime.now().toUtc();
     _isRecording = false;
 
