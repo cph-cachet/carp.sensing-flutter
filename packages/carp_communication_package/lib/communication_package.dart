@@ -91,6 +91,10 @@ class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
   List<Permission> get permissions =>
       [Permission.phone, Permission.sms, Permission.calendar];
 
+  /// Default samplings schema for:
+  ///  * [PHONE_LOG] - period one day back in time and one day into the future
+  ///  * [TEXT_MESSAGE_LOG] - period one day back in time and one day into the future
+  ///  * [CALENDAR] - period one day back in time and one day into the future
   @override
   SamplingSchema get samplingSchema => SamplingSchema()
     ..addConfiguration(
