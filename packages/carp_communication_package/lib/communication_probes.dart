@@ -11,6 +11,7 @@ part of communication;
 ///
 /// Only works on Android.
 class PhoneLogProbe extends DatumProbe {
+  @override
   Future<Datum> getDatum() async {
     HistoricSamplingConfiguration m =
         (samplingConfiguration as HistoricSamplingConfiguration);
@@ -46,6 +47,7 @@ class TextMessageLogProbe extends DatumProbe {
     SmsColumn.TYPE,
   ];
 
+  @override
   Future<Datum> getDatum() async {
     List<SmsMessage> allSms = [];
     allSms
@@ -67,7 +69,7 @@ StreamController<Datum> _textMessageProbeController =
 
 /// The top-level call-back method for handling in-coming SMS messages when
 /// the app is in the background.
-backgrounMessageHandler(SmsMessage message) async {
+void backgrounMessageHandler(SmsMessage message) async {
   _textMessageProbeController.add(
       TextMessageDatum.fromTextMessage(TextMessage.fromSmsMessage(message)));
 }
@@ -82,8 +84,9 @@ class TextMessageProbe extends StreamProbe {
 
   @override
   void onInitialize() {
-    if (!Platform.isAndroid)
+    if (!Platform.isAndroid) {
       throw SensingException('TextMessageProbe only available on Android.');
+    }
 
     Telephony.instance.listenIncomingSms(
       onNewMessage: (SmsMessage message) {
@@ -99,11 +102,12 @@ class TextMessageProbe extends StreamProbe {
 ///
 /// See [CalendarMeasure] for how to configure this probe's measure.
 class CalendarProbe extends DatumProbe {
-  DeviceCalendarPlugin _deviceCalendar = DeviceCalendarPlugin();
+  final DeviceCalendarPlugin _deviceCalendar = DeviceCalendarPlugin();
   List<Calendar>? _calendars;
   late Iterator<Calendar> _calendarIterator;
   List<CalendarEvent> _events = [];
 
+  @override
   void onInitialize() {
     _retrieveCalendars();
   }
@@ -129,28 +133,30 @@ class CalendarProbe extends DatumProbe {
 
   // Collects events from the [calendar].
   Future<bool> _retrieveEvents(Calendar calendar) async {
-    final startDate = new DateTime.now().subtract(samplingConfiguration.past);
-    final endDate = new DateTime.now().add(samplingConfiguration.future);
+    final startDate = DateTime.now().subtract(samplingConfiguration.past);
+    final endDate = DateTime.now().add(samplingConfiguration.future);
 
-    var _calendarEventsResult = await _deviceCalendar.retrieveEvents(
-        calendar.id,
+    var calendarEventsResult = await _deviceCalendar.retrieveEvents(calendar.id,
         RetrieveEventsParams(startDate: startDate, endDate: endDate));
-    List<Event>? _calendarEvents = _calendarEventsResult.data;
-    if (_calendarEvents != null) {
-      _calendarEvents
-          .forEach((event) => _events.add(CalendarEvent.fromEvent(event)));
+    List<Event>? calendarEvents = calendarEventsResult.data;
+    if (calendarEvents != null) {
+      for (var event in calendarEvents) {
+        _events.add(CalendarEvent.fromEvent(event));
+      }
     } else {
       return false;
     }
 
     // recursively collect events from the next calendar in the iterator
-    if (_calendarIterator.moveNext())
+    if (_calendarIterator.moveNext()) {
       return await _retrieveEvents(_calendarIterator.current);
+    }
 
     return true;
   }
 
   /// Get the [CalendarDatum].
+  @override
   Future<Datum> getDatum() async {
     if (_calendars == null) await _retrieveCalendars();
 
@@ -158,8 +164,9 @@ class CalendarProbe extends DatumProbe {
       _events = [];
       _calendarIterator = _calendars!.iterator;
 
-      if (_calendarIterator.moveNext())
+      if (_calendarIterator.moveNext()) {
         await _retrieveEvents(_calendarIterator.current);
+      }
 
       return CalendarDatum()..calendarEvents = _events;
     } else {

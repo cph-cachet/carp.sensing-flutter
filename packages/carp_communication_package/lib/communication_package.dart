@@ -15,12 +15,35 @@ part of communication;
 ///   SamplingPackageRegistry.register(CommunicationSamplingPackage());
 /// ```
 class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
+  /// Measure type for collection of the phone log for a specific time period.
+  ///  * One-time measure.
+  ///  * Uses the [Smartphone] master device for data collection.
+  ///  * Use the [HistoricSamplingConfiguration] for configuration.
   static const String PHONE_LOG = "dk.cachet.carp.phone_log";
+
   // static const String TELEPHONY = "dk.cachet.carp.telephony";
+
+  /// Measure type for collection of the text message (SMS) log for a specific
+  /// time period.
+  ///  * One-time measure.
+  ///  * Uses the [Smartphone] master device for data collection.
+  ///  * Use the [HistoricSamplingConfiguration] for configuration.
   static const String TEXT_MESSAGE_LOG = "dk.cachet.carp.text_message_log";
+
+  /// Measure type for collection of text message (SMS) as they are recieved.
+  ///  * Event-based measure.
+  ///  * Uses the [Smartphone] master device for data collection.
+  ///  * No sampling configuration needed.
   static const String TEXT_MESSAGE = "dk.cachet.carp.text_message";
+
+  /// Measure type for collection of calendar entries from the calendar on the
+  /// phone for a specific period.
+  ///  * One-time measure.
+  ///  * Uses the [Smartphone] master device for data collection.
+  ///  * Use the [HistoricSamplingConfiguration] for configuration.
   static const String CALENDAR = "dk.cachet.carp.calendar";
 
+  @override
   List<String> get dataTypes => [
         PHONE_LOG,
         //TELEPHONY,
@@ -29,6 +52,7 @@ class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
         CALENDAR,
       ];
 
+  @override
   Probe? create(String type) {
     switch (type) {
       case PHONE_LOG:
@@ -46,6 +70,7 @@ class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
     }
   }
 
+  @override
   void onRegister() {
     // register the default privacy transformers
     TransformerSchemaRegistry()
@@ -62,6 +87,7 @@ class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
         .add(CALENDAR, calendarAnoymizer);
   }
 
+  @override
   List<Permission> get permissions =>
       [Permission.phone, Permission.sms, Permission.calendar];
 

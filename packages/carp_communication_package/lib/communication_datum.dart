@@ -10,6 +10,7 @@ part of communication;
 /// Holds a list of text (SMS) messages from the device.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class TextMessageLogDatum extends Datum {
+  @override
   DataFormat get format =>
       DataFormat.fromString(CommunicationSamplingPackage.TEXT_MESSAGE_LOG);
 
@@ -19,9 +20,11 @@ class TextMessageLogDatum extends Datum {
 
   factory TextMessageLogDatum.fromJson(Map<String, dynamic> json) =>
       _$TextMessageLogDatumFromJson(json);
+  @override
   Map<String, dynamic> toJson() => _$TextMessageLogDatumToJson(this);
 
-  String toString() => super.toString() + ', size: ${textMessageLog.length}';
+  @override
+  String toString() => '${super.toString()}, size: ${textMessageLog.length}';
 }
 
 /// Holds a single text (SMS) message as a [Datum] object.
@@ -29,6 +32,7 @@ class TextMessageLogDatum extends Datum {
 /// Wraps a [TextMessage].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class TextMessageDatum extends Datum {
+  @override
   DataFormat get format =>
       DataFormat.fromString(CommunicationSamplingPackage.TEXT_MESSAGE);
 
@@ -41,9 +45,11 @@ class TextMessageDatum extends Datum {
 
   factory TextMessageDatum.fromJson(Map<String, dynamic> json) =>
       _$TextMessageDatumFromJson(json);
+  @override
   Map<String, dynamic> toJson() => _$TextMessageDatumToJson(this);
 
-  String toString() => super.toString() + ', textMessage: $textMessage';
+  @override
+  String toString() => '${super.toString()}, textMessage: $textMessage';
 }
 
 /// Holds a text messages (SMS).
@@ -104,6 +110,7 @@ class TextMessage {
       _$TextMessageFromJson(json);
   Map<String, dynamic> toJson() => _$TextMessageToJson(this);
 
+  @override
   String toString() =>
       "Text Message - id: $id, address: $address, read: $read, date: $date, date_send: $dateSent, type: $type, status: $status\n$body";
 }
@@ -111,6 +118,7 @@ class TextMessage {
 /// Holds a phone log, i.e. a list of phone calls made on the device.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class PhoneLogDatum extends Datum {
+  @override
   DataFormat get format =>
       DataFormat.fromString(CommunicationSamplingPackage.PHONE_LOG);
 
@@ -120,9 +128,11 @@ class PhoneLogDatum extends Datum {
 
   factory PhoneLogDatum.fromJson(Map<String, dynamic> json) =>
       _$PhoneLogDatumFromJson(json);
+  @override
   Map<String, dynamic> toJson() => _$PhoneLogDatumToJson(this);
 
-  String toString() => super.toString() + "size: ${phoneLog.length}";
+  @override
+  String toString() => "${super.toString()}, size: ${phoneLog.length}";
 }
 
 /// Phone call data.
@@ -200,6 +210,7 @@ class PhoneCall {
       _$PhoneCallFromJson(json);
   Map<String, dynamic> toJson() => _$PhoneCallToJson(this);
 
+  @override
   String toString() =>
       "$runtimeType - timestamp: $timestamp, call_type: $callType, duration: $duration, number: $number, formatted_number: $formattedNumber, name: $name";
 }
@@ -207,6 +218,7 @@ class PhoneCall {
 /// Holds a list of calendar events from the device.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class CalendarDatum extends Datum {
+  @override
   DataFormat get format =>
       DataFormat.fromString(CommunicationSamplingPackage.CALENDAR);
 
@@ -216,9 +228,11 @@ class CalendarDatum extends Datum {
 
   factory CalendarDatum.fromJson(Map<String, dynamic> json) =>
       _$CalendarDatumFromJson(json);
+  @override
   Map<String, dynamic> toJson() => _$CalendarDatumToJson(this);
 
-  String toString() => super.toString() + ', size: ${calendarEvents.length}';
+  @override
+  String toString() => '${super.toString()}, size: ${calendarEvents.length}';
 }
 
 /// A calendar event.
@@ -279,6 +293,7 @@ class CalendarEvent {
       _$CalendarEventFromJson(json);
   Map<String, dynamic> toJson() => _$CalendarEventToJson(this);
 
+  @override
   String toString() =>
       "Calendar Event - eventId: $eventId, calendarId: $calendarId, title: $title, description: $description, start: $start, end: $end, all day: $allDay, location: $location, no. attendees: ${attendees!.length}";
 }
