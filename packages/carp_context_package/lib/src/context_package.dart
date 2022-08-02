@@ -18,7 +18,7 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
   /// Measure type for continous collection of activity as recognized by the phone's
   /// activity recognition sub-system.
   ///  * Event-based measure.
-  ///  * Uses the [LocationService] connected device for data collection.
+  /// * Uses the [Smartphone] master device for data collection.
   ///  * No sampling configuration needed.
   static const String ACTIVITY = "${NameSpace.CARP}.activity";
 
@@ -110,6 +110,8 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
   List<Permission> get permissions =>
       [Permission.locationAlways, Permission.activityRecognition];
 
+  /// Default samplings schema for:
+  ///  * [MOBILITY] - place radius on 50 meters, stop radius on 5 meters, and stop duration at 30 seconds.
   @override
   SamplingSchema get samplingSchema => SamplingSchema()
     ..addConfiguration(

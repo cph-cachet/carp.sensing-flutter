@@ -18,9 +18,10 @@ class AppsProbe extends DatumProbe {
     super.onInitialize();
 
     // check if the DeviceApps plugin is available (only available on Android)
-    if (!Platform.isAndroid)
+    if (!Platform.isAndroid) {
       throw SensingException(
           "Error initializing AppsProbe -- only available on Android.");
+    }
   }
 
   @override
@@ -31,9 +32,9 @@ class AppsProbe extends DatumProbe {
 
   List<String> _getAppNames(List<Application> apps) {
     List<String> names = [];
-    apps.forEach((a) {
-      names.add(a.appName);
-    });
+    for (var app in apps) {
+      names.add(app.appName);
+    }
     return names;
   }
 }
@@ -50,9 +51,10 @@ class AppUsageProbe extends DatumProbe {
   void onInitialize() {
     super.onInitialize();
     // check if AppUsage is available (only available on Android)
-    if (!Platform.isAndroid)
+    if (!Platform.isAndroid) {
       throw SensingException(
           "Error initializing AppUsageProbe -- only available on Android.");
+    }
   }
 
   @override
