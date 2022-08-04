@@ -37,7 +37,7 @@ class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
   static const String TEXT_MESSAGE = "dk.cachet.carp.text_message";
 
   /// Measure type for collection of calendar entries from the calendar on the
-  /// phone for a specific period.
+  /// phone for a specific time period.
   ///  * One-time measure.
   ///  * Uses the [Smartphone] master device for data collection.
   ///  * Use the [HistoricSamplingConfiguration] for configuration.
@@ -92,9 +92,9 @@ class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
       [Permission.phone, Permission.sms, Permission.calendar];
 
   /// Default samplings schema for:
-  ///  * [PHONE_LOG] - period one day back in time and one day into the future
-  ///  * [TEXT_MESSAGE_LOG] - period one day back in time and one day into the future
-  ///  * [CALENDAR] - period one day back in time and one day into the future
+  ///  * [PHONE_LOG] - a period one day back in time and one day into the future
+  ///  * [TEXT_MESSAGE_LOG] - a period one day back in time and one day into the future
+  ///  * [CALENDAR] - a period one day back in time and one day into the future
   @override
   SamplingSchema get samplingSchema => SamplingSchema()
     ..addConfiguration(

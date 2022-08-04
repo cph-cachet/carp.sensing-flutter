@@ -56,6 +56,8 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
   @override
   List<Permission> get permissions => [];
 
+  /// Default samplings schema for:
+  ///  * [MEMORY] - once pr. minute.
   @override
   SamplingSchema get samplingSchema => SamplingSchema()
     ..addConfiguration(MEMORY,

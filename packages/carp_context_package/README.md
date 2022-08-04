@@ -67,7 +67,6 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
 >
 > See [Privacy changes in Android 10](https://developer.android.com/about/versions/10/privacy/changes#physical-activity-recognition).
 
-
 ### iOS Integration
 
 Add the following permissions in the `Info.plist` file located in `ios/Runner` (use your own text for explanation in the `<string>` tags):
