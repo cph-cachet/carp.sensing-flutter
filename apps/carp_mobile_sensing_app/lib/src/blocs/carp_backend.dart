@@ -9,7 +9,7 @@ class CarpBackend {
   static const String CLIENT_ID = "carp";
   static const String CLIENT_SECRET = "carp";
 
-  static CarpBackend _instance = CarpBackend._();
+  static final CarpBackend _instance = CarpBackend._();
   CarpApp? _app;
 
   CarpBackend._() : super();
@@ -31,7 +31,7 @@ class CarpBackend {
 
   CarpApp? get app => _app;
 
-  Future initialize() async {
+  Future<void> initialize() async {
     _app = CarpApp(
       name: name,
       uri: Uri.parse(uri),
@@ -59,11 +59,11 @@ class CarpBackend {
 
   /// Get the study invitation.
   Future<void> getStudyInvitation(BuildContext context) async {
-    ActiveParticipationInvitation? _invitation =
+    ActiveParticipationInvitation? invitation =
         await CarpParticipationService().getStudyInvitation(context);
-    debug('CARP Study Invitation: $_invitation');
+    debug('CARP Study Invitation: $invitation');
 
-    bloc.studyDeploymentId = _invitation?.studyDeploymentId;
+    bloc.studyDeploymentId = invitation?.studyDeploymentId;
     info('Deployment ID from invitation: ${bloc.studyDeploymentId}');
   }
 }

@@ -50,17 +50,10 @@ class WifiProbe extends IntervalDatumProbe {
 class BluetoothProbe extends BufferingPeriodicStreamProbe {
   /// Default timeout for bluetooth scan - 4 secs
   static const DEFAULT_TIMEOUT = 4 * 1000;
-
   Datum? _datum;
-  final Stream<dynamic> _bufferingStream = FlutterBluePlus.instance.scanResults;
 
   @override
-  Stream<dynamic> get bufferingStream => _bufferingStream;
-
-  // @override
-  // void onInitialize() {
-  //   _bufferingStream = FlutterBluePlus.instance.scanResults;
-  // }
+  Stream<dynamic> get bufferingStream => FlutterBluePlus.instance.scanResults;
 
   @override
   Future<Datum?> getDatum() async => _datum;
@@ -72,49 +65,23 @@ class BluetoothProbe extends BufferingPeriodicStreamProbe {
           scanMode: ScanMode.lowLatency,
           timeout: samplingConfiguration?.duration ??
               Duration(milliseconds: DEFAULT_TIMEOUT));
-      _datum = BluetoothDatum();
     } catch (error) {
       FlutterBluePlus.instance.stopScan();
       _datum = ErrorDatum('Error scanning for bluetooth - $error');
     }
-    _datum = BluetoothDatum();
   }
 
   @override
-  void onSamplingEnd() {
-    FlutterBluePlus.instance.stopScan();
-  }
+  void onSamplingEnd() => FlutterBluePlus.instance.stopScan();
 
   @override
   void onSamplingData(event) {
-    if (event is ScanResult && _datum is BluetoothDatum) {
-      (_datum as BluetoothDatum)
-          .scanResult
-          .add(BluetoothDevice.fromScanResult(event));
+    print('>> scan event: $event');
+    if (event is List<ScanResult>) {
+      // add the datum for each scan list we get (don't wait for the scan to end)
+      addData(BluetoothDatum()
+        ..scanResult.addAll(event
+            .map((scanResult) => BluetoothDevice.fromScanResult(scanResult))));
     }
   }
 }
-
-// /// The [BluetoothProbe] scans for nearby and visible Bluetooth devices and
-// /// collects a [BluetoothDatum] that lists each device found during the scan.
-// /// Uses a [IntervalSamplingConfiguration] for configuration the [interval]
-// /// of the scan.
-// class BluetoothProbe extends IntervalDatumProbe {
-//   /// Default timeout for bluetooth scan - 4 secs
-//   static const DEFAULT_TIMEOUT = 4 * 1000;
-
-//   Future<Datum> getDatum() async {
-//     Datum datum;
-//     try {
-//       List<dynamic> results = await FlutterBluePlus.instance.startScan(
-//           scanMode: ScanMode.lowLatency,
-//           timeout: Duration(milliseconds: DEFAULT_TIMEOUT));
-//       datum = BluetoothDatum.fromScanResult(results);
-//     } catch (error) {
-//       await FlutterBluePlus.instance.stopScan();
-//       datum = ErrorDatum('Error scanning for bluetooth - $error');
-//     }
-
-//     return datum;
-//   }
-// }

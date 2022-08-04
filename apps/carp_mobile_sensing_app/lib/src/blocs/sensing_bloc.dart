@@ -53,7 +53,7 @@ class SensingBLoC {
       Sensing().runningDevices!.map((device) => DeviceModel(device));
 
   /// Initialize the BLoC.
-  Future initialize({
+  Future<void> initialize({
     DeploymentMode deploymentMode = DeploymentMode.LOCAL,
     String dataFormat = NameSpace.CARP,
   }) async {

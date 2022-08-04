@@ -108,7 +108,7 @@ void main() {
 
   group("CARP Study Protocol Manager", () {
     setUp(() async {
-      app = new CarpApp(
+      app = CarpApp(
         name: "Test",
         uri: Uri.parse(uri),
         oauth: OAuthEndPoint(clientID: clientID, clientSecret: clientSecret),
@@ -147,7 +147,10 @@ void main() {
         List<ActiveParticipationInvitation> invitations =
             await CarpParticipationService()
                 .getActiveParticipationInvitations();
-        invitations.forEach((invitation) => print(invitation));
+
+        for (var invitation in invitations) {
+          print(invitation);
+        }
       },
       skip: false,
     );

@@ -4,19 +4,21 @@ class StudyDeploymentPage extends StatefulWidget {
   const StudyDeploymentPage({Key? key}) : super(key: key);
   static const String routeName = '/study';
 
-  _StudyDeploymentPageState createState() =>
-      _StudyDeploymentPageState(bloc.studyDeploymentModel);
+  @override
+  StudyDeploymentPageState createState() =>
+      StudyDeploymentPageState(bloc.studyDeploymentModel);
 }
 
-class _StudyDeploymentPageState extends State<StudyDeploymentPage> {
+class StudyDeploymentPageState extends State<StudyDeploymentPage> {
   static final GlobalKey<ScaffoldState> _scaffoldKey =
       GlobalKey<ScaffoldState>();
   final double _appBarHeight = 256.0;
 
   final StudyDeploymentModel studyDeploymentModel;
 
-  _StudyDeploymentPageState(this.studyDeploymentModel) : super();
+  StudyDeploymentPageState(this.studyDeploymentModel) : super();
 
+  @override
   Widget build(BuildContext context) =>
       _buildStudyVisualization(context, bloc.studyDeploymentModel);
 
@@ -77,8 +79,9 @@ class _StudyDeploymentPageState extends State<StudyDeploymentPage> {
       child: _buildStudyControllerPanel(context, studyDeploymentModel),
     ));
 
-    studyDeploymentModel.deployment.tasks
-        .forEach((task) => children.add(_TaskPanel(task: task)));
+    for (var task in studyDeploymentModel.deployment.tasks) {
+      children.add(_TaskPanel(task: task));
+    }
 
     return children;
   }
@@ -121,16 +124,17 @@ class _StudyDeploymentPageState extends State<StudyDeploymentPage> {
                         initialData: ExecutorState.created,
                         builder:
                             (context, AsyncSnapshot<ExecutorState> snapshot) {
-                          if (snapshot.hasData)
+                          if (snapshot.hasData) {
                             return _StudyControllerLine(
                                 ProbeDescription
                                     .probeStateLabel[snapshot.data!],
                                 heading: 'State');
-                          else
+                          } else {
                             return _StudyControllerLine(
                                 ProbeDescription
                                     .probeStateLabel[ExecutorState.initialized],
                                 heading: 'State');
+                          }
                         }),
                     StreamBuilder<DataPoint>(
                         stream: studyDeploymentModel.data,

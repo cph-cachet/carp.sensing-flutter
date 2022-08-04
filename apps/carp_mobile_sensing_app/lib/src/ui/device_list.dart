@@ -3,13 +3,16 @@ part of mobile_sensing_app;
 class DevicesList extends StatefulWidget {
   const DevicesList({Key? key}) : super(key: key);
   static const String routeName = '/deviceslist';
-  _DevicesListState createState() => _DevicesListState();
+
+  @override
+  DevicesListState createState() => DevicesListState();
 }
 
-class _DevicesListState extends State<DevicesList> {
+class DevicesListState extends State<DevicesList> {
   static final GlobalKey<ScaffoldState> scaffoldKey =
       GlobalKey<ScaffoldState>();
 
+  @override
   Widget build(BuildContext context) {
     List<DeviceModel> devices = bloc.runningDevices.toList();
 

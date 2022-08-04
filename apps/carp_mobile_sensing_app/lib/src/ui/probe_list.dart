@@ -3,13 +3,16 @@ part of mobile_sensing_app;
 class ProbesList extends StatefulWidget {
   const ProbesList({Key? key}) : super(key: key);
   static const String routeName = '/probelist';
-  _ProbeListState createState() => _ProbeListState();
+
+  @override
+  ProbeListState createState() => ProbeListState();
 }
 
-class _ProbeListState extends State<ProbesList> {
+class ProbeListState extends State<ProbesList> {
   static final GlobalKey<ScaffoldState> scaffoldKey =
       GlobalKey<ScaffoldState>();
 
+  @override
   Widget build(BuildContext context) {
     Iterable<Widget> probes = ListTile.divideTiles(
         context: context,

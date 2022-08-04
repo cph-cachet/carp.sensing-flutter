@@ -60,14 +60,14 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
       ];
 
   /// Default samplings schema for:
-  ///  * [BLUETOOTH] - scanning every 5 minutes, sampling for 5 seconds
+  ///  * [BLUETOOTH] - scanning every 10 minutes, sampling for 5 seconds
   ///  * [WIFI] - collecting every 10 minutes
   @override
   SamplingSchema get samplingSchema => SamplingSchema()
     ..addConfiguration(
         BLUETOOTH,
         PeriodicSamplingConfiguration(
-          interval: const Duration(minutes: 5),
+          interval: const Duration(minutes: 10),
           duration: const Duration(seconds: 5),
         ))
     ..addConfiguration(

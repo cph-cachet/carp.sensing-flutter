@@ -13,7 +13,7 @@ part of mobile_sensing_app;
 /// [TaskDescriptor]s and [Measure]s.
 class LocalStudyProtocolManager implements StudyProtocolManager {
   @override
-  Future initialize() async {}
+  Future<void> initialize() async {}
 
   @override
   Future<SmartphoneStudyProtocol> getStudyProtocol(String protocolId) async {
@@ -248,6 +248,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     }
   }
 
+  @override
   Future<bool> saveStudyProtocol(String studyId, StudyProtocol protocol) async {
     throw UnimplementedError();
   }
