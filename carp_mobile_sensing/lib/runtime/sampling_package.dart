@@ -103,13 +103,14 @@ class SamplingPackageRegistry {
 /// Interface for a sampling package.
 ///
 /// A sampling package provides information on sampling:
-///  - types supported
-///  - schemas - common and for power aware sampling
-///  - permissions needed
+///  * [dataTypes] - the data types supported
+///  * [samplingSchema] - the default [SamplingSchema] containing a set of [SamplingConfiguration]s for each data type.
+///  * [permissions] - a list of [Permission] needed for this package
+///  * [deviceType] - what type of device this package supports
 ///
 /// It also contains factory methods for:
-///  - creating a [Probe] based on a [Measure] type
-///  - creating a [DeviceManager] based on a device type
+///  * creating a [Probe] based on a [Measure] type
+///  * creating a [DeviceManager] based on a device type
 abstract class SamplingPackage {
   /// The list of data type this package supports.
   List<String> get dataTypes;

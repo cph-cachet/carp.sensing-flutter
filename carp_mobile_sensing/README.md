@@ -13,6 +13,7 @@ For an overview of all CAMS packages, see [CARP Mobile Sensing in Flutter](https
 For documentation on how to use CAMS, see the [CAMS wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki).
 
 ## Usage
+
 To use this plugin, add [`carp_mobile_sensing`](https://pub.dev/packages/carp_mobile_sensing) as [dependencies in your `pubspec.yaml` file](https://flutter.io/platform-plugins/).
 
 `````yaml
@@ -40,23 +41,22 @@ The pedometer (step count) probe uses `NSMotion` on iOS and the `NSMotionUsageDe
   <string>Collecting step count.</string>
 ```
 
-> **NOTE:** Other CAMS sampling packages require additional permissions in the `manifest.xml` or `Info.plist` files. 
-> See the documentation for each package. 
-
+> **NOTE:** Other CAMS sampling packages require additional permissions in the `manifest.xml` or `Info.plist` files.
+> See the documentation for each package.
 
 ## Documentation
 
 The [Dart API doc](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/) describes the different libraries and classes.
 
-The [wiki](https://github.com/cph-cachet/carp.sensing/wiki) contains detailed documentation on the CARP Mobile Sensing Framework, including 
-the [domain model](https://github.com/cph-cachet/carp.sensing-flutter/wiki/2.-Domain-Model), 
-how to use it by create a [Study configuration](https://github.com/cph-cachet/carp.sensing-flutter/wiki/3.-Using-CARP-Mobile-Sensing), 
+The [wiki](https://github.com/cph-cachet/carp.sensing/wiki) contains detailed documentation on the CARP Mobile Sensing Framework, including
+the [domain model](https://github.com/cph-cachet/carp.sensing-flutter/wiki/2.-Domain-Model),
+how to use it by create a [Study configuration](https://github.com/cph-cachet/carp.sensing-flutter/wiki/3.-Using-CARP-Mobile-Sensing),
 how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.-Extending-CARP-Mobile-Sensing) it, and
 an overview of the different [Measure types available](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types).
 
 A more scientific documentation of CAMS is available at [arxiv.org](https://arxiv.org/abs/2006.11904):
 
- *  Bardram, Jakob E. "The CARP Mobile Sensing Framework--A Cross-platform, Reactive, Programming Framework and Runtime Environment for Digital Phenotyping." arXiv preprint arXiv:2006.11904 (2020). [[pdf](https://arxiv.org/pdf/2006.11904.pdf)]
+* Bardram, Jakob E. "The CARP Mobile Sensing Framework--A Cross-platform, Reactive, Programming Framework and Runtime Environment for Digital Phenotyping." arXiv preprint arXiv:2006.11904 (2020). [[pdf](https://arxiv.org/pdf/2006.11904.pdf)]
 
 ```latex
 @article{bardram2020carp,
@@ -72,7 +72,7 @@ Please use this as a reference in any scientific papers using CAMS.
 ## Examples of configuring and using CAMS
 
 There is a **very simple** [example app](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/carp_mobile_sensing/example/lib/main.dart) app which shows how a study can be created with different tasks and measures.
-This app just prints the sensing data to a console screen on the phone. 
+This app just prints the sensing data to a console screen on the phone.
 There is also a range of different [examples](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/carp_mobile_sensing/example/lib/example.dart) on how to create a study to take inspiration from.
 
 However, the [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app) provides a **MUCH** better example of how to use the package in a Flutter BLoC architecture, including good documentation of how to do this.
@@ -90,8 +90,8 @@ Note that as a mobile sensing framework running on a phone, CAMS could be limite
 
 ### Defining a `StudyProtcol`
 
-In CAMS, a sensing protocol is configured in a [`StudyProtocol`](https://pub.dev/documentation/carp_core/latest/carp_core_protocols/StudyProtocol-class.html). 
-Below is a simple example of how to set up a protocol that sense step counts (`pedometer`), ambient light (`light`), screen activity (`screen`), and power consumption (`battery`). 
+In CAMS, a sensing protocol is configured in a [`StudyProtocol`](https://pub.dev/documentation/carp_core/latest/carp_core_protocols/StudyProtocol-class.html).
+Below is a simple example of how to set up a protocol that sense step counts (`pedometer`), ambient light (`light`), screen activity (`screen`), and power consumption (`battery`).
 
 ```dart
 // import package
@@ -127,14 +127,13 @@ void example() async {
       phone);
 ```
 
-The above example defines a simple [`SmartphoneStudyProtocol`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/SmartphoneStudyProtocol-class.html) which will store data in a file locally on the phone using a [`FileDataEndPoint`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/FileDataEndPoint-class.html). 
+The above example defines a simple [`SmartphoneStudyProtocol`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/SmartphoneStudyProtocol-class.html) which will store data in a file locally on the phone using a [`FileDataEndPoint`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/FileDataEndPoint-class.html).
 Sampling is configured by adding a [`TriggeredTask`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/TriggeredTask-class.html) to the protocol using an [`ImmediateTrigger`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/ImmediateTrigger-class.html) which triggers a [`BackgroundTask`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/BackgroundTask-class.html) containing four different [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core_protocols/Measure-class.html).
 
-Sampling can be configured in a very sophisticated ways, by specifying different types of devices, triggers, tasks, measures and sampling configurations. 
+Sampling can be configured in a very sophisticated ways, by specifying different types of devices, triggers, tasks, measures and sampling configurations.
 See the CAMS [wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki/) for an overview.
 
 You can write your own `DataEndPoint` definitions and coresponding `DataManager`s for uploading data to your own data endpoint. See the wiki on how to [add a new data manager](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.3-Adding-a-New-Data-Manager).
-
 
 ### Using a `DeploymentService`
 
@@ -151,7 +150,6 @@ DeploymentService deploymentService = SmartphoneDeploymentService();
 StudyDeploymentStatus status =
     await deploymentService.createStudyDeployment(protocol);
 ```
-
 
 ### Running a `SmartphoneDeploymentController`
 
@@ -221,7 +219,6 @@ StreamSubscription<DataPoint> subscription =
 
 The execution of sensing can be controlled on runtime in a number of ways. For example:
 
-
 ```dart
 ...
 
@@ -271,4 +268,3 @@ Please read about existing issues and file new feature requests and bug reports 
 
 This software is copyright (c) [Copenhagen Center for Health Technology (CACHET)](https://www.cachet.dk/) at the [Technical University of Denmark (DTU)](https://www.dtu.dk).
 This software is available 'as-is' under a [MIT license](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/LICENSE).
-

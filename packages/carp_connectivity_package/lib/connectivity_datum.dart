@@ -10,6 +10,7 @@ part of connectivity;
 /// A [Datum] that holds connectivity status of the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ConnectivityDatum extends Datum {
+  @override
   DataFormat get format =>
       DataFormat.fromString(ConnectivitySamplingPackage.CONNECTIVITY);
 
@@ -27,6 +28,7 @@ class ConnectivityDatum extends Datum {
 
   factory ConnectivityDatum.fromJson(Map<String, dynamic> json) =>
       _$ConnectivityDatumFromJson(json);
+  @override
   Map<String, dynamic> toJson() => _$ConnectivityDatumToJson(this);
 
   static String _parseConnectivityStatus(ConnectivityResult result) {
@@ -42,30 +44,34 @@ class ConnectivityDatum extends Datum {
     }
   }
 
+  @override
   String toString() =>
-      super.toString() + ', connectivityStatus: $connectivityStatus';
+      '${super.toString()}, connectivityStatus: $connectivityStatus';
 }
 
 /// A [Datum] that holds information of nearby Bluetooth devices.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class BluetoothDatum extends Datum {
+  @override
   DataFormat get format =>
       DataFormat.fromString(ConnectivitySamplingPackage.BLUETOOTH);
 
   List<BluetoothDevice> scanResult = [];
 
   BluetoothDatum() : super();
-  factory BluetoothDatum.fromScanResult(
-          List<ScanResult> result) =>
+
+  factory BluetoothDatum.fromScanResults(List<ScanResult> results) =>
       BluetoothDatum()
         ..scanResult =
-            result.map((r) => BluetoothDevice.fromScanResult(r)).toList();
+            results.map((r) => BluetoothDevice.fromScanResult(r)).toList();
 
   factory BluetoothDatum.fromJson(Map<String, dynamic> json) =>
       _$BluetoothDatumFromJson(json);
+  @override
   Map<String, dynamic> toJson() => _$BluetoothDatumToJson(this);
 
-  String toString() => super.toString() + 'scanResult: $scanResult';
+  @override
+  String toString() => '${super.toString()}, scanResult: $scanResult';
 }
 
 /// Bluetooth device data.
@@ -134,14 +140,14 @@ class BluetoothDevice {
       _$BluetoothDeviceFromJson(json);
   Map<String, dynamic> toJson() => _$BluetoothDeviceToJson(this);
 
-  String toString() =>
-      '${this.runtimeType} - ' +
+  @override
+  String toString() => '$runtimeType - '
       ', advertisementName: $advertisementName'
-          ', id: $bluetoothDeviceId'
-          ', name: $bluetoothDeviceName'
-          ', type: $bluetoothDeviceType'
-          ', connectable: $connectable'
-          ', rssi: $rssi';
+      ', id: $bluetoothDeviceId'
+      ', name: $bluetoothDeviceName'
+      ', type: $bluetoothDeviceType'
+      ', connectable: $connectable'
+      ', rssi: $rssi';
 }
 
 /// A [Datum] that holds wifi connectivity status in terms of connected SSID
@@ -150,6 +156,7 @@ class BluetoothDevice {
 /// Note that it wifi information cannot be collected on emulators.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class WifiDatum extends Datum {
+  @override
   DataFormat get format =>
       DataFormat.fromString(ConnectivitySamplingPackage.WIFI);
 
@@ -170,8 +177,10 @@ class WifiDatum extends Datum {
 
   factory WifiDatum.fromJson(Map<String, dynamic> json) =>
       _$WifiDatumFromJson(json);
+  @override
   Map<String, dynamic> toJson() => _$WifiDatumToJson(this);
 
+  @override
   String toString() =>
-      super.toString() + ', SSID: $ssid, BSSID: $bssid, IP: $ip';
+      '${super.toString()}, SSID: $ssid, BSSID: $bssid, IP: $ip';
 }

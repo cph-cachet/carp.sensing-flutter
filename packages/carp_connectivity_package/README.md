@@ -1,17 +1,15 @@
 # CARP Connectivity Sampling Package
 
-[![pub package](https://img.shields.io/pub/v/carp_connectivity_package.svg)](https://pub.dartlang.org/packages/carp_connectivity_package)
-
-This library contains a sampling package for connectivity sampling to work with 
-the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package.
-This packages supports sampling of the following [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core/Measure-class.html) types:
+This library contains a sampling package for collection of connectivity related measures to work with the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) framework.
+This packages supports sampling of the following [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core_protocols/Measure-class.html) types:
 
 * `dk.cachet.carp.wifi`
 * `dk.cachet.carp.connectivity`
 * `dk.cachet.carp.bluetooth`
 
-See the [wiki]() for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types)
-and [sampling schemas](https://github.com/cph-cachet/carp.sensing-flutter/wiki/D.-Sampling-Schemas).
+See the [wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki) for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types).
+See the [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app) for an example of how to build a mobile sensing app in Flutter.
+
 There is privacy protection of wifi and bluetooth names as part of the default [Privacy Schema](https://github.com/cph-cachet/carp.sensing-flutter/wiki/3.-Using-CARP-Mobile-Sensing#privacy-schema).
 
 For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter).
@@ -21,8 +19,7 @@ how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.-Exten
 
 ## Installing
 
-To use this package, add the following to you `pubspc.yaml` file. Note that
-this package only works together with `carp_mobile_sensing`.
+To use this package, add the following to you `pubspc.yaml` file. Note that this package only works together with [`carp_mobile_sensing`](https://pub.dev/packages/carp_mobile_sensing).
 
 `````dart
 dependencies:
@@ -36,7 +33,7 @@ dependencies:
 
 ### Android Integration
 
-As explained in the Android [Wi-Fi scanning overview](https://developer.android.com/guide/topics/connectivity/wifi-scan), access to wifi information required different permission to be set. 
+As explained in the Android [Wi-Fi scanning overview](https://developer.android.com/guide/topics/connectivity/wifi-scan), access to wifi information required different permission to be set.
 For Android >= 10 (API level 29) it is `ACCESS_FINE_LOCATION`, `ACCESS_COARSE_LOCATION` and `CHANGE_WIFI_STATE`.
 
 Add the following to your app's `manifest.xml` file located in `android/app/src/main`:
@@ -56,11 +53,10 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
 </manifest>
 ````
 
-
 ### iOS Integration
 
 From iOS >= 13 there is no longer access to wifi information.
-See here form the [Flutter](https://pub.dev/packages/wifi_info_flutter) description 
+See here for the [Flutter](https://pub.dev/packages/wifi_info_flutter) description
 and here for the [iOS](https://developer.apple.com/documentation/systemconfiguration/1614126-cncopycurrentnetworkinfo) description.
 
 To enable bluetooth tracking, add these permissions in the `Info.plist` file located in `ios/Runner`:
@@ -88,9 +84,11 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_connectivity_package/connectivity.dart';
 `````
 
-Before creating a study and running it, register this package in the 
+Before creating a study and running it, register this package in the
 [SamplingPackageRegistry](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/runtime/SamplingPackageRegistry.html).
 
 `````dart
   SamplingPackageRegistry().register(ConnectivitySamplingPackage());
 `````
+
+See the `example.dart` file for a full example of how to set up a CAMS study protocol for this connectivity sampling package.
