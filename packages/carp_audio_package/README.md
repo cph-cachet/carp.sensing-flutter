@@ -78,6 +78,24 @@ import 'package:carp_audio_package/media.dart';
 Before creating a study and running it, register this package in the
 [SamplingPackageRegistry](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/runtime/SamplingPackageRegistry.html).
 
-`````dart
+```dart
   SamplingPackageRegistry().register(MediaSamplingPackage());
-`````
+```
+
+Adding a measure from this package to a study protocol would look something like:
+
+```dart
+  // Add an automatic task that immediately starts collecting audio and noise.
+  protocol.addTriggeredTask(
+      ImmediateTrigger(),
+      BackgroundTask()
+        ..addMeasures(
+          [
+            Measure(type: MediaSamplingPackage.AUDIO),
+            Measure(type: MediaSamplingPackage.NOISE),
+          ],
+        ),
+      phone);
+```
+
+See the `example.dart` file for a full example of how to set up a CAMS study protocol for this sampling package.
