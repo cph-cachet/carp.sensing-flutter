@@ -28,8 +28,7 @@ void main() {
 
     // Define which devices are used for data collection.
     phone = Smartphone();
-
-    protocol..addMasterDevice(phone);
+    protocol.addMasterDevice(phone);
 
     // adding all available measures to one one trigger and one task
     protocol.addTriggeredTask(

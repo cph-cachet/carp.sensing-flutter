@@ -1,7 +1,7 @@
 part of health_package;
 
 class HealthProbe extends StreamProbe {
-  StreamController<HealthDatum> _ctrl = StreamController.broadcast();
+  final StreamController<HealthDatum> _ctrl = StreamController.broadcast();
 
   @override
   Stream<HealthDatum> get stream => _ctrl.stream;
@@ -17,7 +17,7 @@ class HealthProbe extends StreamProbe {
   }
 
   @override
-  Future onResume() async {
+  Future<void> onResume() async {
     super.onResume();
 
     debug('Collecting health data - configuration : $samplingConfiguration');
@@ -41,7 +41,9 @@ class HealthProbe extends StreamProbe {
           'Retrieved ${data.length} health data points of type. $healthDataTypes');
 
       // convert HealthDataPoint to Datums and add them to the stream
-      data.forEach((data) => _ctrl.add(HealthDatum.fromHealthDataPoint(data)));
+      for (var data in data) {
+        _ctrl.add(HealthDatum.fromHealthDataPoint(data));
+      }
     } catch (exception) {
       _ctrl.addError(exception);
     }

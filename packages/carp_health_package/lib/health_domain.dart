@@ -1,6 +1,7 @@
 part of health_package;
 
-String enumToString(e) => e.toString().split('.').last;
+String enumToString(dynamic enumeration) =>
+    enumeration.toString().split('.').last;
 
 /// Diet, Alcohol, Smoking, Exercise, Sleep (DASES) data types.
 enum DasesHealthDataType {
@@ -48,8 +49,12 @@ class HealthSamplingConfiguration extends HistoricSamplingConfiguration {
 
   HealthSamplingConfiguration({super.past, required this.healthDataTypes});
 
+  @override
   Function get fromJsonFunction => _$HealthSamplingConfigurationFromJson;
+
+  @override
   Map<String, dynamic> toJson() => _$HealthSamplingConfigurationToJson(this);
+
   factory HealthSamplingConfiguration.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as HealthSamplingConfiguration;
 }
@@ -62,6 +67,7 @@ HealthValue _healthValueFromJson(json) => NumericHealthValue(-1);
 class HealthDatum extends Datum {
   /// The format of this health datum is `carp.health.<healthdatatype>`,
   /// where `<healthdatatype>` is the lowercase of the [HealthDataType](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html) collected.
+  @override
   DataFormat get format => DataFormat.fromString(
       '${HealthSamplingPackage.HEALTH}.${dataType.toLowerCase()}');
 
@@ -99,7 +105,7 @@ class HealthDatum extends Datum {
       : super();
 
   factory HealthDatum.fromHealthDataPoint(HealthDataPoint healthDataPoint) {
-    String _uuid =
+    String uuid =
         Uuid().v5(Uuid.NAMESPACE_URL, healthDataPoint.toJson().toString());
     return HealthDatum(
       healthDataPoint.value,
@@ -109,21 +115,22 @@ class HealthDatum extends Datum {
       healthDataPoint.dateTo,
       enumToString(healthDataPoint.platform),
       healthDataPoint.deviceId,
-      _uuid,
+      uuid,
     );
   }
 
   factory HealthDatum.fromJson(Map<String, dynamic> json) =>
       _$HealthDatumFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$HealthDatumToJson(this);
 
-  String toString() =>
-      super.toString() +
-      ', dataType: $dataType, '
-          'platform: $platform, '
-          'value: $value, '
-          'unit: $unit, '
-          'dateFrom: $dateFrom, '
-          'dateTo: $dateTo';
+  @override
+  String toString() => '${super.toString()}'
+      ', dataType: $dataType'
+      ', platform: $platform'
+      ', value: $value'
+      ', unit: $unit'
+      ', dateFrom: $dateFrom'
+      ', dateTo: $dateTo';
 }

@@ -37,7 +37,7 @@ Map<String, dynamic> _$HealthSamplingConfigurationToJson(
   val['past'] = instance.past.inMicroseconds;
   val['future'] = instance.future.inMicroseconds;
   val['healthDataTypes'] =
-      instance.healthDataTypes.map((e) => _$HealthDataTypeEnumMap[e]).toList();
+      instance.healthDataTypes.map((e) => _$HealthDataTypeEnumMap[e]!).toList();
   return val;
 }
 

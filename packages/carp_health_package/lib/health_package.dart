@@ -36,19 +36,47 @@ HealthFactory _healthFactory = HealthFactory();
 /// ```
 class HealthSamplingPackage extends SmartphoneSamplingPackage {
   static const String HEALTH_NAMESPACE = "${NameSpace.CARP}.health";
+
+  /// Measure type for collection of health data from Apple Health or Google Fit.
+  ///  * One-time measure.
+  ///  * Uses the [Smartphone] master device for data collection.
+  ///  * Use a [HealthSamplingConfiguration] for sampling configuration.
+  ///
+  /// An example of a confguration of collection of health data once pr. hours is:
+  ///
+  /// ```dart
+  ///   protocol.addTriggeredTask(
+  ///         IntervalTrigger(period: Duration(minutes: 60)),
+  ///         BackgroundTask()
+  ///           ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
+  ///             ..overrideSamplingConfiguration =
+  ///                 HealthSamplingConfiguration(healthDataTypes: [
+  ///               HealthDataType.BLOOD_GLUCOSE,
+  ///               HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
+  ///               HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
+  ///               HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
+  ///               HealthDataType.HEART_RATE,
+  ///               HealthDataType.STEPS,
+  ///             ])),
+  ///         phone);
+  /// ```
   static const String HEALTH = "${NameSpace.CARP}.health";
 
+  @override
   List<String> get dataTypes => [
         HEALTH,
       ];
 
+  @override
   Probe? create(String type) => type == HEALTH ? HealthProbe() : null;
 
+  @override
   void onRegister() {
     FromJsonFactory()
         .register(HealthSamplingConfiguration(healthDataTypes: []));
   }
 
+  @override
   List<Permission> get permissions => [];
 
   /// Request access to Google Fit or Apple HealthKit.
@@ -58,5 +86,6 @@ class HealthSamplingPackage extends SmartphoneSamplingPackage {
   Future<bool> requestAuthorization(List<HealthDataType> types) async =>
       _healthFactory.requestAuthorization(types);
 
+  @override
   SamplingSchema get samplingSchema => SamplingSchema();
 }
