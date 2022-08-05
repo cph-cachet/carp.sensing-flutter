@@ -12,12 +12,15 @@ abstract class ESenseDatum extends Datum {
   /// The name of eSense device that generated this datum.
   String deviceName;
   ESenseDatum(this.deviceName) : super();
-  String toString() => super.toString() + ', device name: $deviceName';
+
+  @override
+  String toString() => '${super.toString()}, device name: $deviceName';
 }
 
 /// Holds information about an eSense button pressed event.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ESenseButtonDatum extends ESenseDatum {
+  @override
   DataFormat get format =>
       DataFormat.fromString(ESenseSamplingPackage.ESENSE_BUTTON);
 
@@ -31,12 +34,14 @@ class ESenseButtonDatum extends ESenseDatum {
   factory ESenseButtonDatum.fromJson(Map<String, dynamic> json) =>
       _$ESenseButtonDatumFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$ESenseButtonDatumToJson(this);
 
   /// true if the button is pressed, false if it is released
   bool pressed;
 
-  String toString() => super.toString() + ', button pressed: $pressed';
+  @override
+  String toString() => '${super.toString()}, button pressed: $pressed';
 }
 
 /// Holds information about an eSense button pressed event.
@@ -45,6 +50,7 @@ class ESenseButtonDatum extends ESenseDatum {
 /// eSense [SensorEvent](https://pub.dev/documentation/esense/latest/esense/SensorEvent-class.html) event.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ESenseSensorDatum extends ESenseDatum {
+  @override
   DataFormat get format =>
       DataFormat.fromString(ESenseSamplingPackage.ESENSE_SENSOR);
 
@@ -80,9 +86,12 @@ class ESenseSensorDatum extends ESenseDatum {
   factory ESenseSensorDatum.fromJson(Map<String, dynamic> json) =>
       _$ESenseSensorDatumFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$ESenseSensorDatumToJson(this);
 
-  String toString() =>
-      super.toString() +
-      ', packetIndex: $packetIndex, accl: [${accel![0]},${accel![1]},${accel![2]}], gyro: [${gyro![0]},${gyro![1]},${gyro![2]}]';
+  @override
+  String toString() => '${super.toString()}'
+      ', packetIndex: $packetIndex'
+      ', accl: [${accel![0]},${accel![1]},${accel![2]}]'
+      ', gyro: [${gyro![0]},${gyro![1]},${gyro![2]}]';
 }

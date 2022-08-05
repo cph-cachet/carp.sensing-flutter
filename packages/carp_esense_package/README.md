@@ -5,16 +5,16 @@
 This library contains a sampling package for
 the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) framework
 to work with the [eSense](https://www.esense.io) earable computing platform.
-This packages supports sampling of the following [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core/Measure-class.html) types (note that the package defines its own namespace of `dk.cachet.carp.esense`):
+This packages supports sampling of the following [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core_protocols/Measure-class.html) types (note that the package defines its own namespace of `dk.cachet.carp.esense`):
 
 * `dk.cachet.carp.esense.button` : eSense button pressed / released events
 * `dk.cachet.carp.esense.sensor` : eSense sensor (accelerometer & gyroscope) events.
 
-See the user documentation on the [eSense device](https://www.esense.io/share/eSense-User-Documentation.pdf) for how to use the device. 
-See the [`esense_flutter`](https://pub.dev/packages/esense_flutter) Flutter plugin and its [API](https://pub.dev/documentation/esense_flutter/latest/) documentation to understand how sensor data is generated and their data formats. 
+See the user documentation on the [eSense device](https://www.esense.io/share/eSense-User-Documentation.pdf) for how to use the device.
+See the [`esense_flutter`](https://pub.dev/packages/esense_flutter) Flutter plugin and its [API](https://pub.dev/documentation/esense_flutter/latest/) documentation to understand how sensor data is generated and their data formats.
 
-See the `carp_mobile_sensing` [wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki) for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types)
-and [sampling schemas](https://github.com/cph-cachet/carp.sensing-flutter/wiki/D.-Sampling-Schemas).
+See the `carp_mobile_sensing` [wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki) for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types).
+See the [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app) for an example of how to build a mobile sensing app in Flutter.
 
 For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter).
 
@@ -48,21 +48,17 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
 <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
 ```
 
-> **NOTE:** The first time the app starts, make sure to allow it to access the phone location. 
-This is necessary to use the BLE on Android. 
-
-> **NOTE:** This package only supports AndroidX and hence requires any Android app using this plugin to also 
-[migrate](https://developer.android.com/jetpack/androidx/migrate) if they're using the original support library. 
+> **NOTE:** The first time the app starts, make sure to allow it to access the phone location.
+This is necessary to use the BLE on Android.
+> **NOTE:** This package only supports AndroidX and hence requires any Android app using this plugin to also [migrate](https://developer.android.com/jetpack/androidx/migrate) if they're using the original support library.
 See Flutter [AndroidX compatibility](https://flutter.dev/docs/development/packages-and-plugins/androidx-compatibility)
-
 
 ### iOS Integration
 
-Requires iOS 10 or later. Hence, in your `Podfile` in the `ios` folder of your app, 
+Requires iOS 10 or later. Hence, in your `Podfile` in the `ios` folder of your app,
 make sure that the platform is set to `10.0`.
- 
 
-```
+```pod
 platform :ios, '10.0'
 ```
 
@@ -80,7 +76,6 @@ Add this permission in the `Info.plist` file located in `ios/Runner`:
 
 ```
 
-
 ## Using it
 
 To use this package, import it into your app together with the
@@ -91,7 +86,6 @@ import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_esense_package/esense.dart';
 `````
-
 
 Collection of eSense data can be added to a study protocol like this.
 
@@ -134,7 +128,7 @@ Collection of eSense data can be added to a study protocol like this.
       eSense);
 ````
 
-Before executing a study with an eSense measure, register this package in the 
+Before executing a study with an eSense measure, register this package in the
 [SamplingPackageRegistry](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/runtime/SamplingPackageRegistry.html).
 
 `````dart

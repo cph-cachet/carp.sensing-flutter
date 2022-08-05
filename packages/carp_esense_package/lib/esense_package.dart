@@ -16,10 +16,45 @@ part of esense;
 /// ```
 class ESenseSamplingPackage implements SamplingPackage {
   static const String ESENSE_NAMESPACE = "${NameSpace.CARP}.esense";
+
+  /// Measure type for continous collection of eSense button events (pressed/released).
+  ///  * Event-based measure.
+  ///  * Uses the [ESenseDevice] connected device for data collection.
+  ///  * No sampling configuration needed.
+  ///
+  /// An example of a study protocol configuration might be:
+  ///
+  /// ```dart
+  ///   // Add a background task that immediately starts collecting eSense button and sensor events from the eSense device.
+  ///   protocol.addTriggeredTask(
+  ///       ImmediateTrigger(),
+  ///       BackgroundTask()
+  ///         ..addMeasure(Measure(type: ESenseSamplingPackage.ESENSE_BUTTON))
+  ///         ..addMeasure(Measure(type: ESenseSamplingPackage.ESENSE_SENSOR)),
+  ///       eSense);
+  /// ```
   static const String ESENSE_BUTTON = "$ESENSE_NAMESPACE.button";
+
+  /// Measure type for continous collection of eSense sensor events
+  /// (accelorometer & gyroscope).
+  ///  * Event-based measure.
+  ///  * Uses the [ESenseDevice] connected device for data collection.
+  ///  * No sampling configuration needed.
+  ///
+  /// An example of a study protocol configuration might be:
+  ///
+  /// ```dart
+  ///   // Add a background task that immediately starts collecting eSense button and sensor events from the eSense device.
+  ///   protocol.addTriggeredTask(
+  ///       ImmediateTrigger(),
+  ///       BackgroundTask()
+  ///         ..addMeasure(Measure(type: ESenseSamplingPackage.ESENSE_BUTTON))
+  ///         ..addMeasure(Measure(type: ESenseSamplingPackage.ESENSE_SENSOR)),
+  ///       eSense);
+  /// ```
   static const String ESENSE_SENSOR = "$ESENSE_NAMESPACE.sensor";
 
-  DeviceManager _deviceManager = ESenseDeviceManager();
+  final DeviceManager _deviceManager = ESenseDeviceManager();
 
   @override
   List<String> get dataTypes => [ESENSE_BUTTON, ESENSE_SENSOR];

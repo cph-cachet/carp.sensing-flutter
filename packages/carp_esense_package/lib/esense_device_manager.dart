@@ -48,9 +48,11 @@ class ESenseDevice extends DeviceDescriptor {
           isMasterDevice: false,
         );
 
+  @override
   Function get fromJsonFunction => _$ESenseDeviceFromJson;
   factory ESenseDevice.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as ESenseDevice;
+  @override
   Map<String, dynamic> toJson() => _$ESenseDeviceToJson(this);
 }
 
@@ -69,10 +71,11 @@ class ESenseDeviceManager
   @override
   void onInitialize(DeviceDescriptor descriptor) {
     if (deviceDescriptor?.deviceName == null ||
-        deviceDescriptor!.deviceName!.isEmpty)
+        deviceDescriptor!.deviceName!.isEmpty) {
       warning(
           'Cannot initialize an $runtimeType with a null or empty device name. '
           "Please specify a valid device name, typically on the form 'eSense-1234'");
+    }
   }
 
   /// A estimate of the battery level of the eSense device.
