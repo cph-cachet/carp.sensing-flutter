@@ -12,6 +12,7 @@ class MovisensProbe extends StreamProbe {
   MovisensDeviceManager get deviceManager =>
       super.deviceManager as MovisensDeviceManager;
 
+  @override
   Stream<MovisensDatum>? get stream =>
       (deviceManager.movisens?.movisensStream != null)
           ? deviceManager.movisens!.movisensStream

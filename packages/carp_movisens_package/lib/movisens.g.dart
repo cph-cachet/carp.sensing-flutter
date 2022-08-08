@@ -367,11 +367,11 @@ Map<String, dynamic> _$MovisensDeviceToJson(MovisensDevice instance) {
   val['samplingConfiguration'] = instance.samplingConfiguration;
   val['address'] = instance.address;
   val['sensorName'] = instance.sensorName;
-  val['sensorLocation'] = _$SensorLocationEnumMap[instance.sensorLocation];
+  val['sensorLocation'] = _$SensorLocationEnumMap[instance.sensorLocation]!;
   val['weight'] = instance.weight;
   val['height'] = instance.height;
   val['age'] = instance.age;
-  val['gender'] = _$GenderEnumMap[instance.gender];
+  val['gender'] = _$GenderEnumMap[instance.gender]!;
   return val;
 }
 

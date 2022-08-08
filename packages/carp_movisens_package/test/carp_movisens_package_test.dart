@@ -120,7 +120,7 @@ void main() {
       ..stepCount = '56'
       ..movisensDeviceName = 'unit_test_device_name';
 
-    steps..movisensTimestamp = DateTime.now().toUtc().toString();
+    steps.movisensTimestamp = DateTime.now().toUtc().toString();
 
     DataPoint dp_1 = DataPoint.fromData(steps);
     expect(dp_1.carpHeader.dataFormat.namespace,

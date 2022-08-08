@@ -14,6 +14,10 @@ part of movisens;
 ///   SamplingPackageRegistry.register(MovisensSamplingPackage());
 /// ```
 class MovisensSamplingPackage implements SamplingPackage {
+  /// Measure type for continous collection of Movisens data from a Movisen device.
+  ///  * Event-based measure.
+  ///  * Uses the [MovisensDevice] connected device for data collection.
+  ///  * No sampling configuration needed.
   static const String MOVISENS = "${NameSpace.CARP}.movisens";
 
   static const String MOVISENS_NAMESPACE = "${NameSpace.CARP}.movisens";
@@ -31,7 +35,7 @@ class MovisensSamplingPackage implements SamplingPackage {
   static const String CONNECTION_STATUS =
       "$MOVISENS_NAMESPACE.connection_status";
 
-  DeviceManager _deviceManager = MovisensDeviceManager();
+  final DeviceManager _deviceManager = MovisensDeviceManager();
 
   @override
   void onRegister() {
