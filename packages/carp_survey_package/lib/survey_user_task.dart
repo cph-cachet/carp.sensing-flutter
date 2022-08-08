@@ -26,6 +26,7 @@ class SurveyUserTask extends UserTask {
 
   SurveyUserTask(super.executor);
 
+  @override
   void onStart(BuildContext context) {
     // saving the build context for later use
     _context = context;
@@ -64,6 +65,7 @@ class SurveyUserTask extends UserTask {
 }
 
 class SurveyUserTaskFactory implements UserTaskFactory {
+  @override
   List<String> types = [
     SurveyUserTask.WHO5_SURVEY_TYPE,
     SurveyUserTask.SURVEY_TYPE,
@@ -72,5 +74,6 @@ class SurveyUserTaskFactory implements UserTaskFactory {
   ];
 
   // always create a [SurveyUserTask]
+  @override
   UserTask create(AppTaskExecutor executor) => SurveyUserTask(executor);
 }

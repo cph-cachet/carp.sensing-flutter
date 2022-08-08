@@ -34,7 +34,10 @@ class RPAppTask extends AppTask {
     required this.rpTask,
   });
 
+  @override
   Function get fromJsonFunction => _$RPAppTaskFromJson;
+
+  @override
   Map<String, dynamic> toJson() => _$RPAppTaskToJson(this);
   factory RPAppTask.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as RPAppTask;
@@ -43,6 +46,7 @@ class RPAppTask extends AppTask {
 /// Holds information about the result of a survey.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class RPTaskResultDatum extends Datum {
+  @override
   DataFormat get format => DataFormat.fromString(SurveySamplingPackage.SURVEY);
 
   // The survey result.
@@ -52,5 +56,7 @@ class RPTaskResultDatum extends Datum {
 
   factory RPTaskResultDatum.fromJson(Map<String, dynamic> json) =>
       _$RPTaskResultDatumFromJson(json);
+
+  @override
   Map<String, dynamic> toJson() => _$RPTaskResultDatumToJson(this);
 }

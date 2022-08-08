@@ -35,5 +35,6 @@ class SurveySamplingPackage extends SmartphoneSamplingPackage {
   @override
   Probe? create(String type) => null;
 
+  @override
   SamplingSchema get samplingSchema => SamplingSchema();
 }
