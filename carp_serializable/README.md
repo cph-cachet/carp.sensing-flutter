@@ -92,7 +92,7 @@ Polymorphic serialization is handled by setting the `$type` property in the `Ser
   }
  ```
 
-However, if you want to specify your own class type (e.g., if you get json serialized from another language which uses a package structure like Java, C# or Kotlin), you can specify the json type in the [jsonType] property of the class.
+However, if you want to specify your own class type (e.g., if you get json serialized from another language which uses a package structure like Java, C# or Kotlin), you can specify the json type in the `jsonType` property of the class.
 
 For example, if the class `B` above should use a different `$type` annotation, using the following:
 
