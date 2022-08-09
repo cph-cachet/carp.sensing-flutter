@@ -5,7 +5,7 @@ A package for polymorphic serialization to/from JSON build on top of [json_seria
 This package allows for implementing serialization and deserialization to/from JSON.
 This is done using the [json_serializable](https://pub.dev/packages/json_serializable) package, so please study how the json_serializable package works, before using this package.
 
-The key feature of this package is that it extends json_serializable with support for serialization of **polymorphic** classes, i.e. classes that inherits from each other. This is done by added type information to the json.
+The key feature of this package is that it extends json_serializable with support for serialization of **polymorphic** classes, i.e. classes that inherits from each other. This is done by adding type information to the json.
 
 ## Getting started
 
