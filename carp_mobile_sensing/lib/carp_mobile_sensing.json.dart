@@ -1,4 +1,4 @@
-part of domain;
+part of carp_mobile_sensing;
 
 bool _fromJsonFunctionsRegistrered = false;
 

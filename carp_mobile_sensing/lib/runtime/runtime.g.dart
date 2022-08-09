@@ -53,7 +53,7 @@ Map<String, dynamic> _$UserTaskSnapshotToJson(UserTaskSnapshot instance) {
   writeNotNull(r'$type', instance.$type);
   val['id'] = instance.id;
   val['task'] = instance.task;
-  val['state'] = _$UserTaskStateEnumMap[instance.state];
+  val['state'] = _$UserTaskStateEnumMap[instance.state]!;
   val['enqueued'] = instance.enqueued.toIso8601String();
   val['triggerTime'] = instance.triggerTime.toIso8601String();
   val['hasNotificationBeenCreated'] = instance.hasNotificationBeenCreated;

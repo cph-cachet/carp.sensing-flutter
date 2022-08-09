@@ -1,11 +1,12 @@
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:test/test.dart';
+import 'package:carp_serializable/carp_serializable.dart';
 
 void main() {
   setUp(() {
     // Initialization of serialization
-    tmp = DomainJsonFactory();
+    CarpMobileSensing();
   });
 
   group('Trigger Tests', () {

@@ -266,7 +266,7 @@ class StudyDeploymentStatus extends Serializable {
         FromJsonFactory().fromJson(json) as StudyDeploymentStatus;
     // when this object was create from json deserialization,
     // the last part of the $type reflects the status
-    switch (status.$type!.split('.').last) {
+    switch (status.$type?.split('.').last) {
       case 'Invited':
         status.status = StudyDeploymentStatusTypes.Invited;
         break;
@@ -287,6 +287,7 @@ class StudyDeploymentStatus extends Serializable {
 
   @override
   Map<String, dynamic> toJson() => _$StudyDeploymentStatusToJson(this);
+
   @override
   String get jsonType => 'dk.cachet.carp.deployment.domain.$runtimeType';
 

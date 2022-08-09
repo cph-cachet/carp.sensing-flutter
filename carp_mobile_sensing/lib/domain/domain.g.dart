@@ -292,38 +292,6 @@ Map<String, dynamic> _$PeriodicSamplingConfigurationToJson(
   return val;
 }
 
-BatteryAwareSamplingConfiguration<TConfig>
-    _$BatteryAwareSamplingConfigurationFromJson<
-            TConfig extends SamplingConfiguration>(
-  Map<String, dynamic> json,
-  TConfig Function(Object? json) fromJsonTConfig,
-) =>
-        BatteryAwareSamplingConfiguration<TConfig>(
-          normal: fromJsonTConfig(json['normal']),
-          low: fromJsonTConfig(json['low']),
-          critical: fromJsonTConfig(json['critical']),
-        )..$type = json[r'$type'] as String?;
-
-Map<String, dynamic> _$BatteryAwareSamplingConfigurationToJson<
-    TConfig extends SamplingConfiguration>(
-  BatteryAwareSamplingConfiguration<TConfig> instance,
-  Object? Function(TConfig value) toJsonTConfig,
-) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull(r'$type', instance.$type);
-  val['normal'] = toJsonTConfig(instance.normal);
-  val['low'] = toJsonTConfig(instance.low);
-  val['critical'] = toJsonTConfig(instance.critical);
-  return val;
-}
-
 OnlineService _$OnlineServiceFromJson(Map<String, dynamic> json) =>
     OnlineService(
       roleName: json['roleName'] as String,
@@ -658,7 +626,7 @@ Map<String, dynamic> _$RecurrentScheduledTriggerToJson(
   writeNotNull(r'$type', instance.$type);
   writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
   val['duration'] = instance.duration.inMicroseconds;
-  val['type'] = _$RecurrentTypeEnumMap[instance.type];
+  val['type'] = _$RecurrentTypeEnumMap[instance.type]!;
   val['time'] = instance.time;
   writeNotNull('end', instance.end?.toIso8601String());
   val['separationCount'] = instance.separationCount;

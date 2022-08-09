@@ -1,7 +1,7 @@
-import 'package:carp_core/carp_common/carp_core_common.dart';
 import 'package:carp_core/carp_protocols/carp_core_protocols.dart';
 import 'package:carp_core/carp_deployment/carp_core_deployment.dart';
 import 'package:carp_core/carp_client/carp_core_client.dart';
+import 'package:carp_serializable/carp_serializable.dart';
 
 // These examples tries to mimic the example from the carp_core Kotlin
 // example at https://github.com/cph-cachet/carp.core-kotlin#example
