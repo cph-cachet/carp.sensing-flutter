@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+import 'package:carp_serializable/carp_serializable.dart';
 
 import 'package:test/test.dart';
 
@@ -12,7 +13,7 @@ void main() {
 
   setUp(() {
     // Initialization of serialization
-    tmp = DomainJsonFactory();
+    CarpMobileSensing();
 
     // Create a new study protocol.
     masterProtocol = SmartphoneStudyProtocol(

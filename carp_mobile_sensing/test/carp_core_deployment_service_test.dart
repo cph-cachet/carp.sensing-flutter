@@ -3,11 +3,12 @@ import 'dart:io';
 import 'package:test/test.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+import 'package:carp_serializable/carp_serializable.dart';
 
 void main() {
   setUp(() {
     // make sure that the json functions are loaded
-    DomainJsonFactory();
+    CarpMobileSensing();
   });
 
   test('JSON File -> StudyProtocol', () async {

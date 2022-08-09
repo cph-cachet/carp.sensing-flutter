@@ -1,0 +1,16 @@
+# Below is a list of people and organizations that have contributed
+# to the project. Names should be added to the list like so:
+#
+#   Name, Organization <email address>
+#
+# To cite CAMS in scientific publications, please use the following reference:
+#
+# @article{bardram2020carp,
+#   title={The CARP Mobile Sensing Framework--A Cross-platform, Reactive, Programming Framework and Runtime Environment for Digital Phenotyping},
+#   author={Bardram, Jakob E},
+#   journal={arXiv preprint arXiv:2006.11904},
+#   year={2020}
+# }
+
+Jakob E. Bardram, Technical University of Denmark <jakba@dtu.dk>
+Steven Jeuris, iMotions, Denmark  <steven.jeuris@gmail.com>

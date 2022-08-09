@@ -15,7 +15,7 @@ class SmartPhoneClientManager extends ClientManager
   SmartPhoneClientManager._() {
     WidgetsFlutterBinding.ensureInitialized();
     WidgetsBinding.instance.addObserver(this);
-    DomainJsonFactory();
+    CarpMobileSensing();
   }
 
   /// Get the singleton [SmartPhoneClientManager].

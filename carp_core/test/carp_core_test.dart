@@ -2,11 +2,14 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:test/test.dart';
 import 'package:carp_core/carp_core.dart';
+import 'package:carp_serializable/carp_serializable.dart';
 
 void main() {
   late StudyProtocol protocol;
 
   setUp(() {
+    Core();
+
     protocol = StudyProtocol(
       ownerId: 'xyz@dtu.dk',
       name: 'Test Study Protocol',

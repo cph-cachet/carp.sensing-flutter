@@ -13,6 +13,7 @@ library carp_core_protocols;
 
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
+import 'package:carp_serializable/carp_serializable.dart';
 
 import 'package:carp_core/carp_common/carp_core_common.dart';
 import 'package:carp_core/carp_data/carp_core_data.dart';
