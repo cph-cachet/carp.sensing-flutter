@@ -10,8 +10,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  carp_serializable:
-    path: ../../carp_serializable/
+  # carp_serializable:
+  #   path: ../../carp_serializable/
   carp_core:
     path: ../../carp_core
   carp_mobile_sensing:

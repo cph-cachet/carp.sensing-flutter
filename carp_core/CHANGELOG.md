@@ -1,5 +1,6 @@
 ## 0.40.0
 
+* Serialization has been moved to a separate package - [carp_serializable](https://pub.dev/packages/carp_serializable)
 * `ConcurrentTask` is now called a `BackgroundTask`
 * support for `BatteryAwareSamplingConfiguration` sampling configuration added
 * fix of error in `SetParticipantData` request

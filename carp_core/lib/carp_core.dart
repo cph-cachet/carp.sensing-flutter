@@ -14,6 +14,10 @@ export 'carp_protocols/carp_core_protocols.dart';
 
 part 'carp_core.json.dart';
 
+/// Start class for this carp_core library. Just create a singleton instance:
+///
+///    Core();
+///
 class Core {
   static final _instance = Core._();
   factory Core() => _instance;
