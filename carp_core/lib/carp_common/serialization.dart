@@ -247,7 +247,11 @@ class FromJsonFactory {
     register(BackgroundTask());
     register(CustomProtocolTask(studyProtocol: 'ignored'));
     register(Measure(type: 'ignored'));
-    register(SamplingConfiguration());
+    final config = SamplingConfiguration();
+    register(config);
+    register(BatteryAwareSamplingConfiguration(
+        critical: config, low: config, normal: config));
+    register(GranularitySamplingConfiguration(Granularity.Balanced));
 
     register(DeviceDescriptor(roleName: ''));
     register(DeviceConnection());

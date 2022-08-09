@@ -292,18 +292,23 @@ Map<String, dynamic> _$PeriodicSamplingConfigurationToJson(
   return val;
 }
 
-BatteryAwareSamplingConfiguration _$BatteryAwareSamplingConfigurationFromJson(
-        Map<String, dynamic> json) =>
-    BatteryAwareSamplingConfiguration(
-      normal: SamplingConfiguration.fromJson(
-          json['normal'] as Map<String, dynamic>),
-      low: SamplingConfiguration.fromJson(json['low'] as Map<String, dynamic>),
-      critical: SamplingConfiguration.fromJson(
-          json['critical'] as Map<String, dynamic>),
-    )..$type = json[r'$type'] as String?;
+BatteryAwareSamplingConfiguration<TConfig>
+    _$BatteryAwareSamplingConfigurationFromJson<
+            TConfig extends SamplingConfiguration>(
+  Map<String, dynamic> json,
+  TConfig Function(Object? json) fromJsonTConfig,
+) =>
+        BatteryAwareSamplingConfiguration<TConfig>(
+          normal: fromJsonTConfig(json['normal']),
+          low: fromJsonTConfig(json['low']),
+          critical: fromJsonTConfig(json['critical']),
+        )..$type = json[r'$type'] as String?;
 
-Map<String, dynamic> _$BatteryAwareSamplingConfigurationToJson(
-    BatteryAwareSamplingConfiguration instance) {
+Map<String, dynamic> _$BatteryAwareSamplingConfigurationToJson<
+    TConfig extends SamplingConfiguration>(
+  BatteryAwareSamplingConfiguration<TConfig> instance,
+  Object? Function(TConfig value) toJsonTConfig,
+) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -313,9 +318,9 @@ Map<String, dynamic> _$BatteryAwareSamplingConfigurationToJson(
   }
 
   writeNotNull(r'$type', instance.$type);
-  val['normal'] = instance.normal;
-  val['low'] = instance.low;
-  val['critical'] = instance.critical;
+  val['normal'] = toJsonTConfig(instance.normal);
+  val['low'] = toJsonTConfig(instance.low);
+  val['critical'] = toJsonTConfig(instance.critical);
   return val;
 }
 

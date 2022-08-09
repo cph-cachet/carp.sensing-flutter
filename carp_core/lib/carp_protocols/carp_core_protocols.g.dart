@@ -547,6 +547,52 @@ Map<String, dynamic> _$SamplingConfigurationToJson(
   return val;
 }
 
+BatteryAwareSamplingConfiguration _$BatteryAwareSamplingConfigurationFromJson(
+        Map<String, dynamic> json) =>
+    BatteryAwareSamplingConfiguration(
+      normal: SamplingConfiguration.fromJson(
+          json['normal'] as Map<String, dynamic>),
+      low: SamplingConfiguration.fromJson(json['low'] as Map<String, dynamic>),
+      critical: SamplingConfiguration.fromJson(
+          json['critical'] as Map<String, dynamic>),
+    )..$type = json[r'$type'] as String?;
+
+Map<String, dynamic> _$BatteryAwareSamplingConfigurationToJson(
+    BatteryAwareSamplingConfiguration instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(r'$type', instance.$type);
+  val['normal'] = instance.normal;
+  val['low'] = instance.low;
+  val['critical'] = instance.critical;
+  return val;
+}
+
+GranularitySamplingConfiguration _$GranularitySamplingConfigurationFromJson(
+        Map<String, dynamic> json) =>
+    GranularitySamplingConfiguration(
+      $enumDecode(_$GranularityEnumMap, json['granularity']),
+    )..$type = json[r'$type'] as String?;
+
+Map<String, dynamic> _$GranularitySamplingConfigurationToJson(
+        GranularitySamplingConfiguration instance) =>
+    <String, dynamic>{
+      r'$type': instance.$type,
+      'granularity': _$GranularityEnumMap[instance.granularity]!,
+    };
+
+const _$GranularityEnumMap = {
+  Granularity.Detailed: 'Detailed',
+  Granularity.Balanced: 'Balanced',
+  Granularity.Coarse: 'Coarse',
+};
+
 StudyProtocolId _$StudyProtocolIdFromJson(Map<String, dynamic> json) =>
     StudyProtocolId(
       json['ownerId'] as String,

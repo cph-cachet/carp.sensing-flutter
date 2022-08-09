@@ -2,65 +2,89 @@
     "ownerId": "xyz@dtu.dk",
     "name": "Test Study Protocol",
     "description": "For testing purposes.",
-    "creationDate": "2022-05-10T14:04:41.754559Z",
+    "creationDate": "2022-08-09T09:56:47.638759Z",
     "masterDevices": [
-     {
-      "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
-      "isMasterDevice": true,
-      "roleName": "masterphone",
-      "samplingConfiguration": {}
-     }
+        {
+            "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
+            "isMasterDevice": true,
+            "roleName": "masterphone",
+            "samplingConfiguration": {}
+        }
     ],
     "connectedDevices": [
-     {
-      "$type": "dk.cachet.carp.protocols.domain.devices.DeviceDescriptor",
-      "isMasterDevice": false,
-      "roleName": "eSense",
-      "samplingConfiguration": {}
-     }
+        {
+            "$type": "dk.cachet.carp.protocols.domain.devices.DeviceDescriptor",
+            "isMasterDevice": false,
+            "roleName": "connected_device",
+            "samplingConfiguration": {}
+        }
     ],
     "connections": [],
     "triggers": {
-     "0": {
-      "$type": "dk.cachet.carp.protocols.domain.triggers.Trigger",
-      "sourceDeviceRoleName": "masterphone"
-     },
-     "1": {
-      "$type": "dk.cachet.carp.protocols.domain.triggers.ManualTrigger",
-      "source_device_role_name": "masterphone"
-     }
+        "0": {
+            "$type": "dk.cachet.carp.protocols.domain.triggers.Trigger",
+            "sourceDeviceRoleName": "masterphone"
+        },
+        "1": {
+            "$type": "dk.cachet.carp.protocols.domain.triggers.ManualTrigger"
+        }
     },
     "tasks": [
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
-      "name": "Start measures",
-      "measures": [
-       {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-        "type": "dk.cachet.carp.light"
-       },
-       {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-        "type": "dk.cachet.carp.gps"
-       },
-       {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-        "type": "dk.cachet.carp.steps"
-       }
-      ]
-     }
+        {
+            "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
+            "name": "Start measures",
+            "measures": [
+                {
+                    "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+                    "type": "dk.cachet.carp.light"
+                },
+                {
+                    "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+                    "type": "dk.cachet.carp.gps"
+                },
+                {
+                    "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+                    "type": "dk.cachet.carp.steps"
+                }
+            ]
+        },
+        {
+            "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
+            "name": "Task #0",
+            "measures": [
+                {
+                    "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+                    "type": "dk.cachet.carp.steps",
+                    "overrideSamplingConfiguration": {
+                        "$type": "dk.cachet.carp.protocols.domain.sampling.BatteryAwareSamplingConfiguration",
+                        "normal": {
+                            "$type": "dk.cachet.carp.protocols.domain.sampling.GranularitySamplingConfiguration",
+                            "granularity": "Detailed"
+                        },
+                        "low": {
+                            "$type": "dk.cachet.carp.protocols.domain.sampling.GranularitySamplingConfiguration",
+                            "granularity": "Balanced"
+                        },
+                        "critical": {
+                            "$type": "dk.cachet.carp.protocols.domain.sampling.GranularitySamplingConfiguration",
+                            "granularity": "Coarse"
+                        }
+                    }
+                }
+            ]
+        }
     ],
     "triggeredTasks": [
-     {
-      "triggerId": 0,
-      "taskName": "Start measures",
-      "targetDeviceRoleName": "masterphone"
-     },
-     {
-      "triggerId": 1,
-      "taskName": "Start measures",
-      "targetDeviceRoleName": "masterphone"
-     }
+        {
+            "triggerId": 0,
+            "taskName": "Start measures",
+            "targetDeviceRoleName": "masterphone"
+        },
+        {
+            "triggerId": 1,
+            "taskName": "Task #0",
+            "targetDeviceRoleName": "masterphone"
+        }
     ],
     "expectedParticipantData": []
-   }
+}

@@ -89,17 +89,49 @@ class PeriodicSamplingConfiguration extends IntervalSamplingConfiguration {
       FromJsonFactory().fromJson(json) as PeriodicSamplingConfiguration;
 }
 
+// /// A sampling configuration which changes based on how much battery the device has left.
+// @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+// class BatteryAwareSamplingConfiguration extends SamplingConfiguration {
+//   /// The sampling configuration to use when there is plenty of battery left.
+//   SamplingConfiguration normal;
+
+//   /// The sampling configuration to use when the battery is low.
+//   SamplingConfiguration low;
+
+//   /// The sampling configuration to use when the battery is critically low.
+//   SamplingConfiguration critical;
+
+//   BatteryAwareSamplingConfiguration({
+//     required this.normal,
+//     required this.low,
+//     required this.critical,
+//   }) : super();
+
+//   @override
+//   Function get fromJsonFunction => _$BatteryAwareSamplingConfigurationFromJson;
+//   @override
+//   Map<String, dynamic> toJson() =>
+//       _$BatteryAwareSamplingConfigurationToJson(this);
+//   factory BatteryAwareSamplingConfiguration.fromJson(
+//           Map<String, dynamic> json) =>
+//       FromJsonFactory().fromJson(json) as BatteryAwareSamplingConfiguration;
+// }
+
 /// A sampling configuration which changes based on how much battery the device has left.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class BatteryAwareSamplingConfiguration extends SamplingConfiguration {
+@JsonSerializable(
+    fieldRename: FieldRename.none,
+    includeIfNull: false,
+    genericArgumentFactories: true)
+class BatteryAwareSamplingConfiguration<TConfig extends SamplingConfiguration>
+    extends SamplingConfiguration {
   /// The sampling configuration to use when there is plenty of battery left.
-  SamplingConfiguration normal;
+  TConfig normal;
 
   /// The sampling configuration to use when the battery is low.
-  SamplingConfiguration low;
+  TConfig low;
 
   /// The sampling configuration to use when the battery is critically low.
-  SamplingConfiguration critical;
+  TConfig critical;
 
   BatteryAwareSamplingConfiguration({
     required this.normal,
@@ -109,41 +141,13 @@ class BatteryAwareSamplingConfiguration extends SamplingConfiguration {
 
   @override
   Function get fromJsonFunction => _$BatteryAwareSamplingConfigurationFromJson;
+
   @override
   Map<String, dynamic> toJson() =>
-      _$BatteryAwareSamplingConfigurationToJson(this);
+      _$BatteryAwareSamplingConfigurationToJson(this, toJson());
+
   factory BatteryAwareSamplingConfiguration.fromJson(
           Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as BatteryAwareSamplingConfiguration;
+      FromJsonFactory().fromJson(json)
+          as BatteryAwareSamplingConfiguration<TConfig>;
 }
-
-// /// A sampling configuration which changes based on how much battery the device has left.
-// @JsonSerializable(
-//     fieldRename: FieldRename.none,
-//     includeIfNull: false,
-//     genericArgumentFactories: true)
-// class BatteryAwareSamplingConfiguration<TConfig extends SamplingConfiguration>
-//     extends SamplingConfiguration {
-//   /// The sampling configuration to use when there is plenty of battery left.
-//   TConfig normal;
-
-//   /// The sampling configuration to use when the battery is low.
-//   TConfig low;
-
-//   /// The sampling configuration to use when the battery is critically low.
-//   TConfig critical;
-
-//   BatteryAwareSamplingConfiguration({
-//     required this.normal,
-//     required this.low,
-//     required this.critical,
-//   }) : super();
-
-//   Function get fromJsonFunction => _$BatteryAwareSamplingConfigurationFromJson;
-//   Map<String, dynamic> toJson() =>
-//       _$BatteryAwareSamplingConfigurationToJson(this, toJson());
-//   factory BatteryAwareSamplingConfiguration.fromJson(
-//           Map<String, dynamic> json) =>
-//       FromJsonFactory().fromJson(json)
-//           as BatteryAwareSamplingConfiguration<TConfig>;
-// }

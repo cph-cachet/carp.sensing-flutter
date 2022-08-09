@@ -15,13 +15,13 @@ void main() {
 
     // Define which devices are used for data collection.
     Smartphone phone = Smartphone(roleName: 'masterphone');
-    DeviceDescriptor eSense = DeviceDescriptor(
-      roleName: 'eSense',
+    DeviceDescriptor connectedDevice = DeviceDescriptor(
+      roleName: 'connected_device',
     );
 
     protocol
       ..addMasterDevice(phone)
-      ..addConnectedDevice(eSense);
+      ..addConnectedDevice(connectedDevice);
 
     // Define what needs to be measured, on which device, when.
     List<Measure> measures = [
@@ -37,9 +37,16 @@ void main() {
       task,
       phone,
     );
+
+    Measure measure = Measure(type: 'dk.cachet.carp.steps');
+    measure.overrideSamplingConfiguration = BatteryAwareSamplingConfiguration(
+        normal: GranularitySamplingConfiguration(Granularity.Detailed),
+        low: GranularitySamplingConfiguration(Granularity.Balanced),
+        critical: GranularitySamplingConfiguration(Granularity.Coarse));
+
     protocol.addTriggeredTask(
-      ManualTrigger(sourceDeviceRoleName: phone.roleName),
-      task,
+      ManualTrigger(),
+      BackgroundTask()..addMeasure(measure),
       phone,
     );
   });
@@ -50,7 +57,7 @@ void main() {
     expect(protocol.ownerId, 'xyz@dtu.dk');
     expect(protocol.triggers.length, 2);
     expect(protocol.triggers.keys.first, '0');
-    expect(protocol.tasks.length, 1);
+    expect(protocol.tasks.length, 2);
     expect(protocol.triggeredTasks.length, 2);
   });
 
