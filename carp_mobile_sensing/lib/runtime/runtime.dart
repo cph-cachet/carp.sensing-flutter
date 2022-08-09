@@ -31,6 +31,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart'
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:uuid/uuid.dart';
 import 'package:cron/cron.dart' as cron;
+import 'package:battery_plus/battery_plus.dart';
 
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;

@@ -131,6 +131,7 @@ abstract class HardwareDeviceManager<
 class SmartphoneDeviceManager
     extends HardwareDeviceManager<DeviceRegistration, Smartphone> {
   int? _batteryLevel = 0;
+  Battery battery = Battery();
 
   @override
   String get id => DeviceInfo().deviceID!;
@@ -138,11 +139,8 @@ class SmartphoneDeviceManager
   @override
   void onInitialize(DeviceDescriptor descriptor) {
     // listen to the battery
-    BatteryProbe()
-      ..data.listen((dataPoint) =>
-          _batteryLevel = (dataPoint.data as BatteryDatum).batteryLevel)
-      ..initialize(Measure(type: DeviceSamplingPackage.BATTERY))
-      ..resume();
+    battery.onBatteryStateChanged
+        .listen((state) async => _batteryLevel = await battery.batteryLevel);
 
     // find the supported datatypes
     for (var package in SamplingPackageRegistry().packages) {

@@ -4,22 +4,19 @@ The CARP Mobile Sensing App provides an example on how to use the [`carp_mobile_
 The app sets up a `Study Deployment` (or just `Study`) that uses a set of `Device`s and starts a set of `Probe`s. The UI of the app is shown below, showing
 (from left to right) the Study Deployment page, the Probe List page, and the Device List page.
 
-
-![Study Visualization page](documentation/study_viz_3.jpg) __ 
-![Probe List page](documentation/probe_list_3.jpg) __ 
-![Device List page](documentation/device_list_3.jpg) 
-
+![Study Visualization page](documentation/study_viz_3.jpg) __
+![Probe List page](documentation/probe_list_3.jpg)__
+![Device List page](documentation/device_list_3.jpg)
 
 The architecture of the app is illustrated below. It follows the [BLoC architecture](https://medium.com/flutterpub/architecting-your-flutter-project-bd04e144a8f1),
 which is recommended by the [Flutter Team](https://www.youtube.com/watch?v=PLHln7wHgPE).
 
-
 ![Bloc Architecture](documentation/architecture_3.png)
 
-The basic architecture holds a singleton `Sensing` class responsible for handling sensing via the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package. 
+The basic architecture holds a singleton `Sensing` class responsible for handling sensing via the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package.
 All business logic is handled by the singleton `BloC` which is the only way the UI models can access and modify data or initiate life cycle events (like pausing and resuming sensing).
-All data to be shown in the UI are handled by (UI) models, and finally each screen is implemented as a [`StatefulWidget`](https://docs.flutter.io/flutter/widgets/StatefulWidget-class.html) in Flutter. 
-Each UI widget only knows its corresponding model and the model knows the BloC. 
+All data to be shown in the UI are handled by (UI) models, and finally each screen is implemented as a [`StatefulWidget`](https://docs.flutter.io/flutter/widgets/StatefulWidget-class.html) in Flutter.
+Each UI widget only knows its corresponding model and the model knows the BloC.
 **NO** data or control flows between the UI and the Bloc or Sensing layer.
 
 ## Sensing BLoC
@@ -87,20 +84,20 @@ final bloc = SensingBLoC();
 
 The BLoC basically plays three roles:
 
- * it holds core business data like the `deployment` and the `deploymentId`
- * it can create (UI) models such as the `StudyDeploymentModel` and a list of `ProbeModel`s, and
- * it provide a set of life cycle methods for sensing like `connectToDevice` and `resume`.
+* it holds core business data like the `deployment` and the `deploymentId`
+* it can create (UI) models such as the `StudyDeploymentModel` and a list of `ProbeModel`s, and
+* it provide a set of life cycle methods for sensing like `connectToDevice` and `resume`.
 
 Finally, note that the singleton `bloc` variable is instantiated, which makes the BLoC accessible in the entire app.
 
-Set up and configuration of sensing is done in the [`Sensing`](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/apps/carp_mobile_sensing_app/lib/src/sensing/sensing.dart) class. 
-Depending on the "deploymenet mode" (local or using CARP), sensing is initialized using the [`LocalStudyProtocolManager`](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/apps/carp_mobile_sensing_app/lib/src/sensing/local_study_protocol_mananger.dart) or the [`CustomProtocolDeploymentService`](https://pub.dev/documentation/carp_backend/latest/carp_backend/CustomProtocolDeploymentService-class.html), respectivly. 
+Set up and configuration of sensing is done in the [`Sensing`](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/apps/carp_mobile_sensing_app/lib/src/sensing/sensing.dart) class.
+Depending on the "deploymenet mode" (local or using CARP), sensing is initialized using the [`LocalStudyProtocolManager`](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/apps/carp_mobile_sensing_app/lib/src/sensing/local_study_protocol_mananger.dart) or the [`CustomProtocolDeploymentService`](https://pub.dev/documentation/carp_backend/latest/carp_backend/CustomProtocolDeploymentService-class.html), respectivly.
 
- ## UI Models
- 
- In this CARP Mobile Sensing App we use one UI model for each UI widget.
- For example, the UI Model `StudyDeploymentModel` serves the UI Widget `StudyDeploymentPage`.
- The main reposibility of the UI Model is to provide access to data (both getter and setters), which is done via the BLoC.
+## UI Models
+
+In this CARP Mobile Sensing App we use one UI model for each UI widget.
+For example, the UI Model `StudyDeploymentModel` serves the UI Widget `StudyDeploymentPage`.
+The main reposibility of the UI Model is to provide access to data (both getter and setters), which is done via the BLoC.
 
 The `StudyDeploymentModel` class looks like this:
 
@@ -145,8 +142,8 @@ void set title(String title) {
 
 ## UI Widgets
 
-The final layer is the UI widgets. 
-Each UI widget takes in its constructor its corresponding UI model. 
+The final layer is the UI widgets.
+Each UI widget takes in its constructor its corresponding UI model.
 For example, the `StudyVisualization` widget's `State` takes a `StudyModel` in its constructor:
 
 `````dart
@@ -169,7 +166,7 @@ class _StudyDeploymentPageState extends State<StudyDeploymentPage> {
 }
 `````
 
-In this way, the `studyDeploymentModel` is available in the entire UI Widget. 
+In this way, the `studyDeploymentModel` is available in the entire UI Widget.
 This allow us to access data and show it in the UI. For example, to show the study title and image this code is used:
 
 ````dart
@@ -194,4 +191,3 @@ More sophisticated (reactive) UI implementation can also be done. For example, t
       return Text('Sample Size: ${studyDeploymentModel.samplingSize}');
     })
 `````
-
