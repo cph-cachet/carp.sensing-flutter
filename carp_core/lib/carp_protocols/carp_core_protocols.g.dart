@@ -484,7 +484,7 @@ RecurrenceRule _$RecurrenceRuleFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$RecurrenceRuleToJson(RecurrenceRule instance) =>
     <String, dynamic>{
-      'frequency': _$FrequencyEnumMap[instance.frequency],
+      'frequency': _$FrequencyEnumMap[instance.frequency]!,
       'interval': instance.interval,
       'end': instance.end,
     };
@@ -509,7 +509,7 @@ End _$EndFromJson(Map<String, dynamic> json) => End(
 
 Map<String, dynamic> _$EndToJson(End instance) {
   final val = <String, dynamic>{
-    'type': _$EndTypeEnumMap[instance.type],
+    'type': _$EndTypeEnumMap[instance.type]!,
   };
 
   void writeNotNull(String key, dynamic value) {

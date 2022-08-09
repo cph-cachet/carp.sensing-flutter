@@ -1,7 +1,7 @@
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options
 
-include: package:lints/recommended.yaml
+include: package:flutter_lints/flutter.yaml
 
 analyzer:
   exclude: [build/**]
@@ -9,9 +9,10 @@ analyzer:
     strict-casts: true
     strict-inference: true
     strict-raw-types: false    
-
+    
 linter:
   rules:
     cancel_subscriptions: true
     constant_identifier_names: false
     depend_on_referenced_packages: false
+    avoid_print: false

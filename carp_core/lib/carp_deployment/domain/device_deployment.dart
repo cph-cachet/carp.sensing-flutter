@@ -96,7 +96,7 @@ class DeviceRegistration extends Serializable {
   ]) : super() {
     this.registrationCreationDate =
         registrationCreationDate ?? DateTime.now().toUtc();
-    this.deviceId = deviceId ?? Uuid().v1();
+    this.deviceId = deviceId ?? const Uuid().v1();
   }
 
   @override

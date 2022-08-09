@@ -236,12 +236,12 @@ class FromJsonFactory {
     // PROTOCOL
     // register(StudyProtocol());
     register(Trigger());
-    register(ElapsedTimeTrigger(elapsedTime: Duration()));
+    register(ElapsedTimeTrigger(elapsedTime: const Duration()));
     register(ManualTrigger());
     register(ScheduledTrigger(
         recurrenceRule: RecurrenceRule(Frequency.DAILY),
         sourceDeviceRoleName: 'ignored',
-        time: TimeOfDay()));
+        time: const TimeOfDay()));
 
     register(TaskDescriptor());
     register(BackgroundTask());

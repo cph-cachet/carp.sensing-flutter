@@ -55,7 +55,7 @@ dev_dependencies:
   build_runner: ^2.0.4    # For building json serialization
   json_serializable: ^6.0.0
   test: any
-  lints: any
+  flutter_lints: any
 
 # The following section is specific to Flutter.
 flutter:

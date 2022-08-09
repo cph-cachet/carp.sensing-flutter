@@ -25,9 +25,9 @@ void main() {
 
     // Define what needs to be measured, on which device, when.
     List<Measure> measures = [
-      Measure(type: DataType(NameSpace.CARP, 'light').toString()),
-      Measure(type: DataType(NameSpace.CARP, 'gps').toString()),
-      Measure(type: DataType(NameSpace.CARP, 'steps').toString()),
+      Measure(type: const DataType(NameSpace.CARP, 'light').toString()),
+      Measure(type: const DataType(NameSpace.CARP, 'gps').toString()),
+      Measure(type: const DataType(NameSpace.CARP, 'steps').toString()),
     ];
 
     BackgroundTask task = BackgroundTask(name: 'Start measures')
@@ -83,7 +83,7 @@ void main() {
     DataPoint dataPoint = DataPoint(
       DataPointHeader(
         studyId: '1234',
-        dataFormat: DataFormat(NameSpace.CARP, 'light'),
+        dataFormat: const DataFormat(NameSpace.CARP, 'light'),
       ),
       Data(),
     );
@@ -96,14 +96,14 @@ void main() {
 
   test('ScheduledTrigger', () async {
     var st = ScheduledTrigger(
-        time: TimeOfDay(hour: 12),
+        time: const TimeOfDay(hour: 12),
         recurrenceRule: RecurrenceRule(Frequency.DAILY, interval: 2));
     expect(st.recurrenceRule.toString(),
         RecurrenceRule.fromString('RRULE:FREQ=DAILY;INTERVAL=2').toString());
     print(st);
 
     st = ScheduledTrigger(
-        time: TimeOfDay(hour: 12),
+        time: const TimeOfDay(hour: 12),
         recurrenceRule:
             RecurrenceRule(Frequency.DAILY, interval: 2, end: End.count(3)));
     expect(
@@ -113,9 +113,9 @@ void main() {
     print(st);
 
     st = ScheduledTrigger(
-        time: TimeOfDay(hour: 12),
+        time: const TimeOfDay(hour: 12),
         recurrenceRule: RecurrenceRule(Frequency.DAILY,
-            interval: 2, end: End.until(Duration(days: 30))));
+            interval: 2, end: End.until(const Duration(days: 30))));
     expect(
         st.recurrenceRule.toString(),
         RecurrenceRule.fromString(
