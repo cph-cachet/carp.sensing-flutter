@@ -1,9 +1,10 @@
 ## 0.40.0
 
 * `ConcurrentTask` is now called a `BackgroundTask`
+* support for `BatteryAwareSamplingConfiguration` sampling configuration added
 * fix of error in `SetParticipantData` request
 * Upgraded to Dart 2.17
-* Refactoring to comply to [official Dart recommended lint rules](https://pub.dev/packages/lints)
+* Refactoring to comply to [official Dart recommended lint rules](https://pub.dev/packages/flutter_lints)
 
 ## 0.33.1
 
