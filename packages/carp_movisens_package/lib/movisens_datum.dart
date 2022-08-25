@@ -102,16 +102,13 @@ class MovisensMETLevelDatum extends MovisensDatum {
 
   MovisensMETLevelDatum() : super();
 
-  factory MovisensMETLevelDatum.fromMap(String value) {
-    MovisensMETLevelDatum metLevelDatum = MovisensMETLevelDatum();
+  MovisensMETLevelDatum.fromMap(String value) {
     final map = jsonDecode(value);
 
-    metLevelDatum.sedentary = map['sedentary'].toString();
-    metLevelDatum.light = map['light'].toString();
-    metLevelDatum.moderate = map['moderate'].toString();
-    metLevelDatum.vigorous = map['vigorous'].toString();
-
-    return metLevelDatum;
+    sedentary = map['sedentary'].toString();
+    light = map['light'].toString();
+    moderate = map['moderate'].toString();
+    vigorous = map['vigorous'].toString();
   }
 
   factory MovisensMETLevelDatum.fromJson(Map<String, dynamic> json) =>
@@ -131,14 +128,9 @@ class MovisensMovementAccelerationDatum extends MovisensDatum {
 
   MovisensMovementAccelerationDatum() : super();
 
-  factory MovisensMovementAccelerationDatum.fromMap(String value) {
-    MovisensMovementAccelerationDatum movementAccelerationDatum =
-        MovisensMovementAccelerationDatum();
+  MovisensMovementAccelerationDatum.fromMap(String value) {
     final map = jsonDecode(value);
-    movementAccelerationDatum.movementAcceleration =
-        map['movement_acceleration'].toString();
-
-    return movementAccelerationDatum;
+    movementAcceleration = map['movement_acceleration'].toString();
   }
 
   factory MovisensMovementAccelerationDatum.fromJson(
@@ -160,12 +152,9 @@ class MovisensTapMarkerDatum extends MovisensDatum {
 
   MovisensTapMarkerDatum() : super();
 
-  factory MovisensTapMarkerDatum.fromMap(String value) {
-    MovisensTapMarkerDatum tapMakerDatum = MovisensTapMarkerDatum();
+  MovisensTapMarkerDatum.fromMap(String value) {
     final map = jsonDecode(value);
-    tapMakerDatum.tapMarker = map['tap_marker'].toString();
-
-    return tapMakerDatum;
+    tapMarker = map['tap_marker'].toString();
   }
 
   factory MovisensTapMarkerDatum.fromJson(Map<String, dynamic> json) =>
@@ -185,12 +174,9 @@ class MovisensBatteryLevelDatum extends MovisensDatum {
 
   MovisensBatteryLevelDatum() : super();
 
-  factory MovisensBatteryLevelDatum.fromMap(String value) {
-    MovisensBatteryLevelDatum batteryLevelDatum = MovisensBatteryLevelDatum();
+  MovisensBatteryLevelDatum.fromMap(String value) {
     final map = jsonDecode(value);
-    batteryLevelDatum.batteryLevel = map['battery_level'].toString();
-
-    return batteryLevelDatum;
+    batteryLevel = map['battery_level'].toString();
   }
 
   factory MovisensBatteryLevelDatum.fromJson(Map<String, dynamic> json) =>
@@ -210,12 +196,9 @@ class MovisensBodyPositionDatum extends MovisensDatum {
 
   MovisensBodyPositionDatum() : super();
 
-  factory MovisensBodyPositionDatum.fromMap(String value) {
-    MovisensBodyPositionDatum bodyPositionDatum = MovisensBodyPositionDatum();
+  MovisensBodyPositionDatum.fromMap(String value) {
     final map = jsonDecode(value);
-    bodyPositionDatum.bodyPosition = map['body_position'].toString();
-
-    return bodyPositionDatum;
+    bodyPosition = map['body_position'].toString();
   }
 
   factory MovisensBodyPositionDatum.fromJson(Map<String, dynamic> json) =>
@@ -233,12 +216,9 @@ class MovisensMETDatum extends MovisensDatum {
 
   MovisensMETDatum() : super();
 
-  factory MovisensMETDatum.fromMap(String value) {
-    MovisensMETDatum metDatum = MovisensMETDatum();
+  MovisensMETDatum.fromMap(String value) {
     final map = jsonDecode(value);
-    metDatum.met = map['met'].toString();
-
-    return metDatum;
+    met = map['met'].toString();
   }
 
   factory MovisensMETDatum.fromJson(Map<String, dynamic> json) =>
@@ -258,12 +238,9 @@ class MovisensHRDatum extends MovisensDatum {
 
   MovisensHRDatum() : super();
 
-  factory MovisensHRDatum.fromMap(String value) {
-    MovisensHRDatum hrDatum = MovisensHRDatum();
+  MovisensHRDatum.fromMap(String value) {
     final map = jsonDecode(value);
-    hrDatum.hr = map['hr'].toString();
-
-    return hrDatum;
+    hr = map['hr'].toString();
   }
 
   factory MovisensHRDatum.fromJson(Map<String, dynamic> json) =>
@@ -282,12 +259,9 @@ class MovisensHRVDatum extends MovisensDatum {
 
   MovisensHRVDatum() : super();
 
-  factory MovisensHRVDatum.fromMap(String value) {
-    MovisensHRVDatum hrvDatum = MovisensHRVDatum();
+  MovisensHRVDatum.fromMap(String value) {
     final map = jsonDecode(value);
-    hrvDatum.hrv = map['hrv'].toString();
-
-    return hrvDatum;
+    hrv = map['hrv'].toString();
   }
 
   factory MovisensHRVDatum.fromJson(Map<String, dynamic> json) =>
@@ -306,12 +280,9 @@ class MovisensIsHrvValidDatum extends MovisensDatum {
 
   MovisensIsHrvValidDatum() : super();
 
-  factory MovisensIsHrvValidDatum.fromMap(String value) {
-    MovisensIsHrvValidDatum isHrvValidDatum = MovisensIsHrvValidDatum();
+  MovisensIsHrvValidDatum.fromMap(String value) {
     final map = jsonDecode(value);
-    isHrvValidDatum.isHrvValid = map['is_hrv_valid'].toString();
-
-    return isHrvValidDatum;
+    isHrvValid = map['is_hrv_valid'].toString();
   }
 
   factory MovisensIsHrvValidDatum.fromJson(Map<String, dynamic> json) =>
@@ -331,12 +302,9 @@ class MovisensStepCountDatum extends MovisensDatum {
 
   MovisensStepCountDatum() : super();
 
-  factory MovisensStepCountDatum.fromMap(String value) {
-    MovisensStepCountDatum stepCountDatum = MovisensStepCountDatum();
+  MovisensStepCountDatum.fromMap(String value) {
     final map = jsonDecode(value);
-    stepCountDatum.stepCount = map['step_count'].toString();
-
-    return stepCountDatum;
+    stepCount = map['step_count'].toString();
   }
   factory MovisensStepCountDatum.fromJson(Map<String, dynamic> json) =>
       _$MovisensStepCountDatumFromJson(json);
@@ -355,14 +323,9 @@ class MovisensConnectionStatusDatum extends MovisensDatum {
 
   MovisensConnectionStatusDatum() : super();
 
-  factory MovisensConnectionStatusDatum.fromMap(String value) {
-    MovisensConnectionStatusDatum connectionStatusDatum =
-        MovisensConnectionStatusDatum();
+  MovisensConnectionStatusDatum.fromMap(String value) {
     final map = jsonDecode(value);
-    connectionStatusDatum.connectionStatus =
-        map['connection_status'].toString();
-
-    return connectionStatusDatum;
+    connectionStatus = map['connection_status'].toString();
   }
 
   factory MovisensConnectionStatusDatum.fromJson(Map<String, dynamic> json) =>

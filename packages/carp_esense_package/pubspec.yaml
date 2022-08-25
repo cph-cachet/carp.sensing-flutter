@@ -29,9 +29,8 @@ dependency_overrides:
   # esense_flutter:
   #   path: ../../../../flutter-plugins/packages/esense_flutter/
 
-
 dev_dependencies:
-  lints: any
+  flutter_lints: any
   build_runner: any
   json_serializable: any
   test: any
