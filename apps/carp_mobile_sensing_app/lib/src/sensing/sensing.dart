@@ -45,7 +45,7 @@ class Sensing {
   factory Sensing() => _instance;
 
   Sensing._() {
-    DomainJsonFactory();
+    CarpMobileSensing();
 
     // Create and register external sampling packages
     SamplingPackageRegistry().register(ConnectivitySamplingPackage());

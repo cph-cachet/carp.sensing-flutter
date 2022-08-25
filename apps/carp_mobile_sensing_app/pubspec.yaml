@@ -13,6 +13,7 @@ dependencies:
     sdk: flutter
   flutter_launcher_icons: ^0.9.1
   
+  carp_serializable: ^1.0.0
   #carp_core: ^0.30.0      # the core CARP domain model
   #carp_mobile_sensing: ^0.30.6
   #carp_connectivity_package: ^0.30.0  # conflict w. RP - different versions of rxdart

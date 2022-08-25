@@ -1,7 +1,7 @@
 ## 0.40.0
 
 * Serialization has been moved to a separate package - [carp_serializable](https://pub.dev/packages/carp_serializable)
-* `ConcurrentTask` is now called a `BackgroundTask`
+* `ConcurrentTask` is renamed to `BackgroundTask`
 * support for `BatteryAwareSamplingConfiguration` sampling configuration added
 * fix of error in `SetParticipantData` request
 * Upgraded to Dart 2.17
