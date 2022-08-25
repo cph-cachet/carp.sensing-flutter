@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:test/test.dart';
 
+import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_esense_package/esense.dart';
@@ -18,8 +19,8 @@ void main() {
     // register the eSense sampling package
     SamplingPackageRegistry().register(ESenseSamplingPackage());
 
-    // make sure that the json functions are loaded
-    DomainJsonFactory();
+    // Initialization of serialization
+    CarpMobileSensing();
 
     // Create a new study protocol.
     protocol = StudyProtocol(

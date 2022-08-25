@@ -6,8 +6,6 @@
  */
 part of runtime;
 
-// TODO - should be/extend an [Executor] and handle the triggered task associated with this device.... and its probes....
-
 /// A [DeviceManager] handles a hardware device or online service on runtime.
 abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
         TDeviceDescriptor extends DeviceDescriptor>
