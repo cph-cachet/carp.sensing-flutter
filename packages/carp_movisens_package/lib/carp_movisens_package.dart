@@ -4,6 +4,7 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
+
 /// A [CARP Mobile Sensing](https://pub.dev/packages/carp_mobile_sensing)
 /// sampling package for collecting cardiovascular data from the
 /// Movisens Move4 and EcgMove4 devices on:
@@ -44,7 +45,7 @@ part 'movisens_device_manager.dart';
 ///   SamplingPackageRegistry.register(MovisensSamplingPackage());
 /// ```
 class MovisensSamplingPackage implements SamplingPackage {
-  /// Measure type for continous collection of Movisens data from a Movisen device.
+  /// Measure type for continous collection of Movisens data from a Movisens device.
   ///  * Event-based measure.
   ///  * Uses the [MovisensDevice] connected device for data collection.
   ///  * No sampling configuration needed.

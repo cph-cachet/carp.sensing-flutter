@@ -164,9 +164,9 @@ class SmartphoneDeviceManager
 abstract class BTLEDeviceManager<TDeviceRegistration extends DeviceRegistration,
         TDeviceDescriptor extends DeviceDescriptor>
     extends HardwareDeviceManager<TDeviceRegistration, TDeviceDescriptor> {
-  /// The Bluetooth address of this BTLE device in the form
-  /// `00:04:79:00:0F:4D`.
-  String get btleAddress;
+  /// The Bluetooth address of this BTLE device in the form `00:04:79:00:0F:4D`.
+  /// Returns null if unknown.
+  String? get btleAddress;
 }
 
 /// Different status for a [DeviceManager].
@@ -183,6 +183,9 @@ enum DeviceStatus {
   /// The device is paired with this phone.
   /// Mainly used for a [BTLEDeviceManager].
   paired,
+
+  /// The device is trying to connect.
+  connecting,
 
   /// The device is connected and ready to be used.
   connected,
