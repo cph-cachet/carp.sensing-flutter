@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of context;
+part of carp_context_package;
 
 /// A manger that knows how to configure and get location.
 /// Provide access to location data while the app is in the background.

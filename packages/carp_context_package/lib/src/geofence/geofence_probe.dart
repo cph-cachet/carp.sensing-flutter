@@ -1,4 +1,4 @@
-part of context;
+part of carp_context_package;
 
 /// Listen on location movements and reports a [GeofenceDatum] to the [stream]
 /// when a geofence event happens. This probe can handle only one [GeofenceMeasure].

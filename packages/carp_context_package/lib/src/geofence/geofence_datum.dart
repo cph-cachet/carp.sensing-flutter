@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of context;
+part of carp_context_package;
 
 /// Holds information about a geofence event of entering, exiting, or dweling.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)

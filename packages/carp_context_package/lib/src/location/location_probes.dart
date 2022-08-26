@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of context;
+part of carp_context_package;
 
 /// Collects location information from the underlying OS's location API.
 /// Is a [DatumProbe] that collects one [LocationDatum] at a time.

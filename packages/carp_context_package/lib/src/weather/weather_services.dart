@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of context;
+part of carp_context_package;
 
 /// An [OnlineService] for the weather service.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)

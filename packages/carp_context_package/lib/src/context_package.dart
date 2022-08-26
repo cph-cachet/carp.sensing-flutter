@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of context;
+part of carp_context_package;
 
 /// This is the base class for this context sampling package.
 ///

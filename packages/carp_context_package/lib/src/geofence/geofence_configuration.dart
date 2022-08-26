@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of context;
+part of carp_context_package;
 
 /// Position coordinated in Degrees (i.e. GPS-style).
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)

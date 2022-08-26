@@ -5,7 +5,7 @@ import 'package:test/test.dart';
 import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
-import 'package:carp_context_package/context.dart';
+import 'package:carp_context_package/carp_context_package.dart';
 // import 'package:activity_recognition_flutter/activity_recognition_flutter.dart';
 import 'package:flutter_activity_recognition/flutter_activity_recognition.dart';
 import 'package:openmhealth_schemas/openmhealth_schemas.dart' as omh;

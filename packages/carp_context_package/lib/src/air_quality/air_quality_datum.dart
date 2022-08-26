@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of context;
+part of carp_context_package;
 
 /// A [Datum] that holds air quality information collected via the
 /// [World's Air Quality Index (WAQI)](https://waqi.info) API.

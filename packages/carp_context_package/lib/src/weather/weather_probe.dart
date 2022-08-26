@@ -1,4 +1,4 @@
-part of context;
+part of carp_context_package;
 
 /// Collects local weather information using the [WeatherFactory] API.
 class WeatherProbe extends DatumProbe {

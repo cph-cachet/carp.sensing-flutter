@@ -1,4 +1,4 @@
-part of context;
+part of carp_context_package;
 
 /// Collects mobility features using the [MobilityFeatures] API.
 class MobilityProbe extends StreamProbe {

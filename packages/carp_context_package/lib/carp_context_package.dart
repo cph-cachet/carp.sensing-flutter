@@ -4,7 +4,7 @@
 ///  * weather
 ///  * air quality
 ///  * mobility features
-library context;
+library carp_context_package;
 
 import 'dart:async';
 import 'dart:math' as math;
@@ -45,7 +45,4 @@ part 'package:carp_context_package/src/mobility/mobility_datum.dart';
 part 'package:carp_context_package/src/mobility/mobility_probe.dart';
 part 'package:carp_context_package/src/mobility/mobility_configuration.dart';
 part 'src/location/location_services.dart';
-part 'context.g.dart';
-
-// auto generate json code (.g files) with:
-//   flutter pub run build_runner build --delete-conflicting-outputs
+part 'carp_context_package.g.dart';

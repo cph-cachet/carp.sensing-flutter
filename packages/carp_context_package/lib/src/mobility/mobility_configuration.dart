@@ -1,4 +1,4 @@
-part of context;
+part of carp_context_package;
 
 /// Specify the configuration on how to measure mobility features.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)

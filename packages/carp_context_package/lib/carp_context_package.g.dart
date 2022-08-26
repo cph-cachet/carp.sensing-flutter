@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of context;
+part of carp_context_package;
 
 // **************************************************************************
 // JsonSerializableGenerator

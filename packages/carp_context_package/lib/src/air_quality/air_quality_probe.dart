@@ -1,4 +1,4 @@
-part of context;
+part of carp_context_package;
 
 /// Collects local air quality information using the [AirQuality] plugin.
 class AirQualityProbe extends DatumProbe {

@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of context;
+part of carp_context_package;
 
 /// Collects activity information from the underlying OS's activity recognition
 /// API. It generates an [ActivityDatum] every time an activity is detected.

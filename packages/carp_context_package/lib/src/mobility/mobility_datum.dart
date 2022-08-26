@@ -1,4 +1,4 @@
-part of context;
+part of carp_context_package;
 
 /// A [Datum] that holds mobility features information.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
