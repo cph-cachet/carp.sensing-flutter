@@ -33,6 +33,6 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 part 'movisens_datum.dart';
 part 'movisens_probe.dart';
 part 'movisens_package.dart';
-part "movisens.g.dart";
+part "carp_movisens_package.g.dart";
 part 'movisens_transformers.dart';
 part 'movisens_device_manager.dart';
