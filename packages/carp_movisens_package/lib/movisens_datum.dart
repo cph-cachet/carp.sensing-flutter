@@ -4,7 +4,7 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of movisens;
+part of carp_movisens_package;
 
 /// An abstract Datum for all Movisens data points.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)

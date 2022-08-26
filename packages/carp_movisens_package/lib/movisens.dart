@@ -4,7 +4,9 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-/// A library for collecting cardiovascular data from the Movisens Move4 and EcgMove4 device data on:
+/// A [CARP Mobile Sensing](https://pub.dev/packages/carp_mobile_sensing)
+/// sampling package for collecting cardiovascular data from the
+/// Movisens Move4 and EcgMove4 devices on:
 ///
 ///  * tap marker
 ///  * heart rate
@@ -15,7 +17,7 @@
 ///  * movement (accelerometer)
 ///  * battery level of device
 ///  * connectivity status to device
-library movisens;
+library carp_movisens_package;
 
 import 'dart:convert';
 import 'dart:async';
@@ -34,6 +36,3 @@ part 'movisens_package.dart';
 part "movisens.g.dart";
 part 'movisens_transformers.dart';
 part 'movisens_device_manager.dart';
-
-// auto generate json code (.g files) with:
-//   flutter pub run build_runner build --delete-conflicting-outputs

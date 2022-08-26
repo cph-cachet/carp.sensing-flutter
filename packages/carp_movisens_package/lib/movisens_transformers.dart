@@ -4,7 +4,7 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of movisens;
+part of carp_movisens_package;
 
 /// A [Datum] which can hold an OMH [DataPoint](https://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_data-point)
 /// and provide its correct OMH [format] and [provenance].

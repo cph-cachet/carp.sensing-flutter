@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of movisens;
+part of carp_movisens_package;
 
 /// A [DeviceDescriptor] for a Movisens device used in a [StudyProtocol].
 ///

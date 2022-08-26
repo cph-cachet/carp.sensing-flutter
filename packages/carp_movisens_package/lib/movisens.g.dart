@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of movisens;
+part of carp_movisens_package;
 
 // **************************************************************************
 // JsonSerializableGenerator
