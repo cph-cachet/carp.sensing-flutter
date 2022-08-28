@@ -22,6 +22,7 @@ library carp_movisens_package;
 
 import 'dart:convert';
 import 'dart:async';
+import 'dart:io' show Platform;
 import 'package:movisens_flutter/movisens_flutter.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:openmhealth_schemas/openmhealth_schemas.dart' as omh;
@@ -97,9 +98,13 @@ class MovisensSamplingPackage implements SamplingPackage {
   @override
   List<Permission> get permissions => []; // no special permissions needed
 
-  /// Create a [MovisensProbe].
+  /// Create a [MovisensProbe]. Only available on Android.
   @override
-  Probe? create(String type) => (type == MOVISENS) ? MovisensProbe() : null;
+  Probe? create(String type) => (Platform.isAndroid)
+      ? (type == MOVISENS)
+          ? MovisensProbe()
+          : null
+      : null;
 
   @override
   List<String> get dataTypes => [MOVISENS];

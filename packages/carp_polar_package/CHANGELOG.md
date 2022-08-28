@@ -1,3 +1,3 @@
-## 0.0.1
+## 0.40.0
 
-* TODO: Describe initial release.
+* initial release based on `carp_mobile_sensing` v. 0.40.0

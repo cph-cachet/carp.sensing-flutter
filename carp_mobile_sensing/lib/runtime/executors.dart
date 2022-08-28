@@ -40,7 +40,7 @@ enum ExecutorState {
   /// Undefined state.
   ///
   /// Typically an executor becomes undefined if it cannot be initialized
-  /// or if this executor is not supported on the specific phone / OS.
+  /// or if this executor (probe) is not supported on the specific phone / OS.
   undefined
 }
 

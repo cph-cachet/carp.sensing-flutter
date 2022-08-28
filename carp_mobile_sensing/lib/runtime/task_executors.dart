@@ -14,10 +14,10 @@ TaskExecutor getTaskExecutor(TaskDescriptor task) {
 }
 
 /// The [TaskExecutor] is responsible for executing a [TaskDescriptor].
-/// For each task it looks up appropriate [Probe]s to collect data.
+/// For each measure in the task, it looks up appropriate [Probe]s to collect data.
 ///
-/// Note that a [TaskExecutor] in itself is a [Executor] and hence work as a
-/// 'super probe'. This - amongst other things - imply that you can listen
+/// Note that a [TaskExecutor] in itself is a [Executor].
+/// This - amongst other things - imply that you can listen
 /// to [Executor.data] from a task executor.
 abstract class TaskExecutor<TConfig extends TaskDescriptor>
     extends AggregateExecutor<TConfig> {

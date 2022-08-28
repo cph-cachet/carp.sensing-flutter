@@ -9,19 +9,19 @@
 /// sampling package for collecting data from the Polar H10, H9, and Polar Verity
 /// Sense Optical (PVSO) heart rate sensors as follows.
 ///
-/// H10 Heart rate sensor
+/// **H10 Heart rate sensor**
 ///
 /// * Heart rate as beats per minute. RR Interval in ms and 1/1024 format.
 /// * Electrocardiography (ECG) data in µV. Default epoch for timestamp is 1.1.2000
 /// * Accelerometer data with sample rates of 25Hz, 50Hz, 100Hz and 200Hz and range of 2G, 4G and 8G. Axis specific acceleration data in mG. Default epoch for timestamp is 1.1.2000
 /// * Start and stop of internal recording and request for internal recording status. Recording supports RR, HR with one second sampletime or HR with five second sampletime.
 ///
-/// H9 Heart rate sensor
+/// **H9 Heart rate sensor**
 ///
 /// * Heart rate as beats per minute. RR Interval in ms and 1/1024 format.
 /// * Heart rate broadcast.
 ///
-/// Polar Verity Sense Optical heart rate sensor
+/// **Polar Verity Sense Optical heart rate sensor**
 ///
 /// * Heart rate as beats per minute.
 /// * Photoplethysmograpy (PPG) values.
@@ -54,7 +54,7 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 part 'polar_datum.dart';
 part 'polar_probes.dart';
 part "carp_polar_package.g.dart";
-part 'polar_transformers.dart';
+// part 'polar_transformers.dart';
 part 'polar_device_manager.dart';
 
 /// The Polar sampling package supporting the following measures (depending on the
@@ -100,9 +100,13 @@ class PolarSamplingPackage implements SamplingPackage {
   static const String POLAR_ACCELEROMETER = "$POLAR_NAMESPACE.accelerometer";
   static const String POLAR_GYROSCOPE = "$POLAR_NAMESPACE.gyroscope";
   static const String POLAR_MAGNETOMETER = "$POLAR_NAMESPACE.magnetometer";
-  static const String POLAR_ECG = "$POLAR_NAMESPACE.ecg";
-  static const String POLAR_PPI = "$POLAR_NAMESPACE.ppi";
+
+  // TODO - can we collect this? Not sure - check.
+  static const String POLAR_EXERCISE = "$POLAR_NAMESPACE.exercise";
   static const String POLAR_PPG = "$POLAR_NAMESPACE.ppg";
+  static const String POLAR_PPI = "$POLAR_NAMESPACE.ppi";
+  static const String POLAR_ECG = "$POLAR_NAMESPACE.ecg";
+  static const String POLAR_HR = "$POLAR_NAMESPACE.hr";
 
   final DeviceManager _deviceManager = PolarDeviceManager();
 
@@ -134,12 +138,16 @@ class PolarSamplingPackage implements SamplingPackage {
         return PolarGyroscopeProbe();
       case POLAR_MAGNETOMETER:
         return PolarMagnetometerProbe();
+      case POLAR_EXERCISE:
+        return PolarExerciseProbe();
       case POLAR_ECG:
         return PolarECGProbe();
       case POLAR_PPI:
         return PolarPPIProbe();
       case POLAR_PPG:
         return PolarPPGProbe();
+      case POLAR_HR:
+        return PolarHRProbe();
       default:
         return null;
     }
@@ -150,9 +158,11 @@ class PolarSamplingPackage implements SamplingPackage {
         POLAR_ACCELEROMETER,
         POLAR_GYROSCOPE,
         POLAR_MAGNETOMETER,
+        POLAR_EXERCISE,
         POLAR_ECG,
         POLAR_PPI,
         POLAR_PPG,
+        POLAR_HR,
       ];
 
   @override
