@@ -29,21 +29,10 @@
 /// * Accelerometer data with sample rate of 52Hz and range of 8G. Axis specific acceleration data in mG.
 /// * Gyroscope data with sample rate of 52Hz and ranges of 250dps, 500dps, 1000dps and 2000dps. Axis specific gyroscope data in dps.
 /// * Magnetometer data with sample rates of 10Hz, 20Hz, 50HZ and 100Hz and range of +/-50 Gauss. Axis specific magnetometer data in Gauss.
-///
-/// In addition, the following device information is collected:
-///
-/// * battery level
-/// * connectivity status
-/// * on/off body status
-/// * name
-/// * RSSI
 library carp_polar_package;
 
-import 'dart:convert';
 import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
-// import 'package:openmhealth_schemas/openmhealth_schemas.dart' as omh;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:polar/polar.dart';
 
@@ -54,7 +43,6 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 part 'polar_datum.dart';
 part 'polar_probes.dart';
 part "carp_polar_package.g.dart";
-// part 'polar_transformers.dart';
 part 'polar_device_manager.dart';
 
 /// The Polar sampling package supporting the following measures (depending on the
@@ -66,15 +54,16 @@ part 'polar_device_manager.dart';
 ///  * dk.cachet.carp.polar.ecg
 ///  * dk.cachet.carp.polar.ppi
 ///  * dk.cachet.carp.polar.ppg
+///  * dk.cachet.carp.polar.hr
 ///
 /// All measure types are continous collection of Polar data from a Polar device,
 /// which are:
 ///
-///  * Event-based measure.
+///  * Event-based measures.
 ///  * Uses the [PolarDevice] connected device for data collection.
 ///  * No sampling configuration needed.
 ///
-/// An example of a study protocol configuration might be:
+/// An example of a study protocol configuration is:
 ///
 /// ```dart
 ///   // Add a background task that immediately starts collecting Polar PPG and

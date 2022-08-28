@@ -81,7 +81,7 @@ class ESenseDeviceManager
   /// A estimate of the battery level of the eSense device.
   ///
   /// It assumes a liniar relationship based on a regression on
-  /// these measures:
+  /// these measures of battery and voltages levels:
   ///
   /// ```
   ///   B  |  V
@@ -101,7 +101,8 @@ class ESenseDeviceManager
   int get batteryLevel => ((1.19 * _voltageLevel - 3.91) * 100).toInt();
 
   @override
-  Future<bool> canConnect() async => status == DeviceStatus.paired;
+  Future<bool> canConnect() async => (deviceDescriptor?.deviceName != null &&
+      deviceDescriptor!.deviceName!.isNotEmpty);
 
   @override
   Future<bool> onConnect() async {

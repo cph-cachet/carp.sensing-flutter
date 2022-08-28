@@ -45,7 +45,7 @@ class PolarDevice extends DeviceDescriptor {
   /// Definitely empty on iOS. Probably empty on modern Android versions.
   String? address;
 
-  /// The type of Polar device.
+  /// The type of Polar device, if known.
   PolarDeviceType? polarDeviceType;
 
   /// The user-friendly name of the sensor.
@@ -97,7 +97,7 @@ class PolarDeviceManager extends BTLEDeviceManager {
   /// The [Polar] device handler.
   /// Only available after this device manger has been connected to a physical
   /// device via the [connect] method.
-  Polar polar = Polar();
+  final Polar polar = Polar();
 
   /// List of [DeviceStreamingFeature]s that are ready. Only available **after**
   /// a Polar device is successfully connected.
@@ -134,12 +134,13 @@ class PolarDeviceManager extends BTLEDeviceManager {
         // listen for what features the connected Polar device supports
         polar.streamingFeaturesReadyStream.listen((e) => features = e.features);
 
-        // listen for battery & connection events
+        // listen for battery  events
         _batterySubscription = polar.batteryLevelStream.listen((event) {
           debug('$runtimeType - Polar event : $event');
           _batteryLevel = event.level;
         });
 
+        // listen for connection events
         _connectingSubscription = polar.deviceConnectingStream.listen((event) {
           debug('$runtimeType - Polar event : $event');
           status = DeviceStatus.connecting;
