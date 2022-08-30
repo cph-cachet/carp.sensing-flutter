@@ -14,7 +14,7 @@ class DevicesListState extends State<DevicesList> {
 
   @override
   Widget build(BuildContext context) {
-    List<DeviceModel> devices = bloc.runningDevices.toList();
+    List<DeviceModel> devices = bloc.availableDevices.toList();
 
     return Scaffold(
       key: scaffoldKey,

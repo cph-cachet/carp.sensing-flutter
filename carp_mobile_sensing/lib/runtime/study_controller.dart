@@ -207,7 +207,7 @@ class SmartphoneDeploymentController extends StudyRuntime {
     // initialize all devices from the master deployment, incl. the master device
     deviceRegistry.initializeDevices(deployment!);
     // and connect imediately to all connectable devices, incl. this phone
-    await deviceRegistry.connectAllConnectableDevices();
+    // await deviceRegistry.connectAllConnectableDevices();
 
     // initialize the app task controller singleton
     await AppTaskController()
@@ -241,6 +241,9 @@ class SmartphoneDeploymentController extends StudyRuntime {
       deployment!.dataEndPoint!,
       data,
     );
+
+    // connect to all connectable devices, incl. this phone
+    await deviceRegistry.connectAllConnectableDevices();
 
     _executor!.initialize(deployment!, deployment!);
     // await enablePowerAwareness();

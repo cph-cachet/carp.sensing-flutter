@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_launcher_icons: ^0.9.1
+  # font_awesome_flutter: ^10.1.0
   
   carp_serializable: ^1.0.0
   #carp_core: ^0.30.0      # the core CARP domain model
@@ -30,7 +31,7 @@ dependencies:
   # carp_esense_package: ^0.30.2
   # carp_movisens_package: ^0.32.0
 
-  # research_package: ^0.7.2
+  research_package: ^0.9.3
 
 # Overriding carp libraries to use the local copy
 dependency_overrides:
@@ -58,8 +59,8 @@ dependency_overrides:
     path: ../../backends/carp_backend/
   carp_webservices:
     path: ../../backends/carp_webservices/
-  research_package:
-    path: ../../../../research.package/
+  # research_package:
+  #   path: ../../../../research.package/
 
 
 dev_dependencies:

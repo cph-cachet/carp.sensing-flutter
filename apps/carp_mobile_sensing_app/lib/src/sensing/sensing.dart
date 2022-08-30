@@ -37,8 +37,8 @@ class Sensing {
   List<Probe> get runningProbes =>
       (_controller != null) ? _controller!.executor!.probes : [];
 
-  /// The list of connected devices.
-  List<DeviceManager>? get runningDevices =>
+  /// The list of available devices.
+  List<DeviceManager>? get availableDevices =>
       (client != null) ? client!.deviceController.devices.values.toList() : [];
 
   /// The singleton sensing instance
@@ -53,6 +53,7 @@ class Sensing {
     SamplingPackageRegistry().register(MediaSamplingPackage());
     SamplingPackageRegistry().register(CommunicationSamplingPackage());
     SamplingPackageRegistry().register(AppsSamplingPackage());
+    SamplingPackageRegistry().register(PolarSamplingPackage());
     SamplingPackageRegistry().register(ESenseSamplingPackage());
   }
 

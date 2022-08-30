@@ -63,13 +63,15 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
   /// Returns true if successful, false if not.
   Future<bool> connect() async {
     bool success = false;
-    assert(isInitialized,
-        '$runtimeType has not been initialized - cannot connect to it.');
+    if (!isInitialized) {
+      warning('$runtimeType has not been initialized - cannot connect to it.');
+      return false;
+    }
 
     info(
         '$runtimeType - Trying to connect to device of type: $type and id: $id');
     success = await onConnect();
-    status = (success) ? DeviceStatus.connected : DeviceStatus.error;
+    status = (success) ? DeviceStatus.connected : DeviceStatus.disconnected;
 
     return success;
   }

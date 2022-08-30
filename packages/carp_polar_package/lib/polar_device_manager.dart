@@ -85,7 +85,7 @@ class PolarDevice extends DeviceDescriptor {
 /// A Polar [DeviceManager].
 class PolarDeviceManager extends BTLEDeviceManager {
   int _batteryLevel = -1;
-  String? _connectionStatus;
+  bool _polarFeaturesAvailable = false;
   StreamSubscription<PolarBatteryLevelEvent>? _batterySubscription;
   StreamSubscription<PolarDeviceInfo>? _connectingSubscription;
   StreamSubscription<PolarDeviceInfo>? _connectedSubscription;
@@ -95,8 +95,6 @@ class PolarDeviceManager extends BTLEDeviceManager {
   PolarDevice get deviceDescriptor => super.deviceDescriptor as PolarDevice;
 
   /// The [Polar] device handler.
-  /// Only available after this device manger has been connected to a physical
-  /// device via the [connect] method.
   final Polar polar = Polar();
 
   /// List of [DeviceStreamingFeature]s that are ready. Only available **after**
@@ -106,7 +104,8 @@ class PolarDeviceManager extends BTLEDeviceManager {
   @override
   String get id => deviceDescriptor.identifier ?? PolarDevice.DEVICE_TYPE;
 
-  String? get connectionStatus => _connectionStatus;
+  /// Are the [features] available (i.e., received from the device)?
+  bool get polarFeaturesAvailable => _polarFeaturesAvailable;
 
   @override
   Future<void> onInitialize(DeviceDescriptor descriptor) async {
@@ -132,7 +131,11 @@ class PolarDeviceManager extends BTLEDeviceManager {
     } else {
       try {
         // listen for what features the connected Polar device supports
-        polar.streamingFeaturesReadyStream.listen((e) => features = e.features);
+        polar.streamingFeaturesReadyStream.listen((event) {
+          debug('$runtimeType - Polar event : $event');
+          features = event.features;
+          _polarFeaturesAvailable = true;
+        });
 
         // listen for battery  events
         _batterySubscription = polar.batteryLevelStream.listen((event) {

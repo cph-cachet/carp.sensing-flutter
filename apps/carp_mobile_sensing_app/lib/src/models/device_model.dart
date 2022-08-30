@@ -37,6 +37,7 @@ class DeviceModel {
   static Map<String, String> get deviceTypeName => {
         Smartphone.DEVICE_TYPE: 'Phone',
         ESenseDevice.DEVICE_TYPE: 'eSense',
+        PolarDevice.DEVICE_TYPE: 'Polar',
         LocationService.DEVICE_TYPE: 'Location',
         AirQualityService.DEVICE_TYPE: 'Air Quality',
         WeatherService.DEVICE_TYPE: 'Weather',
@@ -44,7 +45,8 @@ class DeviceModel {
 
   static Map<String, String> get deviceTypeDescription => {
         Smartphone.DEVICE_TYPE: 'This phone',
-        ESenseDevice.DEVICE_TYPE: 'eSense ear plug',
+        ESenseDevice.DEVICE_TYPE: 'eSense Ear Plug',
+        PolarDevice.DEVICE_TYPE: 'Polar HR Monitor',
         LocationService.DEVICE_TYPE: 'Location Service',
         AirQualityService.DEVICE_TYPE: 'World Air Quality Service',
         WeatherService.DEVICE_TYPE: 'Open Weather Service',
@@ -55,6 +57,8 @@ class DeviceModel {
             Icon(Icons.phone_android, size: 50, color: CACHET.GREY_4),
         ESenseDevice.DEVICE_TYPE:
             Icon(Icons.headset, size: 50, color: CACHET.CACHET_BLUE),
+        PolarDevice.DEVICE_TYPE:
+            Icon(Icons.monitor_heart_outlined, size: 50, color: CACHET.RED),
         LocationService.DEVICE_TYPE:
             Icon(Icons.location_on, size: 50, color: CACHET.GREEN),
         AirQualityService.DEVICE_TYPE:

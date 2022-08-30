@@ -73,6 +73,9 @@ class ESenseSamplingPackage implements SamplingPackage {
   List<Permission> get permissions => [
         Permission.location,
         Permission.microphone,
+        Permission.bluetooth,
+        Permission.bluetoothConnect,
+        Permission.bluetoothScan,
       ];
 
   @override

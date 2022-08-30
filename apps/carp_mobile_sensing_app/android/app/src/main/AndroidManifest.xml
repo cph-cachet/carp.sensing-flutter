@@ -24,9 +24,20 @@
 
     <!-- The following permissions are used in the Connectivity Package -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <!-- Legacy Bluetooth permissions, which is needed on devices with API 30 (Android Q) or older. -->
+    <uses-permission
+        android:name="android.permission.BLUETOOTH"
+        android:maxSdkVersion="30" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_ADMIN"
+        android:maxSdkVersion="30" />
+
+    <!-- The Connectivity package needs Bluetooth scan permission to search for BLE devices. 
+    The package doesn't use the scan to decide the location so "neverForLocation" permission flag can be used.-->
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_SCAN"
+        android:usesPermissionFlags="neverForLocation" />
 
     <!-- The following permissions are used in the Media Package -->
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
@@ -41,12 +52,25 @@
     <!-- Even though we only want to READ the calendar, for some unknown reason we also need to add the WRITE permission. -->
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
 
-    <!-- The following permissions are used in the eSense Packages -->
+    <!-- The following permissions are used in the eSense Package -->
     <!-- ... but are already included above
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
     -->
-    
+
+    <!-- The following permissions are used in the Polar Package -->
+    <!-- ... but are already included above
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_SCAN"
+        android:usesPermissionFlags="neverForLocation" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH"
+        android:maxSdkVersion="30" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_ADMIN"
+        android:maxSdkVersion="30" />
+    -->
+
    <application
         android:label="CARP Mobile Sensing"
         android:name="${applicationName}"

@@ -36,6 +36,7 @@
 library carp_polar_package;
 
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:polar/polar.dart';

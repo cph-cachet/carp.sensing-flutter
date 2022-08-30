@@ -212,6 +212,20 @@ class ProbeDescription {
             Icon(Icons.radio_button_checked, size: 50, color: CACHET.DARK_BLUE),
         ESenseSamplingPackage.ESENSE_SENSOR:
             Icon(Icons.headset, size: 50, color: CACHET.DARK_BLUE),
+        PolarSamplingPackage.POLAR_ACCELEROMETER:
+            Icon(Icons.moving, size: 50, color: CACHET.DARK_BLUE),
+        PolarSamplingPackage.POLAR_GYROSCOPE:
+            Icon(Icons.moving, size: 50, color: CACHET.DARK_BLUE),
+        PolarSamplingPackage.POLAR_MAGNETOMETER:
+            Icon(Icons.iron, size: 50, color: CACHET.DARK_BLUE),
+        PolarSamplingPackage.POLAR_ECG: Icon(Icons.monitor_heart_outlined,
+            size: 50, color: CACHET.DARK_BLUE),
+        PolarSamplingPackage.POLAR_HR:
+            Icon(Icons.heart_broken, size: 50, color: CACHET.DARK_BLUE),
+        PolarSamplingPackage.POLAR_PPG:
+            Icon(Icons.add_link, size: 50, color: CACHET.DARK_BLUE),
+        PolarSamplingPackage.POLAR_PPI:
+            Icon(Icons.link, size: 50, color: CACHET.DARK_BLUE),
       };
 
   static Map<ExecutorState, String> get probeStateLabel => {

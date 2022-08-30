@@ -49,8 +49,8 @@ class SensingBLoC {
       Sensing().runningProbes.map((probe) => ProbeModel(probe));
 
   /// Get a list of running devices
-  Iterable<DeviceModel> get runningDevices =>
-      Sensing().runningDevices!.map((device) => DeviceModel(device));
+  Iterable<DeviceModel> get availableDevices =>
+      Sensing().availableDevices!.map((device) => DeviceModel(device));
 
   /// Initialize the BLoC.
   Future<void> initialize({

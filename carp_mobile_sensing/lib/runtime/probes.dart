@@ -205,6 +205,33 @@ abstract class StreamProbe extends Probe {
   void onDone() => controller.close();
 }
 
+// /// An abstract class used to create a probe that listen continously to events
+// /// from the [futureStream] of [Datum] objects.
+// /// In contrast to the [StreamProbe], this probes waits until the [futureStream]
+// /// is available.
+// ///
+// /// Sub-classes must implement the
+// ///
+// ///     Future<Stream<Datum>>? get futureStream => ...
+// ///
+// /// method in order to provide the stream to collect data from.
+// abstract class FutureStreamProbe extends StreamProbe {
+//   Stream<Datum>? _stream;
+
+//   @override
+//   Stream<Datum>? get stream => _stream;
+
+//   /// The stream of [Datum] objects for this [FutureStreamProbe].
+//   /// Must be implemented by sub-classes.
+//   Future<Stream<Datum>>? get futureStream;
+
+//   @override
+//   Future<void> onResume() async {
+//     _stream = await futureStream;
+//     super.onResume();
+//   }
+// }
+
 /// A periodic probe listening on a stream. Listening is done periodically as
 /// specified in a [PeriodicSamplingConfiguration] listening on intervals every
 /// [interval] for a period of [duration].

@@ -183,28 +183,28 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //       )),
     //     phone);
 
-    // define the sSense device and add its measures
-    ESenseDevice eSense = ESenseDevice(
-      deviceName: 'eSense-0332',
-      samplingRate: 10,
-    );
-    protocol.addConnectedDevice(eSense);
+    // // define the sSense device and add its measures
+    // ESenseDevice eSense = ESenseDevice(
+    //   deviceName: 'eSense-0332',
+    //   samplingRate: 10,
+    // );
+    // protocol.addConnectedDevice(eSense);
 
-    protocol.addTriggeredTask(
-        ImmediateTrigger(),
-        BackgroundTask()
-          ..addMeasure(Measure(type: ESenseSamplingPackage.ESENSE_BUTTON))
-          ..addMeasure(Measure(type: ESenseSamplingPackage.ESENSE_SENSOR)),
-        eSense);
+    // protocol.addTriggeredTask(
+    //     ImmediateTrigger(),
+    //     BackgroundTask()
+    //       ..addMeasure(Measure(type: ESenseSamplingPackage.ESENSE_BUTTON))
+    //       ..addMeasure(Measure(type: ESenseSamplingPackage.ESENSE_SENSOR)),
+    //     eSense);
 
     // define the Polar device and add its measures
     PolarDevice polar = PolarDevice(
       identifier: 'B5FC172F',
       name: 'Polar H10',
       polarDeviceType: PolarDeviceType.H10,
-      roleName: 'ecg-device',
+      roleName: 'polar-h10-device',
     );
-    protocol.addConnectedDevice(eSense);
+    protocol.addConnectedDevice(polar);
 
     protocol.addTriggeredTask(
         ImmediateTrigger(),

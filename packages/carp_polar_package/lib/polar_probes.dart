@@ -12,28 +12,34 @@ abstract class _PolarProbe extends StreamProbe {
       super.deviceManager as PolarDeviceManager;
 }
 
-/// Collects accelerometer data from the Polar device.
-class PolarAccelerometerProbe extends _PolarProbe {
+abstract class _FeatureReadyPolarProbe extends _PolarProbe {
   @override
-  Stream<Datum>? get stream {
-    debug(
-        '$runtimeType - deviceManager.isConnected = ${deviceManager.isConnected}');
-    debug('$deviceManager');
-    debug('${deviceManager.status}');
-
-    return (deviceManager.isConnected)
-        ? deviceManager.features.contains(DeviceStreamingFeature.acc)
-            ? deviceManager.polar
-                .startAccStreaming(deviceManager.id)
-                .map((event) => PolarAccelerometerDatum.fromPolarData(event))
-                .asBroadcastStream()
-            : null
-        : null;
+  Future<void> onResume() async {
+    if (deviceManager.polarFeaturesAvailable) {
+      super.onResume();
+    } else {
+      // if the Polar features are not available yet, try to wait and then resume the probe
+      debug('$runtimeType - delaying resume for 10 secs and restarting...');
+      Future.delayed(const Duration(seconds: 10), () => super.onResume());
+    }
   }
 }
 
+/// Collects accelerometer data from the Polar device.
+class PolarAccelerometerProbe extends _FeatureReadyPolarProbe {
+  @override
+  Stream<Datum>? get stream => (deviceManager.isConnected)
+      ? deviceManager.features.contains(DeviceStreamingFeature.acc)
+          ? deviceManager.polar
+              .startAccStreaming(deviceManager.id)
+              .map((event) => PolarAccelerometerDatum.fromPolarData(event))
+              .asBroadcastStream()
+          : null
+      : null;
+}
+
 /// Collects gyroscope data from the Polar device.
-class PolarGyroscopeProbe extends _PolarProbe {
+class PolarGyroscopeProbe extends _FeatureReadyPolarProbe {
   @override
   Stream<Datum>? get stream => (deviceManager.isConnected)
       ? deviceManager.features.contains(DeviceStreamingFeature.gyro)
@@ -46,7 +52,7 @@ class PolarGyroscopeProbe extends _PolarProbe {
 }
 
 /// Collects magnetometer data from the Polar device.
-class PolarMagnetometerProbe extends _PolarProbe {
+class PolarMagnetometerProbe extends _FeatureReadyPolarProbe {
   @override
   Stream<Datum>? get stream => (deviceManager.isConnected)
       ? deviceManager.features.contains(DeviceStreamingFeature.magnetometer)
@@ -66,7 +72,7 @@ class PolarExerciseProbe extends _PolarProbe {
 }
 
 /// Collects PPG data from the Polar device.
-class PolarPPGProbe extends _PolarProbe {
+class PolarPPGProbe extends _FeatureReadyPolarProbe {
   @override
   Stream<Datum>? get stream => (deviceManager.isConnected)
       ? deviceManager.features.contains(DeviceStreamingFeature.ppg)
@@ -79,7 +85,7 @@ class PolarPPGProbe extends _PolarProbe {
 }
 
 /// Collects PPI data from the Polar device.
-class PolarPPIProbe extends _PolarProbe {
+class PolarPPIProbe extends _FeatureReadyPolarProbe {
   @override
   Stream<Datum>? get stream => (deviceManager.isConnected)
       ? deviceManager.features.contains(DeviceStreamingFeature.ppi)
@@ -92,16 +98,19 @@ class PolarPPIProbe extends _PolarProbe {
 }
 
 /// Collects ECG data from the Polar device.
-class PolarECGProbe extends _PolarProbe {
+class PolarECGProbe extends _FeatureReadyPolarProbe {
   @override
-  Stream<Datum>? get stream => (deviceManager.isConnected)
-      ? deviceManager.features.contains(DeviceStreamingFeature.ecg)
-          ? deviceManager.polar
-              .startEcgStreaming(deviceManager.id)
-              .map((event) => PolarECGDatum.fromPolarData(event))
-              .asBroadcastStream()
-          : null
-      : null;
+  Stream<Datum>? get stream {
+    debug('$runtimeType - features: ${deviceManager.features}');
+    return (deviceManager.isConnected)
+        ? deviceManager.features.contains(DeviceStreamingFeature.ecg)
+            ? deviceManager.polar
+                .startEcgStreaming(deviceManager.id)
+                .map((event) => PolarECGDatum.fromPolarData(event))
+                .asBroadcastStream()
+            : null
+        : null;
+  }
 }
 
 /// Collects HR data from the Polar device.
