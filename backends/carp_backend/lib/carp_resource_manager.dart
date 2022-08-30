@@ -189,7 +189,7 @@ class CarpResourceManager
   Future<String> _cacheLocalizationFilename(Locale locale) async {
     if (_cacheLocalizationPath == null) {
       final directory = await Directory(
-              '${await Settings().carpBasePath}}/$LOCALIZATION_PATH')
+              '${await Settings().carpBasePath}/$LOCALIZATION_PATH')
           .create(recursive: true);
       _cacheLocalizationPath = directory.path;
     }
