@@ -45,7 +45,7 @@ class SurveyUserTask extends UserTask {
   void _onSurveyTriggered(SurveyPage surveyPage) {
     Navigator.push(
       _context,
-      MaterialPageRoute(builder: (context) => surveyPage),
+      MaterialPageRoute<dynamic>(builder: (context) => surveyPage),
     );
   }
 
