@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:test/test.dart';
 
+import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_audio_package/media.dart';
@@ -11,8 +12,8 @@ void main() {
   Smartphone phone;
 
   setUp(() {
-    // make sure that the json functions are loaded
-    DomainJsonFactory();
+    // Initialization of serialization
+    CarpMobileSensing();
 
     // register the context sampling package
     SamplingPackageRegistry().register(MediaSamplingPackage());
