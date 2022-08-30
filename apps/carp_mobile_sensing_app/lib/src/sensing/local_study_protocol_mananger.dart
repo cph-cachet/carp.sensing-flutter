@@ -197,6 +197,24 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           ..addMeasure(Measure(type: ESenseSamplingPackage.ESENSE_SENSOR)),
         eSense);
 
+    // define the Polar device and add its measures
+    PolarDevice polar = PolarDevice(
+      identifier: 'B5FC172F',
+      name: 'Polar H10',
+      polarDeviceType: PolarDeviceType.H10,
+      roleName: 'ecg-device',
+    );
+    protocol.addConnectedDevice(eSense);
+
+    protocol.addTriggeredTask(
+        ImmediateTrigger(),
+        BackgroundTask()
+          ..addMeasure(Measure(type: PolarSamplingPackage.POLAR_HR))
+          ..addMeasure(Measure(type: PolarSamplingPackage.POLAR_ECG))
+          ..addMeasure(Measure(type: PolarSamplingPackage.POLAR_PPG))
+          ..addMeasure(Measure(type: PolarSamplingPackage.POLAR_PPI)),
+        polar);
+
     // // add a measure for ECG monitoring using the Movisens device
     // protocol.addTriggeredTask(
     //   ImmediateTrigger(),

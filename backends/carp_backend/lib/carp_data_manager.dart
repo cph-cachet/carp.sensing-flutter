@@ -19,9 +19,8 @@ class CarpDataManager extends AbstractDataManager {
   late FileDataManager fileDataManager;
 
   CarpDataManager() : super() {
-    // since we're using json serialization, make sure that the json
-    // functions have been registred
-    DomainJsonFactory();
+    // Initialization of serialization
+    CarpMobileSensing();
 
     // register for de-serialization
     FromJsonFactory().register(CarpDataEndPoint(

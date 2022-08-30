@@ -27,8 +27,8 @@ void main() {
   late CarpUser user;
   CarpStudyProtocolManager manager = CarpStudyProtocolManager();
 
-  // make sure that the json functions are loaded
-  DomainJsonFactory();
+  // Initialization of serialization
+  CarpMobileSensing();
 
   // register the context, eSense & audio sampling package
   // this is used to be able to deserialize the downloaded protocol

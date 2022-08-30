@@ -123,6 +123,34 @@ class ProbeDescription {
           'eSense Movement',
           'eSense IMU sensor events.',
         ),
+        PolarSamplingPackage.POLAR_ACCELEROMETER: ProbeDescriptor(
+          'Polar Accelerometer',
+          'Polar IMU sensor events.',
+        ),
+        PolarSamplingPackage.POLAR_GYROSCOPE: ProbeDescriptor(
+          'Polar Gyroscope',
+          'Polar IMU sensor events.',
+        ),
+        PolarSamplingPackage.POLAR_MAGNETOMETER: ProbeDescriptor(
+          'Polar Magnetometer',
+          'Polar IMU sensor events.',
+        ),
+        PolarSamplingPackage.POLAR_ECG: ProbeDescriptor(
+          'Polar ECG',
+          'Polar Electrocardiogram.',
+        ),
+        PolarSamplingPackage.POLAR_HR: ProbeDescriptor(
+          'Polar HR',
+          'Polar Heart Rate.',
+        ),
+        PolarSamplingPackage.POLAR_PPG: ProbeDescriptor(
+          'Polar PPG',
+          'Polar Photoplethysmograpy.',
+        ),
+        PolarSamplingPackage.POLAR_PPI: ProbeDescriptor(
+          'Polar PPI',
+          'Polar Pulse-to-Pulse Interval.',
+        ),
       };
 
   static Map<String, Icon> get probeTypeIcon => {

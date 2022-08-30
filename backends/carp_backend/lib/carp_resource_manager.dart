@@ -28,8 +28,8 @@ class CarpResourceManager
   factory CarpResourceManager() => _instance;
 
   CarpResourceManager._() {
-    // make sure that the json functions are loaded
-    DomainJsonFactory();
+    // Initialization of serialization
+    CarpMobileSensing();
 
     // to initialize json serialization for RP classes
     RPOrderedTask(identifier: '', steps: []);
@@ -188,9 +188,9 @@ class CarpResourceManager
   /// The full path and filename of the local cache of the [locale]
   Future<String> _cacheLocalizationFilename(Locale locale) async {
     if (_cacheLocalizationPath == null) {
-      final directory = await Directory(
-              '${await Settings().carpBasePath}/$LOCALIZATION_PATH')
-          .create(recursive: true);
+      final directory =
+          await Directory('${await Settings().carpBasePath}/$LOCALIZATION_PATH')
+              .create(recursive: true);
       _cacheLocalizationPath = directory.path;
     }
     return '$_cacheLocalizationPath/${locale.languageCode}.json';

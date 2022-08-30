@@ -13,6 +13,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:uuid/uuid.dart';
+
+import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
@@ -87,14 +89,14 @@ class CarpDataEndPoint extends FileDataEndPoint {
     this.password,
     String? collection,
     this.deleteWhenUploaded = true,
-    super.dataFormat ,
+    super.dataFormat,
     super.bufferSize,
     super.zip,
     super.encrypt,
     super.publicKey,
   }) : super(
-            type: DataEndPointTypes.CARP,
-           ) {
+          type: DataEndPointTypes.CARP,
+        ) {
     this.collection = collection ?? DEFAULT_COLLECTION;
     // the CARP server cannot handle zipped or encrypted files (yet)
     if (this.uploadMethod == CarpUploadMethod.BATCH_DATA_POINT) {

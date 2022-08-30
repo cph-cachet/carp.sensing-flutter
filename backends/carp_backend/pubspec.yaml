@@ -12,10 +12,12 @@ dependencies:
   json_annotation: ^4.4.0
   uuid: ^3.0.4
 
+  carp_serializable: ^1.0.0
   # carp_core: ^0.40.0
   # carp_mobile_sensing: ^0.40.0
   # carp_webservices: ^0.40.0
-  # research_package: ^0.7.2      # the informed consent domain model
+  
+  research_package: ^0.9.3      # the informed consent domain model
 
 
 # Overriding carp libraries to use the local copy
@@ -27,8 +29,8 @@ dependency_overrides:
     path: ../../carp_mobile_sensing/
   carp_webservices:
     path: ../carp_webservices/
-  research_package:
-    path: ../../../../research.package/
+  # research_package:
+  #   path: ../../../../research.package/
   # the following sampling packages are only used for unit testing
 #  carp_esense_package:
 #    path: ../../packages/carp_esense_package/
