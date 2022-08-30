@@ -5,6 +5,10 @@
  * found in the LICENSE file.
  */
 
+// Identifiers for CACHET test devices:
+//  * PVSO : B36B5B21 [03813-21-03667]
+//  * H10  : B5FC172F [00634-17-03667]
+
 /// A [CARP Mobile Sensing](https://pub.dev/packages/carp_mobile_sensing)
 /// sampling package for collecting data from the Polar H10, H9, and Polar Verity
 /// Sense Optical (PVSO) heart rate sensors as follows.
