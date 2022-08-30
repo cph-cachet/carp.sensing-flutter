@@ -118,6 +118,16 @@ abstract class UserTask {
         : state = UserTaskState.enqueued;
   }
 
+  /// Callback from the app if this task is expired.
+  ///
+  /// If [dequeue] is `true` the task is removed from the queue.
+  /// Otherwise, it it kept on the queue for later.
+  @mustCallSuper
+  void onExpired(BuildContext context) {
+    state = UserTaskState.expired;
+    AppTaskController().dequeue(id);
+  }
+
   /// Callback from app when this task is done.
   ///
   /// If [dequeue] is `true` the task is removed from the queue.
