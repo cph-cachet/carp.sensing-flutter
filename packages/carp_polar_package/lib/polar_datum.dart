@@ -8,17 +8,18 @@ part of carp_polar_package;
 
 /// An abstract Datum for all Polar data points.
 abstract class PolarDatum extends Datum {
-  /// Polar device id
-  String identifier;
+  /// Polar device identifier.
+  String deviceIdentifier;
 
-  /// Last sample timestamp in nanoseconds.
-  int timeStamp;
+  /// Sample timestamp from the Polar device in nanoseconds.
+  int? deviceTimestamp;
 
-  PolarDatum(this.identifier, this.timeStamp) : super();
+  PolarDatum(this.deviceIdentifier, this.deviceTimestamp) : super();
 
-  /// Create a [PolarDatum] based on [identifier] and [timestamp] from
+  /// Create a [PolarDatum] based on [deviceIdentifier] and [deviceTimestamp] from
   /// a Polar data reading.
-  PolarDatum.fromPolarData(this.identifier, [this.timeStamp = -1]) : super();
+  PolarDatum.fromPolarData(this.deviceIdentifier, [this.deviceTimestamp])
+      : super();
 }
 
 /// Polar (x,y,z) values.
@@ -108,7 +109,11 @@ class PolarAccelerometerDatum extends PolarDatum {
   /// Acceleration samples list (x,y,z).
   List<PolarXYZ> samples;
 
-  PolarAccelerometerDatum(super.identifier, super.timeStamp, this.samples);
+  PolarAccelerometerDatum(
+    super.deviceIdentifier,
+    super.deviceTimestamp,
+    this.samples,
+  );
 
   /// Create a [PolarAccelerometerDatum] based on the original [PolarAccData] reading.
   PolarAccelerometerDatum.fromPolarData(PolarAccData data)
@@ -134,7 +139,11 @@ class PolarGyroscopeDatum extends PolarDatum {
   /// Gyroscope samples list (x,y,z) in °/s signed value
   List<PolarXYZ> samples;
 
-  PolarGyroscopeDatum(super.identifier, super.timeStamp, this.samples);
+  PolarGyroscopeDatum(
+    super.deviceIdentifier,
+    super.deviceTimestamp,
+    this.samples,
+  );
 
   /// Create a [PolarGyroscopeDatum] based on the original [PolarGyroData] reading.
   PolarGyroscopeDatum.fromPolarData(PolarGyroData data)
@@ -160,7 +169,8 @@ class PolarMagnetometerDatum extends PolarDatum {
   /// Magnetometer samples list (x,y,z) in Gauss
   List<PolarXYZ> samples;
 
-  PolarMagnetometerDatum(super.identifier, super.timeStamp, this.samples);
+  PolarMagnetometerDatum(
+      super.deviceIdentifier, super.deviceTimestamp, this.samples);
 
   /// Create a [PolarMagnetometerDatum] based on the original [PolarMagnetometerData] reading.
   PolarMagnetometerDatum.fromPolarData(PolarMagnetometerData data)
@@ -186,7 +196,7 @@ class PolarECGDatum extends PolarDatum {
   /// ECG sample in µVolts
   List<int> samples;
 
-  PolarECGDatum(super.identifier, super.timeStamp, this.samples);
+  PolarECGDatum(super.deviceIdentifier, super.deviceTimestamp, this.samples);
 
   /// Create a [PolarECGDatum] based on the original [PolarEcgData] reading.
   PolarECGDatum.fromPolarData(PolarEcgData data)
@@ -215,7 +225,11 @@ class PolarExerciseDatum extends PolarDatum {
   List<int> samples;
 
   PolarExerciseDatum(
-      super.identifier, super.timeStamp, this.interval, this.samples);
+    super.deviceIdentifier,
+    super.deviceTimestamp,
+    this.interval,
+    this.samples,
+  );
 
   /// Create a [PolarExerciseDatum] based on the original [PolarExerciseData] reading.
   PolarExerciseDatum.fromPolarData(PolarExerciseData data)
@@ -244,7 +258,12 @@ class PolarPPGDatum extends PolarDatum {
   /// ppg(s) and ambient(s) samples list
   List<List<int>> samples;
 
-  PolarPPGDatum(super.identifier, super.timeStamp, this.type, this.samples);
+  PolarPPGDatum(
+    super.deviceIdentifier,
+    super.deviceTimestamp,
+    this.type,
+    this.samples,
+  );
 
   /// Create a [PolarPPGDatum] based on the original [PolarOhrData] reading.
   PolarPPGDatum.fromPolarData(PolarOhrData data)
@@ -271,7 +290,7 @@ class PolarPPIDatum extends PolarDatum {
   /// List of PPI samples read from the Polar device.
   List<PolarPPISample> samples;
 
-  PolarPPIDatum(super.identifier, super.timeStamp, this.samples);
+  PolarPPIDatum(super.deviceIdentifier, super.deviceTimestamp, this.samples);
 
   /// Create a [PolarPPIDatum] based on the original [PolarPpiData] reading.
   PolarPPIDatum.fromPolarData(PolarPpiData data)
@@ -312,8 +331,8 @@ class PolarHRDatum extends PolarDatum {
   bool contactStatusSupported;
 
   PolarHRDatum(
-    super.identifier,
-    super.timeStamp,
+    super.deviceIdentifier,
+    super.deviceTimestamp,
     this.hr,
     this.rrs,
     this.rrsMs,
@@ -335,16 +354,4 @@ class PolarHRDatum extends PolarDatum {
 
   @override
   Map<String, dynamic> toJson() => _$PolarHRDatumToJson(this);
-}
-
-/// HR notification received.
-class PolarHeartRateEvent {
-  /// Polar device id
-  final String identifier;
-
-  /// The [PolarHrData] received from the sensor
-  final PolarHrData data;
-
-  /// Construct a [PolarHeartRateEvent] from an [identifier] and [data]
-  PolarHeartRateEvent(this.identifier, this.data);
 }

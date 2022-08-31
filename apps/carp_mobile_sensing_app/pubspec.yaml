@@ -11,7 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_launcher_icons: ^0.9.1
+  flutter_launcher_icons: ^0.10.0
   # font_awesome_flutter: ^10.1.0
   
   carp_serializable: ^1.0.0

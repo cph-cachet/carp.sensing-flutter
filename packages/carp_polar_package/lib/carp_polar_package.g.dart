@@ -41,8 +41,8 @@ Map<String, dynamic> _$PolarPPISampleToJson(PolarPPISample instance) =>
 PolarAccelerometerDatum _$PolarAccelerometerDatumFromJson(
         Map<String, dynamic> json) =>
     PolarAccelerometerDatum(
-      json['identifier'] as String,
-      json['time_stamp'] as int,
+      json['device_identifier'] as String,
+      json['device_timestamp'] as int?,
       (json['samples'] as List<dynamic>)
           .map((e) => PolarXYZ.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -62,16 +62,16 @@ Map<String, dynamic> _$PolarAccelerometerDatumToJson(
 
   writeNotNull('id', instance.id);
   val['timestamp'] = instance.timestamp.toIso8601String();
-  val['identifier'] = instance.identifier;
-  val['time_stamp'] = instance.timeStamp;
+  val['device_identifier'] = instance.deviceIdentifier;
+  writeNotNull('device_timestamp', instance.deviceTimestamp);
   val['samples'] = instance.samples;
   return val;
 }
 
 PolarGyroscopeDatum _$PolarGyroscopeDatumFromJson(Map<String, dynamic> json) =>
     PolarGyroscopeDatum(
-      json['identifier'] as String,
-      json['time_stamp'] as int,
+      json['device_identifier'] as String,
+      json['device_timestamp'] as int?,
       (json['samples'] as List<dynamic>)
           .map((e) => PolarXYZ.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -90,8 +90,8 @@ Map<String, dynamic> _$PolarGyroscopeDatumToJson(PolarGyroscopeDatum instance) {
 
   writeNotNull('id', instance.id);
   val['timestamp'] = instance.timestamp.toIso8601String();
-  val['identifier'] = instance.identifier;
-  val['time_stamp'] = instance.timeStamp;
+  val['device_identifier'] = instance.deviceIdentifier;
+  writeNotNull('device_timestamp', instance.deviceTimestamp);
   val['samples'] = instance.samples;
   return val;
 }
@@ -99,8 +99,8 @@ Map<String, dynamic> _$PolarGyroscopeDatumToJson(PolarGyroscopeDatum instance) {
 PolarMagnetometerDatum _$PolarMagnetometerDatumFromJson(
         Map<String, dynamic> json) =>
     PolarMagnetometerDatum(
-      json['identifier'] as String,
-      json['time_stamp'] as int,
+      json['device_identifier'] as String,
+      json['device_timestamp'] as int?,
       (json['samples'] as List<dynamic>)
           .map((e) => PolarXYZ.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -120,16 +120,16 @@ Map<String, dynamic> _$PolarMagnetometerDatumToJson(
 
   writeNotNull('id', instance.id);
   val['timestamp'] = instance.timestamp.toIso8601String();
-  val['identifier'] = instance.identifier;
-  val['time_stamp'] = instance.timeStamp;
+  val['device_identifier'] = instance.deviceIdentifier;
+  writeNotNull('device_timestamp', instance.deviceTimestamp);
   val['samples'] = instance.samples;
   return val;
 }
 
 PolarECGDatum _$PolarECGDatumFromJson(Map<String, dynamic> json) =>
     PolarECGDatum(
-      json['identifier'] as String,
-      json['time_stamp'] as int,
+      json['device_identifier'] as String,
+      json['device_timestamp'] as int?,
       (json['samples'] as List<dynamic>).map((e) => e as int).toList(),
     )
       ..id = json['id'] as String?
@@ -146,16 +146,16 @@ Map<String, dynamic> _$PolarECGDatumToJson(PolarECGDatum instance) {
 
   writeNotNull('id', instance.id);
   val['timestamp'] = instance.timestamp.toIso8601String();
-  val['identifier'] = instance.identifier;
-  val['time_stamp'] = instance.timeStamp;
+  val['device_identifier'] = instance.deviceIdentifier;
+  writeNotNull('device_timestamp', instance.deviceTimestamp);
   val['samples'] = instance.samples;
   return val;
 }
 
 PolarExerciseDatum _$PolarExerciseDatumFromJson(Map<String, dynamic> json) =>
     PolarExerciseDatum(
-      json['identifier'] as String,
-      json['time_stamp'] as int,
+      json['device_identifier'] as String,
+      json['device_timestamp'] as int?,
       json['interval'] as int,
       (json['samples'] as List<dynamic>).map((e) => e as int).toList(),
     )
@@ -173,8 +173,8 @@ Map<String, dynamic> _$PolarExerciseDatumToJson(PolarExerciseDatum instance) {
 
   writeNotNull('id', instance.id);
   val['timestamp'] = instance.timestamp.toIso8601String();
-  val['identifier'] = instance.identifier;
-  val['time_stamp'] = instance.timeStamp;
+  val['device_identifier'] = instance.deviceIdentifier;
+  writeNotNull('device_timestamp', instance.deviceTimestamp);
   val['interval'] = instance.interval;
   val['samples'] = instance.samples;
   return val;
@@ -182,8 +182,8 @@ Map<String, dynamic> _$PolarExerciseDatumToJson(PolarExerciseDatum instance) {
 
 PolarPPGDatum _$PolarPPGDatumFromJson(Map<String, dynamic> json) =>
     PolarPPGDatum(
-      json['identifier'] as String,
-      json['time_stamp'] as int,
+      json['device_identifier'] as String,
+      json['device_timestamp'] as int?,
       $enumDecode(_$OhrDataTypeEnumMap, json['type']),
       (json['samples'] as List<dynamic>)
           .map((e) => (e as List<dynamic>).map((e) => e as int).toList())
@@ -203,8 +203,8 @@ Map<String, dynamic> _$PolarPPGDatumToJson(PolarPPGDatum instance) {
 
   writeNotNull('id', instance.id);
   val['timestamp'] = instance.timestamp.toIso8601String();
-  val['identifier'] = instance.identifier;
-  val['time_stamp'] = instance.timeStamp;
+  val['device_identifier'] = instance.deviceIdentifier;
+  writeNotNull('device_timestamp', instance.deviceTimestamp);
   val['type'] = _$OhrDataTypeEnumMap[instance.type]!;
   val['samples'] = instance.samples;
   return val;
@@ -217,8 +217,8 @@ const _$OhrDataTypeEnumMap = {
 
 PolarPPIDatum _$PolarPPIDatumFromJson(Map<String, dynamic> json) =>
     PolarPPIDatum(
-      json['identifier'] as String,
-      json['time_stamp'] as int,
+      json['device_identifier'] as String,
+      json['device_timestamp'] as int?,
       (json['samples'] as List<dynamic>)
           .map((e) => PolarPPISample.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -237,15 +237,15 @@ Map<String, dynamic> _$PolarPPIDatumToJson(PolarPPIDatum instance) {
 
   writeNotNull('id', instance.id);
   val['timestamp'] = instance.timestamp.toIso8601String();
-  val['identifier'] = instance.identifier;
-  val['time_stamp'] = instance.timeStamp;
+  val['device_identifier'] = instance.deviceIdentifier;
+  writeNotNull('device_timestamp', instance.deviceTimestamp);
   val['samples'] = instance.samples;
   return val;
 }
 
 PolarHRDatum _$PolarHRDatumFromJson(Map<String, dynamic> json) => PolarHRDatum(
-      json['identifier'] as String,
-      json['time_stamp'] as int,
+      json['device_identifier'] as String,
+      json['device_timestamp'] as int?,
       json['hr'] as int,
       (json['rrs'] as List<dynamic>).map((e) => e as int).toList(),
       (json['rrs_ms'] as List<dynamic>).map((e) => e as int).toList(),
@@ -266,8 +266,8 @@ Map<String, dynamic> _$PolarHRDatumToJson(PolarHRDatum instance) {
 
   writeNotNull('id', instance.id);
   val['timestamp'] = instance.timestamp.toIso8601String();
-  val['identifier'] = instance.identifier;
-  val['time_stamp'] = instance.timeStamp;
+  val['device_identifier'] = instance.deviceIdentifier;
+  writeNotNull('device_timestamp', instance.deviceTimestamp);
   val['hr'] = instance.hr;
   val['rrs'] = instance.rrs;
   val['rrs_ms'] = instance.rrsMs;
