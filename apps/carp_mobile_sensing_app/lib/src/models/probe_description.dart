@@ -208,24 +208,24 @@ class ProbeDescription {
             Icon(Icons.location_on, size: 50, color: CACHET.CYAN),
         ContextSamplingPackage.MOBILITY:
             Icon(Icons.location_on, size: 50, color: CACHET.ORANGE),
-        ESenseSamplingPackage.ESENSE_BUTTON:
-            Icon(Icons.radio_button_checked, size: 50, color: CACHET.DARK_BLUE),
+        ESenseSamplingPackage.ESENSE_BUTTON: Icon(Icons.radio_button_checked,
+            size: 50, color: CACHET.LIGHT_PURPLE),
         ESenseSamplingPackage.ESENSE_SENSOR:
-            Icon(Icons.headset, size: 50, color: CACHET.DARK_BLUE),
+            Icon(Icons.headset, size: 50, color: CACHET.LIGHT_PURPLE),
         PolarSamplingPackage.POLAR_ACCELEROMETER:
-            Icon(Icons.moving, size: 50, color: CACHET.DARK_BLUE),
+            Icon(Icons.moving, size: 50, color: CACHET.LIGHT_PURPLE),
         PolarSamplingPackage.POLAR_GYROSCOPE:
-            Icon(Icons.moving, size: 50, color: CACHET.DARK_BLUE),
+            Icon(Icons.moving, size: 50, color: CACHET.LIGHT_PURPLE),
         PolarSamplingPackage.POLAR_MAGNETOMETER:
-            Icon(Icons.iron, size: 50, color: CACHET.DARK_BLUE),
-        PolarSamplingPackage.POLAR_ECG: Icon(Icons.monitor_heart_outlined,
-            size: 50, color: CACHET.DARK_BLUE),
+            Icon(Icons.iron, size: 50, color: CACHET.LIGHT_PURPLE),
+        PolarSamplingPackage.POLAR_ECG:
+            Icon(Icons.monitor_heart_outlined, size: 50, color: CACHET.GREEN),
         PolarSamplingPackage.POLAR_HR:
-            Icon(Icons.heart_broken, size: 50, color: CACHET.DARK_BLUE),
+            Icon(Icons.heart_broken, size: 50, color: CACHET.RED),
         PolarSamplingPackage.POLAR_PPG:
-            Icon(Icons.add_link, size: 50, color: CACHET.DARK_BLUE),
+            Icon(Icons.add_link, size: 50, color: CACHET.GREY_2),
         PolarSamplingPackage.POLAR_PPI:
-            Icon(Icons.link, size: 50, color: CACHET.DARK_BLUE),
+            Icon(Icons.link, size: 50, color: CACHET.GREY_3),
       };
 
   static Map<ExecutorState, String> get probeStateLabel => {
