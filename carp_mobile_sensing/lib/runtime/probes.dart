@@ -80,8 +80,8 @@ abstract class Probe extends AbstractExecutor<Measure> {
 //                                SPECIALIZED PROBES
 //---------------------------------------------------------------------------------------
 
-/// This probe collects one piece of [Datum] when resumed, send its to the
-/// [data] stream, and then pauses.
+/// This probe collects one piece of [Datum] when resumed and send its to the
+/// [data] stream.
 ///
 /// The [Datum] to be collected should be implemented in the [getDatum] method.
 ///
@@ -96,7 +96,7 @@ abstract class DatumProbe extends Probe {
       addError(error);
     }
     if (datum != null) addData(datum);
-    pause();
+    // pause(); // TODO - this doesn't work. When here, the probe is still not in a "resumed" state, and this "pause" will generate a warning....
     return true;
   }
 
