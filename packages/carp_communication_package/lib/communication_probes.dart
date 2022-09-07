@@ -83,7 +83,7 @@ class TextMessageProbe extends StreamProbe {
   Stream<Datum> get stream => _textMessageProbeController.stream;
 
   @override
-  void onInitialize() {
+  bool onInitialize() {
     if (!Platform.isAndroid) {
       throw SensingException('TextMessageProbe only available on Android.');
     }
@@ -95,6 +95,7 @@ class TextMessageProbe extends StreamProbe {
       },
       onBackgroundMessage: backgrounMessageHandler,
     );
+    return true;
   }
 }
 
@@ -108,8 +109,9 @@ class CalendarProbe extends DatumProbe {
   List<CalendarEvent> _events = [];
 
   @override
-  void onInitialize() {
+  bool onInitialize() {
     _retrieveCalendars();
+    return true;
   }
 
   Future<bool> _retrieveCalendars() async {

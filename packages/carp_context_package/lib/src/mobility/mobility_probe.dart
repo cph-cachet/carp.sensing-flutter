@@ -3,17 +3,19 @@ part of carp_context_package;
 /// Collects mobility features using the [MobilityFeatures] API.
 class MobilityProbe extends StreamProbe {
   @override
-  void onInitialize() {
+  bool onInitialize() {
     MobilitySamplingConfiguration conf =
         samplingConfiguration as MobilitySamplingConfiguration;
 
     MobilityFeatures().stopRadius = conf.stopRadius;
     MobilityFeatures().placeRadius = conf.placeRadius;
     MobilityFeatures().stopDuration = conf.stopDuration;
+
+    return true;
   }
 
   @override
-  Future<void> onResume() async {
+  Future<bool> onResume() async {
     // start the location data stream from the LocationManager
     Stream<LocationSample> locationStream = LocationManager()
         .onLocationChanged
@@ -24,13 +26,13 @@ class MobilityProbe extends StreamProbe {
     // which in turn produce [MobilityContext]s
     await MobilityFeatures().startListening(locationStream);
 
-    super.onResume();
+    return super.onResume();
   }
 
   @override
-  Future<void> onPause() async {
+  Future<bool> onPause() async {
     await MobilityFeatures().stopListening();
-    super.onPause();
+    return super.onPause();
   }
 
   /// The stream of mobility features as they are generated.

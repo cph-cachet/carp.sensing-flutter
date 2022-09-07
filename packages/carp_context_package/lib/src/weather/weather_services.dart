@@ -69,7 +69,8 @@ class WeatherServiceManager
   }
 
   @override
-  Future<bool> onConnect() async => (service != null);
+  Future<DeviceStatus> onConnect() async =>
+      (service != null) ? DeviceStatus.connected : DeviceStatus.disconnected;
 
   @override
   Future<bool> onDisconnect() async => true;

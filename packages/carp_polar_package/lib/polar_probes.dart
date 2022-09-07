@@ -14,13 +14,15 @@ abstract class _PolarProbe extends StreamProbe {
 
 abstract class _FeatureReadyPolarProbe extends _PolarProbe {
   @override
-  Future<void> onResume() async {
+  Future<bool> onResume() async {
     if (deviceManager.polarFeaturesAvailable) {
-      super.onResume();
+      return await super.onResume();
     } else {
       // if the Polar features are not available yet, try to wait and then resume the probe
-      debug('$runtimeType - delaying resume for 10 secs and restarting...');
-      Future.delayed(const Duration(seconds: 10), () => super.onResume());
+      debug('$runtimeType - features are not available - '
+          'delaying for 20 secs and resuming...');
+      Future.delayed(const Duration(seconds: 20), () => super.resume());
+      return false;
     }
   }
 }

@@ -105,9 +105,9 @@ class ESenseDeviceManager
       deviceDescriptor!.deviceName!.isNotEmpty);
 
   @override
-  Future<bool> onConnect() async {
+  Future<DeviceStatus> onConnect() async {
     if (deviceDescriptor?.deviceName == null ||
-        deviceDescriptor!.deviceName!.isEmpty) return false;
+        deviceDescriptor!.deviceName!.isEmpty) return DeviceStatus.error;
 
     manager = ESenseManager(id);
     // listen for connection events
@@ -153,7 +153,9 @@ class ESenseDeviceManager
     });
 
     debug('$runtimeType - connecting to eSense device, name: $id');
-    return await manager?.connect() ?? false;
+    manager?.connect();
+
+    return DeviceStatus.connecting;
   }
 
   @override

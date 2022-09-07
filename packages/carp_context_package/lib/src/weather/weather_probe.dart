@@ -7,8 +7,10 @@ class WeatherProbe extends DatumProbe {
       super.deviceManager as WeatherServiceManager;
 
   @override
-  void onInitialize() =>
-      LocationManager().configure().then((_) => super.onInitialize());
+  bool onInitialize() {
+    LocationManager().configure().then((_) => super.onInitialize());
+    return true;
+  }
 
   /// Returns the [WeatherDatum] for this location.
   @override

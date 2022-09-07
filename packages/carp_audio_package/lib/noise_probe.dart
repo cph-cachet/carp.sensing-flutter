@@ -22,20 +22,23 @@ class NoiseProbe extends BufferingPeriodicStreamProbe {
   Stream<NoiseReading> get bufferingStream => _noiseMeter!.noiseStream;
 
   @override
-  void onInitialize() {
+  bool onInitialize() {
     _noiseMeter = NoiseMeter();
+    return true;
   }
 
   @override
-  Future<void> onRestart() async {
+  Future<bool> onRestart() async {
     super.onRestart();
     _noiseMeter = NoiseMeter();
+    return true;
   }
 
   @override
-  Future<void> onStop() async {
+  Future<bool> onStop() async {
     super.onStop();
     _noiseMeter = null;
+    return true;
   }
 
   @override

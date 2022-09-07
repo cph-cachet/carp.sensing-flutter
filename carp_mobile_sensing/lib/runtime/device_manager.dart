@@ -58,29 +58,25 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
   /// doing a lot of work on startup.
   void onInitialize(TDeviceDescriptor descriptor);
 
-  /// Ask this [DeviceManager] to connect to the device.
+  /// Ask this [DeviceManager] to start connecting to the device.
   ///
   /// Returns true if successful, false if not.
-  Future<bool> connect() async {
-    bool success = false;
+  Future<DeviceStatus> connect() async {
     if (!isInitialized) {
       warning('$runtimeType has not been initialized - cannot connect to it.');
-      return false;
+      return status;
     }
 
     info(
         '$runtimeType - Trying to connect to device of type: $type and id: $id');
-    success = await onConnect();
-    status = (success) ? DeviceStatus.connected : DeviceStatus.disconnected;
-
-    return success;
+    return status = await onConnect();
   }
 
-  /// Callback on [connect].
+  /// Callback on [connect]. Returns the [DeviceStatus] of the device.
   ///
   /// Is often overriden in sub-classes. Note, however, that it must not be
   /// doing a lot of work on startup.
-  Future<bool> onConnect();
+  Future<DeviceStatus> onConnect();
 
   /// Ask this [DeviceManager] to disconnect from the device.
   ///
@@ -157,7 +153,7 @@ class SmartphoneDeviceManager
   Future<bool> canConnect() async => true; // can always connect to the phone
 
   @override
-  Future<bool> onConnect() async => true;
+  Future<DeviceStatus> onConnect() async => DeviceStatus.connected;
 
   @override
   Future<bool> onDisconnect() async => true;

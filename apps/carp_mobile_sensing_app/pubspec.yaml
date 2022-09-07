@@ -53,8 +53,8 @@ dependency_overrides:
     path: ../../packages/carp_esense_package/
   carp_polar_package:
     path: ../../packages/carp_polar_package/
-  esense_flutter:
-    path: ../../../../flutter-plugins/packages/esense_flutter/
+  # esense_flutter:
+  #   path: ../../../../flutter-plugins/packages/esense_flutter/
   carp_backend:
     path: ../../backends/carp_backend/
   carp_webservices:

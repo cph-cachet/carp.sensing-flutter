@@ -14,17 +14,6 @@ class AppsProbe extends DatumProbe {
   AppsProbe() : super();
 
   @override
-  void onInitialize() {
-    super.onInitialize();
-
-    // check if the DeviceApps plugin is available (only available on Android)
-    if (!Platform.isAndroid) {
-      throw SensingException(
-          "Error initializing AppsProbe -- only available on Android.");
-    }
-  }
-
-  @override
   Future<Datum> getDatum() async {
     List<Application> apps = await DeviceApps.getInstalledApplications();
     return AppsDatum()..installedApps = _getAppNames(apps);
@@ -46,16 +35,6 @@ class AppsProbe extends DatumProbe {
 /// On iOS, an exception is thrown and the probe is stopped.
 class AppUsageProbe extends DatumProbe {
   AppUsageProbe() : super();
-
-  @override
-  void onInitialize() {
-    super.onInitialize();
-    // check if AppUsage is available (only available on Android)
-    if (!Platform.isAndroid) {
-      throw SensingException(
-          "Error initializing AppUsageProbe -- only available on Android.");
-    }
-  }
 
   @override
   HistoricSamplingConfiguration get samplingConfiguration =>

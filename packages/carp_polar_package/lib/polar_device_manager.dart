@@ -124,10 +124,10 @@ class PolarDeviceManager extends BTLEDeviceManager {
   Future<bool> canConnect() async => deviceDescriptor.identifier != null;
 
   @override
-  Future<bool> onConnect() async {
+  Future<DeviceStatus> onConnect() async {
     if (deviceDescriptor.identifier == null) {
       warning('$runtimeType - cannot connect to device, identifier is null.');
-      return false;
+      return DeviceStatus.error;
     } else {
       try {
         // listen for what features the connected Polar device supports
@@ -171,13 +171,14 @@ class PolarDeviceManager extends BTLEDeviceManager {
 
         info('$runtimeType - connecting to Polar device, identifier: $id');
         polar.connectToDevice(id);
+
+        return DeviceStatus.connecting;
       } catch (error) {
         warning(
             "$runtimeType - could not connect to device of type '$type' and id '$id' - error: $error");
-        return false;
+        return DeviceStatus.error;
       }
     }
-    return true;
   }
 
   @override
