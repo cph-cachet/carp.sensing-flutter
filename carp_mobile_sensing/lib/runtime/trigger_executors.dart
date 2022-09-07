@@ -62,9 +62,7 @@ abstract class TriggerExecutor<TConfig extends Trigger>
   // List<DateTime> getSchedule(DateTime from, DateTime to);
 
   @override
-  void onInitialize() {
-    // No initialize needed pr. default.
-  }
+  bool onInitialize() => true; // no initialize needed pr. default.
 
   /// Returns a list of the running probes in this [TriggerExecutor].
   /// This is a combination of the running probes in all task executors.
@@ -95,7 +93,7 @@ class ImmediateTriggerExecutor extends TriggerExecutor<Trigger> {}
 /// study deployment.
 class OneTimeTriggerExecutor extends TriggerExecutor<OneTimeTrigger> {
   @override
-  Future<void> onResume() async {
+  Future<bool> onResume() async {
     if (!configuration!.hasBeenTriggered) {
       configuration!.triggerTimestamp = DateTime.now();
       await super.onResume();
@@ -104,6 +102,7 @@ class OneTimeTriggerExecutor extends TriggerExecutor<OneTimeTrigger> {
           "$runtimeType - one time trigger already occured at: ${configuration?.triggerTimestamp}. "
           'Will not trigger now.');
     }
+    return true;
   }
 }
 
@@ -116,29 +115,40 @@ class PassiveTriggerExecutor extends TriggerExecutor<PassiveTrigger> {
 
   // Forward to the embedded trigger executor
   @override
-  void onInitialize() =>
-      configuration!.executor.initialize(configuration as Trigger, deployment!);
+  bool onInitialize() {
+    configuration!.executor.initialize(configuration as Trigger, deployment!);
+    return true;
+  }
 
   // No-op methods since a PassiveTrigger can only be resumed/paused
   // using the resume/pause methods on the PassiveTrigger.
   @override
-  Future<void> onResume() async {}
+  Future<bool> onResume() async => true;
   @override
-  Future<void> onPause() async {}
+  Future<bool> onPause() async => true;
 
   // Forward to the embedded trigger executor
   @override
-  Future<void> onRestart() async => configuration!.executor.restart();
+  Future<bool> onRestart() async {
+    configuration!.executor.restart();
+    return true;
+  }
+
   @override
-  Future<void> onStop() async => configuration!.executor.stop();
+  Future<bool> onStop() async {
+    configuration!.executor.stop();
+    return true;
+  }
 }
 
 /// Executes a [DelayedTrigger], i.e. resumes sampling after the specified delay.
 /// Once started, it can be paused / resumed as any other [Executor].
 class DelayedTriggerExecutor extends TriggerExecutor<DelayedTrigger> {
   @override
-  Future<void> onResume() async =>
-      Timer(configuration!.delay, () => super.onResume());
+  Future<bool> onResume() async {
+    Timer(configuration!.delay, () => super.onResume());
+    return true;
+  }
 }
 
 /// Executes a [ElapsedTimeTrigger], i.e. resumes sampling after the
@@ -155,10 +165,11 @@ class ElapsedTimeTriggerExecutor
   }
 
   @override
-  Future<void> onResume() async {
+  Future<bool> onResume() async {
     if (deployment?.deployed == null) {
       warning(
           '$runtimeType - this deployment does not have a start time. Cannot execute this trigger.');
+      return false;
     } else {
       int delay = configuration!.elapsedTime.inMilliseconds -
           (DateTime.now().millisecondsSinceEpoch -
@@ -171,6 +182,8 @@ class ElapsedTimeTriggerExecutor
             '$runtimeType - delay is negative, i.e. the trigger time is in the past and should have happend already.');
       }
     }
+
+    return true;
   }
 }
 
@@ -179,9 +192,10 @@ abstract class TimerTriggerExecutor<TConfig extends Trigger>
   Timer? timer;
 
   @override
-  Future<void> onPause() async {
+  Future<bool> onPause() async {
     timer?.cancel();
     await super.onPause();
+    return true;
   }
 }
 
@@ -203,11 +217,12 @@ class IntervalTriggerExecutor extends TimerTriggerExecutor<IntervalTrigger> {
   }
 
   @override
-  Future<void> onResume() async {
+  Future<bool> onResume() async {
     timer = Timer.periodic(configuration!.period, (t) {
       super.onResume();
       Timer(const Duration(seconds: 3), () => super.onPause());
     });
+    return true;
   }
 }
 
@@ -234,7 +249,7 @@ class PeriodicTriggerExecutor extends TimerTriggerExecutor<PeriodicTrigger> {
   }
 
   @override
-  Future<void> onResume() async {
+  Future<bool> onResume() async {
     // create a recurrent timer that resume periodically
     timer = Timer.periodic(configuration!.period, (t) {
       super.onResume();
@@ -243,6 +258,7 @@ class PeriodicTriggerExecutor extends TimerTriggerExecutor<PeriodicTrigger> {
         super.onPause();
       });
     });
+    return true;
   }
 }
 
@@ -256,9 +272,10 @@ class DateTimeTriggerExecutor extends TimerTriggerExecutor<DateTimeTrigger> {
           : [];
 
   @override
-  Future<void> onResume() async {
+  Future<bool> onResume() async {
     if (configuration!.schedule.isAfter(DateTime.now())) {
       warning('The schedule of the DateTimeTrigger cannot be in the past.');
+      return false;
     } else {
       var delay = configuration!.schedule.difference(DateTime.now());
       var duration = configuration?.duration;
@@ -274,6 +291,7 @@ class DateTimeTriggerExecutor extends TimerTriggerExecutor<DateTimeTrigger> {
         }
       });
     }
+    return true;
   }
 }
 
@@ -296,7 +314,7 @@ class RecurrentScheduledTriggerExecutor
   }
 
   @override
-  Future<void> onResume() async {
+  Future<bool> onResume() async {
     Duration delay = configuration!.firstOccurrence.difference(DateTime.now());
     if (configuration!.end == null ||
         configuration!.end!.isAfter(DateTime.now())) {
@@ -304,6 +322,7 @@ class RecurrentScheduledTriggerExecutor
         await super.onResume();
       });
     }
+    return true;
   }
 }
 
@@ -334,7 +353,7 @@ class CronScheduledTriggerExecutor
   }
 
   @override
-  Future<void> onResume() async {
+  Future<bool> onResume() async {
     debug('creating cron job : $configuration');
     var schedule = cron.Schedule.parse(configuration!.cronExpression);
     _scheduledTask = _cron.schedule(schedule, () async {
@@ -342,12 +361,14 @@ class CronScheduledTriggerExecutor
       await super.onResume();
       Timer(configuration!.duration, () => super.onPause());
     });
+    return true;
   }
 
   @override
-  Future<void> onPause() async {
+  Future<bool> onPause() async {
     await _scheduledTask?.cancel();
     await super.onPause();
+    return true;
   }
 }
 
@@ -358,7 +379,7 @@ class SamplingEventTriggerExecutor
   late StreamSubscription<DataPoint>? _subscription;
 
   @override
-  Future<void> onResume() async {
+  Future<bool> onResume() async {
     _subscription = SmartPhoneClientManager()
         .lookupStudyRuntime(deployment!.studyDeploymentId,
             deployment!.deviceDescriptor.roleName)
@@ -371,12 +392,14 @@ class SamplingEventTriggerExecutor
           (dataPoint.carpBody as Datum)
               .equivalentTo(configuration!.pauseCondition)) super.onPause();
     });
+    return true;
   }
 
   @override
-  Future<void> onPause() async {
+  Future<bool> onPause() async {
     await _subscription?.cancel();
     await super.onPause();
+    return true;
   }
 }
 
@@ -389,7 +412,7 @@ class ConditionalSamplingEventTriggerExecutor
   StreamSubscription<DataPoint>? _subscription;
 
   @override
-  Future<void> onResume() async {
+  Future<bool> onResume() async {
     // listen for event of the specified type and resume/pause as needed
     _subscription = SmartPhoneClientManager()
         .lookupStudyRuntime(deployment!.studyDeploymentId,
@@ -401,12 +424,14 @@ class ConditionalSamplingEventTriggerExecutor
       if (configuration!.pauseCondition != null &&
           configuration!.pauseCondition!(dataPoint)) super.onPause();
     });
+    return true;
   }
 
   @override
-  Future<void> onPause() async {
+  Future<bool> onPause() async {
     await _subscription?.cancel();
     await super.onPause();
+    return true;
   }
 }
 
@@ -416,7 +441,7 @@ class ConditionalPeriodicTriggerExecutor
   Timer? timer;
 
   @override
-  Future<void> onResume() async {
+  Future<bool> onResume() async {
     // create a recurrent timer that checks the conditions periodically
     timer = Timer.periodic(configuration!.period, (_) {
       debug(
@@ -426,12 +451,14 @@ class ConditionalPeriodicTriggerExecutor
       if (configuration!.pauseCondition != null &&
           configuration!.pauseCondition!()) super.onPause();
     });
+    return true;
   }
 
   @override
-  Future<void> onPause() async {
+  Future<bool> onPause() async {
     timer?.cancel();
     await super.onPause();
+    return true;
   }
 }
 
@@ -520,7 +547,7 @@ class RandomRecurrentTriggerExecutor
   }
 
   @override
-  Future<void> onResume() async {
+  Future<bool> onResume() async {
     // sampling might be resumed after [startTime] or the app wasn't running at [startTime]
     // therefore, first check if the random timers have been scheduled for today
     if (TimeOfDay.now().isAfter(startTime)) {
@@ -539,6 +566,7 @@ class RandomRecurrentTriggerExecutor
       debug('$runtimeType - resuming cron job : ${DateTime.now().toString()}');
       _scheduleTimers();
     });
+    return true;
   }
 
   void _scheduleTimers() {
@@ -565,7 +593,7 @@ class RandomRecurrentTriggerExecutor
   }
 
   @override
-  Future<void> onPause() async {
+  Future<bool> onPause() async {
     // cancel all the timers that might have been started
     for (var timer in _timers) {
       timer.cancel();
@@ -573,5 +601,6 @@ class RandomRecurrentTriggerExecutor
     // cancel the daily cron job
     await _scheduledTask.cancel();
     await super.onPause();
+    return true;
   }
 }

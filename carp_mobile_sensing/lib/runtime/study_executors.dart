@@ -20,32 +20,36 @@ abstract class AggregateExecutor<TConfig> extends AbstractExecutor<TConfig> {
   Stream<DataPoint> get data => group.stream;
 
   @override
-  Future<void> onResume() async {
+  Future<bool> onResume() async {
     for (var executor in executors) {
       executor.resume();
     }
+    return true;
   }
 
   @override
-  Future<void> onPause() async {
+  Future<bool> onPause() async {
     for (var executor in executors) {
       executor.pause();
     }
+    return true;
   }
 
   @override
-  Future<void> onRestart() async {
+  Future<bool> onRestart() async {
     for (var executor in executors) {
       executor.restart();
     }
+    return true;
   }
 
   @override
-  Future<void> onStop() async {
+  Future<bool> onStop() async {
     for (var executor in executors) {
       executor.stop();
     }
     executors.clear();
+    return true;
   }
 }
 
@@ -64,11 +68,11 @@ class StudyDeploymentExecutor extends AggregateExecutor<SmartphoneDeployment> {
       StreamController.broadcast();
 
   @override
-  void onInitialize() {
+  bool onInitialize() {
     if (configuration == null) {
       warning(
           'Trying to initialize StudyDeploymentExecutor but the deployment configuration is null. Cannot initialize study deployment.');
-      return;
+      return false;
     }
 
     group.add(_manualDataPointController.stream);
@@ -93,6 +97,7 @@ class StudyDeploymentExecutor extends AggregateExecutor<SmartphoneDeployment> {
       group.add(executor.data);
       executors.add(executor);
     }
+    return true;
   }
 
   /// Get the aggregated stream of [DataPoint] data sampled by all executors
@@ -160,7 +165,7 @@ class TriggeredTaskExecutor extends AggregateExecutor<TriggeredTask> {
   }
 
   @override
-  void onInitialize() {
+  bool onInitialize() {
     // get the trigger executor and add it to this stream
     triggerExecutor = getTriggerExecutor(trigger);
     group.add(triggerExecutor!.data);
@@ -173,6 +178,8 @@ class TriggeredTaskExecutor extends AggregateExecutor<TriggeredTask> {
     triggerExecutor?.group.add(taskExecutor!.data);
     triggerExecutor?.executors.add(taskExecutor!);
     taskExecutor?.initialize(task, deployment!);
+
+    return true;
   }
 
   /// Get the aggregated stream of [DataPoint] data sampled by all executors
@@ -212,7 +219,7 @@ class TriggeredAppTaskExecutor extends TriggeredTaskExecutor {
       super.triggerExecutor as ScheduleableTriggerExecutor;
 
   @override
-  Future<void> onResume() async {
+  Future<bool> onResume() async {
     final from = triggeredTask.hasBeenScheduledUntil ?? DateTime.now();
     final to = from.add(Duration(days: 10)); // look 10 days ahead
     final schedule = triggerExecutor.getSchedule(from, to, 10);
@@ -247,10 +254,13 @@ class TriggeredAppTaskExecutor extends TriggeredTaskExecutor {
           DateTime.now().millisecondsSinceEpoch;
       Timer(Duration(milliseconds: duration), () => resume());
     }
+
+    return true;
   }
 
   @override
-  Future<void> onPause() async {} // do nothing - this executor is never resumed
+  Future<bool> onPause() async =>
+      true; // do nothing - this executor is never resumed
 }
 
 /// Returns the relevant [TriggeredTaskExecutor] based on the type of [trigger]

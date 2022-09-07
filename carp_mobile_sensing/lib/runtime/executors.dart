@@ -167,27 +167,32 @@ abstract class AbstractExecutor<TConfig> implements Executor<TConfig> {
   void error() => _stateMachine.error();
 
   /// Callback when this executor is initialized.
+  /// Returns true if succesfully initialized, false othervise.
   ///
   /// Note that this is a non-async method and should hence be 'light-weight'
   /// and not block execution for a long duration.
   @protected
-  void onInitialize();
+  bool onInitialize();
 
   /// Callback when this executor is resumed.
+  /// Returns true if succesfully resumed, false othervise.
   @protected
-  Future<void> onResume();
+  Future<bool> onResume();
 
   /// Callback when this executor is paused.
+  /// Returns true if succesfully paused, false othervise.
   @protected
-  Future<void> onPause();
+  Future<bool> onPause();
 
   /// Callback when this executor is restarted.
+  /// Returns true if succesfully restarted, false othervise.
   @protected
-  Future<void> onRestart();
+  Future<bool> onRestart();
 
   /// Callback when this executor is stopped.
+  /// Returns true if succesfully stopped, false othervise.
   @protected
-  Future<void> onStop();
+  Future<bool> onStop();
 
   @override
   String toString() => '$runtimeType - configuration: $configuration';
@@ -268,8 +273,9 @@ class _CreatedState extends _AbstractExecutorState
   void initialize() {
     info('Initializing ${executor.runtimeType}');
     try {
-      executor.onInitialize();
-      executor._setState(_InitializedState(executor));
+      if (executor.onInitialize()) {
+        executor._setState(_InitializedState(executor));
+      }
     } catch (error) {
       warning('Error initializing ${executor.runtimeType}: $error');
       executor._setState(_UndefinedState(executor));
@@ -292,8 +298,17 @@ class _InitializedState extends _AbstractExecutorState
   @override
   void resume() {
     info('Resuming ${executor.runtimeType}');
-    executor.onResume();
-    executor._setState(_ResumedState(executor));
+    executor.onResume().then((resumed) {
+      if (resumed) executor._setState(_ResumedState(executor));
+    });
+  }
+
+  @override
+  void restart() {
+    info('Restarting ${executor.runtimeType}');
+    executor.onRestart().then((restarted) {
+      if (restarted) executor.resume(); // only resume if succesfully restarted
+    });
   }
 
   @override
@@ -312,16 +327,18 @@ class _ResumedState extends _AbstractExecutorState
   @override
   void restart() {
     info('Restarting ${executor.runtimeType}');
-    executor.pause(); // first pause executor, setting it in a paused state
-    executor.onRestart();
-    executor.resume();
+    executor.pause(); // first pause, before restarting
+    executor.onRestart().then((restarted) {
+      if (restarted) executor.resume(); // only resume if succesfully restarted
+    });
   }
 
   @override
   void pause() {
     info('Pausing ${executor.runtimeType}');
-    executor.onPause();
-    executor._setState(_PausedState(executor));
+    executor.onPause().then((paused) {
+      if (paused) executor._setState(_PausedState(executor));
+    });
   }
 
   @override
@@ -340,15 +357,17 @@ class _PausedState extends _AbstractExecutorState
   @override
   void restart() {
     info('Restarting ${executor.runtimeType}');
-    executor.onRestart();
-    executor.resume();
+    executor.onRestart().then((restarted) {
+      if (restarted) executor.resume(); // only resume if succesfully restarted
+    });
   }
 
   @override
   void resume() {
     info('Resuming ${executor.runtimeType}');
-    executor.onResume();
-    executor._setState(_ResumedState(executor));
+    executor.onResume().then((resumed) {
+      if (resumed) executor._setState(_ResumedState(executor));
+    });
   }
 
   @override

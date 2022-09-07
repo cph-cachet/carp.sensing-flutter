@@ -61,19 +61,19 @@ abstract class Probe extends AbstractExecutor<Measure> {
   // default no-op implementation of callback methods
 
   @override
-  void onInitialize() {}
+  bool onInitialize() => true;
 
   @override
-  Future<void> onResume() async {}
+  Future<bool> onResume() async => true;
 
   @override
-  Future<void> onPause() async {}
+  Future<bool> onPause() async => true;
 
   @override
-  Future<void> onRestart() async {}
+  Future<bool> onRestart() async => true;
 
   @override
-  Future<void> onStop() async {}
+  Future<bool> onStop() async => true;
 }
 
 //---------------------------------------------------------------------------------------
@@ -88,7 +88,7 @@ abstract class Probe extends AbstractExecutor<Measure> {
 /// See [DeviceProbe] for an example.
 abstract class DatumProbe extends Probe {
   @override
-  Future<void> onResume() async {
+  Future<bool> onResume() async {
     Datum? datum;
     try {
       datum = await getDatum();
@@ -97,6 +97,7 @@ abstract class DatumProbe extends Probe {
     }
     if (datum != null) addData(datum);
     pause();
+    return true;
   }
 
   /// Subclasses should implement this method to collect a [Datum].
@@ -119,7 +120,7 @@ abstract class IntervalDatumProbe extends DatumProbe {
       super.samplingConfiguration as IntervalSamplingConfiguration;
 
   @override
-  Future<void> onResume() async {
+  Future<bool> onResume() async {
     Duration? interval = samplingConfiguration?.interval;
     if (interval != null) {
       // create a recurrent timer that gets the data point every [frequency].
@@ -135,18 +136,22 @@ abstract class IntervalDatumProbe extends DatumProbe {
       warning(
           '$runtimeType - no valid interval found in sampling configuration: $samplingConfiguration. '
           'Is a valid IntervalSamplingConfiguration provided?');
+      return false;
     }
+    return true;
   }
 
   @override
-  Future<void> onPause() async {
+  Future<bool> onPause() async {
     timer?.cancel();
+    return true;
   }
 
   @override
-  Future<void> onStop() async {
+  Future<bool> onStop() async {
     timer?.cancel();
     await controller.close();
+    return true;
   }
 }
 
@@ -168,35 +173,40 @@ abstract class StreamProbe extends Probe {
   Stream<Datum>? get stream;
 
   @override
-  Future<void> onResume() async {
+  Future<bool> onResume() async {
     if (stream == null) {
       warning(
           "Trying to resume the stream probe '$runtimeType' which does not provide a Datum stream. "
           'Have you initialized this probe correctly?');
+      return false;
     } else {
       subscription = stream!.listen(onData, onError: onError, onDone: onDone);
     }
+    return true;
   }
 
   @override
-  void onInitialize() {
-    // do nothing pr. default
+  bool onInitialize() => true;
+
+  @override
+  Future<bool> onPause() async {
+    await subscription?.cancel();
+    return true;
   }
 
   @override
-  Future<void> onPause() async => await subscription?.cancel();
-
-  @override
-  Future<void> onRestart() async {
+  Future<bool> onRestart() async {
     await subscription?.cancel();
     await onResume();
+    return true;
   }
 
   @override
-  Future<void> onStop() async {
+  Future<bool> onStop() async {
     await subscription?.cancel();
     await controller.close();
     subscription = null;
+    return true;
   }
 
   // just forwarding to the controller
@@ -254,11 +264,12 @@ abstract class PeriodicStreamProbe extends StreamProbe {
       super.samplingConfiguration as PeriodicSamplingConfiguration;
 
   @override
-  Future<void> onResume() async {
+  Future<bool> onResume() async {
     if (stream == null) {
       warning(
           "Trying to resume the stream probe '$runtimeType' which does not provide a Datum stream. "
           'Have you initialized this probe correctly?');
+      return false;
     } else {
       Duration? interval = samplingConfiguration?.interval;
       Duration? duration = samplingConfiguration?.duration;
@@ -278,18 +289,21 @@ abstract class PeriodicStreamProbe extends StreamProbe {
             'Is a valid PeriodicSamplingConfiguration provided?');
       }
     }
+    return true;
   }
 
   @override
-  Future<void> onPause() async {
+  Future<bool> onPause() async {
     timer?.cancel();
     await super.onPause();
+    return true;
   }
 
   @override
-  Future<void> onStop() async {
+  Future<bool> onStop() async {
     timer?.cancel();
     await super.onStop();
+    return true;
   }
 }
 
@@ -310,7 +324,7 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
       super.samplingConfiguration as PeriodicSamplingConfiguration;
 
   @override
-  Future<void> onResume() async {
+  Future<bool> onResume() async {
     Duration? interval = samplingConfiguration?.interval;
     Duration? duration = samplingConfiguration?.duration;
     if (interval != null && duration != null) {
@@ -333,11 +347,13 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
       warning(
           '$runtimeType - no valid interval and duration found in sampling configuration: $samplingConfiguration. '
           'Is a valid PeriodicSamplingConfiguration provided?');
+      return false;
     }
+    return true;
   }
 
   @override
-  Future<void> onPause() async {
+  Future<bool> onPause() async {
     if (timer != null) timer!.cancel();
     // check if there are some buffered data that needs to be collected before pausing
     try {
@@ -346,12 +362,14 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
     } catch (error) {
       addError(error);
     }
+    return true;
   }
 
   @override
-  Future<void> onStop() async {
+  Future<bool> onStop() async {
     timer?.cancel();
     await controller.close();
+    return true;
   }
 
   /// Handler called when sampling period starts.
@@ -391,7 +409,7 @@ abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
   Stream<Datum> get stream => Stream.empty();
 
   @override
-  Future<void> onResume() async {
+  Future<bool> onResume() async {
     Duration? interval = samplingConfiguration?.interval;
     Duration? duration = samplingConfiguration?.duration;
     if (interval != null && duration != null) {
@@ -414,11 +432,13 @@ abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
       warning(
           '$runtimeType - no valid interval and duration found in sampling configuration: $samplingConfiguration. '
           'Is a valid PeriodicSamplingConfiguration provided?');
+      return false;
     }
+    return true;
   }
 
   @override
-  Future<void> onPause() async {
+  Future<bool> onPause() async {
     await super.onPause();
     onSamplingEnd();
     try {
@@ -427,6 +447,7 @@ abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
     } catch (error) {
       addError(error);
     }
+    return true;
   }
 
   // Sub-classes should implement the following handler methods.
@@ -472,7 +493,7 @@ abstract class BufferingIntervalStreamProbe extends StreamProbe {
       super.samplingConfiguration as IntervalSamplingConfiguration;
 
   @override
-  Future<void> onResume() async {
+  Future<bool> onResume() async {
     Duration? interval = samplingConfiguration?.interval;
     if (interval != null) {
       subscription = bufferingStream.listen(
@@ -492,20 +513,24 @@ abstract class BufferingIntervalStreamProbe extends StreamProbe {
       warning(
           '$runtimeType - no valid interval found in sampling configuration: $samplingConfiguration. '
           'Is a valid IntervalSamplingConfiguration provided?');
+      return false;
     }
+    return true;
   }
 
   @override
-  Future<void> onPause() async {
+  Future<bool> onPause() async {
     await super.onPause();
     await subscription?.cancel();
+    return true;
   }
 
   @override
-  Future<void> onStop() async {
+  Future<bool> onStop() async {
     timer?.cancel();
     await subscription?.cancel();
     await super.onStop();
+    return true;
   }
 
   /// The stream of events to be buffered. Must be specified by sub-classes.

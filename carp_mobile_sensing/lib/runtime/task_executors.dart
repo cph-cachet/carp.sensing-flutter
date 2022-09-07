@@ -28,7 +28,7 @@ abstract class TaskExecutor<TConfig extends TaskDescriptor>
       executors.map((executor) => executor as Probe).toList();
 
   @override
-  void onInitialize() {
+  bool onInitialize() {
     for (Measure measure in task.measures) {
       // create a new probe for each measure - this ensures that we can have
       // multiple measures of the same type, each using its own probe instance
@@ -41,18 +41,21 @@ abstract class TaskExecutor<TConfig extends TaskDescriptor>
         warning(
             'A probe for measure type ${measure.type} could not be created. '
             'Check that the sampling package containing this probe has been registered in the SamplingPackageRegistry.');
+        return false;
       }
     }
+    return true;
   }
 }
 
 /// Executes a [BackgroundTask].
 class BackgroundTaskExecutor extends TaskExecutor<BackgroundTask> {
   @override
-  Future<void> onResume() async {
+  Future<bool> onResume() async {
     await super.onResume();
     if (configuration?.duration != null) {
       Timer(configuration!.duration!, () => super.pause());
     }
+    return true;
   }
 }

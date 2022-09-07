@@ -35,24 +35,24 @@ class AppTaskExecutor<TConfig extends AppTask> extends TaskExecutor<TConfig> {
   }
 
   @override
-  void onInitialize() {
-    // backgroundTaskExecutor.initialize(configuration!, deployment);
-  }
+  bool onInitialize() => true;
+  // backgroundTaskExecutor.initialize(configuration!, deployment);
 
   @override
-  Future<void> onResume() async {
+  Future<bool> onResume() async {
     // when an app task is resumed simply put it on the queue
     await AppTaskController().enqueue(this);
+    return true;
   }
 
   @override
-  Future<void> onPause() async {
-    // TODO - don't know what to do on pause. Remove from queue?
-  }
+  // TODO - don't know what to do on pause. Remove from queue?
+  Future<bool> onPause() async => true;
 
   @override
-  Future<void> onStop() async {
+  Future<bool> onStop() async {
     backgroundTaskExecutor.stop();
     await super.onStop();
+    return true;
   }
 }
