@@ -169,7 +169,6 @@ class PolarDeviceManager extends BTLEDeviceManager {
           deviceDescriptor.rssi = event.rssi;
         });
 
-        info('$runtimeType - connecting to Polar device, identifier: $id');
         polar.connectToDevice(id);
 
         return DeviceStatus.connecting;

@@ -42,7 +42,7 @@ class DeviceController implements DeviceDataCollectorFactory {
     // early out if already registrered
     if (_devices.containsKey(deviceType)) return _devices[deviceType]!;
 
-    info('Creating device manager for device type: $deviceType');
+    info('$runtimeType - Creating device manager for device type: $deviceType');
 
     // look for a device manager of this type in the sampling packages
     DeviceManager? manager;
@@ -51,7 +51,7 @@ class DeviceController implements DeviceDataCollectorFactory {
     }
 
     if (manager == null) {
-      warning('No device manager found for device: $deviceType');
+      warning('$runtimeType - No device manager found for device: $deviceType');
     } else {
       registerDevice(deviceType, manager);
     }

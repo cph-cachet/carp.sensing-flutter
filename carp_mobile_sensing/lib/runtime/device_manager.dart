@@ -14,6 +14,9 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
       StreamController.broadcast();
   final Set<String> _supportedDataTypes = {};
 
+  /// The set of executors that use this device manager.
+  final Set<Executor> executors = {};
+
   DeviceManager([
     super.type,
     super.deviceRegistration,
@@ -77,6 +80,26 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
   /// Is often overriden in sub-classes. Note, however, that it must not be
   /// doing a lot of work on startup.
   Future<DeviceStatus> onConnect();
+
+  /// Restart sampling of the measures using this device.
+  ///
+  /// This entails that all measures in the study protocol using this device's
+  /// type is restarted. This method is useful after the device is connected.
+  void restart() {
+    for (var executor in executors) {
+      executor.restart();
+    }
+  }
+
+  /// Pause sampling of the measures using this device.
+  ///
+  /// This entails that all measures in the study protocol using this device's
+  /// type is paused.
+  void pause() {
+    for (var executor in executors) {
+      executor.pause();
+    }
+  }
 
   /// Ask this [DeviceManager] to disconnect from the device.
   ///

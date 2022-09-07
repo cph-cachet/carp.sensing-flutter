@@ -94,6 +94,12 @@ class StudyDeploymentExecutor extends AggregateExecutor<SmartphoneDeployment> {
 
       executor.initialize(triggeredTask, deployment!);
 
+      // let the device manger know about this executor
+      DeviceController()
+          .getDevice(triggeredTask.targetDevice!.type)
+          ?.executors
+          .add(executor);
+
       group.add(executor.data);
       executors.add(executor);
     }
