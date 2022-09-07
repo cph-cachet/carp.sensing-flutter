@@ -1,7 +1,5 @@
 # CARP eSense Sampling Package
 
-[![pub package](https://img.shields.io/pub/v/carp_esense_package.svg)](https://pub.dartlang.org/packages/carp_esense_package)
-
 This library contains a sampling package for
 the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) framework
 to work with the [eSense](https://www.esense.io) earable computing platform.
@@ -68,10 +66,11 @@ Add this permission in the `Info.plist` file located in `ios/Runner`:
 <key>NSBluetoothAlwaysUsageDescription</key>
 <string>Uses bluetooth to connect to the eSense device</string>
 <key>UIBackgroundModes</key>
-  <array>
+<array>
   <string>audio</string>
   <string>external-accessory</string>
   <string>fetch</string>
+  <string>bluetooth-central</string>
 </array>
 
 ```
