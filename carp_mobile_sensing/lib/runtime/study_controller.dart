@@ -70,9 +70,6 @@ class SmartphoneDeploymentController extends StudyRuntime {
   /// objects that has been collected.
   int get samplingSize => _samplingSize;
 
-  // DateTime? _studyDeploymentStartTime;
-  // DateTime? get studyDeploymentStartTime => _studyDeploymentStartTime;
-
   /// Create a new [SmartphoneDeploymentController] to control the runtime behavior
   /// of a study deployment.
   SmartphoneDeploymentController(super.deploymentService, super.deviceRegistry);

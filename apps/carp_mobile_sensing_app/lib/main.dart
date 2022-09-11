@@ -50,6 +50,7 @@ void main() async {
   //  * CARP_PRODUCTION
   await bloc.initialize(
     deploymentMode: DeploymentMode.LOCAL,
+    useCachedStudyDeployment: false,
   );
 
   runApp(App());

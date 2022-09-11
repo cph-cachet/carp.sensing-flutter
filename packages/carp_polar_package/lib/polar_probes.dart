@@ -21,7 +21,7 @@ abstract class _FeatureReadyPolarProbe extends _PolarProbe {
       // if the Polar features are not available yet, try to wait and then resume the probe
       debug('$runtimeType - features are not available - '
           'delaying for 20 secs and resuming...');
-      Future.delayed(const Duration(seconds: 20), () => super.resume());
+      // Future.delayed(const Duration(seconds: 20), () => super.resume());
       return false;
     }
   }

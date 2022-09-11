@@ -84,7 +84,7 @@ class PolarDevice extends DeviceDescriptor {
 
 /// A Polar [DeviceManager].
 class PolarDeviceManager extends BTLEDeviceManager {
-  int _batteryLevel = -1;
+  int? _batteryLevel;
   bool _polarFeaturesAvailable = false;
   StreamSubscription<PolarBatteryLevelEvent>? _batterySubscription;
   StreamSubscription<PolarDeviceInfo>? _connectingSubscription;
@@ -111,11 +111,12 @@ class PolarDeviceManager extends BTLEDeviceManager {
   Future<void> onInitialize(DeviceDescriptor descriptor) async {
     assert(descriptor is PolarDevice,
         '$runtimeType - can only be initialized with a PolarDevice device descriptor');
+    super.onInitialize(descriptor);
   }
 
   /// The latest read of the battery level of the Polar device.
   @override
-  int get batteryLevel => _batteryLevel;
+  int? get batteryLevel => _batteryLevel;
 
   @override
   String? get btleAddress => deviceDescriptor.address;
@@ -130,17 +131,18 @@ class PolarDeviceManager extends BTLEDeviceManager {
       return DeviceStatus.error;
     } else {
       try {
+        // listen for battery  events
+        _batterySubscription = polar.batteryLevelStream.listen((event) {
+          debug('$runtimeType - Polar event : $event');
+          _batteryLevel = event.level;
+        });
+
         // listen for what features the connected Polar device supports
         polar.streamingFeaturesReadyStream.listen((event) {
           debug('$runtimeType - Polar event : $event');
           features = event.features;
           _polarFeaturesAvailable = true;
-        });
-
-        // listen for battery  events
-        _batterySubscription = polar.batteryLevelStream.listen((event) {
-          debug('$runtimeType - Polar event : $event');
-          _batteryLevel = event.level;
+          status = DeviceStatus.connected;
         });
 
         // listen for connection events
@@ -154,7 +156,8 @@ class PolarDeviceManager extends BTLEDeviceManager {
 
         _connectedSubscription = polar.deviceConnectedStream.listen((event) {
           debug('$runtimeType - Polar event : $event');
-          status = DeviceStatus.connected;
+          // we do not mark the device as fully connected before the features are available
+          status = DeviceStatus.connecting;
           deviceDescriptor.address = event.address;
           deviceDescriptor.name = event.name;
           deviceDescriptor.rssi = event.rssi;
@@ -164,6 +167,7 @@ class PolarDeviceManager extends BTLEDeviceManager {
             polar.deviceDisconnectedStream.listen((event) {
           debug('$runtimeType - Polar event : $event');
           status = DeviceStatus.disconnected;
+          _batteryLevel = null;
           deviceDescriptor.address = event.address;
           deviceDescriptor.name = event.name;
           deviceDescriptor.rssi = event.rssi;

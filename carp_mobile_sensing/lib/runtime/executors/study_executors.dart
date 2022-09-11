@@ -7,56 +7,6 @@
 
 part of runtime;
 
-/// An abstract class used to implement aggregated executors (i.e., executors
-/// with a set of underlying executors).
-///
-/// See [StudyDeploymentExecutor] and [TaskExecutor] for examples.
-abstract class AggregateExecutor<TConfig> extends AbstractExecutor<TConfig> {
-  static final DeviceInfo deviceInfo = DeviceInfo();
-  final StreamGroup<DataPoint> group = StreamGroup.broadcast();
-  final List<Executor> executors = [];
-
-  @override
-  Stream<DataPoint> get data => group.stream;
-
-  @override
-  Future<bool> onResume() async {
-    for (var executor in executors) {
-      executor.resume();
-    }
-    return true;
-  }
-
-  @override
-  Future<bool> onPause() async {
-    for (var executor in executors) {
-      executor.pause();
-    }
-    return true;
-  }
-
-  @override
-  Future<bool> onRestart() async {
-    for (var executor in executors) {
-      executor.restart();
-    }
-    return true;
-  }
-
-  @override
-  Future<bool> onStop() async {
-    for (var executor in executors) {
-      executor.stop();
-    }
-    executors.clear();
-    return true;
-  }
-}
-
-// ---------------------------------------------------------------------------------------------------------
-// STUDY DEPLOYMENT EXECUTOR
-// ---------------------------------------------------------------------------------------------------------
-
 /// The [StudyDeploymentExecutor] is responsible for executing a [SmartphoneDeployment].
 /// For each triggered task in this deployment, it starts a [TriggeredTaskExecutor].
 ///
@@ -96,7 +46,7 @@ class StudyDeploymentExecutor extends AggregateExecutor<SmartphoneDeployment> {
 
       // let the device manger know about this executor
       DeviceController()
-          .getDevice(triggeredTask.targetDevice!.type)
+          .getDevice(triggeredTask.targetDeviceType!)
           ?.executors
           .add(executor);
 
@@ -142,6 +92,24 @@ class StudyDeploymentExecutor extends AggregateExecutor<SmartphoneDeployment> {
     retrainedProbes.retainWhere((probe) => probe.type == type);
     return retrainedProbes;
   }
+}
+
+/// Returns the relevant [TriggeredTaskExecutor] based on the type of [trigger]
+/// and [task].
+TriggeredTaskExecutor getTriggeredTaskExecutor(
+  TriggeredTask triggeredTask,
+  Trigger trigger,
+  TaskDescriptor task,
+) {
+  // a TriggeredAppTaskExecutor need BOTH a Scheduleable trigger and an AppTask
+  // to schedule
+  if (trigger is Scheduleable && task is AppTask) {
+    return TriggeredAppTaskExecutor(triggeredTask, trigger, task);
+  }
+
+  // all other cases we use the normal background triggering relying on the app
+  // running in the background
+  return TriggeredTaskExecutor(triggeredTask, trigger, task);
 }
 
 /// Responsible for handling the execution of a [TriggeredTask].
@@ -200,8 +168,8 @@ class TriggeredTaskExecutor extends AggregateExecutor<TriggeredTask> {
   /// Returns a list of the running probes in this [TriggeredTaskExecutor].
   List<Probe> get probes => taskExecutor?.probes ?? [];
 
-  @override
-  String toString() => '$runtimeType - triggeredTask: $triggeredTask';
+  // @override
+  // String toString() => '$runtimeType - triggeredTask: $triggeredTask';
 }
 
 /// Responsible for handling the execution of a [TriggeredTask] which contains
@@ -267,22 +235,4 @@ class TriggeredAppTaskExecutor extends TriggeredTaskExecutor {
   @override
   Future<bool> onPause() async =>
       true; // do nothing - this executor is never resumed
-}
-
-/// Returns the relevant [TriggeredTaskExecutor] based on the type of [trigger]
-/// and [task].
-TriggeredTaskExecutor getTriggeredTaskExecutor(
-  TriggeredTask triggeredTask,
-  Trigger trigger,
-  TaskDescriptor task,
-) {
-  // a TriggeredAppTaskExecutor need BOTH a Scheduleable trigger and an AppTask
-  // to schedule
-  if (trigger is Scheduleable && task is AppTask) {
-    return TriggeredAppTaskExecutor(triggeredTask, trigger, task);
-  }
-
-  // all other cases we use the normal background triggering relying on the app
-  // running in the background
-  return TriggeredTaskExecutor(triggeredTask, trigger, task);
 }

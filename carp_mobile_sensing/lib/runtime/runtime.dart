@@ -16,6 +16,7 @@ import 'dart:math';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'package:carp_serializable/carp_serializable.dart';
@@ -45,7 +46,6 @@ part 'executors/study_executors.dart';
 part 'executors/executors.dart';
 part 'executors/trigger_executors.dart';
 part 'executors/task_executors.dart';
-part 'executors/app_task_executor.dart';
 part 'app_task_controller.dart';
 part 'user_tasks.dart';
 part 'executors/probes.dart';

@@ -4,6 +4,7 @@ class SensingBLoC {
   static const String STUDY_DEPLOYMENT_ID_KEY = 'study_deployment_id';
 
   String? _studyDeploymentId;
+  bool _useCached = true;
 
   /// The study deployment id for the currently running deployment.
   /// Returns the deployment id cached locally on the phone (if available).
@@ -21,6 +22,9 @@ class SensingBLoC {
     _studyDeploymentId = id;
     Settings().preferences?.setString(STUDY_DEPLOYMENT_ID_KEY, id!);
   }
+
+  /// Use the cached study deployment?
+  bool get useCachedStudyDeployment => _useCached;
 
   /// Erase all study deployment information cached locally on this phone.
   Future<void> eraseStudyDeployment() async {
@@ -56,11 +60,13 @@ class SensingBLoC {
   Future<void> initialize({
     DeploymentMode deploymentMode = DeploymentMode.LOCAL,
     String dataFormat = NameSpace.CARP,
+    bool useCachedStudyDeployment = true,
   }) async {
     await Settings().init();
     Settings().debugLevel = DebugLevel.DEBUG;
     this.deploymentMode = deploymentMode;
     this.dataFormat = dataFormat;
+    _useCached = useCachedStudyDeployment;
 
     info('$runtimeType initialized');
   }

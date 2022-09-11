@@ -60,7 +60,7 @@ class ESenseDevice extends DeviceDescriptor {
 class ESenseDeviceManager
     extends HardwareDeviceManager<DeviceRegistration, ESenseDevice> {
   // the last known voltage level of the eSense device
-  double _voltageLevel = 4;
+  double? _voltageLevel;
 
   /// A handle to the [ESenseManager] plugin.
   ESenseManager? manager;
@@ -88,7 +88,9 @@ class ESenseDeviceManager
   ///
   /// See e.g. https://en.wikipedia.org/wiki/State_of_charge#Voltage_method
   @override
-  int get batteryLevel => ((1.19 * _voltageLevel - 3.91) * 100).toInt();
+  int? get batteryLevel => (_voltageLevel != null)
+      ? ((1.19 * _voltageLevel! - 3.91) * 100).toInt()
+      : null;
 
   @override
   void onInitialize(DeviceDescriptor descriptor) {
@@ -146,6 +148,7 @@ class ESenseDeviceManager
         case ConnectionType.device_not_found:
         case ConnectionType.disconnected:
           status = DeviceStatus.disconnected;
+          _voltageLevel = null;
           // _eventSubscription?.cancel();
           break;
       }

@@ -190,14 +190,15 @@ abstract class StreamProbe extends Probe {
 
   @override
   Future<bool> onPause() async {
+    print('>> $runtimeType - canceling subscription: $subscription');
     await subscription?.cancel();
+    print('>> $runtimeType -  cancled (!!) subscription: $subscription');
     return true;
   }
 
   @override
   Future<bool> onRestart() async {
     await subscription?.cancel();
-    await onResume();
     return true;
   }
 

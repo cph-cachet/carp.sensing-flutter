@@ -38,7 +38,7 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
   set status(DeviceStatus newStatus) {
     debug('$runtimeType - setting device status: $newStatus');
     _status = newStatus;
-    _eventController.add(newStatus);
+    _eventController.add(_status);
   }
 
   /// Has this device manager been initialized?
@@ -48,6 +48,7 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
   bool get isConnected => status == DeviceStatus.connected;
 
   /// Initialize the device manager by specifying its device [descriptor].
+  @nonVirtual
   void initialize(TDeviceDescriptor descriptor) {
     info('Initializing device manager, type: $type, descriptor.: $descriptor');
     deviceDescriptor = descriptor;
@@ -64,6 +65,7 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
   /// Ask this [DeviceManager] to start connecting to the device.
   ///
   /// Returns true if successful, false if not.
+  @nonVirtual
   Future<DeviceStatus> connect() async {
     if (!isInitialized) {
       warning('$runtimeType has not been initialized - cannot connect to it.');
@@ -85,7 +87,9 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
   ///
   /// This entails that all measures in the study protocol using this device's
   /// type is restarted. This method is useful after the device is connected.
+  @nonVirtual
   void restart() {
+    print('>> $runtimeType - executors: $executors');
     for (var executor in executors) {
       executor.restart();
     }
@@ -95,6 +99,7 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
   ///
   /// This entails that all measures in the study protocol using this device's
   /// type is paused.
+  @nonVirtual
   void pause() {
     for (var executor in executors) {
       executor.pause();
@@ -104,6 +109,7 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
   /// Ask this [DeviceManager] to disconnect from the device.
   ///
   /// Returns true if successful, false if not.
+  @nonVirtual
   Future<bool> disconnect() async {
     bool success = false;
     if (status != DeviceStatus.connected) {
@@ -131,11 +137,7 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
 abstract class OnlineServiceManager<
         TDeviceRegistration extends DeviceRegistration,
         TDeviceDescriptor extends OnlineService>
-    extends DeviceManager<TDeviceRegistration, TDeviceDescriptor> {
-  @override
-  Future<bool> canConnect() async =>
-      true; // can always connect to an online service.
-}
+    extends DeviceManager<TDeviceRegistration, TDeviceDescriptor> {}
 
 /// A [DeviceManager] for a hardware device.
 abstract class HardwareDeviceManager<
@@ -143,6 +145,7 @@ abstract class HardwareDeviceManager<
         TDeviceDescriptor extends DeviceDescriptor>
     extends DeviceManager<TDeviceRegistration, TDeviceDescriptor> {
   /// The runtime battery level of this hardware device.
+  /// Returns null if unknown.
   int? get batteryLevel;
 }
 
@@ -188,6 +191,20 @@ abstract class BTLEDeviceManager<TDeviceRegistration extends DeviceRegistration,
   /// The Bluetooth address of this BTLE device in the form `00:04:79:00:0F:4D`.
   /// Returns null if unknown.
   String? get btleAddress;
+
+  // when this device is connected, restart sampling
+  @override
+  @mustCallSuper
+  void onInitialize(DeviceDescriptor descriptor) {
+    print('>> $runtimeType - onInitialize()');
+    statusEvents.listen((event) {
+      print('>> $runtimeType - event: $event');
+      if (event == DeviceStatus.connected) {
+        print('>> $runtimeType - restarting');
+        restart();
+      }
+    });
+  }
 }
 
 /// Different status for a [DeviceManager].
