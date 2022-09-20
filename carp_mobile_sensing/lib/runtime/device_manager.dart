@@ -58,7 +58,7 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
 
   /// Callback on [initialize].
   ///
-  /// Is often overriden in sub-classes. Note, however, that it must not be
+  /// Is to be overriden in sub-classes. Note, however, that it must not be
   /// doing a lot of work on startup.
   void onInitialize(TDeviceDescriptor descriptor);
 
@@ -79,8 +79,7 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
 
   /// Callback on [connect]. Returns the [DeviceStatus] of the device.
   ///
-  /// Is often overriden in sub-classes. Note, however, that it must not be
-  /// doing a lot of work on startup.
+  /// Is to be overriden in sub-classes.
   Future<DeviceStatus> onConnect();
 
   /// Restart sampling of the measures using this device.
@@ -89,9 +88,11 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
   /// type is restarted. This method is useful after the device is connected.
   @nonVirtual
   void restart() {
-    print('>> $runtimeType - executors: $executors');
     for (var executor in executors) {
       executor.restart();
+      if (executor.state == ExecutorState.resumed) {
+        executor.resume();
+      }
     }
   }
 
@@ -128,8 +129,7 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
 
   /// Callback on [disconnect].
   ///
-  /// Is often overriden in sub-classes. Note, however, that it must not be
-  /// doing a lot of work on startup.
+  /// Is to be overriden in sub-classes.
   Future<bool> onDisconnect();
 }
 
@@ -196,18 +196,15 @@ abstract class BTLEDeviceManager<TDeviceRegistration extends DeviceRegistration,
   @override
   @mustCallSuper
   void onInitialize(DeviceDescriptor descriptor) {
-    print('>> $runtimeType - onInitialize()');
     statusEvents.listen((event) {
-      print('>> $runtimeType - event: $event');
       if (event == DeviceStatus.connected) {
-        print('>> $runtimeType - restarting');
         restart();
       }
     });
   }
 }
 
-/// Different status for a [DeviceManager].
+/// Runtime status for a [DeviceManager].
 enum DeviceStatus {
   /// The state of the device is unknown.
   unknown,

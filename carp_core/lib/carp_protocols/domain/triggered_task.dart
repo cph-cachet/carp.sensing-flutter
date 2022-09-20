@@ -46,7 +46,6 @@ class TriggeredTask {
       targetDeviceType = targetDevice!.type;
       targetDeviceRoleName = targetDevice!.roleName;
     }
-    ;
   }
 
   factory TriggeredTask.fromJson(Map<String, dynamic> json) =>

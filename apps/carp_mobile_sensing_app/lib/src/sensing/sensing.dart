@@ -134,7 +134,7 @@ class Sensing {
     await controller?.configure();
 
     // Start samplling
-    controller?.start();
+    controller?.start(bloc.resumeSensingOnStartup);
 
     // Listening on the data stream and print them as json to the debug console
     controller?.data.listen((data) => print(toJsonString(data)));
