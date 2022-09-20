@@ -32,10 +32,12 @@ Future<void> example_0() async {
   protocol.addTriggeredTask(
       DelayedTrigger(delay: Duration(seconds: 10)),
       BackgroundTask(name: 'Sensor Task')
-        ..addMeasure(Measure(type: SensorSamplingPackage.PEDOMETER))
-        ..addMeasure(Measure(type: SensorSamplingPackage.LIGHT))
-        ..addMeasure(Measure(type: DeviceSamplingPackage.SCREEN))
-        ..addMeasure(Measure(type: DeviceSamplingPackage.BATTERY)),
+        ..addMeasures([
+          Measure(type: SensorSamplingPackage.PEDOMETER),
+          Measure(type: SensorSamplingPackage.LIGHT),
+          Measure(type: DeviceSamplingPackage.SCREEN),
+          Measure(type: DeviceSamplingPackage.BATTERY),
+        ]),
       phone);
 
   // STEP II -- CREATE A STUDY
@@ -103,10 +105,12 @@ void example_1() async {
   protocol.addTriggeredTask(
       ImmediateTrigger(),
       BackgroundTask()
-        ..addMeasure(Measure(type: SensorSamplingPackage.PEDOMETER))
-        ..addMeasure(Measure(type: SensorSamplingPackage.LIGHT))
-        ..addMeasure(Measure(type: DeviceSamplingPackage.SCREEN))
-        ..addMeasure(Measure(type: DeviceSamplingPackage.BATTERY)),
+        ..addMeasures([
+          Measure(type: SensorSamplingPackage.PEDOMETER),
+          Measure(type: SensorSamplingPackage.LIGHT),
+          Measure(type: DeviceSamplingPackage.SCREEN),
+          Measure(type: DeviceSamplingPackage.BATTERY),
+        ]),
       phone);
 
   // Use the on-phone deployment service.
@@ -260,7 +264,7 @@ void example_2() async {
   // Adapt a measures.
   //
   // Note that this will only work if the protocol is created locally on the
-  // phone (as in this example above)
+  // phone (as in the example above)
   // If downloaded and deserialized from json, then we need to locate the
   // measures in the deployment
   lightMeasure

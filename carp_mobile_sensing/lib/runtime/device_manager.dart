@@ -133,7 +133,7 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
   Future<bool> onDisconnect();
 }
 
-/// A [DeviceManager] for an online service.
+/// A [DeviceManager] for an online service, like a weather service.
 abstract class OnlineServiceManager<
         TDeviceRegistration extends DeviceRegistration,
         TDeviceDescriptor extends OnlineService>
@@ -185,6 +185,7 @@ class SmartphoneDeviceManager
   Future<bool> onDisconnect() async => true;
 }
 
+/// A device manager for a connectable bluetooth device.
 abstract class BTLEDeviceManager<TDeviceRegistration extends DeviceRegistration,
         TDeviceDescriptor extends DeviceDescriptor>
     extends HardwareDeviceManager<TDeviceRegistration, TDeviceDescriptor> {
@@ -192,11 +193,11 @@ abstract class BTLEDeviceManager<TDeviceRegistration extends DeviceRegistration,
   /// Returns null if unknown.
   String? get btleAddress;
 
-  // when this device is connected, restart sampling
   @override
   @mustCallSuper
   void onInitialize(DeviceDescriptor descriptor) {
     statusEvents.listen((event) {
+      // when this device is (re)connected, restart sampling
       if (event == DeviceStatus.connected) {
         restart();
       }
