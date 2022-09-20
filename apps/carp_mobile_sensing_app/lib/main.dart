@@ -51,6 +51,7 @@ void main() async {
   await bloc.initialize(
     deploymentMode: DeploymentMode.LOCAL,
     useCachedStudyDeployment: false,
+    resumeSensingOnStartup: false,
   );
 
   runApp(App());

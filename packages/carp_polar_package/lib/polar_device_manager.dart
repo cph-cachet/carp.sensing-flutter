@@ -8,14 +8,14 @@ part of carp_polar_package;
 
 /// Enumeration of supported Polar devices.
 enum PolarDeviceType {
-  /// H9 Heart rate sensor
+  /// Polar H9 Heart rate sensor
   H9,
 
-  /// H10 Heart rate sensor
+  /// Polar H10 Heart rate sensor
   H10,
 
-  /// Polar Verity Sense Optical heart rate sensor
-  PVSO,
+  /// Polar Verity Sense heart rate sensor
+  PVS,
 }
 
 /// A [DeviceDescriptor] for a Polar device used in a [StudyProtocol].
@@ -25,11 +25,11 @@ enum PolarDeviceType {
 /// of the device.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class PolarDevice extends DeviceDescriptor {
-  /// The type of a Movisens device.
+  /// The type of a Polar device.
   static const String DEVICE_TYPE =
       '${DeviceDescriptor.DEVICE_NAMESPACE}.PolarDevice';
 
-  /// The default rolename for a Movisens device.
+  /// The default rolename for a Polar device.
   static const String DEFAULT_ROLENAME = 'polar';
 
   /// The polar sensor settings.
@@ -54,7 +54,7 @@ class PolarDevice extends DeviceDescriptor {
   /// RSSI (Received Signal Strength Indicator) value from advertisement
   int? rssi;
 
-  /// Create a new [MovisensDevice].
+  /// Create a new [PolarDevice].
   PolarDevice({
     String? roleName,
     this.polarDeviceType,
@@ -70,6 +70,7 @@ class PolarDevice extends DeviceDescriptor {
             PolarSamplingPackage.POLAR_PPG,
             PolarSamplingPackage.POLAR_PPI,
             PolarSamplingPackage.POLAR_ECG,
+            PolarSamplingPackage.POLAR_HR,
           ],
         );
 

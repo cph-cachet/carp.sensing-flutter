@@ -299,5 +299,5 @@ Map<String, dynamic> _$PolarDeviceToJson(PolarDevice instance) {
 const _$PolarDeviceTypeEnumMap = {
   PolarDeviceType.H9: 'H9',
   PolarDeviceType.H10: 'H10',
-  PolarDeviceType.PVSO: 'PVSO',
+  PolarDeviceType.PVS: 'PVS',
 };
