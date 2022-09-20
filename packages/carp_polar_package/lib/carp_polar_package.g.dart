@@ -152,34 +152,6 @@ Map<String, dynamic> _$PolarECGDatumToJson(PolarECGDatum instance) {
   return val;
 }
 
-PolarExerciseDatum _$PolarExerciseDatumFromJson(Map<String, dynamic> json) =>
-    PolarExerciseDatum(
-      json['device_identifier'] as String,
-      json['device_timestamp'] as int?,
-      json['interval'] as int,
-      (json['samples'] as List<dynamic>).map((e) => e as int).toList(),
-    )
-      ..id = json['id'] as String?
-      ..timestamp = DateTime.parse(json['timestamp'] as String);
-
-Map<String, dynamic> _$PolarExerciseDatumToJson(PolarExerciseDatum instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('id', instance.id);
-  val['timestamp'] = instance.timestamp.toIso8601String();
-  val['device_identifier'] = instance.deviceIdentifier;
-  writeNotNull('device_timestamp', instance.deviceTimestamp);
-  val['interval'] = instance.interval;
-  val['samples'] = instance.samples;
-  return val;
-}
-
 PolarPPGDatum _$PolarPPGDatumFromJson(Map<String, dynamic> json) =>
     PolarPPGDatum(
       json['device_identifier'] as String,

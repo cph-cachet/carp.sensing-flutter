@@ -67,7 +67,6 @@ class PolarDevice extends DeviceDescriptor {
             PolarSamplingPackage.POLAR_ACCELEROMETER,
             PolarSamplingPackage.POLAR_GYROSCOPE,
             PolarSamplingPackage.POLAR_MAGNETOMETER,
-            PolarSamplingPackage.POLAR_EXERCISE,
             PolarSamplingPackage.POLAR_PPG,
             PolarSamplingPackage.POLAR_PPI,
             PolarSamplingPackage.POLAR_ECG,
