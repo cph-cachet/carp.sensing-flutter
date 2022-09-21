@@ -210,40 +210,6 @@ class PolarECGDatum extends PolarDatum {
   Map<String, dynamic> toJson() => _$PolarECGDatumToJson(this);
 }
 
-/// Polar exercise data.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class PolarExerciseDatum extends PolarDatum {
-  @JsonKey(ignore: true)
-  @override
-  DataFormat get format =>
-      DataFormat.fromString(PolarSamplingPackage.POLAR_EXERCISE);
-
-  /// Exercise interval in seconds.
-  int interval;
-
-  /// List of HR or RR samples in BPM
-  List<int> samples;
-
-  PolarExerciseDatum(
-    super.deviceIdentifier,
-    super.deviceTimestamp,
-    this.interval,
-    this.samples,
-  );
-
-  /// Create a [PolarExerciseDatum] based on the original [PolarExerciseData] reading.
-  PolarExerciseDatum.fromPolarData(PolarExerciseData data)
-      : samples = data.samples,
-        interval = data.interval,
-        super.fromPolarData(data.identifier);
-
-  factory PolarExerciseDatum.fromJson(Map<String, dynamic> json) =>
-      _$PolarExerciseDatumFromJson(json);
-
-  @override
-  Map<String, dynamic> toJson() => _$PolarExerciseDatumToJson(this);
-}
-
 /// Polar optical heart rate (OHR) photoplethysmograpy (PPG) data.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class PolarPPGDatum extends PolarDatum {

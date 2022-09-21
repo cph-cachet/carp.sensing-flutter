@@ -21,8 +21,9 @@ class LightProbe extends BufferingPeriodicStreamProbe {
   Stream<dynamic> get bufferingStream => _bufferingStream;
 
   @override
-  void onInitialize() {
+  bool onInitialize() {
     _bufferingStream = Light().lightSensorStream;
+    return true;
   }
 
   @override

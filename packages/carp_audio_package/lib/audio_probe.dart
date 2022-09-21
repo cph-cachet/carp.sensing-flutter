@@ -37,18 +37,21 @@ class AudioProbe extends DatumProbe {
   bool get isRecording => _isRecording;
 
   @override
-  Future<void> onResume() async {
+  Future<bool> onResume() async {
     try {
       await _startAudioRecording();
       debug('Audio recording resumed - sound file : $_soundFileName');
     } catch (error) {
       warning('An error occured trying to start audio recording - $error');
       controller.addError(error);
+      return false;
     }
+
+    return true;
   }
 
   @override
-  Future<void> onPause() async {
+  Future<bool> onPause() async {
     // when pausing the audio sampling, stop recording and collect the datum
     if (_isRecording) {
       try {
@@ -61,13 +64,14 @@ class AudioProbe extends DatumProbe {
         controller.addError(error);
       }
     }
+    return true;
   }
 
   @override
-  Future<void> onStop() async {
+  Future<bool> onStop() async {
     if (_isRecording) await onPause();
     await recorder.stopRecorder();
-    super.onStop();
+    return super.onStop();
   }
 
   Future<void> _startAudioRecording() async {

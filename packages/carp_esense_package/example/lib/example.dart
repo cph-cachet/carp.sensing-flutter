@@ -36,10 +36,12 @@ void main() async {
   protocol.addTriggeredTask(
       ImmediateTrigger(),
       BackgroundTask()
-        ..addMeasure(Measure(type: SensorSamplingPackage.PEDOMETER))
-        ..addMeasure(Measure(type: SensorSamplingPackage.LIGHT))
-        ..addMeasure(Measure(type: DeviceSamplingPackage.SCREEN))
-        ..addMeasure(Measure(type: DeviceSamplingPackage.BATTERY)),
+        ..addMeasures([
+          Measure(type: SensorSamplingPackage.PEDOMETER),
+          Measure(type: SensorSamplingPackage.LIGHT),
+          Measure(type: DeviceSamplingPackage.SCREEN),
+          Measure(type: DeviceSamplingPackage.BATTERY),
+        ]),
       phone);
 
   // Add a background task that immediately starts collecting eSense button and

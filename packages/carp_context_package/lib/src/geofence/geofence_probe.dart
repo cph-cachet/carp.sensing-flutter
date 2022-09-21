@@ -17,7 +17,7 @@ class GeofenceProbe extends StreamProbe {
       super.deviceManager as LocationServiceManager;
 
   @override
-  Future<void> onResume() async {
+  Future<bool> onResume() async {
     Geofence fence = Geofence.fromGeofenceSamplingConfiguration(
         samplingConfiguration as GeofenceSamplingConfiguration);
 
@@ -31,7 +31,7 @@ class GeofenceProbe extends StreamProbe {
       if (datum != null) geoFenceStreamController.add(datum);
     });
 
-    super.onResume();
+    return super.onResume();
   }
 
   @override

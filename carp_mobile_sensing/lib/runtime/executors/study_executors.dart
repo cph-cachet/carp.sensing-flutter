@@ -7,52 +7,6 @@
 
 part of runtime;
 
-/// An abstract class used to implement aggregated executors (i.e., executors
-/// with a set of underlying executors).
-///
-/// See [StudyDeploymentExecutor] and [TaskExecutor] for examples.
-abstract class AggregateExecutor<TConfig> extends AbstractExecutor<TConfig> {
-  static final DeviceInfo deviceInfo = DeviceInfo();
-  final StreamGroup<DataPoint> group = StreamGroup.broadcast();
-  final List<Executor> executors = [];
-
-  @override
-  Stream<DataPoint> get data => group.stream;
-
-  @override
-  Future<void> onResume() async {
-    for (var executor in executors) {
-      executor.resume();
-    }
-  }
-
-  @override
-  Future<void> onPause() async {
-    for (var executor in executors) {
-      executor.pause();
-    }
-  }
-
-  @override
-  Future<void> onRestart() async {
-    for (var executor in executors) {
-      executor.restart();
-    }
-  }
-
-  @override
-  Future<void> onStop() async {
-    for (var executor in executors) {
-      executor.stop();
-    }
-    executors.clear();
-  }
-}
-
-// ---------------------------------------------------------------------------------------------------------
-// STUDY DEPLOYMENT EXECUTOR
-// ---------------------------------------------------------------------------------------------------------
-
 /// The [StudyDeploymentExecutor] is responsible for executing a [SmartphoneDeployment].
 /// For each triggered task in this deployment, it starts a [TriggeredTaskExecutor].
 ///
@@ -64,11 +18,11 @@ class StudyDeploymentExecutor extends AggregateExecutor<SmartphoneDeployment> {
       StreamController.broadcast();
 
   @override
-  void onInitialize() {
+  bool onInitialize() {
     if (configuration == null) {
       warning(
           'Trying to initialize StudyDeploymentExecutor but the deployment configuration is null. Cannot initialize study deployment.');
-      return;
+      return false;
     }
 
     group.add(_manualDataPointController.stream);
@@ -90,9 +44,16 @@ class StudyDeploymentExecutor extends AggregateExecutor<SmartphoneDeployment> {
 
       executor.initialize(triggeredTask, deployment!);
 
+      // let the device manger know about this executor
+      DeviceController()
+          .getDevice(triggeredTask.targetDeviceType!)
+          ?.executors
+          .add(executor);
+
       group.add(executor.data);
       executors.add(executor);
     }
+    return true;
   }
 
   /// Get the aggregated stream of [DataPoint] data sampled by all executors
@@ -133,6 +94,24 @@ class StudyDeploymentExecutor extends AggregateExecutor<SmartphoneDeployment> {
   }
 }
 
+/// Returns the relevant [TriggeredTaskExecutor] based on the type of [trigger]
+/// and [task].
+TriggeredTaskExecutor getTriggeredTaskExecutor(
+  TriggeredTask triggeredTask,
+  Trigger trigger,
+  TaskDescriptor task,
+) {
+  // a TriggeredAppTaskExecutor need BOTH a Scheduleable trigger and an AppTask
+  // to schedule
+  if (trigger is Scheduleable && task is AppTask) {
+    return TriggeredAppTaskExecutor(triggeredTask, trigger, task);
+  }
+
+  // all other cases we use the normal background triggering relying on the app
+  // running in the background
+  return TriggeredTaskExecutor(triggeredTask, trigger, task);
+}
+
 /// Responsible for handling the execution of a [TriggeredTask].
 ///
 /// This executor runs in real-time and triggers the task using timers. This
@@ -160,7 +139,7 @@ class TriggeredTaskExecutor extends AggregateExecutor<TriggeredTask> {
   }
 
   @override
-  void onInitialize() {
+  bool onInitialize() {
     // get the trigger executor and add it to this stream
     triggerExecutor = getTriggerExecutor(trigger);
     group.add(triggerExecutor!.data);
@@ -173,6 +152,8 @@ class TriggeredTaskExecutor extends AggregateExecutor<TriggeredTask> {
     triggerExecutor?.group.add(taskExecutor!.data);
     triggerExecutor?.executors.add(taskExecutor!);
     taskExecutor?.initialize(task, deployment!);
+
+    return true;
   }
 
   /// Get the aggregated stream of [DataPoint] data sampled by all executors
@@ -187,8 +168,8 @@ class TriggeredTaskExecutor extends AggregateExecutor<TriggeredTask> {
   /// Returns a list of the running probes in this [TriggeredTaskExecutor].
   List<Probe> get probes => taskExecutor?.probes ?? [];
 
-  @override
-  String toString() => '$runtimeType - triggeredTask: $triggeredTask';
+  // @override
+  // String toString() => '$runtimeType - triggeredTask: $triggeredTask';
 }
 
 /// Responsible for handling the execution of a [TriggeredTask] which contains
@@ -212,7 +193,7 @@ class TriggeredAppTaskExecutor extends TriggeredTaskExecutor {
       super.triggerExecutor as ScheduleableTriggerExecutor;
 
   @override
-  Future<void> onResume() async {
+  Future<bool> onResume() async {
     final from = triggeredTask.hasBeenScheduledUntil ?? DateTime.now();
     final to = from.add(Duration(days: 10)); // look 10 days ahead
     final schedule = triggerExecutor.getSchedule(from, to, 10);
@@ -247,26 +228,11 @@ class TriggeredAppTaskExecutor extends TriggeredTaskExecutor {
           DateTime.now().millisecondsSinceEpoch;
       Timer(Duration(milliseconds: duration), () => resume());
     }
+
+    return true;
   }
 
   @override
-  Future<void> onPause() async {} // do nothing - this executor is never resumed
-}
-
-/// Returns the relevant [TriggeredTaskExecutor] based on the type of [trigger]
-/// and [task].
-TriggeredTaskExecutor getTriggeredTaskExecutor(
-  TriggeredTask triggeredTask,
-  Trigger trigger,
-  TaskDescriptor task,
-) {
-  // a TriggeredAppTaskExecutor need BOTH a Scheduleable trigger and an AppTask
-  // to schedule
-  if (trigger is Scheduleable && task is AppTask) {
-    return TriggeredAppTaskExecutor(triggeredTask, trigger, task);
-  }
-
-  // all other cases we use the normal background triggering relying on the app
-  // running in the background
-  return TriggeredTaskExecutor(triggeredTask, trigger, task);
+  Future<bool> onPause() async =>
+      true; // do nothing - this executor is never resumed
 }

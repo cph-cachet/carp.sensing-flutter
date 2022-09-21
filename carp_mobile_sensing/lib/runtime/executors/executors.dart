@@ -15,12 +15,13 @@ part of runtime;
 ///
 /// The runtime state has the following state machine:
 ///
-///    +----------------------------------------------------------------+     +-----------+
-///    |   +---------+    +-------------+    +---------+     +--------+ |  -> | undefined |
-///    |   | created | -> | initialized | -> | resumed | <-> | paused | |     +-----------+
-///    |   +---------+    +-------------+    +---------+     +--------+ |  -> | stopped   |
-///    +----------------------------------------------------------------+     +-----------+
-///
+/// ```
+///    +---------------------------------------------------------------+     +-----------+
+///    |  +---------+    +-------------+    +---------+     +--------+ |  -> | undefined |
+///    |  | created | -> | initialized | -> | resumed | <-> | paused | |     +-----------+
+///    |  +---------+    +-------------+    +---------+     +--------+ |  -> | stopped   |
+///    +---------------------------------------------------------------+     +-----------+
+/// ```
 enum ExecutorState {
   /// Created and ready to be initialized.
   created,
@@ -76,34 +77,30 @@ abstract class Executor<TConfig> {
   /// The runtime state changes of this executor.
   Stream<ExecutorState> get stateEvents;
 
-  /// Is [nextState] a valid next state for this executor?
-  ///
-  /// For example:
-  ///   * if the current state of this Executor is `initialized` then a valid next state is `resumed`.
-  ///   * if the current state of this Executor is `resumed` then a valid next state is `paused`.
-  ///   * if the current state of this Executor is `resumed` then `initialized` is **not** a valid next state.
-  bool validNextState(ExecutorState nextState);
-
   /// The stream of [DataPoint] generated from this executor.
   Stream<DataPoint> get data;
 
-  /// Configure and initialize the executor before starting it.
+  /// Configure and initialize the executor before resuming it.
   void initialize(TConfig configuration, [SmartphoneDeployment? deployment]);
 
   /// Resume the executor.
   void resume();
 
-  /// Pause the executor. Paused until [resume], [restart] or [stop] is called.
+  /// Pause the executor. Paused until [resume] or [stop] is called.
   void pause();
 
   /// Restart the executor.
   ///
-  /// This forces the executor to reload its [configuration] and restart sampling
-  /// accordingly. Configuration may be specified via the [initialize] method
+  /// This forces the executor to reload its [configuration] and initialize sampling
+  /// accordingly. Configuration must be specified via the [initialize] method
   /// before calling restart.
+  ///
+  /// Note that calling restart does not automatically resume the executor.
+  /// If the executor is to be resumed after a restart, the [resume] method
+  /// must be called.
   void restart();
 
-  /// Stop the executor. Once an executor is stopped, it cannot be started again.
+  /// Stop the executor. Once an executor is stopped, it cannot be resumed again.
   /// If you need to restart an executor, use the [restart] or [pause] and
   /// [resume] methods.
   void stop();
@@ -133,10 +130,6 @@ abstract class AbstractExecutor<TConfig> implements Executor<TConfig> {
     _stateMachine = _CreatedState(this);
   }
 
-  @override
-  bool validNextState(ExecutorState nextState) =>
-      _stateMachine.validNextState(nextState);
-
   void _setState(_ExecutorStateMachine state) {
     _stateMachine = state;
     _stateEventController.add(state.state);
@@ -144,22 +137,33 @@ abstract class AbstractExecutor<TConfig> implements Executor<TConfig> {
 
   @override
   void initialize(TConfig configuration, [SmartphoneDeployment? deployment]) {
+    info('Initializing $runtimeType');
     _deployment = deployment;
     _configuration = configuration;
     _stateMachine.initialize();
   }
 
   @override
-  void restart() => _stateMachine.restart();
+  void resume() {
+    info('Resuming $runtimeType');
+    _stateMachine.resume();
+  }
 
   @override
-  void pause() => _stateMachine.pause();
+  void pause() {
+    info('Pausing $runtimeType');
+    _stateMachine.pause();
+  }
 
   @override
-  void resume() => _stateMachine.resume();
+  void restart() {
+    info('Restarting $runtimeType');
+    _stateMachine.restart();
+  }
 
   @override
   void stop() {
+    info('Stopping $runtimeType');
     _stateMachine.stop();
     _stateEventController.close();
   }
@@ -167,45 +171,96 @@ abstract class AbstractExecutor<TConfig> implements Executor<TConfig> {
   void error() => _stateMachine.error();
 
   /// Callback when this executor is initialized.
+  /// Returns true if succesfully initialized, false othervise.
   ///
   /// Note that this is a non-async method and should hence be 'light-weight'
   /// and not block execution for a long duration.
   @protected
-  void onInitialize();
+  bool onInitialize();
 
   /// Callback when this executor is resumed.
+  /// Returns true if succesfully resumed, false othervise.
   @protected
-  Future<void> onResume();
+  Future<bool> onResume();
 
   /// Callback when this executor is paused.
+  /// Returns true if succesfully paused, false othervise.
   @protected
-  Future<void> onPause();
+  Future<bool> onPause();
 
   /// Callback when this executor is restarted.
+  /// Returns true if succesfully restarted, false othervise.
   @protected
-  Future<void> onRestart();
+  Future<bool> onRestart();
 
   /// Callback when this executor is stopped.
+  /// Returns true if succesfully stopped, false othervise.
   @protected
-  Future<void> onStop();
+  Future<bool> onStop();
 
   @override
-  String toString() => '$runtimeType - configuration: $configuration';
+  String toString() =>
+      '$runtimeType - state: $state, configuration: $configuration';
 }
 
-//---------------------------------------------------------------------------------------
-//                                 EXECUTOR STATE MACHINE
+/// An abstract class used to implement aggregated executors (i.e., executors
+/// with a set of underlying executors).
+///
+/// See [StudyDeploymentExecutor] and [TaskExecutor] for examples.
+abstract class AggregateExecutor<TConfig> extends AbstractExecutor<TConfig> {
+  static final DeviceInfo deviceInfo = DeviceInfo();
+  final StreamGroup<DataPoint> group = StreamGroup.broadcast();
+  final List<Executor> executors = [];
+
+  @override
+  Stream<DataPoint> get data => group.stream;
+
+  @override
+  Future<bool> onResume() async {
+    for (var executor in executors) {
+      executor.resume();
+    }
+    return true;
+  }
+
+  @override
+  Future<bool> onPause() async {
+    for (var executor in executors) {
+      executor.pause();
+    }
+    return true;
+  }
+
+  @override
+  Future<bool> onRestart() async {
+    for (var executor in executors) {
+      executor.restart();
+    }
+    return true;
+  }
+
+  @override
+  Future<bool> onStop() async {
+    for (var executor in executors) {
+      executor.stop();
+    }
+    executors.clear();
+    return true;
+  }
+}
+
+//------------------------------------------------------------------------------
+//                           EXECUTOR STATE MACHINE
 //
-//         created -> initialized -> resumed <-> paused *-> stopped/undefined
+//     created -> initialized -> resumed <-> paused *-> stopped | undefined
 //
-//---------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
-// all of the below executor state machine classes are private and only used internally
-// hence, they are not documented
+// All of the below executor state machine classes are private and only used
+// internally, and are therefore not documented.
 
 abstract class _ExecutorStateMachine {
   ExecutorState get state;
-  bool validNextState(ExecutorState nextState);
 
   void initialize();
   void pause();
@@ -238,22 +293,17 @@ abstract class _AbstractExecutorState implements _ExecutorStateMachine {
   // Default stop behavior. A Executor can be stopped in all states.
   @override
   void stop() {
-    info('Stopping ${executor.runtimeType}');
-    executor._setState(_StoppedState(executor));
     executor.onStop();
+    executor._setState(_StoppedState(executor));
   }
 
-  // Default error behavior. A Executor can become undefined in all states.
+  // Default error behavior. A Executor can experience an error and become
+  // undefined in all states.
   @override
   void error() {
     warning('Error in ${executor.runtimeType}.');
     executor._setState(_UndefinedState(executor));
   }
-
-  // Default implementation of next state. Can always be stopped.
-  @override
-  bool validNextState(ExecutorState nextState) =>
-      (nextState == ExecutorState.stopped);
 
   void _printWarning(String operation) => warning(
       'Trying to $operation a ${executor.runtimeType} in a state where this cannot be done - state: $state');
@@ -266,19 +316,15 @@ class _CreatedState extends _AbstractExecutorState
 
   @override
   void initialize() {
-    info('Initializing ${executor.runtimeType}');
     try {
-      executor.onInitialize();
-      executor._setState(_InitializedState(executor));
+      if (executor.onInitialize()) {
+        executor._setState(_InitializedState(executor));
+      }
     } catch (error) {
       warning('Error initializing ${executor.runtimeType}: $error');
       executor._setState(_UndefinedState(executor));
     }
   }
-
-  @override
-  bool validNextState(ExecutorState nextState) =>
-      (nextState == ExecutorState.initialized);
 
   @override
   String toString() => 'created';
@@ -291,14 +337,17 @@ class _InitializedState extends _AbstractExecutorState
 
   @override
   void resume() {
-    info('Resuming ${executor.runtimeType}');
-    executor.onResume();
-    executor._setState(_ResumedState(executor));
+    executor.onResume().then((resumed) {
+      if (resumed) executor._setState(_ResumedState(executor));
+    });
   }
 
   @override
-  bool validNextState(ExecutorState nextState) =>
-      (nextState == ExecutorState.resumed);
+  void restart() {
+    executor.onRestart().then((restarted) {
+      if (restarted) executor._setState(_InitializedState(executor));
+    });
+  }
 
   @override
   String toString() => 'initialized';
@@ -310,23 +359,25 @@ class _ResumedState extends _AbstractExecutorState
       : super(executor as AbstractExecutor, ExecutorState.resumed);
 
   @override
+  void resume() {
+    executor.onResume().then((resumed) {
+      if (resumed) executor._setState(_ResumedState(executor));
+    });
+  }
+
+  @override
   void restart() {
-    info('Restarting ${executor.runtimeType}');
-    executor.pause(); // first pause executor, setting it in a paused state
-    executor.onRestart();
-    executor.resume();
+    executor.onRestart().then((restarted) {
+      if (restarted) executor._setState(_InitializedState(executor));
+    });
   }
 
   @override
   void pause() {
-    info('Pausing ${executor.runtimeType}');
-    executor.onPause();
-    executor._setState(_PausedState(executor));
+    executor.onPause().then((paused) {
+      if (paused) executor._setState(_PausedState(executor));
+    });
   }
-
-  @override
-  bool validNextState(ExecutorState nextState) =>
-      (nextState == ExecutorState.paused);
 
   @override
   String toString() => 'resumed';
@@ -338,22 +389,18 @@ class _PausedState extends _AbstractExecutorState
       : super(executor as AbstractExecutor, ExecutorState.paused);
 
   @override
-  void restart() {
-    info('Restarting ${executor.runtimeType}');
-    executor.onRestart();
-    executor.resume();
-  }
-
-  @override
   void resume() {
-    info('Resuming ${executor.runtimeType}');
-    executor.onResume();
-    executor._setState(_ResumedState(executor));
+    executor.onResume().then((resumed) {
+      if (resumed) executor._setState(_ResumedState(executor));
+    });
   }
 
   @override
-  bool validNextState(ExecutorState nextState) =>
-      (nextState == ExecutorState.resumed);
+  void restart() {
+    executor.onRestart().then((restarted) {
+      if (restarted) executor._setState(_InitializedState(executor));
+    });
+  }
 
   @override
   String toString() => 'paused';

@@ -13,18 +13,15 @@ class DeviceModel {
   String? get name => deviceTypeName[type!];
 
   /// A printer-friendly description of this device.
-  String get description =>
-      '${deviceTypeDescription[type!]} - $statusString' +
-      ((deviceManager is HardwareDeviceManager)
-          ? '\n$batteryLevel% battery remaining.'
-          : '');
+  String get description => '${deviceTypeDescription[type!]} - $statusString'
+      '${(deviceManager is HardwareDeviceManager && batteryLevel != null) ? '\n$batteryLevel% battery remaining.' : ''}';
 
   String get statusString => status.toString().split('.').last;
 
-  /// The battery level of this device.
+  /// The battery level of this device, if known.
   int? get batteryLevel => deviceManager is HardwareDeviceManager
       ? (deviceManager as HardwareDeviceManager).batteryLevel
-      : 100;
+      : null;
 
   /// The icon for this type of device.
   Icon? get icon => deviceTypeIcon[type!];

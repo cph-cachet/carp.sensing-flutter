@@ -20,6 +20,7 @@ To use this plugin, add [`carp_mobile_sensing`](https://pub.dev/packages/carp_mo
 dependencies:
   flutter:
     sdk: flutter
+  carp_core: ^latest
   carp_mobile_sensing: ^latest
 `````
 
@@ -75,7 +76,7 @@ There is a **very simple** [example app](https://github.com/cph-cachet/carp.sens
 This app just prints the sensing data to a console screen on the phone.
 There is also a range of different [examples](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/carp_mobile_sensing/example/lib/example.dart) on how to create a study to take inspiration from.
 
-However, the [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app) provides a **MUCH** better example of how to use the package in a Flutter BLoC architecture, including good documentation of how to do this.
+However, the [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app) provides a **MUCH** better example of how to use the framework in a Flutter BLoC architecture, including good documentation of how to do this.
 
 Below is a small primer in the use of CAMS.
 
@@ -94,7 +95,7 @@ In CAMS, a sensing protocol is configured in a [`StudyProtocol`](https://pub.dev
 Below is a simple example of how to set up a protocol that sense step counts (`pedometer`), ambient light (`light`), screen activity (`screen`), and power consumption (`battery`).
 
 ```dart
-// import package
+// import packages
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
@@ -120,10 +121,12 @@ void example() async {
   protocol.addTriggeredTask(
       ImmediateTrigger(),
       BackgroundTask()
-        ..addMeasure(Measure(type: SensorSamplingPackage.PEDOMETER))
-        ..addMeasure(Measure(type: SensorSamplingPackage.LIGHT))
-        ..addMeasure(Measure(type: DeviceSamplingPackage.SCREEN))
-        ..addMeasure(Measure(type: DeviceSamplingPackage.BATTERY)),
+        ..addMeasures([
+          Measure(type: SensorSamplingPackage.PEDOMETER),
+          Measure(type: SensorSamplingPackage.LIGHT),
+          Measure(type: DeviceSamplingPackage.SCREEN),
+          Measure(type: DeviceSamplingPackage.BATTERY),
+        ]),
       phone);
 ```
 
@@ -234,7 +237,7 @@ ProbeRegistry()
 // Adapt a measures.
 //
 // Note that this will only work if the protocol is created locally on the
-// phone (as in this example above)
+// phone (as in the example above)
 // If downloaded and deserialized from json, then we need to locate the
 // measures in the deployment
 lightMeasure

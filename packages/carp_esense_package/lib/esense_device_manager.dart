@@ -60,23 +60,13 @@ class ESenseDevice extends DeviceDescriptor {
 class ESenseDeviceManager
     extends HardwareDeviceManager<DeviceRegistration, ESenseDevice> {
   // the last known voltage level of the eSense device
-  double _voltageLevel = 4;
+  double? _voltageLevel;
 
   /// A handle to the [ESenseManager] plugin.
   ESenseManager? manager;
 
   @override
   String get id => deviceDescriptor?.deviceName ?? 'eSense-????';
-
-  @override
-  void onInitialize(DeviceDescriptor descriptor) {
-    if (deviceDescriptor?.deviceName == null ||
-        deviceDescriptor!.deviceName!.isEmpty) {
-      warning(
-          'Cannot initialize an $runtimeType with a null or empty device name. '
-          "Please specify a valid device name, typically on the form 'eSense-1234'");
-    }
-  }
 
   /// A estimate of the battery level of the eSense device.
   ///
@@ -98,18 +88,31 @@ class ESenseDeviceManager
   ///
   /// See e.g. https://en.wikipedia.org/wiki/State_of_charge#Voltage_method
   @override
-  int get batteryLevel => ((1.19 * _voltageLevel - 3.91) * 100).toInt();
+  int? get batteryLevel => (_voltageLevel != null)
+      ? ((1.19 * _voltageLevel! - 3.91) * 100).toInt()
+      : null;
+
+  @override
+  void onInitialize(DeviceDescriptor descriptor) {
+    if (deviceDescriptor?.deviceName == null ||
+        deviceDescriptor!.deviceName!.isEmpty) {
+      warning(
+          'Cannot initialize an $runtimeType with a null or empty device name. '
+          "Please specify a valid device name, typically on the form 'eSense-1234'");
+    }
+  }
 
   @override
   Future<bool> canConnect() async => (deviceDescriptor?.deviceName != null &&
       deviceDescriptor!.deviceName!.isNotEmpty);
 
   @override
-  Future<bool> onConnect() async {
+  Future<DeviceStatus> onConnect() async {
     if (deviceDescriptor?.deviceName == null ||
-        deviceDescriptor!.deviceName!.isEmpty) return false;
+        deviceDescriptor!.deviceName!.isEmpty) return DeviceStatus.error;
 
     manager = ESenseManager(id);
+
     // listen for connection events
     manager?.connectionEvents.listen((event) {
       debug('$runtimeType - $event');
@@ -125,7 +128,6 @@ class ESenseDeviceManager
           // when connected, listen for battery events
           manager!.eSenseEvents.listen((event) {
             if (event is BatteryRead) {
-              debug('$runtimeType - getting voltage event, $event');
               _voltageLevel = event.voltage ?? 4;
             }
           });
@@ -133,7 +135,6 @@ class ESenseDeviceManager
           // set up a timer that asks for the voltage level
           Timer.periodic(const Duration(minutes: 2), (_) {
             if (status == DeviceStatus.connected) {
-              debug('$runtimeType - requesting voltage...');
               manager?.getBatteryVoltage();
             }
           });
@@ -147,13 +148,14 @@ class ESenseDeviceManager
         case ConnectionType.device_not_found:
         case ConnectionType.disconnected:
           status = DeviceStatus.disconnected;
+          _voltageLevel = null;
           // _eventSubscription?.cancel();
           break;
       }
     });
 
-    debug('$runtimeType - connecting to eSense device, name: $id');
-    return await manager?.connect() ?? false;
+    manager?.connect();
+    return DeviceStatus.connecting;
   }
 
   @override

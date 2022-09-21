@@ -36,7 +36,6 @@
 library carp_polar_package;
 
 import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:polar/polar.dart';
@@ -94,9 +93,6 @@ class PolarSamplingPackage implements SamplingPackage {
   static const String POLAR_ACCELEROMETER = "$POLAR_NAMESPACE.accelerometer";
   static const String POLAR_GYROSCOPE = "$POLAR_NAMESPACE.gyroscope";
   static const String POLAR_MAGNETOMETER = "$POLAR_NAMESPACE.magnetometer";
-
-  // TODO - can we collect this? Not sure - check.
-  static const String POLAR_EXERCISE = "$POLAR_NAMESPACE.exercise";
   static const String POLAR_PPG = "$POLAR_NAMESPACE.ppg";
   static const String POLAR_PPI = "$POLAR_NAMESPACE.ppi";
   static const String POLAR_ECG = "$POLAR_NAMESPACE.ecg";
@@ -132,8 +128,6 @@ class PolarSamplingPackage implements SamplingPackage {
         return PolarGyroscopeProbe();
       case POLAR_MAGNETOMETER:
         return PolarMagnetometerProbe();
-      case POLAR_EXERCISE:
-        return PolarExerciseProbe();
       case POLAR_ECG:
         return PolarECGProbe();
       case POLAR_PPI:
@@ -152,7 +146,6 @@ class PolarSamplingPackage implements SamplingPackage {
         POLAR_ACCELEROMETER,
         POLAR_GYROSCOPE,
         POLAR_MAGNETOMETER,
-        POLAR_EXERCISE,
         POLAR_ECG,
         POLAR_PPI,
         POLAR_PPG,

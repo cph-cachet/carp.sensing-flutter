@@ -111,10 +111,12 @@ Collection of eSense data can be added to a study protocol like this.
   protocol.addTriggeredTask(
       ImmediateTrigger(),
       BackgroundTask()
-        ..addMeasure(Measure(type: SensorSamplingPackage.PEDOMETER))
-        ..addMeasure(Measure(type: SensorSamplingPackage.LIGHT))
-        ..addMeasure(Measure(type: DeviceSamplingPackage.SCREEN))
-        ..addMeasure(Measure(type: DeviceSamplingPackage.BATTERY)),
+        ..addMeasures([
+          Measure(type: SensorSamplingPackage.PEDOMETER),
+          Measure(type: SensorSamplingPackage.LIGHT),
+          Measure(type: DeviceSamplingPackage.SCREEN),
+          Measure(type: DeviceSamplingPackage.BATTERY),
+        ]),
       phone);
 
   // Add a background task that immediately starts collecting eSense button and
@@ -134,4 +136,4 @@ Before executing a study with an eSense measure, register this package in the
 SamplingPackageRegistry().register(ESenseSamplingPackage());
 `````
 
-> **NOTE** that the eSense device must be paired with the phone via BTLE **before** CAMS can connect to it.
+> **NOTE** that the eSense device must be paired with the phone via BLE **before** CAMS can connect to it.

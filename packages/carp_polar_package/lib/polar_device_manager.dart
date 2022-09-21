@@ -8,14 +8,14 @@ part of carp_polar_package;
 
 /// Enumeration of supported Polar devices.
 enum PolarDeviceType {
-  /// H9 Heart rate sensor
+  /// Polar H9 Heart rate sensor
   H9,
 
-  /// H10 Heart rate sensor
+  /// Polar H10 Heart rate sensor
   H10,
 
-  /// Polar Verity Sense Optical heart rate sensor
-  PVSO,
+  /// Polar Verity Sense heart rate sensor
+  PVS,
 }
 
 /// A [DeviceDescriptor] for a Polar device used in a [StudyProtocol].
@@ -25,11 +25,11 @@ enum PolarDeviceType {
 /// of the device.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class PolarDevice extends DeviceDescriptor {
-  /// The type of a Movisens device.
+  /// The type of a Polar device.
   static const String DEVICE_TYPE =
       '${DeviceDescriptor.DEVICE_NAMESPACE}.PolarDevice';
 
-  /// The default rolename for a Movisens device.
+  /// The default rolename for a Polar device.
   static const String DEFAULT_ROLENAME = 'polar';
 
   /// The polar sensor settings.
@@ -54,7 +54,7 @@ class PolarDevice extends DeviceDescriptor {
   /// RSSI (Received Signal Strength Indicator) value from advertisement
   int? rssi;
 
-  /// Create a new [MovisensDevice].
+  /// Create a new [PolarDevice].
   PolarDevice({
     String? roleName,
     this.polarDeviceType,
@@ -67,10 +67,10 @@ class PolarDevice extends DeviceDescriptor {
             PolarSamplingPackage.POLAR_ACCELEROMETER,
             PolarSamplingPackage.POLAR_GYROSCOPE,
             PolarSamplingPackage.POLAR_MAGNETOMETER,
-            PolarSamplingPackage.POLAR_EXERCISE,
             PolarSamplingPackage.POLAR_PPG,
             PolarSamplingPackage.POLAR_PPI,
             PolarSamplingPackage.POLAR_ECG,
+            PolarSamplingPackage.POLAR_HR,
           ],
         );
 
@@ -84,7 +84,7 @@ class PolarDevice extends DeviceDescriptor {
 
 /// A Polar [DeviceManager].
 class PolarDeviceManager extends BTLEDeviceManager {
-  int _batteryLevel = -1;
+  int? _batteryLevel;
   bool _polarFeaturesAvailable = false;
   StreamSubscription<PolarBatteryLevelEvent>? _batterySubscription;
   StreamSubscription<PolarDeviceInfo>? _connectingSubscription;
@@ -111,11 +111,12 @@ class PolarDeviceManager extends BTLEDeviceManager {
   Future<void> onInitialize(DeviceDescriptor descriptor) async {
     assert(descriptor is PolarDevice,
         '$runtimeType - can only be initialized with a PolarDevice device descriptor');
+    super.onInitialize(descriptor);
   }
 
   /// The latest read of the battery level of the Polar device.
   @override
-  int get batteryLevel => _batteryLevel;
+  int? get batteryLevel => _batteryLevel;
 
   @override
   String? get btleAddress => deviceDescriptor.address;
@@ -124,23 +125,24 @@ class PolarDeviceManager extends BTLEDeviceManager {
   Future<bool> canConnect() async => deviceDescriptor.identifier != null;
 
   @override
-  Future<bool> onConnect() async {
+  Future<DeviceStatus> onConnect() async {
     if (deviceDescriptor.identifier == null) {
       warning('$runtimeType - cannot connect to device, identifier is null.');
-      return false;
+      return DeviceStatus.error;
     } else {
       try {
+        // listen for battery  events
+        _batterySubscription = polar.batteryLevelStream.listen((event) {
+          debug('$runtimeType - Polar event : $event');
+          _batteryLevel = event.level;
+        });
+
         // listen for what features the connected Polar device supports
         polar.streamingFeaturesReadyStream.listen((event) {
           debug('$runtimeType - Polar event : $event');
           features = event.features;
           _polarFeaturesAvailable = true;
-        });
-
-        // listen for battery  events
-        _batterySubscription = polar.batteryLevelStream.listen((event) {
-          debug('$runtimeType - Polar event : $event');
-          _batteryLevel = event.level;
+          status = DeviceStatus.connected;
         });
 
         // listen for connection events
@@ -154,7 +156,8 @@ class PolarDeviceManager extends BTLEDeviceManager {
 
         _connectedSubscription = polar.deviceConnectedStream.listen((event) {
           debug('$runtimeType - Polar event : $event');
-          status = DeviceStatus.connected;
+          // we do not mark the device as fully connected before the features are available
+          status = DeviceStatus.connecting;
           deviceDescriptor.address = event.address;
           deviceDescriptor.name = event.name;
           deviceDescriptor.rssi = event.rssi;
@@ -164,20 +167,21 @@ class PolarDeviceManager extends BTLEDeviceManager {
             polar.deviceDisconnectedStream.listen((event) {
           debug('$runtimeType - Polar event : $event');
           status = DeviceStatus.disconnected;
+          _batteryLevel = null;
           deviceDescriptor.address = event.address;
           deviceDescriptor.name = event.name;
           deviceDescriptor.rssi = event.rssi;
         });
 
-        info('$runtimeType - connecting to Polar device, identifier: $id');
         polar.connectToDevice(id);
+
+        return DeviceStatus.connecting;
       } catch (error) {
         warning(
             "$runtimeType - could not connect to device of type '$type' and id '$id' - error: $error");
-        return false;
+        return DeviceStatus.error;
       }
     }
-    return true;
   }
 
   @override

@@ -7,8 +7,10 @@ class AirQualityProbe extends DatumProbe {
       super.deviceManager as AirQualityServiceManager;
 
   @override
-  void onInitialize() =>
-      LocationManager().configure().then((_) => super.onInitialize());
+  bool onInitialize() {
+    LocationManager().configure().then((_) => super.onInitialize());
+    return true;
+  }
 
   /// Returns the [AirQualityDatum] based on the location of the phone.
   // ignore: annotate_overrides

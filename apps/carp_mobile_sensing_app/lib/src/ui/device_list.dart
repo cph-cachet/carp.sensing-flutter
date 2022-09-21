@@ -57,30 +57,18 @@ class DevicesListState extends State<DevicesList> {
                 trailing: device.stateIcon,
               ),
               const Divider(),
-              FlatButton(
+              TextButton(
                   child: const Text('How to use this device?'),
                   onPressed: () => print('Use the $device')),
               (device.status != DeviceStatus.connected)
                   ? Column(children: [
                       const Divider(),
-                      FlatButton(
+                      TextButton(
                         child: const Text('Connect to this device'),
                         onPressed: () => bloc.connectToDevice(device),
                       ),
                     ])
                   : Text(""),
-              // ]
-              //   (device.status != DeviceStatus.connected &&
-              //           device.status != DeviceStatus.sampling)
-              //       // (device.status != DeviceStatus.connected)
-              //       ? ButtonBar(
-              //           children: <Widget>[
-              //             FlatButton(
-              //                 child: const Text('CONNECT TO DEVICE'),
-              //                 onPressed: () => bloc.connectToDevice(device)),
-              //           ],
-              //         )
-              //       : Text(""),
             ],
           ),
         ),

@@ -88,7 +88,7 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
 ```
 
 > **NOTE:** The first time the app starts, make sure to allow it to access the phone location.
-This is necessary to use the BLE on Android.
+This is necessary to use BLE on Android.
 
 ### iOS Integration
 
@@ -135,7 +135,7 @@ Collection of Polar data can be added to a study protocol like this.
     name: 'Polar Sensing Example',
   );
 
-  // define which devices are used for data collection - both phone and eSense
+  // define which devices are used for data collection - both phone and Polar
   var phone = Smartphone();
   var polar = PolarDevice(
     roleName: 'hr-sensor',
@@ -165,7 +165,7 @@ Before executing a study with an Polar measure, register this package in the
 SamplingPackageRegistry().register(PolarSamplingPackage());
 `````
 
-> **NOTE** that the Polar device `identifier` must be specified for the phone to connect to the device via BTLE.
+> **NOTE** that the Polar device `identifier` must be specified for the phone to connect to the device via BLE.
 
 This entails that a Polar device and its probes should not be connected and resumed, before the device identifier is know.
 

@@ -20,8 +20,11 @@ class TriggeredTask {
   late String taskName;
 
   /// The role name of the device to which to send the task with [taskName]
-  /// when the [trigger] condition is met.
+  /// when the trigger condition is met.
   String? targetDeviceRoleName;
+
+  /// The type of the target device.
+  String? targetDeviceType;
 
   /// The time the task have been scheduled until.
   /// Mainly used when scheduling a series of tasks for this trigger.
@@ -39,7 +42,10 @@ class TriggeredTask {
     this.targetDevice,
   ]) : super() {
     if (task != null) taskName = task!.name;
-    if (targetDevice != null) targetDeviceRoleName = targetDevice!.roleName;
+    if (targetDevice != null) {
+      targetDeviceType = targetDevice!.type;
+      targetDeviceRoleName = targetDevice!.roleName;
+    }
   }
 
   factory TriggeredTask.fromJson(Map<String, dynamic> json) =>

@@ -128,13 +128,13 @@ class Sensing {
     // If not deployed before (i.e., cached) the study deployment will be
     // fetched from the deployment service.
     _controller = client?.getStudyRuntime(study!);
-    await controller?.tryDeployment(useCached: true);
+    await controller?.tryDeployment(useCached: bloc.useCachedStudyDeployment);
 
     // Configure the controller
     await controller?.configure();
 
     // Start samplling
-    controller?.start();
+    controller?.start(bloc.resumeSensingOnStartup);
 
     // Listening on the data stream and print them as json to the debug console
     controller?.data.listen((data) => print(toJsonString(data)));

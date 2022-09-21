@@ -12,21 +12,8 @@ abstract class _PolarProbe extends StreamProbe {
       super.deviceManager as PolarDeviceManager;
 }
 
-abstract class _FeatureReadyPolarProbe extends _PolarProbe {
-  @override
-  Future<void> onResume() async {
-    if (deviceManager.polarFeaturesAvailable) {
-      super.onResume();
-    } else {
-      // if the Polar features are not available yet, try to wait and then resume the probe
-      debug('$runtimeType - delaying resume for 10 secs and restarting...');
-      Future.delayed(const Duration(seconds: 10), () => super.onResume());
-    }
-  }
-}
-
 /// Collects accelerometer data from the Polar device.
-class PolarAccelerometerProbe extends _FeatureReadyPolarProbe {
+class PolarAccelerometerProbe extends _PolarProbe {
   @override
   Stream<Datum>? get stream => (deviceManager.isConnected)
       ? deviceManager.features.contains(DeviceStreamingFeature.acc)
@@ -39,7 +26,7 @@ class PolarAccelerometerProbe extends _FeatureReadyPolarProbe {
 }
 
 /// Collects gyroscope data from the Polar device.
-class PolarGyroscopeProbe extends _FeatureReadyPolarProbe {
+class PolarGyroscopeProbe extends _PolarProbe {
   @override
   Stream<Datum>? get stream => (deviceManager.isConnected)
       ? deviceManager.features.contains(DeviceStreamingFeature.gyro)
@@ -52,7 +39,7 @@ class PolarGyroscopeProbe extends _FeatureReadyPolarProbe {
 }
 
 /// Collects magnetometer data from the Polar device.
-class PolarMagnetometerProbe extends _FeatureReadyPolarProbe {
+class PolarMagnetometerProbe extends _PolarProbe {
   @override
   Stream<Datum>? get stream => (deviceManager.isConnected)
       ? deviceManager.features.contains(DeviceStreamingFeature.magnetometer)
@@ -64,15 +51,8 @@ class PolarMagnetometerProbe extends _FeatureReadyPolarProbe {
       : null;
 }
 
-/// Collects exercise data from the Polar device.
-class PolarExerciseProbe extends _PolarProbe {
-  // TODO - how to collect Polar exercise data?
-  @override
-  Stream<Datum>? get stream => null;
-}
-
 /// Collects PPG data from the Polar device.
-class PolarPPGProbe extends _FeatureReadyPolarProbe {
+class PolarPPGProbe extends _PolarProbe {
   @override
   Stream<Datum>? get stream => (deviceManager.isConnected)
       ? deviceManager.features.contains(DeviceStreamingFeature.ppg)
@@ -85,7 +65,7 @@ class PolarPPGProbe extends _FeatureReadyPolarProbe {
 }
 
 /// Collects PPI data from the Polar device.
-class PolarPPIProbe extends _FeatureReadyPolarProbe {
+class PolarPPIProbe extends _PolarProbe {
   @override
   Stream<Datum>? get stream => (deviceManager.isConnected)
       ? deviceManager.features.contains(DeviceStreamingFeature.ppi)
@@ -98,7 +78,7 @@ class PolarPPIProbe extends _FeatureReadyPolarProbe {
 }
 
 /// Collects ECG data from the Polar device.
-class PolarECGProbe extends _FeatureReadyPolarProbe {
+class PolarECGProbe extends _PolarProbe {
   @override
   Stream<Datum>? get stream {
     debug('$runtimeType - features: ${deviceManager.features}');

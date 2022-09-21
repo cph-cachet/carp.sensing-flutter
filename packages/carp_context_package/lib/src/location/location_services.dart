@@ -93,9 +93,9 @@ class LocationServiceManager
   Future<bool> canConnect() async => true;
 
   @override
-  Future<bool> onConnect() async {
+  Future<DeviceStatus> onConnect() async {
     await manager.configure(deviceDescriptor);
-    return manager.enabled;
+    return manager.enabled ? DeviceStatus.connected : DeviceStatus.disconnected;
   }
 
   @override

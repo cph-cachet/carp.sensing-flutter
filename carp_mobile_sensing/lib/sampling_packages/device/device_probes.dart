@@ -63,9 +63,10 @@ class ScreenProbe extends StreamProbe {
 /// as specified in [PeriodicMeasure.frequency].
 class MemoryProbe extends IntervalDatumProbe {
   @override
-  void onInitialize() {
+  bool onInitialize() {
     // check if SysInfo is available (seems not to be available on iOS)
     SysInfo.getFreePhysicalMemory();
+    return true;
   }
 
   @override

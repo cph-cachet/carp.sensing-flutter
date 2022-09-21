@@ -70,9 +70,6 @@ class SmartphoneDeploymentController extends StudyRuntime {
   /// objects that has been collected.
   int get samplingSize => _samplingSize;
 
-  // DateTime? _studyDeploymentStartTime;
-  // DateTime? get studyDeploymentStartTime => _studyDeploymentStartTime;
-
   /// Create a new [SmartphoneDeploymentController] to control the runtime behavior
   /// of a study deployment.
   SmartphoneDeploymentController(super.deploymentService, super.deviceRegistry);
@@ -311,12 +308,12 @@ class SmartphoneDeploymentController extends StudyRuntime {
     }
   }
 
-  /// Start this controller, i.e. resume data collection according to the
-  /// parameters specified in [configure].
+  /// Start this controller and if [resume] is true, resume data collection
+  /// according to the parameters specified in [configure].
   ///
   /// [configure] must be called before starting sampling.
   @override
-  void start() {
+  void start([bool resume = true]) {
     assert(
         _executor != null,
         '$runtimeType - Cannot resume this controller, since the the runtime is not initialized. '
@@ -324,7 +321,7 @@ class SmartphoneDeploymentController extends StudyRuntime {
 
     info('Starting data sampling ...');
     super.start();
-    _executor!.resume();
+    if (resume) _executor!.resume();
   }
 
   /// Stop the sampling.
