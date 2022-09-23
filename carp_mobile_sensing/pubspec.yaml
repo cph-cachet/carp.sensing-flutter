@@ -13,9 +13,9 @@ dependencies:
     sdk: flutter
 
   carp_serializable: ^1.0.0
-  # carp_core: ^0.40.0      # the core CARP domain model
+  carp_core: ^0.40.0      # the core CARP domain model
 
-  json_annotation: ^4.6.0
+  json_annotation: ^4.7.0
   system_info2: ^2.0.0
   uuid: ^3.0.4
   async: ^2.7.0
@@ -25,7 +25,7 @@ dependencies:
   permission_handler: ^10.0.0  
   shared_preferences: ^2.0.0
   package_info_plus: ^1.0.0
-  flutter_local_notifications: ^9.4.0 # For sending notification on AppTask
+  flutter_local_notifications: ^11.0.0 # For sending notification on AppTask
   awesome_notifications: ^0.6.21      # For sending notification on AppTask
   cron: ^0.5.0                        # For scheduling / triggering cron jobs
   stats: ^2.0.0                       # For calculating statistics, ex LightProbe
@@ -46,8 +46,8 @@ dependencies:
 dependency_overrides:
   # carp_serializable:
   #   path: ../carp_serializable/
-  carp_core:
-    path: ../carp_core/
+  # carp_core:
+  #   path: ../carp_core/
 
 dev_dependencies:
   build_runner: ^2.0.4    # For building json serialization

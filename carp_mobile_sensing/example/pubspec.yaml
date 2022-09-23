@@ -1,5 +1,5 @@
 name: carp_mobile_sensing_example
-description: Examples of how to use the carp_mobile_sensing plugin.
+description: Examples of how to use the carp_mobile_sensing framework.
 publish_to: 'none'
 version: 0.40.0
 
@@ -12,8 +12,8 @@ dependencies:
     sdk: flutter
   # carp_serializable:
   #   path: ../../carp_serializable/
-  carp_core:
-    path: ../../carp_core
+  # carp_core:
+  #   path: ../../carp_core
   carp_mobile_sensing:
     path: ../../carp_mobile_sensing/
 

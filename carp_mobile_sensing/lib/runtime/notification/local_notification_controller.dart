@@ -31,24 +31,11 @@ class FlutterLocalNotificationController implements NotificationController {
     await notifications.FlutterLocalNotificationsPlugin().initialize(
       notifications.InitializationSettings(
         android: const notifications.AndroidInitializationSettings('app_icon'),
-        iOS: const notifications.IOSInitializationSettings(),
+        iOS: const notifications.DarwinInitializationSettings(),
       ),
-      onSelectNotification: (String? payload) async {
-        debug('selectedUserTaskNotificationCallback - payload: $payload');
-
-        if (payload != null) {
-          UserTask? task = AppTaskController().getUserTask(payload);
-          info('User Task notification selected - $task');
-          if (task != null) {
-            task.onNotification();
-          } else {
-            warning('Error in callback from notification - no task found.');
-          }
-        } else {
-          warning(
-              "Error in callback from notification - payload is '$payload'");
-        }
-      },
+      onDidReceiveBackgroundNotificationResponse:
+          onDidReceiveNotificationResponse,
+      onDidReceiveNotificationResponse: onDidReceiveNotificationResponse,
     );
     info('$runtimeType initialized.');
     debug('PENDING NOTIFICATIONS:');
@@ -68,7 +55,7 @@ class FlutterLocalNotificationController implements NotificationController {
       priority: notifications.Priority.max,
       ongoing: true,
     ),
-    iOS: const notifications.IOSNotificationDetails(),
+    iOS: const notifications.DarwinNotificationDetails(),
   );
 
   /// Send an immediate notification for a [task].
@@ -132,5 +119,26 @@ class FlutterLocalNotificationController implements NotificationController {
       notifications.FlutterLocalNotificationsPlugin().cancel(task.id.hashCode);
       info('Notification cancled for $task');
     }
+  }
+}
+
+@pragma('vm:entry-point')
+void onDidReceiveNotificationResponse(
+    notifications.NotificationResponse response) {
+  String? payload = response.payload;
+
+  debug(
+      'FlutterLocalNotificationController - onDidReceiveNotificationResponse, payload: $payload');
+
+  if (payload != null) {
+    UserTask? task = AppTaskController().getUserTask(payload);
+    info('User Task notification selected - $task');
+    if (task != null) {
+      task.onNotification();
+    } else {
+      warning('Error in callback from notification - no task found.');
+    }
+  } else {
+    warning("Error in callback from notification - payload is '$payload'");
   }
 }
