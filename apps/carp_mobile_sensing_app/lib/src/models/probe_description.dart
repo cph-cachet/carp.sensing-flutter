@@ -219,7 +219,7 @@ class ProbeDescription {
         PolarSamplingPackage.POLAR_MAGNETOMETER:
             Icon(Icons.iron, size: 50, color: CACHET.LIGHT_PURPLE),
         PolarSamplingPackage.POLAR_ECG:
-            Icon(Icons.monitor_heart_outlined, size: 50, color: CACHET.GREEN),
+            Icon(Icons.monitor_heart_rounded, size: 50, color: CACHET.GREEN),
         PolarSamplingPackage.POLAR_HR:
             Icon(Icons.heart_broken, size: 50, color: CACHET.RED),
         PolarSamplingPackage.POLAR_PPG:

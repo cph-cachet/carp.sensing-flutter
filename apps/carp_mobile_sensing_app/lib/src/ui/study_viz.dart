@@ -1,7 +1,7 @@
 part of mobile_sensing_app;
 
 class StudyDeploymentPage extends StatefulWidget {
-  const StudyDeploymentPage({Key? key}) : super(key: key);
+  const StudyDeploymentPage({super.key});
   static const String routeName = '/study';
 
   @override

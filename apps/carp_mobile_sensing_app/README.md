@@ -14,7 +14,7 @@ which is recommended by the [Flutter Team](https://www.youtube.com/watch?v=PLHln
 ![Bloc Architecture](documentation/architecture_3.png)
 
 The basic architecture holds a singleton `Sensing` class responsible for handling sensing via the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package.
-All business logic is handled by the singleton `BloC` which is the only way the UI models can access and modify data or initiate life cycle events (like pausing and resuming sensing).
+All business logic is handled by the singleton `SensingBLoC` which is the only way the UI models can access and modify data or initiate life cycle events (like pausing and resuming sensing).
 All data to be shown in the UI are handled by (UI) models, and finally each screen is implemented as a [`StatefulWidget`](https://docs.flutter.io/flutter/widgets/StatefulWidget-class.html) in Flutter.
 Each UI widget only knows its corresponding model and the model knows the BloC.
 **NO** data or control flows between the UI and the Bloc or Sensing layer.
@@ -148,13 +148,15 @@ For example, the `StudyVisualization` widget's `State` takes a `StudyModel` in i
 
 `````dart
 class StudyDeploymentPage extends StatefulWidget {
-  const StudyDeploymentPage({Key? key}) : super(key: key);
+  const StudyDeploymentPage({super.key});
+  static const String routeName = '/study';
 
-  _StudyDeploymentPageState createState() =>
-      _StudyDeploymentPageState(bloc.studyDeploymentModel);
+  @override
+  StudyDeploymentPageState createState() =>
+      StudyDeploymentPageState(bloc.studyDeploymentModel);
 }
 
-class _StudyDeploymentPageState extends State<StudyDeploymentPage> {
+class StudyDeploymentPageState extends State<StudyDeploymentPage> {
   final StudyDeploymentModel studyDeploymentModel;
 
   _StudyDeploymentPageState(this.studyDeploymentModel) : super();

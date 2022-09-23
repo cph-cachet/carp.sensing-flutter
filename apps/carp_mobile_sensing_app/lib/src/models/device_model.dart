@@ -55,7 +55,7 @@ class DeviceModel {
         ESenseDevice.DEVICE_TYPE:
             Icon(Icons.headset, size: 50, color: CACHET.CACHET_BLUE),
         PolarDevice.DEVICE_TYPE:
-            Icon(Icons.monitor_heart_outlined, size: 50, color: CACHET.RED),
+            Icon(Icons.monitor_heart, size: 50, color: CACHET.RED),
         LocationService.DEVICE_TYPE:
             Icon(Icons.location_on, size: 50, color: CACHET.GREEN),
         AirQualityService.DEVICE_TYPE:

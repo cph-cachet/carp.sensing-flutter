@@ -204,6 +204,13 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
       polarDeviceType: PolarDeviceType.H10,
       roleName: 'polar-h10-device',
     );
+    // PolarDevice polar = PolarDevice(
+    //   identifier: 'B36B5B21',
+    //   name: 'Polar PVS',
+    //   polarDeviceType: PolarDeviceType.PVS,
+    //   roleName: 'polar-pvs-device',
+    // );
+
     protocol.addConnectedDevice(polar);
 
     protocol.addTriggeredTask(
