@@ -40,8 +40,9 @@ abstract class TaskExecutor<TConfig extends TaskDescriptor>
       } else {
         warning(
             'A probe for measure type ${measure.type} could not be created. '
-            'Check that the sampling package containing this probe has been registered in the SamplingPackageRegistry.');
-        return false;
+            'This may be because this probe is not available on this operating system. '
+            'Or it may be because the sampling package containing this probe has not '
+            'been registered in the SamplingPackageRegistry.');
       }
     }
     return true;
