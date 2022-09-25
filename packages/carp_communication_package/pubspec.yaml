@@ -15,7 +15,7 @@ dependencies:
   # carp_core: ^0.40.0
   # carp_mobile_sensing: ^0.40.0
 
-  json_annotation: ^4.4.0
+  json_annotation: ^4.6.0
   telephony: ^0.2.0
   call_log: ^4.0.0
   device_calendar: ^4.2.0

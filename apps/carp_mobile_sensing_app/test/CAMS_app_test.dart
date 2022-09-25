@@ -9,7 +9,7 @@ import 'package:carp_connectivity_package/connectivity.dart';
 import 'package:carp_esense_package/esense.dart';
 import 'package:carp_context_package/carp_context_package.dart';
 import 'package:carp_audio_package/media.dart';
-import 'package:carp_communication_package/communication.dart';
+// import 'package:carp_communication_package/communication.dart';
 import 'package:carp_apps_package/apps.dart';
 import 'package:carp_backend/carp_backend.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
@@ -33,7 +33,7 @@ void main() {
     SamplingPackageRegistry().register(ConnectivitySamplingPackage());
     SamplingPackageRegistry().register(ContextSamplingPackage());
     SamplingPackageRegistry().register(MediaSamplingPackage());
-    SamplingPackageRegistry().register(CommunicationSamplingPackage());
+    // SamplingPackageRegistry().register(CommunicationSamplingPackage());
     SamplingPackageRegistry().register(AppsSamplingPackage());
     SamplingPackageRegistry().register(ESenseSamplingPackage());
 

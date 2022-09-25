@@ -43,8 +43,9 @@ dependency_overrides:
     path: ../../packages/carp_context_package/
   carp_connectivity_package:
     path: ../../packages/carp_connectivity_package/
-  carp_communication_package:
-    path: ../../packages/carp_communication_package/
+  # due to version conflict in device_calendar this cannot be included for now
+  # carp_communication_package:
+  #   path: ../../packages/carp_communication_package/
   carp_audio_package:
     path: ../../packages/carp_audio_package/
   carp_apps_package:

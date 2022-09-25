@@ -67,22 +67,22 @@ class ProbeDescription {
           'App Usage',
           'Collects app usage statistics.',
         ),
-        CommunicationSamplingPackage.TEXT_MESSAGE_LOG: ProbeDescriptor(
-          'Text Messages',
-          'Collects the SMS message log.',
-        ),
-        CommunicationSamplingPackage.TEXT_MESSAGE: ProbeDescriptor(
-          'Text Message',
-          'Collecting in/out-going SMS text messages.',
-        ),
-        CommunicationSamplingPackage.PHONE_LOG: ProbeDescriptor(
-          'Phone Log',
-          'Collects the phone call log.',
-        ),
-        CommunicationSamplingPackage.CALENDAR: ProbeDescriptor(
-          'Calendar',
-          'Collects entries from phone calendars.',
-        ),
+        // CommunicationSamplingPackage.TEXT_MESSAGE_LOG: ProbeDescriptor(
+        //   'Text Messages',
+        //   'Collects the SMS message log.',
+        // ),
+        // CommunicationSamplingPackage.TEXT_MESSAGE: ProbeDescriptor(
+        //   'Text Message',
+        //   'Collecting in/out-going SMS text messages.',
+        // ),
+        // CommunicationSamplingPackage.PHONE_LOG: ProbeDescriptor(
+        //   'Phone Log',
+        //   'Collects the phone call log.',
+        // ),
+        // CommunicationSamplingPackage.CALENDAR: ProbeDescriptor(
+        //   'Calendar',
+        //   'Collects entries from phone calendars.',
+        // ),
         DeviceSamplingPackage.SCREEN: ProbeDescriptor(
           'Screen',
           'Collecting screen events (on/off/unlock).',
@@ -184,14 +184,14 @@ class ProbeDescription {
             Icon(Icons.apps, size: 50, color: CACHET.LIGHT_GREEN),
         AppsSamplingPackage.APP_USAGE:
             Icon(Icons.get_app, size: 50, color: CACHET.LIGHT_GREEN),
-        CommunicationSamplingPackage.TEXT_MESSAGE_LOG:
-            Icon(Icons.textsms, size: 50, color: CACHET.LIGHT_PURPLE),
-        CommunicationSamplingPackage.TEXT_MESSAGE:
-            Icon(Icons.text_fields, size: 50, color: CACHET.LIGHT_PURPLE),
-        CommunicationSamplingPackage.PHONE_LOG:
-            Icon(Icons.phone_in_talk, size: 50, color: CACHET.ORANGE),
-        CommunicationSamplingPackage.CALENDAR:
-            Icon(Icons.event, size: 50, color: CACHET.CYAN),
+        // CommunicationSamplingPackage.TEXT_MESSAGE_LOG:
+        //     Icon(Icons.textsms, size: 50, color: CACHET.LIGHT_PURPLE),
+        // CommunicationSamplingPackage.TEXT_MESSAGE:
+        //     Icon(Icons.text_fields, size: 50, color: CACHET.LIGHT_PURPLE),
+        // CommunicationSamplingPackage.PHONE_LOG:
+        //     Icon(Icons.phone_in_talk, size: 50, color: CACHET.ORANGE),
+        // CommunicationSamplingPackage.CALENDAR:
+        //     Icon(Icons.event, size: 50, color: CACHET.CYAN),
         DeviceSamplingPackage.SCREEN: Icon(Icons.screen_lock_portrait,
             size: 50, color: CACHET.LIGHT_PURPLE),
         ContextSamplingPackage.LOCATION:

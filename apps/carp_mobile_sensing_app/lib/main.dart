@@ -13,7 +13,7 @@ import 'package:carp_esense_package/esense.dart';
 import 'package:carp_polar_package/carp_polar_package.dart';
 import 'package:carp_context_package/carp_context_package.dart';
 import 'package:carp_audio_package/media.dart';
-import 'package:carp_communication_package/communication.dart';
+// import 'package:carp_communication_package/communication.dart';
 import 'package:carp_apps_package/apps.dart';
 // import 'package:movisens_flutter/movisens_flutter.dart';
 // import 'package:carp_movisens_package/movisens.dart';
