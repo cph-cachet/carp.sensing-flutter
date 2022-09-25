@@ -16,12 +16,10 @@ class AwesomeNotificationController implements NotificationController {
     await AwesomeNotifications().cancelAllSchedules();
   }
 
-  /// Initialize and set up the notification controller.
-  /// ToDo: Set icon for notification channels
   @override
   Future<void> initialize() async {
     AwesomeNotifications().initialize(
-      '',
+      null,
       [
         NotificationChannel(
           channelKey: 'basic_channel',
@@ -40,6 +38,13 @@ class AwesomeNotificationController implements NotificationController {
         ),
       ],
     );
+
+    // ask for permissions to use notifications
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+      if (!isAllowed) {
+        AwesomeNotifications().requestPermissionToSendNotifications();
+      }
+    });
     info('$runtimeType initialized.');
   }
 

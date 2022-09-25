@@ -39,6 +39,16 @@ class SmartPhoneClientManager extends ClientManager
       super.lookupStudyRuntime(studyDeploymentId, deviceRoleName)
           as SmartphoneDeploymentController;
 
+  /// Configure this [SmartPhoneClientManager] by specifying:
+  ///  * [deviceId] - this device's id in study deployments.
+  ///      If not specified, the OS's device id is used.
+  ///  * [deploymentService] - where to get study deployments.
+  ///      If not specified, the [SmartphoneDeploymentService] will be used.
+  ///  * [deviceController] that handles devices connected to this client.
+  ///      If not specified, the default [DeviceController] is used.
+  ///  * [notificationController] - what [NotificationController] to use for notifications.
+  ///     Two alternatives exists; [FlutterLocalNotificationController] or [AwesomeNotificationController].
+  ///     If not specified, the [AwesomeNotificationController] is used.
   @override
   Future<DeviceRegistration> configure({
     NotificationController? notificationController,
@@ -57,7 +67,7 @@ class SmartPhoneClientManager extends ClientManager
 
     // set default values, if not specified
     deviceId ??= DeviceInfo().deviceID;
-    // this._notificationController =
+    // _notificationController =
     //     notificationController ?? FlutterLocalNotificationController();
     _notificationController =
         notificationController ?? AwesomeNotificationController();

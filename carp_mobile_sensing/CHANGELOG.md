@@ -1,10 +1,11 @@
-## 0.40.0 - BREAKING CHANGES
+## 0.40.0 - BREAKING
 
 * One purpose of this release is to make CAMS more stable across app re-restart (since the OSs (Android / iOS) increasingly are killing apps). This has lead to the following changes:
   * `MarkedMeasure` is no longer a separate measure type. The state of all measure are now saved across app restart.
   * A `OneTimeTrigger` no longer needs an id (this is now handled behind-the-scene).
   * All `AppTask` are now scheduled persistently using the notification system. When an app task is due, a notification is made on the phone, and when the user taps this notification, the app is (re)started.
-* Another purpose is to change the configuration of the measures in the study protocol to resemble the newly released version 1.0.0 of the [CARP Core Framework](https://github.com/imotions/carp.core-kotlin). This entails:
+  * As part of this, CAMS now asks for permissions to use notifications on the phone (if the `SmartphoneDeploymentController`is configured to use notifications).
+* Another purpose is to change the configuration of the measures in the study protocol to resemble the newly released version 1.0.0 of the [CARP Core Framework](https://github.com/imotions/carp.core-kotlin) (Note, however, that CAMS is not yet updated to version 1.0.0 of CARP Core - this will happen in the next release). This entails:
   * `Measure` no longer contains sampling configurations but only specifies the `type` of data to collect (e.g., `dk.cachet.carp.memory`)
   * instead, sampling configuration is now done in the `SamplingConfiguration` and `SamplingScheme` classes (which can be part of a `StudyProtocol`).
   * default sampling configuration are now part of a `SamplingSchema` provided by the `SamplingPackage`. For example, periodic sampling in e.g. the `MemoryProbe` is configured using a `PeriodicSamplingConfiguration` in the `DeviceSamplingPackage`.

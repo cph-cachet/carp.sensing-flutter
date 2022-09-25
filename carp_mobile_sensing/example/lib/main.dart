@@ -149,12 +149,15 @@ class Sensing {
     // If not deployed before (i.e., cached) the study deployment will be
     // fetched from the deployment service.
     controller = client.getStudyRuntime(study!);
-    await controller?.tryDeployment(useCached: true);
+    await controller?.tryDeployment(useCached: false);
 
     // Configure the controller.
     //
-    // Notifications are disabled, since we're not using app tasks in this
-    // simple app.
+    // Notifications are enabled for demo purpose and if you add an AppTask to the
+    // protocol below, you should see notifications on the phone.
+    // However, nothing will happen when you click on them.
+    // See the PulmonaryMonitor demo app for a full-scale example of how to use
+    // the App Task model.
     await controller!.configure(
       enableNotifications: true,
     );
@@ -195,11 +198,17 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         name: 'Track patient movement',
         dataEndPoint: SQLiteDataEndPoint());
 
-    // define which devices are used for data collection.
+    // Define which devices are used for data collection.
+    //
+    // In this case, its only this phone.
+    // See the CARP Mobile Sensing app for a full-blown example of how to
+    // use connected devices (e.g., a Polar heart rate monitor) and online
+    // services (e.g., a weather service).
     var phone = Smartphone();
     protocol.addMasterDevice(phone);
 
-    // add default measures from the SensorSamplingPackage
+    // Add measures from the [DeviceSamplingPackage] and [SensorSamplingPackage]
+    // sampling packages.
     protocol.addTriggeredTask(
         ImmediateTrigger(),
         BackgroundTask()
@@ -214,7 +223,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           ]),
         phone);
 
-    // collect device info only once
+    // Collect device info only once
     protocol.addTriggeredTask(
         OneTimeTrigger(),
         BackgroundTask()
@@ -247,14 +256,19 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
         phone);
 
-    // add a task 10 minutes after deployment
+    // Add an app task 2 minutes after deployment and make a notification.
+    //
+    // This App Task is added for demo purpose and you should see notifications
+    // on the phone. However, nothing will happen when you click on it.
+    // See the PulmonaryMonitor demo app for a full-scale example of how to use
+    // the App Task model.
     protocol.addTriggeredTask(
         ElapsedTimeTrigger(
-          elapsedTime: const Duration(minutes: 10),
+          elapsedTime: const Duration(minutes: 2),
         ),
         AppTask(
           type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
-          title: "Elapsed Time - 10 minutes",
+          title: "Elapsed Time - 2 minutes",
           notification: true,
         )..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
         phone);

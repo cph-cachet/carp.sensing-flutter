@@ -74,6 +74,15 @@ class SmartphoneDeploymentController extends StudyRuntime {
   /// of a study deployment.
   SmartphoneDeploymentController(super.deploymentService, super.deviceRegistry);
 
+  /// Verifies whether the master device is ready for deployment and in case
+  /// it is, deploy the [study] previously added.
+  ///
+  /// If [useCached] is true (default), a previously cached [deployment] will be
+  /// retrieved from the phone locally.
+  /// If [useCached] is false, the [deployment] will be retrieved from the
+  /// [deploymentService], based on the [study].
+  ///
+  /// In case already deployed, nothing happens.
   @override
   Future<StudyStatus> tryDeployment({bool useCached = true}) async {
     assert(
@@ -201,10 +210,8 @@ class SmartphoneDeploymentController extends StudyRuntime {
         'A StudyDeploymentController can only work with a SmartphoneDeployment master device deployment');
     info('Configuring $runtimeType');
 
-    // initialize all devices from the master deployment, incl. the master device
+    // initialize all devices from the master deployment, incl. this master device
     deviceRegistry.initializeDevices(deployment!);
-    // and connect imediately to all connectable devices, incl. this phone
-    // await deviceRegistry.connectAllConnectableDevices();
 
     // initialize the app task controller singleton
     await AppTaskController()

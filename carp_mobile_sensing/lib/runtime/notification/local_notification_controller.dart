@@ -37,6 +37,7 @@ class FlutterLocalNotificationController implements NotificationController {
           onDidReceiveNotificationResponse,
       onDidReceiveNotificationResponse: onDidReceiveNotificationResponse,
     );
+
     info('$runtimeType initialized.');
     debug('PENDING NOTIFICATIONS:');
     for (var notification
