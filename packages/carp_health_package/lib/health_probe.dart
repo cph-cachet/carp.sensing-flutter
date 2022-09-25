@@ -11,16 +11,18 @@ class HealthProbe extends StreamProbe {
       super.samplingConfiguration as HealthSamplingConfiguration;
 
   @override
-  void onInitialize() {
+  bool onInitialize() {
     // Request access to the health data type before starting sampling
     _healthFactory.requestAuthorization(samplingConfiguration.healthDataTypes);
+    return true;
   }
 
   @override
-  Future<void> onResume() async {
+  Future<bool> onResume() async {
     super.onResume();
 
-    debug('Collecting health data - configuration : $samplingConfiguration');
+    debug(
+        '$runtimeType - Collecting health data, configuration : $samplingConfiguration');
 
     DateTime start = samplingConfiguration.lastTime ??
         DateTime.now().subtract(samplingConfiguration.past);
@@ -30,7 +32,7 @@ class HealthProbe extends StreamProbe {
     List<HealthDataPoint> data = [];
 
     debug(
-        'Collecting health data - type: $healthDataTypes, start: ${start.toUtc()}, end: ${end.toUtc()}');
+        '$runtimeType - Collecting health data, type: $healthDataTypes, start: ${start.toUtc()}, end: ${end.toUtc()}');
     try {
       data = await _healthFactory.getHealthDataFromTypes(
         start,
@@ -38,7 +40,7 @@ class HealthProbe extends StreamProbe {
         healthDataTypes,
       );
       debug(
-          'Retrieved ${data.length} health data points of type. $healthDataTypes');
+          '$runtimeType - Retrieved ${data.length} health data points of type. $healthDataTypes');
 
       // convert HealthDataPoint to Datums and add them to the stream
       for (var data in data) {
@@ -46,6 +48,8 @@ class HealthProbe extends StreamProbe {
       }
     } catch (exception) {
       _ctrl.addError(exception);
+      return false;
     }
+    return true;
   }
 }
