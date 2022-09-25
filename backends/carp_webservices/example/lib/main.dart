@@ -85,12 +85,12 @@ class _HomePageState extends State<HomePage> {
 
 class AppBLoC {
   final String uri = "https://cans.cachet.dk/stage";
-  ActiveParticipationInvitation _invitation;
-  String get studyId => _invitation?.studyId;
-  String get studyDeploymentId => _invitation?.studyDeploymentId;
+  ActiveParticipationInvitation? _invitation;
+  String? get studyId => _invitation?.studyId;
+  String? get studyDeploymentId => _invitation?.studyDeploymentId;
 
-  CarpApp _app;
-  CarpApp get app => _app;
+  CarpApp? _app;
+  CarpApp? get app => _app;
 
   Future init() async {
     _app = CarpApp(
@@ -99,26 +99,27 @@ class AppBLoC {
       oauth: OAuthEndPoint(clientID: 'carp', clientSecret: 'carp'),
     );
 
-    CarpService().configure(app);
+    CarpService().configure(app!);
   }
 
   void dispose() async {}
 
-  Future authenticate(BuildContext context, {String username}) async =>
+  Future authenticate(BuildContext context, {String? username}) async =>
       await CarpService().authenticateWithDialog(
         context,
         username: username,
         allowClose: true,
       );
 
-  Future<ActiveParticipationInvitation> getStudyInvitation(
+  Future<ActiveParticipationInvitation?> getStudyInvitation(
       BuildContext context) async {
     // configure a participant service based on the carp service already configured
     CarpParticipationService().configureFrom(CarpService());
     _invitation = await CarpParticipationService().getStudyInvitation(context);
     print('CARP Study Invitation: $_invitation');
     // check that the app has been updated to reflect the study id and deployment id
-    print('Study ID: ${app.studyId}, Deployment ID: ${app.studyDeploymentId}');
+    print(
+        'Study ID: ${app?.studyId}, Deployment ID: ${app?.studyDeploymentId}');
     return _invitation;
   }
 }
