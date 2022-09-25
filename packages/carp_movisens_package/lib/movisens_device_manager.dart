@@ -122,7 +122,7 @@ class MovisensDeviceManager extends BTLEDeviceManager {
   Future<bool> canConnect() async => userData != null;
 
   @override
-  Future<bool> onConnect() async {
+  Future<DeviceStatus> onConnect() async {
     try {
       // create and connect to the Movisens device
       movisens = Movisens(userData!);
@@ -150,10 +150,10 @@ class MovisensDeviceManager extends BTLEDeviceManager {
     } catch (error) {
       warning(
           "$runtimeType - could not connect to device of type '$type' - error: $error");
-      return false;
+      return DeviceStatus.error;
     }
 
-    return true;
+    return DeviceStatus.connecting;
   }
 
   @override
