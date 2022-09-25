@@ -38,8 +38,8 @@ abstract class AbstractCommand implements Command {
     // make sure not to mess with CAMS
     Settings().saveAppTaskQueue = false;
 
-    // make sure that the json functions are loaded
-    DomainJsonFactory();
+    // Initialization of serialization
+    CarpMobileSensing();
     CarpDataManager();
     RPTask(identifier: 'ignored');
 
@@ -49,7 +49,7 @@ abstract class AbstractCommand implements Command {
     // register the sampling packages
     // this is used to be able to deserialize the json protocol
     SamplingPackageRegistry().register(AppsSamplingPackage());
-    SamplingPackageRegistry().register(CommunicationSamplingPackage());
+    // SamplingPackageRegistry().register(CommunicationSamplingPackage());
     SamplingPackageRegistry().register(ContextSamplingPackage());
     SamplingPackageRegistry().register(MediaSamplingPackage());
     SamplingPackageRegistry().register(ESenseSamplingPackage());
