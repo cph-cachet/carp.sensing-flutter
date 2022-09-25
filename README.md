@@ -13,7 +13,7 @@ These plugins are also available on [pub](https://pub.dev/publishers/cachet.dk/p
 These are the available CARP Mobile Sensing Flutter components in this repository.
 
 | Component | Description | [pub.dev](https://pub.dev/packages?q=publisher%3Acachet.dk+) |
-|-----------|-------------|-----------------|
+|-----------|-------------|:-----------------:|
 | **Core** | **Basic components** | <img width=200/> |
 | [carp_core](./carp_core) | The CARP core domain model | [![pub package](https://img.shields.io/pub/v/carp_core.svg)](https://pub.dartlang.org/packages/carp_core) |
 | [carp_mobile_sensing](./carp_mobile_sensing) | The main CARP Mobile Sensing Framework | [![pub package](https://img.shields.io/pub/v/carp_mobile_sensing.svg)](https://pub.dartlang.org/packages/carp_mobile_sensing) |
